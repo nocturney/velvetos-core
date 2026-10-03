@@ -796,6 +796,211 @@ def _bare_publication_request(probe: str) -> bool:
     return False
 
 
+def _contains_phrase(probe: str, phrases: tuple[str, ...]) -> bool:
+    return any(_phrase_in(probe, phrase) for phrase in phrases)
+
+
+def _external_mutation_request(probe: str) -> bool:
+    gmail_surface = _contains_phrase(probe, ("gmail", "email", "e-mail", "מייל", "ג׳ימייל", "ג'ימייל"))
+    gmail_write = _contains_phrase(
+        probe,
+        (
+            "reply", "respond", "send", "forward",
+            "תענה", "השב", "שלח", "תשלח", "העבר",
+        ),
+    )
+    drive_surface = _contains_phrase(probe, ("google drive", "drive artifact", "דרייב"))
+    drive_write = _contains_phrase(
+        probe,
+        ("save", "create", "upload", "write", "persist", "שמור", "צור", "העלה", "כתוב"),
+    )
+    return (gmail_surface and gmail_write) or (drive_surface and drive_write)
+
+
+def _physical_print_request(probe: str) -> bool:
+    if _contains_phrase(probe, ("printable", "print-ready", "print ready")):
+        # Building a printable artifact is still local artifact work; actual printer
+        # control remains separately gated below.
+        reduced = probe.replace("printable", "").replace("print-ready", "").replace("print ready", "")
+    else:
+        reduced = probe
+    return _contains_phrase(
+        reduced,
+        (
+            "send to printer", "start print", "start printing", "print this",
+            "upload to printer", "printer control", "printer network",
+            "שלח למדפסת", "התחל הדפסה", "תדפיס", "הדפס את",
+        ),
+    )
+
+
+def _commercial_or_spend_request(probe: str, domains: set[str]) -> bool:
+    if domains & {"sales_conversion", "finance"}:
+        return True
+    return _contains_phrase(
+        probe,
+        (
+            "price", "quote", "cost", "payment", "invoice", "purchase",
+            "subscription", "billing", "spend", "boost", "ads", "advertising",
+            "מחיר", "הצעה", "עלות", "תשלום", "חשבונית", "רכישה", "מנוי", "תקציב", "בוסט",
+        ),
+    ) or "₪" in probe
+
+
+def _rights_or_privacy_request(probe: str) -> bool:
+    return _contains_phrase(
+        probe,
+        (
+            "copyright", "license right", "rights clearance", "personal data",
+            "private data", "private customer data", "customer personal data", "customer data",
+            "privacy", "medical", "legal",
+            "זכויות", "פרטיות", "מידע אישי", "רפואי", "משפטי",
+        ),
+    )
+
+
+def _destructive_or_permission_request(probe: str) -> bool:
+    return _contains_phrase(
+        probe,
+        (
+            "delete", "remove", "archive", "revoke", "permission", "grant access",
+            "change access", "trash", "destroy",
+            "מחק", "תמחק", "הסר", "בטל הרשאה", "הרשאה", "שנה גישה", "אשפה",
+        ),
+    )
+
+
+def request_scope_and_triggers(text: str, domains: list[str], manifest: dict) -> tuple[str, list[str]]:
+    probe = text.casefold()
+    domain_set = set(domains)
+    triggers: list[str] = []
+
+    if domain_set & {"creative_publication", "instagram_action"}:
+        triggers.append("creative_or_publication")
+    if domain_set == {"general_business"}:
+        triggers.append("unknown_domain")
+    if _external_mutation_request(probe) or "instagram_action" in domain_set:
+        triggers.append("external_mutation")
+    if _commercial_or_spend_request(probe, domain_set):
+        triggers.append("commercial_or_spend")
+    if _rights_or_privacy_request(probe):
+        triggers.append("rights_or_privacy")
+    if _destructive_or_permission_request(probe):
+        triggers.append("destructive_or_permission")
+    if _physical_print_request(probe):
+        triggers.append("physical_print")
+
+    if "external_mutation" in triggers:
+        scope = "external_mutation"
+    elif "unknown_domain" in triggers:
+        scope = "unknown_domain"
+    elif "research" in domain_set or _contains_phrase(
+        probe, ("read only", "read-only", "inspect", "analyze", "analyse", "research", "latest", "בדוק", "מחקר")
+    ):
+        scope = "read_only"
+    elif "operations" in domain_set:
+        scope = "internal_mutation"
+    else:
+        scope = "local_routine"
+
+    allowed = set((manifest.get("fastPath") or {}).get("fullPreflightTriggers") or [])
+    triggers = [item for item in dict.fromkeys(triggers) if item in allowed]
+    return scope, triggers
+
+
+def fast_path_eligible(domains: list[str], scope: str, triggers: list[str], manifest: dict) -> bool:
+    cfg = manifest.get("fastPath") or {}
+    if cfg.get("status") != "active" or triggers:
+        return False
+    profiles = cfg.get("domainProfiles") or {}
+    domain_set = set(domains)
+    if not domain_set or not domain_set.issubset(set(profiles)):
+        return False
+    return scope in set(cfg.get("eligibleScopes") or [])
+
+
+def _fast_path_route(
+    domains: list[str],
+    scope: str,
+    text: str,
+    manifest: dict,
+) -> tuple[list[str], list[str], list[str], list[str]]:
+    cfg = manifest["fastPath"]
+    authorities = list(cfg.get("baselineAuthorities") or [])
+    packs: list[str] = []
+    hard_gates: list[str] = []
+    for domain in domains:
+        profile = (cfg.get("domainProfiles") or {}).get(domain) or {}
+        authorities.extend(profile.get("authorities") or [])
+        hard_gates.extend(profile.get("hardGates") or [])
+        packs.extend(profile.get("packs") or [])
+
+    probe = text.casefold()
+    if "production" in domains and scope != "read_only" and _contains_phrase(
+        probe,
+        ("cad", "dimensions", "verified dimensions", "step", "stl", "3mf", "dxf", "תכנון מכני", "מידות"),
+    ):
+        hard_gates.append("verified_specs")
+
+    return (
+        list(dict.fromkeys(authorities)),
+        list(dict.fromkeys(packs)),
+        list(dict.fromkeys(hard_gates)),
+        required_tools_for_request(text, domains),
+    )
+
+
+def required_tools_for_request(text: str, domains: list[str]) -> list[str]:
+    probe = text.casefold()
+    tools: list[str] = []
+    if _contains_phrase(probe, ("gmail", "email", "e-mail", "ג׳ימייל", "ג'ימייל", "מייל")):
+        if _contains_phrase(probe, ("reply", "respond", "תענה", "השב")):
+            tools.append("Gmail.reply")
+        elif _contains_phrase(probe, ("send", "forward", "שלח", "תשלח", "העבר")):
+            tools.append("Gmail.send_message")
+        else:
+            tools.append("Gmail.search_threads")
+    if _contains_phrase(probe, ("google drive", "drive artifact", "דרייב")):
+        if _contains_phrase(probe, ("save", "create", "upload", "write", "persist", "שמור", "צור", "העלה", "כתוב")):
+            tools.append("Google-drive.create_file")
+        else:
+            tools.append("Google-drive.search_files")
+    if _contains_phrase(probe, ("owner brief", "owner morning brief", "בריף")):
+        tools.append("scripts/vfops_loop.py brief")
+    if _contains_phrase(probe, ("internal status", "operational status", "סטטוס")) and "operations" in domains:
+        tools.append("office/control-plane")
+    if "research" in domains:
+        tools.append("WebSearch")
+    if "production" in domains:
+        dcc_routes = (
+            ("maya", "creative-craft:maya"),
+            ("blender", "creative-craft:blender"),
+            ("3ds max", "creative-craft:3dsmax"),
+            ("zbrush", "creative-craft:zbrush"),
+        )
+        for phrase, tool in dcc_routes:
+            if _phrase_in(probe, phrase):
+                tools.append(tool)
+        if _contains_phrase(probe, ("cad", "step", "stl", "3mf", "dxf", "printable", "תכנון", "שרטוט")):
+            tools.append("scripts/vf_fabrication_router.py")
+        if not tools:
+            tools.append("creative-craft:fabrication")
+    return list(dict.fromkeys(tools))
+
+
+def required_skills_for_request(text: str, domains: list[str]) -> list[str]:
+    probe = text.casefold()
+    skills: list[str] = []
+    if "production" in domains:
+        if _contains_phrase(probe, ("maya", "blender", "3ds max", "zbrush", "dcc", "3d model", "modeling")):
+            skills.append("vf-dcc-modeling-craft")
+        if _contains_phrase(probe, ("cad", "step", "stl", "3mf", "dxf", "dimensions", "תכנון", "שרטוט", "מידות")):
+            skills.append("vf-cad-design-craft")
+    if "research" in domains:
+        skills.append("vfresearch")
+    return list(dict.fromkeys(skills))
+
+
 def classify(text: str, manifest: dict) -> list[str]:
     probe = text.casefold()
     hits: list[str] = []
@@ -880,40 +1085,104 @@ def main() -> int:
     )
     args = parser.parse_args()
     manifest = load_manifest()
-    domains = args.domain or classify(args.text or "", manifest)
+    request_text = args.text or ""
+    domains = args.domain or classify(request_text, manifest)
     unknown = [d for d in domains if d not in manifest["domains"]]
     if unknown:
-        print(json.dumps({"project_preflight": "BLOCKED", "reason": "unknown_domain", "domains": unknown}, ensure_ascii=False, indent=2))
+        receipt = {
+            "request_domain": domains,
+            "request_scope": "unknown_domain",
+            "preflight_mode": "FULL",
+            "full_preflight_triggers": ["unknown_domain"],
+            "owner_surface": "true_blocker_only",
+            "authority_manifest_version": manifest["schemaVersion"],
+            "baseline_authority": "FAIL",
+            "routed_packs": [],
+            "required_skills": [],
+            "required_sources": [],
+            "required_tools": [],
+            "hard_gates": [],
+            "current_evidence_state": "BLOCKED",
+            "project_preflight": "BLOCKED",
+            "route_resolution": "BLOCKED",
+            "reason": "unknown_domain",
+            "domains": unknown,
+            "missing_authority_paths": [],
+            "authority_conflicts": [f"unknown domain: {d}" for d in unknown],
+            "creative_execution_authorized": False,
+            "delivery_authorized": False,
+        }
+        print(json.dumps(receipt, ensure_ascii=False, indent=2))
         return 2
-    authorities = list(manifest["baselineAuthorities"])
-    packs: list[str] = []
-    hard_gates: list[str] = []
-    for domain in domains:
-        cfg = manifest["domains"][domain]
-        authorities.extend(cfg.get("authorities", []))
-        packs.extend(cfg.get("packs", []))
-        hard_gates.extend(cfg.get("hardGates", []))
-    authorities = list(dict.fromkeys(authorities))
-    missing = [path for path in authorities if not (ROOT / path).is_file()]
+
+    request_scope, full_triggers = request_scope_and_triggers(request_text, domains, manifest)
+    fast_candidate = fast_path_eligible(domains, request_scope, full_triggers, manifest)
+    fast_profile_problems: list[str] = []
+
+    if fast_candidate:
+        authorities, packs, hard_gates, required_tools = _fast_path_route(
+            domains, request_scope, request_text, manifest
+        )
+        missing = [path for path in authorities if not (ROOT / path).is_file()]
+        if missing:
+            fast_profile_problems = [
+                "fast path authority unavailable: " + path for path in missing
+            ]
+            full_triggers = list(dict.fromkeys(full_triggers + ["authority_conflict"]))
+            fast_candidate = False
+
+    if not fast_candidate:
+        authorities = list(manifest["baselineAuthorities"])
+        packs = []
+        hard_gates = []
+        for domain in domains:
+            cfg = manifest["domains"][domain]
+            authorities.extend(cfg.get("authorities", []))
+            packs.extend(cfg.get("packs", []))
+            hard_gates.extend(cfg.get("hardGates", []))
+        authorities = list(dict.fromkeys(authorities))
+        packs = list(dict.fromkeys(packs))
+        hard_gates = list(dict.fromkeys(hard_gates))
+        required_tools = required_tools_for_request(request_text, domains)
+        missing = [path for path in authorities if not (ROOT / path).is_file()]
+    else:
+        authorities = list(dict.fromkeys(authorities))
+        packs = list(dict.fromkeys(packs))
+        hard_gates = list(dict.fromkeys(hard_gates))
+        missing = [path for path in authorities if not (ROOT / path).is_file()]
+
     creative = bool(set(domains) & {"creative_publication", "instagram_action"})
-    binding_problems = project_binding_problems(creative=creative)
+    binding_problems = [] if fast_candidate else project_binding_problems(creative=creative)
+    binding_problems = fast_profile_problems + binding_problems
+    if (missing or binding_problems) and "authority_conflict" not in full_triggers:
+        full_triggers = list(dict.fromkeys(full_triggers + ["authority_conflict"]))
+
+    preflight_mode = "FAST_PATH" if fast_candidate else "FULL"
+    initial_blocked = bool(missing or binding_problems)
     receipt = {
         "request_domain": domains,
+        "request_scope": request_scope,
+        "preflight_mode": preflight_mode,
+        "full_preflight_triggers": full_triggers,
+        "owner_surface": (manifest.get("fastPath") or {}).get("receiptVisibility", "internal_unless_true_blocker"),
         "authority_manifest_version": manifest["schemaVersion"],
-        "baseline_authority": "FAIL" if (missing or binding_problems) else "PASS",
-        "routed_packs": list(dict.fromkeys(packs)),
-        "required_skills": [],
+        "baseline_authority": "FAIL" if initial_blocked else "PASS",
+        "routed_packs": packs,
+        "required_skills": required_skills_for_request(request_text, domains),
         "required_sources": authorities,
-        "required_tools": [],
-        "hard_gates": list(dict.fromkeys(hard_gates)),
-        "current_evidence_state": "authority_paths_resolved",
-        "project_preflight": "BLOCKED" if (missing or binding_problems) else "PASS",
+        "required_tools": required_tools,
+        "hard_gates": hard_gates,
+        "current_evidence_state": (
+            "fast_path_authority_resolved" if fast_candidate and not initial_blocked
+            else "authority_paths_resolved"
+        ),
+        "project_preflight": "BLOCKED" if initial_blocked else "PASS",
         "missing_authority_paths": missing,
         "authority_conflicts": binding_problems,
         "creative_execution_authorized": False,
         "delivery_authorized": False,
     }
-    receipt["route_resolution"] = "BLOCKED" if (missing or binding_problems) else "PASS"
+    receipt["route_resolution"] = "BLOCKED" if initial_blocked else "PASS"
     if creative:
         from vf_publication_evidence import validate
         phase = args.phase or ("delivery" if "instagram_action" in domains else "production")
@@ -947,7 +1216,14 @@ def main() -> int:
             receipt["project_preflight"] = "PASS" if evidence_ok else "BLOCKED"
             receipt["delivery_authorized"] = False
     else:
-        receipt["evidence_scope"] = "authority path resolution only; no action authorization"
+        receipt["evidence_scope"] = (
+            "minimal authority + scope routing; action postflight remains authoritative"
+            if preflight_mode == "FAST_PATH"
+            else "authority path resolution only; no action authorization"
+        )
+    receipt["owner_surface"] = (manifest.get("fastPath") or {}).get(
+        "receiptVisibility", "internal_unless_true_blocker"
+    )
     print(json.dumps(receipt, ensure_ascii=False, indent=2))
     return 2 if receipt["project_preflight"] == "BLOCKED" else 0
 

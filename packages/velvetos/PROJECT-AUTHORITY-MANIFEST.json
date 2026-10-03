@@ -19,8 +19,80 @@
     "packages/manifest.json",
     "packages/vfbiz/OFFERING.md"
   ],
+  "fastPath": {
+    "status": "active",
+    "receiptVisibility": "internal_unless_true_blocker",
+    "baselineAuthorities": [
+      "constitution/CONSTITUTION.md",
+      "constitution/RISK.md",
+      "constitution/ORCHESTRA.md"
+    ],
+    "eligibleScopes": [
+      "read_only",
+      "local_routine",
+      "internal_mutation"
+    ],
+    "fullPreflightTriggers": [
+      "external_mutation",
+      "unknown_domain",
+      "creative_or_publication",
+      "commercial_or_spend",
+      "rights_or_privacy",
+      "destructive_or_permission",
+      "physical_print",
+      "authority_conflict",
+      "stale_critical_evidence",
+      "new_route"
+    ],
+    "domainProfiles": {
+      "operations": {
+        "packs": [
+          "vfops"
+        ],
+        "authorities": [
+          "packages/vfops/SKILL.md",
+          "office/control-plane.json"
+        ],
+        "hardGates": [
+          "canonical_source",
+          "authority_boundary"
+        ]
+      },
+      "production": {
+        "packs": [
+          "vfprod"
+        ],
+        "authorities": [
+          "packages/vfprod/SKILL.md",
+          "packages/vfprod/FABRICATION-ROUTER.md",
+          "packages/vfprod/TEXT-TO-CAD.md"
+        ],
+        "hardGates": [
+          "fabrication_tool_route",
+          "specialized_skill_instructions"
+        ]
+      },
+      "research": {
+        "packs": [
+          "vfresearch"
+        ],
+        "authorities": [
+          "packages/vfresearch/SKILL.md"
+        ],
+        "hardGates": [
+          "source_evidence",
+          "no_invented_body",
+          "freshness"
+        ]
+      }
+    }
+  },
   "requiredReceiptFields": [
     "request_domain",
+    "request_scope",
+    "preflight_mode",
+    "full_preflight_triggers",
+    "owner_surface",
     "authority_manifest_version",
     "baseline_authority",
     "routed_packs",
@@ -39,6 +111,8 @@
         "social post",
         "public post",
         "קרוסלה",
+        "carousel",
+        "instagram carousel",
         "סטורי",
         "instagram story",
         "ig story",
@@ -120,6 +194,14 @@
         "משימה",
         "סנכרון",
         "תזכורת",
+        "gmail",
+        "email",
+        "owner brief",
+        "owner morning brief",
+        "google drive",
+        "drive artifact",
+        "internal status",
+        "operational status",
         "office",
         "operations"
       ],
@@ -164,6 +246,13 @@
         "SRDF",
         "SDF",
         "SendCutSend",
+        "Maya",
+        "Blender",
+        "3ds Max",
+        "ZBrush",
+        "DCC",
+        "3D model",
+        "modeling",
         "production",
         "print"
       ],

@@ -14,13 +14,14 @@ GATE = ROOT / "packages/velvetos/PROJECT-REQUEST-GATE.md"
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
 CLI = ROOT / "scripts/vf_project_preflight.py"
 FRICTION_BASELINE = ROOT / "packages/velvetos/policy/reports/stage4a-friction-baseline.json"
+FAST_PATH_REPORT = ROOT / "packages/velvetos/policy/reports/stage4b-project-request-fast-path.json"
 
 
 def fail(msg: str) -> None:
     print(f"FAIL project-request-gate: {msg}", file=sys.stderr)
     raise SystemExit(1)
 
-for path in (GATE, MANIFEST, CLI, FRICTION_BASELINE):
+for path in (GATE, MANIFEST, CLI, FRICTION_BASELINE, FAST_PATH_REPORT):
     if not path.is_file():
         fail(f"missing {path.relative_to(ROOT)}")
 
@@ -52,6 +53,31 @@ classes = {row.get("disposition") for row in baseline.get("gate_classification",
 if classes != {"KEEP", "INTERNALIZE", "MERGE", "ACTION_SCOPED", "REMOVE_AS_DUPLICATE"}:
     fail(f"Stage 4A gate classification coverage mismatch: {sorted(classes)}")
 
+stage4b_report = json.loads(FAST_PATH_REPORT.read_text(encoding="utf-8"))
+if stage4b_report.get("schema") != "velvetos.stage4b-project-request-fast-path.v1" or stage4b_report.get("stage") != "4B":
+    fail("Stage 4B acceptance report schema/stage mismatch")
+if stage4b_report.get("behavior_change") is not True or stage4b_report.get("base_main_sha") != "baf8d3492a84568d8351c831e0e2105d5fa7bb36":
+    fail("Stage 4B acceptance report base/behavior contract drift")
+stage4b_summary = stage4b_report.get("summary") or {}
+expected_stage4b_summary = {
+    "route_aligned": 14,
+    "general_business_fallback": 0,
+    "fast_path_count": 7,
+    "full_preflight_count": 7,
+    "required_tools_populated": 10,
+    "owner_surface_internal_unless_true_blocker": 14,
+    "creative_flows_fail_closed_without_evidence": 4,
+    "fast_path_source_reduction_percent": 52.5,
+    "fast_path_gate_reduction_percent": 40.7,
+    "cad_readonly_and_build_scope_distinct": True,
+    "negative_controls_full": True,
+}
+for key, value in expected_stage4b_summary.items():
+    if stage4b_summary.get(key) != value:
+        fail(f"Stage 4B acceptance report drift: {key} expected {value!r}, got {stage4b_summary.get(key)!r}")
+if not all(row.get("pass") is True for row in stage4b_report.get("negative_controls") or []):
+    fail("Stage 4B acceptance report contains a failed FULL-preflight negative control")
+
 manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
 if manifest.get("status") != "mandatory" or manifest.get("preflightMode") != "fail_closed":
     fail("manifest is not mandatory fail-closed")
@@ -69,6 +95,38 @@ required_domains = {
 }
 if not required_domains.issubset(set(manifest.get("domains", {}))):
     fail("required domain coverage missing")
+
+fast_path = manifest.get("fastPath")
+if not isinstance(fast_path, dict) or fast_path.get("status") != "active":
+    fail("Stage 4B fastPath contract missing/inactive")
+if fast_path.get("receiptVisibility") != "internal_unless_true_blocker":
+    fail("Stage 4B receipt visibility must stay internal unless a true blocker exists")
+if set(fast_path.get("eligibleScopes") or []) != {"read_only", "local_routine", "internal_mutation"}:
+    fail("Stage 4B fastPath eligible scope contract drift")
+expected_full_triggers = {
+    "external_mutation", "unknown_domain", "creative_or_publication",
+    "commercial_or_spend", "rights_or_privacy", "destructive_or_permission",
+    "physical_print", "authority_conflict", "stale_critical_evidence", "new_route",
+}
+if set(fast_path.get("fullPreflightTriggers") or []) != expected_full_triggers:
+    fail("Stage 4B full-preflight trigger contract drift")
+fast_profiles = fast_path.get("domainProfiles") or {}
+if set(fast_profiles) != {"operations", "production", "research"}:
+    fail("Stage 4B fastPath domain profiles must be exactly operations/production/research")
+if len(fast_path.get("baselineAuthorities") or []) != 3:
+    fail("Stage 4B minimal baseline must contain exactly three authority files")
+for rel in fast_path.get("baselineAuthorities") or []:
+    if not (ROOT / rel).is_file():
+        fail(f"Stage 4B fastPath baseline authority missing: {rel}")
+for domain, profile in fast_profiles.items():
+    if not isinstance(profile, dict) or not profile.get("packs") or not profile.get("authorities") or not profile.get("hardGates"):
+        fail(f"Stage 4B fastPath profile incomplete: {domain}")
+    for rel in profile.get("authorities") or []:
+        if not (ROOT / rel).is_file():
+            fail(f"Stage 4B fastPath profile authority missing: {domain}:{rel}")
+for field in ("request_scope", "preflight_mode", "full_preflight_triggers", "owner_surface"):
+    if field not in set(manifest.get("requiredReceiptFields") or []):
+        fail(f"Stage 4B receipt field missing: {field}")
 
 project_authority = ROOT / bundle["authority"]
 asset_manifest = ROOT / bundle["assetManifest"]
@@ -346,7 +404,7 @@ for sample, expected in (
     ("create a Story for the new product", "creative_publication"),
     ("write an Instagram caption", "creative_publication"),
     ("copy customer feedback into the owner brief", "copywriting"),
-    ("create a customer success story for the owner brief", "general_business"),
+    ("create a customer success story for the owner brief", "operations"),
     ("עדכן סטטוס הזמנה", "operations"),
 ):
     proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
@@ -613,4 +671,116 @@ for sample in (
     if "instagram_action" in receipt.get("request_domain", []):
         fail(f"read-only Instagram tool must not route instagram_action: {sample}")
 
-print(f"OK project-request-gate domains={len(manifest['domains'])} authority_paths={len(set(all_paths))} creative_without_evidence=BLOCKED creative_tool_authorization=fail_closed")
+
+# Stage 4B fast-path behavioral contract.
+def _stage4b_receipt(sample: str) -> dict:
+    proc = subprocess.run(
+        [sys.executable, str(CLI), "--text", sample],
+        cwd=ROOT, text=True, capture_output=True,
+    )
+    try:
+        receipt = json.loads(proc.stdout)
+    except json.JSONDecodeError as exc:
+        fail(f"Stage 4B preflight returned non-JSON for {sample!r}: {exc}")
+    return receipt
+
+
+stage4b_cases = (
+    ("Prepare an Instagram carousel", "creative_publication", "local_routine", "FULL", "BLOCKED"),
+    ("Reply to this Gmail thread", "operations", "external_mutation", "FULL", "PASS"),
+    ("Send this email to the customer", "operations", "external_mutation", "FULL", "PASS"),
+    ("Prepare the owner morning brief", "operations", "internal_mutation", "FAST_PATH", "PASS"),
+    ("Save this internal artifact to Google Drive", "operations", "external_mutation", "FULL", "PASS"),
+    ("Launch Maya for this modeling task", "production", "local_routine", "FAST_PATH", "PASS"),
+    ("Model this part in Maya", "production", "local_routine", "FAST_PATH", "PASS"),
+    ("Inspect this CAD model read only", "production", "read_only", "FAST_PATH", "PASS"),
+    ("Build a printable CAD model from these verified dimensions", "production", "local_routine", "FAST_PATH", "PASS"),
+    ("Research the latest update for this tool", "research", "read_only", "FAST_PATH", "PASS"),
+    ("Update internal operational status", "operations", "internal_mutation", "FAST_PATH", "PASS"),
+)
+stage4b_receipts: dict[str, dict] = {}
+for sample, expected_domain, expected_scope, expected_mode, expected_state in stage4b_cases:
+    receipt = _stage4b_receipt(sample)
+    stage4b_receipts[sample] = receipt
+    if expected_domain not in receipt.get("request_domain", []):
+        fail(f"Stage 4B route mismatch for {sample}: {receipt.get('request_domain')}")
+    if receipt.get("request_scope") != expected_scope:
+        fail(f"Stage 4B scope mismatch for {sample}: {receipt.get('request_scope')}")
+    if receipt.get("preflight_mode") != expected_mode:
+        fail(f"Stage 4B mode mismatch for {sample}: {receipt.get('preflight_mode')}")
+    if receipt.get("project_preflight") != expected_state:
+        fail(f"Stage 4B state mismatch for {sample}: {receipt.get('project_preflight')}")
+    if receipt.get("owner_surface") != "internal_unless_true_blocker":
+        fail(f"Stage 4B receipt leaked to owner surface for {sample}")
+    for field in manifest["requiredReceiptFields"]:
+        if field not in receipt:
+            fail(f"Stage 4B receipt missing {field} for {sample}")
+
+gmail_reply = stage4b_receipts["Reply to this Gmail thread"]
+if gmail_reply.get("full_preflight_triggers") != ["external_mutation"] or "Gmail.reply" not in gmail_reply.get("required_tools", []):
+    fail("Stage 4B Gmail reply must remain FULL external mutation with Gmail.reply tool route")
+gmail_send = stage4b_receipts["Send this email to the customer"]
+if gmail_send.get("full_preflight_triggers") != ["external_mutation"] or "Gmail.send_message" not in gmail_send.get("required_tools", []):
+    fail("Stage 4B Gmail send must remain FULL external mutation with Gmail.send_message tool route")
+drive = stage4b_receipts["Save this internal artifact to Google Drive"]
+if drive.get("full_preflight_triggers") != ["external_mutation"] or "Google-drive.create_file" not in drive.get("required_tools", []):
+    fail("Stage 4B Drive write must remain FULL external mutation with create-file tool route")
+
+owner_brief = stage4b_receipts["Prepare the owner morning brief"]
+if len(owner_brief.get("required_sources", [])) != 5 or owner_brief.get("routed_packs") != ["vfops"]:
+    fail("Stage 4B owner brief fast path must reduce to 5 sources / vfops")
+if "sync_evidence" in owner_brief.get("hard_gates", []):
+    fail("Stage 4B owner brief must not pay external sync gate before a delivery action exists")
+
+maya_launch = stage4b_receipts["Launch Maya for this modeling task"]
+maya_task = stage4b_receipts["Model this part in Maya"]
+for receipt in (maya_launch, maya_task):
+    if len(receipt.get("required_sources", [])) != 6:
+        fail("Stage 4B Maya fast path must resolve exactly 6 sources")
+    if receipt.get("hard_gates") != ["fabrication_tool_route", "specialized_skill_instructions"]:
+        fail(f"Stage 4B Maya fast path has unrelated gates: {receipt.get('hard_gates')}")
+    if "creative-craft:maya" not in receipt.get("required_tools", []):
+        fail("Stage 4B Maya fast path missing canonical Creative Craft route")
+
+cad_read = stage4b_receipts["Inspect this CAD model read only"]
+cad_build = stage4b_receipts["Build a printable CAD model from these verified dimensions"]
+for forbidden in ("verified_specs", "no_printer_control", "no_invented_price", "print_authority"):
+    if forbidden in cad_read.get("hard_gates", []):
+        fail(f"Stage 4B CAD read-only retained unrelated gate: {forbidden}")
+if "verified_specs" not in cad_build.get("hard_gates", []):
+    fail("Stage 4B CAD build must retain verified_specs")
+for forbidden in ("no_printer_control", "no_invented_price", "print_authority"):
+    if forbidden in cad_build.get("hard_gates", []):
+        fail(f"Stage 4B CAD artifact build must not pay physical-print/commercial gate: {forbidden}")
+if "scripts/vf_fabrication_router.py" not in cad_build.get("required_tools", []):
+    fail("Stage 4B CAD build missing canonical Fabrication Router")
+
+research_fast = stage4b_receipts["Research the latest update for this tool"]
+if len(research_fast.get("required_sources", [])) != 4 or research_fast.get("required_tools") != ["WebSearch"]:
+    fail("Stage 4B research fast path must reduce to 4 sources and canonical WebSearch route")
+internal_status = stage4b_receipts["Update internal operational status"]
+if len(internal_status.get("required_sources", [])) != 5 or "office/control-plane" not in internal_status.get("required_tools", []):
+    fail("Stage 4B internal-status fast path must reduce to 5 sources and canonical Office route")
+
+carousel = stage4b_receipts["Prepare an Instagram carousel"]
+if carousel.get("preflight_mode") != "FULL" or "creative_or_publication" not in carousel.get("full_preflight_triggers", []):
+    fail("Stage 4B carousel must fix under-classification without weakening creative evidence")
+
+# High-risk/ambiguous negative controls never enter FAST_PATH.
+full_controls = (
+    ("Set the customer price in ₪", "commercial_or_spend"),
+    ("Purchase a new subscription for this tool", "commercial_or_spend"),
+    ("Delete this internal file", "destructive_or_permission"),
+    ("Change access permission on this file", "destructive_or_permission"),
+    ("Use this private customer data in the artifact", "rights_or_privacy"),
+    ("Send this STL to the printer and start printing", "physical_print"),
+    ("Summarize this", "unknown_domain"),
+)
+for sample, required_trigger in full_controls:
+    receipt = _stage4b_receipt(sample)
+    if receipt.get("preflight_mode") != "FULL":
+        fail(f"Stage 4B high-risk/unknown request incorrectly entered FAST_PATH: {sample}")
+    if required_trigger not in receipt.get("full_preflight_triggers", []):
+        fail(f"Stage 4B FULL trigger {required_trigger} missing for {sample}")
+
+print(f"OK project-request-gate domains={len(manifest['domains'])} authority_paths={len(set(all_paths))} creative_without_evidence=BLOCKED creative_tool_authorization=fail_closed stage4b_fast_path=PASS")
