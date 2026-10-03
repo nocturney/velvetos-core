@@ -33,7 +33,7 @@ The final registry contains 38 routable tools/capabilities. Availability is eval
 
 | Tool | Accepted surface | Important limit |
 | --- | --- | --- |
-| Resolve | media/timeline/project-settings/render/LUT | narrower subtitle/Fairlight/node operations remain gaps |
+| Resolve | media/project/timeline inspection, bounded import/audio/settings, render validation/output verification, LUT read | timeline edit authoring, grade/node writes, LUT apply, render-job authoring and Fusion compositing remain typed gaps |
 | Topaz Video | accepted ahq-12, scale 1/2/4 | no automatic model download or arbitrary ffmpeg args |
 | HyperFrames | verified local doctor/render | no publish authority |
 | Fusion Studio | bounded official scripting acceptance/render-solid | broader job-owned comp operations remain gaps |
