@@ -1,6 +1,8 @@
 # VelvetOS — Project Request Gate
 
-Status: **MANDATORY · FAIL-CLOSED · ALL REQUESTS**
+Machine authority: `policy_id: project.request.preflight`
+
+Status: **MANDATORY ROUTER · SCOPE-AWARE PREFLIGHT · FAIL-CLOSED ON TRUE BLOCKERS**
 
 This is the single front door for any Velvet Factory / VelvetOS request. It does not replace the Constitution, packs, skills or tools; it forces the request to be routed through them before work begins.
 
@@ -8,14 +10,15 @@ This is the single front door for any Velvet Factory / VelvetOS request. It does
 
 **No substantive work starts before `project_preflight: PASS`.**
 
-The preflight is not permission to dump the whole warehouse into context. It is a dispatcher:
+The preflight is not permission to dump the whole warehouse into context. It is a dispatcher with two execution modes:
 
-1. load the small baseline authority set;
-2. classify the request;
-3. resolve the relevant packs / skills / sources from the authority manifest;
-4. verify hard constraints and current evidence;
-5. only then execute;
-6. run exact-final / action postflight before claiming completion.
+1. classify the request and its action scope;
+2. use `FAST_PATH` for a known read-only, local routine or internal-mutation flow with no full-preflight trigger;
+3. use `FULL` for external mutation, unknown domain, creative/publication, commercial/spend, rights/privacy, destructive/permission, physical-print or authority-conflict cases;
+4. load only the baseline + domain authorities required by that mode;
+5. verify the applicable constraints and current evidence;
+6. only then execute;
+7. run exact-final / action postflight before claiming completion.
 
 If a mandatory authority is unavailable, stale, contradictory or cannot be verified, the branch is `BLOCKED` / `needs_sync`; never silently fall back to model defaults.
 
@@ -31,26 +34,30 @@ This fallback does **not** authorize stale operational truth. Operations, financ
 
 Always resolve the authority manifest: `packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json`.
 
-Baseline law is always higher priority than task-local preference:
-- `constitution/CONSTITUTION.md`
-- `constitution/STUDIO.md`
-- `constitution/RISK.md`
-- `constitution/PUBLIC_CTA.md`
-- `constitution/VISIBLE_TEXT.md`
-- `constitution/ORCHESTRA.md`
-- instance / frontend policy when operating a specific tenant
+The manifest now owns two baseline shapes. `FAST_PATH` resolves only the minimal universal authority declared under `fastPath.baselineAuthorities` plus the selected domain profile. `FULL` keeps the complete baseline for sensitive or ambiguous work. Task-local preference can never override either baseline.
 
 ### 2. Classify the request
 
 Choose one or more domains from the manifest. Do not guess a new pack or invent a parallel workflow. If classification is uncertain, use the office graph / router (`vfmem`) and Living Studio registry before choosing handlers.
 
-### 3. Load only relevant authorities
+### 3. Choose `FAST_PATH` or `FULL`
 
-For every selected domain, load the named pack instructions, relevant skills and canonical Sources of Truth before drafting or acting. A tool being available does not make it authoritative; the manifest and Constitution decide whether it may be used.
-### 4. Build an internal preflight receipt
+`FAST_PATH` is allowed only when all selected domains have an explicit fast-path profile and the request scope is `read_only`, `local_routine` or `internal_mutation`. It is not a bypass: it still produces a complete internal receipt, validates every selected authority path and preserves downstream postflight.
+
+`FULL` is required when any configured full-preflight trigger applies. A routine Gmail/Drive write is therefore still `FULL` at Stage 4B because it is an external mutation, while owner-brief preparation, internal status, research, bounded DCC work and CAD inspection/build can use `FAST_PATH` when no other trigger applies.
+
+### 4. Load only relevant authorities
+
+For every selected domain, load the named pack instructions, relevant skills and canonical Sources of Truth required by the chosen mode before drafting or acting. A tool being available does not make it authoritative; the manifest and Constitution decide whether it may be used.
+
+### 5. Build an internal preflight receipt
 
 Before execution, resolve these fields internally:
 - `request_domain`
+- `request_scope`
+- `preflight_mode: FAST_PATH|FULL`
+- `full_preflight_triggers`
+- `owner_surface`
 - `authority_manifest_version`
 - `baseline_authority: PASS|FAIL`
 - `routed_packs`
@@ -61,15 +68,15 @@ Before execution, resolve these fields internally:
 - `current_evidence_state`
 - `project_preflight: PASS|BLOCKED`
 
-Do not expose this receipt to the owner unless useful or requested. But do not proceed when it is incomplete.
+Keep this receipt internal by default. Do not turn routine PASS receipts, retries, fallbacks, compatibility checks or evidence repair into owner prompts. Surface only a genuine blocker/decision or the receipt when explicitly requested. But do not proceed when the applicable receipt is incomplete.
 
-### 5. Execute through the real pipeline
+### 6. Execute through the real pipeline
 
 Execution must use the routed skills/tools rather than reproducing their intended behavior from memory. When a matching specialist, lint, editor, source or provider exists, actually use it when the task requires it.
 
 Source-ingest evidence preparation for current-chat attachments is allowed before creative authorization; it may only copy/hash/inspect source bytes and must not create a preview. In `CHAT_LOCAL_ATTACHMENT` mode, when the repo executor and attachment bytes live on different filesystems, `scripts/vf_chat_cold_start_preflight.py` is the canonical pre-tool creative gate: it validates the hash-verified current Project bundle, exact source-ingest receipts and inspected creative plan, may return `creative_execution_authorized: true`, and can never authorize publication. Do not send chat-local source paths to a remote repo preflight that cannot read them. For other creative_publication execution, no image-generation, image-editing, design/composition or public-copy production tool may be called until the executable preflight receipt for the exact Creative Manifest/content ID says both project_preflight: PASS and creative_execution_authorized: true. File existence, CI, remembered rules or a planned future QA do not authorize the call. If the receipt cannot be produced or is BLOCKED, stop before tool invocation; diagnostics may repair the evidence, but no creative preview is a valid fallback.
 
-### 6. Postflight
+### 7. Postflight
 
 Before claiming `done`, `ready`, `prepared`, `published`, `synced`, `sent`, or equivalent, run the domain's output/action gates on the exact final artifact or provider result. Evidence beats intention.
 ## Mandatory creative/publication path

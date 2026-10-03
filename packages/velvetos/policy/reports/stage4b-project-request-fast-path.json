@@ -1,0 +1,572 @@
+{
+  "schema": "velvetos.stage4b-project-request-fast-path.v1",
+  "stage": "4B",
+  "behavior_change": true,
+  "base_main_sha": "baf8d3492a84568d8351c831e0e2105d5fa7bb36",
+  "candidate": "reform-v2/stage4b-project-request-fast-path-20261003-r1",
+  "baseline_report": "packages/velvetos/policy/reports/stage4a-friction-baseline.json",
+  "flow_count": 14,
+  "flows": [
+    {
+      "id": "instagram_post",
+      "request": "Prepare an Instagram post",
+      "return_code": 2,
+      "expected_domain": "creative_publication",
+      "domains": [
+        "creative_publication"
+      ],
+      "route_aligned": true,
+      "request_scope": "local_routine",
+      "preflight_mode": "FULL",
+      "full_preflight_triggers": [
+        "creative_or_publication"
+      ],
+      "project_preflight": "BLOCKED",
+      "owner_surface": "internal_unless_true_blocker",
+      "required_sources": 22,
+      "routed_packs": 5,
+      "hard_gates": 11,
+      "required_tools": [],
+      "required_skills": [
+        "velvet-creative-director",
+        "velvet-brand-guardian",
+        "velvet-hebrew-copy"
+      ],
+      "before": {
+        "auto_domains": [
+          "creative_publication"
+        ],
+        "project_preflight": "BLOCKED",
+        "required_sources": 22,
+        "routed_packs": 5,
+        "hard_gates": 11
+      }
+    },
+    {
+      "id": "instagram_story",
+      "request": "Prepare an Instagram Story",
+      "return_code": 2,
+      "expected_domain": "creative_publication",
+      "domains": [
+        "creative_publication"
+      ],
+      "route_aligned": true,
+      "request_scope": "local_routine",
+      "preflight_mode": "FULL",
+      "full_preflight_triggers": [
+        "creative_or_publication"
+      ],
+      "project_preflight": "BLOCKED",
+      "owner_surface": "internal_unless_true_blocker",
+      "required_sources": 22,
+      "routed_packs": 5,
+      "hard_gates": 11,
+      "required_tools": [],
+      "required_skills": [
+        "velvet-creative-director",
+        "velvet-brand-guardian",
+        "velvet-hebrew-copy"
+      ],
+      "before": {
+        "auto_domains": [
+          "creative_publication"
+        ],
+        "project_preflight": "BLOCKED",
+        "required_sources": 22,
+        "routed_packs": 5,
+        "hard_gates": 11
+      }
+    },
+    {
+      "id": "instagram_reel",
+      "request": "Prepare an Instagram Reel",
+      "return_code": 2,
+      "expected_domain": "creative_publication",
+      "domains": [
+        "creative_publication"
+      ],
+      "route_aligned": true,
+      "request_scope": "local_routine",
+      "preflight_mode": "FULL",
+      "full_preflight_triggers": [
+        "creative_or_publication"
+      ],
+      "project_preflight": "BLOCKED",
+      "owner_surface": "internal_unless_true_blocker",
+      "required_sources": 22,
+      "routed_packs": 5,
+      "hard_gates": 11,
+      "required_tools": [],
+      "required_skills": [
+        "velvet-creative-director",
+        "velvet-brand-guardian",
+        "velvet-hebrew-copy"
+      ],
+      "before": {
+        "auto_domains": [
+          "creative_publication"
+        ],
+        "project_preflight": "BLOCKED",
+        "required_sources": 22,
+        "routed_packs": 5,
+        "hard_gates": 11
+      }
+    },
+    {
+      "id": "instagram_carousel",
+      "request": "Prepare an Instagram carousel",
+      "return_code": 2,
+      "expected_domain": "creative_publication",
+      "domains": [
+        "creative_publication"
+      ],
+      "route_aligned": true,
+      "request_scope": "local_routine",
+      "preflight_mode": "FULL",
+      "full_preflight_triggers": [
+        "creative_or_publication"
+      ],
+      "project_preflight": "BLOCKED",
+      "owner_surface": "internal_unless_true_blocker",
+      "required_sources": 22,
+      "routed_packs": 5,
+      "hard_gates": 11,
+      "required_tools": [],
+      "required_skills": [
+        "velvet-creative-director",
+        "velvet-brand-guardian",
+        "velvet-hebrew-copy"
+      ],
+      "before": {
+        "auto_domains": [
+          "general_business"
+        ],
+        "project_preflight": "PASS",
+        "required_sources": 10,
+        "routed_packs": 1,
+        "hard_gates": 3
+      }
+    },
+    {
+      "id": "gmail_reply",
+      "request": "Reply to this Gmail thread",
+      "return_code": 0,
+      "expected_domain": "operations",
+      "domains": [
+        "operations"
+      ],
+      "route_aligned": true,
+      "request_scope": "external_mutation",
+      "preflight_mode": "FULL",
+      "full_preflight_triggers": [
+        "external_mutation"
+      ],
+      "project_preflight": "PASS",
+      "owner_surface": "internal_unless_true_blocker",
+      "required_sources": 11,
+      "routed_packs": 2,
+      "hard_gates": 3,
+      "required_tools": [
+        "Gmail.reply"
+      ],
+      "required_skills": [],
+      "before": {
+        "auto_domains": [
+          "general_business"
+        ],
+        "project_preflight": "PASS",
+        "required_sources": 10,
+        "routed_packs": 1,
+        "hard_gates": 3
+      }
+    },
+    {
+      "id": "gmail_send",
+      "request": "Send this email to the customer",
+      "return_code": 0,
+      "expected_domain": "operations",
+      "domains": [
+        "operations"
+      ],
+      "route_aligned": true,
+      "request_scope": "external_mutation",
+      "preflight_mode": "FULL",
+      "full_preflight_triggers": [
+        "external_mutation"
+      ],
+      "project_preflight": "PASS",
+      "owner_surface": "internal_unless_true_blocker",
+      "required_sources": 11,
+      "routed_packs": 2,
+      "hard_gates": 3,
+      "required_tools": [
+        "Gmail.send_message"
+      ],
+      "required_skills": [],
+      "before": {
+        "auto_domains": [
+          "general_business"
+        ],
+        "project_preflight": "PASS",
+        "required_sources": 10,
+        "routed_packs": 1,
+        "hard_gates": 3
+      }
+    },
+    {
+      "id": "owner_brief",
+      "request": "Prepare the owner morning brief",
+      "return_code": 0,
+      "expected_domain": "operations",
+      "domains": [
+        "operations"
+      ],
+      "route_aligned": true,
+      "request_scope": "internal_mutation",
+      "preflight_mode": "FAST_PATH",
+      "full_preflight_triggers": [],
+      "project_preflight": "PASS",
+      "owner_surface": "internal_unless_true_blocker",
+      "required_sources": 5,
+      "routed_packs": 1,
+      "hard_gates": 2,
+      "required_tools": [
+        "scripts/vfops_loop.py brief"
+      ],
+      "required_skills": [],
+      "before": {
+        "auto_domains": [
+          "general_business"
+        ],
+        "project_preflight": "PASS",
+        "required_sources": 10,
+        "routed_packs": 1,
+        "hard_gates": 3
+      }
+    },
+    {
+      "id": "drive_artifact",
+      "request": "Save this internal artifact to Google Drive",
+      "return_code": 0,
+      "expected_domain": "operations",
+      "domains": [
+        "operations"
+      ],
+      "route_aligned": true,
+      "request_scope": "external_mutation",
+      "preflight_mode": "FULL",
+      "full_preflight_triggers": [
+        "external_mutation"
+      ],
+      "project_preflight": "PASS",
+      "owner_surface": "internal_unless_true_blocker",
+      "required_sources": 11,
+      "routed_packs": 2,
+      "hard_gates": 3,
+      "required_tools": [
+        "Google-drive.create_file"
+      ],
+      "required_skills": [],
+      "before": {
+        "auto_domains": [
+          "general_business"
+        ],
+        "project_preflight": "PASS",
+        "required_sources": 10,
+        "routed_packs": 1,
+        "hard_gates": 3
+      }
+    },
+    {
+      "id": "dcc_launch",
+      "request": "Launch Maya for this modeling task",
+      "return_code": 0,
+      "expected_domain": "production",
+      "domains": [
+        "production"
+      ],
+      "route_aligned": true,
+      "request_scope": "local_routine",
+      "preflight_mode": "FAST_PATH",
+      "full_preflight_triggers": [],
+      "project_preflight": "PASS",
+      "owner_surface": "internal_unless_true_blocker",
+      "required_sources": 6,
+      "routed_packs": 1,
+      "hard_gates": 2,
+      "required_tools": [
+        "creative-craft:maya"
+      ],
+      "required_skills": [
+        "vf-dcc-modeling-craft"
+      ],
+      "before": {
+        "auto_domains": [
+          "general_business"
+        ],
+        "project_preflight": "PASS",
+        "required_sources": 10,
+        "routed_packs": 1,
+        "hard_gates": 3
+      }
+    },
+    {
+      "id": "dcc_task",
+      "request": "Model this part in Maya",
+      "return_code": 0,
+      "expected_domain": "production",
+      "domains": [
+        "production"
+      ],
+      "route_aligned": true,
+      "request_scope": "local_routine",
+      "preflight_mode": "FAST_PATH",
+      "full_preflight_triggers": [],
+      "project_preflight": "PASS",
+      "owner_surface": "internal_unless_true_blocker",
+      "required_sources": 6,
+      "routed_packs": 1,
+      "hard_gates": 2,
+      "required_tools": [
+        "creative-craft:maya"
+      ],
+      "required_skills": [
+        "vf-dcc-modeling-craft"
+      ],
+      "before": {
+        "auto_domains": [
+          "general_business"
+        ],
+        "project_preflight": "PASS",
+        "required_sources": 10,
+        "routed_packs": 1,
+        "hard_gates": 3
+      }
+    },
+    {
+      "id": "cad_readonly",
+      "request": "Inspect this CAD model read only",
+      "return_code": 0,
+      "expected_domain": "production",
+      "domains": [
+        "production"
+      ],
+      "route_aligned": true,
+      "request_scope": "read_only",
+      "preflight_mode": "FAST_PATH",
+      "full_preflight_triggers": [],
+      "project_preflight": "PASS",
+      "owner_surface": "internal_unless_true_blocker",
+      "required_sources": 6,
+      "routed_packs": 1,
+      "hard_gates": 2,
+      "required_tools": [
+        "scripts/vf_fabrication_router.py"
+      ],
+      "required_skills": [
+        "vf-cad-design-craft"
+      ],
+      "before": {
+        "auto_domains": [
+          "production"
+        ],
+        "project_preflight": "PASS",
+        "required_sources": 15,
+        "routed_packs": 4,
+        "hard_gates": 6
+      }
+    },
+    {
+      "id": "cad_build",
+      "request": "Build a printable CAD model from these verified dimensions",
+      "return_code": 0,
+      "expected_domain": "production",
+      "domains": [
+        "production"
+      ],
+      "route_aligned": true,
+      "request_scope": "local_routine",
+      "preflight_mode": "FAST_PATH",
+      "full_preflight_triggers": [],
+      "project_preflight": "PASS",
+      "owner_surface": "internal_unless_true_blocker",
+      "required_sources": 6,
+      "routed_packs": 1,
+      "hard_gates": 3,
+      "required_tools": [
+        "scripts/vf_fabrication_router.py"
+      ],
+      "required_skills": [
+        "vf-cad-design-craft"
+      ],
+      "before": {
+        "auto_domains": [
+          "production"
+        ],
+        "project_preflight": "PASS",
+        "required_sources": 15,
+        "routed_packs": 4,
+        "hard_gates": 6
+      }
+    },
+    {
+      "id": "research_update",
+      "request": "Research the latest update for this tool",
+      "return_code": 0,
+      "expected_domain": "research",
+      "domains": [
+        "research"
+      ],
+      "route_aligned": true,
+      "request_scope": "read_only",
+      "preflight_mode": "FAST_PATH",
+      "full_preflight_triggers": [],
+      "project_preflight": "PASS",
+      "owner_surface": "internal_unless_true_blocker",
+      "required_sources": 4,
+      "routed_packs": 1,
+      "hard_gates": 3,
+      "required_tools": [
+        "WebSearch"
+      ],
+      "required_skills": [
+        "vfresearch"
+      ],
+      "before": {
+        "auto_domains": [
+          "research"
+        ],
+        "project_preflight": "PASS",
+        "required_sources": 10,
+        "routed_packs": 1,
+        "hard_gates": 3
+      }
+    },
+    {
+      "id": "internal_status",
+      "request": "Update internal operational status",
+      "return_code": 0,
+      "expected_domain": "operations",
+      "domains": [
+        "operations"
+      ],
+      "route_aligned": true,
+      "request_scope": "internal_mutation",
+      "preflight_mode": "FAST_PATH",
+      "full_preflight_triggers": [],
+      "project_preflight": "PASS",
+      "owner_surface": "internal_unless_true_blocker",
+      "required_sources": 5,
+      "routed_packs": 1,
+      "hard_gates": 2,
+      "required_tools": [
+        "office/control-plane"
+      ],
+      "required_skills": [],
+      "before": {
+        "auto_domains": [
+          "general_business"
+        ],
+        "project_preflight": "PASS",
+        "required_sources": 10,
+        "routed_packs": 1,
+        "hard_gates": 3
+      }
+    }
+  ],
+  "negative_controls": [
+    {
+      "request": "Set the customer price in ₪",
+      "required_trigger": "commercial_or_spend",
+      "preflight_mode": "FULL",
+      "full_preflight_triggers": [
+        "unknown_domain",
+        "commercial_or_spend"
+      ],
+      "pass": true
+    },
+    {
+      "request": "Purchase a new subscription for this tool",
+      "required_trigger": "commercial_or_spend",
+      "preflight_mode": "FULL",
+      "full_preflight_triggers": [
+        "unknown_domain",
+        "commercial_or_spend"
+      ],
+      "pass": true
+    },
+    {
+      "request": "Delete this internal file",
+      "required_trigger": "destructive_or_permission",
+      "preflight_mode": "FULL",
+      "full_preflight_triggers": [
+        "unknown_domain",
+        "destructive_or_permission"
+      ],
+      "pass": true
+    },
+    {
+      "request": "Change access permission on this file",
+      "required_trigger": "destructive_or_permission",
+      "preflight_mode": "FULL",
+      "full_preflight_triggers": [
+        "unknown_domain",
+        "destructive_or_permission"
+      ],
+      "pass": true
+    },
+    {
+      "request": "Use this private customer data in the artifact",
+      "required_trigger": "rights_or_privacy",
+      "preflight_mode": "FULL",
+      "full_preflight_triggers": [
+        "unknown_domain",
+        "rights_or_privacy"
+      ],
+      "pass": true
+    },
+    {
+      "request": "Send this STL to the printer and start printing",
+      "required_trigger": "physical_print",
+      "preflight_mode": "FULL",
+      "full_preflight_triggers": [
+        "physical_print"
+      ],
+      "pass": true
+    },
+    {
+      "request": "Summarize this",
+      "required_trigger": "unknown_domain",
+      "preflight_mode": "FULL",
+      "full_preflight_triggers": [
+        "unknown_domain"
+      ],
+      "pass": true
+    }
+  ],
+  "summary": {
+    "route_aligned": 14,
+    "general_business_fallback": 0,
+    "fast_path_count": 7,
+    "full_preflight_count": 7,
+    "required_tools_populated": 10,
+    "owner_surface_internal_unless_true_blocker": 14,
+    "creative_flows_fail_closed_without_evidence": 4,
+    "fast_path_before_mean_sources": 11.429,
+    "fast_path_after_mean_sources": 5.429,
+    "fast_path_source_reduction_percent": 52.5,
+    "fast_path_before_mean_gates": 3.857,
+    "fast_path_after_mean_gates": 2.286,
+    "fast_path_gate_reduction_percent": 40.7,
+    "cad_readonly_and_build_scope_distinct": true,
+    "negative_controls_full": true
+  },
+  "acceptance": {
+    "known_flow_generic_fallbacks": 0,
+    "routine_low_risk_owner_prompts": 0,
+    "external_mutations_remain_full": true,
+    "creative_publication_remains_full_and_fail_closed": true,
+    "unknown_or_sensitive_requests_remain_full": true,
+    "postflight_still_required": true
+  }
+}

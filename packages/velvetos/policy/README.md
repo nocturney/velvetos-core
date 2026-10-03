@@ -106,3 +106,17 @@ Stage 4A is observation-only. It does not change request routing, authorization,
 - The report records the required gate dispositions `KEEP`, `INTERNALIZE`, `MERGE`, `ACTION_SCOPED`, and `REMOVE_AS_DUPLICATE` before any behavior changes; the explicit duplicate is `general_business.baseline_authority`, because the global baseline has already been resolved.
 - `check-project-request-gate.py` protects the historical snapshot shape/metrics; it does not regenerate the baseline after later fast-path changes.
 - Stage 4B target: known read-only / routine LOW-risk / already-authorized requests route with a minimal baseline and internal receipt; full preflight remains for unknown/high-risk/external-sensitive cases.
+
+## Stage 4B — Project Request Fast Path active
+
+Stage 4B keeps `project.request.preflight` as the single mandatory router but makes the amount of preflight scope-aware. The fast path is not a bypass and does not create a second authority engine.
+
+- `FAST_PATH` is limited to known `operations`, `production` and `research` routes with scope `read_only`, `local_routine` or `internal_mutation`, and only when no full-preflight trigger is present.
+- The fast path loads three universal authority files plus one domain profile instead of the nine-source global baseline plus every domain authority. It still validates every selected path and still requires domain/action postflight before a completion claim.
+- `FULL` remains mandatory for external mutation, unknown domain, creative/publication, commercial/spend, rights/privacy, destructive/permission, physical-print and authority-conflict cases. `stale_critical_evidence` and `new_route` remain reserved full-preflight triggers for runtime/router callers.
+- Natural-language routing now recognizes Instagram carousel as creative, Gmail/email/owner brief/Google Drive/internal status as operations, and Maya/Blender/3ds Max/ZBrush/DCC/3D-modeling as production.
+- Project receipts now include `request_scope`, `preflight_mode`, `full_preflight_triggers` and `owner_surface`. The owner surface is `internal_unless_true_blocker`: a routine PASS, repair, retry, compatibility check or internal evidence blocker is not itself an owner prompt.
+- `required_tools` / `required_skills` now expose canonical routes for Gmail, Google Drive, Office/owner brief, Research Seat/WebSearch, Creative Craft Maya/DCC and the Fabrication Router instead of leaving known routes blank.
+- CAD read-only and CAD build are now scope-distinct: read-only keeps only routing/specialist gates; artifact build additionally keeps `verified_specs`; neither pays printer-control, price or print-authority gates until an actual physical-print/commercial action exists.
+- `reports/stage4b-project-request-fast-path.json` replays the same 14 Stage 4A flows: 14/14 domain-aligned, 0 generic fallbacks, 7 `FAST_PATH` / 7 `FULL`, 10/14 with explicit tool routes, and all 14 with internal-by-default owner surface. The seven fast-path flows reduce mean authority sources from 11.429 to 5.429 (52.5%) and mean hard gates from 3.857 to 2.286 (40.7%).
+- Seven negative controls prove price/spend, destructive/permission, privacy, physical print and unknown requests remain `FULL`; the four creative flows remain `FULL` and fail closed without exact creative evidence.
