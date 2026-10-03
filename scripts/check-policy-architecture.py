@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,6 +23,8 @@ REPORTS = POLICY_DIR / "reports"
 ACTION_RECEIPT_SCHEMA = SCHEMAS / "action-receipt.schema.json"
 ACTION_RECEIPT_VECTORS = POLICY_DIR / "action-receipt-test-vectors.json"
 ACTION_RECEIPT_VALIDATOR = ROOT / "scripts" / "vf_action_receipt.py"
+STAGE4_ACCEPTANCE = REPORTS / "stage4-acceptance.json"
+STAGE4_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage4-acceptance.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -33,6 +37,7 @@ EXPECTED_REPORTS = {
     "stage2-sensor-registry-audit.json",
     "stage3-preactivation-plan.json",
     "stage4d-instagram-happy-path-implementation.json",
+    "stage4-acceptance.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -608,6 +613,105 @@ def validate_registries() -> tuple[list[str], set[str]]:
                         "Stage 4D live negative control policy result mismatch", problems)
                 require(negative.get("readback_http") == 404 and negative.get("persistent_job_created") is False,
                         "Stage 4D live negative control persisted unexpectedly", problems)
+
+    require(STAGE4_ACCEPTANCE.is_file(), "Stage 4 acceptance receipt missing", problems)
+    require(STAGE4_ACCEPTANCE_GENERATOR.is_file(), "Stage 4 acceptance generator missing", problems)
+    if STAGE4_ACCEPTANCE.is_file():
+        stage4 = load(STAGE4_ACCEPTANCE)
+        require(stage4.get("schema") == "velvetos.stage4-acceptance.v1" and stage4.get("stage") == "4",
+                "Stage 4 acceptance schema/stage mismatch", problems)
+        require(stage4.get("prepared_against_main_sha") == "5a5ebcb655856e758aed2b80ffcb0b683d1b18b3",
+                "Stage 4 acceptance main SHA drift", problems)
+        require(stage4.get("behavior_change") is False and stage4.get("stage4_gate") == "PASS",
+                "Stage 4 gate must remain observation-only PASS", problems)
+        criteria = stage4.get("acceptance_criteria") or {}
+        expected_criteria = {
+            "project_request_routing",
+            "single_authority_per_external_effect",
+            "routine_instagram_zero_owner_prompts_one_policy_decision_verified_publish",
+            "routine_gmail_not_blocked_by_approval_ceremony",
+            "unrelated_stale_runtime_evidence_does_not_block_code",
+            "bounded_cost_reuses_owner_approval_without_unbounded_spend",
+            "critical_guardrail_policy_coverage_preserved",
+            "main_full_sensor_suite_116_of_116",
+        }
+        require(set(criteria) == expected_criteria and all(criteria.get(key) is True for key in expected_criteria),
+                "Stage 4 acceptance criteria drift or fail", problems)
+        stage5_entry = stage4.get("stage5_entry") or {}
+        require(stage5_entry.get("allowed") is True
+                and stage5_entry.get("next_stage") == "Stage 5 — Context, Agents, Skills and Capability Locality",
+                "Stage 4 gate does not authorize Stage 5 entry", problems)
+        main_suite = stage4.get("main_full_suite") or {}
+        require(main_suite.get("head_sha") == "5a5ebcb655856e758aed2b80ffcb0b683d1b18b3"
+                and main_suite.get("workflow_run_id") == 37142530441
+                and main_suite.get("job_id") == 111259753445
+                and main_suite.get("conclusion") == "SUCCESS"
+                and main_suite.get("mode") == "full"
+                and main_suite.get("registered_sensors") == 116
+                and main_suite.get("passed_sensors") == 116
+                and main_suite.get("log_markers") == ["SENSORS 116 mode=full", "OK suite passed=116"],
+                "Stage 4 main full-suite evidence drift", problems)
+        routine = stage4.get("routine_operations") or {}
+        instagram_accept = routine.get("instagram") or {}
+        gmail_accept = routine.get("gmail") or {}
+        runtime_accept = routine.get("runtime_receipts") or {}
+        cost_accept = routine.get("cost") or {}
+        require(instagram_accept.get("owner_prompts") == 0
+                and instagram_accept.get("policy_decisions_per_publish_attempt") == 1
+                and instagram_accept.get("production_cutover") == "PASS"
+                and instagram_accept.get("provider_receipt_required") is True
+                and instagram_accept.get("live_readback_required") is True,
+                "Stage 4 Instagram acceptance drift", problems)
+        require(gmail_accept.get("owner_prompts") == 0
+                and gmail_accept.get("routine_vectors_all_allow") is True
+                and gmail_accept.get("transport_is_authorization") is False
+                and gmail_accept.get("commitment_still_owner_gated") is True,
+                "Stage 4 Gmail acceptance drift", problems)
+        require(runtime_accept.get("unrelated_stale_runtime_blocks_code") is False
+                and runtime_accept.get("real_dependency_still_fail_closed") is True,
+                "Stage 4 runtime-scope acceptance drift", problems)
+        require(cost_accept.get("active_envelopes") == 0
+                and cost_accept.get("spend_authorized_by_stage4g_implementation") is False
+                and cost_accept.get("matching_call_owner_prompts") == 0
+                and cost_accept.get("full_preflight_per_matching_call") is False
+                and cost_accept.get("exact_action_receipt_required") is True,
+                "Stage 4 cost-envelope acceptance drift", problems)
+        safety = stage4.get("safety_invariants") or {}
+        require(bool(safety) and all(value is True for value in safety.values()),
+                "Stage 4 safety invariant coverage drift", problems)
+        for name, source in (stage4.get("source_receipts") or {}).items():
+            require(isinstance(source, dict), f"Stage 4 source receipt {name} invalid", problems)
+            rel = source.get("path") if isinstance(source, dict) else None
+            source_path = ROOT / rel if isinstance(rel, str) else None
+            require(source_path is not None and source_path.is_file(), f"Stage 4 source receipt missing: {name}", problems)
+            if source_path is not None and source_path.is_file():
+                observed_hash = hashlib.sha256(source_path.read_bytes()).hexdigest()
+                require(source.get("sha256") == observed_hash, f"Stage 4 source receipt hash drift: {name}", problems)
+        if STAGE4_ACCEPTANCE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated = Path(td) / "stage4-acceptance.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE4_ACCEPTANCE_GENERATOR),
+                        "--prepared-against", stage4["prepared_against_main_sha"],
+                        "--captured-at", stage4["captured_at"],
+                        "--main-run-id", str(main_suite["workflow_run_id"]),
+                        "--main-job-id", str(main_suite["job_id"]),
+                        "--main-run-url", str(main_suite["run_url"]),
+                        "--output", str(regenerated),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0, "Stage 4 acceptance regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()), problems)
+                if proc.returncode == 0 and regenerated.is_file():
+                    require(regenerated.read_bytes() == STAGE4_ACCEPTANCE.read_bytes(),
+                            "Stage 4 acceptance receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)

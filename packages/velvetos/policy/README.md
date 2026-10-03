@@ -185,3 +185,20 @@ Stage 4G keeps `policy_id: cost.recurring.new` and `NO_NEW_RECURRING_COST` as th
 - `cost-envelope-test-vectors.json` covers 22 cases: 2 ALLOW, 10 REQUIRE_OWNER_APPROVAL/revalidation and 10 DENY. The matching cases prove `owner_prompt_count=0`, `full_preflight_per_call=false` and `exact_action_receipt_required=true`.
 - Generic `velvetos.action-receipt.v1` vectors prove an envelope-authorized cost call may skip a repeated owner gate while still requiring exact action binding.
 - `reports/stage4g-cost-envelopes.json` is reproducible and pins repository acceptance against pre-change `main` `f0df1c7ea28aad1cbaa9d4752bb84bc6035735d5`; it records `active_envelope_count=0`, `external_paid_calls_performed=0` and `spend_authorized_by_stage4g_implementation=false`.
+
+## Stage 4 Gate — Routine Operations & Policy Simplification CLOSED
+
+`reports/stage4-acceptance.json` closes Reform v2 Stage 4 against merged `main` `5a5ebcb655856e758aed2b80ffcb0b683d1b18b3` and GitHub full-suite run `37142530441` / job `111259753445` (`SENSORS 116 mode=full` → `OK suite passed=116`). The receipt is observation-only, hashes every Stage 4 source receipt plus `policy-registry.json`, and `check-policy-architecture.py` regenerates it byte-for-byte in CI.
+
+The gate is `PASS` on all eight integrated criteria:
+
+- Project Request routing: 14/14 known flows aligned, 0 generic fallbacks, routine LOW-risk owner prompts 0, sensitive/unknown paths still FULL.
+- One Authority Gate: each of the seven external effect classes has exactly one canonical effect-authority policy; Visible Text / CTA remain evidence-only and Project Request remains router-only.
+- Routine Instagram: 0 owner prompts, exactly one `instagram.publish` decision per publish attempt, live Worker cutover PASS, provider receipt + live readback retained.
+- Routine Gmail: owner brief / known-thread reply / routine forward stay at 0 owner prompts; commitment/price/spend/rights ambiguity remain owner-gated and provider receipt remains required.
+- Runtime receipts: unrelated stale runtime evidence does not block code-only work; a real declared live dependency still fails closed on stale/missing/malformed/non-healthy proof.
+- Cost envelopes: Stage 4G ships with 0 active envelopes and no spend authorization; matching owner-approved bounded calls reuse approval without repeated full preflight while retaining fresh meter, hard cap and exact-action receipt.
+- Critical guardrails remain represented by canonical effect authorities for cost, Instagram, Gmail, customer WhatsApp, advertising/boost, irreversible delete and permission mutation.
+- The post-4G main full sensor suite passed 116/116.
+
+Stage 5 entry is therefore allowed. Constraint: do not build a second Agent Harness; reduce default context and capability loading to the smallest sufficient local authority while preserving deterministic routing and the Stage 4 safety boundaries.
