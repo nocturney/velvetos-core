@@ -13,15 +13,44 @@ ROOT = Path(__file__).resolve().parents[1]
 GATE = ROOT / "packages/velvetos/PROJECT-REQUEST-GATE.md"
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
 CLI = ROOT / "scripts/vf_project_preflight.py"
+FRICTION_BASELINE = ROOT / "packages/velvetos/policy/reports/stage4a-friction-baseline.json"
 
 
 def fail(msg: str) -> None:
     print(f"FAIL project-request-gate: {msg}", file=sys.stderr)
     raise SystemExit(1)
 
-for path in (GATE, MANIFEST, CLI):
+for path in (GATE, MANIFEST, CLI, FRICTION_BASELINE):
     if not path.is_file():
         fail(f"missing {path.relative_to(ROOT)}")
+
+baseline = json.loads(FRICTION_BASELINE.read_text(encoding="utf-8"))
+if baseline.get("schema") != "velvetos.stage4a-friction-baseline.v1" or baseline.get("stage") != "4A":
+    fail("Stage 4A friction baseline schema/stage mismatch")
+if baseline.get("behavior_change") is not False:
+    fail("Stage 4A friction baseline must remain observation-only")
+if baseline.get("prepared_against_main_sha") != "9989f0ffd11b97a28da732c9fa6ddd234ba51d35":
+    fail("Stage 4A friction baseline source main SHA drift")
+summary = baseline.get("summary") or {}
+expected_stage4a = {
+    "sampled_flows": 14,
+    "baseline_authorities_loaded_for_every_request": 9,
+    "auto_route_aligned": 6,
+    "general_business_fallback": 8,
+    "project_preflight_blocked": 3,
+    "max_required_sources": 22,
+    "max_hard_gates": 11,
+    "gmail_transport_ready": True,
+    "maya_readiness": "READY_ACCEPTED_SURFACE",
+}
+for key, value in expected_stage4a.items():
+    if summary.get(key) != value:
+        fail(f"Stage 4A friction baseline drift: {key} expected {value!r}, got {summary.get(key)!r}")
+if len(baseline.get("flows") or []) != 14:
+    fail("Stage 4A friction baseline must retain exactly 14 sampled flows")
+classes = {row.get("disposition") for row in baseline.get("gate_classification", []) if isinstance(row, dict)}
+if classes != {"KEEP", "INTERNALIZE", "MERGE", "ACTION_SCOPED", "REMOVE_AS_DUPLICATE"}:
+    fail(f"Stage 4A gate classification coverage mismatch: {sorted(classes)}")
 
 manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
 if manifest.get("status") != "mandatory" or manifest.get("preflightMode") != "fail_closed":
