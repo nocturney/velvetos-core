@@ -1,8 +1,8 @@
 {
   "schema": "velvetos.stage4d-instagram-happy-path.implementation.v1",
   "stage": "4D",
-  "prepared_against_main_sha": "7056c4fe48379935b88794c5db88efced72b5a93",
-  "captured_at": "2026-10-03T18:51:03.6015760+03:00",
+  "prepared_against_main_sha": "44aef61e7280f3122d6df043b10ee4ad02e2fcb3",
+  "captured_at": "2026-10-03T19:07:49.5934218+03:00",
   "policy_id": "instagram.publish",
   "policy_version": 2,
   "content_ready": {
@@ -53,7 +53,7 @@
     "ambiguous_after_publish_boundary": "RECONCILE_REQUIRED"
   },
   "compatibility": {
-    "old_policy_context_before": "2026-10-04T00:00:00Z",
+    "old_policy_context_before": "2026-10-03T15:58:09.874Z",
     "new_jobs_require_content_ready_after_cutoff": true
   },
   "tests": [

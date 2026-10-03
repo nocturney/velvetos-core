@@ -89,7 +89,7 @@
       "NOT_APPLICABLE"
     ],
     "legacy_gate_compatibility": {
-      "jobs_created_before": "2026-10-04T00:00:00Z",
+      "jobs_created_before": "2026-10-03T15:58:09.874Z",
       "required_gates": [
         "transport",
         "visible_text",
