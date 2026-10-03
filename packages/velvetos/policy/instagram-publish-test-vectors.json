@@ -1,5 +1,5 @@
 {
-  "vector_version": 1,
+  "vector_version": 2,
   "base_context": {
     "channel": "instagram",
     "publication_type": "organic",
@@ -24,7 +24,68 @@
     },
     "human_approval": null,
     "legacy_authorization": null,
-    "job_created_at": "2026-09-27T12:00:00Z"
+    "job_created_at": "2026-10-04T00:00:01Z",
+    "content_ready": {
+      "schema_version": "velvet.content_ready.v1",
+      "status": "PASS",
+      "bindings": {
+        "content_id": "G100",
+        "package_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "copy_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "media_sha256s": [
+          "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        ]
+      },
+      "evidence": {
+        "product_truth": {
+          "status": "PASS",
+          "ref": "fixture://product_truth",
+          "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+          "failure_mode": null,
+          "reason": null
+        },
+        "brand": {
+          "status": "PASS",
+          "ref": "fixture://brand",
+          "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+          "failure_mode": null,
+          "reason": null
+        },
+        "copy": {
+          "status": "PASS",
+          "ref": "fixture://copy",
+          "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+          "failure_mode": null,
+          "reason": null
+        },
+        "visual_qa": {
+          "status": "PASS",
+          "ref": "fixture://visual_qa",
+          "sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "failure_mode": null,
+          "reason": null
+        },
+        "rights_privacy": {
+          "status": "PASS",
+          "ref": "fixture://rights_privacy",
+          "sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+          "failure_mode": null,
+          "reason": null
+        },
+        "render_transport": {
+          "status": "PASS",
+          "ref": "fixture://render_transport",
+          "sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+          "failure_mode": null,
+          "reason": null
+        }
+      },
+      "repair_targets": [],
+      "retry_targets": [],
+      "hard_blockers": [],
+      "owner_surface": "NONE",
+      "validated_at": "2026-10-03T15:30:00Z"
+    }
   },
   "cases": [
     {
@@ -81,14 +142,14 @@
       "expected_reason": "EXACT_OWNER_APPROVAL"
     },
     {
-      "id": "gate-failure-denies",
+      "id": "content-ready-failure-denies",
       "patch": {
-        "gates": {
-          "exact_final_preflight": "FAIL"
+        "content_ready": {
+          "status": "FAIL"
         }
       },
       "expected_decision": "DENY",
-      "expected_reason": "GATE_NOT_PASS:exact_final_preflight"
+      "expected_reason": "CONTENT_READY_NOT_PASS"
     },
     {
       "id": "boost-forbidden",
@@ -134,7 +195,8 @@
           "content_id": "G100",
           "package_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         },
-        "copy_sha256": null
+        "copy_sha256": null,
+        "job_created_at": "2026-09-27T12:00:00Z"
       },
       "expected_decision": "ALLOW",
       "expected_reason": "LEGACY_COMPATIBILITY"
@@ -159,8 +221,12 @@
     {
       "id": "product-truth-not-applicable",
       "patch": {
-        "gates": {
-          "product_truth": "NOT_APPLICABLE"
+        "content_ready": {
+          "evidence": {
+            "product_truth": {
+              "status": "NOT_APPLICABLE"
+            }
+          }
         }
       },
       "expected_decision": "ALLOW",
@@ -181,6 +247,51 @@
       },
       "expected_decision": "DENY",
       "expected_reason": "MUTATION_TOOL_NOT_ALLOWED"
+    },
+    {
+      "id": "content-ready-required-after-cutover",
+      "patch": {
+        "content_ready": null
+      },
+      "expected_decision": "DENY",
+      "expected_reason": "CONTENT_READY_REQUIRED"
+    },
+    {
+      "id": "content-ready-binding-mismatch-denies",
+      "patch": {
+        "content_ready": {
+          "bindings": {
+            "package_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+          }
+        }
+      },
+      "expected_decision": "DENY",
+      "expected_reason": "CONTENT_READY_BINDING_MISMATCH"
+    },
+    {
+      "id": "content-ready-rights-not-pass-denies",
+      "patch": {
+        "content_ready": {
+          "evidence": {
+            "rights_privacy": {
+              "status": "UNKNOWN",
+              "failure_mode": "HARD_BLOCKER",
+              "reason": "permission unknown"
+            }
+          }
+        }
+      },
+      "expected_decision": "DENY",
+      "expected_reason": "CONTENT_READY_EVIDENCE_NOT_PASS:rights_privacy"
+    },
+    {
+      "id": "bounded-old-gates-compatibility",
+      "patch": {
+        "content_ready": null,
+        "job_created_at": "2026-10-03T23:00:00Z"
+      },
+      "expected_decision": "ALLOW",
+      "expected_reason": "CONTENT_READY_LEGACY_GATE_COMPATIBILITY"
     }
   ]
 }

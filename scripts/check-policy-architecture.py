@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -31,6 +32,7 @@ EXPECTED_REPORTS = {
     "migration-map.json",
     "stage2-sensor-registry-audit.json",
     "stage3-preactivation-plan.json",
+    "stage4d-instagram-happy-path-implementation.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -427,6 +429,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         "artifact-retention.schema.json",
         "instagram-publish.schema.json",
         "instagram-publish-context.schema.json",
+        "content-ready.schema.json",
     }
     actual_schemas = {p.name for p in SCHEMAS.glob("*.json")}
     require(expected_schemas <= actual_schemas, f"missing schemas {sorted(expected_schemas-actual_schemas)}", problems)
@@ -441,7 +444,12 @@ def validate_registries() -> tuple[list[str], set[str]]:
     if instagram_policy_path.is_file():
         instagram_policy = load(instagram_policy_path)
         require(instagram_policy.get("policy_id") == "instagram.publish", "instagram.publish policy_id mismatch", problems)
-        require(instagram_policy.get("version") == 1, "instagram.publish version mismatch", problems)
+        require(instagram_policy.get("version") == 2, "instagram.publish Stage 4D version mismatch", problems)
+        require(instagram_policy.get("required_gates") == ["content_ready"], "instagram.publish must consume one CONTENT_READY gate", problems)
+        content_ready_cfg = instagram_policy.get("content_ready") or {}
+        require(content_ready_cfg.get("schema_version") == "velvet.content_ready.v1", "instagram.publish CONTENT_READY schema binding mismatch", problems)
+        require(content_ready_cfg.get("required_evidence") == ["product_truth", "brand", "copy", "visual_qa", "rights_privacy", "render_transport"], "instagram.publish CONTENT_READY evidence set drift", problems)
+        require((content_ready_cfg.get("legacy_gate_compatibility") or {}).get("jobs_created_before") == "2026-10-04T00:00:00Z", "CONTENT_READY compatibility cutoff drift", problems)
         require(instagram_policy.get("status") == "active", "instagram.publish machine policy must be active after runtime cutover", problems)
         require(instagram_policy.get("decision_values") == ["ALLOW", "DENY", "REQUIRE_OWNER_APPROVAL"], "instagram.publish decision values mismatch", problems)
         row = next((x for x in rows if x.get("policy_id") == "instagram.publish"), None)
@@ -454,6 +462,11 @@ def validate_registries() -> tuple[list[str], set[str]]:
             "scripts/vf_instagram_publish_policy.mjs",
             "packages/vfigos/cloudflare-publisher/src/policy_gate.js",
             "packages/vfigos/cloudflare-publisher/test-policy-gate.mjs",
+            "packages/vfigos/cloudflare-publisher/test-format-contracts.mjs",
+            "packages/vfigos/routine_publish.py",
+            "packages/velvetos/policy/schema/content-ready.schema.json",
+            "packages/velvetos/policy/content-ready-test-vectors.json",
+            "scripts/vf_content_ready.py",
         ):
             require(existing_repo_path(rel_path), f"instagram.publish component missing: {rel_path}", problems)
         worker_path = ROOT / "packages" / "vfigos" / "cloudflare-publisher" / "src" / "index.js"
@@ -482,11 +495,50 @@ def validate_registries() -> tuple[list[str], set[str]]:
         node_tests = [
             ROOT / "packages" / "velvetos" / "policy" / "test-instagram-publish-policy.mjs",
             ROOT / "packages" / "vfigos" / "cloudflare-publisher" / "test-policy-gate.mjs",
+            ROOT / "packages" / "vfigos" / "cloudflare-publisher" / "test-format-contracts.mjs",
         ]
         for test in node_tests:
             if test.is_file():
                 proc = subprocess.run(["node", str(test)], cwd=ROOT, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=30)
                 require(proc.returncode == 0, f"Node policy test failed {test.relative_to(ROOT)}: " + (proc.stderr or proc.stdout).strip()[:500], problems)
+        for content_test, label in ((ROOT / "scripts" / "vf_content_ready.py", "CONTENT_READY"), (ROOT / "packages" / "vfigos" / "routine_publish.py", "routine Instagram happy path")):
+            if content_test.is_file():
+                env = dict(os.environ)
+                env["PYTHONPATH"] = str(ROOT / "packages") + os.pathsep + str(ROOT / "scripts")
+                proc = subprocess.run([sys.executable, str(content_test), "--self-test"], cwd=ROOT, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=30, env=env)
+                require(proc.returncode == 0, f"{label} self-test failed: " + (proc.stderr or proc.stdout).strip()[:500], problems)
+        policy_gate_path = ROOT / "packages" / "vfigos" / "cloudflare-publisher" / "src" / "policy_gate.js"
+        if policy_gate_path.is_file():
+            gate_src = policy_gate_path.read_text(encoding="utf-8")
+            require("content_ready:" in gate_src, "Cloudflare policy context must project CONTENT_READY", problems)
+        stage4d_path = REPORTS / "stage4d-instagram-happy-path-implementation.json"
+        require(stage4d_path.is_file(), "Stage 4D implementation report missing", problems)
+        if stage4d_path.is_file():
+            stage4d = load(stage4d_path)
+            require(stage4d.get("schema") == "velvetos.stage4d-instagram-happy-path.implementation.v1", "Stage 4D report schema mismatch", problems)
+            require(stage4d.get("prepared_against_main_sha") == "7056c4fe48379935b88794c5db88efced72b5a93", "Stage 4D base SHA drift", problems)
+            require(stage4d.get("repository_acceptance") == "PASS", "Stage 4D repository acceptance is not PASS", problems)
+            require(stage4d.get("policy_version") == 2, "Stage 4D report policy version mismatch", problems)
+            happy = stage4d.get("routine_happy_path") or {}
+            require(happy.get("formats") == ["image", "carousel", "reel", "story"], "Stage 4D routine format coverage drift", problems)
+            require(happy.get("per_asset_owner_approval") is False and happy.get("policy_decisions_per_publish_attempt") == 1,
+                    "Stage 4D routine owner/policy decision contract drift", problems)
+            failure = stage4d.get("failure_routing") or {}
+            require(failure.get("quality_failure") == "TARGETED_REPAIR" and failure.get("transport_failure") == "RETRY_INTERNAL"
+                    and failure.get("owner_prompt_on_quality_failure") is False,
+                    "Stage 4D internal repair/retry contract drift", problems)
+            direct = stage4d.get("immediate_direct_mutation") or {}
+            require(direct.get("signed_delivery_approval_preserved") is True
+                    and direct.get("receipt_schema") == "velvet.delivery_approval.v1"
+                    and direct.get("standing_routine_scheduler_does_not_mint_direct_receipt") is True,
+                    "Stage 4D direct mutation boundary drift", problems)
+            cutover = stage4d.get("production_cutover") or {}
+            require(cutover.get("status") in {"PENDING_AFTER_MERGE", "PASS"}, "Stage 4D cutover status invalid", problems)
+            if cutover.get("status") == "PASS":
+                require(isinstance(cutover.get("live_worker_version_id"), str) and bool(cutover.get("live_worker_version_id")),
+                        "Stage 4D live cutover missing Worker version", problems)
+                require((cutover.get("health_readback") or {}).get("policy_version") == 2,
+                        "Stage 4D live cutover health policy version mismatch", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)

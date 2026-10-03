@@ -13,25 +13,56 @@
     "media_sha256s",
     "risk_class",
     "standing_authorization",
-    "forbidden_effects",
-    "gates"
+    "forbidden_effects"
   ],
   "properties": {
-    "channel": {"const": "instagram"},
-    "publication_type": {"const": "organic"},
-    "mutation_tool": {"type": "string", "minLength": 1},
-    "content_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{3,120}$"},
-    "package_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-    "copy_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "channel": {
+      "const": "instagram"
+    },
+    "publication_type": {
+      "const": "organic"
+    },
+    "mutation_tool": {
+      "type": "string",
+      "minLength": 1
+    },
+    "content_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._-]{3,120}$"
+    },
+    "package_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "copy_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
     "media_sha256s": {
       "type": "array",
       "minItems": 1,
       "maxItems": 10,
-      "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
     },
-    "risk_class": {"enum": ["LOW", "MEDIUM", "HIGH"]},
-    "standing_authorization": {"type": "boolean"},
-    "forbidden_effects": {"type": "array", "items": {"type": "string"}},
+    "risk_class": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ]
+    },
+    "standing_authorization": {
+      "type": "boolean"
+    },
+    "forbidden_effects": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "gates": {
       "type": "object",
       "required": [
@@ -45,18 +76,86 @@
       ],
       "additionalProperties": false,
       "properties": {
-        "transport": {"enum": ["PASS", "NOT_APPLICABLE", "FAIL"]},
-        "visible_text": {"enum": ["PASS", "NOT_APPLICABLE", "FAIL"]},
-        "exact_final_preflight": {"enum": ["PASS", "NOT_APPLICABLE", "FAIL"]},
-        "visual_standard": {"enum": ["PASS", "NOT_APPLICABLE", "FAIL"]},
-        "rights_privacy": {"enum": ["PASS", "NOT_APPLICABLE", "FAIL"]},
-        "brand": {"enum": ["PASS", "NOT_APPLICABLE", "FAIL"]},
-        "product_truth": {"enum": ["PASS", "NOT_APPLICABLE", "FAIL"]}
+        "transport": {
+          "enum": [
+            "PASS",
+            "NOT_APPLICABLE",
+            "FAIL"
+          ]
+        },
+        "visible_text": {
+          "enum": [
+            "PASS",
+            "NOT_APPLICABLE",
+            "FAIL"
+          ]
+        },
+        "exact_final_preflight": {
+          "enum": [
+            "PASS",
+            "NOT_APPLICABLE",
+            "FAIL"
+          ]
+        },
+        "visual_standard": {
+          "enum": [
+            "PASS",
+            "NOT_APPLICABLE",
+            "FAIL"
+          ]
+        },
+        "rights_privacy": {
+          "enum": [
+            "PASS",
+            "NOT_APPLICABLE",
+            "FAIL"
+          ]
+        },
+        "brand": {
+          "enum": [
+            "PASS",
+            "NOT_APPLICABLE",
+            "FAIL"
+          ]
+        },
+        "product_truth": {
+          "enum": [
+            "PASS",
+            "NOT_APPLICABLE",
+            "FAIL"
+          ]
+        }
       }
     },
-    "human_approval": {"type": ["object", "null"]},
-    "legacy_authorization": {"type": ["object", "null"]},
-    "job_created_at": {"type": ["string", "null"], "format": "date-time"}
+    "human_approval": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "legacy_authorization": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "job_created_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "content_ready": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "content-ready.schema.json"
+        }
+      ]
+    }
   },
   "additionalProperties": true
 }

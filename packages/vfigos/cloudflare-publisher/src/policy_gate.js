@@ -14,6 +14,8 @@ async function sha256Text(value) {
 function mutationTool(kind) {
   if (kind === "image") return "publish_image";
   if (kind === "carousel") return "publish_carousel";
+  if (kind === "reel") return "publish_reel";
+  if (kind === "story") return "publish_story";
   return "unsupported";
 }
 
@@ -37,7 +39,8 @@ export async function buildInstagramPublishContext(job, env) {
     risk_class: supplied?.risk_class ?? null,
     standing_authorization: String(env?.STANDING_AUTHORIZATION ?? "").toLowerCase() === "true",
     forbidden_effects: Array.isArray(supplied?.forbidden_effects) ? supplied.forbidden_effects : [],
-    gates: supplied?.gates && typeof supplied.gates === "object" ? supplied.gates : {},
+    content_ready: supplied?.content_ready && typeof supplied.content_ready === "object" ? supplied.content_ready : null,
+    gates: supplied?.gates && typeof supplied.gates === "object" ? supplied.gates : {}, // bounded Stage 4D compatibility only
     human_approval: supplied?.human_approval ?? null,
     legacy_authorization: supplied ? null : auth,
     job_created_at: isoSeconds(job?.created_at),

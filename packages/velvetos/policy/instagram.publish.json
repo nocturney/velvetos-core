@@ -1,6 +1,6 @@
 {
   "policy_id": "instagram.publish",
-  "version": 1,
+  "version": 2,
   "status": "active",
   "decision_values": [
     "ALLOW",
@@ -33,17 +33,10 @@
     "media_sha256s"
   ],
   "required_gates": [
-    "transport",
-    "visible_text",
-    "exact_final_preflight",
-    "visual_standard",
-    "rights_privacy",
-    "brand",
-    "product_truth"
+    "content_ready"
   ],
   "gate_pass_values": [
-    "PASS",
-    "NOT_APPLICABLE"
+    "PASS"
   ],
   "authorization": {
     "default": "REQUIRE_OWNER_APPROVAL",
@@ -80,5 +73,37 @@
     "provider_receipt_required": true,
     "live_readback_required": true,
     "ambiguous_after_publish_boundary": "RECONCILE_REQUIRED"
+  },
+  "content_ready": {
+    "schema_version": "velvet.content_ready.v1",
+    "required_evidence": [
+      "product_truth",
+      "brand",
+      "copy",
+      "visual_qa",
+      "rights_privacy",
+      "render_transport"
+    ],
+    "pass_values": [
+      "PASS",
+      "NOT_APPLICABLE"
+    ],
+    "legacy_gate_compatibility": {
+      "jobs_created_before": "2026-10-04T00:00:00Z",
+      "required_gates": [
+        "transport",
+        "visible_text",
+        "exact_final_preflight",
+        "visual_standard",
+        "rights_privacy",
+        "brand",
+        "product_truth"
+      ],
+      "pass_values": [
+        "PASS",
+        "NOT_APPLICABLE"
+      ],
+      "purpose": "Bounded compatibility for policy_context jobs created before Stage 4D deployment; new routine jobs use CONTENT_READY."
+    }
   }
 }

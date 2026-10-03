@@ -26,9 +26,10 @@ Machine-readable authority: `packages/velvetos/TOOL-STATUS.json`.
 
 ## Preconditions
 
-- Run `scripts/vf_send_preflight.py` against the exact current package and respect its fail-closed result.
-- Use the exact approved final package/hash.
-- Pass the current creative/publication preflight and all rights/privacy/brand/copy gates.
+- Build and validate one exact-bound `velvet.content_ready.v1` envelope from Product Truth + brand + copy + visual QA + rights/privacy + render/transport evidence. The envelope is evidence only; `policy_id: instagram.publish` remains the sole publication authority.
+- Use the exact approved final package/hash and exact UTF-8 caption/media digests bound by `CONTENT_READY`.
+- Routine quality failures are targeted repair/retry work, not owner approval work. Only a true hard blocker (for example unclear rights/privacy) surfaces to the owner.
+- The legacy direct `scripts/vf_send_preflight.py` / signed `velvet.delivery_approval.v1` boundary remains mandatory for explicitly authorized immediate direct MCP mutations; Stage 4D does not weaken or machine-mint that receipt.
 - A scheduled/accepted job is not proof of publication.
 - Media bytes uploaded to the Worker are SHA-256 bound; the job is HMAC-bound.
 - Any failure at or after the `media_publish` boundary becomes `reconcile_required`; never blind-retry an ambiguous write.
@@ -37,19 +38,21 @@ Machine-readable authority: `packages/velvetos/TOOL-STATUS.json`.
 
 ## Scheduling
 
-For a scheduled image/carousel:
+For a routine scheduled post/carousel/Reel/Story, use `PYTHONPATH=packages;scripts python packages/vfigos/routine_publish.py` with the exact `CONTENT_READY` envelope, caption file, ordered media files, format and scheduled time.
 
-- upload only the approved derivative bytes to the Cloudflare publisher;
-- verify returned SHA-256 matches the exact source bytes;
-- create the job with exact `content_id`, `package_sha256`, caption, ordered media list and authorization evidence;
-- read the job back and verify `scheduled_at`, media count/order and `status=scheduled`;
-- after due time require `published_verified` and independent Instagram read-back.
+- upload only the approved derivative bytes to the Cloudflare publisher and verify returned SHA-256 matches the exact source bytes;
+- the routine CLI rejects caption/media bytes that do not match the envelope and always submits `risk_class=LOW`, `human_approval=null`; the Worker derives standing authorization itself;
+- image/post requires one JPEG/PNG; carousel requires 2–10 JPEG/PNG; Reel requires one MP4; Story requires one JPEG/PNG or MP4;
+- create the job with exact `content_id`, `package_sha256`, caption, ordered media list and `CONTENT_READY` evidence;
+- `policy_id: instagram.publish` must return `ALLOW` with `STANDING_AUTHORIZATION`; otherwise no routine job is persisted;
+- read the job back and verify schedule, format, media order/digests and state;
+- after due time require `published_verified`, provider media id and live permalink/read-back. `scheduled` is never live proof.
 
 The migrated production job `VF-OCTOPUS-20260927-CAROUSEL` is recorded under `cloudflare-publisher/migrations/2026-09-24-openpost/`. The old OpenPost record was cleared from active scheduling during migration.
 
 ## Immediate publication
 
-For explicitly authorized immediate operations, canonical direct write tools may include `publish_image` / carousel/reel/story equivalents. They are never scheduler evidence and still require live read-back.
+For explicitly authorized immediate operations, canonical direct write tools may include `publish_image` / carousel/reel/story equivalents. They are never scheduler evidence, still require signed `velvet.delivery_approval.v1`, and still require live read-back.
 
 When an explicitly authorized immediate publish uses the existing Instagram write boundary directly, it must still use the same exact approved package and live verification discipline. Direct mutation is not an approval bypass and is not the scheduler of record.
 
