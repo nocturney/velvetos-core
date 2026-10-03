@@ -16,6 +16,7 @@
     "authorization",
     "forbidden_effects",
     "legacy_compatibility",
+    "content_ready",
     "postconditions"
   ],
   "properties": {
@@ -55,8 +56,20 @@
     },
     "exact_bindings": {"type": "array", "minItems": 4, "items": {"type": "string"}, "uniqueItems": true},
     "required_gates": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
-    "gate_pass_values": {"const": ["PASS", "NOT_APPLICABLE"]},
+    "gate_pass_values": {"const": ["PASS"]},
     "authorization": {"type": "object"},
+    "content_ready": {
+      "type": "object",
+      "required": ["schema_version", "required_evidence", "pass_values", "legacy_gate_compatibility"],
+      "properties": {
+        "schema_version": {"const": "velvet.content_ready.v1"},
+        "required_evidence": {
+          "const": ["product_truth", "brand", "copy", "visual_qa", "rights_privacy", "render_transport"]
+        },
+        "pass_values": {"const": ["PASS", "NOT_APPLICABLE"]},
+        "legacy_gate_compatibility": {"type": "object"}
+      }
+    },
     "forbidden_effects": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
     "legacy_compatibility": {"type": "object"},
     "postconditions": {"type": "object"}

@@ -1,0 +1,124 @@
+{
+  "schema": "velvetos.stage4d-instagram-happy-path.implementation.v1",
+  "stage": "4D",
+  "prepared_against_main_sha": "7056c4fe48379935b88794c5db88efced72b5a93",
+  "captured_at": "2026-10-03T18:51:03.6015760+03:00",
+  "policy_id": "instagram.publish",
+  "policy_version": 2,
+  "content_ready": {
+    "schema_version": "velvet.content_ready.v1",
+    "required_evidence": [
+      "product_truth",
+      "brand",
+      "copy",
+      "visual_qa",
+      "rights_privacy",
+      "render_transport"
+    ],
+    "required_gate_count": 1,
+    "required_gates": [
+      "content_ready"
+    ],
+    "evidence_is_authority": false
+  },
+  "routine_happy_path": {
+    "formats": [
+      "image",
+      "carousel",
+      "reel",
+      "story"
+    ],
+    "risk_class": "LOW",
+    "standing_authorization_from_runtime": true,
+    "per_asset_owner_approval": false,
+    "policy_decisions_per_publish_attempt": 1,
+    "scheduler": "packages/vfigos/cloudflare-publisher/",
+    "client": "packages/vfigos/routine_publish.py"
+  },
+  "failure_routing": {
+    "quality_failure": "TARGETED_REPAIR",
+    "transport_failure": "RETRY_INTERNAL",
+    "rights_privacy_ambiguity": "HARD_BLOCKER",
+    "owner_prompt_on_quality_failure": false
+  },
+  "immediate_direct_mutation": {
+    "signed_delivery_approval_preserved": true,
+    "receipt_schema": "velvet.delivery_approval.v1",
+    "standing_routine_scheduler_does_not_mint_direct_receipt": true
+  },
+  "postconditions": {
+    "decision_receipt_required": true,
+    "provider_receipt_required": true,
+    "live_readback_required": true,
+    "ambiguous_after_publish_boundary": "RECONCILE_REQUIRED"
+  },
+  "compatibility": {
+    "old_policy_context_before": "2026-10-04T00:00:00Z",
+    "new_jobs_require_content_ready_after_cutoff": true
+  },
+  "tests": [
+    {
+      "command": "C:\\Python314\\python.exe scripts/vf_content_ready.py --self-test",
+      "return_code": 0,
+      "stdout_tail": [
+        "PASS transport-outage-retry-internal-no-owner RETRY_INTERNAL",
+        "PASS rights-ambiguity-is-real-owner-blocker HARD_BLOCKER",
+        "PASS invalid-package-binding-fails-closed HARD_BLOCKER",
+        "PASS not-applicable-evidence-is-valid-when-explicit PASS",
+        "OK content-ready vectors=8 authority=instagram.publish owner_prompt_on_quality_failure=NO"
+      ],
+      "stderr_tail": []
+    },
+    {
+      "command": "C:\\Python314\\python.exe packages/vfigos/routine_publish.py --self-test",
+      "return_code": 0,
+      "stdout_tail": [
+        "OK routine-instagram happy-path formats=image,carousel,reel,story owner_prompt=0 direct_mcp_receipt=unchanged"
+      ],
+      "stderr_tail": []
+    },
+    {
+      "command": "node packages/velvetos/policy/test-instagram-publish-policy.mjs",
+      "return_code": 0,
+      "stdout_tail": [
+        "PASS content-ready-required-after-cutover DENY CONTENT_READY_REQUIRED",
+        "PASS content-ready-binding-mismatch-denies DENY CONTENT_READY_BINDING_MISMATCH",
+        "PASS content-ready-rights-not-pass-denies DENY CONTENT_READY_EVIDENCE_NOT_PASS:rights_privacy",
+        "PASS bounded-old-gates-compatibility ALLOW CONTENT_READY_LEGACY_GATE_COMPATIBILITY",
+        "OK instagram.publish vectors=18"
+      ],
+      "stderr_tail": []
+    },
+    {
+      "command": "node packages/vfigos/cloudflare-publisher/test-policy-gate.mjs",
+      "return_code": 0,
+      "stdout_tail": [
+        "OK cloudflare publisher policy gate cases=9 content_ready=required_new_jobs"
+      ],
+      "stderr_tail": []
+    },
+    {
+      "command": "node packages/vfigos/cloudflare-publisher/test-format-contracts.mjs",
+      "return_code": 0,
+      "stdout_tail": [
+        "OK cloudflare publisher format contracts image carousel reel story"
+      ],
+      "stderr_tail": []
+    },
+    {
+      "command": "C:\\Python314\\python.exe scripts/check-delivery-approval.py",
+      "return_code": 0,
+      "stdout_tail": [
+        "OK delivery-approval mutation_tools=9 ephemeral_sign_verify=PASS serial_replay=PASS concurrent_replay=PASS spend_unavailable=PASS issuer_iam=PASS mutation_private_key=NO guard_order=PASS payload_binding=PASS media_bytes=PASS prefetch_order=PASS claim_before_fetch=PASS body_cap=PASS"
+      ],
+      "stderr_tail": []
+    }
+  ],
+  "repository_acceptance": "PASS",
+  "production_cutover": {
+    "status": "PENDING_AFTER_MERGE",
+    "live_worker_version_id": null,
+    "health_readback": null,
+    "negative_control": null
+  }
+}

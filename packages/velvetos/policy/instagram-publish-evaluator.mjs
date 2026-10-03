@@ -56,6 +56,69 @@ function humanApprovalState(context) {
   return {present: true, valid};
 }
 
+function contentReadyState(policy, context) {
+  const ready = context.content_ready;
+  const cfg = policy.content_ready || {};
+  const passValues = Array.isArray(cfg.pass_values) ? cfg.pass_values : ["PASS", "NOT_APPLICABLE"];
+  const requiredEvidence = Array.isArray(cfg.required_evidence) ? cfg.required_evidence : [];
+
+  if (ready != null) {
+    if (!ready || typeof ready !== "object" || Array.isArray(ready)) {
+      return {present: true, valid: false, reason: "CONTENT_READY_INVALID"};
+    }
+    if (ready.schema_version !== cfg.schema_version || ready.status !== "PASS") {
+      return {present: true, valid: false, reason: ready.status === "FAIL" ? "CONTENT_READY_NOT_PASS" : "CONTENT_READY_INVALID"};
+    }
+    const bindings = ready.bindings && typeof ready.bindings === "object" ? ready.bindings : {};
+    const exact = (
+      bindings.content_id === context.content_id &&
+      bindings.package_sha256 === context.package_sha256 &&
+      bindings.copy_sha256 === context.copy_sha256 &&
+      Array.isArray(bindings.media_sha256s) &&
+      JSON.stringify(bindings.media_sha256s) === JSON.stringify(context.media_sha256s)
+    );
+    if (!exact) return {present: true, valid: false, reason: "CONTENT_READY_BINDING_MISMATCH"};
+
+    const evidence = ready.evidence && typeof ready.evidence === "object" ? ready.evidence : {};
+    if (Object.keys(evidence).length !== requiredEvidence.length ||
+        requiredEvidence.some((key) => !Object.prototype.hasOwnProperty.call(evidence, key))) {
+      return {present: true, valid: false, reason: "CONTENT_READY_EVIDENCE_SET_INVALID"};
+    }
+    for (const key of requiredEvidence) {
+      const item = evidence[key];
+      if (!item || typeof item !== "object" || !passValues.includes(item.status)) {
+        return {present: true, valid: false, reason: "CONTENT_READY_EVIDENCE_NOT_PASS:" + key};
+      }
+      if (typeof item.ref !== "string" || item.ref.trim().length < 1 || !HEX64.test(item.sha256 || "")) {
+        return {present: true, valid: false, reason: "CONTENT_READY_EVIDENCE_IDENTITY_INVALID:" + key};
+      }
+    }
+    if ((Array.isArray(ready.repair_targets) && ready.repair_targets.length) ||
+        (Array.isArray(ready.retry_targets) && ready.retry_targets.length) ||
+        (Array.isArray(ready.hard_blockers) && ready.hard_blockers.length) ||
+        ready.owner_surface !== "NONE") {
+      return {present: true, valid: false, reason: "CONTENT_READY_UNRESOLVED_WORK"};
+    }
+    return {present: true, valid: true, legacy: false};
+  }
+
+  const compat = cfg.legacy_gate_compatibility || {};
+  const createdAt = Date.parse(context.job_created_at || "");
+  const cutoff = Date.parse(compat.jobs_created_before || "");
+  if (Number.isFinite(createdAt) && Number.isFinite(cutoff) && createdAt < cutoff) {
+    const gates = context.gates && typeof context.gates === "object" ? context.gates : {};
+    const required = Array.isArray(compat.required_gates) ? compat.required_gates : [];
+    const allowed = Array.isArray(compat.pass_values) ? compat.pass_values : ["PASS", "NOT_APPLICABLE"];
+    for (const gate of required) {
+      if (!allowed.includes(gates[gate])) {
+        return {present: false, valid: false, legacy: true, reason: "LEGACY_GATE_NOT_PASS:" + gate};
+      }
+    }
+    return {present: false, valid: true, legacy: true};
+  }
+  return {present: false, valid: false, legacy: false, reason: "CONTENT_READY_REQUIRED"};
+}
+
 function legacyAuthorizationState(policy, context) {
   const legacy = context.legacy_authorization;
   if (legacy == null) return {present: false, valid: false};
@@ -79,7 +142,7 @@ function legacyAuthorizationState(policy, context) {
 }
 
 export function evaluateInstagramPublish(policy, context) {
-  if (!policy || policy.policy_id !== "instagram.publish" || policy.version !== 1) {
+  if (!policy || policy.policy_id !== "instagram.publish" || policy.version !== 2) {
     return finish(policy || {policy_id: "instagram.publish", version: 0, postconditions: {}}, context || {}, "DENY", "POLICY_INVALID");
   }
   if (!context || typeof context !== "object") {
@@ -117,13 +180,11 @@ export function evaluateInstagramPublish(policy, context) {
     return finish(policy, context, "DENY", "EXACT_BINDINGS_INVALID");
   }
 
-  const gates = context.gates && typeof context.gates === "object" ? context.gates : {};
-  for (const gate of policy.required_gates) {
-    const value = gates[gate];
-    if (!policy.gate_pass_values.includes(value)) {
-      return finish(policy, context, "DENY", "GATE_NOT_PASS:" + gate);
-    }
+  const ready = contentReadyState(policy, context);
+  if (!ready.valid) {
+    return finish(policy, context, "DENY", ready.reason || "CONTENT_READY_INVALID");
   }
+  const readinessReason = ready.legacy ? "CONTENT_READY_LEGACY_GATE_COMPATIBILITY" : "CONTENT_READY_PASS";
 
   const risk = String(context.risk_class || "").toUpperCase();
   if (!["LOW", "MEDIUM", "HIGH"].includes(risk)) {
@@ -138,17 +199,17 @@ export function evaluateInstagramPublish(policy, context) {
     if (!policy.risk.owner_approval_allows.includes(risk)) {
       return finish(policy, context, "DENY", "OWNER_APPROVAL_RISK_NOT_ALLOWED");
     }
-    return finish(policy, context, "ALLOW", "EXACT_OWNER_APPROVAL");
+    return finish(policy, context, "ALLOW", readinessReason, "EXACT_OWNER_APPROVAL");
   }
 
   if (context.standing_authorization === true) {
     if (risk === policy.risk.standing_authorization_max) {
-      return finish(policy, context, "ALLOW", "STANDING_AUTHORIZATION");
+      return finish(policy, context, "ALLOW", readinessReason, "STANDING_AUTHORIZATION");
     }
-    return finish(policy, context, "REQUIRE_OWNER_APPROVAL", "RISK_EXCEEDS_STANDING_AUTHORIZATION");
+    return finish(policy, context, "REQUIRE_OWNER_APPROVAL", readinessReason, "RISK_EXCEEDS_STANDING_AUTHORIZATION");
   }
 
-  return finish(policy, context, policy.authorization.default, "OWNER_APPROVAL_REQUIRED");
+  return finish(policy, context, policy.authorization.default, readinessReason, "OWNER_APPROVAL_REQUIRED");
 }
 
 export function validateDecisionReceipt(policy, context, decisionResult) {

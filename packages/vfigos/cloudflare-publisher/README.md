@@ -64,32 +64,50 @@ Deployment order remains fail-closed for future environments:
 
 The production deploy that activated the guard is Worker version `c302b0a1-4d03-4db6-9ff9-056ee69166d7`.
 
-### New job authorization contract
+### New job authorization contract · Stage 4D
 
-`authorization.policy_context` supplies only policy evidence that the Worker cannot derive from immutable job bytes. The Worker ignores any caller attempt to supply standing authorization and derives that value from runtime configuration.
+`authorization.policy_context` supplies only evidence that the Worker cannot derive from immutable job bytes. The Worker ignores any caller attempt to supply standing authorization and derives that value from runtime configuration.
+
+New routine jobs use exactly one `CONTENT_READY` evidence envelope. The envelope aggregates exact artifact identity + Product Truth + brand + copy + visual QA + rights/privacy + render/transport evidence. It is **not** an authorization engine: `policy_id: instagram.publish` remains the only ALLOW / DENY / REQUIRE_OWNER_APPROVAL authority.
 
 ```json
 {
   "kind": "policy_authorization_v1",
-  "evidence": "<exact-preflight-receipt-ref>",
+  "evidence": "CONTENT_READY exact envelope",
   "policy_context": {
     "risk_class": "LOW",
     "forbidden_effects": [],
-    "gates": {
-      "transport": "PASS",
-      "visible_text": "PASS",
-      "exact_final_preflight": "PASS",
-      "visual_standard": "PASS",
-      "rights_privacy": "PASS",
-      "brand": "PASS",
-      "product_truth": "PASS"
+    "content_ready": {
+      "schema_version": "velvet.content_ready.v1",
+      "status": "PASS",
+      "bindings": {
+        "content_id": "G100",
+        "package_sha256": "<64hex>",
+        "copy_sha256": "<64hex>",
+        "media_sha256s": ["<64hex>"]
+      },
+      "evidence": {
+        "product_truth": {"status": "PASS", "ref": "<receipt-ref>", "sha256": "<64hex>", "failure_mode": null, "reason": null},
+        "brand": {"status": "PASS", "ref": "<receipt-ref>", "sha256": "<64hex>", "failure_mode": null, "reason": null},
+        "copy": {"status": "PASS", "ref": "<receipt-ref>", "sha256": "<64hex>", "failure_mode": null, "reason": null},
+        "visual_qa": {"status": "PASS", "ref": "<receipt-ref>", "sha256": "<64hex>", "failure_mode": null, "reason": null},
+        "rights_privacy": {"status": "PASS", "ref": "<receipt-ref>", "sha256": "<64hex>", "failure_mode": null, "reason": null},
+        "render_transport": {"status": "PASS", "ref": "<receipt-ref>", "sha256": "<64hex>", "failure_mode": null, "reason": null}
+      },
+      "repair_targets": [],
+      "retry_targets": [],
+      "hard_blockers": [],
+      "owner_surface": "NONE",
+      "validated_at": "<ISO-8601>"
     },
     "human_approval": null
   }
 }
 ```
 
-For a non-routine decision that requires owner approval, `human_approval` must bind `content_id`, `package_sha256` and the Worker-computed raw UTF-8 caption SHA-256. A mismatched approval is `DENY`, not a fallback to standing authorization.
+With runtime standing authorization enabled, `risk_class=LOW` + exact-bound `CONTENT_READY=PASS` produces one `instagram.publish` decision and no per-asset owner approval. A routine quality failure is repaired/retried upstream and the envelope is regenerated; only a real hard blocker surfaces to the owner. For a non-routine decision that genuinely requires owner approval, `human_approval` must bind `content_id`, `package_sha256` and the Worker-computed raw UTF-8 caption SHA-256. A mismatched approval is `DENY`, not a fallback to standing authorization.
+
+For migration safety only, the Worker accepts the previous seven-gate `policy_context` for jobs whose server-recorded `created_at` is before `2026-10-04T00:00:00Z`. This is bounded compatibility, not the new authoring contract.
 
 ## Canonical policy gate · LIVE
 

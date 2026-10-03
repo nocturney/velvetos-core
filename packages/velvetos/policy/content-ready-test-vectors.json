@@ -1,0 +1,262 @@
+{
+  "schema": "velvet.content_ready.test-vectors.v1",
+  "base_envelope": {
+    "schema_version": "velvet.content_ready.v1",
+    "status": "PASS",
+    "bindings": {
+      "content_id": "G100",
+      "package_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "copy_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "media_sha256s": [
+        "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      ]
+    },
+    "evidence": {
+      "product_truth": {
+        "status": "PASS",
+        "ref": "fixture/product-truth.json",
+        "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "failure_mode": null,
+        "reason": null
+      },
+      "brand": {
+        "status": "PASS",
+        "ref": "fixture/brand.json",
+        "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+        "failure_mode": null,
+        "reason": null
+      },
+      "copy": {
+        "status": "PASS",
+        "ref": "fixture/copy.json",
+        "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+        "failure_mode": null,
+        "reason": null
+      },
+      "visual_qa": {
+        "status": "PASS",
+        "ref": "fixture/visual-qa.json",
+        "sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+        "failure_mode": null,
+        "reason": null
+      },
+      "rights_privacy": {
+        "status": "PASS",
+        "ref": "fixture/rights.json",
+        "sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+        "failure_mode": null,
+        "reason": null
+      },
+      "render_transport": {
+        "status": "PASS",
+        "ref": "fixture/transport.json",
+        "sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "failure_mode": null,
+        "reason": null
+      }
+    },
+    "repair_targets": [],
+    "retry_targets": [],
+    "hard_blockers": [],
+    "owner_surface": "NONE",
+    "validated_at": "2030-01-01T10:00:00Z"
+  },
+  "vectors": [
+    {
+      "id": "routine-ready-pass",
+      "evaluation_time": "2030-01-01T10:01:00Z",
+      "patch_ops": [],
+      "expected": {
+        "content_ready": "PASS",
+        "disposition": "PASS",
+        "owner_surface": "NONE",
+        "repair_targets": [],
+        "retry_targets": [],
+        "hard_blockers": []
+      }
+    },
+    {
+      "id": "brand-quality-failure-targeted-repair-no-owner",
+      "evaluation_time": "2030-01-01T10:01:00Z",
+      "normalize": true,
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/evidence/brand/status",
+          "value": "FAIL"
+        },
+        {
+          "op": "replace",
+          "path": "/evidence/brand/failure_mode",
+          "value": "REPAIRABLE_QUALITY"
+        },
+        {
+          "op": "replace",
+          "path": "/evidence/brand/reason",
+          "value": "brand treatment below threshold"
+        }
+      ],
+      "expected": {
+        "content_ready": "FAIL",
+        "disposition": "TARGETED_REPAIR",
+        "owner_surface": "NONE",
+        "repair_targets": ["brand"],
+        "retry_targets": [],
+        "hard_blockers": []
+      }
+    },
+    {
+      "id": "copy-quality-failure-targeted-repair-no-owner",
+      "evaluation_time": "2030-01-01T10:01:00Z",
+      "normalize": true,
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/evidence/copy/status",
+          "value": "FAIL"
+        },
+        {
+          "op": "replace",
+          "path": "/evidence/copy/failure_mode",
+          "value": "REPAIRABLE_QUALITY"
+        }
+      ],
+      "expected": {
+        "content_ready": "FAIL",
+        "disposition": "TARGETED_REPAIR",
+        "owner_surface": "NONE",
+        "repair_targets": ["copy"],
+        "retry_targets": [],
+        "hard_blockers": []
+      }
+    },
+    {
+      "id": "product-truth-final-creative-failure-targeted-repair",
+      "evaluation_time": "2030-01-01T10:01:00Z",
+      "normalize": true,
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/evidence/product_truth/status",
+          "value": "FAIL"
+        },
+        {
+          "op": "replace",
+          "path": "/evidence/product_truth/failure_mode",
+          "value": "REPAIRABLE_QUALITY"
+        },
+        {
+          "op": "replace",
+          "path": "/evidence/product_truth/reason",
+          "value": "final derivative changed product appearance"
+        }
+      ],
+      "expected": {
+        "content_ready": "FAIL",
+        "disposition": "TARGETED_REPAIR",
+        "owner_surface": "NONE",
+        "repair_targets": ["product_truth"],
+        "retry_targets": [],
+        "hard_blockers": []
+      }
+    },
+    {
+      "id": "transport-outage-retry-internal-no-owner",
+      "evaluation_time": "2030-01-01T10:01:00Z",
+      "normalize": true,
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/evidence/render_transport/status",
+          "value": "FAIL"
+        },
+        {
+          "op": "replace",
+          "path": "/evidence/render_transport/failure_mode",
+          "value": "RETRYABLE_RUNTIME"
+        },
+        {
+          "op": "replace",
+          "path": "/evidence/render_transport/reason",
+          "value": "temporary transport unavailable"
+        }
+      ],
+      "expected": {
+        "content_ready": "FAIL",
+        "disposition": "RETRY_INTERNAL",
+        "owner_surface": "NONE",
+        "repair_targets": [],
+        "retry_targets": ["render_transport"],
+        "hard_blockers": []
+      }
+    },
+    {
+      "id": "rights-ambiguity-is-real-owner-blocker",
+      "evaluation_time": "2030-01-01T10:01:00Z",
+      "normalize": true,
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/evidence/rights_privacy/status",
+          "value": "UNKNOWN"
+        },
+        {
+          "op": "replace",
+          "path": "/evidence/rights_privacy/failure_mode",
+          "value": "HARD_BLOCKER"
+        },
+        {
+          "op": "replace",
+          "path": "/evidence/rights_privacy/reason",
+          "value": "third-party media permission unknown"
+        }
+      ],
+      "expected": {
+        "content_ready": "FAIL",
+        "disposition": "HARD_BLOCKER",
+        "owner_surface": "HARD_BLOCKER",
+        "repair_targets": [],
+        "retry_targets": [],
+        "hard_blockers": ["rights_privacy:third-party media permission unknown"]
+      }
+    },
+    {
+      "id": "invalid-package-binding-fails-closed",
+      "evaluation_time": "2030-01-01T10:01:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/bindings/package_sha256",
+          "value": "bad"
+        }
+      ],
+      "expected": {
+        "content_ready": "FAIL",
+        "disposition": "HARD_BLOCKER",
+        "owner_surface": "HARD_BLOCKER",
+        "repair_targets": [],
+        "retry_targets": [],
+        "hard_blockers": []
+      }
+    },
+    {
+      "id": "not-applicable-evidence-is-valid-when-explicit",
+      "evaluation_time": "2030-01-01T10:01:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/evidence/product_truth/status",
+          "value": "NOT_APPLICABLE"
+        }
+      ],
+      "expected": {
+        "content_ready": "PASS",
+        "disposition": "PASS",
+        "owner_surface": "NONE",
+        "repair_targets": [],
+        "retry_targets": [],
+        "hard_blockers": []
+      }
+    }
+  ]
+}

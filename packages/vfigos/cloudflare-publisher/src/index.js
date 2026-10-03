@@ -15,12 +15,84 @@ function canonicalJob(j){return JSON.stringify({id:j.id,content_id:j.content_id,
 function bearerToken(req){const a=req.headers.get("authorization")||"";return a.toLowerCase().startsWith("bearer ")?a.slice(7).trim():""}
 async function requireAdmin(req,env){if(!(env.CONTROL_TOKEN||"").trim())return false;return secureEq(bearerToken(req),env.CONTROL_TOKEN)}
 async function requireRead(req,env){const t=bearerToken(req);if((env.CONTROL_TOKEN||"").trim()&&secureEq(t,env.CONTROL_TOKEN))return true;if((env.SNAPSHOT_TOKEN||"").trim()&&secureEq(t,env.SNAPSHOT_TOKEN))return true;return false}
-function validateJob(b){if(!b||typeof b!=="object")throw Error("body_object_required");if(!/^[A-Za-z0-9._-]{3,120}$/.test(b.content_id||""))throw Error("invalid_content_id");if(!/^[0-9a-f]{64}$/.test(b.package_sha256||""))throw Error("invalid_package_sha256");if(!["image","carousel"].includes(b.kind))throw Error("invalid_kind");const ts=Math.floor(Date.parse(b.scheduled_at)/1000);if(!Number.isFinite(ts))throw Error("invalid_scheduled_at");if(typeof b.caption!=="string"||b.caption.length>2200)throw Error("invalid_caption");if(!Array.isArray(b.media)||b.media.length<1||b.media.length>10)throw Error("invalid_media");if(b.kind==="image"&&b.media.length!==1)throw Error("image_requires_one_media");if(b.kind==="carousel"&&b.media.length<2)throw Error("carousel_requires_multiple_media");for(const m of b.media){if(typeof m.key!=="string"||!/^[A-Za-z0-9._-]{3,180}$/.test(m.key))throw Error("invalid_media_key");if(!/^[0-9a-f]{64}$/.test(m.sha256||""))throw Error("media_sha_required")}const a=b.authorization;if(!a||typeof a!=="object"||typeof a.evidence!=="string"||a.evidence.length<8)throw Error("authorization_evidence_required");if(a.kind!=="policy_authorization_v1")throw Error("policy_authorization_v1_required");if(!a.policy_context||typeof a.policy_context!=="object")throw Error("policy_context_required");return ts}
+function validateJob(b){
+  if(!b||typeof b!=="object")throw Error("body_object_required");
+  if(!/^[A-Za-z0-9._-]{3,120}$/.test(b.content_id||""))throw Error("invalid_content_id");
+  if(!/^[0-9a-f]{64}$/.test(b.package_sha256||""))throw Error("invalid_package_sha256");
+  if(!["image","carousel","reel","story"].includes(b.kind))throw Error("invalid_kind");
+  const ts=Math.floor(Date.parse(b.scheduled_at)/1000);
+  if(!Number.isFinite(ts))throw Error("invalid_scheduled_at");
+  if(typeof b.caption!=="string"||b.caption.length>2200)throw Error("invalid_caption");
+  if(!Array.isArray(b.media)||b.media.length<1||b.media.length>10)throw Error("invalid_media");
+  if(["image","reel","story"].includes(b.kind)&&b.media.length!==1)throw Error(b.kind+"_requires_one_media");
+  if(b.kind==="carousel"&&b.media.length<2)throw Error("carousel_requires_multiple_media");
+  for(const m of b.media){
+    if(typeof m.key!=="string"||!/^[A-Za-z0-9._-]{3,180}$/.test(m.key))throw Error("invalid_media_key");
+    if(!/^[0-9a-f]{64}$/.test(m.sha256||""))throw Error("media_sha_required");
+  }
+  const a=b.authorization;
+  if(!a||typeof a!=="object"||typeof a.evidence!=="string"||a.evidence.length<8)throw Error("authorization_evidence_required");
+  if(a.kind!=="policy_authorization_v1")throw Error("policy_authorization_v1_required");
+  if(!a.policy_context||typeof a.policy_context!=="object")throw Error("policy_context_required");
+  return ts;
+}
 async function event(env,id,name,detail={}){await env.DB.prepare("INSERT INTO events(job_id,event,detail_json,created_at) VALUES(?,?,?,?)").bind(id,name,JSON.stringify(detail),now()).run()}
 async function graph(env,path,params={},method="POST"){if(!(env.META_ACCESS_TOKEN||"").trim()||!(env.IG_USER_ID||"").trim())throw new Error("meta_config_missing");const u=new URL("https://graph.facebook.com/"+(env.GRAPH_VERSION||"v21.0")+"/"+path.replace(/^\//,""));const q=new URLSearchParams({...params,access_token:env.META_ACCESS_TOKEN});let r;if(method==="GET"){u.search=q;r=await fetch(u,{headers:{"accept":"application/json"}})}else r=await fetch(u,{method,headers:{"content-type":"application/x-www-form-urlencoded","accept":"application/json"},body:q});const text=await r.text();let data;try{data=JSON.parse(text)}catch{data={raw:text.slice(0,500)}}if(!r.ok||data.error){const e=new Error("graph_error");e.graph=data;e.http=r.status;throw e}return data}
 async function poll(env,id){for(let i=0;i<20;i++){const d=await graph(env,id,{fields:"status_code,status"},"GET");if(d.status_code==="FINISHED")return d;if(["ERROR","EXPIRED"].includes(d.status_code))throw Object.assign(new Error("container_failed"),{graph:d});await sleep(1500)}throw new Error("container_timeout")}
-async function verifyMedia(env,media){for(const m of media){const got=await env.MEDIA.getWithMetadata(m.key,{type:"arrayBuffer"});if(!got.value)throw new Error("media_missing");if(got.value.byteLength>25*1024*1024)throw new Error("media_too_large");const h=await sha256(got.value);if(h!==m.sha256||got.metadata?.sha256!==m.sha256)throw new Error("media_sha_mismatch")}}
-async function publishJob(env,j){await verifyMedia(env,j.media);const ids=[];if(j.kind==="carousel"){for(const m of j.media){const c=await graph(env,env.IG_USER_ID+"/media",{image_url:m.url,is_carousel_item:"true"});await poll(env,c.id);ids.push(c.id)}const p=await graph(env,env.IG_USER_ID+"/media",{media_type:"CAROUSEL",children:ids.join(","),caption:j.caption});await poll(env,p.id);return await mediaPublish(env,p.id)}const c=await graph(env,env.IG_USER_ID+"/media",{image_url:j.media[0].url,caption:j.caption});await poll(env,c.id);return await mediaPublish(env,c.id)}
+async function verifyMedia(env,media,kind){
+  const observed=[];
+  for(const m of media){
+    const got=await env.MEDIA.getWithMetadata(m.key,{type:"arrayBuffer"});
+    if(!got.value)throw new Error("media_missing");
+    if(got.value.byteLength>25*1024*1024)throw new Error("media_too_large");
+    const h=await sha256(got.value);
+    if(h!==m.sha256||got.metadata?.sha256!==m.sha256)throw new Error("media_sha_mismatch");
+    const contentType=String(got.metadata?.content_type||"").toLowerCase();
+    if(!["image/jpeg","image/png","video/mp4"].includes(contentType))throw new Error("media_content_type_invalid");
+    observed.push({...m,content_type:contentType});
+  }
+  const allImages=observed.every((m)=>["image/jpeg","image/png"].includes(m.content_type));
+  if(kind==="image"&&!allImages)throw new Error("image_requires_image_media");
+  if(kind==="carousel"&&!allImages)throw new Error("carousel_requires_image_media");
+  if(kind==="reel"&&(observed.length!==1||observed[0].content_type!=="video/mp4"))throw new Error("reel_requires_mp4");
+  if(kind==="story"&&observed.length!==1)throw new Error("story_requires_one_media");
+  return observed;
+}
+async function publishJob(env,j){
+  const media=await verifyMedia(env,j.media,j.kind);
+  const ids=[];
+  if(j.kind==="carousel"){
+    for(const m of media){
+      const c=await graph(env,env.IG_USER_ID+"/media",{image_url:m.url,is_carousel_item:"true"});
+      await poll(env,c.id);
+      ids.push(c.id);
+    }
+    const p=await graph(env,env.IG_USER_ID+"/media",{media_type:"CAROUSEL",children:ids.join(","),caption:j.caption});
+    await poll(env,p.id);
+    return await mediaPublish(env,p.id);
+  }
+  if(j.kind==="reel"){
+    const c=await graph(env,env.IG_USER_ID+"/media",{
+      media_type:"REELS",
+      video_url:media[0].url,
+      caption:j.caption,
+      share_to_feed:"true",
+    });
+    await poll(env,c.id);
+    return await mediaPublish(env,c.id);
+  }
+  if(j.kind==="story"){
+    const params={media_type:"STORIES"};
+    if(media[0].content_type==="video/mp4")params.video_url=media[0].url;
+    else params.image_url=media[0].url;
+    const c=await graph(env,env.IG_USER_ID+"/media",params);
+    await poll(env,c.id);
+    return await mediaPublish(env,c.id);
+  }
+  const c=await graph(env,env.IG_USER_ID+"/media",{image_url:media[0].url,caption:j.caption});
+  await poll(env,c.id);
+  return await mediaPublish(env,c.id);
+}
 async function mediaPublish(env,creationId){let out;try{out=await graph(env,env.IG_USER_ID+"/media_publish",{creation_id:creationId})}catch(e){e.afterPublishBoundary=true;throw e}if(!out.id){const e=new Error("publish_missing_media_id");e.afterPublishBoundary=true;throw e}let v;try{v=await graph(env,out.id,{fields:"id,media_type,permalink,timestamp"},"GET")}catch(e){e.afterPublishBoundary=true;throw e}if(v.id!==out.id||!v.permalink){const e=new Error("live_verification_failed");e.afterPublishBoundary=true;throw e}return v}
 async function readJob(env,id){const r=await env.DB.prepare("SELECT * FROM jobs WHERE id=?").bind(id).first();if(!r)return null;return {...r,media:JSON.parse(r.media_json),authorization:JSON.parse(r.authorization_json)}}
 async function claim(env,id,t){const lease=t+180;const q=await env.DB.prepare("UPDATE jobs SET status='publishing',lease_until=?,attempt_count=attempt_count+1,updated_at=? WHERE id=? AND status IN ('scheduled','retry') AND scheduled_at<=? AND COALESCE(next_attempt_at,scheduled_at)<=?").bind(lease,t,id,t,t).run();return (q.meta?.changes||0)===1}
@@ -122,7 +194,7 @@ async function handleOne(env,id){
 async function runDue(env){const t=now();await env.DB.prepare("INSERT INTO runtime_state(key,value,updated_at) VALUES('last_cron_tick',?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value,updated_at=excluded.updated_at").bind(String(t),t).run();const expired=await env.DB.prepare("SELECT id FROM jobs WHERE status='publishing' AND lease_until IS NOT NULL AND lease_until<?").bind(t).all();for(const r of expired.results||[]){await env.DB.prepare("UPDATE jobs SET status='reconcile_required',last_error_class='lease_expired_ambiguous',last_error='publishing lease expired before durable completion record',lease_until=NULL,updated_at=? WHERE id=? AND status='publishing'").bind(t,r.id).run();try{await event(env,r.id,"reconcile_required",{reason:"lease_expired_ambiguous"})}catch{}}const q=await env.DB.prepare("SELECT id FROM jobs WHERE status IN ('scheduled','retry') AND scheduled_at<=? AND COALESCE(next_attempt_at,scheduled_at)<=? ORDER BY scheduled_at LIMIT 10").bind(t,t).all();for(const r of q.results||[])await handleOne(env,r.id);return (q.results||[]).length}
 async function runtimeStatus(env){const tick=await env.DB.prepare("SELECT value,updated_at FROM runtime_state WHERE key='last_cron_tick'").first();const counts=await env.DB.prepare("SELECT status,COUNT(*) AS count FROM jobs GROUP BY status ORDER BY status").all();return {ok:true,last_cron_tick:tick?Number(tick.value):null,last_cron_updated_at:tick?.updated_at||null,job_counts:counts.results||[]}}
 async function metaHealth(env){const d=await graph(env,env.IG_USER_ID,{fields:"id,username"},"GET");return {ok:true,id:d.id,username:d.username}}
-async function createJob(req,env){const b=await req.json();const ts=validateJob(b);const id=b.id||crypto.randomUUID();const exists=await readJob(env,id);if(exists)return json({ok:false,error:"job_exists"},409);const origin=new URL(req.url).origin;const t=now();const j={id,content_id:b.content_id,package_sha256:b.package_sha256,kind:b.kind,scheduled_at:ts,caption:b.caption,media:b.media.map(x=>({key:x.key,url:origin+"/media/"+x.key,sha256:x.sha256})),authorization:b.authorization,created_at:t};await verifyMedia(env,j.media);const policyDecision=await evaluateInstagramPublishJob(j,env);if(policyDecision.result.decision!=="ALLOW")return json({ok:false,error:"policy_not_allowed",policy:policyDecision.result},policyDecision.result.decision==="REQUIRE_OWNER_APPROVAL"?409:403);const auth=await hmac(env.SCHEDULE_HMAC_KEY,canonicalJob(j));await env.DB.prepare("INSERT INTO jobs(id,content_id,package_sha256,kind,scheduled_at,status,caption,media_json,authorization_json,job_auth,created_at,updated_at) VALUES(?,?,?,?,?,'scheduled',?,?,?,?,?,?)").bind(id,j.content_id,j.package_sha256,j.kind,j.scheduled_at,j.caption,JSON.stringify(j.media),JSON.stringify(j.authorization),auth,t,t).run();await event(env,id,"policy_decision",policyDecision.result.receipt);await event(env,id,"scheduled",{scheduled_at:ts,authorization:{kind:j.authorization.kind,evidence:j.authorization.evidence}});return json({ok:true,id,status:"scheduled",scheduled_at:ts,policy:policyDecision.result.receipt},201)}
+async function createJob(req,env){const b=await req.json();const ts=validateJob(b);const id=b.id||crypto.randomUUID();const exists=await readJob(env,id);if(exists)return json({ok:false,error:"job_exists"},409);const origin=new URL(req.url).origin;const t=now();const j={id,content_id:b.content_id,package_sha256:b.package_sha256,kind:b.kind,scheduled_at:ts,caption:b.caption,media:b.media.map(x=>({key:x.key,url:origin+"/media/"+x.key,sha256:x.sha256})),authorization:b.authorization,created_at:t};await verifyMedia(env,j.media,j.kind);const policyDecision=await evaluateInstagramPublishJob(j,env);if(policyDecision.result.decision!=="ALLOW")return json({ok:false,error:"policy_not_allowed",policy:policyDecision.result},policyDecision.result.decision==="REQUIRE_OWNER_APPROVAL"?409:403);const auth=await hmac(env.SCHEDULE_HMAC_KEY,canonicalJob(j));await env.DB.prepare("INSERT INTO jobs(id,content_id,package_sha256,kind,scheduled_at,status,caption,media_json,authorization_json,job_auth,created_at,updated_at) VALUES(?,?,?,?,?,'scheduled',?,?,?,?,?,?)").bind(id,j.content_id,j.package_sha256,j.kind,j.scheduled_at,j.caption,JSON.stringify(j.media),JSON.stringify(j.authorization),auth,t,t).run();await event(env,id,"policy_decision",policyDecision.result.receipt);await event(env,id,"scheduled",{scheduled_at:ts,authorization:{kind:j.authorization.kind,evidence:j.authorization.evidence}});return json({ok:true,id,status:"scheduled",scheduled_at:ts,policy:policyDecision.result.receipt},201)}
 async function cancelJob(env,id){const q=await env.DB.prepare("UPDATE jobs SET status='cancelled',updated_at=? WHERE id=? AND status IN ('scheduled','retry')").bind(now(),id).run();if(!(q.meta?.changes||0))return json({ok:false,error:"not_cancellable"},409);await event(env,id,"cancelled",{});return json({ok:true,id,status:"cancelled"})}
 async function uploadMedia(req,env,key){if(!/^[A-Za-z0-9._-]{3,180}$/.test(key))return json({ok:false,error:"invalid_media_key"},400);const u=new URL(req.url), expected=(u.searchParams.get("sha256")||"").toLowerCase(), ct=(req.headers.get("content-type")||"application/octet-stream").split(";")[0].trim().toLowerCase();if(!/^[0-9a-f]{64}$/.test(expected))return json({ok:false,error:"sha256_required"},400);if(!["image/jpeg","image/png","video/mp4"].includes(ct))return json({ok:false,error:"unsupported_content_type"},400);const b=await req.arrayBuffer();if(!b.byteLength||b.byteLength>25*1024*1024)return json({ok:false,error:"invalid_media_size"},400);const actual=await sha256(b);if(actual!==expected)return json({ok:false,error:"sha256_mismatch",actual},400);const existing=await env.MEDIA.getWithMetadata(key,{type:"arrayBuffer"});if(existing.value){const eh=await sha256(existing.value);if(eh!==actual||existing.metadata?.sha256!==actual)return json({ok:false,error:"media_key_collision"},409);return json({ok:true,key,sha256:actual,bytes:b.byteLength,idempotent:true,url:new URL("/media/"+key,req.url).toString()})}await env.MEDIA.put(key,b,{metadata:{sha256:actual,content_type:ct,bytes:b.byteLength,created_at:now()}});return json({ok:true,key,sha256:actual,bytes:b.byteLength,idempotent:false,url:new URL("/media/"+key,req.url).toString()})}
 async function serveMedia(req,env,key){if(!/^[A-Za-z0-9._-]{3,180}$/.test(key))return new Response("not found",{status:404});const got=await env.MEDIA.getWithMetadata(key,{type:"arrayBuffer",cacheTtl:60});if(!got.value)return new Response("not found",{status:404});return new Response(req.method==="HEAD"?null:got.value,{status:200,headers:{"content-type":got.metadata?.content_type||"application/octet-stream","content-length":String(got.metadata?.bytes||got.value.byteLength),"etag":'"'+(got.metadata?.sha256||"")+'"',"cache-control":"public, max-age=3600, immutable","x-content-type-options":"nosniff"}})}
@@ -130,7 +202,7 @@ async function route(req,env){
   const u=new URL(req.url);
   const pub=u.pathname.match(/^\/media\/([A-Za-z0-9._-]{3,180})$/);
   if(pub&&["GET","HEAD"].includes(req.method))return serveMedia(req,env,pub[1]);
-  if(u.pathname==="/healthz")return json({ok:true,service:"velvetos-instagram-publisher",scheduler:"cloudflare-cron",storage:"d1+kv",publication:"instagram-graph",account:env.ACCOUNT_LABEL||"velvets_cloud"});
+  if(u.pathname==="/healthz")return json({ok:true,service:"velvetos-instagram-publisher",scheduler:"cloudflare-cron",storage:"d1+kv",publication:"instagram-graph",account:env.ACCOUNT_LABEL||"velvets_cloud",policy_id:"instagram.publish",policy_version:2,content_ready:"velvet.content_ready.v1",formats:["image","carousel","reel","story"]});
 
   const jobMatch=u.pathname.match(/^\/v1\/jobs\/([^/]+)(\/cancel)?$/);
   const readRequest=req.method==="GET"&&(
@@ -156,4 +228,5 @@ async function route(req,env){
   if(jobMatch&&req.method==="POST"&&jobMatch[2])return cancelJob(env,jobMatch[1]);
   return json({ok:false,error:"not_found"},404)
 }
+export {validateJob,verifyMedia,publishJob};
 export default {fetch:route,async scheduled(_event,env,ctx){ctx.waitUntil(runDue(env))}};

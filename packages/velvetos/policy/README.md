@@ -132,3 +132,18 @@ Stage 4C makes authorization ownership explicit without adding a policy service 
 - `schema/action-receipt.schema.json` plus `scripts/vf_action_receipt.py` validate the binding of an already-made canonical policy decision to the exact action. The validator is not a decision engine and cannot turn evidence into authorization.
 - `action-receipt-test-vectors.json` covers valid exact owner authorization plus unregistered policy, effect mismatch, missing binding, missing/expired owner approval, DENY, unresolved owner-approval decision, failing evidence and the Instagram native-receipt boundary.
 - `scripts/check-policy-architecture.py` executes those vectors and enforces the single-authority/evidence-role contract on every CI run where policy architecture is selected; `check-risk-policy.py` protects the destructive-delete and permission-mutation owner boundaries.
+
+## Stage 4D — Routine Instagram Happy Path
+
+Stage 4D collapses routine publication readiness into one exact-bound `CONTENT_READY` evidence envelope while keeping `policy_id: instagram.publish` as the sole publication authority. Repository acceptance is complete; production cutover is recorded separately after the merged Worker is deployed and read back.
+
+- `schema/content-ready.schema.json` + `scripts/vf_content_ready.py` aggregate exact artifact identity, Product Truth, brand, copy, visual QA, rights/privacy and render/transport evidence. They explicitly claim no authorization capability.
+- Routine LOW-risk quality failures route to `TARGETED_REPAIR`; retryable transport failures route to `RETRY_INTERNAL`; neither becomes an owner prompt. Rights/privacy ambiguity remains a `HARD_BLOCKER` and is owner-visible.
+- `instagram.publish` machine policy is version 2 and consumes exactly one `content_ready` gate. Exact content/package/caption/media bindings must match; unresolved repair/retry/blocker state is DENY.
+- With runtime standing authorization enabled, LOW risk + exact `CONTENT_READY=PASS` produces one `ALLOW` decision with `STANDING_AUTHORIZATION` and no per-asset owner approval. Medium/high or missing standing authorization keeps the existing owner path.
+- `packages/vfigos/routine_publish.py` is the canonical routine scheduler client: it validates local evidence refs/digests, exact caption/media bytes, uploads SHA-bound media, creates the Cloudflare job, requires the Worker’s standing-authorized `ALLOW`, then reads the persisted job back. It never mints `velvet.delivery_approval.v1`.
+- The Cloudflare publisher now has tested format contracts for image/post, carousel, Reel and Story. MIME is verified from stored media bytes/metadata before creation and again before publish; Reel requires MP4, carousel requires images, Story accepts one image or MP4.
+- Direct/immediate MCP publication remains unchanged behind signed `velvet.delivery_approval.v1`. Stage 4D standing authorization applies to the canonical scheduled publisher, not to direct mutation tools.
+- Previous seven-gate `policy_context` is a bounded compatibility path only for jobs created before `2026-10-04T00:00:00Z`; new routine jobs require `CONTENT_READY` after that cutoff. Older original scheduled-job authorization remains separately bounded by its pre-Stage-1 cutoff.
+- The publication closure is unchanged: decision receipt precedes mutation; `published_verified` still requires a Meta provider media id plus live read-back/permalink. Failures at/after `media_publish` remain `reconcile_required` and are never blind-retried.
+- `reports/stage4d-instagram-happy-path-implementation.json` records repository acceptance against `main` `7056c4fe48379935b88794c5db88efced72b5a93`; its production cutover remains `PENDING_AFTER_MERGE` until the Worker deployment is verified live.
