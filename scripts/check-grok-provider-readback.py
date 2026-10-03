@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from vf_runtime_receipt_policy import receipt_age_policy, warn_line  # noqa: E402
+from vf_runtime_receipt_policy import build_runtime_proof_request, proof_scope_line  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "automation/grok/manifest.json"
@@ -41,6 +41,12 @@ def parse_time(value: object, label: str = "runtime receipt observed_at") -> dat
 
 
 def main() -> int:
+    try:
+        proof = build_runtime_proof_request()
+    except ValueError as exc:
+        fail(str(exc))
+    require_runtime = proof.requires_component("grok-production-scheduler", implied_if_live=True)
+
     manifest = load(MANIFEST)
     latest = manifest.get("latestProviderReadback") or {}
     if latest.get("status") != "live_verified":
@@ -129,25 +135,30 @@ def main() -> int:
     if retired_observed.get("openpost-release-watch") is not False:
         fail("live OpenPost Release Watch is not disabled")
 
-    runtime = load(RUNTIME)
-    if runtime.get("component_id") != "grok-production-scheduler" or runtime.get("state") != "healthy":
-        fail("runtime Grok scheduler receipt is not healthy")
-    if (runtime.get("evidence") or {}).get("artifact") != artifact_rel:
-        fail("runtime receipt does not point to provider readback artifact")
-    age_hours = (now - parse_time(runtime.get("observed_at"))).total_seconds() / 3600
-    if age_hours < -0.25:
-        fail(f"runtime receipt freshness invalid: {age_hours:.1f}h")
-    if age_hours > 24:
-        age_strict, age_context = receipt_age_policy()
-        if age_strict:
+    runtime_state = "NOT_REQUIRED"
+    if require_runtime:
+        if not RUNTIME.is_file():
+            fail("runtime Grok scheduler receipt missing for required dependency")
+        try:
+            runtime = load(RUNTIME)
+        except Exception as exc:
+            fail(f"runtime Grok scheduler receipt invalid: {exc}")
+        if runtime.get("component_id") != "grok-production-scheduler" or runtime.get("state") != "healthy":
+            fail("runtime Grok scheduler receipt is not healthy")
+        if (runtime.get("evidence") or {}).get("artifact") != artifact_rel:
+            fail("runtime receipt does not point to provider readback artifact")
+        age_hours = (now - parse_time(runtime.get("observed_at"))).total_seconds() / 3600
+        if age_hours < -0.25 or age_hours > 24:
             fail(f"runtime receipt freshness invalid: {age_hours:.1f}h")
-        print(warn_line([f"grok-production-scheduler age={age_hours:.1f}h max=24h"], age_context))
+        runtime_state = "PASS"
 
+    print(proof_scope_line(proof))
     print(
         "GROK PROVIDER READBACK PASS "
         f"protected={len(expected_all)} readback-verified={len(required)} "
         f"pending-first-readback={','.join(pending) or 'none'} "
         f"openpost=disabled timezone={readback.get('rendererTimeZone')} "
+        f"proof={proof.status} runtime_health={runtime_state} "
         "prompt-body-parity=not-claimed"
     )
     return 0

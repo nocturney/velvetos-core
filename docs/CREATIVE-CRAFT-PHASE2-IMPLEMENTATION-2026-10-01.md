@@ -131,7 +131,7 @@ The three remaining failures are not caused by the Phase 2 specialist layer and 
 2. `check-staleness.py`: the repository has no 2026-10-01 morning brief artifact after the staleness cutoff.
 3. `check-velvet-health.py`: fails only because it aggregates the same remaining `skill_health` failure.
 
-The full runner also reports expired runtime receipts as WARN in local mode; these are not Phase 2 capability proofs and were not refreshed by this task.
+At the time of this Phase 2 run, the full runner reported expired runtime receipts as WARN in local mode; those were not Phase 2 capability proofs. Stage 4F (2026-10-03) supersedes that event-based behavior with dependency-scoped `CODE_VALID / DEPLOYMENT_VALID / RUNTIME_HEALTHY` proof, so unrelated stale runtime evidence is no longer part of ordinary code validation.
 
 Therefore: Phase 2 wiring/domain sensors are green, but the shared worktree is **not globally green / merge-ready** until the unrelated skill-health warning and current-day brief staleness are resolved by their owning workstreams.
 

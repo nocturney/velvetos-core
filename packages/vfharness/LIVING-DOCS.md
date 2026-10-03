@@ -25,7 +25,7 @@ Use:
 
 - `packages/vfharness/runtime/expected-components.json` for expected ownership.
 - `packages/vfharness/state/runtime/*.json` for observed deployment/runtime receipts when available.
-- `scripts/check-runtime-doctor.py --strict` for deployment proof. Locally and on pull_request CI an expired receipt is only a WARN; for a deployment claim run it with `VF_RUNTIME_RECEIPTS_STRICT=1` (the mode push/schedule/workflow_dispatch CI uses).
+- `scripts/check-runtime-doctor.py` for `CODE_VALID` contract proof. For a real live claim use a dependency-scoped proof such as `--scope deployment --require-component github` or `--scope runtime --require-component edge-execution`. GitHub event type is not a runtime dependency signal. Missing/malformed/non-healthy/stale evidence fails closed only when that component is actually required. `--strict` remains legacy repository-wide all-component proof.
 - task checkpoints and handoffs for in-progress work state.
 
 ## Verification

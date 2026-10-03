@@ -86,6 +86,8 @@ Before claiming `done`, `ready`, `prepared`, `published`, `synced`, `sent`, or e
 
 The normalized decision vocabulary is `ALLOW | DENY | REQUIRE_OWNER_APPROVAL` (or an explicitly declared native equivalent at that policy boundary). Brand, Product Truth, Visible Text, transport, QA, runtime health, rights/privacy, facts and target identity are evidence inputs only. A PASS from one of those inputs cannot authorize the effect by itself.
 
+**Runtime evidence is dependency-scoped.** Code/preflight validation alone is `CODE_VALID` and must not be blocked by an unrelated stale receipt. When an external effect, deployment or acceptance actually depends on a VelvetOS runtime component, obtain a component-scoped live proof (`check-runtime-doctor.py --scope external_action|deployment|acceptance --require-component <id>`) and require `RUNTIME_HEALTHY` / `DEPLOYMENT_VALID` as appropriate. Missing, malformed, non-healthy or stale evidence for that named dependency remains fail-closed. A GitHub event type never substitutes for dependency declaration.
+
 Exact-action receipts use `packages/velvetos/policy/schema/action-receipt.schema.json` plus `scripts/vf_action_receipt.py` only where the registry receipt mode requires them. `instagram.publish` keeps its existing policy-native decision receipt rather than being wrapped in a second authorization engine. No OPA service, policy daemon or parallel runtime is introduced.
 
 ## Mandatory creative/publication path

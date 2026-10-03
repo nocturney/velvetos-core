@@ -105,7 +105,7 @@ Fan-in:
 
 - אחרי כל המשימות: fresh whole-plan review לשינוי מהותי, ואז `verification-before-claim.md` לפני «סיימתי».
 - אחרי שינוי קטלוג/כלל/פק: `python3 scripts/check-all.py`.
-- לפני טענה ש־worker/automation/connector **רץ בפועל**: `VF_RUNTIME_RECEIPTS_STRICT=1 python3 scripts/check-runtime-doctor.py --strict` וה־receipts הנדרשים (בלי ה־override, receipt שפג תוקפו הוא רק WARN מקומית וב־PR).
+- לפני טענה ש־worker/automation/connector **רץ בפועל**: הצהר dependency מדויק והרץ `python3 scripts/check-runtime-doctor.py --scope runtime --require-component <id>` (או `deployment` / `external_action` / `acceptance` לפי הטענה). receipt stale/missing/malformed/non-healthy של dependency זה חוסם; receipt לא קשור אינו blocker. `--strict` הוא compatibility בלבד לטענת repository-wide all-components.
 - עדכן `state/<task-id>.json` (`status`, `completed_steps`, `unresolved`, `last_updated`).
 
 ## Stop classes — כאן כן עוצרים

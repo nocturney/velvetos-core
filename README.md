@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-03 — **Policy Reform v2 Stage 4E Gmail / external-send simplification:** `policy_id: gmail.send` now has a machine/runtime evaluator that distinguishes routine owner brief / known-thread reply / routine…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-03 — **Policy Reform v2 Stage 4E Gmail / external-send simplification:** `policy_id: gmail.send` now has a machine/runtime evaluator that distinguishes routine owner brief / known-thread reply / routine…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-03 — **Policy Reform v2 Stage 4F Runtime Receipt Scope:** separates `CODE_VALID`, `DEPLOYMENT_VALID` and `RUNTIME_HEALTHY`. GitHub event type no longer upgrades an unrelated PR/push/schedule/dispatch in…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-03 — **Policy Reform v2 Stage 4F Runtime Receipt Scope:** separates `CODE_VALID`, `DEPLOYMENT_VALID` and `RUNTIME_HEALTHY`. GitHub event type no longer upgrades an unrelated PR/push/schedule/dispatch in…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>

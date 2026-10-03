@@ -87,8 +87,7 @@ A PR existing is not proof of completion. A merge is not proof that an external 
 
 ### 6. Merge → runtime truth
 
-When the claim is “deployed”, “active”, “connected”, “published”, or “running on worker/automation”, run the relevant provider/runtime proof. For VelvetOS-wide activation claims use `python3 scripts/check-runtime-doctor.py --strict` when applicable.
-For that proof set `VF_RUNTIME_RECEIPTS_STRICT=1`: without it, local and pull_request runs report expired runtime receipts as a WARN instead of a failure.
+When the claim is “deployed”, “active”, “connected”, “published”, or “running on worker/automation”, run the relevant provider/runtime proof for the component the claim actually depends on. Use `python3 scripts/check-runtime-doctor.py --scope deployment --require-component <id>` for deployment, or `--scope runtime|external_action|acceptance --require-component <id>` for the corresponding live claim. Stale/missing/malformed/non-healthy evidence is fail-closed for those named dependencies. Ordinary PR/push code validation stays `CODE_VALID` and does not become runtime-dependent merely because of its GitHub event type. `--strict` remains a legacy repository-wide all-component proof only when that broad claim is genuinely intended.
 
 Keep states distinct:
 
