@@ -1,14 +1,14 @@
 {
   "component_id": "sderot-windows",
   "state": "healthy",
-  "observed_at": "2026-10-03T04:36:02+00:00",
+  "observed_at": "2026-10-03T16:19:25+00:00",
   "evidence": {
     "source": "Grok Bot ListMachines + remote Shell probe",
     "machineId": "db0e4d78-3b27-46d9-8c2b-453049eb3933",
     "machineName": "Chris",
     "status": "online",
     "hostname": "Chris",
-    "localTimeObserved": "2026-10-03T07:36:02.2052867+03:00",
+    "localTimeObserved": "2026-10-03T19:19:10.6251093+03:00",
     "velvetRootPath": "D:\\Velvet",
     "velvetRootPresent": true,
     "probe": "hostname; Get-Date -Format o; Test-Path D:\\Velvet (read-only)",
