@@ -535,10 +535,63 @@ def validate_registries() -> tuple[list[str], set[str]]:
             cutover = stage4d.get("production_cutover") or {}
             require(cutover.get("status") in {"PENDING_AFTER_MERGE", "PASS"}, "Stage 4D cutover status invalid", problems)
             if cutover.get("status") == "PASS":
+                cutover_receipt_rel = "packages/velvetos/policy/reports/stage4d-instagram-happy-path-cutover.json"
+                require(cutover.get("receipt") == cutover_receipt_rel,
+                        "Stage 4D live cutover receipt binding mismatch", problems)
+                cutover_receipt_path = ROOT / cutover_receipt_rel
+                require(cutover_receipt_path.is_file(), "Stage 4D live cutover receipt missing", problems)
+                cutover_receipt = load(cutover_receipt_path) if cutover_receipt_path.is_file() else {}
+                require(cutover_receipt.get("schema") == "velvetos.stage4d-instagram-happy-path.cutover.v1"
+                        and cutover_receipt.get("stage") == "4D"
+                        and cutover_receipt.get("policy_id") == "instagram.publish"
+                        and cutover_receipt.get("cutover_status") == "PASS",
+                        "Stage 4D live cutover receipt identity/status mismatch", problems)
+                receipt_deployment = cutover_receipt.get("deployment") or {}
+                require(receipt_deployment.get("deployed_main_sha") == cutover.get("deployed_main_sha")
+                        and receipt_deployment.get("live_worker_version_id") == cutover.get("live_worker_version_id")
+                        and receipt_deployment.get("worker_version_created_at") == cutover.get("worker_version_created_at"),
+                        "Stage 4D live cutover report/receipt deployment mismatch", problems)
+                require(cutover_receipt.get("health_readback") == cutover.get("health_readback")
+                        and cutover_receipt.get("negative_control") == cutover.get("negative_control")
+                        and cutover_receipt.get("compatibility") == cutover.get("compatibility"),
+                        "Stage 4D live cutover report/receipt evidence mismatch", problems)
+                require(cutover.get("deployed_main_sha") == "fdc4a3cc1d46b43870e6c69ddcf36fc378a406e7",
+                        "Stage 4D live cutover deployed main SHA mismatch", problems)
                 require(isinstance(cutover.get("live_worker_version_id"), str) and bool(cutover.get("live_worker_version_id")),
                         "Stage 4D live cutover missing Worker version", problems)
-                require((cutover.get("health_readback") or {}).get("policy_version") == 2,
-                        "Stage 4D live cutover health policy version mismatch", problems)
+                require(isinstance(cutover.get("worker_version_created_at"), str) and bool(cutover.get("worker_version_created_at")),
+                        "Stage 4D live cutover missing Worker version timestamp", problems)
+                health = cutover.get("health_readback") or {}
+                require(health.get("ok") is True and health.get("policy_id") == "instagram.publish" and health.get("policy_version") == 2,
+                        "Stage 4D live cutover health policy readback mismatch", problems)
+                require(health.get("content_ready") == "velvet.content_ready.v1"
+                        and health.get("formats") == ["image", "carousel", "reel", "story"],
+                        "Stage 4D live cutover CONTENT_READY/format readback mismatch", problems)
+                require(health.get("runtime_ok") is True
+                        and isinstance(health.get("runtime_heartbeat_age_seconds"), int)
+                        and 0 <= health.get("runtime_heartbeat_age_seconds") <= 180,
+                        "Stage 4D live cutover runtime heartbeat unhealthy", problems)
+                require(isinstance(health.get("published_verified_count"), int) and health.get("published_verified_count") >= 1
+                        and health.get("scheduled_or_retry_count") == 0,
+                        "Stage 4D live cutover job-state readback mismatch", problems)
+                require(health.get("meta_ok") is True and health.get("meta_username") == "velvets_cloud",
+                        "Stage 4D live cutover Meta readback mismatch", problems)
+                require(health.get("instagram_read_smoke_run_id") == 37136222049
+                        and health.get("instagram_read_smoke_head_sha") == "fdc4a3cc1d46b43870e6c69ddcf36fc378a406e7"
+                        and health.get("instagram_read_smoke_live_executed") is True,
+                        "Stage 4D live Instagram read smoke evidence mismatch", problems)
+                smoke_checks = health.get("instagram_read_smoke_checks") or {}
+                require(smoke_checks.get("get_profile") is True and smoke_checks.get("list_media") is True
+                        and smoke_checks.get("live_username") == "velvets_cloud",
+                        "Stage 4D live Instagram read smoke checks incomplete", problems)
+                negative = cutover.get("negative_control") or {}
+                require(negative.get("observed_http") == 403
+                        and negative.get("observed_error") == "policy_not_allowed"
+                        and negative.get("policy_decision") == "DENY"
+                        and negative.get("reason_codes") == ["CONTENT_READY_REQUIRED"],
+                        "Stage 4D live negative control policy result mismatch", problems)
+                require(negative.get("readback_http") == 404 and negative.get("persistent_job_created") is False,
+                        "Stage 4D live negative control persisted unexpectedly", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)

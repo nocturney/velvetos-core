@@ -135,7 +135,7 @@ Stage 4C makes authorization ownership explicit without adding a policy service 
 
 ## Stage 4D — Routine Instagram Happy Path
 
-Stage 4D collapses routine publication readiness into one exact-bound `CONTENT_READY` evidence envelope while keeping `policy_id: instagram.publish` as the sole publication authority. Repository acceptance is complete; production cutover is recorded separately after the merged Worker is deployed and read back.
+Stage 4D collapses routine publication readiness into one exact-bound `CONTENT_READY` evidence envelope while keeping `policy_id: instagram.publish` as the sole publication authority. Repository acceptance and the production cutover are both complete and pinned to live evidence.
 
 - `schema/content-ready.schema.json` + `scripts/vf_content_ready.py` aggregate exact artifact identity, Product Truth, brand, copy, visual QA, rights/privacy and render/transport evidence. They explicitly claim no authorization capability.
 - Routine LOW-risk quality failures route to `TARGETED_REPAIR`; retryable transport failures route to `RETRY_INTERNAL`; neither becomes an owner prompt. Rights/privacy ambiguity remains a `HARD_BLOCKER` and is owner-visible.
@@ -146,4 +146,4 @@ Stage 4D collapses routine publication readiness into one exact-bound `CONTENT_R
 - Direct/immediate MCP publication remains unchanged behind signed `velvet.delivery_approval.v1`. Stage 4D standing authorization applies to the canonical scheduled publisher, not to direct mutation tools.
 - Previous seven-gate `policy_context` is a bounded compatibility path only for jobs created before `2026-10-03T15:58:09.874Z`; new routine jobs require `CONTENT_READY` after that cutoff. Older original scheduled-job authorization remains separately bounded by its pre-Stage-1 cutoff.
 - The publication closure is unchanged: decision receipt precedes mutation; `published_verified` still requires a Meta provider media id plus live read-back/permalink. Failures at/after `media_publish` remain `reconcile_required` and are never blind-retried.
-- `reports/stage4d-instagram-happy-path-implementation.json` now records the cutover-closure candidate against merged Stage 4D `main` `44aef61e7280f3122d6df043b10ee4ad02e2fcb3`; its production cutover remains `PENDING_AFTER_MERGE` until the final cutoff build is deployed and verified live.
+- `reports/stage4d-instagram-happy-path-cutover.json` is the immutable live cutover receipt. It records deployed `main` `fdc4a3cc1d46b43870e6c69ddcf36fc378a406e7`, Worker version `2390ee0e-6019-44c5-9832-e3d08689f440`, policy v2 / `CONTENT_READY` health, fresh cron/runtime state, Meta readback for `velvets_cloud`, GitHub live-read smoke run `37136222049`, five historical `published_verified` jobs, zero scheduled/retry jobs, and a non-persistent negative control returning `403 / DENY / CONTENT_READY_REQUIRED`. The implementation report embeds that receipt reproducibly and now reports production cutover `PASS`.

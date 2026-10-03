@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-03 — **Policy Reform v2 Stage 4D cutover boundary closure:** aligns the bounded legacy seven-gate compatibility window for `policy_id: instagram.publish` to the first Stage 4D production Worker deployme…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-03 — **Policy Reform v2 Stage 4D cutover boundary closure:** aligns the bounded legacy seven-gate compatibility window for `policy_id: instagram.publish` to the first Stage 4D production Worker deployme…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-03 — **Policy Reform v2 Stage 4D live cutover verified:** `policy_id: instagram.publish` v2 is live on Cloudflare Worker version `2390ee0e-6019-44c5-9832-e3d08689f440` from merged `main` `fdc4a3cc1d46b4…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-03 — **Policy Reform v2 Stage 4D live cutover verified:** `policy_id: instagram.publish` v2 is live on Cloudflare Worker version `2390ee0e-6019-44c5-9832-e3d08689f440` from merged `main` `fdc4a3cc1d46b4…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>

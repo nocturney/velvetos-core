@@ -17,6 +17,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "packages" / "velvetos" / "policy" / "reports" / "stage4d-instagram-happy-path-implementation.json"
+CUTOVER_RECEIPT = ROOT / "packages" / "velvetos" / "policy" / "reports" / "stage4d-instagram-happy-path-cutover.json"
 
 
 def run(cmd: list[str], *, env: dict[str, str] | None = None) -> dict[str, Any]:
@@ -84,6 +85,32 @@ def main() -> int:
         and effect["receipt_mode"] == "POLICY_NATIVE_RECEIPT"
     )
 
+    production_cutover = {
+        "status": "PENDING_AFTER_MERGE",
+        "live_worker_version_id": None,
+        "health_readback": None,
+        "negative_control": None,
+    }
+    if CUTOVER_RECEIPT.is_file():
+        cutover = json.loads(CUTOVER_RECEIPT.read_text(encoding="utf-8"))
+        if cutover.get("schema") != "velvetos.stage4d-instagram-happy-path.cutover.v1":
+            raise SystemExit("Stage 4D cutover receipt schema mismatch")
+        if cutover.get("stage") != "4D" or cutover.get("policy_id") != "instagram.publish":
+            raise SystemExit("Stage 4D cutover receipt identity mismatch")
+        deployment = cutover.get("deployment") or {}
+        production_cutover = {
+            "status": cutover.get("cutover_status"),
+            "deployed_main_sha": deployment.get("deployed_main_sha"),
+            "live_worker_version_id": deployment.get("live_worker_version_id"),
+            "worker_version_created_at": deployment.get("worker_version_created_at"),
+            "worker_url": deployment.get("worker_url"),
+            "health_readback": cutover.get("health_readback"),
+            "negative_control": cutover.get("negative_control"),
+            "compatibility": cutover.get("compatibility"),
+            "rollback": cutover.get("rollback"),
+            "receipt": CUTOVER_RECEIPT.relative_to(ROOT).as_posix(),
+        }
+
     report = {
         "schema": "velvetos.stage4d-instagram-happy-path.implementation.v1",
         "stage": "4D",
@@ -129,12 +156,7 @@ def main() -> int:
         },
         "tests": checks,
         "repository_acceptance": "FAIL" if failed or not direct_boundary_preserved else "PASS",
-        "production_cutover": {
-            "status": "PENDING_AFTER_MERGE",
-            "live_worker_version_id": None,
-            "health_readback": None,
-            "negative_control": None,
-        },
+        "production_cutover": production_cutover,
     }
 
     out = args.output if args.output.is_absolute() else ROOT / args.output
