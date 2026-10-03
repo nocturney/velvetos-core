@@ -107,7 +107,7 @@ New routine jobs use exactly one `CONTENT_READY` evidence envelope. The envelope
 
 With runtime standing authorization enabled, `risk_class=LOW` + exact-bound `CONTENT_READY=PASS` produces one `instagram.publish` decision and no per-asset owner approval. A routine quality failure is repaired/retried upstream and the envelope is regenerated; only a real hard blocker surfaces to the owner. For a non-routine decision that genuinely requires owner approval, `human_approval` must bind `content_id`, `package_sha256` and the Worker-computed raw UTF-8 caption SHA-256. A mismatched approval is `DENY`, not a fallback to standing authorization.
 
-For migration safety only, the Worker accepts the previous seven-gate `policy_context` for jobs whose server-recorded `created_at` is before `2026-10-04T00:00:00Z`. This is bounded compatibility, not the new authoring contract.
+For migration safety only, the Worker accepts the previous seven-gate `policy_context` for jobs whose server-recorded `created_at` is before `2026-10-03T15:58:09.874Z`. This is bounded compatibility, not the new authoring contract.
 
 ## Canonical policy gate · LIVE
 

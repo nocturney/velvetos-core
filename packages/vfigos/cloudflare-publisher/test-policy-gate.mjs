@@ -149,7 +149,7 @@ const boundedCompatibility = await evaluateInstagramPublishJob(job({
   forbidden_effects: [],
   human_approval: null,
 }, {
-  created_at: Math.floor(Date.parse("2026-10-03T23:00:00Z") / 1000),
+  created_at: Math.floor(Date.parse("2026-10-03T15:58:00Z") / 1000),
 }), {STANDING_AUTHORIZATION: "true"});
 assert.equal(boundedCompatibility.result.decision, "ALLOW");
 assert.ok(boundedCompatibility.result.reason_codes.includes("CONTENT_READY_LEGACY_GATE_COMPATIBILITY"));

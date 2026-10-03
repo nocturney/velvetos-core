@@ -449,7 +449,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         content_ready_cfg = instagram_policy.get("content_ready") or {}
         require(content_ready_cfg.get("schema_version") == "velvet.content_ready.v1", "instagram.publish CONTENT_READY schema binding mismatch", problems)
         require(content_ready_cfg.get("required_evidence") == ["product_truth", "brand", "copy", "visual_qa", "rights_privacy", "render_transport"], "instagram.publish CONTENT_READY evidence set drift", problems)
-        require((content_ready_cfg.get("legacy_gate_compatibility") or {}).get("jobs_created_before") == "2026-10-04T00:00:00Z", "CONTENT_READY compatibility cutoff drift", problems)
+        require((content_ready_cfg.get("legacy_gate_compatibility") or {}).get("jobs_created_before") == "2026-10-03T15:58:09.874Z", "CONTENT_READY compatibility cutoff drift", problems)
         require(instagram_policy.get("status") == "active", "instagram.publish machine policy must be active after runtime cutover", problems)
         require(instagram_policy.get("decision_values") == ["ALLOW", "DENY", "REQUIRE_OWNER_APPROVAL"], "instagram.publish decision values mismatch", problems)
         row = next((x for x in rows if x.get("policy_id") == "instagram.publish"), None)
@@ -516,7 +516,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if stage4d_path.is_file():
             stage4d = load(stage4d_path)
             require(stage4d.get("schema") == "velvetos.stage4d-instagram-happy-path.implementation.v1", "Stage 4D report schema mismatch", problems)
-            require(stage4d.get("prepared_against_main_sha") == "7056c4fe48379935b88794c5db88efced72b5a93", "Stage 4D base SHA drift", problems)
+            require(stage4d.get("prepared_against_main_sha") == "44aef61e7280f3122d6df043b10ee4ad02e2fcb3", "Stage 4D base SHA drift", problems)
             require(stage4d.get("repository_acceptance") == "PASS", "Stage 4D repository acceptance is not PASS", problems)
             require(stage4d.get("policy_version") == 2, "Stage 4D report policy version mismatch", problems)
             happy = stage4d.get("routine_happy_path") or {}
