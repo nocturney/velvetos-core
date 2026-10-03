@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-02 — **ChatGPT Project 6.6.12 chat-native editor recovery:** `LATEST.json` is now schema v2 and separates creative runtime 6.6.9, Adobe Reel extension 6.6.11 (predecessor 6.6.10) and chat-native editor …</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-02 — **ChatGPT Project 6.6.12 chat-native editor recovery:** `LATEST.json` is now schema v2 and separates creative runtime 6.6.9, Adobe Reel extension 6.6.11 (predecessor 6.6.10) and chat-native editor …</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-01 — **Creative Craft Phase 2 specialist layer:** adds eleven narrow provider-neutral craft/QA Skills for CAD design, DCC modeling, materials/lookdev, post-production, prepress, fabrication, SketchUp/La…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-01 — **Creative Craft Phase 2 specialist layer:** adds eleven narrow provider-neutral craft/QA Skills for CAD design, DCC modeling, materials/lookdev, post-production, prepress, fabrication, SketchUp/La…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
