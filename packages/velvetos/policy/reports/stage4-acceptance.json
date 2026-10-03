@@ -1,0 +1,106 @@
+{
+  "schema": "velvetos.stage4-acceptance.v1",
+  "stage": "4",
+  "prepared_against_main_sha": "5a5ebcb655856e758aed2b80ffcb0b683d1b18b3",
+  "captured_at": "2026-10-03T21:02:03.5739383+03:00",
+  "behavior_change": false,
+  "purpose": "Close Reform v2 Stage 4 after 4A-4G using existing canonical evidence; no new authority or runtime behavior.",
+  "source_receipts": {
+    "stage4b": {
+      "path": "packages/velvetos/policy/reports/stage4b-project-request-fast-path.json",
+      "sha256": "0e3667fbf104664c82c89dacf00c83f1eb0c618cf370f09ebc622ec92cc01c79"
+    },
+    "stage4d_implementation": {
+      "path": "packages/velvetos/policy/reports/stage4d-instagram-happy-path-implementation.json",
+      "sha256": "017a7192d993cb4858df38565d0e56baf5274c051f1bfa6c39e61beab445cc17"
+    },
+    "stage4d_cutover": {
+      "path": "packages/velvetos/policy/reports/stage4d-instagram-happy-path-cutover.json",
+      "sha256": "a88147f84c1a79543b0f09d25a65e9c6d56fc1555d21903acfc98cf0c897ff30"
+    },
+    "stage4e": {
+      "path": "packages/velvetos/policy/reports/stage4e-gmail-send-simplification.json",
+      "sha256": "6a80047c2d19182aeb1fffcf94ed11ff4970643462599b1fdf7030deade5f16d"
+    },
+    "stage4f": {
+      "path": "packages/velvetos/policy/reports/stage4f-runtime-receipt-scope.json",
+      "sha256": "95706e0152cc17926b1da6c232ab1ef056a53fb8d95e93521f89bcca724c1360"
+    },
+    "stage4g": {
+      "path": "packages/velvetos/policy/reports/stage4g-cost-envelopes.json",
+      "sha256": "e2db133beea335d2f0991b897e65ed77b37c02f674078c0f4f54cf801ad58aee"
+    },
+    "policy_registry": {
+      "path": "packages/velvetos/policy/policy-registry.json",
+      "sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8"
+    }
+  },
+  "main_full_suite": {
+    "head_sha": "5a5ebcb655856e758aed2b80ffcb0b683d1b18b3",
+    "workflow_run_id": 37142530441,
+    "job_id": 111259753445,
+    "run_url": "https://github.com/nocturney/velvetos-core/actions/runs/37142530441",
+    "conclusion": "SUCCESS",
+    "mode": "full",
+    "registered_sensors": 116,
+    "passed_sensors": 116,
+    "log_markers": [
+      "SENSORS 116 mode=full",
+      "OK suite passed=116"
+    ]
+  },
+  "acceptance_criteria": {
+    "project_request_routing": true,
+    "single_authority_per_external_effect": true,
+    "routine_instagram_zero_owner_prompts_one_policy_decision_verified_publish": true,
+    "routine_gmail_not_blocked_by_approval_ceremony": true,
+    "unrelated_stale_runtime_evidence_does_not_block_code": true,
+    "bounded_cost_reuses_owner_approval_without_unbounded_spend": true,
+    "critical_guardrail_policy_coverage_preserved": true,
+    "main_full_sensor_suite_116_of_116": true
+  },
+  "routine_operations": {
+    "instagram": {
+      "owner_prompts": 0,
+      "policy_decisions_per_publish_attempt": 1,
+      "production_cutover": "PASS",
+      "provider_receipt_required": true,
+      "live_readback_required": true
+    },
+    "gmail": {
+      "owner_prompts": 0,
+      "routine_vectors_all_allow": true,
+      "transport_is_authorization": false,
+      "commitment_still_owner_gated": true
+    },
+    "runtime_receipts": {
+      "unrelated_stale_runtime_blocks_code": false,
+      "real_dependency_still_fail_closed": true
+    },
+    "cost": {
+      "active_envelopes": 0,
+      "spend_authorized_by_stage4g_implementation": false,
+      "matching_call_owner_prompts": 0,
+      "full_preflight_per_matching_call": false,
+      "exact_action_receipt_required": true
+    }
+  },
+  "safety_invariants": {
+    "price_and_spend_guarded": true,
+    "ads_and_boost_guarded": true,
+    "customer_whatsapp_human_reserved": true,
+    "physical_print_guarded": true,
+    "rights_privacy_ambiguity_guarded": true,
+    "irreversible_delete_guarded": true,
+    "external_permission_mutation_guarded": true,
+    "unverified_facts_fail_closed": true,
+    "exact_external_effect_receipts_preserved": true,
+    "unknown_sensitive_project_requests_remain_full": true
+  },
+  "stage5_entry": {
+    "allowed": true,
+    "next_stage": "Stage 5 — Context, Agents, Skills and Capability Locality",
+    "constraint": "Do not build a second Agent Harness; reduce context to smallest sufficient local authority."
+  },
+  "stage4_gate": "PASS"
+}
