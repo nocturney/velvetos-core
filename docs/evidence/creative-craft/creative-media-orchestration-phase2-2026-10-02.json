@@ -1,0 +1,228 @@
+{
+  "schema": "velvetos.creative-media-orchestration.phase2.evidence.v1",
+  "date": "2026-10-02",
+  "status": "PASS_WITH_TYPED_GAPS",
+  "scope": "Isolated Creative/Media Orchestration Phase 2 design and representative acceptance. Shared CreativeCraftRouter/registry intentionally untouched.",
+  "source_handoff": "05 - Creative Media Orchestration - Creative Craft Phase 2 Handoff",
+  "runtime_baseline": {
+    "handoffs_1_4_complete": true,
+    "missing_integrations": {
+      "status": "COMPLETE",
+      "accepted_count": 11,
+      "blocked_count": 0
+    },
+    "hyperframes": {
+      "version": "0.8.105",
+      "doctor": "PASS",
+      "render_smoke": "PASS"
+    },
+    "speech": {
+      "provider": "VoiceStudio 0.5.2 / OmniVoice",
+      "asr": "faster-whisper",
+      "doctor": "PASS",
+      "speech_smoke": "PASS",
+      "qa": "PASS",
+      "qa_similarity": 0.956522
+    },
+    "manim": {
+      "version": "0.21.0",
+      "smoke": "PASS"
+    }
+  },
+  "isolated_design": {
+    "workflow_count": 13,
+    "structural_validation": "PASS",
+    "shared_router_untouched": true,
+    "files": [
+      {
+        "path": "packages/vfharness/devtools/creative-craft/orchestration-phase2/orchestration-catalog.json",
+        "bytes": 15764,
+        "sha256": "5CBE909D2F10D9DD5578C6AA772D3C9EF60E815F6512B37DF2E2013749F6836F"
+      },
+      {
+        "path": "packages/vfharness/devtools/creative-craft/orchestration-phase2/pipeline-contract.schema.json",
+        "bytes": 1945,
+        "sha256": "F1A2390C7134A54CBFB2D4E322AF68DB443790CED3B3D0C153137E1ADA68FF82"
+      },
+      {
+        "path": "packages/vfharness/devtools/creative-craft/orchestration-phase2/typed-operation-gaps.json",
+        "bytes": 3986,
+        "sha256": "E459FC0D16D14640DBD00F68AD55443105DECBAE36BF64CED23AA11AE726555B"
+      },
+      {
+        "path": "packages/vfharness/devtools/creative-craft/orchestration-phase2/acceptance-test-plan.json",
+        "bytes": 3278,
+        "sha256": "6694FB69FF8913F9D497A7C349F6377CAD29B2DB4856F6A1D345BE2479FC8EAF"
+      },
+      {
+        "path": "packages/vfharness/devtools/creative-craft/orchestration-phase2/ORCHESTRATION-DESIGN.md",
+        "bytes": 7076,
+        "sha256": "3FE8F8C74D593ECA4261B5A7E37194E797D4DE6CB58DD3173CE119B69E46D87F"
+      }
+    ]
+  },
+  "host_lifecycle": {
+    "status": "CONFIRMED",
+    "rule": "GUI/COM Phase 2 candidates launch through existing InteractiveToken Scheduled Tasks; direct Session 0 launch is not a valid production-path acceptance. Headless CLI may run directly when accepted by its adapter contract.",
+    "evidence": [
+      "Direct Session 0 XVL GUI attempt failed UI readiness; InteractiveToken Scheduled Task rerun passed.",
+      "Direct Session 0 InDesign COM attempt stalled; InteractiveToken Scheduled Task rerun passed.",
+      "Media Encoder host correctly refused Session 0; InteractiveToken Scheduled Task run passed."
+    ],
+    "guardrails_preserved": true
+  },
+  "acceptance": {
+    "xvl_corel_acrobat": {
+      "status": "PASS",
+      "input": {
+        "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\phase2_xvl_corel_smoke.xv2",
+        "bytes": 468801,
+        "sha256": "FA9FE9CAA6E3FE3255CFBA3B89CDBEB1F4F30A3E5FECBB421BD1F28FCD8B4F88"
+      },
+      "cdr": {
+        "path": "D:\\Velvet\\Output\\CreativeCraft\\XVL\\orch2-tech-20261002a.cdr",
+        "bytes": 66819,
+        "sha256": "01ED79D95F5903E886E504EAC47130CB9A4211899BF6AEC83D9B3B1DCD6B7639"
+      },
+      "pdf": {
+        "path": "D:\\Velvet\\Output\\CreativeCraft\\XVL\\orch2-tech-20261002a.pdf",
+        "bytes": 2194,
+        "sha256": "63E203D91E3D87D8E14DC2868C9DE3C7AA3D86C5639D96A6BEC4098A9B828E64"
+      },
+      "readback": {
+        "pages": 1,
+        "shapes": 1
+      },
+      "acrobat_inspection": {
+        "status": "PASS",
+        "pages": 1,
+        "exact_pdf": true
+      }
+    },
+    "indesign_acrobat": {
+      "status": "PASS",
+      "job_id": "orch2-pub-20261002a",
+      "idml": {
+        "path": "D:\\Velvet\\Output\\CreativeCraft\\InDesign\\orch2-pub-20261002a.idml",
+        "bytes": 31334,
+        "sha256": "7A0B189142C567FF6223B3F51C34EBE9254BF6C80ECE4830C1BE703660FCDD98"
+      },
+      "pdf": {
+        "path": "D:\\Velvet\\Output\\CreativeCraft\\InDesign\\orch2-pub-20261002a.pdf",
+        "bytes": 14004,
+        "sha256": "895F3083DF8206D6AB642BF55FF004BED2C1527B82E8737B1294F19CD62B8017"
+      },
+      "readback": {
+        "pages": 1,
+        "text_frames": 1,
+        "characters": 266,
+        "post_documents": 0
+      },
+      "acrobat_inspection": {
+        "status": "PASS",
+        "pages": 1,
+        "exact_pdf": true
+      },
+      "limitation": "Current typed InDesign compose is text-only; placed assets, styles, links, preflight, package and named print presets remain P0 gaps."
+    },
+    "media_encoder_derivative": {
+      "status": "PASS",
+      "job_id": "orch2-derivative-20261002a",
+      "source": {
+        "path": "D:\\Velvet\\Tmp\\velvet-hyperframes-windows-smoke\\renders\\host-smoke.mp4",
+        "bytes": 26521,
+        "sha256": "3F854F8298BA1BDEA1844B9BE4C807FBE2D2B1AE12DDD963DB053AD200B60374"
+      },
+      "preset_id": "h264-high",
+      "output": {
+        "path": "D:\\Velvet\\Output\\CreativeCraft\\MediaEncoder\\orch2-derivative-20261002a.mp4",
+        "bytes": 136508,
+        "sha256": "0B2B2467AC86E0A0267903FEBF71EBAE432DF8AC40DE7DB0C13E74D56A047CE0"
+      },
+      "validation": {
+        "duration_seconds": 2,
+        "video_codec": "h264",
+        "width": 1080,
+        "height": 1920,
+        "frame_rate": "30/1",
+        "audio_codec": "aac"
+      },
+      "job_manifest": {
+        "path": "D:\\Velvet\\AME\\Jobs\\orch2-derivative-20261002a\\job.json",
+        "bytes": 1531,
+        "sha256": "BBE50C449E4B8B55D9B6718E3FDE5A6F7237E644B773CCB413442CF9D62E39FE"
+      },
+      "cleanup": "PASS"
+    },
+    "xvl_html5": {
+      "status": "PASS",
+      "job_id": "orch2-html5-20261002a",
+      "input_sha256": "FA9FE9CAA6E3FE3255CFBA3B89CDBEB1F4F30A3E5FECBB421BD1F28FCD8B4F88",
+      "html": {
+        "path": "D:\\Velvet\\Output\\CreativeCraft\\XVLHtml5\\orch2-html5-20261002a\\index.html",
+        "bytes": 14912,
+        "sha256": "08653545269E4BB31E0463C257C72FBA5F337331B55BF593CEDD97ECC612B2CF"
+      },
+      "manifest": {
+        "path": "D:\\Velvet\\Output\\CreativeCraft\\XVLHtml5\\orch2-html5-20261002a\\manifest.json",
+        "bytes": 913,
+        "sha256": "ABE7847DE96AA99D94088C825695470F00E5BDDADA75A37554466883D079A86E"
+      },
+      "package": {
+        "file_count": 111,
+        "jpg_count": 88,
+        "resource_png_count": 21,
+        "total_bytes": 1907197
+      }
+    }
+  },
+  "typed_gaps": {
+    "p0": [
+      "Photoshop bounded finishing",
+      "Premiere bounded timeline authoring",
+      "InDesign placed-asset/styles/preflight/package",
+      "Media Encoder named preset registry beyond h264-high",
+      "Manim declarative typed scene wrapper"
+    ],
+    "p1": [
+      "Illustrator bounded authoring/export",
+      "After Effects bounded comp/render",
+      "Affinity authoring/export",
+      "Resolve subtitles/Fairlight/node-level color/Fusion ops",
+      "Fusion Studio bounded comp templates",
+      "Acrobat deeper prepress facts",
+      "VoiceStudio normalized timing/subtitle handoff",
+      "standardized DCC turntable operation"
+    ]
+  },
+  "clean_state": {
+    "ports": {
+      "6781": "FREE",
+      "6787": "FREE",
+      "6788": "FREE",
+      "6789": "FREE",
+      "6790": "FREE"
+    },
+    "processes": {
+      "InDesign": 0,
+      "Adobe Media Encoder": 0,
+      "xvlstudio2_E": 0,
+      "Designer": 0,
+      "Acrobat": 0
+    },
+    "tasks": {
+      "VelvetOS Phase2 Candidate indesign": "Ready",
+      "VelvetOS Phase2 Candidate acrobat": "Ready",
+      "VelvetOS Phase2 Candidate media-encoder": "Ready",
+      "VelvetOS Phase2 Candidate xvl-studio-corel": "Ready",
+      "VelvetOS Phase2 Candidate xvl-html5": "Ready"
+    }
+  },
+  "policy": {
+    "publish_authorization": false,
+    "auto_publish": false,
+    "arbitrary_scripts": false,
+    "second_visual_foundry": false,
+    "second_media_vault": false
+  }
+}

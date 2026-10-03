@@ -11,11 +11,13 @@ $PhotoshopSource = Join-Path $SourceRoot 'Start-AdobePyBroker-Photoshop.ps1'
 $DesktopSource = Join-Path $SourceRoot 'Start-VelvetDccDesktopHosts.ps1'
 $ManagerSource = Join-Path $SourceRoot 'Invoke-VelvetDccHost.ps1'
 $ManifestSource = Join-Path $SourceRoot 'dcc-desktop-hosts.json'
+$MayaHeadlessSource = Join-Path $SourceRoot 'Start-VelvetMayaHeadless.ps1'
 $GatewayTarget = Join-Path $RuntimeRoot 'Start-VelvetDccGateway.ps1'
 $PhotoshopTarget = Join-Path $RuntimeRoot 'Start-AdobePyBroker-Photoshop.ps1'
 $DesktopTarget = Join-Path $RuntimeRoot 'Start-VelvetDccDesktopHosts.ps1'
 $ManagerTarget = Join-Path $RuntimeRoot 'Invoke-VelvetDccHost.ps1'
 $ManifestTarget = Join-Path $RuntimeRoot 'dcc-desktop-hosts.json'
+$MayaHeadlessTarget = Join-Path $RuntimeRoot 'Start-VelvetMayaHeadless.ps1'
 
 $ObsoleteTasks = @(
     'VelvetOS Acceptance Launch Illustrator',
@@ -50,7 +52,32 @@ function Get-OnDemandTaskName {
     "VelvetOS DCC OnDemand $Id"
 }
 
-$requiredSources = @($GatewaySource,$PhotoshopSource,$DesktopSource,$ManagerSource,$ManifestSource)
+$ExternalOnDemandContracts = @{
+    'illustrator' = @('Start-VelvetIllustratorReadonlyHost.ps1')
+    'fusion' = @('Start-VelvetFusionHost.ps1')
+    'meshmixer' = @('Start-VelvetMeshmixerHost.ps1')
+    'resolve' = @('Start-VelvetResolveHost.ps1')
+    'affinity' = @('Start-VelvetAffinityHost.ps1')
+    'coreldraw' = @('Start-VelvetCorelHost.ps1', '-AppId coreldraw')
+    'corel-designer' = @('Start-VelvetCorelHost.ps1', '-AppId corel-designer')
+}
+
+function Test-OnDemandActionContract {
+    param($App, $Summary)
+    if (-not $Summary.exists) { return $false }
+    $isMayaHeadless = ($App.id -eq 'maya' -and ($App.PSObject.Properties.Name -contains 'automation_mode') -and $App.automation_mode -eq 'headless_mayapy')
+    if ($isMayaHeadless) { return $Summary.action.Contains('Start-VelvetMayaHeadless.ps1') }
+    $id = [string]$App.id
+    if ($ExternalOnDemandContracts.ContainsKey($id)) {
+        foreach ($token in @($ExternalOnDemandContracts[$id])) {
+            if (-not $Summary.action.Contains([string]$token)) { return $false }
+        }
+        return $true
+    }
+    return $Summary.action.Contains("-OnlyAppId $id -HideAfterLaunch")
+}
+
+$requiredSources = @($GatewaySource,$PhotoshopSource,$DesktopSource,$ManagerSource,$ManifestSource,$MayaHeadlessSource)
 foreach ($required in $requiredSources) {
     if (-not (Test-Path -LiteralPath $required)) { throw "Missing deployment source: $required" }
 }
@@ -61,7 +88,8 @@ if ($ValidateOnly) {
         @($PhotoshopSource,$PhotoshopTarget),
         @($DesktopSource,$DesktopTarget),
         @($ManagerSource,$ManagerTarget),
-        @($ManifestSource,$ManifestTarget)
+        @($ManifestSource,$ManifestTarget),
+        @($MayaHeadlessSource,$MayaHeadlessTarget)
     )
     $fileChecks = foreach ($pair in $pairs) {
         $source = $pair[0]; $target = $pair[1]
@@ -75,10 +103,12 @@ if ($ValidateOnly) {
     $desktop = Get-TaskSummary -Name 'VelvetOS DCC Desktop Hosts'
     $onDemand = foreach ($app in $enabledApps) {
         $summary = Get-TaskSummary -Name (Get-OnDemandTaskName -Id $app.id)
-        $expectedArg = "-OnlyAppId $($app.id) -HideAfterLaunch"
         [pscustomobject]@{
-            id=$app.id; task=$summary; no_triggers=($summary.exists -and @($summary.trigger_types).Count -eq 0)
-            hidden_action=($summary.exists -and $summary.action.Contains($expectedArg))
+            id=$app.id
+            task=$summary
+            no_triggers=($summary.exists -and @($summary.trigger_types).Count -eq 0)
+            action_contract_ok=(Test-OnDemandActionContract -App $app -Summary $summary)
+            owner=$(if ($ExternalOnDemandContracts.ContainsKey([string]$app.id)) { 'creative-tools' } else { 'dcc-runtime' })
         }
     }
 
@@ -87,7 +117,7 @@ if ($ValidateOnly) {
                  $manifest.policy.launch_at_logon -eq $false -and
                  $manifest.policy.agent_hidden_launch -eq $true)
     $desktopOk = ($desktop.exists -and @($desktop.trigger_types).Count -eq 0 -and $desktop.action.Contains('-HideAfterLaunch'))
-    $onDemandOk = (@($onDemand | Where-Object { -not $_.no_triggers -or -not $_.hidden_action }).Count -eq 0)
+    $onDemandOk = (@($onDemand | Where-Object { -not $_.no_triggers -or -not $_.action_contract_ok }).Count -eq 0)
     $filesOk = (@($fileChecks | Where-Object { -not $_.match }).Count -eq 0)
     $status = if ($filesOk -and $policyOk -and $desktopOk -and $onDemandOk -and $oldRemaining.Count -eq 0) { 'PASS' } else { 'BLOCKED' }
 
@@ -114,6 +144,7 @@ Copy-Item -LiteralPath $PhotoshopSource -Destination $PhotoshopTarget -Force
 Copy-Item -LiteralPath $DesktopSource -Destination $DesktopTarget -Force
 Copy-Item -LiteralPath $ManagerSource -Destination $ManagerTarget -Force
 Copy-Item -LiteralPath $ManifestSource -Destination $ManifestTarget -Force
+Copy-Item -LiteralPath $MayaHeadlessSource -Destination $MayaHeadlessTarget -Force
 
 $gatewayAction = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument ('-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + $GatewayTarget + '"')
 $gatewayTrigger = New-ScheduledTaskTrigger -AtStartup
@@ -136,9 +167,24 @@ Register-ScheduledTask -TaskName 'VelvetOS DCC Desktop Hosts' -InputObject $desk
 $runtimeManifest = Get-Content $ManifestTarget -Raw | ConvertFrom-Json
 foreach ($app in @($runtimeManifest.apps | Where-Object enabled)) {
     $taskName = Get-OnDemandTaskName -Id $app.id
-    $args = '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + $DesktopTarget + '" -OnlyAppId ' + $app.id + ' -HideAfterLaunch'
+    $id = [string]$app.id
+    if ($ExternalOnDemandContracts.ContainsKey($id)) {
+        $existing = Get-TaskSummary -Name $taskName
+        $existingValid = ($existing.exists -and @($existing.trigger_types).Count -eq 0 -and (Test-OnDemandActionContract -App $app -Summary $existing))
+        if (-not $existingValid) {
+            Write-Warning "External Creative Tools task is missing or invalid and was left untouched: $taskName"
+        }
+        continue
+    }
+    $isMayaHeadless = ($app.id -eq 'maya' -and ($app.PSObject.Properties.Name -contains 'automation_mode') -and $app.automation_mode -eq 'headless_mayapy')
+    $args = if ($isMayaHeadless) {
+        '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + $MayaHeadlessTarget + '"'
+    } else {
+        '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + $DesktopTarget + '" -OnlyAppId ' + $app.id + ' -HideAfterLaunch'
+    }
     $action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument $args
-    $definition = New-ScheduledTask -Action $action -Principal $desktopPrincipal -Settings $desktopSettings -Description ("VelvetOS hidden on-demand DCC host: " + $app.id)
+    $description = if ($isMayaHeadless) { 'VelvetOS hidden on-demand Maya headless MCP host.' } else { "VelvetOS hidden on-demand DCC host: $($app.id)" }
+    $definition = New-ScheduledTask -Action $action -Principal $desktopPrincipal -Settings $desktopSettings -Description $description
     Register-ScheduledTask -TaskName $taskName -InputObject $definition -Force | Out-Null
 }
 

@@ -17,14 +17,14 @@
 | `multicad` | [AnCode666/multiCAD-mcp](https://github.com/AnCode666/multiCAD-mcp) | **skip** | skip (אלא אם יש AutoCAD/ZWCAD במק) | COM/Windows CAD — לא רצפת ההדפסה של VF |
 | `openscad-2` | משפחת OpenSCAD MCP ([petrijr/openscad-mcp](https://github.com/petrijr/openscad-mcp) ודומים) | **skip** | **local optional** אחרי ראש צוות | פרמטרי → STL; דורש OpenSCAD מקומי; עדיין `vlicense` + סלייס |
 | `blender-vxai` | רשימת שוק בלבד; GitHub לא אומת | **skip** | skip עד זיהוי ריפו | אין גוף מאומת — לא ממציאים |
-| `sketchup-1` | [russell-qca/sketchup-mcp](https://github.com/russell-qca/sketchup-mcp) | **skip** | skip אלא אם SketchUp במק | לא כלי הרצפה של VF |
+| `sketchup-1` | [russell-qca/sketchup-mcp](https://github.com/russell-qca/sketchup-mcp) | **skip** | **integration pending** on active Windows host | SketchUp 2026 + LayOut are installed and now have first-class craft via `.cursor/skills/vf-sketchup-layout-craft`; do not claim live MCP/Ruby automation until a separate local integration is accepted |
 | `freecad-1` | [neka-nat/freecad-mcp](https://github.com/neka-nat/freecad-mcp) | **skip** | local optional אם FreeCAD במק | CAD פרמטרי; לא מחליף 3DAI לקונספט מהיר |
 
 ## כלל זהב ל־VF
 
 ```
 פנייה → 3DAI (או מאגר vlicense) → STL + CHECKLIST + סלייס → אדם מדפיס → איסוף שדרות
-         ↘ (מק בלבד, רשות) Blender / OpenSCAD / FreeCAD MCP לעריכה
+         ↘ (local host only, optional) Blender / OpenSCAD / FreeCAD / SketchUp — only through an accepted local adapter; craft guidance alone is not runtime proof
          ↘ (אופציונלי) Excalidraw לדיאגרמת תהליך פנימית — לא פיד
 ```
 

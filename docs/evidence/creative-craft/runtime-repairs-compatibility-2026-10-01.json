@@ -1,0 +1,106 @@
+{
+  "schema": "velvetos.creative-craft.runtime-repairs-compatibility.v1",
+  "created_at": "2026-10-01T17:12:53.7011244Z",
+  "source_handoff": "Handoff 03 - Runtime Repairs & Compatibility, 2026-10-01",
+  "scope": "repair_only",
+  "hyperframes": {
+    "before": {
+      "state_version": "0.8.34",
+      "runtime_prefix_empty": true,
+      "cli_on_path": false
+    },
+    "after": {
+      "version": "0.8.105",
+      "doctor": "pass",
+      "render_smoke": "pass",
+      "receipt": "D:\\Velvet\\Tmp\\velvet-hyperframes-windows-smoke\\renders\\host-smoke.mp4.receipt.json",
+      "video_sha256": "3f854f8298ba1bdea1844b9be4c807fbe2d2b1ae12ddd963db053ad200b60374",
+      "resolution": "1080x1920",
+      "duration_sec": 2,
+      "codec": "h264"
+    },
+    "root_cause": "runtime package prefix was empty while historical verified state/receipt remained authoritative",
+    "recovery": "bootstrap-edge-host-windows.ps1 supports latest-compatible install with 0.8.34 recovery baseline; no inbound port/tunnel"
+  },
+  "prusaslicer": {
+    "installed": "PrusaSlicer 2.9.6",
+    "executable": "C:\\Program Files\\Prusa3D\\PrusaSlicer\\prusa-slicer-console.exe",
+    "before_discovery": false,
+    "after_discovery": true,
+    "canonical_order": [
+      "orcaslicer",
+      "prusa-slicer",
+      "curaengine"
+    ],
+    "production_primary": "OrcaSlicer 2.4.2",
+    "real_slice_gcode": "D:\\Velvet\\Tmp\\prusa-runtime-repair\\cube.gcode",
+    "real_slice_sha256": "AFFBB2CE374091BFD3D2D8BE35B11FD66E4F37A680CF78DEFA264F4079AC4E90",
+    "root_cause": "upstream gcode discovery checked env/PATH and macOS bundle paths but not Windows Prusa3D Program Files",
+    "worktree_patch": "scripts\\vf_cad.py",
+    "runtime_patch": "D:\\Velvet\\Runtime\\VelvetOS\\Cognee\\cognee-core\\scripts\\vf_cad.py",
+    "runtime_backup": "D:\\Velvet\\Runtime\\VelvetOS\\Cognee\\cognee-core\\scripts\\vf_cad.py.before-prusa-discovery-20261001.bak",
+    "printer_actions_allowed": false
+  },
+  "openscad_nightly": {
+    "installed": "2026.09.18",
+    "latest_observed": "2026.10.01",
+    "update_status": "UPDATE_AVAILABLE",
+    "auto_update": false,
+    "source": "https://files.openscad.org/snapshots/",
+    "compatibility_receipt": "D:\\Velvet\\Logs\\DCC-Adobe-Update-Sentinel\\receipts\\20261001T165930Z-openscad-nightly.json",
+    "compatibility_receipt_sha256": "BD182F0A2639E872E852BF77D05EB0F2485E9A6A631D6B2D71A5F211F95DFEC5",
+    "executable_sha256": "2A0A1D2F5D942A63E77A659623D92FD67D7C6CF91A17BAEF0702D736DAE0B268",
+    "stl_sha256": "95ED0BA2988C760597CBCF13E9FFADB90CD731E4FA1B1C72DE0B4E8246DE810E",
+    "png_sha256": "2269E9DE6EAB15427BACFC5AA8C18132B981CB380DDB775D742E40AA1E03421F",
+    "policy": "watch for newer official nightly; no automatic update; after version drift fail closed until STL+PNG CLI smoke passes"
+  },
+  "gigapixel": {
+    "retired_from_active_config": true,
+    "retired_from_baseline": true,
+    "retired_notification_state": true,
+    "active_connector_removed": true,
+    "executable_present": false,
+    "photoshop_plugin_present": false,
+    "historical_evidence_preserved": true,
+    "baseline_backup": "D:\\Velvet\\State\\DCC-Adobe-Update-Sentinel\\accepted-baseline.before-gigapixel-retire-20261001T170024Z.json"
+  },
+  "sentinel_consistency": {
+    "source_runtime_hash": "75462C6C7B0A963060CA9962B363AD4AC3AF9FB2F53FF5F2C4F63BB0E1593559",
+    "config_hash": "890BFAA57FD3D36F8C3C6E769B3AE3B390CF585906557FA607C0940F98C333AA",
+    "openscad_watch_hash": "55C567E0AC6AFC6D609E2BCC1B5629227D37729E231FE4C05ECF48A6E3E28CA3",
+    "openscad_probe_hash": "DB4EFCE377809F167FF070027D1E04E4C0FD5B64F791193CFE8D222ADD524034",
+    "adobe_readiness_fix": "retry read-only Adobe probe within 45-second readiness window; remains fail-closed",
+    "stale_pending_reconcile": "pending_validation is changed to available only when current fingerprint exactly matches accepted baseline",
+    "photoshop_receipt": {
+      "path": "D:\\Velvet\\Logs\\DCC-Adobe-Update-Sentinel\\receipts\\20261001T170627Z-photoshop.json",
+      "sha256": "4F0A98D24BA04BC12694ABCDE4C6F7CF362BEC508982F7934F0C9875F6E30E31"
+    },
+    "topaz_video_receipt": {
+      "path": "D:\\Velvet\\Logs\\DCC-Adobe-Update-Sentinel\\receipts\\20261001T170335Z-topaz-video.json",
+      "sha256": "EE2F7EF014D3F92E288643D26C7A7FE093FA834E4500240E3A2F332CAF28A1A5"
+    },
+    "coreldraw_receipt": {
+      "path": "D:\\Velvet\\Logs\\DCC-Adobe-Update-Sentinel\\receipts\\20261001T170406Z-coreldraw.json",
+      "sha256": "1F9F106DE8D68AB98921F41D17FC214FF8B5A29168B1255ACCE5CBF8DBECD450"
+    },
+    "corel_designer_receipt": {
+      "path": "D:\\Velvet\\Logs\\DCC-Adobe-Update-Sentinel\\receipts\\20261001T170421Z-corel-designer.json",
+      "sha256": "1DE8BA075E96FEEC918A90836B0CBDEDF29B8309E1E72DF5DA131C68898F6453"
+    },
+    "integrated_baseline_inventory_diffs": 0,
+    "remaining_blocked": [
+      {
+        "id": "maya",
+        "status": "needs_compatibility_repair",
+        "last_error": "no live dynamic MCP endpoint for maya",
+        "note": "pre-existing runtime failure; fingerprint matches accepted baseline; not revalidated because no drift and scope forbids broad heavy GUI revalidation"
+      }
+    ]
+  },
+  "boundaries": {
+    "no_printer_network_control": true,
+    "no_publish_send": true,
+    "no_integrity_bypass": true,
+    "no_push_merge": true
+  }
+}

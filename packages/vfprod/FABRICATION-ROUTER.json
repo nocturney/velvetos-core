@@ -111,10 +111,10 @@
       "artifact": false
     },
     "additive_redesign": {
-      "primary": "dfam-check",
+      "primary": "vf-3d-router",
       "chain": [
         "dfam-check",
-        "cad",
+        "vf-3d-router",
         "dfam-check",
         "cad-viewer"
       ],
@@ -205,6 +205,25 @@
         "native_vision",
         "cad",
         "cad-viewer",
+        "dfam-check",
+        "gcode"
+      ],
+      "artifact": true
+    },
+    "reference_reconstruction": {
+      "primary": "native_vision",
+      "chain": [
+        "native_vision",
+        "vf-3d-router",
+        "cad-viewer"
+      ],
+      "artifact": true
+    },
+    "reference_reconstruction_to_print": {
+      "primary": "native_vision",
+      "chain": [
+        "native_vision",
+        "vf-3d-router",
         "dfam-check",
         "gcode"
       ],

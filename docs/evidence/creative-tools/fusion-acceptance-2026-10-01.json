@@ -1,0 +1,59 @@
+{
+  "schema": "velvetos.creative-tools.acceptance.v1",
+  "app": "fusion",
+  "observed_version": "2705.1.25",
+  "status": "FUNCTIONAL_PASS_WITH_LIMITATION",
+  "accepted_at": "2026-10-01T08:38:42.6675997+03:00",
+  "transport": {
+    "kind": "autodesk_native_mcp",
+    "endpoint": "http://127.0.0.1:27182/mcp",
+    "server": "MCP Server Adapter",
+    "protocol": "2025-11-25"
+  },
+  "lifecycle": {
+    "hidden_on_demand": true,
+    "triggerless": true,
+    "restart_read_probe_pass": true,
+    "clean_stop_pass": true
+  },
+  "production_allowlist": {
+    "allowed": [
+      "fusion_mcp_read",
+      "fusion_mcp_electronics_read",
+      "fusion_mcp_update"
+    ],
+    "update_feature_types": [
+      "undo",
+      "redo"
+    ],
+    "blocked": [
+      "fusion_mcp_execute"
+    ],
+    "blocked_before_transport": true
+  },
+  "acceptance": {
+    "safe_read_pass": true,
+    "sentinel_probe_pass": true,
+    "controlled_write_side_effect_previously_verified": true,
+    "step": {
+      "path": "D:\\Velvet\\Tmp\\creative-tools\\fusion-native\\acceptance.step",
+      "sha256": "9609CF00E99BBB68FC5234BC7F717CCCF2008E36EC4B17443A11B200863874DD",
+      "bytes": 8919
+    },
+    "stl": {
+      "path": "D:\\Velvet\\Tmp\\creative-tools\\fusion-native\\acceptance.stl",
+      "sha256": "3B769466707E4740939AF1FFA0FEC7ECA894A8806D8EA969E380982C8CA1FE79",
+      "bytes": 684
+    }
+  },
+  "artifacts": {
+    "hardening_patch_sha256": "4285B99F0BA9D506562B96622E9A13B40AD60A82867A068E3025751386956CFF",
+    "safe_wrapper_sha256": "A4DABE0A9B9BFCC27FF2E52DE524C3BBE0D621E5948E307CEEAFBA6B8ADD11E3",
+    "connector_sha256": "27CDE4597FBD2574EE59237532CE6FD4F23A41EA8347F027F1EE1A7B0B0A2C99"
+  },
+  "limitations": [
+    "fusion_mcp_execute can complete a side effect but stall while returning the MCP tools/call response on Fusion 2705.1.25.",
+    "fusion_mcp_execute includes arbitrary Python script execution and is blocked from production routing.",
+    "Production capability is read-first plus safe undo/redo; controlled arbitrary writes are not exposed."
+  ]
+}

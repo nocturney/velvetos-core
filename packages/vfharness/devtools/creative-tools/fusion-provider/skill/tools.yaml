@@ -1,0 +1,173 @@
+tools:
+  - name: status
+    description: >-
+      Read Fusion connectivity and active-command state through Autodesk's
+      built-in native MCP server. Read-only; does not modify the active document.
+    input_schema:
+      type: object
+      properties: {}
+      additionalProperties: false
+    read_only: true
+    idempotent: true
+    execution: sync
+    affinity: any
+    annotations:
+      read_only_hint: true
+      destructive_hint: false
+      idempotent_hint: true
+      open_world_hint: false
+    source_file: scripts/status.py
+
+  - name: create_temp_design
+    description: >-
+      Create one provider-owned disposable Fusion design for controlled
+      operations and acceptance tests. Never opens or modifies an existing user
+      document.
+    input_schema:
+      type: object
+      properties:
+        label:
+          type: string
+          minLength: 1
+          maxLength: 80
+      additionalProperties: false
+    read_only: false
+    destructive: false
+    idempotent: false
+    execution: sync
+    affinity: any
+    annotations:
+      read_only_hint: false
+      destructive_hint: false
+      idempotent_hint: false
+      open_world_hint: false
+    source_file: scripts/create_temp_design.py
+
+  - name: set_temp_parameter_mm
+    description: >-
+      Create or update one millimetre user parameter in the provider-owned
+      temporary Fusion design. Refuses to act on any other document.
+    input_schema:
+      type: object
+      properties:
+        name:
+          type: string
+          pattern: "^[A-Za-z_][A-Za-z0-9_]{0,63}$"
+        value_mm:
+          type: number
+          minimum: 0.001
+          maximum: 100000
+      required: [name, value_mm]
+      additionalProperties: false
+    read_only: false
+    destructive: false
+    idempotent: true
+    execution: sync
+    affinity: any
+    annotations:
+      read_only_hint: false
+      destructive_hint: false
+      idempotent_hint: true
+      open_world_hint: false
+    source_file: scripts/set_temp_parameter_mm.py
+
+  - name: create_temp_box_mm
+    description: >-
+      Create one rectangular solid in the provider-owned temporary Fusion
+      design using millimetre dimensions. Refuses to act on any other document.
+    input_schema:
+      type: object
+      properties:
+        width_mm:
+          type: number
+          minimum: 0.01
+          maximum: 100000
+        depth_mm:
+          type: number
+          minimum: 0.01
+          maximum: 100000
+        height_mm:
+          type: number
+          minimum: 0.01
+          maximum: 100000
+      required: [width_mm, depth_mm, height_mm]
+      additionalProperties: false
+    read_only: false
+    destructive: false
+    idempotent: false
+    execution: sync
+    affinity: any
+    annotations:
+      read_only_hint: false
+      destructive_hint: false
+      idempotent_hint: false
+      open_world_hint: false
+    source_file: scripts/create_temp_box_mm.py
+
+  - name: temp_design_summary
+    description: >-
+      Read back body, sketch, and user-parameter state from the provider-owned
+      temporary Fusion design. Read-only and refuses other documents.
+    input_schema:
+      type: object
+      properties: {}
+      additionalProperties: false
+    read_only: true
+    idempotent: true
+    execution: sync
+    affinity: any
+    annotations:
+      read_only_hint: true
+      destructive_hint: false
+      idempotent_hint: true
+      open_world_hint: false
+    source_file: scripts/temp_design_summary.py
+
+  - name: export_temp_design
+    description: >-
+      Export the provider-owned temporary Fusion design to STEP or STL under
+      D:\Velvet\Tmp\creative-tools\fusion-provider. No arbitrary output path
+      is accepted.
+    input_schema:
+      type: object
+      properties:
+        format:
+          type: string
+          enum: [step, stl]
+        basename:
+          type: string
+          pattern: "^[A-Za-z0-9_-]{1,64}$"
+          default: acceptance
+      required: [format]
+      additionalProperties: false
+    read_only: false
+    destructive: false
+    idempotent: true
+    execution: sync
+    affinity: any
+    annotations:
+      read_only_hint: false
+      destructive_hint: false
+      idempotent_hint: true
+      open_world_hint: false
+    source_file: scripts/export_temp_design.py
+
+  - name: close_temp_design
+    description: >-
+      Close only the provider-owned temporary Fusion design without saving.
+      Refuses to close any user document.
+    input_schema:
+      type: object
+      properties: {}
+      additionalProperties: false
+    read_only: false
+    destructive: true
+    idempotent: false
+    execution: sync
+    affinity: any
+    annotations:
+      read_only_hint: false
+      destructive_hint: true
+      idempotent_hint: false
+      open_world_hint: false
+    source_file: scripts/close_temp_design.py

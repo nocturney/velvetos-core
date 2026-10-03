@@ -1,0 +1,136 @@
+{
+  "schema": "velvetos.creative-tools.corel-acceptance.v1",
+  "created_at": "2026-10-01T15:35:32.9113008+03:00",
+  "app_id": "coreldraw",
+  "product": "CorelDRAW",
+  "installed": {
+    "version": "27.2.0.135",
+    "executable": {
+      "path": "C:\\Program Files\\Corel\\CorelDRAW Technical Suite\\27\\Programs64\\CorelDRW.exe",
+      "bytes": 390560,
+      "sha256": "C1BBB188BFB05E5BBAFF30700B8A4066E3AEACDBAC90611859E6A952904E96E1"
+    },
+    "typelib": {
+      "path": "C:\\Program Files\\Corel\\CorelDRAW Technical Suite\\27\\Programs64\\TypeLibs\\CorelDRAW.tlb",
+      "bytes": 234212,
+      "sha256": "2317CDEE86D746D57A8A35DFBCC918382CF054C75290677836DB3D8879B0FEBC"
+    },
+    "vgcoreauto": {
+      "path": "C:\\Program Files\\Corel\\CorelDRAW Technical Suite\\27\\Programs64\\TypeLibs\\VGCoreAuto.tlb",
+      "bytes": 899480,
+      "sha256": "7044B6074DFA445F39F6238062AE40E96E01C7764DC28D215872ABACCE3BDD7C"
+    }
+  },
+  "architecture": {
+    "integration": "official_com_only",
+    "adapter_version": "0.1.0",
+    "adapter": {
+      "path": "D:\\Velvet\\Runtime\\CreativeTools\\Corel\\CorelTechnicalSafeAdapter.py",
+      "bytes": 11455,
+      "sha256": "80C8AC9DFF0A81710AC6BA7D4EA24A8E80157700BC91C331541CA7F4777981ED"
+    },
+    "start_wrapper": {
+      "path": "D:\\Velvet\\Runtime\\Autostart\\Start-VelvetCorelHost.ps1",
+      "bytes": 1475,
+      "sha256": "881E126016153F70842B318C1821557D34B3355D5F1001E6EBF819D08F13FCE2"
+    },
+    "stop_wrapper": {
+      "path": "D:\\Velvet\\Runtime\\Autostart\\Stop-VelvetCorelHost.ps1",
+      "bytes": 1329,
+      "sha256": "1535C1F00FA8E2B66B278FB79B62F1479993FF2993AF4028C00832C68A2B7ACD"
+    },
+    "sentinel_script": {
+      "path": "D:\\Velvet\\Runtime\\UpdateSentinel\\Invoke-DccAdobeUpdateSentinel.ps1",
+      "bytes": 37743,
+      "sha256": "69927FCF807FC81D1CF803F7B94BEEDA3DF35107D53BB13C555730D8A2797510"
+    },
+    "sentinel_config": {
+      "path": "D:\\Velvet\\Runtime\\UpdateSentinel\\dcc-adobe-update-sentinel.json",
+      "bytes": 27003,
+      "sha256": "52AE2B68566A0DB82F4131CD621C1DA2BC2670DBF8E9BAFE8DF87C439DF70271"
+    },
+    "runtime_manifest": {
+      "path": "D:\\Velvet\\Runtime\\Autostart\\dcc-desktop-hosts.json",
+      "bytes": 9631,
+      "sha256": "F91F21843E304C24A89EBF59B67975A67054EE860840E59AD775C95370DB3C35"
+    },
+    "production_surface": [
+      "probe",
+      "status",
+      "shutdown"
+    ],
+    "acceptance_surface": "acceptance (temporary gate only)",
+    "prohibited_surface": [
+      "Evaluate",
+      "VBA",
+      "GMS/macros",
+      "generic COM dispatch",
+      "arbitrary script execution"
+    ],
+    "filesystem_write_root": "D:\\Velvet",
+    "refuses_preexisting_user_session": true,
+    "transport": "127.0.0.1 token-authenticated HTTP sidecar"
+  },
+  "lifecycle": {
+    "launch": "on_demand_hidden",
+    "session": 1,
+    "task": {
+      "name": "VelvetOS DCC OnDemand coreldraw",
+      "state": "Ready",
+      "user": "Chris",
+      "logon": "Interactive",
+      "trigger_xml": "<Triggers />",
+      "action": "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File \"D:\\Velvet\\Runtime\\Autostart\\Start-VelvetCorelHost.ps1\" -AppId coreldraw"
+    },
+    "shortcut": {
+      "path": "D:\\Velvet\\Runtime\\Autostart\\CorelDRAW 2026 - VelvetOS.lnk",
+      "bytes": 1269,
+      "sha256": "1ECD2C2DC64933CF3943321F746A35C20CE2C70F59C428050C7FACCA5D79BFA3"
+    },
+    "login_startup": false
+  },
+  "controlled_write": {
+    "status": "PASS",
+    "app": "coreldraw",
+    "readback": {
+      "pages": 1,
+      "shapes": 1,
+      "position_x": 10.0,
+      "position_y": 30.0,
+      "width": 40.0,
+      "height": 20.0,
+      "fill_rgb": [
+        32,
+        95,
+        224
+      ]
+    },
+    "artifact": {
+      "path": "D:\\Velvet\\Tmp\\creative-tools\\corel\\coreldraw-acceptance.pdf",
+      "bytes": 1370821,
+      "page_width_points": 612.0,
+      "page_height_points": 792.0,
+      "sha256": "40E682890B435D282E7257C0382E306A9B80C86A11F7137D32A03018E811FC05"
+    },
+    "post_documents": 0
+  },
+  "sentinel": {
+    "classification": "PASS_COMPATIBILITY_CHECK",
+    "receipt_path": "D:\\Velvet\\Logs\\DCC-Adobe-Update-Sentinel\\receipts\\20261001T123215Z-coreldraw.json",
+    "receipt_sha256": "7283276A359D056981B2F51EF6177BE27F54A6D576E4AA9ED438BF6F8E74492D",
+    "routing": {
+      "status": "available",
+      "fingerprint": "0E7EAC4B6ED159510C7440358BBBC3334754CDA2DD84F253F1CA2C2E152BB7C3",
+      "reason": "post-update compatibility gate passed",
+      "updated_at": "2026-10-01T15:32:15.4858086+03:00"
+    }
+  },
+  "cleanup": {
+    "acceptance_gate_present": false,
+    "host_processes": 0,
+    "listener_count": 0,
+    "temporary_probe_task_present": false
+  },
+  "rollback": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\Rollback-CorelTechnicalIntegration.ps1",
+  "classification": "PASS"
+}

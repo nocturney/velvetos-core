@@ -1,0 +1,61 @@
+{
+  "schema": "velvetos.creative-tools.acceptance.v1",
+  "app": "topaz-video",
+  "observed_version": "1.7.1.0",
+  "status": "PASS",
+  "accepted_at": "2026-10-01T11:50:40.2834448+03:00",
+  "mode": "cli_headless",
+  "runtime": {
+    "ffmpeg": "8.1",
+    "filters": [
+      "tvai_up",
+      "tvai_fi",
+      "tvai_pe",
+      "tvai_cpe",
+      "tvai_stb"
+    ],
+    "gui_required": false,
+    "persistent_background_process": false
+  },
+  "adapter": {
+    "source_sha256": "25D3B68AA0F5636B21FF4540252CE6D229402C18C2970AEB5098437B96B7C20B",
+    "runtime_sha256": "25D3B68AA0F5636B21FF4540252CE6D229402C18C2970AEB5098437B96B7C20B",
+    "connector_sha256": "5B2DE54295765C0027759472CA65E9468AC0ABE84BD5FB69D6D83A080E648E2D",
+    "operations": [
+      "probe",
+      "probe-media",
+      "enhance"
+    ],
+    "automatic_model_downloads": false,
+    "path_sandbox": "D:\\Velvet",
+    "arbitrary_ffmpeg_args": false
+  },
+  "model": {
+    "id": "ahq-12",
+    "payload": "C:\\ProgramData\\Topaz Labs LLC\\Topaz Video\\ahq-v12-fgnet-fp16-288x288-1x-ox.tz3",
+    "bytes": 23657764,
+    "sha256": "CA1A3DD167F9FB019B5E869BEC19E54A4CCBD84DDF8788788D5235C1937E01B9"
+  },
+  "acceptance": {
+    "output": "D:\\Velvet\\Tmp\\creative-tools\\topaz-video\\acceptance-enhanced.mkv",
+    "bytes": 2789063,
+    "sha256": "AA1D2EF91EFD16AC2A8077768F6528AA5ED834A032A83BB401195698300ACBA9",
+    "width": 512,
+    "height": 512,
+    "fps": "4/1",
+    "duration_seconds": 1,
+    "download": false
+  },
+  "sentinel": {
+    "classification": "PASS_COMPATIBILITY_CHECK",
+    "receipt": "D:\\Velvet\\Logs\\DCC-Adobe-Update-Sentinel\\receipts\\20261001T084945Z-topaz-video.json",
+    "receipt_sha256": "8B206D1CAAA7803CF80FE70676341C35216DF9BCFC0274CC3FA9F3D55FC160BE",
+    "routing_status": "available",
+    "fingerprint": "1799F55E332C12C080D723170228B721CB8E02BB310B146AD61C1B8BC512C049"
+  },
+  "process_cleanup": {
+    "topaz_video": 0,
+    "ffmpeg": 0,
+    "ffprobe": 0
+  }
+}

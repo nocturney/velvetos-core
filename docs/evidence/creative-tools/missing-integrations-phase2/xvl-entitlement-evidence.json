@@ -1,0 +1,31 @@
+{
+  "generated": "2026-10-02T22:29:15.9237021+03:00",
+  "status": "OPTIONAL_UNAVAILABLE",
+  "reason": "XVL Player SDK/API entitlement not installed; accepted XVL Studio GUI and xvlgenhtm CLI workflows do not require it",
+  "installed_products": [
+    {
+      "name": "XVL Player / XVL Player Pro 64-bit Edition",
+      "version": "25.0",
+      "path": "C:\\Program Files\\Lattice\\Player3"
+    },
+    {
+      "name": "XVL Studio Corel Edition",
+      "version": "13.0",
+      "path": "C:\\Program Files\\Lattice\\XVLStudio3DCADCorelEdition27"
+    }
+  ],
+  "sdk_installed_product": false,
+  "sdk_like_files": [],
+  "local_manual": "C:\\Program Files\\Lattice\\Player3\\Doc\\XVL_Player_Def.pdf",
+  "manual_note": "Manual states XVL Player SDK is sold separately and Visual Basic/C# integration requires the SDK",
+  "probes": {
+    "standalone_player_open": "PASS",
+    "player_title": "DigitalCamera_from_CAD.xv2 - XVL Player",
+    "xvl_connection_attach": "INVALID_API_CALL",
+    "activeX_host_created": "PASS",
+    "activeX_src_set": "PASS_BUT_MODEL_EMPTY",
+    "model_import": "UNSUPPORTED_OR_NO_READY"
+  },
+  "shared_router_untouched": true,
+  "resolution": "Install/license XVL Player SDK only if future workflows require direct embedded-viewer API access"
+}

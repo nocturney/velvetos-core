@@ -1,0 +1,75 @@
+{
+  "schema": "velvetos.creative-tools.connector.v1",
+  "id": "meshmixer",
+  "display_name": "Autodesk Meshmixer",
+  "adapter_version": "0.1.0",
+  "host_observed_product_version": "11.5.474",
+  "host_display_version": "3.5",
+  "upstream": {
+    "repository": "https://github.com/meshmixer/mm-api.git",
+    "commit": "73c7d69d60952d45938abced877b62ece2d43834",
+    "commit_date": "2017-03-17T14:13:52-04:00",
+    "license": "Autodesk mm-api LICENSE"
+  },
+  "transport": {
+    "kind": "official_mm_api_udp",
+    "request_bind": "127.0.0.1",
+    "request_port": 45007,
+    "response_bind": "127.0.0.1",
+    "response_port": 45023,
+    "runtime_listener_must_be_owned_by": "meshmixer.exe"
+  },
+  "adapter": {
+    "executable": "D:\\Velvet\\Tools\\CreativeTools\\Meshmixer\\adapter-0.1.0\\VelvetMeshmixerAdapter.exe",
+    "architecture": "x86",
+    "source_sha256": "70987A9828EB585B8D880C3622E591039265167993484D2D338D9A6ADEEADE79",
+    "executable_sha256": "04253D9A1B81A119FFB52A401F0E2D34CEC5AD1CD4A33F71EA8E12A0EE56EE9F",
+    "mmapi_native_sha256": "597CADED189E95F66EF67ED2AC761C2AE7A827B4176CFE4563217D9C48BDD657",
+    "mmapi_csharp_sha256": "463E1AF818655C34A372103906FC67884C39D03526606E456C3EBD36DF8648C8"
+  },
+  "lifecycle": {
+    "mode": "existing_dcc_hidden_on_demand",
+    "process": "meshmixer",
+    "task": "VelvetOS DCC OnDemand meshmixer",
+    "managed_shortcut": "D:\\Velvet\\Runtime\\Autostart\\Autodesk Meshmixer - VelvetOS.lnk",
+    "host_wrapper": "D:\\Velvet\\Runtime\\Autostart\\Start-VelvetMeshmixerHost.ps1",
+    "host_wrapper_sha256": "7ED0021DDF082AA6463B190ED17444E3F62C9A9734FC79EE491AFD220891083E",
+    "launch_at_logon": false,
+    "task_triggerless": true,
+    "vendor_shortcut_modified": false
+  },
+  "surface": {
+    "production_operations": [
+      "probe",
+      "list",
+      "info",
+      "import",
+      "screenshot"
+    ],
+    "acceptance_only_operations": [
+      "acceptance-clear"
+    ],
+    "import_root": "D:\\Velvet",
+    "screenshot_root": "D:\\Velvet",
+    "generic_command_stream_exposed": false
+  },
+  "security": {
+    "loopback_only": true,
+    "vendor_binary_modified": false,
+    "signature_or_integrity_checks_weakened": false,
+    "python_27_installed": false,
+    "arbitrary_api_execution_exposed": false,
+    "acceptance_clear_requires_gate_file": "D:\\Velvet\\State\\CreativeTools\\Meshmixer\\acceptance.enabled"
+  },
+  "update_sentinel": {
+    "kind": "meshmixer_cli",
+    "receipt": "D:\\Velvet\\Logs\\DCC-Adobe-Update-Sentinel\\receipts\\20261001T065337Z-meshmixer.json",
+    "receipt_sha256": "1BD6CA30B5FBCF894D1B788ABF2987D7E3451B001AC07DA260817453B921D898"
+  },
+  "compatibility": {
+    "upstream_warning": "The official mm-api README targets Meshmixer 3.0 and warns later versions may not be compatible.",
+    "local_validation": "Meshmixer 3.5 / 11.5.474 answered the official UDP protocol and passed typed read, controlled import, readback, screenshot artifact, cleanup, hidden restart, and Update Sentinel checks.",
+    "future_version_policy": "fail_closed_until_update_sentinel_passes"
+  },
+  "acceptance_status": "FUNCTIONAL_PASS_WITH_LIMITATION"
+}

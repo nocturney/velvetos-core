@@ -22,7 +22,7 @@ Use when the user asks for סקירת best-skills, LinklyAI rankings, skills.sh 
 
 1. Read `BEST-SKILLS.md` + `BEST-SKILLS.json` + `TIMER.md`.
 2. If `standingForever` is false, do not schedule another pass; perform only an explicit one-shot request.
-3. Fetch current rankings from https://github.com/LinklyAI/best-skills. Prefer `gh api`; fail over to WebFetch/orchestra. Never invent ranks.
+3. Fetch current rankings from https://github.com/LinklyAI/best-skills. Prefer `gh api`; fail over to WebFetch/orchestra. Never invent ranks. When the installed GitHub CLI exposes the current `gh skill` preview namespace, use `gh skill search` and `gh skill preview` as an additional discovery/inspection surface only. Preview before any sandbox install; record source/version/commit when pinning. `gh skill` is not a new authority and its preview status means behavior may change.
 4. Diff against `lastPass`, `watchlist`, and `embedded`.
 5. Embed useful **patterns in place** on existing packs. Change constitution only for a durable office improvement and preserve core locks.
 6. Write `packages/vfresearch/sources/YYYY-MM-DD-best-skills.md`.
@@ -34,6 +34,7 @@ Use when the user asks for סקירת best-skills, LinklyAI rankings, skills.sh 
 ## Forbidden
 
 - `npx skills add` / marketplace install on Cloud Agent.
+- `gh skill install` directly into production merely because discovery found a candidate. Research/preview first; adoption still follows provenance, duplicate/conflict review, wrapper/merge classification and the existing skill-authoring checks.
 - Second orchestrator runtime such as OpenClaw/CrewAI/swarms.
 - Separate recurring automation just for Best Skills while Research Seat is active.
 - Auto-DM, unapproved Boost/Ads, Print from HQ.

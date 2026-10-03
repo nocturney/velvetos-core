@@ -1,0 +1,82 @@
+{
+  "schema": "velvetos.creative-tools.acceptance.v1",
+  "app": "resolve",
+  "observed_version": "21.1.0.17",
+  "status": "FUNCTIONAL_PASS_WITH_LIMITATION",
+  "accepted_at": "2026-10-01T11:08:54.7293536+03:00",
+  "official_api": {
+    "kind": "Blackmagic DaVinci Resolve Scripting API",
+    "builtin_python": "C:\\Program Files\\Blackmagic Design\\DaVinci Resolve\\ResolvePython\\ResolvePython.exe",
+    "port": 1144,
+    "external_scripting": "Local",
+    "headless_argument": "-nogui"
+  },
+  "mcp": {
+    "upstream_repository": "https://github.com/samuelgursky/davinci-resolve-mcp.git",
+    "upstream_commit": "f85f1bda0781da4ae7e4cd864bfaca9159e8d352",
+    "upstream_version": "4.8.26",
+    "license": "MIT",
+    "safe_server_sha256": "9380B15FFD6EA96D55F708707A715437E9D293FCAFF86E8ECF362FCFCB22342E",
+    "probe_sha256": "B918DDEB13D69F3772E711CC46AC822FB648341A92D91F69372901C35CA29516",
+    "tool_groups_exposed": 10,
+    "tool_groups_removed": 27,
+    "action_level_allowlist": true,
+    "arbitrary_scripting_exposed": false
+  },
+  "lifecycle": {
+    "task": "VelvetOS DCC OnDemand resolve",
+    "task_triggerless": true,
+    "task_user": "Chris",
+    "headless_hidden": true,
+    "restart_readback": "Untitled Project",
+    "saved_projects_after_cleanup": [],
+    "clean_stop": true
+  },
+  "security": {
+    "path_root": "D:\\Velvet",
+    "disposable_project_prefix": "_mcp_",
+    "acceptance_gate_present": false,
+    "acceptance_only_actions": [
+      "project_manager.load",
+      "project_manager.save",
+      "project_manager.safe_project_delete"
+    ],
+    "removed_groups": [
+      "resolve_control",
+      "script_plugin",
+      "dctl",
+      "fuse_plugin"
+    ],
+    "vendor_binary_modified": false,
+    "signature_or_integrity_checks_weakened": false
+  },
+  "acceptance": {
+    "read_probe_pass": true,
+    "controlled_project": "_mcp_velvet_acceptance_20261001",
+    "setting_write": {
+      "key": "timelineResolutionWidth",
+      "requested": "1280",
+      "readback": "1280",
+      "restored": "1920"
+    },
+    "project_save_pass": true,
+    "project_export": {
+      "path": "D:\\Velvet\\Tmp\\creative-tools\\resolve\\acceptance\\_mcp_velvet_acceptance_20261001.drp",
+      "bytes": 6035,
+      "sha256": "9228EEB026E94ED7F49F7982C24019BD65AFBA5C19CA39C3568B87C300895AD8",
+      "zip_verified": true
+    },
+    "cleanup_verified": true
+  },
+  "update_sentinel": {
+    "classification": "PASS_COMPATIBILITY_CHECK",
+    "receipt": "D:\\Velvet\\Logs\\DCC-Adobe-Update-Sentinel\\receipts\\20261001T080623Z-resolve.json",
+    "receipt_sha256": "490668B7FD225DC51F6C3BA1CE1FFDAD876C49ED36F2225E139B7F13277BF532",
+    "routing_status": "available",
+    "routing_fingerprint": "B177CC431D5D4EF9B0BA40B839B0194CAF4BFDB6DC5205860C0F5956E52B521E"
+  },
+  "limitations": [
+    "Blackmagic Local scripting mode is enabled, but the vendor fuscript listener is observed bound to 0.0.0.0:1144 rather than a loopback-only socket; access control relies on Resolve Local scripting mode.",
+    "Advanced/dangerous upstream MCP groups are intentionally removed until separately accepted."
+  ]
+}

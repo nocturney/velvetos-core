@@ -13,17 +13,19 @@ Use the smallest verified tool chain that can produce and check the requested re
 1. **No artifact / no exact geometry needed** → use native reasoning for calculations, tolerances, tradeoffs and requirements.
 2. **Photo or sketch is input** → use native vision to extract visible constraints, then route the actual engineering work. Never infer hidden/critical dimensions from pixels.
 3. **Functional/dimensional CAD** → use `cad`.
-4. **Organic/sculptural/generative mesh** → prefer 3D AI Studio; use `dfam-check` before print preparation.
-5. **Named standard/off-the-shelf part** → use `step-parts` before creating placeholder geometry.
-6. **Visual review of STEP/STL/3MF/GLB/DXF/URDF/SRDF/SDF** → use `cad-viewer`.
-7. **Additive manufacturability** → use `dfam-check`; use orientation analysis when supports/overhangs/orientation matter.
-8. **Slicing/G-code** → use `gcode` with the existing VelvetPrintLab Orca router and printer matrix.
-9. **Dimensioned manufacturing PDF** → use `engineering-drawing`.
-10. **2D profile / flat pattern / laser-waterjet-router layout** → use `dxf`.
-11. **CNC / sheet metal / injection molding review** → use `dfm`.
-12. **Robot descriptions** → use `urdf`, `srdf` or `sdf` according to the requested artifact.
-13. **SendCutSend** → use `sendcutsend` for preflight only; never submit an order.
-14. **Visual concept only** → native image generation may be used, but it is not dimensional CAD.
+4. **Reference reconstruction with protected functional interfaces** → use native vision for visible constraints, then the existing `vf-3d-router` so it can choose `TEXT_TO_CAD`, `BLENDER_NATIVE` or `HYBRID_CAD_THEN_BLENDER`; never infer hidden dimensions.
+5. **Existing mesh that needs repair/refinement before print prep** → run `dfam-check`, then the existing `vf-3d-router`, then re-run DfAM on the changed mesh.
+6. **Organic/sculptural/generative mesh** → prefer 3D AI Studio; use `dfam-check` before print preparation.
+7. **Named standard/off-the-shelf part** → use `step-parts` before creating placeholder geometry.
+8. **Visual review of STEP/STL/3MF/GLB/DXF/URDF/SRDF/SDF** → use `cad-viewer`.
+9. **Additive manufacturability** → use `dfam-check`; use orientation analysis when supports/overhangs/orientation matter.
+10. **Slicing/G-code** → use `gcode` with the existing VelvetPrintLab Orca router and printer matrix.
+11. **Dimensioned manufacturing PDF** → use `engineering-drawing`.
+12. **2D profile / flat pattern / laser-waterjet-router layout** → use `dxf`.
+13. **CNC / sheet metal / injection molding review** → use `dfm`.
+14. **Robot descriptions** → use `urdf`, `srdf` or `sdf` according to the requested artifact.
+15. **SendCutSend** → use `sendcutsend` for preflight only; never submit an order.
+16. **Visual concept only** → native image generation may be used, but it is not dimensional CAD.
 
 The machine-readable routes live in `FABRICATION-ROUTER.json`.
 
@@ -59,8 +61,10 @@ Typical chains:
 - Functional part: `cad → cad-viewer`
 - Photo/sketch to functional part: `native vision → cad → cad-viewer`
 - Assembly with a known purchased component: `step-parts → cad → cad-viewer`
-- New FDM part to print file: `cad → dfam-check → gcode`
-- Additive redesign: `dfam-check → cad → dfam-check → cad-viewer`
+- New FDM part to print file: `cad → cad-viewer → dfam-check → gcode`
+- Reference reconstruction with protected interfaces: `native vision → vf-3d-router → cad-viewer`
+- Reference reconstruction to print: `native vision → vf-3d-router → dfam-check → gcode`
+- Existing mesh repair/refinement: `dfam-check → vf-3d-router → dfam-check → cad-viewer`
 - Organic model for printing: `3D AI Studio → dfam-check → gcode`
 - Manufacturing sheet: `engineering-drawing`
 - Cut layout: `dxf → cad-viewer`

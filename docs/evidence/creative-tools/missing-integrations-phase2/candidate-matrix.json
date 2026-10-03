@@ -1,0 +1,444 @@
+{
+  "generated": "2026-10-02T22:33:50.6183997+03:00",
+  "accepted": {
+    "indesign": {
+      "status": "PASS",
+      "adapter": {
+        "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\missing-integrations-phase2\\adapters\\InDesignSafeAdapter.py",
+        "bytes": 7830,
+        "sha256": "126307C7EC64E600BB775EC3DDA2944D2991E67C87785BABF85A837944E1EED2"
+      },
+      "artifacts": [
+        {
+          "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\indesign-acceptance.pdf",
+          "bytes": 12038,
+          "sha256": "653703EB71B35927B89F9C9D7B1121967BF00E9E196C23AF82E7B8286C23D1D4"
+        },
+        {
+          "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\indesign-acceptance.idml",
+          "bytes": 31195,
+          "sha256": "22EA707131AEF0A62688B3A802693C354E57A5493D3404CD1C3D17B415A593B1"
+        }
+      ]
+    },
+    "photopaint": {
+      "status": "PASS",
+      "adapter": {
+        "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\missing-integrations-phase2\\adapters\\PhotoPaintSafeAdapter.py",
+        "bytes": 9424,
+        "sha256": "BE00C802D09508080763626D7A5C72EB0B5A52D8A7DDCBE115E57CFCDDF92DDB"
+      },
+      "artifacts": [
+        {
+          "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\photopaint-acceptance.png",
+          "bytes": 3006,
+          "sha256": "4547A03F688640E75F82711C429A8B7E4372FE10E5161B382396DD12DCEAA526"
+        }
+      ]
+    },
+    "fusion_studio": {
+      "status": "PASS",
+      "adapter": {
+        "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\missing-integrations-phase2\\adapters\\FusionStudioSafeAdapter.py",
+        "bytes": 8956,
+        "sha256": "74618B8CF40E42FEC53F73F5538E36D848AAB7E09F9B655FDE9B6377F553EF39"
+      },
+      "artifacts": [
+        {
+          "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\fusion-adapter-acceptance.comp",
+          "bytes": 8588,
+          "sha256": "B71A8749DF0D866929B96D99486F077EB52B2657F36467A4E40749695D46F8C6"
+        },
+        {
+          "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\fusion-adapter-acceptance0000.png",
+          "bytes": 675,
+          "sha256": "AD2E9371C90451427214613190D466EC1F70BBEA04C81AC863702E66FA06D873"
+        }
+      ]
+    },
+    "openscad": {
+      "status": "PASS",
+      "adapter": {
+        "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\missing-integrations-phase2\\adapters\\OpenSCADSafeAdapter.py",
+        "bytes": 5781,
+        "sha256": "C47C8E362E14ECE28F7B767A6A1D09AF6CF2BB5DAF69D65629E8692C7F8CB4B4"
+      },
+      "artifacts": [
+        {
+          "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\openscad-acceptance.stl",
+          "bytes": 1583,
+          "sha256": "C8DCB71B200D9766A5264AD5DB12E19F2EEAB3240BAA3C8B8E20BBB6B4D67EE4"
+        }
+      ]
+    },
+    "office": {
+      "status": "PASS",
+      "adapter": {
+        "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\missing-integrations-phase2\\adapters\\OfficeSafeAdapter.py",
+        "bytes": 12153,
+        "sha256": "B16FFAE9EAC466B075B49EAE4FB598FFF2ED76D0FA28EE2C4D963CD5A040EF42"
+      },
+      "workers": [
+        {
+          "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\missing-integrations-phase2\\adapters\\OfficeWordWorker.ps1",
+          "bytes": 2480,
+          "sha256": "8715D06FE1BFC07DC8F49768DBA1899063E1376A707D7DBD5CFF899BA0853991"
+        },
+        {
+          "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\missing-integrations-phase2\\adapters\\OfficeExcelWorker.ps1",
+          "bytes": 2453,
+          "sha256": "8F60216F15FB2983686885EC6EA5659CCF98ACA2E06767D54B9A6FB31E19A099"
+        },
+        {
+          "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\missing-integrations-phase2\\adapters\\OfficePowerPointWorker.ps1",
+          "bytes": 2267,
+          "sha256": "04FAC5AA204107E4B85A8FD04F8092FBF26B3365EFC5C40F8AFE69A9A73877B9"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\office-adapter-word-acceptance.docx",
+          "bytes": 13169,
+          "sha256": "708B54521618306AF5E84E96B03D75C73987F14F025F78BCA97BB162F30BAE36"
+        },
+        {
+          "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\office-adapter-word-acceptance.pdf",
+          "bytes": 83304,
+          "sha256": "76A73E6162E7344D7C8E3D8E6F942F3A0CB97B81D3ACB677C0250315E748490F"
+        },
+        {
+          "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\office-adapter-excel-acceptance.xlsx",
+          "bytes": 9090,
+          "sha256": "F01FF32DD8638C7EF04C2EDB22A1A1C1CDD07330BE10BFF4A185B71B8B4E381B"
+        },
+        {
+          "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\office-adapter-excel-acceptance.pdf",
+          "bytes": 17314,
+          "sha256": "A18B9CC166E94327AE21A6447A75E10764AAE105CF74EFC5C7A235915724AE9E"
+        },
+        {
+          "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\office-adapter-powerpoint-acceptance.pptx",
+          "bytes": 35940,
+          "sha256": "D64F875D5F5E4376691668410C5DD193CDE2950D8643DD7987BCFD5691817404"
+        },
+        {
+          "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\office-adapter-powerpoint-acceptance.pdf",
+          "bytes": 24868,
+          "sha256": "1250C729595B9762F2FF77D7468B5B0D687AAC2AA2C4A4272A4C46B62168D354"
+        }
+      ]
+    },
+    "acrobat": {
+      "status": "PASS",
+      "adapter": {
+        "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\missing-integrations-phase2\\adapters\\AcrobatSafeAdapter.py",
+        "bytes": 4773,
+        "sha256": "EF3C9EE07EE468251A8C13855A04C816F9041F4F0421310D39E52DB0C1B48081"
+      },
+      "helper": {
+        "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\missing-integrations-phase2\\adapters\\Invoke-AcrobatInspect.ps1",
+        "bytes": 1292,
+        "sha256": "D10FEF5B2CE52D2D8BFFE0710BE179020151CFC5F4E2E39BFB2DBB98680ABC1F"
+      },
+      "acceptance_input": {
+        "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\office-adapter-word-acceptance.pdf",
+        "bytes": 83304,
+        "sha256": "76A73E6162E7344D7C8E3D8E6F942F3A0CB97B81D3ACB677C0250315E748490F"
+      },
+      "readback": {
+        "pages": 1,
+        "file": "office-adapter-word-acceptance.pdf"
+      }
+    },
+    "sketchup_capi": {
+      "status": "PASS",
+      "automation": "official_c_api",
+      "api_version": "14.1",
+      "sketchup_exe_required": false,
+      "source_adapter": {
+        "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\missing-integrations-phase2\\adapters\\SketchUpCapiSafeAdapter.py",
+        "bytes": 14345,
+        "sha256": "1F9894D3AB9D3D1ACB5EC768F3775785E614766A4AEEA91EA4CC68612EF7E433"
+      },
+      "runtime_adapter": {
+        "path": "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\SketchUpCapiSafeAdapter.py",
+        "bytes": 14345,
+        "sha256": "1F9894D3AB9D3D1ACB5EC768F3775785E614766A4AEEA91EA4CC68612EF7E433"
+      },
+      "acceptance_artifact": {
+        "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\sketchup-capi-acceptance.skp",
+        "bytes": 5158,
+        "sha256": "F365681F5667788207C514D4386806E72CE0ECFE87DDA8EB812218DF9FD9124A"
+      },
+      "acceptance_verification": {
+        "faces": 6,
+        "bounds_mm": [
+          10,
+          20,
+          30
+        ],
+        "load_status": 0
+      },
+      "production_smoke": {
+        "path": "D:\\Velvet\\Output\\CreativeCraft\\SketchUpCAPI\\phase2_sketchup_capi_smoke.skp",
+        "bytes": 5154,
+        "sha256": "57B063B74EEF5DB3A2BFC0AEFC36F97B259338D9F5FAE058BC4126F5BBC2CEF6"
+      },
+      "production_smoke_verification": {
+        "faces": 6,
+        "bounds_mm": [
+          42,
+          84,
+          21
+        ]
+      },
+      "native_exe_note": "SketchUp.exe 26.1.256 remains mixed with 26.1.185 DLL set; C API path bypasses SketchUp.exe entirely"
+    },
+    "layout_capi": {
+      "status": "PASS",
+      "automation": "official_c_api",
+      "sketchup_or_layout_exe_required": false,
+      "acceptance_layout": {
+        "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\layout-capi-acceptance.layout",
+        "bytes": 3837,
+        "sha256": "AFC20110E0ABF1E1041185E242A13739E50DB23C1CF6A4C9E6F1E872D21FCA16"
+      },
+      "acceptance_pdf": {
+        "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\layout-capi-acceptance.pdf",
+        "bytes": 901,
+        "sha256": "5F321A098B62B25E2241791234A9F06149FB740BB2AE3F60A0F590E722B32BE0"
+      },
+      "pdf_cross_validation": {
+        "status": "PASS",
+        "validator": "Acrobat COM",
+        "pages": 1
+      },
+      "production_smoke_layout": {
+        "path": "D:\\Velvet\\Output\\CreativeCraft\\SketchUpCAPI\\phase2_layout_capi_smoke.layout",
+        "bytes": 3834,
+        "sha256": "1B20F029B90D8A38551BE62E99991BC70ECE0A58C16E9697FFF08F8E30916BE8"
+      },
+      "production_smoke_pdf": {
+        "path": "D:\\Velvet\\Output\\CreativeCraft\\SketchUpCAPI\\phase2_layout_capi_smoke.pdf",
+        "bytes": 901,
+        "sha256": "D731B9F0081612BCAF550E999AE5F468E0C9E53ADDA36B8BC4D0F028B62B4683"
+      },
+      "pdf_delay_load_fix": "Preload pdflib.dll and LayOutControllers.dll before LayOutAPI.dll; no vendor binary modification",
+      "no_overwrite_test": "PASS"
+    },
+    "media_encoder": {
+      "status": "PASS",
+      "automation": "official_watch_folder",
+      "version": "26.3.2",
+      "preset_id": "h264-high",
+      "preset": "H.264 / Match Source - High bitrate",
+      "watch_folder": "D:\\Velvet\\AME\\Watch\\h264-high",
+      "remote_ame_api": false,
+      "uxp_available_for_installed_version": false,
+      "source_adapter": {
+        "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\missing-integrations-phase2\\adapters\\MediaEncoderWatchSafeAdapter.py",
+        "bytes": 13662,
+        "sha256": "7BA5530BB4EFAC2C234C5B84E1FE0F165EFD5B5460E4F5B9A3B1D0873E094B07"
+      },
+      "runtime_adapter": {
+        "path": "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\MediaEncoderWatchSafeAdapter.py",
+        "bytes": 13662,
+        "sha256": "7BA5530BB4EFAC2C234C5B84E1FE0F165EFD5B5460E4F5B9A3B1D0873E094B07"
+      },
+      "source_host": {
+        "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\missing-integrations-phase2\\Start-Phase2CandidateHost.ps1",
+        "bytes": 4805,
+        "sha256": "88A3E78C1BE3A5049D607903DD4A29112A0174D418298838A265240543ABBE04"
+      },
+      "runtime_host": {
+        "path": "D:\\Velvet\\Runtime\\Autostart\\Start-Phase2CandidateHost.ps1",
+        "bytes": 4805,
+        "sha256": "88A3E78C1BE3A5049D607903DD4A29112A0174D418298838A265240543ABBE04"
+      },
+      "preset_file": {
+        "path": "C:\\Program Files\\Adobe\\Adobe Media Encoder 2026\\MediaIO\\systempresets\\3F3F3F3F_4D6F6F56\\H264 Match Source - High bitrate.epr",
+        "bytes": 130681,
+        "sha256": "7E78BFF4C0A12CD7A0A2E524DC42E64CC8D21A45A93D89B034CE9588D97041CF"
+      },
+      "acceptance_artifact": {
+        "path": "D:\\Velvet\\Output\\CreativeCraft\\MediaEncoder\\ame-watch-20e63b3c6770.mp4",
+        "bytes": 753461,
+        "sha256": "BFAA5A346F071B76AE962584A8024474861A901C835B141BDBC05D1DD8D21D6E"
+      },
+      "manifest": {
+        "path": "D:\\Velvet\\AME\\Jobs\\ame-watch-20e63b3c6770\\job.json",
+        "bytes": 1517,
+        "sha256": "650F617F1480C1000C2E9C5855341E4D54B118EEC521A50D370B74CA72D9211C"
+      },
+      "validation": {
+        "format": "mov,mp4,m4a,3gp,3g2,mj2",
+        "duration": 2,
+        "video_codec": "h264",
+        "width": 320,
+        "height": 180,
+        "frame_rate": "24/1",
+        "audio_codec": "aac"
+      },
+      "cleanup": {
+        "watch_output_removed": true,
+        "archived_source_removed": true,
+        "adapter_listener_removed_on_shutdown": true,
+        "owned_ame_removed_on_shutdown": true,
+        "ownership_state_removed": true
+      },
+      "contracts": {
+        "job_status": "PASS",
+        "duplicate_job_id_rejected": "PASS",
+        "no_overwrite": "PASS",
+        "localhost_bearer_token": "PASS"
+      },
+      "lifecycle": "on-demand InteractiveToken host; refuses pre-existing user AME, starts owned AME, hides window if present, does not require GUI window, and closes only owned AME on adapter shutdown"
+    },
+    "xvl_studio_corel": {
+      "status": "PASS",
+      "automation": "official_gui_workflow_plus_corel_com",
+      "input_types": [
+        ".xv2"
+      ],
+      "outputs": [
+        "cdr",
+        "pdf"
+      ],
+      "source_adapter": {
+        "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\missing-integrations-phase2\\adapters\\XVLCorelSafeAdapter.py",
+        "bytes": 13840,
+        "sha256": "0DFB913450D245D8CF056709AAAE555961405BD5A0E6214873A2F8332F65633B"
+      },
+      "runtime_adapter": {
+        "path": "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\XVLCorelSafeAdapter.py",
+        "bytes": 13840,
+        "sha256": "0DFB913450D245D8CF056709AAAE555961405BD5A0E6214873A2F8332F65633B"
+      },
+      "acceptance": {
+        "cdr": {
+          "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\xvl-corel-acceptance.cdr",
+          "bytes": 66835,
+          "sha256": "C6EA83B648954E8B793C43CACAE8FC1B71236BF2014640E35B5CFE0E0625E1A3"
+        },
+        "pdf": {
+          "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\xvl-corel-acceptance.pdf",
+          "bytes": 2194,
+          "sha256": "0D6C75ADBA8DA2A206408C487F67482F8F33CD263A1F20AC962E3E287FEC3189"
+        },
+        "pages": 1,
+        "shapes": 1,
+        "runtime_revalidated": "2026-10-02T22:33:50.5994601+03:00"
+      },
+      "production_smoke": {
+        "cdr": {
+          "path": "D:\\Velvet\\Output\\CreativeCraft\\XVL\\phase2_xvl_corel_final_smoke.cdr",
+          "bytes": 82727,
+          "sha256": "E7855DB68900824B00B159ADA1A2C903737FD713A21AD5E8D4F3DBBEB2375A67"
+        },
+        "pdf": {
+          "path": "D:\\Velvet\\Output\\CreativeCraft\\XVL\\phase2_xvl_corel_final_smoke.pdf",
+          "bytes": 2194,
+          "sha256": "F7F762BA7A43D6C9783EDF557DE9E49F163C753457D4BA3B2929AB67AC998405"
+        },
+        "pages": 1,
+        "shapes": 1,
+        "no_overwrite": "PASS"
+      },
+      "xvl_sdk_api": false
+    },
+    "xvl_html5": {
+      "status": "PASS",
+      "automation": "bundled_xvlgenhtm_cli",
+      "port": 6790,
+      "input_types": [
+        ".xv2"
+      ],
+      "source_adapter": {
+        "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\missing-integrations-phase2\\adapters\\XvlHtmlSafeAdapter.py",
+        "bytes": 7850,
+        "sha256": "97A47686AA732234A14B6205A84E506F0050A093802BDA4917851FF5E8810446"
+      },
+      "runtime_adapter": {
+        "path": "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\XvlHtmlSafeAdapter.py",
+        "bytes": 7850,
+        "sha256": "97A47686AA732234A14B6205A84E506F0050A093802BDA4917851FF5E8810446"
+      },
+      "generator": {
+        "path": "C:\\Program Files\\Lattice\\XVLStudio3DCADCorelEdition27\\xvlgenhtm.exe",
+        "bytes": 25215344,
+        "sha256": "05012932176E38494064DE16A23BFCAC3B3D4B3315871CEBA95E236EEB1D823B"
+      },
+      "template": "C:\\Program Files\\Lattice\\XVLStudio3DCADCorelEdition27\\Etc\\HTML5",
+      "acceptance": {
+        "html": {
+          "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\xvl-html5-acceptance\\index.html",
+          "bytes": 14912,
+          "sha256": "08653545269E4BB31E0463C257C72FBA5F337331B55BF593CEDD97ECC612B2CF"
+        },
+        "manifest": {
+          "path": "D:\\Velvet\\Tmp\\creative-tools\\missing-integrations-phase2\\xvl-html5-acceptance\\manifest.json",
+          "bytes": 948,
+          "sha256": "5CBF74EC234B49DAE39C2F5F5006F3667094E8AEE8CE73C419E51C38FECFC55B"
+        },
+        "file_count": 111,
+        "jpg_count": 88,
+        "resource_png_count": 21,
+        "total_bytes": 1907197,
+        "runtime_revalidated": "2026-10-02T22:33:50.6127265+03:00"
+      },
+      "production_smoke": {
+        "html": {
+          "path": "D:\\Velvet\\Output\\CreativeCraft\\XVLHtml5\\phase2_xvl_html5_final_smoke\\index.html",
+          "bytes": 14912,
+          "sha256": "08653545269E4BB31E0463C257C72FBA5F337331B55BF593CEDD97ECC612B2CF"
+        },
+        "manifest": {
+          "path": "D:\\Velvet\\Output\\CreativeCraft\\XVLHtml5\\phase2_xvl_html5_final_smoke\\manifest.json",
+          "bytes": 933,
+          "sha256": "DAF4EE48153AAAF548CAC637B80DE01A4A3D40A4812E5EC11056611BE1FCE3CC"
+        },
+        "file_count": 111,
+        "jpg_count": 88,
+        "resource_png_count": 21,
+        "total_bytes": 1832433,
+        "no_overwrite": "PASS"
+      },
+      "full_studio_sdk": false
+    }
+  },
+  "blocked": {},
+  "inventory_only": {
+    "substance_sampler": "6.0.3",
+    "substance_modeler": "1.22.7.1239",
+    "substance_stager": "3.1.8",
+    "elegoo_slicer": "1.5.3.5",
+    "flash_studio": "1.7.18"
+  },
+  "support": {
+    "gcloud": "585.0.0",
+    "gh": "2.98.0",
+    "seven_zip": "26.01"
+  },
+  "shared_router_untouched": true,
+  "limitations": {
+    "xvl_sdk_api": {
+      "status": "OPTIONAL_UNAVAILABLE",
+      "reason": "XVL Player SDK/API entitlement is not installed; it is a separate integration product",
+      "impact": "Not required for accepted Phase2 XVL workflows: XVL Studio to Corel CDR/PDF and XVL to HTML5 are both operational",
+      "evidence": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\docs\\evidence\\creative-tools\\missing-integrations-phase2\\xvl-entitlement-evidence.json"
+    }
+  },
+  "optional_unavailable": {
+    "xvl_player_sdk": {
+      "status": "NOT_INSTALLED",
+      "required_for_phase2": false,
+      "note": "Optional direct SDK/API capability. Current XVL Studio -> Corel DESIGNER and XVL -> HTML5 workflows are accepted without it."
+    }
+  },
+  "phase_status": {
+    "status": "COMPLETE",
+    "accepted_count": 11,
+    "blocked_count": 0,
+    "shared_router_untouched": true
+  }
+}

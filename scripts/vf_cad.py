@@ -193,10 +193,39 @@ def discover_orca(root: Path, matrix: dict) -> dict:
     }
 
 
+def discover_prusa() -> str | None:
+    """Discover a local PrusaSlicer CLI without changing backend preference order."""
+    candidates: list[Path] = []
+    configured = os.environ.get("PRUSASLICER_BIN", "").strip()
+    if configured:
+        candidates.append(Path(configured))
+    for name in ("prusa-slicer", "PrusaSlicer", "prusa-slicer-console", "prusa-slicer-console.exe"):
+        found = shutil.which(name)
+        if found:
+            candidates.append(Path(found))
+    if os.name == "nt":
+        program_files = Path(os.environ.get("ProgramFiles", r"C:\Program Files"))
+        program_files_x86 = Path(os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)"))
+        local_programs = Path(os.environ.get("LOCALAPPDATA", str(Path.home() / "AppData" / "Local"))) / "Programs"
+        candidates.extend([
+            program_files / "Prusa3D" / "PrusaSlicer" / "prusa-slicer-console.exe",
+            program_files / "Prusa3D" / "PrusaSlicer" / "prusa-slicer.exe",
+            program_files_x86 / "Prusa3D" / "PrusaSlicer" / "prusa-slicer-console.exe",
+            local_programs / "PrusaSlicer" / "prusa-slicer-console.exe",
+        ])
+    for candidate in candidates:
+        if candidate.is_file():
+            return str(candidate.resolve())
+    return None
+
+
 def tool_env(root: Path, matrix: dict) -> dict:
     env = os.environ.copy()
     slicer = discover_orca(root, matrix)
     env["ORCASLICER_BIN"] = slicer["path"]
+    prusa = discover_prusa()
+    if prusa:
+        env["PRUSASLICER_BIN"] = prusa
     return env
 
 

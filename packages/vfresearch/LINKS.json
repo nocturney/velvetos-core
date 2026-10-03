@@ -1407,6 +1407,78 @@
         "vfcopy"
       ],
       "note": "Selective pattern embed only: named detector + evals + Visible Text Gate binding. No plugin install, no authorship score, no second writer."
+    },
+    {
+      "id": "roble3-cc-blender-skill",
+      "kind": "repo",
+      "url": "https://github.com/RobLe3/cc-blender-skill",
+      "title": "cc-blender-skill — Blender craft/workflow patterns",
+      "firstEmbedded": "2026-10-01",
+      "lastReviewed": "2026-10-01",
+      "verdict": "patterns-only",
+      "sourceNote": "packages/vfresearch/sources/2026-10-01-creative-craft-phase2.md",
+      "packs": ["vfprod", "vfresearch"],
+      "note": "MIT workflow/craft patterns only. Do not install its orchestration/runtime beside vf-3d-router."
+    },
+    {
+      "id": "arjun988-blender-skills",
+      "kind": "repo",
+      "url": "https://github.com/arjun988/blender-skills",
+      "title": "blender-skills — broad Blender craft reference library",
+      "firstEmbedded": "2026-10-01",
+      "lastReviewed": "2026-10-01",
+      "verdict": "patterns-only",
+      "sourceNote": "packages/vfresearch/sources/2026-10-01-creative-craft-phase2.md",
+      "packs": ["vfprod", "vfresearch"],
+      "note": "MIT reference patterns only; too broad to become a parallel production runtime."
+    },
+    {
+      "id": "kajisho5-ffmpeg-skill",
+      "kind": "repo",
+      "url": "https://github.com/kajisho5/ffmpeg-skill",
+      "title": "ffmpeg-skill — probe/edit/check/visual-verify patterns",
+      "firstEmbedded": "2026-10-01",
+      "lastReviewed": "2026-10-01",
+      "verdict": "patterns-only",
+      "sourceNote": "packages/vfresearch/sources/2026-10-01-creative-craft-phase2.md",
+      "packs": ["vfom", "vfresearch"],
+      "note": "MIT verification-loop patterns merged conceptually into vf-post-production-craft; no second media runtime."
+    },
+    {
+      "id": "samuelgursky-davinci-resolve-mcp",
+      "kind": "repo",
+      "url": "https://github.com/samuelgursky/davinci-resolve-mcp",
+      "title": "davinci-resolve-mcp — post-production domain kernels",
+      "firstEmbedded": "2026-10-01",
+      "lastReviewed": "2026-10-01",
+      "verdict": "patterns-only",
+      "sourceNote": "packages/vfresearch/sources/2026-10-01-creative-craft-phase2.md",
+      "packs": ["vfom", "vfresearch"],
+      "note": "MIT edit/color/conform/delivery/Fusion/audio domain patterns only; execution remains on accepted VelvetOS integrations."
+    },
+    {
+      "id": "aedev-tools-adobe-agent-skills",
+      "kind": "repo",
+      "url": "https://github.com/aedev-tools/adobe-agent-skills",
+      "title": "adobe-agent-skills — After Effects craft patterns",
+      "firstEmbedded": "2026-10-01",
+      "lastReviewed": "2026-10-01",
+      "verdict": "patterns-only",
+      "sourceNote": "packages/vfresearch/sources/2026-10-01-creative-craft-phase2.md",
+      "packs": ["vfom", "vfresearch"],
+      "note": "Apache-2.0 craft patterns only. Its macOS-specific execution path is not adopted on the active Windows host."
+    },
+    {
+      "id": "jablonkai-skills",
+      "kind": "repo",
+      "url": "https://github.com/jablonkai/skills",
+      "title": "jablonkai/skills — Affinity/design workflow patterns",
+      "firstEmbedded": "2026-10-01",
+      "lastReviewed": "2026-10-01",
+      "verdict": "patterns-only",
+      "sourceNote": "packages/vfresearch/sources/2026-10-01-creative-craft-phase2.md",
+      "packs": ["vfom", "vfcovers", "vfresearch"],
+      "note": "MIT workflow ideas only; review third-party asset licenses separately and do not adopt a broad parallel automation surface."
     }
   ],
   "addLink": {

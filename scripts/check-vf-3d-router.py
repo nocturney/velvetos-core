@@ -97,6 +97,8 @@ def main() -> None:
         ("precision bracket 40 mm two holes tolerance STEP", "TEXT_TO_CAD"),
         ("פסלון דקורטיבי מתמונות רפרנס", "BLENDER_NATIVE"),
         ("תושבת במידות מדויקות עם מעטפת אורגנית לפי רפרנס", "HYBRID_CAD_THEN_BLENDER"),
+        ("make this STL printable", "BLENDER_NATIVE"),
+        ("reconstruct this reference and preserve exact mounting holes", "HYBRID_CAD_THEN_BLENDER"),
     ]
     for request, expected in cases:
         result = route(request)

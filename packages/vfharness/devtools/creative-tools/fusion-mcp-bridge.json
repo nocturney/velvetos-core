@@ -1,0 +1,65 @@
+{
+  "schema": "velvetos.creative-tools.connector.v1",
+  "id": "fusion",
+  "display_name": "Autodesk Fusion",
+  "adapter_version": "fusion-native-1.0.0+velvet-safe-0.1.0",
+  "addin_id": "183cc1d9-c94d-411f-be15-5a4790658d52",
+  "host_observed_executable_version": "2705.1.25",
+  "upstream": {
+    "repository": "https://github.com/AutodeskFusion360/FusionMCPSample.git",
+    "commit": "1d49ee8f7744b2e7aaec91f9c660c65963fccd71",
+    "license": "MIT"
+  },
+  "hardening_patch": {
+    "path": "packages/vfharness/devtools/creative-tools/fusion-mcp-0.1.0-hardening.patch",
+    "sha256": "4285B99F0BA9D506562B96622E9A13B40AD60A82867A068E3025751386956CFF"
+  },
+  "transport": {
+    "kind": "autodesk_native_mcp",
+    "protocol": "streamable_http",
+    "scheme": "http",
+    "bind": "127.0.0.1",
+    "port": 27182,
+    "endpoint": "/mcp",
+    "expected_server_name": "MCP Server Adapter",
+    "readiness_evidence": "Fusion AppLog PERF: ApplicationUIReady plus native MCP listener 127.0.0.1:27182 owned by the current Fusion360 process"
+  },
+  "installation": {
+    "addin_path": "C:\\Users\\Chris\\AppData\\Roaming\\Autodesk\\FusionAddins\\Fusion MCP Addin",
+    "legacy_addin_path_migrated": "C:\\Users\\Chris\\AppData\\Roaming\\Autodesk\\Autodesk Fusion\\API\\AddIns\\Fusion MCP Addin",
+    "safe_wrapper_runtime": "D:\\Velvet\\Runtime\\CreativeTools\\Fusion\\Invoke-FusionNativeSafe.mjs"
+  },
+  "lifecycle": {
+    "mode": "existing_dcc_hidden_on_demand",
+    "process": "Fusion360",
+    "task": "VelvetOS DCC OnDemand fusion",
+    "managed_shortcut": "D:\\Velvet\\Runtime\\Autostart\\Autodesk Fusion - VelvetOS.lnk",
+    "user_vendor_shortcut_modified": false,
+    "launch_at_logon": false
+  },
+  "surface": {
+    "enabled_tools": [
+      "fusion_mcp_read",
+      "fusion_mcp_electronics_read",
+      "fusion_mcp_update"
+    ],
+    "allowed_update_feature_types": ["undo", "redo"],
+    "blocked_tools": [
+      "fusion_mcp_execute"
+    ],
+    "limitations": [
+      "Autodesk native fusion_mcp_execute performs controlled writes, but on Fusion 2705.1.25 its MCP tools/call response can stall after the side effect succeeds.",
+      "Because fusion_mcp_execute also includes arbitrary Python script execution, it is blocked by the VelvetOS production allowlist.",
+      "Production routing is therefore read-first with safe undo/redo only; controlled write acceptance was proven separately but is not exposed."
+    ]
+  },
+  "security": {
+    "loopback_only": true,
+    "raw_api_execution_exposed": false,
+    "arbitrary_python_exposed": false,
+    "production_allowlist_enforced_before_transport": true,
+    "vendor_binary_modified": false,
+    "signature_or_integrity_checks_weakened": false
+  },
+  "acceptance_status": "FUNCTIONAL_PASS_WITH_LIMITATION"
+}
