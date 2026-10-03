@@ -69,6 +69,7 @@
         "packages/vfbiz/OFFERING.md",
         "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.4.txt",
         "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json",
+        "packages/velvetos/chatgpt-project/CHAT-NATIVE-EDITOR-ROUTE.md",
         "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt"
       ],
       "hardGates": [
