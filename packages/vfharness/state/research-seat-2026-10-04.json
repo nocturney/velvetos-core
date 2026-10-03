@@ -1,0 +1,24 @@
+{
+  "taskId": "research-seat-2026-10-04",
+  "status": "done",
+  "component_state": "Idle",
+  "summary": "Daily Research Seat 2026-10-04 ready_for_brief before 07:00 Asia/Jerusalem. Product family, versioned proof unlock, license-as-gate, Sunday MakerWorld cards. Best Skills no-embed. Tool-updates dispatch HTTP 403. No owner research email.",
+  "resolution": "ready_for_brief",
+  "owner_email": "NO",
+  "owner_notify": false,
+  "best_skills": "no-embed-existing-coverage",
+  "best_skills_lastPass": "2026-10-04",
+  "best_skills_dataDate": "2026-10-03",
+  "makerworld": "scan-day; 5 commercial-ok gate-only; FOSBOS BY-NC-SA and two SDFL no-sale; no shelf",
+  "upstream_pending": 55,
+  "upstream_new_detections": 5,
+  "tool_updates_email": "armed-then-disabled; workflow_dispatch HTTP 403; no message id",
+  "artifacts": [
+    "packages/vfresearch/sources/2026-10-04-orchestra.md",
+    "packages/vfresearch/sources/2026-10-04-best-skills.md",
+    "packages/vfresearch/sources/2026-10-04-makerworld-scan.md",
+    "packages/vfops/data/research.md"
+  ],
+  "latest_observation": "Jerusalem Sunday 2026-10-04. Freshness OK. Tool-updates workflow 368772560 returned HTTP 403. check-all 9/116 failed on missing PIL/starlette and LINKS stale>8d; weekly refresh not invented.",
+  "ts": "2026-10-04T02:20:00+03:00"
+}

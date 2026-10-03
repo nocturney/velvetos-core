@@ -39,11 +39,11 @@
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
-  "lastPass": "2026-10-02",
-  "dataDate": "2026-10-01",
-  "lastArtifact": "packages/vfresearch/sources/2026-10-02-best-skills.md",
+  "lastPass": "2026-10-04",
+  "dataDate": "2026-10-03",
+  "lastArtifact": "packages/vfresearch/sources/2026-10-04-best-skills.md",
   "lastResult": "no-embed-existing-coverage",
-  "lastTimerStatus": "PROVEN_BY_RESEARCH_SEAT: due/stale pulse (~120h since 2026-09-27) executed inside 2026-10-02 Research Seat; ranking snapshot dataDate 2026-10-01; no separate automation created",
+  "lastTimerStatus": "PROVEN_BY_RESEARCH_SEAT: due pulse (lastPass 2026-10-02, >=44h) executed inside 2026-10-04 Research Seat; ranking snapshot dataDate 2026-10-03; no separate automation created",
   "embedded": [
     {
       "id": "grill-me",
@@ -198,7 +198,7 @@
     },
     {
       "id": "ai-video-image-gen-trending",
-      "note": "2026-10-01 trending-7d is dominated by ai-video/image/avatar clones. Map only via expert-media-director + Canva-first. No Veo/Kling from HQ. No npx."
+      "note": "2026-10-03 trending-7d is still ui-taste plus ai-image/video/avatar and twitter-automation clones. Map media only via expert-media-director + Canva-first. No Veo/Kling from HQ. twitter-automation stays skipped. No npx."
     },
     {
       "id": "archify",
@@ -253,7 +253,7 @@
     {
       "id": "ui-taste",
       "url": "https://www.skills.sh/uizze.sh/ui-taste",
-      "note": "2026-09-27: trending-7d #1 on LinklyAI dataDate 2026-09-26. Watch with anti-ui-slop / taste-skill; vfbriefux internal only; no foreign tokens; no public site."
+      "note": "2026-10-03 trending-7d #1 on LinklyAI dataDate 2026-10-03. Watch with anti-ui-slop; vfbriefux internal only; no foreign tokens; no public site; no npx."
     },
     {
       "id": "affaan-m-ecc",
@@ -268,7 +268,7 @@
     {
       "id": "ui-ux-pro-max-skill",
       "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
-      "note": "Top-repos #6 on LinklyAI dataDate 2026-10-01. Watch with vfbriefux internal only. No foreign tokens. No public site. No npx."
+      "note": "Top-repos #8 on LinklyAI dataDate 2026-10-03. Watch with vfbriefux internal only. No foreign tokens. No public site. No npx."
     }
   ],
   "skipped": [
