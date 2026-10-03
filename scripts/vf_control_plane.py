@@ -15,6 +15,16 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
+# Keep Hebrew/Unicode CLI output reliable on Windows shells whose inherited
+# code page is narrower than UTF-8. File encoding remains explicitly handled
+# at each read/write call; this changes only the console stream encoding.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        try:
+            _stream.reconfigure(encoding="utf-8")
+        except (AttributeError, OSError):
+            pass
+
 ROOT = Path(__file__).resolve().parents[1]
 TZ = ZoneInfo("Asia/Jerusalem")
 
@@ -103,7 +113,11 @@ def load_json(path: Path, default: Any = None) -> Any:
 
 def write_json(path: Path, data: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(data, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
 
 
 def load_jsonl(path: Path) -> list[dict]:
@@ -1712,7 +1726,7 @@ def write_handoff_he(handoff: dict) -> None:
         "אל תפנה לכריסטיאן על מדדים חלשים.",
         "",
     ]
-    HANDOFF_HE.write_text("\n".join(lines), encoding="utf-8")
+    HANDOFF_HE.write_text("\n".join(lines), encoding="utf-8", newline="\n")
 
 
 def brief_summary() -> dict:

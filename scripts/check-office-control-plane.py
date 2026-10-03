@@ -176,7 +176,7 @@ def main() -> None:
         argv = [sys.executable, str(CLI), cmd]
         if cmd == "simulate":
             argv += ["--scenario", "owner_surface"]
-        proc = subprocess.run(argv, cwd=ROOT, text=True, capture_output=True)
+        proc = subprocess.run(argv, cwd=ROOT, text=True, encoding="utf-8", errors="replace", capture_output=True)
         if proc.returncode != 0:
             fail(f"vf_control_plane.py {cmd}: {proc.stderr or proc.stdout}")
 
@@ -184,6 +184,8 @@ def main() -> None:
         [sys.executable, str(CLI), "watchdog"],
         cwd=ROOT,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         capture_output=True,
     )
     # RED_BLOCKER → exit 1; WAITING_EXTERNAL_TOOL / DEAD_LETTER / OK → 0
@@ -201,6 +203,8 @@ def main() -> None:
         [sys.executable, str(CLI), "selftest"],
         cwd=ROOT,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         capture_output=True,
     )
     if proc_t.returncode != 0:
