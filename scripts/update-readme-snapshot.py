@@ -53,6 +53,7 @@ def latest_change() -> str:
     if not CHANGELOG.is_file():
         return "No changelog evidence"
     in_unreleased = False
+    items: list[tuple[str, str]] = []
     for raw in CHANGELOG.read_text(encoding="utf-8").splitlines():
         line = raw.strip()
         if line == "## [Unreleased]":
@@ -62,8 +63,13 @@ def latest_change() -> str:
             break
         if in_unreleased and line.startswith("- "):
             item = line[2:].strip()
-            return item[:210] + ("…" if len(item) > 210 else "")
-    return "No unreleased change recorded"
+            match = re.match(r"(\d{4}-\d{2}-\d{2})\b", item)
+            items.append((match.group(1) if match else "", item))
+    if not items:
+        return "No unreleased change recorded"
+    dated = [entry for entry in items if entry[0]]
+    item = max(dated, key=lambda entry: entry[0])[1] if dated else items[0][1]
+    return item[:210] + ("…" if len(item) > 210 else "")
 
 
 def parse_dt(value: object) -> datetime | None:
@@ -215,7 +221,7 @@ def main() -> int:
         print("OK README System Pulse is current")
         return 0
 
-    README.write_text(expected, encoding="utf-8")
+    README.write_text(expected, encoding="utf-8", newline="\n")
     print("OK README System Pulse updated")
     return 0
 
