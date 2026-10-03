@@ -1,0 +1,24 @@
+{
+  "schema": "velvetos.sensor-shadow-incomplete-recoveries.v1",
+  "entries": [
+    {
+      "run_id": 37097459510,
+      "pull_request": 461,
+      "head_sha": "89aef052be9d77b071c0195f2fd8cabf2d61d26a",
+      "reason": "SELECTOR_SCRIPT_SYNTAX_FAILURE",
+      "expected_selection": "FULL_SUITE",
+      "sensor_count": 116,
+      "full_failures": [
+        "check-critical-syntax",
+        "check-policy-architecture"
+      ],
+      "selector_misses": [],
+      "verification": {
+        "run_id": 37097673081,
+        "head_sha": "772a2bd6987e262c4d694a5b43d056bccaf71ed0",
+        "comparison_status": "NO_MISS"
+      },
+      "evidence": "PR #461 run 37097459510 failed before emitting the selector/comparison markers because scripts/sensor_selector.py had a SyntaxError. The same job log still proves SENSORS 116 mode=full and records exactly check-critical-syntax and check-policy-architecture as full-suite failures. Final PR #461 run 37097673081 completed on the repaired branch, selected FULL_SUITE 116/116, and emitted SENSOR_SHADOW_COMPARISON_JSON status=NO_MISS with selector_misses=[] and critical_misses=[]."
+    }
+  ]
+}
