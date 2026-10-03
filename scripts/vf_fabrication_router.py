@@ -25,6 +25,7 @@ VIRTUAL_TOOLS = {
     "native_vision",
     "native_image_generation",
     "3d-ai-studio",
+    "vf-3d-router",
 }
 
 
@@ -162,11 +163,28 @@ def classify_request(request: str, files: list[str]) -> tuple[str, str, str, boo
     create_terms = (
         "תכין", "תכנן", "בנה", "צור", "תיצור", "תבנה", "תכנון", "מודל",
         "make", "create", "design", "build", "model", "edit", "שנה", "תקן",
+        "reconstruct", "recreate", "שחזר", "שחזור",
         "מתאם", "תושבת", "adapter", "bracket", "mount", "holder", "enclosure",
     )
     print_terms = (
         "להדפסה", "תכין להדפסה", "slice", "slicing", "g-code", "gcode",
-        "פרוס", "סלייס", "print-ready", "ready to print",
+        "פרוס", "סלייס", "print-ready", "ready to print", "printable",
+        "for printing", "for print",
+    )
+    slice_action_terms = (
+        "slice", "slicing", "פרוס", "סלייס",
+        "validate the g-code", "validate g-code", "validate gcode",
+        "g-code validation", "gcode validation",
+        "תכין g-code", "צור g-code", "בדוק g-code", "אמת g-code",
+    )
+    mesh_repair_terms = (
+        "make this stl printable", "make this mesh printable",
+        "repair for print", "fix for print", "repair this stl",
+        "fix this stl", "תתקן להדפסה", "תקן את ה-stl", "תקן את ה stl",
+    )
+    reference_terms = (
+        "this reference", "from reference", "reference image", "reference photo",
+        "reference model", "רפרנס", "מתמונת רפרנס", "מתמונות רפרנס",
     )
     organic_terms = (
         "אורגני", "פסל", "פסלון", "דמות", "פיגורה", "חיה", "sculpt",
@@ -238,8 +256,24 @@ def classify_request(request: str, files: list[str]) -> tuple[str, str, str, boo
     wants_edit = _contains(text, edit_terms)
     is_organic = _contains(text, organic_terms)
     has_standard = _contains(text, standard_terms)
+    has_reference = _contains(text, reference_terms)
+    mentions_mesh = has_mesh or _contains(text, (
+        ".stl", " stl", ".3mf", " 3mf", "mesh", "רשת",
+    ))
+    explicit_slice = _contains(text, slice_action_terms)
+    wants_mesh_repair = _contains(text, mesh_repair_terms) or (
+        mentions_mesh and wants_edit and wants_print
+    )
 
-    if wants_print and (has_mesh or has_cad) and not wants_edit:
+    if explicit_slice:
+        return "slice_and_validate", "explicit slicing/G-code generation or validation requested", "high", False
+    if wants_mesh_repair:
+        return "additive_redesign", "existing mesh needs repair/refinement before print preparation", "high", False
+    if has_reference and wants_create and wants_print:
+        return "reference_reconstruction_to_print", "reference reconstruction with protected engineering constraints plus print preparation", "high", False
+    if has_reference and wants_create:
+        return "reference_reconstruction", "reference reconstruction with engineering constraints requires the existing 3D sub-router", "high", False
+    if wants_print and (mentions_mesh or has_cad) and not wants_edit:
         return "slice_and_validate", "existing engineering artifact needs print preparation", "high", False
     if is_organic and wants_print:
         return "organic_model_to_print", "organic mesh creation plus print preparation requested", "high", False

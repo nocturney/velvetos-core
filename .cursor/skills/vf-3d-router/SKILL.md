@@ -41,6 +41,17 @@ Use its specialist domains and gates as the execution/QA plan. It is local plann
 - `BLENDER_NATIVE`: organic/sculptural form, image/reference reconstruction, mesh repair/refinement, UV/form work.
 - `HYBRID_CAD_THEN_BLENDER`: build/freeze functional interfaces in CAD first; use Blender only for the non-critical form layer; re-measure protected interfaces before handoff.
 
+## Craft layer
+
+After engine selection, load only the craft skill that applies; these skills refine practice and QA but never change the engine-selection contract or authority boundaries:
+- `TEXT_TO_CAD` or other parametric CAD work -> `.cursor/skills/vf-cad-design-craft/SKILL.md`.
+- `BLENDER_NATIVE` or DCC topology/sculpt/UV work -> `.cursor/skills/vf-dcc-modeling-craft/SKILL.md`.
+- `HYBRID_CAD_THEN_BLENDER` -> apply CAD craft to protected functional geometry first, then DCC craft to the non-critical form layer.
+- Any UV-to-bake, Substance, PBR, texture or lookdev task -> also apply `.cursor/skills/vf-material-lookdev/SKILL.md` after geometry/UV state is established.
+- Any additive print-prep, slicer calibration/profile, orientation/support or G-code review task -> apply `.cursor/skills/vf-fabrication-craft/SKILL.md` before the existing DfAM/slicer/G-code gates. It never gains printer-control authority.
+
+The craft layer is advisory/verification knowledge only. Existing Text-to-CAD, Blender expert, DfAM, slicer, export and printer boundaries remain authoritative.
+
 ## Execute
 
 Before live Blender execution run `python scripts/vf_3d.py doctor`.

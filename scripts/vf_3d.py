@@ -38,13 +38,15 @@ FUNCTIONAL_TERMS = (
 )
 ORGANIC_TERMS = (
     "organic", "sculpt", "figurine", "statue", "creature", "character",
-    "mascot", "decorative", "ornament", "reference image", "from photo",
+    "mascot", "decorative", "ornament", "reference image", "reference photo",
+    "reference model", "from reference", "this reference", "from photo",
     "mesh fitting", "פסל", "פסלון", "דמות", "חיה", "אורגני", "פיסול",
     "דקורטיבי", "מתמונה", "מתמונות", "רפרנס",
 )
 MESH_TERMS = (
-    ".stl", ".obj", ".glb", ".gltf", ".blend", "mesh", "remesh", "uv",
-    "repair mesh", "existing model", "מודל קיים", "תיקון mesh", "תיקון רשת",
+    ".stl", ".obj", ".glb", ".gltf", ".blend", " stl", " 3mf",
+    "stl file", "3mf file", "mesh", "remesh", "uv", "repair mesh",
+    "existing model", "מודל קיים", "תיקון mesh", "תיקון רשת",
 )
 FORBIDDEN_SCRIPT_PATTERNS = (
     r"\b(?:import|from)\s+(?:os|subprocess|socket|requests|urllib|http|ctypes|winreg)\b",

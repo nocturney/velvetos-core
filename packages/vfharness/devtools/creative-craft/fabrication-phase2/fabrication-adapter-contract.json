@@ -1,0 +1,160 @@
+{
+  "schema": "velvetos.creative-craft.fabrication-adapter-proposal.v1",
+  "status": "proposal_for_consolidation",
+  "created_at": "2026-10-01",
+  "authority": {
+    "fabrication_router": "packages/vfprod/FABRICATION-ROUTER.json",
+    "fabrication_router_cli": "scripts/vf_fabrication_router.py",
+    "three_d_router": "scripts/vf_3d.py",
+    "cad_bridge": "scripts/vf_cad.py",
+    "cad_engine_registry": "packages/vfprod/CAD-ENGINE-REGISTRY.json",
+    "printer_profile_authority": "VelvetPrintLab/slicer-router/printer_matrix.json"
+  },
+  "creative_craft_boundary": {
+    "decides": ["creative_domain_is_fabrication"],
+    "must_not_decide": [
+      "fabrication_intent",
+      "cad_engine",
+      "three_d_engine",
+      "slicer_profile",
+      "physical_printer_action"
+    ],
+    "registry_shape": "one fabrication tool plus one high-level fabrication pipeline",
+    "duplicate_fabrication_intent_table": false
+  },
+  "operations": {
+    "route": {
+      "mode": "read_only",
+      "delegate": "python scripts/vf_fabrication_router.py decide --request <request> [--file <path>]",
+      "receipt": ["intent", "primary", "chain", "confidence", "reason", "missing_skills", "printer_actions_allowed"]
+    },
+    "status": {
+      "mode": "read_only",
+      "delegates": [
+        "python scripts/vf_fabrication_router.py verify",
+        "python scripts/vf_fabrication_router.py doctor",
+        "python scripts/vf_cad.py doctor"
+      ]
+    },
+    "dfam": {
+      "mode": "local_analysis",
+      "delegate": "python scripts/vf_cad.py dfam --input <path> --angle-limit <degrees>",
+      "source_mutation": false,
+      "receipt_must_bind_to_input_hash": true
+    },
+    "slice": {
+      "mode": "local_artifact_generation",
+      "delegate": "python scripts/vf_cad.py slice --input <path> --printer <key> --output <path> [--execute]",
+      "default": "dry_run",
+      "execute_scope": "generate_and_validate_local_gcode_only",
+      "allowed_printer_keys": ["h2d", "u1", "ecc2", "c5", "c5pro"],
+      "printer_control": false
+    },
+    "three_d_route": {
+      "mode": "internal_only",
+      "delegate": "python scripts/vf_3d.py route --request <request>",
+      "entry_condition": "canonical Fabrication Router chain contains vf-3d-router",
+      "public_bypass": false
+    }
+  },
+  "blocked_operations": [
+    "raw_cad_engine_selection",
+    "raw_script_execution",
+    "raw_fusion_mcp_execute",
+    "arbitrary_blender_python",
+    "handwritten_printer_profile_override",
+    "printer_network_control",
+    "upload_to_printer",
+    "start_print",
+    "pause_print",
+    "cancel_print",
+    "heating",
+    "motion"
+  ],
+  "slicer_policy": {
+    "canonical": "orcaslicer",
+    "current_executable_order": [
+      "orcaslicer",
+      "BLOCKED"
+    ],
+    "target_fallback_order_after_profile_acceptance": [
+      "orcaslicer",
+      "prusa-slicer",
+      "curaengine"
+    ],
+    "bambu_studio": "non_preferred_not_in_automatic_fallback",
+    "elegoo_slicer": "vendor_profile_reference_oracle_only",
+    "flash_studio": "vendor_profile_reference_oracle_only",
+    "fallback_requires_profile_parity": true,
+    "silent_profile_translation": false,
+    "current_prusa_state": "canonical_discovery_pass_but_profile_parity_and_vf_cad_fallback_not_accepted"
+  },
+  "tool_roles": {
+    "text_to_cad": "default functional parametric engineering route",
+    "openscad": "source-first deterministic procedural CSG; proposed subordinate cad provider",
+    "freecad": "explicit iterative FreeCAD/workbench and headless FCStd/STEP/STL export",
+    "fusion": "accepted typed operations only; not a general fabrication fallback",
+    "blender": "organic/reference/existing-mesh refinement; hybrid after protected CAD interfaces when needed",
+    "meshmixer": "review/inspection only until typed repair operations are accepted",
+    "inventor": "native mechanical assembly/drawing source preservation when specifically justified",
+    "autocad": "DWG/DXF-native 2D drafting and exchange",
+    "maya": "native mesh/topology/deformation workflows; currently not routable while Update Sentinel state is needs_compatibility_repair",
+    "3ds_max": "native scene/modifier mesh and presentation geometry",
+    "zbrush": "high-resolution organic sculpt/detail",
+    "sketchup_layout": "spatial/layout/installation planning and documentation, not tolerance-critical part authority",
+    "xvl": "future large-assembly/exploded technical-publication source after integration acceptance"
+  },
+  "runtime_snapshot_2026_10_01": {
+    "fabrication_router": "PASS",
+    "text_to_cad": "PASS",
+    "blender_3d_router": "PASS",
+    "freecad_cli_anything": "PASS_after_runtime_restore_and_strict_acceptance",
+    "openscad_nightly": "available_but_no_typed_fabrication_adapter",
+    "orcaslicer": "canonical_available",
+    "prusa_slicer": "canonical_discovery_available_but_not_profile_parity_accepted",
+    "curaengine": "not_discovered",
+    "fusion": "available_typed_limited",
+    "meshmixer": "available_review_limited",
+    "inventor": "available",
+    "autocad": "available",
+    "3ds_max": "available",
+    "zbrush": "available",
+    "maya": "needs_compatibility_repair",
+    "sketchup_layout": "installed_scope_from_owner_handoff_but_no_typed_route",
+    "xvl": "not_routable_pending_integration"
+  },
+  "boundary_receipts": {
+    "creative_to_fabrication": ["resolved_request", "input_hashes", "explicit_constraints", "unknowns", "route_decision"],
+    "fabrication_to_engine": ["route_identity", "geometry_ir_or_source_manifest", "units", "protected_interfaces", "provenance"],
+    "engine_to_dfam": ["editable_master", "mesh_sidecar_hash", "bbox_scale", "protected_interface_measurements", "engine_provenance"],
+    "dfam_to_slicer": ["dfam_report_bound_to_mesh_hash", "orientation", "process_material_assumptions"],
+    "slicer_to_validator": ["dry_run_receipt", "printer_key", "profile_hashes", "printer_matrix_hash", "backend_version", "gcode_hash"],
+    "validator_to_human_floor": ["validation_result", "warnings", "bounds_temperature_motion_extrusion_checks", "digital_not_physical_proof"]
+  },
+  "physical_print_authorized": false,
+  "handoff_gaps": {
+    "runtime_repairs": [
+      "repair Maya post-update compatibility before Maya fabrication routing",
+      "own OpenSCAD Nightly update-health compatibility work"
+    ],
+    "missing_integrations": [
+      "typed OpenSCAD subordinate cad provider",
+      "bounded Prusa profile-parity/fallback adapter beneath canonical gcode/vf_cad",
+      "bounded Fusion sketch/feature write surface if desired",
+      "SketchUp/LayOut typed automation surface",
+      "XVL Studio integration and acceptance",
+      "optional typed Meshmixer repair operations"
+    ],
+    "skills_research": [
+      "OpenSCAD source-first procedural modeling workflows",
+      "SketchUp/LayOut spatial planning workflows",
+      "XVL technical publication workflows",
+      "engine-neutral mesh repair workflow patterns"
+    ]
+  },
+  "consolidation": {
+    "modify_shared_creative_craft_router_here": false,
+    "modify_shared_creative_craft_registry_here": false,
+    "required_action": "add one thin fabrication adapter/tool and one high-level fabrication pipeline that delegate to the canonical Fabrication Router"
+  }
+}

@@ -82,6 +82,10 @@ decision_cases = [
     ("תכין DXF לחיתוך לייזר", ["part.step"], "dxf_profile_or_flat_pattern"),
     ("פתח לי את המודל לבדיקה", ["part.step"], "cad_visual_review"),
     ("תכין את הקובץ להדפסה", ["part.stl"], "slice_and_validate"),
+    ("design a printable threaded bracket", [], "functional_part_to_print"),
+    ("reconstruct this reference and preserve exact mounting holes", [], "reference_reconstruction"),
+    ("make this STL printable", [], "additive_redesign"),
+    ("slice for U1 and validate the G-code", [], "slice_and_validate"),
     ("מה מרווח מומלץ לחיבור snap-fit ב-PETG?", [], "advice_calculation"),
 ]
 for request, files, expected_intent in decision_cases:
