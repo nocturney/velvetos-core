@@ -38,9 +38,11 @@ def main():
     if st.returncode!=0:
         print('FAIL vf_learning selftest: '+(st.stderr or st.stdout)[-400:],file=sys.stderr); return 1
     wf=(ROOT/'.github/workflows/office-control-plane.yml').read_text(encoding='utf-8')
-    for need in ('vf_learning.py ingest-ci','packages/vfharness/state/learning-candidates','actions: read'):
+    for need in ('vf_learning.py ingest-ci','packages/vfharness/state/learning-candidates'):
         if need not in wf:
             print(f'FAIL office-control-plane.yml must wire learning ingest ({need})',file=sys.stderr); return 1
-    print(f'OK learning candidates={len(records)} selftest=ingest-ci wired=office-control-plane')
+    if 'actions: read' not in wf and 'actions: write' not in wf:
+        print('FAIL office-control-plane.yml must grant explicit actions read/write permission',file=sys.stderr); return 1
+    print(f'OK learning candidates={len(records)} selftest=ingest-ci wired=office-control-plane actions_permission=explicit')
     return 0
 if __name__=='__main__': raise SystemExit(main())

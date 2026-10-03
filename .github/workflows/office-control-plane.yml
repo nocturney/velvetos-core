@@ -11,7 +11,8 @@ on:
 
 permissions:
   contents: write
-  actions: read   # list this repo's workflow runs for learning-candidate ingest (read-only)
+  actions: write  # read CI history + dispatch exact-SHA machine-writer precheck
+  checks: read
 
 jobs:
   control-plane:
@@ -52,6 +53,8 @@ jobs:
           python3 scripts/vf_learning.py ingest-ci --runs "$RUNNER_TEMP/main-runs.json" --window-days 7
           python3 scripts/check-learning-lifecycle.py
       - name: Persist activation evidence only when materially changed
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -e
           paths=(
@@ -79,14 +82,7 @@ jobs:
             git add -- "$learning"
           fi
           git commit -m "office: persist Living Studio activation evidence / learning candidates"
-          branch="${GITHUB_REF_NAME}"
-          git fetch origin "$branch"
-          if ! git rebase "origin/$branch"; then
-            git rebase --abort || true
-            echo "::error::Concurrent Office state changed; refusing overwrite"
-            exit 1
-          fi
-          git push origin "HEAD:$branch"
+          bash scripts/push-main-with-check-all.sh main
       - name: Fail on control-plane error
         if: failure()
         run: echo "::error::Office Control Plane watchdog/sensor failed. See log above." && exit 1
