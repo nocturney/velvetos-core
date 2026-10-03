@@ -42,7 +42,8 @@
         "owner-reserved-action",
         "new-recurring-cost",
         "paid-api-call",
-        "billing-capable-resource"
+        "billing-capable-resource",
+        "external-permission-mutation"
       ],
       "neverFor": [
         "weak-metrics",

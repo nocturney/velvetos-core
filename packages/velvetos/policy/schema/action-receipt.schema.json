@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos.action-receipt.v1",
+  "title": "VelvetOS exact-action authorization receipt",
+  "description": "Binds one canonical policy decision to one external effect and exact action. Evidence inputs never authorize an external effect on their own.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "policy_id",
+    "effect_class",
+    "action",
+    "exact_binding",
+    "policy_decision",
+    "owner_gate",
+    "evidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "velvetos.action-receipt.v1"
+    },
+    "receipt_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "policy_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "effect_class": {
+      "type": "string",
+      "minLength": 1
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action_type", "scope", "commitment"],
+      "properties": {
+        "action_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commitment": {
+          "type": "boolean"
+        },
+        "subject_digest": {
+          "type": ["string", "null"],
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "exact_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "artifact_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "payload_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "text_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "target_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "media_sha256": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "policy_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision_ref", "outcome", "decided_at"],
+      "properties": {
+        "decision_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "outcome": {
+          "enum": ["ALLOW", "DENY", "REQUIRE_OWNER_APPROVAL"]
+        },
+        "decided_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "owner_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "decision", "blocker_ids"],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "reviewer": {
+          "type": ["string", "null"]
+        },
+        "decision": {
+          "enum": ["APPROVED", "REJECTED", "NOT_REVIEWED", "NOT_REQUIRED"]
+        },
+        "reviewed_at": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "expires_at": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "blocker_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["class", "ref", "status"],
+        "properties": {
+          "class": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": ["PASS", "FAIL", "UNKNOWN"]
+          }
+        }
+      }
+    }
+  }
+}

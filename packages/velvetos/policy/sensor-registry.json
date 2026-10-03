@@ -1621,7 +1621,8 @@
       "enforces": [
         "office.owner_escalation",
         "external.irreversible.delete",
-        "advertising.boost"
+        "advertising.boost",
+        "external.permission.mutate"
       ],
       "risk": "high",
       "timeout_seconds": 180,

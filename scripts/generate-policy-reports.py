@@ -222,7 +222,7 @@ def build_reports(baseline_sha: str, coverage_sha: str, registry_sha: str, ci_ba
         (1, "instagram-publish-canonicalization", ["instagram.publish"], "Restore prior publication authorities/runtime choke-point wiring; keep exact preflight and receipt verification fail-closed."),
         (2, "sensor-shadow-selection", [], "Disable selector and run FULL_SUITE; registry remains metadata only."),
         (3, "required-fast-and-affected-ci", [], "Revert workflow/ruleset activation; affected selector can fall back to FULL_SUITE."),
-        (4, "critical-external-effect-framework", ["gmail.send", "customer.whatsapp.send", "advertising.boost", "external.irreversible.delete", "cost.recurring.new"], "Return callers to existing channel-specific gates; keep policy registry references."),
+        (4, "critical-external-effect-framework", ["gmail.send", "customer.whatsapp.send", "advertising.boost", "external.irreversible.delete", "external.permission.mutate", "cost.recurring.new"], "Return callers to existing channel-specific gates; keep policy registry references."),
         (5, "agents-locality", [], "Restore moved guide lines from git history if locality change breaks routing; no business-state migration."),
         (6, "visible-text-and-readme-locality", ["visible_text.finalization"], "Return to current global Visible Text + README gates while preserving exact artifact receipts."),
         (7, "operational-debt-and-retention", ["cost.recurring.new"], "Stop movers/cleanup; retain Git artifacts and current schedules. No deletion is required for rollback."),

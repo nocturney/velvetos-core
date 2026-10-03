@@ -17,6 +17,9 @@ SELECTION = POLICY_DIR / "sensor-selection.json"
 ARTIFACTS = POLICY_DIR / "artifact-retention.json"
 SCHEMAS = POLICY_DIR / "schema"
 REPORTS = POLICY_DIR / "reports"
+ACTION_RECEIPT_SCHEMA = SCHEMAS / "action-receipt.schema.json"
+ACTION_RECEIPT_VECTORS = POLICY_DIR / "action-receipt-test-vectors.json"
+ACTION_RECEIPT_VALIDATOR = ROOT / "scripts" / "vf_action_receipt.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -34,6 +37,10 @@ RISK = {"critical", "high", "medium", "low"}
 STATUS = {"active", "conflicted", "deprecated", "temporary_hotfix"}
 FALLBACK = {"FULL_SUITE", "FULL_DOMAIN", "ALWAYS_ON"}
 MAPPING = {"broad_legacy_baseline", "mapped", "legacy", "deprecated"}
+POLICY_ROLES = {"effect_authority", "evidence_input", "router", "repository_guard", "escalation_boundary"}
+DECISION_VOCABULARY = {"ALLOW", "DENY", "REQUIRE_OWNER_APPROVAL"}
+RECEIPT_MODES = {"EXACT_ACTION_REQUIRED", "EXACT_ACTION_ON_COMMITMENT", "OWNER_RESERVED", "POLICY_NATIVE_RECEIPT"}
+DECISION_AUTHORITY_KINDS = {"runtime_evaluator", "runtime_boundary", "canonical_policy_boundary"}
 POLICY_REF = re.compile(r"policy_id\s*[:=]\s*([a-z0-9]+(?:[._-][a-z0-9]+)*)", re.I)
 RESERVED = re.compile(
     r"authorized_for_tool_publish|approved_for_manual_posting|standingAuthorization|"
@@ -112,6 +119,92 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 for key in ("source_authority", "migration_target", "review_at", "expiry_behavior"):
                     require(bool(meta.get(key)), f"{pid}: hotfix {key} required", problems)
                 require(meta.get("review_at") != meta.get("expires_at"), f"{pid}: review_at must not be treated as expires_at", problems)
+        require(row.get("policy_role") in POLICY_ROLES, f"{pid}: invalid or missing policy_role", problems)
+
+    contract = policies.get("external_effect_contract")
+    require(isinstance(contract, dict), "external_effect_contract missing", problems)
+    contract = contract if isinstance(contract, dict) else {}
+    require(contract.get("contract_version") == 1, "external-effect contract_version", problems)
+    require(contract.get("single_authority_per_effect") is True, "external effects must have one authority each", problems)
+    require(set(contract.get("normalized_decision_vocabulary") or []) == DECISION_VOCABULARY,
+            "external-effect decision vocabulary drift", problems)
+    require(contract.get("action_receipt_schema") == "packages/velvetos/policy/schema/action-receipt.schema.json",
+            "action receipt schema binding mismatch", problems)
+    require(contract.get("action_receipt_validator") == "scripts/vf_action_receipt.py",
+            "action receipt validator binding mismatch", problems)
+
+    evidence_rows = contract.get("evidence_input_classes")
+    require(isinstance(evidence_rows, list) and bool(evidence_rows), "evidence_input_classes required", problems)
+    evidence_rows = evidence_rows if isinstance(evidence_rows, list) else []
+    evidence_ids = [row.get("id") for row in evidence_rows if isinstance(row, dict)]
+    require(len(evidence_ids) == len(set(evidence_ids)), "duplicate evidence input class", problems)
+    require(all(isinstance(row, dict) and row.get("can_authorize_external_effect") is False for row in evidence_rows),
+            "evidence inputs may not authorize external effects", problems)
+    evidence_id_set = {value for value in evidence_ids if isinstance(value, str)}
+
+    effect_rows = contract.get("effects")
+    require(isinstance(effect_rows, list) and bool(effect_rows), "external effect mappings required", problems)
+    effect_rows = effect_rows if isinstance(effect_rows, list) else []
+    effect_classes = [row.get("effect_class") for row in effect_rows if isinstance(row, dict)]
+    effect_policy_ids = [row.get("policy_id") for row in effect_rows if isinstance(row, dict)]
+    require(len(effect_classes) == len(set(effect_classes)), "duplicate external effect_class authority", problems)
+    require(len(effect_policy_ids) == len(set(effect_policy_ids)), "policy_id may own only one external effect in Stage 4C", problems)
+
+    policy_by_id = {row.get("policy_id"): row for row in rows if isinstance(row, dict)}
+    for effect in effect_rows:
+        if not isinstance(effect, dict):
+            problems.append("external effect row must be object")
+            continue
+        effect_class = effect.get("effect_class")
+        pid = effect.get("policy_id")
+        require(isinstance(effect_class, str) and bool(effect_class), "external effect_class missing", problems)
+        require(pid in known_policies, f"{effect_class}: unknown policy_id {pid}", problems)
+        if pid in policy_by_id:
+            require(policy_by_id[pid].get("policy_role") == "effect_authority",
+                    f"{pid}: external effect must resolve to effect_authority role", problems)
+        authority = effect.get("decision_authority")
+        require(isinstance(authority, dict), f"{pid}: decision_authority required", problems)
+        if isinstance(authority, dict):
+            require(authority.get("kind") in DECISION_AUTHORITY_KINDS, f"{pid}: invalid decision authority kind", problems)
+            require(isinstance(authority.get("path"), str) and existing_repo_path(authority.get("path")),
+                    f"{pid}: decision authority path missing", problems)
+        require(effect.get("receipt_mode") in RECEIPT_MODES, f"{pid}: invalid receipt_mode", problems)
+        inputs = effect.get("evidence_inputs")
+        require(isinstance(inputs, list), f"{pid}: evidence_inputs must be list", problems)
+        if isinstance(inputs, list):
+            require(set(inputs).issubset(evidence_id_set), f"{pid}: unknown evidence input class", problems)
+
+    declared_effect_policies = {
+        row.get("policy_id") for row in rows
+        if isinstance(row, dict) and row.get("policy_role") == "effect_authority"
+    }
+    require(set(effect_policy_ids) == declared_effect_policies,
+            "every effect_authority policy must map exactly one external effect", problems)
+    for pid in ("visible_text.finalization", "public.cta"):
+        require(policy_by_id.get(pid, {}).get("policy_role") == "evidence_input",
+                f"{pid} must remain evidence_input, not external authorization authority", problems)
+    require(policy_by_id.get("project.request.preflight", {}).get("policy_role") == "router",
+            "project.request.preflight must remain router-only", problems)
+
+    for path in (ACTION_RECEIPT_SCHEMA, ACTION_RECEIPT_VECTORS, ACTION_RECEIPT_VALIDATOR):
+        require(path.is_file(), f"missing {path.relative_to(ROOT)}", problems)
+    if ACTION_RECEIPT_SCHEMA.is_file():
+        schema = load(ACTION_RECEIPT_SCHEMA)
+        require(schema.get("$id") == "velvetos.action-receipt.v1", "action receipt schema id mismatch", problems)
+    if ACTION_RECEIPT_VECTORS.is_file():
+        vectors = load(ACTION_RECEIPT_VECTORS)
+        require(vectors.get("status") == "ACTIVE_STAGE4C_CONTRACT", "action receipt vectors not active Stage 4C contract", problems)
+    if ACTION_RECEIPT_VALIDATOR.is_file():
+        proc = subprocess.run(
+            [sys.executable, str(ACTION_RECEIPT_VALIDATOR), "--self-test"],
+            cwd=ROOT,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            capture_output=True,
+            timeout=30,
+        )
+        require(proc.returncode == 0, "action receipt self-test failed: " + (proc.stderr.strip() or proc.stdout.strip()), problems)
 
     sensor_rows = sensors.get("sensors")
     require(sensors.get("schema_version") == 1, "sensor registry schema_version", problems)

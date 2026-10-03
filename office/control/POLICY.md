@@ -40,7 +40,8 @@
 - פעולה חיצונית הרסנית
 - הרשאת פרסום שדורשת בעלים
 - חסם קשיח בלי failover
-- מחיקה בלתי הפיכה
+- מחיקה בלתי הפיכה — `policy_id: external.irreversible.delete`
+- שינוי, הרחבה או ביטול הרשאת גישה/שיתוף חיצונית — `policy_id: external.permission.mutate`
 - התחייבות עסקית שלא מכוסה במדיניות
 - עלות חוזרת חדשה / מנוי / תוכנית / משאב בתשלום בלי אישור בעלים מפורש
 - קריאת API בתשלום, workload usage-based או billing-capable resource בלי cost preflight ואישור נדרש
