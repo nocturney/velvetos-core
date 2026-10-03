@@ -93,6 +93,7 @@ The following classifications are the Stage 4A recommendation only; Stage 4A its
 | Current gate | Disposition | Reason |
 |---|---|---|
 | baseline_authority | INTERNALIZE | Resolve the minimum baseline internally |
+| general_business.baseline_authority | REMOVE_AS_DUPLICATE | Global baseline is already resolved before the general-business hard gate |
 | facts | KEEP | Truth invariant |
 | offering_shape | ACTION_SCOPED | Customer/public offering claims only |
 | canonical_source | KEEP | SoT invariant |

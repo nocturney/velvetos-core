@@ -95,3 +95,14 @@ Stage 3 is active in the repository. Pull requests use the deterministic affecte
 - `sensor-selection.json.stage3_preparation` is `ACTIVE`, preserves the `FULL_SUITE_REQUIRED` rollback, and records the owner duration exception as auditable activation metadata.
 - `scripts/check-policy-architecture.py` validates the active workflow shape and activation receipt; the duration exception cannot mask critical misses, incomplete/unresolved evidence, unclassified relevant misses, incomplete history, or deterministic replay failure.
 - `reports/stage3-preactivation-plan.json` remains the historical preactivation transaction/snapshot; the activation receipt is the cutover evidence.
+
+## Stage 4A — friction baseline pinned
+
+Stage 4A is observation-only. It does not change request routing, authorization, tool execution or owner approvals; it freezes the pre-4B friction surface so later simplification is measurable rather than anecdotal.
+
+- `reports/stage4a-friction-baseline.json` and its Markdown companion are pinned against pre-change `main` `9989f0ffd11b97a28da732c9fa6ddd234ba51d35` and inventory the 14 routine flows named by the Reform v2 Stage 4A plan.
+- Baseline result: 8/14 flows fall to `general_business`; Instagram carousel is under-classified; 3 creative-prep flows block before execution without exact evidence; Gmail transport is currently ready; Maya is `READY_ACCEPTED_SURFACE`.
+- Every sampled request pays the nine-source global baseline first. The measured burden is 10–22 authority files and 3–11 hard gates per flow (mean 13.29 sources / 5.14 gates). CAD read-only and CAD build receive the same six production gates.
+- The report records the required gate dispositions `KEEP`, `INTERNALIZE`, `MERGE`, `ACTION_SCOPED`, and `REMOVE_AS_DUPLICATE` before any behavior changes; the explicit duplicate is `general_business.baseline_authority`, because the global baseline has already been resolved.
+- `check-project-request-gate.py` protects the historical snapshot shape/metrics; it does not regenerate the baseline after later fast-path changes.
+- Stage 4B target: known read-only / routine LOW-risk / already-authorized requests route with a minimal baseline and internal receipt; full preflight remains for unknown/high-risk/external-sensitive cases.

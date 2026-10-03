@@ -269,6 +269,7 @@
   ],
   "gate_classification": [
     {"gate": "baseline_authority", "disposition": "INTERNALIZE", "reason": "resolve minimal baseline internally; do not make it owner-visible ceremony"},
+    {"gate": "general_business.baseline_authority", "disposition": "REMOVE_AS_DUPLICATE", "reason": "general_business repeats baseline_authority after the global baseline has already been resolved"},
     {"gate": "facts", "disposition": "KEEP", "reason": "truth invariant"},
     {"gate": "offering_shape", "disposition": "ACTION_SCOPED", "reason": "relevant to customer/public offering claims, not every routine request"},
     {"gate": "canonical_source", "disposition": "KEEP", "reason": "single-source-of-truth invariant"},
