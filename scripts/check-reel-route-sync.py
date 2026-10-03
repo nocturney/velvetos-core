@@ -23,16 +23,35 @@ route = ROOT / c["routeDoc"]
 instructions = ROOT / c["projectInstructions"]
 if not route.is_file() or not instructions.is_file() or not PRESETS.is_file():
     fail("route, project instructions or preset document missing")
-if latest.get("revision") != c.get("projectRevision"):
-    fail("LATEST revision differs from reel route contract")
-if latest.get("revision") != "6.6.11":
+if latest.get("schema") != "velvetos.chatgpt-project.latest.v2":
+    fail("LATEST schema is not v2")
+if "revision" in latest or "bundleId" in latest:
+    fail("LATEST must not expose a single ambiguous top-level revision/bundleId")
+extensions = latest.get("extensions") or {}
+reel = extensions.get("reel") or {}
+creative_runtime = latest.get("creativeRuntime") or {}
+if reel.get("revision") != c.get("projectRevision"):
+    fail("LATEST reel extension revision differs from reel route contract")
+if reel.get("revision") != "6.6.11":
     fail("Adobe Reel route must bind Project revision 6.6.11")
-if (latest.get("baseProject") or {}).get("revision") != c.get("baseCreativeRevision"):
-    fail("base Project revision drift")
-if latest.get("reelRoute") != Path(c["routeDoc"]).name:
-    fail("LATEST reelRoute binding drift")
-if latest.get("instructions") != Path(c["projectInstructions"]).name:
-    fail("LATEST instructions binding drift")
+if reel.get("bundleId") != "VF-PROJECT-6.6.11-ADOBE-PREMIUM-REEL-ROUTE":
+    fail("Adobe Reel bundle id drift")
+if creative_runtime.get("revision") != c.get("baseCreativeRevision"):
+    fail("creative runtime revision drift")
+if reel.get("routeDoc") != Path(c["routeDoc"]).name:
+    fail("LATEST reel route binding drift")
+if reel.get("instructions") != Path(c["projectInstructions"]).name:
+    fail("LATEST reel instructions binding drift")
+predecessor = reel.get("predecessor") or {}
+if predecessor.get("revision") != "6.6.10":
+    fail("Adobe Reel predecessor must remain 6.6.10")
+if predecessor.get("bundleId") != "VF-PROJECT-6.6.10-REEL-VIDEO-ROUTE":
+    fail("Adobe Reel predecessor bundle drift")
+if predecessor.get("instructions") != "PROJECT-INSTRUCTIONS-v6.6.10.txt":
+    fail("Adobe Reel predecessor instructions binding drift")
+predecessor_path = ROOT / "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.10.txt"
+if not predecessor_path.is_file():
+    fail("Adobe Reel predecessor instructions file missing")
 
 route_text = route.read_text(encoding="utf-8")
 instructions_text = instructions.read_text(encoding="utf-8")
