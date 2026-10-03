@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -21,6 +22,9 @@ POLICY_DIR = ROOT / "packages" / "velvetos" / "policy"
 CONFIG = POLICY_DIR / "sensor-selection.json"
 BASELINE = POLICY_DIR / "reports" / "stage2-shadow-observation-baseline.json"
 DEFAULT_CLASSIFICATIONS = POLICY_DIR / "reports" / "stage2-shadow-miss-classifications.json"
+DEFAULT_RECOVERIES = POLICY_DIR / "reports" / "stage2-shadow-incomplete-recoveries.json"
+RECOVERY_SCHEMA = "velvetos.sensor-shadow-incomplete-recoveries.v1"
+RECOVERY_REASONS = {"SELECTOR_SCRIPT_SYNTAX_FAILURE"}
 WORKFLOW = "VelvetOS Core Sensors"
 SELECTION_MARKER = "SENSOR_SHADOW_SELECTION_JSON "
 COMPARISON_MARKER = "SENSOR_SHADOW_COMPARISON_JSON "
@@ -145,6 +149,125 @@ def load_classifications(path: Path | None) -> dict[tuple[int, str], dict]:
     return out
 
 
+def load_recoveries(path: Path | None) -> dict[int, dict]:
+    if path is None:
+        return {}
+    data = load(path)
+    if data.get("schema") != RECOVERY_SCHEMA:
+        raise RuntimeError("invalid shadow incomplete recovery schema")
+    out: dict[int, dict] = {}
+    for row in data.get("entries") or []:
+        try:
+            run_id = int(row["run_id"])
+            pull_request = int(row["pull_request"])
+            head_sha = str(row["head_sha"]).lower()
+            reason = str(row["reason"])
+            expected_selection = str(row["expected_selection"])
+            sensor_count = int(row["sensor_count"])
+            full_failures = list(row["full_failures"])
+            selector_misses = list(row["selector_misses"])
+            verification = dict(row["verification"])
+            verification_run_id = int(verification["run_id"])
+            verification_head_sha = str(verification["head_sha"]).lower()
+        except (KeyError, TypeError, ValueError):
+            raise RuntimeError("invalid shadow incomplete recovery row")
+        if run_id in out:
+            raise RuntimeError(f"duplicate shadow incomplete recovery run_id: {run_id}")
+        if pull_request < 1 or verification_run_id < 1 or sensor_count < 1:
+            raise RuntimeError("shadow incomplete recovery numeric fields must be positive")
+        if not re.fullmatch(r"[0-9a-f]{40}", head_sha) or not re.fullmatch(r"[0-9a-f]{40}", verification_head_sha):
+            raise RuntimeError("shadow incomplete recovery SHA must be 40 lowercase hex characters")
+        if reason not in RECOVERY_REASONS:
+            raise RuntimeError(f"unsupported shadow incomplete recovery reason: {reason}")
+        if expected_selection != "FULL_SUITE":
+            raise RuntimeError("shadow incomplete recovery must prove FULL_SUITE selection")
+        if selector_misses != []:
+            raise RuntimeError("FULL_SUITE recovery cannot declare selector misses")
+        if not all(isinstance(value, str) and re.fullmatch(r"check-[a-z0-9-]+", value) for value in full_failures):
+            raise RuntimeError("shadow incomplete recovery full_failures must be sensor ids")
+        if str(verification.get("comparison_status") or "") != "NO_MISS":
+            raise RuntimeError("shadow incomplete recovery verification must be NO_MISS")
+        if not str(row.get("evidence") or "").strip():
+            raise RuntimeError("shadow incomplete recovery evidence is required")
+        out[run_id] = row
+    return out
+
+
+def parse_full_suite_log(log: str) -> dict:
+    sensor_count = None
+    failures: set[str] = set()
+    for line in log.splitlines():
+        count_match = re.search(r"\bSENSORS\s+(\d+)\s+mode=full\b", line)
+        if count_match:
+            sensor_count = int(count_match.group(1))
+        failure_match = re.search(r"\bFAIL\s+(check-[a-z0-9-]+)\.py\b", line)
+        if failure_match:
+            failures.add(failure_match.group(1))
+    return {
+        "sensor_count": sensor_count,
+        "full_failures": sorted(failures),
+    }
+
+
+def apply_recoveries(
+    observations: list[dict],
+    recoveries: dict[int, dict],
+    total_sensor_count: int,
+) -> list[int]:
+    by_run: dict[int, dict] = {}
+    for observation in observations:
+        for row in observation.get("runs") or [observation]:
+            by_run[int(row["run_id"])] = row
+
+    recovered: list[int] = []
+    for run_id, recovery in recoveries.items():
+        row = by_run.get(run_id)
+        if row is None:
+            continue
+        if row.get("evidence_complete"):
+            raise RuntimeError(f"recovery targets already-complete run: {run_id}")
+        if int(row.get("pull_request") or 0) != int(recovery["pull_request"]):
+            raise RuntimeError(f"recovery PR mismatch for run {run_id}")
+        if str(row.get("head_sha") or "").lower() != str(recovery["head_sha"]).lower():
+            raise RuntimeError(f"recovery head SHA mismatch for run {run_id}")
+        if row.get("conclusion") != "failure":
+            raise RuntimeError(f"recovery target must be a failed run: {run_id}")
+
+        observed = row.get("full_suite_log_evidence") or {}
+        if int(observed.get("sensor_count") or 0) != total_sensor_count:
+            raise RuntimeError(f"recovery lacks full-suite log proof for run {run_id}")
+        if int(recovery["sensor_count"]) != total_sensor_count:
+            raise RuntimeError(f"recovery sensor count mismatch for run {run_id}")
+        if sorted(observed.get("full_failures") or []) != sorted(recovery.get("full_failures") or []):
+            raise RuntimeError(f"recovery full-failure evidence mismatch for run {run_id}")
+
+        verification = recovery["verification"]
+        verification_run_id = int(verification["run_id"])
+        verification_row = by_run.get(verification_run_id)
+        if verification_row is None:
+            raise RuntimeError(f"recovery verification run missing from observation history: {verification_run_id}")
+        if int(verification_row.get("pull_request") or 0) != int(recovery["pull_request"]):
+            raise RuntimeError(f"recovery verification PR mismatch for run {run_id}")
+        if str(verification_row.get("head_sha") or "").lower() != str(verification["head_sha"]).lower():
+            raise RuntimeError(f"recovery verification head SHA mismatch for run {run_id}")
+        if not verification_row.get("evidence_complete"):
+            raise RuntimeError(f"recovery verification run is incomplete: {verification_run_id}")
+
+        selection = verification_row.get("selection") or {}
+        comparison = verification_row.get("comparison") or {}
+        if selection.get("full_suite") is not True or int(selection.get("selection_count") or 0) != total_sensor_count:
+            raise RuntimeError(f"recovery verification did not prove full-suite selection: {verification_run_id}")
+        if comparison.get("status") != "NO_MISS":
+            raise RuntimeError(f"recovery verification comparison is not NO_MISS: {verification_run_id}")
+        if comparison.get("selector_misses") or comparison.get("critical_misses"):
+            raise RuntimeError(f"recovery verification contains selector misses: {verification_run_id}")
+
+        row["evidence_recovered"] = True
+        row["recovery"] = recovery
+        recovered.append(run_id)
+    return sorted(recovered)
+
+
 def scan_observations(
     observations: list[dict],
     classifications: dict[tuple[int, str], dict],
@@ -155,6 +278,8 @@ def scan_observations(
     for observation in observations:
         for row in observation.get("runs") or [observation]:
             if not row["evidence_complete"]:
+                if row.get("evidence_recovered"):
+                    continue
                 incomplete.append(row["run_id"])
                 continue
             comparison = row["comparison"] or {}
@@ -183,7 +308,7 @@ def scan_observations(
     return critical_misses, noncritical_misses, incomplete
 
 
-def collect(limit: int, classifications_path: Path | None) -> dict:
+def collect(limit: int, classifications_path: Path | None, recoveries_path: Path | None) -> dict:
     config = load(CONFIG)
     baseline = load(BASELINE)
     criteria = config["shadow_exit"]
@@ -249,6 +374,7 @@ def collect(limit: int, classifications_path: Path | None) -> dict:
                     log = gh(["run", "view", str(run_id), "--log"], timeout=120)
                     row["selection"] = marker_json(log, SELECTION_MARKER)
                     row["comparison"] = marker_json(log, COMPARISON_MARKER)
+                    row["full_suite_log_evidence"] = parse_full_suite_log(log)
                     row["evidence_complete"] = bool(row["selection"] and row["comparison"])
                 except RuntimeError as exc:
                     row["collection_error"] = str(exc)
@@ -261,6 +387,10 @@ def collect(limit: int, classifications_path: Path | None) -> dict:
         observations.append(observation)
 
     classifications = load_classifications(classifications_path)
+    recoveries = load_recoveries(recoveries_path)
+    registry = load(POLICY_DIR / "sensor-registry.json")
+    total_sensor_count = len(registry.get("sensors") or [])
+    recovered_incomplete = apply_recoveries(observations, recoveries, total_sensor_count)
     critical_misses, noncritical_misses, incomplete = scan_observations(
         observations,
         classifications,
@@ -325,6 +455,7 @@ def collect(limit: int, classifications_path: Path | None) -> dict:
             "noncritical_misses": len(noncritical_misses),
             "unclassified_noncritical_misses": len(unclassified),
             "incomplete_observations": len(incomplete),
+            "recovered_incomplete_observations": len(recovered_incomplete),
             "unresolved_runs": len(unresolved_runs),
             "run_history_complete": not history_truncated,
             "deterministic_replay_pass": deterministic_replay_pass,
@@ -336,6 +467,7 @@ def collect(limit: int, classifications_path: Path | None) -> dict:
         "critical_misses": critical_misses,
         "noncritical_misses": noncritical_misses,
         "incomplete_run_ids": incomplete,
+        "recovered_incomplete_run_ids": recovered_incomplete,
         "unresolved_run_ids": unresolved_runs,
         "observations": observations,
         "read_only": True,
@@ -379,7 +511,85 @@ def self_test() -> int:
         raise AssertionError("PR dedupe erased or duplicated historical miss evidence")
     if noncritical[0].get("classification") != "RELEVANT_MAPPING_FIXED":
         raise AssertionError("historical miss classification was not preserved")
-    print("OK sensor-shadow-observation selftest historical_miss_retention=PASS pr_dedupe=PASS")
+
+    incomplete_run = {
+        "pull_request": 500,
+        "run_id": 2001,
+        "head_sha": "1" * 40,
+        "conclusion": "failure",
+        "evidence_complete": False,
+        "full_suite_log_evidence": {
+            "sensor_count": 3,
+            "full_failures": ["check-critical-syntax"],
+        },
+    }
+    verification_run = {
+        "pull_request": 500,
+        "run_id": 2002,
+        "head_sha": "2" * 40,
+        "conclusion": "success",
+        "evidence_complete": True,
+        "selection": {
+            "full_suite": True,
+            "selection_count": 3,
+        },
+        "comparison": {
+            "status": "NO_MISS",
+            "selector_misses": [],
+            "critical_misses": [],
+        },
+    }
+    recovery_observations = [{
+        "pull_request": 500,
+        "run_id": 2002,
+        "runs": [incomplete_run, verification_run],
+    }]
+    _, _, before_recovery = scan_observations(recovery_observations, {})
+    if before_recovery != [2001]:
+        raise AssertionError("unreviewed incomplete evidence must remain blocking")
+    recoveries = {
+        2001: {
+            "run_id": 2001,
+            "pull_request": 500,
+            "head_sha": "1" * 40,
+            "reason": "SELECTOR_SCRIPT_SYNTAX_FAILURE",
+            "expected_selection": "FULL_SUITE",
+            "sensor_count": 3,
+            "full_failures": ["check-critical-syntax"],
+            "selector_misses": [],
+            "verification": {
+                "run_id": 2002,
+                "head_sha": "2" * 40,
+                "comparison_status": "NO_MISS",
+            },
+            "evidence": "fixture reviewed recovery",
+        }
+    }
+    recovered = apply_recoveries(recovery_observations, recoveries, 3)
+    _, _, after_recovery = scan_observations(recovery_observations, {})
+    if recovered != [2001] or after_recovery:
+        raise AssertionError("reviewed full-suite recovery did not clear incomplete evidence")
+    bad_recovery = dict(recoveries[2001])
+    bad_recovery["full_failures"] = []
+    try:
+        apply_recoveries(
+            [{
+                "pull_request": 500,
+                "run_id": 2002,
+                "runs": [
+                    dict(incomplete_run, evidence_recovered=False),
+                    verification_run,
+                ],
+            }],
+            {2001: bad_recovery},
+            3,
+        )
+    except RuntimeError:
+        pass
+    else:
+        raise AssertionError("mismatched recovery evidence must fail closed")
+
+    print("OK sensor-shadow-observation selftest historical_miss_retention=PASS pr_dedupe=PASS incomplete_recovery=PASS")
     return 0
 
 
@@ -387,6 +597,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=1000)
     ap.add_argument("--classifications", type=Path, default=DEFAULT_CLASSIFICATIONS)
+    ap.add_argument("--recoveries", type=Path, default=DEFAULT_RECOVERIES)
     ap.add_argument("--output", type=Path)
     ap.add_argument("--self-test", action="store_true")
     args = ap.parse_args()
@@ -395,7 +606,7 @@ def main() -> int:
     if args.limit < 1 or args.limit > 1000:
         ap.error("--limit must be 1..1000")
     try:
-        report = collect(args.limit, args.classifications)
+        report = collect(args.limit, args.classifications, args.recoveries)
     except (RuntimeError, OSError, json.JSONDecodeError) as exc:
         print(f"FAIL sensor-shadow-observation collection: {exc}", file=sys.stderr)
         return 1
