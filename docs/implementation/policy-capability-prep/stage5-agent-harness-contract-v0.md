@@ -1,6 +1,6 @@
 # Stage 5 draft - Agent Harness and capability locality
 
-Status: **STAGE 5 ACTIVE · 5A CONTEXT LOCALITY IMPLEMENTED · LOOP/CAPABILITY WORK CONTINUES IN LATER STAGE 5 PRs**
+Status: **STAGE 5 ACTIVE | 5A CONTEXT LOCALITY + 5B HARNESS CONSOLIDATION IMPLEMENTED | WORKSPACE DISTRIBUTION REMAINS**
 
 ## Purpose
 
@@ -45,6 +45,10 @@ Stage 8 remains the final owner of Core/Instance placement. Stage 5 may establis
 ### Stage 5A implementation receipt
 
 Stage 5A implements only the locality mechanics above. Root `AGENTS.md` is now Core-only; domain instructions live next to their owning packages; `PROJECT-AUTHORITY-MANIFEST.json#instructionLocality` selects root + one primary guide per routed domain with warehouse default `off`. Baseline/acceptance evidence is pinned in `packages/velvetos/policy/reports/stage5a-context-locality-baseline.json` and `stage5a-context-locality.json`. The external-effect policy registry is hash-identical to the Stage 4 acceptance snapshot, so this locality change does not alter authorization semantics. Capability routing/loop evolution remains later Stage 5 work.
+
+### Stage 5B implementation receipt
+
+Stage 5B consolidates the shared execution contract without creating a new runtime. `packages/vfharness/LOOP.md` is the only global loop authority; `packages/vfharness/AGENTS.md`, `packages/vfharness/SKILL.md`, the Cursor harness skill/rule and `docs/HARNESS.md` are pointer-only secondary surfaces. Cross-tool continuation remains `office/control/HANDOFF.json` + `packages/vfmem/HANDOFF.md`; handoff carries context/state only and never becomes an orchestrator or policy authority. Specialized playbooks and historical harness state remain intact. Acceptance evidence is pinned in `packages/velvetos/policy/reports/stage5b-harness-consolidation.json`.
 
 ## Upstream elements intentionally not adopted
 

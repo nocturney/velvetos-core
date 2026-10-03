@@ -1,0 +1,130 @@
+{
+  "schema": "velvetos.stage5b-harness-consolidation.v1",
+  "stage": "5B",
+  "behavior_change": true,
+  "prepared_against_main_sha": "daf5092fbf3a4de9bbaa1623a68efe9b24b8a3b5",
+  "captured_at": "2026-10-03T22:08:15.9682206+03:00",
+  "scope": {
+    "canonical_global_loop": "packages/vfharness/LOOP.md",
+    "historical_state_modified": false,
+    "specialized_playbooks_removed": false,
+    "second_orchestrator_created": false
+  },
+  "before": {
+    "surfaces": {
+      "packages/vfharness/LOOP.md": {
+        "points_to_loop": true,
+        "duplicate_signatures": [
+          "retry(step, budget=2)",
+          "downgrade_scope(step)"
+        ],
+        "restates_global_loop": false
+      },
+      "packages/vfharness/AGENTS.md": {
+        "points_to_loop": true,
+        "duplicate_signatures": [],
+        "restates_global_loop": false
+      },
+      "packages/vfharness/SKILL.md": {
+        "points_to_loop": false,
+        "duplicate_signatures": [
+          "retry → fallback → downgrade"
+        ],
+        "restates_global_loop": true
+      },
+      ".cursor/skills/vf-harness/SKILL.md": {
+        "points_to_loop": false,
+        "duplicate_signatures": [],
+        "restates_global_loop": false
+      },
+      ".cursor/rules/vf-harness.mdc": {
+        "points_to_loop": true,
+        "duplicate_signatures": [],
+        "restates_global_loop": false
+      },
+      "docs/HARNESS.md": {
+        "points_to_loop": true,
+        "duplicate_signatures": [],
+        "restates_global_loop": false
+      }
+    },
+    "secondary_pointer_count": 3,
+    "secondary_restating_count": 1,
+    "secondary_restating_surfaces": [
+      "packages/vfharness/SKILL.md"
+    ]
+  },
+  "after": {
+    "surfaces": {
+      "packages/vfharness/LOOP.md": {
+        "points_to_loop": true,
+        "duplicate_signatures": [
+          "retry(step, budget=2)",
+          "downgrade_scope(step)"
+        ],
+        "restates_global_loop": false
+      },
+      "packages/vfharness/AGENTS.md": {
+        "points_to_loop": true,
+        "duplicate_signatures": [],
+        "restates_global_loop": false
+      },
+      "packages/vfharness/SKILL.md": {
+        "points_to_loop": true,
+        "duplicate_signatures": [],
+        "restates_global_loop": false
+      },
+      ".cursor/skills/vf-harness/SKILL.md": {
+        "points_to_loop": true,
+        "duplicate_signatures": [],
+        "restates_global_loop": false
+      },
+      ".cursor/rules/vf-harness.mdc": {
+        "points_to_loop": true,
+        "duplicate_signatures": [],
+        "restates_global_loop": false
+      },
+      "docs/HARNESS.md": {
+        "points_to_loop": true,
+        "duplicate_signatures": [],
+        "restates_global_loop": false
+      }
+    },
+    "secondary_pointer_count": 5,
+    "secondary_restating_count": 0,
+    "secondary_restating_surfaces": []
+  },
+  "execution_contract": {
+    "canonical": "packages/vfharness/LOOP.md",
+    "state": "packages/vfharness/playbooks/skillstate.md",
+    "secondary_mode": "pointer_only",
+    "second_orchestrator": "FORBIDDEN",
+    "cross_tool_handoff": [
+      "office/control/HANDOFF.json",
+      "packages/vfmem/HANDOFF.md"
+    ],
+    "handoff_artifacts_exist": true,
+    "canonical_markers": {
+      "retry": true,
+      "fallback": true,
+      "downgrade": true,
+      "safe_ruling": true,
+      "skillstate": true,
+      "cross_tool_handoff": true
+    }
+  },
+  "authorization_semantics": {
+    "stage5a_policy_registry_sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8",
+    "current_policy_registry_sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8",
+    "external_effect_authority_registry_unchanged": true
+  },
+  "acceptance": {
+    "secondary_surfaces_pointer_only": true,
+    "duplicate_global_loop_reduced": true,
+    "canonical_loop_complete": true,
+    "cross_tool_handoff_preserved": true,
+    "no_second_orchestrator": true,
+    "authorization_semantics_unchanged": true
+  },
+  "repository_acceptance": "PASS"
+}

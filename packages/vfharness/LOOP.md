@@ -1,5 +1,10 @@
 # לולאת סוכן — גבולות, rulings והסלמה
 
+## Canonical execution contract
+
+This file is the only global execution-loop authority for vfharness. `AGENTS.md`, skills, Cursor rules and playbooks may route into this contract but must not restate or override its retry/ruling/checkpoint semantics.
+
+Cross-tool continuation uses the existing `office/control/HANDOFF.json` and `packages/vfmem/HANDOFF.md` artifacts. Handoff carries context/state only; it never creates a second orchestrator or policy authority.
 לא קריאת מודל אחת. מחזור חסום: תכנן → בצע → אמת → retry/fallback/downgrade → ruling בטוח או הסלם.
 
 מצע הביצוע במשימה ארוכה הוא **מצב מובנה** (checkpoint), לא היסטוריית השיחה — דפוס SKILLSTATE (`playbooks/skillstate.md`): בכל צעד \(A_t=(P,\Sigma_t,O_t)\); אחרי עדכון מאומת זורקים reasoning.

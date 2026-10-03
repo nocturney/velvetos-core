@@ -2717,7 +2717,12 @@
         "docs/GROK-FAILOVER.md",
         "packages/manifest.json",
         "packages/vfharness/**",
-        "packages/vfigos/**"
+        "packages/vfigos/**",
+        ".cursor/skills/vf-harness/SKILL.md",
+        ".cursor/rules/vf-harness.mdc",
+        "docs/HARNESS.md",
+        "packages/velvetos/policy/reports/stage5b-harness-consolidation.json",
+        "scripts/generate-stage5b-harness-consolidation-report.py"
       ],
       "triggered_by": [
         "AGENTS.md",
@@ -2727,7 +2732,12 @@
         "packages/manifest.json",
         "packages/vfharness/**",
         "packages/vfigos/**",
-        "scripts/check-vfharness.py"
+        "scripts/check-vfharness.py",
+        ".cursor/skills/vf-harness/SKILL.md",
+        ".cursor/rules/vf-harness.mdc",
+        "docs/HARNESS.md",
+        "packages/velvetos/policy/reports/stage5b-harness-consolidation.json",
+        "scripts/generate-stage5b-harness-consolidation-report.py"
       ],
       "depends_on": [],
       "enforces": [],

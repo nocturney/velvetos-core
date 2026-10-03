@@ -37,6 +37,12 @@
 | [`scripts/check-vfharness.py`](../../scripts/check-vfharness.py) | סנסור הרתמה |
 | [`scripts/check-all.py`](../../scripts/check-all.py) | כל הסנסורים |
 
+## חוזה ביצוע קנוני
+
+`LOOP.md` הוא הסמכות היחידה לסמנטיקה הגלובלית של execution/retry/fallback/ruling/checkpoint. `AGENTS.md`, `SKILL.md`, Cursor skill/rule ו־`docs/HARNESS.md` הם משטחי ניתוב בלבד ואסור להם לשכפל או לשנות את הלולאה.
+
+המשך עבודה בין כלים משתמש רק ב־`office/control/HANDOFF.json` וב־`packages/vfmem/HANDOFF.md`. אין orchestrator שני; handoff הוא context/state בלבד.
+
 ## איך מפעילים
 
 ב-Cursor:
