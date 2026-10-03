@@ -1,0 +1,362 @@
+{
+  "schema": "velvetos.creative-craft.evidence.v1",
+  "created_at": "2026-10-01T18:10:42.3961599+03:00",
+  "milestone": "phase2-execution-layer",
+  "status": "PASS",
+  "router": {
+    "source": {
+      "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-craft\\CreativeCraftRouter.py",
+      "bytes": 27228,
+      "sha256": "835F1191100A00AA73E0D3F2B2ACE55157F50EE7EB81305A4C63FE9B3F5C0B3F"
+    },
+    "runtime": {
+      "path": "D:\\Velvet\\Runtime\\CreativeCraft\\CreativeCraftRouter.py",
+      "bytes": 27228,
+      "sha256": "835F1191100A00AA73E0D3F2B2ACE55157F50EE7EB81305A4C63FE9B3F5C0B3F"
+    },
+    "compile": "PASS"
+  },
+  "registry": {
+    "source": {
+      "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-craft\\creative-craft-registry.json",
+      "bytes": 5077,
+      "sha256": "247811E5ECF1697A04E936F06DAD6DB7D04DF50F756ACFC6B22E5E6EDDEAF243"
+    },
+    "runtime": {
+      "path": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json",
+      "bytes": 5077,
+      "sha256": "247811E5ECF1697A04E936F06DAD6DB7D04DF50F756ACFC6B22E5E6EDDEAF243"
+    },
+    "version": "0.2.0"
+  },
+  "fusion_host": {
+    "source": {
+      "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\Start-VelvetFusionHost.ps1",
+      "bytes": 5815,
+      "sha256": "79734644A1594EC51C1099F4FAE493CA805EC47D8E982D4F70CB437379217EB7"
+    },
+    "runtime": {
+      "path": "D:\\Velvet\\Runtime\\Autostart\\Start-VelvetFusionHost.ps1",
+      "bytes": 5815,
+      "sha256": "79734644A1594EC51C1099F4FAE493CA805EC47D8E982D4F70CB437379217EB7"
+    },
+    "readiness_fallback": "PERF: ApplicationReady + native MCP ownership"
+  },
+  "corel_adapter": {
+    "source": {
+      "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\CorelTechnicalSafeAdapter.py",
+      "bytes": 23443,
+      "sha256": "97D072084735AFE35CC5B71FD9E56E3B29FA897E1114FAD915AEC6E42C21F889"
+    },
+    "runtime": {
+      "path": "D:\\Velvet\\Runtime\\CreativeTools\\Corel\\CorelTechnicalSafeAdapter.py",
+      "bytes": 23443,
+      "sha256": "97D072084735AFE35CC5B71FD9E56E3B29FA897E1114FAD915AEC6E42C21F889"
+    }
+  },
+  "skill": {
+    "files": [
+      {
+        "path": "D:\\Velvet\\Runtime\\CreativeCraft\\skill\\agents\\openai.yaml",
+        "bytes": 122,
+        "sha256": "446CD8A8506F6A0405B0B044AC31D2D945B3B8C89A55E1E9A226D7D84F7D890A"
+      },
+      {
+        "path": "D:\\Velvet\\Runtime\\CreativeCraft\\skill\\references\\corel-craft-spec.md",
+        "bytes": 1049,
+        "sha256": "3FD4E7E376B33F4C1C5A4F2DF46A53B6B9FA405AC81713E22D4C0F249B0D8F52"
+      },
+      {
+        "path": "D:\\Velvet\\Runtime\\CreativeCraft\\skill\\references\\pipelines.md",
+        "bytes": 2131,
+        "sha256": "CBB416F045EC4672970ADA46FF3D71694E9726C682672C9FA317B0F3E4C0C6B4"
+      },
+      {
+        "path": "D:\\Velvet\\Runtime\\CreativeCraft\\skill\\references\\tool-matrix.md",
+        "bytes": 1612,
+        "sha256": "610E94A5A26B7965992FE4AB96CE8C0AD92A25D7287AFA9219EF1F82D746921B"
+      },
+      {
+        "path": "D:\\Velvet\\Runtime\\CreativeCraft\\skill\\references\\tool-routing.md",
+        "bytes": 1696,
+        "sha256": "07EE660A68ECC9EA1AB651271D18B88CAEDDCE1102E0E1352DCB5BB3EA82FCD6"
+      },
+      {
+        "path": "D:\\Velvet\\Runtime\\CreativeCraft\\skill\\SKILL.md",
+        "bytes": 3193,
+        "sha256": "DE98E94AAE99880FBBD2D272D8BBA4534EA539F11B30771B64F08F94EBAF0DCE"
+      }
+    ],
+    "validated": true,
+    "packaged": true
+  },
+  "routing": {
+    "status": "PASS",
+    "registry_version": "0.2.0",
+    "tools": [
+      {
+        "tool": "fusion",
+        "display_name": "Autodesk Fusion",
+        "available": true,
+        "routing_status": "available",
+        "routing_reason": "post-update compatibility gate passed",
+        "lifecycle": "dcc-host",
+        "production_surface": "typed-atomic-provider-v0.2",
+        "operations": [
+          "read",
+          "electronics-read",
+          "undo",
+          "redo",
+          "create-export-box-stl",
+          "create-export-box-step"
+        ],
+        "blocked": [
+          "general-new-design-write",
+          "general-parameter-write",
+          "general-geometry-write",
+          "arbitrary-python",
+          "raw-fusion-mcp-execute",
+          "modify-existing-user-document"
+        ]
+      },
+      {
+        "tool": "meshmixer",
+        "display_name": "Autodesk Meshmixer",
+        "available": true,
+        "routing_status": "available",
+        "routing_reason": "post-update compatibility gate passed",
+        "lifecycle": "dcc-host",
+        "production_surface": "official-mm-api-typed",
+        "operations": [
+          "probe",
+          "list",
+          "info",
+          "import",
+          "screenshot"
+        ],
+        "blocked": [
+          "generic-command-stream",
+          "arbitrary-api-execution"
+        ]
+      },
+      {
+        "tool": "resolve",
+        "display_name": "DaVinci Resolve Studio",
+        "available": true,
+        "routing_status": "available",
+        "routing_reason": "post-update compatibility gate passed",
+        "lifecycle": "dcc-host",
+        "production_surface": "safe-mcp",
+        "operations": [
+          "media",
+          "timeline",
+          "project-settings",
+          "render",
+          "lut"
+        ],
+        "blocked": [
+          "raw-resolve-control",
+          "script-plugin",
+          "dctl-plugin",
+          "fuse-plugin"
+        ]
+      },
+      {
+        "tool": "topaz-video",
+        "display_name": "Topaz Video",
+        "available": true,
+        "routing_status": "available",
+        "routing_reason": "post-update compatibility gate passed",
+        "lifecycle": "headless-cli",
+        "production_surface": "typed-cli",
+        "operations": [
+          "probe-media",
+          "enhance"
+        ],
+        "blocked": [
+          "arbitrary-ffmpeg-args",
+          "automatic-model-downloads"
+        ]
+      },
+      {
+        "tool": "affinity",
+        "display_name": "Affinity",
+        "available": true,
+        "routing_status": "available",
+        "routing_reason": "post-update compatibility gate passed",
+        "lifecycle": "dcc-host",
+        "production_surface": "safe-native-mcp",
+        "operations": [
+          "probe",
+          "status",
+          "render-current"
+        ],
+        "blocked": [
+          "raw-execute-script",
+          "library-write",
+          "network",
+          "filesystem",
+          "canva-ai"
+        ]
+      },
+      {
+        "tool": "coreldraw",
+        "display_name": "CorelDRAW",
+        "available": true,
+        "routing_status": "available",
+        "routing_reason": "post-update compatibility gate passed",
+        "lifecycle": "dcc-host",
+        "production_surface": "typed-craft-v0.2",
+        "operations": [
+          "probe",
+          "status",
+          "craft-vector",
+          "image-import",
+          "pdf-export",
+          "cdr-save"
+        ],
+        "blocked": [
+          "Evaluate",
+          "VBA",
+          "GMS",
+          "generic-com-dispatch",
+          "arbitrary-script"
+        ]
+      },
+      {
+        "tool": "corel-designer",
+        "display_name": "Corel DESIGNER",
+        "available": true,
+        "routing_status": "available",
+        "routing_reason": "post-update compatibility gate passed",
+        "lifecycle": "dcc-host",
+        "production_surface": "typed-craft-v0.2",
+        "operations": [
+          "probe",
+          "status",
+          "craft-vector",
+          "image-import",
+          "pdf-export",
+          "cdr-save"
+        ],
+        "blocked": [
+          "Evaluate",
+          "VBA",
+          "GMS",
+          "generic-com-dispatch",
+          "arbitrary-script"
+        ]
+      }
+    ],
+    "all_requested_available": true
+  },
+  "acceptance": {
+    "fusion_stl": {
+      "path": "D:\\Velvet\\Output\\CreativeCraft\\Fusion\\phase2-fusion-stl-001.stl",
+      "bytes": 684,
+      "sha256": "5290FA10E374CE15B956B73EC8DABB993589B8966176077F0D4B7078DEC5ED0C"
+    },
+    "fusion_step": {
+      "path": "D:\\Velvet\\Output\\CreativeCraft\\Fusion\\phase2-fusion-step-002.step",
+      "bytes": 8935,
+      "sha256": "A6C05722EB74EE0F709CF242CE457D2CDB8B5B5B5B1C1360D03E7490B7748AE5"
+    },
+    "mesh_review": {
+      "path": "D:\\Velvet\\Output\\CreativeCraft\\Meshmixer\\phase2-mesh-review-001.png",
+      "bytes": 21816,
+      "sha256": "FF5E6C3563A6EE80813DAD6C35A7A6885EC51DF86EC41ADF005257286D3CFCFD"
+    },
+    "mesh_technical_sheet_screenshot": {
+      "path": "D:\\Velvet\\Output\\CreativeCraft\\Meshmixer\\phase2-techsheet-002-mesh.png",
+      "bytes": 3712,
+      "sha256": "5E824C89259DA82823FE2853F3E50EC61643EE28A93931F3E90081D190848D8E"
+    },
+    "mesh_technical_sheet_cdr": {
+      "path": "D:\\Velvet\\Output\\CreativeCraft\\Corel\\phase2-techsheet-002-corel-designer.cdr",
+      "bytes": 587999,
+      "sha256": "949A7D3214B3EBF2CF63533A20A7F8504CC2B6F4ADDF5B1DC7928071E3CDB9D2"
+    },
+    "mesh_technical_sheet_pdf": {
+      "path": "D:\\Velvet\\Output\\CreativeCraft\\Corel\\phase2-techsheet-002-corel-designer.pdf",
+      "bytes": 676285,
+      "sha256": "B9FC3DB429C1642FF666BA52138F34515C97BE9A373433E84BA41C82079135DD"
+    },
+    "coreldraw_cdr": {
+      "path": "D:\\Velvet\\Output\\CreativeCraft\\Corel\\phase2-coreldraw-001-coreldraw.cdr",
+      "bytes": 585532,
+      "sha256": "EB2870EF73F707B8EB637E687F8148ECDEE97E1782117C69E644B9D5BE371A08"
+    },
+    "coreldraw_pdf": {
+      "path": "D:\\Velvet\\Output\\CreativeCraft\\Corel\\phase2-coreldraw-001-coreldraw.pdf",
+      "bytes": 1506845,
+      "sha256": "67355B7D735F178E3F331F43D2C471951D083BD8FFDB81D506421323ADE1C92C"
+    },
+    "designer_cdr": {
+      "path": "D:\\Velvet\\Output\\CreativeCraft\\Corel\\phase2-designer-001-corel-designer.cdr",
+      "bytes": 581709,
+      "sha256": "276E0C20A84716D82AE6AA3C9C8684902A7238AC103657B4DD4B0B51E4F43464"
+    },
+    "designer_pdf": {
+      "path": "D:\\Velvet\\Output\\CreativeCraft\\Corel\\phase2-designer-001-corel-designer.pdf",
+      "bytes": 1508094,
+      "sha256": "1CE4AB5DBD2163124DA4FD814F8D6C36BBF9673E01AAA4EE81023F7B8B4D4041"
+    },
+    "topaz": {
+      "path": "D:\\Velvet\\Output\\CreativeCraft\\TopazVideo\\phase2-topaz-002.mkv",
+      "bytes": 3083101,
+      "sha256": "D161981D803E51460D37D7720E7E51F11E611792B9FE270C930FE14CDA7D85CB"
+    }
+  },
+  "sentinel": {
+    "fusion": {
+      "path": "D:\\Velvet\\Logs\\DCC-Adobe-Update-Sentinel\\receipts\\20261001T145918Z-fusion.json",
+      "bytes": 6220,
+      "sha256": "EB74D7BA5968C69729621595F4AADFC8C6C440F089AE0A62C6010C59E52DC1D4"
+    },
+    "coreldraw": {
+      "path": "D:\\Velvet\\Logs\\DCC-Adobe-Update-Sentinel\\receipts\\20261001T133336Z-coreldraw.json",
+      "bytes": 5364,
+      "sha256": "59FEE60FB6969030E74FF8910E908602F9DD5EE7D90BF26AE0422FF84094A2D1"
+    },
+    "corel_designer": {
+      "path": "D:\\Velvet\\Logs\\DCC-Adobe-Update-Sentinel\\receipts\\20261001T133350Z-corel-designer.json",
+      "bytes": 5379,
+      "sha256": "5880E317DAA7F7ED72245F10E493EE3BCB95EC0F0BC2344599776623BEEDE5AA"
+    }
+  },
+  "clean_state": {
+    "process_counts": {
+      "Fusion360": 0,
+      "meshmixer": 0,
+      "CorelDRW": 0,
+      "Designer": 0,
+      "Resolve": 0,
+      "Affinity": 0,
+      "ffmpeg": 0,
+      "ffprobe": 0
+    },
+    "listener_counts": {
+      "6771": 0,
+      "6772": 0,
+      "27182": 0
+    },
+    "scheduled_tasks": {
+      "fusion": "Ready",
+      "meshmixer": "Ready",
+      "coreldraw": "Ready",
+      "corel-designer": "Ready"
+    }
+  },
+  "rollback": {
+    "path": "D:\\Velvet\\Worktrees\\creative-tools-phase1-20260930\\packages\\vfharness\\devtools\\creative-tools\\Rollback-CreativeCraftPhase2.ps1",
+    "bytes": 2240,
+    "sha256": "D43057BFCFB1E6A10299E77C11688B8D5CDBF19D2950CF0771E7ECD3C0AEE70C"
+  },
+  "git_status": [
+    " M packages/vfharness/devtools/dcc-adobe-runtime-persistence/Invoke-VelvetDccHost.ps1",
+    " M packages/vfharness/devtools/dcc-adobe-runtime-persistence/dcc-desktop-hosts.json",
+    "?? docs/evidence/creative-tools/",
+    "?? packages/vfharness/devtools/creative-craft/",
+    "?? packages/vfharness/devtools/creative-tools/"
+  ]
+}

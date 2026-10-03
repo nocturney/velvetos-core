@@ -1,0 +1,252 @@
+{
+  "schema": "velvetos.creative-media-orchestration.phase2.typed-gaps.v1",
+  "date": "2026-10-02",
+  "principle": "Expand only bounded typed operations that unlock named workflows. Do not expose generic scripting/COM/eval surfaces.",
+  "gaps": [
+    {
+      "tool": "Photoshop",
+      "current": [
+        "getVersion",
+        "getActive",
+        "batchPlayReadOnly",
+        "createTemporary",
+        "closeTemporary"
+      ],
+      "priority": "P0",
+      "needed": [
+        "open-or-duplicate-job-owned-source",
+        "crop-resize",
+        "adjustment-layer",
+        "mask",
+        "place-exact-asset",
+        "text-overlay",
+        "export-png-jpeg",
+        "save-editable-copy"
+      ],
+      "unlocks": [
+        "product-image-finishing"
+      ]
+    },
+    {
+      "tool": "Premiere Pro",
+      "current": [
+        "getVersion",
+        "getWriteSupport",
+        "getActive",
+        "acceptTemporaryCycle"
+      ],
+      "priority": "P0",
+      "needed": [
+        "job-owned-project-open-create",
+        "media-import",
+        "sequence-create",
+        "clip-insert-trim",
+        "audio-track-basic",
+        "caption-import-create",
+        "named-export-or-AME-queue"
+      ],
+      "unlocks": [
+        "long-edit-heavy-video",
+        "hebrew-narration-subtitles"
+      ]
+    },
+    {
+      "tool": "Illustrator",
+      "current": [
+        "version/read-only active-document acceptance"
+      ],
+      "priority": "P1",
+      "needed": [
+        "job-owned-document",
+        "place-exact-asset",
+        "path-shape-text-primitives",
+        "artboards",
+        "save-ai",
+        "export-svg-pdf-png"
+      ],
+      "unlocks": [
+        "vector-logo-layout",
+        "product-image-finishing"
+      ]
+    },
+    {
+      "tool": "After Effects",
+      "current": [
+        "typed version/active-project functional read"
+      ],
+      "priority": "P1",
+      "needed": [
+        "job-owned-project-comp",
+        "asset-import",
+        "layer-transform",
+        "typed-text-layer",
+        "named-render-output",
+        "close-owned-project"
+      ],
+      "unlocks": [
+        "short-social-video",
+        "technical-explainer-animation"
+      ]
+    },
+    {
+      "tool": "Affinity",
+      "current": [
+        "probe",
+        "status",
+        "render-current"
+      ],
+      "priority": "P1",
+      "needed": [
+        "open-job-copy",
+        "raster-vector-edits",
+        "place-text-image-shape",
+        "save-editable",
+        "export-pdf-svg-png"
+      ],
+      "unlocks": [
+        "product-image-finishing",
+        "vector-logo-layout"
+      ]
+    },
+    {
+      "tool": "DaVinci Resolve Studio",
+      "current": [
+        "media",
+        "timeline",
+        "project-settings",
+        "render",
+        "lut"
+      ],
+      "priority": "P1",
+      "needed": [
+        "job-project-duplicate",
+        "subtitle-import-create",
+        "basic-fairlight-mix",
+        "bounded-color-node-ops",
+        "bounded-fusion-comp",
+        "named-render-presets"
+      ],
+      "unlocks": [
+        "long-edit-heavy-video",
+        "color-finish",
+        "hebrew-narration-subtitles"
+      ]
+    },
+    {
+      "tool": "Fusion Studio standalone",
+      "current": [
+        "probe",
+        "status",
+        "acceptance",
+        "render_solid"
+      ],
+      "priority": "P1",
+      "needed": [
+        "job-owned-comp",
+        "media-loader",
+        "bounded-node-template",
+        "typed-parameter-update",
+        "frame-range-render"
+      ],
+      "unlocks": [
+        "short-social-video",
+        "technical-explainer-animation",
+        "VFX-compositing"
+      ]
+    },
+    {
+      "tool": "InDesign",
+      "current": [
+        "compose title/body to IDML+PDF"
+      ],
+      "priority": "P0",
+      "needed": [
+        "place-image-pdf-vector",
+        "paragraph-character-styles",
+        "multi-page-frames",
+        "links-readback",
+        "preflight",
+        "package",
+        "named-pdf-export-preset"
+      ],
+      "unlocks": [
+        "engineering-technical-publication",
+        "vector-logo-layout"
+      ]
+    },
+    {
+      "tool": "Acrobat",
+      "current": [
+        "inspect PDF via official COM"
+      ],
+      "priority": "P1",
+      "needed": [
+        "typed page-box/font/output-intent inspection",
+        "separation/output-preview facts where supported"
+      ],
+      "unlocks": [
+        "engineering-technical-publication",
+        "prepress QA"
+      ]
+    },
+    {
+      "tool": "Media Encoder",
+      "current": [
+        "h264-high watch-folder encode",
+        "job_status"
+      ],
+      "priority": "P0",
+      "needed": [
+        "named preset registry: mezzanine/proxy/vertical/audio-only/web variants",
+        "preset metadata receipt"
+      ],
+      "unlocks": [
+        "reusable-derivative-export-factory"
+      ]
+    },
+    {
+      "tool": "Manim",
+      "current": [
+        "local toolchain + host smoke"
+      ],
+      "priority": "P0",
+      "needed": [
+        "declarative technical-scene spec",
+        "bounded primitives/labels/arrows/measurements",
+        "named render profiles",
+        "no arbitrary Python"
+      ],
+      "unlocks": [
+        "technical-explainer-animation"
+      ]
+    },
+    {
+      "tool": "VoiceStudio/ASR",
+      "current": [
+        "doctor/speech smoke/QA receipts"
+      ],
+      "priority": "P1",
+      "needed": [
+        "normalized typed speech job wrapper",
+        "subtitle/timing JSON export",
+        "explicit consent metadata for cloning"
+      ],
+      "unlocks": [
+        "hebrew-narration-subtitles"
+      ]
+    },
+    {
+      "tool": "Blender/Maya/3ds Max",
+      "current": [
+        "accepted DCC adapters"
+      ],
+      "priority": "P1",
+      "needed": [
+        "standardized job-owned turntable operation: source import/ref, camera orbit, lights, frame count, render output, no arbitrary script"
+      ],
+      "unlocks": [
+        "3d-turntable-product-visualization"
+      ]
+    }
+  ]
+}

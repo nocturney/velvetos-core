@@ -1,0 +1,490 @@
+{
+  "schema": "velvetos.creative-media-orchestration.phase2.catalog.v1",
+  "version": "0.1.0",
+  "date": "2026-10-02",
+  "purpose": "Design-only orchestration catalog for Creative Craft Phase 2. It does not replace vfom, Creative Director, domain authorities, the shared CreativeCraftRouter, Media Vault, approval, or publishing.",
+  "invariants": [
+    "vfom/velvet-creative-director owns public creative intent, Product Truth, brand, copy, Visual OS and review evidence",
+    "domain engineering/fabrication authorities own physical and engineering truth",
+    "craft skills own professional method and QA guidance, not business or publish authority",
+    "execution uses only currently accepted typed/bounded adapters and current routing state",
+    "no arbitrary script surface, no silent cloud/paid fallback, no automatic publishing",
+    "preserve pre-existing user sessions and stop only agent-owned GUI sessions",
+    "every cross-tool handoff is file-backed and hash-addressed; a render receipt is not publish authorization",
+    "no second Media Vault, Visual Foundry, creative approval queue, or orchestrator runtime"
+  ],
+  "authority_paths": {
+    "public_creative": [
+      "vf-content-sprint",
+      "velvet-creative-director/vfom",
+      "relevant craft skill",
+      "accepted execution adapter",
+      "exact-output QA",
+      "existing review/publish gates"
+    ],
+    "technical_media": [
+      "engineering/CAD source authority",
+      "relevant craft skill",
+      "accepted execution adapter",
+      "exact-output QA"
+    ],
+    "derivatives": [
+      "approved/file-backed master",
+      "named derivative recipe",
+      "accepted encoder/transcoder",
+      "probe/QC receipt"
+    ]
+  },
+  "tool_choice_rules": {
+    "manim_vs_motion": "Use Manim for semantic geometry, measurement, process and technical-diagram animation. Use After Effects for art-directed layer/motion-graphics work. Use HyperFrames for deterministic template/social composition. Use Fusion Studio for dedicated node/VFX comps and Resolve Fusion for comps tightly coupled to a Resolve timeline.",
+    "fusion_standalone_vs_resolve": "Prefer standalone Fusion for reusable or batch-oriented node graphs independent of an edit timeline; prefer Resolve Fusion for shot/timeline-local compositing; neither replaces HyperFrames template rendering or Manim technical semantics.",
+    "topaz_video": "Use only when restoration/upscale/denoise/interpolation is justified. Source repair belongs before edit; final upscale belongs after picture lock. Always compare against source/master for invented detail or artifacts.",
+    "media_encoder": "Use as the Adobe final derivative factory only for named accepted presets. Current accepted preset is h264-high. Do not expose arbitrary encoder parameters. Use ffprobe for deterministic verification.",
+    "voicestudio": "Script/copy authority comes first. TTS/ASR then produces file-backed audio/transcript/timing plus back-transcription QA. Speech receipts never grant publication authorization."
+  },
+  "workflows": [
+    {
+      "id": "product-image-finishing",
+      "mode": "multi-tool-when-public",
+      "readiness": "PARTIAL_TYPED_AUTOMATION",
+      "authority": "vfom/velvet-creative-director for public Velvet creative; otherwise source-owner intent",
+      "craft_skills": [
+        "vf-image-design-craft",
+        "vf-prepress-qa when print-bound"
+      ],
+      "primary": [
+        "Photoshop"
+      ],
+      "secondary": [
+        "Corel PHOTO-PAINT",
+        "Affinity",
+        "Illustrator/CorelDRAW for deterministic vector overlays"
+      ],
+      "stages": [
+        "source-truth lock",
+        "creative direction if public",
+        "non-destructive raster finish",
+        "deterministic overlay/export",
+        "exact-final QA"
+      ],
+      "artifacts": [
+        "editable master",
+        "review raster",
+        "export receipt"
+      ],
+      "blockers": [
+        "Photoshop typed editing is not yet exposed beyond read-only plus controlled temporary document; Affinity is render-current only"
+      ]
+    },
+    {
+      "id": "vector-logo-layout",
+      "mode": "single-or-multi",
+      "readiness": "READY_BOUNDED_WITH_COREL",
+      "authority": "vfom/Brand Guardian for Velvet brand/logo decisions; direct craft for non-brand technical/general vector work",
+      "craft_skills": [
+        "vf-image-design-craft",
+        "vf-prepress-qa when print-bound"
+      ],
+      "primary": [
+        "CorelDRAW"
+      ],
+      "secondary": [
+        "Illustrator",
+        "Affinity",
+        "InDesign for publication layout"
+      ],
+      "stages": [
+        "asset/brand authority gate",
+        "editable vector construction",
+        "layout/export",
+        "exact PDF/raster QA"
+      ],
+      "artifacts": [
+        "editable vector master",
+        "PDF/SVG/raster derivative",
+        "QA receipt"
+      ],
+      "blockers": [
+        "Illustrator accepted surface is currently read-only; do not invent or regenerate approved logos"
+      ]
+    },
+    {
+      "id": "technical-illustration",
+      "mode": "multi-tool",
+      "readiness": "READY_BOUNDED",
+      "authority": "engineering/CAD source remains geometry authority",
+      "craft_skills": [
+        "vf-technical-illustration-craft"
+      ],
+      "primary": [
+        "XVL Studio Corel Edition -> Corel DESIGNER"
+      ],
+      "secondary": [
+        "Corel DESIGNER direct",
+        "XVL HTML5 Publisher"
+      ],
+      "stages": [
+        "bind CAD/XVL source hash",
+        "derive view/exploded/vector illustration",
+        "annotate/layout",
+        "export CDR/PDF",
+        "inspect exact PDF"
+      ],
+      "artifacts": [
+        "source hash receipt",
+        "editable CDR",
+        "technical PDF",
+        "inspection receipt"
+      ],
+      "blockers": [
+        "Direct XVL SDK is optional/unavailable; GUI+Corel workflow is accepted"
+      ]
+    },
+    {
+      "id": "pbr-material-pipeline",
+      "mode": "multi-tool",
+      "readiness": "PARTIAL_ORCHESTRATION",
+      "authority": "3D source/engineering authority remains upstream; lookdev does not alter engineering truth",
+      "craft_skills": [
+        "vf-dcc-modeling-craft",
+        "vf-material-lookdev"
+      ],
+      "primary": [
+        "Substance Painter"
+      ],
+      "secondary": [
+        "Substance Designer",
+        "Blender",
+        "Maya",
+        "3ds Max"
+      ],
+      "stages": [
+        "mesh/UV readiness",
+        "bake and map inspection",
+        "material authoring",
+        "destination look check",
+        "export texture set + QA"
+      ],
+      "artifacts": [
+        "mesh hash",
+        "bake log/map hashes",
+        "texture-set manifest",
+        "lookdev render/probe"
+      ],
+      "blockers": [
+        "No standardized bounded cross-app material job contract yet; Sampler/Modeler/Stager remain inventory/manual"
+      ]
+    },
+    {
+      "id": "3d-turntable-product-visualization",
+      "mode": "single-tool-by-default",
+      "readiness": "PARTIAL_ORCHESTRATION",
+      "authority": "engineering/Product Truth source first; vfom only if used as public creative",
+      "craft_skills": [
+        "vf-dcc-modeling-craft",
+        "vf-material-lookdev",
+        "vf-image-design-craft when final stills are treated"
+      ],
+      "primary": [
+        "Blender"
+      ],
+      "secondary": [
+        "Maya",
+        "3ds Max",
+        "Substance Painter for materials"
+      ],
+      "stages": [
+        "source/model lock",
+        "lookdev if needed",
+        "camera/light turntable setup",
+        "render sequence/video",
+        "probe + visual QA"
+      ],
+      "artifacts": [
+        "scene/job copy or source ref",
+        "render master",
+        "frame/probe receipt"
+      ],
+      "blockers": [
+        "Needs one standardized typed turntable operation instead of tool-specific arbitrary scene scripting"
+      ]
+    },
+    {
+      "id": "short-social-video",
+      "mode": "multi-tool",
+      "readiness": "READY_WITH_AUTHORITY_AND_BOUNDED_RENDER",
+      "authority": "vf-content-sprint + velvet-creative-director/vfom",
+      "craft_skills": [
+        "vf-post-production-craft",
+        "vf-speech-qa when speech is used"
+      ],
+      "primary": [
+        "HyperFrames"
+      ],
+      "secondary": [
+        "After Effects",
+        "Resolve/Fusion",
+        "Fusion Studio standalone",
+        "VoiceStudio"
+      ],
+      "stages": [
+        "Product Truth + creative manifest",
+        "shot/EDL plan",
+        "speech/timing if needed",
+        "deterministic/custom motion assembly",
+        "master render",
+        "exact-final review"
+      ],
+      "artifacts": [
+        "Creative Manifest refs",
+        "EDL/timing",
+        "master video",
+        "render/QC receipt"
+      ],
+      "blockers": [
+        "After Effects typed authoring is not yet bounded enough for autonomous custom comps"
+      ]
+    },
+    {
+      "id": "long-edit-heavy-video",
+      "mode": "single-editor-plus-specialists",
+      "readiness": "READY_BOUNDED_IN_RESOLVE",
+      "authority": "content/editorial intent upstream; vfom when Velvet public creative",
+      "craft_skills": [
+        "vf-post-production-craft",
+        "vf-speech-qa when speech/subtitles are used"
+      ],
+      "primary": [
+        "DaVinci Resolve Studio"
+      ],
+      "secondary": [
+        "Premiere Pro",
+        "Fusion Studio/Resolve Fusion",
+        "Topaz Video",
+        "Media Encoder"
+      ],
+      "stages": [
+        "ingest/probe",
+        "edit",
+        "audio/dialogue/subtitles",
+        "composite as needed",
+        "color/finish",
+        "render master",
+        "delivery derivatives"
+      ],
+      "artifacts": [
+        "project/timeline ref",
+        "locked master",
+        "QC receipt",
+        "derivative receipts"
+      ],
+      "blockers": [
+        "Premiere first-party typed surface currently lacks real timeline authoring"
+      ]
+    },
+    {
+      "id": "color-finish",
+      "mode": "single-tool",
+      "readiness": "READY_BOUNDED_IN_RESOLVE",
+      "authority": "post-production craft; source/master truth preserved",
+      "craft_skills": [
+        "vf-post-production-craft"
+      ],
+      "primary": [
+        "DaVinci Resolve Studio"
+      ],
+      "secondary": [
+        "ffprobe for verification"
+      ],
+      "stages": [
+        "input/master lock",
+        "project/color setup",
+        "bounded grade/LUT path",
+        "render",
+        "technical + visual QC"
+      ],
+      "artifacts": [
+        "rendered master",
+        "settings/LUT receipt",
+        "probe/QC receipt"
+      ],
+      "blockers": [
+        "Need narrower named node-level color operations before claiming autonomous complex grading"
+      ]
+    },
+    {
+      "id": "video-enhancement",
+      "mode": "specialist-stage",
+      "readiness": "READY_BOUNDED",
+      "authority": "post-production craft; enhancement never becomes source truth",
+      "craft_skills": [
+        "vf-post-production-craft"
+      ],
+      "primary": [
+        "Topaz Video"
+      ],
+      "secondary": [
+        "ffprobe",
+        "Resolve for before/after review"
+      ],
+      "stages": [
+        "diagnose need",
+        "select source-repair or post-lock branch",
+        "bounded enhancement",
+        "before/after probe",
+        "artifact review"
+      ],
+      "artifacts": [
+        "source hash",
+        "enhanced master",
+        "model/scale receipt",
+        "comparison QA"
+      ],
+      "blockers": [
+        "Only accepted ahq-12 path with scale 1/2/4; no automatic model download or arbitrary ffmpeg args"
+      ]
+    },
+    {
+      "id": "hebrew-narration-subtitles",
+      "mode": "multi-tool",
+      "readiness": "READY_BOUNDED",
+      "authority": "script/copy authority precedes speech execution; voice cloning requires consent",
+      "craft_skills": [
+        "vf-speech-qa",
+        "vf-post-production-craft"
+      ],
+      "primary": [
+        "VoiceStudio/OmniVoice",
+        "faster-whisper"
+      ],
+      "secondary": [
+        "Resolve",
+        "ffmpeg/ffprobe"
+      ],
+      "stages": [
+        "approved script/text",
+        "TTS or ASR",
+        "back-transcription/pronunciation QA",
+        "timing/subtitle artifact",
+        "editor placement",
+        "audio/subtitle QC"
+      ],
+      "artifacts": [
+        "speech receipt",
+        "QA/back-transcription receipt",
+        "WAV/audio",
+        "SRT/VTT or timing JSON"
+      ],
+      "blockers": [
+        "Need one normalized typed subtitle/timing handoff contract into editors"
+      ]
+    },
+    {
+      "id": "technical-explainer-animation",
+      "mode": "multi-tool",
+      "readiness": "READY_WITH_TYPED_WRAPPER_GAP",
+      "authority": "engineering facts/source first; vfom only for public creative treatment",
+      "craft_skills": [
+        "vf-post-production-craft",
+        "vf-technical-illustration-craft",
+        "vf-speech-qa when narrated"
+      ],
+      "primary": [
+        "Manim"
+      ],
+      "secondary": [
+        "HyperFrames",
+        "After Effects",
+        "Fusion Studio",
+        "Resolve"
+      ],
+      "stages": [
+        "fact/source lock",
+        "semantic storyboard",
+        "Manim technical animation",
+        "optional brand/motion finish",
+        "narration/subtitles",
+        "master QC"
+      ],
+      "artifacts": [
+        "scene/spec receipt",
+        "technical render",
+        "final master",
+        "probe/QC receipt"
+      ],
+      "blockers": [
+        "Manim is smoke-verified but still needs a bounded declarative scene adapter; do not expose arbitrary Python"
+      ]
+    },
+    {
+      "id": "engineering-technical-publication",
+      "mode": "multi-tool",
+      "readiness": "PARTIAL_END_TO_END_AUTOMATION",
+      "authority": "CAD/XVL/engineering source is authoritative; publication layer may not redefine geometry",
+      "craft_skills": [
+        "vf-technical-illustration-craft",
+        "vf-prepress-qa"
+      ],
+      "primary": [
+        "XVL Studio/Corel DESIGNER",
+        "InDesign",
+        "Acrobat"
+      ],
+      "secondary": [
+        "XVL HTML5 Publisher"
+      ],
+      "stages": [
+        "bind engineering source",
+        "derive technical illustration",
+        "assemble publication",
+        "export exact PDF",
+        "Acrobat inspection",
+        "optional HTML5 derivative"
+      ],
+      "artifacts": [
+        "source/parts refs",
+        "editable CDR",
+        "IDML/package",
+        "final PDF",
+        "Acrobat inspection receipt",
+        "optional HTML5 manifest"
+      ],
+      "blockers": [
+        "InDesign compose currently supports title/body only; typed place/link/styles/preflight/package operations are required for true illustration-rich publication"
+      ]
+    },
+    {
+      "id": "reusable-derivative-export-factory",
+      "mode": "single-master-many-derivatives",
+      "readiness": "READY_BOUNDED_ONE_PRESET",
+      "authority": "derivatives inherit approved master; they do not create new creative approval",
+      "craft_skills": [
+        "vf-post-production-craft",
+        "vf-prepress-qa for print/PDF derivatives"
+      ],
+      "primary": [
+        "Adobe Media Encoder"
+      ],
+      "secondary": [
+        "ffmpeg/ffprobe",
+        "Acrobat for PDF derivatives"
+      ],
+      "stages": [
+        "lock master hash",
+        "resolve named recipe",
+        "encode/export without overwrite",
+        "probe exact derivative",
+        "record master->derivative lineage"
+      ],
+      "artifacts": [
+        "master hash",
+        "recipe id",
+        "derivative file",
+        "probe/QC receipt"
+      ],
+      "blockers": [
+        "Media Encoder currently exposes only h264-high; add named preset recipes before treating it as a general derivative factory"
+      ]
+    }
+  ]
+}

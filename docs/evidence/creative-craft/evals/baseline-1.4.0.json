@@ -1,0 +1,181 @@
+{
+  "schema": "velvetos.creative-craft.eval-result.v1",
+  "mode": "baseline",
+  "version": "1.4.0",
+  "cases": [
+    {
+      "id": "product-render",
+      "specialist": "vf-material-lookdev",
+      "pipeline": "3d-turntable-product-visualization",
+      "score": 4,
+      "max_score": 7,
+      "checks": {
+        "fixture_hash": true,
+        "specialist_exists": true,
+        "trigger_coverage": false,
+        "required_references": false,
+        "concept_coverage": false,
+        "contracts": true,
+        "pipeline_binding": true
+      },
+      "manual_criteria": [
+        "geometry/material truth preserved",
+        "camera perspective supports product intent",
+        "reflection shape reveals form",
+        "beauty does not hide defects"
+      ]
+    },
+    {
+      "id": "hard-surface-model",
+      "specialist": "vf-dcc-modeling-craft",
+      "pipeline": "mesh-review",
+      "score": 6,
+      "max_score": 7,
+      "checks": {
+        "fixture_hash": true,
+        "specialist_exists": true,
+        "trigger_coverage": true,
+        "required_references": false,
+        "concept_coverage": true,
+        "contracts": true,
+        "pipeline_binding": true
+      },
+      "manual_criteria": [
+        "protected silhouette/interfaces preserved",
+        "topology supports downstream task",
+        "bake defects diagnosed at source"
+      ]
+    },
+    {
+      "id": "cad-resilience",
+      "specialist": "vf-cad-design-craft",
+      "pipeline": "fabrication",
+      "score": 5,
+      "max_score": 7,
+      "checks": {
+        "fixture_hash": true,
+        "specialist_exists": true,
+        "trigger_coverage": true,
+        "required_references": false,
+        "concept_coverage": false,
+        "contracts": true,
+        "pipeline_binding": true
+      },
+      "manual_criteria": [
+        "parameter perturbations rebuild",
+        "datum/interface intent survives",
+        "process-specific values stay scoped"
+      ]
+    },
+    {
+      "id": "grade-shot-match",
+      "specialist": "vf-post-production-craft",
+      "pipeline": "color-finish",
+      "score": 6,
+      "max_score": 7,
+      "checks": {
+        "fixture_hash": true,
+        "specialist_exists": true,
+        "trigger_coverage": true,
+        "required_references": true,
+        "concept_coverage": false,
+        "contracts": true,
+        "pipeline_binding": true
+      },
+      "manual_criteria": [
+        "normalization precedes look",
+        "product color truth preserved",
+        "output transform is explicit"
+      ]
+    },
+    {
+      "id": "vfx-composite",
+      "specialist": "vf-post-production-craft",
+      "pipeline": "vfx-composite",
+      "score": 4,
+      "max_score": 7,
+      "checks": {
+        "fixture_hash": true,
+        "specialist_exists": true,
+        "trigger_coverage": false,
+        "required_references": false,
+        "concept_coverage": true,
+        "contracts": true,
+        "pipeline_binding": false
+      },
+      "manual_criteria": [
+        "lens workflow coherent",
+        "matte/track integrity holds",
+        "CG matches plate image system",
+        "worst frames pass"
+      ]
+    },
+    {
+      "id": "motion-piece",
+      "specialist": "vf-post-production-craft",
+      "pipeline": "short-social-video",
+      "score": 7,
+      "max_score": 7,
+      "checks": {
+        "fixture_hash": true,
+        "specialist_exists": true,
+        "trigger_coverage": true,
+        "required_references": true,
+        "concept_coverage": true,
+        "contracts": true,
+        "pipeline_binding": true
+      },
+      "manual_criteria": [
+        "exact copy preserved",
+        "motion hierarchy readable",
+        "timing/easing supports intent"
+      ]
+    },
+    {
+      "id": "technical-illustration",
+      "specialist": "vf-technical-illustration-craft",
+      "pipeline": "technical-illustration",
+      "score": 5,
+      "max_score": 7,
+      "checks": {
+        "fixture_hash": true,
+        "specialist_exists": true,
+        "trigger_coverage": true,
+        "required_references": false,
+        "concept_coverage": false,
+        "contracts": true,
+        "pipeline_binding": true
+      },
+      "manual_criteria": [
+        "part IDs reconcile",
+        "view selection communicates function",
+        "dimensions remain source-linked"
+      ]
+    },
+    {
+      "id": "restoration",
+      "specialist": "vf-post-production-craft",
+      "pipeline": "video-enhancement",
+      "score": 7,
+      "max_score": 7,
+      "checks": {
+        "fixture_hash": true,
+        "specialist_exists": true,
+        "trigger_coverage": true,
+        "required_references": true,
+        "concept_coverage": true,
+        "contracts": true,
+        "pipeline_binding": true
+      },
+      "manual_criteria": [
+        "cadence/interlace diagnosed first",
+        "enhancement stages are separable",
+        "temporal stress frames preserve identity"
+      ]
+    }
+  ],
+  "score": 44,
+  "max_score": 56,
+  "all_structural_pass": false,
+  "manual_artifact_review": "required separately; this runner does not pretend perceptual review happened"
+}

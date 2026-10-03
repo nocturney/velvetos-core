@@ -1,0 +1,57 @@
+{
+  "schema": "velvetos.creative-tools.acceptance.v1",
+  "app": "meshmixer",
+  "observed_version": "3.5 / 11.5.474",
+  "status": "FUNCTIONAL_PASS_WITH_LIMITATION",
+  "accepted_at": "2026-10-01T09:54:35.3185772+03:00",
+  "upstream_commit": "73c7d69d60952d45938abced877b62ece2d43834",
+  "transport": {
+    "kind": "official_mm_api_udp",
+    "request": "127.0.0.1:45007",
+    "response": "127.0.0.1:45023"
+  },
+  "lifecycle": {
+    "hidden_on_demand": true,
+    "task_triggerless": true,
+    "interactive_user": "Chris",
+    "restart_probe_pass": true,
+    "clean_stop_pass": true
+  },
+  "adapter": {
+    "version": "0.1.0",
+    "source_sha256": "70987A9828EB585B8D880C3622E591039265167993484D2D338D9A6ADEEADE79",
+    "exe_sha256": "04253D9A1B81A119FFB52A401F0E2D34CEC5AD1CD4A33F71EA8E12A0EE56EE9F",
+    "operations": [
+      "probe",
+      "list",
+      "info",
+      "import",
+      "screenshot"
+    ],
+    "acceptance_only": [
+      "acceptance-clear"
+    ],
+    "generic_command_stream_exposed": false
+  },
+  "acceptance": {
+    "read_probe": "PASS ConvertScalarToWorld",
+    "controlled_import": true,
+    "imported_object_id": 9,
+    "vertices": 4,
+    "triangles": 4,
+    "screenshot_path": "D:\\Velvet\\Tmp\\creative-tools\\meshmixer\\acceptance.png",
+    "screenshot_bytes": 3712,
+    "screenshot_sha256": "5E824C89259DA82823FE2853F3E50EC61643EE28A93931F3E90081D190848D8E",
+    "cleanup_remaining_objects": 0,
+    "acceptance_gate_removed": true
+  },
+  "update_sentinel": {
+    "classification": "PASS_COMPATIBILITY_CHECK",
+    "receipt": "D:\\Velvet\\Logs\\DCC-Adobe-Update-Sentinel\\receipts\\20261001T065337Z-meshmixer.json",
+    "receipt_sha256": "1BD6CA30B5FBCF894D1B788ABF2987D7E3451B001AC07DA260817453B921D898"
+  },
+  "limitations": [
+    "Official mm-api documentation targets Meshmixer 3.0 and does not guarantee later-version compatibility.",
+    "Local Meshmixer 3.5 / 11.5.474 compatibility has been directly validated and future version drift is fail-closed through Update Sentinel."
+  ]
+}

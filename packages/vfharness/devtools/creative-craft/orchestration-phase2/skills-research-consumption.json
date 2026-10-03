@@ -1,0 +1,114 @@
+{
+  "schema": "velvetos.creative-media-orchestration.phase2.skills-consumption.v1",
+  "date": "2026-10-02",
+  "principle": "Consume specialist Skills by reference at the stage where their craft authority is needed; do not copy them into a monolithic Creative Craft prompt.",
+  "skills": [
+    {
+      "skill": "velvet-creative-director",
+      "role": "public creative planning authority",
+      "used_by": [
+        "product-image-finishing",
+        "short-social-video",
+        "3d-turntable-product-visualization when public",
+        "technical-explainer-animation when public"
+      ]
+    },
+    {
+      "skill": "vf-image-design-craft",
+      "role": "raster/vector craft and export QA",
+      "used_by": [
+        "product-image-finishing",
+        "vector-logo-layout"
+      ]
+    },
+    {
+      "skill": "vf-post-production-craft",
+      "role": "editorial/color/compositing/audio/delivery craft",
+      "used_by": [
+        "short-social-video",
+        "long-edit-heavy-video",
+        "color-finish",
+        "video-enhancement",
+        "technical-explainer-animation",
+        "reusable-derivative-export-factory"
+      ]
+    },
+    {
+      "skill": "vf-speech-qa",
+      "role": "TTS/ASR/pronunciation/back-transcription/consent QA",
+      "used_by": [
+        "hebrew-narration-subtitles",
+        "short-social-video",
+        "long-edit-heavy-video",
+        "technical-explainer-animation"
+      ]
+    },
+    {
+      "skill": "vf-technical-illustration-craft",
+      "role": "projection/exploded/callout/dimension/parts craft",
+      "used_by": [
+        "technical-illustration",
+        "engineering-technical-publication",
+        "technical-explainer-animation"
+      ]
+    },
+    {
+      "skill": "vf-prepress-qa",
+      "role": "print/PDF exact-artifact preflight",
+      "used_by": [
+        "vector-logo-layout when print-bound",
+        "product-image-finishing when print-bound",
+        "engineering-technical-publication"
+      ]
+    },
+    {
+      "skill": "vf-material-lookdev",
+      "role": "baking/PBR/lookdev QA",
+      "used_by": [
+        "pbr-material-pipeline",
+        "3d-turntable-product-visualization"
+      ]
+    },
+    {
+      "skill": "vf-dcc-modeling-craft",
+      "role": "topology/retopo/subdivision/UV readiness",
+      "used_by": [
+        "pbr-material-pipeline",
+        "3d-turntable-product-visualization"
+      ]
+    },
+    {
+      "skill": "vf-cad-design-craft",
+      "role": "design-intent/fit/tolerance upstream context",
+      "used_by": [
+        "technical-illustration",
+        "engineering-technical-publication"
+      ]
+    },
+    {
+      "skill": "vf-sketchup-layout-craft",
+      "role": "spatial/associative drawing-set craft when SketchUp/LayOut is the source",
+      "used_by": [
+        "engineering-technical-publication"
+      ]
+    },
+    {
+      "skill": "vf-bom-costing",
+      "role": "BOM/cost tables only when an evidenced BOM is part of a publication",
+      "used_by": [
+        "engineering-technical-publication"
+      ],
+      "guardrail": "never invent prices/tax/FX and never become ledger authority"
+    }
+  ],
+  "embedded_patterns": [
+    "probe/readback before mutation where possible",
+    "job-owned editable master plus independent derivative",
+    "file-backed handoffs with SHA-256",
+    "exact-output QA rather than trusting tool success",
+    "named presets/profiles instead of arbitrary argument surfaces",
+    "pre-existing user session preservation",
+    "source/product/engineering truth survives every creative stage",
+    "receipt success is not publish authorization"
+  ]
+}

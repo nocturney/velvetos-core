@@ -1,0 +1,56 @@
+{
+  "schema": "velvetos.creative-craft.2.0-final.v2",
+  "date": "2026-10-03",
+  "status": "PASS",
+  "backup": "D:\\Velvet\\Backups\\CreativeCraft\\pre-2.0-20261003-122417",
+  "registry": {
+    "version": "0.4.0",
+    "source_sha256": "3e2c3caa095e96006f66e7e30efaf8ab1b593ee1881bdbcbce8af04cf177e6d1",
+    "runtime_sha256": "3e2c3caa095e96006f66e7e30efaf8ab1b593ee1881bdbcbce8af04cf177e6d1",
+    "parity": true
+  },
+  "router": {
+    "source_sha256": "0f92d5e95eae86e5fce01c3956f1d954cc498c315ed45050cc00718093264049",
+    "runtime_sha256": "0f92d5e95eae86e5fce01c3956f1d954cc498c315ed45050cc00718093264049",
+    "parity": true
+  },
+  "eval": {
+    "baseline": "44/56",
+    "candidate": "56/56",
+    "all_structural_pass": true
+  },
+  "workspace": {
+    "version": "1.5.0",
+    "desired_skills": 35,
+    "creative_specialists": 8,
+    "linked_skills": 15,
+    "pipelines": 24,
+    "main_commit": "cffcf9728ba8f79c0a86fd8c4e60f90d61a410df"
+  },
+  "core": {
+    "feature_commit": "e1648d9f0f21cea61f1172db4d38c0b9fa502a2e",
+    "pr": 464,
+    "main_merge_commit": "42c8a6ba5f8c73d8111483274b2f3f6170710e81"
+  },
+  "validation": {
+    "active_dirty_worktree": "115/116; only pre-existing BRIEF staleness",
+    "clean_current_main_merge_tree": "116/116 PASS",
+    "targeted_merge_tree": "PASS",
+    "candidate_eval": "56/56"
+  },
+  "routing_smoke": {
+    "english_vfx": "PASS",
+    "hebrew_product_visualization": "PASS",
+    "hebrew_vfx": "PASS",
+    "hebrew_color": "PASS",
+    "hebrew_fabrication": "PASS",
+    "hebrew_technical_illustration": "PASS",
+    "hebrew_video_enhancement": "PASS"
+  },
+  "boundaries": {
+    "raw_script_execution": false,
+    "printer_network_control": false,
+    "auto_publish": false,
+    "compatibility_gates_preserved": true
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "schema": "velvetos.creative-media-orchestration.phase2.acceptance-plan.v1",
+  "date": "2026-10-02",
+  "status": "EXECUTED",
+  "rules": [
+    "synthetic/vendor samples only",
+    "GUI/COM candidates must launch through their existing InteractiveToken Scheduled Tasks",
+    "no user-session attachment",
+    "no overwrite",
+    "no publish/send",
+    "file-backed handoffs with SHA-256",
+    "clean up only processes owned by the test"
+  ],
+  "tests": [
+    {
+      "id": "xvl-html5-derivative",
+      "status": "PASS",
+      "intent": "engineering-technical-publication",
+      "steps": [
+        "XVL .xv2 -> bundled xvlgenhtm CLI",
+        "package validation + manifest"
+      ],
+      "artifact": "D:\\Velvet\\Output\\CreativeCraft\\XVLHtml5\\orch2-html5-20261002a\\index.html"
+    },
+    {
+      "id": "technical-illustration-to-pdf-inspection",
+      "status": "PASS",
+      "intent": "technical-illustration",
+      "launch": "InteractiveToken Scheduled Tasks",
+      "steps": [
+        "XVLCorelSafeAdapter illustration_to_designer -> CDR/PDF",
+        "AcrobatSafeAdapter inspect exact generated PDF"
+      ],
+      "artifact": "D:\\Velvet\\Output\\CreativeCraft\\XVL\\orch2-tech-20261002b.pdf"
+    },
+    {
+      "id": "indesign-compose-to-pdf-inspection",
+      "status": "PASS",
+      "intent": "engineering-technical-publication",
+      "launch": "InteractiveToken Scheduled Tasks",
+      "steps": [
+        "InDesignSafeAdapter compose -> IDML/PDF",
+        "AcrobatSafeAdapter inspect exact generated PDF"
+      ],
+      "artifact": "D:\\Velvet\\Output\\CreativeCraft\\InDesign\\orch2-pub-20261002b.pdf"
+    },
+    {
+      "id": "master-to-h264-derivative",
+      "status": "PASS",
+      "intent": "reusable-derivative-export-factory",
+      "launch": "InteractiveToken Scheduled Task",
+      "steps": [
+        "HyperFrames smoke master",
+        "MediaEncoderWatchSafeAdapter encode preset h264-high",
+        "adapter ffprobe validation",
+        "owned host cleanup"
+      ],
+      "artifact": "D:\\Velvet\\Output\\CreativeCraft\\MediaEncoder\\orch2-ame-20261002a.mp4"
+    },
+    {
+      "id": "technical-motion-wrapper",
+      "status": "BLOCKED_BY_TYPED_GAP",
+      "intent": "technical-explainer-animation",
+      "steps": [
+        "future bounded Manim adapter render",
+        "ffprobe",
+        "optional HyperFrames/AE/Fusion finish"
+      ],
+      "blocked_by": "Manim declarative typed wrapper is not yet implemented; arbitrary Python must not be exposed"
+    }
+  ],
+  "diagnostics": [
+    "Direct Session 0 GUI/COM trials are not valid acceptance launch paths for Phase 2 candidates.",
+    "XVL and InDesign both passed when rerun through existing InteractiveToken Scheduled Tasks."
+  ]
+}

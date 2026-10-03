@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos.creative-media.pipeline-contract.v1",
+  "title": "Creative Media Pipeline Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "job_id",
+    "pipeline_id",
+    "intent",
+    "authority",
+    "source_refs",
+    "stages",
+    "publish_authorization"
+  ],
+  "properties": {
+    "schema": {
+      "const": "velvetos.creative-media.pipeline.v1"
+    },
+    "job_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+    },
+    "pipeline_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "intent": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authority": {
+      "type": "object",
+      "required": [
+        "intent_owner",
+        "truth_owner"
+      ],
+      "properties": {
+        "intent_owner": {
+          "type": "string"
+        },
+        "truth_owner": {
+          "type": "string"
+        },
+        "brand_owner": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "publish_owner": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path_or_ref",
+          "sha256",
+          "role"
+        ],
+        "properties": {
+          "path_or_ref": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[A-Fa-f0-9]{64}$"
+          },
+          "role": {
+            "type": "string"
+          },
+          "provenance": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "stage_id",
+          "role",
+          "tool",
+          "operation",
+          "inputs",
+          "outputs",
+          "qa",
+          "receipt"
+        ],
+        "properties": {
+          "stage_id": {
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "authority",
+              "craft",
+              "execution",
+              "qa",
+              "derivative"
+            ]
+          },
+          "tool": {
+            "type": "string"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "outputs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "qa": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "receipt": {
+            "type": "string"
+          },
+          "fallback": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "requires_current_routing_available": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      }
+    },
+    "final_master": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[A-Fa-f0-9]{64}$"
+        }
+      }
+    },
+    "derivative_of": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "publish_authorization": {
+      "const": false
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
