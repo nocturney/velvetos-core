@@ -1,0 +1,158 @@
+{
+  "schema": "velvetos.creative-craft.production-acceptance.v1",
+  "date": "2026-10-03",
+  "base_main": "9da7bee045d77bf8106afa39facbf2e1a4b957ce",
+  "registry_version": "0.4.1",
+  "status": "PASS_WITH_EXPLICIT_TYPED_GAPS",
+  "findings": [
+    {
+      "id": "resolve-readiness-overclaim",
+      "result": "FIXED",
+      "detail": "Resolve safe surface supports inspection, bounded import/audio/settings, render validation/output verification and LUT read, but not general timeline edit authoring, grade/node writes, LUT apply, render-job authoring or Fusion compositing authoring."
+    },
+    {
+      "id": "long-edit-english-routing",
+      "result": "FIXED",
+      "detail": "Natural English long-interview/edit requests now route to long-edit-heavy-video without stealing color-finish requests."
+    }
+  ],
+  "routing_acceptance": {
+    "product_visualization": {
+      "status": "PASS_ROUTE_PARTIAL_EXECUTION",
+      "intent": "3d-turntable-product-visualization",
+      "typed_gap": "standardized-job-owned-turntable-operation"
+    },
+    "vfx": {
+      "status": "PASS_ROUTE_PARTIAL_EXECUTION",
+      "intent": "vfx-composite",
+      "resolve_gap": "fusion-compositing-authoring",
+      "aftereffects_gaps": [
+        "bounded-comp-layer-authoring",
+        "named-render"
+      ],
+      "fusion_studio_gaps": [
+        "job-owned-comp",
+        "media-loader",
+        "bounded-node-template",
+        "frame-range-render"
+      ]
+    },
+    "fabrication": {
+      "status": "PASS",
+      "intent": "fabrication"
+    },
+    "color_finish": {
+      "status": "PASS_ROUTE_PARTIAL_EXECUTION",
+      "intent": "color-finish",
+      "typed_gaps": [
+        "grade-node-authoring",
+        "lut-apply",
+        "render-job-authoring"
+      ]
+    },
+    "long_edit": {
+      "status": "PASS_ROUTE_PARTIAL_EXECUTION",
+      "intent": "long-edit-heavy-video",
+      "matched_keywords": [
+        "long interview",
+        "edit a long"
+      ]
+    }
+  },
+  "resolve_acceptance": {
+    "host_launch": "PASS_HIDDEN_ON_DEMAND",
+    "official_probe": {
+      "status": "PASS",
+      "product": "DaVinci Resolve Studio",
+      "version": "21.1.0.17",
+      "project": "Untitled Project"
+    },
+    "clean_stop": "PASS",
+    "safe_surface_self_test": {
+      "ok": true,
+      "tool_count": 10,
+      "removed_count": 27,
+      "blocked_action_test": true,
+      "path_gate_test": true,
+      "project_name_gate_test": true,
+      "acceptance_gate_test": true
+    },
+    "safe_surface_tool_groups": [
+      "knowledge",
+      "lut",
+      "media_pool",
+      "media_pool_item",
+      "media_storage",
+      "project_manager",
+      "project_settings",
+      "render",
+      "timeline",
+      "timeline_item"
+    ]
+  },
+  "real_artifacts": {
+    "fabrication": {
+      "input": {
+        "path": "D:\\Velvet\\Tmp\\creative-craft-acceptance\\cube20.stl",
+        "bytes": 1217,
+        "sha256": "38F662E44BA21947AA3C06F0289315A8CF91B182D1ACB13FA0AB5A49216C6A8F"
+      },
+      "dfam": {
+        "status": "PASS",
+        "bbox_mm": [
+          20,
+          20,
+          20
+        ],
+        "watertight": true,
+        "triangle_count": 12,
+        "volume_mm3": 8000,
+        "support_to_part_ratio_pct": 0
+      },
+      "gcode": {
+        "path": "D:\\Velvet\\Tmp\\creative-craft-acceptance\\cube20-u1.gcode",
+        "bytes": 322242,
+        "sha256": "CE2B9D4EF4AAF6D6DDED34A14D0E430F9ED1F06DCC603A902A03545909AC1CCA",
+        "printer": "u1",
+        "backend": "orcaslicer",
+        "printer_network_control": false
+      }
+    },
+    "video_enhancement": {
+      "input": {
+        "path": "D:\\Velvet\\Tmp\\creative-craft-acceptance\\topaz-input.mp4",
+        "bytes": 4586,
+        "sha256": "5A2BC74362FC2080155B51A9804CCDD1A00E4076E5C04B9E4C4EF29FEA9A4E86",
+        "codec": "h264",
+        "width": 128,
+        "height": 128,
+        "fps": "10/1",
+        "duration_seconds": 1
+      },
+      "output": {
+        "path": "D:\\Velvet\\Tmp\\creative-craft-acceptance\\topaz-enhanced.mkv",
+        "bytes": 608819,
+        "sha256": "008B9420D9AA561B26EF26D292626EF9FB0BEC784255601A083B50A073EE072B",
+        "codec": "ffv1",
+        "width": 128,
+        "height": 128,
+        "fps": "10/1",
+        "duration_seconds": 1
+      },
+      "adapter": {
+        "status": "PASS",
+        "model": "ahq-12",
+        "scale": 1,
+        "download": false
+      }
+    }
+  },
+  "boundaries": {
+    "arbitrary_script_authority": false,
+    "printer_network_control": false,
+    "auto_publish": false,
+    "cloud_spend": false,
+    "preexisting_user_sessions_preserved": true,
+    "perceptual_review_faked": false
+  }
+}

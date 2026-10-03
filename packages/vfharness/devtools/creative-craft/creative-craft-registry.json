@@ -1,6 +1,6 @@
 {
     "schema":  "velvetos.creative-craft.registry.v1",
-    "version":  "0.4.0",
+    "version":  "0.4.1",
     "policy":  {
                    "fail_closed":  true,
                    "routing_state":  "D:\\Velvet\\State\\DCC-Adobe-Update-Sentinel\\routing-state.json",
@@ -100,29 +100,38 @@
                                               ],
                                   "production_surface":  "safe-mcp",
                                   "operations":  [
-                                                     "media",
-                                                     "timeline",
-                                                     "project-settings",
-                                                     "render",
-                                                     "lut"
+                                                     "media-read-and-bounded-import",
+                                                     "timeline-read-and-bounded-audio",
+                                                     "project-settings-read-and-bounded-settings",
+                                                     "render-inspect-validate-verify",
+                                                     "lut-read"
                                                  ],
                                   "blocked":  [
                                                   "raw-resolve-control",
                                                   "script-plugin",
                                                   "dctl-plugin",
-                                                  "fuse-plugin"
+                                                  "fuse-plugin",
+                                                  "timeline-edit-authoring",
+                                                  "grade-node-authoring",
+                                                  "lut-apply",
+                                                  "render-job-authoring",
+                                                  "fusion-compositing-authoring"
                                               ],
                                   "availability":  {
                                                        "type":  "dcc_routing",
                                                        "route_key":  "resolve"
                                                    },
-                                  "readiness":  "READY_BOUNDED",
+                                  "readiness":  "PARTIAL_TYPED_AUTOMATION",
                                   "skills":  [
                                                  "vf-post-production-craft",
                                                  "vf-vfx-compositing-craft"
                                              ],
                                   "typed_gaps":  [
-
+                                                       "timeline-edit-authoring",
+                                                       "grade-node-authoring",
+                                                       "lut-apply",
+                                                       "render-job-authoring",
+                                                       "fusion-compositing-authoring"
                                                  ]
                               },
                   "topaz-video":  {
@@ -1526,12 +1535,12 @@
                                                                    "vf-post-production-craft",
                                                                    "vf-speech-qa when used"
                                                                ],
-                                                    "readiness":  "READY_BOUNDED_IN_RESOLVE",
+                                                    "readiness":  "PARTIAL_TYPED_AUTOMATION",
                                                     "steps":  [
                                                                   {
                                                                       "tool":  "resolve",
                                                                       "required":  true,
-                                                                      "purpose":  "edit, color, finish, master render"
+                                                                      "purpose":  "project/timeline inspection plus bounded import/audio operations; edit/color/master-render authoring remain typed gaps"
                                                                   },
                                                                   {
                                                                       "tool":  "topaz-video",
@@ -1558,12 +1567,12 @@
                                            "skills":  [
                                                           "vf-post-production-craft"
                                                       ],
-                                           "readiness":  "READY_BOUNDED_IN_RESOLVE",
+                                           "readiness":  "PARTIAL_TYPED_AUTOMATION",
                                            "steps":  [
                                                          {
                                                              "tool":  "resolve",
                                                              "required":  true,
-                                                             "purpose":  "bounded grade/LUT and render"
+                                                             "purpose":  "color/project inspection, LUT read and render validation; grade/LUT apply/render enqueue remain typed gaps"
                                                          },
                                                          {
                                                              "tool":  "ffmpeg",
@@ -1849,12 +1858,12 @@
                                                         "vf-post-production-craft",
                                                         "vf-speech-qa when used"
                                                     ],
-                                         "readiness":  "READY_BOUNDED_IN_RESOLVE",
+                                         "readiness":  "PARTIAL_TYPED_AUTOMATION",
                                          "steps":  [
                                                        {
                                                            "tool":  "resolve",
                                                            "required":  true,
-                                                           "purpose":  "edit, color, finish, master render"
+                                                           "purpose":  "project/timeline inspection plus bounded import/audio operations; edit/color/master-render authoring remain typed gaps"
                                                        },
                                                        {
                                                            "tool":  "topaz-video",
@@ -1882,12 +1891,12 @@
                                                           "vf-post-production-craft",
                                                           "vf-speech-qa when used"
                                                       ],
-                                           "readiness":  "READY_BOUNDED_IN_RESOLVE",
+                                           "readiness":  "PARTIAL_TYPED_AUTOMATION",
                                            "steps":  [
                                                          {
                                                              "tool":  "resolve",
                                                              "required":  true,
-                                                             "purpose":  "edit, color, finish, master render"
+                                                             "purpose":  "project/timeline inspection plus bounded import/audio operations; edit/color/master-render authoring remain typed gaps"
                                                          },
                                                          {
                                                              "tool":  "topaz-video",
@@ -1920,7 +1929,7 @@
                                                           {
                                                               "tool":  "resolve",
                                                               "required":  true,
-                                                              "purpose":  "accepted primary host for bounded shot integration when exposed"
+                                                              "purpose":  "read/inspect support on the current safe surface; shot/Fusion authoring remains a typed gap"
                                                           },
                                                           {
                                                               "tool":  "aftereffects",
@@ -2195,6 +2204,8 @@
                                               "shot match",
                                               "shot-match",
                                               "match shots",
+                                              "match these shots",
+                                              "grade and match",
                                               "גריידינג",
                                               "דירוג צבע",
                                               "התאמת צבע",
@@ -2221,6 +2232,8 @@
                              "pipeline":  "long-edit-heavy-video",
                              "keywords":  [
                                               "long video",
+                                              "long interview",
+                                              "edit a long",
                                               "edit-heavy",
                                               "timeline edit",
                                               "premiere",

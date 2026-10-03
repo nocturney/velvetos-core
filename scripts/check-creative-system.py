@@ -2,6 +2,7 @@
 """Validate Velvet creative specialist + manifest architecture. No network. No send."""
 from __future__ import annotations
 
+import ast
 import json
 import sys
 from pathlib import Path
@@ -17,6 +18,8 @@ VFCOPY_AUTHORITY = ROOT / "packages" / "vfcopy" / "skills" / "velvet-hebrew-copy
 VFCOPY_PIPELINE = ROOT / "packages" / "vfcopy" / "skills" / "velvet-hebrew-copy" / "PIPELINE.md"
 READER_FIRST = ROOT / "packages" / "vfcopy" / "hq" / "reader-first-he.md"
 AI_TELLS = ROOT / "packages" / "vfcopy" / "hq" / "ai-tells-he.md"
+CREATIVE_CRAFT_REGISTRY = ROOT / "packages" / "vfharness" / "devtools" / "creative-craft" / "creative-craft-registry.json"
+RESOLVE_SAFE_SERVER = ROOT / "packages" / "vfharness" / "devtools" / "creative-tools" / "ResolveSafeServer.py"
 SPECIALISTS = {
     "creativeDirector": ROOT / ".cursor" / "skills" / "velvet-creative-director" / "SKILL.md",
     "brandGuardian": ROOT / ".cursor" / "skills" / "velvet-brand-guardian" / "SKILL.md",
@@ -48,6 +51,21 @@ def must_contain(path: Path, needles: tuple[str, ...]) -> None:
     for needle in needles:
         if needle not in text:
             fail(f"{path.relative_to(ROOT)} missing {needle!r}")
+
+
+def load_literal_assignment(path: Path, name: str):
+    if not path.is_file():
+        fail(f"missing {path.relative_to(ROOT)}")
+    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    for node in tree.body:
+        if not isinstance(node, ast.Assign):
+            continue
+        if any(isinstance(target, ast.Name) and target.id == name for target in node.targets):
+            try:
+                return ast.literal_eval(node.value)
+            except (ValueError, TypeError, SyntaxError) as exc:
+                fail(f"{path.relative_to(ROOT)} {name} must remain literal: {exc}")
+    fail(f"{path.relative_to(ROOT)} missing literal assignment {name}")
 
 
 def main() -> None:
@@ -162,7 +180,47 @@ def main() -> None:
         if specialists.get(key) != value or foundry_specialists.get(key) != value:
             fail(f"specialist binding mismatch for {key}")
 
-    print("OK creative-system manifest specialists motion-genomes audio-gate visual-copy-gate bound")
+    # Production-truth guard: the Creative Craft registry must not claim
+    # Resolve authoring operations that the accepted safe surface does not expose.
+    creative_craft = load_json(CREATIVE_CRAFT_REGISTRY)
+    if creative_craft.get("version") != "0.4.1":
+        fail("Creative Craft registry must be 0.4.1 after production-acceptance truth correction")
+    long_edit_rules = [
+        rule for rule in (creative_craft.get("intent_rules") or [])
+        if rule.get("pipeline") == "long-edit-heavy-video"
+    ]
+    if len(long_edit_rules) != 1 or not {"long interview", "edit a long"}.issubset(set(long_edit_rules[0].get("keywords") or [])):
+        fail("long-edit-heavy-video must route natural English long-edit requests")
+    resolve = (creative_craft.get("tools") or {}).get("resolve") or {}
+    required_resolve_gaps = {
+        "timeline-edit-authoring",
+        "grade-node-authoring",
+        "lut-apply",
+        "render-job-authoring",
+        "fusion-compositing-authoring",
+    }
+    if resolve.get("readiness") != "PARTIAL_TYPED_AUTOMATION":
+        fail("Creative Craft Resolve readiness must remain PARTIAL_TYPED_AUTOMATION until authoring gaps close")
+    if not required_resolve_gaps.issubset(set(resolve.get("typed_gaps") or [])):
+        fail("Creative Craft Resolve typed gaps understate the accepted safe surface")
+    for pipeline_name in ("long-edit-heavy-video", "color-finish", "video-edit", "video-finish"):
+        pipeline = (creative_craft.get("pipelines") or {}).get(pipeline_name) or {}
+        if pipeline.get("readiness") != "PARTIAL_TYPED_AUTOMATION":
+            fail(f"{pipeline_name} must remain PARTIAL_TYPED_AUTOMATION on the current Resolve surface")
+
+    resolve_policy = load_literal_assignment(RESOLVE_SAFE_SERVER, "POLICY")
+    if "color_group" in resolve_policy or "fusion_comp" in resolve_policy:
+        fail("Resolve safe surface changed color/Fusion authority; review Creative Craft readiness before promotion")
+    render_actions = set(resolve_policy.get("render") or [])
+    if any(action.startswith(("set_", "add_", "start_", "delete_", "create_")) for action in render_actions):
+        fail("Resolve render authoring appeared; review Creative Craft typed gaps before promotion")
+    if set(resolve_policy.get("lut") or []) - {"path", "list", "read", "capabilities"}:
+        fail("Resolve LUT mutation appeared; review Creative Craft typed gaps before promotion")
+    timeline_actions = set(resolve_policy.get("timeline") or [])
+    if any(token in action for action in timeline_actions for token in ("append", "insert", "trim", "ripple", "create_timeline")):
+        fail("Resolve timeline edit authoring appeared; review Creative Craft typed gaps before promotion")
+
+    print("OK creative-system manifest specialists motion-genomes audio-gate visual-copy-gate + Resolve runtime-truth bound")
 
 
 if __name__ == "__main__":

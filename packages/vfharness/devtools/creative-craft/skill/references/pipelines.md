@@ -25,8 +25,8 @@ Command prefix: `C:\Python314\python.exe D:\Velvet\Runtime\CreativeCraft\Creativ
 | `3d-turntable-product-visualization` | DCC + materials + Product Visualization | PARTIAL_ORCHESTRATION |
 | `vfx-composite` | VFX Compositing + accepted Resolve/AE/Fusion surfaces | PARTIAL_TYPED_AUTOMATION |
 | `short-social-video` | vfom + HyperFrames | READY_WITH_AUTHORITY_AND_BOUNDED_RENDER |
-| `long-edit-heavy-video` | Resolve | READY_BOUNDED_IN_RESOLVE |
-| `color-finish` | Resolve + probe | READY_BOUNDED_IN_RESOLVE |
+| `long-edit-heavy-video` | Resolve | PARTIAL_TYPED_AUTOMATION |
+| `color-finish` | Resolve + probe | PARTIAL_TYPED_AUTOMATION |
 | `video-enhancement` | Topaz Video + probe | READY_BOUNDED |
 | `hebrew-narration-subtitles` | VoiceStudio/ASR | READY_BOUNDED |
 | `technical-explainer-animation` | Manim + optional finish | READY_WITH_TYPED_WRAPPER_GAP |
@@ -36,7 +36,7 @@ Command prefix: `C:\Python314\python.exe D:\Velvet\Runtime\CreativeCraft\Creativ
 | `document-report-bom` | Office typed workers | READY_BOUNDED |
 | `ops-package-release` | existing repo/deploy authority + support tools | READY_SUPPORT |
 
-Legacy aliases `vector-design`, `video-edit`, and `video-finish` remain for compatibility.
+Legacy aliases `vector-design`, `video-edit`, and `video-finish` remain for compatibility. `video-edit` and `video-finish` inherit Resolve's `PARTIAL_TYPED_AUTOMATION` state until bounded timeline authoring and master-render job operations are accepted.
 
 ## Fabrication commands
 
