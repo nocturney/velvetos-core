@@ -249,7 +249,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
 
     for rel in ("scripts/sensor_selector.py", "scripts/compare-sensor-shadow.py", "scripts/stage3_preflight.py", "scripts/check-all.py"):
         require(existing_repo_path(rel), f"selector enforcement component missing: {rel}", problems)
-    for shadow_rel in ("scripts/sensor_selector.py", "scripts/compare-sensor-shadow.py"):
+    for shadow_rel in ("scripts/sensor_selector.py", "scripts/compare-sensor-shadow.py", "scripts/collect-sensor-shadow-observations.py"):
         shadow_harness = ROOT / shadow_rel
         if shadow_harness.is_file():
             proc = subprocess.run(
