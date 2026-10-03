@@ -1,138 +1,189 @@
 {
-    "schema":  "velvetos.dcc-autostart.v2",
-    "user":  "CHRIS\\Chris",
-    "policy":  {
-                   "launch_mode":  "on_demand_hidden",
-                   "minimize":  false,
-                   "skip_if_running":  true,
-                   "stagger_seconds":  25,
-                   "gui_before_login_supported":  false,
-                   "shortcut_first":  true,
-                   "note":  "DCC gateway and Adobe brokers may run in background. GUI hosts do not launch at logon; agents launch one host on demand in hidden mode via manual scheduled tasks. Normal vendor shortcuts remain unchanged for the user.",
-                   "agent_hidden_launch":  true,
-                   "launch_at_logon":  false
-               },
-    "apps":  [
-                 {
-                     "id":  "substance-painter",
-                     "enabled":  true,
-                     "process":  "Adobe Substance 3D Painter",
-                     "path":  "D:\\Velvet\\Runtime\\Autostart\\Adobe Substance 3D Painter - VelvetOS.lnk",
-                     "launch_policy":  "vram_budget_1536_svt_off"
-                 },
-                 {
-                     "id":  "maya",
-                     "enabled":  true,
-                     "process":  "maya",
-                     "path":  "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Autodesk Maya 2027\\Maya 2027.lnk"
-                 },
-                 {
-                     "id":  "inventor",
-                     "enabled":  true,
-                     "process":  "Inventor",
-                     "path":  "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Autodesk Inventor 2027\\Autodesk Inventor Professional 2027 - English.lnk"
-                 },
-                 {
-                     "id":  "autocad",
-                     "enabled":  true,
-                     "process":  "acad",
-                     "path":  "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AutoCAD 2027 - English\\AutoCAD 2027 - English.lnk"
-                 },
-                 {
-                     "id":  "zbrush",
-                     "enabled":  true,
-                     "process":  "ZBrush",
-                     "path":  "D:\\Velvet\\Runtime\\Autostart\\ZBrush 2026.2.1 - VelvetOS.lnk",
-                     "post_launch":  {
-                                         "process":  "dcc-mcp-zbrush",
-                                         "path":  "D:\\Velvet\\Tools\\DCC-MCP\\zbrush-0.2.26\\venv\\Scripts\\dcc-mcp-zbrush.exe",
-                                         "arguments":  [
-                                                           "--mode",
-                                                           "sidecar",
-                                                           "--socket-host",
-                                                           "127.0.0.1",
-                                                           "--socket-port",
-                                                           "9876",
-                                                           "--gateway-port",
-                                                           "9765"
-                                                       ],
-                                         "delay_seconds":  8,
-                                         "window_style":  "Hidden"
-                                     }
-                 },
-                 {
-                     "id":  "blender",
-                     "enabled":  true,
-                     "process":  "blender",
-                     "path":  "C:\\Users\\Chris\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Blender\\Blender 5.2.lnk"
-                 },
-                 {
-                     "id":  "substance-designer",
-                     "enabled":  true,
-                     "process":  "Adobe Substance 3D Designer",
-                     "path":  "D:\\Velvet\\Runtime\\Autostart\\Adobe Substance 3D Designer - VelvetOS.lnk"
-                 },
-                 {
-                     "id":  "substance-sampler",
-                     "enabled":  true,
-                     "process":  "Adobe Substance 3D Sampler",
-                     "path":  "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Substance 3D Sampler.lnk"
-                 },
-                 {
-                     "id":  "substance-modeler",
-                     "enabled":  true,
-                     "process":  "Adobe Substance 3D Modeler",
-                     "path":  "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Substance 3D Modeler.lnk"
-                 },
-                 {
-                     "id":  "substance-stager",
-                     "enabled":  true,
-                     "process":  "Adobe Substance 3D Stager",
-                     "path":  "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Substance 3D Stager.lnk"
-                 },
-                 {
-                     "id":  "cinema4d",
-                     "enabled":  false,
-                     "process":  "Cinema 4D",
-                     "path":  "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Maxon\\Maxon Cinema 4D\\Maxon Cinema 4D 2026.lnk",
-                     "reason":  "out_of_scope_user_directive"
-                 },
-                 {
-                     "id":  "3dsmax",
-                     "enabled":  true,
-                     "process":  "3dsmax",
-                     "path":  "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Autodesk\\Autodesk 3ds Max 2027\\3ds Max 2027 - English.lnk"
-                 },
-                 {
-                     "id":  "photoshop",
-                     "enabled":  true,
-                     "process":  "Photoshop",
-                     "path":  "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Photoshop 2026.lnk"
-                 },
-                 {
-                     "id":  "illustrator",
-                     "enabled":  true,
-                     "process":  "Illustrator",
-                     "path":  "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Illustrator 2026.lnk"
-                 },
-                 {
-                     "id":  "aftereffects",
-                     "enabled":  true,
-                     "process":  "AfterFX",
-                     "path":  "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe After Effects 2026.lnk"
-                 },
-                 {
-                     "id":  "premiere",
-                     "enabled":  true,
-                     "process":  "Adobe Premiere Pro",
-                     "path":  "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Premiere Pro 2026.lnk"
-                 },
-                 {
-                     "id":  "fusion",
-                     "enabled":  false,
-                     "process":  "Fusion360",
-                     "path":  null,
-                     "reason":  "stale_registry_entry_no_executable_found"
-                 }
-             ]
+  "schema": "velvetos.dcc-autostart.v2",
+  "user": "CHRIS\\Chris",
+  "policy": {
+    "launch_mode": "on_demand_hidden",
+    "minimize": false,
+    "skip_if_running": true,
+    "stagger_seconds": 25,
+    "gui_before_login_supported": false,
+    "shortcut_first": true,
+    "note": "DCC gateway and Adobe brokers may run in background. GUI hosts do not launch at logon; agents launch one host on demand in hidden mode via manual scheduled tasks. Normal vendor shortcuts remain unchanged for the user.",
+    "agent_hidden_launch": true,
+    "launch_at_logon": false
+  },
+  "apps": [
+    {
+      "id": "substance-painter",
+      "enabled": true,
+      "process": "Adobe Substance 3D Painter",
+      "path": "D:\\Velvet\\Runtime\\Autostart\\Adobe Substance 3D Painter - VelvetOS.lnk",
+      "launch_policy": "vram_budget_1536_svt_off"
+    },
+    {
+      "id": "maya",
+      "enabled": true,
+      "process": "maya",
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Autodesk Maya 2027\\Maya 2027.lnk",
+      "automation_mode": "headless_mayapy",
+      "automation_process": "mayapy",
+      "managed_pid_file": "D:\\Velvet\\State\\DCC-MCP\\maya-headless-host.json",
+      "on_demand_launcher": "D:\\Velvet\\Runtime\\Autostart\\Start-VelvetMayaHeadless.ps1"
+    },
+    {
+      "id": "inventor",
+      "enabled": true,
+      "process": "Inventor",
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Autodesk Inventor 2027\\Autodesk Inventor Professional 2027 - English.lnk"
+    },
+    {
+      "id": "autocad",
+      "enabled": true,
+      "process": "acad",
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AutoCAD 2027 - English\\AutoCAD 2027 - English.lnk"
+    },
+    {
+      "id": "zbrush",
+      "enabled": true,
+      "process": "ZBrush",
+      "path": "D:\\Velvet\\Runtime\\Autostart\\ZBrush 2026.2.1 - VelvetOS.lnk",
+      "post_launch": {
+        "process": "dcc-mcp-zbrush",
+        "path": "D:\\Velvet\\Tools\\DCC-MCP\\zbrush-0.2.26\\venv\\Scripts\\dcc-mcp-zbrush.exe",
+        "arguments": [
+          "--mode",
+          "sidecar",
+          "--socket-host",
+          "127.0.0.1",
+          "--socket-port",
+          "9876",
+          "--gateway-port",
+          "9765"
+        ],
+        "delay_seconds": 8,
+        "window_style": "Hidden"
+      }
+    },
+    {
+      "id": "blender",
+      "enabled": true,
+      "process": "blender",
+      "path": "C:\\Users\\Chris\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Blender\\Blender 5.2.lnk"
+    },
+    {
+      "id": "substance-designer",
+      "enabled": true,
+      "process": "Adobe Substance 3D Designer",
+      "path": "D:\\Velvet\\Runtime\\Autostart\\Adobe Substance 3D Designer - VelvetOS.lnk"
+    },
+    {
+      "id": "substance-sampler",
+      "enabled": true,
+      "process": "Adobe Substance 3D Sampler",
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Substance 3D Sampler.lnk"
+    },
+    {
+      "id": "substance-modeler",
+      "enabled": true,
+      "process": "Adobe Substance 3D Modeler",
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Substance 3D Modeler.lnk"
+    },
+    {
+      "id": "substance-stager",
+      "enabled": true,
+      "process": "Adobe Substance 3D Stager",
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Substance 3D Stager.lnk"
+    },
+    {
+      "id": "cinema4d",
+      "enabled": false,
+      "process": "Cinema 4D",
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Maxon\\Maxon Cinema 4D\\Maxon Cinema 4D 2026.lnk",
+      "reason": "out_of_scope_user_directive"
+    },
+    {
+      "id": "3dsmax",
+      "enabled": true,
+      "process": "3dsmax",
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Autodesk\\Autodesk 3ds Max 2027\\3ds Max 2027 - English.lnk"
+    },
+    {
+      "id": "photoshop",
+      "enabled": true,
+      "process": "Photoshop",
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Photoshop 2026.lnk"
+    },
+    {
+      "id": "illustrator",
+      "enabled": true,
+      "process": "Illustrator",
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Illustrator 2026.lnk"
+    },
+    {
+      "id": "aftereffects",
+      "enabled": true,
+      "process": "AfterFX",
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe After Effects 2026.lnk"
+    },
+    {
+      "id": "premiere",
+      "enabled": true,
+      "process": "Adobe Premiere Pro",
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Premiere Pro 2026.lnk"
+    },
+    {
+      "id": "fusion",
+      "enabled": true,
+      "process": "Fusion360",
+      "path": "D:\\Velvet\\Runtime\\Autostart\\Autodesk Fusion - VelvetOS.lnk"
+    },
+    {
+      "id": "meshmixer",
+      "enabled": true,
+      "process": "meshmixer",
+      "path": "D:\\Velvet\\Runtime\\Autostart\\Autodesk Meshmixer - VelvetOS.lnk"
+    },
+    {
+      "id": "resolve",
+      "enabled": true,
+      "process": "Resolve",
+      "path": "D:\\Velvet\\Runtime\\Autostart\\DaVinci Resolve Studio - VelvetOS.lnk",
+      "pre_stop": {
+        "path": "D:\\Velvet\\Runtime\\Autostart\\Stop-VelvetResolveHost.ps1",
+        "arguments": []
+      }
+    },
+    {
+      "id": "affinity",
+      "enabled": true,
+      "process": "Affinity",
+      "path": "D:\\Velvet\\Runtime\\Autostart\\Affinity - VelvetOS.lnk"
+    },
+    {
+      "id": "coreldraw",
+      "enabled": true,
+      "process": "CorelDRW",
+      "path": "D:\\Velvet\\Runtime\\Autostart\\CorelDRAW 2026 - VelvetOS.lnk",
+      "pre_stop": {
+        "path": "D:\\Velvet\\Runtime\\Autostart\\Stop-VelvetCorelHost.ps1",
+        "arguments": [
+          "-AppId",
+          "coreldraw"
+        ]
+      }
+    },
+    {
+      "id": "corel-designer",
+      "enabled": true,
+      "process": "Designer",
+      "path": "D:\\Velvet\\Runtime\\Autostart\\Corel DESIGNER 2026 - VelvetOS.lnk",
+      "pre_stop": {
+        "path": "D:\\Velvet\\Runtime\\Autostart\\Stop-VelvetCorelHost.ps1",
+        "arguments": [
+          "-AppId",
+          "corel-designer"
+        ]
+      }
+    }
+  ]
 }

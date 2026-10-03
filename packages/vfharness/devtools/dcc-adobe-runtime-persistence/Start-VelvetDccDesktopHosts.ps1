@@ -125,6 +125,13 @@ foreach ($app in $manifest.apps) {
             $errors += "missing post-launch executable for $($app.id): $($app.post_launch.path)"
         }
     }
+    if (($app.PSObject.Properties.Name -contains 'automation_mode') -and [string]$app.automation_mode -eq 'headless_mayapy') {
+        if (-not ($app.PSObject.Properties.Name -contains 'on_demand_launcher') -or
+            [string]::IsNullOrWhiteSpace([string]$app.on_demand_launcher) -or
+            -not (Test-Path -LiteralPath ([string]$app.on_demand_launcher))) {
+            $errors += "missing headless launcher for $($app.id): $($app.on_demand_launcher)"
+        }
+    }
 }
 
 if ($errors.Count -gt 0) {
@@ -157,6 +164,17 @@ foreach ($app in $manifest.apps) {
         continue
     }
 
+    if (($app.PSObject.Properties.Name -contains 'automation_mode') -and [string]$app.automation_mode -eq 'headless_mayapy') {
+        try {
+            $launcher = [string]$app.on_demand_launcher
+            $result = & powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File $launcher
+            Write-HostLog "HEADLESS $($app.id) launcher=$launcher result=$result"
+        } catch {
+            Write-HostLog "ERROR $($app.id) headless launch: $($_.Exception.Message)"
+        }
+        continue
+    }
+
     $running = Get-AppProcess -Name $app.process
     if ($running.Count -gt 0) {
         $min = if ($HideAfterLaunch) { Hide-App -Name $app.process } else { Minimize-App -Name $app.process }
@@ -166,6 +184,7 @@ foreach ($app in $manifest.apps) {
     }
 
     try {
+        $proc = $null
         if ($app.id -eq 'illustrator') {
             $bootstrapPython = 'D:\Velvet\Tools\DCC-MCP\illustrator-0.3.1\venv\Scripts\python.exe'
             $bootstrapScript = 'D:\Velvet\Runtime\Autostart\Bootstrap-VelvetIllustrator.py'
@@ -175,10 +194,74 @@ foreach ($app in $manifest.apps) {
             $bootstrapErr = Join-Path $LogDir ('illustrator-bootstrap-' + (Get-Date -Format 'yyyyMMdd-HHmmss') + '.stderr.log')
             $bootstrapProc = Start-Process -FilePath $bootstrapPython -ArgumentList @($bootstrapScript) -RedirectStandardOutput $bootstrapOut -RedirectStandardError $bootstrapErr -WindowStyle Hidden -PassThru
             Write-HostLog "BOOTSTRAP illustrator pid=$($bootstrapProc.Id) stdout=$bootstrapOut stderr=$bootstrapErr"
-            Start-Sleep -Seconds 2
+
+            $bootstrapHost = $null
+            $hostDeadline = (Get-Date).AddSeconds(6)
+            do {
+                $candidateHosts = @(Get-AppProcess -Name $app.process)
+                if ($candidateHosts.Count -gt 0) {
+                    $bootstrapHost = $candidateHosts[0]
+                    Write-HostLog "BOOTSTRAP_HOST_DISCOVERED illustrator pid=$($bootstrapHost.Id)"
+                    break
+                }
+                if ($bootstrapProc.HasExited) { break }
+                Start-Sleep -Milliseconds 250
+                $bootstrapProc.Refresh()
+            } while ((Get-Date) -lt $hostDeadline)
+
+            if (-not $bootstrapHost -and -not $bootstrapProc.HasExited) {
+                Write-HostLog "BOOTSTRAP_HOST_PENDING illustrator owner=broker"
+            }
+
+            $bootstrapFinished = $bootstrapProc.WaitForExit(40000)
+            if (-not $bootstrapFinished) {
+                Stop-Process -Id $bootstrapProc.Id -Force -ErrorAction SilentlyContinue
+                @(Get-AppProcess -Name $app.process) | Stop-Process -Force -ErrorAction SilentlyContinue
+                Write-HostLog "BOOTSTRAP_TIMEOUT illustrator pid=$($bootstrapProc.Id)"
+                throw "Illustrator bounded bootstrap timed out"
+            }
+
+            if (-not (Test-Path -LiteralPath $bootstrapOut)) {
+                @(Get-AppProcess -Name $app.process) | Stop-Process -Force -ErrorAction SilentlyContinue
+                throw "Illustrator bootstrap produced no structured output"
+            }
+
+            $bootstrapRaw = (Get-Content -Raw -LiteralPath $bootstrapOut).Trim()
+            try {
+                $bootstrapResult = $bootstrapRaw | ConvertFrom-Json
+            } catch {
+                @(Get-AppProcess -Name $app.process) | Stop-Process -Force -ErrorAction SilentlyContinue
+                Write-HostLog "BOOTSTRAP_PARSE_ERROR illustrator: $($_.Exception.Message)"
+                throw "Illustrator bootstrap output was not valid JSON"
+            }
+
+            if ($bootstrapResult.ok -ne $true -or -not $bootstrapResult.host.pid) {
+                @(Get-AppProcess -Name $app.process) | Stop-Process -Force -ErrorAction SilentlyContinue
+                Write-HostLog "BOOTSTRAP_FAIL illustrator result=$bootstrapRaw"
+                throw "Illustrator bounded bootstrap failed"
+            }
+
+            $verifiedPid = [int]$bootstrapResult.host.pid
+            if ($bootstrapHost -and [int]$bootstrapHost.Id -ne $verifiedPid) {
+                @(Get-AppProcess -Name $app.process) | Stop-Process -Force -ErrorAction SilentlyContinue
+                Write-HostLog "BOOTSTRAP_IDENTITY_MISMATCH illustrator launched_pid=$($bootstrapHost.Id) verified_pid=$verifiedPid"
+                throw "Illustrator bootstrap verified a different host PID"
+            }
+
+            Start-Sleep -Milliseconds 750
+            $candidate = Get-Process -Id $verifiedPid -ErrorAction SilentlyContinue
+            if (-not $candidate) {
+                throw "Illustrator verified bootstrap host exited before handoff"
+            }
+            $proc = $candidate
+            Write-HostLog "BOOTSTRAP_READY illustrator host_pid=$($proc.Id) status=$($bootstrapResult.bootstrap_status)"
         }
-        $proc = Start-InteractiveApp -App $app
-        Write-HostLog "LAUNCH $($app.id) pid=$($proc.Id) path=$($app.path) shell=$([IO.Path]::GetExtension([string]$app.path).ToLowerInvariant() -eq '.lnk')"
+        if (-not $proc) {
+            $proc = Start-InteractiveApp -App $app
+            Write-HostLog "LAUNCH $($app.id) pid=$($proc.Id) path=$($app.path) shell=$([IO.Path]::GetExtension([string]$app.path).ToLowerInvariant() -eq '.lnk')"
+        } else {
+            Write-HostLog "LAUNCH $($app.id) pid=$($proc.Id) mode=verified-bootstrap"
+        }
         $min = if ($HideAfterLaunch) { Hide-App -Name $app.process } else { Minimize-App -Name $app.process }
         Write-HostLog "WINDOW $($app.id) hidden=$HideAfterLaunch result=$min"
         Start-PostLaunch -App $app
