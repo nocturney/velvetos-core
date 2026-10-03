@@ -5,7 +5,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 
 SURFACES = [
-    'AGENTS.md',
+    'packages/vfom/AGENTS.md',
     '.cursor/skills/velvet-creative-director/SKILL.md',
     '.cursor/skills/velvet-brand-guardian/SKILL.md',
     '.cursor/skills/vf-content-sprint/SKILL.md',

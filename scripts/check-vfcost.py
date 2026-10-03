@@ -19,7 +19,7 @@ PLAY = PACK / "hq" / "PLAYBOOK.md"
 CLI_DOC = PACK / "CLI.md"
 BRIEF = ROOT / "packages" / "vfops" / "BRIEF.md"
 SLOTS = ROOT / "packages" / "vfops" / "hq" / "BRIEF-SLOTS.md"
-AGENTS = ROOT / "AGENTS.md"
+AGENTS = PACK / "AGENTS.md"
 LAYERS = ROOT / "packages" / "vfharness" / "layers.json"
 
 REQUIRED_LOCKS = {

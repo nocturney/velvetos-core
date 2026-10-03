@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 LAYERS = ROOT / "packages" / "vfharness" / "layers.json"
 MANIFEST = ROOT / "packages" / "manifest.json"
-AGENTS = ROOT / "AGENTS.md"
+AGENTS = ROOT / "packages" / "vfharness" / "AGENTS.md"
 ALLOWED_LAYER_NAMES = {
     "guides",
     "sensors",

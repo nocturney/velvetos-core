@@ -15,13 +15,17 @@ MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
 CLI = ROOT / "scripts/vf_project_preflight.py"
 FRICTION_BASELINE = ROOT / "packages/velvetos/policy/reports/stage4a-friction-baseline.json"
 FAST_PATH_REPORT = ROOT / "packages/velvetos/policy/reports/stage4b-project-request-fast-path.json"
+STAGE5A_BASELINE = ROOT / "packages/velvetos/policy/reports/stage5a-context-locality-baseline.json"
+STAGE5A_BASELINE_GENERATOR = ROOT / "scripts/generate-stage5a-context-locality-baseline.py"
+STAGE5A_REPORT = ROOT / "packages/velvetos/policy/reports/stage5a-context-locality.json"
+STAGE5A_GENERATOR = ROOT / "scripts/generate-stage5a-context-locality-report.py"
 
 
 def fail(msg: str) -> None:
     print(f"FAIL project-request-gate: {msg}", file=sys.stderr)
     raise SystemExit(1)
 
-for path in (GATE, MANIFEST, CLI, FRICTION_BASELINE, FAST_PATH_REPORT):
+for path in (GATE, MANIFEST, CLI, FRICTION_BASELINE, FAST_PATH_REPORT, STAGE5A_BASELINE, STAGE5A_BASELINE_GENERATOR, STAGE5A_REPORT, STAGE5A_GENERATOR):
     if not path.is_file():
         fail(f"missing {path.relative_to(ROOT)}")
 
@@ -78,6 +82,84 @@ for key, value in expected_stage4b_summary.items():
 if not all(row.get("pass") is True for row in stage4b_report.get("negative_controls") or []):
     fail("Stage 4B acceptance report contains a failed FULL-preflight negative control")
 
+stage5a_baseline = json.loads(STAGE5A_BASELINE.read_text(encoding="utf-8"))
+if stage5a_baseline.get("schema") != "velvetos.stage5a-context-locality-baseline.v1" or stage5a_baseline.get("stage") != "5A":
+    fail("Stage 5A baseline schema/stage mismatch")
+if stage5a_baseline.get("behavior_change") is not False or stage5a_baseline.get("prepared_against_main_sha") != "47f518e9b22bccd4b9fa43cc41336ce28ab701b2":
+    fail("Stage 5A baseline identity drift")
+if stage5a_baseline.get("source_ref") != "47f518e9b22bccd4b9fa43cc41336ce28ab701b2":
+    fail("Stage 5A baseline must be measured from the exact pre-5A Git ref")
+if stage5a_baseline.get("root_agents") != {"lines": 180, "words": 3521, "characters": 28419}:
+    fail("Stage 5A root baseline drift")
+if stage5a_baseline.get("root_domain_leakage_total") != 41 or stage5a_baseline.get("package_local_agents_count") != 0:
+    fail("Stage 5A leakage/local-guide baseline drift")
+if stage5a_baseline.get("check_scripts_referencing_agents_count") != 25:
+    fail("Stage 5A root-consumer baseline drift")
+with tempfile.TemporaryDirectory(prefix="stage5a-baseline-") as td:
+    regenerated_baseline = Path(td) / "baseline.json"
+    proc = subprocess.run(
+        [
+            sys.executable, str(STAGE5A_BASELINE_GENERATOR),
+            "--prepared-against", stage5a_baseline["prepared_against_main_sha"],
+            "--source-ref", stage5a_baseline["source_ref"],
+            "--captured-at", stage5a_baseline["captured_at"],
+            "--output", str(regenerated_baseline),
+        ],
+        cwd=ROOT, text=True, capture_output=True, encoding="utf-8", errors="replace", timeout=90,
+    )
+    if proc.returncode != 0:
+        fail("Stage 5A baseline regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()))
+    if regenerated_baseline.read_bytes() != STAGE5A_BASELINE.read_bytes():
+        fail("Stage 5A baseline is not reproducible from the pinned Git ref")
+
+stage5a = json.loads(STAGE5A_REPORT.read_text(encoding="utf-8"))
+if stage5a.get("schema") != "velvetos.stage5a-context-locality.v1" or stage5a.get("stage") != "5A":
+    fail("Stage 5A acceptance schema/stage mismatch")
+if stage5a.get("behavior_change") is not True or stage5a.get("prepared_against_main_sha") != "47f518e9b22bccd4b9fa43cc41336ce28ab701b2":
+    fail("Stage 5A acceptance base/behavior drift")
+if stage5a.get("repository_acceptance") != "PASS":
+    fail("Stage 5A repository acceptance is not PASS")
+after5 = stage5a.get("after") or {}
+if (after5.get("root_agents") or {}).get("lines") != 56 or (after5.get("root_agents") or {}).get("words") != 453:
+    fail("Stage 5A historical root reduction snapshot drift")
+if after5.get("root_domain_leakage_total") != 0 or after5.get("package_local_agents_count") != 18:
+    fail("Stage 5A historical locality snapshot drift")
+if after5.get("root_word_reduction_percent") != 87.1:
+    fail("Stage 5A root word-reduction snapshot drift")
+locality5 = stage5a.get("instruction_locality") or {}
+if locality5.get("domain_count") != 10 or locality5.get("all_domains_have_exactly_one_primary_guide") is not True or locality5.get("all_domain_receipts_pass") is not True:
+    fail("Stage 5A locality acceptance drift")
+negative5 = stage5a.get("negative_controls") or {}
+if negative5.get("system_engineering_loads_only_root_plus_core") is not True or negative5.get("unknown_domain_root_only_full_blocked") is not True or negative5.get("unrelated_specialist_guides_in_system_receipt") != []:
+    fail("Stage 5A negative-control drift")
+auth5 = stage5a.get("authorization_semantics") or {}
+if auth5.get("external_effect_authority_registry_unchanged") is not True or auth5.get("local_guides_are_authority") is not False or auth5.get("project_request_remains_router_only") is not True:
+    fail("Stage 5A authorization-semantics snapshot drift")
+with tempfile.TemporaryDirectory(prefix="stage5a-acceptance-") as td:
+    regenerated_report = Path(td) / "stage5a.json"
+    proc = subprocess.run(
+        [
+            sys.executable, str(STAGE5A_GENERATOR),
+            "--prepared-against", stage5a["prepared_against_main_sha"],
+            "--captured-at", stage5a["captured_at"],
+            "--output", str(regenerated_report),
+        ],
+        cwd=ROOT, text=True, capture_output=True, encoding="utf-8", errors="replace", timeout=90,
+    )
+    if proc.returncode != 0:
+        fail("Stage 5A acceptance regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()))
+    if regenerated_report.read_bytes() != STAGE5A_REPORT.read_bytes():
+        fail("Stage 5A acceptance report is not reproducible")
+
+root_agents_text = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+root_lines = len(root_agents_text.splitlines())
+root_words = len(root_agents_text.split())
+if root_lines > 80 or root_words > 1200:
+    fail(f"Stage 5A root context budget exceeded: {root_lines} lines / {root_words} words")
+for marker in ("REFERENCE_STUDIO:", "Sderot", "050-2517000", "PUBLIC_CURRENT_CTA", "VF_PUBLICATION_ROUTE_V1", "CREATIVE-TRANSFORMATION-LOCK.md", "BRAND-ASSET-LOCK.md", "PUBLICATION-PREP-EXECUTION.md", "FABRICATION-ROUTER.md", "Grok Bot quota failover", "LIVE-PACKET", "ORGANIC_GROWTH.md", "Instagram", "Gmail", "WhatsApp"):
+    if marker in root_agents_text:
+        fail(f"Stage 5A root domain leakage returned: {marker}")
+
 manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
 if manifest.get("status") != "mandatory" or manifest.get("preflightMode") != "fail_closed":
     fail("manifest is not mandatory fail-closed")
@@ -124,9 +206,33 @@ for domain, profile in fast_profiles.items():
     for rel in profile.get("authorities") or []:
         if not (ROOT / rel).is_file():
             fail(f"Stage 4B fastPath profile authority missing: {domain}:{rel}")
-for field in ("request_scope", "preflight_mode", "full_preflight_triggers", "owner_surface"):
+for field in ("request_scope", "preflight_mode", "full_preflight_triggers", "owner_surface", "local_instructions"):
     if field not in set(manifest.get("requiredReceiptFields") or []):
-        fail(f"Stage 4B receipt field missing: {field}")
+        fail(f"Project Request receipt field missing: {field}")
+
+locality = manifest.get("instructionLocality") or {}
+if locality.get("status") != "active" or locality.get("mode") != "root_plus_selected_domain":
+    fail("Stage 5A instruction locality must be active root_plus_selected_domain")
+if locality.get("rootGuide") != "AGENTS.md" or locality.get("warehouseDefault") != "off":
+    fail("Stage 5A root guide / warehouse default drift")
+if locality.get("unknownDomain") != "root_only_full_preflight":
+    fail("Stage 5A unknown-domain locality drift")
+domain_guides = locality.get("domainGuides") or {}
+if set(domain_guides) != required_domains:
+    fail("Stage 5A instruction locality must cover exactly the 10 routed domains")
+for domain, guides in domain_guides.items():
+    if not isinstance(guides, list) or len(guides) != 1:
+        fail(f"Stage 5A domain {domain} must load exactly one primary local guide")
+    rel = guides[0]
+    if not isinstance(rel, str) or not rel.endswith("/AGENTS.md") or not (ROOT / rel).is_file():
+        fail(f"Stage 5A local guide missing/invalid: {domain}:{rel}")
+for needle in (
+    "load root guide plus selected domain guide only",
+    "do not preload unrelated domain guides or warehouse specialists",
+    "local guides provide instructions/evidence only and never become external-effect authorities",
+):
+    if needle not in (locality.get("rules") or []):
+        fail(f"Stage 5A instruction locality rule missing: {needle}")
 
 project_authority = ROOT / bundle["authority"]
 asset_manifest = ROOT / bundle["assetManifest"]
@@ -378,6 +484,9 @@ with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
         fail("malformed deniedTools did not fail closed")
 
 all_paths = list(manifest.get("baselineAuthorities", []))
+all_paths.append((manifest.get("instructionLocality") or {}).get("rootGuide", "AGENTS.md"))
+for guides in ((manifest.get("instructionLocality") or {}).get("domainGuides") or {}).values():
+    all_paths.extend(guides or [])
 for cfg in manifest["domains"].values():
     all_paths.extend(cfg.get("authorities", []))
 missing = sorted({p for p in all_paths if not (ROOT / p).is_file()})
@@ -393,6 +502,9 @@ for rel in ("AGENTS.md", "instances/velvet-factory/AGENTS.md", "instances/velvet
     body = (ROOT / rel).read_text(encoding="utf-8")
     if "PROJECT-REQUEST-GATE.md" not in body or "PROJECT-AUTHORITY-MANIFEST.json" not in body:
         fail(f"{rel} not bound to project request gate")
+expected_local_guide = {
+    domain: guides[0] for domain, guides in domain_guides.items()
+}
 for sample, expected in (
     ("תכין פוסט לפרסום", "creative_publication"),
     ("caption", "creative_publication"),
@@ -419,6 +531,36 @@ for sample, expected in (
         fail("creative request without exact production evidence must not authorize creative tools")
     if expected != "creative_publication" and receipt.get("creative_execution_authorized") is not False:
         fail("non-creative request must not accidentally authorize creative tools")
+    routed_domains = [d for d in receipt.get("request_domain", []) if d in expected_local_guide]
+    expected_local = ["AGENTS.md"] + list(dict.fromkeys(expected_local_guide[d] for d in routed_domains))
+    if receipt.get("local_instructions") != expected_local:
+        fail(f"Stage 5A locality mismatch for {sample}: expected {expected_local}, got {receipt.get('local_instructions')}")
+
+# Stage 5A negative control: core/system work must not preload creative/fabrication guides.
+system_proc = subprocess.run(
+    [sys.executable, str(CLI), "--domain", "system_engineering", "--text", "update VelvetOS core policy registry"],
+    cwd=ROOT, text=True, capture_output=True,
+)
+if system_proc.returncode != 0:
+    fail(f"system-engineering locality sample failed: {system_proc.stderr or system_proc.stdout}")
+system_receipt = json.loads(system_proc.stdout)
+if "system_engineering" not in system_receipt.get("request_domain", []):
+    fail("system-engineering locality sample did not route to system_engineering")
+if system_receipt.get("local_instructions") != ["AGENTS.md", "packages/velvetos/AGENTS.md"]:
+    fail(f"system-engineering locality should load root + Core guide only: {system_receipt.get('local_instructions')}")
+for forbidden_guide in ("packages/vfom/AGENTS.md", "packages/vfprod/AGENTS.md", "packages/vfharness/devtools/creative-craft/AGENTS.md"):
+    if forbidden_guide in system_receipt.get("local_instructions", []):
+        fail(f"system-engineering locality preloaded unrelated guide {forbidden_guide}")
+
+unknown_proc = subprocess.run(
+    [sys.executable, str(CLI), "--domain", "not-a-domain", "--text", "unknown route"],
+    cwd=ROOT, text=True, capture_output=True,
+)
+if unknown_proc.returncode != 2:
+    fail("unknown-domain locality control must fail closed")
+unknown_receipt = json.loads(unknown_proc.stdout)
+if unknown_receipt.get("local_instructions") != ["AGENTS.md"] or unknown_receipt.get("preflight_mode") != "FULL":
+    fail("unknown-domain locality must load root only and stay FULL")
 
 # Instagram drafting stays on production evidence; publish verbs alone own instagram_action.
 ig_draft = subprocess.run(

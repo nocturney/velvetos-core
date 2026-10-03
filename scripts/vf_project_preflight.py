@@ -12,7 +12,8 @@ import sys as _sys
 _sys.path.insert(0, str(Path(__file__).resolve().parent))
 from vf_project_bundle import resolve as _resolve_project_bundle  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[1]
+INSTRUCTION_ROOT = Path(__file__).resolve().parents[1]
+ROOT = INSTRUCTION_ROOT
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
 # Active bundle identity comes from PROJECT-AUTHORITY-MANIFEST.json (chatgptProjectBundle)
 # via vf_project_bundle; no revision literals here.
@@ -1001,6 +1002,16 @@ def required_skills_for_request(text: str, domains: list[str]) -> list[str]:
     return list(dict.fromkeys(skills))
 
 
+def local_instructions_for_domains(domains: list[str], manifest: dict) -> list[str]:
+    cfg = manifest.get("instructionLocality") or {}
+    root_guide = cfg.get("rootGuide") or "AGENTS.md"
+    guides = [root_guide]
+    domain_guides = cfg.get("domainGuides") or {}
+    for domain in domains:
+        guides.extend(domain_guides.get(domain) or [])
+    return list(dict.fromkeys(guides))
+
+
 def classify(text: str, manifest: dict) -> list[str]:
     probe = text.casefold()
     hits: list[str] = []
@@ -1097,6 +1108,7 @@ def main() -> int:
             "owner_surface": "true_blocker_only",
             "authority_manifest_version": manifest["schemaVersion"],
             "baseline_authority": "FAIL",
+            "local_instructions": local_instructions_for_domains([], manifest),
             "routed_packs": [],
             "required_skills": [],
             "required_sources": [],
@@ -1115,6 +1127,8 @@ def main() -> int:
         print(json.dumps(receipt, ensure_ascii=False, indent=2))
         return 2
 
+    local_instructions = local_instructions_for_domains(domains, manifest)
+    local_instruction_missing = [path for path in local_instructions if not (INSTRUCTION_ROOT / path).is_file()]
     request_scope, full_triggers = request_scope_and_triggers(request_text, domains, manifest)
     fast_candidate = fast_path_eligible(domains, request_scope, full_triggers, manifest)
     fast_profile_problems: list[str] = []
@@ -1153,7 +1167,9 @@ def main() -> int:
 
     creative = bool(set(domains) & {"creative_publication", "instagram_action"})
     binding_problems = [] if fast_candidate else project_binding_problems(creative=creative)
-    binding_problems = fast_profile_problems + binding_problems
+    binding_problems = fast_profile_problems + [
+        "local instruction unavailable: " + path for path in local_instruction_missing
+    ] + binding_problems
     if (missing or binding_problems) and "authority_conflict" not in full_triggers:
         full_triggers = list(dict.fromkeys(full_triggers + ["authority_conflict"]))
 
@@ -1167,6 +1183,7 @@ def main() -> int:
         "owner_surface": (manifest.get("fastPath") or {}).get("receiptVisibility", "internal_unless_true_blocker"),
         "authority_manifest_version": manifest["schemaVersion"],
         "baseline_authority": "FAIL" if initial_blocked else "PASS",
+        "local_instructions": local_instructions,
         "routed_packs": packs,
         "required_skills": required_skills_for_request(request_text, domains),
         "required_sources": authorities,

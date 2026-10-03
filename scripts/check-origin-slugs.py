@@ -13,7 +13,6 @@ PLAYBOOK = ROOT / "docs" / "ORIGIN-SLUGS.md"
 BACKUP = ROOT / "docs" / "BACKUP.md"
 README = ROOT / "README.md"
 PACK_README = ROOT / "packages" / "README.md"
-AGENTS = ROOT / "AGENTS.md"
 VENDOR = ROOT / "scripts" / "vendor-origin-packs.sh"
 DISCOVER = ROOT / "scripts" / "discover-origin-slugs.py"
 CATALOG = ROOT / "packages" / "vfmem" / "catalog.json"
@@ -56,7 +55,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (MANIFEST, PLAYBOOK, BACKUP, README, PACK_README, AGENTS, VENDOR, DISCOVER, CATALOG):
+    for path in (MANIFEST, PLAYBOOK, BACKUP, README, PACK_README, VENDOR, DISCOVER, CATALOG):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -88,12 +87,6 @@ def main() -> None:
     pack_readme = PACK_README.read_text(encoding="utf-8")
     if "ORIGIN-SLUGS.md" not in pack_readme:
         fail("packages/README.md must point to ORIGIN-SLUGS.md")
-
-    agents = AGENTS.read_text(encoding="utf-8")
-    if "check-origin-slugs.py" not in agents:
-        fail("AGENTS.md sensors must list check-origin-slugs.py")
-    if "Invented Origin slug" not in agents and "Origin slug" not in agents:
-        fail("AGENTS.md must record the Origin-slug anti-pattern")
 
     vendor = VENDOR.read_text(encoding="utf-8")
     if "SKIP $name: no Origin slug" not in vendor:

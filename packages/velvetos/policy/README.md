@@ -202,3 +202,15 @@ The gate is `PASS` on all eight integrated criteria:
 - The post-4G main full sensor suite passed 116/116.
 
 Stage 5 entry is therefore allowed. Constraint: do not build a second Agent Harness; reduce default context and capability loading to the smallest sufficient local authority while preserving deterministic routing and the Stage 4 safety boundaries.
+
+## Stage 5A — Context and Instruction Locality
+
+Stage 5A activates locality without adding a second Agent Harness, capability router or policy engine. The existing Project Request manifest remains the router; package-local `AGENTS.md` files are instruction surfaces only.
+
+- The historical pre-change snapshot is `reports/stage5a-context-locality-baseline.json`, pinned to `main` `47f518e9b22bccd4b9fa43cc41336ce28ab701b2`: root `AGENTS.md` was 180 lines / 3,521 words with 41 VF/domain leakage markers, zero package-local guides and 25 check-script couplings.
+- Root `AGENTS.md` is now Core-only: 56 lines / 453 words in the Stage 5A acceptance snapshot, an 87.1% word reduction. The 15 tracked VF/domain markers are all zero.
+- Eighteen package-local `AGENTS.md` guides now sit beside their owning capability/domain. They point to existing canonical law/SoT and cannot authorize external effects.
+- `PROJECT-AUTHORITY-MANIFEST.json#instructionLocality` maps all 10 routed domains to exactly one primary local guide. Runtime receipts expose `local_instructions`; known tasks load root plus the selected domain guide(s), while unknown domains load root only and remain `FULL`/blocked.
+- Warehouse loading defaults to `off`; Core/system-engineering negative control loads only `AGENTS.md` + `packages/velvetos/AGENTS.md`, with no Creative Craft, VF creative or fabrication guide preloaded.
+- Domain sensors were migrated from root-content assertions to their local guide / canonical registry. The policy registry SHA remains exactly equal to the Stage 4 acceptance hash, proving Stage 5A changed context loading rather than authorization semantics.
+- `reports/stage5a-context-locality.json` is reproducible byte-for-byte from the pinned snapshot. `check-project-request-gate.py` protects the historical Stage 5A result and continuing root/locality budgets separately so later Stage 5 work may improve locality without rewriting the baseline.

@@ -20,7 +20,7 @@ WATCH = PACK / "WATCHTOWER.md"
 SKILL = PACK / "SKILL.md"
 BRIEF = ROOT / "packages" / "vfops" / "BRIEF.md"
 SLOTS = ROOT / "packages" / "vfops" / "hq" / "BRIEF-SLOTS.md"
-AGENTS = ROOT / "AGENTS.md"
+AGENTS = PACK / "AGENTS.md"
 LAYERS = ROOT / "packages" / "vfharness" / "layers.json"
 EVENTS = ROOT / "packages" / "velvetos" / "schema" / "events.catalog.json"
 

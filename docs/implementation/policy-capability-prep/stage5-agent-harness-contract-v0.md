@@ -1,6 +1,6 @@
 # Stage 5 draft - Agent Harness and capability locality
 
-Status: **NON-NORMATIVE · NOT ACTIVE · ADOPTION DEFERRED TO STAGE 5**
+Status: **STAGE 5 ACTIVE · 5A CONTEXT LOCALITY IMPLEMENTED · LOOP/CAPABILITY WORK CONTINUES IN LATER STAGE 5 PRs**
 
 ## Purpose
 
@@ -42,6 +42,10 @@ Every consequential task must name and satisfy the canonical `policy_id` chosen 
 
 Stage 8 remains the final owner of Core/Instance placement. Stage 5 may establish locality mechanics but must not guess future instance facts.
 
+### Stage 5A implementation receipt
+
+Stage 5A implements only the locality mechanics above. Root `AGENTS.md` is now Core-only; domain instructions live next to their owning packages; `PROJECT-AUTHORITY-MANIFEST.json#instructionLocality` selects root + one primary guide per routed domain with warehouse default `off`. Baseline/acceptance evidence is pinned in `packages/velvetos/policy/reports/stage5a-context-locality-baseline.json` and `stage5a-context-locality.json`. The external-effect policy registry is hash-identical to the Stage 4 acceptance snapshot, so this locality change does not alter authorization semantics. Capability routing/loop evolution remains later Stage 5 work.
+
 ## Upstream elements intentionally not adopted
 
 - upstream per-domain committed harness manifests as a second source of capability truth;
@@ -73,3 +77,4 @@ Before Stage 5 adoption, rollback is deletion of this draft. After any future ad
 ## Entry gate
 
 Implementation may begin only after Stage 3 completes and the reform reaches Stage 5 through the Stage 4 gate. Until then this document is design input only.
+Stage 5 routing reference: `policy_id: project.request.preflight` remains router-only; no local guide or harness state can replace a destination effect-authority policy.

@@ -1,0 +1,216 @@
+{
+  "schema": "velvetos.stage5a-context-locality.v1",
+  "stage": "5A",
+  "behavior_change": true,
+  "prepared_against_main_sha": "47f518e9b22bccd4b9fa43cc41336ce28ab701b2",
+  "captured_at": "2026-10-03T21:41:34.6670149+03:00",
+  "baseline_receipt": "packages/velvetos/policy/reports/stage5a-context-locality-baseline.json",
+  "before": {
+    "root_agents": {
+      "lines": 180,
+      "words": 3521,
+      "characters": 28419
+    },
+    "root_domain_leakage_total": 41,
+    "package_local_agents_count": 0,
+    "check_scripts_referencing_agents_count": 25
+  },
+  "after": {
+    "root_agents": {
+      "lines": 56,
+      "words": 453,
+      "characters": 3823
+    },
+    "root_domain_leakage_marker_counts": {
+      "reference_studio": 0,
+      "sderot": 0,
+      "business_phone": 0,
+      "public_cta": 0,
+      "publication_route": 0,
+      "creative_transformation": 0,
+      "brand_asset_lock": 0,
+      "publication_prep": 0,
+      "fabrication_router": 0,
+      "grok_quota_failover": 0,
+      "live_packet": 0,
+      "organic_growth": 0,
+      "instagram": 0,
+      "gmail": 0,
+      "whatsapp": 0
+    },
+    "root_domain_leakage_total": 0,
+    "package_local_agents_count": 18,
+    "package_local_agents": [
+      "packages/velvetos/AGENTS.md",
+      "packages/velvetos/living-studio/AGENTS.md",
+      "packages/velvetos_control_api/AGENTS.md",
+      "packages/vfbiz/AGENTS.md",
+      "packages/vfbooks/AGENTS.md",
+      "packages/vfcopy/AGENTS.md",
+      "packages/vfcost/AGENTS.md",
+      "packages/vfgrowth/AGENTS.md",
+      "packages/vfharness/AGENTS.md",
+      "packages/vfharness/devtools/creative-craft/AGENTS.md",
+      "packages/vfharness/devtools/creative-tools/AGENTS.md",
+      "packages/vfigos/AGENTS.md",
+      "packages/vfmedia/AGENTS.md",
+      "packages/vfom/AGENTS.md",
+      "packages/vfops/AGENTS.md",
+      "packages/vfprod/AGENTS.md",
+      "packages/vfresearch/AGENTS.md",
+      "packages/vfsales/AGENTS.md"
+    ],
+    "root_word_reduction_percent": 87.1
+  },
+  "instruction_locality": {
+    "mode": "root_plus_selected_domain",
+    "warehouse_default": "off",
+    "domain_count": 10,
+    "all_domains_have_exactly_one_primary_guide": true,
+    "domain_results": {
+      "copywriting": {
+        "return_code": 0,
+        "expected_local_instructions": [
+          "AGENTS.md",
+          "packages/vfcopy/AGENTS.md"
+        ],
+        "actual_local_instructions": [
+          "AGENTS.md",
+          "packages/vfcopy/AGENTS.md"
+        ],
+        "pass": true
+      },
+      "creative_publication": {
+        "return_code": 2,
+        "expected_local_instructions": [
+          "AGENTS.md",
+          "packages/vfom/AGENTS.md"
+        ],
+        "actual_local_instructions": [
+          "AGENTS.md",
+          "packages/vfom/AGENTS.md"
+        ],
+        "pass": true
+      },
+      "finance": {
+        "return_code": 0,
+        "expected_local_instructions": [
+          "AGENTS.md",
+          "packages/vfbooks/AGENTS.md"
+        ],
+        "actual_local_instructions": [
+          "AGENTS.md",
+          "packages/vfbooks/AGENTS.md"
+        ],
+        "pass": true
+      },
+      "general_business": {
+        "return_code": 0,
+        "expected_local_instructions": [
+          "AGENTS.md",
+          "packages/vfbiz/AGENTS.md"
+        ],
+        "actual_local_instructions": [
+          "AGENTS.md",
+          "packages/vfbiz/AGENTS.md"
+        ],
+        "pass": true
+      },
+      "instagram_action": {
+        "return_code": 2,
+        "expected_local_instructions": [
+          "AGENTS.md",
+          "packages/vfigos/AGENTS.md"
+        ],
+        "actual_local_instructions": [
+          "AGENTS.md",
+          "packages/vfigos/AGENTS.md"
+        ],
+        "pass": true
+      },
+      "operations": {
+        "return_code": 0,
+        "expected_local_instructions": [
+          "AGENTS.md",
+          "packages/vfops/AGENTS.md"
+        ],
+        "actual_local_instructions": [
+          "AGENTS.md",
+          "packages/vfops/AGENTS.md"
+        ],
+        "pass": true
+      },
+      "production": {
+        "return_code": 0,
+        "expected_local_instructions": [
+          "AGENTS.md",
+          "packages/vfprod/AGENTS.md"
+        ],
+        "actual_local_instructions": [
+          "AGENTS.md",
+          "packages/vfprod/AGENTS.md"
+        ],
+        "pass": true
+      },
+      "research": {
+        "return_code": 0,
+        "expected_local_instructions": [
+          "AGENTS.md",
+          "packages/vfresearch/AGENTS.md"
+        ],
+        "actual_local_instructions": [
+          "AGENTS.md",
+          "packages/vfresearch/AGENTS.md"
+        ],
+        "pass": true
+      },
+      "sales_conversion": {
+        "return_code": 0,
+        "expected_local_instructions": [
+          "AGENTS.md",
+          "packages/vfsales/AGENTS.md"
+        ],
+        "actual_local_instructions": [
+          "AGENTS.md",
+          "packages/vfsales/AGENTS.md"
+        ],
+        "pass": true
+      },
+      "system_engineering": {
+        "return_code": 0,
+        "expected_local_instructions": [
+          "AGENTS.md",
+          "packages/velvetos/AGENTS.md"
+        ],
+        "actual_local_instructions": [
+          "AGENTS.md",
+          "packages/velvetos/AGENTS.md"
+        ],
+        "pass": true
+      }
+    },
+    "all_domain_receipts_pass": true
+  },
+  "negative_controls": {
+    "system_engineering_loads_only_root_plus_core": true,
+    "unknown_domain_root_only_full_blocked": true,
+    "unrelated_specialist_guides_in_system_receipt": []
+  },
+  "authorization_semantics": {
+    "stage4_policy_registry_sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8",
+    "current_policy_registry_sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8",
+    "external_effect_authority_registry_unchanged": true,
+    "local_guides_are_authority": false,
+    "project_request_remains_router_only": true
+  },
+  "targets": {
+    "root_max_lines": 80,
+    "root_max_words": 1200,
+    "root_vf_business_fact_markers": 0,
+    "package_local_agents_minimum": 6,
+    "core_system_task_loads_vf_creative_or_printer_context": false,
+    "known_task_loads_only_nearest_local_instructions": true,
+    "authorization_semantics_change": false
+  },
+  "repository_acceptance": "PASS"
+}

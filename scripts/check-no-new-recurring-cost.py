@@ -14,7 +14,7 @@ CONTRACT = ROOT / "packages" / "vfharness" / "cost-policy.json"
 TEMPLATE = ROOT / "packages" / "vfharness" / "cost-preflight" / "TEMPLATE.json"
 README = ROOT / "packages" / "vfharness" / "cost-preflight" / "README.md"
 CLI = ROOT / "scripts" / "vf_cost_preflight.py"
-AGENTS = ROOT / "AGENTS.md"
+AGENTS = ROOT / "AGENTS.md"  # global NO_NEW_RECURRING_COST pointer only
 CONSTITUTION = ROOT / "constitution" / "CONSTITUTION.md"
 ORCHESTRA = ROOT / "constitution" / "ORCHESTRA.md"
 OFFICE_POLICY = ROOT / "office" / "control" / "POLICY.md"
@@ -299,9 +299,6 @@ def main() -> None:
     scripts = {r.get("script") for r in layers.get("sensors", [])}
     if "scripts/check-no-new-recurring-cost.py" not in scripts:
         fail("layers.json must register cost policy sensor")
-
-    if "check-no-new-recurring-cost.py" not in AGENTS.read_text(encoding="utf-8"):
-        fail("AGENTS sensors table must list cost policy sensor")
 
     print("OK NO_NEW_RECURRING_COST canonical + fail-closed cost preflight")
 

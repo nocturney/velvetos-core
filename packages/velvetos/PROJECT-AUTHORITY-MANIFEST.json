@@ -95,6 +95,7 @@
     "owner_surface",
     "authority_manifest_version",
     "baseline_authority",
+    "local_instructions",
     "routed_packs",
     "required_skills",
     "required_sources",
@@ -460,5 +461,50 @@
     "offlineCreativePublicationFallback": true,
     "offlineRepoStateLabel": "UNAVAILABLE_PROJECT_BUNDLE_FALLBACK",
     "referenceSeparation": "AESTHETIC_REFERENCES_ONLY_FOR_STYLE; PRODUCT_TRUTH=SOURCE_PIXELS_PLUS_TEXT_GUIDE"
+  },
+  "instructionLocality": {
+    "status": "active",
+    "mode": "root_plus_selected_domain",
+    "rootGuide": "AGENTS.md",
+    "warehouseDefault": "off",
+    "unknownDomain": "root_only_full_preflight",
+    "domainGuides": {
+      "creative_publication": [
+        "packages/vfom/AGENTS.md"
+      ],
+      "copywriting": [
+        "packages/vfcopy/AGENTS.md"
+      ],
+      "operations": [
+        "packages/vfops/AGENTS.md"
+      ],
+      "production": [
+        "packages/vfprod/AGENTS.md"
+      ],
+      "sales_conversion": [
+        "packages/vfsales/AGENTS.md"
+      ],
+      "finance": [
+        "packages/vfbooks/AGENTS.md"
+      ],
+      "research": [
+        "packages/vfresearch/AGENTS.md"
+      ],
+      "system_engineering": [
+        "packages/velvetos/AGENTS.md"
+      ],
+      "instagram_action": [
+        "packages/vfigos/AGENTS.md"
+      ],
+      "general_business": [
+        "packages/vfbiz/AGENTS.md"
+      ]
+    },
+    "rules": [
+      "load root guide plus selected domain guide only",
+      "do not preload unrelated domain guides or warehouse specialists",
+      "packs/skills/authorities remain routed by the existing manifest",
+      "local guides provide instructions/evidence only and never become external-effect authorities"
+    ]
   }
 }
