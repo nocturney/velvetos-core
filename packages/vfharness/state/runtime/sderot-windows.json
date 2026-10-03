@@ -1,17 +1,18 @@
 {
   "component_id": "sderot-windows",
-  "state": "healthy",
-  "observed_at": "2026-10-02T16:34:52+00:00",
+  "state": "degraded",
+  "observed_at": "2026-10-03T04:18:07+00:00",
   "evidence": {
     "source": "Grok Bot ListMachines + remote Shell probe",
     "machineId": "db0e4d78-3b27-46d9-8c2b-453049eb3933",
     "machineName": "Chris",
-    "status": "online",
-    "hostname": "Chris",
-    "localTimeObserved": "2026-10-02T19:34:52.7900514+03:00",
+    "status": "offline",
     "velvetRootPath": "D:\\Velvet",
-    "velvetRootPresent": true,
+    "velvetRootPresent": false,
     "probe": "hostname; Get-Date -Format o; Test-Path D:\\Velvet (read-only)",
+    "probeError": "Authorized Windows PC offline at ListMachines (connected=false); Grok Bot desktop app must be open and online to run remote Shell. Did not probe.",
+    "listMachinesConnected": false,
+    "note": "Authorized machineId offline at observation; did not probe other machineIds or Mac-Office.",
     "role": "documented Windows first-healthy fallback"
   }
 }
