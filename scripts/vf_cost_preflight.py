@@ -13,6 +13,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from vf_cost_envelope import evaluate_use as evaluate_envelope_use, parse_time as parse_envelope_time
+
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_POLICY = ROOT / "packages" / "vfharness" / "cost-policy.json"
 PLACEHOLDERS = {"", "UNKNOWN", "REPLACE_ME", "PENDING", "TODO", None}
@@ -170,18 +172,56 @@ def validate_document(doc: dict[str, Any], policy: dict[str, Any]) -> dict[str, 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--policy", type=Path, default=DEFAULT_POLICY)
-    parser.add_argument("arguments", nargs="+", help="PRECHECK.json or validate PRECHECK.json")
+    parser.add_argument("--at", help="offset-aware ISO-8601 time for envelope-use evaluation")
+    parser.add_argument("--allow-fixture-envelope", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("arguments", nargs="+", help="PRECHECK.json | validate PRECHECK.json | envelope-use ENVELOPE.json USE.json")
     args = parser.parse_args(argv)
-
-    if len(args.arguments) == 1:
-        preflight_path = Path(args.arguments[0])
-    elif len(args.arguments) == 2 and args.arguments[0] == "validate":
-        preflight_path = Path(args.arguments[1])
-    else:
-        parser.error("use: vf_cost_preflight.py [--policy POLICY] PRECHECK.json OR vf_cost_preflight.py validate PRECHECK.json")
 
     try:
         policy = load_policy(args.policy)
+        if len(args.arguments) == 3 and args.arguments[0] == "envelope-use":
+            envelope_path = Path(args.arguments[1]).resolve()
+            use_path = Path(args.arguments[2])
+            active_root = (ROOT / "packages/vfharness/cost-envelopes/active").resolve()
+            fixture_root = (ROOT / "packages/vfharness/cost-envelopes/fixtures").resolve()
+            try:
+                envelope_path.relative_to(active_root)
+                envelope_location = "active"
+            except ValueError:
+                try:
+                    envelope_path.relative_to(fixture_root)
+                    envelope_location = "fixture"
+                except ValueError:
+                    envelope_location = "invalid"
+            if envelope_location == "invalid":
+                raise ValueError("cost envelope must come from packages/vfharness/cost-envelopes/active")
+            if envelope_location == "fixture" and not args.allow_fixture_envelope:
+                raise ValueError("fixture cost envelope is test-only and cannot authorize production use")
+            envelope = load_json(envelope_path)
+            use = load_json(use_path)
+            at = parse_envelope_time(args.at) if args.at else None
+            if args.at and at is None:
+                raise ValueError("--at must be an offset-aware ISO-8601 timestamp")
+            result = evaluate_envelope_use(envelope, use, at=at)
+            if result.get("decision") == "ALLOW":
+                source_rel = (envelope.get("source_preflight") or {}).get("path")
+                source_path = (ROOT / str(source_rel)).resolve()
+                source_doc = load_json(source_path)
+                source_result = validate_document(source_doc, policy)
+                if source_doc.get("classification") != envelope.get("classification"):
+                    raise ValueError("cost envelope classification does not match source preflight")
+                result["source_preflight_status"] = source_result.get("status")
+                result["source_preflight_revalidated_locally"] = True
+            print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+            return 0 if result.get("decision") == "ALLOW" else 2
+
+        if len(args.arguments) == 1:
+            preflight_path = Path(args.arguments[0])
+        elif len(args.arguments) == 2 and args.arguments[0] == "validate":
+            preflight_path = Path(args.arguments[1])
+        else:
+            parser.error("use: vf_cost_preflight.py [--policy POLICY] PRECHECK.json | validate PRECHECK.json | envelope-use ENVELOPE.json USE.json")
+
         doc = load_json(preflight_path)
         result = validate_document(doc, policy)
     except Exception as exc:

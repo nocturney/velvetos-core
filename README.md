@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-03 — **Policy Reform v2 Stage 4F Runtime Receipt Scope:** separates `CODE_VALID`, `DEPLOYMENT_VALID` and `RUNTIME_HEALTHY`. GitHub event type no longer upgrades an unrelated PR/push/schedule/dispatch in…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-03 — **Policy Reform v2 Stage 4F Runtime Receipt Scope:** separates `CODE_VALID`, `DEPLOYMENT_VALID` and `RUNTIME_HEALTHY`. GitHub event type no longer upgrades an unrelated PR/push/schedule/dispatch in…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-03 — **Policy Reform v2 Stage 4G bounded cost envelopes:** keeps `policy_id: cost.recurring.new` / `NO_NEW_RECURRING_COST` fail-closed by default while adding an owner-approved bounded envelope for repe…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-03 — **Policy Reform v2 Stage 4G bounded cost envelopes:** keeps `policy_id: cost.recurring.new` / `NO_NEW_RECURRING_COST` fail-closed by default while adding an owner-approved bounded envelope for repe…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>

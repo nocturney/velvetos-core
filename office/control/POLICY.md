@@ -14,6 +14,7 @@
 - תחזוקת handoff
 - רשימת פערים פנימית
 - תיקוני איכות שגרתיים
+- paid-capable call שתואם במדויק ל־owner-approved bounded cost envelope תקף, עם meter טרי + hard cap + exact-action receipt; אין owner prompt מחדש
 
 ## צהוב — לבצע + לדווח בבריף
 
@@ -35,7 +36,7 @@
 ## אדום — אישור כריסטיאן
 
 - רכישה / תשלום
-- כל עלות חדשה חוזרת / paid API call / billing-capable resource ללא אישור מפורש - `NO_NEW_RECURRING_COST`
+- כל עלות חדשה חוזרת / paid API call / billing-capable resource ללא אישור מפורש או bounded cost envelope תקף - `NO_NEW_RECURRING_COST`
 - שינוי מחיר
 - פעולה חיצונית הרסנית
 - הרשאת פרסום שדורשת בעלים
@@ -44,7 +45,7 @@
 - שינוי, הרחבה או ביטול הרשאת גישה/שיתוף חיצונית — `policy_id: external.permission.mutate`
 - התחייבות עסקית שלא מכוסה במדיניות
 - עלות חוזרת חדשה / מנוי / תוכנית / משאב בתשלום בלי אישור בעלים מפורש
-- קריאת API בתשלום, workload usage-based או billing-capable resource בלי cost preflight ואישור נדרש
+- קריאת API בתשלום, workload usage-based או billing-capable resource בלי cost preflight ואישור נדרש; envelope תקף נחשב אישור קודם רק בתוך provider/plan/billing/usage/scope/cap/expiry/overage המדויקים שלו
 - `COST_UNKNOWN` — כשהעלות, overage או incremental cost לא הוכחו
 
 ## משטח בעלים (read model)

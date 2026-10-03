@@ -1,0 +1,29 @@
+{
+  "schema": "velvetos.cost-envelope-use.v1",
+  "provider": "fixture-provider",
+  "product_or_plan": "fixture-plan-v1",
+  "billing_model": "usage-based",
+  "usage_model": "requests",
+  "component": "fixture-component",
+  "environment": "test-fixture",
+  "action": "generate",
+  "cap_snapshot": {
+    "amount": 10.0,
+    "currency": "ILS",
+    "period": "fixture-total",
+    "hard_cap_enforced": true
+  },
+  "overage_snapshot": {
+    "behavior": "BLOCK_AT_CAP",
+    "automatic_paid_overage_allowed": false
+  },
+  "meter": {
+    "spent_before_ils": 2.0,
+    "projected_incremental_cost_ils": 1.0,
+    "currency": "ILS",
+    "period": "fixture-total",
+    "hard_cap_enforced": true,
+    "checked_at": "2030-01-01T10:29:00Z",
+    "evidence_ref": "fixture://billing-meter/stage4g"
+  }
+}

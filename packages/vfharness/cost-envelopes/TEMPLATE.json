@@ -1,0 +1,36 @@
+{
+  "schema": "velvetos.cost-envelope.v1",
+  "envelope_id": "REPLACE_ME",
+  "policy_id": "cost.recurring.new",
+  "classification": "PAID_REQUIRED",
+  "provider": "REPLACE_ME",
+  "product_or_plan": "REPLACE_ME",
+  "billing_model": "REPLACE_ME",
+  "usage_model": "REPLACE_ME",
+  "scope": {
+    "component": "REPLACE_ME",
+    "environment": "REPLACE_ME",
+    "actions": ["REPLACE_ME"]
+  },
+  "cap": {
+    "amount": 0,
+    "currency": "ILS",
+    "period": "REPLACE_ME",
+    "hard_cap_enforced": true
+  },
+  "overage": {
+    "behavior": "BLOCK_AT_CAP",
+    "automatic_paid_overage_allowed": false
+  },
+  "meter_max_age_seconds": 3600,
+  "source_preflight": {
+    "path": "REPLACE_ME",
+    "sha256": "REPLACE_ME"
+  },
+  "approval": {
+    "approved_by": "REPLACE_ME",
+    "approved_at": "REPLACE_ME",
+    "expires_at": "REPLACE_ME",
+    "approval_ref": "REPLACE_ME"
+  }
+}

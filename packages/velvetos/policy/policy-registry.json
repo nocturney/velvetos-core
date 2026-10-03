@@ -12,7 +12,8 @@
         "constitution/NO_NEW_RECURRING_COST.md"
       ],
       "machine_policy_locations": [
-        "packages/vfharness/cost-policy.json"
+        "packages/vfharness/cost-policy.json",
+        "packages/velvetos/policy/schema/cost-envelope.schema.json"
       ],
       "enforced_by": [
         {

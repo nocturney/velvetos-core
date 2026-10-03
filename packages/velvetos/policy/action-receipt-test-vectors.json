@@ -464,6 +464,160 @@
         "gate": "PASS",
         "reason_codes": []
       }
+    },
+    {
+      "id": "cost-envelope-exact-action-valid",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/policy_id",
+          "value": "cost.recurring.new"
+        },
+        {
+          "op": "replace",
+          "path": "/effect_class",
+          "value": "recurring_cost_commitment"
+        },
+        {
+          "op": "replace",
+          "path": "/action",
+          "value": {
+            "action_type": "paid_capable_call",
+            "scope": "fixture-envelope-stage4g",
+            "commitment": true,
+            "subject_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        },
+        {
+          "op": "replace",
+          "path": "/exact_binding",
+          "value": {
+            "artifact_sha256": null,
+            "payload_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "text_sha256": null,
+            "target_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "media_sha256": []
+          }
+        },
+        {
+          "op": "replace",
+          "path": "/owner_gate",
+          "value": {
+            "required": false,
+            "reviewer": null,
+            "decision": "NOT_REQUIRED",
+            "reviewed_at": null,
+            "expires_at": null,
+            "blocker_ids": []
+          }
+        },
+        {
+          "op": "replace",
+          "path": "/evidence",
+          "value": [
+            {
+              "class": "cost_preflight",
+              "ref": "fixture://cost-envelope/source-preflight",
+              "status": "PASS"
+            },
+            {
+              "class": "provider_identity",
+              "ref": "fixture://provider/fixture-provider",
+              "status": "PASS"
+            },
+            {
+              "class": "billing_model",
+              "ref": "fixture://billing/usage-based",
+              "status": "PASS"
+            },
+            {
+              "class": "runtime_health",
+              "ref": "fixture://runtime/paid-call",
+              "status": "PASS"
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "gate": "PASS",
+        "reason_codes": []
+      }
+    },
+    {
+      "id": "cost-envelope-missing-exact-action-binding-blocked",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/policy_id",
+          "value": "cost.recurring.new"
+        },
+        {
+          "op": "replace",
+          "path": "/effect_class",
+          "value": "recurring_cost_commitment"
+        },
+        {
+          "op": "replace",
+          "path": "/action",
+          "value": {
+            "action_type": "paid_capable_call",
+            "scope": "fixture-envelope-stage4g",
+            "commitment": true,
+            "subject_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        },
+        {
+          "op": "replace",
+          "path": "/exact_binding",
+          "value": {}
+        },
+        {
+          "op": "replace",
+          "path": "/owner_gate",
+          "value": {
+            "required": false,
+            "reviewer": null,
+            "decision": "NOT_REQUIRED",
+            "reviewed_at": null,
+            "expires_at": null,
+            "blocker_ids": []
+          }
+        },
+        {
+          "op": "replace",
+          "path": "/evidence",
+          "value": [
+            {
+              "class": "cost_preflight",
+              "ref": "fixture://cost-envelope/source-preflight",
+              "status": "PASS"
+            },
+            {
+              "class": "provider_identity",
+              "ref": "fixture://provider/fixture-provider",
+              "status": "PASS"
+            },
+            {
+              "class": "billing_model",
+              "ref": "fixture://billing/usage-based",
+              "status": "PASS"
+            },
+            {
+              "class": "runtime_health",
+              "ref": "fixture://runtime/paid-call",
+              "status": "PASS"
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "EXACT_BINDING_REQUIRED"
+        ]
+      }
     }
   ]
 }

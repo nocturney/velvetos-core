@@ -1,0 +1,389 @@
+{
+  "schema": "velvetos.cost-envelope-test-vectors.v1",
+  "base_envelope": {
+    "schema": "velvetos.cost-envelope.v1",
+    "envelope_id": "fixture-envelope-stage4g",
+    "policy_id": "cost.recurring.new",
+    "classification": "PAID_REQUIRED",
+    "provider": "fixture-provider",
+    "product_or_plan": "fixture-plan-v1",
+    "billing_model": "usage-based",
+    "usage_model": "requests",
+    "scope": {
+      "component": "fixture-component",
+      "environment": "test-fixture",
+      "actions": ["generate", "embed"]
+    },
+    "cap": {
+      "amount": 10.0,
+      "currency": "ILS",
+      "period": "fixture-total",
+      "hard_cap_enforced": true
+    },
+    "overage": {
+      "behavior": "BLOCK_AT_CAP",
+      "automatic_paid_overage_allowed": false
+    },
+    "meter_max_age_seconds": 3600,
+    "source_preflight": {
+      "path": "packages/vfharness/cost-envelopes/fixtures/preflight.json",
+      "sha256": "4431bf92ab39f7b0ccab324e12e5b61734c155f7b0d1af048bfa10c176a465ef"
+    },
+    "approval": {
+      "approved_by": "TEST_FIXTURE_OWNER",
+      "approved_at": "2030-01-01T10:00:00Z",
+      "expires_at": "2030-01-01T11:00:00Z",
+      "approval_ref": "fixture://owner-approval/stage4g"
+    }
+  },
+  "base_use": {
+    "schema": "velvetos.cost-envelope-use.v1",
+    "provider": "fixture-provider",
+    "product_or_plan": "fixture-plan-v1",
+    "billing_model": "usage-based",
+    "usage_model": "requests",
+    "component": "fixture-component",
+    "environment": "test-fixture",
+    "action": "generate",
+    "cap_snapshot": {
+      "amount": 10.0,
+      "currency": "ILS",
+      "period": "fixture-total",
+      "hard_cap_enforced": true
+    },
+    "overage_snapshot": {
+      "behavior": "BLOCK_AT_CAP",
+      "automatic_paid_overage_allowed": false
+    },
+    "meter": {
+      "spent_before_ils": 2.0,
+      "projected_incremental_cost_ils": 1.0,
+      "currency": "ILS",
+      "period": "fixture-total",
+      "hard_cap_enforced": true,
+      "checked_at": "2030-01-01T10:29:00Z",
+      "evidence_ref": "fixture://billing-meter/stage4g"
+    }
+  },
+  "vectors": [
+    {
+      "id": "matching-call-no-repeat-approval",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [],
+      "expected": {
+        "decision": "ALLOW",
+        "reason_codes": [],
+        "owner_prompt_required": false,
+        "full_preflight_required": false,
+        "exact_action_receipt_required": true,
+        "authorization_basis": "BOUNDED_COST_ENVELOPE"
+      }
+    },
+    {
+      "id": "matching-call-exactly-at-cap",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [
+        {"op": "replace", "path": "/meter/spent_before_ils", "value": 9.0},
+        {"op": "replace", "path": "/meter/projected_incremental_cost_ils", "value": 1.0}
+      ],
+      "expected": {
+        "decision": "ALLOW",
+        "reason_codes": [],
+        "owner_prompt_required": false,
+        "full_preflight_required": false,
+        "exact_action_receipt_required": true,
+        "authorization_basis": "BOUNDED_COST_ENVELOPE"
+      }
+    },
+    {
+      "id": "expired-envelope-requires-revalidation",
+      "evaluation_time": "2030-01-01T11:01:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [
+        {"op": "replace", "path": "/meter/checked_at", "value": "2030-01-01T11:00:30Z"}
+      ],
+      "expected": {
+        "decision": "REQUIRE_OWNER_APPROVAL",
+        "reason_codes": ["ENVELOPE_EXPIRED"],
+        "owner_prompt_required": true,
+        "full_preflight_required": true,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "ENVELOPE_REVALIDATION_REQUIRED"
+      }
+    },
+    {
+      "id": "provider-change-invalidates",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [{"op": "replace", "path": "/provider", "value": "other-provider"}],
+      "expected": {
+        "decision": "REQUIRE_OWNER_APPROVAL",
+        "reason_codes": ["PROVIDER_CHANGED"],
+        "owner_prompt_required": true,
+        "full_preflight_required": true,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "ENVELOPE_REVALIDATION_REQUIRED"
+      }
+    },
+    {
+      "id": "plan-change-invalidates",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [{"op": "replace", "path": "/product_or_plan", "value": "fixture-plan-v2"}],
+      "expected": {
+        "decision": "REQUIRE_OWNER_APPROVAL",
+        "reason_codes": ["PLAN_CHANGED"],
+        "owner_prompt_required": true,
+        "full_preflight_required": true,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "ENVELOPE_REVALIDATION_REQUIRED"
+      }
+    },
+    {
+      "id": "billing-model-change-invalidates",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [{"op": "replace", "path": "/billing_model", "value": "subscription"}],
+      "expected": {
+        "decision": "REQUIRE_OWNER_APPROVAL",
+        "reason_codes": ["BILLING_MODEL_CHANGED"],
+        "owner_prompt_required": true,
+        "full_preflight_required": true,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "ENVELOPE_REVALIDATION_REQUIRED"
+      }
+    },
+    {
+      "id": "usage-model-change-invalidates",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [{"op": "replace", "path": "/usage_model", "value": "tokens"}],
+      "expected": {
+        "decision": "REQUIRE_OWNER_APPROVAL",
+        "reason_codes": ["USAGE_MODEL_CHANGED"],
+        "owner_prompt_required": true,
+        "full_preflight_required": true,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "ENVELOPE_REVALIDATION_REQUIRED"
+      }
+    },
+    {
+      "id": "action-scope-change-invalidates",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [{"op": "replace", "path": "/action", "value": "train"}],
+      "expected": {
+        "decision": "REQUIRE_OWNER_APPROVAL",
+        "reason_codes": ["ACTION_SCOPE_CHANGED"],
+        "owner_prompt_required": true,
+        "full_preflight_required": true,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "ENVELOPE_REVALIDATION_REQUIRED"
+      }
+    },
+    {
+      "id": "component-scope-change-invalidates",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [{"op": "replace", "path": "/component", "value": "other-component"}],
+      "expected": {
+        "decision": "REQUIRE_OWNER_APPROVAL",
+        "reason_codes": ["COMPONENT_SCOPE_CHANGED"],
+        "owner_prompt_required": true,
+        "full_preflight_required": true,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "ENVELOPE_REVALIDATION_REQUIRED"
+      }
+    },
+    {
+      "id": "environment-scope-change-invalidates",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [{"op": "replace", "path": "/environment", "value": "production"}],
+      "expected": {
+        "decision": "REQUIRE_OWNER_APPROVAL",
+        "reason_codes": ["ENVIRONMENT_SCOPE_CHANGED"],
+        "owner_prompt_required": true,
+        "full_preflight_required": true,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "ENVELOPE_REVALIDATION_REQUIRED"
+      }
+    },
+    {
+      "id": "cap-change-invalidates",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [{"op": "replace", "path": "/cap_snapshot/amount", "value": 20.0}],
+      "expected": {
+        "decision": "REQUIRE_OWNER_APPROVAL",
+        "reason_codes": ["CAP_CHANGED"],
+        "owner_prompt_required": true,
+        "full_preflight_required": true,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "ENVELOPE_REVALIDATION_REQUIRED"
+      }
+    },
+    {
+      "id": "auto-overage-change-invalidates",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [{"op": "replace", "path": "/overage_snapshot/automatic_paid_overage_allowed", "value": true}],
+      "expected": {
+        "decision": "REQUIRE_OWNER_APPROVAL",
+        "reason_codes": ["AUTO_OVERAGE_OR_BEHAVIOR_CHANGED"],
+        "owner_prompt_required": true,
+        "full_preflight_required": true,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "ENVELOPE_REVALIDATION_REQUIRED"
+      }
+    },
+    {
+      "id": "stale-meter-denied",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [{"op": "replace", "path": "/meter/checked_at", "value": "2030-01-01T09:00:00Z"}],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["METER_STALE"],
+        "owner_prompt_required": false,
+        "full_preflight_required": false,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    },
+    {
+      "id": "future-meter-denied",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [{"op": "replace", "path": "/meter/checked_at", "value": "2030-01-01T10:32:00Z"}],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["METER_FROM_FUTURE"],
+        "owner_prompt_required": false,
+        "full_preflight_required": false,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    },
+    {
+      "id": "aggregate-cap-exceeded-denied",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [
+        {"op": "replace", "path": "/meter/spent_before_ils", "value": 9.5},
+        {"op": "replace", "path": "/meter/projected_incremental_cost_ils", "value": 1.0}
+      ],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["COST_CAP_EXCEEDED"],
+        "owner_prompt_required": false,
+        "full_preflight_required": false,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "CAP_BLOCK"
+      }
+    },
+    {
+      "id": "meter-hard-cap-not-proven-denied",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [{"op": "replace", "path": "/meter/hard_cap_enforced", "value": false}],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["METER_HARD_CAP_NOT_PROVEN"],
+        "owner_prompt_required": false,
+        "full_preflight_required": false,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    },
+    {
+      "id": "source-preflight-hash-mismatch-denied",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [{"op": "replace", "path": "/source_preflight/sha256", "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}],
+      "use_patch_ops": [],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["SOURCE_PREFLIGHT_HASH_MISMATCH"],
+        "owner_prompt_required": false,
+        "full_preflight_required": false,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    },
+    {
+      "id": "unbounded-envelope-denied",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [{"op": "replace", "path": "/cap/hard_cap_enforced", "value": false}],
+      "use_patch_ops": [],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["HARD_CAP_REQUIRED"],
+        "owner_prompt_required": false,
+        "full_preflight_required": false,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    },
+    {
+      "id": "cost-unknown-cannot-be-enveloped",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [{"op": "replace", "path": "/classification", "value": "COST_UNKNOWN"}],
+      "use_patch_ops": [],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["ENVELOPE_CLASSIFICATION_INVALID"],
+        "owner_prompt_required": false,
+        "full_preflight_required": false,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    },
+    {
+      "id": "future-owner-approval-denied",
+      "evaluation_time": "2030-01-01T09:59:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [{"op": "replace", "path": "/meter/checked_at", "value": "2030-01-01T09:58:30Z"}],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["APPROVAL_FROM_FUTURE"],
+        "owner_prompt_required": false,
+        "full_preflight_required": false,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    },
+    {
+      "id": "meter-already-over-cap-denied",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [
+        {"op": "replace", "path": "/meter/spent_before_ils", "value": 11.0},
+        {"op": "replace", "path": "/meter/projected_incremental_cost_ils", "value": 0.0}
+      ],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["METER_ALREADY_OVER_CAP"],
+        "owner_prompt_required": false,
+        "full_preflight_required": false,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    },
+    {
+      "id": "missing-meter-evidence-denied",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "envelope_patch_ops": [],
+      "use_patch_ops": [{"op": "replace", "path": "/meter/evidence_ref", "value": ""}],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["METER_EVIDENCE_REQUIRED"],
+        "owner_prompt_required": false,
+        "full_preflight_required": false,
+        "exact_action_receipt_required": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    }
+  ]
+}

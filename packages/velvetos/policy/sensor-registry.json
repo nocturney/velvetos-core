@@ -940,10 +940,31 @@
       "id": "check-no-new-recurring-cost",
       "path": "scripts/check-no-new-recurring-cost.py",
       "owns": [
-        "scripts/**"
+        "scripts/**",
+        "constitution/NO_NEW_RECURRING_COST.md",
+        "packages/vfharness/cost-policy.json",
+        "packages/vfharness/cost-preflight/**",
+        "packages/vfharness/cost-envelopes/**",
+        "packages/velvetos/policy/schema/cost-envelope.schema.json",
+        "packages/velvetos/policy/cost-envelope-test-vectors.json",
+        "packages/velvetos/policy/action-receipt-test-vectors.json",
+        "scripts/vf_cost_preflight.py",
+        "scripts/vf_cost_envelope.py",
+        "scripts/generate-stage4g-cost-envelope-report.py",
+        "packages/velvetos/policy/reports/stage4g-cost-envelopes.json"
       ],
       "triggered_by": [
-        "scripts/**"
+        "scripts/**",
+        "constitution/NO_NEW_RECURRING_COST.md",
+        "packages/vfharness/cost-policy.json",
+        "packages/vfharness/cost-preflight/**",
+        "packages/vfharness/cost-envelopes/**",
+        "packages/velvetos/policy/schema/cost-envelope.schema.json",
+        "packages/velvetos/policy/cost-envelope-test-vectors.json",
+        "packages/velvetos/policy/action-receipt-test-vectors.json",
+        "scripts/vf_cost_envelope.py",
+        "scripts/generate-stage4g-cost-envelope-report.py",
+        "packages/velvetos/policy/reports/stage4g-cost-envelopes.json"
       ],
       "depends_on": [
         "scripts/vf_cost_preflight.py"

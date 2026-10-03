@@ -232,3 +232,26 @@ The machine contract may accept more than one preflight evidence shape, but the 
 A compact preflight must identify the component and action, carry current evidence and a check date, and state whether incremental cost, automatic paid overage, a hard cap, or paid optional features are possible/enabled. This compatibility exists to preserve existing evidence while integrating newer production routers; it does not weaken the policy.
 
 A monthly cost-drift review remains required for external or cloud-connected components. No silent cost escalation is permitted when changing provider, model tier, hosting mode, storage class, retention, concurrency, polling cadence, or scheduled frequency.
+
+## 23. Bounded Cost Envelopes
+
+`NO_NEW_RECURRING_COST` remains the default. A cost envelope is an explicit, bounded owner authorization **inside** this policy; it is not a second cost authority and it never creates permission by itself.
+
+A real envelope is valid only after a full cost preflight and explicit owner approval are bound to the exact:
+
+- provider;
+- product/plan;
+- billing model;
+- usage model;
+- component/environment/action scope;
+- aggregate ILS cap and cap period;
+- enforced hard-cap state;
+- automatic-overage flag and `BLOCK_AT_CAP` behavior;
+- approval and expiry timestamps;
+- exact source-preflight SHA-256 and approval reference.
+
+When all bindings still match and a fresh provider/billing usage meter proves that `spent_before + projected_incremental_cost <= cap`, a matching paid-capable call may proceed without repeating the full cost preflight or asking the owner again. The call still requires an exact-action receipt before the external paid effect and must retain provider/billing evidence.
+
+Any provider, plan, billing-model, usage-model, scope, cap, automatic-overage or overage-behavior change — or envelope expiry — invalidates the envelope and requires owner revalidation. A stale/missing usage meter, broken hard cap, over-cap meter, projected cap breach, unknown cost, missing source preflight, or mismatched source-preflight hash fails closed.
+
+`COST_UNKNOWN` cannot be authorized through an envelope. There is no emergency or implicit envelope. Stage 4G installs the framework only; it does not create an active spend envelope or approve any new cost.

@@ -1,0 +1,115 @@
+{
+  "schema": "velvetos.stage4g-cost-envelopes.v1",
+  "stage": "4G",
+  "prepared_against_main_sha": "f0df1c7ea28aad1cbaa9d4752bb84bc6035735d5",
+  "captured_at": "2026-10-03T20:50:08.8626584+03:00",
+  "policy_id": "cost.recurring.new",
+  "framework_only": true,
+  "active_envelope_count": 0,
+  "active_envelopes": [],
+  "spend_authorized_by_stage4g_implementation": false,
+  "external_paid_calls_performed": 0,
+  "default_policy": {
+    "no_new_recurring_cost": true,
+    "fail_closed": true,
+    "default_envelope_state": "NO_ACTIVE_ENVELOPE",
+    "cost_unknown_can_be_enveloped": false
+  },
+  "envelope_contract": {
+    "schema": "velvetos.cost-envelope.v1",
+    "single_decision_entrypoint": "scripts/vf_cost_preflight.py",
+    "helper": "scripts/vf_cost_envelope.py",
+    "allowed_classifications": [
+      "EXISTING_PAID_CAPABILITY",
+      "FREE_TIER_LIMITED",
+      "PAID_REQUIRED"
+    ],
+    "cap_currency": "ILS",
+    "overage_behavior": "BLOCK_AT_CAP",
+    "requires_hard_cap": true,
+    "requires_fresh_usage_meter": true,
+    "invalidates_on": [
+      "provider_change",
+      "plan_change",
+      "billing_model_change",
+      "usage_model_change",
+      "scope_change",
+      "cap_change",
+      "automatic_overage_change",
+      "overage_behavior_change",
+      "expiry"
+    ]
+  },
+  "matching_call": {
+    "owner_prompt_count": 0,
+    "full_preflight_per_call": false,
+    "exact_action_receipt_required": true,
+    "source_preflight_hash_bound": true,
+    "aggregate_cap_guard": "spent_before + projected_incremental_cost <= cap",
+    "matching_vectors_all_allow": true
+  },
+  "vector_summary": {
+    "count": 22,
+    "decision_counts": {
+      "ALLOW": 2,
+      "REQUIRE_OWNER_APPROVAL": 10,
+      "DENY": 10
+    },
+    "allow": 2,
+    "revalidation": 10,
+    "deny": 10
+  },
+  "action_receipt_contract": {
+    "policy_effect_receipt_mode": "EXACT_ACTION_REQUIRED",
+    "matching_call_owner_gate_repeated": false,
+    "valid_vector": "cost-envelope-exact-action-valid",
+    "missing_binding_vector": "cost-envelope-missing-exact-action-binding-blocked"
+  },
+  "tests": [
+    {
+      "command": "python scripts/vf_cost_envelope.py --self-test",
+      "return_code": 0,
+      "stdout_tail": [
+        "PASS future-meter-denied DENY FAIL_CLOSED",
+        "PASS aggregate-cap-exceeded-denied DENY CAP_BLOCK",
+        "PASS meter-hard-cap-not-proven-denied DENY FAIL_CLOSED",
+        "PASS source-preflight-hash-mismatch-denied DENY FAIL_CLOSED",
+        "PASS unbounded-envelope-denied DENY FAIL_CLOSED",
+        "PASS cost-unknown-cannot-be-enveloped DENY FAIL_CLOSED",
+        "PASS future-owner-approval-denied DENY FAIL_CLOSED",
+        "PASS meter-already-over-cap-denied DENY FAIL_CLOSED",
+        "PASS missing-meter-evidence-denied DENY FAIL_CLOSED",
+        "OK cost-envelope vectors=22 allow=2 revalidate=10 deny=10 matching_call_owner_prompts=0 full_preflight_per_call=NO"
+      ],
+      "stderr_tail": []
+    },
+    {
+      "command": "python scripts/vf_action_receipt.py --self-test",
+      "return_code": 0,
+      "stdout_tail": [
+        "OK action-receipt vectors=16 policy_decision_is_canonical=true"
+      ],
+      "stderr_tail": []
+    },
+    {
+      "command": "python scripts/vf_cost_preflight.py --allow-fixture-envelope --at 2030-01-01T10:30:00Z envelope-use packages/vfharness/cost-envelopes/fixtures/envelope.json packages/vfharness/cost-envelopes/fixtures/use.json",
+      "return_code": 0,
+      "stdout_tail": [
+        "{\"authorization_basis\": \"BOUNDED_COST_ENVELOPE\", \"decision\": \"ALLOW\", \"decision_ref\": \"cost.recurring.new:a18c14c5b57eb5c2aed4ef0ba6e608e3a0315f6bb2dac16ed5293a676562da43\", \"envelope_id\": \"fixture-envelope-stage4g\", \"exact_action_receipt_required\": true, \"full_preflight_required\": false, \"owner_prompt_required\": false, \"policy_id\": \"cost.recurring.new\", \"reason_codes\": [], \"remaining_after_ils\": 7.0, \"remaining_before_ils\": 8.0, \"schema\": \"velvetos.cost-envelope-decision.v1\", \"source_preflight_revalidated_locally\": true, \"source_preflight_status\": \"PASS\"}"
+      ],
+      "stderr_tail": []
+    }
+  ],
+  "negative_controls": {
+    "fixture_rejected_by_production_entrypoint": true,
+    "fixture_rejection": {
+      "command": "python scripts/vf_cost_preflight.py --at 2030-01-01T10:30:00Z envelope-use packages/vfharness/cost-envelopes/fixtures/envelope.json packages/vfharness/cost-envelopes/fixtures/use.json",
+      "return_code": 2,
+      "stdout_tail": [],
+      "stderr_tail": [
+        "FAIL fixture cost envelope is test-only and cannot authorize production use"
+      ]
+    }
+  },
+  "repository_acceptance": "PASS"
+}
