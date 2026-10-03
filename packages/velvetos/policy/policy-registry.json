@@ -23,7 +23,8 @@
           "kind": "runtime",
           "path": "scripts/vf_cost_preflight.py"
         }
-      ]
+      ],
+      "policy_role": "effect_authority"
     },
     {
       "policy_id": "instagram.publish",
@@ -66,7 +67,8 @@
           "kind": "runtime",
           "path": "scripts/vf_autonomy.py"
         }
-      ]
+      ],
+      "policy_role": "effect_authority"
     },
     {
       "policy_id": "gmail.send",
@@ -86,7 +88,8 @@
           "kind": "sensor",
           "id": "check-visible-text-gate"
         }
-      ]
+      ],
+      "policy_role": "effect_authority"
     },
     {
       "policy_id": "customer.whatsapp.send",
@@ -114,7 +117,8 @@
           "kind": "sensor",
           "id": "check-vf-desk"
         }
-      ]
+      ],
+      "policy_role": "effect_authority"
     },
     {
       "policy_id": "advertising.boost",
@@ -135,13 +139,34 @@
           "kind": "sensor",
           "id": "check-risk-policy"
         }
-      ]
+      ],
+      "policy_role": "effect_authority"
     },
     {
       "policy_id": "external.irreversible.delete",
       "title": "Irreversible external deletion",
       "status": "active",
       "risk_class": "critical",
+      "authority_locations": [
+        "office/control/POLICY.md"
+      ],
+      "machine_policy_locations": [
+        "packages/vfops/risk-policy.json"
+      ],
+      "enforced_by": [
+        {
+          "kind": "sensor",
+          "id": "check-risk-policy"
+        }
+      ],
+      "policy_role": "effect_authority"
+    },
+    {
+      "policy_id": "external.permission.mutate",
+      "title": "External permission mutation",
+      "status": "active",
+      "risk_class": "critical",
+      "policy_role": "effect_authority",
       "authority_locations": [
         "office/control/POLICY.md"
       ],
@@ -174,7 +199,8 @@
           "kind": "sensor",
           "id": "check-soft-tools-pipeline"
         }
-      ]
+      ],
+      "policy_role": "evidence_input"
     },
     {
       "policy_id": "public.cta",
@@ -192,7 +218,8 @@
           "kind": "sensor",
           "id": "check-public-cta"
         }
-      ]
+      ],
+      "policy_role": "evidence_input"
     },
     {
       "policy_id": "project.request.preflight",
@@ -211,7 +238,8 @@
           "kind": "sensor",
           "id": "check-project-request-gate"
         }
-      ]
+      ],
+      "policy_role": "router"
     },
     {
       "policy_id": "repository.agent_surface.secrets",
@@ -227,7 +255,8 @@
           "kind": "sensor",
           "id": "check-agent-surface-security"
         }
-      ]
+      ],
+      "policy_role": "repository_guard"
     },
     {
       "policy_id": "office.owner_escalation",
@@ -245,7 +274,179 @@
           "kind": "sensor",
           "id": "check-risk-policy"
         }
-      ]
+      ],
+      "policy_role": "escalation_boundary"
     }
-  ]
+  ],
+  "external_effect_contract": {
+    "contract_version": 1,
+    "single_authority_per_effect": true,
+    "normalized_decision_vocabulary": [
+      "ALLOW",
+      "DENY",
+      "REQUIRE_OWNER_APPROVAL"
+    ],
+    "action_receipt_schema": "packages/velvetos/policy/schema/action-receipt.schema.json",
+    "action_receipt_validator": "scripts/vf_action_receipt.py",
+    "evidence_input_classes": [
+      {
+        "id": "brand",
+        "can_authorize_external_effect": false
+      },
+      {
+        "id": "product_truth",
+        "can_authorize_external_effect": false
+      },
+      {
+        "id": "visible_text",
+        "can_authorize_external_effect": false
+      },
+      {
+        "id": "transport",
+        "can_authorize_external_effect": false
+      },
+      {
+        "id": "qa",
+        "can_authorize_external_effect": false
+      },
+      {
+        "id": "runtime_health",
+        "can_authorize_external_effect": false
+      },
+      {
+        "id": "rights_privacy",
+        "can_authorize_external_effect": false
+      },
+      {
+        "id": "facts",
+        "can_authorize_external_effect": false
+      },
+      {
+        "id": "target_identity",
+        "can_authorize_external_effect": false
+      },
+      {
+        "id": "cost_preflight",
+        "can_authorize_external_effect": false
+      },
+      {
+        "id": "provider_identity",
+        "can_authorize_external_effect": false
+      },
+      {
+        "id": "billing_model",
+        "can_authorize_external_effect": false
+      }
+    ],
+    "effects": [
+      {
+        "effect_class": "recurring_cost_commitment",
+        "policy_id": "cost.recurring.new",
+        "decision_authority": {
+          "kind": "runtime_boundary",
+          "path": "scripts/vf_cost_preflight.py"
+        },
+        "receipt_mode": "EXACT_ACTION_REQUIRED",
+        "evidence_inputs": [
+          "cost_preflight",
+          "provider_identity",
+          "billing_model",
+          "runtime_health"
+        ]
+      },
+      {
+        "effect_class": "instagram_publication",
+        "policy_id": "instagram.publish",
+        "decision_authority": {
+          "kind": "runtime_evaluator",
+          "path": "packages/velvetos/policy/instagram-publish-evaluator.mjs"
+        },
+        "receipt_mode": "POLICY_NATIVE_RECEIPT",
+        "evidence_inputs": [
+          "brand",
+          "product_truth",
+          "visible_text",
+          "transport",
+          "qa",
+          "runtime_health",
+          "rights_privacy"
+        ]
+      },
+      {
+        "effect_class": "gmail_external_send",
+        "policy_id": "gmail.send",
+        "decision_authority": {
+          "kind": "canonical_policy_boundary",
+          "path": "constitution/SEND.md"
+        },
+        "receipt_mode": "EXACT_ACTION_ON_COMMITMENT",
+        "evidence_inputs": [
+          "facts",
+          "visible_text",
+          "transport",
+          "runtime_health",
+          "rights_privacy"
+        ]
+      },
+      {
+        "effect_class": "customer_whatsapp_send",
+        "policy_id": "customer.whatsapp.send",
+        "decision_authority": {
+          "kind": "canonical_policy_boundary",
+          "path": "constitution/SEND.md"
+        },
+        "receipt_mode": "OWNER_RESERVED",
+        "evidence_inputs": [
+          "facts",
+          "visible_text",
+          "runtime_health",
+          "rights_privacy"
+        ]
+      },
+      {
+        "effect_class": "paid_advertising",
+        "policy_id": "advertising.boost",
+        "decision_authority": {
+          "kind": "canonical_policy_boundary",
+          "path": "office/control/POLICY.md"
+        },
+        "receipt_mode": "EXACT_ACTION_REQUIRED",
+        "evidence_inputs": [
+          "facts",
+          "qa",
+          "runtime_health",
+          "rights_privacy",
+          "cost_preflight"
+        ]
+      },
+      {
+        "effect_class": "irreversible_external_delete",
+        "policy_id": "external.irreversible.delete",
+        "decision_authority": {
+          "kind": "canonical_policy_boundary",
+          "path": "office/control/POLICY.md"
+        },
+        "receipt_mode": "EXACT_ACTION_REQUIRED",
+        "evidence_inputs": [
+          "target_identity",
+          "runtime_health",
+          "rights_privacy"
+        ]
+      },
+      {
+        "effect_class": "external_permission_mutation",
+        "policy_id": "external.permission.mutate",
+        "decision_authority": {
+          "kind": "canonical_policy_boundary",
+          "path": "office/control/POLICY.md"
+        },
+        "receipt_mode": "EXACT_ACTION_REQUIRED",
+        "evidence_inputs": [
+          "target_identity",
+          "runtime_health",
+          "rights_privacy"
+        ]
+      }
+    ]
+  }
 }

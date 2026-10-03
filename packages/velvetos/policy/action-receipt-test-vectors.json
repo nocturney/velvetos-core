@@ -1,0 +1,251 @@
+{
+  "schema": "velvetos.action-receipt-test-vectors.v1",
+  "status": "ACTIVE_STAGE4C_CONTRACT",
+  "base_receipt": {
+    "schema_version": "velvetos.action-receipt.v1",
+    "receipt_id": "fixture-delete-exact-action",
+    "policy_id": "external.irreversible.delete",
+    "effect_class": "irreversible_external_delete",
+    "action": {
+      "action_type": "delete_external_resource",
+      "scope": "exact_resource",
+      "commitment": true,
+      "subject_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "exact_binding": {
+      "artifact_sha256": null,
+      "payload_sha256": null,
+      "text_sha256": null,
+      "target_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "media_sha256": []
+    },
+    "policy_decision": {
+      "decision_ref": "fixture-policy-decision",
+      "outcome": "ALLOW",
+      "decided_at": "2030-01-01T10:00:00Z"
+    },
+    "owner_gate": {
+      "required": true,
+      "reviewer": "owner",
+      "decision": "APPROVED",
+      "reviewed_at": "2030-01-01T10:01:00Z",
+      "expires_at": "2030-01-01T11:00:00Z",
+      "blocker_ids": []
+    },
+    "evidence": [
+      {
+        "class": "target_identity",
+        "ref": "fixture://target/a",
+        "status": "PASS"
+      },
+      {
+        "class": "runtime_health",
+        "ref": "fixture://runtime/delete-adapter",
+        "status": "PASS"
+      }
+    ]
+  },
+  "vectors": [
+    {
+      "id": "exact_owner_gate_valid",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [],
+      "expected": {
+        "gate": "PASS",
+        "reason_codes": []
+      }
+    },
+    {
+      "id": "unregistered_policy_id",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/policy_id",
+          "value": "future.unregistered.effect"
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "POLICY_ID_UNREGISTERED"
+        ]
+      }
+    },
+    {
+      "id": "effect_class_mismatch",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/effect_class",
+          "value": "wrong_effect"
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "EFFECT_CLASS_MISMATCH"
+        ]
+      }
+    },
+    {
+      "id": "missing_exact_binding",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/exact_binding",
+          "value": {}
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "EXACT_BINDING_REQUIRED"
+        ]
+      }
+    },
+    {
+      "id": "owner_not_reviewed",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/owner_gate/decision",
+          "value": "NOT_REVIEWED"
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "OWNER_APPROVAL_REQUIRED"
+        ]
+      }
+    },
+    {
+      "id": "missing_named_reviewer",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/owner_gate/reviewer",
+          "value": null
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "NAMED_REVIEWER_REQUIRED"
+        ]
+      }
+    },
+    {
+      "id": "expired_owner_approval",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/owner_gate/expires_at",
+          "value": "2030-01-01T10:15:00Z"
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "OWNER_APPROVAL_EXPIRED"
+        ]
+      }
+    },
+    {
+      "id": "policy_deny_never_relaxed",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/policy_decision/outcome",
+          "value": "DENY"
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "POLICY_DENY"
+        ]
+      }
+    },
+    {
+      "id": "owner_approval_decision_must_be_reissued_as_allow",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/policy_decision/outcome",
+          "value": "REQUIRE_OWNER_APPROVAL"
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "OWNER_APPROVAL_REQUIRED"
+        ]
+      }
+    },
+    {
+      "id": "failing_evidence_cannot_authorize",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/evidence",
+          "value": [
+            {
+              "class": "target_identity",
+              "ref": "fixture://target/a",
+              "status": "FAIL"
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "EVIDENCE_NOT_PASS:target_identity"
+        ]
+      }
+    },
+    {
+      "id": "instagram_keeps_native_decision_receipt",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/policy_id",
+          "value": "instagram.publish"
+        },
+        {
+          "op": "replace",
+          "path": "/effect_class",
+          "value": "instagram_publication"
+        },
+        {
+          "op": "replace",
+          "path": "/evidence",
+          "value": [
+            {
+              "class": "qa",
+              "ref": "fixture://instagram/exact-final-qa",
+              "status": "PASS"
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "POLICY_NATIVE_RECEIPT_REQUIRED"
+        ]
+      }
+    }
+  ]
+}

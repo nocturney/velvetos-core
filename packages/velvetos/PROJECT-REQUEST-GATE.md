@@ -79,6 +79,15 @@ Source-ingest evidence preparation for current-chat attachments is allowed befor
 ### 7. Postflight
 
 Before claiming `done`, `ready`, `prepared`, `published`, `synced`, `sent`, or equivalent, run the domain's output/action gates on the exact final artifact or provider result. Evidence beats intention.
+
+## External-effect authorization boundary
+
+`policy_id: project.request.preflight` routes and scopes work; it does **not** authorize an external effect. When execution reaches an external publish/send/spend/delete/permission mutation, resolve `packages/velvetos/policy/policy-registry.json#external_effect_contract.effects` and use the single mapped effect-authority `policy_id`.
+
+The normalized decision vocabulary is `ALLOW | DENY | REQUIRE_OWNER_APPROVAL` (or an explicitly declared native equivalent at that policy boundary). Brand, Product Truth, Visible Text, transport, QA, runtime health, rights/privacy, facts and target identity are evidence inputs only. A PASS from one of those inputs cannot authorize the effect by itself.
+
+Exact-action receipts use `packages/velvetos/policy/schema/action-receipt.schema.json` plus `scripts/vf_action_receipt.py` only where the registry receipt mode requires them. `instagram.publish` keeps its existing policy-native decision receipt rather than being wrapped in a second authorization engine. No OPA service, policy daemon or parallel runtime is introduced.
+
 ## Mandatory creative/publication path
 
 Any request involving product media, social content, copy, image/video editing, post/carousel/Story/Reel/cover/grid or `prepare for publication` must route through the complete creative stack named in the authority manifest.

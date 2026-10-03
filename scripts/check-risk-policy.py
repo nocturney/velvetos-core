@@ -31,6 +31,9 @@ def main() -> None:
     for needle in ("ירוק", "צהוב", "כתום", "אדום", "Don't Bother Christian"):
         if needle not in policy_md:
             fail(f"POLICY.md missing {needle}")
+    for policy_id in ("external.irreversible.delete", "external.permission.mutate"):
+        if f"policy_id: {policy_id}" not in policy_md:
+            fail(f"POLICY.md missing canonical {policy_id} boundary")
 
     # RISK.md is a short mirror
     law = LAW_MIRROR.read_text(encoding="utf-8")
@@ -64,8 +67,11 @@ def main() -> None:
     for need in ("weak-metrics", "ordinary-tool-outage-with-failover", "media-intake"):
         if need not in never:
             fail(f"RED.neverFor missing {need}")
-    if "weak-metrics" in (levels["RED"].get("onlyWhen") or []):
+    only_when = levels["RED"].get("onlyWhen") or []
+    if "weak-metrics" in only_when:
         fail("weak-metrics must not be in RED.onlyWhen")
+    if "external-permission-mutation" not in only_when:
+        fail("RED.onlyWhen missing external-permission-mutation")
 
     # Canonical dead-letter store
     dead = json.loads(CANONICAL_DEAD.read_text(encoding="utf-8"))

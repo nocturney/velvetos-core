@@ -36,6 +36,7 @@
         "customer.whatsapp.send",
         "advertising.boost",
         "external.irreversible.delete",
+        "external.permission.mutate",
         "cost.recurring.new"
       ],
       "pr_shape": "SMALL_REVERSIBLE_SERIES",

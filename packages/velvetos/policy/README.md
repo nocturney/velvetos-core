@@ -120,3 +120,15 @@ Stage 4B keeps `project.request.preflight` as the single mandatory router but ma
 - CAD read-only and CAD build are now scope-distinct: read-only keeps only routing/specialist gates; artifact build additionally keeps `verified_specs`; neither pays printer-control, price or print-authority gates until an actual physical-print/commercial action exists.
 - `reports/stage4b-project-request-fast-path.json` replays the same 14 Stage 4A flows: 14/14 domain-aligned, 0 generic fallbacks, 7 `FAST_PATH` / 7 `FULL`, 10/14 with explicit tool routes, and all 14 with internal-by-default owner surface. The seven fast-path flows reduce mean authority sources from 11.429 to 5.429 (52.5%) and mean hard gates from 3.857 to 2.286 (40.7%).
 - Seven negative controls prove price/spend, destructive/permission, privacy, physical print and unknown requests remain `FULL`; the four creative flows remain `FULL` and fail closed without exact creative evidence.
+
+## Stage 4C — One Authority Gate
+
+Stage 4C makes authorization ownership explicit without adding a policy service or second runtime. `project.request.preflight` remains a router; external-effect authorization belongs to one mapped effect-authority `policy_id`.
+
+- `policy-registry.json.external_effect_contract` maps seven external effects one-to-one to `cost.recurring.new`, `instagram.publish`, `gmail.send`, `customer.whatsapp.send`, `advertising.boost`, `external.irreversible.delete`, and the new `external.permission.mutate` boundary.
+- The normalized decision vocabulary is `ALLOW | DENY | REQUIRE_OWNER_APPROVAL`. Registry validation rejects duplicate effect classes, duplicate effect-authority policy IDs, missing authority paths, unknown evidence classes, or an effect policy that is not marked `effect_authority`.
+- Brand, Product Truth, Visible Text, transport, QA, runtime health, rights/privacy, facts, target identity and cost/provider/billing checks are declared evidence inputs. Every evidence class is explicitly `can_authorize_external_effect=false`; `visible_text.finalization` and `public.cta` are enforced as `evidence_input` roles.
+- Exact-action receipt modes are scoped rather than universal: cost/paid/delete/permission use `EXACT_ACTION_REQUIRED`; Gmail uses `EXACT_ACTION_ON_COMMITMENT`; WhatsApp remains `OWNER_RESERVED`; Instagram keeps its existing `POLICY_NATIVE_RECEIPT` and evaluator.
+- `schema/action-receipt.schema.json` plus `scripts/vf_action_receipt.py` validate the binding of an already-made canonical policy decision to the exact action. The validator is not a decision engine and cannot turn evidence into authorization.
+- `action-receipt-test-vectors.json` covers valid exact owner authorization plus unregistered policy, effect mismatch, missing binding, missing/expired owner approval, DENY, unresolved owner-approval decision, failing evidence and the Instagram native-receipt boundary.
+- `scripts/check-policy-architecture.py` executes those vectors and enforces the single-authority/evidence-role contract on every CI run where policy architecture is selected; `check-risk-policy.py` protects the destructive-delete and permission-mutation owner boundaries.
