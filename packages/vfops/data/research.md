@@ -26,3 +26,17 @@
 ```
 
 מקור מלא: `packages/vfresearch/sources/2026-09-25-weekly-links.md`.
+
+## שבועי קישורים · 2.10.2026 (Weekly Research Accountability · cursor-cloud-agent)
+
+- 87 קישורי `LINKS.json` נבדקו. 80 עם גוף שנקרא (gh api / HTTP / WebFetch). 7 דולג — חומה: 4 sourceNote מנוי, 3 אתגר Cloudflare (xenforo / vbulletin / invisioncommunity). `lastReviewed=2026-10-02`.
+- הוטמע: תיקון Huly — `isArchived=false` (ב־25.9 נרשם `archived=true`); README עדיין קפוא, הפיתוח ב־Platform-Collective, Hosted Huly סגור.
+- print-demand — 2 אותות (`sources/2026-10-02-print-demand.md`). HeyOrca עדיין מתוארך 25.9.2026. מדף: אין ספירת גרם.
+- Best Skills: לא stale (`lastPass` 2026-10-02, `dataDate` 2026-10-01). קובץ דירוג `data: 2026-10-02` נדחף אחרי המושב. לא נפתח טיימר שני.
+
+```text
+05 · משרד
+שבועי קישורים — 80/87 עם גוף שנקרא · הוטמע תיקון Huly archived=false · print-demand — 2 אותות
+```
+
+מקור מלא: `packages/vfresearch/sources/2026-10-02-weekly-links.md` · `packages/vfresearch/sources/2026-10-02-print-demand.md`.
