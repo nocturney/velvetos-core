@@ -1,0 +1,347 @@
+{
+  "schema": "velvetos.gmail-send-test-vectors.v1",
+  "base_request": {
+    "action_type": "reply",
+    "send_scope": "known_thread_reply",
+    "body_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "target_verified": true,
+    "transport_ready": true,
+    "facts_verified": true,
+    "blast": false,
+    "new_commercial_commitment": false,
+    "price_or_spend": false,
+    "rights_privacy_status": "PASS",
+    "text_readiness": {
+      "mode": "visible_text_gate",
+      "status": "PASS",
+      "body_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "evidence_ref": "fixture://visible-text/known-thread-reply"
+    }
+  },
+  "vectors": [
+    {
+      "id": "known-thread-routine-reply",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [],
+      "expected": {
+        "decision": "ALLOW",
+        "reason_codes": [],
+        "owner_approval_required": false,
+        "requires_exact_action_receipt": false,
+        "authorization_basis": "ROUTINE_STANDING_AUTHORIZATION"
+      }
+    },
+    {
+      "id": "routine-owner-brief",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {"op": "replace", "path": "/action_type", "value": "send_message"},
+        {"op": "replace", "path": "/send_scope", "value": "owner_brief"}
+      ],
+      "expected": {
+        "decision": "ALLOW",
+        "reason_codes": [],
+        "owner_approval_required": false,
+        "requires_exact_action_receipt": false,
+        "authorization_basis": "ROUTINE_STANDING_AUTHORIZATION"
+      }
+    },
+    {
+      "id": "routine-forward",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {"op": "replace", "path": "/action_type", "value": "forward"},
+        {"op": "replace", "path": "/send_scope", "value": "routine_forward"}
+      ],
+      "expected": {
+        "decision": "ALLOW",
+        "reason_codes": [],
+        "owner_approval_required": false,
+        "requires_exact_action_receipt": false,
+        "authorization_basis": "ROUTINE_STANDING_AUTHORIZATION"
+      }
+    },
+    {
+      "id": "approved-static-copy-exact-reuse",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/text_readiness",
+          "value": {
+            "mode": "approved_static_copy",
+            "status": "PASS",
+            "body_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "evidence_ref": "fixture://approved-static-copy/owner-brief-v1",
+            "text_unchanged": true,
+            "facts_current": true
+          }
+        }
+      ],
+      "expected": {
+        "decision": "ALLOW",
+        "reason_codes": [],
+        "owner_approval_required": false,
+        "requires_exact_action_receipt": false,
+        "authorization_basis": "ROUTINE_STANDING_AUTHORIZATION"
+      }
+    },
+    {
+      "id": "new-outbound-remains-gated",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {"op": "replace", "path": "/action_type", "value": "send_message"},
+        {"op": "replace", "path": "/send_scope", "value": "new_outbound"}
+      ],
+      "expected": {
+        "decision": "REQUIRE_OWNER_APPROVAL",
+        "reason_codes": ["NEW_OUTBOUND_REQUIRES_OWNER_APPROVAL", "OWNER_APPROVAL_REQUIRED"],
+        "owner_approval_required": true,
+        "requires_exact_action_receipt": true,
+        "authorization_basis": "OWNER_GATE"
+      }
+    },
+    {
+      "id": "new-commercial-commitment-remains-gated",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {"op": "replace", "path": "/new_commercial_commitment", "value": true}
+      ],
+      "expected": {
+        "decision": "REQUIRE_OWNER_APPROVAL",
+        "reason_codes": ["NEW_COMMERCIAL_COMMITMENT", "OWNER_APPROVAL_REQUIRED"],
+        "owner_approval_required": true,
+        "requires_exact_action_receipt": true,
+        "authorization_basis": "OWNER_GATE"
+      }
+    },
+    {
+      "id": "price-or-spend-remains-gated",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {"op": "replace", "path": "/price_or_spend", "value": true}
+      ],
+      "expected": {
+        "decision": "REQUIRE_OWNER_APPROVAL",
+        "reason_codes": ["PRICE_OR_SPEND", "OWNER_APPROVAL_REQUIRED"],
+        "owner_approval_required": true,
+        "requires_exact_action_receipt": true,
+        "authorization_basis": "OWNER_GATE"
+      }
+    },
+    {
+      "id": "rights-privacy-ambiguity-remains-gated",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {"op": "replace", "path": "/rights_privacy_status", "value": "UNKNOWN"}
+      ],
+      "expected": {
+        "decision": "REQUIRE_OWNER_APPROVAL",
+        "reason_codes": ["RIGHTS_PRIVACY_AMBIGUITY", "OWNER_APPROVAL_REQUIRED"],
+        "owner_approval_required": true,
+        "requires_exact_action_receipt": true,
+        "authorization_basis": "OWNER_GATE"
+      }
+    },
+    {
+      "id": "exact-owner-approval-allows-commitment",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {"op": "replace", "path": "/new_commercial_commitment", "value": true},
+        {
+          "op": "replace",
+          "path": "/owner_approval",
+          "value": {
+            "decision": "APPROVED",
+            "reviewer": "owner",
+            "body_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "reviewed_at": "2030-01-01T10:00:00Z",
+            "expires_at": "2030-01-01T11:00:00Z",
+            "blocker_ids": []
+          }
+        }
+      ],
+      "expected": {
+        "decision": "ALLOW",
+        "reason_codes": ["NEW_COMMERCIAL_COMMITMENT"],
+        "owner_approval_required": true,
+        "requires_exact_action_receipt": true,
+        "authorization_basis": "EXACT_OWNER_APPROVAL"
+      }
+    },
+    {
+      "id": "owner-approval-body-mismatch-stays-gated",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {"op": "replace", "path": "/new_commercial_commitment", "value": true},
+        {
+          "op": "replace",
+          "path": "/owner_approval",
+          "value": {
+            "decision": "APPROVED",
+            "reviewer": "owner",
+            "body_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "reviewed_at": "2030-01-01T10:00:00Z",
+            "expires_at": "2030-01-01T11:00:00Z",
+            "blocker_ids": []
+          }
+        }
+      ],
+      "expected": {
+        "decision": "REQUIRE_OWNER_APPROVAL",
+        "reason_codes": ["NEW_COMMERCIAL_COMMITMENT", "OWNER_APPROVAL_BODY_MISMATCH"],
+        "owner_approval_required": true,
+        "requires_exact_action_receipt": true,
+        "authorization_basis": "OWNER_GATE"
+      }
+    },
+    {
+      "id": "unverified-fact-denied",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {"op": "replace", "path": "/facts_verified", "value": false}
+      ],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["UNVERIFIED_FACT"],
+        "owner_approval_required": false,
+        "requires_exact_action_receipt": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    },
+    {
+      "id": "blast-denied",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {"op": "replace", "path": "/blast", "value": true}
+      ],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["BLAST_FORBIDDEN"],
+        "owner_approval_required": false,
+        "requires_exact_action_receipt": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    },
+    {
+      "id": "text-gate-failure-denied",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {"op": "replace", "path": "/text_readiness/status", "value": "FAIL"}
+      ],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["TEXT_READINESS_NOT_PASS"],
+        "owner_approval_required": false,
+        "requires_exact_action_receipt": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    },
+    {
+      "id": "text-body-mismatch-denied",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {"op": "replace", "path": "/text_readiness/body_sha256", "value": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}
+      ],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["TEXT_BODY_MISMATCH"],
+        "owner_approval_required": false,
+        "requires_exact_action_receipt": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    },
+    {
+      "id": "static-copy-change-denied",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/text_readiness",
+          "value": {
+            "mode": "approved_static_copy",
+            "status": "PASS",
+            "body_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "evidence_ref": "fixture://approved-static-copy/owner-brief-v1",
+            "text_unchanged": false,
+            "facts_current": true
+          }
+        }
+      ],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["STATIC_COPY_CHANGED"],
+        "owner_approval_required": false,
+        "requires_exact_action_receipt": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    },
+    {
+      "id": "static-copy-stale-facts-denied",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/text_readiness",
+          "value": {
+            "mode": "approved_static_copy",
+            "status": "PASS",
+            "body_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "evidence_ref": "fixture://approved-static-copy/owner-brief-v1",
+            "text_unchanged": true,
+            "facts_current": false
+          }
+        }
+      ],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["STATIC_COPY_FACTS_STALE"],
+        "owner_approval_required": false,
+        "requires_exact_action_receipt": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    },
+    {
+      "id": "transport-down-denied",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {"op": "replace", "path": "/transport_ready", "value": false}
+      ],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["TRANSPORT_NOT_READY"],
+        "owner_approval_required": false,
+        "requires_exact_action_receipt": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    },
+    {
+      "id": "target-unverified-denied",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {"op": "replace", "path": "/target_verified", "value": false}
+      ],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["TARGET_NOT_VERIFIED"],
+        "owner_approval_required": false,
+        "requires_exact_action_receipt": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    },
+    {
+      "id": "unknown-scope-denied",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {"op": "replace", "path": "/send_scope", "value": "unknown"}
+      ],
+      "expected": {
+        "decision": "DENY",
+        "reason_codes": ["SEND_SCOPE_UNKNOWN"],
+        "owner_approval_required": false,
+        "requires_exact_action_receipt": false,
+        "authorization_basis": "FAIL_CLOSED"
+      }
+    }
+  ]
+}

@@ -300,7 +300,7 @@
       "packs": [
         "vfsales"
       ],
-      "note": "HQ does not send Gmail. Close is human WhatsApp."
+      "note": "Cold-email/blast is not used. Routine HQ Gmail follows policy_id gmail.send; customer WhatsApp close remains human where applicable."
     },
     {
       "name": "emails",

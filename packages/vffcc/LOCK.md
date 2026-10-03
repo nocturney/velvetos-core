@@ -19,9 +19,9 @@
 
 חריג **מקומי בלבד** (מחשב כריסטיאן, אחרי ראש צוות): ראה `playbooks/local-offload.md`. לא מהריצה הזו.
 
-## שליחה — נעילה קבועה
+## שליחה — FCC לא שולח ולא מאשר
 
-Discord bot, Telegram bot, וואטסאפ, אינסטגרם, Gmail `send_message` / `reply` / `forward` — אסורים מ־FCC ומ־HQ. Grok שולח.
+Discord bot, Telegram bot, WhatsApp, Instagram ו־Gmail mutation אסורים **מתוך FCC עצמו**. FCC אינו evaluator ואינו יכול לאשר external effect. HQ Gmail פועל לפי `policy_id: gmail.send` ו־`constitution/SEND.md`; Instagram לפי `policy_id: instagram.publish`. Grok הוא failover אופציונלי בלבד.
 
 ## קול / טלפון — דלג
 
@@ -35,4 +35,4 @@ Voice notes, Whisper מקומי, NVIDIA NIM transcription, «כמו OpenClaw» �
 
 Azure OpenAI, Amazon Bedrock, Google Vertex, Cloudflare Workers AI — ענן ארגוני. לא הסטודיו.
 
-חיבור ChatGPT / xAI / Anthropic רשמי כמפתח ב־HQ — דולג. התזמורת כבר פותחת ChatGPT וג׳מיני בדפדפן. Grok Bot נשאר השולח החי.
+חיבור ChatGPT / xAI / Anthropic רשמי כמפתח ב־HQ — דולג. התזמורת כבר פותחת ChatGPT וג׳מיני בדפדפן. שליחה חיה נשלטת רק ב־`constitution/SEND.md`; Grok Bot הוא גיבוי אופציונלי.

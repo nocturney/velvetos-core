@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 import tempfile
 from email import message_from_bytes
@@ -31,10 +32,112 @@ def main() -> None:
         ROOT / "packages" / "vfops" / "apps_script_gmail_bridge" / "appsscript.json",
         ROOT / ".github" / "workflows" / "gmail-brief-send.yml",
         ROOT / "packages" / "vfops" / "out" / "gmail-send-request.json",
+        ROOT / "packages" / "velvetos" / "policy" / "gmail.send.json",
+        ROOT / "packages" / "velvetos" / "policy" / "gmail-send-test-vectors.json",
+        ROOT / "scripts" / "vf_gmail_send_policy.py",
+        ROOT / "constitution" / "SEND.md",
+        ROOT / "scripts" / "vf_send_preflight.py",
+        ROOT / "scripts" / "generate-stage4e-gmail-send-report.py",
+        ROOT / "packages" / "velvetos" / "policy" / "reports" / "stage4e-gmail-send-simplification.json",
+        ROOT / "constitution" / "VISIBLE_TEXT.md",
     ]
     for path in required:
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
+
+    gmail_policy = json.loads((ROOT / "packages/velvetos/policy/gmail.send.json").read_text(encoding="utf-8"))
+    if gmail_policy.get("schema") != "velvetos.gmail-send-policy.v1":
+        fail("gmail.send machine policy schema drift")
+    if gmail_policy.get("policy_id") != "gmail.send" or gmail_policy.get("status") != "ACTIVE_STAGE4E":
+        fail("gmail.send machine policy identity/status drift")
+    if gmail_policy.get("version") != 1:
+        fail("gmail.send machine policy version drift")
+    if set(gmail_policy.get("routine_scopes") or []) != {"owner_brief", "known_thread_reply", "routine_forward"}:
+        fail("gmail.send routine scopes drift")
+    if gmail_policy.get("commitment_receipt_mode") != "EXACT_ACTION_ON_COMMITMENT":
+        fail("gmail.send commitment receipt mode drift")
+    triggers = gmail_policy.get("restricted_triggers") or {}
+    expected_triggers = {
+        "new_commercial_commitment": "REQUIRE_OWNER_APPROVAL",
+        "price_or_spend": "REQUIRE_OWNER_APPROVAL",
+        "rights_privacy_ambiguity": "REQUIRE_OWNER_APPROVAL",
+        "unverified_fact": "DENY",
+        "blast": "DENY",
+    }
+    if triggers != expected_triggers:
+        fail(f"gmail.send restricted trigger drift: {triggers}")
+
+    policy_test = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/vf_gmail_send_policy.py"), "--self-test"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=60,
+    )
+    if policy_test.returncode != 0:
+        fail("gmail.send policy vectors failed: " + (policy_test.stderr.strip() or policy_test.stdout.strip()))
+    if "OK gmail.send vectors=19 routine_owner_prompt=0 commitment_exact_binding=YES" not in policy_test.stdout:
+        fail("gmail.send policy vector summary drift")
+
+    send_law = (ROOT / "constitution/SEND.md").read_text(encoding="utf-8")
+    for needle in (
+        "policy_id: gmail.send",
+        "Routine send בלי ceremony מיותר",
+        "known_thread_reply",
+        "approved_static_copy",
+        "EXACT_ACTION_ON_COMMITMENT",
+        "blast",
+    ):
+        if needle not in send_law:
+            fail(f"SEND.md missing Stage 4E contract marker {needle!r}")
+
+    preflight = (ROOT / "scripts/vf_send_preflight.py").read_text(encoding="utf-8")
+    for needle in (
+        "transport diagnostics only",
+        '"transport_only": True',
+        '"authorization_policy_id": "gmail.send"',
+        '"authorization_evaluator": "scripts/vf_gmail_send_policy.py"',
+    ):
+        if needle not in preflight:
+            fail(f"vf_send_preflight.py missing Gmail transport/auth separation {needle!r}")
+
+    action_vectors = json.loads((ROOT / "packages/velvetos/policy/action-receipt-test-vectors.json").read_text(encoding="utf-8"))
+    action_vector_ids = {row.get("id") for row in action_vectors.get("vectors") or []}
+    for vector_id in (
+        "gmail-commitment-exact-body-valid",
+        "gmail-commitment-missing-exact-body-blocked",
+        "gmail-routine-reply-does-not-require-exact-action-binding",
+    ):
+        if vector_id not in action_vector_ids:
+            fail(f"action receipt contract missing Stage 4E vector {vector_id}")
+
+    report = json.loads((ROOT / "packages/velvetos/policy/reports/stage4e-gmail-send-simplification.json").read_text(encoding="utf-8"))
+    if report.get("schema") != "velvetos.stage4e-gmail-send-simplification.v1" or report.get("stage") != "4E":
+        fail("Stage 4E Gmail report schema/stage drift")
+    if report.get("policy_id") != "gmail.send" or report.get("repository_acceptance") != "PASS":
+        fail("Stage 4E Gmail report identity/acceptance drift")
+    routine = report.get("routine_happy_path") or {}
+    if routine.get("owner_prompt_count") != 0 or routine.get("requires_exact_action_receipt") is not False:
+        fail("Stage 4E routine Gmail path regained approval ceremony")
+    if routine.get("routine_vectors_all_allow") is not True:
+        fail("Stage 4E routine Gmail vectors no longer all ALLOW")
+    summary = report.get("vector_summary") or {}
+    if summary.get("count") != 19 or summary.get("decision_counts") != {"ALLOW": 5, "REQUIRE_OWNER_APPROVAL": 5, "DENY": 9}:
+        fail("Stage 4E Gmail decision distribution drift")
+    if report.get("transport_output_proves_non_authority") is not True:
+        fail("Stage 4E Gmail transport/auth separation not proven")
+    if (report.get("approved_static_copy") or {}).get("full_rewrite_pipeline_rerun_required_when_exact_and_current") is not False:
+        fail("Stage 4E approved static copy regained rewrite ceremony")
+    gated = report.get("gated_cases") or {}
+    if gated.get("commitment_receipt_mode") != "EXACT_ACTION_ON_COMMITMENT" or gated.get("exact_owner_approval_body_binding_required") is not True:
+        fail("Stage 4E commitment exact-binding contract drift")
+
+    visible_text = (ROOT / "constitution/VISIBLE_TEXT.md").read_text(encoding="utf-8")
+    for needle in ("approved_static_copy", "body_sha256", "אין חובה להריץ שוב rewrite/Humanizer מלא"):
+        if needle not in visible_text:
+            fail(f"VISIBLE_TEXT.md missing Stage 4E static-copy reuse marker {needle!r}")
 
     workflow = (ROOT / ".github" / "workflows" / "gmail-brief-send.yml").read_text(encoding="utf-8")
     for needle in (

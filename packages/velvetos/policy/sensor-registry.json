@@ -565,12 +565,26 @@
       "path": "scripts/check-gmail-brief-send.py",
       "owns": [
         ".github/**",
-        "packages/vfops/**"
+        "packages/vfops/**",
+        "packages/velvetos/policy/gmail.send.json",
+        "packages/velvetos/policy/gmail-send-test-vectors.json",
+        "scripts/vf_gmail_send_policy.py",
+        "scripts/generate-stage4e-gmail-send-report.py",
+        "packages/velvetos/policy/reports/stage4e-gmail-send-simplification.json"
       ],
       "triggered_by": [
         ".github/**",
         "packages/vfops/**",
-        "scripts/check-gmail-brief-send.py"
+        "scripts/check-gmail-brief-send.py",
+        "packages/velvetos/policy/gmail.send.json",
+        "packages/velvetos/policy/gmail-send-test-vectors.json",
+        "scripts/vf_gmail_send_policy.py",
+        "packages/velvetos/policy/action-receipt-test-vectors.json",
+        "scripts/generate-stage4e-gmail-send-report.py",
+        "packages/velvetos/policy/reports/stage4e-gmail-send-simplification.json",
+        "scripts/vf_send_preflight.py",
+        "constitution/SEND.md",
+        "constitution/VISIBLE_TEXT.md"
       ],
       "depends_on": [],
       "enforces": [
