@@ -43,6 +43,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: write
+      checks: read
       id-token: write
     steps:
       - uses: actions/checkout@v7
@@ -107,6 +109,8 @@ jobs:
 
       - name: Persist intake state (including blocked/fail)
         id: persist
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -e
           git config user.name "velvetos-media-intake"
@@ -119,14 +123,10 @@ jobs:
           echo "changed=true" >> "$GITHUB_OUTPUT"
           git add packages/vfmedia/catalog.json packages/vfmedia/state packages/vfmedia/data office/control/inbox.json
           git commit -m "vfmedia intake: durable catalog/state from scheduled run (exit ${{ steps.intake.outputs.exit_code }})"
-          branch="${{ github.ref_name }}"
-          git fetch origin "$branch"
-          if ! git rebase "origin/$branch"; then
-            git rebase --abort || true
-            echo "::error::Concurrent update conflicted with vfmedia state. Refusing to persist conflict markers; retry on a fresh checkout."
+          if ! bash scripts/push-main-with-check-all.sh main; then
+            echo "::error::Prechecked main persistence failed; intake state was not pushed."
             exit 4
           fi
-          git push origin "HEAD:$branch"
           echo "pushed=true" >> "$GITHUB_OUTPUT"
 
       - name: Sensor slice

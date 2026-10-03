@@ -40,28 +40,28 @@
   "workflow_direct_sensor_invocations": [
     {
       "workflow": ".github/workflows/jobs-write-through.yml",
-      "line": 111,
+      "line": 113,
       "sensor_path": "scripts/check-vf-office.py",
       "suite_runner_present": false,
       "potential_duplicate_with_suite_runner": false
     },
     {
       "workflow": ".github/workflows/office-control-plane.yml",
-      "line": 39,
+      "line": 40,
       "sensor_path": "scripts/check-office-control-plane.py",
       "suite_runner_present": false,
       "potential_duplicate_with_suite_runner": false
     },
     {
       "workflow": ".github/workflows/office-control-plane.yml",
-      "line": 40,
+      "line": 41,
       "sensor_path": "scripts/check-runtime-corners.py",
       "suite_runner_present": false,
       "potential_duplicate_with_suite_runner": false
     },
     {
       "workflow": ".github/workflows/office-control-plane.yml",
-      "line": 53,
+      "line": 54,
       "sensor_path": "scripts/check-learning-lifecycle.py",
       "suite_runner_present": false,
       "potential_duplicate_with_suite_runner": false

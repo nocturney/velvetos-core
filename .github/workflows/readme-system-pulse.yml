@@ -23,6 +23,8 @@ on:
 
 permissions:
   contents: write
+  actions: write
+  checks: read
 
 concurrency:
   group: readme-system-pulse
@@ -52,6 +54,8 @@ jobs:
 
       - name: Commit only when README changed
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           if git diff --quiet -- README.md; then
@@ -62,4 +66,4 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add README.md
           git commit -m "docs: refresh README System Pulse"
-          git push
+          bash scripts/push-main-with-check-all.sh main

@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  # Used by protected machine writers to precheck an exact staging SHA before
+  # pushing that same SHA to main. The selector diffs against live origin/main.
+  workflow_dispatch:
 
 jobs:
   check-all:
@@ -27,13 +30,23 @@ jobs:
           sudo apt-get install -y ffmpeg
 
       - name: Sensor selector
-        if: github.event_name == 'pull_request'
-        run: >-
-          python3 scripts/sensor_selector.py
-          --base "${{ github.event.pull_request.base.sha }}"
-          --head "${{ github.event.pull_request.head.sha }}"
-          --output sensor-selection.json
-          --summary "$GITHUB_STEP_SUMMARY"
+        if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="${{ github.event.pull_request.base.sha }}"
+            head="${{ github.event.pull_request.head.sha }}"
+          else
+            git fetch origin main
+            base="$(git rev-parse origin/main)"
+            head="$GITHUB_SHA"
+          fi
+          python3 scripts/sensor_selector.py \
+            --base "$base" \
+            --head "$head" \
+            --output sensor-selection.json \
+            --summary "$GITHUB_STEP_SUMMARY"
 
       - name: Instagram publish policy test vectors
         run: node packages/velvetos/policy/test-instagram-publish-policy.mjs
@@ -56,8 +69,8 @@ jobs:
         if: ${{ !cancelled() && github.event_name == 'pull_request' }}
         run: python3 scripts/fix-readme-bidi.py --check
 
-      - name: Run selected VelvetOS sensors on pull request
-        if: ${{ !cancelled() && github.event_name == 'pull_request' }}
+      - name: Run selected VelvetOS sensors on pull request or machine precheck
+        if: ${{ !cancelled() && (github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch') }}
         run: python3 scripts/check-all.py --selection sensor-selection.json --json-out sensor-selected-results.json
 
       - name: Run full VelvetOS sensor suite on main

@@ -28,6 +28,8 @@ concurrency:
 
 permissions:
   contents: write
+  actions: write
+  checks: read
   id-token: write
 
 jobs:
@@ -111,6 +113,8 @@ jobs:
         run: python3 scripts/check-vf-office.py
 
       - name: Persist canonical receipt only when changed
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -e
           if git diff --quiet -- office/ledger/live/sync-receipt.json; then
@@ -121,12 +125,5 @@ jobs:
           git config user.email "noreply@velvetos.local"
           git add -- office/ledger/live/sync-receipt.json
           git commit -m "jobs: persist verified Sheet sync receipt"
-          branch="${GITHUB_REF_NAME}"
-          git fetch origin "$branch"
-          if ! git rebase "origin/$branch"; then
-            git rebase --abort || true
-            echo "::error::Concurrent Jobs state changed; refusing overwrite"
-            exit 1
-          fi
-          git push origin "HEAD:$branch"
+          bash scripts/push-main-with-check-all.sh main
 

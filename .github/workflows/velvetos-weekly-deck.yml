@@ -14,6 +14,8 @@ on:
 
 permissions:
   contents: write
+  actions: write
+  checks: read
 
 jobs:
   build-and-publish:
@@ -30,9 +32,15 @@ jobs:
         run: python3 scripts/vf_weekly_deck.py
 
       - name: Commit deck to docs/weekly-deck
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "velvetos-bot"
           git config user.email "actions@github.com"
           git add docs/weekly-deck packages/vfbriefux/hq/weekly-deck.bento-doc.json
-          git diff --cached --quiet || git commit -m "Weekly deck $(date -u +%F)"
-          git push
+          if git diff --cached --quiet; then
+            echo "Weekly deck already current"
+            exit 0
+          fi
+          git commit -m "Weekly deck $(date -u +%F)"
+          bash scripts/push-main-with-check-all.sh main
