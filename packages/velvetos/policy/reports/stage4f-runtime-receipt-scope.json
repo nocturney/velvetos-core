@@ -1,0 +1,96 @@
+{
+  "schema": "velvetos.stage4f-runtime-receipt-scope.v1",
+  "stage": "4F",
+  "prepared_against_main_sha": "8081bfe62fe6c59e0e22798dda1d2469e5ee3742",
+  "captured_at": "2026-10-03T20:25:06.8862840+03:00",
+  "contract": "packages/vfharness/runtime/proof-scope.json",
+  "statuses": {
+    "code": "CODE_VALID",
+    "deployment": "DEPLOYMENT_VALID",
+    "runtime": "RUNTIME_HEALTHY",
+    "external_action": "RUNTIME_HEALTHY",
+    "acceptance": "RUNTIME_HEALTHY"
+  },
+  "default_scope": "code",
+  "github_event_is_runtime_dependency_signal": false,
+  "unrelated_stale_runtime_blocks_code": false,
+  "live_scopes": [
+    "deployment",
+    "runtime",
+    "external_action",
+    "acceptance"
+  ],
+  "dependency_selection": {
+    "mode": "explicit_component_ids",
+    "live_scope_without_dependency": "FAIL_CLOSED",
+    "repository_wide_token": "*"
+  },
+  "fail_closed_when_dependency_real": {
+    "stale": true,
+    "missing": true,
+    "malformed": true,
+    "component_mismatch": true,
+    "future_dated": true,
+    "missing_evidence": true,
+    "non_healthy": true,
+    "unknown_component": true
+  },
+  "runtime_refresh": {
+    "still_useful": true,
+    "purpose": "keep live proof ready for deployment/runtime/external-action/acceptance claims",
+    "universal_merge_gate": false
+  },
+  "legacy_compatibility": {
+    "VF_RUNTIME_RECEIPTS_STRICT_1": "repository-wide all-component live proof",
+    "check_runtime_doctor_strict": "repository-wide all-component live proof"
+  },
+  "acceptance_examples": {
+    "code": "python scripts/check-runtime-doctor.py",
+    "deployment_component": "python scripts/check-runtime-doctor.py --scope deployment --require-component github",
+    "runtime_component": "python scripts/check-runtime-doctor.py --scope runtime --require-component edge-execution",
+    "external_action_component": "python scripts/check-runtime-doctor.py --scope external_action --require-component google-drive"
+  },
+  "tests": [
+    {
+      "command": "C:\\Python314\\python.exe scripts/check-runtime-receipt-age-policy.py --core-only",
+      "return_code": 0,
+      "stdout_tail": [
+        "OK runtime-receipt-scope default=CODE_VALID github_events=non_authoritative deployment=component_scoped runtime=component_scoped external_action=component_scoped acceptance=component_scoped required-evidence=fail_closed legacy_strict=all_components"
+      ],
+      "stderr_tail": []
+    },
+    {
+      "command": "C:\\Python314\\python.exe scripts/check-runtime-doctor.py",
+      "return_code": 0,
+      "stdout_tail": [
+        "RUNTIME_PROOF scope=code status=CODE_VALID runtime_health_required=false required_components=none",
+        "OK runtime proof status=CODE_VALID schema=v2 components=5 runtime_health=NOT_REQUIRED"
+      ],
+      "stderr_tail": []
+    },
+    {
+      "command": "C:\\Python314\\python.exe scripts/check-grok-provider-readback.py",
+      "return_code": 0,
+      "stdout_tail": [
+        "RUNTIME_PROOF scope=code status=CODE_VALID runtime_health_required=false required_components=none",
+        "GROK PROVIDER READBACK PASS protected=9 readback-verified=9 pending-first-readback=none openpost=disabled timezone=Asia/Jerusalem proof=CODE_VALID runtime_health=NOT_REQUIRED prompt-body-parity=not-claimed"
+      ],
+      "stderr_tail": []
+    },
+    {
+      "command": "C:\\Python314\\python.exe scripts/check-zero-cost-final-acceptance.py",
+      "return_code": 0,
+      "stdout_tail": [
+        "OK zero-cost final acceptance targeted-batches committed-scope=PASS check-all=PASS sensors=116 push=YES pr=MERGED merge=YES proof_scope=code runtime_receipts=NOT_REQUIRED_CODE_VALID"
+      ],
+      "stderr_tail": []
+    }
+  ],
+  "proofs": {
+    "fixture_scope_matrix_pass": true,
+    "doctor_default_code_valid": true,
+    "grok_default_code_valid": true,
+    "zero_cost_acceptance_default_code_valid": true
+  },
+  "repository_acceptance": "PASS"
+}

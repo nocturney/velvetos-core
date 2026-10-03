@@ -1,0 +1,44 @@
+{
+  "schema": "vf.runtime.proof-scope.v1",
+  "stage": "4F",
+  "defaultScope": "code",
+  "statuses": {
+    "code": "CODE_VALID",
+    "deployment": "DEPLOYMENT_VALID",
+    "runtime": "RUNTIME_HEALTHY",
+    "external_action": "RUNTIME_HEALTHY",
+    "acceptance": "RUNTIME_HEALTHY"
+  },
+  "liveScopes": [
+    "deployment",
+    "runtime",
+    "external_action",
+    "acceptance"
+  ],
+  "dependencySelection": {
+    "mode": "explicit_component_ids",
+    "manifest": "packages/vfharness/runtime/expected-components.json",
+    "environment": "VF_RUNTIME_REQUIRED_COMPONENTS",
+    "cli": "--require-component",
+    "repositoryWideToken": "*",
+    "liveScopeWithoutDependency": "FAIL_CLOSED"
+  },
+  "environment": {
+    "scope": "VF_RUNTIME_PROOF_SCOPE",
+    "legacyStrict": "VF_RUNTIME_RECEIPTS_STRICT",
+    "legacyDoctorStrict": "VF_RUNTIME_STRICT"
+  },
+  "rules": [
+    "GitHub event type is not a runtime dependency signal.",
+    "CODE_VALID validates code/contracts and does not require current runtime receipts.",
+    "DEPLOYMENT_VALID requires fresh healthy evidence only for the deployment components explicitly named by the claim.",
+    "RUNTIME_HEALTHY requires fresh healthy evidence only for the runtime components explicitly named by the claim.",
+    "External-action and acceptance claims use RUNTIME_HEALTHY semantics for their named component dependencies.",
+    "Stale runtime evidence never blocks unrelated code/PR/push work.",
+    "Missing, malformed, mismatched, future-dated, evidence-less, non-healthy or stale receipts fail closed when their component is a real live dependency.",
+    "A live scope with no dependency list fails closed rather than silently checking every runtime.",
+    "Legacy strict overrides remain repository-wide all-component proof for backward compatibility.",
+    "Runtime receipt refresh routines remain useful for keeping live proof ready; they are not universal merge gates.",
+    "Legacy repository-wide proof preserves manifest required:false components as degraded; an explicitly named new dependency is required regardless of its historical optional flag."
+  ]
+}

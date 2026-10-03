@@ -231,8 +231,11 @@ def selftest() -> int:
         load_json(DEFAULT_REGISTRY),
         load_json(DEFAULT_CONFIG),
     )
-    if "check-zero-cost-final-acceptance" not in production["candidate_sensor_ids"]:
-        print("FAIL runtime receipt changes must select check-zero-cost-final-acceptance", file=sys.stderr)
+    if "check-runtime-doctor" not in production["candidate_sensor_ids"]:
+        print("FAIL runtime receipt changes must select check-runtime-doctor", file=sys.stderr)
+        return 1
+    if "check-zero-cost-final-acceptance" in production["candidate_sensor_ids"]:
+        print("FAIL Stage 4F runtime receipt changes must not directly select historical zero-cost acceptance", file=sys.stderr)
         return 1
     print(f"OK sensor-selector selftest cases={len(cases)} deterministic=PASS unknown=FULL_SUITE broad=FULL_SUITE")
     return 0

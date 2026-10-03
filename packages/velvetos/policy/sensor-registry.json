@@ -632,7 +632,9 @@
       "triggered_by": [
         "automation/grok/**",
         "packages/vfharness/state/runtime/grok-production-scheduler.json",
-        "scripts/check-grok-provider-readback.py"
+        "scripts/check-grok-provider-readback.py",
+        "scripts/vf_runtime_receipt_policy.py",
+        "packages/vfharness/runtime/proof-scope.json"
       ],
       "depends_on": [],
       "enforces": [],
@@ -1717,7 +1719,10 @@
       ],
       "triggered_by": [
         "packages/vfharness/runtime/expected-components.json",
-        "scripts/check-runtime-doctor.py"
+        "scripts/check-runtime-doctor.py",
+        "scripts/vf_runtime_receipt_policy.py",
+        "packages/vfharness/runtime/proof-scope.json",
+        "packages/vfharness/state/runtime/**"
       ],
       "depends_on": [],
       "enforces": [],
@@ -3286,8 +3291,9 @@
         "packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json",
         "packages/vfharness/state/zero-cost-agent-stack-2026-09-27.json",
         "packages/vfharness/runtime/expected-components.json",
-        "packages/vfharness/state/runtime/**",
-        "scripts/check-zero-cost-final-acceptance.py"
+        "scripts/check-zero-cost-final-acceptance.py",
+        "scripts/vf_runtime_receipt_policy.py",
+        "packages/vfharness/runtime/proof-scope.json"
       ],
       "depends_on": [
         "check-grok-provider-readback",
@@ -3376,13 +3382,20 @@
       "id": "check-runtime-receipt-age-policy",
       "path": "scripts/check-runtime-receipt-age-policy.py",
       "owns": [
-        "scripts/vf_runtime_receipt_policy.py"
+        "scripts/vf_runtime_receipt_policy.py",
+        "packages/vfharness/runtime/proof-scope.json",
+        "scripts/generate-stage4f-runtime-receipt-scope-report.py",
+        "packages/velvetos/policy/reports/stage4f-runtime-receipt-scope.json"
       ],
       "triggered_by": [
         "scripts/vf_runtime_receipt_policy.py",
         "scripts/check-runtime-doctor.py",
         "scripts/check-grok-provider-readback.py",
-        "scripts/check-runtime-receipt-age-policy.py"
+        "scripts/check-runtime-receipt-age-policy.py",
+        "packages/vfharness/runtime/proof-scope.json",
+        "scripts/generate-stage4f-runtime-receipt-scope-report.py",
+        "packages/velvetos/policy/reports/stage4f-runtime-receipt-scope.json",
+        "scripts/check-zero-cost-final-acceptance.py"
       ],
       "depends_on": [],
       "enforces": [],

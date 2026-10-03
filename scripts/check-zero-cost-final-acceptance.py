@@ -8,6 +8,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from vf_runtime_receipt_policy import build_runtime_proof_request
+
 ROOT = Path(__file__).resolve().parents[1]
 RECEIPT = ROOT / "packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json"
 PROGRAM = ROOT / "packages/vfharness/state/zero-cost-agent-stack-2026-09-27.json"
@@ -82,7 +84,13 @@ def main() -> None:
 
     doctor_env = dict(os.environ)
     doctor_env["PYTHONUTF8"] = "1"
+    proof = build_runtime_proof_request(doctor_env)
 
+    # Current runtime health is not part of ordinary code acceptance. A caller
+    # making a deployment/runtime/external-action/acceptance claim opts in via
+    # VF_RUNTIME_PROOF_SCOPE + VF_RUNTIME_REQUIRED_COMPONENTS. The historical
+    # repositoryWideStrictDeploymentProof above remains immutable evidence that
+    # the original accepted program did complete its live proof.
     grok = subprocess.run(
         [sys.executable, "scripts/check-grok-provider-readback.py"],
         cwd=ROOT,
@@ -95,7 +103,7 @@ def main() -> None:
     assert "GROK PROVIDER READBACK PASS" in grok_output
 
     doctor = subprocess.run(
-        [sys.executable, "scripts/check-runtime-doctor.py", "--strict"],
+        [sys.executable, "scripts/check-runtime-doctor.py"],
         cwd=ROOT,
         text=True,
         capture_output=True,
@@ -103,18 +111,24 @@ def main() -> None:
     )
     doctor_output = doctor.stdout + "\n" + doctor.stderr
     assert doctor.returncode == 0, doctor_output.strip()
-    assert "FAIL grok-production-scheduler" not in doctor_output
-    assert "fallback healthy via sderot-windows" in doctor_output
-    assert "FAIL github" not in doctor_output
-    assert "FAIL google-drive" not in doctor_output
-    assert "edge-execution: no healthy member" not in doctor_output
-    # Age-only receipt expiry is a WARN on pull_request CI/local runs and a FAIL on
-    # push/schedule/workflow_dispatch (scripts/vf_runtime_receipt_policy.py); surface it.
-    receipt_warnings = sorted({
-        line.strip()
-        for line in (grok_output + "\n" + doctor_output).splitlines()
-        if line.startswith("WARN runtime receipts expired")
-    })
+    assert f"status={proof.status}" in doctor_output
+
+    requested = set(proof.required_components)
+    all_components = "*" in requested
+    if proof.runtime_health_required:
+        if all_components or "edge-execution" in requested:
+            assert "edge-execution: no healthy member" not in doctor_output
+        if all_components or "grok-production-scheduler" in requested:
+            assert "runtime_health=PASS" in grok_output
+        if all_components or "github" in requested:
+            assert "FAIL github" not in doctor_output
+        if all_components or "google-drive" in requested:
+            assert "FAIL google-drive" not in doctor_output
+        runtime_receipts_state = proof.status
+    else:
+        assert "runtime_health=NOT_REQUIRED" in doctor_output
+        assert "runtime_health=NOT_REQUIRED" in grok_output
+        runtime_receipts_state = "NOT_REQUIRED_CODE_VALID"
 
     guards = receipt.get("costAndAuthority") or {}
     assert guards.get("incrementalRecurringCostIls") == 0
@@ -155,10 +169,11 @@ def main() -> None:
     merge_commit = acceptance.get("mergeCommitSha")
     assert isinstance(merge_commit, str) and len(merge_commit) == 40
     assert git("merge-base", "--is-ancestor", merge_commit, "HEAD").returncode == 0
-    for line in receipt_warnings:
-        print(line)
-    receipts_state = "EXPIRED_WARN" if receipt_warnings else "FRESH"
-    print(f"OK zero-cost final acceptance targeted-batches committed-scope=PASS check-all=PASS sensors={live_sensor_count} push=YES pr=MERGED merge=YES runtime_receipts={receipts_state}")
+    print(
+        "OK zero-cost final acceptance targeted-batches committed-scope=PASS "
+        f"check-all=PASS sensors={live_sensor_count} push=YES pr=MERGED merge=YES "
+        f"proof_scope={proof.scope} runtime_receipts={runtime_receipts_state}"
+    )
 
 
 if __name__ == "__main__":

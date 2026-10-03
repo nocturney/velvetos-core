@@ -21,12 +21,12 @@
 |---|---|---|---|
 | 01:45 | Automation Integrity Guard | תיקון סט האוטומציות המוגן | לא בונה מערכת שנייה |
 | 02:00 | Velvet Research Seat | מחקר חי עד cutoff 07:00 → `vfops/data/research.md` | GHA לא מחליף את גוף המחקר |
-| 07:15 | Runtime Receipts Refresh | רענון ארבע קבלות ה־runtime מתצפיות חיות; PR אחד, מיזוג רק על ירוק | לא ממציא תצפית |
+| 07:15 | Runtime Receipts Refresh | רענון קבלות runtime מתצפיות חיות כדי להכין dependency-scoped live proofs; PR אחד, מיזוג רק על ירוק | freshness אינו gate אוניברסלי לקוד; לא ממציא תצפית |
 | **09:00** | Velvet Morning Brief | בריף V10.3 לבעלים | קובץ שנוצר ≠ נשלח; דרוש Gmail evidence |
 | 10:00 | Morning Delivery Guard | וידוא שנשלח הבריף של היום | |
 | 10:30 | VelvetOS Office Loop | blockers, production→content, drift | לא scheduler לכל היכולות |
 | 18:30 | VelvetOS Office Loop | סגירת יום, למידה, HANDOFF | |
-| 19:15 | Runtime Receipts Refresh | רענון שני של אותן קבלות (מתחת ל־24 שעות) | |
+| 19:15 | Runtime Receipts Refresh | רענון שני של ראיות runtime כדי ש־deployment/runtime claims יוכלו להוכיח dependencies בשם | stale receipt לא קשור אינו חוסם `CODE_VALID` |
 
 שבועי: Weekly Research Accountability שישי 12:00 (ROUTINE).  
 Deck: `.github/workflows/velvetos-weekly-deck.yml` שישי 06:00 UTC.

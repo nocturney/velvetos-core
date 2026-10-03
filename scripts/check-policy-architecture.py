@@ -143,6 +143,22 @@ def validate_registries() -> tuple[list[str], set[str]]:
     require(all(isinstance(row, dict) and row.get("can_authorize_external_effect") is False for row in evidence_rows),
             "evidence inputs may not authorize external effects", problems)
     evidence_id_set = {value for value in evidence_ids if isinstance(value, str)}
+    runtime_health_evidence = next(
+        (row for row in evidence_rows if isinstance(row, dict) and row.get("id") == "runtime_health"),
+        None,
+    )
+    require(isinstance(runtime_health_evidence, dict), "runtime_health evidence class missing", problems)
+    if isinstance(runtime_health_evidence, dict):
+        require(runtime_health_evidence.get("dependency_scoped") is True,
+                "runtime_health must remain dependency-scoped", problems)
+        require(runtime_health_evidence.get("required_status_when_dependency_real") == "RUNTIME_HEALTHY",
+                "runtime_health required status drift", problems)
+        require(runtime_health_evidence.get("proof_scope_contract") == "packages/vfharness/runtime/proof-scope.json",
+                "runtime_health proof-scope contract drift", problems)
+        require(runtime_health_evidence.get("github_event_is_dependency_signal") is False,
+                "GitHub event type must not become runtime dependency authority", problems)
+        require(existing_repo_path(runtime_health_evidence.get("proof_scope_contract")),
+                "runtime_health proof-scope contract missing", problems)
 
     effect_rows = contract.get("effects")
     require(isinstance(effect_rows, list) and bool(effect_rows), "external effect mappings required", problems)

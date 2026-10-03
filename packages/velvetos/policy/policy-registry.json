@@ -317,7 +317,11 @@
       },
       {
         "id": "runtime_health",
-        "can_authorize_external_effect": false
+        "can_authorize_external_effect": false,
+        "dependency_scoped": true,
+        "required_status_when_dependency_real": "RUNTIME_HEALTHY",
+        "proof_scope_contract": "packages/vfharness/runtime/proof-scope.json",
+        "github_event_is_dependency_signal": false
       },
       {
         "id": "rights_privacy",
