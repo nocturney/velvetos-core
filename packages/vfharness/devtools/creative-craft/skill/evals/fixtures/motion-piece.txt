@@ -1,0 +1,2 @@
+SYNTHETIC FIXTURE: 8-second title-led motion piece with exact copy and a two-level hierarchy.
+Task evidence: timing, easing, typography readability, continuity, and delivery QC are reviewed without changing the exact text.

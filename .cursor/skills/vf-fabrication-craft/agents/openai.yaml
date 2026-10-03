@@ -1,0 +1,3 @@
+interface:
+  display_name: "Velvet Fabrication Craft"
+  short_description: "Slicer calibration, orientation, supports, profiles and G-code QA"

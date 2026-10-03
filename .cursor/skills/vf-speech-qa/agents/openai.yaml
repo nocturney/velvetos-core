@@ -1,0 +1,3 @@
+interface:
+  display_name: "Velvet Speech QA"
+  short_description: "Local TTS/ASR pronunciation, transcript, consent and audio-quality checks"

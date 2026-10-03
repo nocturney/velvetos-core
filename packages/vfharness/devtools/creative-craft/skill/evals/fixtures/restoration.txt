@@ -1,0 +1,2 @@
+SYNTHETIC FIXTURE: legacy interlaced/compressed clip with noise, cadence ambiguity, soft detail, and one fast-motion stress segment.
+Task evidence: diagnose before enhancement, keep stages separable, preserve identity/source truth, and compare temporal stress frames against source.

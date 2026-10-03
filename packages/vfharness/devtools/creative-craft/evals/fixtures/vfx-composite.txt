@@ -1,0 +1,2 @@
+SYNTHETIC FIXTURE: foreground plate over CG background with lens distortion metadata, soft motion blur, edge contamination, and mismatched grain.
+Task evidence: plate/lens workflow, matte/track integrity, premultiplication, grain/defocus/motion-blur integration, and worst-frame checks must be explicit.

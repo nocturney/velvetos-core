@@ -1,0 +1,3 @@
+SYNTHETIC FIXTURE: compact consumer enclosure.
+Truth constraints: body dimensions and port locations are protected. Finish is matte polymer with one brushed-metal insert.
+Task evidence: neutral diagnostic render plus hero render must preserve geometry/material identity while improving camera, reflection shape, light hierarchy, and set restraint.

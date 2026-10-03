@@ -1,0 +1,2 @@
+SYNTHETIC FIXTURE: hard-surface handheld housing with a protected silhouette, seam, button recess, and mounting interface.
+Task evidence: topology may change but silhouette and interface dimensions must not. Inspect stress areas, shading continuity, UV/bake readiness, and exported mesh.

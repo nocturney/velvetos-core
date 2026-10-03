@@ -1,0 +1,3 @@
+interface:
+  display_name: "Velvet Material Lookdev"
+  short_description: "PBR authoring, baking, texture pipelines and material-response QA"

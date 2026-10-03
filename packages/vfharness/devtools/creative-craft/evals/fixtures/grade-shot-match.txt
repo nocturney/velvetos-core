@@ -1,0 +1,3 @@
+SYNTHETIC FIXTURE: three-shot sequence with one neutral reference frame and two deliberately mismatched shots.
+Protected truth: chronology and product color identity.
+Task evidence: normalize first, then match exposure/white balance/contrast while preserving destination color-management assumptions.

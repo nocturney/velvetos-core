@@ -1,0 +1,3 @@
+SYNTHETIC FIXTURE: parametric mounting bracket with named width, hole spacing, wall, and fillet parameters.
+Perturbation: change width and hole spacing independently.
+Task evidence: rebuild must preserve datum intent, interface ownership, and manufacturing master without unrelated failure.
