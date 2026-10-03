@@ -112,8 +112,54 @@ for ((attempt=1; attempt<=max_attempts; attempt++)); do
   fi
 
   if git push origin "HEAD:refs/heads/$target_branch"; then
-    echo "MACHINE_PRECHECK_PUSH_OK branch=$target_branch head=$head_sha check_run=$check_run_id"
     cleanup_stage
+
+    # Pushes authenticated by GITHUB_TOKEN do not reliably emit a new push
+    # workflow. Dispatch the canonical full suite explicitly on the now-live SHA
+    # so the Stage 3 main-branch contract remains true for machine writers.
+    gh workflow run "$workflow_file" --repo "$repo" --ref "$target_branch" -f execution=main_full
+
+    full_run_id=""
+    for _ in {1..30}; do
+      full_run_id="$(
+        gh run list \
+          --repo "$repo" \
+          --workflow "$workflow_file" \
+          --branch "$target_branch" \
+          --event workflow_dispatch \
+          --limit 10 \
+          --json databaseId,headSha \
+          --jq ".[] | select(.headSha == \"$head_sha\") | .databaseId" \
+          | head -n 1
+      )"
+      if [[ -n "$full_run_id" ]]; then
+        break
+      fi
+      sleep 2
+    done
+    if [[ -z "$full_run_id" ]]; then
+      echo "::error::no post-push full-suite run appeared for $head_sha"
+      exit 1
+    fi
+
+    gh run watch "$full_run_id" --repo "$repo" --exit-status
+    full_observed="$(
+      gh run view "$full_run_id" --repo "$repo" \
+        --json headSha,headBranch,conclusion \
+        --jq '.headSha + " " + .headBranch + " " + (.conclusion // "")'
+    )"
+    if [[ "$full_observed" != "$head_sha $target_branch success" ]]; then
+      echo "::error::post-push full-suite run did not finish success on live main: $full_observed"
+      exit 1
+    fi
+
+    full_log="$(gh run view "$full_run_id" --repo "$repo" --log)"
+    if ! grep -Eq 'SENSORS [0-9]+ mode=full' <<<"$full_log" || ! grep -Eq 'OK suite passed=[0-9]+' <<<"$full_log"; then
+      echo "::error::post-push run succeeded but did not prove full-suite execution"
+      exit 1
+    fi
+
+    echo "MACHINE_PRECHECK_PUSH_OK branch=$target_branch head=$head_sha check_run=$check_run_id full_run=$full_run_id"
     exit 0
   fi
 

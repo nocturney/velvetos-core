@@ -71,6 +71,9 @@ def main() -> int:
         '.state == "success"',
         'git merge-base --is-ancestor "origin/$target_branch" "$head_sha"',
         'git push origin "HEAD:refs/heads/$target_branch"',
+        '-f execution=main_full',
+        'SENSORS [0-9]+ mode=full',
+        'OK suite passed=[0-9]+',
     ):
         if needle not in helper_text:
             fail(f"machine-writer precheck helper missing invariant: {needle}")
@@ -86,6 +89,10 @@ def main() -> int:
         "statuses/$GITHUB_SHA",
         "context=check-all",
         "state=success",
+        "execution:",
+        "machine_precheck",
+        "main_full",
+        "inputs.execution == 'main_full'",
     ):
         if needle not in core_workflow:
             fail(f"Core Sensors missing machine precheck surface: {needle}")
