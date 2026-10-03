@@ -4,7 +4,7 @@
   "name": "required-fast-and-affected-ci",
   "state": "PREPARED_NOT_ACTIVE",
   "behavior_change": false,
-  "prepared_against_main_sha": "931b5968d6ebfe2a62e7673e57fbed30b9cb0839",
+  "prepared_against_main_sha": "8d64a508f23bcfdc97533ca066def72f477561e7",
   "entry_requirement": "Stage 2 shadow exit gate PASS",
   "current_selector_mode": "shadow",
   "current_merge_authority": "FULL_SUITE",
