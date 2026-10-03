@@ -1,0 +1,47 @@
+{
+  "task_id": "morning-brief-2026-10-03",
+  "title": "Velvet Morning Brief 3.10.2026",
+  "status": "ready",
+  "component_state": "Idle",
+  "date": "2026-10-03",
+  "timezone": "Asia/Jerusalem",
+  "version": "Morning-Green-v3.1",
+  "branch": "cursor/morning-green-2026-10-03-fade",
+  "research": {
+    "source": "origin/cursor/research-seat-2026-10-03-a1a2:packages/vfops/data/research.md",
+    "state": "ready_for_brief",
+    "header": "05 · משרד · 3.10.2026",
+    "landed": false,
+    "pr": 459
+  },
+  "schedule": {
+    "source": "cloudflare-instagram-publisher",
+    "state": "unavailable",
+    "reason": "no live snapshot; FEED-SOURCE unavailableLabel",
+    "openpost": "paused_not_passed"
+  },
+  "visible_text_gate": "PASS",
+  "text_sha256": "1ece92d14b4113c0926e2934c1e6be3ab70c192924d2c3d8c0adf31413c96b5e",
+  "artifacts": {
+    "loop_json": "packages/vfops/hq/brief-2026-10-03.json",
+    "factual_json": "packages/vfops/out/morning-brief-factual-2026-10-03.json",
+    "factual_txt": "packages/vfops/out/morning-brief-2026-10-03.txt",
+    "html": "packages/vfops/out/morning-green-2026-10-03.html",
+    "visibleText": "packages/vfops/out/morning-green-2026-10-03.txt",
+    "request": "packages/vfops/out/gmail-send-request.json",
+    "requestId": "morning-green-2026-10-03",
+    "requestEnabled": false
+  },
+  "locks": [
+    "no invented sale ILS",
+    "Insights אין ספירה",
+    "schedule strip unavailable, not an empty plan",
+    "gmail-send-request enabled false",
+    "no email sent",
+    "no auto-DM",
+    "no HQ Print",
+    "no live IG publish from this brief"
+  ],
+  "next": "send stays disarmed until a later explicit arm",
+  "latest_observation": "Jobs/books lastMod 2026-09-14. Open collection 4790. Calendar 2026-10-03 and 2026-10-04 empty. IG 81/125/12 latest Dd9cy8zCfKq likes=2 comments=0. Research PR #459 ready_for_brief, not merged."
+}
