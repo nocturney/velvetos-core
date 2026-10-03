@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Deterministic Stage 2 shadow selector for VelvetOS sensors.
+"""Deterministic affected-sensor selector for VelvetOS CI.
 
-This script never replaces the full suite in Stage 2. Unknown paths and broad
-harness/policy changes expand to FULL_SUITE.
+Stage 2 used this in shadow mode; Stage 3 uses it as the pull-request execution
+selector. Unknown paths and broad harness/policy changes expand to FULL_SUITE.
 """
 from __future__ import annotations
 
@@ -155,7 +155,7 @@ def select_for_paths(paths: Iterable[str], registry: dict, config: dict) -> dict
 def append_summary(path: Path, result: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     lines = [
-        "### VelvetOS sensor selector - shadow",
+        f"### VelvetOS sensor selector - {result.get('mode') or 'unknown'}",
         "",
         f"- Full-suite fallback: **{str(result['full_suite']).lower()}**",
         f"- Candidate sensors: **{result['candidate_count']} / {result['total_sensor_count']}**",
@@ -274,8 +274,9 @@ def main() -> int:
     if args.summary:
         append_summary(args.summary, result)
 
+    marker_prefix = "SENSOR_SHADOW_SELECTION" if result.get("mode") == "shadow" else "SENSOR_SELECTION"
     print(
-        f"SENSOR_SHADOW_SELECTION full_suite={str(result['full_suite']).lower()} "
+        f"{marker_prefix} full_suite={str(result['full_suite']).lower()} "
         f"candidate={result['candidate_count']} selected={result['selection_count']} "
         f"total={result['total_sensor_count']} reasons={','.join(result['full_suite_reasons']) or 'none'}"
     )
@@ -293,7 +294,7 @@ def main() -> int:
     if args.base:
         marker["base"] = args.base
         marker["head"] = args.head
-    print("SENSOR_SHADOW_SELECTION_JSON " + json.dumps(marker, ensure_ascii=False, sort_keys=True))
+    print(marker_prefix + "_JSON " + json.dumps(marker, ensure_ascii=False, sort_keys=True))
     return 0
 
 

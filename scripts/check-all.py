@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Run VelvetOS computational HQ sensors. No network. No send.
 
-Default behavior remains the authoritative full suite. Stage 3 can later opt in
-to an exact selector output with --selection; that path is dormant until the CI
-workflow explicitly uses it after the Stage 2 exit gate passes.
+Default behavior remains the authoritative full suite. Stage 3 uses an exact
+selector output with --selection for pull requests while pushes to main continue
+to run the full suite.
 """
 from __future__ import annotations
 

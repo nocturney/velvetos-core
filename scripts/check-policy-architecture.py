@@ -218,6 +218,11 @@ def validate_registries() -> tuple[list[str], set[str]]:
     require(stage3.get("required_status_check") == "check-all", "Stage 3 required status check drift", problems)
     require(type(stage3.get("branch_ruleset_id")) is int and stage3.get("branch_ruleset_id") > 0, "Stage 3 branch ruleset id invalid", problems)
     require(stage3.get("branch_ruleset_target_enforcement") == "active", "Stage 3 ruleset target must be active", problems)
+    duration_override = stage3.get("activation_duration_override") or {}
+    require(duration_override.get("type") == "OWNER_DURATION_ONLY", "Stage 3 duration override type drift", problems)
+    require(duration_override.get("criterion") == "minimum_observation_days", "Stage 3 duration override criterion drift", problems)
+    require(duration_override.get("authorized_by") == "owner", "Stage 3 duration override must be owner-authorized", problems)
+    require(duration_override.get("requires_only_blocker") == "MINIMUM_OBSERVATION_DAYS_NOT_MET", "Stage 3 duration override scope drift", problems)
     duplicate_targets = set(stage3.get("duplicate_direct_invocations_to_remove") or [])
     require(duplicate_targets == {"scripts/check-policy-architecture.py", "scripts/check-commission-isolation.py"}, "Stage 3 duplicate-removal targets drift", problems)
 
@@ -235,13 +240,23 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if receipt_path.is_file():
             receipt = load(receipt_path)
             require(receipt.get("schema") == "velvetos.stage3-activation-receipt.v1", "Stage 3 activation receipt schema mismatch", problems)
-            require(receipt.get("stage") == 3 and receipt.get("activation_gate") == "PASS", "Stage 3 activation receipt gate mismatch", problems)
+            activation_gate = receipt.get("activation_gate")
+            require(receipt.get("stage") == 3 and activation_gate in {"PASS", "PASS_WITH_OWNER_DURATION_OVERRIDE"}, "Stage 3 activation receipt gate mismatch", problems)
             require(receipt.get("critical_misses") == 0, "Stage 3 activation receipt contains critical miss", problems)
             require(receipt.get("deterministic_replay_pass") is True, "Stage 3 activation receipt replay failed", problems)
             require(receipt.get("run_history_complete") is True, "Stage 3 activation receipt history incomplete", problems)
             require(receipt.get("rollback_mode") == "FULL_SUITE_REQUIRED", "Stage 3 activation receipt rollback mismatch", problems)
             require(int(receipt.get("observed_pull_requests") or 0) >= int(shadow_exit.get("minimum_pull_requests") or 0), "Stage 3 activation receipt PR count below gate", problems)
-            require(float(receipt.get("observation_days") or 0) >= float(shadow_exit.get("minimum_observation_days") or 0), "Stage 3 activation receipt days below gate", problems)
+            if activation_gate == "PASS":
+                require(float(receipt.get("observation_days") or 0) >= float(shadow_exit.get("minimum_observation_days") or 0), "Stage 3 activation receipt days below gate", problems)
+            else:
+                receipt_override = receipt.get("owner_duration_override") or {}
+                require(receipt_override.get("type") == "OWNER_DURATION_ONLY", "Stage 3 owner duration override missing from receipt", problems)
+                require(receipt_override.get("original_blocker") == "MINIMUM_OBSERVATION_DAYS_NOT_MET", "Stage 3 owner duration override blocker mismatch", problems)
+                require(receipt_override.get("authorized_by") == "owner", "Stage 3 owner duration override authorization mismatch", problems)
+                require(float(receipt.get("observation_days") or 0) >= float(receipt_override.get("minimum_observed_days") or 0), "Stage 3 owner duration override day floor not met", problems)
+                require(int(receipt.get("observed_pull_requests") or 0) >= int(receipt_override.get("minimum_observed_pull_requests") or 0), "Stage 3 owner duration override PR floor not met", problems)
+                require(receipt_override.get("authorized_at") == duration_override.get("authorized_at"), "Stage 3 owner duration override receipt/config mismatch", problems)
         require("--selection sensor-selection.json" in workflow_text, "Stage 3 enforced workflow must run selected suite", problems)
         require("Compare sensor selector shadow with full suite" not in workflow_text, "Stage 3 enforced workflow must remove shadow comparison", problems)
         for rel in sorted(duplicate_targets):
