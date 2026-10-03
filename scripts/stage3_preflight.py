@@ -302,9 +302,8 @@ def main() -> int:
             sha256(args.observation_report),
         )
         args.emit_receipt.parent.mkdir(parents=True, exist_ok=True)
-        args.emit_receipt.write_text(
-            json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-            encoding="utf-8",
+        args.emit_receipt.write_bytes(
+            (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
         )
         print(f"STAGE3_ACTIVATION_RECEIPT {args.emit_receipt}")
 
