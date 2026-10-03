@@ -173,3 +173,15 @@ Stage 4F separates code validity from deployment/runtime truth. A runtime receip
 - The `runtime_health` evidence class in the One Authority Gate registry is explicitly `dependency_scoped=true`, requires `RUNTIME_HEALTHY` when the dependency is real, and states that GitHub event type is not a dependency signal.
 - `Runtime Receipts Refresh` remains twice-daily evidence maintenance so live claims have fresh proof ready. It is useful operationally, but freshness is not a universal code/merge gate.
 - `reports/stage4f-runtime-receipt-scope.json` pins repository acceptance against pre-change `main` `8081bfe62fe6c59e0e22798dda1d2469e5ee3742`. Fixture tests prove GitHub-event neutrality, unrelated stale evidence not blocking `CODE_VALID`, component-scoped live proof, fail-closed required evidence, anyOf fallback, unknown dependency rejection and legacy all-component strict compatibility.
+
+## Stage 4G — Bounded Cost Envelopes
+
+Stage 4G keeps `policy_id: cost.recurring.new` and `NO_NEW_RECURRING_COST` as the single cost authority while allowing one explicit owner approval to cover a tightly bounded sequence of paid-capable calls. The implementation ships **no active envelope and authorizes no spend**.
+
+- `packages/velvetos/policy/schema/cost-envelope.schema.json` binds provider, exact product/plan, billing model, usage model, component/environment/action scope, aggregate ILS cap/period, hard-cap state, overage behavior, source-preflight SHA-256, owner approval reference and expiry.
+- `scripts/vf_cost_preflight.py` remains the single runtime decision entrypoint. `scripts/vf_cost_envelope.py` is a helper only; there is no second cost policy engine.
+- A matching call inside a valid envelope requires a fresh usage meter and proves `spent_before + projected_incremental_cost <= cap`. It does **not** repeat full cost preflight or owner approval, but it still requires an exact-action receipt before the paid external effect.
+- Provider/plan/billing/usage/scope/cap/automatic-overage/overage-behavior drift or expiry returns `REQUIRE_OWNER_APPROVAL`; stale/missing meter evidence, broken hard cap, cap breach, source-preflight mismatch or `COST_UNKNOWN` fail closed.
+- `cost-envelope-test-vectors.json` covers 22 cases: 2 ALLOW, 10 REQUIRE_OWNER_APPROVAL/revalidation and 10 DENY. The matching cases prove `owner_prompt_count=0`, `full_preflight_per_call=false` and `exact_action_receipt_required=true`.
+- Generic `velvetos.action-receipt.v1` vectors prove an envelope-authorized cost call may skip a repeated owner gate while still requiring exact action binding.
+- `reports/stage4g-cost-envelopes.json` is reproducible and pins repository acceptance against pre-change `main` `f0df1c7ea28aad1cbaa9d4752bb84bc6035735d5`; it records `active_envelope_count=0`, `external_paid_calls_performed=0` and `spend_authorized_by_stage4g_implementation=false`.

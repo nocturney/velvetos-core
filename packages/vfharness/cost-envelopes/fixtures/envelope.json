@@ -1,0 +1,39 @@
+{
+  "schema": "velvetos.cost-envelope.v1",
+  "envelope_id": "fixture-envelope-stage4g",
+  "policy_id": "cost.recurring.new",
+  "classification": "PAID_REQUIRED",
+  "provider": "fixture-provider",
+  "product_or_plan": "fixture-plan-v1",
+  "billing_model": "usage-based",
+  "usage_model": "requests",
+  "scope": {
+    "component": "fixture-component",
+    "environment": "test-fixture",
+    "actions": [
+      "generate",
+      "embed"
+    ]
+  },
+  "cap": {
+    "amount": 10.0,
+    "currency": "ILS",
+    "period": "fixture-total",
+    "hard_cap_enforced": true
+  },
+  "overage": {
+    "behavior": "BLOCK_AT_CAP",
+    "automatic_paid_overage_allowed": false
+  },
+  "meter_max_age_seconds": 3600,
+  "source_preflight": {
+    "path": "packages/vfharness/cost-envelopes/fixtures/preflight.json",
+    "sha256": "4431bf92ab39f7b0ccab324e12e5b61734c155f7b0d1af048bfa10c176a465ef"
+  },
+  "approval": {
+    "approved_by": "TEST_FIXTURE_OWNER",
+    "approved_at": "2030-01-01T10:00:00Z",
+    "expires_at": "2030-01-01T11:00:00Z",
+    "approval_ref": "fixture://owner-approval/stage4g"
+  }
+}

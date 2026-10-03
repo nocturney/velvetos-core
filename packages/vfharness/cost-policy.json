@@ -1,6 +1,6 @@
 {
   "id": "no-new-recurring-cost",
-  "version": 1,
+  "version": 2,
   "sourceOfTruth": "constitution/NO_NEW_RECURRING_COST.md",
   "defaultRecurringCostIls": 0,
   "failClosed": true,
@@ -108,5 +108,52 @@
       "workload",
       "incremental_cost_assumption"
     ]
+  },
+  "boundedEnvelopes": {
+    "schema": "velvetos.cost-envelope.v1",
+    "defaultState": "NO_ACTIVE_ENVELOPE",
+    "decisionEntrypoint": "scripts/vf_cost_preflight.py",
+    "helper": "scripts/vf_cost_envelope.py",
+    "allowedClassifications": [
+      "EXISTING_PAID_CAPABILITY",
+      "FREE_TIER_LIMITED",
+      "PAID_REQUIRED"
+    ],
+    "requiredBinding": [
+      "provider",
+      "product_or_plan",
+      "billing_model",
+      "usage_model",
+      "scope",
+      "cap",
+      "overage",
+      "expiry",
+      "source_preflight_sha256",
+      "owner_approval_ref"
+    ],
+    "capCurrency": "ILS",
+    "overageBehavior": "BLOCK_AT_CAP",
+    "requiresHardCap": true,
+    "requiresFreshUsageMeter": true,
+    "perMatchingCall": {
+      "ownerApprovalRequired": false,
+      "fullPreflightRequired": false,
+      "exactActionReceiptRequired": true
+    },
+    "invalidatesOn": [
+      "provider_change",
+      "plan_change",
+      "billing_model_change",
+      "usage_model_change",
+      "scope_change",
+      "cap_change",
+      "automatic_overage_change",
+      "overage_behavior_change",
+      "expiry"
+    ],
+    "cannotEnvelope": [
+      "COST_UNKNOWN"
+    ],
+    "activeEnvelopeDirectory": "packages/vfharness/cost-envelopes/active"
   }
 }
