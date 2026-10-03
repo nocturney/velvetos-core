@@ -116,9 +116,57 @@
   ],
   "repository_acceptance": "PASS",
   "production_cutover": {
-    "status": "PENDING_AFTER_MERGE",
-    "live_worker_version_id": null,
-    "health_readback": null,
-    "negative_control": null
+    "status": "PASS",
+    "deployed_main_sha": "fdc4a3cc1d46b43870e6c69ddcf36fc378a406e7",
+    "live_worker_version_id": "2390ee0e-6019-44c5-9832-e3d08689f440",
+    "worker_version_created_at": "2026-10-03T16:15:19.436Z",
+    "worker_url": "https://velvetos-instagram-publisher.velvetos-vf.workers.dev",
+    "health_readback": {
+      "observed_at": "2026-10-03T16:15:44.3000389Z",
+      "ok": true,
+      "policy_id": "instagram.publish",
+      "policy_version": 2,
+      "content_ready": "velvet.content_ready.v1",
+      "formats": [
+        "image",
+        "carousel",
+        "reel",
+        "story"
+      ],
+      "runtime_ok": true,
+      "runtime_heartbeat_age_seconds": 47,
+      "published_verified_count": 5,
+      "scheduled_or_retry_count": 0,
+      "meta_ok": true,
+      "meta_username": "velvets_cloud",
+      "instagram_read_smoke_run_id": 37136222049,
+      "instagram_read_smoke_head_sha": "fdc4a3cc1d46b43870e6c69ddcf36fc378a406e7",
+      "instagram_read_smoke_live_executed": true,
+      "instagram_read_smoke_checks": {
+        "get_profile": true,
+        "list_media": true,
+        "live_username": "velvets_cloud"
+      }
+    },
+    "negative_control": {
+      "request": "new LOW routine job missing CONTENT_READY",
+      "reused_existing_media_bytes": true,
+      "observed_http": 403,
+      "observed_error": "policy_not_allowed",
+      "policy_decision": "DENY",
+      "reason_codes": [
+        "CONTENT_READY_REQUIRED"
+      ],
+      "readback_http": 404,
+      "persistent_job_created": false
+    },
+    "compatibility": {
+      "legacy_gate_cutoff": "2026-10-03T15:58:09.874Z",
+      "first_stage4d_worker_version_id": "dbbcefed-9265-4831-9c3a-6b36a800c363",
+      "first_stage4d_worker_created_at": "2026-10-03T15:58:09.874Z",
+      "pending_jobs_at_boundary": 0
+    },
+    "rollback": "Redeploy the prior Worker version and preserve exact D1/provider receipts; the negative control created no job.",
+    "receipt": "packages/velvetos/policy/reports/stage4d-instagram-happy-path-cutover.json"
   }
 }
