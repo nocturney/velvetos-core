@@ -1,17 +1,17 @@
 {
   "enabled": false,
-  "requestId": "tool-updates-ee9444ff9d20cf08",
+  "requestId": "tool-updates-bf212b351df3665e",
   "to": "nocturney@gmail.com",
-  "subject": "VelvetOS · עדכוני כלים · 50 ממתינים",
+  "subject": "VelvetOS · עדכוני כלים · 55 ממתינים",
   "html": "packages/vfresearch/out/tool-updates-latest.html",
   "visibleText": "packages/vfresearch/out/tool-updates-latest.txt",
   "images": "",
   "embedRemoteImages": false,
   "remoteImageLimit": 0,
-  "notificationDigest": "ee9444ff9d20cf0848a7c6e781cc9c987538058320c4025f13826443edb499b3",
-  "pendingCount": 50,
+  "notificationDigest": "bf212b351df3665e37e6167e5552495a9df359837a350ec2bdc2b851d1958ee7",
+  "pendingCount": 55,
   "reviewReady": true,
   "unreviewedCount": 0,
   "unreviewedRepos": [],
-  "dispatchNote": "workflow_dispatch returned HTTP 403 Resource not accessible by integration on 2026-10-02; request left disabled so the baseline sensor stays green. No Gmail message id."
+  "dispatchNote": "workflow_dispatch returned HTTP 403 Resource not accessible by integration on 2026-10-04 (workflow 368772560). Request left disabled so the baseline sensor stays green. No Gmail message id."
 }
