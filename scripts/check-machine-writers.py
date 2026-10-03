@@ -66,6 +66,9 @@ def main() -> int:
         'gh run watch "$check_run_id"',
         '.name == "check-all"',
         '.app.slug == "github-actions"',
+        'commits/$head_sha/status',
+        '.context == "check-all"',
+        '.state == "success"',
         'git merge-base --is-ancestor "origin/$target_branch" "$head_sha"',
         'git push origin "HEAD:refs/heads/$target_branch"',
     ):
@@ -75,7 +78,15 @@ def main() -> int:
         fail("machine-writer precheck helper must never force-push")
 
     core_workflow = (WORKFLOWS / "check-all.yml").read_text(encoding="utf-8")
-    for needle in ("workflow_dispatch:", "github.event_name == 'workflow_dispatch'", "--selection sensor-selection.json"):
+    for needle in (
+        "workflow_dispatch:",
+        "github.event_name == 'workflow_dispatch'",
+        "--selection sensor-selection.json",
+        "statuses: write",
+        "statuses/$GITHUB_SHA",
+        "context=check-all",
+        "state=success",
+    ):
         if needle not in core_workflow:
             fail(f"Core Sensors missing machine precheck surface: {needle}")
 

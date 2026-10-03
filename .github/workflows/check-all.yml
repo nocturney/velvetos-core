@@ -9,6 +9,10 @@ on:
   # pushing that same SHA to main. The selector diffs against live origin/main.
   workflow_dispatch:
 
+permissions:
+  contents: read
+  statuses: write
+
 jobs:
   check-all:
     runs-on: ubuntu-latest
@@ -72,6 +76,19 @@ jobs:
       - name: Run selected VelvetOS sensors on pull request or machine precheck
         if: ${{ !cancelled() && (github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch') }}
         run: python3 scripts/check-all.py --selection sensor-selection.json --json-out sensor-selected-results.json
+
+      - name: Publish verified check-all commit status for machine precheck
+        if: ${{ success() && github.event_name == 'workflow_dispatch' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA" \
+            -f state=success \
+            -f context=check-all \
+            -f description='VelvetOS exact-SHA precheck passed' \
+            -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
 
       - name: Run full VelvetOS sensor suite on main
         if: ${{ !cancelled() && github.event_name == 'push' }}

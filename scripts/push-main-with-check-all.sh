@@ -94,6 +94,15 @@ for ((attempt=1; attempt<=max_attempts; attempt++)); do
     exit 1
   fi
 
+  status_count="$(
+    gh api "repos/$repo/commits/$head_sha/status" \
+      --jq '[.statuses[] | select(.context == "check-all" and .state == "success")] | length'
+  )"
+  if [[ "$status_count" -lt 1 ]]; then
+    echo "::error::exact head lacks verified check-all commit status for branch protection"
+    exit 1
+  fi
+
   # A concurrent main update invalidates the checked ancestry. Rebase and
   # dispatch a new exact-SHA check rather than reusing stale evidence.
   git fetch origin "$target_branch"
