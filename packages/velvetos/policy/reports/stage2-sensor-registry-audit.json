@@ -39,20 +39,6 @@
   ],
   "workflow_direct_sensor_invocations": [
     {
-      "workflow": ".github/workflows/check-all.yml",
-      "line": 42,
-      "sensor_path": "scripts/check-policy-architecture.py",
-      "suite_runner_present": true,
-      "potential_duplicate_with_suite_runner": true
-    },
-    {
-      "workflow": ".github/workflows/check-all.yml",
-      "line": 87,
-      "sensor_path": "scripts/check-commission-isolation.py",
-      "suite_runner_present": true,
-      "potential_duplicate_with_suite_runner": true
-    },
-    {
       "workflow": ".github/workflows/jobs-write-through.yml",
       "line": 111,
       "sensor_path": "scripts/check-vf-office.py",
@@ -88,22 +74,7 @@
       "potential_duplicate_with_suite_runner": false
     }
   ],
-  "potential_duplicate_sensor_runs": [
-    {
-      "workflow": ".github/workflows/check-all.yml",
-      "line": 42,
-      "sensor_path": "scripts/check-policy-architecture.py",
-      "suite_runner_present": true,
-      "potential_duplicate_with_suite_runner": true
-    },
-    {
-      "workflow": ".github/workflows/check-all.yml",
-      "line": 87,
-      "sensor_path": "scripts/check-commission-isolation.py",
-      "suite_runner_present": true,
-      "potential_duplicate_with_suite_runner": true
-    }
-  ],
+  "potential_duplicate_sensor_runs": [],
   "duplicate_removal_stage": 3,
   "notes": [
     "Stage 2A records duplicates and nested execution; it does not remove or skip existing checks.",

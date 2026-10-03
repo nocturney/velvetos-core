@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "mode": "shadow",
+  "mode": "enforced",
   "registry": "packages/velvetos/policy/sensor-registry.json",
   "unknown_path_behavior": "FULL_SUITE",
   "broad_change_behavior": "FULL_SUITE",
@@ -35,7 +35,7 @@
     "repository_mutation_from_shadow": false
   },
   "stage3_preparation": {
-    "state": "PREPARED_NOT_ACTIVE",
+    "state": "ACTIVE",
     "activation_requires_shadow_exit_eligible": true,
     "activation_receipt": "packages/velvetos/policy/reports/stage3-activation-receipt.json",
     "pull_request_execution": "SELECTED_SUITE",
@@ -50,6 +50,21 @@
     "required_status_check": "check-all",
     "branch_ruleset_id": 23284099,
     "branch_ruleset_target_enforcement": "active",
+    "activation_duration_override": {
+      "type": "OWNER_DURATION_ONLY",
+      "criterion": "minimum_observation_days",
+      "authorized_by": "owner",
+      "authorized_at": "2026-10-03T15:41:56+03:00",
+      "reason": "Owner judged accumulated duration and evidence sufficient to proceed before the fixed 7-day threshold.",
+      "minimum_observed_days": 5.8467,
+      "minimum_observed_pull_requests": 69,
+      "requires_only_blocker": "MINIMUM_OBSERVATION_DAYS_NOT_MET",
+      "requires_zero_critical_misses": true,
+      "requires_zero_unclassified_noncritical_misses": true,
+      "requires_zero_incomplete_observations": true,
+      "requires_run_history_complete": true,
+      "requires_deterministic_replay_pass": true
+    },
     "rollback_mode": "FULL_SUITE_REQUIRED"
   }
 }

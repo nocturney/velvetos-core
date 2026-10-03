@@ -62,7 +62,8 @@
         "pull_request_execution", "main_push_execution", "selected_suite_runner",
         "critical_always_on_preserved", "unknown_or_broad_change_behavior",
         "duplicate_direct_invocations_to_remove", "required_status_check",
-        "branch_ruleset_id", "branch_ruleset_target_enforcement", "rollback_mode"
+        "branch_ruleset_id", "branch_ruleset_target_enforcement",
+        "activation_duration_override", "rollback_mode"
       ],
       "additionalProperties": false,
       "properties": {
@@ -82,6 +83,33 @@
         "required_status_check": {"const": "check-all"},
         "branch_ruleset_id": {"type": "integer", "minimum": 1},
         "branch_ruleset_target_enforcement": {"const": "active"},
+        "activation_duration_override": {
+          "type": "object",
+          "required": [
+            "type", "criterion", "authorized_by", "authorized_at", "reason",
+            "minimum_observed_days", "minimum_observed_pull_requests",
+            "requires_only_blocker", "requires_zero_critical_misses",
+            "requires_zero_unclassified_noncritical_misses",
+            "requires_zero_incomplete_observations", "requires_run_history_complete",
+            "requires_deterministic_replay_pass"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "type": {"const": "OWNER_DURATION_ONLY"},
+            "criterion": {"const": "minimum_observation_days"},
+            "authorized_by": {"const": "owner"},
+            "authorized_at": {"type": "string", "minLength": 1},
+            "reason": {"type": "string", "minLength": 1},
+            "minimum_observed_days": {"type": "number", "minimum": 0},
+            "minimum_observed_pull_requests": {"type": "integer", "minimum": 1},
+            "requires_only_blocker": {"const": "MINIMUM_OBSERVATION_DAYS_NOT_MET"},
+            "requires_zero_critical_misses": {"const": true},
+            "requires_zero_unclassified_noncritical_misses": {"const": true},
+            "requires_zero_incomplete_observations": {"const": true},
+            "requires_run_history_complete": {"const": true},
+            "requires_deterministic_replay_pass": {"const": true}
+          }
+        },
         "rollback_mode": {"const": "FULL_SUITE_REQUIRED"}
       }
     }

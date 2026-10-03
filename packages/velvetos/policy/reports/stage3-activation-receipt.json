@@ -1,0 +1,82 @@
+{
+  "schema": "velvetos.stage3-activation-receipt.v1",
+  "stage": 3,
+  "activation_gate": "PASS_WITH_OWNER_DURATION_OVERRIDE",
+  "prepared_main_sha": "09f73c909e6583844d9ca80c192462369b13decf",
+  "observation_generated_at": "2026-10-03T12:33:00.243025Z",
+  "observation_start": "2026-09-27T16:13:47Z",
+  "observed_pull_requests": 69,
+  "observed_runs": 129,
+  "observation_days": 5.8467,
+  "critical_misses": 0,
+  "noncritical_misses": 3,
+  "noncritical_classifications": [
+    {
+      "run_id": 36377688299,
+      "pull_request": 407,
+      "sensor_id": "check-scenario-capability-graft",
+      "classification": "RELEVANT_MAPPING_FIXED"
+    },
+    {
+      "run_id": 37034063585,
+      "pull_request": 457,
+      "sensor_id": "check-zero-cost-final-acceptance",
+      "classification": "RELEVANT_MAPPING_FIXED"
+    },
+    {
+      "run_id": 37096112950,
+      "pull_request": 460,
+      "sensor_id": "check-zero-cost-final-acceptance",
+      "classification": "RELEVANT_MAPPING_FIXED"
+    }
+  ],
+  "deterministic_replay_pass": true,
+  "run_history_complete": true,
+  "owner_duration_override": {
+    "type": "OWNER_DURATION_ONLY",
+    "criterion": "minimum_observation_days",
+    "authorized_by": "owner",
+    "authorized_at": "2026-10-03T15:41:56+03:00",
+    "reason": "Owner judged accumulated duration and evidence sufficient to proceed before the fixed 7-day threshold.",
+    "minimum_observed_days": 5.8467,
+    "minimum_observed_pull_requests": 69,
+    "original_blocker": "MINIMUM_OBSERVATION_DAYS_NOT_MET"
+  },
+  "observation_report_sha256": "53252e8590e97cd39a751ccfa552383c5db14abc2f7395061f1cf1fd8f61b51f",
+  "rollback_mode": "FULL_SUITE_REQUIRED",
+  "selector_config_sha256": "bba3f4a1c0dcf4e33769a267c5d91ce55e8dac76312199801ad6b12ab119cf62",
+  "sensor_registry_sha256": "c80b71ed9e586ee29b76b783e8a7c3277f141f2da744d9c86e1f20daeb389089",
+  "stage3_preparation": {
+    "state": "PREPARED_NOT_ACTIVE",
+    "activation_requires_shadow_exit_eligible": true,
+    "activation_receipt": "packages/velvetos/policy/reports/stage3-activation-receipt.json",
+    "pull_request_execution": "SELECTED_SUITE",
+    "main_push_execution": "FULL_SUITE",
+    "selected_suite_runner": "scripts/check-all.py --selection sensor-selection.json",
+    "critical_always_on_preserved": true,
+    "unknown_or_broad_change_behavior": "FULL_SUITE",
+    "duplicate_direct_invocations_to_remove": [
+      "scripts/check-policy-architecture.py",
+      "scripts/check-commission-isolation.py"
+    ],
+    "required_status_check": "check-all",
+    "branch_ruleset_id": 23284099,
+    "branch_ruleset_target_enforcement": "active",
+    "activation_duration_override": {
+      "type": "OWNER_DURATION_ONLY",
+      "criterion": "minimum_observation_days",
+      "authorized_by": "owner",
+      "authorized_at": "2026-10-03T15:41:56+03:00",
+      "reason": "Owner judged accumulated duration and evidence sufficient to proceed before the fixed 7-day threshold.",
+      "minimum_observed_days": 5.8467,
+      "minimum_observed_pull_requests": 69,
+      "requires_only_blocker": "MINIMUM_OBSERVATION_DAYS_NOT_MET",
+      "requires_zero_critical_misses": true,
+      "requires_zero_unclassified_noncritical_misses": true,
+      "requires_zero_incomplete_observations": true,
+      "requires_run_history_complete": true,
+      "requires_deterministic_replay_pass": true
+    },
+    "rollback_mode": "FULL_SUITE_REQUIRED"
+  }
+}
