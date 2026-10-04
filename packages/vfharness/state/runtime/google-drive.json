@@ -1,7 +1,7 @@
 {
   "component_id": "google-drive",
   "state": "healthy",
-  "observed_at": "2026-10-03T16:19:25+00:00",
+  "observed_at": "2026-10-04T04:21:44+00:00",
   "evidence": {
     "source": "Google Drive connector live search",
     "connector": "user-Google-drive search_files",
