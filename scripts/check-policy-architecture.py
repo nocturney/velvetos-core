@@ -52,6 +52,8 @@ STAGE8C_LIVING_RULES = REPORTS / "stage8c-living-studio-rules.json"
 STAGE8C_LIVING_RULES_GENERATOR = ROOT / "scripts" / "generate-stage8c-living-studio-rules.py"
 STAGE8C_CONTROL_API_FLEET = REPORTS / "stage8c-control-api-fleet.json"
 STAGE8C_CONTROL_API_FLEET_GENERATOR = ROOT / "scripts" / "generate-stage8c-control-api-fleet.py"
+STAGE8C_EXPERT_MODULES = REPORTS / "stage8c-expert-modules.json"
+STAGE8C_EXPERT_MODULES_GENERATOR = ROOT / "scripts" / "generate-stage8c-expert-modules.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -79,6 +81,7 @@ EXPECTED_REPORTS = {
     "stage8c-desk-catalog-bindings.json",
     "stage8c-living-studio-rules.json",
     "stage8c-control-api-fleet.json",
+    "stage8c-expert-modules.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -1985,6 +1988,74 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated8ccf.is_file():
                     require(regenerated8ccf.read_bytes() == STAGE8C_CONTROL_API_FLEET.read_bytes(),
                             "Stage 8C Control API fleet receipt is not reproducible", problems)
+
+    if STAGE8C_EXPERT_MODULES.is_file():
+        stage8c_experts = load(STAGE8C_EXPERT_MODULES)
+        require(stage8c_experts.get("schema") == "velvetos.stage8c-expert-modules.v1"
+                and stage8c_experts.get("stage") == "8C_EXPERT_MODULES"
+                and stage8c_experts.get("behavior_change") is True
+                and stage8c_experts.get("repository_acceptance") == "PASS",
+                "Stage 8C expert-modules metadata drift", problems)
+        criteria8ce = stage8c_experts.get("acceptance_criteria") or {}
+        expected_criteria8ce = {
+            "all_three_core_expert_modules_have_no_vf_specific_cta_location_or_visual_digest_values",
+            "revenue_loop_resolves_cta_and_fulfillment_from_selected_instance",
+            "social_booster_resolves_cta_location_and_contact_semantics_from_selected_instance",
+            "media_director_resolves_required_visual_standard_from_selected_instance_profile",
+            "media_director_visual_gate_remains_fail_closed_without_generic_fallback",
+            "vf_visual_enforcement_still_machine_binds_generic_media_director_module",
+            "canonical_instance_profile_retains_vf_values_and_visual_authority",
+            "external_effect_policy_registry_is_unchanged",
+        }
+        require(set(criteria8ce) == expected_criteria8ce
+                and all(criteria8ce.get(key) is True for key in expected_criteria8ce),
+                "Stage 8C expert-modules acceptance criteria drift or fail", problems)
+        modules8ce = stage8c_experts.get("modules") or {}
+        require(set(modules8ce) == {"expert-revenue-loop", "expert-social-booster", "expert-media-director"}
+                and all(isinstance(row, dict)
+                        and row.get("forbidden_instance_value_hits") == []
+                        and row.get("mentions_selected_instance") is True
+                        for row in modules8ce.values()),
+                "Stage 8C expert-module parameterization drift", problems)
+        visual8ce = stage8c_experts.get("visual_enforcement") or {}
+        require(visual8ce.get("path") == "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
+                and visual8ce.get("media_director_reference_count") == 2
+                and visual8ce.get("unchanged_in_this_slice") is True,
+                "Stage 8C expert-module visual enforcement drift", problems)
+        authority8ce = stage8c_experts.get("authority_baseline") or {}
+        require(authority8ce.get("unchanged") is True
+                and authority8ce.get("policy_registry_canonical_sha256")
+                    == authority8ce.get("prepared_against_policy_registry_canonical_sha256"),
+                "Stage 8C expert-module authority baseline drift", problems)
+        require(stage8c_experts.get("remaining_domains") == [
+                    "chatgpt-project-vf-distribution",
+                    "windows-host-binding-document",
+                ],
+                "Stage 8C expert-module remaining-domain handoff drift", problems)
+        if STAGE8C_EXPERT_MODULES_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8ce = Path(td) / "stage8c-expert-modules.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8C_EXPERT_MODULES_GENERATOR),
+                        "--prepared-against", stage8c_experts["prepared_against_main_sha"],
+                        "--captured-at", stage8c_experts["captured_at"],
+                        "--output", str(regenerated8ce),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0,
+                        "Stage 8C expert-module regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()),
+                        problems)
+                if proc.returncode == 0 and regenerated8ce.is_file():
+                    require(regenerated8ce.read_bytes() == STAGE8C_EXPERT_MODULES.read_bytes(),
+                            "Stage 8C expert-modules receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)

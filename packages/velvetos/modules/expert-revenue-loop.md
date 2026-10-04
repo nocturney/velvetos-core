@@ -18,10 +18,10 @@ Playbook: `packages/vfgrowth/experts/REVENUE-LOOP.md`. Weekly pulse: `packages/v
 
 ## Laws
 
-- CTA: Instagram message (`PUBLIC_CURRENT_CTA`) · איסוף — not WhatsApp phone as public CTA; not auto-DM
-- ₪ only from verified source — else `X ₪`
-- Insights only from snapshot — else «אין ספירה»
-- BUSINESS_CONTACT_RECORD WhatsApp send stays human / integration only; Gmail follow-up via tools allowed
-- Boost / paid social: `gate: lead` only
+- Resolve public CTA, channel and fulfillment wording from the selected instance profile (`cta` + `fulfillment`) and the instance's public-CTA authority; Core carries no business handle, phone or pickup location.
+- Price/currency values come only from verified instance/business sources; otherwise use the configured unknown-price placeholder.
+- Insights only from verified instance analytics evidence; otherwise report unavailable rather than inventing a count.
+- Business-contact send rules come from the selected instance policy/bindings; never promote an internal contact record into public CTA.
+- Paid/boost actions follow the selected instance approval policy and external-effect gates.
 
 Always present in core. An instance enables it via `modulesEnabled`.

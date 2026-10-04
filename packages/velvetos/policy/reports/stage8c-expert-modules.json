@@ -1,0 +1,64 @@
+{
+  "schema": "velvetos.stage8c-expert-modules.v1",
+  "stage": "8C_EXPERT_MODULES",
+  "behavior_change": true,
+  "prepared_against_main_sha": "aa7feccd1b31c9ca428562e546de42a1f91a9b9d",
+  "captured_at": "2026-10-04T18:37:21.5767083+03:00",
+  "purpose": "Parameterize instance-value-bearing language in generic expert modules while preserving generic methods and VF machine enforcement.",
+  "modules": {
+    "expert-revenue-loop": {
+      "path": "packages/velvetos/modules/expert-revenue-loop.md",
+      "forbidden_instance_value_hits": [],
+      "mentions_selected_instance": true
+    },
+    "expert-social-booster": {
+      "path": "packages/velvetos/modules/expert-social-booster.md",
+      "forbidden_instance_value_hits": [],
+      "mentions_selected_instance": true
+    },
+    "expert-media-director": {
+      "path": "packages/velvetos/modules/expert-media-director.md",
+      "forbidden_instance_value_hits": [],
+      "mentions_selected_instance": true
+    }
+  },
+  "canonical_instance_profile": {
+    "path": "instances/velvet-factory/instance/velvet-factory.json",
+    "business_value_owner": true,
+    "cta_channel": "instagram-message",
+    "fulfillment_mode": "pickup",
+    "visual_standard_required": true
+  },
+  "visual_enforcement": {
+    "path": "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json",
+    "media_director_reference_count": 2,
+    "unchanged_in_this_slice": true
+  },
+  "authority_baseline": {
+    "policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "unchanged": true
+  },
+  "acceptance_criteria": {
+    "all_three_core_expert_modules_have_no_vf_specific_cta_location_or_visual_digest_values": true,
+    "revenue_loop_resolves_cta_and_fulfillment_from_selected_instance": true,
+    "social_booster_resolves_cta_location_and_contact_semantics_from_selected_instance": true,
+    "media_director_resolves_required_visual_standard_from_selected_instance_profile": true,
+    "media_director_visual_gate_remains_fail_closed_without_generic_fallback": true,
+    "vf_visual_enforcement_still_machine_binds_generic_media_director_module": true,
+    "canonical_instance_profile_retains_vf_values_and_visual_authority": true,
+    "external_effect_policy_registry_is_unchanged": true
+  },
+  "repository_acceptance": "PASS",
+  "next_stage": "Stage 8C — Remaining consumer domains",
+  "remaining_domains": [
+    "chatgpt-project-vf-distribution",
+    "windows-host-binding-document"
+  ],
+  "constraints": [
+    "generic expert methods stay in Core",
+    "business values remain instance-owned",
+    "visual enforcement remains fail-closed",
+    "no external-effect authority change"
+  ]
+}
