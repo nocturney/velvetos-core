@@ -3,9 +3,10 @@
 from __future__ import annotations
 import hashlib, json, shutil, subprocess, sys, tempfile
 from pathlib import Path
+from vf_project_bundle import resolve_reference
 
 ROOT=Path(__file__).resolve().parents[1]
-MANIFEST=ROOT/"packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json"
+MANIFEST=resolve_reference(ROOT,"instance:surface:chatgptProject/ASSET-MANIFEST-v6.6.4.json",instance_id="velvet-factory",env={})
 
 def fail(msg:str)->None:
     print("FAIL chat-runtime-bundle: "+msg,file=sys.stderr)

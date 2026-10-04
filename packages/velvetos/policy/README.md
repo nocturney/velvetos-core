@@ -578,3 +578,11 @@ The six Stage 8B direct-reader bindings have been retired from the legacy compos
 `packages/velvetos/TOOL-STATUS.json` remains physically present and is still exactly parity-equal to the composed contract + instance state. It is rollback/parity evidence only; the rollback window remains open and deletion is not authorized. `legacy-parity` remains the bounded diagnostic verifier.
 
 Progress is recorded in `reports/stage8d-tool-status-consumer-migration.json` (12/12 PASS). `check-policy-architecture.py` regenerates it byte-for-byte and verifies zero active-authority legacy references, exact composition parity, retained rollback compatibility and unchanged external-effect policy.
+
+## Reform v2 Stage 8D - ChatGPT Core compatibility consumer migration
+
+Active Project/ChatGPT runtime authority now resolves from the selected `instance:surface:chatgptProject` distribution. `PROJECT-AUTHORITY-MANIFEST.json` stores logical surface references, while `scripts/vf_project_bundle.py` maps them through the generic instance/distribution resolver without embedding a Velvet Factory default. VF runtime callers select `velvet-factory` explicitly and Core checkout without an instance remains fail-closed.
+
+The Reel route, visual product-truth guide, Project bundle/request-gate sensors and isolated Chat runtime checks all resolve the instance-owned distribution. The retained `packages/velvetos/chatgpt-project` tree remains physically present and byte-equal to `instances/velvet-factory/distribution/chatgpt-project` across all 33 files, so rollback compatibility is preserved without treating the Core copy as active authority.
+
+Historical Stage 8C ChatGPT evidence is replayed from its approved source snapshot and remains byte-for-byte reproducible even after this Stage 8D authority cutover. Progress is recorded in `reports/stage8d-chatgpt-core-consumer-migration.json` (12/12 PASS, active legacy references 0, parity true). The rollback window remains open and deletion remains unauthorized.

@@ -2,8 +2,8 @@
   "schema": "velvetos.reel-route-sync.v1",
   "projectRevision": "6.6.11",
   "baseCreativeRevision": "6.6.9",
-  "routeDoc": "packages/velvetos/chatgpt-project/REEL-ROUTE.md",
-  "projectInstructions": "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.11.txt",
+  "routeDoc": "instance:surface:chatgptProject/REEL-ROUTE.md",
+  "projectInstructions": "instance:surface:chatgptProject/PROJECT-INSTRUCTIONS-v6.6.11.txt",
   "templateRoot": "packages/vfom/hyperframes/templates",
   "implementationStatus": "implemented",
   "adobe": {
@@ -28,5 +28,6 @@
     "VELVET_MACRO_PUNCH",
     "VELVET_MATERIAL_LABEL",
     "VELVET_FINAL_STAMP"
-  ]
+  ],
+  "projectSurface": "chatgptProject"
 }

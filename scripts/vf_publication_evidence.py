@@ -21,7 +21,7 @@ from vf_project_bundle import resolve as _resolve_project_bundle
 POLICY = "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
 # Active bundle identity + SHA-256 trust pins come from PROJECT-AUTHORITY-MANIFEST.json
 # (chatgptProjectBundle) via vf_project_bundle; no revision literals here.
-_BUNDLE = _resolve_project_bundle()
+_BUNDLE = _resolve_project_bundle(instance_id="velvet-factory", env={})
 AUTHORITY = _BUNDLE.authority
 ASSETS = _BUNDLE.asset_manifest
 ASSETS_SHA = _BUNDLE.asset_manifest_sha256
