@@ -20,7 +20,6 @@ TOOL_STATUS_CONTRACT_SCHEMA = PACK / "schema" / "tool-status-contract.schema.jso
 INSTANCE_TOOL_STATUS_SCHEMA = PACK / "schema" / "instance-tool-status.schema.json"
 MODULES_CATALOG = PACK / "modules" / "catalog.json"
 PRESETS = PACK / "presets"
-SAMPLES = PACK / "samples"
 INSTANCES = ROOT / "instances"
 MANIFEST = ROOT / "packages" / "manifest.json"
 DESK = ROOT / ".cursor" / "vf-desk.json"
@@ -327,7 +326,7 @@ def validate_profile(data: dict, module_ids: set[str], *, label: str) -> None:
 
 def check_reference_vf(profile: dict, desk: dict, studio_text: str) -> None:
     if profile.get("id") != "velvet-factory":
-        fail("core sample must be velvet-factory")
+        fail("canonical instance profile must be velvet-factory")
     studio = desk.get("studio") or {}
     if studio.get("instagram") != "@velvets_cloud":
         fail("desk.studio.instagram must stay @velvets_cloud during compat")
@@ -335,13 +334,13 @@ def check_reference_vf(profile: dict, desk: dict, studio_text: str) -> None:
         fail("desk.studio.whatsapp must stay 050-2517000 during compat")
     labels = [s["label"] for s in profile["pipeline"]["stages"]]
     if desk.get("pipeline") != labels:
-        fail("desk.pipeline mismatch vs sample")
+        fail("desk.pipeline mismatch vs canonical instance profile")
     for needle in ("050-2517000", "velvets_cloud", "שדרות"):
         if needle not in studio_text:
             fail(f"STUDIO.md must still list {needle} (compat reference)")
     for need in ("fulfill-pickup", "production-print", "compliance-maker"):
         if need not in profile["modulesEnabled"]:
-            fail(f"VF sample must enable {need}")
+            fail(f"VF canonical instance profile must enable {need}")
     bind = profile.get("mcpBind") or {}
     wa = bind.get("whatsapp") or {}
     if wa.get("send") is not False:
@@ -358,7 +357,7 @@ def check_reference_vf(profile: dict, desk: dict, studio_text: str) -> None:
         fail("VF mcpBind.instagram.connect must point at CONNECT-IG.md")
 
 
-def check_offering_shape(sample: dict, front: dict, studio_text: str) -> None:
+def check_offering_shape(front: dict, studio_text: str) -> None:
     """Owner correction 2026-09-14: two public tracks; quantity/customer type are job facts."""
     offering = (ROOT / "packages" / "vfbiz" / "OFFERING.md").read_text(encoding="utf-8")
     inst_studio = (INSTANCES / "velvet-factory" / "constitution" / "STUDIO.md").read_text(encoding="utf-8")
@@ -366,12 +365,11 @@ def check_offering_shape(sample: dict, front: dict, studio_text: str) -> None:
         for needle in ("מוצרים מוכנים", "התאמה אישית"):
             if needle not in text:
                 fail(f"{label} must keep clear two-track offering: missing {needle}")
-    for label, profile in (("sample", sample), ("frontend-profile", front)):
-        compliance = profile.get("compliance") or {}
-        if compliance.get("noCustomerTypeServicePillar") is not True:
-            fail(f"{label} must lock noCustomerTypeServicePillar")
-        if compliance.get("offeringAuthority") != "packages/vfbiz/OFFERING.md":
-            fail(f"{label} offeringAuthority mismatch")
+    compliance = front.get("compliance") or {}
+    if compliance.get("noCustomerTypeServicePillar") is not True:
+        fail("frontend-profile must lock noCustomerTypeServicePillar")
+    if compliance.get("offeringAuthority") != "packages/vfbiz/OFFERING.md":
+        fail("frontend-profile offeringAuthority mismatch")
     old_paths = [
         ROOT / "packages" / "vfbiz" / ("LOCAL-" + "B2" + "B.md"),
         ROOT / "packages" / "vfsales" / "hq" / ("B2" + "B-QUOTE.md"),
@@ -440,13 +438,7 @@ def main() -> None:
         if not (PRESETS / f"{need}.json").is_file():
             fail(f"missing preset {need}")
 
-    sample_path = SAMPLES / "velvet-factory.json"
-    if not sample_path.is_file():
-        fail("missing samples/velvet-factory.json")
-    sample = load(sample_path)
-    validate_profile(sample, module_ids, label="sample")
-
-    # instance scaffold (frontend)
+    # instance scaffold (frontend) is the canonical runtime/business profile.
     vf_inst = INSTANCES / "velvet-factory"
     for rel in (
         "INSTANCE.json",
@@ -476,9 +468,8 @@ def main() -> None:
 
     desk = load(DESK)
     studio_text = STUDIO.read_text(encoding="utf-8")
-    check_reference_vf(sample, desk, studio_text)
     check_reference_vf(front, desk, studio_text)
-    check_offering_shape(sample, front, studio_text)
+    check_offering_shape(front, studio_text)
 
     # desk should identify as core hosting reference front
     if desk.get("product") != "VelvetOS":

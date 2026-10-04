@@ -8,11 +8,28 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OFFERING = ROOT / "packages" / "vfbiz" / "OFFERING.md"
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
 
 
 def fail(msg: str) -> None:
     print(f"FAIL vf-offering: {msg}", file=sys.stderr)
     raise SystemExit(1)
+
+
+def canonical_instance_profile() -> Path:
+    if str(VELVETOS_PACK) not in sys.path:
+        sys.path.insert(0, str(VELVETOS_PACK))
+    from instance_resolver import resolve_surface  # type: ignore
+    try:
+        return resolve_surface(
+            ROOT,
+            "profile",
+            instance_id="velvet-factory",
+            env={},
+        )
+    except Exception as exc:
+        fail(f"cannot resolve canonical VF profile: {exc}")
+    raise AssertionError("unreachable")
 
 
 def retired_terms() -> tuple[str, ...]:
@@ -115,16 +132,13 @@ def main() -> None:
         if profile.get("liveStatus") != "pending-human-profile-edit":
             fail("live profile debt must stay pending-human-profile-edit until re-verified")
 
-    for rel in (
-        "instances/velvet-factory/instance/velvet-factory.json",
-        "packages/velvetos/samples/velvet-factory.json",
-    ):
-        data = json.loads((ROOT / rel).read_text(encoding="utf-8"))
-        compliance = data.get("compliance") or {}
-        if compliance.get("noCustomerTypeServicePillar") is not True:
-            fail(f"{rel}: noCustomerTypeServicePillar must be true")
-        if compliance.get("offeringAuthority") != "packages/vfbiz/OFFERING.md":
-            fail(f"{rel}: offeringAuthority mismatch")
+    profile_path = canonical_instance_profile()
+    data = json.loads(profile_path.read_text(encoding="utf-8"))
+    compliance = data.get("compliance") or {}
+    if compliance.get("noCustomerTypeServicePillar") is not True:
+        fail(f"{profile_path}: noCustomerTypeServicePillar must be true")
+    if compliance.get("offeringAuthority") != "packages/vfbiz/OFFERING.md":
+        fail(f"{profile_path}: offeringAuthority mismatch")
 
     print(f"OK vf-offering active_files={len(ACTIVE_FILES)} two-track quantity-is-job-attribute live-profile-gated")
 

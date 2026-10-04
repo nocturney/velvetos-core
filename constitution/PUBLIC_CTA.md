@@ -79,7 +79,6 @@ Machine compatibility: **Instagram message / Instagram DM** כאן פירושם 
 | קובץ | שדה |
 |---|---|
 | `instances/velvet-factory/instance/velvet-factory.json` | `cta.primary` = commercial Instagram-message default · `cta.businessContact` = RECORD |
-| `packages/velvetos/samples/velvet-factory.json` | אותו מבנה |
 | `.cursor/vf-desk.json` | `studio.whatsapp` = RECORD · `studio.publicCta` = PUBLIC |
 | `packages/vfigos/PROFILE-DESIRED.json` | ביו מבוקש עם Instagram-message CTA |
 | `packages/vfom/CREATIVE-MANIFEST.schema.json` / job manifest | creative intent קובע showcase מול commercial לפני copy |
