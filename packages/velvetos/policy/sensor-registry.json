@@ -3092,7 +3092,9 @@
         "packages/manifest.json",
         "packages/vfops/**",
         "packages/vfresearch/**",
-        "scripts/**"
+        "scripts/**",
+        "packages/velvetos/policy/research-scheduler-consolidation.json",
+        "packages/velvetos/policy/reports/stage7c-research-scheduler-consolidation.json"
       ],
       "triggered_by": [
         ".cursor/**",
@@ -3101,7 +3103,9 @@
         "packages/manifest.json",
         "packages/vfops/**",
         "packages/vfresearch/**",
-        "scripts/**"
+        "scripts/**",
+        "packages/velvetos/policy/research-scheduler-consolidation.json",
+        "packages/velvetos/policy/reports/stage7c-research-scheduler-consolidation.json"
       ],
       "depends_on": [],
       "enforces": [],

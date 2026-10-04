@@ -1,7 +1,7 @@
 # סקירת קישורי השראה — שבועי
 
 מושב: **מחקר/אורקסטרציה** (`@research-synthesist`) + ראש צוות קורא בבריף.  
-לא פק חדש. לא תזמורת 06:15 (שם פותחים צ'אטים **חדשים**). כאן חוזרים על **קישורים שנשלחו** ועל ריפוזי השראה שכבר הוטמעו.
+לא פק חדש. לא clock נוסף. כאן חוזרים על **קישורים שנשלחו** ועל ריפוזי השראה שכבר הוטמעו, בתוך Research Seat / Weekly Research Accountability או משימה מפורשת.
 
 רישום: `packages/vfresearch/LINKS.json`  
 מפת ChatGPT: `packages/chatgpt-embed-map.json`  
@@ -9,11 +9,11 @@
 
 ## מתי
 
-פעם בשבוע (רמז: **ראשון בבוקר**, Asia/Jerusalem) — או ביום שראש צוות קובע בלוח.
+ה־clock הקבוע הוא **Weekly Research Accountability — Friday 12:00 Asia/Jerusalem** בתוך protected Grok routine inventory. סקירת הקישורים היא capability של אותו Research Seat ויכולה לרוץ גם במשימה מפורשת; אין Sunday timer / ChatGPT / Cursor cron נוסף.
 
-אירוע לוח שנה: רק אם ראש צוות מבקש יצירה. HQ לא יוצר אירוע בלי אישור.
+אירוע לוח שנה: רק אם ראש צוות מבקש יצירה; אירוע כזה אינו scheduler authority. HQ לא יוצר אירוע בלי אישור.
 
-## צעדים (Cursor, לא Grok)
+## צעדים (Research Seat; Cursor/Cloud הם execution tools, לא clock authority)
 
 1. לקרוא את `LINKS.json` מלמעלה למטה.
 2. לכל קישור:
@@ -29,12 +29,18 @@
    - יש הטמעה: «שבועי קישורים — הוטמע X ב־`<pack>`» · «print-demand — N אותות»
    - אין: **«שבועי קישורים — אין חדש במשרד»** / «print-demand — אין חדש»
 7. אחרי שינוי קטלוג/כלל/פק: `python3 scripts/check-all.py`
-8. קישור חדש שהבעלים שלח באמצע השבוע: להוסיף ל־`LINKS.json` **באותו יום** (לא לחכות לראשון).
+8. קישור חדש שהבעלים שלח באמצע השבוע: להוסיף ל־`LINKS.json` **באותו יום** (לא לחכות ל־Friday accountability).
 
 ## תבנית ארטיפקט
 
 ```markdown
 # סקירת קישורים שבועית · YYYY-MM-DD
+
+Research metadata:
+- as_of: YYYY-MM-DD / source observation time
+- provenance: LINKS.json + URLs/provider refs actually read
+- uncertainty: walls/missing reads/none_known
+- refresh_target: next Friday 12:00 accountability or explicit task
 
 מושב: ייצור · Asia/Jerusalem
 רישום: packages/vfresearch/LINKS.json
@@ -76,10 +82,10 @@
 
 ## לא כאן
 
-- תזמורת יומית 06:15 (`DAILY.md`) — צ'אטים חדשים, לא רישום קישורים.
+- Research Seat יומי 02:00 (`DAILY.md`) — גוף מחקר יומי, לא רישום קישורים שבועי.
 - גיבוי GitHub (`docs/BACKUP.md`) — אותו יום לכל פק; לא מחליף את הסקירה השבועית.
 - שליחת אינסטגרם / ג׳ימייל / וואטסאפ מ־HQ.
-- **כן גיבוי לטיימר:** אם `BEST-SKILLS.json` → `standingForever: true` והטיימר חסר — לחדש לפי `vfresearch/TIMER.md` באותו מעבר שבועי.
+- **אין timer כפול:** `BEST-SKILLS.json` עם `standingForever:true` הוא due-check בתוך Research Seat; `TIMER.md` מתאר cadence ולא יוצר scheduler/provider נוסף.
 
 ## Discovery catalogue rule — API mega lists
 

@@ -1,0 +1,57 @@
+{
+  "schema": "velvetos.stage7c-research-scheduler-consolidation.v1",
+  "stage": "7C",
+  "behavior_change": true,
+  "prepared_against_main_sha": "a53f0fd59a2f52602f026d75a055309e3c3bbfae",
+  "captured_at": "2026-10-04T12:15:46.5723048+03:00",
+  "purpose": "Consolidate Research Router and scheduler ownership without adding a daemon, scheduler, or policy authority.",
+  "model": {
+    "path": "packages/velvetos/policy/research-scheduler-consolidation.json",
+    "sha256": "738606f6471c8d3d9aa2cc0733827852600da2abd7c2e0382103ab47ca6d6cac",
+    "protected_routine_count": 9,
+    "scheduled_github_workflow_count": 8
+  },
+  "live_scheduler_evidence": {
+    "provider": "grok-bot",
+    "primary": "grok-bot-routines",
+    "timezone": "Asia/Jerusalem",
+    "provider_readback": "automation/grok/provider-readback-2026-10-04-am.json",
+    "provider_readback_sha256": "f4a27dc183993fd48bc8f7af1adf5c7907e26f0c4b62e56ced515d8d015ae7d4",
+    "protected_routines_verified": 9
+  },
+  "research_routing": {
+    "pending": 50,
+    "deep_review_required": 0,
+    "reusable_current_review": 50,
+    "cheap_detection_first": true
+  },
+  "artifact_contract": {
+    "path": "packages/vfresearch/ARTIFACT-CONTRACT.md",
+    "required_metadata": [
+      "as_of",
+      "provenance",
+      "uncertainty",
+      "refresh_target"
+    ],
+    "historical_rewrite_required": false
+  },
+  "authority_baseline": {
+    "policy_registry_sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8",
+    "unchanged_from_prepared_against": true
+  },
+  "acceptance": {
+    "research_router_reuses_existing_research_seat": true,
+    "cheap_detection_precedes_signal_driven_deep_review": true,
+    "current_bound_reviews_are_reused": true,
+    "all_protected_routines_have_one_primary_clock_owner": true,
+    "fallbacks_are_explicit_and_not_duplicate_recurring_clocks": true,
+    "github_schedules_are_execution_or_verification_not_owner_clock": true,
+    "live_provider_readback_proves_nine_of_nine": true,
+    "provider_readback_remains_evidence_not_policy": true,
+    "research_artifact_truth_metadata_is_required": true,
+    "no_new_daemon_scheduler_cost_or_auto_upgrade": true,
+    "external_effect_policy_registry_is_unchanged": true
+  },
+  "repository_acceptance": "PASS",
+  "next_stage": "Stage 7D — Artifact retention"
+}

@@ -20,6 +20,7 @@ HF_MAC = ROOT / "scripts" / "bootstrap-hyperframes-host-macos.sh"
 MANIM_WIN = ROOT / "scripts" / "bootstrap-manim-host-windows.ps1"
 VIDEO_TOOLCHAIN = ROOT / "packages" / "vfom" / "VIDEO-TOOLCHAIN.json"
 UPSTREAM_CLI = ROOT / "scripts" / "vf_upstream_watch.py"
+LATEST_REPORT = ROOT / "packages" / "vfresearch" / "sources" / "upstream-watch-latest.json"
 GITHUB = re.compile(r"https?://github\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)", re.I)
 
 
@@ -160,6 +161,10 @@ def main() -> int:
         "consumerRoutineId": "velvetos-office-loop",
     }:
         fail("Grok manifest upstream-watch ownership binding mismatch")
+    latest_report = json.loads(LATEST_REPORT.read_text(encoding="utf-8-sig"))
+    artifact_meta = latest_report.get("artifactMeta") or {}
+    if not {"asOf", "provenance", "uncertainty", "refreshTarget"} <= set(artifact_meta):
+        fail("upstream-watch-latest missing Stage 7C artifact metadata")
     research_text = RESEARCH_DAILY.read_text(encoding="utf-8")
     for needle in ("vf_upstream_watch.py check --write", "upstream-watch-latest.json", "אין auto-upgrade"):
         if needle not in research_text:

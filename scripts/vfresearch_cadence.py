@@ -29,13 +29,15 @@ LINKS = ROOT / "packages" / "vfresearch" / "LINKS.json"
 RESEARCH_MD = ROOT / "packages" / "vfops" / "data" / "research.md"
 INDEX_SCRIPT = ROOT / "packages" / "vfmem" / "scripts" / "vf_semantic_search.py"
 INDEX_PKL = ROOT / "packages" / "vfmem" / "semantic_index.pkl"
+UPSTREAM_REPORT = SOURCES / "upstream-watch-latest.json"
+UPSTREAM_REVIEW = SOURCES / "upstream-review-latest.json"
 
 # Activator map — honest owners (do not invent new paid schedules)
 ROUTINES = (
     {
         "id": "daily-orchestra",
         "title": "מחקר יומי / תזמורת 02:00",
-        "trigger": "ChatGPT automation Velvet Research Seat 02:00 + packages/vfresearch/DAILY.md",
+        "trigger": "protected Grok Bot routine velvet-research-seat at 02:00 + packages/vfresearch/DAILY.md",
         "environment": "ChatGPT WebSearch/connectors; Cloud Agent/Cursor may supplement — not GH Actions body fetch",
         "permissions": "read packs; web research; write sources/ + research.md; no subscription UI scraping",
         "input": "yesterday brief, CALENDAR, vfsku/production, live office context",
@@ -46,13 +48,13 @@ ROUTINES = (
     {
         "id": "weekly-links",
         "title": "קישורי השראה שבועיים",
-        "trigger": "skill vf-weekly-links · packages/vfresearch/WEEKLY.md · calendar weekly",
+        "trigger": "protected Grok routine weekly-research-accountability Friday 12:00 or explicit task · packages/vfresearch/WEEKLY.md",
         "environment": "Cloud Agent with WebFetch/WebSearch",
         "permissions": "update LINKS.json + sources/*-weekly-links.md",
         "input": "LINKS.json registry",
         "artifact_glob": "*-*-weekly-links.md",
         "consumer": "LINKS.json lastReviewed + research.md; check-vfresearch.py",
-        "owner": "Cursor research seat",
+        "owner": "Velvet Research Seat capability; no independent scheduler clock",
     },
     {
         "id": "best-skills",
@@ -74,7 +76,7 @@ ROUTINES = (
         "input": "topic / comparison / discovery prompt",
         "artifact_glob": "*-*-*last30*.md",
         "consumer": "trend / content desks; research.md",
-        "owner": "Cursor research seat",
+        "owner": "Velvet Research Seat capability; no independent scheduler clock",
     },
     {
         "id": "semantic-index",
@@ -86,7 +88,7 @@ ROUTINES = (
         "artifact_glob": None,
         "artifact_path": "packages/vfmem/semantic_index.pkl",
         "consumer": "vf_semantic_search queries; not a substitute for weekly/best/last30",
-        "owner": "CI + any agent that rebuilt after large pull",
+        "owner": "GitHub Actions/local execution verifier; not the owner-facing research clock",
     },
 )
 
@@ -124,6 +126,96 @@ def dst_note() -> str:
         f"cron '30 4 * * *' UTC ≈ {local_from_cron_hour:02d}:30 Asia/Jerusalem · "
         f"Research Seat exact 02:00 Asia/Jerusalem; CI runs after it in both DST seasons"
     )
+
+
+def _load_json_object(path: Path) -> dict:
+    if not path.is_file():
+        return {}
+    value = json.loads(path.read_text(encoding="utf-8-sig"))
+    return value if isinstance(value, dict) else {}
+
+
+def _release_binding(value: object) -> str:
+    return "" if value is None else str(value)
+
+
+def upstream_review_routing(explicit_repos: set[str] | None = None) -> dict:
+    """Route pending upstreams to deep review only when current evidence needs it."""
+    report = _load_json_object(UPSTREAM_REPORT)
+    review = _load_json_object(UPSTREAM_REVIEW)
+    reviewed = review.get("items") if isinstance(review.get("items"), dict) else {}
+    explicit = {repo.casefold() for repo in (explicit_repos or set())}
+    rows = []
+    for source in report.get("sources") or []:
+        if not isinstance(source, dict) or not source.get("pendingUpdate"):
+            continue
+        repo = str(source.get("repo") or "")
+        current_head = str(source.get("remoteHead") or "")
+        current_release = _release_binding(source.get("latestRelease"))
+        bound = reviewed.get(repo) or reviewed.get(repo.casefold()) or {}
+        reviewed_head = str(bound.get("reviewedRemoteHead") or "")
+        reviewed_release = _release_binding(bound.get("reviewedRelease"))
+        current_review = bool(
+            reviewed_head
+            and reviewed_head == current_head
+            and reviewed_release == current_release
+        )
+        explicit_task = repo.casefold() in explicit
+        deep_review_required = bool(explicit_task or not current_review)
+        if explicit_task:
+            trigger = "explicit_task"
+        elif not current_review and source.get("newDetection"):
+            trigger = "new_detection"
+        elif not current_review:
+            trigger = "review_missing_or_stale"
+        else:
+            trigger = "reuse_current_review"
+        rows.append(
+            {
+                "repo": repo,
+                "pendingUpdate": True,
+                "newDetection": bool(source.get("newDetection")),
+                "currentReview": current_review,
+                "deepReviewRequired": deep_review_required,
+                "trigger": trigger,
+                "remoteHead": current_head,
+                "latestRelease": source.get("latestRelease"),
+            }
+        )
+    return {
+        "schema": "velvetos.research-review-routing.v1",
+        "cheapDetectionFirst": True,
+        "pending": len(rows),
+        "deepReviewRequired": sum(bool(row["deepReviewRequired"]) for row in rows),
+        "reusableCurrentReview": sum(not bool(row["deepReviewRequired"]) for row in rows),
+        "rows": rows,
+    }
+
+
+def cmd_review_routing(args: argparse.Namespace) -> int:
+    routed = upstream_review_routing(set(args.explicit_repo or []))
+    print(json.dumps(routed, ensure_ascii=False, indent=2))
+    return 0
+
+
+def cmd_routing_selftest(_args: argparse.Namespace) -> int:
+    current = upstream_review_routing()
+    if current.get("schema") != "velvetos.research-review-routing.v1":
+        print("FAIL review routing schema", file=sys.stderr)
+        return 1
+    if current.get("pending", 0) < current.get("deepReviewRequired", 0):
+        print("FAIL deep-review count exceeds pending count", file=sys.stderr)
+        return 1
+    if current.get("pending", 0) != current.get("deepReviewRequired", 0) + current.get("reusableCurrentReview", 0):
+        print("FAIL review routing partition", file=sys.stderr)
+        return 1
+    print(
+        "OK research-review-routing "
+        f"pending={current.get('pending')} "
+        f"deep={current.get('deepReviewRequired')} "
+        f"reuse={current.get('reusableCurrentReview')}"
+    )
+    return 0
 
 
 def cmd_status(_args: argparse.Namespace) -> int:
@@ -263,6 +355,10 @@ def main() -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("status", help="honest status table").set_defaults(func=cmd_status)
     sub.add_parser("map", help="full activator map").set_defaults(func=cmd_map)
+    review_parser = sub.add_parser("review-routing", help="route only stale/missing upstream reviews to deep review")
+    review_parser.add_argument("--explicit-repo", action="append", default=[], help="force deep review for this repo")
+    review_parser.set_defaults(func=cmd_review_routing)
+    sub.add_parser("routing-selftest", help="validate upstream deep-review routing").set_defaults(func=cmd_routing_selftest)
     sub.add_parser("freshness", help="require today's real research-body artifact").set_defaults(func=cmd_freshness)
     sub.add_parser("build-index", help="build semantic index; fail closed").set_defaults(func=cmd_build_index)
     sub.add_parser("verify", help="structure verify").set_defaults(func=cmd_verify)

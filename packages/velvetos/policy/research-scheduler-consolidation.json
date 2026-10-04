@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "registry_kind": "velvetos_research_scheduler_consolidation",
+  "status": "ACTIVE_STAGE7C",
+  "research_router": {
+    "seat_id": "velvet-research-seat",
+    "seat_title": "Velvet Research Seat",
+    "clock_authority": "grok-bot-routines",
+    "existing_seat_only": true,
+    "cheap_detection": {
+      "command": "python3 scripts/vf_upstream_watch.py check --write packages/vfresearch/sources/upstream-watch-latest.json",
+      "output": "packages/vfresearch/sources/upstream-watch-latest.json",
+      "auto_upgrade": false
+    },
+    "deep_review": {
+      "routing_command": "python3 scripts/vfresearch_cadence.py review-routing",
+      "required_when": [
+        "current upstream HEAD/release lacks an exact bound review",
+        "explicit review task"
+      ],
+      "new_detection_is_signal_until_current_review_exists": true,
+      "reuse_current_review_when_exact_binding_matches": true,
+      "binding_fields": [
+        "reviewedRemoteHead",
+        "reviewedRelease"
+      ]
+    },
+    "no_new_daemon": true,
+    "no_new_scheduler": true
+  },
+  "scheduler_authority": {
+    "owner_facing_primary": "grok-bot-routines",
+    "provider": "grok-bot",
+    "timezone": "Asia/Jerusalem",
+    "provider_readback_role": "EVIDENCE_ONLY_NOT_POLICY",
+    "github_actions_role": "MACHINE_EXECUTION_OR_VERIFIER_NOT_OWNER_CLOCK",
+    "previous_schedulers": {
+      "chatgpt": "disabled_after_verified_cutover",
+      "antigravity": "shadow_sidecars_disabled"
+    }
+  },
+  "protected_routines": [
+    {
+      "id": "velvetos-integrity-guard",
+      "primary_scheduler": "grok-bot-routines",
+      "fallback": "manual_on_demand_integrity_audit",
+      "fallback_is_active_duplicate_clock": false
+    },
+    {
+      "id": "velvet-research-seat",
+      "primary_scheduler": "grok-bot-routines",
+      "fallback": "manual_same-turn_research-seat_execution",
+      "fallback_is_active_duplicate_clock": false
+    },
+    {
+      "id": "cognee-memory-sync",
+      "primary_scheduler": "grok-bot-routines",
+      "fallback": "manual_on_demand_cognee_sync",
+      "fallback_is_active_duplicate_clock": false
+    },
+    {
+      "id": "runtime-receipts-refresh",
+      "primary_scheduler": "grok-bot-routines",
+      "fallback": "manual_dependency-scoped_receipt_refresh",
+      "fallback_is_active_duplicate_clock": false
+    },
+    {
+      "id": "velvet-morning-brief",
+      "primary_scheduler": "grok-bot-routines",
+      "fallback": "morning-delivery-guard conditional recovery",
+      "fallback_is_active_duplicate_clock": false
+    },
+    {
+      "id": "morning-delivery-guard",
+      "primary_scheduler": "grok-bot-routines",
+      "fallback": "manual_owner-delivery_recovery_after_guard_blocker",
+      "fallback_is_active_duplicate_clock": false
+    },
+    {
+      "id": "cognee-stable-updates",
+      "primary_scheduler": "grok-bot-routines",
+      "fallback": "manual_explicit_update_review",
+      "fallback_is_active_duplicate_clock": false
+    },
+    {
+      "id": "velvetos-office-loop",
+      "primary_scheduler": "grok-bot-routines",
+      "fallback": "manual scripts/vfops_loop.py run",
+      "fallback_is_active_duplicate_clock": false
+    },
+    {
+      "id": "weekly-research-accountability",
+      "primary_scheduler": "grok-bot-routines",
+      "fallback": "manual_on_demand_research_accountability",
+      "fallback_is_active_duplicate_clock": false
+    }
+  ],
+  "machine_workflows": [
+    {
+      "id": "instagram-read-smoke.yml",
+      "role": "MACHINE_EXECUTION_OR_VERIFIER_NOT_OWNER_CLOCK"
+    },
+    {
+      "id": "jobs-write-through.yml",
+      "role": "MACHINE_EXECUTION_OR_VERIFIER_NOT_OWNER_CLOCK"
+    },
+    {
+      "id": "office-control-plane.yml",
+      "role": "MACHINE_EXECUTION_OR_VERIFIER_NOT_OWNER_CLOCK"
+    },
+    {
+      "id": "publish-bridge-cleanup.yml",
+      "role": "MACHINE_EXECUTION_OR_VERIFIER_NOT_OWNER_CLOCK"
+    },
+    {
+      "id": "readme-system-pulse.yml",
+      "role": "MACHINE_EXECUTION_OR_VERIFIER_NOT_OWNER_CLOCK"
+    },
+    {
+      "id": "velvetos-research.yml",
+      "role": "RESEARCH_FRESHNESS_INDEX_VERIFIER_NOT_BODY_CLOCK"
+    },
+    {
+      "id": "velvetos-weekly-deck.yml",
+      "role": "MACHINE_EXECUTION_OR_VERIFIER_NOT_OWNER_CLOCK"
+    },
+    {
+      "id": "vfmedia-intake.yml",
+      "role": "MACHINE_EXECUTION_OR_VERIFIER_NOT_OWNER_CLOCK"
+    }
+  ],
+  "research_artifact_contract": {
+    "applies_to": "new_or_refreshed_research_artifacts_after_stage7c",
+    "historical_rewrite_required": false,
+    "required_metadata": [
+      "as_of",
+      "provenance",
+      "uncertainty",
+      "refresh_target"
+    ],
+    "markdown_contract": "packages/vfresearch/ARTIFACT-CONTRACT.md",
+    "latest_json_evidence_must_expose_artifact_meta": true
+  },
+  "invariants": {
+    "one_clock_owner_per_protected_routine": true,
+    "fallbacks_are_not_active_duplicate_clocks": true,
+    "provider_readback_proves_state_not_policy": true,
+    "github_schedules_do_not_override_owner_facing_clock_authority": true,
+    "cheap_detection_precedes_deep_review": true,
+    "unchanged_current_review_is_reused": true,
+    "no_auto_upgrade": true,
+    "no_new_research_daemon": true,
+    "no_new_scheduler": true,
+    "no_new_recurring_cost": true,
+    "external_effect_authority_change": false
+  }
+}

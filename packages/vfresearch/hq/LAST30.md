@@ -80,6 +80,12 @@ Google מצטבר עורכים. כאן — קהילה.
 ```markdown
 # last30 · <TOPIC> · YYYY-MM-DD
 
+Research metadata:
+- as_of: end of requested research window
+- provenance: URLs/provider refs actually read
+- uncertainty: walls, weak signals, disagreement, or none_known
+- refresh_target: explicit task / next relevant seasonal or comparison review
+
 מושב: ייצור · @research-synthesist / @trend-researcher · Asia/Jerusalem
 חלון: ~30 יום · מצב: topic | comparison | discovery
 מקור דפוס: mvanhorn/last30days-skill (embed — no CLI)

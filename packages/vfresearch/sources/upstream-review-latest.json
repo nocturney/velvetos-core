@@ -812,5 +812,14 @@
     }
   },
   "notificationPreparedAt": "2026-10-01T23:09:18.414538+00:00",
-  "notificationDigest": "ee9444ff9d20cf0848a7c6e781cc9c987538058320c4025f13826443edb499b3"
+  "notificationDigest": "ee9444ff9d20cf0848a7c6e781cc9c987538058320c4025f13826443edb499b3",
+  "artifactMeta": {
+    "asOf": "2026-10-01T23:08:18.627757+00:00",
+    "provenance": [
+      "packages/vfresearch/sources/upstream-watch-latest.json",
+      "review evidence[] bound to reviewedRemoteHead + reviewedRelease"
+    ],
+    "uncertainty": "review/wait/ignore/update verdicts retain their evidence and do not imply compatibility or adoption unless explicitly proven",
+    "refreshTarget": "when current remoteHead/latestRelease no longer matches the bound review, or an explicit review task"
+  }
 }
