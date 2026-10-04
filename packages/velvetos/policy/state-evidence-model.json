@@ -1,0 +1,513 @@
+{
+  "schema_version": 1,
+  "registry_kind": "velvetos_state_evidence_model",
+  "status": "ACTIVE_STAGE7A",
+  "scope": {
+    "purpose": "Classify state-bearing, proof, authorization-decision, and historical operational artifacts without creating a new store.",
+    "includes": "Operational current-state surfaces, receipts/evidence, external-effect authorization decisions, append-only/history artifacts, and retention-registry artifact classes.",
+    "excludes": "Source code, ordinary static documentation, test fixtures, and binary assets unless a listed surface or retention class explicitly assigns a semantic role.",
+    "storage_change": "NONE_STAGE7A",
+    "migration_change": "NONE_STAGE7A",
+    "deletion_authorized": false
+  },
+  "invariants": {
+    "exactly_four_categories": true,
+    "one_canonical_owner_per_domain": true,
+    "compatibility_paths_are_not_authority": true,
+    "projections_are_not_authority_outside_their_narrow_domain": true,
+    "evidence_never_authorizes_external_effect": true,
+    "authorization_decision_is_distinct_from_evidence": true,
+    "audit_history_never_overwrites_current_state": true,
+    "superseded_current_state_becomes_history": true,
+    "no_new_database": true
+  },
+  "categories": [
+    {
+      "id": "CANONICAL_STATE",
+      "definition": "Current authoritative representation for one bounded domain or the canonical current index for that domain. Its authority never expands beyond the declared authority_scope.",
+      "can_authorize_external_effect": false,
+      "may_be_current": true,
+      "append_only": false
+    },
+    {
+      "id": "EVIDENCE_RECEIPT",
+      "definition": "Proof or observation about state/action/runtime/provider results. Evidence can satisfy a required evidence input but cannot itself decide an external effect.",
+      "can_authorize_external_effect": false,
+      "may_be_current": false,
+      "append_only": true
+    },
+    {
+      "id": "AUTHORIZATION_DECISION",
+      "definition": "A policy-bound decision for an exact external effect/action. It is valid only through the canonical policy decision path and exact-action receipt contract.",
+      "can_authorize_external_effect": true,
+      "may_be_current": false,
+      "append_only": true
+    },
+    {
+      "id": "AUDIT_HISTORY",
+      "definition": "Historical, superseded, append-only, or generated record retained for reconstruction/audit. It cannot overwrite current canonical state or mint authorization.",
+      "can_authorize_external_effect": false,
+      "may_be_current": false,
+      "append_only": true
+    }
+  ],
+  "retention_defaults": [
+    {
+      "artifact_class_id": "canonical-policy-config-schema",
+      "category": "CANONICAL_STATE",
+      "lifecycle": "current policy/config/schema is canonical for its declared configuration domain"
+    },
+    {
+      "artifact_class_id": "compact-audit-receipts",
+      "category": "EVIDENCE_RECEIPT",
+      "lifecycle": "proof by default; exact-action authorization receipts are overridden by schema identity"
+    },
+    {
+      "artifact_class_id": "harness-checkpoints",
+      "category": "CANONICAL_STATE",
+      "lifecycle": "one current checkpoint per task_id; superseded checkpoints transition to AUDIT_HISTORY"
+    },
+    {
+      "artifact_class_id": "office-generated-output",
+      "category": "AUDIT_HISTORY",
+      "lifecycle": "generated output is history unless separately referenced as evidence"
+    },
+    {
+      "artifact_class_id": "publish-bridge-archive",
+      "category": "AUDIT_HISTORY",
+      "lifecycle": "provider/publication archive is immutable history; individual live-readback records may be referenced as evidence"
+    },
+    {
+      "artifact_class_id": "creative-render-output",
+      "category": "AUDIT_HISTORY",
+      "lifecycle": "render outputs are generated history unless a receipt binds their digest as evidence"
+    },
+    {
+      "artifact_class_id": "approved-visual-reference",
+      "category": "CANONICAL_STATE",
+      "lifecycle": "current approved reference is canonical only for visual-reference identity"
+    },
+    {
+      "artifact_class_id": "vfmedia-operational-data",
+      "category": "CANONICAL_STATE",
+      "lifecycle": "current runner/pending state is canonical; event logs are explicitly overridden to AUDIT_HISTORY"
+    },
+    {
+      "artifact_class_id": "research-evidence",
+      "category": "EVIDENCE_RECEIPT",
+      "lifecycle": "source-grounded research evidence with provenance; never self-promotes into state or policy"
+    }
+  ],
+  "surfaces": [
+    {
+      "id": "jobs-ledger",
+      "locator": {
+        "kind": "external_binding",
+        "values": [
+          "office/ledger/bindings.json#canonical",
+          "Google Sheet VF HQ · jobs"
+        ]
+      },
+      "category": "CANONICAL_STATE",
+      "domain": "jobs",
+      "canonical_owner": "Google Sheet VF HQ · jobs",
+      "authority_scope": "job/order operational state",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "compatibility_paths": [
+        {
+          "path": "office/ledger/live/jobs.csv",
+          "mode": "adapter_cache",
+          "authoritative": false
+        },
+        {
+          "path": "office/ledger/live/sync-receipt.json",
+          "mode": "verification_receipt",
+          "authoritative": false
+        }
+      ]
+    },
+    {
+      "id": "office-inbox",
+      "locator": {
+        "kind": "repo_path",
+        "values": [
+          "office/control/inbox.json"
+        ]
+      },
+      "category": "CANONICAL_STATE",
+      "domain": "office-intake",
+      "canonical_owner": "office/control/inbox.json",
+      "authority_scope": "office intake classification",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "compatibility_paths": []
+    },
+    {
+      "id": "office-followups",
+      "locator": {
+        "kind": "repo_path",
+        "values": [
+          "office/control/followups.json"
+        ]
+      },
+      "category": "CANONICAL_STATE",
+      "domain": "followups",
+      "canonical_owner": "office/control/followups.json",
+      "authority_scope": "WIP-to-finished follow-up state",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "compatibility_paths": [
+        {
+          "path": "packages/vfgrowth/data/production-content-followups.json",
+          "mode": "compatibility_pointer_or_mirror",
+          "authoritative": false
+        }
+      ]
+    },
+    {
+      "id": "office-dead-letter",
+      "locator": {
+        "kind": "repo_path",
+        "values": [
+          "office/control/dead-letter.json"
+        ]
+      },
+      "category": "CANONICAL_STATE",
+      "domain": "dead-letter",
+      "canonical_owner": "office/control/dead-letter.json",
+      "authority_scope": "unresolved failed-work state after allowed failover",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "compatibility_paths": [
+        {
+          "path": "packages/vfharness/dead-letter/queue.json",
+          "mode": "compatibility_pointer_or_mirror",
+          "authoritative": false
+        }
+      ]
+    },
+    {
+      "id": "manager-handoff",
+      "locator": {
+        "kind": "repo_path",
+        "values": [
+          "office/control/HANDOFF.json"
+        ]
+      },
+      "category": "CANONICAL_STATE",
+      "domain": "handoff-continuation",
+      "canonical_owner": "office/control/HANDOFF.json",
+      "authority_scope": "continuation/index state only; referenced domain sources retain their own authority",
+      "projection_only": true,
+      "policy_gate_eligible": false,
+      "compatibility_paths": [
+        {
+          "path": "office/control/HANDOFF-he.md",
+          "mode": "human_readable_projection",
+          "authoritative": false
+        }
+      ]
+    },
+    {
+      "id": "task-checkpoints",
+      "locator": {
+        "kind": "repo_glob",
+        "values": [
+          "packages/vfharness/state/**/*.json"
+        ]
+      },
+      "category": "CANONICAL_STATE",
+      "domain": "task-execution",
+      "canonical_owner": "packages/vfharness/state/<task>/checkpoint.json or unique task_id record",
+      "authority_scope": "bounded task execution/resume state only",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "lifecycle": "duplicate task_id is invalid; superseded checkpoints are AUDIT_HISTORY",
+      "embedded_evidence": [
+        "execution_state.artifact_evidence"
+      ],
+      "compatibility_paths": []
+    },
+    {
+      "id": "runtime-health-receipts",
+      "locator": {
+        "kind": "repo_glob",
+        "values": [
+          "packages/vfharness/state/runtime/*.json"
+        ]
+      },
+      "category": "EVIDENCE_RECEIPT",
+      "domain": "runtime-health",
+      "canonical_owner": "runtime receipt producer + vf_runtime_receipt_policy.py validation",
+      "authority_scope": "runtime health evidence only",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "overrides_surface": "task-checkpoints",
+      "compatibility_paths": []
+    },
+    {
+      "id": "jobs-sync-receipt",
+      "locator": {
+        "kind": "repo_path",
+        "values": [
+          "office/ledger/live/sync-receipt.json"
+        ]
+      },
+      "category": "EVIDENCE_RECEIPT",
+      "domain": "jobs-sync",
+      "canonical_owner": "office/ledger/live/sync-receipt.json",
+      "authority_scope": "proof of adapter/remote reconciliation; never job state authority",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "compatibility_paths": []
+    },
+    {
+      "id": "research-sources",
+      "locator": {
+        "kind": "repo_glob",
+        "values": [
+          "packages/vfresearch/sources/**"
+        ]
+      },
+      "category": "EVIDENCE_RECEIPT",
+      "domain": "research",
+      "canonical_owner": "packages/vfresearch/sources/**",
+      "authority_scope": "research provenance/evidence only",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "compatibility_paths": []
+    },
+    {
+      "id": "exact-action-receipt",
+      "locator": {
+        "kind": "schema_id",
+        "values": [
+          "velvetos.action-receipt.v1"
+        ]
+      },
+      "category": "AUTHORIZATION_DECISION",
+      "domain": "external-effects",
+      "canonical_owner": "policy-registry external_effect_contract decision_authority for the receipt policy_id",
+      "authority_scope": "exact bound external action/effect only",
+      "projection_only": false,
+      "policy_gate_eligible": true,
+      "embedded_evidence": [
+        "evidence[]"
+      ],
+      "compatibility_paths": []
+    },
+    {
+      "id": "office-decisions-history",
+      "locator": {
+        "kind": "repo_path",
+        "values": [
+          "office/control/decisions.jsonl"
+        ]
+      },
+      "category": "AUDIT_HISTORY",
+      "domain": "office-governance-history",
+      "canonical_owner": "office/control/decisions.jsonl",
+      "authority_scope": "append-only rationale/history; does not substitute for an exact-action policy decision",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "compatibility_paths": []
+    },
+    {
+      "id": "media-catalog",
+      "locator": {
+        "kind": "repo_path",
+        "values": [
+          "packages/vfmedia/catalog.json"
+        ]
+      },
+      "category": "CANONICAL_STATE",
+      "domain": "media-catalog",
+      "canonical_owner": "packages/vfmedia/catalog.json",
+      "authority_scope": "media identity/catalog metadata",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "compatibility_paths": []
+    },
+    {
+      "id": "media-intake-current-state",
+      "locator": {
+        "kind": "repo_glob",
+        "values": [
+          "packages/vfmedia/state/*.json",
+          "packages/vfmedia/data/intake-brief.json"
+        ]
+      },
+      "category": "CANONICAL_STATE",
+      "domain": "media-intake",
+      "canonical_owner": "packages/vfmedia/state + current intake brief",
+      "authority_scope": "current intake/drive-action state",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "compatibility_paths": []
+    },
+    {
+      "id": "media-intake-event-history",
+      "locator": {
+        "kind": "repo_path",
+        "values": [
+          "packages/vfmedia/data/intake-events.jsonl"
+        ]
+      },
+      "category": "AUDIT_HISTORY",
+      "domain": "media-intake-history",
+      "canonical_owner": "packages/vfmedia/data/intake-events.jsonl",
+      "authority_scope": "append-only intake history",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "overrides_retention_default": "vfmedia-operational-data",
+      "compatibility_paths": []
+    },
+    {
+      "id": "content-approval-queue",
+      "locator": {
+        "kind": "repo_path",
+        "values": [
+          "packages/vfgrowth/data/approval-queue.json"
+        ]
+      },
+      "category": "CANONICAL_STATE",
+      "domain": "content-workflow",
+      "canonical_owner": "packages/vfgrowth/data/approval-queue.json",
+      "authority_scope": "content workflow/review state; approval label alone is not publication authorization",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "compatibility_paths": []
+    },
+    {
+      "id": "content-event-history",
+      "locator": {
+        "kind": "repo_path",
+        "values": [
+          "packages/vfgrowth/data/content_events.jsonl"
+        ]
+      },
+      "category": "AUDIT_HISTORY",
+      "domain": "content-history",
+      "canonical_owner": "packages/vfgrowth/data/content_events.jsonl",
+      "authority_scope": "append-only content event history",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "compatibility_paths": []
+    },
+    {
+      "id": "feed-audit-evidence",
+      "locator": {
+        "kind": "repo_path",
+        "values": [
+          "packages/vfgrowth/data/feed-audit.json"
+        ]
+      },
+      "category": "EVIDENCE_RECEIPT",
+      "domain": "feed-audit",
+      "canonical_owner": "packages/vfgrowth/data/feed-audit.json",
+      "authority_scope": "feed observation/audit evidence",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "compatibility_paths": []
+    },
+    {
+      "id": "content-calendar",
+      "locator": {
+        "kind": "repo_path",
+        "values": [
+          "packages/vfgrowth/CALENDAR.md"
+        ]
+      },
+      "category": "CANONICAL_STATE",
+      "domain": "content-calendar",
+      "canonical_owner": "packages/vfgrowth/CALENDAR.md",
+      "authority_scope": "planned content schedule; schedule is not publication",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "compatibility_paths": []
+    },
+    {
+      "id": "production-completion",
+      "locator": {
+        "kind": "repo_glob",
+        "values": [
+          "packages/vfprod/hq/cards/*.md"
+        ]
+      },
+      "category": "CANONICAL_STATE",
+      "domain": "production",
+      "canonical_owner": "packages/vfprod/hq/cards/*.md via print.done",
+      "authority_scope": "production completion state",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "compatibility_paths": []
+    },
+    {
+      "id": "publication-operational-state",
+      "locator": {
+        "kind": "repo_path",
+        "values": [
+          "packages/vfigos/PUBLICATION-STATES.json",
+          "packages/vfigos/CAPABILITIES.json",
+          "packages/vfigos/PROFILE-DESIRED.json"
+        ]
+      },
+      "category": "CANONICAL_STATE",
+      "domain": "instagram-operational-state",
+      "canonical_owner": "packages/vfigos canonical operational files",
+      "authority_scope": "publication state/capability/profile desired state; never grants publish authorization",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "compatibility_paths": []
+    },
+    {
+      "id": "generated-office-output-history",
+      "locator": {
+        "kind": "retention_class",
+        "values": [
+          "office-generated-output",
+          "creative-render-output",
+          "publish-bridge-archive"
+        ]
+      },
+      "category": "AUDIT_HISTORY",
+      "domain": "generated-output-history",
+      "canonical_owner": "artifact-retention registry + owning generator/archive",
+      "authority_scope": "historical/generated output; may be referenced by evidence but is not current state by itself",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "compatibility_paths": []
+    },
+    {
+      "id": "living-studio-receipts",
+      "locator": {
+        "kind": "repo_or_runtime_path",
+        "values": [
+          "packages/velvetos/living-studio/data/receipts.jsonl"
+        ]
+      },
+      "category": "EVIDENCE_RECEIPT",
+      "domain": "living-studio",
+      "canonical_owner": "living-studio receipt producer when materialized",
+      "authority_scope": "projection/write verification only; living-studio remains a projection/router layer",
+      "projection_only": false,
+      "policy_gate_eligible": false,
+      "compatibility_paths": []
+    }
+  ],
+  "work_ledger": {
+    "status": "INDEX_ONLY_NOT_IMPLEMENTED_STAGE7A",
+    "destination_stage": "7D",
+    "category": "CANONICAL_STATE",
+    "authority_scope": "continuation-index-only",
+    "references_only": true,
+    "full_transcript_allowed": false,
+    "embedded_large_media_allowed": false,
+    "policy_authority": false,
+    "external_effect_authority": false,
+    "implementation_allowed_before_stage7d": false,
+    "draft_source": "docs/implementation/policy-capability-prep/stage7-work-ledger-record-v0.json",
+    "rollback": "Remove the future index/adapters; canonical state/evidence/decision/history owners remain intact."
+  }
+}

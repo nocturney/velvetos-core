@@ -1,0 +1,48 @@
+{
+  "schema": "velvetos.stage7a-state-evidence-model.v1",
+  "stage": "7A",
+  "behavior_change": false,
+  "prepared_against_main_sha": "ae8c75745f0d89677078d9834ea969f6da866195",
+  "captured_at": "2026-10-04T11:31:13.7421962+03:00",
+  "purpose": "Define one semantic model for state/evidence/authorization/history without adding a store, moving artifacts, or changing effect authority.",
+  "model": {
+    "path": "packages/velvetos/policy/state-evidence-model.json",
+    "sha256": "37ff265d0059cc9a597b1875851273b5e3242a1e3cb1b5f78cd4c6939758d574",
+    "categories": [
+      "AUDIT_HISTORY",
+      "AUTHORIZATION_DECISION",
+      "CANONICAL_STATE",
+      "EVIDENCE_RECEIPT"
+    ],
+    "surface_count": 22,
+    "retention_class_count": 9,
+    "retention_classes_mapped": 9
+  },
+  "authority_baseline": {
+    "policy_registry_path": "packages/velvetos/policy/policy-registry.json",
+    "policy_registry_sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8",
+    "unchanged_from_prepared_against": true,
+    "single_authority_per_effect": true
+  },
+  "work_ledger": {
+    "status": "INDEX_ONLY_NOT_IMPLEMENTED_STAGE7A",
+    "destination_stage": "7D",
+    "references_only": true,
+    "policy_authority": false,
+    "external_effect_authority": false
+  },
+  "acceptance": {
+    "exactly_four_semantic_categories": true,
+    "all_retention_registry_artifact_classes_are_mapped": true,
+    "canonical_owner_and_authority_scope_are_explicit_per_operational_surface": true,
+    "compatibility_paths_are_non_authoritative": true,
+    "evidence_is_distinct_from_authorization_decision": true,
+    "audit_history_cannot_overwrite_current_state": true,
+    "handoff_is_continuation_context_not_cross_domain_authority": true,
+    "work_ledger_is_refs_only_and_not_a_second_store": true,
+    "external_effect_policy_registry_is_unchanged": true,
+    "no_storage_migration_or_deletion_is_authorized": true
+  },
+  "repository_acceptance": "PASS",
+  "next_stage": "Stage 7B — Memory/Learning lifecycle"
+}
