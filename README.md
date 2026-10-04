@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 6D documentation authority cleanup:** removes active daily contradictions without creating a new authority: the canonical office team is six seats; 07:00 is a research/readiness c…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 6D documentation authority cleanup:** removes active daily contradictions without creating a new authority: the canonical office team is six seats; 07:00 is a research/readiness c…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 6 acceptance gate CLOSED:** 6A–6D נסגרו ב־9/9 criteria מול main מלא 116/116; Stage 7 entry allowed.</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 6 acceptance gate CLOSED:** 6A–6D close at 9/9 criteria against a full 116/116 main suite; Stage 7 entry allowed.</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>

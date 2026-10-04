@@ -27,6 +27,8 @@ STAGE4_ACCEPTANCE = REPORTS / "stage4-acceptance.json"
 STAGE4_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage4-acceptance.py"
 STAGE5_ACCEPTANCE = REPORTS / "stage5-acceptance.json"
 STAGE5_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage5-acceptance.py"
+STAGE6_ACCEPTANCE = REPORTS / "stage6-acceptance.json"
+STAGE6_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage6-acceptance.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -41,6 +43,7 @@ EXPECTED_REPORTS = {
     "stage4d-instagram-happy-path-implementation.json",
     "stage4-acceptance.json",
     "stage5-acceptance.json",
+    "stage6-acceptance.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -813,6 +816,117 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated5.is_file():
                     require(regenerated5.read_bytes() == STAGE5_ACCEPTANCE.read_bytes(),
                             "Stage 5 acceptance receipt is not reproducible", problems)
+
+
+    require(STAGE6_ACCEPTANCE.is_file(), "Stage 6 acceptance receipt missing", problems)
+    require(STAGE6_ACCEPTANCE_GENERATOR.is_file(), "Stage 6 acceptance generator missing", problems)
+    if STAGE6_ACCEPTANCE.is_file():
+        stage6 = load(STAGE6_ACCEPTANCE)
+        require(stage6.get("schema") == "velvetos.stage6-acceptance.v1" and stage6.get("stage") == "6",
+                "Stage 6 acceptance schema/stage mismatch", problems)
+        require(stage6.get("prepared_against_main_sha") == "efaaf2f127a17917dcc4a6506fb26548a8bde701",
+                "Stage 6 acceptance main SHA drift", problems)
+        require(stage6.get("behavior_change") is False and stage6.get("stage6_gate") == "PASS",
+                "Stage 6 gate must remain observation-only PASS", problems)
+        criteria6 = stage6.get("acceptance_criteria") or {}
+        expected_criteria6 = {
+            "internal_text_uses_proportional_risk_tiers",
+            "public_and_customer_text_remains_evidence_bound",
+            "creative_manifest_and_craft_do_not_create_policy_authority",
+            "creative_refine_and_routine_aesthetics_remain_internal",
+            "dcc_updates_use_latest_compatible_typed_capability_gating",
+            "dcc_recovery_baselines_are_not_allowlists_and_unsafe_escape_stays_blocked",
+            "documentation_authority_has_no_known_active_contradictions",
+            "external_effect_authorization_semantics_remain_unchanged",
+            "main_full_sensor_suite_116_of_116",
+        }
+        require(set(criteria6) == expected_criteria6 and all(criteria6.get(key) is True for key in expected_criteria6),
+                "Stage 6 acceptance criteria drift or fail", problems)
+        stage7_entry = stage6.get("stage7_entry") or {}
+        require(stage7_entry.get("allowed") is True
+                and stage7_entry.get("next_stage") == "Stage 7 — State, Evidence, Runtime, Memory, Research, Scheduler and Retention",
+                "Stage 6 gate does not authorize Stage 7 entry", problems)
+        main6 = stage6.get("main_full_suite") or {}
+        require(main6.get("head_sha") == "efaaf2f127a17917dcc4a6506fb26548a8bde701"
+                and main6.get("workflow_run_id") == 37188157580
+                and main6.get("job_id") == 111394483160
+                and main6.get("conclusion") == "SUCCESS"
+                and main6.get("mode") == "full"
+                and main6.get("registered_sensors") == 116
+                and main6.get("passed_sensors") == 116
+                and main6.get("log_markers") == ["SENSORS 116 mode=full", "OK suite passed=116"],
+                "Stage 6 main full-suite evidence drift", problems)
+        visible6 = stage6.get("visible_text") or {}
+        require(visible6.get("model") == "RISK_AND_SURFACE_TIERS"
+                and visible6.get("draft_internal_required_evidence_count") == 1
+                and visible6.get("public_publish_required_evidence_count") == 6
+                and visible6.get("public_downgrade_blocked") is True
+                and visible6.get("approved_static_requires_exact_sha") is True,
+                "Stage 6 visible-text acceptance drift", problems)
+        creative6 = stage6.get("creative") or {}
+        require(creative6.get("manifest_coordination_only") is True
+                and creative6.get("manifest_not_approval_database") is True
+                and creative6.get("product_truth_higher") is True
+                and creative6.get("quality_system_role") == "authoring_and_quality_system_not_policy_hierarchy"
+                and creative6.get("produce_critique_targeted_refine") == "internal"
+                and creative6.get("ordinary_aesthetic_choice") == "office"
+                and creative6.get("owner_escalation") == "exception-only",
+                "Stage 6 creative acceptance drift", problems)
+        dcc6 = stage6.get("dcc") or {}
+        require(dcc6.get("version_policy") == "latest-compatible"
+                and dcc6.get("recovery_baseline_role") == "drift-comparison-and-recovery-evidence-not-allowlist"
+                and dcc6.get("exact_version_match_required") is False
+                and dcc6.get("available_requires") == "typed_capability_probe_pass"
+                and dcc6.get("illustrator_routing_status") == "available"
+                and dcc6.get("aftereffects_routing_status") == "available"
+                and dcc6.get("aftereffects_version") == "26.5"
+                and dcc6.get("aftereffects_transport") == "adobepy-cep-typed-readonly"
+                and dcc6.get("unsafe_arbitrary_script_escape_wired") is False
+                and dcc6.get("auto_update") is False
+                and dcc6.get("auto_rollback") is False
+                and dcc6.get("auto_uninstall") is False,
+                "Stage 6 DCC acceptance drift", problems)
+        docs6 = stage6.get("documentation_authority") or {}
+        require(docs6.get("checked_file_count") == 113
+                and docs6.get("violations") == []
+                and all((docs6.get("canonical_checks") or {}).values()),
+                "Stage 6 documentation-authority acceptance drift", problems)
+        expected_sources6 = {"stage6a", "stage6b", "stage6c", "stage6d"}
+        sources6 = stage6.get("source_receipts") or {}
+        require(set(sources6) == expected_sources6, "Stage 6 source receipt set drift", problems)
+        for name, source in sources6.items():
+            require(isinstance(source, dict), f"Stage 6 source receipt {name} invalid", problems)
+            rel = source.get("path") if isinstance(source, dict) else None
+            source_path = ROOT / rel if isinstance(rel, str) else None
+            require(source_path is not None and source_path.is_file(), f"Stage 6 source receipt missing: {name}", problems)
+            if source_path is not None and source_path.is_file():
+                observed_hash = hashlib.sha256(source_path.read_bytes()).hexdigest()
+                require(source.get("sha256") == observed_hash, f"Stage 6 source receipt hash drift: {name}", problems)
+        if STAGE6_ACCEPTANCE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated6 = Path(td) / "stage6-acceptance.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE6_ACCEPTANCE_GENERATOR),
+                        "--prepared-against", stage6["prepared_against_main_sha"],
+                        "--captured-at", stage6["captured_at"],
+                        "--main-run-id", str(main6["workflow_run_id"]),
+                        "--main-job-id", str(main6["job_id"]),
+                        "--main-run-url", str(main6["run_url"]),
+                        "--output", str(regenerated6),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0, "Stage 6 acceptance regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()), problems)
+                if proc.returncode == 0 and regenerated6.is_file():
+                    require(regenerated6.read_bytes() == STAGE6_ACCEPTANCE.read_bytes(),
+                            "Stage 6 acceptance receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)
