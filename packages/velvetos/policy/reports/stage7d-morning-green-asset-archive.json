@@ -1,0 +1,441 @@
+{
+  "schema": "velvetos.stage7d-local-artifact-archive.v1",
+  "source_commit": "1922202de411e61cc254ebd114c011198519d863",
+  "archive_root": "D:/Velvet/Artifacts/Retention/stage7d-20261004/morning-green-assets",
+  "copied_at": "2026-10-04T12:46:33.8049460+03:00",
+  "directory_count": 18,
+  "file_count": 86,
+  "bytes": 5953075,
+  "entries": [
+    {
+      "archive_relative": "morning-green-assets-2026-09-22/morning-footer.jpg",
+      "bytes": 5137,
+      "sha256": "7fb67a5cd0f38f8e26eded73c9013b13aa8ea6ba7d2d022b50beea7f47822936"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-22/morning-radar.jpg",
+      "bytes": 5732,
+      "sha256": "eb6f5f9083f874cb003ca8f15bac22b32e8510e2b4de7dba81f5cd335dc8acb0"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-22/morning-story.jpg",
+      "bytes": 6424,
+      "sha256": "37fd9ba83d7d71af07fe6f9978ef431ec7cd98fb231532bd857f1d178b213d44"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-22/morning-top.jpg",
+      "bytes": 10860,
+      "sha256": "505b3722e901f2f262e1b5b6ee96c64d38a0de93f136bb28cf83b2e2f65781e2"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-22/scheduled-6295632e-0a43-47cc-9850-b1db6f0959a1.jpg",
+      "bytes": 17072,
+      "sha256": "31c9330d5d244e4c82eb2e10bae8b112462e46ba3f3a3cda24009aaa80964300"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-22/scheduled-d1a55aa8-a851-499f-99b3-6ebc95c037e2.jpg",
+      "bytes": 20845,
+      "sha256": "90ed51f0a8cfe864bf8c86a0ba2f97ed800e36f3739cb77fbde125a6384e235f"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-23/morning-footer.jpg",
+      "bytes": 5137,
+      "sha256": "7fb67a5cd0f38f8e26eded73c9013b13aa8ea6ba7d2d022b50beea7f47822936"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-23/morning-radar.jpg",
+      "bytes": 5732,
+      "sha256": "eb6f5f9083f874cb003ca8f15bac22b32e8510e2b4de7dba81f5cd335dc8acb0"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-23/morning-story.jpg",
+      "bytes": 6424,
+      "sha256": "37fd9ba83d7d71af07fe6f9978ef431ec7cd98fb231532bd857f1d178b213d44"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-23/morning-top.jpg",
+      "bytes": 10860,
+      "sha256": "505b3722e901f2f262e1b5b6ee96c64d38a0de93f136bb28cf83b2e2f65781e2"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-23/scheduled-6295632e-0a43-47cc-9850-b1db6f0959a1.jpg",
+      "bytes": 17072,
+      "sha256": "31c9330d5d244e4c82eb2e10bae8b112462e46ba3f3a3cda24009aaa80964300"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-23/scheduled-d1a55aa8-a851-499f-99b3-6ebc95c037e2.jpg",
+      "bytes": 20845,
+      "sha256": "90ed51f0a8cfe864bf8c86a0ba2f97ed800e36f3739cb77fbde125a6384e235f"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-24/morning-footer.jpg",
+      "bytes": 84492,
+      "sha256": "3af7ba7cf33342c79708051258a632b51da5ee532dd4113cccf60f29e64cc67d"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-24/morning-radar.jpg",
+      "bytes": 65263,
+      "sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-24/morning-story.jpg",
+      "bytes": 95888,
+      "sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-24/morning-top.jpg",
+      "bytes": 108558,
+      "sha256": "7504997afd9eeee3e075f4134dc299650298147adae129843e3a3a12e4028f63"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-25/morning-footer.jpg",
+      "bytes": 84492,
+      "sha256": "3af7ba7cf33342c79708051258a632b51da5ee532dd4113cccf60f29e64cc67d"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-25/morning-radar.jpg",
+      "bytes": 65263,
+      "sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-25/morning-story.jpg",
+      "bytes": 95888,
+      "sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-25/morning-top.jpg",
+      "bytes": 108558,
+      "sha256": "7504997afd9eeee3e075f4134dc299650298147adae129843e3a3a12e4028f63"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-26/morning-footer.jpg",
+      "bytes": 84492,
+      "sha256": "3af7ba7cf33342c79708051258a632b51da5ee532dd4113cccf60f29e64cc67d"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-26/morning-radar.jpg",
+      "bytes": 65263,
+      "sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-26/morning-story.jpg",
+      "bytes": 95888,
+      "sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-26/morning-top.jpg",
+      "bytes": 108558,
+      "sha256": "7504997afd9eeee3e075f4134dc299650298147adae129843e3a3a12e4028f63"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-27/morning-footer.jpg",
+      "bytes": 84492,
+      "sha256": "3af7ba7cf33342c79708051258a632b51da5ee532dd4113cccf60f29e64cc67d"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-27/morning-radar.jpg",
+      "bytes": 65263,
+      "sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-27/morning-story.jpg",
+      "bytes": 95888,
+      "sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-27/morning-top.jpg",
+      "bytes": 108558,
+      "sha256": "7504997afd9eeee3e075f4134dc299650298147adae129843e3a3a12e4028f63"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-28/morning-footer.jpg",
+      "bytes": 84492,
+      "sha256": "3af7ba7cf33342c79708051258a632b51da5ee532dd4113cccf60f29e64cc67d"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-28/morning-radar.jpg",
+      "bytes": 65263,
+      "sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-28/morning-story.jpg",
+      "bytes": 95888,
+      "sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-28/morning-top.jpg",
+      "bytes": 108558,
+      "sha256": "7504997afd9eeee3e075f4134dc299650298147adae129843e3a3a12e4028f63"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-29/morning-footer.jpg",
+      "bytes": 84492,
+      "sha256": "3af7ba7cf33342c79708051258a632b51da5ee532dd4113cccf60f29e64cc67d"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-29/morning-radar.jpg",
+      "bytes": 65263,
+      "sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-29/morning-story.jpg",
+      "bytes": 95888,
+      "sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-29/morning-top.jpg",
+      "bytes": 108558,
+      "sha256": "7504997afd9eeee3e075f4134dc299650298147adae129843e3a3a12e4028f63"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-30/morning-footer.jpg",
+      "bytes": 84492,
+      "sha256": "3af7ba7cf33342c79708051258a632b51da5ee532dd4113cccf60f29e64cc67d"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-30/morning-radar.jpg",
+      "bytes": 65263,
+      "sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-30/morning-story.jpg",
+      "bytes": 95888,
+      "sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-09-30/morning-top.jpg",
+      "bytes": 108558,
+      "sha256": "7504997afd9eeee3e075f4134dc299650298147adae129843e3a3a12e4028f63"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-10-01/morning-footer.jpg",
+      "bytes": 84492,
+      "sha256": "3af7ba7cf33342c79708051258a632b51da5ee532dd4113cccf60f29e64cc67d"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-10-01/morning-radar.jpg",
+      "bytes": 65263,
+      "sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-10-01/morning-story.jpg",
+      "bytes": 95888,
+      "sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-10-01/morning-top.jpg",
+      "bytes": 108558,
+      "sha256": "7504997afd9eeee3e075f4134dc299650298147adae129843e3a3a12e4028f63"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-10-02/morning-footer.jpg",
+      "bytes": 84492,
+      "sha256": "3af7ba7cf33342c79708051258a632b51da5ee532dd4113cccf60f29e64cc67d"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-10-02/morning-radar.jpg",
+      "bytes": 65263,
+      "sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-10-02/morning-story.jpg",
+      "bytes": 95888,
+      "sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-10-02/morning-top.jpg",
+      "bytes": 108558,
+      "sha256": "7504997afd9eeee3e075f4134dc299650298147adae129843e3a3a12e4028f63"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-10-03/morning-footer.jpg",
+      "bytes": 84492,
+      "sha256": "3af7ba7cf33342c79708051258a632b51da5ee532dd4113cccf60f29e64cc67d"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-10-03/morning-radar.jpg",
+      "bytes": 65263,
+      "sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-10-03/morning-story.jpg",
+      "bytes": 95888,
+      "sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-10-03/morning-top.jpg",
+      "bytes": 108558,
+      "sha256": "7504997afd9eeee3e075f4134dc299650298147adae129843e3a3a12e4028f63"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-10-04/morning-footer.jpg",
+      "bytes": 84492,
+      "sha256": "3af7ba7cf33342c79708051258a632b51da5ee532dd4113cccf60f29e64cc67d"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-10-04/morning-radar.jpg",
+      "bytes": 65263,
+      "sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-10-04/morning-story.jpg",
+      "bytes": 95888,
+      "sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543"
+    },
+    {
+      "archive_relative": "morning-green-assets-2026-10-04/morning-top.jpg",
+      "bytes": 108558,
+      "sha256": "7504997afd9eeee3e075f4134dc299650298147adae129843e3a3a12e4028f63"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa-2026-09-23/morning-footer.jpg",
+      "bytes": 69427,
+      "sha256": "12209f01bbcebf167c5dc0d6436721427934dd9b6d4ebcc5a8378b9764eef2e6"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa-2026-09-23/morning-radar.jpg",
+      "bytes": 65263,
+      "sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa-2026-09-23/morning-story.jpg",
+      "bytes": 95888,
+      "sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa-2026-09-23/morning-top.jpg",
+      "bytes": 106646,
+      "sha256": "0e2f7ce6d7000e4fc94854f3da2605102ef66164d5a2f0b347d932f45a7e2952"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa-2026-09-23/scheduled-6295632e-0a43-47cc-9850-b1db6f0959a1.jpg",
+      "bytes": 17072,
+      "sha256": "31c9330d5d244e4c82eb2e10bae8b112462e46ba3f3a3cda24009aaa80964300"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa-2026-09-23/scheduled-d1a55aa8-a851-499f-99b3-6ebc95c037e2.jpg",
+      "bytes": 20845,
+      "sha256": "90ed51f0a8cfe864bf8c86a0ba2f97ed800e36f3739cb77fbde125a6384e235f"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa2-2026-09-23/morning-footer.jpg",
+      "bytes": 69427,
+      "sha256": "12209f01bbcebf167c5dc0d6436721427934dd9b6d4ebcc5a8378b9764eef2e6"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa2-2026-09-23/morning-radar.jpg",
+      "bytes": 65263,
+      "sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa2-2026-09-23/morning-story.jpg",
+      "bytes": 95888,
+      "sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa2-2026-09-23/morning-top.jpg",
+      "bytes": 106646,
+      "sha256": "0e2f7ce6d7000e4fc94854f3da2605102ef66164d5a2f0b347d932f45a7e2952"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa2-2026-09-23/scheduled-6295632e-0a43-47cc-9850-b1db6f0959a1.jpg",
+      "bytes": 17072,
+      "sha256": "31c9330d5d244e4c82eb2e10bae8b112462e46ba3f3a3cda24009aaa80964300"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa2-2026-09-23/scheduled-d1a55aa8-a851-499f-99b3-6ebc95c037e2.jpg",
+      "bytes": 20845,
+      "sha256": "90ed51f0a8cfe864bf8c86a0ba2f97ed800e36f3739cb77fbde125a6384e235f"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa3-2026-09-23/morning-footer.jpg",
+      "bytes": 84492,
+      "sha256": "3af7ba7cf33342c79708051258a632b51da5ee532dd4113cccf60f29e64cc67d"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa3-2026-09-23/morning-radar.jpg",
+      "bytes": 65263,
+      "sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa3-2026-09-23/morning-story.jpg",
+      "bytes": 95888,
+      "sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa3-2026-09-23/morning-top.jpg",
+      "bytes": 106646,
+      "sha256": "0e2f7ce6d7000e4fc94854f3da2605102ef66164d5a2f0b347d932f45a7e2952"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa3-2026-09-23/scheduled-6295632e-0a43-47cc-9850-b1db6f0959a1.jpg",
+      "bytes": 17072,
+      "sha256": "31c9330d5d244e4c82eb2e10bae8b112462e46ba3f3a3cda24009aaa80964300"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa3-2026-09-23/scheduled-d1a55aa8-a851-499f-99b3-6ebc95c037e2.jpg",
+      "bytes": 20845,
+      "sha256": "90ed51f0a8cfe864bf8c86a0ba2f97ed800e36f3739cb77fbde125a6384e235f"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa4-2026-09-23/morning-footer.jpg",
+      "bytes": 84492,
+      "sha256": "3af7ba7cf33342c79708051258a632b51da5ee532dd4113cccf60f29e64cc67d"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa4-2026-09-23/morning-radar.jpg",
+      "bytes": 65263,
+      "sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa4-2026-09-23/morning-story.jpg",
+      "bytes": 95888,
+      "sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa4-2026-09-23/morning-top.jpg",
+      "bytes": 108558,
+      "sha256": "7504997afd9eeee3e075f4134dc299650298147adae129843e3a3a12e4028f63"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa4-2026-09-23/scheduled-6295632e-0a43-47cc-9850-b1db6f0959a1.jpg",
+      "bytes": 17072,
+      "sha256": "31c9330d5d244e4c82eb2e10bae8b112462e46ba3f3a3cda24009aaa80964300"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa4-2026-09-23/scheduled-d1a55aa8-a851-499f-99b3-6ebc95c037e2.jpg",
+      "bytes": 20845,
+      "sha256": "90ed51f0a8cfe864bf8c86a0ba2f97ed800e36f3739cb77fbde125a6384e235f"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa5-2026-09-23/morning-footer.jpg",
+      "bytes": 84492,
+      "sha256": "3af7ba7cf33342c79708051258a632b51da5ee532dd4113cccf60f29e64cc67d"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa5-2026-09-23/morning-radar.jpg",
+      "bytes": 65263,
+      "sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa5-2026-09-23/morning-story.jpg",
+      "bytes": 95888,
+      "sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa5-2026-09-23/morning-top.jpg",
+      "bytes": 108558,
+      "sha256": "7504997afd9eeee3e075f4134dc299650298147adae129843e3a3a12e4028f63"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa5-2026-09-23/scheduled-6295632e-0a43-47cc-9850-b1db6f0959a1.jpg",
+      "bytes": 17072,
+      "sha256": "31c9330d5d244e4c82eb2e10bae8b112462e46ba3f3a3cda24009aaa80964300"
+    },
+    {
+      "archive_relative": "morning-green-assets-approved-mockup-qa5-2026-09-23/scheduled-d1a55aa8-a851-499f-99b3-6ebc95c037e2.jpg",
+      "bytes": 20845,
+      "sha256": "90ed51f0a8cfe864bf8c86a0ba2f97ed800e36f3739cb77fbde125a6384e235f"
+    }
+  ]
+}

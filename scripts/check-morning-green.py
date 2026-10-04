@@ -99,9 +99,11 @@ def main() -> None:
 
     builder = (PACK / "build_morning_green.py").read_text(encoding="utf-8")
     preparer = (PACK / "prepare_morning_green.py").read_text(encoding="utf-8")
-    for token in ('\"enabled\": bool(args.enable)', "--enable", "embedRemoteImages", "PACK / \"assets\" / \"morning-green\"", "--thumbnail-dir", "morning-green-assets-"):
+    for token in ('\"enabled\": bool(args.enable)', "--enable", "embedRemoteImages", "PACK / \"assets\" / \"morning-green\"", "--thumbnail-dir", "morning-green-assets-current", "morning-green-current.html", "rolling-current-transport"):
         if token not in preparer:
-            fail(f"Morning Green preparer missing fail-closed send contract {token!r}")
+            fail(f"Morning Green preparer missing fail-closed send/retention contract {token!r}")
+    if 'f"morning-green-assets-{iso}"' in preparer or 'f"morning-green-{iso}.html"' in preparer:
+        fail("Morning Green preparer must not accumulate dated rendered transport bundles after Stage 7D")
     if "--openpost" in preparer:
         fail("Morning Green active preparer must not expose an OpenPost input")
     for token in ("reader_friendly", "compact_overview", "compact_attention", "compact_progress", "compact_receivables", "ready_for_brief", "waiting_for_print_done", "lastMod", "thumbnail_cid", "no materialized/public thumbnail", "range(7)", "HE_DAY_SHORT", "extra_count", "instagram_snapshot", "מעורבות בפוסט האחרון", "Insights", "Instagram has its own dedicated analytics section", "דברים שכדאי לשים לב אליהם", "תודה שאתה חלק מהדרך"):

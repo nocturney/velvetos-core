@@ -336,3 +336,17 @@ Upstream research now follows cheap detection first. `vf_upstream_watch.py` reco
 Every new/refreshed research artifact follows `packages/vfresearch/ARTIFACT-CONTRACT.md` and records `as_of`, `provenance`, `uncertainty` and `refresh_target`. Historical dated evidence is not rewritten merely to add metadata. Provider readback proves provider state only; it does not create policy authority.
 
 Acceptance evidence: `reports/stage7c-research-scheduler-consolidation.json` (11/11 PASS, reproducible by `check-vfresearch.py`).
+
+## Reform v2 Stage 7D — Artifact retention
+
+Stage 7D turns the Stage 0/7A artifact classification into bounded retention without adding a database or external-effect authority. All nine artifact classes now have concrete retention semantics; no `CLASSIFY_IN_STAGE_7` placeholder remains.
+
+The first copy-first migration targets Morning Green generated transport images. Eighteen historical `morning-green-assets-*` directories (86 files / 5,953,075 bytes) were copied to the local artifact archive and SHA-256 verified before their tracked tree copies were removed. The compact archive receipt is `reports/stage7d-morning-green-asset-archive.json`. The active producer now maintains one rolling `morning-green-current.html/json/txt` + `morning-green-assets-current/` transport bundle; Gmail still consumes repo-relative files, while daily image-copy accumulation stops.
+
+Active-code/workflow consumer scan has zero references to removed dated transport bundles. Historical Markdown/state/receipt records may still mention their original paths as audit history. Rollback is Git revert plus the copy-first archive receipt; no external irreversible-delete authority is introduced.
+
+Transient classes are now bounded by destination/retention policy rather than silently growing forever: harness checkpoints target active/cited 90-day state-store retention, vfmedia operational data targets current-state plus rolling event archive, compact audit receipts stay in Git when small, and large/creative outputs target artifact/archive or Media Vault after consumer checks.
+
+The Stage 7A Work Ledger question is resolved as **NO_NEW_WORK_LEDGER_STORE**. `office/control/HANDOFF.json` already provides the refs-only continuation/index view, so another ledger would duplicate state/index authority. No new store, policy authority or external-effect authority is created.
+
+Acceptance evidence: `reports/stage7d-artifact-retention.json` (11/11 PASS; >5 MB generated-image Git-noise reduction; reproducible by `check-policy-architecture.py`).

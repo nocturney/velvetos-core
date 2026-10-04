@@ -47,10 +47,13 @@ def main() -> int:
     args = ap.parse_args()
 
     iso, display = extract_date(args.brief_json)
-    green_json = OUT / f"morning-green-{iso}.json"
-    green_txt = OUT / f"morning-green-{iso}.txt"
-    green_html = OUT / f"morning-green-{iso}.html"
-    assets_out = OUT / f"morning-green-assets-{iso}"
+    # Stage 7D retention: one rolling transport bundle in Git.
+    # Historical dated bundles are audit history, not a reason to add a new
+    # rendered copy every day.
+    green_json = OUT / "morning-green-current.json"
+    green_txt = OUT / "morning-green-current.txt"
+    green_html = OUT / "morning-green-current.html"
+    assets_out = OUT / "morning-green-assets-current"
 
     if assets_out.exists():
         shutil.rmtree(assets_out)
@@ -100,6 +103,8 @@ def main() -> int:
         "images": rel(assets_out),
         "embedRemoteImages": True,
         "remoteImageLimit": 8,
+        "artifactDate": iso,
+        "retentionMode": "rolling-current-transport",
     }
     args.request.parent.mkdir(parents=True, exist_ok=True)
     args.request.write_text(json.dumps(req, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
