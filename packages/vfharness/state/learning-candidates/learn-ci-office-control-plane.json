@@ -36,10 +36,14 @@
     "gh-run:37077994644:failure:2026-10-02T23:31:37Z:https://github.com/nocturney/velvetos-core/actions/runs/37077994644",
     "gh-run:37106627885:failure:2026-10-03T07:31:28Z:https://github.com/nocturney/velvetos-core/actions/runs/37106627885",
     "gh-run:37124686754:failure:2026-10-03T12:59:51Z:https://github.com/nocturney/velvetos-core/actions/runs/37124686754",
-    "office-loop-1830 triage 2026-10-03: Office Control Plane failed on main (37124686754 @ 12:59Z and 37106627885 @ 07:31Z). Persist step exited 1 on git add of gitignored packages/velvetos/living-studio/data/signal-room.jsonl; Fail-on-control-plane-error annotation follows that persist error. Same class as prior days. Keep accepted; no promote — no durable fix in this handoff."
+    "office-loop-1830 triage 2026-10-03: Office Control Plane failed on main (37124686754 @ 12:59Z and 37106627885 @ 07:31Z). Persist step exited 1 on git add of gitignored packages/velvetos/living-studio/data/signal-room.jsonl; Fail-on-control-plane-error annotation follows that persist error. Same class as prior days. Keep accepted; no promote — no durable fix in this handoff.",
+    "gh-run:37159121177:failure:2026-10-03T22:38:26Z:https://github.com/nocturney/velvetos-core/actions/runs/37159121177",
+    "gh-run:37186608878:failure:2026-10-04T07:42:30Z:https://github.com/nocturney/velvetos-core/actions/runs/37186608878",
+    "gh-run:37206324516:failure:2026-10-04T13:38:15Z:https://github.com/nocturney/velvetos-core/actions/runs/37206324516",
+    "office-loop-1830 triage 2026-10-04: Office Control Plane failed on main today. 37186608878 @ 07:42Z (and 37159121177 @ 22:38Z 3.10) Persist step exited 1 on git add of gitignored packages/velvetos/living-studio/data/signal-room.jsonl; Fail-on-control-plane-error follows that. 37206324516 @ 13:38Z is a different step: watchdog and check-office-control-plane.py were OK, ingest-ci wrote workflows_failed=4, then check-learning-lifecycle.py FAIL Stage 7B acceptance receipt is not reproducible. Keep accepted; no promote — neither the Persist gitignore class nor the Stage 7B receipt has a durable fix in this handoff."
   ],
   "first_seen": "2026-09-26T10:43:44Z",
-  "last_seen": "2026-10-03T15:43:58+00:00",
+  "last_seen": "2026-10-04T15:50:01+00:00",
   "owner_correction": false,
   "promote_to": null,
   "supersedes": null,
