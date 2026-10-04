@@ -60,6 +60,8 @@ STAGE8C_WINDOWS_HOST = REPORTS / "stage8c-windows-host-binding.json"
 STAGE8C_WINDOWS_HOST_GENERATOR = ROOT / "scripts" / "generate-stage8c-windows-host-binding.py"
 STAGE8C_CLOSURE = REPORTS / "stage8c-closure.json"
 STAGE8C_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8c-closure.py"
+STAGE8D_READINESS = REPORTS / "stage8d-retirement-readiness.json"
+STAGE8D_READINESS_GENERATOR = ROOT / "scripts" / "generate-stage8d-retirement-readiness.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -91,6 +93,7 @@ EXPECTED_REPORTS = {
     "stage8c-chatgpt-distribution-consumers.json",
     "stage8c-windows-host-binding.json",
     "stage8c-closure.json",
+    "stage8d-retirement-readiness.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -2334,6 +2337,115 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated8cc.is_file():
                     require(regenerated8cc.read_bytes() == STAGE8C_CLOSURE.read_bytes(),
                             "Stage 8C closure receipt is not reproducible", problems)
+
+    if STAGE8D_READINESS.is_file():
+        ready8d = load(STAGE8D_READINESS)
+        require(
+            ready8d.get("schema") == "velvetos.stage8d-retirement-readiness.v1"
+            and ready8d.get("stage") == "8D_READINESS"
+            and ready8d.get("behavior_change") is False
+            and ready8d.get("repository_assessment") == "PASS",
+            "Stage 8D readiness metadata drift",
+            problems,
+        )
+        require(
+            ready8d.get("retirement_authorized") is False
+            and ready8d.get("readiness_state") == "BLOCKED_PENDING_MIGRATION_OR_ROLLBACK_WINDOW",
+            "Stage 8D retirement must remain blocked while readiness blockers exist",
+            problems,
+        )
+        surfaces8d = ready8d.get("compatibility_surfaces") or {}
+        expected_surfaces8d = {
+            "sample_profile",
+            "root_desk",
+            "fleet",
+            "tool_status",
+            "chatgpt_core_bundle",
+        }
+        require(set(surfaces8d) == expected_surfaces8d,
+                "Stage 8D compatibility-surface set drift", problems)
+        for sid8d, row8d in surfaces8d.items():
+            require(
+                (row8d or {}).get("present") is True
+                and (row8d or {}).get("delete_authorized") is False
+                and (row8d or {}).get("retirement_ready") is False,
+                f"Stage 8D surface unexpectedly ready/deletable: {sid8d}",
+                problems,
+            )
+        blockers8d = ready8d.get("blockers") or {}
+        require(set(blockers8d) == expected_surfaces8d,
+                "Stage 8D blocker set must cover all compatibility surfaces", problems)
+        require(
+            blockers8d.get("sample_profile") == ["rollback_window_open"],
+            "Stage 8D sample blocker semantics drift",
+            problems,
+        )
+        for sid8d in {"root_desk", "fleet", "tool_status", "chatgpt_core_bundle"}:
+            reasons8d = set(blockers8d.get(sid8d) or [])
+            require(
+                {"rollback_window_open", "active_compatibility_consumers_remain"} <= reasons8d,
+                f"Stage 8D active blocker semantics drift: {sid8d}",
+                problems,
+            )
+        assessment8d = ready8d.get("assessment") or {}
+        require(
+            assessment8d.get("stage8c_closure_is_passed") is True
+            and assessment8d.get("all_compatibility_paths_are_still_present") is True
+            and assessment8d.get("sample_profile_has_no_active_runtime_consumer") is True
+            and assessment8d.get("sample_profile_rollback_window_is_still_open") is True
+            and assessment8d.get("root_desk_rollback_window_is_still_open") is True
+            and assessment8d.get("external_effect_authority_is_unchanged") is True,
+            "Stage 8D readiness assessment drift",
+            problems,
+        )
+        main8d = ready8d.get("post_closure_main_full_suite") or {}
+        require(
+            main8d.get("head_sha") == ready8d.get("prepared_against_main_sha")
+            and main8d.get("conclusion") == "SUCCESS"
+            and main8d.get("mode") == "full"
+            and main8d.get("registered_sensors") == 116
+            and main8d.get("passed_sensors") == 116
+            and main8d.get("log_markers") == ["SENSORS 116 mode=full", "OK suite passed=116"],
+            "Stage 8D post-closure main evidence drift",
+            problems,
+        )
+        authority8d = ready8d.get("authority") or {}
+        require(authority8d.get("external_effect_authority_changed") is False,
+                "Stage 8D readiness changed external-effect authority", problems)
+        constraints8d = ready8d.get("constraints") or []
+        require(
+            "no legacy deletion while retirement_authorized=false" in constraints8d
+            and "rollback windows close only on explicit evidence, never by inference" in constraints8d,
+            "Stage 8D deletion/rollback guard drift",
+            problems,
+        )
+        if STAGE8D_READINESS_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8d = Path(td) / "stage8d-retirement-readiness.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_READINESS_GENERATOR),
+                        "--prepared-against", ready8d["prepared_against_main_sha"],
+                        "--captured-at", ready8d["captured_at"],
+                        "--main-run-id", str(main8d["workflow_run_id"]),
+                        "--main-job-id", str(main8d["job_id"]),
+                        "--main-run-url", main8d["run_url"],
+                        "--output", str(regenerated8d),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0,
+                        "Stage 8D readiness regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()),
+                        problems)
+                if proc.returncode == 0 and regenerated8d.is_file():
+                    require(regenerated8d.read_bytes() == STAGE8D_READINESS.read_bytes(),
+                            "Stage 8D readiness receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)
