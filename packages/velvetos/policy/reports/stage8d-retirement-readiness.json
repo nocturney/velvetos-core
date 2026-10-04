@@ -1,0 +1,274 @@
+{
+  "schema": "velvetos.stage8d-retirement-readiness.v1",
+  "stage": "8D_READINESS",
+  "behavior_change": false,
+  "prepared_against_main_sha": "a55a1d965903a384a139b2f62135648b3a11403c",
+  "captured_at": "2026-10-04T20:50:39.3211878+03:00",
+  "purpose": "Assess Stage 8D legacy-retirement readiness without deleting compatibility paths or changing runtime/policy authority.",
+  "stage8c_closure": {
+    "path": "packages/velvetos/policy/reports/stage8c-closure.json",
+    "canonical_json_sha256": "7706703439a8636db56fe6650f9c40cce33ed461756e04ef0b5943ae89c9fae4",
+    "passed": true
+  },
+  "post_closure_main_full_suite": {
+    "head_sha": "a55a1d965903a384a139b2f62135648b3a11403c",
+    "workflow_run_id": 37221939252,
+    "job_id": 111493871927,
+    "run_url": "https://github.com/nocturney/velvetos-core/actions/runs/37221939252",
+    "conclusion": "SUCCESS",
+    "mode": "full",
+    "registered_sensors": 116,
+    "passed_sensors": 116,
+    "log_markers": [
+      "SENSORS 116 mode=full",
+      "OK suite passed=116"
+    ]
+  },
+  "compatibility_surfaces": {
+    "sample_profile": {
+      "path": "packages/velvetos/samples/velvet-factory.json",
+      "present": true,
+      "reference_count": 3,
+      "references": [
+        "scripts/check-policy-architecture.py",
+        "scripts/generate-stage8a-core-instance-inventory.py",
+        "scripts/generate-stage8b-instance-resolver-foundation.py"
+      ],
+      "known_active_blockers": [],
+      "rollback_window_open": true,
+      "retirement_ready": false,
+      "delete_authorized": false,
+      "blocking_reasons": [
+        "rollback_window_open"
+      ]
+    },
+    "root_desk": {
+      "path": ".cursor/vf-desk.json",
+      "present": true,
+      "reference_count": 53,
+      "references": [
+        ".cursor/rules/velvet-factory-desk.mdc",
+        "CHANGELOG.md",
+        "constitution/PUBLIC_CTA.md",
+        "docs/AGENCY-AGENTS.md",
+        "docs/AGENCY-TOOLS.md",
+        "docs/FAILOVER.md",
+        "docs/SHARED-WORK-COORDINATION.md",
+        "docs/VFMEM.md",
+        "docs/chief-of-staff/PACKS-CATALOG.md",
+        "docs/chief-of-staff/README.md",
+        "docs/chief-of-staff/SOT-INDEX.md",
+        "docs/chief-of-staff/SYSTEM-MAP.md",
+        "instances/velvet-factory/INSTANCE.json",
+        "packages/manifest.json",
+        "packages/velvetos/policy/README.md",
+        "packages/velvetos_control_api/CONTRIBUTIONS.json",
+        "packages/velvetos_control_api/Dockerfile",
+        "packages/velvetos_control_api/README.md",
+        "packages/velvetos_control_api/contributions/integrations.py",
+        "packages/velvetos_control_api/contributions/operational.py",
+        "packages/velvetos_control_api/contributions/unavailable.py",
+        "packages/velvetos_control_api/tests/test_control_api.py",
+        "packages/vffcc/playbooks/cursor-thrift.md",
+        "packages/vfgraft/graph.json",
+        "packages/vfgraft/graph/blast.md",
+        "packages/vfgraft/graph/desk.md",
+        "packages/vfgraft/graph/grok-bot.md",
+        "packages/vfgraft/graph/laws.md",
+        "packages/vfgraft/graph/pipeline.md",
+        "packages/vfgraft/graph/tools.md",
+        "packages/vfharness/layers.json",
+        "packages/vfharness/playbooks/domain-glossary.md",
+        "packages/vfharness/playbooks/skill-first.md",
+        "packages/vfigos/IG-MCP-INVENTORY.md",
+        "packages/vfmakers/LOCK.md",
+        "packages/vfmcp/ICLOUD-DRIVE-SYNC.md",
+        "packages/vfmem/catalog.json",
+        "packages/vfresearch/sources/2026-08-31-effective-html.md",
+        "packages/vfresearch/sources/2026-09-05-last30days-embed.md",
+        "scripts/check-policy-architecture.py",
+        "scripts/check-velvetos.py",
+        "scripts/check-vf-offering.py",
+        "scripts/check-vfmedia.py",
+        "scripts/check-visual-surface-enforcement.py",
+        "scripts/generate-stage6d-documentation-authority-cleanup-report.py",
+        "scripts/generate-stage8a-core-instance-inventory.py",
+        "scripts/generate-stage8b-canonical-instance-config.py",
+        "scripts/generate-stage8b-instance-resolver-foundation.py",
+        "scripts/generate-stage8c-closure.py",
+        "scripts/generate-stage8c-control-api-fleet.py",
+        "scripts/generate-stage8c-desk-catalog-bindings.py",
+        "scripts/generate-stage8c-root-desk-readers.py",
+        "scripts/install-agency-agents.sh"
+      ],
+      "known_active_blockers": [
+        ".cursor/rules/velvet-factory-desk.mdc",
+        "scripts/check-visual-surface-enforcement.py"
+      ],
+      "rollback_window_open": true,
+      "retirement_ready": false,
+      "delete_authorized": false,
+      "blocking_reasons": [
+        "rollback_window_open",
+        "active_compatibility_consumers_remain"
+      ]
+    },
+    "fleet": {
+      "path": "packages/vfprod/FLEET.json",
+      "present": true,
+      "reference_count": 12,
+      "references": [
+        ".cursor/vf-desk.json",
+        "CHANGELOG.md",
+        "docs/chief-of-staff/SOT-INDEX.md",
+        "packages/velvetos/living-studio/REGISTRY.json",
+        "packages/velvetos/policy/README.md",
+        "packages/velvetos_control_api/tests/test_control_api.py",
+        "packages/vfharness/state/studio-ops-engines-2026-09-07.json",
+        "scripts/check-policy-architecture.py",
+        "scripts/generate-stage8a-core-instance-inventory.py",
+        "scripts/generate-stage8b-instance-resolver-foundation.py",
+        "scripts/generate-stage8c-closure.py",
+        "scripts/generate-stage8c-control-api-fleet.py"
+      ],
+      "known_active_blockers": [
+        "packages/velvetos/living-studio/REGISTRY.json"
+      ],
+      "rollback_window_open": true,
+      "retirement_ready": false,
+      "delete_authorized": false,
+      "blocking_reasons": [
+        "rollback_window_open",
+        "active_compatibility_consumers_remain"
+      ]
+    },
+    "tool_status": {
+      "path": "packages/velvetos/TOOL-STATUS.json",
+      "present": true,
+      "reference_count": 21,
+      "references": [
+        ".cursor/rules/velvet-factory-desk.mdc",
+        "instances/velvet-factory/.cursor/rules/velvetos-instance-desk.mdc",
+        "instances/velvet-factory/AGENTS.md",
+        "packages/velvetos/CORE.json",
+        "packages/velvetos/policy/README.md",
+        "packages/velvetos/policy/sensor-registry.json",
+        "packages/velvetos/schema/tool-status-contract.schema.json",
+        "packages/velvetos/tool-status-contract.json",
+        "packages/velvetos/tool_status_resolver.py",
+        "packages/vfharness/playbooks/grok-outage-tools.md",
+        "packages/vfharness/state/upstream-release-watch-2026-09-27/implementation-spec.md",
+        "packages/vfigos/OPENPOST.json",
+        "packages/vfigos/OPENPOST.md",
+        "packages/vfigos/SEND.md",
+        "packages/vfmcp/core-mcp.json",
+        "packages/vfops/ROUTINE.md",
+        "scripts/check-policy-architecture.py",
+        "scripts/check-velvetos.py",
+        "scripts/generate-stage8a-core-instance-inventory.py",
+        "scripts/generate-stage8b-canonical-instance-config.py",
+        "scripts/generate-stage8c-closure.py"
+      ],
+      "known_active_blockers": [
+        "packages/velvetos/CORE.json",
+        "packages/velvetos/tool_status_resolver.py",
+        "packages/velvetos/tool-status-contract.json",
+        "packages/vfigos/OPENPOST.json",
+        "packages/vfmcp/core-mcp.json"
+      ],
+      "rollback_window_open": true,
+      "retirement_ready": false,
+      "delete_authorized": false,
+      "blocking_reasons": [
+        "rollback_window_open",
+        "active_compatibility_consumers_remain"
+      ]
+    },
+    "chatgpt_core_bundle": {
+      "path": "packages/velvetos/chatgpt-project",
+      "present": true,
+      "reference_count": 17,
+      "references": [
+        ".gitattributes",
+        "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
+        "packages/velvetos/policy/README.md",
+        "packages/velvetos/policy/sensor-registry.json",
+        "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md",
+        "packages/vfbrand/brand-tokens.json",
+        "packages/vfharness/state/vf-project-v66-reference-alignment-2026-09-20/implementation-spec.md",
+        "packages/vfharness/state/vf-publication-v64-binding-2026-09-18/task_plan.md",
+        "packages/vfom/REEL-ROUTE-CONTRACT.json",
+        "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json",
+        "scripts/check-chat-runtime-bundle.py",
+        "scripts/check-policy-architecture.py",
+        "scripts/check-project-bundle.py",
+        "scripts/check-reel-route-sync.py",
+        "scripts/generate-stage8a-core-instance-inventory.py",
+        "scripts/generate-stage8c-chatgpt-distribution-consumers.py",
+        "scripts/generate-stage8c-closure.py"
+      ],
+      "known_active_blockers": [
+        "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
+        "packages/vfom/REEL-ROUTE-CONTRACT.json",
+        "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json",
+        "scripts/check-project-bundle.py",
+        "scripts/check-reel-route-sync.py",
+        "scripts/check-chat-runtime-bundle.py"
+      ],
+      "rollback_window_open": true,
+      "retirement_ready": false,
+      "delete_authorized": false,
+      "blocking_reasons": [
+        "rollback_window_open",
+        "active_compatibility_consumers_remain"
+      ]
+    }
+  },
+  "assessment": {
+    "stage8c_closure_is_passed": true,
+    "all_compatibility_paths_are_still_present": true,
+    "sample_profile_has_no_active_runtime_consumer": true,
+    "sample_profile_rollback_window_is_still_open": true,
+    "root_desk_rollback_window_is_still_open": true,
+    "root_desk_still_has_active_compatibility_consumers": true,
+    "fleet_still_has_active_compatibility_consumers": true,
+    "tool_status_still_has_active_compatibility_consumers": true,
+    "chatgpt_core_bundle_still_has_active_compatibility_consumers": true,
+    "external_effect_authority_is_unchanged": true
+  },
+  "blockers": {
+    "sample_profile": [
+      "rollback_window_open"
+    ],
+    "root_desk": [
+      "rollback_window_open",
+      "active_compatibility_consumers_remain"
+    ],
+    "fleet": [
+      "rollback_window_open",
+      "active_compatibility_consumers_remain"
+    ],
+    "tool_status": [
+      "rollback_window_open",
+      "active_compatibility_consumers_remain"
+    ],
+    "chatgpt_core_bundle": [
+      "rollback_window_open",
+      "active_compatibility_consumers_remain"
+    ]
+  },
+  "retirement_authorized": false,
+  "readiness_state": "BLOCKED_PENDING_MIGRATION_OR_ROLLBACK_WINDOW",
+  "repository_assessment": "PASS",
+  "next_action": "Migrate remaining compatibility consumers and collect explicit rollback-window closure evidence; do not delete legacy paths.",
+  "authority": {
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false
+  },
+  "constraints": [
+    "no legacy deletion while retirement_authorized=false",
+    "no big-bang delete",
+    "consumer migration must preserve parity and fail-closed semantics",
+    "rollback windows close only on explicit evidence, never by inference"
+  ]
+}
