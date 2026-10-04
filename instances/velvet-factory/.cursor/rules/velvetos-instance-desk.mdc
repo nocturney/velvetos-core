@@ -20,7 +20,7 @@ You are in the **frontend** office for Velvet Factory. Backend kernel: `vendor/v
 
 ## COLD-START VISUAL STANDARD GATE — ALWAYS REQUIRED
 
-Tool authority: `vendor/velvetos-core/packages/velvetos/TOOL-STATUS.json`. IDs named in this section are reference identity or hard-reject entries only, never a provider route.
+Tool authority: the selected `instance:surface:toolStatus`, composed through `vendor/velvetos-core/packages/velvetos/tool_status_resolver.py`. The retained Core composite is rollback/parity only. IDs named in this section are reference identity or hard-reject entries only, never a provider route.
 
 For **any** request involving Instagram content, social content, image selection/editing, post, carousel, Story still, Reel cover, feed/grid planning, product showcase, service/editorial creative, visual QA or publish preflight, you MUST load these Core authorities **before proposing or generating creative**:
 

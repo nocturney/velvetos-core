@@ -58,8 +58,10 @@
     "contract": "packages/velvetos/tool-status-contract.json",
     "resolver": "packages/velvetos/tool_status_resolver.py",
     "instanceSurface": "toolStatus",
-    "legacyCompatibilityPath": "packages/velvetos/TOOL-STATUS.json",
-    "consumerCutover": false,
+    "activeAuthority": "instance:surface:toolStatus",
+    "rollbackCompatibilityPath": "packages/velvetos/TOOL-STATUS.json",
+    "consumerCutover": true,
+    "rollbackCompatibilityRetained": true,
     "silentBusinessDefaultForbidden": true
   },
   "sampleProfiles": {

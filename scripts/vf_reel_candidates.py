@@ -20,10 +20,14 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from tool_status_resolver import compose_tool_status  # noqa: E402
+
 MEDIA_CATALOG = ROOT / "packages" / "vfmedia" / "catalog.json"
 VIDEO_TOOLCHAIN = ROOT / "packages" / "vfom" / "VIDEO-TOOLCHAIN.json"
 HYPERFRAMES_BACKEND = ROOT / "packages" / "vfom" / "HYPERFRAMES-BACKEND.json"
-TOOL_STATUS = ROOT / "packages" / "velvetos" / "TOOL-STATUS.json"
 
 REEL_CTA = "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם"
 MAX_CANDIDATES = 3
@@ -107,11 +111,20 @@ def unusable_reason(item: dict) -> str:
 
 
 def active_edit_tools(toolchain_path: Path = VIDEO_TOOLCHAIN, backend_path: Path = HYPERFRAMES_BACKEND,
-                      tool_status_path: Path = TOOL_STATUS, root: Path = ROOT) -> dict:
-    """Existing, active editing bridges only; drops anything TOOL-STATUS froze/retired."""
+                      tool_status_path: Path | None = None, root: Path = ROOT) -> dict:
+    """Existing active editing bridges, gated by selected-instance tool status.
+
+    ``tool_status_path`` is fixture-only compatibility for isolated tests. Normal
+    production selection resolves the explicit Velvet Factory ``toolStatus``
+    instance surface through the generic resolver.
+    """
     toolchain = _load(toolchain_path, {})
     backend = _load(backend_path, {})
-    status_doc = _load(tool_status_path, {})
+    status_doc = (
+        _load(tool_status_path, {})
+        if tool_status_path is not None
+        else compose_tool_status(root, instance_id="velvet-factory", env={})
+    )
     blocked_blob = json.dumps(
         [v for v in (status_doc.get("tools") or {}).values()
          if isinstance(v, dict) and str(v.get("status") or "").lower() in BLOCKED_TOOL_STATUSES],

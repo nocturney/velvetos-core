@@ -66,6 +66,8 @@ STAGE8D_FLEET = REPORTS / "stage8d-fleet-consumer-migration.json"
 STAGE8D_FLEET_GENERATOR = ROOT / "scripts" / "generate-stage8d-fleet-consumer-migration.py"
 STAGE8D_ROOT_DESK = REPORTS / "stage8d-root-desk-consumer-migration.json"
 STAGE8D_ROOT_DESK_GENERATOR = ROOT / "scripts" / "generate-stage8d-root-desk-consumer-migration.py"
+STAGE8D_TOOL_STATUS = REPORTS / "stage8d-tool-status-consumer-migration.json"
+STAGE8D_TOOL_STATUS_GENERATOR = ROOT / "scripts" / "generate-stage8d-tool-status-consumer-migration.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -100,6 +102,7 @@ EXPECTED_REPORTS = {
     "stage8d-retirement-readiness.json",
     "stage8d-fleet-consumer-migration.json",
     "stage8d-root-desk-consumer-migration.json",
+    "stage8d-tool-status-consumer-migration.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -2619,6 +2622,108 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated8dr.read_bytes() == STAGE8D_ROOT_DESK.read_bytes(),
                         "Stage 8D root-desk migration receipt is not reproducible",
+                        problems,
+                    )
+
+    if STAGE8D_TOOL_STATUS.is_file():
+        tool8d = load(STAGE8D_TOOL_STATUS)
+        require(
+            tool8d.get("schema") == "velvetos.stage8d-tool-status-consumer-migration.v1"
+            and tool8d.get("stage") == "8D_TOOL_STATUS_CONSUMER_MIGRATION"
+            and tool8d.get("behavior_change") is True
+            and tool8d.get("repository_acceptance") == "PASS",
+            "Stage 8D tool-status migration metadata drift",
+            problems,
+        )
+        criteria8dt = tool8d.get("acceptance_criteria") or {}
+        expected8dt = {
+            "core_declares_selected_instance_tool_status_as_active_authority",
+            "tool_status_contract_marks_consumer_cutover_active",
+            "all_stage8b_direct_readers_have_no_legacy_composite_dependency",
+            "all_real_stage8b_status_readers_use_the_generic_resolver",
+            "unused_vfmcp_legacy_binding_is_removed_without_fake_read",
+            "active_authority_docs_and_rules_point_to_instance_tool_status",
+            "openpost_and_core_mcp_use_instance_tool_status_authority",
+            "canonical_composition_remains_exactly_equal_to_legacy_composite",
+            "legacy_tool_status_composite_is_retained_for_rollback",
+            "rollback_window_remains_open_and_delete_is_unauthorized",
+            "stage8d_readiness_baseline_is_preserved",
+            "external_effect_policy_registry_is_unchanged",
+        }
+        require(
+            set(criteria8dt) == expected8dt and all(criteria8dt.get(k) is True for k in expected8dt),
+            "Stage 8D tool-status migration criteria drift or fail",
+            problems,
+        )
+        migration8dt = tool8d.get("migration") or {}
+        require(
+            migration8dt.get("active_authority") == "instance:surface:toolStatus"
+            and migration8dt.get("resolver") == "packages/velvetos/tool_status_resolver.py"
+            and migration8dt.get("rollback_compatibility_path") == "packages/velvetos/TOOL-STATUS.json"
+            and migration8dt.get("consumer_cutover") is True
+            and migration8dt.get("rollback_compatibility_retained") is True
+            and migration8dt.get("legacy_path_retained") is True
+            and migration8dt.get("delete_authorized") is False,
+            "Stage 8D tool-status migration contract drift",
+            problems,
+        )
+        require(
+            (tool8d.get("consumer_scan") or {}).get("active_authority_legacy_references") == []
+            and (tool8d.get("consumer_scan") or {}).get("active_blockers_removed") is True,
+            "Stage 8D tool-status active consumer scan drift",
+            problems,
+        )
+        require(
+            (tool8d.get("parity") or {}).get("equal") is True
+            and (tool8d.get("parity") or {}).get("composed_canonical_json_sha256")
+                == (tool8d.get("parity") or {}).get("legacy_canonical_json_sha256"),
+            "Stage 8D tool-status parity drift",
+            problems,
+        )
+        require(
+            (tool8d.get("rollback") or {}).get("window_open") is True
+            and (tool8d.get("rollback") or {}).get("retirement_ready") is False
+            and (tool8d.get("rollback") or {}).get("delete_authorized") is False,
+            "Stage 8D tool-status rollback semantics drift",
+            problems,
+        )
+        authority8dt = tool8d.get("authority") or {}
+        require(
+            authority8dt.get("external_effect_authority_changed") is False
+            and authority8dt.get("policy_registry_canonical_sha256")
+                == authority8dt.get("prepared_against_policy_registry_canonical_sha256"),
+            "Stage 8D tool-status migration changed authority",
+            problems,
+        )
+        if STAGE8D_TOOL_STATUS_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8dt = Path(td) / "stage8d-tool-status-consumer-migration.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_TOOL_STATUS_GENERATOR),
+                        "--prepared-against", tool8d["prepared_against_main_sha"],
+                        "--source-commit", tool8d["source_commit_sha"],
+                        "--captured-at", tool8d["captured_at"],
+                        "--output", str(regenerated8dt),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D tool-status migration regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated8dt.is_file():
+                    require(
+                        regenerated8dt.read_bytes() == STAGE8D_TOOL_STATUS.read_bytes(),
+                        "Stage 8D tool-status migration receipt is not reproducible",
                         problems,
                     )
 

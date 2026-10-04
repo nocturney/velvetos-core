@@ -357,5 +357,6 @@
     "sourceScheduleSnapshotEmpty": true,
     "evidence": "packages/vfigos/cloudflare-publisher/migrations/2026-09-24-openpost/"
   },
-  "toolStatusAuthority": "packages/velvetos/TOOL-STATUS.json"
+  "toolStatusAuthority": "instance:surface:toolStatus",
+  "toolStatusResolver": "packages/velvetos/tool_status_resolver.py"
 }

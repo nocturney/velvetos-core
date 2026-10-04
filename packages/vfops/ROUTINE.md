@@ -88,4 +88,4 @@ For routing/search before opening packs manually: `python3 scripts/vfmem.py who 
 
 ## Publisher authority update — 2026-09-26
 
-OpenPost is frozen and has no recurring office responsibility or release/update watcher in scheduler authority. Scheduled Instagram truth comes from the Cloudflare Instagram Publisher; live publication truth still requires Meta/Instagram read-back. See `packages/velvetos/TOOL-STATUS.json`.
+OpenPost is frozen and has no recurring office responsibility or release/update watcher in scheduler authority. Scheduled Instagram truth comes from the Cloudflare Instagram Publisher; live publication truth still requires Meta/Instagram read-back. See selected `instance:surface:toolStatus` via `packages/velvetos/tool_status_resolver.py`.

@@ -29,4 +29,4 @@ New packs are catalogued the **same day** they finish (`docs/BACKUP.md`). If Ori
 
 Agency specialists that sit on a pack are listed in [`docs/AGENCY-TOOLS.md`](../docs/AGENCY-TOOLS.md). They do not replace these folders.
 
-Tool/runtime status authority: [`velvetos/TOOL-STATUS.json`](velvetos/TOOL-STATUS.json).
+Tool/runtime status authority: selected `instance:surface:toolStatus` composed through [`velvetos/tool_status_resolver.py`](velvetos/tool_status_resolver.py). The retained legacy composite is rollback/parity evidence only.

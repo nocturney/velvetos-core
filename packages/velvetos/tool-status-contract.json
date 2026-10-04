@@ -16,8 +16,10 @@
   "instanceStateSurface": "toolStatus",
   "composition": {
     "resolver": "packages/velvetos/tool_status_resolver.py",
-    "legacyCompatibilityPath": "packages/velvetos/TOOL-STATUS.json",
+    "activeAuthority": "instance:surface:toolStatus",
+    "rollbackCompatibilityPath": "packages/velvetos/TOOL-STATUS.json",
     "legacyRetirementStage": "8D_AFTER_CONSUMER_SCAN_AND_ROLLBACK_WINDOW",
-    "consumerCutover": false
+    "consumerCutover": true,
+    "rollbackCompatibilityRetained": true
   }
 }

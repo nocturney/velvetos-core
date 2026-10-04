@@ -100,4 +100,4 @@ Also: `architecture`, `impact <pack>`, `route <stage>`, `adr`. Pack `vfmem`. Pat
 
 When a `@slug` is mentioned, follow that specialist **and** these laws.
 
-- **Tool authority:** `packages/velvetos/TOOL-STATUS.json` wins over stale provider notes.
+- **Tool authority:** selected `instance:surface:toolStatus` resolved through `packages/velvetos/tool_status_resolver.py` wins over stale provider notes; the retained Core composite is rollback/parity only.

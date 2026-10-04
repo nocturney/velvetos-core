@@ -5,7 +5,10 @@ from datetime import datetime
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-REG = ROOT / "packages" / "velvetos" / "TOOL-STATUS.json"
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from tool_status_resolver import compose_tool_status  # noqa: E402
 OPENPOST = ROOT / "packages" / "vfigos" / "OPENPOST.json"
 GROK = ROOT / "automation" / "grok" / "manifest.json"
 OPENPOST_WATCH_REMOVAL = ROOT / "automation" / "grok" / "openpost-release-watch-removal.json"
@@ -19,7 +22,7 @@ def fail(message: str) -> None:
 
 
 def main() -> int:
-    registry = json.loads(REG.read_text(encoding="utf-8"))
+    registry = compose_tool_status(ROOT, instance_id="velvet-factory", env={})
     tools = registry.get("tools") or {}
     if (tools.get("openpost") or {}).get("status") != "frozen":
         fail("OpenPost must remain frozen")

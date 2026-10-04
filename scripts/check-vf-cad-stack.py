@@ -6,6 +6,11 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from tool_status_resolver import compose_tool_status  # noqa: E402
+
 registry_path = ROOT / "packages" / "vfprod" / "CAD-ENGINE-REGISTRY.json"
 schema_path = ROOT / "packages" / "vfprod" / "GEOMETRY-IR.schema.json"
 doc_path = ROOT / "packages" / "vfprod" / "CAD-ENGINE-STACK.md"
@@ -42,7 +47,7 @@ router = json.loads((ROOT / "packages" / "vfprod" / "FABRICATION-ROUTER.json").r
 assert router["engine_registry"] == "packages/vfprod/CAD-ENGINE-REGISTRY.json"
 assert router["engine_stack_cli"] == "scripts/vf_cad_stack.py"
 
-tool_status = json.loads((ROOT / "packages" / "velvetos" / "TOOL-STATUS.json").read_text(encoding="utf-8"))
+tool_status = compose_tool_status(ROOT, instance_id="velvet-factory", env={})
 tts = tool_status["tools"]["text-to-cad"]
 assert tts["engine_registry"] == "packages/vfprod/CAD-ENGINE-REGISTRY.json"
 assert tts["engine_stack_cli"] == "scripts/vf_cad_stack.py"

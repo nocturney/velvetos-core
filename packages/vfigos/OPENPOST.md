@@ -9,7 +9,7 @@ Role: **FROZEN historical publication control-plane only**. New scheduling, queu
 
 ## החלטת ארכיטקטורה
 
-מאז cutover של 2026-09-24, **Cloudflare Publisher הוא מקור האמת היחיד לתזמון Instagram עתידי**; `packages/velvetos/TOOL-STATUS.json` ו־`PUBLISHER.json` הם הסמכות הנוכחית. OpenPost נשאר לקריאת provenance/incident evidence בלבד ואסור להזרים אליו עבודה חדשה.
+מאז cutover של 2026-09-24, **Cloudflare Publisher הוא מקור האמת היחיד לתזמון Instagram עתידי**; `instance:surface:toolStatus` ו־`PUBLISHER.json` הם הסמכות הנוכחית. OpenPost נשאר לקריאת provenance/incident evidence בלבד ואסור להזרים אליו עבודה חדשה.
 
 ```text
 Content decision / creative pipeline

@@ -7,8 +7,12 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from tool_status_resolver import compose_tool_status  # noqa: E402
+
 REGISTRY = ROOT / "packages" / "velvetos" / "UPSTREAM-WATCH.json"
-TOOL_STATUS = ROOT / "packages" / "velvetos" / "TOOL-STATUS.json"
 GROK = ROOT / "automation" / "grok" / "manifest.json"
 SPEECH = ROOT / "packages" / "vfom" / "SPEECH-BACKEND.json"
 COGNEE = ROOT / "packages" / "vfmem" / "cognee.json"
@@ -111,7 +115,7 @@ def main() -> int:
         forbidden = set(row) & {"pinnedVersion", "requiredVersion", "exactVersion"}
         if forbidden:
             fail(f"{repo} has operational exact-version fields: {sorted(forbidden)}")
-    status = json.loads(TOOL_STATUS.read_text(encoding="utf-8"))
+    status = compose_tool_status(ROOT, instance_id="velvet-factory", env={})
     rules = status.get("rules") or {}
     if "latest-compatible" not in str(rules.get("version_default") or ""):
         fail("global tool version default must be latest-compatible")

@@ -48,4 +48,4 @@ Morning Brief 09:00: HQ קורא `send_message` אל `nocturney@gmail.com`. אי
 נוהל פרסום: `playbooks/grok-failover.md`.  
 מסמך קבע: `docs/GROK-FAILOVER.md`.
 
-Current publisher: Cloudflare Instagram Publisher -> Meta Instagram Graph. OpenPost frozen. Tool authority: `packages/velvetos/TOOL-STATUS.json`.
+Current publisher: Cloudflare Instagram Publisher -> Meta Instagram Graph. OpenPost frozen. Tool authority: selected `instance:surface:toolStatus` via `packages/velvetos/tool_status_resolver.py`.

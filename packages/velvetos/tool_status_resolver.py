@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Compose generic Core tool-status semantics with instance-owned tool state.
 
-Stage 8B compatibility foundation. The legacy TOOL-STATUS.json remains the
-active compatibility surface until Stage 8C migrates consumers. This module
-contains no business-instance default and performs no network or write action.
+Stage 8D consumer cutover: active tool authority resolves from the selected
+instance ``toolStatus`` surface. The retained legacy composite is rollback/parity
+evidence only. This module contains no business-instance default and performs no
+network or write action.
 """
 from __future__ import annotations
 
@@ -67,10 +68,14 @@ def _validate_contract(contract: dict[str, Any]) -> None:
     composition = contract.get("composition")
     if not isinstance(composition, dict):
         raise ToolStatusResolutionError("tool status composition contract missing")
-    if composition.get("consumerCutover") is not False:
-        raise ToolStatusResolutionError("Stage 8B must not claim consumer cutover")
-    if composition.get("legacyCompatibilityPath") != "packages/velvetos/TOOL-STATUS.json":
-        raise ToolStatusResolutionError("legacy compatibility path drift")
+    if composition.get("consumerCutover") is not True:
+        raise ToolStatusResolutionError("tool-status consumer cutover must be active")
+    if composition.get("activeAuthority") != "instance:surface:toolStatus":
+        raise ToolStatusResolutionError("tool-status active authority must be the selected instance surface")
+    if composition.get("rollbackCompatibilityPath") != "packages/velvetos/TOOL-STATUS.json":
+        raise ToolStatusResolutionError("rollback compatibility path drift")
+    if composition.get("rollbackCompatibilityRetained") is not True:
+        raise ToolStatusResolutionError("rollback compatibility must remain retained during Stage 8D")
 
 
 def _validate_state(state: dict[str, Any], *, instance_id: str) -> None:
@@ -151,7 +156,7 @@ def _main() -> int:
 
     root = Path(args.root).resolve()
     contract = _load_object(root / CONTRACT_REL)
-    legacy_rel = Path(contract["composition"]["legacyCompatibilityPath"])
+    legacy_rel = Path(contract["composition"]["rollbackCompatibilityPath"])
     legacy = _load_object(root / legacy_rel)
     if composed != legacy:
         print("FAIL composed tool status differs from legacy compatibility document", file=sys.stderr)
