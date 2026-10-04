@@ -49,8 +49,8 @@ Deterministic services remain normal VelvetOS services/workers: Media Vault, ren
 
 Always present in core. An instance enables it via `modulesEnabled`; per-instance `creativeAutonomy` chooses whether routine publishing may use standing authorization.
 
-## Velvet Factory Visual Standard Gate — mandatory (`VF_VISUAL_STANDARD_GATE`)
+## Instance visual-standard gate — mandatory when configured
 
-## VF_VISUAL_STANDARD_GATE
+Compatibility enforcement marker: `VF_VISUAL_STANDARD_GATE`. This identifier is retained for the existing machine guard only; it does not encode business-specific authority or values.
 
-Before public creative execution, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`. Bind SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897` and require `visualStandard.gate=PASS`. Missing/mismatched authority is `visual_standard_unavailable`; generic visual fallback is forbidden.
+Before public creative execution, resolve the selected instance profile and inspect `creativeAutonomy.ownerApprovedVisualStandard`. When `required=true`, load the instance-declared visual-standard document/reference plus the generic visual authority/DNA surfaces, verify the instance-declared artifact digest, and require the configured visual-standard gate to pass. Missing or mismatched required authority is fail-closed as `visual_standard_unavailable`; generic visual fallback is forbidden. Core does not embed a business-specific standard path, digest, location or brand value.

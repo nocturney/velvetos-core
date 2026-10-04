@@ -46,10 +46,25 @@ def main() -> None:
     surfaces = list(policy.get("vfCreativeSurfaces") or [])
     if len(surfaces) < 12:
         fail("creative surface inventory unexpectedly small")
+    parameterized_core_surfaces = {"packages/velvetos/modules/expert-media-director.md"}
     for rel in surfaces:
         path = ROOT / rel
         if not path.is_file(): fail(f"missing creative surface {rel}")
         body = path.read_text(encoding="utf-8")
+        if rel in parameterized_core_surfaces:
+            for needle in (
+                MARKER,
+                "creativeAutonomy.ownerApprovedVisualStandard",
+                "artifact digest",
+                "visual_standard_unavailable",
+                "generic visual fallback is forbidden",
+            ):
+                if needle not in body:
+                    fail(f"{rel} missing parameterized enforcement marker {needle}")
+            for leaked in (STD, SHA):
+                if leaked in body:
+                    fail(f"{rel} must not embed instance visual-standard value {leaked}")
+            continue
         for needle in (MARKER, STD, VIS, DNA, SHA, "visual_standard_unavailable"):
             if needle not in body:
                 fail(f"{rel} missing enforcement marker {needle}")

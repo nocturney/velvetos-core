@@ -18,10 +18,10 @@ Extends `social-growth`. Playbook: `packages/vfgrowth/experts/SOCIAL-BOOSTER.md`
 
 ## Laws
 
-- CTA: Instagram message (`PUBLIC_CURRENT_CTA`) · איסוף שדרות — not WhatsApp phone / not auto-DM / not bare «שלחו DM»
-- No boost without lead seat
-- No invented Insights — verified snapshot or «אין ספירה»
-- Floor proof first — no invented scenes
-- BUSINESS_CONTACT_RECORD `050-2517000` stays desk/integration only (disabled for public CTA)
+- Resolve CTA text, channel and fulfillment/location wording from the selected instance profile and its public-CTA authority. Do not hardcode a business handle, phone number or pickup location in Core.
+- Boost/paid reach follows the selected instance approval policy; generic Core never grants it implicitly.
+- No invented Insights — use verified instance analytics evidence or report unavailable.
+- Floor/product proof first — no invented customer or product scenes.
+- Internal business-contact records stay internal unless the selected instance explicitly promotes a value to public CTA.
 
 Always present in core. An instance enables it via `modulesEnabled`.
