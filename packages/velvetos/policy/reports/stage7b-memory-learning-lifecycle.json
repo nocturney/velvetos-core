@@ -19,9 +19,9 @@
   },
   "candidate_state": {
     "path": "packages/vfharness/state/learning-candidates",
-    "count": 3,
+    "count": 4,
     "status_counts": {
-      "accepted": 3
+      "accepted": 4
     },
     "automatic_promotion": false
   },

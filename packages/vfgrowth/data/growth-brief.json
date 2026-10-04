@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-03",
-  "generatedAt": "2026-10-03T18:42:27+03:00",
+  "date": "2026-10-04",
+  "generatedAt": "2026-10-04T18:47:43+03:00",
   "component_state": "Idle",
   "goal": "פניות מקומיות על מוצרים מוכנים והדפסות בהתאמה אישית.",
   "locks": [
@@ -11,7 +11,7 @@
     "no-invented-ils",
     "no-schedule-from-hq"
   ],
-  "weekdayNote": "2026-10-03 = שבת (Asia/Jerusalem)",
+  "weekdayNote": "2026-10-04 = ראשון (Asia/Jerusalem)",
   "slotRecommendation": {
     "choice": "poll",
     "when": "2026-10-05T20:30+03:00",
@@ -20,7 +20,7 @@
     "reason": "20:30 היום חלף. משבצת סטוריז הבאה: שני 2026-10-05 20:30 Asia/Jerusalem. בלי תזמון מ־HQ."
   },
   "reel": {
-    "slot": "אין פיד בשישי–שבת",
+    "slot": "היום 16:00 · ריל ראשון בשבוע",
     "gate": "candidates_ready",
     "topic": "3 מועמדי וידאו מהקטלוג — לצפייה ובחירה ידנית",
     "asset": "IMG_1285.MOV / IMG_0491.MOV / IMG_0490.MOV (מקור לא ערוך — לא ריל)",
