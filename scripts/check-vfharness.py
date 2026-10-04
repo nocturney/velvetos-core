@@ -250,6 +250,23 @@ def main() -> None:
         or photoshop6c.get("routing_status") != "available"
     ):
         fail("Stage 6C shared Adobe regression proof drift")
+    ccc6c = stage6c.get("creative_control_center_runtime_receipt") or {}
+    ccc_files6c = ccc6c.get("files") or {}
+    ccc_ae6c = ccc6c.get("aftereffects_live_api") or {}
+    if (
+        ccc6c.get("mode") != "source-controlled-receipt-local-runtime-not-authority"
+        or ccc6c.get("runtime_authority") is not False
+        or set(ccc_files6c) != {"server.mjs", "public/app.js", "public/i18n.js"}
+        or any(re.fullmatch(r"[0-9A-F]{64}", str(value or "")) is None for value in ccc_files6c.values())
+        or ccc_ae6c.get("route_status") != "available"
+        or ccc_ae6c.get("display_status") != "available"
+        or ccc_ae6c.get("recovery_baseline_version") != "After Effects 26.3"
+        or ccc_ae6c.get("recovery_baseline_role") != "drift-comparison-and-recovery-evidence-not-allowlist"
+        or ccc_ae6c.get("version_policy") != "latest-compatible"
+        or ccc_ae6c.get("availability_basis") != "typed_capability_probe_pass"
+        or ccc_ae6c.get("repair_request_guard_http_status") != 409
+    ):
+        fail("Stage 6C Creative Control Center runtime receipt drift")
     if not (stage6c.get("validator") or {}).get("pass"):
         fail("Stage 6C DCC/Adobe validator evidence is not PASS")
     parity6c = stage6c.get("source_runtime_parity") or {}
@@ -285,6 +302,16 @@ def main() -> None:
                 "--runtime-sentinel-sha256", parity6c["sentinel_runtime_sha256"],
                 "--runtime-config-sha256", parity6c["config_runtime_sha256"],
                 "--runtime-adobe-probe-sha256", parity6c["adobe_probe_runtime_sha256"],
+                "--ccc-server-sha256", ccc_files6c["server.mjs"],
+                "--ccc-app-sha256", ccc_files6c["public/app.js"],
+                "--ccc-i18n-sha256", ccc_files6c["public/i18n.js"],
+                "--ccc-aftereffects-route-status", ccc_ae6c["route_status"],
+                "--ccc-aftereffects-display-status", ccc_ae6c["display_status"],
+                "--ccc-recovery-baseline-version", ccc_ae6c["recovery_baseline_version"],
+                "--ccc-recovery-baseline-role", ccc_ae6c["recovery_baseline_role"],
+                "--ccc-version-policy", ccc_ae6c["version_policy"],
+                "--ccc-availability-basis", ccc_ae6c["availability_basis"],
+                "--ccc-repair-guard-http-status", str(ccc_ae6c["repair_request_guard_http_status"]),
                 "--output", str(regenerated6c),
             ],
             cwd=ROOT, text=True, capture_output=True, encoding="utf-8", errors="replace", timeout=180,

@@ -92,6 +92,16 @@ def main() -> int:
     ap.add_argument("--runtime-sentinel-sha256", required=True)
     ap.add_argument("--runtime-config-sha256", required=True)
     ap.add_argument("--runtime-adobe-probe-sha256", required=True)
+    ap.add_argument("--ccc-server-sha256", required=True)
+    ap.add_argument("--ccc-app-sha256", required=True)
+    ap.add_argument("--ccc-i18n-sha256", required=True)
+    ap.add_argument("--ccc-aftereffects-route-status", required=True)
+    ap.add_argument("--ccc-aftereffects-display-status", required=True)
+    ap.add_argument("--ccc-recovery-baseline-version", required=True)
+    ap.add_argument("--ccc-recovery-baseline-role", required=True)
+    ap.add_argument("--ccc-version-policy", required=True)
+    ap.add_argument("--ccc-availability-basis", required=True)
+    ap.add_argument("--ccc-repair-guard-http-status", type=int, required=True)
     ap.add_argument("--output", type=Path, default=OUT)
     ns = ap.parse_args()
     if len(ns.prepared_against) != 40:
@@ -159,6 +169,19 @@ def main() -> int:
         and ns.photoshop_classification == "PASS_COMPATIBILITY_CHECK"
         and ns.photoshop_routing_status == "available"
     )
+    creative_control_center_receipt_pass = (
+        ns.ccc_aftereffects_route_status == "available"
+        and ns.ccc_aftereffects_display_status == "available"
+        and ns.ccc_recovery_baseline_version == "After Effects 26.3"
+        and ns.ccc_recovery_baseline_role == "drift-comparison-and-recovery-evidence-not-allowlist"
+        and ns.ccc_version_policy == "latest-compatible"
+        and ns.ccc_availability_basis == "typed_capability_probe_pass"
+        and ns.ccc_repair_guard_http_status == 409
+        and all(
+            re.fullmatch(r"[0-9A-Fa-f]{64}", value or "")
+            for value in (ns.ccc_server_sha256, ns.ccc_app_sha256, ns.ccc_i18n_sha256)
+        )
+    )
 
     source_runtime_parity = (
         source_sentinel_sha.lower() == ns.runtime_sentinel_sha256.lower()
@@ -184,6 +207,7 @@ def main() -> int:
         "illustrator_newer_than_recovery_baseline_passes_typed_probe": illustrator_pass,
         "aftereffects_newer_than_recovery_baseline_passes_typed_probe": aftereffects_pass,
         "shared_adobe_regressions_pass": shared_adobe_regressions_pass,
+        "creative_control_center_runtime_receipt_pass": creative_control_center_receipt_pass,
         "source_runtime_parity_proven": source_runtime_parity,
         "dcc_adobe_validator_passes": validator_pass,
         "no_experimental_or_arbitrary_script_escape_is_wired": no_experimental_escape,
@@ -242,6 +266,25 @@ def main() -> int:
                 "routing_status": ns.photoshop_routing_status,
                 "receipt_sha256": ns.photoshop_receipt_sha256.upper(),
             },
+        },
+        "creative_control_center_runtime_receipt": {
+            "mode": "source-controlled-receipt-local-runtime-not-authority",
+            "runtime_root": r"D:\Velvet\Projects\CreativeControlCenter",
+            "files": {
+                "server.mjs": ns.ccc_server_sha256.upper(),
+                "public/app.js": ns.ccc_app_sha256.upper(),
+                "public/i18n.js": ns.ccc_i18n_sha256.upper(),
+            },
+            "aftereffects_live_api": {
+                "route_status": ns.ccc_aftereffects_route_status,
+                "display_status": ns.ccc_aftereffects_display_status,
+                "recovery_baseline_version": ns.ccc_recovery_baseline_version,
+                "recovery_baseline_role": ns.ccc_recovery_baseline_role,
+                "version_policy": ns.ccc_version_policy,
+                "availability_basis": ns.ccc_availability_basis,
+                "repair_request_guard_http_status": ns.ccc_repair_guard_http_status,
+            },
+            "runtime_authority": False,
         },
         "source_runtime_parity": {
             "sentinel_source_sha256": source_sentinel_sha.upper(),

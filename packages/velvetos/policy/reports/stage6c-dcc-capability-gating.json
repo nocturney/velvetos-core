@@ -3,7 +3,7 @@
   "stage": "6C",
   "behavior_change": true,
   "prepared_against_main_sha": "64425e329320ea20c7446860c1ff9548918c3744",
-  "captured_at": "2026-10-04T10:46:38.3858259+03:00",
+  "captured_at": "2026-10-04T10:53:43.3478700+03:00",
   "policy": {
     "version_policy": "latest-compatible",
     "recovery_baseline_role": "drift-comparison-and-recovery-evidence-not-allowlist",
@@ -53,6 +53,25 @@
       "receipt_sha256": "C0EE45F5CA5BC437E5BF97BAEF113825B2D21AD6ACEBE8F890BEE81F0FB2D181"
     }
   },
+  "creative_control_center_runtime_receipt": {
+    "mode": "source-controlled-receipt-local-runtime-not-authority",
+    "runtime_root": "D:\\Velvet\\Projects\\CreativeControlCenter",
+    "files": {
+      "server.mjs": "CC48D89B38C1ABE8F50FD8DF554C44C651C2AD9BB19E07494D6D98BD00D5B8AF",
+      "public/app.js": "29791FB230A9F14E74BD14FB6788273B17C5301FFB20C0F4739B0697867794FB",
+      "public/i18n.js": "12C13E29A1DF2DBAA6A25DCE20EF810D88C33875E98460869EA4A8C7FF4CD2D5"
+    },
+    "aftereffects_live_api": {
+      "route_status": "available",
+      "display_status": "available",
+      "recovery_baseline_version": "After Effects 26.3",
+      "recovery_baseline_role": "drift-comparison-and-recovery-evidence-not-allowlist",
+      "version_policy": "latest-compatible",
+      "availability_basis": "typed_capability_probe_pass",
+      "repair_request_guard_http_status": 409
+    },
+    "runtime_authority": false
+  },
   "source_runtime_parity": {
     "sentinel_source_sha256": "E1C90A06326E50A3D6828E246271701E69B1C80EBB6A851F8892EF54E921F06E",
     "sentinel_runtime_sha256": "E1C90A06326E50A3D6828E246271701E69B1C80EBB6A851F8892EF54E921F06E",
@@ -83,6 +102,7 @@
     "illustrator_newer_than_recovery_baseline_passes_typed_probe": true,
     "aftereffects_newer_than_recovery_baseline_passes_typed_probe": true,
     "shared_adobe_regressions_pass": true,
+    "creative_control_center_runtime_receipt_pass": true,
     "source_runtime_parity_proven": true,
     "dcc_adobe_validator_passes": true,
     "no_experimental_or_arbitrary_script_escape_is_wired": true,
