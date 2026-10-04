@@ -1,0 +1,52 @@
+{
+  "schema": "velvetos.stage7b-memory-learning-lifecycle.v1",
+  "stage": "7B",
+  "behavior_change": true,
+  "prepared_against_main_sha": "7c1725f628dcb5ed90ce5db0db74eb99825533da",
+  "captured_at": "2026-10-04T11:52:11.4489218+03:00",
+  "purpose": "Make learning selective and evidence-gated while keeping one current authority per durable fact and no second memory system.",
+  "model": {
+    "path": "packages/velvetos/policy/memory-learning-lifecycle.json",
+    "sha256": "e7a0dee7d6295a3d899ccdc781fb4217fc93673c1a25d636c5bc7ee547689131",
+    "lifecycle": [
+      "OBSERVATION",
+      "CANDIDATE",
+      "EVIDENCE_RECURRENCE",
+      "PROMOTED_DURABLE",
+      "SUPERSEDED_EXPIRED"
+    ],
+    "role_count": 8
+  },
+  "candidate_state": {
+    "path": "packages/vfharness/state/learning-candidates",
+    "count": 3,
+    "status_counts": {
+      "accepted": 3
+    },
+    "automatic_promotion": false
+  },
+  "memory_baseline": {
+    "decision_path": "packages/vfharness/state/memory-rationalization-phase7-2026-09-27.json",
+    "decision_sha256": "35141078266f1974d74524b7398adcf0a27aa98f632089dc7dfe60c0b142063f",
+    "cognee_config_path": "packages/vfmem/cognee.json",
+    "cognee_config_sha256": "e83ed369c7aa19c33199b37475080ca9834c0bf24f7bf30a0e564b68498244f8",
+    "new_always_on_memory_systems": 0,
+    "incremental_recurring_cost_ils": 0
+  },
+  "migration_note": "No data/store migration. Existing candidate records and owner-memory history stay in place; legacy pruned remains terminal compatibility while new lifecycle expiry uses expired.",
+  "rollback_note": "Revert the Stage 7B commit. No database, deletion, external-effect authority, or irreversible data migration is introduced.",
+  "acceptance": {
+    "canonical_lifecycle_is_observation_candidate_evidence_promotion_supersession": true,
+    "memory_learning_roles_have_single_bounded_authority": true,
+    "office_learning_is_process_not_store": true,
+    "owner_memory_is_bounded_to_owner_specific_durable_facts": true,
+    "vfmem_routes_and_verifies_without_duplicate_fact_store": true,
+    "cognee_is_derived_no_writeback_and_requires_canonical_verification": true,
+    "promotion_requires_accepted_evidenced_candidate_and_one_destination": true,
+    "automatic_ingest_never_promotes": true,
+    "no_forced_daily_learning_quota": true,
+    "no_new_store_runtime_cost_or_external_effect_authority": true
+  },
+  "repository_acceptance": "PASS",
+  "next_stage": "Stage 7C — Research/Scheduler consolidation"
+}

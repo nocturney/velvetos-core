@@ -310,3 +310,17 @@ All nine artifact classes already present in `artifact-retention.json` have one 
 Work Ledger remains **unimplemented in 7A** and refs/index-only until Stage 7D: no full transcripts, no embedded media, no policy authority, no external-effect authority, and no second artifact store.
 
 Acceptance evidence: `reports/stage7a-state-evidence-model.json` (10/10 PASS, reproducible by `check-policy-architecture.py`).
+
+## Reform v2 Stage 7B — Memory / Learning lifecycle
+
+`memory-learning-lifecycle.json` defines the canonical selective-learning flow:
+
+`OBSERVATION → CANDIDATE → EVIDENCE_RECURRENCE → PROMOTED_DURABLE → SUPERSEDED_EXPIRED`.
+
+`office-learning` owns the process only; it is not a memory store. Learning-candidates own candidate status/evidence refs only. `owner-memory.md` owns durable owner-specific facts only when no more-specific SoT owns them. `vfmem` is the canonical router/verifier across durable sources, not a duplicate fact store. Cognee stays a replaceable derived semantic index with no canonical writeback.
+
+Promotion requires an `accepted` candidate, concrete evidence, one explicit `promote_to` destination, canonical re-read and contradiction/scope checks. Automatic CI ingest cannot change status or promote. There is **no forced daily learning quota**: a retro with no meaningful durable lesson may end without a memory write.
+
+Existing `pruned` remains a terminal compatibility status; new lifecycle expiry uses `expired`. No data migration, new database, always-on runtime, recurring cost, deletion, or external-effect authority change is introduced.
+
+Acceptance evidence: `reports/stage7b-memory-learning-lifecycle.json` (10/10 PASS, reproducible by `check-learning-lifecycle.py`).

@@ -781,12 +781,26 @@
       "owns": [
         ".github/workflows/office-control-plane.yml",
         "packages/vfharness/state/learning-candidates/**",
+        "packages/vfharness/playbooks/learning-lifecycle.md",
+        "packages/velvetos/policy/memory-learning-lifecycle.json",
+        "packages/velvetos/policy/reports/stage7b-memory-learning-lifecycle.json",
+        "scripts/generate-stage7b-memory-learning-lifecycle.py",
         "scripts/vf_learning.py"
       ],
       "triggered_by": [
         ".github/workflows/office-control-plane.yml",
+        ".cursor/rules/velvet-factory-desk.mdc",
+        ".cursor/skills/vf-daily-learning/SKILL.md",
+        "packages/velvetos/modules/office-learning.md",
+        "packages/vfharness/EMBED.md",
+        "packages/vfharness/playbooks/learning-lifecycle.md",
         "packages/vfharness/state/learning-candidates/**",
+        "packages/velvetos/policy/memory-learning-lifecycle.json",
+        "packages/velvetos/policy/reports/stage7b-memory-learning-lifecycle.json",
+        "packages/vfmem/MEMORY-UPDATE.md",
+        "packages/vfops/hq/DAILY-RETRO.md",
         "scripts/check-learning-lifecycle.py",
+        "scripts/generate-stage7b-memory-learning-lifecycle.py",
         "scripts/vf_learning.py"
       ],
       "depends_on": [],

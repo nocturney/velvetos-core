@@ -4,7 +4,7 @@ Module id: `office-learning`
 
 ## Provides
 
-Living office culture: every specialist reviews the day's conversations, promotes durable facts to shared memory, and improves tomorrow's routing. **Not** a second runtime or auto-DM.
+Living office culture: every specialist reviews the day's conversations, captures meaningful observations/candidates, and promotes only evidence-gated durable facts. **Not** a second runtime, second memory store, auto-DM, or daily promotion quota.
 
 Playbooks:
 
@@ -28,10 +28,10 @@ Playbooks:
 
 - Guides (`AGENTS.md`, pack `SKILL.md`) = what should happen
 - Checkpoints (`vfharness/state/`) = what happened in a task
-- Shared memory (`vfmem` routes, `vfgraft` graph, `vfops/data/owner-memory.md`) = what everyone inherits
+- `office-learning` = lifecycle/process owner only; it stores no durable fact. `vfmem` routes/verifies canonical memory, `owner-memory.md` owns durable owner-specific facts, and domain SoTs own promoted policy/pattern truth.
 - No secrets, PHI, or personal folders in promoted memory
 - Learning ≠ inventing ₪, Insights, or blocked bodies
-- Corrections / failures / better approaches trigger same-day promote (self-improving pattern — no second runtime). See `DAILY-RETRO.md` triggers + bi-daily `vfresearch/BEST-SKILLS.md`
+- Corrections / failures / better approaches trigger same-day **capture/triage**, not automatic promotion. A same-day promotion is allowed only when the existing destination gate is already satisfied (for example an explicit owner correction plus canonical verification). See `DAILY-RETRO.md` and `packages/vfharness/playbooks/learning-lifecycle.md`.
 - Deeper durable lessons (optional numbered records): `vfops/hq/LEARNING-RECORDS.md` (teach pattern from mattpocock — no second teaching runtime)
 
 Always present in core. An instance enables it via `modulesEnabled`.

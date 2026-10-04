@@ -20,10 +20,21 @@
 | שכבה | אצלנו | כלל |
 |---|---|---|
 | L1 | checkpoint / תצפית אחרונה | עקבות משימה — לא שיחה שלמה |
-| L2 | `owner-memory.md` | סיכום עמיד למחר — שורה אחת = עובדה אחת |
+| L2 | `owner-memory.md` | עובדת/העדפת בעלים עמידה שאין לה SoT ספציפי יותר; אחרי promotion ל־SoT אחר הרשומה נשארת provenance/history, לא authority כפולה |
 | L3 | `AGENTS.md` / פלייבוק / ADR | סינתזה לחוק — רק אחרי חזרתיות או אישור אדם |
 
 Mastery gate לפני «למדנו / סיימנו»: אימות טרי (`verification-before-claim.md`), לא תחושה.
+
+## Stage 7B — תפקידי memory / learning
+
+- `office-learning` הוא **process owner** של reflection → candidate → promotion; הוא לא database ולא מקור אמת.
+- `packages/vfharness/state/learning-candidates/` הוא staging קנוני לסטטוס מועמד + refs של evidence בלבד; הוא לא durable-fact authority.
+- `owner-memory.md` הוא יעד קנוני רק לעובדות/העדפות בעלים עמידות שאין להן SoT ספציפי יותר.
+- `vfmem` הוא router/verifier מעל המקורות הקנוניים; הוא לא מעתיק את אותה עובדה ל־store מקביל.
+- `Cognee` הוא semantic index נגזר/ניתן להחלפה; אין writeback ממנו, וכל recall דורש canonical verification.
+- policy/pattern שקודם חי **רק** ביעד הדומייני שנבחר (constitution / AGENTS / playbook / skill / ADR / domain SoT). owner-memory/candidate נשארים provenance/history ולא authority נוספת.
+
+ה־lifecycle הקנוני: **observation → candidate → evidence/recurrence → promoted durable fact/pattern → superseded/expired**. `accepted` הוא מצב triage של candidate עם evidence, לא promotion. אין quota יומי: יום ללא תובנה עמידה רשאי להסתיים בלי memory write.
 
 ## מתי לכתוב
 
@@ -50,7 +61,9 @@ Mastery gate לפני «למדנו / סיימנו»: אימות טרי (`verific
 
 ### Save אחרי החלטה
 
-לכתוב כשקרה אחד מאלה:
+Observation גולמי נשמר קודם ב־checkpoint/candidate. כתיבה לזיכרון עמיד היא שלב promotion בלבד; owner correction מפורש הוא evidence חזק ויכול למלא gate אנושי, אבל עדיין דורש יעד קנוני ואימות סתירות.
+
+לקדם כשקרה אחד מאלה:
 
 - **החלטה** שתחזיק שבוע+ («אנחנו על pnpm», «אין Print מ־HQ»)
 - **תיקון** מהבעלים (האות החזק ביותר)

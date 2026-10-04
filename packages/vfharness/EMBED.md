@@ -55,8 +55,8 @@ python3 scripts/check-all.py
 ראש צוות (`vfops/hq/DAILY-RETRO.md`):
 
 1. כל מושב עובר על שיחות היום.
-2. שורה אחת לפחות ל־`vfops/data/owner-memory.md` (פורמט: `vfmem/MEMORY-UPDATE.md`).
-3. מומחי `expert-*` מוסיפים לקח ספציפי לתחום.
+2. אות משמעותי → checkpoint / learning candidate. `owner-memory.md` מתעדכן רק אחרי promotion gate; אם אין למידה עמידה — אין כתיבת זיכרון חובה.
+3. מומחי `expert-*` מוסיפים לקח ספציפי לתחום רק כשיש evidence; אין מכסת למידה יומית.
 4. בוקר למחרת — בריף קורא את הבלוק (לא תיבת דואר).
 
 מיומנות: `.cursor/skills/vf-daily-learning/SKILL.md` · playbook: `playbooks/daily-learning.md`.

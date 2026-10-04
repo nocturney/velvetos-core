@@ -133,7 +133,7 @@ def main() -> None:
     if "check-vfops-loop.py" not in AGENTS.read_text(encoding="utf-8"):
         fail("AGENTS.md sensor table must list check-vfops-loop.py")
 
-    # --- owner-memory day-block contract (Markdown, no Pydantic) ---
+    # --- owner-memory promoted-block contract (Markdown, no Pydantic) ---
     import re
 
     memory_path = ROOT / "packages" / "vfops" / "data" / "owner-memory.md"
@@ -147,8 +147,10 @@ def main() -> None:
         if needle not in mem_upd:
             fail(f"MEMORY-UPDATE.md must lock day-block contract needle {needle}")
     retro_txt = daily_retro.read_text(encoding="utf-8")
-    if "חוזה יום" not in retro_txt or "MEMORY-UPDATE.md" not in retro_txt:
-        fail("DAILY-RETRO.md must point at owner-memory day-block contract")
+    if "חוזה promotion" not in retro_txt or "MEMORY-UPDATE.md" not in retro_txt:
+        fail("DAILY-RETRO.md must point at owner-memory promotion contract")
+    if "אין חובה ליצור בלוק זיכרון" not in retro_txt:
+        fail("DAILY-RETRO.md must allow a no-promotion day")
     if "לולאת פרנסה" not in retro_txt:
         fail("DAILY-RETRO.md must include לולאת פרנסה (inquiries↔models↔materials)")
     if "print.done" not in retro_txt:
