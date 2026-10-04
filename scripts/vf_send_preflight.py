@@ -42,6 +42,14 @@ import re
 import sys
 from pathlib import Path
 from typing import Any
+
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        try:
+            _stream.reconfigure(encoding="utf-8")
+        except (AttributeError, OSError):
+            pass
+
 from vf_publication_evidence import validate as validate_evidence
 from vf_project669_publication import validate as validate_project669
 

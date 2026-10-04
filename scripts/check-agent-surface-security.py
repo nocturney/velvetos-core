@@ -9,6 +9,11 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from instance_resolver import resolve_surface  # type: ignore
+
 CURSOR = ROOT / ".cursor"
 MCP = CURSOR / "mcp.json"
 SECRET_PATTERNS = {
@@ -28,10 +33,15 @@ def iter_agent_text() -> list[Path]:
         base = CURSOR / rel
         if base.is_dir():
             out.extend(p for p in base.rglob("*") if p.is_file() and p.suffix in {".md", ".mdc", ".json", ".yaml", ".yml"})
-    for name in ("mcp.json", "vf-desk.json"):
-        p = CURSOR / name
-        if p.is_file():
-            out.append(p)
+    p = CURSOR / "mcp.json"
+    if p.is_file():
+        out.append(p)
+    try:
+        desk = resolve_surface(ROOT, "toolDesk", instance_id="velvet-factory", env={})
+    except Exception as exc:
+        raise RuntimeError(f"cannot resolve canonical VF tool desk: {exc}") from exc
+    if desk.is_file():
+        out.append(desk)
     return sorted(set(out))
 
 

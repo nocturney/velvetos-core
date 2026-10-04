@@ -29,8 +29,13 @@ if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8")
 
 ROOT = Path(__file__).resolve().parents[1]
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from instance_resolver import resolve_surface  # type: ignore
+
 MANIFEST = ROOT / "packages" / "manifest.json"
-DESK = ROOT / ".cursor" / "vf-desk.json"
+DESK = resolve_surface(ROOT, "toolDesk", instance_id="velvet-factory", env={})
 AGENCY = ROOT / ".cursor" / "agency-agents.json"
 CATALOG = ROOT / "packages" / "vfmem" / "catalog.json"
 SKILLS = ROOT / ".cursor" / "skills"
@@ -103,7 +108,7 @@ def _nid(label: str, key: str) -> str:
 
 def build_graph(root: Path = ROOT) -> Graph:
     manifest = _load_json(root / "packages" / "manifest.json")
-    desk = _load_json(root / ".cursor" / "vf-desk.json")
+    desk = _load_json(resolve_surface(root, "toolDesk", instance_id="velvet-factory", env={}))
     agency = _load_json(root / ".cursor" / "agency-agents.json")
     catalog = _load_json(root / "packages" / "vfmem" / "catalog.json")
     g = Graph()

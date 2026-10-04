@@ -26,16 +26,40 @@
   "notes": [
     "This repo is the Velvet Factory FRONTEND office. Backend kernel = VelvetOS Core (vendor/velvetos-core).",
     "Run ./scripts/attach-core.sh before relying on packs/modules.",
-    "Desk is a curated overlay on The Agency roster. 273 specialists stay installed; only these sit on the studio desk.",
     "Product is VelvetOS; this repo is the Velvet Factory instance. Core modules are always loaded under packages/velvetos/modules/. Other businesses = separate instance repos (REPOS.md).",
+    "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md. Same-day append for new URLs. No invented bodies.",
+    "Desk is a curated overlay on The Agency roster. 273 specialists stay installed; only these sit on the studio desk.",
+    "This repository is VelvetOS Core (backend). Business frontends are separate repos. VF frontend scaffold: instances/velvet-factory/ → nocturney/velvetos-velvet-factory. Desk/STUDIO here remain the reference bind until that cutover.",
     "HQ sends Gmail and Instagram via tools (constitution/SEND.md). Do not wait for Christian or Grok Bot. Auto-DM and boost stay forbidden. Customer WhatsApp **send** stays human 050-2517000 (MCP draft/search only).",
     "Do not invent ₪ prices or Insights. Write X ₪ when no verified amount exists.",
     "Do not commit secrets, medical files, or personal Drive folders.",
     "Research overlay @vfdsh maps awesome-dsh-plugin patterns onto existing packs. Do not install DeepSeek Harness.",
     "Harness: AGENTS.md + packages/vfharness. Six layers on existing packs. No second runtime. After catalog edits run python3 scripts/check-all.py.",
     "Free Claude Code (vffcc) is a local BYOK map only. It does not cut Cursor Cloud usage. Do not install fcc-server on this agent.",
-    "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md. Same-day append for new URLs. No invented bodies.",
-    "Tool failover: if a tool is down or needsAuth, hand the task to the backup tool in the same turn. Never finish empty-handed. Never invent ₪ / Insights / blocked bodies. See constitution/ORCHESTRA.md."
+    "Research/orchestra seat (TEAM.md): packages/vfresearch/HQ-ROUTINE.md — daily orchestra, bi-daily best-skills, weekly links, monthly last30, end-of-day learning. No new pack / no second runtime.",
+    "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md + Print·Demand·Sound (hq/PRINT-DEMAND.md). Same-day append for new URLs. No invented bodies. No auto-DM.",
+    "Print-done handoff: packages/vfprod/PRINT-DONE.md card → vfom draft → PREFLIGHT → vfigos. HQ does not drive printers or auto-publish.",
+    "Organic Growth Control Plane: constitution/ORGANIC_GROWTH.md + vfgrowth/ORGANIC-GROWTH.md + scripts/vf_organic_growth.py. Drafts + 07:00 readiness pack consumed by the 09:00 Morning Brief. No autopost, no auto-DM, no poll→Print, no certain conversion from WhatsApp.",
+    "Floor fleet: packages/vfprod/FLEET.json + ROUTING.md — recommend bed by material (PETG/ASA/Nylon/PEBA). Watchtower stays Edge. Maintenance snapshot empty = אין ספירה.",
+    "09:00 Morning Brief pulls orders.json + Invoice4U snapshot from disk (not inbox). Slot 01 one-click gates (GATES.json) are human — not WhatsApp close, not Print.",
+    "Public offering follows packages/vfbiz/OFFERING.md: ready products + custom work. Customer type and quantity are job attributes, not a separate service line. New commercial expansion still routes through vfbiz + lead decision.",
+    "Every ~2 days forever (until owner stops): LinklyAI/best-skills via BEST-SKILLS.md + TIMER.md + skill vf-best-skills. Renew subscribe_timer every pass. Embed patterns only; no npx skills on Cloud.",
+    "Last-30-days community research: vfresearch/hq/LAST30.md + skill vf-last30 (mvanhorn/last30days-skill patterns). WebSearch/gh/orchestra only — no vendor CLI, no X/TikTok keys.",
+    "Tool failover: if a tool is down or needsAuth, hand the task to the backup tool in the same turn. Never finish empty-handed. Never invent ₪ / Insights / blocked bodies. See constitution/ORCHESTRA.md.",
+    "Grok Bot quota failover: keep producing AND sending via HQ tools. Office brief is תצוגה 3 HTML via send_message to nocturney@gmail.com. #נשלח-מ-HQ or #ממתין-ל-כלי-IG. Grok is optional backup. See docs/GROK-FAILOVER.md + constitution/SEND.md.",
+    "2026-08-31: vfe2b orchestrator overlay from andyrewlee/awesome-agent-orchestrators (194). Patterns on existing crews — pulse/verify/artifact. Do not install a second orchestrator. See packages/vfe2b/ORCHESTRATORS.md.",
+    "3D AI Studio: HTTP MCP at mcp.3daistudio.com. Desktop: .cursor/mcp.json OAuth. Cloud: Team MCP + per-user OAuth (CONNECT-3DAI.md). Playbook packages/vfprod/3DAISTUDIO.md. No API key in git.",
+    "2026-08-31: Core office MCP — studiomcphub in .cursor/mcp.json; Sheets + WhatsApp Desktop CONNECT (VF send=false, skip CMYK). packages/vfmcp/CORE-MCP.md.",
+    "2026-08-31: VelvetOS Core backend + frontend scaffolds under instances/. Sensor: scripts/check-velvetos.py.",
+    "2026-09-01: Expert modules + office-learning + revenue loop (expert-revenue-loop, insights-ingest, instance-onboard) and 7 revenue desk specialists. See vf-revenue-loop skill.",
+    "2026-09-05: Orchestra desks are API keys (vf_gemini.py / vf_chatgpt.py), not gemini.google.com or chatgpt.com in the Cloud browser — that trip Google/OpenAI security alerts. SUBSCRIPTIONS.md. Do not persist cookies. Plus ≠ API.",
+    "2026-09-08: Instagram canonical MCP = adelaidasofia/instagram-mcp (ready-codespace, stdio). jlbadano/ig-mcp legacy. Stories+Insights on same MCP. DM off. remote_access was pending at authoring — superseded 2026-09-09 (remote_access ready). CONNECT-IG.md + DEPLOY-CODESPACE.md. No secrets in git.",
+    "2026-09-09: Cloud Team MCP namespace instagram live Graph OK; remote_access ready. Token watch: expiryMode unknown|limited|none (owner-reported Meta for none; never invent date; never store token). Team MCP scope still not verified. publish_story declared; live story publish not tested this pass.",
+    "2026-09-06: (superseded) Instagram was mapped via jlbadano/ig-mcp needsAuth — see LEGACY-IG-MCP.md.",
+    "iCloud Drive: owner Mac only (CONNECT-ICLOUD.md). Cloud Agent reads mirror via Drive (ICLOUD-DRIVE-SYNC.md + scripts/sync-icloud-to-drive.sh).",
+    "2026-09-07: Four office crews on existing packs — MakerWorld scan (vfresearch/vfsku), print.done→feed (vfprod/vfom), profile→WhatsApp (vfgrowth/vfcopy), books integrity (vfbooks). No new pack. No second runtime. CLIs: vfsku.py scan, vfbooks.py brief, vfprod.py print-done.",
+    "2026-09-08: Shared media vault locked by Christian — Drive Velvet Media (root 1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv). One catalog packages/vfmedia. תפעול owns intake נכנס→מקור. GrokBot uses Drive MCP. Cursor owns catalog schema. Upload ≠ approval. Approved folder alone ≠ approval proof. No share-permission changes. No invented SKUs or ₪.",
+    "2026-09-08: PUBLIC_CURRENT_CTA = Instagram message only (@velvets_cloud). BUSINESS_CONTACT_RECORD WhatsApp 050-2517000 stays on desk but disabled for public CTA and customer outreach from HQ. constitution/PUBLIC_CTA.md. Auto-DM still forever forbidden. Publish states: prepared≠scheduled≠liveVerified (vfigos/PUBLICATION-STATES). Risk GREEN/YELLOW/ORANGE/RED (constitution/RISK.md). Office watchdog: scripts/vf_office_watchdog.py. Production→content continuity for process/WIP posts. Feed audit from post #3 REVIEW_REQUIRED. No Metricool dependency."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -261,6 +285,13 @@
       "useWhen": "Orchestra ChatGPT desk via OPENAI_API_KEY. Do not open chatgpt.com from Cloud. Playbook: packages/vfmcp/SUBSCRIPTIONS.md + CONNECT-CHATGPT.md",
       "rule": "ChatGPT Plus ≠ OpenAI API. No key in git. No browser cookies. Without a key write חסר מפתח ChatGPT. Never invent a body.",
       "failover": "python3 scripts/vf_chatgpt.py orchestra if OPENAI_API_KEY else Gemini API + Perplexity + WebSearch"
+    },
+    "icloud": {
+      "status": "owner-mac-only",
+      "namespace": "icloud-drive-mcp-server",
+      "useWhen": "Cursor Desktop on owner Mac: read/search Velvet Factory folder in iCloud Drive. Playbooks: packages/vfmcp/CONNECT-ICLOUD.md + ICLOUD-DRIVE-SYNC.md",
+      "rule": "Not on Cloud Agent. Full Disk Access on Mac. ICLOUD_MCP_WRITE false by default. No personal/medical/legal folders unless user names them.",
+      "failover": "sync-icloud-to-drive.sh → Drive iCloud mirror; or upload in chat. Cloud HQ uses Drive only."
     }
   },
   "seats": [
@@ -279,15 +310,18 @@
         "chief-of-staff",
         "meeting-notes-specialist",
         "workflow-architect",
-        "ux-architect"
+        "ux-architect",
+        "pipeline-analyst"
       ],
       "tools": [
         "calendar",
         "gmail",
         "vfmem",
-        "web"
+        "web",
+        "gemini",
+        "chatgpt"
       ],
-      "decides": "₪ amount, what moves on the board, what is deferred"
+      "decides": "₪ amount, what moves on the board, what is deferred; end-of-day retro (DAILY-RETRO.md)"
     },
     {
       "id": "studio",
@@ -304,7 +338,11 @@
         "discovery-coach",
         "content-creator",
         "brand-guardian",
-        "email-intelligence-engineer"
+        "email-intelligence-engineer",
+        "offer-lead-gen-strategist",
+        "deal-strategist",
+        "customer-success-manager",
+        "email-marketing-strategist"
       ],
       "tools": [
         "gmail",
@@ -330,7 +368,13 @@
         "image-prompt-engineer",
         "growth-hacker",
         "analytics-reporter",
-        "social-media-strategist"
+        "social-media-strategist",
+        "carousel-growth-engine",
+        "short-video-editing-coach",
+        "offer-lead-gen-strategist",
+        "tracking-measurement-specialist",
+        "paid-social-strategist",
+        "customer-success-manager"
       ],
       "tools": [
         "superdesign",
@@ -368,24 +412,46 @@
       "packs": [
         "vfprod",
         "vfsku",
-        "vlicense",
-        "vfresearch"
+        "vlicense"
       ],
       "specialists": [
         "studio-producer",
         "operations-manager",
         "legal-compliance-checker",
-        "research-synthesist",
-        "trend-researcher"
+        "technical-artist"
       ],
       "tools": [
         "drive",
         "calendar",
         "web",
         "threedaistudio",
-        "studiomcphub"
+        "studiomcphub",
+        "gemini",
+        "chatgpt"
       ],
       "decides": "print feasibility, queue, SKU, file license"
+    },
+    {
+      "id": "research",
+      "he": "מחקר/אורקסטרציה",
+      "packs": [
+        "vfresearch",
+        "vfe2b",
+        "vfdsh",
+        "vfgraft",
+        "vfagents"
+      ],
+      "specialists": [
+        "research-synthesist",
+        "trend-researcher"
+      ],
+      "tools": [
+        "web",
+        "gemini",
+        "chatgpt",
+        "vfmem"
+      ],
+      "decides": "Embed research/inspiration patterns into existing packs per HQ-ROUTINE.md. No new pack per idea. No invented bodies/₪/Insights."
     }
   ],
   "desk": [
@@ -395,14 +461,15 @@
         "vfops",
         "vfharness",
         "vfmem",
-        "velvetos"
+        "velvetos",
+        "vfmedia"
       ],
       "tools": [
         "calendar",
         "gmail",
         "vfmem"
       ],
-      "job": "Morning brief, queue bottlenecks, run-the-studio procedures"
+      "job": "Morning brief, queue bottlenecks, run-the-studio procedures; asks all seats for end-of-day retro (DAILY-RETRO.md)"
     },
     {
       "slug": "chief-of-staff",
@@ -416,7 +483,7 @@
         "gmail",
         "vfmem"
       ],
-      "job": "Open decisions, seat handoffs, what waits for Christian"
+      "job": "Open decisions, seat handoffs, what waits for Christian; owns daily learning ritual (owner-memory.md)"
     },
     {
       "slug": "meeting-notes-specialist",
@@ -437,7 +504,7 @@
       "tools": [
         "calendar"
       ],
-      "job": "Tighten the one pipeline: inquiry → talk → quote → print → pickup; harness loop and checkpoints"
+      "job": "Tighten the one pipeline: inquiry → talk → quote → print → pickup; harness loop, checkpoints, daily-learning playbook"
     },
     {
       "slug": "ux-architect",
@@ -523,7 +590,7 @@
         "vfmskill"
       ],
       "tools": [],
-      "job": "Hebrew spoken-voice copy. Instagram-message PUBLIC_CURRENT_CTA, not bare Send DM / WhatsApp phone."
+      "job": "Hebrew spoken-voice copy. Public CTA follows PUBLIC_CURRENT_CTA (Instagram message); WhatsApp is business-contact/human-close only."
     },
     {
       "slug": "brand-guardian",
@@ -560,7 +627,7 @@
         "drive",
         "image"
       ],
-      "job": "Cover and reel narrative from floor proof, not invented scenes"
+      "job": "Cover and reel narrative from floor proof, not invented scenes; media-director expert (vfom/experts/MEDIA-DIRECTOR.md)"
     },
     {
       "slug": "image-prompt-engineer",
@@ -582,7 +649,7 @@
       "tools": [
         "web"
       ],
-      "job": "Content sprint ideas. No TikTok or ads without lead-seat decision."
+      "job": "Content sprint ideas and organic boost loops (expert-social-booster). No TikTok or ads without lead-seat decision."
     },
     {
       "slug": "social-media-strategist",
@@ -612,7 +679,7 @@
         "vfcost"
       ],
       "tools": [],
-      "job": "Cost factors from slicer / snapshot / Christian. X ₪ if missing."
+      "job": "Material line: python3 scripts/vfcost.py material (grams × ILS/kg). Other cost factors from slicer / snapshot / Christian. X ₪ if missing. Never invent a sale price."
     },
     {
       "slug": "bookkeeper-controller",
@@ -642,7 +709,7 @@
         "vfbiz"
       ],
       "tools": [],
-      "job": "Studio strategy and commercial decisions. Customer type and quantity are job attributes, not a service category."
+      "job": "Studio strategy and commercial decisions. Public offering is ready products + custom work; do not invent a service line from customer type or quantity."
     },
     {
       "slug": "studio-producer",
@@ -654,7 +721,7 @@
         "drive",
         "threedaistudio"
       ],
-      "job": "Print-floor job tracking and queue hours from slicer, not guesses. 3D AI Studio concept mesh after lead approval (3DAISTUDIO.md)"
+      "job": "Print-floor job tracking and queue hours from slicer, not guesses. 3D model expert: analyze/make/build (experts/3D-MODEL.md). 3D AI Studio after lead approval."
     },
     {
       "slug": "operations-manager",
@@ -686,7 +753,7 @@
         "drive",
         "web"
       ],
-      "job": "Source map + weekly inspiration-link review (LINKS.json / WEEKLY.md). Do not invent citations or blocked bodies."
+      "job": "Source map + weekly inspiration-link review (LINKS.json / WEEKLY.md) + last-30-days community synthesis (LAST30.md / vf-last30). Do not invent citations or blocked bodies."
     },
     {
       "slug": "trend-researcher",
@@ -698,7 +765,137 @@
         "calendar",
         "web"
       ],
-      "job": "Season, reprint, and Instagram music/sound briefs from HeyOrca + IG paste (MUSIC.md). Treg not relevant; never invent track names or Insights"
+      "job": "Season, reprint, trend signals, last-30-days discovery (LAST30.md / vf-last30), and IG music/sound briefs (expert-trend-explorer). HeyOrca + IG paste (MUSIC.md). Treg not relevant; never invent track names or Insights"
+    },
+    {
+      "slug": "carousel-growth-engine",
+      "packs": [
+        "vfgrowth",
+        "vfmskill",
+        "vfigos"
+      ],
+      "tools": [
+        "web",
+        "image"
+      ],
+      "job": "Social Booster expert — carousel structure, hook loops, organic reach. expert-social-booster. No boost. No auto-DM. Public CTA follows PUBLIC_CURRENT_CTA (Instagram message); WhatsApp is business-contact/human-close only."
+    },
+    {
+      "slug": "short-video-editing-coach",
+      "packs": [
+        "vfom",
+        "vfgrowth",
+        "vfcovers"
+      ],
+      "tools": [
+        "drive",
+        "image"
+      ],
+      "job": "Media director expert — reel edit plan, storyboard, export notes. vfom/experts/MEDIA-DIRECTOR.md. Floor proof only. HQ does not render Veo/Kling."
+    },
+    {
+      "slug": "technical-artist",
+      "packs": [
+        "vfprod",
+        "vfsku",
+        "vlicense"
+      ],
+      "tools": [
+        "drive",
+        "threedaistudio"
+      ],
+      "job": "3D model expert — mesh analyze, export hygiene, printability hints. experts/3D-MODEL.md. No print from HQ. License gate before reprint."
+    },
+    {
+      "slug": "offer-lead-gen-strategist",
+      "packs": [
+        "vfgrowth",
+        "vfmskill",
+        "vfsales",
+        "vfsku"
+      ],
+      "tools": [
+        "web"
+      ],
+      "job": "Revenue loop — monetized offer on every IG post (SKU, X ₪, CTA). expert-revenue-loop. No DM CTA."
+    },
+    {
+      "slug": "pipeline-analyst",
+      "packs": [
+        "vfops",
+        "vfinsights",
+        "vfconvert",
+        "vfsales"
+      ],
+      "tools": [
+        "gmail",
+        "drive",
+        "vfmem"
+      ],
+      "job": "Map IG posts to pipeline inquiries — verified only. WEEKLY-REVENUE-PULSE input. Never invent Insights."
+    },
+    {
+      "slug": "deal-strategist",
+      "packs": [
+        "vfsales",
+        "vfconvert",
+        "vfcost"
+      ],
+      "tools": [
+        "gmail",
+        "drive"
+      ],
+      "job": "Close open quotes; MEDDPICC-style risk on stalled deals. X ₪ until verified. HQ sends Gmail when draft ready."
+    },
+    {
+      "slug": "customer-success-manager",
+      "packs": [
+        "vfsales",
+        "vfgrowth",
+        "vfconvert"
+      ],
+      "tools": [
+        "gmail",
+        "drive"
+      ],
+      "job": "Post-pickup retention, repeat order prompts, floor-proof follow-up. TIMELINE-AUTO after picked_up."
+    },
+    {
+      "slug": "email-marketing-strategist",
+      "packs": [
+        "vfsales",
+        "vfconvert",
+        "vfmskill"
+      ],
+      "tools": [
+        "gmail"
+      ],
+      "job": "Nurture sequences for open inquiries — Gmail send via tools. No blast list. No invented ₪."
+    },
+    {
+      "slug": "tracking-measurement-specialist",
+      "packs": [
+        "vfinsights",
+        "vfgrowth",
+        "vfops"
+      ],
+      "tools": [
+        "drive",
+        "web"
+      ],
+      "job": "Ingest verified IG snapshots (expert-insights-ingest). Owner paste only. No invented metrics. Not Treg."
+    },
+    {
+      "slug": "paid-social-strategist",
+      "packs": [
+        "vfgrowth",
+        "vfigos",
+        "vfmskill"
+      ],
+      "tools": [
+        "web"
+      ],
+      "job": "Paid boost plan only after lead seat + proven organic offer. gate: lead. No auto-DM."
     }
   ],
   "warehouse": "The other Agency specialists stay in .cursor/rules/ with alwaysApply false. Mention @slug only when the user asks for that specialty. Do not pull Godot, GIS, healthcare, China-social, or XR agents onto a Velvet Factory job unless asked.",
@@ -717,7 +914,12 @@
     ".cursor/skills/vf-fcc-offload/SKILL.md",
     ".cursor/skills/vf-weekly-links/SKILL.md",
     ".cursor/skills/vf-ig-music/SKILL.md",
-    ".cursor/skills/vf-velvetos/SKILL.md"
+    ".cursor/skills/vf-velvetos/SKILL.md",
+    ".cursor/skills/vf-best-skills/SKILL.md",
+    ".cursor/skills/vf-last30/SKILL.md",
+    ".cursor/skills/vf-daily-learning/SKILL.md",
+    ".cursor/skills/vf-revenue-loop/SKILL.md",
+    ".cursor/skills/vf-organic-growth/SKILL.md"
   ],
   "role": "instance",
   "brandAssetLock": {

@@ -24,7 +24,7 @@ V1_UNAVAILABLE = {
     },
     "agents": {
         "reason": "projection_unavailable — agent desk could not be adapted",
-        "hintSource": ".cursor/vf-desk.json",
+        "hintSource": "instance:surface:toolDesk",
     },
     "models": {
         "reason": "projection_unavailable — model shelf could not be adapted",

@@ -10,6 +10,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PACK = ROOT / "packages" / "velvetos"
+if str(PACK) not in sys.path:
+    sys.path.insert(0, str(PACK))
+from instance_resolver import resolve_surface  # type: ignore
+
 CORE = PACK / "CORE.json"
 INSTANCE_RESOLVER = PACK / "instance_resolver.py"
 TOOL_STATUS_RESOLVER = PACK / "tool_status_resolver.py"
@@ -22,7 +26,7 @@ MODULES_CATALOG = PACK / "modules" / "catalog.json"
 PRESETS = PACK / "presets"
 INSTANCES = ROOT / "instances"
 MANIFEST = ROOT / "packages" / "manifest.json"
-DESK = ROOT / ".cursor" / "vf-desk.json"
+DESK = resolve_surface(ROOT, "toolDesk", instance_id="velvet-factory", env={})
 STUDIO = ROOT / "constitution" / "STUDIO.md"
 AGENTS = ROOT / "AGENTS.md"
 KERNEL = PACK / "KERNEL.md"

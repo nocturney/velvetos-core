@@ -8,6 +8,11 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from instance_resolver import resolve_surface  # type: ignore
+
 WRAPPER = ROOT / "scripts" / "vf_office_watchdog.py"
 PLANE_CLI = ROOT / "scripts" / "vf_control_plane.py"
 
@@ -37,7 +42,8 @@ def main() -> None:
         fail("vf_office_watchdog.py must be a thin wrapper around vf_control_plane.cmd_watchdog")
 
     caps = json.loads((ROOT / "packages" / "vfigos" / "CAPABILITIES.json").read_text(encoding="utf-8"))
-    desk = json.loads((ROOT / ".cursor" / "vf-desk.json").read_text(encoding="utf-8"))
+    desk_path = resolve_surface(ROOT, "toolDesk", instance_id="velvet-factory", env={})
+    desk = json.loads(desk_path.read_text(encoding="utf-8"))
     desk_ig_status = ((desk.get("tools") or {}).get("instagram") or {}).get("status")
     ready_like = {"ready", "ready-codespace", "ready-local"}
     if caps.get("currentStatus") in ready_like:

@@ -26,6 +26,11 @@ for _stream in (sys.stdout, sys.stderr):
             pass
 
 ROOT = Path(__file__).resolve().parents[1]
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from instance_resolver import resolve_surface  # type: ignore
+
 TZ = ZoneInfo("Asia/Jerusalem")
 
 CONTROL_PLANE = ROOT / "office" / "control-plane.json"
@@ -86,7 +91,7 @@ PUBLICATION_STATES = ROOT / "packages" / "vfigos" / "PUBLICATION-STATES.json"
 IG_CAPABILITIES = ROOT / "packages" / "vfigos" / "CAPABILITIES.json"
 PROFILE_DESIRED = ROOT / "packages" / "vfigos" / "PROFILE-DESIRED.json"
 FEED_AUDIT = ROOT / "packages" / "vfgrowth" / "data" / "feed-audit.json"
-DESK = ROOT / ".cursor" / "vf-desk.json"
+DESK = resolve_surface(ROOT, "toolDesk", instance_id="velvet-factory", env={})
 TOKEN_WATCH = ROOT / "packages" / "vfigos" / "data" / "token-watch.json"
 INSTANCE_VF = ROOT / "instances" / "velvet-factory" / "instance" / "velvet-factory.json"
 POLICY_CANONICAL = POLICY_MD
