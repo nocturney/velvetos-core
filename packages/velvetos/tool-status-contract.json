@@ -1,0 +1,23 @@
+{
+  "schema": "velvetos.tool-status-contract.v1",
+  "legacyCompositeSchema": "velvetos.tool-status.v1",
+  "role": "CORE_GENERIC_SCHEMA_INTERFACE_ALGORITHM",
+  "rules": {
+    "active": "May be routed to and executed when its normal gates pass.",
+    "frozen": "Must not receive new work, schedules, credentials, monitoring, upgrades or failover traffic. Historical evidence may remain only when clearly marked.",
+    "forbidden": "Must not have an active connector, rule, skill, package, route or fallback. Historical mentions must be explicitly historical and non-executable.",
+    "watch": "Research only; never route production work.",
+    "desired_not_connected": "Relevant/approved target capability, but no live connector/tool namespace is currently verified. Do not claim it works until connection + read smoke pass.",
+    "version_default": "latest-compatible: normal work is capability/smoke gated, not exact-version gated.",
+    "exact_version_exception": "Exact versions/commits/digests are allowed only for rollback, recovery, reproducibility/artifact proof, or an explicitly staged stability gate with smoke + rollback.",
+    "upgrade_application": "Update detection is automatic/read-only where scheduled; applying an upgrade is a separate reviewed action and must not happen inside normal jobs.",
+    "upstream_registry": "packages/velvetos/UPSTREAM-WATCH.json"
+  },
+  "instanceStateSurface": "toolStatus",
+  "composition": {
+    "resolver": "packages/velvetos/tool_status_resolver.py",
+    "legacyCompatibilityPath": "packages/velvetos/TOOL-STATUS.json",
+    "legacyRetirementStage": "8D_AFTER_CONSUMER_SCAN_AND_ROLLBACK_WINDOW",
+    "consumerCutover": false
+  }
+}

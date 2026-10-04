@@ -28,7 +28,8 @@
       "properties": {
         "profile": { "$ref": "#/$defs/relativePath" },
         "toolDesk": { "$ref": "#/$defs/relativePath" },
-        "fleet": { "$ref": "#/$defs/relativePath" }
+        "fleet": { "$ref": "#/$defs/relativePath" },
+        "toolStatus": { "$ref": "#/$defs/relativePath" }
       }
     },
     "core": {
