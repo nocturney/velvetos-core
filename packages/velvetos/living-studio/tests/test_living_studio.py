@@ -30,6 +30,13 @@ class LivingStudioTests(unittest.TestCase):
         self.assertTrue(v["ok"], v)
         self.assertEqual(v["count"], 23)
 
+    def test_production_planner_uses_instance_fleet_surface(self):
+        reg = json.loads((ROOT / "packages/velvetos/living-studio/REGISTRY.json").read_text())
+        planner = next(s for s in reg["skills"] if s["id"] == "production-planner")
+        self.assertIn("instance:surface:fleet", planner["reads"])
+        legacy = "/".join(["packages", "vfprod", "FLEET.json"])
+        self.assertNotIn(legacy, planner["reads"])
+
     def test_world_model_is_projection(self):
         wm = mod.world_model()
         self.assertEqual(wm["kind"], "velvet-world-model-projection")

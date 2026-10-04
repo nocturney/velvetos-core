@@ -554,3 +554,11 @@ Stage 8D begins with an observation-only readiness gate, not deletion. `reports/
 Current result: **BLOCKED_PENDING_MIGRATION_OR_ROLLBACK_WINDOW** and `retirement_authorized=false`. The legacy sample has no active runtime consumer but its rollback window is still explicitly open. Root desk, fleet, TOOL-STATUS and the Core ChatGPT compatibility bundle still have active compatibility consumers and also lack explicit rollback-window closure evidence.
 
 No path may be deleted while `retirement_authorized=false`. Remaining consumers must migrate domain-by-domain with parity and fail-closed behavior preserved; rollback windows close only through explicit evidence, never by elapsed-time inference.
+
+## Reform v2 Stage 8D — Fleet compatibility consumer migration
+
+The first Stage 8D migration slice removes the sole active Living Studio dependency on the legacy vfprod fleet path. `production-planner` now declares `instance:surface:fleet`, matching the canonical instance surface already used by Control API and other instance-aware consumers.
+
+The legacy `packages/vfprod/FLEET.json` file remains present and parity-equal to `instances/velvet-factory/instance/fleet.json`. The rollback window remains open and deletion is still unauthorized; this slice removes an active compatibility consumer only.
+
+The initial Stage 8D readiness receipt is now replayed from the Git snapshot where it was created, so later migrations cannot rewrite that historical baseline. New progress is recorded separately in `reports/stage8d-fleet-consumer-migration.json` (8/8 PASS).

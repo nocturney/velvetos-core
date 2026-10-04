@@ -107,7 +107,7 @@
         "vfsku"
       ],
       "reads": [
-        "packages/vfprod/FLEET.json",
+        "instance:surface:fleet",
         "packages/vfprod/hq/cards/"
       ],
       "writes": [

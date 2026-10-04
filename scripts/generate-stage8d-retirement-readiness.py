@@ -85,9 +85,30 @@ def git_json(sha: str, rel: str) -> dict[str, Any]:
     return obj
 
 
-def git_refs(needle: str) -> list[str]:
+def receipt_source_commit() -> str:
+    rel = OUT.relative_to(ROOT).as_posix()
     proc = subprocess.run(
-        ["git", "grep", "-l", "-F", needle, "--", ":!packages/velvetos/policy/reports/*"],
+        ["git", "log", "--diff-filter=A", "--format=%H", "--", rel],
+        cwd=ROOT, text=True, capture_output=True, encoding="utf-8", errors="replace",
+    )
+    commits = [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+    require(bool(commits), "cannot resolve Stage 8D readiness source commit")
+    return commits[-1]
+
+
+def git_exists(sha: str, rel: str) -> bool:
+    return subprocess.run(
+        ["git", "cat-file", "-e", f"{sha}:{rel}"], cwd=ROOT, capture_output=True
+    ).returncode == 0
+
+
+def git_refs(needle: str, *, commit: str | None = None) -> list[str]:
+    cmd = ["git", "grep", "-l", "-F", needle]
+    if commit:
+        cmd.append(commit)
+    cmd += ["--", ":!packages/velvetos/policy/reports/*"]
+    proc = subprocess.run(
+        cmd,
         cwd=ROOT,
         text=True,
         capture_output=True,
@@ -95,7 +116,16 @@ def git_refs(needle: str) -> list[str]:
         errors="replace",
     )
     require(proc.returncode in {0, 1}, proc.stderr.strip() or f"git grep failed for {needle!r}")
-    return sorted({line.strip().replace("\\", "/") for line in proc.stdout.splitlines() if line.strip()})
+    refs = []
+    prefix = f"{commit}:" if commit else ""
+    for line in proc.stdout.splitlines():
+        value = line.strip().replace("\\", "/")
+        if not value:
+            continue
+        if prefix and value.startswith(prefix):
+            value = value[len(prefix):]
+        refs.append(value)
+    return sorted(set(refs))
 
 
 def main() -> int:
@@ -110,24 +140,25 @@ def main() -> int:
     require(re.fullmatch(r"[0-9a-f]{40}", args.prepared_against) is not None,
             "--prepared-against must be a full lowercase Git SHA")
 
-    closure = load(CLOSURE)
+    source_commit = receipt_source_commit()
+    closure = git_json(source_commit, CLOSURE.relative_to(ROOT).as_posix())
     require(closure.get("repository_acceptance") == "PASS", "Stage 8C closure must PASS before 8D readiness")
     require((closure.get("stage8d_entry") or {}).get("allowed") is True,
             "Stage 8C closure does not allow Stage 8D entry")
 
-    sample = load(SAMPLE_RECEIPT)
-    root_desk = load(ROOT_DESK_RECEIPT)
+    sample = git_json(source_commit, SAMPLE_RECEIPT.relative_to(ROOT).as_posix())
+    root_desk = git_json(source_commit, ROOT_DESK_RECEIPT.relative_to(ROOT).as_posix())
     sample_window_open = (sample.get("legacy_sample") or {}).get("rollback_window_open") is True
     root_window_open = (root_desk.get("root_desk") or {}).get("rollback_window_open") is True
 
-    policy_now = load(POLICY)
+    policy_now = git_json(source_commit, POLICY.relative_to(ROOT).as_posix())
     policy_main = git_json(args.prepared_against, "packages/velvetos/policy/policy-registry.json")
     authority_unchanged = csha(policy_now) == csha(policy_main)
 
     surfaces: dict[str, Any] = {}
     for surface_id, rel in LEGACY_PATHS.items():
-        exists = (ROOT / rel).exists()
-        refs = git_refs(rel)
+        exists = git_exists(source_commit, rel)
+        refs = git_refs(rel, commit=source_commit)
         blockers = []
         for blocker in KNOWN_ACTIVE_BLOCKERS[surface_id]:
             if blocker in refs:
