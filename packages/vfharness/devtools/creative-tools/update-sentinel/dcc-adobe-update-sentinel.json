@@ -8,7 +8,12 @@
                    "auto_update":  false,
                    "max_automatic_probes_per_run":  1,
                    "probe_timeout_seconds":  90,
-                   "owner_notification_dedupe":  true
+                   "owner_notification_dedupe":  true,
+                   "version_policy":  "latest-compatible",
+                   "recovery_baseline_role":  "drift-comparison-and-recovery-evidence-not-allowlist",
+                   "exact_version_match_required":  false,
+                   "drift_action":  "pending_validation_then_capability_probe",
+                   "available_requires":  "typed_capability_probe_pass"
                },
     "paths":  {
                   "runtime_manifest":  "D:\\Velvet\\Runtime\\Autostart\\dcc-desktop-hosts.json",
@@ -51,7 +56,7 @@
                   {
                       "id":  "maya",
                       "support":  "integrated",
-                      "known_good_display_version":  "Maya 2027 / 27.2.0.1859",
+                      "recovery_baseline_display_version":  "Maya 2027 / 27.2.0.1859",
                       "adapter_version":  "0.9.31",
                       "probe":  {
                                     "kind":  "streamable_registry",
@@ -65,7 +70,7 @@
                   {
                       "id":  "3dsmax",
                       "support":  "integrated",
-                      "known_good_display_version":  "3ds Max 2027 / 29.2.0.20588",
+                      "recovery_baseline_display_version":  "3ds Max 2027 / 29.2.0.20588",
                       "adapter_version":  "0.2.14",
                       "probe":  {
                                     "kind":  "streamable_registry",
@@ -79,7 +84,7 @@
                   {
                       "id":  "autocad",
                       "support":  "integrated",
-                      "known_good_display_version":  "AutoCAD 2027 / R26.0.118.0.0",
+                      "recovery_baseline_display_version":  "AutoCAD 2027 / R26.0.118.0.0",
                       "adapter_version":  "2.0.1",
                       "probe":  {
                                     "kind":  "stdio",
@@ -106,7 +111,7 @@
                   {
                       "id":  "inventor",
                       "support":  "integrated",
-                      "known_good_display_version":  "Inventor 2027 / 31.10.27000.0001",
+                      "recovery_baseline_display_version":  "Inventor 2027 / 31.10.27000.0001",
                       "adapter_version":  "0.1.0",
                       "probe":  {
                                     "kind":  "stdio",
@@ -130,7 +135,7 @@
                   {
                       "id":  "fusion",
                       "support":  "integrated",
-                      "known_good_display_version":  "Fusion 2705.1.25",
+                      "recovery_baseline_display_version":  "Fusion 2705.1.25",
                       "adapter_version":  "fusion-native-1.0.0+velvet-safe-0.1.0",
                       "version_search_root":  "C:\\Users\\Chris\\AppData\\Local\\Autodesk\\webdeploy\\production",
                       "version_filename":  "Fusion360.exe",
@@ -149,7 +154,7 @@
                   {
                       "id":  "blender",
                       "support":  "integrated",
-                      "known_good_display_version":  "Blender 5.2.2 LTS",
+                      "recovery_baseline_display_version":  "Blender 5.2.2 LTS",
                       "adapter_version":  "0.2.12",
                       "core_version":  "0.20.37",
                       "version_executable":  "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
@@ -164,7 +169,7 @@
                   {
                       "id":  "zbrush",
                       "support":  "integrated",
-                      "known_good_display_version":  "ZBrush 2026.2.1",
+                      "recovery_baseline_display_version":  "ZBrush 2026.2.1",
                       "adapter_version":  "0.2.26",
                       "probe":  {
                                     "kind":  "streamable_registry",
@@ -178,7 +183,7 @@
                   {
                       "id":  "substance-painter",
                       "support":  "integrated",
-                      "known_good_display_version":  "Substance 3D Painter 12.1.4",
+                      "recovery_baseline_display_version":  "Substance 3D Painter 12.1.4",
                       "adapter_version":  "0.6.0",
                       "version_executable":  "C:\\Program Files\\Adobe\\Adobe Substance 3D Painter\\Adobe Substance 3D Painter.exe",
                       "probe":  {
@@ -193,7 +198,7 @@
                   {
                       "id":  "substance-designer",
                       "support":  "integrated",
-                      "known_good_display_version":  "Substance 3D Designer 16.0.6",
+                      "recovery_baseline_display_version":  "Substance 3D Designer 16.0.6",
                       "adapter_version":  "0.8.1",
                       "version_executable":  "C:\\Program Files\\Adobe\\Adobe Substance 3D Designer\\Adobe Substance 3D Designer.exe",
                       "probe":  {
@@ -208,7 +213,7 @@
                   {
                       "id":  "illustrator",
                       "support":  "integrated",
-                      "known_good_display_version":  "Illustrator 30.8.1",
+                      "recovery_baseline_display_version":  "Illustrator 30.8.1",
                       "adapter_version":  "0.3.1",
                       "probe":  {
                                     "kind":  "standalone_cli",
@@ -228,7 +233,7 @@
                   {
                       "id":  "aftereffects",
                       "support":  "integrated",
-                      "known_good_display_version":  "After Effects 26.3",
+                      "recovery_baseline_display_version":  "After Effects 26.3",
                       "adapter_version":  "0.7.0",
                       "probe":  {
                                     "kind":  "adobe",
@@ -241,7 +246,7 @@
                   {
                       "id":  "photoshop",
                       "support":  "integrated",
-                      "known_good_display_version":  "Photoshop 27.7.0",
+                      "recovery_baseline_display_version":  "Photoshop 27.7.0",
                       "bridge_version":  "0.1.1",
                       "runtime_plugin_dir":  "C:\\Program Files\\Common Files\\Adobe\\UXP\\Plugins\\External\\com.velvetos.photoshop.bridge_0.1.1",
                       "probe":  {
@@ -255,7 +260,7 @@
                   {
                       "id":  "premiere",
                       "support":  "integrated",
-                      "known_good_display_version":  "Premiere Pro 26.3.2",
+                      "recovery_baseline_display_version":  "Premiere Pro 26.3.2",
                       "bridge_version":  "0.1.3",
                       "runtime_plugin_dir":  "C:\\Program Files\\Common Files\\Adobe\\UXP\\Plugins\\External\\com.velvetos.premiere.bridge_0.1.3",
                       "probe":  {
@@ -269,7 +274,7 @@
                   {
                       "id":  "substance-sampler",
                       "support":  "inventory_only",
-                      "known_good_display_version":  "Substance 3D Sampler 6.0.3",
+                      "recovery_baseline_display_version":  "Substance 3D Sampler 6.0.3",
                       "probe":  {
                                     "kind":  "none"
                                 }
@@ -277,7 +282,7 @@
                   {
                       "id":  "substance-modeler",
                       "support":  "inventory_only",
-                      "known_good_display_version":  "Substance 3D Modeler 1.22.7",
+                      "recovery_baseline_display_version":  "Substance 3D Modeler 1.22.7",
                       "probe":  {
                                     "kind":  "none"
                                 }
@@ -285,7 +290,7 @@
                   {
                       "id":  "substance-stager",
                       "support":  "inventory_only",
-                      "known_good_display_version":  "Substance 3D Stager 3.1.8",
+                      "recovery_baseline_display_version":  "Substance 3D Stager 3.1.8",
                       "probe":  {
                                     "kind":  "none"
                                 }
@@ -293,7 +298,7 @@
                   {
                       "id":  "meshmixer",
                       "support":  "integrated",
-                      "known_good_display_version":  "Meshmixer 3.5 / 11.5.474",
+                      "recovery_baseline_display_version":  "Meshmixer 3.5 / 11.5.474",
                       "adapter_version":  "0.1.0",
                       "version_executable":  "C:\\Program Files\\Autodesk\\Meshmixer\\meshmixer.exe",
                       "upstream_commit":  "73c7d69d60952d45938abced877b62ece2d43834",
@@ -307,7 +312,7 @@
                   {
                       "id":  "resolve",
                       "support":  "integrated",
-                      "known_good_display_version":  "DaVinci Resolve Studio 21.1.0.17",
+                      "recovery_baseline_display_version":  "DaVinci Resolve Studio 21.1.0.17",
                       "adapter_version":  "davinci-resolve-mcp-4.8.26+velvet-safe-0.1.0",
                       "version_executable":  "C:\\Program Files\\Blackmagic Design\\DaVinci Resolve\\Resolve.exe",
                       "runtime_plugin_dir":  "D:\\Velvet\\Runtime\\CreativeTools\\Resolve",
@@ -328,7 +333,7 @@
                   {
                       "id":  "topaz-video",
                       "support":  "integrated",
-                      "known_good_display_version":  "Topaz Video 1.7.1.0",
+                      "recovery_baseline_display_version":  "Topaz Video 1.7.1.0",
                       "adapter_version":  "0.1.0",
                       "version_executable":  "C:\\Program Files\\Topaz Labs LLC\\Topaz Video\\Topaz Video.exe",
                       "runtime_plugin_dir":  "D:\\Velvet\\Runtime\\CreativeTools\\TopazVideo",
@@ -354,7 +359,7 @@
                   {
                       "id":  "openscad-nightly",
                       "support":  "integrated",
-                      "known_good_display_version":  "OpenSCAD Nightly 2026.09.18",
+                      "recovery_baseline_display_version":  "OpenSCAD Nightly 2026.09.18",
                       "version_executable":  "C:\\Program Files\\OpenSCAD (Nightly)\\openscad.com",
                       "fingerprint_files":  [
                                                 "C:\\Program Files\\OpenSCAD (Nightly)\\openscad.exe"
@@ -375,7 +380,7 @@
                   {
                       "id":  "affinity",
                       "support":  "integrated",
-                      "known_good_display_version":  "Affinity 3.3.0.4850",
+                      "recovery_baseline_display_version":  "Affinity 3.3.0.4850",
                       "adapter_version":  "0.1.0",
                       "version_executable":  "C:\\Program Files\\Affinity\\Affinity\\Affinity.exe",
                       "runtime_plugin_dir":  "D:\\Velvet\\Runtime\\CreativeTools\\Affinity",
@@ -399,7 +404,7 @@
                   {
                       "id":  "coreldraw",
                       "support":  "integrated",
-                      "known_good_display_version":  "CorelDRAW 27.2.0.135",
+                      "recovery_baseline_display_version":  "CorelDRAW 27.2.0.135",
                       "adapter_version":  "0.1.0",
                       "version_executable":  "C:\\Program Files\\Corel\\CorelDRAW Technical Suite\\27\\Programs64\\CorelDRW.exe",
                       "runtime_plugin_dir":  "D:\\Velvet\\Runtime\\CreativeTools\\Corel",
@@ -426,7 +431,7 @@
                   {
                       "id":  "corel-designer",
                       "support":  "integrated",
-                      "known_good_display_version":  "Corel DESIGNER 27.2.0.135",
+                      "recovery_baseline_display_version":  "Corel DESIGNER 27.2.0.135",
                       "adapter_version":  "0.1.0",
                       "version_executable":  "C:\\Program Files\\Corel\\CorelDRAW Technical Suite\\27\\Programs64\\Designer.exe",
                       "runtime_plugin_dir":  "D:\\Velvet\\Runtime\\CreativeTools\\Corel",

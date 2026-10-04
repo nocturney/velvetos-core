@@ -552,14 +552,27 @@ function Invoke-HostProbe($HostConfig, $HostInventory, [switch]$Automatic) {
             $args = @((Join-Path $PSScriptRoot 'adobe_readonly_probe.py'),'--host',[string]$probe.host,'--port',[string]$probe.port)
             if ($probe.token_file) { $args += @('--token-file',('"' + [string]$probe.token_file + '"')) }
             if ($probe.config_js) { $args += @('--config-js',('"' + [string]$probe.config_js + '"')) }
-            $probeDeadline = (Get-Date).AddSeconds(45)
+            # Bounded Adobe wrappers may legitimately need up to 90-110s while a hidden host
+            # completes startup. The outer process timeout must not be shorter than the typed
+            # probe it supervises, otherwise a healthy latest-compatible host is misclassified.
+            $configuredProbeTimeout = [int]$Config.policy.probe_timeout_seconds
+            $probeProcessTimeout = $(if ([string]$probe.host -eq 'aftereffects') {
+                [math]::Max(120, $configuredProbeTimeout + 30)
+            } else {
+                [math]::Max(30, $configuredProbeTimeout)
+            })
+            $probeDeadline = (Get-Date).AddSeconds($probeProcessTimeout + 5)
+            $maxProbeAttempts = $(if ([string]$probe.host -eq 'aftereffects') { 1 } else { 2 })
             $attempts = 0
             do {
                 $attempts += 1
-                $r = Invoke-JsonProcess ([string]$probe.python) $args 20
+                $r = Invoke-JsonProcess ([string]$probe.python) $args $probeProcessTimeout
                 if ($r.exit_code -eq 0 -and $r.json -and $r.json.status -eq 'PASS') { break }
+                if ($attempts -ge $maxProbeAttempts) { break }
                 Start-Sleep -Milliseconds 1500
             } while ((Get-Date) -lt $probeDeadline)
+            $stages.adobe_probe_process_timeout_seconds = $probeProcessTimeout
+            $stages.adobe_probe_max_attempts = $maxProbeAttempts
             $stages.adobe_probe_attempts = $attempts
         } else {
             throw "unsupported automatic probe kind: $($probe.kind)"
@@ -595,6 +608,10 @@ function Write-Receipt([string]$Id, $Previous, $Current, $ProbeResult) {
         schema='velvetos.dcc-adobe.post-update-receipt.v1'
         created_at=(Get-Date).ToString('o')
         host_id=$Id
+        version_policy='latest-compatible'
+        recovery_baseline_role='drift-comparison-and-recovery-evidence-not-allowlist'
+        exact_version_match_required=$false
+        availability_basis='typed_capability_probe_pass'
         previous_fingerprint=$(if($Previous){[string]$Previous.fingerprint}else{$null})
         new_fingerprint=[string]$Current.fingerprint
         previous_version=$(if($Previous){$Previous.version_executable}else{$null})
@@ -651,13 +668,13 @@ if ($Action -eq 'seed') {
     $baseline = [ordered]@{
         schema='velvetos.dcc-adobe.accepted-baseline.v1'
         accepted_at=(Get-Date).ToString('o')
-        source='2026-09-30 accepted integration evidence plus live readback'
+        source='reviewed live capability evidence; retained for drift comparison and recovery, never as an exact-version allowlist'
         hosts=$hosts
     }
     Write-JsonAtomic $BaselinePath $baseline
     $routing = Get-RoutingState
     foreach ($h in @($Config.hosts | Where-Object {$_.support -eq 'integrated'})) {
-        Set-RoutingStatus $routing ([string]$h.id) 'available' ([string]$inventory.hosts[$h.id].fingerprint) 'known-good baseline seed'
+        Set-RoutingStatus $routing ([string]$h.id) 'available' ([string]$inventory.hosts[$h.id].fingerprint) 'recovery baseline seeded after reviewed live capability evidence'
     }
     Write-JsonAtomic $RoutingPath $routing
     [ordered]@{status='BASELINE_SEEDED';baseline=$BaselinePath;sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $BaselinePath).Hash} | ConvertTo-Json -Depth 5
@@ -665,7 +682,7 @@ if ($Action -eq 'seed') {
 }
 
 if (-not (Test-Path -LiteralPath $BaselinePath)) {
-    [ordered]@{status='NEEDS_BASELINE';message='Run seed with -ConfirmKnownGood only after live known-good verification.';inventory=$InventoryPath} | ConvertTo-Json -Depth 5
+    [ordered]@{status='NEEDS_BASELINE';message='Run seed with legacy -ConfirmKnownGood only after reviewed live capability evidence; the baseline is for drift/recovery, not an exact-version allowlist.';inventory=$InventoryPath} | ConvertTo-Json -Depth 5
     exit 3
 }
 

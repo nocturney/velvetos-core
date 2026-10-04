@@ -18,9 +18,9 @@
   },
   "bootstrap": {
     "source": "packages/vfharness/devtools/dcc-mcp-illustrator-0.3.1-adobepy-0.9.0-bootstrap.py",
-    "source_sha256": "b9f71ae9e363354f98c1f571929d0f9eb60e023306ef19624f10dfae3708f5a8",
+    "source_sha256": "b7ec3f54b1ea0bf22cc2f473aa6d9ae90ae8626edc372877fd02e460cfefd1d7",
     "runtime_path": "D:\\Velvet\\Runtime\\Autostart\\Bootstrap-VelvetIllustrator.py",
-    "runtime_sha256": "b9f71ae9e363354f98c1f571929d0f9eb60e023306ef19624f10dfae3708f5a8",
+    "runtime_sha256": "b7ec3f54b1ea0bf22cc2f473aa6d9ae90ae8626edc372877fd02e460cfefd1d7",
     "timeout_ms": 30000,
     "behavior": [
       "hashes the installed Illustrator executable and CEP manifest/index/module before requesting bootstrap",
@@ -32,7 +32,7 @@
   },
   "autostart_hook": {
     "runtime_script": "D:\\Velvet\\Runtime\\Autostart\\Start-VelvetDccDesktopHosts.ps1",
-    "runtime_sha256": "4941cba86a6a1f840c1eaeb8baea0bd3aa5bcc8267e0cea4978a0c9ce35df55e",
+    "runtime_sha256": "683c04f8a9be4f51eda4996b526d0aa33f55fc0fcbd343b8d5c81a535f346874",
     "launch_contract": "Start the bounded bootstrap process, wait two seconds, then launch Illustrator through the official .lnk using the existing Explorer shortcut-first path.",
     "watcher_required": false
   },

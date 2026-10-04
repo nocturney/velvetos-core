@@ -29,7 +29,12 @@ public static class VelvetWindow {
 
 function Get-AppProcess {
     param([string]$Name)
-    @(Get-Process -Name $Name -ErrorAction SilentlyContinue)
+    @(
+        Get-Process -Name $Name -ErrorAction SilentlyContinue |
+            Where-Object {
+                try { -not $_.HasExited } catch { $false }
+            }
+    )
 }
 
 function Minimize-App {
