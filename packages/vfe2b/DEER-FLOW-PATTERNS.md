@@ -49,7 +49,7 @@ DeerFlow ≠ BabyDeer (מוד AutoGPT ב־`LOCK.md`). DeerFlow הוא harness נ
 | משמרת | מטרה לדוגמה |
 |---|---|
 | פנייה | «Gmail reply נשלח בשרשור X» |
-| בריף 07:00 | «send_message עם htmlBody תצוגה 3» |
+| Morning Brief 09:00 | «send_message עם htmlBody תצוגה 3» |
 | מחקר | «ארטיפקט ב־`vfresearch/sources/` עם מקורות, בלי גוף חסום» |
 | ₪ | **לא goal** — `decision_gate` לראש צוות |
 
@@ -83,7 +83,7 @@ DeerFlow ≠ BabyDeer (מוד AutoGPT ב־`LOCK.md`). DeerFlow הוא harness נ
 | Sandbox bash / E2B | רצפת הדפסה · שליחה דרך כלים |
 | IM channels (Telegram, Slack…) | WhatsApp לקוח = אדם `050-2517000` |
 | DeerMem / mem0 / Honcho | סיכון facts מומצאים על לקוח/₪; `vfmem` ≠ user memory |
-| Scheduled cron tasks | בריף 07:00 = `vfops` + Calendar + Gmail |
+| Scheduled cron tasks | Morning Brief 09:00 = `vfops` + Calendar + Gmail; 07:00 הוא readiness cutoff |
 | Agentic browser | נעול ב־`LOCK.md` (Self-operating computer) |
 | «Ultra» sub-agent swarm | אוטונומיה מלאה — `LOCK.md` |
 

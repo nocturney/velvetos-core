@@ -12,19 +12,19 @@ DeepSeek Harness (`dsh`), `dsh plugin add`, dsh-market, dsh-find-plugin, dsh-des
 
 chicheng-cron, dsh-automation, dsh-routines, dsh-auto-continue, dsh-aura-scheduler, scheduled coding runs, IM bots that reply.
 
-למה: אדם בוואטסאפ, ראש צוות על מחיר, Grok על שליחה. אין סוכן שרץ בליל בלי פיקוח.
+למה: אדם בוואטסאפ, ראש צוות על מחיר, ו-HQ שולח Gmail/Instagram רק דרך הכלים וה-policy הקנוניים. אין daemon DSH נוסף.
 
 ## שליחה / בוט חי — דלג
 
 DSH IM (WhatsApp / Feishu / QQ / Discord), dsh-sleep-send, dsh-article-publish, dsh-lark as a live channel, call_me / text_me.
 
-למה: HQ לא שולח Instagram, Gmail, WhatsApp או DM.
+למה: DSH אינו transport authority. HQ שולח Gmail לפי `policy_id: gmail.send` ו-Instagram לפי `policy_id: instagram.publish`, דרך `constitution/SEND.md`; WhatsApp ללקוח ואוטו-DM נשארים אסורים.
 
 ## דפדפן / טלפון בלי פיקוח — דלג כפעולה חיה
 
 DSH Browser, Tabbit, phone-eye / scrcpy as operators, Self-operating UI.
 
-למה: מדפסות ואינסטגרם חיים נשארים אצל Grok. אפשר לקרוא צילום שכבר בתיקייה, לא ללחוץ Print / Send.
+למה: מדפסות נשארות ברצפה; Instagram publish עובר דרך HQ tools/policy. DSH אינו sender/failover authority.
 
 ## ערכות נושא / חיות מחמד / כרום — דלג
 

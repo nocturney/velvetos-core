@@ -76,7 +76,7 @@
         "vfcovers"
       ],
       "crew": "crews/content-rotation.md",
-      "note": "Instagram only. WhatsApp CTA. HQ does not send. No Typefully."
+      "note": "Instagram only. Public CTA follows PUBLIC_CURRENT_CTA (Instagram message). HQ sends through canonical tools/policy. Grok is optional backup. No Typefully."
     },
     {
       "name": "company-brain",

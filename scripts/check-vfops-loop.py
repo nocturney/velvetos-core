@@ -66,7 +66,7 @@ def main() -> None:
         fail("scripts/vfcost.py missing after rebase onto main")
 
     orch = ORCHESTRA.read_text(encoding="utf-8")
-    for needle in ("vfops_loop.py", "07:00", "FOLLOWER-GROWTH", "רף סוכנות", "אין חדש במשרד", "פער", "PREFLIGHT.md", "רמה נמוכה", "נכשל-סגור"):
+    for needle in ("vfops_loop.py", "09:00", "FOLLOWER-GROWTH", "רף סוכנות", "אין חדש במשרד", "פער", "PREFLIGHT.md", "רמה נמוכה", "נכשל-סגור"):
         if needle not in orch:
             fail(f"ORCHESTRA.md must mention {needle}")
     if "VF_PUBLICATION_ROUTE_V1" not in orch:
@@ -107,6 +107,10 @@ def main() -> None:
     routine = ROUTINE.read_text(encoding="utf-8")
     if "vfops_loop.py" not in routine:
         fail("ROUTINE.md must bind the canonical vfops_loop.py brief producer")
+    if "**07:00 cutoff**" not in routine:
+        fail("ROUTINE.md must keep 07:00 as the internal research/readiness cutoff")
+    if "**09:00** | Velvet Morning Brief" not in routine:
+        fail("ROUTINE.md must keep 09:00 as the single owner-facing Morning Brief")
     brief_persist_cmd = "python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>"
     if routine.count(brief_persist_cmd) < 2:
         fail("ROUTINE.md must bind both Morning Brief and Delivery Guard recovery to the canonical same-day brief artifact producer")

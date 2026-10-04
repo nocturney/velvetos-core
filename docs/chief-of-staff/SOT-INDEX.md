@@ -28,7 +28,7 @@
 |---|---|---|---|
 | חוקת משרד | `constitution/CONSTITUTION.md` | `constitution/README.md` | |
 | עובדות סטודיו VF | `constitution/STUDIO.md` | `.cursor/vf-desk.json` → `studio` | איסוף שדרות בלבד |
-| מושבים | `constitution/TEAM.md` | `.cursor/vf-desk.json` → `seats` | TEAM=6; STUDIO/MAP עדיין כותבים 5 — ראה מתח מתועד |
+| מושבים | `constitution/TEAM.md` | `.cursor/vf-desk.json` → `seats` | שישה מושבים קנוניים |
 | CTA ציבורי | `constitution/PUBLIC_CTA.md` | `PUBLIC_CURRENT_CTA` / `BUSINESS_CONTACT_RECORD` | WhatsApp לא CTA ציבורי |
 | שליחה | `constitution/SEND.md` | `packages/vfigos/SEND.md` · `scripts/vf_send_preflight.py` | HQ שולח Gmail/IG דרך כלים |
 | טקסט לעין אדם | `constitution/VISIBLE_TEXT.md` | `packages/vfcopy` | אין `PASS` בלי ביצוע בפועל |

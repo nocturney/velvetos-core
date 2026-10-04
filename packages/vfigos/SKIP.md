@@ -5,9 +5,9 @@
 | הצעה | מקור | למה לא |
 |---|---|---|
 | ManyChat מנטר תגובות ושולח DM | Gemini | אוטו־DM אסור |
-| Bolta.ai / Buffer עונים או מפרסמים לבד | Perplexity | אותו דין + HQ לא שולח |
+| Bolta.ai / Buffer עונים או מפרסמים לבד | Perplexity | אותו דין; publish רק דרך HQ tools/policy |
 | מילת מפתח «הדפסה» → טופס מחיר | Gemini | ממציא מסלול מחיר + שליחה חיה |
-| Metricool מעלה לבד | שניהם | HQ לא שולח. Grok משבץ |
+| Metricool מעלה לבד | שניהם | HQ משבץ/מפרסם דרך tools/policy; Grok גיבוי אופציונלי |
 | Timelapse עולה ישר לטיוטות IG מהסקריפט כאן | Gemini | טיוטה מקומית + מסירה ל־Grok |
 | קניית Buffer / Later / Bolta מ־HQ | Perplexity | ראש צוות מחליט על מנוי |
 | פולו־בק, צפייה בסטורי, בוסט | Gemini | אסור במנדט |

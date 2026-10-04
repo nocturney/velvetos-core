@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 6C DCC latest-compatible capability gating:** replaces exact known-version acceptance with `latest-compatible` semantics: recovery baselines are drift/recovery evidence rather tha…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 6C DCC latest-compatible capability gating:** replaces exact known-version acceptance with `latest-compatible` semantics: recovery baselines are drift/recovery evidence rather tha…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 6D documentation authority cleanup:** removes active daily contradictions without creating a new authority: the canonical office team is six seats; 07:00 is a research/readiness c…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 6D documentation authority cleanup:** removes active daily contradictions without creating a new authority: the canonical office team is six seats; 07:00 is a research/readiness c…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -240,15 +240,15 @@ The system deliberately separates **automation from authority**. Reading, classi
 - **Fail closed instead of guessing** — unknown state becomes `needs_sync` / `needs_input`, not fabricated certainty.
 - **Human-in-the-loop where consequences matter** — remove repetitive decisions without stealing important ones.
 - **Learn from real work** — outcomes, failures, content performance and operational signals feed the next decision.
-- **Scale without rebuilding the system** — Core laws and patterns are intended to support additional business Offices with their own tenants, workflows, integrations and policies.
+- **Scale without rebuilding the system** — Core laws and patterns are intended to support additional business Offices with their own instance identities, workflows, integrations and business bindings.
 
 ### As a product
 
 VelvetOS can be understood as a **Business Operating System with AI built into the operating model**. It is not merely a chatbot and not merely a collection of automations. It is a persistent layer above the tools a business already uses: it understands the structure and rules, connects events across systems, invokes specialists when needed, preserves authority boundaries and gives owners and teams a reliable operational picture.
 
-The active deployment today is **Velvet Factory**, a 3D-printing studio in Sderot. The direction forward is a reusable operating layer that can support additional businesses: the same Core principles, governance and automation patterns, with each business receiving its own tenant identity, workflows, integrations and policy boundaries.
+The active deployment today is **Velvet Factory**, a 3D-printing studio in Sderot. The direction forward is a reusable operating layer that can support additional businesses: the same Core principles, governance and automation patterns, with each business receiving its own instance identity, workflows, integrations and business bindings; Core policy authority remains shared.
 
-**Active tenant:** Velvet Factory · Sderot  
+**Active instance:** Velvet Factory · Sderot
 **Active channels:** Instagram `@velvets_cloud` · WhatsApp `050-2517000` · local pickup in Sderot
 
 ## Technical shape at a glance

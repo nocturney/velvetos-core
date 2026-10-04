@@ -60,7 +60,7 @@ STATES = {
 }
 
 CHECK_BRIEF = {
-    "date_line": "יום בדיקה · V10.3 — לא 07:00",
+    "date_line": "יום בדיקה · V10.3 legacy/recovery — לא Morning Brief 09:00",
     "bottom_line": "המידע החשוב קודם. לא ממציאים.",
     "footer": "Velvet Factory · איסוף משדרות · V10.3",
     "attention": {"state": "yellow", "label": "מצב העסק", "text": "דורש מעקב"},

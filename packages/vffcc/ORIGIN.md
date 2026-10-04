@@ -17,7 +17,7 @@ Write-up: [`docs/FCC-FIT.md`](../../docs/FCC-FIT.md).
 FCC is a **local** Anthropic/OpenAI-compatible proxy. It does not reduce Cursor Cloud Agent usage on this run.
 
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
-Live Instagram, Gmail send, and printers stay on Grok Bot (5 seats).
+Gmail and Instagram send through canonical HQ tools/policy; Grok Bot is optional backup. Printers stay on the floor. The canonical team has 6 seats.
 
 Reviewed update: `v6.4.3` (`9fe194ed`) fixes the Windows Hermes installer by dropping unsupported `-SkipSetup`. VelvetOS keeps Hermes/FCC second-office runtime skipped; no live FCC service was installed.
 

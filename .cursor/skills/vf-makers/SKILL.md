@@ -22,7 +22,7 @@ Read `packages/vfmakers/EMBED.md`. Run **one** crew:
 - No makerskills plugin, Typefully, or live bank.
 - HQ sends Gmail and Instagram via tools (`constitution/SEND.md`). No auto-DM. No boost.
 - No invented ₪ or Insights.
-- WhatsApp CTA `050-2517000` / איסוף שדרות. Not «שלחו DM».
+- Public CTA = Instagram message לפי `PUBLIC_CTA.md` / איסוף שדרות. WhatsApp = BUSINESS_CONTACT_RECORD בלבד.
 
 ## Verification
 

@@ -18,7 +18,7 @@
 | `vfmem` | שאילתות גרף משרד + זיכרון בעלים | `MEMORY-UPDATE.md` · `docs/VFMEM.md` | `vfmem.py` · `vf_semantic_search.py` · `check-vfmem.py` |
 | `vfgraft` | מפת משרד (Graft markdown) | `MAP.md` · `graph/` | `check-vfgraft.py` |
 | `vfbiz` | החלטות מסחריות + מבנה הצעה | `OFFERING.md` · `LOCK.md` · `CHAIN.md` | `check-vf-offering.py` |
-| `vfbriefux` | פורמט בריף 07:00/09:00 HTML | `MAIL.html` · `hq/PACKET.md` | `render_mail.py` |
+| `vfbriefux` | פורמט Morning Brief 09:00 HTML; 07:00 = readiness cutoff בלבד | `MAIL.html` · `hq/PACKET.md` | `render_mail.py` |
 | `vfbrand` | SoT ויזואלי למותג (נעול 2026-09-13) | `BRAND-SOURCE-OF-TRUTH.md` בלבד | נצרך ב־`LOOP.json`; **חסר** מ־`manifest.json` packs |
 
 ## צינור לקוח → כסף
@@ -97,5 +97,5 @@ HQ **ממליץ** מיטה; לא מדפיס. Watchtower = Edge.
 ## הערות קטלוג (fail-closed)
 
 - README System Pulse סופר **31 packs** — תואם `manifest.json`, לא את תיקיית `vfbrand`.
-- כמה `ORIGIN.md` עדיין כותבים «Live send stays on Grok Bot» — **סופרסד** ב־`constitution/SEND.md` (HQ שולח דרך כלים). לא להעתיק את המשפט הישן כחוק.
+- `ORIGIN.md` הפעילים מיושרים ל־`constitution/SEND.md`: HQ שולח Gmail/Instagram דרך כלים; Grok הוא גיבוי אופציונלי.
 - פקים `origin-unreachable` עדיין משרתים דרך HQ overlay (`SKILL.md` + `hq/`) שחי בליבה.

@@ -17,7 +17,7 @@
 סגירה: איסוף משדרות · בלי סיסמאות, קודי אימות או שמות לקוחות מיותרים.
 
 HTML: `packages/vfbriefux/MAIL.html` (תצוגה 3). לא שולחים טקסט.  
-בפיילאובר Grok: HQ ממלא JSON → `render_mail.py` → `send_message` + `htmlBody` + כריכות `cid`.  
-כש־Grok חי: Grok שולח את אותו HTML. HQ לא לוחץ Publish לאינסטגרם.
+HQ ממלא JSON → `render_mail.py` → `send_message` + `htmlBody` + כריכות `cid`; Grok הוא גיבוי אופציונלי.
+Gmail נשלח מ-HQ דרך המסלול הקנוני. Instagram publish נשאר פעולה נפרדת דרך policy/tools; Grok אינו sender authority.
 
 Portlets (שמות לדאשבורד עתידי על אותם חריצים): `packages/vfbriefux/hq/PORTLETS.md`.

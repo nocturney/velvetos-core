@@ -2,7 +2,7 @@
 
 מקור: `agents/01-web-research-agent` + Agno Research.  
 חבילות: `vfresearch`.  
-Treg / GPT / Gemini — לא Tavily חדש. התוצר נופל לבריף 07:00.
+Treg / GPT / Gemini — לא Tavily חדש. התוצר נסגר עד cutoff 07:00 ונצרך ב-Morning Brief 09:00.
 
 ## שאילתה
 

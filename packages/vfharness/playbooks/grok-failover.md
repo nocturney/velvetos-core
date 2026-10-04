@@ -25,7 +25,7 @@
 |---|---|---|
 | כיתוב | `vfcopy` + `vfgrowth` | Cursor · תזמורת |
 | שליחת IG | `vfigos/SEND.md` | Publish אם יש · אחרת Drive+Gmail |
-| בריף 07:00 | `vfops` + `vfbriefux` | **Gmail send_message** + `htmlBody` תצוגה 3 (`MAIL.html`) |
+| Morning Brief 09:00 | `vfops` + `vfbriefux` | **Gmail send_message** + `htmlBody` תצוגה 3 (`MAIL.html`) |
 | פנייה / הצעה | `vfconvert` → `vfsales` | Gmail **reply** / send (בלי ₪ מומצא) |
 | מחקר | `vfresearch` | WebSearch + תזמורת. **לא Treg** |
 | מסמך משרד | `vfbooks` / `vfops` | Drive `create_file` |
@@ -43,7 +43,7 @@
 
 1. Checkpoint: `packages/vfharness/state/grok-failover-<YYYY-MM-DD>.json`
 2. כל טיוטה רצה על הפק כרגיל.
-3. שליחה מ־HQ דרך הכלים **עכשיו** — לא תור המתנה. בריף 07:00 = `htmlBody` תצוגה 3.
+3. שליחה מ־HQ דרך הכלים **עכשיו** — לא תור המתנה. Morning Brief 09:00 = `htmlBody` תצוגה 3.
 4. מחקר: תזמורת ChatGPT + Gemini + Perplexity (`ORCHESTRA.md`). בלי Treg.
 5. ארטיפקט: `packages/vfresearch/sources/YYYY-MM-DD-grok-failover.md`.
 

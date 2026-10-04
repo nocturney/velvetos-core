@@ -24,7 +24,7 @@
 
 X / LinkedIn / Typefully publish מ־`jab-hook`. דומיין `.com` מ־`domain`. דק Next.js מ־`slide-deck`.
 
-למה: הערוץ הוא אינסטגרם `@velvets_cloud`. HQ סוקר ומשבץ. Grok שולח. CTA הוא וואטסאפ `050-2517000` / איסוף שדרות — לא «שלחו DM».
+למה: הערוץ הוא אינסטגרם `@velvets_cloud`. HQ סוקר ושולח/מפרסם דרך tools/policy. Grok גיבוי אופציונלי. CTA ציבורי = הודעת Instagram לפי `PUBLIC_CTA.md` / איסוף שדרות; WhatsApp הוא BUSINESS_CONTACT_RECORD בלבד.
 
 ## מועצה מפורסמת / רעיון מוצר חדש — דלג או אחר כך
 

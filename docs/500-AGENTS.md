@@ -14,7 +14,7 @@
 | רעיון מהרשימה | חבילה אצלנו | למה לא פק חדש |
 |---|---|---|
 | Web Research / Research Scholar / DeepKnowledge | `vfresearch` | מחקר 06:15 כבר נופל לבריף. Treg במקום Tavily |
-| Instagram Post / Social Media Content | `vfigos`, `vfcopy`, `vfcovers` | טיוטה וסקירה. Grok שולח |
+| Instagram Post / Social Media Content | `vfigos`, `vfcopy`, `vfcovers` | טיוטה, QA ופרסום דרך HQ tools/policy; Grok גיבוי אופציונלי |
 | Marketing Strategy / Content Personalization | `vfgrowth` | ספרינט תוכן, לא אסטרטגיה מומצאת |
 | Product / SKU recommendation / RecAI | `vfsku` | כרטיסים וחוזרים. בלי מק״ט חדש |
 | Factory Process Monitoring | `vfprod` | רשימת רצפה. לא דמון חי |
@@ -25,7 +25,7 @@
 | Receivables / ledger | `vfbooks` | Invoice4U. לא Bookipi |
 | Studio calendar | `vfseason` | סימוני עונה. לא יומן נסיעות |
 | License / legal clause | `vlicense` | שער רישיון. לא מעתיקים מותג ישראלי |
-| Brief UX / meeting packet | `vfbriefux`, `vfops` | בריף בוקר 07:00 |
+| Brief UX / meeting packet | `vfbriefux`, `vfops` | בריף בוקר 09:00 |
 | Copy lint / reflection | `vfcopy` | שיעורי בית. לא פוסט אוטומטי |
 | Strategy / plan-and-execute | `vfbiz` | החלטות. לא שרשרת סוכנים חיה |
 
@@ -69,7 +69,7 @@
 
 1. בשיחת Cursor: «תריץ את נוהל `email-draft` על המייל הזה» / «`lead-score` על הפנייה».
 2. הסוכן ממלא את התבנית מהנוהל. לא שולח. לא ממציא ₪.
-3. אדם או Grok Bot סוגרים את השליחה (וואטסאפ `050-2517000`, אינסטגרם, ג׳ימייל חי).
+3. HQ סוגר Gmail/Instagram דרך הכלים וה-policy הקנוניים; WhatsApp ללקוח נשאר אנושי; Grok Bot הוא גיבוי אופציונלי.
 4. PII: קודם `pii-gate` אם הטקסט הולך למודל חיצוני.
 
 ## סדר מומלץ לשבוע הראשון

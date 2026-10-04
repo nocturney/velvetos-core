@@ -167,7 +167,7 @@
       "pattern": "triage inbox into one supervised run",
       "packs": ["vfops", "vfbriefux"],
       "crew": "crews/morning-brief.md",
-      "note": "Gmail read then one job. HQ may send the 07:00 brief. No unattended queue drain."
+      "note": "Gmail read then one job. HQ may send the 09:00 Morning Brief; 07:00 is readiness cutoff only. No unattended queue drain."
     },
     {
       "name": "NEEDLE",

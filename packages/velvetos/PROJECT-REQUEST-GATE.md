@@ -115,7 +115,7 @@ A beautiful artifact that violates Product Truth, branding, CTA or facts fails. 
 
 When authorities disagree, resolve in this order:
 
-`system / safety / rights` → `Constitution + Product Truth + verified facts` → `tenant/instance policy` → `domain authority / pack` → `owner-approved visual/copy standards` → `local creative preference`.
+`system / safety / rights` → `Constitution + Product Truth + verified facts` → `instance bindings/context (not policy authority)` → `domain authority / pack` → `owner-approved visual/copy standards` → `local creative preference`.
 
 Never use memory of an old chat to override a newer canonical authority.
 ## ChatGPT Project binding

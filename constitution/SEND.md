@@ -10,7 +10,7 @@ Treg לא רלוונטי. Drive יוצר מסמכים לפי צורך.
 **ג׳ימייל ואינסטגרם יוצאים מ־HQ דרך כלים** — לא דרך כריסטיאן ולא דרך Grok Bot.  
 פיילאובר מלא: כלי נפל → כלי גיבוי באותו תור. אסור להישאר בלי תוצאה.
 
-לא פק חדש. לא מושב שישי.
+לא פק חדש. לא מושב נוסף.
 
 ## חוק לפני Send / Publish
 
@@ -110,14 +110,14 @@ Fail-closed:
 - provider receipt נדרש לפני טענה `sent`; transport failure הוא failover/unsynced state, לא הצלחה מדומיינת.
 
 מותר בפועל:
-- בריף 07:00 ל־`nocturney@gmail.com` — routine owner brief.
+- Morning Brief 09:00 ל־`nocturney@gmail.com` — routine owner brief.
 - תשובה בשרשור פנייה שכבר נקרא — routine known-thread reply; בלי ₪ מומצא.
 - הצעה/מחיר/התחייבות — רק אחרי gate המתאים + exact-body owner approval כאשר נדרש.
 - `reply` / `forward` כשזה מקדם את הצינור ואחרי body readiness מתאים.
 
 אסור: blast, סודות, אוטו־DM / `send_dm`, או Send של AI body ללא text readiness תקף.
 
-## בריף 07:00 — לולאה לפני שליחה
+## Morning Brief 09:00 — לולאה לפני שליחה
 
 `python3 scripts/vfops_loop.py brief --write` מרכיב עובדות/חריצים מפקים חיים. אחר כך: `owner-brief` reader-first → `vf-hebrew-copy` → Humanizer/AI-tells → surface-aware lint → fact/status validation → `visible_text_gate: PASS` → ורק אז `render_mail.py` ו־Gmail. המעבר הזה לא מפרסם IG.
 
@@ -143,7 +143,7 @@ Fail-closed:
 
 ## Organic Growth Control Plane — לא מפרסם
 
-[`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md): מפעל טיוטות + Decision Pack 07:00. אישור אדם ≠ פרסום. שליחת IG חיה נשארת פעולה נפרדת אחרי שערי האיכות וה־publish.
+[`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md): מפעל טיוטות + readiness Decision Pack עד cutoff 07:00, שנצרך ב-Morning Brief 09:00. אישור אדם ≠ פרסום. שליחת IG חיה נשארת פעולה נפרדת אחרי שערי האיכות וה־publish.
 
 ## עדיין אסור
 

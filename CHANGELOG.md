@@ -1,10 +1,12 @@
 
-All notable changes to VelvetOS (active tenant: Velvet Factory Headquarters & OS).
+All notable changes to VelvetOS (active reference instance: Velvet Factory Headquarters & OS).
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+- 2026-10-04 — **Reform v2 Stage 6D documentation authority cleanup:** removes active daily contradictions without creating a new authority: the canonical office team is six seats; 07:00 is a research/readiness cutoff while 09:00 is the single owner-facing Morning Brief; public CTA is an Instagram message while WhatsApp remains a business-contact/human-close record; Gmail/Instagram sends are owned by HQ through canonical tools/policy with Grok Bot as optional backup; and legacy tenant wording now redirects to instance identity/business bindings rather than implying parallel policy authority. Historical dated evidence is preserved, superseded operational docs are explicitly marked historical, Stage 6C recovery-baseline semantics remain intact, and the existing `check-living-docs.py` sensor now enforces a reproducible 6D report without increasing the 116-sensor registry.
 
 - 2026-10-04 — **Reform v2 Stage 6C DCC latest-compatible capability gating:** replaces exact known-version acceptance with `latest-compatible` semantics: recovery baselines are drift/recovery evidence rather than allowlists, exact version equality is not required, and a host becomes `available` only after its existing typed capability probe passes. Live proof keeps Illustrator 30.8.2 available above recovery baseline 30.8.1 after `PASS_COMPATIBILITY_CHECK`; After Effects 26.5 remains fail-closed as `needs_compatibility_repair` above recovery baseline 26.3 because its bounded read-only probe cannot currently prove capability. Adobe probe timeouts now match the bounded wrapper and After Effects uses one long attempt instead of duplicate long retries; source/runtime parity is SHA-bound, destructive/update auto-actions remain disabled, the external-effect policy registry is unchanged, and reproducible `stage6c-dcc-capability-gating.json` is owned by the existing `check-vfharness` sensor without increasing the 116-sensor registry.
 

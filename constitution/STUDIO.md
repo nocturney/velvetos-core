@@ -21,7 +21,7 @@ Run `scripts/vf_publication_evidence.py --phase production` before production an
 | CTA ציבורי | הודעת Instagram — `constitution/PUBLIC_CTA.md` |
 | שפה | עברית |
 | סגירה | אדם (הודעות IG / רשומת עסק פנימית) + Invoice4U |
-| צוות משרד | 5 מושבים — ראו [`TEAM.md`](TEAM.md) |
+| צוות משרד | 6 מושבים — ראו [`TEAM.md`](TEAM.md) |
 | הצעה לציבור | מוצרים מוכנים · הדפסה / מודל בהתאמה אישית. כמות וסוג לקוח הם מאפייני הזמנה, לא קטגוריית שירות |
 
 אין כאן מחירי מכירה. אין כאן Insights מומצאים.

@@ -15,7 +15,7 @@
 - **רטרו:** כל סוף יום על שיחות; עכשיו גם catch-up על כל מה שלפני.
 - **ארבעה תחומי מומחה:** Social Booster · 3D model · Trend explorer · Media director (תמונות/וידאו).
 - **שפה:** עברית לקופי מוצר; מסמכי משרד עברית+אנגלית.
-- **CTA:** וואטסאפ `050-2517000` / איסוף שדרות — לא «שלחו DM».
+- **CTA נוכחי:** הודעת Instagram לפי `constitution/PUBLIC_CTA.md` / איסוף שדרות. WhatsApp `050-2517000` = BUSINESS_CONTACT_RECORD/סגירה אנושית בלבד.
 - **אין חיוב API נפרד:** מנויי Gemini / ChatGPT / Perplexity בדפדפן לא כוללים מפתח מפתחים, והבעלים לא רוצה אחד (5.9.2026). מארח = **מק ייעודי** בשדרות (`vfmcp/HOST.md`) — לא PC ווינדוס יומי. Cloud בלי מפתח = WebSearch. לא דוחקים מפתח.
 - **אין סשן דפדפן ב־Cloud:** לא עוגיות, לא patchright, לא `perplexity-user-mcp` בענן. כרום **על המק הייעודי** + `agent worker --computer-use` (`HOST.md`) — לא remote-debug, לא העתקה מווינדוס.
 
@@ -23,7 +23,7 @@
 
 - **למדנו:** Core = backend; VF frontend = `instances/velvet-factory` → `velvetos-velvet-factory` עם `attach-core.sh`.
 - **למדנו:** HQ **שולח** Gmail ו-IG דרך כלים (`SEND.md`) — לא מחכים ל-Grok/כריסטיאן; Grok גיבוי אופציונלי.
-- **למדנו:** בריף 07:00 **לא** קורא תיבת דואר — לוח + vfops בלבד; שליחה ב-`htmlBody` תצוגה 3.
+- **למדנו:** Morning Brief 09:00 **לא** קורא תיבת דואר — לוח + vfops בלבד; שליחה ב-`htmlBody` תצוגה 3.
 - **למדנו:** Treg לא רלוונטי; כלי נפל → failover מיד (`ORCHESTRA.md`).
 - **פתוח:** `grok-failover` checkpoint עדיין `running` — בריף יומי + LIVE-PACKET לפרסום חי דחוף.
 - **פתוח:** פרסום ריפו `velvetos-velvet-factory` — הריפו קיים אצל הבעלים; טוקן Cloud Agent חסום → `PUSH=1` מקומי או הרשאה לאינטגרציה.
@@ -140,7 +140,7 @@
 - **למדנו:** `HQ-ROUTINE.md` הוא מנדט החוקרים (יומי/כל־יומיים/שבועי/חודשי/סוף־יום). מושב שישי על הדסק — מטמיע דפוסים, לא פק חדש.
 - **למדנו:** טיימר `vf-best-skills-bi-daily` היה ריק — חודש. בלי מפתח ChatGPT/Gemini על Cloud → WebSearch בלבד לתזמורת.
 - **למדנו:** Insights — `posts.csv` בלי reach → «אין ספירה»; לא ממלאים.
-- **מחר:** בריף 07:00 קורא בלוק 05 מ־`research.md` + LEARNINGS. סוף־יום מלא אחרי 18:00 לפי `DAILY-RETRO.md`.
+- **מחר:** Morning Brief 09:00 קורא בלוק 05 מ־`research.md` + LEARNINGS. סוף־יום מלא אחרי 18:00 לפי `DAILY-RETRO.md`.
 - **מקור:** הפעלת בעלים 7.9.2026 · ארטיפקטי `sources/2026-09-07-*`.
 
 ### 2026-09-07 (רף סוכנות / סטוריז)
@@ -177,7 +177,7 @@
 ### 2026-09-07 (מנועי רצפה + בריף בלי הקלדה)
 
 - **מושב:** ייצור + תפעול
-- **למדנו:** ניתוב מיטה = `vfprod.py route` המלצה בלבד, לא Print מ-HQ. בריף 07:00 מושך `orders.json`/Invoice4U מהדיסק + שערי לחיצה אדם (`GATES.json`) — לא סגירת וואטסאפ. סוג לקוח וכמות אינם מסלול שירות; כל עבודה עוברת בצינור הרגיל.
+- **למדנו:** ניתוב מיטה = `vfprod.py route` המלצה בלבד, לא Print מ-HQ. Morning Brief 09:00 מושך `orders.json`/Invoice4U מהדיסק + שערי לחיצה אדם (`GATES.json`) — לא סגירת וואטסאפ. סוג לקוח וכמות אינם מסלול שירות; כל עבודה עוברת בצינור הרגיל.
 - **מחר:** למלא `remainingGrams` אחרי שקילה; סנאפשוט תחזוקה אחרי הדפסה תקינה.
 - **מקור:** בקשת חמישה מנועים 7.9.2026 + תיקוני מבנה ההצעה + Watchtower Edge.
 

@@ -277,7 +277,7 @@
     {
       "pack": "vfcopy",
       "layer": "sensors",
-      "how": "VOICE.md law (process-short vs product-story); CTA WhatsApp or IG+WA — not bare DM."
+      "how": "VOICE.md law (process-short vs product-story); Public CTA = Instagram message per PUBLIC_CTA; WhatsApp is business-contact/human-close only; no auto-DM."
     },
     {
       "pack": "vfcost",

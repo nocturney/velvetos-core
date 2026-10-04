@@ -106,7 +106,7 @@
       "status": "already",
       "source": ["crewai/instagram_post"],
       "packs": ["vfigos", "vfcopy", "vfcovers"],
-      "note": "Review and schedule in HQ. Grok Bot sends."
+      "note": "Review and publish through HQ tools/policy. Grok Bot is optional backup."
     },
     {
       "id": "factory-floor-existing",
@@ -194,7 +194,7 @@
       "id": "auto-publish-ig",
       "status": "skip",
       "source": ["crewai/instagram_post"],
-      "reason": "draft allowed; Grok Bot sends"
+      "reason": "draft allowed; publish through HQ tools/policy; Grok Bot is optional backup"
     },
     {
       "id": "landing-page",

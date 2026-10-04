@@ -1,6 +1,7 @@
-# משמרת · פיילאובר Grok 5 ימים
+# HISTORICAL / SUPERSEDED — משמרת · פיילאובר Grok 5 ימים
 
 31.8.2026 → ~5.9.2026 (Asia/Jerusalem).  
+**Historical evidence only. Do not use as current send/schedule authority. Current authority: `constitution/SEND.md`, `constitution/PUBLIC_CTA.md`, `packages/vfops/ROUTINE.md`.**
 בעלים: מכסה 100% · «לדאוג לכל התהליכים והתוצרים עד אז, לרבות שליחת המיילים ופרסומים חיים».
 
 לא פק חדש. צוות: content + morning-brief על פקים קיימים.  

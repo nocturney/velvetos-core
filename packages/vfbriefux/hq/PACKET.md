@@ -6,7 +6,7 @@
 
 ## מעטפת
 
-1. כותרת סטודיו + תאריך + «בריף הבוקר» (או «תצוגה — לא 07:00»)  
+1. כותרת סטודיו + תאריך + «בריף הבוקר 09:00» (או «תצוגה — לא שליחה חיה»)
 2. שורה תחתונה — משפט אחד  
 3. 01–07 לפי `packages/vfops/hq/BRIEF-SLOTS.md` — מילוי אוטומטי: `python3 scripts/vfops_loop.py brief --write`. בלוק `05` מ־`packages/vfops/data/research.md`  
 4. כריכות פיד בסוף / בגוף — `#vfcovers` (`cid:` ב־`htmlBody`)

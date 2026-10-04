@@ -5,15 +5,12 @@
 
 אזור זמן: `Asia/Jerusalem`.
 
-## מתח מתועד: 07:00 מול 09:00
+## קדנס קנוני: 07:00 cutoff, 09:00 Morning Brief
 
-| מקור | מה הוא אומר |
-|---|---|
-| `ROUTINE.md` | Velvet Morning Brief ב־**09:00**; Research Seat 02:00 עם cutoff 07:00 למוכנות |
-| `AGENTS.md` / `CONSTITUTION.md` / `GATES.md` | בריף **07:00**, תצוגה 3 `htmlBody` |
-| `ORCHESTRA.md` | תזמורת מחקר **06:15** (Cursor) |
-
-ראש צוות: לא להמציא איחוד. בריף לבעלים רץ לפי **ROUTINE.md** (09:00) אלא אם HANDOFF חי או הבעלים שינה במפורש. חוקת 07:00 נשארת כחוזה תוכן/HTML (`vfbriefux/MAIL.html`) וצריכת פקים. סטטוס ההרצה בפועל בסשן = `UNPROVEN` בלי `gmail-send-request` receipt.
+- `packages/vfops/ROUTINE.md` הוא שעון האוטומציות לבעלים.
+- **07:00** הוא cutoff/readiness פנימי למחקר ול-Decision Pack; הוא אינו Morning Brief נוסף.
+- **09:00** הוא Morning Brief היחיד לבעלים, במסלול Morning Green v3.1.
+- סטטוס delivery נשאר `UNPROVEN` בלי Gmail/provider evidence.
 
 ## יום — אוטומציות מוגנות (ROUTINE.md)
 
@@ -22,7 +19,7 @@
 | 01:45 | Automation Integrity Guard | תיקון סט האוטומציות המוגן | לא בונה מערכת שנייה |
 | 02:00 | Velvet Research Seat | מחקר חי עד cutoff 07:00 → `vfops/data/research.md` | GHA לא מחליף את גוף המחקר |
 | 07:15 | Runtime Receipts Refresh | רענון קבלות runtime מתצפיות חיות כדי להכין dependency-scoped live proofs; PR אחד, מיזוג רק על ירוק | freshness אינו gate אוניברסלי לקוד; לא ממציא תצפית |
-| **09:00** | Velvet Morning Brief | בריף V10.3 לבעלים | קובץ שנוצר ≠ נשלח; דרוש Gmail evidence |
+| **09:00** | Velvet Morning Brief | Morning Green v3.1 לבעלים | קובץ שנוצר ≠ נשלח; דרוש Gmail evidence |
 | 10:00 | Morning Delivery Guard | וידוא שנשלח הבריף של היום | |
 | 10:30 | VelvetOS Office Loop | blockers, production→content, drift | לא scheduler לכל היכולות |
 | 18:30 | VelvetOS Office Loop | סגירת יום, למידה, HANDOFF | |
@@ -146,7 +143,7 @@ Signals: `scripts/vf_retro_signals.py` → בריף. לא בושת בעלים.
 
 | קצב | מקור | הערה |
 |---|---|---|
-| יומי (02:00 seat / 06:15 ORCHESTRA) | `vfresearch/DAILY.md` | failover ל־WebSearch; אין גוף מומצא |
+| יומי (02:00 Research Seat; 07:00 readiness cutoff) | `vfresearch/DAILY.md` | failover ל־WebSearch; אין גוף מומצא |
 | Research Seat הוא סמכות התזמון (`packages/vfresearch/BEST-SKILLS.json`) | due ב־44h, stale מעל 52h | **אין טיימר חיצוני** — `TIMER.md` היסטורי בלבד |
 | שבועי | `WEEKLY.md` + `LINKS.json` + `PRINT-DEMAND.md` | |
 | MakerWorld א׳+ד׳ | `vfresearch/hq/MAKERWORLD-SCAN.md` + `vfsku.py scan` | |

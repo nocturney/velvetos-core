@@ -45,7 +45,7 @@ Autonomy: `vf_autonomy.py execute` מותר ל־green/yellow בלבד (`office/c
 6. Postflight על הארטיפקט הסופי לפני `done` / `published` / `sent`.
 
 סדר סתירות:  
-`system/safety/rights` → `Constitution + Product Truth + verified facts` → `tenant/instance` → `domain pack` → `owner-approved visual/copy` → `local creative preference`.
+`system/safety/rights` → `Constitution + Product Truth + verified facts` → `instance bindings/context (not policy authority)` → `domain pack` → `owner-approved visual/copy` → `local creative preference`.
 
 ## Visible Text Gate
 

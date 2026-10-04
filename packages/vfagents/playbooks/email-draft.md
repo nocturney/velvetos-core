@@ -2,7 +2,7 @@
 
 מקור: `agents/05-email-drafting-agent` + CrewAI Email Auto Responder.  
 חבילות: `vfsales`, `vfconvert`, `vfops`.  
-**HQ לא שולח, לא משיב, ולא מעביר ג׳ימייל.** אדם או Grok מדביקים.
+**HQ רשאי לשלוח/להשיב/להעביר Gmail דרך `constitution/SEND.md` וה־policy הקנוני.** Grok הוא גיבוי אופציונלי; customer-visible body עדיין חייב text/fact gates.
 
 ## מתי
 
@@ -37,5 +37,5 @@
 
 ## מסירה
 
-הטיוטה נשארת בצ׳אט או בקובץ משרד. אדם מחליט אם לשלוח.  
+הטיוטה עוברת את שערי הטקסט/עובדות וה־Gmail policy; routine known-thread/owner paths יכולים להישלח מ-HQ, ו־commitment/₪ נשארים gated.
 חוב / תזכורת תשלום — רק בהוראת ראש צוות.

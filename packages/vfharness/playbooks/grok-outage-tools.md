@@ -5,7 +5,7 @@
 נמדד בסשן 31.8.2026 (Cloud Agent).
 
 פיילאובר = אותו תפקיד כמו Grok, בלי תחושת מעבר.  
-בריף 07:00: HQ קורא `send_message` אל `nocturney@gmail.com`. אין לחיצת Send אצל הבעלים.  
+Morning Brief 09:00: HQ קורא `send_message` אל `nocturney@gmail.com`. אין לחיצת Send אצל הבעלים.
 אינסטגרם: אין MCP Publish — LIVE-PACKET נשאר (אין כלי, לא מדיניות בלבד).
 
 ## מצב חי (31.8.2026)
@@ -25,7 +25,7 @@
 ## מה HQ מפעיל לבד (בלי לחכות לבעלים)
 
 1. קריאת תיבה / לוח / דרייב־לפי־שם.
-2. `render_mail.py` ואז שליחה — בריף 07:00 אל `nocturney@gmail.com` בלבד (`htmlBody` תצוגה 3 מ־`vfbriefux/MAIL.html` + כריכות `cid`). מועדף `python -m vfops.gmail_brief_send`. MCP גדול מדי: `create_draft` → `update_draft` מצורפים → `send_message(draftId)` (`docs/SEND-BRIEF-MCP.md`). אין `LOAD_FROM_FILE`. MAIL-PACK הוא חלופת טקסט אם MCP נופל. בלי לחיצת בעלים.
+2. `render_mail.py` ואז שליחה — Morning Brief 09:00 אל `nocturney@gmail.com` בלבד (`htmlBody` תצוגה 3 מ־`vfbriefux/MAIL.html` + כריכות `cid`). מועדף `python -m vfops.gmail_brief_send`. MCP גדול מדי: `create_draft` → `update_draft` מצורפים → `send_message(draftId)` (`docs/SEND-BRIEF-MCP.md`). אין `LOAD_FROM_FILE`. MAIL-PACK הוא חלופת טקסט אם MCP נופל. בלי לחיצת בעלים.
 3. `create_event` — משבצת חיה שכבר קיימת ב־`vfgrowth` (למשל G005 חמישי 12:00).
 5. תור `#מוכן-ל-Grok` / `#פרסום-חי-דחוף` + LIVE-PACKET.
 
