@@ -16,6 +16,7 @@ FOUNDRY = P / "FOUNDRY.json"
 EDIT = P / "EDIT-DIRECTOR.md"
 BRIDGE = ROOT / "scripts" / "vf_video_edit.py"
 MANIM_BOOTSTRAP = ROOT / "scripts" / "bootstrap-manim-host-windows.ps1"
+MANIM_MAC_BOOTSTRAP = ROOT / "scripts" / "bootstrap-manim-host-macos.sh"
 
 
 def fail(message: str) -> None:
@@ -101,7 +102,14 @@ def main() -> None:
     if manim.get("masterRenderer") is not False:
         fail("Manim must not become master renderer")
     if manim.get("bootstrap") != "scripts/bootstrap-manim-host-windows.ps1":
-        fail("Manim bootstrap wiring missing")
+        fail("Manim Windows bootstrap wiring missing")
+    if manim.get("macBootstrap") != "scripts/bootstrap-manim-host-macos.sh":
+        fail("Manim macOS bootstrap wiring missing")
+    mac_evidence = manim.get("macHostEvidence") or {}
+    if mac_evidence.get("host") != "sderot-mac" or mac_evidence.get("python") != "3.12":
+        fail("Manim macOS host evidence identity mismatch")
+    if len(str(mac_evidence.get("sha256") or "")) != 64:
+        fail("Manim macOS smoke SHA-256 evidence missing")
     evidence = manim.get("hostEvidence") or {}
     if evidence.get("host") != "sderot-windows" or evidence.get("python") != "3.12":
         fail("Manim host evidence identity mismatch")
@@ -158,6 +166,7 @@ def main() -> None:
         'command_inspect',
         'libx264',
         'aac',
+        'cfg["output"].parent.mkdir(parents=True, exist_ok=True)',
     )
     if "shell=True" in bridge:
         fail("edit bridge must not use shell=True")
@@ -176,6 +185,19 @@ def main() -> None:
     )
     if "$MANIM_VERSION =" in manim_bootstrap or "manim==$MANIM" in manim_bootstrap or "version mismatch: expected" in manim_bootstrap:
         fail("Manim bootstrap must not exact-pin normal execution")
+    manim_mac_bootstrap = contains(
+        MANIM_MAC_BOOTSTRAP,
+        'MANIM_MINIMUM_VERSION="0.21.0"',
+        'MANIM_RECOVERY_VERSION="0.21.0"',
+        'HOST_ID="sderot-mac"',
+        'manim-host.json',
+        'ffprobe',
+        'shasum -a 256',
+        '1080',
+        '1920',
+    )
+    if 'manim==$MANIM' in manim_mac_bootstrap or 'version mismatch: expected' in manim_mac_bootstrap:
+        fail("Manim macOS bootstrap must not exact-pin normal execution")
     if "ngrok" in manim_bootstrap or "--share-desktop" in manim_bootstrap:
         fail("Manim bootstrap must not create an extra remote route")
 

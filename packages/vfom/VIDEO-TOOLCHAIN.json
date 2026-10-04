@@ -94,6 +94,17 @@
         "smoke": "1080x1920 technical slot rendered and ffprobe verified",
         "sha256": "8334a878cfa63aaee28e16e74c0e081dd12f1db7096ad6a8e78e3f26690e176a",
         "verifiedAt": "2026-09-14T08:59:22Z"
+      },
+      "macBootstrap": "scripts/bootstrap-manim-host-macos.sh",
+      "macHostEvidence": {
+        "host": "sderot-mac",
+        "python": "3.12",
+        "toolchain": "~/.velvetos/toolchain/manim-py312",
+        "evidenceVersion": "0.21.0",
+        "evidenceClass": "historical-smoke-artifact",
+        "smoke": "1080x1920 technical slot rendered and ffprobe verified",
+        "sha256": "5c838d189315c9efc8b58cf1b88813a4a72ede21de96e990df2db71fdbc887fe",
+        "verifiedAt": "2026-10-04T06:19:14Z"
       }
     }
   },
@@ -102,11 +113,24 @@
       "status": "implemented",
       "bridge": "scripts/vf_turntable.py",
       "geometrySource": "real print file only",
-      "formats": [".3mf", ".stl", ".obj", ".glb", ".gltf", ".blend"],
-      "durationSeconds": {"min": 6, "max": 8},
+      "formats": [
+        ".3mf",
+        ".stl",
+        ".obj",
+        ".glb",
+        ".gltf",
+        ".blend"
+      ],
+      "durationSeconds": {
+        "min": 6,
+        "max": 8
+      },
       "canvas": "1080x1920@30fps",
       "scene": "warm-interior lighting around source-truth geometry",
-      "colorModes": ["embedded", "verified-hex"],
+      "colorModes": [
+        "embedded",
+        "verified-hex"
+      ],
       "rule": "never AI-generate or repair the product; turntable is illustrative and never a publish receipt"
     }
   },

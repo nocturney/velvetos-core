@@ -16,6 +16,7 @@ required_bridge = [
     "cadgen.cli",
     "dfam_tool.py",
     "gcode_tool.py",
+    'value.replace("\\\\", "/")',
 ]
 missing = [x for x in required_bridge if x not in bridge]
 assert not missing, f"vf_cad bridge missing contracts: {missing}"

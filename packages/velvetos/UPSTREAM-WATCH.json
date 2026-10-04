@@ -594,7 +594,8 @@
       "repo": "ManimCommunity/manim",
       "kind": "runtime-source",
       "integration": [
-        "scripts/bootstrap-manim-host-windows.ps1"
+        "scripts/bootstrap-manim-host-windows.ps1",
+        "scripts/bootstrap-manim-host-macos.sh"
       ],
       "tracking": "default-branch-head-and-release-if-present",
       "updatePolicy": "latest-compatible",
