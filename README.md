@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 6A Visible Text tiers:** replaces the universal six-evidence human-text ceremony with fail-closed risk tiers. `DRAFT_INTERNAL` keeps truth/basic safety only (83.3% ceremony reduct…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 6A Visible Text tiers:** replaces the universal six-evidence human-text ceremony with fail-closed risk tiers. `DRAFT_INTERNAL` keeps truth/basic safety only (83.3% ceremony reduct…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 6B Creative Readiness:** makes the Creative Manifest coordination/evidence-only rather than an approval database; status fields cannot mint authorization. Product Truth stays abov…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 6B Creative Readiness:** makes the Creative Manifest coordination/evidence-only rather than an approval database; status fields cannot mint authorization. Product Truth stays abov…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>

@@ -3,12 +3,18 @@
 from __future__ import annotations
 
 import ast
+import hashlib
 import json
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 VFOM = ROOT / "packages" / "vfom"
+FOUNDRY = VFOM / "FOUNDRY.json"
+STAGE6B_REPORT = ROOT / "packages" / "velvetos" / "policy" / "reports" / "stage6b-creative-readiness.json"
+STAGE6B_GENERATOR = ROOT / "scripts" / "generate-stage6b-creative-readiness-report.py"
 INSTANCE = ROOT / "instances" / "velvet-factory" / "instance" / "velvet-factory.json"
 CONTENT_SPRINT = ROOT / ".cursor" / "skills" / "vf-content-sprint" / "SKILL.md"
 IG_MUSIC_SKILL = ROOT / ".cursor" / "skills" / "vf-ig-music" / "SKILL.md"
@@ -77,6 +83,57 @@ def main() -> None:
         fail("Creative Manifest must be enabled")
     if manifest_policy.get("notASecondStateMachine") is not True or manifest_policy.get("notAMediaCatalog") is not True:
         fail("Creative Manifest must not become a second state machine/catalog")
+    for key in (
+        "coordinationOnly", "notAClaimAuthority", "notApprovalDatabase",
+        "cannotAuthorizeExternalEffects", "statusIsEvidenceProjection", "productTruthAuthorityHigher",
+    ):
+        if manifest_policy.get(key) is not True:
+            fail(f"Creative Manifest Stage 6B boundary missing: {key}")
+    if manifest_policy.get("policyDecisionSource") != "packages/velvetos/policy/policy-registry.json":
+        fail("Creative Manifest policy-decision source drift")
+    if "never creates that state" not in str(manifest_policy.get("rule", "")):
+        fail("Creative Manifest must state that status writes cannot mint authorization")
+
+    quality = foundry.get("creativeQualitySystem") or {}
+    expected_quality_specialists = [
+        ".cursor/skills/vf-cad-design-craft/SKILL.md",
+        ".cursor/skills/vf-dcc-modeling-craft/SKILL.md",
+        ".cursor/skills/vf-material-lookdev/SKILL.md",
+        ".cursor/skills/vf-product-visualization-craft/SKILL.md",
+        ".cursor/skills/vf-post-production-craft/SKILL.md",
+        ".cursor/skills/vf-vfx-compositing-craft/SKILL.md",
+        ".cursor/skills/vf-image-design-craft/SKILL.md",
+        ".cursor/skills/vf-technical-illustration-craft/SKILL.md",
+    ]
+    if quality.get("enabled") is not True or quality.get("version") != "2.0.0":
+        fail("Creative Craft quality system must be active at 2.0.0")
+    if quality.get("role") != "authoring_and_quality_system_not_policy_hierarchy":
+        fail("Creative Craft must remain a quality system, not a policy hierarchy")
+    if quality.get("router") != "packages/vfharness/devtools/creative-craft/skill/SKILL.md":
+        fail("Creative Craft quality router binding drift")
+    if quality.get("specialists") != expected_quality_specialists:
+        fail("Creative Craft quality specialist set drift")
+    if quality.get("produceCritiqueTargetedRefine") != "internal" or quality.get("ordinaryAestheticChoice") != "office":
+        fail("Creative Craft ordinary produce/critique/refine choices must stay internal")
+    if quality.get("qualityFailure") != "targeted_auto_repair_first" or quality.get("ownerEscalation") != "exception-only":
+        fail("Creative Craft quality/escalation contract drift")
+    for key in ("mayAuthorizeExternalEffects", "mayOverrideProductTruth", "mayCreatePolicyHierarchy"):
+        if quality.get(key) is not False:
+            fail(f"Creative Craft must keep {key}=false")
+    if quality.get("manifestWritesAreEvidenceOnly") is not True or quality.get("completionRequiresExactFinalQa") is not True:
+        fail("Creative Craft evidence/final-QA boundary drift")
+    if quality.get("productTruthAuthority") != "higher_than_aesthetic_and_quality_system":
+        fail("Product Truth must remain higher authority than the creative quality system")
+
+    standing = foundry.get("ownerApprovedVisualStandard") or {}
+    if standing.get("approvalScope") != "standing_visual_standard_not_per_job_owner_approval" or standing.get("perJobOwnerApprovalRequired") is not False:
+        fail("owner-approved visual standard must remain standing authority, not per-job approval")
+
+    human = foundry.get("humanSurface") or {}
+    if human.get("mode") != "exception-only" or human.get("routineCreativeChoice") != "office" or human.get("ordinaryAestheticChoice") != "office":
+        fail("ordinary aesthetic decisions must stay inside the office")
+    if human.get("ownerApprovalForAestheticChoice") is not False or human.get("ownerApprovalForRoutineQualityRepair") is not False:
+        fail("routine aesthetics/quality repair must not require owner approval")
 
     audio = foundry.get("audioPolicy") or {}
     if audio.get("requiredForVideo") is not True:
@@ -114,6 +171,9 @@ def main() -> None:
         fail("showcase model-license policy must not be a blanket publish gate")
 
     schema = load_json(VFOM / "CREATIVE-MANIFEST.schema.json")
+    schema_description = str(schema.get("description", ""))
+    if "not an approval database" not in schema_description or "not" not in schema_description or "Product Truth" not in schema_description:
+        fail("Creative Manifest schema must declare coordination/evidence authority boundary")
     required = set(schema.get("required") or [])
     needed = {"jobId", "format", "status", "sourceEvidence", "visualStandard", "concept", "hook", "shots", "edit", "visualCopy", "cover", "qa"}
     if not needed.issubset(required):
@@ -219,6 +279,73 @@ def main() -> None:
     timeline_actions = set(resolve_policy.get("timeline") or [])
     if any(token in action for action in timeline_actions for token in ("append", "insert", "trim", "ripple", "create_timeline")):
         fail("Resolve timeline edit authoring appeared; review Creative Craft typed gaps before promotion")
+
+    if not STAGE6B_REPORT.is_file() or not STAGE6B_GENERATOR.is_file():
+        fail("Stage 6B report/generator missing")
+    stage6b = load_json(STAGE6B_REPORT)
+    if stage6b.get("schema") != "velvetos.stage6b-creative-readiness.v1" or stage6b.get("stage") != "6B":
+        fail("Stage 6B creative-readiness schema/stage mismatch")
+    if stage6b.get("behavior_change") is not True:
+        fail("Stage 6B must record the creative authority/readiness behavior clarification")
+    if stage6b.get("prepared_against_main_sha") != "36a873248f02c24201ebfdf386636f2a96a3db43":
+        fail("Stage 6B base main SHA drift")
+    if stage6b.get("repository_acceptance") != "PASS":
+        fail("Stage 6B repository acceptance is not PASS")
+    before6b = stage6b.get("before") or {}
+    if before6b.get("creative_quality_system_machine_contract_present") is not False:
+        fail("Stage 6B baseline must record no pre-existing Creative Craft machine contract")
+    missing6b = before6b.get("missing_explicit_manifest_boundary_fields") or {}
+    if set(missing6b) != {
+        "coordinationOnly", "notApprovalDatabase", "cannotAuthorizeExternalEffects",
+        "statusIsEvidenceProjection", "productTruthAuthorityHigher", "policyDecisionSource",
+    } or any(value is not None for value in missing6b.values()):
+        fail("Stage 6B pre-change manifest-boundary baseline drift")
+    after6b = stage6b.get("after") or {}
+    current_foundry_hash = hashlib.sha256(FOUNDRY.read_bytes()).hexdigest()
+    current_manifest_hash = hashlib.sha256((VFOM / "CREATIVE-MANIFEST.schema.json").read_bytes()).hexdigest()
+    if after6b.get("foundry_sha256") != current_foundry_hash or after6b.get("manifest_schema_sha256") != current_manifest_hash:
+        fail("Stage 6B current creative authority artifact hash drift")
+    quality6b = after6b.get("creative_quality_system") or {}
+    if quality6b.get("version") != "2.0.0" or quality6b.get("role") != "authoring_and_quality_system_not_policy_hierarchy":
+        fail("Stage 6B Creative Craft quality-system receipt drift")
+    if quality6b.get("mayAuthorizeExternalEffects") is not False or quality6b.get("mayOverrideProductTruth") is not False:
+        fail("Stage 6B Creative Craft authority boundary drift")
+    if quality6b.get("produceCritiqueTargetedRefine") != "internal" or quality6b.get("ownerEscalation") != "exception-only":
+        fail("Stage 6B internal refine/escalation receipt drift")
+    human6b = after6b.get("human_surface") or {}
+    if human6b.get("ownerApprovalForAestheticChoice") is not False or human6b.get("ownerApprovalForRoutineQualityRepair") is not False:
+        fail("Stage 6B routine creative owner-approval boundary drift")
+    if human6b.get("humanRequired") != ((before6b.get("human_surface") or {}).get("humanRequired") or []):
+        fail("Stage 6B owner exception set changed unexpectedly")
+    auth6b = stage6b.get("authorization_semantics") or {}
+    if auth6b.get("external_effect_policy_registry_unchanged") is not True:
+        fail("Stage 6B external-effect policy registry drift")
+    if auth6b.get("creative_manifest_is_policy_authority") is not False or auth6b.get("creative_craft_is_policy_authority") is not False:
+        fail("Stage 6B creative surfaces must not become policy authority")
+    acceptance6b = stage6b.get("acceptance") or {}
+    if len(acceptance6b) != 10 or not all(value is True for value in acceptance6b.values()):
+        fail("Stage 6B acceptance criteria drift/fail")
+    with tempfile.TemporaryDirectory(prefix="stage6b-creative-") as td:
+        regenerated6b = Path(td) / "stage6b.json"
+        proc = subprocess.run(
+            [
+                sys.executable,
+                str(STAGE6B_GENERATOR),
+                "--prepared-against", stage6b["prepared_against_main_sha"],
+                "--captured-at", stage6b["captured_at"],
+                "--output", str(regenerated6b),
+            ],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=90,
+        )
+        if proc.returncode != 0:
+            fail("Stage 6B report regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()))
+        if regenerated6b.read_bytes() != STAGE6B_REPORT.read_bytes():
+            fail("Stage 6B creative-readiness report is not reproducible")
 
     print("OK creative-system manifest specialists motion-genomes audio-gate visual-copy-gate + Resolve runtime-truth bound")
 

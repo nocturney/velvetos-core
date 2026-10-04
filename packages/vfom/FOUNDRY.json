@@ -31,7 +31,9 @@
     "referenceAsset": "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
     "publicReferenceUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
     "artifactSha256": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897",
-    "coldStartGate": "fail_closed"
+    "coldStartGate": "fail_closed",
+    "approvalScope": "standing_visual_standard_not_per_job_owner_approval",
+    "perJobOwnerApprovalRequired": false
   },
   "layers": {
     "creativeIntelligence": [
@@ -82,9 +84,16 @@
     "enabled": true,
     "schema": "packages/vfom/CREATIVE-MANIFEST.schema.json",
     "role": "single per-content-job coordination artifact shared by strategy, creative direction, media selection, edit, retention, authority/voice, engagement, visual QA, cover, final gate and publish handoff",
+    "coordinationOnly": true,
     "notASecondStateMachine": true,
     "notAMediaCatalog": true,
-    "notAClaimAuthority": true
+    "notAClaimAuthority": true,
+    "notApprovalDatabase": true,
+    "cannotAuthorizeExternalEffects": true,
+    "statusIsEvidenceProjection": true,
+    "productTruthAuthorityHigher": true,
+    "policyDecisionSource": "packages/velvetos/policy/policy-registry.json",
+    "rule": "Writing a PASS/ready/authorized status into the Creative Manifest never creates that state; it may only mirror evidence already proven by the canonical policy/evidence path."
   },
   "instagramDecisionPolicy": {
     "enabled": true,
@@ -330,10 +339,40 @@
     "failureState": "visual_standard_unavailable",
     "genericFallbackAllowed": false
   },
+  "creativeQualitySystem": {
+    "enabled": true,
+    "version": "2.0.0",
+    "role": "authoring_and_quality_system_not_policy_hierarchy",
+    "router": "packages/vfharness/devtools/creative-craft/skill/SKILL.md",
+    "registry": "packages/vfharness/devtools/creative-craft/creative-craft-registry.json",
+    "specialists": [
+      ".cursor/skills/vf-cad-design-craft/SKILL.md",
+      ".cursor/skills/vf-dcc-modeling-craft/SKILL.md",
+      ".cursor/skills/vf-material-lookdev/SKILL.md",
+      ".cursor/skills/vf-product-visualization-craft/SKILL.md",
+      ".cursor/skills/vf-post-production-craft/SKILL.md",
+      ".cursor/skills/vf-vfx-compositing-craft/SKILL.md",
+      ".cursor/skills/vf-image-design-craft/SKILL.md",
+      ".cursor/skills/vf-technical-illustration-craft/SKILL.md"
+    ],
+    "produceCritiqueTargetedRefine": "internal",
+    "ordinaryAestheticChoice": "office",
+    "qualityFailure": "targeted_auto_repair_first",
+    "ownerEscalation": "exception-only",
+    "mayAuthorizeExternalEffects": false,
+    "mayOverrideProductTruth": false,
+    "mayCreatePolicyHierarchy": false,
+    "manifestWritesAreEvidenceOnly": true,
+    "productTruthAuthority": "higher_than_aesthetic_and_quality_system",
+    "completionRequiresExactFinalQa": true
+  },
   "humanSurface": {
     "mode": "exception-only",
     "creativeQualityFailure": "auto-repair",
     "routineCreativeChoice": "office",
+    "ordinaryAestheticChoice": "office",
+    "ownerApprovalForAestheticChoice": false,
+    "ownerApprovalForRoutineQualityRepair": false,
     "humanRequired": [
       "physical-footage-or-staging",
       "rights-or-privacy-unclear",
