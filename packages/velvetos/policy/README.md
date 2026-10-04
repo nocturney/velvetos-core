@@ -586,3 +586,11 @@ Active Project/ChatGPT runtime authority now resolves from the selected `instanc
 The Reel route, visual product-truth guide, Project bundle/request-gate sensors and isolated Chat runtime checks all resolve the instance-owned distribution. The retained `packages/velvetos/chatgpt-project` tree remains physically present and byte-equal to `instances/velvet-factory/distribution/chatgpt-project` across all 33 files, so rollback compatibility is preserved without treating the Core copy as active authority.
 
 Historical Stage 8C ChatGPT evidence is replayed from its approved source snapshot and remains byte-for-byte reproducible even after this Stage 8D authority cutover. Progress is recorded in `reports/stage8d-chatgpt-core-consumer-migration.json` (12/12 PASS, active legacy references 0, parity true). The rollback window remains open and deletion remains unauthorized.
+
+## Reform v2 Stage 8D - Post-migration retirement readiness
+
+After the four Stage 8D consumer-migration slices, all five retained compatibility surfaces are now free of active migration blockers. The sample profile remains non-runtime authority, and the fleet, root desk, tool-status and ChatGPT Core receipts each prove their active consumer cutovers while preserving parity or equivalent rollback evidence.
+
+`reports/stage8d-post-migration-readiness.json` records this state as `BLOCKED_ROLLBACK_WINDOWS_ONLY`: all five compatibility paths remain present, all five rollback windows remain explicitly open, and no surface has rollback-window closure evidence yet. Consumer migration completion therefore does **not** authorize deletion. `retirement_authorized=false` and every surface keeps `delete_authorized=false`.
+
+The gate is prepared against merged main `aa6e163fa635a540e11bd8f40fd65d08bc0c4ade`, which passed the full 116/116 sensor suite after PR #527. The next action is evidence-only: collect explicit rollback-window closure evidence per surface. No window may close by elapsed time or inference, and no big-bang delete is authorized.

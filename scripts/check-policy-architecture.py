@@ -70,6 +70,8 @@ STAGE8D_TOOL_STATUS = REPORTS / "stage8d-tool-status-consumer-migration.json"
 STAGE8D_TOOL_STATUS_GENERATOR = ROOT / "scripts" / "generate-stage8d-tool-status-consumer-migration.py"
 STAGE8D_CHATGPT_CORE = REPORTS / "stage8d-chatgpt-core-consumer-migration.json"
 STAGE8D_CHATGPT_CORE_GENERATOR = ROOT / "scripts" / "generate-stage8d-chatgpt-core-consumer-migration.py"
+STAGE8D_POST_MIGRATION = REPORTS / "stage8d-post-migration-readiness.json"
+STAGE8D_POST_MIGRATION_GENERATOR = ROOT / "scripts" / "generate-stage8d-post-migration-readiness.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -106,6 +108,7 @@ EXPECTED_REPORTS = {
     "stage8d-root-desk-consumer-migration.json",
     "stage8d-tool-status-consumer-migration.json",
     "stage8d-chatgpt-core-consumer-migration.json",
+    "stage8d-post-migration-readiness.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -2829,6 +2832,122 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated8dc.read_bytes() == STAGE8D_CHATGPT_CORE.read_bytes(),
                         "Stage 8D ChatGPT Core migration receipt is not reproducible",
+                        problems,
+                    )
+
+    if STAGE8D_POST_MIGRATION.is_file():
+        post8d = load(STAGE8D_POST_MIGRATION)
+        require(
+            post8d.get("schema") == "velvetos.stage8d-post-migration-readiness.v1"
+            and post8d.get("stage") == "8D_POST_MIGRATION_READINESS"
+            and post8d.get("behavior_change") is False
+            and post8d.get("repository_assessment") == "PASS",
+            "Stage 8D post-migration readiness metadata drift",
+            problems,
+        )
+        criteria8dp = post8d.get("acceptance_criteria") or {}
+        expected8dp = {
+            "initial_stage8d_readiness_baseline_passed",
+            "all_five_compatibility_paths_are_still_present",
+            "all_active_compatibility_consumers_are_migrated",
+            "all_five_surfaces_have_parity_or_unchanged_rollback_proof",
+            "all_rollback_windows_remain_explicitly_open",
+            "no_rollback_window_is_closed_by_inference",
+            "retirement_remains_unauthorized_without_closure_evidence",
+            "delete_authority_remains_false_for_every_surface",
+            "external_effect_authority_is_unchanged_since_stage8d_entry",
+            "post_migration_main_full_sensor_suite_116_of_116",
+        }
+        require(
+            set(criteria8dp) == expected8dp and all(criteria8dp.get(k) is True for k in expected8dp),
+            "Stage 8D post-migration readiness criteria drift or fail",
+            problems,
+        )
+        assessment8dp = post8d.get("assessment") or {}
+        require(
+            assessment8dp.get("all_active_compatibility_consumers_migrated") is True
+            and assessment8dp.get("all_required_parity_proven") is True
+            and assessment8dp.get("all_compatibility_paths_retained") is True
+            and assessment8dp.get("all_rollback_windows_open") is True
+            and assessment8dp.get("remaining_active_consumer_blockers") == []
+            and assessment8dp.get("remaining_blocker_class") == "ROLLBACK_WINDOW_CLOSURE_EVIDENCE_ONLY"
+            and assessment8dp.get("external_effect_authority_unchanged") is True,
+            "Stage 8D post-migration assessment drift",
+            problems,
+        )
+        surfaces8dp = post8d.get("compatibility_surfaces") or {}
+        require(
+            set(surfaces8dp) == {"sample_profile", "root_desk", "fleet", "tool_status", "chatgpt_core_bundle"},
+            "Stage 8D post-migration surface set drift",
+            problems,
+        )
+        for sid8dp, row8dp in surfaces8dp.items():
+            require(
+                row8dp.get("present") is True
+                and row8dp.get("active_consumers_migrated") is True
+                and row8dp.get("parity_proven") is True
+                and row8dp.get("rollback_window_open") is True
+                and row8dp.get("rollback_window_closure_evidence") is None
+                and row8dp.get("retirement_ready") is False
+                and row8dp.get("delete_authorized") is False
+                and row8dp.get("blocking_reasons") == ["rollback_window_open_without_explicit_closure_evidence"],
+                f"Stage 8D post-migration rollback semantics drift: {sid8dp}",
+                problems,
+            )
+        require(
+            post8d.get("retirement_authorized") is False
+            and post8d.get("readiness_state") == "BLOCKED_ROLLBACK_WINDOWS_ONLY",
+            "Stage 8D post-migration retirement must remain blocked",
+            problems,
+        )
+        full8dp = post8d.get("post_migration_main_full_suite") or {}
+        require(
+            full8dp.get("head_sha") == post8d.get("source_commit_sha")
+            and full8dp.get("verification_source") == "local_post_merge_check-all"
+            and full8dp.get("mode") == "full"
+            and full8dp.get("registered_sensors") == 116
+            and full8dp.get("passed_sensors") == 116
+            and full8dp.get("conclusion") == "SUCCESS",
+            "Stage 8D post-migration full-suite evidence drift",
+            problems,
+        )
+        authority8dp = post8d.get("authority") or {}
+        require(
+            authority8dp.get("external_effect_authority_changed") is False
+            and authority8dp.get("policy_registry_sha256")
+                == authority8dp.get("stage8d_entry_policy_registry_sha256"),
+            "Stage 8D post-migration readiness changed authority",
+            problems,
+        )
+        if STAGE8D_POST_MIGRATION_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8dp = Path(td) / "stage8d-post-migration-readiness.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_POST_MIGRATION_GENERATOR),
+                        "--prepared-against", post8d["prepared_against_main_sha"],
+                        "--source-commit", post8d["source_commit_sha"],
+                        "--captured-at", post8d["captured_at"],
+                        "--output", str(regenerated8dp),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D post-migration readiness regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated8dp.is_file():
+                    require(
+                        regenerated8dp.read_bytes() == STAGE8D_POST_MIGRATION.read_bytes(),
+                        "Stage 8D post-migration readiness receipt is not reproducible",
                         problems,
                     )
 

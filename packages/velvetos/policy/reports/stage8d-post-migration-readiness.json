@@ -1,0 +1,132 @@
+{
+  "schema": "velvetos.stage8d-post-migration-readiness.v1",
+  "stage": "8D_POST_MIGRATION_READINESS",
+  "behavior_change": false,
+  "prepared_against_main_sha": "aa6e163fa635a540e11bd8f40fd65d08bc0c4ade",
+  "source_commit_sha": "aa6e163fa635a540e11bd8f40fd65d08bc0c4ade",
+  "captured_at": "2026-10-04T22:28:29.4325970+03:00",
+  "purpose": "Reassess Stage 8D after all active compatibility-consumer migrations. Prove consumer cutover and parity while keeping retirement blocked until each rollback window has explicit closure evidence.",
+  "migration_receipts": {
+    "initial_readiness": "packages/velvetos/policy/reports/stage8d-retirement-readiness.json",
+    "sample_profile": "packages/velvetos/policy/reports/stage8c-sample-profile-consumers.json",
+    "fleet": "packages/velvetos/policy/reports/stage8d-fleet-consumer-migration.json",
+    "root_desk": "packages/velvetos/policy/reports/stage8d-root-desk-consumer-migration.json",
+    "tool_status": "packages/velvetos/policy/reports/stage8d-tool-status-consumer-migration.json",
+    "chatgpt_core_bundle": "packages/velvetos/policy/reports/stage8d-chatgpt-core-consumer-migration.json"
+  },
+  "compatibility_surfaces": {
+    "sample_profile": {
+      "path": "packages/velvetos/samples/velvet-factory.json",
+      "present": true,
+      "active_consumers_migrated": true,
+      "parity_proven": true,
+      "rollback_window_open": true,
+      "rollback_window_closure_evidence": null,
+      "retirement_ready": false,
+      "delete_authorized": false,
+      "blocking_reasons": [
+        "rollback_window_open_without_explicit_closure_evidence"
+      ]
+    },
+    "root_desk": {
+      "path": ".cursor/vf-desk.json",
+      "present": true,
+      "active_consumers_migrated": true,
+      "parity_proven": true,
+      "rollback_window_open": true,
+      "rollback_window_closure_evidence": null,
+      "retirement_ready": false,
+      "delete_authorized": false,
+      "blocking_reasons": [
+        "rollback_window_open_without_explicit_closure_evidence"
+      ]
+    },
+    "fleet": {
+      "path": "packages/vfprod/FLEET.json",
+      "present": true,
+      "active_consumers_migrated": true,
+      "parity_proven": true,
+      "rollback_window_open": true,
+      "rollback_window_closure_evidence": null,
+      "retirement_ready": false,
+      "delete_authorized": false,
+      "blocking_reasons": [
+        "rollback_window_open_without_explicit_closure_evidence"
+      ]
+    },
+    "tool_status": {
+      "path": "packages/velvetos/TOOL-STATUS.json",
+      "present": true,
+      "active_consumers_migrated": true,
+      "parity_proven": true,
+      "rollback_window_open": true,
+      "rollback_window_closure_evidence": null,
+      "retirement_ready": false,
+      "delete_authorized": false,
+      "blocking_reasons": [
+        "rollback_window_open_without_explicit_closure_evidence"
+      ]
+    },
+    "chatgpt_core_bundle": {
+      "path": "packages/velvetos/chatgpt-project",
+      "present": true,
+      "active_consumers_migrated": true,
+      "parity_proven": true,
+      "rollback_window_open": true,
+      "rollback_window_closure_evidence": null,
+      "retirement_ready": false,
+      "delete_authorized": false,
+      "blocking_reasons": [
+        "rollback_window_open_without_explicit_closure_evidence"
+      ]
+    }
+  },
+  "assessment": {
+    "all_active_compatibility_consumers_migrated": true,
+    "all_required_parity_proven": true,
+    "all_compatibility_paths_retained": true,
+    "all_rollback_windows_open": true,
+    "remaining_active_consumer_blockers": [],
+    "remaining_blocker_class": "ROLLBACK_WINDOW_CLOSURE_EVIDENCE_ONLY",
+    "external_effect_authority_unchanged": true
+  },
+  "post_migration_main_full_suite": {
+    "head_sha": "aa6e163fa635a540e11bd8f40fd65d08bc0c4ade",
+    "verification_source": "local_post_merge_check-all",
+    "mode": "full",
+    "registered_sensors": 116,
+    "passed_sensors": 116,
+    "conclusion": "SUCCESS",
+    "log_markers": [
+      "OK sensor run left repository files unchanged",
+      "OK suite passed=116"
+    ]
+  },
+  "acceptance_criteria": {
+    "initial_stage8d_readiness_baseline_passed": true,
+    "all_five_compatibility_paths_are_still_present": true,
+    "all_active_compatibility_consumers_are_migrated": true,
+    "all_five_surfaces_have_parity_or_unchanged_rollback_proof": true,
+    "all_rollback_windows_remain_explicitly_open": true,
+    "no_rollback_window_is_closed_by_inference": true,
+    "retirement_remains_unauthorized_without_closure_evidence": true,
+    "delete_authority_remains_false_for_every_surface": true,
+    "external_effect_authority_is_unchanged_since_stage8d_entry": true,
+    "post_migration_main_full_sensor_suite_116_of_116": true
+  },
+  "repository_assessment": "PASS",
+  "retirement_authorized": false,
+  "readiness_state": "BLOCKED_ROLLBACK_WINDOWS_ONLY",
+  "next_action": "Collect explicit rollback-window closure evidence per compatibility surface. Do not delete any legacy path until a later gate records that evidence and explicitly authorizes deletion.",
+  "authority": {
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "stage8d_entry_policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false
+  },
+  "constraints": [
+    "no legacy deletion while retirement_authorized=false",
+    "rollback windows close only on explicit evidence, never by elapsed time or inference",
+    "consumer migration completion alone does not authorize retirement",
+    "no big-bang delete"
+  ]
+}
