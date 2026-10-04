@@ -215,7 +215,8 @@ def main() -> None:
 
     windows_bootstrap = contains(
         WINDOWS_BOOTSTRAP,
-        '$HostId = "sderot-windows"',
+        '$HostId = [Environment]::GetEnvironmentVariable("VELVETOS_HOST_ID")',
+        'FAIL VELVETOS_HOST_ID is not set.',
         f'$HyperFramesRecoveryVersion = "{recovery}"',
         '$NodeRecoveryVersion = "22.22.0"',
         '$script:Python = @(Resolve-Python)',

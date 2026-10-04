@@ -9,12 +9,15 @@ function Resolve-VelvetPath([string]$Name) {
     # Windows path contract: fail closed when a machine variable is missing (no user-profile fallback).
     $value = [Environment]::GetEnvironmentVariable($Name)
     if ([string]::IsNullOrWhiteSpace($value)) {
-        throw "FAIL $Name is not set. On the Windows host VelvetOS paths resolve only through the machine variables in packages/velvetos/WINDOWS-PATH-CONTRACT.md (VELVET_ROOT=D:\Velvet, VELVETOS_REPO_ROOT, VELVETOS_RUNTIME_ROOT, VELVETOS_STATE_ROOT). The legacy user-profile fallback is closed; set $Name machine-wide, open a new shell and rerun."
+        throw "FAIL $Name is not set. On Windows, VelvetOS paths resolve only through the explicit machine variables in packages/velvetos/WINDOWS-PATH-CONTRACT.md. The legacy user-profile fallback is closed; set $Name machine-wide, open a new shell and rerun."
     }
     return [Environment]::ExpandEnvironmentVariables($value)
 }
 
-$HostId = "sderot-windows"
+$HostId = [Environment]::GetEnvironmentVariable("VELVETOS_HOST_ID")
+if ([string]::IsNullOrWhiteSpace($HostId)) {
+    throw "FAIL VELVETOS_HOST_ID is not set. Host identity is an explicit machine/instance binding; set it machine-wide from the selected instance windowsHostBinding and rerun."
+}
 $Repo = Resolve-VelvetPath "VELVETOS_REPO_ROOT"
 $StateDir = Resolve-VelvetPath "VELVETOS_STATE_ROOT"
 $VelvetRoot = Resolve-VelvetPath "VELVET_ROOT"

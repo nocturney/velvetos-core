@@ -56,6 +56,8 @@ STAGE8C_EXPERT_MODULES = REPORTS / "stage8c-expert-modules.json"
 STAGE8C_EXPERT_MODULES_GENERATOR = ROOT / "scripts" / "generate-stage8c-expert-modules.py"
 STAGE8C_CHATGPT_DISTRIBUTION = REPORTS / "stage8c-chatgpt-distribution-consumers.json"
 STAGE8C_CHATGPT_DISTRIBUTION_GENERATOR = ROOT / "scripts" / "generate-stage8c-chatgpt-distribution-consumers.py"
+STAGE8C_WINDOWS_HOST = REPORTS / "stage8c-windows-host-binding.json"
+STAGE8C_WINDOWS_HOST_GENERATOR = ROOT / "scripts" / "generate-stage8c-windows-host-binding.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -85,6 +87,7 @@ EXPECTED_REPORTS = {
     "stage8c-control-api-fleet.json",
     "stage8c-expert-modules.json",
     "stage8c-chatgpt-distribution-consumers.json",
+    "stage8c-windows-host-binding.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -2132,6 +2135,81 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated8cg.is_file():
                     require(regenerated8cg.read_bytes() == STAGE8C_CHATGPT_DISTRIBUTION.read_bytes(),
                             "Stage 8C ChatGPT distribution receipt is not reproducible", problems)
+
+    if STAGE8C_WINDOWS_HOST.is_file():
+        stage8c_windows = load(STAGE8C_WINDOWS_HOST)
+        require(stage8c_windows.get("schema") == "velvetos.stage8c-windows-host-binding.v1"
+                and stage8c_windows.get("stage") == "8C_WINDOWS_HOST_BINDING"
+                and stage8c_windows.get("behavior_change") is True
+                and stage8c_windows.get("repository_acceptance") == "PASS",
+                "Stage 8C Windows host-binding metadata drift", problems)
+        criteria8cw = stage8c_windows.get("acceptance_criteria") or {}
+        expected_criteria8cw = {
+            "generic_core_windows_contract_has_no_instance_host_or_absolute_root_values",
+            "canonical_instance_declares_windows_host_binding_surface",
+            "instance_windows_binding_owns_current_host_identity_and_machine_paths",
+            "windows_bootstraps_require_explicit_host_id_without_hardcoded_identity",
+            "windows_path_consumers_keep_fail_closed_variable_driven_behavior",
+            "vfmem_windows_consumers_remain_generic_and_variable_driven",
+            "operational_host_and_openpost_registries_are_unchanged_and_match_binding",
+            "external_effect_policy_registry_is_unchanged",
+        }
+        require(set(criteria8cw) == expected_criteria8cw
+                and all(criteria8cw.get(key) is True for key in expected_criteria8cw),
+                "Stage 8C Windows host-binding acceptance criteria drift or fail", problems)
+        binding8cw = stage8c_windows.get("binding") or {}
+        require(binding8cw.get("path") == "instances/velvet-factory/instance/windows-host-binding.json"
+                and binding8cw.get("surface") == "windowsHostBinding"
+                and binding8cw.get("host_id") == "sderot-windows"
+                and binding8cw.get("machine_scope_required") is True
+                and binding8cw.get("fallback_to_user_profile") is False
+                and set(binding8cw.get("environment_keys") or []) == {
+                    "VELVET_ROOT", "VELVETOS_REPO_ROOT", "VELVETOS_RUNTIME_ROOT",
+                    "VELVETOS_STATE_ROOT", "VELVETOS_HOST_ID"
+                }
+                and binding8cw.get("lane_count") == 12,
+                "Stage 8C Windows host-binding instance contract drift", problems)
+        generic8cw = stage8c_windows.get("generic_core") or {}
+        require(all(not hits for hits in (generic8cw.get("private_value_hits") or {}).values()),
+                "Stage 8C Windows host-binding Core leak scan drift", problems)
+        baseline8cw = stage8c_windows.get("operational_registry_baseline") or {}
+        require(baseline8cw.get("render_hosts_unchanged") is True
+                and baseline8cw.get("openpost_unchanged") is True
+                and baseline8cw.get("host_registry_id") == "sderot-windows",
+                "Stage 8C Windows operational baseline drift", problems)
+        authority8cw = stage8c_windows.get("authority_baseline") or {}
+        require(authority8cw.get("unchanged") is True
+                and authority8cw.get("policy_registry_canonical_sha256")
+                    == authority8cw.get("prepared_against_policy_registry_canonical_sha256"),
+                "Stage 8C Windows authority baseline drift", problems)
+        require(stage8c_windows.get("next_stage") == "Stage 8C complete"
+                and stage8c_windows.get("remaining_domains") == [],
+                "Stage 8C Windows closure handoff drift", problems)
+        if STAGE8C_WINDOWS_HOST_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8cw = Path(td) / "stage8c-windows-host-binding.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8C_WINDOWS_HOST_GENERATOR),
+                        "--prepared-against", stage8c_windows["prepared_against_main_sha"],
+                        "--captured-at", stage8c_windows["captured_at"],
+                        "--output", str(regenerated8cw),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0,
+                        "Stage 8C Windows host-binding regeneration failed: "
+                        + (proc.stderr.strip() or proc.stdout.strip()),
+                        problems)
+                if proc.returncode == 0 and regenerated8cw.is_file():
+                    require(regenerated8cw.read_bytes() == STAGE8C_WINDOWS_HOST.read_bytes(),
+                            "Stage 8C Windows host-binding receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)

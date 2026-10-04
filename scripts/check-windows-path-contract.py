@@ -9,12 +9,14 @@ import os
 import re
 import sys
 import tempfile
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from types import ModuleType
 from typing import Any, Iterator
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT = ROOT / "packages" / "velvetos" / "WINDOWS-PATH-CONTRACT.md"
+BINDING = ROOT / "instances" / "velvet-factory" / "instance" / "windows-host-binding.json"
+BINDING_SCHEMA = ROOT / "packages" / "velvetos" / "schema" / "instance-windows-host-binding.schema.json"
 
 
 def fail(message: str) -> None:
@@ -26,6 +28,18 @@ def read(rel: str) -> str:
     if not path.is_file():
         fail(f"missing {rel}")
     return path.read_text(encoding="utf-8")
+
+
+def load_json(path: Path) -> dict[str, Any]:
+    if not path.is_file():
+        fail(f"missing {path.relative_to(ROOT)}")
+    try:
+        value = json.loads(path.read_text(encoding="utf-8-sig"))
+    except json.JSONDecodeError as exc:
+        fail(f"invalid JSON {path.relative_to(ROOT)}: {exc}")
+    if not isinstance(value, dict):
+        fail(f"{path.relative_to(ROOT)} must be an object")
+    return value
 
 
 def require(blob: str, needle: str, label: str) -> None:
@@ -205,27 +219,60 @@ def check_upstream_watch_local_paths() -> None:
 legacy_scanner_selftest()
 
 
+binding = load_json(BINDING)
+binding_schema = load_json(BINDING_SCHEMA)
+if binding_schema.get("$id") != "velvetos.instance-windows-host-binding.v1":
+    fail("Windows host-binding schema id drift")
+expected_binding_env = {
+    "VELVET_ROOT": r"D:\Velvet",
+    "VELVETOS_REPO_ROOT": r"D:\Velvet\Repos\velvetos-core",
+    "VELVETOS_RUNTIME_ROOT": r"D:\Velvet\Runtime\VelvetOS",
+    "VELVETOS_STATE_ROOT": r"D:\Velvet\State\VelvetOS",
+    "VELVETOS_HOST_ID": "sderot-windows",
+}
+if binding.get("schema") != "velvetos.instance-windows-host-binding.v1":
+    fail("Windows host binding schema drift")
+if binding.get("instanceId") != "velvet-factory" or binding.get("platform") != "Windows":
+    fail("Windows host binding identity/platform drift")
+if binding.get("hostId") != "sderot-windows" or binding.get("hostRole") != "fallback-office-worker":
+    fail("Windows host binding host identity/role drift")
+if binding.get("machineScopeRequired") is not True or binding.get("fallbackToUserProfile") is not False:
+    fail("Windows host binding must require machine scope and forbid user-profile fallback")
+if binding.get("environment") != expected_binding_env:
+    fail("Windows host binding environment drift")
+expected_lanes = {
+    "repos", "workspaces", "data", "artifacts", "logs", "cache", "tmp",
+    "tools", "services", "migration", "backups", "archive",
+}
+if set((binding.get("lanes") or {})) != expected_lanes:
+    fail("Windows host binding lane vocabulary drift")
+
 contract = CONTRACT.read_text(encoding="utf-8")
 for needle in (
-    r"D:\Velvet\Workspaces",
-    r"D:\Velvet\Data",
-    r"D:\Velvet\Artifacts",
-    r"D:\Velvet\Logs",
-    r"D:\Velvet\Cache",
-    r"D:\Velvet\Tmp",
-    r"D:\Velvet\Backups",
-    r"VELVET_ROOT=D:\Velvet",
-    r"VELVETOS_REPO_ROOT=D:\Velvet\Repos\velvetos-core",
-    r"VELVETOS_RUNTIME_ROOT=D:\Velvet\Runtime\VelvetOS",
-    r"VELVETOS_STATE_ROOT=D:\Velvet\State\VelvetOS",
+    r"%VELVET_ROOT%\Workspaces",
+    r"%VELVET_ROOT%\Data",
+    r"%VELVET_ROOT%\Artifacts",
+    r"%VELVET_ROOT%\Logs",
+    r"%VELVET_ROOT%\Cache",
+    r"%VELVET_ROOT%\Tmp",
+    r"%VELVET_ROOT%\Backups",
+    "VELVET_ROOT=<absolute Windows root for VelvetOS work>",
+    "VELVETOS_REPO_ROOT=<absolute checkout path for velvetos-core>",
+    "VELVETOS_RUNTIME_ROOT=<absolute rebuildable/runtime root>",
+    "VELVETOS_STATE_ROOT=<absolute persistent host-state root>",
+    "VELVETOS_HOST_ID=<explicit host identifier>",
     "## Default working path and forbidden locations",
     r"%USERPROFILE%\Desktop",
-    "If D: is unavailable, stop and report it",
+    "If a required machine variable is unavailable, stop and report it",
     "## Compatibility rule",
     "fallbacks are closed (fail closed)",
-    "Mac hosts are out of scope",
+    "macOS hosts are out of scope",
+    "instance/private deployment bindings",
 ):
     require(contract, needle, "path contract")
+for leaked in (r"D:\Velvet", "Sderot", "sderot-windows", "Chris"):
+    if leaked in contract:
+        fail(f"generic Windows path contract leaks instance/private value: {leaked}")
 compat = contract.split("## Compatibility rule", 1)[1].split("\n## ", 1)[0]
 for stale in ("During migration only", "may fall back", "rollback/commissioning safety net"):
     if stale in compat:
@@ -233,13 +280,14 @@ for stale in ("During migration only", "may fall back", "rollback/commissioning 
 
 for rel, needles in {
     "scripts/bootstrap-edge-host-windows.ps1": (
-        "VELVET_ROOT", "VELVETOS_REPO_ROOT", "VELVETOS_RUNTIME_ROOT", "VELVETOS_STATE_ROOT", "$TmpRoot", FAIL_CLOSED_PS
+        "VELVET_ROOT", "VELVETOS_REPO_ROOT", "VELVETOS_RUNTIME_ROOT", "VELVETOS_STATE_ROOT",
+        "VELVETOS_HOST_ID", "$TmpRoot", FAIL_CLOSED_PS
     ),
     "scripts/bootstrap-speech-host-windows.ps1": (
-        "VELVET_ROOT", "VELVETOS_REPO_ROOT", "VELVETOS_STATE_ROOT", "$TmpRoot", FAIL_CLOSED_PS
+        "VELVET_ROOT", "VELVETOS_REPO_ROOT", "VELVETOS_STATE_ROOT", "VELVETOS_HOST_ID", "$TmpRoot", FAIL_CLOSED_PS
     ),
     "scripts/bootstrap-manim-host-windows.ps1": (
-        "VELVET_ROOT", "VELVETOS_RUNTIME_ROOT", "VELVETOS_STATE_ROOT", "$TmpRoot", FAIL_CLOSED_PS
+        "VELVET_ROOT", "VELVETOS_RUNTIME_ROOT", "VELVETOS_STATE_ROOT", "VELVETOS_HOST_ID", "$TmpRoot", FAIL_CLOSED_PS
     ),
     "packages/vfmem/scripts/vf_cognee_runtime.py": ("VELVETOS_RUNTIME_ROOT", 'os.name == "nt"'),
     "packages/vfmem/scripts/vf_cognee.py": ("VELVETOS_RUNTIME_ROOT", 'os.name == "nt"'),
@@ -248,8 +296,14 @@ for rel, needles in {
     blob = read(rel)
     for needle in needles:
         require(blob, needle, rel)
-    if r"C:\Users\Chris" in blob:
-        fail(f"Chris-specific absolute path in {rel}")
+    for leaked in (r"D:\Velvet", "sderot-windows", "Sderot Windows", r"C:\Users\Chris"):
+        if leaked in blob:
+            fail(f"instance/private Windows binding leaked into {rel}: {leaked}")
+
+media_wrapper = read("scripts/bootstrap-media-host-windows.ps1")
+for leaked in (r"D:\Velvet", "sderot-windows", "Sderot Windows", r"C:\Users\Chris"):
+    if leaked in media_wrapper:
+        fail(f"instance/private Windows binding leaked into media wrapper: {leaked}")
 
 for rel in (
     "scripts/bootstrap-edge-host-windows.ps1",
@@ -284,8 +338,11 @@ if not rule.startswith("---\n"):
 front = rule.split("\n---", 1)[0]
 if "alwaysApply: true" not in front:
     fail(".cursor/rules/windows-d-paths.mdc must be alwaysApply: true")
-for needle in ("WINDOWS-PATH-CONTRACT.md", r"D:\Velvet", "Desktop", "C:", "VELVETOS_RUNTIME_ROOT"):
+for needle in ("WINDOWS-PATH-CONTRACT.md", r"%VELVET_ROOT%", "Desktop", "VELVETOS_RUNTIME_ROOT", "VELVETOS_HOST_ID"):
     require(rule, needle, ".cursor/rules/windows-d-paths.mdc")
+for leaked in (r"D:\Velvet", "sderot-windows", "Sderot Windows", "Chris"):
+    if leaked in rule:
+        fail(f"generic Windows cursor rule leaks instance/private value: {leaked}")
 
 hosts = json.loads(read("packages/vfmcp/RENDER-HOSTS.json"))
 windows = hosts["hosts"]["sderot-windows"]
@@ -314,8 +371,9 @@ if r"C:\Users\Chris" in prompts:
 
 openpost = json.loads(read("packages/vfigos/OPENPOST.json"))
 persistence = (openpost.get("runtime") or {}).get("persistence") or {}
-if persistence.get("startScript") != r"D:\Velvet\Services\OpenPost\staging\start-openpost-staging.ps1":
-    fail("OpenPost staging startScript must live under D:\\Velvet\\Services")
+expected_openpost = str(PureWindowsPath(binding["environment"]["VELVET_ROOT"]) / "Services" / "OpenPost" / "staging" / "start-openpost-staging.ps1")
+if persistence.get("startScript") != expected_openpost:
+    fail("OpenPost staging startScript must match the selected instance Windows service lane")
 if str(persistence.get("startScriptSha256") or "").lower() != "2d5541e4c2b7017c9d34212e78e53c02ee6f144f0e54cf1b1f68defbfed03bd0":
     fail("OpenPost staging startScript SHA drift")
 
@@ -323,5 +381,6 @@ fallback = read("packages/vfmcp/WINDOWS-EDGE-FALLBACK.md")
 require(fallback, "WINDOWS-PATH-CONTRACT.md", "Windows fallback playbook")
 require(fallback, r"%VELVETOS_STATE_ROOT%\edge-host.json", "Windows fallback playbook")
 
-print("OK windows-path-contract vars=4 workspaces+datalanes+services default-path-section=yes "
-      f"legacy-fallback=closed windows-ps1={len(windows_ps)} nt-sim=3 cursor-rule=yes chris-absolute=0")
+print("OK windows-path-contract vars=5 instance-binding=yes concrete-core=0 "
+      "workspaces+datalanes+services default-path-section=yes "
+      f"legacy-fallback=closed windows-ps1={len(windows_ps)} nt-sim=3 cursor-rule=yes")

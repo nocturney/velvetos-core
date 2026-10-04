@@ -18,6 +18,7 @@
     "toolDesk": ".cursor/vf-desk.json",
     "fleet": "instance/fleet.json",
     "toolStatus": "instance/tool-status.json",
-    "chatgptProject": "distribution/chatgpt-project/LATEST.json"
+    "chatgptProject": "distribution/chatgpt-project/LATEST.json",
+    "windowsHostBinding": "instance/windows-host-binding.json"
   }
 }

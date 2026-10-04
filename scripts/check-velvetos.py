@@ -100,6 +100,7 @@ def check_instance_resolver_contract(vf_inst: Path, meta: dict) -> None:
         "fleet": "instance/fleet.json",
         "toolStatus": "instance/tool-status.json",
         "chatgptProject": "distribution/chatgpt-project/LATEST.json",
+        "windowsHostBinding": "instance/windows-host-binding.json",
     }
     if meta.get("surfaceContractVersion") != 1:
         fail("instance surfaceContractVersion must be 1")
@@ -125,8 +126,8 @@ def check_instance_resolver_contract(vf_inst: Path, meta: dict) -> None:
     if surface_schema.get("required") != ["profile"]:
         fail("generic instance manifest must require profile only; domain surfaces stay optional")
     surface_props = surface_schema.get("properties") or {}
-    if not {"profile", "toolDesk", "fleet", "toolStatus", "chatgptProject"} <= set(surface_props):
-        fail("instance-manifest schema must expose profile/toolDesk/fleet/toolStatus/chatgptProject surface vocabulary")
+    if not {"profile", "toolDesk", "fleet", "toolStatus", "chatgptProject", "windowsHostBinding"} <= set(surface_props):
+        fail("instance-manifest schema must expose profile/toolDesk/fleet/toolStatus/chatgptProject/windowsHostBinding surface vocabulary")
 
     canonical_fleet = load(vf_inst / surfaces["fleet"])
     legacy_fleet = load(ROOT / "packages" / "vfprod" / "FLEET.json")

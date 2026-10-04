@@ -115,7 +115,7 @@ def main() -> None:
     help_check = subprocess.run([sys.executable, str(ADAPTER), "--help"], cwd=ROOT, text=True, capture_output=True, timeout=15)
     if help_check.returncode != 0:
         fail(f"speech adapter import/help failed: {(help_check.stderr or help_check.stdout).strip()[:500]}")
-    win_bootstrap = require_text(WIN, "sderot-windows", "VoiceStudio_Current_User_", "latest-compatible", "VoiceStudioMinimumVersion", "VoiceStudioRecoveryVersion", "vf_speech.py", "windows-speech-smoke", "speechSmoke", "/engines/select", "commercialPublish = $false")
+    win_bootstrap = require_text(WIN, 'GetEnvironmentVariable("VELVETOS_HOST_ID")', "FAIL VELVETOS_HOST_ID is not set.", "VoiceStudio_Current_User_", "latest-compatible", "VoiceStudioMinimumVersion", "VoiceStudioRecoveryVersion", "vf_speech.py", "windows-speech-smoke", "speechSmoke", "/engines/select", "commercialPublish = $false")
     if "Downloading pinned VoiceStudio" in win_bootstrap or "$VoiceStudioVersion =" in win_bootstrap:
         fail("Windows speech bootstrap must not exact-pin normal VoiceStudio execution")
     require_text(WRAPPER, "bootstrap-edge-host-windows.ps1", "bootstrap-speech-host-windows.ps1", "Remote Desktop Commander")

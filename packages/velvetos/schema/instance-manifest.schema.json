@@ -58,6 +58,9 @@
         },
         "chatgptProject": {
           "$ref": "#/$defs/relativePath"
+        },
+        "windowsHostBinding": {
+          "$ref": "#/$defs/relativePath"
         }
       }
     },

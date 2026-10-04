@@ -1,21 +1,20 @@
 ---
-description: 'Windows host paths. Default working path is D:\Velvet (VELVET_ROOT) per the Windows path contract; never the Desktop, never new VelvetOS files on C:.'
+description: 'Windows host paths. Resolve the default working root from VELVET_ROOT per the Windows path contract; never the Desktop or an implicit user-profile fallback.'
 globs: ""
 alwaysApply: true
 ---
 
 # Windows host paths · always on
 
-Authority: `packages/velvetos/WINDOWS-PATH-CONTRACT.md` ("Default working path and forbidden locations" + "Compatibility rule").
+Authority: `packages/velvetos/WINDOWS-PATH-CONTRACT.md`. Concrete host ids and absolute path values belong to the selected instance/private `windowsHostBinding` plus machine environment.
 
-On the Windows host:
+On a Windows host:
 
-- Work from `D:\Velvet` (`VELVET_ROOT`). Put each output in its lane: clones in `D:\Velvet\Repos`, worktrees/scratch in `D:\Velvet\Workspaces`, exports/handoffs in `D:\Velvet\Artifacts`, temp files in `D:\Velvet\Tmp`, logs in `D:\Velvet\Logs`.
+- Work from `%VELVET_ROOT%`. Put outputs in the contract lanes: `Repos`, `Workspaces`, `Artifacts`, `Tmp`, `Logs`, and the other declared relative lanes.
 - Never use the Desktop (`%USERPROFILE%\Desktop`, including a OneDrive Desktop) for clones, scratch, downloads or output.
-- Never create new VelvetOS files on C:. Profile-bound state listed in the contract stays where it is.
-- Resolve paths through `VELVET_ROOT`, `VELVETOS_REPO_ROOT`, `VELVETOS_RUNTIME_ROOT` and `VELVETOS_STATE_ROOT`. The legacy `%USERPROFILE%\.velvetos` and `%USERPROFILE%\velvetos-core` fallbacks are closed: if a variable is missing, stop with a clear error; do not fall back to C:.
-- If D: is unavailable, stop and report it.
-
-Mac hosts (`sderot-mac`) keep `~/.velvetos`; this rule covers the Windows host only.
+- Never create new VelvetOS files on the system drive outside profile-bound state explicitly allowed by the contract.
+- Resolve paths through `VELVET_ROOT`, `VELVETOS_REPO_ROOT`, `VELVETOS_RUNTIME_ROOT` and `VELVETOS_STATE_ROOT`; resolve host identity through `VELVETOS_HOST_ID`.
+- Legacy `%USERPROFILE%\.velvetos` and `%USERPROFILE%\velvetos-core` fallbacks are closed. If a required variable is missing, stop with a clear error; do not infer a fallback.
+- macOS hosts keep their platform-specific path/state contract and are out of scope for this rule.
 
 Sensor: `python3 scripts/check-windows-path-contract.py`.
