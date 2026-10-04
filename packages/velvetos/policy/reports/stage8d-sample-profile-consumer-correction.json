@@ -1,0 +1,89 @@
+{
+  "schema": "velvetos.stage8d-sample-profile-consumer-correction.v1",
+  "stage": "8D_SAMPLE_PROFILE_CONSUMER_CORRECTION",
+  "behavior_change": true,
+  "prepared_against_main_sha": "bde52ea50c8c72930248d0b7e669bff759bce9c3",
+  "source_commit_sha": "6ed421104c214884b9e2126808cb20741c7ea336",
+  "captured_at": "2026-10-04T23:00:49.1954381+03:00",
+  "surface_id": "sample_profile",
+  "path": "packages/velvetos/samples/velvet-factory.json",
+  "canonical_path": "instances/velvet-factory/instance/velvet-factory.json",
+  "purpose": "Correct an exact-string consumer-scan blind spot discovered after PR #529. Migrate the hidden public-CTA validation consumer to canonical instance authority, supersede the prior rollback-window closure for deletion purposes, and reopen the observation window without deleting the legacy sample.",
+  "discovery": {
+    "previous_closure_receipt": "packages/velvetos/policy/reports/stage8d-sample-profile-rollback-closure.json",
+    "previous_closure_pull_request": 529,
+    "scan_blind_spot": "LEGACY_PATH_ASSEMBLED_FROM_PATH_SEGMENTS",
+    "hidden_consumer": "scripts/check-public-cta.py",
+    "prepared_against_active_semantic_refs": [
+      "scripts/check-public-cta.py"
+    ],
+    "prepared_against_evidence_refs": [
+      "scripts/check-policy-architecture.py",
+      "scripts/generate-stage8a-core-instance-inventory.py",
+      "scripts/generate-stage8b-instance-resolver-foundation.py",
+      "scripts/generate-stage8c-closure.py",
+      "scripts/generate-stage8c-sample-profile-consumers.py",
+      "scripts/generate-stage8d-post-migration-readiness.py",
+      "scripts/generate-stage8d-retirement-readiness.py",
+      "scripts/generate-stage8d-sample-profile-rollback-closure.py"
+    ]
+  },
+  "correction": {
+    "hidden_consumer_migrated": true,
+    "canonical_instance_validation_retained": true,
+    "active_semantic_legacy_refs_after": [],
+    "evidence_refs_after": [
+      "scripts/check-policy-architecture.py",
+      "scripts/generate-stage8a-core-instance-inventory.py",
+      "scripts/generate-stage8b-instance-resolver-foundation.py",
+      "scripts/generate-stage8c-closure.py",
+      "scripts/generate-stage8c-sample-profile-consumers.py",
+      "scripts/generate-stage8d-post-migration-readiness.py",
+      "scripts/generate-stage8d-retirement-readiness.py",
+      "scripts/generate-stage8d-sample-profile-consumer-correction.py",
+      "scripts/generate-stage8d-sample-profile-rollback-closure.py"
+    ],
+    "legacy_present_after_correction": true,
+    "legacy_unchanged": true,
+    "canonical_legacy_module_parity": true
+  },
+  "rollback_window": {
+    "previous_closure_receipt_preserved": true,
+    "previous_closure_superseded_for_retirement": true,
+    "reopened": true,
+    "closed": false,
+    "closure_evidence": null,
+    "reclosure_requires_fresh_downstream_main_full_suite_observation": true
+  },
+  "acceptance_criteria": {
+    "historical_stage8c_receipt_is_preserved": true,
+    "pr529_closure_receipt_is_preserved_as_historical_evidence": true,
+    "hidden_consumer_is_detected_by_semantic_scan": true,
+    "hidden_consumer_is_migrated_to_canonical_instance_only": true,
+    "no_active_semantic_legacy_sample_consumers_remain": true,
+    "legacy_sample_remains_present_and_unchanged": true,
+    "canonical_legacy_module_parity_is_preserved": true,
+    "external_effect_authority_is_unchanged": true,
+    "previous_rollback_closure_is_superseded_not_used_for_deletion": true,
+    "rollback_window_is_reopened_for_fresh_downstream_observation": true,
+    "delete_authority_remains_false": true
+  },
+  "repository_assessment": "PASS",
+  "rollback_window_closed": false,
+  "retirement_ready_for_deletion_gate": false,
+  "delete_authorized": false,
+  "retirement_authorized": false,
+  "next_action": "Merge this correction, verify main post-merge, then collect fresh downstream main full-suite observations after the hidden-consumer cutover. Only a new explicit rollback re-closure receipt may make sample_profile eligible for a later isolated deletion gate.",
+  "authority": {
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false
+  },
+  "constraints": [
+    "do not delete the legacy sample in this correction",
+    "PR #529 closure is historical evidence but is superseded for retirement authority",
+    "rollback re-closure requires fresh post-correction evidence",
+    "no big-bang delete",
+    "external-effect authority must remain unchanged"
+  ]
+}

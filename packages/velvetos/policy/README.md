@@ -602,3 +602,9 @@ The gate is prepared against merged main `aa6e163fa635a540e11bd8f40fd65d08bc0c4a
 The observation window contains 18 `VelvetOS Core Sensors` main-push runs: 17 successful and one failure. The failure was `check-vfresearch.py` after a provider-readback pointer refresh, explicitly unrelated to `sample_profile`; PR #519 snapshot-bound the historical Stage 7C replay and all 10 observed main runs from that repair through `c344ecb1` are green. Closure authority therefore comes from classified operational evidence, not from elapsed time.
 
 The legacy sample remains physically present. `rollback_window_closed=true` means the observation window is explicitly closed for this one surface; it does **not** mean the file is deleted or that deletion is already authorized. `delete_authorized=false` and `retirement_authorized=false` remain in force. A separate isolated retirement gate must revalidate consumers, parity/closure evidence, current main CI and external-effect authority before it can authorize deletion.
+
+## Reform v2 Stage 8D - Sample-profile hidden-consumer correction
+
+A retirement preflight found that `scripts/check-public-cta.py` still read the legacy sample through a path assembled from `Path` segments. The earlier exact-string scan therefore undercounted active consumers. The hidden consumer is now migrated to the canonical instance profile, and `reports/stage8d-sample-profile-consumer-correction.json` records a semantic scan that proves one active reference before the fix and zero after it.
+
+PR #529's rollback-closure receipt remains preserved as historical evidence, but it is explicitly superseded for retirement authority. The `sample_profile` rollback window is reopened, `retirement_ready_for_deletion_gate=false`, and `delete_authorized=false`. Fresh downstream main full-suite observations after this corrective cutover are required before a new explicit re-closure receipt may make this surface eligible for deletion.

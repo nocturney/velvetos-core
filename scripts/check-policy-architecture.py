@@ -74,6 +74,8 @@ STAGE8D_POST_MIGRATION = REPORTS / "stage8d-post-migration-readiness.json"
 STAGE8D_POST_MIGRATION_GENERATOR = ROOT / "scripts" / "generate-stage8d-post-migration-readiness.py"
 STAGE8D_SAMPLE_ROLLBACK_CLOSURE = REPORTS / "stage8d-sample-profile-rollback-closure.json"
 STAGE8D_SAMPLE_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-sample-profile-rollback-closure.py"
+STAGE8D_SAMPLE_CONSUMER_CORRECTION = REPORTS / "stage8d-sample-profile-consumer-correction.json"
+STAGE8D_SAMPLE_CONSUMER_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-sample-profile-consumer-correction.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -112,6 +114,7 @@ EXPECTED_REPORTS = {
     "stage8d-chatgpt-core-consumer-migration.json",
     "stage8d-post-migration-readiness.json",
     "stage8d-sample-profile-rollback-closure.json",
+    "stage8d-sample-profile-consumer-correction.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -3086,6 +3089,123 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated8ds.read_bytes() == STAGE8D_SAMPLE_ROLLBACK_CLOSURE.read_bytes(),
                         "Stage 8D sample rollback closure receipt is not reproducible",
+                        problems,
+                    )
+
+    if STAGE8D_SAMPLE_CONSUMER_CORRECTION.is_file():
+        fix8ds = load(STAGE8D_SAMPLE_CONSUMER_CORRECTION)
+        require(
+            fix8ds.get("schema") == "velvetos.stage8d-sample-profile-consumer-correction.v1"
+            and fix8ds.get("stage") == "8D_SAMPLE_PROFILE_CONSUMER_CORRECTION"
+            and fix8ds.get("behavior_change") is True
+            and fix8ds.get("surface_id") == "sample_profile"
+            and fix8ds.get("repository_assessment") == "PASS",
+            "Stage 8D sample consumer correction metadata drift",
+            problems,
+        )
+        discovery8ds = fix8ds.get("discovery") or {}
+        require(
+            discovery8ds.get("previous_closure_pull_request") == 529
+            and discovery8ds.get("scan_blind_spot") == "LEGACY_PATH_ASSEMBLED_FROM_PATH_SEGMENTS"
+            and discovery8ds.get("hidden_consumer") == "scripts/check-public-cta.py"
+            and discovery8ds.get("prepared_against_active_semantic_refs") == ["scripts/check-public-cta.py"],
+            "Stage 8D sample hidden-consumer discovery drift",
+            problems,
+        )
+        correction8ds = fix8ds.get("correction") or {}
+        require(
+            correction8ds.get("hidden_consumer_migrated") is True
+            and correction8ds.get("canonical_instance_validation_retained") is True
+            and correction8ds.get("active_semantic_legacy_refs_after") == []
+            and correction8ds.get("legacy_present_after_correction") is True
+            and correction8ds.get("legacy_unchanged") is True
+            and correction8ds.get("canonical_legacy_module_parity") is True,
+            "Stage 8D sample hidden-consumer correction drift",
+            problems,
+        )
+        rollback_fix8ds = fix8ds.get("rollback_window") or {}
+        require(
+            rollback_fix8ds.get("previous_closure_receipt_preserved") is True
+            and rollback_fix8ds.get("previous_closure_superseded_for_retirement") is True
+            and rollback_fix8ds.get("reopened") is True
+            and rollback_fix8ds.get("closed") is False
+            and rollback_fix8ds.get("closure_evidence") is None
+            and rollback_fix8ds.get("reclosure_requires_fresh_downstream_main_full_suite_observation") is True,
+            "Stage 8D sample rollback window must be reopened after hidden-consumer discovery",
+            problems,
+        )
+        expected_fix8ds = {
+            "historical_stage8c_receipt_is_preserved",
+            "pr529_closure_receipt_is_preserved_as_historical_evidence",
+            "hidden_consumer_is_detected_by_semantic_scan",
+            "hidden_consumer_is_migrated_to_canonical_instance_only",
+            "no_active_semantic_legacy_sample_consumers_remain",
+            "legacy_sample_remains_present_and_unchanged",
+            "canonical_legacy_module_parity_is_preserved",
+            "external_effect_authority_is_unchanged",
+            "previous_rollback_closure_is_superseded_not_used_for_deletion",
+            "rollback_window_is_reopened_for_fresh_downstream_observation",
+            "delete_authority_remains_false",
+        }
+        criteria_fix8ds = fix8ds.get("acceptance_criteria") or {}
+        require(
+            set(criteria_fix8ds) == expected_fix8ds
+            and all(criteria_fix8ds.get(k) is True for k in expected_fix8ds),
+            "Stage 8D sample consumer correction criteria drift or fail",
+            problems,
+        )
+        require(
+            fix8ds.get("rollback_window_closed") is False
+            and fix8ds.get("retirement_ready_for_deletion_gate") is False
+            and fix8ds.get("delete_authorized") is False
+            and fix8ds.get("retirement_authorized") is False,
+            "Stage 8D sample correction must block retirement",
+            problems,
+        )
+        authority_fix8ds = fix8ds.get("authority") or {}
+        require(
+            authority_fix8ds.get("external_effect_authority_changed") is False
+            and authority_fix8ds.get("policy_registry_sha256")
+            == authority_fix8ds.get("prepared_against_policy_registry_sha256"),
+            "Stage 8D sample consumer correction changed authority",
+            problems,
+        )
+        current_public_cta = (ROOT / "scripts" / "check-public-cta.py").read_text(encoding="utf-8")
+        require(
+            "sample_path" not in current_public_cta
+            and "packages/velvetos/samples/velvet-factory.json" not in current_public_cta,
+            "public CTA sensor reintroduced the legacy sample consumer",
+            problems,
+        )
+        if STAGE8D_SAMPLE_CONSUMER_CORRECTION_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated_fix8ds = Path(td) / "stage8d-sample-profile-consumer-correction.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_SAMPLE_CONSUMER_CORRECTION_GENERATOR),
+                        "--prepared-against", fix8ds["prepared_against_main_sha"],
+                        "--source-commit", fix8ds["source_commit_sha"],
+                        "--captured-at", fix8ds["captured_at"],
+                        "--output", str(regenerated_fix8ds),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D sample consumer correction regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated_fix8ds.is_file():
+                    require(
+                        regenerated_fix8ds.read_bytes() == STAGE8D_SAMPLE_CONSUMER_CORRECTION.read_bytes(),
+                        "Stage 8D sample consumer correction receipt is not reproducible",
                         problems,
                     )
 
