@@ -58,6 +58,8 @@ STAGE8C_CHATGPT_DISTRIBUTION = REPORTS / "stage8c-chatgpt-distribution-consumers
 STAGE8C_CHATGPT_DISTRIBUTION_GENERATOR = ROOT / "scripts" / "generate-stage8c-chatgpt-distribution-consumers.py"
 STAGE8C_WINDOWS_HOST = REPORTS / "stage8c-windows-host-binding.json"
 STAGE8C_WINDOWS_HOST_GENERATOR = ROOT / "scripts" / "generate-stage8c-windows-host-binding.py"
+STAGE8C_CLOSURE = REPORTS / "stage8c-closure.json"
+STAGE8C_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8c-closure.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -88,6 +90,7 @@ EXPECTED_REPORTS = {
     "stage8c-expert-modules.json",
     "stage8c-chatgpt-distribution-consumers.json",
     "stage8c-windows-host-binding.json",
+    "stage8c-closure.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -2210,6 +2213,127 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated8cw.is_file():
                     require(regenerated8cw.read_bytes() == STAGE8C_WINDOWS_HOST.read_bytes(),
                             "Stage 8C Windows host-binding receipt is not reproducible", problems)
+
+    if STAGE8C_CLOSURE.is_file():
+        closure8c = load(STAGE8C_CLOSURE)
+        require(
+            closure8c.get("schema") == "velvetos.stage8c-closure.v1"
+            and closure8c.get("stage") == "8C_CLOSURE"
+            and closure8c.get("behavior_change") is False
+            and closure8c.get("repository_acceptance") == "PASS",
+            "Stage 8C closure metadata drift",
+            problems,
+        )
+        criteria8cc = closure8c.get("acceptance_criteria") or {}
+        expected8cc = {
+            "all_stage8c_inventory_surfaces_have_passed_migration_receipts",
+            "all_stage8c_domain_receipts_pass_their_full_acceptance_criteria",
+            "no_unsclassified_direct_legacy_consumers_remain_in_migrated_domains",
+            "core_resolution_is_explicit_and_fail_closed_across_migrated_domains",
+            "rollback_compatibility_paths_remain_present",
+            "legacy_paths_remain_protected_from_stage8c_deletion",
+            "external_effect_authority_is_unchanged_across_stage8",
+            "final_stage8c_domain_reports_no_remaining_stage8c_domains",
+            "main_full_sensor_suite_116_of_116",
+        }
+        require(
+            set(criteria8cc) == expected8cc
+            and all(criteria8cc.get(key) is True for key in expected8cc),
+            "Stage 8C closure criteria drift or fail",
+            problems,
+        )
+        sources8cc = closure8c.get("source_receipts") or {}
+        expected_sources8cc = {
+            "stage8a_inventory",
+            "stage8b_resolver",
+            "stage8b_config",
+            "sample_profile",
+            "root_desk_readers",
+            "desk_catalog_bindings",
+            "living_studio",
+            "control_api_fleet",
+            "expert_modules",
+            "chatgpt_distribution",
+            "windows_host_binding",
+        }
+        require(set(sources8cc) == expected_sources8cc,
+                "Stage 8C closure source receipt set drift", problems)
+        for name8cc, meta8cc in sources8cc.items():
+            path8cc = ROOT / str((meta8cc or {}).get("path") or "")
+            require(path8cc.is_file(), f"Stage 8C closure source missing: {name8cc}", problems)
+            if path8cc.is_file():
+                obj8cc = load(path8cc)
+                canonical8cc = hashlib.sha256(
+                    json.dumps(obj8cc, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+                ).hexdigest()
+                require(canonical8cc == (meta8cc or {}).get("canonical_json_sha256"),
+                        f"Stage 8C closure source hash drift: {name8cc}", problems)
+        coverage8cc = closure8c.get("inventory_coverage") or {}
+        require(
+            coverage8cc.get("stage8c_surface_count") == 7
+            and len(coverage8cc.get("stage8c_surface_ids") or []) == 7
+            and coverage8cc.get("all_covered") is True,
+            "Stage 8C closure inventory coverage drift",
+            problems,
+        )
+        rollback8cc = closure8c.get("rollback_compatibility") or {}
+        require(
+            rollback8cc.get("all_present") is True
+            and rollback8cc.get("deletion_authorized") is False
+            and len(rollback8cc.get("paths") or []) == 5,
+            "Stage 8C closure rollback compatibility drift",
+            problems,
+        )
+        authority8cc = closure8c.get("authority") or {}
+        require(authority8cc.get("external_effect_authority_changed") is False,
+                "Stage 8C closure changed external-effect authority", problems)
+        main8cc = closure8c.get("main_full_suite") or {}
+        require(
+            main8cc.get("head_sha") == closure8c.get("prepared_against_main_sha")
+            and main8cc.get("conclusion") == "SUCCESS"
+            and main8cc.get("mode") == "full"
+            and main8cc.get("registered_sensors") == 116
+            and main8cc.get("passed_sensors") == 116
+            and main8cc.get("log_markers") == ["SENSORS 116 mode=full", "OK suite passed=116"],
+            "Stage 8C closure main full-suite evidence drift",
+            problems,
+        )
+        entry8d = closure8c.get("stage8d_entry") or {}
+        require(
+            closure8c.get("next_stage") == "Stage 8D — Legacy retirement"
+            and entry8d.get("allowed") is True
+            and "rollback window" in str(entry8d.get("constraint") or "")
+            and "no big-bang delete" in str(entry8d.get("constraint") or ""),
+            "Stage 8D entry contract drift",
+            problems,
+        )
+        if STAGE8C_CLOSURE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8cc = Path(td) / "stage8c-closure.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8C_CLOSURE_GENERATOR),
+                        "--prepared-against", closure8c["prepared_against_main_sha"],
+                        "--captured-at", closure8c["captured_at"],
+                        "--main-run-id", str(main8cc["workflow_run_id"]),
+                        "--main-job-id", str(main8cc["job_id"]),
+                        "--main-run-url", main8cc["run_url"],
+                        "--output", str(regenerated8cc),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0,
+                        "Stage 8C closure regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()),
+                        problems)
+                if proc.returncode == 0 and regenerated8cc.is_file():
+                    require(regenerated8cc.read_bytes() == STAGE8C_CLOSURE.read_bytes(),
+                            "Stage 8C closure receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)
