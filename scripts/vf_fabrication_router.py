@@ -338,7 +338,9 @@ def _host_text_to_cad_root() -> Path:
 
 
 def _host_python(repo: Path) -> Path:
-    return (repo / ".venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")).resolve()
+    # Do not resolve the venv launcher symlink on macOS/uv; the launcher path
+    # is what makes Python honor the venv's pyvenv.cfg and installed packages.
+    return repo / ".venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
 
 
 def _run(cmd: list[str], *, cwd: Path | None = None, env: dict | None = None) -> dict:

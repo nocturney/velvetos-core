@@ -47,7 +47,8 @@ def main() -> None:
     for needle in ("TEXT_TO_CAD", "BLENDER_NATIVE", "HYBRID_CAD_THEN_BLENDER",
                    "127.0.0.1", "BLENDER_RPC_PORT", "configured_rpc_port",
                    "component_version", "detect_blender", "blender_addon_state",
-                   "blender_rpc_probe", "MCP_SURFACE_PROFILE", "llm-guided",
+                   "blender_rpc_probe", "host_benchmark", "windows_benchmark",
+                   "MCP_SURFACE_PROFILE", "llm-guided",
                    "HF_HUB_OFFLINE", "VISION_ENABLED", "physical_print_authorized"):
         if needle not in source:
             fail(f"router missing contract: {needle}")

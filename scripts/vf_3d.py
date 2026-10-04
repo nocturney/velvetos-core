@@ -433,7 +433,7 @@ def doctor() -> dict:
     design_acceptance_current = bool(
         dos_receipt_current
         and dos_blender_evidence_current
-        and dos_runtime.get("windows_benchmark") == "PASS"
+        and (dos_runtime.get("host_benchmark") or dos_runtime.get("windows_benchmark")) == "PASS"
         and dos_runtime.get("production_geometry_gate") == "PASS"
         and dos_runtime.get("declared_part_coverage_audit") == "PASS"
     )
