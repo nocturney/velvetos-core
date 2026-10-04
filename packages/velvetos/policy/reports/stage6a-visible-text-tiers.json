@@ -1,0 +1,250 @@
+{
+  "schema": "velvetos.stage6a-visible-text-tiers.v1",
+  "stage": "6A",
+  "behavior_change": true,
+  "prepared_against_main_sha": "c1959a6c663d8d363545b5bc9ed8f30a1758941a",
+  "captured_at": "2026-10-04T07:53:37.0614844+03:00",
+  "stage5_entry": {
+    "receipt": "packages/velvetos/policy/reports/stage5-acceptance.json",
+    "gate": "PASS",
+    "stage6_allowed": true
+  },
+  "before": {
+    "source_sha256": "65bc8ccde1e49c00cf33d611fdbaf4d04bdcf03ae086a2f3485ee6965019496f",
+    "model": "UNIVERSAL_FULL_CHAIN",
+    "universal_required_evidence": [
+      "truth_checked",
+      "reader_first",
+      "copy_authority",
+      "humanizer_ai_tells",
+      "domain_tools_recorded",
+      "surface_qa"
+    ],
+    "universal_required_count": 6,
+    "public_extras_preserved": [
+      "marketing_aids_disposition",
+      "no_text_compared"
+    ]
+  },
+  "after": {
+    "source_sha256": "b7d1782c98715861a835ce88e6c04c655a7e77a2965f3bf5707fbe980560b089",
+    "model": "RISK_AND_SURFACE_TIERS",
+    "tier_contract_version": 1,
+    "safe_default_by_surface": {
+      "public-social": "PUBLIC_PUBLISH",
+      "visual-microcopy": "PUBLIC_PUBLISH",
+      "customer-message": "EXTERNAL_COMMITMENT",
+      "sales-proposal": "EXTERNAL_COMMITMENT",
+      "owner-brief": "FINAL_INTERNAL",
+      "human-document": "FINAL_INTERNAL",
+      "ui-microcopy": "FINAL_INTERNAL",
+      "desk": "FINAL_INTERNAL"
+    },
+    "tier_required_evidence_counts": {
+      "DRAFT_INTERNAL": 1,
+      "FINAL_INTERNAL_routine": 2,
+      "FINAL_INTERNAL_sensitive": 5,
+      "EXTERNAL_COMMITMENT": 4,
+      "PUBLIC_PUBLISH": 6
+    },
+    "ceremony_reduction_percent_vs_before": {
+      "DRAFT_INTERNAL": 83.3,
+      "FINAL_INTERNAL_routine": 66.7,
+      "FINAL_INTERNAL_sensitive": 16.7,
+      "EXTERNAL_COMMITMENT": 33.3,
+      "PUBLIC_PUBLISH": 0.0
+    },
+    "heavy_internal_length_threshold_chars": 800,
+    "approved_static_requires_exact_sha": true,
+    "tier_downgrade_fail_closed": true
+  },
+  "behavior_vectors": {
+    "draft_internal_slop_diagnostic": {
+      "tier": "DRAFT_INTERNAL",
+      "surface": "desk",
+      "visible_text_gate": "PASS",
+      "required_evidence": [
+        "truth_checked"
+      ],
+      "missing_evidence": [],
+      "heavy_tools_required": false,
+      "failure_reason": null,
+      "lint_status": "fail_style",
+      "anti_slop_findings": 2,
+      "approved_static_reuse": false,
+      "pass": true
+    },
+    "draft_internal_unverified_price": {
+      "tier": "DRAFT_INTERNAL",
+      "surface": "desk",
+      "visible_text_gate": "FAIL",
+      "required_evidence": [
+        "truth_checked"
+      ],
+      "missing_evidence": [],
+      "heavy_tools_required": false,
+      "failure_reason": "lint_or_fact_gate",
+      "lint_status": "fail_fact",
+      "anti_slop_findings": 0,
+      "approved_static_reuse": false,
+      "pass": true
+    },
+    "final_internal_routine": {
+      "tier": "FINAL_INTERNAL",
+      "surface": "owner-brief",
+      "visible_text_gate": "PASS",
+      "required_evidence": [
+        "truth_checked",
+        "surface_qa"
+      ],
+      "missing_evidence": [],
+      "heavy_tools_required": false,
+      "failure_reason": null,
+      "lint_status": "pass",
+      "anti_slop_findings": 0,
+      "approved_static_reuse": false,
+      "pass": true
+    },
+    "final_internal_sensitive": {
+      "tier": "FINAL_INTERNAL",
+      "surface": "owner-brief",
+      "visible_text_gate": "UNPROVEN",
+      "required_evidence": [
+        "truth_checked",
+        "surface_qa",
+        "reader_first",
+        "copy_authority",
+        "humanizer_ai_tells"
+      ],
+      "missing_evidence": [
+        "reader_first",
+        "copy_authority"
+      ],
+      "heavy_tools_required": true,
+      "failure_reason": null,
+      "lint_status": "pass",
+      "anti_slop_findings": 0,
+      "approved_static_reuse": false,
+      "pass": true
+    },
+    "external_commitment_unbound": {
+      "tier": "EXTERNAL_COMMITMENT",
+      "surface": "customer-message",
+      "visible_text_gate": "UNPROVEN",
+      "required_evidence": [
+        "truth_checked",
+        "reader_first",
+        "surface_qa",
+        "exact_body_bound"
+      ],
+      "missing_evidence": [
+        "exact_body_bound"
+      ],
+      "heavy_tools_required": false,
+      "failure_reason": null,
+      "lint_status": "pass",
+      "anti_slop_findings": 0,
+      "approved_static_reuse": false,
+      "pass": true
+    },
+    "external_commitment_bound": {
+      "tier": "EXTERNAL_COMMITMENT",
+      "surface": "customer-message",
+      "visible_text_gate": "PASS",
+      "required_evidence": [
+        "truth_checked",
+        "reader_first",
+        "surface_qa",
+        "exact_body_bound"
+      ],
+      "missing_evidence": [],
+      "heavy_tools_required": false,
+      "failure_reason": null,
+      "lint_status": "pass",
+      "anti_slop_findings": 0,
+      "approved_static_reuse": false,
+      "pass": true
+    },
+    "public_publish_full": {
+      "tier": "PUBLIC_PUBLISH",
+      "surface": "public-social",
+      "visible_text_gate": "PASS",
+      "required_evidence": [
+        "truth_checked",
+        "reader_first",
+        "copy_authority",
+        "humanizer_ai_tells",
+        "domain_tools_recorded",
+        "surface_qa"
+      ],
+      "missing_evidence": [],
+      "heavy_tools_required": true,
+      "failure_reason": null,
+      "lint_status": "pass",
+      "anti_slop_findings": 0,
+      "approved_static_reuse": false,
+      "pass": true
+    },
+    "approved_static_exact": {
+      "tier": "FINAL_INTERNAL",
+      "surface": "owner-brief",
+      "visible_text_gate": "PASS",
+      "required_evidence": [
+        "truth_checked"
+      ],
+      "missing_evidence": [],
+      "heavy_tools_required": false,
+      "failure_reason": null,
+      "lint_status": "pass",
+      "anti_slop_findings": 0,
+      "approved_static_reuse": true,
+      "pass": true
+    },
+    "approved_static_changed": {
+      "tier": "FINAL_INTERNAL",
+      "surface": "owner-brief",
+      "visible_text_gate": "FAIL",
+      "required_evidence": [
+        "truth_checked",
+        "surface_qa"
+      ],
+      "missing_evidence": [
+        "surface_qa"
+      ],
+      "heavy_tools_required": false,
+      "failure_reason": "approved_static_hash_mismatch",
+      "lint_status": "pass",
+      "anti_slop_findings": 0,
+      "approved_static_reuse": false,
+      "pass": true
+    }
+  },
+  "public_downgrade_blocked": true,
+  "workflow_binding": {
+    "owner_brief_workflows": [
+      ".github/workflows/gmail-brief-send.yml",
+      ".github/workflows/gmail-tool-updates-send.yml"
+    ],
+    "explicit_tier": "FINAL_INTERNAL",
+    "pass": true
+  },
+  "authorization_semantics": {
+    "entry_policy_registry_sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8",
+    "current_policy_registry_sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8",
+    "external_effect_policy_registry_unchanged": true,
+    "visible_text_is_effect_authority": false
+  },
+  "acceptance": {
+    "draft_internal_truth_only_with_fact_guard_preserved": true,
+    "routine_final_internal_skips_heavy_copy_ceremony": true,
+    "sensitive_final_internal_restores_heavy_copy_evidence": true,
+    "external_commitment_requires_exact_body_binding": true,
+    "public_publish_retains_full_chain": true,
+    "public_to_internal_downgrade_blocked": true,
+    "approved_static_copy_reuse_is_exact_hash_only": true,
+    "gmail_owner_brief_workflows_explicit_final_internal": true,
+    "external_effect_policy_registry_unchanged": true,
+    "all_behavior_vectors_pass": true
+  },
+  "repository_acceptance": "PASS"
+}

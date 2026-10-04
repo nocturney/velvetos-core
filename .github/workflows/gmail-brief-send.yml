@@ -76,6 +76,7 @@ jobs:
           set +e
           PYTHONPATH=packages python3 scripts/vf_visible_text.py \
             --surface owner-brief \
+            --tier FINAL_INTERNAL \
             --file "$VISIBLE_TEXT_PATH" \
             --gate \
             --truth-checked \

@@ -2,20 +2,30 @@
 
 מושב: סטודיו (+ specialist הדומיין לפי המשימה). לא סוכן חדש.
 
-עבודה: context → reader-first → ניסוח → Humanizer/lint → fact/surface QA.  
+עבודה: context → tier → רק השלבים הנדרשים לאותו risk/surface → fact/surface QA.
 רף סוכנות: עברית חזקה, טבעית, בלי מילוי; אמת תפעולית נשארת אמת ולא “מתייפה”.
 
 **חוק רוחבי לכל טקסט אנושי שנכתב ב־AI:** `constitution/VISIBLE_TEXT.md`.  
+Policy registry reference: `policy_id: visible_text.finalization`.
 **חוזה היישום:** `SOFT-TOOLS-CONTRACT.md`. הוא מחייב את השרשרת הרלוונטית על גרסת הטקסט הסופית — public, customer או owner — ולא רק Instagram.  
 **קול פיד בלבד:** `VOICE.md` + `VOICE-CHART.md`; public examples מ־`voice/approved/` בלבד; לא מחילים אותם בכוח על בריף בעלים/שיחה פרטית.  
 **שכבת עברית:** `skills/velvet-hebrew-copy/` — סמכות סגנון + surface-aware pipeline + מבחן מאפייה + `needs_input`.  
 קורפוס קול public: `voice/approved/` בלבד (לא `voice/generated/`).  
 תבניות פרומפט משרד: `hq/templates/` (מתודולוגיה מ־prompts.chat; לא ייבוא CSV).  
-לפני prose אנושי: `hq/reader-first-he.md`.  
+`hq/reader-first-he.md` חובה רק כשה־tier דורש reader-first; `DRAFT_INTERNAL` ו־`FINAL_INTERNAL` שגרתי אינם משלמים אותו אוטומטית.
 כלי marketing soft skills לקופי שיווקי/מכירתי: `vfmskill` — `copywriting` + `copy-editing` + `marketing-psychology` כשישים; עובדים בתוך החוזה, לא כאלטרנטיבה אליו.  
 Humanizer/anti-AI: `hq/ai-tells-he.md`.  
 Executable gate לטקסט ספציפי: `python3 scripts/vf_visible_text.py --surface <surface> ...`; public captions נשארים תואמים גם ל־`python3 scripts/check-vfcopy.py lint`.  
 Evals: `python3 scripts/check-vfcopy.py eval` — בודקים את המנוע, **לא** מוכיחים שטקסט מסוים עבר.
+
+## Stage 6 tiers
+
+- `DRAFT_INTERNAL` — truth/basic-safety בלבד; לא final/send/publish.
+- `FINAL_INTERNAL` — truth + clarity/surface QA; reader-first/copy/Humanizer רק אם sensitive או ארוך.
+- `EXTERNAL_COMMITMENT` — facts + reader-first + surface QA + exact body/hash binding.
+- `PUBLIC_PUBLISH` — full public chain + exact text identity; visual copy מוסיף `NO_TEXT`.
+
+ה־CLI גוזר tier בטוח מה־surface אם לא צוין `--tier`, וחוסם downgrade של public/external ל־internal.
 
 ## Surfaces
 

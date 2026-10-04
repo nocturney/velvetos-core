@@ -1,23 +1,25 @@
 ---
-description: Global human-visible AI text gate. Always route owner/customer/public prose through the relevant copy and truth tools before final output.
+description: Global tiered human-visible AI text gate. Route by risk/surface so internal drafts stay light while external/public text keeps exact evidence.
 alwaysApply: true
 ---
 
 # Visible Text Gate · always on
 
 Authority: `constitution/VISIBLE_TEXT.md`.
+Policy registry reference: `policy_id: visible_text.finalization` (evidence/finalization only; not send/publish authority).
 
 Any prose or microcopy created/rephrased by an AI and intended to be read by Christian, a customer, the public, a partner, or another human is **not final** until the relevant Visible Text Gate passes.
 
-## Mandatory baseline for Hebrew AI-authored text
+## Tier routing
 
-1. Read task/domain truth first; preserve source facts, IDs and numbers.
-2. Read `packages/vfcopy/hq/reader-first-he.md`.
-3. Route through `.cursor/skills/vf-hebrew-copy/SKILL.md` → `packages/vfcopy/skills/velvet-hebrew-copy/SKILL.md`.
-4. Run the relevant channel/domain layer: public social → VOICE/PUBLIC_CTA/vfgrowth; customer/quote → vfconvert/vfsales/vfcost/vlicense when relevant; owner brief/report → owner-brief mode without public CTA; visual copy → NO_TEXT comparison + Creative Director/Brand Guardian.
-5. Run `packages/vfcopy/hq/ai-tells-he.md` and `python3 scripts/check-vfcopy.py lint --text '…'`.
-6. Marketing/sales long-form uses `vfmskill` copywriting/copy-editing when relevant; it never replaces vfcopy/Humanizer.
-7. Fact/constraint validation after style pass. Missing facts stay `needs_input` / `חסר`.
+Truth/source facts are universal. Then choose the smallest safe tier:
+
+- `DRAFT_INTERNAL` — internal working draft only: truth/basic-safety; no mandatory reader-first, vfcopy or Humanizer ceremony.
+- `FINAL_INTERNAL` — owner/internal document/UI: truth + final clarity/surface QA. Add `packages/vfcopy/hq/reader-first-he.md` + `.cursor/skills/vf-hebrew-copy/SKILL.md` + Humanizer only when sensitive or long (`>800` chars).
+- `EXTERNAL_COMMITMENT` — customer/proposal/commitment: truth + `packages/vfcopy/hq/reader-first-he.md` + surface QA + exact body/hash binding. Use `.cursor/skills/vf-hebrew-copy/SKILL.md` when copy repair/quality work is relevant; domain packs remain authoritative for facts.
+- `PUBLIC_PUBLISH` — public social/visual copy: full public chain, including `.cursor/skills/vf-hebrew-copy/SKILL.md` + Humanizer, VOICE/CTA where relevant, `NO_TEXT` for visual copy, and exact text identity.
+
+A public/external surface may not downgrade itself to an internal tier. `scripts/vf_visible_text.py` enforces the compatibility table.
 
 ## Scope
 

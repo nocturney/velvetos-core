@@ -2,8 +2,9 @@
 
 מקור רעיונות: [mikiarlo3/ai-copywriter](https://github.com/mikiarlo3/ai-copywriter) v1.6 (COPYWRITING MODE; enso reader-first).  
 **לא** skill נפרד. **לא** `npx skills add`. `constitution/VISIBLE_TEXT.md`, החוקה ו־`PLAYBOOK.md` מנצחים.
+Policy registry reference: `policy_id: visible_text.finalization`.
 
-הלינט anti-AI נשאר ב־`ai-tells-he.md`. כאן רק **איך מתחילים לכתוב** לכל טקסט שאדם עומד לקרוא — public, customer או owner.
+הלינט anti-AI נשאר ב־`ai-tells-he.md`. כאן רק **איך מתחילים לכתוב כאשר ה־Visible Text tier דורש reader-first** — public, external commitment, או internal sensitive/long. Routine internal draft/final אינו חייב לטעון את המדריך.
 
 ## שתי שאלות לפני מילה
 
@@ -69,5 +70,5 @@
 - כל prose/microcopy שנוצר ב־AI לעין אנושית כפוף ל־`constitution/VISIBLE_TEXT.md`.
 - Public social מוסיף `VOICE.md` + `PUBLIC_CTA.md`; private/owner לא.
 - בלי ₪/זמן/לקוח/Insights/סטטוס בלי מקור. חסר → `needs_input`/`חסר`.
-- אחרי הטיוטה: `velvet-hebrew-copy` → `ai-tells-he.md` → `scripts/vf_visible_text.py --surface <surface>` + fact/surface QA.
+- אחרי הטיוטה: הרץ `scripts/vf_visible_text.py --surface <surface> --tier <tier>`; `velvet-hebrew-copy` / `ai-tells-he.md` נדרשים רק כשה־tier/רגישות/אורך דורשים אותם. Public נשאר full chain.
 - Visual copy: 3–5 candidates + `NO_TEXT`; text must earn its place.

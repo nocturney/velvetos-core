@@ -3187,7 +3187,9 @@
         "packages/vfharness/**",
         "packages/vfom/**",
         "packages/vfsales/**",
-        "scripts/vf_visible_text.py"
+        "scripts/vf_visible_text.py",
+        "packages/velvetos/policy/reports/stage6a-visible-text-tiers.json",
+        "scripts/generate-stage6a-visible-text-tiers-report.py"
       ],
       "triggered_by": [
         ".cursor/rules/visible-text-gate.mdc",
@@ -3206,7 +3208,9 @@
         "packages/vfom/**",
         "packages/vfsales/**",
         "scripts/check-visible-text-gate.py",
-        "scripts/vf_visible_text.py"
+        "scripts/vf_visible_text.py",
+        "packages/velvetos/policy/reports/stage6a-visible-text-tiers.json",
+        "scripts/generate-stage6a-visible-text-tiers-report.py"
       ],
       "depends_on": [],
       "enforces": [
