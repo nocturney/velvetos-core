@@ -36,6 +36,8 @@ STAGE7D_ACCEPTANCE = REPORTS / "stage7d-artifact-retention.json"
 STAGE7D_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage7d-artifact-retention.py"
 STAGE7_ACCEPTANCE = REPORTS / "stage7-acceptance.json"
 STAGE7_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage7-acceptance.py"
+STAGE8A_INVENTORY = REPORTS / "stage8a-core-instance-inventory.json"
+STAGE8A_INVENTORY_GENERATOR = ROOT / "scripts" / "generate-stage8a-core-instance-inventory.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -55,6 +57,7 @@ EXPECTED_REPORTS = {
     "stage7d-morning-green-asset-archive.json",
     "stage7d-artifact-retention.json",
     "stage7-acceptance.json",
+    "stage8a-core-instance-inventory.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -1308,6 +1311,108 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated7.is_file():
                     require(regenerated7.read_bytes() == STAGE7_ACCEPTANCE.read_bytes(),
                             "Stage 7 integrated acceptance receipt is not reproducible", problems)
+
+    if STAGE8A_INVENTORY.is_file():
+        stage8a = load(STAGE8A_INVENTORY)
+        require(stage8a.get("schema") == "velvetos.stage8a-core-instance-inventory.v1"
+                and stage8a.get("stage") == "8A"
+                and stage8a.get("behavior_change") is False
+                and stage8a.get("repository_acceptance") == "PASS",
+                "Stage 8A inventory metadata drift", problems)
+        criteria8a = stage8a.get("acceptance_criteria") or {}
+        expected_criteria8a = {
+            "canonical_instance_profile_and_desk_are_identified",
+            "core_compatibility_reference_and_duplicate_sample_are_identified",
+            "machine_enforced_sample_autonomy_and_root_desk_debts_are_mapped",
+            "fleet_values_and_control_api_consumers_are_mapped",
+            "integration_account_and_tool_status_mixed_surface_is_mapped",
+            "creative_project_and_expert_distribution_surfaces_are_mapped",
+            "host_and_instance_path_surfaces_are_mapped",
+            "every_surface_has_target_owner_class_wave_and_no_delete_authority",
+            "stage8_preparation_remains_non_normative",
+            "external_effect_policy_registry_is_unchanged",
+            "stage8a_is_inventory_only_no_move_delete_or_resolver_cutover",
+        }
+        require(set(criteria8a) == expected_criteria8a
+                and all((criteria8a.get(key) or {}).get("pass") is True for key in expected_criteria8a),
+                "Stage 8A acceptance criteria drift or fail", problems)
+        inventory8a = stage8a.get("inventory") or []
+        require(len(inventory8a) == 14, "Stage 8A inventory surface count drift", problems)
+        ids8a = {row.get("surface_id") for row in inventory8a if isinstance(row, dict)}
+        required_ids8a = {
+            "canonical-instance-profile",
+            "canonical-instance-desk",
+            "core-reference-profile-metadata",
+            "core-vf-sample-profile",
+            "root-vf-desk-reference-bind",
+            "living-studio-embedded-business-rules",
+            "vfprod-fleet-registry",
+            "control-api-instance-and-fleet-resolution",
+            "tool-status-mixed-registry",
+            "chatgpt-project-vf-distribution",
+            "expert-modules-with-vf-values",
+            "windows-host-binding-document",
+            "policy-registry-explicit-instance-pointers",
+            "stage8-non-normative-preparation",
+        }
+        require(ids8a == required_ids8a, "Stage 8A inventory surface id set drift", problems)
+        require(all(isinstance(row, dict)
+                    and row.get("target_owner")
+                    and row.get("target_classes")
+                    and row.get("migration_wave")
+                    and row.get("delete_authorized") is False
+                    for row in inventory8a),
+                "Stage 8A inventory contains incomplete/unsafe placement row", problems)
+        summary8a = stage8a.get("summary") or {}
+        require(summary8a.get("surface_count") == 14
+                and summary8a.get("duplicate_or_mixed_surface_count") == 10
+                and summary8a.get("fleet_printer_count") == 4
+                and summary8a.get("project_bundle_revision") == "6.6.4",
+                "Stage 8A summary drift", problems)
+        require(len(summary8a.get("machine_enforced_initial_debts") or []) == 4,
+                "Stage 8A initial machine-enforced debt list drift", problems)
+        canonical8a = stage8a.get("canonical_instance") or {}
+        require(canonical8a.get("id") == "velvet-factory"
+                and canonical8a.get("profile") == "instances/velvet-factory/instance/velvet-factory.json"
+                and canonical8a.get("desk") == "instances/velvet-factory/.cursor/vf-desk.json",
+                "Stage 8A canonical instance identity/path drift", problems)
+        authority8a = stage8a.get("authority_baseline") or {}
+        require(authority8a.get("unchanged") is True
+                and authority8a.get("policy_registry_canonical_sha256")
+                    == authority8a.get("prepared_against_policy_registry_canonical_sha256"),
+                "Stage 8A external-effect policy registry drift", problems)
+        design8a = stage8a.get("design_inputs") or {}
+        require(design8a.get("drafts_are_authority") is False,
+                "Stage 8A non-normative prep was promoted to authority", problems)
+        require(stage8a.get("next_stage") == "Stage 8B — Canonical Instance Config + Resolver Foundation",
+                "Stage 8A next-stage handoff drift", problems)
+        constraints8a = set(stage8a.get("stage8a_constraints") or [])
+        require({"inventory only", "no fact move", "no resolver cutover", "no legacy delete"} <= constraints8a,
+                "Stage 8A observation-only constraints drift", problems)
+        if STAGE8A_INVENTORY_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8a = Path(td) / "stage8a-core-instance-inventory.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8A_INVENTORY_GENERATOR),
+                        "--prepared-against", stage8a["prepared_against_main_sha"],
+                        "--captured-at", stage8a["captured_at"],
+                        "--output", str(regenerated8a),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0,
+                        "Stage 8A inventory regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()),
+                        problems)
+                if proc.returncode == 0 and regenerated8a.is_file():
+                    require(regenerated8a.read_bytes() == STAGE8A_INVENTORY.read_bytes(),
+                            "Stage 8A inventory receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)

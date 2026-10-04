@@ -1,0 +1,685 @@
+{
+  "schema": "velvetos.stage8a-core-instance-inventory.v1",
+  "stage": "8A",
+  "behavior_change": false,
+  "prepared_against_main_sha": "cdd0ff810298178387263d8b9f27bae996d79d3d",
+  "captured_at": "2026-10-04T13:58:00+03:00",
+  "purpose": "Inventory and classify Core/Instance placement debt before any fact move, resolver cutover, or legacy retirement.",
+  "classification_taxonomy": [
+    "CORE_COMPATIBILITY_REFERENCE",
+    "CORE_GENERIC_SCHEMA_INTERFACE_ALGORITHM",
+    "INSTANCE_DOCUMENTATION_DISTRIBUTION",
+    "INSTANCE_INTERNAL_BINDING",
+    "INSTANCE_PRIVATE_BINDING",
+    "INSTANCE_PUBLIC_CONFIG",
+    "INSTANCE_RUNTIME_STATE",
+    "NON_NORMATIVE_PREPARATION"
+  ],
+  "canonical_instance": {
+    "id": "velvet-factory",
+    "profile": "instances/velvet-factory/instance/velvet-factory.json",
+    "desk": "instances/velvet-factory/.cursor/vf-desk.json",
+    "business_name": "Velvet Factory",
+    "location": "Sderot",
+    "cta_channel": "instagram-message"
+  },
+  "inventory": [
+    {
+      "surface_id": "canonical-instance-profile",
+      "paths": [
+        "instances/velvet-factory/instance/velvet-factory.json"
+      ],
+      "current_class": "INSTANCE_CANONICAL_MIXED_PUBLIC_INTERNAL",
+      "fact_domains": [
+        "identity",
+        "locale",
+        "location",
+        "fulfillment",
+        "channels",
+        "cta",
+        "compliance",
+        "tool_bindings",
+        "creative_bindings"
+      ],
+      "current_owner": "INSTANCE",
+      "target_classes": [
+        "INSTANCE_PUBLIC_CONFIG",
+        "INSTANCE_INTERNAL_BINDING"
+      ],
+      "target_owner": "INSTANCE",
+      "disposition": "KEEP_AND_SPLIT_BY_SENSITIVITY_WHEN_NEEDED",
+      "migration_wave": "8B_CANONICAL_INSTANCE_CONFIG",
+      "consumer_evidence": {
+        "needles": [
+          "instances/velvet-factory/instance/velvet-factory.json"
+        ],
+        "all_reference_count": 12,
+        "machine_consumer_count": 5,
+        "machine_consumers": [
+          "packages/velvetos/policy/policy-registry.json",
+          "scripts/check-vf-offering.py",
+          "scripts/check-visual-reject-identity.py",
+          "scripts/check-visual-standard-bootstrap.py",
+          "scripts/generate-policy-reports.py"
+        ]
+      },
+      "delete_authorized": false,
+      "notes": "Primary canonical VF business/profile surface. Stage 8 must move duplicate values toward this ownership, not away from it."
+    },
+    {
+      "surface_id": "canonical-instance-desk",
+      "paths": [
+        "instances/velvet-factory/.cursor/vf-desk.json"
+      ],
+      "current_class": "INSTANCE_CANONICAL_INTERNAL_TOOL_DESK",
+      "fact_domains": [
+        "tool_bindings",
+        "accounts",
+        "agent_roster",
+        "integration_status",
+        "instance_paths"
+      ],
+      "current_owner": "INSTANCE",
+      "target_classes": [
+        "INSTANCE_INTERNAL_BINDING",
+        "INSTANCE_PRIVATE_BINDING"
+      ],
+      "target_owner": "INSTANCE",
+      "disposition": "KEEP_CANONICAL; PUBLIC_PROJECTION_MUST_EXCLUDE_PRIVATE_FIELDS",
+      "migration_wave": "8B_CANONICAL_INSTANCE_CONFIG",
+      "consumer_evidence": {
+        "needles": [
+          "instances/velvet-factory/.cursor/vf-desk.json"
+        ],
+        "all_reference_count": 6,
+        "machine_consumer_count": 3,
+        "machine_consumers": [
+          "packages/velvetos_control_api/CONTRIBUTIONS.json",
+          "packages/velvetos_control_api/tests/test_control_api.py",
+          "scripts/check-vf-offering.py"
+        ]
+      },
+      "delete_authorized": false,
+      "notes": "Control API already resolves this desk via VELVETOS_INSTANCE_ID; secrets remain outside Git."
+    },
+    {
+      "surface_id": "core-reference-profile-metadata",
+      "paths": [
+        "packages/velvetos/CORE.json"
+      ],
+      "current_class": "CORE_COMPATIBILITY_REFERENCE_WITH_INSTANCE_VALUES",
+      "fact_domains": [
+        "instance_identity",
+        "instance_repo_path",
+        "compat_profile_path"
+      ],
+      "current_owner": "CORE",
+      "target_classes": [
+        "CORE_GENERIC_SCHEMA_INTERFACE_ALGORITHM",
+        "CORE_COMPATIBILITY_REFERENCE"
+      ],
+      "target_owner": "CORE",
+      "disposition": "PARAMETERIZE_INSTANCE_REGISTRY; RETIRE_VF_REFERENCE_PROFILE_AFTER_CONSUMER_PARITY",
+      "migration_wave": "8B_RESOLVER_FOUNDATION",
+      "consumer_evidence": {
+        "needles": [
+          "packages/velvetos/CORE.json"
+        ],
+        "all_reference_count": 10,
+        "machine_consumer_count": 4,
+        "machine_consumers": [
+          ".cursor/vf-desk.json",
+          "instances/_template/scripts/attach-core.sh",
+          "instances/velvet-factory/scripts/attach-core.sh",
+          "scripts/generate-stage6d-documentation-authority-cleanup-report.py"
+        ]
+      },
+      "delete_authorized": false,
+      "notes": "Core may know how to resolve an instance, but should not need a Velvet Factory sample to execute generically."
+    },
+    {
+      "surface_id": "core-vf-sample-profile",
+      "paths": [
+        "packages/velvetos/samples/velvet-factory.json"
+      ],
+      "current_class": "CORE_DUPLICATE_INSTANCE_FACTS_FOR_COMPATIBILITY",
+      "fact_domains": [
+        "identity",
+        "location",
+        "contact",
+        "cta",
+        "fulfillment",
+        "compliance",
+        "channels",
+        "tool_bindings"
+      ],
+      "current_owner": "CORE_COMPAT",
+      "target_classes": [
+        "CORE_COMPATIBILITY_REFERENCE"
+      ],
+      "target_owner": "TRANSITIONAL_ONLY",
+      "disposition": "MIGRATE_MACHINE_CONSUMERS_TO_INSTANCE_RESOLVER_THEN_RETIRE_AFTER_ROLLBACK_WINDOW",
+      "migration_wave": "8C_CONSUMER_MIGRATION",
+      "consumer_evidence": {
+        "needles": [
+          "packages/velvetos/samples/velvet-factory.json"
+        ],
+        "all_reference_count": 4,
+        "machine_consumer_count": 2,
+        "machine_consumers": [
+          "packages/velvetos/CORE.json",
+          "scripts/check-vf-offering.py"
+        ]
+      },
+      "delete_authorized": false,
+      "notes": "Machine-enforced duplicate today: check-vf-offering validates both canonical instance and this sample."
+    },
+    {
+      "surface_id": "root-vf-desk-reference-bind",
+      "paths": [
+        ".cursor/vf-desk.json",
+        ".cursor/rules/velvet-factory-desk.mdc"
+      ],
+      "current_class": "CORE_WORKSPACE_COMPATIBILITY_BIND_WITH_INSTANCE_FACTS",
+      "fact_domains": [
+        "identity",
+        "location",
+        "contact",
+        "account_ids",
+        "tool_bindings",
+        "integration_status",
+        "creative_and_business_rules"
+      ],
+      "current_owner": "CORE_WORKSPACE_COMPAT",
+      "target_classes": [
+        "CORE_COMPATIBILITY_REFERENCE",
+        "INSTANCE_INTERNAL_BINDING",
+        "INSTANCE_PRIVATE_BINDING"
+      ],
+      "target_owner": "INSTANCE_WITH_THIN_CORE_RESOLVER",
+      "disposition": "MIGRATE_CHECK_VF_DESK_AND_WORKSPACE_CONSUMERS_TO_INSTANCE_DESK; RETIRE_ROOT_BIND_AFTER_CUTOVER",
+      "migration_wave": "8C_CONSUMER_MIGRATION",
+      "consumer_evidence": {
+        "needles": [
+          "vf-desk.json"
+        ],
+        "all_reference_count": 63,
+        "machine_consumer_count": 26,
+        "machine_consumers": [
+          "instances/velvet-factory/scripts/check-instance-visual-bootstrap.py",
+          "packages/manifest.json",
+          "packages/velvetos_control_api/CONTRIBUTIONS.json",
+          "packages/velvetos_control_api/contributions/integrations.py",
+          "packages/velvetos_control_api/contributions/operational.py",
+          "packages/velvetos_control_api/contributions/unavailable.py",
+          "packages/velvetos_control_api/tests/test_control_api.py",
+          "packages/vfgraft/graph.json",
+          "packages/vfharness/layers.json",
+          "packages/vfmem/catalog.json",
+          "scripts/check-agent-surface-security.py",
+          "scripts/check-office-watchdog.py",
+          "scripts/check-public-cta.py",
+          "scripts/check-velvetos.py",
+          "scripts/check-vf-desk.py",
+          "scripts/check-vf-offering.py",
+          "scripts/check-vfmcp.py",
+          "scripts/check-vfmedia.py",
+          "scripts/check-vfresearch.py",
+          "scripts/check-visual-surface-enforcement.py",
+          "scripts/generate-stage6d-documentation-authority-cleanup-report.py",
+          "scripts/install-agency-agents.sh",
+          "scripts/vf_control_plane.py",
+          "scripts/vf_send_preflight.py",
+          "scripts/vfmem.py",
+          "scripts/vfops_loop.py"
+        ]
+      },
+      "delete_authorized": false,
+      "notes": "Root desk remains an explicit reference bind and is machine-enforced by check-vf-desk.py."
+    },
+    {
+      "surface_id": "living-studio-embedded-business-rules",
+      "paths": [
+        "packages/velvetos/living-studio/AUTONOMY.json"
+      ],
+      "current_class": "CORE_PROJECTION_CONFIG_WITH_HARDCODED_INSTANCE_FACTS",
+      "fact_domains": [
+        "location",
+        "fulfillment",
+        "public_cta",
+        "customer_send_boundary"
+      ],
+      "current_owner": "CORE_LIVING_STUDIO",
+      "target_classes": [
+        "CORE_GENERIC_SCHEMA_INTERFACE_ALGORITHM",
+        "INSTANCE_PUBLIC_CONFIG"
+      ],
+      "target_owner": "INSTANCE_VALUES_RESOLVED_BY_GENERIC_LIVING_STUDIO",
+      "disposition": "REMOVE_VALUE_DUPLICATION_AFTER_INSTANCE_RESOLVER_PARITY",
+      "migration_wave": "8C_CONSUMER_MIGRATION",
+      "consumer_evidence": {
+        "needles": [
+          "AUTONOMY.json"
+        ],
+        "all_reference_count": 8,
+        "machine_consumer_count": 3,
+        "machine_consumers": [
+          "office/control-plane.json",
+          "scripts/check-vf-autonomy.py",
+          "scripts/vf_autonomy.py"
+        ]
+      },
+      "delete_authorized": false,
+      "notes": "check-vf-autonomy currently enforces Sderot/shipping from AUTONOMY.json instead of canonical instance config."
+    },
+    {
+      "surface_id": "vfprod-fleet-registry",
+      "paths": [
+        "packages/vfprod/FLEET.json"
+      ],
+      "current_class": "DOMAIN_PACKAGE_WITH_INSTANCE_FLEET_VALUES",
+      "fact_domains": [
+        "printer_identity",
+        "manufacturer",
+        "model",
+        "capabilities",
+        "fleet_policy",
+        "status"
+      ],
+      "current_owner": "CORE_REPO_VFPROD",
+      "target_classes": [
+        "INSTANCE_PUBLIC_CONFIG",
+        "INSTANCE_INTERNAL_BINDING",
+        "INSTANCE_RUNTIME_STATE",
+        "CORE_GENERIC_SCHEMA_INTERFACE_ALGORITHM"
+      ],
+      "target_owner": "INSTANCE_VALUES_PLUS_CORE_GENERIC_FLEET_CONTRACT",
+      "disposition": "SPLIT_VALUE_REGISTRY_FROM_GENERIC_FLEET_SCHEMA; MIGRATE_CONTROL_API_AND_VFPROD_CONSUMERS",
+      "migration_wave": "8B_CANONICAL_INSTANCE_CONFIG",
+      "consumer_evidence": {
+        "needles": [
+          "packages/vfprod/FLEET.json"
+        ],
+        "all_reference_count": 9,
+        "machine_consumer_count": 5,
+        "machine_consumers": [
+          ".cursor/vf-desk.json",
+          "packages/velvetos/living-studio/REGISTRY.json",
+          "packages/velvetos_control_api/CONTRIBUTIONS.json",
+          "packages/velvetos_control_api/contributions/operational.py",
+          "packages/velvetos_control_api/tests/test_control_api.py"
+        ]
+      },
+      "delete_authorized": false,
+      "notes": "Control API, Living Studio and vfprod currently read the Core-repo fleet path directly. Stage8 printer field draft already marks VF values Instance-owned."
+    },
+    {
+      "surface_id": "control-api-instance-and-fleet-resolution",
+      "paths": [
+        "packages/velvetos_control_api/contributions/integrations.py",
+        "packages/velvetos_control_api/contributions/operational.py",
+        "packages/velvetos_control_api/CONTRIBUTIONS.json",
+        "packages/velvetos_control_api/Dockerfile"
+      ],
+      "current_class": "CORE_GENERIC_PROJECTION_WITH_VF_DEFAULT_AND_CORE_FLEET_PATH",
+      "fact_domains": [
+        "instance_default",
+        "instance_path",
+        "fleet_source_path",
+        "projection_provenance"
+      ],
+      "current_owner": "CORE_CONTROL_API",
+      "target_classes": [
+        "CORE_GENERIC_SCHEMA_INTERFACE_ALGORITHM",
+        "CORE_COMPATIBILITY_REFERENCE"
+      ],
+      "target_owner": "CORE_GENERIC_RESOLVER",
+      "disposition": "KEEP_PROJECTION_ONLY; REMOVE_HARDCODED_VF_DEFAULT_AND_DIRECT_CORE_FLEET_DEPENDENCY_AFTER_PARITY",
+      "migration_wave": "8C_CONSUMER_MIGRATION",
+      "consumer_evidence": {
+        "needles": [
+          "VELVETOS_INSTANCE_ID",
+          "packages/vfprod/FLEET.json"
+        ],
+        "all_reference_count": 6,
+        "machine_consumer_count": 3,
+        "machine_consumers": [
+          ".cursor/vf-desk.json",
+          "packages/velvetos/living-studio/REGISTRY.json",
+          "packages/velvetos_control_api/tests/test_control_api.py"
+        ]
+      },
+      "delete_authorized": false,
+      "notes": "Good direction already exists: instance desk is resolved by ID. Remaining debt is the velvet-factory default and direct fleet path."
+    },
+    {
+      "surface_id": "tool-status-mixed-registry",
+      "paths": [
+        "packages/velvetos/TOOL-STATUS.json"
+      ],
+      "current_class": "MIXED_GENERIC_TOOL_POLICY_AND_INSTANCE_RUNTIME_BINDINGS",
+      "fact_domains": [
+        "tool_policy",
+        "provider_status",
+        "runtime_endpoint",
+        "publication_route",
+        "host_status"
+      ],
+      "current_owner": "CORE_REPO_MIXED",
+      "target_classes": [
+        "CORE_GENERIC_SCHEMA_INTERFACE_ALGORITHM",
+        "INSTANCE_INTERNAL_BINDING",
+        "INSTANCE_RUNTIME_STATE"
+      ],
+      "target_owner": "CORE_GENERIC_TOOL_CONTRACT_PLUS_INSTANCE_BINDINGS_STATE",
+      "disposition": "SPLIT_GENERIC_STATUS_SEMANTICS_FROM_INSTANCE_ENDPOINTS_AND_LIVE_STATUS",
+      "migration_wave": "8B_CANONICAL_INSTANCE_CONFIG",
+      "consumer_evidence": {
+        "needles": [
+          "packages/velvetos/TOOL-STATUS.json"
+        ],
+        "all_reference_count": 11,
+        "machine_consumer_count": 3,
+        "machine_consumers": [
+          "packages/velvetos/policy/sensor-registry.json",
+          "packages/vfigos/OPENPOST.json",
+          "packages/vfmcp/core-mcp.json"
+        ]
+      },
+      "delete_authorized": false,
+      "notes": "Generic status vocabulary belongs in Core; VF endpoints/provider state/host state are instance/domain-owned."
+    },
+    {
+      "surface_id": "chatgpt-project-vf-distribution",
+      "paths": [
+        "packages/velvetos/chatgpt-project/LATEST.json",
+        "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.4.txt",
+        "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.4.txt",
+        "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
+      ],
+      "current_class": "CORE_DISTRIBUTION_BUNDLE_WITH_INSTANCE_CREATIVE_BUSINESS_FACTS",
+      "fact_domains": [
+        "business_identity",
+        "location",
+        "cta",
+        "creative_standard",
+        "publication_bindings",
+        "product_truth"
+      ],
+      "current_owner": "CORE_REPO_DISTRIBUTION",
+      "target_classes": [
+        "INSTANCE_DOCUMENTATION_DISTRIBUTION",
+        "CORE_GENERIC_SCHEMA_INTERFACE_ALGORITHM"
+      ],
+      "target_owner": "INSTANCE_DISTRIBUTION_WITH_CORE_GENERIC_BUNDLE_CONTRACT",
+      "disposition": "KEEP_EXECUTABLE_COMPATIBILITY_UNTIL_INSTANCE_BUNDLE_PARITY_THEN_MOVE_VALUE_BEARING_FILES",
+      "migration_wave": "8C_CONSUMER_MIGRATION",
+      "consumer_evidence": {
+        "needles": [
+          "PROJECT-AUTHORITY-v6.6.4.txt"
+        ],
+        "all_reference_count": 3,
+        "machine_consumer_count": 2,
+        "machine_consumers": [
+          "scripts/check-chat-cold-start-preflight.py",
+          "scripts/vf_chat_cold_start_preflight.py"
+        ]
+      },
+      "delete_authorized": false,
+      "notes": "Current project preflight and authority manifest actively bind the VF-specific executable bundle."
+    },
+    {
+      "surface_id": "expert-modules-with-vf-values",
+      "paths": [
+        "packages/velvetos/modules/expert-revenue-loop.md",
+        "packages/velvetos/modules/expert-social-booster.md",
+        "packages/velvetos/modules/expert-media-director.md"
+      ],
+      "current_class": "GENERIC_MODULE_DOCUMENTATION_WITH_INSTANCE_VALUE_LEAKAGE",
+      "fact_domains": [
+        "cta",
+        "location",
+        "creative_standard"
+      ],
+      "current_owner": "CORE_MODULES",
+      "target_classes": [
+        "CORE_GENERIC_SCHEMA_INTERFACE_ALGORITHM",
+        "INSTANCE_PUBLIC_CONFIG",
+        "INSTANCE_INTERNAL_BINDING"
+      ],
+      "target_owner": "CORE_GENERIC_MODULES_RESOLVING_INSTANCE_FIELDS",
+      "disposition": "PARAMETERIZE_VALUE_BEARING_LANGUAGE; KEEP_GENERIC_METHOD",
+      "migration_wave": "8C_CONSUMER_MIGRATION",
+      "consumer_evidence": {
+        "needles": [
+          "packages/velvetos/modules/expert-revenue-loop.md",
+          "packages/velvetos/modules/expert-social-booster.md",
+          "packages/velvetos/modules/expert-media-director.md"
+        ],
+        "all_reference_count": 2,
+        "machine_consumer_count": 1,
+        "machine_consumers": [
+          "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
+        ]
+      },
+      "delete_authorized": false,
+      "notes": "Generic expert methods may remain in Core; Velvet Factory CTA/location/visual-standard values must resolve from instance/domain authorities."
+    },
+    {
+      "surface_id": "windows-host-binding-document",
+      "paths": [
+        "packages/velvetos/WINDOWS-PATH-CONTRACT.md"
+      ],
+      "current_class": "CORE_HOST_CONTRACT_WITH_INSTANCE_HOST_LABEL",
+      "fact_domains": [
+        "host_role",
+        "instance_path",
+        "machine_binding"
+      ],
+      "current_owner": "CORE_DOCS",
+      "target_classes": [
+        "CORE_GENERIC_SCHEMA_INTERFACE_ALGORITHM",
+        "INSTANCE_PRIVATE_BINDING"
+      ],
+      "target_owner": "CORE_GENERIC_PATH_CONTRACT_PLUS_INSTANCE_HOST_BINDING",
+      "disposition": "PARAMETERIZE_HOST_LABELS_AND_KEEP_PRIVATE_MACHINE_BINDINGS_OUT_OF_GENERIC_DEFAULTS",
+      "migration_wave": "8C_CONSUMER_MIGRATION",
+      "consumer_evidence": {
+        "needles": [
+          "packages/velvetos/WINDOWS-PATH-CONTRACT.md"
+        ],
+        "all_reference_count": 11,
+        "machine_consumer_count": 5,
+        "machine_consumers": [
+          "packages/vfmem/scripts/vf_cognee.py",
+          "packages/vfmem/scripts/vf_cognee_runtime.py",
+          "scripts/bootstrap-edge-host-windows.ps1",
+          "scripts/bootstrap-manim-host-windows.ps1",
+          "scripts/bootstrap-speech-host-windows.ps1"
+        ]
+      },
+      "delete_authorized": false,
+      "notes": "Path semantics are generic; the Sderot Windows host identity is instance/local binding."
+    },
+    {
+      "surface_id": "policy-registry-explicit-instance-pointers",
+      "paths": [
+        "packages/velvetos/policy/policy-registry.json"
+      ],
+      "current_class": "CORE_GENERIC_POLICY_WITH_EXPLICIT_INSTANCE_MACHINE_LOCATION",
+      "fact_domains": [
+        "authority_pointer",
+        "instance_path"
+      ],
+      "current_owner": "CORE_POLICY",
+      "target_classes": [
+        "CORE_GENERIC_SCHEMA_INTERFACE_ALGORITHM"
+      ],
+      "target_owner": "CORE",
+      "disposition": "KEEP_PATTERN; RESOLVE_INSTANCE_ID_WITHOUT_DUPLICATING_BUSINESS_VALUES",
+      "migration_wave": "8B_RESOLVER_FOUNDATION",
+      "consumer_evidence": {
+        "needles": [
+          "packages/velvetos/policy/policy-registry.json"
+        ],
+        "all_reference_count": 19,
+        "machine_consumer_count": 14,
+        "machine_consumers": [
+          "packages/vfom/FOUNDRY.json",
+          "scripts/check-creative-autopilot.py",
+          "scripts/check-creative-system.py",
+          "scripts/generate-policy-reports.py",
+          "scripts/generate-stage4d-instagram-happy-path-report.py",
+          "scripts/generate-stage5c-workspace-distribution-report.py",
+          "scripts/generate-stage6a-visible-text-tiers-report.py",
+          "scripts/generate-stage6b-creative-readiness-report.py",
+          "scripts/generate-stage6c-dcc-capability-gating-report.py",
+          "scripts/generate-stage7-acceptance.py",
+          "scripts/generate-stage7a-state-evidence-model.py",
+          "scripts/generate-stage7b-memory-learning-lifecycle.py",
+          "scripts/generate-stage7c-research-scheduler-consolidation.py",
+          "scripts/generate-stage7d-artifact-retention.py"
+        ]
+      },
+      "delete_authorized": false,
+      "notes": "This is a desired pattern: Core policy points to instance authority without copying business fact values."
+    },
+    {
+      "surface_id": "stage8-non-normative-preparation",
+      "paths": [
+        "docs/implementation/policy-capability-prep/stage8-knowledge-record-v0.schema.json",
+        "docs/implementation/policy-capability-prep/stage8-printer-capability-fields-v0.json"
+      ],
+      "current_class": "NON_NORMATIVE_PREPARATION",
+      "fact_domains": [
+        "knowledge_shape",
+        "printer_field_ownership"
+      ],
+      "current_owner": "DOCUMENTATION",
+      "target_classes": [
+        "NON_NORMATIVE_PREPARATION"
+      ],
+      "target_owner": "DOCUMENTATION_UNTIL_EXPLICIT_STAGE8_ADOPTION",
+      "disposition": "KEEP_NON_AUTHORITATIVE; USE_AS_DESIGN_INPUT_ONLY",
+      "migration_wave": "8A_INVENTORY",
+      "consumer_evidence": {
+        "needles": [
+          "docs/implementation/policy-capability-prep/stage8-knowledge-record-v0.schema.json",
+          "docs/implementation/policy-capability-prep/stage8-printer-capability-fields-v0.json"
+        ],
+        "all_reference_count": 1,
+        "machine_consumer_count": 0,
+        "machine_consumers": []
+      },
+      "delete_authorized": false,
+      "notes": "Both drafts explicitly declare non-normative/no authority and do not themselves activate storage or printer behavior."
+    }
+  ],
+  "summary": {
+    "surface_count": 14,
+    "duplicate_or_mixed_surface_count": 10,
+    "duplicate_or_mixed_surface_ids": [
+      "chatgpt-project-vf-distribution",
+      "control-api-instance-and-fleet-resolution",
+      "core-reference-profile-metadata",
+      "core-vf-sample-profile",
+      "expert-modules-with-vf-values",
+      "living-studio-embedded-business-rules",
+      "root-vf-desk-reference-bind",
+      "tool-status-mixed-registry",
+      "vfprod-fleet-registry",
+      "windows-host-binding-document"
+    ],
+    "machine_enforced_initial_debts": [
+      "core-vf-sample-profile -> scripts/check-vf-offering.py",
+      "living-studio-embedded-business-rules -> scripts/check-vf-autonomy.py",
+      "root-vf-desk-reference-bind -> scripts/check-vf-desk.py",
+      "vfprod-fleet-registry -> Control API/Living Studio/vfprod consumers"
+    ],
+    "migration_waves": {
+      "8A_INVENTORY": [
+        "stage8-non-normative-preparation"
+      ],
+      "8B_CANONICAL_INSTANCE_CONFIG": [
+        "canonical-instance-desk",
+        "canonical-instance-profile",
+        "tool-status-mixed-registry",
+        "vfprod-fleet-registry"
+      ],
+      "8B_RESOLVER_FOUNDATION": [
+        "core-reference-profile-metadata",
+        "policy-registry-explicit-instance-pointers"
+      ],
+      "8C_CONSUMER_MIGRATION": [
+        "chatgpt-project-vf-distribution",
+        "control-api-instance-and-fleet-resolution",
+        "core-vf-sample-profile",
+        "expert-modules-with-vf-values",
+        "living-studio-embedded-business-rules",
+        "root-vf-desk-reference-bind",
+        "windows-host-binding-document"
+      ]
+    },
+    "core_reference_profile": "packages/velvetos/samples/velvet-factory.json",
+    "fleet_printer_count": 4,
+    "tool_status_count": 10,
+    "project_bundle_revision": "6.6.4"
+  },
+  "design_inputs": {
+    "stage5a_locality": "Stage 5A removed root instruction leakage; Stage 8 owns data/value placement.",
+    "stage8_knowledge_record_draft": "docs/implementation/policy-capability-prep/stage8-knowledge-record-v0.schema.json",
+    "stage8_printer_fields_draft": "docs/implementation/policy-capability-prep/stage8-printer-capability-fields-v0.json",
+    "stage9_acceptance_draft": "docs/implementation/policy-capability-prep/stage9-acceptance-plan-v0.json",
+    "drafts_are_authority": false
+  },
+  "authority_baseline": {
+    "policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "unchanged": true
+  },
+  "acceptance_criteria": {
+    "canonical_instance_profile_and_desk_are_identified": {
+      "pass": true
+    },
+    "core_compatibility_reference_and_duplicate_sample_are_identified": {
+      "pass": true
+    },
+    "machine_enforced_sample_autonomy_and_root_desk_debts_are_mapped": {
+      "pass": true
+    },
+    "fleet_values_and_control_api_consumers_are_mapped": {
+      "pass": true
+    },
+    "integration_account_and_tool_status_mixed_surface_is_mapped": {
+      "pass": true
+    },
+    "creative_project_and_expert_distribution_surfaces_are_mapped": {
+      "pass": true
+    },
+    "host_and_instance_path_surfaces_are_mapped": {
+      "pass": true
+    },
+    "every_surface_has_target_owner_class_wave_and_no_delete_authority": {
+      "pass": true
+    },
+    "stage8_preparation_remains_non_normative": {
+      "pass": true
+    },
+    "external_effect_policy_registry_is_unchanged": {
+      "pass": true
+    },
+    "stage8a_is_inventory_only_no_move_delete_or_resolver_cutover": {
+      "pass": true
+    }
+  },
+  "repository_acceptance": "PASS",
+  "next_stage": "Stage 8B — Canonical Instance Config + Resolver Foundation",
+  "stage8a_constraints": [
+    "inventory only",
+    "no fact move",
+    "no resolver cutover",
+    "no legacy delete",
+    "no external-effect authority change",
+    "migration must be domain-by-domain with compatibility, parity, consumer scan and rollback"
+  ]
+}
