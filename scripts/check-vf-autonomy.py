@@ -12,6 +12,10 @@ CONFIG = ROOT / "packages" / "velvetos" / "living-studio" / "AUTONOMY.json"
 CLI = ROOT / "scripts" / "vf_autonomy.py"
 CONTROL_PLANE = ROOT / "office" / "control-plane.json"
 POLICY = ROOT / "office" / "control" / "POLICY.md"
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from living_studio_rules import LivingStudioRuleResolutionError, effective_business_rules  # type: ignore  # noqa: E402
 
 EXPECTED_COMPONENTS = {
     "foundation-runtime-contract",
@@ -79,17 +83,57 @@ def main() -> int:
     if int(retry.get("maxAutomaticRetries", 99)) > 1:
         errors.append("automatic retries exceed one")
 
-    rules = cfg.get("businessRules") or {}
-    if rules.get("pickupOnly") != "Sderot":
-        errors.append("Velvet Factory pickup rule must remain Sderot")
-    if rules.get("nationwideShipping") is not False:
-        errors.append("nationwide shipping must remain false")
-    if rules.get("customerWhatsAppSend") != "human":
-        errors.append("customer WhatsApp send must remain human")
-    if rules.get("inventSaleILS") is not False or rules.get("inventInsights") is not False:
-        errors.append("invented price/Insights locks must remain false")
+    if "businessRules" in cfg:
+        errors.append("AUTONOMY.json must not embed instance business-rule values after Stage 8C")
+    resolution = cfg.get("businessRulesResolution") or {}
+    if resolution != {
+        "resolver": "packages/velvetos/living_studio_rules.py",
+        "instanceSurface": "profile",
+        "instanceIdEnvironment": "VELVETOS_INSTANCE_ID",
+        "requireExplicitInstanceIdWhenRunningFromCore": True,
+        "projectionOnly": True,
+        "legacyShape": "businessRules",
+        "sourceOfTruth": "selected instance profile + generic safety semantics",
+    }:
+        errors.append("AUTONOMY businessRulesResolution contract drift")
+
+    try:
+        rules = effective_business_rules(ROOT, instance_id="velvet-factory", env={})
+    except LivingStudioRuleResolutionError as exc:
+        errors.append(f"cannot resolve canonical VF business rules: {exc}")
+        rules = {}
+
+    profile_path = ROOT / "instances" / "velvet-factory" / "instance" / "velvet-factory.json"
+    try:
+        profile = json.loads(profile_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        errors.append(f"canonical VF profile invalid: {exc}")
+        profile = {}
+    fulfillment = profile.get("fulfillment") or {}
+    compliance = profile.get("compliance") or {}
+    whatsapp = ((profile.get("mcpBind") or {}).get("whatsapp") or {})
+    expected_pickup = profile.get("where") if fulfillment.get("mode") == "pickup" else None
+    if rules.get("pickupOnly") != expected_pickup:
+        errors.append("effective pickup rule must derive from canonical instance profile")
+    if rules.get("nationwideShipping") != fulfillment.get("nationalShipping"):
+        errors.append("effective shipping rule must derive from canonical instance profile")
+    if rules.get("customerWhatsAppSend") != ("tool" if whatsapp.get("send") is True else "human"):
+        errors.append("effective customer send rule must derive from canonical instance binding")
+    if rules.get("inventSaleILS") != (not bool(compliance.get("noInventedPrices"))):
+        errors.append("effective price invention lock must derive from canonical instance compliance")
+    if rules.get("inventInsights") != (not bool(compliance.get("noInventedInsights"))):
+        errors.append("effective Insights invention lock must derive from canonical instance compliance")
     if rules.get("destructiveAutonomy") is not False:
-        errors.append("destructive autonomy must remain false")
+        errors.append("destructive autonomy must remain a generic false safety invariant")
+    if rules.get("publicCTA") != "Instagram message":
+        errors.append("effective public CTA projection must preserve legacy Instagram-message semantics")
+
+    try:
+        effective_business_rules(ROOT, env={})
+    except LivingStudioRuleResolutionError:
+        pass
+    else:
+        errors.append("Living Studio business-rule resolver must require explicit instance from Core")
 
     whole = CONFIG.read_text(encoding="utf-8").lower()
     for phrase in FORBIDDEN_DUPLICATE_WRITES:

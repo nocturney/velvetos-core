@@ -48,6 +48,8 @@ STAGE8C_ROOT_DESK = REPORTS / "stage8c-root-desk-readers.json"
 STAGE8C_ROOT_DESK_GENERATOR = ROOT / "scripts" / "generate-stage8c-root-desk-readers.py"
 STAGE8C_DESK_CATALOG = REPORTS / "stage8c-desk-catalog-bindings.json"
 STAGE8C_DESK_CATALOG_GENERATOR = ROOT / "scripts" / "generate-stage8c-desk-catalog-bindings.py"
+STAGE8C_LIVING_RULES = REPORTS / "stage8c-living-studio-rules.json"
+STAGE8C_LIVING_RULES_GENERATOR = ROOT / "scripts" / "generate-stage8c-living-studio-rules.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -73,6 +75,7 @@ EXPECTED_REPORTS = {
     "stage8c-sample-profile-consumers.json",
     "stage8c-root-desk-readers.json",
     "stage8c-desk-catalog-bindings.json",
+    "stage8c-living-studio-rules.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -1833,6 +1836,82 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated8cc.is_file():
                     require(regenerated8cc.read_bytes() == STAGE8C_DESK_CATALOG.read_bytes(),
                             "Stage 8C desk-catalog receipt is not reproducible", problems)
+
+    if STAGE8C_LIVING_RULES.is_file():
+        stage8c_living = load(STAGE8C_LIVING_RULES)
+        require(stage8c_living.get("schema") == "velvetos.stage8c-living-studio-rules.v1"
+                and stage8c_living.get("stage") == "8C_LIVING_STUDIO_RULES"
+                and stage8c_living.get("behavior_change") is True
+                and stage8c_living.get("repository_acceptance") == "PASS",
+                "Stage 8C Living Studio rule metadata drift", problems)
+        criteria8cl = stage8c_living.get("acceptance_criteria") or {}
+        expected_criteria8cl = {
+            "stage8a_living_studio_debt_is_bound_to_this_slice",
+            "autonomy_config_contains_resolution_contract_not_vf_business_values",
+            "effective_business_rules_exactly_match_pre_cutover_legacy_shape_and_values",
+            "effective_business_rules_derive_instance_values_from_canonical_profile",
+            "generic_living_studio_resolver_has_no_vf_business_default_or_values",
+            "core_checkout_requires_explicit_instance_for_business_rule_projection",
+            "vf_autonomy_action_engine_is_byte_unchanged",
+            "office_control_plane_is_byte_unchanged",
+            "no_new_store_queue_or_canonical_write_is_introduced",
+            "external_effect_policy_registry_is_unchanged",
+        }
+        require(set(criteria8cl) == expected_criteria8cl
+                and all(criteria8cl.get(key) is True for key in expected_criteria8cl),
+                "Stage 8C Living Studio acceptance criteria drift or fail", problems)
+        cfg8cl = stage8c_living.get("configuration") or {}
+        resolution8cl = cfg8cl.get("resolution") or {}
+        require(cfg8cl.get("path") == "packages/velvetos/living-studio/AUTONOMY.json"
+                and cfg8cl.get("embedded_business_rules_removed") is True
+                and resolution8cl.get("resolver") == "packages/velvetos/living_studio_rules.py"
+                and resolution8cl.get("instanceSurface") == "profile"
+                and resolution8cl.get("requireExplicitInstanceIdWhenRunningFromCore") is True
+                and resolution8cl.get("projectionOnly") is True,
+                "Stage 8C Living Studio resolution contract drift", problems)
+        parity8cl = stage8c_living.get("legacy_parity") or {}
+        require(parity8cl.get("exact") is True
+                and parity8cl.get("prepared_against_rules") == parity8cl.get("effective_rules")
+                and len(parity8cl.get("effective_rules") or {}) == 7,
+                "Stage 8C Living Studio legacy parity drift", problems)
+        isolation8cl = stage8c_living.get("runtime_isolation") or {}
+        require(isolation8cl.get("vf_autonomy_byte_unchanged") is True
+                and isolation8cl.get("office_control_plane_byte_unchanged") is True
+                and isolation8cl.get("projection_only") is True
+                and isolation8cl.get("new_store") is False
+                and isolation8cl.get("new_queue") is False,
+                "Stage 8C Living Studio runtime isolation drift", problems)
+        authority8cl = stage8c_living.get("authority_baseline") or {}
+        require(authority8cl.get("unchanged") is True
+                and authority8cl.get("policy_registry_canonical_sha256")
+                    == authority8cl.get("prepared_against_policy_registry_canonical_sha256"),
+                "Stage 8C Living Studio authority baseline drift", problems)
+        require(stage8c_living.get("next_stage") == "Stage 8C — Remaining consumer domains",
+                "Stage 8C Living Studio next-stage handoff drift", problems)
+        if STAGE8C_LIVING_RULES_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8cl = Path(td) / "stage8c-living-studio-rules.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8C_LIVING_RULES_GENERATOR),
+                        "--prepared-against", stage8c_living["prepared_against_main_sha"],
+                        "--captured-at", stage8c_living["captured_at"],
+                        "--output", str(regenerated8cl),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0,
+                        "Stage 8C Living Studio regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()),
+                        problems)
+                if proc.returncode == 0 and regenerated8cl.is_file():
+                    require(regenerated8cl.read_bytes() == STAGE8C_LIVING_RULES.read_bytes(),
+                            "Stage 8C Living Studio receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)
