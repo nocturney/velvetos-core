@@ -28,7 +28,7 @@ EVENTS_CATALOG = ROOT / "packages" / "velvetos" / "schema" / "events.catalog.jso
 LOOP = ROOT / "packages" / "vfops" / "LOOP.json"
 MANIFEST = ROOT / "packages" / "manifest.json"
 AGENTS = PACK / "AGENTS.md"
-DESK = ROOT / ".cursor" / "vf-desk.json"
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
 MEM = ROOT / "packages" / "vfmem" / "catalog.json"
 SLOTS = ROOT / "packages" / "vfops" / "hq" / "BRIEF-SLOTS.md"
 
@@ -84,7 +84,19 @@ def assert_no_ils(path: Path) -> None:
         fail(f"possible invented ILS in {path.relative_to(ROOT)}: {snippet!r}")
 
 
+def canonical_tool_desk() -> Path:
+    if str(VELVETOS_PACK) not in sys.path:
+        sys.path.insert(0, str(VELVETOS_PACK))
+    from instance_resolver import resolve_surface  # type: ignore
+    try:
+        return resolve_surface(ROOT, "toolDesk", instance_id="velvet-factory", env={})
+    except Exception as exc:
+        fail(f"cannot resolve canonical VF tool desk: {exc}")
+    raise AssertionError("unreachable")
+
+
 def main() -> None:
+    desk_path = canonical_tool_desk()
     for path in (
         DOCS,
         SWC,
@@ -103,7 +115,7 @@ def main() -> None:
         LOOP,
         MANIFEST,
         AGENTS,
-        DESK,
+        desk_path,
         MEM,
         SLOTS,
     ):
@@ -283,7 +295,7 @@ def main() -> None:
     if "check-vfmedia.py" not in AGENTS.read_text(encoding="utf-8"):
         fail("AGENTS.md sensor table must list check-vfmedia.py")
 
-    desk = json.loads(DESK.read_text(encoding="utf-8"))
+    desk = json.loads(desk_path.read_text(encoding="utf-8"))
     ops = next((s for s in desk.get("seats") or [] if s.get("id") == "ops"), None)
     if not ops or "vfmedia" not in (ops.get("packs") or []):
         fail("desk ops seat must include vfmedia")
@@ -366,13 +378,13 @@ def main() -> None:
     for relative in (
         "packages/vfmedia/AGENTS.md", "constitution/CONSTITUTION.md",
         "packages/vfigos/SKILL.md", "packages/vfigos/SEND.md",
-        "packages/vfops/LOOP.json", ".cursor/vf-desk.json",
+        "packages/vfops/LOOP.json", "instances/velvet-factory/.cursor/vf-desk.json",
     ):
         text = (ROOT / relative).read_text(encoding="utf-8")
         for legacy in ("constitution/MEDIA-VAULT.md", "media-catalog.json", "check-media-vault.py", "needs-appointment"):
             if legacy in text:
                 fail(f"stale media vault reference in {relative}: {legacy}")
-        if relative != ".cursor/vf-desk.json":
+        if relative != "instances/velvet-factory/.cursor/vf-desk.json":
             for canonical in ("docs/MEDIA-VAULT.md", "packages/vfmedia/catalog.json"):
                 if canonical not in text:
                     fail(f"missing canonical media vault reference in {relative}: {canonical}")
