@@ -13,7 +13,7 @@
 4. **OpenPost:** **FROZEN**. No new schedule, queue, retry, release watch, health dependency or failover may be routed to OpenPost. Historical OpenPost evidence is provenance only.
 5. **Meta Ads MCP:** Ads/Marketing scope only. It is not the organic Instagram publisher and must not be used as one.
 
-Machine-readable authority: `packages/velvetos/TOOL-STATUS.json`.
+Machine-readable authority: selected `instance:surface:toolStatus`, composed through `packages/velvetos/tool_status_resolver.py`; the retained legacy composite is rollback/parity evidence only.
 
 ## Creative and media safety bindings
 

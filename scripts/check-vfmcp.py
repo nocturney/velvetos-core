@@ -8,7 +8,6 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-TOOL_STATUS = ROOT / "packages" / "velvetos" / "TOOL-STATUS.json"
 GAP = ROOT / "packages" / "vfmcp" / "GAP.md"
 FIT = ROOT / "docs" / "MCP-FIT.md"
 SHEETS = ROOT / "packages" / "vfbooks" / "SHEETS.md"

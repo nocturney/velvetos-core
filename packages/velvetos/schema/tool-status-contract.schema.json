@@ -16,13 +16,15 @@
     "instanceStateSurface": {"const": "toolStatus"},
     "composition": {
       "type": "object",
-      "required": ["resolver", "legacyCompatibilityPath", "legacyRetirementStage", "consumerCutover"],
+      "required": ["resolver", "activeAuthority", "rollbackCompatibilityPath", "legacyRetirementStage", "consumerCutover", "rollbackCompatibilityRetained"],
       "additionalProperties": false,
       "properties": {
         "resolver": {"const": "packages/velvetos/tool_status_resolver.py"},
-        "legacyCompatibilityPath": {"const": "packages/velvetos/TOOL-STATUS.json"},
+        "activeAuthority": {"const": "instance:surface:toolStatus"},
+        "rollbackCompatibilityPath": {"const": "packages/velvetos/TOOL-STATUS.json"},
         "legacyRetirementStage": {"type": "string", "minLength": 1},
-        "consumerCutover": {"const": false}
+        "consumerCutover": {"const": true},
+        "rollbackCompatibilityRetained": {"const": true}
       }
     }
   }

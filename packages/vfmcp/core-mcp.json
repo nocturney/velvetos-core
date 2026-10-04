@@ -1,7 +1,7 @@
 {
   "role": "core",
   "updatedAt": "2026-09-26",
-  "rule": "Tool routing is governed by packages/velvetos/TOOL-STATUS.json. No secrets in git.",
+  "rule": "Tool routing is governed by the selected instance:surface:toolStatus through packages/velvetos/tool_status_resolver.py. The retained TOOL-STATUS composite is rollback/parity only. No secrets in git.",
   "projectMcpJson": ".cursor/mcp.json",
   "connect": "packages/vfmcp/CORE-MCP.md",
   "servers": [

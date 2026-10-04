@@ -5,10 +5,15 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from tool_status_resolver import compose_tool_status  # noqa: E402
+
 router_path = ROOT / "packages" / "vfprod" / "FABRICATION-ROUTER.json"
 router = json.loads(router_path.read_text(encoding="utf-8"))
 manifest = json.loads((ROOT / "packages" / "velvetos" / "PROJECT-AUTHORITY-MANIFEST.json").read_text(encoding="utf-8"))
-tool_status = json.loads((ROOT / "packages" / "velvetos" / "TOOL-STATUS.json").read_text(encoding="utf-8"))
+tool_status = compose_tool_status(ROOT, instance_id="velvet-factory", env={})
 vfprod = (ROOT / "packages" / "vfprod" / "SKILL.md").read_text(encoding="utf-8")
 text_to_cad = (ROOT / "packages" / "vfprod" / "TEXT-TO-CAD.md").read_text(encoding="utf-8")
 lock = json.loads((ROOT / "skills-lock.json").read_text(encoding="utf-8"))

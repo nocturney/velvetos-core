@@ -143,8 +143,13 @@ def check_instance_resolver_contract(vf_inst: Path, meta: dict) -> None:
         fail("tool-status contract must remain generic Core semantics")
     if contract.get("instanceStateSurface") != "toolStatus":
         fail("tool-status contract instance surface drift")
-    if (contract.get("composition") or {}).get("consumerCutover") is not False:
-        fail("Stage 8B tool-status split must not claim consumer cutover")
+    composition = contract.get("composition") or {}
+    if composition.get("consumerCutover") is not True:
+        fail("Stage 8D tool-status consumer cutover must be active")
+    if composition.get("activeAuthority") != "instance:surface:toolStatus":
+        fail("tool-status active authority must be the selected instance surface")
+    if composition.get("rollbackCompatibilityRetained") is not True:
+        fail("tool-status rollback compatibility must remain retained")
 
     contract_schema = load(TOOL_STATUS_CONTRACT_SCHEMA)
     if contract_schema.get("$id") != "velvetos.tool-status-contract.v1":
@@ -178,8 +183,10 @@ def check_instance_resolver_contract(vf_inst: Path, meta: dict) -> None:
         "contract": "packages/velvetos/tool-status-contract.json",
         "resolver": "packages/velvetos/tool_status_resolver.py",
         "instanceSurface": "toolStatus",
-        "legacyCompatibilityPath": "packages/velvetos/TOOL-STATUS.json",
-        "consumerCutover": False,
+        "activeAuthority": "instance:surface:toolStatus",
+        "rollbackCompatibilityPath": "packages/velvetos/TOOL-STATUS.json",
+        "consumerCutover": True,
+        "rollbackCompatibilityRetained": True,
         "silentBusinessDefaultForbidden": True,
     }:
         fail("Core toolStatusResolution contract drift")

@@ -44,6 +44,16 @@ def git_json(commit:str,rel:str)->dict[str,Any]:
     if not isinstance(obj,dict): raise SystemExit(f"{rel}@{commit} must be object")
     return obj
 
+def receipt_source_commit()->str:
+    rel=OUT.relative_to(ROOT).as_posix()
+    proc=subprocess.run(
+        ["git","log","--diff-filter=A","--format=%H","--",rel],
+        cwd=ROOT,text=True,capture_output=True,encoding="utf-8",errors="replace",
+    )
+    commits=[line.strip() for line in proc.stdout.splitlines() if line.strip()]
+    require(bool(commits),"cannot resolve Stage 8C Windows receipt source commit")
+    return commits[-1]
+
 def main()->int:
     ap=argparse.ArgumentParser()
     ap.add_argument("--prepared-against",required=True)
@@ -97,9 +107,10 @@ def main()->int:
         require("GetEnvironmentVariable" in text,f"{rel} does not resolve machine env")
         require("The legacy user-profile fallback is closed" in text,f"{rel} fail-closed message drift")
 
-    render_now=load(RENDER_HOSTS)
+    source_commit=receipt_source_commit()
+    render_now=git_json(source_commit,"packages/vfmcp/RENDER-HOSTS.json")
     render_base=git_json(a.prepared_against,"packages/vfmcp/RENDER-HOSTS.json")
-    openpost_now=load(OPENPOST)
+    openpost_now=git_json(source_commit,"packages/vfigos/OPENPOST.json")
     openpost_base=git_json(a.prepared_against,"packages/vfigos/OPENPOST.json")
     require(csha(render_now)==csha(render_base),"render-host registry changed during binding split")
     require(csha(openpost_now)==csha(openpost_base),"OpenPost registry changed during binding split")
