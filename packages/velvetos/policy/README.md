@@ -562,3 +562,9 @@ The first Stage 8D migration slice removes the sole active Living Studio depende
 The legacy `packages/vfprod/FLEET.json` file remains present and parity-equal to `instances/velvet-factory/instance/fleet.json`. The rollback window remains open and deletion is still unauthorized; this slice removes an active compatibility consumer only.
 
 The initial Stage 8D readiness receipt is now replayed from the Git snapshot where it was created, so later migrations cannot rewrite that historical baseline. New progress is recorded separately in `reports/stage8d-fleet-consumer-migration.json` (8/8 PASS).
+
+## Reform v2 Stage 8D — Root desk compatibility consumer migration
+
+The active root-desk compatibility consumers are migrated without deleting the retained root desk. The always-on Velvet Factory Cursor rule now names the selected instance `toolDesk` surface, and visual-standard enforcement resolves `toolDesk` through the generic instance resolver rather than constructing an ambiguous desk path.
+
+The Stage 8C root-desk receipt remains the parity proof for Gmail, Instagram, Gemini, ChatGPT, Drive and the ops seat. The root desk stays present while the rollback window remains open; deletion is not authorized. Progress is recorded separately in `reports/stage8d-root-desk-consumer-migration.json`.

@@ -11,7 +11,7 @@ You are in **VelvetOS Core** (backend OS kernel). Reference studio bind remains 
 - Modules: `packages/velvetos/modules/` (always loaded)
 - Multi-repo: `packages/velvetos/REPOS.md` (Core=backend, instances=frontend)
 
-273 Agency specialists live in `.cursor/rules/` (`alwaysApply: false`). **Do not activate the whole roster.** Use the desk in `.cursor/vf-desk.json` and the skills under `.cursor/skills/`. Full warehouse: `docs/AGENCY-AGENTS.md`. Tool map: `docs/AGENCY-TOOLS.md`. Before grepping the warehouse, read `packages/vfgraft/MAP.md`.
+273 Agency specialists live in `.cursor/rules/` (`alwaysApply: false`). **Do not activate the whole roster.** Use the selected instance `toolDesk` surface (`instance:surface:toolDesk`) and the skills under `.cursor/skills/`; do not read the retained root compatibility desk as active authority. Full warehouse: `docs/AGENCY-AGENTS.md`. Tool map: `docs/AGENCY-TOOLS.md`. Before grepping the warehouse, read `packages/vfgraft/MAP.md`.
 
 ## Laws
 

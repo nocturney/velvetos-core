@@ -64,6 +64,8 @@ STAGE8D_READINESS = REPORTS / "stage8d-retirement-readiness.json"
 STAGE8D_READINESS_GENERATOR = ROOT / "scripts" / "generate-stage8d-retirement-readiness.py"
 STAGE8D_FLEET = REPORTS / "stage8d-fleet-consumer-migration.json"
 STAGE8D_FLEET_GENERATOR = ROOT / "scripts" / "generate-stage8d-fleet-consumer-migration.py"
+STAGE8D_ROOT_DESK = REPORTS / "stage8d-root-desk-consumer-migration.json"
+STAGE8D_ROOT_DESK_GENERATOR = ROOT / "scripts" / "generate-stage8d-root-desk-consumer-migration.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -97,6 +99,7 @@ EXPECTED_REPORTS = {
     "stage8c-closure.json",
     "stage8d-retirement-readiness.json",
     "stage8d-fleet-consumer-migration.json",
+    "stage8d-root-desk-consumer-migration.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -2531,6 +2534,91 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated8df.read_bytes() == STAGE8D_FLEET.read_bytes(),
                         "Stage 8D fleet migration receipt is not reproducible",
+                        problems,
+                    )
+
+    if STAGE8D_ROOT_DESK.is_file():
+        desk8d = load(STAGE8D_ROOT_DESK)
+        require(
+            desk8d.get("schema") == "velvetos.stage8d-root-desk-consumer-migration.v1"
+            and desk8d.get("stage") == "8D_ROOT_DESK_CONSUMER_MIGRATION"
+            and desk8d.get("behavior_change") is True
+            and desk8d.get("repository_acceptance") == "PASS",
+            "Stage 8D root-desk migration metadata drift",
+            problems,
+        )
+        criteria8dr = desk8d.get("acceptance_criteria") or {}
+        expected8dr = {
+            "cursor_rule_resolves_selected_instance_tool_desk_surface",
+            "cursor_rule_has_no_root_desk_literal",
+            "visual_sensor_resolves_tool_desk_through_instance_resolver",
+            "visual_sensor_has_no_root_desk_literal",
+            "known_active_root_desk_blockers_are_removed",
+            "stage8c_required_tool_and_ops_parity_remains_proven",
+            "legacy_root_desk_is_retained_for_rollback",
+            "root_desk_retirement_remains_unauthorized_while_rollback_window_is_open",
+            "stage8d_readiness_baseline_is_preserved",
+            "external_effect_policy_registry_is_unchanged",
+        }
+        require(
+            set(criteria8dr) == expected8dr and all(criteria8dr.get(k) is True for k in expected8dr),
+            "Stage 8D root-desk migration criteria drift or fail",
+            problems,
+        )
+        migration8dr = desk8d.get("migration") or {}
+        require(
+            migration8dr.get("legacy_path") == ".cursor/vf-desk.json"
+            and migration8dr.get("replacement_surface") == "instance:surface:toolDesk"
+            and migration8dr.get("legacy_path_retained") is True
+            and migration8dr.get("delete_authorized") is False,
+            "Stage 8D root-desk migration contract drift",
+            problems,
+        )
+        require(
+            (desk8d.get("prior_parity_evidence") or {}).get("all_required_parity") is True
+            and (desk8d.get("consumer_scan") or {}).get("known_active_blocker_references") == []
+            and (desk8d.get("rollback") or {}).get("window_open") is True
+            and (desk8d.get("rollback") or {}).get("delete_authorized") is False,
+            "Stage 8D root-desk parity/rollback drift",
+            problems,
+        )
+        authority8dr = desk8d.get("authority") or {}
+        require(
+            authority8dr.get("external_effect_authority_changed") is False
+            and authority8dr.get("policy_registry_canonical_sha256")
+                == authority8dr.get("prepared_against_policy_registry_canonical_sha256"),
+            "Stage 8D root-desk migration changed authority",
+            problems,
+        )
+        if STAGE8D_ROOT_DESK_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8dr = Path(td) / "stage8d-root-desk-consumer-migration.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_ROOT_DESK_GENERATOR),
+                        "--prepared-against", desk8d["prepared_against_main_sha"],
+                        "--source-commit", desk8d["source_commit_sha"],
+                        "--captured-at", desk8d["captured_at"],
+                        "--output", str(regenerated8dr),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D root-desk migration regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated8dr.is_file():
+                    require(
+                        regenerated8dr.read_bytes() == STAGE8D_ROOT_DESK.read_bytes(),
+                        "Stage 8D root-desk migration receipt is not reproducible",
                         problems,
                     )
 
