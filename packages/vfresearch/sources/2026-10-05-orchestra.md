@@ -1,13 +1,13 @@
 # Research Seat · 2026-10-05
 
 State: `ready_for_brief`
-Observed run: Monday 2026-10-05, ~02:10–03:30 Asia/Jerusalem, before the 07:00 cutoff. UTC clock at fetch was still 2026-10-04 evening.
+Observed run: Monday 2026-10-05, ~02:10–02:50 Asia/Jerusalem, before the 07:00 cutoff. UTC clock at fetch was still 2026-10-04 evening.
 Seat: Velvet Research Seat
 Path: Grok Bot GitHub CLI failover (fresh `gh` clone under `/tmp`, live WebSearch + WebFetch + `gh api`). No Cursor Cloud Agent. No chatgpt.com / gemini.google.com / perplexity.ai. No Morning Brief send.
 
 ## Research metadata
 
-- **as_of:** 2026-10-05 ~02:10–03:30 Asia/Jerusalem (2026-10-04 ~23:10–00:30 UTC). Every source below was fetched live in this window.
+- **as_of:** 2026-10-05 ~02:10–02:50 Asia/Jerusalem (2026-10-04 ~23:10–23:50 UTC). Every source below was fetched live in this window.
 - **provenance:** the URLs under each finding; `upstream-watch-latest.json` (checkedAt 2026-10-04T23:11:10Z); LinklyAI/best-skills commit `fcdab075666a2332fcfc6ff6fd70584d2fa7eddf` (`data: 2026-10-04`) + https://linkly.ai/skills.
 - **uncertainty:** sources are supplier/vendor blogs and tech press, not a Sderot order log and not `@velvets_cloud` Insights. Meta One prices and Edits availability are US/EU figures from press; Israel availability and price were not verified. Upstream verdicts reuse the 2026-10-04 review from unmerged PR #488 as their base (see Upstream).
 - **refresh_target:** next Velvet Research Seat (2026-10-06 02:00 Asia/Jerusalem); Best Skills due again at `lastPass` + 44h; MakerWorld on Wednesday 2026-10-07.
@@ -88,7 +88,9 @@ Executed. Snapshot dataDate 2026-10-04 (commit `fcdab075`). `no-embed-existing-c
 
 - `python3 scripts/vf_upstream_watch.py check --write packages/vfresearch/sources/upstream-watch-latest.json` at 2026-10-04T23:11:10Z: 95 sources, 56 pending, 6 `newDetection`, 0 failed, `autoUpgrade=false`.
 - `vfresearch_cadence.py review-routing` before review: 56 pending, 39 needing deep review on main's 1.10 review file. Base verdicts were taken from the 4.10 review (unmerged PR #488): 26 rows still matched the current HEAD/release exactly and were reused. The other 30 rows (29 moved since 4.10, plus `HKUDS/DeepTutor` with no review) were read through `gh api` compare + release notes and re-bound. After review: 56/56 current, `update 0 / wait 15 / review 12 / ignore 29`, `notifyOwner` false on every row.
-- `python3 scripts/vf_upstream_email.py render --arm --consume-notify`: `notify=true` (newDetection), digest `fad549248401adce`.
+- `python3 scripts/vf_upstream_email.py render --arm --consume-notify`: `notify=true` (newDetection), digest `fad549248401adce`, local Visible Text Gate on `tool-updates-latest.txt` = PASS (`owner-brief`, `FINAL_INTERNAL`).
+- Tool-updates email: one `workflow_dispatch` attempt of `gmail-tool-updates-send.yml` on this branch was stopped by the Grok Bot safety review before it reached GitHub (needs owner approval). Not retried, no other route. Request left `enabled:false`. No Gmail message id, so no delivery claim.
+- Receipt refresh: the watch moved pending from 50 to 56, so `stage7c-research-scheduler-consolidation.json` and `stage7-acceptance.json` were regenerated with their own generators and unchanged arguments. Only the routing counts and the stage7c hash changed.
 - No ack. No upgrade. No pip/npm/git pull.
 
 Toolchain rows stay out of `packages/vfops/data/research.md`.
