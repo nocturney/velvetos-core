@@ -1,15 +1,27 @@
 # Soft Tools Contract — human-visible AI text must pass the relevant chain
 
 Canonical authority: `constitution/VISIBLE_TEXT.md`.
+Policy registry reference: `policy_id: visible_text.finalization` (evidence input only; destination send/publish policy remains separate).
 
-This contract is the `vfcopy` implementation invariant for **every prose or microcopy artifact created/rephrased by AI and intended for a human reader** — public, customer-facing, or owner-facing. It is channel-aware: the relevant tools depend on the surface; public Instagram rules are not forced onto private customer or owner text. **Origin grants no exemption:** agent/tool/human-originated public copy must pass the same relevant final-copy gates before it can be treated as ready.
+This contract is the `vfcopy` implementation invariant for AI-authored/rephrased text intended for a human reader. **Stage 6 makes it tier-aware:** internal drafts and routine internal finals no longer pay the same ceremony as an external commitment or public publish. Truth/basic safety stays universal; public/customer risk does not get downgraded. **Origin grants no exemption:** public copy and external commitments must still satisfy their tier before they are treated as ready.
 
-## Universal baseline
+## Reform v2 Stage 6 tiers
 
-Before AI-authored human-visible text can be marked `final`, `ready`, `quality_checked`, `ready_for_publish`, `authorized_for_tool_publish`, `ready_to_send`, or equivalent:
+| Tier | Default surfaces / use | Required text evidence |
+|---|---|---|
+| `DRAFT_INTERNAL` | explicit internal working draft only (`desk`, owner/internal document/UI) | verified truth/basic-safety only; style/Humanizer findings are diagnostic, not blockers |
+| `FINAL_INTERNAL` | `owner-brief`, internal `human-document`, `ui-microcopy`, `desk` | truth + final clarity/surface QA; reader-first/copy/Humanizer become required only when sensitive or long (`>800` chars) |
+| `EXTERNAL_COMMITMENT` | `customer-message`, `sales-proposal`, explicitly external commitment documents | facts + reader-first + surface QA + exact body/hash binding to the action |
+| `PUBLIC_PUBLISH` | `public-social`, `visual-microcopy` | full public-copy chain + exact text identity; visual text keeps `NO_TEXT` comparison and marketing/public evidence |
+
+Tier downgrade is fail-closed: a public surface cannot request an internal tier, and an external commitment cannot masquerade as an internal final. `approved_static_copy` may reuse prior copy work only on an exact SHA-256 match after facts are rechecked; a changed hash reopens the gate.
+
+## Evidence catalog
+
+The following stages remain available. A tier requires only the relevant subset; **this is no longer a universal full-chain checklist for every internal sentence**:
 
 1. **Verified context / provenance** — real source only; unknown fact stays unknown. Literal source values remain literal.
-2. **Reader-first** — `hq/reader-first-he.md` before drafting: who reads, at what moment, what they need, and the simplest way to say it.
+2. **Reader-first** — when the selected tier requires it, use `hq/reader-first-he.md`: who reads, at what moment, what they need, and the simplest way to say it.
 3. **Surface route** — choose `public-social`, `visual-microcopy`, `customer-message`, `sales-proposal`, `owner-brief`, `human-document`, `ui-microcopy`, or `desk`.
 4. **Relevant domain tools** — apply the packs that own truth/intent for that surface; do not use irrelevant tools just to satisfy a checklist.
 5. **velvet-hebrew-copy** — `.cursor/skills/vf-hebrew-copy/SKILL.md` → `skills/velvet-hebrew-copy/SKILL.md` + `PIPELINE.md`.
@@ -43,7 +55,9 @@ For cover/first-frame/overlay/slide text, add `NO_TEXT` comparison. Text must ad
 
 For Gmail/WhatsApp/IG private reply, quote or proposal:
 
-`actual thread/card → relevant convert/sales/cost/license truth → reader-first → relevant sales/copywriting aids → velvet-hebrew-copy → Humanizer/AI-tells → scripts/vf_visible_text.py on final copy → fact gate → ready_to_send/handoff`
+`actual thread/card → relevant convert/sales/cost/license truth → reader-first → final clarity/lint → surface QA → exact body/hash binding → ready_to_send/handoff`
+
+`EXTERNAL_COMMITMENT` does not require irrelevant copy tools just to satisfy ceremony. Persuasive/long-form/sensitive customer text may still invoke `velvet-hebrew-copy`, Humanizer or sales/copy aids when they materially improve the result; truth and exact action/body binding remain mandatory.
 
 A phone/WhatsApp reference in a private customer message is not rejected merely because it would be forbidden as a public Instagram CTA.
 
@@ -51,9 +65,11 @@ A phone/WhatsApp reference in a private customer message is not rejected merely 
 
 For the 07:00 brief, direct office summary, status explanation, decision copy or owner-facing HTML:
 
-`office truth → reader-first(owner-brief) → velvet-hebrew-copy operational mode → Humanizer/AI-tells → scripts/vf_visible_text.py on final copy → fact/status validation → owner surface`
+Routine short `FINAL_INTERNAL`: `office truth → final clarity/surface QA → owner surface`.
 
-Humanizer may remove filler; it may **not** soften a blocker, alter an ID/hash/number, or make a red sensor sound green.
+Sensitive or long (`>800` chars) `FINAL_INTERNAL`: `office truth → reader-first(owner-brief) → velvet-hebrew-copy/Humanizer as relevant → final lint + fact/status validation → owner surface`.
+
+`DRAFT_INTERNAL` requires truth/basic-safety only and is never a send/publish authorization. Humanizer may remove filler when used; it may **not** soften a blocker, alter an ID/hash/number, or make a red sensor sound green.
 
 ## Human documents / UI
 

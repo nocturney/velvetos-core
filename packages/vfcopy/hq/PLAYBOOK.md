@@ -1,10 +1,10 @@
 # לינט וכתיבה — Visible Text Playbook
 
 Authority: `constitution/VISIBLE_TEXT.md` + `packages/vfcopy/SOFT-TOOLS-CONTRACT.md`.
+Policy registry reference: `policy_id: visible_text.finalization`.
 
-לפני כל prose/microcopy שנכתב ב־AI ואדם עתיד לקרוא: `hq/reader-first-he.md`.  
-שכבת עברית: `skills/velvet-hebrew-copy/SKILL.md` + `PIPELINE.md`.  
-Humanizer/anti-AI: `hq/ai-tells-he.md`.  
+קודם בוחרים tier לפי `SOFT-TOOLS-CONTRACT.md`. `DRAFT_INTERNAL` ו־`FINAL_INTERNAL` שגרתי אינם מחויבים reader-first/Humanizer ceremony.
+כשה־tier/רגישות/אורך דורשים copy work: `hq/reader-first-he.md` → `skills/velvet-hebrew-copy/SKILL.md` + `PIPELINE.md` → `hq/ai-tells-he.md` לפי הצורך.
 Executable candidate gate: `python3 scripts/vf_visible_text.py --surface <surface> ...`.  
 Public legacy lint: `python3 scripts/check-vfcopy.py lint [--rewrite]`.  
 Evals: `python3 scripts/check-vfcopy.py eval` — בודקים את המנוע, לא מוכיחים שטקסט מסוים עבר.
@@ -38,9 +38,11 @@ Evals: `python3 scripts/check-vfcopy.py eval` — בודקים את המנוע, 
 
 תבניות מוכנות: `hq/templates/README.md`. מקור מתודולוגיה: `packages/vfresearch/sources/2026-08-31-prompts-chat-embed.md`.
 
-## שרשרת חובה
+## מסלול לפי tier
 
-`verified context → surface/intent → reader-first → relevant domain/writing tools → velvet-hebrew-copy → Humanizer/AI-tells → surface-aware lint על הטקסט המדויק → factual/constraint gate → surface QA → visible_text_gate`
+`verified context → tier/surface → רק הכלים הנדרשים → surface-aware lint/fact gate → surface QA/exact binding לפי tier → visible_text_gate`
+
+`PUBLIC_PUBLISH` בלבד שומר את השרשרת הציבורית המלאה: reader-first → relevant writing tools → velvet-hebrew-copy → Humanizer/AI-tells → exact lint → public QA/PREFLIGHT. `EXTERNAL_COMMITMENT` שומר reader-first + surface QA + exact body/hash binding. Internal routine אינו טוען את כל השרשרת אוטומטית.
 
 - marketing/public/sales: `vfmskill` `copywriting` / `copy-editing` / `marketing-psychology` כשהם רלוונטיים; `N/A` צריך להיות אמיתי ולא קיצור דרך.
 - visual: `NO_TEXT` baseline חובה.

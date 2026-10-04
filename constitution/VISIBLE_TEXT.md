@@ -76,3 +76,18 @@ surface_qa: PASS
 - אסור לשלוח ללקוח, לפרסם, לרנדר כ־final, או להציג לבעלים כטקסט גמור אם ה־Visible Text Gate נכשל.
 - אם כלי כתיבה רלוונטי לא זמין: לא ממציאים PASS; משתמשים ב־failover הקיים או מסמנים שהטקסט עדיין draft.
 - שער תפעולי זה אינו תחליף לבדיקות חוק, מחיר, פרטיות, brand, visual או publish; הוא מצטרף אליהן לפי המשטח.
+
+## Reform v2 Stage 6 amendment — risk-tiered Visible Text
+
+Effective 2026-10-04. This section supersedes earlier wording that can be read as requiring the complete copy/Humanizer chain for every internal AI-authored sentence. It does **not** supersede truth, rights/privacy, commercial commitment, public-publish, spend, destructive-action or exact-binding safeguards.
+
+The canonical tiers are:
+
+- `DRAFT_INTERNAL` — internal working draft only. Require verified truth/basic safety. Reader-first, vfcopy/Humanizer and marketing ceremony are not mandatory. This tier is never send/publish/final-external authorization.
+- `FINAL_INTERNAL` — final owner/internal document/UI text. Require truth + clarity/surface QA. Reader-first/copy/Humanizer become mandatory only when the text is sensitive or long (current executable threshold: >800 characters).
+- `EXTERNAL_COMMITMENT` — customer/proposal/commitment text. Require verified facts, reader-first, surface QA and exact body/hash binding to the external action. Relevant domain authority remains mandatory for prices, deadlines, commitments, rights and other protected facts.
+- `PUBLIC_PUBLISH` — public social or visual copy. Keep the full public-copy chain, exact text identity, and all applicable brand/Product Truth/rights/publication evidence. Visual microcopy keeps the `NO_TEXT` comparison.
+
+Tier downgrade is fail-closed. Public surfaces cannot use internal tiers; external commitment surfaces cannot masquerade as internal finals. `scripts/vf_visible_text.py` owns the executable compatibility table and emits `tier`, `required_evidence`, exact `text_sha256` and the gate result.
+
+`approved_static_copy` may reuse prior copy work only when the current text SHA-256 exactly matches the approved SHA and current facts are rechecked. A changed hash or stale/invalid fact reopens the gate. Reuse never grants send/publish authority by itself.

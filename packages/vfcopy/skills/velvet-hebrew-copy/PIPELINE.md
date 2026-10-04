@@ -2,6 +2,18 @@
 
 אין runtime חדש. זה סדר העבודה הקנוני לכל agent שמפיק prose/microcopy אנושי נראה דרך `vfcopy`.
 Authority: `constitution/VISIBLE_TEXT.md`.
+Policy registry reference: `policy_id: visible_text.finalization`.
+
+## Stage 6 tier selector
+
+Before loading copy tools, choose the smallest legal tier:
+
+- `DRAFT_INTERNAL` — truth/basic-safety only; working internal copy may PASS without reader-first/Humanizer ceremony.
+- `FINAL_INTERNAL` — truth + clarity/surface QA; reader-first/copy/Humanizer only when sensitive or long (`>800` chars).
+- `EXTERNAL_COMMITMENT` — facts + reader-first + surface QA + exact body/hash binding.
+- `PUBLIC_PUBLISH` — full public chain + exact text identity; visual copy keeps `NO_TEXT` comparison.
+
+The stage table below is an **evidence catalog**, not a universal requirement list. `scripts/vf_visible_text.py` computes `required_evidence` from tier + surface and rejects illegal tier downgrades. Exact `approved_static_copy` may reuse prior copy work only when SHA-256 is unchanged and facts are rechecked.
 
 ## שלבים
 
@@ -20,12 +32,12 @@ Authority: `constitution/VISIBLE_TEXT.md`.
 | 11 | Visible Text decision | artifact/preflight קיים | `visible_text_gate: PASS|FAIL|UNPROVEN` |
 | 12 | מסירה | הערוץ הבא | final candidate בלבד אחרי PASS |
 
-`reader-first-he.md` הוא baseline לכל prose שנכתב ב־AI לעין אנושית.  
-`vfmskill` copywriting/copy-editing מתווסף כאשר הוא רלוונטי, בעיקר marketing/sales/long-form; הוא אינו עוקף `velvet-hebrew-copy`, `ai-tells-he.md` או אמת הדומיין.
+`reader-first-he.md` הוא evidence tool רק כאשר ה־tier דורש אותו: `EXTERNAL_COMMITMENT`, `PUBLIC_PUBLISH`, או `FINAL_INTERNAL` sensitive/long.
+`vfmskill` copywriting/copy-editing מתווסף כאשר הוא רלוונטי, בעיקר marketing/sales/long-form; הוא אינו עוקף אמת דומיין או evidence חובה של ה־tier.
 
 ### Anti-slop בתוך השער, לא לידו
 
-`detect_ai_slop()` חי בתוך `packages/vfcopy/lint_he.py`. `lint_hebrew_copy()` קורא לו בכל candidate, ולכן finding חוסם את `humanizer_ai_tells` ואת `visible_text_gate: PASS` על אותו digest. `scripts/vf_visible_text.py` גם מחזיר `anti_slop.checked=true` ואת ה-findings המדויקים. מצב `python3 scripts/check-vfcopy.py detect --text '…'` מיועד לאבחון בלבד; הוא אינו עוקף lint, אינו נותן score ואינו טוען מי כתב את הטקסט.
+`detect_ai_slop()` חי בתוך `packages/vfcopy/lint_he.py` ונקרא בכל candidate. ב־`DRAFT_INTERNAL` findings הם diagnostic ואינם blocker; ב־`FINAL_INTERNAL`, `EXTERNAL_COMMITMENT` ו־`PUBLIC_PUBLISH` הם עדיין יכולים לחסום דרך ה־final lint. `approved_static_copy` exact-hash יכול לדלג על style work חוזר לאחר fact recheck. `scripts/vf_visible_text.py` מחזיר את ה-findings ואת `blocking_for_tier` בפועל. מצב `python3 scripts/check-vfcopy.py detect --text '…'` מיועד לאבחון בלבד; הוא אינו עוקף lint, אינו נותן score ואינו טוען מי כתב את הטקסט.
 
 ## Routing לפי mode
 
@@ -42,7 +54,7 @@ Authority: `constitution/VISIBLE_TEXT.md`.
 ### `customer-message`
 1. thread/card אמיתי.
 2. `vfconvert` לחסרים; `vfsales` אם מכירתי; `vfcost` למחיר/עלות; `vlicense` רק כשישים.
-3. reader-first + velvet-hebrew-copy + Humanizer.
+3. `EXTERNAL_COMMITMENT`: reader-first + final lint/surface QA + exact body/hash binding. velvet-hebrew-copy/Humanizer רק כשנדרש לתיקון/איכות, לא כטקס נפרד.
 4. CTA/ערוץ לפי השיחה הפרטית — לא PUBLIC_CURRENT_CTA בכוח.
 
 ### `sales-proposal`
@@ -50,16 +62,15 @@ Authority: `constitution/VISIBLE_TEXT.md`.
 
 ### `owner-brief`
 1. מקורות אמת של המשרד.
-2. reader-first: מה כריסטיאן צריך לדעת/להחליט עכשיו.
-3. velvet-hebrew-copy במצב תפעולי + Humanizer.
-4. preserve literal IDs/hashes/status/numbers.
-5. אין public CTA ואין שיווקיות. חסם נשאר חסם.
+2. routine `FINAL_INTERNAL`: בהירות + surface QA בלבד; preserve literal IDs/hashes/status/numbers.
+3. אם sensitive/long: הוסף reader-first + velvet-hebrew-copy/Humanizer לפי הצורך.
+4. אין public CTA ואין שיווקיות. חסם נשאר חסם.
 
 ### `human-document`
-פק הדומיין → reader-first → vfcopy/Humanizer → copy-editing כשישים → רק אז layout/render QA.
+Internal routine: domain truth → clarity/surface QA → layout/render QA. Sensitive/long מוסיף reader-first/vfcopy; מסמך חיצוני עם commitment עובר `EXTERNAL_COMMITMENT` + exact binding.
 
 ### `ui-microcopy`
-reader-first + vfcopy/Humanizer. labels טכניים קנוניים/נתוני source אינם משוכתבים.
+Routine `FINAL_INTERNAL`: clarity/surface QA + labels טכניים קנוניים literal. reader-first/vfcopy/Humanizer רק אם הרגישות/האורך באמת מצדיקים.
 
 ## Visual copy law
 

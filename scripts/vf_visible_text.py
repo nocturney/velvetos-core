@@ -44,6 +44,26 @@ PUBLIC_SURFACES = {"public-social", "visual-microcopy"}
 LONGFORM_SURFACES = {"owner-brief", "human-document", "sales-proposal"}
 MARKETING_SURFACES = {"public-social", "visual-microcopy", "sales-proposal"}
 
+TIERS = (
+    "DRAFT_INTERNAL",
+    "FINAL_INTERNAL",
+    "EXTERNAL_COMMITMENT",
+    "PUBLIC_PUBLISH",
+)
+INTERNAL_SURFACES = {"owner-brief", "human-document", "ui-microcopy", "desk"}
+EXTERNAL_COMMITMENT_SURFACES = {"customer-message", "sales-proposal", "human-document"}
+DEFAULT_TIER_BY_SURFACE = {
+    "public-social": "PUBLIC_PUBLISH",
+    "visual-microcopy": "PUBLIC_PUBLISH",
+    "customer-message": "EXTERNAL_COMMITMENT",
+    "sales-proposal": "EXTERNAL_COMMITMENT",
+    "owner-brief": "FINAL_INTERNAL",
+    "human-document": "FINAL_INTERNAL",
+    "ui-microcopy": "FINAL_INTERNAL",
+    "desk": "FINAL_INTERNAL",
+}
+HEAVY_INTERNAL_LENGTH = 800
+
 PUBLIC_ONLY_MARKERS = (
     "CTA וואטסאפ/טלפון אסור בתוכן ציבורי",
 )
@@ -119,71 +139,163 @@ def _sha256(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
+def _resolve_tier(args: argparse.Namespace) -> str:
+    tier = (getattr(args, "tier", None) or DEFAULT_TIER_BY_SURFACE[args.surface]).strip()
+    if tier not in TIERS:
+        raise ValueError(f"unsupported visible-text tier: {tier}")
+    if tier in {"DRAFT_INTERNAL", "FINAL_INTERNAL"} and args.surface not in INTERNAL_SURFACES:
+        raise ValueError(f"{tier} cannot be used for external/public surface {args.surface}")
+    if tier == "EXTERNAL_COMMITMENT" and args.surface not in EXTERNAL_COMMITMENT_SURFACES:
+        raise ValueError(f"EXTERNAL_COMMITMENT cannot be used for surface {args.surface}")
+    if tier == "PUBLIC_PUBLISH" and args.surface not in PUBLIC_SURFACES:
+        raise ValueError(f"PUBLIC_PUBLISH requires a public surface, got {args.surface}")
+    return tier
+
+
+def _approved_static_match(text: str, args: argparse.Namespace) -> tuple[bool, bool, str | None]:
+    expected = (getattr(args, "approved_static_sha256", None) or "").strip().lower()
+    if not expected:
+        return False, False, None
+    if len(expected) != 64 or any(ch not in "0123456789abcdef" for ch in expected):
+        raise ValueError("--approved-static-sha256 must be 64 lowercase/uppercase hex characters")
+    observed = _sha256(text)
+    return True, observed == expected, expected
+
+
 def evaluate(args: argparse.Namespace) -> dict[str, Any]:
     text = _read_text(args)
-    context = _load_context(args.context_json)
+    tier = _resolve_tier(args)
+    context = _load_context(getattr(args, "context_json", None))
     context["visible_text_surface"] = args.surface
+    context["visible_text_tier"] = tier
+
+    static_requested, static_match, static_expected = _approved_static_match(text, args)
+    sensitive = bool(getattr(args, "sensitive", False))
+    heavy_internal = tier == "FINAL_INTERNAL" and (
+        sensitive or len(text) > HEAVY_INTERNAL_LENGTH
+    )
+    exact_body_bound = bool(getattr(args, "exact_body_bound", False))
 
     slop_findings = detect_ai_slop(text)
     verdict = lint_hebrew_copy(
         text,
         label=f"visible-text:{args.surface}",
         context=context,
-        offer_rewrite=args.rewrite,
+        offer_rewrite=bool(getattr(args, "rewrite", False)),
     )
     problems = _surface_filter(args.surface, verdict.problems)
     lint_status = _classify(problems, verdict.status)
     lint_pass = lint_status == "pass"
+    fact_safe = lint_status not in {"fail_fact", "needs_input"}
 
-    domain_tools = [x.strip() for x in (args.domain_tool or []) if x.strip()]
-    marketing_disposition = (args.marketing_aids or "").strip()
+    domain_tools = [
+        x.strip() for x in (getattr(args, "domain_tool", None) or []) if x.strip()
+    ]
+    marketing_disposition = (getattr(args, "marketing_aids", None) or "").strip()
 
     stages = {
-        "truth_checked": bool(args.truth_checked),
-        "reader_first": bool(args.reader_first),
-        "copy_authority": bool(args.copy_authority),
+        "truth_checked": bool(getattr(args, "truth_checked", False)),
+        "reader_first": bool(getattr(args, "reader_first", False)),
+        "copy_authority": bool(getattr(args, "copy_authority", False)),
         "humanizer_ai_tells": lint_pass and not slop_findings,
         "domain_tools_recorded": bool(domain_tools),
-        "surface_qa": bool(args.surface_qa),
+        "surface_qa": bool(getattr(args, "surface_qa", False)),
+        "exact_body_bound": exact_body_bound,
     }
 
-    missing: list[str] = [name for name, ok in stages.items() if not ok]
-    if args.surface == "visual-microcopy" and not args.no_text_compared:
+    if static_match:
+        required = ["truth_checked"]
+        if tier == "EXTERNAL_COMMITMENT":
+            required.append("exact_body_bound")
+    elif tier == "DRAFT_INTERNAL":
+        required = ["truth_checked"]
+    elif tier == "FINAL_INTERNAL":
+        required = ["truth_checked", "surface_qa"]
+        if heavy_internal:
+            required.extend(["reader_first", "copy_authority", "humanizer_ai_tells"])
+    elif tier == "EXTERNAL_COMMITMENT":
+        required = ["truth_checked", "reader_first", "surface_qa", "exact_body_bound"]
+    else:
+        required = [
+            "truth_checked",
+            "reader_first",
+            "copy_authority",
+            "humanizer_ai_tells",
+            "domain_tools_recorded",
+            "surface_qa",
+        ]
+
+    missing: list[str] = [name for name in required if not stages[name]]
+    if tier == "PUBLIC_PUBLISH" and args.surface == "visual-microcopy" and not bool(
+        getattr(args, "no_text_compared", False)
+    ):
         missing.append("no_text_compared")
-    if args.surface in MARKETING_SURFACES and not marketing_disposition:
+    if tier == "PUBLIC_PUBLISH" and args.surface in MARKETING_SURFACES and not marketing_disposition:
         missing.append("marketing_aids_disposition")
 
-    if not lint_pass:
+    if static_requested and not static_match:
         gate = "FAIL"
-    elif args.gate and not missing:
-        gate = "PASS"
+        failure_reason = "approved_static_hash_mismatch"
     else:
-        gate = "UNPROVEN"
+        failure_reason = None
+        lint_blocked = not (fact_safe if tier == "DRAFT_INTERNAL" or static_match else lint_pass)
+        if lint_blocked:
+            gate = "FAIL"
+            failure_reason = "lint_or_fact_gate"
+        elif bool(getattr(args, "gate", False)) and not missing:
+            gate = "PASS"
+        else:
+            gate = "UNPROVEN"
 
     payload: dict[str, Any] = {
         "schema": 1,
+        "tier_contract_version": 1,
+        "tier": tier,
         "surface": args.surface,
-        "language": args.language,
+        "language": getattr(args, "language", "he"),
         "text_sha256": _sha256(text),
         "lint": {
             "status": lint_status,
             "problems": problems,
             "raw_status": verdict.status,
+            "blocking_for_tier": not (
+                fact_safe if tier == "DRAFT_INTERNAL" or static_match else lint_pass
+            ),
         },
         "anti_slop": {
             "checked": True,
             "findings": slop_findings,
+            "blocking_for_tier": tier != "DRAFT_INTERNAL" and not static_match,
             "authorship": "NOT_INFERRED — named writing patterns only",
         },
         "stages": stages,
+        "required_evidence": required,
+        "heavy_tools_required": heavy_internal or tier == "PUBLIC_PUBLISH",
         "domain_tools": domain_tools,
         "marketing_aids": marketing_disposition or None,
-        "no_text_compared": bool(args.no_text_compared) if args.surface == "visual-microcopy" else None,
+        "no_text_compared": (
+            bool(getattr(args, "no_text_compared", False))
+            if args.surface == "visual-microcopy"
+            else None
+        ),
+        "approved_static_copy": {
+            "requested": static_requested,
+            "expected_sha256": static_expected,
+            "exact_match": static_match,
+            "reuse_allowed": static_match and stages["truth_checked"],
+        },
         "missing_evidence": missing,
+        "failure_reason": failure_reason,
         "visible_text_gate": gate,
-        "rule": "PASS requires the relevant chain on this exact text; lint/eval existence alone is not execution proof.",
+        "rule": (
+            "Tiered Visible Text Gate: internal drafts pay truth/basic-safety only; "
+            "internal finals add clarity/facts with heavy ceremony only for sensitivity/length; "
+            "external commitments require facts + reader/surface QA + exact-body binding; "
+            "public publish keeps the full public-copy chain. Exact approved static copy may "
+            "reuse prior copy work only while its hash is unchanged and facts are rechecked."
+        ),
     }
-    if args.rewrite and verdict.rewrite:
+    if bool(getattr(args, "rewrite", False)) and verdict.rewrite:
         payload["rewrite_candidate"] = verdict.rewrite
         payload["rewrite_invalidates_current_hash"] = True
     return payload
@@ -196,6 +308,7 @@ def main() -> int:
     source.add_argument("--text")
     source.add_argument("--file")
     parser.add_argument("--language", choices=("he", "mixed"), default="he")
+    parser.add_argument("--tier", choices=TIERS, help="Risk/surface tier. Defaults safely from --surface.")
     parser.add_argument("--context-json")
     parser.add_argument("--domain-tool", action="append", default=[])
     parser.add_argument(
@@ -206,6 +319,9 @@ def main() -> int:
     parser.add_argument("--reader-first", action="store_true")
     parser.add_argument("--copy-authority", action="store_true")
     parser.add_argument("--surface-qa", action="store_true")
+    parser.add_argument("--sensitive", action="store_true", help="Require heavier internal copy ceremony for sensitive content.")
+    parser.add_argument("--exact-body-bound", action="store_true", help="Assert the exact body/hash is bound to the external commitment action.")
+    parser.add_argument("--approved-static-sha256", help="Reuse approved static copy only when the exact current text SHA-256 matches.")
     parser.add_argument("--no-text-compared", action="store_true")
     parser.add_argument("--rewrite", action="store_true")
     parser.add_argument(
