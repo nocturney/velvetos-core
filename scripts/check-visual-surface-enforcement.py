@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
 POLICY = ROOT / "packages" / "vfom" / "VISUAL-STANDARD-ENFORCEMENT.json"
 MARKER = "VF_VISUAL_STANDARD_GATE"
 STD = "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md"
@@ -23,6 +24,18 @@ def load_json(path: Path) -> dict:
     except json.JSONDecodeError as exc: fail(f"invalid JSON {path.relative_to(ROOT)}: {exc}")
     if not isinstance(value, dict): fail(f"{path.relative_to(ROOT)} must be object")
     return value
+
+
+def canonical_tool_desk() -> Path:
+    if str(VELVETOS_PACK) not in sys.path:
+        sys.path.insert(0, str(VELVETOS_PACK))
+    from instance_resolver import resolve_surface  # type: ignore
+    try:
+        return resolve_surface(ROOT, "toolDesk", instance_id="velvet-factory", env={})
+    except Exception as exc:
+        fail(f"cannot resolve canonical VF tool desk: {exc}")
+    raise AssertionError("unreachable")
+
 
 def main() -> None:
     policy = load_json(POLICY)
@@ -94,18 +107,22 @@ def main() -> None:
             fail(f"{rel} must require visual_standard_gate evidence")
 
     embedded = ROOT / "instances/velvet-factory"
-    for rel in ("AGENTS.md", ".cursor/rules/velvetos-instance-desk.mdc", ".cursor/vf-desk.json"):
-        path = embedded / rel
-        if not path.is_file(): fail(f"missing embedded instance surface {rel}")
+    embedded_surfaces = (
+        ("AGENTS.md", embedded / "AGENTS.md"),
+        ("instance-desk-rule", embedded / ".cursor" / "rules" / "velvetos-instance-desk.mdc"),
+        ("toolDesk", canonical_tool_desk()),
+    )
+    for label, path in embedded_surfaces:
+        if not path.is_file(): fail(f"missing embedded instance surface {label}")
         body = path.read_text(encoding="utf-8")
         for needle in ("OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",):
             if needle not in body:
-                fail(f"embedded instance {rel} missing {needle}")
+                fail(f"embedded instance {label} missing {needle}")
         lower = body.lower()
-        if rel == ".cursor/rules/velvetos-instance-desk.mdc" and not ("stop" in lower and "generic" in lower):
-            fail(f"embedded instance {rel} missing stop/generic-fallback semantics")
-        if rel == ".cursor/vf-desk.json" and "fail_closed" not in lower:
-            fail(f"embedded instance {rel} missing fail_closed machine binding")
+        if label == "instance-desk-rule" and not ("stop" in lower and "generic" in lower):
+            fail(f"embedded instance {label} missing stop/generic-fallback semantics")
+        if label == "toolDesk" and "fail_closed" not in lower:
+            fail(f"embedded instance {label} missing fail_closed machine binding")
 
     print(f"OK visual-standard enforced surfaces={len(surfaces)} fail_closed generic_fallback=forbidden")
 

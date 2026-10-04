@@ -1,0 +1,60 @@
+{
+  "schema": "velvetos.stage8d-root-desk-consumer-migration.v1",
+  "stage": "8D_ROOT_DESK_CONSUMER_MIGRATION",
+  "behavior_change": true,
+  "prepared_against_main_sha": "54b9501483f795202447bb53b6e5151bd3af2ccf",
+  "source_commit_sha": "f55602ee92a5364f36a48dee82f86cd1e2b0cdad",
+  "captured_at": "2026-10-04T21:21:56.4945290+03:00",
+  "purpose": "Remove the remaining active root-desk compatibility consumers while retaining the root desk for rollback.",
+  "migration": {
+    "legacy_path": ".cursor/vf-desk.json",
+    "replacement_surface": "instance:surface:toolDesk",
+    "consumers": {
+      ".cursor/rules/velvet-factory-desk.mdc": "selected-instance-toolDesk-surface",
+      "scripts/check-visual-surface-enforcement.py": "instance-resolver-toolDesk"
+    },
+    "legacy_path_retained": true,
+    "delete_authorized": false
+  },
+  "prior_parity_evidence": {
+    "path": "packages/velvetos/policy/reports/stage8c-root-desk-readers.json",
+    "required_subtrees": {
+      "gmail": true,
+      "instagram": true,
+      "gemini": true,
+      "chatgpt": true,
+      "drive": true,
+      "opsSeat": true
+    },
+    "all_required_parity": true
+  },
+  "consumer_scan": {
+    "legacy_reference_count": 51,
+    "known_active_blocker_references": [],
+    "active_blockers_removed": true
+  },
+  "rollback": {
+    "window_open": true,
+    "retirement_ready": false,
+    "delete_authorized": false
+  },
+  "authority": {
+    "policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false
+  },
+  "acceptance_criteria": {
+    "cursor_rule_resolves_selected_instance_tool_desk_surface": true,
+    "cursor_rule_has_no_root_desk_literal": true,
+    "visual_sensor_resolves_tool_desk_through_instance_resolver": true,
+    "visual_sensor_has_no_root_desk_literal": true,
+    "known_active_root_desk_blockers_are_removed": true,
+    "stage8c_required_tool_and_ops_parity_remains_proven": true,
+    "legacy_root_desk_is_retained_for_rollback": true,
+    "root_desk_retirement_remains_unauthorized_while_rollback_window_is_open": true,
+    "stage8d_readiness_baseline_is_preserved": true,
+    "external_effect_policy_registry_is_unchanged": true
+  },
+  "repository_acceptance": "PASS",
+  "next_action": "Migrate the next active compatibility consumer; do not delete the root desk until explicit rollback-window closure evidence exists."
+}
