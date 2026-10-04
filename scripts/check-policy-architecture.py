@@ -54,6 +54,8 @@ STAGE8C_CONTROL_API_FLEET = REPORTS / "stage8c-control-api-fleet.json"
 STAGE8C_CONTROL_API_FLEET_GENERATOR = ROOT / "scripts" / "generate-stage8c-control-api-fleet.py"
 STAGE8C_EXPERT_MODULES = REPORTS / "stage8c-expert-modules.json"
 STAGE8C_EXPERT_MODULES_GENERATOR = ROOT / "scripts" / "generate-stage8c-expert-modules.py"
+STAGE8C_CHATGPT_DISTRIBUTION = REPORTS / "stage8c-chatgpt-distribution-consumers.json"
+STAGE8C_CHATGPT_DISTRIBUTION_GENERATOR = ROOT / "scripts" / "generate-stage8c-chatgpt-distribution-consumers.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -82,6 +84,7 @@ EXPECTED_REPORTS = {
     "stage8c-living-studio-rules.json",
     "stage8c-control-api-fleet.json",
     "stage8c-expert-modules.json",
+    "stage8c-chatgpt-distribution-consumers.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -2056,6 +2059,79 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated8ce.is_file():
                     require(regenerated8ce.read_bytes() == STAGE8C_EXPERT_MODULES.read_bytes(),
                             "Stage 8C expert-modules receipt is not reproducible", problems)
+
+    if STAGE8C_CHATGPT_DISTRIBUTION.is_file():
+        stage8c_chat = load(STAGE8C_CHATGPT_DISTRIBUTION)
+        require(stage8c_chat.get("schema") == "velvetos.stage8c-chatgpt-distribution-consumers.v1"
+                and stage8c_chat.get("stage") == "8C_CHATGPT_DISTRIBUTION_CONSUMERS"
+                and stage8c_chat.get("behavior_change") is True
+                and stage8c_chat.get("repository_acceptance") == "PASS",
+                "Stage 8C ChatGPT distribution metadata drift", problems)
+        criteria8cg = stage8c_chat.get("acceptance_criteria") or {}
+        expected_criteria8cg = {
+            "instance_manifest_declares_chatgpt_project_distribution_surface",
+            "instance_distribution_file_set_matches_core_compatibility_bundle",
+            "instance_distribution_is_byte_equal_to_core_compatibility_bundle",
+            "core_compatibility_non_pin_files_are_unchanged",
+            "core_compatibility_trust_updates_are_limited_to_chat_runtime_and_asset_manifest_pins",
+            "cold_start_checker_resolves_explicit_instance_distribution",
+            "cold_start_preflight_has_no_hardcoded_vf_bundle_revision_or_authority_filename",
+            "cold_start_preflight_derives_identity_from_bundle_manifest_or_latest",
+            "generic_core_checkout_without_instance_distribution_selection_remains_fail_closed",
+            "external_effect_policy_registry_is_unchanged",
+        }
+        require(set(criteria8cg) == expected_criteria8cg
+                and all(criteria8cg.get(key) is True for key in expected_criteria8cg),
+                "Stage 8C ChatGPT distribution acceptance criteria drift or fail", problems)
+        distribution8cg = stage8c_chat.get("distribution") or {}
+        require(distribution8cg.get("surface") == "chatgptProject"
+                and distribution8cg.get("surface_pointer") == "distribution/chatgpt-project/LATEST.json"
+                and distribution8cg.get("instance_root") == "instances/velvet-factory/distribution/chatgpt-project"
+                and distribution8cg.get("core_compatibility_root") == "packages/velvetos/chatgpt-project"
+                and distribution8cg.get("file_count") == 33
+                and distribution8cg.get("byte_parity") is True
+                and distribution8cg.get("core_compatibility_non_pin_files_unchanged") is True
+                and distribution8cg.get("asset_manifest_pin_only_change") is True
+                and distribution8cg.get("project_manifest_pin_only_change") is True
+                and distribution8cg.get("delete_authorized") is False,
+                "Stage 8C ChatGPT distribution parity/rollback drift", problems)
+        consumers8cg = stage8c_chat.get("consumers") or {}
+        require(consumers8cg == {
+                    "scripts/check-chat-cold-start-preflight.py": "instance-distribution-explicit-vf",
+                    "scripts/vf_chat_cold_start_preflight.py": "generic-bundle-derived-identity",
+                },
+                "Stage 8C ChatGPT distribution consumer mapping drift", problems)
+        authority8cg = stage8c_chat.get("authority_baseline") or {}
+        require(authority8cg.get("unchanged") is True
+                and authority8cg.get("policy_registry_canonical_sha256")
+                    == authority8cg.get("prepared_against_policy_registry_canonical_sha256"),
+                "Stage 8C ChatGPT distribution authority baseline drift", problems)
+        require(stage8c_chat.get("next_stage") == "Stage 8C — ChatGPT distribution contract continuation",
+                "Stage 8C ChatGPT distribution next-stage handoff drift", problems)
+        if STAGE8C_CHATGPT_DISTRIBUTION_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8cg = Path(td) / "stage8c-chatgpt-distribution-consumers.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8C_CHATGPT_DISTRIBUTION_GENERATOR),
+                        "--prepared-against", stage8c_chat["prepared_against_main_sha"],
+                        "--captured-at", stage8c_chat["captured_at"],
+                        "--output", str(regenerated8cg),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0,
+                        "Stage 8C ChatGPT distribution regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()),
+                        problems)
+                if proc.returncode == 0 and regenerated8cg.is_file():
+                    require(regenerated8cg.read_bytes() == STAGE8C_CHATGPT_DISTRIBUTION.read_bytes(),
+                            "Stage 8C ChatGPT distribution receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)

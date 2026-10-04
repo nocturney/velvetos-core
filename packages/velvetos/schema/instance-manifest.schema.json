@@ -15,30 +15,70 @@
   ],
   "additionalProperties": true,
   "properties": {
-    "product": { "const": "VelvetOS" },
-    "role": { "const": "instance" },
-    "displayName": { "type": "string", "minLength": 1 },
-    "instanceId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
-    "profile": { "$ref": "#/$defs/relativePath" },
-    "surfaceContractVersion": { "const": 1 },
+    "product": {
+      "const": "VelvetOS"
+    },
+    "role": {
+      "const": "instance"
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "instanceId": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "profile": {
+      "$ref": "#/$defs/relativePath"
+    },
+    "surfaceContractVersion": {
+      "const": 1
+    },
     "surfaces": {
       "type": "object",
-      "required": ["profile"],
-      "additionalProperties": { "$ref": "#/$defs/relativePath" },
+      "required": [
+        "profile"
+      ],
+      "additionalProperties": {
+        "$ref": "#/$defs/relativePath"
+      },
       "properties": {
-        "profile": { "$ref": "#/$defs/relativePath" },
-        "toolDesk": { "$ref": "#/$defs/relativePath" },
-        "fleet": { "$ref": "#/$defs/relativePath" },
-        "toolStatus": { "$ref": "#/$defs/relativePath" }
+        "profile": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "toolDesk": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "fleet": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "toolStatus": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "chatgptProject": {
+          "$ref": "#/$defs/relativePath"
+        }
       }
     },
     "core": {
       "type": "object",
-      "required": ["github", "vendorPath", "attach"],
+      "required": [
+        "github",
+        "vendorPath",
+        "attach"
+      ],
       "properties": {
-        "github": { "type": "string", "minLength": 1 },
-        "vendorPath": { "$ref": "#/$defs/relativePath" },
-        "attach": { "$ref": "#/$defs/relativePath" }
+        "github": {
+          "type": "string",
+          "minLength": 1
+        },
+        "vendorPath": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "attach": {
+          "$ref": "#/$defs/relativePath"
+        }
       }
     }
   },

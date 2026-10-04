@@ -29,3 +29,6 @@ packages/vfharness/state/pr228-rollout/* text eol=lf
 /packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.4.txt -text
 # Brand assets are SHA-256 pinned in packages/vfbrand/brand-tokens.json; keep bytes exact on every checkout (SVGs are text).
 /packages/vfbrand/assets/** -text
+
+# Instance-owned ChatGPT Project distribution is a byte-for-byte compatibility snapshot; preserve legacy whitespace exactly.
+/instances/velvet-factory/distribution/chatgpt-project/** -whitespace

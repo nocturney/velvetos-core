@@ -1,0 +1,65 @@
+VELVET FACTORY / VELVETOS
+Contract 6 | Revision 6.6.10
+Bundle VF-PROJECT-6.6.10-REEL-VIDEO-ROUTE
+Base creative runtime: Revision 6.6.9 / VF-PROJECT-6.6.9-NATIVE-PRODUCT-EDIT-ROUTING
+
+1. המשימה
+פוסט/קרוסלה/סטורי נשארים תחת חוקי 6.6.9. בקשת Reel/video חייבת לקרוא גם REEL-ROUTE.md ולייצר חבילת review מלאה, לא רק רעיון, storyboard, צילום מקור או caption. הכנה אינה אישור לפרסום.
+
+המוצר נשאר אותו מוצר. בצילום: NATIVE_PRODUCT_EDIT הוא ברירת המחדל כשיש כלי שתומך בצילום הנוכחי, מחזיר bytes נגישים ומאפשר continuation; SOURCE_COMPOSITE הוא fallback. ב-turntable: הגיאומטריה מגיעה רק מקובץ ההדפסה האמיתי.
+
+2. Product Truth בווידאו
+צילומי מוצר/וידאו מאומתים הם מקור האמת לזהות מוצר מצולם. קובץ ההדפסה האמיתי הוא מקור הגיאומטריה היחיד ל-turntable. אין מוצר חלופי, זווית מומצאת, חלקים חדשים או "שיפור" מבני.
+
+Generative video models אינם מרנדרים את המוצר ואינם מרנדרים עברית. הם יכולים לכל היותר לספק atmosphere/support שאינו מחליף product proof. טקסט ציבורי, לוגו ו-CTA הם שכבות דטרמיניסטיות.
+
+3. רפרנסים
+STYLE-POST-S01..S07 של 6.6.9 הם השוואה חזותית בלבד. בחר primary אחד ולכל היותר support אחד עם תפקיד שונה. פתח בנפרד. העבר סצנה, אור, היררכיה ואוצר מילים גרפי בלבד. אין שימוש במוצר/טקסט/claim/logo/CTA של הרפרנס ואין image-conditioning לרפרנסים.
+
+4. מסלולי Reel
+A. ANIMATED_RICH_STILL: text-free master, camera push, HEADLINE_REVEAL, ACCENT_RULE_WIPE, CHIP_SEQUENCE, INSET_POP כשמועיל, ולפחות beat אחד של תנועה אמיתית. Ken Burns על still יחיד אינו Reel.
+
+B. PRINTER_TO_SHELF: timelapse/process אמיתי שמסתיים ב-styled still/cover. אין claim מעבר למה שרואים.
+
+C. REAL_PRINT_FILE_TURNTABLE: Blender render של קובץ ההדפסה האמיתי, 9:16, loopable 6–8s, warm interior, וצבע תואם לצילום מאומת כשקיים. render אינו הוכחת print success או חומר/מידות.
+
+D. RICH_STYLE_V2: שדרוג חבילה קיימת תוך שמירת truth claims והיסטוריית receipts, עם cover/hook/audio/end-card עדכניים.
+5. Inputs + layers
+קרא REEL-ROUTE.md, brand-tokens.json, HYPERFRAMES-FRAME.md, VIDEO-TOOLCHAIN, MOTION-PRESETS, EDIT-GATE ו-PREFLIGHT. מדיה מגיעה מ-vfmedia/catalog.json / Media Vault / current-task exact files. חבילות קיימות תחת packages/vfom/jobs/VF-R00x.
+
+Still-driven reel משתמש ב-text-free master. שמור לוגית: product_layer, background_plate, editorial_overlay, audio. product_layer מכיל real pixels בלבד, או deterministic turntable pixels מה-print file. guard מגן overlays ואינו proof לזהות.
+
+6. Variables
+כל Reel מקבל variables JSON אחד: jobId, reelType, headline, subhead, chips<=3, insets<=3, accent, hero/text-free-master ref, real-motion refs, optional turntable input, CTA, logo, audioStrategy ו-output refs. אין להמציא חומר, מידות, עמידות, איכות, מלאי, מחיר או התאמה.
+
+עברית explicit RTL. Rubik 700 לכותרת, Rubik 600 לעברית משנית, Cinzel ל-Latin לפי brand-tokens.json. קבצי הפונט והלוגו נקראים מה-token file; אין hardcoded substitute.
+
+7. Audio
+לכל Reel/video Story יש audioStrategy מתועד ו-Audio Gate על exact final. מסלולים: source, music, SFX, source+music, source+SFX, או intentional silence עם נימוק. שמור studio sound כשהוא תורם proof. אין להמציא track name או "trending". עקוב אחרי packages/vfresearch/MUSIC.md.
+
+8. Cover + copy
+Cover נשאר rich editorial: מוצר דומיננטי, headline עברי כבד 2–4 שורות, accent rule בצבע המוצר, subhead שורה אחת, chips/insets רק עם מידע מאומת. אין overlay על silhouette.
+
+Caption עובר vfcopy Visible Text על הטקסט המדויק. hashtags מגיעים מ-vfgrowth/data/hashtag-library.json, עד 5 בציבור. CTA ברירת מחדל בסוף Reel: "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם". אין טלפון/WhatsApp/wa.me בלי הרשאה נקודתית.
+9. QA order
+Reel QA: PREFLIGHT -> EDIT-GATE -> visual-standard gate -> reference match -> exact-final inspection. פתח first 2s, cut boundaries, midpoint(s), last 2s/end-card, cover full-size ו-mobile/grid crop. בדוק audio stream, RTL, safe zones, product identity, facts, CTA ולוגו.
+
+Rendering receipt הוא technical evidence בלבד, לא creative PASS ולא publish receipt. ready_for_publish הוא handoff state בלבד.
+
+10. Render host
+Chris = sderot-windows. Repo: D:\Velvet\Repos\velvetos-core. HyperFrames current verified CLI is available from C:\Users\Chris\AppData\Roaming\npm. FFmpeg/ffprobe under D:\Velvet\Tools\Shared\ffmpeg\current\bin. Blender 5.2.2 LTS under C:\Program Files\Blender Foundation\Blender 5.2\blender.exe.
+
+הפקודות המדויקות נמצאות ב-REEL-ROUTE.md. CI מבצע lint/schema/sensor tests בלבד ואינו מרנדר production video.
+
+11. Handoff
+Mirror packages/vfom/jobs/VF-R00x: content-contract.json, creative-manifest.json, variables, render request, cover/final refs, caption/hashtag selection, receipts ו-needed_inputs. status=ready_for_publish רק אחרי gates ו-exact-final review.
+
+אין Instagram publishing, scheduling או live write במסלול הזה.
+
+12. Runtime boundary
+Revision 6.6.10 היא Project source extension מעל 6.6.9. ה-6.6.9 flat runner וה-provider capability אינם נטענים לריפו מחדש על ידי שינוי תיעוד זה. אל תטען ש-project installation, provider roundtrip, repo runtime sync או fresh-chat acceptance בוצעו בלי evidence.
+
+ה-repo כבר יודע לצרוך release evidence של Project 6.6.9 בפרסום. עד שיש runtime bundle חדש מותקן ומאומת, ה-executable cold-start bundle בריפו נשאר state נפרד. אל תערבב SOURCE_EXTENSION עם RUNTIME_SYNC.
+
+13. מסירה
+מסור Reel/video package רק אם יש rendered artifact שנבדק או blocker מדויק של input/capability. אין "מוכן" על סמך HTML, still יחיד, timelapse גולמי, render plan או storyboard.

@@ -1,12 +1,12 @@
 {
   "contract_version": 6,
-  "revision": "6.6.4",
-  "bundle_id": "VF-PROJECT-6.6.4-CHAT-RUNTIME-DEPENDENCY-CLOSURE",
-  "created_for": "owner-requested dependency closure after 6.6.3: ship every transitive local chat-runtime dependency inside the Project bundle so cold-start source ingest works without relying on repo-only modules",
+  "revision": "6.6.1",
+  "bundle_id": "VF-PROJECT-6.6.1-FIRST-PASS-CREATIVE-CONTINUITY",
+  "created_for": "owner-requested cold-start repair: complete publication-prep on first response when tools/sources permit and preserve the strongest successful creative master through finalization",
   "instructions": {
-    "filename": "Velvet-Factory-Project-Instructions-v6.6.4.txt",
-    "sha256": "c95f2c647a54a9fb6d6b1c04b022f72c90352f08f655a22beb6554f1d7a42fed",
-    "characters": 6837,
+    "filename": "Velvet-Factory-Project-Instructions-v6.6.1.txt",
+    "sha256": "7bbb60571053ea80d49048ae06734f8377969e1e7d698b764aece50e889f209e",
+    "characters": 7912,
     "limit_supplied_by_owner": 8000
   },
   "assets": [
@@ -14,8 +14,8 @@
       "filename": "Velvet-Factory-Project-Authority-v6.txt",
       "role": "authority",
       "required_for": "all_requests",
-      "sha256": "db07dd973272a96b154b4771af1dbb13c03d039de595b56cd857bb0144025976",
-      "bytes": 31135
+      "sha256": "7ca2eb5d9187abfb5db9852830db94d76b4fa0bce810b51240c94ac76dacb209",
+      "bytes": 27681
     },
     {
       "filename": "Velvet-Factory-APPROVED-Visual-Reference-v2.jpg",
@@ -137,41 +137,6 @@
       "blocking_artifact_or_readability_issue",
       "unsupported_asset_or_claim",
       "explicit_owner_change"
-    ],
-    "creative_master_materialization_required_before_deterministic_overlay": true,
-    "creative_master_must_be_local_path_plus_sha256": true,
-    "creative_master_materialization_receipt_required": true,
-    "creative_tool_materialization_capability_planned_before_generation_when_overlay_expected": true,
-    "conversation_or_ui_only_image_is_not_file_backed_master": true,
-    "provider_task_or_remote_url_is_not_file_backed_master_until_exact_bytes_are_materialized": true,
-    "raw_source_recreation_is_not_creative_master_materialization": true,
-    "unmaterializable_master_must_not_fall_back_silently_to_raw_source": true,
-    "allowed_unmaterializable_master_outcomes": [
-      "preserve_direction_via_file_backed_route",
-      "deliberate_same_provider_no_text_final",
-      "block_deterministic_overlay_branch"
-    ],
-    "current_chat_attachment_local_ingest_required_before_creative_preflight": true,
-    "source_ingest_exact_bytes_and_sha256_required": true,
-    "source_ingest_receipt_required": true,
-    "source_ingest_bridge": "scripts/vf_source_ingest.py",
-    "current_request_intake_root_must_be_explicit": true,
-    "arbitrary_user_folder_scan_for_sources_forbidden": true,
-    "visible_attachment_must_not_be_declared_unusable_before_platform_local_ingest_attempt": true,
-    "attachment_bytes_unavailable_is_bounded_blocker": true,
-    "unhashed_attachment_source_fallback_forbidden": true,
-    "chat_local_preflight": "scripts/vf_chat_cold_start_preflight.py",
-    "chat_local_preflight_required_when_repo_and_attachment_filesystems_differ": true,
-    "remote_repo_preflight_must_not_receive_chat_local_paths": true,
-    "chat_local_preflight_creative_only_never_publication": true,
-    "chat_runtime_files_hash_bound_in_manifest": true,
-    "chat_runtime_dependency_closed": true,
-    "chat_runtime_required_files": [
-      "scripts/vf_source_ingest.py",
-      "scripts/vf_chat_cold_start_preflight.py",
-      "scripts/vf_media_integrity.py",
-      "scripts/vf_media_limits.py",
-      "scripts/vf_creative_master_bridge.py"
     ]
   },
   "optional_originals": [
@@ -189,7 +154,7 @@
     },
     {
       "filename": "Velvet-Factory-ASSET-MANIFEST-v6.3.json",
-      "reason": "historical only; current asset manifest is Revision 6.6.4"
+      "reason": "historical only; current asset manifest is Revision 6.6.1"
     },
     {
       "filename": "Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v1.png",
@@ -197,82 +162,46 @@
     },
     {
       "filename": "Velvet-Factory-ASSET-MANIFEST-v6.4.json",
-      "reason": "historical only; current asset manifest is Revision 6.6.4"
+      "reason": "historical only; current asset manifest is Revision 6.6.1"
     },
     {
       "filename": "Velvet-Factory-Project-Instructions-v6.4.txt",
-      "reason": "historical only; current Project Instructions are Revision 6.6.4"
+      "reason": "historical only; current Project Instructions are Revision 6.6.1"
     },
     {
       "filename": "PROJECT-AUTHORITY-v6.4.txt",
-      "reason": "repository historical snapshot; active Project Authority is Revision 6.6.4"
+      "reason": "repository historical snapshot; active Project Authority is Revision 6.6.1"
     },
     {
       "filename": "Velvet-Factory-ASSET-MANIFEST-v6.5.json",
-      "reason": "historical only; current asset manifest is Revision 6.6.4"
+      "reason": "historical only; current asset manifest is Revision 6.6.1"
     },
     {
       "filename": "Velvet-Factory-Project-Instructions-v6.5.txt",
-      "reason": "historical only; current Project Instructions are Revision 6.6.4"
+      "reason": "historical only; current Project Instructions are Revision 6.6.1"
     },
     {
       "filename": "PROJECT-AUTHORITY-v6.5.txt",
-      "reason": "repository historical snapshot; active Project Authority is Revision 6.6.4"
+      "reason": "repository historical snapshot; active Project Authority is Revision 6.6.1"
     },
     {
       "filename": "Velvet-Factory-ASSET-MANIFEST-v6.6.json",
-      "reason": "historical only; current asset manifest is Revision 6.6.4"
+      "reason": "superseded by Revision 6.6.1 bundle"
     },
     {
       "filename": "Velvet-Factory-Project-Instructions-v6.6.txt",
-      "reason": "historical only; current Project Instructions are Revision 6.6.4"
+      "reason": "superseded by Revision 6.6.1 bundle"
     },
     {
       "filename": "PROJECT-AUTHORITY-v6.6.txt",
-      "reason": "repository historical snapshot; active Project Authority is Revision 6.6.4"
-    },
-    {
-      "filename": "Velvet-Factory-ASSET-MANIFEST-v6.6.1.json",
-      "reason": "historical only; current asset manifest is Revision 6.6.4"
-    },
-    {
-      "filename": "Velvet-Factory-Project-Instructions-v6.6.1.txt",
-      "reason": "historical only; current Project Instructions are Revision 6.6.4"
-    },
-    {
-      "filename": "PROJECT-AUTHORITY-v6.6.1.txt",
-      "reason": "repository historical snapshot; active Project Authority is Revision 6.6.4"
-    },
-    {
-      "filename": "Velvet-Factory-ASSET-MANIFEST-v6.6.2.json",
-      "reason": "superseded by Revision 6.6.4 bundle"
-    },
-    {
-      "filename": "Velvet-Factory-Project-Instructions-v6.6.2.txt",
-      "reason": "superseded by Revision 6.6.4 bundle"
-    },
-    {
-      "filename": "PROJECT-AUTHORITY-v6.6.2.txt",
-      "reason": "repository historical snapshot; active Project Authority is Revision 6.6.4"
-    },
-    {
-      "filename": "Velvet-Factory-ASSET-MANIFEST-v6.6.3.json",
-      "reason": "superseded by Revision 6.6.4 bundle"
-    },
-    {
-      "filename": "Velvet-Factory-Project-Instructions-v6.6.3.txt",
-      "reason": "superseded by Revision 6.6.4 bundle"
-    },
-    {
-      "filename": "PROJECT-AUTHORITY-v6.6.3.txt",
-      "reason": "repository historical snapshot; active Project Authority is Revision 6.6.4"
+      "reason": "repository historical snapshot; active Project Authority is Revision 6.6.1"
     }
   ],
   "asset_resolution": "Match exact filename and hash. A filename alias may be accepted only after hash match; duplicate conflicting revisions are needs_sync.",
   "offline_mode": {
     "creative_publication_bundle_fallback": true,
     "public_copy_bundle_fallback": true,
-    "minimum_revision": "6.6.4",
+    "minimum_revision": "6.6.1",
     "repo_state_label": "UNAVAILABLE_PROJECT_BUNDLE_FALLBACK",
     "live_truth_domains_still_require_live_sources": [
       "operations",
@@ -288,37 +217,5 @@
     "repository_write": "VERIFIED_AFTER_REPO_COMMIT",
     "cold_start_behavioral_test": "NOT_RUN_AFTER_PATCH",
     "publication": "NOT_REQUESTED"
-  },
-  "chat_runtime": [
-    {
-      "filename": "vf_source_ingest.py",
-      "repo_path": "scripts/vf_source_ingest.py",
-      "role": "exact_byte_current_chat_source_ingest",
-      "sha256": "852926d2e44556229a6912a34a773c83b7ca9d4587bd78852e068e92d7f53ad5"
-    },
-    {
-      "filename": "vf_chat_cold_start_preflight.py",
-      "repo_path": "scripts/vf_chat_cold_start_preflight.py",
-      "role": "chat_local_creative_preflight_never_publication",
-      "sha256": "9f300132b56de37a4e0a76f7a11202972d7845fbf464ac10e73048c8074db5a3"
-    },
-    {
-      "filename": "vf_media_integrity.py",
-      "repo_path": "scripts/vf_media_integrity.py",
-      "role": "media_decode_integrity_dependency",
-      "sha256": "533cb25510c6feecddcd55f9cd343da22f6bd9cae953fee3fa6d63384650f78c"
-    },
-    {
-      "filename": "vf_media_limits.py",
-      "repo_path": "scripts/vf_media_limits.py",
-      "role": "bounded_media_subprocess_dependency",
-      "sha256": "b6ec2fd93353aa4e6a28e2e12cb2f7deb24ea98cc74a17cea00a8f6d290653e9"
-    },
-    {
-      "filename": "vf_creative_master_bridge.py",
-      "repo_path": "scripts/vf_creative_master_bridge.py",
-      "role": "exact_byte_creative_master_materialization",
-      "sha256": "9299de229beb8a7a53b4a4f604960de3ccf2bf113ea0f8bea7459292c88cae95"
-    }
-  ]
+  }
 }
