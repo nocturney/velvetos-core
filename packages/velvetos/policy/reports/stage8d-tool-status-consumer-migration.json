@@ -1,0 +1,90 @@
+{
+  "schema": "velvetos.stage8d-tool-status-consumer-migration.v1",
+  "stage": "8D_TOOL_STATUS_CONSUMER_MIGRATION",
+  "behavior_change": true,
+  "prepared_against_main_sha": "8bcdb7de55341a282862dfb9764716a14f10441f",
+  "source_commit_sha": "01e232f8d7bf41480c5f79e5951aee625d770fb3",
+  "captured_at": "2026-10-04T21:44:45.7939198+03:00",
+  "purpose": "Cut active consumers over from the retained TOOL-STATUS compatibility composite to the selected instance toolStatus surface while preserving exact rollback parity.",
+  "migration": {
+    "active_authority": "instance:surface:toolStatus",
+    "resolver": "packages/velvetos/tool_status_resolver.py",
+    "rollback_compatibility_path": "packages/velvetos/TOOL-STATUS.json",
+    "consumer_cutover": true,
+    "rollback_compatibility_retained": true,
+    "legacy_path_retained": true,
+    "delete_authorized": false
+  },
+  "direct_readers": {
+    "scripts/check-upstream-watch.py": {
+      "legacy_literal_present": false,
+      "resolver_present": true
+    },
+    "scripts/check-tool-authority.py": {
+      "legacy_literal_present": false,
+      "resolver_present": true
+    },
+    "scripts/check-vf-cad-stack.py": {
+      "legacy_literal_present": false,
+      "resolver_present": true
+    },
+    "scripts/check-vf-fabrication-router.py": {
+      "legacy_literal_present": false,
+      "resolver_present": true
+    },
+    "scripts/check-vfmcp.py": {
+      "legacy_literal_present": false,
+      "resolver_present": false
+    },
+    "scripts/vf_reel_candidates.py": {
+      "legacy_literal_present": false,
+      "resolver_present": true
+    }
+  },
+  "active_authority_surfaces": {
+    ".cursor/rules/velvet-factory-desk.mdc": true,
+    "instances/velvet-factory/.cursor/rules/velvetos-instance-desk.mdc": true,
+    "instances/velvet-factory/AGENTS.md": true,
+    "packages/README.md": true,
+    "packages/vfharness/playbooks/grok-outage-tools.md": true,
+    "packages/vfigos/OPENPOST.md": true,
+    "packages/vfigos/SEND.md": true,
+    "packages/vfops/ROUTINE.md": true
+  },
+  "consumer_scan": {
+    "legacy_reference_count": 12,
+    "active_authority_legacy_references": [],
+    "active_blockers_removed": true
+  },
+  "parity": {
+    "composed_canonical_json_sha256": "a9782c78b80670b28c5a77a4588b898fd117bc2eaadd6faeb1193d1a21b39e7d",
+    "legacy_canonical_json_sha256": "a9782c78b80670b28c5a77a4588b898fd117bc2eaadd6faeb1193d1a21b39e7d",
+    "equal": true
+  },
+  "rollback": {
+    "window_open": true,
+    "retirement_ready": false,
+    "delete_authorized": false
+  },
+  "authority": {
+    "policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false
+  },
+  "acceptance_criteria": {
+    "core_declares_selected_instance_tool_status_as_active_authority": true,
+    "tool_status_contract_marks_consumer_cutover_active": true,
+    "all_stage8b_direct_readers_have_no_legacy_composite_dependency": true,
+    "all_real_stage8b_status_readers_use_the_generic_resolver": true,
+    "unused_vfmcp_legacy_binding_is_removed_without_fake_read": true,
+    "active_authority_docs_and_rules_point_to_instance_tool_status": true,
+    "openpost_and_core_mcp_use_instance_tool_status_authority": true,
+    "canonical_composition_remains_exactly_equal_to_legacy_composite": true,
+    "legacy_tool_status_composite_is_retained_for_rollback": true,
+    "rollback_window_remains_open_and_delete_is_unauthorized": true,
+    "stage8d_readiness_baseline_is_preserved": true,
+    "external_effect_policy_registry_is_unchanged": true
+  },
+  "repository_acceptance": "PASS",
+  "next_action": "Migrate the next active compatibility domain; do not delete packages/velvetos/TOOL-STATUS.json until explicit rollback-window closure evidence exists."
+}

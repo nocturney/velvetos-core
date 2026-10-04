@@ -568,3 +568,13 @@ The initial Stage 8D readiness receipt is now replayed from the Git snapshot whe
 The active root-desk compatibility consumers are migrated without deleting the retained root desk. The always-on Velvet Factory Cursor rule now names the selected instance `toolDesk` surface, and visual-standard enforcement resolves `toolDesk` through the generic instance resolver rather than constructing an ambiguous desk path.
 
 The Stage 8C root-desk receipt remains the parity proof for Gmail, Instagram, Gemini, ChatGPT, Drive and the ops seat. The root desk stays present while the rollback window remains open; deletion is not authorized. Progress is recorded separately in `reports/stage8d-root-desk-consumer-migration.json`.
+
+## Reform v2 Stage 8D — Tool-status compatibility consumer migration
+
+Active tool authority now resolves from the selected `instance:surface:toolStatus` through `packages/velvetos/tool_status_resolver.py`. The generic Core contract defines semantics while the selected instance owns current tool state; Core execution still fails closed without explicit instance selection.
+
+The six Stage 8B direct-reader bindings have been retired from the legacy composite: five real status readers compose through the resolver, while the unused `check-vfmcp.py` compatibility binding was removed rather than replaced by a fake read. Active Cursor, instance, operations, OpenPost and MCP authority surfaces now point at the instance tool-status authority.
+
+`packages/velvetos/TOOL-STATUS.json` remains physically present and is still exactly parity-equal to the composed contract + instance state. It is rollback/parity evidence only; the rollback window remains open and deletion is not authorized. `legacy-parity` remains the bounded diagnostic verifier.
+
+Progress is recorded in `reports/stage8d-tool-status-consumer-migration.json` (12/12 PASS). `check-policy-architecture.py` regenerates it byte-for-byte and verifies zero active-authority legacy references, exact composition parity, retained rollback compatibility and unchanged external-effect policy.
