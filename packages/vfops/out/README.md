@@ -1,7 +1,11 @@
-# ארכיון בריף שנשלח
+# בריף — transport current + historical audit
 
 נתיב ש־Grok / Cloud / GitHub יכולים לקרוא.  
 `/opt/cursor/artifacts` ו־Origin tmp **לא** נגישים אחרי הסשן.
+
+Stage 7D מפריד בין **transport staging** לבין היסטוריה: Morning Green חדש נכתב רק ל־`morning-green-current.html/json/txt` ול־`morning-green-assets-current/`. הקבצים האלה מוחלפים בריצה הבאה ואינם archive או source of truth. היסטוריית delivery נשמרת ב־compact receipts / factual records / Gmail provider evidence; עותקי תמונות היסטוריים גדולים הועברו copy-first ל־artifact archive, עם manifest ו־SHA-256 ב־`packages/velvetos/policy/reports/stage7d-morning-green-asset-archive.json`.
+
+אין ליצור מחדש `morning-green-assets-YYYY-MM-DD/` או rendered bundle מתוארך כדרך רגילה. rollback של Stage 7D הוא Git revert + archive receipt, לא המצאת evidence חסר.
 
 | קובץ | מה | שליחה |
 |---|---|---|

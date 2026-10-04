@@ -32,6 +32,8 @@ STAGE6_ACCEPTANCE = REPORTS / "stage6-acceptance.json"
 STAGE6_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage6-acceptance.py"
 STAGE7A_ACCEPTANCE = REPORTS / "stage7a-state-evidence-model.json"
 STAGE7A_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage7a-state-evidence-model.py"
+STAGE7D_ACCEPTANCE = REPORTS / "stage7d-artifact-retention.json"
+STAGE7D_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage7d-artifact-retention.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -48,6 +50,8 @@ EXPECTED_REPORTS = {
     "stage5-acceptance.json",
     "stage6-acceptance.json",
     "stage7a-state-evidence-model.json",
+    "stage7d-morning-green-asset-archive.json",
+    "stage7d-artifact-retention.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -437,6 +441,16 @@ def validate_registries() -> tuple[list[str], set[str]]:
     artifact_ids = [row.get("artifact_class_id") for row in entries if isinstance(row, dict)]
     require(len(artifact_ids) == len(set(artifact_ids)), "duplicate artifact_class_id", problems)
 
+    stage7d_retention = artifacts.get("stage7d") or {}
+    stage7d_active = stage7d_retention.get("status") == "ACTIVE_STAGE7D"
+    if stage7d_active:
+        require(stage7d_retention.get("migration_mode") == "COPY_FIRST",
+                "Stage 7D artifact migration must remain COPY_FIRST", problems)
+        require(stage7d_retention.get("consumer_scan_required_before_tree_removal") is True,
+                "Stage 7D removal requires consumer scan", problems)
+        require(stage7d_retention.get("external_irreversible_delete_authority_added") is False,
+                "Stage 7D must not add external irreversible delete authority", problems)
+
     for row in entries:
         if not isinstance(row, dict):
             problems.append("artifact row must be object")
@@ -447,7 +461,18 @@ def validate_registries() -> tuple[list[str], set[str]]:
         require(bool(row.get("current_storage")), f"{aid}: current_storage required", problems)
         require(bool(row.get("target_storage")), f"{aid}: target_storage required", problems)
         require(bool(row.get("retention_class")), f"{aid}: retention_class required", problems)
-        require(row.get("deletion_authorized") is False, f"{aid}: Stage 0 cannot authorize deletion", problems)
+        if stage7d_active:
+            require("CLASSIFY_IN_STAGE_7" not in str(row.get("retention_class")),
+                    f"{aid}: Stage 7D retention class must be concrete", problems)
+            if row.get("deletion_authorized") is True:
+                require(aid == "office-generated-output",
+                        f"{aid}: only scoped generated office copies may be tree-removed in Stage 7D", problems)
+                require(isinstance(row.get("deletion_scope"), list) and bool(row.get("deletion_scope")),
+                        f"{aid}: Stage 7D deletion scope required", problems)
+                require(bool(row.get("copy_first_receipt")),
+                        f"{aid}: Stage 7D copy-first receipt required", problems)
+        else:
+            require(row.get("deletion_authorized") is False, f"{aid}: pre-Stage7D cannot authorize deletion", problems)
         refs = row.get("policy_refs")
         require(isinstance(refs, list), f"{aid}: policy_refs must be list", problems)
         for policy_id in refs or []:
@@ -1104,6 +1129,77 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated7a.is_file():
                     require(regenerated7a.read_bytes() == STAGE7A_ACCEPTANCE.read_bytes(),
                             "Stage 7A acceptance receipt is not reproducible", problems)
+
+    if STAGE7D_ACCEPTANCE.is_file():
+        stage7d = load(STAGE7D_ACCEPTANCE)
+        require(stage7d.get("schema") == "velvetos.stage7d-artifact-retention.v1"
+                and stage7d.get("stage") == "7D"
+                and stage7d.get("behavior_change") is True
+                and stage7d.get("repository_acceptance") == "PASS",
+                "Stage 7D acceptance metadata drift", problems)
+        criteria7d = stage7d.get("acceptance") or {}
+        expected_criteria7d = {
+            "all_nine_artifact_classes_have_concrete_retention",
+            "morning_green_large_history_was_copy_first_archived",
+            "archive_receipt_has_per_file_sha256",
+            "active_consumers_do_not_reference_removed_dated_bundles",
+            "rolling_current_transport_is_producer_and_request_contract",
+            "current_transport_assets_match_canonical_assets",
+            "git_image_noise_reduction_exceeds_5mb",
+            "transient_state_classes_have_bounded_target_retention",
+            "work_ledger_resolved_without_new_store",
+            "no_external_effect_authority_change",
+            "rollback_and_audit_chain_preserved",
+        }
+        require(set(criteria7d) == expected_criteria7d
+                and all(criteria7d.get(key) is True for key in expected_criteria7d),
+                "Stage 7D acceptance criteria drift or fail", problems)
+        require(stage7d.get("next_stage") == "Stage 7 integrated acceptance gate",
+                "Stage 7D next-stage handoff drift", problems)
+        migration7d = stage7d.get("copy_first_migration") or {}
+        require(migration7d.get("archive_files") == 86
+                and migration7d.get("archive_directories") == 18
+                and migration7d.get("historical_asset_dirs_remaining_in_tree") == 0
+                and migration7d.get("generated_image_bytes_reduced", 0) > 5_000_000,
+                "Stage 7D copy-first migration evidence drift", problems)
+        scan7d = stage7d.get("consumer_scan") or {}
+        require(scan7d.get("pass") is True
+                and scan7d.get("dated_transport_refs") == [],
+                "Stage 7D active-consumer scan is not clean", problems)
+        ledger7d = stage7d.get("work_ledger") or {}
+        require(ledger7d.get("decision") == "NO_NEW_WORK_LEDGER_STORE"
+                and ledger7d.get("canonical_continuation_view") == "office/control/HANDOFF.json"
+                and ledger7d.get("new_store_created") is False
+                and ledger7d.get("policy_authority") is False
+                and ledger7d.get("external_effect_authority") is False,
+                "Stage 7D Work Ledger resolution drift", problems)
+        baseline7d = stage7d.get("authority_baseline") or {}
+        require(baseline7d.get("unchanged_from_prepared_against") is True,
+                "Stage 7D external-effect authority baseline drift", problems)
+        if STAGE7D_ACCEPTANCE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated7d = Path(td) / "stage7d-artifact-retention.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE7D_ACCEPTANCE_GENERATOR),
+                        "--prepared-against", stage7d["prepared_against_main_sha"],
+                        "--captured-at", stage7d["captured_at"],
+                        "--output", str(regenerated7d),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0,
+                        "Stage 7D acceptance regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()),
+                        problems)
+                if proc.returncode == 0 and regenerated7d.is_file():
+                    require(regenerated7d.read_bytes() == STAGE7D_ACCEPTANCE.read_bytes(),
+                            "Stage 7D acceptance receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)

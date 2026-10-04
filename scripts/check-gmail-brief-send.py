@@ -157,6 +157,15 @@ def main() -> None:
         fail("bootstrap send request must be disabled on main")
     if request.get("to") != "nocturney@gmail.com":
         fail("send request owner recipient lock changed")
+    expected_transport = {
+        "html": "packages/vfops/out/morning-green-current.html",
+        "visibleText": "packages/vfops/out/morning-green-current.txt",
+        "images": "packages/vfops/out/morning-green-assets-current",
+        "retentionMode": "rolling-current-transport",
+    }
+    for key, expected in expected_transport.items():
+        if request.get(key) != expected:
+            fail(f"Morning Green rolling transport path drift: {key}={request.get(key)!r}")
 
     original_refresh = sender._refresh_authorized_user
 

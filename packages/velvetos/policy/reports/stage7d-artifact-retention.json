@@ -1,0 +1,116 @@
+{
+  "schema": "velvetos.stage7d-artifact-retention.v1",
+  "stage": "7D",
+  "behavior_change": true,
+  "prepared_against_main_sha": "1922202de411e61cc254ebd114c011198519d863",
+  "captured_at": "2026-10-04T12:53:24.7412164+03:00",
+  "purpose": "Bound artifact retention and reduce Git-generated-output noise without losing audit history or creating a second state store.",
+  "retention_registry": {
+    "path": "packages/velvetos/policy/artifact-retention.json",
+    "sha256": "7934080a7b044b89c691feb8474e12fae6ea7e006f471e06987c840e5e412633",
+    "artifact_class_count": 9,
+    "unclassified_retention_count": 0
+  },
+  "copy_first_migration": {
+    "source_scope": [
+      "packages/vfops/out/morning-green-assets-20*/**",
+      "packages/vfops/out/morning-green-assets-approved-mockup-*/**"
+    ],
+    "archive_receipt": "packages/velvetos/policy/reports/stage7d-morning-green-asset-archive.json",
+    "archive_receipt_sha256": "81faaa8dc5afdff5e038868506623e20a72d31f6a95a1c899d233d459484c8d1",
+    "archive_directories": 18,
+    "archive_files": 86,
+    "archive_bytes": 5953075,
+    "historical_asset_dirs_remaining_in_tree": 0,
+    "current_asset_files": 4,
+    "current_asset_bytes": 354201,
+    "generated_image_bytes_reduced": 5598874,
+    "local_archive_path_recorded": "D:/Velvet/Artifacts/Retention/stage7d-20261004/morning-green-assets"
+  },
+  "consumer_scan": {
+    "scanned": [
+      "packages/vfbriefux/prepare_morning_green.py",
+      ".github/workflows/gmail-brief-send.yml",
+      "packages/vfops/gmail_apps_script_request.py",
+      "packages/vfops/gmail_brief_request.py",
+      "packages/vfops/gmail_brief_send.py"
+    ],
+    "dated_transport_refs": [],
+    "pass": true
+  },
+  "current_transport": {
+    "html": "packages/vfops/out/morning-green-current.html",
+    "visible_text": "packages/vfops/out/morning-green-current.txt",
+    "json": "packages/vfops/out/morning-green-current.json",
+    "images": "packages/vfops/out/morning-green-assets-current/",
+    "asset_parity": {
+      "files": 4,
+      "all_match": true,
+      "rows": [
+        {
+          "name": "morning-footer.jpg",
+          "canonical_sha256": "3af7ba7cf33342c79708051258a632b51da5ee532dd4113cccf60f29e64cc67d",
+          "current_sha256": "3af7ba7cf33342c79708051258a632b51da5ee532dd4113cccf60f29e64cc67d",
+          "match": true
+        },
+        {
+          "name": "morning-radar.jpg",
+          "canonical_sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61",
+          "current_sha256": "eb834b559abc79e50aad2b401f0718880079d52ae8c9284553cf650828107b61",
+          "match": true
+        },
+        {
+          "name": "morning-story.jpg",
+          "canonical_sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543",
+          "current_sha256": "33f9797319afaa265ad9b0e9cfe93065aec217bec7463f35a92645f24de17543",
+          "match": true
+        },
+        {
+          "name": "morning-top.jpg",
+          "canonical_sha256": "7504997afd9eeee3e075f4134dc299650298147adae129843e3a3a12e4028f63",
+          "current_sha256": "7504997afd9eeee3e075f4134dc299650298147adae129843e3a3a12e4028f63",
+          "match": true
+        }
+      ]
+    },
+    "request_enabled_on_main": false
+  },
+  "repository_footprint": {
+    "base_tree": {
+      "files": 2975,
+      "bytes": 34741347
+    },
+    "projected_worktree_before_report_commit": {
+      "files": 2898,
+      "bytes": 29225992
+    },
+    "note": "Projected metrics include current untracked non-ignored files and exclude removed worktree files; report self-size is not used as a gate."
+  },
+  "work_ledger": {
+    "decision": "NO_NEW_WORK_LEDGER_STORE",
+    "reason": "office/control/HANDOFF.json already provides refs-only continuation; another ledger would duplicate state/index authority",
+    "canonical_continuation_view": "office/control/HANDOFF.json",
+    "new_store_created": false,
+    "policy_authority": false,
+    "external_effect_authority": false
+  },
+  "authority_baseline": {
+    "policy_registry_sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8",
+    "unchanged_from_prepared_against": true
+  },
+  "acceptance": {
+    "all_nine_artifact_classes_have_concrete_retention": true,
+    "morning_green_large_history_was_copy_first_archived": true,
+    "archive_receipt_has_per_file_sha256": true,
+    "active_consumers_do_not_reference_removed_dated_bundles": true,
+    "rolling_current_transport_is_producer_and_request_contract": true,
+    "current_transport_assets_match_canonical_assets": true,
+    "git_image_noise_reduction_exceeds_5mb": true,
+    "transient_state_classes_have_bounded_target_retention": true,
+    "work_ledger_resolved_without_new_store": true,
+    "no_external_effect_authority_change": true,
+    "rollback_and_audit_chain_preserved": true
+  },
+  "repository_acceptance": "PASS",
+  "next_stage": "Stage 7 integrated acceptance gate"
+}

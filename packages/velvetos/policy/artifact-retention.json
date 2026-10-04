@@ -27,12 +27,14 @@
       "classification": "AUDIT_CHAIN",
       "current_storage": "MIXED",
       "target_storage": "GIT_WHEN_COMPACT",
-      "retention_class": "AUDIT_DURABLE",
+      "retention_class": "AUDIT_DURABLE_COMPACT",
       "policy_refs": [
         "instagram.publish"
       ],
-      "migration_stage": "STAGE_7",
-      "deletion_authorized": false
+      "migration_stage": "STAGE_7D",
+      "deletion_authorized": false,
+      "git_max_bytes": 262144,
+      "oversize_target": "ARTIFACT_STORE_OR_DRIVE"
     },
     {
       "artifact_class_id": "harness-checkpoints",
@@ -42,10 +44,11 @@
       "classification": "TRANSIENT_OR_TASK_STATE",
       "current_storage": "GIT",
       "target_storage": "STATE_STORE",
-      "retention_class": "CLASSIFY_IN_STAGE_7",
+      "retention_class": "ACTIVE_OR_CITED_90D_STATE_STORE",
       "policy_refs": [],
-      "migration_stage": "STAGE_7",
-      "deletion_authorized": false
+      "migration_stage": "STAGE_7D_POLICY_BOUND",
+      "deletion_authorized": false,
+      "decision": "keep active/cited compact checkpoints; move future transient checkpoint churn to state store before deletion"
     },
     {
       "artifact_class_id": "office-generated-output",
@@ -54,11 +57,22 @@
       ],
       "classification": "GENERATED_OUTPUT",
       "current_storage": "GIT",
-      "target_storage": "ARTIFACT_STORE_OR_DRIVE",
-      "retention_class": "CLASSIFY_IN_STAGE_7",
+      "target_storage": "GIT_CURRENT_PLUS_ARTIFACT_ARCHIVE",
+      "retention_class": "ROLLING_CURRENT_TRANSPORT_PLUS_COMPACT_AUDIT",
       "policy_refs": [],
-      "migration_stage": "STAGE_7",
-      "deletion_authorized": false
+      "migration_stage": "STAGE_7D",
+      "deletion_authorized": true,
+      "deletion_scope": [
+        "packages/vfops/out/morning-green-assets-20*/**",
+        "packages/vfops/out/morning-green-assets-approved-mockup-*/**"
+      ],
+      "current_transport": {
+        "html": "packages/vfops/out/morning-green-current.html",
+        "visible_text": "packages/vfops/out/morning-green-current.txt",
+        "json": "packages/vfops/out/morning-green-current.json",
+        "images": "packages/vfops/out/morning-green-assets-current/"
+      },
+      "copy_first_receipt": "packages/velvetos/policy/reports/stage7d-morning-green-asset-archive.json"
     },
     {
       "artifact_class_id": "publish-bridge-archive",
@@ -68,11 +82,11 @@
       "classification": "PUBLICATION_AUDIT_ARCHIVE",
       "current_storage": "GIT_OR_ARCHIVE",
       "target_storage": "ARCHIVE",
-      "retention_class": "UNLIMITED_CURRENT_CONTRACT",
+      "retention_class": "PUBLICATION_AUDIT_DURABLE",
       "policy_refs": [
         "instagram.publish"
       ],
-      "migration_stage": "STAGE_7_REVIEW_ONLY",
+      "migration_stage": "STAGE_7D_REVIEW_ONLY",
       "deletion_authorized": false
     },
     {
@@ -84,12 +98,13 @@
       "classification": "GENERATED_CREATIVE_OUTPUT",
       "current_storage": "GIT",
       "target_storage": "ARTIFACT_STORE_OR_MEDIA_VAULT",
-      "retention_class": "CLASSIFY_IN_STAGE_7",
+      "retention_class": "APPROVED_OR_CITED_DURABLE_ELSE_ARTIFACT_ARCHIVE",
       "policy_refs": [
         "instagram.publish"
       ],
-      "migration_stage": "STAGE_7",
-      "deletion_authorized": false
+      "migration_stage": "STAGE_7D_POLICY_BOUND",
+      "deletion_authorized": false,
+      "decision": "consumer/publication scan required before any creative render tree removal"
     },
     {
       "artifact_class_id": "approved-visual-reference",
@@ -103,7 +118,7 @@
       "policy_refs": [
         "instagram.publish"
       ],
-      "migration_stage": "STAGE_7_REVIEW_ONLY",
+      "migration_stage": "STAGE_7D_REVIEW_ONLY",
       "deletion_authorized": false
     },
     {
@@ -115,10 +130,11 @@
       "classification": "OPERATIONAL_STATE_OR_EVENT_LOG",
       "current_storage": "GIT",
       "target_storage": "STATE_STORE",
-      "retention_class": "CLASSIFY_IN_STAGE_7",
+      "retention_class": "CURRENT_STATE_PLUS_ROLLING_EVENT_ARCHIVE",
       "policy_refs": [],
-      "migration_stage": "STAGE_7",
-      "deletion_authorized": false
+      "migration_stage": "STAGE_7D_POLICY_BOUND",
+      "deletion_authorized": false,
+      "decision": "retain current operational state until state-store consumer migration is proven"
     },
     {
       "artifact_class_id": "research-evidence",
@@ -128,10 +144,19 @@
       "classification": "RESEARCH_EVIDENCE",
       "current_storage": "GIT",
       "target_storage": "GIT_WHEN_COMPACT",
-      "retention_class": "DURABLE_WHEN_CITED",
+      "retention_class": "DURABLE_WHEN_CITED_OR_CURRENT",
       "policy_refs": [],
-      "migration_stage": "STAGE_7_REVIEW_ONLY",
+      "migration_stage": "STAGE_7D_REVIEW_ONLY",
       "deletion_authorized": false
     }
-  ]
+  ],
+  "stage7d": {
+    "status": "ACTIVE_STAGE7D",
+    "migration_mode": "COPY_FIRST",
+    "source_commit": "1922202de411e61cc254ebd114c011198519d863",
+    "archive_receipt": "packages/velvetos/policy/reports/stage7d-morning-green-asset-archive.json",
+    "consumer_scan_required_before_tree_removal": true,
+    "external_irreversible_delete_authority_added": false,
+    "rollback": "git revert restores tree copies; local artifact archive keeps copied bytes"
+  }
 }

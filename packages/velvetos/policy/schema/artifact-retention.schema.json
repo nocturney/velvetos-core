@@ -3,31 +3,169 @@
   "$id": "velvetos://policy/artifact-retention.schema.json",
   "title": "VelvetOS Artifact Retention Registry",
   "type": "object",
-  "required": ["schema_version", "registry_kind", "entries"],
+  "required": [
+    "schema_version",
+    "registry_kind",
+    "entries"
+  ],
   "additionalProperties": false,
   "properties": {
-    "schema_version": {"const": 1},
-    "registry_kind": {"const": "velvetos_artifact_retention_registry"},
+    "schema_version": {
+      "const": 1
+    },
+    "registry_kind": {
+      "const": "velvetos_artifact_retention_registry"
+    },
     "entries": {
       "type": "array",
       "items": {
         "type": "object",
         "required": [
-          "artifact_class_id", "match", "classification", "current_storage",
-          "target_storage", "retention_class", "policy_refs", "migration_stage",
+          "artifact_class_id",
+          "match",
+          "classification",
+          "current_storage",
+          "target_storage",
+          "retention_class",
+          "policy_refs",
+          "migration_stage",
           "deletion_authorized"
         ],
         "additionalProperties": false,
         "properties": {
-          "artifact_class_id": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"},
-          "match": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
-          "classification": {"type": "string", "minLength": 1},
-          "current_storage": {"type": "string", "minLength": 1},
-          "target_storage": {"type": "string", "minLength": 1},
-          "retention_class": {"type": "string", "minLength": 1},
-          "policy_refs": {"type": "array", "items": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"}},
-          "migration_stage": {"type": "string", "minLength": 1},
-          "deletion_authorized": {"const": false}
+          "artifact_class_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"
+          },
+          "match": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "classification": {
+            "type": "string",
+            "minLength": 1
+          },
+          "current_storage": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target_storage": {
+            "type": "string",
+            "minLength": 1
+          },
+          "retention_class": {
+            "type": "string",
+            "minLength": 1
+          },
+          "policy_refs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"
+            }
+          },
+          "migration_stage": {
+            "type": "string",
+            "minLength": 1
+          },
+          "deletion_authorized": {
+            "type": "boolean"
+          },
+          "git_max_bytes": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "oversize_target": {
+            "type": "string",
+            "minLength": 1
+          },
+          "decision": {
+            "type": "string",
+            "minLength": 1
+          },
+          "deletion_scope": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "copy_first_receipt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "current_transport": {
+            "type": "object",
+            "required": [
+              "html",
+              "visible_text",
+              "json",
+              "images"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "html": {
+                "type": "string",
+                "minLength": 1
+              },
+              "visible_text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "json": {
+                "type": "string",
+                "minLength": 1
+              },
+              "images": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "stage7d": {
+      "type": "object",
+      "required": [
+        "status",
+        "migration_mode",
+        "source_commit",
+        "archive_receipt",
+        "consumer_scan_required_before_tree_removal",
+        "external_irreversible_delete_authority_added",
+        "rollback"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "const": "ACTIVE_STAGE7D"
+        },
+        "migration_mode": {
+          "const": "COPY_FIRST"
+        },
+        "source_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "archive_receipt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "consumer_scan_required_before_tree_removal": {
+          "const": true
+        },
+        "external_irreversible_delete_authority_added": {
+          "const": false
+        },
+        "rollback": {
+          "type": "string",
+          "minLength": 1
         }
       }
     }

@@ -1,11 +1,13 @@
 {
   "enabled": false,
-  "requestId": "morning-green-2026-10-03",
+  "requestId": "morning-green-bootstrap-disabled",
   "to": "nocturney@gmail.com",
-  "subject": "Velvet Factory · Morning Brief · 3.10.2026",
-  "html": "packages/vfops/out/morning-green-2026-10-03.html",
-  "visibleText": "packages/vfops/out/morning-green-2026-10-03.txt",
-  "images": "packages/vfops/out/morning-green-assets-2026-10-03",
+  "subject": "Velvet Factory · Morning Brief · rolling current transport",
+  "html": "packages/vfops/out/morning-green-current.html",
+  "visibleText": "packages/vfops/out/morning-green-current.txt",
+  "images": "packages/vfops/out/morning-green-assets-current",
   "embedRemoteImages": true,
-  "remoteImageLimit": 8
+  "remoteImageLimit": 8,
+  "artifactDate": "2026-10-04",
+  "retentionMode": "rolling-current-transport"
 }

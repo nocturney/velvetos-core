@@ -27,3 +27,11 @@ packages/vfops/out/report-*.json
 office/ledger/live/*.csv
 packages/vfmem/semantic_index.pkl
 packages/vfops/data/consumer-runs.jsonl
+
+# Stage 7D: Morning Green keeps one rolling transport bundle in Git.
+# Historical dated renders/images are compact-audit refs or external archive, not new tracked copies.
+packages/vfops/out/morning-green-assets-20*/
+packages/vfops/out/morning-green-assets-approved-mockup-*/
+packages/vfops/out/morning-green-20??-??-??.html
+packages/vfops/out/morning-green-20??-??-??.json
+packages/vfops/out/morning-green-20??-??-??.txt
