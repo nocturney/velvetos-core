@@ -286,6 +286,7 @@ def command_plan(request_path: Path) -> None:
 def command_run(request_path: Path) -> None:
     command_doctor()
     cfg = command_validate(request_path)
+    cfg["output"].parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="vf-video-edit-", dir=str(cfg["output"].parent)) as tmp:
         temp_dir = Path(tmp)
         rendered: list[Path] = []

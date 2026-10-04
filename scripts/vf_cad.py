@@ -29,7 +29,9 @@ def text2cad_root(root: Path) -> Path:
 
 def venv_python(repo: Path) -> Path:
     candidate = repo / ".venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
-    return candidate.resolve()
+    # Keep the venv launcher path intact. On macOS, uv-created venvs use a
+    # symlink here; resolving it would bypass pyvenv.cfg and lose site-packages.
+    return candidate
 
 
 def router_root(root: Path) -> Path:
@@ -70,7 +72,14 @@ def bed_size(machine: dict) -> tuple[float, float]:
 
 
 def native_path(router: Path, value: str) -> Path:
-    p = (router / value).resolve()
+    # printer_matrix.json is shared across Windows and macOS. Normalize either
+    # separator style so the same canonical matrix resolves on both hosts.
+    normalized = value.replace("\\", "/")
+    p = (router / Path(normalized)).resolve()
+    try:
+        p.relative_to(router.resolve())
+    except ValueError as exc:
+        raise RuntimeError(f"native profile escapes slicer-router: {value}") from exc
     if not p.is_file():
         raise RuntimeError(f"native profile missing: {p}")
     return p

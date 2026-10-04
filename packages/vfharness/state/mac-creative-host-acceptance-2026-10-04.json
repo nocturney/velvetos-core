@@ -1,0 +1,85 @@
+{
+  "schema": "velvetos.mac-creative-host-acceptance.v1",
+  "id": "mac-creative-host-acceptance-2026-10-04",
+  "status": "ACCEPTED_LOCAL_RUNTIME",
+  "host": "MacMiniOffice.local",
+  "platform": "macOS arm64 / Apple M4",
+  "verified_at": "2026-10-04",
+  "scope": "Cross-platform local creative/runtime host; no physical printer action and no paid external AI call",
+  "runtime": {
+    "hyperframes": {
+      "status": "PASS",
+      "version": "0.8.119",
+      "smoke": "1080x1920 Hebrew render",
+      "sha256": "7ce01c69faf2b16d84e6b61a31e88d4193d0b9e63df4b6be4bece8efce3c2c8f"
+    },
+    "ffmpeg": {
+      "status": "PASS",
+      "version": "6.1.1"
+    },
+    "edit_intelligence": {
+      "status": "PASS",
+      "segments": 2,
+      "audio": true,
+      "resolution": "1080x1920",
+      "duration": 2.033333,
+      "sha256": "d66e053d4c573e29e3b636dc6a0b35ce141af410e4bf016f0011be2f8b44b08d",
+      "boundary_inspection": "PASS"
+    },
+    "manim": {
+      "status": "PASS",
+      "version": "0.21.0",
+      "resolution": "1080x1920",
+      "sha256": "5c838d189315c9efc8b58cf1b88813a4a72ede21de96e990df2db71fdbc887fe"
+    },
+    "cad": {
+      "status": "PASS",
+      "python": "3.12.15",
+      "cadgen": "0.7.0",
+      "build123d": "0.11.1",
+      "cadquery": "2.8.0",
+      "jscad_modeling": "2.13.0",
+      "orcaslicer": "2.4.2",
+      "printer_profiles": [
+        "h2d",
+        "u1",
+        "ecc2",
+        "c5",
+        "c5pro"
+      ]
+    },
+    "blender": {
+      "status": "PASS",
+      "version": "5.2.2 LTS",
+      "design_os": "0.2.0",
+      "blender_ai_mcp": "3.3.0",
+      "headless_benchmark": "PASS",
+      "production_geometry_gate": "PASS",
+      "coverage_audit": "PASS",
+      "rpc_protocol": "PASS",
+      "rpc_write": "PASS",
+      "loopback_only": true,
+      "rpc_port": 18765
+    }
+  },
+  "cross_platform_repairs": [
+    "normalize Windows-style printer-matrix separators on macOS while keeping one canonical matrix",
+    "preserve uv-created venv launcher paths instead of resolving through the symlink",
+    "make Blender acceptance host-neutral via host_benchmark with legacy windows_benchmark compatibility",
+    "create base-edit output parent before allocating the temporary render directory"
+  ],
+  "safety": {
+    "printer_network_control": false,
+    "upload": false,
+    "start_print": false,
+    "heating": false,
+    "motion": false,
+    "external_paid_ai": false,
+    "physical_manufacture_proven": false
+  },
+  "remaining_external_login": {
+    "cursor_agent_installed": true,
+    "cursor_agent_logged_in": false,
+    "effect": "Mac is verified through Remote Desktop Commander; Cursor worker route is not active until account login."
+  }
+}
