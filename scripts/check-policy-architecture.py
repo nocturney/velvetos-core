@@ -80,6 +80,8 @@ STAGE8D_RETIREMENT_SEMANTIC_AUDIT = REPORTS / "stage8d-retirement-semantic-audit
 STAGE8D_RETIREMENT_SEMANTIC_AUDIT_GENERATOR = ROOT / "scripts" / "generate-stage8d-retirement-semantic-audit.py"
 STAGE8D_ROOT_DESK_RUNTIME_CORRECTION = REPORTS / "stage8d-root-desk-runtime-consumer-correction.json"
 STAGE8D_ROOT_DESK_RUNTIME_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-root-desk-runtime-consumer-correction.py"
+STAGE8D_FLEET_RUNTIME_CORRECTION = REPORTS / "stage8d-fleet-runtime-consumer-correction.json"
+STAGE8D_FLEET_RUNTIME_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-fleet-runtime-consumer-correction.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -121,6 +123,7 @@ EXPECTED_REPORTS = {
     "stage8d-sample-profile-consumer-correction.json",
     "stage8d-retirement-semantic-audit.json",
     "stage8d-root-desk-runtime-consumer-correction.json",
+    "stage8d-fleet-runtime-consumer-correction.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -3321,6 +3324,97 @@ def validate_registries() -> tuple[list[str], set[str]]:
                         problems,
                     )
 
+    if STAGE8D_FLEET_RUNTIME_CORRECTION.is_file():
+        fix8df = load(STAGE8D_FLEET_RUNTIME_CORRECTION)
+        require(
+            fix8df.get("schema") == "velvetos.stage8d-fleet-runtime-consumer-correction.v2"
+            and fix8df.get("stage") == "8D_FLEET_RUNTIME_CONSUMER_CORRECTION"
+            and fix8df.get("behavior_change") is True
+            and fix8df.get("surface_id") == "fleet"
+            and fix8df.get("repository_assessment") == "PASS",
+            "Stage 8D fleet runtime correction metadata drift",
+            problems,
+        )
+        criteria8df = fix8df.get("acceptance_criteria") or {}
+        require(
+            bool(criteria8df) and all(value is True for value in criteria8df.values()),
+            "Stage 8D fleet runtime correction criteria drift or fail",
+            problems,
+        )
+        migration8df = fix8df.get("migration") or {}
+        require(
+            migration8df.get("runtime_consumers_migrated") is True
+            and migration8df.get("legacy_present") is True
+            and migration8df.get("legacy_byte_unchanged") is True
+            and migration8df.get("canonical_legacy_parity") is True
+            and len(migration8df.get("migrated_code") or []) == 4
+            and all((migration8df.get("active_documentation") or {}).values()),
+            "Stage 8D fleet migration/parity drift",
+            problems,
+        )
+        sem8df = fix8df.get("semantic_audit") or {}
+        require(
+            sem8df.get("retirement_preflight_clear") is True
+            and sem8df.get("remaining_blockers") == []
+            and sorted(sem8df.get("negative_controls") or []) == sorted([
+                "packages/velvetos/living-studio/tests/test_living_studio.py",
+                "packages/velvetos_control_api/tests/test_control_api.py",
+            ])
+            and sem8df.get("retained_legacy_surface_references") == [".cursor/vf-desk.json"],
+            "Stage 8D fleet semantic correction drift",
+            problems,
+        )
+        rollback8df = fix8df.get("rollback") or {}
+        require(
+            rollback8df.get("window_open") is True
+            and rollback8df.get("closure_evidence") is None
+            and rollback8df.get("retirement_ready_for_deletion_gate") is False
+            and rollback8df.get("delete_authorized") is False
+            and fix8df.get("retirement_authorized") is False
+            and fix8df.get("delete_authorized") is False,
+            "Stage 8D fleet correction must not close rollback or authorize deletion",
+            problems,
+        )
+        authority8df = fix8df.get("authority") or {}
+        require(
+            authority8df.get("external_effect_authority_changed") is False
+            and authority8df.get("policy_registry_sha256")
+            == authority8df.get("prepared_against_policy_registry_sha256"),
+            "Stage 8D fleet correction changed external-effect authority",
+            problems,
+        )
+        if STAGE8D_FLEET_RUNTIME_CORRECTION_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated_fix8df = Path(td) / "stage8d-fleet-runtime-consumer-correction.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_FLEET_RUNTIME_CORRECTION_GENERATOR),
+                        "--prepared-against", fix8df["prepared_against_main_sha"],
+                        "--source-commit", fix8df["source_commit_sha"],
+                        "--captured-at", fix8df["captured_at"],
+                        "--output", str(regenerated_fix8df),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D fleet runtime correction regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated_fix8df.is_file():
+                    require(
+                        regenerated_fix8df.read_bytes() == STAGE8D_FLEET_RUNTIME_CORRECTION.read_bytes(),
+                        "Stage 8D fleet runtime correction receipt is not reproducible",
+                        problems,
+                    )
+
     if STAGE8D_RETIREMENT_SEMANTIC_AUDIT.is_file():
         audit8d = load(STAGE8D_RETIREMENT_SEMANTIC_AUDIT)
         require(
@@ -3335,7 +3429,8 @@ def validate_registries() -> tuple[list[str], set[str]]:
         require(
             model8d.get("exact_path_detection") is True
             and model8d.get("assembled_path_component_detection") is True
-            and model8d.get("ambiguous_machine_or_config_reference_blocks_retirement") is True,
+            and model8d.get("ambiguous_machine_or_config_reference_blocks_retirement") is True
+            and model8d.get("cross_surface_compatibility_refs_require_correction_receipt") is True,
             "Stage 8D retirement semantic audit model drift",
             problems,
         )
@@ -3364,11 +3459,13 @@ def validate_registries() -> tuple[list[str], set[str]]:
     if STAGE8D_RETIREMENT_SEMANTIC_AUDIT.is_file():
         audit8d = load(STAGE8D_RETIREMENT_SEMANTIC_AUDIT)
         surfaces8d = audit8d.get("compatibility_surfaces") or {}
-        blocked_ids8d = {"fleet", "tool_status", "chatgpt_core_bundle"}
+        blocked_ids8d = {"tool_status", "chatgpt_core_bundle"}
         require(
             (surfaces8d.get("root_desk") or {}).get("retirement_preflight_clear") is True
-            and (surfaces8d.get("root_desk") or {}).get("retirement_preflight_blockers") == [],
-            "Stage 8D semantic audit root-desk correction is not clear",
+            and (surfaces8d.get("root_desk") or {}).get("retirement_preflight_blockers") == []
+            and (surfaces8d.get("fleet") or {}).get("retirement_preflight_clear") is True
+            and (surfaces8d.get("fleet") or {}).get("retirement_preflight_blockers") == [],
+            "Stage 8D semantic audit corrected surfaces are not clear",
             problems,
         )
         require(
@@ -3383,7 +3480,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         assessment8d = audit8d.get("assessment") or {}
         require(
             assessment8d.get("surfaces_total") == 5
-            and assessment8d.get("surfaces_preflight_clear") == 2
+            and assessment8d.get("surfaces_preflight_clear") == 3
             and set(assessment8d.get("surfaces_with_candidate_blockers") or []) == blocked_ids8d
             and assessment8d.get("rollback_windows_closed_by_audit") == 0
             and assessment8d.get("deletion_authorized") is False
