@@ -12,7 +12,7 @@
     },
     "stage7b": {
       "path": "packages/velvetos/policy/reports/stage7b-memory-learning-lifecycle.json",
-      "canonical_json_sha256": "9cb014990f6dae9cdfecf750b7bfe7b020b8d3ad9100660345bade0fc7bb3948"
+      "canonical_json_sha256": "55db56827cdcc3198dc2dec11fe48feea0fdc3d1dfb5cbfefe347f791f190124"
     },
     "stage7c": {
       "path": "packages/velvetos/policy/reports/stage7c-research-scheduler-consolidation.json",
@@ -66,7 +66,7 @@
       "PROMOTED_DURABLE",
       "SUPERSEDED_EXPIRED"
     ],
-    "candidate_count": 3,
+    "candidate_count": 4,
     "automatic_promotion": false,
     "new_always_on_memory_systems": 0,
     "incremental_recurring_cost_ils": 0
