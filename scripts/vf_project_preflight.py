@@ -10,14 +10,18 @@ from pathlib import Path
 
 import sys as _sys
 _sys.path.insert(0, str(Path(__file__).resolve().parent))
-from vf_project_bundle import resolve as _resolve_project_bundle  # noqa: E402
+from vf_project_bundle import (  # noqa: E402
+    ProjectBundleError as _ProjectBundleError,
+    resolve as _resolve_project_bundle,
+    resolve_reference as _resolve_project_reference,
+)
 
 INSTRUCTION_ROOT = Path(__file__).resolve().parents[1]
 ROOT = INSTRUCTION_ROOT
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
 # Active bundle identity comes from PROJECT-AUTHORITY-MANIFEST.json (chatgptProjectBundle)
 # via vf_project_bundle; no revision literals here.
-_BUNDLE = _resolve_project_bundle(ROOT)
+_BUNDLE = _resolve_project_bundle(ROOT, instance_id="velvet-factory", env={})
 PROJECT_AUTHORITY = Path(_BUNDLE.authority)
 PROJECT_ASSET_MANIFEST = Path(_BUNDLE.asset_manifest)
 PROJECT_INSTRUCTIONS = Path(_BUNDLE.instructions)
@@ -37,6 +41,15 @@ CORE_MCP = ROOT / "packages/vfmcp/core-mcp.json"
 
 def load_manifest() -> dict:
     return json.loads(MANIFEST.read_text(encoding="utf-8"))
+
+
+def _authority_available(reference: str) -> bool:
+    try:
+        return _resolve_project_reference(
+            ROOT, reference, instance_id="velvet-factory", env={}
+        ).is_file()
+    except _ProjectBundleError:
+        return False
 
 
 def _text_sha256_candidates(path: Path) -> set[str]:
@@ -1137,7 +1150,7 @@ def main() -> int:
         authorities, packs, hard_gates, required_tools = _fast_path_route(
             domains, request_scope, request_text, manifest
         )
-        missing = [path for path in authorities if not (ROOT / path).is_file()]
+        missing = [path for path in authorities if not _authority_available(path)]
         if missing:
             fast_profile_problems = [
                 "fast path authority unavailable: " + path for path in missing
@@ -1158,12 +1171,12 @@ def main() -> int:
         packs = list(dict.fromkeys(packs))
         hard_gates = list(dict.fromkeys(hard_gates))
         required_tools = required_tools_for_request(request_text, domains)
-        missing = [path for path in authorities if not (ROOT / path).is_file()]
+        missing = [path for path in authorities if not _authority_available(path)]
     else:
         authorities = list(dict.fromkeys(authorities))
         packs = list(dict.fromkeys(packs))
         hard_gates = list(dict.fromkeys(hard_gates))
-        missing = [path for path in authorities if not (ROOT / path).is_file()]
+        missing = [path for path in authorities if not _authority_available(path)]
 
     creative = bool(set(domains) & {"creative_publication", "instagram_action"})
     binding_problems = [] if fast_candidate else project_binding_problems(creative=creative)

@@ -10,6 +10,15 @@ import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+from vf_project_bundle import ProjectBundleError, resolve as resolve_project_bundle, resolve_reference
+
+def authority_reference_exists(reference: str) -> bool:
+    try:
+        return resolve_reference(ROOT, reference, instance_id="velvet-factory", env={}).is_file()
+    except ProjectBundleError:
+        return False
+
 GATE = ROOT / "packages/velvetos/PROJECT-REQUEST-GATE.md"
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
 CLI = ROOT / "scripts/vf_project_preflight.py"
@@ -295,13 +304,13 @@ if set(fast_profiles) != {"operations", "production", "research"}:
 if len(fast_path.get("baselineAuthorities") or []) != 3:
     fail("Stage 4B minimal baseline must contain exactly three authority files")
 for rel in fast_path.get("baselineAuthorities") or []:
-    if not (ROOT / rel).is_file():
+    if not authority_reference_exists(rel):
         fail(f"Stage 4B fastPath baseline authority missing: {rel}")
 for domain, profile in fast_profiles.items():
     if not isinstance(profile, dict) or not profile.get("packs") or not profile.get("authorities") or not profile.get("hardGates"):
         fail(f"Stage 4B fastPath profile incomplete: {domain}")
     for rel in profile.get("authorities") or []:
-        if not (ROOT / rel).is_file():
+        if not authority_reference_exists(rel):
             fail(f"Stage 4B fastPath profile authority missing: {domain}:{rel}")
 for field in ("request_scope", "preflight_mode", "full_preflight_triggers", "owner_surface", "local_instructions"):
     if field not in set(manifest.get("requiredReceiptFields") or []):
@@ -331,9 +340,10 @@ for needle in (
     if needle not in (locality.get("rules") or []):
         fail(f"Stage 5A instruction locality rule missing: {needle}")
 
-project_authority = ROOT / bundle["authority"]
-asset_manifest = ROOT / bundle["assetManifest"]
-project_instructions = ROOT / bundle["instructions"]
+resolved_bundle = resolve_project_bundle(ROOT, instance_id="velvet-factory", env={})
+project_authority = ROOT / resolved_bundle.authority
+asset_manifest = ROOT / resolved_bundle.asset_manifest
+project_instructions = ROOT / resolved_bundle.instructions
 visual_enforcement = ROOT / "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
 for path in (project_authority, asset_manifest, project_instructions, visual_enforcement):
     if not path.is_file():
@@ -486,11 +496,11 @@ import vf_project_preflight as project_preflight
 import vf_publication_evidence as publication_evidence
 if publication_evidence.REJECTED_PRODUCT_TRUTH_REFERENCE_SHA256 not in set(route.get("rejectedArtifactSha256", [])):
     fail("publicationRoute must deny the superseded Product Truth teaching-sheet identity")
-if project_preflight.PROJECT_AUTHORITY != Path(bundle["authority"]):
+if project_preflight.PROJECT_AUTHORITY != Path(resolved_bundle.authority):
     fail("active preflight Project Authority does not match chatgptProjectBundle")
-if project_preflight.PROJECT_ASSET_MANIFEST != Path(bundle["assetManifest"]):
+if project_preflight.PROJECT_ASSET_MANIFEST != Path(resolved_bundle.asset_manifest):
     fail("active preflight asset manifest does not match chatgptProjectBundle")
-if project_preflight.PROJECT_INSTRUCTIONS != Path(bundle["instructions"]):
+if project_preflight.PROJECT_INSTRUCTIONS != Path(resolved_bundle.instructions):
     fail("active preflight Project Instructions do not match chatgptProjectBundle")
 if project_preflight.CREATIVE_MASTER_BRIDGE != Path("scripts/vf_creative_master_bridge.py"):
     fail("active preflight creative-master bridge binding mismatch")
@@ -509,9 +519,9 @@ if not (ROOT / project_preflight.SOURCE_INGEST_BRIDGE).is_file():
     fail("source-ingest bridge implementation missing")
 if not (ROOT / project_preflight.CREATIVE_MASTER_BRIDGE).is_file():
     fail("creative-master bridge implementation missing")
-if Path(publication_evidence.AUTHORITY) != Path(bundle["authority"]):
+if Path(publication_evidence.AUTHORITY) != Path(resolved_bundle.authority):
     fail("publication evidence Project Authority does not match chatgptProjectBundle")
-if Path(publication_evidence.ASSETS) != Path(bundle["assetManifest"]):
+if Path(publication_evidence.ASSETS) != Path(resolved_bundle.asset_manifest):
     fail("publication evidence asset manifest does not match chatgptProjectBundle")
 expected_bundle_identity = (bundle["contractVersion"], str(bundle["revision"]), bundle["bundleId"])
 if (project_preflight.PROJECT_CONTRACT_VERSION, project_preflight.PROJECT_REVISION,
@@ -586,7 +596,7 @@ for guides in ((manifest.get("instructionLocality") or {}).get("domainGuides") o
     all_paths.extend(guides or [])
 for cfg in manifest["domains"].values():
     all_paths.extend(cfg.get("authorities", []))
-missing = sorted({p for p in all_paths if not (ROOT / p).is_file()})
+missing = sorted({p for p in all_paths if not authority_reference_exists(p)})
 if missing:
     fail("missing authority path(s): " + ", ".join(missing))
 

@@ -28,7 +28,7 @@ def digests(path: Path) -> set[str]:
     return {hashlib.sha256(raw).hexdigest(), hashlib.sha256(raw.replace(b"\r\n", b"\n")).hexdigest()}
 
 
-b = vpb.resolve()
+b = vpb.resolve(ROOT, instance_id="velvet-factory", env={})
 # 1. Pins match the real bytes (the pins are trust anchors, not decoration).
 if b.authority_sha256 not in digests(ROOT / b.authority):
     fail("authoritySha256 does not match the authority file")
@@ -63,7 +63,8 @@ for rel in ("scripts/vf_project_preflight.py", "scripts/vf_publication_evidence.
             fail(f"{rel} duplicates a manifest SHA-256 pin")
 
 # 4. LATEST is a projection with explicit states; it must not masquerade an extension as the runtime.
-latest_path = ROOT / "packages/velvetos/chatgpt-project/LATEST.json"
+project_root = (ROOT / b.authority).parent
+latest_path = project_root / "LATEST.json"
 latest = json.loads(latest_path.read_text(encoding="utf-8"))
 if latest.get("schema") != "velvetos.chatgpt-project.latest.v2":
     fail("LATEST schema is not v2")
@@ -94,7 +95,7 @@ if (predecessor.get("revision"), predecessor.get("bundleId")) != (
     fail("LATEST reel predecessor must remain the 6.6.10 Reel extension")
 if predecessor.get("instructions") != "PROJECT-INSTRUCTIONS-v6.6.10.txt":
     fail("LATEST reel predecessor instructions drift")
-predecessor_path = ROOT / "packages/velvetos/chatgpt-project" / "PROJECT-INSTRUCTIONS-v6.6.10.txt"
+predecessor_path = project_root / "PROJECT-INSTRUCTIONS-v6.6.10.txt"
 if not predecessor_path.is_file():
     fail("LATEST reel predecessor instructions file missing")
 for ext_name, ext in (("chatNativeEditor", chat_native), ("reel", reel)):
@@ -102,7 +103,7 @@ for ext_name, ext in (("chatNativeEditor", chat_native), ("reel", reel)):
         rel = ext.get(key)
         if not isinstance(rel, str) or not rel:
             fail(f"LATEST {ext_name}.{key} missing")
-        path = ROOT / "packages/velvetos/chatgpt-project" / rel
+        path = project_root / rel
         if not path.is_file():
             fail(f"LATEST {ext_name}.{key} file missing: {rel}")
 repo_exec = latest.get("repoExecutableBundle") or {}
@@ -115,8 +116,8 @@ if repo_exec.get("assetManifest") != Path(b.asset_manifest).name:
 if repo_exec.get("instructions") != Path(b.instructions).name:
     fail("LATEST repoExecutableBundle instructions drift")
 
-chat_route = (ROOT / "packages/velvetos/chatgpt-project" / chat_native["routeDoc"]).read_text(encoding="utf-8")
-chat_instructions = (ROOT / "packages/velvetos/chatgpt-project" / chat_native["instructions"]).read_text(encoding="utf-8")
+chat_route = (project_root / chat_native["routeDoc"]).read_text(encoding="utf-8")
+chat_instructions = (project_root / chat_native["instructions"]).read_text(encoding="utf-8")
 for needle in (
     "CHAT_NATIVE_TERMINAL",
     "FILE_BACKED_NATIVE_EDIT",
@@ -144,25 +145,28 @@ cases = {
     "bad sha": lambda m: m["chatgptProjectBundle"].__setitem__("assetManifestSha256", "abc"),
     "revision/path mismatch": lambda m: m["chatgptProjectBundle"].__setitem__("revision", "9.9.9"),
     "bundle id without revision": lambda m: m["chatgptProjectBundle"].__setitem__("bundleId", "VF-PROJECT-X"),
-    "missing file": lambda m: m["chatgptProjectBundle"].__setitem__("instructions", "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v" + m["chatgptProjectBundle"]["revision"] + ".missing.txt"),
+    "missing file": lambda m: m["chatgptProjectBundle"].__setitem__("instructions", "instance:surface:chatgptProject/PROJECT-INSTRUCTIONS-v" + m["chatgptProjectBundle"]["revision"] + ".missing.txt"),
     "absolute path": lambda m: m["chatgptProjectBundle"].__setitem__("productTruthGuide", "/etc/passwd"),
     "missing hash field": lambda m: m["chatgptProjectBundle"].pop("authoritySha256"),
 }
 with tempfile.TemporaryDirectory() as tmp:
     t = Path(tmp)
+    shutil.copytree(ROOT / "instances" / "velvet-factory", t / "instances" / "velvet-factory")
+    (t / "packages" / "velvetos").mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(ROOT / "packages" / "velvetos" / "instance_resolver.py", t / "packages" / "velvetos" / "instance_resolver.py")
     for rel in (b.authority, b.asset_manifest, b.instructions, b.product_truth_guide):
         (t / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / rel, t / rel)
     (t / vpb.MANIFEST_REL).parent.mkdir(parents=True, exist_ok=True)
     (t / vpb.MANIFEST_REL).write_text(json.dumps(manifest), encoding="utf-8")
-    if vpb.resolve(t) != b:
+    if vpb.resolve(t, instance_id="velvet-factory", env={}) != b:
         fail("resolver is not deterministic on a copied tree")
     for name, mutate in cases.items():
         m = copy.deepcopy(manifest)
         mutate(m)
         (t / vpb.MANIFEST_REL).write_text(json.dumps(m), encoding="utf-8")
         try:
-            vpb.resolve(t)
+            vpb.resolve(t, instance_id="velvet-factory", env={})
         except vpb.ProjectBundleError:
             continue
         fail(f"resolver accepted broken manifest ({name})")

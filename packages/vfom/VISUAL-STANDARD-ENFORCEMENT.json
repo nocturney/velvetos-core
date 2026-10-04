@@ -162,7 +162,7 @@
     ],
     "productTruth": {
       "source": "actual verified product source pixels",
-      "guide": "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt",
+      "guide": "instance:surface:chatgptProject/PRODUCT-TRUTH-GUIDE-v1.txt",
       "visualConditioning": "FORBIDDEN"
     },
     "rejectedCreativeConditioningAssets": [

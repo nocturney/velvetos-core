@@ -142,10 +142,10 @@
         ".cursor/skills/velvet-brand-guardian/SKILL.md",
         "packages/vfigos/SEND.md",
         "packages/vfbiz/OFFERING.md",
-        "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.4.txt",
-        "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json",
-        "packages/velvetos/chatgpt-project/CHAT-NATIVE-EDITOR-ROUTE.md",
-        "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt"
+        "instance:surface:chatgptProject/PROJECT-AUTHORITY-v6.6.4.txt",
+        "instance:surface:chatgptProject/ASSET-MANIFEST-v6.6.4.json",
+        "instance:surface:chatgptProject/CHAT-NATIVE-EDITOR-ROUTE.md",
+        "instance:surface:chatgptProject/PRODUCT-TRUTH-GUIDE-v1.txt"
       ],
       "hardGates": [
         "product_truth",
@@ -417,9 +417,9 @@
         "packages/vfgrowth/PREFLIGHT.md",
         "packages/vfbiz/OFFERING.md",
         "packages/vfom/PUBLICATION-PREP-EXECUTION.md",
-        "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.4.txt",
-        "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json",
-        "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt"
+        "instance:surface:chatgptProject/PROJECT-AUTHORITY-v6.6.4.txt",
+        "instance:surface:chatgptProject/ASSET-MANIFEST-v6.6.4.json",
+        "instance:surface:chatgptProject/PRODUCT-TRUTH-GUIDE-v1.txt"
       ],
       "hardGates": [
         "publish_preflight",
@@ -452,10 +452,10 @@
     "contractVersion": 6,
     "revision": "6.6.4",
     "bundleId": "VF-PROJECT-6.6.4-CHAT-RUNTIME-DEPENDENCY-CLOSURE",
-    "authority": "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.4.txt",
-    "assetManifest": "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json",
-    "instructions": "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.4.txt",
-    "productTruthGuide": "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt",
+    "authority": "instance:surface:chatgptProject/PROJECT-AUTHORITY-v6.6.4.txt",
+    "assetManifest": "instance:surface:chatgptProject/ASSET-MANIFEST-v6.6.4.json",
+    "instructions": "instance:surface:chatgptProject/PROJECT-INSTRUCTIONS-v6.6.4.txt",
+    "productTruthGuide": "instance:surface:chatgptProject/PRODUCT-TRUTH-GUIDE-v1.txt",
     "authoritySha256": "db07dd973272a96b154b4771af1dbb13c03d039de595b56cd857bb0144025976",
     "assetManifestSha256": "b7af4ccd29bdf47c077d02103923203b822b7b0368098a6e2ba39d0e4dda9ab0",
     "offlineCreativePublicationFallback": true,

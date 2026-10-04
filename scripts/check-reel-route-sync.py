@@ -6,9 +6,11 @@ import json
 import sys
 from pathlib import Path
 
+from vf_project_bundle import ProjectBundleError, resolve_reference
+
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT = ROOT / "packages/vfom/REEL-ROUTE-CONTRACT.json"
-LATEST = ROOT / "packages/velvetos/chatgpt-project/LATEST.json"
+LATEST = resolve_reference(ROOT, "instance:surface:chatgptProject/LATEST.json", instance_id="velvet-factory", env={})
 PRESETS = ROOT / "packages/vfom/MOTION-PRESETS.md"
 
 
@@ -18,9 +20,11 @@ def fail(msg: str) -> None:
 
 
 c = json.loads(CONTRACT.read_text(encoding="utf-8"))
+if c.get("projectSurface") != "chatgptProject":
+    fail("project surface binding drift")
 latest = json.loads(LATEST.read_text(encoding="utf-8"))
-route = ROOT / c["routeDoc"]
-instructions = ROOT / c["projectInstructions"]
+route = resolve_reference(ROOT, c["routeDoc"], instance_id="velvet-factory", env={})
+instructions = resolve_reference(ROOT, c["projectInstructions"], instance_id="velvet-factory", env={})
 if not route.is_file() or not instructions.is_file() or not PRESETS.is_file():
     fail("route, project instructions or preset document missing")
 if latest.get("schema") != "velvetos.chatgpt-project.latest.v2":
@@ -38,9 +42,9 @@ if reel.get("bundleId") != "VF-PROJECT-6.6.11-ADOBE-PREMIUM-REEL-ROUTE":
     fail("Adobe Reel bundle id drift")
 if creative_runtime.get("revision") != c.get("baseCreativeRevision"):
     fail("creative runtime revision drift")
-if reel.get("routeDoc") != Path(c["routeDoc"]).name:
+if reel.get("routeDoc") != route.name:
     fail("LATEST reel route binding drift")
-if reel.get("instructions") != Path(c["projectInstructions"]).name:
+if reel.get("instructions") != instructions.name:
     fail("LATEST reel instructions binding drift")
 predecessor = reel.get("predecessor") or {}
 if predecessor.get("revision") != "6.6.10":
@@ -49,7 +53,7 @@ if predecessor.get("bundleId") != "VF-PROJECT-6.6.10-REEL-VIDEO-ROUTE":
     fail("Adobe Reel predecessor bundle drift")
 if predecessor.get("instructions") != "PROJECT-INSTRUCTIONS-v6.6.10.txt":
     fail("Adobe Reel predecessor instructions binding drift")
-predecessor_path = ROOT / "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.10.txt"
+predecessor_path = LATEST.parent / "PROJECT-INSTRUCTIONS-v6.6.10.txt"
 if not predecessor_path.is_file():
     fail("Adobe Reel predecessor instructions file missing")
 
