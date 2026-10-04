@@ -3,7 +3,7 @@
 מושב: **ייצור** (`@studio-producer`). לא Print מ־HQ. לא פק חדש.
 
 CLI: `python3 scripts/vfprod.py route --material PETG --strength outdoor`  
-צי: `FLEET.json` (ארבע מיטות למילוי מהרצפה).  
+צי: `instance:surface:fleet` (ארבע מיטות למילוי מהרצפה).
 Edge אחרי רכישה: [`WATCHTOWER.md`](WATCHTOWER.md) מריץ תור על ה־LAN — HQ רק ממליץ.
 
 ## מה מותר

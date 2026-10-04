@@ -82,7 +82,7 @@
 
 | דומיין | סמכות קנונית | CLI / sensor | הערה |
 |---|---|---|---|
-| צי רצפה | `packages/vfprod/FLEET.json` | `vfprod.py route` · `ROUTING.md` | HQ לא מדפיס |
+| צי רצפה | `instances/velvet-factory/instance/fleet.json` | `vfprod.py route` · `ROUTING.md` | HQ לא מדפיס |
 | print.done | `packages/vfprod/PRINT-DONE.md` | `vfprod/hq/cards/` · אירוע `print.done` | חסר גלם = חסר, לא סצנה מומצאת |
 | Watchtower | `packages/vfprod/WATCHTOWER.md` | | Edge/LAN שדרות — לא דמון בליבה |
 | מדף מק״ט | `packages/vfsku/SHELF.json` | `vfsku.py scan` · `FIRST-PRINT.md` | לא ממציאים שמות/₪ |

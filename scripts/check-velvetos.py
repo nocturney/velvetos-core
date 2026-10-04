@@ -134,11 +134,11 @@ def check_instance_resolver_contract(vf_inst: Path, meta: dict) -> None:
         fail("instance-manifest schema must expose profile/toolDesk/fleet/toolStatus/chatgptProject/windowsHostBinding surface vocabulary")
 
     canonical_fleet = load(vf_inst / surfaces["fleet"])
-    legacy_fleet = load(ROOT / "packages" / "vfprod" / "FLEET.json")
-    if canonical_fleet != legacy_fleet:
-        fail("Stage 8B canonical instance fleet must remain parity-equal to legacy vfprod/FLEET.json")
+    # Stage 8D: current Core validation is canonical-instance-only. Historical
+    # canonical/legacy parity remains reproducible in the Stage 8B/8D receipts;
+    # this live sensor must not keep the rollback compatibility file alive.
     if len(canonical_fleet.get("printers") or []) != 4:
-        fail("Stage 8B canonical instance fleet printer count drift")
+        fail("canonical instance fleet printer count drift")
 
     contract = load(TOOL_STATUS_CONTRACT)
     if contract.get("schema") != "velvetos.tool-status-contract.v1":

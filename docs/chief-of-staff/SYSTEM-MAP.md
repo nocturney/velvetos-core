@@ -156,7 +156,7 @@ Failover פרסום: לפרסום VF חל `VF_PUBLICATION_ROUTE_V1`. אין fail
 
 ### 6.9 Production support — IMPLEMENTED
 
-ארבע מיטות ב־`FLEET.json`. `vfprod.py route` לפי חומר.  
+ארבע מיטות ב־`instance:surface:fleet`. `vfprod.py route` לפי חומר.
 print.done → כרטיס → טיוטת תוכן.  
 Watchtower = Edge מתוכנן/LAN — לא דמון בליבה.  
 3D AI Studio: אתר + MCP OAuth; אין מפתח בגיט; אותו שער `vlicense`.

@@ -17,7 +17,11 @@ if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8")
 
 ROOT = Path(__file__).resolve().parents[1]
-FLEET = ROOT / "packages" / "vfprod" / "FLEET.json"
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from instance_resolver import InstanceResolutionError, resolve_surface  # type: ignore  # noqa: E402
+
 SNAP = ROOT / "packages" / "vfprod" / "data" / "maintenance-snapshot.json"
 FILAMENTS = ROOT / "packages" / "vfcost" / "FILAMENTS.json"
 CARDS = ROOT / "packages" / "vfprod" / "hq" / "cards"
@@ -71,6 +75,13 @@ def load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def canonical_fleet_path() -> Path:
+    try:
+        return resolve_surface(ROOT, "fleet", instance_id="velvet-factory", env={})
+    except InstanceResolutionError as exc:
+        raise SystemExit(f"canonical fleet resolution failed: {exc}") from exc
+
+
 def printer_label(fleet: dict, pid: str) -> str:
     for row in fleet.get("printers") or []:
         if row.get("id") == pid:
@@ -81,7 +92,7 @@ def printer_label(fleet: dict, pid: str) -> str:
 
 
 def cmd_fleet(_args: argparse.Namespace) -> int:
-    data = load_json(FLEET)
+    data = load_json(canonical_fleet_path())
     printers = data.get("printers") or []
     print(f"צי רצפה · {len(printers)} מיטות · hq_prints=false")
     print(f"{'id':<18}{'מותג':<16}פרוטוקול Watchtower")
@@ -104,7 +115,7 @@ def cmd_route(args: argparse.Namespace) -> int:
     spec = MATERIALS.get(material)
     if spec is None:
         return fail(f"חומר לא בצי: {args.material.strip()}")
-    fleet = load_json(FLEET)
+    fleet = load_json(canonical_fleet_path())
     prefer = spec["prefer"]
     first = prefer[0] if prefer else ""
     label = printer_label(fleet, first)
@@ -198,7 +209,7 @@ def cmd_maintain(_args: argparse.Namespace) -> int:
 
 
 def cmd_brief(_args: argparse.Namespace) -> int:
-    fleet = load_json(FLEET)
+    fleet = load_json(canonical_fleet_path())
     n = len(fleet.get("printers") or [])
     snap = load_json(SNAP)
     if not (snap.get("updatedAt") or "").strip():

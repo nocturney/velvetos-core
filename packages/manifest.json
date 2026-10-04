@@ -112,7 +112,7 @@
     },
     {
       "name": "vfprod",
-      "summary": "Production pack — print-floor (PRINT-DONE.md, FLEET.json, WATCHTOWER.md Edge dashboard). No Print from HQ. No invented sale ₪.",
+      "summary": "Production pack — print-floor (PRINT-DONE.md, instance:surface:fleet, WATCHTOWER.md Edge dashboard). No Print from HQ. No invented sale ₪.",
       "bcId": "bc-cd4a5cde",
       "agentUrl": "https://cursor.com/agents/bc-cd4a5cde",
       "originSlug": "christian-velvet/tmp-c9ca74be9225ac7d",
