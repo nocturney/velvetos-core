@@ -72,6 +72,8 @@ STAGE8D_CHATGPT_CORE = REPORTS / "stage8d-chatgpt-core-consumer-migration.json"
 STAGE8D_CHATGPT_CORE_GENERATOR = ROOT / "scripts" / "generate-stage8d-chatgpt-core-consumer-migration.py"
 STAGE8D_POST_MIGRATION = REPORTS / "stage8d-post-migration-readiness.json"
 STAGE8D_POST_MIGRATION_GENERATOR = ROOT / "scripts" / "generate-stage8d-post-migration-readiness.py"
+STAGE8D_SAMPLE_ROLLBACK_CLOSURE = REPORTS / "stage8d-sample-profile-rollback-closure.json"
+STAGE8D_SAMPLE_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-sample-profile-rollback-closure.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -109,6 +111,7 @@ EXPECTED_REPORTS = {
     "stage8d-tool-status-consumer-migration.json",
     "stage8d-chatgpt-core-consumer-migration.json",
     "stage8d-post-migration-readiness.json",
+    "stage8d-sample-profile-rollback-closure.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -2948,6 +2951,141 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated8dp.read_bytes() == STAGE8D_POST_MIGRATION.read_bytes(),
                         "Stage 8D post-migration readiness receipt is not reproducible",
+                        problems,
+                    )
+
+    if STAGE8D_SAMPLE_ROLLBACK_CLOSURE.is_file():
+        close8ds = load(STAGE8D_SAMPLE_ROLLBACK_CLOSURE)
+        require(
+            close8ds.get("schema") == "velvetos.stage8d-sample-profile-rollback-closure.v1"
+            and close8ds.get("stage") == "8D_SAMPLE_PROFILE_ROLLBACK_CLOSURE"
+            and close8ds.get("behavior_change") is False
+            and close8ds.get("surface_id") == "sample_profile"
+            and close8ds.get("repository_assessment") == "PASS",
+            "Stage 8D sample rollback closure metadata drift",
+            problems,
+        )
+        criteria8ds = close8ds.get("acceptance_criteria") or {}
+        expected8ds = {
+            "stage8c_sample_cutover_passed",
+            "legacy_sample_has_no_runtime_authority",
+            "active_legacy_consumers_remain_zero",
+            "legacy_sample_is_byte_unchanged_since_cutover",
+            "canonical_and_legacy_module_sets_match",
+            "external_effect_authority_is_unchanged",
+            "observation_window_contains_multiple_downstream_main_full_suites",
+            "all_observed_failures_are_explicitly_classified",
+            "only_observed_failure_is_unrelated_to_sample_profile",
+            "unrelated_failure_has_explicit_repair_and_post_repair_green_runs",
+            "closure_is_evidence_based_not_elapsed_time_based",
+            "legacy_file_is_retained_after_window_closure",
+            "deletion_requires_a_separate_retirement_gate",
+        }
+        require(
+            set(criteria8ds) == expected8ds and all(criteria8ds.get(k) is True for k in expected8ds),
+            "Stage 8D sample rollback closure criteria drift or fail",
+            problems,
+        )
+        current8ds = close8ds.get("current_evidence") or {}
+        require(
+            current8ds.get("legacy_present") is True
+            and current8ds.get("runtime_authority") is False
+            and current8ds.get("legacy_reference_class") == "HISTORICAL_GUARDS_AND_SNAPSHOT_GENERATORS_ONLY"
+            and current8ds.get("legacy_byte_unchanged_since_cutover") is True
+            and current8ds.get("canonical_legacy_module_parity") is True
+            and current8ds.get("active_consumer_count") == 0
+            and current8ds.get("external_effect_authority_unchanged") is True,
+            "Stage 8D sample rollback closure current evidence drift",
+            problems,
+        )
+        observation8ds = close8ds.get("observation_window") or {}
+        failures8ds = observation8ds.get("classified_failures") or []
+        require(
+            observation8ds.get("basis") == "DOWNSTREAM_MAIN_FULL_SUITE_AND_CONSUMER_STABILITY"
+            and observation8ds.get("elapsed_time_is_not_closure_authority") is True
+            and observation8ds.get("main_push_run_count") == 18
+            and observation8ds.get("success_count") == 17
+            and observation8ds.get("failure_count") == 1
+            and len(observation8ds.get("runs") or []) == 18
+            and observation8ds.get("post_repair_success_count") == 10
+            and observation8ds.get("latest_main_full_suite_success") is True,
+            "Stage 8D sample rollback observation evidence drift",
+            problems,
+        )
+        require(
+            len(failures8ds) == 1
+            and failures8ds[0].get("workflow_run_id") == 37218152953
+            and failures8ds[0].get("failed_sensor") == "check-vfresearch.py"
+            and failures8ds[0].get("sample_profile_related") is False
+            and failures8ds[0].get("repair_pr") == 519
+            and failures8ds[0].get("repair_merge_sha") == "b46f0414613c1e957ea9f3f0d34ad0ba82ccdf93",
+            "Stage 8D sample rollback failure classification drift",
+            problems,
+        )
+        rollback8ds = close8ds.get("rollback_window") or {}
+        require(
+            rollback8ds.get("was_open_in_stage8c_receipt") is True
+            and rollback8ds.get("was_open_in_post_migration_baseline") is True
+            and rollback8ds.get("closure_evidence") == "this_receipt"
+            and rollback8ds.get("closed") is True,
+            "Stage 8D sample rollback window was not explicitly closed by evidence",
+            problems,
+        )
+        require(
+            close8ds.get("rollback_window_closed") is True
+            and close8ds.get("retirement_ready_for_deletion_gate") is True
+            and close8ds.get("delete_authorized") is False
+            and close8ds.get("retirement_authorized") is False,
+            "Stage 8D sample closure must not authorize deletion",
+            problems,
+        )
+        authority8ds = close8ds.get("authority") or {}
+        require(
+            authority8ds.get("external_effect_authority_changed") is False
+            and authority8ds.get("policy_registry_sha256") == authority8ds.get("stage8c_policy_registry_sha256"),
+            "Stage 8D sample rollback closure changed authority",
+            problems,
+        )
+        constraints8ds = set(close8ds.get("constraints") or [])
+        require(
+            {
+                "closure evidence does not itself authorize deletion",
+                "legacy sample remains present in this change",
+                "no big-bang delete",
+                "retirement must be isolated to sample_profile",
+                "external-effect authority must remain unchanged",
+            } <= constraints8ds,
+            "Stage 8D sample rollback closure safety constraints drift",
+            problems,
+        )
+        if STAGE8D_SAMPLE_ROLLBACK_CLOSURE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8ds = Path(td) / "stage8d-sample-profile-rollback-closure.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_SAMPLE_ROLLBACK_CLOSURE_GENERATOR),
+                        "--prepared-against", close8ds["prepared_against_main_sha"],
+                        "--captured-at", close8ds["captured_at"],
+                        "--output", str(regenerated8ds),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D sample rollback closure regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated8ds.is_file():
+                    require(
+                        regenerated8ds.read_bytes() == STAGE8D_SAMPLE_ROLLBACK_CLOSURE.read_bytes(),
+                        "Stage 8D sample rollback closure receipt is not reproducible",
                         problems,
                     )
 

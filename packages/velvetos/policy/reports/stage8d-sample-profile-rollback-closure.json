@@ -1,0 +1,205 @@
+{
+  "schema": "velvetos.stage8d-sample-profile-rollback-closure.v1",
+  "stage": "8D_SAMPLE_PROFILE_ROLLBACK_CLOSURE",
+  "behavior_change": false,
+  "prepared_against_main_sha": "c344ecb12d9cc3f8ec254c4dd08dda397ad96ea4",
+  "captured_at": "2026-10-04T22:45:05.5576288+03:00",
+  "surface_id": "sample_profile",
+  "path": "packages/velvetos/samples/velvet-factory.json",
+  "canonical_path": "instances/velvet-factory/instance/velvet-factory.json",
+  "purpose": "Close the sample_profile rollback observation window using explicit consumer, parity, immutability and downstream-CI evidence, while retaining the compatibility file and keeping deletion unauthorized until a separate retirement gate.",
+  "cutover": {
+    "pull_request": 510,
+    "merge_sha": "80bed30bf54c854f2854d7328ccda171a587d569",
+    "merged_at": "2026-10-04T12:50:12Z",
+    "migration_receipt": "packages/velvetos/policy/reports/stage8c-sample-profile-consumers.json"
+  },
+  "current_evidence": {
+    "legacy_present": true,
+    "runtime_authority": false,
+    "legacy_references": [
+      "scripts/check-policy-architecture.py",
+      "scripts/generate-stage8a-core-instance-inventory.py",
+      "scripts/generate-stage8b-instance-resolver-foundation.py"
+    ],
+    "legacy_reference_class": "HISTORICAL_GUARDS_AND_SNAPSHOT_GENERATORS_ONLY",
+    "legacy_byte_unchanged_since_cutover": true,
+    "canonical_legacy_module_parity": true,
+    "active_consumer_count": 0,
+    "external_effect_authority_unchanged": true
+  },
+  "observation_window": {
+    "basis": "DOWNSTREAM_MAIN_FULL_SUITE_AND_CONSUMER_STABILITY",
+    "elapsed_time_is_not_closure_authority": true,
+    "start_merge_sha": "80bed30bf54c854f2854d7328ccda171a587d569",
+    "end_main_sha": "c344ecb12d9cc3f8ec254c4dd08dda397ad96ea4",
+    "workflow": "VelvetOS Core Sensors",
+    "main_push_run_count": 18,
+    "success_count": 17,
+    "failure_count": 1,
+    "runs": [
+      {
+        "id": 37203484008,
+        "sha": "80bed30bf54c854f2854d7328ccda171a587d569",
+        "created_at": "2026-10-04T12:50:15Z",
+        "conclusion": "success"
+      },
+      {
+        "id": 37204438791,
+        "sha": "bd7ba61f4f512a9b101e90b79e21a20d41674483",
+        "created_at": "2026-10-04T13:06:26Z",
+        "conclusion": "success"
+      },
+      {
+        "id": 37205358052,
+        "sha": "d8091ca0f788f7a5b1eb3eaa8f2f724e6063c1fb",
+        "created_at": "2026-10-04T13:21:55Z",
+        "conclusion": "success"
+      },
+      {
+        "id": 37206100010,
+        "sha": "3b656636c8df3d84dcf1aca9944edbb222ad6bde",
+        "created_at": "2026-10-04T13:34:26Z",
+        "conclusion": "success"
+      },
+      {
+        "id": 37207919550,
+        "sha": "aa7feccd1b31c9ca428562e546de42a1f91a9b9d",
+        "created_at": "2026-10-04T14:04:31Z",
+        "conclusion": "success"
+      },
+      {
+        "id": 37214342312,
+        "sha": "ac9af3536e78d029872f3db69f02e4bf9e90504b",
+        "created_at": "2026-10-04T15:47:51Z",
+        "conclusion": "success"
+      },
+      {
+        "id": 37215095998,
+        "sha": "03cf86ae850179fb4cf0a5460bee76a74569def5",
+        "created_at": "2026-10-04T15:59:43Z",
+        "conclusion": "success"
+      },
+      {
+        "id": 37218152953,
+        "sha": "4945a6de7b6dd06e07bfbec106b30fe4052409f6",
+        "created_at": "2026-10-04T16:48:55Z",
+        "conclusion": "failure"
+      },
+      {
+        "id": 37219282743,
+        "sha": "b46f0414613c1e957ea9f3f0d34ad0ba82ccdf93",
+        "created_at": "2026-10-04T17:06:56Z",
+        "conclusion": "success"
+      },
+      {
+        "id": 37219801669,
+        "sha": "2bac699984337506ce13a839984526c17b408eab",
+        "created_at": "2026-10-04T17:15:12Z",
+        "conclusion": "success"
+      },
+      {
+        "id": 37221071250,
+        "sha": "11ce1ca3a44cb21af24add900ab6b0e9d9e0a47e",
+        "created_at": "2026-10-04T17:35:11Z",
+        "conclusion": "success"
+      },
+      {
+        "id": 37221939252,
+        "sha": "a55a1d965903a384a139b2f62135648b3a11403c",
+        "created_at": "2026-10-04T17:48:54Z",
+        "conclusion": "success"
+      },
+      {
+        "id": 37223042443,
+        "sha": "79ab05dc02964f5fdc77e19a1ac69b6222676c51",
+        "created_at": "2026-10-04T18:05:33Z",
+        "conclusion": "success"
+      },
+      {
+        "id": 37223939091,
+        "sha": "54b9501483f795202447bb53b6e5151bd3af2ccf",
+        "created_at": "2026-10-04T18:18:39Z",
+        "conclusion": "success"
+      },
+      {
+        "id": 37224855463,
+        "sha": "8bcdb7de55341a282862dfb9764716a14f10441f",
+        "created_at": "2026-10-04T18:32:53Z",
+        "conclusion": "success"
+      },
+      {
+        "id": 37226359339,
+        "sha": "1a03b212761223f198b82a1443374a7fc4a7fed7",
+        "created_at": "2026-10-04T18:56:39Z",
+        "conclusion": "success"
+      },
+      {
+        "id": 37228203854,
+        "sha": "aa6e163fa635a540e11bd8f40fd65d08bc0c4ade",
+        "created_at": "2026-10-04T19:25:16Z",
+        "conclusion": "success"
+      },
+      {
+        "id": 37228944358,
+        "sha": "c344ecb12d9cc3f8ec254c4dd08dda397ad96ea4",
+        "created_at": "2026-10-04T19:36:50Z",
+        "conclusion": "success"
+      }
+    ],
+    "classified_failures": [
+      {
+        "workflow_run_id": 37218152953,
+        "head_sha": "4945a6de7b6dd06e07bfbec106b30fe4052409f6",
+        "failed_sensor": "check-vfresearch.py",
+        "failure": "Stage 7C acceptance receipt was not reproducible after the mutable provider-readback pointer advanced.",
+        "sample_profile_related": false,
+        "repair_pr": 519,
+        "repair_merge_sha": "b46f0414613c1e957ea9f3f0d34ad0ba82ccdf93",
+        "repair": "Historical Stage 7C replay was snapshot-bound to its recorded provider-readback witness."
+      }
+    ],
+    "post_repair_success_count": 10,
+    "latest_main_full_suite_success": true
+  },
+  "rollback_window": {
+    "was_open_in_stage8c_receipt": true,
+    "was_open_in_post_migration_baseline": true,
+    "closure_evidence": "this_receipt",
+    "closed": true,
+    "closure_reason": "No active sample consumers, no legacy drift, canonical parity preserved, policy authority unchanged, and downstream main full-suite observation shows no sample-related regression. The one observed failure was unrelated and has an explicit repair followed by green runs."
+  },
+  "acceptance_criteria": {
+    "stage8c_sample_cutover_passed": true,
+    "legacy_sample_has_no_runtime_authority": true,
+    "active_legacy_consumers_remain_zero": true,
+    "legacy_sample_is_byte_unchanged_since_cutover": true,
+    "canonical_and_legacy_module_sets_match": true,
+    "external_effect_authority_is_unchanged": true,
+    "observation_window_contains_multiple_downstream_main_full_suites": true,
+    "all_observed_failures_are_explicitly_classified": true,
+    "only_observed_failure_is_unrelated_to_sample_profile": true,
+    "unrelated_failure_has_explicit_repair_and_post_repair_green_runs": true,
+    "closure_is_evidence_based_not_elapsed_time_based": true,
+    "legacy_file_is_retained_after_window_closure": true,
+    "deletion_requires_a_separate_retirement_gate": true
+  },
+  "repository_assessment": "PASS",
+  "rollback_window_closed": true,
+  "retirement_ready_for_deletion_gate": true,
+  "delete_authorized": false,
+  "retirement_authorized": false,
+  "next_action": "Run a separate isolated sample_profile retirement gate. Do not delete the legacy sample unless that later gate revalidates clean consumers, parity/closure evidence, current main CI and external-effect authority, then explicitly authorizes deletion.",
+  "authority": {
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "stage8c_policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false
+  },
+  "constraints": [
+    "closure evidence does not itself authorize deletion",
+    "legacy sample remains present in this change",
+    "no big-bang delete",
+    "retirement must be isolated to sample_profile",
+    "external-effect authority must remain unchanged"
+  ]
+}

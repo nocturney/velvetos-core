@@ -594,3 +594,11 @@ After the four Stage 8D consumer-migration slices, all five retained compatibili
 `reports/stage8d-post-migration-readiness.json` records this state as `BLOCKED_ROLLBACK_WINDOWS_ONLY`: all five compatibility paths remain present, all five rollback windows remain explicitly open, and no surface has rollback-window closure evidence yet. Consumer migration completion therefore does **not** authorize deletion. `retirement_authorized=false` and every surface keeps `delete_authorized=false`.
 
 The gate is prepared against merged main `aa6e163fa635a540e11bd8f40fd65d08bc0c4ade`, which passed the full 116/116 sensor suite after PR #527. The next action is evidence-only: collect explicit rollback-window closure evidence per surface. No window may close by elapsed time or inference, and no big-bang delete is authorized.
+
+## Reform v2 Stage 8D - Sample-profile rollback closure
+
+`reports/stage8d-sample-profile-rollback-closure.json` closes only the `sample_profile` rollback observation window. This is a later evidence layer; it does not rewrite the historical post-migration baseline above. The closure is based on a clean current consumer scan, byte-stability of the retained sample since PR #510, canonical/legacy module parity, unchanged external-effect authority and downstream main full-suite observation.
+
+The observation window contains 18 `VelvetOS Core Sensors` main-push runs: 17 successful and one failure. The failure was `check-vfresearch.py` after a provider-readback pointer refresh, explicitly unrelated to `sample_profile`; PR #519 snapshot-bound the historical Stage 7C replay and all 10 observed main runs from that repair through `c344ecb1` are green. Closure authority therefore comes from classified operational evidence, not from elapsed time.
+
+The legacy sample remains physically present. `rollback_window_closed=true` means the observation window is explicitly closed for this one surface; it does **not** mean the file is deleted or that deletion is already authorized. `delete_authorized=false` and `retirement_authorized=false` remain in force. A separate isolated retirement gate must revalidate consumers, parity/closure evidence, current main CI and external-effect authority before it can authorize deletion.
