@@ -413,6 +413,8 @@ def main() -> None:
                 stage7c_report["prepared_against_main_sha"],
                 "--captured-at",
                 stage7c_report["captured_at"],
+                "--provider-readback-artifact",
+                stage7c_report["live_scheduler_evidence"]["provider_readback"],
                 "--output",
                 str(regenerated),
             ],

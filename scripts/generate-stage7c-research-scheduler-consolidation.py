@@ -60,6 +60,10 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prepared-against", required=True)
     parser.add_argument("--captured-at", required=True)
+    parser.add_argument(
+        "--provider-readback-artifact",
+        help="Stable provider-readback witness for historical receipt replay; defaults to the current manifest pointer for a new capture.",
+    )
     parser.add_argument("--output", type=Path, default=OUT)
     args = parser.parse_args()
     require(len(args.prepared_against) == 40, "--prepared-against must be a full Git SHA")
@@ -113,10 +117,16 @@ def main() -> int:
             "every protected routine needs an explicit non-duplicate fallback")
 
     latest = manifest.get("latestProviderReadback") or {}
-    artifact_rel = latest.get("artifact")
-    require(latest.get("status") == "live_verified" and isinstance(artifact_rel, str),
-            "latest provider readback is not live verified")
-    readback = load(ROOT / artifact_rel)
+    if args.provider_readback_artifact:
+        artifact_rel = args.provider_readback_artifact
+    else:
+        artifact_rel = latest.get("artifact")
+        require(latest.get("status") == "live_verified" and isinstance(artifact_rel, str),
+                "latest provider readback is not live verified")
+    require(isinstance(artifact_rel, str) and bool(artifact_rel), "provider readback artifact is required")
+    artifact_path = ROOT / artifact_rel
+    require(artifact_path.is_file(), f"provider readback artifact missing: {artifact_rel}")
+    readback = load(artifact_path)
     observed_rows = readback.get("protectedRoutines") or []
     observed_ids = {row.get("providerRoutineId") for row in observed_rows if isinstance(row, dict)}
     require(readback.get("protectedRoutineCount") == 9 and observed_ids == set(protected_ids),
