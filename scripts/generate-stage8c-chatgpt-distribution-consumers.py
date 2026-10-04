@@ -8,6 +8,7 @@ from typing import Any
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/"packages/velvetos/policy/reports/stage8c-chatgpt-distribution-consumers.json"
 POLICY=ROOT/"packages/velvetos/policy/policy-registry.json"
+PROJECT_MANIFEST=ROOT/"packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
 CORE_DIR=ROOT/"packages/velvetos/chatgpt-project"
 INST_DIR=ROOT/"instances/velvet-factory/distribution/chatgpt-project"
 INSTANCE=ROOT/"instances/velvet-factory/INSTANCE.json"
@@ -33,6 +34,20 @@ def git_json(commit:str,rel:str)->dict[str,Any]:
 def git_bytes(commit:str,rel:str)->bytes:
     return subprocess.check_output(["git","show",f"{commit}:{rel}"],cwd=ROOT)
 
+def normalize_runtime_pin_manifest(obj:dict[str,Any])->dict[str,Any]:
+    copy=json.loads(json.dumps(obj))
+    for row in copy.get("chat_runtime") or []:
+        if isinstance(row,dict) and row.get("repo_path")=="scripts/vf_chat_cold_start_preflight.py":
+            row["sha256"]="__VF_CHAT_PREFLIGHT_SHA__"
+    return copy
+
+def normalize_project_manifest_pin(obj:dict[str,Any])->dict[str,Any]:
+    copy=json.loads(json.dumps(obj))
+    bundle=copy.get("chatgptProjectBundle") or {}
+    if isinstance(bundle,dict) and "assetManifestSha256" in bundle:
+        bundle["assetManifestSha256"]="__ASSET_MANIFEST_SHA__"
+    return copy
+
 def main()->int:
     ap=argparse.ArgumentParser()
     ap.add_argument("--prepared-against",required=True)
@@ -52,16 +67,48 @@ def main()->int:
     mismatches=[rel for rel in sorted(core_files) if sha_bytes(core_files[rel])!=sha_bytes(inst_files[rel])]
     require(not mismatches,f"instance distribution byte parity mismatch: {mismatches[:5]}")
 
-    core_unchanged=[]
+    core_non_pin_unchanged=[]
     for rel,p in sorted(core_files.items()):
+        if rel=="ASSET-MANIFEST-v6.6.4.json":
+            continue
         repo_rel=(Path("packages/velvetos/chatgpt-project")/rel).as_posix()
         try:
             before=git_bytes(a.prepared_against,repo_rel)
         except subprocess.CalledProcessError:
-            core_unchanged.append(False)
+            core_non_pin_unchanged.append(False)
             continue
-        core_unchanged.append(before==p.read_bytes())
-    require(all(core_unchanged),"Core compatibility bundle changed during distribution cutover")
+        core_non_pin_unchanged.append(before==p.read_bytes())
+    require(all(core_non_pin_unchanged),"Core compatibility bundle changed outside the approved runtime pin update")
+
+    current_asset=load(CORE_DIR/"ASSET-MANIFEST-v6.6.4.json")
+    baseline_asset=git_json(a.prepared_against,"packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json")
+    pin_only_asset_change=(
+        csha(normalize_runtime_pin_manifest(current_asset))
+        == csha(normalize_runtime_pin_manifest(baseline_asset))
+    )
+    require(pin_only_asset_change,"asset manifest changed beyond the approved chat runtime hash pin")
+    runtime_rows=[
+        row for row in (current_asset.get("chat_runtime") or [])
+        if isinstance(row,dict) and row.get("repo_path")=="scripts/vf_chat_cold_start_preflight.py"
+    ]
+    current_script_sha=sha_bytes(PREFLIGHT)
+    require(len(runtime_rows)==1 and runtime_rows[0].get("sha256")==current_script_sha,
+            "asset manifest does not pin the current generic chat preflight bytes")
+
+    current_project_manifest=load(PROJECT_MANIFEST)
+    baseline_project_manifest=git_json(a.prepared_against,"packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json")
+    project_manifest_pin_only_change=(
+        csha(normalize_project_manifest_pin(current_project_manifest))
+        == csha(normalize_project_manifest_pin(baseline_project_manifest))
+    )
+    require(project_manifest_pin_only_change,
+            "Project Authority manifest changed beyond assetManifestSha256 trust-pin refresh")
+    current_asset_sha=sha_bytes(CORE_DIR/"ASSET-MANIFEST-v6.6.4.json")
+    require(
+        ((current_project_manifest.get("chatgptProjectBundle") or {}).get("assetManifestSha256"))
+        == current_asset_sha,
+        "Project Authority manifest assetManifestSha256 does not bind current asset manifest",
+    )
 
     checker=CHECKER.read_text(encoding="utf-8")
     preflight=PREFLIGHT.read_text(encoding="utf-8")
@@ -92,8 +139,10 @@ def main()->int:
           set(core_files)==set(inst_files),
       "instance_distribution_is_byte_equal_to_core_compatibility_bundle":
           not mismatches,
-      "core_compatibility_bundle_is_unchanged_for_rollback_window":
-          all(core_unchanged),
+      "core_compatibility_non_pin_files_are_unchanged":
+          all(core_non_pin_unchanged),
+      "core_compatibility_trust_updates_are_limited_to_chat_runtime_and_asset_manifest_pins":
+          pin_only_asset_change and project_manifest_pin_only_change,
       "cold_start_checker_resolves_explicit_instance_distribution":
           "resolve_distribution" in checker and 'instance_id="velvet-factory"' in checker,
       "cold_start_preflight_has_no_hardcoded_vf_bundle_revision_or_authority_filename":
@@ -118,7 +167,9 @@ def main()->int:
         "core_compatibility_root":"packages/velvetos/chatgpt-project",
         "file_count":len(inst_files),
         "byte_parity":not mismatches,
-        "core_compatibility_unchanged":all(core_unchanged),
+        "core_compatibility_non_pin_files_unchanged":all(core_non_pin_unchanged),
+        "asset_manifest_pin_only_change":pin_only_asset_change,
+        "project_manifest_pin_only_change":project_manifest_pin_only_change,
         "delete_authorized":False,
       },
       "consumers":{
