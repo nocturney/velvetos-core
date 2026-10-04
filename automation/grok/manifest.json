@@ -135,7 +135,7 @@
   "latestProviderReadback": {
     "status": "live_verified",
     "date": "2026-10-04",
-    "artifact": "automation/grok/provider-readback-2026-10-04-am.json",
+    "artifact": "automation/grok/provider-readback-2026-10-04-pm.json",
     "protectedRoutineCount": 9,
     "protectedInventoryClockMatch": true,
     "rendererTimeZone": "Asia/Jerusalem",
