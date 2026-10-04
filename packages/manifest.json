@@ -26,7 +26,7 @@
     "Re-run scripts/vendor-origin-packs.sh after `origin auth login` or CURSOR_API_KEY to pull actual trees.",
     "Current send authority: constitution/SEND.md — HQ sends Gmail/Instagram via tools; Grok Bot is optional backup; printers stay on the floor; canonical team = 6 seats.",
     "Standing order 2026-08-30: GitHub is the constant backup. Same-day catalog+CHANGELOG even when Origin will not clone. Grok Bot: docs/BACKUP.md.",
-    "2026-08-30 desk overlay: 28 Agency specialists + live tools in .cursor/vf-desk.json and docs/AGENCY-TOOLS.md. HQ Gmail is read-only.",
+    "2026-08-30 desk overlay: 28 Agency specialists + live tools in instance:surface:toolDesk and docs/AGENCY-TOOLS.md. HQ Gmail is read-only.",
     "2026-08-30: vfdsh maps awesome-dsh-plugin patterns onto existing packs. Do not install DeepSeek Harness. See docs/DSH-FIT.md.",
     "2026-08-30: vfmskill is an HQ-native pack. Curated 15/50 skills from coreyhaines31/marketingskills (MIT, e55de88) mapped onto existing packs. No SaaS CMO dump, no send, no invented ₪.",
     "2026-08-30: vfom is an HQ-native pack (not Origin). OpenMontage pipeline patterns (clip-factory, hybrid, reference plan, scene gate, self-review) map onto existing content packs. Do not vendor Remotion or send Instagram.",

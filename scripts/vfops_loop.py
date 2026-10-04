@@ -22,6 +22,11 @@ for _stream in (sys.stdout, sys.stderr):
         _stream.reconfigure(encoding="utf-8")
 
 ROOT = Path(__file__).resolve().parents[1]
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from instance_resolver import resolve_surface  # type: ignore
+
 LOOP_JSON = ROOT / "packages" / "vfops" / "LOOP.json"
 MANIFEST = ROOT / "packages" / "manifest.json"
 RESEARCH = ROOT / "packages" / "vfops" / "data" / "research.md"
@@ -36,7 +41,7 @@ STUDIO = ROOT / "constitution" / "STUDIO.md"
 INSTANCE = ROOT / "constitution" / "INSTANCE.md"
 SKILLS = ROOT / ".cursor" / "skills"
 CONNECT_IG = ROOT / "packages" / "vfigos" / "CONNECT-IG.md"
-DESK = ROOT / ".cursor" / "vf-desk.json"
+DESK = resolve_surface(ROOT, "toolDesk", instance_id="velvet-factory", env={})
 IG_CAPABILITIES = ROOT / "packages" / "vfigos" / "CAPABILITIES.json"
 TOKEN_WATCH = ROOT / "packages" / "vfigos" / "data" / "token-watch.json"
 FOLLOWUPS_CTRL = ROOT / "office" / "control" / "followups.json"

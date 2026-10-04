@@ -1,0 +1,162 @@
+{
+  "schema": "velvetos.stage8d-root-desk-runtime-consumer-correction.v1",
+  "stage": "8D_ROOT_DESK_RUNTIME_CONSUMER_CORRECTION",
+  "behavior_change": true,
+  "prepared_against_main_sha": "44a2546a90a9b31051556cdc882842e471cd0eb1",
+  "source_commit_sha": "56950b116c54a2a9ae8f4baadcd0893ab91f774e",
+  "captured_at": "2026-10-04T23:51:38.5643829+03:00",
+  "surface_id": "root_desk",
+  "legacy_path": ".cursor/vf-desk.json",
+  "canonical_path": "instances/velvet-factory/.cursor/vf-desk.json",
+  "purpose": "Migrate root-desk runtime readers exposed by the fail-closed semantic audit to the canonical instance toolDesk surface, preserve operational parity, and keep rollback/deletion closed.",
+  "migration": {
+    "runtime_readers": {
+      "scripts/check-agent-surface-security.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/check-office-watchdog.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/check-public-cta.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/check-velvetos.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/check-vf-desk.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/check-vfmcp.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/check-vfresearch.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/vf_control_plane.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/vfmem.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/vfops_loop.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      }
+    },
+    "runtime_consumers_migrated": true,
+    "legacy_present": true,
+    "legacy_byte_unchanged": true
+  },
+  "operational_parity": {
+    "legacy_tool_count": 18,
+    "canonical_tool_count": 18,
+    "legacy_seat_count": 6,
+    "canonical_seat_count": 6,
+    "legacy_specialist_count": 38,
+    "canonical_specialist_count": 38,
+    "tools_equal_by_id": true,
+    "seats_equal_by_id": true,
+    "specialists_equal_by_slug": true,
+    "skills_superset": true,
+    "notes_superset": true
+  },
+  "semantic_audit": {
+    "retirement_preflight_clear": true,
+    "remaining_blockers": [],
+    "reference_classes": {
+      "canonical_instance_reference": [
+        "instances/velvet-factory/INSTANCE.json",
+        "instances/velvet-factory/scripts/check-instance-visual-bootstrap.py"
+      ],
+      "canonical_surface_consumer": [
+        "packages/velvetos_control_api/CONTRIBUTIONS.json",
+        "packages/velvetos_control_api/contributions/integrations.py",
+        "packages/velvetos_control_api/contributions/operational.py",
+        "scripts/check-velvetos.py",
+        "scripts/check-vfmcp.py",
+        "scripts/check-vfresearch.py"
+      ],
+      "documentation_reference": [
+        "CHANGELOG.md",
+        "constitution/PUBLIC_CTA.md",
+        "docs/AGENCY-AGENTS.md",
+        "docs/AGENCY-TOOLS.md",
+        "docs/FAILOVER.md",
+        "docs/SHARED-WORK-COORDINATION.md",
+        "docs/VFMEM.md",
+        "docs/chief-of-staff/PACKS-CATALOG.md",
+        "docs/chief-of-staff/README.md",
+        "docs/chief-of-staff/SOT-INDEX.md",
+        "docs/chief-of-staff/SYSTEM-MAP.md",
+        "packages/velvetos/policy/README.md",
+        "packages/velvetos_control_api/README.md",
+        "packages/vffcc/playbooks/cursor-thrift.md",
+        "packages/vfigos/IG-MCP-INVENTORY.md",
+        "packages/vfmakers/LOCK.md",
+        "packages/vfmcp/ICLOUD-DRIVE-SYNC.md",
+        "packages/vfresearch/sources/2026-08-31-effective-html.md",
+        "packages/vfresearch/sources/2026-09-05-last30days-embed.md"
+      ],
+      "evidence_machinery": [
+        "scripts/check-policy-architecture.py",
+        "scripts/generate-stage8a-core-instance-inventory.py",
+        "scripts/generate-stage8b-canonical-instance-config.py",
+        "scripts/generate-stage8b-instance-resolver-foundation.py",
+        "scripts/generate-stage8c-closure.py",
+        "scripts/generate-stage8c-control-api-fleet.py",
+        "scripts/generate-stage8c-desk-catalog-bindings.py",
+        "scripts/generate-stage8c-root-desk-readers.py",
+        "scripts/generate-stage8d-post-migration-readiness.py",
+        "scripts/generate-stage8d-retirement-readiness.py",
+        "scripts/generate-stage8d-retirement-semantic-audit.py",
+        "scripts/generate-stage8d-root-desk-consumer-migration.py"
+      ]
+    }
+  },
+  "rollback": {
+    "window_open": true,
+    "closure_evidence": null,
+    "retirement_ready_for_deletion_gate": false,
+    "delete_authorized": false
+  },
+  "authority": {
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false
+  },
+  "acceptance_criteria": {
+    "prior_root_desk_migration_receipt_is_preserved": true,
+    "legacy_root_desk_is_byte_unchanged": true,
+    "all_runtime_readers_use_explicit_instance_tool_desk_surface": true,
+    "semantic_preflight_has_zero_root_desk_blockers": true,
+    "canonical_tools_preserve_legacy_rows": true,
+    "canonical_seats_preserve_legacy_rows": true,
+    "canonical_specialists_preserve_legacy_rows": true,
+    "canonical_skills_are_legacy_superset": true,
+    "canonical_notes_are_legacy_superset": true,
+    "canonical_instance_identity_and_fail_closed_gates_are_preserved": true,
+    "external_effect_authority_is_unchanged": true,
+    "rollback_window_remains_open": true,
+    "delete_authority_remains_false": true
+  },
+  "repository_assessment": "PASS",
+  "retirement_authorized": false,
+  "delete_authorized": false,
+  "next_action": "Merge this correction and collect fresh downstream main full-suite evidence before explicit root_desk rollback-window closure. Do not delete .cursor/vf-desk.json from this correction.",
+  "constraints": [
+    "legacy root desk remains present and byte-unchanged",
+    "rollback closure requires fresh post-correction evidence",
+    "deletion requires a separate explicit preflight",
+    "no big-bang retirement",
+    "external-effect authority must remain unchanged"
+  ]
+}

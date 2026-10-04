@@ -9,6 +9,11 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from instance_resolver import resolve_surface  # type: ignore
+
 LINKS = ROOT / "packages" / "vfresearch" / "LINKS.json"
 HQ_ROUTINE = ROOT / "packages" / "vfresearch" / "HQ-ROUTINE.md"
 WEEKLY = ROOT / "packages" / "vfresearch" / "WEEKLY.md"
@@ -36,7 +41,7 @@ ROUTINE = ROOT / "packages" / "vfops" / "ROUTINE.md"
 ORCHESTRA = ROOT / "constitution" / "ORCHESTRA.md"
 RESEARCH_BLOCK = ROOT / "packages" / "vfops" / "data" / "research.md"
 MANIFEST = ROOT / "packages" / "manifest.json"
-DESK = ROOT / ".cursor" / "vf-desk.json"
+DESK = resolve_surface(ROOT, "toolDesk", instance_id="velvet-factory", env={})
 REQUIRED_LOCKS = {
     "hq-send-via-tools",
     "no-auto-dm",

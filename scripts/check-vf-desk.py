@@ -7,7 +7,12 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DESK = ROOT / ".cursor" / "vf-desk.json"
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from instance_resolver import resolve_surface  # type: ignore
+
+DESK = resolve_surface(ROOT, "toolDesk", instance_id="velvet-factory", env={})
 AGENCY = ROOT / ".cursor" / "agency-agents.json"
 RULE = ROOT / ".cursor" / "rules" / "velvet-factory-desk.mdc"
 MANIFEST = ROOT / "packages" / "manifest.json"
@@ -23,9 +28,9 @@ def main() -> None:
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
-    desk = json.loads(DESK.read_text())
-    agency = json.loads(AGENCY.read_text())
-    manifest = json.loads(MANIFEST.read_text())
+    desk = json.loads(DESK.read_text(encoding="utf-8"))
+    agency = json.loads(AGENCY.read_text(encoding="utf-8"))
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
 
     slugs = {a["slug"] for a in agency.get("agents", [])}
     packs = {p["name"] for p in manifest.get("packs", [])}
@@ -33,7 +38,7 @@ def main() -> None:
     if not slugs:
         fail("agency catalog has no agents")
 
-    text = RULE.read_text()
+    text = RULE.read_text(encoding="utf-8")
     if "alwaysApply: true" not in text:
         fail("velvet-factory-desk.mdc must be alwaysApply: true")
     if "send_message" not in text:

@@ -78,6 +78,8 @@ STAGE8D_SAMPLE_CONSUMER_CORRECTION = REPORTS / "stage8d-sample-profile-consumer-
 STAGE8D_SAMPLE_CONSUMER_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-sample-profile-consumer-correction.py"
 STAGE8D_RETIREMENT_SEMANTIC_AUDIT = REPORTS / "stage8d-retirement-semantic-audit.json"
 STAGE8D_RETIREMENT_SEMANTIC_AUDIT_GENERATOR = ROOT / "scripts" / "generate-stage8d-retirement-semantic-audit.py"
+STAGE8D_ROOT_DESK_RUNTIME_CORRECTION = REPORTS / "stage8d-root-desk-runtime-consumer-correction.json"
+STAGE8D_ROOT_DESK_RUNTIME_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-root-desk-runtime-consumer-correction.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -118,6 +120,7 @@ EXPECTED_REPORTS = {
     "stage8d-sample-profile-rollback-closure.json",
     "stage8d-sample-profile-consumer-correction.json",
     "stage8d-retirement-semantic-audit.json",
+    "stage8d-root-desk-runtime-consumer-correction.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -3212,6 +3215,111 @@ def validate_registries() -> tuple[list[str], set[str]]:
                         problems,
                     )
 
+    if STAGE8D_ROOT_DESK_RUNTIME_CORRECTION.is_file():
+        fix8dr = load(STAGE8D_ROOT_DESK_RUNTIME_CORRECTION)
+        require(
+            fix8dr.get("schema") == "velvetos.stage8d-root-desk-runtime-consumer-correction.v1"
+            and fix8dr.get("stage") == "8D_ROOT_DESK_RUNTIME_CONSUMER_CORRECTION"
+            and fix8dr.get("behavior_change") is True
+            and fix8dr.get("surface_id") == "root_desk"
+            and fix8dr.get("repository_assessment") == "PASS",
+            "Stage 8D root-desk runtime correction metadata drift",
+            problems,
+        )
+        criteria8dr = fix8dr.get("acceptance_criteria") or {}
+        require(
+            bool(criteria8dr) and all(value is True for value in criteria8dr.values()),
+            "Stage 8D root-desk runtime correction criteria drift or fail",
+            problems,
+        )
+        migration8dr = fix8dr.get("migration") or {}
+        readers8dr = migration8dr.get("runtime_readers") or {}
+        require(
+            migration8dr.get("runtime_consumers_migrated") is True
+            and migration8dr.get("legacy_present") is True
+            and migration8dr.get("legacy_byte_unchanged") is True
+            and len(readers8dr) == 10
+            and all(
+                row.get("uses_instance_surface_resolver") is True
+                and row.get("direct_root_legacy_read") is False
+                for row in readers8dr.values()
+            ),
+            "Stage 8D root-desk reader migration drift",
+            problems,
+        )
+        parity8dr = fix8dr.get("operational_parity") or {}
+        require(
+            parity8dr.get("legacy_tool_count") == 18
+            and parity8dr.get("canonical_tool_count") >= 18
+            and parity8dr.get("legacy_seat_count") == 6
+            and parity8dr.get("canonical_seat_count") >= 6
+            and parity8dr.get("legacy_specialist_count") == 38
+            and parity8dr.get("canonical_specialist_count") >= 38
+            and parity8dr.get("tools_equal_by_id") is True
+            and parity8dr.get("seats_equal_by_id") is True
+            and parity8dr.get("specialists_equal_by_slug") is True
+            and parity8dr.get("skills_superset") is True
+            and parity8dr.get("notes_superset") is True,
+            "Stage 8D root-desk operational parity drift",
+            problems,
+        )
+        sem8dr = fix8dr.get("semantic_audit") or {}
+        require(
+            sem8dr.get("retirement_preflight_clear") is True
+            and sem8dr.get("remaining_blockers") == [],
+            "Stage 8D root-desk semantic preflight is not clear",
+            problems,
+        )
+        rollback8dr = fix8dr.get("rollback") or {}
+        require(
+            rollback8dr.get("window_open") is True
+            and rollback8dr.get("closure_evidence") is None
+            and rollback8dr.get("retirement_ready_for_deletion_gate") is False
+            and rollback8dr.get("delete_authorized") is False
+            and fix8dr.get("retirement_authorized") is False
+            and fix8dr.get("delete_authorized") is False,
+            "Stage 8D root-desk correction must not close rollback or authorize deletion",
+            problems,
+        )
+        authority8dr = fix8dr.get("authority") or {}
+        require(
+            authority8dr.get("external_effect_authority_changed") is False
+            and authority8dr.get("policy_registry_sha256")
+            == authority8dr.get("prepared_against_policy_registry_sha256"),
+            "Stage 8D root-desk correction changed external-effect authority",
+            problems,
+        )
+        if STAGE8D_ROOT_DESK_RUNTIME_CORRECTION_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated_fix8dr = Path(td) / "stage8d-root-desk-runtime-consumer-correction.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_ROOT_DESK_RUNTIME_CORRECTION_GENERATOR),
+                        "--prepared-against", fix8dr["prepared_against_main_sha"],
+                        "--source-commit", fix8dr["source_commit_sha"],
+                        "--captured-at", fix8dr["captured_at"],
+                        "--output", str(regenerated_fix8dr),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D root-desk runtime correction regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated_fix8dr.is_file():
+                    require(
+                        regenerated_fix8dr.read_bytes() == STAGE8D_ROOT_DESK_RUNTIME_CORRECTION.read_bytes(),
+                        "Stage 8D root-desk runtime correction receipt is not reproducible",
+                        problems,
+                    )
 
     if STAGE8D_RETIREMENT_SEMANTIC_AUDIT.is_file():
         audit8d = load(STAGE8D_RETIREMENT_SEMANTIC_AUDIT)
@@ -3256,20 +3364,26 @@ def validate_registries() -> tuple[list[str], set[str]]:
     if STAGE8D_RETIREMENT_SEMANTIC_AUDIT.is_file():
         audit8d = load(STAGE8D_RETIREMENT_SEMANTIC_AUDIT)
         surfaces8d = audit8d.get("compatibility_surfaces") or {}
-        blocked_ids8d = {"fleet", "root_desk", "tool_status", "chatgpt_core_bundle"}
+        blocked_ids8d = {"fleet", "tool_status", "chatgpt_core_bundle"}
+        require(
+            (surfaces8d.get("root_desk") or {}).get("retirement_preflight_clear") is True
+            and (surfaces8d.get("root_desk") or {}).get("retirement_preflight_blockers") == [],
+            "Stage 8D semantic audit root-desk correction is not clear",
+            problems,
+        )
         require(
             all(
                 (surfaces8d.get(sid) or {}).get("retirement_preflight_clear") is False
                 and bool((surfaces8d.get(sid) or {}).get("retirement_preflight_blockers"))
                 for sid in blocked_ids8d
             ),
-            "Stage 8D semantic audit unexpectedly cleared a remaining surface",
+            "Stage 8D semantic audit unexpectedly cleared an uncorrected surface",
             problems,
         )
         assessment8d = audit8d.get("assessment") or {}
         require(
             assessment8d.get("surfaces_total") == 5
-            and assessment8d.get("surfaces_preflight_clear") == 1
+            and assessment8d.get("surfaces_preflight_clear") == 2
             and set(assessment8d.get("surfaces_with_candidate_blockers") or []) == blocked_ids8d
             and assessment8d.get("rollback_windows_closed_by_audit") == 0
             and assessment8d.get("deletion_authorized") is False

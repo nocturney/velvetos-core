@@ -144,7 +144,7 @@ lines = [
     f"**{len(agents)} agents** installed as project rules in `.cursor/rules/`.",
     "Each Agency rule has `alwaysApply: false` — mention it with `@slug` when you need that specialist.",
     "",
-    "Velvet Factory **desk** (packs + live tools): [`docs/AGENCY-TOOLS.md`](AGENCY-TOOLS.md), [`.cursor/vf-desk.json`](../.cursor/vf-desk.json).",
+    "Velvet Factory **desk** (packs + live tools): [`docs/AGENCY-TOOLS.md`](AGENCY-TOOLS.md), [`instance:surface:toolDesk`](../instances/velvet-factory/.cursor/vf-desk.json).",
     "Always-on router: `.cursor/rules/velvet-factory-desk.mdc`. Warehouse specialists stay off a print job unless asked.",
     "",
     "This HQ still does not send Instagram. Live send stays on Grok Bot.",

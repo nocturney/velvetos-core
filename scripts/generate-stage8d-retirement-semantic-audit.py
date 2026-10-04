@@ -51,7 +51,28 @@ MACHINE_SUFFIXES = {".py", ".json", ".yml", ".yaml", ".js", ".mjs", ".ps1", ".sh
 DOC_SUFFIXES = {".md", ".txt", ".rst"}
 HISTORY_PREFIXES = ("packages/vfharness/state/",)
 EVIDENCE_PREFIXES = ("scripts/generate-stage8",)
-EVIDENCE_EXACT = {"scripts/check-policy-architecture.py"}
+EVIDENCE_EXACT = {
+    "scripts/check-policy-architecture.py",
+    "scripts/generate-stage6d-documentation-authority-cleanup-report.py",
+}
+REVIEWED_SAFE_REFERENCES = {
+    "fleet": {
+        "packages/velvetos/living-studio/tests/test_living_studio.py": "negative_control",
+        "packages/velvetos_control_api/tests/test_control_api.py": "negative_control",
+    },
+    "root_desk": {
+        "instances/velvet-factory/INSTANCE.json": "canonical_instance_reference",
+        "instances/velvet-factory/scripts/check-instance-visual-bootstrap.py": "canonical_instance_reference",
+        "packages/velvetos_control_api/CONTRIBUTIONS.json": "canonical_surface_consumer",
+        "packages/velvetos_control_api/contributions/integrations.py": "canonical_surface_consumer",
+        "packages/velvetos_control_api/contributions/operational.py": "canonical_surface_consumer",
+        "scripts/check-velvetos.py": "canonical_surface_consumer",
+        "scripts/check-vf-desk.py": "canonical_surface_consumer",
+        "scripts/check-vfmcp.py": "canonical_surface_consumer",
+        "scripts/check-vfresearch.py": "canonical_surface_consumer",
+        "scripts/install-agency-agents.sh": "canonical_instance_reference",
+    },
+}
 
 
 def require(value: bool, message: str) -> None:
@@ -92,7 +113,7 @@ def semantic_match(surface_id: str, text: str) -> bool:
         scrubbed = low.replace("instances/velvet-factory/.cursor/vf-desk.json", "")
         if ".cursor/vf-desk.json" in scrubbed:
             return True
-        return '".cursor"' in low and "vf-desk.json" in low
+        return '".cursor"' in scrubbed and "vf-desk.json" in scrubbed
     if path in low:
         return True
     return all(component.lower() in low for component in spec["components"])
@@ -104,6 +125,9 @@ def classify(surface_id: str, rel: str) -> str:
         return "self"
     if rel == legacy:
         return "self"
+    reviewed = REVIEWED_SAFE_REFERENCES.get(surface_id, {}).get(rel)
+    if reviewed:
+        return reviewed
     if rel in EVIDENCE_EXACT or rel.startswith(EVIDENCE_PREFIXES):
         return "evidence_machinery"
     if rel.startswith(HISTORY_PREFIXES):
@@ -175,6 +199,7 @@ def main() -> int:
             "ambiguous_machine_or_config_reference_blocks_retirement": True,
             "documentation_references_are_reported_but_do_not_self-authorize_deletion": True,
             "historical_state_and_evidence_machinery_are_separately_classified": True,
+            "reviewed_safe_references_are_explicitly_classified": True,
         },
         "compatibility_surfaces": surfaces,
         "assessment": {

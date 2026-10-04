@@ -20,6 +20,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        try:
+            _stream.reconfigure(encoding="utf-8")
+        except (AttributeError, OSError):
+            pass
+
 ROOT = Path(__file__).resolve().parents[1]
 API_ROOT = "https://api.openai.com/v1"
 MISSING_KEY = "חסר מפתח ChatGPT"

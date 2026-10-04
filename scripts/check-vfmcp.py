@@ -8,10 +8,15 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from instance_resolver import resolve_surface  # type: ignore
+
 GAP = ROOT / "packages" / "vfmcp" / "GAP.md"
 FIT = ROOT / "docs" / "MCP-FIT.md"
 SHEETS = ROOT / "packages" / "vfbooks" / "SHEETS.md"
-DESK = ROOT / ".cursor" / "vf-desk.json"
+DESK = resolve_surface(ROOT, "toolDesk", instance_id="velvet-factory", env={})
 MCP = ROOT / ".cursor" / "mcp.json"
 ORCHESTRA = ROOT / "constitution" / "ORCHESTRA.md"
 ORIGIN = ROOT / "packages" / "vfmcp" / "ORIGIN.md"
@@ -89,7 +94,7 @@ def main() -> None:
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
-    mcp = json.loads(MCP.read_text())
+    mcp = json.loads(MCP.read_text(encoding="utf-8"))
     servers = mcp.get("mcpServers") or {}
     for name, expected_url in REQUIRED_MCP.items():
         row = servers.get(name) or {}
@@ -100,7 +105,7 @@ def main() -> None:
         if "mcp-remote" in args or row.get("command") == "npx":
             fail(f".cursor/mcp.json {name} must use HTTP url, not mcp-remote")
 
-    gap = GAP.read_text()
+    gap = GAP.read_text(encoding="utf-8")
     for needle in NEEDLES_GAP:
         if needle not in gap:
             fail(f"GAP.md must mention {needle}")
@@ -111,14 +116,14 @@ def main() -> None:
     if "לא רלוונטי" not in gap and "not relevant" not in gap.lower():
         fail("GAP.md must mark Treg as not relevant")
 
-    sheets = SHEETS.read_text()
+    sheets = SHEETS.read_text(encoding="utf-8")
     for needle in NEEDLES_SHEETS:
         if needle not in sheets:
             fail(f"SHEETS.md must mention {needle}")
     if "₪" in sheets and "X ₪" not in sheets and "לא ממציאים ₪" not in sheets:
         fail("SHEETS.md must not invent a sale ₪")
 
-    fit = FIT.read_text()
+    fit = FIT.read_text(encoding="utf-8")
     if "GAP.md" not in fit:
         fail("MCP-FIT.md must point at vfmcp/GAP.md")
     if "WebSearch" not in fit:
@@ -126,19 +131,19 @@ def main() -> None:
     if "3D AI Studio" not in fit:
         fail("MCP-FIT.md must map the owner 3D AI Studio account")
 
-    studio = PLAYBOOK_3DAI.read_text()
+    studio = PLAYBOOK_3DAI.read_text(encoding="utf-8")
     for needle in ("אין מפתח בגיט", "vlicense", "STL", "OAuth", "CONNECT-3DAI.md", "3DAIStudio"):
         if needle not in studio:
             fail(f"3DAISTUDIO.md must mention {needle}")
     if "₪" in studio and "X ₪" not in studio:
         fail("3DAISTUDIO.md must not invent a sale ₪")
 
-    connect = CONNECT_3DAI.read_text()
+    connect = CONNECT_3DAI.read_text(encoding="utf-8")
     for needle in ("threedaistudio", "mcp.3daistudio.com", "AI Assistants (MCP)"):
         if needle not in connect:
             fail(f"CONNECT-3DAI.md must mention {needle}")
 
-    desk = json.loads(DESK.read_text())
+    desk = json.loads(DESK.read_text(encoding="utf-8"))
     tools = desk.get("tools") or {}
     for key in ("web", "image"):
         if key not in tools:
@@ -200,12 +205,12 @@ def main() -> None:
     if "CONNECT-ICLOUD.md" not in (icloud.get("useWhen") or "") and "CONNECT-ICLOUD.md" not in (icloud.get("rule") or ""):
         fail("vf-desk.json icloud must point at CONNECT-ICLOUD.md")
 
-    core_mcp = json.loads(CORE_MCP.read_text())
+    core_mcp = json.loads(CORE_MCP.read_text(encoding="utf-8"))
     ids = {s.get("id") for s in (core_mcp.get("servers") or [])}
     for need in ("studiomcphub", "mcp-gsheets", "whatsapp", "gemini-api", "chatgpt-api", "instagram"):
         if need not in ids:
             fail(f"core-mcp.json must list {need}")
-    if CORE_MCP.read_text().count("sk-") or "BEGIN PRIVATE" in CORE_MCP.read_text():
+    if CORE_MCP.read_text(encoding="utf-8").count("sk-") or "BEGIN PRIVATE" in CORE_MCP.read_text(encoding="utf-8"):
         fail("core-mcp.json must not contain secrets")
 
     for path, needles in (
@@ -429,7 +434,7 @@ def main() -> None:
     if "חסר מפתח ChatGPT" not in (chatgpt.get("rule") or ""):
         fail("vf-desk.json chatgpt.rule must mention חסר מפתח ChatGPT")
 
-    orchestra = ORCHESTRA.read_text()
+    orchestra = ORCHESTRA.read_text(encoding="utf-8")
     if "WebSearch" not in orchestra and "tools.web" not in orchestra:
         fail("ORCHESTRA.md must mention WebSearch / tools.web failover")
     if "GenerateImage" not in orchestra and "tools.image" not in orchestra:
@@ -449,19 +454,19 @@ def main() -> None:
     if "HOST.md" not in orchestra:
         fail("ORCHESTRA.md must point 06:15 subscription desks at HOST.md")
 
-    if "GAP.md" not in ORIGIN.read_text():
+    if "GAP.md" not in ORIGIN.read_text(encoding="utf-8"):
         fail("vfmcp/ORIGIN.md must mention GAP.md")
-    if "CORE-MCP.md" not in ORIGIN.read_text():
+    if "CORE-MCP.md" not in ORIGIN.read_text(encoding="utf-8"):
         fail("vfmcp/ORIGIN.md must mention CORE-MCP.md")
-    if "CONNECT-GEMINI.md" not in ORIGIN.read_text() and "vf_gemini.py" not in ORIGIN.read_text():
+    if "CONNECT-GEMINI.md" not in ORIGIN.read_text(encoding="utf-8") and "vf_gemini.py" not in ORIGIN.read_text(encoding="utf-8"):
         fail("vfmcp/ORIGIN.md must mention the Gemini API bridge")
-    if "CONNECT-CHATGPT.md" not in ORIGIN.read_text() and "vf_chatgpt.py" not in ORIGIN.read_text():
+    if "CONNECT-CHATGPT.md" not in ORIGIN.read_text(encoding="utf-8") and "vf_chatgpt.py" not in ORIGIN.read_text(encoding="utf-8"):
         fail("vfmcp/ORIGIN.md must mention the ChatGPT API bridge")
-    if "SUBSCRIPTIONS.md" not in ORIGIN.read_text():
+    if "SUBSCRIPTIONS.md" not in ORIGIN.read_text(encoding="utf-8"):
         fail("vfmcp/ORIGIN.md must mention SUBSCRIPTIONS.md")
-    if "HOST.md" not in ORIGIN.read_text():
+    if "HOST.md" not in ORIGIN.read_text(encoding="utf-8"):
         fail("vfmcp/ORIGIN.md must mention HOST.md")
-    origin_text = ORIGIN.read_text()
+    origin_text = ORIGIN.read_text(encoding="utf-8")
     if "CONNECT-IG.md" not in origin_text and "instagram-mcp" not in origin_text:
         fail("vfmcp/ORIGIN.md must mention CONNECT-IG.md / instagram-mcp")
 
@@ -523,6 +528,8 @@ def main() -> None:
         [sys.executable, str(VF_GEMINI), "status"],
         cwd=ROOT,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         capture_output=True,
         env=env,
     )
@@ -552,6 +559,8 @@ def main() -> None:
         [sys.executable, str(VF_CHATGPT), "status"],
         cwd=ROOT,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         capture_output=True,
         env=env,
     )
@@ -576,6 +585,8 @@ def main() -> None:
         [sys.executable, str(preflight)],
         cwd=ROOT,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         capture_output=True,
         env=env,
     )
@@ -594,6 +605,8 @@ def main() -> None:
         [sys.executable, str(preflight), "--gate", "instagram"],
         cwd=ROOT,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         capture_output=True,
         env=env,
     )
@@ -608,6 +621,8 @@ def main() -> None:
             [sys.executable, "-m", "unittest", test_mod],
             cwd=ig_remote,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             capture_output=True,
             env=env,
         )
@@ -631,6 +646,8 @@ def main() -> None:
         [sys.executable, str(ig_remote / "smoke_public.py"), "--skip-if-missing"],
         cwd=ROOT,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         capture_output=True,
         env=env_skip,
     )

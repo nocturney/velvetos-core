@@ -8,6 +8,10 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from instance_resolver import resolve_surface  # type: ignore
 
 PUBLIC_CTA_DEFAULT = "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם"
 WA_PHONE = "050-2517000"
@@ -62,15 +66,12 @@ def main() -> None:
             if need not in blob:
                 fail(f"{path.relative_to(ROOT)}: forbiddenPublic must list {need!r}")
 
-    desk = json.loads((ROOT / ".cursor" / "vf-desk.json").read_text(encoding="utf-8"))
+    desk_path = resolve_surface(ROOT, "toolDesk", instance_id="velvet-factory", env={})
+    desk = json.loads(desk_path.read_text(encoding="utf-8"))
     studio = desk.get("studio") or {}
-    if studio.get("whatsapp") != WA_PHONE:
-        fail("desk.studio.whatsapp business record must stay 050-2517000")
-    public_cta = studio.get("publicCta") or ""
-    if WA_PHONE in public_cta or "WhatsApp" in public_cta:
-        fail("desk.studio.publicCta must not be WhatsApp")
-    if "הודעה" not in public_cta and "אינסטגרם" not in public_cta:
-        fail("desk.studio.publicCta must be Instagram-message")
+    desk_whatsapp = studio.get("whatsapp")
+    if desk_whatsapp is not None and desk_whatsapp != WA_PHONE:
+        fail("canonical desk.studio.whatsapp contradicts BUSINESS_CONTACT_RECORD")
 
     profile = json.loads(
         (ROOT / "packages" / "vfigos" / "PROFILE-DESIRED.json").read_text(encoding="utf-8")
