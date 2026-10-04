@@ -46,6 +46,8 @@ STAGE8C_SAMPLE = REPORTS / "stage8c-sample-profile-consumers.json"
 STAGE8C_SAMPLE_GENERATOR = ROOT / "scripts" / "generate-stage8c-sample-profile-consumers.py"
 STAGE8C_ROOT_DESK = REPORTS / "stage8c-root-desk-readers.json"
 STAGE8C_ROOT_DESK_GENERATOR = ROOT / "scripts" / "generate-stage8c-root-desk-readers.py"
+STAGE8C_DESK_CATALOG = REPORTS / "stage8c-desk-catalog-bindings.json"
+STAGE8C_DESK_CATALOG_GENERATOR = ROOT / "scripts" / "generate-stage8c-desk-catalog-bindings.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -70,6 +72,7 @@ EXPECTED_REPORTS = {
     "stage8b-canonical-instance-config.json",
     "stage8c-sample-profile-consumers.json",
     "stage8c-root-desk-readers.json",
+    "stage8c-desk-catalog-bindings.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -1762,6 +1765,74 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated8cd.is_file():
                     require(regenerated8cd.read_bytes() == STAGE8C_ROOT_DESK.read_bytes(),
                             "Stage 8C root-desk receipt is not reproducible", problems)
+
+    if STAGE8C_DESK_CATALOG.is_file():
+        stage8c_catalog = load(STAGE8C_DESK_CATALOG)
+        require(stage8c_catalog.get("schema") == "velvetos.stage8c-desk-catalog-bindings.v1"
+                and stage8c_catalog.get("stage") == "8C_DESK_CATALOG_BINDINGS"
+                and stage8c_catalog.get("behavior_change") is True
+                and stage8c_catalog.get("repository_acceptance") == "PASS",
+                "Stage 8C desk-catalog metadata drift", problems)
+        criteria8cc = stage8c_catalog.get("acceptance_criteria") or {}
+        expected_criteria8cc = {
+            "all_target_catalog_graph_bindings_point_to_canonical_instance_desk",
+            "no_root_only_desk_binding_remains_in_target_packages",
+            "vfmem_binding_count_is_exact",
+            "vfgraft_binding_count_is_exact",
+            "vfharness_binding_count_is_exact",
+            "root_desk_remains_unchanged_for_rollback",
+            "external_effect_policy_registry_is_unchanged",
+            "legacy_root_desk_delete_is_not_authorized",
+        }
+        require(set(criteria8cc) == expected_criteria8cc
+                and all(criteria8cc.get(key) is True for key in expected_criteria8cc),
+                "Stage 8C desk-catalog acceptance criteria drift or fail", problems)
+        require(stage8c_catalog.get("canonical_path") == "instances/velvet-factory/.cursor/vf-desk.json"
+                and stage8c_catalog.get("total_canonical_bindings") == 18,
+                "Stage 8C desk-catalog binding summary drift", problems)
+        targets8cc = stage8c_catalog.get("targets") or {}
+        require(len(targets8cc) == 11
+                and all(isinstance(row, dict)
+                        and row.get("root_only_binding_count") == 0
+                        and int(row.get("canonical_binding_count") or 0) > 0
+                        for row in targets8cc.values()),
+                "Stage 8C desk-catalog target binding drift", problems)
+        root8cc = stage8c_catalog.get("root_desk") or {}
+        require(root8cc.get("retained") is True
+                and root8cc.get("unchanged_from_prepared_against") is True
+                and root8cc.get("delete_authorized") is False,
+                "Stage 8C desk-catalog rollback contract drift", problems)
+        authority8cc = stage8c_catalog.get("authority_baseline") or {}
+        require(authority8cc.get("unchanged") is True
+                and authority8cc.get("policy_registry_canonical_sha256")
+                    == authority8cc.get("prepared_against_policy_registry_canonical_sha256"),
+                "Stage 8C desk-catalog authority baseline drift", problems)
+        require(stage8c_catalog.get("next_stage") == "Stage 8C — Remaining consumer domains",
+                "Stage 8C desk-catalog next-stage handoff drift", problems)
+        if STAGE8C_DESK_CATALOG_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8cc = Path(td) / "stage8c-desk-catalog-bindings.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8C_DESK_CATALOG_GENERATOR),
+                        "--prepared-against", stage8c_catalog["prepared_against_main_sha"],
+                        "--captured-at", stage8c_catalog["captured_at"],
+                        "--output", str(regenerated8cc),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0,
+                        "Stage 8C desk-catalog regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()),
+                        problems)
+                if proc.returncode == 0 and regenerated8cc.is_file():
+                    require(regenerated8cc.read_bytes() == STAGE8C_DESK_CATALOG.read_bytes(),
+                            "Stage 8C desk-catalog receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)

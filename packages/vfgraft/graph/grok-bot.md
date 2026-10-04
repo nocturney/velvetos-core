@@ -11,7 +11,7 @@ When Grok weekly quota is exhausted: HQ keeps producing **and sending** (`vfharn
 - `docs/BACKUP.md`
 - `constitution/CONSTITUTION.md`
 - `constitution/SEND.md`
-- `.cursor/vf-desk.json`
+- `instances/velvet-factory/.cursor/vf-desk.json`
 
 ## Links
 

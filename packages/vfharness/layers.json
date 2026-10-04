@@ -77,7 +77,7 @@
       "role": "safety-boundary",
       "files": [
         "packages/vfharness/PERMISSIONS.md",
-        ".cursor/vf-desk.json"
+        "instances/velvet-factory/.cursor/vf-desk.json"
       ]
     },
     {
