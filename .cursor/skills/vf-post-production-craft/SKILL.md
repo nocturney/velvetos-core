@@ -1,6 +1,6 @@
 ---
 name: vf-post-production-craft
-description: Apply professional editorial, cinematography, color, motion direction, kinetic typography, audio-post, restoration/enhancement and delivery QA across DaVinci Resolve Studio, Premiere Pro, After Effects, Media Encoder, ffmpeg/ffprobe, HyperFrames and Topaz Video. Use for editing, shot language, grading, motion design, animated type, audio finishing, video restoration/upscale, transcodes or final delivery. Plate VFX, roto/key, tracking and CG integration belong to vf-vfx-compositing-craft. This skill supplies craft and QA only; preserve existing content, DCC/Adobe and publishing authorities.
+description: Apply professional editorial, cinematography, color, motion direction, kinetic typography, audio-post, restoration/enhancement and delivery QA across DaVinci Resolve Studio, Premiere Pro, After Effects, Media Encoder, ffmpeg/ffprobe, HyperFrames and Topaz Video. Use for editing, shot language, grading, motion design, animated type, audio finishing, video restoration/upscale, transcodes or final delivery. Plate VFX, roto/key, tracking and CG integration belong to vf-vfx-compositing-craft. This skill supplies craft and QA only; preserve existing content, DCC/Adobe and publishing authorities. Use only when explicitly routed by Creative Craft, Fabrication Router, or another accepted VelvetOS pipeline for a matching task; do not auto-select this specialist from unrelated ambient context.
 ---
 
 # Velvet Post-Production Craft
@@ -26,7 +26,7 @@ Apply post craft after the creative/story authority has defined what the piece m
 
 ## Hard stops
 
-- Do not publish or schedule content from this skill.
+- Do not publish or schedule content from this skill. External publication remains governed by `policy_id: instagram.publish`.
 - Do not introduce paid/cloud render or enhancement services automatically.
 - Do not claim a render is good because the encoder exited successfully.
 - Do not overwrite the only source/master when a reversible workflow is possible.

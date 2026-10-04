@@ -1,6 +1,6 @@
 ---
 name: vf-product-visualization-craft
-description: Apply professional product visualization, hero-shot, catalog, turntable and studio-product-photography craft across accepted local 3D/render surfaces. Use for product visualization, hero renders, camera and lens decisions, studio lighting, reflection shaping, surface readability, shot variants and restrained set styling after product geometry and material truth are established. Preserve CAD/model/material authority; this skill owns presentation, not product invention.
+description: Apply professional product visualization, hero-shot, catalog, turntable and studio-product-photography craft across accepted local 3D/render surfaces. Use for product visualization, hero renders, camera and lens decisions, studio lighting, reflection shaping, surface readability, shot variants and restrained set styling after product geometry and material truth are established. Preserve CAD/model/material authority; this skill owns presentation, not product invention. Use only when explicitly routed by Creative Craft, Fabrication Router, or another accepted VelvetOS pipeline for a matching task; do not auto-select this specialist from unrelated ambient context.
 ---
 
 # Velvet Product Visualization Craft

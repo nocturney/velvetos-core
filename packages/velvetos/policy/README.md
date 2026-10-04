@@ -224,3 +224,15 @@ Stage 5B keeps the existing `vfharness` and removes duplicate global loop semant
 - Cross-tool continuation remains `office/control/HANDOFF.json` + `packages/vfmem/HANDOFF.md`; neither is authorization.
 - The external-effect policy registry remains hash-identical to Stage 5A, so harness consolidation changes no authorization semantics.
 - `check-vfharness.py` enforces the machine contract and regenerates the Stage 5B report byte-for-byte.
+
+## Stage 5C — Workspace Distribution / Capability Routing
+
+Stage 5C closes workspace distribution after Stage 5A locality and Stage 5B harness consolidation. It does not add a second router, increase the desired skill count, or create authorization semantics.
+
+- Workspace distribution is pinned to `nocturney/velvetos-workspace-distribution` PR #3: head `de214771e3c64063f201359c58f918653a0bed05`, merge `4fa715dc78275b87a942658b26b74608932d8d50`, plugin version `1.6.0`.
+- The desired Workspace skill set remains 35. `creative-craft` remains the ambient natural-language router; the eight professional Creative Craft specialists are available workspace-wide but **ROUTED_ONLY**.
+- Routed specialists: `vf-cad-design-craft`, `vf-dcc-modeling-craft`, `vf-material-lookdev`, `vf-product-visualization-craft`, `vf-post-production-craft`, `vf-vfx-compositing-craft`, `vf-image-design-craft`, `vf-technical-illustration-craft`.
+- The distribution desired state explicitly sets `warehousePreload=false`, selection to `intent -> creative-craft/router -> minimum matching specialist(s)`, and `authorizationEffect=NONE`.
+- The workspace verifier enforces the exact routed-only specialist set, standards-compliant Skill frontmatter (`name` + `description` only), Creative Craft ambient-router continuity and Workspace Stack version `1.6.0`.
+- Creative Craft candidate structural evals pass 56/56. Core specialist entrypoints carry the same routed-only trigger contract; `check-project-request-gate.py` regenerates the Stage 5C receipt byte-for-byte and blocks drift.
+- `reports/stage5c-workspace-distribution.json` pins the external distribution Git identities/blobs and proves the Stage 5B external-effect authority registry is unchanged at Stage 5C entry.

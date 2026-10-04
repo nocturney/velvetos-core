@@ -1,6 +1,6 @@
 ---
 name: vf-image-design-craft
-description: Apply professional art direction, moodboard, non-destructive raster, vector identity, mixed-media/editorial layout, composition and export craft across Photoshop, Illustrator, Affinity, CorelDRAW and Corel PHOTO-PAINT. Use for visual-direction boards, image cleanup/compositing/retouching, logo and icon geometry, vector construction, artwork refinement, editorial layouts, deterministic typography or graphics QA. Preserve source/product truth, brand authority and existing publication workflows; this skill edits media but does not authorize claims or publishing.
+description: Apply professional art direction, moodboard, non-destructive raster, vector identity, mixed-media/editorial layout, composition and export craft across Photoshop, Illustrator, Affinity, CorelDRAW and Corel PHOTO-PAINT. Use for visual-direction boards, image cleanup/compositing/retouching, logo and icon geometry, vector construction, artwork refinement, editorial layouts, deterministic typography or graphics QA. Preserve source/product truth, brand authority and existing publication workflows; this skill edits media but does not authorize claims or publishing. Use only when explicitly routed by Creative Craft, Fabrication Router, or another accepted VelvetOS pipeline for a matching task; do not auto-select this specialist from unrelated ambient context.
 ---
 
 # Velvet Image + Vector Design Craft

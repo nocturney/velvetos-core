@@ -1,6 +1,6 @@
 ---
 name: vf-vfx-compositing-craft
-description: Apply professional VFX compositing craft for plate cleanup, roto, keying, tracking and matchmove, CG/AOV integration, lens-distortion workflow, alpha/premultiplication, edge/grain/defocus/motion-blur integration and shot technical review. Use for VFX shots, compositing, roto, key/greenscreen, tracking, matchmove, plate cleanup, render-pass reconstruction, lens distortion or CG integration across accepted local compositing surfaces. Editorial and creative color remain vf-post-production-craft; 3D asset creation remains DCC/material authority.
+description: Apply professional VFX compositing craft for plate cleanup, roto, keying, tracking and matchmove, CG/AOV integration, lens-distortion workflow, alpha/premultiplication, edge/grain/defocus/motion-blur integration and shot technical review. Use for VFX shots, compositing, roto, key/greenscreen, tracking, matchmove, plate cleanup, render-pass reconstruction, lens distortion or CG integration across accepted local compositing surfaces. Editorial and creative color remain vf-post-production-craft; 3D asset creation remains DCC/material authority. Use only when explicitly routed by Creative Craft, Fabrication Router, or another accepted VelvetOS pipeline for a matching task; do not auto-select this specialist from unrelated ambient context.
 ---
 
 # Velvet VFX Compositing Craft

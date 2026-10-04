@@ -1,6 +1,6 @@
 ---
 name: vf-material-lookdev
-description: Apply professional material authoring, UV-to-bake, PBR/OpenPBR, texture QA and material-response lookdev across Substance Painter, Substance Designer and related local DCC/render workflows. Use for high-to-low baking, mesh-map diagnosis, material authoring, texture-set cleanup, shader/export preparation, neutral material validation or lookdev verification. Product camera, hero lighting, reflection shaping and set presentation belong to vf-product-visualization-craft. Preserve existing Substance/DCC execution adapters and never add cloud spend or a second runtime.
+description: Apply professional material authoring, UV-to-bake, PBR/OpenPBR, texture QA and material-response lookdev across Substance Painter, Substance Designer and related local DCC/render workflows. Use for high-to-low baking, mesh-map diagnosis, material authoring, texture-set cleanup, shader/export preparation, neutral material validation or lookdev verification. Product camera, hero lighting, reflection shaping and set presentation belong to vf-product-visualization-craft. Preserve existing Substance/DCC execution adapters and never add cloud spend or a second runtime. Use only when explicitly routed by Creative Craft, Fabrication Router, or another accepted VelvetOS pipeline for a matching task; do not auto-select this specialist from unrelated ambient context.
 ---
 
 # Velvet Material Lookdev

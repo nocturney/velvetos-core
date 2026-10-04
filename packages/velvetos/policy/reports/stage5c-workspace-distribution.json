@@ -1,0 +1,156 @@
+{
+  "schema": "velvetos.stage5c-workspace-distribution.v1",
+  "stage": "5C",
+  "behavior_change": true,
+  "prepared_against_main_sha": "722005858f06724894d13856e77d79ad9a9ee3a9",
+  "captured_at": "2026-10-04T06:40:36.9933310+03:00",
+  "distribution_binding": {
+    "repository": "nocturney/velvetos-workspace-distribution",
+    "base_sha": "13e161bb94ad004b431ee451e678a0a74cc7c732",
+    "head_sha": "de214771e3c64063f201359c58f918653a0bed05",
+    "merge_sha": "4fa715dc78275b87a942658b26b74608932d8d50",
+    "pull_request": 3,
+    "plugin_version": "1.6.0",
+    "git_blobs": {
+      "inventory/workspace-stack.json": "c858af50d684306727f9fd15fafcde140577b7ba",
+      "inventory/workspace-audit.json": "9c1f19c053b478f1a5c9fc8cf65670d5c53b4995",
+      "plugins/velvetos-workspace-skills/.codex-plugin/plugin.json": "27dbd4c236ffdd367b118ece3e14d59a1259eea9",
+      "scripts/verify-bundle.ps1": "7d42dc69b081bf24e8a2e3f5a55aa5c74c576a69"
+    },
+    "verify_bundle": "PASS",
+    "desired_skill_count": 35,
+    "creative_craft_specialist_count": 8,
+    "creative_craft_eval": {
+      "score": 56,
+      "max_score": 56,
+      "all_structural_pass": true
+    }
+  },
+  "invocation_contract": {
+    "router": "creative-craft",
+    "router_may_auto_invoke": true,
+    "specialists": [
+      "vf-cad-design-craft",
+      "vf-dcc-modeling-craft",
+      "vf-material-lookdev",
+      "vf-product-visualization-craft",
+      "vf-post-production-craft",
+      "vf-vfx-compositing-craft",
+      "vf-image-design-craft",
+      "vf-technical-illustration-craft"
+    ],
+    "specialist_activation": "ROUTED_ONLY",
+    "availability": "DISTRIBUTED_WORKSPACE_WIDE",
+    "warehouse_preload": false,
+    "selection": "intent -> creative-craft/router -> minimum matching specialist(s)",
+    "authorization_effect": "NONE"
+  },
+  "core_source": {
+    "router_frontmatter_keys": [
+      "name",
+      "description"
+    ],
+    "router_ambient_marker": true,
+    "specialists": {
+      "vf-cad-design-craft": {
+        "exists": true,
+        "frontmatter_keys": [
+          "name",
+          "description"
+        ],
+        "frontmatter_standard": true,
+        "routed_only_marker": true,
+        "pass": true
+      },
+      "vf-dcc-modeling-craft": {
+        "exists": true,
+        "frontmatter_keys": [
+          "name",
+          "description"
+        ],
+        "frontmatter_standard": true,
+        "routed_only_marker": true,
+        "pass": true
+      },
+      "vf-material-lookdev": {
+        "exists": true,
+        "frontmatter_keys": [
+          "name",
+          "description"
+        ],
+        "frontmatter_standard": true,
+        "routed_only_marker": true,
+        "pass": true
+      },
+      "vf-product-visualization-craft": {
+        "exists": true,
+        "frontmatter_keys": [
+          "name",
+          "description"
+        ],
+        "frontmatter_standard": true,
+        "routed_only_marker": true,
+        "pass": true
+      },
+      "vf-post-production-craft": {
+        "exists": true,
+        "frontmatter_keys": [
+          "name",
+          "description"
+        ],
+        "frontmatter_standard": true,
+        "routed_only_marker": true,
+        "pass": true
+      },
+      "vf-vfx-compositing-craft": {
+        "exists": true,
+        "frontmatter_keys": [
+          "name",
+          "description"
+        ],
+        "frontmatter_standard": true,
+        "routed_only_marker": true,
+        "pass": true
+      },
+      "vf-image-design-craft": {
+        "exists": true,
+        "frontmatter_keys": [
+          "name",
+          "description"
+        ],
+        "frontmatter_standard": true,
+        "routed_only_marker": true,
+        "pass": true
+      },
+      "vf-technical-illustration-craft": {
+        "exists": true,
+        "frontmatter_keys": [
+          "name",
+          "description"
+        ],
+        "frontmatter_standard": true,
+        "routed_only_marker": true,
+        "pass": true
+      }
+    }
+  },
+  "authorization_semantics": {
+    "stage5b_policy_registry_sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8",
+    "stage5c_entry_policy_registry_sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8",
+    "external_effect_authority_registry_unchanged": true,
+    "workspace_skill_invocation_is_policy_authority": false
+  },
+  "acceptance": {
+    "desired_skill_count_unchanged": true,
+    "creative_craft_remains_ambient_router": true,
+    "specialists_exactly_eight": true,
+    "all_specialists_routed_only": true,
+    "warehouse_preload_disabled": true,
+    "workspace_availability_is_not_context_preload": true,
+    "workspace_invocation_creates_no_authority": true,
+    "external_effect_authority_registry_unchanged_at_stage5c_entry": true,
+    "distribution_bundle_verified": true,
+    "creative_craft_structural_evals_pass": true
+  },
+  "repository_acceptance": "PASS"
+}

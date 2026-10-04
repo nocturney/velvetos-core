@@ -1,6 +1,6 @@
 ---
 name: vf-technical-illustration-craft
-description: Apply professional technical-illustration and technical-publication practice across Corel DESIGNER, XVL Studio Corel Edition and accepted publication tools for exploded views, projected/isometric drawings, callouts, linked labels, dimensions, parts identification, assembly/service graphics and multi-step technical guides. Use when producing technical communication from CAD/3D/product sources. Preserve the engineering master and source identifiers; illustration clarity never authorizes changing product truth.
+description: Apply professional technical-illustration and technical-publication practice across Corel DESIGNER, XVL Studio Corel Edition and accepted publication tools for exploded views, projected/isometric drawings, callouts, linked labels, dimensions, parts identification, assembly/service graphics and multi-step technical guides. Use when producing technical communication from CAD/3D/product sources. Preserve the engineering master and source identifiers; illustration clarity never authorizes changing product truth. Use only when explicitly routed by Creative Craft, Fabrication Router, or another accepted VelvetOS pipeline for a matching task; do not auto-select this specialist from unrelated ambient context.
 ---
 
 # Velvet Technical Illustration Craft
