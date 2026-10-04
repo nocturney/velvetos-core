@@ -1,0 +1,50 @@
+{
+  "schema": "velvetos.stage8d-fleet-consumer-migration.v1",
+  "stage": "8D_FLEET_CONSUMER_MIGRATION",
+  "behavior_change": true,
+  "prepared_against_main_sha": "79ab05dc02964f5fdc77e19a1ac69b6222676c51",
+  "source_commit_sha": "33dac31d34621c6bf8071ab1206cd26624888185",
+  "captured_at": "2026-10-04T21:09:25.3878294+03:00",
+  "purpose": "Remove the remaining active Living Studio consumer of the legacy fleet path while retaining rollback compatibility.",
+  "migration": {
+    "consumer": "packages/velvetos/living-studio/REGISTRY.json",
+    "skill": "production-planner",
+    "from": "packages/vfprod/FLEET.json",
+    "to": "instance:surface:fleet",
+    "canonical_path": "instances/velvet-factory/instance/fleet.json",
+    "legacy_path_retained": true,
+    "delete_authorized": false
+  },
+  "parity": {
+    "canonical_json_sha256": "4c3e2c2ad9b2f9eb8fc44b9aa793e25dcf1ec926fcc81f190cf3109e9869aa1d",
+    "legacy_json_sha256": "4c3e2c2ad9b2f9eb8fc44b9aa793e25dcf1ec926fcc81f190cf3109e9869aa1d",
+    "equal": true
+  },
+  "consumer_scan": {
+    "legacy_reference_count": 13,
+    "living_studio_legacy_references": [],
+    "active_blocker_removed": true
+  },
+  "rollback": {
+    "window_open": true,
+    "retirement_ready": false,
+    "delete_authorized": false
+  },
+  "authority": {
+    "policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false
+  },
+  "acceptance_criteria": {
+    "living_studio_production_planner_uses_instance_fleet_surface": true,
+    "living_studio_has_no_legacy_fleet_consumer": true,
+    "canonical_instance_manifest_declares_fleet_surface": true,
+    "canonical_and_legacy_fleet_remain_parity_equal": true,
+    "legacy_fleet_is_retained_for_rollback": true,
+    "fleet_retirement_remains_unauthorized_while_rollback_window_is_open": true,
+    "stage8d_readiness_baseline_is_preserved": true,
+    "external_effect_policy_registry_is_unchanged": true
+  },
+  "repository_acceptance": "PASS",
+  "next_action": "Migrate the next active compatibility consumer; do not delete packages/vfprod/FLEET.json until explicit rollback-window closure evidence exists."
+}
