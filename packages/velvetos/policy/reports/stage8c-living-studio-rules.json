@@ -1,0 +1,94 @@
+{
+  "schema": "velvetos.stage8c-living-studio-rules.v1",
+  "stage": "8C_LIVING_STUDIO_RULES",
+  "behavior_change": true,
+  "prepared_against_main_sha": "80bed30bf54c854f2854d7328ccda171a587d569",
+  "captured_at": "2026-10-04T15:59:38.8497334+03:00",
+  "purpose": "Remove embedded VF business values from Living Studio AUTONOMY config and resolve an exact legacy-compatible projection from canonical instance config.",
+  "inventory_binding": {
+    "surface_id": "living-studio-embedded-business-rules",
+    "wave": "8C_CONSUMER_MIGRATION"
+  },
+  "configuration": {
+    "path": "packages/velvetos/living-studio/AUTONOMY.json",
+    "embedded_business_rules_removed": true,
+    "resolution": {
+      "resolver": "packages/velvetos/living_studio_rules.py",
+      "instanceSurface": "profile",
+      "instanceIdEnvironment": "VELVETOS_INSTANCE_ID",
+      "requireExplicitInstanceIdWhenRunningFromCore": true,
+      "projectionOnly": true,
+      "legacyShape": "businessRules",
+      "sourceOfTruth": "selected instance profile + generic safety semantics"
+    }
+  },
+  "legacy_parity": {
+    "prepared_against_rules": {
+      "pickupOnly": "Sderot",
+      "nationwideShipping": false,
+      "publicCTA": "Instagram message",
+      "customerWhatsAppSend": "human",
+      "inventSaleILS": false,
+      "inventInsights": false,
+      "destructiveAutonomy": false
+    },
+    "effective_rules": {
+      "pickupOnly": "Sderot",
+      "nationwideShipping": false,
+      "publicCTA": "Instagram message",
+      "customerWhatsAppSend": "human",
+      "inventSaleILS": false,
+      "inventInsights": false,
+      "destructiveAutonomy": false
+    },
+    "exact": true
+  },
+  "projection_sources": {
+    "pickupOnly": "profile.where when fulfillment.mode=pickup",
+    "nationwideShipping": "profile.fulfillment.nationalShipping",
+    "publicCTA": "profile.cta.channel projected to legacy label",
+    "customerWhatsAppSend": "profile.mcpBind.whatsapp.send projected to human/tool",
+    "inventSaleILS": "inverse profile.compliance.noInventedPrices",
+    "inventInsights": "inverse profile.compliance.noInventedInsights",
+    "destructiveAutonomy": "generic Core safety invariant false"
+  },
+  "runtime_isolation": {
+    "vf_autonomy_byte_unchanged": true,
+    "office_control_plane_byte_unchanged": true,
+    "projection_only": true,
+    "new_store": false,
+    "new_queue": false
+  },
+  "authority_baseline": {
+    "policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "unchanged": true
+  },
+  "acceptance_criteria": {
+    "stage8a_living_studio_debt_is_bound_to_this_slice": true,
+    "autonomy_config_contains_resolution_contract_not_vf_business_values": true,
+    "effective_business_rules_exactly_match_pre_cutover_legacy_shape_and_values": true,
+    "effective_business_rules_derive_instance_values_from_canonical_profile": true,
+    "generic_living_studio_resolver_has_no_vf_business_default_or_values": true,
+    "core_checkout_requires_explicit_instance_for_business_rule_projection": true,
+    "vf_autonomy_action_engine_is_byte_unchanged": true,
+    "office_control_plane_is_byte_unchanged": true,
+    "no_new_store_queue_or_canonical_write_is_introduced": true,
+    "external_effect_policy_registry_is_unchanged": true
+  },
+  "repository_acceptance": "PASS",
+  "next_stage": "Stage 8C — Remaining consumer domains",
+  "next_domains": [
+    "root-vf-desk-reference-bind",
+    "control-api-instance-and-fleet-resolution",
+    "chatgpt-project-vf-distribution",
+    "expert-modules-with-vf-values",
+    "windows-host-binding-document"
+  ],
+  "constraints": [
+    "Living Studio remains a projection/router, never source of truth",
+    "no external-effect authority change",
+    "no new runtime, queue, database or store",
+    "remaining domains migrate independently with parity proof and rollback window"
+  ]
+}
