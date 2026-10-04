@@ -50,6 +50,8 @@ STAGE8C_DESK_CATALOG = REPORTS / "stage8c-desk-catalog-bindings.json"
 STAGE8C_DESK_CATALOG_GENERATOR = ROOT / "scripts" / "generate-stage8c-desk-catalog-bindings.py"
 STAGE8C_LIVING_RULES = REPORTS / "stage8c-living-studio-rules.json"
 STAGE8C_LIVING_RULES_GENERATOR = ROOT / "scripts" / "generate-stage8c-living-studio-rules.py"
+STAGE8C_CONTROL_API_FLEET = REPORTS / "stage8c-control-api-fleet.json"
+STAGE8C_CONTROL_API_FLEET_GENERATOR = ROOT / "scripts" / "generate-stage8c-control-api-fleet.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -76,6 +78,7 @@ EXPECTED_REPORTS = {
     "stage8c-root-desk-readers.json",
     "stage8c-desk-catalog-bindings.json",
     "stage8c-living-studio-rules.json",
+    "stage8c-control-api-fleet.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -1912,6 +1915,76 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated8cl.is_file():
                     require(regenerated8cl.read_bytes() == STAGE8C_LIVING_RULES.read_bytes(),
                             "Stage 8C Living Studio receipt is not reproducible", problems)
+
+    if STAGE8C_CONTROL_API_FLEET.is_file():
+        stage8c_control = load(STAGE8C_CONTROL_API_FLEET)
+        require(stage8c_control.get("schema") == "velvetos.stage8c-control-api-fleet.v1"
+                and stage8c_control.get("stage") == "8C_CONTROL_API_FLEET"
+                and stage8c_control.get("behavior_change") is True
+                and stage8c_control.get("repository_acceptance") == "PASS",
+                "Stage 8C Control API fleet metadata drift", problems)
+        criteria8ccf = stage8c_control.get("acceptance_criteria") or {}
+        expected_criteria8ccf = {
+            "control_api_production_reads_canonical_instance_fleet_surface",
+            "control_api_agents_and_integrations_read_canonical_tooldesk_surface",
+            "control_api_runtime_has_no_legacy_fleet_path_or_silent_vf_default",
+            "control_api_registry_declares_instance_owned_fleet_and_desk_authority",
+            "cloud_run_image_packages_resolver_manifest_and_declared_surfaces_not_legacy_fleet",
+            "vf_cloud_run_deployment_selects_instance_explicitly",
+            "canonical_fleet_remains_exactly_equal_to_legacy_rollback_copy",
+            "legacy_fleet_is_unchanged_and_retained_for_rollback",
+            "external_effect_policy_registry_is_unchanged",
+        }
+        require(set(criteria8ccf) == expected_criteria8ccf
+                and all(criteria8ccf.get(key) is True for key in expected_criteria8ccf),
+                "Stage 8C Control API fleet acceptance criteria drift or fail", problems)
+        fleet8ccf = stage8c_control.get("fleet") or {}
+        require(fleet8ccf.get("canonical") == "instances/velvet-factory/instance/fleet.json"
+                and fleet8ccf.get("legacy") == "packages/vfprod/FLEET.json"
+                and fleet8ccf.get("parity") is True
+                and fleet8ccf.get("legacy_unchanged_from_prepared_against") is True
+                and fleet8ccf.get("printer_count") == 4
+                and fleet8ccf.get("legacy_delete_authorized") is False,
+                "Stage 8C Control API fleet rollback/parity drift", problems)
+        control8ccf = stage8c_control.get("control_api") or {}
+        require(control8ccf.get("production_source") == "instances/<VELVETOS_INSTANCE_ID>/instance/fleet.json"
+                and control8ccf.get("agent_source") == "instances/<VELVETOS_INSTANCE_ID>/.cursor/vf-desk.json#desk"
+                and control8ccf.get("integration_source") == "instances/<VELVETOS_INSTANCE_ID>/.cursor/vf-desk.json#tools"
+                and control8ccf.get("explicit_instance_environment") == "VELVETOS_INSTANCE_ID"
+                and control8ccf.get("vf_deployment_instance") == "velvet-factory"
+                and control8ccf.get("legacy_fleet_runtime_reference") is False,
+                "Stage 8C Control API source contract drift", problems)
+        authority8ccf = stage8c_control.get("authority_baseline") or {}
+        require(authority8ccf.get("unchanged") is True
+                and authority8ccf.get("policy_registry_canonical_sha256")
+                    == authority8ccf.get("prepared_against_policy_registry_canonical_sha256"),
+                "Stage 8C Control API authority baseline drift", problems)
+        require(stage8c_control.get("next_stage") == "Stage 8C — Remaining consumer domains",
+                "Stage 8C Control API next-stage handoff drift", problems)
+        if STAGE8C_CONTROL_API_FLEET_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8ccf = Path(td) / "stage8c-control-api-fleet.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8C_CONTROL_API_FLEET_GENERATOR),
+                        "--prepared-against", stage8c_control["prepared_against_main_sha"],
+                        "--captured-at", stage8c_control["captured_at"],
+                        "--output", str(regenerated8ccf),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0,
+                        "Stage 8C Control API fleet regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()),
+                        problems)
+                if proc.returncode == 0 and regenerated8ccf.is_file():
+                    require(regenerated8ccf.read_bytes() == STAGE8C_CONTROL_API_FLEET.read_bytes(),
+                            "Stage 8C Control API fleet receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)

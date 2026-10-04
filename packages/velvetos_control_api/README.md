@@ -36,14 +36,14 @@ Schema id: `velvetos.control.v1`.
 | System / locks / SoT map | `office/control-plane.json` |
 | Risk / Don't Bother Christian | `office/control/POLICY.md` |
 | Capabilities | `packages/vfops/hq/capabilities.json` + `packages/vfigos/CAPABILITIES.json` |
-| Integrations | `instances/<VELVETOS_INSTANCE_ID or velvet-factory>/.cursor/vf-desk.json#tools` — canonical desk projection with source status + provenance preserved |
+| Integrations | `instances/<VELVETOS_INSTANCE_ID>/.cursor/vf-desk.json#tools` — canonical desk projection; instance id is required explicitly |
 | Attention | `vf_control_plane.owner_surface_items` + `vf_autonomy.blockers` |
 | Activity | `office/control/HANDOFF.json`, `decisions.jsonl`, living-studio pulse/autonomy projections |
 | Jobs | `scripts/vf_jobs_adapter.py` (Sheet canonical; CSV cache) |
-| Production | `packages/vfprod/FLEET.json` + canonical print/maintenance projections |
+| Production | `instances/<VELVETOS_INSTANCE_ID>/instance/fleet.json` + vfprod print/maintenance projections |
 | Content | `packages/vfgrowth/LEDGER.md` / approval-queue projection |
 | Files / media | `packages/vfmedia/catalog.json` — bounded item projection with canonical total count preserved |
-| Agents | `instances/<VELVETOS_INSTANCE_ID or velvet-factory>/.cursor/vf-desk.json` specialist roster |
+| Agents | `instances/<VELVETOS_INSTANCE_ID>/.cursor/vf-desk.json` specialist roster |
 | Models | `packages/vfsku/SHELF.md` projection; missing values remain missing |
 
 Production/content/files/agents/models are projection-backed in v1 when their canonical source is present. A missing or unreadable source stays honestly `unavailable`; it is never converted into a verified empty collection.
@@ -93,6 +93,7 @@ Implement `project(ctx)` + `search(q, ctx)`. Project existing adapters only — 
 
 ```bash
 export PYTHONPATH=packages
+export VELVETOS_INSTANCE_ID=velvet-factory
 export VELVETOS_CONTROL_API_TOKEN=dev-only-not-for-git
 python3 scripts/vf_control_api.py snapshot
 python3 scripts/vf_control_api.py selftest

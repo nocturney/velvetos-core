@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 from typing import Any
 
+from velvetos_control_api.instance_sources import InstanceSourceError, resolve_instance_surface
 from velvetos_control_api.schema import now_iso, provenance
 
 
@@ -37,13 +38,22 @@ def _normalized_status(raw_status: str | None, namespace: str | None) -> str:
     return "UNAVAILABLE"
 
 
-def _desk_path(root: Path) -> Path:
-    instance_id = (os.environ.get("VELVETOS_INSTANCE_ID") or "velvet-factory").strip()
-    return root / "instances" / instance_id / ".cursor" / "vf-desk.json"
-
-
 def normalize_integrations(root: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:
-    path = _desk_path(root)
+    try:
+        path = resolve_instance_surface(root, "toolDesk", env=os.environ)
+    except InstanceSourceError as exc:
+        return [], {
+            "state": "unavailable",
+            "items": None,
+            "count": None,
+            "reason": f"instance tool desk unavailable: {exc}",
+            "provenance": provenance(
+                source="instance:surface:toolDesk",
+                verified_at=None,
+                freshness="unknown",
+                authority="canonical",
+            ),
+        }
     if not path.is_file():
         return [], {
             "state": "unavailable",
@@ -82,7 +92,7 @@ def normalize_integrations(root: Path) -> tuple[list[dict[str, Any]], dict[str, 
                 "account": raw.get("account"),
                 "verifiedAt": raw.get("verifiedAt") or data.get("updatedAt"),
                 "provenance": provenance(
-                    source=f"instances/{data.get('instanceId') or 'velvet-factory'}/.cursor/vf-desk.json#tools.{tool_id}",
+                    source=f"instances/{data.get('instanceId') or 'unknown-instance'}/.cursor/vf-desk.json#tools.{tool_id}",
                     verified_at=str(raw.get("verifiedAt") or data.get("updatedAt") or now_iso()),
                     freshness="fresh",
                     authority="canonical",
@@ -95,7 +105,7 @@ def normalize_integrations(root: Path) -> tuple[list[dict[str, Any]], dict[str, 
         "items": rows,
         "count": len(rows),
         "provenance": provenance(
-            source=f"instances/{data.get('instanceId') or 'velvet-factory'}/.cursor/vf-desk.json#tools",
+            source=f"instances/{data.get('instanceId') or 'unknown-instance'}/.cursor/vf-desk.json#tools",
             verified_at=str(data.get("updatedAt") or now_iso()),
             freshness="fresh",
             authority="canonical",

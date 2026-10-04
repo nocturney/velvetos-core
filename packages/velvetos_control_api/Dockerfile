@@ -33,23 +33,27 @@ COPY office /app/office
 COPY packages/vfops/hq/capabilities.json /app/packages/vfops/hq/capabilities.json
 COPY packages/vfigos/CAPABILITIES.json /app/packages/vfigos/CAPABILITIES.json
 COPY packages/velvetos/living-studio /app/packages/velvetos/living-studio
+COPY packages/velvetos/instance_resolver.py /app/packages/velvetos/instance_resolver.py
 COPY constitution/PUBLIC_CTA.md /app/constitution/PUBLIC_CTA.md
 COPY constitution/CONSTITUTION.md /app/constitution/CONSTITUTION.md
 COPY constitution/ORCHESTRA.md /app/constitution/ORCHESTRA.md
 COPY packages/vfgrowth/data /app/packages/vfgrowth/data
 COPY packages/vfprod/hq /app/packages/vfprod/hq
-COPY packages/vfprod/FLEET.json /app/packages/vfprod/FLEET.json
 COPY packages/vfprod/data/print-events.jsonl /app/packages/vfprod/data/print-events.jsonl
 COPY packages/vfprod/data/maintenance-snapshot.json /app/packages/vfprod/data/maintenance-snapshot.json
 COPY packages/vfsku/SHELF.json /app/packages/vfsku/SHELF.json
 COPY packages/vfmedia/catalog.json /app/packages/vfmedia/catalog.json
-# Canonical instance tool desk used by the integrations contribution. This is
-# configuration only; no connector credentials or secrets are stored here.
+# Explicit VF instance manifest + declared read-only surfaces. Runtime selection
+# still requires VELVETOS_INSTANCE_ID; the code contains no silent business default.
+COPY instances/velvet-factory/INSTANCE.json /app/instances/velvet-factory/INSTANCE.json
+COPY instances/velvet-factory/instance/velvet-factory.json /app/instances/velvet-factory/instance/velvet-factory.json
+COPY instances/velvet-factory/instance/fleet.json /app/instances/velvet-factory/instance/fleet.json
+COPY instances/velvet-factory/instance/tool-status.json /app/instances/velvet-factory/instance/tool-status.json
 COPY instances/velvet-factory/.cursor/vf-desk.json /app/instances/velvet-factory/.cursor/vf-desk.json
 
 # Ensure package __init__ paths exist for copied JSON-only trees
 RUN mkdir -p /app/packages/vfops/hq /app/packages/vfigos /app/packages/vfmedia \
-    /app/packages/vfgrowth /app/packages/vfprod /app/constitution /app/scripts \
+    /app/packages/vfgrowth /app/packages/vfprod /app/packages/velvetos /app/constitution /app/scripts \
     && chown -R controlapi:controlapi /app
 
 USER controlapi
