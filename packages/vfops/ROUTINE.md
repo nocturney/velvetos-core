@@ -16,7 +16,7 @@ Asia/Jerusalem. The **live protected Grok Bot routine inventory** is the clock a
 | **18:30** | VelvetOS Office Loop | Second sweep: changes since morning, autonomous completion, learning/state persistence and end-of-day handoff. |
 | **19:15** | Runtime Receipts Refresh | Second daily refresh of the same runtime evidence so live claims can prove named dependencies without an on-demand cold start; unrelated code remains `CODE_VALID` even if another receipt ages out. |
 
-Weekly / קאדנס שבועי: `Cognee Stable Updates` runs Monday at 10:00 and `Weekly Research Accountability` runs Friday at 12:00. Repository-owned GitHub workflows keep their own schedules; Office Loop consumes their evidence rather than duplicating their cron.
+Weekly / קאדנס שבועי: `Cognee Stable Updates` runs Monday at 10:00 and `Weekly Research Accountability` runs Friday at 12:00. Repository-owned GitHub workflows keep their own schedules as machine execution/verifier clocks; Office Loop consumes their evidence rather than treating them as a second owner-facing scheduler. The machine-readable ownership/fallback contract is `packages/velvetos/policy/research-scheduler-consolidation.json`.
 
 ## Live Grok Cognee routines
 

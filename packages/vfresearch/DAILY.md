@@ -6,12 +6,14 @@
 ה־Research Seat משתמש ב־WebSearch/מקורות ציבוריים וחיבורים מאומתים; מק ייעודי יכול להשלים מקורות מנוי, אבל אין תלות בו כדי שהמחקר היומי ירוץ.  
 Cloud לא גולש ל־chatgpt.com / gemini.google.com / perplexity.ai. לא שומרים עוגיות ולא מתחזים להפעלת גוף שלא רץ.
 
+כל artifact חדש/מרוענן עומד ב־`packages/vfresearch/ARTIFACT-CONTRACT.md`: `as_of`, `provenance`, `uncertainty`, `refresh_target`. זהו metadata של ראיות, לא authority לפעולה.
+
 ## 02:00 — גוף מחקר אמיתי
 
 1. לקרוא את הבריף הקודם, לוח `vfgrowth`, מצב `vfsku`/ייצור, והקשר משרד/הזמנות החי כשזמין.
 2. להריץ מחקר Web אמיתי על אותות רלוונטיים לסטודיו: מוצרים חוזרים קלים להדפסה/מכירה, המרה מפנייה להזמנה, יעילות ייצור/משרד, תוכן מהעבודה עצמה, ומגמות maker/3D-print שימושיות.
 3. להריץ `python3 scripts/vf_upstream_watch.py check --write packages/vfresearch/sources/upstream-watch-latest.json`. זהו read-only watch על כלים מותקנים וגם על repos שמספקים skills/agents/patterns; אין auto-upgrade. שינוי upstream נשאר `pendingUpdate` גם בריצות הבאות עד אימוץ שנבדק. רק אחרי compatibility/adoption evidence מפורש מותר `vf_upstream_watch.py ack`; עצם גילוי העדכון אינו אישור להתקנה או ack.
-4. לכל `pendingUpdate` לבדוק release notes / diff רלוונטי, השפעה על ה־integration שלנו וראיות compatibility קיימות. לכתוב את ההחלטה ל־`packages/vfresearch/sources/upstream-review-latest.json` כ־`update`, `wait`, `review` או `ignore`, עם נימוק וראיות, ובנוסף `reviewedRemoteHead` ו־`reviewedRelease` שתואמים בדיוק לדוח הנוכחי. מייל אינו יכול להיחמש עד שכל ה־pending קיבלו review עדכני. כאשר review חסר/ישן הופך ל־current, לסמן `notifyOwner:true` לריצה אחת כדי שהפריט ייכלל במייל הראשון; אחרי הכנת request הדגל מתאפס.
+4. להריץ `python3 scripts/vfresearch_cadence.py review-routing`. Deep review נעשה **רק** לשורות עם `deepReviewRequired:true`: HEAD/release נוכחי שאין לו review קשור בדיוק, או repo שנשלח כ־`--explicit-repo` במשימת review מפורשת. Pending ישן עם `reviewedRemoteHead` + `reviewedRelease` שתואמים למצב הנוכחי משתמש מחדש ב־review הקיים ולא משלם deep review יומי נוסף. כשנדרש review, לבדוק release notes / diff רלוונטי, השפעה על ה־integration וראיות compatibility; לכתוב `update` / `wait` / `review` / `ignore` עם נימוק, evidence וה־binding המדויק. מייל אינו יכול להיחמש עד שכל ה־pending מחזיקים review נוכחי. כאשר review חסר/ישן הופך ל־current, `notifyOwner:true` יכול להישלח פעם אחת; אחרי הכנת request הדגל מתאפס.
 5. להעדיף מקור ראשוני/עדכני; לשמור URL + תאריך מקור. לא להעתיק buzz ולא להציג אות כללי כאילו הוא Insight של `@velvets_cloud`.
 6. להטמיע רק מה ששימושי בפק קיים (`constitution/ORCHESTRA.md`). בלי פק חדש רק כי נמצא רעיון.
 7. לכתוב את התמצית הצרכנית ל־`packages/vfops/data/research.md` עבור בריף 09:00. **אין להכניס לתמצית הזו רשימת עדכוני כלים, מספר pending updates או החלטות update/wait/review/ignore.** כאשר המצב הוא `ready_for_brief`, גוף התמצית חייב להשתמש בכותרת הקנונית **`## מה נבנה / יועל`** לפני הממצאים. אם אין משהו מוצק: **«אין חדש במשרד»** בדיוק.

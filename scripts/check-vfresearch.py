@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,6 +25,10 @@ DEMAND_HELPER = ROOT / "scripts" / "vf_demand_signals.py"
 DEMAND_TEST = ROOT / "scripts" / "test_vf_demand_signals.py"
 MAKERWORLD_SCAN = ROOT / "packages" / "vfresearch" / "hq" / "MAKERWORLD-SCAN.md"
 DAILY = ROOT / "packages" / "vfresearch" / "DAILY.md"
+ARTIFACT_CONTRACT = ROOT / "packages" / "vfresearch" / "ARTIFACT-CONTRACT.md"
+STAGE7C_MODEL = ROOT / "packages" / "velvetos" / "policy" / "research-scheduler-consolidation.json"
+STAGE7C_REPORT = ROOT / "packages" / "velvetos" / "policy" / "reports" / "stage7c-research-scheduler-consolidation.json"
+STAGE7C_GENERATOR = ROOT / "scripts" / "generate-stage7c-research-scheduler-consolidation.py"
 MUSIC = ROOT / "packages" / "vfresearch" / "MUSIC.md"
 MUSIC_SOURCES = ROOT / "packages" / "vfresearch" / "SOURCES-MUSIC.json"
 MUSIC_SKILL = ROOT / ".cursor" / "skills" / "vf-ig-music" / "SKILL.md"
@@ -356,6 +361,72 @@ def main() -> None:
         fail("velvetos-research.yml must document Asia/Jerusalem / DST timing")
     if "vfresearch_cadence.py" not in HQ_ROUTINE.read_text(encoding="utf-8"):
         fail("HQ-ROUTINE.md must point at vfresearch_cadence.py")
+
+    for path in (ARTIFACT_CONTRACT, STAGE7C_MODEL, STAGE7C_REPORT, STAGE7C_GENERATOR):
+        if not path.is_file():
+            fail(f"Stage 7C missing {path.relative_to(ROOT)}")
+    contract = ARTIFACT_CONTRACT.read_text(encoding="utf-8")
+    for marker in ("as_of", "provenance", "uncertainty", "refresh_target"):
+        if marker not in contract:
+            fail(f"ARTIFACT-CONTRACT.md missing {marker}")
+    stage7c_model = json.loads(STAGE7C_MODEL.read_text(encoding="utf-8"))
+    if (
+        stage7c_model.get("registry_kind") != "velvetos_research_scheduler_consolidation"
+        or stage7c_model.get("status") != "ACTIVE_STAGE7C"
+    ):
+        fail("Stage 7C model identity drift")
+    protected7c = stage7c_model.get("protected_routines") or []
+    if len(protected7c) != 9 or len({row.get("id") for row in protected7c}) != 9:
+        fail("Stage 7C must map exactly nine protected routines")
+    if any(row.get("primary_scheduler") != "grok-bot-routines" for row in protected7c):
+        fail("Stage 7C protected routine primary scheduler drift")
+    if any(row.get("fallback_is_active_duplicate_clock") is not False for row in protected7c):
+        fail("Stage 7C fallback cannot be an active duplicate clock")
+    stage7c_report = json.loads(STAGE7C_REPORT.read_text(encoding="utf-8"))
+    if (
+        stage7c_report.get("schema") != "velvetos.stage7c-research-scheduler-consolidation.v1"
+        or stage7c_report.get("repository_acceptance") != "PASS"
+        or stage7c_report.get("next_stage") != "Stage 7D — Artifact retention"
+    ):
+        fail("Stage 7C acceptance receipt drift")
+    criteria7c = stage7c_report.get("acceptance") or {}
+    if len(criteria7c) != 11 or not all(criteria7c.values()):
+        fail("Stage 7C acceptance criteria fail")
+    routing_test = subprocess.run(
+        [sys.executable, str(cadence), "routing-selftest"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=30,
+    )
+    if routing_test.returncode != 0 or "OK research-review-routing" not in (routing_test.stdout or ""):
+        fail(f"Stage 7C review-routing selftest failed: {routing_test.stderr or routing_test.stdout}")
+    with tempfile.TemporaryDirectory() as td:
+        regenerated = Path(td) / "stage7c.json"
+        proc7c = subprocess.run(
+            [
+                sys.executable,
+                str(STAGE7C_GENERATOR),
+                "--prepared-against",
+                stage7c_report["prepared_against_main_sha"],
+                "--captured-at",
+                stage7c_report["captured_at"],
+                "--output",
+                str(regenerated),
+            ],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=60,
+        )
+        if proc7c.returncode != 0:
+            fail(f"Stage 7C receipt regeneration failed: {proc7c.stderr or proc7c.stdout}")
+        if regenerated.read_bytes() != STAGE7C_REPORT.read_bytes():
+            fail("Stage 7C acceptance receipt is not reproducible")
 
     for cmd, label in (([sys.executable, str(DEMAND_TEST)], "demand test"), ([sys.executable, str(DEMAND_HELPER), "--self-test"], "demand self-test")):
         proc = subprocess.run(cmd, capture_output=True, text=True)

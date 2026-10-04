@@ -6,8 +6,9 @@ Status: production scheduler as of 2026-09-19.
 
 - Repository/runtime authority wins over embedded routine prose.
 - The live protected Grok Bot routine inventory is the clock authority for owner-facing scheduled office work.
-- GitHub Actions remains the deterministic execution layer for machine workflows and canonical Gmail delivery.
-- ChatGPT scheduler copies and Antigravity shadow sidecars are retired/disabled after cutover; they are not fallback schedulers.
+- GitHub Actions remains the deterministic execution/verifier layer for machine workflows and canonical Gmail delivery; its cron entries do not override the owner-facing Grok clock authority.
+- Provider readback is state evidence (inventory/enabled/clock/timezone), not policy authority and not prompt-body parity unless that body was explicitly read.
+- ChatGPT scheduler copies and Antigravity shadow sidecars are retired/disabled after cutover; they are not fallback schedulers. Stage 7C fallbacks are explicit manual/conditional recovery paths, never active duplicate recurring clocks.
 - Never revive legacy recurring routines or create a second scheduler without Christian's explicit instruction.
 
 ## Protected routine set

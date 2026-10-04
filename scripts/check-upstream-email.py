@@ -59,7 +59,10 @@ def main() -> int:
     if "decisions delivered separately by email" not in office:
         fail("Office verification line must document separate decision delivery")
 
-    review = json.loads(REVIEW.read_text(encoding="utf-8"))
+    review = json.loads(REVIEW.read_text(encoding="utf-8-sig"))
+    review_meta = review.get("artifactMeta") or {}
+    if not {"asOf", "provenance", "uncertainty", "refreshTarget"} <= set(review_meta):
+        fail("upstream-review-latest missing Stage 7C artifact metadata")
     if review.get("schema") != "velvetos.upstream-review.v1":
         fail("review schema mismatch")
     valid = {"update", "wait", "review", "ignore"}

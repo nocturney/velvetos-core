@@ -334,9 +334,19 @@ def check(write: Path | None, *, strict: bool = False) -> int:
                 })
                 errors.append(str(exc))
     rows.sort(key=lambda row: order.get(str(row.get("repo") or ""), 10**9))
+    report_checked_at = datetime.now(timezone.utc).isoformat()
     report = {
         "schema": "velvetos.upstream-watch-report.v1",
-        "checkedAt": datetime.now(timezone.utc).isoformat(),
+        "checkedAt": report_checked_at,
+        "artifactMeta": {
+            "asOf": report_checked_at,
+            "provenance": [
+                "packages/velvetos/UPSTREAM-WATCH.json",
+                "live GitHub default-branch HEAD and latest-release lookups",
+            ],
+            "uncertainty": "check_failed/unavailable rows and best-effort release lookup remain explicit; no auto-upgrade inference",
+            "refreshTarget": "next Velvet Research Seat 02:00 upstream check or explicit upstream review task",
+        },
         "policy": registry.get("policy"),
         "scheduler": registry.get("scheduler"),
         "summary": {
@@ -360,7 +370,7 @@ def check(write: Path | None, *, strict: bool = False) -> int:
         except ValueError:
             fail("--write must stay inside repository root")
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(text, encoding="utf-8")
+        target.write_bytes(text.encode("utf-8"))
     if errors:
         print(f"WARN upstream checks failed for {len(errors)} source(s); see report", file=sys.stderr)
     return 1 if strict and errors else 0

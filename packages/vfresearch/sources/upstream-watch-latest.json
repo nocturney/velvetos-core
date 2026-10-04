@@ -2066,5 +2066,14 @@
       "newDetection": false,
       "state": "no_change"
     }
-  ]
+  ],
+  "artifactMeta": {
+    "asOf": "2026-10-01T23:05:42.328425+00:00",
+    "provenance": [
+      "packages/velvetos/UPSTREAM-WATCH.json",
+      "live GitHub default-branch HEAD and latest-release lookups"
+    ],
+    "uncertainty": "check_failed/unavailable rows and best-effort release lookup remain explicit; no auto-upgrade inference",
+    "refreshTarget": "next Velvet Research Seat 02:00 upstream check or explicit upstream review task"
+  }
 }

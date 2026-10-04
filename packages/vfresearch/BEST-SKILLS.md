@@ -78,6 +78,12 @@
 ```markdown
 # Best Skills · YYYY-MM-DD
 
+Research metadata:
+- as_of: dataDate / fetch time
+- provenance: LinklyAI/best-skills ranking files actually read
+- uncertainty: blocked/missing lists/none_known
+- refresh_target: due when lastPass >=44h; stale >52h; explicit task may run sooner
+
 מקור: LinklyAI/best-skills · dataDate: YYYY-MM-DD
 מושב: ייצור · Asia/Jerusalem
 

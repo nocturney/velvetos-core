@@ -324,3 +324,15 @@ Promotion requires an `accepted` candidate, concrete evidence, one explicit `pro
 Existing `pruned` remains a terminal compatibility status; new lifecycle expiry uses `expired`. No data migration, new database, always-on runtime, recurring cost, deletion, or external-effect authority change is introduced.
 
 Acceptance evidence: `reports/stage7b-memory-learning-lifecycle.json` (10/10 PASS, reproducible by `check-learning-lifecycle.py`).
+
+## Reform v2 Stage 7C — Research / Scheduler consolidation
+
+`research-scheduler-consolidation.json` keeps the existing **Velvet Research Seat** and the protected Grok Bot inventory as the one owner-facing clock authority. All nine protected routines map to `grok-bot-routines` with an explicit fallback that is manual or conditional recovery, never an active duplicate recurring clock. ChatGPT copies and Antigravity sidecars remain retired/disabled.
+
+Repository-owned GitHub schedules remain valid machine execution/verifier clocks. They do not become owner-facing routine authority; in particular, `velvetos-research.yml` verifies freshness, builds the semantic index and runs sensors after the 02:00 Research Seat rather than generating the research body.
+
+Upstream research now follows cheap detection first. `vf_upstream_watch.py` records current HEAD/release evidence; `vfresearch_cadence.py review-routing` sends only missing/stale exact bindings or explicit review tasks to deep review. A still-pending update whose `reviewedRemoteHead` + `reviewedRelease` remain current reuses that review instead of paying daily deep-review cost.
+
+Every new/refreshed research artifact follows `packages/vfresearch/ARTIFACT-CONTRACT.md` and records `as_of`, `provenance`, `uncertainty` and `refresh_target`. Historical dated evidence is not rewritten merely to add metadata. Provider readback proves provider state only; it does not create policy authority.
+
+Acceptance evidence: `reports/stage7c-research-scheduler-consolidation.json` (11/11 PASS, reproducible by `check-vfresearch.py`).
