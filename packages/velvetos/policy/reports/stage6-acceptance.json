@@ -1,0 +1,98 @@
+{
+  "schema": "velvetos.stage6-acceptance.v1",
+  "stage": "6",
+  "behavior_change": false,
+  "prepared_against_main_sha": "efaaf2f127a17917dcc4a6506fb26548a8bde701",
+  "captured_at": "2026-10-04T11:16:04.2526565+03:00",
+  "purpose": "Close Reform v2 Stage 6 after 6A/6B/6C/6D; no new policy authority or runtime behavior.",
+  "source_receipts": {
+    "stage6a": {
+      "path": "packages/velvetos/policy/reports/stage6a-visible-text-tiers.json",
+      "sha256": "665f4dc8befc5573f6236b36913e17847f8b7827ac04947c016c5bf254c689c9"
+    },
+    "stage6b": {
+      "path": "packages/velvetos/policy/reports/stage6b-creative-readiness.json",
+      "sha256": "5f4059783007db67d0fa1d01d5ffcbd80c63d36e2bc001d98354abd4c8970a2d"
+    },
+    "stage6c": {
+      "path": "packages/velvetos/policy/reports/stage6c-dcc-capability-gating.json",
+      "sha256": "37305d477ae3fec3fc8fe5e21d5b7add478260441fa9f75ef5d5a1727b5b9fb0"
+    },
+    "stage6d": {
+      "path": "packages/velvetos/policy/reports/stage6d-documentation-authority-cleanup.json",
+      "sha256": "6361fb3c51bed0678b740be0ce87ac684b6140e8933a91937e767646bcf3adf4"
+    }
+  },
+  "main_full_suite": {
+    "head_sha": "efaaf2f127a17917dcc4a6506fb26548a8bde701",
+    "workflow_run_id": 37188157580,
+    "job_id": 111394483160,
+    "run_url": "https://github.com/nocturney/velvetos-core/actions/runs/37188157580",
+    "conclusion": "SUCCESS",
+    "mode": "full",
+    "registered_sensors": 116,
+    "passed_sensors": 116,
+    "log_markers": [
+      "SENSORS 116 mode=full",
+      "OK suite passed=116"
+    ]
+  },
+  "acceptance_criteria": {
+    "internal_text_uses_proportional_risk_tiers": true,
+    "public_and_customer_text_remains_evidence_bound": true,
+    "creative_manifest_and_craft_do_not_create_policy_authority": true,
+    "creative_refine_and_routine_aesthetics_remain_internal": true,
+    "dcc_updates_use_latest_compatible_typed_capability_gating": true,
+    "dcc_recovery_baselines_are_not_allowlists_and_unsafe_escape_stays_blocked": true,
+    "documentation_authority_has_no_known_active_contradictions": true,
+    "external_effect_authorization_semantics_remain_unchanged": true,
+    "main_full_sensor_suite_116_of_116": true
+  },
+  "visible_text": {
+    "model": "RISK_AND_SURFACE_TIERS",
+    "draft_internal_required_evidence_count": 1,
+    "public_publish_required_evidence_count": 6,
+    "public_downgrade_blocked": true,
+    "approved_static_requires_exact_sha": true
+  },
+  "creative": {
+    "manifest_coordination_only": true,
+    "manifest_not_approval_database": true,
+    "product_truth_higher": true,
+    "quality_system_role": "authoring_and_quality_system_not_policy_hierarchy",
+    "produce_critique_targeted_refine": "internal",
+    "ordinary_aesthetic_choice": "office",
+    "owner_escalation": "exception-only"
+  },
+  "dcc": {
+    "version_policy": "latest-compatible",
+    "recovery_baseline_role": "drift-comparison-and-recovery-evidence-not-allowlist",
+    "exact_version_match_required": false,
+    "available_requires": "typed_capability_probe_pass",
+    "illustrator_routing_status": "available",
+    "aftereffects_routing_status": "available",
+    "aftereffects_version": "26.5",
+    "aftereffects_transport": "adobepy-cep-typed-readonly",
+    "unsafe_arbitrary_script_escape_wired": false,
+    "auto_update": false,
+    "auto_rollback": false,
+    "auto_uninstall": false
+  },
+  "documentation_authority": {
+    "checked_file_count": 113,
+    "violations": [],
+    "canonical_checks": {
+      "seats": true,
+      "morning_brief": true,
+      "public_cta": true,
+      "send_authority": true,
+      "instance_identity": true
+    }
+  },
+  "stage7_entry": {
+    "allowed": true,
+    "next_stage": "Stage 7 — State, Evidence, Runtime, Memory, Research, Scheduler and Retention",
+    "constraint": "Consolidate operational state/evidence roles without creating a new database or weakening existing authority boundaries."
+  },
+  "stage6_gate": "PASS"
+}

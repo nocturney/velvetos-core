@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 6D documentation authority cleanup:** removes active daily contradictions without creating a new authority: the canonical office team is six seats; 07:00 is a research/readiness c…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 6D documentation authority cleanup:** removes active daily contradictions without creating a new authority: the canonical office team is six seats; 07:00 is a research/readiness c…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 6 acceptance gate CLOSED:** reproducible `stage6-acceptance.json` closes 6A/6B/6C/6D against merged `main` `efaaf2f127a17917dcc4a6506fb26548a8bde701` and post-merge run `371881575…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 6 acceptance gate CLOSED:** reproducible `stage6-acceptance.json` closes 6A/6B/6C/6D against merged `main` `efaaf2f127a17917dcc4a6506fb26548a8bde701` and post-merge run `371881575…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
