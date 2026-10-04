@@ -12,7 +12,9 @@
     "core_compatibility_root": "packages/velvetos/chatgpt-project",
     "file_count": 33,
     "byte_parity": true,
-    "core_compatibility_unchanged": true,
+    "core_compatibility_non_pin_files_unchanged": true,
+    "asset_manifest_pin_only_change": true,
+    "project_manifest_pin_only_change": true,
     "delete_authorized": false
   },
   "consumers": {
@@ -28,7 +30,8 @@
     "instance_manifest_declares_chatgpt_project_distribution_surface": true,
     "instance_distribution_file_set_matches_core_compatibility_bundle": true,
     "instance_distribution_is_byte_equal_to_core_compatibility_bundle": true,
-    "core_compatibility_bundle_is_unchanged_for_rollback_window": true,
+    "core_compatibility_non_pin_files_are_unchanged": true,
+    "core_compatibility_trust_updates_are_limited_to_chat_runtime_and_asset_manifest_pins": true,
     "cold_start_checker_resolves_explicit_instance_distribution": true,
     "cold_start_preflight_has_no_hardcoded_vf_bundle_revision_or_authority_filename": true,
     "cold_start_preflight_derives_identity_from_bundle_manifest_or_latest": true,

@@ -2072,7 +2072,8 @@ def validate_registries() -> tuple[list[str], set[str]]:
             "instance_manifest_declares_chatgpt_project_distribution_surface",
             "instance_distribution_file_set_matches_core_compatibility_bundle",
             "instance_distribution_is_byte_equal_to_core_compatibility_bundle",
-            "core_compatibility_bundle_is_unchanged_for_rollback_window",
+            "core_compatibility_non_pin_files_are_unchanged",
+            "core_compatibility_trust_updates_are_limited_to_chat_runtime_and_asset_manifest_pins",
             "cold_start_checker_resolves_explicit_instance_distribution",
             "cold_start_preflight_has_no_hardcoded_vf_bundle_revision_or_authority_filename",
             "cold_start_preflight_derives_identity_from_bundle_manifest_or_latest",
@@ -2089,7 +2090,9 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 and distribution8cg.get("core_compatibility_root") == "packages/velvetos/chatgpt-project"
                 and distribution8cg.get("file_count") == 33
                 and distribution8cg.get("byte_parity") is True
-                and distribution8cg.get("core_compatibility_unchanged") is True
+                and distribution8cg.get("core_compatibility_non_pin_files_unchanged") is True
+                and distribution8cg.get("asset_manifest_pin_only_change") is True
+                and distribution8cg.get("project_manifest_pin_only_change") is True
                 and distribution8cg.get("delete_authorized") is False,
                 "Stage 8C ChatGPT distribution parity/rollback drift", problems)
         consumers8cg = stage8c_chat.get("consumers") or {}
