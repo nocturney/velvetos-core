@@ -73,7 +73,7 @@
       "engine_registry": "packages/vfprod/CAD-ENGINE-REGISTRY.json",
       "engine_stack_cli": "scripts/vf_cad_stack.py",
       "engine_status": "chat build bridge verified: Fabrication Router -> Geometry IR -> vf_cad_stack.py build; build123d/cadgen primary, CadQuery/JSCAD verified fallbacks; CAD/CAE Copilot and Forgent3D pilot-only",
-      "host_status": "WINDOWS_HOST_VERIFIED",
+      "host_status": "WINDOWS_AND_MAC_HOST_VERIFIED",
       "host_evidence": "packages/vfharness/state/fabrication-router-host-acceptance-2026-09-27.json",
       "installed_skill_count": 12,
       "installed_skills": [
@@ -97,7 +97,8 @@
       "print_start": false,
       "adopted_release": "v0.7.0",
       "upstream_commit": "fafa7b057d8f2c3347ff422f0515380123a4b1d4",
-      "adoption_evidence": "packages/vfharness/state/text-to-cad-0.7.0-adoption-2026-09-27.json"
+      "adoption_evidence": "packages/vfharness/state/text-to-cad-0.7.0-adoption-2026-09-27.json",
+      "mac_host_evidence": "packages/vfharness/state/mac-creative-host-acceptance-2026-10-04.json"
     },
     "cli-anything-freecad": {
       "status": "active_scope_limited",

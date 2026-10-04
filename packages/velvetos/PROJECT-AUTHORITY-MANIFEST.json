@@ -457,7 +457,7 @@
     "instructions": "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.4.txt",
     "productTruthGuide": "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt",
     "authoritySha256": "db07dd973272a96b154b4771af1dbb13c03d039de595b56cd857bb0144025976",
-    "assetManifestSha256": "13bd7dc24f4c00cda96f16a47c0fc45986d8e10280b21f7f8a6da292da68645b",
+    "assetManifestSha256": "33f9ea3582af697bfe29ec65c498d0c15a16ae39ea4263ad188a0c98da341778",
     "offlineCreativePublicationFallback": true,
     "offlineRepoStateLabel": "UNAVAILABLE_PROJECT_BUNDLE_FALLBACK",
     "referenceSeparation": "AESTHETIC_REFERENCES_ONLY_FOR_STYLE; PRODUCT_TRUTH=SOURCE_PIXELS_PLUS_TEXT_GUIDE"
