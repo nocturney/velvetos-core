@@ -613,4 +613,10 @@ PR #529's rollback-closure receipt remains preserved as historical evidence, but
 
 `reports/stage8d-retirement-semantic-audit.json` is an observation-only, fail-closed preflight over the five retained compatibility surfaces. It catches both literal legacy paths and paths assembled from components, classifies evidence/history/documentation separately from machine/config candidates, and never closes a rollback window or authorizes deletion.
 
-Against merged main `30d72da6`, only `sample_profile` has no machine/config candidate blockers. `fleet`, `root_desk`, `tool_status` and `chatgpt_core_bundle` remain blocked pending surface-by-surface review/migration of their candidate references. Ambiguity blocks retirement; it is never interpreted as proof of safety. The audit therefore keeps `retirement_authorized=false` and `deletion_authorized=false` while the remaining candidates are resolved.
+Against merged main `30d72da6`, only `sample_profile` had no machine/config candidate blockers. `fleet`, `root_desk`, `tool_status` and `chatgpt_core_bundle` remained blocked pending surface-by-surface review/migration of their candidate references. Ambiguity blocks retirement; it is never interpreted as proof of safety.
+
+## Reform v2 Stage 8D - Root desk semantic correction
+
+`reports/stage8d-root-desk-runtime-consumer-correction.json` records the corrective root-desk pass after the semantic audit exposed readers missed by the earlier narrow migration receipt. Ten live readers now resolve the selected `toolDesk` surface explicitly; the canonical Velvet Factory desk preserves every legacy operational tool, seat, specialist, skill and note required by those readers while keeping instance identity and fail-closed creative gates intact.
+
+The root compatibility desk remains byte-unchanged and present. The regenerated semantic audit now reports `sample_profile` and `root_desk` preflight-clear (2/5), with `fleet`, `tool_status` and `chatgpt_core_bundle` still blocked. This correction does **not** close the root-desk rollback window and does not authorize deletion; fresh downstream main evidence plus a later explicit rollback-closure/deletion gate are still required.

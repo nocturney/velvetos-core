@@ -2,21 +2,22 @@
   "schema": "velvetos.stage8d-retirement-semantic-audit.v1",
   "stage": "8D_RETIREMENT_SEMANTIC_AUDIT",
   "behavior_change": false,
-  "source_commit_sha": "30d72da6a257c2973d9d1b96e4caff0377135db3",
-  "captured_at": "2026-10-04T23:12:31.6248839+03:00",
+  "source_commit_sha": "56950b116c54a2a9ae8f4baadcd0893ab91f774e",
+  "captured_at": "2026-10-04T23:51:38.5643829+03:00",
   "purpose": "Fail-closed semantic audit for retained Stage 8D compatibility surfaces. Detect exact and assembled path references before rollback closure or deletion.",
   "audit_model": {
     "exact_path_detection": true,
     "assembled_path_component_detection": true,
     "ambiguous_machine_or_config_reference_blocks_retirement": true,
     "documentation_references_are_reported_but_do_not_self-authorize_deletion": true,
-    "historical_state_and_evidence_machinery_are_separately_classified": true
+    "historical_state_and_evidence_machinery_are_separately_classified": true,
+    "reviewed_safe_references_are_explicitly_classified": true
   },
   "compatibility_surfaces": {
     "sample_profile": {
       "path": "packages/velvetos/samples/velvet-factory.json",
       "present": true,
-      "semantic_reference_count": 11,
+      "semantic_reference_count": 12,
       "references": [
         {
           "path": "CHANGELOG.md",
@@ -55,6 +56,10 @@
           "class": "evidence_machinery"
         },
         {
+          "path": "scripts/generate-stage8d-retirement-semantic-audit.py",
+          "class": "evidence_machinery"
+        },
+        {
           "path": "scripts/generate-stage8d-sample-profile-consumer-correction.py",
           "class": "evidence_machinery"
         },
@@ -76,6 +81,7 @@
           "scripts/generate-stage8c-sample-profile-consumers.py",
           "scripts/generate-stage8d-post-migration-readiness.py",
           "scripts/generate-stage8d-retirement-readiness.py",
+          "scripts/generate-stage8d-retirement-semantic-audit.py",
           "scripts/generate-stage8d-sample-profile-consumer-correction.py",
           "scripts/generate-stage8d-sample-profile-rollback-closure.py"
         ]
@@ -88,7 +94,7 @@
     "fleet": {
       "path": "packages/vfprod/FLEET.json",
       "present": true,
-      "semantic_reference_count": 23,
+      "semantic_reference_count": 25,
       "references": [
         {
           "path": "CHANGELOG.md",
@@ -147,6 +153,10 @@
           "class": "evidence_machinery"
         },
         {
+          "path": "scripts/generate-stage8d-retirement-semantic-audit.py",
+          "class": "evidence_machinery"
+        },
+        {
           "path": "packages/vfharness/state/studio-ops-engines-2026-09-07.json",
           "class": "historical_state"
         },
@@ -155,15 +165,11 @@
           "class": "machine_or_config_candidate"
         },
         {
+          "path": "instances/velvet-factory/.cursor/vf-desk.json",
+          "class": "machine_or_config_candidate"
+        },
+        {
           "path": "packages/manifest.json",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "packages/velvetos/living-studio/tests/test_living_studio.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "packages/velvetos_control_api/tests/test_control_api.py",
           "class": "machine_or_config_candidate"
         },
         {
@@ -181,6 +187,14 @@
         {
           "path": "scripts/vfprod.py",
           "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "packages/velvetos/living-studio/tests/test_living_studio.py",
+          "class": "negative_control"
+        },
+        {
+          "path": "packages/velvetos_control_api/tests/test_control_api.py",
+          "class": "negative_control"
         }
       ],
       "classes": {
@@ -200,27 +214,30 @@
           "scripts/generate-stage8c-control-api-fleet.py",
           "scripts/generate-stage8d-fleet-consumer-migration.py",
           "scripts/generate-stage8d-post-migration-readiness.py",
-          "scripts/generate-stage8d-retirement-readiness.py"
+          "scripts/generate-stage8d-retirement-readiness.py",
+          "scripts/generate-stage8d-retirement-semantic-audit.py"
         ],
         "historical_state": [
           "packages/vfharness/state/studio-ops-engines-2026-09-07.json"
         ],
         "machine_or_config_candidate": [
           ".cursor/vf-desk.json",
+          "instances/velvet-factory/.cursor/vf-desk.json",
           "packages/manifest.json",
-          "packages/velvetos/living-studio/tests/test_living_studio.py",
-          "packages/velvetos_control_api/tests/test_control_api.py",
           "scripts/check-velvetos.py",
           "scripts/check-vfprod.py",
           "scripts/vf_living_studio.py",
           "scripts/vfprod.py"
+        ],
+        "negative_control": [
+          "packages/velvetos/living-studio/tests/test_living_studio.py",
+          "packages/velvetos_control_api/tests/test_control_api.py"
         ]
       },
       "retirement_preflight_blockers": [
         ".cursor/vf-desk.json",
+        "instances/velvet-factory/.cursor/vf-desk.json",
         "packages/manifest.json",
-        "packages/velvetos/living-studio/tests/test_living_studio.py",
-        "packages/velvetos_control_api/tests/test_control_api.py",
         "scripts/check-velvetos.py",
         "scripts/check-vfprod.py",
         "scripts/vf_living_studio.py",
@@ -233,8 +250,40 @@
     "root_desk": {
       "path": ".cursor/vf-desk.json",
       "present": true,
-      "semantic_reference_count": 49,
+      "semantic_reference_count": 39,
       "references": [
+        {
+          "path": "instances/velvet-factory/INSTANCE.json",
+          "class": "canonical_instance_reference"
+        },
+        {
+          "path": "instances/velvet-factory/scripts/check-instance-visual-bootstrap.py",
+          "class": "canonical_instance_reference"
+        },
+        {
+          "path": "packages/velvetos_control_api/CONTRIBUTIONS.json",
+          "class": "canonical_surface_consumer"
+        },
+        {
+          "path": "packages/velvetos_control_api/contributions/integrations.py",
+          "class": "canonical_surface_consumer"
+        },
+        {
+          "path": "packages/velvetos_control_api/contributions/operational.py",
+          "class": "canonical_surface_consumer"
+        },
+        {
+          "path": "scripts/check-velvetos.py",
+          "class": "canonical_surface_consumer"
+        },
+        {
+          "path": "scripts/check-vfmcp.py",
+          "class": "canonical_surface_consumer"
+        },
+        {
+          "path": "scripts/check-vfresearch.py",
+          "class": "canonical_surface_consumer"
+        },
         {
           "path": "CHANGELOG.md",
           "class": "documentation_reference"
@@ -352,87 +401,27 @@
           "class": "evidence_machinery"
         },
         {
-          "path": "scripts/generate-stage8d-root-desk-consumer-migration.py",
+          "path": "scripts/generate-stage8d-retirement-semantic-audit.py",
           "class": "evidence_machinery"
         },
         {
-          "path": "instances/velvet-factory/INSTANCE.json",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "instances/velvet-factory/scripts/check-instance-visual-bootstrap.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "packages/manifest.json",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "packages/velvetos_control_api/CONTRIBUTIONS.json",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "packages/velvetos_control_api/contributions/integrations.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "packages/velvetos_control_api/contributions/operational.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "packages/velvetos_control_api/contributions/unavailable.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/check-agent-surface-security.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/check-office-watchdog.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/check-public-cta.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/check-velvetos.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/check-vf-desk.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/check-vfmcp.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/check-vfresearch.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/generate-stage6d-documentation-authority-cleanup-report.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/install-agency-agents.sh",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/vf_control_plane.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/vfmem.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/vfops_loop.py",
-          "class": "machine_or_config_candidate"
+          "path": "scripts/generate-stage8d-root-desk-consumer-migration.py",
+          "class": "evidence_machinery"
         }
       ],
       "classes": {
+        "canonical_instance_reference": [
+          "instances/velvet-factory/INSTANCE.json",
+          "instances/velvet-factory/scripts/check-instance-visual-bootstrap.py"
+        ],
+        "canonical_surface_consumer": [
+          "packages/velvetos_control_api/CONTRIBUTIONS.json",
+          "packages/velvetos_control_api/contributions/integrations.py",
+          "packages/velvetos_control_api/contributions/operational.py",
+          "scripts/check-velvetos.py",
+          "scripts/check-vfmcp.py",
+          "scripts/check-vfresearch.py"
+        ],
         "documentation_reference": [
           "CHANGELOG.md",
           "constitution/PUBLIC_CTA.md",
@@ -465,59 +454,19 @@
           "scripts/generate-stage8c-root-desk-readers.py",
           "scripts/generate-stage8d-post-migration-readiness.py",
           "scripts/generate-stage8d-retirement-readiness.py",
+          "scripts/generate-stage8d-retirement-semantic-audit.py",
           "scripts/generate-stage8d-root-desk-consumer-migration.py"
-        ],
-        "machine_or_config_candidate": [
-          "instances/velvet-factory/INSTANCE.json",
-          "instances/velvet-factory/scripts/check-instance-visual-bootstrap.py",
-          "packages/manifest.json",
-          "packages/velvetos_control_api/CONTRIBUTIONS.json",
-          "packages/velvetos_control_api/contributions/integrations.py",
-          "packages/velvetos_control_api/contributions/operational.py",
-          "packages/velvetos_control_api/contributions/unavailable.py",
-          "scripts/check-agent-surface-security.py",
-          "scripts/check-office-watchdog.py",
-          "scripts/check-public-cta.py",
-          "scripts/check-velvetos.py",
-          "scripts/check-vf-desk.py",
-          "scripts/check-vfmcp.py",
-          "scripts/check-vfresearch.py",
-          "scripts/generate-stage6d-documentation-authority-cleanup-report.py",
-          "scripts/install-agency-agents.sh",
-          "scripts/vf_control_plane.py",
-          "scripts/vfmem.py",
-          "scripts/vfops_loop.py"
         ]
       },
-      "retirement_preflight_blockers": [
-        "instances/velvet-factory/INSTANCE.json",
-        "instances/velvet-factory/scripts/check-instance-visual-bootstrap.py",
-        "packages/manifest.json",
-        "packages/velvetos_control_api/CONTRIBUTIONS.json",
-        "packages/velvetos_control_api/contributions/integrations.py",
-        "packages/velvetos_control_api/contributions/operational.py",
-        "packages/velvetos_control_api/contributions/unavailable.py",
-        "scripts/check-agent-surface-security.py",
-        "scripts/check-office-watchdog.py",
-        "scripts/check-public-cta.py",
-        "scripts/check-velvetos.py",
-        "scripts/check-vf-desk.py",
-        "scripts/check-vfmcp.py",
-        "scripts/check-vfresearch.py",
-        "scripts/generate-stage6d-documentation-authority-cleanup-report.py",
-        "scripts/install-agency-agents.sh",
-        "scripts/vf_control_plane.py",
-        "scripts/vfmem.py",
-        "scripts/vfops_loop.py"
-      ],
-      "retirement_preflight_clear": false,
+      "retirement_preflight_blockers": [],
+      "retirement_preflight_clear": true,
       "rollback_window_closed_by_this_audit": false,
       "delete_authorized": false
     },
     "tool_status": {
       "path": "packages/velvetos/TOOL-STATUS.json",
       "present": true,
-      "semantic_reference_count": 16,
+      "semantic_reference_count": 17,
       "references": [
         {
           "path": "CHANGELOG.md",
@@ -549,6 +498,10 @@
         },
         {
           "path": "scripts/generate-stage8d-retirement-readiness.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-retirement-semantic-audit.py",
           "class": "evidence_machinery"
         },
         {
@@ -596,6 +549,7 @@
           "scripts/generate-stage8c-closure.py",
           "scripts/generate-stage8d-post-migration-readiness.py",
           "scripts/generate-stage8d-retirement-readiness.py",
+          "scripts/generate-stage8d-retirement-semantic-audit.py",
           "scripts/generate-stage8d-tool-status-consumer-migration.py"
         ],
         "historical_state": [
@@ -625,7 +579,7 @@
     "chatgpt_core_bundle": {
       "path": "packages/velvetos/chatgpt-project",
       "present": true,
-      "semantic_reference_count": 21,
+      "semantic_reference_count": 22,
       "references": [
         {
           "path": "CHANGELOG.md",
@@ -680,6 +634,10 @@
           "class": "evidence_machinery"
         },
         {
+          "path": "scripts/generate-stage8d-retirement-semantic-audit.py",
+          "class": "evidence_machinery"
+        },
+        {
           "path": "packages/vfharness/state/vf-project-v66-reference-alignment-2026-09-20/implementation-spec.md",
           "class": "historical_state"
         },
@@ -728,7 +686,8 @@
           "scripts/generate-stage8c-sample-profile-consumers.py",
           "scripts/generate-stage8d-chatgpt-core-consumer-migration.py",
           "scripts/generate-stage8d-post-migration-readiness.py",
-          "scripts/generate-stage8d-retirement-readiness.py"
+          "scripts/generate-stage8d-retirement-readiness.py",
+          "scripts/generate-stage8d-retirement-semantic-audit.py"
         ],
         "historical_state": [
           "packages/vfharness/state/vf-project-v66-reference-alignment-2026-09-20/implementation-spec.md",
@@ -760,11 +719,10 @@
   },
   "assessment": {
     "surfaces_total": 5,
-    "surfaces_preflight_clear": 1,
+    "surfaces_preflight_clear": 2,
     "surfaces_with_candidate_blockers": [
       "chatgpt_core_bundle",
       "fleet",
-      "root_desk",
       "tool_status"
     ],
     "rollback_windows_closed_by_audit": 0,
