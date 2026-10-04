@@ -58,47 +58,6 @@ def illustrator_bounded_snapshot():
     return payload
 
 
-def aftereffects_bounded_snapshot():
-    wrapper = Path(r"D:\Velvet\Runtime\CreativeCraft\Invoke-AfterEffectsReadonly.ps1")
-    if not wrapper.is_file():
-        raise RuntimeError("bounded After Effects read-only wrapper missing")
-    proc = subprocess.run(
-        [
-            "powershell.exe",
-            "-NoProfile",
-            "-ExecutionPolicy",
-            "Bypass",
-            "-File",
-            str(wrapper),
-            "-Operation",
-            "snapshot",
-        ],
-        capture_output=True,
-        text=True,
-        timeout=110,
-    )
-    stdout = (proc.stdout or "").strip()
-    stderr = (proc.stderr or "").strip()
-    if proc.returncode != 0:
-        msg = stderr or stdout or f"bounded After Effects read-only wrapper failed with exit {proc.returncode}"
-        raise RuntimeError(msg[:500])
-    payload = None
-    for line in reversed(stdout.splitlines()):
-        line = line.strip()
-        if not line.startswith("{"):
-            continue
-        try:
-            payload = json.loads(line)
-            break
-        except Exception:
-            continue
-    if not isinstance(payload, dict) or payload.get("status") != "PASS":
-        raise RuntimeError("bounded After Effects read-only wrapper returned no PASS payload")
-    if payload.get("operation") != "snapshot":
-        raise RuntimeError("bounded After Effects read-only wrapper operation mismatch")
-    return payload
-
-
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--host", choices=["illustrator","aftereffects","photoshop","premiere"], required=True)
@@ -119,12 +78,36 @@ def main():
             out["operations"] = ["version", "active-document-read"]
             out["blocked"] = ["unbounded-authoring"]
         elif args.host == "aftereffects":
-            snap = aftereffects_bounded_snapshot()
-            out["version"] = str(snap.get("version") or "")
-            out["project"] = snap.get("project")
-            out["transport"] = "bounded-afterfx-com"
-            out["operations"] = ["version", "active-project-read"]
-            out["blocked"] = ["arbitrary-script-authoring"]
+            token = get_token(args)
+            from adobe.core import BrokerClient
+            client = BrokerClient(broker_url=broker, token=token, target="default", timeout=12.0)
+            sessions = [
+                row for row in client.capabilities()
+                if isinstance(row, dict)
+                and (row.get("capabilities") or {}).get("host") == "after-effects"
+                and (row.get("capabilities") or {}).get("bridgeKind") == "cep"
+                and row.get("target", "default") == "default"
+            ]
+            if len(sessions) != 1:
+                raise RuntimeError(
+                    f"expected exactly one typed After Effects CEP session, got {len(sessions)}"
+                )
+            methods = (sessions[0].get("capabilities") or {}).get("methods") or {}
+            if (
+                "getVersion" not in methods.get("app", ())
+                or "getActive" not in methods.get("project", ())
+            ):
+                raise RuntimeError("required typed After Effects read methods are unavailable")
+            out["version"] = str(client.call("after-effects", "app", "getVersion"))
+            out["project"] = client.call("after-effects", "project", "getActive")
+            out["transport"] = "adobepy-cep-typed-readonly"
+            out["operations"] = ["app.getVersion", "project.getActive"]
+            out["blocked"] = [
+                "raw.evalExtendScript",
+                "project.save",
+                "project.importFile",
+                "project.createComposition",
+            ]
         else:
             token = get_token(args)
             from adobe.core import BrokerClient

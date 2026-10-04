@@ -232,12 +232,24 @@ def main() -> None:
     ):
         fail("Stage 6C Illustrator newer-version proof drift")
     if (
-        aftereffects6c.get("classification") != "NEEDS_COMPATIBILITY_REPAIR"
-        or aftereffects6c.get("routing_status") != "needs_compatibility_repair"
+        aftereffects6c.get("classification") != "PASS_COMPATIBILITY_CHECK"
+        or aftereffects6c.get("routing_status") != "available"
         or aftereffects6c.get("newer_than_recovery_baseline") is not True
-        or aftereffects6c.get("final_result") != "blocked_fail_closed"
+        or aftereffects6c.get("probe_status") != "PASS"
+        or aftereffects6c.get("transport") != "adobepy-cep-typed-readonly"
+        or aftereffects6c.get("operations") != ["app.getVersion", "project.getActive"]
+        or aftereffects6c.get("final_result") != "typed_capability_pass"
     ):
-        fail("Stage 6C After Effects fail-closed proof drift")
+        fail("Stage 6C After Effects typed capability proof drift")
+    premiere6c = live6c.get("premiere_regression") or {}
+    photoshop6c = live6c.get("photoshop_regression") or {}
+    if (
+        premiere6c.get("classification") != "PASS_COMPATIBILITY_CHECK"
+        or premiere6c.get("routing_status") != "available"
+        or photoshop6c.get("classification") != "PASS_COMPATIBILITY_CHECK"
+        or photoshop6c.get("routing_status") != "available"
+    ):
+        fail("Stage 6C shared Adobe regression proof drift")
     if not (stage6c.get("validator") or {}).get("pass"):
         fail("Stage 6C DCC/Adobe validator evidence is not PASS")
     parity6c = stage6c.get("source_runtime_parity") or {}
@@ -261,8 +273,18 @@ def main() -> None:
                 "--aftereffects-probe-timeout", str(aftereffects6c["probe_timeout_seconds"]),
                 "--aftereffects-max-attempts", str(aftereffects6c["max_probe_attempts"]),
                 "--aftereffects-attempts", str(aftereffects6c["probe_attempts"]),
+                "--aftereffects-probe-status", aftereffects6c["probe_status"],
+                "--aftereffects-transport", aftereffects6c["transport"],
+                "--aftereffects-operations", ",".join(aftereffects6c["operations"]),
+                "--premiere-receipt-sha256", premiere6c["receipt_sha256"],
+                "--premiere-classification", premiere6c["classification"],
+                "--premiere-routing-status", premiere6c["routing_status"],
+                "--photoshop-receipt-sha256", photoshop6c["receipt_sha256"],
+                "--photoshop-classification", photoshop6c["classification"],
+                "--photoshop-routing-status", photoshop6c["routing_status"],
                 "--runtime-sentinel-sha256", parity6c["sentinel_runtime_sha256"],
                 "--runtime-config-sha256", parity6c["config_runtime_sha256"],
+                "--runtime-adobe-probe-sha256", parity6c["adobe_probe_runtime_sha256"],
                 "--output", str(regenerated6c),
             ],
             cwd=ROOT, text=True, capture_output=True, encoding="utf-8", errors="replace", timeout=180,
