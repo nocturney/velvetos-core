@@ -42,6 +42,8 @@ STAGE8B_RESOLVER = REPORTS / "stage8b-instance-resolver-foundation.json"
 STAGE8B_RESOLVER_GENERATOR = ROOT / "scripts" / "generate-stage8b-instance-resolver-foundation.py"
 STAGE8B_CONFIG = REPORTS / "stage8b-canonical-instance-config.json"
 STAGE8B_CONFIG_GENERATOR = ROOT / "scripts" / "generate-stage8b-canonical-instance-config.py"
+STAGE8C_SAMPLE = REPORTS / "stage8c-sample-profile-consumers.json"
+STAGE8C_SAMPLE_GENERATOR = ROOT / "scripts" / "generate-stage8c-sample-profile-consumers.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -64,6 +66,7 @@ EXPECTED_REPORTS = {
     "stage8a-core-instance-inventory.json",
     "stage8b-instance-resolver-foundation.json",
     "stage8b-canonical-instance-config.json",
+    "stage8c-sample-profile-consumers.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -1592,6 +1595,93 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated8bc.is_file():
                     require(regenerated8bc.read_bytes() == STAGE8B_CONFIG.read_bytes(),
                             "Stage 8B canonical-config receipt is not reproducible", problems)
+
+    if STAGE8C_SAMPLE.is_file():
+        stage8c_sample = load(STAGE8C_SAMPLE)
+        require(stage8c_sample.get("schema") == "velvetos.stage8c-sample-profile-consumers.v1"
+                and stage8c_sample.get("stage") == "8C_SAMPLE_PROFILE_CONSUMERS"
+                and stage8c_sample.get("behavior_change") is True
+                and stage8c_sample.get("repository_acceptance") == "PASS",
+                "Stage 8C sample/profile metadata drift", problems)
+        criteria8cs = stage8c_sample.get("acceptance_criteria") or {}
+        expected_criteria8cs = {
+            "core_no_longer_declares_vf_sample_as_runtime_reference_profile",
+            "core_marks_samples_as_non_runtime_rollback_documentation",
+            "offering_guard_reads_canonical_profile_through_instance_resolver",
+            "core_scaffold_guard_no_longer_reads_or_validates_vf_sample",
+            "core_cli_has_no_silent_vf_default_and_supports_explicit_instance_selection",
+            "canonical_and_rollback_sample_module_sets_match",
+            "legacy_sample_is_unchanged_and_retained_for_rollback_window",
+            "only_non_runtime_guards_and_snapshot_generators_reference_legacy_sample_path",
+            "active_docs_point_to_canonical_instance_profile_not_sample",
+            "external_effect_policy_registry_is_unchanged",
+        }
+        require(set(criteria8cs) == expected_criteria8cs
+                and all(criteria8cs.get(key) is True for key in expected_criteria8cs),
+                "Stage 8C sample/profile acceptance criteria drift or fail", problems)
+        legacy8cs = stage8c_sample.get("legacy_sample") or {}
+        require(legacy8cs.get("path") == "packages/velvetos/samples/velvet-factory.json"
+                and legacy8cs.get("retained") is True
+                and legacy8cs.get("unchanged_from_prepared_against") is True
+                and legacy8cs.get("runtime_authority") is False
+                and legacy8cs.get("delete_authorized") is False
+                and legacy8cs.get("rollback_window_open") is True,
+                "Stage 8C legacy sample rollback contract drift", problems)
+        consumers8cs = stage8c_sample.get("cutover_consumers") or {}
+        require(set(consumers8cs) == {
+                    "packages/velvetos/CORE.json",
+                    "scripts/check-vf-offering.py",
+                    "scripts/check-velvetos.py",
+                    "scripts/velvetos.py",
+                }
+                and all(isinstance(row, dict)
+                        and row.get("legacy_sample_path_present") is False
+                        and row.get("legacy_samples_symbol_present") is False
+                        for row in consumers8cs.values()),
+                "Stage 8C sample/profile consumer cutover drift", problems)
+        require(stage8c_sample.get("remaining_legacy_path_references") == [
+                    "scripts/check-policy-architecture.py",
+                    "scripts/generate-stage8a-core-instance-inventory.py",
+                    "scripts/generate-stage8b-instance-resolver-foundation.py",
+                ],
+                "Stage 8C sample/profile remaining-reference scan drift", problems)
+        cli8cs = stage8c_sample.get("cli_proof") or {}
+        require((cli8cs.get("generic_without_instance") or {}).get("exit_code") == 0
+                and str((cli8cs.get("generic_without_instance") or {}).get("first_line") or "").startswith("modules (no instance selected")
+                and (cli8cs.get("explicit_velvet_factory") or {}).get("exit_code") == 0
+                and "selected instance velvet-factory" in str((cli8cs.get("explicit_velvet_factory") or {}).get("first_line") or ""),
+                "Stage 8C generic/explicit CLI proof drift", problems)
+        authority8cs = stage8c_sample.get("authority_baseline") or {}
+        require(authority8cs.get("unchanged") is True
+                and authority8cs.get("policy_registry_canonical_sha256")
+                    == authority8cs.get("prepared_against_policy_registry_canonical_sha256"),
+                "Stage 8C sample/profile authority baseline drift", problems)
+        require(stage8c_sample.get("next_stage") == "Stage 8C — Remaining consumer domains",
+                "Stage 8C sample/profile next-stage handoff drift", problems)
+        if STAGE8C_SAMPLE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8cs = Path(td) / "stage8c-sample-profile-consumers.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8C_SAMPLE_GENERATOR),
+                        "--prepared-against", stage8c_sample["prepared_against_main_sha"],
+                        "--captured-at", stage8c_sample["captured_at"],
+                        "--output", str(regenerated8cs),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0,
+                        "Stage 8C sample/profile regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()),
+                        problems)
+                if proc.returncode == 0 and regenerated8cs.is_file():
+                    require(regenerated8cs.read_bytes() == STAGE8C_SAMPLE.read_bytes(),
+                            "Stage 8C sample/profile receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)

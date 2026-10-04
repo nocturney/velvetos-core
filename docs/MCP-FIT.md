@@ -37,7 +37,7 @@ These are already in the Cursor / Cloud Agent tool surface. Adding a second MCP 
 
 Constitution: VF WhatsApp **send** stays human `050-2517000`. Instagram **publish** allowed via canonical MCP after approval gates; **DM stays off**. HQ does not print. No invented ₪. No secrets in git. Metricool is optional/legacy — not required.
 
-Catalog: [`packages/vfmcp/CORE-MCP.md`](../packages/vfmcp/CORE-MCP.md) · [`core-mcp.json`](../packages/vfmcp/core-mcp.json). VF bind: `mcpBind` on `packages/velvetos/samples/velvet-factory.json`.
+Catalog: [`packages/vfmcp/CORE-MCP.md`](../packages/vfmcp/CORE-MCP.md) · [`core-mcp.json`](../packages/vfmcp/core-mcp.json). VF bind: canonical instance `mcpBind` on `instances/velvet-factory/instance/velvet-factory.json`, resolved through the instance manifest/profile surface.
 
 ### 0. Instagram Publish + Insights + Stories — adelaidasofia/instagram-mcp · **canonical (ready-codespace)**
 

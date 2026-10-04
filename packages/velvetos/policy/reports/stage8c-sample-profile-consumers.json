@@ -1,0 +1,91 @@
+{
+  "schema": "velvetos.stage8c-sample-profile-consumers.v1",
+  "stage": "8C_SAMPLE_PROFILE_CONSUMERS",
+  "behavior_change": true,
+  "prepared_against_main_sha": "ef7dd8f08f44a6c7cefee1ca5c44446a5d3b1499",
+  "captured_at": "2026-10-04T15:40:33.2408069+03:00",
+  "purpose": "Migrate Core/sample profile machine consumers to canonical instance resolution while retaining the sample unchanged for rollback/documentation compatibility.",
+  "inventory_binding": {
+    "surface_id": "core-vf-sample-profile",
+    "wave": "8C_CONSUMER_MIGRATION"
+  },
+  "canonical_profile": {
+    "path": "instances/velvet-factory/instance/velvet-factory.json",
+    "instance_id": "velvet-factory",
+    "module_count": 18
+  },
+  "legacy_sample": {
+    "path": "packages/velvetos/samples/velvet-factory.json",
+    "retained": true,
+    "unchanged_from_prepared_against": true,
+    "runtime_authority": false,
+    "delete_authorized": false,
+    "rollback_window_open": true
+  },
+  "cutover_consumers": {
+    "packages/velvetos/CORE.json": {
+      "legacy_sample_path_present": false,
+      "legacy_samples_symbol_present": false
+    },
+    "scripts/check-vf-offering.py": {
+      "legacy_sample_path_present": false,
+      "legacy_samples_symbol_present": false
+    },
+    "scripts/check-velvetos.py": {
+      "legacy_sample_path_present": false,
+      "legacy_samples_symbol_present": false
+    },
+    "scripts/velvetos.py": {
+      "legacy_sample_path_present": false,
+      "legacy_samples_symbol_present": false
+    }
+  },
+  "remaining_legacy_path_references": [
+    "scripts/check-policy-architecture.py",
+    "scripts/generate-stage8a-core-instance-inventory.py",
+    "scripts/generate-stage8b-instance-resolver-foundation.py"
+  ],
+  "cli_proof": {
+    "generic_without_instance": {
+      "exit_code": 0,
+      "first_line": "modules (no instance selected; use --instance-id or VELVETOS_INSTANCE_ID for enabled marks):"
+    },
+    "explicit_velvet_factory": {
+      "exit_code": 0,
+      "first_line": "modules (*=enabled in selected instance velvet-factory):"
+    }
+  },
+  "authority_baseline": {
+    "policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "unchanged": true
+  },
+  "acceptance_criteria": {
+    "core_no_longer_declares_vf_sample_as_runtime_reference_profile": true,
+    "core_marks_samples_as_non_runtime_rollback_documentation": true,
+    "offering_guard_reads_canonical_profile_through_instance_resolver": true,
+    "core_scaffold_guard_no_longer_reads_or_validates_vf_sample": true,
+    "core_cli_has_no_silent_vf_default_and_supports_explicit_instance_selection": true,
+    "canonical_and_rollback_sample_module_sets_match": true,
+    "legacy_sample_is_unchanged_and_retained_for_rollback_window": true,
+    "only_non_runtime_guards_and_snapshot_generators_reference_legacy_sample_path": true,
+    "active_docs_point_to_canonical_instance_profile_not_sample": true,
+    "external_effect_policy_registry_is_unchanged": true
+  },
+  "repository_acceptance": "PASS",
+  "next_stage": "Stage 8C — Remaining consumer domains",
+  "next_domains": [
+    "root-vf-desk-reference-bind",
+    "living-studio-embedded-business-rules",
+    "control-api-instance-and-fleet-resolution",
+    "chatgpt-project-vf-distribution",
+    "expert-modules-with-vf-values",
+    "windows-host-binding-document"
+  ],
+  "constraints": [
+    "sample remains during rollback window",
+    "no legacy delete in this slice",
+    "no external-effect authority change",
+    "remaining domains migrate independently with parity proof"
+  ]
+}

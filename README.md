@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 8B canonical instance config CLOSED:** completes the four `8B_CANONICAL_INSTANCE_CONFIG` items from the Stage 8A inventory. The existing canonical VF profile and tool desk remain …</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 8B canonical instance config CLOSED:** completes the four `8B_CANONICAL_INSTANCE_CONFIG` items from the Stage 8A inventory. The existing canonical VF profile and tool desk remain …</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 8C sample/profile consumer cutover:** removes runtime/machine dependence on the duplicate Core sample profile. `CORE.json` now marks `packages/velvetos/samples/` as documentation/…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 8C sample/profile consumer cutover:** removes runtime/machine dependence on the duplicate Core sample profile. `CORE.json` now marks `packages/velvetos/samples/` as documentation/…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -352,7 +352,8 @@ python3 scripts/update-readme-snapshot.py --check
 
 ```bash
 python3 scripts/velvetos.py core
-python3 scripts/velvetos.py modules
+python3 scripts/velvetos.py modules                              # generic catalog, no business default
+python3 scripts/velvetos.py --instance-id velvet-factory modules       # explicit instance-enabled marks
 python3 scripts/velvetos.py instances
 python3 scripts/check-all.py
 python3 scripts/check-commission-isolation.py

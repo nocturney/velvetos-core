@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -11,16 +12,25 @@ PACK = ROOT / "packages" / "velvetos"
 CORE = PACK / "CORE.json"
 CATALOG = PACK / "modules" / "catalog.json"
 PRESETS = PACK / "presets"
-SAMPLES = PACK / "samples"
 INSTANCES = ROOT / "instances"
+if str(PACK) not in sys.path:
+    sys.path.insert(0, str(PACK))
+from instance_resolver import InstanceResolutionError, resolve_surface  # type: ignore
 
 
 def load(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def sample() -> dict:
-    return load(SAMPLES / "velvet-factory.json")
+def selected_profile(instance_id: str | None = None) -> dict | None:
+    requested = instance_id or os.environ.get("VELVETOS_INSTANCE_ID")
+    if not requested:
+        return None
+    try:
+        path = resolve_surface(ROOT, "profile", instance_id=requested, env={})
+    except InstanceResolutionError as exc:
+        raise SystemExit(f"instance profile resolution failed: {exc}") from exc
+    return load(path)
 
 
 def cmd_core() -> int:
@@ -38,10 +48,15 @@ def cmd_core() -> int:
     return 0
 
 
-def cmd_modules() -> int:
+def cmd_modules(instance_id: str | None = None) -> int:
     cat = load(CATALOG)
-    enabled = set(sample()["modulesEnabled"])
-    print("modules (*=in VF sample / maker-print):")
+    profile = selected_profile(instance_id)
+    enabled = set((profile or {}).get("modulesEnabled", []))
+    selected = (profile or {}).get("id")
+    if selected:
+        print(f"modules (*=enabled in selected instance {selected}):")
+    else:
+        print("modules (no instance selected; use --instance-id or VELVETOS_INSTANCE_ID for enabled marks):")
     for row in cat["modules"]:
         mark = "*" if row["id"] in enabled else " "
         print(f" {mark} {row['id']:28} [{row['group']}] {row['summary']}")
@@ -74,15 +89,24 @@ def cmd_instances() -> int:
 
 
 def main(argv: list[str]) -> int:
-    if len(argv) < 2 or argv[1] in {"-h", "--help", "help"}:
-        print("usage: velvetos.py core|modules|presets|instances")
+    args = list(argv[1:])
+    instance_id: str | None = None
+    if "--instance-id" in args:
+        index = args.index("--instance-id")
+        if index + 1 >= len(args):
+            print("--instance-id requires a value", file=sys.stderr)
+            return 1
+        instance_id = args[index + 1]
+        del args[index:index + 2]
+    if not args or args[0] in {"-h", "--help", "help"}:
+        print("usage: velvetos.py [--instance-id ID] core|modules|presets|instances")
         print(" legacy: instance|active → core ; list → modules+presets+instances")
         return 0
-    cmd = argv[1]
+    cmd = args[0]
     if cmd in {"instance", "active"}:
         cmd = "core"
     if cmd == "list":
-        cmd_modules()
+        cmd_modules(instance_id)
         print()
         cmd_presets()
         print()
@@ -90,12 +114,12 @@ def main(argv: list[str]) -> int:
     if cmd == "core":
         return cmd_core()
     if cmd == "modules":
-        return cmd_modules()
+        return cmd_modules(instance_id)
     if cmd == "presets":
         return cmd_presets()
     if cmd == "instances":
         return cmd_instances()
-    print("usage: velvetos.py core|modules|presets|instances", file=sys.stderr)
+    print("usage: velvetos.py [--instance-id ID] core|modules|presets|instances", file=sys.stderr)
     return 1
 
 
