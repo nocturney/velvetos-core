@@ -6,7 +6,7 @@ Current office capability map, failover boundaries and verified send/read surfac
 
 ## Sources
 
-- `.cursor/vf-desk.json`
+- `instances/velvet-factory/.cursor/vf-desk.json`
 - `docs/AGENCY-TOOLS.md`
 - `packages/vfmcp/GAP.md`
 - `constitution/SEND.md`

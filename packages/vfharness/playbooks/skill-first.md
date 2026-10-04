@@ -1,7 +1,7 @@
 # Skill-first — קרא סקיל לפני פעולה
 
 מקור דפוס: [obra/superpowers `using-superpowers`](https://github.com/obra/superpowers) (Top repo ב־LinklyAI/best-skills).  
-רתמה: `vfharness` · רשימת סקילים: `.cursor/vf-desk.json` → `skills[]` + `.cursor/skills/`.
+רתמה: `vfharness` · רשימת סקילים: `instances/velvet-factory/.cursor/vf-desk.json` → `skills[]` + `.cursor/skills/`.
 
 ## חוק
 

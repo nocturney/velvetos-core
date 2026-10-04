@@ -14,7 +14,7 @@
 | שכבה | קובץ | מה |
 |---|---|---|
 | צינור | `constitution/` + `AGENTS.md` | פנייה → שיחה → הצעה → הדפסה → איסוף |
-| מושבים | `constitution/TEAM.md` · `.cursor/vf-desk.json` | מחקר/אורקסטרציה · ראש צוות · סטודיו · צמיחה · תפעול · ייצור |
+| מושבים | `constitution/TEAM.md` · `instances/velvet-factory/.cursor/vf-desk.json` | מחקר/אורקסטרציה · ראש צוות · סטודיו · צמיחה · תפעול · ייצור |
 | CTA | `constitution/SEND.md` | וואטסאפ `050-2517000` / איסוף שדרות — לא «שלחו DM» |
 | מחיר / Insights | מדריכים | `X ₪` / «אין ספירה» — לא המצאה |
 | זיכרון עמיד | `packages/vfops/data/owner-memory.md` | עובדות שחוזרות |

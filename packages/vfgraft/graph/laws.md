@@ -9,7 +9,7 @@ HQ sends Gmail and Instagram via tools (`constitution/SEND.md`). Do not wait for
 - `.cursor/rules/velvet-factory-desk.mdc`
 - `constitution/CONSTITUTION.md`
 - `constitution/SEND.md`
-- `.cursor/vf-desk.json`
+- `instances/velvet-factory/.cursor/vf-desk.json`
 
 ## Links
 

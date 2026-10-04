@@ -6,7 +6,7 @@ Five seats (ראש צוות, סטודיו, צמיחה, תפעול, ייצור) a
 
 ## Sources
 
-- `.cursor/vf-desk.json`
+- `instances/velvet-factory/.cursor/vf-desk.json`
 - `docs/AGENCY-TOOLS.md`
 - `.cursor/rules/velvet-factory-desk.mdc`
 

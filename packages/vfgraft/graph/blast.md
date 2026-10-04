@@ -6,7 +6,7 @@
 ## Sources
 
 - `.cursor/rules/velvet-factory-desk.mdc`
-- `.cursor/vf-desk.json`
+- `instances/velvet-factory/.cursor/vf-desk.json`
 - `packages/vfgraft/MAP.md`
 
 ## Links

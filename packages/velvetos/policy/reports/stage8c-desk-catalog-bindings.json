@@ -1,0 +1,86 @@
+{
+  "schema": "velvetos.stage8c-desk-catalog-bindings.v1",
+  "stage": "8C_DESK_CATALOG_BINDINGS",
+  "behavior_change": true,
+  "prepared_against_main_sha": "bd7ba61f4f512a9b101e90b79e21a20d41674483",
+  "captured_at": "2026-10-04T16:11:12.5416267+03:00",
+  "purpose": "Migrate vfmem/vfgraft/vfharness desk source bindings to canonical instance desk without deleting the root rollback desk.",
+  "canonical_path": "instances/velvet-factory/.cursor/vf-desk.json",
+  "targets": {
+    "packages/vfmem/catalog.json": {
+      "canonical_binding_count": 3,
+      "root_only_binding_count": 0
+    },
+    "packages/vfgraft/graph.json": {
+      "canonical_binding_count": 6,
+      "root_only_binding_count": 0
+    },
+    "packages/vfgraft/graph/blast.md": {
+      "canonical_binding_count": 1,
+      "root_only_binding_count": 0
+    },
+    "packages/vfgraft/graph/desk.md": {
+      "canonical_binding_count": 1,
+      "root_only_binding_count": 0
+    },
+    "packages/vfgraft/graph/grok-bot.md": {
+      "canonical_binding_count": 1,
+      "root_only_binding_count": 0
+    },
+    "packages/vfgraft/graph/laws.md": {
+      "canonical_binding_count": 1,
+      "root_only_binding_count": 0
+    },
+    "packages/vfgraft/graph/pipeline.md": {
+      "canonical_binding_count": 1,
+      "root_only_binding_count": 0
+    },
+    "packages/vfgraft/graph/tools.md": {
+      "canonical_binding_count": 1,
+      "root_only_binding_count": 0
+    },
+    "packages/vfharness/layers.json": {
+      "canonical_binding_count": 1,
+      "root_only_binding_count": 0
+    },
+    "packages/vfharness/playbooks/domain-glossary.md": {
+      "canonical_binding_count": 1,
+      "root_only_binding_count": 0
+    },
+    "packages/vfharness/playbooks/skill-first.md": {
+      "canonical_binding_count": 1,
+      "root_only_binding_count": 0
+    }
+  },
+  "total_canonical_bindings": 18,
+  "root_desk": {
+    "retained": true,
+    "unchanged_from_prepared_against": true,
+    "delete_authorized": false
+  },
+  "authority_baseline": {
+    "unchanged": true,
+    "policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad"
+  },
+  "acceptance_criteria": {
+    "all_target_catalog_graph_bindings_point_to_canonical_instance_desk": true,
+    "no_root_only_desk_binding_remains_in_target_packages": true,
+    "vfmem_binding_count_is_exact": true,
+    "vfgraft_binding_count_is_exact": true,
+    "vfharness_binding_count_is_exact": true,
+    "root_desk_remains_unchanged_for_rollback": true,
+    "external_effect_policy_registry_is_unchanged": true,
+    "legacy_root_desk_delete_is_not_authorized": true
+  },
+  "repository_acceptance": "PASS",
+  "next_stage": "Stage 8C — Remaining consumer domains",
+  "remaining_domains": [
+    "root desk rules/documentation",
+    "Living Studio embedded business rules",
+    "Control API/fleet projection",
+    "ChatGPT project distribution",
+    "expert-module instance values",
+    "Windows host binding"
+  ]
+}

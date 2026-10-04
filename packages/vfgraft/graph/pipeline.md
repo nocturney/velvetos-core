@@ -9,7 +9,7 @@ VelvetOS canonical ids (all instances): `lead → talk → offer → fulfill →
 ## Sources
 
 - `constitution/CONSTITUTION.md`
-- `.cursor/vf-desk.json`
+- `instances/velvet-factory/.cursor/vf-desk.json`
 - `packages/vfconvert/PATH.md`
 
 ## Links

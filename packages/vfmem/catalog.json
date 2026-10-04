@@ -29,7 +29,7 @@
   ],
   "sourcesOfTruth": [
     "packages/manifest.json",
-    ".cursor/vf-desk.json",
+    "instances/velvet-factory/.cursor/vf-desk.json",
     ".cursor/agency-agents.json",
     ".cursor/skills",
     "constitution/CONSTITUTION.md"
@@ -598,7 +598,7 @@
     {
       "id": "no-invented-prices",
       "text": "Do not invent ₪. Write X ₪ when the source is missing.",
-      "source": ".cursor/vf-desk.json"
+      "source": "instances/velvet-factory/.cursor/vf-desk.json"
     },
     {
       "id": "no-invented-insights",
@@ -613,7 +613,7 @@
     {
       "id": "no-secrets-in-git",
       "text": "No secrets in git. Do not open personal, medical, or legal Drive folders unless named.",
-      "source": ".cursor/vf-desk.json"
+      "source": "instances/velvet-factory/.cursor/vf-desk.json"
     },
     {
       "id": "no-cbm-binary-from-hq",
