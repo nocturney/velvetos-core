@@ -293,3 +293,20 @@ The integrated gate passes all nine criteria:
 - The post-6D main full sensor suite passed 116/116.
 
 Stage 7 entry is allowed. Stage 7 may consolidate state/evidence/runtime/memory/research/scheduler/retention roles, but must not create a new database merely to rename existing state or weaken canonical effect-authority boundaries.
+
+## Reform v2 Stage 7A — State / Evidence model
+
+`state-evidence-model.json` is the canonical semantic map for operational artifacts. It does **not** create a database or move data. Every mapped surface is assigned one of exactly four roles:
+
+- `CANONICAL_STATE` — current state for one bounded domain only.
+- `EVIDENCE_RECEIPT` — proof/observation; never external-effect authority.
+- `AUTHORIZATION_DECISION` — exact-action policy decision; currently bound only to `velvetos.action-receipt.v1`.
+- `AUDIT_HISTORY` — append-only/superseded/generated history; cannot overwrite current state.
+
+All nine artifact classes already present in `artifact-retention.json` have one semantic default. Compatibility caches, mirrors, projections and human-readable views are explicitly non-authoritative.
+
+`office/control/HANDOFF.json` remains canonical only for the narrow handoff/continuation domain; it does not become authority over the jobs/media/policy sources it references. Task checkpoints remain current state by unique `task_id`; embedded artifact digests are evidence, and superseded checkpoints are history.
+
+Work Ledger remains **unimplemented in 7A** and refs/index-only until Stage 7D: no full transcripts, no embedded media, no policy authority, no external-effect authority, and no second artifact store.
+
+Acceptance evidence: `reports/stage7a-state-evidence-model.json` (10/10 PASS, reproducible by `check-policy-architecture.py`).

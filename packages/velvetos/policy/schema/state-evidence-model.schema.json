@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://policy/state-evidence-model.schema.json",
+  "title": "VelvetOS State/Evidence Semantic Model",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "registry_kind",
+    "status",
+    "scope",
+    "invariants",
+    "categories",
+    "retention_defaults",
+    "surfaces",
+    "work_ledger"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "registry_kind": {
+      "const": "velvetos_state_evidence_model"
+    },
+    "status": {
+      "const": "ACTIVE_STAGE7A"
+    },
+    "scope": {
+      "type": "object"
+    },
+    "invariants": {
+      "type": "object"
+    },
+    "categories": {
+      "type": "array",
+      "minItems": 4
+    },
+    "retention_defaults": {
+      "type": "array",
+      "minItems": 1
+    },
+    "surfaces": {
+      "type": "array",
+      "minItems": 1
+    },
+    "work_ledger": {
+      "type": "object"
+    }
+  }
+}

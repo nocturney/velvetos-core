@@ -18,6 +18,7 @@ POLICIES = POLICY_DIR / "policy-registry.json"
 SENSORS = POLICY_DIR / "sensor-registry.json"
 SELECTION = POLICY_DIR / "sensor-selection.json"
 ARTIFACTS = POLICY_DIR / "artifact-retention.json"
+STATE_EVIDENCE_MODEL = POLICY_DIR / "state-evidence-model.json"
 SCHEMAS = POLICY_DIR / "schema"
 REPORTS = POLICY_DIR / "reports"
 ACTION_RECEIPT_SCHEMA = SCHEMAS / "action-receipt.schema.json"
@@ -29,6 +30,8 @@ STAGE5_ACCEPTANCE = REPORTS / "stage5-acceptance.json"
 STAGE5_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage5-acceptance.py"
 STAGE6_ACCEPTANCE = REPORTS / "stage6-acceptance.json"
 STAGE6_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage6-acceptance.py"
+STAGE7A_ACCEPTANCE = REPORTS / "stage7a-state-evidence-model.json"
+STAGE7A_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage7a-state-evidence-model.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -44,6 +47,7 @@ EXPECTED_REPORTS = {
     "stage4-acceptance.json",
     "stage5-acceptance.json",
     "stage6-acceptance.json",
+    "stage7a-state-evidence-model.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -454,6 +458,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         "sensor-registry.schema.json",
         "sensor-selection.schema.json",
         "artifact-retention.schema.json",
+        "state-evidence-model.schema.json",
         "instagram-publish.schema.json",
         "instagram-publish-context.schema.json",
         "content-ready.schema.json",
@@ -927,6 +932,178 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated6.is_file():
                     require(regenerated6.read_bytes() == STAGE6_ACCEPTANCE.read_bytes(),
                             "Stage 6 acceptance receipt is not reproducible", problems)
+
+
+    require(STATE_EVIDENCE_MODEL.is_file(), "Stage 7A state/evidence model missing", problems)
+    require(STAGE7A_ACCEPTANCE.is_file(), "Stage 7A acceptance receipt missing", problems)
+    require(STAGE7A_ACCEPTANCE_GENERATOR.is_file(), "Stage 7A acceptance generator missing", problems)
+    if STATE_EVIDENCE_MODEL.is_file():
+        model7a = load(STATE_EVIDENCE_MODEL)
+        require(model7a.get("schema_version") == 1
+                and model7a.get("registry_kind") == "velvetos_state_evidence_model"
+                and model7a.get("status") == "ACTIVE_STAGE7A",
+                "Stage 7A state/evidence registry identity drift", problems)
+        categories7a = model7a.get("categories") or []
+        category_ids7a = [row.get("id") for row in categories7a if isinstance(row, dict)]
+        expected_categories7a = {
+            "CANONICAL_STATE", "EVIDENCE_RECEIPT",
+            "AUTHORIZATION_DECISION", "AUDIT_HISTORY",
+        }
+        require(set(category_ids7a) == expected_categories7a and len(category_ids7a) == 4,
+                "Stage 7A must define exactly four semantic categories", problems)
+        category_by_id7a = {
+            row.get("id"): row for row in categories7a
+            if isinstance(row, dict) and isinstance(row.get("id"), str)
+        }
+        require(category_by_id7a.get("EVIDENCE_RECEIPT", {}).get("can_authorize_external_effect") is False,
+                "Stage 7A evidence may not authorize external effects", problems)
+        require(category_by_id7a.get("CANONICAL_STATE", {}).get("can_authorize_external_effect") is False,
+                "Stage 7A canonical state may not authorize external effects", problems)
+        require(category_by_id7a.get("AUDIT_HISTORY", {}).get("can_authorize_external_effect") is False,
+                "Stage 7A audit/history may not authorize external effects", problems)
+        require(category_by_id7a.get("AUTHORIZATION_DECISION", {}).get("can_authorize_external_effect") is True,
+                "Stage 7A authorization decision must be the sole authorizing category", problems)
+
+        invariants7a = model7a.get("invariants") or {}
+        required_invariants7a = {
+            "exactly_four_categories",
+            "one_canonical_owner_per_domain",
+            "compatibility_paths_are_not_authority",
+            "projections_are_not_authority_outside_their_narrow_domain",
+            "evidence_never_authorizes_external_effect",
+            "authorization_decision_is_distinct_from_evidence",
+            "audit_history_never_overwrites_current_state",
+            "superseded_current_state_becomes_history",
+            "no_new_database",
+        }
+        require(all(invariants7a.get(key) is True for key in required_invariants7a),
+                "Stage 7A invariant drift", problems)
+        scope7a = model7a.get("scope") or {}
+        require(scope7a.get("storage_change") == "NONE_STAGE7A"
+                and scope7a.get("migration_change") == "NONE_STAGE7A"
+                and scope7a.get("deletion_authorized") is False,
+                "Stage 7A must remain classification-only with no storage move/deletion", problems)
+
+        defaults7a = model7a.get("retention_defaults") or []
+        default_ids7a = [row.get("artifact_class_id") for row in defaults7a if isinstance(row, dict)]
+        require(len(default_ids7a) == len(set(default_ids7a)),
+                "Stage 7A duplicate retention semantic mapping", problems)
+        require(set(default_ids7a) == set(artifact_ids),
+                "Stage 7A must map every artifact-retention class exactly once", problems)
+        require(all(isinstance(row, dict) and row.get("category") in expected_categories7a for row in defaults7a),
+                "Stage 7A retention mapping references unknown category", problems)
+
+        surfaces7a = model7a.get("surfaces") or []
+        surface_ids7a = [row.get("id") for row in surfaces7a if isinstance(row, dict)]
+        require(len(surface_ids7a) == len(set(surface_ids7a)), "Stage 7A duplicate surface id", problems)
+        required_surfaces7a = {
+            "jobs-ledger", "office-followups", "office-dead-letter", "manager-handoff",
+            "task-checkpoints", "runtime-health-receipts", "jobs-sync-receipt",
+            "research-sources", "exact-action-receipt", "office-decisions-history",
+            "media-catalog", "media-intake-current-state", "media-intake-event-history",
+            "content-approval-queue", "content-event-history", "feed-audit-evidence",
+            "content-calendar", "production-completion", "publication-operational-state",
+            "generated-office-output-history",
+        }
+        require(required_surfaces7a <= set(surface_ids7a),
+                "Stage 7A operational surface mapping incomplete", problems)
+        for row in surfaces7a:
+            if not isinstance(row, dict):
+                problems.append("Stage 7A surface row must be object")
+                continue
+            sid = row.get("id")
+            require(row.get("category") in expected_categories7a, f"{sid}: invalid Stage 7A category", problems)
+            require(bool(row.get("canonical_owner")), f"{sid}: canonical_owner required", problems)
+            require(bool(row.get("authority_scope")), f"{sid}: authority_scope required", problems)
+            compatibility7a = row.get("compatibility_paths")
+            require(isinstance(compatibility7a, list), f"{sid}: compatibility_paths must be list", problems)
+            if isinstance(compatibility7a, list):
+                require(all(isinstance(item, dict) and item.get("authoritative") is False for item in compatibility7a),
+                        f"{sid}: compatibility path cannot be authoritative", problems)
+            if row.get("category") != "AUTHORIZATION_DECISION":
+                require(row.get("policy_gate_eligible") is False,
+                        f"{sid}: only AUTHORIZATION_DECISION may be policy-gate eligible", problems)
+        auth_surfaces7a = [row for row in surfaces7a
+                           if isinstance(row, dict) and row.get("category") == "AUTHORIZATION_DECISION"]
+        require(len(auth_surfaces7a) == 1 and auth_surfaces7a[0].get("id") == "exact-action-receipt",
+                "Stage 7A exact-action receipt must be the sole authorization-decision surface", problems)
+        if auth_surfaces7a:
+            require((auth_surfaces7a[0].get("locator") or {}).get("values") == ["velvetos.action-receipt.v1"],
+                    "Stage 7A authorization surface lost action-receipt schema binding", problems)
+
+        handoff7a = next((row for row in surfaces7a if isinstance(row, dict) and row.get("id") == "manager-handoff"), {})
+        require(handoff7a.get("projection_only") is True and handoff7a.get("policy_gate_eligible") is False,
+                "Stage 7A handoff must remain continuation context, not policy authority", problems)
+        work_ledger7a = model7a.get("work_ledger") or {}
+        require(work_ledger7a.get("status") == "INDEX_ONLY_NOT_IMPLEMENTED_STAGE7A"
+                and work_ledger7a.get("destination_stage") == "7D"
+                and work_ledger7a.get("references_only") is True
+                and work_ledger7a.get("policy_authority") is False
+                and work_ledger7a.get("external_effect_authority") is False
+                and work_ledger7a.get("implementation_allowed_before_stage7d") is False,
+                "Stage 7A Work Ledger must remain refs-only and unimplemented until 7D", problems)
+
+    if STAGE7A_ACCEPTANCE.is_file():
+        stage7a = load(STAGE7A_ACCEPTANCE)
+        require(stage7a.get("schema") == "velvetos.stage7a-state-evidence-model.v1"
+                and stage7a.get("stage") == "7A"
+                and stage7a.get("behavior_change") is False
+                and stage7a.get("prepared_against_main_sha") == "ae8c75745f0d89677078d9834ea969f6da866195"
+                and stage7a.get("repository_acceptance") == "PASS",
+                "Stage 7A acceptance metadata drift", problems)
+        criteria7a = stage7a.get("acceptance") or {}
+        expected_criteria7a = {
+            "exactly_four_semantic_categories",
+            "all_retention_registry_artifact_classes_are_mapped",
+            "canonical_owner_and_authority_scope_are_explicit_per_operational_surface",
+            "compatibility_paths_are_non_authoritative",
+            "evidence_is_distinct_from_authorization_decision",
+            "audit_history_cannot_overwrite_current_state",
+            "handoff_is_continuation_context_not_cross_domain_authority",
+            "work_ledger_is_refs_only_and_not_a_second_store",
+            "external_effect_policy_registry_is_unchanged",
+            "no_storage_migration_or_deletion_is_authorized",
+        }
+        require(set(criteria7a) == expected_criteria7a
+                and all(criteria7a.get(key) is True for key in expected_criteria7a),
+                "Stage 7A acceptance criteria drift or fail", problems)
+        require(stage7a.get("next_stage") == "Stage 7B — Memory/Learning lifecycle",
+                "Stage 7A next-stage handoff drift", problems)
+        model_meta7a = stage7a.get("model") or {}
+        if STATE_EVIDENCE_MODEL.is_file():
+            require(model_meta7a.get("sha256") == hashlib.sha256(STATE_EVIDENCE_MODEL.read_bytes()).hexdigest(),
+                    "Stage 7A model hash drift", problems)
+        require(model_meta7a.get("retention_classes_mapped") == len(artifact_ids)
+                and model_meta7a.get("retention_class_count") == len(artifact_ids),
+                "Stage 7A retention mapping count drift", problems)
+        baseline7a = stage7a.get("authority_baseline") or {}
+        require(baseline7a.get("unchanged_from_prepared_against") is True
+                and baseline7a.get("single_authority_per_effect") is True,
+                "Stage 7A external-effect authority baseline drift", problems)
+        if STAGE7A_ACCEPTANCE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated7a = Path(td) / "stage7a-state-evidence-model.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE7A_ACCEPTANCE_GENERATOR),
+                        "--prepared-against", stage7a["prepared_against_main_sha"],
+                        "--captured-at", stage7a["captured_at"],
+                        "--output", str(regenerated7a),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0,
+                        "Stage 7A acceptance regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()),
+                        problems)
+                if proc.returncode == 0 and regenerated7a.is_file():
+                    require(regenerated7a.read_bytes() == STAGE7A_ACCEPTANCE.read_bytes(),
+                            "Stage 7A acceptance receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)
