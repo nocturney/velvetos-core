@@ -608,3 +608,9 @@ The legacy sample remains physically present. `rollback_window_closed=true` mean
 A retirement preflight found that `scripts/check-public-cta.py` still read the legacy sample through a path assembled from `Path` segments. The earlier exact-string scan therefore undercounted active consumers. The hidden consumer is now migrated to the canonical instance profile, and `reports/stage8d-sample-profile-consumer-correction.json` records a semantic scan that proves one active reference before the fix and zero after it.
 
 PR #529's rollback-closure receipt remains preserved as historical evidence, but it is explicitly superseded for retirement authority. The `sample_profile` rollback window is reopened, `retirement_ready_for_deletion_gate=false`, and `delete_authorized=false`. Fresh downstream main full-suite observations after this corrective cutover are required before a new explicit re-closure receipt may make this surface eligible for deletion.
+
+## Reform v2 Stage 8D - Retirement semantic audit
+
+`reports/stage8d-retirement-semantic-audit.json` is an observation-only, fail-closed preflight over the five retained compatibility surfaces. It catches both literal legacy paths and paths assembled from components, classifies evidence/history/documentation separately from machine/config candidates, and never closes a rollback window or authorizes deletion.
+
+Against merged main `30d72da6`, only `sample_profile` has no machine/config candidate blockers. `fleet`, `root_desk`, `tool_status` and `chatgpt_core_bundle` remain blocked pending surface-by-surface review/migration of their candidate references. Ambiguity blocks retirement; it is never interpreted as proof of safety. The audit therefore keeps `retirement_authorized=false` and `deletion_authorized=false` while the remaining candidates are resolved.

@@ -76,6 +76,8 @@ STAGE8D_SAMPLE_ROLLBACK_CLOSURE = REPORTS / "stage8d-sample-profile-rollback-clo
 STAGE8D_SAMPLE_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-sample-profile-rollback-closure.py"
 STAGE8D_SAMPLE_CONSUMER_CORRECTION = REPORTS / "stage8d-sample-profile-consumer-correction.json"
 STAGE8D_SAMPLE_CONSUMER_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-sample-profile-consumer-correction.py"
+STAGE8D_RETIREMENT_SEMANTIC_AUDIT = REPORTS / "stage8d-retirement-semantic-audit.json"
+STAGE8D_RETIREMENT_SEMANTIC_AUDIT_GENERATOR = ROOT / "scripts" / "generate-stage8d-retirement-semantic-audit.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -115,6 +117,7 @@ EXPECTED_REPORTS = {
     "stage8d-post-migration-readiness.json",
     "stage8d-sample-profile-rollback-closure.json",
     "stage8d-sample-profile-consumer-correction.json",
+    "stage8d-retirement-semantic-audit.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -3206,6 +3209,103 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated_fix8ds.read_bytes() == STAGE8D_SAMPLE_CONSUMER_CORRECTION.read_bytes(),
                         "Stage 8D sample consumer correction receipt is not reproducible",
+                        problems,
+                    )
+
+
+    if STAGE8D_RETIREMENT_SEMANTIC_AUDIT.is_file():
+        audit8d = load(STAGE8D_RETIREMENT_SEMANTIC_AUDIT)
+        require(
+            audit8d.get("schema") == "velvetos.stage8d-retirement-semantic-audit.v1"
+            and audit8d.get("stage") == "8D_RETIREMENT_SEMANTIC_AUDIT"
+            and audit8d.get("behavior_change") is False
+            and audit8d.get("repository_assessment") == "PASS",
+            "Stage 8D retirement semantic audit metadata drift",
+            problems,
+        )
+        model8d = audit8d.get("audit_model") or {}
+        require(
+            model8d.get("exact_path_detection") is True
+            and model8d.get("assembled_path_component_detection") is True
+            and model8d.get("ambiguous_machine_or_config_reference_blocks_retirement") is True,
+            "Stage 8D retirement semantic audit model drift",
+            problems,
+        )
+        surfaces8d = audit8d.get("compatibility_surfaces") or {}
+        expected_surface_ids8d = {"sample_profile", "fleet", "root_desk", "tool_status", "chatgpt_core_bundle"}
+        require(set(surfaces8d) == expected_surface_ids8d, "Stage 8D semantic audit surface set drift", problems)
+        require(
+            all(
+                row.get("present") is True
+                and row.get("rollback_window_closed_by_this_audit") is False
+                and row.get("delete_authorized") is False
+                for row in surfaces8d.values()
+            ),
+            "Stage 8D semantic audit changed retirement/delete state",
+            problems,
+        )
+        sample_audit8d = surfaces8d.get("sample_profile") or {}
+        require(
+            sample_audit8d.get("retirement_preflight_clear") is True
+            and sample_audit8d.get("retirement_preflight_blockers") == [],
+            "Stage 8D semantic audit sample state drift",
+            problems,
+        )
+
+
+    if STAGE8D_RETIREMENT_SEMANTIC_AUDIT.is_file():
+        audit8d = load(STAGE8D_RETIREMENT_SEMANTIC_AUDIT)
+        surfaces8d = audit8d.get("compatibility_surfaces") or {}
+        blocked_ids8d = {"fleet", "root_desk", "tool_status", "chatgpt_core_bundle"}
+        require(
+            all(
+                (surfaces8d.get(sid) or {}).get("retirement_preflight_clear") is False
+                and bool((surfaces8d.get(sid) or {}).get("retirement_preflight_blockers"))
+                for sid in blocked_ids8d
+            ),
+            "Stage 8D semantic audit unexpectedly cleared a remaining surface",
+            problems,
+        )
+        assessment8d = audit8d.get("assessment") or {}
+        require(
+            assessment8d.get("surfaces_total") == 5
+            and assessment8d.get("surfaces_preflight_clear") == 1
+            and set(assessment8d.get("surfaces_with_candidate_blockers") or []) == blocked_ids8d
+            and assessment8d.get("rollback_windows_closed_by_audit") == 0
+            and assessment8d.get("deletion_authorized") is False
+            and audit8d.get("retirement_authorized") is False
+            and audit8d.get("deletion_authorized") is False,
+            "Stage 8D semantic audit assessment drift",
+            problems,
+        )
+        if STAGE8D_RETIREMENT_SEMANTIC_AUDIT_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated_audit8d = Path(td) / "stage8d-retirement-semantic-audit.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_RETIREMENT_SEMANTIC_AUDIT_GENERATOR),
+                        "--source-commit", audit8d["source_commit_sha"],
+                        "--captured-at", audit8d["captured_at"],
+                        "--output", str(regenerated_audit8d),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D semantic audit regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated_audit8d.is_file():
+                    require(
+                        regenerated_audit8d.read_bytes() == STAGE8D_RETIREMENT_SEMANTIC_AUDIT.read_bytes(),
+                        "Stage 8D semantic audit receipt is not reproducible",
                         problems,
                     )
 
