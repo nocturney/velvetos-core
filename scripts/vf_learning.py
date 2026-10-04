@@ -6,7 +6,16 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 DIR=ROOT/'packages/vfharness/state/learning-candidates'
-VALID={'candidate','accepted','rejected','promoted','superseded','pruned'}
+VALID={'candidate','accepted','rejected','promoted','superseded','expired','pruned'}
+ALLOWED_TRANSITIONS={
+    'candidate': {'candidate','accepted','rejected','expired','pruned'},
+    'accepted': {'accepted','promoted','rejected','superseded','expired','pruned'},
+    'promoted': {'promoted','superseded','expired'},
+    'rejected': {'rejected'},
+    'superseded': {'superseded'},
+    'expired': {'expired'},
+    'pruned': {'pruned'},
+}
 
 def now(): return datetime.now(timezone.utc).astimezone().isoformat(timespec='seconds')
 def path_for(cid): return DIR/f'{cid}.json'
@@ -32,8 +41,16 @@ def evidence(a):
 def status(a):
     p,d=load(a.candidate_id)
     if a.status not in VALID: raise SystemExit('invalid status')
-    if a.status in {'accepted','promoted'} and not d.get('evidence'): raise SystemExit('cannot accept/promote without evidence')
-    if a.status=='promoted' and not a.promote_to: raise SystemExit('promoted requires --promote-to')
+    current=d.get('status')
+    if a.status not in ALLOWED_TRANSITIONS.get(current,set()):
+        raise SystemExit(f'invalid learning transition: {current} -> {a.status}')
+    if a.status in {'accepted','promoted'} and not d.get('evidence'):
+        raise SystemExit('cannot accept/promote without evidence')
+    if a.status=='promoted':
+        if current!='accepted': raise SystemExit('promotion requires current status=accepted')
+        if not a.promote_to: raise SystemExit('promoted requires --promote-to')
+    elif a.promote_to:
+        raise SystemExit('--promote-to is only valid with status=promoted')
     d['status']=a.status; d['last_seen']=now()
     if a.promote_to: d['promote_to']=a.promote_to
     save(p,d); return 0

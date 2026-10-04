@@ -1,75 +1,64 @@
-# Learning lifecycle — candidate to durable policy
+# Learning lifecycle — observation to durable memory
 
-Source pattern: selective `affaan-m/ECC` continuous-learning / learn-eval ideas, implemented inside VelvetOS memory and checkpoint governance. No observer daemon, plugin runtime, or second memory backend is introduced.
+Stage 7B canonical contract. No observer daemon, plugin runtime, second memory backend, or forced daily quota is introduced.
 
 ## Goal
 
-Prevent two failure modes:
+Keep useful learning without turning every observation into durable truth or duplicating the same fact across owner-memory, vfmem, Cognee, and office-learning.
 
-1. Useful lessons disappear at session end.
-2. One-off observations are promoted too quickly into durable rules.
+## Canonical lifecycle
 
-## Lifecycle
+`observation -> candidate -> evidence/recurrence -> promoted durable fact/pattern -> superseded/expired`
 
-`signal -> candidate -> evidence -> accepted/rejected -> promoted -> superseded/pruned`
+Negative terminal outcomes remain `rejected` and legacy `pruned`.
 
-Signals may come from checkpoints, daily retro, owner corrections, repeated sensor failures, production incidents, repeated route misses, or repeated successful repairs.
+| Stage | Existing surface | Authority |
+|---|---|---|
+| observation | task checkpoint / retro / measured domain evidence | evidence only |
+| candidate | `packages/vfharness/state/learning-candidates/<id>.json` | candidate status + evidence refs only |
+| evidence/recurrence | candidate `status=accepted` with concrete refs / owner correction | promotion eligibility only |
+| promoted durable | exactly one named `promote_to` SoT | current durable truth |
+| superseded/expired | candidate/history + target's normal history mechanism | historical context only |
 
-Candidate records live under:
+`office-learning` owns the process, not the facts. `vfmem` routes and canonically verifies. `owner-memory.md` owns durable owner-specific facts only when no more-specific SoT owns them. Cognee is a derived semantic index with no writeback.
 
-`packages/vfharness/state/learning-candidates/<candidate_id>.json`
+## Candidate record
 
-Schema fields:
+Candidate records live under `packages/vfharness/state/learning-candidates/` using `vf.learning-candidate.v1`.
 
-```json
-{
-  "schema": "vf.learning-candidate.v1",
-  "candidate_id": "learn-...",
-  "trigger": "specific observable condition",
-  "action": "bounded response",
-  "scope": "task|project|owner",
-  "confidence": 0.5,
-  "status": "candidate",
-  "evidence": ["checkpoint:..."],
-  "first_seen": "ISO-8601",
-  "last_seen": "ISO-8601",
-  "owner_correction": false,
-  "promote_to": null,
-  "supersedes": null
-}
-```
+Statuses:
+- `candidate` — bounded hypothesis/signal.
+- `accepted` — evidence/recurrence triaged as worthy of promotion review; still not durable truth.
+- `promoted` — written to one explicit `promote_to` canonical destination.
+- `superseded` / `expired` — no longer current.
+- `rejected` — evidence did not support promotion.
+- `pruned` — legacy terminal compatibility status; new expiry should use `expired`.
 
 ## Automatic CI signal source
 
-`office-control-plane.yml` (every 6h at 02/08/14/20 UTC = 05/11/17/23 IDT) runs `python3 scripts/vf_learning.py ingest-ci` over `gh run list --branch main`: each workflow that failed on `main` (push/schedule/dispatch, last 7 days) gets one candidate `learn-ci-<workflow>` with `gh-run:<id>:<conclusion>:<createdAt>:<url>` evidence. It is deterministic and idempotent (evidence de-duplicated by run id, timestamps from the runs, file written only on change), confidence rises 0.1 per independent failure (0.3 → max 0.8), and **status is never changed automatically** — accept/reject/promote/prune is triage by the Office Loop or a human. Self-test: `python3 scripts/vf_learning.py selftest`.
+`office-control-plane.yml` may ingest failed main-branch workflows into candidates. Ingest is deterministic/idempotent and **never changes candidate status automatically**. More failures add evidence; they do not auto-promote.
 
-## Confidence rules
-
-- Confidence is evidence strength, not model certainty.
-- New candidates should normally start between `0.3` and `0.5`.
-- Repeated independent evidence can raise confidence.
-- Owner correction is strong evidence, but still must not silently override constitutional or safety rules.
-- Never invent evidence to reach a threshold.
-
-## Promotion
+## Promotion gate
 
 Promotion requires all of:
+1. current candidate status is `accepted`;
+2. concrete evidence exists;
+3. `promote_to` names exactly one existing canonical destination;
+4. current canonical source is re-read and contradiction/authority scope checked;
+5. destination-specific repetition/human gate is satisfied.
 
-- `status=accepted`;
-- at least one concrete evidence reference;
-- destination named in `promote_to`;
-- no unresolved contradiction with current constitution/rules;
-- human/repetition gate required by the destination still applies.
+An explicit owner correction is strong human evidence and may satisfy the human/repetition part when the destination allows it; it does not bypass safety, constitution, or canonical verification.
 
-Before creating a new skill/rule/playbook, run overlap review:
+No daily quota exists. A retro with no meaningful durable learning ends with no memory promotion.
 
+Before creating a new skill/rule/playbook:
 `Save | Improve then Save | Absorb into <existing> | Drop`
 
-Prefer absorb/update over skill proliferation.
+Prefer absorb/update over proliferation. Never copy the same current fact into owner-memory and a domain SoT as two authorities; after promotion, the candidate/old memory entry is provenance/history.
 
-## Pruning
+## Supersession / expiry
 
-Reject or prune candidates that are stale, contradicted, duplicate, unsupported, or too task-specific. Never delete history that is needed to explain a prior policy; mark supersession instead.
+Do not silently delete history needed to explain prior behavior. Mark the learning candidate `superseded` or `expired` and let the promoted destination's normal history mechanism preserve provenance. Derived Cognee data is refreshed from canonical sources and is never the closure mechanism.
 
 ## Verification
 

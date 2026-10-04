@@ -1,6 +1,6 @@
 ---
 name: vf-daily-learning
-description: Run the Velvet Factory end-of-day learning ritual — review conversations, update shared owner memory, promote durable facts. Lead seat asks every specialist to improve for tomorrow. Use at end of day, daily retro, or when the user asks for learning loop / זיכרון משותף / סוף יום.
+description: Run the Velvet Factory end-of-day learning ritual — review conversations, capture meaningful learning candidates, and promote durable facts only through the evidence gate. Use at end of day, daily retro, or when the user asks for learning loop / זיכרון משותף / סוף יום.
 ---
 
 # vf-daily-learning
@@ -21,10 +21,10 @@ Living office culture: specialists learn, improve, and feed shared memory — no
 3. Fill the revenue-loop table only from real inquiries / print cards / materials — never invent demand or Insights.
 4. Fill the load section only with measured hours; missing stays `~__` / «אין ספירה» — never invent hours.
 5. Append a **log line** under the history section in `DAILY-RETRO.md` (keep prior days).
-6. Write **one line minimum** to `packages/vfops/data/owner-memory.md` (format in `packages/vfmem/MEMORY-UPDATE.md`).
+6. If there is a meaningful signal, create/update the bounded learning candidate or checkpoint. Write `owner-memory.md` only after the promotion gate; if there is no durable learning, record no memory line.
 7. Open checkpoints for unfinished jobs: `packages/vfharness/state/` (set `component_state` when operational mode matters).
 8. If same mistake twice → note for `AGENTS.md` ANTI-PATTERN (next catalog edit).
-9. Weekly load pulse (subjective): `packages/vfops/hq/WEEKLY-LOAD.md` — does not replace the daily memory line.
+9. Weekly load pulse (subjective): `packages/vfops/hq/WEEKLY-LOAD.md` — operational logging is separate from durable-memory promotion.
 10. **Retro → signal:** `python3 scripts/vf_retro_signals.py --write` → brief slots 01/05 (`RETRO-SIGNALS.md`; kinds include `model_demand` / `material_signal`). No owner shame / weak Insights upward.
 
 ## Per expert module

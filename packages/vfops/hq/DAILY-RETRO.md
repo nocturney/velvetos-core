@@ -14,7 +14,7 @@
 
 > עברו על כל השיחות מהיום. מה למדנו על הבעלים / הסטודיו / הלקוחות?  
 > מה לשמור לזיכרון המשותף? מה לתקן מחר?  
-> כתבו שורה אחת לפחות ל־`vfops/data/owner-memory.md` אם זה עובר לכולם.
+> אם יש אות משמעותי — שמרו observation/candidate עם מקור. כתבו ל־`vfops/data/owner-memory.md` רק אם הוא עבר promotion gate; אם אין למידה עמידה, אין שורת זיכרון חובה.
 
 ## רשימת בדיקה לכל מושב
 
@@ -70,16 +70,16 @@
 
 | מתי | מה לעשות |
 |---|---|
-| משתמש תיקן / דחה תוצר | שורה ב־`owner-memory.md` + אם חוזר → ANTI-PATTERN |
+| משתמש תיקן / דחה תוצר | candidate עם `owner_correction=true` + evidence; promotion ל־owner-memory/SoT רק אחרי gate |
 | כלי / פקודה נכשלו | לרשום failover אמיתי; לא «אמור לעבוד» |
-| גילינו גישה טובה יותר | לעדכן פלייבוק/סקיל בפק הקיים **אותו יום** אם זה חוזר |
+| גילינו גישה טובה יותר | candidate/evidence קודם; עדכון playbook/skill באותו יום רק אם recurrence/owner gate כבר הושלם |
 | דירוג best-skills חשף דפוס | `BEST-SKILLS.md` · הטמעה במקום |
 | טענת הצלחה בלי אימות | Mastery gate — `verification-before-claim.md` · `MASTERY-MEMORY.md` |
 | אותה טעות פעמיים | Question-bank → ANTI-PATTERN או `LEARNING-RECORDS.md` |
 
-## חוזה יום (owner-memory)
+## חוזה promotion (owner-memory)
 
-לפני שסוגרים רטרו — בלוק חדש ב־`owner-memory.md` חייב לעמוד ב־`MEMORY-UPDATE.md`:
+אם הרטרו באמת מקדם עובדה עמידה ל־`owner-memory.md`, הבלוק החדש חייב לעמוד ב־`MEMORY-UPDATE.md`. אם אין promotion, אין חובה ליצור בלוק זיכרון:
 
 - כותרת `### YYYY-MM-DD …`
 - `**מושב:**` · `**למדנו:**` · `**מקור:**` (חובה)
@@ -89,7 +89,7 @@
 
 ## פלט חובה
 
-1. **שורת יום** ב־`packages/vfops/data/owner-memory.md` (תאריך + תובנה אחת) — לפי החוזה למעלה
+1. **תוצאת learning** — אות משמעותי → checkpoint/candidate; promotion מאומת → יעד SoT אחד. אם אין תובנה עמידה, אין כתיבת זיכרון חובה.
 2. **שורת לוג** בתחתית קובץ זה (או העתק ל־`DAILY-RETRO-LOG.md` אם הלוג גדל)
 3. **Checkpoint** אם job רב־שלבי פתוח — `vfharness/state/<task-id>.json` (+ `component_state` כשיש מצב תפעולי)
 4. **תיקון מדריך** — אם אותה טעות פעמיים → שורת ANTI-PATTERN ב־`AGENTS.md` (מחר, לא הלילה)

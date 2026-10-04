@@ -27,7 +27,7 @@ You are in **VelvetOS Core** (backend OS kernel). Reference studio bind remains 
 - Treg is **not relevant**. WebSearch / orchestra only.
 - Drive **creates** office docs when needed. No personal, medical, or legal folders unless the user names them.
 - No TikTok or ads without the lead seat. No secrets in git.
-- **Living office:** lead seat runs end-of-day retro (`vfops/hq/DAILY-RETRO.md`). Every specialist reviews today's conversations, promotes one durable line to `vfops/data/owner-memory.md`, and improves tomorrow — not static generic prompts. Module: `office-learning`.
+- **Living office:** lead seat runs end-of-day retro (`vfops/hq/DAILY-RETRO.md`). Every specialist reviews today's conversations and captures only meaningful observations/candidates; durable promotion is evidence-gated and optional — there is no daily learning quota. Module: `office-learning`.
 - **Revenue loop:** every monetized IG post needs an Offer card (SKU, `X ₪` or verified price, CTA). Module: `expert-revenue-loop`; weekly `WEEKLY-REVENUE-PULSE.md`; Insights via owner snapshot only (`expert-insights-ingest`).
 
 ## Route (pack → specialist → tool)

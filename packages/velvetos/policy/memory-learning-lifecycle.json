@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "registry_kind": "velvetos_memory_learning_lifecycle",
+  "status": "ACTIVE_STAGE7B",
+  "lifecycle": [
+    {
+      "id": "OBSERVATION",
+      "meaning": "bounded evidence from a task/retro/domain measurement",
+      "durable_truth": false
+    },
+    {
+      "id": "CANDIDATE",
+      "meaning": "triageable hypothesis with evidence references",
+      "durable_truth": false
+    },
+    {
+      "id": "EVIDENCE_RECURRENCE",
+      "meaning": "accepted candidate with concrete evidence/recurrence or explicit owner correction",
+      "durable_truth": false
+    },
+    {
+      "id": "PROMOTED_DURABLE",
+      "meaning": "fact/pattern written to exactly one canonical destination",
+      "durable_truth": true
+    },
+    {
+      "id": "SUPERSEDED_EXPIRED",
+      "meaning": "historical provenance; no longer current authority",
+      "durable_truth": false
+    }
+  ],
+  "roles": [
+    {
+      "id": "office-learning",
+      "role": "PROCESS_OWNER",
+      "stores_current_fact": false,
+      "authority": "learning lifecycle orchestration only"
+    },
+    {
+      "id": "task-checkpoints",
+      "role": "OBSERVATION_EVIDENCE",
+      "stores_current_fact": false,
+      "authority": "task observation/history only",
+      "path": "packages/vfharness/state/"
+    },
+    {
+      "id": "learning-candidates",
+      "role": "CANDIDATE_STAGING",
+      "stores_current_fact": false,
+      "authority": "candidate status and evidence refs only",
+      "path": "packages/vfharness/state/learning-candidates/"
+    },
+    {
+      "id": "owner-memory",
+      "role": "OWNER_SPECIFIC_DURABLE_MEMORY",
+      "stores_current_fact": true,
+      "authority": "durable owner-specific preference/fact when no more-specific SoT owns it",
+      "path": "packages/vfops/data/owner-memory.md"
+    },
+    {
+      "id": "vfmem",
+      "role": "CANONICAL_MEMORY_ROUTER_VERIFIER",
+      "stores_current_fact": false,
+      "authority": "route and verify canonical durable sources; never duplicate-copy authority",
+      "path": "packages/vfmem/"
+    },
+    {
+      "id": "cognee",
+      "role": "DERIVED_SEMANTIC_INDEX",
+      "stores_current_fact": false,
+      "authority": "context-only derived recall; canonical verification required; no writeback",
+      "path": "packages/vfmem/cognee.json"
+    },
+    {
+      "id": "vfinsights",
+      "role": "MEASURED_DOMAIN_EVIDENCE",
+      "stores_current_fact": true,
+      "authority": "measured performance evidence only, not general memory"
+    },
+    {
+      "id": "promoted-domain-sot",
+      "role": "PROMOTED_DURABLE_DESTINATION",
+      "stores_current_fact": true,
+      "authority": "constitution/AGENTS/playbook/skill/ADR/domain SoT selected by promote_to"
+    }
+  ],
+  "candidate_status_mapping": {
+    "candidate": "CANDIDATE",
+    "accepted": "EVIDENCE_RECURRENCE",
+    "promoted": "PROMOTED_DURABLE",
+    "superseded": "SUPERSEDED_EXPIRED",
+    "expired": "SUPERSEDED_EXPIRED",
+    "rejected": "TERMINAL_NEGATIVE",
+    "pruned": "TERMINAL_LEGACY_COMPAT"
+  },
+  "promotion_gate": {
+    "requires_current_status": "accepted",
+    "requires_concrete_evidence": true,
+    "requires_exactly_one_promote_to": true,
+    "requires_canonical_reread": true,
+    "requires_contradiction_scope_check": true,
+    "owner_correction_is_strong_evidence_not_bypass": true,
+    "automatic_ingest_may_promote": false
+  },
+  "invariants": {
+    "no_forced_daily_learning_quota": true,
+    "day_without_durable_learning_may_end_without_memory_write": true,
+    "one_current_authority_per_fact": true,
+    "office_learning_is_not_storage": true,
+    "candidate_store_is_not_durable_fact_authority": true,
+    "vfmem_is_router_verifier_not_duplicate_store": true,
+    "cognee_is_derived_replaceable_no_writeback": true,
+    "promoted_fact_has_one_canonical_destination": true,
+    "superseded_or_expired_records_are_history_only": true,
+    "no_new_memory_database": true,
+    "no_new_always_on_runtime": true,
+    "no_new_recurring_cost": true,
+    "external_effect_authority_change": false
+  },
+  "compatibility": {
+    "pruned_status": "legacy terminal compatibility status; prefer expired for new lifecycle expiry",
+    "existing_owner_memory": "existing historical entries are retained; future promotions must name one current canonical target rather than duplicate authority"
+  }
+}
