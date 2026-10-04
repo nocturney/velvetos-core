@@ -34,8 +34,9 @@ def main() -> None:
             fail(f"PUBLIC_CTA.md missing {needle!r}")
 
     instance_path = ROOT / "instances" / "velvet-factory" / "instance" / "velvet-factory.json"
-    sample_path = ROOT / "packages" / "velvetos" / "samples" / "velvet-factory.json"
-    for path in (instance_path, sample_path):
+    # Stage 8D: public CTA enforcement is canonical-instance-only. The retained
+    # Core sample is rollback evidence, not a live policy/validation surface.
+    for path in (instance_path,):
         data = json.loads(path.read_text(encoding="utf-8"))
         cta = data.get("cta") or {}
         primary = cta.get("primary") or ""
