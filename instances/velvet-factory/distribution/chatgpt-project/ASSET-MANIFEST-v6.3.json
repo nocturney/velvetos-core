@@ -1,0 +1,147 @@
+{
+  "contract_version": 6,
+  "revision": "6.3",
+  "bundle_id": "VF-PROJECT-6.3-EDITORIAL-RETOUCH-TRUTH",
+  "created_for": "owner-requested ChatGPT Project cold-start package with offline creative/publication fallback",
+  "instructions": {
+    "filename": "Velvet-Factory-Project-Instructions-v6.3.txt",
+    "sha256": "4bf4b64e76beb698f5a4ce70a11386aae87c0b4740fcfcea4cbd25b012aff997",
+    "characters": 6804,
+    "limit_supplied_by_owner": 8000
+  },
+  "assets": [
+    {
+      "filename": "Velvet-Factory-Project-Authority-v6.txt",
+      "role": "authority",
+      "required_for": "all_requests",
+      "sha256": "e405783c85cd6c746c1da8d56601d20e2d2ea783571d310fe87449064439d67e",
+      "bytes": 21075
+    },
+    {
+      "filename": "Velvet-Factory-APPROVED-Visual-Reference-v2.jpg",
+      "role": "broad_style_only",
+      "required_for": "visual_work",
+      "sha256": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897",
+      "bytes": 862200,
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "filename": "Velvet-Factory-EDITORIAL-STYLE-REFERENCE-v2.png",
+      "role": "editorial_layout_and_annotation_style_only",
+      "required_for": "visual_work",
+      "sha256": "f7f1d04dd1fd08e70da03627d9042a1b716a3793768c0db8408304413219c2ae",
+      "bytes": 1971573,
+      "dimensions": [
+        2048,
+        2110
+      ]
+    },
+    {
+      "filename": "Velvet-Factory-CURRENT-CREATIVE-REFERENCE-v1.png",
+      "role": "current_owner_approved_direction_style_only_not_product_source",
+      "required_for": "visual_work",
+      "sha256": "e9e190019782b215b1a9c5eafcdb7e5bda3c14698f87b191c62bf3f8fa68f9c2",
+      "bytes": 2215826,
+      "dimensions": [
+        1122,
+        1402
+      ]
+    },
+    {
+      "filename": "Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v2.png",
+      "role": "retouch_and_same_frame_detail_crop_teaching_sheet_not_general_product_source",
+      "required_for": "visual_work",
+      "sha256": "17c3a4deeebb566b7566e3e69257c03b666fcc92436c78e824efbccf627e6dc9",
+      "bytes": 3039133,
+      "dimensions": [
+        2200,
+        1700
+      ]
+    },
+    {
+      "filename": "Velvet-Factory-APPROVED-LOGO-GOLD-LIGHT-v1.jpg",
+      "role": "exact_owner_logo_light_background",
+      "required_for": "only_when_this_logo_is_used",
+      "sha256": "b7bad605e976ad8ad3cd94dce7e32e0831677ae85939d9e6f45f5de41dfeed0c",
+      "bytes": 114289,
+      "dimensions": [
+        1456,
+        1600
+      ]
+    },
+    {
+      "filename": "Velvet-Factory-APPROVED-LOGO-GOLD-DARK-v1.jpg",
+      "role": "exact_owner_logo_dark_background",
+      "required_for": "only_when_this_logo_is_used",
+      "sha256": "2a0c7f720341335e9727ec11f32161f5c9b7af9f30b20dcec2d207e0c0601b87",
+      "bytes": 83112,
+      "dimensions": [
+        1280,
+        698
+      ]
+    }
+  ],
+  "current_references": {
+    "broad_visual": "Velvet-Factory-APPROVED-Visual-Reference-v2.jpg",
+    "editorial_layout": "Velvet-Factory-EDITORIAL-STYLE-REFERENCE-v2.png",
+    "current_direction": "Velvet-Factory-CURRENT-CREATIVE-REFERENCE-v1.png",
+    "product_truth": "Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v2.png"
+  },
+  "reference_rules": {
+    "style_boards_are_not_product_sources": true,
+    "current_creative_reference_is_style_only": true,
+    "detail_cards_presented_as_magnifications_must_be_literal_same_frame_crops": true,
+    "ordinary_photo_retouch_is_product_truth_safe_when_product_materially_unchanged": true,
+    "background_context_should_not_be_destroyed_by_excessive_blur": true
+  },
+  "optional_originals": [
+    {
+      "path": "VF-R004-source-photo-as-supplied.jpg",
+      "sha256": "312a41a45723ccefd3ddcb93af9d866f6153ad21edf0082559911e176efd77dc",
+      "bytes": 460070
+    },
+    {
+      "path": "Original-Brand-Assets/Velvet-Factory-APPROVED-LOGO-GOLD-v1.svg",
+      "sha256": "13795c5c101a0fc5a681956e5709bf0a13cd43c39ed05826aa88f331f5e4ab3a",
+      "bytes": 2532386
+    },
+    {
+      "path": "Original-Brand-Assets/logo-vector-original-font-dependent.svg",
+      "sha256": "50f85c01b1690df5790c395a1bf420eb83429ad1cb36ce008c865f4a48e752f3",
+      "bytes": 11814
+    }
+  ],
+  "superseded": [
+    {
+      "filename": "Velvet-Factory-ASSET-MANIFEST-v6.2.json",
+      "reason": "superseded by Revision 6.3 bundle"
+    },
+    {
+      "filename": "Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v1.png",
+      "reason": "superseded by v2 teaching sheet; historical only"
+    }
+  ],
+  "asset_resolution": "Match exact filename and hash. A filename alias may be accepted only after hash match; duplicate conflicting revisions are needs_sync.",
+  "offline_mode": {
+    "creative_publication_bundle_fallback": true,
+    "public_copy_bundle_fallback": true,
+    "repo_state_label": "UNAVAILABLE_PROJECT_BUNDLE_FALLBACK",
+    "live_truth_domains_still_require_live_sources": [
+      "operations",
+      "finance",
+      "production_status",
+      "catalog_status",
+      "instagram_action"
+    ]
+  },
+  "scope_status": {
+    "configuration_files": "LOCAL_VERIFIED",
+    "project_installation": "NOT_VERIFIED",
+    "repository_write": "VERIFIED",
+    "cold_start_behavioral_test": "NOT_RUN",
+    "publication": "NOT_REQUESTED"
+  }
+}

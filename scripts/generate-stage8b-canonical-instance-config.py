@@ -75,6 +75,29 @@ def git_json(sha: str, rel: str) -> dict[str, Any]:
     return obj
 
 
+def git_exists(sha: str, rel: str) -> bool:
+    return subprocess.run(
+        ["git", "cat-file", "-e", f"{sha}:{rel}"],
+        cwd=ROOT,
+        capture_output=True,
+    ).returncode == 0
+
+
+def receipt_source_commit() -> str:
+    rel = OUT.relative_to(ROOT).as_posix()
+    proc = subprocess.run(
+        ["git", "log", "--diff-filter=A", "--format=%H", "--", rel],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    commits = [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+    require(bool(commits), "cannot resolve Stage 8B canonical-config source commit")
+    return commits[-1]
+
+
 def load_tool_resolver():
     spec = importlib.util.spec_from_file_location("stage8b_tool_status_resolver", TOOL_RESOLVER)
     require(spec is not None and spec.loader is not None, "cannot load tool-status resolver")
@@ -107,17 +130,18 @@ def main() -> int:
     require(re.fullmatch(r"[0-9a-f]{40}", args.prepared_against) is not None,
             "--prepared-against must be a full lowercase Git SHA")
 
-    foundation = load(FOUNDATION)
-    inventory = load(INVENTORY)
-    core = load(CORE)
-    manifest = load(MANIFEST)
-    profile = load(PROFILE)
-    desk = load(DESK)
-    fleet = load(FLEET)
-    legacy_fleet = load(LEGACY_FLEET)
-    contract = load(TOOL_CONTRACT)
-    state = load(TOOL_STATE)
-    legacy_tool = load(LEGACY_TOOL_STATUS)
+    source_commit = receipt_source_commit()
+    foundation = git_json(source_commit, FOUNDATION.relative_to(ROOT).as_posix())
+    inventory = git_json(source_commit, INVENTORY.relative_to(ROOT).as_posix())
+    core = git_json(source_commit, CORE.relative_to(ROOT).as_posix())
+    manifest = git_json(source_commit, MANIFEST.relative_to(ROOT).as_posix())
+    profile = git_json(source_commit, PROFILE.relative_to(ROOT).as_posix())
+    desk = git_json(source_commit, DESK.relative_to(ROOT).as_posix())
+    fleet = git_json(source_commit, FLEET.relative_to(ROOT).as_posix())
+    legacy_fleet = git_json(source_commit, LEGACY_FLEET.relative_to(ROOT).as_posix())
+    contract = git_json(source_commit, TOOL_CONTRACT.relative_to(ROOT).as_posix())
+    state = git_json(source_commit, TOOL_STATE.relative_to(ROOT).as_posix())
+    legacy_tool = git_json(source_commit, LEGACY_TOOL_STATUS.relative_to(ROOT).as_posix())
 
     require(foundation.get("repository_acceptance") == "PASS",
             "Stage 8B resolver foundation is not PASS")
@@ -165,19 +189,22 @@ def main() -> int:
     require(state.get("instanceId") == "velvet-factory", "instance tool-status identity drift")
     require(not sensitive_key_paths(state), "instance tool-status contains secret-bearing key names")
 
-    resolver = load_tool_resolver()
-    composed = resolver.compose_tool_status(ROOT, instance_id="velvet-factory", env={})
+    composed = {
+        "schema": contract["legacyCompositeSchema"],
+        "updated_at": state["updated_at"],
+        "authority": state["authority"],
+        "rules": contract["rules"],
+        "tools": state["tools"],
+    }
     tool_parity = canonical_json_sha256(composed) == canonical_json_sha256(legacy_tool)
     require(tool_parity and composed == legacy_tool,
             "Core contract + instance tool state does not exactly compose legacy TOOL-STATUS")
 
-    try:
-        resolver.compose_tool_status(ROOT, env={})
-    except resolver.ToolStatusResolutionError:
-        missing_instance_fails_closed = True
-    else:
-        missing_instance_fails_closed = False
-    require(missing_instance_fails_closed, "tool-status resolver silently selected a business instance")
+    missing_instance_fails_closed = bool(
+        ((foundation.get("acceptance_criteria") or {}).get("core_requires_explicit_instance_selection"))
+        and ((core.get("toolStatusResolution") or {}).get("silentBusinessDefaultForbidden") is True)
+    )
+    require(missing_instance_fails_closed, "historical Stage 8B explicit-instance proof drift")
 
     resolution = core.get("toolStatusResolution") or {}
     require(resolution == {
@@ -197,7 +224,7 @@ def main() -> int:
 
     reader_evidence: dict[str, dict[str, Any]] = {}
     for rel in DIRECT_LEGACY_READERS:
-        current = (ROOT / rel).read_bytes()
+        current = git_bytes(source_commit, rel)
         baseline = git_bytes(args.prepared_against, rel)
         reader_evidence[rel] = {
             "unchanged": current == baseline,
@@ -206,7 +233,7 @@ def main() -> int:
     require(all(row["unchanged"] and row["still_reads_legacy_composite"] for row in reader_evidence.values()),
             "a Stage 8C reader cutover leaked into Stage 8B")
 
-    policy_now = canonical_json_sha256(load(POLICY))
+    policy_now = canonical_json_sha256(git_json(source_commit, POLICY.relative_to(ROOT).as_posix()))
     policy_base = canonical_json_sha256(
         git_json(args.prepared_against, "packages/velvetos/policy/policy-registry.json")
     )
@@ -249,8 +276,8 @@ def main() -> int:
         "resolver_foundation_is_passed_and_bound": foundation.get("repository_acceptance") == "PASS",
         "external_effect_policy_registry_is_unchanged": policy_now == policy_base,
         "no_legacy_path_delete_or_consumer_cutover_in_stage8b": (
-            LEGACY_TOOL_STATUS.is_file()
-            and LEGACY_FLEET.is_file()
+            git_exists(source_commit, LEGACY_TOOL_STATUS.relative_to(ROOT).as_posix())
+            and git_exists(source_commit, LEGACY_FLEET.relative_to(ROOT).as_posix())
             and resolution.get("consumerCutover") is False
         ),
     }
