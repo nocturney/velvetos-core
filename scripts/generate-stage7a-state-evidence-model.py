@@ -259,7 +259,8 @@ def main() -> int:
 
     out = args.output if args.output.is_absolute() else ROOT / args.output
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    payload = json.dumps(report, ensure_ascii=False, indent=2) + "\n"
+    out.write_bytes(payload.encode("utf-8"))
     print(
         "STAGE7A_STATE_EVIDENCE "
         f"acceptance={report['repository_acceptance']} "
