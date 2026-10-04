@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 8A Core/Instance inventory:** observation-only inventory classifies 14 Core/Instance placement surfaces and 10 duplicate/mixed-placement debts without moving facts, cutting over a…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 8A Core/Instance inventory:** observation-only inventory classifies 14 Core/Instance placement surfaces and 10 duplicate/mixed-placement debts without moving facts, cutting over a…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 8B resolver foundation (slice):** adds a generic fail-closed `packages/velvetos/instance_resolver.py` with explicit `VELVETOS_INSTANCE_ID` selection from Core, no Velvet Factory/S…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 8B resolver foundation (slice):** adds a generic fail-closed `packages/velvetos/instance_resolver.py` with explicit `VELVETOS_INSTANCE_ID` selection from Core, no Velvet Factory/S…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>

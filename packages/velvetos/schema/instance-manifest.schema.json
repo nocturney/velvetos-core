@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos/instance-manifest.schema.json",
+  "title": "VelvetOS instance manifest",
+  "type": "object",
+  "required": [
+    "product",
+    "role",
+    "displayName",
+    "instanceId",
+    "profile",
+    "surfaceContractVersion",
+    "surfaces",
+    "core"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "product": { "const": "VelvetOS" },
+    "role": { "const": "instance" },
+    "displayName": { "type": "string", "minLength": 1 },
+    "instanceId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "profile": { "$ref": "#/$defs/relativePath" },
+    "surfaceContractVersion": { "const": 1 },
+    "surfaces": {
+      "type": "object",
+      "required": ["profile"],
+      "additionalProperties": { "$ref": "#/$defs/relativePath" },
+      "properties": {
+        "profile": { "$ref": "#/$defs/relativePath" },
+        "toolDesk": { "$ref": "#/$defs/relativePath" },
+        "fleet": { "$ref": "#/$defs/relativePath" }
+      }
+    },
+    "core": {
+      "type": "object",
+      "required": ["github", "vendorPath", "attach"],
+      "properties": {
+        "github": { "type": "string", "minLength": 1 },
+        "vendorPath": { "$ref": "#/$defs/relativePath" },
+        "attach": { "$ref": "#/$defs/relativePath" }
+      }
+    }
+  },
+  "$defs": {
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![A-Za-z]:)(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+"
+    }
+  }
+}

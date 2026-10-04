@@ -38,6 +38,8 @@ STAGE7_ACCEPTANCE = REPORTS / "stage7-acceptance.json"
 STAGE7_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage7-acceptance.py"
 STAGE8A_INVENTORY = REPORTS / "stage8a-core-instance-inventory.json"
 STAGE8A_INVENTORY_GENERATOR = ROOT / "scripts" / "generate-stage8a-core-instance-inventory.py"
+STAGE8B_RESOLVER = REPORTS / "stage8b-instance-resolver-foundation.json"
+STAGE8B_RESOLVER_GENERATOR = ROOT / "scripts" / "generate-stage8b-instance-resolver-foundation.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -58,6 +60,7 @@ EXPECTED_REPORTS = {
     "stage7d-artifact-retention.json",
     "stage7-acceptance.json",
     "stage8a-core-instance-inventory.json",
+    "stage8b-instance-resolver-foundation.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -1413,6 +1416,89 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated8a.is_file():
                     require(regenerated8a.read_bytes() == STAGE8A_INVENTORY.read_bytes(),
                             "Stage 8A inventory receipt is not reproducible", problems)
+
+    if STAGE8B_RESOLVER.is_file():
+        stage8b = load(STAGE8B_RESOLVER)
+        require(stage8b.get("schema") == "velvetos.stage8b-instance-resolver-foundation.v1"
+                and stage8b.get("stage") == "8B_RESOLVER_FOUNDATION"
+                and stage8b.get("behavior_change") is True
+                and stage8b.get("repository_acceptance") == "PASS",
+                "Stage 8B resolver-foundation metadata drift", problems)
+        criteria8b = stage8b.get("acceptance_criteria") or {}
+        expected_criteria8b = {
+            "generic_resolver_has_no_vf_business_default",
+            "core_requires_explicit_instance_selection",
+            "modern_manifest_contract_is_fail_closed",
+            "generic_instance_does_not_require_fleet_or_vf_surfaces",
+            "vf_manifest_declares_profile_tooldesk_and_fleet_surfaces",
+            "canonical_instance_fleet_matches_legacy_fleet",
+            "legacy_consumers_and_external_effect_policy_are_unchanged",
+            "no_legacy_path_is_deleted_in_resolver_foundation",
+            "consumer_cutover_is_deferred_until_parity_migration",
+        }
+        require(set(criteria8b) == expected_criteria8b
+                and all(criteria8b.get(key) is True for key in expected_criteria8b),
+                "Stage 8B resolver-foundation acceptance criteria drift or fail", problems)
+        resolver8b = stage8b.get("resolver") or {}
+        fixture8b = resolver8b.get("generic_fixture") or {}
+        require(resolver8b.get("path") == "packages/velvetos/instance_resolver.py"
+                and resolver8b.get("core_mode") == "core-explicit-instance"
+                and resolver8b.get("environment_variable") == "VELVETOS_INSTANCE_ID"
+                and resolver8b.get("silent_business_default") is False,
+                "Stage 8B resolver contract drift", problems)
+        require(fixture8b.get("instance_id") == "fixture"
+                and fixture8b.get("surfaces") == ["profile"]
+                and fixture8b.get("bad_surface_contract_version_rejected") is True
+                and fixture8b.get("parent_traversal_rejected") is True,
+                "Stage 8B generic fixture proof drift", problems)
+        manifest8b = stage8b.get("manifest_contract") or {}
+        require(manifest8b.get("surface_contract_version") == 1
+                and manifest8b.get("generic_required_surfaces") == ["profile"]
+                and set((manifest8b.get("vf_surfaces") or {})) == {"profile", "toolDesk", "fleet"},
+                "Stage 8B manifest contract drift", problems)
+        fleet8b = stage8b.get("fleet") or {}
+        require(fleet8b.get("canonical_instance_path") == "instances/velvet-factory/instance/fleet.json"
+                and fleet8b.get("legacy_compatibility_path") == "packages/vfprod/FLEET.json"
+                and fleet8b.get("parity") is True
+                and fleet8b.get("printer_count") == 4
+                and fleet8b.get("consumer_cutover") is False,
+                "Stage 8B fleet parity/compatibility drift", problems)
+        legacy8b = stage8b.get("legacy_baseline") or {}
+        require(legacy8b.get("all_unchanged") is True
+                and legacy8b.get("legacy_delete_authorized") is False
+                and all((legacy8b.get("unchanged") or {}).values()),
+                "Stage 8B legacy baseline drift", problems)
+        require(stage8b.get("next_stage") == "Stage 8B — Canonical Instance Config continuation",
+                "Stage 8B resolver-foundation next-stage handoff drift", problems)
+        constraints8b = set(stage8b.get("constraints") or [])
+        require("no legacy delete" in constraints8b
+                and "no external-effect authority change" in constraints8b
+                and "generic Core cannot silently assume Velvet Factory" in constraints8b,
+                "Stage 8B resolver-foundation constraints drift", problems)
+        if STAGE8B_RESOLVER_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8b = Path(td) / "stage8b-instance-resolver-foundation.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8B_RESOLVER_GENERATOR),
+                        "--prepared-against", stage8b["prepared_against_main_sha"],
+                        "--captured-at", stage8b["captured_at"],
+                        "--output", str(regenerated8b),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0,
+                        "Stage 8B resolver-foundation regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()),
+                        problems)
+                if proc.returncode == 0 and regenerated8b.is_file():
+                    require(regenerated8b.read_bytes() == STAGE8B_RESOLVER.read_bytes(),
+                            "Stage 8B resolver-foundation receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)

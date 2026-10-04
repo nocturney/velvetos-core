@@ -2,13 +2,17 @@
 """Validate VelvetOS Core + instance scaffolds. No network. No send."""
 from __future__ import annotations
 
+import importlib.util
 import json
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PACK = ROOT / "packages" / "velvetos"
 CORE = PACK / "CORE.json"
+INSTANCE_RESOLVER = PACK / "instance_resolver.py"
+INSTANCE_MANIFEST_SCHEMA = PACK / "schema" / "instance-manifest.schema.json"
 MODULES_CATALOG = PACK / "modules" / "catalog.json"
 PRESETS = PACK / "presets"
 SAMPLES = PACK / "samples"
@@ -41,8 +45,10 @@ REQUIRED_ROOT = (
     "LAYERS.md",
     "ADR-THREE-LAYERS.md",
     "CORE.json",
+    "instance_resolver.py",
     "modules/catalog.json",
     "schema/instance.schema.json",
+    "schema/instance-manifest.schema.json",
     "schema/events.catalog.json",
     "schema/event-envelope.schema.json",
 )
@@ -56,6 +62,155 @@ def fail(msg: str) -> None:
 
 def load(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def load_instance_resolver():
+    spec = importlib.util.spec_from_file_location("velvetos_instance_resolver", INSTANCE_RESOLVER)
+    if spec is None or spec.loader is None:
+        fail("cannot load packages/velvetos/instance_resolver.py")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def check_instance_resolver_contract(vf_inst: Path, meta: dict) -> None:
+    surfaces = meta.get("surfaces") or {}
+    expected = {
+        "profile": "instance/velvet-factory.json",
+        "toolDesk": ".cursor/vf-desk.json",
+        "fleet": "instance/fleet.json",
+    }
+    if meta.get("surfaceContractVersion") != 1:
+        fail("instance surfaceContractVersion must be 1")
+    if surfaces != expected:
+        fail(f"instance surfaces drift: {surfaces!r}")
+    if meta.get("profile") != surfaces.get("profile"):
+        fail("INSTANCE.json legacy profile alias must match surfaces.profile")
+
+    manifest_schema = load(INSTANCE_MANIFEST_SCHEMA)
+    expected_manifest_required = {
+        "product",
+        "role",
+        "displayName",
+        "instanceId",
+        "profile",
+        "surfaceContractVersion",
+        "surfaces",
+        "core",
+    }
+    if set(manifest_schema.get("required") or []) != expected_manifest_required:
+        fail("instance-manifest schema top-level required fields drift")
+    surface_schema = ((manifest_schema.get("properties") or {}).get("surfaces") or {})
+    if surface_schema.get("required") != ["profile"]:
+        fail("generic instance manifest must require profile only; domain surfaces stay optional")
+    surface_props = surface_schema.get("properties") or {}
+    if not {"profile", "toolDesk", "fleet"} <= set(surface_props):
+        fail("instance-manifest schema must expose profile/toolDesk/fleet surface vocabulary")
+
+    canonical_fleet = load(vf_inst / surfaces["fleet"])
+    legacy_fleet = load(ROOT / "packages" / "vfprod" / "FLEET.json")
+    if canonical_fleet != legacy_fleet:
+        fail("Stage 8B canonical instance fleet must remain parity-equal to legacy vfprod/FLEET.json")
+    if len(canonical_fleet.get("printers") or []) != 4:
+        fail("Stage 8B canonical instance fleet printer count drift")
+
+    resolver = load_instance_resolver()
+    try:
+        from_core = resolver.resolve_instance(ROOT, instance_id="velvet-factory", env={})
+    except Exception as exc:
+        fail(f"instance resolver explicit Core resolution failed: {exc}")
+    if from_core.mode != "core-explicit-instance":
+        fail("instance resolver Core mode drift")
+    if from_core.instance_root != vf_inst.resolve():
+        fail("instance resolver Core instance root mismatch")
+    for key, rel in expected.items():
+        if from_core.surface(key) != (vf_inst / rel).resolve():
+            fail(f"instance resolver surface mismatch: {key}")
+
+    try:
+        from_env = resolver.resolve_instance(ROOT, env={"VELVETOS_INSTANCE_ID": "velvet-factory"})
+    except Exception as exc:
+        fail(f"instance resolver env resolution failed: {exc}")
+    if from_env.instance_id != "velvet-factory":
+        fail("instance resolver env instance id mismatch")
+
+    try:
+        current = resolver.resolve_instance(vf_inst, env={})
+    except Exception as exc:
+        fail(f"instance resolver current-workspace resolution failed: {exc}")
+    if current.mode != "current-instance-workspace" or current.instance_id != "velvet-factory":
+        fail("instance resolver current workspace identity/mode drift")
+
+    try:
+        resolver.resolve_instance(ROOT, env={})
+    except resolver.InstanceResolutionError:
+        pass
+    else:
+        fail("Core resolver must fail closed when no instance id is supplied")
+
+    if "velvet-factory" in INSTANCE_RESOLVER.read_text(encoding="utf-8").lower():
+        fail("generic instance resolver must not contain a Velvet Factory business default")
+
+    with tempfile.TemporaryDirectory() as td:
+        fake_core = Path(td)
+        fake = fake_core / "instances" / "fixture"
+        fake.mkdir(parents=True)
+        (fake / "profile.json").write_text("{}\n", encoding="utf-8")
+        manifest = {
+            "product": "VelvetOS",
+            "role": "instance",
+            "displayName": "Fixture Instance",
+            "instanceId": "fixture",
+            "profile": "profile.json",
+            "surfaceContractVersion": 1,
+            "surfaces": {
+                "profile": "profile.json",
+            },
+            "core": {
+                "github": "example/core",
+                "vendorPath": "vendor/core",
+                "attach": "scripts/attach-core.sh",
+            },
+        }
+        (fake / "INSTANCE.json").write_text(
+            json.dumps(manifest) + "\n",
+            encoding="utf-8",
+        )
+
+        try:
+            generic = resolver.resolve_instance(fake_core, instance_id="fixture", env={})
+        except Exception as exc:
+            fail(f"generic non-VF instance resolution failed: {exc}")
+        if generic.instance_id != "fixture" or generic.mode != "core-explicit-instance":
+            fail("generic non-VF instance identity/mode drift")
+        if set(generic.surfaces) != {"profile"}:
+            fail("generic instance resolver must not require VF-only surfaces")
+
+        bad_version = dict(manifest)
+        bad_version["surfaceContractVersion"] = 2
+        (fake / "INSTANCE.json").write_text(json.dumps(bad_version) + "\n", encoding="utf-8")
+        try:
+            resolver.resolve_instance(fake_core, instance_id="fixture", env={})
+        except resolver.InstanceResolutionError:
+            pass
+        else:
+            fail("modern instance manifest must fail closed on unsupported surfaceContractVersion")
+
+        outside = fake_core / "outside-stage8b.json"
+        outside.write_text("{}\n", encoding="utf-8")
+        traversal = dict(manifest)
+        traversal["surfaces"] = {
+            "profile": "profile.json",
+            "escape": "../../outside-stage8b.json",
+        }
+        (fake / "INSTANCE.json").write_text(json.dumps(traversal) + "\n", encoding="utf-8")
+        try:
+            resolver.resolve_instance(fake_core, instance_id="fixture", env={})
+        except resolver.InstanceResolutionError:
+            pass
+        else:
+            fail("instance resolver must reject parent traversal")
 
 
 def validate_profile(data: dict, module_ids: set[str], *, label: str) -> None:
@@ -179,6 +334,19 @@ def main() -> None:
         fail("CORE.json displayName must be VelvetOS Core")
     if "backend" not in json.dumps(core.get("metaphor", {})).lower():
         fail("CORE.json must describe backend metaphor")
+    resolution = core.get("instanceResolution") or {}
+    if resolution.get("resolver") != "packages/velvetos/instance_resolver.py":
+        fail("CORE.json instance resolver path drift")
+    if resolution.get("instanceIdEnvironment") != "VELVETOS_INSTANCE_ID":
+        fail("CORE.json instance id environment drift")
+    if resolution.get("manifestPattern") != "instances/{instanceId}/INSTANCE.json":
+        fail("CORE.json manifest pattern drift")
+    if resolution.get("surfaceMap") != "INSTANCE.json#surfaces":
+        fail("CORE.json surface map contract drift")
+    if resolution.get("requireExplicitInstanceIdWhenRunningFromCore") is not True:
+        fail("CORE.json must require explicit instance id from Core")
+    if resolution.get("silentBusinessDefaultForbidden") is not True:
+        fail("CORE.json must forbid silent business defaults")
 
     catalog = load(MODULES_CATALOG)
     modules = catalog.get("modules") or []
@@ -217,6 +385,7 @@ def main() -> None:
         "README.md",
         "AGENTS.md",
         "instance/velvet-factory.json",
+        "instance/fleet.json",
         "constitution/STUDIO.md",
         "constitution/ORCHESTRA.md",
         "constitution/SEND.md",
@@ -231,6 +400,7 @@ def main() -> None:
         fail("instances/velvet-factory INSTANCE.json role must be instance")
     if meta.get("displayName") != "VelvetOS — Velvet Factory":
         fail("instance displayName mismatch")
+    check_instance_resolver_contract(vf_inst, meta)
     front = load(vf_inst / "instance" / "velvet-factory.json")
     validate_profile(front, module_ids, label="frontend-profile")
     if front["channels"]["instagram"][0]["handle"] != "@velvets_cloud":
