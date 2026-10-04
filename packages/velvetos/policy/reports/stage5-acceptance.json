@@ -1,0 +1,79 @@
+{
+  "schema": "velvetos.stage5-acceptance.v1",
+  "stage": "5",
+  "behavior_change": false,
+  "prepared_against_main_sha": "67bd5dc1bedfb98b850e4b5b09090dcd51598e48",
+  "captured_at": "2026-10-04T06:49:13.2387671+03:00",
+  "purpose": "Close Reform v2 Stage 5 after 5A/5B/5C; no new router, harness or authorization semantics.",
+  "source_receipts": {
+    "stage5a": {
+      "path": "packages/velvetos/policy/reports/stage5a-context-locality.json",
+      "sha256": "10615f462b1e9e04da7b481b28365dee93ba9207ab3a69f2ea761a0c6799c26d"
+    },
+    "stage5b": {
+      "path": "packages/velvetos/policy/reports/stage5b-harness-consolidation.json",
+      "sha256": "99e7d0079f23b22876798392de14682017af229464f86519221b7a8360bbec6b"
+    },
+    "stage5c": {
+      "path": "packages/velvetos/policy/reports/stage5c-workspace-distribution.json",
+      "sha256": "81639a4d1f5f8d0e3df57638f5b02f99ad068108a0cf5c8341975404055027ad"
+    }
+  },
+  "main_full_suite": {
+    "head_sha": "67bd5dc1bedfb98b850e4b5b09090dcd51598e48",
+    "workflow_run_id": 37175062910,
+    "job_id": 111355869001,
+    "run_url": "https://github.com/nocturney/velvetos-core/actions/runs/37175062910",
+    "conclusion": "SUCCESS",
+    "mode": "full",
+    "registered_sensors": 116,
+    "passed_sensors": 116,
+    "log_markers": [
+      "SENSORS 116 mode=full",
+      "OK suite passed=116"
+    ]
+  },
+  "acceptance_criteria": {
+    "core_system_context_is_local_and_business_clean": true,
+    "known_routine_loads_minimum_domain_instructions": true,
+    "single_existing_harness_no_second_orchestrator": true,
+    "workspace_specialists_are_routed_only_not_preloaded": true,
+    "authorization_semantics_unchanged": true,
+    "no_context_warehouse_regression": true,
+    "main_full_sensor_suite_116_of_116": true
+  },
+  "context_locality": {
+    "root_lines": 56,
+    "root_words": 453,
+    "root_domain_leakage_total": 0,
+    "domain_count": 10,
+    "warehouse_default": "off",
+    "system_engineering_context_clean": true
+  },
+  "harness": {
+    "canonical_loop": "packages/vfharness/LOOP.md",
+    "secondary_restating_count": 0,
+    "second_orchestrator": "FORBIDDEN",
+    "cross_tool_handoff": [
+      "office/control/HANDOFF.json",
+      "packages/vfmem/HANDOFF.md"
+    ]
+  },
+  "workspace_distribution": {
+    "repository": "nocturney/velvetos-workspace-distribution",
+    "merge_sha": "4fa715dc78275b87a942658b26b74608932d8d50",
+    "plugin_version": "1.6.0",
+    "desired_skill_count": 35,
+    "router": "creative-craft",
+    "specialist_count": 8,
+    "specialist_activation": "ROUTED_ONLY",
+    "warehouse_preload": false,
+    "authorization_effect": "NONE"
+  },
+  "stage6_entry": {
+    "allowed": true,
+    "next_stage": "Stage 6 — Visible Text, Creative and DCC Simplification",
+    "constraint": "Apply surface/risk tiers; do not weaken truth, rights, commitment, public-publish or exact-binding safeguards."
+  },
+  "stage5_gate": "PASS"
+}

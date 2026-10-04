@@ -1,6 +1,6 @@
-# Stage 5 draft - Agent Harness and capability locality
+# Stage 5 - Agent Harness and capability locality
 
-Status: **STAGE 5 ACTIVE | 5A CONTEXT LOCALITY + 5B HARNESS CONSOLIDATION + 5C WORKSPACE DISTRIBUTION IMPLEMENTED | STAGE 5 GATE REMAINS**
+Status: **STAGE 5 CLOSED | 5A CONTEXT LOCALITY + 5B HARNESS CONSOLIDATION + 5C WORKSPACE DISTRIBUTION + INTEGRATED GATE PASS**
 
 ## Purpose
 
@@ -62,17 +62,20 @@ Stage 5C stabilizes workspace distribution without expanding the warehouse. `noc
 - closure based on worker self-report;
 - broad context loading from every domain.
 
-## Verification design for Stage 5
+## Integrated Stage 5 acceptance
 
-When Stage 5 is active, acceptance should prove:
-1. a Core-only task does not load VF creative/printer/business context;
-2. the nearest domain guide resolves correctly;
-3. an Instance task receives its verified binding without moving generic policy authority into the Instance;
-4. required policy/receipt gates cannot be waived by harness state;
-5. retry limits and escalation preserve the existing `vfharness` failure discipline;
-6. close fails when target evidence is absent.
+`packages/velvetos/policy/reports/stage5-acceptance.json` closes Stage 5 against merged `main` `67bd5dc1bedfb98b850e4b5b09090dcd51598e48` and post-merge full-suite run `37175062910` / job `111355869001` (116/116 PASS). `check-policy-architecture.py` validates source-receipt hashes and regenerates the acceptance receipt byte-for-byte.
 
-No check or sensor is added by this preparation bundle.
+The gate passes all seven criteria:
+1. Core/system context remains business-clean and bounded to the selected local guide.
+2. Known routine requests load only root + the minimum routed domain instructions.
+3. `packages/vfharness/LOOP.md` remains the single global execution-loop authority; no second orchestrator exists.
+4. Workspace specialist craft remains available but routed-only, with no warehouse preload.
+5. Workspace skill invocation creates no external-effect authority.
+6. No context-warehouse regression is introduced across Core + Workspace distribution.
+7. The post-5C main full sensor suite passes 116/116.
+
+Stage 6 entry is allowed. The next stage may simplify Visible Text / creative / DCC ceremony by surface and risk, but it may not weaken truth, rights/privacy, commercial commitment, public-publish, spend, destructive action or exact-binding safeguards.
 
 ## Data ownership
 
@@ -82,7 +85,6 @@ Generic loop semantics belong to Core. Task checkpoints remain in the existing h
 
 Before Stage 5 adoption, rollback is deletion of this draft. After any future adoption, rollback must restore the prior `vfharness` behavior and instruction locality from Git history without migrating business state.
 
-## Entry gate
+## Stage 6 handoff
 
-Implementation may begin only after Stage 3 completes and the reform reaches Stage 5 through the Stage 4 gate. Until then this document is design input only.
-Stage 5 routing reference: `policy_id: project.request.preflight` remains router-only; no local guide or harness state can replace a destination effect-authority policy.
+Stage 5 is closed. `policy_id: project.request.preflight` remains router-only; no local guide, harness state, Workspace skill or specialist selection can replace a destination effect-authority policy. Stage 6 should reuse the locality and routed-specialist mechanics established here rather than broaden default context again.
