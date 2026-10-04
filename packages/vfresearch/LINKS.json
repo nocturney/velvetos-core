@@ -31,7 +31,7 @@
       "url": "https://chatgpt.com/c/6a94f50b-f964-83eb-a89f-91b7c5e439fa",
       "title": "בניית משרד הדפסה יעיל — 31.8",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/chatgpt-6a94f50b.md",
       "report": "packages/vfresearch/sources/2026-08-31-orchestra.md",
       "packs": [
@@ -49,7 +49,7 @@
       "url": "https://chatgpt.com/s/t_6a94208d21048191a67144976f50de19",
       "title": "סוכני בנייה",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "map": "packages/chatgpt-embed-map.json",
       "report": "docs/SHARE-EMBED-he.md",
       "packs": [
@@ -72,7 +72,7 @@
       "openUrl": "https://gemini.google.com/share/4f223bc1774c",
       "title": "סוכני בינה לעסק הדפסות תלת-ממד",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/gemini-hbuCq3MEy5po.md",
       "report": "docs/SHARES-2026-08-30.md",
       "packs": [
@@ -97,7 +97,7 @@
       "url": "https://www.perplexity.ai/search/c950af30-8c60-4667-b7d6-84db67f62218",
       "title": "Perplexity — אתר AI / תמחור / שרשרת",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/perplexity-c950af30.md",
       "report": "docs/SHARES-2026-08-30.md",
       "wallNote": "Live page may hit Cloudflare; use owner PDF / source note. Never invent body.",
@@ -122,7 +122,7 @@
       "url": "https://github.com/punkpeye/awesome-mcp-servers",
       "title": "awesome-mcp-servers",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "report": "docs/MCP-FIT.md",
       "pack": "vfmcp",
       "packs": [
@@ -135,7 +135,7 @@
       "url": "https://github.com/DeusData/codebase-memory-mcp",
       "title": "codebase-memory-mcp",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "report": "docs/VFMEM.md",
       "pack": "vfmem",
       "packs": [
@@ -149,7 +149,7 @@
       "url": "https://github.com/trailhq/Graft",
       "title": "Graft",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "report": "docs/GRAFT.md",
       "pack": "vfgraft",
       "packs": [
@@ -163,7 +163,7 @@
       "url": "https://github.com/Alishahryar1/free-claude-code",
       "title": "free-claude-code",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "report": "docs/FCC-FIT.md",
       "pack": "vffcc",
       "packs": [
@@ -177,7 +177,7 @@
       "url": "https://github.com/ashishpatel26/500-AI-Agents-Projects",
       "title": "500-AI-Agents-Projects",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "report": "docs/500-AGENTS.md",
       "pack": "vfagents",
       "packs": [
@@ -190,7 +190,7 @@
       "url": "https://github.com/msitarzewski/agency-agents",
       "title": "agency-agents",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "report": "docs/AGENCY-AGENTS.md",
       "packs": [
         ".cursor/rules"
@@ -203,7 +203,7 @@
       "url": "https://www.heyorca.com/blog/trending-audio-for-reels-tiktok",
       "title": "HeyOrca — trending TikTok and Instagram Reels audio (weekly)",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/SOURCES-MUSIC.json",
       "report": "packages/vfresearch/sources/2026-09-16-ig-music.md",
       "packs": [
@@ -220,7 +220,7 @@
       "url": "https://postplanify.com/blog/trending-audio-on-instagram",
       "title": "PostPlanify — Find & Use Trending Audio on Instagram (2026)",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/SOURCES-MUSIC.json",
       "packs": [
         "vfresearch",
@@ -234,7 +234,7 @@
       "url": "https://github.com/e2b-dev/awesome-ai-agents",
       "title": "awesome-ai-agents",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "report": "docs/ORCHESTRA-2026-08-30.md",
       "pack": "vfe2b",
       "packs": [
@@ -248,7 +248,7 @@
       "url": "https://github.com/andyrewlee/awesome-agent-orchestrators",
       "title": "awesome-agent-orchestrators",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-awesome-orchestrators.md",
       "report": "docs/ORCHESTRATORS.md",
       "pack": "vfe2b",
@@ -264,7 +264,7 @@
       "url": "https://github.com/plannotator/effective-html",
       "title": "effective-html",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-effective-html.md",
       "report": "packages/vfbriefux/hq/EFFECTIVE-HTML.md",
       "pack": "vfbriefux",
@@ -280,7 +280,7 @@
       "url": "https://www.3daistudio.com",
       "title": "3D AI Studio — text/image to 3D (owner subscription)",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfprod/3DAISTUDIO.md",
       "report": "packages/vfresearch/sources/2026-08-31-3daistudio.md",
       "packs": [
@@ -297,7 +297,7 @@
       "url": "https://www.3daistudio.com/MCP",
       "title": "3D AI Studio MCP connector (OAuth, no API key)",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfprod/CONNECT-3DAI.md",
       "report": "packages/vfresearch/sources/2026-08-31-3daistudio.md",
       "packs": [
@@ -312,7 +312,7 @@
       "url": "https://github.com/plannotator/write-better",
       "title": "write-better — agent skill for clear prose",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-write-better-embed.md",
       "packs": [
         "vfcopy",
@@ -326,7 +326,7 @@
       "url": "https://github.com/VoltAgent/awesome-design-md",
       "title": "awesome-design-md — DESIGN.md for coding agents",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-agent-repos-embed.md",
       "report": "docs/AGENT-REPOS-EMBED-he.md",
       "packs": [
@@ -339,7 +339,7 @@
       "url": "https://github.com/OthmanAdi/planning-with-files",
       "title": "planning-with-files — persistent markdown planning",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-agent-repos-embed.md",
       "report": "docs/AGENT-REPOS-EMBED-he.md",
       "packs": [
@@ -354,7 +354,7 @@
       "url": "https://github.com/NirDiamant/GenAI_Agents",
       "title": "GenAI_Agents — agent technique tutorials",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-agent-repos-embed.md",
       "report": "docs/AGENT-REPOS-EMBED-he.md",
       "pack": "vfagents",
@@ -372,7 +372,7 @@
       "url": "https://github.com/Yeachan-Heo/oh-my-claudecode",
       "title": "oh-my-claudecode — Claude Code team orchestration",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-agent-repos-embed.md",
       "report": "docs/AGENT-REPOS-EMBED-he.md",
       "packs": [
@@ -387,7 +387,7 @@
       "url": "https://github.com/ruvnet/ruflo",
       "title": "ruflo — agent meta-harness / swarms",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-agent-repos-embed.md",
       "report": "docs/AGENT-REPOS-EMBED-he.md",
       "packs": [
@@ -401,7 +401,7 @@
       "url": "https://github.com/f/prompts.chat",
       "title": "prompts.chat — prompt library + book + MCP (f.k.a. Awesome ChatGPT Prompts)",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-prompts-chat-embed.md",
       "packs": [
         "vfcopy",
@@ -416,7 +416,7 @@
       "url": "https://github.com/Leonxlnx/taste-skill",
       "title": "taste-skill — anti-slop frontend Agent Skills (MIT)",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-taste-skill.md",
       "report": "docs/TASTE-SKILL-EMBED-he.md",
       "packs": [
@@ -431,7 +431,7 @@
       "url": "https://github.com/GetBindu/Bindu",
       "title": "Bindu — identity, A2A, x402 for agent internet",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-bindu.md",
       "verdict": "watch",
       "packs": [
@@ -447,7 +447,7 @@
       "url": "https://github.com/lobehub/lobehub",
       "title": "LobeHub — Chief Agent Operator (patterns only)",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-lobehub.md",
       "packs": [
         "vfmcp",
@@ -463,7 +463,7 @@
       "url": "https://github.com/huginn/huginn",
       "title": "Huginn — event-driven agents (pattern only)",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-huginn-embed.md",
       "report": "packages/vfresearch/sources/2026-08-31-weekly-links.md",
       "pack": "vfe2b",
@@ -482,7 +482,7 @@
       "url": "https://github.com/superset-sh/superset",
       "title": "Superset — parallel coding agent IDE (worktrees)",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-superset-patterns.md",
       "report": "packages/vfe2b/ORCHESTRATORS.md",
       "pack": "vfe2b",
@@ -499,7 +499,7 @@
       "url": "https://github.com/twentyhq/twenty",
       "title": "Twenty — open-source CRM (AI / objects / MCP)",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "report": "docs/OFFICE-OS-EMBED-he.md",
       "packs": [
@@ -517,7 +517,7 @@
       "url": "https://github.com/frappe/erpnext",
       "title": "ERPNext — open-source ERP",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "report": "docs/OFFICE-OS-EMBED-he.md",
       "packs": [
@@ -534,7 +534,7 @@
       "url": "https://github.com/hcengineering/platform",
       "title": "Huly — all-in-one work platform",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "report": "docs/OFFICE-OS-EMBED-he.md",
       "packs": [
@@ -550,7 +550,7 @@
       "url": "https://github.com/monicahq/monica",
       "title": "Monica — personal relationship management",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfsales",
@@ -564,7 +564,7 @@
       "url": "https://github.com/nocobase/nocobase",
       "title": "NocoBase — AI + no-code business systems",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "report": "docs/OFFICE-OS-EMBED-he.md",
       "packs": [
@@ -580,7 +580,7 @@
       "url": "https://github.com/krayin/laravel-crm",
       "title": "Krayin — Laravel CRM",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfops",
@@ -594,7 +594,7 @@
       "url": "https://github.com/akaunting/akaunting",
       "title": "Akaunting — online accounting",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfbooks"
@@ -607,7 +607,7 @@
       "url": "https://github.com/idurar/idurar-erp-crm",
       "title": "IDURAR — ERP/CRM invoice quote",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfsales",
@@ -621,7 +621,7 @@
       "url": "https://github.com/Dolibarr/dolibarr",
       "title": "Dolibarr — modular ERP/CRM",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfops",
@@ -636,7 +636,7 @@
       "url": "https://www.odoo.com/",
       "title": "Odoo — open source ERP/CRM apps",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "report": "docs/OFFICE-OS-EMBED-he.md",
       "packs": [
@@ -651,7 +651,7 @@
       "url": "https://www.zoho.com/all-products.html?src=zGlobalAllProductsbottom",
       "title": "Zoho — business apps suite / Zoho One",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfops",
@@ -665,7 +665,7 @@
       "url": "https://www.salesforce.com/eu/small-business/pro-suite/",
       "title": "Salesforce Pro Suite — SMB CRM",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfops",
@@ -680,14 +680,15 @@
       "url": "https://www.netsuite.com/portal/home.shtml",
       "title": "NetSuite — cloud ERP",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfbriefux",
         "vfbooks",
         "vfprod"
       ],
-      "note": "Role KPI portlets → brief slots. No NetSuite install."
+      "note": "Role KPI portlets → brief slots. No NetSuite install.",
+      "wallNote": "2026-10-04 weekly review: live request returned HTTP 403 (Access Denied); sourceNote was re-read as fallback; no live body was invented."
     },
     {
       "id": "monday-com",
@@ -695,7 +696,7 @@
       "url": "https://monday.com/",
       "title": "monday.com — AI work platform",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfops",
@@ -710,7 +711,7 @@
       "url": "https://xenforo.com/",
       "title": "XenForo — forum platform",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfconvert",
@@ -725,13 +726,14 @@
       "url": "https://www.vbulletin.com/",
       "title": "vBulletin — forum platform",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfconvert",
         "vfops"
       ],
-      "note": "Forum thread + usergroup patterns → inquiry + seats."
+      "note": "Forum thread + usergroup patterns → inquiry + seats.",
+      "wallNote": "2026-10-04 weekly review: live request returned HTTP 403 (Just a moment...); sourceNote was re-read as fallback; no live body was invented."
     },
     {
       "id": "invisioncommunity",
@@ -739,13 +741,14 @@
       "url": "https://invisioncommunity.com/",
       "title": "Invision Community — forums/suite",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfops",
         "vfconvert"
       ],
-      "note": "Moderation queue + digest → decision gates + morning brief."
+      "note": "Moderation queue + digest → decision gates + morning brief.",
+      "wallNote": "2026-10-04 weekly review: live request returned HTTP 403 (Just a moment...); sourceNote was re-read as fallback; no live body was invented."
     },
     {
       "id": "woltlab",
@@ -753,7 +756,7 @@
       "url": "https://www.woltlab.com/en/",
       "title": "WoltLab — forum/community software",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfops"
@@ -766,7 +769,7 @@
       "url": "https://buildwithclaude.com/",
       "title": "Build with Claude — plugin/skill/MCP discovery (davepoon)",
       "firstEmbedded": "2026-09-03",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-buildwithclaude.md",
       "report": "packages/vfresearch/sources/2026-09-03-weekly-links.md",
       "packs": [
@@ -786,7 +789,7 @@
       "url": "https://github.com/LinklyAI/best-skills",
       "title": "LinklyAI/best-skills — daily Top 100 agent skills rankings",
       "firstEmbedded": "2026-09-03",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/BEST-SKILLS.json",
       "report": "packages/vfresearch/sources/2026-09-03-best-skills.md",
       "cadenceOverride": "every-2-days",
@@ -808,7 +811,7 @@
       "openUrl": "https://arxiv.org/html/2608.26263",
       "title": "SKILLSTATE — scalable long-horizon agent skills (explicit execution state)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-skillstate.md",
       "playbook": "packages/vfharness/playbooks/skillstate.md",
       "packs": [
@@ -824,7 +827,7 @@
       "url": "https://mcpmarket.com/tools/skills/strategic-context-compaction-1787987503518",
       "title": "Strategic Context Compaction — phase-boundary /compact (Claude Code)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-strategic-compact.md",
       "playbook": "packages/vfharness/playbooks/context-thrift.md",
       "packs": [
@@ -841,7 +844,7 @@
       "openUrl": "https://agentskill.sh/@openclaw/diagram-maker",
       "title": "Diagram Maker Visualizer (openclaw/diagram-maker)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "wallNote": "mcpmarket.com returned Vercel security checkpoint; body taken from agentskill.sh + github.com/openclaw/openclaw/skills/diagram-maker — no invented mcpmarket body.",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-diagram-maker.md",
       "report": "packages/vfbriefux/hq/DIAGRAM-MAKER.md",
@@ -855,11 +858,11 @@
     {
       "id": "mcpmarket-blender-mcp",
       "kind": "mcp-listing",
-      "url": "https://mcpmarket.com/server/blender-model-context-protocol",
+      "url": "https://github.com/ahujasid/mcp-for-blender",
       "openUrl": "https://github.com/ahujasid/blender-mcp",
       "title": "Blender MCP (ahujasid) — local Blender control",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-three.md",
       "playbook": "packages/vfprod/BLENDER-MCP.md",
       "packs": [
@@ -868,7 +871,7 @@
         "vlicense",
         "vfsku"
       ],
-      "note": "mcpmarket Cloudflare — body from GitHub. Cloud Agent skip. Desktop optional after lead. Concept/STL stays 3DAI."
+      "note": "mcpmarket Cloudflare — body from GitHub. Cloud Agent skip. Desktop optional after lead. Concept/STL stays 3DAI. 2026-10-04: GitHub canonical repo name is now ahujasid/mcp-for-blender; existing Blender-MCP family mapping is unchanged."
     },
     {
       "id": "mcpmarket-archon",
@@ -877,7 +880,7 @@
       "openUrl": "https://github.com/coleam00/Archon",
       "title": "Archon — AI coding harness / workflow builder",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-three.md",
       "playbook": "packages/vfe2b/ORCHESTRATORS.md",
       "packs": [
@@ -894,7 +897,7 @@
       "openUrl": "https://github.com/Jeffallan/claude-skills",
       "title": "Jeffallan fullstack-dev-skills — Claude Code plugin (~67 skills)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-three.md",
       "packs": [
         "vfmem",
@@ -911,7 +914,7 @@
       "openUrl": "https://github.com/excalidraw/excalidraw-mcp",
       "title": "Excalidraw MCP — interactive diagrams",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/CAD-MCP.md",
       "packs": [
@@ -927,7 +930,7 @@
       "openUrl": "https://github.com/dhakalnirajan/blender-open-mcp",
       "title": "Blender Open MCP (Ollama)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/BLENDER-MCP.md",
       "packs": [
@@ -939,18 +942,18 @@
     {
       "id": "mcpmarket-blender-ai",
       "kind": "mcp-listing",
-      "url": "https://mcpmarket.com/server/blender-ai",
+      "url": "https://github.com/ahujasid/mcp-for-blender",
       "openUrl": "https://github.com/ahujasid/blender-mcp",
       "title": "Blender AI MCP (market listing)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/CAD-MCP.md",
       "packs": [
         "vfprod",
         "vfmcp"
       ],
-      "note": "Listing body blocked. Treated as Blender-MCP family sibling — Cloud skip; Desktop → BLENDER-MCP canonical."
+      "note": "Listing body blocked. Treated as Blender-MCP family sibling — Cloud skip; Desktop → BLENDER-MCP canonical. 2026-10-04: GitHub canonical repo name is now ahujasid/mcp-for-blender; existing Blender-MCP family mapping is unchanged."
     },
     {
       "id": "mcpmarket-svgmaker",
@@ -959,7 +962,7 @@
       "openUrl": "https://github.com/GenWaveLLC/svgmaker-mcp",
       "title": "SVGMaker MCP — AI SVG generate/edit",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/CAD-MCP.md",
       "packs": [
@@ -975,7 +978,7 @@
       "openUrl": "https://github.com/AnCode666/multiCAD-mcp",
       "title": "multiCAD MCP — AutoCAD/ZWCAD/GstarCAD/BricsCAD",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/CAD-MCP.md",
       "packs": [
@@ -991,7 +994,7 @@
       "openUrl": "https://github.com/petrijr/openscad-mcp",
       "title": "OpenSCAD MCP family — parametric validate/render/STL",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/CAD-MCP.md",
       "packs": [
@@ -1008,7 +1011,7 @@
       "url": "https://mcpmarket.com/server/blender-vxai",
       "title": "Blender VXAI MCP (market listing)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/CAD-MCP.md",
       "packs": [
@@ -1024,7 +1027,7 @@
       "openUrl": "https://github.com/russell-qca/sketchup-mcp",
       "title": "SketchUp MCP",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/CAD-MCP.md",
       "packs": [
@@ -1040,7 +1043,7 @@
       "openUrl": "https://github.com/neka-nat/freecad-mcp",
       "title": "FreeCAD MCP",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/CAD-MCP.md",
       "packs": [
@@ -1057,7 +1060,7 @@
       "openUrl": "https://youmind.com/prompts",
       "title": "YouMind — free AI prompt library (image/video/web)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-youmind-prompts.md",
       "playbook": "packages/vfcovers/hq/PLAYBOOK.md",
       "packs": [
@@ -1073,7 +1076,7 @@
       "openUrl": "https://mcpmarket.com/tools/skills/market-research-intelligence",
       "title": "Market Research Intelligence — decision-oriented research gates (MCP Market)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-market-research-intelligence.md",
       "playbook": "packages/vfresearch/hq/MARKET-INTEL.md",
       "packs": [
@@ -1090,7 +1093,7 @@
       "url": "https://footrue.com/",
       "title": "footrue ToolBox — 200+ free browser-local tools",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-footrue.md",
       "report": "packages/vfresearch/sources/2026-09-05-weekly-links-footrue.md",
       "playbook": "packages/vfcovers/hq/PLAYBOOK.md",
@@ -1105,7 +1108,7 @@
       "url": "https://github.com/mikiarlo3/ai-copywriter",
       "title": "ai-copywriter — reader-first copy + Humanizer (33 AI tells)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-ai-copywriter-embed.md",
       "packs": [
         "vfcopy",
@@ -1120,7 +1123,7 @@
       "url": "https://github.com/social-media-skills/skills",
       "title": "social-media-skills — caption/hook/voice/carousel/reels/SEO craft",
       "firstEmbedded": "2026-09-09",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-09-velvet-hebrew-copy-embed.md",
       "packs": [
         "vfcopy",
@@ -1134,7 +1137,7 @@
       "url": "https://github.com/thekozugroup/humanizer",
       "title": "humanizer — AI-tell detect + rewrite (MIT)",
       "firstEmbedded": "2026-09-09",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-09-velvet-hebrew-copy-embed.md",
       "packs": [
         "vfcopy",
@@ -1148,7 +1151,7 @@
       "url": "https://github.com/debpalash/VoiceStudio",
       "title": "VoiceStudio — local ElevenLabs alternative (TTS/ASR/dub/MCP)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-voicestudio.md",
       "report": "packages/vfresearch/sources/2026-09-05-voicestudio-weekly.md",
       "verdict": "skip-install",
@@ -1167,7 +1170,7 @@
       "openUrl": "https://deeptutor.info/",
       "title": "DeepTutor — lifelong personalized tutoring (agent-native learning)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-deeptutor-examful-charts-academic.md",
       "playbook": "packages/vfops/hq/MASTERY-MEMORY.md",
       "packs": [
@@ -1184,7 +1187,7 @@
       "url": "https://examful.ai/",
       "title": "ExamFul.ai — AP / IB / A-level past papers + AI tutoring",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "verdict": "watch",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-deeptutor-examful-charts-academic.md",
       "packs": [
@@ -1199,7 +1202,7 @@
       "url": "https://github.com/larashero3-dotcom/lieflat-charts",
       "title": "lieflat-charts — agent skill for polished HTML data charts",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-deeptutor-examful-charts-academic.md",
       "report": "packages/vfbriefux/hq/CHARTS.md",
       "packs": [
@@ -1215,7 +1218,7 @@
       "url": "https://github.com/Imbad0202/academic-research-skills",
       "title": "academic-research-skills — research → write → review → revise → finalize",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-deeptutor-examful-charts-academic.md",
       "playbook": "packages/vfresearch/hq/ACADEMIC-PIPELINE.md",
       "packs": [
@@ -1231,7 +1234,7 @@
       "url": "https://github.com/mvanhorn/last30days-skill",
       "title": "last30days-skill — people-scored multi-source research (last ~30 days)",
       "firstEmbedded": "2026-09-03",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-last30days-embed.md",
       "playbook": "packages/vfresearch/hq/LAST30.md",
       "skill": ".cursor/skills/vf-last30/SKILL.md",
@@ -1248,7 +1251,7 @@
       "openUrl": "https://github.com/ndesv21/socialclaw/blob/main/skill/SKILL.md",
       "title": "Social Media Publisher (SocialClaw-style) — validate→apply→verify publish skill",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-social-media-publisher.md",
       "packs": [
         "vfigos",
@@ -1265,7 +1268,7 @@
       "url": "https://github.com/jlbadano/ig-mcp",
       "title": "LEGACY — jlbadano/ig-mcp (superseded)",
       "firstEmbedded": "2026-09-06",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "status": "legacy",
       "connect": "packages/vfigos/LEGACY-IG-MCP.md",
       "packs": [
@@ -1282,7 +1285,7 @@
       "url": "https://github.com/adelaidasofia/instagram-mcp",
       "title": "instagram-mcp — canonical Instagram Graph API MCP",
       "firstEmbedded": "2026-09-08",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "status": "canonical",
       "connect": "packages/vfigos/CONNECT-IG.md",
       "deploy": "packages/vfigos/DEPLOY-CODESPACE.md",
@@ -1299,7 +1302,7 @@
       "url": "https://github.com/charlie947/social-media-skills",
       "title": "social-media-skills — content/research/analytics skill patterns",
       "firstEmbedded": "2026-09-14",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-14-social-intelligence-repos.md",
       "packs": [
         "vfresearch",
@@ -1316,7 +1319,7 @@
       "url": "https://github.com/cporter202/automate-for-growth",
       "title": "automate-for-growth — batching and feedback-loop patterns",
       "firstEmbedded": "2026-09-14",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-14-social-intelligence-repos.md",
       "packs": [
         "vfresearch",
@@ -1331,7 +1334,7 @@
       "url": "https://github.com/cporter202/social-media-scraping-apis",
       "title": "social-media-scraping-apis — provider discovery catalogue",
       "firstEmbedded": "2026-09-14",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-14-social-intelligence-repos.md",
       "packs": [
         "vfresearch"
@@ -1344,7 +1347,7 @@
       "url": "https://github.com/cporter202/social-growth-apis-for-creators",
       "title": "social-growth-apis-for-creators — public provider discovery catalogue",
       "firstEmbedded": "2026-09-18",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "packs": [
         "vfresearch"
       ],
@@ -1356,7 +1359,7 @@
       "url": "https://github.com/cporter202/API-mega-list",
       "title": "API-mega-list — broad provider discovery index",
       "firstEmbedded": "2026-09-18",
-      "lastReviewed": "2026-09-25",
+      "lastReviewed": "2026-10-04",
       "packs": [
         "vfresearch"
       ],
@@ -1368,7 +1371,7 @@
       "url": "https://github.com/mlightcad/awesome-cad",
       "title": "awesome-cad — open-source CAD ecosystem radar",
       "firstEmbedded": "2026-09-27",
-      "lastReviewed": "2026-09-27",
+      "lastReviewed": "2026-10-04",
       "report": "packages/vfprod/CAD-ENGINE-STACK.md",
       "packs": [
         "vfresearch",
@@ -1382,7 +1385,7 @@
       "url": "https://github.com/scenario-labs/skills",
       "title": "scenario-labs/skills — open creative + DCC expert capability library",
       "firstEmbedded": "2026-09-28",
-      "lastReviewed": "2026-09-28",
+      "lastReviewed": "2026-10-04",
       "verdict": "embedded-capabilities-only",
       "sourceNote": "packages/vfresearch/sources/2026-09-28-scenario-labs-skills.md",
       "playbook": "packages/vfprod/SCENARIO-EXPERT-CAPABILITIES.md",
@@ -1401,7 +1404,7 @@
       "url": "https://github.com/petergyang/no-ai-slop",
       "title": "no-ai-slop — named anti-slop editing patterns (MIT)",
       "firstEmbedded": "2026-09-29",
-      "lastReviewed": "2026-09-29",
+      "lastReviewed": "2026-10-04",
       "sourceNote": "packages/vfresearch/sources/2026-09-29-no-ai-slop.md",
       "packs": [
         "vfcopy"
@@ -1414,10 +1417,13 @@
       "url": "https://github.com/RobLe3/cc-blender-skill",
       "title": "cc-blender-skill — Blender craft/workflow patterns",
       "firstEmbedded": "2026-10-01",
-      "lastReviewed": "2026-10-01",
+      "lastReviewed": "2026-10-04",
       "verdict": "patterns-only",
       "sourceNote": "packages/vfresearch/sources/2026-10-01-creative-craft-phase2.md",
-      "packs": ["vfprod", "vfresearch"],
+      "packs": [
+        "vfprod",
+        "vfresearch"
+      ],
       "note": "MIT workflow/craft patterns only. Do not install its orchestration/runtime beside vf-3d-router."
     },
     {
@@ -1426,10 +1432,13 @@
       "url": "https://github.com/arjun988/blender-skills",
       "title": "blender-skills — broad Blender craft reference library",
       "firstEmbedded": "2026-10-01",
-      "lastReviewed": "2026-10-01",
+      "lastReviewed": "2026-10-04",
       "verdict": "patterns-only",
       "sourceNote": "packages/vfresearch/sources/2026-10-01-creative-craft-phase2.md",
-      "packs": ["vfprod", "vfresearch"],
+      "packs": [
+        "vfprod",
+        "vfresearch"
+      ],
       "note": "MIT reference patterns only; too broad to become a parallel production runtime."
     },
     {
@@ -1438,10 +1447,13 @@
       "url": "https://github.com/kajisho5/ffmpeg-skill",
       "title": "ffmpeg-skill — probe/edit/check/visual-verify patterns",
       "firstEmbedded": "2026-10-01",
-      "lastReviewed": "2026-10-01",
+      "lastReviewed": "2026-10-04",
       "verdict": "patterns-only",
       "sourceNote": "packages/vfresearch/sources/2026-10-01-creative-craft-phase2.md",
-      "packs": ["vfom", "vfresearch"],
+      "packs": [
+        "vfom",
+        "vfresearch"
+      ],
       "note": "MIT verification-loop patterns merged conceptually into vf-post-production-craft; no second media runtime."
     },
     {
@@ -1450,10 +1462,13 @@
       "url": "https://github.com/samuelgursky/davinci-resolve-mcp",
       "title": "davinci-resolve-mcp — post-production domain kernels",
       "firstEmbedded": "2026-10-01",
-      "lastReviewed": "2026-10-01",
+      "lastReviewed": "2026-10-04",
       "verdict": "patterns-only",
       "sourceNote": "packages/vfresearch/sources/2026-10-01-creative-craft-phase2.md",
-      "packs": ["vfom", "vfresearch"],
+      "packs": [
+        "vfom",
+        "vfresearch"
+      ],
       "note": "MIT edit/color/conform/delivery/Fusion/audio domain patterns only; execution remains on accepted VelvetOS integrations."
     },
     {
@@ -1462,10 +1477,13 @@
       "url": "https://github.com/aedev-tools/adobe-agent-skills",
       "title": "adobe-agent-skills — After Effects craft patterns",
       "firstEmbedded": "2026-10-01",
-      "lastReviewed": "2026-10-01",
+      "lastReviewed": "2026-10-04",
       "verdict": "patterns-only",
       "sourceNote": "packages/vfresearch/sources/2026-10-01-creative-craft-phase2.md",
-      "packs": ["vfom", "vfresearch"],
+      "packs": [
+        "vfom",
+        "vfresearch"
+      ],
       "note": "Apache-2.0 craft patterns only. Its macOS-specific execution path is not adopted on the active Windows host."
     },
     {
@@ -1474,10 +1492,14 @@
       "url": "https://github.com/jablonkai/skills",
       "title": "jablonkai/skills — Affinity/design workflow patterns",
       "firstEmbedded": "2026-10-01",
-      "lastReviewed": "2026-10-01",
+      "lastReviewed": "2026-10-04",
       "verdict": "patterns-only",
       "sourceNote": "packages/vfresearch/sources/2026-10-01-creative-craft-phase2.md",
-      "packs": ["vfom", "vfcovers", "vfresearch"],
+      "packs": [
+        "vfom",
+        "vfcovers",
+        "vfresearch"
+      ],
       "note": "MIT workflow ideas only; review third-party asset licenses separately and do not adopt a broad parallel automation surface."
     }
   ],
