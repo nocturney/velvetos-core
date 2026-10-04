@@ -587,7 +587,7 @@
     },
     {
       "id": "no-auto-dm",
-      "text": "Auto-DM stays forbidden. CTA is WhatsApp 050-2517000.",
+      "text": "Auto-DM stays forbidden. PUBLIC_CURRENT_CTA is Instagram message; WhatsApp 050-2517000 is BUSINESS_CONTACT_RECORD/human-close only.",
       "source": "constitution/SEND.md"
     },
     {

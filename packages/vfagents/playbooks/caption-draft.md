@@ -28,4 +28,4 @@
 
 ## אחרי הסקירה
 
-`vfigos` מסמן מוכן. Grok Bot משבץ ושולח.
+`vfigos` מסמן מוכן; HQ משבץ/מפרסם דרך tools/policy לאחר gates. Grok Bot גיבוי אופציונלי.

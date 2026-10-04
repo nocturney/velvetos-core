@@ -1,6 +1,6 @@
 ---
 name: vf-organic-growth
-description: Run the VelvetOS Organic Growth Control Plane — print.done to Reel/Story drafts, 07:00 approval pack, hashtags, community work orders, probabilistic attribution. Never auto-posts Instagram, never auto-DM, never treats WhatsApp as certain conversion. Use for צמיחה אורגנית, Decision Pack, מפעל תוכן, community poll, hashtag set, orders.json attribution, or organic growth overlay.
+description: Run the VelvetOS Organic Growth Control Plane — print.done to Reel/Story drafts, 07:00 readiness pack consumed by the 09:00 Morning Brief, hashtags, community work orders, probabilistic attribution. Never auto-posts Instagram, never auto-DM, never treats WhatsApp as certain conversion. Use for צמיחה אורגנית, Decision Pack, מפעל תוכן, community poll, hashtag set, orders.json attribution, or organic growth overlay.
 ---
 
 # Organic Growth Control Plane
@@ -25,7 +25,7 @@ Run `scripts/vf_publication_evidence.py --phase production` before production an
 4. Draft Reel for the **next CALENDAR.md 16:00 slot** (Sun/Tue only — no weekday-every-day reel).
 5. Draft Story poll for 20:30 Sun–Thu from `poll-library.json` (floor can actually run it).
 6. Put assets in `approval-queue.json` at `pending_human_approval`.
-7. 07:00 Decision Pack: [אישור] [עריכה] [דחייה]. Publication authorization is owned by `policy_id: instagram.publish`; an approval can satisfy the exact owner-approval branch, while `approved_for_manual_posting` remains the legacy manual-post path.
+7. 07:00 readiness Decision Pack (input to the 09:00 Morning Brief): [אישור] [עריכה] [דחייה]. Publication authorization is owned by `policy_id: instagram.publish`; an approval can satisfy the exact owner-approval branch, while `approved_for_manual_posting` remains the legacy manual-post path.
 8. Attribution via `vfsales/data/orders.json` + `vfinsights/ATTRIBUTION.md`. Missing = «אין ספירה».
 
 ## Do not

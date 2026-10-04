@@ -20,7 +20,7 @@ Human-visible text authority: `constitution/VISIBLE_TEXT.md` → `.cursor/skills
 
 1. **Google Calendar** — `list_calendars` then `list_events` on `nocturney@gmail.com` for **today** in `Asia/Jerusalem`. Pickup windows and named holds only.
 2. **Gmail — send only for the brief** — only after `visible_text_gate: PASS`; render `vfbriefux/MAIL.html`. Prefer `python -m vfops.gmail_brief_send` (HTML file + CID image dir). If MCP only: `create_draft(html)` → `update_draft(attachments)` → `send_message(draftId)` — `docs/SEND-BRIEF-MCP.md`. Never `LOAD_FROM_FILE`. Do not `reply` / `forward` / send to a customer.
-3. **Gmail — inbox read: skip for the brief** — `search_threads` / `in:inbox newer_than:1d` stay available on the desk for `vfconvert`, `vfbooks`, and named threads. **Do not call them to populate the 07:00 brief** — incoming mail is not a work source right now. If the user names a thread, read that thread only.
+3. **Gmail — inbox read: skip for the brief** — `search_threads` / `in:inbox newer_than:1d` stay available on the desk for `vfconvert`, `vfbooks`, and named threads. **Do not call them to populate the 09:00 Morning Brief** — incoming mail is not a work source right now. If the user names a thread, read that thread only.
 4. **Drive** — skip unless the user names a job file or SKU.
 
 ## Output (Hebrew)
@@ -37,7 +37,7 @@ Before filling slots, run `python3 scripts/vfops_loop.py brief --write` so תפ�
 
 Slot **01** may include one-click yes/no/defer from `packages/vfops/hq/GATES.json` (`vfops_loop.py gate`). A click is a human gate — not WhatsApp send, not Print, not a sale ₪.
 
-Slot **02** pulls `packages/vfbooks/data/orders.json` + Invoice4U snapshot from **disk**. Do not scrape `in:inbox` to fill the 07:00 brief. Empty files = «אין ספירה».
+Slot **02** pulls `packages/vfbooks/data/orders.json` + Invoice4U snapshot from **disk**. Do not scrape `in:inbox` to fill the 09:00 Morning Brief. Empty files = «אין ספירה».
 
 Slot **03** also pastes `python3 scripts/vfprod.py brief` (fleet + maintenance) and `python3 scripts/vfsku.py scan`.
 

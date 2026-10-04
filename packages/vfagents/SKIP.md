@@ -16,7 +16,7 @@
 | Write a Book / Screenplay / Movie / Book Rec | Media hobby | לא הוצאה |
 | 24/7 Chatbot / ManyChat-class | Customer Service | אדם בוואטסאפ. בוט חי **אסור** |
 | Email Auto Responder *send* | Communication | טיוטה כן (`email-draft`). שליחה מ־HQ **אסורה** |
-| Instagram Post *publish* | Social | טיוטה כן (`caption-draft`). Grok שולח |
+| Instagram Post *publish* | Social | טיוטה כן (`caption-draft`). פרסום דרך HQ tools/policy; Grok גיבוי אופציונלי |
 | Landing Page Generator | Web | אתר רק אם ראש צוות פותח (`vfbiz`) |
 | Property Pricing | Real Estate | לא נדל״ן |
 | Vibe Hacking / Real-Time Threat / Decepticon | Cyber (offensive) | לא צוות אדום |

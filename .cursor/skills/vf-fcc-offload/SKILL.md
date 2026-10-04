@@ -25,7 +25,7 @@ Use when the user asks about [free-claude-code](https://github.com/Alishahryar1/
 - האם זה חוסך את Cursor Cloud: לא
 - מה כן חוסך עכשיו: שלושת כללי ה־thrift הרלוונטיים לשאלה
 - אם רוצים מק: NIM → Groq → Gemini → OpenRouter, מפתחות ב־`~/.fcc/`
-- CTA אם צריך אדם: וואטסאפ `050-2517000` — לא «שלחו DM»
+- CTA ציבורי אם נדרש: הודעת Instagram לפי `PUBLIC_CTA.md`; WhatsApp הוא BUSINESS_CONTACT_RECORD/סגירה אנושית בלבד
 
 ## Verification
 

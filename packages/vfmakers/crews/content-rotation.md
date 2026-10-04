@@ -9,12 +9,12 @@ Source pattern: [makerskills `jab-hook`](https://github.com/coreyhaines31/makers
 | Planner | `vfgrowth` | Week table: jab vs hook | Boost, move a booked slot |
 | Copy | `vfcopy` | Hebrew spoken voice | «שלחו DM» |
 | Board | `vfigos` | Review / schedule note | Send, auto-DM |
-| Human + Grok | — | Approve · Grok sends | — |
+| Human + HQ tools | — | Sensitive approval when required · publish through `policy_id: instagram.publish`; Grok optional backup | — |
 
 ## Mental model
 
 - **Jab** = value (floor process, how it is printed, season mark, pickup how-to). No ask.
-- **Hook** = one CTA: WhatsApp `050-2517000` · איסוף שדרות.
+- **Hook** = at most one public CTA: Instagram message לפי `PUBLIC_CTA.md` · איסוף שדרות; no public WhatsApp.
 - Do not stack two hooks on consecutive planned days.
 - Target feel: more jabs than hooks. One hook in a seven-day plan is enough if the floor is quiet.
 - Channel: Instagram `@velvets_cloud` only from this crew. No TikTok / ads without lead-seat `decide`.

@@ -12,7 +12,7 @@
   → ארטיפקט (קובץ / checkpoint / Drive / Gmail שנשלח)
   → אינדקס (קובץ זה + vfmem + בריף)
   → owner-memory.md (תמצית לכל המושבים)
-  → בריף 07:00 / שיחה הבאה
+  → Morning Brief 09:00 / שיחה הבאה
 ```
 
 ## VelvetOS Core (backend) — הריפו הזה

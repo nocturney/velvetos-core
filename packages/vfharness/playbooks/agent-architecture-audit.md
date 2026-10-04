@@ -18,7 +18,7 @@ Do not use for: ordinary code review, inventing ₪ / Insights, or refactoring p
 | 6 | Tool selection | desk route table + MCP namespaces | `check-vfmcp.py` |
 | 7 | Tool execution | real MCP call vs claimed send | `constitution/SEND.md` |
 | 8 | Tool interpretation | failover without inventing body | `ORCHESTRA.md` |
-| 9 | Answer shaping | Hebrew office copy; CTA WhatsApp / איסוף | desk CTA law |
+| 9 | Answer shaping | Hebrew office copy; CTA ציבורי Instagram message / איסוף; WhatsApp רק business-contact/human-close | desk CTA law |
 | 11 | Hidden repair loops | second orchestrator / swarm / auto-fix | `vfe2b/LOCK.md` |
 | 12 | Persistence | `vfharness/state/*.json` vs stale cache | checkpoint schema |
 

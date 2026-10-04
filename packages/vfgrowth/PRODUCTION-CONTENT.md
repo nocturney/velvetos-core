@@ -53,7 +53,7 @@
 
 `finished-media-required` / `waiting_for_media`
 
-מופיע בבריף 07:00 אם רלוונטי.
+מופיע ב-Morning Brief 09:00 אם רלוונטי.
 
 ## בדיקה
 

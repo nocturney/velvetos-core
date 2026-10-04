@@ -4,7 +4,7 @@
 חריצי המייל נשארים 01–07 (`MAIL.html`). זה **מסך פעולה** לחריץ 01/07 — לא דוח ארוך ולא Publish.
 
 ```
-VELVET ORGANIC GROWTH BRIEF — 07:00
+VELVET ORGANIC GROWTH READINESS PACK — cutoff 07:00 → Morning Brief 09:00
 
 יעד היום:
 {goal}

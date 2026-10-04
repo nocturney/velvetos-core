@@ -12,7 +12,7 @@
 
 כל עסק = **frontend instance** נפרד ששואב מודולים מהליבה (`packages/velvetos/REPOS.md`).
 
-Tenant ייחוס פעיל בליבה: **Velvet Factory** — סטודיו הדפסת תלת־ממד בשדרות, איסוף עצמי, Instagram `@velvets_cloud`, WhatsApp `050-2517000` כרשומת עסק פנימית בלבד.
+Instance reference binding: **Velvet Factory** — סטודיו הדפסת תלת־ממד בשדרות, איסוף עצמי, Instagram `@velvets_cloud`, WhatsApp `050-2517000` כרשומת עסק פנימית בלבד.
 
 המטרה אינה אוטומציה עיוורת: להוריד עבודה מכנית, לשמור הקשר, לחבר אירועים — ולהשאיר החלטות רגישות אצל אדם.
 
@@ -47,7 +47,7 @@ Tenant ייחוס פעיל בליבה: **Velvet Factory** — סטודיו הד�
 | Workspace יומיומי מומלץ (START-HERE) | לפתוח את תיקיית ה־scaffold; ריפו נפרד **אופציונלי** |
 | Bind תאימות בליבה | desk/STUDIO נשארים כאן עד cutover |
 
-`constitution/TENANT.md` עדיין אומר «הריפו = VelvetOS — Velvet Factory» — ניסוח ישן מול `CORE.json`. **לא לאחד במסמך זה.** סמכות זהות: `CORE.json`.
+Legacy `constitution/TENANT.md` is now a redirect to Instance terminology. Identity authority remains `CORE.json` + `INSTANCE.md`; instance bindings do not create policy authority.
 
 Presets נוספים (`beauty-multi-ig`, `clinical-legal-opinions`) = **preset-only**, לא משרדים חיים.
 
@@ -69,9 +69,9 @@ Presets נוספים (`beauty-multi-ig`, `clinical-legal-opinions`) = **preset-o
 `@chief-of-staff` יושב על מושב `lead` יחד עם `@studio-operations`.  
 עבודה: החלטות פתוחות, מסירות מושבים, מה מחכה לכריסטיאן, לולאת למידה (`owner-memory.md`).
 
-**מתח מתועד:** `constitution/STUDIO.md` ו־`packages/vfgraft/MAP.md` עדיין כותבים «5 מושבים». אריזת הפקים בין TEAM ל־desk אינה זהה (למשל `vfcovers` אצל צמיחה ב־desk ואצל סטודיו ב־TEAM). בניתוב יומיומי: **desk.json** לכלי/`@slug`; **TEAM.md** לחוקה. לא «לתקן» כאן.
+המספר הקנוני הוא **6 מושבים**. `TEAM.md`, desk, locks והמפות הפעילות מיושרים; הבדלים בחלוקת פקים בין תצוגות אינם משנים את מספר המושבים.
 
-Grok Bot «5 seats» = גבול שליחה היסטורי (IG/Gmail/מדפסות). **סופרסד חלקית:** HQ שולח Gmail/IG דרך כלים; מדפסות נשארות ברצפה; Grok = גיבוי אופציונלי (`SEND.md`).
+Grok Bot הוא גיבוי אופציונלי ואינו מושב או sender authority. HQ שולח Gmail/Instagram דרך `SEND.md`; מדפסות נשארות ברצפה.
 
 ---
 
@@ -185,7 +185,7 @@ Engineering chain + agent-instruction-qa + human-step-wizard + execution-discipl
 
 `docs/FAILOVER.md`. סדר: ChatGPT → Perplexity → Gemini → Grok → Cursor (טכני).  
 קוראים SoT קיים + דוח השתלטות. לא בונים מחדש.  
-**סתירה מתועדת:** FAILOVER.md עדיין כותב CTA וואטסאפ כציבורי. **סמכות CTA: `PUBLIC_CTA.md`.**
+FAILOVER ונתיבי התוכן הפעילים מיושרים ל-`PUBLIC_CTA.md`: CTA ציבורי הוא הודעת Instagram; WhatsApp הוא BUSINESS_CONTACT_RECORD בלבד.
 
 ### 6.14 Project Request Gate — MANDATORY
 
@@ -260,11 +260,6 @@ PR שנוגע ב־`packages/` `office/` `scripts/` `.github/workflows/` `constit
 | Watchtower כדשבורד חי על LAN | planned/Edge playbook | `WATCHTOWER.md` |
 | Origin vendor ל־tmp-* | origin-unreachable | `manifest.json` |
 | `vfbrand` כפק במניפסט | חסר מהקטלוג המכונה | תיקייה קיימת; LOOP צורך אותה |
-| מספר מושבים 5 מול 6 | סתירת מסמכים | TEAM/desk=6; STUDIO/MAP=5 |
-| שעון בריף 07:00 מול 09:00 | סתירת מסמכים | ROUTINE=09:00; חוקה=07:00 |
-| FAILOVER.md CTA וואטסאפ | מסמך מיושן בנקודה זו | PUBLIC_CTA מנצח |
-| TENANT.md «הריפו=VF» | ניסוח מיושן | CORE.json מנצח |
-| ORIGIN.md «Grok שולח» | סופרסד | SEND.md |
 | SWC SHAs של GrokBot/Codex | עלולים להיות מאחור | `SHARED-WORK-COORDINATION.md` עצמו מזהיר `main` ≠ מה שרץ על המכונה |
 | Sheets sku/quotes/books write-through | IDs קיימים; LIVE כתיבה UNPROVEN כאן | רק jobs מוצהר עם receipt |
 | `GATES.json` items | ריק בקריאה | אין להמציא שערי בריף פתוחים |

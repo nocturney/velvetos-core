@@ -63,7 +63,7 @@ A phone/WhatsApp reference in a private customer message is not rejected merely 
 
 ## Owner chain
 
-For the 07:00 brief, direct office summary, status explanation, decision copy or owner-facing HTML:
+For the 09:00 Morning Brief, direct office summary, status explanation, decision copy or owner-facing HTML:
 
 Routine short `FINAL_INTERNAL`: `office truth → final clarity/surface QA → owner surface`.
 

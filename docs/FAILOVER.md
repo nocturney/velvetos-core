@@ -73,7 +73,7 @@
 - תוכן עסקי בעברית טבעית, קצרה ולא תאגידית.
 - אם המשרד יכול לסגור משהו בעצמו — לא להפוך אותו למשימה לבעלים.
 - עם זאת, הבעלים חייב לקבל שקיפות מלאה לגבי מה בוצע, מה בתהליך ומה מתוכנן.
-- CTA: WhatsApp `050-2517000` / איסוף שדרות — לא «שלחו DM».
+- CTA ציבורי: הודעת Instagram לפי `PUBLIC_CTA.md` / איסוף שדרות; WhatsApp `050-2517000` הוא BUSINESS_CONTACT_RECORD בלבד.
 - HQ שולח Gmail/Instagram **דרך כלים** (`constitution/SEND.md`) — לא מחכים לאדם ללחוץ Send אם הכלי זמין.
 - אין Print מ־HQ. אין secrets בגיט.
 
@@ -142,7 +142,7 @@
 |---|---|
 | `packages/vfgrowth/LEDGER.md` + `CALENDAR.md` + `HANDOFF-he.md` | מעקב מועמדים / משבצות / מסירה |
 | `packages/vfprod/PRINT-DONE.md` + כרטיסי `vfprod/hq/cards/` | גשר Print→Post אחרי הדפסה תקינה |
-| `constitution/ORGANIC_GROWTH.md` + `scripts/vf_organic_growth.py` | טיוטות + Decision Pack 07:00 (בלי autopost) |
+| `constitution/ORGANIC_GROWTH.md` + `scripts/vf_organic_growth.py` | טיוטות + readiness Decision Pack עד cutoff 07:00 לצריכת Morning Brief 09:00 (בלי autopost) |
 | `packages/vfgrowth/data/content_events.jsonl` | יומן אירועי תוכן אם קיים |
 | checkpoints `packages/vfharness/state/` | מצב משימה + `component_state` |
 

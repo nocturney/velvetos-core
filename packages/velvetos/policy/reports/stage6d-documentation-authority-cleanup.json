@@ -1,0 +1,57 @@
+{
+  "schema": "velvetos.stage6d-documentation-authority-cleanup.v1",
+  "stage": "6D",
+  "behavior_change": false,
+  "scope": "active documentation/skill/pack authority wording; historical evidence remains historical",
+  "canonical_sources": {
+    "team": "constitution/TEAM.md",
+    "morning_brief_clock": "packages/vfops/ROUTINE.md",
+    "public_cta": "constitution/PUBLIC_CTA.md",
+    "send": "constitution/SEND.md",
+    "core_instance_identity": [
+      "packages/velvetos/CORE.json",
+      "constitution/INSTANCE.md",
+      "packages/velvetos/REPOS.md"
+    ],
+    "dcc_version_semantics": "packages/velvetos/policy/reports/stage6c-dcc-capability-gating.json"
+  },
+  "historical_policy": {
+    "rewrite_dated_evidence": false,
+    "active_superseded_docs_must_be_marked_historical": true,
+    "known_historical_doc_markers": {
+      "packages/vfops/OUTAGE-5D.md": [
+        "HISTORICAL / SUPERSEDED",
+        "Historical evidence only"
+      ]
+    }
+  },
+  "checked_file_count": 113,
+  "checked_groups": {
+    "seats": 8,
+    "morning_brief": 47,
+    "public_cta": 27,
+    "send_authority": 36,
+    "instance_identity": 11
+  },
+  "canonical_checks": {
+    "seats": true,
+    "morning_brief": true,
+    "public_cta": true,
+    "send_authority": true,
+    "instance_identity": true
+  },
+  "historical_checks": {
+    "packages/vfops/OUTAGE-5D.md": true
+  },
+  "violations": [],
+  "acceptance": {
+    "canonical_team_is_six_seats": true,
+    "owner_morning_brief_is_0900_and_0700_is_readiness_only": true,
+    "public_cta_is_instagram_message_not_whatsapp": true,
+    "hq_is_gmail_instagram_sender_and_grok_is_optional_backup": true,
+    "instance_identity_is_context_binding_not_parallel_policy_authority": true,
+    "superseded_failover_doc_is_explicitly_historical": true,
+    "dcc_docs_use_stage6c_recovery_baseline_semantics": true
+  },
+  "repository_acceptance": "PASS"
+}

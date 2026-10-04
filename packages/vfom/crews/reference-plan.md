@@ -16,7 +16,7 @@ Source pattern: OpenMontage «Paste A Video» + `reference_input` on `pipeline_d
 1. Need a URL or a named local clip. Missing → **חסר**. Stop.
 2. Write four lines:
    - **נשמר:** pacing / hook style / structure / tone
-   - **משתנה:** our print, Hebrew voice, WhatsApp CTA
+   - **משתנה:** our print, Hebrew voice, Instagram-message PUBLIC_CURRENT_CTA
    - **עלות:** if a paid generator is requested, say so and wait for the lead seat. No ₪ figure unless Christian gave one.
 3. Offer **3** variants that share the keep-list and differ in angle (timelapse-led / before-after / how-to-order).
 4. Stop. Do not generate motion. Do not copy an Israeli brand frame.

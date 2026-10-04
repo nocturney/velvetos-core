@@ -11,7 +11,7 @@
 | `decide` | `vfbiz`, `vfops` | 6–8 שאלות, קריאה ברורה, ארכיון עם תאריך חזרה |
 | `unstuck` | `vfops`, `vfprod` | סיווג הקיר + זוויות. רישיון / «לא» של לקוח לא עוקפים |
 | `company-cfo` | `vfbooks`, `vfcost` | דופק שבועי / צילום חודשי ממקור מאומת בלבד |
-| `jab-hook` | `vfgrowth`, `vfcopy`, `vfigos` | ג׳אב (ערך) ואז הוק (וואטסאפ). HQ לא שולח |
+| `jab-hook` | `vfgrowth`, `vfcopy`, `vfigos` | ג׳אב (ערך) ואז הוק (PUBLIC_CURRENT_CTA = הודעת Instagram). HQ מפרסם דרך tools/policy לאחר gates |
 | `company-brain` | HQ + `vfcopy` + `vfsales` | לכידת שפת לקוח / התנגדויות / FAQ לתוך `hq/` |
 | `paste` (סודות) | `vfcopy` | לפני טיוטה שיוצאת מהמשרד — אין סודות בגיט |
 | `social-fetch` | `vfresearch`, `vfgrowth` | קריאת פוסט ציבורי כעובדה. אין פוסט / DM |

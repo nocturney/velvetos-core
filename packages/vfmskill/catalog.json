@@ -49,7 +49,7 @@
         "vfcopy",
         "vfsales"
       ],
-      "note": "Hebrew spoken-voice. One CTA. WhatsApp 050-2517000 / איסוף שדרות. No Send DM."
+      "note": "Hebrew spoken-voice. Public CTA follows PUBLIC_CURRENT_CTA (Instagram message) / איסוף שדרות. WhatsApp is business-contact/human-close only. No auto-DM."
     },
     {
       "name": "copy-editing",
@@ -66,7 +66,7 @@
         "vfgrowth",
         "vfigos"
       ],
-      "note": "Instagram draft only. Review/schedule in vfigos. Grok sends. No TikTok, boost, or auto-DM."
+      "note": "Instagram draft only. Review/publish through vfigos + canonical HQ tools/policy. Grok is optional backup. No TikTok, boost, or auto-DM."
     },
     {
       "name": "customer-research",
@@ -126,7 +126,7 @@
         "vfgrowth",
         "vfcovers"
       ],
-      "note": "Reel hook / on-film text / caption. Proof from Drive job/SKU. Grok sends."
+      "note": "Reel hook / on-film text / caption. Proof from Drive job/SKU. Publish through canonical HQ tools/policy; Grok is optional backup."
     },
     {
       "name": "competitor-profiling",

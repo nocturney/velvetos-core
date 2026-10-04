@@ -32,4 +32,4 @@
 
 כשיש ריל או בקשה למוזיקה: `../MUSIC.md` + `../SOURCES-MUSIC.json` · `@trend-researcher`.  
 מקור ראשי: HeyOrca שבועי (בלי Treg). ארטיפקט: `../sources/YYYY-MM-DD-ig-music.md`.  
-מסירה ל־`vfigos` + `vfom`. HQ לא שולח.
+מסירה ל־`vfigos` + `vfom`; publish דרך HQ tools/policy לאחר gates. Grok גיבוי אופציונלי.

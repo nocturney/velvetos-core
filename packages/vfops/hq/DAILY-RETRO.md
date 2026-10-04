@@ -117,7 +117,7 @@
 
 ## בוקר למחרת
 
-בריף 07:00 קורא את `owner-memory.md` (בלוק קצר) — לא תיבת דואר.  
+Morning Brief 09:00 קורא את `owner-memory.md` (בלוק קצר) — לא תיבת דואר.
 אם קיים `retro-signals.json` מהיום — שורות פער בחריץ 01/05 (`BRIEF-SLOTS.md`).  
 `python3 scripts/vfmem.py who "daily retro"` → מסלול זה.
 

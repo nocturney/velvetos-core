@@ -15,4 +15,4 @@ Write-up: [`docs/GRAFT.md`](../../docs/GRAFT.md).
 | Source | https://github.com/trailhq/Graft (README read 2026-08-30) |
 
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
-Live Instagram, Gmail send, and printers stay on Grok Bot (5 seats).
+Gmail and Instagram send through canonical HQ tools/policy; Grok Bot is optional backup. Printers stay on the floor. The canonical team has 6 seats.

@@ -24,7 +24,7 @@
 
 **אומרים:** `@vfmakers rotation`
 
-**יוצא:** טבלת שבוע ג׳אב/הוק ב־`vfgrowth/hq/rotation/`. CTA וואטסאפ `050-2517000`. סטטוס שליחה: לא נשלח מ־HQ.
+**יוצא:** טבלת שבוע ג׳אב/הוק ב־`vfgrowth/hq/rotation/`. CTA ציבורי = הודעת Instagram לפי `PUBLIC_CTA.md`. סטטוס שליחה: נשלח רק דרך HQ tools/policy לאחר gate; אין טענת live בלי provider verification.
 
 ## brain
 

@@ -18,7 +18,7 @@ print.done (Edge / מפעיל)
         → Media Capture (איכות / חסר=חסר)
         → Content Factory (Reel למשבצת 16:00 הבאה · Story 20:30)
         → policy_checked → pending_human_approval
-        → בריף 07:00 [אישור|עריכה|דחייה]
+        → readiness Decision Pack עד cutoff 07:00 [אישור|עריכה|דחייה] → Morning Brief 09:00
         → approved_for_manual_posting
         → אדם מעלה ב־instagram.com
         → Insights מיובאים + orders.json

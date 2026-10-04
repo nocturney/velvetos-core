@@ -16,7 +16,7 @@
 | כישור מהספרייה | חבילה אצלנו | למה לא פק חדש |
 |---|---|---|
 | `copywriting` / `copy-editing` | `vfcopy` | שיעורי בית, טיוטה, לינט |
-| `social` / `content-strategy` / `video` | `vfgrowth`, `vfigos` | חבילה וסקירה. Grok שולח |
+| `social` / `content-strategy` / `video` | `vfgrowth`, `vfigos` | חבילה, סקירה ופרסום דרך HQ tools/policy; Grok גיבוי אופציונלי |
 | `customer-research` | `vfconvert` | בריף משרשור |
 | `offers` / `sales-enablement` | `vfsales` | הצעה אחרי `vfcost` |
 | `competitor-profiling` | `vfresearch` | מקורות או «חסר» |

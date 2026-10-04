@@ -1,6 +1,6 @@
 # צינור אוניברסלי
 
-VelvetOS מחזיק **חמישה שלבים קנוניים**. כל tenant ממפה עליהם תוויות בעברית (או שפה אחרת). אין צינור שני.
+VelvetOS מחזיק **חמישה שלבים קנוניים**. כל instance ממפה עליהם תוויות בעברית (או שפה אחרת). אין צינור שני.
 
 ## שלבים קנוניים
 
@@ -19,7 +19,7 @@ VelvetOS מחזיק **חמישה שלבים קנוניים**. כל tenant ממפ
 | lead | `vfconvert` |
 | talk | `vfconvert` + `vfsales` |
 | offer | `vfsales` + `vfcopy` + `vfcost` |
-| fulfill | `vfprod` (או מיפוי tenant ל־appointment/document) |
+| fulfill | `vfprod` (או מיפוי instance ל־appointment/document) |
 | close | `vfsales` follow-up + `vfgrowth` תוכן אחרי הוכחה |
 
 
@@ -30,7 +30,7 @@ VelvetOS מחזיק **חמישה שלבים קנוניים**. כל tenant ממפ
 | `pickup` | לקוח מגיע (VF · שדרות) |
 | `appointment` | תור במקום (יופי / קליניקה) |
 | `document` | מסירת קובץ/PDF (חוות דעת) |
-| `hybrid` | שילוב — רק אם ה־tenant מגדיר במפורש |
+| `hybrid` | שילוב — רק אם ה־instance מגדיר במפורש |
 
 ## כלל
 

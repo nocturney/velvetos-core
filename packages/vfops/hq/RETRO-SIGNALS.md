@@ -5,7 +5,7 @@
 
 ## מתי
 
-סוף רטרו ערב **או** לפני בריף 07:00:
+סוף רטרו ערב **או** לפני Morning Brief 09:00:
 
 ```bash
 python3 scripts/vf_retro_signals.py --write

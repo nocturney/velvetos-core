@@ -88,4 +88,4 @@ VF palette (maps to DESIGN.md — not upstream rainbow):
 - Risk / blocked: `#f0d8d8`
 - Note / decision: `#fff3bf`
 
-Laws: no invented ₪ in labels; CTA stays WhatsApp / איסוף שדרות when present.
+Laws: no invented ₪ in labels; Public CTA follows PUBLIC_CURRENT_CTA (Instagram message) / איסוף שדרות when present; WhatsApp is not public CTA.

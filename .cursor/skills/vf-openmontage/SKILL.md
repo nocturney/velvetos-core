@@ -33,7 +33,7 @@ Read the crew. Fill its template. Do not run `make setup` from OpenMontage.
 ## Laws
 
 - Floor proof first. No file → **חסר**. Stop.
-- CTA: WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM».
+- Public CTA: Instagram message לפי `PUBLIC_CTA.md` / איסוף שדרות. WhatsApp = BUSINESS_CONTACT_RECORD בלבד.
 - No invented ₪, Insights, or bed footage.
 - No Veo/Kling/Remotion from HQ unless the lead seat opened that spend.
 - Hand the approved draft to `vfigos`. HQ sends via tools (`constitution/SEND.md`); Grok is optional backup.
