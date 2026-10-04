@@ -1,0 +1,52 @@
+{
+  "name": "vfprod-fleet",
+  "title": "צי מדפסות — המלצת מיטה, לא Print מ-HQ",
+  "updatedAt": "2026-09-07",
+  "briefSlot": "03",
+  "cli": "python3 scripts/vfprod.py fleet",
+  "briefCli": "python3 scripts/vfprod.py brief",
+  "hqPrints": false,
+  "rule": "Recommend a bed from material + strength. Floor human assigns. HQ never pushes G-code. Watchtower (if purchased) is Edge LAN only.",
+  "watchtower": "packages/vfprod/WATCHTOWER.md",
+  "locks": [
+    "no-print-from-hq",
+    "no-invented-prices",
+    "no-invented-telemetry",
+    "floor-assigns"
+  ],
+  "materials": ["PLA", "PETG", "ABS", "ASA", "Nylon", "PEBA"],
+  "printers": [
+    {
+      "id": "bambu-a",
+      "brand": "Bambu Lab",
+      "model": "",
+      "enclosure": true,
+      "watchtowerProtocol": "bambu",
+      "status": "unknown"
+    },
+    {
+      "id": "bambu-b",
+      "brand": "Bambu Lab",
+      "model": "",
+      "enclosure": true,
+      "watchtowerProtocol": "bambu",
+      "status": "unknown"
+    },
+    {
+      "id": "snapmaker-u1",
+      "brand": "Snapmaker",
+      "model": "U1",
+      "enclosure": "",
+      "watchtowerProtocol": "unknown",
+      "status": "unknown"
+    },
+    {
+      "id": "elegoo-centauri",
+      "brand": "Elegoo",
+      "model": "Centauri",
+      "enclosure": "",
+      "watchtowerProtocol": "unknown",
+      "status": "unknown"
+    }
+  ]
+}

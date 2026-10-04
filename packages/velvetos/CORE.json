@@ -48,5 +48,14 @@
     "referenceProfile": "packages/velvetos/samples/velvet-factory.json",
     "note": "Until the VF instance repo is the Cursor workspace, this core keeps a reference profile so existing desk/STUDIO sensors still pass. Live office front = instances/velvet-factory/."
   },
-  "rule": "This repository is VelvetOS Core (backend). Business offices are separate instance repos (frontend) that pull modules from core."
+  "rule": "This repository is VelvetOS Core (backend). Business offices are separate instance repos (frontend) that pull modules from core.",
+  "instanceResolution": {
+    "resolver": "packages/velvetos/instance_resolver.py",
+    "instanceIdEnvironment": "VELVETOS_INSTANCE_ID",
+    "manifestPattern": "instances/{instanceId}/INSTANCE.json",
+    "currentWorkspaceManifest": "INSTANCE.json",
+    "surfaceMap": "INSTANCE.json#surfaces",
+    "requireExplicitInstanceIdWhenRunningFromCore": true,
+    "silentBusinessDefaultForbidden": true
+  }
 }

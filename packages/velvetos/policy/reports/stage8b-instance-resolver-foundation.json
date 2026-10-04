@@ -1,0 +1,75 @@
+{
+  "schema": "velvetos.stage8b-instance-resolver-foundation.v1",
+  "stage": "8B_RESOLVER_FOUNDATION",
+  "behavior_change": true,
+  "prepared_against_main_sha": "b9fbf64e7c9c4ed55a52aadb634c4f277ff6f0ad",
+  "captured_at": "2026-10-04T14:46:12.5300281+03:00",
+  "purpose": "Add generic fail-closed instance/surface resolution and canonical VF fleet placement without cutting over legacy consumers.",
+  "resolver": {
+    "path": "packages/velvetos/instance_resolver.py",
+    "core_mode": "core-explicit-instance",
+    "environment_variable": "VELVETOS_INSTANCE_ID",
+    "silent_business_default": false,
+    "generic_fixture": {
+      "instance_id": "fixture",
+      "mode": "core-explicit-instance",
+      "surfaces": [
+        "profile"
+      ],
+      "bad_surface_contract_version_rejected": true,
+      "parent_traversal_rejected": true
+    }
+  },
+  "manifest_contract": {
+    "schema": "packages/velvetos/schema/instance-manifest.schema.json",
+    "surface_contract_version": 1,
+    "generic_required_surfaces": [
+      "profile"
+    ],
+    "vf_surfaces": {
+      "profile": "instance/velvet-factory.json",
+      "toolDesk": ".cursor/vf-desk.json",
+      "fleet": "instance/fleet.json"
+    }
+  },
+  "fleet": {
+    "canonical_instance_path": "instances/velvet-factory/instance/fleet.json",
+    "legacy_compatibility_path": "packages/vfprod/FLEET.json",
+    "canonical_json_sha256": "4c3e2c2ad9b2f9eb8fc44b9aa793e25dcf1ec926fcc81f190cf3109e9869aa1d",
+    "legacy_json_sha256": "4c3e2c2ad9b2f9eb8fc44b9aa793e25dcf1ec926fcc81f190cf3109e9869aa1d",
+    "parity": true,
+    "printer_count": 4,
+    "consumer_cutover": false
+  },
+  "legacy_baseline": {
+    "unchanged": {
+      "fleet": true,
+      "sample": true,
+      "autonomy": true,
+      "root_desk": true,
+      "policy_registry": true
+    },
+    "all_unchanged": true,
+    "legacy_delete_authorized": false
+  },
+  "acceptance_criteria": {
+    "generic_resolver_has_no_vf_business_default": true,
+    "core_requires_explicit_instance_selection": true,
+    "modern_manifest_contract_is_fail_closed": true,
+    "generic_instance_does_not_require_fleet_or_vf_surfaces": true,
+    "vf_manifest_declares_profile_tooldesk_and_fleet_surfaces": true,
+    "canonical_instance_fleet_matches_legacy_fleet": true,
+    "legacy_consumers_and_external_effect_policy_are_unchanged": true,
+    "no_legacy_path_is_deleted_in_resolver_foundation": true,
+    "consumer_cutover_is_deferred_until_parity_migration": true
+  },
+  "repository_acceptance": "PASS",
+  "next_stage": "Stage 8B — Canonical Instance Config continuation",
+  "constraints": [
+    "no Control API/Living Studio/vfprod/root-desk consumer cutover in this slice",
+    "no legacy delete",
+    "no external-effect authority change",
+    "generic Core cannot silently assume Velvet Factory",
+    "continue instance-owned tool/runtime bindings before Stage 8C consumer migration"
+  ]
+}

@@ -11,5 +11,11 @@
     "vendorPath": "vendor/velvetos-core",
     "attach": "scripts/attach-core.sh"
   },
-  "metaphor": "frontend office for one business; backend kernel is VelvetOS Core"
+  "metaphor": "frontend office for one business; backend kernel is VelvetOS Core",
+  "surfaceContractVersion": 1,
+  "surfaces": {
+    "profile": "instance/velvet-factory.json",
+    "toolDesk": ".cursor/vf-desk.json",
+    "fleet": "instance/fleet.json"
+  }
 }

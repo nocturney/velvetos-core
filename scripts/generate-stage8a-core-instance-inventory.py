@@ -74,9 +74,9 @@ def git_json(sha: str, rel: str) -> dict[str, Any]:
     return obj
 
 
-def git_grep_files(needle: str) -> list[str]:
+def git_grep_files(sha: str, needle: str) -> list[str]:
     proc = subprocess.run(
-        ["git", "grep", "-l", "-F", "--", needle],
+        ["git", "grep", "-l", "-F", needle, sha, "--"],
         cwd=ROOT,
         text=True,
         capture_output=True,
@@ -84,8 +84,17 @@ def git_grep_files(needle: str) -> list[str]:
         errors="replace",
     )
     if proc.returncode not in {0, 1}:
-        raise SystemExit(proc.stderr.strip() or f"git grep failed for {needle!r}")
-    return sorted({line.strip().replace("\\", "/") for line in proc.stdout.splitlines() if line.strip()})
+        raise SystemExit(proc.stderr.strip() or f"git grep failed for {needle!r} at {sha}")
+    prefix = f"{sha}:"
+    refs = set()
+    for line in proc.stdout.splitlines():
+        value = line.strip()
+        if not value:
+            continue
+        if value.startswith(prefix):
+            value = value[len(prefix):]
+        refs.add(value.replace("\\", "/"))
+    return sorted(refs)
 
 
 def is_machine_consumer(rel: str) -> bool:
@@ -96,10 +105,10 @@ def is_machine_consumer(rel: str) -> bool:
     return path.suffix.lower() in MACHINE_EXTENSIONS or rel.startswith(".github/workflows/")
 
 
-def consumer_summary(needles: list[str], own_paths: list[str]) -> dict[str, Any]:
+def consumer_summary(sha: str, needles: list[str], own_paths: list[str]) -> dict[str, Any]:
     all_refs: set[str] = set()
     for needle in needles:
-        all_refs.update(git_grep_files(needle))
+        all_refs.update(git_grep_files(sha, needle))
     own = {p.replace("\\", "/") for p in own_paths}
     evidence_machinery = {
         "scripts/generate-stage8a-core-instance-inventory.py",
@@ -118,6 +127,7 @@ def consumer_summary(needles: list[str], own_paths: list[str]) -> dict[str, Any]
 
 def row(
     *,
+    treeish: str,
     surface_id: str,
     paths: list[str],
     current_class: str,
@@ -131,9 +141,14 @@ def row(
     notes: str,
 ) -> dict[str, Any]:
     for p in paths:
-        require((ROOT / p).exists(), f"{surface_id}: missing {p}")
+        proc = subprocess.run(
+            ["git", "cat-file", "-e", f"{treeish}:{p}"],
+            cwd=ROOT,
+            capture_output=True,
+        )
+        require(proc.returncode == 0, f"{surface_id}: missing {p} at {treeish}")
     require(set(target_classes) <= TARGET_CLASSES, f"{surface_id}: invalid target class")
-    consumers = consumer_summary(needles or paths, paths)
+    consumers = consumer_summary(treeish, needles or paths, paths)
     return {
         "surface_id": surface_id,
         "paths": paths,
@@ -159,15 +174,15 @@ def main() -> int:
     require(re.fullmatch(r"[0-9a-f]{40}", args.prepared_against) is not None,
             "--prepared-against must be a full lowercase Git SHA")
 
-    instance = load(INSTANCE)
-    instance_desk = load(INSTANCE_DESK)
-    core = load(CORE)
-    sample = load(SAMPLE)
-    autonomy = load(AUTONOMY)
-    fleet = load(FLEET)
-    tools = load(TOOL_STATUS)
-    root_desk = load(ROOT_DESK)
-    project_manifest = load(PROJECT_MANIFEST)
+    instance = git_json(args.prepared_against, INSTANCE.relative_to(ROOT).as_posix())
+    instance_desk = git_json(args.prepared_against, INSTANCE_DESK.relative_to(ROOT).as_posix())
+    core = git_json(args.prepared_against, CORE.relative_to(ROOT).as_posix())
+    sample = git_json(args.prepared_against, SAMPLE.relative_to(ROOT).as_posix())
+    autonomy = git_json(args.prepared_against, AUTONOMY.relative_to(ROOT).as_posix())
+    fleet = git_json(args.prepared_against, FLEET.relative_to(ROOT).as_posix())
+    tools = git_json(args.prepared_against, TOOL_STATUS.relative_to(ROOT).as_posix())
+    root_desk = git_json(args.prepared_against, ROOT_DESK.relative_to(ROOT).as_posix())
+    project_manifest = git_json(args.prepared_against, PROJECT_MANIFEST.relative_to(ROOT).as_posix())
 
     require(instance.get("id") == "velvet-factory", "canonical instance id drift")
     require(instance.get("businessName") == "Velvet Factory", "canonical instance business identity drift")
@@ -186,6 +201,7 @@ def main() -> int:
 
     rows = [
         row(
+            treeish=args.prepared_against,
             surface_id="canonical-instance-profile",
             paths=["instances/velvet-factory/instance/velvet-factory.json"],
             current_class="INSTANCE_CANONICAL_MIXED_PUBLIC_INTERNAL",
@@ -198,6 +214,7 @@ def main() -> int:
             notes="Primary canonical VF business/profile surface. Stage 8 must move duplicate values toward this ownership, not away from it.",
         ),
         row(
+            treeish=args.prepared_against,
             surface_id="canonical-instance-desk",
             paths=["instances/velvet-factory/.cursor/vf-desk.json"],
             current_class="INSTANCE_CANONICAL_INTERNAL_TOOL_DESK",
@@ -210,6 +227,7 @@ def main() -> int:
             notes="Control API already resolves this desk via VELVETOS_INSTANCE_ID; secrets remain outside Git.",
         ),
         row(
+            treeish=args.prepared_against,
             surface_id="core-reference-profile-metadata",
             paths=["packages/velvetos/CORE.json"],
             current_class="CORE_COMPATIBILITY_REFERENCE_WITH_INSTANCE_VALUES",
@@ -222,6 +240,7 @@ def main() -> int:
             notes="Core may know how to resolve an instance, but should not need a Velvet Factory sample to execute generically.",
         ),
         row(
+            treeish=args.prepared_against,
             surface_id="core-vf-sample-profile",
             paths=["packages/velvetos/samples/velvet-factory.json"],
             current_class="CORE_DUPLICATE_INSTANCE_FACTS_FOR_COMPATIBILITY",
@@ -234,6 +253,7 @@ def main() -> int:
             notes="Machine-enforced duplicate today: check-vf-offering validates both canonical instance and this sample.",
         ),
         row(
+            treeish=args.prepared_against,
             surface_id="root-vf-desk-reference-bind",
             paths=[".cursor/vf-desk.json", ".cursor/rules/velvet-factory-desk.mdc"],
             current_class="CORE_WORKSPACE_COMPATIBILITY_BIND_WITH_INSTANCE_FACTS",
@@ -247,6 +267,7 @@ def main() -> int:
             notes="Root desk remains an explicit reference bind and is machine-enforced by check-vf-desk.py.",
         ),
         row(
+            treeish=args.prepared_against,
             surface_id="living-studio-embedded-business-rules",
             paths=["packages/velvetos/living-studio/AUTONOMY.json"],
             current_class="CORE_PROJECTION_CONFIG_WITH_HARDCODED_INSTANCE_FACTS",
@@ -260,6 +281,7 @@ def main() -> int:
             notes="check-vf-autonomy currently enforces Sderot/shipping from AUTONOMY.json instead of canonical instance config.",
         ),
         row(
+            treeish=args.prepared_against,
             surface_id="vfprod-fleet-registry",
             paths=["packages/vfprod/FLEET.json"],
             current_class="DOMAIN_PACKAGE_WITH_INSTANCE_FLEET_VALUES",
@@ -272,6 +294,7 @@ def main() -> int:
             notes="Control API, Living Studio and vfprod currently read the Core-repo fleet path directly. Stage8 printer field draft already marks VF values Instance-owned.",
         ),
         row(
+            treeish=args.prepared_against,
             surface_id="control-api-instance-and-fleet-resolution",
             paths=[
                 "packages/velvetos_control_api/contributions/integrations.py",
@@ -290,6 +313,7 @@ def main() -> int:
             notes="Good direction already exists: instance desk is resolved by ID. Remaining debt is the velvet-factory default and direct fleet path.",
         ),
         row(
+            treeish=args.prepared_against,
             surface_id="tool-status-mixed-registry",
             paths=["packages/velvetos/TOOL-STATUS.json"],
             current_class="MIXED_GENERIC_TOOL_POLICY_AND_INSTANCE_RUNTIME_BINDINGS",
@@ -302,6 +326,7 @@ def main() -> int:
             notes="Generic status vocabulary belongs in Core; VF endpoints/provider state/host state are instance/domain-owned.",
         ),
         row(
+            treeish=args.prepared_against,
             surface_id="chatgpt-project-vf-distribution",
             paths=[
                 "packages/velvetos/chatgpt-project/LATEST.json",
@@ -320,6 +345,7 @@ def main() -> int:
             notes="Current project preflight and authority manifest actively bind the VF-specific executable bundle.",
         ),
         row(
+            treeish=args.prepared_against,
             surface_id="expert-modules-with-vf-values",
             paths=[
                 "packages/velvetos/modules/expert-revenue-loop.md",
@@ -336,6 +362,7 @@ def main() -> int:
             notes="Generic expert methods may remain in Core; Velvet Factory CTA/location/visual-standard values must resolve from instance/domain authorities.",
         ),
         row(
+            treeish=args.prepared_against,
             surface_id="windows-host-binding-document",
             paths=["packages/velvetos/WINDOWS-PATH-CONTRACT.md"],
             current_class="CORE_HOST_CONTRACT_WITH_INSTANCE_HOST_LABEL",
@@ -348,6 +375,7 @@ def main() -> int:
             notes="Path semantics are generic; the Sderot Windows host identity is instance/local binding.",
         ),
         row(
+            treeish=args.prepared_against,
             surface_id="policy-registry-explicit-instance-pointers",
             paths=["packages/velvetos/policy/policy-registry.json"],
             current_class="CORE_GENERIC_POLICY_WITH_EXPLICIT_INSTANCE_MACHINE_LOCATION",
@@ -360,6 +388,7 @@ def main() -> int:
             notes="This is a desired pattern: Core policy points to instance authority without copying business fact values.",
         ),
         row(
+            treeish=args.prepared_against,
             surface_id="stage8-non-normative-preparation",
             paths=[
                 "docs/implementation/policy-capability-prep/stage8-knowledge-record-v0.schema.json",
@@ -406,7 +435,7 @@ def main() -> int:
         migration_waves.setdefault(r["migration_wave"], []).append(r["surface_id"])
     migration_waves = {k: sorted(v) for k, v in sorted(migration_waves.items())}
 
-    policy_now = load(POLICY_REGISTRY)
+    policy_now = git_json(args.prepared_against, "packages/velvetos/policy/policy-registry.json")
     policy_base = git_json(args.prepared_against, "packages/velvetos/policy/policy-registry.json")
     policy_unchanged = canonical_json_sha256(policy_now) == canonical_json_sha256(policy_base)
 
