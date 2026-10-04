@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos.instance-windows-host-binding.v1",
+  "type": "object",
+  "required": ["schema", "instanceId", "platform", "hostId", "hostRole", "machineScopeRequired", "fallbackToUserProfile", "environment", "lanes"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "velvetos.instance-windows-host-binding.v1" },
+    "instanceId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "platform": { "const": "Windows" },
+    "hostId": { "type": "string", "minLength": 1 },
+    "hostRole": { "type": "string", "minLength": 1 },
+    "machineScopeRequired": { "const": true },
+    "fallbackToUserProfile": { "const": false },
+    "environment": {
+      "type": "object",
+      "required": ["VELVET_ROOT", "VELVETOS_REPO_ROOT", "VELVETOS_RUNTIME_ROOT", "VELVETOS_STATE_ROOT", "VELVETOS_HOST_ID"],
+      "additionalProperties": false,
+      "properties": {
+        "VELVET_ROOT": { "type": "string", "minLength": 1 },
+        "VELVETOS_REPO_ROOT": { "type": "string", "minLength": 1 },
+        "VELVETOS_RUNTIME_ROOT": { "type": "string", "minLength": 1 },
+        "VELVETOS_STATE_ROOT": { "type": "string", "minLength": 1 },
+        "VELVETOS_HOST_ID": { "type": "string", "minLength": 1 }
+      }
+    },
+    "lanes": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    }
+  }
+}

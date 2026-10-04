@@ -1,0 +1,30 @@
+{
+  "schema": "velvetos.instance-windows-host-binding.v1",
+  "instanceId": "velvet-factory",
+  "platform": "Windows",
+  "hostId": "sderot-windows",
+  "hostRole": "fallback-office-worker",
+  "machineScopeRequired": true,
+  "fallbackToUserProfile": false,
+  "environment": {
+    "VELVET_ROOT": "D:\\Velvet",
+    "VELVETOS_REPO_ROOT": "D:\\Velvet\\Repos\\velvetos-core",
+    "VELVETOS_RUNTIME_ROOT": "D:\\Velvet\\Runtime\\VelvetOS",
+    "VELVETOS_STATE_ROOT": "D:\\Velvet\\State\\VelvetOS",
+    "VELVETOS_HOST_ID": "sderot-windows"
+  },
+  "lanes": {
+    "repos": "Repos",
+    "workspaces": "Workspaces",
+    "data": "Data",
+    "artifacts": "Artifacts",
+    "logs": "Logs",
+    "cache": "Cache",
+    "tmp": "Tmp",
+    "tools": "Tools",
+    "services": "Services",
+    "migration": "Migration",
+    "backups": "Backups",
+    "archive": "Archive"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "schema": "velvetos.stage8c-windows-host-binding.v1",
+  "stage": "8C_WINDOWS_HOST_BINDING",
+  "behavior_change": true,
+  "prepared_against_main_sha": "2bac699984337506ce13a839984526c17b408eab",
+  "captured_at": "2026-10-04T20:21:25.5329026+03:00",
+  "purpose": "Separate generic Windows path semantics from the Velvet Factory private Windows host identity and absolute machine paths.",
+  "binding": {
+    "path": "instances/velvet-factory/instance/windows-host-binding.json",
+    "surface": "windowsHostBinding",
+    "host_id": "sderot-windows",
+    "machine_scope_required": true,
+    "fallback_to_user_profile": false,
+    "environment_keys": [
+      "VELVETOS_HOST_ID",
+      "VELVETOS_REPO_ROOT",
+      "VELVETOS_RUNTIME_ROOT",
+      "VELVETOS_STATE_ROOT",
+      "VELVET_ROOT"
+    ],
+    "lane_count": 12
+  },
+  "generic_core": {
+    "contract": "packages/velvetos/WINDOWS-PATH-CONTRACT.md",
+    "scoped_files": [
+      "packages/velvetos/WINDOWS-PATH-CONTRACT.md",
+      ".cursor/rules/windows-d-paths.mdc",
+      "scripts/bootstrap-edge-host-windows.ps1",
+      "scripts/bootstrap-speech-host-windows.ps1",
+      "scripts/bootstrap-manim-host-windows.ps1",
+      "scripts/bootstrap-media-host-windows.ps1",
+      "packages/vfmem/scripts/vf_cognee.py",
+      "packages/vfmem/scripts/vf_cognee_runtime.py"
+    ],
+    "private_value_hits": {
+      "packages/velvetos/WINDOWS-PATH-CONTRACT.md": [],
+      ".cursor/rules/windows-d-paths.mdc": [],
+      "scripts/bootstrap-edge-host-windows.ps1": [],
+      "scripts/bootstrap-speech-host-windows.ps1": [],
+      "scripts/bootstrap-manim-host-windows.ps1": [],
+      "scripts/bootstrap-media-host-windows.ps1": [],
+      "packages/vfmem/scripts/vf_cognee.py": [],
+      "packages/vfmem/scripts/vf_cognee_runtime.py": []
+    }
+  },
+  "operational_registry_baseline": {
+    "render_hosts_unchanged": true,
+    "openpost_unchanged": true,
+    "host_registry_id": "sderot-windows"
+  },
+  "authority_baseline": {
+    "policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "unchanged": true
+  },
+  "acceptance_criteria": {
+    "generic_core_windows_contract_has_no_instance_host_or_absolute_root_values": true,
+    "canonical_instance_declares_windows_host_binding_surface": true,
+    "instance_windows_binding_owns_current_host_identity_and_machine_paths": true,
+    "windows_bootstraps_require_explicit_host_id_without_hardcoded_identity": true,
+    "windows_path_consumers_keep_fail_closed_variable_driven_behavior": true,
+    "vfmem_windows_consumers_remain_generic_and_variable_driven": true,
+    "operational_host_and_openpost_registries_are_unchanged_and_match_binding": true,
+    "external_effect_policy_registry_is_unchanged": true
+  },
+  "repository_acceptance": "PASS",
+  "next_stage": "Stage 8C complete",
+  "remaining_domains": [],
+  "constraints": [
+    "host registry remains operational authority",
+    "instance binding owns concrete deployment values",
+    "machine environment must be provisioned explicitly",
+    "no user-profile fallback",
+    "no external-effect authority change"
+  ]
+}

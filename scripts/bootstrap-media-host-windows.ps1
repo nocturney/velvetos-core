@@ -10,7 +10,7 @@ $Root = Split-Path -Parent $PSScriptRoot
 Set-Location $Root
 
 Write-Host "=== VelvetOS canonical Windows media fallback ==="
-Write-Host "This wrapper commissions the existing sderot-windows Edge host for HyperFrames + VoiceStudio."
+Write-Host "This wrapper commissions the explicitly bound Windows Edge host for HyperFrames + VoiceStudio."
 
 $edgeArgs = @()
 if ($SkipHyperFramesInstall) { $edgeArgs += "-SkipHyperFramesInstall" }
@@ -24,7 +24,7 @@ if ($SkipVoiceStudioInstall) { $speechArgs += "-SkipVoiceStudioInstall" }
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 if ($StartWorker) {
-    Write-Host "NOTE: -StartWorker is accepted for compatibility, but sderot-windows uses the existing Remote Desktop Commander route rather than a second Cursor worker."
+    Write-Host "NOTE: -StartWorker is accepted for compatibility, but the selected Windows host uses its existing Remote Desktop Commander route rather than a second Cursor worker."
 }
 
 Write-Host "OK Windows media fallback commissioned locally."
