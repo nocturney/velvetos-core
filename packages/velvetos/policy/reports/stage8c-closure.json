@@ -1,0 +1,141 @@
+{
+  "schema": "velvetos.stage8c-closure.v1",
+  "stage": "8C_CLOSURE",
+  "behavior_change": false,
+  "prepared_against_main_sha": "11ce1ca3a44cb21af24add900ab6b0e9d9e0a47e",
+  "captured_at": "2026-10-04T20:39:24.5392694+03:00",
+  "purpose": "Close Stage 8C consumer migration only; prove inventory coverage, clean migrated consumers, retained rollback compatibility, unchanged authority and post-merge main health before Stage 8D retirement.",
+  "source_receipts": {
+    "stage8a_inventory": {
+      "path": "packages/velvetos/policy/reports/stage8a-core-instance-inventory.json",
+      "canonical_json_sha256": "4113ba15b645b359d94a079a125b409bba64bb6badce5d0b3871fb4976862a57"
+    },
+    "stage8b_resolver": {
+      "path": "packages/velvetos/policy/reports/stage8b-instance-resolver-foundation.json",
+      "canonical_json_sha256": "42d4d1b5a21ed78149d3cfd695f2d806d3056566e2249cfb7fd7f72d5771f121"
+    },
+    "stage8b_config": {
+      "path": "packages/velvetos/policy/reports/stage8b-canonical-instance-config.json",
+      "canonical_json_sha256": "81849ab505954b049a0aea3b37cf16c9a0abb3643cf12b003ebf0da1eeab25e1"
+    },
+    "sample_profile": {
+      "path": "packages/velvetos/policy/reports/stage8c-sample-profile-consumers.json",
+      "canonical_json_sha256": "1ac83c69a9acd2bb2319760e6b32019f06ff65e6477b31e8f7e59b447ae681fa"
+    },
+    "root_desk_readers": {
+      "path": "packages/velvetos/policy/reports/stage8c-root-desk-readers.json",
+      "canonical_json_sha256": "ca112239b9dca50215aae8bded37e6fdbf4146f55fd513431758a21a3ea08d1f"
+    },
+    "desk_catalog_bindings": {
+      "path": "packages/velvetos/policy/reports/stage8c-desk-catalog-bindings.json",
+      "canonical_json_sha256": "35cc6928181998859692b3fe0b59cdff7e39592514a50b0866d197f31a3c6b6a"
+    },
+    "living_studio": {
+      "path": "packages/velvetos/policy/reports/stage8c-living-studio-rules.json",
+      "canonical_json_sha256": "ec18d2b01db48555d172dde2b4ec2789d169843353f31692e32c004dc9e028a5"
+    },
+    "control_api_fleet": {
+      "path": "packages/velvetos/policy/reports/stage8c-control-api-fleet.json",
+      "canonical_json_sha256": "e8072fcec6d8b4616563018affebe1eed63ac6f50368fc6cc6bc738242664e69"
+    },
+    "expert_modules": {
+      "path": "packages/velvetos/policy/reports/stage8c-expert-modules.json",
+      "canonical_json_sha256": "28afbf0423338f40804ae905e2b95d9f2a593478ef634edc7cc5ac965a838292"
+    },
+    "chatgpt_distribution": {
+      "path": "packages/velvetos/policy/reports/stage8c-chatgpt-distribution-consumers.json",
+      "canonical_json_sha256": "7ffd8d3ac19fc00c65e0ccb440ece74696914a6927937375a85b3df1f4b3c039"
+    },
+    "windows_host_binding": {
+      "path": "packages/velvetos/policy/reports/stage8c-windows-host-binding.json",
+      "canonical_json_sha256": "ece1e1244737eca0fd58f14a23ebafcfedd1228d611a536b9934918bd2217d90"
+    }
+  },
+  "inventory_coverage": {
+    "stage8c_surface_count": 7,
+    "stage8c_surface_ids": [
+      "chatgpt-project-vf-distribution",
+      "control-api-instance-and-fleet-resolution",
+      "core-vf-sample-profile",
+      "expert-modules-with-vf-values",
+      "living-studio-embedded-business-rules",
+      "root-vf-desk-reference-bind",
+      "windows-host-binding-document"
+    ],
+    "domain_receipt_map": {
+      "core-vf-sample-profile": [
+        "sample_profile"
+      ],
+      "root-vf-desk-reference-bind": [
+        "root_desk_readers",
+        "desk_catalog_bindings"
+      ],
+      "living-studio-embedded-business-rules": [
+        "living_studio"
+      ],
+      "control-api-instance-and-fleet-resolution": [
+        "control_api_fleet"
+      ],
+      "chatgpt-project-vf-distribution": [
+        "chatgpt_distribution"
+      ],
+      "expert-modules-with-vf-values": [
+        "expert_modules"
+      ],
+      "windows-host-binding-document": [
+        "windows_host_binding"
+      ]
+    },
+    "all_covered": true
+  },
+  "consumer_scan": {
+    "clean": true,
+    "proof_mode": "domain_receipt_machine-consumer assertions"
+  },
+  "rollback_compatibility": {
+    "paths": [
+      "packages/velvetos/samples/velvet-factory.json",
+      ".cursor/vf-desk.json",
+      "packages/vfprod/FLEET.json",
+      "packages/velvetos/TOOL-STATUS.json",
+      "packages/velvetos/chatgpt-project/LATEST.json"
+    ],
+    "all_present": true,
+    "deletion_authorized": false
+  },
+  "authority": {
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false
+  },
+  "main_full_suite": {
+    "head_sha": "11ce1ca3a44cb21af24add900ab6b0e9d9e0a47e",
+    "workflow_run_id": 37221071250,
+    "job_id": 111491351299,
+    "run_url": "https://github.com/nocturney/velvetos-core/actions/runs/37221071250",
+    "conclusion": "SUCCESS",
+    "mode": "full",
+    "registered_sensors": 116,
+    "passed_sensors": 116,
+    "log_markers": [
+      "SENSORS 116 mode=full",
+      "OK suite passed=116"
+    ]
+  },
+  "acceptance_criteria": {
+    "all_stage8c_inventory_surfaces_have_passed_migration_receipts": true,
+    "all_stage8c_domain_receipts_pass_their_full_acceptance_criteria": true,
+    "no_unsclassified_direct_legacy_consumers_remain_in_migrated_domains": true,
+    "core_resolution_is_explicit_and_fail_closed_across_migrated_domains": true,
+    "rollback_compatibility_paths_remain_present": true,
+    "legacy_paths_remain_protected_from_stage8c_deletion": true,
+    "external_effect_authority_is_unchanged_across_stage8": true,
+    "final_stage8c_domain_reports_no_remaining_stage8c_domains": true,
+    "main_full_sensor_suite_116_of_116": true
+  },
+  "repository_acceptance": "PASS",
+  "next_stage": "Stage 8D — Legacy retirement",
+  "stage8d_entry": {
+    "allowed": true,
+    "constraint": "Retire legacy compatibility paths only after clean consumer scan, parity proof, rollback window and explicit deletion evidence; no big-bang delete."
+  }
+}
