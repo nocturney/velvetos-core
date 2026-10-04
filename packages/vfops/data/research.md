@@ -1,28 +1,26 @@
-# 05 · משרד · 2.10.2026
+# 05 · משרד · 5.10.2026
 
 מצב Research Seat: `ready_for_brief`.
 הריצה הושלמה לפני cutoff 07:00 Asia/Jerusalem.
 
 ## מה נבנה / יועל
-- שעון איסוף נפתח רק כשהעבודה משוחררת לייצור: קובץ סופי, אישור, ואין תנאי פתוח. הצעה או מקדמה לבד לא מתחילות את הימים. מיפוי ל־`vfsales` / `vfconvert`.
-- אישור שנכנס לתור עם הקשר מלא (מי, חלון איסוף, חומר, כמות, קובץ שולט). «אושר» בשרשור לא מספיק. מיפוי ל־`vfconvert` / `vfsales`.
-- בדיקת התאמה לפני מחיר: חומר, זמן מכונה, גימור, והתנגשות עם התור. אם אין התאמה — השהיה, לא ₪. מיפוי ל־`vfconvert`.
-- לפני אצווה מרובת חלקים: נעילת זהות לאיסוף (יחידה, רוויזיה, כמות בשקית, מה עוד נמסר). אישור גימור אינו אישור אריזה. מיפוי ל־`vfprod`. בלי משלוח ארצי.
-- תוכן מהרצפה: טיימלאפס או תהליך קצר של עבודה אמיתית, לא תמונת מוצר גנרית. מיפוי ל־`vfcovers` / `vfgrowth`. אין ספירת Insights.
-- Best Skills: due/stale (~120ש מ־27.9) — בוצע על דירוג 1.10; `no-embed-existing-coverage`.
-- MakerWorld: יום שישי — דילוג (הסריקה היא א׳–ד׳).
+- הזמנה חוזרת: כשלקוח מבקש «אותו דבר שוב», כרטיס התשובה מציין את העבודה הקודמת, גרסת הקובץ, חומר וצבע, כמות, ומה השתנה. בלי שינוי, העבודה נכנסת לתור לפי הרישום הקודם. שינוי בצבע, בחומר, בכמות או בתאריך פותח בדיקה והצעה חדשות. «אולי נצטרך עוד» נשאר הערה ולא תופס זמן מדפסת. מיפוי ל־`vfconvert` / `vfsales` / `vfprod`.
+- הצעת מחיר בלי שתיקה: בהודעת ההצעה יש תמונה של הפריט שלהם, משפט אחד על מה קורה אחרי «כן» (קובץ סופי, תור, הודעת איסוף), וסיכום קצר שאפשר להעביר לבן זוג או להורה. מעקב נשאר ידני, בלי אוטו־DM. מיפוי ל־`vfsales` / `vfconvert`.
+- פוסט של לקוח שתייג את `@velvets_cloud` יכול לעלות לגריד שלנו בלי לפרסם מחדש את התמונה שלו. זו אפשרות לכריסטיאן ולא צעד אוטומטי: צריך רשות מהלקוח, בדיקת פרטיות, ומעבר בסטנדרט הגריד. מיפוי ל־`vfgrowth` / `vfcovers` / `vlicense`.
+- Meta One: קישורים בתוך פוסטים ורילס זמינים רק במנוי בתשלום. לא קונים. ה־CTA נשאר הודעת Instagram ל־`@velvets_cloud`. סיכומי המדדים של עוזר Edits אינם Insights שלנו.
+- Best Skills: stale (~72ש מ־2.10 על main) — בוצע על דירוג 4.10; `no-embed-existing-coverage`.
+- MakerWorld: יום שני — לא יום סריקה.
 
-מקור מלא: `packages/vfresearch/sources/2026-10-02-orchestra.md` · `packages/vfresearch/sources/2026-10-02-best-skills.md`.
+מקור מלא: `packages/vfresearch/sources/2026-10-05-orchestra.md` · `packages/vfresearch/sources/2026-10-05-best-skills.md`.
 
-## שבועי קישורים · 25.9.2026 (Weekly Research Accountability · gh-failover)
+## שבועי קישורים · 4.10.2026
 
-- 84 קישורי `LINKS.json`: 80 נבדקו חי, 4 חומות (נקרא רק sourceNote). `lastReviewed=2026-09-25`.
-- הוטמע: Huly בארכיון (הפיתוח עבר ל־Platform-Collective; השירות המתארח נסגר) → `note` ב־`LINKS.json`. HeyOrca 25.9 → print-demand.
-- print-demand — 4 אותות (`sources/2026-09-25-print-demand.md`); מדף חומרים חסר ספירה.
+- 93/93 רשומות `LINKS.json` עברו review חי. 3 חומות (Invision Community, NetSuite, vBulletin) נקראו רק דרך sourceNote.
+- תחזוקה בלבד: שתי הפניות Blender עודכנו לשם הקנוני `ahujasid/mcp-for-blender`. אין capability חדש.
 
 ```text
 05 · משרד
-שבועי קישורים — 80/84 נבדקו חי · הוטמע Huly-ארכיון + HeyOrca 25.9 · print-demand — 4 אותות
+שבועי קישורים — 93/93 reviewed · 2 canonical GitHub URL updates (Blender MCP rename) · 3 walls via sourceNote · 0 dead/unresolved links · אין capability חדש.
 ```
 
-מקור מלא: `packages/vfresearch/sources/2026-09-25-weekly-links.md`.
+מקור מלא: `packages/vfresearch/sources/2026-10-04-weekly-links.md`.

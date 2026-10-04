@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.upstream-review.v1",
-  "reviewedAt": "2026-10-01T23:08:18.627757+00:00",
+  "reviewedAt": "2026-10-04T23:15:21.665167+00:00",
   "policy": "Owner receives a separate update email only when newDetection or a current review sets notifyOwner. No auto-upgrade and no ack without compatibility evidence.",
   "summary": {
-    "pending": 50,
+    "pending": 56,
     "update": 0,
-    "wait": 14,
-    "review": 11,
-    "ignore": 25
+    "wait": 15,
+    "review": 12,
+    "ignore": 29
   },
   "items": {
     "00080000/dsh-project-memory": {
@@ -20,11 +20,16 @@
         "kind=catalog-source",
         "integration=packages/vfdsh/catalog.json",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/00080000/dsh-project-memory/compare/3d171b6d4b78d82d71398fb28c638830b5c28291...c5451c6c28e739cffa13e5a9def27450d49147fb"
+        "compare: https://github.com/00080000/dsh-project-memory/compare/3d171b6d4b78d82d71398fb28c638830b5c28291...c5451c6c28e739cffa13e5a9def27450d49147fb",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=af438eb67a87 latestRelease=v0.5.14; no smoke; no ack",
+        "compare: https://github.com/00080000/dsh-project-memory/compare/3d171b6d4b78d82d71398fb28c638830b5c28291...af438eb67a8701d14742f4d53f4154405ee2655d",
+        "2026-10-05 Research Seat: compare af438eb67a87...ffaa4e4359c4 ahead_by=3; read commits/release notes; verdict ignore unchanged; no smoke; no ack",
+        "compare: https://github.com/00080000/dsh-project-memory/compare/af438eb67a8701d14742f4d53f4154405ee2655d...ffaa4e4359c425b0228929f4156386e3bfe23b43",
+        "head commits sample: fix(0.5.15): walkDir 读失败不再当删除、entry id 单射、派生字段重建、TS 增强队列有界; docs(readme): 精简行文与配置表，去掉逐块测试数与版本史（en/zh 同步）; docs(readme): 修正 store 的 git 默认行为；/tasks 段落去掉宿主限制说明"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "c5451c6c28e739cffa13e5a9def27450d49147fb",
-      "reviewedRelease": "v0.5.13"
+      "reviewedRemoteHead": "ffaa4e4359c425b0228929f4156386e3bfe23b43",
+      "reviewedRelease": "v0.5.14"
     },
     "ahujasid/blender-mcp": {
       "verdict": "wait",
@@ -52,11 +57,16 @@
         "kind=skill-pattern",
         "integration=.cursor/skills/vf-fcc-offload/SKILL.md",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/Alishahryar1/free-claude-code/compare/37c77262115a02d3ef97763b7e7a4e0dd011183e...6b2989d4fbb921bf884d8dedcbeaf4a33e2b5991"
+        "compare: https://github.com/Alishahryar1/free-claude-code/compare/37c77262115a02d3ef97763b7e7a4e0dd011183e...6b2989d4fbb921bf884d8dedcbeaf4a33e2b5991",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=f29cc304bff8 latestRelease=v6.9.0; no smoke; no ack",
+        "compare: https://github.com/Alishahryar1/free-claude-code/compare/37c77262115a02d3ef97763b7e7a4e0dd011183e...f29cc304bff8b39819a25435e2525f02aa1a99a2",
+        "2026-10-05 Research Seat: compare f29cc304bff8...f1f798c79054 ahead_by=2 release v6.9.0→v6.9.2 (published 2026-10-04T22:38:03Z); read commits/release notes; verdict ignore unchanged; no smoke; no ack",
+        "compare: https://github.com/Alishahryar1/free-claude-code/compare/f29cc304bff8b39819a25435e2525f02aa1a99a2...f1f798c790541258dd46de3f6e011421cb5aaa5e",
+        "head commits sample: patch: recover interrupted streams after delivered output (#1986); patch: preserve parallel Chat tool-call identities (#1993)"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "6b2989d4fbb921bf884d8dedcbeaf4a33e2b5991",
-      "reviewedRelease": "v6.7.0"
+      "reviewedRemoteHead": "f1f798c790541258dd46de3f6e011421cb5aaa5e",
+      "reviewedRelease": "v6.9.2"
     },
     "andyrewlee/awesome-agent-orchestrators": {
       "verdict": "ignore",
@@ -68,10 +78,12 @@
         "kind=agent-index",
         "integration=packages/vfharness/playbooks/orchestrators.md",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/andyrewlee/awesome-agent-orchestrators/compare/e120484e448f6115e69788d148d67accea17a0c6...21a752a9b88c79ee756e2544f94187ce867ad794"
+        "compare: https://github.com/andyrewlee/awesome-agent-orchestrators/compare/e120484e448f6115e69788d148d67accea17a0c6...21a752a9b88c79ee756e2544f94187ce867ad794",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=5f49eb3d1daa latestRelease=None; no smoke; no ack",
+        "compare: https://github.com/andyrewlee/awesome-agent-orchestrators/compare/e120484e448f6115e69788d148d67accea17a0c6...5f49eb3d1daa226bedd4958e1705ffdc1ac53419"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "21a752a9b88c79ee756e2544f94187ce867ad794",
+      "reviewedRemoteHead": "5f49eb3d1daa226bedd4958e1705ffdc1ac53419",
       "reviewedRelease": null
     },
     "Anionex/dsh-vision-toolkit": {
@@ -148,10 +160,31 @@
         "kind=cad-runtime-source",
         "integration=Blender host/runtime",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/blender/blender/compare/35a2d9dfd0ad5b311e1eb94dcc60ab0cfdc60047...64d181010e0dbc49d2faaaa057357aef8d9a809c"
+        "compare: https://github.com/blender/blender/compare/35a2d9dfd0ad5b311e1eb94dcc60ab0cfdc60047...64d181010e0dbc49d2faaaa057357aef8d9a809c",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=703834468bfa latestRelease=None; no smoke; no ack",
+        "compare: https://github.com/blender/blender/compare/35a2d9dfd0ad5b311e1eb94dcc60ab0cfdc60047...703834468bfa0464da39634f3cf346a078d5236c",
+        "2026-10-05 Research Seat: compare 703834468bfa...877314a34bbc ahead_by=2; read commits/release notes; verdict wait unchanged; no smoke; no ack",
+        "compare: https://github.com/blender/blender/compare/703834468bfa0464da39634f3cf346a078d5236c...877314a34bbcb9f7624d92f1e15cec01935d5306",
+        "head commits sample: Cleanup: trailing whitespaces; Git: Use LFS for .ktx2 images"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "64d181010e0dbc49d2faaaa057357aef8d9a809c",
+      "reviewedRemoteHead": "877314a34bbcb9f7624d92f1e15cec01935d5306",
+      "reviewedRelease": null
+    },
+    "calesthio/OpenMontage": {
+      "verdict": "wait",
+      "reasonHe": "מקור התבנית של vfom זז ב-HEAD בלי release ובלי smoke תאימות. אין שדרוג ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=None latestRelease=None",
+        "baselineHead=08e2151fa02d remoteHead=9327439db690",
+        "kind=embedded-provenance",
+        "newDetection=true on 2026-10-04 Research Seat",
+        "no compatibility smoke and no ack",
+        "compare: https://github.com/calesthio/OpenMontage/compare/08e2151fa02de28a5d6a312b3d575692bf147ad7...9327439db69021ab4b0e2776729bf3b58fdb5a87"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "9327439db69021ab4b0e2776729bf3b58fdb5a87",
       "reviewedRelease": null
     },
     "coreyhaines31/marketingskills": {
@@ -164,11 +197,13 @@
         "kind=embedded-provenance",
         "integration=packages/vfmskill/ORIGIN.md · packages/vfmskill/catalog.json",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/coreyhaines31/marketingskills/compare/5b2c0007766c6a1cf1d53fd8fc73e979e0821022...c0e35b78ad294c4ea8dbe7801c79bfeb6f67f3e9"
+        "compare: https://github.com/coreyhaines31/marketingskills/compare/5b2c0007766c6a1cf1d53fd8fc73e979e0821022...c0e35b78ad294c4ea8dbe7801c79bfeb6f67f3e9",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=dda3841f0b29 latestRelease=v2.11.17; no smoke; no ack",
+        "compare: https://github.com/coreyhaines31/marketingskills/compare/5b2c0007766c6a1cf1d53fd8fc73e979e0821022...dda3841f0b294e01e93b1541486beefbfab0915e"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "c0e35b78ad294c4ea8dbe7801c79bfeb6f67f3e9",
-      "reviewedRelease": "v2.11.6"
+      "reviewedRemoteHead": "dda3841f0b294e01e93b1541486beefbfab0915e",
+      "reviewedRelease": "v2.11.17"
     },
     "debpalash/VoiceStudio": {
       "verdict": "ignore",
@@ -180,10 +215,15 @@
         "kind=runtime-source",
         "integration=packages/vfom/SPEECH-BACKEND.json · scripts/bootstrap-speech-host-windows.ps1",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/debpalash/VoiceStudio/compare/08a1592e3cb9b4c36beef5fa3185ec2313bb1fea...befc0a6f5b552b0b99e6eea574bc3c55e3d0519a"
+        "compare: https://github.com/debpalash/VoiceStudio/compare/08a1592e3cb9b4c36beef5fa3185ec2313bb1fea...befc0a6f5b552b0b99e6eea574bc3c55e3d0519a",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=c4d63ef207f3 latestRelease=v0.5.6; no smoke; no ack",
+        "compare: https://github.com/debpalash/VoiceStudio/compare/08a1592e3cb9b4c36beef5fa3185ec2313bb1fea...c4d63ef207f345b4405f8e8320a73d273ce7187f",
+        "2026-10-05 Research Seat: compare c4d63ef207f3...3fcd381e5c32 ahead_by=9; read commits/release notes; verdict ignore unchanged; no smoke; no ack",
+        "compare: https://github.com/debpalash/VoiceStudio/compare/c4d63ef207f345b4405f8e8320a73d273ce7187f...3fcd381e5c3282b084384dbc38be28ddaba0e6bf",
+        "head commits sample: Merge pull request #2557 from debpalash/packaging/aur; fix: preserve CPU source installs and initialize Electron startup; fix: retain complete CPU and CUDA lock graphs"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "befc0a6f5b552b0b99e6eea574bc3c55e3d0519a",
+      "reviewedRemoteHead": "3fcd381e5c3282b084384dbc38be28ddaba0e6bf",
       "reviewedRelease": "v0.5.6"
     },
     "DeusData/codebase-memory-mcp": {
@@ -196,11 +236,35 @@
         "kind=pattern-source",
         "integration=packages/vfmem/ORIGIN.md",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/DeusData/codebase-memory-mcp/compare/5df8b0442c48fed654c6f11d94cb6f64f00fc368...cb7d937638f77fb67aacc39444f6a6709d217d51"
+        "compare: https://github.com/DeusData/codebase-memory-mcp/compare/5df8b0442c48fed654c6f11d94cb6f64f00fc368...cb7d937638f77fb67aacc39444f6a6709d217d51",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=96c3f41cf334 latestRelease=v0.11.0; no smoke; no ack",
+        "compare: https://github.com/DeusData/codebase-memory-mcp/compare/5df8b0442c48fed654c6f11d94cb6f64f00fc368...96c3f41cf334d87670cb085f1fcf16f637293222",
+        "2026-10-05 Research Seat: compare 96c3f41cf334...268a9d888664 ahead_by=84; read commits/release notes; verdict review unchanged; no smoke; no ack",
+        "compare: https://github.com/DeusData/codebase-memory-mcp/compare/96c3f41cf334d87670cb085f1fcf16f637293222...268a9d8886642eb7f9b2ce45f5ce27cdecf0f519",
+        "head commits sample: Merge pull request #2488 from DeusData/test/daemon-runtime-connection-cap-deterministic; Merge pull request #2489 from DeusData/fix/path-alias-skip-links; Merge pull request #2253 from DeusData/distill/1245-cypher-partial-where"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "cb7d937638f77fb67aacc39444f6a6709d217d51",
+      "reviewedRemoteHead": "268a9d8886642eb7f9b2ce45f5ce27cdecf0f519",
       "reviewedRelease": "v0.11.0"
+    },
+    "Devin-AXIS/deepseek-design": {
+      "verdict": "ignore",
+      "reasonHe": "שורת קטלוג בלבד. VelvetOS לא מריץ את הריפו. אין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=None latestRelease=None",
+        "baselineHead=f70d052bd86d remoteHead=bafd4b6285ad",
+        "kind=catalog-source",
+        "newDetection=true on 2026-10-04 Research Seat",
+        "no compatibility smoke and no ack",
+        "compare: https://github.com/Devin-AXIS/deepseek-design/compare/f70d052bd86d15887adc3b9345cdd6a90a09b4a8...bafd4b6285add8371cad8d4a7c6c59e2d0f59f79",
+        "2026-10-05 Research Seat: compare bafd4b6285ad...d918fe6b14e1 ahead_by=2; read commits/release notes; verdict ignore unchanged; no smoke; no ack",
+        "compare: https://github.com/Devin-AXIS/deepseek-design/compare/bafd4b6285add8371cad8d4a7c6c59e2d0f59f79...d918fe6b14e1f09cb578cb1b922878981cf6a3aa",
+        "head commits sample: sync: iPolloWork dfa728a857a5; sync: iPolloWork 0550466f285a"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "d918fe6b14e1f09cb578cb1b922878981cf6a3aa",
+      "reviewedRelease": null
     },
     "dsh-market/dsh-market": {
       "verdict": "ignore",
@@ -212,10 +276,12 @@
         "kind=catalog-source",
         "integration=packages/vfdsh/catalog.json",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/dsh-market/dsh-market/compare/4ceda5d2b7b666a9093e97bc5ae06bcaf383f154...c33e37441e8616d195f8c29e9781ed1c1172ef5f"
+        "compare: https://github.com/dsh-market/dsh-market/compare/4ceda5d2b7b666a9093e97bc5ae06bcaf383f154...c33e37441e8616d195f8c29e9781ed1c1172ef5f",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=bf7720e650e2 latestRelease=v1.66.8; no smoke; no ack",
+        "compare: https://github.com/dsh-market/dsh-market/compare/4ceda5d2b7b666a9093e97bc5ae06bcaf383f154...bf7720e650e2ba2eb2384309672750cde061eb7c"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "c33e37441e8616d195f8c29e9781ed1c1172ef5f",
+      "reviewedRemoteHead": "bf7720e650e2ba2eb2384309672750cde061eb7c",
       "reviewedRelease": "v1.66.8"
     },
     "earthtojake/text-to-cad": {
@@ -228,11 +294,16 @@
         "kind=runtime-source",
         "integration=packages/vfprod/TEXT-TO-CAD.md",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/earthtojake/text-to-cad/compare/fafa7b057d8f2c3347ff422f0515380123a4b1d4...f40a5963bf0257c91feaffd8a6c2e537dde3141a"
+        "compare: https://github.com/earthtojake/text-to-cad/compare/fafa7b057d8f2c3347ff422f0515380123a4b1d4...f40a5963bf0257c91feaffd8a6c2e537dde3141a",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=4d420edd14f7 latestRelease=v0.7.10; no smoke; no ack",
+        "compare: https://github.com/earthtojake/text-to-cad/compare/fafa7b057d8f2c3347ff422f0515380123a4b1d4...4d420edd14f75bede5e94dd83fbf6d6ed1542236",
+        "2026-10-05 Research Seat: compare 4d420edd14f7...8d795f56343e ahead_by=2 release v0.7.10→v0.7.11 (published 2026-10-03T23:14:27Z); read commits/release notes; verdict wait unchanged; no smoke; no ack",
+        "compare: https://github.com/earthtojake/text-to-cad/compare/4d420edd14f75bede5e94dd83fbf6d6ed1542236...8d795f56343edce7ef6b9413e02f7a92318f8229",
+        "head commits sample: cadgen and viewer: faster agent edits and opens (web and CAD app), host-safe CAD-app messages, Rende; Fix STEP loading for wire-only imported components (#526)"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "f40a5963bf0257c91feaffd8a6c2e537dde3141a",
-      "reviewedRelease": "v0.7.6"
+      "reviewedRemoteHead": "8d795f56343edce7ef6b9413e02f7a92318f8229",
+      "reviewedRelease": "v0.7.11"
     },
     "FFmpeg/FFmpeg": {
       "verdict": "wait",
@@ -244,10 +315,15 @@
         "kind=runtime-toolchain",
         "integration=scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-hyperframes-host-macos.sh · scripts/vf_hyperframes.py",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/FFmpeg/FFmpeg/compare/d62aef2e50434cc31eccf236ae67d864becb7068...460cb05218a236cb587516fe2c8b121403609d95"
+        "compare: https://github.com/FFmpeg/FFmpeg/compare/d62aef2e50434cc31eccf236ae67d864becb7068...460cb05218a236cb587516fe2c8b121403609d95",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=f391d256fdeb latestRelease=None; no smoke; no ack",
+        "compare: https://github.com/FFmpeg/FFmpeg/compare/d62aef2e50434cc31eccf236ae67d864becb7068...f391d256fdeb64245f2693e85ebd662e09262124",
+        "2026-10-05 Research Seat: compare f391d256fdeb...a35c8799920a ahead_by=39; read commits/release notes; verdict wait unchanged; no smoke; no ack",
+        "compare: https://github.com/FFmpeg/FFmpeg/compare/f391d256fdeb64245f2693e85ebd662e09262124...a35c8799920a93b99781eab6e70a5795ee7d182b",
+        "head commits sample: lavc/hevcdec: factor local context growth and substream setup out of WPP; lavc/hevcdec: decode tiles in parallel under slice threading; avcodec/snowenc: check the frame number against the pass-2 statistics before indexing them"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "460cb05218a236cb587516fe2c8b121403609d95",
+      "reviewedRemoteHead": "a35c8799920a93b99781eab6e70a5795ee7d182b",
       "reviewedRelease": null
     },
     "FreeCAD/FreeCAD": {
@@ -260,10 +336,15 @@
         "kind=cad-runtime-source",
         "integration=CAD/3D toolchain upstream",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/FreeCAD/FreeCAD/compare/20b531c4211f0f0b27f86f35ce6e4b00c322706d...b9609745048b3848b923bf25ee44d63c180b2094"
+        "compare: https://github.com/FreeCAD/FreeCAD/compare/20b531c4211f0f0b27f86f35ce6e4b00c322706d...b9609745048b3848b923bf25ee44d63c180b2094",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=0c0fdc133421 latestRelease=1.1.4; no smoke; no ack",
+        "compare: https://github.com/FreeCAD/FreeCAD/compare/20b531c4211f0f0b27f86f35ce6e4b00c322706d...0c0fdc1334215cbe4d4990f7e2da802d1f99a120",
+        "2026-10-05 Research Seat: compare 0c0fdc133421...eccfb5b8550b ahead_by=9; read commits/release notes; verdict wait unchanged; no smoke; no ack",
+        "compare: https://github.com/FreeCAD/FreeCAD/compare/0c0fdc1334215cbe4d4990f7e2da802d1f99a120...eccfb5b8550bf0e64b13609431c27d5c2fb573f4",
+        "head commits sample: PD: Initialize dress-up highlighting flags; fix missing backgroundin TD ordered list icon; fix unecessary elide in selection window"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "b9609745048b3848b923bf25ee44d63c180b2094",
+      "reviewedRemoteHead": "eccfb5b8550bf0e64b13609431c27d5c2fb573f4",
       "reviewedRelease": "1.1.4"
     },
     "git/git": {
@@ -276,10 +357,13 @@
         "kind=runtime-toolchain",
         "integration=scripts/bootstrap-edge-host-windows.ps1",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/git/git/compare/0f8e75abebff0877cae681a3d5ff31ac47f54220...c46c1e37724f0478939de636ab8ea5a89086d532"
+        "compare: https://github.com/git/git/compare/0f8e75abebff0877cae681a3d5ff31ac47f54220...c46c1e37724f0478939de636ab8ea5a89086d532",
+        "2026-10-05 Research Seat: compare c46c1e37724f...8103b446517e ahead_by=22; read commits/release notes; verdict wait unchanged; no smoke; no ack",
+        "compare: https://github.com/git/git/compare/c46c1e37724f0478939de636ab8ea5a89086d532...8103b446517e0c44e67561b9d0ccce56efa60a71",
+        "head commits sample: Merge branch 'of/commit-reach-repo-awareness'; Merge branch 'rr/upload-pack-swap-shallow-wanted-ref'; Merge branch 'js/coverity-fixes'"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "c46c1e37724f0478939de636ab8ea5a89086d532",
+      "reviewedRemoteHead": "8103b446517e0c44e67561b9d0ccce56efa60a71",
       "reviewedRelease": null
     },
     "Han-1413141/dsh-cost-meter": {
@@ -292,11 +376,16 @@
         "kind=catalog-source",
         "integration=packages/vfdsh/catalog.json",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/Han-1413141/dsh-cost-meter/compare/c520d9bae873836bfafb1e672dca5042b50f05f9...ae9ae9120346d1947673b219251446905458d2e8"
+        "compare: https://github.com/Han-1413141/dsh-cost-meter/compare/c520d9bae873836bfafb1e672dca5042b50f05f9...ae9ae9120346d1947673b219251446905458d2e8",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=201b3ef52477 latestRelease=v1.8.10; no smoke; no ack",
+        "compare: https://github.com/Han-1413141/dsh-cost-meter/compare/c520d9bae873836bfafb1e672dca5042b50f05f9...201b3ef524775ad6e97e37952bfa4fd34b043ef2",
+        "2026-10-05 Research Seat: compare 201b3ef52477...bc29c788710b ahead_by=2 release v1.8.10→v1.8.11 (published 2026-10-04T13:00:31Z); read commits/release notes; verdict ignore unchanged; no smoke; no ack",
+        "compare: https://github.com/Han-1413141/dsh-cost-meter/compare/201b3ef524775ad6e97e37952bfa4fd34b043ef2...bc29c788710b5888877871f1bfeb1f030be495a8",
+        "head commits sample: fix: isolate credential editors from sidebar autofill (#233); chore: release v1.8.11 credential editor isolation"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "ae9ae9120346d1947673b219251446905458d2e8",
-      "reviewedRelease": "v1.8.5"
+      "reviewedRemoteHead": "bc29c788710b5888877871f1bfeb1f030be495a8",
+      "reviewedRelease": "v1.8.11"
     },
     "headroomlabs-ai/headroom": {
       "verdict": "review",
@@ -308,10 +397,15 @@
         "kind=pattern-source",
         "integration=packages/vfharness/playbooks/context-thrift.md",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/headroomlabs-ai/headroom/compare/d13e1966f820220b482a33c30bde1e926743939a...8538a831531bb277a6083ed2a010312a849c3050"
+        "compare: https://github.com/headroomlabs-ai/headroom/compare/d13e1966f820220b482a33c30bde1e926743939a...8538a831531bb277a6083ed2a010312a849c3050",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=1cf496612e78 latestRelease=v0.39.1; no smoke; no ack",
+        "compare: https://github.com/headroomlabs-ai/headroom/compare/d13e1966f820220b482a33c30bde1e926743939a...1cf496612e781ef8d67ff87ee4f78037492f0bc7",
+        "2026-10-05 Research Seat: compare 1cf496612e78...befdb52fd565 ahead_by=17; read commits/release notes; verdict review unchanged; no smoke; no ack",
+        "compare: https://github.com/headroomlabs-ai/headroom/compare/1cf496612e781ef8d67ff87ee4f78037492f0bc7...befdb52fd565ff990e4ff1463f0550ba7df588b5",
+        "head commits sample: fix(proxy): take a streamed Anthropic turn's uncached input from usage (#3946); fix(ccr): only proactively expand compressions present in the requesting conversation (#3924); fix(cache): keep prefix lineage across a replaced system tail (#3934)"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "8538a831531bb277a6083ed2a010312a849c3050",
+      "reviewedRemoteHead": "befdb52fd565ff990e4ff1463f0550ba7df588b5",
       "reviewedRelease": "v0.39.1"
     },
     "heygen-com/hyperframes": {
@@ -324,11 +418,33 @@
         "kind=runtime-source",
         "integration=scripts/vf_hyperframes.py",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/heygen-com/hyperframes/compare/b165b64eda845f46f9b622b96e4545bf704d0950...c3b6e55f7eb6eea845dc001889b50fc35b841d4e"
+        "compare: https://github.com/heygen-com/hyperframes/compare/b165b64eda845f46f9b622b96e4545bf704d0950...c3b6e55f7eb6eea845dc001889b50fc35b841d4e",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=b71aa9338be1 latestRelease=v0.8.116; no smoke; no ack",
+        "compare: https://github.com/heygen-com/hyperframes/compare/b165b64eda845f46f9b622b96e4545bf704d0950...b71aa9338be16edd77ac78392dc95045ac1b4f70",
+        "2026-10-05 Research Seat: compare b71aa9338be1...1bdb5edd93bb ahead_by=63 release v0.8.116→v0.8.125 (published 2026-10-04T21:01:12Z); read commits/release notes; verdict ignore unchanged; no smoke; no ack",
+        "compare: https://github.com/heygen-com/hyperframes/compare/b71aa9338be16edd77ac78392dc95045ac1b4f70...1bdb5edd93bb7fe58cbb5ec81133a23deb075ad2",
+        "head commits sample: Merge pull request #5031 from heygen-com/release/v0.8.125; fix(studio): the motion path draws on every load, not only when the layer's node is the frame's own ; fix: preview and bundled scripts run where and when the author put them (#5014)"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "c3b6e55f7eb6eea845dc001889b50fc35b841d4e",
-      "reviewedRelease": "v0.8.106"
+      "reviewedRemoteHead": "1bdb5edd93bb7fe58cbb5ec81133a23deb075ad2",
+      "reviewedRelease": "v0.8.125"
+    },
+    "HKUDS/DeepTutor": {
+      "verdict": "ignore",
+      "reasonHe": "מקור דפוס בלבד ל־vfmem/MEMORY-UPDATE.md. v1.6.13 עוסק בקריאה/האזנה/בנק שאלות ופרסור מסמכים, לא בדפוס עדכון זיכרון שאנחנו מאמצים. אין ack.",
+      "evidence": [
+        "changeKinds=head,release",
+        "baselineRelease=v1.6.12 latestRelease=v1.6.13",
+        "baselineHead=ef2d9e5c3c99 remoteHead=f07029cfcf2c",
+        "kind=pattern-source",
+        "integration=packages/vfmem/MEMORY-UPDATE.md",
+        "2026-10-05 Research Seat: compare ef2d9e5c3c99...f07029cfcf2c ahead_by=182 release None→v1.6.13 (published 2026-10-04T13:35:37Z); read commits/release notes; verdict ignore set; no smoke; no ack",
+        "compare: https://github.com/HKUDS/DeepTutor/compare/ef2d9e5c3c99fd073742c5aadc2bb9584b1e503b...f07029cfcf2c8dfccdb671cdfc343db8334f5741",
+        "head commits sample: fix(chat): distinguish unconfirmed replies from expired questions (#1648); fix(reading): track EPUB text progress within chapters (#1673); fix(tests): normalize Windows paths in web contracts (#1696)"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "f07029cfcf2c8dfccdb671cdfc343db8334f5741",
+      "reviewedRelease": "v1.6.13"
     },
     "HuanLinOTO/dsh-plugin-mineru": {
       "verdict": "ignore",
@@ -345,6 +461,41 @@
       "notifyOwner": false,
       "reviewedRemoteHead": "b302e2aa5fa5badf2ee622f9c179384a196860ab",
       "reviewedRelease": null
+    },
+    "huginn/huginn": {
+      "verdict": "ignore",
+      "reasonHe": "שורת קטלוג ב-vfe2b. לא מתקינים runtime שני. אין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=v2026.09.22 latestRelease=v2026.09.22",
+        "baselineHead=86ac2818e0dc remoteHead=3a9ee6237c9f",
+        "kind=catalog-source",
+        "newDetection=true on 2026-10-04 Research Seat",
+        "no compatibility smoke and no ack",
+        "compare: https://github.com/huginn/huginn/compare/86ac2818e0dc4983aaecf73f126740071c57158e...3a9ee6237c9feb4ebd8bf3450a4b0bd6fc864ce1",
+        "2026-10-05 Research Seat: compare 3a9ee6237c9f...5658f26d4c17 ahead_by=10 release v2026.09.22→v2026.10.04 (published 2026-10-04T12:10:56Z); read commits/release notes; verdict ignore unchanged; no smoke; no ack",
+        "compare: https://github.com/huginn/huginn/compare/3a9ee6237c9feb4ebd8bf3450a4b0bd6fc864ce1...5658f26d4c176e3b6052dc0a6f400f5a45a6ec83",
+        "head commits sample: Update https://github.com/stripe/smokescreen digest to fa5bb56 (#3765); Deduplicate automatic agent checks; Merge pull request #3767 from huginn/deduplicate-automatic-agent-checks"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "5658f26d4c176e3b6052dc0a6f400f5a45a6ec83",
+      "reviewedRelease": "v2026.10.04"
+    },
+    "Jeffallan/claude-skills": {
+      "verdict": "review",
+      "reasonHe": "מקור דפוס סקילים שמופה לזיכרון משרד. בודקים רלוונטיות לפני אימוץ. אין התקנה ואין ack.",
+      "evidence": [
+        "changeKinds=head,release",
+        "baselineRelease=v0.4.16 latestRelease=v0.4.18",
+        "baselineHead=882ef55e377d remoteHead=1be15d8064f8",
+        "kind=skill-pattern",
+        "newDetection=true on 2026-10-04 Research Seat",
+        "no compatibility smoke and no ack",
+        "compare: https://github.com/Jeffallan/claude-skills/compare/882ef55e377dbf9a4dbe496bb41ac6ccd0e555cf...1be15d8064f88fc25216442406d40add8fd23b53"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "1be15d8064f88fc25216442406d40add8fd23b53",
+      "reviewedRelease": "v0.4.18"
     },
     "jing-hy/picturereader": {
       "verdict": "ignore",
@@ -372,10 +523,12 @@
         "kind=catalog-source",
         "integration=packages/vfe2b/catalog.json",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/joaomdmoura/crewai/compare/4ed2abc7bbf504a634d3b733f2a97e0fbe8d44ec...8078f9130c35a47be95d4a55bf1d73b3fd44fc88"
+        "compare: https://github.com/joaomdmoura/crewai/compare/4ed2abc7bbf504a634d3b733f2a97e0fbe8d44ec...8078f9130c35a47be95d4a55bf1d73b3fd44fc88",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=738c8e19e35c latestRelease=1.15.23; no smoke; no ack",
+        "compare: https://github.com/joaomdmoura/crewai/compare/4ed2abc7bbf504a634d3b733f2a97e0fbe8d44ec...738c8e19e35c2888d8e0663bc5cc45c5acf6ac2d"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "8078f9130c35a47be95d4a55bf1d73b3fd44fc88",
+      "reviewedRemoteHead": "738c8e19e35c2888d8e0663bc5cc45c5acf6ac2d",
       "reviewedRelease": "1.15.23"
     },
     "linkingoscar/dsh-attachment-formats": {
@@ -404,10 +557,15 @@
         "kind=skill-index",
         "integration=.cursor/skills/vf-best-skills/SKILL.md · packages/vfresearch/BEST-SKILLS.md",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/LinklyAI/best-skills/compare/fe7eb0ccddb1c71a3cf2459efe48cbb9ccc0793d...5042aaafcea7f558185a78e932af7b9b5c3fb20b"
+        "compare: https://github.com/LinklyAI/best-skills/compare/fe7eb0ccddb1c71a3cf2459efe48cbb9ccc0793d...5042aaafcea7f558185a78e932af7b9b5c3fb20b",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=2634c8019f4b latestRelease=None; no smoke; no ack",
+        "compare: https://github.com/LinklyAI/best-skills/compare/fe7eb0ccddb1c71a3cf2459efe48cbb9ccc0793d...2634c8019f4b1f421e7536729bc861cb4a5769d8",
+        "2026-10-05 Research Seat: compare 2634c8019f4b...fcdab075666a ahead_by=1; read commits/release notes; verdict ignore unchanged; no smoke; no ack",
+        "compare: https://github.com/LinklyAI/best-skills/compare/2634c8019f4b1f421e7536729bc861cb4a5769d8...fcdab075666a2332fcfc6ff6fd70584d2fa7eddf",
+        "head commits sample: data: 2026-10-04"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "5042aaafcea7f558185a78e932af7b9b5c3fb20b",
+      "reviewedRemoteHead": "fcdab075666a2332fcfc6ff6fd70584d2fa7eddf",
       "reviewedRelease": null
     },
     "liustack/modlens": {
@@ -420,11 +578,14 @@
         "kind=catalog-source",
         "integration=packages/vfdsh/catalog.json",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/liustack/modlens/compare/ffeee3e32de1c05315e334be97c9f087242fe2f3...333468c72bf9630ec5dd60b169b89e1f48f39b53"
+        "compare: https://github.com/liustack/modlens/compare/ffeee3e32de1c05315e334be97c9f087242fe2f3...333468c72bf9630ec5dd60b169b89e1f48f39b53",
+        "2026-10-05 Research Seat: compare 333468c72bf9...1d8b20fc97a3 ahead_by=3 release v3.26.5→v3.26.6 (published 2026-10-04T07:38:02Z); read commits/release notes; verdict ignore unchanged; no smoke; no ack",
+        "compare: https://github.com/liustack/modlens/compare/333468c72bf9630ec5dd60b169b89e1f48f39b53...1d8b20fc97a33b456e0d500037d4d66febaeb80a",
+        "head commits sample: fix(dsh): retry discovery when a route cannot answer yet at boot; docs: 记录 3.26.6 变更; chore(release): v3.26.6"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "333468c72bf9630ec5dd60b169b89e1f48f39b53",
-      "reviewedRelease": "v3.26.5"
+      "reviewedRemoteHead": "1d8b20fc97a33b456e0d500037d4d66febaeb80a",
+      "reviewedRelease": "v3.26.6"
     },
     "ManimCommunity/manim": {
       "verdict": "wait",
@@ -436,10 +597,15 @@
         "kind=runtime-source",
         "integration=scripts/bootstrap-manim-host-windows.ps1",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/ManimCommunity/manim/compare/16c4a68b6d151e2024d0b1e1b80bfb7725c9f5b2...22aa85f47c9dc1b32a4e27bda2dd68320f9cd69c"
+        "compare: https://github.com/ManimCommunity/manim/compare/16c4a68b6d151e2024d0b1e1b80bfb7725c9f5b2...22aa85f47c9dc1b32a4e27bda2dd68320f9cd69c",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=5dc0d3b8dfe2 latestRelease=v0.21.0; no smoke; no ack",
+        "compare: https://github.com/ManimCommunity/manim/compare/16c4a68b6d151e2024d0b1e1b80bfb7725c9f5b2...5dc0d3b8dfe23b1dbf2284cca111c5d146a44db0",
+        "2026-10-05 Research Seat: compare 5dc0d3b8dfe2...9b7b49fba47a ahead_by=2; read commits/release notes; verdict wait unchanged; no smoke; no ack",
+        "compare: https://github.com/ManimCommunity/manim/compare/5dc0d3b8dfe23b1dbf2284cca111c5d146a44db0...9b7b49fba47ad37453f1fcf35aa7f910ea474535",
+        "head commits sample: Small update to tangential arc docs (#5046); chore(deps): update Tornado, Jupyter, and virtualenv (#5047)"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "22aa85f47c9dc1b32a4e27bda2dd68320f9cd69c",
+      "reviewedRemoteHead": "9b7b49fba47ad37453f1fcf35aa7f910ea474535",
       "reviewedRelease": "v0.21.0"
     },
     "mattpocock/skills": {
@@ -452,11 +618,14 @@
         "kind=skill-pattern",
         "integration=packages/vfharness/playbooks/engineering-delivery-chain.md",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/mattpocock/skills/compare/c55ee46073ed923f86ce59a5eb3b6d895095d1b7...d81f3a183412e71a5b1e84ca21bc1a35eea03a60"
+        "compare: https://github.com/mattpocock/skills/compare/c55ee46073ed923f86ce59a5eb3b6d895095d1b7...d81f3a183412e71a5b1e84ca21bc1a35eea03a60",
+        "2026-10-05 Research Seat: compare d81f3a183412...24fe0ef7737e ahead_by=6 release v1.2.3→v1.3.1 (published 2026-10-04T12:48:18Z); read commits/release notes; verdict review unchanged; no smoke; no ack",
+        "compare: https://github.com/mattpocock/skills/compare/d81f3a183412e71a5b1e84ca21bc1a35eea03a60...24fe0ef7737efae15c87225755e9f6f5965e4888",
+        "head commits sample: ask-matt: route post-bug reflection to /retro, drop stale hand-off; chore: version skills; Merge pull request #1121 from mattpocock/fix/1117-diagnosing-bugs-post-mortem"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "d81f3a183412e71a5b1e84ca21bc1a35eea03a60",
-      "reviewedRelease": "v1.2.3"
+      "reviewedRemoteHead": "24fe0ef7737efae15c87225755e9f6f5965e4888",
+      "reviewedRelease": "v1.3.1"
     },
     "MichengAI/dsh-agency-agents": {
       "verdict": "ignore",
@@ -484,10 +653,13 @@
         "kind=agent-repo",
         "integration=%USERPROFILE%/.agency-agents",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/msitarzewski/agency-agents/compare/053ddbbf392a1688fc7043d81529f47ef2cf86c8...d3f71c4bb8922d3eea7576237a870dd59b3cdd52"
+        "compare: https://github.com/msitarzewski/agency-agents/compare/053ddbbf392a1688fc7043d81529f47ef2cf86c8...d3f71c4bb8922d3eea7576237a870dd59b3cdd52",
+        "2026-10-05 Research Seat: compare d3f71c4bb892...83294689da38 ahead_by=106; read commits/release notes; verdict review unchanged; no smoke; no ack",
+        "compare: https://github.com/msitarzewski/agency-agents/compare/d3f71c4bb8922d3eea7576237a870dd59b3cdd52...83294689da3832c0a9f223221148c411fd3eacc0",
+        "head commits sample: Merge #1026: fix(testing): validate TCO adoption inputs before division; Merge #1001: Preserve automatic theme selection across page reloads; chore(eval): regenerate the convert-outputs manifest for content batch 2"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "d3f71c4bb8922d3eea7576237a870dd59b3cdd52",
+      "reviewedRemoteHead": "83294689da3832c0a9f223221148c411fd3eacc0",
       "reviewedRelease": null
     },
     "mvanhorn/last30days-skill": {
@@ -532,10 +704,15 @@
         "kind=runtime-toolchain",
         "integration=scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-hyperframes-host-macos.sh",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/nodejs/node/compare/a2a064c76afe42fedf061d976de8dff69ef2feaf...adcd028c0e4fddb9c8c10237ccce50dc58b3abc7"
+        "compare: https://github.com/nodejs/node/compare/a2a064c76afe42fedf061d976de8dff69ef2feaf...adcd028c0e4fddb9c8c10237ccce50dc58b3abc7",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=c60762cbd543 latestRelease=v26.10.0; no smoke; no ack",
+        "compare: https://github.com/nodejs/node/compare/a2a064c76afe42fedf061d976de8dff69ef2feaf...c60762cbd54367ce71b733c4524ed63842fd2f5e",
+        "2026-10-05 Research Seat: compare c60762cbd543...93bb027b687e ahead_by=49; read commits/release notes; verdict wait unchanged; no smoke; no ack",
+        "compare: https://github.com/nodejs/node/compare/c60762cbd54367ce71b733c4524ed63842fd2f5e...93bb027b687e8bcf0b71bd62e0c8ff2630dc93cc",
+        "head commits sample: deps: V8: backport 9fb4444bfc46; build,win: do not quote cmd arguments; tools: increase constexpr step limit for MSVC STL"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "adcd028c0e4fddb9c8c10237ccce50dc58b3abc7",
+      "reviewedRemoteHead": "93bb027b687e8bcf0b71bd62e0c8ff2630dc93cc",
       "reviewedRelease": "v26.10.0"
     },
     "omdsh-dev/dsh-data-agent": {
@@ -564,11 +741,16 @@
         "kind=agent-pattern",
         "integration=packages/vfharness/playbooks/oma-patterns.md",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/open-multi-agent/open-multi-agent/compare/ab349e7ad03900455016b798c78464edf98cc94d...4e293a21a8bceac114e395aebc0306b5730ab2d4"
+        "compare: https://github.com/open-multi-agent/open-multi-agent/compare/ab349e7ad03900455016b798c78464edf98cc94d...4e293a21a8bceac114e395aebc0306b5730ab2d4",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=3563a9312b30 latestRelease=v1.21.0; no smoke; no ack",
+        "compare: https://github.com/open-multi-agent/open-multi-agent/compare/ab349e7ad03900455016b798c78464edf98cc94d...3563a9312b304fffca49873c0dcf6c3b259a0f58",
+        "2026-10-05 Research Seat: compare 3563a9312b30...75a67581c98d ahead_by=1 release v1.21.0→v1.21.1 (published 2026-10-04T00:18:45Z); read commits/release notes; verdict ignore unchanged; no smoke; no ack",
+        "compare: https://github.com/open-multi-agent/open-multi-agent/compare/3563a9312b304fffca49873c0dcf6c3b259a0f58...75a67581c98df3bce3c90035dcaf445a989155d2",
+        "head commits sample: fix(release-bot): wait up to eight minutes for npm to serve a published version (#622)"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "4e293a21a8bceac114e395aebc0306b5730ab2d4",
-      "reviewedRelease": "v1.21.0"
+      "reviewedRemoteHead": "75a67581c98df3bce3c90035dcaf445a989155d2",
+      "reviewedRelease": "v1.21.1"
     },
     "openscad/openscad": {
       "verdict": "wait",
@@ -580,10 +762,15 @@
         "kind=cad-runtime-source",
         "integration=CAD/3D toolchain upstream",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/openscad/openscad/compare/eecb92a6b6ef4e810c205facc5acabc917d42a5e...03da906b4c437e6935ba91d8209cb153d3259a37"
+        "compare: https://github.com/openscad/openscad/compare/eecb92a6b6ef4e810c205facc5acabc917d42a5e...03da906b4c437e6935ba91d8209cb153d3259a37",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=9899c745e47d latestRelease=openscad-2021.01; no smoke; no ack",
+        "compare: https://github.com/openscad/openscad/compare/eecb92a6b6ef4e810c205facc5acabc917d42a5e...9899c745e47dbf0f48b3ca23562eea31e66f9b82",
+        "2026-10-05 Research Seat: compare 9899c745e47d...81ade7d33a8e ahead_by=2; read commits/release notes; verdict wait unchanged; no smoke; no ack",
+        "compare: https://github.com/openscad/openscad/compare/9899c745e47dbf0f48b3ca23562eea31e66f9b82...81ade7d33a8ed14fc6817a1cf0d44334592bb9fc",
+        "head commits sample: Add timestamp to macOS signature (new Apple requirement) (#7094); Sign macOS binaries with GPG key (#7093)"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "03da906b4c437e6935ba91d8209cb153d3259a37",
+      "reviewedRemoteHead": "81ade7d33a8ed14fc6817a1cf0d44334592bb9fc",
       "reviewedRelease": "openscad-2021.01"
     },
     "OrcaSlicer/OrcaSlicer": {
@@ -596,10 +783,15 @@
         "kind=runtime-source",
         "integration=production slicer",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/OrcaSlicer/OrcaSlicer/compare/4964f49765f7963b9ee4b016fe5a3bc0581e1911...9d7112549515a66e5f50708d1aa3db9dcf9cdea0"
+        "compare: https://github.com/OrcaSlicer/OrcaSlicer/compare/4964f49765f7963b9ee4b016fe5a3bc0581e1911...9d7112549515a66e5f50708d1aa3db9dcf9cdea0",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=5e2d8ab4f080 latestRelease=v2.4.2; no smoke; no ack",
+        "compare: https://github.com/OrcaSlicer/OrcaSlicer/compare/4964f49765f7963b9ee4b016fe5a3bc0581e1911...5e2d8ab4f080f5d7c00aa52f776d92f8699e72c4",
+        "2026-10-05 Research Seat: compare 5e2d8ab4f080...4b4a261787ee ahead_by=19; read commits/release notes; verdict wait unchanged; no smoke; no ack",
+        "compare: https://github.com/OrcaSlicer/OrcaSlicer/compare/5e2d8ab4f080f5d7c00aa52f776d92f8699e72c4...4b4a261787ee815fbde96adfe04f3871d88acc16",
+        "head commits sample: Precise Seam: remove known limitations and rework perimeter intersection (#16072); Fix a small memory leak when creating default enum list options (#16133); Fix crash on macOS when OrcaSlicer is quit from the Dock, a logout or a restart (#16136)"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "9d7112549515a66e5f50708d1aa3db9dcf9cdea0",
+      "reviewedRemoteHead": "4b4a261787ee815fbde96adfe04f3871d88acc16",
       "reviewedRelease": "v2.4.2"
     },
     "python/cpython": {
@@ -612,10 +804,15 @@
         "kind=runtime-toolchain",
         "integration=scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-manim-host-windows.ps1",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/python/cpython/compare/baec76438e32f50983f48c1658a55015b036204b...a4f28a52b4b54c34100ee0891b9a15640ed3a7b2"
+        "compare: https://github.com/python/cpython/compare/baec76438e32f50983f48c1658a55015b036204b...a4f28a52b4b54c34100ee0891b9a15640ed3a7b2",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=880696af1aff latestRelease=None; no smoke; no ack",
+        "compare: https://github.com/python/cpython/compare/baec76438e32f50983f48c1658a55015b036204b...880696af1aff6f4170fbacdfb8aa73a84be73da5",
+        "2026-10-05 Research Seat: compare 880696af1aff...587b7a5b315a ahead_by=6; read commits/release notes; verdict wait unchanged; no smoke; no ack",
+        "compare: https://github.com/python/cpython/compare/880696af1aff6f4170fbacdfb8aa73a84be73da5...587b7a5b315a971ecd376184a1f1cbecaa9e6f21",
+        "head commits sample: gh-158583: Fix uninitialized memory read in bytes.fromhex() (#158584); gh-158585: Optimize bytes object creation (#158664); Docs: Clarify that `ctypes.pythonapi` *may* be `None` under a statically linked interpreter (GH-1586"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "a4f28a52b4b54c34100ee0891b9a15640ed3a7b2",
+      "reviewedRemoteHead": "587b7a5b315a971ecd376184a1f1cbecaa9e6f21",
       "reviewedRelease": null
     },
     "Q00/ouroboros": {
@@ -628,11 +825,16 @@
         "kind=catalog-source",
         "integration=packages/vfdsh/catalog.json",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/Q00/ouroboros/compare/c0d584c78aa46c8b12bc3a7157f5b7b6681720f3...3fc7abb03a9e87a3ed2fdde6aa22674b016b6d74"
+        "compare: https://github.com/Q00/ouroboros/compare/c0d584c78aa46c8b12bc3a7157f5b7b6681720f3...3fc7abb03a9e87a3ed2fdde6aa22674b016b6d74",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=dfc530775fa0 latestRelease=v0.55.4; no smoke; no ack",
+        "compare: https://github.com/Q00/ouroboros/compare/c0d584c78aa46c8b12bc3a7157f5b7b6681720f3...dfc530775fa0c1a3cd560708ee5e0a0f9cb2f5ce",
+        "2026-10-05 Research Seat: compare dfc530775fa0...1b113faf17ed ahead_by=2; read commits/release notes; verdict ignore unchanged; no smoke; no ack",
+        "compare: https://github.com/Q00/ouroboros/compare/dfc530775fa0c1a3cd560708ee5e0a0f9cb2f5ce...1b113faf17edf86e8899dc484e90d06ffb35b0e5",
+        "head commits sample: fix(exec-sandbox): allow mode, time and xattr changes inside writable roots on Linux (#2516); fix(boundary): oracles for built inputs, non-JSON results, no_raise and command files (#2518)"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "3fc7abb03a9e87a3ed2fdde6aa22674b016b6d74",
-      "reviewedRelease": "v0.55.3"
+      "reviewedRemoteHead": "1b113faf17edf86e8899dc484e90d06ffb35b0e5",
+      "reviewedRelease": "v0.55.4"
     },
     "remotion-dev/remotion": {
       "verdict": "ignore",
@@ -644,10 +846,12 @@
         "kind=embedded-provenance",
         "integration=packages/vfom/VIDEO-TOOLCHAIN.json",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/remotion-dev/remotion/compare/1beb32cb9e3ef074842dedb076af1bfcad17427a...c320056a980972de109ef27a40bede9660a46931"
+        "compare: https://github.com/remotion-dev/remotion/compare/1beb32cb9e3ef074842dedb076af1bfcad17427a...c320056a980972de109ef27a40bede9660a46931",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=e385a83dbde5 latestRelease=v4.0.532; no smoke; no ack",
+        "compare: https://github.com/remotion-dev/remotion/compare/1beb32cb9e3ef074842dedb076af1bfcad17427a...e385a83dbde54179c0457ad90b7d7c3a4b6ab44a"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "c320056a980972de109ef27a40bede9660a46931",
+      "reviewedRemoteHead": "e385a83dbde54179c0457ad90b7d7c3a4b6ab44a",
       "reviewedRelease": "v4.0.532"
     },
     "scenario-labs/skills": {
@@ -660,11 +864,16 @@
         "kind=skill-pattern",
         "integration=packages/vfprod/SCENARIO-EXPERT-CAPABILITIES.md · packages/vfom/CREATIVE-REFINE-LOOP.md · packages/vfprod/third_party/scenario-labs/blender/VENDOR-MANIFEST.json",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/scenario-labs/skills/compare/9624e295fa33168bc1be22a628c23ba132d1c959...c8a4bddf2b052864f2eaf98d7ce5aa044c72bf42"
+        "compare: https://github.com/scenario-labs/skills/compare/9624e295fa33168bc1be22a628c23ba132d1c959...c8a4bddf2b052864f2eaf98d7ce5aa044c72bf42",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=4b20beaab597 latestRelease=skills-v0.50.0; no smoke; no ack",
+        "compare: https://github.com/scenario-labs/skills/compare/9624e295fa33168bc1be22a628c23ba132d1c959...4b20beaab5975b9b87516b8fbfc794c1ef7f06c1",
+        "2026-10-05 Research Seat: compare 4b20beaab597...91caa011e137 ahead_by=13 release skills-v0.50.0→skills-v0.52.0 (published 2026-10-04T11:44:16Z); read commits/release notes; verdict review unchanged; no smoke; no ack",
+        "compare: https://github.com/scenario-labs/skills/compare/4b20beaab5975b9b87516b8fbfc794c1ef7f06c1...91caa011e13774a220aba7136309b49964104040",
+        "head commits sample: fix(skills): file only missing ids, since one duplicate fails the whole collection add (#183); fix(skills): launch batches in waves under the concurrency ceiling (#184); feat(scenario-seedream): add 5.0 Flash and Flash Layerize (#182)"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "c8a4bddf2b052864f2eaf98d7ce5aa044c72bf42",
-      "reviewedRelease": "skills-v0.48.0"
+      "reviewedRemoteHead": "91caa011e13774a220aba7136309b49964104040",
+      "reviewedRelease": "skills-v0.52.0"
     },
     "shengsheng90/DSH-taskboard": {
       "verdict": "ignore",
@@ -708,11 +917,16 @@
         "kind=catalog-source",
         "integration=packages/vfe2b/catalog.json",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/stablyai/orca/compare/0a876b2f5a26db1f845ddb26d04da6c5b14601cb...38c2d1dcb9dc079bba6f59bdaa179d6af0584f09"
+        "compare: https://github.com/stablyai/orca/compare/0a876b2f5a26db1f845ddb26d04da6c5b14601cb...38c2d1dcb9dc079bba6f59bdaa179d6af0584f09",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=60b166468515 latestRelease=v1.4.219; no smoke; no ack",
+        "compare: https://github.com/stablyai/orca/compare/0a876b2f5a26db1f845ddb26d04da6c5b14601cb...60b166468515b411ce9b9ceb20a9b4fff9804416",
+        "2026-10-05 Research Seat: compare 60b166468515...3b01ba6d0d86 ahead_by=65 release v1.4.219→v1.4.220 (published 2026-10-04T05:01:05Z); read commits/release notes; verdict ignore unchanged; no smoke; no ack",
+        "compare: https://github.com/stablyai/orca/compare/60b166468515b411ce9b9ceb20a9b4fff9804416...3b01ba6d0d8635efc8b80cb19c9bb3882d84f16c",
+        "head commits sample: fix: update Caffeinate tooltip copy about MacBook lid behavior (#23091); Simplify the phone-control and phone-size terminal dialogs (#25307); fix(terminal): stop old output bleeding into Claude's screen when revisiting a remote tab (#24926)"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "38c2d1dcb9dc079bba6f59bdaa179d6af0584f09",
-      "reviewedRelease": "v1.4.218"
+      "reviewedRemoteHead": "3b01ba6d0d8635efc8b80cb19c9bb3882d84f16c",
+      "reviewedRelease": "v1.4.220"
     },
     "Tencent/WeKnora": {
       "verdict": "ignore",
@@ -729,6 +943,22 @@
       "notifyOwner": false,
       "reviewedRemoteHead": "bccb4b151bae403508da77fbb174efc79dc47c1a",
       "reviewedRelease": "v0.8.2"
+    },
+    "tong-io/tongflow": {
+      "verdict": "ignore",
+      "reasonHe": "שורת קטלוג בלבד. VelvetOS לא מריץ את הריפו. אין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=v0.3.5 latestRelease=v0.3.5",
+        "baselineHead=36e103c0ab6f remoteHead=a00f0d374c75",
+        "kind=catalog-source",
+        "newDetection=true on 2026-10-04 Research Seat",
+        "no compatibility smoke and no ack",
+        "compare: https://github.com/tong-io/tongflow/compare/36e103c0ab6f6919c524051ab67448e1d057b339...a00f0d374c75e1efe736ce5bf2b71c7311844564"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "a00f0d374c75e1efe736ce5bf2b71c7311844564",
+      "reviewedRelease": "v0.3.5"
     },
     "topoteretes/cognee": {
       "verdict": "wait",
@@ -772,11 +1002,13 @@
         "kind=catalog-source",
         "integration=packages/vfdsh/catalog.json",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/volcengine/OpenViking/compare/a09a9d20a8e07d08973aee177802d00e08df29e6...b597acc1b9c4889d57d376bd2e33fbea7ee7e924"
+        "compare: https://github.com/volcengine/OpenViking/compare/a09a9d20a8e07d08973aee177802d00e08df29e6...b597acc1b9c4889d57d376bd2e33fbea7ee7e924",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=9d9bc85e1f6a latestRelease=v0.4.23; no smoke; no ack",
+        "compare: https://github.com/volcengine/OpenViking/compare/a09a9d20a8e07d08973aee177802d00e08df29e6...9d9bc85e1f6a15afa7f23b0d7bf114a7c61cad14"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "b597acc1b9c4889d57d376bd2e33fbea7ee7e924",
-      "reviewedRelease": "v0.4.22"
+      "reviewedRemoteHead": "9d9bc85e1f6a15afa7f23b0d7bf114a7c61cad14",
+      "reviewedRelease": "v0.4.23"
     },
     "xmanrui/dsh-im": {
       "verdict": "ignore",
@@ -788,11 +1020,16 @@
         "kind=catalog-source",
         "integration=packages/vfdsh/catalog.json",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/xmanrui/dsh-im/compare/b7522c70b4707c6879dc6985c20820da65e95cae...d41a5b5eb43dd5aa6115da4caf53843f1b14a32f"
+        "compare: https://github.com/xmanrui/dsh-im/compare/b7522c70b4707c6879dc6985c20820da65e95cae...d41a5b5eb43dd5aa6115da4caf53843f1b14a32f",
+        "2026-10-04 Research Seat: HEAD/release moved; verdict unchanged; remoteHead=692928d2033b latestRelease=v4.34.2; no smoke; no ack",
+        "compare: https://github.com/xmanrui/dsh-im/compare/b7522c70b4707c6879dc6985c20820da65e95cae...692928d2033bed7f2fa0c81b591130fa929eee72",
+        "2026-10-05 Research Seat: compare 692928d2033b...ceb05482bd32 ahead_by=6 release v4.34.2→v4.35.1 (published 2026-10-04T16:16:43Z); read commits/release notes; verdict ignore unchanged; no smoke; no ack",
+        "compare: https://github.com/xmanrui/dsh-im/compare/692928d2033bed7f2fa0c81b591130fa929eee72...ceb05482bd32327ec61e9e8b5a556a7abb601caf",
+        "head commits sample: fix(qq): recognize mentions in all-message group events; chore(release): 4.35.0; fix: report archived sessions across all channels"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "d41a5b5eb43dd5aa6115da4caf53843f1b14a32f",
-      "reviewedRelease": "v4.34.1"
+      "reviewedRemoteHead": "ceb05482bd32327ec61e9e8b5a556a7abb601caf",
+      "reviewedRelease": "v4.35.1"
     },
     "yxqfg/phone-lens": {
       "verdict": "ignore",
@@ -804,22 +1041,27 @@
         "kind=catalog-source",
         "integration=packages/vfdsh/catalog.json",
         "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
-        "compare: https://github.com/yxqfg/phone-lens/compare/1f9eb54f2375359a66016a30796936c69d4f8a6e...8df0d0037b9a98a28084bb6280560c8d8d9bddb9"
+        "compare: https://github.com/yxqfg/phone-lens/compare/1f9eb54f2375359a66016a30796936c69d4f8a6e...8df0d0037b9a98a28084bb6280560c8d8d9bddb9",
+        "2026-10-05 Research Seat: compare 8df0d0037b9a...413855c0c7b1 ahead_by=1 release v1.0.2→v1.0.3 (published 2026-10-04T11:48:59Z); read commits/release notes; verdict ignore unchanged; no smoke; no ack",
+        "compare: https://github.com/yxqfg/phone-lens/compare/8df0d0037b9a98a28084bb6280560c8d8d9bddb9...413855c0c7b1025a5af8c627f5f6c0fa51becc85",
+        "head commits sample: feat: release v1.0.3 — arm64-only 25MB APK, keepalive mutual-wake, settings pop jank fix"
       ],
       "notifyOwner": false,
-      "reviewedRemoteHead": "8df0d0037b9a98a28084bb6280560c8d8d9bddb9",
-      "reviewedRelease": "v1.0.2"
+      "reviewedRemoteHead": "413855c0c7b1025a5af8c627f5f6c0fa51becc85",
+      "reviewedRelease": "v1.0.3"
     }
   },
-  "notificationPreparedAt": "2026-10-01T23:09:18.414538+00:00",
-  "notificationDigest": "ee9444ff9d20cf0848a7c6e781cc9c987538058320c4025f13826443edb499b3",
   "artifactMeta": {
-    "asOf": "2026-10-01T23:08:18.627757+00:00",
+    "asOf": "2026-10-04T23:15:21.665167+00:00",
     "provenance": [
-      "packages/vfresearch/sources/upstream-watch-latest.json",
+      "packages/vfresearch/sources/upstream-watch-latest.json (checkedAt 2026-10-04T23:11:10.136844+00:00)",
+      "base verdicts: 2026-10-04 Research Seat review (unmerged PR #488, branch cursor/research-seat-2026-10-04-31fc)",
+      "gh api compare + releases for the 30 rows whose HEAD/release moved since that review",
       "review evidence[] bound to reviewedRemoteHead + reviewedRelease"
     ],
-    "uncertainty": "review/wait/ignore/update verdicts retain their evidence and do not imply compatibility or adoption unless explicitly proven",
+    "uncertainty": "review/wait/ignore/update verdicts retain their evidence and do not imply compatibility or adoption unless explicitly proven; base reviews came from an unmerged PR; no compatibility smoke was run",
     "refreshTarget": "when current remoteHead/latestRelease no longer matches the bound review, or an explicit review task"
-  }
+  },
+  "notificationPreparedAt": "2026-10-04T23:15:26.667082+00:00",
+  "notificationDigest": "fad549248401adceb4f756102250db3ca922576d9548898ad6b25f9a86c6302a"
 }

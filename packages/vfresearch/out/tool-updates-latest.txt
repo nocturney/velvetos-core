@@ -1,11 +1,11 @@
 VelvetOS · עדכוני כלים
 
-נמצאו 50 עדכונים ממתינים. לא בוצע שום שדרוג אוטומטי.
-בדיקת upstream אחרונה: 2026-10-01T23:05:42.328425+00:00
+נמצאו 56 עדכונים ממתינים. לא בוצע שום שדרוג אוטומטי.
+בדיקת upstream אחרונה: 2026-10-04T23:11:10.136844+00:00
 
 1. 00080000/dsh-project-memory
    מצב: אין פעולה כרגע
-   גרסה/מקור: v0.5.12 → v0.5.13
+   גרסה/מקור: v0.5.12 → v0.5.14
    שינוי: head, release
    שימוש אצלנו: packages/vfdsh/catalog.json
    למה: שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.
@@ -23,7 +23,7 @@ VelvetOS · עדכוני כלים
 
 3. Alishahryar1/free-claude-code
    מצב: אין פעולה כרגע
-   גרסה/מקור: v6.4.4 → v6.7.0
+   גרסה/מקור: v6.4.4 → v6.9.2
    שינוי: head, release
    שימוש אצלנו: .cursor/skills/vf-fcc-offload/SKILL.md
    למה: ספק וידאו/קול/CLI מחוץ למנדט Cloud. אין התקנה ואין ack.
@@ -32,7 +32,7 @@ VelvetOS · עדכוני כלים
 
 4. andyrewlee/awesome-agent-orchestrators
    מצב: אין פעולה כרגע
-   גרסה/מקור: e120484e44 → 21a752a9b8
+   גרסה/מקור: e120484e44 → 5f49eb3d1d
    שינוי: head
    שימוש אצלנו: packages/vfharness/playbooks/orchestrators.md
    למה: מקור orchestrator/runtime שני. נעול אצלנו. אין התקנה ואין ack.
@@ -77,23 +77,32 @@ VelvetOS · עדכוני כלים
 
 9. blender/blender
    מצב: להמתין
-   גרסה/מקור: 35a2d9dfd0 → 64d181010e
+   גרסה/מקור: 35a2d9dfd0 → 877314a34b
    שינוי: head
    שימוש אצלנו: Blender host/runtime
    למה: שינוי upstream ב-runtime פעיל בלי smoke תאימות במושב הזה. אין שדרוג ואין ack.
    ראיות: changeKinds=head · baselineRelease=None latestRelease=None · baselineHead=35a2d9dfd0ad remoteHead=64d181010e0d · kind=cad-runtime-source
    מקור: https://github.com/blender/blender
 
-10. coreyhaines31/marketingskills
+10. calesthio/OpenMontage
+   מצב: להמתין
+   גרסה/מקור: 08e2151fa0 → 9327439db6
+   שינוי: head
+   שימוש אצלנו: packages/vfom/ORIGIN.md · packages/vfom/catalog.json
+   למה: מקור התבנית של vfom זז ב-HEAD בלי release ובלי smoke תאימות. אין שדרוג ואין ack.
+   ראיות: changeKinds=head · baselineRelease=None latestRelease=None · baselineHead=08e2151fa02d remoteHead=9327439db690 · kind=embedded-provenance
+   מקור: https://github.com/calesthio/OpenMontage
+
+11. coreyhaines31/marketingskills
    מצב: לבדוק לפני החלטה
-   גרסה/מקור: v2.11.1 → v2.11.6
+   גרסה/מקור: v2.11.1 → v2.11.17
    שינוי: head, release
    שימוש אצלנו: packages/vfmskill/ORIGIN.md · packages/vfmskill/catalog.json
    למה: ה-head או ה-release זזו. לא נקרא diff מלא ואין ראיית אימוץ. לבדוק לפני הטמעת דפוס. אין npx ואין ack.
    ראיות: changeKinds=head,release · baselineRelease=v2.11.1 latestRelease=v2.11.6 · baselineHead=5b2c0007766c remoteHead=c0e35b78ad29 · kind=embedded-provenance
    מקור: https://github.com/coreyhaines31/marketingskills
 
-11. debpalash/VoiceStudio
+12. debpalash/VoiceStudio
    מצב: אין פעולה כרגע
    גרסה/מקור: v0.5.6 → v0.5.6
    שינוי: head
@@ -102,7 +111,7 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head · baselineRelease=v0.5.6 latestRelease=v0.5.6 · baselineHead=08a1592e3cb9 remoteHead=befc0a6f5b55 · kind=runtime-source
    מקור: https://github.com/debpalash/VoiceStudio
 
-12. DeusData/codebase-memory-mcp
+13. DeusData/codebase-memory-mcp
    מצב: לבדוק לפני החלטה
    גרסה/מקור: v0.11.0 → v0.11.0
    שינוי: head
@@ -111,7 +120,16 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head · baselineRelease=v0.11.0 latestRelease=v0.11.0 · baselineHead=5df8b0442c48 remoteHead=cb7d937638f7 · kind=pattern-source
    מקור: https://github.com/DeusData/codebase-memory-mcp
 
-13. dsh-market/dsh-market
+14. Devin-AXIS/deepseek-design
+   מצב: אין פעולה כרגע
+   גרסה/מקור: f70d052bd8 → d918fe6b14
+   שינוי: head
+   שימוש אצלנו: packages/vfdsh/catalog.json
+   למה: שורת קטלוג בלבד. VelvetOS לא מריץ את הריפו. אין ack.
+   ראיות: changeKinds=head · baselineRelease=None latestRelease=None · baselineHead=f70d052bd86d remoteHead=bafd4b6285ad · kind=catalog-source
+   מקור: https://github.com/Devin-AXIS/deepseek-design
+
+15. dsh-market/dsh-market
    מצב: אין פעולה כרגע
    גרסה/מקור: v1.66.3 → v1.66.8
    שינוי: head, release
@@ -120,25 +138,25 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head,release · baselineRelease=v1.66.3 latestRelease=v1.66.8 · baselineHead=4ceda5d2b7b6 remoteHead=c33e37441e86 · kind=catalog-source
    מקור: https://github.com/dsh-market/dsh-market
 
-14. earthtojake/text-to-cad
+16. earthtojake/text-to-cad
    מצב: להמתין
-   גרסה/מקור: v0.7.0 → v0.7.6
+   גרסה/מקור: v0.7.0 → v0.7.11
    שינוי: head, release
    שימוש אצלנו: packages/vfprod/TEXT-TO-CAD.md
    למה: v0.7.0 אומצה קודם. latestRelease עכשיו v0.7.6 בלי smoke של הגרסה החדשה. להמתין. אין ack.
    ראיות: changeKinds=head,release · baselineRelease=v0.7.0 latestRelease=v0.7.6 · baselineHead=fafa7b057d8f remoteHead=f40a5963bf02 · kind=runtime-source
    מקור: https://github.com/earthtojake/text-to-cad
 
-15. FFmpeg/FFmpeg
+17. FFmpeg/FFmpeg
    מצב: להמתין
-   גרסה/מקור: d62aef2e50 → 460cb05218
+   גרסה/מקור: d62aef2e50 → a35c879992
    שינוי: head
    שימוש אצלנו: scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-hyperframes-host-macos.sh · scripts/vf_hyperframes.py
    למה: שינוי upstream ב-runtime פעיל בלי smoke תאימות במושב הזה. אין שדרוג ואין ack.
    ראיות: changeKinds=head · baselineRelease=None latestRelease=None · baselineHead=d62aef2e5043 remoteHead=460cb05218a2 · kind=runtime-toolchain
    מקור: https://github.com/FFmpeg/FFmpeg
 
-16. FreeCAD/FreeCAD
+18. FreeCAD/FreeCAD
    מצב: להמתין
    גרסה/מקור: 1.1.3 → 1.1.4
    שינוי: head, release
@@ -147,25 +165,25 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head,release · baselineRelease=1.1.3 latestRelease=1.1.4 · baselineHead=20b531c4211f remoteHead=b9609745048b · kind=cad-runtime-source
    מקור: https://github.com/FreeCAD/FreeCAD
 
-17. git/git
+19. git/git
    מצב: להמתין
-   גרסה/מקור: 0f8e75abeb → c46c1e3772
+   גרסה/מקור: 0f8e75abeb → 8103b44651
    שינוי: head
    שימוש אצלנו: scripts/bootstrap-edge-host-windows.ps1
    למה: שינוי upstream ב-runtime פעיל בלי smoke תאימות במושב הזה. אין שדרוג ואין ack.
    ראיות: changeKinds=head · baselineRelease=None latestRelease=None · baselineHead=0f8e75abebff remoteHead=c46c1e37724f · kind=runtime-toolchain
    מקור: https://github.com/git/git
 
-18. Han-1413141/dsh-cost-meter
+20. Han-1413141/dsh-cost-meter
    מצב: אין פעולה כרגע
-   גרסה/מקור: v1.7.40 → v1.8.5
+   גרסה/מקור: v1.7.40 → v1.8.11
    שינוי: head, release
    שימוש אצלנו: packages/vfdsh/catalog.json
    למה: שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.
    ראיות: changeKinds=head,release · baselineRelease=v1.7.40 latestRelease=v1.8.5 · baselineHead=c520d9bae873 remoteHead=ae9ae9120346 · kind=catalog-source
    מקור: https://github.com/Han-1413141/dsh-cost-meter
 
-19. headroomlabs-ai/headroom
+21. headroomlabs-ai/headroom
    מצב: לבדוק לפני החלטה
    גרסה/מקור: v0.39.1 → v0.39.1
    שינוי: head
@@ -174,16 +192,25 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head · baselineRelease=v0.39.1 latestRelease=v0.39.1 · baselineHead=d13e1966f820 remoteHead=8538a831531b · kind=pattern-source
    מקור: https://github.com/headroomlabs-ai/headroom
 
-20. heygen-com/hyperframes
+22. heygen-com/hyperframes
    מצב: אין פעולה כרגע
-   גרסה/מקור: v0.8.80 → v0.8.106
+   גרסה/מקור: v0.8.80 → v0.8.125
    שינוי: head, release
    שימוש אצלנו: scripts/vf_hyperframes.py
    למה: ספק וידאו/קול/CLI מחוץ למנדט Cloud. אין התקנה ואין ack.
    ראיות: changeKinds=head,release · baselineRelease=v0.8.80 latestRelease=v0.8.106 · baselineHead=b165b64eda84 remoteHead=c3b6e55f7eb6 · kind=runtime-source
    מקור: https://github.com/heygen-com/hyperframes
 
-21. HuanLinOTO/dsh-plugin-mineru
+23. HKUDS/DeepTutor
+   מצב: אין פעולה כרגע
+   גרסה/מקור: v1.6.12 → v1.6.13
+   שינוי: head, release
+   שימוש אצלנו: packages/vfmem/MEMORY-UPDATE.md
+   למה: מקור דפוס בלבד ל־vfmem/MEMORY-UPDATE.md. v1.6.13 עוסק בקריאה/האזנה/בנק שאלות ופרסור מסמכים, לא בדפוס עדכון זיכרון שאנחנו מאמצים. אין ack.
+   ראיות: changeKinds=head,release · baselineRelease=v1.6.12 latestRelease=v1.6.13 · baselineHead=ef2d9e5c3c99 remoteHead=f07029cfcf2c · kind=pattern-source
+   מקור: https://github.com/HKUDS/DeepTutor
+
+24. HuanLinOTO/dsh-plugin-mineru
    מצב: אין פעולה כרגע
    גרסה/מקור: d66efc12c8 → b302e2aa5f
    שינוי: head
@@ -192,7 +219,25 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head · baselineRelease=None latestRelease=None · baselineHead=d66efc12c89e remoteHead=b302e2aa5fa5 · kind=catalog-source
    מקור: https://github.com/HuanLinOTO/dsh-plugin-mineru
 
-22. jing-hy/picturereader
+25. huginn/huginn
+   מצב: אין פעולה כרגע
+   גרסה/מקור: v2026.09.22 → v2026.10.04
+   שינוי: head, release
+   שימוש אצלנו: packages/vfe2b/catalog.json
+   למה: שורת קטלוג ב-vfe2b. לא מתקינים runtime שני. אין ack.
+   ראיות: changeKinds=head · baselineRelease=v2026.09.22 latestRelease=v2026.09.22 · baselineHead=86ac2818e0dc remoteHead=3a9ee6237c9f · kind=catalog-source
+   מקור: https://github.com/huginn/huginn
+
+26. Jeffallan/claude-skills
+   מצב: לבדוק לפני החלטה
+   גרסה/מקור: v0.4.16 → v0.4.18
+   שינוי: head, release
+   שימוש אצלנו: packages/vfmem/MEMORY-UPDATE.md
+   למה: מקור דפוס סקילים שמופה לזיכרון משרד. בודקים רלוונטיות לפני אימוץ. אין התקנה ואין ack.
+   ראיות: changeKinds=head,release · baselineRelease=v0.4.16 latestRelease=v0.4.18 · baselineHead=882ef55e377d remoteHead=1be15d8064f8 · kind=skill-pattern
+   מקור: https://github.com/Jeffallan/claude-skills
+
+27. jing-hy/picturereader
    מצב: אין פעולה כרגע
    גרסה/מקור: v3.3.3 → v3.3.3
    שינוי: head
@@ -201,7 +246,7 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head · baselineRelease=v3.3.3 latestRelease=v3.3.3 · baselineHead=4e48fc916fd6 remoteHead=619a67e39d0a · kind=catalog-source
    מקור: https://github.com/jing-hy/picturereader
 
-23. joaomdmoura/crewai
+28. joaomdmoura/crewai
    מצב: אין פעולה כרגע
    גרסה/מקור: 1.15.22 → 1.15.23
    שינוי: head, release
@@ -210,7 +255,7 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head,release · baselineRelease=1.15.22 latestRelease=1.15.23 · baselineHead=4ed2abc7bbf5 remoteHead=8078f9130c35 · kind=catalog-source
    מקור: https://github.com/joaomdmoura/crewai
 
-24. linkingoscar/dsh-attachment-formats
+29. linkingoscar/dsh-attachment-formats
    מצב: אין פעולה כרגע
    גרסה/מקור: v0.12.1 → v0.12.4
    שינוי: head, release
@@ -219,43 +264,43 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head,release · baselineRelease=v0.12.1 latestRelease=v0.12.4 · baselineHead=ad61a0413cb0 remoteHead=4bcfae40dbd6 · kind=catalog-source
    מקור: https://github.com/linkingoscar/dsh-attachment-formats
 
-25. LinklyAI/best-skills
+30. LinklyAI/best-skills
    מצב: אין פעולה כרגע
-   גרסה/מקור: fe7eb0ccdd → 5042aaafce
+   גרסה/מקור: fe7eb0ccdd → fcdab07566
    שינוי: head
    שימוש אצלנו: .cursor/skills/vf-best-skills/SKILL.md · packages/vfresearch/BEST-SKILLS.md
    למה: הדירוג נקרא מ-data/2026-10-01 במעבר הזה. אין התקנת הריפו ואין ack.
    ראיות: changeKinds=head · baselineRelease=None latestRelease=None · baselineHead=fe7eb0ccddb1 remoteHead=5042aaafcea7 · kind=skill-index
    מקור: https://github.com/LinklyAI/best-skills
 
-26. liustack/modlens
+31. liustack/modlens
    מצב: אין פעולה כרגע
-   גרסה/מקור: v3.26.5 → v3.26.5
-   שינוי: head
+   גרסה/מקור: v3.26.5 → v3.26.6
+   שינוי: head, release
    שימוש אצלנו: packages/vfdsh/catalog.json
    למה: שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.
    ראיות: changeKinds=head · baselineRelease=v3.26.5 latestRelease=v3.26.5 · baselineHead=ffeee3e32de1 remoteHead=333468c72bf9 · kind=catalog-source
    מקור: https://github.com/liustack/modlens
 
-27. ManimCommunity/manim
+32. ManimCommunity/manim
    מצב: להמתין
    גרסה/מקור: v0.21.0 → v0.21.0
    שינוי: head
-   שימוש אצלנו: scripts/bootstrap-manim-host-windows.ps1
+   שימוש אצלנו: scripts/bootstrap-manim-host-windows.ps1 · scripts/bootstrap-manim-host-macos.sh
    למה: שינוי upstream ב-runtime פעיל בלי smoke תאימות במושב הזה. אין שדרוג ואין ack.
    ראיות: changeKinds=head · baselineRelease=v0.21.0 latestRelease=v0.21.0 · baselineHead=16c4a68b6d15 remoteHead=22aa85f47c9d · kind=runtime-source
    מקור: https://github.com/ManimCommunity/manim
 
-28. mattpocock/skills
+33. mattpocock/skills
    מצב: לבדוק לפני החלטה
-   גרסה/מקור: v1.2.3 → v1.2.3
-   שינוי: head
+   גרסה/מקור: v1.2.3 → v1.3.1
+   שינוי: head, release
    שימוש אצלנו: packages/vfharness/playbooks/engineering-delivery-chain.md
    למה: ה-head או ה-release זזו. לא נקרא diff מלא ואין ראיית אימוץ. לבדוק לפני הטמעת דפוס. אין npx ואין ack.
    ראיות: changeKinds=head · baselineRelease=v1.2.3 latestRelease=v1.2.3 · baselineHead=c55ee46073ed remoteHead=d81f3a183412 · kind=skill-pattern
    מקור: https://github.com/mattpocock/skills
 
-29. MichengAI/dsh-agency-agents
+34. MichengAI/dsh-agency-agents
    מצב: אין פעולה כרגע
    גרסה/מקור: v1.0.5 → v1.0.7
    שינוי: head, release
@@ -264,16 +309,16 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head,release · baselineRelease=v1.0.5 latestRelease=v1.0.7 · baselineHead=a4ef1548da94 remoteHead=8a422790cc9d · kind=catalog-source
    מקור: https://github.com/MichengAI/dsh-agency-agents
 
-30. msitarzewski/agency-agents
+35. msitarzewski/agency-agents
    מצב: לבדוק לפני החלטה
-   גרסה/מקור: 053ddbbf39 → d3f71c4bb8
+   גרסה/מקור: 053ddbbf39 → 83294689da
    שינוי: head
    שימוש אצלנו: %USERPROFILE%/.agency-agents
    למה: ה-head או ה-release זזו. לא נקרא diff מלא ואין ראיית אימוץ. לבדוק לפני הטמעת דפוס. אין npx ואין ack.
    ראיות: changeKinds=head · baselineRelease=None latestRelease=None · baselineHead=053ddbbf392a remoteHead=d3f71c4bb892 · kind=agent-repo
    מקור: https://github.com/msitarzewski/agency-agents
 
-31. mvanhorn/last30days-skill
+36. mvanhorn/last30days-skill
    מצב: לבדוק לפני החלטה
    גרסה/מקור: v3.25.0 → v3.26.0
    שינוי: head, release
@@ -282,7 +327,7 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head,release · baselineRelease=v3.25.0 latestRelease=v3.26.0 · baselineHead=084662b501fb remoteHead=5103ba478b38 · kind=skill-pattern
    מקור: https://github.com/mvanhorn/last30days-skill
 
-32. NirDiamant/GenAI_Agents
+37. NirDiamant/GenAI_Agents
    מצב: לבדוק לפני החלטה
    גרסה/מקור: 078d6d544e → 6746e4b0a1
    שינוי: head
@@ -291,7 +336,7 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head · baselineRelease=None latestRelease=None · baselineHead=078d6d544e15 remoteHead=6746e4b0a168 · kind=agent-pattern
    מקור: https://github.com/NirDiamant/GenAI_Agents
 
-33. nodejs/node
+38. nodejs/node
    מצב: להמתין
    גרסה/מקור: v26.10.0 → v26.10.0
    שינוי: head
@@ -300,7 +345,7 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head · baselineRelease=v26.10.0 latestRelease=v26.10.0 · baselineHead=a2a064c76afe remoteHead=adcd028c0e4f · kind=runtime-toolchain
    מקור: https://github.com/nodejs/node
 
-34. omdsh-dev/dsh-data-agent
+39. omdsh-dev/dsh-data-agent
    מצב: אין פעולה כרגע
    גרסה/מקור: v0.2.0 → v0.2.2
    שינוי: head, release
@@ -309,16 +354,16 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head,release · baselineRelease=v0.2.0 latestRelease=v0.2.2 · baselineHead=3016f67c0a67 remoteHead=6a649fe930ae · kind=catalog-source
    מקור: https://github.com/omdsh-dev/dsh-data-agent
 
-35. open-multi-agent/open-multi-agent
+40. open-multi-agent/open-multi-agent
    מצב: אין פעולה כרגע
-   גרסה/מקור: v1.21.0 → v1.21.0
-   שינוי: head
+   גרסה/מקור: v1.21.0 → v1.21.1
+   שינוי: head, release
    שימוש אצלנו: packages/vfharness/playbooks/oma-patterns.md
    למה: מקור orchestrator/runtime שני. נעול אצלנו. אין התקנה ואין ack.
    ראיות: changeKinds=head · baselineRelease=v1.21.0 latestRelease=v1.21.0 · baselineHead=ab349e7ad039 remoteHead=4e293a21a8bc · kind=agent-pattern
    מקור: https://github.com/open-multi-agent/open-multi-agent
 
-36. openscad/openscad
+41. openscad/openscad
    מצב: להמתין
    גרסה/מקור: openscad-2021.01 → openscad-2021.01
    שינוי: head
@@ -327,7 +372,7 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head · baselineRelease=openscad-2021.01 latestRelease=openscad-2021.01 · baselineHead=eecb92a6b6ef remoteHead=03da906b4c43 · kind=cad-runtime-source
    מקור: https://github.com/openscad/openscad
 
-37. OrcaSlicer/OrcaSlicer
+42. OrcaSlicer/OrcaSlicer
    מצב: להמתין
    גרסה/מקור: v2.4.2 → v2.4.2
    שינוי: head
@@ -336,25 +381,25 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head · baselineRelease=v2.4.2 latestRelease=v2.4.2 · baselineHead=4964f49765f7 remoteHead=9d7112549515 · kind=runtime-source
    מקור: https://github.com/OrcaSlicer/OrcaSlicer
 
-38. python/cpython
+43. python/cpython
    מצב: להמתין
-   גרסה/מקור: baec76438e → a4f28a52b4
+   גרסה/מקור: baec76438e → 587b7a5b31
    שינוי: head
    שימוש אצלנו: scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-manim-host-windows.ps1
    למה: שינוי upstream ב-runtime פעיל בלי smoke תאימות במושב הזה. אין שדרוג ואין ack.
    ראיות: changeKinds=head · baselineRelease=None latestRelease=None · baselineHead=baec76438e32 remoteHead=a4f28a52b4b5 · kind=runtime-toolchain
    מקור: https://github.com/python/cpython
 
-39. Q00/ouroboros
+44. Q00/ouroboros
    מצב: אין פעולה כרגע
-   גרסה/מקור: v0.54.6 → v0.55.3
+   גרסה/מקור: v0.54.6 → v0.55.4
    שינוי: head, release
    שימוש אצלנו: packages/vfdsh/catalog.json
    למה: מקור orchestrator/runtime שני. נעול אצלנו. אין התקנה ואין ack.
    ראיות: changeKinds=head,release · baselineRelease=v0.54.6 latestRelease=v0.55.3 · baselineHead=c0d584c78aa4 remoteHead=3fc7abb03a9e · kind=catalog-source
    מקור: https://github.com/Q00/ouroboros
 
-40. remotion-dev/remotion
+45. remotion-dev/remotion
    מצב: אין פעולה כרגע
    גרסה/מקור: v4.0.529 → v4.0.532
    שינוי: head, release
@@ -363,16 +408,16 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head,release · baselineRelease=v4.0.529 latestRelease=v4.0.532 · baselineHead=1beb32cb9e3e remoteHead=c320056a9809 · kind=embedded-provenance
    מקור: https://github.com/remotion-dev/remotion
 
-41. scenario-labs/skills
+46. scenario-labs/skills
    מצב: לבדוק לפני החלטה
-   גרסה/מקור: skills-v0.48.0 → skills-v0.48.0
-   שינוי: head
+   גרסה/מקור: skills-v0.48.0 → skills-v0.52.0
+   שינוי: head, release
    שימוש אצלנו: packages/vfprod/SCENARIO-EXPERT-CAPABILITIES.md · packages/vfom/CREATIVE-REFINE-LOOP.md · packages/vfprod/third_party/scenario-labs/blender/VENDOR-MANIFEST.json
    למה: ה-head או ה-release זזו. לא נקרא diff מלא ואין ראיית אימוץ. לבדוק לפני הטמעת דפוס. אין npx ואין ack.
    ראיות: changeKinds=head · baselineRelease=skills-v0.48.0 latestRelease=skills-v0.48.0 · baselineHead=9624e295fa33 remoteHead=c8a4bddf2b05 · kind=skill-pattern
    מקור: https://github.com/scenario-labs/skills
 
-42. shengsheng90/DSH-taskboard
+47. shengsheng90/DSH-taskboard
    מצב: אין פעולה כרגע
    גרסה/מקור: v0.1.6 → v0.1.7
    שינוי: head, release
@@ -381,7 +426,7 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head,release · baselineRelease=v0.1.6 latestRelease=v0.1.7 · baselineHead=ddf137d42670 remoteHead=4eb26e6e0bf4 · kind=catalog-source
    מקור: https://github.com/shengsheng90/DSH-taskboard
 
-43. Snapmaker/OrcaSlicer
+48. Snapmaker/OrcaSlicer
    מצב: להמתין
    גרסה/מקור: v2.4.0 → v2.4.0
    שינוי: head
@@ -390,16 +435,16 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head · baselineRelease=v2.4.0 latestRelease=v2.4.0 · baselineHead=da53bc5ffe47 remoteHead=c0e69878c643 · kind=slicer-runtime-source
    מקור: https://github.com/Snapmaker/OrcaSlicer
 
-44. stablyai/orca
+49. stablyai/orca
    מצב: אין פעולה כרגע
-   גרסה/מקור: v1.4.215 → v1.4.218
+   גרסה/מקור: v1.4.215 → v1.4.220
    שינוי: head, release
    שימוש אצלנו: packages/vfe2b/catalog.json
    למה: מקור orchestrator/runtime שני. נעול אצלנו. אין התקנה ואין ack.
    ראיות: changeKinds=head,release · baselineRelease=v1.4.215 latestRelease=v1.4.218 · baselineHead=0a876b2f5a26 remoteHead=38c2d1dcb9dc · kind=catalog-source
    מקור: https://github.com/stablyai/orca
 
-45. Tencent/WeKnora
+50. Tencent/WeKnora
    מצב: אין פעולה כרגע
    גרסה/מקור: v0.8.2 → v0.8.2
    שינוי: head
@@ -408,7 +453,16 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head · baselineRelease=v0.8.2 latestRelease=v0.8.2 · baselineHead=9114e4e4f905 remoteHead=bccb4b151bae · kind=catalog-source
    מקור: https://github.com/Tencent/WeKnora
 
-46. topoteretes/cognee
+51. tong-io/tongflow
+   מצב: אין פעולה כרגע
+   גרסה/מקור: v0.3.5 → v0.3.5
+   שינוי: head
+   שימוש אצלנו: packages/vfdsh/catalog.json
+   למה: שורת קטלוג בלבד. VelvetOS לא מריץ את הריפו. אין ack.
+   ראיות: changeKinds=head · baselineRelease=v0.3.5 latestRelease=v0.3.5 · baselineHead=36e103c0ab6f remoteHead=a00f0d374c75 · kind=catalog-source
+   מקור: https://github.com/tong-io/tongflow
+
+52. topoteretes/cognee
    מצב: להמתין
    גרסה/מקור: v1.6.1 → v1.6.2
    שינוי: head, release
@@ -417,7 +471,7 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head,release · baselineRelease=v1.6.1 latestRelease=v1.6.2 · baselineHead=eb90d0374075 remoteHead=b32d8afc59e1 · kind=runtime-source
    מקור: https://github.com/topoteretes/cognee
 
-47. trailhq/Graft
+53. trailhq/Graft
    מצב: לבדוק לפני החלטה
    גרסה/מקור: 80692e5ad0 → fe30ead39d
    שינוי: head
@@ -426,27 +480,27 @@ VelvetOS · עדכוני כלים
    ראיות: changeKinds=head · baselineRelease=None latestRelease=None · baselineHead=80692e5ad0bc remoteHead=fe30ead39d5e · kind=embedded-provenance
    מקור: https://github.com/trailhq/Graft
 
-48. volcengine/OpenViking
+54. volcengine/OpenViking
    מצב: אין פעולה כרגע
-   גרסה/מקור: v0.4.21 → v0.4.22
+   גרסה/מקור: v0.4.21 → v0.4.23
    שינוי: head, release
    שימוש אצלנו: packages/vfdsh/catalog.json
    למה: שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.
    ראיות: changeKinds=head,release · baselineRelease=v0.4.21 latestRelease=v0.4.22 · baselineHead=a09a9d20a8e0 remoteHead=b597acc1b9c4 · kind=catalog-source
    מקור: https://github.com/volcengine/OpenViking
 
-49. xmanrui/dsh-im
+55. xmanrui/dsh-im
    מצב: אין פעולה כרגע
-   גרסה/מקור: v4.29.0 → v4.34.1
+   גרסה/מקור: v4.29.0 → v4.35.1
    שינוי: head, release
    שימוש אצלנו: packages/vfdsh/catalog.json
    למה: שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.
    ראיות: changeKinds=head,release · baselineRelease=v4.29.0 latestRelease=v4.34.1 · baselineHead=b7522c70b470 remoteHead=d41a5b5eb43d · kind=catalog-source
    מקור: https://github.com/xmanrui/dsh-im
 
-50. yxqfg/phone-lens
+56. yxqfg/phone-lens
    מצב: אין פעולה כרגע
-   גרסה/מקור: v0.3.5 → v1.0.2
+   גרסה/מקור: v0.3.5 → v1.0.3
    שינוי: head, release
    שימוש אצלנו: packages/vfdsh/catalog.json
    למה: שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.
