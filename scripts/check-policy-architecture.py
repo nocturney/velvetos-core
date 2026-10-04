@@ -68,6 +68,8 @@ STAGE8D_ROOT_DESK = REPORTS / "stage8d-root-desk-consumer-migration.json"
 STAGE8D_ROOT_DESK_GENERATOR = ROOT / "scripts" / "generate-stage8d-root-desk-consumer-migration.py"
 STAGE8D_TOOL_STATUS = REPORTS / "stage8d-tool-status-consumer-migration.json"
 STAGE8D_TOOL_STATUS_GENERATOR = ROOT / "scripts" / "generate-stage8d-tool-status-consumer-migration.py"
+STAGE8D_CHATGPT_CORE = REPORTS / "stage8d-chatgpt-core-consumer-migration.json"
+STAGE8D_CHATGPT_CORE_GENERATOR = ROOT / "scripts" / "generate-stage8d-chatgpt-core-consumer-migration.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -103,6 +105,7 @@ EXPECTED_REPORTS = {
     "stage8d-fleet-consumer-migration.json",
     "stage8d-root-desk-consumer-migration.json",
     "stage8d-tool-status-consumer-migration.json",
+    "stage8d-chatgpt-core-consumer-migration.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -2724,6 +2727,108 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated8dt.read_bytes() == STAGE8D_TOOL_STATUS.read_bytes(),
                         "Stage 8D tool-status migration receipt is not reproducible",
+                        problems,
+                    )
+
+    if STAGE8D_CHATGPT_CORE.is_file():
+        chat8d = load(STAGE8D_CHATGPT_CORE)
+        require(
+            chat8d.get("schema") == "velvetos.stage8d-chatgpt-core-consumer-migration.v1"
+            and chat8d.get("stage") == "8D_CHATGPT_CORE_CONSUMER_MIGRATION"
+            and chat8d.get("behavior_change") is True
+            and chat8d.get("repository_acceptance") == "PASS",
+            "Stage 8D ChatGPT Core migration metadata drift",
+            problems,
+        )
+        criteria8dc = chat8d.get("acceptance_criteria") or {}
+        expected8dc = {
+            "stage8c_chatgpt_distribution_parity_is_preserved",
+            "instance_manifest_keeps_chatgpt_project_surface",
+            "project_authority_bundle_uses_instance_surface_references",
+            "reel_and_visual_contracts_use_instance_chatgpt_surface",
+            "generic_bundle_resolver_has_no_silent_business_default",
+            "vf_runtime_callers_select_instance_explicitly",
+            "all_active_chatgpt_consumers_have_no_legacy_root_reference",
+            "canonical_instance_distribution_remains_byte_equal_to_legacy_bundle",
+            "legacy_chatgpt_core_bundle_is_retained_for_rollback",
+            "rollback_window_remains_open_and_delete_is_unauthorized",
+            "stage8d_readiness_baseline_is_preserved",
+            "external_effect_policy_registry_is_unchanged",
+        }
+        require(
+            set(criteria8dc) == expected8dc and all(criteria8dc.get(k) is True for k in expected8dc),
+            "Stage 8D ChatGPT Core migration criteria drift or fail",
+            problems,
+        )
+        migration8dc = chat8d.get("migration") or {}
+        require(
+            migration8dc.get("active_authority") == "instance:surface:chatgptProject"
+            and migration8dc.get("instance_distribution_root") == "instances/velvet-factory/distribution/chatgpt-project"
+            and migration8dc.get("rollback_compatibility_root") == "packages/velvetos/chatgpt-project"
+            and migration8dc.get("legacy_path_retained") is True
+            and migration8dc.get("delete_authorized") is False,
+            "Stage 8D ChatGPT Core migration contract drift",
+            problems,
+        )
+        scan8dc = chat8d.get("consumer_scan") or {}
+        require(
+            scan8dc.get("active_legacy_references") == []
+            and scan8dc.get("active_blockers_removed") is True,
+            "Stage 8D ChatGPT Core active consumer scan drift",
+            problems,
+        )
+        parity8dc = chat8d.get("parity") or {}
+        require(
+            parity8dc.get("file_count") == 33
+            and parity8dc.get("file_sets_equal") is True
+            and parity8dc.get("byte_equal") is True,
+            "Stage 8D ChatGPT Core parity drift",
+            problems,
+        )
+        require(
+            (chat8d.get("rollback") or {}).get("window_open") is True
+            and (chat8d.get("rollback") or {}).get("retirement_ready") is False
+            and (chat8d.get("rollback") or {}).get("delete_authorized") is False,
+            "Stage 8D ChatGPT Core rollback semantics drift",
+            problems,
+        )
+        authority8dc = chat8d.get("authority") or {}
+        require(
+            authority8dc.get("external_effect_authority_changed") is False
+            and authority8dc.get("policy_registry_canonical_sha256")
+                == authority8dc.get("prepared_against_policy_registry_canonical_sha256"),
+            "Stage 8D ChatGPT Core migration changed authority",
+            problems,
+        )
+        if STAGE8D_CHATGPT_CORE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8dc = Path(td) / "stage8d-chatgpt-core-consumer-migration.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_CHATGPT_CORE_GENERATOR),
+                        "--prepared-against", chat8d["prepared_against_main_sha"],
+                        "--source-commit", chat8d["source_commit_sha"],
+                        "--captured-at", chat8d["captured_at"],
+                        "--output", str(regenerated8dc),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D ChatGPT Core migration regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated8dc.is_file():
+                    require(
+                        regenerated8dc.read_bytes() == STAGE8D_CHATGPT_CORE.read_bytes(),
+                        "Stage 8D ChatGPT Core migration receipt is not reproducible",
                         problems,
                     )
 

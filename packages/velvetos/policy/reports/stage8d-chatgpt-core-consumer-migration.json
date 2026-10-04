@@ -1,0 +1,64 @@
+{
+  "schema": "velvetos.stage8d-chatgpt-core-consumer-migration.v1",
+  "stage": "8D_CHATGPT_CORE_CONSUMER_MIGRATION",
+  "behavior_change": true,
+  "prepared_against_main_sha": "1a03b212761223f198b82a1443374a7fc4a7fed7",
+  "source_commit_sha": "871a858c78d00f78095d0946c54e955c72fb91fe",
+  "captured_at": "2026-10-04T22:14:37.0922734+03:00",
+  "purpose": "Cut active project/runtime consumers over from the retained Core ChatGPT bundle to the selected instance chatgptProject surface while preserving exact rollback parity.",
+  "migration": {
+    "active_authority": "instance:surface:chatgptProject",
+    "instance_distribution_root": "instances/velvet-factory/distribution/chatgpt-project",
+    "rollback_compatibility_root": "packages/velvetos/chatgpt-project",
+    "legacy_path_retained": true,
+    "delete_authorized": false
+  },
+  "active_consumers": {
+    "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json": true,
+    "packages/vfom/REEL-ROUTE-CONTRACT.json": true,
+    "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json": true,
+    "scripts/check-project-bundle.py": true,
+    "scripts/check-project-request-gate.py": true,
+    "scripts/check-reel-route-sync.py": true,
+    "scripts/check-chat-runtime-bundle.py": true,
+    "scripts/vf_project_bundle.py": true,
+    "scripts/vf_project_preflight.py": true,
+    "scripts/vf_publication_evidence.py": true
+  },
+  "consumer_scan": {
+    "legacy_reference_count": 9,
+    "active_legacy_references": [],
+    "active_blockers_removed": true
+  },
+  "parity": {
+    "file_count": 33,
+    "file_sets_equal": true,
+    "byte_equal": true
+  },
+  "rollback": {
+    "window_open": true,
+    "retirement_ready": false,
+    "delete_authorized": false
+  },
+  "authority": {
+    "policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false
+  },
+  "acceptance_criteria": {
+    "stage8c_chatgpt_distribution_parity_is_preserved": true,
+    "instance_manifest_keeps_chatgpt_project_surface": true,
+    "project_authority_bundle_uses_instance_surface_references": true,
+    "reel_and_visual_contracts_use_instance_chatgpt_surface": true,
+    "generic_bundle_resolver_has_no_silent_business_default": true,
+    "vf_runtime_callers_select_instance_explicitly": true,
+    "all_active_chatgpt_consumers_have_no_legacy_root_reference": true,
+    "canonical_instance_distribution_remains_byte_equal_to_legacy_bundle": true,
+    "legacy_chatgpt_core_bundle_is_retained_for_rollback": true,
+    "rollback_window_remains_open_and_delete_is_unauthorized": true,
+    "stage8d_readiness_baseline_is_preserved": true,
+    "external_effect_policy_registry_is_unchanged": true
+  },
+  "repository_acceptance": "PASS",
+  "next_action": "Migrate or close the remaining compatibility domains; do not delete packages/velvetos/chatgpt-project until explicit rollback-window closure evidence exists."
+}

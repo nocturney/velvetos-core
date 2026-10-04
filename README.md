@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 8D tool-status consumer migration:** active tool authority now resolves from the selected `instance:surface:toolStatus` through `tool_status_resolver.py`. All six Stage 8B direct-…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 8D tool-status consumer migration:** active tool authority now resolves from the selected `instance:surface:toolStatus` through `tool_status_resolver.py`. All six Stage 8B direct-…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 8D ChatGPT Core consumer migration:** active Project/ChatGPT consumers now resolve the selected `instance:surface:chatgptProject` distribution instead of treating `packages/velvet…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 8D ChatGPT Core consumer migration:** active Project/ChatGPT consumers now resolve the selected `instance:surface:chatgptProject` distribution instead of treating `packages/velvet…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
