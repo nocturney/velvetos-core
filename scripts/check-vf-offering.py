@@ -49,7 +49,6 @@ def retired_terms() -> tuple[str, ...]:
 
 ACTIVE_FILES = (
     "AGENTS.md",
-    ".cursor/vf-desk.json",
     "constitution/STUDIO.md",
     "constitution/ORCHESTRA.md",
     "packages/vfbiz/OFFERING.md",
@@ -101,7 +100,6 @@ def main() -> None:
     shorthand = "B" + "2" + "B"
     for rel in (
         "packages/vfbiz/AGENTS.md",
-        ".cursor/vf-desk.json",
         "constitution/STUDIO.md",
         "packages/vfbiz/OFFERING.md",
         "packages/vfbiz/SKILL.md",

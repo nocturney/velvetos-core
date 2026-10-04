@@ -46,7 +46,7 @@ from vf_publication_evidence import validate as validate_evidence
 from vf_project669_publication import validate as validate_project669
 
 ROOT = Path(__file__).resolve().parents[1]
-DESK = ROOT / ".cursor" / "vf-desk.json"
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
 SEND = ROOT / "constitution" / "SEND.md"
 PREFLIGHT_ROOT = ROOT / "packages" / "vfgrowth" / "preflight"
 
@@ -71,6 +71,16 @@ CREATIVE_TREATMENT_CATEGORIES = {
     "audio",
 }
 TRIVIAL_ONLY_CATEGORIES = {"crop", "resize", "format", "normalize", "normalization"}
+
+
+def _canonical_tool_desk() -> Path:
+    if str(VELVETOS_PACK) not in sys.path:
+        sys.path.insert(0, str(VELVETOS_PACK))
+    from instance_resolver import resolve_surface  # type: ignore
+    try:
+        return resolve_surface(ROOT, "toolDesk", instance_id="velvet-factory", env={})
+    except Exception as exc:
+        raise RuntimeError(f"cannot resolve canonical VF tool desk: {exc}") from exc
 
 
 def _env_present(*names: str) -> bool:
@@ -465,11 +475,16 @@ def main() -> int:
     parser.add_argument("--package-sha256", help="SHA-256 of the ordered exact final package")
     args = parser.parse_args()
 
-    if not DESK.is_file():
-        print("FAIL missing .cursor/vf-desk.json", file=sys.stderr)
+    try:
+        desk_path = _canonical_tool_desk()
+    except RuntimeError as exc:
+        print(f"FAIL {exc}", file=sys.stderr)
+        return 1
+    if not desk_path.is_file():
+        print(f"FAIL missing canonical tool desk {desk_path}", file=sys.stderr)
         return 1
 
-    desk = json.loads(DESK.read_text(encoding="utf-8"))
+    desk = json.loads(desk_path.read_text(encoding="utf-8"))
     report = channel_report(desk)
     quality_failed = False
     quality_missing = False

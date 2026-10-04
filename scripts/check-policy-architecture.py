@@ -44,6 +44,8 @@ STAGE8B_CONFIG = REPORTS / "stage8b-canonical-instance-config.json"
 STAGE8B_CONFIG_GENERATOR = ROOT / "scripts" / "generate-stage8b-canonical-instance-config.py"
 STAGE8C_SAMPLE = REPORTS / "stage8c-sample-profile-consumers.json"
 STAGE8C_SAMPLE_GENERATOR = ROOT / "scripts" / "generate-stage8c-sample-profile-consumers.py"
+STAGE8C_ROOT_DESK = REPORTS / "stage8c-root-desk-readers.json"
+STAGE8C_ROOT_DESK_GENERATOR = ROOT / "scripts" / "generate-stage8c-root-desk-readers.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -67,6 +69,7 @@ EXPECTED_REPORTS = {
     "stage8b-instance-resolver-foundation.json",
     "stage8b-canonical-instance-config.json",
     "stage8c-sample-profile-consumers.json",
+    "stage8c-root-desk-readers.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -1682,6 +1685,83 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated8cs.is_file():
                     require(regenerated8cs.read_bytes() == STAGE8C_SAMPLE.read_bytes(),
                             "Stage 8C sample/profile receipt is not reproducible", problems)
+
+    if STAGE8C_ROOT_DESK.is_file():
+        stage8c_desk = load(STAGE8C_ROOT_DESK)
+        require(stage8c_desk.get("schema") == "velvetos.stage8c-root-desk-readers.v1"
+                and stage8c_desk.get("stage") == "8C_ROOT_DESK_READERS"
+                and stage8c_desk.get("behavior_change") is True
+                and stage8c_desk.get("repository_acceptance") == "PASS",
+                "Stage 8C root-desk metadata drift", problems)
+        criteria8cd = stage8c_desk.get("acceptance_criteria") or {}
+        expected_criteria8cd = {
+            "root_desk_is_unchanged_and_retained_for_rollback",
+            "canonical_instance_desk_has_exact_required_tool_subtree_parity",
+            "canonical_instance_desk_has_exact_ops_seat_parity",
+            "vfmedia_reads_tool_desk_through_instance_resolver",
+            "send_preflight_reads_tool_desk_through_instance_resolver",
+            "offering_guard_no_longer_treats_root_desk_as_active_authority",
+            "all_direct_readers_are_free_of_root_desk_literal",
+            "external_effect_policy_registry_is_unchanged",
+            "legacy_root_desk_delete_is_not_authorized",
+        }
+        require(set(criteria8cd) == expected_criteria8cd
+                and all(criteria8cd.get(key) is True for key in expected_criteria8cd),
+                "Stage 8C root-desk acceptance criteria drift or fail", problems)
+        root8cd = stage8c_desk.get("root_desk") or {}
+        require(root8cd.get("path") == ".cursor/vf-desk.json"
+                and root8cd.get("retained") is True
+                and root8cd.get("unchanged_from_prepared_against") is True
+                and root8cd.get("delete_authorized") is False
+                and root8cd.get("rollback_window_open") is True,
+                "Stage 8C root-desk rollback contract drift", problems)
+        canonical8cd = stage8c_desk.get("canonical_tool_desk") or {}
+        parity8cd = canonical8cd.get("parity") or {}
+        require(canonical8cd.get("path") == "instances/velvet-factory/.cursor/vf-desk.json"
+                and set(parity8cd) == {"gmail", "instagram", "gemini", "chatgpt", "drive", "opsSeat"}
+                and all(parity8cd.values()),
+                "Stage 8C root-desk canonical parity drift", problems)
+        readers8cd = stage8c_desk.get("cutover_readers") or {}
+        require(set(readers8cd) == {
+                    "scripts/check-vfmedia.py",
+                    "scripts/check-vf-offering.py",
+                    "scripts/vf_send_preflight.py",
+                }
+                and all(isinstance(row, dict)
+                        and row.get("root_desk_literal_present") is False
+                        for row in readers8cd.values()),
+                "Stage 8C root-desk direct reader scan drift", problems)
+        authority8cd = stage8c_desk.get("authority_baseline") or {}
+        require(authority8cd.get("unchanged") is True
+                and authority8cd.get("policy_registry_canonical_sha256")
+                    == authority8cd.get("prepared_against_policy_registry_canonical_sha256"),
+                "Stage 8C root-desk authority baseline drift", problems)
+        require(stage8c_desk.get("next_stage") == "Stage 8C — Remaining consumer domains",
+                "Stage 8C root-desk next-stage handoff drift", problems)
+        if STAGE8C_ROOT_DESK_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8cd = Path(td) / "stage8c-root-desk-readers.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8C_ROOT_DESK_GENERATOR),
+                        "--prepared-against", stage8c_desk["prepared_against_main_sha"],
+                        "--captured-at", stage8c_desk["captured_at"],
+                        "--output", str(regenerated8cd),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0,
+                        "Stage 8C root-desk regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()),
+                        problems)
+                if proc.returncode == 0 and regenerated8cd.is_file():
+                    require(regenerated8cd.read_bytes() == STAGE8C_ROOT_DESK.read_bytes(),
+                            "Stage 8C root-desk receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)

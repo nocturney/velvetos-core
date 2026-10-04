@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 8C sample/profile consumer cutover:** removes runtime/machine dependence on the duplicate Core sample profile. `CORE.json` now marks `packages/velvetos/samples/` as documentation/…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 8C sample/profile consumer cutover:** removes runtime/machine dependence on the duplicate Core sample profile. `CORE.json` now marks `packages/velvetos/samples/` as documentation/…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 8C root-desk direct-reader cutover:** enriches the canonical Velvet Factory instance desk with the exact tool/ops subtrees still consumed by root-desk readers, proving parity for …</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 8C root-desk direct-reader cutover:** enriches the canonical Velvet Factory instance desk with the exact tool/ops subtrees still consumed by root-desk readers, proving parity for …</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>

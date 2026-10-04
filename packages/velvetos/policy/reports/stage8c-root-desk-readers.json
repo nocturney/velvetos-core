@@ -1,0 +1,68 @@
+{
+  "schema": "velvetos.stage8c-root-desk-readers.v1",
+  "stage": "8C_ROOT_DESK_READERS",
+  "behavior_change": true,
+  "prepared_against_main_sha": "80bed30bf54c854f2854d7328ccda171a587d569",
+  "captured_at": "2026-10-04T15:58:00.5990107+03:00",
+  "purpose": "Migrate direct machine readers from root reference desk to canonical instance toolDesk while retaining root desk for rollback.",
+  "root_desk": {
+    "path": ".cursor/vf-desk.json",
+    "retained": true,
+    "unchanged_from_prepared_against": true,
+    "delete_authorized": false,
+    "rollback_window_open": true
+  },
+  "canonical_tool_desk": {
+    "path": "instances/velvet-factory/.cursor/vf-desk.json",
+    "parity": {
+      "gmail": true,
+      "instagram": true,
+      "gemini": true,
+      "chatgpt": true,
+      "drive": true,
+      "opsSeat": true
+    }
+  },
+  "cutover_readers": {
+    "scripts/check-vfmedia.py": {
+      "root_desk_literal_present": false,
+      "instance_resolver_present": true
+    },
+    "scripts/check-vf-offering.py": {
+      "root_desk_literal_present": false,
+      "instance_resolver_present": true
+    },
+    "scripts/vf_send_preflight.py": {
+      "root_desk_literal_present": false,
+      "instance_resolver_present": true
+    }
+  },
+  "authority_baseline": {
+    "policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "unchanged": true
+  },
+  "acceptance_criteria": {
+    "root_desk_is_unchanged_and_retained_for_rollback": true,
+    "canonical_instance_desk_has_exact_required_tool_subtree_parity": true,
+    "canonical_instance_desk_has_exact_ops_seat_parity": true,
+    "vfmedia_reads_tool_desk_through_instance_resolver": true,
+    "send_preflight_reads_tool_desk_through_instance_resolver": true,
+    "offering_guard_no_longer_treats_root_desk_as_active_authority": true,
+    "all_direct_readers_are_free_of_root_desk_literal": true,
+    "external_effect_policy_registry_is_unchanged": true,
+    "legacy_root_desk_delete_is_not_authorized": true
+  },
+  "repository_acceptance": "PASS",
+  "next_stage": "Stage 8C — Remaining consumer domains",
+  "remaining_root_desk_domains": [
+    "vfmem/vfgraft/vfharness catalog references",
+    "root desk documentation/rules",
+    "historical policy receipts/generators"
+  ],
+  "constraints": [
+    "root desk remains during rollback window",
+    "no external-effect authority change",
+    "remaining references migrate independently"
+  ]
+}

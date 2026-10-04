@@ -83,7 +83,7 @@
       },
       "briefSources": {
         "inboxRead": false,
-        "note": "inboxToday kept for vfconvert/vfbooks — not used for 07:00 brief (2026-08-31)"
+        "note": "inboxToday kept for vfconvert/vfbooks — not used for 09:00 Morning Brief (2026-08-31)"
       },
       "labelHints": {
         "bills": "[Gmail]/חשבונות"
@@ -100,7 +100,8 @@
     "drive": {
       "status": "ready",
       "mode": "search-and-create",
-      "note": "Search by job/SKU. Create office docs/sheets with create_file when needed. Do not open personal, medical, or legal folders unless the user names them.",
+      "note": "Search by job/SKU. Create office docs/sheets with create_file when needed. Do not open personal, medical, or legal folders unless the user names them. Shared media vault (locked 2026-09-08): root 1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv — inbox 1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ · source 1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6 · in-progress 13H42Kpif3GPNaHlnI24YiHn-m1IS1k5a · approved 1LitaCUDgVk7njkWAvC-MX-noQOkyr-ib. Catalog is packages/vfmedia only. Do not change sharing. Do not delete vault files.",
+      "mediaVaultRootId": "1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv",
       "failover": "Use files/names the user gave in chat; still create a new office doc if the job needs one"
     },
     "superdesign": {
@@ -113,6 +114,7 @@
       "auth": "ready",
       "transport": "streamable-http",
       "remote_access": "ready",
+      "remote_mcp_note": "Cloud Team MCP namespace instagram · Cloud Run /mcp · Bearer VELVET_INSTAGRAM_MCP_BEARER_TOKEN · ChatGPT Auth=API key (No Auth→401) · live_check.ok 2026-09-09 · see packages/vfigos/CHATGPT-MCP.md",
       "namespace": "instagram",
       "account": "@velvets_cloud",
       "igUserId": "17841407772120429",
@@ -120,12 +122,13 @@
       "mcp": "Cloud Team MCP namespace instagram · adelaidasofia/instagram-mcp",
       "package": "adelaidasofia-instagram-mcp",
       "source": "https://github.com/adelaidasofia/instagram-mcp",
+      "legacyMcp": "jlbadano/ig-mcp",
+      "capabilities": "packages/vfigos/CAPABILITIES.json",
+      "publicationStates": "packages/vfigos/PUBLICATION-STATES.json",
+      "profileDesired": "packages/vfigos/PROFILE-DESIRED.json",
       "useWhen": "scheduled publish via Cloudflare publisher; live verification/read via Instagram Graph/MCP",
       "connect": "packages/vfigos/CONNECT-IG.md",
       "deploy": "packages/vfigos/DEPLOY-CODESPACE.md",
-      "stories": "enabled-same-mcp",
-      "dmEnabled": false,
-      "boostEnabled": false,
       "notRequired": [
         "Metricool",
         "Publer",
@@ -133,19 +136,29 @@
         "SimplePost",
         "Meta Business Suite"
       ],
+      "stories": "enabled-same-mcp",
+      "dmEnabled": false,
+      "boostEnabled": false,
       "allowed": [
         "healthcheck",
+        "list_accounts",
+        "account_info",
         "get_profile",
         "list_media",
         "get_media",
         "get_account_insights",
         "get_media_insights",
         "get_audience_insights",
+        "get_comments",
+        "get_mentions",
+        "publishing_limit",
+        "business_discovery",
         "publish_image",
         "publish_video",
         "publish_reel",
         "publish_carousel",
-        "publish_story"
+        "publish_story",
+        "reply_to_comment"
       ],
       "forbidden": [
         "send_message",
@@ -154,10 +167,11 @@
         "send_dm",
         "auto-dm",
         "boost",
-        "ads"
+        "ads",
+        "INSTAGRAM_MCP_DM_ENABLED"
       ],
-      "rule": "Approved public HTTPS media URL → publish_* → verify with list_media/get_media. No invented Insights. No auto-DM. No boost. publish success ≠ liveVerified.",
-      "scheduler": "vendor/velvetos-core/packages/vfigos/cloudflare-publisher/",
+      "rule": "Approved public HTTPS media URL → publish_image|carousel|reel|story → verify live with list_media/get_media. No invented Insights. No auto-DM. No boost. publish tool success ≠ liveVerified.",
+      "scheduler": "packages/vfigos/cloudflare-publisher/",
       "publicationTarget": "Meta Instagram Graph API",
       "failover": "Scheduled delivery stays on the Cloudflare Instagram Publisher. If the live Instagram Graph/MCP boundary is unavailable, preserve the exact approved artifact and mark the operation blocked pending canonical live verification."
     },
@@ -233,6 +247,20 @@
       "useWhen": "Search/draft on the studio phone after packages/vfmcp/CONNECT-WHATSAPP.md",
       "rule": "VF send stays human 050-2517000. send=false. No Infobip/ManyChat auto-send.",
       "failover": "python3 scripts/vf_office.py convert draft + wa.me"
+    },
+    "gemini": {
+      "status": "needs-key",
+      "command": "python3 scripts/vf_gemini.py",
+      "useWhen": "Orchestra Gemini desk via GEMINI_API_KEY. Do not open gemini.google.com from Cloud. Playbook: packages/vfmcp/SUBSCRIPTIONS.md + CONNECT-GEMINI.md",
+      "rule": "Subscription gemini.google.com ≠ Gemini API. Do not install aliargun or RLabs gemini-mcp. No key in git. No Veo from HQ. No browser cookies. Without a key write חסר מפתח Gemini. Never invent a body.",
+      "failover": "python3 scripts/vf_gemini.py orchestra if GEMINI_API_KEY else ChatGPT API + Perplexity + WebSearch"
+    },
+    "chatgpt": {
+      "status": "needs-key",
+      "command": "python3 scripts/vf_chatgpt.py",
+      "useWhen": "Orchestra ChatGPT desk via OPENAI_API_KEY. Do not open chatgpt.com from Cloud. Playbook: packages/vfmcp/SUBSCRIPTIONS.md + CONNECT-CHATGPT.md",
+      "rule": "ChatGPT Plus ≠ OpenAI API. No key in git. No browser cookies. Without a key write חסר מפתח ChatGPT. Never invent a body.",
+      "failover": "python3 scripts/vf_chatgpt.py orchestra if OPENAI_API_KEY else Gemini API + Perplexity + WebSearch"
     }
   },
   "seats": [
@@ -318,7 +346,8 @@
       "packs": [
         "vfcost",
         "vfbooks",
-        "vfbiz"
+        "vfbiz",
+        "vfmedia"
       ],
       "specialists": [
         "pricing-analyst",
