@@ -1,6 +1,6 @@
 # Stage 5 draft - Agent Harness and capability locality
 
-Status: **STAGE 5 ACTIVE | 5A CONTEXT LOCALITY + 5B HARNESS CONSOLIDATION IMPLEMENTED | WORKSPACE DISTRIBUTION REMAINS**
+Status: **STAGE 5 ACTIVE | 5A CONTEXT LOCALITY + 5B HARNESS CONSOLIDATION + 5C WORKSPACE DISTRIBUTION IMPLEMENTED | STAGE 5 GATE REMAINS**
 
 ## Purpose
 
@@ -49,6 +49,10 @@ Stage 5A implements only the locality mechanics above. Root `AGENTS.md` is now C
 ### Stage 5B implementation receipt
 
 Stage 5B consolidates the shared execution contract without creating a new runtime. `packages/vfharness/LOOP.md` is the only global loop authority; `packages/vfharness/AGENTS.md`, `packages/vfharness/SKILL.md`, the Cursor harness skill/rule and `docs/HARNESS.md` are pointer-only secondary surfaces. Cross-tool continuation remains `office/control/HANDOFF.json` + `packages/vfmem/HANDOFF.md`; handoff carries context/state only and never becomes an orchestrator or policy authority. Specialized playbooks and historical harness state remain intact. Acceptance evidence is pinned in `packages/velvetos/policy/reports/stage5b-harness-consolidation.json`.
+
+### Stage 5C implementation receipt
+
+Stage 5C stabilizes workspace distribution without expanding the warehouse. `nocturney/velvetos-workspace-distribution` PR #3 / merge `4fa715dc78275b87a942658b26b74608932d8d50` publishes Workspace Stack `1.6.0` with the desired skill count unchanged at 35. `creative-craft` remains the ambient natural-language router; the eight professional craft specialists remain available workspace-wide but are explicitly **routed-only**, selected by intent/pipeline and never ambient-preloaded. Workspace invocation has `authorizationEffect=NONE`; it cannot grant publish/send/spend/delete/permission authority. The distribution verifier enforces the exact specialist set, standards-compliant `name`/`description` frontmatter, `warehousePreload=false` and router continuity; Creative Craft structural evals pass 56/56. Core acceptance evidence is pinned in `packages/velvetos/policy/reports/stage5c-workspace-distribution.json`.
 
 ## Upstream elements intentionally not adopted
 

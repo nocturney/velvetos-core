@@ -1,6 +1,6 @@
 ---
 name: vf-cad-design-craft
-description: Apply professional parametric CAD, industrial/product-design and form-development discipline across Fusion, Inventor, AutoCAD, FreeCAD, OpenSCAD and the existing Text-to-CAD stack. Use for dimensioned functional parts, enclosures/products, assemblies, interfaces, fits, threads, tolerances, Fusion Form/surface work, constraint-driven generative exploration, manufacturing masters, or CAD QA. Add craft and verification only; preserve vf-3d-router, Text-to-CAD, DfAM, slicer and printer authority boundaries.
+description: Apply professional parametric CAD, industrial/product-design and form-development discipline across Fusion, Inventor, AutoCAD, FreeCAD, OpenSCAD and the existing Text-to-CAD stack. Use for dimensioned functional parts, enclosures/products, assemblies, interfaces, fits, threads, tolerances, Fusion Form/surface work, constraint-driven generative exploration, manufacturing masters, or CAD QA. Add craft and verification only; preserve vf-3d-router, Text-to-CAD, DfAM, slicer and printer authority boundaries. Use only when explicitly routed by Creative Craft, Fabrication Router, or another accepted VelvetOS pipeline for a matching task; do not auto-select this specialist from unrelated ambient context.
 ---
 
 # Velvet CAD Design Craft

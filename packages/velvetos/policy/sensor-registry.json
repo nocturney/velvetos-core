@@ -1287,7 +1287,8 @@
         "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json",
         "scripts/**",
         "packages/velvetos/policy/reports/stage5a-context-locality-baseline.json",
-        "packages/velvetos/policy/reports/stage5a-context-locality.json"
+        "packages/velvetos/policy/reports/stage5a-context-locality.json",
+        "packages/velvetos/policy/reports/stage5c-workspace-distribution.json"
       ],
       "triggered_by": [
         "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
@@ -1297,7 +1298,16 @@
         "AGENTS.md",
         "packages/**/AGENTS.md",
         "packages/velvetos/policy/reports/stage5a-context-locality-baseline.json",
-        "packages/velvetos/policy/reports/stage5a-context-locality.json"
+        "packages/velvetos/policy/reports/stage5a-context-locality.json",
+        "packages/velvetos/policy/reports/stage5c-workspace-distribution.json",
+        ".cursor/skills/vf-cad-design-craft/SKILL.md",
+        ".cursor/skills/vf-dcc-modeling-craft/SKILL.md",
+        ".cursor/skills/vf-material-lookdev/SKILL.md",
+        ".cursor/skills/vf-product-visualization-craft/SKILL.md",
+        ".cursor/skills/vf-post-production-craft/SKILL.md",
+        ".cursor/skills/vf-vfx-compositing-craft/SKILL.md",
+        ".cursor/skills/vf-image-design-craft/SKILL.md",
+        ".cursor/skills/vf-technical-illustration-craft/SKILL.md"
       ],
       "depends_on": [
         "scripts/vf_project_preflight.py",

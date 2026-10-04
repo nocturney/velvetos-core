@@ -1,6 +1,6 @@
 ---
 name: vf-dcc-modeling-craft
-description: Apply professional polygon, prop/object design, sculpt, character/creature, stylized collectible, retopology, subdivision, UV and mesh-surgery QA practice across Blender, Maya, 3ds Max, ZBrush and Meshmixer using the existing VelvetOS DCC execution adapters. Use for organic or hard-surface modeling, grounded props/products, sculpt-to-production workflows, character or creature form, stylized collectibles, deformation-ready topology, UV readiness, bake preparation, mesh repair/surgery or DCC geometry review. Preserve vf-3d-router and accepted host/runtime boundaries.
+description: Apply professional polygon, prop/object design, sculpt, character/creature, stylized collectible, retopology, subdivision, UV and mesh-surgery QA practice across Blender, Maya, 3ds Max, ZBrush and Meshmixer using the existing VelvetOS DCC execution adapters. Use for organic or hard-surface modeling, grounded props/products, sculpt-to-production workflows, character or creature form, stylized collectibles, deformation-ready topology, UV readiness, bake preparation, mesh repair/surgery or DCC geometry review. Preserve vf-3d-router and accepted host/runtime boundaries. Use only when explicitly routed by Creative Craft, Fabrication Router, or another accepted VelvetOS pipeline for a matching task; do not auto-select this specialist from unrelated ambient context.
 ---
 
 # Velvet DCC Modeling Craft

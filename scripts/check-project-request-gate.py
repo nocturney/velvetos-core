@@ -19,13 +19,15 @@ STAGE5A_BASELINE = ROOT / "packages/velvetos/policy/reports/stage5a-context-loca
 STAGE5A_BASELINE_GENERATOR = ROOT / "scripts/generate-stage5a-context-locality-baseline.py"
 STAGE5A_REPORT = ROOT / "packages/velvetos/policy/reports/stage5a-context-locality.json"
 STAGE5A_GENERATOR = ROOT / "scripts/generate-stage5a-context-locality-report.py"
+STAGE5C_REPORT = ROOT / "packages/velvetos/policy/reports/stage5c-workspace-distribution.json"
+STAGE5C_GENERATOR = ROOT / "scripts/generate-stage5c-workspace-distribution-report.py"
 
 
 def fail(msg: str) -> None:
     print(f"FAIL project-request-gate: {msg}", file=sys.stderr)
     raise SystemExit(1)
 
-for path in (GATE, MANIFEST, CLI, FRICTION_BASELINE, FAST_PATH_REPORT, STAGE5A_BASELINE, STAGE5A_BASELINE_GENERATOR, STAGE5A_REPORT, STAGE5A_GENERATOR):
+for path in (GATE, MANIFEST, CLI, FRICTION_BASELINE, FAST_PATH_REPORT, STAGE5A_BASELINE, STAGE5A_BASELINE_GENERATOR, STAGE5A_REPORT, STAGE5A_GENERATOR, STAGE5C_REPORT, STAGE5C_GENERATOR):
     if not path.is_file():
         fail(f"missing {path.relative_to(ROOT)}")
 
@@ -150,6 +152,101 @@ with tempfile.TemporaryDirectory(prefix="stage5a-acceptance-") as td:
         fail("Stage 5A acceptance regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()))
     if regenerated_report.read_bytes() != STAGE5A_REPORT.read_bytes():
         fail("Stage 5A acceptance report is not reproducible")
+
+stage5c = json.loads(STAGE5C_REPORT.read_text(encoding="utf-8"))
+if stage5c.get("schema") != "velvetos.stage5c-workspace-distribution.v1" or stage5c.get("stage") != "5C":
+    fail("Stage 5C workspace-distribution schema/stage mismatch")
+if stage5c.get("behavior_change") is not True or stage5c.get("prepared_against_main_sha") != "722005858f06724894d13856e77d79ad9a9ee3a9":
+    fail("Stage 5C base/behavior contract drift")
+if stage5c.get("repository_acceptance") != "PASS":
+    fail("Stage 5C repository acceptance is not PASS")
+dist5c = stage5c.get("distribution_binding") or {}
+expected_dist5c = {
+    "repository": "nocturney/velvetos-workspace-distribution",
+    "base_sha": "13e161bb94ad004b431ee451e678a0a74cc7c732",
+    "head_sha": "de214771e3c64063f201359c58f918653a0bed05",
+    "merge_sha": "4fa715dc78275b87a942658b26b74608932d8d50",
+    "pull_request": 3,
+    "plugin_version": "1.6.0",
+    "verify_bundle": "PASS",
+    "desired_skill_count": 35,
+    "creative_craft_specialist_count": 8,
+}
+for key, value in expected_dist5c.items():
+    if dist5c.get(key) != value:
+        fail(f"Stage 5C distribution binding drift: {key} expected {value!r}, got {dist5c.get(key)!r}")
+expected_blobs5c = {
+    "inventory/workspace-stack.json": "c858af50d684306727f9fd15fafcde140577b7ba",
+    "inventory/workspace-audit.json": "9c1f19c053b478f1a5c9fc8cf65670d5c53b4995",
+    "plugins/velvetos-workspace-skills/.codex-plugin/plugin.json": "27dbd4c236ffdd367b118ece3e14d59a1259eea9",
+    "scripts/verify-bundle.ps1": "7d42dc69b081bf24e8a2e3f5a55aa5c74c576a69",
+}
+if dist5c.get("git_blobs") != expected_blobs5c:
+    fail("Stage 5C distribution Git-blob binding drift")
+eval5c = dist5c.get("creative_craft_eval") or {}
+if eval5c != {"score": 56, "max_score": 56, "all_structural_pass": True}:
+    fail("Stage 5C Creative Craft structural eval drift")
+contract5c = stage5c.get("invocation_contract") or {}
+expected_specialists5c = [
+    "vf-cad-design-craft",
+    "vf-dcc-modeling-craft",
+    "vf-material-lookdev",
+    "vf-product-visualization-craft",
+    "vf-post-production-craft",
+    "vf-vfx-compositing-craft",
+    "vf-image-design-craft",
+    "vf-technical-illustration-craft",
+]
+if contract5c.get("router") != "creative-craft" or contract5c.get("router_may_auto_invoke") is not True:
+    fail("Stage 5C Creative Craft ambient-router contract drift")
+if contract5c.get("specialists") != expected_specialists5c:
+    fail("Stage 5C routed specialist set drift")
+if contract5c.get("specialist_activation") != "ROUTED_ONLY" or contract5c.get("availability") != "DISTRIBUTED_WORKSPACE_WIDE":
+    fail("Stage 5C specialist activation/availability drift")
+if contract5c.get("warehouse_preload") is not False or contract5c.get("authorization_effect") != "NONE":
+    fail("Stage 5C warehouse/auth boundary drift")
+core5c = stage5c.get("core_source") or {}
+if core5c.get("router_ambient_marker") is not True or set(core5c.get("router_frontmatter_keys") or []) != {"name", "description"}:
+    fail("Stage 5C router source contract drift")
+specialist_rows5c = core5c.get("specialists") or {}
+if set(specialist_rows5c) != set(expected_specialists5c):
+    fail("Stage 5C Core specialist evidence set drift")
+for name in expected_specialists5c:
+    row = specialist_rows5c.get(name) or {}
+    if row.get("pass") is not True or row.get("frontmatter_standard") is not True or row.get("routed_only_marker") is not True:
+        fail(f"Stage 5C specialist source drift: {name}")
+auth5c = stage5c.get("authorization_semantics") or {}
+if auth5c.get("external_effect_authority_registry_unchanged") is not True or auth5c.get("workspace_skill_invocation_is_policy_authority") is not False:
+    fail("Stage 5C authorization-semantics drift")
+acceptance5c = stage5c.get("acceptance") or {}
+if not acceptance5c or not all(value is True for value in acceptance5c.values()):
+    fail("Stage 5C acceptance criteria drift")
+with tempfile.TemporaryDirectory(prefix="stage5c-workspace-") as td:
+    regenerated5c = Path(td) / "stage5c.json"
+    proc = subprocess.run(
+        [
+            sys.executable, str(STAGE5C_GENERATOR),
+            "--prepared-against", stage5c["prepared_against_main_sha"],
+            "--captured-at", stage5c["captured_at"],
+            "--distribution-base-sha", dist5c["base_sha"],
+            "--distribution-head-sha", dist5c["head_sha"],
+            "--distribution-merge-sha", dist5c["merge_sha"],
+            "--distribution-pr", str(dist5c["pull_request"]),
+            "--distribution-version", dist5c["plugin_version"],
+            "--workspace-stack-blob", dist5c["git_blobs"]["inventory/workspace-stack.json"],
+            "--workspace-audit-blob", dist5c["git_blobs"]["inventory/workspace-audit.json"],
+            "--plugin-manifest-blob", dist5c["git_blobs"]["plugins/velvetos-workspace-skills/.codex-plugin/plugin.json"],
+            "--verify-script-blob", dist5c["git_blobs"]["scripts/verify-bundle.ps1"],
+            "--eval-score", str(eval5c["score"]),
+            "--eval-max-score", str(eval5c["max_score"]),
+            "--output", str(regenerated5c),
+        ],
+        cwd=ROOT, text=True, capture_output=True, encoding="utf-8", errors="replace", timeout=90,
+    )
+    if proc.returncode != 0:
+        fail("Stage 5C report regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()))
+    if regenerated5c.read_bytes() != STAGE5C_REPORT.read_bytes():
+        fail("Stage 5C workspace-distribution report is not reproducible")
 
 root_agents_text = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
 root_lines = len(root_agents_text.splitlines())
