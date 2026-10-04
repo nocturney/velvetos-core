@@ -25,6 +25,8 @@ ACTION_RECEIPT_VECTORS = POLICY_DIR / "action-receipt-test-vectors.json"
 ACTION_RECEIPT_VALIDATOR = ROOT / "scripts" / "vf_action_receipt.py"
 STAGE4_ACCEPTANCE = REPORTS / "stage4-acceptance.json"
 STAGE4_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage4-acceptance.py"
+STAGE5_ACCEPTANCE = REPORTS / "stage5-acceptance.json"
+STAGE5_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage5-acceptance.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -38,6 +40,7 @@ EXPECTED_REPORTS = {
     "stage3-preactivation-plan.json",
     "stage4d-instagram-happy-path-implementation.json",
     "stage4-acceptance.json",
+    "stage5-acceptance.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -712,6 +715,104 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated.is_file():
                     require(regenerated.read_bytes() == STAGE4_ACCEPTANCE.read_bytes(),
                             "Stage 4 acceptance receipt is not reproducible", problems)
+
+    require(STAGE5_ACCEPTANCE.is_file(), "Stage 5 acceptance receipt missing", problems)
+    require(STAGE5_ACCEPTANCE_GENERATOR.is_file(), "Stage 5 acceptance generator missing", problems)
+    if STAGE5_ACCEPTANCE.is_file():
+        stage5 = load(STAGE5_ACCEPTANCE)
+        require(stage5.get("schema") == "velvetos.stage5-acceptance.v1" and stage5.get("stage") == "5",
+                "Stage 5 acceptance schema/stage mismatch", problems)
+        require(stage5.get("prepared_against_main_sha") == "67bd5dc1bedfb98b850e4b5b09090dcd51598e48",
+                "Stage 5 acceptance main SHA drift", problems)
+        require(stage5.get("behavior_change") is False and stage5.get("stage5_gate") == "PASS",
+                "Stage 5 gate must remain observation-only PASS", problems)
+        criteria5 = stage5.get("acceptance_criteria") or {}
+        expected_criteria5 = {
+            "core_system_context_is_local_and_business_clean",
+            "known_routine_loads_minimum_domain_instructions",
+            "single_existing_harness_no_second_orchestrator",
+            "workspace_specialists_are_routed_only_not_preloaded",
+            "authorization_semantics_unchanged",
+            "no_context_warehouse_regression",
+            "main_full_sensor_suite_116_of_116",
+        }
+        require(set(criteria5) == expected_criteria5 and all(criteria5.get(key) is True for key in expected_criteria5),
+                "Stage 5 acceptance criteria drift or fail", problems)
+        stage6_entry = stage5.get("stage6_entry") or {}
+        require(stage6_entry.get("allowed") is True
+                and stage6_entry.get("next_stage") == "Stage 6 — Visible Text, Creative and DCC Simplification",
+                "Stage 5 gate does not authorize Stage 6 entry", problems)
+        main5 = stage5.get("main_full_suite") or {}
+        require(main5.get("head_sha") == "67bd5dc1bedfb98b850e4b5b09090dcd51598e48"
+                and main5.get("workflow_run_id") == 37175062910
+                and main5.get("job_id") == 111355869001
+                and main5.get("conclusion") == "SUCCESS"
+                and main5.get("mode") == "full"
+                and main5.get("registered_sensors") == 116
+                and main5.get("passed_sensors") == 116
+                and main5.get("log_markers") == ["SENSORS 116 mode=full", "OK suite passed=116"],
+                "Stage 5 main full-suite evidence drift", problems)
+        context5 = stage5.get("context_locality") or {}
+        require(context5.get("root_lines") == 56
+                and context5.get("root_words") == 453
+                and context5.get("root_domain_leakage_total") == 0
+                and context5.get("domain_count") == 10
+                and context5.get("warehouse_default") == "off"
+                and context5.get("system_engineering_context_clean") is True,
+                "Stage 5 context-locality acceptance drift", problems)
+        harness5 = stage5.get("harness") or {}
+        require(harness5.get("canonical_loop") == "packages/vfharness/LOOP.md"
+                and harness5.get("secondary_restating_count") == 0
+                and harness5.get("second_orchestrator") == "FORBIDDEN"
+                and harness5.get("cross_tool_handoff") == ["office/control/HANDOFF.json", "packages/vfmem/HANDOFF.md"],
+                "Stage 5 harness acceptance drift", problems)
+        workspace5 = stage5.get("workspace_distribution") or {}
+        require(workspace5.get("repository") == "nocturney/velvetos-workspace-distribution"
+                and workspace5.get("merge_sha") == "4fa715dc78275b87a942658b26b74608932d8d50"
+                and workspace5.get("plugin_version") == "1.6.0"
+                and workspace5.get("desired_skill_count") == 35
+                and workspace5.get("router") == "creative-craft"
+                and workspace5.get("specialist_count") == 8
+                and workspace5.get("specialist_activation") == "ROUTED_ONLY"
+                and workspace5.get("warehouse_preload") is False
+                and workspace5.get("authorization_effect") == "NONE",
+                "Stage 5 workspace-distribution acceptance drift", problems)
+        expected_sources5 = {"stage5a", "stage5b", "stage5c"}
+        sources5 = stage5.get("source_receipts") or {}
+        require(set(sources5) == expected_sources5, "Stage 5 source receipt set drift", problems)
+        for name, source in sources5.items():
+            require(isinstance(source, dict), f"Stage 5 source receipt {name} invalid", problems)
+            rel = source.get("path") if isinstance(source, dict) else None
+            source_path = ROOT / rel if isinstance(rel, str) else None
+            require(source_path is not None and source_path.is_file(), f"Stage 5 source receipt missing: {name}", problems)
+            if source_path is not None and source_path.is_file():
+                observed_hash = hashlib.sha256(source_path.read_bytes()).hexdigest()
+                require(source.get("sha256") == observed_hash, f"Stage 5 source receipt hash drift: {name}", problems)
+        if STAGE5_ACCEPTANCE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated5 = Path(td) / "stage5-acceptance.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE5_ACCEPTANCE_GENERATOR),
+                        "--prepared-against", stage5["prepared_against_main_sha"],
+                        "--captured-at", stage5["captured_at"],
+                        "--main-run-id", str(main5["workflow_run_id"]),
+                        "--main-job-id", str(main5["job_id"]),
+                        "--main-run-url", str(main5["run_url"]),
+                        "--output", str(regenerated5),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0, "Stage 5 acceptance regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()), problems)
+                if proc.returncode == 0 and regenerated5.is_file():
+                    require(regenerated5.read_bytes() == STAGE5_ACCEPTANCE.read_bytes(),
+                            "Stage 5 acceptance receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)
