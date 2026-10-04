@@ -15,6 +15,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "packages" / "vfharness" / "devtools" / "creative-tools" / "update-sentinel" / "dcc-adobe-update-sentinel.json"
 SENTINEL = ROOT / "packages" / "vfharness" / "devtools" / "creative-tools" / "update-sentinel" / "Invoke-DccAdobeUpdateSentinel.ps1"
+ADOBE_PROBE = ROOT / "packages" / "vfharness" / "devtools" / "creative-tools" / "update-sentinel" / "adobe_readonly_probe.py"
 VALIDATOR = ROOT / "scripts" / "validate-dcc-adobe-compat.py"
 POLICY = ROOT / "packages" / "velvetos" / "policy" / "policy-registry.json"
 OUT = ROOT / "packages" / "velvetos" / "policy" / "reports" / "stage6c-dcc-capability-gating.json"
@@ -79,8 +80,28 @@ def main() -> int:
     ap.add_argument("--aftereffects-probe-timeout", type=int, required=True)
     ap.add_argument("--aftereffects-max-attempts", type=int, required=True)
     ap.add_argument("--aftereffects-attempts", type=int, required=True)
+    ap.add_argument("--aftereffects-probe-status", required=True)
+    ap.add_argument("--aftereffects-transport", required=True)
+    ap.add_argument("--aftereffects-operations", required=True)
+    ap.add_argument("--premiere-receipt-sha256", required=True)
+    ap.add_argument("--premiere-classification", required=True)
+    ap.add_argument("--premiere-routing-status", required=True)
+    ap.add_argument("--photoshop-receipt-sha256", required=True)
+    ap.add_argument("--photoshop-classification", required=True)
+    ap.add_argument("--photoshop-routing-status", required=True)
     ap.add_argument("--runtime-sentinel-sha256", required=True)
     ap.add_argument("--runtime-config-sha256", required=True)
+    ap.add_argument("--runtime-adobe-probe-sha256", required=True)
+    ap.add_argument("--ccc-server-sha256", required=True)
+    ap.add_argument("--ccc-app-sha256", required=True)
+    ap.add_argument("--ccc-i18n-sha256", required=True)
+    ap.add_argument("--ccc-aftereffects-route-status", required=True)
+    ap.add_argument("--ccc-aftereffects-display-status", required=True)
+    ap.add_argument("--ccc-recovery-baseline-version", required=True)
+    ap.add_argument("--ccc-recovery-baseline-role", required=True)
+    ap.add_argument("--ccc-version-policy", required=True)
+    ap.add_argument("--ccc-availability-basis", required=True)
+    ap.add_argument("--ccc-repair-guard-http-status", type=int, required=True)
     ap.add_argument("--output", type=Path, default=OUT)
     ns = ap.parse_args()
     if len(ns.prepared_against) != 40:
@@ -98,9 +119,12 @@ def main() -> int:
 
     sentinel_bytes = SENTINEL.read_bytes()
     config_bytes = CONFIG.read_bytes()
+    adobe_probe_bytes = ADOBE_PROBE.read_bytes()
     sentinel_text = sentinel_bytes.decode("utf-8-sig")
+    adobe_probe_text = adobe_probe_bytes.decode("utf-8-sig")
     source_sentinel_sha = sha_bytes(sentinel_bytes)
     source_config_sha = sha_bytes(config_bytes)
+    source_adobe_probe_sha = sha_bytes(adobe_probe_bytes)
 
     version_policy_pass = (
         policy.get("version_policy") == "latest-compatible"
@@ -125,22 +149,51 @@ def main() -> int:
     aftereffects_newer = version_tuple(ns.aftereffects_version) > version_tuple(
         aftereffects.get("recovery_baseline_display_version", "")
     )
-    aftereffects_fail_closed = (
-        ns.aftereffects_classification == "NEEDS_COMPATIBILITY_REPAIR"
-        and ns.aftereffects_routing_status == "needs_compatibility_repair"
+    aftereffects_operations = [
+        item.strip() for item in ns.aftereffects_operations.split(",") if item.strip()
+    ]
+    aftereffects_pass = (
+        ns.aftereffects_classification == "PASS_COMPATIBILITY_CHECK"
+        and ns.aftereffects_routing_status == "available"
         and aftereffects_newer
+        and ns.aftereffects_probe_status == "PASS"
+        and ns.aftereffects_transport == "adobepy-cep-typed-readonly"
+        and aftereffects_operations == ["app.getVersion", "project.getActive"]
         and ns.aftereffects_max_attempts == 1
         and ns.aftereffects_attempts == 1
         and ns.aftereffects_probe_timeout >= 120
+    )
+    shared_adobe_regressions_pass = (
+        ns.premiere_classification == "PASS_COMPATIBILITY_CHECK"
+        and ns.premiere_routing_status == "available"
+        and ns.photoshop_classification == "PASS_COMPATIBILITY_CHECK"
+        and ns.photoshop_routing_status == "available"
+    )
+    creative_control_center_receipt_pass = (
+        ns.ccc_aftereffects_route_status == "available"
+        and ns.ccc_aftereffects_display_status == "available"
+        and ns.ccc_recovery_baseline_version == "After Effects 26.3"
+        and ns.ccc_recovery_baseline_role == "drift-comparison-and-recovery-evidence-not-allowlist"
+        and ns.ccc_version_policy == "latest-compatible"
+        and ns.ccc_availability_basis == "typed_capability_probe_pass"
+        and ns.ccc_repair_guard_http_status == 409
+        and all(
+            re.fullmatch(r"[0-9A-Fa-f]{64}", value or "")
+            for value in (ns.ccc_server_sha256, ns.ccc_app_sha256, ns.ccc_i18n_sha256)
+        )
     )
 
     source_runtime_parity = (
         source_sentinel_sha.lower() == ns.runtime_sentinel_sha256.lower()
         and source_config_sha.lower() == ns.runtime_config_sha256.lower()
+        and source_adobe_probe_sha.lower() == ns.runtime_adobe_probe_sha256.lower()
     )
     no_experimental_escape = (
         "Invoke-AfterEffectsIsolatedReadonlyProbe" not in sentinel_text
         and "aftereffects_isolated_read_probe" not in sentinel_text
+        and "Invoke-AfterEffectsReadonly.ps1" not in adobe_probe_text
+        and "aftereffects_bounded_snapshot" not in adobe_probe_text
+        and 'client.call("after-effects", "raw"' not in adobe_probe_text
         and (aftereffects.get("probe") or {}).get("kind") == "adobe"
         and (illustrator.get("probe") or {}).get("kind") == "standalone_cli"
     )
@@ -152,7 +205,9 @@ def main() -> int:
         "drift_routes_to_capability_probe": policy.get("drift_action") == "pending_validation_then_capability_probe",
         "available_requires_typed_capability_probe_pass": policy.get("available_requires") == "typed_capability_probe_pass",
         "illustrator_newer_than_recovery_baseline_passes_typed_probe": illustrator_pass,
-        "aftereffects_newer_than_recovery_baseline_fails_closed_without_typed_proof": aftereffects_fail_closed,
+        "aftereffects_newer_than_recovery_baseline_passes_typed_probe": aftereffects_pass,
+        "shared_adobe_regressions_pass": shared_adobe_regressions_pass,
+        "creative_control_center_runtime_receipt_pass": creative_control_center_receipt_pass,
         "source_runtime_parity_proven": source_runtime_parity,
         "dcc_adobe_validator_passes": validator_pass,
         "no_experimental_or_arbitrary_script_escape_is_wired": no_experimental_escape,
@@ -196,14 +251,48 @@ def main() -> int:
                 "probe_timeout_seconds": ns.aftereffects_probe_timeout,
                 "max_probe_attempts": ns.aftereffects_max_attempts,
                 "probe_attempts": ns.aftereffects_attempts,
-                "final_result": "blocked_fail_closed",
+                "probe_status": ns.aftereffects_probe_status,
+                "transport": ns.aftereffects_transport,
+                "operations": aftereffects_operations,
+                "final_result": "typed_capability_pass",
             },
+            "premiere_regression": {
+                "classification": ns.premiere_classification,
+                "routing_status": ns.premiere_routing_status,
+                "receipt_sha256": ns.premiere_receipt_sha256.upper(),
+            },
+            "photoshop_regression": {
+                "classification": ns.photoshop_classification,
+                "routing_status": ns.photoshop_routing_status,
+                "receipt_sha256": ns.photoshop_receipt_sha256.upper(),
+            },
+        },
+        "creative_control_center_runtime_receipt": {
+            "mode": "source-controlled-receipt-local-runtime-not-authority",
+            "runtime_root": r"D:\Velvet\Projects\CreativeControlCenter",
+            "files": {
+                "server.mjs": ns.ccc_server_sha256.upper(),
+                "public/app.js": ns.ccc_app_sha256.upper(),
+                "public/i18n.js": ns.ccc_i18n_sha256.upper(),
+            },
+            "aftereffects_live_api": {
+                "route_status": ns.ccc_aftereffects_route_status,
+                "display_status": ns.ccc_aftereffects_display_status,
+                "recovery_baseline_version": ns.ccc_recovery_baseline_version,
+                "recovery_baseline_role": ns.ccc_recovery_baseline_role,
+                "version_policy": ns.ccc_version_policy,
+                "availability_basis": ns.ccc_availability_basis,
+                "repair_request_guard_http_status": ns.ccc_repair_guard_http_status,
+            },
+            "runtime_authority": False,
         },
         "source_runtime_parity": {
             "sentinel_source_sha256": source_sentinel_sha.upper(),
             "sentinel_runtime_sha256": ns.runtime_sentinel_sha256.upper(),
             "config_source_sha256": source_config_sha.upper(),
             "config_runtime_sha256": ns.runtime_config_sha256.upper(),
+            "adobe_probe_source_sha256": source_adobe_probe_sha.upper(),
+            "adobe_probe_runtime_sha256": ns.runtime_adobe_probe_sha256.upper(),
             "pass": source_runtime_parity,
         },
         "validator": {

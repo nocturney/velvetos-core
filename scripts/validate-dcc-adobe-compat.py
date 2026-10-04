@@ -15,6 +15,7 @@ PERSISTENCE = DEVTOOLS / "dcc-adobe-runtime-persistence.json"
 SENTINEL_DIR = DEVTOOLS / "creative-tools" / "update-sentinel"
 SENTINEL_CONFIG = SENTINEL_DIR / "dcc-adobe-update-sentinel.json"
 SENTINEL_SCRIPT = SENTINEL_DIR / "Invoke-DccAdobeUpdateSentinel.ps1"
+ADOBE_PROBE = SENTINEL_DIR / "adobe_readonly_probe.py"
 
 
 def load_json(path: Path) -> dict:
@@ -41,6 +42,7 @@ def main() -> int:
     persistence = load_json(PERSISTENCE)
     sentinel = load_json(SENTINEL_CONFIG)
     sentinel_text = SENTINEL_SCRIPT.read_text(encoding="utf-8-sig")
+    adobe_probe_text = ADOBE_PROBE.read_text(encoding="utf-8-sig")
     sentinel_policy = sentinel.get("policy") or {}
     if sentinel.get("schema") != "velvetos.dcc-adobe.update-sentinel.v1":
         errors.append("update-sentinel: schema drift")
@@ -107,6 +109,33 @@ def main() -> int:
         errors.append("update-sentinel: runtime gate must not compare routing against recovery display versions")
     if re.search(r"(?i)(invoke-expression|iex\s|powershell\s+-command\s+\$|cmd\.exe\s+/c\s+\$)", sentinel_text):
         errors.append("update-sentinel: arbitrary scripting escape hatch detected")
+
+    for required in (
+        'args.host == "aftereffects"',
+        'BrokerClient(broker_url=broker, token=token, target="default", timeout=12.0)',
+        '.get("host") == "after-effects"',
+        '.get("bridgeKind") == "cep"',
+        '"getVersion" not in methods.get("app", ())',
+        '"getActive" not in methods.get("project", ())',
+        'client.call("after-effects", "app", "getVersion")',
+        'client.call("after-effects", "project", "getActive")',
+        '"transport"] = "adobepy-cep-typed-readonly"',
+        '"raw.evalExtendScript"',
+    ):
+        if required not in adobe_probe_text:
+            errors.append(f"adobe-probe: missing typed After Effects contract fragment {required!r}")
+    for forbidden in (
+        "Invoke-AfterEffectsReadonly.ps1",
+        "aftereffects_bounded_snapshot",
+        '"bounded-afterfx-com"',
+    ):
+        if forbidden in adobe_probe_text:
+            errors.append(f"adobe-probe: legacy After Effects script transport still present: {forbidden}")
+    if re.search(
+        r"""client\.call\(\s*["']after-effects["']\s*,\s*["']raw["']""",
+        adobe_probe_text,
+    ):
+        errors.append("adobe-probe: After Effects raw script RPC is forbidden in compatibility proof")
 
     overlay_ids: set[str] = set()
     for row in overlays.get("overlays") or []:
