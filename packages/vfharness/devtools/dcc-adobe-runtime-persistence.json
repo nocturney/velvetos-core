@@ -35,7 +35,7 @@
     {
       "id": "dcc-desktop-host-wrapper",
       "source": "packages/vfharness/devtools/dcc-adobe-runtime-persistence/Start-VelvetDccDesktopHosts.ps1",
-      "sha256": "e4b7d8b3084906b1f30e8c6a6734e430a8e46a3038a1d2c91864b6129c56a51b",
+      "sha256": "10d424b9d3709efdf47875fbb68bb16c7232596b638f4f1ff2db4b7fe6f945d6",
       "runtime_target": "D:\\Velvet\\Runtime\\Autostart\\Start-VelvetDccDesktopHosts.ps1",
       "task": "VelvetOS DCC Desktop Hosts",
       "trigger": "none_manual_only",
@@ -45,21 +45,21 @@
     {
       "id": "dcc-host-manager",
       "source": "packages/vfharness/devtools/dcc-adobe-runtime-persistence/Invoke-VelvetDccHost.ps1",
-      "sha256": "99bdc73ccf1ff87fabd5568bc0db0675589b6e32e89b0a260c2c67cafd1eb32c",
+      "sha256": "0d2e22e21c75518337b2792b673bfcceeb5184155fae653a4fade1fc6e3fd8ca",
       "runtime_target": "D:\\Velvet\\Runtime\\Autostart\\Invoke-VelvetDccHost.ps1",
       "required_behavior": "Expose start/stop/status for one hidden on-demand DCC host without changing the user's normal vendor shortcuts."
     },
     {
       "id": "dcc-desktop-host-manifest",
       "source": "packages/vfharness/devtools/dcc-adobe-runtime-persistence/dcc-desktop-hosts.json",
-      "sha256": "2225f39c5bb983234fd5ced48af673cf7e18f435b76f50b8575dc51c36d267ab",
+      "sha256": "1f6723656db463ce3a7aa2a923220e4bcaf2ae8dceef1023f2a2f4facee333c6",
       "runtime_target": "D:\\Velvet\\Runtime\\Autostart\\dcc-desktop-hosts.json",
       "required_behavior": "Policy is on_demand_hidden with launch_at_logon=false and agent_hidden_launch=true."
     },
     {
       "id": "reboot-persistence-installer",
       "source": "packages/vfharness/devtools/dcc-adobe-runtime-persistence/Install-DccAdobeRebootPersistence.ps1",
-      "sha256": "925b2d2336eabe579a2d22edc4e1509a40c2f815b28f7ddb22c29983af1acdf9",
+      "sha256": "057b7e88c42690b73ade88719a2d3afb8a32dc412807a4522f3186fb356fe10d",
       "required_behavior": "Idempotently deploy background persistence plus manual-only hidden DCC host tasks, remove obsolete acceptance launch tasks, and validate live/source parity without exposing tokens."
     }
   ],

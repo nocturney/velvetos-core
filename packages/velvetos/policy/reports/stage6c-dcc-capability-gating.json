@@ -1,0 +1,74 @@
+{
+  "schema": "velvetos.stage6c-dcc-capability-gating.v1",
+  "stage": "6C",
+  "behavior_change": true,
+  "prepared_against_main_sha": "64425e329320ea20c7446860c1ff9548918c3744",
+  "captured_at": "2026-10-04T09:55:59.9314524+03:00",
+  "policy": {
+    "version_policy": "latest-compatible",
+    "recovery_baseline_role": "drift-comparison-and-recovery-evidence-not-allowlist",
+    "exact_version_match_required": false,
+    "drift_action": "pending_validation_then_capability_probe",
+    "available_requires": "typed_capability_probe_pass",
+    "fail_closed": true,
+    "auto_update": false,
+    "auto_rollback": false,
+    "auto_uninstall": false
+  },
+  "live_evidence": {
+    "illustrator": {
+      "installed_version": "30.8.2",
+      "recovery_baseline": "Illustrator 30.8.1",
+      "classification": "PASS_COMPATIBILITY_CHECK",
+      "routing_status": "available",
+      "receipt_sha256": "4B18950F9AB96AED2CB2ABB94F54B3559C778D13194165953B174A092D56D0DB",
+      "newer_than_recovery_baseline": true
+    },
+    "aftereffects": {
+      "installed_version": "26.5",
+      "recovery_baseline": "After Effects 26.3",
+      "classification": "NEEDS_COMPATIBILITY_REPAIR",
+      "routing_status": "needs_compatibility_repair",
+      "receipt_sha256": "1A74E0D916BF7E342C06A8F6EB67A0E84047F60722C772843721A3E1188A46A1",
+      "newer_than_recovery_baseline": true,
+      "probe_timeout_seconds": 120,
+      "max_probe_attempts": 1,
+      "probe_attempts": 1,
+      "final_result": "blocked_fail_closed"
+    }
+  },
+  "source_runtime_parity": {
+    "sentinel_source_sha256": "E1C90A06326E50A3D6828E246271701E69B1C80EBB6A851F8892EF54E921F06E",
+    "sentinel_runtime_sha256": "E1C90A06326E50A3D6828E246271701E69B1C80EBB6A851F8892EF54E921F06E",
+    "config_source_sha256": "BD04DA03711B2B07581E3CBB551C08A50E3F43DA265137C3AE4B7D1C346159EC",
+    "config_runtime_sha256": "BD04DA03711B2B07581E3CBB551C08A50E3F43DA265137C3AE4B7D1C346159EC",
+    "pass": true
+  },
+  "validator": {
+    "path": "scripts/validate-dcc-adobe-compat.py",
+    "pass": true,
+    "output": "DCC/ADOBE COMPAT PASS overlays=4 records=2 bridges=2 runtime_files=6"
+  },
+  "authorization_semantics": {
+    "entry_policy_registry_sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8",
+    "current_policy_registry_sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8",
+    "external_effect_policy_registry_unchanged": true,
+    "update_sentinel_is_external_effect_authority": false,
+    "recovery_baseline_is_authority": false
+  },
+  "acceptance": {
+    "version_policy_is_latest_compatible": true,
+    "recovery_baseline_is_not_allowlist": true,
+    "exact_version_match_is_not_required": true,
+    "drift_routes_to_capability_probe": true,
+    "available_requires_typed_capability_probe_pass": true,
+    "illustrator_newer_than_recovery_baseline_passes_typed_probe": true,
+    "aftereffects_newer_than_recovery_baseline_fails_closed_without_typed_proof": true,
+    "source_runtime_parity_proven": true,
+    "dcc_adobe_validator_passes": true,
+    "no_experimental_or_arbitrary_script_escape_is_wired": true,
+    "destructive_or_update_auto_actions_remain_disabled": true,
+    "external_effect_policy_registry_unchanged": true
+  },
+  "repository_acceptance": "PASS"
+}

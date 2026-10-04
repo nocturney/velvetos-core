@@ -12,6 +12,9 @@ DEVTOOLS = ROOT / "packages" / "vfharness" / "devtools"
 OVERLAYS = DEVTOOLS / "dcc-mcp-overlays.json"
 BRIDGES = DEVTOOLS / "adobe-first-party-bridges.json"
 PERSISTENCE = DEVTOOLS / "dcc-adobe-runtime-persistence.json"
+SENTINEL_DIR = DEVTOOLS / "creative-tools" / "update-sentinel"
+SENTINEL_CONFIG = SENTINEL_DIR / "dcc-adobe-update-sentinel.json"
+SENTINEL_SCRIPT = SENTINEL_DIR / "Invoke-DccAdobeUpdateSentinel.ps1"
 
 
 def load_json(path: Path) -> dict:
@@ -36,6 +39,75 @@ def main() -> int:
     overlays = load_json(OVERLAYS)
     bridges = load_json(BRIDGES)
     persistence = load_json(PERSISTENCE)
+    sentinel = load_json(SENTINEL_CONFIG)
+    sentinel_text = SENTINEL_SCRIPT.read_text(encoding="utf-8-sig")
+    sentinel_policy = sentinel.get("policy") or {}
+    if sentinel.get("schema") != "velvetos.dcc-adobe.update-sentinel.v1":
+        errors.append("update-sentinel: schema drift")
+    expected_sentinel_policy = {
+        "version_policy": "latest-compatible",
+        "recovery_baseline_role": "drift-comparison-and-recovery-evidence-not-allowlist",
+        "exact_version_match_required": False,
+        "drift_action": "pending_validation_then_capability_probe",
+        "available_requires": "typed_capability_probe_pass",
+        "fail_closed": True,
+        "auto_update": False,
+        "auto_rollback": False,
+        "auto_uninstall": False,
+    }
+    for key, expected in expected_sentinel_policy.items():
+        if sentinel_policy.get(key) != expected:
+            errors.append(f"update-sentinel: policy {key} expected={expected!r} actual={sentinel_policy.get(key)!r}")
+
+    allowed_probe_kinds = {
+        "streamable_registry",
+        "standalone_cli",
+        "adobe",
+        "stdio",
+        "corel_com",
+        "fusion_native",
+        "meshmixer_cli",
+        "resolve_cli",
+        "affinity_mcp",
+    }
+    integrated_hosts = [row for row in (sentinel.get("hosts") or []) if row.get("support") == "integrated"]
+    if len(integrated_hosts) != 20:
+        errors.append(f"update-sentinel: expected 20 integrated hosts, found {len(integrated_hosts)}")
+    for host in integrated_hosts:
+        host_id = str(host.get("id") or "<missing>")
+        if "known_good_display_version" in host:
+            errors.append(f"update-sentinel: {host_id} still uses known_good_display_version as an app-version concept")
+        if not str(host.get("recovery_baseline_display_version") or "").strip():
+            errors.append(f"update-sentinel: {host_id} missing recovery_baseline_display_version")
+        probe_kind = str((host.get("probe") or {}).get("kind") or "")
+        if probe_kind not in allowed_probe_kinds:
+            errors.append(f"update-sentinel: {host_id} has missing/unsupported typed probe kind {probe_kind!r}")
+
+    for required in (
+        "classification=$(if($pass){'PASS_NEW_VERSION'}else{'NEEDS_COMPATIBILITY_REPAIR'})",
+        "'PASS_COMPATIBILITY_CHECK'",
+        "'pending_validation'",
+        "'available'",
+        "'post-update compatibility gate passed'",
+        "'needs_compatibility_repair'",
+        "version_policy='latest-compatible'",
+        "recovery_baseline_role='drift-comparison-and-recovery-evidence-not-allowlist'",
+        "exact_version_match_required=$false",
+        "availability_basis='typed_capability_probe_pass'",
+        "recovery baseline seeded after reviewed live capability evidence",
+        "not an exact-version allowlist",
+        "$probeProcessTimeout = $(if ([string]$probe.host -eq 'aftereffects')",
+        "$stages.adobe_probe_process_timeout_seconds = $probeProcessTimeout",
+        "$maxProbeAttempts = $(if ([string]$probe.host -eq 'aftereffects') { 1 } else { 2 })",
+        "$stages.adobe_probe_max_attempts = $maxProbeAttempts",
+    ):
+        if required not in sentinel_text:
+            errors.append(f"update-sentinel: missing Stage 6C contract fragment {required!r}")
+    if "recovery_baseline_display_version" in sentinel_text:
+        errors.append("update-sentinel: runtime gate must not compare routing against recovery display versions")
+    if re.search(r"(?i)(invoke-expression|iex\s|powershell\s+-command\s+\$|cmd\.exe\s+/c\s+\$)", sentinel_text):
+        errors.append("update-sentinel: arbitrary scripting escape hatch detected")
+
     overlay_ids: set[str] = set()
     for row in overlays.get("overlays") or []:
         overlay_id = str(row.get("id") or "")

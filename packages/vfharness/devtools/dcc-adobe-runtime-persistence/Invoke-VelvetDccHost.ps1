@@ -28,11 +28,18 @@ function Get-AppProcesses {
             if ($cim.Name -ine $expectedName) { return @() }
             if (($state.PSObject.Properties.Name -contains 'command_marker') -and $state.command_marker -and ([string]$cim.CommandLine -notlike ('*' + [string]$state.command_marker + '*'))) { return @() }
             $proc = Get-Process -Id ([int]$state.pid) -ErrorAction SilentlyContinue
-            if ($proc) { return @($proc) }
+            if ($proc) {
+                try { if (-not $proc.HasExited) { return @($proc) } } catch {}
+            }
         } catch { return @() }
         return @()
     }
-    @(Get-Process -Name $app.process -ErrorAction SilentlyContinue)
+    @(
+        Get-Process -Name $app.process -ErrorAction SilentlyContinue |
+            Where-Object {
+                try { -not $_.HasExited } catch { $false }
+            }
+    )
 }
 
 if ($Action -eq 'start' -and -not $CompatibilityProbe) {

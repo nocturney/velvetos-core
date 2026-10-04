@@ -19,9 +19,9 @@
       "id": "illustrator-bounded-bootstrap-provenance",
       "record": "packages/vfharness/devtools/dcc-mcp-illustrator-0.3.1-bootstrap-provenance.json",
       "state": "ACCEPTED_LOCAL_PERSISTENCE",
-      "record_sha256": "e058080f9958e874342169499351d8b8d8148260240e9c81cf488071024eda2e",
+      "record_sha256": "50606cc764a73e6f7dac650b229d2d104b58e96bcce8c666f3df7d009df42b0a",
       "source_file": "packages/vfharness/devtools/dcc-mcp-illustrator-0.3.1-adobepy-0.9.0-bootstrap.py",
-      "source_sha256": "b9f71ae9e363354f98c1f571929d0f9eb60e023306ef19624f10dfae3708f5a8",
+      "source_sha256": "b7ec3f54b1ea0bf22cc2f473aa6d9ae90ae8626edc372877fd02e460cfefd1d7",
       "acceptance_evidence_sha256": "c8da428ddffe739c87f473a120d2cc7c8054a0394acd3c4d9a7423ab10dcf7d2"
     }
   ],

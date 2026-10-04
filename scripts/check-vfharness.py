@@ -15,6 +15,9 @@ MANIFEST = ROOT / "packages" / "manifest.json"
 AGENTS = ROOT / "packages" / "vfharness" / "AGENTS.md"
 STAGE5B_REPORT = ROOT / "packages" / "velvetos" / "policy" / "reports" / "stage5b-harness-consolidation.json"
 STAGE5B_GENERATOR = ROOT / "scripts" / "generate-stage5b-harness-consolidation-report.py"
+STAGE6C_REPORT = ROOT / "packages" / "velvetos" / "policy" / "reports" / "stage6c-dcc-capability-gating.json"
+STAGE6C_GENERATOR = ROOT / "scripts" / "generate-stage6c-dcc-capability-gating-report.py"
+DCC_ADOBE_VALIDATOR = ROOT / "scripts" / "validate-dcc-adobe-compat.py"
 ALLOWED_LAYER_NAMES = {
     "guides",
     "sensors",
@@ -67,7 +70,7 @@ def main() -> None:
         fail(f"missing {MANIFEST.relative_to(ROOT)}")
     if not AGENTS.is_file():
         fail("missing AGENTS.md (layer 1 guide)")
-    for path in (STAGE5B_REPORT, STAGE5B_GENERATOR):
+    for path in (STAGE5B_REPORT, STAGE5B_GENERATOR, STAGE6C_REPORT, STAGE6C_GENERATOR, DCC_ADOBE_VALIDATOR):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -208,6 +211,66 @@ def main() -> None:
             fail("Stage 5B report regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()))
         if regenerated.read_bytes() != STAGE5B_REPORT.read_bytes():
             fail("Stage 5B report is not reproducible")
+
+    stage6c = json.loads(STAGE6C_REPORT.read_text(encoding="utf-8"))
+    if stage6c.get("schema") != "velvetos.stage6c-dcc-capability-gating.v1" or stage6c.get("stage") != "6C":
+        fail("Stage 6C report schema/stage drift")
+    if stage6c.get("prepared_against_main_sha") != "64425e329320ea20c7446860c1ff9548918c3744":
+        fail("Stage 6C entry SHA drift")
+    if stage6c.get("repository_acceptance") != "PASS":
+        fail("Stage 6C repository acceptance is not PASS")
+    acceptance6c = stage6c.get("acceptance") or {}
+    if not acceptance6c or not all(value is True for value in acceptance6c.values()):
+        fail("Stage 6C acceptance criteria drift")
+    live6c = stage6c.get("live_evidence") or {}
+    illustrator6c = live6c.get("illustrator") or {}
+    aftereffects6c = live6c.get("aftereffects") or {}
+    if (
+        illustrator6c.get("classification") != "PASS_COMPATIBILITY_CHECK"
+        or illustrator6c.get("routing_status") != "available"
+        or illustrator6c.get("newer_than_recovery_baseline") is not True
+    ):
+        fail("Stage 6C Illustrator newer-version proof drift")
+    if (
+        aftereffects6c.get("classification") != "NEEDS_COMPATIBILITY_REPAIR"
+        or aftereffects6c.get("routing_status") != "needs_compatibility_repair"
+        or aftereffects6c.get("newer_than_recovery_baseline") is not True
+        or aftereffects6c.get("final_result") != "blocked_fail_closed"
+    ):
+        fail("Stage 6C After Effects fail-closed proof drift")
+    if not (stage6c.get("validator") or {}).get("pass"):
+        fail("Stage 6C DCC/Adobe validator evidence is not PASS")
+    parity6c = stage6c.get("source_runtime_parity") or {}
+    if parity6c.get("pass") is not True:
+        fail("Stage 6C source/runtime parity evidence is not PASS")
+    with tempfile.TemporaryDirectory(prefix="stage6c-dcc-") as td:
+        regenerated6c = Path(td) / "stage6c.json"
+        proc = subprocess.run(
+            [
+                sys.executable, str(STAGE6C_GENERATOR),
+                "--prepared-against", stage6c["prepared_against_main_sha"],
+                "--captured-at", stage6c["captured_at"],
+                "--illustrator-receipt-sha256", illustrator6c["receipt_sha256"],
+                "--illustrator-version", illustrator6c["installed_version"],
+                "--illustrator-classification", illustrator6c["classification"],
+                "--illustrator-routing-status", illustrator6c["routing_status"],
+                "--aftereffects-receipt-sha256", aftereffects6c["receipt_sha256"],
+                "--aftereffects-version", aftereffects6c["installed_version"],
+                "--aftereffects-classification", aftereffects6c["classification"],
+                "--aftereffects-routing-status", aftereffects6c["routing_status"],
+                "--aftereffects-probe-timeout", str(aftereffects6c["probe_timeout_seconds"]),
+                "--aftereffects-max-attempts", str(aftereffects6c["max_probe_attempts"]),
+                "--aftereffects-attempts", str(aftereffects6c["probe_attempts"]),
+                "--runtime-sentinel-sha256", parity6c["sentinel_runtime_sha256"],
+                "--runtime-config-sha256", parity6c["config_runtime_sha256"],
+                "--output", str(regenerated6c),
+            ],
+            cwd=ROOT, text=True, capture_output=True, encoding="utf-8", errors="replace", timeout=180,
+        )
+        if proc.returncode != 0:
+            fail("Stage 6C report regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()))
+        if regenerated6c.read_bytes() != STAGE6C_REPORT.read_bytes():
+            fail("Stage 6C report is not reproducible")
 
     schema_path = ROOT / "packages/vfharness/templates/checkpoint.schema.json"
     schema = json.loads(schema_path.read_text())

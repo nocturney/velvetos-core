@@ -2736,7 +2736,10 @@
         ".cursor/rules/vf-harness.mdc",
         "docs/HARNESS.md",
         "packages/velvetos/policy/reports/stage5b-harness-consolidation.json",
-        "scripts/generate-stage5b-harness-consolidation-report.py"
+        "scripts/generate-stage5b-harness-consolidation-report.py",
+        "packages/velvetos/policy/reports/stage6c-dcc-capability-gating.json",
+        "scripts/generate-stage6c-dcc-capability-gating-report.py",
+        "scripts/validate-dcc-adobe-compat.py"
       ],
       "triggered_by": [
         "AGENTS.md",
@@ -2751,7 +2754,10 @@
         ".cursor/rules/vf-harness.mdc",
         "docs/HARNESS.md",
         "packages/velvetos/policy/reports/stage5b-harness-consolidation.json",
-        "scripts/generate-stage5b-harness-consolidation-report.py"
+        "scripts/generate-stage5b-harness-consolidation-report.py",
+        "packages/velvetos/policy/reports/stage6c-dcc-capability-gating.json",
+        "scripts/generate-stage6c-dcc-capability-gating-report.py",
+        "scripts/validate-dcc-adobe-compat.py"
       ],
       "depends_on": [],
       "enforces": [],
