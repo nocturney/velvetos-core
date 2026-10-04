@@ -13,6 +13,7 @@ CONTRACT = ROOT / "packages" / "vfom" / "CONTENT-CONTRACT.schema.json"
 MANIFEST = ROOT / "packages" / "vfom" / "CREATIVE-MANIFEST.schema.json"
 DNA = ROOT / "packages" / "vfom" / "VISUAL-DNA.json"
 VISUAL = ROOT / "packages" / "vfom" / "VISUAL-OS.md"
+REFINE = ROOT / "packages" / "vfom" / "CREATIVE-REFINE-LOOP.md"
 EDIT = ROOT / "packages" / "vfom" / "EDIT-DIRECTOR.md"
 MEDIA_DIRECTOR = ROOT / "packages" / "vfom" / "experts" / "MEDIA-DIRECTOR.md"
 MODULE = ROOT / "packages" / "velvetos" / "modules" / "expert-media-director.md"
@@ -78,6 +79,18 @@ def main() -> None:
         "waiting_for_media",
         "published_verified",
         "performance_learned",
+        "policy_id: instagram.publish",
+        "Creative Manifest = coordination artifact, not approval database",
+        "Creative Craft 2.0 = authoring + quality system, not policy hierarchy",
+        "Produce → Critique → Targeted Refine",
+        "standing standard",
+    ))
+    must_contain(REFINE, (
+        "policy_id: instagram.publish",
+        "not an approval database",
+        "authoring/quality system",
+        "Product Truth is higher authority",
+        "produce → critique → targeted refine",
     ))
     must_contain(VISUAL, (
         "brandScore",
@@ -126,6 +139,58 @@ def main() -> None:
 
     layers = foundry.get("layers") or {}
     require_subset(set(layers), {"creativeIntelligence", "orchestration", "deterministicServices"}, "Foundry layers")
+
+    manifest_policy = foundry.get("creativeManifest") or {}
+    for key in (
+        "coordinationOnly", "notASecondStateMachine", "notAMediaCatalog", "notAClaimAuthority",
+        "notApprovalDatabase", "cannotAuthorizeExternalEffects", "statusIsEvidenceProjection",
+        "productTruthAuthorityHigher",
+    ):
+        if manifest_policy.get(key) is not True:
+            fail(f"creativeManifest.{key} must be true")
+    if manifest_policy.get("policyDecisionSource") != "packages/velvetos/policy/policy-registry.json":
+        fail("Creative Manifest policy decision source drift")
+    if "never creates that state" not in str(manifest_policy.get("rule", "")):
+        fail("Creative Manifest status writes must not mint authorization")
+
+    standing = foundry.get("ownerApprovedVisualStandard") or {}
+    if standing.get("approvalScope") != "standing_visual_standard_not_per_job_owner_approval":
+        fail("owner-approved visual standard must remain a standing standard")
+    if standing.get("perJobOwnerApprovalRequired") is not False:
+        fail("owner-approved visual standard must not require per-job owner approval")
+
+    quality = foundry.get("creativeQualitySystem") or {}
+    if quality.get("enabled") is not True or quality.get("version") != "2.0.0":
+        fail("Creative Craft quality system must be enabled at 2.0.0")
+    if quality.get("role") != "authoring_and_quality_system_not_policy_hierarchy":
+        fail("Creative Craft must not become a policy hierarchy")
+    if quality.get("produceCritiqueTargetedRefine") != "internal":
+        fail("produce/critique/targeted-refine must remain internal")
+    if quality.get("ordinaryAestheticChoice") != "office":
+        fail("ordinary aesthetic choices must remain office-owned")
+    if quality.get("qualityFailure") != "targeted_auto_repair_first":
+        fail("ordinary quality failures must target auto-repair first")
+    if quality.get("ownerEscalation") != "exception-only":
+        fail("Creative Craft owner escalation must remain exception-only")
+    for key in ("mayAuthorizeExternalEffects", "mayOverrideProductTruth", "mayCreatePolicyHierarchy"):
+        if quality.get(key) is not False:
+            fail(f"creativeQualitySystem.{key} must remain false")
+    if quality.get("manifestWritesAreEvidenceOnly") is not True:
+        fail("Creative Manifest writes from quality system must remain evidence-only")
+    if quality.get("productTruthAuthority") != "higher_than_aesthetic_and_quality_system":
+        fail("Product Truth must remain above aesthetic/quality systems")
+    if quality.get("completionRequiresExactFinalQa") is not True:
+        fail("creative quality completion must require exact-final QA")
+
+    human_surface = foundry.get("humanSurface") or {}
+    if human_surface.get("mode") != "exception-only":
+        fail("Foundry human surface must remain exception-only")
+    if human_surface.get("routineCreativeChoice") != "office" or human_surface.get("ordinaryAestheticChoice") != "office":
+        fail("routine creative/aesthetic choices must remain office-owned")
+    if human_surface.get("ownerApprovalForAestheticChoice") is not False:
+        fail("ordinary aesthetic choice must not require owner approval")
+    if human_surface.get("ownerApprovalForRoutineQualityRepair") is not False:
+        fail("routine quality repair must not require owner approval")
 
     finishing = foundry.get("visualFinishingPolicy") or {}
     if finishing.get("enabled") is not True:

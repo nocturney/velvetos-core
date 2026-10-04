@@ -10,7 +10,18 @@
 
 ה־control contract המכני של ה־Foundry נמצא ב־`FOUNDRY.json`. חוזה תוכן לכל job נבנה לפי `CONTENT-CONTRACT.schema.json`. שניהם מרחיבים את המערכת הקיימת ואינם יוצרים SoT או runtime מקביל.
 
-## Pipeline — Reference → Generate → Critique → Repair → Rank → Learn
+Policy boundary: `policy_id: instagram.publish`. ה־Creative Manifest, Creative Craft, QA score או status מקומי אינם יכולים לאשר publish; הם מספקים coordination/evidence בלבד.
+
+## Stage 6B — coordination vs authority
+
+- **Creative Manifest = coordination artifact, not approval database.** כתיבת `PASS`, `ready_for_publish` או `authorized_for_tool_publish` לתוכו אינה יוצרת את המצב; הוא רק משקף policy/evidence שכבר הוכחו במסלול הקנוני.
+- **Product Truth מעל aesthetic/quality systems.** source identity, geometry, material/color truth and verified physical facts גוברים על visual standard, references, Creative Craft או taste score.
+- **Creative Craft 2.0 = authoring + quality system, not policy hierarchy.** הוא רשאי לייצר, לבקר, לאבחן ולתקן; אינו mint policy decisions, spend, rights, send או publish authority.
+- **Produce → Critique → Targeted Refine נשאר internal.** ordinary hook/cover/layout/grade/reference/provider/repair choice נסגר בתוך המשרד לפי rubric/evidence; אין owner ping בגלל taste preference רגילה.
+- הבעלים נשאר רק ב־`humanSurface.humanRequired`: physical gap, unclear rights/privacy, unsupported high-stakes claim, price/spend/ads, customer WhatsApp, Print from HQ, destructive action או hard blocker אחרי failover.
+- owner-approved grid הוא **standing standard**, לא per-job approval request.
+
+## Pipeline — Reference → Produce → Critique → Targeted Refine → Rank → Learn
 
 ## Visual Standard Load Gate · before creative work
 

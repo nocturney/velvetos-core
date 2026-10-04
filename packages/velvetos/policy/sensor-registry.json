@@ -373,7 +373,9 @@
         "instances/**",
         "packages/vfcopy/**",
         "packages/vfom/**",
-        "packages/vfresearch/**"
+        "packages/vfresearch/**",
+        "packages/velvetos/policy/reports/stage6b-creative-readiness.json",
+        "scripts/generate-stage6b-creative-readiness-report.py"
       ],
       "triggered_by": [
         ".cursor/**",
@@ -381,7 +383,9 @@
         "packages/vfcopy/**",
         "packages/vfom/**",
         "packages/vfresearch/**",
-        "scripts/check-creative-system.py"
+        "scripts/check-creative-system.py",
+        "packages/velvetos/policy/reports/stage6b-creative-readiness.json",
+        "scripts/generate-stage6b-creative-readiness-report.py"
       ],
       "depends_on": [],
       "enforces": [],

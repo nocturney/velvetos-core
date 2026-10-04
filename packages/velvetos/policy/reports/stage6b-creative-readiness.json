@@ -1,0 +1,134 @@
+{
+  "schema": "velvetos.stage6b-creative-readiness.v1",
+  "stage": "6B",
+  "behavior_change": true,
+  "prepared_against_main_sha": "36a873248f02c24201ebfdf386636f2a96a3db43",
+  "captured_at": "2026-10-04T08:10:50.1641971+03:00",
+  "stage6a_entry": {
+    "receipt": "packages/velvetos/policy/reports/stage6a-visible-text-tiers.json",
+    "acceptance": "PASS"
+  },
+  "before": {
+    "foundry_sha256": "c4e250b837f9396c85328dd4e31189f179b83a822bb869e4b95bd25ddf84a074",
+    "manifest_schema_sha256": "5490009d8c5745450cf4fcd84e901f576efd3c08c97d2712a019b1250e2cfdf9",
+    "creative_manifest_existing_safety": {
+      "notASecondStateMachine": true,
+      "notAMediaCatalog": true,
+      "notAClaimAuthority": true
+    },
+    "missing_explicit_manifest_boundary_fields": {
+      "coordinationOnly": null,
+      "notApprovalDatabase": null,
+      "cannotAuthorizeExternalEffects": null,
+      "statusIsEvidenceProjection": null,
+      "productTruthAuthorityHigher": null,
+      "policyDecisionSource": null
+    },
+    "creative_quality_system_machine_contract_present": false,
+    "human_surface": {
+      "mode": "exception-only",
+      "creativeQualityFailure": "auto-repair",
+      "routineCreativeChoice": "office",
+      "humanRequired": [
+        "physical-footage-or-staging",
+        "rights-or-privacy-unclear",
+        "sale-ils-or-price-change",
+        "purchase-or-spend",
+        "boost-or-ads",
+        "customer-whatsapp-send",
+        "print-from-hq",
+        "irreversible-destructive-action",
+        "hard-blocker-after-failover"
+      ]
+    }
+  },
+  "after": {
+    "foundry_sha256": "eb79d8f0cabf6700aa9939e8c25000698c2b0c3234b8084d54de4e0b918b43b5",
+    "manifest_schema_sha256": "9d346a7e443bc152d139ce0524939ea8c10c2a818c0257e9b598c303541e34f4",
+    "creative_manifest": {
+      "enabled": true,
+      "schema": "packages/vfom/CREATIVE-MANIFEST.schema.json",
+      "role": "single per-content-job coordination artifact shared by strategy, creative direction, media selection, edit, retention, authority/voice, engagement, visual QA, cover, final gate and publish handoff",
+      "coordinationOnly": true,
+      "notASecondStateMachine": true,
+      "notAMediaCatalog": true,
+      "notAClaimAuthority": true,
+      "notApprovalDatabase": true,
+      "cannotAuthorizeExternalEffects": true,
+      "statusIsEvidenceProjection": true,
+      "productTruthAuthorityHigher": true,
+      "policyDecisionSource": "packages/velvetos/policy/policy-registry.json",
+      "rule": "Writing a PASS/ready/authorized status into the Creative Manifest never creates that state; it may only mirror evidence already proven by the canonical policy/evidence path."
+    },
+    "creative_quality_system": {
+      "enabled": true,
+      "version": "2.0.0",
+      "role": "authoring_and_quality_system_not_policy_hierarchy",
+      "router": "packages/vfharness/devtools/creative-craft/skill/SKILL.md",
+      "registry": "packages/vfharness/devtools/creative-craft/creative-craft-registry.json",
+      "specialists": [
+        ".cursor/skills/vf-cad-design-craft/SKILL.md",
+        ".cursor/skills/vf-dcc-modeling-craft/SKILL.md",
+        ".cursor/skills/vf-material-lookdev/SKILL.md",
+        ".cursor/skills/vf-product-visualization-craft/SKILL.md",
+        ".cursor/skills/vf-post-production-craft/SKILL.md",
+        ".cursor/skills/vf-vfx-compositing-craft/SKILL.md",
+        ".cursor/skills/vf-image-design-craft/SKILL.md",
+        ".cursor/skills/vf-technical-illustration-craft/SKILL.md"
+      ],
+      "produceCritiqueTargetedRefine": "internal",
+      "ordinaryAestheticChoice": "office",
+      "qualityFailure": "targeted_auto_repair_first",
+      "ownerEscalation": "exception-only",
+      "mayAuthorizeExternalEffects": false,
+      "mayOverrideProductTruth": false,
+      "mayCreatePolicyHierarchy": false,
+      "manifestWritesAreEvidenceOnly": true,
+      "productTruthAuthority": "higher_than_aesthetic_and_quality_system",
+      "completionRequiresExactFinalQa": true
+    },
+    "standing_visual_standard": {
+      "approvalScope": "standing_visual_standard_not_per_job_owner_approval",
+      "perJobOwnerApprovalRequired": false
+    },
+    "human_surface": {
+      "mode": "exception-only",
+      "creativeQualityFailure": "auto-repair",
+      "routineCreativeChoice": "office",
+      "ordinaryAestheticChoice": "office",
+      "ownerApprovalForAestheticChoice": false,
+      "ownerApprovalForRoutineQualityRepair": false,
+      "humanRequired": [
+        "physical-footage-or-staging",
+        "rights-or-privacy-unclear",
+        "sale-ils-or-price-change",
+        "purchase-or-spend",
+        "boost-or-ads",
+        "customer-whatsapp-send",
+        "print-from-hq",
+        "irreversible-destructive-action",
+        "hard-blocker-after-failover"
+      ]
+    }
+  },
+  "authorization_semantics": {
+    "entry_policy_registry_sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8",
+    "current_policy_registry_sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8",
+    "external_effect_policy_registry_unchanged": true,
+    "creative_manifest_is_policy_authority": false,
+    "creative_craft_is_policy_authority": false
+  },
+  "acceptance": {
+    "creative_manifest_is_coordination_not_approval_database": true,
+    "manifest_status_cannot_mint_external_authorization": true,
+    "product_truth_remains_higher_authority": true,
+    "owner_approved_visual_standard_is_standing_not_per_job_approval": true,
+    "creative_craft_is_quality_system_not_policy_hierarchy": true,
+    "produce_critique_targeted_refine_is_internal": true,
+    "ordinary_aesthetic_choices_and_repairs_do_not_ping_owner": true,
+    "exception_only_owner_surface_preserved_exactly": true,
+    "creative_authority_boundary_documented": true,
+    "external_effect_policy_registry_unchanged": true
+  },
+  "repository_acceptance": "PASS"
+}

@@ -3,10 +3,17 @@
 Status: **MANDATORY METHOD INSIDE THE EXISTING VISUAL FOUNDRY**  
 Source inspiration: MIT-licensed `scenario-labs/skills` v0.48.0.  
 Authority remains Product Truth, Visual OS, Content Contract, Brand Guardian, Visible Text
-and exact-final publication evidence.
+and exact-final publication evidence. External publication remains `policy_id: instagram.publish`;
+this refine loop never authorizes the effect by itself.
 
 This is not a Scenario workflow and does not require Scenario MCP, credits, storage or
 model access.
+
+## 0. Stage 6B authority and escalation boundary
+
+The Creative Manifest records the working candidate, rubric, evidence, repairs and projections; it is not an approval database. Creative Craft 2.0 and its routed specialists are an authoring/quality system, not a new policy layer. Product Truth is higher authority than aesthetic references, score, taste, model output or provider preference.
+
+`produce → critique → targeted refine → recheck` is an internal loop. Ordinary aesthetic choices and ordinary quality failures are resolved by the office with the smallest evidence-backed repair; do not ask the owner which hook, crop, cover, grade, composition or provider they “prefer”. Escalate only the explicit exception-only human surface in `FOUNDRY.json` / the active Instance, or a hard blocker after bounded failover.
 
 ## 1. Product-shot baseline
 
