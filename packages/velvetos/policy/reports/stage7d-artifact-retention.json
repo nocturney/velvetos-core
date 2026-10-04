@@ -80,11 +80,21 @@
       "files": 2975,
       "bytes": 34741347
     },
-    "projected_worktree_before_report_commit": {
-      "files": 2898,
-      "bytes": 29225992
+    "migrated_scope": {
+      "historical_generated_images": {
+        "files": 86,
+        "bytes": 5953075
+      },
+      "rolling_current_images": {
+        "files": 4,
+        "bytes": 354201
+      },
+      "files_reduced": 82,
+      "bytes_reduced": 5598874,
+      "metric_source": "copy-first SHA-256 archive receipt plus canonical rolling-current asset bytes",
+      "checkout_independent": true
     },
-    "note": "Projected metrics include current untracked non-ignored files and exclude removed worktree files; report self-size is not used as a gate."
+    "note": "Footprint metrics use Git object sizes for the immutable base plus SHA-manifested migration bytes; they are checkout- and line-ending-independent."
   },
   "work_ledger": {
     "decision": "NO_NEW_WORK_LEDGER_STORE",

@@ -88,25 +88,22 @@ def base_tree_metrics(sha: str) -> dict[str, int]:
     return {"files": files, "bytes": total}
 
 
-def projected_worktree_metrics() -> dict[str, int]:
-    tracked = subprocess.check_output(
-        ["git", "ls-files", "-z"], cwd=ROOT
-    ).decode("utf-8", errors="surrogateescape").split("\0")
-    untracked = subprocess.check_output(
-        ["git", "ls-files", "--others", "--exclude-standard", "-z"], cwd=ROOT
-    ).decode("utf-8", errors="surrogateescape").split("\0")
-    rels = {item for item in tracked + untracked if item}
-    # Exclude this generated acceptance receipt from its own footprint metric so
-    # regeneration is byte-stable after the receipt has been committed.
-    rels.discard(OUT.relative_to(ROOT).as_posix())
-    files = 0
-    total = 0
-    for rel in rels:
-        path = ROOT / rel
-        if path.is_file():
-            files += 1
-            total += path.stat().st_size
-    return {"files": files, "bytes": total}
+def migration_footprint(*, archive_files: int, archive_bytes: int, current_files: int, current_bytes: int) -> dict[str, Any]:
+    """Checkout-independent footprint for the migrated generated-image scope."""
+    return {
+        "historical_generated_images": {
+            "files": archive_files,
+            "bytes": archive_bytes,
+        },
+        "rolling_current_images": {
+            "files": current_files,
+            "bytes": current_bytes,
+        },
+        "files_reduced": archive_files - current_files,
+        "bytes_reduced": archive_bytes - current_bytes,
+        "metric_source": "copy-first SHA-256 archive receipt plus canonical rolling-current asset bytes",
+        "checkout_independent": True,
+    }
 
 
 def active_consumer_scan() -> dict[str, Any]:
@@ -267,7 +264,12 @@ def main() -> int:
     require(current_policy == baseline_policy, "Stage 7D changed external-effect policy registry")
 
     base_metrics = base_tree_metrics(args.prepared_against)
-    projected_metrics = projected_worktree_metrics()
+    migrated_footprint = migration_footprint(
+        archive_files=int(archive["file_count"]),
+        archive_bytes=int(archive["bytes"]),
+        current_files=int(parity["files"]),
+        current_bytes=current_asset_bytes,
+    )
     criteria = {
         "all_nine_artifact_classes_have_concrete_retention": all(
             "CLASSIFY_IN_STAGE_7" not in str(row.get("retention_class")) for row in entries
@@ -326,8 +328,8 @@ def main() -> int:
         },
         "repository_footprint": {
             "base_tree": base_metrics,
-            "projected_worktree_before_report_commit": projected_metrics,
-            "note": "Projected metrics include current untracked non-ignored files and exclude removed worktree files; report self-size is not used as a gate.",
+            "migrated_scope": migrated_footprint,
+            "note": "Footprint metrics use Git object sizes for the immutable base plus SHA-manifested migration bytes; they are checkout- and line-ending-independent.",
         },
         "work_ledger": work_ledger_decision,
         "authority_baseline": {
