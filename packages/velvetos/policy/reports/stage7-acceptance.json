@@ -1,0 +1,108 @@
+{
+  "schema": "velvetos.stage7-acceptance.v1",
+  "stage": "7",
+  "behavior_change": false,
+  "prepared_against_main_sha": "eb9f0b84031a128b62d2fbf8e3bd3eaa4073d644",
+  "captured_at": "2026-10-04T13:47:42.7409630+03:00",
+  "purpose": "Close Reform v2 Stage 7 after 7A/7B/7C/7D; aggregate evidence only and add no new authority, store, daemon, scheduler, or runtime behavior.",
+  "source_receipts": {
+    "stage7a": {
+      "path": "packages/velvetos/policy/reports/stage7a-state-evidence-model.json",
+      "canonical_json_sha256": "ad2504476847fa2193df10998972e78d91a262bdc18993490c916b95d878e0e7"
+    },
+    "stage7b": {
+      "path": "packages/velvetos/policy/reports/stage7b-memory-learning-lifecycle.json",
+      "canonical_json_sha256": "9cb014990f6dae9cdfecf750b7bfe7b020b8d3ad9100660345bade0fc7bb3948"
+    },
+    "stage7c": {
+      "path": "packages/velvetos/policy/reports/stage7c-research-scheduler-consolidation.json",
+      "canonical_json_sha256": "0a0e710d6ebea747360c19f4f9f883871848aa49ea447e6ab62919acc707a7f5"
+    },
+    "stage7d": {
+      "path": "packages/velvetos/policy/reports/stage7d-artifact-retention.json",
+      "canonical_json_sha256": "ab84581d9fabce46b044a306520ef1b7d51460d347997e087069899a17d29eb0"
+    }
+  },
+  "main_full_suite": {
+    "head_sha": "eb9f0b84031a128b62d2fbf8e3bd3eaa4073d644",
+    "workflow_run_id": 37196253673,
+    "job_id": 111418644447,
+    "run_url": "https://github.com/nocturney/velvetos-core/actions/runs/37196253673",
+    "conclusion": "SUCCESS",
+    "mode": "full",
+    "registered_sensors": 116,
+    "passed_sensors": 116,
+    "log_markers": [
+      "SENSORS 116 mode=full",
+      "OK suite passed=116"
+    ]
+  },
+  "acceptance_criteria": {
+    "state_evidence_model_is_single_and_semantically_explicit": true,
+    "memory_learning_is_selective_evidence_gated_and_nonduplicative": true,
+    "research_and_scheduler_have_single_clock_ownership_and_truth_metadata": true,
+    "artifact_retention_is_concrete_copy_first_and_audit_preserving": true,
+    "work_ledger_question_is_resolved_without_a_second_store": true,
+    "external_effect_authority_remains_unchanged_across_stage7": true,
+    "stage7_adds_no_duplicate_store_daemon_scheduler_or_recurring_cost": true,
+    "stage7_substage_handoff_chain_is_complete": true,
+    "main_full_sensor_suite_116_of_116": true
+  },
+  "state_evidence": {
+    "semantic_categories": [
+      "AUDIT_HISTORY",
+      "AUTHORIZATION_DECISION",
+      "CANONICAL_STATE",
+      "EVIDENCE_RECEIPT"
+    ],
+    "surface_count": 22,
+    "retention_classes_mapped": 9
+  },
+  "memory_learning": {
+    "lifecycle": [
+      "OBSERVATION",
+      "CANDIDATE",
+      "EVIDENCE_RECURRENCE",
+      "PROMOTED_DURABLE",
+      "SUPERSEDED_EXPIRED"
+    ],
+    "candidate_count": 3,
+    "automatic_promotion": false,
+    "new_always_on_memory_systems": 0,
+    "incremental_recurring_cost_ils": 0
+  },
+  "research_scheduler": {
+    "protected_routine_count": 9,
+    "primary_clock_owner": "grok-bot-routines",
+    "provider": "grok-bot",
+    "provider_verified": 9,
+    "pending": 50,
+    "deep_review_required": 0,
+    "reusable_current_review": 50,
+    "required_artifact_metadata": [
+      "as_of",
+      "provenance",
+      "uncertainty",
+      "refresh_target"
+    ]
+  },
+  "retention": {
+    "artifact_class_count": 9,
+    "unclassified_retention_count": 0,
+    "archived_files": 86,
+    "generated_image_bytes_reduced": 5598874,
+    "active_removed_path_refs": 0,
+    "work_ledger_decision": "NO_NEW_WORK_LEDGER_STORE"
+  },
+  "authority": {
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "receipt_baseline_sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8",
+    "external_effect_authority_changed": false
+  },
+  "stage8_entry": {
+    "allowed": true,
+    "next_stage": "Stage 8 — Core / Instance Separation + Capability Placement",
+    "constraint": "Move VF-specific facts and bindings to canonical instance ownership domain-by-domain with compatibility resolver, parity proof, consumer scan and rollback window; no big-bang delete."
+  },
+  "stage7_gate": "PASS"
+}

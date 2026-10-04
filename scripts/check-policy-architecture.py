@@ -34,6 +34,8 @@ STAGE7A_ACCEPTANCE = REPORTS / "stage7a-state-evidence-model.json"
 STAGE7A_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage7a-state-evidence-model.py"
 STAGE7D_ACCEPTANCE = REPORTS / "stage7d-artifact-retention.json"
 STAGE7D_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage7d-artifact-retention.py"
+STAGE7_ACCEPTANCE = REPORTS / "stage7-acceptance.json"
+STAGE7_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage7-acceptance.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -52,6 +54,7 @@ EXPECTED_REPORTS = {
     "stage7a-state-evidence-model.json",
     "stage7d-morning-green-asset-archive.json",
     "stage7d-artifact-retention.json",
+    "stage7-acceptance.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -1200,6 +1203,111 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated7d.is_file():
                     require(regenerated7d.read_bytes() == STAGE7D_ACCEPTANCE.read_bytes(),
                             "Stage 7D acceptance receipt is not reproducible", problems)
+
+    if STAGE7_ACCEPTANCE.is_file():
+        stage7 = load(STAGE7_ACCEPTANCE)
+        require(stage7.get("schema") == "velvetos.stage7-acceptance.v1"
+                and stage7.get("stage") == "7"
+                and stage7.get("behavior_change") is False
+                and stage7.get("stage7_gate") == "PASS",
+                "Stage 7 integrated acceptance metadata drift", problems)
+        criteria7 = stage7.get("acceptance_criteria") or {}
+        expected_criteria7 = {
+            "state_evidence_model_is_single_and_semantically_explicit",
+            "memory_learning_is_selective_evidence_gated_and_nonduplicative",
+            "research_and_scheduler_have_single_clock_ownership_and_truth_metadata",
+            "artifact_retention_is_concrete_copy_first_and_audit_preserving",
+            "work_ledger_question_is_resolved_without_a_second_store",
+            "external_effect_authority_remains_unchanged_across_stage7",
+            "stage7_adds_no_duplicate_store_daemon_scheduler_or_recurring_cost",
+            "stage7_substage_handoff_chain_is_complete",
+            "main_full_sensor_suite_116_of_116",
+        }
+        require(set(criteria7) == expected_criteria7
+                and all(criteria7.get(key) is True for key in expected_criteria7),
+                "Stage 7 integrated acceptance criteria drift or fail", problems)
+        main7 = stage7.get("main_full_suite") or {}
+        require(main7.get("head_sha") == stage7.get("prepared_against_main_sha")
+                and main7.get("conclusion") == "SUCCESS"
+                and main7.get("mode") == "full"
+                and main7.get("registered_sensors") == 116
+                and main7.get("passed_sensors") == 116
+                and main7.get("log_markers") == ["SENSORS 116 mode=full", "OK suite passed=116"],
+                "Stage 7 main full-suite evidence drift", problems)
+        sources7 = stage7.get("source_receipts") or {}
+        require(set(sources7) == {"stage7a", "stage7b", "stage7c", "stage7d"},
+                "Stage 7 source receipt set drift", problems)
+        for name7, meta7 in sources7.items():
+            path7 = ROOT / str((meta7 or {}).get("path") or "")
+            require(path7.is_file(), f"Stage 7 source receipt missing: {name7}", problems)
+            if path7.is_file():
+                obj7 = load(path7)
+                canonical7 = hashlib.sha256(
+                    json.dumps(obj7, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+                ).hexdigest()
+                require(canonical7 == (meta7 or {}).get("canonical_json_sha256"),
+                        f"Stage 7 source receipt hash drift: {name7}", problems)
+        state7 = stage7.get("state_evidence") or {}
+        require(set(state7.get("semantic_categories") or []) == {
+                    "AUDIT_HISTORY", "AUTHORIZATION_DECISION", "CANONICAL_STATE", "EVIDENCE_RECEIPT"
+                }
+                and state7.get("surface_count") == 22
+                and state7.get("retention_classes_mapped") == 9,
+                "Stage 7 state/evidence summary drift", problems)
+        memory7 = stage7.get("memory_learning") or {}
+        require(memory7.get("automatic_promotion") is False
+                and memory7.get("new_always_on_memory_systems") == 0
+                and memory7.get("incremental_recurring_cost_ils") == 0,
+                "Stage 7 memory/learning safety drift", problems)
+        scheduler7 = stage7.get("research_scheduler") or {}
+        require(scheduler7.get("protected_routine_count") == 9
+                and scheduler7.get("primary_clock_owner") == "grok-bot-routines"
+                and scheduler7.get("provider_verified") == 9
+                and scheduler7.get("deep_review_required") == 0
+                and scheduler7.get("pending") == scheduler7.get("reusable_current_review"),
+                "Stage 7 research/scheduler summary drift", problems)
+        retention7 = stage7.get("retention") or {}
+        require(retention7.get("artifact_class_count") == 9
+                and retention7.get("unclassified_retention_count") == 0
+                and retention7.get("generated_image_bytes_reduced", 0) > 5_000_000
+                and retention7.get("active_removed_path_refs") == 0
+                and retention7.get("work_ledger_decision") == "NO_NEW_WORK_LEDGER_STORE",
+                "Stage 7 retention summary drift", problems)
+        authority7 = stage7.get("authority") or {}
+        require(authority7.get("external_effect_authority_changed") is False,
+                "Stage 7 external-effect authority changed", problems)
+        entry8 = stage7.get("stage8_entry") or {}
+        require(entry8.get("allowed") is True
+                and entry8.get("next_stage") == "Stage 8 — Core / Instance Separation + Capability Placement"
+                and "no big-bang delete" in str(entry8.get("constraint") or ""),
+                "Stage 8 entry contract drift", problems)
+        if STAGE7_ACCEPTANCE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated7 = Path(td) / "stage7-acceptance.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE7_ACCEPTANCE_GENERATOR),
+                        "--prepared-against", stage7["prepared_against_main_sha"],
+                        "--captured-at", stage7["captured_at"],
+                        "--main-run-id", str(main7["workflow_run_id"]),
+                        "--main-job-id", str(main7["job_id"]),
+                        "--main-run-url", main7["run_url"],
+                        "--output", str(regenerated7),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0,
+                        "Stage 7 integrated acceptance regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()),
+                        problems)
+                if proc.returncode == 0 and regenerated7.is_file():
+                    require(regenerated7.read_bytes() == STAGE7_ACCEPTANCE.read_bytes(),
+                            "Stage 7 integrated acceptance receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)
