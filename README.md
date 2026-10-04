@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 8D sample-profile rollback closure:** closes only the `sample_profile` rollback observation window using explicit evidence, not elapsed-time inference. The legacy sample has remai…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 8D sample-profile rollback closure:** closes only the `sample_profile` rollback observation window using explicit evidence, not elapsed-time inference. The legacy sample has remai…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 8D sample-profile retirement gate:** authorizes a later isolated retirement of `packages/velvetos/samples/velvet-factory.json` after the merged rollback closure, clean consumer/pa…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 8D sample-profile retirement gate:** authorizes a later isolated retirement of `packages/velvetos/samples/velvet-factory.json` after the merged rollback closure, clean consumer/pa…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>

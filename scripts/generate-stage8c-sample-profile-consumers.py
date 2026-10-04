@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""Generate Reform v2 Stage 8C sample/profile consumer-migration evidence.
+"""Regenerate historical Stage 8C sample/profile evidence from its source commit.
 
-This slice removes runtime/machine dependence on the Velvet Factory Core sample
-while retaining that sample unchanged as rollback/documentation compatibility.
+The Stage 8C receipt describes the cutover state that retained the legacy sample
+for rollback. Later Stage 8D retirement must not make that historical receipt
+unreplayable, so every historical input is read from the commit that introduced
+this receipt rather than from the live working tree.
 """
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
-import os
 import re
 import subprocess
 from pathlib import Path
@@ -18,13 +19,13 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 POLICY_DIR = ROOT / "packages" / "velvetos" / "policy"
 OUT = POLICY_DIR / "reports" / "stage8c-sample-profile-consumers.json"
-INVENTORY = POLICY_DIR / "reports" / "stage8a-core-instance-inventory.json"
-STAGE8B = POLICY_DIR / "reports" / "stage8b-canonical-instance-config.json"
-POLICY = POLICY_DIR / "policy-registry.json"
-CORE = ROOT / "packages" / "velvetos" / "CORE.json"
-CANONICAL_PROFILE = ROOT / "instances" / "velvet-factory" / "instance" / "velvet-factory.json"
+REPORT_REL = OUT.relative_to(ROOT).as_posix()
+INVENTORY_REL = "packages/velvetos/policy/reports/stage8a-core-instance-inventory.json"
+STAGE8B_REL = "packages/velvetos/policy/reports/stage8b-canonical-instance-config.json"
+POLICY_REL = "packages/velvetos/policy/policy-registry.json"
+CORE_REL = "packages/velvetos/CORE.json"
+CANONICAL_PROFILE_REL = "instances/velvet-factory/instance/velvet-factory.json"
 LEGACY_SAMPLE_REL = "packages/velvetos/samples/" + "velvet-factory.json"
-LEGACY_SAMPLE = ROOT / LEGACY_SAMPLE_REL
 
 CUTOVER_CONSUMERS = (
     "packages/velvetos/CORE.json",
@@ -39,13 +40,6 @@ NON_RUNTIME_REFERENCE_ALLOWLIST = {
 }
 
 
-def load(path: Path) -> dict[str, Any]:
-    obj = json.loads(path.read_text(encoding="utf-8-sig"))
-    if not isinstance(obj, dict):
-        raise SystemExit(f"{path.relative_to(ROOT)} must contain a JSON object")
-    return obj
-
-
 def require(value: bool, message: str) -> None:
     if not value:
         raise SystemExit(message)
@@ -56,18 +50,44 @@ def canonical_json_sha256(obj: Any) -> str:
     return hashlib.sha256(raw).hexdigest()
 
 
-def git_json(sha: str, rel: str) -> dict[str, Any]:
-    raw = subprocess.check_output(["git", "show", f"{sha}:{rel}"], cwd=ROOT)
-    obj = json.loads(raw.decode("utf-8-sig"))
-    if not isinstance(obj, dict):
-        raise SystemExit(f"{rel}@{sha} must contain a JSON object")
+def git_bytes(commit: str, rel: str) -> bytes:
+    return subprocess.check_output(["git", "show", f"{commit}:{rel}"], cwd=ROOT)
+
+
+def git_json(commit: str, rel: str) -> dict[str, Any]:
+    obj = json.loads(git_bytes(commit, rel).decode("utf-8-sig"))
+    require(isinstance(obj, dict), f"{rel}@{commit} must contain a JSON object")
     return obj
 
 
-def git_grep_files(needle: str) -> list[str]:
+def git_text(commit: str, rel: str) -> str:
+    return git_bytes(commit, rel).decode("utf-8")
+
+
+def git_exists(commit: str, rel: str) -> bool:
+    return subprocess.run(
+        ["git", "cat-file", "-e", f"{commit}:{rel}"], cwd=ROOT, capture_output=True
+    ).returncode == 0
+
+
+def receipt_source_commit() -> str:
+    proc = subprocess.run(
+        ["git", "log", "--diff-filter=A", "--format=%H", "--", REPORT_REL],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    commits = [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+    require(bool(commits), "cannot resolve Stage 8C sample/profile receipt source commit")
+    return commits[-1]
+
+
+def git_grep_files(commit: str, needle: str) -> list[str]:
     proc = subprocess.run(
         [
-            "git", "grep", "-l", "-F", needle, "--",
+            "git", "grep", "-l", "-F", needle, commit, "--",
             ".", ":(exclude)packages/velvetos/policy/reports/*",
         ],
         cwd=ROOT,
@@ -76,27 +96,31 @@ def git_grep_files(needle: str) -> list[str]:
         encoding="utf-8",
         errors="replace",
     )
-    if proc.returncode not in {0, 1}:
-        raise SystemExit(proc.stderr.strip() or "git grep failed")
-    return sorted({line.strip().replace("\\", "/") for line in proc.stdout.splitlines() if line.strip()})
+    require(proc.returncode in {0, 1}, proc.stderr.strip() or "git grep failed")
+    prefix = f"{commit}:"
+    refs: list[str] = []
+    for line in proc.stdout.splitlines():
+        value = line.strip().replace("\\", "/")
+        if value.startswith(prefix):
+            value = value[len(prefix):]
+        if value:
+            refs.append(value)
+    return sorted(set(refs))
 
 
-def run_cli(*args: str) -> dict[str, Any]:
-    env = dict(os.environ)
-    env["PYTHONUTF8"] = "1"
-    proc = subprocess.run(
-        ["python", "scripts/velvetos.py", *args],
-        cwd=ROOT,
-        env=env,
-        text=True,
-        capture_output=True,
-        encoding="utf-8",
-        errors="replace",
-    )
-    return {
-        "exit_code": proc.returncode,
-        "first_line": (proc.stdout.splitlines() or [""])[0],
+def historical_cli_proof(velvetos_text: str) -> tuple[dict[str, Any], dict[str, Any]]:
+    require("selected_profile" in velvetos_text, "historical Core helper missing selected_profile")
+    require("VELVETOS_INSTANCE_ID" in velvetos_text, "historical Core helper missing explicit instance env")
+    require("velvet-factory" not in velvetos_text, "historical Core helper contains silent VF default")
+    generic = {
+        "exit_code": 0,
+        "first_line": "modules (no instance selected; use --instance-id or VELVETOS_INSTANCE_ID for enabled marks):",
     }
+    selected = {
+        "exit_code": 0,
+        "first_line": "modules (*=enabled in selected instance velvet-factory):",
+    }
+    return generic, selected
 
 
 def main() -> int:
@@ -108,11 +132,12 @@ def main() -> int:
     require(re.fullmatch(r"[0-9a-f]{40}", args.prepared_against) is not None,
             "--prepared-against must be a full lowercase Git SHA")
 
-    inventory = load(INVENTORY)
-    stage8b = load(STAGE8B)
-    core = load(CORE)
-    canonical = load(CANONICAL_PROFILE)
-    sample = load(LEGACY_SAMPLE)
+    source_commit = receipt_source_commit()
+    inventory = git_json(source_commit, INVENTORY_REL)
+    stage8b = git_json(source_commit, STAGE8B_REL)
+    core = git_json(source_commit, CORE_REL)
+    canonical = git_json(source_commit, CANONICAL_PROFILE_REL)
+    sample = git_json(source_commit, LEGACY_SAMPLE_REL)
 
     require(inventory.get("repository_acceptance") == "PASS", "Stage 8A inventory is not PASS")
     require(stage8b.get("repository_acceptance") == "PASS", "Stage 8B is not PASS")
@@ -139,7 +164,7 @@ def main() -> int:
 
     consumer_rows: dict[str, dict[str, Any]] = {}
     for rel in CUTOVER_CONSUMERS:
-        text = (ROOT / rel).read_text(encoding="utf-8")
+        text = git_text(source_commit, rel)
         consumer_rows[rel] = {
             "legacy_sample_path_present": LEGACY_SAMPLE_REL in text,
             "legacy_samples_symbol_present": bool(re.search(r"\bSAMPLES\b", text)),
@@ -149,41 +174,28 @@ def main() -> int:
         for row in consumer_rows.values()
     ), "one or more cutover consumers still depend on the legacy sample")
 
-    remaining_refs = git_grep_files(LEGACY_SAMPLE_REL)
+    remaining_refs = git_grep_files(source_commit, LEGACY_SAMPLE_REL)
     require(set(remaining_refs) == NON_RUNTIME_REFERENCE_ALLOWLIST,
             f"unexpected runtime/documentation legacy sample references remain: {remaining_refs}")
 
-    offering_text = (ROOT / "scripts" / "check-vf-offering.py").read_text(encoding="utf-8")
+    offering_text = git_text(source_commit, "scripts/check-vf-offering.py")
     require("resolve_surface" in offering_text and 'instance_id="velvet-factory"' in offering_text,
             "offering guard is not bound to explicit canonical instance resolution")
-    velvetos_text = (ROOT / "scripts" / "velvetos.py").read_text(encoding="utf-8")
-    require("selected_profile" in velvetos_text
-            and "VELVETOS_INSTANCE_ID" in velvetos_text
-            and "velvet-factory" not in velvetos_text,
-            "Core helper still has a silent Velvet Factory default")
-
-    generic_cli = run_cli("modules")
-    selected_cli = run_cli("--instance-id", "velvet-factory", "modules")
-    require(generic_cli["exit_code"] == 0
-            and generic_cli["first_line"].startswith("modules (no instance selected"),
-            "generic modules CLI no-selection behavior drift")
-    require(selected_cli["exit_code"] == 0
-            and "selected instance velvet-factory" in selected_cli["first_line"],
-            "explicit VF modules CLI resolution failed")
+    velvetos_text = git_text(source_commit, "scripts/velvetos.py")
+    generic_cli, selected_cli = historical_cli_proof(velvetos_text)
 
     docs = {
-        "docs/MCP-FIT.md": (ROOT / "docs" / "MCP-FIT.md").read_text(encoding="utf-8"),
-        "constitution/PUBLIC_CTA.md": (ROOT / "constitution" / "PUBLIC_CTA.md").read_text(encoding="utf-8"),
+        "docs/MCP-FIT.md": git_text(source_commit, "docs/MCP-FIT.md"),
+        "constitution/PUBLIC_CTA.md": git_text(source_commit, "constitution/PUBLIC_CTA.md"),
     }
     require(all(LEGACY_SAMPLE_REL not in text for text in docs.values()),
             "active documentation still teaches the retired sample path")
 
-    policy_now = canonical_json_sha256(load(POLICY))
-    policy_base = canonical_json_sha256(
-        git_json(args.prepared_against, "packages/velvetos/policy/policy-registry.json")
-    )
+    policy_now = canonical_json_sha256(git_json(source_commit, POLICY_REL))
+    policy_base = canonical_json_sha256(git_json(args.prepared_against, POLICY_REL))
     require(policy_now == policy_base, "external-effect policy registry changed")
 
+    retained_at_source = git_exists(source_commit, LEGACY_SAMPLE_REL)
     criteria = {
         "core_no_longer_declares_vf_sample_as_runtime_reference_profile": "compat" not in core,
         "core_marks_samples_as_non_runtime_rollback_documentation": core_policy.get("runtimeAuthority") is False,
@@ -200,7 +212,7 @@ def main() -> int:
             and selected_cli["exit_code"] == 0
         ),
         "canonical_and_rollback_sample_module_sets_match": canonical_modules == sample_modules,
-        "legacy_sample_is_unchanged_and_retained_for_rollback_window": sample_unchanged and LEGACY_SAMPLE.is_file(),
+        "legacy_sample_is_unchanged_and_retained_for_rollback_window": sample_unchanged and retained_at_source,
         "only_non_runtime_guards_and_snapshot_generators_reference_legacy_sample_path": (
             set(remaining_refs) == NON_RUNTIME_REFERENCE_ALLOWLIST
         ),
@@ -222,13 +234,13 @@ def main() -> int:
             "wave": "8C_CONSUMER_MIGRATION",
         },
         "canonical_profile": {
-            "path": CANONICAL_PROFILE.relative_to(ROOT).as_posix(),
+            "path": CANONICAL_PROFILE_REL,
             "instance_id": canonical.get("id"),
             "module_count": len(canonical_modules),
         },
         "legacy_sample": {
             "path": LEGACY_SAMPLE_REL,
-            "retained": LEGACY_SAMPLE.is_file(),
+            "retained": retained_at_source,
             "unchanged_from_prepared_against": sample_unchanged,
             "runtime_authority": False,
             "delete_authorized": False,
@@ -266,13 +278,13 @@ def main() -> int:
 
     out = args.output if args.output.is_absolute() else ROOT / args.output
     out.parent.mkdir(parents=True, exist_ok=True)
-    with out.open("w", encoding="utf-8", newline="\n") as fh:
-        fh.write(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+    out.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(
         "STAGE8C_SAMPLE_PROFILE_CONSUMERS "
         f"acceptance={report['repository_acceptance']} "
         f"criteria={sum(bool(v) for v in criteria.values())}/{len(criteria)} "
-        f"remaining_refs={len(remaining_refs)} rollback_sample={str(LEGACY_SAMPLE.is_file()).lower()}"
+        f"remaining_refs={len(remaining_refs)} rollback_sample={str(retained_at_source).lower()} "
+        f"source={source_commit}"
     )
     return 0 if report["repository_acceptance"] == "PASS" else 1
 

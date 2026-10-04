@@ -74,6 +74,8 @@ STAGE8D_POST_MIGRATION = REPORTS / "stage8d-post-migration-readiness.json"
 STAGE8D_POST_MIGRATION_GENERATOR = ROOT / "scripts" / "generate-stage8d-post-migration-readiness.py"
 STAGE8D_SAMPLE_ROLLBACK_CLOSURE = REPORTS / "stage8d-sample-profile-rollback-closure.json"
 STAGE8D_SAMPLE_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-sample-profile-rollback-closure.py"
+STAGE8D_SAMPLE_RETIREMENT_GATE = REPORTS / "stage8d-sample-profile-retirement-gate.json"
+STAGE8D_SAMPLE_RETIREMENT_GATE_GENERATOR = ROOT / "scripts" / "generate-stage8d-sample-profile-retirement-gate.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -112,6 +114,7 @@ EXPECTED_REPORTS = {
     "stage8d-chatgpt-core-consumer-migration.json",
     "stage8d-post-migration-readiness.json",
     "stage8d-sample-profile-rollback-closure.json",
+    "stage8d-sample-profile-retirement-gate.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -3086,6 +3089,147 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated8ds.read_bytes() == STAGE8D_SAMPLE_ROLLBACK_CLOSURE.read_bytes(),
                         "Stage 8D sample rollback closure receipt is not reproducible",
+                        problems,
+                    )
+
+    if STAGE8D_SAMPLE_RETIREMENT_GATE.is_file():
+        gate8ds = load(STAGE8D_SAMPLE_RETIREMENT_GATE)
+        require(
+            gate8ds.get("schema") == "velvetos.stage8d-sample-profile-retirement-gate.v1"
+            and gate8ds.get("stage") == "8D_SAMPLE_PROFILE_RETIREMENT_GATE"
+            and gate8ds.get("behavior_change") is False
+            and gate8ds.get("surface_id") == "sample_profile"
+            and gate8ds.get("repository_assessment") == "PASS",
+            "Stage 8D sample retirement gate metadata drift",
+            problems,
+        )
+        criteria8dg = gate8ds.get("acceptance_criteria") or {}
+        expected8dg = {
+            "explicit_rollback_window_closure_is_merged",
+            "closure_did_not_self_authorize_deletion",
+            "legacy_sample_is_still_present_before_retirement",
+            "active_legacy_consumer_count_is_zero",
+            "only_historical_guard_and_snapshot_references_remain",
+            "legacy_sample_is_byte_unchanged_since_cutover",
+            "canonical_legacy_module_parity_is_preserved",
+            "historical_stage8c_sample_receipt_replays_byte_equal",
+            "closure_merge_main_ci_is_green",
+            "closure_merge_local_full_suite_is_116_of_116",
+            "external_effect_authority_is_unchanged",
+            "authorization_scope_is_single_surface_and_explicit",
+            "no_delete_occurs_in_this_gate",
+        }
+        require(
+            set(criteria8dg) == expected8dg and all(criteria8dg.get(k) is True for k in expected8dg),
+            "Stage 8D sample retirement gate criteria drift or fail",
+            problems,
+        )
+        closure8dg = gate8ds.get("closure_binding") or {}
+        require(
+            closure8dg.get("pull_request") == 529
+            and closure8dg.get("merge_sha") == gate8ds.get("prepared_against_main_sha")
+            and closure8dg.get("rollback_window_closed") is True
+            and closure8dg.get("closure_delete_authorized") is False
+            and closure8dg.get("retirement_ready_for_deletion_gate") is True,
+            "Stage 8D sample retirement gate closure binding drift",
+            problems,
+        )
+        current8dg = gate8ds.get("current_revalidation") or {}
+        require(
+            current8dg.get("legacy_present") is True
+            and current8dg.get("active_consumer_count") == 0
+            and current8dg.get("legacy_reference_class") == "HISTORICAL_GUARDS_AND_SNAPSHOT_GENERATORS_ONLY"
+            and current8dg.get("legacy_byte_unchanged_since_cutover") is True
+            and current8dg.get("canonical_legacy_module_parity") is True
+            and current8dg.get("historical_stage8c_receipt_replays_byte_equal") is True
+            and current8dg.get("core_sample_metadata_runtime_authority") is False
+            and current8dg.get("external_effect_authority_unchanged") is True,
+            "Stage 8D sample retirement current revalidation drift",
+            problems,
+        )
+        verify8dg = gate8ds.get("post_closure_verification") or {}
+        gh8dg = verify8dg.get("github_core_sensors") or {}
+        local8dg = verify8dg.get("local_full_suite") or {}
+        require(
+            verify8dg.get("main_sha") == gate8ds.get("prepared_against_main_sha")
+            and gh8dg.get("workflow_run_id") == 37230041634
+            and gh8dg.get("conclusion") == "SUCCESS"
+            and local8dg.get("mode") == "full"
+            and local8dg.get("registered_sensors") == 116
+            and local8dg.get("passed_sensors") == 116
+            and local8dg.get("conclusion") == "SUCCESS"
+            and local8dg.get("repository_files_unchanged") is True,
+            "Stage 8D sample retirement post-closure verification drift",
+            problems,
+        )
+        auth8dg = gate8ds.get("authorization") or {}
+        require(
+            auth8dg.get("surface_retirement_authorized") is True
+            and auth8dg.get("delete_authorized") is True
+            and auth8dg.get("authorized_delete_paths")
+                == ["packages/velvetos/samples/velvet-factory.json"]
+            and auth8dg.get("authorization_consumed") is False
+            and auth8dg.get("overall_stage8d_retirement_authorized") is False
+            and auth8dg.get("invalidated_by_new_active_consumer_or_parity_or_authority_drift") is True,
+            "Stage 8D sample retirement authorization scope drift",
+            problems,
+        )
+        require(
+            gate8ds.get("retirement_authorized") is True
+            and gate8ds.get("delete_authorized") is True
+            and gate8ds.get("deletion_performed") is False,
+            "Stage 8D sample retirement gate must authorize later deletion without performing it",
+            problems,
+        )
+        authority8dg = gate8ds.get("authority") or {}
+        require(
+            authority8dg.get("external_effect_authority_changed") is False
+            and authority8dg.get("policy_registry_sha256")
+                == authority8dg.get("closure_policy_registry_sha256"),
+            "Stage 8D sample retirement gate changed authority",
+            problems,
+        )
+        constraints8dg = set(gate8ds.get("constraints") or [])
+        require(
+            {
+                "this gate performs no deletion",
+                "authorization applies only to sample_profile",
+                "no big-bang delete",
+                "historical evidence must remain byte-reproducible after retirement",
+                "external-effect authority must remain unchanged",
+                "other Stage 8D rollback windows remain independently gated",
+            } <= constraints8dg,
+            "Stage 8D sample retirement gate safety constraints drift",
+            problems,
+        )
+        if STAGE8D_SAMPLE_RETIREMENT_GATE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8dg = Path(td) / "stage8d-sample-profile-retirement-gate.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_SAMPLE_RETIREMENT_GATE_GENERATOR),
+                        "--prepared-against", gate8ds["prepared_against_main_sha"],
+                        "--captured-at", gate8ds["captured_at"],
+                        "--output", str(regenerated8dg),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=120,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D sample retirement gate regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated8dg.is_file():
+                    require(
+                        regenerated8dg.read_bytes() == STAGE8D_SAMPLE_RETIREMENT_GATE.read_bytes(),
+                        "Stage 8D sample retirement gate receipt is not reproducible",
                         problems,
                     )
 

@@ -602,3 +602,11 @@ The gate is prepared against merged main `aa6e163fa635a540e11bd8f40fd65d08bc0c4a
 The observation window contains 18 `VelvetOS Core Sensors` main-push runs: 17 successful and one failure. The failure was `check-vfresearch.py` after a provider-readback pointer refresh, explicitly unrelated to `sample_profile`; PR #519 snapshot-bound the historical Stage 7C replay and all 10 observed main runs from that repair through `c344ecb1` are green. Closure authority therefore comes from classified operational evidence, not from elapsed time.
 
 The legacy sample remains physically present. `rollback_window_closed=true` means the observation window is explicitly closed for this one surface; it does **not** mean the file is deleted or that deletion is already authorized. `delete_authorized=false` and `retirement_authorized=false` remain in force. A separate isolated retirement gate must revalidate consumers, parity/closure evidence, current main CI and external-effect authority before it can authorize deletion.
+
+## Reform v2 Stage 8D - Sample-profile retirement gate
+
+`reports/stage8d-sample-profile-retirement-gate.json` is the deletion-authorization boundary for the already-closed `sample_profile` rollback window. It revalidates zero active consumers, unchanged legacy bytes, canonical module parity, unchanged external-effect authority and the green post-closure `main` verification at `bde52ea5` (GitHub Core Sensors success plus local 116/116 full suite).
+
+The historical Stage 8C sample generator is source-snapshot-bound before authorization. Replaying the original Stage 8C inputs produces the exact original receipt bytes, so later physical retirement cannot rewrite or invalidate the evidence that documented the earlier rollback window.
+
+This gate sets `retirement_authorized=true` and `delete_authorized=true` **only for** `packages/velvetos/samples/velvet-factory.json`, while `deletion_performed=false`. The actual deletion must occur in a separate isolated PR based on the merged gate, remove the stale non-runtime `CORE.json.sampleProfiles` rollback metadata, preserve all historical receipts, re-run exact-SHA selector and an independent 116-sensor suite, and leave the other Stage 8D compatibility surfaces independently gated.

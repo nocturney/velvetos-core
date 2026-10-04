@@ -1,0 +1,100 @@
+{
+  "schema": "velvetos.stage8d-sample-profile-retirement-gate.v1",
+  "stage": "8D_SAMPLE_PROFILE_RETIREMENT_GATE",
+  "behavior_change": false,
+  "prepared_against_main_sha": "bde52ea50c8c72930248d0b7e669bff759bce9c3",
+  "captured_at": "2026-10-04T23:00:16.8846156+03:00",
+  "surface_id": "sample_profile",
+  "legacy_path": "packages/velvetos/samples/velvet-factory.json",
+  "canonical_path": "instances/velvet-factory/instance/velvet-factory.json",
+  "purpose": "Authorize a later isolated retirement of the legacy VF sample profile after explicit rollback closure, clean consumer/parity revalidation, historical receipt replay proof and post-closure CI.",
+  "closure_binding": {
+    "pull_request": 529,
+    "merge_sha": "bde52ea50c8c72930248d0b7e669bff759bce9c3",
+    "receipt": "packages/velvetos/policy/reports/stage8d-sample-profile-rollback-closure.json",
+    "rollback_window_closed": true,
+    "closure_delete_authorized": false,
+    "retirement_ready_for_deletion_gate": true
+  },
+  "current_revalidation": {
+    "legacy_present": true,
+    "active_consumer_count": 0,
+    "legacy_references": [
+      "scripts/check-policy-architecture.py",
+      "scripts/generate-stage8a-core-instance-inventory.py",
+      "scripts/generate-stage8b-instance-resolver-foundation.py"
+    ],
+    "legacy_reference_class": "HISTORICAL_GUARDS_AND_SNAPSHOT_GENERATORS_ONLY",
+    "legacy_byte_unchanged_since_cutover": true,
+    "canonical_legacy_module_parity": true,
+    "historical_stage8c_receipt_replays_byte_equal": true,
+    "core_sample_metadata_runtime_authority": false,
+    "external_effect_authority_unchanged": true
+  },
+  "post_closure_verification": {
+    "main_sha": "bde52ea50c8c72930248d0b7e669bff759bce9c3",
+    "github_core_sensors": {
+      "workflow_run_id": 37230041634,
+      "conclusion": "SUCCESS"
+    },
+    "github_readme_pulse": {
+      "workflow_run_id": 37230041570,
+      "conclusion": "SUCCESS"
+    },
+    "local_full_suite": {
+      "mode": "full",
+      "registered_sensors": 116,
+      "passed_sensors": 116,
+      "conclusion": "SUCCESS",
+      "repository_files_unchanged": true
+    }
+  },
+  "authorization": {
+    "surface_retirement_authorized": true,
+    "delete_authorized": true,
+    "authorized_delete_paths": [
+      "packages/velvetos/samples/velvet-factory.json"
+    ],
+    "required_same-surface_cleanup": [
+      "remove packages/velvetos/CORE.json sampleProfiles rollback-only metadata",
+      "preserve historical Stage 8A/8B/8C receipts through source-snapshot replay",
+      "update live policy/docs to state sample_profile is retired"
+    ],
+    "authorization_consumed": false,
+    "overall_stage8d_retirement_authorized": false,
+    "invalidated_by_new_active_consumer_or_parity_or_authority_drift": true
+  },
+  "acceptance_criteria": {
+    "explicit_rollback_window_closure_is_merged": true,
+    "closure_did_not_self_authorize_deletion": true,
+    "legacy_sample_is_still_present_before_retirement": true,
+    "active_legacy_consumer_count_is_zero": true,
+    "only_historical_guard_and_snapshot_references_remain": true,
+    "legacy_sample_is_byte_unchanged_since_cutover": true,
+    "canonical_legacy_module_parity_is_preserved": true,
+    "historical_stage8c_sample_receipt_replays_byte_equal": true,
+    "closure_merge_main_ci_is_green": true,
+    "closure_merge_local_full_suite_is_116_of_116": true,
+    "external_effect_authority_is_unchanged": true,
+    "authorization_scope_is_single_surface_and_explicit": true,
+    "no_delete_occurs_in_this_gate": true
+  },
+  "repository_assessment": "PASS",
+  "retirement_authorized": true,
+  "delete_authorized": true,
+  "deletion_performed": false,
+  "next_action": "Create a separate PR from the merged gate, revalidate exact main/head, delete only packages/velvetos/samples/velvet-factory.json, remove stale Core sampleProfiles metadata, preserve historical receipt replay, run selector plus independent full suite, and merge only if green.",
+  "authority": {
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "closure_policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false
+  },
+  "constraints": [
+    "this gate performs no deletion",
+    "authorization applies only to sample_profile",
+    "no big-bang delete",
+    "historical evidence must remain byte-reproducible after retirement",
+    "external-effect authority must remain unchanged",
+    "other Stage 8D rollback windows remain independently gated"
+  ]
+}
