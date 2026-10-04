@@ -62,6 +62,8 @@ STAGE8C_CLOSURE = REPORTS / "stage8c-closure.json"
 STAGE8C_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8c-closure.py"
 STAGE8D_READINESS = REPORTS / "stage8d-retirement-readiness.json"
 STAGE8D_READINESS_GENERATOR = ROOT / "scripts" / "generate-stage8d-retirement-readiness.py"
+STAGE8D_FLEET = REPORTS / "stage8d-fleet-consumer-migration.json"
+STAGE8D_FLEET_GENERATOR = ROOT / "scripts" / "generate-stage8d-fleet-consumer-migration.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -94,6 +96,7 @@ EXPECTED_REPORTS = {
     "stage8c-windows-host-binding.json",
     "stage8c-closure.json",
     "stage8d-retirement-readiness.json",
+    "stage8d-fleet-consumer-migration.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -2446,6 +2449,90 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated8d.is_file():
                     require(regenerated8d.read_bytes() == STAGE8D_READINESS.read_bytes(),
                             "Stage 8D readiness receipt is not reproducible", problems)
+
+    if STAGE8D_FLEET.is_file():
+        fleet8d = load(STAGE8D_FLEET)
+        require(
+            fleet8d.get("schema") == "velvetos.stage8d-fleet-consumer-migration.v1"
+            and fleet8d.get("stage") == "8D_FLEET_CONSUMER_MIGRATION"
+            and fleet8d.get("behavior_change") is True
+            and fleet8d.get("repository_acceptance") == "PASS",
+            "Stage 8D fleet migration metadata drift",
+            problems,
+        )
+        criteria8df = fleet8d.get("acceptance_criteria") or {}
+        expected8df = {
+            "living_studio_production_planner_uses_instance_fleet_surface",
+            "living_studio_has_no_legacy_fleet_consumer",
+            "canonical_instance_manifest_declares_fleet_surface",
+            "canonical_and_legacy_fleet_remain_parity_equal",
+            "legacy_fleet_is_retained_for_rollback",
+            "fleet_retirement_remains_unauthorized_while_rollback_window_is_open",
+            "stage8d_readiness_baseline_is_preserved",
+            "external_effect_policy_registry_is_unchanged",
+        }
+        require(
+            set(criteria8df) == expected8df and all(criteria8df.get(k) is True for k in expected8df),
+            "Stage 8D fleet migration criteria drift or fail",
+            problems,
+        )
+        migration8df = fleet8d.get("migration") or {}
+        require(
+            migration8df.get("consumer") == "packages/velvetos/living-studio/REGISTRY.json"
+            and migration8df.get("skill") == "production-planner"
+            and migration8df.get("to") == "instance:surface:fleet"
+            and migration8df.get("legacy_path_retained") is True
+            and migration8df.get("delete_authorized") is False,
+            "Stage 8D fleet migration contract drift",
+            problems,
+        )
+        require(
+            (fleet8d.get("parity") or {}).get("equal") is True
+            and (fleet8d.get("consumer_scan") or {}).get("living_studio_legacy_references") == []
+            and (fleet8d.get("rollback") or {}).get("window_open") is True
+            and (fleet8d.get("rollback") or {}).get("delete_authorized") is False,
+            "Stage 8D fleet parity/rollback drift",
+            problems,
+        )
+        authority8df = fleet8d.get("authority") or {}
+        require(
+            authority8df.get("external_effect_authority_changed") is False
+            and authority8df.get("policy_registry_canonical_sha256")
+                == authority8df.get("prepared_against_policy_registry_canonical_sha256"),
+            "Stage 8D fleet migration changed authority",
+            problems,
+        )
+        if STAGE8D_FLEET_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8df = Path(td) / "stage8d-fleet-consumer-migration.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_FLEET_GENERATOR),
+                        "--prepared-against", fleet8d["prepared_against_main_sha"],
+                        "--source-commit", fleet8d["source_commit_sha"],
+                        "--captured-at", fleet8d["captured_at"],
+                        "--output", str(regenerated8df),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D fleet migration regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated8df.is_file():
+                    require(
+                        regenerated8df.read_bytes() == STAGE8D_FLEET.read_bytes(),
+                        "Stage 8D fleet migration receipt is not reproducible",
+                        problems,
+                    )
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)
