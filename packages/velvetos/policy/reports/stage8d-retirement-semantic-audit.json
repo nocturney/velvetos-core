@@ -1,0 +1,785 @@
+{
+  "schema": "velvetos.stage8d-retirement-semantic-audit.v1",
+  "stage": "8D_RETIREMENT_SEMANTIC_AUDIT",
+  "behavior_change": false,
+  "source_commit_sha": "30d72da6a257c2973d9d1b96e4caff0377135db3",
+  "captured_at": "2026-10-04T23:12:31.6248839+03:00",
+  "purpose": "Fail-closed semantic audit for retained Stage 8D compatibility surfaces. Detect exact and assembled path references before rollback closure or deletion.",
+  "audit_model": {
+    "exact_path_detection": true,
+    "assembled_path_component_detection": true,
+    "ambiguous_machine_or_config_reference_blocks_retirement": true,
+    "documentation_references_are_reported_but_do_not_self-authorize_deletion": true,
+    "historical_state_and_evidence_machinery_are_separately_classified": true
+  },
+  "compatibility_surfaces": {
+    "sample_profile": {
+      "path": "packages/velvetos/samples/velvet-factory.json",
+      "present": true,
+      "semantic_reference_count": 11,
+      "references": [
+        {
+          "path": "CHANGELOG.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "packages/velvetos/policy/README.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "scripts/check-policy-architecture.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8a-core-instance-inventory.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8b-instance-resolver-foundation.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8c-closure.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8c-sample-profile-consumers.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-post-migration-readiness.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-retirement-readiness.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-sample-profile-consumer-correction.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-sample-profile-rollback-closure.py",
+          "class": "evidence_machinery"
+        }
+      ],
+      "classes": {
+        "documentation_reference": [
+          "CHANGELOG.md",
+          "packages/velvetos/policy/README.md"
+        ],
+        "evidence_machinery": [
+          "scripts/check-policy-architecture.py",
+          "scripts/generate-stage8a-core-instance-inventory.py",
+          "scripts/generate-stage8b-instance-resolver-foundation.py",
+          "scripts/generate-stage8c-closure.py",
+          "scripts/generate-stage8c-sample-profile-consumers.py",
+          "scripts/generate-stage8d-post-migration-readiness.py",
+          "scripts/generate-stage8d-retirement-readiness.py",
+          "scripts/generate-stage8d-sample-profile-consumer-correction.py",
+          "scripts/generate-stage8d-sample-profile-rollback-closure.py"
+        ]
+      },
+      "retirement_preflight_blockers": [],
+      "retirement_preflight_clear": true,
+      "rollback_window_closed_by_this_audit": false,
+      "delete_authorized": false
+    },
+    "fleet": {
+      "path": "packages/vfprod/FLEET.json",
+      "present": true,
+      "semantic_reference_count": 23,
+      "references": [
+        {
+          "path": "CHANGELOG.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "docs/chief-of-staff/PACKS-CATALOG.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "docs/chief-of-staff/SOT-INDEX.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "docs/chief-of-staff/SYSTEM-MAP.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "packages/velvetos/policy/README.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "scripts/check-policy-architecture.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8a-core-instance-inventory.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8b-canonical-instance-config.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8b-instance-resolver-foundation.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8c-closure.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8c-control-api-fleet.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-fleet-consumer-migration.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-post-migration-readiness.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-retirement-readiness.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "packages/vfharness/state/studio-ops-engines-2026-09-07.json",
+          "class": "historical_state"
+        },
+        {
+          "path": ".cursor/vf-desk.json",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "packages/manifest.json",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "packages/velvetos/living-studio/tests/test_living_studio.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "packages/velvetos_control_api/tests/test_control_api.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/check-velvetos.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/check-vfprod.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/vf_living_studio.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/vfprod.py",
+          "class": "machine_or_config_candidate"
+        }
+      ],
+      "classes": {
+        "documentation_reference": [
+          "CHANGELOG.md",
+          "docs/chief-of-staff/PACKS-CATALOG.md",
+          "docs/chief-of-staff/SOT-INDEX.md",
+          "docs/chief-of-staff/SYSTEM-MAP.md",
+          "packages/velvetos/policy/README.md"
+        ],
+        "evidence_machinery": [
+          "scripts/check-policy-architecture.py",
+          "scripts/generate-stage8a-core-instance-inventory.py",
+          "scripts/generate-stage8b-canonical-instance-config.py",
+          "scripts/generate-stage8b-instance-resolver-foundation.py",
+          "scripts/generate-stage8c-closure.py",
+          "scripts/generate-stage8c-control-api-fleet.py",
+          "scripts/generate-stage8d-fleet-consumer-migration.py",
+          "scripts/generate-stage8d-post-migration-readiness.py",
+          "scripts/generate-stage8d-retirement-readiness.py"
+        ],
+        "historical_state": [
+          "packages/vfharness/state/studio-ops-engines-2026-09-07.json"
+        ],
+        "machine_or_config_candidate": [
+          ".cursor/vf-desk.json",
+          "packages/manifest.json",
+          "packages/velvetos/living-studio/tests/test_living_studio.py",
+          "packages/velvetos_control_api/tests/test_control_api.py",
+          "scripts/check-velvetos.py",
+          "scripts/check-vfprod.py",
+          "scripts/vf_living_studio.py",
+          "scripts/vfprod.py"
+        ]
+      },
+      "retirement_preflight_blockers": [
+        ".cursor/vf-desk.json",
+        "packages/manifest.json",
+        "packages/velvetos/living-studio/tests/test_living_studio.py",
+        "packages/velvetos_control_api/tests/test_control_api.py",
+        "scripts/check-velvetos.py",
+        "scripts/check-vfprod.py",
+        "scripts/vf_living_studio.py",
+        "scripts/vfprod.py"
+      ],
+      "retirement_preflight_clear": false,
+      "rollback_window_closed_by_this_audit": false,
+      "delete_authorized": false
+    },
+    "root_desk": {
+      "path": ".cursor/vf-desk.json",
+      "present": true,
+      "semantic_reference_count": 49,
+      "references": [
+        {
+          "path": "CHANGELOG.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "constitution/PUBLIC_CTA.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "docs/AGENCY-AGENTS.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "docs/AGENCY-TOOLS.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "docs/FAILOVER.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "docs/SHARED-WORK-COORDINATION.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "docs/VFMEM.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "docs/chief-of-staff/PACKS-CATALOG.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "docs/chief-of-staff/README.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "docs/chief-of-staff/SOT-INDEX.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "docs/chief-of-staff/SYSTEM-MAP.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "packages/velvetos/policy/README.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "packages/velvetos_control_api/README.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "packages/vffcc/playbooks/cursor-thrift.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "packages/vfigos/IG-MCP-INVENTORY.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "packages/vfmakers/LOCK.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "packages/vfmcp/ICLOUD-DRIVE-SYNC.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "packages/vfresearch/sources/2026-08-31-effective-html.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "packages/vfresearch/sources/2026-09-05-last30days-embed.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "scripts/check-policy-architecture.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8a-core-instance-inventory.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8b-canonical-instance-config.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8b-instance-resolver-foundation.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8c-closure.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8c-control-api-fleet.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8c-desk-catalog-bindings.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8c-root-desk-readers.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-post-migration-readiness.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-retirement-readiness.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-root-desk-consumer-migration.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "instances/velvet-factory/INSTANCE.json",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "instances/velvet-factory/scripts/check-instance-visual-bootstrap.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "packages/manifest.json",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "packages/velvetos_control_api/CONTRIBUTIONS.json",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "packages/velvetos_control_api/contributions/integrations.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "packages/velvetos_control_api/contributions/operational.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "packages/velvetos_control_api/contributions/unavailable.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/check-agent-surface-security.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/check-office-watchdog.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/check-public-cta.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/check-velvetos.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/check-vf-desk.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/check-vfmcp.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/check-vfresearch.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/generate-stage6d-documentation-authority-cleanup-report.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/install-agency-agents.sh",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/vf_control_plane.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/vfmem.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/vfops_loop.py",
+          "class": "machine_or_config_candidate"
+        }
+      ],
+      "classes": {
+        "documentation_reference": [
+          "CHANGELOG.md",
+          "constitution/PUBLIC_CTA.md",
+          "docs/AGENCY-AGENTS.md",
+          "docs/AGENCY-TOOLS.md",
+          "docs/FAILOVER.md",
+          "docs/SHARED-WORK-COORDINATION.md",
+          "docs/VFMEM.md",
+          "docs/chief-of-staff/PACKS-CATALOG.md",
+          "docs/chief-of-staff/README.md",
+          "docs/chief-of-staff/SOT-INDEX.md",
+          "docs/chief-of-staff/SYSTEM-MAP.md",
+          "packages/velvetos/policy/README.md",
+          "packages/velvetos_control_api/README.md",
+          "packages/vffcc/playbooks/cursor-thrift.md",
+          "packages/vfigos/IG-MCP-INVENTORY.md",
+          "packages/vfmakers/LOCK.md",
+          "packages/vfmcp/ICLOUD-DRIVE-SYNC.md",
+          "packages/vfresearch/sources/2026-08-31-effective-html.md",
+          "packages/vfresearch/sources/2026-09-05-last30days-embed.md"
+        ],
+        "evidence_machinery": [
+          "scripts/check-policy-architecture.py",
+          "scripts/generate-stage8a-core-instance-inventory.py",
+          "scripts/generate-stage8b-canonical-instance-config.py",
+          "scripts/generate-stage8b-instance-resolver-foundation.py",
+          "scripts/generate-stage8c-closure.py",
+          "scripts/generate-stage8c-control-api-fleet.py",
+          "scripts/generate-stage8c-desk-catalog-bindings.py",
+          "scripts/generate-stage8c-root-desk-readers.py",
+          "scripts/generate-stage8d-post-migration-readiness.py",
+          "scripts/generate-stage8d-retirement-readiness.py",
+          "scripts/generate-stage8d-root-desk-consumer-migration.py"
+        ],
+        "machine_or_config_candidate": [
+          "instances/velvet-factory/INSTANCE.json",
+          "instances/velvet-factory/scripts/check-instance-visual-bootstrap.py",
+          "packages/manifest.json",
+          "packages/velvetos_control_api/CONTRIBUTIONS.json",
+          "packages/velvetos_control_api/contributions/integrations.py",
+          "packages/velvetos_control_api/contributions/operational.py",
+          "packages/velvetos_control_api/contributions/unavailable.py",
+          "scripts/check-agent-surface-security.py",
+          "scripts/check-office-watchdog.py",
+          "scripts/check-public-cta.py",
+          "scripts/check-velvetos.py",
+          "scripts/check-vf-desk.py",
+          "scripts/check-vfmcp.py",
+          "scripts/check-vfresearch.py",
+          "scripts/generate-stage6d-documentation-authority-cleanup-report.py",
+          "scripts/install-agency-agents.sh",
+          "scripts/vf_control_plane.py",
+          "scripts/vfmem.py",
+          "scripts/vfops_loop.py"
+        ]
+      },
+      "retirement_preflight_blockers": [
+        "instances/velvet-factory/INSTANCE.json",
+        "instances/velvet-factory/scripts/check-instance-visual-bootstrap.py",
+        "packages/manifest.json",
+        "packages/velvetos_control_api/CONTRIBUTIONS.json",
+        "packages/velvetos_control_api/contributions/integrations.py",
+        "packages/velvetos_control_api/contributions/operational.py",
+        "packages/velvetos_control_api/contributions/unavailable.py",
+        "scripts/check-agent-surface-security.py",
+        "scripts/check-office-watchdog.py",
+        "scripts/check-public-cta.py",
+        "scripts/check-velvetos.py",
+        "scripts/check-vf-desk.py",
+        "scripts/check-vfmcp.py",
+        "scripts/check-vfresearch.py",
+        "scripts/generate-stage6d-documentation-authority-cleanup-report.py",
+        "scripts/install-agency-agents.sh",
+        "scripts/vf_control_plane.py",
+        "scripts/vfmem.py",
+        "scripts/vfops_loop.py"
+      ],
+      "retirement_preflight_clear": false,
+      "rollback_window_closed_by_this_audit": false,
+      "delete_authorized": false
+    },
+    "tool_status": {
+      "path": "packages/velvetos/TOOL-STATUS.json",
+      "present": true,
+      "semantic_reference_count": 16,
+      "references": [
+        {
+          "path": "CHANGELOG.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "packages/velvetos/policy/README.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "scripts/check-policy-architecture.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8a-core-instance-inventory.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8b-canonical-instance-config.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8c-closure.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-post-migration-readiness.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-retirement-readiness.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-tool-status-consumer-migration.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "packages/vfharness/state/upstream-release-watch-2026-09-27/implementation-spec.md",
+          "class": "historical_state"
+        },
+        {
+          "path": "packages/velvetos/CORE.json",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "packages/velvetos/policy/sensor-registry.json",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "packages/velvetos/schema/tool-status-contract.schema.json",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "packages/velvetos/tool-status-contract.json",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "packages/velvetos/tool_status_resolver.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/check-velvetos.py",
+          "class": "machine_or_config_candidate"
+        }
+      ],
+      "classes": {
+        "documentation_reference": [
+          "CHANGELOG.md",
+          "packages/velvetos/policy/README.md"
+        ],
+        "evidence_machinery": [
+          "scripts/check-policy-architecture.py",
+          "scripts/generate-stage8a-core-instance-inventory.py",
+          "scripts/generate-stage8b-canonical-instance-config.py",
+          "scripts/generate-stage8c-closure.py",
+          "scripts/generate-stage8d-post-migration-readiness.py",
+          "scripts/generate-stage8d-retirement-readiness.py",
+          "scripts/generate-stage8d-tool-status-consumer-migration.py"
+        ],
+        "historical_state": [
+          "packages/vfharness/state/upstream-release-watch-2026-09-27/implementation-spec.md"
+        ],
+        "machine_or_config_candidate": [
+          "packages/velvetos/CORE.json",
+          "packages/velvetos/policy/sensor-registry.json",
+          "packages/velvetos/schema/tool-status-contract.schema.json",
+          "packages/velvetos/tool-status-contract.json",
+          "packages/velvetos/tool_status_resolver.py",
+          "scripts/check-velvetos.py"
+        ]
+      },
+      "retirement_preflight_blockers": [
+        "packages/velvetos/CORE.json",
+        "packages/velvetos/policy/sensor-registry.json",
+        "packages/velvetos/schema/tool-status-contract.schema.json",
+        "packages/velvetos/tool-status-contract.json",
+        "packages/velvetos/tool_status_resolver.py",
+        "scripts/check-velvetos.py"
+      ],
+      "retirement_preflight_clear": false,
+      "rollback_window_closed_by_this_audit": false,
+      "delete_authorized": false
+    },
+    "chatgpt_core_bundle": {
+      "path": "packages/velvetos/chatgpt-project",
+      "present": true,
+      "semantic_reference_count": 21,
+      "references": [
+        {
+          "path": "CHANGELOG.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "packages/velvetos/policy/README.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "scripts/check-policy-architecture.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8a-core-instance-inventory.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8c-chatgpt-distribution-consumers.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8c-closure.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8c-expert-modules.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8c-living-studio-rules.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8c-sample-profile-consumers.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-chatgpt-core-consumer-migration.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-post-migration-readiness.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-retirement-readiness.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "packages/vfharness/state/vf-project-v66-reference-alignment-2026-09-20/implementation-spec.md",
+          "class": "historical_state"
+        },
+        {
+          "path": "packages/vfharness/state/vf-publication-v64-binding-2026-09-18/task_plan.md",
+          "class": "historical_state"
+        },
+        {
+          "path": "packages/velvetos/policy/sensor-registry.json",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "packages/vfbrand/brand-tokens.json",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/check-project-bundle.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/check-reel-route-sync.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": "scripts/check-velvetos.py",
+          "class": "machine_or_config_candidate"
+        },
+        {
+          "path": ".gitattributes",
+          "class": "other_candidate"
+        }
+      ],
+      "classes": {
+        "documentation_reference": [
+          "CHANGELOG.md",
+          "packages/velvetos/policy/README.md",
+          "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md"
+        ],
+        "evidence_machinery": [
+          "scripts/check-policy-architecture.py",
+          "scripts/generate-stage8a-core-instance-inventory.py",
+          "scripts/generate-stage8c-chatgpt-distribution-consumers.py",
+          "scripts/generate-stage8c-closure.py",
+          "scripts/generate-stage8c-expert-modules.py",
+          "scripts/generate-stage8c-living-studio-rules.py",
+          "scripts/generate-stage8c-sample-profile-consumers.py",
+          "scripts/generate-stage8d-chatgpt-core-consumer-migration.py",
+          "scripts/generate-stage8d-post-migration-readiness.py",
+          "scripts/generate-stage8d-retirement-readiness.py"
+        ],
+        "historical_state": [
+          "packages/vfharness/state/vf-project-v66-reference-alignment-2026-09-20/implementation-spec.md",
+          "packages/vfharness/state/vf-publication-v64-binding-2026-09-18/task_plan.md"
+        ],
+        "machine_or_config_candidate": [
+          "packages/velvetos/policy/sensor-registry.json",
+          "packages/vfbrand/brand-tokens.json",
+          "scripts/check-project-bundle.py",
+          "scripts/check-reel-route-sync.py",
+          "scripts/check-velvetos.py"
+        ],
+        "other_candidate": [
+          ".gitattributes"
+        ]
+      },
+      "retirement_preflight_blockers": [
+        ".gitattributes",
+        "packages/velvetos/policy/sensor-registry.json",
+        "packages/vfbrand/brand-tokens.json",
+        "scripts/check-project-bundle.py",
+        "scripts/check-reel-route-sync.py",
+        "scripts/check-velvetos.py"
+      ],
+      "retirement_preflight_clear": false,
+      "rollback_window_closed_by_this_audit": false,
+      "delete_authorized": false
+    }
+  },
+  "assessment": {
+    "surfaces_total": 5,
+    "surfaces_preflight_clear": 1,
+    "surfaces_with_candidate_blockers": [
+      "chatgpt_core_bundle",
+      "fleet",
+      "root_desk",
+      "tool_status"
+    ],
+    "rollback_windows_closed_by_audit": 0,
+    "deletion_authorized": false
+  },
+  "repository_assessment": "PASS",
+  "retirement_authorized": false,
+  "deletion_authorized": false,
+  "next_action": "Resolve machine/config candidates surface-by-surface, then collect explicit rollback-window closure evidence. Do not delete any compatibility surface from this audit.",
+  "constraints": [
+    "observation only",
+    "no rollback-window closure",
+    "no deletion authorization",
+    "ambiguous references fail closed",
+    "retire at most one compatibility surface per deletion PR",
+    "no big-bang delete"
+  ]
+}
