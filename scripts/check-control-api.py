@@ -79,13 +79,19 @@ def main() -> None:
         if need not in ids:
             fail(f"CONTRIBUTIONS.json missing {need}")
 
+    control_env = {
+        **os.environ,
+        "PYTHONPATH": str(ROOT / "packages"),
+        "VELVETOS_INSTANCE_ID": "velvet-factory",
+    }
+
     # CLI selftest
     proc = subprocess.run(
         [sys.executable, str(CLI), "selftest"],
         cwd=ROOT,
         text=True,
         capture_output=True,
-        env={**os.environ, "PYTHONPATH": str(ROOT / "packages")},
+        env=control_env,
     )
     if proc.returncode != 0:
         fail(f"vf_control_api.py selftest: {proc.stderr or proc.stdout}")
@@ -96,7 +102,7 @@ def main() -> None:
         cwd=ROOT,
         text=True,
         capture_output=True,
-        env={**os.environ, "PYTHONPATH": str(ROOT / "packages")},
+        env=control_env,
     )
     if tproc.returncode != 0:
         fail(f"control-api tests:\n{tproc.stderr or tproc.stdout}")
@@ -107,7 +113,7 @@ def main() -> None:
         cwd=ROOT,
         text=True,
         capture_output=True,
-        env={**os.environ, "PYTHONPATH": str(ROOT / "packages")},
+        env=control_env,
     )
     if snap_proc.returncode != 0:
         fail(f"snapshot: {snap_proc.stderr or snap_proc.stdout}")

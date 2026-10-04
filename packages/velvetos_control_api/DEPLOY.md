@@ -15,6 +15,7 @@ This document describes the **intended** operational pattern. A live Cloud Run d
 | Ingress | Public Cloud Run invocation for this read-only projection gateway — `--allow-unauthenticated`; `/v1/*` remains app-token protected |
 | Runtime SA | Dedicated SA with **read** access to the repo checkout / mounted projection data only |
 | Secrets | `VELVETOS_CONTROL_API_TOKEN` from GSM only |
+| Instance selection | `VELVETOS_INSTANCE_ID=velvet-factory` for the current VF deployment; code fails closed when absent |
 
 ## Isolation (hard rules)
 
@@ -57,6 +58,7 @@ gcloud run deploy velvetos-control-api \
   --allow-unauthenticated \
   --service-account "velvetos-control-api@${GCP_PROJECT_ID}.iam.gserviceaccount.com" \
   --set-secrets "VELVETOS_CONTROL_API_TOKEN=velvetos-control-api-token:latest" \
+  --set-env-vars "VELVETOS_INSTANCE_ID=velvet-factory" \
   --cpu 1 --memory 512Mi --max-instances 3
 ```
 

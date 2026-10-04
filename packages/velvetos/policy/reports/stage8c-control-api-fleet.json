@@ -1,0 +1,56 @@
+{
+  "schema": "velvetos.stage8c-control-api-fleet.v1",
+  "stage": "8C_CONTROL_API_FLEET",
+  "behavior_change": true,
+  "prepared_against_main_sha": "3b656636c8df3d84dcf1aca9944edbb222ad6bde",
+  "captured_at": "2026-10-04T16:53:51.0785774+03:00",
+  "purpose": "Migrate Control API production/agent/integration instance projections to generic instance surfaces while retaining legacy vfprod fleet for rollback and non-migrated consumers.",
+  "fleet": {
+    "canonical": "instances/velvet-factory/instance/fleet.json",
+    "legacy": "packages/vfprod/FLEET.json",
+    "parity": true,
+    "legacy_unchanged_from_prepared_against": true,
+    "printer_count": 4,
+    "legacy_delete_authorized": false
+  },
+  "control_api": {
+    "production_source": "instances/<VELVETOS_INSTANCE_ID>/instance/fleet.json",
+    "agent_source": "instances/<VELVETOS_INSTANCE_ID>/.cursor/vf-desk.json#desk",
+    "integration_source": "instances/<VELVETOS_INSTANCE_ID>/.cursor/vf-desk.json#tools",
+    "explicit_instance_environment": "VELVETOS_INSTANCE_ID",
+    "vf_deployment_instance": "velvet-factory",
+    "legacy_fleet_runtime_reference": false
+  },
+  "docker_required_instance_copies": [
+    "instances/velvet-factory/.cursor/vf-desk.json",
+    "instances/velvet-factory/INSTANCE.json",
+    "instances/velvet-factory/instance/fleet.json",
+    "instances/velvet-factory/instance/tool-status.json",
+    "instances/velvet-factory/instance/velvet-factory.json",
+    "packages/velvetos/instance_resolver.py"
+  ],
+  "authority_baseline": {
+    "policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "unchanged": true
+  },
+  "acceptance_criteria": {
+    "control_api_production_reads_canonical_instance_fleet_surface": true,
+    "control_api_agents_and_integrations_read_canonical_tooldesk_surface": true,
+    "control_api_runtime_has_no_legacy_fleet_path_or_silent_vf_default": true,
+    "control_api_registry_declares_instance_owned_fleet_and_desk_authority": true,
+    "cloud_run_image_packages_resolver_manifest_and_declared_surfaces_not_legacy_fleet": true,
+    "vf_cloud_run_deployment_selects_instance_explicitly": true,
+    "canonical_fleet_remains_exactly_equal_to_legacy_rollback_copy": true,
+    "legacy_fleet_is_unchanged_and_retained_for_rollback": true,
+    "external_effect_policy_registry_is_unchanged": true
+  },
+  "repository_acceptance": "PASS",
+  "next_stage": "Stage 8C — Remaining consumer domains",
+  "constraints": [
+    "legacy vfprod fleet remains for rollback and non-migrated consumers",
+    "no legacy delete in this slice",
+    "no external-effect authority change",
+    "Control API remains projection-only and read-only"
+  ]
+}

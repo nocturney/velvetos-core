@@ -31,7 +31,7 @@
       "class": "IntegrationsContribution",
       "domains": ["integrations"],
       "authoritativeSources": [
-        "instances/velvet-factory/.cursor/vf-desk.json#tools"
+        "instances/<VELVETOS_INSTANCE_ID>/.cursor/vf-desk.json#tools"
       ]
     },
     {
@@ -83,12 +83,12 @@
       "class": "OperationalDomainsContribution",
       "domains": ["production", "content", "files", "agents", "models"],
       "authoritativeSources": [
-        "packages/vfprod/FLEET.json",
+        "instances/<VELVETOS_INSTANCE_ID>/instance/fleet.json",
         "packages/vfprod/data/print-events.jsonl",
         "packages/vfprod/data/maintenance-snapshot.json",
         "packages/vfgrowth/data/approval-queue.json",
         "packages/vfmedia/catalog.json",
-        "instances/velvet-factory/.cursor/vf-desk.json#desk",
+        "instances/<VELVETOS_INSTANCE_ID>/.cursor/vf-desk.json#desk",
         "packages/vfsku/SHELF.json"
       ]
     }

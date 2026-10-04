@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 from typing import Any
 
+from velvetos_control_api.instance_sources import InstanceSourceError, resolve_instance_surface
 from velvetos_control_api.schema import collection_ready, collection_unavailable
 
 
@@ -24,11 +25,20 @@ def _unavailable(source: str, reason: str) -> dict[str, Any]:
     return collection_unavailable(reason=reason, source=source)
 
 
+def _surface(root: Path, name: str) -> tuple[Path | None, str | None]:
+    try:
+        return resolve_instance_surface(root, name, env=os.environ), None
+    except InstanceSourceError as exc:
+        return None, str(exc)
+
+
 def project_production(root: Path) -> dict[str, Any]:
-    fleet_path = root / "packages" / "vfprod" / "FLEET.json"
+    fleet_path, fleet_error = _surface(root, "fleet")
+    if fleet_path is None:
+        return _unavailable("instance:surface:fleet", f"production fleet source unavailable: {fleet_error}")
     fleet = _json(fleet_path)
     if fleet is None:
-        return _unavailable("packages/vfprod/FLEET.json", "production fleet source missing")
+        return _unavailable(str(fleet_path), "production fleet source missing")
 
     items: list[dict[str, Any]] = []
     for raw in fleet.get("printers") or []:
@@ -73,9 +83,14 @@ def project_production(root: Path) -> dict[str, Any]:
             event_count += 1
 
     maintenance = _json(root / "packages" / "vfprod" / "data" / "maintenance-snapshot.json") or {}
+    try:
+        fleet_source = fleet_path.relative_to(root).as_posix()
+    except ValueError:
+        fleet_source = fleet_path.as_posix()
+
     out = collection_ready(
         items,
-        source="packages/vfprod/FLEET.json + packages/vfprod/data/print-events.jsonl",
+        source=f"{fleet_source} + packages/vfprod/data/print-events.jsonl",
         verified_at=fleet.get("updatedAt"),
         extra={
             "printerCount": len(fleet.get("printers") or []),
@@ -164,13 +179,10 @@ def project_files(root: Path) -> dict[str, Any]:
     return out
 
 
-def _desk_path(root: Path) -> Path:
-    instance_id = (os.environ.get("VELVETOS_INSTANCE_ID") or "velvet-factory").strip()
-    return root / "instances" / instance_id / ".cursor" / "vf-desk.json"
-
-
 def project_agents(root: Path) -> dict[str, Any]:
-    path = _desk_path(root)
+    path, desk_error = _surface(root, "toolDesk")
+    if path is None:
+        return _unavailable("instance:surface:toolDesk", f"instance agent desk unavailable: {desk_error}")
     data = _json(path)
     if data is None:
         return _unavailable(str(path), "instance agent desk missing")
@@ -196,7 +208,7 @@ def project_agents(root: Path) -> dict[str, Any]:
         })
     return collection_ready(
         items,
-        source=f"instances/{data.get('instanceId') or 'velvet-factory'}/.cursor/vf-desk.json#desk",
+        source=f"instances/{data.get('instanceId') or 'unknown-instance'}/.cursor/vf-desk.json#desk",
         verified_at=data.get("updatedAt"),
         extra={"seatCount": len(data.get("seats") or [])},
     )

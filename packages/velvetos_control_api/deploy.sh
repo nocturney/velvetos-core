@@ -41,6 +41,7 @@ gcloud run deploy "${SERVICE}" \
   --allow-unauthenticated \
   --service-account "${SA_EMAIL}" \
   --set-secrets "VELVETOS_CONTROL_API_TOKEN=${TOKEN_SECRET}:latest" \
+  --set-env-vars "VELVETOS_INSTANCE_ID=velvet-factory" \
   --cpu 1 \
   --memory 512Mi \
   --max-instances 3

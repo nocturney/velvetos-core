@@ -39,6 +39,16 @@ from velvetos_control_api.snapshot import build_snapshot  # noqa: E402
 
 
 class SchemaTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self._prev_instance = os.environ.get("VELVETOS_INSTANCE_ID")
+        os.environ["VELVETOS_INSTANCE_ID"] = "velvet-factory"
+
+    def tearDown(self) -> None:
+        if self._prev_instance is None:
+            os.environ.pop("VELVETOS_INSTANCE_ID", None)
+        else:
+            os.environ["VELVETOS_INSTANCE_ID"] = self._prev_instance
+
     def test_snapshot_schema(self) -> None:
         snap = build_snapshot(root=ROOT)
         self.assertEqual(snap["schema"], SCHEMA)
@@ -135,6 +145,16 @@ class CapabilityTests(unittest.TestCase):
 
 
 class IntegrationProjectionTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self._prev_instance = os.environ.get("VELVETOS_INSTANCE_ID")
+        os.environ["VELVETOS_INSTANCE_ID"] = "velvet-factory"
+
+    def tearDown(self) -> None:
+        if self._prev_instance is None:
+            os.environ.pop("VELVETOS_INSTANCE_ID", None)
+        else:
+            os.environ["VELVETOS_INSTANCE_ID"] = self._prev_instance
+
     def test_instance_tools_project_from_canonical_desk(self) -> None:
         rows, envelope = normalize_integrations(ROOT)
         self.assertEqual(envelope["state"], "ready")
@@ -164,6 +184,13 @@ class IntegrationProjectionTests(unittest.TestCase):
             self.assertIsNone(envelope["items"])
             self.assertIsNone(envelope["count"])
 
+    def test_core_checkout_without_instance_id_is_honestly_unavailable(self) -> None:
+        os.environ.pop("VELVETOS_INSTANCE_ID", None)
+        rows, envelope = normalize_integrations(ROOT)
+        self.assertEqual(rows, [])
+        self.assertEqual(envelope["state"], "unavailable")
+        self.assertIn("requires --instance-id or VELVETOS_INSTANCE_ID", envelope["reason"])
+
     def test_cloud_run_image_packages_canonical_instance_desk(self) -> None:
         dockerfile = (ROOT / "packages" / "velvetos_control_api" / "Dockerfile").read_text(encoding="utf-8")
         self.assertIn(
@@ -176,9 +203,20 @@ class IntegrationProjectionTests(unittest.TestCase):
         deploy = (ROOT / "packages" / "velvetos_control_api" / "deploy.sh").read_text(encoding="utf-8")
         self.assertIn("--allow-unauthenticated", deploy)
         self.assertNotIn("--no-allow-unauthenticated", deploy)
+        self.assertIn('--set-env-vars "VELVETOS_INSTANCE_ID=velvet-factory"', deploy)
 
 
 class OperationalProjectionTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self._prev_instance = os.environ.get("VELVETOS_INSTANCE_ID")
+        os.environ["VELVETOS_INSTANCE_ID"] = "velvet-factory"
+
+    def tearDown(self) -> None:
+        if self._prev_instance is None:
+            os.environ.pop("VELVETOS_INSTANCE_ID", None)
+        else:
+            os.environ["VELVETOS_INSTANCE_ID"] = self._prev_instance
+
     def test_production_projects_known_fleet_without_fake_telemetry(self) -> None:
         col = project_production(ROOT)
         self.assertEqual(col["state"], "ready")
@@ -209,6 +247,15 @@ class OperationalProjectionTests(unittest.TestCase):
         self.assertGreaterEqual(col["seatCount"], 5)
         self.assertTrue(all("id" in item and "job" in item for item in col["items"]))
 
+    def test_core_checkout_without_instance_id_fails_closed_for_instance_domains(self) -> None:
+        os.environ.pop("VELVETOS_INSTANCE_ID", None)
+        production = project_production(ROOT)
+        agents = project_agents(ROOT)
+        self.assertEqual(production["state"], "unavailable")
+        self.assertEqual(agents["state"], "unavailable")
+        self.assertIn("requires --instance-id or VELVETOS_INSTANCE_ID", production["reason"])
+        self.assertIn("requires --instance-id or VELVETOS_INSTANCE_ID", agents["reason"])
+
     def test_models_project_five_explicit_empty_slots(self) -> None:
         col = project_models(ROOT)
         self.assertEqual(col["state"], "ready")
@@ -225,12 +272,18 @@ class OperationalProjectionTests(unittest.TestCase):
     def test_cloud_run_image_packages_operational_sources(self) -> None:
         dockerfile = (ROOT / "packages" / "velvetos_control_api" / "Dockerfile").read_text(encoding="utf-8")
         for source in (
-            "packages/vfprod/FLEET.json",
+            "packages/velvetos/instance_resolver.py",
+            "instances/velvet-factory/INSTANCE.json",
+            "instances/velvet-factory/instance/velvet-factory.json",
+            "instances/velvet-factory/instance/fleet.json",
+            "instances/velvet-factory/instance/tool-status.json",
+            "instances/velvet-factory/.cursor/vf-desk.json",
             "packages/vfprod/data/print-events.jsonl",
             "packages/vfprod/data/maintenance-snapshot.json",
             "packages/vfsku/SHELF.json",
         ):
             self.assertIn(f"COPY {source}", dockerfile)
+        self.assertNotIn("COPY packages/vfprod/FLEET.json", dockerfile)
 
 
 class AuthActionTests(unittest.TestCase):
@@ -332,6 +385,16 @@ class AuthActionTests(unittest.TestCase):
 
 
 class SearchTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self._prev_instance = os.environ.get("VELVETOS_INSTANCE_ID")
+        os.environ["VELVETOS_INSTANCE_ID"] = "velvet-factory"
+
+    def tearDown(self) -> None:
+        if self._prev_instance is None:
+            os.environ.pop("VELVETOS_INSTANCE_ID", None)
+        else:
+            os.environ["VELVETOS_INSTANCE_ID"] = self._prev_instance
+
     def test_destination_validation(self) -> None:
         self.assertTrue(validate_destination("/jobs/VF-1"))
         self.assertFalse(validate_destination("https://evil.test/x"))
