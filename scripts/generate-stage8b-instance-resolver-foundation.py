@@ -16,6 +16,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import types
 from pathlib import Path
 from typing import Any
 
@@ -67,13 +68,76 @@ def git_json(sha: str, rel: str) -> dict[str, Any]:
     return obj
 
 
-def load_resolver():
-    spec = importlib.util.spec_from_file_location("stage8b_instance_resolver", RESOLVER)
-    require(spec is not None and spec.loader is not None, "cannot load instance resolver")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    return module
+def git_bytes(sha: str, rel: str) -> bytes:
+    return subprocess.check_output(["git", "show", f"{sha}:{rel}"], cwd=ROOT)
+
+
+def git_exists(sha: str, rel: str) -> bool:
+    return subprocess.run(
+        ["git", "cat-file", "-e", f"{sha}:{rel}"],
+        cwd=ROOT,
+        capture_output=True,
+    ).returncode == 0
+
+
+def receipt_source_commit() -> str:
+    rel = OUT.relative_to(ROOT).as_posix()
+    proc = subprocess.run(
+        ["git", "log", "--diff-filter=A", "--format=%H", "--", rel],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    commits = [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+    require(bool(commits), "cannot resolve Stage 8B resolver-foundation source commit")
+    return commits[-1]
+
+
+def load_resolver(sha: str):
+    rel = RESOLVER.relative_to(ROOT).as_posix()
+    source = git_bytes(sha, rel).decode("utf-8-sig")
+    name = "stage8b_instance_resolver_snapshot"
+    module = types.ModuleType(name)
+    module.__file__ = f"{rel}@{sha}"
+    sys.modules[name] = module
+    exec(compile(source, module.__file__, "exec"), module.__dict__)
+    return module, source
+
+
+def snapshot_resolution_proof(resolver, manifest: dict[str, Any]) -> dict[str, Any]:
+    with tempfile.TemporaryDirectory() as td:
+        fake_core = Path(td)
+        inst = fake_core / "instances" / "velvet-factory"
+        inst.mkdir(parents=True)
+        (inst / "INSTANCE.json").write_text(
+            json.dumps(manifest) + "\n", encoding="utf-8"
+        )
+        for rel in (manifest.get("surfaces") or {}).values():
+            path = inst / str(rel)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("{}\n", encoding="utf-8")
+
+        explicit = resolver.resolve_instance(fake_core, instance_id="velvet-factory", env={})
+        require(explicit.mode == "core-explicit-instance", "explicit Core resolution mode drift")
+        require(explicit.instance_root == inst.resolve(), "explicit VF root resolution drift")
+        require(explicit.surface("fleet") == (inst / "instance/fleet.json").resolve(),
+                "VF fleet surface resolution drift")
+
+        via_env = resolver.resolve_instance(fake_core, env={"VELVETOS_INSTANCE_ID": "velvet-factory"})
+        require(via_env.instance_id == "velvet-factory", "environment instance resolution drift")
+        current = resolver.resolve_instance(inst, env={})
+        require(current.mode == "current-instance-workspace", "current instance workspace mode drift")
+
+        try:
+            resolver.resolve_instance(fake_core, env={})
+        except resolver.InstanceResolutionError:
+            missing_id_rejected = True
+        else:
+            missing_id_rejected = False
+        require(missing_id_rejected, "Core resolver silently selected a business instance")
+        return {"core_mode": explicit.mode, "missing_id_rejected": missing_id_rejected}
 
 
 def generic_fixture_proof(resolver) -> dict[str, Any]:
@@ -142,16 +206,18 @@ def main() -> int:
     require(re.fullmatch(r"[0-9a-f]{40}", args.prepared_against) is not None,
             "--prepared-against must be a full lowercase Git SHA")
 
-    core = load(CORE)
-    manifest = load(VF_MANIFEST)
-    schema = load(SCHEMA)
-    fleet = load(VF_FLEET)
-    legacy_fleet = load(LEGACY_FLEET)
-    resolver = load_resolver()
+    source_commit = receipt_source_commit()
+    core = git_json(source_commit, CORE.relative_to(ROOT).as_posix())
+    manifest = git_json(source_commit, VF_MANIFEST.relative_to(ROOT).as_posix())
+    schema = git_json(source_commit, SCHEMA.relative_to(ROOT).as_posix())
+    fleet = git_json(source_commit, VF_FLEET.relative_to(ROOT).as_posix())
+    legacy_fleet = git_json(source_commit, LEGACY_FLEET.relative_to(ROOT).as_posix())
+    resolver, resolver_source = load_resolver(source_commit)
+    resolution_proof = snapshot_resolution_proof(resolver, manifest)
 
-    require("velvet-factory" not in RESOLVER.read_text(encoding="utf-8").lower(),
+    require("velvet-factory" not in resolver_source.lower(),
             "generic resolver contains Velvet Factory default")
-    require("sderot" not in RESOLVER.read_text(encoding="utf-8").lower(),
+    require("sderot" not in resolver_source.lower(),
             "generic resolver contains VF location default")
 
     resolution = core.get("instanceResolution") or {}
@@ -185,24 +251,7 @@ def main() -> int:
     require(manifest.get("profile") == vf_surfaces.get("profile"),
             "VF legacy profile alias must match surfaces.profile")
 
-    explicit = resolver.resolve_instance(ROOT, instance_id="velvet-factory", env={})
-    require(explicit.mode == "core-explicit-instance", "explicit Core resolution mode drift")
-    require(explicit.instance_root == VF_ROOT.resolve(), "explicit VF root resolution drift")
-    require(explicit.surface("fleet") == VF_FLEET.resolve(), "VF fleet surface resolution drift")
-
-    via_env = resolver.resolve_instance(ROOT, env={"VELVETOS_INSTANCE_ID": "velvet-factory"})
-    require(via_env.instance_id == "velvet-factory", "environment instance resolution drift")
-    current = resolver.resolve_instance(VF_ROOT, env={})
-    require(current.mode == "current-instance-workspace", "current instance workspace mode drift")
-
-    try:
-        resolver.resolve_instance(ROOT, env={})
-    except resolver.InstanceResolutionError:
-        missing_id_rejected = True
-    else:
-        missing_id_rejected = False
-    require(missing_id_rejected, "Core resolver silently selected a business instance")
-
+    missing_id_rejected = bool(resolution_proof["missing_id_rejected"])
     fixture = generic_fixture_proof(resolver)
     require(fixture["bad_surface_contract_version_rejected"] is True,
             "generic resolver accepted unsupported surface contract version")
@@ -215,15 +264,15 @@ def main() -> int:
 
     legacy_unchanged: dict[str, bool] = {}
     for name, rel in LEGACY_JSON_PATHS.items():
-        current_obj = load(ROOT / rel)
+        source_obj = git_json(source_commit, rel)
         baseline_obj = git_json(args.prepared_against, rel)
-        legacy_unchanged[name] = canonical_json_sha256(current_obj) == canonical_json_sha256(baseline_obj)
+        legacy_unchanged[name] = canonical_json_sha256(source_obj) == canonical_json_sha256(baseline_obj)
     require(all(legacy_unchanged.values()), "8B resolver foundation changed a legacy consumer/authority source")
 
     criteria = {
         "generic_resolver_has_no_vf_business_default": (
-            "velvet-factory" not in RESOLVER.read_text(encoding="utf-8").lower()
-            and "sderot" not in RESOLVER.read_text(encoding="utf-8").lower()
+            "velvet-factory" not in resolver_source.lower()
+            and "sderot" not in resolver_source.lower()
         ),
         "core_requires_explicit_instance_selection": missing_id_rejected,
         "modern_manifest_contract_is_fail_closed": (
@@ -234,7 +283,7 @@ def main() -> int:
         "vf_manifest_declares_profile_tooldesk_and_fleet_surfaces": set(vf_surfaces) == {"profile", "toolDesk", "fleet"},
         "canonical_instance_fleet_matches_legacy_fleet": fleet_parity,
         "legacy_consumers_and_external_effect_policy_are_unchanged": all(legacy_unchanged.values()),
-        "no_legacy_path_is_deleted_in_resolver_foundation": all((ROOT / rel).is_file() for rel in LEGACY_JSON_PATHS.values()),
+        "no_legacy_path_is_deleted_in_resolver_foundation": all(git_exists(source_commit, rel) for rel in LEGACY_JSON_PATHS.values()),
         "consumer_cutover_is_deferred_until_parity_migration": True,
     }
 
@@ -247,7 +296,7 @@ def main() -> int:
         "purpose": "Add generic fail-closed instance/surface resolution and canonical VF fleet placement without cutting over legacy consumers.",
         "resolver": {
             "path": RESOLVER.relative_to(ROOT).as_posix(),
-            "core_mode": explicit.mode,
+            "core_mode": resolution_proof["core_mode"],
             "environment_variable": "VELVETOS_INSTANCE_ID",
             "silent_business_default": False,
             "generic_fixture": fixture,

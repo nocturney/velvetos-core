@@ -12,7 +12,12 @@ ROOT = Path(__file__).resolve().parents[1]
 PACK = ROOT / "packages" / "velvetos"
 CORE = PACK / "CORE.json"
 INSTANCE_RESOLVER = PACK / "instance_resolver.py"
+TOOL_STATUS_RESOLVER = PACK / "tool_status_resolver.py"
+TOOL_STATUS_CONTRACT = PACK / "tool-status-contract.json"
+LEGACY_TOOL_STATUS = PACK / "TOOL-STATUS.json"
 INSTANCE_MANIFEST_SCHEMA = PACK / "schema" / "instance-manifest.schema.json"
+TOOL_STATUS_CONTRACT_SCHEMA = PACK / "schema" / "tool-status-contract.schema.json"
+INSTANCE_TOOL_STATUS_SCHEMA = PACK / "schema" / "instance-tool-status.schema.json"
 MODULES_CATALOG = PACK / "modules" / "catalog.json"
 PRESETS = PACK / "presets"
 SAMPLES = PACK / "samples"
@@ -46,9 +51,13 @@ REQUIRED_ROOT = (
     "ADR-THREE-LAYERS.md",
     "CORE.json",
     "instance_resolver.py",
+    "tool_status_resolver.py",
+    "tool-status-contract.json",
     "modules/catalog.json",
     "schema/instance.schema.json",
     "schema/instance-manifest.schema.json",
+    "schema/tool-status-contract.schema.json",
+    "schema/instance-tool-status.schema.json",
     "schema/events.catalog.json",
     "schema/event-envelope.schema.json",
 )
@@ -74,12 +83,23 @@ def load_instance_resolver():
     return module
 
 
+def load_tool_status_resolver():
+    spec = importlib.util.spec_from_file_location("velvetos_tool_status_resolver", TOOL_STATUS_RESOLVER)
+    if spec is None or spec.loader is None:
+        fail("cannot load packages/velvetos/tool_status_resolver.py")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
 def check_instance_resolver_contract(vf_inst: Path, meta: dict) -> None:
     surfaces = meta.get("surfaces") or {}
     expected = {
         "profile": "instance/velvet-factory.json",
         "toolDesk": ".cursor/vf-desk.json",
         "fleet": "instance/fleet.json",
+        "toolStatus": "instance/tool-status.json",
     }
     if meta.get("surfaceContractVersion") != 1:
         fail("instance surfaceContractVersion must be 1")
@@ -105,8 +125,8 @@ def check_instance_resolver_contract(vf_inst: Path, meta: dict) -> None:
     if surface_schema.get("required") != ["profile"]:
         fail("generic instance manifest must require profile only; domain surfaces stay optional")
     surface_props = surface_schema.get("properties") or {}
-    if not {"profile", "toolDesk", "fleet"} <= set(surface_props):
-        fail("instance-manifest schema must expose profile/toolDesk/fleet surface vocabulary")
+    if not {"profile", "toolDesk", "fleet", "toolStatus"} <= set(surface_props):
+        fail("instance-manifest schema must expose profile/toolDesk/fleet/toolStatus surface vocabulary")
 
     canonical_fleet = load(vf_inst / surfaces["fleet"])
     legacy_fleet = load(ROOT / "packages" / "vfprod" / "FLEET.json")
@@ -114,6 +134,54 @@ def check_instance_resolver_contract(vf_inst: Path, meta: dict) -> None:
         fail("Stage 8B canonical instance fleet must remain parity-equal to legacy vfprod/FLEET.json")
     if len(canonical_fleet.get("printers") or []) != 4:
         fail("Stage 8B canonical instance fleet printer count drift")
+
+    contract = load(TOOL_STATUS_CONTRACT)
+    if contract.get("schema") != "velvetos.tool-status-contract.v1":
+        fail("generic tool-status contract schema drift")
+    if contract.get("role") != "CORE_GENERIC_SCHEMA_INTERFACE_ALGORITHM":
+        fail("tool-status contract must remain generic Core semantics")
+    if contract.get("instanceStateSurface") != "toolStatus":
+        fail("tool-status contract instance surface drift")
+    if (contract.get("composition") or {}).get("consumerCutover") is not False:
+        fail("Stage 8B tool-status split must not claim consumer cutover")
+
+    contract_schema = load(TOOL_STATUS_CONTRACT_SCHEMA)
+    if contract_schema.get("$id") != "velvetos.tool-status-contract.v1":
+        fail("tool-status contract schema id drift")
+    state_schema = load(INSTANCE_TOOL_STATUS_SCHEMA)
+    if state_schema.get("$id") != "velvetos.instance-tool-status.v1":
+        fail("instance tool-status schema id drift")
+
+    instance_tool_status = load(vf_inst / surfaces["toolStatus"])
+    if instance_tool_status.get("schema") != "velvetos.instance-tool-status.v1":
+        fail("instance tool-status schema drift")
+    if instance_tool_status.get("instanceId") != "velvet-factory":
+        fail("instance tool-status identity drift")
+    if instance_tool_status.get("contract") != "packages/velvetos/tool-status-contract.json":
+        fail("instance tool-status contract binding drift")
+
+    tool_status_resolver = load_tool_status_resolver()
+    try:
+        composed_tool_status = tool_status_resolver.compose_tool_status(
+            ROOT, instance_id="velvet-factory", env={}
+        )
+    except Exception as exc:
+        fail(f"tool-status composition failed: {exc}")
+    legacy_tool_status = load(LEGACY_TOOL_STATUS)
+    if composed_tool_status != legacy_tool_status:
+        fail("generic contract + instance tool status must remain parity-equal to legacy TOOL-STATUS.json")
+
+    core = load(CORE)
+    tool_resolution = core.get("toolStatusResolution") or {}
+    if tool_resolution != {
+        "contract": "packages/velvetos/tool-status-contract.json",
+        "resolver": "packages/velvetos/tool_status_resolver.py",
+        "instanceSurface": "toolStatus",
+        "legacyCompatibilityPath": "packages/velvetos/TOOL-STATUS.json",
+        "consumerCutover": False,
+        "silentBusinessDefaultForbidden": True,
+    }:
+        fail("Core toolStatusResolution contract drift")
 
     resolver = load_instance_resolver()
     try:

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos.tool-status-contract.v1",
+  "type": "object",
+  "required": ["schema", "legacyCompositeSchema", "role", "rules", "instanceStateSurface", "composition"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": "velvetos.tool-status-contract.v1"},
+    "legacyCompositeSchema": {"const": "velvetos.tool-status.v1"},
+    "role": {"const": "CORE_GENERIC_SCHEMA_INTERFACE_ALGORITHM"},
+    "rules": {
+      "type": "object",
+      "required": ["active", "frozen", "forbidden", "watch", "desired_not_connected", "version_default", "exact_version_exception", "upgrade_application", "upstream_registry"],
+      "additionalProperties": false
+    },
+    "instanceStateSurface": {"const": "toolStatus"},
+    "composition": {
+      "type": "object",
+      "required": ["resolver", "legacyCompatibilityPath", "legacyRetirementStage", "consumerCutover"],
+      "additionalProperties": false,
+      "properties": {
+        "resolver": {"const": "packages/velvetos/tool_status_resolver.py"},
+        "legacyCompatibilityPath": {"const": "packages/velvetos/TOOL-STATUS.json"},
+        "legacyRetirementStage": {"type": "string", "minLength": 1},
+        "consumerCutover": {"const": false}
+      }
+    }
+  }
+}

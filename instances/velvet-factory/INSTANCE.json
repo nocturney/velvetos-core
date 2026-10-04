@@ -16,6 +16,7 @@
   "surfaces": {
     "profile": "instance/velvet-factory.json",
     "toolDesk": ".cursor/vf-desk.json",
-    "fleet": "instance/fleet.json"
+    "fleet": "instance/fleet.json",
+    "toolStatus": "instance/tool-status.json"
   }
 }

@@ -57,5 +57,13 @@
     "surfaceMap": "INSTANCE.json#surfaces",
     "requireExplicitInstanceIdWhenRunningFromCore": true,
     "silentBusinessDefaultForbidden": true
+  },
+  "toolStatusResolution": {
+    "contract": "packages/velvetos/tool-status-contract.json",
+    "resolver": "packages/velvetos/tool_status_resolver.py",
+    "instanceSurface": "toolStatus",
+    "legacyCompatibilityPath": "packages/velvetos/TOOL-STATUS.json",
+    "consumerCutover": false,
+    "silentBusinessDefaultForbidden": true
   }
 }

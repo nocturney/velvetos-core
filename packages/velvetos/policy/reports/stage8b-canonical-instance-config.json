@@ -1,0 +1,115 @@
+{
+  "schema": "velvetos.stage8b-canonical-instance-config.v1",
+  "stage": "8B",
+  "behavior_change": true,
+  "prepared_against_main_sha": "d573518b98a4cc8ae404fd54f4ed5f7ccd878eeb",
+  "captured_at": "2026-10-04T15:05:15.3708427+03:00",
+  "purpose": "Close canonical instance placement before Stage 8C reader migration; preserve compatibility composites and authority semantics.",
+  "inventory_binding": {
+    "stage8a_path": "packages/velvetos/policy/reports/stage8a-core-instance-inventory.json",
+    "canonical_config_items": [
+      "canonical-instance-desk",
+      "canonical-instance-profile",
+      "tool-status-mixed-registry",
+      "vfprod-fleet-registry"
+    ],
+    "resolver_foundation_items": [
+      "core-reference-profile-metadata",
+      "policy-registry-explicit-instance-pointers"
+    ]
+  },
+  "resolver_foundation": {
+    "path": "packages/velvetos/policy/reports/stage8b-instance-resolver-foundation.json",
+    "repository_acceptance": "PASS"
+  },
+  "canonical_instance_surfaces": {
+    "profile": "instance/velvet-factory.json",
+    "toolDesk": ".cursor/vf-desk.json",
+    "fleet": "instance/fleet.json",
+    "toolStatus": "instance/tool-status.json"
+  },
+  "canonical_config_items": {
+    "canonical-instance-profile": {
+      "path": "instances/velvet-factory/instance/velvet-factory.json",
+      "ready": true
+    },
+    "canonical-instance-desk": {
+      "path": "instances/velvet-factory/.cursor/vf-desk.json",
+      "ready": true
+    },
+    "vfprod-fleet-registry": {
+      "path": "instances/velvet-factory/instance/fleet.json",
+      "legacy": "packages/vfprod/FLEET.json",
+      "ready": true
+    },
+    "tool-status-mixed-registry": {
+      "core_contract": "packages/velvetos/tool-status-contract.json",
+      "instance_state": "instances/velvet-factory/instance/tool-status.json",
+      "legacy": "packages/velvetos/TOOL-STATUS.json",
+      "ready": true
+    }
+  },
+  "tool_status_split": {
+    "core_contract": "packages/velvetos/tool-status-contract.json",
+    "instance_state": "instances/velvet-factory/instance/tool-status.json",
+    "legacy_composite": "packages/velvetos/TOOL-STATUS.json",
+    "tool_count": 10,
+    "exact_composition_parity": true,
+    "legacy_composite_unchanged_from_prepared_against": true,
+    "consumer_cutover": false,
+    "sensitive_key_paths": []
+  },
+  "legacy_reader_evidence": {
+    "scripts/check-upstream-watch.py": {
+      "unchanged": true,
+      "still_reads_legacy_composite": true
+    },
+    "scripts/check-tool-authority.py": {
+      "unchanged": true,
+      "still_reads_legacy_composite": true
+    },
+    "scripts/check-vf-cad-stack.py": {
+      "unchanged": true,
+      "still_reads_legacy_composite": true
+    },
+    "scripts/check-vf-fabrication-router.py": {
+      "unchanged": true,
+      "still_reads_legacy_composite": true
+    },
+    "scripts/check-vfmcp.py": {
+      "unchanged": true,
+      "still_reads_legacy_composite": true
+    },
+    "scripts/vf_reel_candidates.py": {
+      "unchanged": true,
+      "still_reads_legacy_composite": true
+    }
+  },
+  "authority_baseline": {
+    "policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "unchanged": true
+  },
+  "acceptance_criteria": {
+    "all_stage8b_inventory_items_have_canonical_placement": true,
+    "generic_core_tool_contract_has_no_vf_business_values": true,
+    "instance_tool_state_contains_tools_not_generic_rules": true,
+    "tool_status_split_exactly_composes_legacy_compatibility_document": true,
+    "tool_status_resolution_requires_explicit_instance_from_core": true,
+    "fleet_canonical_copy_remains_exactly_equal_to_legacy": true,
+    "all_known_direct_legacy_readers_are_unchanged_and_still_on_compatibility_surface": true,
+    "resolver_foundation_is_passed_and_bound": true,
+    "external_effect_policy_registry_is_unchanged": true,
+    "no_legacy_path_delete_or_consumer_cutover_in_stage8b": true
+  },
+  "repository_acceptance": "PASS",
+  "next_stage": "Stage 8C — Consumer Migration",
+  "stage8c_constraints": [
+    "migrate readers domain-by-domain through generic resolvers",
+    "prove semantic parity before each consumer cutover",
+    "keep legacy compatibility files through a rollback window",
+    "retire legacy only after clean consumer scan",
+    "Control API and Living Studio remain projections, never source of truth",
+    "no external-effect authority change"
+  ]
+}

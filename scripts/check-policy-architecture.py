@@ -40,6 +40,8 @@ STAGE8A_INVENTORY = REPORTS / "stage8a-core-instance-inventory.json"
 STAGE8A_INVENTORY_GENERATOR = ROOT / "scripts" / "generate-stage8a-core-instance-inventory.py"
 STAGE8B_RESOLVER = REPORTS / "stage8b-instance-resolver-foundation.json"
 STAGE8B_RESOLVER_GENERATOR = ROOT / "scripts" / "generate-stage8b-instance-resolver-foundation.py"
+STAGE8B_CONFIG = REPORTS / "stage8b-canonical-instance-config.json"
+STAGE8B_CONFIG_GENERATOR = ROOT / "scripts" / "generate-stage8b-canonical-instance-config.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -61,6 +63,7 @@ EXPECTED_REPORTS = {
     "stage7-acceptance.json",
     "stage8a-core-instance-inventory.json",
     "stage8b-instance-resolver-foundation.json",
+    "stage8b-canonical-instance-config.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -1499,6 +1502,96 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 if proc.returncode == 0 and regenerated8b.is_file():
                     require(regenerated8b.read_bytes() == STAGE8B_RESOLVER.read_bytes(),
                             "Stage 8B resolver-foundation receipt is not reproducible", problems)
+
+    if STAGE8B_CONFIG.is_file():
+        stage8b_config = load(STAGE8B_CONFIG)
+        require(stage8b_config.get("schema") == "velvetos.stage8b-canonical-instance-config.v1"
+                and stage8b_config.get("stage") == "8B"
+                and stage8b_config.get("behavior_change") is True
+                and stage8b_config.get("repository_acceptance") == "PASS",
+                "Stage 8B canonical-config metadata drift", problems)
+        criteria8bc = stage8b_config.get("acceptance_criteria") or {}
+        expected_criteria8bc = {
+            "all_stage8b_inventory_items_have_canonical_placement",
+            "generic_core_tool_contract_has_no_vf_business_values",
+            "instance_tool_state_contains_tools_not_generic_rules",
+            "tool_status_split_exactly_composes_legacy_compatibility_document",
+            "tool_status_resolution_requires_explicit_instance_from_core",
+            "fleet_canonical_copy_remains_exactly_equal_to_legacy",
+            "all_known_direct_legacy_readers_are_unchanged_and_still_on_compatibility_surface",
+            "resolver_foundation_is_passed_and_bound",
+            "external_effect_policy_registry_is_unchanged",
+            "no_legacy_path_delete_or_consumer_cutover_in_stage8b",
+        }
+        require(set(criteria8bc) == expected_criteria8bc
+                and all(criteria8bc.get(key) is True for key in expected_criteria8bc),
+                "Stage 8B canonical-config acceptance criteria drift or fail", problems)
+        surfaces8bc = stage8b_config.get("canonical_instance_surfaces") or {}
+        require(surfaces8bc == {
+                    "profile": "instance/velvet-factory.json",
+                    "toolDesk": ".cursor/vf-desk.json",
+                    "fleet": "instance/fleet.json",
+                    "toolStatus": "instance/tool-status.json",
+                },
+                "Stage 8B canonical instance surface map drift", problems)
+        split8bc = stage8b_config.get("tool_status_split") or {}
+        require(split8bc.get("core_contract") == "packages/velvetos/tool-status-contract.json"
+                and split8bc.get("instance_state") == "instances/velvet-factory/instance/tool-status.json"
+                and split8bc.get("legacy_composite") == "packages/velvetos/TOOL-STATUS.json"
+                and split8bc.get("tool_count") == 10
+                and split8bc.get("exact_composition_parity") is True
+                and split8bc.get("legacy_composite_unchanged_from_prepared_against") is True
+                and split8bc.get("consumer_cutover") is False
+                and split8bc.get("sensitive_key_paths") == [],
+                "Stage 8B tool-status split evidence drift", problems)
+        readers8bc = stage8b_config.get("legacy_reader_evidence") or {}
+        require(len(readers8bc) == 6
+                and all(isinstance(row, dict)
+                        and row.get("unchanged") is True
+                        and row.get("still_reads_legacy_composite") is True
+                        for row in readers8bc.values()),
+                "Stage 8B legacy reader compatibility proof drift", problems)
+        authority8bc = stage8b_config.get("authority_baseline") or {}
+        require(authority8bc.get("unchanged") is True
+                and authority8bc.get("policy_registry_canonical_sha256")
+                    == authority8bc.get("prepared_against_policy_registry_canonical_sha256"),
+                "Stage 8B external-effect authority baseline drift", problems)
+        require(stage8b_config.get("next_stage") == "Stage 8C — Consumer Migration",
+                "Stage 8B next-stage handoff drift", problems)
+        constraints8bc = set(stage8b_config.get("stage8c_constraints") or [])
+        require({
+                    "migrate readers domain-by-domain through generic resolvers",
+                    "prove semantic parity before each consumer cutover",
+                    "keep legacy compatibility files through a rollback window",
+                    "retire legacy only after clean consumer scan",
+                    "Control API and Living Studio remain projections, never source of truth",
+                    "no external-effect authority change",
+                } <= constraints8bc,
+                "Stage 8C entry constraints drift", problems)
+        if STAGE8B_CONFIG_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8bc = Path(td) / "stage8b-canonical-instance-config.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8B_CONFIG_GENERATOR),
+                        "--prepared-against", stage8b_config["prepared_against_main_sha"],
+                        "--captured-at", stage8b_config["captured_at"],
+                        "--output", str(regenerated8bc),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(proc.returncode == 0,
+                        "Stage 8B canonical-config regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()),
+                        problems)
+                if proc.returncode == 0 and regenerated8bc.is_file():
+                    require(regenerated8bc.read_bytes() == STAGE8B_CONFIG.read_bytes(),
+                            "Stage 8B canonical-config receipt is not reproducible", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos.instance-tool-status.v1",
+  "type": "object",
+  "required": ["schema", "instanceId", "updated_at", "authority", "tools", "contract"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": "velvetos.instance-tool-status.v1"},
+    "instanceId": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+    "updated_at": {"type": "string", "minLength": 1},
+    "authority": {"type": "string", "minLength": 1},
+    "tools": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["status"],
+        "properties": {
+          "status": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": true
+      }
+    },
+    "contract": {"const": "packages/velvetos/tool-status-contract.json"}
+  }
+}
