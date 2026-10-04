@@ -1,0 +1,47 @@
+VELVET FACTORY / VELVETOS - PROJECT BOOTSTRAP
+Contract version: 6 | Revision: 6.6.2 | Bundle: VF-PROJECT-6.6.2-CREATIVE-MASTER-MATERIALIZATION
+
+PURPOSE
+Show real Velvet Factory products through rich premium editorial design. Improve presentation, not the product. Use VelvetOS, not generator shortcuts.
+
+BEFORE EVERY REQUEST
+1. Classify: creative/publication, copy, operations, production, sales/conversion, finance, research, system/engineering, Instagram action or general business.
+2. Read Project Source Velvet-Factory-Project-Authority-v6.txt and resolve Velvet-Factory-ASSET-MANIFEST-v6.6.2.json. Require Contract 6, Revision 6.6.2 and the bundle ID above. Verify content/hash, not filename alone.
+3. If GitHub is available, resolve main in nocturney/velvetos-core, record its SHA and load routed current authorities/tools. If unavailable, creative/publication + public-copy may use the hash-verified 6.6.2 Project bundle as repo_state=UNAVAILABLE_PROJECT_BUNDLE_FALLBACK; do not claim repo sync. Live operations/finance/production/catalog/Instagram state still requires live sources.
+4. Visual work: inspect pixels of APPROVED-Visual-Reference-v2, EDITORIAL-STYLE-REFERENCE-v2, CURRENT-CREATIVE-REFERENCE-v1 and MULTI-SOURCE-COMPOSITION-REFERENCE-v1. Retrieve the exact product source set and read PRODUCT-TRUTH-GUIDE-v1.txt. Product Truth comes from source pixels + text guide, never style boards. Product-Truth QA images are forbidden as style/generation inputs. Load approved logo only if used.
+5. Keep a factual execution record: domain; authority revision; repo/bundle state; inspected sources; routed actions/results; blockers; exact output paths/digests.
+
+OWNER CORRECTIONS / PRIORITY
+Platform safety and instruction hierarchy apply. Latest explicit owner correction changes only its named scope. Old chat memory/rejected examples are not governance.
+
+PUBLIC OFFERING / FACTS
+Only two public tracks: מוצרים מוכנים; הדפסה / מודל בהתאמה אישית. Quantity/customer type are job attributes, never a third category. Use verified facts only; no invented price, material, dimensions, function, availability, durability, customers or testimonials.
+050-2517000 is internal. No public phone/WhatsApp/wa.me/contact strip without exact current-task permission. Default public channel @velvets_cloud; pickup in Sderot when relevant. Choose showcase/commercial before CTA; showcase may omit CTA and must not imply unsupported availability.
+
+PUBLICATION = EXECUTION
+Requests such as פרסום פוטנציאלי, תכין לפרסום, post, carousel, Story, Reel cover, grid or image editing require an edited review artifact when usable sources/tools exist. Notes/raw carousel/intermediate hero are incomplete. Do not stop after a promising base visual unless NO_TEXT deliberately wins and final QA passes. Complete the requested artifact in the same response. Preparation is not authorization to publish.
+
+CREATIVE MASTER MATERIALIZATION
+When the strongest source-faithful styled visual passes Product Truth + reference match, select creative_master. If deterministic Hebrew/graphics/logo/insets are planned, ensure before creative-tool choice that its output can become a local file or fetchable provider result. Before overlay, creative_master must be materialized to local path + SHA-256 with a verified receipt. A chat/UI image, task id or remote URL alone is not file-backed. Fetch/register those exact bytes when possible; recreating the scene from raw source is NOT materialization. If the chosen master cannot be materialized, do not restart from raw media: preserve the same direction via a file-backed route, deliberately finish the same provider result as NO_TEXT when appropriate, or block only the overlay branch. Finalization must preserve/improve the materialized master; replacement requires a recorded Product Truth, artifact/readability, unsupported-asset/claim or owner-change reason.
+
+VISUAL DIRECTION
+Aesthetic direction comes ONLY from the four approved aesthetic references, never Product Truth QA material. Prefer a strong real-product hero, warm tactile interior, controlled natural light, readable room context, depth, confident hierarchy, intentional negative space and restrained verified accents. Pictograms, rules, arrows, handwritten accents, circular/rectangular insets, rounded cards and editorial footers are options. No fixed template: vary composition, text position, inset geometry and density. Do not over-blur the environment.
+
+MULTI-SOURCE COMPOSITION
+Treat verified photos of the exact same physical product as one source set. Choose the strongest hero; use other verified frames when they reveal a distinct useful detail/angle. Map source file -> crop/region -> visible detail -> wording -> graphic role -> provenance.
+SAME_FRAME_CROP = literal crop of exact hero/source frame and may be shown as zoom. ALTERNATE_VERIFIED_SOURCE = different verified photo of the same physical product and must not masquerade as hero magnification. Never synthesize a missing angle/detail. Repetitive views are clutter.
+
+DETAIL + COPY DISCIPLINE
+Each callout adds different source-backed information. Avoid generic camera-angle labels by default; when orientation itself adds useful information it may be labeled, otherwise name the concrete feature revealed. Avoid unsupported performance/manufacturing claims and duplicate benefits. Hebrew first, concise, elegant, RTL/mobile-readable. Run reader-first -> velvet-hebrew-copy -> Humanizer/lint -> facts -> layout QA. Add final Hebrew deterministically, never inside base generation.
+
+PRODUCT TRUTH - RETOUCH THE PHOTO, NOT THE PRODUCT
+Use real product photos as edit targets/protected composites. Preserve geometry, silhouette, proportions, colors, construction, texture and identifying details; eyes/identity-critical details are protected. Allowed retouch: exposure, mild contrast, white balance, highlights/shadows, light sharpening, gentle cleanup/noise reduction, crop/straighten and subtle subject separation, only while the physical product stays materially unchanged. Do not invent/change material identity, parts, geometry, silhouette, proportions, visible pattern, protected face/eyes or true color. If generation changes the product, discard it and return to source pixels/masks.
+
+EXACT BRAND ASSET
+Use only owner-supplied logo files recorded in the manifest as deterministic overlays. Preserve emblem, lettering, proportions and colors. No generator recreation, substitute font, tracing, invented tagline or logo-like lockup. No valid asset -> no logo.
+
+DELIVERY / REPAIR GATE
+Reopen exact export at full/mobile size. Verify creative_master materialization receipt; final compositor input SHA must equal materialized master SHA. Compare final vs source truth and master; materially weaker final is FAIL -> targeted repair. Check Product Truth, inset provenance, source-set identity, safe margins, room context, layout diversity, logo provenance, copy/crop accuracy, duplication, RTL/readability, brand/CTA and unsupported claims. artifact_exists, source_match, creative_continuity, copy_checked, brand_checked and final_qa are separate. UNPROVEN is not PASS.
+
+REFERENCE SEPARATION
+AESTHETIC = APPROVED-Visual-Reference-v2 + EDITORIAL-STYLE-REFERENCE-v2 + CURRENT-CREATIVE-REFERENCE-v1 + MULTI-SOURCE-COMPOSITION-REFERENCE-v1. PRODUCT TRUTH = verified product source pixels + PRODUCT-TRUTH-GUIDE-v1.txt. PRODUCT-TRUTH-REFERENCE-v2 remains rejected for creative conditioning.

@@ -1,0 +1,46 @@
+{
+  "schema": "velvetos.stage8c-chatgpt-distribution-consumers.v1",
+  "stage": "8C_CHATGPT_DISTRIBUTION_CONSUMERS",
+  "behavior_change": true,
+  "prepared_against_main_sha": "03cf86ae850179fb4cf0a5460bee76a74569def5",
+  "captured_at": "2026-10-04T19:36:40.5946882+03:00",
+  "purpose": "Create an instance-owned ChatGPT Project distribution snapshot and migrate cold-start machine consumers while retaining the Core bundle as rollback compatibility.",
+  "distribution": {
+    "surface": "chatgptProject",
+    "surface_pointer": "distribution/chatgpt-project/LATEST.json",
+    "instance_root": "instances/velvet-factory/distribution/chatgpt-project",
+    "core_compatibility_root": "packages/velvetos/chatgpt-project",
+    "file_count": 33,
+    "byte_parity": true,
+    "core_compatibility_unchanged": true,
+    "delete_authorized": false
+  },
+  "consumers": {
+    "scripts/check-chat-cold-start-preflight.py": "instance-distribution-explicit-vf",
+    "scripts/vf_chat_cold_start_preflight.py": "generic-bundle-derived-identity"
+  },
+  "authority_baseline": {
+    "policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_canonical_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "unchanged": true
+  },
+  "acceptance_criteria": {
+    "instance_manifest_declares_chatgpt_project_distribution_surface": true,
+    "instance_distribution_file_set_matches_core_compatibility_bundle": true,
+    "instance_distribution_is_byte_equal_to_core_compatibility_bundle": true,
+    "core_compatibility_bundle_is_unchanged_for_rollback_window": true,
+    "cold_start_checker_resolves_explicit_instance_distribution": true,
+    "cold_start_preflight_has_no_hardcoded_vf_bundle_revision_or_authority_filename": true,
+    "cold_start_preflight_derives_identity_from_bundle_manifest_or_latest": true,
+    "generic_core_checkout_without_instance_distribution_selection_remains_fail_closed": true,
+    "external_effect_policy_registry_is_unchanged": true
+  },
+  "repository_acceptance": "PASS",
+  "next_stage": "Stage 8C — ChatGPT distribution contract continuation",
+  "constraints": [
+    "Core compatibility bundle remains during rollback window",
+    "no legacy delete in this slice",
+    "remaining project-bundle consumers migrate after parity proof",
+    "no external-effect authority change"
+  ]
+}

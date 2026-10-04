@@ -10,13 +10,6 @@ import argparse, hashlib, json, re, sys
 from pathlib import Path
 from vf_media_integrity import inspect_media
 
-CONTRACT=6
-REVISION="6.6.4"
-BUNDLE="VF-PROJECT-6.6.4-CHAT-RUNTIME-DEPENDENCY-CLOSURE"
-MANIFEST_NAME="Velvet-Factory-ASSET-MANIFEST-v6.6.4.json"
-AUTHORITY_NAMES=("Velvet-Factory-Project-Authority-v6.txt","PROJECT-AUTHORITY-v6.6.4.txt")
-INSTRUCTION_NAMES=("Velvet-Factory-Project-Instructions-v6.6.4.txt","PROJECT-INSTRUCTIONS-v6.6.4.txt")
-GUIDE_NAMES=("Velvet-Factory-PRODUCT-TRUTH-GUIDE-v1.txt","PRODUCT-TRUTH-GUIDE-v1.txt")
 AXES=("product_to_frame","environment","light","depth","negative_space","hierarchy","typography","details","surfaces","accent")
 PROVENANCE={"SAME_FRAME_CROP","ALTERNATE_VERIFIED_SOURCE"}
 ROUTES={"LOCAL_FILE_OUTPUT","FETCHABLE_PROVIDER_RESULT","SAME_PROVIDER_NO_TEXT_FINAL"}
@@ -39,6 +32,65 @@ def find(base:Path,names):
         if p.is_file(): return p
     raise ValueError("missing bundle file: "+"/".join(names))
 
+def bundle_contract(base:Path):
+    latest_path=base/"LATEST.json"
+    if latest_path.is_file():
+        latest=load(latest_path)
+        repo_exec=latest.get("repoExecutableBundle") or {}
+        manifest_name=repo_exec.get("assetManifest")
+        if not isinstance(manifest_name,str) or not manifest_name:
+            raise ValueError("LATEST repoExecutableBundle.assetManifest missing")
+        manifest_path=find(base,(manifest_name,))
+    else:
+        candidates=sorted(base.glob("ASSET-MANIFEST-v*.json"))+sorted(base.glob("Velvet-Factory-ASSET-MANIFEST-v*.json"))
+        unique=[]
+        seen=set()
+        for p in candidates:
+            key=p.resolve()
+            if key not in seen:
+                seen.add(key); unique.append(p)
+        if len(unique)!=1:
+            raise ValueError("bundle manifest is ambiguous without LATEST.json")
+        manifest_path=unique[0]
+
+    manifest=load(manifest_path)
+    contract=manifest.get("contract_version")
+    revision=str(manifest.get("revision") or "")
+    bundle_id=manifest.get("bundle_id")
+    if not isinstance(contract,int) or contract<1 or not revision or not isinstance(bundle_id,str) or not bundle_id:
+        raise ValueError("bundle identity missing from asset manifest")
+
+    rows=manifest.get("assets") or []
+    auth_rows=[x for x in rows if isinstance(x,dict) and x.get("role")=="authority"]
+    if len(auth_rows)!=1 or not isinstance(auth_rows[0].get("filename"),str):
+        raise ValueError("bundle authority asset binding missing")
+    authority_name=auth_rows[0]["filename"]
+    authority_alias=f"PROJECT-AUTHORITY-v{revision}.txt"
+
+    ins=manifest.get("instructions") or {}
+    installed_instruction=ins.get("filename")
+    if not isinstance(installed_instruction,str) or not installed_instruction:
+        raise ValueError("bundle instructions binding missing")
+    instruction_alias=f"PROJECT-INSTRUCTIONS-v{revision}.txt"
+
+    product_truth=manifest.get("product_truth") or {}
+    installed_guide=product_truth.get("guide")
+    if not isinstance(installed_guide,str) or not installed_guide:
+        raise ValueError("bundle Product Truth guide binding missing")
+    guide_alias=installed_guide.removeprefix("Velvet-Factory-")
+
+    return {
+        "manifest_path":manifest_path,
+        "manifest":manifest,
+        "contract":contract,
+        "revision":revision,
+        "bundle_id":bundle_id,
+        "authority_asset_name":authority_name,
+        "authority_names":(authority_name,authority_alias),
+        "instruction_names":(installed_instruction,instruction_alias),
+        "guide_names":(installed_guide,guide_alias),
+    }
+
 def meaningful(v):
     return isinstance(v,str) and bool(v.strip()) and v.strip().upper() not in {"PENDING","UNPROVEN","TODO","N/A"}
 
@@ -51,17 +103,20 @@ def main()->int:
     a=ap.parse_args()
     try:
         bundle=Path(a.bundle_dir).resolve(); ws=Path(a.workspace).resolve()
-        manifest_path=find(bundle,(MANIFEST_NAME,"ASSET-MANIFEST-v6.6.4.json"))
-        manifest=load(manifest_path)
-        if (manifest.get("contract_version"),str(manifest.get("revision")),manifest.get("bundle_id"))!=(CONTRACT,REVISION,BUNDLE):
-            raise ValueError("bundle identity mismatch")
-        authority=find(bundle,AUTHORITY_NAMES); instructions=find(bundle,INSTRUCTION_NAMES)
+        contract_info=bundle_contract(bundle)
+        manifest_path=contract_info["manifest_path"]
+        manifest=contract_info["manifest"]
+        contract=contract_info["contract"]
+        revision=contract_info["revision"]
+        bundle_id=contract_info["bundle_id"]
+        authority=find(bundle,contract_info["authority_names"])
+        instructions=find(bundle,contract_info["instruction_names"])
         rows=manifest.get("assets") or []
-        auth_rows=[x for x in rows if x.get("filename")=="Velvet-Factory-Project-Authority-v6.txt"]
+        auth_rows=[x for x in rows if x.get("filename")==contract_info["authority_asset_name"]]
         if len(auth_rows)!=1 or auth_rows[0].get("sha256") not in text_candidates(authority): raise ValueError("authority hash mismatch")
         ins=manifest.get("instructions") or {}
         if ins.get("sha256") not in text_candidates(instructions): raise ValueError("instructions hash mismatch")
-        guide=find(bundle,GUIDE_NAMES); product_truth=manifest.get("product_truth") or {}
+        guide=find(bundle,contract_info["guide_names"]); product_truth=manifest.get("product_truth") or {}
         guide_rows=[x for x in rows if x.get("filename")==product_truth.get("guide")]
         if len(guide_rows)!=1 or guide_rows[0].get("sha256") not in text_candidates(guide): raise ValueError("Product Truth guide mismatch")
         current=manifest.get("current_references") or {}
@@ -116,7 +171,7 @@ def main()->int:
         if plan.get("deterministic_overlay_expected") is True and route=="SAME_PROVIDER_NO_TEXT_FINAL":
             raise ValueError("NO_TEXT route conflicts with deterministic overlay plan")
         out={"project_preflight":"PASS","creative_execution_authorized":True,"delivery_authorized":False,
-             "mode":"CHAT_LOCAL_ATTACHMENT","contract":CONTRACT,"revision":REVISION,"bundle_id":BUNDLE,
+             "mode":"CHAT_LOCAL_ATTACHMENT","contract":contract,"revision":revision,"bundle_id":bundle_id,
              "sources":source_refs,"source_ingest":ingest_refs,"references":refs,
              "product_truth_guide_sha256":guide_rows[0]["sha256"],"creative_output_route":route}
         print(json.dumps(out,ensure_ascii=False,indent=2)); return 0

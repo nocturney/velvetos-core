@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 8C expert-module parameterization:** removes Velvet Factory CTA, pickup/location, phone/handle and exact visual-standard digest/path values from the three generic Core expert modu…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 8C expert-module parameterization:** removes Velvet Factory CTA, pickup/location, phone/handle and exact visual-standard digest/path values from the three generic Core expert modu…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-04 — **Reform v2 Stage 8C ChatGPT Project distribution consumer cutover:** adds an instance-owned Velvet Factory ChatGPT Project distribution snapshot under `instances/velvet-factory/distribution/chatgp…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-04 — **Reform v2 Stage 8C ChatGPT Project distribution consumer cutover:** adds an instance-owned Velvet Factory ChatGPT Project distribution snapshot under `instances/velvet-factory/distribution/chatgp…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>

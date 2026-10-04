@@ -4,7 +4,9 @@ from pathlib import Path
 from PIL import Image
 ROOT=Path(__file__).resolve().parents[1]
 PREF=ROOT/"scripts/vf_chat_cold_start_preflight.py"; ING=ROOT/"scripts/vf_source_ingest.py"
-PROJECT=ROOT/"packages/velvetos/chatgpt-project"
+sys.path.insert(0, str(ROOT / "scripts"))
+from vf_project_distribution import resolve_distribution
+PROJECT=resolve_distribution(ROOT, instance_id="velvet-factory", env={})
 def run(cmd): return subprocess.run(cmd,text=True,capture_output=True)
 def fail(x): print("FAIL "+x,file=sys.stderr); raise SystemExit(1)
 def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
