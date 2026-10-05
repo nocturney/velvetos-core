@@ -1,0 +1,148 @@
+{
+  "schema": "velvetos.stage8d-tool-status-rollback-closure.v1",
+  "stage": "8D_TOOL_STATUS_ROLLBACK_CLOSURE",
+  "behavior_change": false,
+  "prepared_against_main_sha": "e853c0497546b2528f56da2578cb4cc9f3d2ab80",
+  "captured_at": "2026-10-05T09:30:55.8897735+03:00",
+  "surface_id": "tool_status",
+  "legacy_path": "packages/velvetos/TOOL-STATUS.json",
+  "canonical_contract_path": "packages/velvetos/tool-status-contract.json",
+  "canonical_state_path": "instances/velvet-factory/instance/tool-status.json",
+  "purpose": "Close the tool_status rollback observation window using post-correction content classification, semantic, exact-composition parity, legacy immutability and downstream-main evidence while retaining the compatibility composite and keeping deletion unauthorized.",
+  "correction": {
+    "receipt": "packages/velvetos/policy/reports/stage8d-tool-status-semantic-correction.json",
+    "pull_request": 536,
+    "merge_sha": "ed183f59959b4eaebd5a092e61d4ef969e834df7"
+  },
+  "current_evidence": {
+    "legacy_present": true,
+    "runtime_authority": false,
+    "active_authority": "instance:surface:toolStatus",
+    "content_validated_safe_references": {
+      "packages/velvetos/CORE.json": "rollback_contract_reference",
+      "packages/velvetos/policy/sensor-registry.json": "rollback_sensor_binding",
+      "packages/velvetos/schema/tool-status-contract.schema.json": "rollback_contract_schema_reference",
+      "packages/velvetos/tool-status-contract.json": "rollback_contract_reference",
+      "packages/velvetos/tool_status_resolver.py": "rollback_parity_implementation",
+      "scripts/check-velvetos.py": "rollback_parity_sensor"
+    },
+    "safe_reference_count": 6,
+    "semantic_preflight_clear": true,
+    "all_stage8d_semantic_preflights_clear": true,
+    "legacy_byte_unchanged_since_correction": true,
+    "canonical_composed_sha256": "a9782c78b80670b28c5a77a4588b898fd117bc2eaadd6faeb1193d1a21b39e7d",
+    "legacy_sha256": "a9782c78b80670b28c5a77a4588b898fd117bc2eaadd6faeb1193d1a21b39e7d",
+    "canonical_composition_exact_equal": true,
+    "external_effect_authority_unchanged": true
+  },
+  "observation_window": {
+    "basis": "POST_CORRECTION_EXACT_MAIN_HEAD_FULL_SUITE_AND_SEMANTIC_STABILITY",
+    "elapsed_time_is_not_closure_authority": true,
+    "start_merge_sha": "ed183f59959b4eaebd5a092e61d4ef969e834df7",
+    "end_main_sha": "e853c0497546b2528f56da2578cb4cc9f3d2ab80",
+    "workflow": "VelvetOS Core Sensors",
+    "verified_main_head_run_count": 7,
+    "workflow_events": [
+      "push"
+    ],
+    "success_count": 7,
+    "failure_count": 0,
+    "runs": [
+      {
+        "id": 37262173012,
+        "sha": "ed183f59959b4eaebd5a092e61d4ef969e834df7",
+        "created_at": "2026-10-05T04:07:50Z",
+        "event": "push",
+        "conclusion": "success"
+      },
+      {
+        "id": 37263663917,
+        "sha": "adf1b3195951ca00f0f1d976fa06523c7e90b069",
+        "created_at": "2026-10-05T04:28:24Z",
+        "event": "push",
+        "conclusion": "success"
+      },
+      {
+        "id": 37267662064,
+        "sha": "b722f622dd2eab031c087fe051c56a5eb019d705",
+        "created_at": "2026-10-05T05:24:39Z",
+        "event": "push",
+        "conclusion": "success"
+      },
+      {
+        "id": 37269082934,
+        "sha": "e3a91cabcfdd2a145cdb79339ffc8a68c724a18a",
+        "created_at": "2026-10-05T05:44:01Z",
+        "event": "push",
+        "conclusion": "success"
+      },
+      {
+        "id": 37270696543,
+        "sha": "dcf7fab530f97ac326018182a8545625897a95fa",
+        "created_at": "2026-10-05T06:05:39Z",
+        "event": "push",
+        "conclusion": "success"
+      },
+      {
+        "id": 37270881356,
+        "sha": "840206d08a6d13638fd560dddca1dd6583076612",
+        "created_at": "2026-10-05T06:08:00Z",
+        "event": "push",
+        "conclusion": "success"
+      },
+      {
+        "id": 37272603427,
+        "sha": "e853c0497546b2528f56da2578cb4cc9f3d2ab80",
+        "created_at": "2026-10-05T06:28:34Z",
+        "event": "push",
+        "conclusion": "success"
+      }
+    ],
+    "all_descend_from_correction": true,
+    "monotonic_main_lineage": true,
+    "latest_main_full_suite_success": true
+  },
+  "rollback_window": {
+    "was_open_in_correction_receipt": true,
+    "closure_evidence": "this_receipt",
+    "closed": true,
+    "closure_reason": "Active authority remains instance:surface:toolStatus, all six remaining machine references remain content-validated rollback/parity metadata, semantic preflight is clear, canonical composition is exactly parity-equal to the retained legacy composite, legacy bytes and policy authority are unchanged, and multiple downstream exact-main-head full-suite observations are green."
+  },
+  "acceptance_criteria": {
+    "tool_status_semantic_correction_is_pass": true,
+    "active_authority_remains_instance_surface_tool_status": true,
+    "six_remaining_machine_refs_remain_content_validated_rollback_only": true,
+    "tool_status_semantic_preflight_is_clear": true,
+    "all_five_stage8d_semantic_preflights_are_clear": true,
+    "legacy_tool_status_is_byte_unchanged_since_correction": true,
+    "canonical_composition_remains_exactly_parity_equal": true,
+    "external_effect_authority_is_unchanged": true,
+    "observation_window_contains_multiple_distinct_downstream_main_heads": true,
+    "all_downstream_main_head_verifications_are_successful": true,
+    "all_observations_descend_from_tool_status_correction": true,
+    "latest_observation_matches_prepared_against_main": true,
+    "closure_is_evidence_based_not_elapsed_time_based": true,
+    "legacy_file_is_retained_after_closure": true,
+    "deletion_requires_a_separate_isolated_gate": true
+  },
+  "repository_assessment": "PASS",
+  "rollback_window_closed": true,
+  "retirement_ready_for_deletion_gate": true,
+  "delete_authorized": false,
+  "retirement_authorized": false,
+  "next_action": "Run a separate isolated tool_status deletion gate. Revalidate current semantic classification, this closure receipt, latest main CI, exact composition parity and external-effect authority before authorizing deletion or removing rollback metadata.",
+  "authority": {
+    "active_authority": "instance:surface:toolStatus",
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "tool_status_correction_policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false
+  },
+  "constraints": [
+    "closure evidence does not itself authorize deletion",
+    "legacy TOOL-STATUS remains present in this change",
+    "six reviewed rollback/parity references remain fail-closed content classifications",
+    "no big-bang delete",
+    "retirement must be isolated to tool_status",
+    "external-effect authority must remain unchanged"
+  ]
+}

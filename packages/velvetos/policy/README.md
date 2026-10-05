@@ -662,3 +662,11 @@ This closure does not delete the compatibility desk and does not authorize delet
 The observation window uses eight distinct exact-main-head successful full-suite boundaries from `027700b3` through `840206d0`. The scheduled VF Media head `8aa691f9` is represented by a successful exact-SHA workflow-dispatch run, with a second successful run recorded as corroborating evidence; the remaining boundaries are push-triggered main runs.
 
 This closure does not delete `packages/vfprod/FLEET.json` and does not authorize deletion. `rollback_window_closed=true` and `retirement_ready_for_deletion_gate=true`; `delete_authorized=false` and `retirement_authorized=false` remain enforced until a later isolated fleet deletion gate revalidates current main, semantic state, exact parity, closure evidence and policy authority.
+
+## Reform v2 Stage 8D - Tool-status rollback closure
+
+`reports/stage8d-tool-status-rollback-closure.json` closes the `tool_status` rollback observation window after the PR #536 semantic correction. Closure revalidates all six reviewed machine/config references from their current contents, requires active authority to remain `instance:surface:toolStatus`, requires the canonical contract + instance state composition to remain exactly parity-equal to the retained `TOOL-STATUS.json`, requires the legacy bytes and external-effect policy authority to remain unchanged, and binds the evidence to seven successful exact-main-head `VelvetOS Core Sensors` runs through `e853c049`.
+
+The six retained references are still compatibility-only: Core/contract rollback metadata, the schema constraint for that metadata, the dedicated parity implementation, the parity sensor and the two status-sensor registry bindings. A role change in any of them fails closed through the semantic classifier.
+
+This closure does not delete `TOOL-STATUS.json` and does not remove rollback metadata. `rollback_window_closed=true` and `retirement_ready_for_deletion_gate=true`; `delete_authorized=false` and `retirement_authorized=false` remain enforced until a separate isolated tool-status deletion gate revalidates current main, classification, parity, closure evidence and policy authority.
