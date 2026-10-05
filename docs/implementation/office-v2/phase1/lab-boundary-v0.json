@@ -1,0 +1,66 @@
+{
+  "schema": "velvetos.office-v2.lab-boundary.v0",
+  "status": "PRE_REBOOT_STAGED",
+  "host_node": "windows-primary",
+  "lab_root": "D:/Velvet/Lab/OfficeV2",
+  "compose_project": "officev2lab",
+  "network": {
+    "name": "officev2-lab",
+    "subnet_mode": "AUTO_ALLOCATE_WITH_COLLISION_CHECK",
+    "production_network_membership_allowed": false,
+    "host_bind_default": "127.0.0.1"
+  },
+  "service_naming": {
+    "prefix": "officev2-lab-",
+    "production_service_name_reuse_allowed": false
+  },
+  "ports": {
+    "otel_grpc": 14317,
+    "otel_http": 14318,
+    "candidate_postgres": 15432,
+    "lab_api": 18081,
+    "lab_ui": 18082,
+    "candidate_range_start": 19000,
+    "candidate_range_end": 19049,
+    "forbidden_known_collision": 18080
+  },
+  "paths": {
+    "artifacts_windows": "D:/Velvet/Lab/OfficeV2/artifacts",
+    "artifacts_wsl": "/mnt/d/Velvet/Lab/OfficeV2/artifacts",
+    "volumes": "D:/Velvet/Lab/OfficeV2/volumes",
+    "logs": "D:/Velvet/Lab/OfficeV2/logs",
+    "backups": "D:/Velvet/Lab/OfficeV2/backups",
+    "identity_stubs": "D:/Velvet/Lab/OfficeV2/identity-stubs",
+    "compose": "D:/Velvet/Lab/OfficeV2/compose",
+    "otel": "D:/Velvet/Lab/OfficeV2/otel"
+  },
+  "credential_policy": {
+    "production_credentials_allowed": false,
+    "production_secret_mounts_allowed": false,
+    "allowed_classes": ["LAB_ONLY_SECRET", "PUBLIC_IDENTIFIER", "IDENTITY_STUB"],
+    "versioned_secret_values_allowed": false
+  },
+  "authority_policy": {
+    "lab_business_truth_authority": false,
+    "lab_production_writer_authority": false,
+    "lab_approval_authority": false,
+    "lab_runtime_state_may_be_authoritative_for_lab_only": true
+  },
+  "candidate_postgres": {
+    "enabled": false,
+    "role": "DISPOSABLE_OR_CANDIDATE_SPECIFIC_ONLY",
+    "universal_office_database": false
+  },
+  "untrusted_code": {
+    "direct_windows_execution_allowed": false,
+    "direct_wsl_host_execution_allowed": false,
+    "isolation_required_before_pilot": true
+  },
+  "phase1_reboot_boundary": {
+    "wsl_feature_enabled": true,
+    "virtual_machine_platform_enabled": true,
+    "wsl_runtime_active": false,
+    "reboot_required_before_distro_activation": true,
+    "automatic_reboot_allowed": false
+  }
+}
