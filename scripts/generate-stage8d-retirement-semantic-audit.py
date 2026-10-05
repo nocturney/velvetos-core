@@ -124,6 +124,105 @@ def root_desk_correction_passed(sha: str) -> bool:
     )
 
 
+def tool_status_safe_class(sha: str, rel: str) -> str | None:
+    legacy = "packages/velvetos/TOOL-STATUS.json"
+    try:
+        text = git_text(sha, rel)
+    except subprocess.CalledProcessError:
+        return None
+
+    if rel == "packages/velvetos/CORE.json":
+        try:
+            obj = json.loads(text)
+        except json.JSONDecodeError:
+            return None
+        row = obj.get("toolStatusResolution") or {}
+        if (
+            row.get("activeAuthority") == "instance:surface:toolStatus"
+            and row.get("rollbackCompatibilityPath") == legacy
+            and row.get("instanceSurface") == "toolStatus"
+        ):
+            return "rollback_contract_reference"
+        return None
+
+    if rel == "packages/velvetos/tool-status-contract.json":
+        try:
+            obj = json.loads(text)
+        except json.JSONDecodeError:
+            return None
+        comp = obj.get("composition") or {}
+        if (
+            obj.get("instanceStateSurface") == "toolStatus"
+            and comp.get("activeAuthority") == "instance:surface:toolStatus"
+            and comp.get("rollbackCompatibilityPath") == legacy
+            and comp.get("consumerCutover") is True
+            and comp.get("rollbackCompatibilityRetained") is True
+        ):
+            return "rollback_contract_reference"
+        return None
+
+    if rel == "packages/velvetos/schema/tool-status-contract.schema.json":
+        try:
+            obj = json.loads(text)
+        except json.JSONDecodeError:
+            return None
+        comp = (((obj.get("properties") or {}).get("composition") or {}).get("properties") or {})
+        if (
+            (((obj.get("properties") or {}).get("instanceStateSurface") or {}).get("const") == "toolStatus")
+            and (comp.get("activeAuthority") or {}).get("const") == "instance:surface:toolStatus"
+            and (comp.get("rollbackCompatibilityPath") or {}).get("const") == legacy
+            and (comp.get("consumerCutover") or {}).get("const") is True
+            and (comp.get("rollbackCompatibilityRetained") or {}).get("const") is True
+        ):
+            return "rollback_contract_schema_reference"
+        return None
+
+    if rel == "packages/velvetos/tool_status_resolver.py":
+        required = (
+            'composition.get("activeAuthority") != "instance:surface:toolStatus"',
+            'composition.get("rollbackCompatibilityPath") != "packages/velvetos/TOOL-STATUS.json"',
+            'parser.add_argument("command", choices=("show", "legacy-parity"))',
+            'legacy_rel = Path(contract["composition"]["rollbackCompatibilityPath"])',
+        )
+        if all(token in text for token in required):
+            return "rollback_parity_implementation"
+        return None
+
+    if rel == "scripts/check-velvetos.py":
+        required = (
+            'LEGACY_TOOL_STATUS = PACK / "TOOL-STATUS.json"',
+            'composition.get("activeAuthority") != "instance:surface:toolStatus"',
+            'composed_tool_status != legacy_tool_status',
+        )
+        if all(token in text for token in required):
+            return "rollback_parity_sensor"
+        return None
+
+    if rel == "packages/velvetos/policy/sensor-registry.json":
+        try:
+            obj = json.loads(text)
+        except json.JSONDecodeError:
+            return None
+        allowed_ids = {"check-upstream-watch", "check-vf-cad-stack"}
+        refs = []
+        for row in obj.get("sensors") or []:
+            if not isinstance(row, dict):
+                continue
+            for field in ("owns", "triggered_by"):
+                values = row.get(field) or []
+                if legacy in values:
+                    refs.append((row.get("id"), field))
+        if (
+            len(refs) == 4
+            and {sensor_id for sensor_id, _ in refs} == allowed_ids
+            and {field for _, field in refs} == {"owns", "triggered_by"}
+        ):
+            return "rollback_sensor_binding"
+        return None
+
+    return None
+
+
 def semantic_match(surface_id: str, text: str) -> bool:
     spec = SURFACES[surface_id]
     low = text.lower().replace("\\", "/")
@@ -143,6 +242,10 @@ def classify(surface_id: str, rel: str, sha: str) -> str:
     if surface_id == "fleet" and rel == ".cursor/vf-desk.json":
         if root_desk_correction_passed(sha):
             return "retained_legacy_surface_reference"
+    if surface_id == "tool_status":
+        safe_class = tool_status_safe_class(sha, rel)
+        if safe_class:
+            return safe_class
     if surface_id == "chatgpt_core_bundle" and rel.startswith(legacy + "/"):
         return "self"
     if rel == legacy:
@@ -223,6 +326,7 @@ def main() -> int:
             "historical_state_and_evidence_machinery_are_separately_classified": True,
             "reviewed_safe_references_are_explicitly_classified": True,
             "cross_surface_compatibility_refs_require_correction_receipt": True,
+            "tool_status_rollback_refs_are_content_validated": True,
         },
         "compatibility_surfaces": surfaces,
         "assessment": {
