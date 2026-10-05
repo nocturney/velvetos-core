@@ -258,7 +258,7 @@
       "Velvet-Factory-APPROVED-LOGO-GOLD-LIGHT-v1.jpg",
       "Velvet-Factory-APPROVED-LOGO-GOLD-DARK-v1.jpg"
     ],
-    "knownOffRepoAssetsSource": "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json (listed there; not committed to this repository)",
+    "knownOffRepoAssetsSource": "instances/velvet-factory/distribution/chatgpt-project/ASSET-MANIFEST-v6.6.4.json (listed there; not committed to this repository)",
     "preferred": {
       "overlay": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-full-lockup-traced.svg",
       "markOnly": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-mark-traced.svg",

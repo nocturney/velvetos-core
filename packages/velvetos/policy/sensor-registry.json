@@ -132,12 +132,12 @@
       "id": "check-chat-cold-start-preflight",
       "path": "scripts/check-chat-cold-start-preflight.py",
       "owns": [
-        "packages/velvetos/chatgpt-project/**",
+        "instances/velvet-factory/distribution/chatgpt-project/**",
         "scripts/vf_chat_cold_start_preflight.py",
         "scripts/vf_source_ingest.py"
       ],
       "triggered_by": [
-        "packages/velvetos/chatgpt-project/**",
+        "instances/velvet-factory/distribution/chatgpt-project/**",
         "scripts/check-chat-cold-start-preflight.py",
         "scripts/vf_chat_cold_start_preflight.py",
         "scripts/vf_source_ingest.py"
@@ -158,10 +158,10 @@
       "id": "check-chat-runtime-bundle",
       "path": "scripts/check-chat-runtime-bundle.py",
       "owns": [
-        "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json"
+        "instances/velvet-factory/distribution/chatgpt-project/ASSET-MANIFEST-v6.6.4.json"
       ],
       "triggered_by": [
-        "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json",
+        "instances/velvet-factory/distribution/chatgpt-project/ASSET-MANIFEST-v6.6.4.json",
         "scripts/check-chat-runtime-bundle.py"
       ],
       "depends_on": [],
@@ -1270,15 +1270,15 @@
       "path": "scripts/check-project-bundle.py",
       "owns": [
         "scripts/**",
-        "packages/velvetos/chatgpt-project/LATEST.json",
-        "packages/velvetos/chatgpt-project/CHAT-NATIVE-EDITOR-ROUTE.md",
-        "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-*.txt"
+        "instances/velvet-factory/distribution/chatgpt-project/LATEST.json",
+        "instances/velvet-factory/distribution/chatgpt-project/CHAT-NATIVE-EDITOR-ROUTE.md",
+        "instances/velvet-factory/distribution/chatgpt-project/PROJECT-INSTRUCTIONS-*.txt"
       ],
       "triggered_by": [
         "scripts/**",
-        "packages/velvetos/chatgpt-project/LATEST.json",
-        "packages/velvetos/chatgpt-project/CHAT-NATIVE-EDITOR-ROUTE.md",
-        "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-*.txt"
+        "instances/velvet-factory/distribution/chatgpt-project/LATEST.json",
+        "instances/velvet-factory/distribution/chatgpt-project/CHAT-NATIVE-EDITOR-ROUTE.md",
+        "instances/velvet-factory/distribution/chatgpt-project/PROJECT-INSTRUCTIONS-*.txt"
       ],
       "depends_on": [
         "scripts/vf_project_bundle.py",
@@ -3394,19 +3394,19 @@
       "id": "check-reel-route-sync",
       "path": "scripts/check-reel-route-sync.py",
       "owns": [
-        "packages/velvetos/chatgpt-project/REEL-ROUTE.md",
-        "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.10.txt",
-        "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.11.txt",
-        "packages/velvetos/chatgpt-project/LATEST.json",
+        "instances/velvet-factory/distribution/chatgpt-project/REEL-ROUTE.md",
+        "instances/velvet-factory/distribution/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.10.txt",
+        "instances/velvet-factory/distribution/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.11.txt",
+        "instances/velvet-factory/distribution/chatgpt-project/LATEST.json",
         "packages/vfom/REEL-ROUTE-CONTRACT.json",
         "packages/vfom/MOTION-PRESETS.md",
         "packages/vfom/hyperframes/templates/**"
       ],
       "triggered_by": [
-        "packages/velvetos/chatgpt-project/REEL-ROUTE.md",
-        "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.10.txt",
-        "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.11.txt",
-        "packages/velvetos/chatgpt-project/LATEST.json",
+        "instances/velvet-factory/distribution/chatgpt-project/REEL-ROUTE.md",
+        "instances/velvet-factory/distribution/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.10.txt",
+        "instances/velvet-factory/distribution/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.11.txt",
+        "instances/velvet-factory/distribution/chatgpt-project/LATEST.json",
         "packages/vfom/REEL-ROUTE-CONTRACT.json",
         "packages/vfom/MOTION-PRESETS.md",
         "packages/vfom/hyperframes/templates/**",

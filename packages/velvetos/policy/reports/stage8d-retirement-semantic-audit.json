@@ -2,8 +2,8 @@
   "schema": "velvetos.stage8d-retirement-semantic-audit.v1",
   "stage": "8D_RETIREMENT_SEMANTIC_AUDIT",
   "behavior_change": false,
-  "source_commit_sha": "06d5be2d427299e061f9c4aca79daf2bc22ef73c",
-  "captured_at": "2026-10-05T06:54:10.1049919+03:00",
+  "source_commit_sha": "16917c2acc2bbd438935c5b8f7e6b69be9645a84",
+  "captured_at": "2026-10-05T07:02:41.8066037+03:00",
   "purpose": "Fail-closed semantic audit for retained Stage 8D compatibility surfaces. Detect exact and assembled path references before rollback closure or deletion.",
   "audit_model": {
     "exact_path_detection": true,
@@ -13,7 +13,8 @@
     "historical_state_and_evidence_machinery_are_separately_classified": true,
     "reviewed_safe_references_are_explicitly_classified": true,
     "cross_surface_compatibility_refs_require_correction_receipt": true,
-    "tool_status_rollback_refs_are_content_validated": true
+    "tool_status_rollback_refs_are_content_validated": true,
+    "chatgpt_remaining_refs_are_content_validated": true
   },
   "compatibility_surfaces": {
     "sample_profile": {
@@ -430,10 +431,14 @@
     "tool_status": {
       "path": "packages/velvetos/TOOL-STATUS.json",
       "present": true,
-      "semantic_reference_count": 17,
+      "semantic_reference_count": 19,
       "references": [
         {
           "path": "CHANGELOG.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "README.md",
           "class": "documentation_reference"
         },
         {
@@ -473,6 +478,10 @@
           "class": "evidence_machinery"
         },
         {
+          "path": "scripts/generate-stage8d-tool-status-semantic-correction.py",
+          "class": "evidence_machinery"
+        },
+        {
           "path": "packages/vfharness/state/upstream-release-watch-2026-09-27/implementation-spec.md",
           "class": "historical_state"
         },
@@ -504,6 +513,7 @@
       "classes": {
         "documentation_reference": [
           "CHANGELOG.md",
+          "README.md",
           "packages/velvetos/policy/README.md"
         ],
         "evidence_machinery": [
@@ -514,7 +524,8 @@
           "scripts/generate-stage8d-post-migration-readiness.py",
           "scripts/generate-stage8d-retirement-readiness.py",
           "scripts/generate-stage8d-retirement-semantic-audit.py",
-          "scripts/generate-stage8d-tool-status-consumer-migration.py"
+          "scripts/generate-stage8d-tool-status-consumer-migration.py",
+          "scripts/generate-stage8d-tool-status-semantic-correction.py"
         ],
         "historical_state": [
           "packages/vfharness/state/upstream-release-watch-2026-09-27/implementation-spec.md"
@@ -544,18 +555,34 @@
     "chatgpt_core_bundle": {
       "path": "packages/velvetos/chatgpt-project",
       "present": true,
-      "semantic_reference_count": 22,
+      "semantic_reference_count": 21,
       "references": [
+        {
+          "path": "packages/vfbrand/brand-tokens.json",
+          "class": "canonical_asset_source"
+        },
+        {
+          "path": "packages/velvetos/policy/sensor-registry.json",
+          "class": "canonical_sensor_binding"
+        },
+        {
+          "path": "scripts/check-project-bundle.py",
+          "class": "canonical_surface_sensor"
+        },
+        {
+          "path": "scripts/check-reel-route-sync.py",
+          "class": "canonical_surface_sensor"
+        },
+        {
+          "path": "scripts/check-velvetos.py",
+          "class": "canonical_surface_sensor"
+        },
         {
           "path": "CHANGELOG.md",
           "class": "documentation_reference"
         },
         {
           "path": "packages/velvetos/policy/README.md",
-          "class": "documentation_reference"
-        },
-        {
-          "path": "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md",
           "class": "documentation_reference"
         },
         {
@@ -611,35 +638,25 @@
           "class": "historical_state"
         },
         {
-          "path": "packages/velvetos/policy/sensor-registry.json",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "packages/vfbrand/brand-tokens.json",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/check-project-bundle.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/check-reel-route-sync.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/check-velvetos.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
           "path": ".gitattributes",
-          "class": "other_candidate"
+          "class": "rollback_git_attributes"
         }
       ],
       "classes": {
+        "canonical_asset_source": [
+          "packages/vfbrand/brand-tokens.json"
+        ],
+        "canonical_sensor_binding": [
+          "packages/velvetos/policy/sensor-registry.json"
+        ],
+        "canonical_surface_sensor": [
+          "scripts/check-project-bundle.py",
+          "scripts/check-reel-route-sync.py",
+          "scripts/check-velvetos.py"
+        ],
         "documentation_reference": [
           "CHANGELOG.md",
-          "packages/velvetos/policy/README.md",
-          "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md"
+          "packages/velvetos/policy/README.md"
         ],
         "evidence_machinery": [
           "scripts/check-policy-architecture.py",
@@ -658,36 +675,20 @@
           "packages/vfharness/state/vf-project-v66-reference-alignment-2026-09-20/implementation-spec.md",
           "packages/vfharness/state/vf-publication-v64-binding-2026-09-18/task_plan.md"
         ],
-        "machine_or_config_candidate": [
-          "packages/velvetos/policy/sensor-registry.json",
-          "packages/vfbrand/brand-tokens.json",
-          "scripts/check-project-bundle.py",
-          "scripts/check-reel-route-sync.py",
-          "scripts/check-velvetos.py"
-        ],
-        "other_candidate": [
+        "rollback_git_attributes": [
           ".gitattributes"
         ]
       },
-      "retirement_preflight_blockers": [
-        ".gitattributes",
-        "packages/velvetos/policy/sensor-registry.json",
-        "packages/vfbrand/brand-tokens.json",
-        "scripts/check-project-bundle.py",
-        "scripts/check-reel-route-sync.py",
-        "scripts/check-velvetos.py"
-      ],
-      "retirement_preflight_clear": false,
+      "retirement_preflight_blockers": [],
+      "retirement_preflight_clear": true,
       "rollback_window_closed_by_this_audit": false,
       "delete_authorized": false
     }
   },
   "assessment": {
     "surfaces_total": 5,
-    "surfaces_preflight_clear": 4,
-    "surfaces_with_candidate_blockers": [
-      "chatgpt_core_bundle"
-    ],
+    "surfaces_preflight_clear": 5,
+    "surfaces_with_candidate_blockers": [],
     "rollback_windows_closed_by_audit": 0,
     "deletion_authorized": false
   },

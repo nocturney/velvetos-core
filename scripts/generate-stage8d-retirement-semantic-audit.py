@@ -223,6 +223,100 @@ def tool_status_safe_class(sha: str, rel: str) -> str | None:
     return None
 
 
+def chatgpt_safe_class(sha: str, rel: str) -> str | None:
+    legacy_prefix = "packages/velvetos/chatgpt-project/"
+    canonical_prefix = "instances/velvet-factory/distribution/chatgpt-project/"
+    try:
+        text = git_text(sha, rel)
+    except subprocess.CalledProcessError:
+        return None
+    normalized = text.replace("\\", "/")
+
+    if rel == ".gitattributes":
+        legacy_lines = [
+            line.strip() for line in normalized.splitlines()
+            if "packages/velvetos/chatgpt-project/" in line
+        ]
+        if (
+            legacy_lines
+            and all(
+                line.startswith("/packages/velvetos/chatgpt-project/")
+                and line.endswith(" -text")
+                for line in legacy_lines
+            )
+            and "/instances/velvet-factory/distribution/chatgpt-project/** -whitespace" in normalized
+        ):
+            return "rollback_git_attributes"
+        return None
+
+    if rel == "packages/velvetos/policy/sensor-registry.json":
+        if legacy_prefix in normalized:
+            return None
+        try:
+            obj = json.loads(text)
+        except json.JSONDecodeError:
+            return None
+        expected_ids = {
+            "check-chat-cold-start-preflight",
+            "check-chat-runtime-bundle",
+            "check-project-bundle",
+            "check-reel-route-sync",
+        }
+        seen: set[str] = set()
+        for row in obj.get("sensors") or []:
+            if not isinstance(row, dict) or row.get("id") not in expected_ids:
+                continue
+            owns = [str(x).replace("\\", "/") for x in (row.get("owns") or [])]
+            triggered = [str(x).replace("\\", "/") for x in (row.get("triggered_by") or [])]
+            if (
+                any(x.startswith(canonical_prefix) for x in owns)
+                and any(x.startswith(canonical_prefix) for x in triggered)
+            ):
+                seen.add(str(row.get("id")))
+        if seen == expected_ids:
+            return "canonical_sensor_binding"
+        return None
+
+    if rel == "packages/vfbrand/brand-tokens.json":
+        if legacy_prefix not in normalized and (
+            canonical_prefix + "ASSET-MANIFEST-v6.6.4.json"
+        ) in normalized:
+            return "canonical_asset_source"
+        return None
+
+    if rel == "scripts/check-project-bundle.py":
+        if legacy_prefix in normalized:
+            return None
+        required = (
+            'b = vpb.resolve(ROOT, instance_id="velvet-factory", env={})',
+            '"instance:surface:chatgptProject/PROJECT-INSTRUCTIONS-v"',
+        )
+        if all(token in text for token in required):
+            return "canonical_surface_sensor"
+        return None
+
+    if rel == "scripts/check-reel-route-sync.py":
+        if legacy_prefix in normalized:
+            return None
+        required = (
+            'resolve_reference(ROOT, "instance:surface:chatgptProject/LATEST.json"',
+            'resolve_reference(ROOT, c["routeDoc"], instance_id="velvet-factory", env={})',
+            'resolve_reference(ROOT, c["projectInstructions"], instance_id="velvet-factory", env={})',
+        )
+        if all(token in text for token in required):
+            return "canonical_surface_sensor"
+        return None
+
+    if rel == "scripts/check-velvetos.py":
+        if legacy_prefix in normalized:
+            return None
+        if '"chatgptProject": "distribution/chatgpt-project/LATEST.json"' in text:
+            return "canonical_surface_sensor"
+        return None
+
+    return None
+
+
 def semantic_match(surface_id: str, text: str) -> bool:
     spec = SURFACES[surface_id]
     low = text.lower().replace("\\", "/")
@@ -244,6 +338,10 @@ def classify(surface_id: str, rel: str, sha: str) -> str:
             return "retained_legacy_surface_reference"
     if surface_id == "tool_status":
         safe_class = tool_status_safe_class(sha, rel)
+        if safe_class:
+            return safe_class
+    if surface_id == "chatgpt_core_bundle":
+        safe_class = chatgpt_safe_class(sha, rel)
         if safe_class:
             return safe_class
     if surface_id == "chatgpt_core_bundle" and rel.startswith(legacy + "/"):
@@ -327,6 +425,7 @@ def main() -> int:
             "reviewed_safe_references_are_explicitly_classified": True,
             "cross_surface_compatibility_refs_require_correction_receipt": True,
             "tool_status_rollback_refs_are_content_validated": True,
+            "chatgpt_remaining_refs_are_content_validated": True,
         },
         "compatibility_surfaces": surfaces,
         "assessment": {
