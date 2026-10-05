@@ -1,18 +1,17 @@
 {
   "component_id": "sderot-windows",
-  "state": "degraded",
-  "observed_at": "2026-10-04T16:45:39+00:00",
+  "state": "healthy",
+  "observed_at": "2026-10-05T04:23:50+00:00",
   "evidence": {
     "source": "Grok Bot ListMachines + remote Shell probe",
     "machineId": "db0e4d78-3b27-46d9-8c2b-453049eb3933",
     "machineName": "Chris",
-    "status": "offline",
+    "status": "online",
+    "hostname": "Chris",
+    "localTimeObserved": "2026-10-05T07:23:50.5755578+03:00",
     "velvetRootPath": "D:\\Velvet",
-    "velvetRootPresent": false,
+    "velvetRootPresent": true,
     "probe": "hostname; Get-Date -Format o; Test-Path D:\\Velvet (read-only)",
-    "probeError": "Your local machine isn't connected right now (the Grok Bot desktop app must be open and online to run commands on it).",
-    "listMachinesConnected": false,
-    "note": "Authorized machineId offline at observation; did not probe other machineIds or Mac-Office.",
     "role": "documented Windows first-healthy fallback"
   }
 }
