@@ -1,0 +1,75 @@
+{
+  "schema": "velvetos.stage8d-chatgpt-semantic-correction.v1",
+  "stage": "8D_CHATGPT_SEMANTIC_CORRECTION",
+  "behavior_change": true,
+  "prepared_against_main_sha": "adf1b3195951ca00f0f1d976fa06523c7e90b069",
+  "source_commit_sha": "16917c2acc2bbd438935c5b8f7e6b69be9645a84",
+  "captured_at": "2026-10-05T07:02:41.8066037+03:00",
+  "surface_id": "chatgpt_core_bundle",
+  "legacy_root": "packages/velvetos/chatgpt-project",
+  "canonical_root": "instances/velvet-factory/distribution/chatgpt-project",
+  "purpose": "Remove the final active/config legacy ChatGPT bundle bindings and prove all remaining semantic references are canonical sensors, evidence/history/docs, or rollback byte-preservation metadata.",
+  "migration": {
+    "brand_asset_source_migrated": true,
+    "sensor_registry_migrated": true,
+    "canonical_sensor_binding_count": 18,
+    "legacy_distribution_present": true,
+    "legacy_tree_unchanged": true
+  },
+  "parity": {
+    "file_count": 33,
+    "file_sets_equal": true,
+    "byte_equal": true,
+    "mismatches": []
+  },
+  "classification": {
+    "content_validated_safe_references": {
+      ".gitattributes": "rollback_git_attributes",
+      "packages/velvetos/policy/sensor-registry.json": "canonical_sensor_binding",
+      "packages/vfbrand/brand-tokens.json": "canonical_asset_source",
+      "scripts/check-project-bundle.py": "canonical_surface_sensor",
+      "scripts/check-reel-route-sync.py": "canonical_surface_sensor",
+      "scripts/check-velvetos.py": "canonical_surface_sensor"
+    },
+    "remaining_blockers": [],
+    "retirement_preflight_clear": true
+  },
+  "rollback": {
+    "window_open": true,
+    "closure_evidence": null,
+    "retirement_ready_for_deletion_gate": false,
+    "delete_authorized": false
+  },
+  "authority": {
+    "active_authority": "instance:surface:chatgptProject",
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false
+  },
+  "acceptance_criteria": {
+    "prior_chatgpt_consumer_migration_is_pass": true,
+    "active_legacy_references_are_zero": true,
+    "legacy_and_instance_distribution_file_sets_are_equal": true,
+    "legacy_and_instance_distribution_bytes_are_equal": true,
+    "legacy_bundle_is_tree_unchanged": true,
+    "brand_asset_source_is_canonical_instance_distribution": true,
+    "sensor_registry_uses_canonical_instance_distribution": true,
+    "remaining_candidate_refs_are_content_validated_safe": true,
+    "chatgpt_semantic_preflight_has_zero_blockers": true,
+    "rollback_git_attributes_are_preserved": true,
+    "rollback_window_remains_open": true,
+    "delete_authority_remains_false": true,
+    "external_effect_authority_is_unchanged": true
+  },
+  "repository_assessment": "PASS",
+  "retirement_authorized": false,
+  "delete_authorized": false,
+  "next_action": "Merge this correction and verify downstream main. All five semantic preflights are then clear; rollback-window closure evidence is still required per surface before any deletion gate.",
+  "constraints": [
+    "legacy ChatGPT bundle remains present and byte-equal",
+    "rollback .gitattributes remain in place while compatibility bundle exists",
+    "rollback window remains open",
+    "no deletion in this change",
+    "external-effect authority remains unchanged"
+  ]
+}

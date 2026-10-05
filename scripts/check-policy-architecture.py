@@ -84,6 +84,8 @@ STAGE8D_FLEET_RUNTIME_CORRECTION = REPORTS / "stage8d-fleet-runtime-consumer-cor
 STAGE8D_FLEET_RUNTIME_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-fleet-runtime-consumer-correction.py"
 STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION = REPORTS / "stage8d-tool-status-semantic-correction.json"
 STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-tool-status-semantic-correction.py"
+STAGE8D_CHATGPT_SEMANTIC_CORRECTION = REPORTS / "stage8d-chatgpt-semantic-correction.json"
+STAGE8D_CHATGPT_SEMANTIC_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-chatgpt-semantic-correction.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -127,6 +129,7 @@ EXPECTED_REPORTS = {
     "stage8d-root-desk-runtime-consumer-correction.json",
     "stage8d-fleet-runtime-consumer-correction.json",
     "stage8d-tool-status-semantic-correction.json",
+    "stage8d-chatgpt-semantic-correction.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -3504,6 +3507,102 @@ def validate_registries() -> tuple[list[str], set[str]]:
                         problems,
                     )
 
+    if STAGE8D_CHATGPT_SEMANTIC_CORRECTION.is_file():
+        fix8dc = load(STAGE8D_CHATGPT_SEMANTIC_CORRECTION)
+        require(
+            fix8dc.get("schema") == "velvetos.stage8d-chatgpt-semantic-correction.v1"
+            and fix8dc.get("stage") == "8D_CHATGPT_SEMANTIC_CORRECTION"
+            and fix8dc.get("behavior_change") is True
+            and fix8dc.get("surface_id") == "chatgpt_core_bundle"
+            and fix8dc.get("repository_assessment") == "PASS",
+            "Stage 8D ChatGPT semantic correction metadata drift",
+            problems,
+        )
+        criteria8dc = fix8dc.get("acceptance_criteria") or {}
+        require(
+            bool(criteria8dc) and all(value is True for value in criteria8dc.values()),
+            "Stage 8D ChatGPT semantic correction criteria drift or fail",
+            problems,
+        )
+        migration8dc = fix8dc.get("migration") or {}
+        require(
+            migration8dc.get("brand_asset_source_migrated") is True
+            and migration8dc.get("sensor_registry_migrated") is True
+            and migration8dc.get("canonical_sensor_binding_count") == 18
+            and migration8dc.get("legacy_distribution_present") is True
+            and migration8dc.get("legacy_tree_unchanged") is True,
+            "Stage 8D ChatGPT migration metadata drift",
+            problems,
+        )
+        parity8dc = fix8dc.get("parity") or {}
+        require(
+            parity8dc.get("file_count") == 33
+            and parity8dc.get("file_sets_equal") is True
+            and parity8dc.get("byte_equal") is True
+            and parity8dc.get("mismatches") == [],
+            "Stage 8D ChatGPT parity drift",
+            problems,
+        )
+        classification8dc = fix8dc.get("classification") or {}
+        require(
+            classification8dc.get("retirement_preflight_clear") is True
+            and classification8dc.get("remaining_blockers") == []
+            and len(classification8dc.get("content_validated_safe_references") or {}) == 6,
+            "Stage 8D ChatGPT semantic classification drift",
+            problems,
+        )
+        rollback8dc = fix8dc.get("rollback") or {}
+        require(
+            rollback8dc.get("window_open") is True
+            and rollback8dc.get("closure_evidence") is None
+            and rollback8dc.get("retirement_ready_for_deletion_gate") is False
+            and rollback8dc.get("delete_authorized") is False
+            and fix8dc.get("retirement_authorized") is False
+            and fix8dc.get("delete_authorized") is False,
+            "Stage 8D ChatGPT correction must not close rollback or authorize deletion",
+            problems,
+        )
+        authority8dc = fix8dc.get("authority") or {}
+        require(
+            authority8dc.get("active_authority") == "instance:surface:chatgptProject"
+            and authority8dc.get("external_effect_authority_changed") is False
+            and authority8dc.get("policy_registry_sha256")
+            == authority8dc.get("prepared_against_policy_registry_sha256"),
+            "Stage 8D ChatGPT correction authority drift",
+            problems,
+        )
+        if STAGE8D_CHATGPT_SEMANTIC_CORRECTION_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated_fix8dc = Path(td) / "stage8d-chatgpt-semantic-correction.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_CHATGPT_SEMANTIC_CORRECTION_GENERATOR),
+                        "--prepared-against", fix8dc["prepared_against_main_sha"],
+                        "--source-commit", fix8dc["source_commit_sha"],
+                        "--captured-at", fix8dc["captured_at"],
+                        "--output", str(regenerated_fix8dc),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D ChatGPT semantic correction regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated_fix8dc.is_file():
+                    require(
+                        regenerated_fix8dc.read_bytes() == STAGE8D_CHATGPT_SEMANTIC_CORRECTION.read_bytes(),
+                        "Stage 8D ChatGPT semantic correction receipt is not reproducible",
+                        problems,
+                    )
+
     if STAGE8D_RETIREMENT_SEMANTIC_AUDIT.is_file():
         audit8d = load(STAGE8D_RETIREMENT_SEMANTIC_AUDIT)
         require(
@@ -3520,7 +3619,8 @@ def validate_registries() -> tuple[list[str], set[str]]:
             and model8d.get("assembled_path_component_detection") is True
             and model8d.get("ambiguous_machine_or_config_reference_blocks_retirement") is True
             and model8d.get("cross_surface_compatibility_refs_require_correction_receipt") is True
-            and model8d.get("tool_status_rollback_refs_are_content_validated") is True,
+            and model8d.get("tool_status_rollback_refs_are_content_validated") is True
+            and model8d.get("chatgpt_remaining_refs_are_content_validated") is True,
             "Stage 8D retirement semantic audit model drift",
             problems,
         )
@@ -3549,14 +3649,16 @@ def validate_registries() -> tuple[list[str], set[str]]:
     if STAGE8D_RETIREMENT_SEMANTIC_AUDIT.is_file():
         audit8d = load(STAGE8D_RETIREMENT_SEMANTIC_AUDIT)
         surfaces8d = audit8d.get("compatibility_surfaces") or {}
-        blocked_ids8d = {"chatgpt_core_bundle"}
+        blocked_ids8d = set()
         require(
             (surfaces8d.get("root_desk") or {}).get("retirement_preflight_clear") is True
             and (surfaces8d.get("root_desk") or {}).get("retirement_preflight_blockers") == []
             and (surfaces8d.get("fleet") or {}).get("retirement_preflight_clear") is True
             and (surfaces8d.get("fleet") or {}).get("retirement_preflight_blockers") == []
             and (surfaces8d.get("tool_status") or {}).get("retirement_preflight_clear") is True
-            and (surfaces8d.get("tool_status") or {}).get("retirement_preflight_blockers") == [],
+            and (surfaces8d.get("tool_status") or {}).get("retirement_preflight_blockers") == []
+            and (surfaces8d.get("chatgpt_core_bundle") or {}).get("retirement_preflight_clear") is True
+            and (surfaces8d.get("chatgpt_core_bundle") or {}).get("retirement_preflight_blockers") == [],
             "Stage 8D semantic audit corrected surfaces are not clear",
             problems,
         )
@@ -3572,7 +3674,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         assessment8d = audit8d.get("assessment") or {}
         require(
             assessment8d.get("surfaces_total") == 5
-            and assessment8d.get("surfaces_preflight_clear") == 4
+            and assessment8d.get("surfaces_preflight_clear") == 5
             and set(assessment8d.get("surfaces_with_candidate_blockers") or []) == blocked_ids8d
             and assessment8d.get("rollback_windows_closed_by_audit") == 0
             and assessment8d.get("deletion_authorized") is False
