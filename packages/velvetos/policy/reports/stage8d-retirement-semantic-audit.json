@@ -2,8 +2,8 @@
   "schema": "velvetos.stage8d-retirement-semantic-audit.v1",
   "stage": "8D_RETIREMENT_SEMANTIC_AUDIT",
   "behavior_change": false,
-  "source_commit_sha": "77406f64b948710d4758bfb73520370c196bd809",
-  "captured_at": "2026-10-05T00:03:43.4328167+03:00",
+  "source_commit_sha": "06d5be2d427299e061f9c4aca79daf2bc22ef73c",
+  "captured_at": "2026-10-05T06:54:10.1049919+03:00",
   "purpose": "Fail-closed semantic audit for retained Stage 8D compatibility surfaces. Detect exact and assembled path references before rollback closure or deletion.",
   "audit_model": {
     "exact_path_detection": true,
@@ -12,7 +12,8 @@
     "documentation_references_are_reported_but_do_not_self-authorize_deletion": true,
     "historical_state_and_evidence_machinery_are_separately_classified": true,
     "reviewed_safe_references_are_explicitly_classified": true,
-    "cross_surface_compatibility_refs_require_correction_receipt": true
+    "cross_surface_compatibility_refs_require_correction_receipt": true,
+    "tool_status_rollback_refs_are_content_validated": true
   },
   "compatibility_surfaces": {
     "sample_profile": {
@@ -95,7 +96,7 @@
     "fleet": {
       "path": "packages/vfprod/FLEET.json",
       "present": true,
-      "semantic_reference_count": 16,
+      "semantic_reference_count": 17,
       "references": [
         {
           "path": "CHANGELOG.md",
@@ -131,6 +132,10 @@
         },
         {
           "path": "scripts/generate-stage8d-fleet-consumer-migration.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-fleet-runtime-consumer-correction.py",
           "class": "evidence_machinery"
         },
         {
@@ -175,6 +180,7 @@
           "scripts/generate-stage8c-closure.py",
           "scripts/generate-stage8c-control-api-fleet.py",
           "scripts/generate-stage8d-fleet-consumer-migration.py",
+          "scripts/generate-stage8d-fleet-runtime-consumer-correction.py",
           "scripts/generate-stage8d-post-migration-readiness.py",
           "scripts/generate-stage8d-retirement-readiness.py",
           "scripts/generate-stage8d-retirement-semantic-audit.py"
@@ -198,7 +204,7 @@
     "root_desk": {
       "path": ".cursor/vf-desk.json",
       "present": true,
-      "semantic_reference_count": 40,
+      "semantic_reference_count": 41,
       "references": [
         {
           "path": "instances/velvet-factory/INSTANCE.json",
@@ -341,6 +347,10 @@
           "class": "evidence_machinery"
         },
         {
+          "path": "scripts/generate-stage8d-fleet-runtime-consumer-correction.py",
+          "class": "evidence_machinery"
+        },
+        {
           "path": "scripts/generate-stage8d-post-migration-readiness.py",
           "class": "evidence_machinery"
         },
@@ -404,6 +414,7 @@
           "scripts/generate-stage8c-control-api-fleet.py",
           "scripts/generate-stage8c-desk-catalog-bindings.py",
           "scripts/generate-stage8c-root-desk-readers.py",
+          "scripts/generate-stage8d-fleet-runtime-consumer-correction.py",
           "scripts/generate-stage8d-post-migration-readiness.py",
           "scripts/generate-stage8d-retirement-readiness.py",
           "scripts/generate-stage8d-retirement-semantic-audit.py",
@@ -467,27 +478,27 @@
         },
         {
           "path": "packages/velvetos/CORE.json",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "packages/velvetos/policy/sensor-registry.json",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "packages/velvetos/schema/tool-status-contract.schema.json",
-          "class": "machine_or_config_candidate"
+          "class": "rollback_contract_reference"
         },
         {
           "path": "packages/velvetos/tool-status-contract.json",
-          "class": "machine_or_config_candidate"
+          "class": "rollback_contract_reference"
+        },
+        {
+          "path": "packages/velvetos/schema/tool-status-contract.schema.json",
+          "class": "rollback_contract_schema_reference"
         },
         {
           "path": "packages/velvetos/tool_status_resolver.py",
-          "class": "machine_or_config_candidate"
+          "class": "rollback_parity_implementation"
         },
         {
           "path": "scripts/check-velvetos.py",
-          "class": "machine_or_config_candidate"
+          "class": "rollback_parity_sensor"
+        },
+        {
+          "path": "packages/velvetos/policy/sensor-registry.json",
+          "class": "rollback_sensor_binding"
         }
       ],
       "classes": {
@@ -508,24 +519,25 @@
         "historical_state": [
           "packages/vfharness/state/upstream-release-watch-2026-09-27/implementation-spec.md"
         ],
-        "machine_or_config_candidate": [
+        "rollback_contract_reference": [
           "packages/velvetos/CORE.json",
-          "packages/velvetos/policy/sensor-registry.json",
-          "packages/velvetos/schema/tool-status-contract.schema.json",
-          "packages/velvetos/tool-status-contract.json",
-          "packages/velvetos/tool_status_resolver.py",
+          "packages/velvetos/tool-status-contract.json"
+        ],
+        "rollback_contract_schema_reference": [
+          "packages/velvetos/schema/tool-status-contract.schema.json"
+        ],
+        "rollback_parity_implementation": [
+          "packages/velvetos/tool_status_resolver.py"
+        ],
+        "rollback_parity_sensor": [
           "scripts/check-velvetos.py"
+        ],
+        "rollback_sensor_binding": [
+          "packages/velvetos/policy/sensor-registry.json"
         ]
       },
-      "retirement_preflight_blockers": [
-        "packages/velvetos/CORE.json",
-        "packages/velvetos/policy/sensor-registry.json",
-        "packages/velvetos/schema/tool-status-contract.schema.json",
-        "packages/velvetos/tool-status-contract.json",
-        "packages/velvetos/tool_status_resolver.py",
-        "scripts/check-velvetos.py"
-      ],
-      "retirement_preflight_clear": false,
+      "retirement_preflight_blockers": [],
+      "retirement_preflight_clear": true,
       "rollback_window_closed_by_this_audit": false,
       "delete_authorized": false
     },
@@ -672,10 +684,9 @@
   },
   "assessment": {
     "surfaces_total": 5,
-    "surfaces_preflight_clear": 3,
+    "surfaces_preflight_clear": 4,
     "surfaces_with_candidate_blockers": [
-      "chatgpt_core_bundle",
-      "tool_status"
+      "chatgpt_core_bundle"
     ],
     "rollback_windows_closed_by_audit": 0,
     "deletion_authorized": false

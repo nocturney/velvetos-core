@@ -82,6 +82,8 @@ STAGE8D_ROOT_DESK_RUNTIME_CORRECTION = REPORTS / "stage8d-root-desk-runtime-cons
 STAGE8D_ROOT_DESK_RUNTIME_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-root-desk-runtime-consumer-correction.py"
 STAGE8D_FLEET_RUNTIME_CORRECTION = REPORTS / "stage8d-fleet-runtime-consumer-correction.json"
 STAGE8D_FLEET_RUNTIME_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-fleet-runtime-consumer-correction.py"
+STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION = REPORTS / "stage8d-tool-status-semantic-correction.json"
+STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-tool-status-semantic-correction.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -124,6 +126,7 @@ EXPECTED_REPORTS = {
     "stage8d-retirement-semantic-audit.json",
     "stage8d-root-desk-runtime-consumer-correction.json",
     "stage8d-fleet-runtime-consumer-correction.json",
+    "stage8d-tool-status-semantic-correction.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -3415,6 +3418,92 @@ def validate_registries() -> tuple[list[str], set[str]]:
                         problems,
                     )
 
+    if STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION.is_file():
+        fix8dt = load(STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION)
+        require(
+            fix8dt.get("schema") == "velvetos.stage8d-tool-status-semantic-correction.v1"
+            and fix8dt.get("stage") == "8D_TOOL_STATUS_SEMANTIC_CORRECTION"
+            and fix8dt.get("behavior_change") is False
+            and fix8dt.get("surface_id") == "tool_status"
+            and fix8dt.get("repository_assessment") == "PASS",
+            "Stage 8D tool-status semantic correction metadata drift",
+            problems,
+        )
+        criteria8dt = fix8dt.get("acceptance_criteria") or {}
+        require(
+            bool(criteria8dt) and all(value is True for value in criteria8dt.values()),
+            "Stage 8D tool-status semantic correction criteria drift or fail",
+            problems,
+        )
+        classification8dt = fix8dt.get("classification") or {}
+        safe8dt = classification8dt.get("content_validated_safe_references") or {}
+        require(
+            classification8dt.get("retirement_preflight_clear") is True
+            and classification8dt.get("remaining_blockers") == []
+            and len(safe8dt) == 6,
+            "Stage 8D tool-status semantic classification drift",
+            problems,
+        )
+        parity8dt = fix8dt.get("parity") or {}
+        require(
+            parity8dt.get("equal") is True
+            and parity8dt.get("canonical_composed_sha256")
+            == parity8dt.get("legacy_sha256"),
+            "Stage 8D tool-status parity drift",
+            problems,
+        )
+        rollback8dt = fix8dt.get("rollback") or {}
+        require(
+            rollback8dt.get("window_open") is True
+            and rollback8dt.get("closure_evidence") is None
+            and rollback8dt.get("retirement_ready_for_deletion_gate") is False
+            and rollback8dt.get("delete_authorized") is False
+            and fix8dt.get("retirement_authorized") is False
+            and fix8dt.get("delete_authorized") is False,
+            "Stage 8D tool-status correction must not close rollback or authorize deletion",
+            problems,
+        )
+        authority8dt = fix8dt.get("authority") or {}
+        require(
+            authority8dt.get("active_authority") == "instance:surface:toolStatus"
+            and authority8dt.get("external_effect_authority_changed") is False
+            and authority8dt.get("policy_registry_sha256")
+            == authority8dt.get("prepared_against_policy_registry_sha256"),
+            "Stage 8D tool-status correction authority drift",
+            problems,
+        )
+        if STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated_fix8dt = Path(td) / "stage8d-tool-status-semantic-correction.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION_GENERATOR),
+                        "--prepared-against", fix8dt["prepared_against_main_sha"],
+                        "--source-commit", fix8dt["source_commit_sha"],
+                        "--captured-at", fix8dt["captured_at"],
+                        "--output", str(regenerated_fix8dt),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=90,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D tool-status semantic correction regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated_fix8dt.is_file():
+                    require(
+                        regenerated_fix8dt.read_bytes() == STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION.read_bytes(),
+                        "Stage 8D tool-status semantic correction receipt is not reproducible",
+                        problems,
+                    )
+
     if STAGE8D_RETIREMENT_SEMANTIC_AUDIT.is_file():
         audit8d = load(STAGE8D_RETIREMENT_SEMANTIC_AUDIT)
         require(
@@ -3430,7 +3519,8 @@ def validate_registries() -> tuple[list[str], set[str]]:
             model8d.get("exact_path_detection") is True
             and model8d.get("assembled_path_component_detection") is True
             and model8d.get("ambiguous_machine_or_config_reference_blocks_retirement") is True
-            and model8d.get("cross_surface_compatibility_refs_require_correction_receipt") is True,
+            and model8d.get("cross_surface_compatibility_refs_require_correction_receipt") is True
+            and model8d.get("tool_status_rollback_refs_are_content_validated") is True,
             "Stage 8D retirement semantic audit model drift",
             problems,
         )
@@ -3459,12 +3549,14 @@ def validate_registries() -> tuple[list[str], set[str]]:
     if STAGE8D_RETIREMENT_SEMANTIC_AUDIT.is_file():
         audit8d = load(STAGE8D_RETIREMENT_SEMANTIC_AUDIT)
         surfaces8d = audit8d.get("compatibility_surfaces") or {}
-        blocked_ids8d = {"tool_status", "chatgpt_core_bundle"}
+        blocked_ids8d = {"chatgpt_core_bundle"}
         require(
             (surfaces8d.get("root_desk") or {}).get("retirement_preflight_clear") is True
             and (surfaces8d.get("root_desk") or {}).get("retirement_preflight_blockers") == []
             and (surfaces8d.get("fleet") or {}).get("retirement_preflight_clear") is True
-            and (surfaces8d.get("fleet") or {}).get("retirement_preflight_blockers") == [],
+            and (surfaces8d.get("fleet") or {}).get("retirement_preflight_blockers") == []
+            and (surfaces8d.get("tool_status") or {}).get("retirement_preflight_clear") is True
+            and (surfaces8d.get("tool_status") or {}).get("retirement_preflight_blockers") == [],
             "Stage 8D semantic audit corrected surfaces are not clear",
             problems,
         )
@@ -3480,7 +3572,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         assessment8d = audit8d.get("assessment") or {}
         require(
             assessment8d.get("surfaces_total") == 5
-            and assessment8d.get("surfaces_preflight_clear") == 3
+            and assessment8d.get("surfaces_preflight_clear") == 4
             and set(assessment8d.get("surfaces_with_candidate_blockers") or []) == blocked_ids8d
             and assessment8d.get("rollback_windows_closed_by_audit") == 0
             and assessment8d.get("deletion_authorized") is False
