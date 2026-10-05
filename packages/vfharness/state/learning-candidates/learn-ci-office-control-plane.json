@@ -40,10 +40,14 @@
     "gh-run:37159121177:failure:2026-10-03T22:38:26Z:https://github.com/nocturney/velvetos-core/actions/runs/37159121177",
     "gh-run:37186608878:failure:2026-10-04T07:42:30Z:https://github.com/nocturney/velvetos-core/actions/runs/37186608878",
     "gh-run:37206324516:failure:2026-10-04T13:38:15Z:https://github.com/nocturney/velvetos-core/actions/runs/37206324516",
-    "office-loop-1830 triage 2026-10-04: Office Control Plane failed on main today. 37186608878 @ 07:42Z (and 37159121177 @ 22:38Z 3.10) Persist step exited 1 on git add of gitignored packages/velvetos/living-studio/data/signal-room.jsonl; Fail-on-control-plane-error follows that. 37206324516 @ 13:38Z is a different step: watchdog and check-office-control-plane.py were OK, ingest-ci wrote workflows_failed=4, then check-learning-lifecycle.py FAIL Stage 7B acceptance receipt is not reproducible. Keep accepted; no promote — neither the Persist gitignore class nor the Stage 7B receipt has a durable fix in this handoff."
+    "office-loop-1830 triage 2026-10-04: Office Control Plane failed on main today. 37186608878 @ 07:42Z (and 37159121177 @ 22:38Z 3.10) Persist step exited 1 on git add of gitignored packages/velvetos/living-studio/data/signal-room.jsonl; Fail-on-control-plane-error follows that. 37206324516 @ 13:38Z is a different step: watchdog and check-office-control-plane.py were OK, ingest-ci wrote workflows_failed=4, then check-learning-lifecycle.py FAIL Stage 7B acceptance receipt is not reproducible. Keep accepted; no promote — neither the Persist gitignore class nor the Stage 7B receipt has a durable fix in this handoff.",
+    "gh-run:37222478406:failure:2026-10-04T17:57:18Z:https://github.com/nocturney/velvetos-core/actions/runs/37222478406",
+    "gh-run:37240940018:failure:2026-10-04T22:41:01Z:https://github.com/nocturney/velvetos-core/actions/runs/37240940018",
+    "gh-run:37282258178:failure:2026-10-05T08:13:05Z:https://github.com/nocturney/velvetos-core/actions/runs/37282258178",
+    "office-loop-1830 triage 2026-10-05: Office Control Plane failed on main 3x since yesterday's handoff (37222478406 @ 17:57Z 4.10, 37240940018 @ 22:41Z 4.10, 37282258178 @ 08:13Z 5.10). Watchdog, memory hygiene, gaps, handoff validate, sensor and ingest-ci were all OK; each failure is the same Persist activation evidence step exiting 1 because git add hits a gitignored path, then Fail-on-control-plane-error follows. Same class as 4.10. Keep accepted; no promote — no durable fix for the Persist/gitignore class in this handoff."
   ],
   "first_seen": "2026-09-26T10:43:44Z",
-  "last_seen": "2026-10-04T15:50:01+00:00",
+  "last_seen": "2026-10-05T18:45:37+03:00",
   "owner_correction": false,
   "promote_to": null,
   "supersedes": null,
