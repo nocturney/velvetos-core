@@ -22,7 +22,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 
 **Zero-cost stack closeout:** PR #390 is merged to `main`; the canonical final-acceptance receipt/sensor records `MERGED / merge=YES` and the reconciled suite remains **109/109 PASS**. Declared limitations remain fail-closed and unchanged.
 
-**Reform v2 Stage 8D compatibility retirement:** `sample_profile`, `root_desk`, `fleet` and `tool_status` are retired on merged `main`. The remaining `chatgpt_core_bundle` is still physically present but is not runtime authority; this change adds only its evidence-only deletion gate after proving 33/33 byte parity with the canonical Velvet Factory `instance:surface:chatgptProject` distribution, exact restore anchors and successful exact-main CI. No ChatGPT bundle file is deleted by this gate, and external-effect authority is unchanged.
+**Reform v2 Stage 8D compatibility retirement:** all five legacy compatibility surfaces are now retired in this change: `sample_profile`, `root_desk`, `fleet`, `tool_status` and `chatgpt_core_bundle`. The final Core ChatGPT compatibility tree is removed only after its separate merged gate; the canonical Velvet Factory `instance:surface:chatgptProject` distribution remains 33/33 files intact and authoritative, and only the 24 legacy-specific `.gitattributes` preservation lines are removed. Exact Git restore anchors remain available and external-effect authority is unchanged.
 
 <!-- OPERATIONAL-SNAPSHOT:START -->
 <table>
@@ -54,8 +54,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-05 - **Reform v2 Stage 8D ChatGPT Core deletion gate:** authorizes only a later isolated retirement of `packages/velvetos/chatgpt-project` plus the 24 legacy-specific `.gitattributes` byte-preservation …</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-05 - **Reform v2 Stage 8D ChatGPT Core deletion gate:** authorizes only a later isolated retirement of `packages/velvetos/chatgpt-project` plus the 24 legacy-specific `.gitattributes` byte-preservation …</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-05 - **Reform v2 Stage 8D ChatGPT Core retirement:** removes only the authorized `packages/velvetos/chatgpt-project` compatibility tree (33 files) plus exactly the 24 legacy-specific `.gitattributes` by…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-05 - **Reform v2 Stage 8D ChatGPT Core retirement:** removes only the authorized `packages/velvetos/chatgpt-project` compatibility tree (33 files) plus exactly the 24 legacy-specific `.gitattributes` by…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
