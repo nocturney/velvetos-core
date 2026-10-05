@@ -1,0 +1,30 @@
+name: officev2-lab
+
+services:
+  officev2-otel:
+    image: ${OTEL_COLLECTOR_IMAGE:?Set OTEL_COLLECTOR_IMAGE to a reviewed immutable reference}
+    command: ["--config=/etc/otelcol/config.yaml"]
+    restart: "no"
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp
+    volumes:
+      - ./otel-collector.yaml:/etc/otelcol/config.yaml:ro
+      - ${OFFICEV2_LAB_ARTIFACTS:-/mnt/d/Velvet/OfficeV2Lab/artifacts}:/var/officev2/artifacts
+    ports:
+      - "127.0.0.1:14317:4317"
+      - "127.0.0.1:14318:4318"
+      - "127.0.0.1:14319:13133"
+    networks:
+      - officev2_lab
+    labels:
+      velvetos.phase: "office-v2-phase1"
+      velvetos.authority: "none"
+      velvetos.state_class: "runtime_state"
+
+networks:
+  officev2_lab:
+    name: officev2_lab
+    driver: bridge

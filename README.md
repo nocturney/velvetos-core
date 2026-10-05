@@ -24,7 +24,9 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 
 **Reform v2 — CLOSED:** Stage 8D final acceptance is PASS. All five legacy compatibility surfaces (`sample_profile`, `root_desk`, `fleet`, `tool_status`, `chatgpt_core_bundle`) are authoritatively retired; the final semantic audit is 5/5 clear with zero blockers, all restore anchors and historical replay receipts remain Git-verifiable, exact-main `VelvetOS Core Sensors` is 116/116 green, and external-effect authority is unchanged. Canonical Velvet Factory instance surfaces remain explicit, fail-closed and authoritative; the ChatGPT distribution remains 33 files intact.
 
-**Office v2 — PHASE 0 GREEN:** the safety/continuity/governance foundation is isolated from the existing main worktree and passes the Phase 0 gate: production smoke PASS, project checkpoint→compact→verify→resume PASS with a fail-closed negative control, correlation/provenance/contract schemas and stateful restore admission are defined, and the current suite is 117/117 green with no new production writer. Automated Drive/Orders writes remain policy-blocked, printer/xTool live reads remain unverified with human fallback, and printer/xTool HQ commands remain prohibited. Phase 1 has not started.
+**Office v2 — PHASE 0 CLOSED ON MAIN:** PR #561 is merged at `d755c4cb62e2fde16f6c5804db180d48170238ba`; the exact-main GitHub full suite passed 117/117 after merge. Production smoke, project checkpoint→compact→verify→resume (including fail-closed negative control), correlation/provenance contracts and stateful restore admission are accepted with no new production writer. Automated Drive/Orders writes remain policy-blocked, printer/xTool live reads remain unverified with human fallback, and printer/xTool HQ commands remain prohibited.
+
+**Office v2 — PHASE 1 PREP / HOST MUTATION BLOCKED:** the neutral LAB boundary is being built in a fresh isolated worktree from the accepted Phase 0 main. The Phase 1 sensor raises the current suite to 118 sensors; LAB roots, loopback-only ports, OTel correlation contract, dry-run lifecycle and Windows/Mac Node Contract manifests are in place. WSL/VMP Windows features are enabled, but WSL userspace and Docker are absent and the host already has CBS/file-rename reboot debt; GrokBot and AdobePy are logon-triggered. Therefore no reboot, WSL install or Docker install is claimed or executed until a controlled maintenance admission is green.
 
 <!-- OPERATIONAL-SNAPSHOT:START -->
 <table>
@@ -36,7 +38,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 </tr>
 <tr>
 <td align="center"><strong>23</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>117</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>118</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>11</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>

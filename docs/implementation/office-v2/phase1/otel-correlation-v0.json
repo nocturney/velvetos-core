@@ -1,0 +1,27 @@
+{
+  "schema": "velvetos.office-v2.otel-correlation.v0",
+  "status": "PHASE1_DEFINITION",
+  "source_contract": "docs/implementation/office-v2/phase0/contracts/correlation-envelope.schema.json",
+  "service_name": "officev2-phase1-fixture",
+  "required_trace_attributes": [
+    "velvetos.request_id",
+    "velvetos.project_id",
+    "velvetos.workflow_id",
+    "velvetos.run_id",
+    "velvetos.attempt_id"
+  ],
+  "optional_trace_attributes": [
+    "velvetos.conversation_id",
+    "velvetos.approval_id",
+    "velvetos.domain_entity_id",
+    "velvetos.event_id",
+    "velvetos.artifact_id",
+    "velvetos.provider_id",
+    "velvetos.node_id",
+    "velvetos.policy_decision_id",
+    "velvetos.receipt_id"
+  ],
+  "native_id_rule": "External/domain-native IDs remain intact; VelvetOS correlation attributes link rather than replace them.",
+  "authority_rule": "Trace attributes are observability/provenance only and never authorize an external effect.",
+  "phase1_fixture_endpoint": "http://127.0.0.1:14318/v1/traces"
+}

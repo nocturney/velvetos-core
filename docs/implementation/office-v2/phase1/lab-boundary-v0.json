@@ -1,0 +1,60 @@
+{
+  "schema": "velvetos.office-v2.lab-boundary.v0",
+  "status": "PREP_IN_PROGRESS_HOST_MUTATION_BLOCKED",
+  "accepted_main_sha": "d755c4cb62e2fde16f6c5804db180d48170238ba",
+  "production_authority": "NONE",
+  "production_credentials_allowed": false,
+  "lab_root": "D:/Velvet/OfficeV2Lab",
+  "wsl_runtime": {
+    "source_distribution": "Ubuntu-26.04",
+    "instance_name": "OfficeV2-Lab",
+    "architecture": "WSL2",
+    "container_runtime": "Docker Engine + Compose plugin inside the dedicated WSL instance",
+    "docker_desktop_required": false,
+    "status": "PLANNED_MAINTENANCE_BLOCKED"
+  },
+  "network": {
+    "name": "officev2_lab",
+    "scope": "LAB_ONLY",
+    "host_bind_policy": "LOOPBACK_ONLY_UNLESS_LATER_ADMITTED"
+  },
+  "ports": {
+    "otel_grpc": 14317,
+    "otel_http": 14318,
+    "otel_health": 14319,
+    "candidate_db": 15432,
+    "node_health": 18780
+  },
+  "excluded_host_ports": [18080],
+  "artifact_lane": {
+    "windows": "D:/Velvet/OfficeV2Lab/artifacts",
+    "wsl": "/mnt/d/Velvet/OfficeV2Lab/artifacts",
+    "authority_role": "GENERATED_ARTIFACT_AND_EVIDENCE_ONLY"
+  },
+  "storage_roots": {
+    "state": "D:/Velvet/OfficeV2Lab/state",
+    "backups": "D:/Velvet/OfficeV2Lab/backups",
+    "logs": "D:/Velvet/OfficeV2Lab/logs"
+  },
+  "credential_classes_allowed": [
+    "LAB_ONLY_SECRET",
+    "PUBLIC_IDENTIFIER"
+  ],
+  "stateful_candidate_rule": "RESTORE_DRILL_REQUIRED_BEFORE_PRODUCTION_CAPABLE",
+  "untrusted_code_host_execution": "PROHIBITED",
+  "image_policy": {
+    "floating_latest_allowed": false,
+    "reviewed_reference_required": true,
+    "digest_pin_preferred": true
+  },
+  "candidate_neutrality": {
+    "postgres_universal_default": false,
+    "durable_engine_winner": null,
+    "model_gateway_winner": null,
+    "mcp_a2a_winner": null,
+    "event_bus_commitment": null,
+    "feature_flag_platform_commitment": null
+  },
+  "host_change_admission_ref": "docs/implementation/office-v2/phase1/host-change-admission-v0.md",
+  "backup_restore_ref": "docs/implementation/office-v2/phase1/backup-restore-lab-v0.md"
+}
