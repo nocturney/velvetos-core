@@ -116,6 +116,8 @@ STAGE8D_CHATGPT_DELETION_GATE = REPORTS / "stage8d-chatgpt-deletion-gate.json"
 STAGE8D_CHATGPT_DELETION_GATE_GENERATOR = ROOT / "scripts" / "generate-stage8d-chatgpt-deletion-gate.py"
 STAGE8D_CHATGPT_DELETION = REPORTS / "stage8d-chatgpt-deletion.json"
 STAGE8D_CHATGPT_DELETION_GENERATOR = ROOT / "scripts" / "generate-stage8d-chatgpt-deletion.py"
+STAGE8D_FINAL_ACCEPTANCE = REPORTS / "stage8d-final-acceptance.json"
+STAGE8D_FINAL_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage8d-final-acceptance.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -175,6 +177,7 @@ EXPECTED_REPORTS = {
     "stage8d-chatgpt-rollback-closure.json",
     "stage8d-chatgpt-deletion-gate.json",
     "stage8d-chatgpt-deletion.json",
+    "stage8d-final-acceptance.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -5736,12 +5739,16 @@ def validate_registries() -> tuple[list[str], set[str]]:
         require(set(surfaces8d) == expected_surface_ids8d, "Stage 8D semantic audit surface set drift", problems)
         require(
             all(
-                row.get("present") is True
+                row.get("present") is False
+                and row.get("retired") is True
                 and row.get("rollback_window_closed_by_this_audit") is False
                 and row.get("delete_authorized") is False
+                and (row.get("retirement_evidence") or {}).get("repository_assessment") == "PASS"
+                and (row.get("retirement_evidence") or {}).get("deletion_performed") is True
+                and (row.get("retirement_evidence") or {}).get("retirement_authorized") is True
                 for row in surfaces8d.values()
             ),
-            "Stage 8D semantic audit changed retirement/delete state",
+            "Stage 8D semantic audit final retirement state drift",
             problems,
         )
         sample_audit8d = surfaces8d.get("sample_profile") or {}
@@ -5785,6 +5792,8 @@ def validate_registries() -> tuple[list[str], set[str]]:
             and set(assessment8d.get("surfaces_with_candidate_blockers") or []) == blocked_ids8d
             and assessment8d.get("rollback_windows_closed_by_audit") == 0
             and assessment8d.get("deletion_authorized") is False
+            and assessment8d.get("surfaces_retired") == 5
+            and set(assessment8d.get("retired_surfaces") or []) == expected_surface_ids8d
             and audit8d.get("retirement_authorized") is False
             and audit8d.get("deletion_authorized") is False,
             "Stage 8D semantic audit assessment drift",
@@ -5818,6 +5827,179 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated_audit8d.read_bytes() == STAGE8D_RETIREMENT_SEMANTIC_AUDIT.read_bytes(),
                         "Stage 8D semantic audit receipt is not reproducible",
+                        problems,
+                    )
+
+    if STAGE8D_FINAL_ACCEPTANCE.is_file():
+        final8d = load(STAGE8D_FINAL_ACCEPTANCE)
+        require(
+            final8d.get("schema") == "velvetos.stage8d-final-acceptance.v1"
+            and final8d.get("stage") == "8D_FINAL_ACCEPTANCE"
+            and final8d.get("behavior_change") is False
+            and final8d.get("repository_acceptance") == "PASS"
+            and final8d.get("stage8d_complete") is True
+            and final8d.get("reform_v2_complete") is True,
+            "Stage 8D final acceptance metadata drift",
+            problems,
+        )
+        criteria8df = final8d.get("acceptance_criteria") or {}
+        expected8df = {
+            "all_five_compatibility_surfaces_are_physically_absent",
+            "all_five_authoritative_deletion_receipts_are_pass",
+            "final_semantic_audit_is_5_of_5_clear_and_retired",
+            "no_active_or_ambiguous_legacy_runtime_consumers_remain",
+            "all_restore_anchors_resolve_from_git_history",
+            "all_historical_replay_receipts_remain_byte_anchored",
+            "external_effect_policy_authority_is_unchanged",
+            "canonical_chatgpt_distribution_remains_33_files",
+            "canonical_chatgpt_gitattributes_rule_remains",
+            "exact_main_full_sensor_suite_is_116_of_116",
+            "exact_main_readme_system_pulse_is_green",
+        }
+        require(
+            set(criteria8df) == expected8df
+            and all(criteria8df.get(key) is True for key in expected8df),
+            "Stage 8D final acceptance criteria drift or fail",
+            problems,
+        )
+
+        semantic8df = final8d.get("semantic_audit") or {}
+        audit_now8df = load(STAGE8D_RETIREMENT_SEMANTIC_AUDIT)
+        audit_hash8df = hashlib.sha256(
+            json.dumps(audit_now8df, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        require(
+            semantic8df.get("canonical_json_sha256") == audit_hash8df
+            and semantic8df.get("repository_assessment") == "PASS"
+            and semantic8df.get("surfaces_total") == 5
+            and semantic8df.get("surfaces_preflight_clear") == 5
+            and semantic8df.get("surfaces_retired") == 5
+            and semantic8df.get("candidate_blockers") == [],
+            "Stage 8D final semantic binding drift",
+            problems,
+        )
+
+        receipts8df = final8d.get("deletion_receipts") or {}
+        expected_receipts8df = {
+            "sample_profile",
+            "root_desk",
+            "fleet",
+            "tool_status",
+            "chatgpt_core_bundle",
+        }
+        require(set(receipts8df) == expected_receipts8df,
+                "Stage 8D final deletion receipt set drift", problems)
+        for sid8df, meta8df in receipts8df.items():
+            path8df = ROOT / str((meta8df or {}).get("path") or "")
+            require(path8df.is_file(), f"Stage 8D final source receipt missing: {sid8df}", problems)
+            if path8df.is_file():
+                obj8df = load(path8df)
+                canonical_hash8df = hashlib.sha256(
+                    json.dumps(obj8df, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+                ).hexdigest()
+                require(
+                    canonical_hash8df == (meta8df or {}).get("canonical_json_sha256")
+                    and obj8df.get("repository_assessment") == "PASS"
+                    and obj8df.get("deletion_performed") is True
+                    and obj8df.get("retirement_authorized") is True,
+                    f"Stage 8D final deletion receipt drift: {sid8df}",
+                    problems,
+                )
+
+        restore8df = final8d.get("restore_anchors") or {}
+        require(
+            set(restore8df) == expected_receipts8df
+            and all((restore8df.get(sid) or {}).get("verified_from_git") is True for sid in expected_receipts8df),
+            "Stage 8D final restore-anchor verification drift",
+            problems,
+        )
+        replay8df = final8d.get("historical_replay") or {}
+        require(
+            set(replay8df) == expected_receipts8df
+            and all(
+                bool(replay8df.get(sid))
+                and all((meta or {}).get("verified_from_git") is True for meta in (replay8df.get(sid) or {}).values())
+                for sid in expected_receipts8df
+            ),
+            "Stage 8D final historical replay verification drift",
+            problems,
+        )
+
+        authority8df = final8d.get("authority") or {}
+        require(
+            authority8df.get("external_effect_authority_changed") is False
+            and authority8df.get("instance_selection_remains_explicit_and_fail_closed") is True,
+            "Stage 8D final authority drift",
+            problems,
+        )
+        canonical8df = final8d.get("canonical_state") or {}
+        require(
+            canonical8df.get("chatgpt_file_count") == 33
+            and canonical8df.get("retired_legacy_paths_present") == [],
+            "Stage 8D final canonical state drift",
+            problems,
+        )
+
+        main8df = final8d.get("main_full_suite") or {}
+        require(
+            main8df.get("head_sha") == final8d.get("prepared_against_main_sha")
+            and main8df.get("event") == "push"
+            and main8df.get("conclusion") == "SUCCESS"
+            and main8df.get("mode") == "full"
+            and main8df.get("registered_sensors") == 116
+            and main8df.get("passed_sensors") == 116
+            and main8df.get("repository_files_unchanged") is True
+            and main8df.get("log_markers") == [
+                "SENSORS 116 mode=full",
+                "OK sensor run left repository files unchanged",
+                "OK suite passed=116",
+            ],
+            "Stage 8D final exact-main full-suite evidence drift",
+            problems,
+        )
+        readme8df = final8d.get("readme_system_pulse") or {}
+        require(
+            readme8df.get("head_sha") == final8d.get("prepared_against_main_sha")
+            and readme8df.get("event") in {"push", "workflow_dispatch", "schedule"}
+            and readme8df.get("conclusion") == "SUCCESS",
+            "Stage 8D final README System Pulse evidence drift",
+            problems,
+        )
+
+        if STAGE8D_FINAL_ACCEPTANCE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8df = Path(td) / "stage8d-final-acceptance.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_FINAL_ACCEPTANCE_GENERATOR),
+                        "--prepared-against", final8d["prepared_against_main_sha"],
+                        "--captured-at", final8d["captured_at"],
+                        "--main-run-id", str(main8df["workflow_run_id"]),
+                        "--main-job-id", str(main8df["job_id"]),
+                        "--main-run-url", main8df["run_url"],
+                        "--readme-run-id", str(readme8df["workflow_run_id"]),
+                        "--readme-run-url", readme8df["run_url"],
+                        "--readme-event", readme8df["event"],
+                        "--output", str(regenerated8df),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=120,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D final acceptance regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated8df.is_file():
+                    require(
+                        regenerated8df.read_bytes() == STAGE8D_FINAL_ACCEPTANCE.read_bytes(),
+                        "Stage 8D final acceptance receipt is not reproducible",
                         problems,
                     )
 
