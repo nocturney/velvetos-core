@@ -86,6 +86,8 @@ STAGE8D_ROOT_DESK_ROLLBACK_CLOSURE = REPORTS / "stage8d-root-desk-rollback-closu
 STAGE8D_ROOT_DESK_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-root-desk-rollback-closure.py"
 STAGE8D_FLEET_RUNTIME_CORRECTION = REPORTS / "stage8d-fleet-runtime-consumer-correction.json"
 STAGE8D_FLEET_RUNTIME_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-fleet-runtime-consumer-correction.py"
+STAGE8D_FLEET_ROLLBACK_CLOSURE = REPORTS / "stage8d-fleet-rollback-closure.json"
+STAGE8D_FLEET_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-fleet-rollback-closure.py"
 STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION = REPORTS / "stage8d-tool-status-semantic-correction.json"
 STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-tool-status-semantic-correction.py"
 STAGE8D_CHATGPT_SEMANTIC_CORRECTION = REPORTS / "stage8d-chatgpt-semantic-correction.json"
@@ -134,6 +136,7 @@ EXPECTED_REPORTS = {
     "stage8d-root-desk-runtime-consumer-correction.json",
     "stage8d-root-desk-rollback-closure.json",
     "stage8d-fleet-runtime-consumer-correction.json",
+    "stage8d-fleet-rollback-closure.json",
     "stage8d-tool-status-semantic-correction.json",
     "stage8d-chatgpt-semantic-correction.json",
 }
@@ -3666,6 +3669,128 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated_fix8df.read_bytes() == STAGE8D_FLEET_RUNTIME_CORRECTION.read_bytes(),
                         "Stage 8D fleet runtime correction receipt is not reproducible",
+                        problems,
+                    )
+
+    if STAGE8D_FLEET_ROLLBACK_CLOSURE.is_file():
+        close8df = load(STAGE8D_FLEET_ROLLBACK_CLOSURE)
+        require(
+            close8df.get("schema") == "velvetos.stage8d-fleet-rollback-closure.v1"
+            and close8df.get("stage") == "8D_FLEET_ROLLBACK_CLOSURE"
+            and close8df.get("behavior_change") is False
+            and close8df.get("surface_id") == "fleet"
+            and close8df.get("repository_assessment") == "PASS",
+            "Stage 8D fleet rollback closure metadata drift",
+            problems,
+        )
+        correction_close8df = close8df.get("correction") or {}
+        require(
+            correction_close8df.get("receipt")
+            == "packages/velvetos/policy/reports/stage8d-fleet-runtime-consumer-correction.json"
+            and correction_close8df.get("pull_request") == 534
+            and correction_close8df.get("merge_sha") == "027700b3077bc900658313186e313772f539bd7d",
+            "Stage 8D fleet closure correction binding drift",
+            problems,
+        )
+        evidence_close8df = close8df.get("current_evidence") or {}
+        migrated_close8df = evidence_close8df.get("migrated_code") or {}
+        docs_close8df = evidence_close8df.get("active_documentation") or {}
+        require(
+            evidence_close8df.get("legacy_present") is True
+            and evidence_close8df.get("runtime_authority") is False
+            and len(migrated_close8df) == 4
+            and all(
+                row.get("legacy_path_absent") is True
+                and row.get("canonical_fleet_binding_present") is True
+                for row in migrated_close8df.values()
+            )
+            and len(docs_close8df) == 7
+            and all(row.get("legacy_path_absent") is True for row in docs_close8df.values())
+            and evidence_close8df.get("semantic_preflight_clear") is True
+            and evidence_close8df.get("all_stage8d_semantic_preflights_clear") is True
+            and evidence_close8df.get("legacy_byte_unchanged_since_correction") is True
+            and evidence_close8df.get("canonical_legacy_exact_equal") is True
+            and evidence_close8df.get("printer_count") == 4
+            and evidence_close8df.get("external_effect_authority_unchanged") is True,
+            "Stage 8D fleet closure current evidence drift",
+            problems,
+        )
+        observations_close8df = close8df.get("observation_window") or {}
+        runs_close8df = observations_close8df.get("runs") or []
+        require(
+            observations_close8df.get("basis") == "POST_CORRECTION_EXACT_MAIN_HEAD_FULL_SUITE_AND_SEMANTIC_STABILITY"
+            and observations_close8df.get("elapsed_time_is_not_closure_authority") is True
+            and observations_close8df.get("verified_main_head_run_count") == 8
+            and observations_close8df.get("workflow_events") == ["push", "workflow_dispatch"]
+            and observations_close8df.get("success_count") == 8
+            and observations_close8df.get("failure_count") == 0
+            and len(runs_close8df) == 8
+            and len({row.get("sha") for row in runs_close8df}) == 8
+            and all(row.get("conclusion") == "success" for row in runs_close8df)
+            and runs_close8df[5].get("id") == 37269731921
+            and runs_close8df[5].get("additional_successful_run_ids") == [37269817015]
+            and runs_close8df[-1].get("id") == 37270881356
+            and observations_close8df.get("all_descend_from_correction") is True
+            and observations_close8df.get("monotonic_main_lineage") is True
+            and observations_close8df.get("latest_main_full_suite_success") is True,
+            "Stage 8D fleet closure observation window drift",
+            problems,
+        )
+        rollback_close8df = close8df.get("rollback_window") or {}
+        require(
+            rollback_close8df.get("was_open_in_correction_receipt") is True
+            and rollback_close8df.get("closure_evidence") == "this_receipt"
+            and rollback_close8df.get("closed") is True
+            and close8df.get("rollback_window_closed") is True
+            and close8df.get("retirement_ready_for_deletion_gate") is True
+            and close8df.get("delete_authorized") is False
+            and close8df.get("retirement_authorized") is False,
+            "Stage 8D fleet closure must close rollback without authorizing deletion",
+            problems,
+        )
+        criteria_close8df = close8df.get("acceptance_criteria") or {}
+        require(
+            len(criteria_close8df) == 15
+            and all(value is True for value in criteria_close8df.values()),
+            "Stage 8D fleet closure criteria drift or fail",
+            problems,
+        )
+        authority_close8df = close8df.get("authority") or {}
+        require(
+            authority_close8df.get("external_effect_authority_changed") is False
+            and authority_close8df.get("policy_registry_sha256")
+            == authority_close8df.get("fleet_correction_policy_registry_sha256"),
+            "Stage 8D fleet closure changed external-effect authority",
+            problems,
+        )
+        if STAGE8D_FLEET_ROLLBACK_CLOSURE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated_close8df = Path(td) / "stage8d-fleet-rollback-closure.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_FLEET_ROLLBACK_CLOSURE_GENERATOR),
+                        "--prepared-against", close8df["prepared_against_main_sha"],
+                        "--captured-at", close8df["captured_at"],
+                        "--output", str(regenerated_close8df),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=180,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D fleet rollback closure regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated_close8df.is_file():
+                    require(
+                        regenerated_close8df.read_bytes() == STAGE8D_FLEET_ROLLBACK_CLOSURE.read_bytes(),
+                        "Stage 8D fleet rollback closure receipt is not reproducible",
                         problems,
                     )
 
