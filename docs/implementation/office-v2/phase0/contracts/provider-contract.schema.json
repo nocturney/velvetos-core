@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/provider-contract.v0",
+  "title": "Office v2 Provider Contract v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["provider_id", "kind", "node_id", "trust_class", "current_state", "health", "observed_at", "capabilities"],
+  "properties": {
+    "provider_id": {"type": "string", "minLength": 1},
+    "kind": {"enum": ["connector", "local_process", "scheduled_task", "cloud_runtime", "external_api", "domain_store", "station_agent"]},
+    "endpoint_ref": {"type": ["string", "null"]},
+    "node_id": {"type": ["string", "null"]},
+    "trust_class": {"type": "string", "minLength": 1},
+    "credential_ref": {"type": ["string", "null"], "description": "Reference only. Never inline a secret."},
+    "current_state": {"enum": ["READY", "DEGRADED", "BLOCKED", "OFFLINE", "UNVERIFIED"]},
+    "health": {"enum": ["PASS", "WARN", "FAIL", "UNKNOWN"]},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "capabilities": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "receipt_refs": {"type": "array", "items": {"type": "string"}},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  }
+}

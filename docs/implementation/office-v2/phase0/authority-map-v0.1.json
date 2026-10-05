@@ -1,0 +1,176 @@
+{
+  "schema": "velvetos.office-v2.authority-map.v0.1",
+  "status": "PHASE0_BASELINE",
+  "single_external_effect_authority": true,
+  "new_production_writer_added": false,
+  "rules": [
+    "Every domain has one named authoritative store/decision owner.",
+    "A provider, health probe, router, cache or evidence receipt does not become a second writer.",
+    "Unknown mutation authority means BLOCKED, not an Office v2 local allow rule.",
+    "Fallbacks must preserve the same authority semantics and must not create another canonical store."
+  ],
+  "domains": [
+    {
+      "domain": "versioned_system_definition",
+      "production_writer": "reviewed Git commit on canonical repository",
+      "authoritative_store": "nocturney/velvetos-core origin/main",
+      "readers": ["VelvetOS runtimes", "workspace distributions", "operators"],
+      "allowed_mutations": ["reviewed versioned-definition change"],
+      "fallback": "last verified canonical commit",
+      "forbidden_second_writers": ["runtime-generated live state", "parallel definition repository"],
+      "current_baseline": "81e5dbb28b7de6bead5fc581736f16f27b5059f0"
+    },
+    {
+      "domain": "jobs_business_truth",
+      "production_writer": "existing Google Sheets job update path under canonical effect authority",
+      "authoritative_store": "Google Sheet VF HQ · jobs",
+      "readers": ["vf_jobs_adapter", "Office brief/read models", "Google Sheets connector"],
+      "allowed_mutations": ["only after canonical orders-update effect authority is resolved"],
+      "fallback": "none for business truth; office/ledger/live/jobs.csv is adapter cache only",
+      "forbidden_second_writers": ["Git jobs JSON/CSV as truth", "Office v2 project-state copy"],
+      "current_status": "READ_AVAILABLE_WRITE_BLOCKED_PENDING_EFFECT_AUTHORITY"
+    },
+    {
+      "domain": "instagram_publication",
+      "production_writer": "Cloudflare Worker velvetos-instagram-publisher",
+      "authoritative_store": "Meta Instagram Graph publication state",
+      "readers": ["VelvetOS Instagram MCP", "publisher readback", "GitHub scheduled smoke"],
+      "allowed_mutations": ["policy_id instagram.publish approved effects only"],
+      "fallback": "no alternate production writer; degrade/block on provider failure",
+      "forbidden_second_writers": ["OpenPost as publication authority", "direct MCP publish bypassing policy", "second scheduler"],
+      "policy_authority": "packages/velvetos/policy/policy-registry.json#instagram_publication"
+    },
+    {
+      "domain": "instagram_read",
+      "production_writer": null,
+      "authoritative_store": "Meta Instagram Graph live state",
+      "readers": ["VelvetOS Instagram MCP", "publication readback"],
+      "allowed_mutations": [],
+      "fallback": "publisher readback where semantically equivalent",
+      "forbidden_second_writers": ["cached profile/media treated as current truth"]
+    },
+    {
+      "domain": "gmail_owner_delivery",
+      "production_writer": "Gmail connector",
+      "authoritative_store": "Gmail provider mailbox/send state",
+      "readers": ["Gmail connector", "brief delivery verifier"],
+      "allowed_mutations": ["policy_id gmail.send owner-scoped send"],
+      "fallback": "draft/manual owner review",
+      "forbidden_second_writers": ["untracked SMTP path", "claim-sent from generated artifact"],
+      "policy_authority": "packages/velvetos/policy/policy-registry.json#gmail_external_send"
+    },
+    {
+      "domain": "drive_read",
+      "production_writer": null,
+      "authoritative_store": "Google Drive provider state",
+      "readers": ["Google Drive connector"],
+      "allowed_mutations": [],
+      "fallback": "none for live Drive truth",
+      "forbidden_second_writers": ["local mirror promoted to Drive truth"]
+    },
+    {
+      "domain": "drive_write",
+      "production_writer": "UNRESOLVED",
+      "authoritative_store": "Google Drive provider state",
+      "readers": ["Google Drive connector"],
+      "allowed_mutations": [],
+      "fallback": "BLOCKED/read-only until canonical effect mapping exists",
+      "forbidden_second_writers": ["Office v2 ad-hoc permission", "untracked direct write"],
+      "current_status": "BLOCKED_PENDING_EFFECT_AUTHORITY"
+    },
+    {
+      "domain": "creative_blender",
+      "production_writer": "existing CreativeCraft router/typed station operation",
+      "authoritative_store": "D:/Velvet/State/CreativeCraft/blender-station-routing.json for current route state",
+      "readers": ["CreativeCraft orchestrator", "Office capability projection"],
+      "allowed_mutations": ["typed artifact operations within existing provider contracts"],
+      "fallback": "windows-primary when route declares it",
+      "forbidden_second_writers": ["Office v2 independent Blender router", "arbitrary-shell station path"]
+    },
+    {
+      "domain": "creative_maya",
+      "production_writer": "existing DCC Maya adapter",
+      "authoritative_store": "DCC host/routing receipts and live Maya process state",
+      "readers": ["DCC gateway", "Creative Control Center", "Office capability projection"],
+      "allowed_mutations": ["typed DCC operations after route/probe proof"],
+      "fallback": "verified alternate DCC route only",
+      "forbidden_second_writers": ["Office v2 direct Maya automation bypass"],
+      "current_status": "DEGRADED_EXPECTED_0.9.33_ACTIVE_REGISTRY_0.9.31_SHADOW"
+    },
+    {
+      "domain": "creative_adobe",
+      "production_writer": "existing Creative Control Center typed route / AdobePy broker",
+      "authoritative_store": "typed route state plus provider-native document/application state",
+      "readers": ["Creative Control Center", "DCC/AdobePy probes", "Office capability projection"],
+      "allowed_mutations": ["typed app operation after route compatibility gate"],
+      "fallback": "verified typed alternate only",
+      "forbidden_second_writers": ["Office v2 app-specific bypass"]
+    },
+    {
+      "domain": "cad_mesh_slice",
+      "production_writer": "existing vfprod/CreativeCraft artifact pipeline",
+      "authoritative_store": "artifact files plus packages/vfprod/FABRICATION-ROUTER.json routing definition",
+      "readers": ["vfprod", "CreativeCraft", "Office capability projection"],
+      "allowed_mutations": ["artifact generation/transform/validation", "G-code file generation"],
+      "fallback": "existing verified provider fallback selected by canonical router",
+      "forbidden_second_writers": ["Office v2 parallel CAD/mesh router", "printer network control from HQ"]
+    },
+    {
+      "domain": "artifact_transport",
+      "production_writer": "existing CreativeCraft authenticated station transport",
+      "authoritative_store": "artifact destination plus D:/Velvet/State/CreativeCraft/station-transport.json for route state",
+      "readers": ["CreativeCraft station agent", "Office capability projection"],
+      "allowed_mutations": ["allowlisted typed artifact transfer/operation"],
+      "fallback": "local verified route",
+      "forbidden_second_writers": ["arbitrary shell transport", "untracked transfer path"]
+    },
+    {
+      "domain": "printer_device_read",
+      "production_writer": null,
+      "authoritative_store": "future verified Edge/device provider",
+      "readers": ["future Office/floor projection"],
+      "allowed_mutations": [],
+      "fallback": "UNKNOWN; human floor observation is not invented telemetry",
+      "forbidden_second_writers": ["repo fleet file treated as live telemetry"],
+      "current_status": "UNVERIFIED"
+    },
+    {
+      "domain": "printer_device_command",
+      "production_writer": "human floor operation only",
+      "authoritative_store": "physical device/floor state",
+      "readers": ["human operator"],
+      "allowed_mutations": ["human floor operation only under current hard boundary"],
+      "fallback": "none",
+      "forbidden_second_writers": ["HQ upload/start/pause/cancel/heating/motion path"],
+      "current_status": "PROHIBITED_FROM_HQ"
+    },
+    {
+      "domain": "xtool_device",
+      "production_writer": "UNRESOLVED",
+      "authoritative_store": "UNRESOLVED_DEVICE_BINDING",
+      "readers": [],
+      "allowed_mutations": [],
+      "fallback": "human operation until canonical binding/safety/effect authority exist",
+      "forbidden_second_writers": ["Office v2 unverified device command path"],
+      "current_status": "OWNER_KNOWN_RUNTIME_UNVERIFIED"
+    },
+    {
+      "domain": "project_continuity",
+      "production_writer": "Office v2 continuity helper",
+      "authoritative_store": "D:/Velvet/State/OfficeV2/project-state for continuation scope only",
+      "readers": ["same/new chat continuation verifier", "read-only Migration Console"],
+      "allowed_mutations": ["checkpoint", "compact", "verify metadata"],
+      "fallback": "last verified project-state checkpoint",
+      "forbidden_second_writers": ["project state promoted to business truth", "semantic memory promoted to project state"]
+    },
+    {
+      "domain": "office_v2_migration_audit",
+      "production_writer": "append-only Office v2 migration-ledger writer/process",
+      "authoritative_store": "D:/Velvet/State/OfficeV2/migration/ledger-v0.jsonl",
+      "readers": ["read-only Migration Console", "reviewer"],
+      "allowed_mutations": ["append migration entry only"],
+      "fallback": "timestamped evidence receipts",
+      "forbidden_second_writers": ["Migration Console write surface", "rewriting prior ledger entries"]
+    }
+  ]
+}

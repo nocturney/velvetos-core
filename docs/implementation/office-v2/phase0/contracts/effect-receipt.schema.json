@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/effect-receipt.v0",
+  "title": "Office v2 EffectReceipt v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["receipt_id", "intent_id", "attempt_id", "provider_id", "status", "observed_at", "readback", "retry_allowed"],
+  "properties": {
+    "receipt_id": {"type": "string", "minLength": 1},
+    "intent_id": {"type": "string", "minLength": 1},
+    "attempt_id": {"type": "string", "minLength": 1},
+    "provider_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["ACCEPTED", "SUCCEEDED", "FAILED", "UNKNOWN_OUTCOME", "RECONCILED", "COMPENSATED"]},
+    "provider_receipt_ref": {"type": ["string", "null"]},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "readback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "evidence_ref"],
+      "properties": {
+        "state": {"enum": ["NOT_REQUIRED", "PENDING", "PASS", "FAIL", "UNKNOWN"]},
+        "evidence_ref": {"type": ["string", "null"]}
+      }
+    },
+    "reconciliation_state": {"enum": ["NOT_REQUIRED", "PENDING", "RESOLVED_SUCCESS", "RESOLVED_FAILURE", "UNRESOLVED"]},
+    "retry_allowed": {"type": "boolean"},
+    "compensation_ref": {"type": ["string", "null"]},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "UNKNOWN_OUTCOME"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "retry_allowed": {"const": false},
+          "reconciliation_state": {"enum": ["PENDING", "UNRESOLVED"]}
+        },
+        "required": ["reconciliation_state"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/migration-ledger-entry.v0",
+  "title": "Office v2 Migration Ledger Entry v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "change_id", "recorded_at", "owner", "target", "change_class",
+    "preconditions", "affected_authorities", "action", "rollback_point",
+    "evidence_refs", "smoke_result", "verdict", "correlation"
+  ],
+  "properties": {
+    "change_id": {"type": "string", "minLength": 1},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "owner": {"type": "string", "minLength": 1},
+    "target": {"type": "string", "minLength": 1},
+    "change_class": {
+      "enum": [
+        "WORKTREE", "VERSIONED_DEFINITION", "PROJECT_STATE", "RUNTIME_BINDING",
+        "PROVIDER", "CREDENTIAL_REFERENCE", "DATA_MIGRATION", "ROLLBACK",
+        "ADMISSION", "EVIDENCE", "INVENTORY"
+      ]
+    },
+    "source_ref": {"type": ["string", "null"]},
+    "preconditions": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "affected_authorities": {"type": "array", "items": {"type": "string"}},
+    "action": {"type": "string", "minLength": 1},
+    "rollback_point": {
+      "type": "object",
+      "required": ["reference", "instructions"],
+      "properties": {
+        "reference": {"type": "string", "minLength": 1},
+        "instructions": {"type": "string", "minLength": 1}
+      }
+    },
+    "evidence_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "smoke_result": {
+      "type": "object",
+      "required": ["status", "evidence_ref"],
+      "properties": {
+        "status": {"enum": ["PASS", "WARN", "FAIL", "NOT_RUN"]},
+        "evidence_ref": {"type": ["string", "null"]}
+      }
+    },
+    "verdict": {"enum": ["VERIFIED", "IN_PROGRESS", "BLOCKED", "ROLLED_BACK", "REJECTED"]},
+    "correlation": {"$ref": "correlation-envelope.schema.json"},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  }
+}

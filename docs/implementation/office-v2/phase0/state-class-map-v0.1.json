@@ -1,0 +1,65 @@
+{
+  "schema": "velvetos.office-v2.state-class-map.v0.1",
+  "status": "PHASE0",
+  "git_live_state_policy": "VERSIONED_DEFINITION_ONLY",
+  "relationship_to_reform_v2": {
+    "orthogonal_axis": true,
+    "semantic_model_ref": "packages/velvetos/policy/state-evidence-model.json",
+    "rule": "Office v2 classes answer where/how state lives and ages. Reform v2 categories answer semantic authority/proof role. Neither silently replaces the other."
+  },
+  "classes": [
+    {
+      "id": "VERSIONED_DEFINITION",
+      "default_store": "Git",
+      "reform_v2_semantic_default": "CANONICAL_STATE",
+      "authority": "versioned definition within declared scope",
+      "examples": ["schemas", "contracts", "policy definitions", "routing definitions"]
+    },
+    {
+      "id": "BUSINESS_TRUTH",
+      "default_store": "owning domain system",
+      "reform_v2_semantic_default": "CANONICAL_STATE",
+      "authority": "domain owner only",
+      "git_allowed": false,
+      "examples": ["VF HQ jobs Google Sheet", "provider account state"]
+    },
+    {
+      "id": "PROJECT_STATE",
+      "default_store": "D:/Velvet/State/OfficeV2/project-state",
+      "reform_v2_semantic_default": "CANONICAL_STATE",
+      "authority": "continuation/index scope only; references domain truth",
+      "git_allowed": false
+    },
+    {
+      "id": "RUNTIME_STATE",
+      "default_store": "runtime-owned state path/database",
+      "reform_v2_semantic_default": "CANONICAL_STATE",
+      "authority": "bounded runtime scope only",
+      "git_allowed": false
+    },
+    {
+      "id": "EVENT",
+      "default_store": "append-only event/audit storage",
+      "reform_v2_semantic_default": "AUDIT_HISTORY",
+      "authority": "never current truth by event existence alone",
+      "promotion_rule": "A referenced observation may serve as EVIDENCE_RECEIPT; the event does not become an effect authority.",
+      "git_allowed": false
+    },
+    {
+      "id": "GENERATED_ARTIFACT",
+      "default_store": "artifact/media storage",
+      "reform_v2_semantic_default": "AUDIT_HISTORY",
+      "authority": "none by default",
+      "promotion_rule": "Exact digest may be referenced as EVIDENCE_RECEIPT.",
+      "git_allowed": false
+    },
+    {
+      "id": "DERIVED_SEARCH_OR_MEMORY",
+      "default_store": "derived index/memory store",
+      "reform_v2_semantic_default": "AUDIT_HISTORY",
+      "authority": "projection only; source must be re-resolved for authoritative claims/effects",
+      "git_allowed": false
+    }
+  ],
+  "legacy_migration_rule": "Existing repo-hosted operational state from Reform v2 remains authoritative exactly as currently declared until a later gated migration. Phase 0 forbids adding new live state to Git and records candidates; it does not cut over existing owners."
+}

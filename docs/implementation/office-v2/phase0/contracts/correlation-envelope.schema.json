@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/correlation-envelope.v0",
+  "title": "Office v2 Correlation Envelope v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["request_id", "project_id", "workflow_id", "run_id", "attempt_id"],
+  "properties": {
+    "request_id": {"type": "string", "minLength": 1},
+    "conversation_id": {"type": ["string", "null"], "minLength": 1},
+    "project_id": {"type": "string", "minLength": 1},
+    "workflow_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "attempt_id": {"type": "string", "minLength": 1},
+    "approval_id": {"type": ["string", "null"], "minLength": 1},
+    "domain_entity_id": {"type": ["string", "null"], "minLength": 1},
+    "event_id": {"type": ["string", "null"], "minLength": 1},
+    "artifact_id": {"type": ["string", "null"], "minLength": 1},
+    "provider_id": {"type": ["string", "null"], "minLength": 1},
+    "node_id": {"type": ["string", "null"], "minLength": 1},
+    "policy_decision_id": {"type": ["string", "null"], "minLength": 1},
+    "receipt_id": {"type": ["string", "null"], "minLength": 1}
+  }
+}
