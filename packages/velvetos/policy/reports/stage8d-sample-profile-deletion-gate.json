@@ -1,0 +1,132 @@
+{
+  "schema": "velvetos.stage8d-sample-profile-deletion-gate.v1",
+  "stage": "8D_SAMPLE_PROFILE_DELETION_GATE",
+  "behavior_change": false,
+  "prepared_against_main_sha": "495a6c91e8dea4b65dacf415be42aa22fc471ae4",
+  "captured_at": "2026-10-05T10:44:59.2107435+03:00",
+  "surface_id": "sample_profile",
+  "target": {
+    "legacy_path": "packages/velvetos/samples/velvet-factory.json",
+    "canonical_path": "instances/velvet-factory/instance/velvet-factory.json",
+    "delete_exactly": [
+      "packages/velvetos/samples/velvet-factory.json"
+    ],
+    "delete_other_surfaces": false
+  },
+  "purpose": "Authorize one later isolated deletion of the sample_profile compatibility file after revalidating current main, semantic clearance, canonical coverage, rollback closure, restore evidence and policy authority. This gate performs no deletion.",
+  "prerequisite_closure": {
+    "receipt": "packages/velvetos/policy/reports/stage8d-sample-profile-rollback-reclosure.json",
+    "schema": "velvetos.stage8d-sample-profile-rollback-reclosure.v2",
+    "rollback_window_closed": true,
+    "retirement_ready_for_deletion_gate": true
+  },
+  "cross_surface_state": {
+    "sample_profile": {
+      "repository_assessment": "PASS",
+      "rollback_window_closed": true,
+      "retirement_ready_for_deletion_gate": true,
+      "delete_authorized": false,
+      "retirement_authorized": false
+    },
+    "root_desk": {
+      "repository_assessment": "PASS",
+      "rollback_window_closed": true,
+      "retirement_ready_for_deletion_gate": true,
+      "delete_authorized": false,
+      "retirement_authorized": false
+    },
+    "fleet": {
+      "repository_assessment": "PASS",
+      "rollback_window_closed": true,
+      "retirement_ready_for_deletion_gate": true,
+      "delete_authorized": false,
+      "retirement_authorized": false
+    },
+    "tool_status": {
+      "repository_assessment": "PASS",
+      "rollback_window_closed": true,
+      "retirement_ready_for_deletion_gate": true,
+      "delete_authorized": false,
+      "retirement_authorized": false
+    },
+    "chatgpt_core_bundle": {
+      "repository_assessment": "PASS",
+      "rollback_window_closed": true,
+      "retirement_ready_for_deletion_gate": true,
+      "delete_authorized": false,
+      "retirement_authorized": false
+    }
+  },
+  "current_evidence": {
+    "legacy_present": true,
+    "runtime_authority": false,
+    "active_semantic_legacy_consumer_count": 0,
+    "semantic_preflight_clear": true,
+    "all_stage8d_semantic_preflights_clear": true,
+    "compatibility_metadata_excluded_from_canonical_coverage": {
+      "role": "sample",
+      "notes": "Reference profile hosted in VelvetOS Core for sensors/compat. Live frontend office lives in instances/velvet-factory/ → publish to nocturney/velvetos-velvet-factory."
+    },
+    "canonical_semantically_covers_legacy_business_config": true,
+    "canonical_legacy_module_parity": true,
+    "external_effect_authority_unchanged": true
+  },
+  "restore_anchor": {
+    "source_commit_sha": "495a6c91e8dea4b65dacf415be42aa22fc471ae4",
+    "legacy_path": "packages/velvetos/samples/velvet-factory.json",
+    "git_blob_sha1": "7ffc401ef4ce87acd25c48a2d095ab82eca8f76b",
+    "sha256": "01a792c229721fa95590636a645aab8d46439d6efd523c48b6ee6b73ca366f5d",
+    "size_bytes": 5214,
+    "restore_command": "git show 495a6c91e8dea4b65dacf415be42aa22fc471ae4:packages/velvetos/samples/velvet-factory.json > packages/velvetos/samples/velvet-factory.json"
+  },
+  "latest_main_ci": {
+    "workflow": "VelvetOS Core Sensors",
+    "run_id": 37277013397,
+    "sha": "495a6c91e8dea4b65dacf415be42aa22fc471ae4",
+    "event": "push",
+    "conclusion": "success",
+    "created_at": "2026-10-05T07:18:29Z"
+  },
+  "authority": {
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "sample_reclosure_policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false,
+    "delete_authorized": true,
+    "delete_authorized_surface": "sample_profile",
+    "delete_authorized_paths": [
+      "packages/velvetos/samples/velvet-factory.json"
+    ],
+    "retirement_authorized": false
+  },
+  "acceptance_criteria": {
+    "sample_reclosure_is_pass_and_closed": true,
+    "sample_reclosure_is_ready_for_deletion_gate": true,
+    "sample_reclosure_did_not_pre_authorize_deletion": true,
+    "all_five_rollback_windows_are_closed_and_gate_ready": true,
+    "all_other_surfaces_remain_deletion_unauthorized": true,
+    "current_sample_semantic_preflight_is_clear": true,
+    "current_global_semantic_preflight_is_5_of_5_clear": true,
+    "active_semantic_sample_legacy_consumers_are_zero": true,
+    "canonical_instance_semantically_covers_legacy_business_config_except_compat_metadata": true,
+    "canonical_and_legacy_module_sets_match": true,
+    "exact_legacy_blob_is_anchored_for_restore": true,
+    "latest_exact_main_core_sensor_run_is_success": true,
+    "external_effect_authority_is_unchanged": true,
+    "gate_authorizes_only_sample_profile_target": true,
+    "deletion_is_not_performed_in_gate_change": true,
+    "retirement_completion_waits_for_separate_deletion_pr": true
+  },
+  "repository_assessment": "PASS",
+  "delete_authorized": true,
+  "deletion_performed": false,
+  "retirement_authorized": false,
+  "next_action": "Merge this evidence-only gate, verify post-merge main, then create a separate isolated sample_profile deletion PR that removes exactly the authorized path and re-runs semantic, policy and full-suite checks.",
+  "constraints": [
+    "this gate does not delete files",
+    "authorization applies only to the exact sample_profile target recorded above",
+    "no other Stage 8D compatibility surface is deletion-authorized by this receipt",
+    "actual deletion requires a separate isolated PR",
+    "restore anchor must remain available in Git history",
+    "external-effect authority must remain unchanged"
+  ]
+}
