@@ -73,6 +73,10 @@ RETIREMENT_RECEIPTS = {
         "receipt": "packages/velvetos/policy/reports/stage8d-tool-status-deletion.json",
         "schema": "velvetos.stage8d-tool-status-deletion.v1",
     },
+    "chatgpt_core_bundle": {
+        "receipt": "packages/velvetos/policy/reports/stage8d-chatgpt-deletion.json",
+        "schema": "velvetos.stage8d-chatgpt-deletion.v1",
+    },
 }
 REVIEWED_SAFE_REFERENCES = {
     "fleet": {
