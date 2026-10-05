@@ -1,0 +1,186 @@
+{
+  "schema": "velvetos.draft.context-continuity-acceptance-vectors.v0",
+  "status": "NON_NORMATIVE_REFORM_PREPARATION",
+  "authority": false,
+  "purpose": "Executable-test inventory for future implementation; expected results are normative only for this draft design, not current runtime behavior.",
+  "vectors": [
+    {
+      "id": "research-to-planning",
+      "trigger": "phase_boundary",
+      "preconditions": [
+        "research evidence addressable",
+        "checkpoint updated",
+        "no in-flight mutation"
+      ],
+      "expected": "COMPACT_ALLOWED",
+      "must_preserve": [
+        "goal",
+        "findings refs",
+        "unresolved",
+        "next_step"
+      ],
+      "must_drop_or_reduce": [
+        "raw search/tool dump",
+        "duplicate reasoning"
+      ]
+    },
+    {
+      "id": "planning-to-execution",
+      "trigger": "phase_boundary",
+      "preconditions": [
+        "planned_steps persisted",
+        "exact artifact paths persisted"
+      ],
+      "expected": "COMPACT_ALLOWED",
+      "must_preserve": [
+        "planned_steps_remaining",
+        "exact_paths",
+        "constraints",
+        "next_step"
+      ],
+      "must_drop_or_reduce": [
+        "planning discussion variants superseded by final plan"
+      ]
+    },
+    {
+      "id": "mid-execution-unpersisted",
+      "trigger": "context_pressure",
+      "preconditions": [
+        "local step has unpersisted partial state"
+      ],
+      "expected": "COMPACT_BLOCKED",
+      "reason": "mid-execution loss can corrupt resume state"
+    },
+    {
+      "id": "debugging-resolved",
+      "trigger": "phase_boundary",
+      "preconditions": [
+        "fix verified",
+        "latest observation persisted",
+        "failing traces addressable as evidence"
+      ],
+      "expected": "COMPACT_ALLOWED",
+      "must_preserve": [
+        "root cause",
+        "applied fix ref",
+        "verification result",
+        "next_step"
+      ],
+      "must_drop_or_reduce": [
+        "superseded hypotheses",
+        "large repetitive traces"
+      ]
+    },
+    {
+      "id": "exact-action-in-flight",
+      "trigger": "context_pressure",
+      "preconditions": [
+        "external mutation requested but provider result not yet verified"
+      ],
+      "expected": "COMPACT_BLOCKED",
+      "reason": "must not lose exact action/result binding"
+    },
+    {
+      "id": "open-human-gate",
+      "trigger": "context_pressure",
+      "preconditions": [
+        "checkpoint blocked",
+        "gate persisted",
+        "no action in flight"
+      ],
+      "expected": "COMPACT_ALLOWED",
+      "must_preserve": [
+        "gate.kind",
+        "gate.waiting_for",
+        "gate.reason",
+        "next_step",
+        "authorization_refs"
+      ]
+    },
+    {
+      "id": "large-tool-dump",
+      "trigger": "tool_output_inflation",
+      "preconditions": [
+        "resume-relevant facts extracted",
+        "raw output cached or source re-readable"
+      ],
+      "expected": "COMPACT_ALLOWED",
+      "must_preserve": [
+        "latest_observation",
+        "evidence_refs",
+        "next_step"
+      ],
+      "must_drop_or_reduce": [
+        "raw repetitive payload"
+      ]
+    },
+    {
+      "id": "unknown-runtime-health",
+      "trigger": "context_pressure",
+      "preconditions": [
+        "runtime health receipt stale or absent"
+      ],
+      "expected": "COMPACT_ALLOWED_WITH_UNKNOWN_PRESERVED",
+      "must_preserve": [
+        "UNPROVEN or unknown state"
+      ],
+      "forbidden": [
+        "invent PASS",
+        "convert missing receipt to healthy"
+      ]
+    },
+    {
+      "id": "missing-resume-id",
+      "trigger": "phase_boundary",
+      "preconditions": [
+        "next step requires provider/file ID present only in recent chat"
+      ],
+      "expected": "COMPACT_BLOCKED",
+      "reason": "persist stable ID or retain exact recent tail before compaction"
+    },
+    {
+      "id": "post-compact-authority-drift",
+      "trigger": "verification",
+      "preconditions": [
+        "compacted result implies approval not present in sources"
+      ],
+      "expected": "COMPACT_REJECTED_RECOVER",
+      "reason": "authority neutrality failed"
+    },
+    {
+      "id": "cross-harness-resume",
+      "trigger": "harness_change",
+      "preconditions": [
+        "task checkpoint and HANDOFF resolve",
+        "named artifacts exist"
+      ],
+      "expected": "RESUME_ALLOWED_AFTER_VERIFY",
+      "must_preserve": [
+        "canonical refs",
+        "next_step",
+        "blockers",
+        "verification refs"
+      ]
+    },
+    {
+      "id": "sensitive-transcript-material",
+      "trigger": "context_pressure",
+      "preconditions": [
+        "recent tail contains secret or customer-sensitive raw value"
+      ],
+      "expected": "COMPACT_ALLOWED_ONLY_WITH_REDACTION_OR_REFERENCE",
+      "forbidden": [
+        "promote secret to durable summary",
+        "copy sensitive raw transcript into HANDOFF"
+      ]
+    }
+  ],
+  "global_pass_conditions": [
+    "zero authority widening",
+    "zero invented state",
+    "all resume-critical exact paths/IDs preserved",
+    "blocked remains blocked unless canonical evidence changed",
+    "provider compaction failure cannot corrupt canonical checkpoint",
+    "disabling integration restores current behavior without migration"
+  ]
+}
