@@ -670,3 +670,11 @@ This closure does not delete `packages/vfprod/FLEET.json` and does not authorize
 The six retained references are still compatibility-only: Core/contract rollback metadata, the schema constraint for that metadata, the dedicated parity implementation, the parity sensor and the two status-sensor registry bindings. A role change in any of them fails closed through the semantic classifier.
 
 This closure does not delete `TOOL-STATUS.json` and does not remove rollback metadata. `rollback_window_closed=true` and `retirement_ready_for_deletion_gate=true`; `delete_authorized=false` and `retirement_authorized=false` remain enforced until a separate isolated tool-status deletion gate revalidates current main, classification, parity, closure evidence and policy authority.
+
+## Reform v2 Stage 8D - ChatGPT rollback closure
+
+`reports/stage8d-chatgpt-rollback-closure.json` closes the final Stage 8D rollback observation window, `chatgpt_core_bundle`, after the PR #538 semantic correction. Closure requires the retained Core bundle and canonical instance distribution to remain exactly 33/33 files byte-equal, the legacy tree and rollback `.gitattributes` to remain unchanged, brand provenance and all 18 sensor bindings to remain canonical, all six reviewed candidate references to keep their content-validated safe roles, all five semantic preflights to remain clear, and external-effect authority to remain unchanged.
+
+The observation window is bound to six successful exact-main-head `VelvetOS Core Sensors` push runs from `b722f622` through `725d2e92`. Closure is evidence-driven rather than elapsed-time-driven.
+
+This closure does not delete the Core bundle and does not remove rollback `.gitattributes`. After this receipt lands, all five Stage 8D compatibility surfaces have explicit rollback-window closure evidence and are individually eligible to enter their separate deletion gates. `delete_authorized=false` and `retirement_authorized=false` remain enforced; deletion must still happen one surface at a time after revalidating current main, semantic state, the surface-specific closure receipt, parity/immutability requirements and external-effect authority.
