@@ -722,3 +722,11 @@ The retired root desk remains recoverable as Git blob `30ddd380f1d556dd1b444c3ca
 The gate accepts the already-missing `sample_profile` and `root_desk` only through their authoritative retirement receipts. Current semantic audit remains 5/5 clear with exactly those two surfaces retired. The retained fleet remains exactly byte/content equal to `instances/velvet-factory/instance/fleet.json`; all four live fleet readers and all seven active-documentation bindings remain canonical, and the fleet rollback-closure evidence remains valid.
 
 The retained fleet is restore-anchored as Git blob `d76126ce8ac08b5faf86b5069df18886118b8f1a`, SHA-256 `baffa4db8f61d33339f89161155e620d0914a802fe230b241a566bdadb085f3c`, 1364 bytes, sourced from `12e8ea4c`. This gate sets `delete_authorized=true` only for `fleet`; `deletion_performed=false` and `retirement_authorized=false`. `tool_status` and `chatgpt_core_bundle` remain deletion-unauthorized, and external-effect authority is unchanged.
+
+## Reform v2 Stage 8D - tool_status deletion gate
+
+`reports/stage8d-tool-status-deletion-gate.json` is the evidence-only deletion gate for `packages/velvetos/TOOL-STATUS.json`. It is prepared against exact main `3f7bd148` after the isolated `fleet` retirement merged and exact-main `VelvetOS Core Sensors` run `37301696406` succeeded.
+
+The gate accepts the already-missing `sample_profile`, `root_desk` and `fleet` surfaces only through their authoritative retirement receipts. Current semantic audit remains 5/5 clear with exactly those three surfaces retired. Active tool-status authority remains `instance:surface:toolStatus`; the canonical generic contract plus Velvet Factory instance state still composes exactly to the retained compatibility composite, and all six remaining machine/config references remain content-validated rollback/parity metadata.
+
+The retained composite is restore-anchored as Git blob `e5bb196c5bfd0a0bd5b6fe95df1549de9b1d2372`, SHA-256 `0b1f082887c9e4d5367574b746bee36f62f4aced0f8cf631a08551e553030add`, 6753 bytes, sourced from `3f7bd148`. This gate sets `delete_authorized=true` only for `tool_status`; `deletion_performed=false` and `retirement_authorized=false`. `chatgpt_core_bundle` remains deletion-unauthorized, and external-effect authority is unchanged.
