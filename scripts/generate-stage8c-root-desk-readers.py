@@ -7,6 +7,7 @@ from typing import Any
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/"packages/velvetos/policy/reports/stage8c-root-desk-readers.json"
+REPORT_REL=OUT.relative_to(ROOT).as_posix()
 POLICY=ROOT/"packages/velvetos/policy/policy-registry.json"
 ROOT_DESK=ROOT/".cursor/vf-desk.json"
 CANON=ROOT/"instances/velvet-factory/.cursor/vf-desk.json"
@@ -35,6 +36,18 @@ def git_json(commit:str,rel:str)->dict[str,Any]:
     if not isinstance(obj,dict): raise SystemExit(f"{rel}@{commit} must be object")
     return obj
 
+def git_text(commit:str,rel:str)->str:
+    return subprocess.check_output(["git","show",f"{commit}:{rel}"],cwd=ROOT).decode("utf-8-sig")
+
+def git_exists(commit:str,rel:str)->bool:
+    return subprocess.run(["git","cat-file","-e",f"{commit}:{rel}"],cwd=ROOT,capture_output=True).returncode==0
+
+def source_commit()->str:
+    p=subprocess.run(["git","log","-1","--format=%H","--",REPORT_REL],cwd=ROOT,text=True,capture_output=True,encoding="utf-8",errors="replace")
+    commits=[x.strip() for x in p.stdout.splitlines() if x.strip()]
+    require(bool(commits),"cannot resolve Stage 8C root-desk receipt source commit")
+    return commits[-1]
+
 def main()->int:
     ap=argparse.ArgumentParser()
     ap.add_argument("--prepared-against",required=True)
@@ -42,7 +55,8 @@ def main()->int:
     ap.add_argument("--output",type=Path,default=OUT)
     a=ap.parse_args()
     require(re.fullmatch(r"[0-9a-f]{40}",a.prepared_against) is not None,"bad sha")
-    root=load(ROOT_DESK); canon=load(CANON)
+    src=source_commit()
+    root=git_json(src,".cursor/vf-desk.json"); canon=git_json(src,"instances/velvet-factory/.cursor/vf-desk.json")
     base_root=git_json(a.prepared_against,".cursor/vf-desk.json")
     require(sha(root)==sha(base_root),"root desk changed during migration")
 
@@ -56,7 +70,7 @@ def main()->int:
 
     reader_scan={}
     for rel in DIRECT_READERS:
-        text=(ROOT/rel).read_text(encoding="utf-8")
+        text=git_text(src,rel)
         reader_scan[rel]={
             "root_desk_literal_present": bool(
                 re.search(r"(?<!instances/velvet-factory/)\.cursor/vf-desk\.json", text)
@@ -69,17 +83,17 @@ def main()->int:
     require(reader_scan["scripts/check-vfmedia.py"]["instance_resolver_present"],"vfmedia not resolver-bound")
     require(reader_scan["scripts/vf_send_preflight.py"]["instance_resolver_present"],"send preflight not resolver-bound")
 
-    offering=(ROOT/"scripts/check-vf-offering.py").read_text(encoding="utf-8")
+    offering=git_text(src,"scripts/check-vf-offering.py")
     require('".cursor/vf-desk.json"' not in offering,"offering still treats root desk as active authority")
-    media=(ROOT/"scripts/check-vfmedia.py").read_text(encoding="utf-8")
+    media=git_text(src,"scripts/check-vfmedia.py")
     require("instances/velvet-factory/.cursor/vf-desk.json" in media,"vfmedia canonical desk reference missing")
 
-    policy_now=sha(load(POLICY))
+    policy_now=sha(git_json(src,"packages/velvetos/policy/policy-registry.json"))
     policy_base=sha(git_json(a.prepared_against,"packages/velvetos/policy/policy-registry.json"))
     require(policy_now==policy_base,"policy registry changed")
 
     criteria={
-      "root_desk_is_unchanged_and_retained_for_rollback": sha(root)==sha(base_root) and ROOT_DESK.is_file(),
+      "root_desk_is_unchanged_and_retained_for_rollback": sha(root)==sha(base_root) and git_exists(src,".cursor/vf-desk.json"),
       "canonical_instance_desk_has_exact_required_tool_subtree_parity": all(parity[k] for k in TOOLS),
       "canonical_instance_desk_has_exact_ops_seat_parity": parity["opsSeat"],
       "vfmedia_reads_tool_desk_through_instance_resolver": reader_scan["scripts/check-vfmedia.py"]["instance_resolver_present"],
@@ -87,7 +101,7 @@ def main()->int:
       "offering_guard_no_longer_treats_root_desk_as_active_authority": '".cursor/vf-desk.json"' not in offering,
       "all_direct_readers_are_free_of_root_desk_literal": all(not row["root_desk_literal_present"] for row in reader_scan.values()),
       "external_effect_policy_registry_is_unchanged": policy_now==policy_base,
-      "legacy_root_desk_delete_is_not_authorized": ROOT_DESK.is_file(),
+      "legacy_root_desk_delete_is_not_authorized": git_exists(src,".cursor/vf-desk.json"),
     }
     report={
       "schema":"velvetos.stage8c-root-desk-readers.v1",
@@ -98,7 +112,7 @@ def main()->int:
       "purpose":"Migrate direct machine readers from root reference desk to canonical instance toolDesk while retaining root desk for rollback.",
       "root_desk":{
         "path":".cursor/vf-desk.json",
-        "retained":ROOT_DESK.is_file(),
+        "retained":git_exists(src,".cursor/vf-desk.json"),
         "unchanged_from_prepared_against":sha(root)==sha(base_root),
         "delete_authorized":False,
         "rollback_window_open":True,

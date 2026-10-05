@@ -7,6 +7,7 @@ from typing import Any
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/"packages/velvetos/policy/reports/stage8c-desk-catalog-bindings.json"
+REPORT_REL=OUT.relative_to(ROOT).as_posix()
 POLICY=ROOT/"packages/velvetos/policy/policy-registry.json"
 ROOT_DESK=ROOT/".cursor/vf-desk.json"
 CANON="instances/velvet-factory/.cursor/vf-desk.json"
@@ -49,6 +50,15 @@ def git_json(commit:str,rel:str)->dict[str,Any]:
     x=json.loads(raw.decode("utf-8-sig"))
     if not isinstance(x,dict): raise SystemExit(f"{rel}@{commit} must be object")
     return x
+def git_text(commit:str,rel:str)->str:
+    return subprocess.check_output(["git","show",f"{commit}:{rel}"],cwd=ROOT).decode("utf-8-sig")
+def git_exists(commit:str,rel:str)->bool:
+    return subprocess.run(["git","cat-file","-e",f"{commit}:{rel}"],cwd=ROOT,capture_output=True).returncode==0
+def source_commit()->str:
+    p=subprocess.run(["git","log","-1","--format=%H","--",REPORT_REL],cwd=ROOT,text=True,capture_output=True,encoding="utf-8",errors="replace")
+    commits=[x.strip() for x in p.stdout.splitlines() if x.strip()]
+    require(bool(commits),"cannot resolve Stage 8C desk-catalog receipt source commit")
+    return commits[-1]
 def main()->int:
     ap=argparse.ArgumentParser()
     ap.add_argument("--prepared-against",required=True)
@@ -56,7 +66,8 @@ def main()->int:
     ap.add_argument("--output",type=Path,default=OUT)
     a=ap.parse_args()
     require(re.fullmatch(r"[0-9a-f]{40}",a.prepared_against) is not None,"bad sha")
-    root=load(ROOT_DESK)
+    src=source_commit()
+    root=git_json(src,".cursor/vf-desk.json")
     base_root=git_json(a.prepared_against,".cursor/vf-desk.json")
     require(sha(root)==sha(base_root),"root desk changed")
 
@@ -64,13 +75,13 @@ def main()->int:
     root_only={}
     pattern=re.compile(r"(?<!instances/velvet-factory/)\.cursor/vf-desk\.json")
     for rel in TARGETS:
-        text=(ROOT/rel).read_text(encoding="utf-8")
+        text=git_text(src,rel)
         counts[rel]=text.count(CANON)
         root_only[rel]=len(pattern.findall(text))
     require(counts==EXPECTED_COUNTS,f"canonical binding counts drift: {counts}")
     require(all(v==0 for v in root_only.values()),f"root-only bindings remain: {root_only}")
 
-    policy_now=sha(load(POLICY))
+    policy_now=sha(git_json(src,"packages/velvetos/policy/policy-registry.json"))
     policy_base=sha(git_json(a.prepared_against,"packages/velvetos/policy/policy-registry.json"))
     require(policy_now==policy_base,"policy changed")
     criteria={
@@ -79,9 +90,9 @@ def main()->int:
       "vfmem_binding_count_is_exact": counts["packages/vfmem/catalog.json"]==3,
       "vfgraft_binding_count_is_exact": sum(counts[k] for k in counts if k.startswith("packages/vfgraft/"))==12,
       "vfharness_binding_count_is_exact": sum(counts[k] for k in counts if k.startswith("packages/vfharness/"))==3,
-      "root_desk_remains_unchanged_for_rollback": sha(root)==sha(base_root) and ROOT_DESK.is_file(),
+      "root_desk_remains_unchanged_for_rollback": sha(root)==sha(base_root) and git_exists(src,".cursor/vf-desk.json"),
       "external_effect_policy_registry_is_unchanged": policy_now==policy_base,
-      "legacy_root_desk_delete_is_not_authorized": ROOT_DESK.is_file(),
+      "legacy_root_desk_delete_is_not_authorized": git_exists(src,".cursor/vf-desk.json"),
     }
     report={
       "schema":"velvetos.stage8c-desk-catalog-bindings.v1",
@@ -93,7 +104,7 @@ def main()->int:
       "canonical_path":CANON,
       "targets":{rel:{"canonical_binding_count":counts[rel],"root_only_binding_count":root_only[rel]} for rel in TARGETS},
       "total_canonical_bindings":sum(counts.values()),
-      "root_desk":{"retained":ROOT_DESK.is_file(),"unchanged_from_prepared_against":sha(root)==sha(base_root),"delete_authorized":False},
+      "root_desk":{"retained":git_exists(src,".cursor/vf-desk.json"),"unchanged_from_prepared_against":sha(root)==sha(base_root),"delete_authorized":False},
       "authority_baseline":{"unchanged":policy_now==policy_base,"policy_registry_canonical_sha256":policy_now,"prepared_against_policy_registry_canonical_sha256":policy_base},
       "acceptance_criteria":criteria,
       "repository_acceptance":"PASS" if all(criteria.values()) else "FAIL",

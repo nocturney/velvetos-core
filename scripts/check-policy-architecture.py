@@ -90,6 +90,8 @@ STAGE8D_ROOT_DESK_ROLLBACK_CLOSURE = REPORTS / "stage8d-root-desk-rollback-closu
 STAGE8D_ROOT_DESK_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-root-desk-rollback-closure.py"
 STAGE8D_ROOT_DESK_DELETION_GATE = REPORTS / "stage8d-root-desk-deletion-gate.json"
 STAGE8D_ROOT_DESK_DELETION_GATE_GENERATOR = ROOT / "scripts" / "generate-stage8d-root-desk-deletion-gate.py"
+STAGE8D_ROOT_DESK_DELETION = REPORTS / "stage8d-root-desk-deletion.json"
+STAGE8D_ROOT_DESK_DELETION_GENERATOR = ROOT / "scripts" / "generate-stage8d-root-desk-deletion.py"
 STAGE8D_FLEET_RUNTIME_CORRECTION = REPORTS / "stage8d-fleet-runtime-consumer-correction.json"
 STAGE8D_FLEET_RUNTIME_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-fleet-runtime-consumer-correction.py"
 STAGE8D_FLEET_ROLLBACK_CLOSURE = REPORTS / "stage8d-fleet-rollback-closure.json"
@@ -148,6 +150,7 @@ EXPECTED_REPORTS = {
     "stage8d-root-desk-runtime-consumer-correction.json",
     "stage8d-root-desk-rollback-closure.json",
     "stage8d-root-desk-deletion-gate.json",
+    "stage8d-root-desk-deletion.json",
     "stage8d-fleet-runtime-consumer-correction.json",
     "stage8d-fleet-rollback-closure.json",
     "stage8d-tool-status-semantic-correction.json",
@@ -4047,6 +4050,175 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated8dr.read_bytes() == STAGE8D_ROOT_DESK_DELETION_GATE.read_bytes(),
                         "Stage 8D root-desk deletion gate receipt is not reproducible",
+                        problems,
+                    )
+
+
+    if STAGE8D_ROOT_DESK_DELETION.is_file():
+        delete8dr = load(STAGE8D_ROOT_DESK_DELETION)
+        require(
+            delete8dr.get("schema") == "velvetos.stage8d-root-desk-deletion.v1"
+            and delete8dr.get("stage") == "8D_ROOT_DESK_DELETION"
+            and delete8dr.get("behavior_change") is False
+            and delete8dr.get("surface_id") == "root_desk"
+            and delete8dr.get("prepared_against_main_sha") == "98ac4ce14e20564f5161af5ad7bc9bc96a774e2a"
+            and delete8dr.get("repository_assessment") == "PASS",
+            "Stage 8D root-desk deletion metadata drift",
+            problems,
+        )
+        gate_delete8dr = delete8dr.get("gate") or {}
+        require(
+            gate_delete8dr.get("receipt")
+            == "packages/velvetos/policy/reports/stage8d-root-desk-deletion-gate.json"
+            and gate_delete8dr.get("gate_head_sha") == "fe0944086b7d158048715eef273b530a68122fee"
+            and gate_delete8dr.get("gate_merge_sha") == "98ac4ce14e20564f5161af5ad7bc9bc96a774e2a"
+            and gate_delete8dr.get("gate_pr") == 549
+            and gate_delete8dr.get("repository_assessment") == "PASS"
+            and gate_delete8dr.get("delete_authorized") is True
+            and gate_delete8dr.get("authorized_paths") == [".cursor/vf-desk.json"],
+            "Stage 8D root-desk deletion gate binding drift",
+            problems,
+        )
+        ci_delete8dr = delete8dr.get("post_gate_main_ci") or {}
+        require(
+            ci_delete8dr.get("workflow") == "VelvetOS Core Sensors"
+            and ci_delete8dr.get("run_id") == 37286661000
+            and ci_delete8dr.get("sha") == "98ac4ce14e20564f5161af5ad7bc9bc96a774e2a"
+            and ci_delete8dr.get("event") == "push"
+            and ci_delete8dr.get("conclusion") == "success",
+            "Stage 8D root-desk deletion post-gate CI drift",
+            problems,
+        )
+        prior_delete8dr = delete8dr.get("prior_retirement") or {}
+        require(
+            prior_delete8dr.get("surface_id") == "sample_profile"
+            and prior_delete8dr.get("receipt")
+            == "packages/velvetos/policy/reports/stage8d-sample-profile-deletion.json"
+            and prior_delete8dr.get("repository_assessment") == "PASS"
+            and prior_delete8dr.get("deletion_performed") is True
+            and prior_delete8dr.get("retirement_authorized") is True,
+            "Stage 8D root-desk deletion prior retirement drift",
+            problems,
+        )
+        deletion8dr = delete8dr.get("deletion") or {}
+        require(
+            deletion8dr.get("legacy_path") == ".cursor/vf-desk.json"
+            and deletion8dr.get("canonical_path") == "instances/velvet-factory/.cursor/vf-desk.json"
+            and deletion8dr.get("legacy_present") is False
+            and deletion8dr.get("deleted_paths") == [".cursor/vf-desk.json"]
+            and deletion8dr.get("delete_exactly") == [".cursor/vf-desk.json"]
+            and deletion8dr.get("deletion_performed") is True
+            and deletion8dr.get("other_surfaces_deleted") is False,
+            "Stage 8D root-desk deletion scope drift",
+            problems,
+        )
+        cross_delete8dr = delete8dr.get("cross_surface_isolation") or {}
+        require(
+            set(cross_delete8dr) == {"fleet", "tool_status", "chatgpt_core_bundle"}
+            and all(
+                row.get("present") is True
+                and row.get("unchanged_from_prepared_against") is True
+                and row.get("deletion_authorized") is False
+                for row in cross_delete8dr.values()
+            ),
+            "Stage 8D root-desk deletion cross-surface isolation drift",
+            problems,
+        )
+        evidence_delete8dr = delete8dr.get("current_evidence") or {}
+        readers_delete8dr = evidence_delete8dr.get("runtime_readers") or {}
+        require(
+            evidence_delete8dr.get("runtime_authority") is False
+            and evidence_delete8dr.get("runtime_reader_count") == 10
+            and len(readers_delete8dr) == 10
+            and all(
+                row.get("uses_instance_surface_resolver") is True
+                and row.get("direct_root_legacy_read") is False
+                for row in readers_delete8dr.values()
+            )
+            and evidence_delete8dr.get("legacy_tool_count") == 18
+            and evidence_delete8dr.get("canonical_tool_count") == 18
+            and evidence_delete8dr.get("legacy_seat_count") == 6
+            and evidence_delete8dr.get("canonical_seat_count") == 6
+            and evidence_delete8dr.get("legacy_specialist_count") == 38
+            and evidence_delete8dr.get("canonical_specialist_count") == 38
+            and evidence_delete8dr.get("tools_equal_by_id") is True
+            and evidence_delete8dr.get("seats_equal_by_id") is True
+            and evidence_delete8dr.get("specialists_equal_by_slug") is True
+            and evidence_delete8dr.get("skills_superset") is True
+            and evidence_delete8dr.get("nonfleet_notes_preserved") is True
+            and evidence_delete8dr.get("fleet_note_semantically_superseded") is True
+            and evidence_delete8dr.get("external_effect_authority_unchanged") is True,
+            "Stage 8D root-desk deletion current evidence drift",
+            problems,
+        )
+        restore_delete8dr = delete8dr.get("restore_anchor") or {}
+        require(
+            restore_delete8dr.get("source_commit_sha") == "dfd699dcee63d5175f03ae3312fbb89992ea78ca"
+            and restore_delete8dr.get("legacy_path") == ".cursor/vf-desk.json"
+            and restore_delete8dr.get("git_blob_sha1") == "30ddd380f1d556dd1b444c3ca6b153f6d6188e1f"
+            and restore_delete8dr.get("sha256") == "702695ffa72b8f0e56738cc533cc95ee2d6a6cd76c66cf58f2a84d3658a1116b"
+            and restore_delete8dr.get("size_bytes") == 34186
+            and restore_delete8dr.get("verified_after_deletion") is True,
+            "Stage 8D root-desk deletion restore anchor drift",
+            problems,
+        )
+        replay_delete8dr = delete8dr.get("historical_replay") or {}
+        require(
+            set(replay_delete8dr) == {"stage8c_root_desk_readers", "stage8c_desk_catalog_bindings"}
+            and replay_delete8dr["stage8c_root_desk_readers"].get("commit")
+            == "4b074e9c203f678d6b2216ff52e5a46782136a3c"
+            and replay_delete8dr["stage8c_desk_catalog_bindings"].get("commit")
+            == "da5388f2b8c2739461fd247f441d10ab7b61987e"
+            and all(row.get("receipt_matches_creation_commit") is True for row in replay_delete8dr.values()),
+            "Stage 8D root-desk deletion historical replay anchors drift",
+            problems,
+        )
+        authority_delete8dr = delete8dr.get("authority") or {}
+        require(
+            authority_delete8dr.get("external_effect_authority_changed") is False
+            and authority_delete8dr.get("delete_authorized_surface") == "root_desk"
+            and authority_delete8dr.get("retirement_authorized") is True
+            and delete8dr.get("delete_authorized") is True
+            and delete8dr.get("deletion_performed") is True
+            and delete8dr.get("retirement_authorized") is True,
+            "Stage 8D root-desk deletion authority drift",
+            problems,
+        )
+        criteria_delete8dr = delete8dr.get("acceptance_criteria") or {}
+        require(
+            len(criteria_delete8dr) == 14
+            and all(value is True for value in criteria_delete8dr.values()),
+            "Stage 8D root-desk deletion criteria drift or fail",
+            problems,
+        )
+        if STAGE8D_ROOT_DESK_DELETION_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated_delete8dr = Path(td) / "stage8d-root-desk-deletion.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_ROOT_DESK_DELETION_GENERATOR),
+                        "--prepared-against", delete8dr["prepared_against_main_sha"],
+                        "--captured-at", delete8dr["captured_at"],
+                        "--output", str(regenerated_delete8dr),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=180,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D root-desk deletion regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated_delete8dr.is_file():
+                    require(
+                        regenerated_delete8dr.read_bytes() == STAGE8D_ROOT_DESK_DELETION.read_bytes(),
+                        "Stage 8D root-desk deletion receipt is not reproducible",
                         problems,
                     )
 
