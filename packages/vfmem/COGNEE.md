@@ -19,7 +19,7 @@ Windows reference host:
 if (-not $env:VELVETOS_RUNTIME_ROOT) { throw 'VELVETOS_RUNTIME_ROOT is not set; see packages/velvetos/WINDOWS-PATH-CONTRACT.md' }
 $CogneeHome = Join-Path $env:VELVETOS_RUNTIME_ROOT 'Cognee'
 py -3 -m venv (Join-Path $CogneeHome 'cognee-venv')
-& (Join-Path $CogneeHome 'cognee-venv\Scripts\python.exe') -m pip install "cognee[gliner]==1.6.1"
+& (Join-Path $CogneeHome 'cognee-venv\Scripts\python.exe') -m pip install "cognee[gliner]==1.6.2"
 $env:VFMEM_COGNEE_PYTHON = Join-Path $CogneeHome 'cognee-venv\Scripts\python.exe'
 ```
 

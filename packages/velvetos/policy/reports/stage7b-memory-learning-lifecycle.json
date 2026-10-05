@@ -29,7 +29,7 @@
     "decision_path": "packages/vfharness/state/memory-rationalization-phase7-2026-09-27.json",
     "decision_sha256": "35141078266f1974d74524b7398adcf0a27aa98f632089dc7dfe60c0b142063f",
     "cognee_config_path": "packages/vfmem/cognee.json",
-    "cognee_config_sha256": "e83ed369c7aa19c33199b37475080ca9834c0bf24f7bf30a0e564b68498244f8",
+    "cognee_config_sha256": "43ae2248ddaf684a04f70ecb51b6fa35bb7e5573401b65677b6b85975fc436d7",
     "new_always_on_memory_systems": 0,
     "incremental_recurring_cost_ils": 0
   },
