@@ -1,0 +1,184 @@
+{
+  "schema": "velvetos.stage8d-root-desk-deletion-gate.v1",
+  "stage": "8D_ROOT_DESK_DELETION_GATE",
+  "behavior_change": false,
+  "prepared_against_main_sha": "dfd699dcee63d5175f03ae3312fbb89992ea78ca",
+  "captured_at": "2026-10-05T11:43:35.5359927+03:00",
+  "surface_id": "root_desk",
+  "target": {
+    "legacy_path": ".cursor/vf-desk.json",
+    "canonical_path": "instances/velvet-factory/.cursor/vf-desk.json",
+    "delete_exactly": [
+      ".cursor/vf-desk.json"
+    ],
+    "delete_other_surfaces": false
+  },
+  "purpose": "Authorize one later isolated deletion of the root_desk compatibility file after revalidating current semantic state, runtime-reader cutover, operational parity, rollback closure, prior sample retirement, restore evidence and policy authority. This gate performs no deletion.",
+  "prerequisite_closure": {
+    "receipt": "packages/velvetos/policy/reports/stage8d-root-desk-rollback-closure.json",
+    "schema": "velvetos.stage8d-root-desk-rollback-closure.v1",
+    "rollback_window_closed": true,
+    "retirement_ready_for_deletion_gate": true
+  },
+  "prior_retirement": {
+    "surface_id": "sample_profile",
+    "receipt": "packages/velvetos/policy/reports/stage8d-sample-profile-deletion.json",
+    "repository_assessment": "PASS",
+    "deletion_performed": true,
+    "retirement_authorized": true
+  },
+  "remaining_surface_state": {
+    "fleet": {
+      "repository_assessment": "PASS",
+      "rollback_window_closed": true,
+      "retirement_ready_for_deletion_gate": true,
+      "delete_authorized": false,
+      "retirement_authorized": false
+    },
+    "tool_status": {
+      "repository_assessment": "PASS",
+      "rollback_window_closed": true,
+      "retirement_ready_for_deletion_gate": true,
+      "delete_authorized": false,
+      "retirement_authorized": false
+    },
+    "chatgpt_core_bundle": {
+      "repository_assessment": "PASS",
+      "rollback_window_closed": true,
+      "retirement_ready_for_deletion_gate": true,
+      "delete_authorized": false,
+      "retirement_authorized": false
+    }
+  },
+  "current_evidence": {
+    "legacy_present": true,
+    "runtime_authority": false,
+    "runtime_reader_count": 10,
+    "runtime_readers": {
+      "scripts/check-agent-surface-security.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/check-office-watchdog.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/check-public-cta.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/check-velvetos.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/check-vf-desk.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/check-vfmcp.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/check-vfresearch.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/vf_control_plane.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/vfmem.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      },
+      "scripts/vfops_loop.py": {
+        "uses_instance_surface_resolver": true,
+        "direct_root_legacy_read": false
+      }
+    },
+    "semantic_preflight_clear": true,
+    "all_stage8d_semantic_preflights_clear": true,
+    "retired_surfaces": [
+      "sample_profile"
+    ],
+    "legacy_byte_unchanged_since_closure": true,
+    "legacy_tool_count": 18,
+    "canonical_tool_count": 18,
+    "legacy_seat_count": 6,
+    "canonical_seat_count": 6,
+    "legacy_specialist_count": 38,
+    "canonical_specialist_count": 38,
+    "tools_equal_by_id": true,
+    "seats_equal_by_id": true,
+    "specialists_equal_by_slug": true,
+    "skills_superset": true,
+    "nonfleet_notes_preserved": true,
+    "fleet_note_semantically_superseded": true,
+    "external_effect_authority_unchanged": true
+  },
+  "restore_anchor": {
+    "source_commit_sha": "dfd699dcee63d5175f03ae3312fbb89992ea78ca",
+    "legacy_path": ".cursor/vf-desk.json",
+    "git_blob_sha1": "30ddd380f1d556dd1b444c3ca6b153f6d6188e1f",
+    "sha256": "702695ffa72b8f0e56738cc533cc95ee2d6a6cd76c66cf58f2a84d3658a1116b",
+    "size_bytes": 34186,
+    "restore_command": "git show dfd699dcee63d5175f03ae3312fbb89992ea78ca:.cursor/vf-desk.json > .cursor/vf-desk.json"
+  },
+  "latest_main_ci": {
+    "workflow": "VelvetOS Core Sensors",
+    "run_id": 37284249359,
+    "sha": "dfd699dcee63d5175f03ae3312fbb89992ea78ca",
+    "event": "push",
+    "conclusion": "success",
+    "created_at": "2026-10-05T08:32:18Z"
+  },
+  "authority": {
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "root_desk_closure_policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false,
+    "delete_authorized": true,
+    "delete_authorized_surface": "root_desk",
+    "delete_authorized_paths": [
+      ".cursor/vf-desk.json"
+    ],
+    "retirement_authorized": false
+  },
+  "acceptance_criteria": {
+    "root_desk_closure_is_pass_and_closed": true,
+    "root_desk_closure_is_ready_for_deletion_gate": true,
+    "root_desk_closure_did_not_pre_authorize_deletion": true,
+    "sample_profile_retirement_is_authoritatively_proven": true,
+    "remaining_three_surfaces_are_closed_gate_ready_and_deletion_unauthorized": true,
+    "current_root_desk_semantic_preflight_is_clear": true,
+    "current_global_semantic_preflight_is_5_of_5_clear": true,
+    "semantic_audit_recognizes_exactly_one_retired_surface": true,
+    "all_runtime_readers_remain_on_explicit_instance_tool_desk_surface": true,
+    "legacy_root_desk_is_unchanged_since_closure": true,
+    "canonical_tools_preserve_all_legacy_rows": true,
+    "canonical_seats_preserve_all_legacy_rows": true,
+    "canonical_specialists_preserve_all_legacy_rows": true,
+    "canonical_skills_are_legacy_superset": true,
+    "canonical_notes_preserve_or_authoritatively_supersede_legacy_notes": true,
+    "canonical_identity_and_fail_closed_gates_are_preserved": true,
+    "exact_legacy_blob_is_anchored_for_restore": true,
+    "latest_exact_main_core_sensor_run_is_success": true,
+    "external_effect_authority_is_unchanged": true,
+    "gate_authorizes_only_root_desk_target": true,
+    "deletion_is_not_performed_in_gate_change": true,
+    "retirement_completion_waits_for_separate_deletion_pr": true
+  },
+  "repository_assessment": "PASS",
+  "delete_authorized": true,
+  "deletion_performed": false,
+  "retirement_authorized": false,
+  "next_action": "Merge this evidence-only gate, verify post-merge main, then create a separate isolated root_desk deletion PR that removes exactly the authorized path and re-runs semantic, policy and full-suite checks.",
+  "constraints": [
+    "this gate does not delete files",
+    "authorization applies only to the exact root_desk target recorded above",
+    "sample_profile is already retired and is not modified by this gate",
+    "fleet, tool_status and chatgpt_core_bundle remain deletion-unauthorized by this receipt",
+    "actual deletion requires a separate isolated PR",
+    "restore anchor must remain available in Git history",
+    "external-effect authority must remain unchanged"
+  ]
+}
