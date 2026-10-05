@@ -1,0 +1,65 @@
+{
+  "schema": "velvetos.stage8d-tool-status-semantic-correction.v1",
+  "stage": "8D_TOOL_STATUS_SEMANTIC_CORRECTION",
+  "behavior_change": false,
+  "prepared_against_main_sha": "027700b3077bc900658313186e313772f539bd7d",
+  "source_commit_sha": "06d5be2d427299e061f9c4aca79daf2bc22ef73c",
+  "captured_at": "2026-10-05T06:54:10.1049919+03:00",
+  "surface_id": "tool_status",
+  "legacy_path": "packages/velvetos/TOOL-STATUS.json",
+  "canonical_contract_path": "packages/velvetos/tool-status-contract.json",
+  "canonical_state_path": "instances/velvet-factory/instance/tool-status.json",
+  "purpose": "Prove the remaining TOOL-STATUS semantic references are rollback/parity/test metadata after active consumers were already migrated to instance:surface:toolStatus.",
+  "classification": {
+    "content_validated_safe_references": {
+      "packages/velvetos/CORE.json": "rollback_contract_reference",
+      "packages/velvetos/policy/sensor-registry.json": "rollback_sensor_binding",
+      "packages/velvetos/schema/tool-status-contract.schema.json": "rollback_contract_schema_reference",
+      "packages/velvetos/tool-status-contract.json": "rollback_contract_reference",
+      "packages/velvetos/tool_status_resolver.py": "rollback_parity_implementation",
+      "scripts/check-velvetos.py": "rollback_parity_sensor"
+    },
+    "remaining_blockers": [],
+    "retirement_preflight_clear": true
+  },
+  "parity": {
+    "canonical_composed_sha256": "a9782c78b80670b28c5a77a4588b898fd117bc2eaadd6faeb1193d1a21b39e7d",
+    "legacy_sha256": "a9782c78b80670b28c5a77a4588b898fd117bc2eaadd6faeb1193d1a21b39e7d",
+    "equal": true
+  },
+  "rollback": {
+    "window_open": true,
+    "closure_evidence": null,
+    "retirement_ready_for_deletion_gate": false,
+    "delete_authorized": false
+  },
+  "authority": {
+    "active_authority": "instance:surface:toolStatus",
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false
+  },
+  "acceptance_criteria": {
+    "prior_tool_status_consumer_migration_is_pass": true,
+    "active_authority_legacy_references_are_zero": true,
+    "canonical_composition_remains_exactly_parity_equal": true,
+    "legacy_tool_status_is_byte_unchanged": true,
+    "six_remaining_machine_refs_are_content_validated_rollback_only": true,
+    "tool_status_semantic_preflight_has_zero_blockers": true,
+    "tool_status_active_authority_remains_instance_surface": true,
+    "rollback_window_remains_open": true,
+    "delete_authority_remains_false": true,
+    "external_effect_authority_is_unchanged": true
+  },
+  "repository_assessment": "PASS",
+  "retirement_authorized": false,
+  "delete_authorized": false,
+  "next_action": "Merge this semantic correction and collect fresh downstream main evidence before explicit tool-status rollback closure. Remove rollback/parity metadata only in a later deletion gate.",
+  "constraints": [
+    "legacy TOOL-STATUS remains present and byte-unchanged",
+    "rollback window remains open",
+    "no deletion in this change",
+    "content validation must fail closed if any reviewed reference changes role",
+    "external-effect authority remains unchanged"
+  ]
+}
