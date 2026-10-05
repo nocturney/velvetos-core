@@ -24,6 +24,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 
 **Reform v2 — CLOSED:** Stage 8D final acceptance is PASS. All five legacy compatibility surfaces (`sample_profile`, `root_desk`, `fleet`, `tool_status`, `chatgpt_core_bundle`) are authoritatively retired; the final semantic audit is 5/5 clear with zero blockers, all restore anchors and historical replay receipts remain Git-verifiable, exact-main `VelvetOS Core Sensors` is 116/116 green, and external-effect authority is unchanged. Canonical Velvet Factory instance surfaces remain explicit, fail-closed and authoritative; the ChatGPT distribution remains 33 files intact.
 
+**Office v2 — PHASE 0 GREEN:** the safety/continuity/governance foundation is isolated from the existing main worktree and passes the Phase 0 gate: production smoke PASS, project checkpoint→compact→verify→resume PASS with a fail-closed negative control, correlation/provenance/contract schemas and stateful restore admission are defined, and the current suite is 117/117 green with no new production writer. Automated Drive/Orders writes remain policy-blocked, printer/xTool live reads remain unverified with human fallback, and printer/xTool HQ commands remain prohibited. Phase 1 has not started.
+
 <!-- OPERATIONAL-SNAPSHOT:START -->
 <table>
 <tr>
@@ -34,7 +36,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 </tr>
 <tr>
 <td align="center"><strong>23</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>116</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>117</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>11</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>

@@ -3,15 +3,15 @@
   "stage": "2A",
   "behavior_change": false,
   "suite_runner": "scripts/check-all.py",
-  "registered_sensor_count": 116,
-  "live_sensor_count": 116,
+  "registered_sensor_count": 117,
+  "live_sensor_count": 117,
   "registry_matches_live": true,
   "mapping_state_counts": {
-    "mapped": 116
+    "mapped": 117
   },
   "fallback_scope_counts": {
     "ALWAYS_ON": 4,
-    "FULL_SUITE": 112
+    "FULL_SUITE": 113
   },
   "dependency_edge_count": 48,
   "sensors_with_dependencies": 27,

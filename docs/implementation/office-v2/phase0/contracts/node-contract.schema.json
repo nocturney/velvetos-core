@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/node-contract.v0",
+  "title": "Office v2 Node Contract v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "node_id", "os_build", "execution_surfaces", "cpu_ram", "gpu_vram",
+    "installed_applications", "capability_contract_versions", "local_runtimes",
+    "load", "health", "artifact_locality", "trust_security_level",
+    "maintenance_state", "compatibility_range", "observed_at"
+  ],
+  "properties": {
+    "node_id": {"type": "string", "minLength": 1},
+    "os_build": {
+      "type": "object",
+      "required": ["platform", "version", "build"],
+      "properties": {
+        "platform": {"enum": ["windows", "macos", "linux", "cloud", "external"]},
+        "version": {"type": "string", "minLength": 1},
+        "build": {"type": "string", "minLength": 1}
+      }
+    },
+    "execution_surfaces": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "cpu_ram": {
+      "type": "object",
+      "required": ["cpu", "ram_gb"],
+      "properties": {
+        "cpu": {"type": "string", "minLength": 1},
+        "ram_gb": {"type": "number", "minimum": 0}
+      }
+    },
+    "gpu_vram": {
+      "type": ["object", "null"],
+      "properties": {
+        "gpu": {"type": "string"},
+        "vram_gb": {"type": ["number", "null"], "minimum": 0},
+        "driver": {"type": ["string", "null"]}
+      }
+    },
+    "installed_applications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "version"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "version": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "capability_contract_versions": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "local_runtimes": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "load": {
+      "type": "object",
+      "required": ["state"],
+      "properties": {
+        "state": {"enum": ["IDLE", "NORMAL", "BUSY", "SATURATED", "UNKNOWN"]},
+        "observations": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "health": {"enum": ["PASS", "WARN", "FAIL", "UNKNOWN"]},
+    "artifact_locality": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "trust_security_level": {
+      "enum": ["TRUSTED_OWNER_NODE", "TRUSTED_SERVICE_RUNTIME", "BOUNDED_EXTERNAL_PROVIDER", "UNVERIFIED_NODE"]
+    },
+    "maintenance_state": {"enum": ["ACTIVE", "DRAINING", "MAINTENANCE", "OFFLINE", "UNKNOWN"]},
+    "compatibility_range": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "transport": {
+      "type": ["object", "null"],
+      "properties": {
+        "mode": {"type": "string"},
+        "authenticated": {"type": "boolean"},
+        "arbitrary_shell": {"type": "boolean"},
+        "endpoint_ref": {"type": ["string", "null"]}
+      }
+    },
+    "credential_class_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}}
+  }
+}
