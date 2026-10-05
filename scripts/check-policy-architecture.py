@@ -112,6 +112,8 @@ STAGE8D_CHATGPT_SEMANTIC_CORRECTION = REPORTS / "stage8d-chatgpt-semantic-correc
 STAGE8D_CHATGPT_SEMANTIC_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-chatgpt-semantic-correction.py"
 STAGE8D_CHATGPT_ROLLBACK_CLOSURE = REPORTS / "stage8d-chatgpt-rollback-closure.json"
 STAGE8D_CHATGPT_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-chatgpt-rollback-closure.py"
+STAGE8D_CHATGPT_DELETION_GATE = REPORTS / "stage8d-chatgpt-deletion-gate.json"
+STAGE8D_CHATGPT_DELETION_GATE_GENERATOR = ROOT / "scripts" / "generate-stage8d-chatgpt-deletion-gate.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -169,6 +171,7 @@ EXPECTED_REPORTS = {
     "stage8d-tool-status-deletion.json",
     "stage8d-chatgpt-semantic-correction.json",
     "stage8d-chatgpt-rollback-closure.json",
+    "stage8d-chatgpt-deletion-gate.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -5360,9 +5363,175 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     problems,
                 )
                 if proc.returncode == 0 and regenerated_close8dc.is_file():
+
                     require(
                         regenerated_close8dc.read_bytes() == STAGE8D_CHATGPT_ROLLBACK_CLOSURE.read_bytes(),
                         "Stage 8D ChatGPT rollback closure receipt is not reproducible",
+                        problems,
+                    )
+
+    if STAGE8D_CHATGPT_DELETION_GATE.is_file():
+        gate8dc = load(STAGE8D_CHATGPT_DELETION_GATE)
+        require(
+            gate8dc.get("schema") == "velvetos.stage8d-chatgpt-deletion-gate.v1"
+            and gate8dc.get("stage") == "8D_CHATGPT_DELETION_GATE"
+            and gate8dc.get("behavior_change") is False
+            and gate8dc.get("surface_id") == "chatgpt_core_bundle"
+            and gate8dc.get("prepared_against_main_sha") == "774d4e6164277057f91eb5681551735a1928404f"
+            and gate8dc.get("repository_assessment") == "PASS",
+            "Stage 8D ChatGPT deletion gate metadata drift",
+            problems,
+        )
+        target8dc = gate8dc.get("target") or {}
+        require(
+            target8dc.get("legacy_root") == "packages/velvetos/chatgpt-project"
+            and target8dc.get("canonical_root") == "instances/velvet-factory/distribution/chatgpt-project"
+            and target8dc.get("delete_legacy_root") is True
+            and target8dc.get("legacy_file_count") == 33
+            and target8dc.get("modify_gitattributes") is True
+            and len(target8dc.get("remove_only_legacy_gitattributes_lines") or []) == 24
+            and target8dc.get("canonical_gitattributes_rule_must_remain")
+            == "/instances/velvet-factory/distribution/chatgpt-project/** -whitespace"
+            and target8dc.get("delete_other_surfaces") is False,
+            "Stage 8D ChatGPT deletion gate target drift",
+            problems,
+        )
+        prereq8dc = gate8dc.get("prerequisite_closure") or {}
+        require(
+            prereq8dc.get("receipt")
+            == "packages/velvetos/policy/reports/stage8d-chatgpt-rollback-closure.json"
+            and prereq8dc.get("schema") == "velvetos.stage8d-chatgpt-rollback-closure.v1"
+            and prereq8dc.get("rollback_window_closed") is True
+            and prereq8dc.get("retirement_ready_for_deletion_gate") is True,
+            "Stage 8D ChatGPT deletion closure prerequisite drift",
+            problems,
+        )
+        prior8dc = gate8dc.get("prior_retirements") or {}
+        expected_prior8dc = {
+            "sample_profile": "packages/velvetos/policy/reports/stage8d-sample-profile-deletion.json",
+            "root_desk": "packages/velvetos/policy/reports/stage8d-root-desk-deletion.json",
+            "fleet": "packages/velvetos/policy/reports/stage8d-fleet-deletion.json",
+            "tool_status": "packages/velvetos/policy/reports/stage8d-tool-status-deletion.json",
+        }
+        require(
+            set(prior8dc) == set(expected_prior8dc)
+            and all(
+                (prior8dc.get(surface_id) or {}).get("receipt") == receipt
+                and (prior8dc.get(surface_id) or {}).get("repository_assessment") == "PASS"
+                and (prior8dc.get(surface_id) or {}).get("deletion_performed") is True
+                and (prior8dc.get(surface_id) or {}).get("retirement_authorized") is True
+                for surface_id, receipt in expected_prior8dc.items()
+            ),
+            "Stage 8D ChatGPT deletion prior-retirement drift",
+            problems,
+        )
+        evidence8dc = gate8dc.get("current_evidence") or {}
+        expected_safe8dc = {
+            ".gitattributes": "rollback_git_attributes",
+            "packages/velvetos/policy/sensor-registry.json": "canonical_sensor_binding",
+            "packages/vfbrand/brand-tokens.json": "canonical_asset_source",
+            "scripts/check-project-bundle.py": "canonical_surface_sensor",
+            "scripts/check-reel-route-sync.py": "canonical_surface_sensor",
+            "scripts/check-velvetos.py": "canonical_surface_sensor",
+        }
+        require(
+            evidence8dc.get("legacy_present") is True
+            and evidence8dc.get("runtime_authority") is False
+            and evidence8dc.get("active_authority") == "instance:surface:chatgptProject"
+            and evidence8dc.get("file_count") == 33
+            and evidence8dc.get("file_sets_equal") is True
+            and evidence8dc.get("byte_equal") is True
+            and evidence8dc.get("mismatches") == []
+            and evidence8dc.get("content_validated_safe_references") == expected_safe8dc
+            and evidence8dc.get("safe_reference_count") == 6
+            and evidence8dc.get("canonical_sensor_binding_count") == 18
+            and evidence8dc.get("brand_asset_source_canonical") is True
+            and evidence8dc.get("semantic_preflight_clear") is True
+            and evidence8dc.get("all_stage8d_semantic_preflights_clear") is True
+            and set(evidence8dc.get("retired_surfaces") or [])
+            == {"sample_profile", "root_desk", "fleet", "tool_status"}
+            and evidence8dc.get("legacy_tree_unchanged_since_closure") is True
+            and evidence8dc.get("rollback_git_attributes_unchanged_since_closure") is True
+            and evidence8dc.get("external_effect_authority_unchanged") is True,
+            "Stage 8D ChatGPT deletion current evidence drift",
+            problems,
+        )
+        restore8dc = gate8dc.get("restore_anchor") or {}
+        require(
+            restore8dc.get("source_commit_sha") == "774d4e6164277057f91eb5681551735a1928404f"
+            and restore8dc.get("legacy_root") == "packages/velvetos/chatgpt-project"
+            and restore8dc.get("git_tree_sha1") == "d7961fe63ff483b0085d9689b8b3c1b4d35a35f4"
+            and restore8dc.get("file_count") == 33
+            and restore8dc.get("manifest_sha256") == "9d99f8dc6f7f5dc0972cb66dcc3dbba38e5ba5e272d7a3aed4588acfb26193bb"
+            and restore8dc.get("legacy_gitattributes_line_count") == 24
+            and restore8dc.get("legacy_gitattributes_sha256") == "dd0fe2cd643d43a7eae46b016e4403856f6f74dc9a64b414e2a64ad9326a530f"
+            and restore8dc.get("restore_bundle_command")
+            == "git checkout 774d4e6164277057f91eb5681551735a1928404f -- packages/velvetos/chatgpt-project",
+            "Stage 8D ChatGPT deletion restore anchor drift",
+            problems,
+        )
+        ci8dc = gate8dc.get("latest_main_ci") or {}
+        require(
+            ci8dc.get("workflow") == "VelvetOS Core Sensors"
+            and ci8dc.get("run_id") == 37319349828
+            and ci8dc.get("run_attempt") == 1
+            and ci8dc.get("sha") == "774d4e6164277057f91eb5681551735a1928404f"
+            and ci8dc.get("event") == "push"
+            and ci8dc.get("conclusion") == "success",
+            "Stage 8D ChatGPT deletion latest-main CI drift",
+            problems,
+        )
+        authority8dc = gate8dc.get("authority") or {}
+        require(
+            authority8dc.get("active_authority") == "instance:surface:chatgptProject"
+            and authority8dc.get("policy_registry_sha256")
+            == authority8dc.get("chatgpt_closure_policy_registry_sha256")
+            and authority8dc.get("external_effect_authority_changed") is False
+            and authority8dc.get("delete_authorized") is True
+            and authority8dc.get("delete_authorized_surface") == "chatgpt_core_bundle"
+            and authority8dc.get("delete_authorized_root") == "packages/velvetos/chatgpt-project"
+            and authority8dc.get("gitattributes_cleanup_authorized") is True
+            and authority8dc.get("retirement_authorized") is False
+            and gate8dc.get("delete_authorized") is True
+            and gate8dc.get("deletion_performed") is False
+            and gate8dc.get("retirement_authorized") is False,
+            "Stage 8D ChatGPT deletion gate authority drift",
+            problems,
+        )
+        criteria8dc = gate8dc.get("acceptance_criteria") or {}
+        require(
+            len(criteria8dc) == 24 and all(value is True for value in criteria8dc.values()),
+            "Stage 8D ChatGPT deletion gate criteria drift or fail",
+            problems,
+        )
+        if STAGE8D_CHATGPT_DELETION_GATE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8dc = Path(td) / "stage8d-chatgpt-deletion-gate.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_CHATGPT_DELETION_GATE_GENERATOR),
+                        "--prepared-against", gate8dc["prepared_against_main_sha"],
+                        "--captured-at", gate8dc["captured_at"],
+                        "--output", str(regenerated8dc),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=180,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D ChatGPT deletion gate regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated8dc.is_file():
+                    require(
+                        regenerated8dc.read_bytes() == STAGE8D_CHATGPT_DELETION_GATE.read_bytes(),
+                        "Stage 8D ChatGPT deletion gate receipt is not reproducible",
                         problems,
                     )
 
