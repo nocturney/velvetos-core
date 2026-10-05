@@ -8,10 +8,11 @@
   "status": "accepted",
   "evidence": [
     "gh-run:37155113603:failure:2026-10-03T21:26:32Z:https://github.com/nocturney/velvetos-core/actions/runs/37155113603",
-    "office-loop-1830 triage 2026-10-04: New candidate from ingest-ci. Single main failure 37155113603 @ 21:26Z 3.10 schedule — Persist intake state exited 4 because scripts/push-main-with-check-all.sh did not push (annotation: Prechecked main persistence failed; intake state was not pushed; watched check-all reported contract checks failed). Later scheduled main runs succeeded: 37181634079 @ 06:02Z 4.10 and 37202492370 @ 12:33Z 4.10. Accept as a real one-off persist failure; no promote — no durable intake-push fix in this handoff."
+    "office-loop-1830 triage 2026-10-04: New candidate from ingest-ci. Single main failure 37155113603 @ 21:26Z 3.10 schedule — Persist intake state exited 4 because scripts/push-main-with-check-all.sh did not push (annotation: Prechecked main persistence failed; intake state was not pushed; watched check-all reported contract checks failed). Later scheduled main runs succeeded: 37181634079 @ 06:02Z 4.10 and 37202492370 @ 12:33Z 4.10. Accept as a real one-off persist failure; no promote — no durable intake-push fix in this handoff.",
+    "office-loop-1830 triage 2026-10-05: No VF Media Auto Intake failure on main since 4.10; scheduled intake persisted on main today (commits a10c58b, 8aa691f). Keep accepted; no promote."
   ],
   "first_seen": "2026-10-03T21:26:32Z",
-  "last_seen": "2026-10-04T15:50:01+00:00",
+  "last_seen": "2026-10-05T18:45:37+03:00",
   "owner_correction": false,
   "promote_to": null,
   "supersedes": null,
