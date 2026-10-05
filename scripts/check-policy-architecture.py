@@ -78,6 +78,8 @@ STAGE8D_SAMPLE_CONSUMER_CORRECTION = REPORTS / "stage8d-sample-profile-consumer-
 STAGE8D_SAMPLE_CONSUMER_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-sample-profile-consumer-correction.py"
 STAGE8D_SAMPLE_ROLLBACK_RECLOSURE = REPORTS / "stage8d-sample-profile-rollback-reclosure.json"
 STAGE8D_SAMPLE_ROLLBACK_RECLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-sample-profile-rollback-reclosure.py"
+STAGE8D_SAMPLE_DELETION_GATE = REPORTS / "stage8d-sample-profile-deletion-gate.json"
+STAGE8D_SAMPLE_DELETION_GATE_GENERATOR = ROOT / "scripts" / "generate-stage8d-sample-profile-deletion-gate.py"
 STAGE8D_RETIREMENT_SEMANTIC_AUDIT = REPORTS / "stage8d-retirement-semantic-audit.json"
 STAGE8D_RETIREMENT_SEMANTIC_AUDIT_GENERATOR = ROOT / "scripts" / "generate-stage8d-retirement-semantic-audit.py"
 STAGE8D_ROOT_DESK_RUNTIME_CORRECTION = REPORTS / "stage8d-root-desk-runtime-consumer-correction.json"
@@ -136,6 +138,7 @@ EXPECTED_REPORTS = {
     "stage8d-sample-profile-rollback-closure.json",
     "stage8d-sample-profile-consumer-correction.json",
     "stage8d-sample-profile-rollback-reclosure.json",
+    "stage8d-sample-profile-deletion-gate.json",
     "stage8d-retirement-semantic-audit.json",
     "stage8d-root-desk-runtime-consumer-correction.json",
     "stage8d-root-desk-rollback-closure.json",
@@ -3347,6 +3350,144 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated_reclose8ds.read_bytes() == STAGE8D_SAMPLE_ROLLBACK_RECLOSURE.read_bytes(),
                         "Stage 8D sample rollback re-closure receipt is not reproducible",
+                        problems,
+                    )
+
+    if STAGE8D_SAMPLE_DELETION_GATE.is_file():
+        gate8ds = load(STAGE8D_SAMPLE_DELETION_GATE)
+        require(
+            gate8ds.get("schema") == "velvetos.stage8d-sample-profile-deletion-gate.v1"
+            and gate8ds.get("stage") == "8D_SAMPLE_PROFILE_DELETION_GATE"
+            and gate8ds.get("behavior_change") is False
+            and gate8ds.get("surface_id") == "sample_profile"
+            and gate8ds.get("repository_assessment") == "PASS",
+            "Stage 8D sample deletion gate metadata drift",
+            problems,
+        )
+        target_gate8ds = gate8ds.get("target") or {}
+        require(
+            target_gate8ds.get("legacy_path") == "packages/velvetos/samples/velvet-factory.json"
+            and target_gate8ds.get("canonical_path") == "instances/velvet-factory/instance/velvet-factory.json"
+            and target_gate8ds.get("delete_exactly") == ["packages/velvetos/samples/velvet-factory.json"]
+            and target_gate8ds.get("delete_other_surfaces") is False,
+            "Stage 8D sample deletion target drift",
+            problems,
+        )
+        prereq_gate8ds = gate8ds.get("prerequisite_closure") or {}
+        require(
+            prereq_gate8ds.get("receipt")
+            == "packages/velvetos/policy/reports/stage8d-sample-profile-rollback-reclosure.json"
+            and prereq_gate8ds.get("schema") == "velvetos.stage8d-sample-profile-rollback-reclosure.v2"
+            and prereq_gate8ds.get("rollback_window_closed") is True
+            and prereq_gate8ds.get("retirement_ready_for_deletion_gate") is True,
+            "Stage 8D sample deletion gate closure prerequisite drift",
+            problems,
+        )
+        cross_gate8ds = gate8ds.get("cross_surface_state") or {}
+        require(
+            sorted(cross_gate8ds) == sorted([
+                "sample_profile", "root_desk", "fleet", "tool_status", "chatgpt_core_bundle"
+            ])
+            and all(
+                row.get("repository_assessment") == "PASS"
+                and row.get("rollback_window_closed") is True
+                and row.get("retirement_ready_for_deletion_gate") is True
+                and row.get("delete_authorized") is False
+                and row.get("retirement_authorized") is False
+                for row in cross_gate8ds.values()
+            ),
+            "Stage 8D sample deletion gate cross-surface prerequisite drift",
+            problems,
+        )
+        evidence_gate8ds = gate8ds.get("current_evidence") or {}
+        compat_gate8ds = evidence_gate8ds.get("compatibility_metadata_excluded_from_canonical_coverage") or {}
+        require(
+            evidence_gate8ds.get("legacy_present") is True
+            and evidence_gate8ds.get("runtime_authority") is False
+            and evidence_gate8ds.get("active_semantic_legacy_consumer_count") == 0
+            and evidence_gate8ds.get("semantic_preflight_clear") is True
+            and evidence_gate8ds.get("all_stage8d_semantic_preflights_clear") is True
+            and compat_gate8ds.get("role") == "sample"
+            and "Reference profile hosted in VelvetOS Core for sensors/compat" in str(compat_gate8ds.get("notes"))
+            and evidence_gate8ds.get("canonical_semantically_covers_legacy_business_config") is True
+            and evidence_gate8ds.get("canonical_legacy_module_parity") is True
+            and evidence_gate8ds.get("external_effect_authority_unchanged") is True,
+            "Stage 8D sample deletion gate current evidence drift",
+            problems,
+        )
+        restore_gate8ds = gate8ds.get("restore_anchor") or {}
+        require(
+            restore_gate8ds.get("source_commit_sha") == gate8ds.get("prepared_against_main_sha")
+            and restore_gate8ds.get("legacy_path") == "packages/velvetos/samples/velvet-factory.json"
+            and restore_gate8ds.get("git_blob_sha1") == "7ffc401ef4ce87acd25c48a2d095ab82eca8f76b"
+            and restore_gate8ds.get("sha256") == "01a792c229721fa95590636a645aab8d46439d6efd523c48b6ee6b73ca366f5d"
+            and restore_gate8ds.get("size_bytes") == 5214
+            and restore_gate8ds.get("restore_command")
+            == "git show 495a6c91e8dea4b65dacf415be42aa22fc471ae4:packages/velvetos/samples/velvet-factory.json > packages/velvetos/samples/velvet-factory.json",
+            "Stage 8D sample deletion restore anchor drift",
+            problems,
+        )
+        ci_gate8ds = gate8ds.get("latest_main_ci") or {}
+        require(
+            ci_gate8ds.get("workflow") == "VelvetOS Core Sensors"
+            and ci_gate8ds.get("run_id") == 37277013397
+            and ci_gate8ds.get("sha") == "495a6c91e8dea4b65dacf415be42aa22fc471ae4"
+            and ci_gate8ds.get("event") == "push"
+            and ci_gate8ds.get("conclusion") == "success",
+            "Stage 8D sample deletion gate latest-main CI evidence drift",
+            problems,
+        )
+        criteria_gate8ds = gate8ds.get("acceptance_criteria") or {}
+        require(
+            len(criteria_gate8ds) == 16
+            and all(value is True for value in criteria_gate8ds.values()),
+            "Stage 8D sample deletion gate criteria drift or fail",
+            problems,
+        )
+        authority_gate8ds = gate8ds.get("authority") or {}
+        require(
+            authority_gate8ds.get("external_effect_authority_changed") is False
+            and authority_gate8ds.get("policy_registry_sha256")
+            == authority_gate8ds.get("sample_reclosure_policy_registry_sha256")
+            and authority_gate8ds.get("delete_authorized") is True
+            and authority_gate8ds.get("delete_authorized_surface") == "sample_profile"
+            and authority_gate8ds.get("delete_authorized_paths")
+            == ["packages/velvetos/samples/velvet-factory.json"]
+            and authority_gate8ds.get("retirement_authorized") is False
+            and gate8ds.get("delete_authorized") is True
+            and gate8ds.get("deletion_performed") is False
+            and gate8ds.get("retirement_authorized") is False,
+            "Stage 8D sample deletion gate authority drift",
+            problems,
+        )
+        if STAGE8D_SAMPLE_DELETION_GATE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated_gate8ds = Path(td) / "stage8d-sample-profile-deletion-gate.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_SAMPLE_DELETION_GATE_GENERATOR),
+                        "--prepared-against", gate8ds["prepared_against_main_sha"],
+                        "--captured-at", gate8ds["captured_at"],
+                        "--output", str(regenerated_gate8ds),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=180,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D sample deletion gate regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated_gate8ds.is_file():
+                    require(
+                        regenerated_gate8ds.read_bytes() == STAGE8D_SAMPLE_DELETION_GATE.read_bytes(),
+                        "Stage 8D sample deletion gate receipt is not reproducible",
                         problems,
                     )
 
