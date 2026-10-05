@@ -696,3 +696,13 @@ The deletion removes exactly `packages/velvetos/samples/velvet-factory.json`. Th
 The deleted sample remains recoverable from Git using the gate restore anchor: blob `7ffc401ef4ce87acd25c48a2d095ab82eca8f76b`, SHA-256 `01a792c229721fa95590636a645aab8d46439d6efd523c48b6ee6b73ca366f5d`, 5214 bytes, sourced from `495a6c91`. Historical Stage 8C sample and closure receipts remain byte-reproducible from their creation commits after their generators were snapshot-bound. External-effect authority is unchanged.
 
 This receipt sets `deletion_performed=true` and `retirement_authorized=true` only for `sample_profile`. It does not authorize deletion of `root_desk`, `fleet`, `tool_status` or `chatgpt_core_bundle`; each remaining surface still requires its own evidence-only deletion gate followed by a separate isolated deletion PR.
+
+## Reform v2 Stage 8D - root_desk deletion gate
+
+`reports/stage8d-root-desk-deletion-gate.json` is the evidence-only deletion gate for the retained root desk compatibility file. It is prepared against exact main `dfd699dc` after the isolated `sample_profile` retirement merged and passed post-merge `VelvetOS Core Sensors` run `37284249359`.
+
+The gate accepts the already-missing sample only through its authoritative retirement receipt; physical absence alone is insufficient. The other three retained compatibility surfaces remain closure-complete, present and deletion-unauthorized. Current semantic audit remains 5/5 clear with exactly `sample_profile` retired, while all ten root-desk runtime readers continue resolving the canonical `toolDesk` surface with no direct root compatibility reads.
+
+Operational parity is revalidated before authorization: all 18 legacy tool rows, 6 seats and 38 specialists are preserved by the canonical instance desk, legacy skills remain covered, non-fleet notes remain present, and the legacy fleet note is accepted only through its explicit canonical `instance:surface:fleet` supersession. External-effect authority is unchanged.
+
+The exact retained root desk is restore-anchored as Git blob `30ddd380f1d556dd1b444c3ca6b153f6d6188e1f`, SHA-256 `702695ffa72b8f0e56738cc533cc95ee2d6a6cd76c66cf58f2a84d3658a1116b`, 34186 bytes, sourced from `dfd699dc`. This gate sets `delete_authorized=true` only for `root_desk`; `deletion_performed=false` and `retirement_authorized=false` remain enforced until a separate isolated deletion PR.

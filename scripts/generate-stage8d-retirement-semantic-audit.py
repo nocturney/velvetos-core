@@ -56,6 +56,12 @@ EVIDENCE_EXACT = {
     "scripts/generate-stage6d-documentation-authority-cleanup-report.py",
 }
 ROOT_DESK_CORRECTION_REL = "packages/velvetos/policy/reports/stage8d-root-desk-runtime-consumer-correction.json"
+RETIREMENT_RECEIPTS = {
+    "sample_profile": {
+        "receipt": "packages/velvetos/policy/reports/stage8d-sample-profile-deletion.json",
+        "schema": "velvetos.stage8d-sample-profile-deletion.v1",
+    },
+}
 REVIEWED_SAFE_REFERENCES = {
     "fleet": {
         "packages/velvetos/living-studio/tests/test_living_studio.py": "negative_control",
@@ -104,6 +110,42 @@ def candidates(sha: str, token: str) -> list[str]:
         if rel:
             out.append(rel)
     return sorted(set(out))
+
+
+def retirement_evidence(sha: str, surface_id: str) -> dict[str, Any] | None:
+    legacy = SURFACES[surface_id]["path"]
+    if git_exists(sha, legacy):
+        return None
+    spec = RETIREMENT_RECEIPTS.get(surface_id)
+    require(spec is not None, f"{surface_id}: compatibility surface is missing without a known retirement receipt")
+    receipt_rel = str(spec["receipt"])
+    require(git_exists(sha, receipt_rel), f"{surface_id}: retirement receipt is missing")
+    try:
+        receipt = json.loads(git_text(sha, receipt_rel))
+    except (json.JSONDecodeError, subprocess.CalledProcessError) as exc:
+        raise SystemExit(f"{surface_id}: retirement receipt is unreadable: {exc}") from exc
+    deletion = receipt.get("deletion") or {}
+    authority = receipt.get("authority") or {}
+    require(
+        receipt.get("schema") == spec["schema"]
+        and receipt.get("surface_id") == surface_id
+        and receipt.get("repository_assessment") == "PASS"
+        and receipt.get("deletion_performed") is True
+        and receipt.get("retirement_authorized") is True
+        and deletion.get("legacy_path") == legacy
+        and deletion.get("legacy_present") is False
+        and deletion.get("deletion_performed") is True
+        and deletion.get("delete_exactly") == [legacy]
+        and authority.get("retirement_authorized") is True,
+        f"{surface_id}: retirement receipt does not authoritatively prove the missing surface",
+    )
+    return {
+        "receipt": receipt_rel,
+        "schema": receipt.get("schema"),
+        "repository_assessment": "PASS",
+        "deletion_performed": True,
+        "retirement_authorized": True,
+    }
 
 
 def root_desk_correction_passed(sha: str) -> bool:
@@ -365,6 +407,8 @@ def classify(surface_id: str, rel: str, sha: str) -> str:
 
 def scan_surface(sha: str, surface_id: str) -> dict[str, Any]:
     spec = SURFACES[surface_id]
+    present = git_exists(sha, spec["path"])
+    retired = retirement_evidence(sha, surface_id) if not present else None
     rows = []
     for rel in candidates(sha, spec["token"]):
         try:
@@ -382,9 +426,9 @@ def scan_surface(sha: str, surface_id: str) -> dict[str, Any]:
         classes.get("machine_or_config_candidate", [])
         + classes.get("other_candidate", [])
     ))
-    return {
+    result = {
         "path": spec["path"],
-        "present": git_exists(sha, spec["path"]),
+        "present": present,
         "semantic_reference_count": len(rows),
         "references": rows,
         "classes": classes,
@@ -393,6 +437,10 @@ def scan_surface(sha: str, surface_id: str) -> dict[str, Any]:
         "rollback_window_closed_by_this_audit": False,
         "delete_authorized": False,
     }
+    if retired is not None:
+        result["retired"] = True
+        result["retirement_evidence"] = retired
+    return result
 
 
 def main() -> int:
@@ -404,7 +452,11 @@ def main() -> int:
     require(re.fullmatch(r"[0-9a-f]{40}", args.source_commit) is not None, "--source-commit must be a full lowercase Git SHA")
 
     surfaces = {sid: scan_surface(args.source_commit, sid) for sid in SURFACES}
-    require(all(row["present"] for row in surfaces.values()), "one or more compatibility surfaces are already missing")
+    retired_surfaces = sorted(sid for sid, row in surfaces.items() if row.get("retired") is True)
+    require(
+        all(row["present"] or row.get("retired") is True for row in surfaces.values()),
+        "one or more compatibility surfaces are missing without authoritative retirement evidence",
+    )
 
     report = {
         "schema": "velvetos.stage8d-retirement-semantic-audit.v1",
@@ -453,6 +505,19 @@ def main() -> int:
             "no big-bang delete",
         ],
     }
+    if retired_surfaces:
+        report["purpose"] = (
+            "Fail-closed semantic audit for retained and authoritatively retired Stage 8D compatibility surfaces. "
+            "A missing surface is accepted only when its merged retirement receipt proves deletion and retirement; "
+            "remaining surfaces still undergo exact and assembled-path reference detection."
+        )
+        report["audit_model"]["missing_surface_requires_authoritative_retirement_receipt"] = True
+        report["assessment"]["surfaces_retired"] = len(retired_surfaces)
+        report["assessment"]["retired_surfaces"] = retired_surfaces
+        report["next_action"] = (
+            "Continue retirement surface-by-surface. Revalidate every retained target before its deletion gate; "
+            "never treat physical absence alone as retirement evidence."
+        )
 
     out = args.output if args.output.is_absolute() else ROOT / args.output
     out.parent.mkdir(parents=True, exist_ok=True)
