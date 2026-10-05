@@ -1,0 +1,80 @@
+{
+  "schema": "velvetos.draft.compaction-policy.v0",
+  "status": "NON_NORMATIVE_REFORM_PREPARATION",
+  "authority": false,
+  "runtime_enabled": false,
+  "mode": "DESIGN_ONLY",
+  "prepared_against_main_sha": "dfd699dcee63d5175f03ae3312fbb89992ea78ca",
+  "objective": "Trigger context compaction only when it improves headroom without risking task continuity, execution correctness, or authority boundaries.",
+  "signals": {
+    "context_pressure": {
+      "description": "Provider/runtime reports remaining context headroom or estimated working-set pressure.",
+      "default_action": "ELIGIBLE_IF_SAFE_BOUNDARY",
+      "thresholds": "provider-specific; no production threshold is approved by this draft"
+    },
+    "phase_boundary": {
+      "eligible": [
+        "research_to_planning",
+        "planning_to_execution",
+        "debugging_resolved_to_next_task",
+        "failed_approach_to_new_approach"
+      ],
+      "conditional": [
+        "execution_to_verification"
+      ],
+      "forbidden": [
+        "mid_execution_with_unpersisted_state"
+      ]
+    },
+    "tool_output_inflation": {
+      "description": "Large logs, search results, traces or tool payloads dominate the working set after their resume-relevant facts are persisted.",
+      "default_action": "ELIGIBLE_IF_RAW_EVIDENCE_RETAINED_OR_ADDRESSABLE"
+    },
+    "manual_checkpoint": {
+      "description": "A future operator/harness explicitly requests compaction after a verified checkpoint.",
+      "default_action": "ELIGIBLE_IF_ALL_GUARDS_PASS"
+    }
+  },
+  "hard_blocks": [
+    "uncommitted_or_unpersisted_execution_state",
+    "exact_external_action_in_flight",
+    "open_mutation_transaction_without_verified_result",
+    "required_artifact_or_identifier_exists_only_in_chat",
+    "checkpoint_missing_for_long_running_task",
+    "pre_compaction_manifest_unproven",
+    "active_secret_or_sensitive_value_would_be_copied_into_summary",
+    "compaction_would_replace_a_canonical_source_with_summary_prose"
+  ],
+  "preconditions": [
+    "persist current checkpoint/state patch",
+    "resolve or explicitly mark unavailable every resume-critical source reference",
+    "bind open approvals/authorization decisions by reference only",
+    "retain the minimum recent tail needed for ambiguity resolution",
+    "record trigger reason"
+  ],
+  "postconditions": [
+    "all preserved fields survive exactly or as verified references",
+    "no new approval/authority claim appears",
+    "next_step remains executable or explicitly blocked",
+    "canonical source identities remain unchanged",
+    "contradictions list is empty",
+    "if verification is not PASS, reject compacted context and recover"
+  ],
+  "recovery_order": [
+    "existing task checkpoint",
+    "office/control/HANDOFF.json when cross-harness context is needed",
+    "named canonical domain sources",
+    "named evidence receipts",
+    "uncompressed recent tail/cache",
+    "provider compacted summary last"
+  ],
+  "rollout": [
+    "DESIGN_ONLY",
+    "SHADOW_BUILD",
+    "SHADOW_COMPARE",
+    "CONTROLLED_DEV",
+    "BOUNDED_PRODUCTION",
+    "ACTIVE_WITH_KILL_SWITCH"
+  ],
+  "rollback": "Set runtime integration disabled and use existing vfharness checkpoint/HANDOFF continuation unchanged."
+}
