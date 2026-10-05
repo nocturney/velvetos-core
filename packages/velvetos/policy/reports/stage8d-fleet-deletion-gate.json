@@ -1,0 +1,170 @@
+{
+  "schema": "velvetos.stage8d-fleet-deletion-gate.v1",
+  "stage": "8D_FLEET_DELETION_GATE",
+  "behavior_change": false,
+  "prepared_against_main_sha": "12e8ea4c0a38286eccc30972579270739411b5f2",
+  "captured_at": "2026-10-05T13:11:08.5823148+03:00",
+  "surface_id": "fleet",
+  "target": {
+    "legacy_path": "packages/vfprod/FLEET.json",
+    "canonical_path": "instances/velvet-factory/instance/fleet.json",
+    "delete_exactly": [
+      "packages/vfprod/FLEET.json"
+    ],
+    "delete_other_surfaces": false
+  },
+  "purpose": "Authorize one later isolated deletion of the fleet compatibility file after revalidating current semantic state, runtime/documentation cutover, exact parity, rollback closure, the prior two retirements, restore evidence and policy authority. This gate performs no deletion.",
+  "prerequisite_closure": {
+    "receipt": "packages/velvetos/policy/reports/stage8d-fleet-rollback-closure.json",
+    "schema": "velvetos.stage8d-fleet-rollback-closure.v1",
+    "rollback_window_closed": true,
+    "retirement_ready_for_deletion_gate": true
+  },
+  "prior_retirements": {
+    "sample_profile": {
+      "receipt": "packages/velvetos/policy/reports/stage8d-sample-profile-deletion.json",
+      "repository_assessment": "PASS",
+      "deletion_performed": true,
+      "retirement_authorized": true
+    },
+    "root_desk": {
+      "receipt": "packages/velvetos/policy/reports/stage8d-root-desk-deletion.json",
+      "repository_assessment": "PASS",
+      "deletion_performed": true,
+      "retirement_authorized": true
+    }
+  },
+  "remaining_surface_state": {
+    "tool_status": {
+      "repository_assessment": "PASS",
+      "rollback_window_closed": true,
+      "retirement_ready_for_deletion_gate": true,
+      "delete_authorized": false,
+      "retirement_authorized": false
+    },
+    "chatgpt_core_bundle": {
+      "repository_assessment": "PASS",
+      "rollback_window_closed": true,
+      "retirement_ready_for_deletion_gate": true,
+      "delete_authorized": false,
+      "retirement_authorized": false
+    }
+  },
+  "current_evidence": {
+    "legacy_present": true,
+    "runtime_authority": false,
+    "migrated_code": {
+      "scripts/vfprod.py": {
+        "legacy_path_absent": true,
+        "canonical_fleet_binding_present": true
+      },
+      "scripts/check-vfprod.py": {
+        "legacy_path_absent": true,
+        "canonical_fleet_binding_present": true
+      },
+      "scripts/vf_living_studio.py": {
+        "legacy_path_absent": true,
+        "canonical_fleet_binding_present": true
+      },
+      "scripts/check-velvetos.py": {
+        "legacy_path_absent": true,
+        "canonical_fleet_binding_present": true
+      }
+    },
+    "active_documentation": {
+      "docs/chief-of-staff/SOT-INDEX.md": {
+        "legacy_path_absent": true
+      },
+      "docs/chief-of-staff/PACKS-CATALOG.md": {
+        "legacy_path_absent": true
+      },
+      "docs/chief-of-staff/SYSTEM-MAP.md": {
+        "legacy_path_absent": true
+      },
+      "packages/manifest.json": {
+        "legacy_path_absent": true
+      },
+      "packages/vfprod/FLOOR.md": {
+        "legacy_path_absent": true
+      },
+      "packages/vfprod/ROUTING.md": {
+        "legacy_path_absent": true
+      },
+      "instances/velvet-factory/.cursor/vf-desk.json": {
+        "legacy_path_absent": true
+      }
+    },
+    "semantic_preflight_clear": true,
+    "all_stage8d_semantic_preflights_clear": true,
+    "retired_surfaces": [
+      "root_desk",
+      "sample_profile"
+    ],
+    "legacy_byte_unchanged_since_closure": true,
+    "canonical_legacy_exact_equal": true,
+    "printer_count": 4,
+    "external_effect_authority_unchanged": true
+  },
+  "restore_anchor": {
+    "source_commit_sha": "12e8ea4c0a38286eccc30972579270739411b5f2",
+    "legacy_path": "packages/vfprod/FLEET.json",
+    "git_blob_sha1": "d76126ce8ac08b5faf86b5069df18886118b8f1a",
+    "sha256": "baffa4db8f61d33339f89161155e620d0914a802fe230b241a566bdadb085f3c",
+    "size_bytes": 1364,
+    "restore_command": "git show 12e8ea4c0a38286eccc30972579270739411b5f2:packages/vfprod/FLEET.json > packages/vfprod/FLEET.json"
+  },
+  "latest_main_ci": {
+    "workflow": "VelvetOS Core Sensors",
+    "run_id": 37294141817,
+    "sha": "12e8ea4c0a38286eccc30972579270739411b5f2",
+    "event": "push",
+    "conclusion": "success",
+    "created_at": "2026-10-05T10:04:03Z"
+  },
+  "authority": {
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "fleet_closure_policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false,
+    "delete_authorized": true,
+    "delete_authorized_surface": "fleet",
+    "delete_authorized_paths": [
+      "packages/vfprod/FLEET.json"
+    ],
+    "retirement_authorized": false
+  },
+  "acceptance_criteria": {
+    "fleet_closure_is_pass_and_closed": true,
+    "fleet_closure_is_ready_for_deletion_gate": true,
+    "fleet_closure_did_not_pre_authorize_deletion": true,
+    "sample_profile_retirement_is_authoritatively_proven": true,
+    "root_desk_retirement_is_authoritatively_proven": true,
+    "remaining_two_surfaces_are_closed_gate_ready_and_deletion_unauthorized": true,
+    "current_fleet_semantic_preflight_is_clear": true,
+    "current_global_semantic_preflight_is_5_of_5_clear": true,
+    "semantic_audit_recognizes_exactly_two_retired_surfaces": true,
+    "all_live_fleet_readers_remain_canonical": true,
+    "all_active_fleet_documentation_remains_canonical": true,
+    "legacy_fleet_is_unchanged_since_closure": true,
+    "canonical_and_legacy_fleet_are_exactly_equal": true,
+    "exact_legacy_blob_is_anchored_for_restore": true,
+    "latest_exact_main_core_sensor_run_is_success": true,
+    "external_effect_authority_is_unchanged": true,
+    "gate_authorizes_only_fleet_target": true,
+    "deletion_is_not_performed_in_gate_change": true,
+    "retirement_completion_waits_for_separate_deletion_pr": true
+  },
+  "repository_assessment": "PASS",
+  "delete_authorized": true,
+  "deletion_performed": false,
+  "retirement_authorized": false,
+  "next_action": "Merge this evidence-only gate, verify post-merge main, then create a separate isolated fleet deletion PR that removes exactly the authorized path and re-runs semantic, policy and full-suite checks.",
+  "constraints": [
+    "this gate does not delete files",
+    "authorization applies only to the exact fleet target recorded above",
+    "sample_profile and root_desk are already retired and are not modified by this gate",
+    "tool_status and chatgpt_core_bundle remain deletion-unauthorized by this receipt",
+    "actual deletion requires a separate isolated PR",
+    "restore anchor must remain available in Git history",
+    "external-effect authority must remain unchanged"
+  ]
+}

@@ -706,3 +706,19 @@ The gate accepts the already-missing sample only through its authoritative retir
 Operational parity is revalidated before authorization: all 18 legacy tool rows, 6 seats and 38 specialists are preserved by the canonical instance desk, legacy skills remain covered, non-fleet notes remain present, and the legacy fleet note is accepted only through its explicit canonical `instance:surface:fleet` supersession. External-effect authority is unchanged.
 
 The exact retained root desk is restore-anchored as Git blob `30ddd380f1d556dd1b444c3ca6b153f6d6188e1f`, SHA-256 `702695ffa72b8f0e56738cc533cc95ee2d6a6cd76c66cf58f2a84d3658a1116b`, 34186 bytes, sourced from `dfd699dc`. This gate sets `delete_authorized=true` only for `root_desk`; `deletion_performed=false` and `retirement_authorized=false` remain enforced until a separate isolated deletion PR.
+
+## Reform v2 Stage 8D - root_desk deletion
+
+`reports/stage8d-root-desk-deletion.json` records the isolated retirement completed by PR #550. The deletion was prepared against exact gate-merge main `98ac4ce1`, after `VelvetOS Core Sensors` run `37286661000` succeeded on that exact SHA, and removes only `.cursor/vf-desk.json`.
+
+The canonical desk at `instances/velvet-factory/.cursor/vf-desk.json` remains authoritative. All ten runtime readers continue resolving the explicit instance `toolDesk` surface, while parity remains 18 tools, 6 seats and 38 specialists with legacy skills covered and notes preserved or explicitly superseded. The prior `sample_profile` retirement remains authoritative; `fleet`, `tool_status` and `chatgpt_core_bundle` remain present and deletion-unauthorized.
+
+The retired root desk remains recoverable as Git blob `30ddd380f1d556dd1b444c3ca6b153f6d6188e1f`, SHA-256 `702695ffa72b8f0e56738cc533cc95ee2d6a6cd76c66cf58f2a84d3658a1116b`, 34186 bytes. Historical Stage 8C desk receipts remain byte-reproducible from their creation snapshots. External-effect authority is unchanged.
+
+## Reform v2 Stage 8D - fleet deletion gate
+
+`reports/stage8d-fleet-deletion-gate.json` is the evidence-only deletion gate for `packages/vfprod/FLEET.json`. It is prepared against exact main `12e8ea4c` after the isolated `root_desk` retirement merged and the exact-main `VelvetOS Core Sensors` run `37294141817` succeeded.
+
+The gate accepts the already-missing `sample_profile` and `root_desk` only through their authoritative retirement receipts. Current semantic audit remains 5/5 clear with exactly those two surfaces retired. The retained fleet remains exactly byte/content equal to `instances/velvet-factory/instance/fleet.json`; all four live fleet readers and all seven active-documentation bindings remain canonical, and the fleet rollback-closure evidence remains valid.
+
+The retained fleet is restore-anchored as Git blob `d76126ce8ac08b5faf86b5069df18886118b8f1a`, SHA-256 `baffa4db8f61d33339f89161155e620d0914a802fe230b241a566bdadb085f3c`, 1364 bytes, sourced from `12e8ea4c`. This gate sets `delete_authorized=true` only for `fleet`; `deletion_performed=false` and `retirement_authorized=false`. `tool_status` and `chatgpt_core_bundle` remain deletion-unauthorized, and external-effect authority is unchanged.
