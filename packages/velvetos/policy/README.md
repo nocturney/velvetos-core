@@ -683,6 +683,16 @@ This closure does not delete the Core bundle and does not remove rollback `.gita
 
 `reports/stage8d-sample-profile-deletion-gate.json` is the evidence-only deletion gate for the retained Velvet Factory sample-profile compatibility file. It authorizes deletion of exactly that single compatibility target on a later isolated PR; it does not delete the file itself and does not authorize deletion of any other compatibility surface.
 
-The gate revalidates the authoritative sample re-closure, all five rollback-closure receipts, current 5/5 semantic clearance, zero active sample legacy consumers, exact-main `VelvetOS Core Sensors` success on `fa097b6d`, unchanged external-effect policy authority, and canonical coverage of every retained business/config field. Only the sample-only metadata `role=sample` and the explicit Core compatibility note are excluded from canonical coverage. The exact legacy blob is anchored as Git blob `7ffc401ef4ce87acd25c48a2d095ab82eca8f76b`, SHA-256 `01a792c229721fa95590636a645aab8d46439d6efd523c48b6ee6b73ca366f5d`, 5214 bytes, restorable from `fa097b6d`.
+The gate revalidates the authoritative sample re-closure, all five rollback-closure receipts, current 5/5 semantic clearance, zero active sample legacy consumers, exact-main `VelvetOS Core Sensors` success on `495a6c91` (run `37277013397`), unchanged external-effect policy authority, and canonical coverage of every retained business/config field. Only the sample-only metadata `role=sample` and the explicit Core compatibility note are excluded from canonical coverage. The exact legacy blob is anchored as Git blob `7ffc401ef4ce87acd25c48a2d095ab82eca8f76b`, SHA-256 `01a792c229721fa95590636a645aab8d46439d6efd523c48b6ee6b73ca366f5d`, 5214 bytes, restorable from `495a6c91`.
 
 The resulting authority is intentionally narrow: `delete_authorized=true` only for `sample_profile` and only for the exact legacy path; `deletion_performed=false` and `retirement_authorized=false`. A separate deletion PR must revalidate the gate and remove exactly that path.
+
+## Reform v2 Stage 8D - sample_profile deletion
+
+`reports/stage8d-sample-profile-deletion.json` records the isolated retirement of the sample-profile compatibility file after PR #546 merged the evidence-only deletion gate. The deletion base is merge `94d70732`; its `VelvetOS Core Sensors` main-push run `37280812073` succeeded before the deletion candidate was prepared.
+
+The deletion removes exactly `packages/velvetos/samples/velvet-factory.json`. The canonical profile at `instances/velvet-factory/instance/velvet-factory.json` remains present and continues to cover all business/config fields and all 18 enabled modules. The other four Stage 8D compatibility surfaces remain present, byte-unchanged from the deletion base and deletion-unauthorized by this receipt.
+
+The deleted sample remains recoverable from Git using the gate restore anchor: blob `7ffc401ef4ce87acd25c48a2d095ab82eca8f76b`, SHA-256 `01a792c229721fa95590636a645aab8d46439d6efd523c48b6ee6b73ca366f5d`, 5214 bytes, sourced from `495a6c91`. Historical Stage 8C sample and closure receipts remain byte-reproducible from their creation commits after their generators were snapshot-bound. External-effect authority is unchanged.
+
+This receipt sets `deletion_performed=true` and `retirement_authorized=true` only for `sample_profile`. It does not authorize deletion of `root_desk`, `fleet`, `tool_status` or `chatgpt_core_bundle`; each remaining surface still requires its own evidence-only deletion gate followed by a separate isolated deletion PR.

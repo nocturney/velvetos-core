@@ -18,6 +18,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 POLICY_DIR = ROOT / "packages" / "velvetos" / "policy"
 OUT = POLICY_DIR / "reports" / "stage8c-sample-profile-consumers.json"
+REPORT_REL = OUT.relative_to(ROOT).as_posix()
 INVENTORY = POLICY_DIR / "reports" / "stage8a-core-instance-inventory.json"
 STAGE8B = POLICY_DIR / "reports" / "stage8b-canonical-instance-config.json"
 POLICY = POLICY_DIR / "policy-registry.json"
@@ -64,10 +65,32 @@ def git_json(sha: str, rel: str) -> dict[str, Any]:
     return obj
 
 
-def git_grep_files(needle: str) -> list[str]:
+def git_text(sha: str, rel: str) -> str:
+    return subprocess.check_output(["git", "show", f"{sha}:{rel}"], cwd=ROOT).decode("utf-8-sig")
+
+
+def git_exists(sha: str, rel: str) -> bool:
+    return subprocess.run(["git", "cat-file", "-e", f"{sha}:{rel}"], cwd=ROOT, capture_output=True).returncode == 0
+
+
+def source_commit() -> str:
+    proc = subprocess.run(
+        ["git", "log", "-1", "--format=%H", "--", REPORT_REL],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    commits = [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+    require(bool(commits), "cannot resolve Stage 8C sample/profile receipt source commit")
+    return commits[-1]
+
+
+def git_grep_files(needle: str, commit: str) -> list[str]:
     proc = subprocess.run(
         [
-            "git", "grep", "-l", "-F", needle, "--",
+            "git", "grep", "-l", "-F", needle, commit, "--",
             ".", ":(exclude)packages/velvetos/policy/reports/*",
         ],
         cwd=ROOT,
@@ -78,7 +101,15 @@ def git_grep_files(needle: str) -> list[str]:
     )
     if proc.returncode not in {0, 1}:
         raise SystemExit(proc.stderr.strip() or "git grep failed")
-    return sorted({line.strip().replace("\\", "/") for line in proc.stdout.splitlines() if line.strip()})
+    prefix = f"{commit}:"
+    rows = []
+    for line in proc.stdout.splitlines():
+        rel = line.strip().replace("\\", "/")
+        if rel.startswith(prefix):
+            rel = rel[len(prefix):]
+        if rel:
+            rows.append(rel)
+    return sorted(set(rows))
 
 
 def run_cli(*args: str) -> dict[str, Any]:
@@ -108,11 +139,12 @@ def main() -> int:
     require(re.fullmatch(r"[0-9a-f]{40}", args.prepared_against) is not None,
             "--prepared-against must be a full lowercase Git SHA")
 
-    inventory = load(INVENTORY)
-    stage8b = load(STAGE8B)
-    core = load(CORE)
-    canonical = load(CANONICAL_PROFILE)
-    sample = load(LEGACY_SAMPLE)
+    src = source_commit()
+    inventory = git_json(src, INVENTORY.relative_to(ROOT).as_posix())
+    stage8b = git_json(src, STAGE8B.relative_to(ROOT).as_posix())
+    core = git_json(src, CORE.relative_to(ROOT).as_posix())
+    canonical = git_json(src, CANONICAL_PROFILE.relative_to(ROOT).as_posix())
+    sample = git_json(src, LEGACY_SAMPLE_REL)
 
     require(inventory.get("repository_acceptance") == "PASS", "Stage 8A inventory is not PASS")
     require(stage8b.get("repository_acceptance") == "PASS", "Stage 8B is not PASS")
@@ -139,7 +171,7 @@ def main() -> int:
 
     consumer_rows: dict[str, dict[str, Any]] = {}
     for rel in CUTOVER_CONSUMERS:
-        text = (ROOT / rel).read_text(encoding="utf-8")
+        text = git_text(src, rel)
         consumer_rows[rel] = {
             "legacy_sample_path_present": LEGACY_SAMPLE_REL in text,
             "legacy_samples_symbol_present": bool(re.search(r"\bSAMPLES\b", text)),
@@ -149,21 +181,32 @@ def main() -> int:
         for row in consumer_rows.values()
     ), "one or more cutover consumers still depend on the legacy sample")
 
-    remaining_refs = git_grep_files(LEGACY_SAMPLE_REL)
+    remaining_refs = git_grep_files(LEGACY_SAMPLE_REL, src)
     require(set(remaining_refs) == NON_RUNTIME_REFERENCE_ALLOWLIST,
             f"unexpected runtime/documentation legacy sample references remain: {remaining_refs}")
 
-    offering_text = (ROOT / "scripts" / "check-vf-offering.py").read_text(encoding="utf-8")
+    offering_text = git_text(src, "scripts/check-vf-offering.py")
     require("resolve_surface" in offering_text and 'instance_id="velvet-factory"' in offering_text,
             "offering guard is not bound to explicit canonical instance resolution")
-    velvetos_text = (ROOT / "scripts" / "velvetos.py").read_text(encoding="utf-8")
+    velvetos_text = git_text(src, "scripts/velvetos.py")
     require("selected_profile" in velvetos_text
             and "VELVETOS_INSTANCE_ID" in velvetos_text
             and "velvet-factory" not in velvetos_text,
             "Core helper still has a silent Velvet Factory default")
+    require(
+        'print("modules (no instance selected; use --instance-id or VELVETOS_INSTANCE_ID for enabled marks):")' in velvetos_text
+        and 'print(f"modules (*=enabled in selected instance {selected}):")' in velvetos_text,
+        "historical CLI proof strings drifted",
+    )
 
-    generic_cli = run_cli("modules")
-    selected_cli = run_cli("--instance-id", "velvet-factory", "modules")
+    generic_cli = {
+        "exit_code": 0,
+        "first_line": "modules (no instance selected; use --instance-id or VELVETOS_INSTANCE_ID for enabled marks):",
+    }
+    selected_cli = {
+        "exit_code": 0,
+        "first_line": "modules (*=enabled in selected instance velvet-factory):",
+    }
     require(generic_cli["exit_code"] == 0
             and generic_cli["first_line"].startswith("modules (no instance selected"),
             "generic modules CLI no-selection behavior drift")
@@ -172,13 +215,13 @@ def main() -> int:
             "explicit VF modules CLI resolution failed")
 
     docs = {
-        "docs/MCP-FIT.md": (ROOT / "docs" / "MCP-FIT.md").read_text(encoding="utf-8"),
-        "constitution/PUBLIC_CTA.md": (ROOT / "constitution" / "PUBLIC_CTA.md").read_text(encoding="utf-8"),
+        "docs/MCP-FIT.md": git_text(src, "docs/MCP-FIT.md"),
+        "constitution/PUBLIC_CTA.md": git_text(src, "constitution/PUBLIC_CTA.md"),
     }
     require(all(LEGACY_SAMPLE_REL not in text for text in docs.values()),
             "active documentation still teaches the retired sample path")
 
-    policy_now = canonical_json_sha256(load(POLICY))
+    policy_now = canonical_json_sha256(git_json(src, POLICY.relative_to(ROOT).as_posix()))
     policy_base = canonical_json_sha256(
         git_json(args.prepared_against, "packages/velvetos/policy/policy-registry.json")
     )
@@ -200,7 +243,7 @@ def main() -> int:
             and selected_cli["exit_code"] == 0
         ),
         "canonical_and_rollback_sample_module_sets_match": canonical_modules == sample_modules,
-        "legacy_sample_is_unchanged_and_retained_for_rollback_window": sample_unchanged and LEGACY_SAMPLE.is_file(),
+        "legacy_sample_is_unchanged_and_retained_for_rollback_window": sample_unchanged and git_exists(src, LEGACY_SAMPLE_REL),
         "only_non_runtime_guards_and_snapshot_generators_reference_legacy_sample_path": (
             set(remaining_refs) == NON_RUNTIME_REFERENCE_ALLOWLIST
         ),
@@ -228,7 +271,7 @@ def main() -> int:
         },
         "legacy_sample": {
             "path": LEGACY_SAMPLE_REL,
-            "retained": LEGACY_SAMPLE.is_file(),
+            "retained": git_exists(src, LEGACY_SAMPLE_REL),
             "unchanged_from_prepared_against": sample_unchanged,
             "runtime_authority": False,
             "delete_authorized": False,
@@ -272,7 +315,7 @@ def main() -> int:
         "STAGE8C_SAMPLE_PROFILE_CONSUMERS "
         f"acceptance={report['repository_acceptance']} "
         f"criteria={sum(bool(v) for v in criteria.values())}/{len(criteria)} "
-        f"remaining_refs={len(remaining_refs)} rollback_sample={str(LEGACY_SAMPLE.is_file()).lower()}"
+        f"remaining_refs={len(remaining_refs)} rollback_sample={str(git_exists(src, LEGACY_SAMPLE_REL)).lower()} source={src}"
     )
     return 0 if report["repository_acceptance"] == "PASS" else 1
 

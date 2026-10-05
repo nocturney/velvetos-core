@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REPORTS = ROOT / "packages" / "velvetos" / "policy" / "reports"
 POLICY = ROOT / "packages" / "velvetos" / "policy" / "policy-registry.json"
 OUT = REPORTS / "stage8c-closure.json"
+REPORT_REL = OUT.relative_to(ROOT).as_posix()
 
 SOURCES = {
     "stage8a_inventory": REPORTS / "stage8a-core-instance-inventory.json",
@@ -78,6 +79,24 @@ def git_json(sha: str, rel: str) -> dict[str, Any]:
     return obj
 
 
+def git_exists(sha: str, rel: str) -> bool:
+    return subprocess.run(["git", "cat-file", "-e", f"{sha}:{rel}"], cwd=ROOT, capture_output=True).returncode == 0
+
+
+def source_commit() -> str:
+    proc = subprocess.run(
+        ["git", "log", "-1", "--format=%H", "--", REPORT_REL],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    commits = [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+    require(bool(commits), "cannot resolve Stage 8C closure source commit")
+    return commits[-1]
+
+
 def criteria(row: dict[str, Any]) -> dict[str, Any]:
     return (row.get("acceptance_criteria") or row.get("acceptance") or {})
 
@@ -109,10 +128,12 @@ def main() -> int:
     require(re.fullmatch(r"[0-9a-f]{40}", args.prepared_against) is not None,
             "--prepared-against must be a full lowercase Git SHA")
 
+    src = source_commit()
     rows: dict[str, dict[str, Any]] = {}
     for name, path in SOURCES.items():
-        require(path.is_file(), f"missing {path.relative_to(ROOT)}")
-        rows[name] = load(path)
+        rel = path.relative_to(ROOT).as_posix()
+        require(git_exists(src, rel), f"missing {rel}@{src}")
+        rows[name] = git_json(src, rel)
         require(rows[name].get("repository_acceptance") == "PASS", f"{name} is not PASS")
         require(all_true(rows[name]), f"{name} acceptance criteria are not all true")
 
@@ -162,7 +183,7 @@ def main() -> int:
         and windows.get("windows_bootstraps_require_explicit_host_id_without_hardcoded_identity") is True
     )
 
-    rollback_present = all((ROOT / rel).is_file() for rel in ROLLBACK_PATHS)
+    rollback_present = all(git_exists(src, rel) for rel in ROLLBACK_PATHS)
     rollback_protected = (
         flag(inventory, "every_surface_has_target_owner_class_wave_and_no_delete_authority")
         and config.get("no_legacy_path_delete_or_consumer_cutover_in_stage8b") is True
@@ -174,7 +195,7 @@ def main() -> int:
         and windows.get("operational_host_and_openpost_registries_are_unchanged_and_match_binding") is True
     )
 
-    policy_now = load(POLICY)
+    policy_now = git_json(src, POLICY.relative_to(ROOT).as_posix())
     policy_main = git_json(args.prepared_against, "packages/velvetos/policy/policy-registry.json")
     policy_sha = csha(policy_now)
     authority_rows = [
@@ -279,7 +300,7 @@ def main() -> int:
         "STAGE8C_CLOSURE "
         f"acceptance={report['repository_acceptance']} "
         f"criteria={sum(1 for v in acceptance.values() if v)}/{len(acceptance)} "
-        f"surfaces={len(wave_ids)} stage8d_allowed={report['stage8d_entry']['allowed']}"
+        f"surfaces={len(wave_ids)} stage8d_allowed={report['stage8d_entry']['allowed']} source={src}"
     )
     return 0 if report["repository_acceptance"] == "PASS" else 1
 
