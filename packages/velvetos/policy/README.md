@@ -654,3 +654,11 @@ This receipt closes only the observation window. The legacy sample remains physi
 The fleet correction intentionally changed one canonical desk note from the retained legacy `FLEET.json` authority hint to `instance:surface:fleet`. The closure treats that note as equivalent only when the rest of the note is byte-equivalent after the authority prefix and the passing fleet-correction receipt proves the instance desk was part of the canonical fleet documentation migration. Every other legacy note must still be preserved.
 
 This closure does not delete the compatibility desk and does not authorize deletion. `rollback_window_closed=true` and `retirement_ready_for_deletion_gate=true`; `delete_authorized=false` and `retirement_authorized=false` remain enforced until a later isolated root-desk deletion gate revalidates current main, semantic state, parity, closure evidence and policy authority.
+
+## Reform v2 Stage 8D - Fleet rollback closure
+
+`reports/stage8d-fleet-rollback-closure.json` closes the `fleet` rollback observation window after the PR #534 corrective consumer migration. The closure revalidates the four live fleet readers, all seven active-documentation bindings, exact JSON equality between the canonical instance fleet and retained compatibility fleet, unchanged legacy bytes, 5/5 Stage 8D semantic clearance and unchanged external-effect policy authority.
+
+The observation window uses eight distinct exact-main-head successful full-suite boundaries from `027700b3` through `840206d0`. The scheduled VF Media head `8aa691f9` is represented by a successful exact-SHA workflow-dispatch run, with a second successful run recorded as corroborating evidence; the remaining boundaries are push-triggered main runs.
+
+This closure does not delete `packages/vfprod/FLEET.json` and does not authorize deletion. `rollback_window_closed=true` and `retirement_ready_for_deletion_gate=true`; `delete_authorized=false` and `retirement_authorized=false` remain enforced until a later isolated fleet deletion gate revalidates current main, semantic state, exact parity, closure evidence and policy authority.
