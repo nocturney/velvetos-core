@@ -90,6 +90,8 @@ STAGE8D_FLEET_ROLLBACK_CLOSURE = REPORTS / "stage8d-fleet-rollback-closure.json"
 STAGE8D_FLEET_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-fleet-rollback-closure.py"
 STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION = REPORTS / "stage8d-tool-status-semantic-correction.json"
 STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-tool-status-semantic-correction.py"
+STAGE8D_TOOL_STATUS_ROLLBACK_CLOSURE = REPORTS / "stage8d-tool-status-rollback-closure.json"
+STAGE8D_TOOL_STATUS_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-tool-status-rollback-closure.py"
 STAGE8D_CHATGPT_SEMANTIC_CORRECTION = REPORTS / "stage8d-chatgpt-semantic-correction.json"
 STAGE8D_CHATGPT_SEMANTIC_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-chatgpt-semantic-correction.py"
 EXPECTED_REPORTS = {
@@ -138,6 +140,7 @@ EXPECTED_REPORTS = {
     "stage8d-fleet-runtime-consumer-correction.json",
     "stage8d-fleet-rollback-closure.json",
     "stage8d-tool-status-semantic-correction.json",
+    "stage8d-tool-status-rollback-closure.json",
     "stage8d-chatgpt-semantic-correction.json",
 }
 
@@ -3877,6 +3880,122 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated_fix8dt.read_bytes() == STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION.read_bytes(),
                         "Stage 8D tool-status semantic correction receipt is not reproducible",
+                        problems,
+                    )
+
+    if STAGE8D_TOOL_STATUS_ROLLBACK_CLOSURE.is_file():
+        close8dt = load(STAGE8D_TOOL_STATUS_ROLLBACK_CLOSURE)
+        require(
+            close8dt.get("schema") == "velvetos.stage8d-tool-status-rollback-closure.v1"
+            and close8dt.get("stage") == "8D_TOOL_STATUS_ROLLBACK_CLOSURE"
+            and close8dt.get("behavior_change") is False
+            and close8dt.get("surface_id") == "tool_status"
+            and close8dt.get("repository_assessment") == "PASS",
+            "Stage 8D tool-status rollback closure metadata drift",
+            problems,
+        )
+        correction_close8dt = close8dt.get("correction") or {}
+        require(
+            correction_close8dt.get("receipt")
+            == "packages/velvetos/policy/reports/stage8d-tool-status-semantic-correction.json"
+            and correction_close8dt.get("pull_request") == 536
+            and correction_close8dt.get("merge_sha") == "ed183f59959b4eaebd5a092e61d4ef969e834df7",
+            "Stage 8D tool-status closure correction binding drift",
+            problems,
+        )
+        evidence_close8dt = close8dt.get("current_evidence") or {}
+        safe_close8dt = evidence_close8dt.get("content_validated_safe_references") or {}
+        require(
+            evidence_close8dt.get("legacy_present") is True
+            and evidence_close8dt.get("runtime_authority") is False
+            and evidence_close8dt.get("active_authority") == "instance:surface:toolStatus"
+            and evidence_close8dt.get("safe_reference_count") == 6
+            and len(safe_close8dt) == 6
+            and evidence_close8dt.get("semantic_preflight_clear") is True
+            and evidence_close8dt.get("all_stage8d_semantic_preflights_clear") is True
+            and evidence_close8dt.get("legacy_byte_unchanged_since_correction") is True
+            and evidence_close8dt.get("canonical_composition_exact_equal") is True
+            and evidence_close8dt.get("canonical_composed_sha256")
+            == evidence_close8dt.get("legacy_sha256")
+            and evidence_close8dt.get("external_effect_authority_unchanged") is True,
+            "Stage 8D tool-status closure current evidence drift",
+            problems,
+        )
+        observations_close8dt = close8dt.get("observation_window") or {}
+        runs_close8dt = observations_close8dt.get("runs") or []
+        require(
+            observations_close8dt.get("basis") == "POST_CORRECTION_EXACT_MAIN_HEAD_FULL_SUITE_AND_SEMANTIC_STABILITY"
+            and observations_close8dt.get("elapsed_time_is_not_closure_authority") is True
+            and observations_close8dt.get("verified_main_head_run_count") == 7
+            and observations_close8dt.get("workflow_events") == ["push"]
+            and observations_close8dt.get("success_count") == 7
+            and observations_close8dt.get("failure_count") == 0
+            and len(runs_close8dt) == 7
+            and len({row.get("sha") for row in runs_close8dt}) == 7
+            and all(row.get("conclusion") == "success" for row in runs_close8dt)
+            and runs_close8dt[-1].get("id") == 37272603427
+            and observations_close8dt.get("all_descend_from_correction") is True
+            and observations_close8dt.get("monotonic_main_lineage") is True
+            and observations_close8dt.get("latest_main_full_suite_success") is True,
+            "Stage 8D tool-status closure observation window drift",
+            problems,
+        )
+        rollback_close8dt = close8dt.get("rollback_window") or {}
+        require(
+            rollback_close8dt.get("was_open_in_correction_receipt") is True
+            and rollback_close8dt.get("closure_evidence") == "this_receipt"
+            and rollback_close8dt.get("closed") is True
+            and close8dt.get("rollback_window_closed") is True
+            and close8dt.get("retirement_ready_for_deletion_gate") is True
+            and close8dt.get("delete_authorized") is False
+            and close8dt.get("retirement_authorized") is False,
+            "Stage 8D tool-status closure must close rollback without authorizing deletion",
+            problems,
+        )
+        criteria_close8dt = close8dt.get("acceptance_criteria") or {}
+        require(
+            len(criteria_close8dt) == 15
+            and all(value is True for value in criteria_close8dt.values()),
+            "Stage 8D tool-status closure criteria drift or fail",
+            problems,
+        )
+        authority_close8dt = close8dt.get("authority") or {}
+        require(
+            authority_close8dt.get("active_authority") == "instance:surface:toolStatus"
+            and authority_close8dt.get("external_effect_authority_changed") is False
+            and authority_close8dt.get("policy_registry_sha256")
+            == authority_close8dt.get("tool_status_correction_policy_registry_sha256"),
+            "Stage 8D tool-status closure changed authority",
+            problems,
+        )
+        if STAGE8D_TOOL_STATUS_ROLLBACK_CLOSURE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated_close8dt = Path(td) / "stage8d-tool-status-rollback-closure.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_TOOL_STATUS_ROLLBACK_CLOSURE_GENERATOR),
+                        "--prepared-against", close8dt["prepared_against_main_sha"],
+                        "--captured-at", close8dt["captured_at"],
+                        "--output", str(regenerated_close8dt),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=180,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D tool-status rollback closure regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated_close8dt.is_file():
+                    require(
+                        regenerated_close8dt.read_bytes() == STAGE8D_TOOL_STATUS_ROLLBACK_CLOSURE.read_bytes(),
+                        "Stage 8D tool-status rollback closure receipt is not reproducible",
                         problems,
                     )
 
