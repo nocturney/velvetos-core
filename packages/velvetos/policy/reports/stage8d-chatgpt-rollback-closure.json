@@ -1,0 +1,148 @@
+{
+  "schema": "velvetos.stage8d-chatgpt-rollback-closure.v1",
+  "stage": "8D_CHATGPT_ROLLBACK_CLOSURE",
+  "behavior_change": false,
+  "prepared_against_main_sha": "725d2e922739bfceed688c3db36b7fb371931a61",
+  "captured_at": "2026-10-05T09:42:30.6981622+03:00",
+  "surface_id": "chatgpt_core_bundle",
+  "legacy_root": "packages/velvetos/chatgpt-project",
+  "canonical_root": "instances/velvet-factory/distribution/chatgpt-project",
+  "purpose": "Close the ChatGPT Core compatibility rollback observation window using post-correction content classification, exact distribution parity, legacy-tree immutability, canonical bindings and downstream-main evidence while retaining the compatibility bundle and keeping deletion unauthorized.",
+  "correction": {
+    "receipt": "packages/velvetos/policy/reports/stage8d-chatgpt-semantic-correction.json",
+    "pull_request": 538,
+    "merge_sha": "b722f622dd2eab031c087fe051c56a5eb019d705"
+  },
+  "current_evidence": {
+    "legacy_present": true,
+    "runtime_authority": false,
+    "active_authority": "instance:surface:chatgptProject",
+    "file_count": 33,
+    "file_sets_equal": true,
+    "byte_equal": true,
+    "mismatches": [],
+    "legacy_tree_unchanged_since_correction": true,
+    "rollback_git_attributes_unchanged_since_correction": true,
+    "canonical_sensor_binding_count": 18,
+    "brand_asset_source_canonical": true,
+    "content_validated_safe_references": {
+      ".gitattributes": "rollback_git_attributes",
+      "packages/velvetos/policy/sensor-registry.json": "canonical_sensor_binding",
+      "packages/vfbrand/brand-tokens.json": "canonical_asset_source",
+      "scripts/check-project-bundle.py": "canonical_surface_sensor",
+      "scripts/check-reel-route-sync.py": "canonical_surface_sensor",
+      "scripts/check-velvetos.py": "canonical_surface_sensor"
+    },
+    "safe_reference_count": 6,
+    "semantic_preflight_clear": true,
+    "all_stage8d_semantic_preflights_clear": true,
+    "external_effect_authority_unchanged": true
+  },
+  "observation_window": {
+    "basis": "POST_CORRECTION_EXACT_MAIN_HEAD_FULL_SUITE_AND_SEMANTIC_STABILITY",
+    "elapsed_time_is_not_closure_authority": true,
+    "start_merge_sha": "b722f622dd2eab031c087fe051c56a5eb019d705",
+    "end_main_sha": "725d2e922739bfceed688c3db36b7fb371931a61",
+    "workflow": "VelvetOS Core Sensors",
+    "verified_main_head_run_count": 6,
+    "workflow_events": [
+      "push"
+    ],
+    "success_count": 6,
+    "failure_count": 0,
+    "runs": [
+      {
+        "id": 37267662064,
+        "sha": "b722f622dd2eab031c087fe051c56a5eb019d705",
+        "created_at": "2026-10-05T05:24:39Z",
+        "event": "push",
+        "conclusion": "success"
+      },
+      {
+        "id": 37269082934,
+        "sha": "e3a91cabcfdd2a145cdb79339ffc8a68c724a18a",
+        "created_at": "2026-10-05T05:44:01Z",
+        "event": "push",
+        "conclusion": "success"
+      },
+      {
+        "id": 37270696543,
+        "sha": "dcf7fab530f97ac326018182a8545625897a95fa",
+        "created_at": "2026-10-05T06:05:39Z",
+        "event": "push",
+        "conclusion": "success"
+      },
+      {
+        "id": 37270881356,
+        "sha": "840206d08a6d13638fd560dddca1dd6583076612",
+        "created_at": "2026-10-05T06:08:00Z",
+        "event": "push",
+        "conclusion": "success"
+      },
+      {
+        "id": 37272603427,
+        "sha": "e853c0497546b2528f56da2578cb4cc9f3d2ab80",
+        "created_at": "2026-10-05T06:28:34Z",
+        "event": "push",
+        "conclusion": "success"
+      },
+      {
+        "id": 37273584691,
+        "sha": "725d2e922739bfceed688c3db36b7fb371931a61",
+        "created_at": "2026-10-05T06:40:10Z",
+        "event": "push",
+        "conclusion": "success"
+      }
+    ],
+    "all_descend_from_correction": true,
+    "monotonic_main_lineage": true,
+    "latest_main_full_suite_success": true
+  },
+  "rollback_window": {
+    "was_open_in_correction_receipt": true,
+    "closure_evidence": "this_receipt",
+    "closed": true,
+    "closure_reason": "Active authority remains instance:surface:chatgptProject, the 33-file canonical and compatibility distributions remain byte-equal, the legacy tree and rollback .gitattributes are unchanged, all six remaining candidate references retain their content-validated safe roles, semantic preflight is clear, policy authority is unchanged, and multiple exact-main-head full-suite observations are green."
+  },
+  "acceptance_criteria": {
+    "chatgpt_semantic_correction_is_pass": true,
+    "active_authority_remains_instance_surface_chatgpt_project": true,
+    "legacy_and_instance_distribution_file_sets_are_equal": true,
+    "legacy_and_instance_distribution_bytes_are_equal": true,
+    "legacy_bundle_tree_is_unchanged_since_correction": true,
+    "rollback_git_attributes_are_unchanged_since_correction": true,
+    "brand_asset_source_remains_canonical_instance_distribution": true,
+    "sensor_registry_keeps_eighteen_canonical_bindings": true,
+    "six_remaining_candidate_refs_remain_content_validated_safe": true,
+    "chatgpt_semantic_preflight_is_clear": true,
+    "all_five_stage8d_semantic_preflights_are_clear": true,
+    "external_effect_authority_is_unchanged": true,
+    "observation_window_contains_multiple_distinct_downstream_main_heads": true,
+    "all_downstream_main_head_verifications_are_successful": true,
+    "all_observations_descend_from_chatgpt_correction": true,
+    "latest_observation_matches_prepared_against_main": true,
+    "closure_is_evidence_based_not_elapsed_time_based": true,
+    "legacy_bundle_is_retained_after_closure": true,
+    "deletion_requires_a_separate_isolated_gate": true
+  },
+  "repository_assessment": "PASS",
+  "rollback_window_closed": true,
+  "retirement_ready_for_deletion_gate": true,
+  "delete_authorized": false,
+  "retirement_authorized": false,
+  "next_action": "All five Stage 8D rollback windows are now closure-eligible once this receipt is merged. Run separate isolated deletion gates one surface at a time; each gate must revalidate current main, semantic state, its closure receipt, parity/immutability requirements and external-effect authority before authorizing deletion.",
+  "authority": {
+    "active_authority": "instance:surface:chatgptProject",
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "chatgpt_correction_policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false
+  },
+  "constraints": [
+    "closure evidence does not itself authorize deletion",
+    "legacy ChatGPT bundle remains present in this change",
+    "rollback .gitattributes remain in place while compatibility bundle exists",
+    "no big-bang delete",
+    "retirement must be isolated to chatgpt_core_bundle",
+    "external-effect authority must remain unchanged"
+  ]
+}

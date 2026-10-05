@@ -94,6 +94,8 @@ STAGE8D_TOOL_STATUS_ROLLBACK_CLOSURE = REPORTS / "stage8d-tool-status-rollback-c
 STAGE8D_TOOL_STATUS_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-tool-status-rollback-closure.py"
 STAGE8D_CHATGPT_SEMANTIC_CORRECTION = REPORTS / "stage8d-chatgpt-semantic-correction.json"
 STAGE8D_CHATGPT_SEMANTIC_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-chatgpt-semantic-correction.py"
+STAGE8D_CHATGPT_ROLLBACK_CLOSURE = REPORTS / "stage8d-chatgpt-rollback-closure.json"
+STAGE8D_CHATGPT_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-chatgpt-rollback-closure.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -142,6 +144,7 @@ EXPECTED_REPORTS = {
     "stage8d-tool-status-semantic-correction.json",
     "stage8d-tool-status-rollback-closure.json",
     "stage8d-chatgpt-semantic-correction.json",
+    "stage8d-chatgpt-rollback-closure.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -4092,6 +4095,126 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated_fix8dc.read_bytes() == STAGE8D_CHATGPT_SEMANTIC_CORRECTION.read_bytes(),
                         "Stage 8D ChatGPT semantic correction receipt is not reproducible",
+                        problems,
+                    )
+
+    if STAGE8D_CHATGPT_ROLLBACK_CLOSURE.is_file():
+        close8dc = load(STAGE8D_CHATGPT_ROLLBACK_CLOSURE)
+        require(
+            close8dc.get("schema") == "velvetos.stage8d-chatgpt-rollback-closure.v1"
+            and close8dc.get("stage") == "8D_CHATGPT_ROLLBACK_CLOSURE"
+            and close8dc.get("behavior_change") is False
+            and close8dc.get("surface_id") == "chatgpt_core_bundle"
+            and close8dc.get("repository_assessment") == "PASS",
+            "Stage 8D ChatGPT rollback closure metadata drift",
+            problems,
+        )
+        correction_close8dc = close8dc.get("correction") or {}
+        require(
+            correction_close8dc.get("receipt")
+            == "packages/velvetos/policy/reports/stage8d-chatgpt-semantic-correction.json"
+            and correction_close8dc.get("pull_request") == 538
+            and correction_close8dc.get("merge_sha") == "b722f622dd2eab031c087fe051c56a5eb019d705",
+            "Stage 8D ChatGPT closure correction binding drift",
+            problems,
+        )
+        evidence_close8dc = close8dc.get("current_evidence") or {}
+        safe_close8dc = evidence_close8dc.get("content_validated_safe_references") or {}
+        require(
+            evidence_close8dc.get("legacy_present") is True
+            and evidence_close8dc.get("runtime_authority") is False
+            and evidence_close8dc.get("active_authority") == "instance:surface:chatgptProject"
+            and evidence_close8dc.get("file_count") == 33
+            and evidence_close8dc.get("file_sets_equal") is True
+            and evidence_close8dc.get("byte_equal") is True
+            and evidence_close8dc.get("mismatches") == []
+            and evidence_close8dc.get("legacy_tree_unchanged_since_correction") is True
+            and evidence_close8dc.get("rollback_git_attributes_unchanged_since_correction") is True
+            and evidence_close8dc.get("canonical_sensor_binding_count") == 18
+            and evidence_close8dc.get("brand_asset_source_canonical") is True
+            and evidence_close8dc.get("safe_reference_count") == 6
+            and len(safe_close8dc) == 6
+            and evidence_close8dc.get("semantic_preflight_clear") is True
+            and evidence_close8dc.get("all_stage8d_semantic_preflights_clear") is True
+            and evidence_close8dc.get("external_effect_authority_unchanged") is True,
+            "Stage 8D ChatGPT closure current evidence drift",
+            problems,
+        )
+        observations_close8dc = close8dc.get("observation_window") or {}
+        runs_close8dc = observations_close8dc.get("runs") or []
+        require(
+            observations_close8dc.get("basis") == "POST_CORRECTION_EXACT_MAIN_HEAD_FULL_SUITE_AND_SEMANTIC_STABILITY"
+            and observations_close8dc.get("elapsed_time_is_not_closure_authority") is True
+            and observations_close8dc.get("verified_main_head_run_count") == 6
+            and observations_close8dc.get("workflow_events") == ["push"]
+            and observations_close8dc.get("success_count") == 6
+            and observations_close8dc.get("failure_count") == 0
+            and len(runs_close8dc) == 6
+            and len({row.get("sha") for row in runs_close8dc}) == 6
+            and all(row.get("conclusion") == "success" for row in runs_close8dc)
+            and runs_close8dc[-1].get("id") == 37273584691
+            and observations_close8dc.get("all_descend_from_correction") is True
+            and observations_close8dc.get("monotonic_main_lineage") is True
+            and observations_close8dc.get("latest_main_full_suite_success") is True,
+            "Stage 8D ChatGPT closure observation window drift",
+            problems,
+        )
+        rollback_close8dc = close8dc.get("rollback_window") or {}
+        require(
+            rollback_close8dc.get("was_open_in_correction_receipt") is True
+            and rollback_close8dc.get("closure_evidence") == "this_receipt"
+            and rollback_close8dc.get("closed") is True
+            and close8dc.get("rollback_window_closed") is True
+            and close8dc.get("retirement_ready_for_deletion_gate") is True
+            and close8dc.get("delete_authorized") is False
+            and close8dc.get("retirement_authorized") is False,
+            "Stage 8D ChatGPT closure must close rollback without authorizing deletion",
+            problems,
+        )
+        criteria_close8dc = close8dc.get("acceptance_criteria") or {}
+        require(
+            len(criteria_close8dc) == 19
+            and all(value is True for value in criteria_close8dc.values()),
+            "Stage 8D ChatGPT closure criteria drift or fail",
+            problems,
+        )
+        authority_close8dc = close8dc.get("authority") or {}
+        require(
+            authority_close8dc.get("active_authority") == "instance:surface:chatgptProject"
+            and authority_close8dc.get("external_effect_authority_changed") is False
+            and authority_close8dc.get("policy_registry_sha256")
+            == authority_close8dc.get("chatgpt_correction_policy_registry_sha256"),
+            "Stage 8D ChatGPT closure changed authority",
+            problems,
+        )
+        if STAGE8D_CHATGPT_ROLLBACK_CLOSURE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated_close8dc = Path(td) / "stage8d-chatgpt-rollback-closure.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_CHATGPT_ROLLBACK_CLOSURE_GENERATOR),
+                        "--prepared-against", close8dc["prepared_against_main_sha"],
+                        "--captured-at", close8dc["captured_at"],
+                        "--output", str(regenerated_close8dc),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=180,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D ChatGPT rollback closure regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated_close8dc.is_file():
+                    require(
+                        regenerated_close8dc.read_bytes() == STAGE8D_CHATGPT_ROLLBACK_CLOSURE.read_bytes(),
+                        "Stage 8D ChatGPT rollback closure receipt is not reproducible",
                         problems,
                     )
 
