@@ -29,6 +29,7 @@ This prep package turns those existing rules into an implementation-ready contra
 | `provider-interface-v0.md` | provider-neutral adapter contract |
 | `acceptance-vectors-v0.json` | regression scenarios for future implementation |
 | `integration-plan-v0.md` | bounded path from shadow mode to production |
+| `scripts/check-context-continuity-prep.py` | static drift checker; not wired to CI/runtime |
 
 ## Non-negotiable architecture
 
@@ -54,6 +55,16 @@ post-compaction verifier
 ```
 
 The manifest and compacted summary are disposable. They never replace the checkpoint, HANDOFF, policy registry, domain state, receipts or evidence.
+
+## Prep drift check
+
+Run manually on the prep branch:
+
+```bash
+python3 scripts/check-context-continuity-prep.py
+```
+
+The checker verifies that the draft remains non-authoritative/runtime-disabled, all canonical dependency paths still resolve, the manifest reuses **exactly** the four Stage 7A semantic roles, hard compaction blocks remain present, and the acceptance vector set has not drifted. This branch does not add the checker to CI.
 
 ## Integration boundary
 
