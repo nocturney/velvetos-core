@@ -82,6 +82,8 @@ STAGE8D_RETIREMENT_SEMANTIC_AUDIT = REPORTS / "stage8d-retirement-semantic-audit
 STAGE8D_RETIREMENT_SEMANTIC_AUDIT_GENERATOR = ROOT / "scripts" / "generate-stage8d-retirement-semantic-audit.py"
 STAGE8D_ROOT_DESK_RUNTIME_CORRECTION = REPORTS / "stage8d-root-desk-runtime-consumer-correction.json"
 STAGE8D_ROOT_DESK_RUNTIME_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-root-desk-runtime-consumer-correction.py"
+STAGE8D_ROOT_DESK_ROLLBACK_CLOSURE = REPORTS / "stage8d-root-desk-rollback-closure.json"
+STAGE8D_ROOT_DESK_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-root-desk-rollback-closure.py"
 STAGE8D_FLEET_RUNTIME_CORRECTION = REPORTS / "stage8d-fleet-runtime-consumer-correction.json"
 STAGE8D_FLEET_RUNTIME_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-fleet-runtime-consumer-correction.py"
 STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION = REPORTS / "stage8d-tool-status-semantic-correction.json"
@@ -130,6 +132,7 @@ EXPECTED_REPORTS = {
     "stage8d-sample-profile-rollback-reclosure.json",
     "stage8d-retirement-semantic-audit.json",
     "stage8d-root-desk-runtime-consumer-correction.json",
+    "stage8d-root-desk-rollback-closure.json",
     "stage8d-fleet-runtime-consumer-correction.json",
     "stage8d-tool-status-semantic-correction.json",
     "stage8d-chatgpt-semantic-correction.json",
@@ -3441,6 +3444,137 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated_fix8dr.read_bytes() == STAGE8D_ROOT_DESK_RUNTIME_CORRECTION.read_bytes(),
                         "Stage 8D root-desk runtime correction receipt is not reproducible",
+                        problems,
+                    )
+
+    if STAGE8D_ROOT_DESK_ROLLBACK_CLOSURE.is_file():
+        close8dr = load(STAGE8D_ROOT_DESK_ROLLBACK_CLOSURE)
+        require(
+            close8dr.get("schema") == "velvetos.stage8d-root-desk-rollback-closure.v1"
+            and close8dr.get("stage") == "8D_ROOT_DESK_ROLLBACK_CLOSURE"
+            and close8dr.get("behavior_change") is False
+            and close8dr.get("surface_id") == "root_desk"
+            and close8dr.get("repository_assessment") == "PASS",
+            "Stage 8D root-desk rollback closure metadata drift",
+            problems,
+        )
+        correction_close8dr = close8dr.get("correction") or {}
+        require(
+            correction_close8dr.get("receipt")
+            == "packages/velvetos/policy/reports/stage8d-root-desk-runtime-consumer-correction.json"
+            and correction_close8dr.get("pull_request") == 533
+            and correction_close8dr.get("merge_sha") == "a6f74bcd3fe9cd9b4c116df1dbc2a06b09519634",
+            "Stage 8D root-desk closure correction binding drift",
+            problems,
+        )
+        evidence_close8dr = close8dr.get("current_evidence") or {}
+        readers_close8dr = evidence_close8dr.get("runtime_readers") or {}
+        require(
+            evidence_close8dr.get("legacy_present") is True
+            and evidence_close8dr.get("runtime_authority") is False
+            and evidence_close8dr.get("runtime_reader_count") == 10
+            and len(readers_close8dr) == 10
+            and all(
+                row.get("uses_instance_surface_resolver") is True
+                and row.get("direct_root_legacy_read") is False
+                for row in readers_close8dr.values()
+            )
+            and evidence_close8dr.get("semantic_preflight_clear") is True
+            and evidence_close8dr.get("all_stage8d_semantic_preflights_clear") is True
+            and evidence_close8dr.get("legacy_byte_unchanged_since_correction") is True
+            and evidence_close8dr.get("legacy_tool_count") == 18
+            and evidence_close8dr.get("canonical_tool_count") >= 18
+            and evidence_close8dr.get("legacy_seat_count") == 6
+            and evidence_close8dr.get("canonical_seat_count") >= 6
+            and evidence_close8dr.get("legacy_specialist_count") == 38
+            and evidence_close8dr.get("canonical_specialist_count") >= 38
+            and evidence_close8dr.get("tools_equal_by_id") is True
+            and evidence_close8dr.get("seats_equal_by_id") is True
+            and evidence_close8dr.get("specialists_equal_by_slug") is True
+            and evidence_close8dr.get("skills_superset") is True
+            and evidence_close8dr.get("nonfleet_notes_preserved") is True
+            and evidence_close8dr.get("fleet_note_semantically_superseded") is True
+            and evidence_close8dr.get("fleet_correction_receipt")
+            == "packages/velvetos/policy/reports/stage8d-fleet-runtime-consumer-correction.json"
+            and evidence_close8dr.get("external_effect_authority_unchanged") is True,
+            "Stage 8D root-desk closure current evidence drift",
+            problems,
+        )
+        observations_close8dr = close8dr.get("observation_window") or {}
+        runs_close8dr = observations_close8dr.get("runs") or []
+        require(
+            observations_close8dr.get("basis") == "POST_CORRECTION_DOWNSTREAM_MAIN_FULL_SUITE_AND_SEMANTIC_STABILITY"
+            and observations_close8dr.get("elapsed_time_is_not_closure_authority") is True
+            and observations_close8dr.get("verified_main_head_run_count") == 7
+            and observations_close8dr.get("workflow_events") == ["push", "workflow_dispatch"]
+            and observations_close8dr.get("success_count") == 7
+            and observations_close8dr.get("failure_count") == 0
+            and len(runs_close8dr) == 7
+            and len({row.get("sha") for row in runs_close8dr}) == 7
+            and all(row.get("conclusion") == "success" for row in runs_close8dr)
+            and runs_close8dr[-1].get("id") == 37269731921
+            and runs_close8dr[-1].get("additional_successful_run_ids") == [37269817015]
+            and observations_close8dr.get("all_descend_from_correction") is True
+            and observations_close8dr.get("monotonic_main_lineage") is True
+            and observations_close8dr.get("latest_main_full_suite_success") is True,
+            "Stage 8D root-desk closure observation window drift",
+            problems,
+        )
+        rollback_close8dr = close8dr.get("rollback_window") or {}
+        require(
+            rollback_close8dr.get("was_open_in_correction_receipt") is True
+            and rollback_close8dr.get("closure_evidence") == "this_receipt"
+            and rollback_close8dr.get("closed") is True
+            and close8dr.get("rollback_window_closed") is True
+            and close8dr.get("retirement_ready_for_deletion_gate") is True
+            and close8dr.get("delete_authorized") is False
+            and close8dr.get("retirement_authorized") is False,
+            "Stage 8D root-desk closure must close rollback without authorizing deletion",
+            problems,
+        )
+        criteria_close8dr = close8dr.get("acceptance_criteria") or {}
+        require(
+            len(criteria_close8dr) == 20
+            and all(value is True for value in criteria_close8dr.values()),
+            "Stage 8D root-desk closure criteria drift or fail",
+            problems,
+        )
+        authority_close8dr = close8dr.get("authority") or {}
+        require(
+            authority_close8dr.get("external_effect_authority_changed") is False
+            and authority_close8dr.get("policy_registry_sha256")
+            == authority_close8dr.get("root_desk_correction_policy_registry_sha256"),
+            "Stage 8D root-desk closure changed external-effect authority",
+            problems,
+        )
+        if STAGE8D_ROOT_DESK_ROLLBACK_CLOSURE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated_close8dr = Path(td) / "stage8d-root-desk-rollback-closure.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_ROOT_DESK_ROLLBACK_CLOSURE_GENERATOR),
+                        "--prepared-against", close8dr["prepared_against_main_sha"],
+                        "--captured-at", close8dr["captured_at"],
+                        "--output", str(regenerated_close8dr),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=180,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D root-desk rollback closure regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated_close8dr.is_file():
+                    require(
+                        regenerated_close8dr.read_bytes() == STAGE8D_ROOT_DESK_ROLLBACK_CLOSURE.read_bytes(),
+                        "Stage 8D root-desk rollback closure receipt is not reproducible",
                         problems,
                     )
 
