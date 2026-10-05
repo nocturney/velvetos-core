@@ -2,6 +2,7 @@
 """Validate VelvetOS Core + instance scaffolds. No network. No send."""
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import sys
@@ -19,6 +20,7 @@ INSTANCE_RESOLVER = PACK / "instance_resolver.py"
 TOOL_STATUS_RESOLVER = PACK / "tool_status_resolver.py"
 TOOL_STATUS_CONTRACT = PACK / "tool-status-contract.json"
 LEGACY_TOOL_STATUS = PACK / "TOOL-STATUS.json"
+TOOL_STATUS_DELETION_RECEIPT = PACK / "policy" / "reports" / "stage8d-tool-status-deletion.json"
 INSTANCE_MANIFEST_SCHEMA = PACK / "schema" / "instance-manifest.schema.json"
 TOOL_STATUS_CONTRACT_SCHEMA = PACK / "schema" / "tool-status-contract.schema.json"
 INSTANCE_TOOL_STATUS_SCHEMA = PACK / "schema" / "instance-tool-status.schema.json"
@@ -74,6 +76,11 @@ def fail(msg: str) -> None:
 
 def load(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def canonical_sha(value: object) -> str:
+    raw = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(raw).hexdigest()
 
 
 def load_instance_resolver():
@@ -177,9 +184,29 @@ def check_instance_resolver_contract(vf_inst: Path, meta: dict) -> None:
         )
     except Exception as exc:
         fail(f"tool-status composition failed: {exc}")
-    legacy_tool_status = load(LEGACY_TOOL_STATUS)
-    if composed_tool_status != legacy_tool_status:
-        fail("generic contract + instance tool status must remain parity-equal to legacy TOOL-STATUS.json")
+    if LEGACY_TOOL_STATUS.is_file():
+        legacy_tool_status = load(LEGACY_TOOL_STATUS)
+        if composed_tool_status != legacy_tool_status:
+            fail("generic contract + instance tool status must remain parity-equal to legacy TOOL-STATUS.json")
+    else:
+        if not TOOL_STATUS_DELETION_RECEIPT.is_file():
+            fail("legacy TOOL-STATUS.json is absent without an authoritative Stage 8D deletion receipt")
+        deletion_receipt = load(TOOL_STATUS_DELETION_RECEIPT)
+        deletion = deletion_receipt.get("deletion") or {}
+        evidence = deletion_receipt.get("current_evidence") or {}
+        composed_sha = canonical_sha(composed_tool_status)
+        if not (
+            deletion_receipt.get("schema") == "velvetos.stage8d-tool-status-deletion.v1"
+            and deletion_receipt.get("repository_assessment") == "PASS"
+            and deletion_receipt.get("deletion_performed") is True
+            and deletion_receipt.get("retirement_authorized") is True
+            and deletion.get("legacy_path") == "packages/velvetos/TOOL-STATUS.json"
+            and deletion.get("legacy_present") is False
+            and evidence.get("canonical_composition_exact_equal") is True
+            and evidence.get("canonical_composed_sha256") == composed_sha
+            and evidence.get("legacy_canonical_sha256") == composed_sha
+        ):
+            fail("retired TOOL-STATUS parity anchor drift")
 
     core = load(CORE)
     tool_resolution = core.get("toolStatusResolution") or {}
