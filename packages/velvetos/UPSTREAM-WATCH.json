@@ -920,9 +920,9 @@
       "updatePolicy": "latest-compatible",
       "autoUpgrade": false,
       "adoptionGate": "staging-venv+smoke+vfmem-sensor+rollback",
-      "adoptedRelease": "v1.6.1",
+      "adoptedRelease": "v1.6.2",
       "adoptionClass": "staged-stability-pin",
-      "adoptedHead": "eb90d03740755f5252b8b12cce91fd09970f2d81"
+      "adoptedHead": "ba3631f2ed363a6ea50d649c34c56885af6b36fe"
     },
     {
       "repo": "trailhq/Graft",
