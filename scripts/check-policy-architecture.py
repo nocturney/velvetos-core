@@ -96,6 +96,8 @@ STAGE8D_FLEET_RUNTIME_CORRECTION = REPORTS / "stage8d-fleet-runtime-consumer-cor
 STAGE8D_FLEET_RUNTIME_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-fleet-runtime-consumer-correction.py"
 STAGE8D_FLEET_ROLLBACK_CLOSURE = REPORTS / "stage8d-fleet-rollback-closure.json"
 STAGE8D_FLEET_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-fleet-rollback-closure.py"
+STAGE8D_FLEET_DELETION_GATE = REPORTS / "stage8d-fleet-deletion-gate.json"
+STAGE8D_FLEET_DELETION_GATE_GENERATOR = ROOT / "scripts" / "generate-stage8d-fleet-deletion-gate.py"
 STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION = REPORTS / "stage8d-tool-status-semantic-correction.json"
 STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-tool-status-semantic-correction.py"
 STAGE8D_TOOL_STATUS_ROLLBACK_CLOSURE = REPORTS / "stage8d-tool-status-rollback-closure.json"
@@ -153,6 +155,7 @@ EXPECTED_REPORTS = {
     "stage8d-root-desk-deletion.json",
     "stage8d-fleet-runtime-consumer-correction.json",
     "stage8d-fleet-rollback-closure.json",
+    "stage8d-fleet-deletion-gate.json",
     "stage8d-tool-status-semantic-correction.json",
     "stage8d-tool-status-rollback-closure.json",
     "stage8d-chatgpt-semantic-correction.json",
@@ -4432,6 +4435,168 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated_close8df.read_bytes() == STAGE8D_FLEET_ROLLBACK_CLOSURE.read_bytes(),
                         "Stage 8D fleet rollback closure receipt is not reproducible",
+                        problems,
+                    )
+
+
+    if STAGE8D_FLEET_DELETION_GATE.is_file():
+        gate8df = load(STAGE8D_FLEET_DELETION_GATE)
+        require(
+            gate8df.get("schema") == "velvetos.stage8d-fleet-deletion-gate.v1"
+            and gate8df.get("stage") == "8D_FLEET_DELETION_GATE"
+            and gate8df.get("behavior_change") is False
+            and gate8df.get("surface_id") == "fleet"
+            and gate8df.get("prepared_against_main_sha") == "12e8ea4c0a38286eccc30972579270739411b5f2"
+            and gate8df.get("repository_assessment") == "PASS",
+            "Stage 8D fleet deletion gate metadata drift",
+            problems,
+        )
+        target8df = gate8df.get("target") or {}
+        require(
+            target8df.get("legacy_path") == "packages/vfprod/FLEET.json"
+            and target8df.get("canonical_path") == "instances/velvet-factory/instance/fleet.json"
+            and target8df.get("delete_exactly") == ["packages/vfprod/FLEET.json"]
+            and target8df.get("delete_other_surfaces") is False,
+            "Stage 8D fleet deletion target drift",
+            problems,
+        )
+        prereq8df = gate8df.get("prerequisite_closure") or {}
+        require(
+            prereq8df.get("receipt")
+            == "packages/velvetos/policy/reports/stage8d-fleet-rollback-closure.json"
+            and prereq8df.get("schema") == "velvetos.stage8d-fleet-rollback-closure.v1"
+            and prereq8df.get("rollback_window_closed") is True
+            and prereq8df.get("retirement_ready_for_deletion_gate") is True,
+            "Stage 8D fleet deletion closure prerequisite drift",
+            problems,
+        )
+        prior8df = gate8df.get("prior_retirements") or {}
+        sample8df = prior8df.get("sample_profile") or {}
+        root8df = prior8df.get("root_desk") or {}
+        require(
+            set(prior8df) == {"sample_profile", "root_desk"}
+            and sample8df.get("receipt")
+            == "packages/velvetos/policy/reports/stage8d-sample-profile-deletion.json"
+            and sample8df.get("repository_assessment") == "PASS"
+            and sample8df.get("deletion_performed") is True
+            and sample8df.get("retirement_authorized") is True
+            and root8df.get("receipt")
+            == "packages/velvetos/policy/reports/stage8d-root-desk-deletion.json"
+            and root8df.get("repository_assessment") == "PASS"
+            and root8df.get("deletion_performed") is True
+            and root8df.get("retirement_authorized") is True,
+            "Stage 8D fleet deletion prior-retirement binding drift",
+            problems,
+        )
+        remaining8df = gate8df.get("remaining_surface_state") or {}
+        require(
+            set(remaining8df) == {"tool_status", "chatgpt_core_bundle"}
+            and all(
+                row.get("repository_assessment") == "PASS"
+                and row.get("rollback_window_closed") is True
+                and row.get("retirement_ready_for_deletion_gate") is True
+                and row.get("delete_authorized") is False
+                and row.get("retirement_authorized") is False
+                for row in remaining8df.values()
+            ),
+            "Stage 8D fleet deletion retained-surface state drift",
+            problems,
+        )
+        evidence8df = gate8df.get("current_evidence") or {}
+        migrated8df = evidence8df.get("migrated_code") or {}
+        docs8df = evidence8df.get("active_documentation") or {}
+        require(
+            evidence8df.get("legacy_present") is True
+            and evidence8df.get("runtime_authority") is False
+            and len(migrated8df) == 4
+            and all(
+                row.get("legacy_path_absent") is True
+                and row.get("canonical_fleet_binding_present") is True
+                for row in migrated8df.values()
+            )
+            and len(docs8df) == 7
+            and all(row.get("legacy_path_absent") is True for row in docs8df.values())
+            and evidence8df.get("semantic_preflight_clear") is True
+            and evidence8df.get("all_stage8d_semantic_preflights_clear") is True
+            and evidence8df.get("retired_surfaces") == ["root_desk", "sample_profile"]
+            and evidence8df.get("legacy_byte_unchanged_since_closure") is True
+            and evidence8df.get("canonical_legacy_exact_equal") is True
+            and evidence8df.get("printer_count") == 4
+            and evidence8df.get("external_effect_authority_unchanged") is True,
+            "Stage 8D fleet deletion current evidence drift",
+            problems,
+        )
+        restore8df = gate8df.get("restore_anchor") or {}
+        require(
+            restore8df.get("source_commit_sha") == "12e8ea4c0a38286eccc30972579270739411b5f2"
+            and restore8df.get("legacy_path") == "packages/vfprod/FLEET.json"
+            and restore8df.get("git_blob_sha1") == "d76126ce8ac08b5faf86b5069df18886118b8f1a"
+            and restore8df.get("sha256") == "baffa4db8f61d33339f89161155e620d0914a802fe230b241a566bdadb085f3c"
+            and restore8df.get("size_bytes") == 1364
+            and restore8df.get("restore_command")
+            == "git show 12e8ea4c0a38286eccc30972579270739411b5f2:packages/vfprod/FLEET.json > packages/vfprod/FLEET.json",
+            "Stage 8D fleet deletion restore anchor drift",
+            problems,
+        )
+        ci8df = gate8df.get("latest_main_ci") or {}
+        require(
+            ci8df.get("workflow") == "VelvetOS Core Sensors"
+            and ci8df.get("run_id") == 37294141817
+            and ci8df.get("sha") == "12e8ea4c0a38286eccc30972579270739411b5f2"
+            and ci8df.get("event") == "push"
+            and ci8df.get("conclusion") == "success",
+            "Stage 8D fleet deletion latest-main CI drift",
+            problems,
+        )
+        authority8df = gate8df.get("authority") or {}
+        require(
+            authority8df.get("external_effect_authority_changed") is False
+            and authority8df.get("policy_registry_sha256")
+            == authority8df.get("fleet_closure_policy_registry_sha256")
+            and authority8df.get("delete_authorized") is True
+            and authority8df.get("delete_authorized_surface") == "fleet"
+            and authority8df.get("delete_authorized_paths") == ["packages/vfprod/FLEET.json"]
+            and authority8df.get("retirement_authorized") is False
+            and gate8df.get("delete_authorized") is True
+            and gate8df.get("deletion_performed") is False
+            and gate8df.get("retirement_authorized") is False,
+            "Stage 8D fleet deletion gate authority drift",
+            problems,
+        )
+        criteria8df = gate8df.get("acceptance_criteria") or {}
+        require(
+            len(criteria8df) == 19 and all(value is True for value in criteria8df.values()),
+            "Stage 8D fleet deletion gate criteria drift or fail",
+            problems,
+        )
+        if STAGE8D_FLEET_DELETION_GATE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8df = Path(td) / "stage8d-fleet-deletion-gate.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_FLEET_DELETION_GATE_GENERATOR),
+                        "--prepared-against", gate8df["prepared_against_main_sha"],
+                        "--captured-at", gate8df["captured_at"],
+                        "--output", str(regenerated8df),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=180,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D fleet deletion gate regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated8df.is_file():
+                    require(
+                        regenerated8df.read_bytes() == STAGE8D_FLEET_DELETION_GATE.read_bytes(),
+                        "Stage 8D fleet deletion gate receipt is not reproducible",
                         problems,
                     )
 
