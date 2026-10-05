@@ -122,7 +122,8 @@
       ],
       "expected": "COMPACT_ALLOWED_WITH_UNKNOWN_PRESERVED",
       "must_preserve": [
-        "UNPROVEN or unknown state"
+        "UNPROVEN or unknown state",
+        "safe_to_resume=false when the next step depends on runtime health"
       ],
       "forbidden": [
         "invent PASS",
@@ -176,6 +177,7 @@
     }
   ],
   "global_pass_conditions": [
+    "Stage 7A semantic roles remain exactly CANONICAL_STATE, EVIDENCE_RECEIPT, AUTHORIZATION_DECISION, AUDIT_HISTORY",
     "zero authority widening",
     "zero invented state",
     "all resume-critical exact paths/IDs preserved",
