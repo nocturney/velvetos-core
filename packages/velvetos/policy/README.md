@@ -754,3 +754,12 @@ The exact retained legacy tree is restore-anchored as Git tree `d7961fe63ff483b0
 Active authority remains `instance:surface:chatgptProject`. The canonical Velvet Factory distribution remains 33/33 files with bytes equal to the retired legacy tree, while remaining direct legacy-path references are bounded to historical state, documentation, policy evidence and Stage 8 generators. The exact legacy tree remains recoverable from Git tree `d7961fe63ff483b0085d9689b8b3c1b4d35a35f4`, manifest SHA-256 `9d99f8dc6f7f5dc0972cb66dcc3dbba38e5ba5e272d7a3aed4588acfb26193bb`; the removed attribute set remains anchored by SHA-256 `dd0fe2cd643d43a7eae46b016e4403856f6f74dc9a64b414e2a64ad9326a530f`.
 
 This receipt sets `deletion_performed=true` and `retirement_authorized=true` for `chatgpt_core_bundle`. Together with the prior four authoritative deletion receipts, all five Stage 8D compatibility surfaces are retirement-complete pending the integrated Stage 8D final acceptance. Historical ChatGPT receipts remain byte-anchored and external-effect authority is unchanged.
+
+
+## Reform v2 Stage 8D - Final acceptance / Reform v2 closure
+
+`reports/stage8d-final-acceptance.json` is the integrated evidence-only closure for Stage 8D and Reform v2. It is prepared against exact main `87f02307` after PR #558 merged the final isolated `chatgpt_core_bundle` retirement and PR #559 refreshed runtime receipts without reopening compatibility authority. Exact-main `VelvetOS Core Sensors` run `37342022333` passed the full 116/116 suite without repository mutation, and README System Pulse workflow-dispatch run `37343038165` succeeded on the same SHA.
+
+The final semantic audit reports all five compatibility surfaces retired and 5/5 preflight-clear with zero candidate blockers. Each physical absence is accepted only through its authoritative deletion receipt. The final receipt revalidates every restore anchor against Git history and every recorded historical-replay receipt against its anchored commit bytes; all checks pass.
+
+Canonical Velvet Factory instance surfaces remain authoritative, explicit instance selection remains fail-closed, the canonical ChatGPT distribution remains 33 files with its canonical `.gitattributes` rule, and external-effect policy authority is unchanged. The receipt records `stage8d_complete=true` and `reform_v2_complete=true`. No runtime authority or business behavior is changed by final acceptance.

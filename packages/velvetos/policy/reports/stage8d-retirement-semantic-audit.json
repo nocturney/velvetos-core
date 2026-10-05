@@ -2,9 +2,9 @@
   "schema": "velvetos.stage8d-retirement-semantic-audit.v1",
   "stage": "8D_RETIREMENT_SEMANTIC_AUDIT",
   "behavior_change": false,
-  "source_commit_sha": "16917c2acc2bbd438935c5b8f7e6b69be9645a84",
-  "captured_at": "2026-10-05T07:02:41.8066037+03:00",
-  "purpose": "Fail-closed semantic audit for retained Stage 8D compatibility surfaces. Detect exact and assembled path references before rollback closure or deletion.",
+  "source_commit_sha": "87f023079238b3d3d4c563cd40baca63a36883a0",
+  "captured_at": "2026-10-05T19:48:35.0850877+03:00",
+  "purpose": "Fail-closed semantic audit for retained and authoritatively retired Stage 8D compatibility surfaces. A missing surface is accepted only when its merged retirement receipt proves deletion and retirement; remaining surfaces still undergo exact and assembled-path reference detection.",
   "audit_model": {
     "exact_path_detection": true,
     "assembled_path_component_detection": true,
@@ -14,13 +14,14 @@
     "reviewed_safe_references_are_explicitly_classified": true,
     "cross_surface_compatibility_refs_require_correction_receipt": true,
     "tool_status_rollback_refs_are_content_validated": true,
-    "chatgpt_remaining_refs_are_content_validated": true
+    "chatgpt_remaining_refs_are_content_validated": true,
+    "missing_surface_requires_authoritative_retirement_receipt": true
   },
   "compatibility_surfaces": {
     "sample_profile": {
       "path": "packages/velvetos/samples/velvet-factory.json",
-      "present": true,
-      "semantic_reference_count": 12,
+      "present": false,
+      "semantic_reference_count": 23,
       "references": [
         {
           "path": "CHANGELOG.md",
@@ -51,6 +52,22 @@
           "class": "evidence_machinery"
         },
         {
+          "path": "scripts/generate-stage8d-chatgpt-deletion-gate.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-chatgpt-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-fleet-deletion-gate.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-fleet-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
           "path": "scripts/generate-stage8d-post-migration-readiness.py",
           "class": "evidence_machinery"
         },
@@ -63,11 +80,39 @@
           "class": "evidence_machinery"
         },
         {
+          "path": "scripts/generate-stage8d-root-desk-deletion-gate.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-root-desk-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
           "path": "scripts/generate-stage8d-sample-profile-consumer-correction.py",
           "class": "evidence_machinery"
         },
         {
+          "path": "scripts/generate-stage8d-sample-profile-deletion-gate.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-sample-profile-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
           "path": "scripts/generate-stage8d-sample-profile-rollback-closure.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-sample-profile-rollback-reclosure.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-tool-status-deletion-gate.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-tool-status-deletion.py",
           "class": "evidence_machinery"
         }
       ],
@@ -82,22 +127,41 @@
           "scripts/generate-stage8b-instance-resolver-foundation.py",
           "scripts/generate-stage8c-closure.py",
           "scripts/generate-stage8c-sample-profile-consumers.py",
+          "scripts/generate-stage8d-chatgpt-deletion-gate.py",
+          "scripts/generate-stage8d-chatgpt-deletion.py",
+          "scripts/generate-stage8d-fleet-deletion-gate.py",
+          "scripts/generate-stage8d-fleet-deletion.py",
           "scripts/generate-stage8d-post-migration-readiness.py",
           "scripts/generate-stage8d-retirement-readiness.py",
           "scripts/generate-stage8d-retirement-semantic-audit.py",
+          "scripts/generate-stage8d-root-desk-deletion-gate.py",
+          "scripts/generate-stage8d-root-desk-deletion.py",
           "scripts/generate-stage8d-sample-profile-consumer-correction.py",
-          "scripts/generate-stage8d-sample-profile-rollback-closure.py"
+          "scripts/generate-stage8d-sample-profile-deletion-gate.py",
+          "scripts/generate-stage8d-sample-profile-deletion.py",
+          "scripts/generate-stage8d-sample-profile-rollback-closure.py",
+          "scripts/generate-stage8d-sample-profile-rollback-reclosure.py",
+          "scripts/generate-stage8d-tool-status-deletion-gate.py",
+          "scripts/generate-stage8d-tool-status-deletion.py"
         ]
       },
       "retirement_preflight_blockers": [],
       "retirement_preflight_clear": true,
       "rollback_window_closed_by_this_audit": false,
-      "delete_authorized": false
+      "delete_authorized": false,
+      "retired": true,
+      "retirement_evidence": {
+        "receipt": "packages/velvetos/policy/reports/stage8d-sample-profile-deletion.json",
+        "schema": "velvetos.stage8d-sample-profile-deletion.v1",
+        "repository_assessment": "PASS",
+        "deletion_performed": true,
+        "retirement_authorized": true
+      }
     },
     "fleet": {
       "path": "packages/vfprod/FLEET.json",
-      "present": true,
-      "semantic_reference_count": 17,
+      "present": false,
+      "semantic_reference_count": 27,
       "references": [
         {
           "path": "CHANGELOG.md",
@@ -132,7 +196,27 @@
           "class": "evidence_machinery"
         },
         {
+          "path": "scripts/generate-stage8d-chatgpt-deletion-gate.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-chatgpt-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
           "path": "scripts/generate-stage8d-fleet-consumer-migration.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-fleet-deletion-gate.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-fleet-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-fleet-rollback-closure.py",
           "class": "evidence_machinery"
         },
         {
@@ -152,6 +236,30 @@
           "class": "evidence_machinery"
         },
         {
+          "path": "scripts/generate-stage8d-root-desk-deletion-gate.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-root-desk-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-root-desk-rollback-closure.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-sample-profile-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-tool-status-deletion-gate.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-tool-status-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
           "path": "packages/vfharness/state/studio-ops-engines-2026-09-07.json",
           "class": "historical_state"
         },
@@ -162,10 +270,6 @@
         {
           "path": "packages/velvetos_control_api/tests/test_control_api.py",
           "class": "negative_control"
-        },
-        {
-          "path": ".cursor/vf-desk.json",
-          "class": "retained_legacy_surface_reference"
         }
       ],
       "classes": {
@@ -180,11 +284,22 @@
           "scripts/generate-stage8b-instance-resolver-foundation.py",
           "scripts/generate-stage8c-closure.py",
           "scripts/generate-stage8c-control-api-fleet.py",
+          "scripts/generate-stage8d-chatgpt-deletion-gate.py",
+          "scripts/generate-stage8d-chatgpt-deletion.py",
           "scripts/generate-stage8d-fleet-consumer-migration.py",
+          "scripts/generate-stage8d-fleet-deletion-gate.py",
+          "scripts/generate-stage8d-fleet-deletion.py",
+          "scripts/generate-stage8d-fleet-rollback-closure.py",
           "scripts/generate-stage8d-fleet-runtime-consumer-correction.py",
           "scripts/generate-stage8d-post-migration-readiness.py",
           "scripts/generate-stage8d-retirement-readiness.py",
-          "scripts/generate-stage8d-retirement-semantic-audit.py"
+          "scripts/generate-stage8d-retirement-semantic-audit.py",
+          "scripts/generate-stage8d-root-desk-deletion-gate.py",
+          "scripts/generate-stage8d-root-desk-deletion.py",
+          "scripts/generate-stage8d-root-desk-rollback-closure.py",
+          "scripts/generate-stage8d-sample-profile-deletion.py",
+          "scripts/generate-stage8d-tool-status-deletion-gate.py",
+          "scripts/generate-stage8d-tool-status-deletion.py"
         ],
         "historical_state": [
           "packages/vfharness/state/studio-ops-engines-2026-09-07.json"
@@ -192,20 +307,25 @@
         "negative_control": [
           "packages/velvetos/living-studio/tests/test_living_studio.py",
           "packages/velvetos_control_api/tests/test_control_api.py"
-        ],
-        "retained_legacy_surface_reference": [
-          ".cursor/vf-desk.json"
         ]
       },
       "retirement_preflight_blockers": [],
       "retirement_preflight_clear": true,
       "rollback_window_closed_by_this_audit": false,
-      "delete_authorized": false
+      "delete_authorized": false,
+      "retired": true,
+      "retirement_evidence": {
+        "receipt": "packages/velvetos/policy/reports/stage8d-fleet-deletion.json",
+        "schema": "velvetos.stage8d-fleet-deletion.v1",
+        "repository_assessment": "PASS",
+        "deletion_performed": true,
+        "retirement_authorized": true
+      }
     },
     "root_desk": {
       "path": ".cursor/vf-desk.json",
-      "present": true,
-      "semantic_reference_count": 41,
+      "present": false,
+      "semantic_reference_count": 51,
       "references": [
         {
           "path": "instances/velvet-factory/INSTANCE.json",
@@ -348,6 +468,22 @@
           "class": "evidence_machinery"
         },
         {
+          "path": "scripts/generate-stage8d-chatgpt-deletion-gate.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-chatgpt-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-fleet-deletion-gate.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-fleet-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
           "path": "scripts/generate-stage8d-fleet-runtime-consumer-correction.py",
           "class": "evidence_machinery"
         },
@@ -368,7 +504,31 @@
           "class": "evidence_machinery"
         },
         {
+          "path": "scripts/generate-stage8d-root-desk-deletion-gate.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-root-desk-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-root-desk-rollback-closure.py",
+          "class": "evidence_machinery"
+        },
+        {
           "path": "scripts/generate-stage8d-root-desk-runtime-consumer-correction.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-sample-profile-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-tool-status-deletion-gate.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-tool-status-deletion.py",
           "class": "evidence_machinery"
         }
       ],
@@ -415,30 +575,44 @@
           "scripts/generate-stage8c-control-api-fleet.py",
           "scripts/generate-stage8c-desk-catalog-bindings.py",
           "scripts/generate-stage8c-root-desk-readers.py",
+          "scripts/generate-stage8d-chatgpt-deletion-gate.py",
+          "scripts/generate-stage8d-chatgpt-deletion.py",
+          "scripts/generate-stage8d-fleet-deletion-gate.py",
+          "scripts/generate-stage8d-fleet-deletion.py",
           "scripts/generate-stage8d-fleet-runtime-consumer-correction.py",
           "scripts/generate-stage8d-post-migration-readiness.py",
           "scripts/generate-stage8d-retirement-readiness.py",
           "scripts/generate-stage8d-retirement-semantic-audit.py",
           "scripts/generate-stage8d-root-desk-consumer-migration.py",
-          "scripts/generate-stage8d-root-desk-runtime-consumer-correction.py"
+          "scripts/generate-stage8d-root-desk-deletion-gate.py",
+          "scripts/generate-stage8d-root-desk-deletion.py",
+          "scripts/generate-stage8d-root-desk-rollback-closure.py",
+          "scripts/generate-stage8d-root-desk-runtime-consumer-correction.py",
+          "scripts/generate-stage8d-sample-profile-deletion.py",
+          "scripts/generate-stage8d-tool-status-deletion-gate.py",
+          "scripts/generate-stage8d-tool-status-deletion.py"
         ]
       },
       "retirement_preflight_blockers": [],
       "retirement_preflight_clear": true,
       "rollback_window_closed_by_this_audit": false,
-      "delete_authorized": false
+      "delete_authorized": false,
+      "retired": true,
+      "retirement_evidence": {
+        "receipt": "packages/velvetos/policy/reports/stage8d-root-desk-deletion.json",
+        "schema": "velvetos.stage8d-root-desk-deletion.v1",
+        "repository_assessment": "PASS",
+        "deletion_performed": true,
+        "retirement_authorized": true
+      }
     },
     "tool_status": {
       "path": "packages/velvetos/TOOL-STATUS.json",
-      "present": true,
-      "semantic_reference_count": 19,
+      "present": false,
+      "semantic_reference_count": 26,
       "references": [
         {
           "path": "CHANGELOG.md",
-          "class": "documentation_reference"
-        },
-        {
-          "path": "README.md",
           "class": "documentation_reference"
         },
         {
@@ -462,6 +636,18 @@
           "class": "evidence_machinery"
         },
         {
+          "path": "scripts/generate-stage8d-chatgpt-deletion-gate.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-chatgpt-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-fleet-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
           "path": "scripts/generate-stage8d-post-migration-readiness.py",
           "class": "evidence_machinery"
         },
@@ -474,7 +660,27 @@
           "class": "evidence_machinery"
         },
         {
+          "path": "scripts/generate-stage8d-root-desk-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-sample-profile-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
           "path": "scripts/generate-stage8d-tool-status-consumer-migration.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-tool-status-deletion-gate.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-tool-status-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-tool-status-rollback-closure.py",
           "class": "evidence_machinery"
         },
         {
@@ -513,7 +719,6 @@
       "classes": {
         "documentation_reference": [
           "CHANGELOG.md",
-          "README.md",
           "packages/velvetos/policy/README.md"
         ],
         "evidence_machinery": [
@@ -521,10 +726,18 @@
           "scripts/generate-stage8a-core-instance-inventory.py",
           "scripts/generate-stage8b-canonical-instance-config.py",
           "scripts/generate-stage8c-closure.py",
+          "scripts/generate-stage8d-chatgpt-deletion-gate.py",
+          "scripts/generate-stage8d-chatgpt-deletion.py",
+          "scripts/generate-stage8d-fleet-deletion.py",
           "scripts/generate-stage8d-post-migration-readiness.py",
           "scripts/generate-stage8d-retirement-readiness.py",
           "scripts/generate-stage8d-retirement-semantic-audit.py",
+          "scripts/generate-stage8d-root-desk-deletion.py",
+          "scripts/generate-stage8d-sample-profile-deletion.py",
           "scripts/generate-stage8d-tool-status-consumer-migration.py",
+          "scripts/generate-stage8d-tool-status-deletion-gate.py",
+          "scripts/generate-stage8d-tool-status-deletion.py",
+          "scripts/generate-stage8d-tool-status-rollback-closure.py",
           "scripts/generate-stage8d-tool-status-semantic-correction.py"
         ],
         "historical_state": [
@@ -550,12 +763,20 @@
       "retirement_preflight_blockers": [],
       "retirement_preflight_clear": true,
       "rollback_window_closed_by_this_audit": false,
-      "delete_authorized": false
+      "delete_authorized": false,
+      "retired": true,
+      "retirement_evidence": {
+        "receipt": "packages/velvetos/policy/reports/stage8d-tool-status-deletion.json",
+        "schema": "velvetos.stage8d-tool-status-deletion.v1",
+        "repository_assessment": "PASS",
+        "deletion_performed": true,
+        "retirement_authorized": true
+      }
     },
     "chatgpt_core_bundle": {
       "path": "packages/velvetos/chatgpt-project",
-      "present": true,
-      "semantic_reference_count": 21,
+      "present": false,
+      "semantic_reference_count": 29,
       "references": [
         {
           "path": "packages/vfbrand/brand-tokens.json",
@@ -579,6 +800,10 @@
         },
         {
           "path": "CHANGELOG.md",
+          "class": "documentation_reference"
+        },
+        {
+          "path": "README.md",
           "class": "documentation_reference"
         },
         {
@@ -618,6 +843,26 @@
           "class": "evidence_machinery"
         },
         {
+          "path": "scripts/generate-stage8d-chatgpt-deletion-gate.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-chatgpt-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-chatgpt-rollback-closure.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-chatgpt-semantic-correction.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-fleet-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
           "path": "scripts/generate-stage8d-post-migration-readiness.py",
           "class": "evidence_machinery"
         },
@@ -630,16 +875,24 @@
           "class": "evidence_machinery"
         },
         {
+          "path": "scripts/generate-stage8d-root-desk-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-sample-profile-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-tool-status-deletion.py",
+          "class": "evidence_machinery"
+        },
+        {
           "path": "packages/vfharness/state/vf-project-v66-reference-alignment-2026-09-20/implementation-spec.md",
           "class": "historical_state"
         },
         {
           "path": "packages/vfharness/state/vf-publication-v64-binding-2026-09-18/task_plan.md",
           "class": "historical_state"
-        },
-        {
-          "path": ".gitattributes",
-          "class": "rollback_git_attributes"
         }
       ],
       "classes": {
@@ -656,6 +909,7 @@
         ],
         "documentation_reference": [
           "CHANGELOG.md",
+          "README.md",
           "packages/velvetos/policy/README.md"
         ],
         "evidence_machinery": [
@@ -667,22 +921,35 @@
           "scripts/generate-stage8c-living-studio-rules.py",
           "scripts/generate-stage8c-sample-profile-consumers.py",
           "scripts/generate-stage8d-chatgpt-core-consumer-migration.py",
+          "scripts/generate-stage8d-chatgpt-deletion-gate.py",
+          "scripts/generate-stage8d-chatgpt-deletion.py",
+          "scripts/generate-stage8d-chatgpt-rollback-closure.py",
+          "scripts/generate-stage8d-chatgpt-semantic-correction.py",
+          "scripts/generate-stage8d-fleet-deletion.py",
           "scripts/generate-stage8d-post-migration-readiness.py",
           "scripts/generate-stage8d-retirement-readiness.py",
-          "scripts/generate-stage8d-retirement-semantic-audit.py"
+          "scripts/generate-stage8d-retirement-semantic-audit.py",
+          "scripts/generate-stage8d-root-desk-deletion.py",
+          "scripts/generate-stage8d-sample-profile-deletion.py",
+          "scripts/generate-stage8d-tool-status-deletion.py"
         ],
         "historical_state": [
           "packages/vfharness/state/vf-project-v66-reference-alignment-2026-09-20/implementation-spec.md",
           "packages/vfharness/state/vf-publication-v64-binding-2026-09-18/task_plan.md"
-        ],
-        "rollback_git_attributes": [
-          ".gitattributes"
         ]
       },
       "retirement_preflight_blockers": [],
       "retirement_preflight_clear": true,
       "rollback_window_closed_by_this_audit": false,
-      "delete_authorized": false
+      "delete_authorized": false,
+      "retired": true,
+      "retirement_evidence": {
+        "receipt": "packages/velvetos/policy/reports/stage8d-chatgpt-deletion.json",
+        "schema": "velvetos.stage8d-chatgpt-deletion.v1",
+        "repository_assessment": "PASS",
+        "deletion_performed": true,
+        "retirement_authorized": true
+      }
     }
   },
   "assessment": {
@@ -690,12 +957,20 @@
     "surfaces_preflight_clear": 5,
     "surfaces_with_candidate_blockers": [],
     "rollback_windows_closed_by_audit": 0,
-    "deletion_authorized": false
+    "deletion_authorized": false,
+    "surfaces_retired": 5,
+    "retired_surfaces": [
+      "chatgpt_core_bundle",
+      "fleet",
+      "root_desk",
+      "sample_profile",
+      "tool_status"
+    ]
   },
   "repository_assessment": "PASS",
   "retirement_authorized": false,
   "deletion_authorized": false,
-  "next_action": "Resolve machine/config candidates surface-by-surface, then collect explicit rollback-window closure evidence. Do not delete any compatibility surface from this audit.",
+  "next_action": "All five Stage 8D compatibility surfaces are authoritatively retired. Do not reopen deletion work; proceed to integrated Stage 8D final acceptance.",
   "constraints": [
     "observation only",
     "no rollback-window closure",

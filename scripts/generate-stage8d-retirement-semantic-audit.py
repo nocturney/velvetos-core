@@ -530,10 +530,16 @@ def main() -> int:
         report["audit_model"]["missing_surface_requires_authoritative_retirement_receipt"] = True
         report["assessment"]["surfaces_retired"] = len(retired_surfaces)
         report["assessment"]["retired_surfaces"] = retired_surfaces
-        report["next_action"] = (
-            "Continue retirement surface-by-surface. Revalidate every retained target before its deletion gate; "
-            "never treat physical absence alone as retirement evidence."
-        )
+        if len(retired_surfaces) == len(SURFACES):
+            report["next_action"] = (
+                "All five Stage 8D compatibility surfaces are authoritatively retired. "
+                "Do not reopen deletion work; proceed to integrated Stage 8D final acceptance."
+            )
+        else:
+            report["next_action"] = (
+                "Continue retirement surface-by-surface. Revalidate every retained target before its deletion gate; "
+                "never treat physical absence alone as retirement evidence."
+            )
 
     out = args.output if args.output.is_absolute() else ROOT / args.output
     out.parent.mkdir(parents=True, exist_ok=True)
