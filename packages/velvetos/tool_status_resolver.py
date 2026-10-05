@@ -2,13 +2,15 @@
 """Compose generic Core tool-status semantics with instance-owned tool state.
 
 Stage 8D consumer cutover: active tool authority resolves from the selected
-instance ``toolStatus`` surface. The retained legacy composite is rollback/parity
-evidence only. This module contains no business-instance default and performs no
-network or write action.
+instance ``toolStatus`` surface. The legacy composite is rollback/parity evidence
+only; after retirement its exact parity anchor is retained in the authoritative
+deletion receipt and Git history rather than as a live file. This module contains
+no business-instance default and performs no network or write action.
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import sys
@@ -22,6 +24,7 @@ if str(HERE) not in sys.path:
 from instance_resolver import InstanceResolutionError, resolve_instance  # noqa: E402
 
 CONTRACT_REL = Path("packages/velvetos/tool-status-contract.json")
+DELETION_RECEIPT_REL = Path("packages/velvetos/policy/reports/stage8d-tool-status-deletion.json")
 
 
 class ToolStatusResolutionError(RuntimeError):
@@ -157,11 +160,38 @@ def _main() -> int:
     root = Path(args.root).resolve()
     contract = _load_object(root / CONTRACT_REL)
     legacy_rel = Path(contract["composition"]["rollbackCompatibilityPath"])
-    legacy = _load_object(root / legacy_rel)
-    if composed != legacy:
-        print("FAIL composed tool status differs from legacy compatibility document", file=sys.stderr)
+    legacy_path = root / legacy_rel
+    if legacy_path.is_file():
+        legacy = _load_object(legacy_path)
+        if composed != legacy:
+            print("FAIL composed tool status differs from legacy compatibility document", file=sys.stderr)
+            return 1
+        print("OK tool-status legacy parity")
+        return 0
+
+    receipt_path = root / DELETION_RECEIPT_REL
+    if not receipt_path.is_file():
+        print("FAIL legacy compatibility document is absent without a Stage 8D deletion receipt", file=sys.stderr)
         return 1
-    print("OK tool-status legacy parity")
+    receipt = _load_object(receipt_path)
+    deletion = receipt.get("deletion") or {}
+    evidence = receipt.get("current_evidence") or {}
+    canonical_raw = json.dumps(composed, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    composed_sha = hashlib.sha256(canonical_raw).hexdigest()
+    if not (
+        receipt.get("schema") == "velvetos.stage8d-tool-status-deletion.v1"
+        and receipt.get("repository_assessment") == "PASS"
+        and receipt.get("deletion_performed") is True
+        and receipt.get("retirement_authorized") is True
+        and deletion.get("legacy_path") == legacy_rel.as_posix()
+        and deletion.get("legacy_present") is False
+        and evidence.get("canonical_composition_exact_equal") is True
+        and evidence.get("canonical_composed_sha256") == composed_sha
+        and evidence.get("legacy_canonical_sha256") == composed_sha
+    ):
+        print("FAIL retired tool-status parity anchor drift", file=sys.stderr)
+        return 1
+    print("OK tool-status retired legacy parity anchor")
     return 0
 
 

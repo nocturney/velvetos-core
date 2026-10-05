@@ -22,7 +22,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 
 **Zero-cost stack closeout:** PR #390 is merged to `main`; the canonical final-acceptance receipt/sensor records `MERGED / merge=YES` and the reconciled suite remains **109/109 PASS**. Declared limitations remain fail-closed and unchanged.
 
-**Reform v2 Stage 8D compatibility retirement:** `sample_profile`, `root_desk` and `fleet` are retired on merged `main`. This change is the evidence-only deletion gate for `tool_status`: it authorizes only a later isolated removal of `packages/velvetos/TOOL-STATUS.json` after revalidating exact canonical composition parity and the three prior retirements. Active authority remains `instance:surface:toolStatus`; `chatgpt_core_bundle` remains present and deletion-unauthorized. External-effect authority is unchanged.
+**Reform v2 Stage 8D compatibility retirement:** `sample_profile`, `root_desk` and `fleet` are retired on merged `main`. This change retires only the already-authorized `tool_status` compatibility composite `packages/velvetos/TOOL-STATUS.json`; active authority remains `instance:surface:toolStatus`, with exact canonical contract + instance-state composition parity and a Git restore anchor preserved. `chatgpt_core_bundle` remains present and deletion-unauthorized until its own gate + deletion sequence completes. External-effect authority is unchanged.
 
 <!-- OPERATIONAL-SNAPSHOT:START -->
 <table>
@@ -54,8 +54,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-05 - **Reform v2 Stage 8D tool-status deletion gate:** authorizes only a later isolated removal of `packages/velvetos/TOOL-STATUS.json` after proving the prior `sample_profile`, `root_desk` and `fleet` …</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-05 - **Reform v2 Stage 8D tool-status deletion gate:** authorizes only a later isolated removal of `packages/velvetos/TOOL-STATUS.json` after proving the prior `sample_profile`, `root_desk` and `fleet` …</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-05 - **Reform v2 Stage 8D tool-status retirement:** removes only the authorized `packages/velvetos/TOOL-STATUS.json` compatibility composite after PR #553's evidence-only deletion gate. The exact gate m…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-05 - **Reform v2 Stage 8D tool-status retirement:** removes only the authorized `packages/velvetos/TOOL-STATUS.json` compatibility composite after PR #553's evidence-only deletion gate. The exact gate m…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>

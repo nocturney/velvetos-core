@@ -1,0 +1,162 @@
+{
+  "schema": "velvetos.stage8d-tool-status-deletion.v1",
+  "stage": "8D_TOOL_STATUS_DELETION",
+  "behavior_change": false,
+  "prepared_against_main_sha": "376652dc035e2e6a0cdb59453f1c37c79b42f872",
+  "captured_at": "2026-10-05T15:46:00.4604125+03:00",
+  "surface_id": "tool_status",
+  "gate": {
+    "receipt": "packages/velvetos/policy/reports/stage8d-tool-status-deletion-gate.json",
+    "gate_head_sha": "e46a752929781091d6b5cf724418b716a04f5b84",
+    "gate_merge_sha": "376652dc035e2e6a0cdb59453f1c37c79b42f872",
+    "gate_pr": 553,
+    "repository_assessment": "PASS",
+    "delete_authorized": true,
+    "authorized_paths": [
+      "packages/velvetos/TOOL-STATUS.json"
+    ]
+  },
+  "post_gate_main_ci": {
+    "workflow": "VelvetOS Core Sensors",
+    "run_id": 37310304615,
+    "run_attempt": 2,
+    "sha": "376652dc035e2e6a0cdb59453f1c37c79b42f872",
+    "event": "push",
+    "conclusion": "success",
+    "created_at": "2026-10-05T12:33:05Z",
+    "run_started_at": "2026-10-05T12:35:32Z"
+  },
+  "prior_retirements": {
+    "sample_profile": {
+      "receipt": "packages/velvetos/policy/reports/stage8d-sample-profile-deletion.json",
+      "repository_assessment": "PASS",
+      "deletion_performed": true,
+      "retirement_authorized": true
+    },
+    "root_desk": {
+      "receipt": "packages/velvetos/policy/reports/stage8d-root-desk-deletion.json",
+      "repository_assessment": "PASS",
+      "deletion_performed": true,
+      "retirement_authorized": true
+    },
+    "fleet": {
+      "receipt": "packages/velvetos/policy/reports/stage8d-fleet-deletion.json",
+      "repository_assessment": "PASS",
+      "deletion_performed": true,
+      "retirement_authorized": true
+    }
+  },
+  "deletion": {
+    "legacy_path": "packages/velvetos/TOOL-STATUS.json",
+    "canonical_contract_path": "packages/velvetos/tool-status-contract.json",
+    "canonical_state_path": "instances/velvet-factory/instance/tool-status.json",
+    "legacy_present": false,
+    "deleted_paths": [
+      "packages/velvetos/TOOL-STATUS.json"
+    ],
+    "delete_exactly": [
+      "packages/velvetos/TOOL-STATUS.json"
+    ],
+    "deletion_performed": true,
+    "other_surfaces_deleted": false
+  },
+  "retained_surface_isolation": {
+    "chatgpt_core_bundle": {
+      "path": "packages/velvetos/chatgpt-project",
+      "present": true,
+      "unchanged_from_prepared_against": true,
+      "deletion_authorized": false
+    }
+  },
+  "current_evidence": {
+    "runtime_authority": false,
+    "active_authority": "instance:surface:toolStatus",
+    "content_validated_safe_references": {
+      "packages/velvetos/CORE.json": "rollback_contract_reference",
+      "packages/velvetos/policy/sensor-registry.json": "rollback_sensor_binding",
+      "packages/velvetos/schema/tool-status-contract.schema.json": "rollback_contract_schema_reference",
+      "packages/velvetos/tool-status-contract.json": "rollback_contract_reference",
+      "packages/velvetos/tool_status_resolver.py": "rollback_parity_implementation",
+      "scripts/check-velvetos.py": "rollback_parity_sensor"
+    },
+    "safe_reference_count": 6,
+    "retired_legacy_validation": {
+      "mode": "deletion_receipt_hash_anchor",
+      "live_legacy_file_read_required": false,
+      "validators": [
+        "scripts/check-velvetos.py",
+        "packages/velvetos/tool_status_resolver.py"
+      ]
+    },
+    "canonical_composed_sha256": "a9782c78b80670b28c5a77a4588b898fd117bc2eaadd6faeb1193d1a21b39e7d",
+    "legacy_canonical_sha256": "a9782c78b80670b28c5a77a4588b898fd117bc2eaadd6faeb1193d1a21b39e7d",
+    "canonical_composition_exact_equal": true,
+    "external_effect_authority_unchanged": true
+  },
+  "restore_anchor": {
+    "source_commit_sha": "3f7bd148ebf31dae67a02e86ba2b8727dc14c171",
+    "legacy_path": "packages/velvetos/TOOL-STATUS.json",
+    "git_blob_sha1": "e5bb196c5bfd0a0bd5b6fe95df1549de9b1d2372",
+    "sha256": "0b1f082887c9e4d5367574b746bee36f62f4aced0f8cf631a08551e553030add",
+    "size_bytes": 6753,
+    "restore_command": "git show 3f7bd148ebf31dae67a02e86ba2b8727dc14c171:packages/velvetos/TOOL-STATUS.json > packages/velvetos/TOOL-STATUS.json",
+    "verified_after_deletion": true
+  },
+  "historical_replay": {
+    "consumer_migration": {
+      "commit": "541de91794e07b23493304e4af7d653849be869a",
+      "receipt": "packages/velvetos/policy/reports/stage8d-tool-status-consumer-migration.json",
+      "receipt_sha256": "8824ffc78bc7ab55560763e58bfa6cd48b27b8798062d18010bc4a025839e521",
+      "receipt_matches_creation_commit": true
+    },
+    "semantic_correction": {
+      "commit": "e43ee067c702603ae54e4f295939a8c4a723432e",
+      "receipt": "packages/velvetos/policy/reports/stage8d-tool-status-semantic-correction.json",
+      "receipt_sha256": "57bb14e965a1193809ab65b693a7670445c461463ea865b2b277b114bb00d593",
+      "receipt_matches_creation_commit": true
+    },
+    "rollback_closure": {
+      "commit": "5d218b18305bb09c0b1a2f78d118c0a3acb4a329",
+      "receipt": "packages/velvetos/policy/reports/stage8d-tool-status-rollback-closure.json",
+      "receipt_sha256": "1abc2f56320052e34a050ec535ddf5dffc15534533a2780d0ee4db1d97bfc859",
+      "receipt_matches_creation_commit": true
+    }
+  },
+  "authority": {
+    "active_authority": "instance:surface:toolStatus",
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false,
+    "delete_authorized_surface": "tool_status",
+    "retirement_authorized": true
+  },
+  "acceptance_criteria": {
+    "merged_gate_is_pass_and_exactly_authorizes_tool_status": true,
+    "gate_itself_did_not_perform_deletion": true,
+    "gate_merge_main_push_ci_rerun_is_success": true,
+    "authorized_tool_status_is_absent": true,
+    "no_other_tracked_path_is_deleted": true,
+    "non_target_changes_are_retirement_support_only": true,
+    "three_prior_retirements_remain_authoritative": true,
+    "chatgpt_core_bundle_is_present_and_unchanged": true,
+    "canonical_composition_remains_exactly_parity_equal": true,
+    "active_authority_remains_instance_surface_tool_status": true,
+    "six_rollback_parity_references_remain_bounded": true,
+    "external_effect_authority_is_unchanged": true,
+    "exact_restore_anchor_still_resolves": true,
+    "historical_tool_status_receipts_remain_byte_anchored": true,
+    "retirement_is_limited_to_tool_status": true
+  },
+  "repository_assessment": "PASS",
+  "delete_authorized": true,
+  "deletion_performed": true,
+  "retirement_authorized": true,
+  "next_action": "Run exact-SHA selector plus an independent full suite, merge only this isolated tool_status deletion PR, verify the merge SHA locally and with main push CI, then open the separate chatgpt_core_bundle deletion gate.",
+  "constraints": [
+    "one compatibility surface retired per deletion PR",
+    "sample_profile, root_desk and fleet remain retired and are not modified",
+    "chatgpt_core_bundle remains deletion-unauthorized by this receipt",
+    "historical tool_status receipts remain byte-anchored to creation commits",
+    "restore anchor remains available in Git history",
+    "external-effect authority remains unchanged"
+  ]
+}

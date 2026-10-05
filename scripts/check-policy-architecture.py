@@ -106,6 +106,8 @@ STAGE8D_TOOL_STATUS_ROLLBACK_CLOSURE = REPORTS / "stage8d-tool-status-rollback-c
 STAGE8D_TOOL_STATUS_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-tool-status-rollback-closure.py"
 STAGE8D_TOOL_STATUS_DELETION_GATE = REPORTS / "stage8d-tool-status-deletion-gate.json"
 STAGE8D_TOOL_STATUS_DELETION_GATE_GENERATOR = ROOT / "scripts" / "generate-stage8d-tool-status-deletion-gate.py"
+STAGE8D_TOOL_STATUS_DELETION = REPORTS / "stage8d-tool-status-deletion.json"
+STAGE8D_TOOL_STATUS_DELETION_GENERATOR = ROOT / "scripts" / "generate-stage8d-tool-status-deletion.py"
 STAGE8D_CHATGPT_SEMANTIC_CORRECTION = REPORTS / "stage8d-chatgpt-semantic-correction.json"
 STAGE8D_CHATGPT_SEMANTIC_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-chatgpt-semantic-correction.py"
 STAGE8D_CHATGPT_ROLLBACK_CLOSURE = REPORTS / "stage8d-chatgpt-rollback-closure.json"
@@ -164,6 +166,7 @@ EXPECTED_REPORTS = {
     "stage8d-tool-status-semantic-correction.json",
     "stage8d-tool-status-rollback-closure.json",
     "stage8d-tool-status-deletion-gate.json",
+    "stage8d-tool-status-deletion.json",
     "stage8d-chatgpt-semantic-correction.json",
     "stage8d-chatgpt-rollback-closure.json",
 }
@@ -4967,6 +4970,183 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated_gate8dt.read_bytes() == STAGE8D_TOOL_STATUS_DELETION_GATE.read_bytes(),
                         "Stage 8D tool-status deletion gate receipt is not reproducible",
+                        problems,
+                    )
+
+
+    if STAGE8D_TOOL_STATUS_DELETION.is_file():
+        delete8dt = load(STAGE8D_TOOL_STATUS_DELETION)
+        require(
+            delete8dt.get("schema") == "velvetos.stage8d-tool-status-deletion.v1"
+            and delete8dt.get("stage") == "8D_TOOL_STATUS_DELETION"
+            and delete8dt.get("behavior_change") is False
+            and delete8dt.get("surface_id") == "tool_status"
+            and delete8dt.get("prepared_against_main_sha") == "376652dc035e2e6a0cdb59453f1c37c79b42f872"
+            and delete8dt.get("repository_assessment") == "PASS",
+            "Stage 8D tool-status deletion metadata drift",
+            problems,
+        )
+        gate_delete8dt = delete8dt.get("gate") or {}
+        require(
+            gate_delete8dt.get("receipt")
+            == "packages/velvetos/policy/reports/stage8d-tool-status-deletion-gate.json"
+            and gate_delete8dt.get("gate_head_sha") == "e46a752929781091d6b5cf724418b716a04f5b84"
+            and gate_delete8dt.get("gate_merge_sha") == "376652dc035e2e6a0cdb59453f1c37c79b42f872"
+            and gate_delete8dt.get("gate_pr") == 553
+            and gate_delete8dt.get("repository_assessment") == "PASS"
+            and gate_delete8dt.get("delete_authorized") is True
+            and gate_delete8dt.get("authorized_paths") == ["packages/velvetos/TOOL-STATUS.json"],
+            "Stage 8D tool-status deletion gate binding drift",
+            problems,
+        )
+        ci_delete8dt = delete8dt.get("post_gate_main_ci") or {}
+        require(
+            ci_delete8dt.get("workflow") == "VelvetOS Core Sensors"
+            and ci_delete8dt.get("run_id") == 37310304615
+            and ci_delete8dt.get("run_attempt") == 2
+            and ci_delete8dt.get("sha") == "376652dc035e2e6a0cdb59453f1c37c79b42f872"
+            and ci_delete8dt.get("event") == "push"
+            and ci_delete8dt.get("conclusion") == "success",
+            "Stage 8D tool-status deletion post-gate CI drift",
+            problems,
+        )
+        prior_delete8dt = delete8dt.get("prior_retirements") or {}
+        expected_prior_delete8dt = {
+            "sample_profile": "packages/velvetos/policy/reports/stage8d-sample-profile-deletion.json",
+            "root_desk": "packages/velvetos/policy/reports/stage8d-root-desk-deletion.json",
+            "fleet": "packages/velvetos/policy/reports/stage8d-fleet-deletion.json",
+        }
+        require(
+            set(prior_delete8dt) == set(expected_prior_delete8dt)
+            and all(
+                (prior_delete8dt.get(surface_id) or {}).get("receipt") == receipt
+                and (prior_delete8dt.get(surface_id) or {}).get("repository_assessment") == "PASS"
+                and (prior_delete8dt.get(surface_id) or {}).get("deletion_performed") is True
+                and (prior_delete8dt.get(surface_id) or {}).get("retirement_authorized") is True
+                for surface_id, receipt in expected_prior_delete8dt.items()
+            ),
+            "Stage 8D tool-status deletion prior-retirement drift",
+            problems,
+        )
+        deletion_delete8dt = delete8dt.get("deletion") or {}
+        require(
+            deletion_delete8dt.get("legacy_path") == "packages/velvetos/TOOL-STATUS.json"
+            and deletion_delete8dt.get("canonical_contract_path") == "packages/velvetos/tool-status-contract.json"
+            and deletion_delete8dt.get("canonical_state_path") == "instances/velvet-factory/instance/tool-status.json"
+            and deletion_delete8dt.get("legacy_present") is False
+            and deletion_delete8dt.get("deleted_paths") == ["packages/velvetos/TOOL-STATUS.json"]
+            and deletion_delete8dt.get("delete_exactly") == ["packages/velvetos/TOOL-STATUS.json"]
+            and deletion_delete8dt.get("deletion_performed") is True
+            and deletion_delete8dt.get("other_surfaces_deleted") is False,
+            "Stage 8D tool-status deletion scope drift",
+            problems,
+        )
+        retained_delete8dt = delete8dt.get("retained_surface_isolation") or {}
+        chatgpt_delete8dt = retained_delete8dt.get("chatgpt_core_bundle") or {}
+        require(
+            set(retained_delete8dt) == {"chatgpt_core_bundle"}
+            and chatgpt_delete8dt.get("path") == "packages/velvetos/chatgpt-project"
+            and chatgpt_delete8dt.get("present") is True
+            and chatgpt_delete8dt.get("unchanged_from_prepared_against") is True
+            and chatgpt_delete8dt.get("deletion_authorized") is False,
+            "Stage 8D tool-status deletion cross-surface isolation drift",
+            problems,
+        )
+        evidence_delete8dt = delete8dt.get("current_evidence") or {}
+        expected_safe_delete8dt = {
+            "packages/velvetos/CORE.json": "rollback_contract_reference",
+            "packages/velvetos/policy/sensor-registry.json": "rollback_sensor_binding",
+            "packages/velvetos/schema/tool-status-contract.schema.json": "rollback_contract_schema_reference",
+            "packages/velvetos/tool-status-contract.json": "rollback_contract_reference",
+            "packages/velvetos/tool_status_resolver.py": "rollback_parity_implementation",
+            "scripts/check-velvetos.py": "rollback_parity_sensor",
+        }
+        require(
+            evidence_delete8dt.get("runtime_authority") is False
+            and evidence_delete8dt.get("active_authority") == "instance:surface:toolStatus"
+            and evidence_delete8dt.get("content_validated_safe_references") == expected_safe_delete8dt
+            and evidence_delete8dt.get("safe_reference_count") == 6
+            and evidence_delete8dt.get("canonical_composition_exact_equal") is True
+            and evidence_delete8dt.get("canonical_composed_sha256")
+            == evidence_delete8dt.get("legacy_canonical_sha256")
+            and evidence_delete8dt.get("external_effect_authority_unchanged") is True,
+            "Stage 8D tool-status deletion current evidence drift",
+            problems,
+        )
+        restore_delete8dt = delete8dt.get("restore_anchor") or {}
+        require(
+            restore_delete8dt.get("source_commit_sha") == "3f7bd148ebf31dae67a02e86ba2b8727dc14c171"
+            and restore_delete8dt.get("legacy_path") == "packages/velvetos/TOOL-STATUS.json"
+            and restore_delete8dt.get("git_blob_sha1") == "e5bb196c5bfd0a0bd5b6fe95df1549de9b1d2372"
+            and restore_delete8dt.get("sha256") == "0b1f082887c9e4d5367574b746bee36f62f4aced0f8cf631a08551e553030add"
+            and restore_delete8dt.get("size_bytes") == 6753
+            and restore_delete8dt.get("verified_after_deletion") is True,
+            "Stage 8D tool-status deletion restore anchor drift",
+            problems,
+        )
+        replay_delete8dt = delete8dt.get("historical_replay") or {}
+        expected_replay_delete8dt = {
+            "consumer_migration": "541de91794e07b23493304e4af7d653849be869a",
+            "semantic_correction": "e43ee067c702603ae54e4f295939a8c4a723432e",
+            "rollback_closure": "5d218b18305bb09c0b1a2f78d118c0a3acb4a329",
+        }
+        require(
+            set(replay_delete8dt) == set(expected_replay_delete8dt)
+            and all(
+                (replay_delete8dt.get(name) or {}).get("commit") == commit
+                and (replay_delete8dt.get(name) or {}).get("receipt_matches_creation_commit") is True
+                and bool((replay_delete8dt.get(name) or {}).get("receipt_sha256"))
+                for name, commit in expected_replay_delete8dt.items()
+            ),
+            "Stage 8D tool-status deletion historical replay drift",
+            problems,
+        )
+        authority_delete8dt = delete8dt.get("authority") or {}
+        require(
+            authority_delete8dt.get("active_authority") == "instance:surface:toolStatus"
+            and authority_delete8dt.get("external_effect_authority_changed") is False
+            and authority_delete8dt.get("delete_authorized_surface") == "tool_status"
+            and authority_delete8dt.get("retirement_authorized") is True
+            and delete8dt.get("delete_authorized") is True
+            and delete8dt.get("deletion_performed") is True
+            and delete8dt.get("retirement_authorized") is True,
+            "Stage 8D tool-status deletion authority drift",
+            problems,
+        )
+        criteria_delete8dt = delete8dt.get("acceptance_criteria") or {}
+        require(
+            len(criteria_delete8dt) == 15 and all(value is True for value in criteria_delete8dt.values()),
+            "Stage 8D tool-status deletion criteria drift or fail",
+            problems,
+        )
+        if STAGE8D_TOOL_STATUS_DELETION_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated_delete8dt = Path(td) / "stage8d-tool-status-deletion.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_TOOL_STATUS_DELETION_GENERATOR),
+                        "--prepared-against", delete8dt["prepared_against_main_sha"],
+                        "--captured-at", delete8dt["captured_at"],
+                        "--output", str(regenerated_delete8dt),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=180,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D tool-status deletion regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated_delete8dt.is_file():
+                    require(
+                        regenerated_delete8dt.read_bytes() == STAGE8D_TOOL_STATUS_DELETION.read_bytes(),
+                        "Stage 8D tool-status deletion receipt is not reproducible",
                         problems,
                     )
 
