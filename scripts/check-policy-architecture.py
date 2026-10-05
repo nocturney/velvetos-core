@@ -76,6 +76,8 @@ STAGE8D_SAMPLE_ROLLBACK_CLOSURE = REPORTS / "stage8d-sample-profile-rollback-clo
 STAGE8D_SAMPLE_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-sample-profile-rollback-closure.py"
 STAGE8D_SAMPLE_CONSUMER_CORRECTION = REPORTS / "stage8d-sample-profile-consumer-correction.json"
 STAGE8D_SAMPLE_CONSUMER_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-sample-profile-consumer-correction.py"
+STAGE8D_SAMPLE_ROLLBACK_RECLOSURE = REPORTS / "stage8d-sample-profile-rollback-reclosure.json"
+STAGE8D_SAMPLE_ROLLBACK_RECLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-sample-profile-rollback-reclosure.py"
 STAGE8D_RETIREMENT_SEMANTIC_AUDIT = REPORTS / "stage8d-retirement-semantic-audit.json"
 STAGE8D_RETIREMENT_SEMANTIC_AUDIT_GENERATOR = ROOT / "scripts" / "generate-stage8d-retirement-semantic-audit.py"
 STAGE8D_ROOT_DESK_RUNTIME_CORRECTION = REPORTS / "stage8d-root-desk-runtime-consumer-correction.json"
@@ -125,6 +127,7 @@ EXPECTED_REPORTS = {
     "stage8d-post-migration-readiness.json",
     "stage8d-sample-profile-rollback-closure.json",
     "stage8d-sample-profile-consumer-correction.json",
+    "stage8d-sample-profile-rollback-reclosure.json",
     "stage8d-retirement-semantic-audit.json",
     "stage8d-root-desk-runtime-consumer-correction.json",
     "stage8d-fleet-runtime-consumer-correction.json",
@@ -3221,6 +3224,117 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated_fix8ds.read_bytes() == STAGE8D_SAMPLE_CONSUMER_CORRECTION.read_bytes(),
                         "Stage 8D sample consumer correction receipt is not reproducible",
+                        problems,
+                    )
+
+    if STAGE8D_SAMPLE_ROLLBACK_RECLOSURE.is_file():
+        reclose8ds = load(STAGE8D_SAMPLE_ROLLBACK_RECLOSURE)
+        require(
+            reclose8ds.get("schema") == "velvetos.stage8d-sample-profile-rollback-reclosure.v2"
+            and reclose8ds.get("stage") == "8D_SAMPLE_PROFILE_ROLLBACK_RECLOSURE"
+            and reclose8ds.get("behavior_change") is False
+            and reclose8ds.get("surface_id") == "sample_profile"
+            and reclose8ds.get("repository_assessment") == "PASS",
+            "Stage 8D sample rollback re-closure metadata drift",
+            problems,
+        )
+        supersession8ds = reclose8ds.get("supersession") or {}
+        require(
+            supersession8ds.get("historical_closure_receipt")
+            == "packages/velvetos/policy/reports/stage8d-sample-profile-rollback-closure.json"
+            and supersession8ds.get("historical_closure_preserved") is True
+            and supersession8ds.get("historical_closure_superseded_for_current_retirement_authority") is True
+            and supersession8ds.get("correction_receipt")
+            == "packages/velvetos/policy/reports/stage8d-sample-profile-consumer-correction.json"
+            and supersession8ds.get("correction_pull_request") == 531,
+            "Stage 8D sample re-closure supersession chain drift",
+            problems,
+        )
+        evidence8ds = reclose8ds.get("current_evidence") or {}
+        require(
+            evidence8ds.get("legacy_present") is True
+            and evidence8ds.get("runtime_authority") is False
+            and evidence8ds.get("active_semantic_legacy_consumer_count") == 0
+            and evidence8ds.get("semantic_preflight_clear") is True
+            and evidence8ds.get("all_stage8d_semantic_preflights_clear") is True
+            and evidence8ds.get("legacy_byte_unchanged_since_correction") is True
+            and evidence8ds.get("canonical_legacy_module_parity") is True
+            and evidence8ds.get("external_effect_authority_unchanged") is True,
+            "Stage 8D sample re-closure current evidence drift",
+            problems,
+        )
+        observations8ds = reclose8ds.get("observation_window") or {}
+        runs8ds = observations8ds.get("runs") or []
+        require(
+            observations8ds.get("basis") == "FRESH_POST_CORRECTION_DOWNSTREAM_MAIN_FULL_SUITE_AND_SEMANTIC_STABILITY"
+            and observations8ds.get("elapsed_time_is_not_closure_authority") is True
+            and observations8ds.get("main_push_run_count") == 6
+            and observations8ds.get("success_count") == 6
+            and observations8ds.get("failure_count") == 0
+            and len(runs8ds) == 6
+            and len({row.get("sha") for row in runs8ds}) == 6
+            and all(row.get("conclusion") == "success" for row in runs8ds)
+            and observations8ds.get("all_descend_from_correction") is True
+            and observations8ds.get("monotonic_main_lineage") is True
+            and observations8ds.get("latest_main_full_suite_success") is True,
+            "Stage 8D sample re-closure observation window drift",
+            problems,
+        )
+        rollback_reclose8ds = reclose8ds.get("rollback_window") or {}
+        require(
+            rollback_reclose8ds.get("reopened_by_correction") is True
+            and rollback_reclose8ds.get("closure_evidence") == "this_receipt"
+            and rollback_reclose8ds.get("closed") is True
+            and reclose8ds.get("rollback_window_closed") is True
+            and reclose8ds.get("retirement_ready_for_deletion_gate") is True
+            and reclose8ds.get("delete_authorized") is False
+            and reclose8ds.get("retirement_authorized") is False,
+            "Stage 8D sample re-closure must close rollback without authorizing deletion",
+            problems,
+        )
+        criteria_reclose8ds = reclose8ds.get("acceptance_criteria") or {}
+        require(
+            len(criteria_reclose8ds) == 16
+            and all(value is True for value in criteria_reclose8ds.values()),
+            "Stage 8D sample re-closure criteria drift or fail",
+            problems,
+        )
+        authority_reclose8ds = reclose8ds.get("authority") or {}
+        require(
+            authority_reclose8ds.get("external_effect_authority_changed") is False
+            and authority_reclose8ds.get("policy_registry_sha256")
+            == authority_reclose8ds.get("sample_correction_policy_registry_sha256"),
+            "Stage 8D sample re-closure changed external-effect authority",
+            problems,
+        )
+        if STAGE8D_SAMPLE_ROLLBACK_RECLOSURE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated_reclose8ds = Path(td) / "stage8d-sample-profile-rollback-reclosure.json"
+                proc = subprocess.run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_SAMPLE_ROLLBACK_RECLOSURE_GENERATOR),
+                        "--prepared-against", reclose8ds["prepared_against_main_sha"],
+                        "--captured-at", reclose8ds["captured_at"],
+                        "--output", str(regenerated_reclose8ds),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=180,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D sample rollback re-closure regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated_reclose8ds.is_file():
+                    require(
+                        regenerated_reclose8ds.read_bytes() == STAGE8D_SAMPLE_ROLLBACK_RECLOSURE.read_bytes(),
+                        "Stage 8D sample rollback re-closure receipt is not reproducible",
                         problems,
                     )
 
