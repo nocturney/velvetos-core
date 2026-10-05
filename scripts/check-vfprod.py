@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Validate floor fleet routing + maintenance snapshot. No network. No Print. No invented ₪."""
 from __future__ import annotations
 
@@ -10,7 +10,20 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PACK = ROOT / "packages" / "vfprod"
-FLEET = PACK / "FLEET.json"
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from instance_resolver import InstanceResolutionError, resolve_surface  # type: ignore  # noqa: E402
+
+
+def canonical_fleet_path() -> Path:
+    try:
+        return resolve_surface(ROOT, "fleet", instance_id="velvet-factory", env={})
+    except InstanceResolutionError as exc:
+        raise SystemExit(f"FAIL cannot resolve canonical fleet: {exc}") from exc
+
+
+FLEET = canonical_fleet_path()
 ROUTING = PACK / "ROUTING.md"
 MAINT = PACK / "MAINTENANCE.md"
 SNAP = PACK / "data" / "maintenance-snapshot.json"
@@ -68,24 +81,24 @@ def main() -> None:
 
     data = json.loads(FLEET.read_text(encoding="utf-8"))
     if data.get("name") != "vfprod-fleet":
-        fail("FLEET.json name must be vfprod-fleet")
+        fail("canonical fleet name must be vfprod-fleet")
     if data.get("hqPrints") is not False:
-        fail("FLEET.json hqPrints must be false")
+        fail("canonical fleet hqPrints must be false")
     if data.get("briefSlot") != "03":
-        fail("FLEET.json briefSlot must be 03")
+        fail("canonical fleet briefSlot must be 03")
     locks = set(data.get("locks") or [])
     missing = REQUIRED_LOCKS - locks
     if missing:
-        fail(f"FLEET.json missing locks {sorted(missing)}")
+        fail(f"canonical fleet missing locks {sorted(missing)}")
     mats = set(data.get("materials") or [])
     if not REQUIRED_MATERIALS <= mats:
-        fail(f"FLEET.json must list {sorted(REQUIRED_MATERIALS)}")
+        fail(f"canonical fleet must list {sorted(REQUIRED_MATERIALS)}")
     printers = data.get("printers") or []
     if len(printers) != 4:
-        fail(f"FLEET.json must have 4 beds, got {len(printers)}")
+        fail(f"canonical fleet must have 4 beds, got {len(printers)}")
     ids = {p.get("id") for p in printers}
     if ids != REQUIRED_IDS:
-        fail(f"FLEET.json ids must be {sorted(REQUIRED_IDS)}, got {sorted(ids)}")
+        fail(f"canonical fleet ids must be {sorted(REQUIRED_IDS)}, got {sorted(ids)}")
     for row in printers:
         if (row.get("model") or "").strip() in {"X1C", "P1S", "X1 Carbon"}:
             fail("do not invent a Bambu model number")

@@ -2,8 +2,8 @@
   "schema": "velvetos.stage8d-retirement-semantic-audit.v1",
   "stage": "8D_RETIREMENT_SEMANTIC_AUDIT",
   "behavior_change": false,
-  "source_commit_sha": "56950b116c54a2a9ae8f4baadcd0893ab91f774e",
-  "captured_at": "2026-10-04T23:51:38.5643829+03:00",
+  "source_commit_sha": "77406f64b948710d4758bfb73520370c196bd809",
+  "captured_at": "2026-10-05T00:03:43.4328167+03:00",
   "purpose": "Fail-closed semantic audit for retained Stage 8D compatibility surfaces. Detect exact and assembled path references before rollback closure or deletion.",
   "audit_model": {
     "exact_path_detection": true,
@@ -11,7 +11,8 @@
     "ambiguous_machine_or_config_reference_blocks_retirement": true,
     "documentation_references_are_reported_but_do_not_self-authorize_deletion": true,
     "historical_state_and_evidence_machinery_are_separately_classified": true,
-    "reviewed_safe_references_are_explicitly_classified": true
+    "reviewed_safe_references_are_explicitly_classified": true,
+    "cross_surface_compatibility_refs_require_correction_receipt": true
   },
   "compatibility_surfaces": {
     "sample_profile": {
@@ -94,22 +95,10 @@
     "fleet": {
       "path": "packages/vfprod/FLEET.json",
       "present": true,
-      "semantic_reference_count": 25,
+      "semantic_reference_count": 16,
       "references": [
         {
           "path": "CHANGELOG.md",
-          "class": "documentation_reference"
-        },
-        {
-          "path": "docs/chief-of-staff/PACKS-CATALOG.md",
-          "class": "documentation_reference"
-        },
-        {
-          "path": "docs/chief-of-staff/SOT-INDEX.md",
-          "class": "documentation_reference"
-        },
-        {
-          "path": "docs/chief-of-staff/SYSTEM-MAP.md",
           "class": "documentation_reference"
         },
         {
@@ -161,48 +150,21 @@
           "class": "historical_state"
         },
         {
-          "path": ".cursor/vf-desk.json",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "instances/velvet-factory/.cursor/vf-desk.json",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "packages/manifest.json",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/check-velvetos.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/check-vfprod.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/vf_living_studio.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
-          "path": "scripts/vfprod.py",
-          "class": "machine_or_config_candidate"
-        },
-        {
           "path": "packages/velvetos/living-studio/tests/test_living_studio.py",
           "class": "negative_control"
         },
         {
           "path": "packages/velvetos_control_api/tests/test_control_api.py",
           "class": "negative_control"
+        },
+        {
+          "path": ".cursor/vf-desk.json",
+          "class": "retained_legacy_surface_reference"
         }
       ],
       "classes": {
         "documentation_reference": [
           "CHANGELOG.md",
-          "docs/chief-of-staff/PACKS-CATALOG.md",
-          "docs/chief-of-staff/SOT-INDEX.md",
-          "docs/chief-of-staff/SYSTEM-MAP.md",
           "packages/velvetos/policy/README.md"
         ],
         "evidence_machinery": [
@@ -220,37 +182,23 @@
         "historical_state": [
           "packages/vfharness/state/studio-ops-engines-2026-09-07.json"
         ],
-        "machine_or_config_candidate": [
-          ".cursor/vf-desk.json",
-          "instances/velvet-factory/.cursor/vf-desk.json",
-          "packages/manifest.json",
-          "scripts/check-velvetos.py",
-          "scripts/check-vfprod.py",
-          "scripts/vf_living_studio.py",
-          "scripts/vfprod.py"
-        ],
         "negative_control": [
           "packages/velvetos/living-studio/tests/test_living_studio.py",
           "packages/velvetos_control_api/tests/test_control_api.py"
+        ],
+        "retained_legacy_surface_reference": [
+          ".cursor/vf-desk.json"
         ]
       },
-      "retirement_preflight_blockers": [
-        ".cursor/vf-desk.json",
-        "instances/velvet-factory/.cursor/vf-desk.json",
-        "packages/manifest.json",
-        "scripts/check-velvetos.py",
-        "scripts/check-vfprod.py",
-        "scripts/vf_living_studio.py",
-        "scripts/vfprod.py"
-      ],
-      "retirement_preflight_clear": false,
+      "retirement_preflight_blockers": [],
+      "retirement_preflight_clear": true,
       "rollback_window_closed_by_this_audit": false,
       "delete_authorized": false
     },
     "root_desk": {
       "path": ".cursor/vf-desk.json",
       "present": true,
-      "semantic_reference_count": 39,
+      "semantic_reference_count": 40,
       "references": [
         {
           "path": "instances/velvet-factory/INSTANCE.json",
@@ -407,6 +355,10 @@
         {
           "path": "scripts/generate-stage8d-root-desk-consumer-migration.py",
           "class": "evidence_machinery"
+        },
+        {
+          "path": "scripts/generate-stage8d-root-desk-runtime-consumer-correction.py",
+          "class": "evidence_machinery"
         }
       ],
       "classes": {
@@ -455,7 +407,8 @@
           "scripts/generate-stage8d-post-migration-readiness.py",
           "scripts/generate-stage8d-retirement-readiness.py",
           "scripts/generate-stage8d-retirement-semantic-audit.py",
-          "scripts/generate-stage8d-root-desk-consumer-migration.py"
+          "scripts/generate-stage8d-root-desk-consumer-migration.py",
+          "scripts/generate-stage8d-root-desk-runtime-consumer-correction.py"
         ]
       },
       "retirement_preflight_blockers": [],
@@ -719,10 +672,9 @@
   },
   "assessment": {
     "surfaces_total": 5,
-    "surfaces_preflight_clear": 2,
+    "surfaces_preflight_clear": 3,
     "surfaces_with_candidate_blockers": [
       "chatgpt_core_bundle",
-      "fleet",
       "tool_status"
     ],
     "rollback_windows_closed_by_audit": 0,

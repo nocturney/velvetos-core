@@ -40,7 +40,7 @@
     "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md + Print·Demand·Sound (hq/PRINT-DEMAND.md). Same-day append for new URLs. No invented bodies. No auto-DM.",
     "Print-done handoff: packages/vfprod/PRINT-DONE.md card → vfom draft → PREFLIGHT → vfigos. HQ does not drive printers or auto-publish.",
     "Organic Growth Control Plane: constitution/ORGANIC_GROWTH.md + vfgrowth/ORGANIC-GROWTH.md + scripts/vf_organic_growth.py. Drafts + 07:00 readiness pack consumed by the 09:00 Morning Brief. No autopost, no auto-DM, no poll→Print, no certain conversion from WhatsApp.",
-    "Floor fleet: packages/vfprod/FLEET.json + ROUTING.md — recommend bed by material (PETG/ASA/Nylon/PEBA). Watchtower stays Edge. Maintenance snapshot empty = אין ספירה.",
+    "Floor fleet: instance:surface:fleet + packages/vfprod/ROUTING.md — recommend bed by material (PETG/ASA/Nylon/PEBA). Watchtower stays Edge. Maintenance snapshot empty = אין ספירה.",
     "09:00 Morning Brief pulls orders.json + Invoice4U snapshot from disk (not inbox). Slot 01 one-click gates (GATES.json) are human — not WhatsApp close, not Print.",
     "Public offering follows packages/vfbiz/OFFERING.md: ready products + custom work. Customer type and quantity are job attributes, not a separate service line. New commercial expansion still routes through vfbiz + lead decision.",
     "Every ~2 days forever (until owner stops): LinklyAI/best-skills via BEST-SKILLS.md + TIMER.md + skill vf-best-skills. Renew subscribe_timer every pass. Embed patterns only; no npx skills on Cloud.",

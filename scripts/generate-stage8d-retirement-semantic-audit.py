@@ -55,6 +55,7 @@ EVIDENCE_EXACT = {
     "scripts/check-policy-architecture.py",
     "scripts/generate-stage6d-documentation-authority-cleanup-report.py",
 }
+ROOT_DESK_CORRECTION_REL = "packages/velvetos/policy/reports/stage8d-root-desk-runtime-consumer-correction.json"
 REVIEWED_SAFE_REFERENCES = {
     "fleet": {
         "packages/velvetos/living-studio/tests/test_living_studio.py": "negative_control",
@@ -105,6 +106,24 @@ def candidates(sha: str, token: str) -> list[str]:
     return sorted(set(out))
 
 
+def root_desk_correction_passed(sha: str) -> bool:
+    if not git_exists(sha, ROOT_DESK_CORRECTION_REL):
+        return False
+    try:
+        receipt = json.loads(git_text(sha, ROOT_DESK_CORRECTION_REL))
+    except (json.JSONDecodeError, subprocess.CalledProcessError):
+        return False
+    semantic = receipt.get("semantic_audit") or {}
+    rollback = receipt.get("rollback") or {}
+    return (
+        receipt.get("repository_assessment") == "PASS"
+        and semantic.get("retirement_preflight_clear") is True
+        and semantic.get("remaining_blockers") == []
+        and rollback.get("window_open") is True
+        and receipt.get("delete_authorized") is False
+    )
+
+
 def semantic_match(surface_id: str, text: str) -> bool:
     spec = SURFACES[surface_id]
     low = text.lower().replace("\\", "/")
@@ -119,8 +138,11 @@ def semantic_match(surface_id: str, text: str) -> bool:
     return all(component.lower() in low for component in spec["components"])
 
 
-def classify(surface_id: str, rel: str) -> str:
+def classify(surface_id: str, rel: str, sha: str) -> str:
     legacy = SURFACES[surface_id]["path"]
+    if surface_id == "fleet" and rel == ".cursor/vf-desk.json":
+        if root_desk_correction_passed(sha):
+            return "retained_legacy_surface_reference"
     if surface_id == "chatgpt_core_bundle" and rel.startswith(legacy + "/"):
         return "self"
     if rel == legacy:
@@ -150,7 +172,7 @@ def scan_surface(sha: str, surface_id: str) -> dict[str, Any]:
             continue
         if not semantic_match(surface_id, text):
             continue
-        rows.append({"path": rel, "class": classify(surface_id, rel)})
+        rows.append({"path": rel, "class": classify(surface_id, rel, sha)})
     rows = sorted(rows, key=lambda row: (row["class"], row["path"]))
     classes: dict[str, list[str]] = {}
     for row in rows:
@@ -200,6 +222,7 @@ def main() -> int:
             "documentation_references_are_reported_but_do_not_self-authorize_deletion": True,
             "historical_state_and_evidence_machinery_are_separately_classified": True,
             "reviewed_safe_references_are_explicitly_classified": True,
+            "cross_surface_compatibility_refs_require_correction_receipt": True,
         },
         "compatibility_surfaces": surfaces,
         "assessment": {

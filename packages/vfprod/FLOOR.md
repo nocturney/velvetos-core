@@ -9,7 +9,7 @@
 Perplexity הציע סוכן שמקבל STL, חותך, ומקצה מדפסת לפי חומר / גודל / תאריך יעד.  
 כאן: אדם על הרצפה בוחר מיטה פנויה. HQ ממליץ בלבד (`ROUTING.md` · `python3 scripts/vfprod.py route`) ולא דוחף G-code.
 
-ארבע מיטות בקטלוג: `FLEET.json` (Bambu A/B · Snapmaker U1 · Elegoo Centauri). דגם/סדרה ריקים עד ספירת רצפה.
+ארבע מיטות בקטלוג: `instance:surface:fleet` (Bambu A/B · Snapmaker U1 · Elegoo Centauri). דגם/סדרה ריקים עד ספירת רצפה.
 
 דשבורד חווה עתידי על ה־LAN (Watchtower) = **Edge בלבד** — פלייבוק: [`WATCHTOWER.md`](WATCHTOWER.md). כלי רצפה, לא פקודת Print מ־HQ.
 

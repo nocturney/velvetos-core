@@ -22,7 +22,7 @@ SPEC.loader.exec_module(mod)
 
 class LivingStudioTests(unittest.TestCase):
     def test_registry_has_23_skills(self):
-        reg = json.loads((ROOT / "packages/velvetos/living-studio/REGISTRY.json").read_text())
+        reg = json.loads((ROOT / "packages/velvetos/living-studio/REGISTRY.json").read_text(encoding="utf-8"))
         self.assertEqual(len(reg["skills"]), 23)
 
     def test_skill_verify_all(self):
@@ -31,7 +31,7 @@ class LivingStudioTests(unittest.TestCase):
         self.assertEqual(v["count"], 23)
 
     def test_production_planner_uses_instance_fleet_surface(self):
-        reg = json.loads((ROOT / "packages/velvetos/living-studio/REGISTRY.json").read_text())
+        reg = json.loads((ROOT / "packages/velvetos/living-studio/REGISTRY.json").read_text(encoding="utf-8"))
         planner = next(s for s in reg["skills"] if s["id"] == "production-planner")
         self.assertIn("instance:surface:fleet", planner["reads"])
         legacy = "/".join(["packages", "vfprod", "FLEET.json"])
@@ -61,7 +61,7 @@ class LivingStudioTests(unittest.TestCase):
         a = mod.universal_intake("note", text, dry_run=True)
         self.assertEqual(a["status"], "dry_run")
         # inbox should not gain this excerpt
-        inbox = json.loads((ROOT / "office/control/inbox.json").read_text())
+        inbox = json.loads((ROOT / "office/control/inbox.json").read_text(encoding="utf-8"))
         blob = json.dumps(inbox)
         self.assertNotIn(text, blob)
 
@@ -109,7 +109,7 @@ class LivingStudioTests(unittest.TestCase):
 
     def test_canonical_sots_unchanged_by_selftest_contract(self):
         # Selftest must be non-mutating — inbox buckets stay the main template set
-        inbox = json.loads((ROOT / "office/control/inbox.json").read_text())
+        inbox = json.loads((ROOT / "office/control/inbox.json").read_text(encoding="utf-8"))
         self.assertIn("buckets", inbox)
         # no selftest pollution keys required empty
         for bucket in (inbox.get("buckets") or {}).values():

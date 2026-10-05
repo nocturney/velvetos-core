@@ -1,0 +1,93 @@
+{
+  "schema": "velvetos.stage8d-fleet-runtime-consumer-correction.v2",
+  "stage": "8D_FLEET_RUNTIME_CONSUMER_CORRECTION",
+  "behavior_change": true,
+  "prepared_against_main_sha": "7acda9e89ae53ff868827b9480fce02830bfdd1a",
+  "source_commit_sha": "77406f64b948710d4758bfb73520370c196bd809",
+  "captured_at": "2026-10-05T00:03:43.4328167+03:00",
+  "surface_id": "fleet",
+  "legacy_path": "packages/vfprod/FLEET.json",
+  "canonical_path": "instances/velvet-factory/instance/fleet.json",
+  "purpose": "Complete fleet runtime/documentation cutover exposed by the fail-closed semantic audit, while retaining the parity-equal fleet compatibility file and keeping rollback open.",
+  "migration": {
+    "migrated_code": [
+      "scripts/vfprod.py",
+      "scripts/check-vfprod.py",
+      "scripts/vf_living_studio.py",
+      "scripts/check-velvetos.py"
+    ],
+    "runtime_consumers_migrated": true,
+    "active_documentation": {
+      "docs/chief-of-staff/SOT-INDEX.md": true,
+      "docs/chief-of-staff/PACKS-CATALOG.md": true,
+      "docs/chief-of-staff/SYSTEM-MAP.md": true,
+      "packages/manifest.json": true,
+      "packages/vfprod/FLOOR.md": true,
+      "packages/vfprod/ROUTING.md": true,
+      "instances/velvet-factory/.cursor/vf-desk.json": true
+    },
+    "legacy_present": true,
+    "legacy_byte_unchanged": true,
+    "canonical_legacy_parity": true
+  },
+  "semantic_audit": {
+    "base_blockers": [
+      ".cursor/vf-desk.json",
+      "instances/velvet-factory/.cursor/vf-desk.json",
+      "packages/manifest.json",
+      "scripts/check-velvetos.py",
+      "scripts/check-vfprod.py",
+      "scripts/vf_living_studio.py",
+      "scripts/vfprod.py"
+    ],
+    "negative_controls": [
+      "packages/velvetos/living-studio/tests/test_living_studio.py",
+      "packages/velvetos_control_api/tests/test_control_api.py"
+    ],
+    "retained_legacy_surface_references": [
+      ".cursor/vf-desk.json"
+    ],
+    "remaining_blockers": [],
+    "retirement_preflight_clear": true,
+    "root_desk_dependency_receipt": "packages/velvetos/policy/reports/stage8d-root-desk-runtime-consumer-correction.json"
+  },
+  "rollback": {
+    "window_open": true,
+    "closure_evidence": null,
+    "retirement_ready_for_deletion_gate": false,
+    "delete_authorized": false
+  },
+  "authority": {
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "prepared_against_policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false
+  },
+  "acceptance_criteria": {
+    "prior_fleet_migration_receipt_is_preserved": true,
+    "semantic_audit_exposed_remaining_runtime_consumers": true,
+    "all_live_fleet_readers_use_canonical_instance_surface": true,
+    "active_fleet_documentation_uses_canonical_surface": true,
+    "canonical_and_legacy_fleet_remain_parity_equal": true,
+    "legacy_fleet_is_byte_unchanged": true,
+    "root_desk_rollback_surface_is_byte_unchanged": true,
+    "root_desk_correction_dependency_is_satisfied": true,
+    "legacy_path_test_assertions_are_explicit_negative_controls": true,
+    "retained_root_desk_reference_is_receipt_gated_not_runtime_authority": true,
+    "semantic_preflight_has_zero_fleet_blockers": true,
+    "fleet_rollback_window_remains_open": true,
+    "fleet_delete_authority_remains_false": true,
+    "external_effect_authority_is_unchanged": true
+  },
+  "repository_assessment": "PASS",
+  "retirement_authorized": false,
+  "delete_authorized": false,
+  "next_action": "Merge this correction, verify downstream main, then collect explicit fresh evidence for fleet rollback-window closure. Do not delete packages/vfprod/FLEET.json in this change.",
+  "constraints": [
+    "no fleet legacy deletion in this change",
+    "no fleet rollback-window closure in this change",
+    "cross-surface compatibility classification requires a passing root-desk correction receipt",
+    "negative controls do not count as live consumers",
+    "no big-bang retirement",
+    "external-effect authority must remain unchanged"
+  ]
+}

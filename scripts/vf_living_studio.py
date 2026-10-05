@@ -19,6 +19,11 @@ from zoneinfo import ZoneInfo
 
 from vf_paths import OFFICE_ROOT, ROOT  # noqa: E402
 
+VELVETOS_PACK = ROOT / "packages" / "velvetos"
+if str(VELVETOS_PACK) not in sys.path:
+    sys.path.insert(0, str(VELVETOS_PACK))
+from instance_resolver import InstanceResolutionError, resolve_surface  # type: ignore  # noqa: E402
+
 TZ = ZoneInfo("Asia/Jerusalem")
 
 LS = ROOT / "packages" / "velvetos" / "living-studio"
@@ -45,7 +50,6 @@ PRINT_EVENTS = OFFICE_ROOT / "packages" / "vfprod" / "data" / "print-events.json
 if not PRINT_EVENTS.parent.is_dir():
     PRINT_EVENTS = ROOT / "packages" / "vfprod" / "data" / "print-events.jsonl"
 CARDS = ROOT / "packages" / "vfprod" / "hq" / "cards"
-FLEET = ROOT / "packages" / "vfprod" / "FLEET.json"
 LOOP = ROOT / "packages" / "vfops" / "LOOP.json"
 OWNER_MEMORY = OFFICE_ROOT / "packages" / "vfops" / "data" / "owner-memory.md"
 if not OWNER_MEMORY.parent.is_dir():
@@ -82,6 +86,13 @@ def load_json(path: Path, default: Any = None) -> Any:
     if not path.is_file():
         return default
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def canonical_fleet_path() -> Path:
+    try:
+        return resolve_surface(ROOT, "fleet", instance_id="velvet-factory", env={})
+    except InstanceResolutionError as exc:
+        raise RuntimeError(f"canonical fleet resolution failed: {exc}") from exc
 
 
 def append_jsonl(path: Path, row: dict) -> None:
@@ -308,7 +319,7 @@ def world_model() -> dict:
     inbox = load_json(INBOX, {"buckets": {}}) or {}
     handoff = load_json(HANDOFF, {}) or {}
     loop = load_json(LOOP, {}) or {}
-    fleet = load_json(FLEET, {}) or {}
+    fleet = load_json(canonical_fleet_path(), {}) or {}
     ig = ig_status()
     decisions = []
     if DECISIONS.is_file():
@@ -1760,7 +1771,7 @@ def work_to_story() -> dict:
 
 
 def print_engineering() -> dict:
-    fleet = load_json(FLEET, {}) or {}
+    fleet = load_json(canonical_fleet_path(), {}) or {}
     return {
         "router": "packages/vfprod",
         "cli": "python3 scripts/vfprod.py route|remaining|brief",

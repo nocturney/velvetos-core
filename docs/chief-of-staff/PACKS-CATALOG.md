@@ -36,7 +36,7 @@
 
 | פק | תפקיד | סמכות / כניסה | CLI / sensor |
 |---|---|---|---|
-| `vfprod` | רצפה: ניתוב מיטות, print.done, תחזוקה | `FLEET.json` · `ROUTING.md` · `PRINT-DONE.md` · `WATCHTOWER.md` · `3DAISTUDIO.md` | `vfprod.py` · `check-vfprod.py` |
+| `vfprod` | רצפה: ניתוב מיטות, print.done, תחזוקה | `instance:surface:fleet` · `ROUTING.md` · `PRINT-DONE.md` · `WATCHTOWER.md` · `3DAISTUDIO.md` | `vfprod.py` · `check-vfprod.py` |
 
 HQ **ממליץ** מיטה; לא מדפיס. Watchtower = Edge.
 
