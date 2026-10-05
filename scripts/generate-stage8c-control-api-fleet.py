@@ -12,6 +12,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "packages" / "velvetos" / "policy" / "reports" / "stage8c-control-api-fleet.json"
+REPORT_REL = OUT.relative_to(ROOT).as_posix()
 POLICY = ROOT / "packages" / "velvetos" / "policy" / "policy-registry.json"
 CANON_FLEET = ROOT / "instances" / "velvet-factory" / "instance" / "fleet.json"
 LEGACY_FLEET = ROOT / "packages" / "vfprod" / "FLEET.json"
@@ -45,6 +46,24 @@ def git_json(commit: str, rel: str) -> dict[str, Any]:
         raise SystemExit(f"{rel}@{commit} must be object")
     return obj
 
+
+def git_text(commit: str, rel: str) -> str:
+    return subprocess.check_output(["git", "show", f"{commit}:{rel}"], cwd=ROOT).decode("utf-8-sig", errors="replace")
+
+
+def git_exists(commit: str, rel: str) -> bool:
+    return subprocess.run(["git", "cat-file", "-e", f"{commit}:{rel}"], cwd=ROOT, capture_output=True).returncode == 0
+
+
+def source_commit() -> str | None:
+    proc = subprocess.run(
+        ["git", "log", "-1", "--format=%H", "--", REPORT_REL],
+        cwd=ROOT, text=True, capture_output=True, encoding="utf-8", errors="replace",
+    )
+    value = proc.stdout.strip()
+    return value if re.fullmatch(r"[0-9a-f]{40}", value or "") else None
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--prepared-against", required=True)
@@ -53,20 +72,26 @@ def main() -> int:
     a = ap.parse_args()
     require(re.fullmatch(r"[0-9a-f]{40}", a.prepared_against) is not None, "bad sha")
 
-    canon = load(CANON_FLEET)
-    legacy = load(LEGACY_FLEET)
+    src = source_commit()
+    def src_json(path: Path) -> dict[str, Any]:
+        return git_json(src, path.relative_to(ROOT).as_posix()) if src else load(path)
+    def src_text(path: Path) -> str:
+        return git_text(src, path.relative_to(ROOT).as_posix()) if src else path.read_text(encoding="utf-8")
+
+    canon = src_json(CANON_FLEET)
+    legacy = src_json(LEGACY_FLEET)
     legacy_base = git_json(a.prepared_against, "packages/vfprod/FLEET.json")
     require(csha(canon) == csha(legacy), "canonical fleet differs from legacy compatibility fleet")
     require(csha(legacy) == csha(legacy_base), "legacy fleet changed during Control API cutover")
 
-    operational = OPERATIONAL.read_text(encoding="utf-8")
-    integrations = INTEGRATIONS.read_text(encoding="utf-8")
-    helper = INSTANCE_SOURCES.read_text(encoding="utf-8")
-    contributions = load(CONTRIB)
-    docker = DOCKER.read_text(encoding="utf-8")
-    deploy = DEPLOY.read_text(encoding="utf-8")
-    readme = README.read_text(encoding="utf-8")
-    deploy_doc = DEPLOY_DOC.read_text(encoding="utf-8")
+    operational = src_text(OPERATIONAL)
+    integrations = src_text(INTEGRATIONS)
+    helper = src_text(INSTANCE_SOURCES)
+    contributions = src_json(CONTRIB)
+    docker = src_text(DOCKER)
+    deploy = src_text(DEPLOY)
+    readme = src_text(README)
+    deploy_doc = src_text(DEPLOY_DOC)
 
     runtime_files = {
         "operational": operational,
@@ -112,7 +137,7 @@ def main() -> int:
     require("instances/<VELVETOS_INSTANCE_ID>/instance/fleet.json" in readme,
             "Control API README still teaches legacy production authority")
 
-    policy_now = csha(load(POLICY))
+    policy_now = csha(src_json(POLICY))
     policy_base = csha(git_json(a.prepared_against, "packages/velvetos/policy/policy-registry.json"))
     require(policy_now == policy_base, "external-effect policy changed")
 
@@ -137,7 +162,7 @@ def main() -> int:
         ),
         "vf_cloud_run_deployment_selects_instance_explicitly": '--set-env-vars "VELVETOS_INSTANCE_ID=velvet-factory"' in deploy,
         "canonical_fleet_remains_exactly_equal_to_legacy_rollback_copy": csha(canon) == csha(legacy),
-        "legacy_fleet_is_unchanged_and_retained_for_rollback": csha(legacy) == csha(legacy_base) and LEGACY_FLEET.is_file(),
+        "legacy_fleet_is_unchanged_and_retained_for_rollback": csha(legacy) == csha(legacy_base) and (git_exists(src, LEGACY_FLEET.relative_to(ROOT).as_posix()) if src else LEGACY_FLEET.is_file()),
         "external_effect_policy_registry_is_unchanged": policy_now == policy_base,
     }
 

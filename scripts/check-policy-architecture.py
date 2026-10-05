@@ -98,6 +98,8 @@ STAGE8D_FLEET_ROLLBACK_CLOSURE = REPORTS / "stage8d-fleet-rollback-closure.json"
 STAGE8D_FLEET_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-fleet-rollback-closure.py"
 STAGE8D_FLEET_DELETION_GATE = REPORTS / "stage8d-fleet-deletion-gate.json"
 STAGE8D_FLEET_DELETION_GATE_GENERATOR = ROOT / "scripts" / "generate-stage8d-fleet-deletion-gate.py"
+STAGE8D_FLEET_DELETION = REPORTS / "stage8d-fleet-deletion.json"
+STAGE8D_FLEET_DELETION_GENERATOR = ROOT / "scripts" / "generate-stage8d-fleet-deletion.py"
 STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION = REPORTS / "stage8d-tool-status-semantic-correction.json"
 STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION_GENERATOR = ROOT / "scripts" / "generate-stage8d-tool-status-semantic-correction.py"
 STAGE8D_TOOL_STATUS_ROLLBACK_CLOSURE = REPORTS / "stage8d-tool-status-rollback-closure.json"
@@ -156,6 +158,7 @@ EXPECTED_REPORTS = {
     "stage8d-fleet-runtime-consumer-correction.json",
     "stage8d-fleet-rollback-closure.json",
     "stage8d-fleet-deletion-gate.json",
+    "stage8d-fleet-deletion.json",
     "stage8d-tool-status-semantic-correction.json",
     "stage8d-tool-status-rollback-closure.json",
     "stage8d-chatgpt-semantic-correction.json",

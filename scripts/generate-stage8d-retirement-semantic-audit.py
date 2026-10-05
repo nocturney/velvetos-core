@@ -65,6 +65,10 @@ RETIREMENT_RECEIPTS = {
         "receipt": "packages/velvetos/policy/reports/stage8d-root-desk-deletion.json",
         "schema": "velvetos.stage8d-root-desk-deletion.v1",
     },
+    "fleet": {
+        "receipt": "packages/velvetos/policy/reports/stage8d-fleet-deletion.json",
+        "schema": "velvetos.stage8d-fleet-deletion.v1",
+    },
 }
 REVIEWED_SAFE_REFERENCES = {
     "fleet": {
