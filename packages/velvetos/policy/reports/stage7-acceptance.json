@@ -16,7 +16,7 @@
     },
     "stage7c": {
       "path": "packages/velvetos/policy/reports/stage7c-research-scheduler-consolidation.json",
-      "canonical_json_sha256": "0a0e710d6ebea747360c19f4f9f883871848aa49ea447e6ab62919acc707a7f5"
+      "canonical_json_sha256": "bb2a76b2448580b37422edc4e5e825202a149408c882e1a850a29bf802cd7541"
     },
     "stage7d": {
       "path": "packages/velvetos/policy/reports/stage7d-artifact-retention.json",
@@ -76,9 +76,9 @@
     "primary_clock_owner": "grok-bot-routines",
     "provider": "grok-bot",
     "provider_verified": 9,
-    "pending": 50,
+    "pending": 56,
     "deep_review_required": 0,
-    "reusable_current_review": 50,
+    "reusable_current_review": 56,
     "required_artifact_metadata": [
       "as_of",
       "provenance",

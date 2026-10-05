@@ -20,9 +20,9 @@
     "protected_routines_verified": 9
   },
   "research_routing": {
-    "pending": 50,
+    "pending": 56,
     "deep_review_required": 0,
-    "reusable_current_review": 50,
+    "reusable_current_review": 56,
     "cheap_detection_first": true
   },
   "artifact_contract": {
