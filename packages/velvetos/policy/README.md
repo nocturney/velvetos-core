@@ -327,7 +327,7 @@ Acceptance evidence: `reports/stage7b-memory-learning-lifecycle.json` (10/10 PAS
 
 ## Reform v2 Stage 7C — Research / Scheduler consolidation
 
-`research-scheduler-consolidation.json` keeps the existing **Velvet Research Seat** and the protected Grok Bot inventory as the one owner-facing clock authority. All nine protected routines map to `grok-bot-routines` with an explicit fallback that is manual or conditional recovery, never an active duplicate recurring clock. ChatGPT copies and Antigravity sidecars remain retired/disabled.
+`research-scheduler-consolidation.json` is retained as **historical Stage 7C acceptance evidence** for the former nine-routine cutover. Current scheduler authority moved on 2026-10-06 to `automation/grok/current-baseline.json` + `automation/grok/manifest.json`: three recurring Grok routines only; the former Research Seat is manual/event-driven.
 
 Repository-owned GitHub schedules remain valid machine execution/verifier clocks. They do not become owner-facing routine authority; in particular, `velvetos-research.yml` verifies freshness, builds the semantic index and runs sensors after the 02:00 Research Seat rather than generating the research body.
 
@@ -360,7 +360,7 @@ The integrated gate requires all nine conditions simultaneously:
 
 - one explicit four-role state/evidence semantic model with all nine retention classes mapped;
 - selective evidence-gated memory/learning, no automatic promotion, no forced daily quota, no new always-on memory system, and zero incremental recurring cost;
-- one owner-facing clock authority for all nine protected routines, with GitHub schedules limited to machine execution/verification;
+- current owner-facing recurring authority limited to the three-routine minimal Grok baseline, with GitHub schedules limited to machine execution/verification; Stage 7C nine-routine evidence remains historical;
 - research truth metadata (`as_of`, `provenance`, `uncertainty`, `refresh_target`) and cheap-detection-first deep-review routing;
 - concrete artifact retention with copy-first migration, clean active-consumer scan, rollback evidence, and no unclassified retention placeholders;
 - the Stage 7A Work Ledger question resolved as **NO_NEW_WORK_LEDGER_STORE**, with `office/control/HANDOFF.json` remaining the refs-only continuation view;

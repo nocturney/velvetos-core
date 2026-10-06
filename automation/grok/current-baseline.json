@@ -1,0 +1,51 @@
+{
+  "schema": "vf.grok.current-baseline.v1",
+  "approvedAt": "2026-10-06T15:00:00+03:00",
+  "approvedBy": "Christian Velvet",
+  "timezone": "Asia/Jerusalem",
+  "purpose": "Minimal recurring Grok Bot footprint; routine governance moves out of the dedicated Grok manager.",
+  "activeRoutines": [
+    {
+      "id": "cognee-memory-sync",
+      "title": "Cognee Memory Sync",
+      "cadence": "daily 06:30",
+      "providerSchedule": "CRON_TZ=Asia/Jerusalem 30 6 * * *"
+    },
+    {
+      "id": "velvetos-office-loop",
+      "title": "VelvetOS Office Loop",
+      "cadence": "daily 18:30",
+      "providerSchedule": "CRON_TZ=Asia/Jerusalem 30 18 * * *"
+    },
+    {
+      "id": "runtime-receipts-refresh",
+      "title": "Runtime Receipts Refresh",
+      "cadence": "daily 19:15",
+      "providerSchedule": "CRON_TZ=Asia/Jerusalem 15 19 * * *"
+    }
+  ],
+  "manualOrEventDriven": [
+    {
+      "id": "velvet-morning-brief",
+      "title": "Velvet Morning Brief",
+      "desiredEnabled": false
+    }
+  ],
+  "disabledRoutines": [
+    "morning-delivery-guard",
+    "velvet-research-seat",
+    "weekly-research-accountability",
+    "cognee-stable-updates",
+    "velvetos-integrity-guard",
+    "pc-offline-retry"
+  ],
+  "manager": {
+    "dedicatedRoutineManagerRequired": false,
+    "providerShellMayRemainDormantIfNeededForRoutineOwnership": true,
+    "managerMustNotRunRecurringGovernanceWork": true
+  },
+  "historicalEvidence": {
+    "stage7cModel": "packages/velvetos/policy/research-scheduler-consolidation.json",
+    "note": "Stage 7C remains historical acceptance evidence and is not current scheduler authority after this owner-approved baseline."
+  }
+}

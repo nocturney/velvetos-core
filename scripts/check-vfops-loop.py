@@ -107,13 +107,14 @@ def main() -> None:
     routine = ROUTINE.read_text(encoding="utf-8")
     if "vfops_loop.py" not in routine:
         fail("ROUTINE.md must bind the canonical vfops_loop.py brief producer")
-    if "**07:00 cutoff**" not in routine:
-        fail("ROUTINE.md must keep 07:00 as the internal research/readiness cutoff")
-    if "**09:00** | Velvet Morning Brief" not in routine:
-        fail("ROUTINE.md must keep 09:00 as the single owner-facing Morning Brief")
+    for needle in ("**06:30** | Cognee Memory Sync", "**18:30** | VelvetOS Office Loop", "**19:15** | Runtime Receipts Refresh"):
+        if needle not in routine:
+            fail(f"ROUTINE.md missing current minimal schedule marker {needle}")
+    if "manual/event-driven" not in routine or "Velvet Morning Brief" not in routine:
+        fail("ROUTINE.md must keep Morning Brief as a manual/event-driven capability")
     brief_persist_cmd = "python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>"
-    if routine.count(brief_persist_cmd) < 2:
-        fail("ROUTINE.md must bind both Morning Brief and Delivery Guard recovery to the canonical same-day brief artifact producer")
+    if brief_persist_cmd not in routine:
+        fail("ROUTINE.md must bind the event-driven Morning Brief to the canonical same-day artifact producer")
     if "backfill artifact is not a delivery receipt" not in routine:
         fail("ROUTINE.md must keep brief artifact persistence separate from Gmail delivery proof")
     if "vfops_loop.py" not in HANDOFF.read_text(encoding="utf-8"):

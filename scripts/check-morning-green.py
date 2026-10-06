@@ -80,22 +80,31 @@ def main() -> None:
             fail(f"Gmail sender missing CID capability {token!r}")
 
     grok_contract = (ROOT / "automation" / "grok" / "CONTRACT.md").read_text(encoding="utf-8")
-    for token in ("09:00 owner brief must use Morning Green v3.1", "V10.3 remains available only for legacy/recovery", "Apps Script bridge v5 health"):
+    for token in (
+        "Morning Green v3.1 remains the only current owner-email design",
+        "V10.3 remains available only for legacy/recovery",
+        "not a recurring scheduler job",
+    ):
         if token not in grok_contract:
-            fail(f"Grok owner-email authority missing Morning Green cutover token {token!r}")
+            fail(f"Grok owner-email authority missing current Morning Green token {token!r}")
     grok_manifest = json.loads((ROOT / "automation" / "grok" / "manifest.json").read_text(encoding="utf-8"))
-    if int(grok_manifest.get("version", 0)) < 2 or grok_manifest.get("morningGreenCutoverDate") != "2026-09-23":
-        fail("Grok manifest missing Morning Green production cutover version/date")
+    if int(grok_manifest.get("version", 0)) < 6 or grok_manifest.get("morningGreenCutoverDate") != "2026-09-23":
+        fail("Grok manifest missing current Morning Green production cutover version/date")
     authority = grok_manifest.get("ownerEmailAuthority") or {}
     if not str(authority.get("design") or "").startswith("Morning Green v3.1"):
         fail("Grok ownerEmailAuthority is not Morning Green v3.1")
-    morning = next((x for x in grok_manifest.get("routines", []) if x.get("id") == "velvet-morning-brief"), None)
-    if not morning or "Morning Green v3.1" not in str(morning.get("responsibility") or ""):
-        fail("protected 09:00 routine is not bound to Morning Green v3.1")
+    retired = {x.get("id"): x for x in grok_manifest.get("retiredRoutines", [])}
+    morning = retired.get("velvet-morning-brief") or {}
+    if morning.get("desiredEnabled") is not False or morning.get("state") != "manual_or_event_driven_only":
+        fail("Morning Brief must remain manual/event-driven and disabled as a recurring Grok routine")
     routine = (ROOT / "packages" / "vfops" / "ROUTINE.md").read_text(encoding="utf-8")
-    for token in ("09:00** | Velvet Morning Brief | Owner-facing Morning Green v3.1", "10:00** | Morning Delivery Guard | Verify TODAY'S 09:00 Morning Green delivery", "must not silently downgrade to V10.3"):
+    for token in (
+        "manual/event-driven only",
+        "python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>",
+        "backfill artifact is not a delivery receipt",
+    ):
         if token not in routine:
-            fail(f"vfops ROUTINE missing Morning Green production rule {token!r}")
+            fail(f"vfops ROUTINE missing current Morning Green capability rule {token!r}")
 
     builder = (PACK / "build_morning_green.py").read_text(encoding="utf-8")
     preparer = (PACK / "prepare_morning_green.py").read_text(encoding="utf-8")
