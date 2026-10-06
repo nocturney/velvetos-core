@@ -20,7 +20,7 @@ Use when the user asks for סקירת קישורים שבועית, refresh of Ch
 3. Same weekly pass: run `packages/vfresearch/hq/PRINT-DEMAND.md` — visual 3D trends + IL demand signals + sound via `MUSIC.md`. Write `packages/vfresearch/sources/YYYY-MM-DD-print-demand.md`. No auto-DM. No invented hot hours.
 4. Write `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md`.
 5. Set brief `05` line: embed summary or «שבועי קישורים — אין חדש במשרד» · print-demand line.
-6. After catalog/pack edits: `python3 scripts/check-all.py` (includes `check-vfresearch.py`).
+6. After scoped catalog/pack edits run `python3 scripts/check-vfresearch.py` plus affected domain sensors; reserve `python3 scripts/check-all.py` for repository-wide contract/authority changes or explicit acceptance/regression.
 7. New URL mid-week: append to `LINKS.json` the same day.
 
 ## Forbidden

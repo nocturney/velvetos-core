@@ -2,9 +2,10 @@ name: VF Media Auto Intake
 # VELVET_MACHINE_WRITER_ALLOW: packages/vfmedia/catalog.json packages/vfmedia/state packages/vfmedia/data office/control/inbox.json
 
 # Scheduled background intake for Drive inbox -> canonical vfmedia catalog.
-# Target cadence: every 5 minutes (GitHub Actions minimum schedule interval).
+# Current cadence: every 3h at :23 UTC; manual dispatch is also available.
 # Platform caveat: scheduled runs are best-effort and may be delayed under load.
-# validate (vfmedia.py validate) is NOT this job - it is schema-only.
+# Offline validate/selftest/hardening proof is owned once by check-vfmedia.py.
+# This job owns the live intake mutation plus one read-only canonical sensor pass.
 #
 # Authentication uses GitHub OIDC -> Google Workload Identity Federation.
 # The workflow mints a short-lived Drive access token; no long-lived Google
@@ -56,11 +57,8 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Hardening unit tests
-        run: python3 packages/vfmedia/tests/test_intake_hardening.py -v
-
-      - name: Offline selftest
-        run: python3 scripts/vfmedia.py intake selftest
+      - name: Canonical media preflight sensor
+        run: python3 scripts/check-vfmedia.py
 
       - name: Install Drive client
         run: pip install --quiet google-api-python-client google-auth
@@ -128,11 +126,6 @@ jobs:
             exit 4
           fi
           echo "pushed=true" >> "$GITHUB_OUTPUT"
-
-      - name: Sensor slice
-        run: |
-          python3 scripts/check-vfmedia.py
-          python3 scripts/vfmedia.py validate
 
       - name: Fail on AUTH / FAIL / PERSIST / push problems
         if: always()

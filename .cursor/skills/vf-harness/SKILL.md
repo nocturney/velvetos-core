@@ -36,7 +36,7 @@ Canonical execution semantics live only in `packages/vfharness/LOOP.md`; this sk
 - archive/handoff packaging → `playbooks/deterministic-packaging.md`;
 - new/edited instructions/rules/skills → `playbooks/agent-instruction-qa.md` + `python3 scripts/check-skill-health.py`.
 
-After catalog/rule/pack edits run `python3 scripts/check-all.py`. Cross-tool continuation uses existing `office/control/HANDOFF.json` and `packages/vfmem/HANDOFF.md`; never create a second orchestrator.
+After scoped catalog/rule/pack edits run the affected/domain sensors first; reserve `python3 scripts/check-all.py` for repository-wide contract/authority changes or explicit acceptance/regression. Cross-tool continuation uses existing `office/control/HANDOFF.json` and `packages/vfmem/HANDOFF.md`; never create a second orchestrator.
 
 ## Forbidden
 

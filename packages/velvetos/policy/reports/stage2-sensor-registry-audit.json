@@ -67,8 +67,22 @@
       "potential_duplicate_with_suite_runner": false
     },
     {
+      "workflow": ".github/workflows/velvetos-research.yml",
+      "line": 53,
+      "sensor_path": "scripts/check-vfresearch.py",
+      "suite_runner_present": false,
+      "potential_duplicate_with_suite_runner": false
+    },
+    {
+      "workflow": ".github/workflows/velvetos-research.yml",
+      "line": 54,
+      "sensor_path": "scripts/check-vfmem.py",
+      "suite_runner_present": false,
+      "potential_duplicate_with_suite_runner": false
+    },
+    {
       "workflow": ".github/workflows/vfmedia-intake.yml",
-      "line": 134,
+      "line": 61,
       "sensor_path": "scripts/check-vfmedia.py",
       "suite_runner_present": false,
       "potential_duplicate_with_suite_runner": false

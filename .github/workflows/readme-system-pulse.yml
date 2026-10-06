@@ -3,8 +3,6 @@ name: README System Pulse
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "17 * * * *"
   push:
     branches: [main]
     paths:
@@ -13,13 +11,10 @@ on:
       - "packages/vfigos/CAPABILITIES.json"
       - "packages/vfmedia/state/intake-runner.json"
       - "packages/velvetos/living-studio/REGISTRY.json"
+      - "packages/velvetos/policy/sensor-registry.json"
       - "packages/manifest.json"
-      - "CHANGELOG.md"
-      - "scripts/check-*.py"
       - "scripts/update-readme-snapshot.py"
       - "scripts/fix-readme-bidi.py"
-      - ".github/workflows/*.yml"
-      - ".github/workflows/*.yaml"
 
 permissions:
   contents: write

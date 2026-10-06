@@ -1,6 +1,7 @@
 name: Instagram Read Smoke
-# Read-only. Offline unit tests + live MCP smoke (Graph GETs only, via
-# smoke_public.py READ_ONLY_TOOLS). Never publishes, deletes, DMs or commits.
+# Read-only live MCP smoke (Graph GETs only, via smoke_public.py READ_ONLY_TOOLS).
+# Offline unit tests are owned by check-vfmcp.py / code-change validation.
+# Never publishes, deletes, DMs or commits.
 # Live part needs repo secret VELVET_INSTAGRAM_MCP_BEARER_TOKEN; without it
 # the step prints SKIP and stays green (no numbers claimed).
 
@@ -35,12 +36,6 @@ jobs:
 
       - name: Install pinned sensor deps
         run: python3 -m pip install --disable-pip-version-check --require-hashes -r requirements-sensors.py311.lock
-
-      - name: Offline Instagram MCP unit tests
-        working-directory: packages/vfigos/remote
-        run: |
-          python3 -m unittest -v test_http_path
-          python3 -m unittest -v test_insights_v21
 
       - name: Live read-only smoke (skips without bearer secret)
         env:

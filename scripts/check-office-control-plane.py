@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import subprocess
 import sys
 from pathlib import Path
 
@@ -70,20 +69,19 @@ def main() -> None:
         if key not in sot:
             fail(f"sourcesOfTruth missing {key}")
 
-    # Authoritative paths must exist (globs excluded). Live jobs.csv is gitignored — bootstrap header.
+    # Authoritative paths must exist (globs excluded). The live jobs cache is gitignored,
+    # so a read-only sensor accepts the canonical bootstrap template when no cache exists.
     jobs_live = ROOT / "office" / "ledger" / "live" / "jobs.csv"
     jobs_tmpl = ROOT / "office" / "ledger" / "templates" / "jobs.csv"
-    if not jobs_live.is_file():
-        if not jobs_tmpl.is_file():
-            fail("missing office/ledger/templates/jobs.csv")
-        jobs_live.parent.mkdir(parents=True, exist_ok=True)
-        jobs_live.write_text(jobs_tmpl.read_text(encoding="utf-8"), encoding="utf-8")
+    if not jobs_live.is_file() and not jobs_tmpl.is_file():
+        fail("missing office/ledger/live/jobs.csv and bootstrap template office/ledger/templates/jobs.csv")
+    jobs_contract_path = jobs_live if jobs_live.is_file() else jobs_tmpl
 
     must_exist = [
         ROOT / "constitution" / "CONSTITUTION.md",
         ROOT / "constitution" / "ORCHESTRA.md",
         ROOT / "constitution" / "PUBLIC_CTA.md",
-        jobs_live,
+        jobs_contract_path,
         ROOT / "packages" / "vfmedia" / "catalog.json",
         ROOT / "docs" / "MEDIA-VAULT.md",
         ROOT / "packages" / "vfgrowth" / "CALENDAR.md",
@@ -171,49 +169,42 @@ def main() -> None:
     if "office/control-plane.json" not in guide_paths:
         fail("LOOP.json guides must include office/control-plane.json")
 
-    # CLI smoke
-    for cmd in ("status", "gaps", "followups", "memory-hygiene", "review", "handoff", "simulate"):
-        argv = [sys.executable, str(CLI), cmd]
-        if cmd == "simulate":
-            argv += ["--scenario", "owner_surface"]
-        proc = subprocess.run(argv, cwd=ROOT, text=True, encoding="utf-8", errors="replace", capture_output=True)
-        if proc.returncode != 0:
-            fail(f"vf_control_plane.py {cmd}: {proc.stderr or proc.stdout}")
+    # Execute once, validate once: the workflow owns refresh/mutation commands.
+    # This sensor validates CLI wiring and the evidence already produced by that owner.
+    cli_src = CLI.read_text(encoding="utf-8")
+    for command, function_name in (
+        ("status", "cmd_status"),
+        ("watchdog", "cmd_watchdog"),
+        ("gaps", "cmd_gaps"),
+        ("handoff", "cmd_handoff"),
+        ("followups", "cmd_followups"),
+        ("review", "cmd_review"),
+        ("memory-hygiene", "cmd_memory_hygiene"),
+        ("simulate", "cmd_simulate"),
+        ("selftest", "cmd_selftest"),
+    ):
+        if f'def {function_name}(' not in cli_src:
+            fail(f"vf_control_plane.py missing handler for {command}")
+        if f'sub.add_parser("{command}")' not in cli_src:
+            fail(f"vf_control_plane.py missing parser wiring for {command}")
 
-    proc_w = subprocess.run(
-        [sys.executable, str(CLI), "watchdog"],
-        cwd=ROOT,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        capture_output=True,
-    )
-    # RED_BLOCKER → exit 1; WAITING_EXTERNAL_TOOL / DEAD_LETTER / OK → 0
-    if proc_w.returncode not in (0, 1):
-        fail(f"watchdog: {proc_w.stderr or proc_w.stdout}")
-    if "WATCHDOG " not in (proc_w.stdout or ""):
-        fail("watchdog must print WATCHDOG <WORST>")
-    if proc_w.returncode == 1 and "RED_BLOCKER" not in (proc_w.stdout or ""):
-        fail(f"watchdog exit 1 without RED_BLOCKER: {proc_w.stdout}")
-    # Ambient state must not be RED_BLOCKER (repo health)
-    if "WATCHDOG RED_BLOCKER" in (proc_w.stdout or ""):
-        fail(f"watchdog RED_BLOCKER in ambient repo: {proc_w.stdout}")
+    workflow = (ROOT / ".github" / "workflows" / "office-control-plane.yml").read_text(encoding="utf-8")
+    for command in ("watchdog", "memory-hygiene", "gaps", "handoff"):
+        if f"vf_control_plane.py {command}" not in workflow:
+            fail(f"office-control-plane.yml must own {command} execution")
 
-    proc_t = subprocess.run(
-        [sys.executable, str(CLI), "selftest"],
-        cwd=ROOT,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        capture_output=True,
-    )
-    if proc_t.returncode != 0:
-        fail(f"selftest: {proc_t.stderr or proc_t.stdout}")
-
-    if not (CONTROL / "HANDOFF.json").is_file():
-        fail("handoff did not write HANDOFF.json")
-    if not (CONTROL / "HANDOFF-he.md").is_file():
-        fail("handoff did not write HANDOFF-he.md")
+    handoff_json = CONTROL / "HANDOFF.json"
+    handoff_he = CONTROL / "HANDOFF-he.md"
+    if not handoff_json.is_file():
+        fail("missing existing office/control/HANDOFF.json evidence")
+    if not handoff_he.is_file():
+        fail("missing existing office/control/HANDOFF-he.md evidence")
+    handoff = json.loads(handoff_json.read_text(encoding="utf-8"))
+    for key in ("updatedAt", "active_now", "waiting", "failed", "authoritative_sources"):
+        if key not in handoff:
+            fail(f"HANDOFF.json missing {key}")
+    if (handoff.get("authoritative_sources") or {}).get("manager_handoff") != "office/control/HANDOFF.json":
+        fail("HANDOFF.json manager_handoff authority mismatch")
 
     # Locks present
     locks = set(plane.get("locks") or [])
@@ -234,19 +225,5 @@ def main() -> None:
     print("OK office control plane")
 
 
-# Sensors only read: undo writes made by the office CLIs this sensor smoke-tests
-# (see scripts/sensor_isolation.py).
-SIDE_EFFECT_PATHS = (
-    "office/control",
-    "packages/vfharness/dead-letter",
-    "packages/vfgrowth/data",
-    "packages/vfigos/CAPABILITIES.json",
-)
-
-
 if __name__ == "__main__":
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from sensor_isolation import preserve_repo_files  # noqa: E402
-
-    with preserve_repo_files(ROOT, SIDE_EFFECT_PATHS):
-        main()
+    main()

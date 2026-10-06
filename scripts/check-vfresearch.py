@@ -351,6 +351,11 @@ def main() -> None:
         fail("velvetos-research.yml must not hide index failures with || echo")
     if "vfresearch_cadence.py build-index" not in wf_text:
         fail("velvetos-research.yml must build index via vfresearch_cadence.py (fail closed)")
+    if "scripts/check-all.py" in wf_text:
+        fail("velvetos-research.yml must use routed research sensors, not the repository-wide full suite")
+    for sensor in ("check-vfresearch.py", "check-vfmem.py"):
+        if sensor not in wf_text:
+            fail(f"velvetos-research.yml routed verification missing {sensor}")
     if "Asia/Jerusalem" not in wf_text and "IDT" not in wf_text:
         fail("velvetos-research.yml must document Asia/Jerusalem / DST timing")
     if "vfresearch_cadence.py" not in HQ_ROUTINE.read_text(encoding="utf-8"):
