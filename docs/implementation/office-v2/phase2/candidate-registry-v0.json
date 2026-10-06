@@ -1941,21 +1941,21 @@
     {
       "source_item_id": null,
       "provenance_class": "PHASE3B_CURRENT_RESEARCH",
-      "lifecycle_state": "ADMITTED",
-      "decision_verdict": "BENCHMARK_REQUIRED",
-      "runtime_verification": "NOT_RUN",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "runtime_verification": "PASS",
       "authority_role": "NONE",
       "platform_constraints": [],
       "notes": [
         "No winner or production authority is granted by registry intake.",
         "Phase 3B admission research PASS; production authority remains NONE.",
-        "LAB smoke pending."
+        "Isolated LAB smoke PASS; destructive fixture pending."
       ],
       "original_office_v2_verdict": null,
       "candidate_id": "candidate-keycloak",
       "name": "Keycloak",
       "category": "IDENTITY_PROVIDER",
-      "verdict_reason": "Phase 3B CANDIDATE→ADMITTED research gate PASS with immutable artifact pin; LAB smoke/fixture evidence still required before LAB/SHADOW.",
+      "verdict_reason": "Phase 3B isolated LAB smoke PASS with synthetic identity material only; destructive fixture/scorecard still required before winner selection or SHADOW.",
       "capability_tags": [
         "service-identity",
         "oidc",
@@ -1976,27 +1976,29 @@
         "https://github.com/keycloak/keycloak",
         "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
         "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
-        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/keycloak-lab-smoke-pass.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/keycloak-smoke-task-cleanup.json"
       ]
     },
     {
       "source_item_id": null,
       "provenance_class": "PHASE3B_CURRENT_RESEARCH",
-      "lifecycle_state": "ADMITTED",
-      "decision_verdict": "BENCHMARK_REQUIRED",
-      "runtime_verification": "NOT_RUN",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "runtime_verification": "PASS",
       "authority_role": "NONE",
       "platform_constraints": [],
       "notes": [
         "No winner or production authority is granted by registry intake.",
         "Phase 3B admission research PASS; production authority remains NONE.",
-        "LAB smoke pending."
+        "Isolated LAB smoke PASS; destructive fixture pending."
       ],
       "original_office_v2_verdict": null,
       "candidate_id": "candidate-authentik",
       "name": "authentik",
       "category": "IDENTITY_PROVIDER",
-      "verdict_reason": "Phase 3B CANDIDATE→ADMITTED research gate PASS with immutable artifact pin; LAB smoke/fixture evidence still required before LAB/SHADOW.",
+      "verdict_reason": "Phase 3B isolated LAB smoke PASS with synthetic identity material only; destructive fixture/scorecard still required before winner selection or SHADOW.",
       "capability_tags": [
         "service-identity",
         "oidc",
@@ -2014,7 +2016,9 @@
         "https://github.com/goauthentik/authentik/blob/main/LICENSE",
         "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
         "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
-        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authentik-lab-smoke-pass.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authentik-smoke-task-cleanup.json"
       ]
     },
     {

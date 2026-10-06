@@ -1,6 +1,6 @@
 # Office v2 Phase 3B — Identity / Authorization / Credential Broker
 
-Status: **CONTRACT V0 FROZEN / ADMISSION RESEARCH COMPLETE / 7 ADMITTED TO LAB SMOKE / 1 LICENSE-DEFERRED / NO WINNER / NO PRODUCTION AUTHORITY CHANGE**
+Status: **CONTRACT V0 FROZEN / IDENTITY + AUTHORIZATION LAB SMOKES PASS / CREDENTIAL LAB SMOKES IN PROGRESS / 1 LICENSE-DEFERRED / NO WINNER / NO PRODUCTION AUTHORITY CHANGE**
 
 Phase 3B treats security as three explicit roles rather than forcing one product to own identity, authorization and secrets:
 
@@ -46,4 +46,6 @@ Admission is not LAB validation, winner selection, SHADOW, PILOT or production p
 
 Authorization lane admission smoke is PASS for OPA, OpenFGA and Cedar. The run used only synthetic inputs; OPA/OpenFGA had no host-port bindings, Cedar used the checksum-verified official 4.13.0 CLI asset, and teardown removed candidate containers/network before lifecycle promotion to LAB.
 
-Identity and credential-broker candidates remain ADMITTED until their own isolated LAB smoke passes. No LAB smoke selects a winner or grants SHADOW/PILOT/production authority.
+Identity lane admission smoke is PASS for Keycloak and authentik. Both used synthetic service identities only, no host-port bindings, no production credentials, and no raw token/secret material in receipts. Keycloak proved client-credentials issuance plus wrong-secret and deleted-client denial; authentik proved client-credentials issuance plus wrong-secret denial and token revocation.
+
+Credential-broker candidates remain independently gated by their own isolated LAB smoke evidence. No LAB smoke selects a winner or grants SHADOW/PILOT/production authority.

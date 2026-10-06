@@ -158,13 +158,14 @@ def main() -> None:
         fail("ZITADEL license caveat missing")
 
     lab_authz = {"candidate-openfga", "candidate-opa", "candidate-cedar"}
-    pending_admitted = expected_admitted - lab_authz
-    for cid in lab_authz:
+    lab_identity = {"candidate-keycloak", "candidate-authentik"}
+    pending_admitted = expected_admitted - lab_authz - lab_identity
+    for cid in lab_authz | lab_identity:
         item = by_id.get(cid) or {}
         if item.get("lifecycle_state") != "LAB" or item.get("decision_verdict") != "LAB_VALIDATED":
-            fail("authorization LAB candidate registry state mismatch: " + cid)
+            fail("LAB candidate registry state mismatch: " + cid)
         if item.get("authority_role") != "NONE" or item.get("runtime_verification") != "PASS":
-            fail("authorization LAB candidate authority/runtime mismatch: " + cid)
+            fail("LAB candidate authority/runtime mismatch: " + cid)
     for cid in pending_admitted:
         item = by_id.get(cid) or {}
         if item.get("lifecycle_state") != "ADMITTED" or item.get("decision_verdict") != "BENCHMARK_REQUIRED":
@@ -180,13 +181,20 @@ def main() -> None:
         fail("authorization LAB status mismatch")
     if set(authz_status.get("lab_candidates") or []) != lab_authz:
         fail("authorization LAB candidate set mismatch")
+    identity_status = ((lab_status.get("lanes") or {}).get("identity_provider") or {})
+    if identity_status.get("status") != "LAB_SMOKE_PASS_DESTRUCTIVE_FIXTURE_PENDING":
+        fail("identity LAB status mismatch")
+    if set(identity_status.get("lab_candidates") or []) != lab_identity:
+        fail("identity LAB candidate set mismatch")
+    if len(identity_status.get("receipt_refs") or []) != 2 or len(identity_status.get("cleanup_refs") or []) != 2:
+        fail("identity LAB evidence refs incomplete")
 
     zit = by_id.get("candidate-zitadel") or {}
     if zit.get("lifecycle_state") != "RESEARCHED" or zit.get("decision_verdict") != "DEFERRED_WITH_REASON":
         fail("ZITADEL registry state must remain researched/deferred")
 
     shortlist = load(P3B / "identity-security-shortlist-v0.json")
-    if shortlist.get("status") != "AUTHORIZATION_LANE_LAB_VALIDATED_OTHER_LANES_PENDING_NO_WINNER":
+    if shortlist.get("status") != "IDENTITY_AND_AUTHORIZATION_LANES_LAB_VALIDATED_CREDENTIAL_LANE_PENDING_NO_WINNER":
         fail("Phase 3B shortlist status mismatch")
     if shortlist.get("winner") is not None or shortlist.get("production_authority_granted") is not False:
         fail("Phase 3B shortlist selected winner or authority prematurely")
@@ -217,9 +225,12 @@ def main() -> None:
             if not lane.get("lab_smoke_ref"):
                 fail("authorization shortlist missing LAB smoke receipt")
         elif lane_id == "phase3b-identity-provider":
-            expected = {"candidate-zitadel":"DEFERRED_WITH_REASON","candidate-keycloak":"ADMITTED","candidate-authentik":"ADMITTED"}
+            expected = {"candidate-zitadel":"DEFERRED_WITH_REASON","candidate-keycloak":"LAB","candidate-authentik":"LAB"}
             if lane.get("candidate_admission") != expected:
                 fail("identity shortlist admission state drift")
+            refs = lane.get("lab_smoke_refs") or {}
+            if set(refs) != lab_identity or not all(refs.values()):
+                fail("identity shortlist LAB smoke refs incomplete")
         elif lane_id == "phase3b-credential-broker":
             expected = {"candidate-infisical-agent-vault":"ADMITTED","candidate-openbao":"ADMITTED"}
             if lane.get("candidate_admission") != expected:
