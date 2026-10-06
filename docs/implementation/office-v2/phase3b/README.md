@@ -1,6 +1,6 @@
 # Office v2 Phase 3B — Identity / Authorization / Credential Broker
 
-Status: **CONTRACT V0 FROZEN / ALL THREE LANES DESTRUCTIVE COMPLETE / CROSS-ROLE COMPOSITION PASS / PRIMARY: ZITADEL + OPA + OPENBAO / VALIDATED FALLBACK SWAPS: KEYCLOAK, CEDAR, INFISICAL / SELECTED FOR INTEGRATION / NO PRODUCTION AUTHORITY CHANGE**
+Status: **CONTRACT V0 FROZEN / ALL THREE LANES DESTRUCTIVE COMPLETE / CROSS-ROLE COMPOSITION PASS / PRIMARY: ZITADEL + OPA + OPENBAO / VALIDATED FALLBACK SWAPS: KEYCLOAK, CEDAR, INFISICAL / INTEGRATION WIRING DEFINED / NOT SHADOW / NO PRODUCTION AUTHORITY CHANGE**
 
 Phase 3B treats security as three explicit roles rather than forcing one product to own identity, authorization and secrets:
 
@@ -44,6 +44,16 @@ The frozen 20-step fixture passed in four selected compositions, without Cartesi
 All four receipts are LAB-only, use synthetic credentials/material, expose no host ports, record no raw bearer/secret material, and prove fail-closed dependency behavior. The primary composition is selected for integration because it preserves the already selected lane winners while each one-at-a-time fallback has independently proven interoperability under the same fixture.
 
 `composition-gate-verdict-v0.json` is the canonical Phase 3B composition receipt. This closes the architecture/composition gate only. It does **not** grant SHADOW, PILOT or production authority, and `CURRENT.json` remains at the Phase 3A closed / Phase 3B ready checkpoint pending a separate project-state promotion.
+
+## Integration wiring — non-authoritative
+
+`integration-wiring-v0.json` now freezes the normalized integration order as request intake → identity verification → claim normalization → authorization → exact credential-scope check → credential-resolution decision → effect gate → sanitized evidence. The selected component mapping is ZITADEL → OPA → OpenBao, with Keycloak, Cedar and Infisical retained only as explicit one-at-a-time rewires. Automatic fallback is disabled; a canonical DENY may never be retried against a fallback merely to seek ALLOW.
+
+`scripts/vf_office_v2_security_wiring.py` is the executable reference for this contract. It is standard-library-only, imports no provider/network client, embeds no runtime endpoint, accepts only synthetic request metadata, rejects raw token/secret/private-key fields, and supports `validate`, `simulate` and `selftest`. Even the fully passing path returns `ALLOW_SIMULATION_ONLY`; `external_effect_allowed` is always `false`, and the script never resolves or emits credential material.
+
+`promotion-gates-v0.json` keeps SHADOW explicitly blocked pending a separate promotion receipt plus persistence backup/restore drills, health/fail-closed probes, sanitized correlated evidence, service/rollback planning and an exact regression gate. PILOT and production are separately blocked after that. No production endpoint, credential class, writer, canonical store or external-effect authority is bound by the current wiring.
+
+A wiring PASS therefore proves only **LAB_SIMULATION_ONLY integration semantics**. It does not change the Phase 0 authority map or credential trust classes, does not advance `CURRENT.json`, and does not grant SHADOW, PILOT or production authority.
 
 ## Admission research
 

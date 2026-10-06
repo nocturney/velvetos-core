@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 import json
+import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 P2 = ROOT / "docs" / "implementation" / "office-v2" / "phase2"
 P3B = ROOT / "docs" / "implementation" / "office-v2" / "phase3b"
+WIRING_SCRIPT = ROOT / "scripts" / "vf_office_v2_security_wiring.py"
 
 REQUIRED = [
     P3B / "README.md",
@@ -21,6 +23,9 @@ REQUIRED = [
     P3B / "identity-lane-verdict-v0.json",
     P3B / "credential-lane-verdict-v0.json",
     P3B / "composition-gate-verdict-v0.json",
+    P3B / "integration-wiring-v0.json",
+    P3B / "promotion-gates-v0.json",
+    WIRING_SCRIPT,
     P3B / "scorecards" / "credential-candidate-openbao.json",
     P3B / "scorecards" / "credential-candidate-infisical-agent-vault.json",
     P3B / "scorecards" / "identity-candidate-zitadel.json",
@@ -247,6 +252,18 @@ def main() -> None:
         fail("Phase 3B LAB composition evidence/strategy mismatch")
     if lab_comp.get("verdict_ref") != "docs/implementation/office-v2/phase3b/composition-gate-verdict-v0.json":
         fail("Phase 3B LAB composition verdict ref missing")
+    lab_wiring = lab_status.get("integration_wiring") or {}
+    if lab_wiring.get("status") != "PASS" or lab_wiring.get("mode") != "LAB_SIMULATION_ONLY" or lab_wiring.get("selftest_cases") != 7:
+        fail("Phase 3B LAB integration wiring status mismatch")
+    if lab_wiring.get("wiring_ref") != "docs/implementation/office-v2/phase3b/integration-wiring-v0.json" or lab_wiring.get("promotion_gate_ref") != "docs/implementation/office-v2/phase3b/promotion-gates-v0.json":
+        fail("Phase 3B LAB integration wiring refs mismatch")
+    if lab_wiring.get("reference_implementation") != "scripts/vf_office_v2_security_wiring.py":
+        fail("Phase 3B LAB integration wiring implementation ref mismatch")
+    if lab_wiring.get("evidence_ref") != "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/integration-wiring-validation.json":
+        fail("Phase 3B LAB integration wiring evidence ref mismatch")
+    for field in ("network_calls_allowed", "external_effects_allowed", "production_credentials_bound", "shadow_promoted", "pilot_promoted", "production_promoted", "production_authority_change"):
+        if lab_wiring.get(field) is not False:
+            fail("Phase 3B LAB integration wiring unsafe field: " + field)
 
     zit = by_id.get("candidate-zitadel") or {}
     if zit.get("lifecycle_state") != "LAB" or zit.get("decision_verdict") != "LAB_VALIDATED":
@@ -425,8 +442,54 @@ def main() -> None:
     if not primary_ev.get("path") or len(primary_ev.get("sha256") or "") != 64:
         fail("Phase 3B primary evidence incomplete")
 
+    wiring = load(P3B / "integration-wiring-v0.json")
+    if wiring.get("status") != "LAB_WIRING_DEFINED_NO_PRODUCTION_AUTHORITY" or wiring.get("mode") != "LAB_SIMULATION_ONLY":
+        fail("Phase 3B integration wiring status/mode mismatch")
+    if wiring.get("selected_composition") != "composition-zitadel-opa-openbao" or wiring.get("credential_trust_class") != "LAB_ONLY_SECRET":
+        fail("Phase 3B integration wiring composition/trust mismatch")
+    for field in (
+        "production_authority_change", "production_writer_change", "production_credentials_allowed",
+        "production_secret_material_allowed", "external_effects_allowed", "network_calls_allowed_by_reference_implementation",
+    ):
+        if wiring.get(field) is not False:
+            fail("Phase 3B integration wiring unsafe field: " + field)
+    wiring_roles = wiring.get("roles") or {}
+    for role, candidate in expected_primary.items():
+        if (wiring_roles.get(role) or {}).get("primary") != candidate or (wiring_roles.get(role) or {}).get("fallback") != expected_fallbacks[role]:
+            fail("Phase 3B integration wiring role selection mismatch: " + role)
+    pipeline = wiring.get("pipeline") or []
+    expected_pipeline = ["request_intake", "identity_verify", "claim_normalize", "authorize", "credential_scope_check", "credential_resolution_decision", "effect_gate", "evidence_finalize"]
+    if [row.get("id") for row in pipeline] != expected_pipeline or not all(row.get("fail_closed") is True for row in pipeline):
+        fail("Phase 3B integration wiring pipeline must remain ordered and fail-closed")
+    evidence_contract = wiring.get("evidence_contract") or {}
+    if evidence_contract.get("raw_secret_material_allowed") is not False or evidence_contract.get("raw_bearer_material_allowed") is not False:
+        fail("Phase 3B integration wiring evidence redaction drift")
+    if any(marker in json.dumps(wiring, sort_keys=True).lower() for marker in ("http://", "https://", "127.0.0.1", "localhost")):
+        fail("Phase 3B integration wiring must not embed runtime endpoints")
+
+    promotion = load(P3B / "promotion-gates-v0.json")
+    if promotion.get("status") != "INTEGRATION_WIRING_ONLY_NOT_PROMOTED" or promotion.get("current_authority") != "NONE":
+        fail("Phase 3B promotion gate status/authority mismatch")
+    if promotion.get("current_project_state_must_remain") != "PHASE_3A_CLOSED_GREEN__PHASE_3B_READY":
+        fail("Phase 3B promotion gate must preserve current project state")
+    for field in ("production_authority_change", "production_writer_change", "production_credentials_bound", "shadow_promoted", "pilot_promoted", "production_promoted"):
+        if promotion.get(field) is not False:
+            fail("Phase 3B promotion field must remain false: " + field)
+    if (promotion.get("shadow_gate") or {}).get("status") != "BLOCKED_PENDING_SEPARATE_PROMOTION":
+        fail("Phase 3B SHADOW gate must remain blocked")
+    if (promotion.get("production_gate") or {}).get("implicit_promotion_allowed") is not False:
+        fail("Phase 3B implicit production promotion must remain forbidden")
+
+    wiring_source = WIRING_SCRIPT.read_text(encoding="utf-8-sig")
+    for forbidden_import in ("import requests", "from requests", "import httpx", "from httpx", "import socket", "import urllib"):
+        if forbidden_import in wiring_source:
+            fail("Phase 3B reference wiring may not import network client: " + forbidden_import)
+    selftest = subprocess.run([sys.executable, str(WIRING_SCRIPT), "selftest"], cwd=ROOT, text=True, capture_output=True, timeout=30)
+    if selftest.returncode != 0 or "selftest=7" not in selftest.stdout or "external_effect=NONE" not in selftest.stdout:
+        fail("Phase 3B integration wiring selftest failed: " + (selftest.stderr.strip() or selftest.stdout.strip()))
+
     readme = (P3B / "README.md").read_text(encoding="utf-8-sig")
-    for marker in ("CROSS-ROLE COMPOSITION PASS", "NO PRODUCTION AUTHORITY CHANGE", "Authentication never implies authorization", "shared 20-step composition fixture", "composition-gate-verdict-v0.json"):
+    for marker in ("CROSS-ROLE COMPOSITION PASS", "INTEGRATION WIRING DEFINED", "NOT SHADOW", "NO PRODUCTION AUTHORITY CHANGE", "Authentication never implies authorization", "shared 20-step composition fixture", "composition-gate-verdict-v0.json", "LAB_SIMULATION_ONLY", "promotion-gates-v0.json"):
         if marker not in readme:
             fail("Phase 3B README missing safety/composition marker: " + marker)
 

@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.office-v2.phase3b-lab-status.v0",
-  "captured_at": "2026-10-06T18:49:24.642017Z",
+  "captured_at": "2026-10-06T19:44:38.2299308Z",
   "production_authority_change": false,
   "production_writer_change": false,
   "production_credentials_used": false,
@@ -63,7 +63,7 @@
       ]
     }
   },
-  "next_gate": "Phase 3B architecture/composition gate is closed GREEN for integration planning only. SHADOW/PILOT/production authority still requires a separate explicit promotion gate.",
+  "next_gate": "Phase 3B integration wiring is defined and sensor-validated in LAB_SIMULATION_ONLY mode. SHADOW remains blocked until a separate explicit promotion receipt and all promotion-gates-v0 prerequisites pass.",
   "winner": "composition-zitadel-opa-openbao",
   "composition_gate": {
     "status": "PASS",
@@ -87,6 +87,22 @@
       "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-fallback-zitadel-cedar-openbao.json",
       "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-fallback-zitadel-opa-infisical.json"
     ],
+    "production_authority_change": false
+  },
+  "integration_wiring": {
+    "status": "PASS",
+    "mode": "LAB_SIMULATION_ONLY",
+    "wiring_ref": "docs/implementation/office-v2/phase3b/integration-wiring-v0.json",
+    "promotion_gate_ref": "docs/implementation/office-v2/phase3b/promotion-gates-v0.json",
+    "reference_implementation": "scripts/vf_office_v2_security_wiring.py",
+    "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/integration-wiring-validation.json",
+    "selftest_cases": 7,
+    "network_calls_allowed": false,
+    "external_effects_allowed": false,
+    "production_credentials_bound": false,
+    "shadow_promoted": false,
+    "pilot_promoted": false,
+    "production_promoted": false,
     "production_authority_change": false
   }
 }
