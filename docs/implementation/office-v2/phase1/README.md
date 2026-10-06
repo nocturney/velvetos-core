@@ -1,40 +1,45 @@
 # VelvetOS Office v2 — Phase 1 Neutral Lab & Safety Boundary
 
 Phase 0 is closed on canonical main at `d755c4cb62e2fde16f6c5804db180d48170238ba`.
+Phase 1 neutral-LAB preparation is merged. Formal closure work starts from `origin/main@6c3865acee79fb11dbaeeace0a5bc73f9624d187`.
 
-This directory contains versioned Phase 1 definitions only. The active LAB runtime, backups, artifacts and node observations live outside Git.
+This directory contains versioned Phase 1 definitions and bounded receipt summaries only. Raw runtime evidence, backups, artifacts and live node observations remain outside Git.
 
 ## Current status
 
-`PREP_IN_PROGRESS / HOST_MUTATION_BLOCKED`
+`RUNTIME_PROVEN / FORMAL_CLOSURE_PENDING`
 
-The Windows host already has pending reboot state. WSL/VMP optional features are enabled, but WSL userspace and Docker are absent. Desktop Commander and the DCC Gateway are boot/SYSTEM capable; GrokBot and AdobePy brokers are logon-triggered. Host mutation therefore waits for a controlled maintenance admission.
+The five START HERE technical gate criteria have real runtime proof. The canonical 118-sensor repository regression is green and the temporary WSL user-context bridge has been deleted. Formal closure now requires sealed Project State, PR merge and exact-main CI.
 
-## LAB identity
+## Realized LAB runtime
 
-- Root: `D:/Velvet/OfficeV2Lab`
-- WSL source: Ubuntu 26.04 LTS; dedicated instance name: `OfficeV2-Lab`
-- Container runtime target: Docker Engine + Compose plugin inside the dedicated WSL2 instance; Docker Desktop is not required
-- Network: `officev2_lab`
-- Shared artifact lane: `D:/Velvet/OfficeV2Lab/artifacts` ↔ `/mnt/d/Velvet/OfficeV2Lab/artifacts`
-- OTel host ports: 14317 (gRPC), 14318 (HTTP), 14319 (health)
-- Candidate database port: 15432, reserved but unused
-- Node health port: 18780, reserved
-- Port 18080: excluded because live host probe found it in use
+- Windows post-reboot: CBS and Windows Update reboot flags are clear. Residual delete-only/temp file-rename entries remain visible as warnings and are not manually cleared.
+- WSL: 3.0.1.0; kernel 6.18.40.1-1.
+- Distro: `OfficeV2-Lab`, Ubuntu 26.04.1 LTS, WSL2, default user `officev2` uid 1000.
+- Docker Engine: 29.8.2; Docker Compose: v5.6.0; systemd and Docker are active.
+- Network: `officev2_lab`.
+- OTel: digest-pinned collector; loopback-only ports 14317/14318/14319.
+- Shared artifact lane: `D:/Velvet/OfficeV2Lab/artifacts` ↔ `/var/officev2/artifacts`.
+- Full `/mnt/c` and `/mnt/d` mounts are absent.
+- Artifact mount requires `rw,nosuid,nodev,noexec,nosymfollow` plus metadata, uid=1000, gid=1000 and umask=077.
 
 ## Safety boundary
 
 - LAB has no production authority.
 - LAB receives no production credentials by default.
-- Stateful candidates are not production-capable before a restore drill.
-- Untrusted/generated code does not run directly on Windows/WSL host.
-- Candidate availability does not make it an architectural winner.
-- No production writer or business SoT is moved in Phase 1.
+- Only LAB_ONLY_SECRET and PUBLIC_IDENTIFIER credential classes are admitted.
+- Untrusted/generated code does not run directly on the Windows/WSL host.
+- PostgreSQL was used only as a disposable restore-drill candidate; it is not a universal Office v2 database decision.
+- No production writer or business source of truth moved in Phase 1.
 
-## Runtime definitions
+## Gate evidence
 
-`tools/office-v2-lab/` contains a neutral Compose/OTel definition. It requires an explicitly supplied reviewed image reference; no `:latest` tag is accepted by the Phase 1 sensor.
+- Destroy/recreate without production impact: PASS.
+- Stateful LAB restore: PASS.
+- Production-secret exclusion: PASS.
+- Real correlated end-to-end trace: PASS.
+- Fresh NODE-A capability/health manifest: PASS.
 
-## Gate
+Canonical raw evidence stays under `D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/` and `D:/Velvet/OfficeV2Lab/`. Versioned files cite those paths but do not copy credentials, secrets or raw production payloads into Git.
 
-Phase 1 remains open until the START HERE gate is proven: destroy/recreate, one stateful restore, production secrets excluded, one correlated end-to-end trace, and a valid NODE-A capability/health manifest.
+Phase 2 remains blocked until formal Phase 1 closure is GREEN on merged current main.

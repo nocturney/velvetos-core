@@ -60,6 +60,7 @@ def collect(node_id: str | None = None) -> dict[str, Any]:
     runtimes: list[str] = [f"Python {platform.python_version()}"]
     health = "PASS"
     maintenance_state = "ACTIVE"
+    evidence_refs: list[str] = []
 
     git = app_version(["git", "--version"], "Git")
     if git:
@@ -104,15 +105,69 @@ def collect(node_id: str | None = None) -> dict[str, Any]:
             if path.is_file():
                 apps.append({"name": name, "version": "installed"})
 
-        pending = win_value(
+        reboot_probe = win_value(
             "$c=Test-Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Component Based Servicing\\RebootPending';"
+            "$w=Test-Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WindowsUpdate\\Auto Update\\RebootRequired';"
             "$p=(Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager' "
             "-Name PendingFileRenameOperations -ErrorAction SilentlyContinue).PendingFileRenameOperations;"
-            "Write-Output ([bool]($c -or [bool]$p))"
-        ).lower() == "true"
-        if pending:
+            "$meaningful=@($p | Where-Object {$_ -and $_.Trim() -ne ''});"
+            "Write-Output ($c.ToString()+'|'+$w.ToString()+'|'+$meaningful.Count)"
+        )
+        parts = reboot_probe.split("|")
+        cbs_pending = len(parts) > 0 and parts[0].strip().lower() == "true"
+        wu_pending = len(parts) > 1 and parts[1].strip().lower() == "true"
+        try:
+            rename_count = int(parts[2]) if len(parts) > 2 else 0
+        except ValueError:
+            rename_count = 0
+        if cbs_pending or wu_pending:
             health = "WARN"
             maintenance_state = "MAINTENANCE"
+        elif rename_count:
+            # Preserve delete-only/temp cleanup records as a visible warning; do not treat them as a reboot block.
+            health = "WARN"
+            maintenance_state = "ACTIVE"
+
+        wsl_code, wsl_out = run(["wsl.exe", "--version"])
+        if wsl_code == 0 and wsl_out:
+            wsl_out = wsl_out.replace(chr(0), "")
+            for line in wsl_out.splitlines():
+                clean = line.strip()
+                if clean.lower().startswith("wsl version:"):
+                    runtimes.append("WSL " + clean.split(":", 1)[1].strip())
+                elif clean.lower().startswith("kernel version:"):
+                    runtimes.append("WSL kernel " + clean.split(":", 1)[1].strip())
+
+        evidence_root = Path(r"D:\Velvet\Artifacts\OfficeV2\phase1\evidence")
+        docker_receipts = sorted(evidence_root.glob("*/docker-user-verify.txt"), key=lambda p: p.stat().st_mtime, reverse=True) if evidence_root.is_dir() else []
+        if docker_receipts:
+            receipt_text = docker_receipts[0].read_text(encoding="utf-8-sig", errors="replace").replace(chr(0), "")
+            for line in receipt_text.splitlines():
+                if line.startswith("CLIENT=") and " SERVER=" in line:
+                    runtimes.append("Docker Engine " + line.split(" SERVER=", 1)[1].strip())
+                elif line.startswith("Docker Compose version "):
+                    runtimes.append(line.strip())
+            evidence_refs.append(str(docker_receipts[0]).replace("\\", "/"))
+
+        probe_path = Path(r"D:\Velvet\Artifacts\OfficeV2\phase1\evidence\2026-10-06\phase1-final-user-probe.txt")
+        if probe_path.is_file():
+            probe_text = probe_path.read_text(encoding="utf-8-sig", errors="replace").replace(chr(0), "")
+            for line in probe_text.splitlines():
+                if line.startswith("PRETTY_NAME="):
+                    distro_name = line.split("=", 1)[1].strip().strip('"')
+                    runtimes.append("OfficeV2-Lab " + distro_name + " (WSL2)")
+                    break
+            if "SYSTEMD_EXIT|0" in probe_text:
+                runtimes.append("OfficeV2-Lab systemd running")
+            mnt_c_unmounted = "MNT_C_EXIT|0" not in probe_text
+            mnt_d_unmounted = "MNT_D_EXIT|0" not in probe_text
+            if "ARTIFACT_EXIT|0" in probe_text and mnt_c_unmounted and mnt_d_unmounted:
+                runtimes.append("OfficeV2-Lab isolated artifact lane active")
+            evidence_refs.append(str(probe_path).replace("\\", "/"))
+
+        post_reboot = Path(r"D:\Velvet\Artifacts\OfficeV2\phase1\evidence\2026-10-06\post-reboot-admission.json")
+        if post_reboot.is_file():
+            evidence_refs.append(str(post_reboot).replace("\\", "/"))
         execution = ["Remote Desktop Commander", "PowerShell", "Python", "Node.js", "DCC Gateway"]
         artifacts = ["D:/Velvet", "D:/Velvet/OfficeV2Lab/artifacts"]
         transport = {"mode": "Remote Desktop Commander + local runtime", "authenticated": True, "arbitrary_shell": True}
@@ -164,10 +219,11 @@ def collect(node_id: str | None = None) -> dict[str, Any]:
         "compatibility_range": [
             "Office v2 Phase 0 contracts",
             "Office v2 Phase 1 neutral LAB prep",
+            "Office v2 Phase 1 runtime gate",
         ],
         "observed_at": now_iso(),
         "transport": transport,
-        "evidence_refs": [],
+        "evidence_refs": list(dict.fromkeys(evidence_refs)),
     }
     return manifest
 

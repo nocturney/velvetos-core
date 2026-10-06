@@ -2,67 +2,35 @@
 
 Authority: START HERE Google Doc `15NMtyaUDjxiACPKEY_T5rW7IUFwtD2qU88yhbKQhEkw`, Phase 1 “Neutral Lab & Safety Boundary”.
 
-Accepted baseline: `origin/main@d755c4cb62e2fde16f6c5804db180d48170238ba` after Phase 0 exact-main acceptance.
+Closure baseline: `origin/main@6c3865acee79fb11dbaeeace0a5bc73f9624d187` at the start of formal Phase 1 closure.
 
 ## Goal
-Create a neutral, reversible LAB boundary and its executable admission/health contracts without granting the LAB production authority or credentials.
+Create a neutral, reversible LAB boundary and prove it without granting the LAB production authority or credentials.
 
-## Current host admission
-Windows host mutation is **MAINTENANCE_BLOCKED**:
-- CPU/firmware virtualization + SLAT: available.
-- Windows optional features `Microsoft-Windows-Subsystem-Linux` and `VirtualMachinePlatform`: enabled.
-- WSL userspace: not installed.
-- Docker: absent.
-- Existing CBS reboot + pending file-renames: present.
-- Desktop Commander + DCC Gateway: boot/SYSTEM capable.
-- GrokBot + AdobePy brokers: logon-triggered, therefore reboot is not operationally transparent.
+## Realized host/runtime state
+- Controlled reboot completed before new WSL/Docker mutation.
+- CBS RebootPending=false and Windows Update RebootRequired=false.
+- Residual delete-only/temp file-renames remain visible and are not manually cleared.
+- WSL runtime 3.0.1.0; kernel 6.18.40.1-1.
+- OfficeV2-Lab: Ubuntu 26.04.1 LTS, WSL2, user officev2 uid 1000.
+- Docker Engine 29.8.2; Compose v5.6.0; systemd and Docker active.
+- Full Windows drive automount is disabled in the LAB.
+- Only `D:/Velvet/OfficeV2Lab/artifacts` is exposed at `/var/officev2/artifacts`.
+- OTel is loopback-only on 14317/14318/14319.
 
-Canonical live admission evidence:
-`D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-05/windows-host-admission.json`.
+Canonical raw evidence remains outside Git under `D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/` and `D:/Velvet/OfficeV2Lab/`.
 
-## Phase 1 deliverables
-1. Dedicated LAB identity, network, service names, ports and storage roots.
-2. Shared Windows↔WSL artifact lane.
-3. LAB credential/egress contract: LAB-only by default; no production credentials.
-4. Minimal OTel collector definition carrying Phase 0 correlation IDs.
-5. Teardown/recreate tooling and dry-run proofs.
-6. Node Contract v0 publisher/validator for NODE-A; Mac inventory compatible with same contract.
-7. Backup target + restore-drill definition.
-8. Safe WSL2/Docker maintenance runbook; actual host mutation only after maintenance admission.
-9. Stateful candidate rule: no production-capable state until restore drill passes.
-10. No universal Postgres, durable engine, model gateway, MCP/A2A, NATS, feature-flag or sandbox winner.
-
-## Neutral LAB defaults
-- Windows root: `D:/Velvet/OfficeV2Lab`
-- WSL source: Ubuntu 26.04 LTS; dedicated instance: `OfficeV2-Lab`
-- Container runtime: Docker Engine + Compose plugin inside the dedicated WSL2 instance; Docker Desktop is not required
-- Shared artifact lane: `D:/Velvet/OfficeV2Lab/artifacts` ↔ `/mnt/d/Velvet/OfficeV2Lab/artifacts`
-- Network name: `officev2_lab`
-- OTel host ports: `14317→4317`, `14318→4318`
-- Reserved candidate DB host port: `15432` (unused until admitted)
-- Node/health reserved host port: `18780`
-- `18080` is explicitly excluded because it is in use on the live host.
-
-## Non-goals
-- No host reboot from an unadmitted state.
-- No copying production secrets into LAB.
-- No production writer or production SoT cutover.
-- No candidate winner selection merely because a container can run.
-- No untrusted/generated code directly on the Windows/WSL host.
-
-## Verification
-- RED then GREEN: `python scripts/check-office-v2-phase1.py`
-- LAB doctor dry-run must work with WSL/Docker absent and return `MAINTENANCE_BLOCKED_PREP_ALLOWED`, not false success.
-- Node manifest generator must self-test and validate Phase 0 Node Contract v0 fields.
-- Teardown/recreate plan must be dry-run safe before any Docker install.
-- Existing repository suite remains green after Phase 1 definition changes.
+## Deliverable status
+1. Dedicated LAB identity/network/service/storage boundary — REALIZED.
+2. Isolated Windows↔WSL artifact lane — VERIFIED.
+3. LAB-only credential boundary / no production credentials — VERIFIED.
+4. Minimal OTel using Phase 0 correlation IDs — VERIFIED E2E.
+5. Destroy/recreate tooling and real proof — VERIFIED.
+6. Node Contract v0 publisher/validator for NODE-A — VERIFIED; Mac remains compatible with the same contract.
+7. Backup target and one stateful restore drill — VERIFIED.
+8. Controlled WSL2/Docker maintenance sequence — EXECUTED AND VERIFIED.
+9. Stateful candidate admission rule — PRESERVED.
+10. No durable-engine/model-gateway/MCP-A2A/NATS/feature-flag/Postgres-universal winner — PRESERVED.
 
 ## Gate
-Phase 1 cannot be GREEN until:
-- LAB can be destroyed/recreated without production impact;
-- one stateful LAB service restore drill passes;
-- production secrets remain inaccessible to LAB by default;
-- one end-to-end trace carries correlation IDs;
-- NODE-A publishes a valid capability/health manifest.
-
-Until the host-maintenance gate is admitted, Phase 1 status is `PREP_IN_PROGRESS / HOST_MUTATION_BLOCKED`.
+The five START HERE technical criteria are backed by live evidence. The closure tree passes targeted checks plus the canonical 118-sensor regression, and the temporary WSL user-context task is deleted. Phase 1 becomes formally GREEN only after final gate/Project State receipts are sealed, the closure PR merges, and exact-main CI is GREEN.

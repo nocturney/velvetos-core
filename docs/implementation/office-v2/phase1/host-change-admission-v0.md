@@ -1,8 +1,8 @@
 # Office v2 Phase 1 Host Change Admission v0
 
-Current verdict: **MAINTENANCE_BLOCKED / PREP_ALLOWED**.
+Historical pre-maintenance verdict: **MAINTENANCE_BLOCKED / PREP_ALLOWED**. Current Phase 1 runtime state is validated; formal repository closure is pending.
 
-## Observed host facts
+## Historical pre-maintenance observed host facts
 
 - Firmware virtualization: enabled.
 - VM monitor extensions: available.
@@ -50,3 +50,16 @@ After an admitted reboot:
 ## Prohibited shortcuts
 
 Do not clear reboot registry markers manually. Do not disable boot/security controls to force WSL. Do not copy production secrets into LAB. Do not treat an installed container runtime as production authority.
+
+## Realized Phase 1 admission result — 2026-10-06
+
+- A controlled reboot completed before new WSL/Docker mutation; CBS RebootPending and Windows Update RebootRequired are now false.
+- Residual delete-only/temp rename records remain visible as warnings and were not manually cleared.
+- Production recovery checks passed before runtime installation continued.
+- WSL 3.0.1.0 / kernel 6.18.40.1-1 is installed.
+- `OfficeV2-Lab` is WSL2 with Ubuntu 26.04.1 LTS.
+- Docker Engine 29.8.2 / Compose v5.6.0 is active inside the dedicated distro.
+- LocalSystem cannot operate WSL distro sessions; bounded user-context verification used the temporary on-demand `OfficeV2 WSL User Probe Temp` Scheduled Task instead of weakening WSL permissions.
+- The temporary bridge was not an architecture dependency and was deleted after the final user-context runtime probe; cleanup receipt: `D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/temp-user-bridge-cleanup.json`.
+
+Canonical raw evidence: `D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/`.

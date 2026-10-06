@@ -17,6 +17,7 @@ REQUIRED = [
     P1 / "maintenance-runbook-v0.md",
     P1 / "backup-restore-lab-v0.md",
     P1 / "otel-correlation-v0.json",
+    P1 / "runtime-gate-receipt-v0.json",
     LAB / "compose.yaml",
     LAB / "otel-collector.yaml",
     LAB / "env.example",
@@ -76,6 +77,10 @@ def main() -> None:
         fail("LAB ports mismatch")
     if cfg.get("artifact_lane", {}).get("windows") != "D:/Velvet/OfficeV2Lab/artifacts":
         fail("artifact lane mismatch")
+    if cfg.get("artifact_lane", {}).get("wsl") != "/var/officev2/artifacts":
+        fail("isolated WSL artifact lane mismatch")
+    if cfg.get("artifact_lane", {}).get("full_c_drive_mounted") is not False or cfg.get("artifact_lane", {}).get("full_d_drive_mounted") is not False:
+        fail("full Windows drives must remain unmounted in LAB")
     if cfg.get("stateful_candidate_rule") != "RESTORE_DRILL_REQUIRED_BEFORE_PRODUCTION_CAPABLE":
         fail("stateful admission rule mismatch")
 
@@ -97,7 +102,7 @@ def main() -> None:
         fail("LAB host ports must not bind all interfaces")
 
     env_example = (LAB / "env.example").read_text(encoding="utf-8-sig")
-    for marker in ("OFFICEV2_WSL_DISTRO=OfficeV2-Lab", "PRODUCTION_CREDENTIALS_ALLOWED=false"):
+    for marker in ("OFFICEV2_WSL_DISTRO=OfficeV2-Lab", "OFFICEV2_LAB_ARTIFACTS=/var/officev2/artifacts", "PRODUCTION_CREDENTIALS_ALLOWED=false"):
         if marker not in env_example:
             fail("LAB env example missing " + marker)
 
@@ -118,6 +123,15 @@ def main() -> None:
     if required_trace != expected_trace:
         fail("OTel correlation required attributes mismatch")
 
+    gate = json.loads((P1 / "runtime-gate-receipt-v0.json").read_text(encoding="utf-8-sig"))
+    if gate.get("technical_verdict") != "PASS":
+        fail("Phase 1 technical runtime gate is not PASS")
+    criteria = gate.get("criteria") or {}
+    if not criteria or not all(criteria.values()):
+        fail("Phase 1 runtime gate criteria are incomplete")
+    if gate.get("phase2_allowed") is not False:
+        fail("Phase 2 must remain blocked until formal Phase 1 closure")
+
     for path in (
         ROOT / "scripts" / "vf_office_v2_lab_doctor.py",
         ROOT / "scripts" / "vf_office_v2_lab_lifecycle.py",
@@ -126,7 +140,7 @@ def main() -> None:
     ):
         self_test(path)
 
-    print("OK office-v2-phase1 neutral-lab=PASS host-change=GATED")
+    print("OK office-v2-phase1 neutral-lab=PASS runtime-gate=PASS formal-closure=PENDING")
 
 
 if __name__ == "__main__":

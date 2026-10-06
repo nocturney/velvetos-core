@@ -1,6 +1,6 @@
 # Office v2 Phase 1 Controlled WSL2 / Docker Maintenance Runbook v0
 
-Status: **PLAN ONLY / EXECUTION BLOCKED BY CURRENT HOST ADMISSION**.
+Status: **EXECUTED / RUNTIME VALIDATED / FORMAL CLOSURE PENDING**.
 
 This runbook changes only the Phase 1 LAB substrate. It never changes a production writer, production authority, business source of truth, or production credential boundary.
 
@@ -12,7 +12,7 @@ This runbook changes only the Phase 1 LAB substrate. It never changes a producti
 - Dedicated WSL instance name: `OfficeV2-Lab`.
 - Container runtime: Docker Engine + Compose plugin inside `OfficeV2-Lab`.
 - Docker Desktop: not required.
-- Shared artifact lane: `D:/Velvet/OfficeV2Lab/artifacts` <-> `/mnt/d/Velvet/OfficeV2Lab/artifacts`.
+- Shared artifact lane: `D:/Velvet/OfficeV2Lab/artifacts` <-> `/var/officev2/artifacts`; full `/mnt/c` and `/mnt/d` automounts are disabled.
 - LAB host ports remain loopback-only unless a later gate explicitly changes that.
 
 The exact commands and package versions are revalidated against current Microsoft/Ubuntu/Docker documentation immediately before execution.
@@ -128,3 +128,15 @@ Before execution, revalidate:
 - Microsoft WSL install/basic-command documentation;
 - Ubuntu on WSL install guidance for Ubuntu 26.04 LTS;
 - Docker Engine Ubuntu installation/support documentation.
+
+## Realized execution summary — 2026-10-06
+
+- Stage A separated the pre-existing reboot transition; CBS/Windows Update reboot flags cleared after the controlled reboot.
+- Stage B installed the Microsoft-signed WSL 3.0.1.0 runtime.
+- Stage C created `OfficeV2-Lab` as WSL2 with Ubuntu 26.04.1 LTS.
+- Stage D installed Docker Engine 29.8.2 and Compose v5.6.0 from Docker's official Ubuntu repository.
+- Filesystem isolation was hardened after the initial automount exposed full C:/D:. The validated state has no full drive mounts and exposes only the artifact lane at `/var/officev2/artifacts`.
+- Stage E ran the digest-pinned OTel collector on loopback only and passed a real correlated OTLP HTTP trace.
+- Stage F passed destroy/recreate plus a disposable stateful PostgreSQL restore drill.
+- No production credentials were introduced into LAB and no production writer changed.
+- LocalSystem/WSL incompatibility was handled with a temporary on-demand interactive-token task; the task was deleted after final runtime verification and is not an architecture dependency.

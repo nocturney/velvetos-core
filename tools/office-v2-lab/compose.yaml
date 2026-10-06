@@ -12,7 +12,7 @@ services:
       - /tmp
     volumes:
       - ./otel-collector.yaml:/etc/otelcol/config.yaml:ro
-      - ${OFFICEV2_LAB_ARTIFACTS:-/mnt/d/Velvet/OfficeV2Lab/artifacts}:/var/officev2/artifacts
+      - ${OFFICEV2_LAB_ARTIFACTS:-/var/officev2/artifacts}:/var/officev2/artifacts
     ports:
       - "127.0.0.1:14317:4317"
       - "127.0.0.1:14318:4318"

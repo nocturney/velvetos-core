@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.office-v2.lab-boundary.v0",
-  "status": "PREP_IN_PROGRESS_HOST_MUTATION_BLOCKED",
-  "accepted_main_sha": "d755c4cb62e2fde16f6c5804db180d48170238ba",
+  "status": "RUNTIME_VALIDATED_FORMAL_CLOSURE_PENDING",
+  "accepted_main_sha": "6c3865acee79fb11dbaeeace0a5bc73f9624d187",
   "production_authority": "NONE",
   "production_credentials_allowed": false,
   "lab_root": "D:/Velvet/OfficeV2Lab",
@@ -11,7 +11,13 @@
     "architecture": "WSL2",
     "container_runtime": "Docker Engine + Compose plugin inside the dedicated WSL instance",
     "docker_desktop_required": false,
-    "status": "PLANNED_MAINTENANCE_BLOCKED"
+    "observed_distribution": "Ubuntu 26.04.1 LTS",
+    "wsl_version": "3.0.1.0",
+    "kernel_version": "6.18.40.1-1",
+    "docker_engine_version": "29.8.2",
+    "docker_compose_version": "v5.6.0",
+    "systemd": "running",
+    "status": "READY"
   },
   "network": {
     "name": "officev2_lab",
@@ -28,8 +34,14 @@
   "excluded_host_ports": [18080],
   "artifact_lane": {
     "windows": "D:/Velvet/OfficeV2Lab/artifacts",
-    "wsl": "/mnt/d/Velvet/OfficeV2Lab/artifacts",
-    "authority_role": "GENERATED_ARTIFACT_AND_EVIDENCE_ONLY"
+    "wsl": "/var/officev2/artifacts",
+    "authority_role": "GENERATED_ARTIFACT_AND_EVIDENCE_ONLY",
+    "host_drive_automount": false,
+    "full_c_drive_mounted": false,
+    "full_d_drive_mounted": false,
+    "mount_options_required": [
+      "rw", "nosuid", "nodev", "noexec", "nosymfollow", "metadata", "uid=1000", "gid=1000", "umask=077"
+    ]
   },
   "storage_roots": {
     "state": "D:/Velvet/OfficeV2Lab/state",
@@ -56,5 +68,12 @@
     "feature_flag_platform_commitment": null
   },
   "host_change_admission_ref": "docs/implementation/office-v2/phase1/host-change-admission-v0.md",
-  "backup_restore_ref": "docs/implementation/office-v2/phase1/backup-restore-lab-v0.md"
+  "backup_restore_ref": "docs/implementation/office-v2/phase1/backup-restore-lab-v0.md",
+  "runtime_evidence_refs": [
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/post-reboot-admission.json",
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/docker-user-verify.txt",
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/wsl-user-probe.txt",
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/otel-e2e-trace-pass.json",
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/stateful-restore-drill-pass.json"
+  ]
 }
