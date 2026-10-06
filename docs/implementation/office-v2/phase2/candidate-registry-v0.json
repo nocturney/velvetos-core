@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-06T06:02:10.448Z",
+  "updated_at": "2026-10-06T09:55:16.531683Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 72,
+  "candidate_count": 82,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -754,15 +754,23 @@
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "capability_tags": [
-        "credential-management"
+        "credential-management",
+        "machine-identity",
+        "revocation",
+        "secrets"
       ],
       "platform_constraints": [],
-      "shortlist_lanes": [],
+      "shortlist_lanes": [
+        "phase3b-credential-broker"
+      ],
       "evidence_refs": [
-        "prior-research://office-v2-master-plan"
+        "prior-research://office-v2-master-plan",
+        "https://infisical.com/blog/introducing-machine-identities",
+        "https://infisical.com/platform/secrets-management"
       ],
       "notes": [
-        "not preselected"
+        "not preselected",
+        "Phase 3B credential-broker challenger; exact version/pin and LAB admission pending."
       ],
       "original_office_v2_verdict": "BENCHMARK"
     },
@@ -1783,6 +1791,310 @@
         "Composition baseline, not a product winner declaration."
       ],
       "original_office_v2_verdict": null
+    },
+    {
+      "candidate_id": "incumbent-current-service-identity",
+      "source_item_id": null,
+      "name": "Current provider-native service identity composition",
+      "category": "INCUMBENT_COMPOSITION",
+      "provenance_class": "LIVE_DERIVED_INCUMBENT",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Current bounded provider-native identities remain production incumbents until a Phase 3B replacement passes promotion.",
+      "runtime_verification": "PASS",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "service-identity",
+        "oidc",
+        "provider-native-iam"
+      ],
+      "platform_constraints": [
+        "provider-specific"
+      ],
+      "shortlist_lanes": [
+        "phase3b-identity-provider"
+      ],
+      "evidence_refs": [
+        "scripts/check-delivery-approval.py",
+        "office/ledger/README.md",
+        "packages/velvetos/WINDOWS-PATH-CONTRACT.md"
+      ],
+      "notes": [
+        "Composition includes existing GCP service-account/OIDC/WIF and connector-native identity paths; it is not a central identity provider.",
+        "Derived registry entry only; no new authority is created."
+      ],
+      "original_office_v2_verdict": null
+    },
+    {
+      "candidate_id": "incumbent-current-authorization",
+      "source_item_id": null,
+      "name": "VelvetOS current policy registry and domain-native decision composition",
+      "category": "INCUMBENT_COMPOSITION",
+      "provenance_class": "LIVE_DERIVED_INCUMBENT",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Current canonical policy registry and domain-native decision paths remain the authorization incumbent until an admitted replacement is explicitly promoted.",
+      "runtime_verification": "PASS",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "authorization",
+        "policy-decision",
+        "decision-receipt"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "phase3b-authorization-policy"
+      ],
+      "evidence_refs": [
+        "packages/velvetos/policy/policy-registry.json",
+        "packages/velvetos/PROJECT-REQUEST-GATE.md",
+        "packages/velvetos/policy/schema/action-receipt.schema.json"
+      ],
+      "notes": [
+        "Current architecture deliberately has no parallel OPA/policy daemon.",
+        "Derived registry entry only; existing domain authority remains canonical."
+      ],
+      "original_office_v2_verdict": null
+    },
+    {
+      "candidate_id": "incumbent-current-credential-management",
+      "source_item_id": null,
+      "name": "Current provider-native credential and secret-store composition",
+      "category": "INCUMBENT_COMPOSITION",
+      "provenance_class": "LIVE_DERIVED_INCUMBENT",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Existing bounded provider-native secret stores and credential paths remain incumbent; Phase 3B evaluates whether a broker improves scope, rotation and revocation without exposing unrelated secrets.",
+      "runtime_verification": "WARN",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "credential-management",
+        "secret-storage",
+        "credential-scoping"
+      ],
+      "platform_constraints": [
+        "provider-specific",
+        "Windows"
+      ],
+      "shortlist_lanes": [
+        "phase3b-credential-broker"
+      ],
+      "evidence_refs": [
+        "packages/velvetos/WINDOWS-PATH-CONTRACT.md",
+        "scripts/check-agent-surface-security.py",
+        "scripts/check-delivery-approval.py"
+      ],
+      "notes": [
+        "The incumbent is distributed rather than a single broker.",
+        "WARN reflects fragmentation, not a known credential leak."
+      ],
+      "original_office_v2_verdict": null
+    },
+    {
+      "source_item_id": null,
+      "provenance_class": "PHASE3B_CURRENT_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "platform_constraints": [],
+      "notes": [
+        "No winner or production authority is granted by registry intake."
+      ],
+      "original_office_v2_verdict": null,
+      "candidate_id": "candidate-zitadel",
+      "name": "ZITADEL",
+      "category": "IDENTITY_PROVIDER",
+      "verdict_reason": "START HERE Phase 3B names this class/candidate as serious enough for current contract-aligned research; immutable version and LAB admission remain pending.",
+      "capability_tags": [
+        "service-identity",
+        "oidc",
+        "oauth2",
+        "identity-provider"
+      ],
+      "shortlist_lanes": [
+        "phase3b-identity-provider"
+      ],
+      "evidence_refs": [
+        "https://zitadel.com/docs/guides/integrate/service-accounts/authenticate-service-accounts",
+        "https://zitadel.com/docs/self-hosting/manage/login-client"
+      ]
+    },
+    {
+      "source_item_id": null,
+      "provenance_class": "PHASE3B_CURRENT_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "platform_constraints": [],
+      "notes": [
+        "No winner or production authority is granted by registry intake."
+      ],
+      "original_office_v2_verdict": null,
+      "candidate_id": "candidate-keycloak",
+      "name": "Keycloak",
+      "category": "IDENTITY_PROVIDER",
+      "verdict_reason": "START HERE Phase 3B names this class/candidate as serious enough for current contract-aligned research; immutable version and LAB admission remain pending.",
+      "capability_tags": [
+        "service-identity",
+        "oidc",
+        "oauth2",
+        "identity-provider"
+      ],
+      "shortlist_lanes": [
+        "phase3b-identity-provider"
+      ],
+      "evidence_refs": [
+        "https://www.keycloak.org/2026/09/keycloak-2675-released",
+        "https://www.keycloak.org/2026/01/keycloak-2650-released"
+      ]
+    },
+    {
+      "source_item_id": null,
+      "provenance_class": "PHASE3B_CURRENT_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "platform_constraints": [],
+      "notes": [
+        "No winner or production authority is granted by registry intake."
+      ],
+      "original_office_v2_verdict": null,
+      "candidate_id": "candidate-authentik",
+      "name": "authentik",
+      "category": "IDENTITY_PROVIDER",
+      "verdict_reason": "START HERE Phase 3B names this class/candidate as serious enough for current contract-aligned research; immutable version and LAB admission remain pending.",
+      "capability_tags": [
+        "service-identity",
+        "oidc",
+        "identity-provider"
+      ],
+      "shortlist_lanes": [
+        "phase3b-identity-provider"
+      ],
+      "evidence_refs": [
+        "https://docs.goauthentik.io/releases/2026.8/"
+      ]
+    },
+    {
+      "source_item_id": null,
+      "provenance_class": "PHASE3B_CURRENT_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "platform_constraints": [],
+      "notes": [
+        "No winner or production authority is granted by registry intake."
+      ],
+      "original_office_v2_verdict": null,
+      "candidate_id": "candidate-openfga",
+      "name": "OpenFGA",
+      "category": "AUTHORIZATION_ENGINE",
+      "verdict_reason": "START HERE Phase 3B names this class/candidate as serious enough for current contract-aligned research; immutable version and LAB admission remain pending.",
+      "capability_tags": [
+        "authorization",
+        "relationship-based-access-control",
+        "policy-decision"
+      ],
+      "shortlist_lanes": [
+        "phase3b-authorization-policy"
+      ],
+      "evidence_refs": [
+        "https://openfga.dev/docs/getting-started/setup-openfga/docker"
+      ]
+    },
+    {
+      "source_item_id": null,
+      "provenance_class": "PHASE3B_CURRENT_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "platform_constraints": [],
+      "notes": [
+        "No winner or production authority is granted by registry intake."
+      ],
+      "original_office_v2_verdict": null,
+      "candidate_id": "candidate-opa",
+      "name": "Open Policy Agent",
+      "category": "AUTHORIZATION_ENGINE",
+      "verdict_reason": "START HERE Phase 3B names this class/candidate as serious enough for current contract-aligned research; immutable version and LAB admission remain pending.",
+      "capability_tags": [
+        "authorization",
+        "policy-engine",
+        "policy-decision",
+        "decision-logs"
+      ],
+      "shortlist_lanes": [
+        "phase3b-authorization-policy"
+      ],
+      "evidence_refs": [
+        "https://www.openpolicyagent.org/docs/rest-api",
+        "https://www.openpolicyagent.org/docs/management-decision-logs"
+      ]
+    },
+    {
+      "source_item_id": null,
+      "provenance_class": "PHASE3B_CURRENT_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "platform_constraints": [],
+      "notes": [
+        "No winner or production authority is granted by registry intake."
+      ],
+      "original_office_v2_verdict": null,
+      "candidate_id": "candidate-cedar",
+      "name": "Cedar",
+      "category": "AUTHORIZATION_ENGINE",
+      "verdict_reason": "START HERE Phase 3B names this class/candidate as serious enough for current contract-aligned research; immutable version and LAB admission remain pending.",
+      "capability_tags": [
+        "authorization",
+        "policy-language",
+        "rbac",
+        "abac"
+      ],
+      "shortlist_lanes": [
+        "phase3b-authorization-policy"
+      ],
+      "evidence_refs": [
+        "https://cedarpolicy.com/",
+        "https://docs.cedarpolicy.com/"
+      ]
+    },
+    {
+      "source_item_id": null,
+      "provenance_class": "PHASE3B_CURRENT_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "platform_constraints": [],
+      "notes": [
+        "No winner or production authority is granted by registry intake."
+      ],
+      "original_office_v2_verdict": null,
+      "candidate_id": "candidate-openbao",
+      "name": "OpenBao",
+      "category": "CREDENTIAL_BROKER",
+      "verdict_reason": "START HERE Phase 3B names this class/candidate as serious enough for current contract-aligned research; immutable version and LAB admission remain pending.",
+      "capability_tags": [
+        "credential-management",
+        "secrets",
+        "machine-auth",
+        "revocation"
+      ],
+      "shortlist_lanes": [
+        "phase3b-credential-broker"
+      ],
+      "evidence_refs": [
+        "https://openbao.org/docs/concepts/auth/",
+        "https://openbao.org/docs/auth/token/"
+      ]
     }
   ]
 }

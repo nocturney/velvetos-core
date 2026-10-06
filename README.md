@@ -34,6 +34,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 
 **Office v2 — CURRENT VERIFICATION + POLICY SEMANTICS:** the sensor registry is lifecycle-aware (123 registered; 116 active `CORE+DOMAIN` regression sensors) and current office policy is event/risk driven rather than ritual-clock driven. Morning Brief and Research are manual/event-driven; Best Skills is on-demand; retro is scoped to changed domains/new evidence; verified Instagram MCP is the first Insights source; routine Instagram publication may use canonical standing authorization only through exact-final gates + `policy_id: instagram.publish` + `vfigos`, never direct/bypass autopost; 3D AI providers remain fail-closed behind rights plus recurring-cost authority instead of unconditional per-use approval. These are contract semantics, not a claim that any pending PR is merged.
 
+**Office v2 - PHASE 3B IDENTITY / AUTHORIZATION / CREDENTIAL BROKER OPEN / CONTRACT FROZEN:** identity, policy and credential management are separated into three benchmark lanes with explicit incumbents and 2-3 serious challengers. The vendor-neutral 20-step security fixture requires deny-by-default, service identity, exact scoped credentials, revocation, correlated policy decisions, no unrelated-secret exposure, fail-closed dependency outages and secret-redacted evidence. Lane winners remain non-authoritative and must pass a shared cross-role composition fixture before Phase 3B can close; LAB still forbids production credentials and production authority.
+
 <!-- OPERATIONAL-SNAPSHOT:START -->
 <table>
 <tr>
@@ -44,7 +46,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 </tr>
 <tr>
 <td align="center"><strong>23</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>123</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>124</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>11</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>

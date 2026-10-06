@@ -1,0 +1,49 @@
+{
+  "schema": "velvetos.office-v2.phase3b-identity-security-shortlist.v0",
+  "status": "CONTRACT_FROZEN_RESEARCH_SHORTLIST_NO_WINNER",
+  "captured_at": "2026-10-06T09:55:16.531683Z",
+  "winner": null,
+  "production_authority_granted": false,
+  "lanes": [
+    {
+      "lane_id": "phase3b-identity-provider",
+      "role": "identity_provider",
+      "incumbent": "incumbent-current-service-identity",
+      "challengers": [
+        "candidate-zitadel",
+        "candidate-keycloak",
+        "candidate-authentik"
+      ],
+      "winner": null,
+      "admission_status": "RESEARCH_PENDING_VERSION_PIN_AND_LAB_ADMISSION"
+    },
+    {
+      "lane_id": "phase3b-authorization-policy",
+      "role": "authorization_policy",
+      "incumbent": "incumbent-current-authorization",
+      "challengers": [
+        "candidate-openfga",
+        "candidate-opa",
+        "candidate-cedar"
+      ],
+      "winner": null,
+      "admission_status": "RESEARCH_PENDING_VERSION_PIN_AND_LAB_ADMISSION"
+    },
+    {
+      "lane_id": "phase3b-credential-broker",
+      "role": "credential_broker",
+      "incumbent": "incumbent-current-credential-management",
+      "challengers": [
+        "candidate-infisical-agent-vault",
+        "candidate-openbao"
+      ],
+      "winner": null,
+      "admission_status": "RESEARCH_PENDING_VERSION_PIN_AND_LAB_ADMISSION"
+    }
+  ],
+  "composition_gate": {
+    "winner_selection_per_lane_allowed_only_after_fixture": true,
+    "phase3b_closure_requires_cross_role_composition_pass": true,
+    "no_lane_winner_grants_production_authority": true
+  }
+}

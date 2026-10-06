@@ -1,0 +1,34 @@
+{
+  "schema": "velvetos.office-v2.phase3b-registry-extension.v0",
+  "status": "APPLIED",
+  "captured_at": "2026-10-06T09:55:16.531683Z",
+  "reason": "START HERE Phase 3B explicitly requires identity/authorization/credential-broker candidates that were not all present in the closed 68-item historical source import.",
+  "source_import_preserved": {
+    "source_item_count": 68,
+    "imported_source_item_count": 68
+  },
+  "derived_or_new_candidate_ids": [
+    "incumbent-current-service-identity",
+    "incumbent-current-authorization",
+    "incumbent-current-credential-management",
+    "candidate-zitadel",
+    "candidate-keycloak",
+    "candidate-authentik",
+    "candidate-openfga",
+    "candidate-opa",
+    "candidate-cedar",
+    "candidate-openbao"
+  ],
+  "updated_existing_candidate_ids": [
+    "candidate-infisical-agent-vault"
+  ],
+  "authority_change": false,
+  "production_writer_change": false,
+  "production_credentials_used": false,
+  "evidence_refs": [
+    "gdrive://15NMtyaUDjxiACPKEY_T5rW7IUFwtD2qU88yhbKQhEkw#phase3b",
+    "docs/implementation/office-v2/phase2/admission-policy-v0.md",
+    "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+    "docs/implementation/office-v2/phase3b/identity-security-shortlist-v0.json"
+  ]
+}
