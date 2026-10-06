@@ -1,6 +1,6 @@
 # Office v2 Phase 3B — Identity / Authorization / Credential Broker
 
-Status: **CONTRACT V0 FROZEN / ALL THREE LANES DESTRUCTIVE COMPLETE / IDENTITY: ZITADEL WINNER + KEYCLOAK FALLBACK / AUTHORIZATION: OPA WINNER + CEDAR FALLBACK / CREDENTIAL: OPENBAO WINNER + INFISICAL FALLBACK / CROSS-ROLE COMPOSITION PENDING / NO WINNER AT PHASE LEVEL / NO PRODUCTION AUTHORITY CHANGE**
+Status: **CONTRACT V0 FROZEN / ALL THREE LANES DESTRUCTIVE COMPLETE / CROSS-ROLE COMPOSITION PASS / PRIMARY: ZITADEL + OPA + OPENBAO / VALIDATED FALLBACK SWAPS: KEYCLOAK, CEDAR, INFISICAL / SELECTED FOR INTEGRATION / NO PRODUCTION AUTHORITY CHANGE**
 
 Phase 3B treats security as three explicit roles rather than forcing one product to own identity, authorization and secrets:
 
@@ -30,9 +30,20 @@ Before any production-adjacent PILOT, the selected composition must prove:
 
 Each sublane is benchmarked independently using neutral LAB stubs for the other two roles. Only the lane winner/fallback combinations proceed to the shared 20-step composition fixture. This avoids a brute-force Cartesian bake-off while still proving the selected products interoperate safely.
 
-Current shortlist is research-only. Exact versions, immutable pins, license/maintenance/security review, resource plans and teardown/rollback evidence are required before ADMITTED-to-LAB promotion.
+The shortlist has now completed admission, per-lane destructive validation and the shared Stage B composition gate. Exact pins and lane verdicts remain frozen; production credentials and production authority remain forbidden in LAB.
 
-Production credentials and production authority remain forbidden in LAB.
+## Shared Stage B composition
+
+The frozen 20-step fixture passed in four selected compositions, without Cartesian exhaustion:
+
+- **Primary:** ZITADEL + OPA + OpenBao — PASS 20/20.
+- **Identity fallback swap:** Keycloak + OPA + OpenBao — PASS 20/20.
+- **Authorization fallback swap:** ZITADEL + Cedar + OpenBao — PASS 20/20.
+- **Credential fallback swap:** ZITADEL + OPA + Infisical — PASS 20/20.
+
+All four receipts are LAB-only, use synthetic credentials/material, expose no host ports, record no raw bearer/secret material, and prove fail-closed dependency behavior. The primary composition is selected for integration because it preserves the already selected lane winners while each one-at-a-time fallback has independently proven interoperability under the same fixture.
+
+`composition-gate-verdict-v0.json` is the canonical Phase 3B composition receipt. This closes the architecture/composition gate only. It does **not** grant SHADOW, PILOT or production authority, and `CURRENT.json` remains at the Phase 3A closed / Phase 3B ready checkpoint pending a separate project-state promotion.
 
 ## Admission research
 

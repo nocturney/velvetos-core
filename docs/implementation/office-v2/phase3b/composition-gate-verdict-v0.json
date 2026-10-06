@@ -1,0 +1,67 @@
+{
+  "schema": "velvetos.office-v2.phase3b-composition-gate-verdict.v0",
+  "captured_at": "2026-10-06T18:49:24.642017Z",
+  "status": "SELECTED_FOR_INTEGRATION_NO_PRODUCTION_AUTHORITY",
+  "fixture_id": "identity-security-destructive-20-step",
+  "winner": "composition-zitadel-opa-openbao",
+  "phase3b_gate_closed": true,
+  "production_authority_change": false,
+  "production_writer_change": false,
+  "production_credentials_used": false,
+  "production_secret_material_used": false,
+  "shadow_or_pilot_promotion": false,
+  "cartesian_exhaustion_required": false,
+  "primary_composition": {
+    "composition_id": "composition-zitadel-opa-openbao",
+    "identity_provider": "candidate-zitadel",
+    "authorization_policy": "candidate-opa",
+    "credential_broker": "candidate-openbao",
+    "benchmark_status": "PASS",
+    "evidence": {
+      "path": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-winners-zitadel-opa-openbao.json",
+      "sha256": "6ce0725ca1f568fd3c9291dd0a557f8e40e6ced3337a52a0370dd2d52c459751"
+    }
+  },
+  "validated_fallback_swaps": {
+    "identity_provider": {
+      "composition_id": "composition-keycloak-opa-openbao",
+      "candidate": "candidate-keycloak",
+      "benchmark_status": "PASS",
+      "evidence": {
+        "path": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-fallback-keycloak-opa-openbao.json",
+        "sha256": "6f5afc3bae97c66e864a34849a236efaebc920b42cf158148c5fd9f993e9c53d"
+      }
+    },
+    "authorization_policy": {
+      "composition_id": "composition-zitadel-cedar-openbao",
+      "candidate": "candidate-cedar",
+      "benchmark_status": "PASS",
+      "evidence": {
+        "path": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-fallback-zitadel-cedar-openbao.json",
+        "sha256": "107a9aa1e0510243f275e2357897c3c428d55930675c04bd7f41a28b792f1744"
+      }
+    },
+    "credential_broker": {
+      "composition_id": "composition-zitadel-opa-infisical",
+      "candidate": "candidate-infisical-agent-vault",
+      "benchmark_status": "PASS",
+      "evidence": {
+        "path": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-fallback-zitadel-opa-infisical.json",
+        "sha256": "614748a3a62c3bed2a1aa33420e72fd274eea8d2bb22e9e1347cfd5fd2382f05"
+      }
+    }
+  },
+  "selection_basis": [
+    "The primary composition uses the already selected lane winners: ZITADEL for identity, OPA for authorization and OpenBao for credential brokering.",
+    "The primary composition passed all 20 frozen Stage B steps under one isolated LAB network with no production credentials or authority.",
+    "Each selected lane fallback also passed the same 20-step shared fixture when swapped one-at-a-time around the primary composition: Keycloak, Cedar and Infisical.",
+    "The frozen contract explicitly does not require Cartesian exhaustion; the one-at-a-time fallback swaps prove the selected interoperability paths without a 3x3x2 bake-off.",
+    "All four composition receipts record fail-closed dependency behavior, no host-port exposure and no raw secret or bearer material."
+  ],
+  "promotion_limits": [
+    "This verdict closes the Phase 3B architecture/composition gate only; it does not grant SHADOW, PILOT or production authority.",
+    "CURRENT.json remains at the Phase 3A closed/Phase 3B ready checkpoint until a separate project-state promotion is explicitly authorized.",
+    "Any production-adjacent integration must preserve default DENY, scoped credential access, observable revocation, rollback and explicit authority-transfer receipts."
+  ],
+  "next_gate": "Prepare integration wiring and later SHADOW/PILOT promotion gates for the selected composition. Production authority remains unchanged until a separate explicit promotion receipt."
+}

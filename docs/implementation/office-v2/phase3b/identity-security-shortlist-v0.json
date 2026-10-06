@@ -1,8 +1,8 @@
 {
   "schema": "velvetos.office-v2.phase3b-identity-security-shortlist.v0",
-  "status": "ALL_LANES_SELECTED_COMPOSITION_PENDING_NO_PRODUCTION_AUTHORITY",
-  "captured_at": "2026-10-06T15:38:52.076716Z",
-  "winner": null,
+  "status": "COMPOSITION_GATE_PASS_PRIMARY_SELECTED_NO_PRODUCTION_AUTHORITY",
+  "captured_at": "2026-10-06T18:49:24.642017Z",
+  "winner": "composition-zitadel-opa-openbao",
   "production_authority_granted": false,
   "lanes": [
     {
@@ -17,7 +17,7 @@
       "winner": "candidate-zitadel",
       "fallback": "candidate-keycloak",
       "specialized_reserve": "candidate-authentik",
-      "admission_status": "DESTRUCTIVE_COMPLETE_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY",
+      "admission_status": "DESTRUCTIVE_COMPLETE_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY",
       "candidate_admission": {
         "candidate-zitadel": "LAB",
         "candidate-keycloak": "LAB",
@@ -41,7 +41,7 @@
       ],
       "winner": "candidate-opa",
       "fallback": "candidate-cedar",
-      "admission_status": "DESTRUCTIVE_COMPLETE_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY",
+      "admission_status": "DESTRUCTIVE_COMPLETE_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY",
       "candidate_admission": {
         "candidate-openfga": "LAB",
         "candidate-opa": "LAB",
@@ -60,7 +60,7 @@
       ],
       "winner": "candidate-openbao",
       "fallback": "candidate-infisical-agent-vault",
-      "admission_status": "DESTRUCTIVE_COMPLETE_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY",
+      "admission_status": "DESTRUCTIVE_COMPLETE_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY",
       "candidate_admission": {
         "candidate-infisical-agent-vault": "LAB",
         "candidate-openbao": "LAB"
@@ -75,6 +75,27 @@
   "composition_gate": {
     "winner_selection_per_lane_allowed_only_after_fixture": true,
     "phase3b_closure_requires_cross_role_composition_pass": true,
-    "no_lane_winner_grants_production_authority": true
+    "no_lane_winner_grants_production_authority": true,
+    "status": "PASS",
+    "fixture_id": "identity-security-destructive-20-step",
+    "winner": "composition-zitadel-opa-openbao",
+    "primary": {
+      "identity_provider": "candidate-zitadel",
+      "authorization_policy": "candidate-opa",
+      "credential_broker": "candidate-openbao"
+    },
+    "validated_fallback_swaps": {
+      "identity_provider": "candidate-keycloak",
+      "authorization_policy": "candidate-cedar",
+      "credential_broker": "candidate-infisical-agent-vault"
+    },
+    "cartesian_exhaustion_required": false,
+    "verdict_ref": "docs/implementation/office-v2/phase3b/composition-gate-verdict-v0.json",
+    "evidence_refs": [
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-winners-zitadel-opa-openbao.json",
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-fallback-keycloak-opa-openbao.json",
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-fallback-zitadel-cedar-openbao.json",
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-fallback-zitadel-opa-infisical.json"
+    ]
   }
 }

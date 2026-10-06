@@ -20,6 +20,7 @@ REQUIRED = [
     P3B / "authorization-lane-verdict-v0.json",
     P3B / "identity-lane-verdict-v0.json",
     P3B / "credential-lane-verdict-v0.json",
+    P3B / "composition-gate-verdict-v0.json",
     P3B / "scorecards" / "credential-candidate-openbao.json",
     P3B / "scorecards" / "credential-candidate-infisical-agent-vault.json",
     P3B / "scorecards" / "identity-candidate-zitadel.json",
@@ -190,10 +191,12 @@ def main() -> None:
             fail("pending LAB candidate authority/runtime mismatch: " + cid)
 
     lab_status = load(P3B / "lab-status-v0.json")
-    if lab_status.get("winner_selected") is not False or lab_status.get("production_authority_change") is not False:
-        fail("Phase 3B LAB status selected winner or changed authority")
+    if lab_status.get("winner_selected") is not True or lab_status.get("winner") != "composition-zitadel-opa-openbao":
+        fail("Phase 3B LAB status missing selected primary composition")
+    if any(lab_status.get(k) is not False for k in ("production_authority_change", "production_writer_change", "production_credentials_used")):
+        fail("Phase 3B LAB status changed production authority/writer/credentials")
     authz_status = ((lab_status.get("lanes") or {}).get("authorization_policy") or {})
-    if authz_status.get("status") != "DESTRUCTIVE_PASS_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY":
+    if authz_status.get("status") != "DESTRUCTIVE_PASS_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY":
         fail("authorization LAB status mismatch")
     if set(authz_status.get("lab_candidates") or []) != lab_authz:
         fail("authorization LAB candidate set mismatch")
@@ -202,7 +205,7 @@ def main() -> None:
     if authz_status.get("lane_verdict_ref") != "docs/implementation/office-v2/phase3b/authorization-lane-verdict-v0.json":
         fail("authorization lane verdict ref missing")
     identity_status = ((lab_status.get("lanes") or {}).get("identity_provider") or {})
-    if identity_status.get("status") != "DESTRUCTIVE_PASS_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY":
+    if identity_status.get("status") != "DESTRUCTIVE_PASS_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY":
         fail("identity LAB status mismatch")
     if set(identity_status.get("lab_candidates") or []) != lab_identity:
         fail("identity LAB candidate set mismatch")
@@ -218,7 +221,7 @@ def main() -> None:
         fail("identity LAB evidence refs incomplete")
 
     credential_status = ((lab_status.get("lanes") or {}).get("credential_broker") or {})
-    if credential_status.get("status") != "DESTRUCTIVE_PASS_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY":
+    if credential_status.get("status") != "DESTRUCTIVE_PASS_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY":
         fail("credential LAB status mismatch")
     if credential_status.get("winner") != "candidate-openbao" or credential_status.get("fallback") != "candidate-infisical-agent-vault":
         fail("credential lane winner/fallback mismatch")
@@ -230,6 +233,20 @@ def main() -> None:
         fail("credential LAB must have no pending candidates after OpenBao smoke")
     if len(credential_status.get("receipt_refs") or []) != 2 or len(credential_status.get("cleanup_refs") or []) != 2:
         fail("credential LAB evidence refs incomplete")
+
+    lab_comp = lab_status.get("composition_gate") or {}
+    if lab_comp.get("status") != "PASS" or lab_comp.get("winner") != "composition-zitadel-opa-openbao":
+        fail("Phase 3B LAB composition gate status/winner mismatch")
+    if lab_comp.get("fixture_id") != "identity-security-destructive-20-step" or lab_comp.get("production_authority_change") is not False:
+        fail("Phase 3B LAB composition fixture/authority mismatch")
+    if lab_comp.get("primary") != {"identity_provider":"candidate-zitadel","authorization_policy":"candidate-opa","credential_broker":"candidate-openbao"}:
+        fail("Phase 3B LAB primary composition mismatch")
+    if lab_comp.get("validated_fallback_swaps") != {"identity_provider":"candidate-keycloak","authorization_policy":"candidate-cedar","credential_broker":"candidate-infisical-agent-vault"}:
+        fail("Phase 3B LAB fallback composition mismatch")
+    if lab_comp.get("cartesian_exhaustion_required") is not False or len(lab_comp.get("evidence_refs") or []) != 4:
+        fail("Phase 3B LAB composition evidence/strategy mismatch")
+    if lab_comp.get("verdict_ref") != "docs/implementation/office-v2/phase3b/composition-gate-verdict-v0.json":
+        fail("Phase 3B LAB composition verdict ref missing")
 
     zit = by_id.get("candidate-zitadel") or {}
     if zit.get("lifecycle_state") != "LAB" or zit.get("decision_verdict") != "LAB_VALIDATED":
@@ -256,10 +273,10 @@ def main() -> None:
         fail("OpenBao LAB receipt evidence missing from registry")
 
     shortlist = load(P3B / "identity-security-shortlist-v0.json")
-    if shortlist.get("status") != "ALL_LANES_SELECTED_COMPOSITION_PENDING_NO_PRODUCTION_AUTHORITY":
+    if shortlist.get("status") != "COMPOSITION_GATE_PASS_PRIMARY_SELECTED_NO_PRODUCTION_AUTHORITY":
         fail("Phase 3B shortlist status mismatch")
-    if shortlist.get("winner") is not None or shortlist.get("production_authority_granted") is not False:
-        fail("Phase 3B shortlist selected winner or authority prematurely")
+    if shortlist.get("winner") != "composition-zitadel-opa-openbao" or shortlist.get("production_authority_granted") is not False:
+        fail("Phase 3B shortlist primary composition/authority mismatch")
     lanes = {x.get("lane_id"): x for x in shortlist.get("lanes") or []}
     if set(lanes) != set(EXPECTED_LANES):
         fail("Phase 3B shortlist lane set mismatch")
@@ -295,7 +312,7 @@ def main() -> None:
                 fail("authorization shortlist candidates must all be LAB after smoke")
             if not lane.get("lab_smoke_ref"):
                 fail("authorization shortlist missing LAB smoke receipt")
-            if lane.get("admission_status") != "DESTRUCTIVE_COMPLETE_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY":
+            if lane.get("admission_status") != "DESTRUCTIVE_COMPLETE_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY":
                 fail("authorization destructive status mismatch")
             if lane.get("lane_verdict_ref") != "docs/implementation/office-v2/phase3b/authorization-lane-verdict-v0.json":
                 fail("authorization shortlist lane verdict ref missing")
@@ -306,7 +323,7 @@ def main() -> None:
             refs = lane.get("lab_smoke_refs") or {}
             if set(refs) != lab_identity or not all(refs.values()):
                 fail("identity shortlist LAB smoke refs incomplete")
-            if lane.get("admission_status") != "DESTRUCTIVE_COMPLETE_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY":
+            if lane.get("admission_status") != "DESTRUCTIVE_COMPLETE_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY":
                 fail("identity destructive status mismatch")
             if lane.get("lane_verdict_ref") != "docs/implementation/office-v2/phase3b/identity-lane-verdict-v0.json":
                 fail("identity shortlist lane verdict ref missing")
@@ -317,7 +334,7 @@ def main() -> None:
             refs = lane.get("lab_smoke_refs") or {}
             if set(refs) != lab_credential or not all(refs.values()):
                 fail("credential shortlist LAB smoke refs incomplete")
-            if lane.get("admission_status") != "DESTRUCTIVE_COMPLETE_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY":
+            if lane.get("admission_status") != "DESTRUCTIVE_COMPLETE_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY":
                 fail("credential destructive status mismatch")
             if lane.get("lane_verdict_ref") != "docs/implementation/office-v2/phase3b/credential-lane-verdict-v0.json":
                 fail("credential shortlist lane verdict ref missing")
@@ -357,16 +374,63 @@ def main() -> None:
         sc = load(P3B / "scorecards" / f"credential-{cid}.json")
         if sc.get("fixture_id") != "identity-security-destructive-20-step" or sc.get("candidate_id") != cid:
             fail("credential scorecard identity/fixture mismatch: " + cid)
+    expected_primary = {
+        "identity_provider": "candidate-zitadel",
+        "authorization_policy": "candidate-opa",
+        "credential_broker": "candidate-openbao",
+    }
+    expected_fallbacks = {
+        "identity_provider": "candidate-keycloak",
+        "authorization_policy": "candidate-cedar",
+        "credential_broker": "candidate-infisical-agent-vault",
+    }
     comp = shortlist.get("composition_gate") or {}
     if not all(comp.get(k) is True for k in ("winner_selection_per_lane_allowed_only_after_fixture", "phase3b_closure_requires_cross_role_composition_pass", "no_lane_winner_grants_production_authority")):
-        fail("Phase 3B composition gate incomplete")
+        fail("Phase 3B composition gate policy incomplete")
+    if comp.get("status") != "PASS" or comp.get("winner") != "composition-zitadel-opa-openbao":
+        fail("Phase 3B composition gate result mismatch")
+    if comp.get("fixture_id") != "identity-security-destructive-20-step" or comp.get("primary") != expected_primary:
+        fail("Phase 3B composition fixture/primary mismatch")
+    if comp.get("validated_fallback_swaps") != expected_fallbacks or comp.get("cartesian_exhaustion_required") is not False:
+        fail("Phase 3B composition fallback strategy mismatch")
+    if comp.get("verdict_ref") != "docs/implementation/office-v2/phase3b/composition-gate-verdict-v0.json" or len(comp.get("evidence_refs") or []) != 4:
+        fail("Phase 3B composition verdict/evidence refs incomplete")
+
+    composition_verdict = load(P3B / "composition-gate-verdict-v0.json")
+    if composition_verdict.get("status") != "SELECTED_FOR_INTEGRATION_NO_PRODUCTION_AUTHORITY":
+        fail("Phase 3B composition verdict status mismatch")
+    if composition_verdict.get("fixture_id") != "identity-security-destructive-20-step" or composition_verdict.get("winner") != "composition-zitadel-opa-openbao":
+        fail("Phase 3B composition verdict fixture/winner mismatch")
+    if composition_verdict.get("phase3b_gate_closed") is not True or composition_verdict.get("cartesian_exhaustion_required") is not False:
+        fail("Phase 3B composition verdict closure/strategy mismatch")
+    if any(composition_verdict.get(k) is not False for k in (
+        "production_authority_change", "production_writer_change", "production_credentials_used",
+        "production_secret_material_used", "shadow_or_pilot_promotion",
+    )):
+        fail("Phase 3B composition verdict changed production authority")
+    primary = composition_verdict.get("primary_composition") or {}
+    if {k: primary.get(k) for k in expected_primary} != expected_primary or primary.get("benchmark_status") != "PASS":
+        fail("Phase 3B primary composition verdict mismatch")
+    fallback_rows = composition_verdict.get("validated_fallback_swaps") or {}
+    if set(fallback_rows) != set(expected_fallbacks):
+        fail("Phase 3B fallback verdict set mismatch")
+    for role, candidate in expected_fallbacks.items():
+        row = fallback_rows.get(role) or {}
+        if row.get("candidate") != candidate or row.get("benchmark_status") != "PASS":
+            fail("Phase 3B fallback verdict mismatch: " + role)
+        ev = row.get("evidence") or {}
+        if not ev.get("path") or len(ev.get("sha256") or "") != 64:
+            fail("Phase 3B fallback evidence incomplete: " + role)
+    primary_ev = primary.get("evidence") or {}
+    if not primary_ev.get("path") or len(primary_ev.get("sha256") or "") != 64:
+        fail("Phase 3B primary evidence incomplete")
 
     readme = (P3B / "README.md").read_text(encoding="utf-8-sig")
-    for marker in ("NO WINNER", "NO PRODUCTION AUTHORITY CHANGE", "Authentication never implies authorization", "shared 20-step composition fixture"):
+    for marker in ("CROSS-ROLE COMPOSITION PASS", "NO PRODUCTION AUTHORITY CHANGE", "Authentication never implies authorization", "shared 20-step composition fixture", "composition-gate-verdict-v0.json"):
         if marker not in readme:
-            fail("Phase 3B README missing safety marker: " + marker)
+            fail("Phase 3B README missing safety/composition marker: " + marker)
 
-    print(f"OK office-v2-phase3b contract=FROZEN fixture=20-STEP lanes=3 candidates={len(items)} source-import=68/68 winner=NONE authority=NONE")
+    print(f"OK office-v2-phase3b contract=FROZEN fixture=20-STEP lanes=3 candidates={len(items)} source-import=68/68 winner=composition-zitadel-opa-openbao authority=NONE")
 
 if __name__ == "__main__":
     main()

@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase3b-lab-status.v0",
-  "captured_at": "2026-10-06T15:38:52.076716Z",
+  "captured_at": "2026-10-06T18:49:24.642017Z",
   "production_authority_change": false,
   "production_writer_change": false,
   "production_credentials_used": false,
-  "winner_selected": false,
+  "winner_selected": true,
   "lanes": {
     "identity_provider": {
-      "status": "DESTRUCTIVE_PASS_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY",
+      "status": "DESTRUCTIVE_PASS_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY",
       "winner": "candidate-zitadel",
       "fallback": "candidate-keycloak",
       "specialized_reserve": "candidate-authentik",
@@ -31,7 +31,7 @@
       "pending_candidates": []
     },
     "authorization_policy": {
-      "status": "DESTRUCTIVE_PASS_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY",
+      "status": "DESTRUCTIVE_PASS_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY",
       "winner": "candidate-opa",
       "fallback": "candidate-cedar",
       "lane_verdict_ref": "docs/implementation/office-v2/phase3b/authorization-lane-verdict-v0.json",
@@ -44,7 +44,7 @@
       "cleanup_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-smoke-task-cleanup.json"
     },
     "credential_broker": {
-      "status": "DESTRUCTIVE_PASS_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY",
+      "status": "DESTRUCTIVE_PASS_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY",
       "winner": "candidate-openbao",
       "fallback": "candidate-infisical-agent-vault",
       "lane_verdict_ref": "docs/implementation/office-v2/phase3b/credential-lane-verdict-v0.json",
@@ -63,5 +63,30 @@
       ]
     }
   },
-  "next_gate": "Execute the shared cross-role composition gate using selected lane winners/fallbacks. No production authority before composition PASS and later promotion gate."
+  "next_gate": "Phase 3B architecture/composition gate is closed GREEN for integration planning only. SHADOW/PILOT/production authority still requires a separate explicit promotion gate.",
+  "winner": "composition-zitadel-opa-openbao",
+  "composition_gate": {
+    "status": "PASS",
+    "fixture_id": "identity-security-destructive-20-step",
+    "winner": "composition-zitadel-opa-openbao",
+    "primary": {
+      "identity_provider": "candidate-zitadel",
+      "authorization_policy": "candidate-opa",
+      "credential_broker": "candidate-openbao"
+    },
+    "validated_fallback_swaps": {
+      "identity_provider": "candidate-keycloak",
+      "authorization_policy": "candidate-cedar",
+      "credential_broker": "candidate-infisical-agent-vault"
+    },
+    "cartesian_exhaustion_required": false,
+    "verdict_ref": "docs/implementation/office-v2/phase3b/composition-gate-verdict-v0.json",
+    "evidence_refs": [
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-winners-zitadel-opa-openbao.json",
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-fallback-keycloak-opa-openbao.json",
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-fallback-zitadel-cedar-openbao.json",
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-fallback-zitadel-opa-infisical.json"
+    ],
+    "production_authority_change": false
+  }
 }
