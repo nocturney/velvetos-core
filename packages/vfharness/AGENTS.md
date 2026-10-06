@@ -2,7 +2,7 @@
 
 PROJECT: VelvetOS harness discipline
 TEST: `python3 scripts/check-vfharness.py`
-LINT: `python3 scripts/check-all.py`
+LINT: affected/domain sensors for scoped edits; repository acceptance: `python3 scripts/check-all.py`
 
 This guide applies only to `packages/vfharness/**`. Root `AGENTS.md` owns Core-wide identity and boundaries; this file owns harness-specific execution discipline.
 
@@ -15,7 +15,7 @@ This guide applies only to `packages/vfharness/**`. Root `AGENTS.md` owns Core-w
 - `send_message` and other external effects follow the canonical destination policy and receipt contract; the harness only routes/executes after policy allows.
 - Office-manager failover: `docs/FAILOVER.md`. Grok Bot quota failover: `playbooks/grok-failover.md` + `docs/GROK-FAILOVER.md`. Urgent publication continuity uses `packages/vfigos/LIVE-PACKET.md`; failover never becomes a new authority.
 - Retry with an approach change, not identical tool-call thrash. Preserve the existing capped retry/escalation rules in `LOOP.md` and `layers.json`.
-- Run `python3 scripts/check-all.py` after harness/catalog/rule changes. Sensor inventory is `packages/velvetos/policy/sensor-registry.json`, not this guide.
+- After scoped harness/catalog/rule changes, run the affected/domain sensors. Run `python3 scripts/check-all.py` only for repository-wide contract/authority changes or explicit acceptance/regression. Sensor inventory is `packages/velvetos/policy/sensor-registry.json`, not this guide.
 
 ## ANTI-PATTERNS
 

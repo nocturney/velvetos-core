@@ -28,7 +28,7 @@
 6. שורת בלוק `05-משרד` בבריף הבא (`vfops/BRIEF.md`):
    - יש הטמעה: «שבועי קישורים — הוטמע X ב־`<pack>`» · «print-demand — N אותות»
    - אין: **«שבועי קישורים — אין חדש במשרד»** / «print-demand — אין חדש»
-7. אחרי שינוי קטלוג/כלל/פק: `python3 scripts/check-all.py`
+7. אחרי שינוי קטלוג/כלל/פק תחום: `python3 scripts/check-vfresearch.py` + הסנסורים המושפעים; `python3 scripts/check-all.py` רק לשינוי רוחבי בחוזה/סמכות או acceptance/regression מפורש
 8. קישור חדש שהבעלים שלח באמצע השבוע: להוסיף ל־`LINKS.json` **באותו יום** (לא לחכות ל־Friday accountability).
 
 ## תבנית ארטיפקט

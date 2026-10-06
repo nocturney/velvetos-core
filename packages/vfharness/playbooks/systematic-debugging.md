@@ -60,7 +60,7 @@ NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 ### 3. תיקון ממוקד
 
 - שנה רק מה שמוכיח את ההשערה.
-- אחרי שינוי קטלוג/כלל/פק: `python3 scripts/check-all.py`.
+- אחרי שינוי קטלוג/כלל/פק תחום: הרץ את הסנסורים המושפעים; `python3 scripts/check-all.py` רק לשינוי רוחבי בחוזה/סמכות או acceptance/regression מפורש.
 - כשל סנסור → תיקון אחד → אם נכשל שוב: הסלמה עם תבנית escalation (לא ניחוש שלישי).
 
 ### 4. אימות

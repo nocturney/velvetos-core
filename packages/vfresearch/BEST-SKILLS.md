@@ -27,7 +27,7 @@
 6. לכתוב ארטיפקט: `packages/vfresearch/sources/YYYY-MM-DD-best-skills.md`.
 7. לעדכן `BEST-SKILLS.json` (`lastPass`, `dataDate`, `lastArtifact`, `lastResult`).
 8. שורת בלוק `05-משרד`: «best-skills — הוטמע X» או «best-skills — אין חדש במשרד».
-9. אחרי שינוי קטלוג/כלל/פק: `python3 scripts/check-all.py`.
+9. אחרי שינוי קטלוג/כלל/פק תחום: `python3 scripts/check-vfresearch.py` + הסנסורים המושפעים; `python3 scripts/check-all.py` רק לשינוי רוחבי בחוזה/סמכות או acceptance/regression מפורש.
 10. לאמת שה־artifact וה־state תואמים. אין timer receipt מומצא, ואין ריצה אוטומטית רק מפני ש־`lastPass` ישן.
 
 ## מיפוי — לא פק כפול

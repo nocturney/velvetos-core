@@ -35,7 +35,7 @@ packages/<pack>/…   # playbook / templates שהסקיל מצביע אליהם
 
 - הטמעה על פק **קיים** באותו יום
 - נעילות: אין אוטו־DM, אין ₪ מומצא, HQ שולח דרך כלים
-- אחרי שינוי: `python3 scripts/check-all.py`
+- אחרי שינוי תחום: affected/domain sensors; `python3 scripts/check-all.py` רק לשינוי רוחבי בחוזה/סמכות או acceptance/regression מפורש
 - רישום מקור חיצוני ב־`vfresearch/LINKS.json` או `BEST-SKILLS.json`
 
 ## בדיקת תיאור (trigger)

@@ -104,7 +104,7 @@ Fan-in:
 ### 5. סיום
 
 - אחרי כל המשימות: fresh whole-plan review לשינוי מהותי, ואז `verification-before-claim.md` לפני «סיימתי».
-- אחרי שינוי קטלוג/כלל/פק: `python3 scripts/check-all.py`.
+- אחרי שינוי קטלוג/כלל/פק תחום: הרץ את הסנסורים המושפעים; `python3 scripts/check-all.py` רק לשינוי רוחבי בחוזה/סמכות או acceptance/regression מפורש.
 - לפני טענה ש־worker/automation/connector **רץ בפועל**: הצהר dependency מדויק והרץ `python3 scripts/check-runtime-doctor.py --scope runtime --require-component <id>` (או `deployment` / `external_action` / `acceptance` לפי הטענה). receipt stale/missing/malformed/non-healthy של dependency זה חוסם; receipt לא קשור אינו blocker. `--strict` הוא compatibility בלבד לטענת repository-wide all-components.
 - עדכן `state/<task-id>.json` (`status`, `completed_steps`, `unresolved`, `last_updated`).
 

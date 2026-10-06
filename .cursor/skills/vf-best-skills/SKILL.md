@@ -28,7 +28,7 @@ Use when the user asks for סקירת best-skills, LinklyAI rankings, skills.sh 
 6. Write `packages/vfresearch/sources/YYYY-MM-DD-best-skills.md`.
 7. Update `BEST-SKILLS.json`: `lastPass`, `dataDate`, `lastArtifact`, `lastResult`.
 8. Update brief block `05` when there is brief-worthy output.
-9. After catalog/pack/rule edits run `python3 scripts/check-all.py`.
+9. After scoped catalog/pack/rule edits run the affected/domain sensors; reserve `python3 scripts/check-all.py` for repository-wide contract/authority changes or explicit acceptance/regression.
 10. Verify the state/artifact pair. `lastPass` age is provenance only; never schedule work from age alone and never claim a fresh review without a matching artifact.
 
 ## Forbidden

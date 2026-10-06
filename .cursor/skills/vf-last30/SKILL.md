@@ -24,7 +24,7 @@ Use when the user asks for מחקר 30 יום אחרונים, what people say on
 5. Apply confidence floor; allow **nothing-solid** (honest empty) — never invent trends, track names, ₪, or Insights.
 6. Write `packages/vfresearch/sources/YYYY-MM-DD-<topic>-last30.md`.
 7. Hand off embeds to an existing pack, or line for brief block `05` when office-relevant.
-8. After catalog/pack edits: `python3 scripts/check-all.py`.
+8. After scoped catalog/pack edits run the affected research/domain sensors; use `python3 scripts/check-all.py` only for repository-wide contract/authority changes or explicit acceptance/regression.
 
 ## Forbidden
 

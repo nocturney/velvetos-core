@@ -62,9 +62,6 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-06 - **Scheduler simplification / Grok 3→0 cutover:** owner-facing recurring authority moved to ChatGPT automations. The active recurring set is now Cognee Memory Sync once daily (~11:30 flexible), Velv…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-06 - **Scheduler simplification / Grok 3→0 cutover:** owner-facing recurring authority moved to ChatGPT automations. The active recurring set is now Cognee Memory Sync once daily (~11:30 flexible), Velv…</div>
-
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
 <!-- OPERATIONAL-SNAPSHOT:END -->
@@ -208,13 +205,13 @@ External scheduled office clock: **Grok Bot protected routines** (`automation/gr
 - ‏פרסום ותקשורת חיצונית כפופים ל־approval/capability gates.
 - ‏איסוף נשאר בשדרות כל עוד הרשומה הקנונית לא שונתה.
 
-## ‏README חי
+## ‏README + System Pulse
 
 ‏ה־README הוא חלק מהמוצר. שינוי מהותי ב־`packages/`, `office/`, `scripts/`, `.github/workflows/` או `constitution/` מחייב עדכון README באותו PR, אלא אם מדובר בשינוי פנימי שאינו משנה capability.
 
 ‏פלט שגרתי פטור: תוצרי מחקר מתוארכים, checkpoints, תוצרי בריף, קבצי `data/`/`state/` של חבילות וראיות של workflows לא מחייבים עדכון README. קוד, קונפיגורציה וחוזים עדיין מחייבים. הרשימה המדויקת ב־`scripts/readme_contract.py`. ב־CI החיישנים רצים גם אם שלב README נכשל.
 
-‏ה־System Pulse למעלה **נוצר מנתוני הריפו עצמו**. להרצה ידנית:
+‏ה־System Pulse למעלה **נוצר מנתוני הריפו עצמו**. Workflow הרענון מופעל רק ידנית או כשמקורות הראיה שמזינים את ה־snapshot משתנים; אין cron שעתי ואין שרשרת self-commit מכל שינוי workflow/CHANGELOG. להרצה ידנית:
 
 ```bash
 python3 scripts/update-readme-snapshot.py
@@ -318,7 +315,7 @@ The repository currently carries workflows for the sensor suite, Gmail brief, Of
 
 The Office Control Plane workflow also turns failed `main` runs into learning candidates (`scripts/vf_learning.py ingest-ci` → `packages/vfharness/state/learning-candidates/learn-ci-<workflow>.json`, deterministic, status never auto-changed; triage stays with the Office Loop).
 
-The VelvetOS research workflow installs the same sensor runtime as the sensor-suite workflow (Pillow, cryptography, starlette, ffmpeg) before its final `check-all.py` step, so its sensor verdict reflects the contracts rather than a missing module.
+The VelvetOS research workflow installs the pinned sensor runtime, then validates research with the routed domain set (`check-vfresearch.py` + `check-vfmem.py`); it no longer runs the repository-wide `check-all.py` suite after already completing map/freshness/index/verify/status.
 
 A workflow file proves automation exists; provider-dependent behavior is **LIVE** only after real provider/runtime verification.
 
@@ -341,13 +338,13 @@ A workflow file proves automation exists; provider-dependent behavior is **LIVE*
 | Change history | [`CHANGELOG.md`](CHANGELOG.md) |
 | Agent guidance | [`AGENTS.md`](AGENTS.md) |
 
-## Living README contract
+## README + System Pulse contract
 
 This README is part of the product. Material capability/runtime changes must update it in the same PR.
 
 Routine output is exempt: dated research artifacts, harness checkpoints, Morning Brief artifacts/outputs, pack `data/`/`state/` files and machine-workflow evidence do not require a README edit. Code, config, contracts and pack docs still do. The exact list lives in `scripts/readme_contract.py` (`ROUTINE_OUTPUT`) and is guarded by `scripts/check-readme-contract.py`. In CI, the README steps no longer hide the sensors: `check-all.py` and commission isolation run even when a README step fails.
 
-The System Pulse above is generated from repository sources:
+The System Pulse above is generated from repository sources. Its refresh workflow is event-driven by meaningful snapshot inputs (or manual dispatch), not an hourly cron and not every workflow/CHANGELOG change:
 
 ```bash
 python3 scripts/update-readme-snapshot.py
@@ -375,7 +372,7 @@ Frontend drift: `nocturney/velvetos-velvet-factory` is **private**. `sync-instan
 
 פער חזית: ריפו החזית פרטי; הבדיקה רק קוראת ומשווה, לא דוחפת, וב־CI מדלגת כשאין גישה.
 
-Sensors are read-only: a `check-all.py` run must leave repository files unchanged and ends with `OK sensor run left repository files unchanged` (or a `WARN sensor side effects …` list). Sensors that smoke-test writer CLIs restore those outputs through `scripts/sensor_isolation.py`. Canonical artifacts are written only by the explicit commands (`vfops_loop.py brief --write`, `vf_control_plane.py handoff`, `vf_organic_growth.py brief --write`, `vf_retro_signals.py --write`).
+Sensors are read-only: a `check-all.py` run must leave repository files unchanged and ends with `OK sensor run left repository files unchanged` (or a `WARN sensor side effects …` list). Sensors that still need writer smoke tests isolate/restore those outputs through `scripts/sensor_isolation.py`; `check-office-control-plane.py` instead validates the existing workflow-produced evidence and CLI wiring without replaying control-plane mutations. Canonical artifacts are written only by the explicit commands (`vfops_loop.py brief --write`, `vf_control_plane.py handoff`, `vf_organic_growth.py brief --write`, `vf_retro_signals.py --write`).
 
 חיישנים רק קוראים: הרצת `check-all.py` לא משאירה שינויים בקבצי הריפו. ארטיפקט קנוני נכתב רק דרך הפקודה המפורשת.
 
