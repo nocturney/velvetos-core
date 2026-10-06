@@ -1163,6 +1163,34 @@
       "mapping_state": "mapped"
     },
     {
+      "id": "check-office-v2-phase2",
+      "path": "scripts/check-office-v2-phase2.py",
+      "owns": [
+        "docs/implementation/office-v2/phase2/**",
+        "packages/vfharness/state/office-v2-phase2-20261006/**",
+        "scripts/vf_office_v2_golden_fixture.py"
+      ],
+      "triggered_by": [
+        "docs/implementation/office-v2/phase2/**",
+        "packages/vfharness/state/office-v2-phase2-20261006/**",
+        "scripts/check-office-v2-phase2.py",
+        "scripts/vf_office_v2_golden_fixture.py"
+      ],
+      "depends_on": [
+        "check-office-v2-phase1"
+      ],
+      "enforces": [],
+      "risk": "critical",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
       "id": "check-openpost-status",
       "path": "scripts/check-openpost-status.py",
       "owns": [

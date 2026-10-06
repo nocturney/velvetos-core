@@ -1,0 +1,84 @@
+{
+  "schema": "velvetos.office-v2.golden-fixture.v0",
+  "fixture_id": "long-job-crash-resume",
+  "status": "CONTRACT_V0",
+  "title": "Long job -> crash -> resume",
+  "capability_scope": [
+    "long_job.start",
+    "checkpoint",
+    "failure",
+    "resume"
+  ],
+  "input_contract": {
+    "required": [
+      "job_ref",
+      "checkpoint_policy",
+      "correlation"
+    ],
+    "vendor_specific_fields_forbidden": true
+  },
+  "semantic_steps": [
+    {
+      "step_id": "start",
+      "capability": "long_job.start",
+      "side_effect_class": "REVERSIBLE_WRITE",
+      "expected_evidence": [
+        "start_receipt"
+      ]
+    },
+    {
+      "step_id": "checkpoint",
+      "capability": "checkpoint",
+      "side_effect_class": "REVERSIBLE_WRITE",
+      "expected_evidence": [
+        "checkpoint_receipt"
+      ]
+    },
+    {
+      "step_id": "crash",
+      "capability": "failure.inject_or_observe",
+      "side_effect_class": "NONE",
+      "expected_evidence": [
+        "failure_receipt"
+      ]
+    },
+    {
+      "step_id": "resume",
+      "capability": "resume",
+      "side_effect_class": "REVERSIBLE_WRITE",
+      "expected_evidence": [
+        "resume_receipt"
+      ]
+    }
+  ],
+  "success_contract": [
+    "resume continues from a valid checkpoint",
+    "completed effects are not duplicated",
+    "cancellation and timeout remain explicit"
+  ],
+  "evidence_contract": {
+    "required": [
+      "start_receipt",
+      "checkpoint_receipt",
+      "failure_receipt",
+      "resume_receipt"
+    ]
+  },
+  "rollback_contract": [
+    "checkpoint can be discarded",
+    "job can be abandoned without hidden retry"
+  ],
+  "resource_capture": [
+    "wall_seconds",
+    "cpu_peak_pct",
+    "ram_peak_mb",
+    "gpu_peak_pct",
+    "vram_peak_mb",
+    "storage_delta_mb",
+    "network_mb",
+    "external_cost",
+    "recurring_cost",
+    "operator_minutes"
+  ],
+  "external_effect_policy": "PROVIDER_ADAPTER_REQUIRED_NO_DIRECT_RUNNER_MUTATION"
+}

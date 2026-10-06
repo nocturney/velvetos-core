@@ -1,0 +1,84 @@
+{
+  "schema": "velvetos.office-v2.golden-fixture.v0",
+  "fixture_id": "3d-asset-dcc-slice-artifact",
+  "status": "CONTRACT_V0",
+  "title": "3D asset -> DCC -> slice -> artifact",
+  "capability_scope": [
+    "asset.intake",
+    "dcc.transform",
+    "slice",
+    "artifact.provenance"
+  ],
+  "input_contract": {
+    "required": [
+      "asset_ref",
+      "target_profile",
+      "correlation"
+    ],
+    "vendor_specific_fields_forbidden": true
+  },
+  "semantic_steps": [
+    {
+      "step_id": "intake",
+      "capability": "asset.intake",
+      "side_effect_class": "NONE",
+      "expected_evidence": [
+        "asset_identity"
+      ]
+    },
+    {
+      "step_id": "dcc",
+      "capability": "dcc.transform",
+      "side_effect_class": "REVERSIBLE_WRITE",
+      "expected_evidence": [
+        "dcc_receipt"
+      ]
+    },
+    {
+      "step_id": "slice",
+      "capability": "slice",
+      "side_effect_class": "REVERSIBLE_WRITE",
+      "expected_evidence": [
+        "slice_receipt"
+      ]
+    },
+    {
+      "step_id": "artifact",
+      "capability": "artifact.provenance",
+      "side_effect_class": "NONE",
+      "expected_evidence": [
+        "artifact_receipt"
+      ]
+    }
+  ],
+  "success_contract": [
+    "source identity remains linked",
+    "generated artifact is reproducibly identified",
+    "no device print command is implied"
+  ],
+  "evidence_contract": {
+    "required": [
+      "asset_identity",
+      "dcc_receipt",
+      "slice_receipt",
+      "artifact_receipt"
+    ]
+  },
+  "rollback_contract": [
+    "generated artifacts can be discarded",
+    "source asset remains untouched unless explicitly versioned"
+  ],
+  "resource_capture": [
+    "wall_seconds",
+    "cpu_peak_pct",
+    "ram_peak_mb",
+    "gpu_peak_pct",
+    "vram_peak_mb",
+    "storage_delta_mb",
+    "network_mb",
+    "external_cost",
+    "recurring_cost",
+    "operator_minutes"
+  ],
+  "external_effect_policy": "PROVIDER_ADAPTER_REQUIRED_NO_DIRECT_RUNNER_MUTATION"
+}

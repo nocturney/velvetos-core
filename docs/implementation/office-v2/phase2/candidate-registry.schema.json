@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/phase2/candidate-registry-entry.v0",
+  "title": "Office v2 Phase 2 Candidate Registry Entry v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "candidate_id",
+    "source_item_id",
+    "name",
+    "category",
+    "provenance_class",
+    "lifecycle_state",
+    "decision_verdict",
+    "verdict_reason",
+    "runtime_verification",
+    "authority_role",
+    "capability_tags",
+    "platform_constraints",
+    "shortlist_lanes",
+    "evidence_refs",
+    "notes"
+  ],
+  "properties": {
+    "candidate_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_item_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "category": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provenance_class": {
+      "type": "string",
+      "minLength": 1
+    },
+    "lifecycle_state": {
+      "enum": [
+        "DISCOVERED",
+        "RESEARCHED",
+        "CANDIDATE",
+        "ADMITTED",
+        "LAB",
+        "SHADOW",
+        "PILOT",
+        "PRODUCTION",
+        "FALLBACK",
+        "RETIRED"
+      ]
+    },
+    "decision_verdict": {
+      "enum": [
+        "KEEP_INCUMBENT",
+        "BENCHMARK_REQUIRED",
+        "IMPORT_EXISTING",
+        "REPAIR_REQUIRED",
+        "ADVANCE_TO_CANDIDATE",
+        "LAB_VALIDATED",
+        "REJECTED_WITH_REASON",
+        "BENCHMARKED_AND_LOST",
+        "SUPERSEDED",
+        "DEFERRED_WITH_REASON"
+      ]
+    },
+    "verdict_reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "runtime_verification": {
+      "enum": [
+        "PASS",
+        "WARN",
+        "FAIL",
+        "NOT_RUN",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "authority_role": {
+      "enum": [
+        "PRODUCTION_INCUMBENT",
+        "LAB_INCUMBENT",
+        "HISTORICAL_ONLY",
+        "PHYSICAL_DEVICE",
+        "NONE"
+      ]
+    },
+    "capability_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "platform_constraints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "shortlist_lanes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "original_office_v2_verdict": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

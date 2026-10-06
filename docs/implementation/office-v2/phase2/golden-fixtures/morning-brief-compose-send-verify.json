@@ -1,0 +1,86 @@
+{
+  "schema": "velvetos.office-v2.golden-fixture.v0",
+  "fixture_id": "morning-brief-compose-send-verify",
+  "status": "CONTRACT_V0",
+  "title": "Morning Brief -> compose -> send -> verify",
+  "capability_scope": [
+    "brief.compose",
+    "mail.authorize",
+    "mail.send",
+    "mail.verify"
+  ],
+  "input_contract": {
+    "required": [
+      "brief_inputs",
+      "recipient_ref",
+      "correlation"
+    ],
+    "vendor_specific_fields_forbidden": true
+  },
+  "semantic_steps": [
+    {
+      "step_id": "compose",
+      "capability": "brief.compose",
+      "side_effect_class": "NONE",
+      "expected_evidence": [
+        "composition_receipt"
+      ]
+    },
+    {
+      "step_id": "authorize",
+      "capability": "mail.authorize",
+      "side_effect_class": "READ",
+      "expected_evidence": [
+        "policy_decision"
+      ]
+    },
+    {
+      "step_id": "send",
+      "capability": "mail.send",
+      "side_effect_class": "IRREVERSIBLE_WRITE",
+      "expected_evidence": [
+        "effect_intent",
+        "send_receipt"
+      ]
+    },
+    {
+      "step_id": "verify",
+      "capability": "mail.verify",
+      "side_effect_class": "READ",
+      "expected_evidence": [
+        "sent_readback"
+      ]
+    }
+  ],
+  "success_contract": [
+    "composed brief preserves source provenance",
+    "send occurs once under policy",
+    "sent message is read back or outcome remains explicit"
+  ],
+  "evidence_contract": {
+    "required": [
+      "composition_receipt",
+      "policy_decision",
+      "effect_intent",
+      "send_receipt",
+      "sent_readback"
+    ]
+  },
+  "rollback_contract": [
+    "email send is not undone synthetically",
+    "ambiguous send is reconciled before retry"
+  ],
+  "resource_capture": [
+    "wall_seconds",
+    "cpu_peak_pct",
+    "ram_peak_mb",
+    "gpu_peak_pct",
+    "vram_peak_mb",
+    "storage_delta_mb",
+    "network_mb",
+    "external_cost",
+    "recurring_cost",
+    "operator_minutes"
+  ],
+  "external_effect_policy": "PROVIDER_ADAPTER_REQUIRED_NO_DIRECT_RUNNER_MUTATION"
+}

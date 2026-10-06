@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/phase2/pattern-adoption-receipt.v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "pattern_id",
+    "source",
+    "adopted_parts",
+    "rejected_parts",
+    "target_contract_refs",
+    "evidence_refs",
+    "decision",
+    "captured_at"
+  ],
+  "properties": {
+    "schema": {
+      "const": "velvetos.office-v2.pattern-adoption-receipt.v0"
+    },
+    "pattern_id": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "adopted_parts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rejected_parts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "target_contract_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "decision": {
+      "enum": [
+        "ADOPT",
+        "ADOPT_PARTIAL",
+        "REJECT_WITH_REASON",
+        "DEFER_WITH_REASON"
+      ]
+    },
+    "captured_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
