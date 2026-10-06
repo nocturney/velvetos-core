@@ -65,6 +65,9 @@ def main() -> None:
         fail("dedicated WSL instance name mismatch")
     if wsl.get("docker_desktop_required") is not False:
         fail("Docker Desktop must not be required by the neutral LAB")
+    routine = cfg.get("routine_launch") or {}
+    if routine.get("window_policy") != "HEADLESS_HIDDEN" or routine.get("visible_console_required") is not False:
+        fail("routine WSL launch must remain headless/hidden")
     if cfg.get("network", {}).get("name") != "officev2_lab":
         fail("LAB network mismatch")
     if cfg.get("ports") != {
@@ -129,8 +132,10 @@ def main() -> None:
     criteria = gate.get("criteria") or {}
     if not criteria or not all(criteria.values()):
         fail("Phase 1 runtime gate criteria are incomplete")
-    if gate.get("phase2_allowed") is not False:
-        fail("Phase 2 must remain blocked until formal Phase 1 closure")
+    if gate.get("formal_verdict") != "GREEN":
+        fail("Phase 1 formal runtime gate is not GREEN")
+    if gate.get("phase2_allowed") is not True:
+        fail("Phase 2 must be allowed after formal Phase 1 closure")
 
     for path in (
         ROOT / "scripts" / "vf_office_v2_lab_doctor.py",
@@ -140,7 +145,7 @@ def main() -> None:
     ):
         self_test(path)
 
-    print("OK office-v2-phase1 neutral-lab=PASS runtime-gate=PASS formal-closure=PENDING")
+    print("OK office-v2-phase1 neutral-lab=PASS runtime-gate=PASS formal-closure=GREEN phase2=ALLOWED")
 
 
 if __name__ == "__main__":

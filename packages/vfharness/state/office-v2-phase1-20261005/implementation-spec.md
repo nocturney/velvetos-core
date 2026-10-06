@@ -33,4 +33,4 @@ Canonical raw evidence remains outside Git under `D:/Velvet/Artifacts/OfficeV2/p
 10. No durable-engine/model-gateway/MCP-A2A/NATS/feature-flag/Postgres-universal winner — PRESERVED.
 
 ## Gate
-The five START HERE technical criteria are backed by live evidence. The closure tree passes targeted checks plus the canonical 118-sensor regression, and the temporary WSL user-context task is deleted. Phase 1 becomes formally GREEN only after final gate/Project State receipts are sealed, the closure PR merges, and exact-main CI is GREEN.
+The five START HERE technical criteria are backed by live evidence. The canonical 118-sensor regression passed, PR #565 merged at `cf040c36a3d772ffd425586bfd80f02313621360`, exact-main Core Sensors run `37418107706` is GREEN, Project State checkpoint 008 is sealed, and routine WSL operation is headless. Phase 1 is formally GREEN; Phase 2 may begin without preselecting implementation winners.
