@@ -819,22 +819,23 @@
       "category": "RESEARCH_CANDIDATE",
       "provenance_class": "PRIOR_RESEARCH",
       "lifecycle_state": "RESEARCHED",
-      "decision_verdict": "BENCHMARK_REQUIRED",
-      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
-      "runtime_verification": "NOT_RUN",
+      "decision_verdict": "DEFERRED_WITH_REASON",
+      "verdict_reason": "Phase 3A admission failed closed: SDK 1.41.1 requires hatchet-embedded v0.107.2, but the SDK-declared release checksums URL returned HTTP 404. Reopen only when an immutable sidecar artifact is available.",
+      "runtime_verification": "BLOCKED_UPSTREAM_ARTIFACT",
       "authority_role": "NONE",
       "capability_tags": [
         "durable-execution"
       ],
       "platform_constraints": [],
-      "shortlist_lanes": [
-        "durable-execution"
-      ],
+      "shortlist_lanes": [],
       "evidence_refs": [
-        "prior-research://office-v2-master-plan"
+        "prior-research://office-v2-master-plan",
+        "docs/implementation/office-v2/phase3/runtime-pins-v0.json",
+        "docs/implementation/office-v2/phase3/durable-execution-shortlist-reopen-v0.json"
       ],
       "notes": [
-        "no durable-engine winner in Phase 0"
+        "no durable-engine winner in Phase 0",
+        "removed from active Phase 3A shortlist after immutable-runtime admission failure"
       ],
       "original_office_v2_verdict": "BENCHMARK"
     },
@@ -870,20 +871,26 @@
       "name": "DBOS",
       "category": "RESEARCH_CANDIDATE",
       "provenance_class": "PRIOR_RESEARCH",
-      "lifecycle_state": "RESEARCHED",
+      "lifecycle_state": "ADMITTED",
       "decision_verdict": "BENCHMARK_REQUIRED",
-      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
-      "runtime_verification": "NOT_RUN",
+      "verdict_reason": "Promoted from the credible reserve after Hatchet failed immutable-runtime admission; DBOS 3.1.0 resolved to a pinned wheel and remains subject to the same destructive fixture.",
+      "runtime_verification": "PIN_RESOLVED_NOT_BENCHMARKED",
       "authority_role": "NONE",
       "capability_tags": [
         "durable-execution"
       ],
       "platform_constraints": [],
-      "shortlist_lanes": [],
-      "evidence_refs": [
-        "prior-research://office-v2-master-plan"
+      "shortlist_lanes": [
+        "durable-execution"
       ],
-      "notes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan",
+        "docs/implementation/office-v2/phase3/runtime-pins-v0.json",
+        "docs/implementation/office-v2/phase3/durable-execution-shortlist-reopen-v0.json"
+      ],
+      "notes": [
+        "candidate-specific disposable Postgres substrate only; not a universal Office v2 database decision"
+      ],
       "original_office_v2_verdict": "BENCHMARK"
     },
     {

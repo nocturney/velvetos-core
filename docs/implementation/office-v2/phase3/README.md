@@ -24,14 +24,14 @@ Incumbent:
 - `incumbent-current-durable-execution`.
 
 LAB-admission shortlist:
-- `candidate-restate` — target Restate 1.7.12.
-- `candidate-hatchet` — target Hatchet 0.107.2.
-- `candidate-temporal` — target Temporal server 1.32.0.
+- `candidate-restate` — Restate 1.7.12, OCI digest pinned.
+- `candidate-dbos` — DBOS Python 3.1.0, wheel SHA256 pinned; promoted from reserve after the Hatchet admission failure.
+- `candidate-temporal` — Temporal CLI 1.9.1 / embedded OSS Server 1.32.0, OCI digest pinned.
 
-Credible reserve:
-- `candidate-dbos` — DBOS Python 3.1.0. Fresh September evidence is recorded, but the candidate remains reserve so the Phase 2 default cap of three challengers is preserved. It may replace a shortlisted candidate if admission or benchmark evidence materially justifies reopening.
+Admission-blocked:
+- `candidate-hatchet` — SDK 1.41.1 is pinned, but the SDK-declared `hatchet-embedded` v0.107.2 checksums release URL returned HTTP 404. It remains `DEFERRED_WITH_REASON` and may reopen when an immutable sidecar artifact is available.
 
-No `winner` is declared.
+The shortlist reopen is recorded in `durable-execution-shortlist-reopen-v0.json`; exact artifact pins are in `runtime-pins-v0.json`. No `winner` is declared.
 
 ## Destructive fixture
 
@@ -51,7 +51,7 @@ The fixture succeeds only when no completed external effect is duplicated, recov
 
 ## Admission boundary
 
-`durable-execution-admission-v0.json` is a research/admission receipt, not an installation receipt. A candidate may enter LAB only after its immutable runtime artifact is resolved, network/storage are bounded to OfficeV2-Lab, a health probe and teardown path exist, and the runtime has zero production credentials/authority.
+`durable-execution-admission-v0.json` is a research/admission receipt, not a benchmark result. Restate, DBOS and Temporal now have immutable runtime pins and may enter LAB under the bounded plan; Hatchet failed closed before LAB start. A health probe, teardown path, zero production credentials and zero production authority remain mandatory.
 
 ## Evidence
 

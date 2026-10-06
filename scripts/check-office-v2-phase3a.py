@@ -15,6 +15,8 @@ REQUIRED = [
     P3 / "durable-execution-destructive-v0.json",
     P3 / "durable-execution-admission-v0.json",
     P3 / "durable-execution-lab-plan-v0.json",
+    P3 / "runtime-pins-v0.json",
+    P3 / "durable-execution-shortlist-reopen-v0.json",
 ]
 
 MANDATORY_STEP_IDS = {
@@ -37,7 +39,7 @@ MANDATORY_STEP_IDS = {
 
 EXPECTED_CHALLENGERS = {
     "candidate-restate",
-    "candidate-hatchet",
+    "candidate-dbos",
     "candidate-temporal",
 }
 
@@ -121,14 +123,19 @@ def main() -> None:
     }
     if admitted != EXPECTED_CHALLENGERS:
         fail("Phase 3A admitted challenger set drifted")
-    if by_id.get("candidate-dbos", {}).get("disposition") != "RESERVE_DEFERRED_WITH_REASON":
-        fail("DBOS credible reserve disposition missing")
-    for cid in EXPECTED_CHALLENGERS | {"candidate-dbos"}:
+    hatchet = by_id.get("candidate-hatchet") or {}
+    if hatchet.get("role") != "ADMISSION_BLOCKED" or hatchet.get("disposition") != "DEFERRED_WITH_REASON":
+        fail("Hatchet admission failure must remain explicit")
+    if hatchet.get("embedded_release_result") != "HTTP_404":
+        fail("Hatchet upstream artifact failure evidence drifted")
+    if hatchet.get("authority_role") != "NONE":
+        fail("Hatchet blocked candidate must have no authority")
+    for cid in EXPECTED_CHALLENGERS | {"candidate-hatchet"}:
         item = by_id.get(cid)
         if not item:
             fail("missing candidate admission: " + cid)
         if item.get("authority_role") != "NONE":
-            fail("challenger/reserve authority must remain NONE: " + cid)
+            fail("challenger/blocked authority must remain NONE: " + cid)
         if not item.get("target_version"):
             fail("candidate target version missing: " + cid)
         if not item.get("evidence_refs"):
@@ -142,6 +149,30 @@ def main() -> None:
         fail("Phase 3A admission must remain aligned to Phase 2 durable shortlist")
     if lane.get("winner") is not None:
         fail("durable-execution shortlist declared a winner before bake-off")
+    if lane.get("reopen_trigger") != "SHORTLISTED_CANDIDATE_ADMISSION_FAILURE":
+        fail("durable-execution shortlist reopen trigger missing")
+    if lane.get("replaced_candidate") != "candidate-hatchet":
+        fail("durable-execution shortlist replacement provenance missing")
+
+    pins = load(P3 / "runtime-pins-v0.json")
+    if pins.get("production_credentials_used") is not False or pins.get("production_authority_change") is not False:
+        fail("runtime pin resolution must not use production credentials or change authority")
+    pin_candidates = pins.get("candidates") or {}
+    for cid in EXPECTED_CHALLENGERS:
+        if cid not in pin_candidates:
+            fail("runtime pins missing active candidate: " + cid)
+    if pin_candidates.get("candidate-hatchet", {}).get("status") != "ADMISSION_BLOCKED_UPSTREAM_ARTIFACT_UNAVAILABLE":
+        fail("Hatchet pin failure is not preserved")
+
+    reopen = load(P3 / "durable-execution-shortlist-reopen-v0.json")
+    if reopen.get("trigger") != "SHORTLISTED_CANDIDATE_ADMISSION_FAILURE":
+        fail("shortlist reopen receipt trigger mismatch")
+    if reopen.get("failed_candidate") != "candidate-hatchet" or reopen.get("replacement_candidate") != "candidate-dbos":
+        fail("shortlist reopen candidate mapping mismatch")
+    if set(reopen.get("active_challengers") or []) != EXPECTED_CHALLENGERS:
+        fail("shortlist reopen active challengers mismatch")
+    if reopen.get("winner") is not None or reopen.get("production_authority_change") is not False:
+        fail("shortlist reopen must not select winner or change authority")
 
     lab = load(P3 / "durable-execution-lab-plan-v0.json")
     if lab.get("status") != "PINS_RESOLVED_LAB_NOT_STARTED":
@@ -170,14 +201,14 @@ def main() -> None:
         "NO WINNER",
         "no production credentials",
         "exactly 20 semantic steps",
-        "candidate-dbos",
+        "candidate-hatchet",
     ):
         if marker not in readme:
             fail("Phase 3A README missing safety marker: " + marker)
 
     print(
         "OK office-v2-phase3a contract=FROZEN fixture=20-STEP "
-        "challengers=3 reserve=DBOS winner=NONE lab=PLANNED authority=NONE"
+        "challengers=3 blocked=Hatchet winner=NONE pins=RESOLVED lab=NOT_STARTED authority=NONE"
     )
 
 

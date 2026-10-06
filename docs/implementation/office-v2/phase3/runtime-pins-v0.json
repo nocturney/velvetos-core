@@ -1,0 +1,39 @@
+{
+  "schema": "velvetos.office-v2.phase3a-runtime-pins.v0",
+  "captured_at": "2026-10-06T10:03:12+03:00",
+  "status": "IMMUTABLE_PINS_RESOLVED_WITH_ONE_ADMISSION_FAILURE",
+  "source_evidence": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/resolve-pins-task.txt",
+  "candidates": {
+    "candidate-restate": {
+      "target": "Restate 1.7.12",
+      "artifact": "docker.restate.dev/restatedev/restate:1.7.12",
+      "immutable_pin": "docker.restate.dev/restatedev/restate@sha256:bfe48559e64706510d3d5fe736414c52557cd7753100fa4e63ff44d8198ab176",
+      "pin_type": "OCI_DIGEST",
+      "status": "PINNED"
+    },
+    "candidate-temporal": {
+      "target": "Temporal CLI 1.9.1 / embedded OSS Server 1.32.0",
+      "artifact": "temporalio/temporal:1.9.1",
+      "immutable_pin": "temporalio/temporal@sha256:ad4c82c97bd12b417d1ea942610dbcd511afb250c4d5ed26c694009533df447e",
+      "pin_type": "OCI_DIGEST",
+      "status": "PINNED"
+    },
+    "candidate-hatchet": {
+      "target": "Hatchet SDK 1.41.1 / embedded engine v0.107.2",
+      "sdk_artifact": "hatchet_sdk-1.41.1-py3-none-any.whl",
+      "sdk_sha256": "2128eefb4189f6d4c05676140f408fec982f1b62e0cf9412a32c4f9c901a125e",
+      "embedded_release": "https://github.com/hatchet-dev/hatchet-embedded/releases/download/v0.107.2/checksums.txt",
+      "embedded_release_result": "HTTP_404",
+      "status": "ADMISSION_BLOCKED_UPSTREAM_ARTIFACT_UNAVAILABLE"
+    },
+    "candidate-dbos": {
+      "target": "DBOS Python 3.1.0",
+      "artifact": "dbos-3.1.0-py3-none-any.whl",
+      "sha256": "de6b361352b72067e3528b9d80e96eef3521c5a4350651cf640278aec9765f10",
+      "pin_type": "PYPI_WHEEL_SHA256",
+      "status": "PINNED_RESERVE_PROMOTED"
+    }
+  },
+  "production_credentials_used": false,
+  "production_authority_change": false
+}
