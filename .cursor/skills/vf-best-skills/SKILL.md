@@ -1,13 +1,13 @@
 ---
 name: vf-best-skills
-description: Standing forever ~48h pass over LinklyAI/best-skills rankings until the owner stops it — discover and embed useful patterns into existing VelvetOS packs. The canonical scheduler authority is Velvet Research Seat; use when best-skills is due, the user asks for rankings, or Research Seat detects stale lastPass.
+description: On-demand review of LinklyAI/best-skills rankings for a concrete adoption, content, or Office v2 decision. No standing timer; use when the user asks or current work needs fresh evidence.
 ---
 
-# Best Skills (~48h · forever until owner stops)
+# Best Skills — on demand
 
-Use when the user asks for סקירת best-skills, LinklyAI rankings, skills.sh Top 100, דופק קבוע, or when **Velvet Research Seat** detects that `lastPass` is due (at least 44h old).
+Use when the user asks for סקירת best-skills, LinklyAI rankings, skills.sh Top 100, or when a concrete tool/skill/content/Office v2 decision needs fresh ecosystem evidence.
 
-**Standing order:** keep running about every 48h forever until the owner explicitly says to stop or change cadence. See `packages/vfresearch/TIMER.md`.
+**Current override (2026-10-06): No standing cadence.** The former ~48h standing cadence is retired. Age of `lastPass` is provenance only and never schedules work by itself. See `packages/vfresearch/TIMER.md`.
 
 ## Packs and specialists
 
@@ -29,7 +29,7 @@ Use when the user asks for סקירת best-skills, LinklyAI rankings, skills.sh 
 7. Update `BEST-SKILLS.json`: `lastPass`, `dataDate`, `lastArtifact`, `lastResult`.
 8. Update brief block `05` when there is brief-worthy output.
 9. After catalog/pack/rule edits run `python3 scripts/check-all.py`.
-10. Verify the state/artifact pair. A `lastPass` older than 52h is stale and must be handled by Research Seat; never claim fresh without a matching artifact.
+10. Verify the state/artifact pair. `lastPass` age is provenance only; never schedule work from age alone and never claim a fresh review without a matching artifact.
 
 ## Forbidden
 
@@ -44,7 +44,7 @@ Use when the user asks for סקירת best-skills, LinklyAI rankings, skills.sh 
 
 ## Verification
 
-A pass is complete only when the source was actually read, the dated artifact exists, `BEST-SKILLS.json` points to that artifact/date/result, and any edits pass their existing sensors. Research Seat freshness is the cadence proof; an unavailable external subscription namespace is not a blocker by itself.
+A pass is complete only when the source was actually read, the dated artifact exists, `BEST-SKILLS.json` points to that artifact/date/result, and any edits pass their existing sensors. There is no cadence/freshness obligation when no concrete research need exists.
 
 ## Related
 

@@ -1,18 +1,14 @@
-name: VelvetOS Research Cadence
+name: VelvetOS Research Verification
 
-# The actual research body is produced by the owner-facing Velvet Research Seat at
-# 02:00 Asia/Jerusalem, with a 07:00 readiness cutoff for the 09:00 Morning Brief.
-# GitHub Actions does not pretend to replace WebSearch/body research; it verifies
-# freshness, builds the semantic index, and runs sensors after the live seat has had
-# several hours to complete. 04:30 UTC is 07:30 IDT (summer) / 06:30 IST (winter),
-# always after the 02:00 seat. Freshness failure remains honest evidence of a missing body.
+# Research is manual/event-driven after the 2026-10-06 scheduler simplification.
+# This workflow verifies a research artifact/index when explicitly dispatched; it
+# does not create a research body and has no recurring clock. Any owner-facing
+# timing semantics remain Asia/Jerusalem and therefore follow local DST.
 on:
-  schedule:
-    - cron: '30 4 * * *'
   workflow_dispatch:
 
 jobs:
-  daily-research:
+  research-verification:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,22 +19,19 @@ jobs:
         with:
           python-version: '3.12'
 
-      # Same pinned sensor runtime as check-all.yml (hashed lock generated from requirements-sensors.txt):
-      # scikit-learn for build-index, Pillow/cryptography/starlette for the final
-      # check-all step, and real ffmpeg/ffprobe for the video sensors.
       - name: Install sensor runtime dependencies
         run: |
           python3 -m pip install --disable-pip-version-check --require-hashes -r requirements-sensors.py312.lock
           sudo apt-get update -qq
           sudo apt-get install -y ffmpeg
 
-      - name: Cadence map + DST note
+      - name: Research routing map
         run: python3 scripts/vfresearch_cadence.py map
 
-      - name: Verify same-day research body freshness
+      - name: Verify explicitly produced research body freshness
         run: python3 scripts/vfresearch_cadence.py freshness
 
-      - name: Build semantic index (fail closed)
+      - name: Build semantic index
         run: python3 scripts/vfresearch_cadence.py build-index
 
       - name: Upload semantic index for consumers
@@ -52,7 +45,7 @@ jobs:
       - name: Verify research artifact structure
         run: python3 scripts/vfresearch_cadence.py verify
 
-      - name: Status (honest activation flags)
+      - name: Status
         run: python3 scripts/vfresearch_cadence.py status
 
       - name: Run office sensor suite

@@ -1,5 +1,5 @@
 {
-  "schema": "vf.grok.current-baseline.v2",
+  "schema": "vf.grok.current-state.v2",
   "effectiveAt": "2026-10-06T15:15:00+03:00",
   "approvedBy": "Christian Velvet",
   "currentAuthority": "automation/chatgpt/manifest.json",
@@ -7,5 +7,7 @@
   "grokEnabledRoutineCount": 0,
   "providerRetirementEvidence": "automation/grok/provider-readback-2026-10-06-retired.json",
   "managerRole": "dormant_hidden_historical_audit_only",
-  "rule": "Do not revive Grok recurring routines from historical Stage 7C or prior cutover records."
+  "rule": "Do not revive Grok recurring routines from historical Stage 7C or prior cutover records.",
+  "observedAt": "2026-10-06T15:27:00+03:00",
+  "status": "GROK_RETIRED_CHATGPT_AUTHORITY"
 }

@@ -1,0 +1,173 @@
+﻿{
+    "schema":  "vf.grok.provider-readback.v1",
+    "observedAt":  "2026-10-06T15:26:25.1531001+03:00",
+    "provider":  "grok-bot",
+    "providerAppVersion":  "0.66.0",
+    "signedIn":  true,
+    "rendererTimeZone":  "Asia/Jerusalem",
+    "transport":  {
+                      "surface":  "Signed-in Grok Bot desktop renderer inspected directly through loopback CDP",
+                      "inspection":  "Direct DOM readback after the owner-authorized retirement writes: all ten known routine controls expose Resume and Paused; no model prompt was used for this verification readback.",
+                      "modelPromptSent":  null,
+                      "writeOperationsPerformed":  [
+                                                       {
+                                                           "providerRoutineId":  "velvetos-integrity-guard",
+                                                           "operation":  "set_enabled_false"
+                                                       },
+                                                       {
+                                                           "providerRoutineId":  "velvet-research-seat",
+                                                           "operation":  "set_enabled_false"
+                                                       },
+                                                       {
+                                                           "providerRoutineId":  "cognee-memory-sync",
+                                                           "operation":  "set_enabled_false"
+                                                       },
+                                                       {
+                                                           "providerRoutineId":  "runtime-receipts-refresh",
+                                                           "operation":  "set_enabled_false"
+                                                       },
+                                                       {
+                                                           "providerRoutineId":  "velvet-morning-brief",
+                                                           "operation":  "set_enabled_false"
+                                                       },
+                                                       {
+                                                           "providerRoutineId":  "morning-delivery-guard",
+                                                           "operation":  "set_enabled_false"
+                                                       },
+                                                       {
+                                                           "providerRoutineId":  "cognee-stable-updates",
+                                                           "operation":  "set_enabled_false"
+                                                       },
+                                                       {
+                                                           "providerRoutineId":  "velvetos-office-loop",
+                                                           "operation":  "set_enabled_false"
+                                                       },
+                                                       {
+                                                           "providerRoutineId":  "weekly-research-accountability",
+                                                           "operation":  "set_enabled_false"
+                                                       },
+                                                       {
+                                                           "providerRoutineId":  "pc-offline-retry",
+                                                           "operation":  "set_enabled_false"
+                                                       }
+                                                   ],
+                      "writeAuthorization":  "Christian Velvet explicit approval in ChatGPT on 2026-10-06",
+                      "observer":  "ChatGPT direct CDP DOM inspection",
+                      "requestedBy":  "Christian Velvet",
+                      "modelPromptSentForReadback":  false,
+                      "retirementWritesInitiatedByAuthorizedModelPrompt":  true
+                  },
+    "protectedRoutineCount":  0,
+    "protectedRoutines":  [
+
+                          ],
+    "retiredRoutines":  [
+                            {
+                                "providerRoutineId":  "openpost-release-watch",
+                                "title":  "OpenPost Release Watch",
+                                "desiredEnabled":  false,
+                                "enabled":  false,
+                                "present":  false,
+                                "note":  "previously deleted and remains absent"
+                            },
+                            {
+                                "providerRoutineId":  "velvetos-integrity-guard",
+                                "title":  "VelvetOS Integrity Guard",
+                                "expectedCadence":  "daily 01:45",
+                                "desiredEnabled":  false,
+                                "enabled":  false,
+                                "present":  true,
+                                "controlReadback":  "Resume VelvetOS Integrity Guard, Every day at 1:45 AM"
+                            },
+                            {
+                                "providerRoutineId":  "velvet-research-seat",
+                                "title":  "Velvet Research Seat",
+                                "expectedCadence":  "daily 02:00",
+                                "desiredEnabled":  false,
+                                "enabled":  false,
+                                "present":  true,
+                                "controlReadback":  "Resume Velvet Research Seat, Every day at 2:00 AM"
+                            },
+                            {
+                                "providerRoutineId":  "cognee-memory-sync",
+                                "title":  "Cognee Memory Sync",
+                                "expectedCadence":  "daily 06:30",
+                                "desiredEnabled":  false,
+                                "enabled":  false,
+                                "present":  true,
+                                "controlReadback":  "Resume Cognee Memory Sync, Every day at 6:30 AM"
+                            },
+                            {
+                                "providerRoutineId":  "runtime-receipts-refresh",
+                                "title":  "Runtime Receipts Refresh",
+                                "expectedCadence":  "daily 07:15 and 19:15",
+                                "desiredEnabled":  false,
+                                "enabled":  false,
+                                "present":  true,
+                                "controlReadback":  "Resume Runtime Receipts Refresh, Every day at 7:15 AM and 7:15 PM"
+                            },
+                            {
+                                "providerRoutineId":  "velvet-morning-brief",
+                                "title":  "Velvet Morning Brief",
+                                "expectedCadence":  "daily 09:00",
+                                "desiredEnabled":  false,
+                                "enabled":  false,
+                                "present":  true,
+                                "controlReadback":  "Resume Velvet Morning Brief, Every day at 9:00 AM"
+                            },
+                            {
+                                "providerRoutineId":  "morning-delivery-guard",
+                                "title":  "Morning Delivery Guard",
+                                "expectedCadence":  "daily 10:00",
+                                "desiredEnabled":  false,
+                                "enabled":  false,
+                                "present":  true,
+                                "controlReadback":  "Resume Morning Delivery Guard, Every day at 10:00 AM"
+                            },
+                            {
+                                "providerRoutineId":  "cognee-stable-updates",
+                                "title":  "Cognee Stable Updates",
+                                "expectedCadence":  "Monday 10:00",
+                                "desiredEnabled":  false,
+                                "enabled":  false,
+                                "present":  true,
+                                "controlReadback":  "Resume Cognee Stable Updates, Every Monday at 10:00 AM"
+                            },
+                            {
+                                "providerRoutineId":  "velvetos-office-loop",
+                                "title":  "VelvetOS Office Loop",
+                                "expectedCadence":  "daily 10:30 and 18:30",
+                                "desiredEnabled":  false,
+                                "enabled":  false,
+                                "present":  true,
+                                "controlReadback":  "Resume VelvetOS Office Loop, Every day at 10:30 AM and 6:30 PM"
+                            },
+                            {
+                                "providerRoutineId":  "weekly-research-accountability",
+                                "title":  "Weekly Research Accountability",
+                                "expectedCadence":  "Friday 12:00",
+                                "desiredEnabled":  false,
+                                "enabled":  false,
+                                "present":  true,
+                                "controlReadback":  "Resume Weekly Research Accountability, Every Friday at 12:00 PM"
+                            },
+                            {
+                                "providerRoutineId":  "pc-offline-retry",
+                                "title":  "PC Offline Retry",
+                                "expectedCadence":  "daily 07:55 and 19:55",
+                                "desiredEnabled":  false,
+                                "enabled":  false,
+                                "present":  true,
+                                "controlReadback":  "Resume PC Offline Retry, Every day at 7:55 AM and 7:55 PM"
+                            }
+                        ],
+    "verificationScope":  {
+                              "inventoryIds":  true,
+                              "enabledState":  true,
+                              "effectiveScheduleDisplay":  true,
+                              "rendererTimeZone":  true,
+                              "promptBodyParity":  false,
+                              "note":  "Direct signed-in UI verification at 2026-10-06T15:26:25+03:00: all ten known Grok routines expose Resume controls and Paused state. Historical schedules are audit metadata only, not active clocks."
+                          },
+    "status":  "LIVE_PROVIDER_STATE_CONFIRMATION_PASS"
+}

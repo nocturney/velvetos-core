@@ -1,14 +1,13 @@
-# מחקר יומי · Velvet Research Seat
+# מחקר לפי צורך · Velvet Research
 
-מושב: **צמיחה** + ראש צוות קורא בבריף.  
-בעל ריצה קבוע: **Velvet Research Seat** ב־02:00 Asia/Jerusalem.  
-יעד סיום: עד **07:00** כ־`ready_for_brief`, `no_meaningful_findings` או blocker מפורש. בריף הבוקר קורא את התוצר ב־09:00.  
-ה־Research Seat משתמש ב־WebSearch/מקורות ציבוריים וחיבורים מאומתים; מק ייעודי יכול להשלים מקורות מנוי, אבל אין תלות בו כדי שהמחקר היומי ירוץ.  
+מושב: **צמיחה** + ראש צוות קורא בתוצר כשיש תוצר.
+**Owner override 2026-10-06:** אין Research Seat יומי, אין 02:00 trigger ואין 07:00 cutoff מחייב. מחקר מופעל רק לשאלה/החלטה קונקרטית, צורך תוכן אמיתי או freeze gate פתוח ב־Office v2. Morning Brief הוא event-driven ויכול לצרוך תוצר מחקר קיים כשהוא רלוונטי.
+ה־Research Seat משתמש ב־WebSearch/מקורות ציבוריים וחיבורים מאומתים; מק ייעודי יכול להשלים מקורות מנוי, אבל אין תלות בו כדי שהמחקר היומי ירוץ.
 Cloud לא גולש ל־chatgpt.com / gemini.google.com / perplexity.ai. לא שומרים עוגיות ולא מתחזים להפעלת גוף שלא רץ.
 
 כל artifact חדש/מרוענן עומד ב־`packages/vfresearch/ARTIFACT-CONTRACT.md`: `as_of`, `provenance`, `uncertainty`, `refresh_target`. זהו metadata של ראיות, לא authority לפעולה.
 
-## 02:00 — גוף מחקר אמיתי
+## גוף מחקר אמיתי — בהפעלה מפורשת/אירועית
 
 1. לקרוא את הבריף הקודם, לוח `vfgrowth`, מצב `vfsku`/ייצור, והקשר משרד/הזמנות החי כשזמין.
 2. להריץ מחקר Web אמיתי על אותות רלוונטיים לסטודיו: מוצרים חוזרים קלים להדפסה/מכירה, המרה מפנייה להזמנה, יעילות ייצור/משרד, תוכן מהעבודה עצמה, ומגמות maker/3D-print שימושיות.
@@ -21,11 +20,11 @@ Cloud לא גולש ל־chatgpt.com / gemini.google.com / perplexity.ai. לא ש
 
 ## חוזה freshness
 
-מחקר יומי הוא GREEN רק אם קיים `sources/YYYY-MM-DD-orchestra.md` לאותו יום ובו הוכחה לגוף מחקר: לפחות URL חיצוני אמיתי + ממצאים, או `אין חדש במשרד` יחד עם תיעוד החיפוש שבוצע. אינדקס סמנטי, `check-all`, או workflow ירוק **אינם** הוכחה שהמחקר היומי עצמו רץ.
+כאשר מחקר מופעל, הוא GREEN רק אם קיים artifact לאותה ריצה ובו הוכחה לגוף מחקר: לפחות URL חיצוני אמיתי + ממצאים, או `אין חדש במשרד` יחד עם תיעוד החיפוש שבוצע. ללא trigger מחקרי אין חובת freshness. אינדקס סמנטי, `check-all`, או workflow ירוק אינם הוכחה שמחקר בוצע.
 
 בדיקה: `python3 scripts/vfresearch_cadence.py freshness`.
 
-`VelvetOS Research Cadence` ב־GitHub רץ אחרי ה־Research Seat כדי לאמת freshness, לבנות אינדקס ולהריץ sensors. הוא לא ממציא/מחליף גוף Web research.
+`VelvetOS Research Cadence` ב־GitHub הוא verifier/index machine workflow בלבד. הוא לא יוצר גוף Web research ולא הופך ל־owner-facing clock.
 
 בלי ₪. בלי Insights מומצאים. בלי שמות לקוח מיותרים. בלי אוטו־DM. בלי Meta Business Suite. בלי משלוח ארצי.
 

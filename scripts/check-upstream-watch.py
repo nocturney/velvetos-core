@@ -158,13 +158,13 @@ def main() -> int:
     grok = json.loads(GROK.read_text(encoding="utf-8"))
     upstream_binding = grok.get("upstreamWatch") or {}
     if upstream_binding != {
-        "ownerRoutineId": "velvet-research-seat",
+        "ownerRoutineId": "manual_or_event_driven_research",
         "registry": "packages/velvetos/UPSTREAM-WATCH.json",
         "report": "packages/vfresearch/sources/upstream-watch-latest.json",
         "autoUpgrade": False,
         "consumerRoutineId": "velvetos-office-loop",
     }:
-        fail("Grok manifest upstream-watch ownership binding mismatch")
+        fail("current upstream-watch ownership binding mismatch")
     latest_report = json.loads(LATEST_REPORT.read_text(encoding="utf-8-sig"))
     artifact_meta = latest_report.get("artifactMeta") or {}
     if not {"asOf", "provenance", "uncertainty", "refreshTarget"} <= set(artifact_meta):

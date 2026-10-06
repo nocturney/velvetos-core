@@ -1,16 +1,16 @@
 {
-  "version": 6,
+  "version": 7,
   "provider": "grok-bot",
   "bot": "Chief of Staff",
   "timezone": "Asia/Jerusalem",
-  "migrationState": "cutover",
+  "migrationState": "chatgpt_scheduler_cutover",
   "cutoverDate": "2026-09-19",
   "morningGreenCutoverDate": "2026-09-23",
   "cogneeCutover": {
     "requestedDate": "2026-09-23",
     "packet": "automation/grok/cognee-routines.json",
-    "providerActivation": "live_verified",
-    "chatgptCopies": "disabled_after_verified_grok_readback",
+    "providerActivation": "historical_live_verified_then_retired",
+    "chatgptCopies": "reactivated_under_chatgpt_scheduler_2026-10-06",
     "verifiedDate": "2026-09-23",
     "providerRoutineIds": {
       "cognee-memory-sync": "cognee-memory-sync",
@@ -20,13 +20,13 @@
       "providerRoutineId": "velvetos-integrity-guard",
       "enabled": false,
       "cadence": null,
-      "protectedRoutineCount": 3,
+      "protectedRoutineCount": 0,
       "state": "retired_owner_approved_2026-10-06"
     }
   },
-  "productionScheduler": "grok-bot-routines",
+  "productionScheduler": "chatgpt-automations",
   "previousSchedulers": {
-    "chatgpt": "disabled_after_verified_cutover",
+    "grok-bot": "retired_owner_approved_2026-10-06",
     "antigravity": "shadow_sidecars_disabled"
   },
   "ownerEmailAuthority": {
@@ -37,39 +37,13 @@
     "sender": "packages/vfops/gmail_brief_request.py",
     "interactiveGmailFallback": false
   },
-  "routines": [
-    {
-      "id": "cognee-memory-sync",
-      "title": "Cognee Memory Sync",
-      "cadence": "daily 06:30",
-      "enabled": true,
-      "providerSchedule": "CRON_TZ=Asia/Jerusalem 30 6 * * *",
-      "responsibility": "refresh and verify the local derived Cognee/vfmem index; silent when current and healthy"
-    },
-    {
-      "id": "velvetos-office-loop",
-      "title": "VelvetOS Office Loop",
-      "cadence": "daily 18:30",
-      "enabled": true,
-      "providerSchedule": "CRON_TZ=Asia/Jerusalem 30 18 * * *",
-      "responsibility": "single end-of-day office sweep for meaningful state, handoff and learning only"
-    },
-    {
-      "id": "runtime-receipts-refresh",
-      "title": "Runtime Receipts Refresh",
-      "cadence": "daily 19:15",
-      "enabled": true,
-      "providerSchedule": "CRON_TZ=Asia/Jerusalem 15 19 * * *",
-      "protectedFrom": "2026-09-29T14:01:00+03:00",
-      "responsibility": "refresh dependency-scoped runtime evidence once daily from live observations only; never fabricate an observation"
-    }
-  ],
+  "routines": [],
   "protectedSet": {
-    "count": 3,
-    "changedAt": "2026-10-06T15:00:00+03:00",
-    "change": "owner-approved minimal baseline: three recurring routines; routine-manager/guard and low-value clocks retired",
+    "count": 0,
+    "changedAt": "2026-10-06T15:15:00+03:00",
+    "change": "owner-approved cutover: Grok recurring scheduler retired; three schedules moved to ChatGPT automations",
     "approvedBy": "Christian Velvet",
-    "readbackRule": "current provider evidence must match exactly the three active manifest routines; retired/manual routines must remain disabled or absent"
+    "readbackRule": "known Grok routines must remain disabled or absent; no Grok routine is current scheduler authority"
   },
   "retiredRoutines": [
     {
@@ -82,25 +56,25 @@
       "id": "morning-delivery-guard",
       "title": "Morning Delivery Guard",
       "desiredEnabled": false,
-      "state": "paused_owner_approved_2026-10-06"
+      "state": "retired"
     },
     {
       "id": "velvet-research-seat",
       "title": "Velvet Research Seat",
       "desiredEnabled": false,
-      "state": "paused_owner_approved_2026-10-06"
+      "state": "manual_or_event_driven_only"
     },
     {
       "id": "weekly-research-accountability",
       "title": "Weekly Research Accountability",
       "desiredEnabled": false,
-      "state": "paused_owner_approved_2026-10-06"
+      "state": "retired"
     },
     {
       "id": "cognee-stable-updates",
       "title": "Cognee Stable Updates",
       "desiredEnabled": false,
-      "state": "on_demand_upstream_review_only"
+      "state": "on_demand_update_review_only"
     },
     {
       "id": "velvetos-integrity-guard",
@@ -112,7 +86,25 @@
       "id": "pc-offline-retry",
       "title": "PC Offline Retry",
       "desiredEnabled": false,
-      "state": "retired_no_separate_retry_clock"
+      "state": "retired_retry_is_workflow_native"
+    },
+    {
+      "id": "cognee-memory-sync",
+      "title": "Cognee Memory Sync",
+      "desiredEnabled": false,
+      "state": "moved_to_chatgpt_automation"
+    },
+    {
+      "id": "velvetos-office-loop",
+      "title": "VelvetOS Office Loop",
+      "desiredEnabled": false,
+      "state": "moved_to_chatgpt_automation"
+    },
+    {
+      "id": "runtime-receipts-refresh",
+      "title": "Runtime Receipts Refresh",
+      "desiredEnabled": false,
+      "state": "moved_to_chatgpt_automation"
     },
     {
       "id": "openpost-release-watch",
@@ -139,19 +131,47 @@
   "latestProviderReadback": {
     "status": "live_verified",
     "date": "2026-10-06",
-    "artifact": "automation/grok/provider-readback-2026-10-06-minimal.json",
-    "protectedRoutineCount": 3,
-    "protectedInventoryClockMatch": true,
+    "artifact": "automation/grok/provider-readback-2026-10-06-retired.json",
+    "protectedRoutineCount": 0,
+    "allKnownGrokRoutinesDisabled": true,
     "rendererTimeZone": "Asia/Jerusalem",
     "promptBodyParityClaimed": false,
     "openpostReleaseWatchPresent": false
   },
   "upstreamWatch": {
-    "ownerRoutineId": "velvet-research-seat",
+    "ownerRoutineId": "manual_or_event_driven_research",
     "registry": "packages/velvetos/UPSTREAM-WATCH.json",
     "report": "packages/vfresearch/sources/upstream-watch-latest.json",
     "autoUpgrade": false,
     "consumerRoutineId": "velvetos-office-loop"
   },
-  "currentBaselineArtifact": "automation/grok/current-baseline.json"
+  "currentBaselineArtifact": "automation/grok/current-baseline.json",
+  "providerState": "retired_scheduler_on_demand_agent_only",
+  "externalScheduler": {
+    "provider": "chatgpt-automations",
+    "authority": "owner-facing-primary",
+    "timezone": "Asia/Jerusalem",
+    "providerReceipt": "not_available_in_repository_do_not_fabricate",
+    "routines": [
+      {
+        "id": "velvetos-office-loop",
+        "title": "VelvetOS Office Loop",
+        "cadence": "daily 18:30",
+        "timingMode": "exact"
+      },
+      {
+        "id": "cognee-memory-sync",
+        "title": "Cognee Memory Sync",
+        "cadence": "daily around 11:30",
+        "timingMode": "flexible"
+      },
+      {
+        "id": "runtime-receipts-refresh",
+        "title": "Runtime Receipts Refresh",
+        "cadence": "daily 19:15",
+        "timingMode": "exact"
+      }
+    ],
+    "manifest": "automation/chatgpt/manifest.json"
+  }
 }

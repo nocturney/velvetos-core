@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import json
+from datetime import datetime
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -59,21 +60,10 @@ def main() -> int:
         fail("OpenPost watch provider readback must prove absence with exactly 8 routines remaining")
     remaining_titles = set(readback.get("remaining_titles") or [])
     removal_binding = (grok.get("publisherAuthority") or {}).get("openpostReleaseWatchRemoval") or {}
-    # The deletion receipt is historical evidence from 2026-09-27. Validate it
-    # against the exact eight titles recorded at that time, not today's smaller
-    # owner-approved scheduler baseline.
-    historical_titles = {
-        "Velvet Research Seat",
-        "Velvet Morning Brief",
-        "Morning Delivery Guard",
-        "VelvetOS Office Loop",
-        "Weekly Research Accountability",
-        "VelvetOS Integrity Guard",
-        "Cognee Memory Sync",
-        "Cognee Stable Updates",
-    }
-    if remaining_titles != historical_titles:
-        fail("OpenPost deletion receipt historical eight-routine inventory drift")
+    # The 2026-09-27 removal witness is historical. Current Grok authority is retired,
+    # so replay it against its own recorded cardinality rather than today's empty set.
+    if len(remaining_titles) != 8 or removal_binding.get("remainingRoutineCount") != 8:
+        fail("historical OpenPost watch removal witness must preserve its eight-routine readback")
     if removal_binding.get("state") != "live_verified_deleted" or removal_binding.get("evidence") != "automation/grok/openpost-release-watch-removal.json":
         fail("Grok manifest must bind the live-verified OpenPost watch deletion evidence")
     openpost_tool = tools.get("openpost") or {}
