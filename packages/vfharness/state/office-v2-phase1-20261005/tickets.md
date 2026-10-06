@@ -1,36 +1,21 @@
 # Office v2 Phase 1 — tickets
 
-## P1-A · Host admission and LAB contract
-Outcome: exact host prerequisites, reboot risks, ports, roots and credential boundary are explicit.
-Verify: Phase 1 sensor + host admission receipt.
-Done when: no install command is allowed while admission is MAINTENANCE_BLOCKED.
+## P1-A · Host admission and LAB contract — DONE
+Post-reboot admission is recorded; production recovery passed before WSL/Docker continuation.
 
-## P1-B · Neutral LAB definition
-Outcome: network/service/storage/artifact-lane/OTel definitions exist without product winner bias.
-Depends on: P1-A.
-Verify: structural sensor and config parse.
-Done when: compose/config can be rendered but not executed without WSL/Docker.
+## P1-B · Neutral LAB definition — DONE
+Dedicated LAB network/storage/OTel definition is realized with only the isolated artifact lane mounted.
 
-## P1-C · Node Contract publisher
-Outcome: NODE-A and Mac can emit the same Node Contract v0 shape.
-Depends on: Phase 0 Node Contract.
-Verify: generator self-test + local live manifest.
-Done when: Windows live manifest validates; Mac collection path is compatible.
+## P1-C · Node Contract publisher — DONE
+Fresh NODE-A manifest from the closure tree validates and reports WSL 3.0.1.0, Ubuntu 26.04.1 LTS, Docker 29.8.2, Compose v5.6.0, systemd and the isolated artifact lane.
 
-## P1-D · Destroy/recreate + restore tooling
-Outcome: scripts have dry-run plan, state boundaries and restore admission.
-Depends on: P1-B.
-Verify: no-op self-tests before Docker exists.
-Done when: actual gate waits only for admitted host runtime.
+## P1-D · Destroy/recreate + restore tooling — DONE
+LAB destroy/recreate and a disposable PostgreSQL stateful restore drill passed; PostgreSQL remains drill-only and non-authoritative.
 
-## P1-E · Controlled WSL2/Docker maintenance
-Outcome: install userspace/runtime and prove clean reboot/recovery.
-Depends on: P1-A..D and maintenance admission.
-Verify: boot recovery, WSL doctor, Docker doctor, no production credential leakage.
-Done when: host mutation is proven rather than assumed.
+## P1-E · Controlled WSL2/Docker maintenance — DONE
+The pre-existing reboot transition was separated first; WSL/Ubuntu/Docker were then installed and verified without production regression.
 
-## P1-F · Phase 1 gate
-Outcome: lab destroy/recreate, one stateful restore, correlation trace and NODE-A manifest.
-Depends on: P1-E.
-Verify: exact receipts.
-Done when: START HERE Phase 1 Gate is GREEN.
+## P1-F · Phase 1 gate — FORMAL CLOSURE IN PROGRESS
+Technical criteria are PASS. Canonical 118-sensor regression is PASS and the temporary user-context Scheduled Task is deleted. Remaining formal work: seal gate/Project State receipts, merge the dedicated closure PR, and verify exact-main CI.
+
+Phase 2 is not allowed to start until P1-F is formally GREEN.

@@ -1,0 +1,60 @@
+{
+  "schema": "velvetos.office-v2.phase1-runtime-gate-receipt.v0",
+  "evaluated_at": "2026-10-06T08:07:04+03:00",
+  "closure_baseline_sha": "6c3865acee79fb11dbaeeace0a5bc73f9624d187",
+  "branch": "office-v2/phase1-runtime-gate-20261006",
+  "technical_verdict": "PASS",
+  "formal_verdict": "PENDING_MERGE_AND_EXACT_MAIN",
+  "criteria": {
+    "lab_destroy_recreate_without_production_impact": true,
+    "one_stateful_lab_restore_successful": true,
+    "production_secrets_inaccessible_by_default": true,
+    "end_to_end_trace_carries_correlation_ids": true,
+    "node_a_valid_capability_health_manifest": true
+  },
+  "node_a": {
+    "node_id": "NODE-A",
+    "health": "WARN",
+    "maintenance_state": "ACTIVE",
+    "warning_basis": "CBS and Windows Update reboot flags are clear; residual delete-only/temp file-rename cleanup records remain visible and are not manually cleared.",
+    "manifest_ref": "D:/Velvet/State/OfficeV2/nodes/phase1-node-a.json",
+    "validation_ref": "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/node-a-runtime-gate-validate.json"
+  },
+  "runtime": {
+    "wsl": "3.0.1.0",
+    "kernel": "6.18.40.1-1",
+    "distro": "OfficeV2-Lab / Ubuntu 26.04.1 LTS / WSL2",
+    "docker_engine": "29.8.2",
+    "docker_compose": "v5.6.0",
+    "artifact_lane": "D:/Velvet/OfficeV2Lab/artifacts <-> /var/officev2/artifacts",
+    "full_windows_drive_mounts": false,
+    "production_authority": "NONE",
+    "production_credentials_used": false
+  },
+  "evidence_refs": [
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/post-reboot-admission.json",
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/phase1-final-user-probe.txt",
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/otel-e2e-trace-pass.json",
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/stateful-restore-drill-pass.json",
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/node-a-runtime-gate.stdout.json",
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/node-a-runtime-gate-validate.json",
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/closure-check-all-final-postcleanup.log",
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/temp-user-bridge-cleanup.json"
+  ],
+  "repository_regression": {
+    "status": "PASS",
+    "sensor_count": 118,
+    "failures": 0,
+    "repository_side_effects": 0,
+    "environment": "Python 3.11 hashed sensor lock + Windows tzdata==2026.5 + Git Bash syntax surface"
+  },
+  "temporary_user_bridge_removed": true,
+  "formal_closure_remaining": [
+    "seal final pre-merge Project State checkpoint",
+    "commit/push closure branch",
+    "PR CI GREEN and merge",
+    "exact-main CI GREEN",
+    "emit final GREEN Phase 1 gate receipt and sealed Project State checkpoint"
+  ],
+  "phase2_allowed": false
+}
