@@ -27,7 +27,10 @@
       "pending_candidates": []
     },
     "authorization_policy": {
-      "status": "LAB_SMOKE_PASS_DESTRUCTIVE_FIXTURE_PENDING",
+      "status": "DESTRUCTIVE_PASS_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY",
+      "winner": "candidate-opa",
+      "fallback": "candidate-cedar",
+      "lane_verdict_ref": "docs/implementation/office-v2/phase3b/authorization-lane-verdict-v0.json",
       "lab_candidates": [
         "candidate-openfga",
         "candidate-opa",
