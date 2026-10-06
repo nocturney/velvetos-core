@@ -1,15 +1,15 @@
 # VelvetOS Office v2 — Phase 1 Neutral Lab & Safety Boundary
 
 Phase 0 is closed on canonical main at `d755c4cb62e2fde16f6c5804db180d48170238ba`.
-Phase 1 neutral-LAB preparation is merged. Formal closure work starts from `origin/main@6c3865acee79fb11dbaeeace0a5bc73f9624d187`.
+Phase 1 is formally closed on merged `main@cf040c36a3d772ffd425586bfd80f02313621360`; exact-main Core Sensors run `37418107706` is GREEN.
 
 This directory contains versioned Phase 1 definitions and bounded receipt summaries only. Raw runtime evidence, backups, artifacts and live node observations remain outside Git.
 
 ## Current status
 
-`RUNTIME_PROVEN / FORMAL_CLOSURE_PENDING`
+`GREEN / CLOSED`
 
-The five START HERE technical gate criteria have real runtime proof. The canonical 118-sensor repository regression is green and the temporary WSL user-context bridge has been deleted. Formal closure now requires sealed Project State, PR merge and exact-main CI.
+All five START HERE gate criteria are proven, the canonical 118-sensor regression is green, PR #565 is merged, exact-main CI is green, Project State checkpoint 008 is sealed, and routine WSL operation is headless. Phase 2 may begin under the existing no-premature-winner rules.
 
 ## Realized LAB runtime
 
@@ -42,4 +42,4 @@ The five START HERE technical gate criteria have real runtime proof. The canonic
 
 Canonical raw evidence stays under `D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/` and `D:/Velvet/OfficeV2Lab/`. Versioned files cite those paths but do not copy credentials, secrets or raw production payloads into Git.
 
-Phase 2 remains blocked until formal Phase 1 closure is GREEN on merged current main.
+Phase 2 Inventory, Contracts & Benchmark Engineering is now allowed to begin. Product/provider winners remain forbidden until their contracts, fixtures, benchmarks and promotion gates justify selection.

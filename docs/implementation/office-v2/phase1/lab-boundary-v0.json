@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.office-v2.lab-boundary.v0",
-  "status": "RUNTIME_VALIDATED_FORMAL_CLOSURE_PENDING",
+  "status": "PHASE1_CLOSED_GREEN",
   "accepted_main_sha": "6c3865acee79fb11dbaeeace0a5bc73f9624d187",
   "production_authority": "NONE",
   "production_credentials_allowed": false,
@@ -18,6 +18,13 @@
     "docker_compose_version": "v5.6.0",
     "systemd": "running",
     "status": "READY"
+  },
+  "routine_launch": {
+    "task_name": "OfficeV2 LAB Lease",
+    "user_context": "Chris / InteractiveToken",
+    "window_policy": "HEADLESS_HIDDEN",
+    "launcher": "PowerShell -WindowStyle Hidden -NonInteractive",
+    "visible_console_required": false
   },
   "network": {
     "name": "officev2_lab",

@@ -15,7 +15,7 @@ LAB destroy/recreate and a disposable PostgreSQL stateful restore drill passed; 
 ## P1-E · Controlled WSL2/Docker maintenance — DONE
 The pre-existing reboot transition was separated first; WSL/Ubuntu/Docker were then installed and verified without production regression.
 
-## P1-F · Phase 1 gate — FORMAL CLOSURE IN PROGRESS
-Technical criteria are PASS. Canonical 118-sensor regression is PASS and the temporary user-context Scheduled Task is deleted. Remaining formal work: seal gate/Project State receipts, merge the dedicated closure PR, and verify exact-main CI.
+## P1-F · Phase 1 gate — DONE / GREEN
+All five technical criteria are PASS. Canonical 118-sensor regression is PASS, PR #565 is merged, exact-main Core Sensors run 37418107706 is GREEN, checkpoint 008 is sealed, temporary OfficeV2 tasks are removed, and the permanent WSL lease is headless/hidden.
 
-Phase 2 is not allowed to start until P1-F is formally GREEN.
+Phase 2 Inventory, Contracts & Benchmark Engineering may begin. Implementation winners remain gated by contracts, Golden Fixtures and benchmark evidence.
