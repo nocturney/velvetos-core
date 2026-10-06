@@ -1,0 +1,68 @@
+{
+  "schema": "velvetos.office-v2.phase2-scorecard.v0",
+  "candidate_id": "incumbent-current-durable-execution",
+  "fixture_id": "durable-execution-destructive-20-step",
+  "run_id": "arun-5be82f7c6915",
+  "captured_at": "2026-10-06T12:15:31+03:00",
+  "fitness": {
+    "score_0_5": 1.0,
+    "notes": [
+      "Hard FAIL under the frozen 20-step fixture.",
+      "Current composition proves basic lifecycle, checkpoint/idempotent skip and waiting_approval, but same-run worker recovery fails.",
+      "No durable engine recovery, approval resume, cancel, retry loop, eligible-work movement or operator replay primitive is exposed."
+    ]
+  },
+  "safety": {
+    "score_0_5": 3.0,
+    "notes": [
+      "Benchmark ran under VF_OFFICE_ROOT sandbox with zero production authority and zero production credentials.",
+      "Existing policy says reconcile before retry and never retry blindly.",
+      "Unknown-effect provider truth is not bound to a first-class durable effect attempt, so the hard reconciliation gate remains unproven."
+    ]
+  },
+  "operability": {
+    "score_0_5": 4.0,
+    "notes": [
+      "Plain JSON/JSONL and Git-backed code are easy to inspect and restore.",
+      "Operational simplicity does not compensate for missing in-flight durable recovery semantics.",
+      "No separate durable runtime service is present to operate, but there is also no first-class run recovery control plane."
+    ]
+  },
+  "evidence_quality": {
+    "score_0_5": 4.5,
+    "notes": [
+      "Incumbent receipt records all frozen steps and explicit mandatory failures.",
+      "CPU/RAM/network were explicitly unavailable for short-lived one-shot processes and remain null rather than being treated as zero."
+    ]
+  },
+  "resources": {
+    "wall_seconds": 1.088,
+    "cpu_peak_pct": null,
+    "ram_peak_mb": null,
+    "gpu_peak_pct": null,
+    "vram_peak_mb": null,
+    "storage_delta_mb": 0.028,
+    "network_mb": null,
+    "external_cost": 0.0,
+    "recurring_cost": 0.0,
+    "operator_minutes": 0.0
+  },
+  "rollback": {
+    "status": "PASS",
+    "notes": [
+      "Code rollback is Git-based and JSON/JSONL state can be copied/restored.",
+      "Rollback does not provide same-run recovery for already in-flight work; that gap is scored under fitness, not hidden by file restore."
+    ]
+  },
+  "security_findings": [
+    "No production credentials were used.",
+    "Mutable writes were redirected to the LAB sandbox.",
+    "Existing source reads may fall back to the checked-out repository, but benchmark writes did not target production SoTs."
+  ],
+  "operations_findings": [
+    "Canonical evidence: D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/incumbent-destructive-benchmark-fail.json",
+    "Hard failures include recover-worker, engine recovery, approval-resume, cancel-child, retry, move, reconcile-inspect and replay-finalize.",
+    "Resource fields that could not be measured are explicitly null."
+  ],
+  "verdict": "REJECTED_WITH_REASON"
+}

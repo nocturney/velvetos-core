@@ -1,0 +1,258 @@
+{
+  "schema": "velvetos.office-v2.phase3a-destructive-fixture.v0",
+  "fixture_id": "durable-execution-destructive-20-step",
+  "status": "CONTRACT_V0",
+  "title": "Durable execution destructive 20-step workflow",
+  "vendor_specific_fields_forbidden": true,
+  "production_effects_forbidden": true,
+  "effect_adapter": "LAB_LOCAL_SIMULATED_EFFECT_ADAPTER",
+  "input_contract": {
+    "required": [
+      "request_id",
+      "workflow_id",
+      "run_id",
+      "idempotency_scope",
+      "approval_fixture",
+      "move_eligibility",
+      "simulated_effect_fixture"
+    ]
+  },
+  "steps": [
+    {
+      "n": 1,
+      "id": "accept",
+      "capability": "durable.workflow.start",
+      "action": "accept request and create durable run",
+      "expected": [
+        "run_created"
+      ]
+    },
+    {
+      "n": 2,
+      "id": "checkpoint-a",
+      "capability": "durable.checkpoint",
+      "action": "persist initial progress",
+      "expected": [
+        "checkpoint_a"
+      ]
+    },
+    {
+      "n": 3,
+      "id": "effect-intent-a",
+      "capability": "effect.intent",
+      "action": "create idempotent simulated effect intent A",
+      "expected": [
+        "effect_intent_a"
+      ]
+    },
+    {
+      "n": 4,
+      "id": "effect-a",
+      "capability": "effect.execute.simulated",
+      "action": "execute simulated local effect A and persist receipt",
+      "expected": [
+        "effect_receipt_a"
+      ]
+    },
+    {
+      "n": 5,
+      "id": "kill-worker",
+      "capability": "failure.inject.worker",
+      "action": "terminate active worker",
+      "expected": [
+        "worker_kill_receipt"
+      ]
+    },
+    {
+      "n": 6,
+      "id": "recover-worker",
+      "capability": "durable.workflow.resume",
+      "action": "recover on worker without duplicating effect A",
+      "expected": [
+        "worker_recovery",
+        "effect_a_singleton_proof"
+      ]
+    },
+    {
+      "n": 7,
+      "id": "kill-engine",
+      "capability": "failure.inject.engine",
+      "action": "terminate durable engine/process",
+      "expected": [
+        "engine_kill_receipt"
+      ]
+    },
+    {
+      "n": 8,
+      "id": "restart-engine",
+      "capability": "durable.engine.recover",
+      "action": "restart engine and recover run metadata",
+      "expected": [
+        "engine_recovery"
+      ]
+    },
+    {
+      "n": 9,
+      "id": "duplicate-webhook",
+      "capability": "input.duplicate",
+      "action": "submit duplicate invocation/webhook using same idempotency scope",
+      "expected": [
+        "duplicate_input_receipt"
+      ]
+    },
+    {
+      "n": 10,
+      "id": "dedupe",
+      "capability": "durable.idempotency",
+      "action": "prove duplicate input does not duplicate completed work/effect",
+      "expected": [
+        "dedupe_proof"
+      ]
+    },
+    {
+      "n": 11,
+      "id": "approval-wait",
+      "capability": "durable.workflow.pause_wait",
+      "action": "enter durable long approval wait",
+      "expected": [
+        "approval_wait_receipt"
+      ]
+    },
+    {
+      "n": 12,
+      "id": "approval-resume",
+      "capability": "durable.workflow.resume",
+      "action": "resolve fixture approval and resume",
+      "expected": [
+        "approval_resume_receipt"
+      ]
+    },
+    {
+      "n": 13,
+      "id": "cancel-child",
+      "capability": "durable.workflow.cancel",
+      "action": "cancel a cancellable child/branch",
+      "expected": [
+        "cancel_receipt"
+      ]
+    },
+    {
+      "n": 14,
+      "id": "transient-failure",
+      "capability": "failure.inject.transient",
+      "action": "inject transient failure into retryable step",
+      "expected": [
+        "transient_failure_receipt"
+      ]
+    },
+    {
+      "n": 15,
+      "id": "retry",
+      "capability": "durable.workflow.retry",
+      "action": "retry according to explicit policy and attempt identity",
+      "expected": [
+        "retry_receipt"
+      ]
+    },
+    {
+      "n": 16,
+      "id": "checkpoint-b",
+      "capability": "durable.checkpoint",
+      "action": "persist progress after retry",
+      "expected": [
+        "checkpoint_b"
+      ]
+    },
+    {
+      "n": 17,
+      "id": "move",
+      "capability": "durable.workflow.move_eligible",
+      "action": "move explicitly eligible work to alternate LAB worker",
+      "expected": [
+        "move_receipt",
+        "ownership_trace"
+      ]
+    },
+    {
+      "n": 18,
+      "id": "unknown-effect",
+      "capability": "effect.execute.simulated",
+      "action": "simulate ambiguous outcome for local effect B after dispatch but before receipt confirmation",
+      "expected": [
+        "unknown_effect_state"
+      ]
+    },
+    {
+      "n": 19,
+      "id": "reconcile-inspect",
+      "capability": "effect.reconcile",
+      "action": "inspect provider truth/local ledger, reconcile effect B, and expose operator state",
+      "expected": [
+        "reconciliation_receipt",
+        "inspection_snapshot"
+      ]
+    },
+    {
+      "n": 20,
+      "id": "replay-finalize",
+      "capability": "durable.workflow.replay",
+      "action": "perform bounded inspect/replay then finalize once with complete evidence",
+      "expected": [
+        "replay_receipt",
+        "final_receipt",
+        "no_duplicate_effects_proof"
+      ]
+    }
+  ],
+  "success_contract": [
+    "all 20 steps have correlated evidence",
+    "simulated effect A is observed exactly once after worker and engine failure",
+    "duplicate input produces no duplicate completed effect",
+    "approval wait survives without hidden polling mutation",
+    "cancel and retry are explicit and inspectable",
+    "resume and eligible work movement preserve ownership/attempt identity",
+    "unknown effect B is reconciled before any retry decision",
+    "operator inspect/replay is available",
+    "final state contains no unresolved UNKNOWN outcome",
+    "backup/upgrade/rollback assessment is recorded in the candidate scorecard"
+  ],
+  "required_evidence": [
+    "run_created",
+    "checkpoint_a",
+    "effect_intent_a",
+    "effect_receipt_a",
+    "worker_kill_receipt",
+    "worker_recovery",
+    "effect_a_singleton_proof",
+    "engine_kill_receipt",
+    "engine_recovery",
+    "duplicate_input_receipt",
+    "dedupe_proof",
+    "approval_wait_receipt",
+    "approval_resume_receipt",
+    "cancel_receipt",
+    "transient_failure_receipt",
+    "retry_receipt",
+    "checkpoint_b",
+    "move_receipt",
+    "ownership_trace",
+    "unknown_effect_state",
+    "reconciliation_receipt",
+    "inspection_snapshot",
+    "replay_receipt",
+    "final_receipt",
+    "no_duplicate_effects_proof"
+  ],
+  "resource_capture": [
+    "wall_seconds",
+    "cpu_peak_pct",
+    "ram_peak_mb",
+    "gpu_peak_pct",
+    "vram_peak_mb",
+    "storage_delta_mb",
+    "network_mb",
+    "external_cost",
+    "recurring_cost",
+    "operator_minutes"
+  ]
+}

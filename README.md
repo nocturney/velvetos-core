@@ -28,7 +28,9 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 
 **Office v2 — PHASE 1 CLOSED / GREEN:** the neutral LAB is realized on NODE-A with WSL 3.0.1.0, Ubuntu 26.04.1 LTS, Docker Engine 29.8.2 / Compose v5.6.0, loopback-only digest-pinned OTel, and a single hardened artifact lane at `/var/officev2/artifacts`; full Windows drive mounts remain disabled. All five START HERE criteria are PASS, the canonical suite is 118/118 PASS, PR #565 is merged at `cf040c36a3d772ffd425586bfd80f02313621360`, and exact-main Core Sensors run `37418107706` is GREEN. Routine WSL operation is headless through the hidden `OfficeV2 LAB Lease`; all temporary OfficeV2 Scheduled Tasks are removed. Production authority/writers remain unchanged. Phase 2 Inventory, Contracts & Benchmark Engineering may begin without preselecting implementation winners.
 
-**Office v2 — PHASE 2 FOUNDATION / NO WINNERS:** the Candidate Registry now closes the full 68-item source inventory plus four explicit incumbent baselines (72 total), with lifecycle/verdict state machine, admission policy, five P0 shortlists, standard resource/cost scorecards, Pattern Adoption + research freeze/reopen contracts, and six vendor-neutral executable Golden Fixtures. The new critical Phase 2 sensor raises the suite to 119 sensors and the local canonical suite is 119/119 PASS. No challenger is installed or promoted by this foundation; every shortlist keeps `winner: null` until contract-aligned benchmark evidence exists.
+**Office v2 — PHASE 2 FOUNDATION CLOSED / BENCHMARK CONTRACTS FROZEN:** the Candidate Registry closes the full 68-item source inventory plus four explicit incumbent baselines (72 total), with lifecycle/verdict state machine, admission policy, five P0 shortlists, standard resource/cost scorecards, Pattern Adoption + research freeze/reopen contracts, and six vendor-neutral executable Golden Fixtures. The Phase 2 foundation itself promotes no challenger; lanes remain open with `winner: null` until contract-aligned benchmark evidence closes that lane.
+
+**Office v2 — PHASE 3A DURABLE EXECUTION CLOSED / RESTATE SELECTED:** the frozen 20-step destructive fixture is complete across the incumbent plus Restate, Hatchet and Temporal. Restate 1.7.12 is selected as the smallest reliable durable-execution spine; Temporal is the recorded fallback; Hatchet passed the semantic hard gate but lost on lane fit/operability; the current incumbent failed mandatory same-run recovery/resume/cancel/retry/move/replay semantics. Four normalized scorecards and `durable-execution-verdict-v0.json` record the decision. Local canonical validation is 120/120 PASS. This is an integration selection only: production authority, production writer ownership and production credentials remain unchanged.
 
 <!-- OPERATIONAL-SNAPSHOT:START -->
 <table>
@@ -40,7 +42,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 </tr>
 <tr>
 <td align="center"><strong>23</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>119</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>120</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>11</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>

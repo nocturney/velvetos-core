@@ -818,10 +818,10 @@
       "name": "Hatchet",
       "category": "RESEARCH_CANDIDATE",
       "provenance_class": "PRIOR_RESEARCH",
-      "lifecycle_state": "RESEARCHED",
+      "lifecycle_state": "ADMITTED",
       "decision_verdict": "BENCHMARK_REQUIRED",
-      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
-      "runtime_verification": "NOT_RUN",
+      "verdict_reason": "Phase 3A admission PASS using the official hatchet-lite v0.107.2 OCI image. The earlier HTTP 404 applied only to an embedded-sidecar v0.107.2 artifact shape and is superseded by a valid immutable self-host artifact.",
+      "runtime_verification": "ADMISSION_SMOKE_PASS",
       "authority_role": "NONE",
       "capability_tags": [
         "durable-execution"
@@ -831,10 +831,15 @@
         "durable-execution"
       ],
       "evidence_refs": [
-        "prior-research://office-v2-master-plan"
+        "prior-research://office-v2-master-plan",
+        "docs/implementation/office-v2/phase3/runtime-pins-v0.json",
+        "docs/implementation/office-v2/phase3/durable-execution-shortlist-reopen-v0.json",
+        "docs/implementation/office-v2/phase3/durable-execution-shortlist-correction-v0.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/hatchet-admission-smoke.json"
       ],
       "notes": [
-        "no durable-engine winner in Phase 0"
+        "no durable-engine winner in Phase 0",
+        "official hatchet-lite OCI admission smoke PASS; prior embedded-sidecar 404 is superseded evidence"
       ],
       "original_office_v2_verdict": "BENCHMARK"
     },
@@ -870,10 +875,10 @@
       "name": "DBOS",
       "category": "RESEARCH_CANDIDATE",
       "provenance_class": "PRIOR_RESEARCH",
-      "lifecycle_state": "RESEARCHED",
-      "decision_verdict": "BENCHMARK_REQUIRED",
-      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
-      "runtime_verification": "NOT_RUN",
+      "lifecycle_state": "CANDIDATE",
+      "decision_verdict": "DEFERRED_WITH_REASON",
+      "verdict_reason": "Returned to credible reserve after Hatchet passed corrected OCI-based admission. Its 3.1.0 wheel remains immutably pinned and may reopen only under the recorded material-evidence triggers.",
+      "runtime_verification": "PIN_RESOLVED_RESERVE_NOT_BENCHMARKED",
       "authority_role": "NONE",
       "capability_tags": [
         "durable-execution"
@@ -881,9 +886,15 @@
       "platform_constraints": [],
       "shortlist_lanes": [],
       "evidence_refs": [
-        "prior-research://office-v2-master-plan"
+        "prior-research://office-v2-master-plan",
+        "docs/implementation/office-v2/phase3/runtime-pins-v0.json",
+        "docs/implementation/office-v2/phase3/durable-execution-shortlist-reopen-v0.json",
+        "docs/implementation/office-v2/phase3/durable-execution-shortlist-correction-v0.json"
       ],
-      "notes": [],
+      "notes": [
+        "candidate-specific disposable Postgres substrate only; not a universal Office v2 database decision",
+        "credible reserve; not in the active three-challenger bake-off"
+      ],
       "original_office_v2_verdict": "BENCHMARK"
     },
     {

@@ -1,0 +1,69 @@
+{
+  "schema": "velvetos.office-v2.phase2-scorecard.v0",
+  "candidate_id": "candidate-hatchet",
+  "fixture_id": "durable-execution-destructive-20-step",
+  "run_id": "b3bae5c5-a6bf-40c1-945d-27c22581468c",
+  "captured_at": "2026-10-06T12:15:31+03:00",
+  "fitness": {
+    "score_0_5": 4.5,
+    "notes": [
+      "PASS on all controller gates: worker/engine recovery, dedupe, approval wait/resume, cancellation, retry, movement, UNKNOWN_RECONCILE, inspect/replay and no duplicate external effects.",
+      "Simulated effects A and B remained exactly once.",
+      "Replay re-executed internal task/finalization events, so the fixture validates pre-replay finalize-once plus post-replay external-effect singleton safety rather than zero internal re-execution."
+    ]
+  },
+  "safety": {
+    "score_0_5": 4.5,
+    "notes": [
+      "Internal candidate network, no host ports, zero production credentials and zero production authority.",
+      "Provider-truth reconciliation protected the ambiguous effect.",
+      "External effects remained singleton even after operator replay."
+    ]
+  },
+  "operability": {
+    "score_0_5": 3.0,
+    "notes": [
+      "Hatchet Lite is simple to package but depends on PostgreSQL for the tested self-host shape.",
+      "Official docs note engine migrations at startup and warn not to let multiple engines apply migrations concurrently.",
+      "Recovery/reassignment waits made this benchmark materially slower than Restate and Temporal."
+    ]
+  },
+  "evidence_quality": {
+    "score_0_5": 4.5,
+    "notes": [
+      "Full semantic controller checks passed and raw Docker resource samples were retained.",
+      "Resource parser defects were repaired from immutable raw samples; corrected receipt records wall/CPU/RAM/network/storage without changing semantic evidence."
+    ]
+  },
+  "resources": {
+    "wall_seconds": 284.583,
+    "cpu_peak_pct": 2.76,
+    "ram_peak_mb": 574.01,
+    "gpu_peak_pct": 0.0,
+    "vram_peak_mb": 0.0,
+    "storage_delta_mb": 28.389,
+    "network_mb": 17.061,
+    "external_cost": 0.0,
+    "recurring_cost": 0.0,
+    "operator_minutes": 0.0
+  },
+  "rollback": {
+    "status": "PASS",
+    "notes": [
+      "Hatchet self-host state is PostgreSQL-backed; database backup/restore is the primary state rollback surface.",
+      "Official embedded/self-host docs describe migration control and single-migrator requirements: https://docs.hatchet.run/v1/embedded and https://docs.hatchet.run/v1/running-locally",
+      "A restore drill is still required before any production authority."
+    ]
+  },
+  "security_findings": [
+    "No production credentials or production authority were used.",
+    "LAB token stayed inside the isolated benchmark and was removed during teardown.",
+    "Production keyset/TLS hardening was not part of this benchmark."
+  ],
+  "operations_findings": [
+    "Canonical receipt: D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/hatchet-destructive-benchmark-pass.json",
+    "Corrected resource capture: wall 284.583 s; aggregate peak CPU 2.76%; aggregate peak RAM 574.01 MiB; observed network 17.061 MiB; storage delta 28.389 MiB.",
+    "Operator replay can re-run internal tasks, reinforcing the need for effect-level idempotency even though no external duplicate occurred."
+  ],
+  "verdict": "BENCHMARKED_AND_LOST"
+}

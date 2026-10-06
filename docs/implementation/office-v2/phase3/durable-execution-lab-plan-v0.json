@@ -1,0 +1,91 @@
+{
+  "schema": "velvetos.office-v2.phase3a-durable-lab-plan.v0",
+  "status": "DESTRUCTIVE_BAKEOFF_COMPLETE_WINNER_SELECTED_NO_AUTHORITY_CHANGE",
+  "host": "NODE-A / OfficeV2-Lab",
+  "production_authority": "NONE",
+  "production_credentials_allowed": false,
+  "full_windows_drive_mounts_allowed": false,
+  "effect_surface": "LAB_LOCAL_SIMULATED_EFFECT_ADAPTER_ONLY",
+  "artifact_root": "/var/officev2/artifacts/phase3a-durable",
+  "network_policy": "DEDICATED_CANDIDATE_NETWORKS_LOOPBACK_HOST_PORTS_ONLY",
+  "candidates": [
+    {
+      "candidate_id": "candidate-restate",
+      "runtime_pin_status": "RESOLVED",
+      "runtime_target": "Restate 1.7.12",
+      "immutable_pin": "docker.restate.dev/restatedev/restate@sha256:bfe48559e64706510d3d5fe736414c52557cd7753100fa4e63ff44d8198ab176",
+      "network": "officev2_p3a_restate",
+      "host_ports": [],
+      "storage": "/var/officev2/artifacts/phase3a-durable/restate",
+      "health_probe": "internal HTTP 9070 readiness plus process recovery evidence",
+      "admission_smoke": "PASS_WITH_OBSERVATION",
+      "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/restate-admission-smoke.json",
+      "teardown": "remove candidate containers/network/volumes after evidence export",
+      "destructive_benchmark": "PASS",
+      "benchmark_evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/restate-destructive-benchmark-pass.json",
+      "scorecard_ref": "docs/implementation/office-v2/phase3/scorecard-restate-v0.json"
+    },
+    {
+      "candidate_id": "candidate-hatchet",
+      "runtime_pin_status": "RESOLVED",
+      "runtime_target": "Hatchet Lite 0.107.2",
+      "immutable_pin": "ghcr.io/hatchet-dev/hatchet/hatchet-lite@sha256:b150603cf7ffda29a7c9f91d2f210594c6511bbd470f4caabfcad091751d6973",
+      "database_pin": "postgres@sha256:a02db8cac496f15b094798a38254f14d6e00741f709360e5e00bb6668ea31636",
+      "network": "officev2_p3a_hatchet",
+      "host_ports": [],
+      "storage": "/var/officev2/artifacts/phase3a-durable/hatchet",
+      "health_probe": "internal 7077 + 8888 readiness, migrations, candidate DB, kill/restart",
+      "admission_smoke": "PASS",
+      "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/hatchet-admission-smoke.json",
+      "teardown": "remove Hatchet container, candidate Postgres container/volume and network after evidence export",
+      "destructive_benchmark": "PASS",
+      "benchmark_evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/hatchet-destructive-benchmark-pass.json",
+      "scorecard_ref": "docs/implementation/office-v2/phase3/scorecard-hatchet-v0.json"
+    },
+    {
+      "candidate_id": "candidate-temporal",
+      "runtime_pin_status": "RESOLVED",
+      "runtime_target": "Temporal CLI 1.9.1 / OSS Server 1.32.0",
+      "immutable_pin": "temporalio/temporal@sha256:ad4c82c97bd12b417d1ea942610dbcd511afb250c4d5ed26c694009533df447e",
+      "network": "officev2_p3a_temporal",
+      "host_ports": [],
+      "storage": "/var/officev2/artifacts/phase3a-durable/temporal",
+      "health_probe": "Temporal cluster health/namespace query inside isolated network",
+      "admission_smoke": "PASS",
+      "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/temporal-admission-smoke.json",
+      "teardown": "stop dev server container and remove candidate state after evidence export",
+      "destructive_benchmark": "PASS",
+      "benchmark_evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/temporal-destructive-benchmark-pass.json",
+      "scorecard_ref": "docs/implementation/office-v2/phase3/scorecard-temporal-v0.json"
+    }
+  ],
+  "blocked_candidates": [],
+  "forbidden_host_ports": [
+    18080,
+    18100
+  ],
+  "notes": [
+    "18080 is existing OpenPost-reserved surface; 18100 is currently occupied and excluded.",
+    "Hatchet uses a candidate-specific disposable Postgres substrate only; this is not a universal database selection.",
+    "All three active challengers passed the frozen 20-step destructive semantic gate; the incumbent baseline failed mandatory durable recovery capabilities.",
+    "Restate is selected for integration and Temporal is recorded as fallback. No production authority or production writer changes in Phase 3A.",
+    "Unknown resource metrics remain null/unavailable and were not silently treated as zero."
+  ],
+  "reserve_candidates": [
+    {
+      "candidate_id": "candidate-dbos",
+      "immutable_pin": "dbos-3.1.0-py3-none-any.whl#sha256=de6b361352b72067e3528b9d80e96eef3521c5a4350651cf640278aec9765f10",
+      "status": "CREDIBLE_RESERVE",
+      "reason": "Hatchet corrected admission passed; shortlist cap remains three challengers."
+    }
+  ],
+  "winner_candidate": "candidate-restate",
+  "fallback_candidate": "candidate-temporal",
+  "verdict_ref": "docs/implementation/office-v2/phase3/durable-execution-verdict-v0.json",
+  "incumbent_baseline": {
+    "candidate_id": "incumbent-current-durable-execution",
+    "destructive_benchmark": "FAIL",
+    "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/incumbent-destructive-benchmark-fail.json",
+    "scorecard_ref": "docs/implementation/office-v2/phase3/scorecard-incumbent-current-v0.json"
+  }
+}

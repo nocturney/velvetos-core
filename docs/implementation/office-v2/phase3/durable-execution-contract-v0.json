@@ -1,0 +1,54 @@
+{
+  "schema": "velvetos.office-v2.phase3a-durable-execution-contract.v0",
+  "status": "CONTRACT_V0_FROZEN_FOR_LAB",
+  "phase": "PHASE_3A",
+  "authority_change": false,
+  "production_writer_change": false,
+  "production_credentials_allowed": false,
+  "target_capabilities": [
+    "durable.workflow.start",
+    "durable.workflow.status",
+    "durable.workflow.pause_wait",
+    "durable.workflow.cancel",
+    "durable.workflow.retry",
+    "durable.workflow.resume",
+    "durable.workflow.move_eligible",
+    "durable.workflow.inspect",
+    "durable.workflow.replay",
+    "effect.intent",
+    "effect.receipt",
+    "effect.reconcile"
+  ],
+  "required_failure_modes": [
+    "WORKER_KILL",
+    "ENGINE_KILL",
+    "DUPLICATE_WEBHOOK",
+    "LONG_APPROVAL_WAIT",
+    "CANCEL",
+    "TRANSIENT_RETRY",
+    "RESUME",
+    "MOVE_ELIGIBLE_WORK",
+    "UNKNOWN_EXTERNAL_EFFECT_OUTCOME",
+    "INSPECT_REPLAY"
+  ],
+  "gate": {
+    "no_duplicate_external_effects": true,
+    "deterministic_recovery_required": true,
+    "operator_inspection_required": true,
+    "replay_required": true,
+    "upgrade_backup_rollback_acceptable": true,
+    "unknown_outcome_must_reconcile_before_retry": true
+  },
+  "semantics": {
+    "idempotency": "EffectIntent and attempt identity must prevent a completed effect from being performed twice.",
+    "unknown_outcome": "An ambiguous effect attempt enters UNKNOWN/RECONCILE and cannot be blindly retried.",
+    "cancellation": "Cancellation is explicit, observable, and must not erase evidence of already completed effects.",
+    "resume": "Resume continues from durable progress without replaying completed effects.",
+    "move": "Only explicitly eligible work may move to another worker/node; ownership and attempt identity remain inspectable.",
+    "replay": "Replay is an operator-visible diagnostic/recovery action, not a hidden second writer."
+  },
+  "fixture_ref": "docs/implementation/office-v2/phase3/durable-execution-destructive-v0.json",
+  "scorecard_ref": "docs/implementation/office-v2/phase2/scorecard.schema.json",
+  "admission_ref": "docs/implementation/office-v2/phase3/durable-execution-admission-v0.json",
+  "external_effect_surface": "LAB_LOCAL_SIMULATED_EFFECT_ADAPTER_ONLY"
+}
