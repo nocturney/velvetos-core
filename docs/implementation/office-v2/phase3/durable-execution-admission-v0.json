@@ -1,0 +1,105 @@
+{
+  "schema": "velvetos.office-v2.phase3a-durable-admission.v0",
+  "captured_at": "2026-10-06T09:40:00+03:00",
+  "shortlist_policy": "INCUMBENT_PLUS_MAX_THREE_SERIOUS_CHALLENGERS",
+  "winner": null,
+  "production_authority_granted": false,
+  "candidates": [
+    {
+      "candidate_id": "incumbent-current-durable-execution",
+      "role": "INCUMBENT_BASELINE",
+      "disposition": "BENCHMARK_BASELINE",
+      "lifecycle_state": "PRODUCTION",
+      "lab_admission": "NOT_APPLICABLE",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "evidence_refs": [
+        "packages/velvetos/README.md",
+        ".github/workflows/office-control-plane.yml"
+      ]
+    },
+    {
+      "candidate_id": "candidate-restate",
+      "role": "CHALLENGER",
+      "disposition": "ADMITTED_PENDING_IMMUTABLE_RUNTIME_PIN",
+      "target_version": "1.7.12",
+      "license": "BSL-1.1 with internal/own production use grant; converts to Apache-2.0 on change date",
+      "self_host_shape": "single binary or Docker; no external database required for basic deployment",
+      "credential_class": "LAB_ONLY_SECRET_OR_NONE",
+      "authority_role": "NONE",
+      "rationale": "Distinct lightweight log-centric durable runtime with strong reliable-execution/idempotency semantics and low LAB operational footprint.",
+      "evidence_refs": [
+        "https://github.com/restatedev/restate/releases/tag/v1.7.12",
+        "https://github.com/restatedev/restate/blob/main/LICENSE",
+        "https://restate.dev/blog/announcing-restate-1-7"
+      ]
+    },
+    {
+      "candidate_id": "candidate-hatchet",
+      "role": "CHALLENGER",
+      "disposition": "ADMITTED_PENDING_IMMUTABLE_RUNTIME_PIN",
+      "target_version": "0.107.2",
+      "sdk_target": "Python 1.41.1",
+      "license": "MIT",
+      "self_host_shape": "embedded mode available without Docker/account; full local stack also available",
+      "credential_class": "LAB_ONLY_SECRET_OR_NONE",
+      "authority_role": "NONE",
+      "rationale": "Agent/background-task focused challenger with embedded local mode, durable tasks, retries, monitoring and low-friction CI/LAB execution.",
+      "evidence_refs": [
+        "https://github.com/hatchet-dev/hatchet/releases",
+        "https://github.com/hatchet-dev/hatchet/blob/main/LICENSE",
+        "https://docs.hatchet.run/v1/embedded",
+        "https://docs.hatchet.run/v1/running-locally"
+      ]
+    },
+    {
+      "candidate_id": "candidate-temporal",
+      "role": "CHALLENGER",
+      "disposition": "ADMITTED_PENDING_IMMUTABLE_RUNTIME_PIN",
+      "target_version": "1.32.0",
+      "license": "MIT",
+      "self_host_shape": "Temporal CLI dev server is single binary/no external dependencies for local evaluation; production self-host is a broader service topology",
+      "credential_class": "LAB_ONLY_SECRET_OR_NONE",
+      "authority_role": "NONE",
+      "rationale": "Mature reference implementation gives the bake-off a high-capability durability/inspection baseline despite higher likely production operational cost.",
+      "evidence_refs": [
+        "https://github.com/temporalio/temporal/releases",
+        "https://github.com/temporalio/temporal/blob/main/LICENSE",
+        "https://docs.temporal.io/self-hosted-guide"
+      ]
+    },
+    {
+      "candidate_id": "candidate-dbos",
+      "role": "CREDIBLE_RESERVE",
+      "disposition": "RESERVE_DEFERRED_WITH_REASON",
+      "target_version": "Python 3.1.0",
+      "license": "MIT",
+      "self_host_shape": "library-centric durable execution backed by a system database; recent release adds rewind/workflow ID reuse and major schema changes",
+      "credential_class": "LAB_ONLY_SECRET_OR_NONE",
+      "authority_role": "NONE",
+      "rationale": "Material September 2026 evidence keeps DBOS credible, but adding a fourth challenger would violate the Phase 2 shortlist cap. Reopen if a shortlisted challenger fails admission/fixture or if DBOS evidence changes the contract trade-off.",
+      "reopen_triggers": [
+        "SHORTLISTED_CANDIDATE_ADMISSION_FAILURE",
+        "SHORTLISTED_CANDIDATE_BENCHMARK_FAILURE",
+        "MATERIAL_CONTRACT_CHANGE",
+        "CREDIBLE_NEW_EVIDENCE"
+      ],
+      "evidence_refs": [
+        "https://github.com/dbos-inc/dbos-transact-py/releases/tag/3.1.0",
+        "https://www.dbos.dev/blog/whats-new-in-dbos-september-2026",
+        "https://github.com/dbos-inc/dbos-transact-py/blob/main/pyproject.toml"
+      ]
+    }
+  ],
+  "admission_requirements": {
+    "immutable_runtime_artifact_resolved": true,
+    "license_maintenance_owner_review": true,
+    "bounded_lab_network_storage": true,
+    "production_credentials": false,
+    "production_authority": "NONE",
+    "health_probe_required": true,
+    "teardown_required": true,
+    "resource_capture_required": true,
+    "rollback_backup_upgrade_assessment_required": true,
+    "fixture_ref": "docs/implementation/office-v2/phase3/durable-execution-destructive-v0.json"
+  }
+}

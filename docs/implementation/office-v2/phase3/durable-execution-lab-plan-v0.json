@@ -1,0 +1,58 @@
+{
+  "schema": "velvetos.office-v2.phase3a-durable-lab-plan.v0",
+  "status": "PLANNED_NOT_STARTED",
+  "host": "NODE-A / OfficeV2-Lab",
+  "production_authority": "NONE",
+  "production_credentials_allowed": false,
+  "full_windows_drive_mounts_allowed": false,
+  "effect_surface": "LAB_LOCAL_SIMULATED_EFFECT_ADAPTER_ONLY",
+  "artifact_root": "/var/officev2/artifacts/phase3a-durable",
+  "network_policy": "DEDICATED_CANDIDATE_NETWORKS_LOOPBACK_HOST_PORTS_ONLY",
+  "candidates": [
+    {
+      "candidate_id": "candidate-restate",
+      "runtime_pin_status": "PENDING_DIGEST",
+      "runtime_target": "Restate 1.7.12",
+      "network": "officev2_p3a_restate",
+      "host_ports": [
+        18081,
+        19070,
+        19071
+      ],
+      "storage": "/var/officev2/artifacts/phase3a-durable/restate",
+      "health_probe": "HTTP/API readiness on loopback-mapped candidate port",
+      "teardown": "remove candidate containers/network/volumes after evidence export"
+    },
+    {
+      "candidate_id": "candidate-hatchet",
+      "runtime_pin_status": "PENDING_ARTIFACT_HASH",
+      "runtime_target": "Hatchet 0.107.2 / Python SDK 1.41.1 embedded mode",
+      "network": "process-local unless full stack becomes necessary",
+      "host_ports": [],
+      "storage": "/var/officev2/artifacts/phase3a-durable/hatchet",
+      "health_probe": "embedded engine + worker readiness receipt",
+      "teardown": "terminate sidecar/worker and remove embedded database/cache after evidence export"
+    },
+    {
+      "candidate_id": "candidate-temporal",
+      "runtime_pin_status": "PENDING_ARTIFACT_HASH",
+      "runtime_target": "Temporal server 1.32.0 via pinned CLI/dev-server artifact",
+      "network": "officev2_p3a_temporal",
+      "host_ports": [
+        17233,
+        18233
+      ],
+      "storage": "/var/officev2/artifacts/phase3a-durable/temporal",
+      "health_probe": "Temporal service health/namespace query on loopback",
+      "teardown": "stop dev server, remove candidate state after evidence export"
+    }
+  ],
+  "forbidden_host_ports": [
+    18080,
+    18100
+  ],
+  "notes": [
+    "18080 is existing OpenPost-reserved surface; 18100 is currently occupied and excluded.",
+    "Candidate definitions do not imply installation or LAB admission until immutable pins are recorded."
+  ]
+}
