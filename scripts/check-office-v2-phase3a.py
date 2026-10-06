@@ -18,6 +18,11 @@ REQUIRED = [
     P3 / "runtime-pins-v0.json",
     P3 / "durable-execution-shortlist-reopen-v0.json",
     P3 / "durable-execution-shortlist-correction-v0.json",
+    P3 / "scorecard-incumbent-current-v0.json",
+    P3 / "scorecard-restate-v0.json",
+    P3 / "scorecard-hatchet-v0.json",
+    P3 / "scorecard-temporal-v0.json",
+    P3 / "durable-execution-verdict-v0.json",
 ]
 
 MANDATORY_STEP_IDS = {
@@ -146,8 +151,14 @@ def main() -> None:
         fail("Phase 2 durable-execution shortlist missing")
     if set(lane.get("challengers") or []) != EXPECTED_CHALLENGERS:
         fail("Phase 3A admission must remain aligned to Phase 2 durable shortlist")
-    if lane.get("winner") is not None:
-        fail("durable-execution shortlist declared a winner before bake-off")
+    if lane.get("winner") != "candidate-restate":
+        fail("durable-execution shortlist winner must be candidate-restate after completed bake-off")
+    if lane.get("fallback") != "candidate-temporal":
+        fail("durable-execution shortlist fallback must be candidate-temporal")
+    if lane.get("freeze_state") != "FROZEN_AFTER_PHASE3A_BAKEOFF":
+        fail("durable-execution shortlist must be frozen after Phase 3A bake-off")
+    if lane.get("verdict_receipt") != "docs/implementation/office-v2/phase3/durable-execution-verdict-v0.json":
+        fail("durable-execution shortlist verdict provenance missing")
     if lane.get("correction_receipt") != "docs/implementation/office-v2/phase3/durable-execution-shortlist-correction-v0.json":
         fail("durable-execution shortlist correction provenance missing")
 
@@ -186,8 +197,12 @@ def main() -> None:
         fail("shortlist correction must not select winner or change authority")
 
     lab = load(P3 / "durable-execution-lab-plan-v0.json")
-    if lab.get("status") != "ADMISSION_SMOKES_PASS_DESTRUCTIVE_FIXTURE_NOT_STARTED":
-        fail("LAB plan must record all active admission smokes PASS before destructive bake-off")
+    if lab.get("status") != "DESTRUCTIVE_BAKEOFF_COMPLETE_WINNER_SELECTED_NO_AUTHORITY_CHANGE":
+        fail("LAB plan must record completed destructive bake-off and selected winner")
+    if lab.get("winner_candidate") != "candidate-restate" or lab.get("fallback_candidate") != "candidate-temporal":
+        fail("LAB plan winner/fallback mismatch")
+    if lab.get("verdict_ref") != "docs/implementation/office-v2/phase3/durable-execution-verdict-v0.json":
+        fail("LAB plan verdict reference missing")
     if lab.get("production_authority") != "NONE":
         fail("LAB plan production authority must be NONE")
     if lab.get("production_credentials_allowed") is not False:
@@ -211,23 +226,76 @@ def main() -> None:
             fail("active candidate admission smoke is not PASS: " + str(item.get("candidate_id")))
         if not item.get("evidence_ref"):
             fail("active candidate admission smoke evidence is missing: " + str(item.get("candidate_id")))
+        if item.get("destructive_benchmark") != "PASS":
+            fail("active candidate destructive benchmark must PASS: " + str(item.get("candidate_id")))
+        if not item.get("benchmark_evidence_ref") or not item.get("scorecard_ref"):
+            fail("active candidate benchmark/scorecard provenance missing: " + str(item.get("candidate_id")))
+    incumbent = lab.get("incumbent_baseline") or {}
+    if incumbent.get("destructive_benchmark") != "FAIL":
+        fail("incumbent baseline must record frozen-fixture FAIL")
+    if not incumbent.get("evidence_ref") or not incumbent.get("scorecard_ref"):
+        fail("incumbent baseline evidence/scorecard provenance missing")
     reserves = lab.get("reserve_candidates") or []
     if {item.get("candidate_id") for item in reserves} != {"candidate-dbos"}:
         fail("LAB plan reserve set must contain only DBOS")
 
+    verdict = load(P3 / "durable-execution-verdict-v0.json")
+    if verdict.get("status") != "SELECTED_FOR_INTEGRATION_NO_PRODUCTION_AUTHORITY":
+        fail("Phase 3A verdict status mismatch")
+    if verdict.get("winner") != "candidate-restate" or verdict.get("fallback") != "candidate-temporal":
+        fail("Phase 3A verdict winner/fallback mismatch")
+    if verdict.get("production_authority_change") is not False or verdict.get("production_writer_change") is not False:
+        fail("Phase 3A verdict must not change production authority/writer")
+    if verdict.get("production_credentials_used") is not False:
+        fail("Phase 3A verdict must not use production credentials")
+    dispositions = verdict.get("dispositions") or {}
+    expected_verdicts = {
+        "incumbent-current-durable-execution": "REJECTED_WITH_REASON",
+        "candidate-restate": "ADVANCE",
+        "candidate-hatchet": "BENCHMARKED_AND_LOST",
+        "candidate-temporal": "DEFERRED_WITH_REASON",
+        "candidate-dbos": "DEFERRED_WITH_REASON",
+    }
+    for cid, expected in expected_verdicts.items():
+        if (dispositions.get(cid) or {}).get("verdict") != expected:
+            fail("Phase 3A disposition mismatch: " + cid)
+
+    expected_scorecards = {
+        "scorecard-incumbent-current-v0.json": ("incumbent-current-durable-execution", "REJECTED_WITH_REASON"),
+        "scorecard-restate-v0.json": ("candidate-restate", "ADVANCE"),
+        "scorecard-hatchet-v0.json": ("candidate-hatchet", "BENCHMARKED_AND_LOST"),
+        "scorecard-temporal-v0.json": ("candidate-temporal", "DEFERRED_WITH_REASON"),
+    }
+    required_resource_fields = {
+        "wall_seconds", "cpu_peak_pct", "ram_peak_mb", "gpu_peak_pct", "vram_peak_mb",
+        "storage_delta_mb", "network_mb", "external_cost", "recurring_cost", "operator_minutes",
+    }
+    for name, (cid, expected_verdict) in expected_scorecards.items():
+        card = load(P3 / name)
+        if card.get("schema") != "velvetos.office-v2.phase2-scorecard.v0":
+            fail("scorecard schema mismatch: " + name)
+        if card.get("candidate_id") != cid or card.get("verdict") != expected_verdict:
+            fail("scorecard candidate/verdict mismatch: " + name)
+        if set((card.get("resources") or {}).keys()) != required_resource_fields:
+            fail("scorecard resource shape mismatch: " + name)
+        if (card.get("rollback") or {}).get("status") != "PASS":
+            fail("scorecard rollback must PASS: " + name)
+
     readme = (P3 / "README.md").read_text(encoding="utf-8-sig")
     for marker in (
-        "NO WINNER",
+        "WINNER: candidate-restate",
+        "FALLBACK: candidate-temporal",
         "no production credentials",
         "exactly 20 semantic steps",
         "candidate-hatchet",
+        "production authority remains unchanged",
     ):
         if marker not in readme:
-            fail("Phase 3A README missing safety marker: " + marker)
+            fail("Phase 3A README missing closure marker: " + marker)
 
     print(
         "OK office-v2-phase3a contract=FROZEN fixture=20-STEP "
-        "challengers=3 reserve=DBOS winner=NONE pins=RESOLVED admission-smokes=PASS benchmark=NOT_STARTED authority=NONE"
+        "challengers=3 reserve=DBOS winner=RESTATE fallback=TEMPORAL benchmark=COMPLETE authority=NONE"
     )
 
 

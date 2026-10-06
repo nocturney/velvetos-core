@@ -2,7 +2,7 @@
 
 Authority: START HERE Phase 3A. Baseline: `main@7fa9cb1f03da0876831c9d05efbfe44de2f8c280` after Phase 2 GREEN.
 
-Status: **CONTRACT FROZEN / THREE ADMISSION SMOKES PASS / DESTRUCTIVE BAKE-OFF NOT YET RUN / NO WINNER / NO PRODUCTION AUTHORITY CHANGE**.
+Status: **CONTRACT FROZEN / DESTRUCTIVE BAKE-OFF COMPLETE / WINNER: candidate-restate / FALLBACK: candidate-temporal / NO PRODUCTION AUTHORITY CHANGE**.
 
 ## Objective
 
@@ -21,17 +21,17 @@ Choose the smallest reliable durable-execution spine before domain migrations. P
 ## Benchmark set
 
 Incumbent:
-- `incumbent-current-durable-execution`.
+- `incumbent-current-durable-execution` — destructive baseline **FAIL**. Basic checkpoint/idempotency/wait state exists, but mandatory same-run recovery/resume/cancel/retry/move/replay semantics are missing.
 
-LAB-admission shortlist:
-- `candidate-restate` — Restate 1.7.12, OCI digest pinned; isolated start/kill/restart smoke PASS with one documented node-incarnation observation.
-- `candidate-hatchet` — Hatchet Lite 0.107.2, OCI digest pinned; isolated Postgres-only start/kill/restart smoke PASS with zero host ports.
-- `candidate-temporal` — Temporal CLI 1.9.1 / embedded OSS Server 1.32.0, immutable runtime pinned; isolated engine-kill/restart smoke PASS with namespace persistence.
+LAB-admission shortlist and bake-off result:
+- `candidate-restate` — Restate 1.7.12, OCI digest pinned; admission PASS; destructive 20-step semantic benchmark **PASS**; **selected winner**.
+- `candidate-hatchet` — Hatchet Lite 0.107.2, OCI digest pinned; admission PASS; destructive 20-step semantic benchmark **PASS**; **benchmarked and lost** on fit/operability for this lane.
+- `candidate-temporal` — Temporal CLI 1.9.1 / embedded OSS Server 1.32.0, immutable runtime pinned; admission PASS; destructive 20-step semantic benchmark **PASS**; **recorded fallback**.
 
 Credible reserve:
 - `candidate-dbos` — DBOS Python 3.1.0, wheel SHA256 pinned. It briefly entered the active set after a Hatchet embedded-sidecar URL failure, then returned to reserve when the official `hatchet-lite` OCI artifact passed admission.
 
-`durable-execution-shortlist-reopen-v0.json` preserves the temporary fail-closed decision; `durable-execution-shortlist-correction-v0.json` records the evidence-based correction. Exact artifact pins are in `runtime-pins-v0.json`. No `winner` is declared.
+`durable-execution-shortlist-reopen-v0.json` preserves the temporary fail-closed decision; `durable-execution-shortlist-correction-v0.json` records the evidence-based correction. Exact artifact pins are in `runtime-pins-v0.json`. The completed bake-off verdict is `durable-execution-verdict-v0.json`: Restate winner, Temporal fallback, with no production-authority change.
 
 ## Destructive fixture
 
@@ -58,4 +58,13 @@ The fixture succeeds only when no completed external effect is duplicated, recov
 Raw runtime benchmark evidence stays under:
 `D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/`.
 
-Versioned definitions contain no secrets and no production payloads.
+Versioned scorecards:
+- `scorecard-incumbent-current-v0.json`
+- `scorecard-restate-v0.json`
+- `scorecard-hatchet-v0.json`
+- `scorecard-temporal-v0.json`
+
+Selection receipt:
+- `durable-execution-verdict-v0.json`
+
+Versioned definitions contain no secrets and no production payloads. The winner selection is a LAB/architecture decision only; production authority remains unchanged.

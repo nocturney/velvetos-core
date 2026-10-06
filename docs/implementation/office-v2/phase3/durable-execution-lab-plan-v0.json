@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.office-v2.phase3a-durable-lab-plan.v0",
-  "status": "ADMISSION_SMOKES_PASS_DESTRUCTIVE_FIXTURE_NOT_STARTED",
+  "status": "DESTRUCTIVE_BAKEOFF_COMPLETE_WINNER_SELECTED_NO_AUTHORITY_CHANGE",
   "host": "NODE-A / OfficeV2-Lab",
   "production_authority": "NONE",
   "production_credentials_allowed": false,
@@ -20,7 +20,10 @@
       "health_probe": "internal HTTP 9070 readiness plus process recovery evidence",
       "admission_smoke": "PASS_WITH_OBSERVATION",
       "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/restate-admission-smoke.json",
-      "teardown": "remove candidate containers/network/volumes after evidence export"
+      "teardown": "remove candidate containers/network/volumes after evidence export",
+      "destructive_benchmark": "PASS",
+      "benchmark_evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/restate-destructive-benchmark-pass.json",
+      "scorecard_ref": "docs/implementation/office-v2/phase3/scorecard-restate-v0.json"
     },
     {
       "candidate_id": "candidate-hatchet",
@@ -34,7 +37,10 @@
       "health_probe": "internal 7077 + 8888 readiness, migrations, candidate DB, kill/restart",
       "admission_smoke": "PASS",
       "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/hatchet-admission-smoke.json",
-      "teardown": "remove Hatchet container, candidate Postgres container/volume and network after evidence export"
+      "teardown": "remove Hatchet container, candidate Postgres container/volume and network after evidence export",
+      "destructive_benchmark": "PASS",
+      "benchmark_evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/hatchet-destructive-benchmark-pass.json",
+      "scorecard_ref": "docs/implementation/office-v2/phase3/scorecard-hatchet-v0.json"
     },
     {
       "candidate_id": "candidate-temporal",
@@ -47,7 +53,10 @@
       "health_probe": "Temporal cluster health/namespace query inside isolated network",
       "admission_smoke": "PASS",
       "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/temporal-admission-smoke.json",
-      "teardown": "stop dev server container and remove candidate state after evidence export"
+      "teardown": "stop dev server container and remove candidate state after evidence export",
+      "destructive_benchmark": "PASS",
+      "benchmark_evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/temporal-destructive-benchmark-pass.json",
+      "scorecard_ref": "docs/implementation/office-v2/phase3/scorecard-temporal-v0.json"
     }
   ],
   "blocked_candidates": [],
@@ -58,7 +67,9 @@
   "notes": [
     "18080 is existing OpenPost-reserved surface; 18100 is currently occupied and excluded.",
     "Hatchet uses a candidate-specific disposable Postgres substrate only; this is not a universal database selection.",
-    "All three active challengers passed isolated admission smoke. The common destructive 20-step benchmark has not started and no winner exists."
+    "All three active challengers passed the frozen 20-step destructive semantic gate; the incumbent baseline failed mandatory durable recovery capabilities.",
+    "Restate is selected for integration and Temporal is recorded as fallback. No production authority or production writer changes in Phase 3A.",
+    "Unknown resource metrics remain null/unavailable and were not silently treated as zero."
   ],
   "reserve_candidates": [
     {
@@ -67,5 +78,14 @@
       "status": "CREDIBLE_RESERVE",
       "reason": "Hatchet corrected admission passed; shortlist cap remains three challengers."
     }
-  ]
+  ],
+  "winner_candidate": "candidate-restate",
+  "fallback_candidate": "candidate-temporal",
+  "verdict_ref": "docs/implementation/office-v2/phase3/durable-execution-verdict-v0.json",
+  "incumbent_baseline": {
+    "candidate_id": "incumbent-current-durable-execution",
+    "destructive_benchmark": "FAIL",
+    "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/incumbent-destructive-benchmark-fail.json",
+    "scorecard_ref": "docs/implementation/office-v2/phase3/scorecard-incumbent-current-v0.json"
+  }
 }

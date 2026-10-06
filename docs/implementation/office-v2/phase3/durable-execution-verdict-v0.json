@@ -1,0 +1,80 @@
+{
+  "schema": "velvetos.office-v2.phase3a-durable-execution-verdict.v0",
+  "captured_at": "2026-10-06T12:18:05+03:00",
+  "status": "SELECTED_FOR_INTEGRATION_NO_PRODUCTION_AUTHORITY",
+  "objective": "Choose the smallest reliable durable-execution spine before domain migrations.",
+  "fixture_id": "durable-execution-destructive-20-step",
+  "winner": "candidate-restate",
+  "fallback": "candidate-temporal",
+  "production_authority_change": false,
+  "production_writer_change": false,
+  "production_credentials_used": false,
+  "effect_surface": "LAB_LOCAL_SIMULATED_EFFECT_ADAPTER_ONLY",
+  "dispositions": {
+    "candidate-restate": {
+      "verdict": "ADVANCE",
+      "role": "WINNER",
+      "scorecard_ref": "docs/implementation/office-v2/phase3/scorecard-restate-v0.json",
+      "benchmark_status": "PASS"
+    },
+    "candidate-temporal": {
+      "verdict": "DEFERRED_WITH_REASON",
+      "role": "FALLBACK",
+      "scorecard_ref": "docs/implementation/office-v2/phase3/scorecard-temporal-v0.json",
+      "benchmark_status": "PASS"
+    },
+    "candidate-hatchet": {
+      "verdict": "BENCHMARKED_AND_LOST",
+      "role": "LOSER_RETAIN_EVIDENCE",
+      "scorecard_ref": "docs/implementation/office-v2/phase3/scorecard-hatchet-v0.json",
+      "benchmark_status": "PASS"
+    },
+    "incumbent-current-durable-execution": {
+      "verdict": "REJECTED_WITH_REASON",
+      "role": "INCUMBENT_FAILED_CONTRACT",
+      "scorecard_ref": "docs/implementation/office-v2/phase3/scorecard-incumbent-current-v0.json",
+      "benchmark_status": "FAIL"
+    },
+    "candidate-dbos": {
+      "verdict": "DEFERRED_WITH_REASON",
+      "role": "CREDIBLE_RESERVE_NOT_RUN",
+      "reason": "Corrected Hatchet admission restored the three-challenger cap; reserve did not need the destructive bake-off."
+    }
+  },
+  "selection_basis": [
+    "The incumbent fails mandatory same-run recovery/resume/cancel/retry/move/replay semantics and cannot remain the durable-execution winner.",
+    "Restate, Temporal and Hatchet all passed the frozen semantic hard gate with no duplicate simulated external effects.",
+    "The Phase 3A objective is the smallest reliable spine, not the most feature-rich platform.",
+    "Restate combines full semantic PASS with the simplest basic self-host shape, no external database requirement for the basic deployment, the lowest recorded wall time in this fixture, and dedicated snapshot/backup plus upgrade/rollback operational surfaces.",
+    "Temporal is retained as fallback because it provides the strongest mature history/inspection and self-host operations story, but its production topology and sequential schema/server upgrade discipline are heavier.",
+    "Hatchet passes semantics but loses on operational footprint for this use case: PostgreSQL is required in the tested shape, recovery/reassignment was slower, and operator replay re-executed internal tasks even though effect-level idempotency prevented duplicate external effects.",
+    "Unknown/null Restate and Temporal CPU/RAM/network fields were not converted to zero and were not used as a hidden advantage."
+  ],
+  "benchmark_refs": {
+    "incumbent": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/incumbent-destructive-benchmark-fail.json",
+    "restate": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/restate-destructive-benchmark-pass.json",
+    "temporal": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/temporal-destructive-benchmark-pass.json",
+    "hatchet": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/hatchet-destructive-benchmark-pass.json"
+  },
+  "operational_evidence": [
+    "https://docs.restate.dev/server/snapshots",
+    "https://docs.restate.dev/server/upgrading",
+    "https://docs.temporal.io/self-hosted-guide",
+    "https://docs.hatchet.run/v1/embedded",
+    "https://docs.hatchet.run/v1/running-locally"
+  ],
+  "promotion_limits": [
+    "This verdict selects a Phase 3A runtime winner only; it does not install a new production writer or transfer production authority.",
+    "Before production use, the Integration Factory must configure identity/policy, credentials, observability, health probes, backup/restore drill, regression tests, rollback, service/autostart management and SHADOW/PILOT gates.",
+    "Existing production work retains priority until a later explicit production promotion receipt."
+  ],
+  "reopen_triggers": [
+    "PRODUCTION_REGRESSION",
+    "MATERIAL_CONTRACT_CHANGE",
+    "MAJOR_LICENSE_COST_MAINTENANCE_CHANGE",
+    "SECURITY_FINDING",
+    "OS_HARDWARE_FEASIBILITY_CHANGE",
+    "CANDIDATE_EOL_OR_ABANDONMENT",
+    "CREDIBLE_NEW_CHALLENGER_EVIDENCE_AGAINST_SAME_FIXTURE"
+  ]
+}

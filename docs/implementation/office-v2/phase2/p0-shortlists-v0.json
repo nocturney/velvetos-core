@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.office-v2.phase2-p0-shortlists.v0",
-  "status": "PRE_BENCHMARK_NO_WINNERS",
+  "status": "DURABLE_EXECUTION_WINNER_RECORDED_OTHER_LANES_OPEN",
   "default_rule": "incumbent plus 2–3 serious challengers",
   "lanes": [
     {
@@ -12,9 +12,11 @@
         "candidate-hatchet",
         "candidate-temporal"
       ],
-      "winner": null,
-      "freeze_state": "OPEN_UNTIL_FIXTURES_AND_SCORECARDS",
-      "correction_receipt": "docs/implementation/office-v2/phase3/durable-execution-shortlist-correction-v0.json"
+      "winner": "candidate-restate",
+      "freeze_state": "FROZEN_AFTER_PHASE3A_BAKEOFF",
+      "correction_receipt": "docs/implementation/office-v2/phase3/durable-execution-shortlist-correction-v0.json",
+      "fallback": "candidate-temporal",
+      "verdict_receipt": "docs/implementation/office-v2/phase3/durable-execution-verdict-v0.json"
     },
     {
       "lane_id": "model-routing",

@@ -101,8 +101,17 @@ def main() -> None:
             fail("shortlist incumbent missing from registry: " + str(lane.get("lane_id")))
         if not 2 <= len(challengers) <= 3:
             fail("shortlist must have 2-3 challengers: " + str(lane.get("lane_id")))
-        if lane.get("winner") is not None:
-            fail("pre-benchmark shortlist must not declare a winner: " + str(lane.get("lane_id")))
+        if lane.get("lane_id") == "durable-execution":
+            if lane.get("winner") != "candidate-restate":
+                fail("closed durable-execution lane must record Restate winner")
+            if lane.get("fallback") != "candidate-temporal":
+                fail("closed durable-execution lane must record Temporal fallback")
+            if lane.get("freeze_state") != "FROZEN_AFTER_PHASE3A_BAKEOFF":
+                fail("closed durable-execution lane freeze state mismatch")
+            if lane.get("verdict_receipt") != "docs/implementation/office-v2/phase3/durable-execution-verdict-v0.json":
+                fail("closed durable-execution lane verdict provenance missing")
+        elif lane.get("winner") is not None:
+            fail("open pre-benchmark shortlist must not declare a winner: " + str(lane.get("lane_id")))
         if any(c not in known for c in challengers):
             fail("shortlist challenger missing from registry: " + str(lane.get("lane_id")))
 
