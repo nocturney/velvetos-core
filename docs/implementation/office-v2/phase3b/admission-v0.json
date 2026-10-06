@@ -10,12 +10,11 @@
   "runtime_pins_ref": "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
   "fixture_ref": "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json",
   "summary": {
-    "admitted": 7,
-    "deferred": 1,
-    "deferred_candidates": [
-      "candidate-zitadel"
-    ],
+    "admitted": 8,
+    "deferred": 0,
+    "deferred_candidates": [],
     "identity_lane_admitted": [
+      "candidate-zitadel",
       "candidate-keycloak",
       "candidate-authentik"
     ],
@@ -36,14 +35,14 @@
       "lane": "phase3b-identity-provider",
       "version": "4.19.4",
       "license": "AGPL-3.0-only main repository; documented Apache-2.0/MIT exceptions for specific subtrees",
-      "license_review": "BLOCKED_OWNER_OR_LEGAL_ACCEPTANCE_REQUIRED",
+      "license_review": "PASS_OWNER_ACCEPTED_AGPL_BOUNDARY_FOR_LAB",
       "maintenance_review": "PASS_CURRENT_RELEASE_2026-10-01",
-      "security_trust_review": "PASS_WITH_LICENSE_BLOCK; current 4.19.4 is newer than 4.19.2 security fixes and project publishes security advisories",
+      "security_trust_review": "PASS_FOR_LAB; current release is newer than recorded security fixes and project publishes security advisories",
       "capability_match": "PASS service accounts, private-key JWT/client-credentials/PAT, rotation and auditability",
       "platform_feasibility": "PASS linux/amd64 OCI",
       "isolation_plan": "internal LAB network only; disposable PostgreSQL; no host port; synthetic service accounts only",
       "resource_cost_plan": "capture docker stats, image/storage delta, startup, network and operator minutes; recurring software cost not assumed",
-      "rollback_uninstall_plan": "LAB teardown removes candidate containers, network and volumes; production migration/export not admitted until license decision",
+      "rollback_uninstall_plan": "LAB teardown removes candidate containers, network and volumes; any future modified/combined AGPL deployment must preserve the accepted source-disclosure boundary.",
       "fixture_mapping": [
         "identity-bootstrap",
         "identity-token",
@@ -53,8 +52,8 @@
         "identity-revoke",
         "revoked-identity-deny"
       ],
-      "admission_verdict": "DEFERRED_WITH_REASON",
-      "reason": "Technical fit is credible, but Phase 2 admission requires license review. AGPL-3.0 obligations/commercial-license choice are not silently accepted on the owner's behalf.",
+      "admission_verdict": "ADMITTED",
+      "reason": "Owner resolved the AGPL concern: separate-service/API integration is acceptable and ZITADEL modifications may be open-sourced if obligations require it. Technical admission therefore proceeds to LAB smoke.",
       "immutable_artifact": {
         "candidate_id": "candidate-zitadel",
         "status": "RESOLVED",

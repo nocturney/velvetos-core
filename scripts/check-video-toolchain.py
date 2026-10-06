@@ -79,12 +79,19 @@ def main() -> None:
     if (slots.get("hyperframes") or {}).get("status") != "canonical":
         fail("HyperFrames animation slot must stay canonical")
     remotion = slots.get("remotion") or {}
-    if remotion.get("versionPolicy") != "latest-compatible" or remotion.get("status") != "license-gated":
+    if remotion.get("versionPolicy") != "latest-compatible" or remotion.get("status") != "free-license-eligible":
         fail("Remotion version policy/status mismatch")
     if not re.fullmatch(r"\d+\.\d+\.\d+", str(remotion.get("reviewedBaselineVersion") or "")):
         fail("Remotion reviewed baseline must be semver evidence, not an execution pin")
-    if remotion.get("compatibilityGate") != "license-eligibility+adapter-smoke":
+    if remotion.get("compatibilityGate") != "free-license-eligibility+adapter-smoke":
         fail("Remotion compatibility/license gate mismatch")
+    eligibility = remotion.get("licenseEligibility") or {}
+    if eligibility.get("currentVerdict") != "FREE_LICENSE_ELIGIBLE" or eligibility.get("currentBusinessHeadcount") != 1:
+        fail("Remotion current Free License eligibility evidence mismatch")
+    if eligibility.get("freeLicenseMaxHeadcount") != 3 or eligibility.get("recheckAtHeadcount") != 4:
+        fail("Remotion headcount threshold mismatch")
+    if eligibility.get("commercialUseAllowed") is not True or eligibility.get("automationAllowed") is not True:
+        fail("Remotion Free License capability flags mismatch")
     if remotion.get("installByDefault") is not False or remotion.get("masterRenderer") is not False:
         fail("Remotion must remain optional and subordinate")
 
@@ -206,14 +213,14 @@ def main() -> None:
         DOC,
         "pattern-adapted",
         "HyperFrames remains the canonical master compositor",
-        "license-gated",
+        "Free License",
         "Manim",
         "not another editor product",
     )
     contains(EDIT, "VIDEO-TOOLCHAIN.json", "vf_video_edit.py", "HyperFrames remains")
     print(
         "OK video toolchain adapters "
-        "edit=implemented remotion=license-gated "
+        "edit=implemented remotion=free-license-eligible "
         "manim=host-smoke-verified hyperframes=canonical"
     )
 

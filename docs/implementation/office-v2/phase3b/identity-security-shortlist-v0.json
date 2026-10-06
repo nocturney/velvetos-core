@@ -15,9 +15,9 @@
         "candidate-authentik"
       ],
       "winner": null,
-      "admission_status": "2_LAB_VALIDATED_1_DEFERRED_LICENSE_REVIEW",
+      "admission_status": "2_LAB_VALIDATED_1_ADMITTED_SMOKE_PENDING",
       "candidate_admission": {
-        "candidate-zitadel": "DEFERRED_WITH_REASON",
+        "candidate-zitadel": "ADMITTED",
         "candidate-keycloak": "LAB",
         "candidate-authentik": "LAB"
       },

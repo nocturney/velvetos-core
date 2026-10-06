@@ -164,7 +164,7 @@ Watchtower = Edge מתוכנן/LAN — לא דמון בליבה.
 ### 6.10 Video / Speech backends — IMPLEMENTED / host-verified לפי README
 
 HyperFrames: Mac מועדף; Windows `host_smoke_verified` כגיבוי.  
-Video adapters: EDL/Manim smoke ב־Windows; Remotion **license-gated**.  
+Video adapters: EDL/Manim smoke ב־Windows; Remotion **Free License eligible at headcount=1** (re-check at 4+).
 Speech: VoiceStudio על `sderot-windows` LIVE/VERIFIED לפי README. Receipt דיבור ≠ אישור פרסום.  
 סטטוס host **עכשיו** = UNPROVEN בלי doctor חי בסשן.
 

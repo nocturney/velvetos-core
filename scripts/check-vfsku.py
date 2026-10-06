@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -24,7 +25,6 @@ LICENSE = ROOT / "packages" / "vlicense" / "GATE.md"
 
 ALLOWED_STATUS = {
     "empty",
-    "waiting-license",
     "waiting-slice",
     "lab",
     "ready",
@@ -38,7 +38,7 @@ REQUIRED_LOCKS = {
     "israeli-brand-stop",
 }
 ILS_NUMBER = re.compile(r"(?<!050-251)(?<!050–251)\d[\d.,]*\s*₪|₪\s*\d")
-NAMED_FIELDS = ("sourceUrl", "license", "licenseChecked")
+NAMED_FIELDS = ("sourceUrl",)
 READY_FIELDS = NAMED_FIELDS + ("sliceGrams", "sliceMinutes", "slicePath", "costChecked")
 
 
@@ -48,7 +48,7 @@ def fail(msg: str) -> None:
 
 
 def assert_no_ils(path: Path) -> None:
-    text = path.read_text()
+    text = path.read_text(encoding="utf-8")
     for m in ILS_NUMBER.finditer(text):
         snippet = text[max(0, m.start() - 20) : m.end() + 8]
         if "X ₪" in snippet:
@@ -63,7 +63,7 @@ def main() -> None:
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
-    data = json.loads(SHELF.read_text())
+    data = json.loads(SHELF.read_text(encoding="utf-8"))
     if data.get("name") != "vfsku-shelf":
         fail("SHELF.json name must be vfsku-shelf")
     if data.get("maxSlots") != 5:
@@ -107,27 +107,27 @@ def main() -> None:
         if slot.get("israeliBrandStop") is True and status not in {"blocked", "empty"}:
             fail(f"slot {sid} israeliBrandStop must be blocked")
 
-    gate = GATE.read_text()
-    for needle in ("SHELF.json", "FIRST-PRINT.md", "vfsku.py", "הורדה ≠", "vfsku.py scan", "TAG.md"):
+    gate = GATE.read_text(encoding="utf-8")
+    for needle in ("SHELF.json", "FIRST-PRINT.md", "vfsku.py", "provenance", "vfsku.py scan", "TAG.md"):
         if needle not in gate:
             fail(f"GATE.md must mention {needle}")
 
-    first = FIRST.read_text()
+    first = FIRST.read_text(encoding="utf-8")
     for needle in ("SHELF.json", "vlicense", "בלי חומרה", "python3 scripts/vfsku.py", "SHOP-CLOSE.md"):
         if needle not in first:
             fail(f"FIRST-PRINT.md must mention {needle}")
 
-    shop_close = SHOP_CLOSE.read_text()
+    shop_close = SHOP_CLOSE.read_text(encoding="utf-8")
     for needle in ("SHELF.json", "vfsku.py shop", "אין ספירה", "PATH.md"):
         if needle not in shop_close:
             fail(f"SHOP-CLOSE.md must mention {needle}")
 
-    convert_path = CONVERT_PATH.read_text()
+    convert_path = CONVERT_PATH.read_text(encoding="utf-8")
     for needle in ("SHELF.json", "מדף", "מינימום התאמה", "vfsku.py shop"):
         if needle not in convert_path:
             fail(f"vfconvert/PATH.md must mention shelf-first needle: {needle}")
 
-    cli_src = CLI.read_text()
+    cli_src = CLI.read_text(encoding="utf-8")
     if 'add_parser("shop"' not in cli_src and "add_parser('shop'" not in cli_src:
         fail("vfsku.py must expose a shop subcommand")
     if 'add_parser("scan"' not in cli_src and "add_parser('scan'" not in cli_src:
@@ -135,11 +135,15 @@ def main() -> None:
 
     import subprocess
 
+    child_env = os.environ.copy()
+    child_env["PYTHONUTF8"] = "1"
     sun = subprocess.run(
         [sys.executable, str(CLI), "scan", "--date", "2026-09-06"],
         cwd=ROOT,
         text=True,
+        encoding="utf-8",
         capture_output=True,
+        env=child_env,
     )
     if sun.returncode != 0 or "יום סריקה" not in (sun.stdout or ""):
         fail("vfsku.py scan on Sunday must say יום סריקה")
@@ -147,45 +151,38 @@ def main() -> None:
         [sys.executable, str(CLI), "scan", "--date", "2026-09-07"],
         cwd=ROOT,
         text=True,
+        encoding="utf-8",
         capture_output=True,
+        env=child_env,
     )
     if mon.returncode != 0 or "לא יום סריקה" not in (mon.stdout or ""):
         fail("vfsku.py scan on Monday must say לא יום סריקה")
 
-    lab = LAB.read_text()
+    lab = LAB.read_text(encoding="utf-8")
     if "print-in-place" not in lab.lower() and "קופסה" not in lab:
         fail("LAB.md must keep a print-in-place / box direction")
     if "חומרה" not in lab:
         fail("LAB.md must flag hardware as yellow")
 
-    tag = TAG.read_text()
+    tag = TAG.read_text(encoding="utf-8")
     for needle in ("Velvet Factory", "איסוף שדרות", "SHOP-CLOSE.md"):
         if needle not in tag:
             fail(f"TAG.md must mention {needle}")
 
-    license_gate = LICENSE.read_text()
-    if "Commercial License" not in license_gate and "מנוי יוצר" not in license_gate:
-        fail("vlicense/GATE.md must mention MakerWorld commercial membership")
-    if "הורדה" not in license_gate:
-        fail("vlicense/GATE.md must say download is not a license")
-    if "שינוי תנאי" not in license_gate and "התראת מערכת" not in license_gate:
-        fail("vlicense/GATE.md must re-check after MakerWorld term-change notification")
-    if "מחזור החיוב" not in license_gate:
-        fail("vlicense/GATE.md must mention billing-cycle end on cancel")
-    if "בינלאומי" not in license_gate:
-        fail("vlicense/GATE.md must mark international commercial vs Israeli brand")
-    if "TAG.md" not in license_gate:
-        fail("vlicense/GATE.md must point VF tags at vfsku/TAG.md")
-    if "CC BY-NC" not in license_gate and "NC" not in license_gate:
-        fail("vlicense/GATE.md must lock NC as not-for-sale")
+    license_gate = LICENSE.read_text(encoding="utf-8")
+    for needle in ("showcase", "יוצר/מותג ישראלי", "israeliBrandStop", "פיראט", "TAG.md"):
+        if needle not in license_gate:
+            fail(f"vlicense/GATE.md missing owner licensing policy marker: {needle}")
+    if "אינו blocker" not in license_gate and "אינו gate" not in license_gate:
+        fail("vlicense/GATE.md must keep non-Israeli model-license metadata non-blocking for showcase")
 
-    brief = BRIEF.read_text()
+    brief = BRIEF.read_text(encoding="utf-8")
     if "vfsku.py" not in brief:
         fail("vfops/BRIEF.md must hook slot 03 to vfsku.py")
-    if "vfsku.py" not in SLOTS.read_text():
+    if "vfsku.py" not in SLOTS.read_text(encoding="utf-8"):
         fail("BRIEF-SLOTS.md must hook slot 03 to vfsku.py")
 
-    week = WEEK.read_text()
+    week = WEEK.read_text(encoding="utf-8")
     for needle in ("MakerWorld", "אין שם להציע", "הורדה", "G004", "MAKERWORLD-SCAN", "vfsku.py scan"):
         if needle not in week:
             fail(f"vfsku/week.md missing {needle!r}")

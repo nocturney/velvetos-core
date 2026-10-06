@@ -1,6 +1,6 @@
 # Office v2 Phase 3B — Identity / Authorization / Credential Broker
 
-Status: **CONTRACT V0 FROZEN / IDENTITY + AUTHORIZATION LAB SMOKES PASS / CREDENTIAL LAB SMOKES IN PROGRESS / 1 LICENSE-DEFERRED / NO WINNER / NO PRODUCTION AUTHORITY CHANGE**
+Status: **CONTRACT V0 FROZEN / IDENTITY + AUTHORIZATION LAB SMOKES PASS / CREDENTIAL LAB SMOKES IN PROGRESS / ZITADEL ADMITTED / NO WINNER / NO PRODUCTION AUTHORITY CHANGE**
 
 Phase 3B treats security as three explicit roles rather than forcing one product to own identity, authorization and secrets:
 
@@ -38,7 +38,7 @@ Production credentials and production authority remain forbidden in LAB.
 
 Immutable NODE-A pins are frozen in runtime-pins-v0.json. Seven challengers pass the Phase 2 CANDIDATE→ADMITTED research gate and may proceed to isolated LAB smoke: Keycloak, authentik, OpenFGA, OPA, Cedar, Infisical and OpenBao.
 
-ZITADEL remains a technically credible identity candidate but is DEFERRED_WITH_REASON because its main repository is AGPL-3.0-only and Office v2 does not silently accept licensing obligations or choose a commercial license on the owner's behalf. The identity lane still has two admitted serious challengers.
+Owner decision 2026-10-06 resolves the prior ZITADEL licensing defer: AGPL obligations are accepted for the separate-service/API architecture, and modifications to ZITADEL itself may be open-sourced if required. ZITADEL is ADMITTED to isolated LAB smoke alongside Keycloak and authentik; this does not grant production authority or select a winner.
 
 Admission is not LAB validation, winner selection, SHADOW, PILOT or production promotion.
 
