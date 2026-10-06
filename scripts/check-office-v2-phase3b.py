@@ -160,7 +160,7 @@ def main() -> None:
         fail("ZITADEL license caveat missing")
 
     lab_authz = {"candidate-openfga", "candidate-opa", "candidate-cedar"}
-    lab_identity = {"candidate-keycloak", "candidate-authentik"}
+    lab_identity = {"candidate-zitadel", "candidate-keycloak", "candidate-authentik"}
     pending_admitted = expected_admitted - lab_authz - lab_identity
     for cid in lab_authz | lab_identity:
         item = by_id.get(cid) or {}
@@ -184,20 +184,20 @@ def main() -> None:
     if set(authz_status.get("lab_candidates") or []) != lab_authz:
         fail("authorization LAB candidate set mismatch")
     identity_status = ((lab_status.get("lanes") or {}).get("identity_provider") or {})
-    if identity_status.get("status") != "PARTIAL_LAB_SMOKE_PASS_ZITADEL_PENDING":
+    if identity_status.get("status") != "LAB_SMOKE_PASS_DESTRUCTIVE_FIXTURE_PENDING":
         fail("identity LAB status mismatch")
     if set(identity_status.get("lab_candidates") or []) != lab_identity:
         fail("identity LAB candidate set mismatch")
-    if set(identity_status.get("pending_candidates") or []) != {"candidate-zitadel"}:
-        fail("identity pending candidate set mismatch")
-    if len(identity_status.get("receipt_refs") or []) != 2 or len(identity_status.get("cleanup_refs") or []) != 2:
+    if identity_status.get("pending_candidates"):
+        fail("identity LAB must have no pending candidates after ZITADEL smoke")
+    if len(identity_status.get("receipt_refs") or []) != 3 or len(identity_status.get("cleanup_refs") or []) != 3:
         fail("identity LAB evidence refs incomplete")
 
     zit = by_id.get("candidate-zitadel") or {}
-    if zit.get("lifecycle_state") != "ADMITTED" or zit.get("decision_verdict") != "BENCHMARK_REQUIRED":
-        fail("ZITADEL registry state must be admitted/pending LAB smoke")
-    if zit.get("authority_role") != "NONE" or zit.get("runtime_verification") != "NOT_RUN":
-        fail("ZITADEL admitted state must have no authority and no runtime claim")
+    if zit.get("lifecycle_state") != "LAB" or zit.get("decision_verdict") != "LAB_VALIDATED":
+        fail("ZITADEL registry state must be LAB/LAB_VALIDATED after smoke PASS")
+    if zit.get("authority_role") != "NONE" or zit.get("runtime_verification") != "PASS":
+        fail("ZITADEL LAB state must have runtime PASS and no authority")
 
     shortlist = load(P3B / "identity-security-shortlist-v0.json")
     if shortlist.get("status") != "IDENTITY_AND_AUTHORIZATION_LANES_LAB_VALIDATED_CREDENTIAL_LANE_PENDING_NO_WINNER":
@@ -231,7 +231,7 @@ def main() -> None:
             if not lane.get("lab_smoke_ref"):
                 fail("authorization shortlist missing LAB smoke receipt")
         elif lane_id == "phase3b-identity-provider":
-            expected = {"candidate-zitadel":"ADMITTED","candidate-keycloak":"LAB","candidate-authentik":"LAB"}
+            expected = {"candidate-zitadel":"LAB","candidate-keycloak":"LAB","candidate-authentik":"LAB"}
             if lane.get("candidate_admission") != expected:
                 fail("identity shortlist admission state drift")
             refs = lane.get("lab_smoke_refs") or {}

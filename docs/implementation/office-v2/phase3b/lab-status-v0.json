@@ -1,29 +1,30 @@
 {
   "schema": "velvetos.office-v2.phase3b-lab-status.v0",
-  "captured_at": "2026-10-06T11:16:27.702171Z",
+  "captured_at": "2026-10-06T12:46:27.980753Z",
   "production_authority_change": false,
   "production_writer_change": false,
   "production_credentials_used": false,
   "winner_selected": false,
   "lanes": {
     "identity_provider": {
-      "status": "PARTIAL_LAB_SMOKE_PASS_ZITADEL_PENDING",
+      "status": "LAB_SMOKE_PASS_DESTRUCTIVE_FIXTURE_PENDING",
       "lab_candidates": [
+        "candidate-zitadel",
         "candidate-keycloak",
         "candidate-authentik"
       ],
       "deferred": [],
       "receipt_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/zitadel-lab-smoke-pass.json",
         "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/keycloak-lab-smoke-pass.json",
         "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authentik-lab-smoke-pass.json"
       ],
       "cleanup_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/zitadel-smoke-clean9-cleanup.json",
         "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/keycloak-smoke-task-cleanup.json",
         "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authentik-smoke-task-cleanup.json"
       ],
-      "pending_candidates": [
-        "candidate-zitadel"
-      ]
+      "pending_candidates": []
     },
     "authorization_policy": {
       "status": "LAB_SMOKE_PASS_DESTRUCTIVE_FIXTURE_PENDING",
@@ -43,5 +44,5 @@
       ]
     }
   },
-  "next_gate": "Complete ZITADEL and credential-broker LAB smokes, then run lane-specific destructive fixtures and normalized scorecards. No winner selection from admission smoke."
+  "next_gate": "Complete credential-broker LAB smokes, then run lane-specific destructive fixtures and normalized scorecards. No winner selection from admission smoke."
 }

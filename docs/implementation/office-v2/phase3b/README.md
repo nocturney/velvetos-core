@@ -1,6 +1,6 @@
 # Office v2 Phase 3B — Identity / Authorization / Credential Broker
 
-Status: **CONTRACT V0 FROZEN / IDENTITY + AUTHORIZATION LAB SMOKES PASS / CREDENTIAL LAB SMOKES IN PROGRESS / ZITADEL ADMITTED / NO WINNER / NO PRODUCTION AUTHORITY CHANGE**
+Status: **CONTRACT V0 FROZEN / IDENTITY + AUTHORIZATION LAB SMOKES PASS / CREDENTIAL LAB SMOKES IN PROGRESS / NO WINNER / NO PRODUCTION AUTHORITY CHANGE**
 
 Phase 3B treats security as three explicit roles rather than forcing one product to own identity, authorization and secrets:
 
@@ -36,9 +36,9 @@ Production credentials and production authority remain forbidden in LAB.
 
 ## Admission research
 
-Immutable NODE-A pins are frozen in runtime-pins-v0.json. Seven challengers pass the Phase 2 CANDIDATE→ADMITTED research gate and may proceed to isolated LAB smoke: Keycloak, authentik, OpenFGA, OPA, Cedar, Infisical and OpenBao.
+Immutable NODE-A pins are frozen in runtime-pins-v0.json. Eight challengers pass the Phase 2 CANDIDATE→ADMITTED research gate and may proceed to isolated LAB smoke: ZITADEL, Keycloak, authentik, OpenFGA, OPA, Cedar, Infisical and OpenBao.
 
-Owner decision 2026-10-06 resolves the prior ZITADEL licensing defer: AGPL obligations are accepted for the separate-service/API architecture, and modifications to ZITADEL itself may be open-sourced if required. ZITADEL is ADMITTED to isolated LAB smoke alongside Keycloak and authentik; this does not grant production authority or select a winner.
+Owner decision 2026-10-06 resolves the prior ZITADEL licensing defer: AGPL obligations are accepted for the separate-service/API architecture, and modifications to ZITADEL itself may be open-sourced if required. ZITADEL completed isolated LAB smoke successfully; this does not grant production authority or select a winner.
 
 Admission is not LAB validation, winner selection, SHADOW, PILOT or production promotion.
 
@@ -46,6 +46,6 @@ Admission is not LAB validation, winner selection, SHADOW, PILOT or production p
 
 Authorization lane admission smoke is PASS for OPA, OpenFGA and Cedar. The run used only synthetic inputs; OPA/OpenFGA had no host-port bindings, Cedar used the checksum-verified official 4.13.0 CLI asset, and teardown removed candidate containers/network before lifecycle promotion to LAB.
 
-Identity lane admission smoke is PASS for Keycloak and authentik. Both used synthetic service identities only, no host-port bindings, no production credentials, and no raw token/secret material in receipts. Keycloak proved client-credentials issuance plus wrong-secret and deleted-client denial; authentik proved client-credentials issuance plus wrong-secret denial and token revocation.
+Identity lane admission smoke is PASS for ZITADEL, Keycloak and authentik. All used synthetic service identities only, no production credentials, and no raw token/secret material in receipts. ZITADEL used an internal-only network with no host-port bindings and proved bootstrap identity, service-account creation, client-credentials issuance, wrong-secret denial, deletion and deleted-identity denial. Keycloak proved client-credentials issuance plus wrong-secret and deleted-client denial; authentik proved client-credentials issuance plus wrong-secret denial and token revocation.
 
 Credential-broker candidates remain independently gated by their own isolated LAB smoke evidence. No LAB smoke selects a winner or grants SHADOW/PILOT/production authority.
