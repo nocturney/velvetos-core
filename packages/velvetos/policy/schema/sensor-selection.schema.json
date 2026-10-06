@@ -6,6 +6,7 @@
   "required": [
     "schema_version", "mode", "registry", "unknown_path_behavior",
     "broad_change_behavior", "always_on_source", "broad_change_patterns",
+    "neutral_change_patterns", "machine_write_routing",
     "shadow_exit", "evidence", "stage3_preparation"
   ],
   "additionalProperties": false,
@@ -21,6 +22,35 @@
       "minItems": 1,
       "uniqueItems": true,
       "items": {"type": "string", "minLength": 1}
+    },
+    "neutral_change_patterns": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "machine_write_routing": {
+      "type": "object",
+      "required": [
+        "state_data_patterns", "domain_artifact_patterns", "post_push_full_suite_classes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "state_data_patterns": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "domain_artifact_patterns": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "post_push_full_suite_classes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["AUTHORITY_SECURITY", "CODE_CONTRACT", "DOMAIN_ARTIFACT", "STATE_DATA"]}
+        }
+      }
     },
     "shadow_exit": {
       "type": "object",
@@ -59,8 +89,9 @@
       "type": "object",
       "required": [
         "state", "activation_requires_shadow_exit_eligible", "activation_receipt",
-        "pull_request_execution", "main_push_execution", "selected_suite_runner",
-        "critical_always_on_preserved", "unknown_or_broad_change_behavior",
+        "pull_request_execution", "main_push_execution",
+        "machine_writer_precheck_execution", "machine_writer_post_push_execution",
+        "selected_suite_runner", "critical_always_on_preserved", "unknown_or_broad_change_behavior",
         "duplicate_direct_invocations_to_remove", "required_status_check",
         "branch_ruleset_id", "branch_ruleset_target_enforcement",
         "activation_duration_override", "rollback_mode"
@@ -72,6 +103,8 @@
         "activation_receipt": {"const": "packages/velvetos/policy/reports/stage3-activation-receipt.json"},
         "pull_request_execution": {"const": "SELECTED_SUITE"},
         "main_push_execution": {"const": "FULL_SUITE"},
+        "machine_writer_precheck_execution": {"const": "SELECTED_OR_FULL_BY_RISK"},
+        "machine_writer_post_push_execution": {"const": "REUSE_EXACT_SHA_PRECHECK_EXCEPT_AUTHORITY_SECURITY"},
         "selected_suite_runner": {"const": "scripts/check-all.py --selection sensor-selection.json"},
         "critical_always_on_preserved": {"const": true},
         "unknown_or_broad_change_behavior": {"const": "FULL_SUITE"},

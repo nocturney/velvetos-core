@@ -7,7 +7,8 @@
       "id": "check-agent-security-conformance",
       "path": "scripts/check-agent-security-conformance.py",
       "owns": [
-        "packages/vfharness/security/**"
+        "packages/vfharness/security/**",
+        "scripts/check-agent-security-conformance.py"
       ],
       "triggered_by": [
         "packages/vfharness/security/**",
@@ -33,7 +34,7 @@
       "id": "check-agent-surface-security",
       "path": "scripts/check-agent-surface-security.py",
       "owns": [
-        ".cursor/**"
+        "scripts/check-agent-surface-security.py"
       ],
       "triggered_by": [
         ".cursor/**",
@@ -58,6 +59,7 @@
       "path": "scripts/check-behavioral-evals.py",
       "owns": [
         "packages/vfharness/evals/**",
+        "scripts/check-behavioral-evals.py",
         "tools/promptfoo/**"
       ],
       "triggered_by": [
@@ -84,6 +86,7 @@
         "packages/vfgrowth/preflight/TEMPLATE.md",
         "packages/vfom/BRAND-ASSET-LOCK.md",
         "packages/vfom/tests/publication-prep-coldstart.json",
+        "scripts/check-brand-asset-cta-lock.py",
         "scripts/vf_send_preflight.py"
       ],
       "triggered_by": [
@@ -109,7 +112,9 @@
       "id": "check-brand-tokens",
       "path": "scripts/check-brand-tokens.py",
       "owns": [
-        "packages/vfbrand/**"
+        "packages/vfbrand/**",
+        "packages/vfom/**",
+        "scripts/check-brand-tokens.py"
       ],
       "triggered_by": [
         "packages/vfbrand/**",
@@ -133,6 +138,7 @@
       "path": "scripts/check-chat-cold-start-preflight.py",
       "owns": [
         "instances/velvet-factory/distribution/chatgpt-project/**",
+        "scripts/check-chat-cold-start-preflight.py",
         "scripts/vf_chat_cold_start_preflight.py",
         "scripts/vf_source_ingest.py"
       ],
@@ -158,7 +164,8 @@
       "id": "check-chat-runtime-bundle",
       "path": "scripts/check-chat-runtime-bundle.py",
       "owns": [
-        "instances/velvet-factory/distribution/chatgpt-project/ASSET-MANIFEST-v6.6.4.json"
+        "instances/velvet-factory/distribution/chatgpt-project/ASSET-MANIFEST-v6.6.4.json",
+        "scripts/check-chat-runtime-bundle.py"
       ],
       "triggered_by": [
         "instances/velvet-factory/distribution/chatgpt-project/ASSET-MANIFEST-v6.6.4.json",
@@ -180,10 +187,11 @@
       "id": "check-cli-anything-pilot",
       "path": "scripts/check-cli-anything-pilot.py",
       "owns": [
-        "packages/vfharness/devtools/**",
         "packages/vfharness/cost-preflight/**",
-        "scripts/vf_cli_anything.py",
-        "scripts/vf_cad.py"
+        "packages/vfharness/devtools/**",
+        "scripts/check-cli-anything-pilot.py",
+        "scripts/vf_cad.py",
+        "scripts/vf_cli_anything.py"
       ],
       "triggered_by": [
         "packages/vfharness/devtools/**",
@@ -209,7 +217,8 @@
       "id": "check-cloudflare-publish-fingerprint",
       "path": "scripts/check-cloudflare-publish-fingerprint.py",
       "owns": [
-        "packages/vfigos/**"
+        "packages/vfigos/**",
+        "scripts/check-cloudflare-publish-fingerprint.py"
       ],
       "triggered_by": [
         "packages/vfigos/**",
@@ -233,12 +242,14 @@
       "owns": [
         "automation/**",
         "packages/vfmem/**",
-        "scripts/**"
+        "scripts/check-cognee-integration.py",
+        "scripts/vfmem.py"
       ],
       "triggered_by": [
         "automation/**",
         "packages/vfmem/**",
-        "scripts/**"
+        "scripts/check-cognee-integration.py",
+        "scripts/vfmem.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -256,10 +267,12 @@
       "id": "check-commission-isolation",
       "path": "scripts/check-commission-isolation.py",
       "owns": [
-        "scripts/**"
+        "scripts/check-commission-isolation.py",
+        "scripts/commission_operational_gaps.py",
+        "scripts/sensor_isolation.py"
       ],
       "triggered_by": [
-        "scripts/**"
+        "scripts/check-commission-isolation.py"
       ],
       "depends_on": [
         "scripts/commission_operational_gaps.py",
@@ -281,15 +294,17 @@
       "path": "scripts/check-control-api.py",
       "owns": [
         "AGENTS.md",
-        "office/**",
+        "office/control-plane.json",
         "packages/velvetos_control_api/**",
-        "scripts/**"
+        "scripts/check-control-api.py",
+        "scripts/vf_control_api.py"
       ],
       "triggered_by": [
         "AGENTS.md",
-        "office/**",
+        "office/control-plane.json",
         "packages/velvetos_control_api/**",
-        "scripts/**"
+        "scripts/check-control-api.py",
+        "scripts/vf_control_api.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -307,25 +322,32 @@
       "id": "check-creative-autopilot",
       "path": "scripts/check-creative-autopilot.py",
       "owns": [
-        ".cursor/**",
+        ".cursor/skills/velvet-brand-guardian/SKILL.md",
+        ".cursor/skills/vf-content-sprint/SKILL.md",
         "constitution/**",
         "instances/**",
-        "packages/velvetos/**",
+        "packages/velvetos/modules/expert-media-director.md",
+        "packages/velvetos/policy/policy-registry.json",
         "packages/vfe2b/**",
         "packages/vfgraft/**",
         "packages/vfgrowth/**",
-        "packages/vfmedia/**",
-        "packages/vfom/**"
+        "packages/vfmedia/SKILL.md",
+        "packages/vfmedia/catalog.schema.json",
+        "packages/vfom/**",
+        "scripts/check-creative-autopilot.py"
       ],
       "triggered_by": [
-        ".cursor/**",
+        ".cursor/skills/velvet-brand-guardian/SKILL.md",
+        ".cursor/skills/vf-content-sprint/SKILL.md",
         "constitution/**",
         "instances/**",
-        "packages/velvetos/**",
+        "packages/velvetos/modules/expert-media-director.md",
+        "packages/velvetos/policy/policy-registry.json",
         "packages/vfe2b/**",
         "packages/vfgraft/**",
         "packages/vfgrowth/**",
-        "packages/vfmedia/**",
+        "packages/vfmedia/SKILL.md",
+        "packages/vfmedia/catalog.schema.json",
         "packages/vfom/**",
         "scripts/check-creative-autopilot.py"
       ],
@@ -347,6 +369,7 @@
       "id": "check-creative-master-bridge",
       "path": "scripts/check-creative-master-bridge.py",
       "owns": [
+        "scripts/check-creative-master-bridge.py",
         "scripts/vf_creative_master_bridge.py"
       ],
       "triggered_by": [
@@ -369,22 +392,49 @@
       "id": "check-creative-system",
       "path": "scripts/check-creative-system.py",
       "owns": [
-        ".cursor/**",
+        ".cursor/skills/velvet-brand-guardian/SKILL.md",
+        ".cursor/skills/velvet-creative-director/SKILL.md",
+        ".cursor/skills/velvet-media-librarian/SKILL.md",
+        ".cursor/skills/vf-cad-design-craft/SKILL.md",
+        ".cursor/skills/vf-content-sprint/SKILL.md",
+        ".cursor/skills/vf-dcc-modeling-craft/SKILL.md",
+        ".cursor/skills/vf-hebrew-copy/SKILL.md",
+        ".cursor/skills/vf-ig-music/SKILL.md",
+        ".cursor/skills/vf-image-design-craft/SKILL.md",
+        ".cursor/skills/vf-material-lookdev/SKILL.md",
+        ".cursor/skills/vf-post-production-craft/SKILL.md",
+        ".cursor/skills/vf-product-visualization-craft/SKILL.md",
+        ".cursor/skills/vf-technical-illustration-craft/SKILL.md",
+        ".cursor/skills/vf-vfx-compositing-craft/SKILL.md",
         "instances/**",
+        "packages/velvetos/policy/reports/stage6b-creative-readiness.json",
         "packages/vfcopy/**",
         "packages/vfom/**",
-        "packages/vfresearch/**",
-        "packages/velvetos/policy/reports/stage6b-creative-readiness.json",
+        "packages/vfresearch/MUSIC.md",
+        "scripts/check-creative-system.py",
         "scripts/generate-stage6b-creative-readiness-report.py"
       ],
       "triggered_by": [
-        ".cursor/**",
+        ".cursor/skills/velvet-brand-guardian/SKILL.md",
+        ".cursor/skills/velvet-creative-director/SKILL.md",
+        ".cursor/skills/velvet-media-librarian/SKILL.md",
+        ".cursor/skills/vf-cad-design-craft/SKILL.md",
+        ".cursor/skills/vf-content-sprint/SKILL.md",
+        ".cursor/skills/vf-dcc-modeling-craft/SKILL.md",
+        ".cursor/skills/vf-hebrew-copy/SKILL.md",
+        ".cursor/skills/vf-ig-music/SKILL.md",
+        ".cursor/skills/vf-image-design-craft/SKILL.md",
+        ".cursor/skills/vf-material-lookdev/SKILL.md",
+        ".cursor/skills/vf-post-production-craft/SKILL.md",
+        ".cursor/skills/vf-product-visualization-craft/SKILL.md",
+        ".cursor/skills/vf-technical-illustration-craft/SKILL.md",
+        ".cursor/skills/vf-vfx-compositing-craft/SKILL.md",
         "instances/**",
+        "packages/velvetos/policy/reports/stage6b-creative-readiness.json",
         "packages/vfcopy/**",
         "packages/vfom/**",
-        "packages/vfresearch/**",
+        "packages/vfresearch/MUSIC.md",
         "scripts/check-creative-system.py",
-        "packages/velvetos/policy/reports/stage6b-creative-readiness.json",
         "scripts/generate-stage6b-creative-readiness-report.py"
       ],
       "depends_on": [],
@@ -412,6 +462,7 @@
         "packages/vfgrowth/**",
         "packages/vfigos/**",
         "packages/vfom/**",
+        "scripts/check-creative-transformation-lock.py",
         "scripts/vf_send_preflight.py"
       ],
       "triggered_by": [
@@ -465,11 +516,13 @@
       "path": "scripts/check-delivery-approval.py",
       "owns": [
         "packages/vfigos/**",
-        "scripts/**"
+        "scripts/check-delivery-approval.py",
+        "scripts/vf_project_preflight.py"
       ],
       "triggered_by": [
         "packages/vfigos/**",
-        "scripts/**"
+        "scripts/check-delivery-approval.py",
+        "scripts/vf_project_preflight.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -489,12 +542,26 @@
       "owns": [
         "README.md",
         "packages/vfresearch/DEMAND-SIGNALS.md",
-        "scripts/**"
+        "scripts/*demand*signals.py",
+        "scripts/check-demand-signals-dormant.py",
+        "scripts/check-vfresearch.py"
       ],
       "triggered_by": [
+        "**/*.cron",
+        "**/*.json",
+        "**/*.ps1",
+        "**/*.py",
+        "**/*.service",
+        "**/*.sh",
+        "**/*.timer",
+        "**/*.toml",
+        "**/*.yaml",
+        "**/*.yml",
         "README.md",
         "packages/vfresearch/DEMAND-SIGNALS.md",
-        "scripts/**"
+        "scripts/*demand*signals.py",
+        "scripts/check-demand-signals-dormant.py",
+        "scripts/check-vfresearch.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -513,11 +580,12 @@
       "path": "scripts/check-ecosystem-radar-phase9.py",
       "owns": [
         "packages/vfharness/state/ecosystem-radar-phase9-2026-09-27.json",
-        "packages/vfresearch/**"
+        "packages/vfresearch/BEST-SKILLS.json",
+        "scripts/check-ecosystem-radar-phase9.py"
       ],
       "triggered_by": [
         "packages/vfharness/state/ecosystem-radar-phase9-2026-09-27.json",
-        "packages/vfresearch/**",
+        "packages/vfresearch/BEST-SKILLS.json",
         "scripts/check-ecosystem-radar-phase9.py"
       ],
       "depends_on": [],
@@ -536,12 +604,13 @@
       "id": "check-engineering-quality",
       "path": "scripts/check-engineering-quality.py",
       "owns": [
+        ".cursor/skills/vf-diagram-design/**",
+        ".cursor/skills/vf-web-ui-quality/**",
+        ".diagram-design",
+        "instances/velvet-factory/.diagram-design",
         "packages/vfharness/devtools/**",
         "packages/vfharness/playbooks/**",
-        ".cursor/skills/vf-web-ui-quality/**",
-        ".cursor/skills/vf-diagram-design/**",
-        ".diagram-design",
-        "instances/velvet-factory/.diagram-design"
+        "scripts/check-engineering-quality.py"
       ],
       "triggered_by": [
         "packages/vfharness/devtools/**",
@@ -568,27 +637,32 @@
       "id": "check-gmail-brief-send",
       "path": "scripts/check-gmail-brief-send.py",
       "owns": [
-        ".github/**",
-        "packages/vfops/**",
-        "packages/velvetos/policy/gmail.send.json",
+        ".github/workflows/gmail-brief-send.yml",
+        "constitution/SEND.md",
+        "constitution/VISIBLE_TEXT.md",
+        "packages/velvetos/policy/action-receipt-test-vectors.json",
         "packages/velvetos/policy/gmail-send-test-vectors.json",
-        "scripts/vf_gmail_send_policy.py",
-        "scripts/generate-stage4e-gmail-send-report.py",
-        "packages/velvetos/policy/reports/stage4e-gmail-send-simplification.json"
-      ],
-      "triggered_by": [
-        ".github/**",
+        "packages/velvetos/policy/gmail.send.json",
+        "packages/velvetos/policy/reports/stage4e-gmail-send-simplification.json",
         "packages/vfops/**",
         "scripts/check-gmail-brief-send.py",
-        "packages/velvetos/policy/gmail.send.json",
-        "packages/velvetos/policy/gmail-send-test-vectors.json",
-        "scripts/vf_gmail_send_policy.py",
-        "packages/velvetos/policy/action-receipt-test-vectors.json",
         "scripts/generate-stage4e-gmail-send-report.py",
-        "packages/velvetos/policy/reports/stage4e-gmail-send-simplification.json",
-        "scripts/vf_send_preflight.py",
+        "scripts/vf_gmail_send_policy.py",
+        "scripts/vf_send_preflight.py"
+      ],
+      "triggered_by": [
+        ".github/workflows/gmail-brief-send.yml",
         "constitution/SEND.md",
-        "constitution/VISIBLE_TEXT.md"
+        "constitution/VISIBLE_TEXT.md",
+        "packages/velvetos/policy/action-receipt-test-vectors.json",
+        "packages/velvetos/policy/gmail-send-test-vectors.json",
+        "packages/velvetos/policy/gmail.send.json",
+        "packages/velvetos/policy/reports/stage4e-gmail-send-simplification.json",
+        "packages/vfops/**",
+        "scripts/check-gmail-brief-send.py",
+        "scripts/generate-stage4e-gmail-send-report.py",
+        "scripts/vf_gmail_send_policy.py",
+        "scripts/vf_send_preflight.py"
       ],
       "depends_on": [],
       "enforces": [
@@ -608,7 +682,8 @@
       "id": "check-grok-boot-hardening",
       "path": "scripts/check-grok-boot-hardening.py",
       "owns": [
-        "packages/vfigos/**"
+        "packages/vfigos/**",
+        "scripts/check-grok-boot-hardening.py"
       ],
       "triggered_by": [
         "packages/vfigos/**",
@@ -631,7 +706,10 @@
       "path": "scripts/check-grok-provider-readback.py",
       "owns": [
         "automation/grok/**",
-        "packages/vfharness/state/runtime/grok-production-scheduler.json"
+        "packages/vfharness/runtime/proof-scope.json",
+        "packages/vfharness/state/runtime/grok-production-scheduler.json",
+        "scripts/check-grok-provider-readback.py",
+        "scripts/vf_runtime_receipt_policy.py"
       ],
       "triggered_by": [
         "automation/grok/**",
@@ -656,28 +734,38 @@
       "id": "check-hq-overlay",
       "path": "scripts/check-hq-overlay.py",
       "owns": [
+        ".github/workflows/velvetos-weekly-deck.yml",
         "constitution/**",
+        "docs/weekly-deck/**",
         "packages/chatgpt-embed-map.json",
         "packages/manifest.json",
         "packages/vfbriefux/**",
+        "packages/vfbriefux/hq/weekly-deck.bento-doc.json",
         "packages/vfcopy/**",
         "packages/vfgrowth/**",
         "packages/vfinsights/**",
         "packages/vfops/**",
+        "scripts/check-hq-overlay.py",
+        "scripts/sensor_isolation.py",
         "scripts/vendor-origin-packs.sh",
+        "scripts/vf_weekly_deck.py",
         "scripts/vfops_loop.py"
       ],
       "triggered_by": [
+        ".github/workflows/velvetos-weekly-deck.yml",
         "constitution/**",
+        "docs/weekly-deck/**",
         "packages/chatgpt-embed-map.json",
         "packages/manifest.json",
         "packages/vfbriefux/**",
+        "packages/vfbriefux/hq/weekly-deck.bento-doc.json",
         "packages/vfcopy/**",
         "packages/vfgrowth/**",
         "packages/vfinsights/**",
         "packages/vfops/**",
         "scripts/check-hq-overlay.py",
         "scripts/vendor-origin-packs.sh",
+        "scripts/vf_weekly_deck.py",
         "scripts/vfops_loop.py"
       ],
       "depends_on": [
@@ -698,16 +786,22 @@
       "id": "check-hyperframes-backend",
       "path": "scripts/check-hyperframes-backend.py",
       "owns": [
-        ".cursor/**",
+        ".cursor/skills/vf-content-sprint/SKILL.md",
         "packages/vfmcp/**",
         "packages/vfom/**",
-        "scripts/**"
+        "scripts/bootstrap-edge-host-windows.ps1",
+        "scripts/bootstrap-hyperframes-host-macos.sh",
+        "scripts/check-hyperframes-backend.py",
+        "scripts/vf_hyperframes.py"
       ],
       "triggered_by": [
-        ".cursor/**",
+        ".cursor/skills/vf-content-sprint/SKILL.md",
         "packages/vfmcp/**",
         "packages/vfom/**",
-        "scripts/**"
+        "scripts/bootstrap-edge-host-windows.ps1",
+        "scripts/bootstrap-hyperframes-host-macos.sh",
+        "scripts/check-hyperframes-backend.py",
+        "scripts/vf_hyperframes.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -725,12 +819,13 @@
       "id": "check-instagram-content-decision",
       "path": "scripts/check-instagram-content-decision.py",
       "owns": [
-        ".cursor/**",
+        ".cursor/skills/vf-content-sprint/SKILL.md",
         "packages/vfe2b/**",
-        "packages/vfom/**"
+        "packages/vfom/**",
+        "scripts/check-instagram-content-decision.py"
       ],
       "triggered_by": [
-        ".cursor/**",
+        ".cursor/skills/vf-content-sprint/SKILL.md",
         "packages/vfe2b/**",
         "packages/vfom/**",
         "scripts/check-instagram-content-decision.py"
@@ -751,9 +846,10 @@
       "id": "check-laya-shadow",
       "path": "scripts/check-laya-shadow.py",
       "owns": [
+        "packages/vfharness/cost-preflight/laya-*.json",
         "packages/vfharness/evals/laya-shadow-dataset.jsonl",
         "packages/vfharness/state/laya-shadow-*.json",
-        "packages/vfharness/cost-preflight/laya-*.json",
+        "scripts/check-laya-shadow.py",
         "scripts/run-laya-shadow.py"
       ],
       "triggered_by": [
@@ -779,11 +875,18 @@
       "id": "check-learning-lifecycle",
       "path": "scripts/check-learning-lifecycle.py",
       "owns": [
+        ".cursor/rules/velvet-factory-desk.mdc",
+        ".cursor/skills/vf-daily-learning/SKILL.md",
         ".github/workflows/office-control-plane.yml",
-        "packages/vfharness/state/learning-candidates/**",
-        "packages/vfharness/playbooks/learning-lifecycle.md",
+        "packages/velvetos/modules/office-learning.md",
         "packages/velvetos/policy/memory-learning-lifecycle.json",
         "packages/velvetos/policy/reports/stage7b-memory-learning-lifecycle.json",
+        "packages/vfharness/EMBED.md",
+        "packages/vfharness/playbooks/learning-lifecycle.md",
+        "packages/vfharness/state/learning-candidates/**",
+        "packages/vfmem/MEMORY-UPDATE.md",
+        "packages/vfops/hq/DAILY-RETRO.md",
+        "scripts/check-learning-lifecycle.py",
         "scripts/generate-stage7b-memory-learning-lifecycle.py",
         "scripts/vf_learning.py"
       ],
@@ -819,13 +922,16 @@
       "id": "check-living-docs",
       "path": "scripts/check-living-docs.py",
       "owns": [
+        ".github/workflows/readme-system-pulse.yml",
         "AGENTS.md",
         "README.md",
         "docs/SHARED-WORK-COORDINATION.md",
         "packages/vfharness/LIVING-DOCS.md",
-        "packages/vfharness/runtime/expected-components.json"
+        "packages/vfharness/runtime/expected-components.json",
+        "scripts/check-living-docs.py"
       ],
       "triggered_by": [
+        ".github/workflows/readme-system-pulse.yml",
         "AGENTS.md",
         "README.md",
         "docs/SHARED-WORK-COORDINATION.md",
@@ -849,24 +955,39 @@
       "id": "check-living-studio",
       "path": "scripts/check-living-studio.py",
       "owns": [
+        ".cursor/skills/vf-living-studio/SKILL.md",
         "AGENTS.md",
-        "office/**",
+        "office/control-plane.json",
+        "office/control/**",
+        "office/learning/failure-museum/entries.jsonl",
+        "office/world-model.db",
         "packages/manifest.json",
-        "packages/velvetos/**",
+        "packages/velvetos/living-studio/**",
+        "packages/velvetos/schema/events.catalog.json",
         "packages/vfcopy/**",
-        "packages/vfharness/**",
-        "packages/vfmedia/**",
-        "scripts/**"
+        "packages/vfharness/playbooks/**",
+        "packages/vfmedia/INTAKE.md",
+        "scripts/check-all.py",
+        "scripts/check-living-studio.py",
+        "scripts/sensor_isolation.py",
+        "scripts/vf_living_studio.py"
       ],
       "triggered_by": [
+        ".cursor/skills/vf-living-studio/SKILL.md",
         "AGENTS.md",
-        "office/**",
+        "office/control-plane.json",
+        "office/control/**",
+        "office/learning/failure-museum/entries.jsonl",
+        "office/world-model.db",
         "packages/manifest.json",
-        "packages/velvetos/**",
+        "packages/velvetos/living-studio/**",
+        "packages/velvetos/schema/events.catalog.json",
         "packages/vfcopy/**",
-        "packages/vfharness/**",
-        "packages/vfmedia/**",
-        "scripts/**"
+        "packages/vfharness/playbooks/**",
+        "packages/vfmedia/INTAKE.md",
+        "scripts/check-all.py",
+        "scripts/check-living-studio.py",
+        "scripts/vf_living_studio.py"
       ],
       "depends_on": [
         "scripts/sensor_isolation.py"
@@ -886,7 +1007,7 @@
       "id": "check-machine-writers",
       "path": "scripts/check-machine-writers.py",
       "owns": [
-        ".github/**"
+        "scripts/check-machine-writers.py"
       ],
       "triggered_by": [
         ".github/**",
@@ -908,7 +1029,8 @@
       "id": "check-memory-rationalization",
       "path": "scripts/check-memory-rationalization.py",
       "owns": [
-        "packages/vfharness/state/memory-*.json"
+        "packages/vfharness/state/memory-*.json",
+        "scripts/check-memory-rationalization.py"
       ],
       "triggered_by": [
         "packages/vfharness/state/memory-*.json",
@@ -931,13 +1053,12 @@
       "path": "scripts/check-morning-green.py",
       "owns": [
         "automation/**",
-        "packages/vfbriefux/**",
         "packages/vfigos/**",
-        "packages/vfops/**"
+        "packages/vfops/**",
+        "scripts/check-morning-green.py"
       ],
       "triggered_by": [
         "automation/**",
-        "packages/vfbriefux/**",
         "packages/vfigos/**",
         "packages/vfops/**",
         "scripts/check-morning-green.py"
@@ -958,31 +1079,31 @@
       "id": "check-no-new-recurring-cost",
       "path": "scripts/check-no-new-recurring-cost.py",
       "owns": [
-        "scripts/**",
         "constitution/NO_NEW_RECURRING_COST.md",
+        "packages/velvetos/policy/action-receipt-test-vectors.json",
+        "packages/velvetos/policy/cost-envelope-test-vectors.json",
+        "packages/velvetos/policy/reports/stage4g-cost-envelopes.json",
+        "packages/velvetos/policy/schema/cost-envelope.schema.json",
+        "packages/vfharness/cost-envelopes/**",
         "packages/vfharness/cost-policy.json",
         "packages/vfharness/cost-preflight/**",
-        "packages/vfharness/cost-envelopes/**",
-        "packages/velvetos/policy/schema/cost-envelope.schema.json",
-        "packages/velvetos/policy/cost-envelope-test-vectors.json",
-        "packages/velvetos/policy/action-receipt-test-vectors.json",
-        "scripts/vf_cost_preflight.py",
-        "scripts/vf_cost_envelope.py",
+        "scripts/check-no-new-recurring-cost.py",
         "scripts/generate-stage4g-cost-envelope-report.py",
-        "packages/velvetos/policy/reports/stage4g-cost-envelopes.json"
+        "scripts/vf_cost_envelope.py",
+        "scripts/vf_cost_preflight.py"
       ],
       "triggered_by": [
-        "scripts/**",
         "constitution/NO_NEW_RECURRING_COST.md",
+        "packages/velvetos/policy/action-receipt-test-vectors.json",
+        "packages/velvetos/policy/cost-envelope-test-vectors.json",
+        "packages/velvetos/policy/reports/stage4g-cost-envelopes.json",
+        "packages/velvetos/policy/schema/cost-envelope.schema.json",
+        "packages/vfharness/cost-envelopes/**",
         "packages/vfharness/cost-policy.json",
         "packages/vfharness/cost-preflight/**",
-        "packages/vfharness/cost-envelopes/**",
-        "packages/velvetos/policy/schema/cost-envelope.schema.json",
-        "packages/velvetos/policy/cost-envelope-test-vectors.json",
-        "packages/velvetos/policy/action-receipt-test-vectors.json",
-        "scripts/vf_cost_envelope.py",
+        "scripts/check-no-new-recurring-cost.py",
         "scripts/generate-stage4g-cost-envelope-report.py",
-        "packages/velvetos/policy/reports/stage4g-cost-envelopes.json"
+        "scripts/vf_cost_envelope.py"
       ],
       "depends_on": [
         "scripts/vf_cost_preflight.py"
@@ -1006,6 +1127,7 @@
       "owns": [
         "packages/vfharness/observability/**",
         "packages/vfharness/state/observability-phase2-*.json",
+        "scripts/check-observability.py",
         "tools/observability/**"
       ],
       "triggered_by": [
@@ -1032,26 +1154,39 @@
       "owns": [
         "AGENTS.md",
         "constitution/**",
-        "docs/**",
-        "office/**",
+        "docs/MEDIA-VAULT.md",
+        "office/control-plane.json",
+        "office/control/**",
+        "office/ledger/README.md",
+        "office/ledger/live/jobs.csv",
+        "office/ledger/templates/jobs.csv",
+        "office/sources-of-truth.json",
         "packages/vfgrowth/**",
-        "packages/vfharness/**",
+        "packages/vfharness/dead-letter/**",
         "packages/vfigos/**",
-        "packages/vfmedia/**",
+        "packages/vfmedia/catalog.json",
         "packages/vfops/**",
-        "scripts/**"
+        "scripts/check-office-control-plane.py",
+        "scripts/sensor_isolation.py",
+        "scripts/vf_control_plane.py"
       ],
       "triggered_by": [
         "AGENTS.md",
         "constitution/**",
-        "docs/**",
-        "office/**",
+        "docs/MEDIA-VAULT.md",
+        "office/control-plane.json",
+        "office/control/**",
+        "office/ledger/README.md",
+        "office/ledger/live/jobs.csv",
+        "office/ledger/templates/jobs.csv",
+        "office/sources-of-truth.json",
         "packages/vfgrowth/**",
-        "packages/vfharness/**",
+        "packages/vfharness/dead-letter/**",
         "packages/vfigos/**",
-        "packages/vfmedia/**",
+        "packages/vfmedia/catalog.json",
         "packages/vfops/**",
-        "scripts/**"
+        "scripts/check-office-control-plane.py",
+        "scripts/vf_control_plane.py"
       ],
       "depends_on": [
         "scripts/sensor_isolation.py"
@@ -1071,22 +1206,24 @@
       "id": "check-office-watchdog",
       "path": "scripts/check-office-watchdog.py",
       "owns": [
-        ".cursor/**",
         "constitution/**",
-        "office/**",
+        "office/control/**",
         "packages/vfgrowth/**",
         "packages/vfigos/**",
         "packages/vfops/**",
-        "scripts/**"
+        "scripts/check-office-watchdog.py",
+        "scripts/vf_control_plane.py",
+        "scripts/vf_office_watchdog.py"
       ],
       "triggered_by": [
-        ".cursor/**",
         "constitution/**",
-        "office/**",
+        "office/control/**",
         "packages/vfgrowth/**",
         "packages/vfigos/**",
         "packages/vfops/**",
-        "scripts/**"
+        "scripts/check-office-watchdog.py",
+        "scripts/vf_control_plane.py",
+        "scripts/vf_office_watchdog.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -1106,6 +1243,7 @@
       "owns": [
         "docs/implementation/office-v2/phase0/**",
         "packages/vfharness/state/office-v2-phase0-20261005/**",
+        "scripts/check-office-v2-phase0.py",
         "scripts/vf_office_v2_continuity.py",
         "scripts/vf_office_v2_migration_console.py"
       ],
@@ -1134,11 +1272,12 @@
       "owns": [
         "docs/implementation/office-v2/phase1/**",
         "packages/vfharness/state/office-v2-phase1-20261005/**",
-        "tools/office-v2-lab/**",
+        "scripts/check-office-v2-phase1.py",
         "scripts/vf_office_v2_lab_doctor.py",
         "scripts/vf_office_v2_lab_lifecycle.py",
         "scripts/vf_office_v2_node_manifest.py",
-        "scripts/vf_office_v2_trace_fixture.py"
+        "scripts/vf_office_v2_trace_fixture.py",
+        "tools/office-v2-lab/**"
       ],
       "triggered_by": [
         "docs/implementation/office-v2/phase1/**",
@@ -1168,6 +1307,7 @@
       "owns": [
         "docs/implementation/office-v2/phase2/**",
         "packages/vfharness/state/office-v2-phase2-20261006/**",
+        "scripts/check-office-v2-phase2.py",
         "scripts/vf_office_v2_golden_fixture.py"
       ],
       "triggered_by": [
@@ -1195,7 +1335,8 @@
       "path": "scripts/check-office-v2-phase3a.py",
       "owns": [
         "docs/implementation/office-v2/phase3/**",
-        "packages/vfharness/state/office-v2-phase3a-20261006/**"
+        "packages/vfharness/state/office-v2-phase3a-20261006/**",
+        "scripts/check-office-v2-phase3a.py"
       ],
       "triggered_by": [
         "docs/implementation/office-v2/phase3/**",
@@ -1223,7 +1364,8 @@
         "README.md",
         "packages/vfbriefux/FEED-SOURCE.json",
         "packages/vfigos/OPENPOST.json",
-        "packages/vfigos/OPENPOST.md"
+        "packages/vfigos/OPENPOST.md",
+        "scripts/check-openpost-status.py"
       ],
       "triggered_by": [
         "README.md",
@@ -1248,30 +1390,32 @@
       "id": "check-organic-growth",
       "path": "scripts/check-organic-growth.py",
       "owns": [
-        ".cursor/**",
+        ".cursor/skills/vf-organic-growth/SKILL.md",
         "AGENTS.md",
         "constitution/**",
-        "packages/velvetos/**",
-        "packages/vfbriefux/**",
+        "packages/velvetos/schema/events.catalog.json",
+        "packages/vfbriefux/hq/GROWTH-BRIEF.md",
         "packages/vfgrowth/**",
         "packages/vfinsights/**",
         "packages/vfops/**",
         "packages/vfprod/**",
         "packages/vfsales/**",
-        "scripts/**"
+        "scripts/check-organic-growth.py",
+        "scripts/sensor_isolation.py",
+        "scripts/vf_organic_growth.py"
       ],
       "triggered_by": [
-        ".cursor/**",
+        ".cursor/skills/vf-organic-growth/SKILL.md",
         "AGENTS.md",
         "constitution/**",
-        "packages/velvetos/**",
-        "packages/vfbriefux/**",
+        "packages/velvetos/schema/events.catalog.json",
+        "packages/vfbriefux/hq/GROWTH-BRIEF.md",
         "packages/vfgrowth/**",
         "packages/vfinsights/**",
         "packages/vfops/**",
         "packages/vfprod/**",
         "packages/vfsales/**",
-        "scripts/**"
+        "scripts/check-organic-growth.py"
       ],
       "depends_on": [
         "scripts/sensor_isolation.py",
@@ -1298,20 +1442,26 @@
       "owns": [
         "AGENTS.md",
         "README.md",
-        "docs/**",
+        "docs/BACKUP.md",
+        "docs/ORIGIN-SLUGS.md",
         "packages/README.md",
         "packages/manifest.json",
         "packages/vfmem/**",
-        "scripts/**"
+        "scripts/check-origin-slugs.py",
+        "scripts/discover-origin-slugs.py",
+        "scripts/vendor-origin-packs.sh"
       ],
       "triggered_by": [
         "AGENTS.md",
         "README.md",
-        "docs/**",
+        "docs/BACKUP.md",
+        "docs/ORIGIN-SLUGS.md",
         "packages/README.md",
         "packages/manifest.json",
         "packages/vfmem/**",
-        "scripts/**"
+        "scripts/check-origin-slugs.py",
+        "scripts/discover-origin-slugs.py",
+        "scripts/vendor-origin-packs.sh"
       ],
       "depends_on": [],
       "enforces": [],
@@ -1330,15 +1480,15 @@
       "path": "scripts/check-policy-architecture.py",
       "owns": [
         "instances/**",
-        "packages/velvetos/**",
+        "packages/velvetos/policy/**",
         "packages/vfigos/**",
-        "scripts/**"
+        "scripts/check-policy-architecture.py"
       ],
       "triggered_by": [
         "instances/**",
         "packages/velvetos/**",
         "packages/vfigos/**",
-        "scripts/**"
+        "scripts/check-policy-architecture.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -1356,16 +1506,17 @@
       "id": "check-production-content",
       "path": "scripts/check-production-content.py",
       "owns": [
-        "office/**",
+        "office/control/followups.json",
         "packages/vfgrowth/**",
         "packages/vfprod/**",
-        "scripts/**"
+        "scripts/check-production-content.py",
+        "scripts/vf_control_plane.py"
       ],
       "triggered_by": [
-        "office/**",
+        "office/control/followups.json",
         "packages/vfgrowth/**",
         "packages/vfprod/**",
-        "scripts/**"
+        "scripts/check-production-content.py"
       ],
       "depends_on": [
         "scripts/vf_control_plane.py"
@@ -1385,16 +1536,19 @@
       "id": "check-project-bundle",
       "path": "scripts/check-project-bundle.py",
       "owns": [
-        "scripts/**",
-        "instances/velvet-factory/distribution/chatgpt-project/LATEST.json",
         "instances/velvet-factory/distribution/chatgpt-project/CHAT-NATIVE-EDITOR-ROUTE.md",
-        "instances/velvet-factory/distribution/chatgpt-project/PROJECT-INSTRUCTIONS-*.txt"
+        "instances/velvet-factory/distribution/chatgpt-project/LATEST.json",
+        "instances/velvet-factory/distribution/chatgpt-project/PROJECT-INSTRUCTIONS-*.txt",
+        "scripts/check-project-bundle.py",
+        "scripts/vf_project_bundle.py",
+        "scripts/vf_project_preflight.py",
+        "scripts/vf_publication_evidence.py"
       ],
       "triggered_by": [
-        "scripts/**",
-        "instances/velvet-factory/distribution/chatgpt-project/LATEST.json",
         "instances/velvet-factory/distribution/chatgpt-project/CHAT-NATIVE-EDITOR-ROUTE.md",
-        "instances/velvet-factory/distribution/chatgpt-project/PROJECT-INSTRUCTIONS-*.txt"
+        "instances/velvet-factory/distribution/chatgpt-project/LATEST.json",
+        "instances/velvet-factory/distribution/chatgpt-project/PROJECT-INSTRUCTIONS-*.txt",
+        "scripts/check-project-bundle.py"
       ],
       "depends_on": [
         "scripts/vf_project_bundle.py",
@@ -1416,32 +1570,66 @@
       "id": "check-project-request-gate",
       "path": "scripts/check-project-request-gate.py",
       "owns": [
-        "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
-        "packages/velvetos/PROJECT-REQUEST-GATE.md",
-        "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json",
-        "scripts/**",
-        "packages/velvetos/policy/reports/stage5a-context-locality-baseline.json",
-        "packages/velvetos/policy/reports/stage5a-context-locality.json",
-        "packages/velvetos/policy/reports/stage5c-workspace-distribution.json"
-      ],
-      "triggered_by": [
-        "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
-        "packages/velvetos/PROJECT-REQUEST-GATE.md",
-        "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json",
-        "scripts/**",
+        ".cursor/skills/vf-cad-design-craft/SKILL.md",
+        ".cursor/skills/vf-dcc-modeling-craft/SKILL.md",
+        ".cursor/skills/vf-image-design-craft/SKILL.md",
+        ".cursor/skills/vf-material-lookdev/SKILL.md",
+        ".cursor/skills/vf-post-production-craft/SKILL.md",
+        ".cursor/skills/vf-product-visualization-craft/SKILL.md",
+        ".cursor/skills/vf-technical-illustration-craft/SKILL.md",
+        ".cursor/skills/vf-vfx-compositing-craft/SKILL.md",
         "AGENTS.md",
         "packages/**/AGENTS.md",
+        "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
+        "packages/velvetos/PROJECT-REQUEST-GATE.md",
         "packages/velvetos/policy/reports/stage5a-context-locality-baseline.json",
         "packages/velvetos/policy/reports/stage5a-context-locality.json",
         "packages/velvetos/policy/reports/stage5c-workspace-distribution.json",
+        "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json",
+        "scripts/check-project-request-gate.py",
+        "scripts/generate-stage5a-context-locality-baseline.py",
+        "scripts/generate-stage5a-context-locality-report.py",
+        "scripts/generate-stage5c-workspace-distribution-report.py",
+        "scripts/verify-bundle.ps1",
+        "scripts/vf_chat_cold_start_preflight.py",
+        "scripts/vf_creative_master_bridge.py",
+        "scripts/vf_fabrication_router.py",
+        "scripts/vf_media_integrity.py",
+        "scripts/vf_media_limits.py",
+        "scripts/vf_project_bundle.py",
+        "scripts/vf_project_preflight.py",
+        "scripts/vf_publication_evidence.py",
+        "scripts/vf_source_ingest.py"
+      ],
+      "triggered_by": [
         ".cursor/skills/vf-cad-design-craft/SKILL.md",
         ".cursor/skills/vf-dcc-modeling-craft/SKILL.md",
-        ".cursor/skills/vf-material-lookdev/SKILL.md",
-        ".cursor/skills/vf-product-visualization-craft/SKILL.md",
-        ".cursor/skills/vf-post-production-craft/SKILL.md",
-        ".cursor/skills/vf-vfx-compositing-craft/SKILL.md",
         ".cursor/skills/vf-image-design-craft/SKILL.md",
-        ".cursor/skills/vf-technical-illustration-craft/SKILL.md"
+        ".cursor/skills/vf-material-lookdev/SKILL.md",
+        ".cursor/skills/vf-post-production-craft/SKILL.md",
+        ".cursor/skills/vf-product-visualization-craft/SKILL.md",
+        ".cursor/skills/vf-technical-illustration-craft/SKILL.md",
+        ".cursor/skills/vf-vfx-compositing-craft/SKILL.md",
+        "AGENTS.md",
+        "packages/**/AGENTS.md",
+        "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
+        "packages/velvetos/PROJECT-REQUEST-GATE.md",
+        "packages/velvetos/policy/reports/stage5a-context-locality-baseline.json",
+        "packages/velvetos/policy/reports/stage5a-context-locality.json",
+        "packages/velvetos/policy/reports/stage5c-workspace-distribution.json",
+        "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json",
+        "scripts/check-project-request-gate.py",
+        "scripts/generate-stage5a-context-locality-baseline.py",
+        "scripts/generate-stage5a-context-locality-report.py",
+        "scripts/generate-stage5c-workspace-distribution-report.py",
+        "scripts/verify-bundle.ps1",
+        "scripts/vf_chat_cold_start_preflight.py",
+        "scripts/vf_creative_master_bridge.py",
+        "scripts/vf_fabrication_router.py",
+        "scripts/vf_media_integrity.py",
+        "scripts/vf_media_limits.py",
+        "scripts/vf_project_bundle.py",
+        "scripts/vf_source_ingest.py"
       ],
       "depends_on": [
         "scripts/vf_project_preflight.py",
@@ -1464,10 +1652,11 @@
       "id": "check-project669-publication",
       "path": "scripts/check-project669-publication.py",
       "owns": [
-        "scripts/**"
+        "scripts/check-project669-publication.py",
+        "scripts/vf_project669_publication.py"
       ],
       "triggered_by": [
-        "scripts/**"
+        "scripts/check-project669-publication.py"
       ],
       "depends_on": [
         "scripts/vf_project669_publication.py"
@@ -1489,17 +1678,18 @@
       "id": "check-public-cta",
       "path": "scripts/check-public-cta.py",
       "owns": [
-        ".cursor/**",
         "constitution/**",
         "instances/**",
-        "packages/velvetos/**",
-        "packages/vfigos/**"
+        "packages/velvetos/policy/instagram-publish-test-vectors.json",
+        "packages/velvetos/policy/instagram.publish.json",
+        "packages/vfigos/**",
+        "scripts/check-public-cta.py"
       ],
       "triggered_by": [
-        ".cursor/**",
         "constitution/**",
         "instances/**",
-        "packages/velvetos/**",
+        "packages/velvetos/policy/instagram-publish-test-vectors.json",
+        "packages/velvetos/policy/instagram.publish.json",
         "packages/vfigos/**",
         "scripts/check-public-cta.py"
       ],
@@ -1522,10 +1712,17 @@
       "id": "check-publication-evidence",
       "path": "scripts/check-publication-evidence.py",
       "owns": [
-        "scripts/**"
+        "scripts/check-publication-evidence.py",
+        "scripts/vf_media_integrity.py",
+        "scripts/vf_media_limits.py",
+        "scripts/vf_project_preflight.py",
+        "scripts/vf_publication_evidence.py",
+        "scripts/vf_publish_bridge.py",
+        "scripts/vf_publish_handoff.py",
+        "scripts/vf_send_preflight.py"
       ],
       "triggered_by": [
-        "scripts/**"
+        "scripts/check-publication-evidence.py"
       ],
       "depends_on": [
         "scripts/vf_media_integrity.py",
@@ -1564,6 +1761,7 @@
         "packages/vfgrowth/**",
         "packages/vfigos/**",
         "packages/vfom/**",
+        "scripts/check-publication-prep-execution.py",
         "scripts/vf_send_preflight.py"
       ],
       "triggered_by": [
@@ -1597,7 +1795,8 @@
       "id": "check-publication-states",
       "path": "scripts/check-publication-states.py",
       "owns": [
-        "packages/vfigos/**"
+        "packages/vfigos/**",
+        "scripts/check-publication-states.py"
       ],
       "triggered_by": [
         "packages/vfigos/**",
@@ -1619,16 +1818,22 @@
       "id": "check-publish-bridge",
       "path": "scripts/check-publish-bridge.py",
       "owns": [
-        ".github/**",
+        ".github/workflows/publish-bridge-cleanup.yml",
         "instances/**",
         "packages/vfigos/**",
-        "scripts/**"
+        "scripts/check-publish-bridge.py",
+        "scripts/vf_publish_bridge.py",
+        "scripts/vf_publish_bridge_cleanup.py",
+        "scripts/vf_publish_handoff.py"
       ],
       "triggered_by": [
-        ".github/**",
+        ".github/workflows/publish-bridge-cleanup.yml",
         "instances/**",
         "packages/vfigos/**",
-        "scripts/**"
+        "scripts/check-publish-bridge.py",
+        "scripts/vf_publish_bridge.py",
+        "scripts/vf_publish_bridge_cleanup.py",
+        "scripts/vf_publish_handoff.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -1646,7 +1851,8 @@
       "id": "check-publish-fingerprint",
       "path": "scripts/check-publish-fingerprint.py",
       "owns": [
-        "packages/vfigos/**"
+        "packages/vfigos/**",
+        "scripts/check-publish-fingerprint.py"
       ],
       "triggered_by": [
         "packages/vfigos/**",
@@ -1668,10 +1874,12 @@
       "id": "check-publish-handoff",
       "path": "scripts/check-publish-handoff.py",
       "owns": [
-        "scripts/**"
+        "scripts/check-publish-handoff.py",
+        "scripts/vf_publish_bridge.py",
+        "scripts/vf_publish_handoff.py"
       ],
       "triggered_by": [
-        "scripts/**"
+        "scripts/check-publish-handoff.py"
       ],
       "depends_on": [
         "scripts/vf_publish_bridge.py",
@@ -1692,6 +1900,7 @@
       "id": "check-readme-contract",
       "path": "scripts/check-readme-contract.py",
       "owns": [
+        "scripts/check-readme-contract.py",
         "scripts/readme_contract.py"
       ],
       "triggered_by": [
@@ -1715,10 +1924,11 @@
       "id": "check-reef-phase8-lab",
       "path": "scripts/check-reef-phase8-lab.py",
       "owns": [
-        "packages/vfharness/state/reef-phase8-lab-2026-09-27.json",
-        "packages/vfharness/devtools/reef-windows-import-overlay.patch",
         "packages/vfharness/cost-preflight/reef-*.json",
-        "packages/vfharness/cost-preflight/uv-*.json"
+        "packages/vfharness/cost-preflight/uv-*.json",
+        "packages/vfharness/devtools/reef-windows-import-overlay.patch",
+        "packages/vfharness/state/reef-phase8-lab-2026-09-27.json",
+        "scripts/check-reef-phase8-lab.py"
       ],
       "triggered_by": [
         "packages/vfharness/state/reef-phase8-lab-2026-09-27.json",
@@ -1743,9 +1953,10 @@
       "id": "check-reliability-pilots",
       "path": "scripts/check-reliability-pilots.py",
       "owns": [
+        "packages/vfharness/cost-preflight/**",
         "packages/vfharness/reliability/**",
         "packages/vfharness/state/**",
-        "packages/vfharness/cost-preflight/**"
+        "scripts/check-reliability-pilots.py"
       ],
       "triggered_by": [
         "packages/vfharness/reliability/**",
@@ -1769,7 +1980,8 @@
       "id": "check-review-convergence",
       "path": "scripts/check-review-convergence.py",
       "owns": [
-        "packages/vfharness/state/reviews/**"
+        "packages/vfharness/state/reviews/**",
+        "scripts/check-review-convergence.py"
       ],
       "triggered_by": [
         "packages/vfharness/state/reviews/**",
@@ -1792,17 +2004,23 @@
       "path": "scripts/check-risk-policy.py",
       "owns": [
         "constitution/**",
-        "office/**",
-        "packages/vfharness/**",
+        "office/control-plane.json",
+        "office/control/POLICY.md",
+        "office/control/dead-letter.json",
+        "packages/vfharness/dead-letter/**",
         "packages/vfops/**",
-        "scripts/**"
+        "scripts/check-risk-policy.py",
+        "scripts/vf_dead_letter.py"
       ],
       "triggered_by": [
         "constitution/**",
-        "office/**",
-        "packages/vfharness/**",
+        "office/control-plane.json",
+        "office/control/POLICY.md",
+        "office/control/dead-letter.json",
+        "packages/vfharness/dead-letter/**",
         "packages/vfops/**",
-        "scripts/**"
+        "scripts/check-risk-policy.py",
+        "scripts/vf_dead_letter.py"
       ],
       "depends_on": [],
       "enforces": [
@@ -1825,18 +2043,19 @@
       "id": "check-runtime-activation",
       "path": "scripts/check-runtime-activation.py",
       "owns": [
-        "office/**",
-        "packages/velvetos/**",
-        "packages/vfharness/**",
-        "packages/vfmedia/**",
+        "office/ledger/live/sync-receipt.json",
+        "packages/velvetos/living-studio/REGISTRY.json",
+        "packages/vfharness/state/close-operational-gaps-2026-09-10.json",
+        "packages/vfmedia/state/intake-runner.json",
         "packages/vfom/**",
-        "packages/vfops/**"
+        "packages/vfops/**",
+        "scripts/check-runtime-activation.py"
       ],
       "triggered_by": [
-        "office/**",
-        "packages/velvetos/**",
-        "packages/vfharness/**",
-        "packages/vfmedia/**",
+        "office/ledger/live/sync-receipt.json",
+        "packages/velvetos/living-studio/REGISTRY.json",
+        "packages/vfharness/state/close-operational-gaps-2026-09-10.json",
+        "packages/vfmedia/state/intake-runner.json",
         "packages/vfom/**",
         "packages/vfops/**",
         "scripts/check-runtime-activation.py"
@@ -1857,18 +2076,22 @@
       "id": "check-runtime-corners",
       "path": "scripts/check-runtime-corners.py",
       "owns": [
-        ".github/**",
-        "office/**",
-        "packages/velvetos/**",
-        "packages/vfresearch/**",
-        "scripts/**"
+        ".github/workflows/jobs-write-through.yml",
+        ".github/workflows/office-control-plane.yml",
+        "office/ledger/live/sync-receipt.json",
+        "packages/velvetos/living-studio/REGISTRY.json",
+        "packages/vfresearch/BEST-SKILLS.json",
+        "scripts/check-runtime-corners.py",
+        "scripts/vf_living_studio_activation.py"
       ],
       "triggered_by": [
-        ".github/**",
-        "office/**",
-        "packages/velvetos/**",
-        "packages/vfresearch/**",
-        "scripts/**"
+        ".github/workflows/jobs-write-through.yml",
+        ".github/workflows/office-control-plane.yml",
+        "office/ledger/live/sync-receipt.json",
+        "packages/velvetos/living-studio/REGISTRY.json",
+        "packages/vfresearch/BEST-SKILLS.json",
+        "scripts/check-runtime-corners.py",
+        "scripts/vf_living_studio_activation.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -1886,7 +2109,11 @@
       "id": "check-runtime-doctor",
       "path": "scripts/check-runtime-doctor.py",
       "owns": [
-        "packages/vfharness/runtime/expected-components.json"
+        "packages/vfharness/runtime/expected-components.json",
+        "packages/vfharness/runtime/proof-scope.json",
+        "packages/vfharness/state/runtime/**",
+        "scripts/check-runtime-doctor.py",
+        "scripts/vf_runtime_receipt_policy.py"
       ],
       "triggered_by": [
         "packages/vfharness/runtime/expected-components.json",
@@ -1916,12 +2143,14 @@
         "packages/vfgrowth/EDIT-GATE.md",
         "packages/vfom/CREATIVE-REFINE-LOOP.md",
         "packages/vfom/SKILL.md",
+        "packages/vfprod/**",
         "packages/vfprod/BLENDER-MCP.md",
         "packages/vfprod/SCENARIO-EXPERT-CAPABILITIES.md",
         "packages/vfprod/experts/3D-MODEL.md",
         "packages/vfprod/third_party/scenario-labs/**",
         "packages/vfresearch/LINKS.json",
         "packages/vfresearch/sources/2026-09-28-scenario-labs-skills.md",
+        "scripts/check-scenario-capability-graft.py",
         "scripts/vf_blender_expert.py"
       ],
       "triggered_by": [
@@ -1952,8 +2181,8 @@
       "id": "check-sensor-locks",
       "path": "scripts/check-sensor-locks.py",
       "owns": [
-        ".github/**",
-        "requirements-sensors.txt"
+        "requirements-sensors.txt",
+        "scripts/check-sensor-locks.py"
       ],
       "triggered_by": [
         ".github/**",
@@ -1976,15 +2205,20 @@
       "id": "check-skill-health",
       "path": "scripts/check-skill-health.py",
       "owns": [
-        ".agents/**",
-        ".cursor/**",
-        "packages/**",
+        ".agents/**/SKILL.md",
+        ".claude/**/SKILL.md",
+        ".codex/**/SKILL.md",
+        ".cursor/skills/**/SKILL.md",
+        "packages/**/SKILL.md",
+        "scripts/check-skill-health.py",
         "skills-lock.json"
       ],
       "triggered_by": [
-        ".agents/**",
-        ".cursor/**",
-        "packages/**",
+        ".agents/**/SKILL.md",
+        ".claude/**/SKILL.md",
+        ".codex/**/SKILL.md",
+        ".cursor/skills/**/SKILL.md",
+        "packages/**/SKILL.md",
         "scripts/check-skill-health.py",
         "skills-lock.json"
       ],
@@ -2005,18 +2239,35 @@
       "path": "scripts/check-skill-pattern-embeds.py",
       "owns": [
         "packages/velvetos/PRODUCTIZATION.md",
-        "packages/vfbriefux/**",
         "packages/vfcopy/hq/AI-TELLS-GAP.md",
-        "packages/vfharness/**",
-        "packages/vfresearch/**",
+        "packages/vfharness/AGENT-SURFACE-SECURITY.md",
+        "packages/vfharness/PLANNING-FILES.md",
+        "packages/vfharness/SKILL.md",
+        "packages/vfharness/playbooks/critique-review.md",
+        "packages/vfharness/playbooks/executing-plans.md",
+        "packages/vfharness/playbooks/implementation-discipline.md",
+        "packages/vfharness/playbooks/terse-worker-output.md",
+        "packages/vfharness/playbooks/writing-plans.md",
+        "packages/vfharness/scripts/vf_graceful_escalation.py",
+        "packages/vfresearch/hq/LAST30.md",
+        "packages/vfresearch/hq/SKILL-SCOUTING-SOURCES.md",
+        "scripts/check-skill-pattern-embeds.py",
         "scripts/check-vfharness-execution-discipline.py"
       ],
       "triggered_by": [
         "packages/velvetos/PRODUCTIZATION.md",
-        "packages/vfbriefux/**",
         "packages/vfcopy/hq/AI-TELLS-GAP.md",
-        "packages/vfharness/**",
-        "packages/vfresearch/**",
+        "packages/vfharness/AGENT-SURFACE-SECURITY.md",
+        "packages/vfharness/PLANNING-FILES.md",
+        "packages/vfharness/SKILL.md",
+        "packages/vfharness/playbooks/critique-review.md",
+        "packages/vfharness/playbooks/executing-plans.md",
+        "packages/vfharness/playbooks/implementation-discipline.md",
+        "packages/vfharness/playbooks/terse-worker-output.md",
+        "packages/vfharness/playbooks/writing-plans.md",
+        "packages/vfharness/scripts/vf_graceful_escalation.py",
+        "packages/vfresearch/hq/LAST30.md",
+        "packages/vfresearch/hq/SKILL-SCOUTING-SOURCES.md",
         "scripts/check-skill-pattern-embeds.py",
         "scripts/check-vfharness-execution-discipline.py"
       ],
@@ -2036,18 +2287,28 @@
       "id": "check-social-intelligence",
       "path": "scripts/check-social-intelligence.py",
       "owns": [
-        ".cursor/**",
+        ".cursor/skills/vf-content-sprint/SKILL.md",
         "packages/vfinsights/**",
         "packages/vfom/**",
-        "packages/vfresearch/**",
-        "scripts/**"
+        "packages/vfresearch/LINKS.json",
+        "packages/vfresearch/SKILL.md",
+        "packages/vfresearch/SOCIAL-INTELLIGENCE.md",
+        "packages/vfresearch/reference-pattern.schema.json",
+        "packages/vfresearch/social-research-packet.schema.json",
+        "scripts/check-social-intelligence.py",
+        "scripts/vf_social_intelligence.py"
       ],
       "triggered_by": [
-        ".cursor/**",
+        ".cursor/skills/vf-content-sprint/SKILL.md",
         "packages/vfinsights/**",
         "packages/vfom/**",
-        "packages/vfresearch/**",
-        "scripts/**"
+        "packages/vfresearch/LINKS.json",
+        "packages/vfresearch/SKILL.md",
+        "packages/vfresearch/SOCIAL-INTELLIGENCE.md",
+        "packages/vfresearch/reference-pattern.schema.json",
+        "packages/vfresearch/social-research-packet.schema.json",
+        "scripts/check-social-intelligence.py",
+        "scripts/vf_social_intelligence.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -2080,6 +2341,7 @@
         "packages/vfgrowth/PREFLIGHT.md",
         "packages/vfgrowth/preflight/TEMPLATE.md",
         "packages/vfmskill/EMBED.md",
+        "scripts/check-soft-tools-pipeline.py",
         "scripts/check-vfcopy.py"
       ],
       "triggered_by": [
@@ -2119,6 +2381,7 @@
       "id": "check-source-ingest",
       "path": "scripts/check-source-ingest.py",
       "owns": [
+        "scripts/check-source-ingest.py",
         "scripts/vf_source_ingest.py"
       ],
       "triggered_by": [
@@ -2143,12 +2406,20 @@
       "owns": [
         "packages/vfmcp/**",
         "packages/vfom/**",
-        "scripts/**"
+        "scripts/bootstrap-edge-host-windows.ps1",
+        "scripts/bootstrap-media-host-windows.ps1",
+        "scripts/bootstrap-speech-host-windows.ps1",
+        "scripts/check-speech-layer.py",
+        "scripts/vf_speech.py"
       ],
       "triggered_by": [
         "packages/vfmcp/**",
         "packages/vfom/**",
-        "scripts/**"
+        "scripts/bootstrap-edge-host-windows.ps1",
+        "scripts/bootstrap-media-host-windows.ps1",
+        "scripts/bootstrap-speech-host-windows.ps1",
+        "scripts/check-speech-layer.py",
+        "scripts/vf_speech.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -2167,15 +2438,16 @@
       "path": "scripts/check-staleness.py",
       "owns": [
         "packages/vfe2b/**",
-        "packages/vfharness/**",
+        "packages/vfharness/state/**",
         "packages/vfops/**",
-        "packages/vfresearch/**"
+        "packages/vfresearch/LINKS.json",
+        "scripts/check-staleness.py"
       ],
       "triggered_by": [
         "packages/vfe2b/**",
-        "packages/vfharness/**",
+        "packages/vfharness/state/**",
         "packages/vfops/**",
-        "packages/vfresearch/**",
+        "packages/vfresearch/LINKS.json",
         "scripts/check-staleness.py"
       ],
       "depends_on": [],
@@ -2195,14 +2467,15 @@
       "path": "scripts/check-tool-authority.py",
       "owns": [
         "automation/**",
-        "packages/velvetos/**",
-        "packages/vfbriefux/**",
-        "packages/vfigos/**"
+        "packages/velvetos/tool-status-contract.json",
+        "packages/vfbriefux/FEED-SOURCE.json",
+        "packages/vfigos/**",
+        "scripts/check-tool-authority.py"
       ],
       "triggered_by": [
         "automation/**",
-        "packages/velvetos/**",
-        "packages/vfbriefux/**",
+        "packages/velvetos/tool-status-contract.json",
+        "packages/vfbriefux/FEED-SOURCE.json",
         "packages/vfigos/**",
         "scripts/check-tool-authority.py"
       ],
@@ -2232,8 +2505,10 @@
       "id": "check-upstream-email",
       "path": "scripts/check-upstream-email.py",
       "owns": [
-        "packages/vfresearch/out/**",
         ".github/workflows/gmail-tool-updates-send.yml",
+        "packages/vfresearch/DAILY.md",
+        "packages/vfresearch/out/**",
+        "scripts/check-upstream-email.py",
         "scripts/vf_upstream_email.py"
       ],
       "triggered_by": [
@@ -2261,10 +2536,12 @@
       "id": "check-upstream-watch",
       "path": "scripts/check-upstream-watch.py",
       "owns": [
-        "packages/velvetos/UPSTREAM-WATCH.json",
+        "automation/grok/manifest.json",
         "packages/velvetos/TOOL-STATUS.json",
+        "packages/velvetos/UPSTREAM-WATCH.json",
         "packages/vfresearch/DAILY.md",
-        "automation/grok/manifest.json"
+        "scripts/check-upstream-watch.py",
+        "scripts/vf_upstream_watch.py"
       ],
       "triggered_by": [
         "packages/velvetos/UPSTREAM-WATCH.json",
@@ -2280,10 +2557,10 @@
       "id": "check-velvet-health",
       "path": "scripts/check-velvet-health.py",
       "owns": [
-        "scripts/**"
+        "scripts/check-velvet-health.py"
       ],
       "triggered_by": [
-        "scripts/**"
+        "scripts/check-velvet-health.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -2301,30 +2578,38 @@
       "id": "check-velvetos",
       "path": "scripts/check-velvetos.py",
       "owns": [
-        ".cursor/**",
-        ".github/**",
+        ".cursor/environment.json",
+        ".cursor/vf-desk.json",
+        ".github/workflows/check-all.yml",
         "AGENTS.md",
         "constitution/**",
-        "docs/**",
+        "docs/VELVETOS.md",
         "instances/**",
         "packages/manifest.json",
         "packages/velvetos/**",
         "packages/vfbiz/**",
         "packages/vfsales/**",
-        "scripts/**"
+        "scripts/attach-core.sh",
+        "scripts/check-velvetos.py",
+        "scripts/publish-instance.sh",
+        "scripts/sync-instance-scaffold.sh"
       ],
       "triggered_by": [
-        ".cursor/**",
-        ".github/**",
+        ".cursor/environment.json",
+        ".cursor/vf-desk.json",
+        ".github/workflows/check-all.yml",
         "AGENTS.md",
         "constitution/**",
-        "docs/**",
+        "docs/VELVETOS.md",
         "instances/**",
         "packages/manifest.json",
         "packages/velvetos/**",
         "packages/vfbiz/**",
         "packages/vfsales/**",
-        "scripts/**"
+        "scripts/attach-core.sh",
+        "scripts/check-velvetos.py",
+        "scripts/publish-instance.sh",
+        "scripts/sync-instance-scaffold.sh"
       ],
       "depends_on": [],
       "enforces": [],
@@ -2342,12 +2627,13 @@
       "id": "check-vf-3d-router",
       "path": "scripts/check-vf-3d-router.py",
       "owns": [
-        "scripts/vf_3d.py",
-        "scripts/vf_cad.py",
-        "packages/vfprod/**",
-        "packages/velvetos/modules/expert-3d-model.md",
         ".cursor/skills/vf-3d-router/**",
-        "packages/vfharness/cost-preflight/**"
+        "packages/velvetos/modules/expert-3d-model.md",
+        "packages/vfharness/cost-preflight/**",
+        "packages/vfprod/**",
+        "scripts/check-vf-3d-router.py",
+        "scripts/vf_3d.py",
+        "scripts/vf_cad.py"
       ],
       "triggered_by": [
         "packages/vfprod/**",
@@ -2375,14 +2661,20 @@
       "id": "check-vf-autonomy",
       "path": "scripts/check-vf-autonomy.py",
       "owns": [
-        "office/**",
-        "packages/velvetos/**",
-        "scripts/**"
+        "office/control-plane.json",
+        "office/control/POLICY.md",
+        "packages/velvetos/living-studio/AUTONOMY.json",
+        "packages/velvetos/living_studio_rules.py",
+        "scripts/check-vf-autonomy.py",
+        "scripts/vf_autonomy.py"
       ],
       "triggered_by": [
-        "office/**",
-        "packages/velvetos/**",
-        "scripts/**"
+        "office/control-plane.json",
+        "office/control/POLICY.md",
+        "packages/velvetos/living-studio/AUTONOMY.json",
+        "packages/velvetos/living_studio_rules.py",
+        "scripts/check-vf-autonomy.py",
+        "scripts/vf_autonomy.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -2401,11 +2693,13 @@
       "path": "scripts/check-vf-cad-integration.py",
       "owns": [
         "packages/vfprod/**",
-        "scripts/**"
+        "scripts/check-vf-cad-integration.py",
+        "scripts/vf_cad.py"
       ],
       "triggered_by": [
         "packages/vfprod/**",
-        "scripts/**"
+        "scripts/check-vf-cad-integration.py",
+        "scripts/vf_cad.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -2423,16 +2717,17 @@
       "id": "check-vf-cad-stack",
       "path": "scripts/check-vf-cad-stack.py",
       "owns": [
-        "packages/vfprod/**",
-        "packages/vfresearch/LINKS.json",
         "packages/velvetos/TOOL-STATUS.json",
         "packages/vfharness/state/cad-engine-stack-20260927/**",
-        "packages/vfharness/state/fabrication-cost-cadquery-2026-09-27.json",
-        "packages/vfharness/state/fabrication-cost-jscad-2026-09-27.json",
         "packages/vfharness/state/fabrication-cost-cad-cae-copilot-2026-09-27.json",
+        "packages/vfharness/state/fabrication-cost-cadquery-2026-09-27.json",
         "packages/vfharness/state/fabrication-cost-forgent3d-2026-09-27.json",
+        "packages/vfharness/state/fabrication-cost-jscad-2026-09-27.json",
+        "packages/vfprod/**",
+        "packages/vfresearch/LINKS.json",
+        "scripts/check-vf-cad-stack.py",
         "scripts/vf_cad_stack.py",
-        "scripts/check-vf-cad-stack.py"
+        "scripts/vf_cost_preflight.py"
       ],
       "triggered_by": [
         "packages/vfprod/**",
@@ -2460,12 +2755,15 @@
       "id": "check-vf-desk",
       "path": "scripts/check-vf-desk.py",
       "owns": [
-        ".cursor/**",
+        ".cursor/agency-agents.json",
+        ".cursor/rules/velvet-factory-desk.mdc",
         "constitution/**",
-        "packages/manifest.json"
+        "packages/manifest.json",
+        "scripts/check-vf-desk.py"
       ],
       "triggered_by": [
-        ".cursor/**",
+        ".cursor/agency-agents.json",
+        ".cursor/rules/velvet-factory-desk.mdc",
         "constitution/**",
         "packages/manifest.json",
         "scripts/check-vf-desk.py"
@@ -2490,19 +2788,23 @@
       "owns": [
         ".agents/**",
         ".grok/**",
-        "packages/velvetos/**",
-        "packages/vfharness/**",
+        "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
+        "packages/vfharness/state/**",
         "packages/vfprod/**",
-        "scripts/**",
+        "scripts/check-vf-fabrication-router.py",
+        "scripts/vf_cost_preflight.py",
+        "scripts/vf_fabrication_router.py",
         "skills-lock.json"
       ],
       "triggered_by": [
         ".agents/**",
         ".grok/**",
-        "packages/velvetos/**",
-        "packages/vfharness/**",
+        "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
+        "packages/vfharness/state/**",
         "packages/vfprod/**",
-        "scripts/**",
+        "scripts/check-vf-fabrication-router.py",
+        "scripts/vf_cost_preflight.py",
+        "scripts/vf_fabrication_router.py",
         "skills-lock.json"
       ],
       "depends_on": [],
@@ -2521,10 +2823,11 @@
       "id": "check-vf-handoff",
       "path": "scripts/check-vf-handoff.py",
       "owns": [
-        "packages/vfharness/**"
+        "packages/vfharness/state/handoffs/**",
+        "scripts/check-vf-handoff.py"
       ],
       "triggered_by": [
-        "packages/vfharness/**",
+        "packages/vfharness/state/handoffs/**",
         "scripts/check-vf-handoff.py"
       ],
       "depends_on": [],
@@ -2543,7 +2846,7 @@
       "id": "check-vf-offering",
       "path": "scripts/check-vf-offering.py",
       "owns": [
-        "packages/velvetos/**",
+        "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
         "packages/vfbiz/**",
         "packages/vfconvert/**",
         "packages/vfcopy/**",
@@ -2552,10 +2855,11 @@
         "packages/vfom/**",
         "packages/vfops/**",
         "packages/vfsales/**",
-        "packages/vfsku/**"
+        "packages/vfsku/**",
+        "scripts/check-vf-offering.py"
       ],
       "triggered_by": [
-        "packages/velvetos/**",
+        "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
         "packages/vfbiz/**",
         "packages/vfconvert/**",
         "packages/vfcopy/**",
@@ -2583,20 +2887,24 @@
       "id": "check-vf-office",
       "path": "scripts/check-vf-office.py",
       "owns": [
-        "docs/**",
-        "office/**",
+        "docs/MCP-FIT.md",
+        "office/ledger/bindings.json",
+        "office/ledger/live/sync-receipt.json",
         "packages/vfbooks/**",
         "packages/vfconvert/**",
         "packages/vfprod/**",
-        "scripts/**"
+        "scripts/check-vf-office.py",
+        "scripts/vf_jobs_adapter.py",
+        "scripts/vf_office.py"
       ],
       "triggered_by": [
-        "docs/**",
-        "office/**",
+        "docs/MCP-FIT.md",
+        "office/ledger/bindings.json",
+        "office/ledger/live/sync-receipt.json",
         "packages/vfbooks/**",
         "packages/vfconvert/**",
         "packages/vfprod/**",
-        "scripts/**"
+        "scripts/check-vf-office.py"
       ],
       "depends_on": [
         "scripts/vf_jobs_adapter.py",
@@ -2617,6 +2925,7 @@
       "id": "check-vf-task-state",
       "path": "scripts/check-vf-task-state.py",
       "owns": [
+        "scripts/check-vf-task-state.py",
         "scripts/vf_task_state.py"
       ],
       "triggered_by": [
@@ -2641,7 +2950,8 @@
       "path": "scripts/check-vfagents.py",
       "owns": [
         "packages/manifest.json",
-        "packages/vfagents/**"
+        "packages/vfagents/**",
+        "scripts/check-vfagents.py"
       ],
       "triggered_by": [
         "packages/manifest.json",
@@ -2665,7 +2975,8 @@
       "path": "scripts/check-vfcopy.py",
       "owns": [
         "packages/vfcopy/**",
-        "packages/vfgrowth/**"
+        "packages/vfgrowth/**",
+        "scripts/check-vfcopy.py"
       ],
       "triggered_by": [
         "packages/vfcopy/**",
@@ -2690,16 +3001,18 @@
       "owns": [
         "AGENTS.md",
         "packages/vfcost/**",
-        "packages/vfharness/**",
+        "packages/vfharness/layers.json",
         "packages/vfops/**",
-        "scripts/**"
+        "scripts/check-vfcost.py",
+        "scripts/vfcost.py"
       ],
       "triggered_by": [
         "AGENTS.md",
         "packages/vfcost/**",
-        "packages/vfharness/**",
+        "packages/vfharness/layers.json",
         "packages/vfops/**",
-        "scripts/**"
+        "scripts/check-vfcost.py",
+        "scripts/vfcost.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -2717,12 +3030,13 @@
       "id": "check-vfdsh",
       "path": "scripts/check-vfdsh.py",
       "owns": [
-        "docs/**",
+        "docs/DSH-FIT.md",
         "packages/manifest.json",
-        "packages/vfdsh/**"
+        "packages/vfdsh/**",
+        "scripts/check-vfdsh.py"
       ],
       "triggered_by": [
-        "docs/**",
+        "docs/DSH-FIT.md",
         "packages/manifest.json",
         "packages/vfdsh/**",
         "scripts/check-vfdsh.py"
@@ -2743,15 +3057,16 @@
       "id": "check-vfe2b",
       "path": "scripts/check-vfe2b.py",
       "owns": [
-        ".cursor/**",
-        "docs/**",
+        ".cursor/skills/vf-run/SKILL.md",
+        "docs/ORCHESTRATORS.md",
         "packages/manifest.json",
         "packages/vfconvert/**",
-        "packages/vfe2b/**"
+        "packages/vfe2b/**",
+        "scripts/check-vfe2b.py"
       ],
       "triggered_by": [
-        ".cursor/**",
-        "docs/**",
+        ".cursor/skills/vf-run/SKILL.md",
+        "docs/ORCHESTRATORS.md",
         "packages/manifest.json",
         "packages/vfconvert/**",
         "packages/vfe2b/**",
@@ -2773,12 +3088,13 @@
       "id": "check-vffcc",
       "path": "scripts/check-vffcc.py",
       "owns": [
-        "docs/**",
+        "docs/FCC-FIT.md",
         "packages/manifest.json",
-        "packages/vffcc/**"
+        "packages/vffcc/**",
+        "scripts/check-vffcc.py"
       ],
       "triggered_by": [
-        "docs/**",
+        "docs/FCC-FIT.md",
         "packages/manifest.json",
         "packages/vffcc/**",
         "scripts/check-vffcc.py"
@@ -2801,7 +3117,8 @@
       "owns": [
         ".cursor/rules/velvet-factory-desk.mdc",
         "packages/manifest.json",
-        "packages/vfgraft/**"
+        "packages/vfgraft/**",
+        "scripts/check-vfgraft.py"
       ],
       "triggered_by": [
         ".cursor/rules/velvet-factory-desk.mdc",
@@ -2829,7 +3146,8 @@
         "constitution/**",
         "instances/**",
         "packages/vfcopy/**",
-        "packages/vfgrowth/**"
+        "packages/vfgrowth/**",
+        "scripts/check-vfgrowth.py"
       ],
       "triggered_by": [
         "AGENTS.md",
@@ -2855,37 +3173,38 @@
       "id": "check-vfharness",
       "path": "scripts/check-vfharness.py",
       "owns": [
+        ".cursor/rules/vf-harness.mdc",
+        ".cursor/skills/vf-harness/SKILL.md",
         "AGENTS.md",
         "constitution/**",
         "docs/FAILOVER.md",
         "docs/GROK-FAILOVER.md",
+        "docs/HARNESS.md",
         "packages/manifest.json",
+        "packages/velvetos/policy/reports/stage5b-harness-consolidation.json",
+        "packages/velvetos/policy/reports/stage6c-dcc-capability-gating.json",
         "packages/vfharness/**",
         "packages/vfigos/**",
-        ".cursor/skills/vf-harness/SKILL.md",
-        ".cursor/rules/vf-harness.mdc",
-        "docs/HARNESS.md",
-        "packages/velvetos/policy/reports/stage5b-harness-consolidation.json",
+        "scripts/check-vfharness.py",
         "scripts/generate-stage5b-harness-consolidation-report.py",
-        "packages/velvetos/policy/reports/stage6c-dcc-capability-gating.json",
         "scripts/generate-stage6c-dcc-capability-gating-report.py",
         "scripts/validate-dcc-adobe-compat.py"
       ],
       "triggered_by": [
+        ".cursor/rules/vf-harness.mdc",
+        ".cursor/skills/vf-harness/SKILL.md",
         "AGENTS.md",
         "constitution/**",
         "docs/FAILOVER.md",
         "docs/GROK-FAILOVER.md",
+        "docs/HARNESS.md",
         "packages/manifest.json",
+        "packages/velvetos/policy/reports/stage5b-harness-consolidation.json",
+        "packages/velvetos/policy/reports/stage6c-dcc-capability-gating.json",
         "packages/vfharness/**",
         "packages/vfigos/**",
         "scripts/check-vfharness.py",
-        ".cursor/skills/vf-harness/SKILL.md",
-        ".cursor/rules/vf-harness.mdc",
-        "docs/HARNESS.md",
-        "packages/velvetos/policy/reports/stage5b-harness-consolidation.json",
         "scripts/generate-stage5b-harness-consolidation-report.py",
-        "packages/velvetos/policy/reports/stage6c-dcc-capability-gating.json",
         "scripts/generate-stage6c-dcc-capability-gating-report.py",
         "scripts/validate-dcc-adobe-compat.py"
       ],
@@ -2905,10 +3224,11 @@
       "id": "check-vfharness-execution-discipline",
       "path": "scripts/check-vfharness-execution-discipline.py",
       "owns": [
-        "packages/vfharness/**"
+        "packages/vfharness/scripts/vf_graceful_escalation.py",
+        "scripts/check-vfharness-execution-discipline.py"
       ],
       "triggered_by": [
-        "packages/vfharness/**",
+        "packages/vfharness/scripts/vf_graceful_escalation.py",
         "scripts/check-vfharness-execution-discipline.py"
       ],
       "depends_on": [],
@@ -2932,7 +3252,8 @@
         "packages/vfbooks/**",
         "packages/vfgrowth/**",
         "packages/vfmakers/**",
-        "packages/vfops/**"
+        "packages/vfops/**",
+        "scripts/check-vfmakers.py"
       ],
       "triggered_by": [
         "packages/manifest.json",
@@ -2959,28 +3280,34 @@
       "id": "check-vfmcp",
       "path": "scripts/check-vfmcp.py",
       "owns": [
-        ".cursor/**",
-        ".github/**",
+        ".cursor/mcp.json",
+        ".github/workflows/instagram-read-smoke.yml",
         "constitution/**",
-        "docs/**",
-        "packages/velvetos/**",
+        "docs/MCP-FIT.md",
+        "packages/velvetos/policy/**",
         "packages/vfbooks/**",
         "packages/vfigos/**",
         "packages/vfmcp/**",
         "packages/vfprod/**",
-        "scripts/**"
+        "scripts/check-vfmcp.py",
+        "scripts/vf_chatgpt.py",
+        "scripts/vf_control_plane.py",
+        "scripts/vf_gemini.py",
+        "scripts/vf_send_preflight.py"
       ],
       "triggered_by": [
-        ".cursor/**",
-        ".github/**",
+        ".cursor/mcp.json",
+        ".github/workflows/instagram-read-smoke.yml",
         "constitution/**",
-        "docs/**",
-        "packages/velvetos/**",
+        "docs/MCP-FIT.md",
+        "packages/velvetos/policy/**",
         "packages/vfbooks/**",
         "packages/vfigos/**",
         "packages/vfmcp/**",
         "packages/vfprod/**",
-        "scripts/**"
+        "scripts/check-vfmcp.py",
+        "scripts/vf_control_plane.py",
+        "scripts/vf_send_preflight.py"
       ],
       "depends_on": [
         "scripts/vf_chatgpt.py",
@@ -3003,30 +3330,34 @@
       "id": "check-vfmedia",
       "path": "scripts/check-vfmedia.py",
       "owns": [
-        ".cursor/**",
-        ".github/**",
+        ".github/workflows/vfmedia-intake.yml",
         "AGENTS.md",
-        "docs/**",
+        "docs/MEDIA-VAULT.md",
+        "docs/SHARED-WORK-COORDINATION.md",
         "packages/manifest.json",
-        "packages/velvetos/**",
+        "packages/velvetos/schema/events.catalog.json",
         "packages/vfigos/**",
         "packages/vfmedia/**",
         "packages/vfmem/**",
         "packages/vfops/**",
-        "scripts/**"
+        "scripts/check-media-vault.py",
+        "scripts/check-vfmedia.py",
+        "scripts/vfmedia.py"
       ],
       "triggered_by": [
-        ".cursor/**",
-        ".github/**",
+        ".github/workflows/vfmedia-intake.yml",
         "AGENTS.md",
-        "docs/**",
+        "docs/MEDIA-VAULT.md",
+        "docs/SHARED-WORK-COORDINATION.md",
         "packages/manifest.json",
-        "packages/velvetos/**",
+        "packages/velvetos/schema/events.catalog.json",
         "packages/vfigos/**",
         "packages/vfmedia/**",
         "packages/vfmem/**",
         "packages/vfops/**",
-        "scripts/**"
+        "scripts/check-media-vault.py",
+        "scripts/check-vfmedia.py",
+        "scripts/vfmedia.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -3046,12 +3377,13 @@
       "owns": [
         "packages/manifest.json",
         "packages/vfmem/**",
-        "scripts/**"
+        "scripts/check-vfmem.py",
+        "scripts/vfmem.py"
       ],
       "triggered_by": [
         "packages/manifest.json",
         "packages/vfmem/**",
-        "scripts/**"
+        "scripts/check-vfmem.py"
       ],
       "depends_on": [
         "scripts/vfmem.py"
@@ -3072,13 +3404,14 @@
       "path": "scripts/check-vfmskill.py",
       "owns": [
         ".agents/**",
-        ".cursor/**",
+        ".cursor/skills/vf-marketing-skills/SKILL.md",
         "packages/manifest.json",
-        "packages/vfmskill/**"
+        "packages/vfmskill/**",
+        "scripts/check-vfmskill.py"
       ],
       "triggered_by": [
         ".agents/**",
-        ".cursor/**",
+        ".cursor/skills/vf-marketing-skills/SKILL.md",
         "packages/manifest.json",
         "packages/vfmskill/**",
         "scripts/check-vfmskill.py"
@@ -3100,7 +3433,8 @@
       "path": "scripts/check-vfom.py",
       "owns": [
         "packages/manifest.json",
-        "packages/vfom/**"
+        "packages/vfom/**",
+        "scripts/check-vfom.py"
       ],
       "triggered_by": [
         "packages/manifest.json",
@@ -3125,7 +3459,7 @@
       "owns": [
         "AGENTS.md",
         "constitution/**",
-        "docs/**",
+        "docs/SEND-BRIEF-MCP.md",
         "packages/vfbiz/**",
         "packages/vfbooks/**",
         "packages/vfcopy/**",
@@ -3134,13 +3468,20 @@
         "packages/vfmem/**",
         "packages/vfops/**",
         "packages/vfprod/**",
-        "packages/vfresearch/**",
-        "scripts/**"
+        "packages/vfresearch/hq/MAKERWORLD-SCAN.md",
+        "scripts/check-vfops-loop.py",
+        "scripts/sensor_isolation.py",
+        "scripts/vf_organic_growth.py",
+        "scripts/vf_retro_signals.py",
+        "scripts/vfbooks.py",
+        "scripts/vfcost.py",
+        "scripts/vfops_loop.py",
+        "scripts/vfprod.py"
       ],
       "triggered_by": [
         "AGENTS.md",
         "constitution/**",
-        "docs/**",
+        "docs/SEND-BRIEF-MCP.md",
         "packages/vfbiz/**",
         "packages/vfbooks/**",
         "packages/vfcopy/**",
@@ -3149,8 +3490,13 @@
         "packages/vfmem/**",
         "packages/vfops/**",
         "packages/vfprod/**",
-        "packages/vfresearch/**",
-        "scripts/**"
+        "packages/vfresearch/hq/MAKERWORLD-SCAN.md",
+        "scripts/check-vfops-loop.py",
+        "scripts/vf_organic_growth.py",
+        "scripts/vf_retro_signals.py",
+        "scripts/vfbooks.py",
+        "scripts/vfcost.py",
+        "scripts/vfprod.py"
       ],
       "depends_on": [
         "scripts/sensor_isolation.py",
@@ -3172,19 +3518,21 @@
       "path": "scripts/check-vfprod.py",
       "owns": [
         "AGENTS.md",
-        "packages/velvetos/**",
-        "packages/vfharness/**",
+        "packages/velvetos/schema/events.catalog.json",
+        "packages/vfharness/layers.json",
         "packages/vfops/**",
         "packages/vfprod/**",
-        "scripts/**"
+        "scripts/check-vfprod.py",
+        "scripts/vfprod.py"
       ],
       "triggered_by": [
         "AGENTS.md",
-        "packages/velvetos/**",
-        "packages/vfharness/**",
+        "packages/velvetos/schema/events.catalog.json",
+        "packages/vfharness/layers.json",
         "packages/vfops/**",
         "packages/vfprod/**",
-        "scripts/**"
+        "scripts/check-vfprod.py",
+        "scripts/vfprod.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -3202,26 +3550,40 @@
       "id": "check-vfresearch",
       "path": "scripts/check-vfresearch.py",
       "owns": [
-        ".cursor/**",
-        ".github/**",
+        ".cursor/skills/vf-best-skills/SKILL.md",
+        ".cursor/skills/vf-ig-music/SKILL.md",
+        ".cursor/skills/vf-last30/SKILL.md",
+        ".cursor/skills/vf-weekly-links/SKILL.md",
+        ".github/workflows/velvetos-research.yml",
         "constitution/**",
         "packages/manifest.json",
+        "packages/velvetos/policy/reports/stage7c-research-scheduler-consolidation.json",
+        "packages/velvetos/policy/research-scheduler-consolidation.json",
         "packages/vfops/**",
         "packages/vfresearch/**",
-        "scripts/**",
-        "packages/velvetos/policy/research-scheduler-consolidation.json",
-        "packages/velvetos/policy/reports/stage7c-research-scheduler-consolidation.json"
+        "scripts/*demand*signals.py",
+        "scripts/check-all.py",
+        "scripts/check-vfresearch.py",
+        "scripts/generate-stage7c-research-scheduler-consolidation.py",
+        "scripts/vfresearch_cadence.py"
       ],
       "triggered_by": [
-        ".cursor/**",
-        ".github/**",
+        ".cursor/skills/vf-best-skills/SKILL.md",
+        ".cursor/skills/vf-ig-music/SKILL.md",
+        ".cursor/skills/vf-last30/SKILL.md",
+        ".cursor/skills/vf-weekly-links/SKILL.md",
+        ".github/workflows/velvetos-research.yml",
         "constitution/**",
         "packages/manifest.json",
+        "packages/velvetos/policy/reports/stage7c-research-scheduler-consolidation.json",
+        "packages/velvetos/policy/research-scheduler-consolidation.json",
         "packages/vfops/**",
         "packages/vfresearch/**",
-        "scripts/**",
-        "packages/velvetos/policy/research-scheduler-consolidation.json",
-        "packages/velvetos/policy/reports/stage7c-research-scheduler-consolidation.json"
+        "scripts/*demand*signals.py",
+        "scripts/check-all.py",
+        "scripts/check-vfresearch.py",
+        "scripts/generate-stage7c-research-scheduler-consolidation.py",
+        "scripts/vfresearch_cadence.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -3244,7 +3606,8 @@
         "packages/vfprod/**",
         "packages/vfsku/**",
         "packages/vlicense/**",
-        "scripts/**"
+        "scripts/check-vfsku.py",
+        "scripts/vfsku.py"
       ],
       "triggered_by": [
         "packages/vfconvert/**",
@@ -3252,7 +3615,8 @@
         "packages/vfprod/**",
         "packages/vfsku/**",
         "packages/vlicense/**",
-        "scripts/**"
+        "scripts/check-vfsku.py",
+        "scripts/vfsku.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -3270,6 +3634,7 @@
       "id": "check-video-normalization",
       "path": "scripts/check-video-normalization.py",
       "owns": [
+        "scripts/check-video-normalization.py",
         "scripts/vf_video_normalization.py"
       ],
       "triggered_by": [
@@ -3294,11 +3659,17 @@
       "path": "scripts/check-video-toolchain.py",
       "owns": [
         "packages/vfom/**",
-        "scripts/**"
+        "scripts/bootstrap-manim-host-macos.sh",
+        "scripts/bootstrap-manim-host-windows.ps1",
+        "scripts/check-video-toolchain.py",
+        "scripts/vf_video_edit.py"
       ],
       "triggered_by": [
         "packages/vfom/**",
-        "scripts/**"
+        "scripts/bootstrap-manim-host-macos.sh",
+        "scripts/bootstrap-manim-host-windows.ps1",
+        "scripts/check-video-toolchain.py",
+        "scripts/vf_video_edit.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -3324,16 +3695,17 @@
         ".cursor/skills/vf-morning-brief/**",
         "AGENTS.md",
         "constitution/**",
+        "packages/velvetos/policy/reports/stage6a-visible-text-tiers.json",
         "packages/vfconvert/**",
         "packages/vfcopy/**",
         "packages/vfe2b/**",
         "packages/vfgrowth/**",
-        "packages/vfharness/**",
+        "packages/vfharness/SKILL.md",
         "packages/vfom/**",
         "packages/vfsales/**",
-        "scripts/vf_visible_text.py",
-        "packages/velvetos/policy/reports/stage6a-visible-text-tiers.json",
-        "scripts/generate-stage6a-visible-text-tiers-report.py"
+        "scripts/check-visible-text-gate.py",
+        "scripts/generate-stage6a-visible-text-tiers-report.py",
+        "scripts/vf_visible_text.py"
       ],
       "triggered_by": [
         ".cursor/rules/visible-text-gate.mdc",
@@ -3344,17 +3716,17 @@
         ".cursor/skills/vf-morning-brief/**",
         "AGENTS.md",
         "constitution/**",
+        "packages/velvetos/policy/reports/stage6a-visible-text-tiers.json",
         "packages/vfconvert/**",
         "packages/vfcopy/**",
         "packages/vfe2b/**",
         "packages/vfgrowth/**",
-        "packages/vfharness/**",
+        "packages/vfharness/SKILL.md",
         "packages/vfom/**",
         "packages/vfsales/**",
         "scripts/check-visible-text-gate.py",
-        "scripts/vf_visible_text.py",
-        "packages/velvetos/policy/reports/stage6a-visible-text-tiers.json",
-        "scripts/generate-stage6a-visible-text-tiers-report.py"
+        "scripts/generate-stage6a-visible-text-tiers-report.py",
+        "scripts/vf_visible_text.py"
       ],
       "depends_on": [],
       "enforces": [
@@ -3374,7 +3746,9 @@
       "id": "check-visual-reject-identity",
       "path": "scripts/check-visual-reject-identity.py",
       "owns": [
-        "instances/**"
+        "instances/**",
+        "instances/velvet-factory/scripts/check-instance-visual-bootstrap.py",
+        "scripts/check-visual-reject-identity.py"
       ],
       "triggered_by": [
         "instances/**",
@@ -3398,7 +3772,8 @@
       "id": "check-visual-standard-bootstrap",
       "path": "scripts/check-visual-standard-bootstrap.py",
       "owns": [
-        "packages/vfom/jobs/**"
+        "packages/vfom/jobs/**",
+        "scripts/check-visual-standard-bootstrap.py"
       ],
       "triggered_by": [
         "packages/vfom/jobs/**",
@@ -3423,6 +3798,7 @@
         "instances/velvet-factory/**",
         "packages/vfgrowth/**",
         "packages/vfom/**",
+        "scripts/check-visual-surface-enforcement.py",
         "scripts/vf_send_preflight.py"
       ],
       "triggered_by": [
@@ -3448,14 +3824,19 @@
       "id": "check-windows-path-contract",
       "path": "scripts/check-windows-path-contract.py",
       "owns": [
-        "packages/velvetos/**",
+        "packages/velvetos/UPSTREAM-WATCH.json",
+        "packages/velvetos/WINDOWS-PATH-CONTRACT.md",
+        "packages/velvetos/schema/instance-windows-host-binding.schema.json",
         "packages/vfigos/**",
         "packages/vfmcp/**",
         "packages/vfmem/**",
-        "packages/vfom/**"
+        "packages/vfom/**",
+        "scripts/check-windows-path-contract.py"
       ],
       "triggered_by": [
-        "packages/velvetos/**",
+        "packages/velvetos/UPSTREAM-WATCH.json",
+        "packages/velvetos/WINDOWS-PATH-CONTRACT.md",
+        "packages/velvetos/schema/instance-windows-host-binding.schema.json",
         "packages/vfigos/**",
         "packages/vfmcp/**",
         "packages/vfmem/**",
@@ -3478,9 +3859,12 @@
       "id": "check-zero-cost-final-acceptance",
       "path": "scripts/check-zero-cost-final-acceptance.py",
       "owns": [
-        "packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json",
+        "packages/vfharness/runtime/expected-components.json",
+        "packages/vfharness/runtime/proof-scope.json",
         "packages/vfharness/state/zero-cost-agent-stack-2026-09-27.json",
-        "packages/vfharness/runtime/expected-components.json"
+        "packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json",
+        "scripts/check-zero-cost-final-acceptance.py",
+        "scripts/vf_runtime_receipt_policy.py"
       ],
       "triggered_by": [
         "packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json",
@@ -3510,13 +3894,14 @@
       "id": "check-reel-route-sync",
       "path": "scripts/check-reel-route-sync.py",
       "owns": [
-        "instances/velvet-factory/distribution/chatgpt-project/REEL-ROUTE.md",
+        "instances/velvet-factory/distribution/chatgpt-project/LATEST.json",
         "instances/velvet-factory/distribution/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.10.txt",
         "instances/velvet-factory/distribution/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.11.txt",
-        "instances/velvet-factory/distribution/chatgpt-project/LATEST.json",
-        "packages/vfom/REEL-ROUTE-CONTRACT.json",
+        "instances/velvet-factory/distribution/chatgpt-project/REEL-ROUTE.md",
         "packages/vfom/MOTION-PRESETS.md",
-        "packages/vfom/hyperframes/templates/**"
+        "packages/vfom/REEL-ROUTE-CONTRACT.json",
+        "packages/vfom/hyperframes/templates/**",
+        "scripts/check-reel-route-sync.py"
       ],
       "triggered_by": [
         "instances/velvet-factory/distribution/chatgpt-project/REEL-ROUTE.md",
@@ -3544,9 +3929,11 @@
       "id": "check-reel-templates",
       "path": "scripts/check-reel-templates.py",
       "owns": [
-        "packages/vfom/hyperframes/**",
-        "packages/vfom/MOTION-PRESETS.md",
+        "packages/vfbrand/brand-tokens.json",
         "packages/vfom/HYPERFRAMES-RENDER.schema.json",
+        "packages/vfom/MOTION-PRESETS.md",
+        "packages/vfom/hyperframes/**",
+        "scripts/check-reel-templates.py",
         "scripts/vf_hyperframes.py",
         "scripts/vf_turntable.py"
       ],
@@ -3577,10 +3964,14 @@
       "id": "check-runtime-receipt-age-policy",
       "path": "scripts/check-runtime-receipt-age-policy.py",
       "owns": [
-        "scripts/vf_runtime_receipt_policy.py",
+        "packages/velvetos/policy/reports/stage4f-runtime-receipt-scope.json",
         "packages/vfharness/runtime/proof-scope.json",
+        "scripts/check-grok-provider-readback.py",
+        "scripts/check-runtime-doctor.py",
+        "scripts/check-runtime-receipt-age-policy.py",
+        "scripts/check-zero-cost-final-acceptance.py",
         "scripts/generate-stage4f-runtime-receipt-scope-report.py",
-        "packages/velvetos/policy/reports/stage4f-runtime-receipt-scope.json"
+        "scripts/vf_runtime_receipt_policy.py"
       ],
       "triggered_by": [
         "scripts/vf_runtime_receipt_policy.py",
