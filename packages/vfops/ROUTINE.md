@@ -1,33 +1,31 @@
 # ROUTINE — Velvet Factory office schedule
 
-Asia/Jerusalem. The **live protected Grok Bot routine inventory** is the clock authority for owner-facing scheduled office work. `automation/grok/manifest.json` records the provider binding; this document describes responsibilities and cadence and must not create or revive a second scheduler.
+Asia/Jerusalem. Current recurring Grok Bot authority is the **three-routine minimal baseline** in `automation/grok/current-baseline.json` and `automation/grok/manifest.json`. Historical Stage 7C nine-routine wording is provenance, not current scheduler authority.
 
-## Current protected daily cadence
+## Current scheduled cadence
 
 | Time | Surface | Responsibility |
 |---|---|---|
-| **01:45** | VelvetOS Integrity Guard | Verify/repair the protected active automation set before daily workloads. |
-| **02:00** | Velvet Research Seat | Daily live research plus read-only upstream/toolchain update observation. Finish by the **07:00 cutoff** as `ready_for_brief`, `no_meaningful_findings`, or an explicit blocker. Consumer output is `packages/vfops/data/research.md`; upstream evidence is `packages/vfresearch/sources/upstream-watch-latest.json`. |
-| **06:30** | Cognee Memory Sync | Refresh/verify the local derived Cognee/vfmem index; stay silent when current and healthy, report exact blockers/anomalies only. |
-| **07:15** | Runtime Receipts Refresh | Refresh the live runtime receipts in `packages/vfharness/state/runtime/` from real observations only (no fabricated observation), keeping dependency-scoped deployment/runtime proofs ready. Freshness is not a universal code/merge gate. |
-| **09:00** | Velvet Morning Brief | Owner-facing Morning Green v3.1 brief from current live sources. Persist the same-day canonical factual artifact with `python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>`, refresh Cloudflare Instagram Publisher queue truth and approved publication media evidence, project through `prepare_morning_green.py`, then deliver only through the canonical GitHub/Gmail path. Delivery still requires Gmail provider evidence, not merely generated files. |
-| **10:00** | Morning Delivery Guard | Verify TODAY'S 09:00 Morning Green delivery; recover only if absent/unverified. Recovery must persist/rebuild the same-day factual artifact with `python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>`, refresh current Cloudflare Instagram Publisher evidence, rebuild the same Morning Green route and use the canonical Gmail path. `backfill artifact is not a delivery receipt`, and recovery must not silently downgrade to V10.3. |
-| **10:30** | VelvetOS Office Loop | Post-brief operations: blockers, production→content, readiness/publishing and system drift. |
-| **18:30** | VelvetOS Office Loop | Second sweep: changes since morning, autonomous completion, learning/state persistence and end-of-day handoff. |
-| **19:15** | Runtime Receipts Refresh | Second daily refresh of the same runtime evidence so live claims can prove named dependencies without an on-demand cold start; unrelated code remains `CODE_VALID` even if another receipt ages out. |
+| **06:30** | Cognee Memory Sync | Refresh/verify the local derived Cognee/vfmem index; silent when healthy. |
+| **18:30** | VelvetOS Office Loop | One meaningful end-of-day office sweep: state changes, handoff and learning. |
+| **19:15** | Runtime Receipts Refresh | Refresh dependency-scoped runtime evidence from real observations only; never fabricate an observation. |
 
-Weekly / קאדנס שבועי: `Cognee Stable Updates` runs Monday at 10:00 and `Weekly Research Accountability` runs Friday at 12:00. Repository-owned GitHub workflows keep their own schedules as machine execution/verifier clocks; Office Loop consumes their evidence rather than treating them as a second owner-facing scheduler. The machine-readable ownership/fallback contract is `packages/velvetos/policy/research-scheduler-consolidation.json`.
+No other Grok routine is a recurring clock.
 
-## Live Grok Cognee routines
+## Manual / event-driven capabilities
 
-`Cognee Memory Sync` (`cognee-memory-sync`) and `Cognee Stable Updates` (`cognee-stable-updates`) are live, enabled Grok Bot routines in `Asia/Jerusalem`, verified by provider readback on 2026-09-23. Their exact prompts, schedules and readback evidence are recorded in `automation/grok/cognee-routines.json`. The two matching ChatGPT automation copies were disabled only after that verification, so Grok Bot is now the sole scheduler for these two jobs.
+`Velvet Morning Brief` is manual/event-driven only. When justified, build the factual artifact with `python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>` and use the canonical delivery path. `backfill artifact is not a delivery receipt`.
 
-`VelvetOS Integrity Guard` is a finite single-pass 01:45 audit. It repairs only the protected routines, verifies once, then exits; it is not a continuous monitor. The protected-set contract does not authorize deleting, pausing, or rewriting a new unlisted routine merely because it is outside the nine protected entries (eight until `Runtime Receipts Refresh` was added on 2026-09-29). Known legacy routines remain disabled; an unknown extra routine is left untouched and surfaced as a conflict unless Christian explicitly authorizes removal.
+`Velvet Research Seat` is also manual/event-driven only. The old **07:00 cutoff** and **09:00** brief remain historical workflow references, not active recurring clocks. Research output, when intentionally refreshed, continues to land in `packages/vfops/data/research.md`.
 
+`Morning Delivery Guard`, `Weekly Research Accountability`, `Cognee Stable Updates`, `VelvetOS Integrity Guard`, and `PC Offline Retry` are disabled. `Cognee Stable Updates` is handled on demand through upstream review. There is no dedicated recurring routine manager.
+
+Best-skills (`BEST-SKILLS`) and weekly inspiration (`WEEKLY.md` / שבוע) remain lifecycle capabilities, not fixed Grok clocks.
 
 ## Canonical ownership
 
-`VelvetOS Office Loop` is the active scheduled office manager. It intentionally owns responsibilities that were previously split across separate Creative Autopilot, Evening Summary, Automation Steward, Media Intake desk checks, Publish Watch, Content Sprint and Insights Review automations. Those legacy recurring ChatGPT automations stay disabled. The former protected ChatGPT scheduler copies were retired at the verified 2026-09-19 Grok Bot cutover and must not be re-enabled as a second scheduler unless Christian explicitly changes the architecture.
+
+`VelvetOS Office Loop` is the only scheduled office sweep and runs once at 18:30. It intentionally owns responsibilities that were previously split across separate Creative Autopilot, Evening Summary, Automation Steward, Media Intake desk checks, Publish Watch, Content Sprint and Insights Review automations. Those legacy recurring ChatGPT automations stay disabled. The former protected ChatGPT scheduler copies were retired at the verified 2026-09-19 Grok Bot cutover and must not be re-enabled as a second scheduler unless Christian explicitly changes the architecture.
 
 `packages/vfops/LOOP.json` is a **consume/lifecycle map, not a clock source**. Historical labels such as `daily-07:00` or `daily-06:15` do not override the protected live automation set above.
 
@@ -37,7 +35,7 @@ Weekly / קאדנס שבועי: `Cognee Stable Updates` runs Monday at 10:00 and
 
 - `vfmedia-intake.yml` — high-frequency canonical Media Vault intake.
 - `office-control-plane.yml` — watchdog/control-plane health, memory hygiene, gaps and handoff, plus CI-failure learning candidates (`vf_learning.py ingest-ci` → `packages/vfharness/state/learning-candidates/`); not a replacement scheduler for every office capability.
-- `velvetos-research.yml` — research freshness/index/sensor verification around artifacts; the live Research Seat performs the owner-facing web research body.
+- `velvetos-research.yml` — research freshness/index/sensor verification around artifacts; any owner-facing research body is manual/event-driven.
 - `readme-system-pulse.yml` — README/System Pulse refresh.
 - `gmail-brief-send.yml` — one-shot production Gmail transport through the owner Apps Script bridge when `packages/vfops/out/gmail-send-request.json` is explicitly enabled.
 - `velvetos-weekly-deck.yml` — weekly deck build path.
@@ -59,7 +57,7 @@ No Instagram connection does **not** stop office work: continue intake, inspecti
 
 ## Recurring non-clock responsibilities
 
-- **Upstream/toolchain watch:** the existing Research Seat runs `python3 scripts/vf_upstream_watch.py check --write packages/vfresearch/sources/upstream-watch-latest.json`. It covers installed/runtime sources and repository-only skill/agent/pattern upstreams from `packages/velvetos/UPSTREAM-WATCH.json`. It never auto-upgrades. Detected updates are sticky until a reviewed adoption explicitly runs `vf_upstream_watch.py ack --repo … --evidence …`; compatibility/smoke evidence is required before that acknowledgement.
+- **Upstream/toolchain watch:** when an explicit research/upstream event justifies it, the Research Seat can run `python3 scripts/vf_upstream_watch.py check --write packages/vfresearch/sources/upstream-watch-latest.json`. It covers installed/runtime sources and repository-only skill/agent/pattern upstreams from `packages/velvetos/UPSTREAM-WATCH.json`. It never auto-upgrades. Detected updates are sticky until a reviewed adoption explicitly runs `vf_upstream_watch.py ack --repo … --evidence …`; compatibility/smoke evidence is required before that acknowledgement.
 - **Bi-daily Best Skills:** `BEST-SKILLS.md` / `vf-best-skills` runs approximately every 48h until explicitly stopped. This is a standing lifecycle responsibility, not a second fixed-clock scheduler; timer/provider renewal evidence must remain honest.
 - **Weekly inspiration links / קישורי השראה שבועיים:** `vfresearch/WEEKLY.md` + `LINKS.json`, followed by Print·Demand·Sound via `vfresearch/hq/PRINT-DEMAND.md`. The weekly cadence must emit real source/evidence or an explicit no-change/blocker state.
 - MakerWorld/Printables candidate research runs behind `MAKERWORLD-SCAN.md` + license/slice/test gates; never promote directly to SKU/price.
@@ -67,7 +65,7 @@ No Instagram connection does **not** stop office work: continue intake, inspecti
 - Daily learning/retro and owner-memory are owned by the Office Loop/end-of-day learning path.
 - LAST30/community research remains monthly/on-demand unless the protected automation set explicitly changes.
 
-The 09:00 brief consumes the daily research block from `packages/vfops/data/research.md`; if the daily body did not run, the brief must show an honest gap rather than infer completion from a green workflow.
+An event-driven Morning Brief may consume `packages/vfops/data/research.md`; if research was not intentionally refreshed, the brief must show an honest gap rather than infer completion from a green workflow.
 
 ## Truth rules
 

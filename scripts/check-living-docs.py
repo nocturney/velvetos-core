@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import subprocess
 import sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
@@ -21,22 +20,49 @@ def main():
         txt=coord.read_text(errors='ignore').lower()
         if 'main' in txt and 'what runs on the machine' in txt and 'receipt' not in txt:
             errors.append('SHARED-WORK-COORDINATION.md discusses runtime drift without linking runtime receipts')
-    stage6d = ROOT/'scripts/generate-stage6d-documentation-authority-cleanup-report.py'
-    if not stage6d.is_file():
-        errors.append('missing Stage 6D documentation-authority generator')
+    # Stage 6D is historical acceptance evidence. Current documentation authority
+    # moved after Stage 6D and must not force today's scheduler docs back to the
+    # old 07:00/09:00 clock contract.
+    stage6d_report = ROOT/'packages/velvetos/policy/reports/stage6d-documentation-authority-cleanup.json'
+    if not stage6d_report.is_file():
+        errors.append('missing historical Stage 6D documentation-authority receipt')
     else:
-        proc = subprocess.run(
-            [sys.executable, str(stage6d), '--check'],
-            cwd=ROOT,
-            text=True,
-            encoding='utf-8',
-            errors='replace',
-            capture_output=True,
-            timeout=60,
-        )
-        if proc.returncode != 0:
-            detail = (proc.stdout.strip() or proc.stderr.strip() or f'exit {proc.returncode}')
-            errors.append('Stage 6D documentation-authority gate failed: '+detail)
+        try:
+            import json
+            stage6d = json.loads(stage6d_report.read_text(encoding='utf-8'))
+            if stage6d.get('repository_acceptance') != 'PASS':
+                errors.append('historical Stage 6D documentation-authority receipt is not PASS')
+        except Exception as exc:
+            errors.append('historical Stage 6D documentation-authority receipt unreadable: '+str(exc))
+
+    baseline = ROOT/'automation/grok/current-baseline.json'
+    manifest = ROOT/'automation/grok/manifest.json'
+    routine = ROOT/'packages/vfops/ROUTINE.md'
+    if not baseline.is_file():
+        errors.append('missing current Grok minimal baseline')
+    else:
+        try:
+            import json
+            b = json.loads(baseline.read_text(encoding='utf-8'))
+            active = {row.get('id') for row in (b.get('activeRoutines') or [])}
+            expected = {'cognee-memory-sync','velvetos-office-loop','runtime-receipts-refresh'}
+            if active != expected:
+                errors.append('current Grok minimal baseline active routine set drift')
+        except Exception as exc:
+            errors.append('current Grok minimal baseline unreadable: '+str(exc))
+    if manifest.is_file():
+        try:
+            import json
+            m = json.loads(manifest.read_text(encoding='utf-8'))
+            if m.get('currentBaselineArtifact') != 'automation/grok/current-baseline.json':
+                errors.append('Grok manifest does not bind the current minimal baseline')
+        except Exception as exc:
+            errors.append('Grok manifest unreadable: '+str(exc))
+    if routine.is_file():
+        current = routine.read_text(encoding='utf-8')
+        for marker in ('**06:30** | Cognee Memory Sync','**18:30** | VelvetOS Office Loop','**19:15** | Runtime Receipts Refresh','manual/event-driven only'):
+            if marker not in current:
+                errors.append('current routine documentation missing '+marker)
     if errors:
         for e in errors: print('FAIL '+e,file=sys.stderr)
         return 1

@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "provider": "grok-bot",
   "bot": "Chief of Staff",
   "timezone": "Asia/Jerusalem",
@@ -18,9 +18,10 @@
     },
     "integrityGuard": {
       "providerRoutineId": "velvetos-integrity-guard",
-      "enabled": true,
-      "cadence": "daily 01:45",
-      "protectedRoutineCount": 9
+      "enabled": false,
+      "cadence": null,
+      "protectedRoutineCount": 3,
+      "state": "retired_owner_approved_2026-10-06"
     }
   },
   "productionScheduler": "grok-bot-routines",
@@ -38,81 +39,84 @@
   },
   "routines": [
     {
-      "id": "velvetos-integrity-guard",
-      "title": "VelvetOS Integrity Guard",
-      "cadence": "daily 01:45",
-      "enabled": true,
-      "responsibility": "finite single-pass protection of live Grok routine inventory; repair protected drift; never delete unknown unlisted routines; notify only on repair/blocker"
-    },
-    {
-      "id": "velvet-research-seat",
-      "title": "Velvet Research Seat",
-      "cadence": "daily 02:00",
-      "enabled": true,
-      "responsibility": "daily research plus read-only upstream/toolchain watch; canonical artifacts before 07:00 cutoff; tool-update decisions go to a separate owner email, never the Morning Brief; never auto-upgrade"
-    },
-    {
       "id": "cognee-memory-sync",
       "title": "Cognee Memory Sync",
       "cadence": "daily 06:30",
       "enabled": true,
+      "providerSchedule": "CRON_TZ=Asia/Jerusalem 30 6 * * *",
       "responsibility": "refresh and verify the local derived Cognee/vfmem index; silent when current and healthy"
-    },
-    {
-      "id": "runtime-receipts-refresh",
-      "title": "Runtime Receipts Refresh",
-      "cadence": "daily 07:15 and 19:15",
-      "enabled": true,
-      "providerSchedule": "CRON_TZ=Asia/Jerusalem 15 7,19 * * *",
-      "protectedFrom": "2026-09-29T14:01:00+03:00",
-      "responsibility": "keep the four 24h runtime receipts in packages/vfharness/state/runtime fresh from live observations only; open one PR; merge only on green; never fabricate an observation"
-    },
-    {
-      "id": "velvet-morning-brief",
-      "title": "Velvet Morning Brief",
-      "cadence": "daily 09:00",
-      "enabled": true,
-      "responsibility": "Morning Green v3.1 owner brief via canonical GitHub/Gmail sender; V10.3 is legacy/recovery only"
-    },
-    {
-      "id": "morning-delivery-guard",
-      "title": "Morning Delivery Guard",
-      "cadence": "daily 10:00",
-      "enabled": true,
-      "responsibility": "verify 09:00 delivery; one full-fidelity recovery if needed"
-    },
-    {
-      "id": "cognee-stable-updates",
-      "title": "Cognee Stable Updates",
-      "cadence": "Monday 10:00",
-      "enabled": true,
-      "responsibility": "watch stable Cognee releases; staged smoke/PR/CI/promotion with rollback and action-only notification"
     },
     {
       "id": "velvetos-office-loop",
       "title": "VelvetOS Office Loop",
-      "cadence": "daily 10:30 and 18:30",
+      "cadence": "daily 18:30",
       "enabled": true,
-      "responsibility": "consolidated office operations, readiness, publishing gates, learning and handoff"
+      "providerSchedule": "CRON_TZ=Asia/Jerusalem 30 18 * * *",
+      "responsibility": "single end-of-day office sweep for meaningful state, handoff and learning only"
+    },
+    {
+      "id": "runtime-receipts-refresh",
+      "title": "Runtime Receipts Refresh",
+      "cadence": "daily 19:15",
+      "enabled": true,
+      "providerSchedule": "CRON_TZ=Asia/Jerusalem 15 19 * * *",
+      "protectedFrom": "2026-09-29T14:01:00+03:00",
+      "responsibility": "refresh dependency-scoped runtime evidence once daily from live observations only; never fabricate an observation"
+    }
+  ],
+  "protectedSet": {
+    "count": 3,
+    "changedAt": "2026-10-06T15:00:00+03:00",
+    "change": "owner-approved minimal baseline: three recurring routines; routine-manager/guard and low-value clocks retired",
+    "approvedBy": "Christian Velvet",
+    "readbackRule": "current provider evidence must match exactly the three active manifest routines; retired/manual routines must remain disabled or absent"
+  },
+  "retiredRoutines": [
+    {
+      "id": "velvet-morning-brief",
+      "title": "Velvet Morning Brief",
+      "desiredEnabled": false,
+      "state": "manual_or_event_driven_only"
+    },
+    {
+      "id": "morning-delivery-guard",
+      "title": "Morning Delivery Guard",
+      "desiredEnabled": false,
+      "state": "paused_owner_approved_2026-10-06"
+    },
+    {
+      "id": "velvet-research-seat",
+      "title": "Velvet Research Seat",
+      "desiredEnabled": false,
+      "state": "paused_owner_approved_2026-10-06"
     },
     {
       "id": "weekly-research-accountability",
       "title": "Weekly Research Accountability",
-      "cadence": "Friday 12:00",
-      "enabled": true,
-      "responsibility": "canonical weekly research accountability workflow"
-    }
-  ],
-  "protectedSet": {
-    "count": 9,
-    "changedAt": "2026-09-29T14:01:00+03:00",
-    "change": "added runtime-receipts-refresh as the 9th protected routine",
-    "approvedBy": "Christian Velvet",
-    "readbackRule": "a provider readback must list exactly the manifest routines whose protectedFrom is absent or <= readback observedAt; routines added after the latest real readback stay pending_first_readback until the next live readback, which must include them"
-  },
-  "retiredRoutines": [
+      "desiredEnabled": false,
+      "state": "paused_owner_approved_2026-10-06"
+    },
+    {
+      "id": "cognee-stable-updates",
+      "title": "Cognee Stable Updates",
+      "desiredEnabled": false,
+      "state": "on_demand_upstream_review_only"
+    },
+    {
+      "id": "velvetos-integrity-guard",
+      "title": "VelvetOS Integrity Guard",
+      "desiredEnabled": false,
+      "state": "retired_no_dedicated_routine_manager"
+    },
+    {
+      "id": "pc-offline-retry",
+      "title": "PC Offline Retry",
+      "desiredEnabled": false,
+      "state": "retired_no_separate_retry_clock"
+    },
     {
       "id": "openpost-release-watch",
+      "title": "OpenPost Release Watch",
       "desiredEnabled": false,
       "state": "deleted_verified",
       "evidence": "automation/grok/openpost-release-watch-removal.json"
@@ -135,8 +139,8 @@
   "latestProviderReadback": {
     "status": "live_verified",
     "date": "2026-10-06",
-    "artifact": "automation/grok/provider-readback-2026-10-06-am.json",
-    "protectedRoutineCount": 9,
+    "artifact": "automation/grok/provider-readback-2026-10-06-minimal.json",
+    "protectedRoutineCount": 3,
     "protectedInventoryClockMatch": true,
     "rendererTimeZone": "Asia/Jerusalem",
     "promptBodyParityClaimed": false,
@@ -148,5 +152,6 @@
     "report": "packages/vfresearch/sources/upstream-watch-latest.json",
     "autoUpgrade": false,
     "consumerRoutineId": "velvetos-office-loop"
-  }
+  },
+  "currentBaselineArtifact": "automation/grok/current-baseline.json"
 }

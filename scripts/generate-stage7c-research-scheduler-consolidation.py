@@ -69,7 +69,13 @@ def main() -> int:
     require(len(args.prepared_against) == 40, "--prepared-against must be a full Git SHA")
 
     model = load(MODEL)
-    manifest = load(MANIFEST)
+    # A pinned provider-readback artifact is used only for historical receipt replay.
+    # In that mode, replay the scheduler manifest from the original prepared-against
+    # SHA rather than forcing today's scheduler baseline to pretend it is still Stage 7C.
+    if args.provider_readback_artifact:
+        manifest = json.loads(git_show(args.prepared_against, "automation/grok/manifest.json").decode("utf-8-sig"))
+    else:
+        manifest = load(MANIFEST)
     watch = load(WATCH)
     review = load(REVIEW)
     policies = load(POLICY_REGISTRY)

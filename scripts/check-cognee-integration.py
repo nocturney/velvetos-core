@@ -160,23 +160,22 @@ def main() -> None:
         fail("unexpected live Grok Cognee provider routine IDs")
     guard_binding = cutover.get("integrityGuard") or {}
     if guard_binding.get("providerRoutineId") != "velvetos-integrity-guard":
-        fail("Integrity Guard provider binding missing after Cognee cutover")
-    if guard_binding.get("enabled") is not True or guard_binding.get("cadence") != "daily 01:45":
-        fail("Integrity Guard enabled/cadence drift after Cognee cutover")
-    if guard_binding.get("protectedRoutineCount") != 9:
-        fail("Integrity Guard must protect the nine current protected routines")
+        fail("historical Integrity Guard provider binding missing")
+    if guard_binding.get("enabled") is not False or guard_binding.get("state") != "retired_owner_approved_2026-10-06":
+        fail("Integrity Guard must stay retired in the current Grok manifest")
+    if guard_binding.get("protectedRoutineCount") != 3:
+        fail("current Grok protected routine count must be three")
 
     manifest_routines = {row.get("id"): row for row in (grok_manifest.get("routines") or [])}
-    expected_manifest = {
-        "cognee-memory-sync": "daily 06:30",
-        "cognee-stable-updates": "Monday 10:00",
-    }
-    if len(manifest_routines) != 9:
-        fail("Grok manifest must contain the nine protected routines")
-    for routine_id, cadence in expected_manifest.items():
-        row = manifest_routines.get(routine_id) or {}
-        if row.get("cadence") != cadence or row.get("enabled") is not True:
-            fail(f"verified Grok manifest drift for {routine_id}")
+    if set(manifest_routines) != {"cognee-memory-sync", "velvetos-office-loop", "runtime-receipts-refresh"}:
+        fail("Grok manifest current routine set must be the three-routine minimal baseline")
+    row = manifest_routines.get("cognee-memory-sync") or {}
+    if row.get("cadence") != "daily 06:30" or row.get("enabled") is not True:
+        fail("Cognee Memory Sync current Grok manifest drift")
+    retired = {row.get("id"): row for row in (grok_manifest.get("retiredRoutines") or [])}
+    stable = retired.get("cognee-stable-updates") or {}
+    if stable.get("desiredEnabled") is not False:
+        fail("Cognee Stable Updates must be retired/on-demand in current Grok manifest")
 
     grok_packet = json.loads(GROK_COGNEE.read_text(encoding="utf-8"))
     if grok_packet.get("schema") != "vf.grok.cognee-cutover.v1":
