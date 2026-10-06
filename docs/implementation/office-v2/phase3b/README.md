@@ -1,6 +1,6 @@
 # Office v2 Phase 3B — Identity / Authorization / Credential Broker
 
-Status: **CONTRACT V0 FROZEN / ALL THREE LANES LAB SMOKES PASS / AUTHORIZATION DESTRUCTIVE COMPLETE: OPA WINNER + CEDAR FALLBACK FOR COMPOSITION / IDENTITY + CREDENTIAL FIXTURES PENDING / NO WINNER AT PHASE LEVEL / NO PRODUCTION AUTHORITY CHANGE**
+Status: **CONTRACT V0 FROZEN / ALL THREE LANES LAB SMOKES PASS / IDENTITY DESTRUCTIVE COMPLETE: ZITADEL WINNER + KEYCLOAK FALLBACK / AUTHORIZATION DESTRUCTIVE COMPLETE: OPA WINNER + CEDAR FALLBACK / CREDENTIAL FIXTURE PENDING / NO WINNER AT PHASE LEVEL / NO PRODUCTION AUTHORITY CHANGE**
 
 Phase 3B treats security as three explicit roles rather than forcing one product to own identity, authorization and secrets:
 
@@ -46,6 +46,6 @@ Admission is not LAB validation, winner selection, SHADOW, PILOT or production p
 
 Authorization lane admission smoke is PASS for OPA, OpenFGA and Cedar. The run used only synthetic inputs; OPA/OpenFGA had no host-port bindings, Cedar used the checksum-verified official 4.13.0 CLI asset, and teardown removed candidate containers/network before lifecycle promotion to LAB.
 
-Identity lane admission smoke is PASS for ZITADEL, Keycloak and authentik. All used synthetic service identities only, no production credentials, and no raw token/secret material in receipts. ZITADEL used an internal-only network with no host-port bindings and proved bootstrap identity, service-account creation, client-credentials issuance, wrong-secret denial, deletion and deleted-identity denial. Keycloak proved client-credentials issuance plus wrong-secret and deleted-client denial; authentik proved client-credentials issuance plus wrong-secret denial and token revocation.
+Identity lane admission smoke is PASS for ZITADEL, Keycloak and authentik. All used synthetic service identities only, no production credentials, and no raw token/secret material in receipts. The frozen 20-step destructive fixture is also complete for all three challengers: each proved identity issuance/verification, revocation, replacement identity recovery and dependency-outage fail-closed behavior. ZITADEL is selected as the identity winner for composition, Keycloak as fallback, and authentik as specialized reserve. This lane selection does not grant SHADOW, PILOT or production authority.
 
 Credential-broker LAB smoke is PASS for both Infisical's core/community path and OpenBao. Infisical used only synthetic machine identity and secret material on an internal-only network with no host-port bindings; it proved scoped read, unrelated-project denial, viewer write denial, client-secret rotation, revocation of the old secret and its issued token, survival of the rotated credential, and full denial after identity deletion. Agent Vault / Enterprise-only features were not assumed. OpenBao used synthetic AppRole credentials on an internal-only network with no host-port bindings and proved scoped read, unrelated-secret denial and token revocation. No LAB smoke selects a winner or grants SHADOW/PILOT/production authority.

@@ -18,6 +18,11 @@ REQUIRED = [
     P3B / "admission-v0.json",
     P3B / "lab-status-v0.json",
     P3B / "authorization-lane-verdict-v0.json",
+    P3B / "identity-lane-verdict-v0.json",
+    P3B / "scorecards" / "identity-candidate-zitadel.json",
+    P3B / "scorecards" / "identity-candidate-keycloak.json",
+    P3B / "scorecards" / "identity-candidate-authentik.json",
+    P3B / "scorecards" / "identity-incumbent-current-service-identity.json",
     P3B / "scorecards" / "authorization-candidate-opa.json",
     P3B / "scorecards" / "authorization-candidate-cedar.json",
     P3B / "scorecards" / "authorization-candidate-openfga.json",
@@ -194,10 +199,16 @@ def main() -> None:
     if authz_status.get("lane_verdict_ref") != "docs/implementation/office-v2/phase3b/authorization-lane-verdict-v0.json":
         fail("authorization lane verdict ref missing")
     identity_status = ((lab_status.get("lanes") or {}).get("identity_provider") or {})
-    if identity_status.get("status") != "LAB_SMOKE_PASS_DESTRUCTIVE_FIXTURE_PENDING":
+    if identity_status.get("status") != "DESTRUCTIVE_PASS_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY":
         fail("identity LAB status mismatch")
     if set(identity_status.get("lab_candidates") or []) != lab_identity:
         fail("identity LAB candidate set mismatch")
+    if identity_status.get("winner") != "candidate-zitadel" or identity_status.get("fallback") != "candidate-keycloak":
+        fail("identity lane winner/fallback mismatch")
+    if identity_status.get("specialized_reserve") != "candidate-authentik":
+        fail("identity lane reserve mismatch")
+    if identity_status.get("lane_verdict_ref") != "docs/implementation/office-v2/phase3b/identity-lane-verdict-v0.json":
+        fail("identity lane verdict ref missing")
     if identity_status.get("pending_candidates"):
         fail("identity LAB must have no pending candidates after ZITADEL smoke")
     if len(identity_status.get("receipt_refs") or []) != 3 or len(identity_status.get("cleanup_refs") or []) != 3:
@@ -238,7 +249,7 @@ def main() -> None:
         fail("OpenBao LAB receipt evidence missing from registry")
 
     shortlist = load(P3B / "identity-security-shortlist-v0.json")
-    if shortlist.get("status") != "AUTHORIZATION_LANE_SELECTED_IDENTITY_AND_CREDENTIAL_FIXTURES_PENDING_NO_PRODUCTION_AUTHORITY":
+    if shortlist.get("status") != "IDENTITY_AND_AUTHORIZATION_LANES_SELECTED_CREDENTIAL_FIXTURE_PENDING_NO_PRODUCTION_AUTHORITY":
         fail("Phase 3B shortlist status mismatch")
     if shortlist.get("winner") is not None or shortlist.get("production_authority_granted") is not False:
         fail("Phase 3B shortlist selected winner or authority prematurely")
@@ -255,6 +266,9 @@ def main() -> None:
         if lane_id == "phase3b-authorization-policy":
             if lane.get("winner") != "candidate-opa" or lane.get("fallback") != "candidate-cedar":
                 fail("authorization lane selection mismatch")
+        elif lane_id == "phase3b-identity-provider":
+            if lane.get("winner") != "candidate-zitadel" or lane.get("fallback") != "candidate-keycloak" or lane.get("specialized_reserve") != "candidate-authentik":
+                fail("identity lane selection mismatch")
         elif lane.get("winner") is not None:
             fail("Phase 3B lane winner selected before destructive fixture: " + lane_id)
         for cid in [incumbent, *challengers]:
@@ -282,6 +296,10 @@ def main() -> None:
             refs = lane.get("lab_smoke_refs") or {}
             if set(refs) != lab_identity or not all(refs.values()):
                 fail("identity shortlist LAB smoke refs incomplete")
+            if lane.get("admission_status") != "DESTRUCTIVE_COMPLETE_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY":
+                fail("identity destructive status mismatch")
+            if lane.get("lane_verdict_ref") != "docs/implementation/office-v2/phase3b/identity-lane-verdict-v0.json":
+                fail("identity shortlist lane verdict ref missing")
         elif lane_id == "phase3b-credential-broker":
             expected = {"candidate-infisical-agent-vault":"LAB","candidate-openbao":"LAB"}
             if lane.get("candidate_admission") != expected:
@@ -289,6 +307,18 @@ def main() -> None:
             refs = lane.get("lab_smoke_refs") or {}
             if set(refs) != lab_credential or not all(refs.values()):
                 fail("credential shortlist LAB smoke refs incomplete")
+
+    identity_verdict = load(P3B / "identity-lane-verdict-v0.json")
+    if identity_verdict.get("status") != "LANE_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY":
+        fail("identity lane verdict status mismatch")
+    if identity_verdict.get("winner") != "candidate-zitadel" or identity_verdict.get("fallback") != "candidate-keycloak" or identity_verdict.get("specialized_reserve") != "candidate-authentik":
+        fail("identity lane verdict selection mismatch")
+    if identity_verdict.get("production_authority_change") is not False or identity_verdict.get("shadow_or_pilot_promotion") is not False:
+        fail("identity lane verdict changed authority or promoted runtime")
+    for cid in ("candidate-zitadel", "candidate-keycloak", "candidate-authentik", "incumbent-current-service-identity"):
+        sc = load(P3B / "scorecards" / f"identity-{cid}.json")
+        if sc.get("fixture_id") != "identity-security-destructive-20-step" or sc.get("candidate_id") != cid:
+            fail("identity scorecard identity/fixture mismatch: " + cid)
 
     authz_verdict = load(P3B / "authorization-lane-verdict-v0.json")
     if authz_verdict.get("status") != "LANE_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY":

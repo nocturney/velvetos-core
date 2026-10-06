@@ -1,0 +1,62 @@
+{
+  "schema": "velvetos.office-v2.phase2-scorecard.v0",
+  "candidate_id": "incumbent-current-service-identity",
+  "fixture_id": "identity-security-destructive-20-step",
+  "run_id": "incumbent-service-identity-inspection-20261006",
+  "captured_at": "2026-10-06T15:36:38.253461Z",
+  "fitness": {
+    "score_0_5": 1.5,
+    "notes": [
+      "Failed 9 mandatory identity-provider lane steps because the current production shape is provider-native rather than one canonical identity-provider boundary.",
+      "There is no uniform bootstrap, assertion issuance, verification, revocation, replacement-identity or isolated dependency-outage interface."
+    ]
+  },
+  "safety": {
+    "score_0_5": 4.5,
+    "notes": [
+      "Existing delivery-approval and policy-architecture guards both passed; this benchmark found a contract-fit gap, not an existing production bypass.",
+      "Provider/domain-native identities retain their current production authority until a later explicit promotion."
+    ]
+  },
+  "operability": {
+    "score_0_5": 3.8,
+    "notes": [
+      "No central identity service is currently required, but identity lifecycle operations are distributed across GCP/OIDC/WIF and connector-native providers.",
+      "That distribution increases the integration burden for a single Office v2 workload-identity contract."
+    ]
+  },
+  "evidence_quality": {
+    "score_0_5": 4.8,
+    "notes": [
+      "Inspection uses the real repository delivery-approval and policy-architecture guards and records unsupported semantics as failures.",
+      "No production identity was created, revoked or mutated to manufacture benchmark evidence."
+    ]
+  },
+  "resources": {
+    "wall_seconds": 82.93,
+    "cpu_peak_pct": null,
+    "ram_peak_mb": null,
+    "gpu_peak_pct": null,
+    "vram_peak_mb": null,
+    "storage_delta_mb": null,
+    "network_mb": null,
+    "external_cost": 0.0,
+    "recurring_cost": 0.0,
+    "operator_minutes": 0.0
+  },
+  "rollback": {
+    "status": "NOT_APPLICABLE",
+    "notes": [
+      "Inspection-only benchmark made no production mutation."
+    ]
+  },
+  "security_findings": [
+    "Current production guards passed.",
+    "Failure is central identity-provider contract fit, not evidence of unsafe existing provider-native identities."
+  ],
+  "operations_findings": [
+    "Evidence: D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/identity-destructive-incumbent-current-service-identity.json",
+    "Mandatory failures=9; current production composition remains incumbent until explicit later promotion."
+  ],
+  "verdict": "REJECTED_WITH_REASON"
+}

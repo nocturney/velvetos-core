@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.office-v2.phase3b-identity-security-shortlist.v0",
-  "status": "AUTHORIZATION_LANE_SELECTED_IDENTITY_AND_CREDENTIAL_FIXTURES_PENDING_NO_PRODUCTION_AUTHORITY",
-  "captured_at": "2026-10-06T13:48:03.498551Z",
+  "status": "IDENTITY_AND_AUTHORIZATION_LANES_SELECTED_CREDENTIAL_FIXTURE_PENDING_NO_PRODUCTION_AUTHORITY",
+  "captured_at": "2026-10-06T15:38:52.076716Z",
   "winner": null,
   "production_authority_granted": false,
   "lanes": [
@@ -14,8 +14,10 @@
         "candidate-keycloak",
         "candidate-authentik"
       ],
-      "winner": null,
-      "admission_status": "3_LAB_VALIDATED_DESTRUCTIVE_FIXTURE_PENDING",
+      "winner": "candidate-zitadel",
+      "fallback": "candidate-keycloak",
+      "specialized_reserve": "candidate-authentik",
+      "admission_status": "DESTRUCTIVE_COMPLETE_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY",
       "candidate_admission": {
         "candidate-zitadel": "LAB",
         "candidate-keycloak": "LAB",
@@ -25,7 +27,8 @@
         "candidate-zitadel": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/zitadel-lab-smoke-pass.json",
         "candidate-keycloak": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/keycloak-lab-smoke-pass.json",
         "candidate-authentik": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authentik-lab-smoke-pass.json"
-      }
+      },
+      "lane_verdict_ref": "docs/implementation/office-v2/phase3b/identity-lane-verdict-v0.json"
     },
     {
       "lane_id": "phase3b-authorization-policy",
