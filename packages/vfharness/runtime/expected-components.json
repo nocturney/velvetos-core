@@ -14,15 +14,10 @@
       "kind": "worker-group",
       "required": true,
       "evidence": "runtime-receipt",
-      "anyOf": ["sderot-mac", "sderot-windows"],
-      "maxAgeHours": 24
-    },
-    {
-      "id": "grok-production-scheduler",
-      "kind": "automation",
-      "required": true,
-      "evidence": "provider-readback",
-      "receipt": "grok-production-scheduler",
+      "anyOf": [
+        "sderot-mac",
+        "sderot-windows"
+      ],
       "maxAgeHours": 24
     },
     {

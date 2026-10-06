@@ -166,29 +166,28 @@ def main() -> None:
     if "LinklyAI/best-skills" not in best and "linklyai/best-skills" not in best.lower():
         fail("BEST-SKILLS.md must name LinklyAI/best-skills")
     if "YYYY-MM-DD-best-skills.md" not in best:
-        fail("BEST-SKILLS.md must name bi-daily artifact pattern")
+        fail("BEST-SKILLS.md must name the dated artifact pattern")
     if "npx skills" not in best.lower() and "npx skills" not in best:
-        # must forbid install
         fail("BEST-SKILLS.md must mention npx skills (forbid on Cloud)")
-    if "כל יומיים" not in best and "48" not in best:
-        fail("BEST-SKILLS.md must state every-2-days cadence")
+    if "לפי צורך" not in best and "on-demand" not in best.lower():
+        fail("BEST-SKILLS.md must be on-demand after scheduler simplification")
 
-    best_json = json.loads(BEST_SKILLS_JSON.read_text(encoding="utf-8"))
+    best_json = json.loads(BEST_SKILLS_JSON.read_text(encoding="utf-8-sig"))
     if best_json.get("name") != "vfresearch-best-skills":
         fail("BEST-SKILLS.json name must be vfresearch-best-skills")
-    if best_json.get("cadence") != "every-2-days":
-        fail("BEST-SKILLS.json cadence must be every-2-days")
+    if best_json.get("cadence") != "on-demand":
+        fail("BEST-SKILLS.json cadence must be on-demand")
     if "existing packs" not in (best_json.get("rule") or ""):
         fail("BEST-SKILLS.json rule must say embed into existing packs")
-    if best_json.get("standingForever") is not True:
-        fail("BEST-SKILLS.json standingForever must be true until owner stops")
-    if best_json.get("schedulerAuthority") != "Velvet Research Seat":
-        fail("BEST-SKILLS.json schedulerAuthority must be Velvet Research Seat")
-    if best_json.get("timerName") != "research-seat:best-skills-48h":
-        fail("BEST-SKILLS.json timerName must route through Research Seat")
+    if best_json.get("standingForever") is not False:
+        fail("BEST-SKILLS.json standingForever must be false after owner retirement")
+    if best_json.get("schedulerAuthority") != "manual-or-event-driven-research":
+        fail("BEST-SKILLS.json schedulerAuthority must be manual/event-driven research")
+    if best_json.get("timerName") not in (None, ""):
+        fail("BEST-SKILLS.json must not retain a timerName")
     freshness = best_json.get("freshnessContract") or {}
-    if freshness.get("targetHours") != 44 or freshness.get("graceHours") != 8:
-        fail("BEST-SKILLS.json freshness must be 44h due + 8h grace (stale >52h)")
+    if freshness.get("mode") != "on-demand" or freshness.get("targetHours") is not None or freshness.get("graceHours") is not None:
+        fail("BEST-SKILLS freshness must not recreate a time-based due state")
     if "TIMER.md" not in (best_json.get("timerPlaybook") or ""):
         fail("BEST-SKILLS.json must point timerPlaybook at TIMER.md")
     best_locks = set(best_json.get("locks") or [])
@@ -196,41 +195,31 @@ def main() -> None:
         if need not in best_locks:
             fail(f"BEST-SKILLS.json missing lock {need}")
     if not best_json.get("lastPass"):
-        fail("BEST-SKILLS.json must set lastPass")
+        fail("BEST-SKILLS.json must preserve lastPass provenance")
 
     timer = BEST_SKILLS_TIMER.read_text(encoding="utf-8")
-    if "Velvet Research Seat" not in timer:
-        fail("TIMER.md must name Velvet Research Seat as cadence authority")
-    if "48" not in timer or "44h" not in timer or "52" not in timer:
-        fail("TIMER.md must state ~48h cadence, 44h due threshold and 52h stale threshold")
-    if "forever" not in timer.lower() and "standing order" not in timer:
-        fail("TIMER.md must state forever-until-owner-stops standing order")
+    if "on-demand" not in timer.lower() or "There is no timer" not in timer:
+        fail("TIMER.md must explicitly retire the standing timer")
+    if "Age alone" not in timer:
+        fail("TIMER.md must forbid age-only scheduling")
     if "subscribe_timer" in timer:
         fail("TIMER.md must not depend on external subscribe_timer")
-    for rel in ("packages/vfresearch/AGENTS.md", "constitution/ORCHESTRA.md"):
-        law = (ROOT / rel).read_text(encoding="utf-8")
-        if "subscribe_timer" in law or "חידוש טיימר חובה" in law:
-            fail(f"{rel} must not instruct external timer renewal (Research Seat is scheduler authority per BEST-SKILLS.json)")
     constitution_index = (ROOT / "constitution" / "README.md").read_text(encoding="utf-8")
     for link in __import__("re").findall(r"\]\(([A-Za-z0-9_.-]+\.md)\)", constitution_index):
         if not (ROOT / "constitution" / link).is_file():
             fail(f"constitution/README.md links missing file {link}")
 
     best_skill = BEST_SKILLS_SKILL.read_text(encoding="utf-8")
-    if "BEST-SKILLS.md" not in best_skill:
-        fail("vf-best-skills skill must point at BEST-SKILLS.md")
-    if "TIMER.md" not in best_skill:
-        fail("vf-best-skills skill must point at TIMER.md")
+    if "BEST-SKILLS.md" not in best_skill or "TIMER.md" not in best_skill:
+        fail("vf-best-skills skill must point at the playbook and timer-retirement contract")
     if "research-synthesist" not in best_skill:
         fail("vf-best-skills skill must mention research-synthesist")
     if "npx" not in best_skill.lower():
         fail("vf-best-skills skill must forbid npx install")
-    if "standing" not in best_skill.lower() and "לנצח" not in best_skill:
-        fail("vf-best-skills skill must mention standing forever order")
-    if "Research Seat" not in best_skill:
-        fail("vf-best-skills skill must route cadence through Research Seat")
-    if "lastPass" not in best_skill or "52h" not in best_skill:
-        fail("vf-best-skills skill must verify freshness from lastPass/artifact")
+    if "no standing cadence" not in best_skill.lower():
+        fail("vf-best-skills skill must explicitly deny a standing cadence")
+    if "lastPass" not in best_skill:
+        fail("vf-best-skills skill must preserve lastPass provenance")
 
     link_ids = {item["id"] for item in links}
     if "linklyai-best-skills" not in link_ids:
@@ -380,6 +369,13 @@ def main() -> None:
         or stage7c_model.get("status") != "ACTIVE_STAGE7C"
     ):
         fail("Stage 7C model identity drift")
+    current_override = stage7c_model.get("current_authority_override") or {}
+    if (
+        current_override.get("authority") != "chatgpt-automations"
+        or current_override.get("grok_recurring_protected_count") != 0
+        or current_override.get("status") != "SUPERSEDED_FOR_CURRENT_SCHEDULER_AUTHORITY"
+    ):
+        fail("Stage 7C historical model must carry the current ChatGPT scheduler override")
     protected7c = stage7c_model.get("protected_routines") or []
     if len(protected7c) != 9 or len({row.get("id") for row in protected7c}) != 9:
         fail("Stage 7C must map exactly nine protected routines")

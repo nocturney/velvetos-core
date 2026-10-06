@@ -22,6 +22,7 @@ WATCH = ROOT / "packages" / "vfresearch" / "sources" / "upstream-watch-latest.js
 REVIEW = ROOT / "packages" / "vfresearch" / "sources" / "upstream-review-latest.json"
 WORKFLOWS = ROOT / ".github" / "workflows"
 OUT = POLICY / "reports" / "stage7c-research-scheduler-consolidation.json"
+STAGE7C_WITNESS_SHA = "99074637d96c6b6211ed781bb7ced67a9370e040"
 
 META_KEYS = {"asOf", "provenance", "uncertainty", "refreshTarget"}
 
@@ -46,8 +47,20 @@ def git_show(sha: str, rel: str) -> bytes:
     return subprocess.check_output(["git", "show", f"{sha}:{rel}"], cwd=ROOT)
 
 
-def scheduled_workflows() -> dict[str, list[str]]:
+def scheduled_workflows(historical_sha: str | None = None) -> dict[str, list[str]]:
     found: dict[str, list[str]] = {}
+    if historical_sha:
+        names = subprocess.check_output(
+            ["git", "ls-tree", "-r", "--name-only", historical_sha, ".github/workflows"],
+            cwd=ROOT,
+            text=True,
+        ).splitlines()
+        for rel in sorted(name for name in names if name.endswith(".yml")):
+            text = git_show(historical_sha, rel).decode("utf-8")
+            crons = re.findall(r"cron:\s*['\"]([^'\"]+)['\"]", text)
+            if crons:
+                found[Path(rel).name] = crons
+        return found
     for path in sorted(WORKFLOWS.glob("*.yml")):
         text = path.read_text(encoding="utf-8")
         crons = re.findall(r"cron:\s*['\"]([^'\"]+)['\"]", text)
@@ -68,14 +81,22 @@ def main() -> int:
     args = parser.parse_args()
     require(len(args.prepared_against) == 40, "--prepared-against must be a full Git SHA")
 
-    model = load(MODEL)
-    # A pinned provider-readback artifact is used only for historical receipt replay.
-    # In that mode, replay the scheduler manifest from the original prepared-against
-    # SHA rather than forcing today's scheduler baseline to pretend it is still Stage 7C.
+    # Stage 7C scheduler ownership is historical after the 2026-10-06 ChatGPT cutover.
+    # Replay pinned evidence from the original prepared-against SHA; never force the
+    # current scheduler manifest/model to pretend Grok is still owner-facing authority.
     if args.provider_readback_artifact:
+        model = load(MODEL)
+        historical_model = dict(model)
+        historical_model.pop("current_authority_override", None)
+        model_bytes = (json.dumps(historical_model, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+        model = historical_model
         manifest = json.loads(git_show(args.prepared_against, "automation/grok/manifest.json").decode("utf-8-sig"))
     else:
+        model_bytes = MODEL.read_bytes()
+        model = load(MODEL)
         manifest = load(MANIFEST)
+        require(manifest.get("productionScheduler") == "grok-bot-routines",
+                "Stage 7C is historical after scheduler cutover; use a pinned provider readback for replay")
     watch = load(WATCH)
     review = load(REVIEW)
     policies = load(POLICY_REGISTRY)
@@ -140,7 +161,8 @@ def main() -> int:
     require(all(row.get("enabled") is True and row.get("matchesCanonicalClock") is True for row in observed_rows),
             "live protected routine clock/enabled state drift")
 
-    workflows = scheduled_workflows()
+    historical_replay = bool(args.provider_readback_artifact)
+    workflows = scheduled_workflows(args.prepared_against if historical_replay else None)
     machine = model.get("machine_workflows") or []
     machine_by_id = {row.get("id"): row for row in machine if isinstance(row, dict)}
     require(set(machine_by_id) == set(workflows), "scheduled GitHub workflow inventory drift")
@@ -150,15 +172,21 @@ def main() -> int:
     }
     require(all(row.get("role") in allowed_workflow_roles for row in machine),
             "GitHub workflow role must explicitly deny owner-clock/body-clock authority")
-    research_workflow = (WORKFLOWS / "velvetos-research.yml").read_text(encoding="utf-8")
+    if historical_replay:
+        research_workflow = git_show(STAGE7C_WITNESS_SHA, ".github/workflows/velvetos-research.yml").decode("utf-8")
+        cadence_text = git_show(STAGE7C_WITNESS_SHA, "scripts/vfresearch_cadence.py").decode("utf-8")
+        daily = git_show(STAGE7C_WITNESS_SHA, "packages/vfresearch/DAILY.md").decode("utf-8")
+    else:
+        research_workflow = (WORKFLOWS / "velvetos-research.yml").read_text(encoding="utf-8")
+        cadence_text = CADENCE.read_text(encoding="utf-8")
+        daily = DAILY.read_text(encoding="utf-8")
     require("actual research body is produced by the owner-facing Velvet Research Seat" in research_workflow
             and "verifies" in research_workflow
             and "freshness" in research_workflow,
-            "velvetos-research workflow must remain verifier/index, not research-body clock")
+            "historical velvetos-research workflow must remain verifier/index, not research-body clock")
 
-    cadence_text = CADENCE.read_text(encoding="utf-8")
     require("protected Grok Bot routine velvet-research-seat" in cadence_text,
-            "cadence map still claims legacy ChatGPT research clock")
+            "Stage 7C cadence witness drift")
     require("review-routing" in cadence_text and "reuse_current_review" in cadence_text,
             "signal-driven deep-review routing missing")
     proc = subprocess.run(
@@ -187,11 +215,10 @@ def main() -> int:
     require(routed.get("pending") == routed.get("deepReviewRequired") + routed.get("reusableCurrentReview"),
             "review routing does not partition pending updates")
 
-    daily = DAILY.read_text(encoding="utf-8")
     require("vfresearch_cadence.py review-routing" in daily
             and "Pending ישן" in daily
             and "ARTIFACT-CONTRACT.md" in daily,
-            "DAILY.md does not enforce Stage 7C routing/artifact contract")
+            "historical DAILY.md does not enforce Stage 7C routing/artifact contract")
     contract = ARTIFACT_CONTRACT.read_text(encoding="utf-8")
     for marker in ("as_of", "provenance", "uncertainty", "refresh_target"):
         require(marker in contract, f"research artifact contract missing {marker}")
@@ -254,7 +281,7 @@ def main() -> int:
         "purpose": "Consolidate Research Router and scheduler ownership without adding a daemon, scheduler, or policy authority.",
         "model": {
             "path": MODEL.relative_to(ROOT).as_posix(),
-            "sha256": sha256(MODEL),
+            "sha256": hashlib.sha256(model_bytes).hexdigest(),
             "protected_routine_count": len(protected_ids),
             "scheduled_github_workflow_count": len(workflows),
         },

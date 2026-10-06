@@ -1,4 +1,4 @@
-# Best Skills — סקירת דירוג כל יומיים
+# Best Skills — סקירת דירוג לפי צורך
 
 מושב: **מחקר/אורקסטרציה** (`@research-synthesist`) + ראש צוות קורא בבריף.  
 מקור חי: [LinklyAI/best-skills](https://github.com/LinklyAI/best-skills) (Top 100, מתעדכן יומית).  
@@ -8,12 +8,9 @@
 מצב: `packages/vfresearch/BEST-SKILLS.json`  
 רישום: `LINKS.json` → `linklyai-best-skills`
 
-## למה כל יומיים
+## הפעלה נוכחית
 
-הדירוגים זזים כל יום (WIS, trending, social buzz, top repos). מעבר שבועי בלבד מפספס קפיצות.  
-**כל ~48 שעות** (Asia/Jerusalem) — **דופק קבוע לנצח** עד שהבעלים מעדכן אחרת (standing order 2026-09-03).
-
-סמכות cadence: **Velvet Research Seat** לפי `packages/vfresearch/TIMER.md`. `lastPass` + artifact הם הראיה; אין תלות במנוי timer חיצוני. מעבר מתבצע כש־`lastPass` בן 44 שעות לפחות; grace של 8 שעות, כלומר מעל 52h המצב stale.
+**Owner override 2026-10-06:** הסריקה המחזורית בוטלה. מריצים רק כשיש שאלה/החלטה קונקרטית, צורך תוכן, או freeze gate פתוח ב־Office v2. `lastPass` + artifact נשארים provenance; גילם אינו trigger או blocker. סמכות המחקר היא manual/event-driven לפי `packages/vfresearch/TIMER.md`.
 
 אירוע Calendar: רק אם ראש צוות מבקש יצירה.
 
@@ -31,7 +28,7 @@
 7. לעדכן `BEST-SKILLS.json` (`lastPass`, `dataDate`, `lastArtifact`, `lastResult`).
 8. שורת בלוק `05-משרד`: «best-skills — הוטמע X» או «best-skills — אין חדש במשרד».
 9. אחרי שינוי קטלוג/כלל/פק: `python3 scripts/check-all.py`.
-10. לאמת שה־artifact וה־state תואמים. אם `lastPass` ישן מ־52 שעות, Research Seat חייב לבצע מעבר או לרשום blocker אמיתי. אין timer receipt מומצא.
+10. לאמת שה־artifact וה־state תואמים. אין timer receipt מומצא, ואין ריצה אוטומטית רק מפני ש־`lastPass` ישן.
 
 ## מיפוי — לא פק כפול
 
@@ -82,7 +79,7 @@ Research metadata:
 - as_of: dataDate / fetch time
 - provenance: LinklyAI/best-skills ranking files actually read
 - uncertainty: blocked/missing lists/none_known
-- refresh_target: due when lastPass >=44h; stale >52h; explicit task may run sooner
+- refresh_target: on-demand when a concrete decision/question needs current data
 
 מקור: LinklyAI/best-skills · dataDate: YYYY-MM-DD
 מושב: ייצור · Asia/Jerusalem
@@ -114,5 +111,5 @@ Research metadata:
 ## לא כאן
 
 - סקירת `LINKS.json` השבועית (`WEEKLY.md`) — נשארת; זה מעבר נוסף לדירוג החי.
-- Research Seat הוא הסמכות הקבועה; אין automation/timer שני עבור Best Skills.
+- אין Research Seat קבוע ואין timer עבור Best Skills; הפעלה היא manual/event-driven בלבד.
 - שליחת IG/Gmail/WhatsApp אינה חלק מהמעבר, למעט delivery paths שכבר מורשים בנפרד.

@@ -28,7 +28,8 @@ def main() -> None:
         ASSETS / "morning-radar.jpg",
         ASSETS / "morning-footer.jpg",
         ROOT / "packages" / "vfigos" / "cloudflare_publisher_snapshot.py",
-        ROOT / "automation" / "grok" / "CONTRACT.md",
+        ROOT / "automation" / "chatgpt" / "CONTRACT.md",
+        ROOT / "automation" / "chatgpt" / "manifest.json",
         ROOT / "automation" / "grok" / "manifest.json",
         ROOT / "packages" / "vfops" / "ROUTINE.md",
     ]
@@ -79,32 +80,29 @@ def main() -> None:
         if token not in sender:
             fail(f"Gmail sender missing CID capability {token!r}")
 
-    grok_contract = (ROOT / "automation" / "grok" / "CONTRACT.md").read_text(encoding="utf-8")
-    for token in (
-        "Morning Green v3.1 remains the only current owner-email design",
-        "V10.3 remains available only for legacy/recovery",
-        "not a recurring scheduler job",
-    ):
-        if token not in grok_contract:
-            fail(f"Grok owner-email authority missing current Morning Green token {token!r}")
-    grok_manifest = json.loads((ROOT / "automation" / "grok" / "manifest.json").read_text(encoding="utf-8"))
-    if int(grok_manifest.get("version", 0)) < 6 or grok_manifest.get("morningGreenCutoverDate") != "2026-09-23":
-        fail("Grok manifest missing current Morning Green production cutover version/date")
-    authority = grok_manifest.get("ownerEmailAuthority") or {}
+    chatgpt_contract = (ROOT / "automation" / "chatgpt" / "CONTRACT.md").read_text(encoding="utf-8")
+    if "Current owner-facing scheduling authority is ChatGPT automations" not in chatgpt_contract:
+        fail("ChatGPT scheduler contract missing current authority")
+    chatgpt_manifest = json.loads((ROOT / "automation" / "chatgpt" / "manifest.json").read_text(encoding="utf-8"))
+    if chatgpt_manifest.get("provider") != "chatgpt-automations" or chatgpt_manifest.get("status") != "ACTIVE":
+        fail("ChatGPT scheduler manifest is not active")
+    authority = chatgpt_manifest.get("ownerEmailAuthority") or {}
     if not str(authority.get("design") or "").startswith("Morning Green v3.1"):
-        fail("Grok ownerEmailAuthority is not Morning Green v3.1")
-    retired = {x.get("id"): x for x in grok_manifest.get("retiredRoutines", [])}
-    morning = retired.get("velvet-morning-brief") or {}
-    if morning.get("desiredEnabled") is not False or morning.get("state") != "manual_or_event_driven_only":
-        fail("Morning Brief must remain manual/event-driven and disabled as a recurring Grok routine")
+        fail("ChatGPT ownerEmailAuthority is not Morning Green v3.1")
+    if authority.get("deliveryEvidenceRequired") is not True:
+        fail("Morning Green delivery must remain evidence-gated")
+    morning = chatgpt_manifest.get("morningBrief") or {}
+    if morning.get("scheduled") is not False or morning.get("mode") != "manual-or-event-driven":
+        fail("Morning Brief must remain manual/event-driven")
+    if morning.get("design") != "Morning Green v3.1":
+        fail("event-driven Morning Brief is not bound to Morning Green v3.1")
+    grok_manifest = json.loads((ROOT / "automation" / "grok" / "manifest.json").read_text(encoding="utf-8"))
+    if grok_manifest.get("productionScheduler") != "chatgpt-automations" or (grok_manifest.get("protectedSet") or {}).get("count") != 0:
+        fail("Grok retirement mirror disagrees with ChatGPT scheduler authority")
     routine = (ROOT / "packages" / "vfops" / "ROUTINE.md").read_text(encoding="utf-8")
-    for token in (
-        "manual/event-driven only",
-        "python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>",
-        "backfill artifact is not a delivery receipt",
-    ):
+    for token in ("Velvet Morning Brief", "manual/event-driven", "Morning Green", "delivery requires real Gmail/provider evidence"):
         if token not in routine:
-            fail(f"vfops ROUTINE missing current Morning Green capability rule {token!r}")
+            fail(f"vfops ROUTINE missing event-driven Morning Green rule {token!r}")
 
     builder = (PACK / "build_morning_green.py").read_text(encoding="utf-8")
     preparer = (PACK / "prepare_morning_green.py").read_text(encoding="utf-8")

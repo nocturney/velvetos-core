@@ -1,32 +1,21 @@
 # לולאות תפעול · LOOPS
 
-שעון קנוני לאוטומציות בעלים: **`packages/vfops/ROUTINE.md`**.  
-`packages/vfops/LOOP.json` הוא מפת **צריכה** של פקים, לא שעון. תוויות היסטוריות `daily-07:00` / `daily-06:15` **אינן** דוחפות את ה־cron החי.
+שעון קנוני לאוטומציות בעלים: **`automation/chatgpt/manifest.json` + `packages/vfops/ROUTINE.md`**.
+`packages/vfops/LOOP.json` הוא מפת צריכה, לא שעון. Grokbot אינו scheduler.
 
 אזור זמן: `Asia/Jerusalem`.
 
-## קדנס קנוני: 07:00 cutoff, 09:00 Morning Brief
-
-- `packages/vfops/ROUTINE.md` הוא שעון האוטומציות לבעלים.
-- **07:00** הוא cutoff/readiness פנימי למחקר ול-Decision Pack; הוא אינו Morning Brief נוסף.
-- **09:00** הוא Morning Brief היחיד לבעלים, במסלול Morning Green v3.1.
-- סטטוס delivery נשאר `UNPROVEN` בלי Gmail/provider evidence.
-
-## יום — אוטומציות מוגנות (ROUTINE.md)
+## קדנס נוכחי — מינימום הכרחי
 
 | שעה | משטח | מה | מה לא |
 |---|---|---|---|
-| 01:45 | Automation Integrity Guard | תיקון סט האוטומציות המוגן | לא בונה מערכת שנייה |
-| 02:00 | Velvet Research Seat | מחקר חי עד cutoff 07:00 → `vfops/data/research.md` | GHA לא מחליף את גוף המחקר |
-| 07:15 | Runtime Receipts Refresh | רענון קבלות runtime מתצפיות חיות כדי להכין dependency-scoped live proofs; PR אחד, מיזוג רק על ירוק | freshness אינו gate אוניברסלי לקוד; לא ממציא תצפית |
-| **09:00** | Velvet Morning Brief | Morning Green v3.1 לבעלים | קובץ שנוצר ≠ נשלח; דרוש Gmail evidence |
-| 10:00 | Morning Delivery Guard | וידוא שנשלח הבריף של היום | |
-| 10:30 | VelvetOS Office Loop | blockers, production→content, drift | לא scheduler לכל היכולות |
-| 18:30 | VelvetOS Office Loop | סגירת יום, למידה, HANDOFF | |
-| 19:15 | Runtime Receipts Refresh | רענון שני של ראיות runtime כדי ש־deployment/runtime claims יוכלו להוכיח dependencies בשם | stale receipt לא קשור אינו חוסם `CODE_VALID` |
+| ~11:30 | Cognee Memory Sync | סנכרון derived-memory יומי גמיש | לא authority ולא cloud model |
+| 18:30 | VelvetOS Office Loop | sweep תפעולי אחד, handoff ופעולות אמיתיות | לא research רחב ולא self-health bureaucracy |
+| 19:15 | Runtime Receipts Refresh | ראיות runtime dependency-scoped מתצפיות אמיתיות | לא Grok receipt ולא refresh מלאכותי |
 
-שבועי: Weekly Research Accountability שישי 12:00 (ROUTINE).  
-Deck: `.github/workflows/velvetos-weekly-deck.yml` שישי 06:00 UTC.
+Morning Brief הוא manual/event-driven בלבד. Delivery Guard, Research Seat, Weekly Research Accountability, Cognee Stable Updates, Integrity Guard ו-PC Offline Retry אינם clocks פעילים.
+
+Deck: `.github/workflows/velvetos-weekly-deck.yml` נשאר workflow מכונה נפרד ואינו authority לשעון הבעלים.
 
 ## GitHub Actions (קיום workflow ≠ LIVE ספק)
 
@@ -38,7 +27,7 @@ Deck: `.github/workflows/velvetos-weekly-deck.yml` שישי 06:00 UTC.
 | `instagram-read-smoke.yml` | smoke קריאה-בלבד ל־Instagram MCP (401 בלי טוקן, profile, media, insights, בלי כלי כתיבה) | 04:41 UTC יומי; secret `VELVET_INSTAGRAM_MCP_BEARER_TOKEN` |
 | `office-control-plane.yml` | activation sweep + watchdog + hygiene + gaps + handoff | `0 2,8,14,20 * * *` UTC = 05:00/11:00/17:00/23:00 IDT (לא מתנגש ב־Office Loop 10:30/18:30 גם עם עיכוב GitHub של ~40 דק׳) |
 | `jobs-write-through.yml` | Sheet jobs WIF pull/push/read-back | `:07,:22,:37,:52` כל שעה |
-| `velvetos-research.yml` | freshness/index/sensors אחרי Research Seat | 04:30 UTC |
+| `velvetos-research.yml` | verifier/index/sensors למחקר שכבר הופק | workflow_dispatch בלבד; אין cron |
 | `readme-system-pulse.yml` | רענון README pulse | שעתי + שינוי קבצי ראיה |
 | `gmail-brief-send.yml` | שליחת בריף כש־`gmail-send-request.json` enabled | workflow_dispatch / push לקובץ |
 | `velvetos-weekly-deck.yml` | דק שבועי מנתוני ריפו | שישי |
@@ -141,14 +130,14 @@ Signals: `scripts/vf_retro_signals.py` → בריף. לא בושת בעלים.
 
 ## מחקר
 
-| קצב | מקור | הערה |
+| טריגר | מקור | הערה |
 |---|---|---|
-| יומי (02:00 Research Seat; 07:00 readiness cutoff) | `vfresearch/DAILY.md` | failover ל־WebSearch; אין גוף מומצא |
-| Research Seat הוא סמכות התזמון (`packages/vfresearch/BEST-SKILLS.json`) | due ב־44h, stale מעל 52h | **אין טיימר חיצוני** — `TIMER.md` היסטורי בלבד |
-| שבועי | `WEEKLY.md` + `LINKS.json` + `PRINT-DEMAND.md` | |
-| MakerWorld א׳+ד׳ | `vfresearch/hq/MAKERWORLD-SCAN.md` + `vfsku.py scan` | |
-| Last-30 | `hq/LAST30.md` · skill `vf-last30` | |
-| דופק פרנסה שבועי | `vfops/playbooks/WEEKLY-REVENUE-PULSE.md` | Insights רק מסנאפשוט מאומת |
+| שאלה/החלטה/צורך תוכן/gate פתוח | `vfresearch/DAILY.md` | on-demand; אין Research Seat יומי ואין cutoff קבוע |
+| החלטת skill/tool | `BEST-SKILLS.md` + `BEST-SKILLS.json` | on-demand; גיל `lastPass` הוא provenance בלבד |
+| inspiration / print-demand | `WEEKLY.md` + `LINKS.json` + `PRINT-DEMAND.md` | playbook לפי צורך; “weekly” אינו clock |
+| MakerWorld / Printables | `vfresearch/hq/MAKERWORLD-SCAN.md` + `vfsku.py scan` | לפי צורך מאומת; license/slice/test לפני promotion |
+| Last-30 | `hq/LAST30.md` · skill `vf-last30` | לפי דרישה בלבד |
+| Revenue pulse | `vfops/playbooks/WEEKLY-REVENUE-PULSE.md` | מופעל רק כשיש צורך עסקי/סקירה; Insights רק מסנאפשוט מאומת |
 
 ## הנדסה / הוראות סוכן
 

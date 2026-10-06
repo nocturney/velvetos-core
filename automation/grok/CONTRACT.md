@@ -1,56 +1,32 @@
 # Grok Bot automation contract
 
-Status: production scheduler, **minimal recurring baseline approved 2026-10-06**.
+Status: **recurring Grok scheduler retired by owner on 2026-10-06**.
 
 ## Current authority
 
-- `automation/grok/current-baseline.json` and `automation/grok/manifest.json` are current scheduler policy.
-- Repository/runtime authority wins over embedded routine prose.
-- Only three Grok Bot routines are recurring and protected. Disabled/manual routines must not be revived by a guard, validator, migration helper, or historical Stage 7C wording.
-- Provider evidence proves inventory/enabled/clock state only. It never proves prompt-body parity unless explicitly inspected.
-- Unknown unlisted routines are not deletion-authorized merely because they are unlisted.
-- Historical Stage 7C scheduler evidence is retained for provenance only and is not current desired-state authority.
+- Owner-facing recurring scheduler authority is `chatgpt-automations`.
+- Grok Bot has **zero enabled recurring routines** from the VelvetOS set.
+- Grok Bot remains available on demand as a tool/agent, not as scheduler, routine manager, integrity guard, or retry daemon.
+- `automation/grok/current-baseline.json` is the current scheduler policy. Historical Stage 7C/Grok readbacks are provenance only.
+- Never fabricate a ChatGPT provider receipt. The repository records declarative authority; live execution is verified when a real run/effect requires it.
+- Unknown/unlisted provider routines are never deletion-authorized merely because they are not in the current set.
 
-## Current protected recurring set
+## Current ChatGPT schedules
 
-Timezone: `Asia/Jerusalem`. Current protected count: **three**.
+- `VelvetOS Office Loop` — daily 18:30 Asia/Jerusalem.
+- `Cognee Memory Sync` — once daily, flexible around 11:30 Asia/Jerusalem.
+- `Runtime Receipts Refresh` — daily 19:15 Asia/Jerusalem.
 
-- `Cognee Memory Sync` — daily 06:30 (`cognee-memory-sync`)
-- `VelvetOS Office Loop` — daily 18:30 (`velvetos-office-loop`)
-- `Runtime Receipts Refresh` — daily 19:15 (`runtime-receipts-refresh`)
+`Velvet Morning Brief` and `Velvet Research Seat` are manual/event-driven capabilities, not standing clocks.
 
-`Runtime Receipts Refresh` remains dependency-scoped evidence maintenance; receipt freshness is not a universal code/merge gate.
+## Retired Grok clocks
 
-## Disabled / manual-only set
+Morning Brief, Morning Delivery Guard, Research Seat, Weekly Research Accountability, Cognee Stable Updates, Cognee Memory Sync, Office Loop, Runtime Receipts Refresh, Integrity Guard and PC Offline Retry are disabled in Grok. OpenPost Release Watch remains absent/deleted.
 
-The following provider routines are intentionally disabled and may retain their saved prompts:
+Provider retirement evidence: `automation/grok/provider-readback-2026-10-06-retired.json`.
 
-- `Velvet Morning Brief` — manual/event-driven only; no daily 09:00 clock.
-- `Morning Delivery Guard` — retired.
-- `Velvet Research Seat` — retired as a recurring clock; research is manual/event-driven when justified.
-- `Weekly Research Accountability` — retired; no separate weekly research clock.
-- `Cognee Stable Updates` — on-demand/upstream-review only.
-- `VelvetOS Integrity Guard` — retired; there is no dedicated recurring routine manager/guard.
-- `PC Offline Retry` — retired; no separate retry clock.
+## Execution semantics
 
-`OpenPost Release Watch` remains deleted/absent.
+Retry/backoff/reconciliation belong to durable workflow execution. Runtime evidence is dependency-scoped and created from real observations only. A health check that cannot affect production or a pending owner decision does not justify an owner notification.
 
-## Routine-manager role
-
-A dedicated Grok Bot routine-manager role is not required. If the owning Grok agent must remain present as a provider shell so the three routines continue to exist, it stays dormant: no recurring governance work, no self-maintenance loop, and no owner notifications when nothing requires action.
-
-## Morning Brief capability
-
-Morning Green v3.1 remains the only current owner-email design; V10.3 remains available only for legacy/recovery surfaces. Morning Green is a valid capability, but it is not a recurring scheduler job. When explicitly triggered by an event or request, build the factual same-day artifact with:
-
-`python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>`
-
-Delivery claims still require real Gmail/provider evidence. A generated or backfilled artifact is not a delivery receipt.
-
-## Research / upstream work
-
-The former Research Seat may be invoked manually/event-driven when a real unresolved question, content need, or upstream decision justifies it. Broad daily research and a separate weekly accountability clock are retired. Upstream checks never auto-upgrade.
-
-## Historical evidence
-
-The 2026-09-19 through 2026-10-06 pre-reduction readbacks, `automation/grok/cognee-routines.json`, and Stage 7C acceptance artifacts remain historical evidence. They are not rewritten or back-filled and do not override the current three-routine baseline.
+The dedicated Grok automation-manager chat may remain dormant for historical audit context only. It has no recurring governance or notification duty.

@@ -23,8 +23,8 @@ def main() -> None:
     # Phase 9 snapshot stays on the 2026-09-27 close. Live Best Skills cadence advances after that.
     assert research.get("lastPass") == "2026-09-27"
     assert research.get("observedDataDate") == "2026-09-26"
-    assert best.get("schedulerAuthority") == "Velvet Research Seat"
-    assert best.get("standingForever") is True
+    assert best.get("schedulerAuthority") == "manual-or-event-driven-research"
+    assert best.get("standingForever") is False
     assert best.get("lastPass")
     assert best.get("dataDate")
     assert research.get("newSchedulerCreated") is False

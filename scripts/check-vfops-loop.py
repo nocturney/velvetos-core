@@ -107,7 +107,7 @@ def main() -> None:
     routine = ROUTINE.read_text(encoding="utf-8")
     if "vfops_loop.py" not in routine:
         fail("ROUTINE.md must bind the canonical vfops_loop.py brief producer")
-    for needle in ("**06:30** | Cognee Memory Sync", "**18:30** | VelvetOS Office Loop", "**19:15** | Runtime Receipts Refresh"):
+    for needle in ("**~11:30** | Cognee Memory Sync", "**18:30** | VelvetOS Office Loop", "**19:15** | Runtime Receipts Refresh"):
         if needle not in routine:
             fail(f"ROUTINE.md missing current minimal schedule marker {needle}")
     if "manual/event-driven" not in routine or "Velvet Morning Brief" not in routine:

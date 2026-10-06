@@ -1,18 +1,17 @@
-{
-  "component_id": "grok-production-scheduler",
-  "state": "healthy",
-  "observed_at": "2026-10-06T12:07:00+00:00",
-  "evidence": {
-    "source": "Grok Bot provider state confirmation after owner-authorized reduction",
-    "artifact": "automation/grok/provider-readback-2026-10-06-minimal.json",
-    "provider": "grok-bot",
-    "signedIn": true,
-    "rendererTimeZone": "Asia/Jerusalem",
-    "protectedRoutineCount": 3,
-    "allProtectedEnabled": true,
-    "allProtectedClockMatch": true,
-    "allRetiredDesiredDisabled": true,
-    "openPostReleaseWatchDisabled": true,
-    "promptBodyParityClaimed": false
-  }
+﻿{
+    "component_id":  "grok-production-scheduler",
+    "state":  "retired",
+    "observed_at":  "2026-10-06T12:26:25.1531001+00:00",
+    "evidence":  {
+                     "source":  "direct signed-in Grok UI state confirmation after owner-authorized retirement",
+                     "artifact":  "automation/grok/provider-readback-2026-10-06-retired.json",
+                     "provider":  "grok-bot",
+                     "signedIn":  true,
+                     "rendererTimeZone":  "Asia/Jerusalem",
+                     "protectedRoutineCount":  0,
+                     "allKnownGrokRoutinesDisabled":  true,
+                     "replacementAuthority":  "chatgpt-automations",
+                     "notRequiredForCurrentSchedulerProof":  true,
+                     "promptBodyParityClaimed":  false
+                 }
 }

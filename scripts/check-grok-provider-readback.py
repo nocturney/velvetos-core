@@ -13,10 +13,11 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "automation/grok/manifest.json"
 RUNTIME = ROOT / "packages/vfharness/state/runtime/grok-production-scheduler.json"
 
-# Current protected set size. Owner-approved minimal baseline since 2026-10-06.
-# Historical readbacks remain historical evidence; the current state confirmation
-# must prove exactly these three recurring routines and keep retired clocks off.
-PROTECTED_ROUTINE_COUNT = 3
+# Current protected set size. 8 -> 9 on 2026-09-29 (Runtime Receipts Refresh,
+# owner-approved). A readback is compared against the routines that were
+# protected at its observedAt (manifest routine protectedFrom), so a real
+# pre-change readback stays valid and no readback is ever back-filled.
+PROTECTED_ROUTINE_COUNT = 0
 
 
 def load(path: Path) -> dict:
@@ -44,7 +45,7 @@ def main() -> int:
         proof = build_runtime_proof_request()
     except ValueError as exc:
         fail(str(exc))
-    require_runtime = proof.requires_component("grok-production-scheduler", implied_if_live=True)
+    require_runtime = proof.requires_component("grok-production-scheduler", implied_if_live=False)
 
     manifest = load(MANIFEST)
     latest = manifest.get("latestProviderReadback") or {}
@@ -67,8 +68,10 @@ def main() -> int:
     if readback.get("rendererTimeZone") != manifest.get("timezone"):
         fail("renderer timezone differs from manifest")
     transport = readback.get("transport") or {}
-    if transport.get("writeOperationsPerformed") not in ([], None):
-        fail("readback/state confirmation must not perform provider writes")
+    writes = transport.get("writeOperationsPerformed")
+    if writes not in ([], None):
+        if readback.get("protectedRoutineCount") != 0 or not transport.get("writeAuthorization"):
+            fail("provider retirement writes require explicit authorization and zero protected routines")
     if (readback.get("verificationScope") or {}).get("promptBodyParity") is not False:
         fail("readback must not overclaim prompt-body parity")
 
@@ -163,7 +166,7 @@ def main() -> int:
         "GROK PROVIDER READBACK PASS "
         f"protected={len(expected_all)} readback-verified={len(required)} "
         f"pending-first-readback={','.join(pending) or 'none'} "
-        f"openpost=disabled timezone={readback.get('rendererTimeZone')} "
+        f"openpost=disabled timezone={readback.get('rendererTimeZone')} current-scheduler=chatgpt-automations "
         f"proof={proof.status} runtime_health={runtime_state} "
         "prompt-body-parity=not-claimed"
     )

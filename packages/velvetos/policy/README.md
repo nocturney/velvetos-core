@@ -168,10 +168,10 @@ Stage 4F separates code validity from deployment/runtime truth. A runtime receip
 - `scripts/check-runtime-doctor.py` defaults to `CODE_VALID`, validates the runtime contract/repository proof, and does not consume current provider/connector/host receipts. Live scopes require explicit `--require-component <id>` dependencies; a live scope with no dependency list fails closed instead of silently checking every runtime.
 - For a named live dependency, stale, missing, malformed, component-mismatched, future-dated, evidence-less, non-healthy or unknown-component evidence remains a blocker. `anyOf` groups continue to pass with one fresh healthy member.
 - `VF_RUNTIME_PROOF_SCOPE` + `VF_RUNTIME_REQUIRED_COMPONENTS` provide the same dependency-scoped contract to nested sensors/actions. `VF_RUNTIME_RECEIPTS_STRICT=1`, `VF_RUNTIME_STRICT=1` and `check-runtime-doctor.py --strict` remain migration-compatible repository-wide all-component proof, not normal CI behavior.
-- `check-grok-provider-readback.py` always validates the provider-readback contract but consumes the live Grok scheduler receipt only when `grok-production-scheduler` is a real live dependency. `check-zero-cost-final-acceptance.py` preserves the immutable historical strict proof while current full-suite execution defaults to `CODE_VALID`.
+- `check-grok-provider-readback.py` now validates the retired Grok state confirmation and historical readback contract only. `grok-production-scheduler` is no longer a current runtime dependency; historical zero-cost/Stage 7 receipts remain immutable replay evidence while current full-suite execution defaults to `CODE_VALID`.
 - Runtime receipt file changes now directly select `check-runtime-doctor`, not the historical zero-cost acceptance sensor. Other relevant package sensors may still run through their own mappings, but receipt freshness itself no longer broadens into historical acceptance.
 - The `runtime_health` evidence class in the One Authority Gate registry is explicitly `dependency_scoped=true`, requires `RUNTIME_HEALTHY` when the dependency is real, and states that GitHub event type is not a dependency signal.
-- `Runtime Receipts Refresh` remains twice-daily evidence maintenance so live claims have fresh proof ready. It is useful operationally, but freshness is not a universal code/merge gate.
+- `Runtime Receipts Refresh` is one ChatGPT automation at 19:15. It refreshes only real dependency-scoped evidence; there is no required Grok scheduler receipt and freshness is not a universal code/merge gate.
 - `reports/stage4f-runtime-receipt-scope.json` pins repository acceptance against pre-change `main` `8081bfe62fe6c59e0e22798dda1d2469e5ee3742`. Fixture tests prove GitHub-event neutrality, unrelated stale evidence not blocking `CODE_VALID`, component-scoped live proof, fail-closed required evidence, anyOf fallback, unknown dependency rejection and legacy all-component strict compatibility.
 
 ## Stage 4G — Bounded Cost Envelopes
@@ -327,9 +327,9 @@ Acceptance evidence: `reports/stage7b-memory-learning-lifecycle.json` (10/10 PAS
 
 ## Reform v2 Stage 7C — Research / Scheduler consolidation
 
-`research-scheduler-consolidation.json` is retained as **historical Stage 7C acceptance evidence** for the former nine-routine cutover. Current scheduler authority moved on 2026-10-06 to `automation/grok/current-baseline.json` + `automation/grok/manifest.json`: three recurring Grok routines only; the former Research Seat is manual/event-driven.
+`research-scheduler-consolidation.json` and its Stage 7C receipt are **historical acceptance witnesses** for the scheduler architecture that existed when Stage 7C closed. They are replayed against their pinned Git/readback evidence and are not current scheduling policy.
 
-Repository-owned GitHub schedules remain valid machine execution/verifier clocks. They do not become owner-facing routine authority; in particular, `velvetos-research.yml` verifies freshness, builds the semantic index and runs sensors after the 02:00 Research Seat rather than generating the research body.
+Current owner-facing authority moved on 2026-10-06 to `automation/chatgpt/manifest.json`: only Cognee Memory Sync once daily, VelvetOS Office Loop at 18:30, and Runtime Receipts Refresh at 19:15 remain recurring. Morning Brief and research are manual/event-driven; all known Grok routines are paused. Repository-owned GitHub schedules remain machine execution/verifier clocks and do not become owner-facing routine authority.
 
 Upstream research now follows cheap detection first. `vf_upstream_watch.py` records current HEAD/release evidence; `vfresearch_cadence.py review-routing` sends only missing/stale exact bindings or explicit review tasks to deep review. A still-pending update whose `reviewedRemoteHead` + `reviewedRelease` remain current reuses that review instead of paying daily deep-review cost.
 
@@ -360,7 +360,7 @@ The integrated gate requires all nine conditions simultaneously:
 
 - one explicit four-role state/evidence semantic model with all nine retention classes mapped;
 - selective evidence-gated memory/learning, no automatic promotion, no forced daily quota, no new always-on memory system, and zero incremental recurring cost;
-- current owner-facing recurring authority limited to the three-routine minimal Grok baseline, with GitHub schedules limited to machine execution/verification; Stage 7C nine-routine evidence remains historical;
+- one owner-facing clock authority for all nine protected routines, with GitHub schedules limited to machine execution/verification;
 - research truth metadata (`as_of`, `provenance`, `uncertainty`, `refresh_target`) and cheap-detection-first deep-review routing;
 - concrete artifact retention with copy-first migration, clean active-consumer scan, rollback evidence, and no unclassified retention placeholders;
 - the Stage 7A Work Ledger question resolved as **NO_NEW_WORK_LEDGER_STORE**, with `office/control/HANDOFF.json` remaining the refs-only continuation view;
