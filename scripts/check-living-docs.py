@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
+import re
 import sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
@@ -20,6 +21,23 @@ def main():
         txt=coord.read_text(errors='ignore').lower()
         if 'main' in txt and 'what runs on the machine' in txt and 'receipt' not in txt:
             errors.append('SHARED-WORK-COORDINATION.md discusses runtime drift without linking runtime receipts')
+
+    pulse = ROOT/'.github/workflows/readme-system-pulse.yml'
+    if not pulse.is_file():
+        errors.append('missing README System Pulse workflow')
+    else:
+        pulse_text = pulse.read_text(encoding='utf-8')
+        for marker in (
+            'workflow_dispatch:',
+            'python3 scripts/update-readme-snapshot.py',
+            'python3 scripts/fix-readme-bidi.py --check',
+            'bash scripts/push-main-with-check-all.sh main',
+            '# VELVET_MACHINE_WRITER_ALLOW: README.md',
+        ):
+            if marker not in pulse_text:
+                errors.append('README System Pulse workflow missing '+marker)
+        if re.search(r'(?m)^\s*schedule:\s*$', pulse_text) or 'cron:' in pulse_text:
+            errors.append('README System Pulse must remain event-driven without cron')
     # Stage 6D is historical acceptance evidence. Current documentation authority
     # moved after Stage 6D and must not force today's scheduler docs back to the
     # old 07:00/09:00 clock contract.

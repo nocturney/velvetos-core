@@ -420,6 +420,11 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if row.get("mapping_state") == "mapped" and row.get("fallback_scope") != "ALWAYS_ON":
             require(row.get("triggered_by") != ["**"], f"{sid}: mapped sensor cannot keep wildcard-only trigger", problems)
             require(row.get("owns") != ["**"], f"{sid}: mapped sensor cannot keep wildcard-only ownership", problems)
+            require(path in (row.get("owns") or []), f"{sid}: mapped domain sensor must own its own check path", problems)
+            for dep in row.get("depends_on") or []:
+                if dep not in sensor_id_set:
+                    require(dep in (row.get("owns") or []),
+                            f"{sid}: file dependency must also be covered by owns: {dep}", problems)
 
     always_on = [row for row in sensor_rows if isinstance(row, dict) and row.get("fallback_scope") == "ALWAYS_ON"]
     always_on_ids = {row.get("id") for row in always_on}
@@ -437,6 +442,48 @@ def validate_registries() -> tuple[list[str], set[str]]:
         require(row.get("mapping_state") == "mapped", f"{sid}: ALWAYS_ON sensor must be mapped", problems)
         require(type(row.get("timeout_seconds")) is int and row.get("timeout_seconds") <= 180, f"{sid}: ALWAYS_ON timeout must stay fast", problems)
 
+    # Routing rationalization: generic observer globs may exist only where the
+    # sensor truly observes the whole surface. Ownership stays canonical so an
+    # observer match can never turn an unknown path into mapped coverage.
+    broad_trigger_allow = {
+        "scripts/**": set(),
+        ".github/**": {"check-machine-writers", "check-sensor-locks"},
+        ".cursor/**": {"check-agent-surface-security"},
+        "office/**": set(),
+        "docs/**": set(),
+        "packages/**": set(),
+        "packages/vfharness/**": {"check-vfharness"},
+        "packages/vfresearch/**": {"check-vfresearch"},
+        "packages/vfmedia/**": {"check-vfmedia"},
+        "packages/velvetos/**": {"check-policy-architecture", "check-velvetos"},
+    }
+    broad_owns_allow = {
+        ".github/**": set(),
+        ".cursor/**": set(),
+        "packages/vfharness/**": {"check-vfharness"},
+        "packages/vfresearch/**": {"check-vfresearch"},
+        "packages/vfmedia/**": {"check-vfmedia"},
+        "packages/velvetos/**": {"check-velvetos"},
+    }
+    for pattern, allowed in broad_trigger_allow.items():
+        holders = {
+            row.get("id") for row in sensor_rows
+            if isinstance(row, dict) and pattern in (row.get("triggered_by") or [])
+        }
+        require(holders <= allowed, f"routing trigger umbrella {pattern} expanded to {sorted(holders - allowed)}", problems)
+    for pattern in ("scripts/**", "office/**", "docs/**", "packages/**"):
+        holders = {
+            row.get("id") for row in sensor_rows
+            if isinstance(row, dict) and pattern in (row.get("owns") or [])
+        }
+        require(not holders, f"routing ownership umbrella {pattern} must be eliminated: {sorted(holders)}", problems)
+    for pattern, allowed in broad_owns_allow.items():
+        holders = {
+            row.get("id") for row in sensor_rows
+            if isinstance(row, dict) and pattern in (row.get("owns") or [])
+        }
+        require(holders <= allowed, f"routing ownership umbrella {pattern} expanded to {sorted(holders - allowed)}", problems)
+
     require(selection.get("schema_version") == 1, "sensor selection schema_version", problems)
     selector_mode = selection.get("mode")
     require(selector_mode in {"shadow", "enforced"}, "sensor selector mode invalid", problems)
@@ -446,17 +493,48 @@ def validate_registries() -> tuple[list[str], set[str]]:
     broad_patterns = selection.get("broad_change_patterns")
     require(isinstance(broad_patterns, list) and bool(broad_patterns), "selector broad_change_patterns required", problems)
     required_broad = {
+        "AGENTS.md",
+        ".cursor/rules/**",
         ".github/workflows/check-all.yml",
+        "constitution/**",
+        "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
+        "packages/velvetos/policy/policy-registry.json",
         "packages/velvetos/policy/sensor-registry.json",
         "packages/velvetos/policy/sensor-selection.json",
         "packages/velvetos/policy/schema/**",
         "scripts/check-all.py",
+        "scripts/check-machine-writers.py",
         "scripts/check-policy-architecture.py",
+        "scripts/push-main-with-check-all.sh",
         "scripts/sensor_selector.py",
         "scripts/compare-sensor-shadow.py",
         "scripts/stage3_preflight.py",
     }
     require(required_broad <= set(broad_patterns or []), "selector broad-change safety set incomplete", problems)
+    neutral_patterns = selection.get("neutral_change_patterns")
+    require(isinstance(neutral_patterns, list) and "CHANGELOG.md" in neutral_patterns,
+            "selector neutral path contract must explicitly include CHANGELOG.md", problems)
+    machine_routing = selection.get("machine_write_routing") or {}
+    state_patterns = set(machine_routing.get("state_data_patterns") or [])
+    artifact_patterns = set(machine_routing.get("domain_artifact_patterns") or [])
+    require(bool(state_patterns), "machine-write STATE_DATA patterns required", problems)
+    require(bool(artifact_patterns), "machine-write DOMAIN_ARTIFACT patterns required", problems)
+    require(not (state_patterns & artifact_patterns), "machine-write state/artifact patterns must not overlap literally", problems)
+    require(set(machine_routing.get("post_push_full_suite_classes") or []) == {"AUTHORITY_SECURITY"},
+            "only AUTHORITY_SECURITY may require machine-writer post-push full suite", problems)
+    for required_state in (
+        "office/ledger/live/sync-receipt.json",
+        "office/learning/failure-museum/entries.jsonl",
+        "packages/vfharness/state/learning-candidates/**",
+    ):
+        require(required_state in state_patterns, f"machine-write STATE_DATA missing {required_state}", problems)
+    for required_artifact in (
+        "README.md",
+        "docs/weekly-deck/**",
+        "packages/vfbriefux/hq/weekly-deck.bento-doc.json",
+        "packages/vfmedia/catalog.json",
+    ):
+        require(required_artifact in artifact_patterns, f"machine-write DOMAIN_ARTIFACT missing {required_artifact}", problems)
     shadow_exit = selection.get("shadow_exit") or {}
     require(type(shadow_exit.get("minimum_pull_requests")) is int and shadow_exit.get("minimum_pull_requests") >= 1, "shadow minimum_pull_requests invalid", problems)
     require(type(shadow_exit.get("minimum_observation_days")) is int and shadow_exit.get("minimum_observation_days") >= 1, "shadow minimum_observation_days invalid", problems)
@@ -466,7 +544,11 @@ def validate_registries() -> tuple[list[str], set[str]]:
     stage3 = selection.get("stage3_preparation") or {}
     require(stage3.get("activation_requires_shadow_exit_eligible") is True, "Stage 3 activation must require eligible shadow exit", problems)
     require(stage3.get("pull_request_execution") == "SELECTED_SUITE", "Stage 3 PR target must be SELECTED_SUITE", problems)
-    require(stage3.get("main_push_execution") == "FULL_SUITE", "Stage 3 main push target must remain FULL_SUITE", problems)
+    require(stage3.get("main_push_execution") == "FULL_SUITE", "Stage 3 ordinary main push target must remain FULL_SUITE", problems)
+    require(stage3.get("machine_writer_precheck_execution") == "SELECTED_OR_FULL_BY_RISK",
+            "Stage 3 machine-writer precheck must remain risk-routed", problems)
+    require(stage3.get("machine_writer_post_push_execution") == "REUSE_EXACT_SHA_PRECHECK_EXCEPT_AUTHORITY_SECURITY",
+            "Stage 3 machine-writer post-push reuse contract drift", problems)
     require(stage3.get("selected_suite_runner") == "scripts/check-all.py --selection sensor-selection.json", "Stage 3 selected suite runner drift", problems)
     require(stage3.get("critical_always_on_preserved") is True, "Stage 3 must preserve critical ALWAYS_ON sensors", problems)
     require(stage3.get("unknown_or_broad_change_behavior") == "FULL_SUITE", "Stage 3 must fail broad on unknown/broad changes", problems)
