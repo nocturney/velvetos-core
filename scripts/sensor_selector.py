@@ -18,6 +18,9 @@ ROOT = Path(__file__).resolve().parents[1]
 POLICY_DIR = ROOT / "packages" / "velvetos" / "policy"
 DEFAULT_REGISTRY = POLICY_DIR / "sensor-registry.json"
 DEFAULT_CONFIG = POLICY_DIR / "sensor-selection.json"
+ACTIVE_REGRESSION_LIFECYCLES = {"CORE", "DOMAIN"}
+EVENT_LIFECYCLE = "EVENT_ACCEPTANCE"
+RETIRED_LIFECYCLE = "RETIRED_RECEIPT"
 
 
 def load_json(path: Path) -> dict:
@@ -69,13 +72,13 @@ def changed_paths(base: str, head: str) -> list[str]:
 
 
 def expand_sensor_dependencies(selected: set[str], rows: dict[str, dict]) -> set[str]:
-    """Support sensor-id dependencies if introduced later; file dependencies are matched directly."""
+    """Expand live sensor dependencies; retired receipt checks are explicit-only."""
     changed = True
     while changed:
         changed = False
         for sid in list(selected):
             for dep in rows[sid].get("depends_on") or []:
-                if dep in rows and dep not in selected:
+                if dep in rows and rows[dep].get("lifecycle") != RETIRED_LIFECYCLE and dep not in selected:
                     selected.add(dep)
                     changed = True
     return selected
@@ -107,6 +110,12 @@ def select_for_paths(paths: Iterable[str], registry: dict, config: dict) -> dict
     paths = sorted({p.replace("\\", "/") for p in paths if p})
     sensors = [row for row in registry.get("sensors") or [] if isinstance(row, dict)]
     by_id = {row["id"]: row for row in sensors}
+    active_regression = {
+        row["id"] for row in sensors
+        if row.get("lifecycle") in ACTIVE_REGRESSION_LIFECYCLES
+    }
+    event_sensors = {row["id"] for row in sensors if row.get("lifecycle") == EVENT_LIFECYCLE}
+    retired_sensors = {row["id"] for row in sensors if row.get("lifecycle") == RETIRED_LIFECYCLE}
     always_on = {
         row["id"] for row in sensors
         if row.get("fallback_scope") == "ALWAYS_ON"
@@ -134,6 +143,8 @@ def select_for_paths(paths: Iterable[str], registry: dict, config: dict) -> dict
     # Cross-cutting / ALWAYS_ON observers must never make a new path "known".
     for row in sensors:
         sid = row["id"]
+        if row.get("lifecycle") == RETIRED_LIFECYCLE:
+            continue
         for field in ("triggered_by", "depends_on"):
             for pattern in row.get(field) or []:
                 if pattern in by_id:
@@ -173,7 +184,13 @@ def select_for_paths(paths: Iterable[str], registry: dict, config: dict) -> dict
         full_suite = True
         reasons.append("UNMAPPED_SENSOR_PRESENT")
 
-    selected = set(by_id) if full_suite else candidate
+    if full_suite:
+        # FULL_SUITE now means the complete live regression surface. Event
+        # acceptance sensors join only when directly selected by the changed
+        # paths; retired receipts are explicit-only historical diagnostics.
+        selected = set(active_regression) | (candidate & event_sensors)
+    else:
+        selected = candidate - retired_sensors
     machine_class = machine_write_class(paths, full_suite, config)
     post_push_full = set((config.get("machine_write_routing") or {}).get("post_push_full_suite_classes") or [])
     return {
@@ -192,7 +209,11 @@ def select_for_paths(paths: Iterable[str], registry: dict, config: dict) -> dict
         "selected_sensor_paths": [by_id[sid]["path"] for sid in sorted(selected)],
         "selection_count": len(selected),
         "candidate_count": len(candidate),
+        "regression_sensor_count": len(active_regression),
         "total_sensor_count": len(sensors),
+        "regression_sensor_ids": sorted(active_regression),
+        "event_sensor_ids": sorted(event_sensors),
+        "retired_sensor_ids": sorted(retired_sensors),
         "matches": {sid: rows for sid, rows in sorted(matches_by_sensor.items())},
         "ownership_matches": {sid: rows for sid, rows in sorted(ownership_matches.items())},
         "machine_write_class": machine_class,
@@ -208,6 +229,7 @@ def append_summary(path: Path, result: dict) -> None:
         "",
         f"- Full-suite fallback: **{str(result['full_suite']).lower()}**",
         f"- Candidate sensors: **{result['candidate_count']} / {result['total_sensor_count']}**",
+        f"- Active regression sensors: **{result['regression_sensor_count']} / {result['total_sensor_count']}**",
         f"- Effective selected sensors: **{result['selection_count']} / {result['total_sensor_count']}**",
         f"- Reasons: {', '.join(result['full_suite_reasons']) or 'none'}",
         f"- Unknown paths: {len(result['unmatched_paths'])}",
@@ -236,6 +258,7 @@ def selftest() -> int:
                 "owns": ["scripts/check-critical.py"],
                 "triggered_by": ["**/*.py", "scripts/check-critical.py"],
                 "depends_on": [],
+                "lifecycle": "CORE",
                 "fallback_scope": "ALWAYS_ON",
                 "mapping_state": "mapped",
             },
@@ -245,6 +268,27 @@ def selftest() -> int:
                 "owns": ["packages/copy/**", "scripts/check-copy.py", "scripts/copy_engine.py"],
                 "triggered_by": ["packages/copy/**", "scripts/check-copy.py", "scripts/copy_engine.py"],
                 "depends_on": [],
+                "lifecycle": "DOMAIN",
+                "fallback_scope": "FULL_SUITE",
+                "mapping_state": "mapped",
+            },
+            {
+                "id": "check-event",
+                "path": "scripts/check-event.py",
+                "owns": ["events/**", "scripts/check-event.py"],
+                "triggered_by": ["events/**", "scripts/check-event.py"],
+                "depends_on": [],
+                "lifecycle": "EVENT_ACCEPTANCE",
+                "fallback_scope": "FULL_SUITE",
+                "mapping_state": "mapped",
+            },
+            {
+                "id": "check-retired",
+                "path": "scripts/check-retired.py",
+                "owns": ["history/**", "scripts/check-retired.py"],
+                "triggered_by": ["history/**", "scripts/check-retired.py"],
+                "depends_on": [],
+                "lifecycle": "RETIRED_RECEIPT",
                 "fallback_scope": "FULL_SUITE",
                 "mapping_state": "mapped",
             },
@@ -278,6 +322,10 @@ def selftest() -> int:
         # Mixed diffs may only move upward in risk; callers cannot downgrade them.
         (["state/cache.json", "artifacts/report.json"], False, ["check-copy", "check-critical"], "DOMAIN_ARTIFACT"),
         (["state/cache.json", "packages/copy/a.md"], False, ["check-copy", "check-critical"], "CODE_CONTRACT"),
+        # Event acceptance runs when its event surface changes.
+        (["events/phase.json"], False, ["check-critical", "check-event"], "CODE_CONTRACT"),
+        # Retired receipts never re-enter routine execution; an uncovered retired-only path fails broad over live sensors.
+        (["history/old.json"], True, ["check-copy", "check-critical"], "AUTHORITY_SECURITY"),
     ]
     # Synthetic domain owner covers state/artifact paths and must be selected for them.
     registry["sensors"][1]["owns"].extend(["state/**", "artifacts/**"])
@@ -373,6 +421,7 @@ def main() -> int:
         "post_push_full_suite_required": result["post_push_full_suite_required"],
         "candidate_sensor_ids": result["candidate_sensor_ids"],
         "selection_count": result["selection_count"],
+        "regression_sensor_count": result["regression_sensor_count"],
         "total_sensor_count": result["total_sensor_count"],
     }
     if args.base:

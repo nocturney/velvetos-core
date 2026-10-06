@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Run VelvetOS computational HQ sensors. No network. No send.
 
-Default behavior remains the authoritative full suite. Stage 3 uses an exact
-selector output with --selection for pull requests while pushes to main continue
-to run the full suite.
+Default behavior is the authoritative active regression surface (CORE + DOMAIN).
+Stage 3 uses an exact selector output with --selection for pull requests while
+pushes to main run the full active regression. Event/retired lifecycle checks are
+explicit-only unless the selector directly activates a relevant event sensor.
 """
 from __future__ import annotations
 
@@ -24,6 +25,8 @@ ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "scripts"
 SENSOR_REGISTRY = ROOT / "packages" / "velvetos" / "policy" / "sensor-registry.json"
 SKIP = {"check-all.py"}
+REGRESSION_LIFECYCLES = {"CORE", "DOMAIN"}
+RETIRED_LIFECYCLE = "RETIRED_RECEIPT"
 
 
 def git_dirty_state() -> dict[str, bytes] | None:
@@ -59,22 +62,47 @@ def discover_checks() -> dict[str, Path]:
     }
 
 
-def always_on_sensor_ids() -> set[str]:
+def registry_sensor_rows() -> list[dict]:
     registry = json.loads(SENSOR_REGISTRY.read_text(encoding="utf-8"))
+    return [row for row in registry.get("sensors") or [] if isinstance(row, dict)]
+
+
+def always_on_sensor_ids(rows: list[dict] | None = None) -> set[str]:
+    rows = rows if rows is not None else registry_sensor_rows()
     return {
         str(row["id"])
-        for row in registry.get("sensors") or []
-        if isinstance(row, dict) and row.get("fallback_scope") == "ALWAYS_ON"
+        for row in rows
+        if row.get("fallback_scope") == "ALWAYS_ON"
     }
+
+
+def regression_sensor_ids(rows: list[dict] | None = None) -> set[str]:
+    rows = rows if rows is not None else registry_sensor_rows()
+    return {str(row["id"]) for row in rows if row.get("lifecycle") in REGRESSION_LIFECYCLES}
+
+
+def retired_sensor_ids(rows: list[dict] | None = None) -> set[str]:
+    rows = rows if rows is not None else registry_sensor_rows()
+    return {str(row["id"]) for row in rows if row.get("lifecycle") == RETIRED_LIFECYCLE}
 
 
 def select_checks(
     all_checks: dict[str, Path],
     selection: dict | None,
     required_always_on: set[str] | None = None,
+    required_regression: set[str] | None = None,
+    retired: set[str] | None = None,
+    include_all_lifecycle: bool = False,
 ) -> tuple[list[Path], str]:
+    regression = required_regression if required_regression is not None else set(all_checks)
+    retired_ids = retired or set()
     if selection is None:
-        return list(all_checks.values()), "full"
+        chosen = set(all_checks) if include_all_lifecycle else set(regression)
+        unknown = sorted(chosen - set(all_checks))
+        if unknown:
+            raise ValueError(f"registry references unknown sensors: {unknown}")
+        mode = "all-lifecycle" if include_all_lifecycle else "full"
+        return [all_checks[sensor_id] for sensor_id in sorted(chosen)], mode
     sensor_ids = selection.get("selected_sensor_ids")
     if not isinstance(sensor_ids, list) or not sensor_ids:
         raise ValueError("selection must contain non-empty selected_sensor_ids")
@@ -91,8 +119,13 @@ def select_checks(
     missing_required = sorted(required - selected)
     if missing_required:
         raise ValueError(f"selection omits ALWAYS_ON sensors: {missing_required}")
-    if selection.get("full_suite") is True and selected != set(all_checks):
-        raise ValueError("FULL_SUITE selection does not contain every live sensor")
+    forbidden_retired = sorted(selected & retired_ids)
+    if forbidden_retired:
+        raise ValueError(f"routine selection includes RETIRED_RECEIPT sensors: {forbidden_retired}")
+    if selection.get("full_suite") is True:
+        missing_regression = sorted(regression - selected)
+        if missing_regression:
+            raise ValueError(f"FULL_SUITE selection omits active regression sensors: {missing_regression}")
     return [all_checks[sensor_id] for sensor_id in normalized], "selected"
 
 
@@ -100,40 +133,64 @@ def selftest() -> int:
     fixture = {
         "check-a": Path("scripts/check-a.py"),
         "check-b": Path("scripts/check-b.py"),
+        "check-retired": Path("scripts/check-retired.py"),
     }
+    always_on = {"check-a"}
+    regression = {"check-a", "check-b"}
+    retired = {"check-retired"}
+
     selected, mode = select_checks(
         fixture,
-        {"selected_sensor_ids": ["check-a", "check-b"], "total_sensor_count": 2},
-        {"check-a"},
+        {"selected_sensor_ids": ["check-a", "check-b"], "total_sensor_count": 3},
+        always_on,
+        regression,
+        retired,
     )
     if mode != "selected" or [path.stem for path in selected] != ["check-a", "check-b"]:
         print("FAIL check-all selection fixture", file=sys.stderr)
         return 1
-    selected, mode = select_checks(fixture, None)
+
+    selected, mode = select_checks(fixture, None, set(), regression, retired)
     if mode != "full" or [path.stem for path in selected] != ["check-a", "check-b"]:
-        print("FAIL check-all full-suite fixture", file=sys.stderr)
+        print("FAIL check-all active full-suite fixture", file=sys.stderr)
         return 1
+
+    selected, mode = select_checks(fixture, None, set(), regression, retired, include_all_lifecycle=True)
+    if mode != "all-lifecycle" or [path.stem for path in selected] != ["check-a", "check-b", "check-retired"]:
+        print("FAIL check-all all-lifecycle fixture", file=sys.stderr)
+        return 1
+
     for bad in (
         {"selected_sensor_ids": []},
         {"selected_sensor_ids": ["check-a", "check-a"]},
         {"selected_sensor_ids": ["check-missing"]},
-        {"selected_sensor_ids": ["check-a"], "total_sensor_count": 3},
-        {"selected_sensor_ids": ["check-a"], "full_suite": True},
+        {"selected_sensor_ids": ["check-a"], "total_sensor_count": 4},
+        {"selected_sensor_ids": ["check-a"], "full_suite": True, "total_sensor_count": 3},
+        {"selected_sensor_ids": ["check-a", "check-b", "check-retired"], "total_sensor_count": 3},
     ):
         try:
-            select_checks(fixture, bad)
+            select_checks(fixture, bad, always_on, regression, retired)
         except ValueError:
             continue
         print(f"FAIL check-all accepted invalid selection: {bad}", file=sys.stderr)
         return 1
     try:
-        select_checks(fixture, {"selected_sensor_ids": ["check-b"]}, {"check-a"})
+        select_checks(
+            fixture,
+            {"selected_sensor_ids": ["check-b"], "total_sensor_count": 3},
+            always_on,
+            regression,
+            retired,
+        )
     except ValueError:
         pass
     else:
         print("FAIL check-all accepted selection missing ALWAYS_ON sensor", file=sys.stderr)
         return 1
-    print("OK check-all selftest default=FULL_SUITE selected_input=EXACT always_on=REQUIRED fail_closed=PASS")
+    print(
+        "OK check-all selftest default=ACTIVE_FULL selected_input=EXACT "
+        "always_on=REQUIRED retired=EXPLICIT_ONLY all_lifecycle=AVAILABLE fail_closed=PASS"
+    )
     return 0
 
 
@@ -141,11 +198,15 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--json-out", type=Path)
     ap.add_argument("--selection", type=Path)
+    ap.add_argument("--all-lifecycle", action="store_true", help="explicitly replay EVENT_ACCEPTANCE and RETIRED_RECEIPT sensors too")
     ap.add_argument("--self-test", action="store_true")
     args = ap.parse_args()
 
     if args.self_test:
         return selftest()
+    if args.selection and args.all_lifecycle:
+        print("FAIL --selection and --all-lifecycle are mutually exclusive", file=sys.stderr)
+        return 2
 
     all_checks = discover_checks()
     if not all_checks:
@@ -159,8 +220,18 @@ def main() -> int:
             print(f"FAIL invalid selection file: {exc}", file=sys.stderr)
             return 1
     try:
-        required_always_on = always_on_sensor_ids() if selection is not None else set()
-        checks, suite_mode = select_checks(all_checks, selection, required_always_on)
+        rows = registry_sensor_rows()
+        required_always_on = always_on_sensor_ids(rows) if selection is not None else set()
+        regression = regression_sensor_ids(rows)
+        retired = retired_sensor_ids(rows)
+        checks, suite_mode = select_checks(
+            all_checks,
+            selection,
+            required_always_on,
+            regression,
+            retired,
+            include_all_lifecycle=args.all_lifecycle,
+        )
     except (OSError, json.JSONDecodeError, KeyError, ValueError) as exc:
         print(f"FAIL {exc}", file=sys.stderr)
         return 1
@@ -225,6 +296,7 @@ def main() -> int:
             "suite_runner": "scripts/check-all.py",
             "suite_mode": suite_mode,
             "sensor_count": len(checks),
+            "regression_sensor_count": len(regression),
             "total_available_sensor_count": len(all_checks),
             "failed_count": len(failed),
             "selected_sensor_ids": [path.stem for path in checks],

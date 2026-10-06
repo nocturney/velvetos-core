@@ -1,0 +1,545 @@
+{
+  "schema": "velvetos.policy-history-manifest.v1",
+  "purpose": "immutable_integrity_for_completed_stage4_stage8_policy_history",
+  "routine_execution": "HASH_ONLY",
+  "explicit_replay": "scripts/check-policy-history-replay.py",
+  "entry_count": 134,
+  "entries": [
+    {
+      "path": "packages/velvetos/policy/artifact-retention.json",
+      "sha256": "7934080a7b044b89c691feb8474e12fae6ea7e006f471e06987c840e5e412633"
+    },
+    {
+      "path": "packages/velvetos/policy/memory-learning-lifecycle.json",
+      "sha256": "e7a0dee7d6295a3d899ccdc781fb4217fc93673c1a25d636c5bc7ee547689131"
+    },
+    {
+      "path": "packages/velvetos/policy/policy-registry.json",
+      "sha256": "b6968049c1ad31acd03591c106d79db195c2e46bac6c5ef2377e0dd6022b06d8"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage4-acceptance.json",
+      "sha256": "a89c856136def0839f52b3eb697ae152857515a374c3868753e863ceaa154aa9"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage4a-friction-baseline.json",
+      "sha256": "2d3513b3495a8da3aa2bb6d0e4fe61783ce1d51fce344d80e96809499bf4c390"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage4b-project-request-fast-path.json",
+      "sha256": "0e3667fbf104664c82c89dacf00c83f1eb0c618cf370f09ebc622ec92cc01c79"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage4d-instagram-happy-path-cutover.json",
+      "sha256": "a88147f84c1a79543b0f09d25a65e9c6d56fc1555d21903acfc98cf0c897ff30"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage4d-instagram-happy-path-implementation.json",
+      "sha256": "017a7192d993cb4858df38565d0e56baf5274c051f1bfa6c39e61beab445cc17"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage4e-gmail-send-simplification.json",
+      "sha256": "6a80047c2d19182aeb1fffcf94ed11ff4970643462599b1fdf7030deade5f16d"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage4f-runtime-receipt-scope.json",
+      "sha256": "95706e0152cc17926b1da6c232ab1ef056a53fb8d95e93521f89bcca724c1360"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage4g-cost-envelopes.json",
+      "sha256": "e2db133beea335d2f0991b897e65ed77b37c02f674078c0f4f54cf801ad58aee"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage5-acceptance.json",
+      "sha256": "8bbf270338003187070989f84616d2d5e5d5b03a1c6b2228791806f2c288ba7d"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage5a-context-locality-baseline.json",
+      "sha256": "6168bf74c8ad0ec2ab7f28ac12973112e5b4e4d5b7c7b6061a341ea0b78c77c5"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage5a-context-locality.json",
+      "sha256": "10615f462b1e9e04da7b481b28365dee93ba9207ab3a69f2ea761a0c6799c26d"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage5b-harness-consolidation.json",
+      "sha256": "99e7d0079f23b22876798392de14682017af229464f86519221b7a8360bbec6b"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage5c-workspace-distribution.json",
+      "sha256": "81639a4d1f5f8d0e3df57638f5b02f99ad068108a0cf5c8341975404055027ad"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage6-acceptance.json",
+      "sha256": "f18622ac05718d8dfc24cd598b7f2ec5a3f8881adb26026bc6bc49a994d00572"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage6a-visible-text-tiers.json",
+      "sha256": "665f4dc8befc5573f6236b36913e17847f8b7827ac04947c016c5bf254c689c9"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage6b-creative-readiness.json",
+      "sha256": "5f4059783007db67d0fa1d01d5ffcbd80c63d36e2bc001d98354abd4c8970a2d"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage6c-dcc-capability-gating.json",
+      "sha256": "37305d477ae3fec3fc8fe5e21d5b7add478260441fa9f75ef5d5a1727b5b9fb0"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage6d-documentation-authority-cleanup.json",
+      "sha256": "6361fb3c51bed0678b740be0ce87ac684b6140e8933a91937e767646bcf3adf4"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage7-acceptance.json",
+      "sha256": "af03b9c830f642c72a2ddcc488fa20fd4454ac31b6eb8108b3277f7ec736441a"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage7a-state-evidence-model.json",
+      "sha256": "8a3c37768e564d93680223654b5d729f7112c6f678e0b45240adbcf78b3c883f"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage7b-memory-learning-lifecycle.json",
+      "sha256": "be144c7b13d410cee842bdfa368de5aeb80dbb0de34bda8767285778940453b8"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage7c-research-scheduler-consolidation.json",
+      "sha256": "001a46d22a6317dcdfcb0314964ef2b999856a3168376c0d2e5a440495256153"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage7d-artifact-retention.json",
+      "sha256": "e8bb05c0607c7911162ea7d6557d9a4711c3cf62f9136d8d5e6c7866948bc273"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage7d-morning-green-asset-archive.json",
+      "sha256": "81faaa8dc5afdff5e038868506623e20a72d31f6a95a1c899d233d459484c8d1"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8a-core-instance-inventory.json",
+      "sha256": "183bda7f9362c1cde46942cb54079e74233eb19396c0d60236fc4e30f8843713"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8b-canonical-instance-config.json",
+      "sha256": "ba9b4da9f3cae6bfb991f7d5783a1b1572e1cb07f690c1390c794bdd156fc691"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8b-instance-resolver-foundation.json",
+      "sha256": "a348b9a5d096582e0fcbecf10d7b943910f3cd5370647b9e8d81c1ecd04e0b37"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8c-chatgpt-distribution-consumers.json",
+      "sha256": "b58c3c4dbce1b8e4462586559546b641948d40ebb78f9d5b7491192ab0f9fcd5"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8c-closure.json",
+      "sha256": "ea4881b7fbfe9777705b86090f2a0fe72fba687064a5beb5d7b78cdcceb3ad06"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8c-control-api-fleet.json",
+      "sha256": "28257b3773f8cb62feaa254c16258dcea63213226a5e62d3393f6eeaf964ca2f"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8c-desk-catalog-bindings.json",
+      "sha256": "1339784d8b16f3071b1994971b2e293977c54ab62fa108581c54d9b0fd453504"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8c-expert-modules.json",
+      "sha256": "ea4c53b4016a461e8878dc789c1d08a15efd8bb10e45a308ee3d08ea8b2f98cb"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8c-living-studio-rules.json",
+      "sha256": "3242df82193e39747fa41e598faf78ee5b1f0e86482db74e8d59827915561093"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8c-root-desk-readers.json",
+      "sha256": "d11621a8ebadc3872330c2903c90a1b18f51bb467ae9460fbf77346fdae03ac5"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8c-sample-profile-consumers.json",
+      "sha256": "a33fb4cb338638619c605cd3d9ea0c990544b3c096440c079e75c05d8967ee71"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8c-windows-host-binding.json",
+      "sha256": "e126f31165608ec521312669a84c1a352e9c4a504eab12c6c49c8383b65eebe1"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-chatgpt-core-consumer-migration.json",
+      "sha256": "66d64c264b31fcd637c1ef260854f5e3c99fda567e83ecc68de29975d082d7ef"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-chatgpt-deletion-gate.json",
+      "sha256": "fcac622b7b77c5254489ef0ecf93f42d9ec1d5486511578265a5767f420cdcc8"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-chatgpt-deletion.json",
+      "sha256": "3a354c04cc9dcad06b7694eb6659892688beff3b758782cbfc1c9e782c4b12ff"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-chatgpt-rollback-closure.json",
+      "sha256": "1f8e5287dca1f194f82bd6c799c1fd8fb01e692536dd4efa2b525fe6328b2b14"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-chatgpt-semantic-correction.json",
+      "sha256": "dad0e864b4412c8a5caaf4231ebc260bd9fd30189e1a1990cc5504985ca133a9"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-final-acceptance.json",
+      "sha256": "507d55fa149dfbf27d1598fbd4e3c6cc9313af6c3ed7394ea378fb9b987575bb"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-fleet-consumer-migration.json",
+      "sha256": "fab0221c35ff2d17937b877249baa123f11857c1a363de4717a10905874d64bc"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-fleet-deletion-gate.json",
+      "sha256": "837214bee82c2cb94d5d0633aec8637039342dbdaaa059e3351bff573217028f"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-fleet-deletion.json",
+      "sha256": "2b41ccea03a2a7f904ef83ad7d2357cb7b2651f57fab9f5a5e34656c19b41b5f"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-fleet-rollback-closure.json",
+      "sha256": "b2032eadd7cbc849e62a991f00bb365f24bd012c735a0ab25d5ec30b99c23b9f"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-fleet-runtime-consumer-correction.json",
+      "sha256": "c3194b2252e2d87718a65d63cda2ac20b14740e58cb86a6dff281f29bc161a00"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-post-migration-readiness.json",
+      "sha256": "6b1fbfc1fc9be7108ba07dcd3d8004406343a5ff1b4c1ec6fc5a8189b6077f13"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-retirement-readiness.json",
+      "sha256": "5ea6f0544ce03c5d8a4ad006f31a1e2a87c3acc5c5d54c476c2c929564960fdc"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-retirement-semantic-audit.json",
+      "sha256": "d95f70e1665618d01d24a467ef8e65dd8a4c2f04132b818d1890024d38a10537"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-root-desk-consumer-migration.json",
+      "sha256": "fc8fdf1073287c45450f27acd86d35dbc5880f2bbf5ada3673e5685a307a0523"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-root-desk-deletion-gate.json",
+      "sha256": "9e823fc5613f266ad6c38a31cb73bf5c0311bfb8e26d5ae814b90698e0df1719"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-root-desk-deletion.json",
+      "sha256": "93d8c46edd5d70bbbeeaa76f17fdf5e8d2c2d36b6b4573133446fa115dec9141"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-root-desk-rollback-closure.json",
+      "sha256": "34caad35b8f77edff24e0cbf3a42d84b825f275edc60778f5f4339231316bc7a"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-root-desk-runtime-consumer-correction.json",
+      "sha256": "5f54fade9bd72e9e288093a981fb3feadd7a9988ca13045c05ff272f317c64b8"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-sample-profile-consumer-correction.json",
+      "sha256": "4351744f4923625b607a66cbc7cdcea1a2ead8f55c4222e7113eedcc61f197f2"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-sample-profile-deletion-gate.json",
+      "sha256": "1969cf2618d7fd31303107bbb1662ed7c9871e23dbf629ad47e54aea81f37e08"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-sample-profile-deletion.json",
+      "sha256": "8541bed3056c77bd5279149b420eb902df335d37aafa849f303b4d4cf11e852f"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-sample-profile-rollback-closure.json",
+      "sha256": "bf88652a1f4a2cede922c8c93b6164ce6b44e966ef25beb919925f5118bceaac"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-sample-profile-rollback-reclosure.json",
+      "sha256": "92099b99bb06767daccf26e8250218f9595bceea7131f5f02801c55620cf395d"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-tool-status-consumer-migration.json",
+      "sha256": "8824ffc78bc7ab55560763e58bfa6cd48b27b8798062d18010bc4a025839e521"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-tool-status-deletion-gate.json",
+      "sha256": "8665e8bdc7fb9f1029ab199813583c79c7648072defba7c5c20d5f2ddc5beb3b"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-tool-status-deletion.json",
+      "sha256": "4a016ce43793a98b35bc90754c2f5b37937c11731f26eb97794f14d9f41e10a5"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-tool-status-rollback-closure.json",
+      "sha256": "1abc2f56320052e34a050ec535ddf5dffc15534533a2780d0ee4db1d97bfc859"
+    },
+    {
+      "path": "packages/velvetos/policy/reports/stage8d-tool-status-semantic-correction.json",
+      "sha256": "57bb14e965a1193809ab65b693a7670445c461463ea865b2b277b114bb00d593"
+    },
+    {
+      "path": "packages/velvetos/policy/research-scheduler-consolidation.json",
+      "sha256": "66082c442a4c19e56483569abdba9b1273a12474263baeab23ae6af03298b9d8"
+    },
+    {
+      "path": "packages/velvetos/policy/state-evidence-model.json",
+      "sha256": "37ff265d0059cc9a597b1875851273b5e3242a1e3cb1b5f78cd4c6939758d574"
+    },
+    {
+      "path": "scripts/check-policy-history-replay.py",
+      "sha256": "c9c027a70509e9c163989ce1ffd0d445cc5b65fa0b867646f12ae5370b8331ee"
+    },
+    {
+      "path": "scripts/generate-policy-history-manifest.py",
+      "sha256": "0590079a865c31851a178b4dcabdc98d71b13ada611b62ba385f812dca636065"
+    },
+    {
+      "path": "scripts/generate-stage4-acceptance.py",
+      "sha256": "f60feab1fb2a7f92710dd292246fbd4af83790a922909a94ec8089a1fcf03534"
+    },
+    {
+      "path": "scripts/generate-stage4b-fast-path-report.py",
+      "sha256": "9b72f5f0b5f87537ea96f5c3203b677d9ee8fad2d0dd6c8853d6ec4bc6b4dbb4"
+    },
+    {
+      "path": "scripts/generate-stage4d-instagram-happy-path-report.py",
+      "sha256": "57468dd5b0f64d7cb3da4781672ade5b47f635a2759506091950d9450f05cdc4"
+    },
+    {
+      "path": "scripts/generate-stage4e-gmail-send-report.py",
+      "sha256": "6836b44f19455c5b85870c4dc879be0388f042831e42de03bd7c2590b543188b"
+    },
+    {
+      "path": "scripts/generate-stage4f-runtime-receipt-scope-report.py",
+      "sha256": "ee5a7c24751393da3f5f51dbe013cfd802f79c20640ac4ee36a7d9876125d851"
+    },
+    {
+      "path": "scripts/generate-stage4g-cost-envelope-report.py",
+      "sha256": "0624a715e66cb52164757420abc8fac9966aa6f6cc1aaa99fb9b27160145da35"
+    },
+    {
+      "path": "scripts/generate-stage5-acceptance.py",
+      "sha256": "8241ee225e1885c5c638c42f823535ac59dc454fc3668144176d0da6baf95ba8"
+    },
+    {
+      "path": "scripts/generate-stage5a-context-locality-baseline.py",
+      "sha256": "9de8c913e6d84e5dd9be051c71558782972f92e7d07e6627c0315645e7bfc09f"
+    },
+    {
+      "path": "scripts/generate-stage5a-context-locality-report.py",
+      "sha256": "a7db86a046b3fbecbc9721abb54793defeee940e7c556231ea5614c387abf5d7"
+    },
+    {
+      "path": "scripts/generate-stage5b-harness-consolidation-report.py",
+      "sha256": "199ed46972966dcef051c6921681578c37d4e331c3df83eda09aff9fb7665ccc"
+    },
+    {
+      "path": "scripts/generate-stage5c-workspace-distribution-report.py",
+      "sha256": "ea3cc075c7e2b4c8e981a94e6ba788e017e4c2d92f73d41b8fe00baf5ec074b7"
+    },
+    {
+      "path": "scripts/generate-stage6-acceptance.py",
+      "sha256": "1e3c79cea026f73e8f2872b3b71c252156492255b684c31563423744e31c06a7"
+    },
+    {
+      "path": "scripts/generate-stage6a-visible-text-tiers-report.py",
+      "sha256": "2baecaa86e86c63383896067957e913ee1461c78742470b4c194f34aba5ffb3c"
+    },
+    {
+      "path": "scripts/generate-stage6b-creative-readiness-report.py",
+      "sha256": "8259d03c811decdb8137ac7d563e9275b50ef6b68491b5e7655785de584b322e"
+    },
+    {
+      "path": "scripts/generate-stage6c-dcc-capability-gating-report.py",
+      "sha256": "b1d48e1785d7675ae37e55cd91b8dd1943149f9abc782ac2fa80520e19ac6740"
+    },
+    {
+      "path": "scripts/generate-stage6d-documentation-authority-cleanup-report.py",
+      "sha256": "bb9286c7cce06b037e7440ce06bbefc708111082a79179411b2bc727ab88720c"
+    },
+    {
+      "path": "scripts/generate-stage7-acceptance.py",
+      "sha256": "6b0c96abd474a1e68c33397f6977311ba622579baf30ec026e778808cbc9d360"
+    },
+    {
+      "path": "scripts/generate-stage7a-state-evidence-model.py",
+      "sha256": "121eb7c878b79123f35ee78d0eba47e65ef3a01e71c358a6a2ba0877fae9ee11"
+    },
+    {
+      "path": "scripts/generate-stage7b-memory-learning-lifecycle.py",
+      "sha256": "78881b79cd4cf740067266a17c1d0b8fac51ea3ff983952292306a397eeef4b1"
+    },
+    {
+      "path": "scripts/generate-stage7c-research-scheduler-consolidation.py",
+      "sha256": "e9a4877509f07d28b8ed7d82a1f6d37550d865d66d1c898ea790e5d17337f548"
+    },
+    {
+      "path": "scripts/generate-stage7d-artifact-retention.py",
+      "sha256": "8821abd323de47355e565251f21d18c9f405644316494399043caf1ab8294719"
+    },
+    {
+      "path": "scripts/generate-stage8a-core-instance-inventory.py",
+      "sha256": "98b7876c669f9ceb7caf7c8236dfb0354fadee4b9af2fa7c3f617ba7307868e1"
+    },
+    {
+      "path": "scripts/generate-stage8b-canonical-instance-config.py",
+      "sha256": "a87270680af0e8768b5e5d83e5e20ae0071c569f2598538e2e98c09b131870fb"
+    },
+    {
+      "path": "scripts/generate-stage8b-instance-resolver-foundation.py",
+      "sha256": "fd7e7ea29cd2b911ab95bcdc1f9133ce92eb9358f13fa719803ffbea7ca46d71"
+    },
+    {
+      "path": "scripts/generate-stage8c-chatgpt-distribution-consumers.py",
+      "sha256": "5f3c82f64cae7d7dba944749d275bbd9424cafc65999a3244dae09bcf59a021f"
+    },
+    {
+      "path": "scripts/generate-stage8c-closure.py",
+      "sha256": "9f582436a6626c514c4b42390e5ebfda48f5c8534ddbf34d29bd0e3caf9a9676"
+    },
+    {
+      "path": "scripts/generate-stage8c-control-api-fleet.py",
+      "sha256": "ee44a2630e7b6a1e56a9a37e7aeee51e4ab3ca353ae1a972f96a3519b6da8e47"
+    },
+    {
+      "path": "scripts/generate-stage8c-desk-catalog-bindings.py",
+      "sha256": "d6485997fc12fa12e4257c4904bce4f133c83e1a352194096e46b1765a4f253b"
+    },
+    {
+      "path": "scripts/generate-stage8c-expert-modules.py",
+      "sha256": "75433080d960487f6b07b2517bc0990f4d3ae4ebb2fc54fae032a210155dbec6"
+    },
+    {
+      "path": "scripts/generate-stage8c-living-studio-rules.py",
+      "sha256": "de517995feedae142563891c3d431b2e5131f4cc9904a5988f5722ae8da3c813"
+    },
+    {
+      "path": "scripts/generate-stage8c-root-desk-readers.py",
+      "sha256": "5686cc0697bb29682664109e89aba372771c71f47cfeeb78d71ff92eff09358e"
+    },
+    {
+      "path": "scripts/generate-stage8c-sample-profile-consumers.py",
+      "sha256": "c1b630cdc9884b34bc1094b1b43e2e112939be9ee43d7c08c3659473e4586e04"
+    },
+    {
+      "path": "scripts/generate-stage8c-windows-host-binding.py",
+      "sha256": "b0496cdce6da8d4f4189e4c9674f8a9da5f7b166ca115676616871366afdcc08"
+    },
+    {
+      "path": "scripts/generate-stage8d-chatgpt-core-consumer-migration.py",
+      "sha256": "8e7de8bc2034eb2db0c74940ef5952ad3999f726c92354d657d5b18c5b0751d3"
+    },
+    {
+      "path": "scripts/generate-stage8d-chatgpt-deletion-gate.py",
+      "sha256": "3c00361b349344ee7d3f58da4ddb5ec67f78ffb9b7db45f3aa72d47bde4453ac"
+    },
+    {
+      "path": "scripts/generate-stage8d-chatgpt-deletion.py",
+      "sha256": "39913ef0fe5749d5184f4312cce42d0202353325ed4ad7c6ae69d5fc2b21a035"
+    },
+    {
+      "path": "scripts/generate-stage8d-chatgpt-rollback-closure.py",
+      "sha256": "1f7242ad5826e0220b0da67a3c08b211ba6f8bf1c5f0e7302fe44fe1e58003a9"
+    },
+    {
+      "path": "scripts/generate-stage8d-chatgpt-semantic-correction.py",
+      "sha256": "f0dcf3f7b74bc2baf86943b0102c9d5c2bed1ab05bf618cc0debb94e70be0e06"
+    },
+    {
+      "path": "scripts/generate-stage8d-final-acceptance.py",
+      "sha256": "759cfa19ce83e168e6dd936c1a095eeec8a2b1bf88e1a4a8800f813b492adbd4"
+    },
+    {
+      "path": "scripts/generate-stage8d-fleet-consumer-migration.py",
+      "sha256": "50bd7aba769c651484804c3c63c5b20d3b3a65a078bf2304ffd56574a0ba569f"
+    },
+    {
+      "path": "scripts/generate-stage8d-fleet-deletion-gate.py",
+      "sha256": "e63401464015fd7000f7140a2b096e1d0faa0f38f87c470a28766720c89fa9fc"
+    },
+    {
+      "path": "scripts/generate-stage8d-fleet-deletion.py",
+      "sha256": "c0c53021dd9274a4363061873e7160f5079c9931de4170a2e1ad208479f57857"
+    },
+    {
+      "path": "scripts/generate-stage8d-fleet-rollback-closure.py",
+      "sha256": "0440c60b69e5c97b3913d3d2ef4065a221af3d08d3dc316a4b80f4bfa4981623"
+    },
+    {
+      "path": "scripts/generate-stage8d-fleet-runtime-consumer-correction.py",
+      "sha256": "afe988c01d29546c61b60521b2f5bdc938c804db4c26d62207c39c0739f2f378"
+    },
+    {
+      "path": "scripts/generate-stage8d-post-migration-readiness.py",
+      "sha256": "23072977affcb58dc8aed89932b297d3608fe2dc21ec48854cb7a719632f399c"
+    },
+    {
+      "path": "scripts/generate-stage8d-retirement-readiness.py",
+      "sha256": "f6a173095cd4c4118b41d5e79a809de0a70450a8e12e08eee3817f9257354218"
+    },
+    {
+      "path": "scripts/generate-stage8d-retirement-semantic-audit.py",
+      "sha256": "e0337c939d47ae82eb3903e694109cc47259d1e852d00270017b18296ec4f98f"
+    },
+    {
+      "path": "scripts/generate-stage8d-root-desk-consumer-migration.py",
+      "sha256": "a2bca2c91ea587e572f4f1386a4867c182c9f36306a9a99e1e4d4d37b8eb54de"
+    },
+    {
+      "path": "scripts/generate-stage8d-root-desk-deletion-gate.py",
+      "sha256": "917f05771f626b007570f3685af3fef62a2afd201ee9822339833324785f7356"
+    },
+    {
+      "path": "scripts/generate-stage8d-root-desk-deletion.py",
+      "sha256": "da560c1594f5e951af73361722758a3ef06c789c543c45dd34270ef667222dbf"
+    },
+    {
+      "path": "scripts/generate-stage8d-root-desk-rollback-closure.py",
+      "sha256": "2baa8d25516d1507d9854cc6024c61871083d4e30f61b3f1b654fcb889fe0928"
+    },
+    {
+      "path": "scripts/generate-stage8d-root-desk-runtime-consumer-correction.py",
+      "sha256": "2f10965418eb815706073a82d2932cd74ab935458dfe9ed1d2f5c8403078a3e7"
+    },
+    {
+      "path": "scripts/generate-stage8d-sample-profile-consumer-correction.py",
+      "sha256": "3e124a63ede1b26978cf63ad84774a8c1c13f82238f9e690bf00e01391e750df"
+    },
+    {
+      "path": "scripts/generate-stage8d-sample-profile-deletion-gate.py",
+      "sha256": "14655e02580f78c72376dd6d37fe09269e2ee8afcb4f13e0d3c20a9701b28907"
+    },
+    {
+      "path": "scripts/generate-stage8d-sample-profile-deletion.py",
+      "sha256": "6b815aa9786216fe82c3681dd656b881fc12be8bf348387e0b762a900d6cdb0a"
+    },
+    {
+      "path": "scripts/generate-stage8d-sample-profile-rollback-closure.py",
+      "sha256": "b1c74ba0f1f4af7c8d7a0b7e6b356eb7bf4bc890911ad8fe78fc2867c8bb6357"
+    },
+    {
+      "path": "scripts/generate-stage8d-sample-profile-rollback-reclosure.py",
+      "sha256": "d6640561f83b7ef90ac784587b15bfa485b1ea4a814495903e445aebae13aaaa"
+    },
+    {
+      "path": "scripts/generate-stage8d-tool-status-consumer-migration.py",
+      "sha256": "f181db58176b9678019945df6e287c2dbcba3a383b6f636dc4cf71b42c824b17"
+    },
+    {
+      "path": "scripts/generate-stage8d-tool-status-deletion-gate.py",
+      "sha256": "463ac92e471d8f0df40bd078858112ba2f3c1b279e0c2832026612033c2f12bb"
+    },
+    {
+      "path": "scripts/generate-stage8d-tool-status-deletion.py",
+      "sha256": "98f8c97e0e2d4effabfe5be4a1adfa04a9cf29d60fac8521818465195ab2c3e3"
+    },
+    {
+      "path": "scripts/generate-stage8d-tool-status-rollback-closure.py",
+      "sha256": "a77b8a7973e2a363c10345d47fec17d025b5d8aea85cea10a08c9294fb536c7d"
+    },
+    {
+      "path": "scripts/generate-stage8d-tool-status-semantic-correction.py",
+      "sha256": "e69da8bb83afcfa913865e8c151a68778ab252d5059d78f45c16c4003ed93bf3"
+    }
+  ]
+}

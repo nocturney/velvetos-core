@@ -20,6 +20,7 @@
         "check-behavioral-evals"
       ],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -44,6 +45,7 @@
       "enforces": [
         "repository.agent_surface.secrets"
       ],
+      "lifecycle": "CORE",
       "risk": "critical",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -69,7 +71,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -98,6 +101,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -123,7 +127,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 60,
       "failure_effect": {
         "merge": "BLOCK",
@@ -150,7 +155,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -173,7 +179,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -203,7 +210,8 @@
         "scripts/vf_cad.py"
       ],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -226,6 +234,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -253,7 +262,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -279,7 +289,8 @@
         "scripts/sensor_isolation.py"
       ],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -308,6 +319,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -355,7 +367,8 @@
       "enforces": [
         "instagram.publish"
       ],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -378,7 +391,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -439,7 +453,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -480,6 +495,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -501,6 +517,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "CORE",
       "risk": "critical",
       "timeout_seconds": 60,
       "failure_effect": {
@@ -526,6 +543,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -565,7 +583,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -590,7 +609,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "medium",
+      "lifecycle": "RETIRED_RECEIPT",
+      "risk": "low",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -623,7 +643,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -668,6 +689,7 @@
       "enforces": [
         "gmail.send"
       ],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -691,6 +713,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -720,6 +743,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -772,7 +796,8 @@
         "scripts/sensor_isolation.py"
       ],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -805,7 +830,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -832,6 +858,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -861,6 +888,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -908,7 +936,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -941,7 +970,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -993,7 +1023,8 @@
         "scripts/sensor_isolation.py"
       ],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -1015,6 +1046,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "CORE",
       "risk": "critical",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -1038,7 +1070,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -1065,7 +1098,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -1111,6 +1145,7 @@
       "enforces": [
         "cost.recurring.new"
       ],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -1138,6 +1173,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -1192,7 +1228,8 @@
         "scripts/sensor_isolation.py"
       ],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -1227,8 +1264,43 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-office-v2-contracts",
+      "path": "scripts/check-office-v2-contracts.py",
+      "owns": [
+        "docs/implementation/office-v2/phase0/authority-map-v0.1.json",
+        "docs/implementation/office-v2/phase0/credential-trust-classes-v0.json",
+        "docs/implementation/office-v2/phase1/lab-boundary-v0.json",
+        "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
+        "docs/implementation/office-v2/phase2/candidate-registry-v0.json",
+        "docs/implementation/office-v2/phase3/durable-execution-contract-v0.json",
+        "docs/implementation/office-v2/phase3/durable-execution-lab-plan-v0.json",
+        "docs/implementation/office-v2/phase3/durable-execution-verdict-v0.json",
+        "scripts/check-office-v2-contracts.py"
+      ],
+      "triggered_by": [
+        "docs/implementation/office-v2/phase0/**",
+        "docs/implementation/office-v2/phase1/**",
+        "docs/implementation/office-v2/phase2/**",
+        "docs/implementation/office-v2/phase3/**",
+        "scripts/check-office-v2-contracts.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "lifecycle": "DOMAIN",
+      "risk": "high",
+      "timeout_seconds": 60,
       "failure_effect": {
         "merge": "BLOCK",
         "release": "BLOCK_IF_RELEVANT",
@@ -1256,7 +1328,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "critical",
+      "lifecycle": "EVENT_ACCEPTANCE",
+      "risk": "low",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -1291,7 +1364,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "critical",
+      "lifecycle": "EVENT_ACCEPTANCE",
+      "risk": "low",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -1320,7 +1394,8 @@
         "check-office-v2-phase1"
       ],
       "enforces": [],
-      "risk": "critical",
+      "lifecycle": "EVENT_ACCEPTANCE",
+      "risk": "low",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -1347,7 +1422,8 @@
         "check-office-v2-phase2"
       ],
       "enforces": [],
-      "risk": "critical",
+      "lifecycle": "EVENT_ACCEPTANCE",
+      "risk": "low",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -1376,6 +1452,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -1426,7 +1503,8 @@
         "advertising.boost",
         "customer.whatsapp.send"
       ],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -1465,7 +1543,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -1492,6 +1571,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "CORE",
       "risk": "critical",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -1500,6 +1580,90 @@
         "runtime": "NO_DIRECT_RUNTIME_EFFECT"
       },
       "fallback_scope": "ALWAYS_ON",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-retired-receipt-integrity",
+      "path": "scripts/check-retired-receipt-integrity.py",
+      "owns": [
+        "packages/velvetos/policy/retired-receipt-manifest.json",
+        "packages/vfharness/state/ecosystem-radar-phase9-2026-09-27.json",
+        "packages/vfharness/state/zero-cost-agent-stack-2026-09-27.json",
+        "packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json",
+        "scripts/check-ecosystem-radar-phase9.py",
+        "scripts/check-retired-receipt-integrity.py",
+        "scripts/check-zero-cost-final-acceptance.py",
+        "scripts/generate-retired-receipt-manifest.py"
+      ],
+      "triggered_by": [
+        "packages/velvetos/policy/retired-receipt-manifest.json",
+        "packages/vfharness/state/ecosystem-radar-phase9-2026-09-27.json",
+        "packages/vfharness/state/zero-cost-agent-stack-2026-09-27.json",
+        "packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json",
+        "scripts/check-ecosystem-radar-phase9.py",
+        "scripts/check-retired-receipt-integrity.py",
+        "scripts/check-zero-cost-final-acceptance.py",
+        "scripts/generate-retired-receipt-manifest.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "lifecycle": "DOMAIN",
+      "risk": "high",
+      "timeout_seconds": 30,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-policy-history-replay",
+      "path": "scripts/check-policy-history-replay.py",
+      "owns": [
+        "packages/velvetos/policy/historical-policy-manifest.json",
+        "packages/velvetos/policy/reports/stage4*.json",
+        "packages/velvetos/policy/reports/stage5*.json",
+        "packages/velvetos/policy/reports/stage6*.json",
+        "packages/velvetos/policy/reports/stage7*.json",
+        "packages/velvetos/policy/reports/stage8*.json",
+        "scripts/check-policy-history-replay.py",
+        "scripts/generate-policy-history-manifest.py",
+        "scripts/generate-stage4*.py",
+        "scripts/generate-stage5*.py",
+        "scripts/generate-stage6*.py",
+        "scripts/generate-stage7*.py",
+        "scripts/generate-stage8*.py"
+      ],
+      "triggered_by": [
+        "packages/velvetos/policy/historical-policy-manifest.json",
+        "packages/velvetos/policy/reports/stage4*.json",
+        "packages/velvetos/policy/reports/stage5*.json",
+        "packages/velvetos/policy/reports/stage6*.json",
+        "packages/velvetos/policy/reports/stage7*.json",
+        "packages/velvetos/policy/reports/stage8*.json",
+        "scripts/check-policy-history-replay.py",
+        "scripts/generate-policy-history-manifest.py",
+        "scripts/generate-stage4*.py",
+        "scripts/generate-stage5*.py",
+        "scripts/generate-stage6*.py",
+        "scripts/generate-stage7*.py",
+        "scripts/generate-stage8*.py"
+      ],
+      "depends_on": [
+        "check-policy-architecture"
+      ],
+      "enforces": [],
+      "lifecycle": "EVENT_ACCEPTANCE",
+      "risk": "high",
+      "timeout_seconds": 300,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
       "mapping_state": "mapped"
     },
     {
@@ -1522,7 +1686,8 @@
         "scripts/vf_control_plane.py"
       ],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -1556,7 +1721,8 @@
         "scripts/vf_publication_evidence.py"
       ],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -1638,7 +1804,8 @@
       "enforces": [
         "project.request.preflight"
       ],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -1664,7 +1831,8 @@
       "enforces": [
         "instagram.publish"
       ],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -1698,6 +1866,7 @@
         "public.cta",
         "customer.whatsapp.send"
       ],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -1736,6 +1905,7 @@
       "enforces": [
         "instagram.publish"
       ],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -1781,6 +1951,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -1804,6 +1975,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -1837,6 +2009,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -1860,6 +2033,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -1886,6 +2060,7 @@
         "scripts/vf_publish_handoff.py"
       ],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -1910,7 +2085,8 @@
         "scripts/readme_contract.py"
       ],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -1939,6 +2115,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -1966,7 +2143,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -1989,7 +2167,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2029,6 +2208,7 @@
         "advertising.boost",
         "external.permission.mutate"
       ],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -2062,6 +2242,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -2095,7 +2276,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2124,6 +2306,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -2167,7 +2350,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2191,7 +2375,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2224,7 +2409,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2273,7 +2459,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2312,7 +2499,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2367,7 +2555,8 @@
       "enforces": [
         "visible_text.finalization"
       ],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2390,6 +2579,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -2423,7 +2613,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2452,7 +2643,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2481,6 +2673,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -2492,7 +2685,8 @@
       "mapping_state": "mapped"
     },
     {
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2523,7 +2717,8 @@
       ]
     },
     {
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2564,7 +2759,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2613,7 +2809,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2647,7 +2844,8 @@
         "scripts/vf_cad.py"
       ],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2678,6 +2876,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -2703,7 +2902,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2741,7 +2941,8 @@
         "scripts/vf_cost_preflight.py"
       ],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2772,7 +2973,8 @@
       "enforces": [
         "customer.whatsapp.send"
       ],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2809,6 +3011,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -2832,7 +3035,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2873,7 +3077,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2911,7 +3116,8 @@
         "scripts/vf_office.py"
       ],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2935,7 +3141,8 @@
         "scripts/vf_task_state.py"
       ],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2960,7 +3167,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2985,7 +3193,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3016,7 +3225,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3043,7 +3253,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3074,7 +3285,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3101,7 +3313,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3128,7 +3341,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3159,6 +3373,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -3210,7 +3425,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3233,7 +3449,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3266,7 +3483,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3316,6 +3534,7 @@
       "enforces": [
         "customer.whatsapp.send"
       ],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -3361,7 +3580,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3389,7 +3609,8 @@
         "scripts/vfmem.py"
       ],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3418,7 +3639,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3443,7 +3665,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3503,7 +3726,8 @@
         "scripts/vfops_loop.py"
       ],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3536,7 +3760,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3587,7 +3812,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3620,7 +3846,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3644,7 +3871,8 @@
         "scripts/vf_video_normalization.py"
       ],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3673,7 +3901,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3732,6 +3961,7 @@
       "enforces": [
         "visible_text.finalization"
       ],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -3758,6 +3988,7 @@
         "instances/velvet-factory/scripts/check-instance-visual-bootstrap.py"
       ],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -3781,6 +4012,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -3810,6 +4042,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -3845,6 +4078,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
@@ -3880,7 +4114,8 @@
         "check-no-new-recurring-cost"
       ],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "RETIRED_RECEIPT",
+      "risk": "low",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3915,7 +4150,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3950,7 +4186,8 @@
         "check-reel-route-sync"
       ],
       "enforces": [],
-      "risk": "high",
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -3985,6 +4222,7 @@
       ],
       "depends_on": [],
       "enforces": [],
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
