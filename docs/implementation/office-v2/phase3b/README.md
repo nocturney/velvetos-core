@@ -41,3 +41,9 @@ Immutable NODE-A pins are frozen in runtime-pins-v0.json. Seven challengers pass
 ZITADEL remains a technically credible identity candidate but is DEFERRED_WITH_REASON because its main repository is AGPL-3.0-only and Office v2 does not silently accept licensing obligations or choose a commercial license on the owner's behalf. The identity lane still has two admitted serious challengers.
 
 Admission is not LAB validation, winner selection, SHADOW, PILOT or production promotion.
+
+## LAB admission smokes
+
+Authorization lane admission smoke is PASS for OPA, OpenFGA and Cedar. The run used only synthetic inputs; OPA/OpenFGA had no host-port bindings, Cedar used the checksum-verified official 4.13.0 CLI asset, and teardown removed candidate containers/network before lifecycle promotion to LAB.
+
+Identity and credential-broker candidates remain ADMITTED until their own isolated LAB smoke passes. No LAB smoke selects a winner or grants SHADOW/PILOT/production authority.

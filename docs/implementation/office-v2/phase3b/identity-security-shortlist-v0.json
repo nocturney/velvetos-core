@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.office-v2.phase3b-identity-security-shortlist.v0",
-  "status": "ADMISSION_RESEARCH_COMPLETE_LAB_SMOKES_PENDING_NO_WINNER",
+  "status": "AUTHORIZATION_LANE_LAB_VALIDATED_OTHER_LANES_PENDING_NO_WINNER",
   "captured_at": "2026-10-06T09:55:16.531683Z",
   "winner": null,
   "production_authority_granted": false,
@@ -32,12 +32,13 @@
         "candidate-cedar"
       ],
       "winner": null,
-      "admission_status": "3_ADMITTED_LAB_SMOKES_PENDING",
+      "admission_status": "3_LAB_VALIDATED_DESTRUCTIVE_FIXTURE_PENDING",
       "candidate_admission": {
-        "candidate-openfga": "ADMITTED",
-        "candidate-opa": "ADMITTED",
-        "candidate-cedar": "ADMITTED"
-      }
+        "candidate-openfga": "LAB",
+        "candidate-opa": "LAB",
+        "candidate-cedar": "LAB"
+      },
+      "lab_smoke_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-lab-smoke-pass.json"
     },
     {
       "lane_id": "phase3b-credential-broker",

@@ -16,6 +16,7 @@ REQUIRED = [
     P3B / "registry-extension-v0.json",
     P3B / "runtime-pins-v0.json",
     P3B / "admission-v0.json",
+    P3B / "lab-status-v0.json",
 ]
 EXPECTED_LANES = {
     "phase3b-identity-provider": ("identity_provider", "incumbent-current-service-identity", 3),
@@ -156,20 +157,36 @@ def main() -> None:
     if "AGPL-3.0" not in str(rows["candidate-zitadel"].get("license")):
         fail("ZITADEL license caveat missing")
 
-    for cid in expected_admitted:
+    lab_authz = {"candidate-openfga", "candidate-opa", "candidate-cedar"}
+    pending_admitted = expected_admitted - lab_authz
+    for cid in lab_authz:
         item = by_id.get(cid) or {}
-        if item.get("lifecycle_state") != "ADMITTED":
-            fail("admitted candidate registry state mismatch: " + cid)
-        if item.get("authority_role") != "NONE":
-            fail("admitted challenger gained authority: " + cid)
-        if item.get("runtime_verification") != "NOT_RUN":
-            fail("admission research must not claim LAB runtime verification: " + cid)
+        if item.get("lifecycle_state") != "LAB" or item.get("decision_verdict") != "LAB_VALIDATED":
+            fail("authorization LAB candidate registry state mismatch: " + cid)
+        if item.get("authority_role") != "NONE" or item.get("runtime_verification") != "PASS":
+            fail("authorization LAB candidate authority/runtime mismatch: " + cid)
+    for cid in pending_admitted:
+        item = by_id.get(cid) or {}
+        if item.get("lifecycle_state") != "ADMITTED" or item.get("decision_verdict") != "BENCHMARK_REQUIRED":
+            fail("pending LAB candidate registry state mismatch: " + cid)
+        if item.get("authority_role") != "NONE" or item.get("runtime_verification") != "NOT_RUN":
+            fail("pending LAB candidate authority/runtime mismatch: " + cid)
+
+    lab_status = load(P3B / "lab-status-v0.json")
+    if lab_status.get("winner_selected") is not False or lab_status.get("production_authority_change") is not False:
+        fail("Phase 3B LAB status selected winner or changed authority")
+    authz_status = ((lab_status.get("lanes") or {}).get("authorization_policy") or {})
+    if authz_status.get("status") != "LAB_SMOKE_PASS_DESTRUCTIVE_FIXTURE_PENDING":
+        fail("authorization LAB status mismatch")
+    if set(authz_status.get("lab_candidates") or []) != lab_authz:
+        fail("authorization LAB candidate set mismatch")
+
     zit = by_id.get("candidate-zitadel") or {}
     if zit.get("lifecycle_state") != "RESEARCHED" or zit.get("decision_verdict") != "DEFERRED_WITH_REASON":
         fail("ZITADEL registry state must remain researched/deferred")
 
     shortlist = load(P3B / "identity-security-shortlist-v0.json")
-    if shortlist.get("status") != "ADMISSION_RESEARCH_COMPLETE_LAB_SMOKES_PENDING_NO_WINNER":
+    if shortlist.get("status") != "AUTHORIZATION_LANE_LAB_VALIDATED_OTHER_LANES_PENDING_NO_WINNER":
         fail("Phase 3B shortlist status mismatch")
     if shortlist.get("winner") is not None or shortlist.get("production_authority_granted") is not False:
         fail("Phase 3B shortlist selected winner or authority prematurely")
@@ -194,6 +211,19 @@ def main() -> None:
                 fail("Phase 3B challenger has authority: " + cid)
             if lane_id not in (row.get("shortlist_lanes") or []):
                 fail("Phase 3B candidate lane binding missing: " + cid)
+        if lane_id == "phase3b-authorization-policy":
+            if set((lane.get("candidate_admission") or {}).values()) != {"LAB"}:
+                fail("authorization shortlist candidates must all be LAB after smoke")
+            if not lane.get("lab_smoke_ref"):
+                fail("authorization shortlist missing LAB smoke receipt")
+        elif lane_id == "phase3b-identity-provider":
+            expected = {"candidate-zitadel":"DEFERRED_WITH_REASON","candidate-keycloak":"ADMITTED","candidate-authentik":"ADMITTED"}
+            if lane.get("candidate_admission") != expected:
+                fail("identity shortlist admission state drift")
+        elif lane_id == "phase3b-credential-broker":
+            expected = {"candidate-infisical-agent-vault":"ADMITTED","candidate-openbao":"ADMITTED"}
+            if lane.get("candidate_admission") != expected:
+                fail("credential shortlist admission state drift")
 
     comp = shortlist.get("composition_gate") or {}
     if not all(comp.get(k) is True for k in ("winner_selection_per_lane_allowed_only_after_fixture", "phase3b_closure_requires_cross_role_composition_pass", "no_lane_winner_grants_production_authority")):
