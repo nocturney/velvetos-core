@@ -44,7 +44,10 @@
       "cleanup_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-smoke-task-cleanup.json"
     },
     "credential_broker": {
-      "status": "LAB_SMOKE_PASS_DESTRUCTIVE_FIXTURE_PENDING",
+      "status": "DESTRUCTIVE_PASS_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY",
+      "winner": "candidate-openbao",
+      "fallback": "candidate-infisical-agent-vault",
+      "lane_verdict_ref": "docs/implementation/office-v2/phase3b/credential-lane-verdict-v0.json",
       "lab_candidates": [
         "candidate-infisical-agent-vault",
         "candidate-openbao"
@@ -60,5 +63,5 @@
       ]
     }
   },
-  "next_gate": "Complete the credential-broker destructive benchmark and scorecards, then execute the cross-role composition gate using selected lane winners/fallbacks. No production authority before composition PASS and later promotion gate."
+  "next_gate": "Execute the shared cross-role composition gate using selected lane winners/fallbacks. No production authority before composition PASS and later promotion gate."
 }

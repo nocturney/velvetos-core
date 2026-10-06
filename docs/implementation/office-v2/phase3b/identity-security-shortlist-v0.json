@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.office-v2.phase3b-identity-security-shortlist.v0",
-  "status": "IDENTITY_AND_AUTHORIZATION_LANES_SELECTED_CREDENTIAL_FIXTURE_PENDING_NO_PRODUCTION_AUTHORITY",
+  "status": "ALL_LANES_SELECTED_COMPOSITION_PENDING_NO_PRODUCTION_AUTHORITY",
   "captured_at": "2026-10-06T15:38:52.076716Z",
   "winner": null,
   "production_authority_granted": false,
@@ -58,8 +58,9 @@
         "candidate-infisical-agent-vault",
         "candidate-openbao"
       ],
-      "winner": null,
-      "admission_status": "2_LAB_VALIDATED_DESTRUCTIVE_FIXTURE_PENDING",
+      "winner": "candidate-openbao",
+      "fallback": "candidate-infisical-agent-vault",
+      "admission_status": "DESTRUCTIVE_COMPLETE_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY",
       "candidate_admission": {
         "candidate-infisical-agent-vault": "LAB",
         "candidate-openbao": "LAB"
@@ -67,7 +68,8 @@
       "lab_smoke_refs": {
         "candidate-infisical-agent-vault": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/infisical-lab-smoke-pass.json",
         "candidate-openbao": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/openbao-lab-smoke-pass.json"
-      }
+      },
+      "lane_verdict_ref": "docs/implementation/office-v2/phase3b/credential-lane-verdict-v0.json"
     }
   ],
   "composition_gate": {

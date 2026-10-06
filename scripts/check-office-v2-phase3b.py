@@ -19,6 +19,9 @@ REQUIRED = [
     P3B / "lab-status-v0.json",
     P3B / "authorization-lane-verdict-v0.json",
     P3B / "identity-lane-verdict-v0.json",
+    P3B / "credential-lane-verdict-v0.json",
+    P3B / "scorecards" / "credential-candidate-openbao.json",
+    P3B / "scorecards" / "credential-candidate-infisical-agent-vault.json",
     P3B / "scorecards" / "identity-candidate-zitadel.json",
     P3B / "scorecards" / "identity-candidate-keycloak.json",
     P3B / "scorecards" / "identity-candidate-authentik.json",
@@ -215,8 +218,12 @@ def main() -> None:
         fail("identity LAB evidence refs incomplete")
 
     credential_status = ((lab_status.get("lanes") or {}).get("credential_broker") or {})
-    if credential_status.get("status") != "LAB_SMOKE_PASS_DESTRUCTIVE_FIXTURE_PENDING":
+    if credential_status.get("status") != "DESTRUCTIVE_PASS_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY":
         fail("credential LAB status mismatch")
+    if credential_status.get("winner") != "candidate-openbao" or credential_status.get("fallback") != "candidate-infisical-agent-vault":
+        fail("credential lane winner/fallback mismatch")
+    if credential_status.get("lane_verdict_ref") != "docs/implementation/office-v2/phase3b/credential-lane-verdict-v0.json":
+        fail("credential lane verdict ref missing")
     if set(credential_status.get("lab_candidates") or []) != lab_credential:
         fail("credential LAB candidate set mismatch")
     if credential_status.get("pending_candidates"):
@@ -249,7 +256,7 @@ def main() -> None:
         fail("OpenBao LAB receipt evidence missing from registry")
 
     shortlist = load(P3B / "identity-security-shortlist-v0.json")
-    if shortlist.get("status") != "IDENTITY_AND_AUTHORIZATION_LANES_SELECTED_CREDENTIAL_FIXTURE_PENDING_NO_PRODUCTION_AUTHORITY":
+    if shortlist.get("status") != "ALL_LANES_SELECTED_COMPOSITION_PENDING_NO_PRODUCTION_AUTHORITY":
         fail("Phase 3B shortlist status mismatch")
     if shortlist.get("winner") is not None or shortlist.get("production_authority_granted") is not False:
         fail("Phase 3B shortlist selected winner or authority prematurely")
@@ -269,6 +276,9 @@ def main() -> None:
         elif lane_id == "phase3b-identity-provider":
             if lane.get("winner") != "candidate-zitadel" or lane.get("fallback") != "candidate-keycloak" or lane.get("specialized_reserve") != "candidate-authentik":
                 fail("identity lane selection mismatch")
+        elif lane_id == "phase3b-credential-broker":
+            if lane.get("winner") != "candidate-openbao" or lane.get("fallback") != "candidate-infisical-agent-vault":
+                fail("credential lane selection mismatch")
         elif lane.get("winner") is not None:
             fail("Phase 3B lane winner selected before destructive fixture: " + lane_id)
         for cid in [incumbent, *challengers]:
@@ -307,6 +317,10 @@ def main() -> None:
             refs = lane.get("lab_smoke_refs") or {}
             if set(refs) != lab_credential or not all(refs.values()):
                 fail("credential shortlist LAB smoke refs incomplete")
+            if lane.get("admission_status") != "DESTRUCTIVE_COMPLETE_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY":
+                fail("credential destructive status mismatch")
+            if lane.get("lane_verdict_ref") != "docs/implementation/office-v2/phase3b/credential-lane-verdict-v0.json":
+                fail("credential shortlist lane verdict ref missing")
 
     identity_verdict = load(P3B / "identity-lane-verdict-v0.json")
     if identity_verdict.get("status") != "LANE_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY":
@@ -331,6 +345,18 @@ def main() -> None:
         sc = load(P3B / "scorecards" / f"authorization-{cid}.json")
         if sc.get("fixture_id") != "identity-security-destructive-20-step" or sc.get("candidate_id") != cid:
             fail("authorization scorecard identity/fixture mismatch: " + cid)
+
+    credential_verdict = load(P3B / "credential-lane-verdict-v0.json")
+    if credential_verdict.get("status") != "LANE_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY":
+        fail("credential lane verdict status mismatch")
+    if credential_verdict.get("winner") != "candidate-openbao" or credential_verdict.get("fallback") != "candidate-infisical-agent-vault":
+        fail("credential lane verdict winner/fallback mismatch")
+    if credential_verdict.get("production_authority_change") is not False or credential_verdict.get("shadow_or_pilot_promotion") is not False:
+        fail("credential lane verdict changed authority or promoted runtime")
+    for cid in ("candidate-openbao", "candidate-infisical-agent-vault"):
+        sc = load(P3B / "scorecards" / f"credential-{cid}.json")
+        if sc.get("fixture_id") != "identity-security-destructive-20-step" or sc.get("candidate_id") != cid:
+            fail("credential scorecard identity/fixture mismatch: " + cid)
     comp = shortlist.get("composition_gate") or {}
     if not all(comp.get(k) is True for k in ("winner_selection_per_lane_allowed_only_after_fixture", "phase3b_closure_requires_cross_role_composition_pass", "no_lane_winner_grants_production_authority")):
         fail("Phase 3B composition gate incomplete")
