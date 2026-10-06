@@ -1,0 +1,1777 @@
+{
+  "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
+  "status": "CLOSED_IMPORT",
+  "updated_at": "2026-10-06T06:02:10.448Z",
+  "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
+  "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
+  "source_item_count": 68,
+  "imported_source_item_count": 68,
+  "derived_incumbent_count": 4,
+  "candidate_count": 72,
+  "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
+  "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
+  "rules": [
+    "Every prior inventory item is preserved and receives a meaningful Phase 2 verdict.",
+    "Derived incumbents describe current compositions only; they do not create new production authority.",
+    "A shortlist is a benchmark set, not a winner declaration.",
+    "Prior research is evidence input, not current runtime verification."
+  ],
+  "items": [
+    {
+      "candidate_id": "live-cloudflare-instagram-publisher",
+      "source_item_id": "live-cloudflare-instagram-publisher",
+      "name": "VelvetOS Cloudflare Instagram Publisher",
+      "category": "SERVICE",
+      "provenance_class": "LIVE_OBSERVED",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Existing bounded incumbent remains accepted pending any lane-specific challenge.",
+      "runtime_verification": "PASS",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "instagram.publish"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase0/evidence/2026-10-05/live-state-receipt-20261005T201816+0300.json"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "KEEP"
+    },
+    {
+      "candidate_id": "live-instagram-mcp",
+      "source_item_id": "live-instagram-mcp",
+      "name": "VelvetOS Instagram MCP",
+      "category": "MCP",
+      "provenance_class": "LIVE_OBSERVED",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Existing bounded incumbent remains accepted pending any lane-specific challenge.",
+      "runtime_verification": "PASS",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "instagram.read"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase0/evidence/2026-10-05/live-state-receipt-20261005T201816+0300.json"
+      ],
+      "notes": [
+        "configured account label env differs from live username velvets_cloud"
+      ],
+      "original_office_v2_verdict": "KEEP"
+    },
+    {
+      "candidate_id": "live-gmail-connector",
+      "source_item_id": "live-gmail-connector",
+      "name": "Gmail Connector",
+      "category": "SERVICE",
+      "provenance_class": "LIVE_OBSERVED",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Existing bounded incumbent remains accepted pending any lane-specific challenge.",
+      "runtime_verification": "PASS",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "gmail.read",
+        "gmail.send_owner"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase0/evidence/2026-10-05/live-state-receipt-20261005T201816+0300.json"
+      ],
+      "notes": [
+        "auth/profile read verified; fresh send smoke pending"
+      ],
+      "original_office_v2_verdict": "KEEP"
+    },
+    {
+      "candidate_id": "live-google-drive-connector",
+      "source_item_id": "live-google-drive-connector",
+      "name": "Google Drive / Sheets Connector",
+      "category": "SERVICE",
+      "provenance_class": "LIVE_OBSERVED",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Existing bounded incumbent remains accepted pending any lane-specific challenge.",
+      "runtime_verification": "PASS",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "drive.read",
+        "orders.read"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase0/evidence/2026-10-05/live-state-receipt-20261005T201816+0300.json"
+      ],
+      "notes": [
+        "write effects remain blocked pending canonical authority"
+      ],
+      "original_office_v2_verdict": "KEEP"
+    },
+    {
+      "candidate_id": "live-creativecraft",
+      "source_item_id": "live-creativecraft",
+      "name": "CreativeCraft Station Agent / Router",
+      "category": "RUNTIME",
+      "provenance_class": "LIVE_OBSERVED",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Existing bounded incumbent remains accepted pending any lane-specific challenge.",
+      "runtime_verification": "PASS",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "creative",
+        "artifact.transport",
+        "cad",
+        "mesh",
+        "slice"
+      ],
+      "platform_constraints": [
+        "Windows",
+        "macOS"
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "D:/Velvet/State/CreativeCraft/blender-station-routing.json",
+        "D:/Velvet/State/CreativeCraft/station-transport.json"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "KEEP"
+    },
+    {
+      "candidate_id": "live-blender",
+      "source_item_id": "live-blender",
+      "name": "Blender",
+      "category": "TOOL",
+      "provenance_class": "LIVE_OBSERVED",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Existing bounded incumbent remains accepted pending any lane-specific challenge.",
+      "runtime_verification": "PASS",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "creative.blender",
+        "mesh"
+      ],
+      "platform_constraints": [
+        "Windows",
+        "macOS"
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "D:/Velvet/State/CreativeCraft/blender-station-routing.json"
+      ],
+      "notes": [
+        "Mac live version 5.2.2 observed through station state/process"
+      ],
+      "original_office_v2_verdict": "KEEP"
+    },
+    {
+      "candidate_id": "live-maya",
+      "source_item_id": "live-maya",
+      "name": "Autodesk Maya 2027",
+      "category": "TOOL",
+      "provenance_class": "LIVE_OBSERVED",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "REPAIR_REQUIRED",
+      "verdict_reason": "Existing incumbent remains visible but requires repair evidence before its warning can be cleared.",
+      "runtime_verification": "WARN",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "creative.maya"
+      ],
+      "platform_constraints": [
+        "Windows"
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "D:/Velvet/State/DCC-MCP/maya-headless-host.json"
+      ],
+      "notes": [
+        "expected adapter 0.9.33; active registry path 0.9.31-shadow"
+      ],
+      "original_office_v2_verdict": "REPAIR"
+    },
+    {
+      "candidate_id": "live-adobepy",
+      "source_item_id": "live-adobepy",
+      "name": "AdobePy Brokers",
+      "category": "BRIDGE",
+      "provenance_class": "LIVE_OBSERVED",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Existing bounded incumbent remains accepted pending any lane-specific challenge.",
+      "runtime_verification": "WARN",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "creative.adobe"
+      ],
+      "platform_constraints": [
+        "Windows"
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase0/evidence/2026-10-05/live-state-receipt-20261005T201816+0300.json"
+      ],
+      "notes": [
+        "After Effects, Illustrator and Photoshop brokers live; exact action smoke pending"
+      ],
+      "original_office_v2_verdict": "KEEP"
+    },
+    {
+      "candidate_id": "live-openpost",
+      "source_item_id": "live-openpost",
+      "name": "OpenPost",
+      "category": "SERVICE",
+      "provenance_class": "LIVE_OBSERVED",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "DEFERRED_WITH_REASON",
+      "verdict_reason": "Prior decision is deferred; it remains visible and may reopen only under the research-reopen rules.",
+      "runtime_verification": "PASS",
+      "authority_role": "HISTORICAL_ONLY",
+      "capability_tags": [
+        "historical-publication-tool"
+      ],
+      "platform_constraints": [
+        "Windows"
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase0/evidence/2026-10-05/live-state-receipt-20261005T201816+0300.json"
+      ],
+      "notes": [
+        "process is live but production authority remains frozen/historical-only"
+      ],
+      "original_office_v2_verdict": "DEFER"
+    },
+    {
+      "candidate_id": "live-grokbot",
+      "source_item_id": "live-grokbot",
+      "name": "GrokBot",
+      "category": "AGENT",
+      "provenance_class": "LIVE_OBSERVED",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Existing bounded incumbent remains accepted pending any lane-specific challenge.",
+      "runtime_verification": "PASS",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "agent-runtime"
+      ],
+      "platform_constraints": [
+        "Windows"
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase0/evidence/2026-10-05/live-state-receipt-20261005T201816+0300.json"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "KEEP"
+    },
+    {
+      "candidate_id": "live-desktop-commander",
+      "source_item_id": "live-desktop-commander",
+      "name": "Desktop Commander Remote",
+      "category": "MCP",
+      "provenance_class": "LIVE_OBSERVED",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Existing bounded incumbent remains accepted pending any lane-specific challenge.",
+      "runtime_verification": "PASS",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "remote-execution",
+        "filesystem"
+      ],
+      "platform_constraints": [
+        "Windows",
+        "macOS"
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase0/evidence/2026-10-05/live-state-receipt-20261005T201816+0300.json"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "KEEP"
+    },
+    {
+      "candidate_id": "partial-cognee",
+      "source_item_id": "partial-cognee",
+      "name": "Cognee",
+      "category": "RUNTIME",
+      "provenance_class": "LIVE_OBSERVED",
+      "lifecycle_state": "CANDIDATE",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "memory",
+        "knowledge"
+      ],
+      "platform_constraints": [
+        "Windows"
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "scheduled-task://VelvetOS - Cognee Bootstrap"
+      ],
+      "notes": [
+        "bootstrap task exists; Phase 0 has not promoted it to project-state authority"
+      ],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-hindsight",
+      "source_item_id": "candidate-hindsight",
+      "name": "Hindsight",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "memory",
+        "context"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "memory-context"
+      ],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-supermemory",
+      "source_item_id": "candidate-supermemory",
+      "name": "Supermemory",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "memory",
+        "context"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "memory-context"
+      ],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-memu",
+      "source_item_id": "candidate-memu",
+      "name": "memU",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "memory",
+        "context"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-skillopt",
+      "source_item_id": "candidate-skillopt",
+      "name": "Microsoft SkillOpt",
+      "category": "SKILL",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "skill-optimization",
+        "evaluation"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://skills"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-nvidia-skillevaluator",
+      "source_item_id": "candidate-nvidia-skillevaluator",
+      "name": "NVIDIA SkillEvaluator",
+      "category": "SKILL",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "skill-evaluation"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://skills"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-agent-skill-eval",
+      "source_item_id": "candidate-agent-skill-eval",
+      "name": "agent-skill-eval",
+      "category": "SKILL",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "skill-evaluation"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://skills"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-google-skills",
+      "source_item_id": "candidate-google-skills",
+      "name": "google/skills",
+      "category": "SKILL",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "IMPORT_EXISTING",
+      "verdict_reason": "Existing/researched capability is imported into the closed registry without production promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "skills"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://skills"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "IMPORT"
+    },
+    {
+      "candidate_id": "candidate-promptfoo",
+      "source_item_id": "candidate-promptfoo",
+      "name": "Promptfoo",
+      "category": "TOOL",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Existing bounded incumbent remains accepted pending any lane-specific challenge.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "evals",
+        "regression"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://skills"
+      ],
+      "notes": [
+        "repository already contains promptfoo-related eval tooling"
+      ],
+      "original_office_v2_verdict": "KEEP"
+    },
+    {
+      "candidate_id": "candidate-opendots",
+      "source_item_id": "candidate-opendots",
+      "name": "OpenDots",
+      "category": "AGENT",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-ui",
+        "agent-orchestration"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://agents"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-herdr",
+      "source_item_id": "candidate-herdr",
+      "name": "herdr",
+      "category": "RUNTIME",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "prior-research://agents"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-useagent",
+      "source_item_id": "candidate-useagent",
+      "name": "useAgent",
+      "category": "AGENT",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://agents"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-pi-desktop",
+      "source_item_id": "candidate-pi-desktop",
+      "name": "PI-Desktop",
+      "category": "AGENT",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "desktop-agent"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://agents"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-laya",
+      "source_item_id": "candidate-laya",
+      "name": "Laya",
+      "category": "RUNTIME",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "decision-engine"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://agents"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-reef",
+      "source_item_id": "candidate-reef",
+      "name": "Reef",
+      "category": "AGENT",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "multi-agent"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://agents"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-pydantic-ai",
+      "source_item_id": "candidate-pydantic-ai",
+      "name": "Pydantic AI",
+      "category": "RUNTIME",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-framework"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "prior-research://agents"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-mastra",
+      "source_item_id": "candidate-mastra",
+      "name": "Mastra",
+      "category": "RUNTIME",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-framework"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "prior-research://agents"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-icepick",
+      "source_item_id": "candidate-icepick",
+      "name": "Icepick",
+      "category": "RUNTIME",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://agents"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-letta",
+      "source_item_id": "candidate-letta",
+      "name": "Letta",
+      "category": "RUNTIME",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-memory"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://agents"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-infisical-agent-vault",
+      "source_item_id": "candidate-infisical-agent-vault",
+      "name": "Infisical Agent Vault",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "credential-management"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [
+        "not preselected"
+      ],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-a2a",
+      "source_item_id": "candidate-a2a",
+      "name": "A2A",
+      "category": "PATTERN",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_APPLICABLE",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-interoperability"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [
+        "no MCP/A2A winner in Phase 0"
+      ],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-agent-reach",
+      "source_item_id": "candidate-agent-reach",
+      "name": "Agent-Reach",
+      "category": "TOOL",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-reachability"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-hatchet",
+      "source_item_id": "candidate-hatchet",
+      "name": "Hatchet",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "durable-execution"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "durable-execution"
+      ],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [
+        "no durable-engine winner in Phase 0"
+      ],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-restate",
+      "source_item_id": "candidate-restate",
+      "name": "Restate",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "durable-execution"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "durable-execution"
+      ],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [
+        "no durable-engine winner in Phase 0"
+      ],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-dbos",
+      "source_item_id": "candidate-dbos",
+      "name": "DBOS",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "durable-execution"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-temporal",
+      "source_item_id": "candidate-temporal",
+      "name": "Temporal",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "durable-execution"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "durable-execution"
+      ],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [
+        "no durable-engine winner in Phase 0"
+      ],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-litellm",
+      "source_item_id": "candidate-litellm",
+      "name": "LiteLLM",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "model-gateway"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "model-routing"
+      ],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [
+        "no model-gateway winner in Phase 0"
+      ],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-tensorzero",
+      "source_item_id": "candidate-tensorzero",
+      "name": "TensorZero",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "model-gateway",
+        "observability"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "model-routing"
+      ],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [
+        "no model-gateway winner in Phase 0"
+      ],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-toolhive",
+      "source_item_id": "candidate-toolhive",
+      "name": "ToolHive",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "mcp",
+        "tool-runtime"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "tool-gateway-interoperability"
+      ],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-agentgateway",
+      "source_item_id": "candidate-agentgateway",
+      "name": "agentgateway",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-gateway"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "tool-gateway-interoperability"
+      ],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-erpnext",
+      "source_item_id": "candidate-erpnext",
+      "name": "ERPNext",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "business-system"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [
+        "not preselected as universal business SoT"
+      ],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-twenty",
+      "source_item_id": "candidate-twenty",
+      "name": "Twenty",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "crm"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-akaunting",
+      "source_item_id": "candidate-akaunting",
+      "name": "Akaunting",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "accounting"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-spoolman",
+      "source_item_id": "candidate-spoolman",
+      "name": "Spoolman",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "filament",
+        "inventory"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-carbon",
+      "source_item_id": "candidate-carbon",
+      "name": "Carbon",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "search",
+        "knowledge"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-inventree",
+      "source_item_id": "candidate-inventree",
+      "name": "InvenTree",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "inventory",
+        "manufacturing"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [
+        "no manufacturing SoT cutover in Phase 0"
+      ],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-paperless",
+      "source_item_id": "candidate-paperless",
+      "name": "Paperless-ngx",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "documents"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-manyfold",
+      "source_item_id": "candidate-manyfold",
+      "name": "Manyfold",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "3d-assets"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-kitsu",
+      "source_item_id": "candidate-kitsu",
+      "name": "Kitsu",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "production-tracking"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-ayon",
+      "source_item_id": "candidate-ayon",
+      "name": "AYON",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "dcc-pipeline"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-graphiti",
+      "source_item_id": "candidate-graphiti",
+      "name": "Graphiti",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "memory",
+        "graph"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "memory-context"
+      ],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-mem0",
+      "source_item_id": "candidate-mem0",
+      "name": "Mem0",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "memory"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-deja-vu",
+      "source_item_id": "candidate-deja-vu",
+      "name": "Deja Vu",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "memory",
+        "continuity"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://office-v2-master-plan"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "BENCHMARK"
+    },
+    {
+      "candidate_id": "candidate-cli-anything",
+      "source_item_id": "candidate-cli-anything",
+      "name": "CLI-Anything",
+      "category": "TOOL",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "IMPORT_EXISTING",
+      "verdict_reason": "Existing/researched capability is imported into the closed registry without production promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "cli-adapters"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://creative-tools"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "IMPORT"
+    },
+    {
+      "candidate_id": "candidate-freecad",
+      "source_item_id": "candidate-freecad",
+      "name": "FreeCAD",
+      "category": "TOOL",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "IMPORT_EXISTING",
+      "verdict_reason": "Existing/researched capability is imported into the closed registry without production promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "cad"
+      ],
+      "platform_constraints": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://creative-tools"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "IMPORT"
+    },
+    {
+      "candidate_id": "candidate-openscad",
+      "source_item_id": "candidate-openscad",
+      "name": "OpenSCAD",
+      "category": "TOOL",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "IMPORT_EXISTING",
+      "verdict_reason": "Existing/researched capability is imported into the closed registry without production promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "cad"
+      ],
+      "platform_constraints": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://creative-tools"
+      ],
+      "notes": [
+        "nightly previously approved"
+      ],
+      "original_office_v2_verdict": "IMPORT"
+    },
+    {
+      "candidate_id": "candidate-meshroom",
+      "source_item_id": "candidate-meshroom",
+      "name": "Meshroom",
+      "category": "TOOL",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "IMPORT_EXISTING",
+      "verdict_reason": "Existing/researched capability is imported into the closed registry without production promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "photogrammetry"
+      ],
+      "platform_constraints": [
+        "Windows",
+        "Linux"
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://creative-tools"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "IMPORT"
+    },
+    {
+      "candidate_id": "candidate-colmap",
+      "source_item_id": "candidate-colmap",
+      "name": "COLMAP",
+      "category": "TOOL",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "IMPORT_EXISTING",
+      "verdict_reason": "Existing/researched capability is imported into the closed registry without production promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "photogrammetry"
+      ],
+      "platform_constraints": [
+        "Windows",
+        "Linux",
+        "macOS"
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://creative-tools"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "IMPORT"
+    },
+    {
+      "candidate_id": "deferred-openclaw",
+      "source_item_id": "deferred-openclaw",
+      "name": "OpenClaw family",
+      "category": "AGENT",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "DEFERRED_WITH_REASON",
+      "verdict_reason": "Prior decision is deferred; it remains visible and may reopen only under the research-reopen rules.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-framework"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://agents"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "DEFER"
+    },
+    {
+      "candidate_id": "deferred-crewai",
+      "source_item_id": "deferred-crewai",
+      "name": "CrewAI",
+      "category": "RUNTIME",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "DEFERRED_WITH_REASON",
+      "verdict_reason": "Prior decision is deferred; it remains visible and may reopen only under the research-reopen rules.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-framework"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://agents"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "DEFER"
+    },
+    {
+      "candidate_id": "deferred-autogen",
+      "source_item_id": "deferred-autogen",
+      "name": "AutoGen",
+      "category": "RUNTIME",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "DEFERRED_WITH_REASON",
+      "verdict_reason": "Prior decision is deferred; it remains visible and may reopen only under the research-reopen rules.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-framework"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://agents"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "DEFER"
+    },
+    {
+      "candidate_id": "deferred-langgraph",
+      "source_item_id": "deferred-langgraph",
+      "name": "LangGraph",
+      "category": "RUNTIME",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "DEFERRED_WITH_REASON",
+      "verdict_reason": "Prior decision is deferred; it remains visible and may reopen only under the research-reopen rules.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-framework"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://agents"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "DEFER"
+    },
+    {
+      "candidate_id": "deferred-orca",
+      "source_item_id": "deferred-orca",
+      "name": "Orca",
+      "category": "RUNTIME",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "DEFERRED_WITH_REASON",
+      "verdict_reason": "Prior decision is deferred; it remains visible and may reopen only under the research-reopen rules.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://agents"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "DEFER"
+    },
+    {
+      "candidate_id": "deferred-ruflo",
+      "source_item_id": "deferred-ruflo",
+      "name": "Ruflo",
+      "category": "RUNTIME",
+      "provenance_class": "PRIOR_RESEARCH",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "DEFERRED_WITH_REASON",
+      "verdict_reason": "Prior decision is deferred; it remains visible and may reopen only under the research-reopen rules.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "prior-research://agents"
+      ],
+      "notes": [],
+      "original_office_v2_verdict": "DEFER"
+    },
+    {
+      "candidate_id": "device-xtool-m2",
+      "source_item_id": "device-xtool-m2",
+      "name": "xTool M2",
+      "category": "DEVICE",
+      "provenance_class": "OWNER_CONFIRMED",
+      "lifecycle_state": "CANDIDATE",
+      "decision_verdict": "IMPORT_EXISTING",
+      "verdict_reason": "Existing/researched capability is imported into the closed registry without production promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "PHYSICAL_DEVICE",
+      "capability_tags": [
+        "laser-blue-10w",
+        "laser-ir-3w",
+        "cmyk-print",
+        "rotary-ra3-lite"
+      ],
+      "platform_constraints": [
+        "physical-studio-device"
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "owner-confirmed://prior-chat"
+      ],
+      "notes": [
+        "blue laser 10W",
+        "infrared head 3W",
+        "CMYK print head",
+        "RA3 Lite rotary attachment",
+        "no canonical VelvetOS runtime binding found in current repo"
+      ],
+      "original_office_v2_verdict": "IMPORT"
+    },
+    {
+      "candidate_id": "phase1-wsl2",
+      "source_item_id": "phase1-wsl2",
+      "name": "WSL2 + Ubuntu LTS",
+      "category": "LINUX_ONLY_CANDIDATE",
+      "provenance_class": "LIVE_OBSERVED",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "verdict_reason": "Phase 1 proved this substrate in the neutral LAB without granting production authority.",
+      "runtime_verification": "PASS",
+      "authority_role": "LAB_INCUMBENT",
+      "capability_tags": [
+        "linux-substrate"
+      ],
+      "platform_constraints": [
+        "Windows"
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase0/evidence/2026-10-05/live-state-receipt-20261005T201816+0300.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/phase1-final-green-receipt.json"
+      ],
+      "notes": [
+        "absent now; Phase 1 prerequisite, not installed in Phase 0",
+        "Phase 0 absence/block is superseded by the validated Phase 1 LAB runtime."
+      ],
+      "original_office_v2_verdict": "IMPORT"
+    },
+    {
+      "candidate_id": "phase1-docker",
+      "source_item_id": "phase1-docker",
+      "name": "Docker / Compose",
+      "category": "RUNTIME",
+      "provenance_class": "LIVE_OBSERVED",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "verdict_reason": "Phase 1 proved this substrate in the neutral LAB without granting production authority.",
+      "runtime_verification": "PASS",
+      "authority_role": "LAB_INCUMBENT",
+      "capability_tags": [
+        "container-runtime"
+      ],
+      "platform_constraints": [
+        "Windows/WSL2"
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase0/evidence/2026-10-05/live-state-receipt-20261005T201816+0300.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/phase1-final-green-receipt.json"
+      ],
+      "notes": [
+        "absent now; Phase 1 prerequisite, not installed in Phase 0",
+        "Phase 0 absence/block is superseded by the validated Phase 1 LAB runtime."
+      ],
+      "original_office_v2_verdict": "IMPORT"
+    },
+    {
+      "candidate_id": "incumbent-current-durable-execution",
+      "source_item_id": null,
+      "name": "Current VelvetOS workflow/task execution composition",
+      "category": "PATTERN",
+      "provenance_class": "DERIVED_FROM_EXISTING_REGISTRY",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Current execution composition is the baseline to beat; Phase 2 does not preselect a durable-engine replacement.",
+      "runtime_verification": "PASS",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "durable-execution",
+        "workflow-execution"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "durable-execution"
+      ],
+      "evidence_refs": [
+        "packages/velvetos/README.md",
+        ".github/workflows/office-control-plane.yml"
+      ],
+      "notes": [
+        "Composition baseline, not a product winner declaration."
+      ],
+      "original_office_v2_verdict": null
+    },
+    {
+      "candidate_id": "incumbent-current-model-routing",
+      "source_item_id": null,
+      "name": "Current direct model/provider routing",
+      "category": "PATTERN",
+      "provenance_class": "DERIVED_FROM_EXISTING_REGISTRY",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Direct routing is the current baseline; no model-gateway winner is assumed.",
+      "runtime_verification": "PASS",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "model-gateway",
+        "model-routing"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "model-routing"
+      ],
+      "evidence_refs": [
+        "packages/vffcc/README.md",
+        "packages/velvetos/README.md"
+      ],
+      "notes": [
+        "Composition baseline, not a product winner declaration."
+      ],
+      "original_office_v2_verdict": null
+    },
+    {
+      "candidate_id": "incumbent-current-tool-gateway",
+      "source_item_id": null,
+      "name": "Current direct MCP/plugin/tool bindings",
+      "category": "PATTERN",
+      "provenance_class": "DERIVED_FROM_EXISTING_REGISTRY",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Current direct typed bindings are the baseline; no MCP/A2A gateway winner is assumed.",
+      "runtime_verification": "PASS",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "mcp",
+        "tool-runtime",
+        "agent-interoperability"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "tool-gateway-interoperability"
+      ],
+      "evidence_refs": [
+        "packages/vfmcp/core-mcp.json",
+        "packages/vfmcp/CORE-MCP.md"
+      ],
+      "notes": [
+        "Composition baseline, not a product winner declaration."
+      ],
+      "original_office_v2_verdict": null
+    },
+    {
+      "candidate_id": "incumbent-current-memory",
+      "source_item_id": null,
+      "name": "vfmem with optional Cognee-derived semantic recall",
+      "category": "PATTERN",
+      "provenance_class": "DERIVED_FROM_EXISTING_REGISTRY",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "vfmem remains canonical memory; derived recall is the incumbent benchmark baseline and not Project State authority.",
+      "runtime_verification": "PASS",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "memory",
+        "context",
+        "knowledge"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "memory-context"
+      ],
+      "evidence_refs": [
+        "packages/vfmem/README.md",
+        "packages/vfmem/COGNEE.md"
+      ],
+      "notes": [
+        "Composition baseline, not a product winner declaration."
+      ],
+      "original_office_v2_verdict": null
+    }
+  ]
+}

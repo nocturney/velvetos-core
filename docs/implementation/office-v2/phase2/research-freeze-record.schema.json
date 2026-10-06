@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/phase2/research-freeze-record.v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "record_type",
+    "decision_scope",
+    "captured_at",
+    "reason",
+    "evidence_refs"
+  ],
+  "properties": {
+    "schema": {
+      "const": "velvetos.office-v2.research-freeze-record.v0"
+    },
+    "record_type": {
+      "enum": [
+        "FREEZE",
+        "REOPEN"
+      ]
+    },
+    "decision_scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "captured_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "shortlist_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "requirements_covered": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "fixtures_ran": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "security_operations_scored": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "rollback_status": {
+      "enum": [
+        "PASS",
+        "FAIL_EXPLICIT",
+        "PENDING",
+        "NOT_APPLICABLE",
+        null
+      ]
+    },
+    "verdicts_recorded": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "reopen_trigger": {
+      "enum": [
+        "PRODUCTION_REGRESSION",
+        "NEW_REQUIREMENT",
+        "LICENSE_COST_MAINTENANCE_CHANGE",
+        "SECURITY_FINDING",
+        "OS_HARDWARE_FEASIBILITY_CHANGE",
+        "CANDIDATE_EOL",
+        "CREDIBLE_NEW_CHALLENGER",
+        null
+      ]
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    }
+  }
+}

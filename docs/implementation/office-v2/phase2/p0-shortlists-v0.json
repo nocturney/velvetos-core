@@ -1,0 +1,65 @@
+{
+  "schema": "velvetos.office-v2.phase2-p0-shortlists.v0",
+  "status": "PRE_BENCHMARK_NO_WINNERS",
+  "default_rule": "incumbent plus 2–3 serious challengers",
+  "lanes": [
+    {
+      "lane_id": "durable-execution",
+      "contract_scope": "long job, crash, resume, idempotency, cancellation, timeout and evidence",
+      "incumbent": "incumbent-current-durable-execution",
+      "challengers": [
+        "candidate-restate",
+        "candidate-hatchet",
+        "candidate-temporal"
+      ],
+      "winner": null,
+      "freeze_state": "OPEN_UNTIL_FIXTURES_AND_SCORECARDS"
+    },
+    {
+      "lane_id": "model-routing",
+      "contract_scope": "typed model routing, policy, observability, fallback and cost evidence",
+      "incumbent": "incumbent-current-model-routing",
+      "challengers": [
+        "candidate-litellm",
+        "candidate-tensorzero"
+      ],
+      "winner": null,
+      "freeze_state": "OPEN_UNTIL_FIXTURES_AND_SCORECARDS"
+    },
+    {
+      "lane_id": "tool-gateway-interoperability",
+      "contract_scope": "typed tool discovery, trust, policy, MCP/A2A interoperability and audit",
+      "incumbent": "incumbent-current-tool-gateway",
+      "challengers": [
+        "candidate-toolhive",
+        "candidate-agentgateway"
+      ],
+      "winner": null,
+      "freeze_state": "OPEN_UNTIL_FIXTURES_AND_SCORECARDS"
+    },
+    {
+      "lane_id": "memory-context",
+      "contract_scope": "derived recall, provenance, deletion, freshness and canonical-authority separation",
+      "incumbent": "incumbent-current-memory",
+      "challengers": [
+        "candidate-hindsight",
+        "candidate-supermemory",
+        "candidate-graphiti"
+      ],
+      "winner": null,
+      "freeze_state": "OPEN_UNTIL_FIXTURES_AND_SCORECARDS"
+    },
+    {
+      "lane_id": "agent-runtime",
+      "contract_scope": "typed agent execution, tool use, approvals, evidence, cancellation and isolation",
+      "incumbent": "live-grokbot",
+      "challengers": [
+        "candidate-herdr",
+        "candidate-pydantic-ai",
+        "candidate-mastra"
+      ],
+      "winner": null,
+      "freeze_state": "OPEN_UNTIL_FIXTURES_AND_SCORECARDS"
+    }
+  ]
+}

@@ -28,6 +28,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 
 **Office v2 — PHASE 1 CLOSED / GREEN:** the neutral LAB is realized on NODE-A with WSL 3.0.1.0, Ubuntu 26.04.1 LTS, Docker Engine 29.8.2 / Compose v5.6.0, loopback-only digest-pinned OTel, and a single hardened artifact lane at `/var/officev2/artifacts`; full Windows drive mounts remain disabled. All five START HERE criteria are PASS, the canonical suite is 118/118 PASS, PR #565 is merged at `cf040c36a3d772ffd425586bfd80f02313621360`, and exact-main Core Sensors run `37418107706` is GREEN. Routine WSL operation is headless through the hidden `OfficeV2 LAB Lease`; all temporary OfficeV2 Scheduled Tasks are removed. Production authority/writers remain unchanged. Phase 2 Inventory, Contracts & Benchmark Engineering may begin without preselecting implementation winners.
 
+**Office v2 — PHASE 2 FOUNDATION / NO WINNERS:** the Candidate Registry now closes the full 68-item source inventory plus four explicit incumbent baselines (72 total), with lifecycle/verdict state machine, admission policy, five P0 shortlists, standard resource/cost scorecards, Pattern Adoption + research freeze/reopen contracts, and six vendor-neutral executable Golden Fixtures. The new critical Phase 2 sensor raises the suite to 119 sensors and the local canonical suite is 119/119 PASS. No challenger is installed or promoted by this foundation; every shortlist keeps `winner: null` until contract-aligned benchmark evidence exists.
+
 <!-- OPERATIONAL-SNAPSHOT:START -->
 <table>
 <tr>
@@ -38,7 +40,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 </tr>
 <tr>
 <td align="center"><strong>23</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>118</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>119</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>11</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
