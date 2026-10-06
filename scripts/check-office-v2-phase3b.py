@@ -14,6 +14,8 @@ REQUIRED = [
     P3B / "identity-security-destructive-v0.json",
     P3B / "identity-security-shortlist-v0.json",
     P3B / "registry-extension-v0.json",
+    P3B / "runtime-pins-v0.json",
+    P3B / "admission-v0.json",
 ]
 EXPECTED_LANES = {
     "phase3b-identity-provider": ("identity_provider", "incumbent-current-service-identity", 3),
@@ -111,8 +113,63 @@ def main() -> None:
     if extension.get("authority_change") is not False or extension.get("production_writer_change") is not False or extension.get("production_credentials_used") is not False:
         fail("Phase 3B registry extension changed authority or used production credentials")
 
+    pins = load(P3B / "runtime-pins-v0.json")
+    artifacts = pins.get("artifacts") or []
+    if len(artifacts) != 8:
+        fail("Phase 3B runtime pin set must contain 8 candidates")
+    pin_ids = {x.get("candidate_id") for x in artifacts}
+    expected_pin_ids = {
+        "candidate-zitadel", "candidate-keycloak", "candidate-authentik",
+        "candidate-openfga", "candidate-opa", "candidate-cedar",
+        "candidate-infisical-agent-vault", "candidate-openbao",
+    }
+    if pin_ids != expected_pin_ids or any(x.get("status") != "RESOLVED" for x in artifacts):
+        fail("Phase 3B immutable artifact pins incomplete")
+    for row in artifacts:
+        if row.get("candidate_id") == "candidate-cedar":
+            if not row.get("sha256") or row.get("artifact") != "crates.io:cedar-policy@4.13.0":
+                fail("Cedar crate pin missing")
+        else:
+            if not row.get("linux_amd64_digest") or not str(row.get("linux_amd64_digest")).startswith("sha256:"):
+                fail("OCI linux/amd64 digest missing: " + str(row.get("candidate_id")))
+
+    admission = load(P3B / "admission-v0.json")
+    if admission.get("status") != "ADMISSION_RESEARCH_COMPLETE_LAB_SMOKES_PENDING":
+        fail("Phase 3B admission status mismatch")
+    if admission.get("authority_change") is not False or admission.get("production_writer_change") is not False:
+        fail("Phase 3B admission changed authority/writers")
+    if admission.get("production_credentials_used") is not False or admission.get("production_secret_material_used") is not False:
+        fail("Phase 3B admission used production credential material")
+    rows = {x.get("candidate_id"): x for x in admission.get("candidates") or []}
+    if set(rows) != expected_pin_ids:
+        fail("Phase 3B admission candidate set mismatch")
+    admitted = {cid for cid,row in rows.items() if row.get("admission_verdict") == "ADMITTED"}
+    expected_admitted = {
+        "candidate-keycloak", "candidate-authentik",
+        "candidate-openfga", "candidate-opa", "candidate-cedar",
+        "candidate-infisical-agent-vault", "candidate-openbao",
+    }
+    if admitted != expected_admitted:
+        fail("Phase 3B admitted set mismatch")
+    if rows["candidate-zitadel"].get("admission_verdict") != "DEFERRED_WITH_REASON":
+        fail("ZITADEL must remain license-deferred until explicit license resolution")
+    if "AGPL-3.0" not in str(rows["candidate-zitadel"].get("license")):
+        fail("ZITADEL license caveat missing")
+
+    for cid in expected_admitted:
+        item = by_id.get(cid) or {}
+        if item.get("lifecycle_state") != "ADMITTED":
+            fail("admitted candidate registry state mismatch: " + cid)
+        if item.get("authority_role") != "NONE":
+            fail("admitted challenger gained authority: " + cid)
+        if item.get("runtime_verification") != "NOT_RUN":
+            fail("admission research must not claim LAB runtime verification: " + cid)
+    zit = by_id.get("candidate-zitadel") or {}
+    if zit.get("lifecycle_state") != "RESEARCHED" or zit.get("decision_verdict") != "DEFERRED_WITH_REASON":
+        fail("ZITADEL registry state must remain researched/deferred")
+
     shortlist = load(P3B / "identity-security-shortlist-v0.json")
-    if shortlist.get("status") != "CONTRACT_FROZEN_RESEARCH_SHORTLIST_NO_WINNER":
+    if shortlist.get("status") != "ADMISSION_RESEARCH_COMPLETE_LAB_SMOKES_PENDING_NO_WINNER":
         fail("Phase 3B shortlist status mismatch")
     if shortlist.get("winner") is not None or shortlist.get("production_authority_granted") is not False:
         fail("Phase 3B shortlist selected winner or authority prematurely")

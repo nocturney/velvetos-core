@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-06T09:55:16.531683Z",
+  "updated_at": "2026-10-06T10:32:14.227259Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
@@ -748,9 +748,9 @@
       "name": "Infisical Agent Vault",
       "category": "RESEARCH_CANDIDATE",
       "provenance_class": "PRIOR_RESEARCH",
-      "lifecycle_state": "RESEARCHED",
+      "lifecycle_state": "ADMITTED",
       "decision_verdict": "BENCHMARK_REQUIRED",
-      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "verdict_reason": "Phase 3B CANDIDATE→ADMITTED research gate PASS with immutable artifact pin; LAB smoke/fixture evidence still required before LAB/SHADOW.",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "capability_tags": [
@@ -766,11 +766,20 @@
       "evidence_refs": [
         "prior-research://office-v2-master-plan",
         "https://infisical.com/blog/introducing-machine-identities",
-        "https://infisical.com/platform/secrets-management"
+        "https://infisical.com/platform/secrets-management",
+        "docs/implementation/office-v2/phase3b/admission-v0.json",
+        "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
+        "https://github.com/Infisical/infisical/releases",
+        "https://github.com/Infisical/infisical/blob/main/LICENSE",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
       ],
       "notes": [
         "not preselected",
-        "Phase 3B credential-broker challenger; exact version/pin and LAB admission pending."
+        "Phase 3B credential-broker challenger; exact version/pin and LAB admission pending.",
+        "Phase 3B admission research PASS; production authority remains NONE.",
+        "LAB smoke pending."
       ],
       "original_office_v2_verdict": "BENCHMARK"
     },
@@ -1894,18 +1903,19 @@
       "source_item_id": null,
       "provenance_class": "PHASE3B_CURRENT_RESEARCH",
       "lifecycle_state": "RESEARCHED",
-      "decision_verdict": "BENCHMARK_REQUIRED",
+      "decision_verdict": "DEFERRED_WITH_REASON",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "platform_constraints": [],
       "notes": [
-        "No winner or production authority is granted by registry intake."
+        "No winner or production authority is granted by registry intake.",
+        "Phase 3B technical fit remains credible, but license acceptance is unresolved; do not run LAB admission until explicitly resolved."
       ],
       "original_office_v2_verdict": null,
       "candidate_id": "candidate-zitadel",
       "name": "ZITADEL",
       "category": "IDENTITY_PROVIDER",
-      "verdict_reason": "START HERE Phase 3B names this class/candidate as serious enough for current contract-aligned research; immutable version and LAB admission remain pending.",
+      "verdict_reason": "Technical fit is credible, but Phase 2 admission requires license review. AGPL-3.0 obligations/commercial-license choice are not silently accepted on the owner's behalf.",
       "capability_tags": [
         "service-identity",
         "oidc",
@@ -1917,25 +1927,35 @@
       ],
       "evidence_refs": [
         "https://zitadel.com/docs/guides/integrate/service-accounts/authenticate-service-accounts",
-        "https://zitadel.com/docs/self-hosting/manage/login-client"
+        "https://zitadel.com/docs/self-hosting/manage/login-client",
+        "docs/implementation/office-v2/phase3b/admission-v0.json",
+        "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
+        "https://github.com/zitadel/zitadel/releases",
+        "https://github.com/zitadel/zitadel/blob/main/LICENSING.md",
+        "https://zitadel.com/docs/guides/integrate/service-accounts/client-credentials",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
       ]
     },
     {
       "source_item_id": null,
       "provenance_class": "PHASE3B_CURRENT_RESEARCH",
-      "lifecycle_state": "RESEARCHED",
+      "lifecycle_state": "ADMITTED",
       "decision_verdict": "BENCHMARK_REQUIRED",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "platform_constraints": [],
       "notes": [
-        "No winner or production authority is granted by registry intake."
+        "No winner or production authority is granted by registry intake.",
+        "Phase 3B admission research PASS; production authority remains NONE.",
+        "LAB smoke pending."
       ],
       "original_office_v2_verdict": null,
       "candidate_id": "candidate-keycloak",
       "name": "Keycloak",
       "category": "IDENTITY_PROVIDER",
-      "verdict_reason": "START HERE Phase 3B names this class/candidate as serious enough for current contract-aligned research; immutable version and LAB admission remain pending.",
+      "verdict_reason": "Phase 3B CANDIDATE→ADMITTED research gate PASS with immutable artifact pin; LAB smoke/fixture evidence still required before LAB/SHADOW.",
       "capability_tags": [
         "service-identity",
         "oidc",
@@ -1947,25 +1967,36 @@
       ],
       "evidence_refs": [
         "https://www.keycloak.org/2026/09/keycloak-2675-released",
-        "https://www.keycloak.org/2026/01/keycloak-2650-released"
+        "https://www.keycloak.org/2026/01/keycloak-2650-released",
+        "docs/implementation/office-v2/phase3b/admission-v0.json",
+        "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
+        "https://www.keycloak.org/2026/10/keycloak-2680-released",
+        "https://www.keycloak.org/docs/26.8.0/server_admin/",
+        "https://www.keycloak.org/docs/26.8.0/upgrading/",
+        "https://github.com/keycloak/keycloak",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
       ]
     },
     {
       "source_item_id": null,
       "provenance_class": "PHASE3B_CURRENT_RESEARCH",
-      "lifecycle_state": "RESEARCHED",
+      "lifecycle_state": "ADMITTED",
       "decision_verdict": "BENCHMARK_REQUIRED",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "platform_constraints": [],
       "notes": [
-        "No winner or production authority is granted by registry intake."
+        "No winner or production authority is granted by registry intake.",
+        "Phase 3B admission research PASS; production authority remains NONE.",
+        "LAB smoke pending."
       ],
       "original_office_v2_verdict": null,
       "candidate_id": "candidate-authentik",
       "name": "authentik",
       "category": "IDENTITY_PROVIDER",
-      "verdict_reason": "START HERE Phase 3B names this class/candidate as serious enough for current contract-aligned research; immutable version and LAB admission remain pending.",
+      "verdict_reason": "Phase 3B CANDIDATE→ADMITTED research gate PASS with immutable artifact pin; LAB smoke/fixture evidence still required before LAB/SHADOW.",
       "capability_tags": [
         "service-identity",
         "oidc",
@@ -1975,25 +2006,35 @@
         "phase3b-identity-provider"
       ],
       "evidence_refs": [
-        "https://docs.goauthentik.io/releases/2026.8/"
+        "https://docs.goauthentik.io/releases/2026.8/",
+        "docs/implementation/office-v2/phase3b/admission-v0.json",
+        "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
+        "https://docs.goauthentik.io/users-sources/user/account-types/service-accounts",
+        "https://docs.goauthentik.io/add-secure-apps/providers/oauth2/machine_to_machine",
+        "https://github.com/goauthentik/authentik/blob/main/LICENSE",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
       ]
     },
     {
       "source_item_id": null,
       "provenance_class": "PHASE3B_CURRENT_RESEARCH",
-      "lifecycle_state": "RESEARCHED",
+      "lifecycle_state": "ADMITTED",
       "decision_verdict": "BENCHMARK_REQUIRED",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "platform_constraints": [],
       "notes": [
-        "No winner or production authority is granted by registry intake."
+        "No winner or production authority is granted by registry intake.",
+        "Phase 3B admission research PASS; production authority remains NONE.",
+        "LAB smoke pending."
       ],
       "original_office_v2_verdict": null,
       "candidate_id": "candidate-openfga",
       "name": "OpenFGA",
       "category": "AUTHORIZATION_ENGINE",
-      "verdict_reason": "START HERE Phase 3B names this class/candidate as serious enough for current contract-aligned research; immutable version and LAB admission remain pending.",
+      "verdict_reason": "Phase 3B CANDIDATE→ADMITTED research gate PASS with immutable artifact pin; LAB smoke/fixture evidence still required before LAB/SHADOW.",
       "capability_tags": [
         "authorization",
         "relationship-based-access-control",
@@ -2003,25 +2044,34 @@
         "phase3b-authorization-policy"
       ],
       "evidence_refs": [
-        "https://openfga.dev/docs/getting-started/setup-openfga/docker"
+        "https://openfga.dev/docs/getting-started/setup-openfga/docker",
+        "docs/implementation/office-v2/phase3b/admission-v0.json",
+        "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
+        "https://github.com/openfga/openfga/releases",
+        "https://github.com/openfga/openfga",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
       ]
     },
     {
       "source_item_id": null,
       "provenance_class": "PHASE3B_CURRENT_RESEARCH",
-      "lifecycle_state": "RESEARCHED",
+      "lifecycle_state": "ADMITTED",
       "decision_verdict": "BENCHMARK_REQUIRED",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "platform_constraints": [],
       "notes": [
-        "No winner or production authority is granted by registry intake."
+        "No winner or production authority is granted by registry intake.",
+        "Phase 3B admission research PASS; production authority remains NONE.",
+        "LAB smoke pending."
       ],
       "original_office_v2_verdict": null,
       "candidate_id": "candidate-opa",
       "name": "Open Policy Agent",
       "category": "AUTHORIZATION_ENGINE",
-      "verdict_reason": "START HERE Phase 3B names this class/candidate as serious enough for current contract-aligned research; immutable version and LAB admission remain pending.",
+      "verdict_reason": "Phase 3B CANDIDATE→ADMITTED research gate PASS with immutable artifact pin; LAB smoke/fixture evidence still required before LAB/SHADOW.",
       "capability_tags": [
         "authorization",
         "policy-engine",
@@ -2033,25 +2083,35 @@
       ],
       "evidence_refs": [
         "https://www.openpolicyagent.org/docs/rest-api",
-        "https://www.openpolicyagent.org/docs/management-decision-logs"
+        "https://www.openpolicyagent.org/docs/management-decision-logs",
+        "docs/implementation/office-v2/phase3b/admission-v0.json",
+        "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
+        "https://github.com/open-policy-agent/opa/releases",
+        "https://www.openpolicyagent.org/docs/operations",
+        "https://github.com/open-policy-agent/opa",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
       ]
     },
     {
       "source_item_id": null,
       "provenance_class": "PHASE3B_CURRENT_RESEARCH",
-      "lifecycle_state": "RESEARCHED",
+      "lifecycle_state": "ADMITTED",
       "decision_verdict": "BENCHMARK_REQUIRED",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "platform_constraints": [],
       "notes": [
-        "No winner or production authority is granted by registry intake."
+        "No winner or production authority is granted by registry intake.",
+        "Phase 3B admission research PASS; production authority remains NONE.",
+        "LAB smoke pending."
       ],
       "original_office_v2_verdict": null,
       "candidate_id": "candidate-cedar",
       "name": "Cedar",
       "category": "AUTHORIZATION_ENGINE",
-      "verdict_reason": "START HERE Phase 3B names this class/candidate as serious enough for current contract-aligned research; immutable version and LAB admission remain pending.",
+      "verdict_reason": "Phase 3B CANDIDATE→ADMITTED research gate PASS with immutable artifact pin; LAB smoke/fixture evidence still required before LAB/SHADOW.",
       "capability_tags": [
         "authorization",
         "policy-language",
@@ -2063,25 +2123,35 @@
       ],
       "evidence_refs": [
         "https://cedarpolicy.com/",
-        "https://docs.cedarpolicy.com/"
+        "https://docs.cedarpolicy.com/",
+        "docs/implementation/office-v2/phase3b/admission-v0.json",
+        "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
+        "https://github.com/cedar-policy/cedar/releases",
+        "https://docs.cedarpolicy.com/auth/authorization.html",
+        "https://github.com/cedar-policy/cedar",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
       ]
     },
     {
       "source_item_id": null,
       "provenance_class": "PHASE3B_CURRENT_RESEARCH",
-      "lifecycle_state": "RESEARCHED",
+      "lifecycle_state": "ADMITTED",
       "decision_verdict": "BENCHMARK_REQUIRED",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "platform_constraints": [],
       "notes": [
-        "No winner or production authority is granted by registry intake."
+        "No winner or production authority is granted by registry intake.",
+        "Phase 3B admission research PASS; production authority remains NONE.",
+        "LAB smoke pending."
       ],
       "original_office_v2_verdict": null,
       "candidate_id": "candidate-openbao",
       "name": "OpenBao",
       "category": "CREDENTIAL_BROKER",
-      "verdict_reason": "START HERE Phase 3B names this class/candidate as serious enough for current contract-aligned research; immutable version and LAB admission remain pending.",
+      "verdict_reason": "Phase 3B CANDIDATE→ADMITTED research gate PASS with immutable artifact pin; LAB smoke/fixture evidence still required before LAB/SHADOW.",
       "capability_tags": [
         "credential-management",
         "secrets",
@@ -2093,7 +2163,17 @@
       ],
       "evidence_refs": [
         "https://openbao.org/docs/concepts/auth/",
-        "https://openbao.org/docs/auth/token/"
+        "https://openbao.org/docs/auth/token/",
+        "docs/implementation/office-v2/phase3b/admission-v0.json",
+        "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
+        "https://openbao.org/community/release-notes/2-7-0/",
+        "https://openbao.org/downloads/?version=v2.7.1",
+        "https://openbao.org/docs/auth/approle/",
+        "https://openbao.org/docs/commands/token/revoke/",
+        "https://github.com/openbao/openbao/blob/main/LICENSE",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
       ]
     }
   ]

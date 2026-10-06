@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.office-v2.phase3b-identity-security-shortlist.v0",
-  "status": "CONTRACT_FROZEN_RESEARCH_SHORTLIST_NO_WINNER",
+  "status": "ADMISSION_RESEARCH_COMPLETE_LAB_SMOKES_PENDING_NO_WINNER",
   "captured_at": "2026-10-06T09:55:16.531683Z",
   "winner": null,
   "production_authority_granted": false,
@@ -15,7 +15,12 @@
         "candidate-authentik"
       ],
       "winner": null,
-      "admission_status": "RESEARCH_PENDING_VERSION_PIN_AND_LAB_ADMISSION"
+      "admission_status": "2_ADMITTED_1_DEFERRED_LICENSE_REVIEW",
+      "candidate_admission": {
+        "candidate-zitadel": "DEFERRED_WITH_REASON",
+        "candidate-keycloak": "ADMITTED",
+        "candidate-authentik": "ADMITTED"
+      }
     },
     {
       "lane_id": "phase3b-authorization-policy",
@@ -27,7 +32,12 @@
         "candidate-cedar"
       ],
       "winner": null,
-      "admission_status": "RESEARCH_PENDING_VERSION_PIN_AND_LAB_ADMISSION"
+      "admission_status": "3_ADMITTED_LAB_SMOKES_PENDING",
+      "candidate_admission": {
+        "candidate-openfga": "ADMITTED",
+        "candidate-opa": "ADMITTED",
+        "candidate-cedar": "ADMITTED"
+      }
     },
     {
       "lane_id": "phase3b-credential-broker",
@@ -38,7 +48,11 @@
         "candidate-openbao"
       ],
       "winner": null,
-      "admission_status": "RESEARCH_PENDING_VERSION_PIN_AND_LAB_ADMISSION"
+      "admission_status": "2_ADMITTED_LAB_SMOKES_PENDING",
+      "candidate_admission": {
+        "candidate-infisical-agent-vault": "ADMITTED",
+        "candidate-openbao": "ADMITTED"
+      }
     }
   ],
   "composition_gate": {
