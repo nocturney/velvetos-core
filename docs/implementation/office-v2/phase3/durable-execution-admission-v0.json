@@ -20,7 +20,7 @@
     {
       "candidate_id": "candidate-restate",
       "role": "CHALLENGER",
-      "disposition": "ADMITTED_PENDING_IMMUTABLE_RUNTIME_PIN",
+      "disposition": "ADMITTED",
       "target_version": "1.7.12",
       "license": "BSL-1.1 with internal/own production use grant; converts to Apache-2.0 on change date",
       "self_host_shape": "single binary or Docker; no external database required for basic deployment",
@@ -31,41 +31,44 @@
         "https://github.com/restatedev/restate/releases/tag/v1.7.12",
         "https://github.com/restatedev/restate/blob/main/LICENSE",
         "https://restate.dev/blog/announcing-restate-1-7"
-      ]
+      ],
+      "runtime_pin": "docker.restate.dev/restatedev/restate@sha256:bfe48559e64706510d3d5fe736414c52557cd7753100fa4e63ff44d8198ab176"
     },
     {
       "candidate_id": "candidate-hatchet",
       "role": "CHALLENGER",
-      "disposition": "ADMITTED_PENDING_IMMUTABLE_RUNTIME_PIN",
+      "disposition": "ADMITTED",
       "target_version": "0.107.2",
       "sdk_target": "Python 1.41.1",
       "license": "MIT",
-      "self_host_shape": "embedded mode available without Docker/account; full local stack also available",
+      "self_host_shape": "Hatchet Lite container for failure-injection LAB; embedded mode remains an alternate local shape",
       "credential_class": "LAB_ONLY_SECRET_OR_NONE",
       "authority_role": "NONE",
-      "rationale": "Agent/background-task focused challenger with embedded local mode, durable tasks, retries, monitoring and low-friction CI/LAB execution.",
+      "rationale": "Agent/background-task focused challenger with durable tasks, retries, monitoring and a bounded self-hosted Lite topology suitable for explicit engine-failure injection.",
       "evidence_refs": [
-        "https://github.com/hatchet-dev/hatchet/releases",
+        "https://github.com/hatchet-dev/hatchet/releases/tag/v0.107.2",
         "https://github.com/hatchet-dev/hatchet/blob/main/LICENSE",
-        "https://docs.hatchet.run/v1/embedded",
         "https://docs.hatchet.run/v1/running-locally"
-      ]
+      ],
+      "runtime_pin": "ghcr.io/hatchet-dev/hatchet/hatchet-lite@sha256:b150603cf7ffda29a7c9f91d2f210594c6511bbd470f4caabfcad091751d6973"
     },
     {
       "candidate_id": "candidate-temporal",
       "role": "CHALLENGER",
-      "disposition": "ADMITTED_PENDING_IMMUTABLE_RUNTIME_PIN",
+      "disposition": "ADMITTED",
       "target_version": "1.32.0",
+      "cli_target": "1.9.1",
       "license": "MIT",
       "self_host_shape": "Temporal CLI dev server is single binary/no external dependencies for local evaluation; production self-host is a broader service topology",
       "credential_class": "LAB_ONLY_SECRET_OR_NONE",
       "authority_role": "NONE",
       "rationale": "Mature reference implementation gives the bake-off a high-capability durability/inspection baseline despite higher likely production operational cost.",
       "evidence_refs": [
-        "https://github.com/temporalio/temporal/releases",
+        "https://github.com/temporalio/cli/releases/tag/v1.9.1",
         "https://github.com/temporalio/temporal/blob/main/LICENSE",
         "https://docs.temporal.io/self-hosted-guide"
-      ]
+      ],
+      "runtime_pin": "temporal_cli_1.9.1_linux_amd64.tar.gz#sha256=09a0326a51db84d02735e53542b9ebd8c4758daf47482a9ab0abce15844e60d5"
     },
     {
       "candidate_id": "candidate-dbos",
@@ -101,5 +104,6 @@
     "resource_capture_required": true,
     "rollback_backup_upgrade_assessment_required": true,
     "fixture_ref": "docs/implementation/office-v2/phase3/durable-execution-destructive-v0.json"
-  }
+  },
+  "runtime_pin_receipt": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/runtime-pins.json"
 }

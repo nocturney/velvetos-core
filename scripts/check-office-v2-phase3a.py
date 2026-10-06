@@ -117,7 +117,7 @@ def main() -> None:
     admitted = {
         cid for cid, item in by_id.items()
         if item.get("role") == "CHALLENGER"
-        and item.get("disposition") == "ADMITTED_PENDING_IMMUTABLE_RUNTIME_PIN"
+        and item.get("disposition") == "ADMITTED"
     }
     if admitted != EXPECTED_CHALLENGERS:
         fail("Phase 3A admitted challenger set drifted")
@@ -144,8 +144,8 @@ def main() -> None:
         fail("durable-execution shortlist declared a winner before bake-off")
 
     lab = load(P3 / "durable-execution-lab-plan-v0.json")
-    if lab.get("status") != "PLANNED_NOT_STARTED":
-        fail("LAB plan must remain planned until immutable pins are recorded")
+    if lab.get("status") != "PINS_RESOLVED_LAB_NOT_STARTED":
+        fail("LAB plan must record resolved immutable pins before bring-up")
     if lab.get("production_authority") != "NONE":
         fail("LAB plan production authority must be NONE")
     if lab.get("production_credentials_allowed") is not False:
@@ -158,8 +158,10 @@ def main() -> None:
     for item in lab.get("candidates") or []:
         if item.get("candidate_id") not in EXPECTED_CHALLENGERS:
             fail("non-shortlisted candidate present in LAB plan")
-        if not str(item.get("runtime_pin_status", "")).startswith("PENDING_"):
-            fail("candidate must not claim LAB readiness before immutable runtime pin")
+        if item.get("runtime_pin_status") != "RESOLVED":
+            fail("candidate immutable runtime pin is not resolved")
+        if not item.get("immutable_pin"):
+            fail("candidate immutable runtime pin value is missing")
         if forbidden.intersection(set(item.get("host_ports") or [])):
             fail("candidate LAB plan uses forbidden host port")
 

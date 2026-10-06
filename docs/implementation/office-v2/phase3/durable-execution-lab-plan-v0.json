@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.office-v2.phase3a-durable-lab-plan.v0",
-  "status": "PLANNED_NOT_STARTED",
+  "status": "PINS_RESOLVED_LAB_NOT_STARTED",
   "host": "NODE-A / OfficeV2-Lab",
   "production_authority": "NONE",
   "production_credentials_allowed": false,
@@ -11,7 +11,7 @@
   "candidates": [
     {
       "candidate_id": "candidate-restate",
-      "runtime_pin_status": "PENDING_DIGEST",
+      "runtime_pin_status": "RESOLVED",
       "runtime_target": "Restate 1.7.12",
       "network": "officev2_p3a_restate",
       "host_ports": [
@@ -21,22 +21,27 @@
       ],
       "storage": "/var/officev2/artifacts/phase3a-durable/restate",
       "health_probe": "HTTP/API readiness on loopback-mapped candidate port",
-      "teardown": "remove candidate containers/network/volumes after evidence export"
+      "teardown": "remove candidate containers/network/volumes after evidence export",
+      "immutable_pin": "docker.restate.dev/restatedev/restate@sha256:bfe48559e64706510d3d5fe736414c52557cd7753100fa4e63ff44d8198ab176"
     },
     {
       "candidate_id": "candidate-hatchet",
-      "runtime_pin_status": "PENDING_ARTIFACT_HASH",
-      "runtime_target": "Hatchet 0.107.2 / Python SDK 1.41.1 embedded mode",
-      "network": "process-local unless full stack becomes necessary",
-      "host_ports": [],
+      "runtime_pin_status": "RESOLVED",
+      "runtime_target": "Hatchet Lite 0.107.2",
+      "network": "officev2_p3a_hatchet",
+      "host_ports": [
+        18888,
+        17077
+      ],
       "storage": "/var/officev2/artifacts/phase3a-durable/hatchet",
-      "health_probe": "embedded engine + worker readiness receipt",
-      "teardown": "terminate sidecar/worker and remove embedded database/cache after evidence export"
+      "health_probe": "HTTP health on 127.0.0.1:18888 plus worker/engine readiness receipt",
+      "teardown": "remove Hatchet/Postgres candidate containers, network and candidate volumes after evidence export",
+      "immutable_pin": "ghcr.io/hatchet-dev/hatchet/hatchet-lite@sha256:b150603cf7ffda29a7c9f91d2f210594c6511bbd470f4caabfcad091751d6973"
     },
     {
       "candidate_id": "candidate-temporal",
-      "runtime_pin_status": "PENDING_ARTIFACT_HASH",
-      "runtime_target": "Temporal server 1.32.0 via pinned CLI/dev-server artifact",
+      "runtime_pin_status": "RESOLVED",
+      "runtime_target": "Temporal CLI 1.9.1 / embedded Server 1.32.0 / UI 2.54.1",
       "network": "officev2_p3a_temporal",
       "host_ports": [
         17233,
@@ -44,7 +49,9 @@
       ],
       "storage": "/var/officev2/artifacts/phase3a-durable/temporal",
       "health_probe": "Temporal service health/namespace query on loopback",
-      "teardown": "stop dev server, remove candidate state after evidence export"
+      "teardown": "stop dev server, remove candidate state after evidence export",
+      "immutable_pin": "temporal_cli_1.9.1_linux_amd64.tar.gz#sha256=09a0326a51db84d02735e53542b9ebd8c4758daf47482a9ab0abce15844e60d5",
+      "executable_path": "/home/officev2/.local/officev2-phase3a/pins/temporal/temporal"
     }
   ],
   "forbidden_host_ports": [
@@ -53,6 +60,8 @@
   ],
   "notes": [
     "18080 is existing OpenPost-reserved surface; 18100 is currently occupied and excluded.",
-    "Candidate definitions do not imply installation or LAB admission until immutable pins are recorded."
-  ]
+    "Pins are resolved, but no challenger service is LAB-ready until its health/teardown receipt passes.",
+    "Temporal artifacts stay on the hardened noexec artifact lane; the verified executable copy runs only from the officev2 user-owned WSL filesystem."
+  ],
+  "runtime_pin_receipt": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/runtime-pins.json"
 }
