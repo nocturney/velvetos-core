@@ -5,7 +5,7 @@
 
 ## מתי
 
-סוף רטרו ערב **או** לפני Morning Brief 09:00:
+אחרי retro event משמעותי **או** לפני Morning Brief שהופעל וצריך לצרוך אותות עדכניים; אין standing ערב/09:00 clock:
 
 ```bash
 python3 scripts/vf_retro_signals.py --write

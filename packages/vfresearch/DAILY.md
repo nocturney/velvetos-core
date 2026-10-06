@@ -15,7 +15,7 @@ Cloud לא גולש ל־chatgpt.com / gemini.google.com / perplexity.ai. לא ש
 4. להריץ `python3 scripts/vfresearch_cadence.py review-routing`. Deep review נעשה **רק** לשורות עם `deepReviewRequired:true`: HEAD/release נוכחי שאין לו review קשור בדיוק, או repo שנשלח כ־`--explicit-repo` במשימת review מפורשת. Pending ישן עם `reviewedRemoteHead` + `reviewedRelease` שתואמים למצב הנוכחי משתמש מחדש ב־review הקיים ולא משלם deep review יומי נוסף. כשנדרש review, לבדוק release notes / diff רלוונטי, השפעה על ה־integration וראיות compatibility; לכתוב `update` / `wait` / `review` / `ignore` עם נימוק, evidence וה־binding המדויק. מייל אינו יכול להיחמש עד שכל ה־pending מחזיקים review נוכחי. כאשר review חסר/ישן הופך ל־current, `notifyOwner:true` יכול להישלח פעם אחת; אחרי הכנת request הדגל מתאפס.
 5. להעדיף מקור ראשוני/עדכני; לשמור URL + תאריך מקור. לא להעתיק buzz ולא להציג אות כללי כאילו הוא Insight של `@velvets_cloud`.
 6. להטמיע רק מה ששימושי בפק קיים (`constitution/ORCHESTRA.md`). בלי פק חדש רק כי נמצא רעיון.
-7. לכתוב את התמצית הצרכנית ל־`packages/vfops/data/research.md` עבור בריף 09:00. **אין להכניס לתמצית הזו רשימת עדכוני כלים, מספר pending updates או החלטות update/wait/review/ignore.** כאשר המצב הוא `ready_for_brief`, גוף התמצית חייב להשתמש בכותרת הקנונית **`## מה נבנה / יועל`** לפני הממצאים. אם אין משהו מוצק: **«אין חדש במשרד»** בדיוק.
+7. לכתוב את התמצית הצרכנית ל־`packages/vfops/data/research.md` עבור ה־Morning Brief הבא אם התוצר רלוונטי. **אין להכניס לתמצית הזו רשימת עדכוני כלים, מספר pending updates או החלטות update/wait/review/ignore.** כאשר המצב הוא `ready_for_brief`, גוף התמצית חייב להשתמש בכותרת הקנונית **`## מה נבנה / יועל`** לפני הממצאים. אם אין משהו מוצק: **«אין חדש במשרד»** בדיוק.
 8. לשמור גוף מלא ב־`sources/YYYY-MM-DD-orchestra.md` עם מקורות, ממצאים, מגבלות, מה עושים עם זה, ומה דולג.
 
 ## חוזה freshness
@@ -90,6 +90,6 @@ Velvet Factory — סטודיו קטן להדפסות תלת־ממד בשדרו�
 
 1. לתרגם את התיאור לעברית קצרה (`vfcopy`).
 2. לחפש דגם במאגר פתוח. **נעילת בעלים למחקר:** מגבלת רישיון של יוצר זר אינה קריטריון פסילה/דירוג ב־Research Seat; יוצר/מותג ישראלי → `vlicense` / stop לפני שימוש בקובץ. זהו כלל triage מחקרי, לא קביעה משפטית לגבי שימוש בפועל.
-3. אם אין דגם: הדמיה דו־ממדית לאישור. מידול או 3D AI Studio / Meshy/Tripo — רק אחרי אישור ראש צוות (`vfprod/3DAISTUDIO.md`).
+3. אם אין דגם: הדמיה דו־ממדית כשצריך. מידול מקומי או 3D AI Studio / Meshy/Tripo עוברים דרך Fabrication/3D routing, `vlicense` ו־cost authority (`vfprod/3DAISTUDIO.md`); אין per-use lead approval רק בגלל בחירת engine.
 4. מודל שנוצר ב־AI עדיין עובר סלייס; אם הוא מבוסס על יוצר/מותג ישראלי → `vlicense` / stop. לא נכנס לקטלוג לבד (`vfsku`).
 5. סגירה מסחרית נשארת במסלול האנושי/המורשה; אין auto-DM.

@@ -155,7 +155,7 @@ def main() -> None:
     if "WEEKLY.md" not in orchestra and "קישורי השראה" not in orchestra:
         fail("constitution/ORCHESTRA.md must mention weekly link review")
     if "BEST-SKILLS.md" not in orchestra and "best-skills" not in orchestra.lower():
-        fail("constitution/ORCHESTRA.md must mention bi-daily best-skills review")
+        fail("constitution/ORCHESTRA.md must mention on-demand best-skills review")
     for needle in ("Failover", "באותו רגע", "אסור להישאר בלי תוצאה"):
         if needle not in orchestra:
             fail(f"constitution/ORCHESTRA.md must mention failover needle: {needle}")
@@ -250,7 +250,7 @@ def main() -> None:
 
     routine = ROUTINE.read_text(encoding="utf-8")
     if "BEST-SKILLS" not in routine and "best-skills" not in routine.lower():
-        fail("vfops/ROUTINE.md must mention bi-daily best-skills")
+        fail("vfops/ROUTINE.md must mention best-skills")
     if "WEEKLY.md" not in routine and "קישורי השראה" not in routine:
         fail("vfops/ROUTINE.md must mention weekly inspiration links")
     if NEEDLE_WEEKLY not in routine:
@@ -283,7 +283,7 @@ def main() -> None:
     if "failover" not in notes.lower():
         fail("vf-desk.json notes must mention tool failover")
     if "best-skills" not in notes.lower() and "BEST-SKILLS" not in notes:
-        fail("vf-desk.json notes must mention bi-daily best-skills")
+        fail("vf-desk.json notes must mention best-skills")
 
     music = MUSIC.read_text(encoding="utf-8")
     for needle in ("@trend-researcher", "vfigos", "חסר מקור", "HeyOrca", "@velvets_cloud", "לא בשימוש"):

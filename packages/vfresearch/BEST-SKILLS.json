@@ -1,6 +1,6 @@
 {
   "name": "vfresearch-best-skills",
-  "title": "LinklyAI/best-skills — דירוג סקילים כל יומיים",
+  "title": "LinklyAI/best-skills — דירוג סקילים לפי צורך",
   "source": "https://github.com/LinklyAI/best-skills",
   "homepage": "https://linkly.ai/skills",
   "playbook": "packages/vfresearch/BEST-SKILLS.md",
@@ -20,7 +20,7 @@
     "@trend-researcher"
   ],
   "seat": "ייצור",
-  "rule": "Re-read LinklyAI/best-skills rankings every ~48h. Embed useful patterns into existing packs only. Do not invent rankings, ₪, or Insights. Do not npx-install skills on Cloud Agent.",
+  "rule": "Re-read LinklyAI/best-skills rankings only for an explicit research/adoption/content need or unresolved Office v2 gate. Embed useful patterns into existing packs only. Do not invent rankings, ₪, or Insights. Do not npx-install skills on Cloud Agent.",
   "locks": [
     "hq-send-via-tools",
     "no-auto-dm",
@@ -35,7 +35,7 @@
   ],
   "opened": [
     "constitution-may-update-when-durable-pattern-found",
-    "bi-daily-public-skill-leaderboard-scan",
+    "retired-bi-daily-public-skill-leaderboard-scan",
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
@@ -43,7 +43,7 @@
   "dataDate": "2026-10-01",
   "lastArtifact": "packages/vfresearch/sources/2026-10-02-best-skills.md",
   "lastResult": "no-embed-existing-coverage",
-  "lastTimerStatus": "PROVEN_BY_RESEARCH_SEAT: due/stale pulse (~120h since 2026-09-27) executed inside 2026-10-02 Research Seat; ranking snapshot dataDate 2026-10-01; no separate automation created",
+  "lastTimerStatus": "HISTORICAL_PROVENANCE_ONLY: 2026-10-02 Research Seat executed the then-due pulse; scheduler authority was retired on 2026-10-06 and age no longer creates a due state",
   "embedded": [
     {
       "id": "grill-me",

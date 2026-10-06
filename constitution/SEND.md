@@ -110,14 +110,14 @@ Fail-closed:
 - provider receipt נדרש לפני טענה `sent`; transport failure הוא failover/unsynced state, לא הצלחה מדומיינת.
 
 מותר בפועל:
-- Morning Brief 09:00 ל־`nocturney@gmail.com` — routine owner brief.
+- Morning Brief ידני/אירועי ל־`nocturney@gmail.com` — routine owner-brief class; אין standing 09:00 clock.
 - תשובה בשרשור פנייה שכבר נקרא — routine known-thread reply; בלי ₪ מומצא.
 - הצעה/מחיר/התחייבות — רק אחרי gate המתאים + exact-body owner approval כאשר נדרש.
 - `reply` / `forward` כשזה מקדם את הצינור ואחרי body readiness מתאים.
 
 אסור: blast, סודות, אוטו־DM / `send_dm`, או Send של AI body ללא text readiness תקף.
 
-## Morning Brief 09:00 — לולאה לפני שליחה
+## Morning Brief ידני/אירועי — לולאה לפני שליחה
 
 `python3 scripts/vfops_loop.py brief --write` מרכיב עובדות/חריצים מפקים חיים. אחר כך: `owner-brief` reader-first → `vf-hebrew-copy` → Humanizer/AI-tells → surface-aware lint → fact/status validation → `visible_text_gate: PASS` → ורק אז `render_mail.py` ו־Gmail. המעבר הזה לא מפרסם IG.
 
@@ -141,9 +141,9 @@ Fail-closed:
 
 `create_file`: מסמך / גיליון / מצגת למשרד. אם AI כתב prose שאדם אמור לקרוא במסמך — `human-document`/`owner-brief` Visible Text Gate לפני שמכנים אותו final. נתוני source literal אינם עוברים rewrite. לא פותחים תיקיות אישיות/רפואיות/משפטיות. לא ממציאים שורות מחיר.
 
-## Organic Growth Control Plane — לא מפרסם
+## Organic Growth Control Plane — לא מפרסם ישירות
 
-[`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md): מפעל טיוטות + readiness Decision Pack עד cutoff 07:00, שנצרך ב-Morning Brief 09:00. אישור אדם ≠ פרסום. שליחת IG חיה נשארת פעולה נפרדת אחרי שערי האיכות וה־publish.
+[`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md): מפעל טיוטות + readiness Decision Pack לפי צורך/אירוע. ה־Control Plane עצמו אינו קורא Publish API; הוא מוסר ל־`vfigos`. `policy_id: instagram.publish` רשאי לאשר LOW-risk routine publication מכוח standing authorization כשה־instance וכל השערים המדויקים תקפים. אין direct/bypass autopost; אישור אדם נדרש רק כשה־policy מחזיר `REQUIRE_OWNER_APPROVAL` או כשיש חריג אנושי אמיתי.
 
 ## עדיין אסור
 

@@ -14,4 +14,4 @@
 
 דוגמה (בלי ₪): Clicky Clicker V2 print-in-place · MakerWorld 3214356 · כמות אחרי סלייס.
 HEI HEI ודומיו: דגימה לריל, לא באצ׳.  
-מודל מ־3D AI Studio / Tripo/Meshy: לא כרטיס עד שאישור ראש צוות + `vlicense` + סלייס.
+מודל מ־3D AI Studio / Tripo/Meshy: לא כרטיס עד `vlicense` + סלייס; generated origin אינו לבדו human-approval gate. Provider cost authorization נבדק לפני generation לפי `vfprod/3DAISTUDIO.md`.

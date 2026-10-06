@@ -16,7 +16,7 @@
 
 ## Morning Brief V6
 
-בכל Morning Brief 09:00 מבצעים probe חי — לא מסתמכים על `LEARNINGS.md` כדי לתאר את מצב העמוד הנוכחי.
+כאשר Morning Brief מופעל, מבצעים probe חי — לא מסתמכים על `LEARNINGS.md` כדי לתאר את מצב העמוד הנוכחי. אין standing 09:00 Insights probe.
 
 כרטיס `Instagram · מצב העמוד` כולל כשזמין:
 - followers עכשיו.

@@ -12,7 +12,7 @@
 **UI SYSTEM:** `hq/UI-SYSTEM.md` — internal product/UI design intelligence with Hebrew RTL + accessibility + Velvet constraints (UI/UX Pro Max pattern).  
 **UI AUDIT:** `hq/UI-AUDIT.md` — Hallmark-style anti-slop audit; Taste-style creative spike is optional and gated, never default.  
 **PORTLETS:** `hq/PORTLETS.md` — שמות דאשבורד עתידי על אותם חריצים (NetSuite/Salesforce), לא מבנה שני.  
-**GROWTH BRIEF:** `hq/GROWTH-BRIEF.md` — 07:00 readiness Decision Pack (`vf_organic_growth.py`) consumed by the 09:00 Morning Brief. אישור ≠ פרסום. לא מחליף חריצי 01–07.
+**GROWTH BRIEF:** `hq/GROWTH-BRIEF.md` — event-driven readiness pack (`vf_organic_growth.py`) consumed by the next Morning Brief only when relevant. Readiness ≠ authorization; publication goes through `instagram.publish`. לא מחליף חריצי 01–07.
 טיוטת effective-html: `hq/brief-email.html` — רפרנס/Wireframe; מקור [effective-html](https://github.com/plannotator/effective-html). Mobbin חסום → עובדים על הקובץ הזה או על דיאגרמת SVG.
 
 לא ממציאים Insights. לא ממציאים מחיר.  

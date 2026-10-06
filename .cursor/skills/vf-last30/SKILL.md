@@ -38,5 +38,5 @@ Use when the user asks for מחקר 30 יום אחרונים, what people say on
 ## Related
 
 - Weekly inspiration links: `vf-weekly-links`
-- Best-skills bi-daily: `vf-best-skills`
+- Best-skills on-demand: `vf-best-skills`
 - IG music: `vf-ig-music` (HeyOrca — not this skill for track names)
