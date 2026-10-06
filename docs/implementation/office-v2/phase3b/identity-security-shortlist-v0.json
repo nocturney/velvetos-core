@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.office-v2.phase3b-identity-security-shortlist.v0",
-  "status": "IDENTITY_AND_AUTHORIZATION_LANES_LAB_VALIDATED_CREDENTIAL_LANE_PENDING_NO_WINNER",
-  "captured_at": "2026-10-06T12:46:27.980753Z",
+  "status": "ALL_LANES_LAB_VALIDATED_DESTRUCTIVE_FIXTURES_PENDING_NO_WINNER",
+  "captured_at": "2026-10-06T13:48:03.498551Z",
   "winner": null,
   "production_authority_granted": false,
   "lanes": [
@@ -54,10 +54,14 @@
         "candidate-openbao"
       ],
       "winner": null,
-      "admission_status": "2_ADMITTED_LAB_SMOKES_PENDING",
+      "admission_status": "2_LAB_VALIDATED_DESTRUCTIVE_FIXTURE_PENDING",
       "candidate_admission": {
-        "candidate-infisical-agent-vault": "ADMITTED",
-        "candidate-openbao": "ADMITTED"
+        "candidate-infisical-agent-vault": "LAB",
+        "candidate-openbao": "LAB"
+      },
+      "lab_smoke_refs": {
+        "candidate-infisical-agent-vault": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/infisical-lab-smoke-pass.json",
+        "candidate-openbao": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/openbao-lab-smoke-pass.json"
       }
     }
   ],

@@ -161,8 +161,9 @@ def main() -> None:
 
     lab_authz = {"candidate-openfga", "candidate-opa", "candidate-cedar"}
     lab_identity = {"candidate-zitadel", "candidate-keycloak", "candidate-authentik"}
-    pending_admitted = expected_admitted - lab_authz - lab_identity
-    for cid in lab_authz | lab_identity:
+    lab_credential = {"candidate-infisical-agent-vault", "candidate-openbao"}
+    pending_admitted = expected_admitted - lab_authz - lab_identity - lab_credential
+    for cid in lab_authz | lab_identity | lab_credential:
         item = by_id.get(cid) or {}
         if item.get("lifecycle_state") != "LAB" or item.get("decision_verdict") != "LAB_VALIDATED":
             fail("LAB candidate registry state mismatch: " + cid)
@@ -193,14 +194,42 @@ def main() -> None:
     if len(identity_status.get("receipt_refs") or []) != 3 or len(identity_status.get("cleanup_refs") or []) != 3:
         fail("identity LAB evidence refs incomplete")
 
+    credential_status = ((lab_status.get("lanes") or {}).get("credential_broker") or {})
+    if credential_status.get("status") != "LAB_SMOKE_PASS_DESTRUCTIVE_FIXTURE_PENDING":
+        fail("credential LAB status mismatch")
+    if set(credential_status.get("lab_candidates") or []) != lab_credential:
+        fail("credential LAB candidate set mismatch")
+    if credential_status.get("pending_candidates"):
+        fail("credential LAB must have no pending candidates after OpenBao smoke")
+    if len(credential_status.get("receipt_refs") or []) != 2 or len(credential_status.get("cleanup_refs") or []) != 2:
+        fail("credential LAB evidence refs incomplete")
+
     zit = by_id.get("candidate-zitadel") or {}
     if zit.get("lifecycle_state") != "LAB" or zit.get("decision_verdict") != "LAB_VALIDATED":
         fail("ZITADEL registry state must be LAB/LAB_VALIDATED after smoke PASS")
     if zit.get("authority_role") != "NONE" or zit.get("runtime_verification") != "PASS":
         fail("ZITADEL LAB state must have runtime PASS and no authority")
 
+    infisical = by_id.get("candidate-infisical-agent-vault") or {}
+    if infisical.get("lifecycle_state") != "LAB" or infisical.get("decision_verdict") != "LAB_VALIDATED":
+        fail("Infisical registry state must be LAB/LAB_VALIDATED after smoke PASS")
+    if infisical.get("authority_role") != "NONE" or infisical.get("runtime_verification") != "PASS":
+        fail("Infisical LAB state must have runtime PASS and no authority")
+    infisical_evidence = set(infisical.get("evidence_refs") or [])
+    if "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/infisical-lab-smoke-pass.json" not in infisical_evidence:
+        fail("Infisical LAB receipt evidence missing from registry")
+
+    openbao = by_id.get("candidate-openbao") or {}
+    if openbao.get("lifecycle_state") != "LAB" or openbao.get("decision_verdict") != "LAB_VALIDATED":
+        fail("OpenBao registry state must be LAB/LAB_VALIDATED after smoke PASS")
+    if openbao.get("authority_role") != "NONE" or openbao.get("runtime_verification") != "PASS":
+        fail("OpenBao LAB state must have runtime PASS and no authority")
+    openbao_evidence = set(openbao.get("evidence_refs") or [])
+    if "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/openbao-lab-smoke-pass.json" not in openbao_evidence:
+        fail("OpenBao LAB receipt evidence missing from registry")
+
     shortlist = load(P3B / "identity-security-shortlist-v0.json")
-    if shortlist.get("status") != "IDENTITY_AND_AUTHORIZATION_LANES_LAB_VALIDATED_CREDENTIAL_LANE_PENDING_NO_WINNER":
+    if shortlist.get("status") != "ALL_LANES_LAB_VALIDATED_DESTRUCTIVE_FIXTURES_PENDING_NO_WINNER":
         fail("Phase 3B shortlist status mismatch")
     if shortlist.get("winner") is not None or shortlist.get("production_authority_granted") is not False:
         fail("Phase 3B shortlist selected winner or authority prematurely")
@@ -238,9 +267,12 @@ def main() -> None:
             if set(refs) != lab_identity or not all(refs.values()):
                 fail("identity shortlist LAB smoke refs incomplete")
         elif lane_id == "phase3b-credential-broker":
-            expected = {"candidate-infisical-agent-vault":"ADMITTED","candidate-openbao":"ADMITTED"}
+            expected = {"candidate-infisical-agent-vault":"LAB","candidate-openbao":"LAB"}
             if lane.get("candidate_admission") != expected:
                 fail("credential shortlist admission state drift")
+            refs = lane.get("lab_smoke_refs") or {}
+            if set(refs) != lab_credential or not all(refs.values()):
+                fail("credential shortlist LAB smoke refs incomplete")
 
     comp = shortlist.get("composition_gate") or {}
     if not all(comp.get(k) is True for k in ("winner_selection_per_lane_allowed_only_after_fixture", "phase3b_closure_requires_cross_role_composition_pass", "no_lane_winner_grants_production_authority")):

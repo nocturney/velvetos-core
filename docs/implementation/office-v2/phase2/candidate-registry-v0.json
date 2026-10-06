@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-06T12:46:27.980753Z",
+  "updated_at": "2026-10-06T13:48:03.498551Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
@@ -748,10 +748,10 @@
       "name": "Infisical Agent Vault",
       "category": "RESEARCH_CANDIDATE",
       "provenance_class": "PRIOR_RESEARCH",
-      "lifecycle_state": "ADMITTED",
-      "decision_verdict": "BENCHMARK_REQUIRED",
-      "verdict_reason": "Phase 3B CANDIDATE→ADMITTED research gate PASS with immutable artifact pin; LAB smoke/fixture evidence still required before LAB/SHADOW.",
-      "runtime_verification": "NOT_RUN",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "verdict_reason": "Phase 3B isolated core-only LAB smoke PASS with synthetic machine identity and secrets; scoped read, unrelated-project denial, viewer write denial, credential rotation/revocation, identity deletion and post-delete denial verified. Destructive fixture/scorecard is still required before winner selection or SHADOW.",
+      "runtime_verification": "PASS",
       "authority_role": "NONE",
       "capability_tags": [
         "credential-management",
@@ -773,13 +773,16 @@
         "https://github.com/Infisical/infisical/blob/main/LICENSE",
         "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
         "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
-        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/infisical-lab-smoke-pass.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/infisical-smoke-task-cleanup.json"
       ],
       "notes": [
         "not preselected",
-        "Phase 3B credential-broker challenger; exact version/pin and LAB admission pending.",
+        "Phase 3B credential-broker challenger; immutable pin and core-only LAB smoke verified.",
         "Phase 3B admission research PASS; production authority remains NONE.",
-        "LAB smoke pending."
+        "Agent Vault / Enterprise-only features were not assumed in the LAB path.",
+        "Core-only LAB smoke PASS; destructive fixture pending."
       ],
       "original_office_v2_verdict": "BENCHMARK"
     },
@@ -2156,21 +2159,21 @@
     {
       "source_item_id": null,
       "provenance_class": "PHASE3B_CURRENT_RESEARCH",
-      "lifecycle_state": "ADMITTED",
-      "decision_verdict": "BENCHMARK_REQUIRED",
-      "runtime_verification": "NOT_RUN",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "runtime_verification": "PASS",
       "authority_role": "NONE",
       "platform_constraints": [],
       "notes": [
         "No winner or production authority is granted by registry intake.",
         "Phase 3B admission research PASS; production authority remains NONE.",
-        "LAB smoke pending."
+        "LAB smoke PASS with synthetic AppRole credentials, scoped read, unrelated-secret denial and token revocation proof."
       ],
       "original_office_v2_verdict": null,
       "candidate_id": "candidate-openbao",
       "name": "OpenBao",
       "category": "CREDENTIAL_BROKER",
-      "verdict_reason": "Phase 3B CANDIDATE→ADMITTED research gate PASS with immutable artifact pin; LAB smoke/fixture evidence still required before LAB/SHADOW.",
+      "verdict_reason": "Phase 3B LAB smoke PASS on immutable 2.7.1 artifact: AppRole scoped read succeeded, unrelated secret access denied, revoked token denied, host ports absent; destructive fixture still required before SHADOW.",
       "capability_tags": [
         "credential-management",
         "secrets",
@@ -2192,7 +2195,9 @@
         "https://github.com/openbao/openbao/blob/main/LICENSE",
         "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
         "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
-        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/openbao-lab-smoke-pass.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/openbao-smoke-task-cleanup.json"
       ]
     }
   ]

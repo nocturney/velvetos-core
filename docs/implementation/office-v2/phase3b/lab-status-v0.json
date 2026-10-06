@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.office-v2.phase3b-lab-status.v0",
-  "captured_at": "2026-10-06T12:46:27.980753Z",
+  "captured_at": "2026-10-06T13:48:03.498551Z",
   "production_authority_change": false,
   "production_writer_change": false,
   "production_credentials_used": false,
@@ -37,12 +37,21 @@
       "cleanup_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-smoke-task-cleanup.json"
     },
     "credential_broker": {
-      "status": "ADMISSION_COMPLETE_LAB_SMOKE_PENDING",
+      "status": "LAB_SMOKE_PASS_DESTRUCTIVE_FIXTURE_PENDING",
       "lab_candidates": [
         "candidate-infisical-agent-vault",
         "candidate-openbao"
+      ],
+      "pending_candidates": [],
+      "receipt_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/infisical-lab-smoke-pass.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/openbao-lab-smoke-pass.json"
+      ],
+      "cleanup_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/infisical-smoke-task-cleanup.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/openbao-smoke-task-cleanup.json"
       ]
     }
   },
-  "next_gate": "Complete credential-broker LAB smokes, then run lane-specific destructive fixtures and normalized scorecards. No winner selection from admission smoke."
+  "next_gate": "Run lane-specific destructive fixtures and normalized scorecards, then the cross-role composition gate. No winner selection from admission smoke."
 }

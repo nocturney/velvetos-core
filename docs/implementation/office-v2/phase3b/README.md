@@ -1,6 +1,6 @@
 # Office v2 Phase 3B — Identity / Authorization / Credential Broker
 
-Status: **CONTRACT V0 FROZEN / IDENTITY + AUTHORIZATION LAB SMOKES PASS / CREDENTIAL LAB SMOKES IN PROGRESS / NO WINNER / NO PRODUCTION AUTHORITY CHANGE**
+Status: **CONTRACT V0 FROZEN / ALL THREE LANES LAB SMOKES PASS / DESTRUCTIVE FIXTURES PENDING / NO WINNER / NO PRODUCTION AUTHORITY CHANGE**
 
 Phase 3B treats security as three explicit roles rather than forcing one product to own identity, authorization and secrets:
 
@@ -48,4 +48,4 @@ Authorization lane admission smoke is PASS for OPA, OpenFGA and Cedar. The run u
 
 Identity lane admission smoke is PASS for ZITADEL, Keycloak and authentik. All used synthetic service identities only, no production credentials, and no raw token/secret material in receipts. ZITADEL used an internal-only network with no host-port bindings and proved bootstrap identity, service-account creation, client-credentials issuance, wrong-secret denial, deletion and deleted-identity denial. Keycloak proved client-credentials issuance plus wrong-secret and deleted-client denial; authentik proved client-credentials issuance plus wrong-secret denial and token revocation.
 
-Credential-broker candidates remain independently gated by their own isolated LAB smoke evidence. No LAB smoke selects a winner or grants SHADOW/PILOT/production authority.
+Credential-broker LAB smoke is PASS for both Infisical's core/community path and OpenBao. Infisical used only synthetic machine identity and secret material on an internal-only network with no host-port bindings; it proved scoped read, unrelated-project denial, viewer write denial, client-secret rotation, revocation of the old secret and its issued token, survival of the rotated credential, and full denial after identity deletion. Agent Vault / Enterprise-only features were not assumed. OpenBao used synthetic AppRole credentials on an internal-only network with no host-port bindings and proved scoped read, unrelated-secret denial and token revocation. No LAB smoke selects a winner or grants SHADOW/PILOT/production authority.
