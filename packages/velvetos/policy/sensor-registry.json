@@ -1437,7 +1437,8 @@
       "id": "check-office-v2-phase3b",
       "path": "scripts/check-office-v2-phase3b.py",
       "owns": [
-        "docs/implementation/office-v2/phase3b/**"
+        "docs/implementation/office-v2/phase3b/**",
+        "scripts/check-office-v2-phase3b.py"
       ],
       "triggered_by": [
         "docs/implementation/office-v2/phase3b/**",
@@ -1448,7 +1449,8 @@
         "check-office-v2-phase2"
       ],
       "enforces": [],
-      "risk": "critical",
+      "lifecycle": "EVENT_ACCEPTANCE",
+      "risk": "low",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",

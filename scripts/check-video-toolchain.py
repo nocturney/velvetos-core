@@ -83,7 +83,7 @@ def main() -> None:
         fail("Remotion version policy/status mismatch")
     if not re.fullmatch(r"\d+\.\d+\.\d+", str(remotion.get("reviewedBaselineVersion") or "")):
         fail("Remotion reviewed baseline must be semver evidence, not an execution pin")
-    if remotion.get("compatibilityGate") != "free-license-eligibility+adapter-smoke":
+    if remotion.get("compatibilityGate") != "license-eligibility+adapter-smoke":
         fail("Remotion compatibility/license gate mismatch")
     eligibility = remotion.get("licenseEligibility") or {}
     if eligibility.get("currentVerdict") != "FREE_LICENSE_ELIGIBLE" or eligibility.get("currentBusinessHeadcount") != 1:

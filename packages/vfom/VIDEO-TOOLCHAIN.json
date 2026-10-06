@@ -50,7 +50,7 @@
       "origin": "https://github.com/remotion-dev/remotion",
       "versionPolicy": "latest-compatible",
       "reviewedBaselineVersion": "4.0.523",
-      "compatibilityGate": "free-license-eligibility+adapter-smoke",
+      "compatibilityGate": "license-eligibility+adapter-smoke",
       "status": "free-license-eligible",
       "installByDefault": false,
       "masterRenderer": false,

@@ -563,6 +563,7 @@ def validate_registries(historical_replay: bool = False) -> tuple[list[str], set
         "check-office-v2-phase1",
         "check-office-v2-phase2",
         "check-office-v2-phase3a",
+        "check-office-v2-phase3b",
         "check-policy-history-replay",
     }
     expected_retired = {
@@ -575,7 +576,7 @@ def validate_registries(historical_replay: bool = False) -> tuple[list[str], set
             f"EVENT_ACCEPTANCE lifecycle set drifted: {sorted(lifecycle_ids['EVENT_ACCEPTANCE'])}", problems)
     require(lifecycle_ids["RETIRED_RECEIPT"] == expected_retired,
             f"RETIRED_RECEIPT lifecycle set drifted: {sorted(lifecycle_ids['RETIRED_RECEIPT'])}", problems)
-    require(len(lifecycle_ids["DOMAIN"]) == len(sensor_rows) - 11,
+    require(len(lifecycle_ids["DOMAIN"]) == len(sensor_rows) - 12,
             "DOMAIN lifecycle count must cover every non-core/non-event/non-retired sensor", problems)
     critical_ids = {
         row.get("id") for row in sensor_rows
