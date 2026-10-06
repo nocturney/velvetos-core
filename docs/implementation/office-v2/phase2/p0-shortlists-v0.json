@@ -9,14 +9,12 @@
       "incumbent": "incumbent-current-durable-execution",
       "challengers": [
         "candidate-restate",
-        "candidate-dbos",
+        "candidate-hatchet",
         "candidate-temporal"
       ],
       "winner": null,
-      "freeze_state": "REOPENED_AFTER_ADMISSION_FAILURE",
-      "reopen_trigger": "SHORTLISTED_CANDIDATE_ADMISSION_FAILURE",
-      "replaced_candidate": "candidate-hatchet",
-      "reopen_receipt": "docs/implementation/office-v2/phase3/durable-execution-shortlist-reopen-v0.json"
+      "freeze_state": "OPEN_UNTIL_FIXTURES_AND_SCORECARDS",
+      "correction_receipt": "docs/implementation/office-v2/phase3/durable-execution-shortlist-correction-v0.json"
     },
     {
       "lane_id": "model-routing",

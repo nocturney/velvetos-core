@@ -1,17 +1,15 @@
 {
   "schema": "velvetos.office-v2.phase3a-durable-admission.v0",
-  "captured_at": "2026-10-06T10:03:12+03:00",
+  "captured_at": "2026-10-06T10:44:17+03:00",
   "shortlist_policy": "INCUMBENT_PLUS_MAX_THREE_SERIOUS_CHALLENGERS",
   "winner": null,
   "production_authority_granted": false,
   "active_challengers": [
     "candidate-restate",
-    "candidate-dbos",
+    "candidate-hatchet",
     "candidate-temporal"
   ],
-  "blocked_candidates": [
-    "candidate-hatchet"
-  ],
+  "blocked_candidates": [],
   "candidates": [
     {
       "candidate_id": "incumbent-current-durable-execution",
@@ -43,20 +41,22 @@
     },
     {
       "candidate_id": "candidate-hatchet",
-      "role": "ADMISSION_BLOCKED",
-      "disposition": "DEFERRED_WITH_REASON",
-      "target_version": "0.107.2",
+      "role": "CHALLENGER",
+      "disposition": "ADMITTED",
+      "target_version": "Hatchet Lite 0.107.2",
       "sdk_target": "Python 1.41.1",
+      "immutable_runtime_pin": "ghcr.io/hatchet-dev/hatchet/hatchet-lite@sha256:b150603cf7ffda29a7c9f91d2f210594c6511bbd470f4caabfcad091751d6973",
       "sdk_sha256": "2128eefb4189f6d4c05676140f408fec982f1b62e0cf9412a32c4f9c901a125e",
-      "embedded_release_result": "HTTP_404",
+      "candidate_db_substrate": "postgres@sha256:a02db8cac496f15b094798a38254f14d6e00741f709360e5e00bb6668ea31636",
+      "license": "MIT",
+      "self_host_shape": "official hatchet-lite OCI image with candidate-specific disposable Postgres for LAB; no host ports required for admission smoke",
       "credential_class": "LAB_ONLY_SECRET_OR_NONE",
       "authority_role": "NONE",
-      "rationale": "The pinned SDK resolves embedded runtime through hatchet-dev/hatchet-embedded v0.107.2, but the SDK-declared checksums release URL returned HTTP 404. Admission fails closed until an immutable sidecar artifact becomes available.",
-      "replaced_in_active_shortlist_by": "candidate-dbos",
+      "rationale": "Original serious challenger restored after corrected immutable-artifact admission. Official v0.107.2 hatchet-lite image passed isolated start/kill/restart smoke.",
       "evidence_refs": [
         "docs/implementation/office-v2/phase3/runtime-pins-v0.json",
-        "docs/implementation/office-v2/phase3/durable-execution-shortlist-reopen-v0.json",
-        "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/resolve-pins-task.txt"
+        "docs/implementation/office-v2/phase3/durable-execution-shortlist-correction-v0.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/hatchet-admission-smoke.json"
       ]
     },
     {
@@ -78,21 +78,26 @@
     },
     {
       "candidate_id": "candidate-dbos",
-      "role": "CHALLENGER",
-      "disposition": "ADMITTED",
+      "role": "CREDIBLE_RESERVE",
+      "disposition": "RESERVE_DEFERRED_WITH_REASON",
       "target_version": "Python 3.1.0",
       "immutable_runtime_pin": "dbos-3.1.0-py3-none-any.whl#sha256=de6b361352b72067e3528b9d80e96eef3521c5a4350651cf640278aec9765f10",
       "candidate_db_substrate": "postgres@sha256:a02db8cac496f15b094798a38254f14d6e00741f709360e5e00bb6668ea31636",
       "license": "MIT",
-      "self_host_shape": "library-centric durable execution with a candidate-specific disposable system database for LAB; this does not make Postgres a universal Office v2 default.",
+      "self_host_shape": "library-centric durable execution with a candidate-specific disposable system database for LAB",
       "credential_class": "LAB_ONLY_SECRET_OR_NONE",
       "authority_role": "NONE",
-      "rationale": "Recorded credible reserve promoted only because Hatchet failed immutable-artifact admission. Version 3.1.0 has a pinned wheel and is evaluated against the same fixture.",
+      "rationale": "Returned to the credible reserve after Hatchet passed corrected OCI admission. May reopen only on a recorded material-evidence trigger.",
+      "reopen_triggers": [
+        "SHORTLISTED_CANDIDATE_ADMISSION_FAILURE",
+        "SHORTLISTED_CANDIDATE_BENCHMARK_FAILURE",
+        "MATERIAL_CONTRACT_CHANGE",
+        "CREDIBLE_NEW_EVIDENCE"
+      ],
       "evidence_refs": [
         "docs/implementation/office-v2/phase3/runtime-pins-v0.json",
-        "docs/implementation/office-v2/phase3/durable-execution-shortlist-reopen-v0.json",
-        "https://github.com/dbos-inc/dbos-transact-py/releases/tag/3.1.0",
-        "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/stateful-restore-drill-pass.json"
+        "docs/implementation/office-v2/phase3/durable-execution-shortlist-correction-v0.json",
+        "https://github.com/dbos-inc/dbos-transact-py/releases/tag/3.1.0"
       ]
     }
   ],

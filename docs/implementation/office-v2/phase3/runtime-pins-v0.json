@@ -1,8 +1,8 @@
 {
   "schema": "velvetos.office-v2.phase3a-runtime-pins.v0",
   "captured_at": "2026-10-06T10:03:12+03:00",
-  "status": "IMMUTABLE_PINS_RESOLVED_WITH_ONE_ADMISSION_FAILURE",
-  "source_evidence": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/resolve-pins-task.txt",
+  "status": "IMMUTABLE_PINS_RESOLVED",
+  "source_evidence": "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/runtime-pins.json",
   "candidates": {
     "candidate-restate": {
       "target": "Restate 1.7.12",
@@ -19,21 +19,24 @@
       "status": "PINNED"
     },
     "candidate-hatchet": {
-      "target": "Hatchet SDK 1.41.1 / embedded engine v0.107.2",
+      "target": "Hatchet Lite 0.107.2 / Python SDK 1.41.1 secondary client pin",
+      "artifact": "ghcr.io/hatchet-dev/hatchet/hatchet-lite:v0.107.2",
+      "immutable_pin": "ghcr.io/hatchet-dev/hatchet/hatchet-lite@sha256:b150603cf7ffda29a7c9f91d2f210594c6511bbd470f4caabfcad091751d6973",
+      "pin_type": "OCI_DIGEST",
       "sdk_artifact": "hatchet_sdk-1.41.1-py3-none-any.whl",
       "sdk_sha256": "2128eefb4189f6d4c05676140f408fec982f1b62e0cf9412a32c4f9c901a125e",
-      "embedded_release": "https://github.com/hatchet-dev/hatchet-embedded/releases/download/v0.107.2/checksums.txt",
-      "embedded_release_result": "HTTP_404",
-      "status": "ADMISSION_BLOCKED_UPSTREAM_ARTIFACT_UNAVAILABLE"
+      "embedded_sidecar_observation": "hatchet-embedded v0.107.2 URL returned HTTP 404; the selected official hatchet-lite OCI artifact does not depend on that sidecar release.",
+      "status": "PINNED"
     },
     "candidate-dbos": {
       "target": "DBOS Python 3.1.0",
       "artifact": "dbos-3.1.0-py3-none-any.whl",
       "sha256": "de6b361352b72067e3528b9d80e96eef3521c5a4350651cf640278aec9765f10",
       "pin_type": "PYPI_WHEEL_SHA256",
-      "status": "PINNED_RESERVE_PROMOTED"
+      "status": "PINNED_RESERVE"
     }
   },
   "production_credentials_used": false,
-  "production_authority_change": false
+  "production_authority_change": false,
+  "admission_correction_ref": "docs/implementation/office-v2/phase3/durable-execution-shortlist-correction-v0.json"
 }

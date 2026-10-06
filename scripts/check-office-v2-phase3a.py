@@ -17,6 +17,7 @@ REQUIRED = [
     P3 / "durable-execution-lab-plan-v0.json",
     P3 / "runtime-pins-v0.json",
     P3 / "durable-execution-shortlist-reopen-v0.json",
+    P3 / "durable-execution-shortlist-correction-v0.json",
 ]
 
 MANDATORY_STEP_IDS = {
@@ -39,7 +40,7 @@ MANDATORY_STEP_IDS = {
 
 EXPECTED_CHALLENGERS = {
     "candidate-restate",
-    "candidate-dbos",
+    "candidate-hatchet",
     "candidate-temporal",
 }
 
@@ -123,19 +124,17 @@ def main() -> None:
     }
     if admitted != EXPECTED_CHALLENGERS:
         fail("Phase 3A admitted challenger set drifted")
-    hatchet = by_id.get("candidate-hatchet") or {}
-    if hatchet.get("role") != "ADMISSION_BLOCKED" or hatchet.get("disposition") != "DEFERRED_WITH_REASON":
-        fail("Hatchet admission failure must remain explicit")
-    if hatchet.get("embedded_release_result") != "HTTP_404":
-        fail("Hatchet upstream artifact failure evidence drifted")
-    if hatchet.get("authority_role") != "NONE":
-        fail("Hatchet blocked candidate must have no authority")
-    for cid in EXPECTED_CHALLENGERS | {"candidate-hatchet"}:
+    dbos = by_id.get("candidate-dbos") or {}
+    if dbos.get("role") != "CREDIBLE_RESERVE" or dbos.get("disposition") != "RESERVE_DEFERRED_WITH_REASON":
+        fail("DBOS must remain the credible reserve after corrected Hatchet admission")
+    if dbos.get("authority_role") != "NONE":
+        fail("DBOS reserve must have no authority")
+    for cid in EXPECTED_CHALLENGERS | {"candidate-dbos"}:
         item = by_id.get(cid)
         if not item:
             fail("missing candidate admission: " + cid)
         if item.get("authority_role") != "NONE":
-            fail("challenger/blocked authority must remain NONE: " + cid)
+            fail("challenger/reserve authority must remain NONE: " + cid)
         if not item.get("target_version"):
             fail("candidate target version missing: " + cid)
         if not item.get("evidence_refs"):
@@ -149,10 +148,8 @@ def main() -> None:
         fail("Phase 3A admission must remain aligned to Phase 2 durable shortlist")
     if lane.get("winner") is not None:
         fail("durable-execution shortlist declared a winner before bake-off")
-    if lane.get("reopen_trigger") != "SHORTLISTED_CANDIDATE_ADMISSION_FAILURE":
-        fail("durable-execution shortlist reopen trigger missing")
-    if lane.get("replaced_candidate") != "candidate-hatchet":
-        fail("durable-execution shortlist replacement provenance missing")
+    if lane.get("correction_receipt") != "docs/implementation/office-v2/phase3/durable-execution-shortlist-correction-v0.json":
+        fail("durable-execution shortlist correction provenance missing")
 
     pins = load(P3 / "runtime-pins-v0.json")
     if pins.get("production_credentials_used") is not False or pins.get("production_authority_change") is not False:
@@ -161,22 +158,36 @@ def main() -> None:
     for cid in EXPECTED_CHALLENGERS:
         if cid not in pin_candidates:
             fail("runtime pins missing active candidate: " + cid)
-    if pin_candidates.get("candidate-hatchet", {}).get("status") != "ADMISSION_BLOCKED_UPSTREAM_ARTIFACT_UNAVAILABLE":
-        fail("Hatchet pin failure is not preserved")
+        if pin_candidates[cid].get("status") != "PINNED":
+            fail("active candidate runtime pin is not PINNED: " + cid)
+    if pin_candidates.get("candidate-dbos", {}).get("status") != "PINNED_RESERVE":
+        fail("DBOS reserve pin status missing")
 
     reopen = load(P3 / "durable-execution-shortlist-reopen-v0.json")
     if reopen.get("trigger") != "SHORTLISTED_CANDIDATE_ADMISSION_FAILURE":
-        fail("shortlist reopen receipt trigger mismatch")
-    if reopen.get("failed_candidate") != "candidate-hatchet" or reopen.get("replacement_candidate") != "candidate-dbos":
-        fail("shortlist reopen candidate mapping mismatch")
+        fail("historical shortlist reopen receipt trigger mismatch")
+    if reopen.get("status") != "SUPERSEDED_AFTER_CORRECTED_HATCHET_OCI_ADMISSION":
+        fail("historical shortlist reopen must be marked superseded")
+    if reopen.get("failed_candidate") != "candidate-hatchet" or reopen.get("temporary_replacement_candidate") != "candidate-dbos":
+        fail("historical shortlist reopen mapping mismatch")
     if set(reopen.get("active_challengers") or []) != EXPECTED_CHALLENGERS:
-        fail("shortlist reopen active challengers mismatch")
+        fail("historical reopen receipt must point to corrected active challengers")
     if reopen.get("winner") is not None or reopen.get("production_authority_change") is not False:
-        fail("shortlist reopen must not select winner or change authority")
+        fail("shortlist history must not select winner or change authority")
+
+    correction = load(P3 / "durable-execution-shortlist-correction-v0.json")
+    if correction.get("status") != "APPLIED":
+        fail("shortlist correction is not applied")
+    if correction.get("restored_candidate") != "candidate-hatchet" or correction.get("returned_to_reserve") != "candidate-dbos":
+        fail("shortlist correction candidate mapping mismatch")
+    if set(correction.get("active_challengers") or []) != EXPECTED_CHALLENGERS:
+        fail("shortlist correction active challengers mismatch")
+    if correction.get("winner") is not None or correction.get("production_authority_change") is not False:
+        fail("shortlist correction must not select winner or change authority")
 
     lab = load(P3 / "durable-execution-lab-plan-v0.json")
-    if lab.get("status") != "PINS_RESOLVED_LAB_NOT_STARTED":
-        fail("LAB plan must record resolved immutable pins before bring-up")
+    if lab.get("status") != "ADMISSION_SMOKES_PASS_DESTRUCTIVE_FIXTURE_NOT_STARTED":
+        fail("LAB plan must record all active admission smokes PASS before destructive bake-off")
     if lab.get("production_authority") != "NONE":
         fail("LAB plan production authority must be NONE")
     if lab.get("production_credentials_allowed") is not False:
@@ -186,15 +197,23 @@ def main() -> None:
     forbidden = set(lab.get("forbidden_host_ports") or [])
     if not {18080, 18100}.issubset(forbidden):
         fail("known occupied/forbidden ports are not reserved")
-    for item in lab.get("candidates") or []:
-        if item.get("candidate_id") not in EXPECTED_CHALLENGERS:
-            fail("non-shortlisted candidate present in LAB plan")
+    lab_candidates = lab.get("candidates") or []
+    if {item.get("candidate_id") for item in lab_candidates} != EXPECTED_CHALLENGERS:
+        fail("LAB plan active candidate set does not match corrected shortlist")
+    for item in lab_candidates:
         if item.get("runtime_pin_status") != "RESOLVED":
             fail("candidate immutable runtime pin is not resolved")
         if not item.get("immutable_pin"):
             fail("candidate immutable runtime pin value is missing")
         if forbidden.intersection(set(item.get("host_ports") or [])):
             fail("candidate LAB plan uses forbidden host port")
+        if not str(item.get("admission_smoke", "")).startswith("PASS"):
+            fail("active candidate admission smoke is not PASS: " + str(item.get("candidate_id")))
+        if not item.get("evidence_ref"):
+            fail("active candidate admission smoke evidence is missing: " + str(item.get("candidate_id")))
+    reserves = lab.get("reserve_candidates") or []
+    if {item.get("candidate_id") for item in reserves} != {"candidate-dbos"}:
+        fail("LAB plan reserve set must contain only DBOS")
 
     readme = (P3 / "README.md").read_text(encoding="utf-8-sig")
     for marker in (
@@ -208,7 +227,7 @@ def main() -> None:
 
     print(
         "OK office-v2-phase3a contract=FROZEN fixture=20-STEP "
-        "challengers=3 blocked=Hatchet winner=NONE pins=RESOLVED lab=NOT_STARTED authority=NONE"
+        "challengers=3 reserve=DBOS winner=NONE pins=RESOLVED admission-smokes=PASS benchmark=NOT_STARTED authority=NONE"
     )
 
 

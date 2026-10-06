@@ -1,15 +1,15 @@
 # Office v2 Phase 3A tickets
 
-## P3A-1 · Contract + destructive fixture — IN PROGRESS
-Freeze the 20-step vendor-neutral failure/recovery contract and sensor.
+## P3A-1 · Contract + destructive fixture — DONE
+The vendor-neutral 20-step failure/recovery contract is frozen and sensor-covered.
 
-## P3A-2 · Admission + immutable pins — PLANNED
-Resolve immutable runtime artifacts for Restate, Hatchet and Temporal, record license/maintenance/security/teardown, and admit to LAB.
+## P3A-2 · Admission + immutable pins — DONE
+Restate, Hatchet Lite and Temporal have immutable runtime pins. A temporary Hatchet sidecar-specific admission failure was corrected using the official pinned Hatchet Lite OCI artifact; DBOS returned to credible reserve.
 
-## P3A-3 · LAB bring-up — PLANNED
-Bring up one candidate at a time in OfficeV2-Lab with headless execution, no production credentials and isolated evidence paths.
+## P3A-3 · LAB bring-up — DONE / ADMISSION SMOKES PASS
+Restate, Hatchet and Temporal each passed headless isolated start/kill/restart admission with no production credentials, no production authority and no required host ports.
 
-## P3A-4 · Destructive bake-off — PLANNED
+## P3A-4 · Destructive bake-off — IN PROGRESS
 Run identical 20-step fixture and standard scorecard against incumbent + three challengers.
 
 ## P3A-5 · Verdict/freeze — PLANNED

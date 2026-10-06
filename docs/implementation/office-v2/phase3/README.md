@@ -2,7 +2,7 @@
 
 Authority: START HERE Phase 3A. Baseline: `main@7fa9cb1f03da0876831c9d05efbfe44de2f8c280` after Phase 2 GREEN.
 
-Status: **CONTRACT + ADMISSION FREEZE IN PROGRESS / NO WINNER / NO PRODUCTION AUTHORITY CHANGE**.
+Status: **CONTRACT FROZEN / THREE ADMISSION SMOKES PASS / DESTRUCTIVE BAKE-OFF NOT YET RUN / NO WINNER / NO PRODUCTION AUTHORITY CHANGE**.
 
 ## Objective
 
@@ -24,14 +24,14 @@ Incumbent:
 - `incumbent-current-durable-execution`.
 
 LAB-admission shortlist:
-- `candidate-restate` — Restate 1.7.12, OCI digest pinned.
-- `candidate-dbos` — DBOS Python 3.1.0, wheel SHA256 pinned; promoted from reserve after the Hatchet admission failure.
-- `candidate-temporal` — Temporal CLI 1.9.1 / embedded OSS Server 1.32.0, OCI digest pinned.
+- `candidate-restate` — Restate 1.7.12, OCI digest pinned; isolated start/kill/restart smoke PASS with one documented node-incarnation observation.
+- `candidate-hatchet` — Hatchet Lite 0.107.2, OCI digest pinned; isolated Postgres-only start/kill/restart smoke PASS with zero host ports.
+- `candidate-temporal` — Temporal CLI 1.9.1 / embedded OSS Server 1.32.0, immutable runtime pinned; isolated engine-kill/restart smoke PASS with namespace persistence.
 
-Admission-blocked:
-- `candidate-hatchet` — SDK 1.41.1 is pinned, but the SDK-declared `hatchet-embedded` v0.107.2 checksums release URL returned HTTP 404. It remains `DEFERRED_WITH_REASON` and may reopen when an immutable sidecar artifact is available.
+Credible reserve:
+- `candidate-dbos` — DBOS Python 3.1.0, wheel SHA256 pinned. It briefly entered the active set after a Hatchet embedded-sidecar URL failure, then returned to reserve when the official `hatchet-lite` OCI artifact passed admission.
 
-The shortlist reopen is recorded in `durable-execution-shortlist-reopen-v0.json`; exact artifact pins are in `runtime-pins-v0.json`. No `winner` is declared.
+`durable-execution-shortlist-reopen-v0.json` preserves the temporary fail-closed decision; `durable-execution-shortlist-correction-v0.json` records the evidence-based correction. Exact artifact pins are in `runtime-pins-v0.json`. No `winner` is declared.
 
 ## Destructive fixture
 
@@ -51,7 +51,7 @@ The fixture succeeds only when no completed external effect is duplicated, recov
 
 ## Admission boundary
 
-`durable-execution-admission-v0.json` is a research/admission receipt, not a benchmark result. Restate, DBOS and Temporal now have immutable runtime pins and may enter LAB under the bounded plan; Hatchet failed closed before LAB start. A health probe, teardown path, zero production credentials and zero production authority remain mandatory.
+`durable-execution-admission-v0.json` is a research/admission receipt, not a benchmark result. Restate, Hatchet and Temporal now have immutable pins and have each passed isolated LAB admission smoke. DBOS remains a pinned credible reserve. A health probe, teardown path, zero production credentials and zero production authority remain mandatory; admission success is not a benchmark verdict.
 
 ## Evidence
 

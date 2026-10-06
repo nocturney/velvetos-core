@@ -1,0 +1,24 @@
+{
+  "schema": "velvetos.office-v2.phase3a-shortlist-correction.v0",
+  "captured_at": "2026-10-06T10:44:17+03:00",
+  "lane_id": "durable-execution",
+  "status": "APPLIED",
+  "trigger": "CREDIBLE_OFFICIAL_ALTERNATIVE_ARTIFACT_EVIDENCE",
+  "prior_receipt": "docs/implementation/office-v2/phase3/durable-execution-shortlist-reopen-v0.json",
+  "correction": "The prior Hatchet admission failure applied only to the missing embedded-sidecar v0.107.2 release. The official hatchet-lite v0.107.2 OCI image is independently immutable, was already pulled by digest, and passed isolated LAB start/kill/restart admission with a candidate-specific disposable Postgres substrate.",
+  "restored_candidate": "candidate-hatchet",
+  "returned_to_reserve": "candidate-dbos",
+  "active_challengers": [
+    "candidate-restate",
+    "candidate-hatchet",
+    "candidate-temporal"
+  ],
+  "hatchet_immutable_pin": "ghcr.io/hatchet-dev/hatchet/hatchet-lite@sha256:b150603cf7ffda29a7c9f91d2f210594c6511bbd470f4caabfcad091751d6973",
+  "evidence_refs": [
+    "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/runtime-pins.json",
+    "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/hatchet-admission-smoke.json",
+    "D:/Velvet/OfficeV2Lab/artifacts/phase3a-durable/hatchet/admission-smoke.log"
+  ],
+  "winner": null,
+  "production_authority_change": false
+}
