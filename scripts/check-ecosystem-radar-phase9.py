@@ -49,7 +49,7 @@ def main() -> None:
     assert verdicts.get("twitter-automation") == "SKIP_POLICY_LOCK"
     assert verdicts.get("ui-taste") == "NO_LAB_EXISTING_COVERAGE"
     assert verdicts.get("gh-cli-readonly-agent") == "WATCH_EXISTING_GITHUB_PATH"
-    print("OK ecosystem-radar phase9 no-new-lab cost=0 authority=none research-seat=fresh")
+    print("OK ecosystem-radar phase9 no-new-lab cost=0 authority=none research=on-demand")
 
 
 if __name__ == "__main__":

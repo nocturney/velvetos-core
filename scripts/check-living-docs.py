@@ -37,30 +37,34 @@ def main():
 
     baseline = ROOT/'automation/grok/current-baseline.json'
     manifest = ROOT/'automation/grok/manifest.json'
+    chatgpt = ROOT/'automation/chatgpt/manifest.json'
     routine = ROOT/'packages/vfops/ROUTINE.md'
-    if not baseline.is_file():
-        errors.append('missing current Grok minimal baseline')
+    if not baseline.is_file() or not chatgpt.is_file():
+        errors.append('missing current scheduler cutover baseline/ChatGPT manifest')
     else:
         try:
             import json
             b = json.loads(baseline.read_text(encoding='utf-8'))
-            active = {row.get('id') for row in (b.get('activeRoutines') or [])}
+            c = json.loads(chatgpt.read_text(encoding='utf-8'))
+            if b.get('currentAuthority') != 'automation/chatgpt/manifest.json' or b.get('grokRecurringAuthority') is not False or b.get('grokEnabledRoutineCount') != 0:
+                errors.append('Grok retirement baseline drift')
+            scheduled = {row.get('logicalId') for row in (c.get('scheduledRoutines') or []) if row.get('enabled') is True}
             expected = {'cognee-memory-sync','velvetos-office-loop','runtime-receipts-refresh'}
-            if active != expected:
-                errors.append('current Grok minimal baseline active routine set drift')
+            if c.get('provider') != 'chatgpt-automations' or scheduled != expected:
+                errors.append('current ChatGPT scheduled routine set drift')
         except Exception as exc:
-            errors.append('current Grok minimal baseline unreadable: '+str(exc))
+            errors.append('current scheduler baseline unreadable: '+str(exc))
     if manifest.is_file():
         try:
             import json
             m = json.loads(manifest.read_text(encoding='utf-8'))
-            if m.get('currentBaselineArtifact') != 'automation/grok/current-baseline.json':
-                errors.append('Grok manifest does not bind the current minimal baseline')
+            if m.get('productionScheduler') != 'chatgpt-automations' or (m.get('routines') or []):
+                errors.append('Grok manifest must remain a zero-routine retirement mirror')
         except Exception as exc:
             errors.append('Grok manifest unreadable: '+str(exc))
     if routine.is_file():
         current = routine.read_text(encoding='utf-8')
-        for marker in ('**06:30** | Cognee Memory Sync','**18:30** | VelvetOS Office Loop','**19:15** | Runtime Receipts Refresh','manual/event-driven only'):
+        for marker in ('**~11:30** | Cognee Memory Sync','**18:30** | VelvetOS Office Loop','**19:15** | Runtime Receipts Refresh','manual/event-driven'):
             if marker not in current:
                 errors.append('current routine documentation missing '+marker)
     if errors:
