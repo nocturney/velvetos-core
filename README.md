@@ -57,13 +57,13 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
-| **Last verified / refreshed evidence** | `2026-10-05T18:44:16+03:00` |
+| **Last verified / refreshed evidence** | `2026-10-06T15:50:54+03:00` |
 
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-05 - **Reform v2 final acceptance / closure:** closes Stage 8D and Reform v2 after all five compatibility surfaces were retired through isolated gate + deletion sequences. The final semantic audit on ex…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-05 - **Reform v2 final acceptance / closure:** closes Stage 8D and Reform v2 after all five compatibility surfaces were retired through isolated gate + deletion sequences. The final semantic audit on ex…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-10-06 - **Scheduler simplification / Grok 3→0 cutover:** owner-facing recurring authority moved to ChatGPT automations. The active recurring set is now Cognee Memory Sync once daily (~11:30 flexible), Velv…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-10-06 - **Scheduler simplification / Grok 3→0 cutover:** owner-facing recurring authority moved to ChatGPT automations. The active recurring set is now Cognee Memory Sync once daily (~11:30 flexible), Velv…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
