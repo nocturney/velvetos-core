@@ -83,8 +83,14 @@ def main() -> None:
     require(prod_read.get("production_promoted") is False, "production read implementation must not self-promote")
     require(prod_read.get("production_writer_change") is False and prod_read.get("external_mutation_allowed") is False, "production read implementation writer/mutation boundary drift")
     runtime_contract = prod_read.get("runtime_contract") or {}
+    require(runtime_contract.get("broker_instance") == "officev2-p3b-prod-openbao", "production runtime broker instance mismatch")
+    require(runtime_contract.get("broker_volume") == "officev2_p3b_prod_bao", "production runtime broker volume mismatch")
+    require(runtime_contract.get("broker_isolated_from_pilot") is True, "production broker must be isolated from PILOT broker")
     require(runtime_contract.get("broker_path") == "officev2-prod/data/instagram-publisher-snapshot", "production runtime broker path mismatch")
     require(runtime_contract.get("broker_role") == "officev2-prod-publisher-snapshot", "production runtime broker role mismatch")
+    require(runtime_contract.get("broker_rotator_role") == "officev2-prod-publisher-snapshot-rotator", "production runtime rotator role mismatch")
+    require(runtime_contract.get("broker_rotator_capabilities") == ["create", "update", "read"], "production runtime rotator capability mismatch")
+    require(runtime_contract.get("broker_rotator_scope") == "secret/data/officev2-prod/instagram-publisher-snapshot only", "production runtime rotator scope mismatch")
     require(runtime_contract.get("identity_lifecycle") == "persistent_until_explicit_rollback", "production identity must be persistent")
     require(runtime_contract.get("prepare_reuses_current_pilot_provider_credential_without_cutover") is True, "prepare must not rotate provider credential")
     require(runtime_contract.get("rotate_requires_old_provider_credential_http") == 401, "rotation old credential denial proof missing")
@@ -121,6 +127,7 @@ def main() -> None:
 
     resolver = (VFIGOS / "officev2_production_snapshot_resolver.ps1").read_text(encoding="utf-8-sig")
     snapshot_read = (VFIGOS / "officev2_production_snapshot_read.sh").read_text(encoding="utf-8-sig")
+    production_token_read = (VFIGOS / "officev2_production_token_read.sh").read_text(encoding="utf-8-sig")
     runtime_bind = (VFIGOS / "officev2_production_runtime_bind.ps1").read_text(encoding="utf-8-sig")
     openbao_bind = (VFIGOS / "officev2_production_openbao_bind.sh").read_text(encoding="utf-8-sig")
     zitadel_bootstrap = (VFIGOS / "officev2_production_zitadel_bootstrap.sh").read_text(encoding="utf-8-sig")
@@ -149,6 +156,7 @@ def main() -> None:
         "svc:officev2-p3b-prod-publisher-snapshot",
         "officev2-prod-publisher-snapshot",
         "officev2-prod/data/instagram-publisher-snapshot",
+        "officev2-p3b-prod-openbao",
         '"persistent_principal":True',
         '"ephemeral_cleanup_on_exit":False',
         'write_http!=401',
@@ -171,23 +179,30 @@ def main() -> None:
         require(marker in runtime_bind, "production runtime binding missing fail-closed marker: " + marker)
 
     for marker in (
-        "operator generate-root",
+        "officev2-p3b-prod-openbao",
+        "officev2_p3b_prod_bao",
+        "officev2-phase3b-prod-openbao.service",
         "officev2-prod/data/instagram-publisher-snapshot",
         "officev2-prod-publisher-snapshot",
+        "officev2-prod-publisher-snapshot-rotator",
         "token_no_default_policy",
+        "/v1/sys/init",
         "auth/token/revoke-self",
         "auth/token/lookup-self",
         "root_after",
+        "root_used\":false",
     ):
         require(marker in openbao_bind, "production OpenBao binder missing marker: " + marker)
     require("secret/data/officev2-pilot/instagram-publisher-snapshot" not in openbao_bind, "production OpenBao binder may not write/read PILOT secret path")
+    require("officev2-p3b-prod-openbao" in production_token_read, "production token reader must use isolated production OpenBao")
+    require("officev2-p3b-shadow-openbao" not in production_token_read, "production token reader may not use PILOT OpenBao")
 
     for marker in ("SUCCESS=false", "client_credentials", "wrong-", "SUCCESS=true"):
         require(marker in zitadel_bootstrap, "production ZITADEL bootstrap missing marker: " + marker)
     require("svc:officev2-p3b-prod-publisher-snapshot" in opa_policy, "production OPA policy canonical principal missing")
     for marker in ("prod_allow", "prod_write", "pilot_allow", "shadow_allow", "anonymous"):
         require(marker in opa_apply, "production OPA apply negative-control marker missing: " + marker)
-    for marker in ("systemctl stop", "PROD_RECOVERY_OPA_FAIL_OPEN", "PROD_RECOVERY_ZITADEL_FAIL_OPEN", "PROD_RECOVERY_OPENBAO_FAIL_OPEN", "v1/sys/unseal"):
+    for marker in ("systemctl stop", "officev2-phase3b-prod-openbao.service", "officev2-p3b-prod-openbao", "/opt/officev2-phase3b-prod/unseal.key", "PROD_RECOVERY_OPA_FAIL_OPEN", "PROD_RECOVERY_ZITADEL_FAIL_OPEN", "PROD_RECOVERY_OPENBAO_FAIL_OPEN", "v1/sys/unseal"):
         require(marker in recovery, "production recovery drill missing marker: " + marker)
     for marker in ("production-recovery.json", "ROTATED_PRODUCTION_CREDENTIAL_READY_FOR_PROMOTION", "outage_fail_closed", "unseal_without_persistent_root"):
         require(marker in recovery_wrapper, "production recovery wrapper missing marker: " + marker)

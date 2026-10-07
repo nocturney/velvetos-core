@@ -40,7 +40,7 @@ RESOURCE="cloudflare:velvetos-instagram-publisher"
 CORR="$(python3 -c 'import uuid; print(uuid.uuid4())')"
 Z_IP="$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' officev2-p3b-shadow-zitadel 2>/dev/null || true)"
 OPA_IP="$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' officev2-p3b-shadow-opa 2>/dev/null || true)"
-BAO_IP="$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' officev2-p3b-shadow-openbao 2>/dev/null || true)"
+BAO_IP="$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' officev2-p3b-prod-openbao 2>/dev/null || true)"
 [ -n "$Z_IP" ] && [ -n "$OPA_IP" ] && [ -n "$BAO_IP" ] || { echo "PROD_CANDIDATE_IP_MISSING" >&2; exit 253; }
 BAO_API="http://$BAO_IP:8200"
 
@@ -145,7 +145,7 @@ doc={
  "principal":principal,"action":"publisher.snapshot.read","resource":"cloudflare:velvetos-instagram-publisher",
  "identity":{"provider":"zitadel","client_credentials_http":200,"token_reference_sha256":itok,"machine_id_reference_sha256":mid,"username_reference_sha256":uname,"persistent_principal":True,"ephemeral_cleanup_on_exit":False},
  "authorization":{"engine":"opa","http":int(opa),"decision":"ALLOW","default":"DENY"},
- "broker":{"broker":"openbao","role":"officev2-prod-publisher-snapshot","logical_secret_path":"officev2-prod/data/instagram-publisher-snapshot","approle_login_http":int(login),"exact_scope_read_http":int(bread),"unrelated_scope_http":int(bunrel),"credential_reference_sha256":cred,"session_cleanup_on_exit":True},
+ "broker":{"broker":"openbao","instance":"officev2-p3b-prod-openbao","role":"officev2-prod-publisher-snapshot","logical_secret_path":"officev2-prod/data/instagram-publisher-snapshot","approle_login_http":int(login),"exact_scope_read_http":int(bread),"unrelated_scope_http":int(bunrel),"credential_reference_sha256":cred,"session_cleanup_on_exit":True},
  "provider":summary,"snapshot_payload_sha256":snapsha,
  "raw_identity_token_recorded":False,"raw_provider_credential_recorded":False,"raw_broker_token_recorded":False,
  "control_token_read_or_reused":False,"meta_access_token_read_or_reused":False,

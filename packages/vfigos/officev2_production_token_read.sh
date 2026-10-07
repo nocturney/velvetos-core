@@ -8,7 +8,7 @@ INPUT="$(cat)"
 ROLE_ID="$(printf '%s' "$INPUT" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("role_id",""))')"
 SECRET_ID="$(printf '%s' "$INPUT" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("secret_id",""))')"
 [ -n "$ROLE_ID" ] && [ -n "$SECRET_ID" ] || { echo "PROD_APPROLE_INPUT_INVALID" >&2; exit 311; }
-BAO_IP="$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' officev2-p3b-shadow-openbao 2>/dev/null || true)"
+BAO_IP="$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' officev2-p3b-prod-openbao 2>/dev/null || true)"
 [ -n "$BAO_IP" ] || { echo "PROD_BROKER_IP_MISSING" >&2; exit 312; }
 BAO_API="http://$BAO_IP:8200"
 LOGIN="$(python3 -c 'import json,sys; print(json.dumps({"role_id":sys.argv[1],"secret_id":sys.argv[2]}))' "$ROLE_ID" "$SECRET_ID")"
