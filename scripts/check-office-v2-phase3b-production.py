@@ -164,6 +164,9 @@ def main() -> None:
         require(marker in snapshot_read, "production snapshot read missing marker: " + marker)
     for forbidden in ("officev2-pilot/instagram-publisher-snapshot", "/v2/users/new", "META_ACCESS_TOKEN", "CONTROL_TOKEN"):
         require(forbidden not in snapshot_read, "production snapshot read contains forbidden path/material: " + forbidden)
+    for marker in ('BUNDLE_FILE="$TMP/runtime-bundle.json"', 'chmod 0600 "$BUNDLE_FILE"', 'python3 - "$BUNDLE_FILE"'):
+        require(marker in snapshot_read, "production snapshot read secure bundle parser missing marker: " + marker)
+    require("printf '%s' \"$INPUT\" | python3 - <<'PY'" not in snapshot_read, "production snapshot read may not pipe a secret bundle into python stdin while also using a heredoc program")
 
     for marker in (
         "ValidateSet('Prepare','Rotate','Cleanup')",

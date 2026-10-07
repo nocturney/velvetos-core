@@ -18,9 +18,13 @@ cleanup(){
 trap cleanup EXIT
 
 INPUT="$(cat)"
-readarray -t PARTS < <(printf '%s' "$INPUT" | python3 - <<'PY'
+BUNDLE_FILE="$TMP/runtime-bundle.json"
+printf '%s' "$INPUT" > "$BUNDLE_FILE"
+chmod 0600 "$BUNDLE_FILE"
+readarray -t PARTS < <(python3 - "$BUNDLE_FILE" <<'PY'
 import json,sys
-d=json.load(sys.stdin)
+with open(sys.argv[1],encoding="utf-8") as f:
+    d=json.load(f)
 print(d.get("role_id",""))
 print(d.get("secret_id",""))
 print(d.get("zitadel_username",""))
