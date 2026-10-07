@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase3b-pilot-readiness.v0",
-  "status": "LIVE_READINESS_PASS_EXPLICIT_PROMOTION_PENDING",
+  "status": "PILOT_ACTIVE_PRODUCTION_GATE_READY",
   "scope_ref": "docs/implementation/office-v2/phase3b/pilot-scope-v0.json",
   "scope_id": "instagram-publisher-snapshot-read",
   "selected_composition": "composition-zitadel-opa-openbao",
   "credential_class": "PRODUCTION_READ",
   "project_state": {
-    "required_phase": "PHASE_3B_SHADOW_ACTIVE",
-    "required_checkpoint": "office-v2-phase3b-v0-cp015-shadow-green",
+    "required_phase": "PHASE_3B_PILOT_ACTIVE",
+    "required_checkpoint": "office-v2-phase3b-v0-cp016-pilot-active",
     "gate": "GREEN"
   },
   "shadow_baseline": {
@@ -54,16 +54,14 @@
     "post-rollback narrow rebind passed",
     "full canonical regression passed 116/116 on exact readiness SHA"
   ],
-  "remaining_preconditions": [
-    "separate explicit PILOT promotion receipt"
-  ],
-  "pilot_promoted": false,
+  "remaining_preconditions": [],
+  "pilot_promoted": true,
   "production_promoted": false,
   "production_writer_change": false,
   "production_authority_change": false,
   "external_mutation_allowed": false,
   "live_readiness": {
-    "status": "PASS_READY_FOR_EXPLICIT_PROMOTION",
+    "status": "PASS_PILOT_ACTIVE",
     "scope_id": "instagram-publisher-snapshot-read",
     "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/pilot-live-readiness-progress.json",
     "readiness_sha": "856b4387da9e66e7489d6c7011a2b370a7e1db2f",
@@ -73,6 +71,11 @@
     "service_recovery_and_upgrade_rollback": "PASS",
     "rollback_to_incumbent": "PASS",
     "post_rollback_narrow_rebind": "PASS",
-    "explicit_promotion_receipt_required": true
+    "explicit_promotion_receipt_required": false,
+    "promotion_receipt_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/pilot-promotion.json"
+  },
+  "production_gate": {
+    "status": "READY_FOR_VERSIONED_AUTHORITY_CONTRACT",
+    "contract_ref": "docs/implementation/office-v2/phase3b/production-promotion-v0.json"
   }
 }
