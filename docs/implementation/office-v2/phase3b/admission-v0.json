@@ -1,0 +1,369 @@
+{
+  "schema": "velvetos.office-v2.phase3b-admission.v0",
+  "status": "ADMISSION_RESEARCH_COMPLETE_LAB_SMOKES_PENDING",
+  "captured_at": "2026-10-06T10:32:14.227259Z",
+  "authority_change": false,
+  "production_writer_change": false,
+  "production_credentials_used": false,
+  "production_secret_material_used": false,
+  "admission_policy_ref": "docs/implementation/office-v2/phase2/admission-policy-v0.md",
+  "runtime_pins_ref": "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
+  "fixture_ref": "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json",
+  "summary": {
+    "admitted": 8,
+    "deferred": 0,
+    "deferred_candidates": [],
+    "identity_lane_admitted": [
+      "candidate-zitadel",
+      "candidate-keycloak",
+      "candidate-authentik"
+    ],
+    "authorization_lane_admitted": [
+      "candidate-openfga",
+      "candidate-opa",
+      "candidate-cedar"
+    ],
+    "credential_lane_admitted": [
+      "candidate-infisical-agent-vault",
+      "candidate-openbao"
+    ],
+    "winner": null
+  },
+  "candidates": [
+    {
+      "candidate_id": "candidate-zitadel",
+      "lane": "phase3b-identity-provider",
+      "version": "4.19.4",
+      "license": "AGPL-3.0-only main repository; documented Apache-2.0/MIT exceptions for specific subtrees",
+      "license_review": "PASS_OWNER_ACCEPTED_AGPL_BOUNDARY_FOR_LAB",
+      "maintenance_review": "PASS_CURRENT_RELEASE_2026-10-01",
+      "security_trust_review": "PASS_FOR_LAB; current release is newer than recorded security fixes and project publishes security advisories",
+      "capability_match": "PASS service accounts, private-key JWT/client-credentials/PAT, rotation and auditability",
+      "platform_feasibility": "PASS linux/amd64 OCI",
+      "isolation_plan": "internal LAB network only; disposable PostgreSQL; no host port; synthetic service accounts only",
+      "resource_cost_plan": "capture docker stats, image/storage delta, startup, network and operator minutes; recurring software cost not assumed",
+      "rollback_uninstall_plan": "LAB teardown removes candidate containers, network and volumes; any future modified/combined AGPL deployment must preserve the accepted source-disclosure boundary.",
+      "fixture_mapping": [
+        "identity-bootstrap",
+        "identity-token",
+        "identity-verify",
+        "anonymous-deny",
+        "wrong-principal-deny",
+        "identity-revoke",
+        "revoked-identity-deny"
+      ],
+      "admission_verdict": "ADMITTED",
+      "reason": "Owner resolved the AGPL concern: separate-service/API integration is acceptable and ZITADEL modifications may be open-sourced if obligations require it. Technical admission therefore proceeds to LAB smoke.",
+      "immutable_artifact": {
+        "candidate_id": "candidate-zitadel",
+        "status": "RESOLVED",
+        "tag_ref": "ghcr.io/zitadel/zitadel:v4.19.4",
+        "index_digest": null,
+        "linux_amd64_digest": "sha256:5d4ab2bb5326ceb673d2c08ae81ad4550968404904f7b0ff64b1eb638242b87d",
+        "media_type": "application/vnd.oci.image.index.v1+json"
+      },
+      "evidence_refs": [
+        "https://github.com/zitadel/zitadel/releases",
+        "https://github.com/zitadel/zitadel/blob/main/LICENSING.md",
+        "https://zitadel.com/docs/guides/integrate/service-accounts/authenticate-service-accounts",
+        "https://zitadel.com/docs/guides/integrate/service-accounts/client-credentials",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
+      ]
+    },
+    {
+      "candidate_id": "candidate-keycloak",
+      "lane": "phase3b-identity-provider",
+      "version": "26.8.0",
+      "license": "Apache-2.0",
+      "license_review": "PASS_FOR_LAB",
+      "maintenance_review": "PASS_CURRENT_RELEASE_2026-10-01",
+      "security_trust_review": "PASS_FOR_LAB; active upstream, current release, supported service-account/client-credentials and federated client authentication paths",
+      "capability_match": "PASS OIDC service accounts/client credentials, short-lived tokens, role scoping and revocation",
+      "platform_feasibility": "PASS linux/amd64 OCI",
+      "isolation_plan": "internal LAB network only; disposable PostgreSQL; no host port; synthetic realm/client/service account only",
+      "resource_cost_plan": "capture server+DB docker stats, storage delta, startup, network and operator minutes; recurring software cost=0 for community upstream",
+      "rollback_uninstall_plan": "LAB realm/config export before destructive upgrade tests; teardown removes containers/volume; production rollback proof remains a later gate",
+      "fixture_mapping": [
+        "identity-bootstrap",
+        "identity-token",
+        "identity-verify",
+        "anonymous-deny",
+        "wrong-principal-deny",
+        "identity-revoke",
+        "revoked-identity-deny"
+      ],
+      "admission_verdict": "ADMITTED",
+      "reason": "Meets CANDIDATE→ADMITTED evidence requirements; LAB smoke still required before lifecycle state LAB.",
+      "immutable_artifact": {
+        "candidate_id": "candidate-keycloak",
+        "status": "RESOLVED",
+        "tag_ref": "quay.io/keycloak/keycloak:26.8.0",
+        "index_digest": null,
+        "linux_amd64_digest": "sha256:d79bc4bf1c54e802735ef91926b5c003de1fbb50b1a93382611972277219c9ad",
+        "media_type": "application/vnd.oci.image.index.v1+json"
+      },
+      "evidence_refs": [
+        "https://www.keycloak.org/2026/10/keycloak-2680-released",
+        "https://www.keycloak.org/docs/26.8.0/server_admin/",
+        "https://www.keycloak.org/docs/26.8.0/upgrading/",
+        "https://github.com/keycloak/keycloak",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
+      ]
+    },
+    {
+      "candidate_id": "candidate-authentik",
+      "lane": "phase3b-identity-provider",
+      "version": "2026.8.3",
+      "license": "MIT core; Enterprise subtree has separate license",
+      "license_review": "PASS_FOR_LAB_CORE_ONLY",
+      "maintenance_review": "PASS_CURRENT_PATCH_2026.8.3",
+      "security_trust_review": "PASS_FOR_LAB_CORE_ONLY; core service accounts and M2M client-credentials/JWT flows are documented; Enterprise Agent accounts are not required",
+      "capability_match": "PASS core service accounts, M2M OAuth2/JWT, scoped roles/object permissions and token revocation",
+      "platform_feasibility": "PASS linux/amd64 OCI",
+      "isolation_plan": "internal LAB network only; server/worker plus disposable PostgreSQL as required by official deployment; no host port; synthetic accounts only",
+      "resource_cost_plan": "capture server/worker/DB docker stats, storage delta, startup, network and operator minutes; no Enterprise feature dependency allowed",
+      "rollback_uninstall_plan": "LAB database snapshot/export before upgrade tests; teardown removes candidate containers/volume; outpost versions must track server if later used",
+      "fixture_mapping": [
+        "identity-bootstrap",
+        "identity-token",
+        "identity-verify",
+        "anonymous-deny",
+        "wrong-principal-deny",
+        "identity-revoke",
+        "revoked-identity-deny"
+      ],
+      "admission_verdict": "ADMITTED",
+      "reason": "Core M2M path is sufficient without Enterprise Agent accounts; LAB smoke still required.",
+      "immutable_artifact": {
+        "candidate_id": "candidate-authentik",
+        "status": "RESOLVED",
+        "tag_ref": "ghcr.io/goauthentik/server:2026.8.3",
+        "index_digest": null,
+        "linux_amd64_digest": "sha256:09782fe56675bc616a0324468f1698e2d9d83c978bc5e426686fb7563517a442",
+        "media_type": "application/vnd.oci.image.index.v1+json"
+      },
+      "evidence_refs": [
+        "https://docs.goauthentik.io/releases/2026.8/",
+        "https://docs.goauthentik.io/users-sources/user/account-types/service-accounts",
+        "https://docs.goauthentik.io/add-secure-apps/providers/oauth2/machine_to_machine",
+        "https://github.com/goauthentik/authentik/blob/main/LICENSE",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
+      ]
+    },
+    {
+      "candidate_id": "candidate-openfga",
+      "lane": "phase3b-authorization-policy",
+      "version": "1.21.0",
+      "license": "Apache-2.0",
+      "license_review": "PASS_FOR_LAB",
+      "maintenance_review": "PASS_CURRENT_RELEASE_2026-09-20",
+      "security_trust_review": "PASS_FOR_LAB; active upstream and signed/checksummed release assets",
+      "capability_match": "PASS relationship-based authorization/check API; decision correlation wrapper required by Office v2 contract",
+      "platform_feasibility": "PASS linux/amd64 OCI",
+      "isolation_plan": "internal LAB network only; memory store for admission smoke, disposable PostgreSQL only when persistence/rollback is benchmarked; no host port",
+      "resource_cost_plan": "capture container/DB stats as applicable, model size, request latency, network and operator minutes; recurring software cost=0",
+      "rollback_uninstall_plan": "versioned authorization model export plus teardown; persistence backup/restore proof required before SHADOW",
+      "fixture_mapping": [
+        "authorized-check",
+        "wrong-principal-deny",
+        "wrong-action-deny",
+        "cross-scope-deny",
+        "policy-revoke",
+        "dependency-outage"
+      ],
+      "admission_verdict": "ADMITTED",
+      "reason": "Meets research/admission requirements; Office v2 wrapper must supply correlated receipt semantics.",
+      "immutable_artifact": {
+        "candidate_id": "candidate-openfga",
+        "status": "RESOLVED",
+        "tag_ref": "docker.io/openfga/openfga:v1.21.0",
+        "index_digest": null,
+        "linux_amd64_digest": "sha256:51bece5c31783bfeb150eae0f1c818ae804c50d39e0a311c43ff5357fed6debd",
+        "media_type": "application/vnd.docker.distribution.manifest.list.v2+json"
+      },
+      "evidence_refs": [
+        "https://github.com/openfga/openfga/releases",
+        "https://openfga.dev/docs/getting-started/setup-openfga/docker",
+        "https://github.com/openfga/openfga",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
+      ]
+    },
+    {
+      "candidate_id": "candidate-opa",
+      "lane": "phase3b-authorization-policy",
+      "version": "1.21.1",
+      "license": "Apache-2.0",
+      "license_review": "PASS_FOR_LAB",
+      "maintenance_review": "PASS_CURRENT_RELEASE_2026-09-29",
+      "security_trust_review": "PASS_FOR_LAB; active CNCF project, security audit artifact, decision logs support decision_id and masking",
+      "capability_match": "PASS general policy engine, REST/embedded modes, default-deny policy can be explicit, decision receipts and secret masking available",
+      "platform_feasibility": "PASS linux/amd64 OCI",
+      "isolation_plan": "single internal-only container, read-only policy/config mounts, console decision logs with secret masking, no host port",
+      "resource_cost_plan": "capture docker stats, bundle size, latency, startup and operator minutes; recurring software cost=0",
+      "rollback_uninstall_plan": "versioned signed policy bundle/config rollback and container teardown; no state DB required for core decision path",
+      "fixture_mapping": [
+        "authorized-check",
+        "decision-correlation",
+        "wrong-principal-deny",
+        "wrong-action-deny",
+        "cross-scope-deny",
+        "policy-revoke",
+        "dependency-outage",
+        "inspect-finalize"
+      ],
+      "admission_verdict": "ADMITTED",
+      "reason": "Meets research/admission requirements; LAB fixture must prove fail-closed handling of undefined/no-policy state.",
+      "immutable_artifact": {
+        "candidate_id": "candidate-opa",
+        "status": "RESOLVED",
+        "tag_ref": "docker.io/openpolicyagent/opa:1.21.1",
+        "index_digest": null,
+        "linux_amd64_digest": "sha256:3990b950cfd62284d7bd86a32ee1d76f18f5d3364c8e83f8b9b82f1ff19f7498",
+        "media_type": "application/vnd.oci.image.index.v1+json"
+      },
+      "evidence_refs": [
+        "https://github.com/open-policy-agent/opa/releases",
+        "https://www.openpolicyagent.org/docs/management-decision-logs",
+        "https://www.openpolicyagent.org/docs/operations",
+        "https://github.com/open-policy-agent/opa",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
+      ]
+    },
+    {
+      "candidate_id": "candidate-cedar",
+      "lane": "phase3b-authorization-policy",
+      "version": "4.13.0",
+      "license": "Apache-2.0",
+      "license_review": "PASS_FOR_LAB",
+      "maintenance_review": "PASS_CURRENT_RELEASE_2026-09-15",
+      "security_trust_review": "PASS_FOR_LAB; CNCF project with documented security process and deterministic default-deny authorization semantics",
+      "capability_match": "PASS embedded authorization engine; Office v2 adapter must add service boundary, correlation and audit receipt",
+      "platform_feasibility": "PASS source crate pinned by SHA-256; build in isolated adapter container",
+      "isolation_plan": "no network dependency required by policy engine; compile/runtime adapter in LAB container with read-only policy/entity fixtures",
+      "resource_cost_plan": "capture build size/time separately from steady-state CPU/RAM/latency and operator minutes; recurring software cost=0",
+      "rollback_uninstall_plan": "pin crate and policy bundle; rollback is adapter image + policy bundle version; teardown removes adapter image/container",
+      "fixture_mapping": [
+        "authorized-check",
+        "wrong-principal-deny",
+        "wrong-action-deny",
+        "cross-scope-deny",
+        "policy-revoke",
+        "dependency-outage",
+        "inspect-finalize"
+      ],
+      "admission_verdict": "ADMITTED",
+      "reason": "Meets research/admission requirements as an embedded engine rather than a standalone policy service.",
+      "immutable_artifact": {
+        "candidate_id": "candidate-cedar",
+        "status": "RESOLVED",
+        "artifact": "crates.io:cedar-policy@4.13.0",
+        "sha256": "5e4f5e46c425491b7133eecb3030d82d27301b84bfa08533c59a6902cca7eb80",
+        "bytes": 244270
+      },
+      "evidence_refs": [
+        "https://github.com/cedar-policy/cedar/releases",
+        "https://docs.cedarpolicy.com/auth/authorization.html",
+        "https://github.com/cedar-policy/cedar",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
+      ]
+    },
+    {
+      "candidate_id": "candidate-infisical-agent-vault",
+      "lane": "phase3b-credential-broker",
+      "version": "0.165.16",
+      "license": "MIT core; ee directory has separate enterprise license",
+      "license_review": "PASS_FOR_LAB_CORE_ONLY",
+      "maintenance_review": "PASS_CURRENT_RELEASE_0.165.16",
+      "security_trust_review": "PASS_FOR_LAB_CORE_ONLY; machine identities use granular roles and short-lived access tokens; public vulnerability-disclosure process",
+      "capability_match": "PASS machine identity + scoped secret access + rotation/revocation concepts; exact core-vs-EE feature use must remain visible",
+      "platform_feasibility": "PASS linux/amd64 OCI",
+      "isolation_plan": "internal LAB network only; disposable PostgreSQL and Redis; synthetic ENCRYPTION_KEY/AUTH_SECRET and synthetic project secrets only; no host port",
+      "resource_cost_plan": "capture app+Postgres+Redis stats, storage delta, startup, network and operator minutes; upstream self-host guidance treats single-node compose as evaluation/home-lab suitable",
+      "rollback_uninstall_plan": "database backup plus encryption-key escrow for LAB upgrade drill; teardown removes app/DB/Redis and synthetic keys",
+      "fixture_mapping": [
+        "scoped-credential",
+        "unrelated-secret-proof",
+        "simulated-provider-use",
+        "credential-rotate",
+        "old-credential-revoke",
+        "dependency-outage",
+        "inspect-finalize"
+      ],
+      "admission_verdict": "ADMITTED",
+      "reason": "Meets research/admission requirements for core/community LAB path; no Enterprise-only feature may be assumed.",
+      "immutable_artifact": {
+        "candidate_id": "candidate-infisical-agent-vault",
+        "status": "RESOLVED",
+        "tag_ref": "docker.io/infisical/infisical:v0.165.16",
+        "index_digest": null,
+        "linux_amd64_digest": "sha256:2755365ad9b4745b1aae45529f4b3559c21e56957a3adc9461cfb8170b4d3fe4",
+        "media_type": "application/vnd.oci.image.index.v1+json"
+      },
+      "evidence_refs": [
+        "https://github.com/Infisical/infisical/releases",
+        "https://github.com/Infisical/infisical/blob/main/LICENSE",
+        "https://infisical.com/blog/introducing-machine-identities",
+        "https://infisical.com/platform/secrets-management",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
+      ]
+    },
+    {
+      "candidate_id": "candidate-openbao",
+      "lane": "phase3b-credential-broker",
+      "version": "2.7.1",
+      "license": "MPL-2.0",
+      "license_review": "PASS_FOR_LAB",
+      "maintenance_review": "PASS_CURRENT_SECURITY_PATCH_2026-10-01",
+      "security_trust_review": "PASS_FOR_LAB; 2.7.1 includes security fixes; AppRole is machine-oriented; token/lease revocation is explicit",
+      "capability_match": "PASS machine auth, policy-scoped tokens/secrets, leases and revocation",
+      "platform_feasibility": "PASS linux/amd64 OCI",
+      "isolation_plan": "internal LAB network only; synthetic AppRole and synthetic secrets; no host port; root token bootstrap confined to LAB and revoked after setup in destructive fixture",
+      "resource_cost_plan": "capture docker stats, storage delta, startup, network and operator minutes; recurring software cost=0",
+      "rollback_uninstall_plan": "file/Raft snapshot path for later destructive benchmark; admission smoke may use disposable dev storage; teardown removes storage and bootstrap material",
+      "fixture_mapping": [
+        "scoped-credential",
+        "unrelated-secret-proof",
+        "simulated-provider-use",
+        "credential-rotate",
+        "old-credential-revoke",
+        "dependency-outage",
+        "inspect-finalize"
+      ],
+      "admission_verdict": "ADMITTED",
+      "reason": "Meets research/admission requirements; later fixture must prove root-token retirement, exact policy scope and revocation.",
+      "immutable_artifact": {
+        "candidate_id": "candidate-openbao",
+        "status": "RESOLVED",
+        "tag_ref": "ghcr.io/openbao/openbao:2.7.1",
+        "index_digest": null,
+        "linux_amd64_digest": "sha256:a36ea8c27f0dcff5757664ad080425f96d3b6b2f33db3e76c4e2d3112fb17005",
+        "media_type": "application/vnd.oci.image.index.v1+json"
+      },
+      "evidence_refs": [
+        "https://openbao.org/community/release-notes/2-7-0/",
+        "https://openbao.org/downloads/?version=v2.7.1",
+        "https://openbao.org/docs/auth/approle/",
+        "https://openbao.org/docs/commands/token/revoke/",
+        "https://github.com/openbao/openbao/blob/main/LICENSE",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json"
+      ]
+    }
+  ],
+  "next_gate": "ADMITTED_TO_LAB_SMOKE: versioned definitions, LAB-only synthetic credentials, bounded network/storage, health probe, teardown receipt and resource capture."
+}

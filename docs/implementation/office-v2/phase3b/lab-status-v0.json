@@ -1,0 +1,141 @@
+{
+  "schema": "velvetos.office-v2.phase3b-lab-status.v0",
+  "captured_at": "2026-10-06T20:39:46.6258198Z",
+  "production_authority_change": false,
+  "production_writer_change": false,
+  "production_credentials_used": false,
+  "winner_selected": true,
+  "lanes": {
+    "identity_provider": {
+      "status": "DESTRUCTIVE_PASS_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY",
+      "winner": "candidate-zitadel",
+      "fallback": "candidate-keycloak",
+      "specialized_reserve": "candidate-authentik",
+      "lane_verdict_ref": "docs/implementation/office-v2/phase3b/identity-lane-verdict-v0.json",
+      "lab_candidates": [
+        "candidate-zitadel",
+        "candidate-keycloak",
+        "candidate-authentik"
+      ],
+      "deferred": [],
+      "receipt_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/zitadel-lab-smoke-pass.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/keycloak-lab-smoke-pass.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authentik-lab-smoke-pass.json"
+      ],
+      "cleanup_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/zitadel-smoke-clean9-cleanup.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/keycloak-smoke-task-cleanup.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authentik-smoke-task-cleanup.json"
+      ],
+      "pending_candidates": []
+    },
+    "authorization_policy": {
+      "status": "DESTRUCTIVE_PASS_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY",
+      "winner": "candidate-opa",
+      "fallback": "candidate-cedar",
+      "lane_verdict_ref": "docs/implementation/office-v2/phase3b/authorization-lane-verdict-v0.json",
+      "lab_candidates": [
+        "candidate-openfga",
+        "candidate-opa",
+        "candidate-cedar"
+      ],
+      "receipt_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-lab-smoke-pass.json",
+      "cleanup_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-smoke-task-cleanup.json"
+    },
+    "credential_broker": {
+      "status": "DESTRUCTIVE_PASS_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY",
+      "winner": "candidate-openbao",
+      "fallback": "candidate-infisical-agent-vault",
+      "lane_verdict_ref": "docs/implementation/office-v2/phase3b/credential-lane-verdict-v0.json",
+      "lab_candidates": [
+        "candidate-infisical-agent-vault",
+        "candidate-openbao"
+      ],
+      "pending_candidates": [],
+      "receipt_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/infisical-lab-smoke-pass.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/openbao-lab-smoke-pass.json"
+      ],
+      "cleanup_refs": [
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/infisical-smoke-task-cleanup.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/openbao-smoke-task-cleanup.json"
+      ]
+    }
+  },
+  "next_gate": "Phase 3B pre-SHADOW readiness is complete: runtime readiness and the full 116/116 exact regression are PASS without activation. SHADOW remains unpromoted and blocked solely on a separate explicit project-state promotion receipt.",
+  "winner": "composition-zitadel-opa-openbao",
+  "composition_gate": {
+    "status": "PASS",
+    "fixture_id": "identity-security-destructive-20-step",
+    "winner": "composition-zitadel-opa-openbao",
+    "primary": {
+      "identity_provider": "candidate-zitadel",
+      "authorization_policy": "candidate-opa",
+      "credential_broker": "candidate-openbao"
+    },
+    "validated_fallback_swaps": {
+      "identity_provider": "candidate-keycloak",
+      "authorization_policy": "candidate-cedar",
+      "credential_broker": "candidate-infisical-agent-vault"
+    },
+    "cartesian_exhaustion_required": false,
+    "verdict_ref": "docs/implementation/office-v2/phase3b/composition-gate-verdict-v0.json",
+    "evidence_refs": [
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-winners-zitadel-opa-openbao.json",
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-fallback-keycloak-opa-openbao.json",
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-fallback-zitadel-cedar-openbao.json",
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-fallback-zitadel-opa-infisical.json"
+    ],
+    "production_authority_change": false
+  },
+  "integration_wiring": {
+    "status": "PASS",
+    "mode": "LAB_SIMULATION_ONLY",
+    "wiring_ref": "docs/implementation/office-v2/phase3b/integration-wiring-v0.json",
+    "promotion_gate_ref": "docs/implementation/office-v2/phase3b/promotion-gates-v0.json",
+    "reference_implementation": "scripts/vf_office_v2_security_wiring.py",
+    "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/integration-wiring-validation.json",
+    "selftest_cases": 7,
+    "network_calls_allowed": false,
+    "external_effects_allowed": false,
+    "production_credentials_bound": false,
+    "shadow_promoted": false,
+    "pilot_promoted": false,
+    "production_promoted": false,
+    "production_authority_change": false
+  },
+  "persistence_readiness": {
+    "status": "PASS",
+    "scope": "LAB_ONLY_SYNTHETIC",
+    "readiness_ref": "docs/implementation/office-v2/phase3b/shadow-readiness-v0.json",
+    "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/persistence-readiness.json",
+    "evidence_sha256": "c8093f463c293d851109de73d1c60a688efc918ea719d782916bbfda2c752da7",
+    "opa": "PASS",
+    "openbao": "PASS",
+    "zitadel": "PASS",
+    "host_port_bindings_empty": true,
+    "production_credentials_used": false,
+    "production_secret_material_used": false,
+    "production_authority_change": false,
+    "shadow_promoted": false
+  },
+  "runtime_readiness": {
+    "status": "PASS_NOT_ACTIVATED",
+    "contract_ref": "docs/implementation/office-v2/phase3b/runtime-readiness-v0.json",
+    "validator": "scripts/vf_office_v2_security_shadow_doctor.py",
+    "selftest_cases": 10,
+    "health_fail_closed": true,
+    "service_plan_complete": true,
+    "services_installed": false,
+    "services_enabled": false,
+    "rollback_to_incumbents_selftest": true,
+    "dpapi_cross_process_probe": "PASS",
+    "dpapi_evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/dpapi-key-material-probe.json",
+    "dpapi_evidence_sha256": "89b771f66b22ff1841ad83e84d4d2a161aa226fc01a5debdfb0fc1e2d90c9a92",
+    "external_effects_allowed": false,
+    "production_credentials_bound": false,
+    "production_authority_change": false,
+    "shadow_promoted": false
+  }
+}

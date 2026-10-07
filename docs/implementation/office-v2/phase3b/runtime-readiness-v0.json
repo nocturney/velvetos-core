@@ -1,0 +1,140 @@
+{
+  "schema": "velvetos.office-v2.phase3b-runtime-readiness.v0",
+  "status": "PRE_SHADOW_RUNTIME_READINESS_PASS_NOT_ACTIVATED",
+  "selected_composition": "composition-zitadel-opa-openbao",
+  "mode": "PRE_SHADOW_ONLY",
+  "current_authority": "NONE",
+  "production_authority_change": false,
+  "production_writer_change": false,
+  "production_credentials_bound": false,
+  "production_secret_material_allowed": false,
+  "external_effects_allowed": false,
+  "shadow_promoted": false,
+  "runtime_activation_allowed": false,
+  "health_contract": {
+    "status": "PASS_CONTRACT_AND_EXISTING_LAB_OUTAGE_EVIDENCE",
+    "aggregate_rule": "READY only when identity, authorization and broker are each healthy and a synthetic end-to-end probe passes; every unknown/unhealthy state is DENY",
+    "identity_provider": {
+      "candidate": "candidate-zitadel",
+      "probe": "internal ZITADEL readiness plus synthetic identity issuance/readback",
+      "success": "ready=true and synthetic identity operation PASS",
+      "failure_action": "DENY_SHADOW_RESULT"
+    },
+    "authorization_policy": {
+      "candidate": "candidate-opa",
+      "probe": "internal OPA health plus known ALLOW and known DENY policy checks",
+      "success": "health PASS and both expected decisions match",
+      "failure_action": "DENY_SHADOW_RESULT"
+    },
+    "credential_broker": {
+      "candidate": "candidate-openbao",
+      "probe": "internal OpenBao health/unsealed state plus exact-scope synthetic read",
+      "success": "health=active and exact-scope synthetic read PASS",
+      "failure_action": "DENY_SHADOW_RESULT"
+    },
+    "outage_rule": "No component failure may trigger an alternate engine to seek ALLOW. The shadow result is discarded and the production incumbent path remains canonical.",
+    "source_evidence_refs": [
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-winners-zitadel-opa-openbao.json",
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/persistence-readiness.json"
+    ]
+  },
+  "service_autostart_plan": {
+    "status": "PLAN_COMPLETE_NOT_INSTALLED_NOT_ENABLED",
+    "windows_permanent_task": "OfficeV2 LAB Lease",
+    "new_permanent_windows_tasks_allowed": false,
+    "wsl_distribution": "OfficeV2-Lab",
+    "systemd_target": "officev2-phase3b-shadow.target",
+    "planned_units": [
+      "officev2-phase3b-postgres.service",
+      "officev2-phase3b-zitadel.service",
+      "officev2-phase3b-opa.service",
+      "officev2-phase3b-openbao.service",
+      "officev2-phase3b-shadow-health.service"
+    ],
+    "installed": false,
+    "enabled": false,
+    "host_port_bindings_allowed": false,
+    "restart_policy": "on-failure-with-bounded-backoff",
+    "operator_inspection": [
+      "query OfficeV2 LAB Lease state from Windows Task Scheduler",
+      "inspect systemd unit state inside OfficeV2-Lab",
+      "inspect sanitized health receipt and component container status",
+      "never infer healthy from process existence alone"
+    ],
+    "activation_rule": "Do not install or enable the target before a separate explicit SHADOW promotion receipt."
+  },
+  "key_material_handling": {
+    "status": "PASS_DPAPI_CROSS_PROCESS_PROBE_NO_RUNTIME_SECRETS",
+    "credential_class": "LAB_ONLY_SECRET",
+    "encrypted_store": "D:/Velvet/OfficeV2Lab/state/phase3b-security/secrets",
+    "encryption": "Windows DPAPI CurrentUser under the same Chris user context as OfficeV2 LAB Lease",
+    "acl_policy": "inheritance removed; current user and SYSTEM only",
+    "plaintext_runtime_path": "/run/officev2/phase3b",
+    "plaintext_runtime_policy": "tmpfs/runtime-only, mode 0700 directory and 0600 files, written via stdin not CLI args, removed on stop",
+    "persistent_items": [
+      "ZITADEL master key",
+      "ZITADEL LAB admin machine-key JSON",
+      "OpenBao unseal key",
+      "OpenBao synthetic SHADOW AppRole secret"
+    ],
+    "not_persisted": [
+      "OpenBao bootstrap root token after scoped bootstrap is complete",
+      "bearer tokens",
+      "production provider credentials",
+      "production secrets"
+    ],
+    "git_allowed": false,
+    "artifact_evidence_allowed": false,
+    "log_allowed": false,
+    "fallback_if_dpapi_unavailable": "BLOCK_CANDIDATE_RUNTIME_KEEP_INCUMBENTS_CANONICAL",
+    "prelogin_claimed": false,
+    "probe_evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/dpapi-key-material-probe.json",
+    "probe_evidence_sha256": "89b771f66b22ff1841ad83e84d4d2a161aa226fc01a5debdfb0fc1e2d90c9a92",
+    "cross_process_verified": true,
+    "plaintext_hash_match": true,
+    "encrypted_blob_removed_after_probe": true,
+    "acl_identities": ["CHRIS\\Chris", "NT AUTHORITY\\SYSTEM"]
+  },
+  "rollback": {
+    "status": "PASS_CONTRACT_SELFTEST_INCUMBENTS_REMAIN_CANONICAL",
+    "identity_incumbent": "incumbent-current-service-identity",
+    "authorization_incumbent": "incumbent-current-authorization",
+    "credential_incumbent": "incumbent-current-credential-management",
+    "canonical_effect_authority_during_shadow": "production incumbents only",
+    "candidate_outputs": "observer-only sanitized shadow receipts",
+    "rollback_action": [
+      "stop/disable the candidate shadow target",
+      "discard candidate shadow decisions and credential-resolution results",
+      "retain existing provider-native identity paths",
+      "retain VelvetOS policy registry/domain-native authorization",
+      "retain provider-native credential/secret-store paths",
+      "do not migrate, rewrite or rebind production state"
+    ],
+    "automatic_fallback_from_canonical_deny": false,
+    "authority_transfer_required_for_rollback": false
+  },
+  "evidence_contract": {
+    "allowed": [
+      "component state",
+      "decision outcome",
+      "correlation id",
+      "principal hash",
+      "policy revision/hash",
+      "credential scope metadata",
+      "backup/evidence hashes",
+      "service state",
+      "rollback selector state"
+    ],
+    "forbidden": [
+      "raw token",
+      "raw secret",
+      "private key",
+      "master key",
+      "unseal key",
+      "AppRole secret id",
+      "authorization header"
+    ]
+  },
+  "reference_validator": "scripts/vf_office_v2_security_shadow_doctor.py",
+  "promotion_boundary": "A runtime-readiness PASS is still pre-SHADOW. It never installs/enables services and never advances CURRENT.json; an explicit project-state SHADOW promotion receipt remains mandatory."
+}

@@ -1,0 +1,66 @@
+{
+  "schema": "velvetos.office-v2.phase2-scorecard.v0",
+  "candidate_id": "candidate-opa",
+  "fixture_id": "identity-security-destructive-20-step",
+  "run_id": "20261006T140626Z-155063",
+  "captured_at": "2026-10-06T14:59:03.486553Z",
+  "fitness": {
+    "score_0_5": 5.0,
+    "notes": [
+      "PASS on all 20 frozen identity-security steps while authorization_policy was the candidate lane.",
+      "Direct principal/action/resource policy semantics match the Office v2 authorization contract without translating the core decision into a relationship graph.",
+      "Policy revocation and dependency outage both produced subsequent DENY behavior."
+    ]
+  },
+  "safety": {
+    "score_0_5": 5.0,
+    "notes": [
+      "Default-deny semantics, wrong-principal/action/scope denial, policy-revoke denial and outage fail-closed were all empirically verified.",
+      "Internal-only LAB network, no host port bindings, no production credentials, no production authority, and no raw secret/token material in the receipt.",
+      "OPA's decision-log/masking model aligns with the contract's correlated operator-visible receipt requirement."
+    ]
+  },
+  "operability": {
+    "score_0_5": 4.8,
+    "notes": [
+      "Single stateless pinned container with read-only policy mount and no state database in the tested core decision path.",
+      "Policy/config rollback is a versioned bundle/container rollback rather than a data-store migration.",
+      "Observed destructive fixture wall time was 7.308 seconds; terminal sample showed about 12.93 MiB container memory."
+    ]
+  },
+  "evidence_quality": {
+    "score_0_5": 4.6,
+    "notes": [
+      "Complete 20-step correlated receipt, policy-revision hashes, deny proofs, outage proof and terminal Docker stats are retained.",
+      "CPU/RAM/network/storage peak series were not captured; unavailable fields remain null rather than being scored as zero."
+    ]
+  },
+  "resources": {
+    "wall_seconds": 7.308,
+    "cpu_peak_pct": null,
+    "ram_peak_mb": null,
+    "gpu_peak_pct": null,
+    "vram_peak_mb": null,
+    "storage_delta_mb": null,
+    "network_mb": null,
+    "external_cost": 0.0,
+    "recurring_cost": 0.0,
+    "operator_minutes": 0.0
+  },
+  "rollback": {
+    "status": "PASS",
+    "notes": [
+      "Rollback is previous immutable OPA image plus previous signed/versioned policy/config bundle.",
+      "The core benchmark path has no persistent database to restore."
+    ]
+  },
+  "security_findings": [
+    "No production credentials or production authority used.",
+    "No host ports; policy mounted read-only; synthetic stubs only for the other two roles."
+  ],
+  "operations_findings": [
+    "Evidence: D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-destructive-candidate-opa.json",
+    "Best direct fit to the frozen generic authorization contract and its decision-receipt requirement."
+  ],
+  "verdict": "ADVANCE"
+}

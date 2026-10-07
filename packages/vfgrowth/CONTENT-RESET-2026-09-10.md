@@ -44,9 +44,11 @@ Any prior future candidate assignment (G004/G006/G007/G008/G009/G010/etc.), cale
 
 ## Rights / model-license operating scope
 
-Owner decision 2026-09-10: owner-captured `showcase` content of a printed object is **not blocked by a blanket model-license/public-release-rights gate** merely because commercial-license metadata for the model is absent.
+Owner decision updated 2026-10-06: Velvet Factory uses printed models to demonstrate studio capability as well as for possible future products. **Model-license metadata for a non-Israeli creator is not a blocker for research, test printing, owner-captured portfolio/showcase content, or candidate ranking**, including NC/ND/unknown-license metadata.
 
-The rights/privacy gate remains active for third-party media, UGC, identifiable-person/privacy issues, known rights restrictions/disputes, or other actual external-rights concerns. Model-license review re-enters when public content explicitly offers the depicted model for sale, is paid promotion of that model, or a known restriction exists.
+The explicit owner-review exception is an **Israeli creator or Israeli brand**. Those cases are `human_required` and are checked with Christian individually before public/commercial use.
+
+Rights/privacy gates still apply to stolen/pirated material, third-party media/UGC, identifiable-person privacy, or a concrete known dispute. A future actual sale of a third-party model can trigger a transaction-specific rights check if needed; the possibility of a future sale does not pre-block the model today.
 
 Private inbound conversations are separate from public editorial/showcase framing. This is an internal workflow policy, not a legal determination about any particular license.
 

@@ -9,7 +9,7 @@ This layer adapts useful patterns from `browser-use/video-use`, Remotion and Man
 1. **Edit Intelligence** (`scripts/vf_video_edit.py`) prepares a deterministic base cut from real/approved media staged for the job. It borrows useful production rules from video-use: audio-first decisions, word-boundary cuts when transcript evidence exists, 30–200ms edge padding, 30ms audio fades, rendered-output inspection and at most three repair passes.
 2. **HyperFrames remains the canonical master compositor.** Hebrew RTL overlays, kinetic typography, multi-shot composition and the social master continue through `HYPERFRAMES-BACKEND.json`.
 3. **FFmpeg/SVG remains the deterministic fallback** for simple overlays/captions and emergency render equivalence.
-4. **Remotion is an optional animation-slot engine, not a renderer replacement.** It is license-gated. Do not install or use it commercially until `vlicense` records eligibility/company-license evidence.
+4. **Remotion is an optional animation-slot engine, not a renderer replacement.** Current owner business headcount is 1, so it is **Free License eligible** for commercial use and automation. Re-check only if relevant project/company headcount reaches 4+ or upstream terms change.
 5. **Manim is an optional technical/explainer slot engine.** It is appropriate for diagrams, measurements and geometry explanations, not as proof that a physical print/test/customer result happened.
 
 ## Brand assets for compositions
@@ -45,7 +45,7 @@ python3 scripts/vf_video_edit.py inspect request.json
 
 ## Remotion license gate
 
-Remotion uses a `latest-compatible` policy. `4.0.523` is retained only as the version against which the current integration/license review was recorded, not as an execution pin. The upstream commercial license has organization-size conditions rather than being an unrestricted MIT-style production license, so any future activation must re-check current license eligibility and pass the adapter smoke before use. It remains `license-gated` and subordinate to Foundry authority/QA.
+Remotion uses a `latest-compatible` policy. `4.0.523` is retained only as the version against which the current integration/license review was recorded, not as an execution pin. Owner/business headcount is currently 1; Remotion's current Free License covers individuals and organizations up to 3 people, including commercial use and automation. Re-check eligibility at 4+ relevant people or if upstream terms change. Remotion remains optional and subordinate to Foundry authority/QA.
 
 ## Manim host gate
 

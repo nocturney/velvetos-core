@@ -1,0 +1,246 @@
+{
+  "schema": "velvetos.office-v2.phase3b-identity-security-destructive-fixture.v0",
+  "fixture_id": "identity-security-destructive-20-step",
+  "status": "CONTRACT_V0",
+  "vendor_specific_fields_forbidden": true,
+  "production_credentials_forbidden": true,
+  "production_effects_forbidden": true,
+  "effect_adapter": "LAB_LOCAL_SIMULATED_RESOURCE_AND_SYNTHETIC_SECRETS_ONLY",
+  "lane_strategy": {
+    "stage_a": "Benchmark each lane independently while the other two roles use deterministic neutral LAB stubs.",
+    "stage_b": "Run shared composition fixture for selected winner/fallback combinations; lane PASS alone cannot close Phase 3B.",
+    "cartesian_exhaustion_required": false,
+    "reason": "Avoid 3x3x2 combinatorial testing while still proving selected-role interoperability."
+  },
+  "steps": [
+    {
+      "n": 1,
+      "id": "identity-bootstrap",
+      "capability": "identity.service.authenticate",
+      "action": "create LAB-only service identity using synthetic/bootstrap material",
+      "expected": [
+        "service_identity_created"
+      ]
+    },
+    {
+      "n": 2,
+      "id": "identity-token",
+      "capability": "identity.service.authenticate",
+      "action": "obtain short-lived LAB identity assertion/token",
+      "expected": [
+        "identity_assertion_receipt"
+      ]
+    },
+    {
+      "n": 3,
+      "id": "identity-verify",
+      "capability": "identity.service.verify",
+      "action": "verify issuer/audience/subject/expiry and bind principal",
+      "expected": [
+        "identity_verification_receipt"
+      ]
+    },
+    {
+      "n": 4,
+      "id": "authorized-check",
+      "capability": "authorization.check",
+      "action": "evaluate an explicitly allowed action/resource",
+      "expected": [
+        "allow_decision_receipt"
+      ]
+    },
+    {
+      "n": 5,
+      "id": "decision-correlation",
+      "capability": "authorization.decision_receipt",
+      "action": "prove decision id correlates principal/action/resource/policy revision",
+      "expected": [
+        "decision_correlation_receipt"
+      ]
+    },
+    {
+      "n": 6,
+      "id": "anonymous-deny",
+      "capability": "security.fail_closed",
+      "action": "submit request without identity",
+      "expected": [
+        "anonymous_deny_receipt"
+      ]
+    },
+    {
+      "n": 7,
+      "id": "wrong-principal-deny",
+      "capability": "authorization.check",
+      "action": "submit same action using wrong service identity",
+      "expected": [
+        "wrong_principal_deny_receipt"
+      ]
+    },
+    {
+      "n": 8,
+      "id": "wrong-action-deny",
+      "capability": "authorization.check",
+      "action": "submit ungranted action for valid identity",
+      "expected": [
+        "wrong_action_deny_receipt"
+      ]
+    },
+    {
+      "n": 9,
+      "id": "cross-scope-deny",
+      "capability": "authorization.check",
+      "action": "request resource outside authorized tenant/project/scope",
+      "expected": [
+        "cross_scope_deny_receipt"
+      ]
+    },
+    {
+      "n": 10,
+      "id": "scoped-credential",
+      "capability": "credential.issue_or_fetch",
+      "action": "request synthetic credential for the allowed exact resource",
+      "expected": [
+        "scoped_credential_receipt"
+      ]
+    },
+    {
+      "n": 11,
+      "id": "unrelated-secret-proof",
+      "capability": "credential.scope",
+      "action": "attempt sibling/unrelated secret discovery and access",
+      "expected": [
+        "no_unrelated_secret_exposure_proof"
+      ]
+    },
+    {
+      "n": 12,
+      "id": "simulated-provider-use",
+      "capability": "credential.issue_or_fetch",
+      "action": "use scoped synthetic credential against LAB-local simulated provider",
+      "expected": [
+        "simulated_provider_receipt"
+      ]
+    },
+    {
+      "n": 13,
+      "id": "credential-rotate",
+      "capability": "credential.rotate",
+      "action": "rotate the synthetic credential without broadening scope",
+      "expected": [
+        "credential_rotation_receipt"
+      ]
+    },
+    {
+      "n": 14,
+      "id": "old-credential-revoke",
+      "capability": "credential.revoke",
+      "action": "prove old credential can no longer access the simulated provider",
+      "expected": [
+        "old_credential_revoked_receipt"
+      ]
+    },
+    {
+      "n": 15,
+      "id": "identity-revoke",
+      "capability": "identity.service.revoke",
+      "action": "revoke the service identity",
+      "expected": [
+        "identity_revocation_receipt"
+      ]
+    },
+    {
+      "n": 16,
+      "id": "revoked-identity-deny",
+      "capability": "security.fail_closed",
+      "action": "prove revoked identity cannot obtain ALLOW or new credentials",
+      "expected": [
+        "revoked_identity_deny_receipt"
+      ]
+    },
+    {
+      "n": 17,
+      "id": "new-identity-resume",
+      "capability": "identity.service.rotate",
+      "action": "issue replacement identity material and restore only intended scope",
+      "expected": [
+        "replacement_identity_receipt"
+      ]
+    },
+    {
+      "n": 18,
+      "id": "policy-revoke",
+      "capability": "authorization.check",
+      "action": "change policy from ALLOW to DENY and prove subsequent decision observes new revision",
+      "expected": [
+        "policy_revocation_receipt"
+      ]
+    },
+    {
+      "n": 19,
+      "id": "dependency-outage",
+      "capability": "security.fail_closed",
+      "action": "make policy/broker dependency unavailable and prove no permissive fallback",
+      "expected": [
+        "outage_fail_closed_receipt"
+      ]
+    },
+    {
+      "n": 20,
+      "id": "inspect-finalize",
+      "capability": "security.audit.inspect",
+      "action": "inspect correlated audit trail and finalize with no raw secrets, plus backup/upgrade/rollback assessment",
+      "expected": [
+        "inspection_snapshot",
+        "secret_redaction_proof",
+        "rollback_assessment"
+      ]
+    }
+  ],
+  "success_contract": [
+    "all 20 steps have correlated evidence",
+    "default outcome is DENY",
+    "authentication never substitutes for authorization",
+    "valid identity plus wrong action/resource is denied",
+    "credential access is exact-scope and unrelated synthetic secrets remain undiscoverable",
+    "identity and credential revocation are observable and effective",
+    "policy revocation changes subsequent decisions without permissive cache fallback",
+    "dependency outage fails closed",
+    "no raw secret/token/private key is present in receipts or logs",
+    "operator inspection and backup/upgrade/rollback assessment are recorded",
+    "selected cross-role composition passes before Phase 3B gate closes"
+  ],
+  "required_evidence": [
+    "service_identity_created",
+    "identity_assertion_receipt",
+    "identity_verification_receipt",
+    "allow_decision_receipt",
+    "decision_correlation_receipt",
+    "anonymous_deny_receipt",
+    "wrong_principal_deny_receipt",
+    "wrong_action_deny_receipt",
+    "cross_scope_deny_receipt",
+    "scoped_credential_receipt",
+    "no_unrelated_secret_exposure_proof",
+    "simulated_provider_receipt",
+    "credential_rotation_receipt",
+    "old_credential_revoked_receipt",
+    "identity_revocation_receipt",
+    "revoked_identity_deny_receipt",
+    "replacement_identity_receipt",
+    "policy_revocation_receipt",
+    "outage_fail_closed_receipt",
+    "inspection_snapshot",
+    "secret_redaction_proof",
+    "rollback_assessment"
+  ],
+  "resource_capture": [
+    "wall_seconds",
+    "cpu_peak_pct",
+    "ram_peak_mb",
+    "storage_delta_mb",
+    "network_mb",
+    "external_cost",
+    "recurring_cost",
+    "operator_minutes"
+  ]
+}

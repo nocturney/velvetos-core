@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-06T06:02:10.448Z",
+  "updated_at": "2026-10-06T13:48:03.498551Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 72,
+  "candidate_count": 82,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -748,21 +748,41 @@
       "name": "Infisical Agent Vault",
       "category": "RESEARCH_CANDIDATE",
       "provenance_class": "PRIOR_RESEARCH",
-      "lifecycle_state": "RESEARCHED",
-      "decision_verdict": "BENCHMARK_REQUIRED",
-      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
-      "runtime_verification": "NOT_RUN",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "verdict_reason": "Phase 3B isolated core-only LAB smoke PASS with synthetic machine identity and secrets; scoped read, unrelated-project denial, viewer write denial, credential rotation/revocation, identity deletion and post-delete denial verified. Destructive fixture/scorecard is still required before winner selection or SHADOW.",
+      "runtime_verification": "PASS",
       "authority_role": "NONE",
       "capability_tags": [
-        "credential-management"
+        "credential-management",
+        "machine-identity",
+        "revocation",
+        "secrets"
       ],
       "platform_constraints": [],
-      "shortlist_lanes": [],
+      "shortlist_lanes": [
+        "phase3b-credential-broker"
+      ],
       "evidence_refs": [
-        "prior-research://office-v2-master-plan"
+        "prior-research://office-v2-master-plan",
+        "https://infisical.com/blog/introducing-machine-identities",
+        "https://infisical.com/platform/secrets-management",
+        "docs/implementation/office-v2/phase3b/admission-v0.json",
+        "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
+        "https://github.com/Infisical/infisical/releases",
+        "https://github.com/Infisical/infisical/blob/main/LICENSE",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/infisical-lab-smoke-pass.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/infisical-smoke-task-cleanup.json"
       ],
       "notes": [
-        "not preselected"
+        "not preselected",
+        "Phase 3B credential-broker challenger; immutable pin and core-only LAB smoke verified.",
+        "Phase 3B admission research PASS; production authority remains NONE.",
+        "Agent Vault / Enterprise-only features were not assumed in the LAB path.",
+        "Core-only LAB smoke PASS; destructive fixture pending."
       ],
       "original_office_v2_verdict": "BENCHMARK"
     },
@@ -1783,6 +1803,402 @@
         "Composition baseline, not a product winner declaration."
       ],
       "original_office_v2_verdict": null
+    },
+    {
+      "candidate_id": "incumbent-current-service-identity",
+      "source_item_id": null,
+      "name": "Current provider-native service identity composition",
+      "category": "INCUMBENT_COMPOSITION",
+      "provenance_class": "LIVE_DERIVED_INCUMBENT",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Current bounded provider-native identities remain production incumbents until a Phase 3B replacement passes promotion.",
+      "runtime_verification": "PASS",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "service-identity",
+        "oidc",
+        "provider-native-iam"
+      ],
+      "platform_constraints": [
+        "provider-specific"
+      ],
+      "shortlist_lanes": [
+        "phase3b-identity-provider"
+      ],
+      "evidence_refs": [
+        "scripts/check-delivery-approval.py",
+        "office/ledger/README.md",
+        "packages/velvetos/WINDOWS-PATH-CONTRACT.md"
+      ],
+      "notes": [
+        "Composition includes existing GCP service-account/OIDC/WIF and connector-native identity paths; it is not a central identity provider.",
+        "Derived registry entry only; no new authority is created."
+      ],
+      "original_office_v2_verdict": null
+    },
+    {
+      "candidate_id": "incumbent-current-authorization",
+      "source_item_id": null,
+      "name": "VelvetOS current policy registry and domain-native decision composition",
+      "category": "INCUMBENT_COMPOSITION",
+      "provenance_class": "LIVE_DERIVED_INCUMBENT",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Current canonical policy registry and domain-native decision paths remain the authorization incumbent until an admitted replacement is explicitly promoted.",
+      "runtime_verification": "PASS",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "authorization",
+        "policy-decision",
+        "decision-receipt"
+      ],
+      "platform_constraints": [],
+      "shortlist_lanes": [
+        "phase3b-authorization-policy"
+      ],
+      "evidence_refs": [
+        "packages/velvetos/policy/policy-registry.json",
+        "packages/velvetos/PROJECT-REQUEST-GATE.md",
+        "packages/velvetos/policy/schema/action-receipt.schema.json"
+      ],
+      "notes": [
+        "Current architecture deliberately has no parallel OPA/policy daemon.",
+        "Derived registry entry only; existing domain authority remains canonical."
+      ],
+      "original_office_v2_verdict": null
+    },
+    {
+      "candidate_id": "incumbent-current-credential-management",
+      "source_item_id": null,
+      "name": "Current provider-native credential and secret-store composition",
+      "category": "INCUMBENT_COMPOSITION",
+      "provenance_class": "LIVE_DERIVED_INCUMBENT",
+      "lifecycle_state": "PRODUCTION",
+      "decision_verdict": "KEEP_INCUMBENT",
+      "verdict_reason": "Existing bounded provider-native secret stores and credential paths remain incumbent; Phase 3B evaluates whether a broker improves scope, rotation and revocation without exposing unrelated secrets.",
+      "runtime_verification": "WARN",
+      "authority_role": "PRODUCTION_INCUMBENT",
+      "capability_tags": [
+        "credential-management",
+        "secret-storage",
+        "credential-scoping"
+      ],
+      "platform_constraints": [
+        "provider-specific",
+        "Windows"
+      ],
+      "shortlist_lanes": [
+        "phase3b-credential-broker"
+      ],
+      "evidence_refs": [
+        "packages/velvetos/WINDOWS-PATH-CONTRACT.md",
+        "scripts/check-agent-surface-security.py",
+        "scripts/check-delivery-approval.py"
+      ],
+      "notes": [
+        "The incumbent is distributed rather than a single broker.",
+        "WARN reflects fragmentation, not a known credential leak."
+      ],
+      "original_office_v2_verdict": null
+    },
+    {
+      "source_item_id": null,
+      "provenance_class": "PHASE3B_CURRENT_RESEARCH",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "runtime_verification": "PASS",
+      "authority_role": "NONE",
+      "platform_constraints": [],
+      "notes": [
+        "No winner or production authority is granted by registry intake.",
+        "Owner resolved AGPL concern on 2026-10-06: separate-service/API use is acceptable; copyleft is tracked as an obligation, not a rejection reason.",
+        "Isolated LAB smoke PASS; client credentials, wrong-secret denial and deleted-identity denial verified; destructive fixture pending."
+      ],
+      "original_office_v2_verdict": null,
+      "candidate_id": "candidate-zitadel",
+      "name": "ZITADEL",
+      "category": "IDENTITY_PROVIDER",
+      "verdict_reason": "Phase 3B isolated LAB smoke PASS with synthetic service identity material only; AGPL service/API boundary remains accepted. Destructive fixture/scorecard is still required before winner selection or SHADOW.",
+      "capability_tags": [
+        "service-identity",
+        "oidc",
+        "oauth2",
+        "identity-provider"
+      ],
+      "shortlist_lanes": [
+        "phase3b-identity-provider"
+      ],
+      "evidence_refs": [
+        "https://zitadel.com/docs/guides/integrate/service-accounts/authenticate-service-accounts",
+        "https://zitadel.com/docs/self-hosting/manage/login-client",
+        "docs/implementation/office-v2/phase3b/admission-v0.json",
+        "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
+        "https://github.com/zitadel/zitadel/releases",
+        "https://github.com/zitadel/zitadel/blob/main/LICENSING.md",
+        "https://zitadel.com/docs/guides/integrate/service-accounts/client-credentials",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/zitadel-lab-smoke-pass.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/zitadel-smoke-clean9-cleanup.json"
+      ]
+    },
+    {
+      "source_item_id": null,
+      "provenance_class": "PHASE3B_CURRENT_RESEARCH",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "runtime_verification": "PASS",
+      "authority_role": "NONE",
+      "platform_constraints": [],
+      "notes": [
+        "No winner or production authority is granted by registry intake.",
+        "Phase 3B admission research PASS; production authority remains NONE.",
+        "Isolated LAB smoke PASS; destructive fixture pending."
+      ],
+      "original_office_v2_verdict": null,
+      "candidate_id": "candidate-keycloak",
+      "name": "Keycloak",
+      "category": "IDENTITY_PROVIDER",
+      "verdict_reason": "Phase 3B isolated LAB smoke PASS with synthetic identity material only; destructive fixture/scorecard still required before winner selection or SHADOW.",
+      "capability_tags": [
+        "service-identity",
+        "oidc",
+        "oauth2",
+        "identity-provider"
+      ],
+      "shortlist_lanes": [
+        "phase3b-identity-provider"
+      ],
+      "evidence_refs": [
+        "https://www.keycloak.org/2026/09/keycloak-2675-released",
+        "https://www.keycloak.org/2026/01/keycloak-2650-released",
+        "docs/implementation/office-v2/phase3b/admission-v0.json",
+        "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
+        "https://www.keycloak.org/2026/10/keycloak-2680-released",
+        "https://www.keycloak.org/docs/26.8.0/server_admin/",
+        "https://www.keycloak.org/docs/26.8.0/upgrading/",
+        "https://github.com/keycloak/keycloak",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/keycloak-lab-smoke-pass.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/keycloak-smoke-task-cleanup.json"
+      ]
+    },
+    {
+      "source_item_id": null,
+      "provenance_class": "PHASE3B_CURRENT_RESEARCH",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "runtime_verification": "PASS",
+      "authority_role": "NONE",
+      "platform_constraints": [],
+      "notes": [
+        "No winner or production authority is granted by registry intake.",
+        "Phase 3B admission research PASS; production authority remains NONE.",
+        "Isolated LAB smoke PASS; destructive fixture pending."
+      ],
+      "original_office_v2_verdict": null,
+      "candidate_id": "candidate-authentik",
+      "name": "authentik",
+      "category": "IDENTITY_PROVIDER",
+      "verdict_reason": "Phase 3B isolated LAB smoke PASS with synthetic identity material only; destructive fixture/scorecard still required before winner selection or SHADOW.",
+      "capability_tags": [
+        "service-identity",
+        "oidc",
+        "identity-provider"
+      ],
+      "shortlist_lanes": [
+        "phase3b-identity-provider"
+      ],
+      "evidence_refs": [
+        "https://docs.goauthentik.io/releases/2026.8/",
+        "docs/implementation/office-v2/phase3b/admission-v0.json",
+        "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
+        "https://docs.goauthentik.io/users-sources/user/account-types/service-accounts",
+        "https://docs.goauthentik.io/add-secure-apps/providers/oauth2/machine_to_machine",
+        "https://github.com/goauthentik/authentik/blob/main/LICENSE",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authentik-lab-smoke-pass.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authentik-smoke-task-cleanup.json"
+      ]
+    },
+    {
+      "source_item_id": null,
+      "provenance_class": "PHASE3B_CURRENT_RESEARCH",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "runtime_verification": "PASS",
+      "authority_role": "NONE",
+      "platform_constraints": [],
+      "notes": [
+        "No winner or production authority is granted by registry intake.",
+        "Phase 3B admission research PASS; production authority remains NONE.",
+        "LAB smoke pending.",
+        "Phase 3B LAB smoke PASS; no production credentials, production effects or authority.",
+        "This is not a winner verdict or SHADOW promotion."
+      ],
+      "original_office_v2_verdict": null,
+      "candidate_id": "candidate-openfga",
+      "name": "OpenFGA",
+      "category": "AUTHORIZATION_ENGINE",
+      "verdict_reason": "Phase 3B ADMITTED→LAB smoke PASS under isolated synthetic-only conditions; destructive fixture/scorecard still required before SHADOW or winner selection.",
+      "capability_tags": [
+        "authorization",
+        "relationship-based-access-control",
+        "policy-decision"
+      ],
+      "shortlist_lanes": [
+        "phase3b-authorization-policy"
+      ],
+      "evidence_refs": [
+        "https://openfga.dev/docs/getting-started/setup-openfga/docker",
+        "docs/implementation/office-v2/phase3b/admission-v0.json",
+        "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
+        "https://github.com/openfga/openfga/releases",
+        "https://github.com/openfga/openfga",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-lab-smoke-pass.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-smoke-task-cleanup.json"
+      ]
+    },
+    {
+      "source_item_id": null,
+      "provenance_class": "PHASE3B_CURRENT_RESEARCH",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "runtime_verification": "PASS",
+      "authority_role": "NONE",
+      "platform_constraints": [],
+      "notes": [
+        "No winner or production authority is granted by registry intake.",
+        "Phase 3B admission research PASS; production authority remains NONE.",
+        "LAB smoke pending.",
+        "Phase 3B LAB smoke PASS; no production credentials, production effects or authority.",
+        "This is not a winner verdict or SHADOW promotion."
+      ],
+      "original_office_v2_verdict": null,
+      "candidate_id": "candidate-opa",
+      "name": "Open Policy Agent",
+      "category": "AUTHORIZATION_ENGINE",
+      "verdict_reason": "Phase 3B ADMITTED→LAB smoke PASS under isolated synthetic-only conditions; destructive fixture/scorecard still required before SHADOW or winner selection.",
+      "capability_tags": [
+        "authorization",
+        "policy-engine",
+        "policy-decision",
+        "decision-logs"
+      ],
+      "shortlist_lanes": [
+        "phase3b-authorization-policy"
+      ],
+      "evidence_refs": [
+        "https://www.openpolicyagent.org/docs/rest-api",
+        "https://www.openpolicyagent.org/docs/management-decision-logs",
+        "docs/implementation/office-v2/phase3b/admission-v0.json",
+        "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
+        "https://github.com/open-policy-agent/opa/releases",
+        "https://www.openpolicyagent.org/docs/operations",
+        "https://github.com/open-policy-agent/opa",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-lab-smoke-pass.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-smoke-task-cleanup.json"
+      ]
+    },
+    {
+      "source_item_id": null,
+      "provenance_class": "PHASE3B_CURRENT_RESEARCH",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "runtime_verification": "PASS",
+      "authority_role": "NONE",
+      "platform_constraints": [],
+      "notes": [
+        "No winner or production authority is granted by registry intake.",
+        "Phase 3B admission research PASS; production authority remains NONE.",
+        "LAB smoke pending.",
+        "Phase 3B LAB smoke PASS; no production credentials, production effects or authority.",
+        "This is not a winner verdict or SHADOW promotion."
+      ],
+      "original_office_v2_verdict": null,
+      "candidate_id": "candidate-cedar",
+      "name": "Cedar",
+      "category": "AUTHORIZATION_ENGINE",
+      "verdict_reason": "Phase 3B ADMITTED→LAB smoke PASS under isolated synthetic-only conditions; destructive fixture/scorecard still required before SHADOW or winner selection.",
+      "capability_tags": [
+        "authorization",
+        "policy-language",
+        "rbac",
+        "abac"
+      ],
+      "shortlist_lanes": [
+        "phase3b-authorization-policy"
+      ],
+      "evidence_refs": [
+        "https://cedarpolicy.com/",
+        "https://docs.cedarpolicy.com/",
+        "docs/implementation/office-v2/phase3b/admission-v0.json",
+        "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
+        "https://github.com/cedar-policy/cedar/releases",
+        "https://docs.cedarpolicy.com/auth/authorization.html",
+        "https://github.com/cedar-policy/cedar",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-lab-smoke-pass.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-smoke-task-cleanup.json"
+      ]
+    },
+    {
+      "source_item_id": null,
+      "provenance_class": "PHASE3B_CURRENT_RESEARCH",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "runtime_verification": "PASS",
+      "authority_role": "NONE",
+      "platform_constraints": [],
+      "notes": [
+        "No winner or production authority is granted by registry intake.",
+        "Phase 3B admission research PASS; production authority remains NONE.",
+        "LAB smoke PASS with synthetic AppRole credentials, scoped read, unrelated-secret denial and token revocation proof."
+      ],
+      "original_office_v2_verdict": null,
+      "candidate_id": "candidate-openbao",
+      "name": "OpenBao",
+      "category": "CREDENTIAL_BROKER",
+      "verdict_reason": "Phase 3B LAB smoke PASS on immutable 2.7.1 artifact: AppRole scoped read succeeded, unrelated secret access denied, revoked token denied, host ports absent; destructive fixture still required before SHADOW.",
+      "capability_tags": [
+        "credential-management",
+        "secrets",
+        "machine-auth",
+        "revocation"
+      ],
+      "shortlist_lanes": [
+        "phase3b-credential-broker"
+      ],
+      "evidence_refs": [
+        "https://openbao.org/docs/concepts/auth/",
+        "https://openbao.org/docs/auth/token/",
+        "docs/implementation/office-v2/phase3b/admission-v0.json",
+        "docs/implementation/office-v2/phase3b/runtime-pins-v0.json",
+        "https://openbao.org/community/release-notes/2-7-0/",
+        "https://openbao.org/downloads/?version=v2.7.1",
+        "https://openbao.org/docs/auth/approle/",
+        "https://openbao.org/docs/commands/token/revoke/",
+        "https://github.com/openbao/openbao/blob/main/LICENSE",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+        "docs/implementation/office-v2/phase3b/identity-security-contract-v0.json",
+        "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/openbao-lab-smoke-pass.json",
+        "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/openbao-smoke-task-cleanup.json"
+      ]
     }
   ]
 }

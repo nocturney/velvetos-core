@@ -51,7 +51,7 @@
       "versionPolicy": "latest-compatible",
       "reviewedBaselineVersion": "4.0.523",
       "compatibilityGate": "license-eligibility+adapter-smoke",
-      "status": "license-gated",
+      "status": "free-license-eligible",
       "installByDefault": false,
       "masterRenderer": false,
       "useFor": [
@@ -59,7 +59,16 @@
         "component-heavy-animation",
         "specialized-react-visual"
       ],
-      "rule": "use only after license eligibility or company-license evidence is recorded; output returns to Foundry QA as an asset, never as a second orchestration path"
+      "rule": "Current owner business headcount is 1, so the Remotion Free License covers commercial use and automation. Recheck eligibility if total relevant project headcount reaches 4 or the upstream license changes; output remains subordinate to Foundry QA.",
+      "licenseEligibility": {
+        "currentVerdict": "FREE_LICENSE_ELIGIBLE",
+        "currentBusinessHeadcount": 1,
+        "freeLicenseMaxHeadcount": 3,
+        "recheckAtHeadcount": 4,
+        "commercialUseAllowed": true,
+        "automationAllowed": true,
+        "source": "https://www.remotion.dev/docs/license/pricing"
+      }
     },
     "manim": {
       "origin": "https://github.com/ManimCommunity/manim",

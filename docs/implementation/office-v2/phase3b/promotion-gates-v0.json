@@ -1,0 +1,112 @@
+{
+  "schema": "velvetos.office-v2.phase3b-promotion-gates.v0",
+  "status": "PRE_SHADOW_READY_AWAITING_EXPLICIT_PROMOTION",
+  "selected_composition": "composition-zitadel-opa-openbao",
+  "shadow_readiness_ref": "docs/implementation/office-v2/phase3b/shadow-readiness-v0.json",
+  "current_authority": "NONE",
+  "production_authority_change": false,
+  "production_writer_change": false,
+  "production_credentials_bound": false,
+  "shadow_promoted": false,
+  "pilot_promoted": false,
+  "production_promoted": false,
+  "current_project_state_must_remain": "PHASE_3A_CLOSED_GREEN__PHASE_3B_READY",
+  "integration_gate": {
+    "status": "PASS_NO_RUNTIME_PROMOTION",
+    "requires": [
+      "integration-wiring-v0.json validates against Phase 0 authority and credential-trust contracts",
+      "reference implementation selftest passes fail-closed negative controls",
+      "full canonical sensor suite remains green",
+      "no production endpoints, credentials, secret material or external effects are introduced"
+    ],
+    "grants": ["integration-contract-complete"],
+    "does_not_grant": ["SHADOW", "PILOT", "PRODUCTION_AUTHORITY", "PRODUCTION_WRITER"]
+  },
+  "shadow_gate": {
+    "status": "READY_FOR_EXPLICIT_SHADOW_PROMOTION_NOT_PROMOTED",
+    "persistence_readiness": {
+      "status": "PASS",
+      "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/persistence-readiness.json",
+      "evidence_sha256": "c8093f463c293d851109de73d1c60a688efc918ea719d782916bbfda2c752da7",
+      "opa": "PASS",
+      "openbao": "PASS",
+      "zitadel": "PASS"
+    },
+    "exact_regression": {
+      "status": "PASS",
+      "suite": "116/116",
+      "mode": "full",
+      "repository_files_unchanged": true,
+      "production_authority_change": false,
+      "shadow_promoted": false
+    },
+    "requires": [
+      "separate explicit project-state promotion receipt",
+      "persistent ZITADEL data backup and restore drill",
+      "OPA policy bundle/config backup and restore drill",
+      "OpenBao storage backup and restore drill",
+      "identity, policy and broker health probes with fail-closed outage behavior",
+      "sanitized correlated decision and credential-resolution receipts",
+      "bounded service/autostart plan and operator inspection path",
+      "rollback drill to the existing incumbent paths",
+      "zero external effects and no production credential binding during SHADOW",
+      "exact regression and negative-control suite for the promoted wiring"
+    ],
+    "completed_preconditions": [
+      "persistent ZITADEL data backup and restore drill",
+      "OPA policy bundle/config backup and restore drill",
+      "OpenBao storage backup and restore drill",
+      "sanitized correlated decision and credential-resolution receipts",
+      "identity, policy and broker health probes with fail-closed outage behavior",
+      "bounded service/autostart plan and operator inspection path",
+      "rollback drill to the existing incumbent paths",
+      "persistent LAB key-material handling outside Git plus cross-process DPAPI proof",
+      "exact regression and negative-control suite after runtime-readiness wiring"
+    ],
+    "remaining_preconditions": [
+      "separate explicit project-state promotion receipt"
+    ],
+    "forbids": [
+      "production credential binding",
+      "production external effects",
+      "authority transfer",
+      "changing canonical business truth"
+    ]
+  },
+  "pilot_gate": {
+    "status": "BLOCKED_UNTIL_SHADOW_PASS_AND_SEPARATE_PROMOTION",
+    "requires": [
+      "SHADOW promotion receipt and SHADOW evidence PASS",
+      "separate explicit PILOT promotion receipt",
+      "one bounded domain/effect scope named in the receipt",
+      "Phase 0 credential class re-binding for only the named capability",
+      "provider-native revocation and rotation drill",
+      "rollback to the incumbent path without authority ambiguity",
+      "observable decision/effect correlation",
+      "service recovery and upgrade rollback drill"
+    ],
+    "default_credential_class": "LAB_ONLY_SECRET",
+    "production_class_must_be_explicitly_rebound": true
+  },
+  "production_gate": {
+    "status": "BLOCKED_UNTIL_PILOT_PASS_AND_SEPARATE_AUTHORITY_TRANSFER",
+    "requires": [
+      "PILOT evidence PASS",
+      "explicit production authority-transfer receipt",
+      "authority-map update naming the exact production decision/effect owner",
+      "credential-trust update naming exact production credential class and scope",
+      "machine-writer and policy-architecture guards PASS",
+      "rollback and disaster-recovery evidence",
+      "full canonical sensor suite PASS on the exact promotion SHA"
+    ],
+    "implicit_promotion_allowed": false
+  },
+  "safety_invariants": [
+    "Authentication does not imply authorization.",
+    "Authorization ALLOW does not itself authorize an external effect.",
+    "Credential existence does not imply authorization.",
+    "Unknown identity, policy, scope, broker state or mutation authority fails closed.",
+    "Fallbacks preserve authority semantics and never seek ALLOW after a canonical DENY.",
+    "Versioned repository content contains references/metadata only, never production secret material."
+  ]
+}
