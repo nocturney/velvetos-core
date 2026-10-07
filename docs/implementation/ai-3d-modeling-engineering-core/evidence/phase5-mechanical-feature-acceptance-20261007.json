@@ -1,0 +1,427 @@
+{
+  "adversarial_cases": {
+    "bearing.invalid_size": {
+      "reason": "ValueError:unsupported bearing size for SKT: M99-99-99",
+      "status": "BLOCKED"
+    },
+    "candidate.living_hinge_not_executable": {
+      "reason": "ValueError:feature is not promoted/executable: living_hinge",
+      "status": "BLOCKED"
+    },
+    "candidate.sheet_metal_not_executable": {
+      "reason": "ValueError:feature is not promoted/executable: sheet_metal",
+      "status": "BLOCKED"
+    },
+    "candidate.snap_fit_not_executable": {
+      "reason": "ValueError:feature is not promoted/executable: snap_fit",
+      "status": "BLOCKED"
+    },
+    "enclosure.floor_too_thick": {
+      "reason": "ValueError:floor_mm must be less than outer_z_mm",
+      "status": "BLOCKED"
+    },
+    "enclosure.wall_consumes_cavity": {
+      "reason": "ValueError:wall_mm leaves no interior cavity",
+      "status": "BLOCKED"
+    },
+    "fastener.invalid_size": {
+      "reason": "ValueError:unsupported hex-nut size for iso4032: M999-1",
+      "status": "BLOCKED"
+    },
+    "fastener.zero_length": {
+      "reason": "ValueError:length_mm must be a positive number",
+      "status": "BLOCKED"
+    },
+    "fit.negative_clearance": {
+      "reason": "ValueError:radial_clearance_mm must be a non-negative number",
+      "status": "BLOCKED"
+    },
+    "fit.negative_interference": {
+      "reason": "ValueError:radial_interference_mm must be a non-negative number",
+      "status": "BLOCKED"
+    },
+    "gear.invalid_pressure": {
+      "reason": "ValueError:pressure_angle_deg must be < 45",
+      "status": "BLOCKED"
+    },
+    "gear.too_few_teeth": {
+      "reason": "ValueError:tooth_count must be an integer >= 6",
+      "status": "BLOCKED"
+    },
+    "insert.invalid_size": {
+      "reason": "ValueError:unsupported heat-set size for McMaster-Carr: M99-Invalid",
+      "status": "BLOCKED"
+    },
+    "magnet.negative_clearance": {
+      "reason": "ValueError:radial_clearance_mm must be a non-negative number",
+      "status": "BLOCKED"
+    },
+    "thread.simple_no_solid": {
+      "reason": "ValueError:simple=true is metadata/simplified upstream output and is not accepted as solid thread geometry",
+      "status": "BLOCKED"
+    },
+    "thread.zero_pitch": {
+      "reason": "ValueError:pitch_mm must be a positive number",
+      "status": "BLOCKED"
+    }
+  },
+  "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+  "candidate_only": {
+    "living_hinge": {
+      "blockers": [
+        "material/process compatibility",
+        "hinge thickness evidence",
+        "bend radius",
+        "cycle-life target"
+      ],
+      "provider": "build123d.native",
+      "status": "CANDIDATE_PROCESS_SENSITIVE"
+    },
+    "sheet_metal": {
+      "blockers": [
+        "no validated bend-aware sheet-metal runtime in the canonical stack",
+        "bend allowance/K-factor policy not yet qualified"
+      ],
+      "provider": null,
+      "status": "CANDIDATE_RUNTIME_GAP"
+    },
+    "snap_fit": {
+      "blockers": [
+        "material strain limit",
+        "print orientation",
+        "layer adhesion",
+        "cycle-life target"
+      ],
+      "provider": "build123d.native",
+      "status": "CANDIDATE_PROCESS_SENSITIVE"
+    }
+  },
+  "positive_cases": {
+    "bearing.deep_groove": {
+      "artifact_hashes": {
+        "STEP": "7deb626cc3892fc0bb76be9a084764fa562f35b81db873a6ccc4094732481b30",
+        "STL": "d40bf8c759ac09fa80ccd2d629b5e2995e39c6c31f512796d930e47450b7060c"
+      },
+      "kind": "geometry",
+      "metrics": {
+        "area": 2113.185397223537,
+        "bbox_max": [
+          11.000000027541356,
+          11.000000023196291,
+          7.0
+        ],
+        "bbox_min": [
+          -11.000000118851228,
+          -11.000000118851228,
+          -1.6653345369377348e-16
+        ],
+        "bbox_size": [
+          22.000000146392583,
+          22.00000014204752,
+          7.0
+        ],
+        "type": "SingleRowDeepGrooveBallBearing",
+        "volume": 1658.9782755023666
+      },
+      "runtime": {
+        "bd_warehouse": "0.3.0",
+        "build123d": "0.11.1"
+      },
+      "status": "PASS"
+    },
+    "enclosure.rect_open_top": {
+      "artifact_hashes": {
+        "STEP": "bb5e78adc61cb8a1c6cac2c375f3c129459da6db4a05e6a05b87c2edb8ff8635",
+        "STL": "b334408bab847346b5c4daf332a25535d86d277915c7d4b3e5f1088f523f295a"
+      },
+      "kind": "geometry",
+      "metrics": {
+        "area": 12112.0,
+        "bbox_max": [
+          30.0,
+          20.0,
+          20.0
+        ],
+        "bbox_min": [
+          -30.0,
+          -20.0,
+          0.0
+        ],
+        "bbox_size": [
+          60.0,
+          40.0,
+          20.0
+        ],
+        "type": "Part",
+        "volume": 11712.0
+      },
+      "runtime": {
+        "bd_warehouse": "0.3.0",
+        "build123d": "0.11.1"
+      },
+      "status": "PASS"
+    },
+    "fastener.hex_nut": {
+      "artifact_hashes": {
+        "STEP": "e9eca37fc312feca56f4cca86755293a47ec3d8e8635d2ab5857a9e72f47aea3",
+        "STL": "49d0f55a7958309bfa664576977d1759585c7005dd0d7c1e6e783cc76fb3b526"
+      },
+      "kind": "geometry",
+      "metrics": {
+        "area": 175.39849367157495,
+        "bbox_max": [
+          4.040451884327379,
+          3.5,
+          3.2000000000000006
+        ],
+        "bbox_min": [
+          -4.040451884327379,
+          -3.5000000000000004,
+          -2.220446049250313e-16
+        ],
+        "bbox_size": [
+          8.080903768654759,
+          7.0,
+          3.200000000000001
+        ],
+        "type": "HexNut",
+        "volume": 95.23412307085282
+      },
+      "runtime": {
+        "bd_warehouse": "0.3.0",
+        "build123d": "0.11.1"
+      },
+      "status": "PASS"
+    },
+    "fastener.plain_washer": {
+      "artifact_hashes": {
+        "STEP": "93e9b0a23c15aa35bcda356bf657a6bae81c751b1ed50747ce357f2afbbda929",
+        "STL": "7082de34bb62b65ff3c40ed60ec069d7027853d87e74b679afe05326bfe41da9"
+      },
+      "kind": "geometry",
+      "metrics": {
+        "area": 135.79534245141878,
+        "bbox_max": [
+          4.5,
+          4.5,
+          0.9
+        ],
+        "bbox_min": [
+          -4.5,
+          -4.5,
+          0.0
+        ],
+        "bbox_size": [
+          9.0,
+          9.0,
+          0.9
+        ],
+        "type": "PlainWasher",
+        "volume": 44.18571527457704
+      },
+      "runtime": {
+        "bd_warehouse": "0.3.0",
+        "build123d": "0.11.1"
+      },
+      "status": "PASS"
+    },
+    "fastener.socket_head_cap_screw": {
+      "artifact_hashes": {
+        "STEP": "30d760e3012080673dec418ba4c18b7c4578c78faf693de165acf88a60e09f19",
+        "STL": "d025272e397077de7044033bf11b1335e925d1840c833ca27df6ae99dc4190e8"
+      },
+      "kind": "geometry",
+      "metrics": {
+        "area": 353.4084149868037,
+        "bbox_max": [
+          3.61,
+          3.61,
+          4.0000001
+        ],
+        "bbox_min": [
+          -3.61,
+          -3.61,
+          -16.0
+        ],
+        "bbox_size": [
+          7.22,
+          7.22,
+          20.0000001
+        ],
+        "type": "SocketHeadCapScrew",
+        "volume": 279.8459849944561
+      },
+      "runtime": {
+        "bd_warehouse": "0.3.0",
+        "build123d": "0.11.1"
+      },
+      "status": "PASS"
+    },
+    "fit.clearance_cylindrical": {
+      "kind": "calculation",
+      "result": {
+        "diametral_clearance_mm": 0.2,
+        "hole_diameter_mm": 4.2,
+        "radial_clearance_mm": 0.1,
+        "shaft_diameter_mm": 4.0
+      },
+      "runtime": {
+        "bd_warehouse": "0.3.0",
+        "build123d": "0.11.1"
+      },
+      "status": "PASS"
+    },
+    "fit.interference_cylindrical": {
+      "kind": "calculation",
+      "result": {
+        "diametral_interference_mm": 0.05,
+        "hole_diameter_mm": 4.0,
+        "radial_interference_mm": 0.025,
+        "shaft_diameter_mm": 4.05
+      },
+      "runtime": {
+        "bd_warehouse": "0.3.0",
+        "build123d": "0.11.1"
+      },
+      "status": "PASS"
+    },
+    "gear.spur": {
+      "artifact_hashes": {
+        "STEP": "8fde72d447bddbe13427f50da92f15cf6eb913279e3f8e709fe29101f007ff56",
+        "STL": "52faa1d523f78fcfe7ec25603ffe4dce8c4023167d8c506a8d3066c1202b7f33"
+      },
+      "kind": "geometry",
+      "metrics": {
+        "area": 1271.2363326920074,
+        "bbox_max": [
+          11.0000001,
+          11.0000001,
+          2.5000001
+        ],
+        "bbox_min": [
+          -11.0000001,
+          -11.0000001,
+          -2.5000001
+        ],
+        "bbox_size": [
+          22.0000002,
+          22.0000002,
+          5.0000002
+        ],
+        "type": "SpurGear",
+        "volume": 1532.6232460240853
+      },
+      "runtime": {
+        "bd_warehouse": "0.3.0",
+        "build123d": "0.11.1"
+      },
+      "status": "PASS"
+    },
+    "insert.heat_set": {
+      "artifact_hashes": {
+        "STEP": "d2383285fe059e755d57bb7f5aabce5314466edca1fccaa2dfeed5de16441024",
+        "STL": "c719c201b7c0fb926b411c94910cfd1c3ecb87a949981b466a3e4de7a7349c7b"
+      },
+      "kind": "geometry",
+      "metrics": {
+        "area": 393.25165504711083,
+        "bbox_max": [
+          3.1500001002369102,
+          3.1500001002369102,
+          8.200000099999999
+        ],
+        "bbox_min": [
+          -3.1500001002369102,
+          -3.1500001002369102,
+          0.0
+        ],
+        "bbox_size": [
+          6.3000002004738205,
+          6.3000002004738205,
+          8.200000099999999
+        ],
+        "type": "HeatSetNut",
+        "volume": 85.12117342491824
+      },
+      "runtime": {
+        "bd_warehouse": "0.3.0",
+        "build123d": "0.11.1"
+      },
+      "status": "PASS"
+    },
+    "magnet.cylindrical_pocket": {
+      "artifact_hashes": {
+        "STEP": "a52050d918f24ef9d53310f42b522cf3bd319ddbf069ef7b357248992540defd",
+        "STL": "1ea27e323d8dfaabf392cd9d3555bd233bd360dc1a4eb79791a0f2cb734dece5"
+      },
+      "kind": "geometry",
+      "metrics": {
+        "area": 125.67941410685968,
+        "bbox_max": [
+          3.15,
+          3.15,
+          3.2
+        ],
+        "bbox_min": [
+          -3.15,
+          -3.15,
+          0.0
+        ],
+        "bbox_size": [
+          6.3,
+          6.3,
+          3.2
+        ],
+        "type": "Cylinder",
+        "volume": 99.75184993678313
+      },
+      "runtime": {
+        "bd_warehouse": "0.3.0",
+        "build123d": "0.11.1"
+      },
+      "status": "PASS"
+    },
+    "thread.iso": {
+      "artifact_hashes": {
+        "STEP": "5da6bb90a6c6fc4c89f4bfa5592a9de02e3a6d4963839c81052f4949b6fbfafd",
+        "STL": "f79465f0c103f979eeef5df1de85974be8d16c9af958f1dce57382f33a252ed2"
+      },
+      "kind": "geometry",
+      "metrics": {
+        "area": 232.0470820586507,
+        "bbox_max": [
+          2.0000001014892264,
+          2.000000111821486,
+          8.612499052675517
+        ],
+        "bbox_min": [
+          -2.000001306273369,
+          -1.9999668699409585,
+          0.08749990000000002
+        ],
+        "bbox_size": [
+          4.000001407762595,
+          3.9999669817624444,
+          8.524999152675518
+        ],
+        "type": "IsoThread",
+        "volume": 26.385172211408467
+      },
+      "runtime": {
+        "bd_warehouse": "0.3.0",
+        "build123d": "0.11.1"
+      },
+      "status": "PASS"
+    }
+  },
+  "runtime": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
+  "safety": {
+    "invent_fit_clearance": false,
+    "invent_material_properties": false,
+    "machine_control_allowed": false,
+    "printer_actions_allowed": false,
+    "promote_process_sensitive_geometry_without_evidence": false
+  },
+  "schema": "velvetos.ai3d.phase5-mechanical-feature-acceptance.v1",
+  "status": "PASS"
+}

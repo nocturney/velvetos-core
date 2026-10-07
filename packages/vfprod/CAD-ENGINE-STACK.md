@@ -41,3 +41,10 @@ Phase 4 keeps this stack under the same Fabrication Router authority.
 - Reopen acceptance for exact-CAD uses deterministic geometry/semantic checks. Byte equality is recorded but is not required for serializers such as STEP/3MF/DXF that may encode non-geometric metadata.
 - Semantic selection rules live in `EXACT-CAD-PATTERNS.json`: geometry predicates and explicit datums are required; numeric face-index fallback is forbidden and ambiguity fails closed.
 - `bd_warehouse==0.3.0` is the bounded curated mechanical primitive library in the canonical build123d venv. It is not a new authority. Initial proven fixtures are socket-head cap screw, hex nut and plain washer; broader feature packs are promoted separately.
+## Mechanical feature packs
+
+`MECHANICAL-FEATURE-PACKS.json` and `scripts/ai3d_mechanical_features.py` extend the same CAD stack; they are not a second authority.
+
+Promoted packs wrap mature upstream primitives where available: fasteners, solid ISO threads, spur gears, deep-groove bearings and heat-set inserts use `bd_warehouse`. Magnet pockets, explicit fit calculations and the bounded open-top enclosure use small native build123d/VelvetOS wrappers with all dimensions/clearances explicit.
+
+Snap-fit, living-hinge and sheet-metal packs are intentionally non-executable candidates until their material/process or bend-policy blockers are qualified. Unknown feature IDs and invalid/adversarial parameters return BLOCKED.

@@ -49,6 +49,8 @@ def problem_class(capability: str) -> str:
 
 
 def precision_model(capability: str) -> str:
+    if capability == "cad.feature.fits":
+        return "not_applicable"
     if capability.startswith("cad.") or capability == "cam.toolpath":
         return "exact_brep"
     if capability.startswith("mesh.") or capability.startswith("ai.") or capability.startswith("sculpt."):
@@ -65,6 +67,10 @@ def precision_model(capability: str) -> str:
 def io_types(capability: str) -> tuple[list[str], list[str]]:
     if capability == "cam.toolpath":
         return ["bounded_cam_request"], ["offline_grbl_artifact", "verification_receipt"]
+    if capability == "cad.feature.fits":
+        return ["typed_fit_request"], ["fit_calculation", "verification_receipt"]
+    if capability.startswith("cad.feature."):
+        return ["typed_mechanical_feature_request"], ["cad_artifact", "verification_receipt"]
     if capability.startswith("cad."):
         return ["typed_cad_request", "cad_artifact_or_geometry_ir"], ["cad_artifact", "verification_receipt"]
     if capability.startswith("mesh."):
@@ -266,6 +272,8 @@ def make_record(
 
 def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path: Path) -> dict:
     cad = load(repo_root / "packages" / "vfprod" / "CAD-ENGINE-REGISTRY.json")
+    mechanical_path = repo_root / "packages" / "vfprod" / "MECHANICAL-FEATURE-PACKS.json"
+    mechanical = load(mechanical_path)
     creative = load(creative_path)
     blender = load(blender_path)
     stations = load(station_path)
@@ -385,6 +393,96 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
                     "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase4-bd-warehouse-runtime-install-20261007.json",
                     bd_warehouse["evidence_ref"],
                 ],
+            )
+        )
+
+    build123d_meta = canonical_engine_metadata("build123d")
+    for pack_id, pack in mechanical["packs"].items():
+        pack_status = str(pack["status"])
+        is_proven = pack_status.startswith("PROVEN")
+        is_candidate = pack_status.startswith("CANDIDATE")
+        if not (is_proven or is_candidate):
+            continue
+
+        provider_name = pack.get("provider")
+        if isinstance(provider_name, str) and provider_name.startswith("bd_warehouse"):
+            metadata = bd_warehouse
+            engine_id = "bd_warehouse"
+            runtime_id = bd_warehouse.get("runtime_id", "vf-cad-stack:build123d-venv")
+            provider_record = {
+                "version": bd_warehouse.get("version"),
+                "license": bd_warehouse.get("license"),
+                "capabilities": [f"cad.feature.{pack_id}"],
+            }
+        elif provider_name == "build123d.native":
+            metadata = build123d_meta
+            engine_id = "build123d"
+            runtime_id = build123d_meta.get("runtime_id", "vf-cad-stack:build123d-venv")
+            provider_record = {
+                "version": build123d_meta.get("version"),
+                "license": build123d_meta.get("license"),
+                "capabilities": [f"cad.feature.{pack_id}"],
+            }
+        elif provider_name == "velvetos.explicit-fit-calculator":
+            metadata = {
+                "version": "1.0",
+                "license": None,
+                "runtime_id": "vf-cad-stack:build123d-venv",
+                "evidence_ref": "scripts/ai3d_mechanical_features.py",
+            }
+            engine_id = "velvetos-explicit-fit-calculator"
+            runtime_id = metadata["runtime_id"]
+            provider_record = {
+                "version": metadata["version"],
+                "license": metadata["license"],
+                "capabilities": [f"cad.feature.{pack_id}"],
+            }
+        else:
+            metadata = {
+                "version": None,
+                "license": None,
+                "runtime_id": "not-admitted",
+                "evidence_ref": str(mechanical_path),
+            }
+            engine_id = str(provider_name or f"candidate:{pack_id}")
+            runtime_id = metadata["runtime_id"]
+            provider_record = {
+                "version": None,
+                "license": None,
+                "capabilities": [f"cad.feature.{pack_id}"],
+            }
+
+        evidence_refs = [
+            "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+            "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+        ]
+        if metadata.get("evidence_ref"):
+            evidence_refs.append(metadata["evidence_ref"])
+
+        records.append(
+            make_record(
+                record_id=f"cad.feature.{pack_id}--mechanical-pack",
+                capability_id=f"cad.feature.{pack_id}",
+                authority_id="fabrication-router",
+                authority_ref="packages/vfprod/FABRICATION-ROUTER.json",
+                engine_id=engine_id,
+                engine_version=metadata.get("version"),
+                adapter_id="ai3d-mechanical-features",
+                adapter_ref="scripts/ai3d_mechanical_features.py",
+                runtime_id=runtime_id,
+                host_classes=["windows-primary"],
+                headless=True,
+                verification_state="PROVEN_PROVIDER" if is_proven else "CANDIDATE",
+                validators=(
+                    ["validate_ai3d_phase5_mechanical"]
+                    if is_proven
+                    else ["phase5 material/process qualification required"]
+                ),
+                evidence_refs=evidence_refs,
+                fallbacks=[],
+                status="PROVEN" if is_proven else "CANDIDATE",
+                provider=provider_record,
+                license_provenance=evidence_refs,
             )
         )
 

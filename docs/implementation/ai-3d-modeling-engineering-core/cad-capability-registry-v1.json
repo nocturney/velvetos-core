@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.ai3d.cad-capability-registry.v1",
   "non_authoritative_staging": true,
-  "generated_at": "2026-10-07T14:09:05.470797+00:00",
+  "generated_at": "2026-10-07T14:24:16.773980+00:00",
   "authority_invariant": "This registry grants no authority. Fabrication Router/vf-3d-router, CreativeCraft, Blender Capability Host, slicer and production authorities remain unchanged.",
   "records": [
     {
@@ -574,6 +574,710 @@
           "runtime": "windows-primary"
         }
       ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "cad.feature.bearings--mechanical-pack",
+      "capability_id": "cad.feature.bearings",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "bd_warehouse",
+        "version": "0.3.0"
+      },
+      "adapter": {
+        "id": "ai3d-mechanical-features",
+        "source_ref": "scripts/ai3d_mechanical_features.py"
+      },
+      "runtime": {
+        "id": "vf-cad-stack:build123d-venv",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_mechanical_feature_request"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+        "code_license": "Apache-2.0",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase5_mechanical"
+        ],
+        "evidence_refs": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "cad.feature.enclosure--mechanical-pack",
+      "capability_id": "cad.feature.enclosure",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "build123d",
+        "version": "0.11.1"
+      },
+      "adapter": {
+        "id": "ai3d-mechanical-features",
+        "source_ref": "scripts/ai3d_mechanical_features.py"
+      },
+      "runtime": {
+        "id": "vf-cad-stack:build123d-venv",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_mechanical_feature_request"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+        "code_license": "Apache-2.0",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase5_mechanical"
+        ],
+        "evidence_refs": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "cad.feature.fasteners--mechanical-pack",
+      "capability_id": "cad.feature.fasteners",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "bd_warehouse",
+        "version": "0.3.0"
+      },
+      "adapter": {
+        "id": "ai3d-mechanical-features",
+        "source_ref": "scripts/ai3d_mechanical_features.py"
+      },
+      "runtime": {
+        "id": "vf-cad-stack:build123d-venv",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_mechanical_feature_request"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+        "code_license": "Apache-2.0",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase5_mechanical"
+        ],
+        "evidence_refs": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "cad.feature.fits--mechanical-pack",
+      "capability_id": "cad.feature.fits",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "velvetos-explicit-fit-calculator",
+        "version": "1.0"
+      },
+      "adapter": {
+        "id": "ai3d-mechanical-features",
+        "source_ref": "scripts/ai3d_mechanical_features.py"
+      },
+      "runtime": {
+        "id": "vf-cad-stack:build123d-venv",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_fit_request"
+      ],
+      "output_types": [
+        "fit_calculation",
+        "verification_receipt"
+      ],
+      "precision_model": "not_applicable",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "scripts/ai3d_mechanical_features.py"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase5_mechanical"
+        ],
+        "evidence_refs": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "scripts/ai3d_mechanical_features.py"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "cad.feature.gears--mechanical-pack",
+      "capability_id": "cad.feature.gears",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "bd_warehouse",
+        "version": "0.3.0"
+      },
+      "adapter": {
+        "id": "ai3d-mechanical-features",
+        "source_ref": "scripts/ai3d_mechanical_features.py"
+      },
+      "runtime": {
+        "id": "vf-cad-stack:build123d-venv",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_mechanical_feature_request"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+        "code_license": "Apache-2.0",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase5_mechanical"
+        ],
+        "evidence_refs": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "cad.feature.inserts--mechanical-pack",
+      "capability_id": "cad.feature.inserts",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "bd_warehouse",
+        "version": "0.3.0"
+      },
+      "adapter": {
+        "id": "ai3d-mechanical-features",
+        "source_ref": "scripts/ai3d_mechanical_features.py"
+      },
+      "runtime": {
+        "id": "vf-cad-stack:build123d-venv",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_mechanical_feature_request"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+        "code_license": "Apache-2.0",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase5_mechanical"
+        ],
+        "evidence_refs": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "cad.feature.living_hinge--mechanical-pack",
+      "capability_id": "cad.feature.living_hinge",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "build123d",
+        "version": "0.11.1"
+      },
+      "adapter": {
+        "id": "ai3d-mechanical-features",
+        "source_ref": "scripts/ai3d_mechanical_features.py"
+      },
+      "runtime": {
+        "id": "vf-cad-stack:build123d-venv",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_mechanical_feature_request"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+        "code_license": "Apache-2.0",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "phase5 material/process qualification required"
+        ],
+        "evidence_refs": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "fallback": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "record_id": "cad.feature.magnets--mechanical-pack",
+      "capability_id": "cad.feature.magnets",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "build123d",
+        "version": "0.11.1"
+      },
+      "adapter": {
+        "id": "ai3d-mechanical-features",
+        "source_ref": "scripts/ai3d_mechanical_features.py"
+      },
+      "runtime": {
+        "id": "vf-cad-stack:build123d-venv",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_mechanical_feature_request"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+        "code_license": "Apache-2.0",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase5_mechanical"
+        ],
+        "evidence_refs": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "cad.feature.sheet_metal--mechanical-pack",
+      "capability_id": "cad.feature.sheet_metal",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "candidate:sheet_metal",
+        "version": null
+      },
+      "adapter": {
+        "id": "ai3d-mechanical-features",
+        "source_ref": "scripts/ai3d_mechanical_features.py"
+      },
+      "runtime": {
+        "id": "not-admitted",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_mechanical_feature_request"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "D:\\Velvet\\Worktrees\\ai-3d-modeling-engineering-core-20261007\\packages\\vfprod\\MECHANICAL-FEATURE-PACKS.json"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "phase5 material/process qualification required"
+        ],
+        "evidence_refs": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "D:\\Velvet\\Worktrees\\ai-3d-modeling-engineering-core-20261007\\packages\\vfprod\\MECHANICAL-FEATURE-PACKS.json"
+        ]
+      },
+      "fallback": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "record_id": "cad.feature.snap_fit--mechanical-pack",
+      "capability_id": "cad.feature.snap_fit",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "build123d",
+        "version": "0.11.1"
+      },
+      "adapter": {
+        "id": "ai3d-mechanical-features",
+        "source_ref": "scripts/ai3d_mechanical_features.py"
+      },
+      "runtime": {
+        "id": "vf-cad-stack:build123d-venv",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_mechanical_feature_request"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+        "code_license": "Apache-2.0",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "phase5 material/process qualification required"
+        ],
+        "evidence_refs": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "fallback": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "record_id": "cad.feature.threads--mechanical-pack",
+      "capability_id": "cad.feature.threads",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "bd_warehouse",
+        "version": "0.3.0"
+      },
+      "adapter": {
+        "id": "ai3d-mechanical-features",
+        "source_ref": "scripts/ai3d_mechanical_features.py"
+      },
+      "runtime": {
+        "id": "vf-cad-stack:build123d-venv",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_mechanical_feature_request"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+        "code_license": "Apache-2.0",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase5_mechanical"
+        ],
+        "evidence_refs": [
+          "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "fallback": [],
       "status": "PROVEN"
     },
     {

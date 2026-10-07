@@ -158,6 +158,48 @@ def main() -> int:
     assert forgent["status"] == "CANDIDATE"
     assert forgent["headless"] is False
 
+    mechanical_records = {
+        row["capability_id"].removeprefix("cad.feature."): row
+        for row in records
+        if row["record_id"].endswith("--mechanical-pack")
+    }
+    assert set(mechanical_records) == {
+        "fasteners",
+        "threads",
+        "gears",
+        "bearings",
+        "inserts",
+        "magnets",
+        "fits",
+        "snap_fit",
+        "living_hinge",
+        "enclosure",
+        "sheet_metal",
+    }
+    for pack_id in (
+        "fasteners",
+        "threads",
+        "gears",
+        "bearings",
+        "inserts",
+        "magnets",
+        "fits",
+        "enclosure",
+    ):
+        row = mechanical_records[pack_id]
+        assert row["status"] == "PROVEN", pack_id
+        assert row["verification"]["state"] == "PROVEN_PROVIDER", pack_id
+        assert row["adapter"]["id"] == "ai3d-mechanical-features", pack_id
+    for pack_id in ("snap_fit", "living_hinge", "sheet_metal"):
+        row = mechanical_records[pack_id]
+        assert row["status"] == "CANDIDATE", pack_id
+        assert row["verification"]["state"] == "CANDIDATE", pack_id
+
+    fits = mechanical_records["fits"]
+    assert fits["precision_model"] == "not_applicable"
+    assert "fit_calculation" in fits["output_types"]
+    assert fits["license_lane"] == "review-required"
+
     research_candidate_engines = {
         "hunyuan3d-2.1-shape",
         "triposg",

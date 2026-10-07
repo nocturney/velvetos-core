@@ -64,7 +64,7 @@ Files:
 
 The registry is deliberately non-authoritative staging. Existing proven routes are recorded first. Research candidates remain CANDIDATE until fixture, license and resource qualification pass.
 
-Current generated registry: 42 records; 33 PROVEN, 1 ACTIVE_AUTHORITY, 8 CANDIDATE. Exactly 20 Blender cross-station entries are PROVEN_TYPED. Fabrication-authority engine versions come from the runtimes that vf_cad_stack actually executes; bd_warehouse is registered as a bounded proven primitive capability after Phase 4 host acceptance.
+Current generated registry: 53 records; 41 PROVEN, 1 ACTIVE_AUTHORITY, 11 CANDIDATE. Exactly 20 Blender cross-station entries are PROVEN_TYPED. Fabrication-authority engine versions come from the runtimes that vf_cad_stack actually executes; Phase 4/5 CAD and mechanical capability records are admitted only after host acceptance evidence.
 
 ## Phase 3 - Engineering Contract and common artifact protocol
 
@@ -119,6 +119,38 @@ Phase 4 validation:
 
   py -3.11 scripts/validate_ai3d_phase4_exact_cad.py
 
+## Phase 5 - Mechanical feature packs
+
+Files:
+
+- packages/vfprod/MECHANICAL-FEATURE-PACKS.json
+- scripts/ai3d_mechanical_features.py
+- scripts/validate_ai3d_phase5_mechanical.py
+- evidence/phase5-mechanical-feature-acceptance-20261007.json
+
+Promoted bounded packs:
+
+- fasteners: socket-head cap screw, hex nut and plain washer via bd_warehouse.
+- threads: solid ISO thread via bd_warehouse; `simple=true` is explicitly rejected for geometry output because it does not carry a solid.
+- gears: bounded spur gear wrapper via bd_warehouse.
+- bearings: single-row deep-groove bearing with upstream size-table validation.
+- inserts: heat-set insert with upstream provider/size validation.
+- magnets: native cylindrical pocket tool with explicit radial and axial clearances; no material/process fit is inferred.
+- fits: explicit cylindrical clearance/interference calculator; no fit class or clearance is guessed.
+- enclosure: bounded open-top rectangular shell with explicit outer dimensions, wall and floor thickness.
+
+Still CANDIDATE:
+
+- snap-fit: blocked on material strain, print orientation, layer adhesion and cycle-life evidence.
+- living hinge: blocked on material/process compatibility, hinge thickness, bend radius and cycle-life evidence.
+- sheet metal: blocked until a bend-aware runtime and bend allowance/K-factor policy are qualified.
+
+Phase 5 acceptance executes 11 positive fixtures and 16 adversarial cases. All promoted geometry exports STEP+STL with hashes; invalid parameters and candidate-only packs fail closed.
+
+Phase 5 validation:
+
+  py -3.11 scripts/validate_ai3d_phase5_mechanical.py
+
 ## Validation state
 
 Explicit AI3D validation stack: PASS.
@@ -128,8 +160,8 @@ Repository regression:
 - scripts/check-all.py: 116/116 PASS
 - exit code: 0
 - sensor side-effect check: repository files unchanged
-- full-suite log: evidence/check-all-phase4-20261007.log
+- full-suite log: evidence/check-all-phase5-20261007.log
 
 ## Next implementation phase
 
-Phase 5 is the mechanical feature-pack layer: fasteners/threads/gears/bearings/inserts/magnets/fits/snap-fit/living-hinge/enclosure/sheet-metal packs, with unit tests and adversarial parameter/property tests. Mature upstream libraries should be wrapped rather than copied.
+Phase 6 is the mesh/organic/implicit expansion: qualify Trimesh/Manifold operations, Open3D/PyMeshLab/OpenVDB/SDF specialists behind bounded contracts, and reuse the existing Blender Capability Host rather than creating another mesh authority.

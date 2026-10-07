@@ -14,12 +14,14 @@ from tool_status_resolver import compose_tool_status  # noqa: E402
 registry_path = ROOT / "packages" / "vfprod" / "CAD-ENGINE-REGISTRY.json"
 schema_path = ROOT / "packages" / "vfprod" / "GEOMETRY-IR.schema.json"
 patterns_path = ROOT / "packages" / "vfprod" / "EXACT-CAD-PATTERNS.json"
+mechanical_path = ROOT / "packages" / "vfprod" / "MECHANICAL-FEATURE-PACKS.json"
 doc_path = ROOT / "packages" / "vfprod" / "CAD-ENGINE-STACK.md"
 cli = ROOT / "scripts" / "vf_cad_stack.py"
 
 assert registry_path.is_file(), registry_path
 assert schema_path.is_file(), schema_path
 assert patterns_path.is_file(), patterns_path
+assert mechanical_path.is_file(), mechanical_path
 assert doc_path.is_file(), doc_path
 assert cli.is_file(), cli
 
@@ -29,6 +31,7 @@ assert registry["authority"] == "packages/vfprod/FABRICATION-ROUTER.md"
 assert registry["printer_actions_allowed"] is False
 assert registry["max_repair_iterations"] == 2
 assert registry["exact_cad_patterns"] == "packages/vfprod/EXACT-CAD-PATTERNS.json"
+assert registry["mechanical_feature_packs"] == "packages/vfprod/MECHANICAL-FEATURE-PACKS.json"
 
 patterns = json.loads(patterns_path.read_text(encoding="utf-8"))
 assert patterns["schema"] == "velvetos.exact-cad-patterns.v1"
@@ -41,6 +44,26 @@ assert patterns["curated_primitives"]["bd_warehouse"]["version"] == "0.3.0"
 assert patterns["curated_primitives"]["bd_warehouse"]["license"] == "Apache-2.0"
 assert patterns["safety"]["printer_actions_allowed"] is False
 assert patterns["safety"]["machine_control_allowed"] is False
+
+mechanical = json.loads(mechanical_path.read_text(encoding="utf-8"))
+assert mechanical["schema"] == "velvetos.ai3d.mechanical-feature-packs.v1"
+assert mechanical["authority"] == "packages/vfprod/FABRICATION-ROUTER.md"
+assert mechanical["upstream"]["bd_warehouse"]["version"] == "0.3.0"
+assert mechanical["upstream"]["bd_warehouse"]["license"] == "Apache-2.0"
+for pack_id in (
+    "fasteners",
+    "threads",
+    "gears",
+    "bearings",
+    "inserts",
+    "magnets",
+    "fits",
+    "enclosure",
+):
+    assert mechanical["packs"][pack_id]["status"].startswith("PROVEN"), pack_id
+for pack_id in ("snap_fit", "living_hinge", "sheet_metal"):
+    assert mechanical["packs"][pack_id]["status"].startswith("CANDIDATE"), pack_id
+    assert mechanical["packs"][pack_id]["blockers"], pack_id
 
 engines = registry["engines"]
 assert set(engines) == {"build123d", "cadquery", "jscad", "cad-cae-copilot", "forgent3d"}
@@ -107,6 +130,7 @@ contract = json.loads(proc.stdout)
 assert contract["status"] == "PASS"
 assert contract["max_repair_iterations"] == 2
 assert contract["exact_cad_patterns"] == "packages/vfprod/EXACT-CAD-PATTERNS.json"
+assert contract["mechanical_feature_packs"] == "packages/vfprod/MECHANICAL-FEATURE-PACKS.json"
 assert contract["coordinate_frame"] == "xy_center_z_min"
 
 sample = ROOT / "packages" / "vfharness" / "state" / "cad-engine-stack-20260927" / "geometry-ir-sample.json"
