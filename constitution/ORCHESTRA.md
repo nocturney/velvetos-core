@@ -9,7 +9,7 @@ Run `scripts/vf_publication_evidence.py --phase production` before production an
 ## רף סוכנות (כוכב צפון)
 
 התזמורת משרתת משרד שמרגיש **סוכנות יקרה**: כל כלי נצרך עד תוצר, לא עד הצעה.  
-Failover מיידי. בלי חצי-עבודה. בלי גוף/₪/Insights מומצאים. בריף 09:00 בטון סוכנות — הבעלים קורא ויושב רגוע.
+Failover מיידי. בלי חצי-עבודה. בלי גוף/₪/Insights מומצאים. כשנבנה Morning Brief ידני/אירועי הוא בטון סוכנות — הבעלים קורא ויושב רגוע.
 
 נעול 30.8.2026 ~17:55 (Asia/Jerusalem):  
 הצ'אט ב־Grok = **החלטות בלבד**. ראש צוות לא חוקר, לא כותב, לא גולש.  
@@ -90,20 +90,20 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 
 כל מעבר failover: שורה בארטיפקט היומי (`sources/YYYY-MM-DD-orchestra.md`) — מה נפל · למה · לאיזה כלי עבר · מה הוטמע.
 
-## 06:15 כל בוקר (Asia/Jerusalem)
+## מעבר מחקר — לפי צורך / אירוע (Asia/Jerusalem)
 
-Cursor, לא Grok:
+אין standing 06:15 clock. מפעילים כשיש שאלה/החלטה קונקרטית, צורך תוכן אמיתי או freeze gate פתוח. Cursor, לא Grok:
 
 1. קורא את בריף אתמול + לוח `vfgrowth` + `vfsku` הפתוח.
 2. **מק בשדרות** = מארח המנויים, **מק ייעודי** לא PC ווינדוס ([`vfmcp/HOST.md`](../packages/vfmcp/HOST.md)): כרום ו/או Codex `login` + Gemini CLI Login with Google + Perplexity בטאב. **Cloud** לא פותח אתרי מנוי (התראות אבטחה) — קורא `vfresearch/sources/` או `WebSearch`. בלי מפתח API: לא `vf_chatgpt.py` / `vf_gemini.py` חיים. תבנית: `vfresearch/DAILY.md`. [`vfmcp/SUBSCRIPTIONS.md`](../packages/vfmcp/SUBSCRIPTIONS.md).
 3. כלי נפל באמצע → **failover מיד** (טבלה למעלה). לא מחכים לסיום כל השלושה אם אחד כבר חסום.
 4. מטמיע רק מה ששימושי **מיד** בפק קיים. אין פק לרעיון.
-5. כותב שורת «מה נבנה / יועל» ל־`packages/vfops/data/research.md` (בלוק `05-משרד` בבריף 09:00; כולל «failover: X→Y» אם היה).
+5. כותב שורת «מה נבנה / יועל» ל־`packages/vfops/data/research.md` (בלוק `05-משרד` ב־Morning Brief הבא כשהתוצר רלוונטי; כולל «failover: X→Y» אם היה).
 6. ריק או אין הטמעה = **«אין חדש במשרד»** בדיוק. לא ממלאים רעש.
 
-מעבר ערב (כמו 30.8 אחרי הנעילה): אותה פרוצדורה, התוצר נופל לבריף **למחרת** 09:00.
+מעבר מאוחר/ערב: אותה פרוצדורה; התוצר זמין ל־Morning Brief הבא אם וכאשר הוא מופעל ורלוונטי.
 
-## 09:00 — לולאת משרד (כל פק נצרך)
+## Morning Brief — לולאת משרד ידנית/אירועית
 
 לא קוראים קטלוג. **מושכים** שורות מהפקים החיים:
 
@@ -122,7 +122,7 @@ python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.jso
 חריץ 03 = `vfsku` + `week.md`.  
 חריץ 04 = `FOLLOWER-GROWTH` + `vfbiz/out/week.md` + היילייטס + וואטסאפ.  
 חריץ 05 = CLI אמיתי מ-24ש או «אין חדש במשרד» + שורות פער לפק שלא הורץ. לא מדביקים קטלוג מ-`research.md` כאילו רץ כלי.  
-חריץ 06 = `vfinsights` — «אין ספירה» עד טוקן / סנאפשוט. אין חדשות רעות מומצאות לבעלים; מדדים חלשים נשארים לוג פנימי.  
+חריץ 06 = `vfinsights` — Instagram MCP מאומת הוא מקור ראשון; owner/Drive snapshot הוא fallback. חסר/לא נתמך = «אין ספירה». אין חדשות רעות מומצאות לבעלים; מדדים חלשים נשארים לוג פנימי.
 חריץ 07 = כיתובי `vfcopy` מוכנים + שער עריכה + ארטיפקט `PREFLIGHT.md` לפני שיבוץ. פער סוכנות = שורת **פער** למשרד, לא אשמת בעלים.
 
 שליחת המייל לפי [`SEND.md`](SEND.md). המעבר הזה לא מפרסם IG.  
@@ -190,22 +190,20 @@ packages/vfresearch/sources/YYYY-MM-DD-orchestra.md
 
 שורת בלוק `05`: «שבועי קישורים — …» או «שבועי קישורים — אין חדש במשרד».
 
-## כל יומיים — דירוג Best Skills (לא צ'אט חדש)
+## לפי צורך — דירוג Best Skills (לא צ'אט חדש)
 
-מקור חי: [LinklyAI/best-skills](https://github.com/LinklyAI/best-skills) (Top 100 מתעדכן יומית).  
-מעבר שבועי לא מספיק — הדירוגים זזים. **כל ~48 שעות** רצים את הסקירה.
+מקור חי: [LinklyAI/best-skills](https://github.com/LinklyAI/best-skills). Owner override 2026-10-06 ביטל את דופק ~48 השעות ואת `standingForever` כטריגר. `lastPass` הוא provenance בלבד; גיל לבדו אינו יוצר משימה, blocker או notification.
 
-**Standing order (בעלים 2026-09-03):** דופק **קבוע לנצח** עד הודעה מפורשת לעצור / לשנות קצב.  
-אין חידוש טיימר חיצוני: Velvet Research Seat הוא סמכות התזמון ומריץ מעבר כש־`lastPass` בן 44 שעות ומעלה (stale מעל 52) — `freshnessContract` ב־`BEST-SKILLS.json` + `packages/vfresearch/TIMER.md`.
+מריצים רק כששאלה/החלטת tool/skill, צורך תוכן, maintenance decision או Office v2 freeze gate דורשים מידע עדכני.
 
 1. פלייבוק: `packages/vfresearch/BEST-SKILLS.md`
-2. מצב: `packages/vfresearch/BEST-SKILLS.json` (`standingForever: true`)
+2. מצב: `packages/vfresearch/BEST-SKILLS.json` — provenance, לא scheduler authority.
 3. מיומנות: `.cursor/skills/vf-best-skills/SKILL.md`
 4. ארטיפקט: `packages/vfresearch/sources/YYYY-MM-DD-best-skills.md`
 5. מטמיעים **דפוסים** על פקים קיימים. אין `npx skills` על Cloud Agent. אין runtime שני.
-6. מחדשים את הטיימר — בלי זה הדופק נשבר אחרי ~7 ימים.
+6. אין timer renewal. חזרה לקדנס מחזורי דורשת החלטת בעלים מפורשת חדשה.
 
-שורת בלוק `05`: «best-skills — …» או «best-skills — אין חדש במשרד».
+אם המעבר רץ, שורת בלוק `05`: «best-skills — …» או «best-skills — אין חדש במשרד».
 
 ## לפי דרישה — מחקר 30 יום / קהילה (לא צ'אט חדש)
 

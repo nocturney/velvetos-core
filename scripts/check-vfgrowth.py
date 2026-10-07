@@ -34,7 +34,7 @@ def fail(msg: str) -> None:
 
 
 def assert_no_ils(path: Path) -> None:
-    text = path.read_text()
+    text = path.read_text(encoding="utf-8")
     for m in ILS_NUMBER.finditer(text):
         snippet = text[max(0, m.start() - 20) : m.end() + 8]
         if "X ₪" in snippet:
@@ -53,7 +53,7 @@ def main() -> None:
     organic = ROOT / "packages" / "vfgrowth" / "ORGANIC-GROWTH.md"
     if not organic.is_file():
         fail("missing vfgrowth/ORGANIC-GROWTH.md")
-    og = organic.read_text()
+    og = organic.read_text(encoding="utf-8")
     for needle in ("print.done", "אין ריל כל יום", "approved_for_manual_posting"):
         if needle not in og:
             fail(f"ORGANIC-GROWTH.md missing {needle!r}")
@@ -62,7 +62,7 @@ def main() -> None:
         fail("ORGANIC-GROWTH.md must mention Instagram-message public CTA")
     assert_no_ils(organic)
 
-    cal = CAL.read_text()
+    cal = CAL.read_text(encoding="utf-8")
     for needle in (
         "16:00",
         "12:00",
@@ -82,7 +82,7 @@ def main() -> None:
     if "שישי" not in cal or "שבת" not in cal:
         fail("CALENDAR.md must mention Friday/Saturday no-feed")
 
-    ledger = LEDGER.read_text()
+    ledger = LEDGER.read_text(encoding="utf-8")
     for needle in (
         "DcqkjOLlYVX",
         "DcvuJLxCJgU",
@@ -109,7 +109,7 @@ def main() -> None:
     if "HISTORICAL_NOT_LIVE" not in g005_ledger:
         fail("LEDGER.md must mark G005 HISTORICAL_NOT_LIVE")
 
-    handoff = HANDOFF.read_text()
+    handoff = HANDOFF.read_text(encoding="utf-8")
     if "> LEGACY / provenance only" not in handoff:
         fail("HANDOFF-he.md must explicitly fence historical G003/G004 instructions")
     handoff_active = handoff.split("> LEGACY / provenance only", 1)[0]
@@ -136,19 +136,19 @@ def main() -> None:
     if "שלחו DM" in handoff_active and "לא «שלחו DM»" not in handoff_active and "בלי «שלחו DM»" not in handoff_active:
         fail("HANDOFF-he.md active route must forbid bare שלחו DM (auto-dm tooling)")
 
-    g003 = G003.read_text()
+    g003 = G003.read_text(encoding="utf-8")
     for needle in ("SoccerBall", "LEGACY", "KEEP_LIVE_BASELINE", "HISTORICAL_NOT_LIVE", "LEDGER.md"):
         if needle not in g003:
             fail(f"G003.md missing current-status/history needle {needle!r}")
     if "חסום מדיה" in g003:
         fail("G003.md must not stay media-blocked after the historical lock")
 
-    g004 = G004.read_text()
+    g004 = G004.read_text(encoding="utf-8")
     for needle in ("קטלבל", "מחזיק", "LEGACY", "STALE", "provenance only", "VF_PUBLICATION_ROUTE_V1", "LEDGER.md"):
         if needle not in g004:
             fail(f"G004.md missing stale/history needle {needle!r}")
 
-    copy4 = COPY_G004.read_text()
+    copy4 = COPY_G004.read_text(encoding="utf-8")
     for needle in ("LEGACY / STALE", "audit only", "VF_PUBLICATION_ROUTE_V1", "מחזיק", "kettlebells-pink"):
         if needle not in copy4:
             fail(f"vfcopy/G004.md missing stale/history needle {needle!r}")
@@ -159,7 +159,7 @@ def main() -> None:
     if "חמש ורודות מהמיטה" in copy4:
         fail("vfcopy/G004.md must not keep early thin copy")
 
-    voice = VOICE.read_text()
+    voice = VOICE.read_text(encoding="utf-8")
     for needle in (
         "תהליך-קצר",
         "סיפור-מוצר",
@@ -178,24 +178,24 @@ def main() -> None:
     if not any(n in voice for n in ("PUBLIC_CURRENT_CTA", "PUBLIC_CTA", "אינסטגרם")):
         fail("vfcopy/VOICE.md must lock Instagram-message PUBLIC_CURRENT_CTA")
 
-    research = VOICE_RESEARCH.read_text()
+    research = VOICE_RESEARCH.read_text(encoding="utf-8")
     for needle in ("https://", "אין ספירת עוקבים", "לאמץ", "לדחות", "nisha.co", "studioarmadillo.com"):
         if needle not in research:
             fail(f"vfcopy/VOICE-RESEARCH.md missing {needle!r}")
 
-    studio = (ROOT / "constitution" / "STUDIO.md").read_text()
+    studio = (ROOT / "constitution" / "STUDIO.md").read_text(encoding="utf-8")
     if "VOICE.md" not in studio:
         fail("constitution/STUDIO.md must point at VOICE.md")
     for needle in ("PREFLIGHT.md", "רמה נמוכה", "נכשל-סגור", "VOICE-RESEARCH"):
         if needle not in studio:
             fail(f"constitution/STUDIO.md must lock Christian/preflight needle {needle!r}")
-    inst_studio = (ROOT / "instances" / "velvet-factory" / "constitution" / "STUDIO.md").read_text()
+    inst_studio = (ROOT / "instances" / "velvet-factory" / "constitution" / "STUDIO.md").read_text(encoding="utf-8")
     if "VOICE.md" not in inst_studio:
         fail("instances/velvet-factory/constitution/STUDIO.md must point at VOICE.md")
     if "PREFLIGHT.md" not in inst_studio:
         fail("instances/velvet-factory/constitution/STUDIO.md must point at PREFLIGHT.md")
 
-    preflight = PREFLIGHT.read_text()
+    preflight = PREFLIGHT.read_text(encoding="utf-8")
     for needle in (
         "VOICE.md",
         "VOICE-RESEARCH",
@@ -218,12 +218,12 @@ def main() -> None:
         fail("CONTENT-RUBRIC.md missing")
     if not (ROOT / "packages" / "vfcopy" / "VOICE-CHART.md").is_file():
         fail("VOICE-CHART.md missing")
-    template_pf = (ROOT / "packages" / "vfgrowth" / "preflight" / "TEMPLATE.md").read_text()
+    template_pf = (ROOT / "packages" / "vfgrowth" / "preflight" / "TEMPLATE.md").read_text(encoding="utf-8")
     if "Rubric" not in template_pf:
         fail("preflight/TEMPLATE.md must include Rubric table")
     if not any(n in template_pf for n in ("הודעה", "אינסטגרם", "PUBLIC_CURRENT_CTA")):
         fail("preflight/TEMPLATE.md must use Instagram-message CTA (not WhatsApp phone)")
-    g004p = PREFLIGHT_G004.read_text()
+    g004p = PREFLIGHT_G004.read_text(encoding="utf-8")
     for needle in (
         "INCIDENT 2026-09-10",
         "APPROVAL INVALIDATED",
@@ -237,7 +237,7 @@ def main() -> None:
     if not any(n in g004p for n in ("הודעה", "אינסטגרם", "PUBLIC_CURRENT_CTA")):
         fail("preflight/G004.md historical record must preserve its CTA evidence")
 
-    copy = COPY.read_text()
+    copy = COPY.read_text(encoding="utf-8")
     if "מה יוצא מהמדפסת" not in copy:
         fail("vfcopy/G003.md must lock caption מה יוצא מהמדפסת")
     if not any(n in copy for n in ("הודעה", "אינסטגרם", "שלחו לנו הודעה")):
@@ -250,7 +250,7 @@ def main() -> None:
     if "שלחו DM" in copy and "לא «שלחו DM»" not in copy and "בלי «שלחו DM»" not in copy:
         fail("vfcopy/G003.md must not instruct bare שלחו DM")
 
-    stories = STORIES.read_text()
+    stories = STORIES.read_text(encoding="utf-8")
     if "20:30" not in stories:
         fail("ig-stories.md must lock 20:30")
     if not any(n in stories for n in ("הודעה", "אינסטגרם", "שלחו לנו הודעה", "PUBLIC")):
@@ -261,7 +261,7 @@ def main() -> None:
         if needle not in stories:
             fail(f"ig-stories.md must mention {needle!r}")
 
-    fix = STORIES_FIX.read_text()
+    fix = STORIES_FIX.read_text(encoding="utf-8")
     for needle in ("LEGACY / STALE", "audit only", "VF_PUBLICATION_ROUTE_V1", "סיפור-מוצר", "מחזיק"):
         if needle not in fix:
             fail(f"G004-STORIES-FIX.md missing stale/history needle {needle!r}")
@@ -280,14 +280,14 @@ def main() -> None:
         # phone outside fence only OK with revised-media / business-record note
         pass  # allow mention in notes if marked elsewhere; fence check above is hard
 
-    play = STORIES_PLAY.read_text()
+    play = STORIES_PLAY.read_text(encoding="utf-8")
     for needle in ("סיפור-מוצר", "תהליך-קצר", "VF_PUBLICATION_ROUTE_V1"):
         if needle not in play:
             fail(f"STORIES.md missing {needle!r}")
     if not any(n in play for n in ("הודעה", "אינסטגרם", "PUBLIC_CURRENT_CTA")):
         fail("STORIES.md must use Instagram-message CTA")
 
-    follower = FOLLOWER.read_text()
+    follower = FOLLOWER.read_text(encoding="utf-8")
     for needle in ("80", "0", "היילייטס", "ריל תהליך", "אאוטבאונד"):
         if needle not in follower:
             fail(f"FOLLOWER-GROWTH.md missing {needle!r}")
@@ -298,7 +298,7 @@ def main() -> None:
     if "PROFILE-TO-WHATSAPP" not in follower and "PROFILE-TO-INSTAGRAM" not in follower:
         fail("FOLLOWER-GROWTH.md must point at PROFILE funnel doc")
 
-    funnel = FUNNEL.read_text()
+    funnel = FUNNEL.read_text(encoding="utf-8")
     for needle in ("תהליך-קצר", "סיפור-מוצר", "אין ספירה", "PREFLIGHT"):
         if needle not in funnel:
             fail(f"PROFILE funnel missing {needle!r}")
@@ -310,12 +310,12 @@ def main() -> None:
     if "ריל כל יום" in funnel and "אין ריל כל יום" not in funnel:
         fail("PROFILE funnel must not schedule a reel every weekday")
 
-    tags = TAGS.read_text()
+    tags = TAGS.read_text(encoding="utf-8")
     for needle in ("#צמיחה-חברתית", "#ריל-תהליך", "#היילייטס", "#המרת-פרופיל", "social-growth"):
         if needle not in tags:
             fail(f"constitution/tags.md missing social-growth tag {needle!r}")
 
-    if "check-vfgrowth.py" not in AGENTS.read_text():
+    if "check-vfgrowth.py" not in AGENTS.read_text(encoding="utf-8"):
         fail("AGENTS.md sensor table must list check-vfgrowth.py")
 
     print("OK standing calendar + G003 lock + G004 + VOICE + follower-growth")

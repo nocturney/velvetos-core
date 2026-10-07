@@ -9,21 +9,23 @@
 - שבועי לפני `WEEKLY-REVENUE-PULSE`
 - אחרי קמפיין / קרוסלה / ריל
 
-## מקורות מותרים
+## מקורות מותרים — לפי עדיפות
 
-1. צילום מסך / ייצוא IG Professional (בעלים מדביק)
-2. Drive doc שהבעלים העלה
-3. מספרים שהבעלים כתב במפורש בשיחה
+1. Instagram MCP קנוני ומאומת (`adelaidasofia/instagram-mcp`): `get_account_insights`, `get_media_insights`, `list_media`, ו־account/profile reads לפי מה ש־Meta מחזירה בפועל.
+2. צילום מסך / ייצוא IG Professional שהבעלים מדביק — fallback כש־MCP חסום/לא מחזיר את המדד.
+3. Drive doc שהבעלים העלה.
+4. מספרים שהבעלים כתב במפורש בשיחה.
 
-**לא:** Treg · WebSearch למספרים · המצאה
+**לא:** Treg · WebSearch למספרי החשבון · המצאה. מדד חסר/לא נתמך = «אין ספירה».
 
 ## תהליך
 
-1. בעלים ממלא `templates/snapshot-ingest.md` (או מדביק ב-Drive).
-2. `@tracking-measurement-specialist` מעתיק ל־`sources/YYYY-MM-DD-ig-snapshot.md`.
-3. `@analytics-reporter` מסכם — רק עובדות מהקובץ.
-4. `@pipeline-analyst` מקשר ל־`ig_post_ref` בכרטיסי pipeline (אם יש פניות).
-5. handoff ל־`@carousel-growth-engine` / `@growth-hacker` — מה לחזור עליו.
+1. נסה קודם read חי דרך Instagram MCP על החשבון/המדיה הרלוונטיים; שמור רק שדות שהספק החזיר בפועל.
+2. אם ה־MCP חסום או שהמדד לא נתמך, עבור ל־owner paste / Drive snapshot בלי להמציא פערים.
+3. `@tracking-measurement-specialist` שומר provenance ב־`sources/YYYY-MM-DD-ig-snapshot.md` או בקלט המדידה הקנוני.
+4. `@analytics-reporter` מסכם — רק עובדות מהמקור המאומת.
+5. `@pipeline-analyst` מקשר ל־`ig_post_ref` בכרטיסי pipeline (אם יש פניות).
+6. handoff ל־`@carousel-growth-engine` / `@growth-hacker` — מה לחזור עליו.
 
 ## פלט
 

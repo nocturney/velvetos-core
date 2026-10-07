@@ -6,8 +6,8 @@
 
 ## מה זה
 
-מערכת **ייצור טיוטות + תור אישור 07:00**.  
-לא מפרסמת ל־`@velvets_cloud`. לא שולחת DM. לא סוגרת וואטסאפ.
+מערכת **ייצור טיוטות + readiness event-driven + handoff ל־publication policy**.
+לא מפרסמת ישירות ל־`@velvets_cloud`: live publish הוא action נפרד של `vfigos` ורק אחרי `policy_id: instagram.publish`, exact-final gates, receipt ו־live verification. לא שולחת DM. לא סוגרת וואטסאפ.
 
 עדיפות ספרינט תוכן (Control Plane — לא תור מקביל):
 1. `ready_for_finished_content` · 2. `print.done` עם מדיה · 3. מאושר שמחכה למשבצת · 4. מדיה חדשה מקליטה · 5. רק אז רעיונות חדשים.  
@@ -16,13 +16,14 @@ CLI: `python3 scripts/vf_control_plane.py followups` · מפה: `office/control-
 ```
 print.done (Edge / מפעיל)
         → Media Capture (איכות / חסר=חסר)
-        → Content Factory (Reel למשבצת 16:00 הבאה · Story 20:30)
-        → policy_checked → pending_human_approval
-        → readiness Decision Pack עד cutoff 07:00 [אישור|עריכה|דחייה] → Morning Brief 09:00
-        → approved_for_manual_posting
-        → אדם מעלה ב־instagram.com
-        → Insights מיובאים + orders.json
-        → המלצת מחר
+        → Content Factory (Reel/Story לפי content grid)
+        → exact-final PREFLIGHT + EDIT-GATE
+        → policy_checked
+        → ALLOW + standingAuthorization → authorized_for_tool_publish → vfigos → published_verified
+           OR REQUIRE_OWNER_APPROVAL → pending_human_approval → approved_for_manual_posting (legacy/manual branch)
+        → readiness pack לפי צורך/אירוע; Morning Brief צורך אותו רק אם מופעל ורלוונטי
+        → Insights מאומתים + orders.json
+        → learning/recommendation
 ```
 
 ## מסלולי Reel (למשבצת לוח, לא כל יום חול)
@@ -40,7 +41,7 @@ print.done (Edge / מפעיל)
 סדר ההחלטה של שער הריל (`vf_organic_growth.py brief`):
 
 1. `print.done` / כרטיס עם נתיב מדיה → `quality_checked` (כמו קודם; עדיין PREFLIGHT לפני שיבוץ).
-2. אחרת, וידאו שמיש ב־`packages/vfmedia/catalog.json` → `candidates_ready`: 2–3 מועמדים (וידאו בלבד, `status=source`, לא מפורסם, בלי נגזרות, בלי כפילויות; חדש לפני ישן; סדרה שכבר פורסמה בסוף; משך רק אם הקטלוג מחזיק אותו). לכל מועמד: מזהה קטלוג + שם קובץ, למה נבחר, ומתכון עריכה בכלי פעיל קיים — `scripts/vf_video_edit.py` (חיתוך 7–15ש, `portrait` 1080x1920 · 9:16, 30fps, `visual-only`) → `scripts/vf_hyperframes.py` (`reel_master`, הוק NO_TEXT או עד 5 מילים לפי OWNER-APPROVED-GRID-STANDARD, CTA בסוף: «לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם»). מועמד הוא **הצעה, לא ריל**: אדם צופה ומאשר, ואז PREFLIGHT + EDIT-GATE. בלי אוטו־עריכה, בלי רינדור בתזמון, בלי פרסום, ובלי טענה שהווידאו מראה מוצר מסוים אם אין `productLink`.
+2. אחרת, וידאו שמיש ב־`packages/vfmedia/catalog.json` → `candidates_ready`: 2–3 מועמדים (וידאו בלבד, `status=source`, לא מפורסם, בלי נגזרות, בלי כפילויות; חדש לפני ישן; סדרה שכבר פורסמה בסוף; משך רק אם הקטלוג מחזיק אותו). לכל מועמד: מזהה קטלוג + שם קובץ, למה נבחר, ומתכון עריכה בכלי פעיל קיים — `scripts/vf_video_edit.py` → `scripts/vf_hyperframes.py`. מועמד הוא **הצעה, לא ריל**: בחירת/עריכת routine יכולה להיות office-owned, אבל completion דורש exact-final PREFLIGHT + EDIT-GATE ואז `policy_id: instagram.publish`. הסקריפט הזה לא מפרסם ולא יוצר authorization; אין רינדור/פרסום עוקף-policy ואין טענת מוצר בלי `productLink`.
 3. חסר גלם איכותי וגם אין וידאו שמיש בקטלוג → `blocked_no_media` — לא ממציאים Reel. שורת בריף:  
 «אין Reel איכותי אוטומטי להיום. נדרשים 15 שניות צילום ידני: קלוז־אפ של המוצר ביד + בדיקת התאמה.»
 
@@ -49,7 +50,7 @@ print.done (Edge / מפעיל)
 ## Story 20:30 (א׳–ה׳)
 
 2–3 שקופיות: ויזואל מחר במעבדה · סקר · CTA רך להודעת Instagram (`PUBLIC_CURRENT_CTA`).  
-שלושה ניסוחים מדורגים לפי ביצועים **מיובאים** בלבד. מצב: `pending_human_approval`.
+שלושה ניסוחים מדורגים לפי ביצועים **מאומתים** בלבד. מצב ההכנה אינו authorization: exact package עובר `policy_id: instagram.publish`; `pending_human_approval` קיים רק אם policy דורש אדם.
 
 ## תעודת מוצר
 
@@ -72,5 +73,5 @@ print.done (Edge / מפעיל)
 
 ## נעול
 
-אין Publish מכאן. אין אוטו־DM. אין בוסט. אין ₪ / Insights מומצאים.  
+אין direct/bypass Publish מכאן; publication עובר רק דרך `vfigos` + policy/receipt/live verification. אין אוטו־DM. אין בוסט. אין ₪ / Insights מומצאים.
 תיוג משתתפים: משפט «אתם בחרתם—הנה התוצאה» — לא תיוג בלי opt-in.

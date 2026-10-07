@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Organic Growth Control Plane — drafts + 07:00 decision pack. No publish. No DM."""
+"""Organic Growth Control Plane — drafts + event-driven readiness. No direct publish. No DM."""
 from __future__ import annotations
 
 import argparse
@@ -8,6 +8,10 @@ import sys
 from datetime import date, datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
+
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8")
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import vf_reel_candidates as reel_candidates  # noqa: E402
@@ -30,14 +34,16 @@ POLICY = ROOT / "constitution" / "ORGANIC_GROWTH.md"
 
 GATES_FORWARD = {
     "draft": {"quality_checked", "candidates_ready", "blocked_no_media"},
-    # candidates_ready = catalog suggestions only; a human views/approves and PREFLIGHT+EDIT-GATE pass
-    # before anything becomes a draft reel. Never publish/edit/schedule from here.
+    # candidates_ready = catalog suggestions only; routine selection may be office-owned,
+    # but exact-final PREFLIGHT+EDIT-GATE + policy authorization are required before publish.
     "candidates_ready": {"quality_checked", "draft", "blocked_no_media"},
     "quality_checked": {"policy_checked", "blocked_policy"},
-    "policy_checked": {"pending_human_approval"},
+    "policy_checked": {"authorized_for_tool_publish", "pending_human_approval", "blocked_policy"},
+    "authorized_for_tool_publish": {"published_verified", "blocked_policy"},
     "pending_human_approval": {"approved_for_manual_posting", "edit", "rejected"},
     "approved_for_manual_posting": {"posted_manually"},
     "posted_manually": {"performance_imported"},
+    "published_verified": {"performance_imported"},
     "performance_imported": {"attributed"},
     "attributed": {"learned"},
     "edit": {"draft"},
@@ -112,8 +118,8 @@ def print_payloads() -> list[dict]:
 
 NO_MEDIA_LINE = "אין Reel איכותי אוטומטי להיום. נדרשים 15 שניות צילום ידני: קלוז־אפ של המוצר ביד + בדיקת התאמה."
 CANDIDATES_LINE = (
-    "מועמדי Reel מהקטלוג ({n}) — הצעה בלבד, לא ריל: לצפות, לבחור, לאשר ידנית, "
-    "ואז PREFLIGHT + EDIT-GATE. אין טענת מוצר בלי productLink."
+    "מועמדי Reel מהקטלוג ({n}) — הצעה בלבד, לא ריל: לבחור/לעבד לפי הראיות, "
+    "ואז exact-final PREFLIGHT + EDIT-GATE + instagram.publish. אין טענת מוצר בלי productLink."
 )
 
 
@@ -121,7 +127,7 @@ def media_quality_line(payloads: list[dict], candidates: list[dict] | None = Non
     """print.done/card media → quality_checked; catalog video suggestions → candidates_ready;
     blocked_no_media only when neither exists. Never invents a reel."""
     if any(has_media(p) for p in payloads):
-        return "quality_checked", "יש נתיב מדיה בכרטיס/אירוע — עדיין דורש PREFLIGHT לפני שיבוץ"
+        return "quality_checked", "יש נתיב מדיה בכרטיס/אירוע — עדיין דורש exact-final PREFLIGHT + EDIT-GATE + policy לפני publication"
     if candidates:
         return "candidates_ready", CANDIDATES_LINE.format(n=len(candidates))
     return "blocked_no_media", NO_MEDIA_LINE
@@ -247,10 +253,10 @@ def cmd_brief(args: argparse.Namespace) -> int:
             ),
             "deferred": {"id": f"poll-{poll.get('poll_id') or 'petg_vs_nylon'}", "to": "משבצת סטוריז פנויה אחרת"},
         }
-        story_gate = "recommended_g004_pending_human_post"
+        story_gate = "recommended_g004_policy_pending"
         slot_status = f"המלצה יחידה · G004 · {slot_meta['whenHe']}"
-        story_note = "בחירה אחת: G004. סקר לא משובץ במקביל. אישור ≠ פרסום · בלי תזמון מ־HQ."
-        studio_story_task = f"לאשר ידנית G004 ל־{slot_meta['whenHe']} (לא מפרסם מ־HQ)."
+        story_note = "בחירה אחת: G004. סקר לא משובץ במקביל. authorization נקבע רק ב־instagram.publish; בלי bypass מ־HQ."
+        studio_story_task = f"להכין exact package ל־{slot_meta['whenHe']} ולהעביר ל־instagram.publish; human רק אם policy דורש."
     elif now.weekday() < 5 and (
         now.hour < 20 or (now.hour == 20 and now.minute < 30)
     ):
@@ -266,10 +272,10 @@ def cmd_brief(args: argparse.Namespace) -> int:
             ),
             "deferred": {"id": "G004-stories", "to": "qualification חדש מול LEDGER + VF_PUBLICATION_ROUTE_V1"},
         }
-        story_gate = "recommended_poll_pending_human_post"
+        story_gate = "recommended_poll_policy_pending"
         slot_status = f"המלצה יחידה · סקר · {slot_meta['whenHe']}"
-        story_note = "בחירה אחת: סקר. G004 נשאר STALE עד qualification חדש ב־LEDGER. אישור ≠ פרסום."
-        studio_story_task = f"לאשר או לדחות סקר ל־{slot_meta['whenHe']} (לא מפרסם)."
+        story_note = "בחירה אחת: סקר. G004 נשאר STALE עד qualification חדש ב־LEDGER. authorization נקבע רק ב־instagram.publish."
+        studio_story_task = f"להכין או לדחות סקר ל־{slot_meta['whenHe']}; publish רק דרך policy + vfigos."
     else:
         slot_rec = {
             "choice": "poll" if not g004_ready else "G004",
@@ -290,7 +296,7 @@ def cmd_brief(args: argparse.Namespace) -> int:
         "component_state": "Idle" if gate != "blocked_no_media" else "Blocked",
         "goal": "פניות מקומיות על מוצרים מוכנים והדפסות בהתאמה אישית.",
         "locks": [
-            "no-autopost",
+            "no-direct-bypass-autopost",
             "no-auto-dm",
             "no-boost",
             "no-invented-insights",
@@ -316,7 +322,7 @@ def cmd_brief(args: argparse.Namespace) -> int:
             "cta": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
             "geotag": "שדרות" if gate != "blocked_no_media" else "חסר",
             "hashtag_set_id": tag_set.get("hashtag_set_id") or "local_custom_v1",
-            "actions": ["אישור", "עריכה", "דחייה"],
+            "actions": ["המשך לפי policy", "עריכה", "דחייה"],
             "no_media_line": media_line,
             "candidates": candidates,
             "candidate_lines": cand_lines,
@@ -324,7 +330,7 @@ def cmd_brief(args: argparse.Namespace) -> int:
                 k: section["catalog"][k]
                 for k in ("catalog", "videosInCatalog", "usableVideos", "skipped", "activeEditTools")
             },
-            "locks": ["no-autopost", "no-auto-edit", "no-schedule", "no-product-claim-without-productLink"],
+            "locks": ["no-direct-bypass-autopost", "no-auto-edit", "no-schedule", "no-product-claim-without-productLink"],
         },
         "story": {
             "slot": story_slot(now),
@@ -335,7 +341,7 @@ def cmd_brief(args: argparse.Namespace) -> int:
             "question": poll.get("question") or "חסר סקר בספרייה",
             "options": poll.get("options") or [],
             "cta": "לפרטים — שלחו הודעה כאן באינסטגרם",
-            "actions": ["אישור", "עריכה", "דחייה"],
+            "actions": ["המשך לפי policy", "עריכה", "דחייה"],
             "note": story_note,
         },
         "yesterday": {
@@ -373,7 +379,7 @@ def cmd_brief(args: argparse.Namespace) -> int:
             "resolution": "אם G004 לא מוכן — המלצה יחידה לסקר; אחרת המלצה יחידה ל-G004",
         }
     text = (
-        f"VELVET ORGANIC GROWTH BRIEF — 07:00\n"
+        f"VELVET ORGANIC GROWTH READINESS — EVENT-DRIVEN\n"
         f"יום: {pack['weekdayNote']}\n"
         f"יעד היום: {pack['goal']}\n"
         f"1. REEL · {pack['reel']['slot']} · gate={pack['reel']['gate']}\n"
@@ -381,16 +387,16 @@ def cmd_brief(args: argparse.Namespace) -> int:
         + "".join(f"{line}\n" for line in cand_lines)
         + f"CTA: {pack['reel']['cta']}\n"
         f"סט האשטגים: {pack['reel']['hashtag_set_id']}\n"
-        f"פעולה: [אישור] [עריכה] [דחייה] — אישור ≠ פרסום\n"
+        f"פעולה: [המשך לפי policy] [עריכה] [דחייה] — authorization ≠ readiness\n"
         f"2. STORY · {pack['story']['slotStatus']} · gate={pack['story']['gate']}\n"
         f"המלצה יחידה: {slot_rec['choice']} · {slot_rec['whenHe']}\n"
         f"נימוק: {slot_rec['reason']}\n"
         f"סקר (לא שיבוץ מקביל): {pack['story']['question']} · {' / '.join(pack['story']['options'])}\n"
         f"{pack['story'].get('note')}\n"
-        f"פעולה: [אישור] [עריכה] [דחייה]\n"
+        f"פעולה: [המשך לפי policy] [עריכה] [דחייה]\n"
         f"3. אתמול: Insights {pack['yesterday']['insights']} · הזמנות {pack['yesterday']['recommendation']}\n"
         f"4. סטודיו: {'; '.join(pack['studio_tasks'])}\n"
-        "אין Publish / אין אוטו-DM / אין ₪ מומצא."
+        "אין direct/bypass Publish / אין אוטו-DM / אין ₪ מומצא."
     )
     print(text)
     if args.write:
@@ -485,7 +491,7 @@ def cmd_score(_args: argparse.Namespace) -> int:
 def main() -> int:
     parser = argparse.ArgumentParser(description="VelvetOS organic growth control plane")
     sub = parser.add_subparsers(dest="cmd", required=True)
-    brief = sub.add_parser("brief", help="07:00 decision pack")
+    brief = sub.add_parser("brief", help="event-driven readiness pack")
     brief.add_argument("--write", action="store_true")
     brief.set_defaults(func=cmd_brief)
     sub.add_parser("policy", help="policy gate over queue + orders").set_defaults(func=cmd_policy)

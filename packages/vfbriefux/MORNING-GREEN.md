@@ -1,6 +1,6 @@
 # Morning Green v3.1
 
-המסלול הקנוני לבריף 09:00 של Velvet Factory. זהו מייל owner-only, RTL, Desktop-first ורספונסיבי, בעיצוב מגזיני ירוק/שמנת/זהב. החל מ־2026-09-23 הסטטוס הוא `LIVE / VERIFIED` עבור בריף הבוקר.
+המסלול הקנוני לעיצוב Morning Brief של Velvet Factory כאשר בריף מופעל. זהו מייל owner-only, RTL, Desktop-first ורספונסיבי, בעיצוב מגזיני ירוק/שמנת/זהב. החל מ־2026-09-23 הסטטוס הוא `LIVE / VERIFIED` עבור surface הבריף; אין מכאן standing 09:00 clock.
 
 `MAIL.html` / `render_mail.py` נשארים זמינים ל־legacy/recovery owner surfaces בלבד; Morning Green הוא ברירת המחדל של בריף הבוקר.
 
@@ -92,7 +92,7 @@ Self-check: `python packages/vfbriefux/render_morning_green.py --check`
 5. Gmail readback מאמת את ההודעה;
 6. Apps Script bridge health תקין וה־one-shot חוזר ל־disabled.
 
-כל ששת השערים עברו ב־2026-09-23. Apps Script deployment הקנוני עודכן לגרסה 5 והחזיר HTTP 200; QA production-path החזיר Gmail message ID `1a0ca4521ef56af0`; readback אימת 6 CID images, את התזמונים 09:00 ו־12:00 ואת היעדרם של template tokens פתוחים. לכן בריף 09:00 רשאי להשתמש ב־Morning Green כברירת המחדל.
+כל ששת השערים עברו ב־2026-09-23. Apps Script deployment הקנוני עודכן לגרסה 5 והחזיר HTTP 200; QA production-path החזיר Gmail message ID `1a0ca4521ef56af0`; readback היסטורי אימת 6 CID images ואת התזמונים שהיו פעילים אז, 09:00 ו־12:00, ואת היעדרם של template tokens פתוחים. לכן Morning Green רשאי לשמש כברירת המחדל בכל הפעלה נוכחית של הבריף; הראיה ההיסטורית אינה מחזירה schedule.
 
 ## Publisher cutover — 2026-09-26
 

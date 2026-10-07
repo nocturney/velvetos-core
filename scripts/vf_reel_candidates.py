@@ -2,14 +2,15 @@
 """Reel candidates from the one media catalog — suggestions only, never a reel.
 
 Reads packages/vfmedia/catalog.json (the vault's single catalog) and proposes the
-best 2-3 unpublished source videos for a human to view. Each candidate carries a
-proposed edit recipe that names an existing active office editing tool
-(VIDEO-TOOLCHAIN editIntelligence bridge + HyperFrames canonical overlay).
+best 2-3 unpublished source videos. Each candidate carries a proposed edit recipe
+that names an existing active office editing tool (VIDEO-TOOLCHAIN editIntelligence
+bridge + HyperFrames canonical overlay).
 
-Locks: no publish, no edit, no render, no network, no schedule. A candidate is
-not a reel and does not show a specific product unless the catalog links one
-(`productLink`). "do not invent a reel" still holds: nothing here exists until a
-human views the clip, approves it, and it passes PREFLIGHT + EDIT-GATE.
+Locks: no direct publish, no edit, no render, no network, no schedule. A candidate
+is not a reel and does not show a specific product unless the catalog links one
+(`productLink`). Routine creative selection may be office-owned, but nothing is
+publish-ready until exact-final PREFLIGHT + EDIT-GATE pass and
+`policy_id: instagram.publish` authorizes the external effect.
 """
 from __future__ import annotations
 
@@ -179,9 +180,9 @@ def edit_recipe(name: str, kind: str, tools: dict) -> dict:
         "tool": steps[0]["tool"] if steps else "",
         "host": "office host · sderot-mac → sderot-windows (RENDER-HOSTS) · ידני, לא בתזמון",
         "steps": steps,
-        "gates": ["צפייה+אישור אדם", "packages/vfgrowth/PREFLIGHT.md", "packages/vfgrowth/EDIT-GATE.md"],
+        "gates": ["exact-final visual review", "packages/vfgrowth/PREFLIGHT.md", "packages/vfgrowth/EDIT-GATE.md", "policy_id: instagram.publish"],
         "cta": REEL_CTA,
-        "note": "הצעה בלבד — לא עריכה, לא רינדור, לא פרסום",
+        "note": "הצעה בלבד — לא authorization ולא פרסום; routine selection can stay office-owned",
     }
 
 

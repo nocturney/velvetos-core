@@ -52,7 +52,7 @@
     {
       "id": "vfbiz",
       "kind": "docs-playbook",
-      "cadence": "daily-07:00",
+      "cadence": "on-brief",
       "consume": "packages/vfbiz/hq/PLAYBOOK.md",
       "briefSlot": "04",
       "handoff": "packages/vfbiz/OFFERING.md"
@@ -60,7 +60,7 @@
     {
       "id": "vfbooks",
       "kind": "working-cli",
-      "cadence": "daily-07:00",
+      "cadence": "on-brief",
       "consume": "python3 scripts/vfbooks.py brief",
       "briefSlot": "02",
       "handoff": "packages/vfbooks/INTEGRITY.md",
@@ -69,7 +69,7 @@
     {
       "id": "vfbriefux",
       "kind": "working-cli",
-      "cadence": "daily-07:00",
+      "cadence": "on-brief",
       "consume": "python3 packages/vfbriefux/render_mail.py --check",
       "briefSlot": "all",
       "handoff": "packages/vfbriefux/hq/PACKET.md"
@@ -86,7 +86,7 @@
     {
       "id": "vfcopy",
       "kind": "docs-playbook",
-      "cadence": "daily-07:00",
+      "cadence": "on-brief",
       "consume": "packages/vfcopy/G004-STORIES-FIX.md",
       "briefSlot": "07",
       "handoff": "packages/vfcopy/G004-STORIES-FIX.md"
@@ -94,7 +94,7 @@
     {
       "id": "vfcost",
       "kind": "working-cli",
-      "cadence": "daily-07:00",
+      "cadence": "on-brief",
       "consume": "python3 scripts/vfcost.py brief",
       "briefSlot": "02",
       "handoff": "packages/vfcost/CLI.md"
@@ -145,7 +145,7 @@
     {
       "id": "vfgrowth",
       "kind": "docs-playbook",
-      "cadence": "daily-07:00",
+      "cadence": "on-brief",
       "consume": "packages/vfgrowth/hq/FOLLOWER-GROWTH.md",
       "briefSlot": "04",
       "handoff": "packages/vfgrowth/HANDOFF-he.md",
@@ -169,7 +169,7 @@
     {
       "id": "vfigos",
       "kind": "mcp-ready",
-      "cadence": "daily-growth",
+      "cadence": "on-publish",
       "consume": "packages/vfigos/CONNECT-IG.md",
       "briefSlot": "06",
       "handoff": "packages/vfigos/HANDOFF-STANDING-he.md",
@@ -180,7 +180,7 @@
     {
       "id": "vfinsights",
       "kind": "mcp-callable",
-      "cadence": "daily-07:00",
+      "cadence": "on-brief",
       "consume": "packages/vfinsights/READ.md",
       "briefSlot": "06",
       "handoff": "packages/vfinsights/templates/snapshot-ingest.md",
@@ -240,7 +240,7 @@
     {
       "id": "vfops",
       "kind": "working-cli",
-      "cadence": "daily-07:00",
+      "cadence": "on-brief",
       "consume": "python3 scripts/vfops_loop.py brief",
       "briefSlot": "all",
       "handoff": "packages/vfops/ROUTINE.md"
@@ -248,7 +248,7 @@
     {
       "id": "vfprod",
       "kind": "working-cli",
-      "cadence": "daily-03",
+      "cadence": "on-brief",
       "consume": "python3 scripts/vfprod.py brief",
       "briefSlot": "03",
       "handoff": "packages/vfprod/FLOOR.md",
@@ -257,7 +257,7 @@
     {
       "id": "vfresearch",
       "kind": "docs-playbook",
-      "cadence": "daily-06:15",
+      "cadence": "on-demand",
       "consume": "packages/vfresearch/DAILY.md",
       "briefSlot": "05",
       "handoff": "packages/vfresearch/WEEKLY.md"
@@ -274,7 +274,7 @@
     {
       "id": "vfseason",
       "kind": "docs-playbook",
-      "cadence": "daily-07:00",
+      "cadence": "on-content",
       "consume": "packages/vfseason/hq/PLAYBOOK.md",
       "briefSlot": "07",
       "handoff": "packages/vfgrowth/CALENDAR.md",
@@ -283,7 +283,7 @@
     {
       "id": "vfsku",
       "kind": "working-cli",
-      "cadence": "daily-07:00",
+      "cadence": "on-brief",
       "consume": "python3 scripts/vfsku.py scan",
       "briefSlot": "03",
       "handoff": "packages/vfresearch/hq/MAKERWORLD-SCAN.md"
@@ -332,7 +332,7 @@
     {
       "id": "organic-growth",
       "path": "constitution/ORGANIC_GROWTH.md",
-      "cadence": "daily-07:00",
+      "cadence": "on-content",
       "consume": "python3 scripts/vf_organic_growth.py brief --write"
     },
     {
@@ -350,7 +350,7 @@
     {
       "id": "skill-morning-brief",
       "path": ".cursor/skills/vf-morning-brief/SKILL.md",
-      "cadence": "daily-07:00",
+      "cadence": "on-demand",
       "consume": "python3 scripts/vfops_loop.py brief --write"
     },
     {
@@ -374,13 +374,13 @@
     {
       "id": "skill-best-skills",
       "path": ".cursor/skills/vf-best-skills/SKILL.md",
-      "cadence": "bi-daily",
+      "cadence": "on-demand",
       "consume": ".cursor/skills/vf-best-skills/SKILL.md"
     },
     {
       "id": "skill-daily-learning",
       "path": ".cursor/skills/vf-daily-learning/SKILL.md",
-      "cadence": "daily-eod",
+      "cadence": "on-learning-event",
       "consume": ".cursor/skills/vf-daily-learning/SKILL.md"
     },
     {
@@ -644,7 +644,7 @@
     {
       "id": "books-integrity",
       "path": "packages/vfbooks/INTEGRITY.md",
-      "cadence": "daily-07:00",
+      "cadence": "on-brief",
       "consume": "python3 scripts/vfbooks.py brief"
     },
     {
@@ -656,13 +656,13 @@
     {
       "id": "skill-organic-growth",
       "path": ".cursor/skills/vf-organic-growth/SKILL.md",
-      "cadence": "daily-07:00",
+      "cadence": "on-content",
       "consume": "python3 scripts/vf_organic_growth.py brief --write"
     },
     {
       "id": "organic-growth-pack",
       "path": "packages/vfgrowth/ORGANIC-GROWTH.md",
-      "cadence": "daily-07:00",
+      "cadence": "on-content",
       "consume": "packages/vfgrowth/GATE.md"
     },
     {

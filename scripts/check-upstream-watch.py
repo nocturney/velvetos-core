@@ -174,9 +174,16 @@ def main() -> int:
         if needle not in research_text:
             fail(f"Research Seat daily contract missing upstream watch marker: {needle}")
     office_text = OFFICE_LOOP.read_text(encoding="utf-8")
-    for needle in ("UPSTREAM_REPORT", "upstream watch report stale", "upstream monitor healthy (decisions delivered separately by email)"):
+    for needle in (
+        "UPSTREAM_REPORT",
+        "upstream-watch-evidence",
+        "report age is provenance only",
+        "decisions delivered separately by email",
+    ):
         if needle not in office_text:
-            fail(f"Office Loop missing upstream report consumption marker: {needle}")
+            fail(f"Office Loop missing event-driven upstream evidence marker: {needle}")
+    if "checked != today" in office_text or "upstream watch report stale" in office_text:
+        fail("Office Loop must not recreate a daily freshness clock for upstream research")
     if "changed={changed}" in office_text or "pendingUpdates" in office_text:
         fail("Office Loop must not expose update counts/decisions in Morning Brief")
     active_rows = list(grok.get("routines") or [])

@@ -19,7 +19,7 @@ Bind ייחוס (תאימות): Velvet Factory — שדרות · איסוף · �
 
 **NO_NEW_RECURRING_COST:** יעד ברירת המחדל הוא אפס עלות חדשה חוזרת. לפני התקנה, חיבור, credentials, קריאה ראשונה שעלולה להיות מחויבת או production, מפעילים cost preflight ונכשלים-סגור כשהעלות בתשלום או לא ידועה. סמכות קנונית: [`NO_NEW_RECURRING_COST.md`](NO_NEW_RECURRING_COST.md).
 
-מפעל צמיחה אורגני: [`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md) — טיוטות + readiness pack עד cutoff 07:00 לצריכת Morning Brief 09:00. לא בוט פרסום. לא אוטו־DM.
+מפעל צמיחה אורגני: [`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md) — טיוטות + readiness pack לפי צורך/אירוע לצריכת Morning Brief ידני/אירועי. ה־Control Plane אינו Publish API ישיר; פרסום מורשה עובר רק דרך `vfigos` + `policy_id: instagram.publish`. לא אוטו־DM.
 
 מאגר מדיה משותף: [`docs/MEDIA-VAULT.md`](../docs/MEDIA-VAULT.md) · קטלוג אחד `packages/vfmedia/catalog.json`. תפעול קולט נכנס→מקור; העלאה ומיקום בתיקייה אינם אישור לפרסום.
 

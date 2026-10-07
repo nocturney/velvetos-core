@@ -26,7 +26,7 @@
 | Connector priority + seat scope | LobeHub ToolsEngine | `vfmcp/GAP.md` — מושב → namespace → failover |
 | White-box memory (לא צ'אט גלובלי) | LobeHub Personal Memory | `vfharness/state/` + checkpoint schema |
 | Agent Groups / Project משותף | LobeHub Pages | fan-out max 3 על `vfcopy`/`vfcovers` בלבד |
-| Schedule registry (לא cron אוטונומי) | LobeHub Operator | `vfops/ROUTINE.md` + Morning Brief 09:00 + `decision_gate` |
+| Schedule registry (לא cron אוטונומי) | LobeHub Operator | `vfops/ROUTINE.md` + manual/event-driven Morning Brief + `decision_gate` |
 | setup / teardown / run ל-workspace | [Superset](https://github.com/superset-sh/superset) lifecycle scripts | Cloud Agent `environment.json` — לא IDE שני |
 | Session goal | DeerFlow `/goal` | שדה `מטרה` בכרטיס · checkpoint `goal` |
 | Sub-agent bounds | DeerFlow task | fan-out ≤3 · לא על ₪/שליחה |
@@ -49,7 +49,7 @@ Cursor הוא המשרד. `LOCK.md` + `skipFamilies` ב־`orchestrators.json`.
 
 1. `@vfe2b run <עבודה>` — תיק אחד, צוות קיים אחד.
 2. ממלאים כרטיס עם `מצב` + `דופק` + `אימות` + `ארטיפקט`.
-3. Morning Brief 09:00: אחרי המיון — HQ שולח ג׳ימייל (`send_message`).
+3. Morning Brief: אחרי המיון, ורק כשהוא מופעל — HQ שולח ג׳ימייל (`send_message`).
 4. פנייה בשרשור נקוב: HQ `reply` כשהטיוטה מוכנה. וואטסאפ לקוח נשאר אדם.
 6. `decision_gate` = ₪ לראש צוות בלבד. לא «מחכים לגרוק שישלח».
 

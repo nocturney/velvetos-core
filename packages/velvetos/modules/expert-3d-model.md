@@ -26,7 +26,7 @@ Blender contract: `packages/vfprod/BLENDER-MCP.md`.
 - Text-to-CAD / STEP / DfAM / Orca bridge: `packages/vfprod/TEXT-TO-CAD.md`.
 - Hardened local Blender controller: `blender-ai-mcp` through `scripts/vf_3d.py`.
 - Headless geometry/print QA: `design-os-3d-blender`.
-- 3D AI Studio only as separately authorized optional capability, never the zero-cost default under `policy_id: cost.recurring.new`.
+- 3D AI Studio only through `policy_id: cost.recurring.new`: an `EXISTING_PAID_CAPABILITY` may proceed without per-use owner approval only when fresh preflight proves no incremental charge; metered/credit use may reuse approval only through a valid bounded cost envelope with current meter + hard cap. It is never the silent zero-cost fallback.
 
 ## Laws
 

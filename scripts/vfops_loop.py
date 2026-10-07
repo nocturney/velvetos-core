@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Office activation loop — consume every pack into the daily brief.
+"""Office activation loop — consume packs into an event-driven owner brief.
 
-No network. No send. No invented ₪ or Insights.
+No network. No send. No invented ₪ or Insights. The brief has no standing clock.
 """
 from __future__ import annotations
 
@@ -67,7 +67,7 @@ FUNNEL = ROOT / "packages" / "vfgrowth" / "hq" / "PROFILE-TO-WHATSAPP.md"
 CLI_LOG = ROOT / "packages" / "vfops" / "data" / "cli-runs.jsonl"
 TZ = ZoneInfo("Asia/Jerusalem")
 ILS_NUMBER = re.compile(r"(?<!050-251)(?<!050–251)\d[\d.,]*\s*₪|₪\s*\d")
-DAILY_CADENCE = {"daily-07:00", "daily-06:15", "daily-03", "daily-growth"}
+BRIEF_RELEVANT_CADENCE = {"on-brief", "office-loop"}
 AUDIT_PACKS = {
     "vfcopy",
     "vfcovers",
@@ -228,14 +228,14 @@ def cli_runs_last_24h() -> list[str]:
 def gap_lines(invoked: set[str]) -> str:
     data = load_loop()
     rows: list[str] = []
-    # on-content / on-inquiry are intentional non-morning cadences — not “failed to run”.
-    skip_gap_cadence = {"on-content", "on-inquiry", "weekly", "bi-daily", "daily-eod"}
+    # Event/on-demand cadences are not missing brief work merely because they did not run.
+    skip_gap_cadence = {"on-content", "on-inquiry", "on-demand", "on-learning-event", "on-publish", "weekly", "session-start", "after-edit", "on-job", "on-instance", "on-shelf"}
     for row in data.get("packs") or []:
         pid = row.get("id") or ""
         cadence = row.get("cadence") or ""
         if cadence in skip_gap_cadence:
             continue
-        watch = pid in AUDIT_PACKS or cadence in DAILY_CADENCE
+        watch = pid in AUDIT_PACKS or cadence in BRIEF_RELEVANT_CADENCE
         if not watch or pid in invoked:
             continue
         blocked = row.get("blocked")
@@ -243,7 +243,7 @@ def gap_lines(invoked: set[str]) -> str:
         rows.append(f"פער: {pid} לא הורץ · {row.get('consume')}{extra}")
     if not rows:
         return ""
-    return "פערים (לא הורץ הבוקר)\n" + "\n".join(rows)
+    return "פערים (לא נצרך בהרכבת ה־brief)\n" + "\n".join(rows)
 
 
 def sku_line() -> str:
@@ -284,7 +284,7 @@ def books_line() -> str:
     if n_orders == 0 and n_inv == 0:
         disk = (
             "ספר דיסק: פער סנכרון · orders.json ריק ≠ הוכחה שאין הזמנות · "
-            "Invoice4U ריק עד הדבקה (לא inbox ל-07:00) · אין ספירה"
+            "Invoice4U ריק עד הדבקה (לא inbox למילוי Morning Brief) · אין ספירה"
         )
     else:
         disk = f"ספר דיסק: הזמנות={n_orders} · Invoice4U={n_inv} · בלי ₪ מומצא"
@@ -652,8 +652,8 @@ def insights_line() -> str:
 
 
 
-# --- Daily consumers (run ≠ brief ≠ check) ---------------------------------
-# run: execute eligible tasks once (no check-all; no auto G005 render)
+# --- Office-loop consumers (run ≠ brief ≠ check) ---------------------------
+# run: execute eligible office-loop tasks once per day key when explicitly invoked (no check-all; no auto G005 render)
 # brief/assemble: read artifacts + prior CLI runs into the packet
 # check: integrity only (may assemble in-memory; must not recurse into run)
 
@@ -679,7 +679,7 @@ class ConsumerSpec:
     requires: tuple[Path, ...] = ()
     artifact: Path | None = None
     pack: str = ""
-    auto_daily: bool = False
+    auto_run: bool = False
     skip_reason: str = ""
 
 
@@ -695,30 +695,40 @@ def consumer_registry() -> list[ConsumerSpec]:
             timeout_s=60,
             requires=(VELVETOS_CLI,),
             pack="velvetos",
-            auto_daily=True,
+            auto_run=True,
         ),
         ConsumerSpec(
             id="vfinsights-loop",
             title="vfinsights measurement loop",
-            cadence="daily-07:00",
+            cadence="office-loop",
             kind="exec",
             argv=[sys.executable, str(INSIGHTS_LOOP), "--data", str(INSIGHTS_CSV)],
             timeout_s=60,
             requires=(INSIGHTS_LOOP, INSIGHTS_CSV),
             artifact=LEARNINGS,
             pack="vfinsights",
-            auto_daily=True,
+            auto_run=True,
         ),
         ConsumerSpec(
-            id="vfresearch-daily",
-            title="vfresearch daily playbook status",
-            cadence="daily-06:15",
-            kind="verify",
-            requires=(RESEARCH_DAILY, RESEARCH_MD, UPSTREAM_REPORT),
+            id="vfresearch-on-demand",
+            title="vfresearch manual/event-driven research",
+            cadence="on-demand",
+            kind="skip",
+            requires=(RESEARCH_DAILY,),
             artifact=RESEARCH_MD,
             pack="vfresearch",
-            auto_daily=True,
-            skip_reason="",  # verify only — DAILY.md is a playbook, not scripts/vfresearch.py
+            auto_run=False,
+            skip_reason="manual/event-driven research is not an Office Loop clock",
+        ),
+        ConsumerSpec(
+            id="upstream-watch-evidence",
+            title="upstream watch evidence health",
+            cadence="office-loop",
+            kind="verify",
+            requires=(UPSTREAM_REPORT,),
+            artifact=UPSTREAM_REPORT,
+            pack="",
+            auto_run=True,
         ),
         ConsumerSpec(
             id="vfsales-quote",
@@ -728,7 +738,7 @@ def consumer_registry() -> list[ConsumerSpec]:
             argv=[sys.executable, str(QUOTE_LADDER), "--task-id", "vfops-loop-skip"],
             requires=(QUOTE_LADDER, QUOTE_MD),
             pack="vfsales",
-            auto_daily=False,
+            auto_run=False,
             skip_reason="on-inquiry only — no automatic quote without known fields / lead ILS",
         ),
         ConsumerSpec(
@@ -738,7 +748,7 @@ def consumer_registry() -> list[ConsumerSpec]:
             kind="skip",
             requires=(ROOT / "packages" / "vfcovers" / "g005" / "compose_slides.py",),
             pack="vfcovers",
-            auto_daily=False,
+            auto_run=False,
             skip_reason="on-content only — composing G005 requires an explicit content job",
         ),
         ConsumerSpec(
@@ -747,53 +757,53 @@ def consumer_registry() -> list[ConsumerSpec]:
             cadence="ci/check",
             kind="skip",
             pack="vfharness",
-            auto_daily=False,
+            auto_run=False,
             skip_reason="integrity belongs to `vfops_loop.py check` / CI — never from run/assemble (recursion)",
         ),
         ConsumerSpec(
             id="vfbooks-brief",
             title="vfbooks integrity line",
-            cadence="daily-07:00",
+            cadence="office-loop",
             kind="exec",
             argv=[sys.executable, str(VFBOOKS), "brief"],
             timeout_s=30,
             requires=(VFBOOKS,),
             pack="vfbooks",
-            auto_daily=True,
+            auto_run=True,
         ),
         ConsumerSpec(
             id="vfsku-scan",
             title="MakerWorld scan line (Sun/Wed or not-scan-day)",
-            cadence="daily-07:00",
+            cadence="office-loop",
             kind="exec",
             argv=[sys.executable, str(VFSKU), "scan"],
             timeout_s=30,
             requires=(VFSKU,),
             pack="vfsku",
-            auto_daily=True,
+            auto_run=True,
         ),
         ConsumerSpec(
             id="vfprod-print-done",
             title="print.done cards for brief",
-            cadence="daily-03",
+            cadence="office-loop",
             kind="exec",
             argv=[sys.executable, str(VFPROD), "print-done"],
             timeout_s=30,
             requires=(VFPROD,),
             pack="vfprod",
-            auto_daily=True,
+            auto_run=True,
         ),
         ConsumerSpec(
             id="organic-growth-brief",
-            title="organic growth 07:00 decision pack",
-            cadence="daily-07:00",
+            title="organic growth event-driven readiness pack",
+            cadence="office-loop",
             kind="exec",
             argv=[sys.executable, str(ORGANIC_CLI), "brief", "--write"],
             timeout_s=30,
             requires=(ORGANIC_CLI,),
             artifact=GROWTH_BRIEF,
             pack="vfgrowth",
-            auto_daily=True,
+            auto_run=True,
         ),
     ]
 
@@ -836,11 +846,11 @@ def append_consumer_run(today: str, spec: ConsumerSpec, *, ok: bool, detail: str
 
 def run_consumer(spec: ConsumerSpec, *, today: str, force: bool = False) -> dict:
     """Run one consumer. Returns a structured result — never claims done on skip/fail."""
-    if spec.kind == "skip" or not spec.auto_daily:
+    if spec.kind == "skip" or not spec.auto_run:
         return {
             "id": spec.id,
             "status": "skipped",
-            "reason": spec.skip_reason or f"cadence {spec.cadence} not auto-daily",
+            "reason": spec.skip_reason or f"cadence {spec.cadence} not enabled for office-loop run",
         }
     if not force and consumer_already_ran(today, spec.id):
         return {"id": spec.id, "status": "skipped", "reason": "already ran successfully today"}
@@ -851,12 +861,11 @@ def run_consumer(spec: ConsumerSpec, *, today: str, force: bool = False) -> dict
         return {"id": spec.id, "status": "failed", "reason": detail}
 
     if spec.kind == "verify":
-        if spec.id == "vfresearch-daily":
+        if spec.id == "upstream-watch-evidence":
             try:
-                upstream = json.loads(UPSTREAM_REPORT.read_text(encoding="utf-8"))
+                upstream = json.loads(UPSTREAM_REPORT.read_text(encoding="utf-8-sig"))
                 summary = upstream.get("summary") or {}
-                checked = datetime.fromisoformat(str(upstream.get("checkedAt") or "").replace("Z", "+00:00")).astimezone(TZ).date().isoformat()
-            except (OSError, ValueError, json.JSONDecodeError) as exc:
+            except (OSError, json.JSONDecodeError) as exc:
                 detail = f"upstream watch report invalid: {exc}"
                 append_consumer_run(today, spec, ok=False, detail=detail)
                 return {"id": spec.id, "status": "failed", "reason": detail}
@@ -864,17 +873,13 @@ def run_consumer(spec: ConsumerSpec, *, today: str, force: bool = False) -> dict
                 detail = "upstream watch report schema mismatch"
                 append_consumer_run(today, spec, ok=False, detail=detail)
                 return {"id": spec.id, "status": "failed", "reason": detail}
-            if checked != today:
-                detail = f"upstream watch report stale: checked={checked} expected={today}"
-                append_consumer_run(today, spec, ok=False, detail=detail)
-                return {"id": spec.id, "status": "failed", "reason": detail}
             failed = int(summary.get("failed") or 0)
             sources = int(summary.get("sources") or 0)
             if sources <= 0 or failed:
-                detail = f"upstream watch incomplete: sources={sources} failed={failed}"
+                detail = f"upstream watch report unhealthy: sources={sources} failed={failed}"
                 append_consumer_run(today, spec, ok=False, detail=detail)
                 return {"id": spec.id, "status": "failed", "reason": detail}
-            detail = "research daily verified; upstream monitor healthy (decisions delivered separately by email)"
+            detail = "upstream monitor healthy; report age is provenance only; decisions delivered separately by email"
         else:
             detail = f"verified {' · '.join(str(p.relative_to(ROOT)) for p in spec.requires)}"
         append_consumer_run(today, spec, ok=True, detail=detail)
@@ -910,8 +915,8 @@ def run_consumer(spec: ConsumerSpec, *, today: str, force: bool = False) -> dict
     return {"id": spec.id, "status": "ok", "detail": detail, "pack": spec.pack}
 
 
-def run_daily_consumers(*, today: str | None = None, force: bool = False) -> list[dict]:
-    """Execute eligible daily tasks once. Does not assemble brief. Does not run check-all."""
+def run_consumers(*, today: str | None = None, force: bool = False) -> list[dict]:
+    """Execute eligible office-loop consumers once for a day key. Does not assemble brief or run check-all."""
     day = today or datetime.now(TZ).date().isoformat()
     results: list[dict] = []
     for spec in consumer_registry():
@@ -1008,12 +1013,12 @@ def assemble(today: str) -> dict:
     office = office_line(invoked)
     deck_line = weekly_deck_line(today)
     decision_prose = (
-        f"{gate_prose} Organic Growth: אישור = approved_for_manual_posting — לא Publish."
+        f"{gate_prose} Organic Growth: readiness בלבד; publish authorization נקבע רק ב־policy_id: instagram.publish. Owner approval רק אם policy דורש."
     )
     if cp_prose:
         decision_prose = f"{decision_prose} Control Plane: {cp_prose}."
     growth_brief_path = ROOT / "packages" / "vfgrowth" / "data" / "growth-brief.json"
-    story_20_row = ["סטורי 20:30", "ממתין לאישור", "לא מפרסם"]
+    story_20_row = ["סטורי 20:30", "ממתין ל־exact package/policy", "לא authorization"]
     reel_16_row = ["ריל 16:00 (לוח א׳/ג׳)", "דחה עד גלם", "vf_organic_growth.py"]
     if growth_brief_path.is_file():
         try:
@@ -1022,11 +1027,11 @@ def assemble(today: str) -> dict:
             reel = gb.get("reel") or {}
             reel_cands = reel.get("candidates") or []
             if gb.get("date") == today and reel.get("gate") == "candidates_ready" and reel_cands:
-                # Catalog suggestions only — a human views/approves; PREFLIGHT + EDIT-GATE; no publish.
+                # Catalog suggestions only — routine selection can be office-owned; exact-final gates + policy still required.
                 reel_16_row = [
                     "ריל 16:00 (לוח א׳/ג׳)",
-                    f"{len(reel_cands)} מועמדים לצפייה",
-                    (" · ".join(str(c.get("fileName") or c.get("id")) for c in reel_cands) + " · לא ריל עד אישור")[:80],
+                    f"{len(reel_cands)} מועמדים להכנה",
+                    (" · ".join(str(c.get("fileName") or c.get("id")) for c in reel_cands) + " · לא ריל עד exact-final gates")[:80],
                 ]
             rec = gb.get("slotRecommendation") or st.get("recommendation") or {}
             if gb.get("date") != today:
@@ -1144,16 +1149,16 @@ def cmd_inventory(_args: argparse.Namespace) -> int:
 
 
 def cmd_run(args: argparse.Namespace) -> int:
-    """Run eligible daily consumers once. Never runs check-all. Never auto-renders G005."""
+    """Run eligible office-loop consumers once. Never runs check-all. Never auto-renders G005."""
     today = args.date or datetime.now(TZ).date().isoformat()
-    results = run_daily_consumers(today=today, force=bool(args.force))
+    results = run_consumers(today=today, force=bool(args.force))
     print(consumer_brief_lines(results))
     # Surface failures without claiming the whole office failed on intentional skips
     failed = [r for r in results if r["status"] == "failed"]
     if failed:
         print(f"FAIL consumers failed={len(failed)}", file=sys.stderr)
         return 1
-    print("OK daily consumers")
+    print("OK office-loop consumers")
     return 0
 
 
@@ -1267,8 +1272,8 @@ def cmd_status(_args: argparse.Namespace) -> int:
 
 def cmd_weekly(_args: argparse.Namespace) -> int:
     data = load_loop()
-    print("=== צריכה שבועית / דו-יומית ===")
-    weekly = ("weekly", "bi-daily", "daily-eod")
+    print("=== צריכה שבועית / on-demand ===")
+    weekly = ("weekly",)
     for row in data.get("packs") or []:
         if row.get("cadence") in weekly or row["id"] in {"vfresearch", "vfbooks", "vfmakers"}:
             print(f"{row['id']:<12} {row['cadence']:<16} {row['consume']}")
@@ -1280,7 +1285,7 @@ def cmd_weekly(_args: argparse.Namespace) -> int:
 
 def cmd_handoff(_args: argparse.Namespace) -> int:
     ig = ig_connection_evidence()
-    print("=== מסירה לסטודיו · פתח כל בוקר ===")
+    print("=== מסירה לסטודיו · בעת handoff ===")
     print("רף: סוכנות יקרה · לא חצי-עבודה")
     print("קובץ: packages/vfgrowth/HANDOFF-he.md")
     print("חבילה: G004 קטלבל-מחזיק · vfcopy/G004-STORIES-FIX.md")
@@ -1451,11 +1456,11 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Velvet Factory office activation loop")
     sub = parser.add_subparsers(dest="cmd", required=True)
     sub.add_parser("inventory", help="list every pack kind/cadence").set_defaults(func=cmd_inventory)
-    run_p = sub.add_parser("run", help="run eligible daily consumers once (no check-all, no auto G005)")
+    run_p = sub.add_parser("run", help="run eligible office-loop consumers once (no check-all, no auto G005)")
     run_p.add_argument("--date")
     run_p.add_argument("--force", action="store_true", help="re-run even if already ok today")
     run_p.set_defaults(func=cmd_run)
-    brief = sub.add_parser("brief", help="assemble 07:00 packet from live packs")
+    brief = sub.add_parser("brief", help="assemble event-driven Morning Brief from live packs")
     brief.add_argument("--write", action="store_true")
     brief.add_argument("--date")
     brief.set_defaults(func=cmd_brief)

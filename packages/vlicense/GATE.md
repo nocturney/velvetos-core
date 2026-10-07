@@ -9,7 +9,7 @@
 | רישיון בינלאומי ציבורי שמאפשר מכירה | ממשיכים ל־`vfsku` / `vfsales`. מסמנים `#רישיון-בינלאומי`. תווית אריזה: זהות Velvet Factory ב־`vfsku/TAG.md` — לא לוגו זר |
 | CC BY-NC / NC | **לא למכירה.** לא «מתעלמים מ־NC בינלאומי». Flexi Man NC נשאר חסום |
 | מותג ישראלי / קובץ שאסור להעתיק | עוצרים. לא מעתיקים. מסמנים `#מותג-ישראלי-לא-מעתיקים` במשבצת (`israeliBrandStop`) |
-| מודל מ־3D AI Studio / Meshy/Tripo / מחולל | לא «ציבורי מסחרי» אוטומטית. ראש צוות מאשר לפני באצ׳. פלייבוק: `vfprod/3DAISTUDIO.md` |
+| מודל מ־3D AI Studio / Meshy/Tripo / מחולל | לא «ציבורי מסחרי» אוטומטית. דורש provenance/terms/rights שמתירים את השימוש המסחרי; ambiguity/לקוח/מותג/זכויות לא ברורות → human/legal gate. Generated origin לבדו אינו per-use owner approval. פלייבוק + cost gate: `vfprod/3DAISTUDIO.md` |
 | הורדה / «זה ב־MakerWorld» / «זה ב־Printables» | **לא רישיון.** קוראים את שורת הדגם. רושמים הוכחה ב־`vfsku/SHELF.json` |
 | מנוי יוצר MakerWorld Commercial License | בודקים שהמנוי **פעיל** ושהדגם נכלל («Get Commercial License» בדף הדגם). MakerWorld **לא** מעניקה את הרישיון — היוצר מעניק. לא ממירים דמי מנוי ל־₪ מכירה |
 | ביטול מנוי (FAQ MakerWorld) | גישה עד **סוף מחזור החיוב**; אין החזר. אחרי סוף המחזור → `waiting-license` / אין באצ׳ |
