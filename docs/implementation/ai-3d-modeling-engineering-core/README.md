@@ -270,10 +270,10 @@ Explicit AI3D validation stack: PASS.
 
 Repository regression:
 
-- scripts/check-all.py: 116/116 PASS
+- scripts/check-all.py: 118/118 PASS
 - exit code: 0
 - sensor side-effect check: repository files unchanged
-- full-suite log: evidence/check-all-phase9-20261007.log
+- full-suite log: evidence/check-all-phase9-merged-main-20261007.log
 
 ## Next implementation phase
 
