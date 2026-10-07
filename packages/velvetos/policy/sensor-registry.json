@@ -1465,6 +1465,38 @@
       "mapping_state": "mapped"
     },
     {
+      "id": "check-office-v2-phase3b-production",
+      "path": "scripts/check-office-v2-phase3b-production.py",
+      "owns": [
+        "docs/implementation/office-v2/phase3b/production-promotion-v0.json",
+        "docs/implementation/office-v2/phase0/authority-map-v0.1.json",
+        "docs/implementation/office-v2/phase0/credential-trust-classes-v0.json",
+        "scripts/check-office-v2-phase3b-production.py"
+      ],
+      "triggered_by": [
+        "docs/implementation/office-v2/phase3b/production-promotion-v0.json",
+        "docs/implementation/office-v2/phase0/authority-map-v0.1.json",
+        "docs/implementation/office-v2/phase0/credential-trust-classes-v0.json",
+        "scripts/check-office-v2-phase3b-production.py"
+      ],
+      "depends_on": [
+        "check-office-v2-phase3b",
+        "check-machine-writers",
+        "check-policy-architecture"
+      ],
+      "enforces": [],
+      "lifecycle": "DOMAIN",
+      "risk": "high",
+      "timeout_seconds": 60,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK",
+        "runtime": "BLOCK_PROMOTION"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
       "id": "check-openpost-status",
       "path": "scripts/check-openpost-status.py",
       "owns": [
