@@ -144,7 +144,11 @@ def validate_contract() -> dict[str, Any]:
     runtime_evidence = shadow_gate.get("runtime_evidence") or {}
     require(runtime_evidence.get("status") == "PASS" and runtime_evidence.get("production_path") == "INCUMBENTS_CANONICAL", "SHADOW runtime evidence mismatch")
     require(runtime_evidence.get("external_effects_allowed") is False, "SHADOW runtime may not grant external effects")
-    require((promotion.get("pilot_gate") or {}).get("status") == "BLOCKED_PENDING_BOUNDED_SCOPE_AND_SEPARATE_PROMOTION", "PILOT gate must remain blocked")
+    pilot_gate = promotion.get("pilot_gate") or {}
+    require(pilot_gate.get("status") == "READINESS_SCOPE_SELECTED_LIVE_PROOF_PENDING", "PILOT readiness gate status mismatch")
+    require(pilot_gate.get("selected_scope_id") == "instagram-publisher-snapshot-read", "PILOT bounded scope mismatch")
+    require(pilot_gate.get("selected_credential_class") == "PRODUCTION_READ", "PILOT credential class mismatch")
+    require("separate explicit PILOT promotion receipt" in (pilot_gate.get("remaining_live_preconditions") or []), "PILOT explicit promotion boundary missing")
     require((promotion.get("production_gate") or {}).get("implicit_promotion_allowed") is False, "implicit production promotion forbidden")
 
     return wiring

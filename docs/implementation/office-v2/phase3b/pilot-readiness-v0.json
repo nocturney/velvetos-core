@@ -1,0 +1,67 @@
+{
+  "schema": "velvetos.office-v2.phase3b-pilot-readiness.v0",
+  "status": "STATIC_READINESS_PASS_LIVE_PROOF_PENDING",
+  "scope_ref": "docs/implementation/office-v2/phase3b/pilot-scope-v0.json",
+  "scope_id": "instagram-publisher-snapshot-read",
+  "selected_composition": "composition-zitadel-opa-openbao",
+  "credential_class": "PRODUCTION_READ",
+  "project_state": {
+    "required_phase": "PHASE_3B_SHADOW_ACTIVE",
+    "required_checkpoint": "office-v2-phase3b-v0-cp015-shadow-green",
+    "gate": "GREEN"
+  },
+  "shadow_baseline": {
+    "status": "READY",
+    "mode": "SHADOW_OBSERVER_ONLY",
+    "production_path": "INCUMBENTS_CANONICAL",
+    "production_authority_change": false,
+    "production_writer_change": false,
+    "production_credentials_used": false,
+    "external_effects_allowed": false,
+    "live_health_ref": "D:/Velvet/OfficeV2Lab/artifacts/phase3b-security/shadow-runtime/health-latest.json"
+  },
+  "cloudflare_preflight": {
+    "status": "PASS",
+    "wrangler_version": "4.148.0",
+    "authenticated": true,
+    "workers_write_scope_present": true,
+    "snapshot_token_currently_present": false,
+    "current_deployment_version": "2390ee0e-6019-44c5-9832-e3d08689f440",
+    "snapshot_read_logic_blame_commit": "2be313ca5",
+    "deployment_created_after_snapshot_logic": true,
+    "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/pilot-cloudflare-live-state.txt"
+  },
+  "static_source_proof": {
+    "status": "PASS",
+    "snapshot_token_is_read_only": true,
+    "write_endpoints_require_control_token": true,
+    "meta_access_token_not_exposed": true,
+    "source_ref": "packages/vfigos/cloudflare-publisher/src/index.js"
+  },
+  "completed_preconditions": [
+    "SHADOW closure GREEN and exact-main post-merge Core Sensors SUCCESS",
+    "bounded production-read scope named",
+    "PRODUCTION_READ class selected",
+    "dedicated SNAPSHOT_TOKEN path exists in provider source",
+    "SNAPSHOT_TOKEN absent before PILOT issuance",
+    "provider session can manage Worker secrets",
+    "write endpoints remain CONTROL_TOKEN-only in source"
+  ],
+  "remaining_preconditions": [
+    "issue dedicated SNAPSHOT_TOKEN and prove GET=200 plus write=401",
+    "provider-native rotation proof: old token=401 new token=200",
+    "provider-native revocation proof: revoked token=401",
+    "bind only the final dedicated token to OpenBao exact pilot path",
+    "correlated ZITADEL -> OPA -> OpenBao -> Worker read receipt",
+    "candidate outage fail-closed and recovery proof under the named PILOT scope",
+    "service recovery and upgrade rollback drill",
+    "rollback to incumbent read path without authority ambiguity",
+    "full canonical regression on exact readiness SHA",
+    "separate explicit PILOT promotion receipt"
+  ],
+  "pilot_promoted": false,
+  "production_promoted": false,
+  "production_writer_change": false,
+  "production_authority_change": false,
+  "external_mutation_allowed": false
+}
