@@ -27,7 +27,7 @@ def load(path: Path) -> dict:
 def problem_class(capability: str) -> str:
     if capability.startswith("cad."):
         return "exact_cad"
-    if capability.startswith("mesh."):
+    if capability.startswith("mesh.") or capability.startswith("implicit."):
         return "mesh_geometry"
     if capability.startswith("scan.") or capability.startswith("photogrammetry.") or capability.startswith("reconstruction."):
         return "reconstruction"
@@ -53,6 +53,8 @@ def precision_model(capability: str) -> str:
         return "not_applicable"
     if capability.startswith("cad.") or capability == "cam.toolpath":
         return "exact_brep"
+    if capability.startswith("implicit."):
+        return "mixed"
     if capability.startswith("mesh.") or capability.startswith("ai.") or capability.startswith("sculpt."):
         return "polygonal_mesh"
     if capability.startswith("scan.") or capability.startswith("photogrammetry."):
@@ -67,6 +69,10 @@ def precision_model(capability: str) -> str:
 def io_types(capability: str) -> tuple[list[str], list[str]]:
     if capability == "cam.toolpath":
         return ["bounded_cam_request"], ["offline_grbl_artifact", "verification_receipt"]
+    if capability == "implicit.signed_distance":
+        return ["mesh_artifact", "query_points"], ["signed_distance_field", "verification_receipt"]
+    if capability == "implicit.openvdb":
+        return ["mesh_or_volume_artifact"], ["vdb_volume_artifact", "verification_receipt"]
     if capability == "cad.feature.fits":
         return ["typed_fit_request"], ["fit_calculation", "verification_receipt"]
     if capability.startswith("cad.feature."):
@@ -274,6 +280,14 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
     cad = load(repo_root / "packages" / "vfprod" / "CAD-ENGINE-REGISTRY.json")
     mechanical_path = repo_root / "packages" / "vfprod" / "MECHANICAL-FEATURE-PACKS.json"
     mechanical = load(mechanical_path)
+    mesh_specialists_path = (
+        repo_root
+        / "docs"
+        / "implementation"
+        / "ai-3d-modeling-engineering-core"
+        / "mesh-organic-specialists-v1.json"
+    )
+    mesh_specialists = load(mesh_specialists_path)
     creative = load(creative_path)
     blender = load(blender_path)
     stations = load(station_path)
@@ -554,6 +568,7 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
         ("sidecar_trimesh", "automation.geometry"),
         ("sidecar_trimesh", "geometry.variant_batch"),
         ("sidecar_open3d", "scan.reconstruct"),
+        ("sidecar_libigl", "simulation.analysis"),
         ("sidecar_colmap", "photogrammetry.sfm"),
         ("sidecar_meshroom", "photogrammetry.object_reconstruct"),
         ("sidecar_gmsh", "simulation.geometry"),
@@ -566,6 +581,20 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
         if not provider or (capability, provider_id) in existing_pairs:
             continue
         verified = is_functional(provider)
+        specialist = mesh_specialists.get("specialists", {}).get(provider_id, {})
+        phase6_new = capability in specialist.get("new_bounded_capabilities", [])
+        validators = ["provider functional probe", "artifact verification"]
+        evidence_refs = [f"{blender_path}#provider:{provider_id}"]
+        license_provenance = [f"{blender_path}#provider:{provider_id}"]
+        if phase6_new:
+            validators.append("validate_ai3d_phase6_mesh")
+            phase6_refs = [
+                "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+                "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json",
+            ]
+            evidence_refs.extend(phase6_refs)
+            license_provenance.extend(phase6_refs)
+
         records.append(
             make_record(
                 record_id=f"{capability}--{provider_id}",
@@ -580,14 +609,83 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
                 host_classes=["windows-primary"],
                 headless=provider.get("headless_operation") == "available",
                 verification_state="PROVEN_PROVIDER" if verified else "READY_BOUNDED",
-                validators=["provider functional probe", "artifact verification"],
-                evidence_refs=[f"{blender_path}#provider:{provider_id}"],
+                validators=validators,
+                evidence_refs=evidence_refs,
                 fallbacks=[],
                 status="PROVEN" if verified else "READY_BOUNDED",
                 provider=provider,
-                license_provenance=[f"{blender_path}#provider:{provider_id}"],
+                license_provenance=license_provenance,
             )
         )
+
+    phase6_acceptance = (
+        "docs/implementation/ai-3d-modeling-engineering-core/evidence/"
+        "phase6-mesh-organic-acceptance-20261007.json"
+    )
+    phase6_config = (
+        "docs/implementation/ai-3d-modeling-engineering-core/"
+        "mesh-organic-specialists-v1.json"
+    )
+    sdf_specialist = mesh_specialists["specialists"]["trimesh_sdf"]
+    if str(sdf_specialist["status"]).startswith("PROVEN"):
+        sdf_provider = {
+            "version": sdf_specialist["version"],
+            "license": sdf_specialist["license"],
+            "capabilities": ["implicit.signed_distance"],
+        }
+        records.append(
+            make_record(
+                record_id="implicit.signed_distance--trimesh_sdf",
+                capability_id="implicit.signed_distance",
+                authority_id="blender-capability-host",
+                authority_ref=phase6_config,
+                engine_id="trimesh_sdf",
+                engine_version=sdf_specialist["version"],
+                adapter_id="phase6-trimesh-sdf",
+                adapter_ref="scripts/validate_ai3d_phase6_mesh.py",
+                runtime_id=sdf_specialist["runtime"],
+                host_classes=["windows-primary"],
+                headless=True,
+                verification_state="PROVEN_PROVIDER",
+                validators=["validate_ai3d_phase6_mesh"],
+                evidence_refs=[
+                    phase6_config,
+                    phase6_acceptance,
+                    "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-rtree-runtime-install-20261007.json",
+                ],
+                fallbacks=[],
+                status="PROVEN",
+                provider=sdf_provider,
+                license_provenance=[
+                    phase6_config,
+                    phase6_acceptance,
+                ],
+            )
+        )
+
+    openvdb = mesh_specialists["specialists"]["openvdb"]
+    records.append(
+        make_record(
+            record_id="implicit.openvdb--candidate-openvdb",
+            capability_id="implicit.openvdb",
+            authority_id="blender-capability-host",
+            authority_ref=phase6_config,
+            engine_id="openvdb",
+            engine_version=openvdb.get("version"),
+            adapter_id="not-admitted",
+            adapter_ref=phase6_config,
+            runtime_id="not-admitted",
+            host_classes=["windows-primary"],
+            headless=False,
+            verification_state="CANDIDATE",
+            validators=["reproducible OpenVDB runtime fixture required"],
+            evidence_refs=[phase6_config, phase6_acceptance],
+            fallbacks=[],
+            status="CANDIDATE",
+            provider=None,
+            license_provenance=[phase6_config, phase6_acceptance],
+        )
+    )
 
     research_candidates = [
         ("ai.image_to_3d", "hunyuan3d-2.1-shape", "ai-generation-local"),

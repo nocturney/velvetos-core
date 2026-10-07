@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / "docs" / "implementation" / "ai-3d-modeling-engineering-core"
 SCHEMA_PATH = BASE / "cad-capability-registry-v1.schema.json"
 REGISTRY_PATH = BASE / "cad-capability-registry-v1.json"
+SPECIALISTS_PATH = BASE / "mesh-organic-specialists-v1.json"
 
 
 def load(path: Path) -> dict:
@@ -53,6 +54,7 @@ def runtime_distribution_version(
 def main() -> int:
     schema = load(SCHEMA_PATH)
     registry = load(REGISTRY_PATH)
+    specialists = load(SPECIALISTS_PATH)
     validate_schema(registry, schema)
 
     assert registry["schema"] == "velvetos.ai3d.cad-capability-registry.v1"
@@ -199,6 +201,74 @@ def main() -> int:
     assert fits["precision_model"] == "not_applicable"
     assert "fit_calculation" in fits["output_types"]
     assert fits["license_lane"] == "review-required"
+
+    assert specialists["schema"] == "velvetos.ai3d.mesh-organic-specialists.v1"
+    assert specialists["non_authoritative_staging"] is True
+    assert specialists["policy"]["no_second_mesh_router"] is True
+    assert specialists["policy"]["reuse_existing_typed_operations"] is True
+    reused_typed = set(specialists["existing_typed_capabilities_reused"])
+    assert reused_typed <= typed_caps
+    for capability in reused_typed:
+        rows = [
+            row
+            for row in typed
+            if row["capability_id"] == capability
+        ]
+        assert len(rows) == 1, capability
+
+    phase6_provider_records = {
+        ("sidecar_pymeshlab", "ai.image_to_3d.print_cleanup"),
+        ("sidecar_trimesh", "automation.geometry"),
+        ("sidecar_trimesh", "geometry.variant_batch"),
+        ("sidecar_open3d", "scan.reconstruct"),
+        ("sidecar_libigl", "simulation.analysis"),
+        ("native_sculpt", "sculpt.organic"),
+    }
+    for engine_id, capability_id in phase6_provider_records:
+        row = next(
+            item
+            for item in records
+            if item["engine"]["id"] == engine_id
+            and item["capability_id"] == capability_id
+        )
+        assert row["status"] == "PROVEN", (engine_id, capability_id)
+        assert row["verification"]["state"] == "PROVEN_PROVIDER", (
+            engine_id,
+            capability_id,
+        )
+        assert "validate_ai3d_phase6_mesh" in row["verification"]["validators"]
+        assert all(
+            item["verification"]["state"] != "PROVEN_TYPED"
+            for item in records
+            if item["engine"]["id"] == engine_id
+            and item["capability_id"] == capability_id
+        )
+
+    sdf = next(
+        row
+        for row in records
+        if row["record_id"] == "implicit.signed_distance--trimesh_sdf"
+    )
+    assert sdf["status"] == "PROVEN"
+    assert sdf["verification"]["state"] == "PROVEN_PROVIDER"
+    assert sdf["problem_class"] == "mesh_geometry"
+    assert sdf["precision_model"] == "mixed"
+    assert "signed_distance_field" in sdf["output_types"]
+    assert sdf["runtime"]["id"] == "geometry-core-py312"
+    assert sdf["license_lane"] == "commercial-clean"
+    assert "mit" in sdf["license"]["code_license"].lower()
+
+    openvdb = next(
+        row
+        for row in records
+        if row["record_id"] == "implicit.openvdb--candidate-openvdb"
+    )
+    assert openvdb["status"] == "CANDIDATE"
+    assert openvdb["verification"]["state"] == "CANDIDATE"
+    assert openvdb["runtime"]["id"] == "not-admitted"
+    assert openvdb["headless"] is False
+    assert openvdb["license_lane"] == "review-required"
+    assert "vdb_volume_artifact" in openvdb["output_types"]
 
     research_candidate_engines = {
         "hunyuan3d-2.1-shape",

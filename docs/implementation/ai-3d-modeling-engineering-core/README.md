@@ -151,6 +151,34 @@ Phase 5 validation:
 
   py -3.11 scripts/validate_ai3d_phase5_mechanical.py
 
+## Phase 6 - Mesh / organic / implicit expansion
+
+Files:
+
+- mesh-organic-specialists-v1.json
+- scripts/validate_ai3d_phase6_mesh.py
+- evidence/phase6-mesh-organic-acceptance-20261007.json
+- evidence/phase6-rtree-runtime-install-20261007.json
+
+Proven bounded specialists:
+
+- Trimesh 5.1.1: existing provider proof plus explicit geometry variant-batch fixtures.
+- Manifold3D 3.5.4: existing Blender-host boolean/remesh route is reused; no duplicate typed operation is created.
+- PyMeshLab 2025.7.post1: existing cleanup/retopology provider is reused and its print-cleanup fixture remains provider-level evidence.
+- libigl 2.6.3: bounded simulation-analysis provider record with functional fixture evidence.
+- Open3D 0.20.0: bounded reconstruction provider proof with downsample and ICP fixtures.
+- native Blender sculpt/voxel-remesh: existing Blender Capability Host providers remain the authority; sculpt.organic is provider-proven but not typed-promoted.
+- Trimesh + rtree 1.4.1: signed-distance queries are proven behind an explicit watertight-mesh/query-point contract.
+
+OpenVDB remains CANDIDATE. Neither pyopenvdb nor openvdb has a matching distribution in the canonical Windows geometry runtime, and no Blender-native OpenVDB path is promoted without a reproducible bounded fixture.
+
+The 10 already-promoted mesh/scan typed capabilities are explicitly reused. Phase 6 does not create a second mesh router and does not promote provider proof into PROVEN_TYPED state.
+
+Phase 6 validation:
+
+  py -3.11 scripts/validate_ai3d_phase6_mesh.py
+  py -3.11 scripts/validate_ai3d_capability_registry.py
+
 ## Validation state
 
 Explicit AI3D validation stack: PASS.
@@ -160,8 +188,8 @@ Repository regression:
 - scripts/check-all.py: 116/116 PASS
 - exit code: 0
 - sensor side-effect check: repository files unchanged
-- full-suite log: evidence/check-all-phase5-20261007.log
+- full-suite log: evidence/check-all-phase6-20261007.log
 
 ## Next implementation phase
 
-Phase 6 is the mesh/organic/implicit expansion: qualify Trimesh/Manifold operations, Open3D/PyMeshLab/OpenVDB/SDF specialists behind bounded contracts, and reuse the existing Blender Capability Host rather than creating another mesh authority.
+Phase 7 is reverse engineering and scan-to-CAD: point-cloud normalization/registration, reconstruction and segmentation, then bounded NURBS/primitive fitting and CAD reconstruction while reusing existing COLMAP/Meshroom/scan capabilities.

@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.ai3d.cad-capability-registry.v1",
   "non_authoritative_staging": true,
-  "generated_at": "2026-10-07T14:24:16.773980+00:00",
+  "generated_at": "2026-10-07T15:39:39.388955+00:00",
   "authority_invariant": "This registry grants no authority. Fabrication Router/vf-3d-router, CreativeCraft, Blender Capability Host, slicer and production authorities remain unchanged.",
   "records": [
     {
@@ -429,17 +429,22 @@
         "redistribution": "not authorized by this registry beyond the recorded upstream terms",
         "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
         "provenance": [
-          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_pymeshlab"
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_pymeshlab",
+          "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json"
         ]
       },
       "verification": {
         "state": "PROVEN_PROVIDER",
         "validators": [
           "provider functional probe",
-          "artifact verification"
+          "artifact verification",
+          "validate_ai3d_phase6_mesh"
         ],
         "evidence_refs": [
-          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_pymeshlab"
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_pymeshlab",
+          "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json"
         ]
       },
       "fallback": [],
@@ -488,17 +493,22 @@
         "redistribution": "not authorized by this registry beyond the recorded upstream terms",
         "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
         "provenance": [
-          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_trimesh"
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_trimesh",
+          "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json"
         ]
       },
       "verification": {
         "state": "PROVEN_PROVIDER",
         "validators": [
           "provider functional probe",
-          "artifact verification"
+          "artifact verification",
+          "validate_ai3d_phase6_mesh"
         ],
         "evidence_refs": [
-          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_trimesh"
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_trimesh",
+          "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json"
         ]
       },
       "fallback": [],
@@ -1992,17 +2002,146 @@
         "redistribution": "not authorized by this registry beyond the recorded upstream terms",
         "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
         "provenance": [
-          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_trimesh"
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_trimesh",
+          "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json"
         ]
       },
       "verification": {
         "state": "PROVEN_PROVIDER",
         "validators": [
           "provider functional probe",
-          "artifact verification"
+          "artifact verification",
+          "validate_ai3d_phase6_mesh"
         ],
         "evidence_refs": [
-          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_trimesh"
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_trimesh",
+          "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "implicit.openvdb--candidate-openvdb",
+      "capability_id": "implicit.openvdb",
+      "problem_class": "mesh_geometry",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json"
+      },
+      "engine": {
+        "id": "openvdb",
+        "version": null
+      },
+      "adapter": {
+        "id": "not-admitted",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json"
+      },
+      "runtime": {
+        "id": "not-admitted",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "mesh_or_volume_artifact"
+      ],
+      "output_types": [
+        "vdb_volume_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": false,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "reproducible OpenVDB runtime fixture required"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json"
+        ]
+      },
+      "fallback": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "record_id": "implicit.signed_distance--trimesh_sdf",
+      "capability_id": "implicit.signed_distance",
+      "problem_class": "mesh_geometry",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json"
+      },
+      "engine": {
+        "id": "trimesh_sdf",
+        "version": "trimesh 5.1.1 + rtree 1.4.1"
+      },
+      "adapter": {
+        "id": "phase6-trimesh-sdf",
+        "source_ref": "scripts/validate_ai3d_phase6_mesh.py"
+      },
+      "runtime": {
+        "id": "geometry-core-py312",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "mesh_artifact",
+        "query_points"
+      ],
+      "output_types": [
+        "signed_distance_field",
+        "verification_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+        "code_license": "MIT",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase6_mesh"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-rtree-runtime-install-20261007.json"
         ]
       },
       "fallback": [],
@@ -3287,17 +3426,22 @@
         "redistribution": "not authorized by this registry beyond the recorded upstream terms",
         "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
         "provenance": [
-          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_open3d"
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_open3d",
+          "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json"
         ]
       },
       "verification": {
         "state": "PROVEN_PROVIDER",
         "validators": [
           "provider functional probe",
-          "artifact verification"
+          "artifact verification",
+          "validate_ai3d_phase6_mesh"
         ],
         "evidence_refs": [
-          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_open3d"
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_open3d",
+          "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json"
         ]
       },
       "fallback": [],
@@ -3418,17 +3562,86 @@
         "redistribution": "not authorized by this registry beyond the recorded upstream terms",
         "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
         "provenance": [
-          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:native_sculpt"
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:native_sculpt",
+          "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json"
         ]
       },
       "verification": {
         "state": "PROVEN_PROVIDER",
         "validators": [
           "provider functional probe",
-          "artifact verification"
+          "artifact verification",
+          "validate_ai3d_phase6_mesh"
         ],
         "evidence_refs": [
-          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:native_sculpt"
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:native_sculpt",
+          "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "simulation.analysis--sidecar_libigl",
+      "capability_id": "simulation.analysis",
+      "problem_class": "simulation",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json"
+      },
+      "engine": {
+        "id": "sidecar_libigl",
+        "version": "2.6.3"
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "geometry-core-py312",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_request"
+      ],
+      "output_types": [
+        "artifact_or_receipt"
+      ],
+      "precision_model": "not_applicable",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_libigl",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_libigl",
+          "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "provider functional probe",
+          "artifact verification",
+          "validate_ai3d_phase6_mesh"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_libigl",
+          "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json"
         ]
       },
       "fallback": [],

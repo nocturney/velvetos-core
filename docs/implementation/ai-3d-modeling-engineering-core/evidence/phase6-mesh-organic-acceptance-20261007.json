@@ -1,0 +1,202 @@
+{
+  "authority": "blender-capability-host",
+  "creative_craft_registry": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json",
+  "geometry_fixture": {
+    "libigl": {
+      "adjacency_nnz": 12,
+      "success": true
+    },
+    "manifold3d": {
+      "faces": 28,
+      "success": true,
+      "volume": 12.0,
+      "watertight": true
+    },
+    "pymeshlab": {
+      "after_vertices": 3,
+      "before_vertices": 4,
+      "success": true
+    },
+    "trimesh": {
+      "faces": 320,
+      "success": true,
+      "volume": 4.047044679978849
+    }
+  },
+  "geometry_runtime": "D:\\Velvet\\Runtime\\BlenderMonster\\venvs\\geometry-core\\Scripts\\python.exe",
+  "live_providers": {
+    "native_sculpt": {
+      "capabilities": [
+        "sculpt.organic"
+      ],
+      "functional_probe": "native",
+      "runtime": "blender-5.2.2-main",
+      "state": "preferred",
+      "version": "5.2.2"
+    },
+    "native_voxel_remesh": {
+      "capabilities": [
+        "mesh.remesh_repair",
+        "sculpt.organic"
+      ],
+      "functional_probe": "native",
+      "runtime": "blender-5.2.2-main",
+      "state": "preferred",
+      "version": "5.2.2"
+    },
+    "sidecar_libigl": {
+      "capabilities": [
+        "mesh.remesh_repair",
+        "mesh.retopology",
+        "simulation.analysis"
+      ],
+      "functional_probe": "passed",
+      "runtime": "geometry-core-py312",
+      "state": "available",
+      "version": "2.6.3"
+    },
+    "sidecar_manifold3d": {
+      "capabilities": [
+        "mesh.boolean_hardsurface",
+        "mesh.remesh_repair",
+        "print.prepare",
+        "ai.image_to_3d.print_cleanup"
+      ],
+      "functional_probe": "passed",
+      "runtime": "geometry-core-py312",
+      "state": "available",
+      "version": "3.5.4"
+    },
+    "sidecar_open3d": {
+      "capabilities": [
+        "scan.pointcloud",
+        "scan.register",
+        "scan.reconstruct",
+        "mesh.remesh_repair",
+        "asset.pipeline"
+      ],
+      "functional_probe": "passed",
+      "runtime": "scan-reconstruction-py312",
+      "state": "available",
+      "version": "0.20.0"
+    },
+    "sidecar_pymeshlab": {
+      "capabilities": [
+        "mesh.remesh_repair",
+        "mesh.retopology",
+        "asset.pipeline",
+        "interchange.import_export",
+        "print.prepare",
+        "ai.image_to_3d.print_cleanup"
+      ],
+      "functional_probe": "passed",
+      "runtime": "geometry-core-py312",
+      "state": "available",
+      "version": "2025.7.post1"
+    },
+    "sidecar_trimesh": {
+      "capabilities": [
+        "mesh.remesh_repair",
+        "asset.pipeline",
+        "interchange.import_export",
+        "print.prepare",
+        "ai.image_to_3d.print_cleanup",
+        "automation.geometry",
+        "geometry.variant_batch"
+      ],
+      "functional_probe": "passed",
+      "runtime": "geometry-core-py312",
+      "state": "available",
+      "version": "5.1.1"
+    }
+  },
+  "openvdb": {
+    "blockers": [
+      "pyopenvdb has no matching distribution in the canonical Windows geometry runtime",
+      "openvdb has no matching distribution in the canonical Windows geometry runtime",
+      "Blender-native volume/OpenVDB path still needs a reproducible bounded fixture before admission"
+    ],
+    "import_probe": {
+      "openvdb": false,
+      "pyopenvdb": false
+    },
+    "status": "CANDIDATE_RUNTIME_GAP"
+  },
+  "provider_registry": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json",
+  "reused_typed_capabilities": [
+    "mesh.analysis",
+    "mesh.boolean_hardsurface",
+    "mesh.remesh_repair",
+    "mesh.repair",
+    "mesh.retopology",
+    "scan.clean",
+    "scan.pointcloud",
+    "scan.pointcloud.e57_io",
+    "scan.pointcloud.las_laz_io",
+    "scan.register"
+  ],
+  "runtime_versions": {
+    "libigl": "2.6.3",
+    "manifold3d": "3.5.4",
+    "pymeshlab": "2025.7.post1",
+    "rtree": "1.4.1",
+    "trimesh": "5.1.1"
+  },
+  "safety": {
+    "duplicate_typed_operation_promotion": false,
+    "machine_control_allowed": false,
+    "printer_actions_allowed": false,
+    "silent_unit_conversion": false
+  },
+  "scan_fixture": {
+    "open3d_downsample": {
+      "after": 196,
+      "before": 900,
+      "success": true
+    },
+    "open3d_icp": {
+      "fitness": 1.0,
+      "rmse": 5.887846720064156e-17,
+      "success": true
+    }
+  },
+  "scan_runtime": "D:\\Velvet\\Runtime\\BlenderMonster\\venvs\\scan-reconstruction\\Scripts\\python.exe",
+  "schema": "velvetos.ai3d.phase6-mesh-organic-acceptance.v1",
+  "sdf_fixture": {
+    "contains": [
+      true,
+      true,
+      false,
+      false
+    ],
+    "signed_distance": [
+      1.0,
+      0.09999999999999998,
+      -0.10000000000000009,
+      -1.0
+    ]
+  },
+  "status": "PASS",
+  "variant_batch_fixture": {
+    "rows": [
+      {
+        "faces": 12,
+        "size": 1,
+        "volume": 1.0,
+        "watertight": true
+      },
+      {
+        "faces": 12,
+        "size": 2,
+        "volume": 8.0,
+        "watertight": true
+      },
+      {
+        "faces": 12,
+        "size": 3,
+        "volume": 27.0,
+        "watertight": true
+      }
+    ]
+  }
+}
