@@ -131,11 +131,11 @@ def validate_contract() -> dict[str, Any]:
     for field in ("production_authority_change", "production_writer_change", "production_credentials_used", "production_secret_material_used", "shadow_or_pilot_promotion"):
         require(verdict.get(field) is False, f"composition verdict unsafe field: {field}")
 
-    require(promotion.get("status") == "INTEGRATION_WIRING_ONLY_NOT_PROMOTED", "promotion status mismatch")
+    require(promotion.get("status") == "PRE_SHADOW_READINESS_IN_PROGRESS_NOT_PROMOTED", "promotion status mismatch")
     require(promotion.get("current_authority") == "NONE", "promotion authority must remain NONE")
     for field in ("production_authority_change", "production_writer_change", "production_credentials_bound", "shadow_promoted", "pilot_promoted", "production_promoted"):
         require(promotion.get(field) is False, f"promotion field must remain false: {field}")
-    require((promotion.get("shadow_gate") or {}).get("status") == "BLOCKED_PENDING_SEPARATE_PROMOTION", "SHADOW gate must remain blocked")
+    require((promotion.get("shadow_gate") or {}).get("status") == "BLOCKED_PENDING_EXACT_REGRESSION_AND_SEPARATE_PROMOTION", "SHADOW gate must remain blocked")
     require((promotion.get("pilot_gate") or {}).get("status") == "BLOCKED_UNTIL_SHADOW_PASS_AND_SEPARATE_PROMOTION", "PILOT gate must remain blocked")
     require((promotion.get("production_gate") or {}).get("implicit_promotion_allowed") is False, "implicit production promotion forbidden")
 

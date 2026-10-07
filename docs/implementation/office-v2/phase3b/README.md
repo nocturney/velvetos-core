@@ -1,6 +1,6 @@
 # Office v2 Phase 3B — Identity / Authorization / Credential Broker
 
-Status: **CONTRACT V0 FROZEN / ALL THREE LANES DESTRUCTIVE COMPLETE / CROSS-ROLE COMPOSITION PASS / PRIMARY: ZITADEL + OPA + OPENBAO / VALIDATED FALLBACK SWAPS: KEYCLOAK, CEDAR, INFISICAL / INTEGRATION WIRING DEFINED / NOT SHADOW / NO PRODUCTION AUTHORITY CHANGE**
+Status: **CONTRACT V0 FROZEN / CROSS-ROLE COMPOSITION PASS / PRIMARY: ZITADEL + OPA + OPENBAO / INTEGRATION WIRING PASS / PERSISTENCE RESTORE PASS / RUNTIME READINESS PASS NOT ACTIVATED / EXACT REGRESSION PENDING / NOT SHADOW / NO PRODUCTION AUTHORITY CHANGE**
 
 Phase 3B treats security as three explicit roles rather than forcing one product to own identity, authorization and secrets:
 
@@ -54,6 +54,12 @@ All four receipts are LAB-only, use synthetic credentials/material, expose no ho
 `promotion-gates-v0.json` keeps SHADOW explicitly blocked pending a separate promotion receipt plus persistence backup/restore drills, health/fail-closed probes, sanitized correlated evidence, service/rollback planning and an exact regression gate. PILOT and production are separately blocked after that. No production endpoint, credential class, writer, canonical store or external-effect authority is bound by the current wiring.
 
 A wiring PASS therefore proves only **LAB_SIMULATION_ONLY integration semantics**. It does not change the Phase 0 authority map or credential trust classes, does not advance `CURRENT.json`, and does not grant SHADOW, PILOT or production authority.
+
+## Persistence restore readiness
+
+The selected primary composition has now also passed an isolated persistence/restore drill using only synthetic LAB state. OPA was backed up, replaced by a deny-only policy, restored and returned the expected ALLOW again. OpenBao used persistent integrated Raft storage: an offline backup was taken, a fresh empty volume returned the expected uninitialized state, the backup was restored into a new volume, the restored node returned sealed state, then unsealed and read back the synthetic secret successfully. ZITADEL used its pinned PostgreSQL substrate: a custom-format `pg_dump` was restored into a fresh empty Postgres instance and the same synthetic machine identity could issue a token again after restore.
+
+Canonical evidence is `D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/persistence-readiness.json` with SHA256 `c8093f463c293d851109de73d1c60a688efc918ea719d782916bbfda2c752da7`. The final drill run `20261007T042934Z-218776` passed OPA policy restore, OpenBao Raft fresh-storage/restore/unseal/read, and ZITADEL PostgreSQL fresh-DB/restore/token issuance. All host-port bindings remained empty, no production credentials or secret material were used, and no raw key/token/secret material appears in the receipt. `shadow-readiness-v0.json` records this as a completed precondition only. SHADOW remains blocked on the exact regression/negative-control suite and a separate explicit project-state promotion receipt.
 
 ## Admission research
 

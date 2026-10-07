@@ -1439,13 +1439,15 @@
       "owns": [
         "docs/implementation/office-v2/phase3b/**",
         "scripts/check-office-v2-phase3b.py",
-        "scripts/vf_office_v2_security_wiring.py"
+        "scripts/vf_office_v2_security_wiring.py",
+        "scripts/vf_office_v2_security_shadow_doctor.py"
       ],
       "triggered_by": [
         "docs/implementation/office-v2/phase3b/**",
         "docs/implementation/office-v2/phase2/candidate-registry-v0.json",
         "scripts/check-office-v2-phase3b.py",
-        "scripts/vf_office_v2_security_wiring.py"
+        "scripts/vf_office_v2_security_wiring.py",
+        "scripts/vf_office_v2_security_shadow_doctor.py"
       ],
       "depends_on": [
         "check-office-v2-phase2"

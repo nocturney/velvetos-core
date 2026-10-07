@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 P2 = ROOT / "docs" / "implementation" / "office-v2" / "phase2"
 P3B = ROOT / "docs" / "implementation" / "office-v2" / "phase3b"
 WIRING_SCRIPT = ROOT / "scripts" / "vf_office_v2_security_wiring.py"
+SHADOW_DOCTOR = ROOT / "scripts" / "vf_office_v2_security_shadow_doctor.py"
 
 REQUIRED = [
     P3B / "README.md",
@@ -25,7 +26,10 @@ REQUIRED = [
     P3B / "composition-gate-verdict-v0.json",
     P3B / "integration-wiring-v0.json",
     P3B / "promotion-gates-v0.json",
+    P3B / "shadow-readiness-v0.json",
+    P3B / "runtime-readiness-v0.json",
     WIRING_SCRIPT,
+    SHADOW_DOCTOR,
     P3B / "scorecards" / "credential-candidate-openbao.json",
     P3B / "scorecards" / "credential-candidate-infisical-agent-vault.json",
     P3B / "scorecards" / "identity-candidate-zitadel.json",
@@ -264,6 +268,34 @@ def main() -> None:
     for field in ("network_calls_allowed", "external_effects_allowed", "production_credentials_bound", "shadow_promoted", "pilot_promoted", "production_promoted", "production_authority_change"):
         if lab_wiring.get(field) is not False:
             fail("Phase 3B LAB integration wiring unsafe field: " + field)
+    lab_persistence = lab_status.get("persistence_readiness") or {}
+    if lab_persistence.get("status") != "PASS" or lab_persistence.get("scope") != "LAB_ONLY_SYNTHETIC":
+        fail("Phase 3B LAB persistence readiness status/scope mismatch")
+    if lab_persistence.get("readiness_ref") != "docs/implementation/office-v2/phase3b/shadow-readiness-v0.json":
+        fail("Phase 3B LAB persistence readiness ref mismatch")
+    if lab_persistence.get("evidence_ref") != "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/persistence-readiness.json" or len(lab_persistence.get("evidence_sha256") or "") != 64:
+        fail("Phase 3B LAB persistence evidence ref/hash mismatch")
+    if any(lab_persistence.get(role) != "PASS" for role in ("opa", "openbao", "zitadel")):
+        fail("Phase 3B LAB persistence component status mismatch")
+    if lab_persistence.get("host_port_bindings_empty") is not True:
+        fail("Phase 3B LAB persistence must expose no host ports")
+    for field in ("production_credentials_used", "production_secret_material_used", "production_authority_change", "shadow_promoted"):
+        if lab_persistence.get(field) is not False:
+            fail("Phase 3B LAB persistence unsafe field: " + field)
+    lab_runtime = lab_status.get("runtime_readiness") or {}
+    if lab_runtime.get("status") != "PASS_NOT_ACTIVATED" or lab_runtime.get("selftest_cases") != 10:
+        fail("Phase 3B LAB runtime readiness status/selftest mismatch")
+    if lab_runtime.get("contract_ref") != "docs/implementation/office-v2/phase3b/runtime-readiness-v0.json" or lab_runtime.get("validator") != "scripts/vf_office_v2_security_shadow_doctor.py":
+        fail("Phase 3B LAB runtime readiness refs mismatch")
+    if lab_runtime.get("health_fail_closed") is not True or lab_runtime.get("service_plan_complete") is not True or lab_runtime.get("rollback_to_incumbents_selftest") is not True:
+        fail("Phase 3B LAB runtime readiness proof incomplete")
+    if lab_runtime.get("services_installed") is not False or lab_runtime.get("services_enabled") is not False:
+        fail("Phase 3B pre-SHADOW services must remain inactive")
+    if lab_runtime.get("dpapi_cross_process_probe") != "PASS" or len(lab_runtime.get("dpapi_evidence_sha256") or "") != 64:
+        fail("Phase 3B DPAPI key-material proof missing")
+    for field in ("external_effects_allowed", "production_credentials_bound", "production_authority_change", "shadow_promoted"):
+        if lab_runtime.get(field) is not False:
+            fail("Phase 3B LAB runtime readiness unsafe field: " + field)
 
     zit = by_id.get("candidate-zitadel") or {}
     if zit.get("lifecycle_state") != "LAB" or zit.get("decision_verdict") != "LAB_VALIDATED":
@@ -468,17 +500,68 @@ def main() -> None:
         fail("Phase 3B integration wiring must not embed runtime endpoints")
 
     promotion = load(P3B / "promotion-gates-v0.json")
-    if promotion.get("status") != "INTEGRATION_WIRING_ONLY_NOT_PROMOTED" or promotion.get("current_authority") != "NONE":
+    if promotion.get("status") != "PRE_SHADOW_READINESS_IN_PROGRESS_NOT_PROMOTED" or promotion.get("current_authority") != "NONE":
         fail("Phase 3B promotion gate status/authority mismatch")
+    if promotion.get("shadow_readiness_ref") != "docs/implementation/office-v2/phase3b/shadow-readiness-v0.json":
+        fail("Phase 3B shadow readiness ref missing")
     if promotion.get("current_project_state_must_remain") != "PHASE_3A_CLOSED_GREEN__PHASE_3B_READY":
         fail("Phase 3B promotion gate must preserve current project state")
     for field in ("production_authority_change", "production_writer_change", "production_credentials_bound", "shadow_promoted", "pilot_promoted", "production_promoted"):
         if promotion.get(field) is not False:
             fail("Phase 3B promotion field must remain false: " + field)
-    if (promotion.get("shadow_gate") or {}).get("status") != "BLOCKED_PENDING_SEPARATE_PROMOTION":
-        fail("Phase 3B SHADOW gate must remain blocked")
+    integration_gate = promotion.get("integration_gate") or {}
+    if integration_gate.get("status") != "PASS_NO_RUNTIME_PROMOTION":
+        fail("Phase 3B integration gate must be PASS without runtime promotion")
+    shadow_gate = promotion.get("shadow_gate") or {}
+    if shadow_gate.get("status") != "BLOCKED_PENDING_EXACT_REGRESSION_AND_SEPARATE_PROMOTION":
+        fail("Phase 3B SHADOW gate must remain blocked on exact regression + explicit promotion")
+    persistence = shadow_gate.get("persistence_readiness") or {}
+    if persistence.get("status") != "PASS" or persistence.get("evidence_ref") != "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/persistence-readiness.json" or len(persistence.get("evidence_sha256") or "") != 64:
+        fail("Phase 3B promotion gate persistence evidence mismatch")
+    if any(persistence.get(role) != "PASS" for role in ("opa", "openbao", "zitadel")):
+        fail("Phase 3B promotion gate persistence component mismatch")
+    if "separate explicit project-state promotion receipt" not in (shadow_gate.get("remaining_preconditions") or []):
+        fail("Phase 3B SHADOW gate lost explicit project-state promotion requirement")
     if (promotion.get("production_gate") or {}).get("implicit_promotion_allowed") is not False:
         fail("Phase 3B implicit production promotion must remain forbidden")
+
+    readiness = load(P3B / "shadow-readiness-v0.json")
+    if readiness.get("status") != "PRE_SHADOW_READINESS_PASS_EXACT_REGRESSION_PENDING_NO_PROMOTION" or readiness.get("selected_composition") != "composition-zitadel-opa-openbao":
+        fail("Phase 3B shadow readiness status/composition mismatch")
+    if readiness.get("current_authority") != "NONE" or readiness.get("current_project_state_must_remain") != "PHASE_3A_CLOSED_GREEN__PHASE_3B_READY":
+        fail("Phase 3B shadow readiness authority/project-state mismatch")
+    for field in ("production_authority_change", "production_writer_change", "production_credentials_bound", "production_secret_material_used", "external_effects_allowed", "shadow_promoted", "pilot_promoted", "production_promoted"):
+        if readiness.get(field) is not False:
+            fail("Phase 3B shadow readiness unsafe field: " + field)
+    readiness_wiring = readiness.get("integration_wiring") or {}
+    if readiness_wiring.get("status") != "PASS" or readiness_wiring.get("mode") != "LAB_SIMULATION_ONLY" or len(readiness_wiring.get("evidence_sha256") or "") != 64:
+        fail("Phase 3B shadow readiness integration proof mismatch")
+    readiness_persistence = readiness.get("persistence_restore") or {}
+    if readiness_persistence.get("status") != "PASS" or readiness_persistence.get("scope") != "LAB_ONLY_SYNTHETIC" or len(readiness_persistence.get("evidence_sha256") or "") != 64:
+        fail("Phase 3B shadow readiness persistence proof mismatch")
+    if (readiness_persistence.get("opa") or {}).get("restored_allow") is not True:
+        fail("Phase 3B OPA restore readiness mismatch")
+    if (readiness_persistence.get("openbao") or {}).get("storage_backend") != "raft" or (readiness_persistence.get("openbao") or {}).get("restored_value_match") is not True:
+        fail("Phase 3B OpenBao restore readiness mismatch")
+    if (readiness_persistence.get("zitadel") or {}).get("restored_identity_token_http") != 200:
+        fail("Phase 3B ZITADEL restore readiness mismatch")
+    readiness_runtime = readiness.get("runtime_readiness") or {}
+    if readiness_runtime.get("status") != "PASS_NOT_ACTIVATED" or readiness_runtime.get("validator_selftest_cases") != 10:
+        fail("Phase 3B shadow runtime readiness status/selftest mismatch")
+    if readiness_runtime.get("contract_ref") != "docs/implementation/office-v2/phase3b/runtime-readiness-v0.json" or readiness_runtime.get("validator") != "scripts/vf_office_v2_security_shadow_doctor.py":
+        fail("Phase 3B shadow runtime readiness refs mismatch")
+    if readiness_runtime.get("health_fail_closed") is not True or readiness_runtime.get("service_plan_complete") is not True or readiness_runtime.get("rollback_to_incumbents_selftest") is not True:
+        fail("Phase 3B shadow runtime readiness proof incomplete")
+    if readiness_runtime.get("services_installed") is not False or readiness_runtime.get("services_enabled") is not False:
+        fail("Phase 3B shadow readiness must not activate services")
+    if readiness_runtime.get("dpapi_cross_process_probe") != "PASS" or len(readiness_runtime.get("dpapi_evidence_sha256") or "") != 64:
+        fail("Phase 3B shadow readiness DPAPI proof mismatch")
+    for field in ("production_authority_change", "shadow_promoted"):
+        if readiness_runtime.get(field) is not False:
+            fail("Phase 3B shadow runtime readiness unsafe field: " + field)
+    remaining = readiness.get("remaining_preconditions_before_shadow_can_be_considered") or []
+    if remaining != ["exact regression and negative-control suite after runtime-readiness wiring", "separate explicit project-state SHADOW promotion receipt"]:
+        fail("Phase 3B shadow readiness remaining preconditions drift")
 
     wiring_source = WIRING_SCRIPT.read_text(encoding="utf-8-sig")
     for forbidden_import in ("import requests", "from requests", "import httpx", "from httpx", "import socket", "import urllib"):
@@ -487,9 +570,16 @@ def main() -> None:
     selftest = subprocess.run([sys.executable, str(WIRING_SCRIPT), "selftest"], cwd=ROOT, text=True, capture_output=True, timeout=30)
     if selftest.returncode != 0 or "selftest=7" not in selftest.stdout or "external_effect=NONE" not in selftest.stdout:
         fail("Phase 3B integration wiring selftest failed: " + (selftest.stderr.strip() or selftest.stdout.strip()))
+    shadow_source = SHADOW_DOCTOR.read_text(encoding="utf-8-sig")
+    for forbidden_import in ("import requests", "from requests", "import httpx", "from httpx", "import socket", "import urllib"):
+        if forbidden_import in shadow_source:
+            fail("Phase 3B shadow doctor may not import network client: " + forbidden_import)
+    shadow_selftest = subprocess.run([sys.executable, str(SHADOW_DOCTOR), "selftest"], cwd=ROOT, text=True, capture_output=True, timeout=30)
+    if shadow_selftest.returncode != 0 or "selftest=10" not in shadow_selftest.stdout or "services=NOT_ACTIVATED" not in shadow_selftest.stdout or "effect=NONE" not in shadow_selftest.stdout:
+        fail("Phase 3B shadow readiness selftest failed: " + (shadow_selftest.stderr.strip() or shadow_selftest.stdout.strip()))
 
     readme = (P3B / "README.md").read_text(encoding="utf-8-sig")
-    for marker in ("CROSS-ROLE COMPOSITION PASS", "INTEGRATION WIRING DEFINED", "NOT SHADOW", "NO PRODUCTION AUTHORITY CHANGE", "Authentication never implies authorization", "shared 20-step composition fixture", "composition-gate-verdict-v0.json", "LAB_SIMULATION_ONLY", "promotion-gates-v0.json"):
+    for marker in ("CROSS-ROLE COMPOSITION PASS", "INTEGRATION WIRING PASS", "PERSISTENCE RESTORE PASS", "RUNTIME READINESS PASS NOT ACTIVATED", "EXACT REGRESSION PENDING", "NOT SHADOW", "NO PRODUCTION AUTHORITY CHANGE", "Authentication never implies authorization", "shared 20-step composition fixture", "composition-gate-verdict-v0.json", "LAB_SIMULATION_ONLY", "promotion-gates-v0.json", "shadow-readiness-v0.json"):
         if marker not in readme:
             fail("Phase 3B README missing safety/composition marker: " + marker)
 
