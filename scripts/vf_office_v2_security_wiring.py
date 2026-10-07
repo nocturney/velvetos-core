@@ -131,7 +131,7 @@ def validate_contract() -> dict[str, Any]:
     for field in ("production_authority_change", "production_writer_change", "production_credentials_used", "production_secret_material_used", "shadow_or_pilot_promotion"):
         require(verdict.get(field) is False, f"composition verdict unsafe field: {field}")
 
-    require(promotion.get("status") == "SHADOW_ACTIVE_OBSERVER_ONLY_PILOT_BLOCKED", "promotion status mismatch")
+    require(promotion.get("status") == "SHADOW_ACTIVE_OBSERVER_ONLY_PILOT_READY", "promotion status mismatch")
     require(promotion.get("current_authority") == "INCUMBENTS_CANONICAL", "production incumbents must remain canonical")
     for field in ("production_authority_change", "production_writer_change", "production_credentials_bound", "pilot_promoted", "production_promoted"):
         require(promotion.get(field) is False, f"promotion unsafe field: {field}")
@@ -145,10 +145,11 @@ def validate_contract() -> dict[str, Any]:
     require(runtime_evidence.get("status") == "PASS" and runtime_evidence.get("production_path") == "INCUMBENTS_CANONICAL", "SHADOW runtime evidence mismatch")
     require(runtime_evidence.get("external_effects_allowed") is False, "SHADOW runtime may not grant external effects")
     pilot_gate = promotion.get("pilot_gate") or {}
-    require(pilot_gate.get("status") == "READINESS_SCOPE_SELECTED_LIVE_PROOF_PENDING", "PILOT readiness gate status mismatch")
+    require(pilot_gate.get("status") == "PASS_READY_FOR_EXPLICIT_PROMOTION", "PILOT readiness gate status mismatch")
     require(pilot_gate.get("selected_scope_id") == "instagram-publisher-snapshot-read", "PILOT bounded scope mismatch")
     require(pilot_gate.get("selected_credential_class") == "PRODUCTION_READ", "PILOT credential class mismatch")
-    require("separate explicit PILOT promotion receipt" in (pilot_gate.get("remaining_live_preconditions") or []), "PILOT explicit promotion boundary missing")
+    require(pilot_gate.get("remaining_live_preconditions") == ["separate explicit PILOT promotion receipt"], "PILOT explicit promotion boundary mismatch")
+    require(pilot_gate.get("readiness_sha") == "856b4387da9e66e7489d6c7011a2b370a7e1db2f", "PILOT readiness SHA mismatch")
     require((promotion.get("production_gate") or {}).get("implicit_promotion_allowed") is False, "implicit production promotion forbidden")
 
     return wiring

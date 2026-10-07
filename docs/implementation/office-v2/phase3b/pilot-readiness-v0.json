@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.office-v2.phase3b-pilot-readiness.v0",
-  "status": "STATIC_READINESS_PASS_LIVE_PROOF_PENDING",
+  "status": "LIVE_READINESS_PASS_EXPLICIT_PROMOTION_PENDING",
   "scope_ref": "docs/implementation/office-v2/phase3b/pilot-scope-v0.json",
   "scope_id": "instagram-publisher-snapshot-read",
   "selected_composition": "composition-zitadel-opa-openbao",
@@ -43,25 +43,36 @@
     "bounded production-read scope named",
     "PRODUCTION_READ class selected",
     "dedicated SNAPSHOT_TOKEN path exists in provider source",
-    "SNAPSHOT_TOKEN absent before PILOT issuance",
-    "provider session can manage Worker secrets",
-    "write endpoints remain CONTROL_TOKEN-only in source"
+    "provider-native issue, rotation and revocation proof passed",
+    "current dedicated SNAPSHOT_TOKEN read=200 and write=401",
+    "OpenBao exact pilot-path binding passed and unrelated scope is denied",
+    "ZITADEL principal issue/readback/revocation proof passed",
+    "correlated ZITADEL -> OPA -> OpenBao -> Worker read receipt passed",
+    "candidate outage fail-closed and recovery passed 3/3",
+    "service recovery and upgrade rollback passed",
+    "rollback to incumbent read path passed without authority ambiguity",
+    "post-rollback narrow rebind passed",
+    "full canonical regression passed 116/116 on exact readiness SHA"
   ],
   "remaining_preconditions": [
-    "issue dedicated SNAPSHOT_TOKEN and prove GET=200 plus write=401",
-    "provider-native rotation proof: old token=401 new token=200",
-    "provider-native revocation proof: revoked token=401",
-    "bind only the final dedicated token to OpenBao exact pilot path",
-    "correlated ZITADEL -> OPA -> OpenBao -> Worker read receipt",
-    "candidate outage fail-closed and recovery proof under the named PILOT scope",
-    "service recovery and upgrade rollback drill",
-    "rollback to incumbent read path without authority ambiguity",
-    "full canonical regression on exact readiness SHA",
     "separate explicit PILOT promotion receipt"
   ],
   "pilot_promoted": false,
   "production_promoted": false,
   "production_writer_change": false,
   "production_authority_change": false,
-  "external_mutation_allowed": false
+  "external_mutation_allowed": false,
+  "live_readiness": {
+    "status": "PASS_READY_FOR_EXPLICIT_PROMOTION",
+    "scope_id": "instagram-publisher-snapshot-read",
+    "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/pilot-live-readiness-progress.json",
+    "readiness_sha": "856b4387da9e66e7489d6c7011a2b370a7e1db2f",
+    "full_canonical_regression": "PASS_116_OF_116",
+    "repository_files_unchanged": true,
+    "outage_fail_closed_and_recovery": "PASS_3_OF_3",
+    "service_recovery_and_upgrade_rollback": "PASS",
+    "rollback_to_incumbent": "PASS",
+    "post_rollback_narrow_rebind": "PASS",
+    "explicit_promotion_receipt_required": true
+  }
 }

@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.office-v2.phase3b-promotion-gates.v0",
-  "status": "SHADOW_ACTIVE_OBSERVER_ONLY_PILOT_BLOCKED",
+  "status": "SHADOW_ACTIVE_OBSERVER_ONLY_PILOT_READY",
   "selected_composition": "composition-zitadel-opa-openbao",
   "shadow_readiness_ref": "docs/implementation/office-v2/phase3b/shadow-readiness-v0.json",
   "current_authority": "INCUMBENTS_CANONICAL",
@@ -90,7 +90,7 @@
     }
   },
   "pilot_gate": {
-    "status": "READINESS_SCOPE_SELECTED_LIVE_PROOF_PENDING",
+    "status": "PASS_READY_FOR_EXPLICIT_PROMOTION",
     "requires": [
       "SHADOW promotion receipt and SHADOW evidence PASS",
       "separate explicit PILOT promotion receipt",
@@ -116,6 +116,9 @@
       "SNAPSHOT_TOKEN is absent before PILOT issuance"
     ],
     "remaining_live_preconditions": [
+      "separate explicit PILOT promotion receipt"
+    ],
+    "completed_live_preconditions": [
       "dedicated SNAPSHOT_TOKEN issue/read/write-deny proof",
       "provider-native rotation and revocation drill",
       "OpenBao exact pilot-path binding",
@@ -123,9 +126,12 @@
       "candidate outage fail-closed and recovery proof",
       "service recovery and upgrade rollback drill",
       "rollback to incumbent read path without authority ambiguity",
-      "full canonical regression on exact readiness SHA",
-      "separate explicit PILOT promotion receipt"
-    ]
+      "post-rollback narrow rebind",
+      "full canonical regression on exact readiness SHA"
+    ],
+    "live_readiness_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/pilot-live-readiness-progress.json",
+    "readiness_sha": "856b4387da9e66e7489d6c7011a2b370a7e1db2f",
+    "promotion_contract_ref": "docs/implementation/office-v2/phase3b/pilot-promotion-v0.json"
   },
   "production_gate": {
     "status": "BLOCKED_UNTIL_PILOT_PASS_AND_SEPARATE_AUTHORITY_TRANSFER",

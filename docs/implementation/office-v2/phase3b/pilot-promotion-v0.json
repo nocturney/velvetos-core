@@ -1,0 +1,47 @@
+{
+  "schema": "velvetos.office-v2.phase3b-pilot-promotion.v0",
+  "status": "READY_AWAITING_EXPLICIT_PROJECT_STATE_PROMOTION",
+  "scope_ref": "docs/implementation/office-v2/phase3b/pilot-scope-v0.json",
+  "readiness_ref": "docs/implementation/office-v2/phase3b/pilot-readiness-v0.json",
+  "scope_id": "instagram-publisher-snapshot-read",
+  "selected_composition": "composition-zitadel-opa-openbao",
+  "credential_class": "PRODUCTION_READ",
+  "readiness_sha": "856b4387da9e66e7489d6c7011a2b370a7e1db2f",
+  "live_readiness_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/pilot-live-readiness-progress.json",
+  "owner_authorization_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/pilot-promotion-authorization.json",
+  "owner_authorization_sha256": "088c01fc8c67794cfeae9cf8356590e4a079654587d4923ca4da1a373f9795c5",
+  "explicit_runtime_promotion_receipt_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/pilot-promotion.json",
+  "required_project_state_before_promotion": {
+    "phase": "PHASE_3B_SHADOW_ACTIVE",
+    "checkpoint": "office-v2-phase3b-v0-cp015-shadow-green",
+    "gate": "GREEN"
+  },
+  "promotion_conditions": [
+    "readiness branch merged to main",
+    "exact merged main SHA verified",
+    "post-merge CI/Core Sensors green",
+    "live readiness remains PASS_READY_FOR_EXPLICIT_PROMOTION",
+    "current provider, broker and E2E receipts share one credential reference hash",
+    "SHADOW health remains READY and production_path remains INCUMBENTS_CANONICAL",
+    "separate sanitized runtime promotion receipt is written before Project State advances"
+  ],
+  "bounded_pilot_grants": [
+    "publisher.snapshot.read through the named ZITADEL -> OPA -> OpenBao -> Cloudflare path",
+    "PRODUCTION_READ access only for the frozen instagram-publisher-snapshot-read scope"
+  ],
+  "does_not_grant": [
+    "production authority transfer",
+    "production writer ownership",
+    "publish or mutation",
+    "CONTROL_TOKEN access",
+    "META_ACCESS_TOKEN access",
+    "fallback ALLOW after canonical DENY"
+  ],
+  "credential_reference_hash_required_in_runtime_receipt": true,
+  "raw_secret_in_repository_forbidden": true,
+  "pilot_promoted": false,
+  "production_promoted": false,
+  "production_authority_change": false,
+  "production_writer_change": false,
+  "external_mutation_allowed": false
+}
