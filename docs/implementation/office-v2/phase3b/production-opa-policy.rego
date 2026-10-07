@@ -15,7 +15,7 @@ allow if {
 }
 
 allow if {
-  input.principal == "svc:officev2-p3b-production-publisher-snapshot"
+  input.principal == "svc:officev2-p3b-prod-publisher-snapshot"
   input.action == "publisher.snapshot.read"
   input.resource == "cloudflare:velvetos-instagram-publisher"
 }
