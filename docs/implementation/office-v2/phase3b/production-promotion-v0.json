@@ -1,0 +1,40 @@
+{
+  "schema": "velvetos.office-v2.phase3b-production-promotion.v0",
+  "status": "READY_AWAITING_EXPLICIT_RUNTIME_AUTHORITY_TRANSFER",
+  "scope_id": "instagram-publisher-snapshot-read",
+  "production_domain": "instagram_read",
+  "capability": "instagram.publisher.snapshot.read",
+  "selected_composition": "composition-zitadel-opa-openbao",
+  "required_project_state_before_promotion": {
+    "phase": "PHASE_3B_PILOT_ACTIVE",
+    "checkpoint": "office-v2-phase3b-v0-cp016-pilot-active",
+    "gate": "GREEN"
+  },
+  "authority": {
+    "identity_owner": "ZITADEL",
+    "authorization_decision_owner": "OPA",
+    "credential_broker_owner": "OpenBao",
+    "provider_read_effect_owner": "velvetos-instagram-publisher",
+    "production_writer_change": false,
+    "external_mutation_allowed": false
+  },
+  "credential_binding": {
+    "class": "PRODUCTION_READ",
+    "write_allowed": false,
+    "raw_secret_in_repository_forbidden": true
+  },
+  "promotion_conditions": [
+    "PILOT evidence PASS",
+    "authority-map and credential-trust bindings PASS",
+    "machine-writer and policy-architecture guards PASS",
+    "production runtime correlation PASS",
+    "rollback and disaster-recovery PASS",
+    "full exact-SHA regression and CI PASS",
+    "separate sanitized authority-transfer receipt before Project State advances"
+  ],
+  "production_authority_change": true,
+  "production_writer_change": false,
+  "production_promoted": false,
+  "external_mutation_allowed": false,
+  "implicit_promotion_allowed": false
+}
