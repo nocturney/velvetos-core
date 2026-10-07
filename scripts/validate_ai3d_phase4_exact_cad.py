@@ -217,6 +217,28 @@ def main() -> int:
             assert_vector(payload["bbox_min"], exact_min, tolerance, f"{label}.min")
             assert_vector(payload["bbox_max"], exact_max, tolerance, f"{label}.max")
 
+        expected_volume = 120.0 * 80.0 * 8.0 + math.pi * 10.0 * 10.0 * 4.0
+        mesh_quality: dict[str, Any] = {}
+        for label, payload in (
+            ("build123d", first["artifacts"]["stl"]),
+            ("cadquery", cadquery["artifacts"]["stl"]),
+            ("jscad", jscad["artifacts"]["stl"]),
+        ):
+            assert payload["mesh_watertight"] is True, label
+            assert payload["mesh_body_count"] == 1, label
+            assert_vector(payload["mesh_extents"], exact_size, 1e-3, f"{label}.mesh_extents")
+            assert close(payload["mesh_volume"], expected_volume, 1.0), (
+                label,
+                payload["mesh_volume"],
+                expected_volume,
+            )
+            mesh_quality[label] = {
+                "watertight": payload["mesh_watertight"],
+                "body_count": payload["mesh_body_count"],
+                "extents_mm": payload["mesh_extents"],
+                "volume_mm3": payload["mesh_volume"],
+            }
+
         assert_vector(
             first["artifacts"]["dxf"]["shapes"][0]["bbox_size"],
             [20.0, 20.0, 0.0],
@@ -276,6 +298,50 @@ def main() -> int:
         assert invalid["status"] == "BLOCKED"
         assert invalid["reason"].startswith("unsupported_formats:build123d:")
 
+        ambiguous_ir = {
+            "schema": "velvetos.geometry-ir.v1",
+            "units": "mm",
+            "parts": [
+                {
+                    "id": "left",
+                    "kind": "box",
+                    "dimensions": {"x": 10, "y": 10, "z": 10},
+                    "translate_mm": [-20, 0, 0],
+                },
+                {
+                    "id": "right",
+                    "kind": "box",
+                    "dimensions": {"x": 10, "y": 10, "z": 10},
+                    "translate_mm": [20, 0, 0],
+                },
+            ],
+            "constraints": [],
+        }
+        ambiguous_path = temp / "ambiguous-top-face.json"
+        ambiguous_path.write_text(
+            json.dumps(ambiguous_ir, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        ambiguous = run_json(
+            [
+                sys.executable,
+                str(STACK),
+                "build",
+                "--input",
+                str(ambiguous_path),
+                "--engine",
+                "build123d",
+                "--formats",
+                "dxf",
+                "--out-dir",
+                str(temp / "ambiguous-output"),
+            ],
+            expect=2,
+        )
+        assert ambiguous["status"] == "BLOCKED"
+        assert ambiguous["reason"] == "engine_failed"
+        assert "semantic top-face selection ambiguous" in ambiguous["stderr"]
+
         byte_determinism: dict[str, bool] = {}
         for name in first_receipt["artifacts"]:
             byte_determinism[name] = sha256(first_dir / name) == sha256(second_dir / name)
@@ -305,10 +371,12 @@ def main() -> int:
             "jscad": {
                 "geometry_signature": geometry_signature(jscad),
             },
+            "mesh_quality": mesh_quality,
             "bd_warehouse": bd,
             "semantic_selection": selection,
             "negative_controls": {
                 "unknown_export_format": "BLOCKED",
+                "ambiguous_top_profile": "BLOCKED",
                 "numeric_face_index_fallback": False,
                 "printer_actions_allowed": False,
             },

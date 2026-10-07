@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import importlib.metadata
+import importlib.util
 import json
 from pathlib import Path
 from typing import Any
@@ -95,7 +96,16 @@ def probe_artifacts(root: Path) -> dict[str, Any]:
 
     stl_path = root / "model.stl"
     if stl_path.is_file():
-        result["stl"] = metrics(b.import_stl(stl_path))
+        stl_metrics = metrics(b.import_stl(stl_path))
+        if importlib.util.find_spec("trimesh") is not None:
+            import trimesh
+
+            mesh = trimesh.load_mesh(stl_path, process=True)
+            stl_metrics["mesh_extents"] = [float(value) for value in mesh.extents]
+            stl_metrics["mesh_volume"] = float(mesh.volume)
+            stl_metrics["mesh_watertight"] = bool(mesh.is_watertight)
+            stl_metrics["mesh_body_count"] = int(mesh.body_count)
+        result["stl"] = stl_metrics
 
     dxf_path = root / "model-top.dxf"
     if dxf_path.is_file():

@@ -375,7 +375,20 @@ if 'glb' in formats:
     if ok is False:
         raise RuntimeError('glb export failed')
 if 'dxf' in formats or 'svg' in formats:
-    top_face=max(solid.faces(),key=lambda face: face.center().Z)
+    planar_up=[
+        face for face in solid.faces()
+        if getattr(getattr(face,'geom_type',None),'name',None)=='PLANE'
+        and face.normal_at().Z>=0.999999
+    ]
+    if not planar_up:
+        raise RuntimeError('semantic top-face selection found no +Z planar face')
+    top_z=max(face.center().Z for face in planar_up)
+    selected=[face for face in planar_up if abs(face.center().Z-top_z)<=1e-6]
+    if len(selected)!=1:
+        raise RuntimeError(
+            'semantic top-face selection ambiguous: '+str(len(selected))
+        )
+    top_face=selected[0]
     if 'dxf' in formats:
         exporter=ExportDXF()
         exporter.add_shape(top_face)

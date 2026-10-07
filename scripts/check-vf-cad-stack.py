@@ -45,6 +45,11 @@ assert patterns["curated_primitives"]["bd_warehouse"]["license"] == "Apache-2.0"
 assert patterns["safety"]["printer_actions_allowed"] is False
 assert patterns["safety"]["machine_control_allowed"] is False
 
+cli_source = cli.read_text(encoding="utf-8")
+assert "semantic top-face selection found no +Z planar face" in cli_source
+assert "semantic top-face selection ambiguous" in cli_source
+assert "face.center().Z-top_z" in cli_source
+
 mechanical = json.loads(mechanical_path.read_text(encoding="utf-8"))
 assert mechanical["schema"] == "velvetos.ai3d.mechanical-feature-packs.v1"
 assert mechanical["authority"] == "packages/vfprod/FABRICATION-ROUTER.md"
