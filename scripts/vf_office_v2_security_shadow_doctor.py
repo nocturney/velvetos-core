@@ -124,7 +124,7 @@ def validate_contract() -> dict[str, Any]:
         require(row.get("authority_role") == "PRODUCTION_INCUMBENT", f"incumbent authority drift: {role}")
         require(row.get("decision_verdict") == "KEEP_INCUMBENT", f"incumbent verdict drift: {role}")
 
-    require(promotion.get("status") == "SHADOW_ACTIVE_OBSERVER_ONLY_PILOT_BLOCKED", "promotion status drift")
+    require(promotion.get("status") == "SHADOW_ACTIVE_OBSERVER_ONLY_PILOT_READY", "promotion status drift")
     require(promotion.get("current_authority") == "INCUMBENTS_CANONICAL", "production incumbents must remain canonical")
     require(promotion.get("shadow_promoted") is True, "explicit SHADOW promotion missing")
     require(promotion.get("pilot_promoted") is False and promotion.get("production_promoted") is False, "SHADOW must not imply PILOT/production")
