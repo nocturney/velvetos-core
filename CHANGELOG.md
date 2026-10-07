@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-10-07 - **Event-driven staleness contract repair:** `check-staleness.py` no longer fabricates a daily 09:00/09:15 Morning Brief deadline after Office 2.0 retired the standing brief clock. The sensor still enforces research-link freshness and stale running checkpoints, reports whether an event-driven brief exists today, and leaves brief completion to the invocation/checkpoint that actually triggered it. This removes a time-of-day CI failure without weakening any active workflow or external-effect gate.
+
 - 2026-10-06 - **Scheduler simplification / Grok 3→0 cutover:** owner-facing recurring authority moved to ChatGPT automations. The active recurring set is now Cognee Memory Sync once daily (~11:30 flexible), VelvetOS Office Loop at 18:30, and Runtime Receipts Refresh at 19:15; Morning Brief is manual/event-driven. All ten known Grok routines are paused and Grok is on-demand only. `grok-production-scheduler` is removed from current runtime-required components; historical Grok readbacks remain immutable evidence. Current authority is `automation/chatgpt/manifest.json`.
 
 

@@ -94,7 +94,7 @@ Lindy, Clay, Zapier Central, Gumloop, Julius, Relevance AI, Bardeen, Beam, GitHu
 
 1. ארבעה תרחישים: `morning-digest`, `inquiry-chain`, `weekly-links`, `content-live`.
 2. כל צומת = event ב-checkpoint (`vfharness/templates/checkpoint.schema.json`).
-3. `working?` = `python3 scripts/check-staleness.py` (בריף היום + LINKS לא ישנים).
+3. `working?` = `python3 scripts/check-staleness.py` (LINKS לא ישנים + checkpoints רצים שאינם תקועים; Morning Brief נבדק רק כשאירוע/הפעלה יצרו אותו, בלי clock יומי).
 4. Dedup פנייה: `vfconvert/hq/DEDUP.md`.
 5. **לא** מתקינים Huginn Rails.
 
