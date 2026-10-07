@@ -30,17 +30,18 @@ function Unprotect-Text([string]$Path){
   $enc=[IO.File]::ReadAllText($Path);$sec=ConvertTo-SecureString $enc;$cred=[Management.Automation.PSCredential]::new('officev2',$sec)
   try{return $cred.GetNetworkCredential().Password}finally{$cred=$null;$sec=$null}
 }
-function Invoke-Wsl([string]$Script,[string[]]$Args=@(),[string]$InputText=''){
+function Invoke-Wsl([string]$Script,[string[]]$ScriptArgs=@(),[string]$InputText=''){
   $psi=[Diagnostics.ProcessStartInfo]::new();$psi.FileName=$wsl
-  $psi.Arguments=("-d OfficeV2-Lab -u root -- bash "+$Script+$(if($Args.Count){" "+($Args -join ' ')}else{''}))
+  $quoted=@($ScriptArgs | ForEach-Object { "'" + ($_.Replace("'","'\''")) + "'" })
+  $psi.Arguments=("-d OfficeV2-Lab -u root -- bash "+$Script+$(if($quoted.Count){" "+($quoted -join ' ')}else{''}))
   $psi.UseShellExecute=$false;$psi.RedirectStandardInput=$true;$psi.RedirectStandardOutput=$true;$psi.RedirectStandardError=$true;$psi.CreateNoWindow=$true
   $p=[Diagnostics.Process]::new();$p.StartInfo=$psi;[void]$p.Start();if($InputText){$p.StandardInput.Write($InputText)};$p.StandardInput.Close()
   $stdout=$p.StandardOutput.ReadToEnd();$stderr=$p.StandardError.ReadToEnd();$p.WaitForExit()
   [pscustomobject]@{ExitCode=$p.ExitCode;Stdout=$stdout;Stderr=$stderr}
 }
-function Invoke-Wrangler([string[]]$Args,[string]$Stdin){
+function Invoke-Wrangler([string[]]$CommandArgs,[string]$Stdin){
   $old=Get-Location
-  try{Set-Location $workerDir;$stdout=($Stdin|& $npx @Args 2>&1|Out-String);[pscustomobject]@{ExitCode=$LASTEXITCODE;Stdout=$stdout}}
+  try{Set-Location $workerDir;$stdout=($Stdin|& $npx @CommandArgs 2>&1|Out-String);[pscustomobject]@{ExitCode=$LASTEXITCODE;Stdout=$stdout}}
   finally{Set-Location $old}
 }
 function Put-Snapshot([string]$Token){

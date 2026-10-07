@@ -175,8 +175,10 @@ def main() -> None:
         "Put-Snapshot $oldToken",
         "production_authority_active=$false",
         "Protect-Text",
+        "[string[]]$ScriptArgs",
     ):
         require(marker in runtime_bind, "production runtime binding missing fail-closed marker: " + marker)
+    require("[string[]]$Args" not in runtime_bind, "production runtime Invoke-Wsl may not shadow PowerShell automatic $Args")
 
     for marker in (
         "officev2-p3b-prod-openbao",
@@ -193,6 +195,8 @@ def main() -> None:
         "root_used\":false",
     ):
         require(marker in openbao_bind, "production OpenBao binder missing marker: " + marker)
+    require('chmod 0644 "$CONFIG"' in openbao_bind, "production OpenBao non-secret config must remain readable after privilege drop")
+    require("StartLimitIntervalSec=60" in openbao_bind, "production OpenBao systemd start-limit guard missing")
     require("secret/data/officev2-pilot/instagram-publisher-snapshot" not in openbao_bind, "production OpenBao binder may not write/read PILOT secret path")
     require("officev2-p3b-prod-openbao" in production_token_read, "production token reader must use isolated production OpenBao")
     require("officev2-p3b-shadow-openbao" not in production_token_read, "production token reader may not use PILOT OpenBao")
@@ -206,8 +210,9 @@ def main() -> None:
         require(marker in recovery, "production recovery drill missing marker: " + marker)
     for marker in ("production-recovery.json", "ROTATED_PRODUCTION_CREDENTIAL_READY_FOR_PROMOTION", "outage_fail_closed", "unseal_without_persistent_root"):
         require(marker in recovery_wrapper, "production recovery wrapper missing marker: " + marker)
-    for marker in ("production-rollback-drill.json", "former_production_credential_http", "restored_pilot_runtime_http", "Put-Snapshot $prodToken", "ROLLBACK_DRILL_COMPLETE_REQUIRES_FRESH_ROTATE"):
+    for marker in ("production-rollback-drill.json", "former_production_credential_http", "restored_pilot_runtime_http", "Put-Snapshot $prodToken", "ROLLBACK_DRILL_COMPLETE_REQUIRES_FRESH_ROTATE", "[string[]]$ScriptArgs", "[string[]]$CommandArgs"):
         require(marker in rollback_drill, "production rollback drill missing marker: " + marker)
+    require("[string[]]$Args" not in rollback_drill, "production rollback helpers may not shadow PowerShell automatic $Args")
     for marker in ("Resolve-Phase3B-ProductionSnapshot.ps1", "--mode", "Production", "vf.instagram.schedule-snapshot.v1"):
         require(marker in adapter, "secure production snapshot adapter missing marker: " + marker)
     for forbidden in ("VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN", "cloudflare-publisher-control.dpapi", "resolve_token"):
