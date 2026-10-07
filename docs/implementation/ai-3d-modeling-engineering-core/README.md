@@ -179,6 +179,39 @@ Phase 6 validation:
   py -3.11 scripts/validate_ai3d_phase6_mesh.py
   py -3.11 scripts/validate_ai3d_capability_registry.py
 
+## Phase 7 - Reverse engineering / scan-to-CAD
+
+Files:
+
+- reverse-engineering-scan-to-cad-v1.json
+- scripts/ai3d_reverse_engineering.py
+- scripts/validate_ai3d_phase7_reverse_engineering.py
+- evidence/phase7-reverse-engineering-acceptance-20261007.json
+- evidence/phase7-geomdl-runtime-install-20261007.json
+
+The existing Blender-host provider `pipeline_scan_to_cad` remains the composite scan-to-CAD route. Phase 7 does not create a second scan router or CAD authority.
+
+Proven bounded behavior:
+
+- existing scan.pointcloud, scan.clean and scan.register typed capabilities are reused.
+- COLMAP 4.2.1, Meshroom 2025.1.0 and Open3D 0.20.0 remain provider components for registration/reconstruction; existing functional evidence is preserved.
+- segmentation is explicit: a `segment_ref` selects an upstream/user-provided segment. Automatic semantic feature recognition is not claimed.
+- primitive fitting currently supports explicit `box_axis_aligned` and `cylinder_z` families only.
+- a synthetic cylinder point cloud with distractor segment fits exactly to diameter 20 mm, height 30 mm and explicit translation; known-dimension anchors are checked and mismatch fails closed.
+- the fitted primitive is emitted as `velvetos.geometry-ir.v1`, rebuilt through the existing build123d authority path, exported to STEP and reopened at the expected 20 x 20 x 30 mm bounds.
+- geomdl 5.4.0 (MIT) is installed in the existing geometry-core Python 3.12 runtime with `--no-deps`; no existing geometry package changed.
+- geomdl least-squares surface fitting is proven behind a structured-grid and explicit fit-error-threshold contract. Its NURBS surface is reconstruction evidence only and never manufacturing truth.
+- NURBSFit 2026 remains CANDIDATE_RESEARCH pending GoCoPP C++ qualification, NURBSDiff compatibility, PyTorch3D/CUDA qualification and a reproducible VelvetOS fixture.
+
+Negative controls block missing primitive family, missing segment reference, dimension-anchor mismatch and NURBS fitting without an explicit error threshold.
+
+Capability Registry after Phase 7: 60 records, 46 PROVEN, 13 CANDIDATE, 1 ACTIVE_AUTHORITY, and still exactly 20 PROVEN_TYPED.
+
+Phase 7 validation:
+
+  py -3.11 scripts/validate_ai3d_phase7_reverse_engineering.py
+  py -3.11 scripts/validate_ai3d_capability_registry.py
+
 ## Validation state
 
 Explicit AI3D validation stack: PASS.
@@ -188,8 +221,8 @@ Repository regression:
 - scripts/check-all.py: 116/116 PASS
 - exit code: 0
 - sensor side-effect check: repository files unchanged
-- full-suite log: evidence/check-all-phase6-20261007.log
+- full-suite log: evidence/check-all-phase7-20261007.log
 
 ## Next implementation phase
 
-Phase 7 is reverse engineering and scan-to-CAD: point-cloud normalization/registration, reconstruction and segmentation, then bounded NURBS/primitive fitting and CAD reconstruction while reusing existing COLMAP/Meshroom/scan capabilities.
+Phase 8 is assemblies, motion, collision and ECAD: keep assembly semantics separate from mesh/CAD geometry truth, qualify motion/collision evidence, and reuse existing PCB/import authorities rather than creating another assembly or electronics router.

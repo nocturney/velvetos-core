@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.ai3d.cad-capability-registry.v1",
   "non_authoritative_staging": true,
-  "generated_at": "2026-10-07T15:39:39.388955+00:00",
+  "generated_at": "2026-10-07T15:55:41.637672+00:00",
   "authority_invariant": "This registry grants no authority. Fabrication Router/vf-3d-router, CreativeCraft, Blender Capability Host, slicer and production authorities remain unchanged.",
   "records": [
     {
@@ -1349,6 +1349,81 @@
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase4-exact-cad-acceptance-20261007.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase4-bd-warehouse-runtime-install-20261007.json",
           "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "build123d",
+          "runtime": "vf-cad-stack:build123d-venv"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "cad.reverse_engineer--pipeline_scan_to_cad",
+      "capability_id": "cad.reverse_engineer",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json"
+      },
+      "engine": {
+        "id": "pipeline_scan_to_cad",
+        "version": null
+      },
+      "adapter": {
+        "id": "existing-scan-to-cad-composite",
+        "source_ref": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:pipeline_scan_to_cad"
+      },
+      "runtime": {
+        "id": "multi-sidecar",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "scan_or_mesh_evidence",
+        "engineering_contract",
+        "dimension_evidence"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "fit_report",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions",
+        "scan_is_evidence_not_manufacturing_truth",
+        "dimension_evidence_required_for_critical_dimensions",
+        "no_automatic_semantic_feature_recognition"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:pipeline_scan_to_cad",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:pipeline_scan_to_cad",
+          "docs/implementation/ai-3d-modeling-engineering-core/reverse-engineering-scan-to-cad-v1.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "existing component probes",
+          "validate_ai3d_phase7_reverse_engineering"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:pipeline_scan_to_cad",
+          "docs/implementation/ai-3d-modeling-engineering-core/reverse-engineering-scan-to-cad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase7-reverse-engineering-acceptance-20261007.json"
         ]
       },
       "fallback": [
@@ -3006,7 +3081,7 @@
       "output_types": [
         "artifact_or_receipt"
       ],
-      "precision_model": "not_applicable",
+      "precision_model": "mixed",
       "constraints_support": [
         "bounded_typed_request"
       ],
@@ -3068,7 +3143,7 @@
       "output_types": [
         "artifact_or_receipt"
       ],
-      "precision_model": "not_applicable",
+      "precision_model": "mixed",
       "constraints_support": [
         "bounded_typed_request"
       ],
@@ -3101,6 +3176,220 @@
       },
       "fallback": [],
       "status": "CANDIDATE"
+    },
+    {
+      "record_id": "reconstruction.nurbs_fit--candidate-nurbsfit_2026",
+      "capability_id": "reconstruction.nurbs_fit",
+      "problem_class": "reconstruction",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/reverse-engineering-scan-to-cad-v1.json"
+      },
+      "engine": {
+        "id": "nurbsfit_2026",
+        "version": null
+      },
+      "adapter": {
+        "id": "not-admitted",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/reverse-engineering-scan-to-cad-v1.json"
+      },
+      "runtime": {
+        "id": "not-admitted",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "structured_point_grid",
+        "fit_contract"
+      ],
+      "output_types": [
+        "nurbs_surface_evidence",
+        "fit_report",
+        "verification_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request",
+        "explicit_fit_error_threshold",
+        "surface_evidence_only",
+        "separate_exact_cad_contract_required"
+      ],
+      "headless": false,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/reverse-engineering-scan-to-cad-v1.json",
+        "code_license": "MIT",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/reverse-engineering-scan-to-cad-v1.json",
+          "https://github.com/lizOnly/nurbsfit"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "GoCoPP runtime qualification required",
+          "NURBSDiff compatibility qualification required",
+          "PyTorch3D CUDA qualification required",
+          "reproducible VelvetOS fixture required"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/reverse-engineering-scan-to-cad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase7-reverse-engineering-acceptance-20261007.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "geomdl",
+          "runtime": "geometry-core-py312"
+        }
+      ],
+      "status": "CANDIDATE"
+    },
+    {
+      "record_id": "reconstruction.nurbs_fit--geomdl",
+      "capability_id": "reconstruction.nurbs_fit",
+      "problem_class": "reconstruction",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/reverse-engineering-scan-to-cad-v1.json"
+      },
+      "engine": {
+        "id": "geomdl",
+        "version": "5.4.0"
+      },
+      "adapter": {
+        "id": "ai3d-reverse-engineering",
+        "source_ref": "scripts/ai3d_reverse_engineering.py"
+      },
+      "runtime": {
+        "id": "geometry-core-py312",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "structured_point_grid",
+        "fit_contract"
+      ],
+      "output_types": [
+        "nurbs_surface_evidence",
+        "fit_report",
+        "verification_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request",
+        "explicit_fit_error_threshold",
+        "surface_evidence_only",
+        "separate_exact_cad_contract_required"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/reverse-engineering-scan-to-cad-v1.json",
+        "code_license": "MIT",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/reverse-engineering-scan-to-cad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase7-geomdl-runtime-install-20261007.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase7_reverse_engineering"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/reverse-engineering-scan-to-cad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase7-reverse-engineering-acceptance-20261007.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase7-geomdl-runtime-install-20261007.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "phase7-explicit-primitive",
+          "runtime": "repo-python"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "reconstruction.primitive_fit--phase7-explicit-primitive",
+      "capability_id": "reconstruction.primitive_fit",
+      "problem_class": "reconstruction",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/reverse-engineering-scan-to-cad-v1.json"
+      },
+      "engine": {
+        "id": "phase7-explicit-primitive",
+        "version": "1.0"
+      },
+      "adapter": {
+        "id": "ai3d-reverse-engineering",
+        "source_ref": "scripts/ai3d_reverse_engineering.py"
+      },
+      "runtime": {
+        "id": "repo-python",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "point_cloud_artifact",
+        "explicit_segment_ref",
+        "explicit_primitive_family",
+        "dimension_evidence"
+      ],
+      "output_types": [
+        "geometry_ir",
+        "fit_report",
+        "verification_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request",
+        "explicit_segment_ref",
+        "explicit_primitive_family",
+        "no_hidden_dimension_inference"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/reverse-engineering-scan-to-cad-v1.json",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/reverse-engineering-scan-to-cad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase7-reverse-engineering-acceptance-20261007.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase7_reverse_engineering"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/reverse-engineering-scan-to-cad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase7-reverse-engineering-acceptance-20261007.json"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
     },
     {
       "record_id": "scan.clean--blender-host",

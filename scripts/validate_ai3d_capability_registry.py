@@ -13,6 +13,7 @@ BASE = ROOT / "docs" / "implementation" / "ai-3d-modeling-engineering-core"
 SCHEMA_PATH = BASE / "cad-capability-registry-v1.schema.json"
 REGISTRY_PATH = BASE / "cad-capability-registry-v1.json"
 SPECIALISTS_PATH = BASE / "mesh-organic-specialists-v1.json"
+REVERSE_PATH = BASE / "reverse-engineering-scan-to-cad-v1.json"
 
 
 def load(path: Path) -> dict:
@@ -55,6 +56,7 @@ def main() -> int:
     schema = load(SCHEMA_PATH)
     registry = load(REGISTRY_PATH)
     specialists = load(SPECIALISTS_PATH)
+    reverse = load(REVERSE_PATH)
     validate_schema(registry, schema)
 
     assert registry["schema"] == "velvetos.ai3d.cad-capability-registry.v1"
@@ -269,6 +271,62 @@ def main() -> int:
     assert openvdb["headless"] is False
     assert openvdb["license_lane"] == "review-required"
     assert "vdb_volume_artifact" in openvdb["output_types"]
+
+    assert reverse["schema"] == "velvetos.ai3d.reverse-engineering-scan-to-cad.v1"
+    assert reverse["non_authoritative_staging"] is True
+    assert reverse["existing_composite_provider"] == "pipeline_scan_to_cad"
+    assert reverse["epistemic_policy"]["scan_is_evidence_not_manufacturing_truth"] is True
+    assert reverse["epistemic_policy"]["automatic_semantic_feature_recognition_claimed"] is False
+
+    reverse_pipeline = next(
+        row
+        for row in records
+        if row["record_id"] == "cad.reverse_engineer--pipeline_scan_to_cad"
+    )
+    assert reverse_pipeline["status"] == "PROVEN"
+    assert reverse_pipeline["verification"]["state"] == "PROVEN_PROVIDER"
+    assert reverse_pipeline["engine"]["id"] == "pipeline_scan_to_cad"
+    assert reverse_pipeline["runtime"]["id"] == "multi-sidecar"
+    assert "no_automatic_semantic_feature_recognition" in reverse_pipeline["constraints_support"]
+    assert reverse_pipeline["verification"]["state"] != "PROVEN_TYPED"
+
+    primitive_fit = next(
+        row
+        for row in records
+        if row["record_id"] == "reconstruction.primitive_fit--phase7-explicit-primitive"
+    )
+    assert primitive_fit["status"] == "PROVEN"
+    assert primitive_fit["verification"]["state"] == "PROVEN_PROVIDER"
+    assert primitive_fit["authority"]["id"] == "fabrication-router"
+    assert "geometry_ir" in primitive_fit["output_types"]
+    assert "explicit_segment_ref" in primitive_fit["constraints_support"]
+    assert "explicit_primitive_family" in primitive_fit["constraints_support"]
+    assert "no_hidden_dimension_inference" in primitive_fit["constraints_support"]
+
+    geomdl_fit = next(
+        row
+        for row in records
+        if row["record_id"] == "reconstruction.nurbs_fit--geomdl"
+    )
+    assert geomdl_fit["status"] == "PROVEN"
+    assert geomdl_fit["verification"]["state"] == "PROVEN_PROVIDER"
+    assert geomdl_fit["engine"]["version"] == "5.4.0"
+    assert geomdl_fit["runtime"]["id"] == "geometry-core-py312"
+    assert geomdl_fit["license_lane"] == "commercial-clean"
+    assert geomdl_fit["license"]["code_license"] == "MIT"
+    assert "nurbs_surface_evidence" in geomdl_fit["output_types"]
+    assert "separate_exact_cad_contract_required" in geomdl_fit["constraints_support"]
+
+    nurbsfit = next(
+        row
+        for row in records
+        if row["record_id"] == "reconstruction.nurbs_fit--candidate-nurbsfit_2026"
+    )
+    assert nurbsfit["status"] == "CANDIDATE"
+    assert nurbsfit["verification"]["state"] == "CANDIDATE"
+    assert nurbsfit["runtime"]["id"] == "not-admitted"
+    assert nurbsfit["license_lane"] == "commercial-clean"
+    assert nurbsfit["license"]["code_license"] == "MIT"
 
     research_candidate_engines = {
         "hunyuan3d-2.1-shape",

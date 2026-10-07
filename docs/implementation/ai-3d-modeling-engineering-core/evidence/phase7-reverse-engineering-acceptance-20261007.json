@@ -1,0 +1,189 @@
+{
+  "schema": "velvetos.ai3d.phase7-reverse-engineering-acceptance.v1",
+  "status": "PASS",
+  "existing_composite_provider": "pipeline_scan_to_cad",
+  "authorities": {
+    "scan_mesh": "blender-capability-host",
+    "exact_cad": "packages/vfprod/FABRICATION-ROUTER.md",
+    "geometry_ir": "velvetos.geometry-ir.v1"
+  },
+  "components": {
+    "sidecar_colmap": {
+      "version": "4.2.1",
+      "runtime": "colmap-4.2.1-cuda",
+      "functional_probe": "passed",
+      "capabilities": [
+        "scan.register",
+        "scan.reconstruct",
+        "photogrammetry.sfm",
+        "photogrammetry.mvs"
+      ]
+    },
+    "sidecar_meshroom": {
+      "version": "2025.1.0",
+      "runtime": "meshroom-2025.1.0-windows-cuda12",
+      "functional_probe": "passed",
+      "capabilities": [
+        "scan.register",
+        "scan.reconstruct",
+        "photogrammetry.sfm",
+        "photogrammetry.mvs",
+        "photogrammetry.mesh",
+        "photogrammetry.texture",
+        "photogrammetry.object_reconstruct",
+        "photogrammetry.camera_tracking",
+        "scan.lidar_meshing",
+        "photometric_stereo"
+      ]
+    },
+    "sidecar_open3d": {
+      "version": "0.20.0",
+      "runtime": "scan-reconstruction-py312",
+      "functional_probe": "passed",
+      "capabilities": [
+        "scan.pointcloud",
+        "scan.register",
+        "scan.reconstruct",
+        "mesh.remesh_repair",
+        "asset.pipeline"
+      ]
+    },
+    "sidecar_freecad": {
+      "version": "1.1.3",
+      "runtime": "freecad-1.1",
+      "functional_probe": "passed",
+      "capabilities": [
+        "cad.precision",
+        "cad.parametric",
+        "cad.solid.parametric",
+        "cad.import_step",
+        "cad.export_step",
+        "manufacturing.cnc_laser_gcode",
+        "interchange.import_export",
+        "cam.toolpath"
+      ]
+    }
+  },
+  "reused_typed_capabilities": [
+    "scan.pointcloud",
+    "scan.clean",
+    "scan.register"
+  ],
+  "scan_fixture": {
+    "open3d_downsample": {
+      "after": 196,
+      "before": 900,
+      "success": true
+    },
+    "open3d_icp": {
+      "fitness": 1.0,
+      "rmse": 5.887846720064156e-17,
+      "success": true
+    }
+  },
+  "geomdl": {
+    "version": "5.4.0",
+    "license": "MIT"
+  },
+  "primitive_fit": {
+    "family": "cylinder_z",
+    "selected_point_count": 96,
+    "fitted_dimensions_mm": {
+      "diameter": 20.0,
+      "height": 30.0
+    },
+    "translate_mm": [
+      4.999999999999999,
+      -3.0,
+      2.0
+    ],
+    "dimension_evidence": [
+      {
+        "id": "diameter",
+        "expected_mm": 20.0,
+        "actual_mm": 20.0,
+        "absolute_error_mm": 0.0,
+        "tolerance_mm": 0.01,
+        "within_tolerance": true
+      },
+      {
+        "id": "height",
+        "expected_mm": 30.0,
+        "actual_mm": 30.0,
+        "absolute_error_mm": 0.0,
+        "tolerance_mm": 0.01,
+        "within_tolerance": true
+      }
+    ],
+    "semantic_feature_recognition": false
+  },
+  "cad_reconstruction": {
+    "engine": "build123d",
+    "engine_version": "0.11.1",
+    "formats": [
+      "step",
+      "stl"
+    ],
+    "step_roundtrip": {
+      "min": [
+        -5.0,
+        -13.0,
+        2.0
+      ],
+      "max": [
+        15.0,
+        7.0,
+        32.0
+      ],
+      "size": [
+        20.0,
+        20.0,
+        30.0
+      ],
+      "volume": 9424.777960769381
+    },
+    "authority": "packages/vfprod/FABRICATION-ROUTER.md"
+  },
+  "nurbs_fit": {
+    "provider": "geomdl",
+    "version": "5.4.0",
+    "fit_error_mm": {
+      "rms_nearest_sample": 0.2073914526188057,
+      "max_nearest_sample": 0.3422794465458636,
+      "threshold": 1.5
+    },
+    "degree_u": 3,
+    "degree_v": 3,
+    "ctrlpts_size_u": 5,
+    "ctrlpts_size_v": 5,
+    "surface_role": "reconstruction_evidence",
+    "manufacturing_authority": false
+  },
+  "negative_controls": {
+    "missing_primitive_family": "BLOCKED",
+    "missing_segment_ref": "BLOCKED",
+    "dimension_anchor_mismatch": "BLOCKED",
+    "nurbs_without_fit_threshold": "BLOCKED",
+    "automatic_semantic_feature_recognition": false
+  },
+  "nurbsfit_2026": {
+    "status": "CANDIDATE_RESEARCH",
+    "source": "https://github.com/lizOnly/nurbsfit",
+    "license": "MIT",
+    "blockers": [
+      "requires GoCoPP C++ preprocessing/runtime qualification",
+      "requires NURBSDiff compatibility patch according to upstream instructions",
+      "requires PyTorch3D/CUDA build qualification",
+      "no reproducible VelvetOS point-cloud-to-NURBS fixture yet",
+      "must not replace geomdl bounded lane or exact-CAD authority before benchmark"
+    ]
+  },
+  "safety": {
+    "printer_actions_allowed": false,
+    "machine_control_allowed": false,
+    "duplicate_scan_router": false,
+    "duplicate_cad_router": false,
+    "silent_unit_conversion": false,
+    "automatic_semantic_feature_inference": false
+  }
+}

@@ -15,6 +15,14 @@ registry_path = ROOT / "packages" / "vfprod" / "CAD-ENGINE-REGISTRY.json"
 schema_path = ROOT / "packages" / "vfprod" / "GEOMETRY-IR.schema.json"
 patterns_path = ROOT / "packages" / "vfprod" / "EXACT-CAD-PATTERNS.json"
 mechanical_path = ROOT / "packages" / "vfprod" / "MECHANICAL-FEATURE-PACKS.json"
+reverse_path = (
+    ROOT
+    / "docs"
+    / "implementation"
+    / "ai-3d-modeling-engineering-core"
+    / "reverse-engineering-scan-to-cad-v1.json"
+)
+reverse_adapter = ROOT / "scripts" / "ai3d_reverse_engineering.py"
 doc_path = ROOT / "packages" / "vfprod" / "CAD-ENGINE-STACK.md"
 cli = ROOT / "scripts" / "vf_cad_stack.py"
 
@@ -22,6 +30,8 @@ assert registry_path.is_file(), registry_path
 assert schema_path.is_file(), schema_path
 assert patterns_path.is_file(), patterns_path
 assert mechanical_path.is_file(), mechanical_path
+assert reverse_path.is_file(), reverse_path
+assert reverse_adapter.is_file(), reverse_adapter
 assert doc_path.is_file(), doc_path
 assert cli.is_file(), cli
 
@@ -69,6 +79,19 @@ for pack_id in (
 for pack_id in ("snap_fit", "living_hinge", "sheet_metal"):
     assert mechanical["packs"][pack_id]["status"].startswith("CANDIDATE"), pack_id
     assert mechanical["packs"][pack_id]["blockers"], pack_id
+
+reverse = json.loads(reverse_path.read_text(encoding="utf-8"))
+assert reverse["schema"] == "velvetos.ai3d.reverse-engineering-scan-to-cad.v1"
+assert reverse["non_authoritative_staging"] is True
+assert reverse["existing_composite_provider"] == "pipeline_scan_to_cad"
+assert reverse["authorities"]["scan_mesh"] == "blender-capability-host"
+assert reverse["authorities"]["exact_cad"] == "packages/vfprod/FABRICATION-ROUTER.md"
+assert reverse["epistemic_policy"]["scan_is_evidence_not_manufacturing_truth"] is True
+assert reverse["epistemic_policy"]["automatic_semantic_feature_recognition_claimed"] is False
+assert reverse["epistemic_policy"]["hidden_dimensions_may_be_invented"] is False
+assert reverse["safety"]["duplicate_scan_router"] is False
+assert reverse["safety"]["duplicate_cad_router"] is False
+assert reverse["safety"]["printer_actions_allowed"] is False
 
 engines = registry["engines"]
 assert set(engines) == {"build123d", "cadquery", "jscad", "cad-cae-copilot", "forgent3d"}

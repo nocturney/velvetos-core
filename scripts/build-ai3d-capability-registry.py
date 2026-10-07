@@ -59,6 +59,8 @@ def precision_model(capability: str) -> str:
         return "polygonal_mesh"
     if capability.startswith("scan.") or capability.startswith("photogrammetry."):
         return "point_cloud"
+    if capability.startswith("reconstruction."):
+        return "mixed"
     if capability.startswith("print."):
         return "process_output"
     if capability.startswith("interchange.") or capability.startswith("electronics."):
@@ -69,6 +71,24 @@ def precision_model(capability: str) -> str:
 def io_types(capability: str) -> tuple[list[str], list[str]]:
     if capability == "cam.toolpath":
         return ["bounded_cam_request"], ["offline_grbl_artifact", "verification_receipt"]
+    if capability == "cad.reverse_engineer":
+        return [
+            "scan_or_mesh_evidence",
+            "engineering_contract",
+            "dimension_evidence",
+        ], ["cad_artifact", "fit_report", "verification_receipt"]
+    if capability == "reconstruction.primitive_fit":
+        return [
+            "point_cloud_artifact",
+            "explicit_segment_ref",
+            "explicit_primitive_family",
+            "dimension_evidence",
+        ], ["geometry_ir", "fit_report", "verification_receipt"]
+    if capability == "reconstruction.nurbs_fit":
+        return [
+            "structured_point_grid",
+            "fit_contract",
+        ], ["nurbs_surface_evidence", "fit_report", "verification_receipt"]
     if capability == "implicit.signed_distance":
         return ["mesh_artifact", "query_points"], ["signed_distance_field", "verification_receipt"]
     if capability == "implicit.openvdb":
@@ -104,6 +124,24 @@ def constraints(capability: str) -> list[str]:
         values.append("units_and_dimensions")
     if capability.startswith("mesh."):
         values.append("topology_validation")
+    if capability == "cad.reverse_engineer":
+        values.extend([
+            "scan_is_evidence_not_manufacturing_truth",
+            "dimension_evidence_required_for_critical_dimensions",
+            "no_automatic_semantic_feature_recognition",
+        ])
+    if capability == "reconstruction.primitive_fit":
+        values.extend([
+            "explicit_segment_ref",
+            "explicit_primitive_family",
+            "no_hidden_dimension_inference",
+        ])
+    if capability == "reconstruction.nurbs_fit":
+        values.extend([
+            "explicit_fit_error_threshold",
+            "surface_evidence_only",
+            "separate_exact_cad_contract_required",
+        ])
     if capability.startswith("print."):
         values.append("no_printer_network_action")
     if capability == "cam.toolpath":
@@ -288,6 +326,14 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
         / "mesh-organic-specialists-v1.json"
     )
     mesh_specialists = load(mesh_specialists_path)
+    reverse_engineering_path = (
+        repo_root
+        / "docs"
+        / "implementation"
+        / "ai-3d-modeling-engineering-core"
+        / "reverse-engineering-scan-to-cad-v1.json"
+    )
+    reverse_engineering = load(reverse_engineering_path)
     creative = load(creative_path)
     blender = load(blender_path)
     stations = load(station_path)
@@ -684,6 +730,164 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
             status="CANDIDATE",
             provider=None,
             license_provenance=[phase6_config, phase6_acceptance],
+        )
+    )
+
+    phase7_config = (
+        "docs/implementation/ai-3d-modeling-engineering-core/"
+        "reverse-engineering-scan-to-cad-v1.json"
+    )
+    phase7_acceptance = (
+        "docs/implementation/ai-3d-modeling-engineering-core/evidence/"
+        "phase7-reverse-engineering-acceptance-20261007.json"
+    )
+    phase7_runtime = (
+        "docs/implementation/ai-3d-modeling-engineering-core/evidence/"
+        "phase7-geomdl-runtime-install-20261007.json"
+    )
+    reverse_stages = {
+        row["id"]: row for row in reverse_engineering["stages"]
+    }
+
+    scan_to_cad_provider = providers.get("pipeline_scan_to_cad")
+    if scan_to_cad_provider:
+        records.append(
+            make_record(
+                record_id="cad.reverse_engineer--pipeline_scan_to_cad",
+                capability_id="cad.reverse_engineer",
+                authority_id="blender-capability-host",
+                authority_ref=str(blender_path),
+                engine_id="pipeline_scan_to_cad",
+                engine_version=version_for(scan_to_cad_provider),
+                adapter_id="existing-scan-to-cad-composite",
+                adapter_ref=str(blender_path) + "#provider:pipeline_scan_to_cad",
+                runtime_id=str(scan_to_cad_provider.get("runtime") or "multi-sidecar"),
+                host_classes=["windows-primary"],
+                headless=scan_to_cad_provider.get("headless_operation") == "available",
+                verification_state="PROVEN_PROVIDER",
+                validators=[
+                    "existing component probes",
+                    "validate_ai3d_phase7_reverse_engineering",
+                ],
+                evidence_refs=[
+                    str(blender_path) + "#provider:pipeline_scan_to_cad",
+                    phase7_config,
+                    phase7_acceptance,
+                ],
+                fallbacks=[
+                    {
+                        "engine": "build123d",
+                        "runtime": "vf-cad-stack:build123d-venv",
+                    }
+                ],
+                status="PROVEN",
+                provider=scan_to_cad_provider,
+                license_provenance=[
+                    str(blender_path) + "#provider:pipeline_scan_to_cad",
+                    phase7_config,
+                ],
+            )
+        )
+
+    primitive_stage = reverse_stages["primitive_fit"]
+    primitive_provider = {
+        "version": "1.0",
+        "license": None,
+        "capabilities": ["reconstruction.primitive_fit"],
+    }
+    records.append(
+        make_record(
+            record_id="reconstruction.primitive_fit--phase7-explicit-primitive",
+            capability_id="reconstruction.primitive_fit",
+            authority_id="fabrication-router",
+            authority_ref=phase7_config,
+            engine_id="phase7-explicit-primitive",
+            engine_version="1.0",
+            adapter_id="ai3d-reverse-engineering",
+            adapter_ref="scripts/ai3d_reverse_engineering.py",
+            runtime_id="repo-python",
+            host_classes=["windows-primary"],
+            headless=True,
+            verification_state="PROVEN_PROVIDER",
+            validators=["validate_ai3d_phase7_reverse_engineering"],
+            evidence_refs=[phase7_config, phase7_acceptance],
+            fallbacks=[],
+            status="PROVEN",
+            provider=primitive_provider,
+            license_provenance=[phase7_config, phase7_acceptance],
+        )
+    )
+
+    nurbs_stage = reverse_stages["nurbs_fit"]
+    geomdl_provider = {
+        "version": nurbs_stage["version"],
+        "license": nurbs_stage["license"],
+        "capabilities": ["reconstruction.nurbs_fit"],
+    }
+    records.append(
+        make_record(
+            record_id="reconstruction.nurbs_fit--geomdl",
+            capability_id="reconstruction.nurbs_fit",
+            authority_id="blender-capability-host",
+            authority_ref=phase7_config,
+            engine_id="geomdl",
+            engine_version=nurbs_stage["version"],
+            adapter_id="ai3d-reverse-engineering",
+            adapter_ref="scripts/ai3d_reverse_engineering.py",
+            runtime_id=nurbs_stage["runtime"],
+            host_classes=["windows-primary"],
+            headless=True,
+            verification_state="PROVEN_PROVIDER",
+            validators=["validate_ai3d_phase7_reverse_engineering"],
+            evidence_refs=[phase7_config, phase7_acceptance, phase7_runtime],
+            fallbacks=[
+                {
+                    "engine": "phase7-explicit-primitive",
+                    "runtime": "repo-python",
+                }
+            ],
+            status="PROVEN",
+            provider=geomdl_provider,
+            license_provenance=[phase7_config, phase7_runtime],
+        )
+    )
+
+    nurbsfit = reverse_engineering["research_candidates"]["nurbsfit_2026"]
+    nurbsfit_provider = {
+        "version": None,
+        "license": nurbsfit["license"],
+        "capabilities": ["reconstruction.nurbs_fit"],
+    }
+    records.append(
+        make_record(
+            record_id="reconstruction.nurbs_fit--candidate-nurbsfit_2026",
+            capability_id="reconstruction.nurbs_fit",
+            authority_id="blender-capability-host",
+            authority_ref=phase7_config,
+            engine_id="nurbsfit_2026",
+            engine_version=None,
+            adapter_id="not-admitted",
+            adapter_ref=phase7_config,
+            runtime_id="not-admitted",
+            host_classes=["windows-primary"],
+            headless=False,
+            verification_state="CANDIDATE",
+            validators=[
+                "GoCoPP runtime qualification required",
+                "NURBSDiff compatibility qualification required",
+                "PyTorch3D CUDA qualification required",
+                "reproducible VelvetOS fixture required",
+            ],
+            evidence_refs=[phase7_config, phase7_acceptance],
+            fallbacks=[
+                {
+                    "engine": "geomdl",
+                    "runtime": nurbs_stage["runtime"],
+                }
+            ],
+            status="CANDIDATE",
+            provider=nurbsfit_provider,
+            license_provenance=[phase7_config, nurbsfit["source"]],
         )
     )
 
