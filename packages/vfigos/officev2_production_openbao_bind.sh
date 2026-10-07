@@ -67,7 +67,9 @@ listener "tcp" {
   tls_disable = true
 }
 HCL
-  chmod 0600 "$CONFIG"
+  # The config contains no secret material; OpenBao may drop privileges before reading it.
+  # Keep it world-readable but root-owned while secrets remain in dedicated 0600 files.
+  chmod 0644 "$CONFIG"
   cat >"$UNSEAL_HELPER" <<'SH'
 #!/usr/bin/env bash
 set -Eeuo pipefail
@@ -99,6 +101,8 @@ SH
 Description=Office v2 Phase3B Production Read OpenBao
 After=docker.service officev2-phase3b-openbao.service
 Requires=docker.service
+StartLimitIntervalSec=60
+StartLimitBurst=3
 
 [Service]
 Type=simple
@@ -108,8 +112,6 @@ ExecStartPost=$UNSEAL_HELPER
 ExecStop=-/usr/bin/docker stop -t 15 $CONTAINER
 Restart=on-failure
 RestartSec=5
-StartLimitIntervalSec=60
-StartLimitBurst=3
 
 [Install]
 WantedBy=officev2-phase3b-shadow.target
