@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.office-v2.phase3b-pilot-promotion.v0",
-  "status": "PROMOTED_RUNTIME_RECEIPT_PASS",
+  "status": "READY_AWAITING_EXPLICIT_PROJECT_STATE_PROMOTION",
   "scope_ref": "docs/implementation/office-v2/phase3b/pilot-scope-v0.json",
   "readiness_ref": "docs/implementation/office-v2/phase3b/pilot-readiness-v0.json",
   "scope_id": "instagram-publisher-snapshot-read",
@@ -39,12 +39,9 @@
   ],
   "credential_reference_hash_required_in_runtime_receipt": true,
   "raw_secret_in_repository_forbidden": true,
-  "pilot_promoted": true,
+  "pilot_promoted": false,
   "production_promoted": false,
   "production_authority_change": false,
   "production_writer_change": false,
-  "external_mutation_allowed": false,
-  "runtime_promotion_receipt_sha256_required": true,
-  "runtime_promotion_receipt_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/pilot-promotion.json",
-  "project_state_checkpoint": "office-v2-phase3b-v0-cp016-pilot-active"
+  "external_mutation_allowed": false
 }

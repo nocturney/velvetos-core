@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.office-v2.phase3b-pilot-scope.v0",
-  "status": "PILOT_ACTIVE_PRODUCTION_GATE_READY",
+  "status": "PILOT_SCOPE_FROZEN_LIVE_PROOF_PENDING",
   "scope_id": "instagram-publisher-snapshot-read",
   "selected_composition": "composition-zitadel-opa-openbao",
   "production_domain": "instagram_read",
@@ -36,14 +36,9 @@
   ],
   "source_contract": {
     "reader_guard": "requireRead",
-    "reader_accepts": [
-      "CONTROL_TOKEN",
-      "SNAPSHOT_TOKEN"
-    ],
+    "reader_accepts": ["CONTROL_TOKEN", "SNAPSHOT_TOKEN"],
     "writer_guard": "requireAdmin",
-    "writer_accepts": [
-      "CONTROL_TOKEN"
-    ],
+    "writer_accepts": ["CONTROL_TOKEN"],
     "snapshot_token_can_authorize_write": false,
     "source_ref": "packages/vfigos/cloudflare-publisher/src/index.js"
   },
@@ -100,11 +95,9 @@
     "production_writer_change": false
   },
   "promotion": {
-    "pilot_promoted": true,
+    "pilot_promoted": false,
     "production_promoted": false,
     "separate_pilot_promotion_receipt_required": true,
-    "production_authority_transfer_required_later": true,
-    "pilot_project_state": "office-v2-phase3b-v0-cp016-pilot-active",
-    "pilot_runtime_receipt_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/pilot-promotion.json"
+    "production_authority_transfer_required_later": true
   }
 }
