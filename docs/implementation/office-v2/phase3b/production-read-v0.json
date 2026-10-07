@@ -1,0 +1,48 @@
+{
+  "schema": "velvetos.office-v2.phase3b-production-read.v0",
+  "status": "STATIC_AND_LIVE_BRIDGE_READY_EXACT_REGRESSION_PENDING",
+  "scope_id": "instagram-publisher-snapshot-read",
+  "production_domain": "instagram_publisher_snapshot_read",
+  "selected_composition": "composition-zitadel-opa-openbao",
+  "credential_class": "PRODUCTION_READ",
+  "principal": "svc:officev2-p3b-production-publisher-snapshot",
+  "action": "publisher.snapshot.read",
+  "resource": "cloudflare:velvetos-instagram-publisher",
+  "authority_extension_ref": "docs/implementation/office-v2/phase3b/production-read-authority-map-v0.json",
+  "credential_trust_extension_ref": "docs/implementation/office-v2/phase3b/production-read-credential-trust-v0.json",
+  "opa_policy_ref": "docs/implementation/office-v2/phase3b/production-opa-policy.rego",
+  "active_consumer": "packages/vfigos/officev2_secure_publisher_snapshot.py",
+  "legacy_rollback_consumer": "packages/vfigos/cloudflare_publisher_snapshot.py",
+  "legacy_consumer_active": false,
+  "control_token_fallback_allowed": false,
+  "meta_access_token_allowed": false,
+  "allowed_provider_requests": ["GET /v1/runtime", "GET /v1/meta-health", "GET /v1/jobs", "GET /v1/jobs/{id}"],
+  "provider_write_probe_expected_http": 401,
+  "runtime_refs": {
+    "resolver": "D:/Velvet/Runtime/OfficeV2Lab/Resolve-Phase3B-ProductionSnapshot.ps1",
+    "resolver_sha256": "7aed934eeda7b665e8ea3df7d8f8bc6ce012c280e1b20a6326fa1d141334c273",
+    "bridge": "D:/Velvet/OfficeV2Lab/artifacts/phase3b-security/production-snapshot-read.sh",
+    "bridge_sha256": "b1466cf952006d376d85bfdfca171aefd2a39bd204613ae798fc021c1674e2ad",
+    "opa_runtime_sha256": "bb4d45d824075c530e6542574d136fd7fa6d507fb2db07986fabdcb904f118b7"
+  },
+  "owner_authority_transfer_sha256": "26e054aa6c8428a371a4591110c4ae37f11368ecbb163b1fa80721a823b25587",
+  "preproduction_bridge_probe_sha256": "6c1d5a450fb90f817b9e74096ec9423adbd370deb28f2213374551c4d4709368",
+  "pilot_promotion_sha256": "5c4c183d1f279f1a84156a09cc207d4373e2fa63c09b93c38deda485f4ade59c",
+  "rollback_and_dr_evidence": {
+    "outage_recovery": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/pilot-outage-recovery.json",
+    "service_recovery_upgrade_rollback": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/pilot-service-recovery-upgrade-rollback.json",
+    "rollback_to_incumbent": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/pilot-rollback-incumbent.json"
+  },
+  "remaining_preconditions": [
+    "machine-writer and policy-architecture guards PASS on exact readiness SHA",
+    "full canonical sensor suite PASS on exact readiness SHA",
+    "merge exact readiness SHA to main and confirm post-merge CI PASS",
+    "separate production promotion receipt before project-state advance"
+  ],
+  "production_authority_change": true,
+  "production_authority_change_scope": "read decision and credential resolution for this named scope only",
+  "production_writer_change": false,
+  "external_mutation_allowed": false,
+  "production_promoted": false,
+  "implicit_promotion_allowed": false
+}

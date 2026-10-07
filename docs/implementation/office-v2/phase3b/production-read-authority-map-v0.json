@@ -1,0 +1,27 @@
+{
+  "schema": "velvetos.office-v2.phase3b-production-read-authority-map.v0",
+  "status": "AUTHORIZED_PROMOTION_PENDING",
+  "extends": "docs/implementation/office-v2/phase0/authority-map-v0.1.json",
+  "domain": "instagram_publisher_snapshot_read",
+  "scope_id": "instagram-publisher-snapshot-read",
+  "production_writer": null,
+  "authoritative_store": "Cloudflare Worker velvetos-instagram-publisher runtime/job read surface",
+  "identity_provider": "candidate-zitadel",
+  "authorization_decision_owner": "candidate-opa",
+  "credential_resolution_owner": "candidate-openbao",
+  "provider_read_owner": "Cloudflare Worker velvetos-instagram-publisher",
+  "consumer": "packages/vfigos/officev2_secure_publisher_snapshot.py",
+  "principal": "svc:officev2-p3b-production-publisher-snapshot",
+  "action": "publisher.snapshot.read",
+  "resource": "cloudflare:velvetos-instagram-publisher",
+  "allowed_mutations": [],
+  "production_writer_change": false,
+  "canonical_business_truth_change": false,
+  "fallback": "FAIL_CLOSED while active; rollback to incumbent reader requires a separate rollback receipt",
+  "forbidden": [
+    "new publisher writer",
+    "direct Meta credential path",
+    "admin/control credential fallback",
+    "fallback from canonical DENY to seek ALLOW"
+  ]
+}
