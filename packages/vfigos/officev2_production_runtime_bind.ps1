@@ -64,10 +64,10 @@ function Protect-Text([string]$Text,[string]$Path) {
   & icacls.exe $Path /inheritance:r /grant:r "${me}:F" "SYSTEM:F" | Out-Null
   if($LASTEXITCODE -ne 0){throw 'production runtime bundle ACL setup failed'}
 }
-function Invoke-Wsl([string]$Script,[string[]]$Args=@(),[string]$InputText='') {
+function Invoke-Wsl([string]$Script,[string[]]$ScriptArgs=@(),[string]$InputText='') {
   $psi=[Diagnostics.ProcessStartInfo]::new()
   $psi.FileName=$wsl
-  $quoted=@($Args | ForEach-Object { "'" + ($_.Replace("'","'\''")) + "'" })
+  $quoted=@($ScriptArgs | ForEach-Object { "'" + ($_.Replace("'","'\''")) + "'" })
   $psi.Arguments=("-d OfficeV2-Lab -u root -- bash " + $Script + ($(if($quoted.Count){" "+($quoted -join ' ')}else{''})))
   $psi.UseShellExecute=$false
   $psi.RedirectStandardInput=$true

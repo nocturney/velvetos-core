@@ -138,6 +138,11 @@ def main() -> None:
     adapter = (VFIGOS / "officev2_secure_publisher_snapshot.py").read_text(encoding="utf-8-sig")
     opa_policy = (P3B / "production-opa-policy.rego").read_text(encoding="utf-8-sig")
 
+    require("[string[]]$Args" not in runtime_bind, "production runtime binding may not use PowerShell automatic $Args as a named parameter")
+    require("[string[]]$Args" not in rollback_drill, "production rollback drill may not use PowerShell automatic $Args as a named parameter")
+    require("[string[]]$ScriptArgs" in runtime_bind, "production runtime binding ScriptArgs guard missing")
+    require("[string[]]$ScriptArgs" in rollback_drill and "[string[]]$WranglerArgs" in rollback_drill, "production rollback argument guards missing")
+
     for marker in (
         "production-read-bundle.dpapi",
         "PHASE_3B_PILOT_ACTIVE",
