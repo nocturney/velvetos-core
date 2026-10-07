@@ -3,11 +3,11 @@ set -Eeuo pipefail
 EXPECTED="$1"
 INPUT="$(cat)"
 RUN=/run/officev2/phase3b
-UNSEAL_FILE="$RUN/openbao-unseal.key"
+UNSEAL_FILE=/opt/officev2-phase3b-prod/unseal.key
 READ=/var/officev2/artifacts/phase3b-security/production-snapshot-read.sh
 OPA_SVC=officev2-phase3b-opa.service
 Z_SVC=officev2-phase3b-zitadel.service
-BAO_SVC=officev2-phase3b-openbao.service
+BAO_SVC=officev2-phase3b-prod-openbao.service
 SUCCESS=false
 
 cip(){ docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$1" 2>/dev/null || true; }
@@ -16,7 +16,7 @@ restore_all(){
   systemctl start "$OPA_SVC" "$Z_SVC" "$BAO_SVC" >/dev/null 2>&1 || true
   sleep 1
   local bip health key
-  bip="$(cip officev2-p3b-shadow-openbao)"
+  bip="$(cip officev2-p3b-prod-openbao)"
   if [ -n "$bip" ]; then
     health="$(curl -sS -o /dev/null -w '%{http_code}' --connect-timeout 1 "http://$bip:8200/v1/sys/health" || true)"
     if [ "$health" = 503 ] && [ -s "$UNSEAL_FILE" ]; then
@@ -58,7 +58,7 @@ wait_zitadel(){
 wait_bao(){
   local ip="" health="" key=""
   for _ in $(seq 1 80); do
-    ip="$(cip officev2-p3b-shadow-openbao)"
+    ip="$(cip officev2-p3b-prod-openbao)"
     if [ -n "$ip" ]; then
       health="$(curl -sS -o /dev/null -w '%{http_code}' --connect-timeout 1 "http://$ip:8200/v1/sys/health" 2>/dev/null || true)"
       if [ "$health" = 503 ]; then

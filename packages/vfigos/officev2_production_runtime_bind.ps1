@@ -205,7 +205,7 @@ if($Mode -eq 'Prepare'){
     if($bao.ExitCode -ne 0){throw ('production OpenBao Init failed: '+(Safe-Wsl-Error $bao 'broker init denied'))}
     $brokerRaw=$bao.Stdout.Trim()
     $broker=$brokerRaw | ConvertFrom-Json
-    if($broker.broker_path -ne 'officev2-prod/data/instagram-publisher-snapshot' -or $broker.broker_role -ne 'officev2-prod-publisher-snapshot' -or [string]$broker.credential_reference_sha256 -ne $pilotHash){throw 'production OpenBao Init output mismatch'}
+    if($broker.broker_path -ne 'officev2-prod/data/instagram-publisher-snapshot' -or $broker.broker_role -ne 'officev2-prod-publisher-snapshot' -or $broker.rotator_role -ne 'officev2-prod-publisher-snapshot-rotator' -or $broker.broker_instance -ne 'officev2-p3b-prod-openbao' -or -not [string]$broker.rotator_role_id -or -not [string]$broker.rotator_secret_id -or [string]$broker.credential_reference_sha256 -ne $pilotHash){throw 'production OpenBao Init output mismatch'}
     $brokerCreated=$true
 
     $bundle=[ordered]@{
@@ -213,6 +213,8 @@ if($Mode -eq 'Prepare'){
       scope_id='instagram-publisher-snapshot-read'
       role_id=[string]$broker.role_id
       secret_id=[string]$broker.secret_id
+      rotator_role_id=[string]$broker.rotator_role_id
+      rotator_secret_id=[string]$broker.rotator_secret_id
       zitadel_machine_id=[string]$identity.machine_id
       zitadel_username=[string]$identity.username
       zitadel_client_secret=[string]$identity.client_secret
@@ -249,6 +251,12 @@ if($Mode -eq 'Prepare'){
         logical_path='officev2-prod/data/instagram-publisher-snapshot'
         role_id_reference_sha256=(Hash-Text ([string]$broker.role_id))
         secret_id_reference_sha256=(Hash-Text ([string]$broker.secret_id))
+        rotator_role='officev2-prod-publisher-snapshot-rotator'
+        rotator_role_id_reference_sha256=(Hash-Text ([string]$broker.rotator_role_id))
+        rotator_secret_id_reference_sha256=(Hash-Text ([string]$broker.rotator_secret_id))
+        instance='officev2-p3b-prod-openbao'
+        volume='officev2_p3b_prod_bao'
+        isolated_from_pilot_broker=$true
         exact_scope_read_http=200
         unrelated_scope_http=403
         root_token_persisted=$false
@@ -296,6 +304,8 @@ if(-not (Test-Path $bindingReceipt)){throw 'production runtime binding receipt m
 $binding=Get-Content $bindingReceipt -Raw | ConvertFrom-Json
 if($binding.status -ne 'PASS' -or $binding.production_promoted -ne $false){throw 'production runtime binding is not ready for Rotate'}
 $bundleJson=Unprotect-Text $prodBlob
+$bundleObj=$bundleJson | ConvertFrom-Json
+foreach($f in @('rotator_role_id','rotator_secret_id')){if(-not [string]$bundleObj.$f){throw "production runtime bundle missing $f"}}
 $oldToken=$null; $newToken=$null
 $providerChanged=$false; $brokerChanged=$false
 try {
@@ -320,7 +330,8 @@ try {
   $newWrite=Http-Code $newToken 'POST' '/v1/run'
   if($oldAfter -ne 401 -or $newRead -ne 200 -or $newMeta -ne 200 -or $newJobs -ne 200 -or $newWrite -ne 401){throw "provider rotation boundary failed old=$oldAfter read=$newRead meta=$newMeta jobs=$newJobs write=$newWrite"}
 
-  $bao=Invoke-Wsl $openbaoBind @('Rotate') $newToken
+  $baoInput=[ordered]@{provider_token=$newToken;rotator_role_id=[string]$bundleObj.rotator_role_id;rotator_secret_id=[string]$bundleObj.rotator_secret_id}|ConvertTo-Json -Compress
+  $bao=Invoke-Wsl $openbaoBind @('Rotate') $baoInput
   if($bao.ExitCode -ne 0){throw ('production OpenBao Rotate failed: '+(Safe-Wsl-Error $bao 'broker rotate denied'))}
   $baoProof=$bao.Stdout.Trim() | ConvertFrom-Json
   if($baoProof.status -ne 'PASS' -or [string]$baoProof.credential_reference_sha256 -ne $newHash -or $baoProof.root_revoked -ne $true){throw 'production OpenBao Rotate proof mismatch'}
@@ -364,7 +375,10 @@ try {
     try {
       Put-Snapshot $oldToken
       for($i=0;$i -lt 30;$i++){if((Http-Code $oldToken 'GET' '/v1/runtime') -eq 200){break};Start-Sleep -Seconds 2}
-      if($brokerChanged){[void](Invoke-Wsl $openbaoBind @('Rotate') $oldToken)}
+      if($brokerChanged){
+        $rollbackBaoInput=[ordered]@{provider_token=$oldToken;rotator_role_id=[string]$bundleObj.rotator_role_id;rotator_secret_id=[string]$bundleObj.rotator_secret_id}|ConvertTo-Json -Compress
+        [void](Invoke-Wsl $openbaoBind @('Rotate') $rollbackBaoInput)
+      }
     } catch {}
   }
   $fail=[ordered]@{
@@ -384,6 +398,6 @@ try {
   Write-Json $rotationReceipt $fail
   throw ('production rotation failed closed: '+$cause)
 } finally {
-  $oldToken=$null; $newToken=$null; $bundleJson=$null
+  $oldToken=$null; $newToken=$null; $bundleJson=$null; $bundleObj=$null; $baoInput=$null; $rollbackBaoInput=$null
   [GC]::Collect()
 }
