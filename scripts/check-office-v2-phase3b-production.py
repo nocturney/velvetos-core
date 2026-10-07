@@ -164,6 +164,8 @@ def main() -> None:
         require(marker in snapshot_read, "production snapshot read missing marker: " + marker)
     for forbidden in ("officev2-pilot/instagram-publisher-snapshot", "/v2/users/new", "META_ACCESS_TOKEN", "CONTROL_TOKEN"):
         require(forbidden not in snapshot_read, "production snapshot read contains forbidden path/material: " + forbidden)
+    require("python3 - <<'PY'" not in snapshot_read, "production snapshot bundle parser may not combine piped JSON with a stdin heredoc")
+    require("python3 -c '" in snapshot_read and 'PROD_RUNTIME_BUNDLE_PARSE_FAIL' in snapshot_read and '"${#PARTS[@]}" -eq 6' in snapshot_read, "production snapshot bundle parser must consume piped JSON and fail closed on field-count drift")
 
     for marker in (
         "ValidateSet('Prepare','Rotate','Cleanup')",
