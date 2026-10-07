@@ -208,6 +208,15 @@ def main() -> None:
     if "ngrok" in mac_bootstrap or "--share-desktop" in mac_bootstrap:
         fail("Mac render bootstrap must not create an extra remote route")
     bash = shutil.which("bash")
+    if sys.platform == "win32" and bash:
+        bash_path = Path(bash).resolve()
+        # Windows System32\\bash.exe is the WSL launcher, not a POSIX bash that
+        # accepts a Windows path argument. Prefer Git Bash when available so
+        # this remains a real shell syntax check instead of a false WSL-path failure.
+        if bash_path.name.lower() == "bash.exe" and bash_path.parent.name.lower() == "system32":
+            git = shutil.which("git")
+            git_bash = (Path(git).resolve().parents[1] / "bin" / "bash.exe") if git else None
+            bash = str(git_bash) if git_bash and git_bash.is_file() else None
     if bash:
         shell_check = subprocess.run([bash, "-n", str(MAC_BOOTSTRAP)], text=True, capture_output=True)
         if shell_check.returncode != 0:
