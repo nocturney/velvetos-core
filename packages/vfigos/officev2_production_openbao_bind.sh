@@ -57,15 +57,20 @@ wait_health(){
 install_runtime(){
   install -d -m 0700 "$BASE"
   cat >"$CONFIG" <<'HCL'
-disable_mlock = true
 ui = false
-storage "file" {
+
+storage "raft" {
   path = "/openbao/data"
+  node_id = "officev2-prod-node-1"
 }
+
 listener "tcp" {
   address = "0.0.0.0:8200"
   tls_disable = true
 }
+
+api_addr = "http://prod-openbao:8200"
+cluster_addr = "http://prod-openbao:8201"
 HCL
   # The config contains no secret material; OpenBao may drop privileges before reading it.
   # Keep it world-readable but root-owned while secrets remain in dedicated 0600 files.
@@ -139,6 +144,9 @@ if [ "$MODE" = Init ]; then
 
   install_runtime
   docker volume create "$VOLUME" >/dev/null
+  # OpenBao's image entrypoint drops to uid 100 / gid 1000 even when Docker starts as root.
+  # Prepare the fresh isolated volume for that runtime identity before first boot.
+  docker run --rm --user root -v "$VOLUME:/openbao/data" --entrypoint sh "$IMAGE" -lc 'chown 100:1000 /openbao/data && chmod 0700 /openbao/data' >/dev/null
   systemctl enable "$SERVICE" >/dev/null
   systemctl start "$SERVICE"
   BAO_IP="$(wait_health 501)" || { echo "PROD_OPENBAO_INIT_HEALTH_TIMEOUT" >&2; exit 235; }

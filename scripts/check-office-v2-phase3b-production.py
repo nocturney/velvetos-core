@@ -196,6 +196,10 @@ def main() -> None:
     ):
         require(marker in openbao_bind, "production OpenBao binder missing marker: " + marker)
     require('chmod 0644 "$CONFIG"' in openbao_bind, "production OpenBao non-secret config must remain readable after privilege drop")
+    require('storage "raft"' in openbao_bind and 'node_id = "officev2-prod-node-1"' in openbao_bind, "production OpenBao must use supported isolated raft storage")
+    require('storage "file"' not in openbao_bind, "production OpenBao may not use unsupported file storage backend")
+    require('api_addr = "http://prod-openbao:8200"' in openbao_bind and 'cluster_addr = "http://prod-openbao:8201"' in openbao_bind, "production OpenBao raft API/cluster addresses missing")
+    require("chown 100:1000 /openbao/data" in openbao_bind and "chmod 0700 /openbao/data" in openbao_bind, "production OpenBao volume ownership must match image runtime uid/gid")
     require("StartLimitIntervalSec=60" in openbao_bind, "production OpenBao systemd start-limit guard missing")
     require("secret/data/officev2-pilot/instagram-publisher-snapshot" not in openbao_bind, "production OpenBao binder may not write/read PILOT secret path")
     require("officev2-p3b-prod-openbao" in production_token_read, "production token reader must use isolated production OpenBao")
