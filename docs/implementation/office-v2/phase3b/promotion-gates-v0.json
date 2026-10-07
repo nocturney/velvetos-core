@@ -90,7 +90,7 @@
     }
   },
   "pilot_gate": {
-    "status": "BLOCKED_PENDING_BOUNDED_SCOPE_AND_SEPARATE_PROMOTION",
+    "status": "READINESS_SCOPE_SELECTED_LIVE_PROOF_PENDING",
     "requires": [
       "SHADOW promotion receipt and SHADOW evidence PASS",
       "separate explicit PILOT promotion receipt",
@@ -102,7 +102,30 @@
       "service recovery and upgrade rollback drill"
     ],
     "default_credential_class": "LAB_ONLY_SECRET",
-    "production_class_must_be_explicitly_rebound": true
+    "production_class_must_be_explicitly_rebound": true,
+    "selected_scope_ref": "docs/implementation/office-v2/phase3b/pilot-scope-v0.json",
+    "selected_scope_id": "instagram-publisher-snapshot-read",
+    "selected_credential_class": "PRODUCTION_READ",
+    "static_readiness_ref": "docs/implementation/office-v2/phase3b/pilot-readiness-v0.json",
+    "static_source_proof": "PASS",
+    "completed_static_preconditions": [
+      "SHADOW promotion receipt and SHADOW evidence PASS",
+      "one bounded domain/effect scope named in the receipt",
+      "PRODUCTION_READ class selected for only the named capability",
+      "provider source has a dedicated read-only SNAPSHOT_TOKEN separate from CONTROL_TOKEN",
+      "SNAPSHOT_TOKEN is absent before PILOT issuance"
+    ],
+    "remaining_live_preconditions": [
+      "dedicated SNAPSHOT_TOKEN issue/read/write-deny proof",
+      "provider-native rotation and revocation drill",
+      "OpenBao exact pilot-path binding",
+      "correlated ZITADEL -> OPA -> OpenBao -> Worker read receipt",
+      "candidate outage fail-closed and recovery proof",
+      "service recovery and upgrade rollback drill",
+      "rollback to incumbent read path without authority ambiguity",
+      "full canonical regression on exact readiness SHA",
+      "separate explicit PILOT promotion receipt"
+    ]
   },
   "production_gate": {
     "status": "BLOCKED_UNTIL_PILOT_PASS_AND_SEPARATE_AUTHORITY_TRANSFER",

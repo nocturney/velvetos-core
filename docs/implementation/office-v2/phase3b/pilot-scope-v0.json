@@ -1,0 +1,103 @@
+{
+  "schema": "velvetos.office-v2.phase3b-pilot-scope.v0",
+  "status": "PILOT_SCOPE_FROZEN_LIVE_PROOF_PENDING",
+  "scope_id": "instagram-publisher-snapshot-read",
+  "selected_composition": "composition-zitadel-opa-openbao",
+  "production_domain": "instagram_read",
+  "capability": "instagram.publisher.snapshot.read",
+  "credential_class": "PRODUCTION_READ",
+  "production_access": true,
+  "write_allowed": false,
+  "principal": "svc:officev2-p3b-pilot-publisher-snapshot",
+  "action": "publisher.snapshot.read",
+  "resource": "cloudflare:velvetos-instagram-publisher",
+  "provider": {
+    "kind": "cloudflare_worker",
+    "service": "velvetos-instagram-publisher",
+    "base_url_ref": "packages/vfigos/PUBLISHER.json",
+    "credential_binding": "SNAPSHOT_TOKEN",
+    "existing_control_token_reuse_forbidden": true,
+    "meta_access_token_binding_forbidden": true
+  },
+  "allowed_requests": [
+    "GET /v1/runtime",
+    "GET /v1/meta-health",
+    "GET /v1/jobs",
+    "GET /v1/jobs/{id}"
+  ],
+  "forbidden_requests": [
+    "PUT /v1/media/{key}",
+    "POST /v1/jobs",
+    "POST /v1/jobs/{id}/cancel",
+    "POST /v1/run",
+    "any mutation endpoint",
+    "any request using CONTROL_TOKEN",
+    "any direct Meta Graph credential use"
+  ],
+  "source_contract": {
+    "reader_guard": "requireRead",
+    "reader_accepts": ["CONTROL_TOKEN", "SNAPSHOT_TOKEN"],
+    "writer_guard": "requireAdmin",
+    "writer_accepts": ["CONTROL_TOKEN"],
+    "snapshot_token_can_authorize_write": false,
+    "source_ref": "packages/vfigos/cloudflare-publisher/src/index.js"
+  },
+  "provider_native_credential_lifecycle": {
+    "issue": "wrangler secret put SNAPSHOT_TOKEN",
+    "rotate": "replace SNAPSHOT_TOKEN with a newly generated random value",
+    "revoke": "wrangler secret delete SNAPSHOT_TOKEN",
+    "old_token_after_rotation_must_return": 401,
+    "revoked_token_must_return": 401,
+    "current_token_read_must_return": 200,
+    "current_token_write_must_return": 401
+  },
+  "credential_broker_binding": {
+    "broker": "candidate-openbao",
+    "secret_path": "officev2-pilot/data/instagram-publisher-snapshot",
+    "role": "officev2-pilot-publisher-snapshot",
+    "exact_scope_only": true,
+    "unrelated_secret_access_forbidden": true,
+    "raw_secret_in_evidence_forbidden": true,
+    "control_token_forbidden": true,
+    "meta_access_token_forbidden": true
+  },
+  "authorization": {
+    "identity_provider": "candidate-zitadel",
+    "policy_engine": "candidate-opa",
+    "default": "DENY",
+    "authentication_implies_authorization": false,
+    "authorization_implies_external_effect": false,
+    "canonical_deny_retry_against_fallback_forbidden": true
+  },
+  "correlation_receipt": {
+    "required": true,
+    "must_include": [
+      "correlation_id",
+      "principal",
+      "action",
+      "resource",
+      "policy_decision",
+      "credential_reference_hash",
+      "provider_http_status",
+      "response_payload_hash"
+    ],
+    "must_not_include": [
+      "raw bearer",
+      "SNAPSHOT_TOKEN",
+      "CONTROL_TOKEN",
+      "META_ACCESS_TOKEN"
+    ]
+  },
+  "rollback": {
+    "provider": "delete SNAPSHOT_TOKEN and verify the former token returns 401",
+    "broker": "remove the exact pilot secret path and role",
+    "runtime": "return to SHADOW observer-only with production incumbents unchanged",
+    "production_writer_change": false
+  },
+  "promotion": {
+    "pilot_promoted": false,
+    "production_promoted": false,
+    "separate_pilot_promotion_receipt_required": true,
+    "production_authority_transfer_required_later": true
+  }
+}

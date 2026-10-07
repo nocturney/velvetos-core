@@ -1,6 +1,6 @@
 # Office v2 Phase 3B — Identity / Authorization / Credential Broker
 
-Status: **CONTRACT V0 FROZEN / CROSS-ROLE COMPOSITION PASS / PRIMARY: ZITADEL + OPA + OPENBAO / SHADOW ACTIVE / OBSERVER-ONLY / FAIL-CLOSED / RESTART-RESTORE PASS / PILOT BLOCKED / NO PRODUCTION AUTHORITY CHANGE**
+Status: **CONTRACT V0 FROZEN / CROSS-ROLE COMPOSITION PASS / PRIMARY: ZITADEL + OPA + OPENBAO / SHADOW ACTIVE / OBSERVER-ONLY / FAIL-CLOSED / RESTART-RESTORE PASS / PILOT SCOPE SELECTED / LIVE PROOF PENDING / PILOT BLOCKED / NO PRODUCTION AUTHORITY CHANGE**
 
 Phase 3B treats security as three explicit roles rather than forcing one product to own identity, authorization and secrets:
 
@@ -70,6 +70,8 @@ The live SHADOW composition is ZITADEL + OPA + OpenBao under the existing hidden
 Three outage negative controls passed independently for identity, authorization and credential-broker failure; each forced DENY and then recovered to READY. A full OfficeV2-Lab WSL terminate/restart also passed: the unchanged DPAPI bundle rematerialized runtime-only secret files, `OfficeV2 LAB Lease` restored the target automatically, and SHADOW returned to READY with production incumbents still canonical. Fourteen temporary Phase 3B Scheduled Tasks were then removed; `OfficeV2 LAB Lease` is the only remaining OfficeV2 task.
 
 SHADOW does **not** imply PILOT. PILOT remains blocked until a separate bounded scope is named and the remaining credential re-binding, provider-native revocation/rotation, correlated effect, recovery/upgrade rollback and explicit promotion requirements pass.
+
+The bounded first PILOT scope is now frozen as **instagram-publisher-snapshot-read**: a dedicated Cloudflare Publisher SNAPSHOT_TOKEN under credential class PRODUCTION_READ, authenticated by ZITADEL, authorized by OPA and brokered through an exact OpenBao path. The token may call only the existing read endpoints; CONTROL_TOKEN, Meta credentials and every write endpoint are explicitly outside scope. Static readiness is PASS, but PILOT remains unpromoted until live issue/rotation/revocation, broker binding, correlation, outage/recovery, upgrade rollback, rollback-to-incumbent and exact-regression evidence all pass. See pilot-scope-v0.json and pilot-readiness-v0.json.
 
 ## Admission research
 

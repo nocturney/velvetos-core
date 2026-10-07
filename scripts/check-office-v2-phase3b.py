@@ -29,6 +29,8 @@ REQUIRED = [
     P3B / "shadow-readiness-v0.json",
     P3B / "runtime-readiness-v0.json",
     P3B / "shadow-active-v0.json",
+    P3B / "pilot-scope-v0.json",
+    P3B / "pilot-readiness-v0.json",
     WIRING_SCRIPT,
     SHADOW_DOCTOR,
     P3B / "scorecards" / "credential-candidate-openbao.json",
@@ -552,8 +554,14 @@ def main() -> None:
     if runtime_evidence.get("production_path") != "INCUMBENTS_CANONICAL" or runtime_evidence.get("external_effects_allowed") is not False:
         fail("Phase 3B SHADOW runtime authority boundary drift")
     pilot_gate = promotion.get("pilot_gate") or {}
-    if pilot_gate.get("status") != "BLOCKED_PENDING_BOUNDED_SCOPE_AND_SEPARATE_PROMOTION" or pilot_gate.get("production_class_must_be_explicitly_rebound") is not True:
-        fail("Phase 3B PILOT gate must remain blocked")
+    if pilot_gate.get("status") != "READINESS_SCOPE_SELECTED_LIVE_PROOF_PENDING" or pilot_gate.get("production_class_must_be_explicitly_rebound") is not True:
+        fail("Phase 3B PILOT readiness gate status mismatch")
+    if pilot_gate.get("selected_scope_ref") != "docs/implementation/office-v2/phase3b/pilot-scope-v0.json" or pilot_gate.get("selected_scope_id") != "instagram-publisher-snapshot-read":
+        fail("Phase 3B PILOT selected scope mismatch")
+    if pilot_gate.get("selected_credential_class") != "PRODUCTION_READ" or pilot_gate.get("static_source_proof") != "PASS":
+        fail("Phase 3B PILOT credential/static proof mismatch")
+    if not pilot_gate.get("remaining_live_preconditions") or "separate explicit PILOT promotion receipt" not in pilot_gate.get("remaining_live_preconditions"):
+        fail("Phase 3B PILOT live proof/promotion boundary missing")
     if (promotion.get("production_gate") or {}).get("implicit_promotion_allowed") is not False:
         fail("Phase 3B implicit production promotion must remain forbidden")
 
@@ -649,6 +657,46 @@ def main() -> None:
     if (active.get("pilot_gate") or {}).get("status") != "BLOCKED":
         fail("Phase 3B active SHADOW must not imply PILOT")
 
+    pilot_scope = load(P3B / "pilot-scope-v0.json")
+    if pilot_scope.get("status") != "PILOT_SCOPE_FROZEN_LIVE_PROOF_PENDING" or pilot_scope.get("scope_id") != "instagram-publisher-snapshot-read":
+        fail("Phase 3B PILOT scope status/id mismatch")
+    if pilot_scope.get("selected_composition") != "composition-zitadel-opa-openbao" or pilot_scope.get("credential_class") != "PRODUCTION_READ":
+        fail("Phase 3B PILOT scope composition/credential class mismatch")
+    if pilot_scope.get("production_domain") != "instagram_read" or pilot_scope.get("write_allowed") is not False:
+        fail("Phase 3B PILOT must remain bounded read-only")
+    provider = pilot_scope.get("provider") or {}
+    if provider.get("service") != "velvetos-instagram-publisher" or provider.get("credential_binding") != "SNAPSHOT_TOKEN":
+        fail("Phase 3B PILOT provider binding mismatch")
+    if provider.get("existing_control_token_reuse_forbidden") is not True or provider.get("meta_access_token_binding_forbidden") is not True:
+        fail("Phase 3B PILOT must forbid incumbent control/meta credential reuse")
+    source_contract = pilot_scope.get("source_contract") or {}
+    if source_contract.get("reader_guard") != "requireRead" or source_contract.get("writer_guard") != "requireAdmin" or source_contract.get("snapshot_token_can_authorize_write") is not False:
+        fail("Phase 3B PILOT source read/write separation drift")
+    lifecycle = pilot_scope.get("provider_native_credential_lifecycle") or {}
+    if lifecycle.get("old_token_after_rotation_must_return") != 401 or lifecycle.get("revoked_token_must_return") != 401 or lifecycle.get("current_token_read_must_return") != 200 or lifecycle.get("current_token_write_must_return") != 401:
+        fail("Phase 3B PILOT provider-native lifecycle expectations drift")
+    broker = pilot_scope.get("credential_broker_binding") or {}
+    if broker.get("broker") != "candidate-openbao" or broker.get("exact_scope_only") is not True or broker.get("control_token_forbidden") is not True or broker.get("meta_access_token_forbidden") is not True:
+        fail("Phase 3B PILOT OpenBao exact-scope boundary drift")
+    if (pilot_scope.get("promotion") or {}).get("pilot_promoted") is not False:
+        fail("Phase 3B PILOT scope must not self-promote")
+
+    pilot_readiness = load(P3B / "pilot-readiness-v0.json")
+    if pilot_readiness.get("status") != "STATIC_READINESS_PASS_LIVE_PROOF_PENDING" or pilot_readiness.get("scope_id") != "instagram-publisher-snapshot-read":
+        fail("Phase 3B PILOT readiness status/scope mismatch")
+    if pilot_readiness.get("credential_class") != "PRODUCTION_READ" or pilot_readiness.get("pilot_promoted") is not False:
+        fail("Phase 3B PILOT readiness credential/promotion mismatch")
+    cf = pilot_readiness.get("cloudflare_preflight") or {}
+    if cf.get("status") != "PASS" or cf.get("authenticated") is not True or cf.get("snapshot_token_currently_present") is not False:
+        fail("Phase 3B PILOT Cloudflare preflight mismatch")
+    static = pilot_readiness.get("static_source_proof") or {}
+    if static.get("snapshot_token_is_read_only") is not True or static.get("write_endpoints_require_control_token") is not True:
+        fail("Phase 3B PILOT static source proof mismatch")
+    remaining = pilot_readiness.get("remaining_preconditions") or []
+    for required in ("provider-native rotation proof: old token=401 new token=200", "provider-native revocation proof: revoked token=401", "separate explicit PILOT promotion receipt"):
+        if required not in remaining:
+            fail("Phase 3B PILOT remaining precondition missing: " + required)
+
     wiring_source = WIRING_SCRIPT.read_text(encoding="utf-8-sig")
     for forbidden_import in ("import requests", "from requests", "import httpx", "from httpx", "import socket", "import urllib"):
         if forbidden_import in wiring_source:
@@ -665,11 +713,11 @@ def main() -> None:
         fail("Phase 3B shadow readiness selftest failed: " + (shadow_selftest.stderr.strip() or shadow_selftest.stdout.strip()))
 
     readme = (P3B / "README.md").read_text(encoding="utf-8-sig")
-    for marker in ("CROSS-ROLE COMPOSITION PASS", "SHADOW ACTIVE", "OBSERVER-ONLY", "FAIL-CLOSED", "RESTART-RESTORE PASS", "PILOT BLOCKED", "NO PRODUCTION AUTHORITY CHANGE", "Authentication never implies authorization", "shared 20-step composition fixture", "composition-gate-verdict-v0.json", "LAB_SIMULATION_ONLY", "promotion-gates-v0.json", "shadow-readiness-v0.json", "shadow-active-v0.json", "OfficeV2 LAB Lease"):
+    for marker in ("CROSS-ROLE COMPOSITION PASS", "SHADOW ACTIVE", "OBSERVER-ONLY", "FAIL-CLOSED", "RESTART-RESTORE PASS", "PILOT SCOPE SELECTED", "LIVE PROOF PENDING", "PILOT BLOCKED", "NO PRODUCTION AUTHORITY CHANGE", "Authentication never implies authorization", "shared 20-step composition fixture", "composition-gate-verdict-v0.json", "LAB_SIMULATION_ONLY", "promotion-gates-v0.json", "shadow-readiness-v0.json", "shadow-active-v0.json", "OfficeV2 LAB Lease"):
         if marker not in readme:
             fail("Phase 3B README missing safety/composition marker: " + marker)
 
-    print(f"OK office-v2-phase3b contract=FROZEN fixture=20-STEP lanes=3 candidates={len(items)} source-import=68/68 winner=composition-zitadel-opa-openbao shadow=ACTIVE candidate_authority=NONE production=INCUMBENTS_CANONICAL")
+    print(f"OK office-v2-phase3b contract=FROZEN fixture=20-STEP lanes=3 candidates={len(items)} source-import=68/68 winner=composition-zitadel-opa-openbao shadow=ACTIVE pilot_scope=instagram-publisher-snapshot-read pilot=BLOCKED_LIVE_PROOF_PENDING production=INCUMBENTS_CANONICAL")
 
 if __name__ == "__main__":
     main()
