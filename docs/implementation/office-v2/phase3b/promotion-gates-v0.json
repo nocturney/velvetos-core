@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.office-v2.phase3b-promotion-gates.v0",
-  "status": "PRE_SHADOW_READINESS_IN_PROGRESS_NOT_PROMOTED",
+  "status": "PRE_SHADOW_READY_AWAITING_EXPLICIT_PROMOTION",
   "selected_composition": "composition-zitadel-opa-openbao",
   "shadow_readiness_ref": "docs/implementation/office-v2/phase3b/shadow-readiness-v0.json",
   "current_authority": "NONE",
@@ -23,7 +23,7 @@
     "does_not_grant": ["SHADOW", "PILOT", "PRODUCTION_AUTHORITY", "PRODUCTION_WRITER"]
   },
   "shadow_gate": {
-    "status": "BLOCKED_PENDING_EXACT_REGRESSION_AND_SEPARATE_PROMOTION",
+    "status": "READY_FOR_EXPLICIT_SHADOW_PROMOTION_NOT_PROMOTED",
     "persistence_readiness": {
       "status": "PASS",
       "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/persistence-readiness.json",
@@ -31,6 +31,14 @@
       "opa": "PASS",
       "openbao": "PASS",
       "zitadel": "PASS"
+    },
+    "exact_regression": {
+      "status": "PASS",
+      "suite": "116/116",
+      "mode": "full",
+      "repository_files_unchanged": true,
+      "production_authority_change": false,
+      "shadow_promoted": false
     },
     "requires": [
       "separate explicit project-state promotion receipt",
@@ -52,10 +60,10 @@
       "identity, policy and broker health probes with fail-closed outage behavior",
       "bounded service/autostart plan and operator inspection path",
       "rollback drill to the existing incumbent paths",
-      "persistent LAB key-material handling outside Git plus cross-process DPAPI proof"
+      "persistent LAB key-material handling outside Git plus cross-process DPAPI proof",
+      "exact regression and negative-control suite after runtime-readiness wiring"
     ],
     "remaining_preconditions": [
-      "exact regression and negative-control suite after runtime-readiness wiring",
       "separate explicit project-state promotion receipt"
     ],
     "forbids": [

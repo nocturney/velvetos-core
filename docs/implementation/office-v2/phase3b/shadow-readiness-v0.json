@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.office-v2.phase3b-shadow-readiness.v0",
-  "captured_at": "2026-10-06T20:27:39.711652Z",
-  "status": "PRE_SHADOW_READINESS_PASS_EXACT_REGRESSION_PENDING_NO_PROMOTION",
+  "captured_at": "2026-10-07T04:34:40.3124788Z",
+  "status": "PRE_SHADOW_READINESS_COMPLETE_NO_PROMOTION",
   "selected_composition": "composition-zitadel-opa-openbao",
   "current_authority": "NONE",
   "production_authority_change": false,
@@ -75,6 +75,16 @@
     "production_authority_change": false,
     "shadow_promoted": false
   },
+  "exact_regression": {
+    "status": "PASS",
+    "suite": "116/116",
+    "mode": "full",
+    "validated_after_rebase": true,
+    "repository_files_unchanged": true,
+    "services_activated": false,
+    "production_authority_change": false,
+    "shadow_promoted": false
+  },
   "completed_preconditions": [
     "cross-role composition benchmark PASS",
     "non-authoritative integration wiring PASS",
@@ -85,10 +95,10 @@
     "identity/policy/broker health-probe fail-closed contract PASS",
     "bounded service/autostart and operator-inspection plan PASS without activation",
     "rollback-to-incumbents contract selftest PASS",
-    "persistent LAB key-material handling contract plus DPAPI cross-process probe PASS"
+    "persistent LAB key-material handling contract plus DPAPI cross-process probe PASS",
+    "exact regression and negative-control suite after runtime-readiness wiring PASS 116/116"
   ],
   "remaining_preconditions_before_shadow_can_be_considered": [
-    "exact regression and negative-control suite after runtime-readiness wiring",
     "separate explicit project-state SHADOW promotion receipt"
   ],
   "promotion_rule": "Completing pre-SHADOW readiness does not itself promote SHADOW. CURRENT.json and all production authority remain unchanged until a separate explicit promotion receipt."

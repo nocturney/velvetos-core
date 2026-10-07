@@ -500,7 +500,7 @@ def main() -> None:
         fail("Phase 3B integration wiring must not embed runtime endpoints")
 
     promotion = load(P3B / "promotion-gates-v0.json")
-    if promotion.get("status") != "PRE_SHADOW_READINESS_IN_PROGRESS_NOT_PROMOTED" or promotion.get("current_authority") != "NONE":
+    if promotion.get("status") != "PRE_SHADOW_READY_AWAITING_EXPLICIT_PROMOTION" or promotion.get("current_authority") != "NONE":
         fail("Phase 3B promotion gate status/authority mismatch")
     if promotion.get("shadow_readiness_ref") != "docs/implementation/office-v2/phase3b/shadow-readiness-v0.json":
         fail("Phase 3B shadow readiness ref missing")
@@ -513,20 +513,27 @@ def main() -> None:
     if integration_gate.get("status") != "PASS_NO_RUNTIME_PROMOTION":
         fail("Phase 3B integration gate must be PASS without runtime promotion")
     shadow_gate = promotion.get("shadow_gate") or {}
-    if shadow_gate.get("status") != "BLOCKED_PENDING_EXACT_REGRESSION_AND_SEPARATE_PROMOTION":
-        fail("Phase 3B SHADOW gate must remain blocked on exact regression + explicit promotion")
+    if shadow_gate.get("status") != "READY_FOR_EXPLICIT_SHADOW_PROMOTION_NOT_PROMOTED":
+        fail("Phase 3B SHADOW gate must be ready but remain explicitly unpromoted")
     persistence = shadow_gate.get("persistence_readiness") or {}
     if persistence.get("status") != "PASS" or persistence.get("evidence_ref") != "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/persistence-readiness.json" or len(persistence.get("evidence_sha256") or "") != 64:
         fail("Phase 3B promotion gate persistence evidence mismatch")
     if any(persistence.get(role) != "PASS" for role in ("opa", "openbao", "zitadel")):
         fail("Phase 3B promotion gate persistence component mismatch")
+    gate_regression = shadow_gate.get("exact_regression") or {}
+    if gate_regression.get("status") != "PASS" or gate_regression.get("suite") != "116/116" or gate_regression.get("repository_files_unchanged") is not True:
+        fail("Phase 3B promotion gate exact regression mismatch")
+    if gate_regression.get("production_authority_change") is not False or gate_regression.get("shadow_promoted") is not False:
+        fail("Phase 3B promotion gate regression changed authority")
+    if (shadow_gate.get("remaining_preconditions") or []) != ["separate explicit project-state promotion receipt"]:
+        fail("Phase 3B SHADOW gate remaining preconditions drift")
     if "separate explicit project-state promotion receipt" not in (shadow_gate.get("remaining_preconditions") or []):
         fail("Phase 3B SHADOW gate lost explicit project-state promotion requirement")
     if (promotion.get("production_gate") or {}).get("implicit_promotion_allowed") is not False:
         fail("Phase 3B implicit production promotion must remain forbidden")
 
     readiness = load(P3B / "shadow-readiness-v0.json")
-    if readiness.get("status") != "PRE_SHADOW_READINESS_PASS_EXACT_REGRESSION_PENDING_NO_PROMOTION" or readiness.get("selected_composition") != "composition-zitadel-opa-openbao":
+    if readiness.get("status") != "PRE_SHADOW_READINESS_COMPLETE_NO_PROMOTION" or readiness.get("selected_composition") != "composition-zitadel-opa-openbao":
         fail("Phase 3B shadow readiness status/composition mismatch")
     if readiness.get("current_authority") != "NONE" or readiness.get("current_project_state_must_remain") != "PHASE_3A_CLOSED_GREEN__PHASE_3B_READY":
         fail("Phase 3B shadow readiness authority/project-state mismatch")
@@ -559,8 +566,13 @@ def main() -> None:
     for field in ("production_authority_change", "shadow_promoted"):
         if readiness_runtime.get(field) is not False:
             fail("Phase 3B shadow runtime readiness unsafe field: " + field)
+    readiness_regression = readiness.get("exact_regression") or {}
+    if readiness_regression.get("status") != "PASS" or readiness_regression.get("suite") != "116/116" or readiness_regression.get("validated_after_rebase") is not True or readiness_regression.get("repository_files_unchanged") is not True:
+        fail("Phase 3B shadow exact regression proof mismatch")
+    if readiness_regression.get("services_activated") is not False or readiness_regression.get("production_authority_change") is not False or readiness_regression.get("shadow_promoted") is not False:
+        fail("Phase 3B shadow exact regression crossed activation/authority boundary")
     remaining = readiness.get("remaining_preconditions_before_shadow_can_be_considered") or []
-    if remaining != ["exact regression and negative-control suite after runtime-readiness wiring", "separate explicit project-state SHADOW promotion receipt"]:
+    if remaining != ["separate explicit project-state SHADOW promotion receipt"]:
         fail("Phase 3B shadow readiness remaining preconditions drift")
 
     wiring_source = WIRING_SCRIPT.read_text(encoding="utf-8-sig")
@@ -579,7 +591,7 @@ def main() -> None:
         fail("Phase 3B shadow readiness selftest failed: " + (shadow_selftest.stderr.strip() or shadow_selftest.stdout.strip()))
 
     readme = (P3B / "README.md").read_text(encoding="utf-8-sig")
-    for marker in ("CROSS-ROLE COMPOSITION PASS", "INTEGRATION WIRING PASS", "PERSISTENCE RESTORE PASS", "RUNTIME READINESS PASS NOT ACTIVATED", "EXACT REGRESSION PENDING", "NOT SHADOW", "NO PRODUCTION AUTHORITY CHANGE", "Authentication never implies authorization", "shared 20-step composition fixture", "composition-gate-verdict-v0.json", "LAB_SIMULATION_ONLY", "promotion-gates-v0.json", "shadow-readiness-v0.json"):
+    for marker in ("CROSS-ROLE COMPOSITION PASS", "INTEGRATION WIRING PASS", "PERSISTENCE RESTORE PASS", "RUNTIME READINESS PASS NOT ACTIVATED", "EXACT REGRESSION PASS", "PRE-SHADOW READY", "NOT SHADOW", "NO PRODUCTION AUTHORITY CHANGE", "Authentication never implies authorization", "shared 20-step composition fixture", "composition-gate-verdict-v0.json", "LAB_SIMULATION_ONLY", "promotion-gates-v0.json", "shadow-readiness-v0.json"):
         if marker not in readme:
             fail("Phase 3B README missing safety/composition marker: " + marker)
 

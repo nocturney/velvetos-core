@@ -124,10 +124,15 @@ def validate_contract() -> dict[str, Any]:
         require(row.get("authority_role") == "PRODUCTION_INCUMBENT", f"incumbent authority drift: {role}")
         require(row.get("decision_verdict") == "KEEP_INCUMBENT", f"incumbent verdict drift: {role}")
 
-    require(promotion.get("status") == "PRE_SHADOW_READINESS_IN_PROGRESS_NOT_PROMOTED", "promotion status drift")
+    require(promotion.get("status") == "PRE_SHADOW_READY_AWAITING_EXPLICIT_PROMOTION", "promotion status drift")
     require(promotion.get("shadow_promoted") is False, "promotion unexpectedly grants SHADOW")
-    require(shadow.get("status") == "PRE_SHADOW_READINESS_PASS_EXACT_REGRESSION_PENDING_NO_PROMOTION", "shadow readiness status drift")
+    require(shadow.get("status") == "PRE_SHADOW_READINESS_COMPLETE_NO_PROMOTION", "shadow readiness status drift")
     require(shadow.get("shadow_promoted") is False, "shadow readiness unexpectedly promoted")
+    exact = shadow.get("exact_regression") or {}
+    require(exact.get("status") == "PASS" and exact.get("suite") == "116/116", "exact regression status mismatch")
+    require(exact.get("validated_after_rebase") is True and exact.get("repository_files_unchanged") is True, "exact regression proof incomplete")
+    require(exact.get("services_activated") is False and exact.get("production_authority_change") is False and exact.get("shadow_promoted") is False, "exact regression crossed activation/authority boundary")
+    require(shadow.get("remaining_preconditions_before_shadow_can_be_considered") == ["separate explicit project-state SHADOW promotion receipt"], "remaining SHADOW preconditions drift")
     return runtime
 
 

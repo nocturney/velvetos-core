@@ -63,7 +63,7 @@
       ]
     }
   },
-  "next_gate": "Phase 3B pre-SHADOW runtime readiness is PASS without activation. Run the exact regression/negative-control suite on the final readiness commit next; after that, SHADOW remains blocked solely on a separate explicit project-state promotion receipt.",
+  "next_gate": "Phase 3B pre-SHADOW readiness is complete: runtime readiness and the full 116/116 exact regression are PASS without activation. SHADOW remains unpromoted and blocked solely on a separate explicit project-state promotion receipt.",
   "winner": "composition-zitadel-opa-openbao",
   "composition_gate": {
     "status": "PASS",
