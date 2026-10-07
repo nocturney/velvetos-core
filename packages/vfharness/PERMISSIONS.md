@@ -11,7 +11,8 @@ ALLOW write: packages/**, constitution/**, docs/**, AGENTS.md, CHANGELOG.md
 ALLOW write: drive create_file (office docs/sheets; no personal/medical/legal folders)
 ALLOW execute: python3 scripts/check-*.py
 ALLOW send: gmail send_message / reply / forward
-ASK before: git push, calendar create
+ALLOW git delivery: branch / worktree / commit / push / PR create-update / conflict resolution / merge when the owner already approved the implementation scope and required CI/reviews/branch protections pass
+ASK before: calendar create; Git scope expansion beyond approved work; force-push/history rewrite; bypass of required checks/rulesets/branch protection
 DENY: auto-DM, boost without lead seat, treg call, fake-ig-post
 DENY: rm -rf, DROP TABLE, secrets in git
 DENY: invented ₪, invented Insights
@@ -24,7 +25,7 @@ DENY: invented ₪, invented Insights
 | קריאת קוד / פקים | Allow | הפיך |
 | כתיבה בפק | Allow + git | שחזור מ-git |
 | הרצת סנסורים | Allow | בלי תופעת לוואי |
-| Push | Ask | נראה מבחוץ |
+| Push / PR / Merge | Allow בתוך scope שכבר אושר ליישום | לא מבקשים אישור נוסף; עדיין חייבים CI/reviews/branch protection וללא force-push |
 | שליחת ג׳ימייל / IG דרך כלי | Allow | `SEND.md` — לא מחכים לאדם או לגרוק |
 | Morning Brief (manual/event-driven) | Allow `htmlBody` תצוגה 3 אל עצמכם | `vfbriefux/MAIL.html`; אין standing clock |
 | אוטו־DM / בוסט | Deny | נעול תמיד |

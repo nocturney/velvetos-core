@@ -24,3 +24,9 @@ Bind ייחוס (תאימות): Velvet Factory — שדרות · איסוף · �
 מאגר מדיה משותף: [`docs/MEDIA-VAULT.md`](../docs/MEDIA-VAULT.md) · קטלוג אחד `packages/vfmedia/catalog.json`. תפעול קולט נכנס→מקור; העלאה ומיקום בתיקייה אינם אישור לפרסום.
 
 בקרת משרד (איחוד מקורות אמת, לא מערכת שנייה): [`office/control-plane.json`](../office/control-plane.json) · `office/control/` · `python3 scripts/vf_control_plane.py` · מדיניות Don't Bother Christian ב־`office/control/POLICY.md`.
+
+## Standing implementation authorization — Git delivery
+
+כאשר הבעלים מאשר במפורש עבודה/פעילות ל־**יישום / הטמעה / ביצוע**, האישור כולל מראש גם את פעולות ה־Git הנדרשות כדי להביא את אותה עבודה לסיום: יצירת branch/worktree, commit, `git push`, פתיחה/עדכון של PR, פתרון conflicts שאינו מרחיב את ה־scope, וה־merge לאחר שכל CI, required checks, reviews ו־branch protections החלים עברו. **אין לבקש מהבעלים אישור נוסף רק עבור push או merge בתוך ה־scope שכבר אושר.**
+
+האישור אינו מתיר להרחיב scope, לעקוף CI/rulesets/branch protection, לבצע force-push או history rewrite, לצרף שינויים לא קשורים, או לעקוף שערים נפרדים של עלות/כסף, credentials/security, מחיקה/פעולה הרסנית או external business authority. אם אחד מאלה נדרש — חל השער הספציפי שלו. אם GitHub דורש reviewer/approval בלתי תלוי ברמת הפלטפורמה, מכבדים אותו ולא עוקפים אותו.
