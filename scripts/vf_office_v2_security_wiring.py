@@ -131,16 +131,20 @@ def validate_contract() -> dict[str, Any]:
     for field in ("production_authority_change", "production_writer_change", "production_credentials_used", "production_secret_material_used", "shadow_or_pilot_promotion"):
         require(verdict.get(field) is False, f"composition verdict unsafe field: {field}")
 
-    require(promotion.get("status") == "PRE_SHADOW_READY_AWAITING_EXPLICIT_PROMOTION", "promotion status mismatch")
-    require(promotion.get("current_authority") == "NONE", "promotion authority must remain NONE")
-    for field in ("production_authority_change", "production_writer_change", "production_credentials_bound", "shadow_promoted", "pilot_promoted", "production_promoted"):
-        require(promotion.get(field) is False, f"promotion field must remain false: {field}")
+    require(promotion.get("status") == "SHADOW_ACTIVE_OBSERVER_ONLY_PILOT_BLOCKED", "promotion status mismatch")
+    require(promotion.get("current_authority") == "INCUMBENTS_CANONICAL", "production incumbents must remain canonical")
+    for field in ("production_authority_change", "production_writer_change", "production_credentials_bound", "pilot_promoted", "production_promoted"):
+        require(promotion.get(field) is False, f"promotion unsafe field: {field}")
+    require(promotion.get("shadow_promoted") is True, "explicit SHADOW promotion missing")
     shadow_gate = promotion.get("shadow_gate") or {}
-    require(shadow_gate.get("status") == "READY_FOR_EXPLICIT_SHADOW_PROMOTION_NOT_PROMOTED", "SHADOW gate must remain unpromoted")
+    require(shadow_gate.get("status") == "PASS_SHADOW_ACTIVE_OBSERVER_ONLY", "SHADOW gate active-state mismatch")
     exact = shadow_gate.get("exact_regression") or {}
     require(exact.get("status") == "PASS" and exact.get("suite") == "116/116", "SHADOW exact regression mismatch")
-    require(shadow_gate.get("remaining_preconditions") == ["separate explicit project-state promotion receipt"], "SHADOW remaining preconditions drift")
-    require((promotion.get("pilot_gate") or {}).get("status") == "BLOCKED_UNTIL_SHADOW_PASS_AND_SEPARATE_PROMOTION", "PILOT gate must remain blocked")
+    require(shadow_gate.get("remaining_preconditions") == [], "SHADOW preconditions must be closed after explicit promotion")
+    runtime_evidence = shadow_gate.get("runtime_evidence") or {}
+    require(runtime_evidence.get("status") == "PASS" and runtime_evidence.get("production_path") == "INCUMBENTS_CANONICAL", "SHADOW runtime evidence mismatch")
+    require(runtime_evidence.get("external_effects_allowed") is False, "SHADOW runtime may not grant external effects")
+    require((promotion.get("pilot_gate") or {}).get("status") == "BLOCKED_PENDING_BOUNDED_SCOPE_AND_SEPARATE_PROMOTION", "PILOT gate must remain blocked")
     require((promotion.get("production_gate") or {}).get("implicit_promotion_allowed") is False, "implicit production promotion forbidden")
 
     return wiring

@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.office-v2.phase3b-lab-status.v0",
-  "captured_at": "2026-10-06T20:39:46.6258198Z",
+  "captured_at": "2026-10-07T05:24:49.233410Z",
   "production_authority_change": false,
   "production_writer_change": false,
   "production_credentials_used": false,
@@ -63,7 +63,7 @@
       ]
     }
   },
-  "next_gate": "Phase 3B pre-SHADOW readiness is complete: runtime readiness and the full 116/116 exact regression are PASS without activation. SHADOW remains unpromoted and blocked solely on a separate explicit project-state promotion receipt.",
+  "next_gate": "Phase 3B SHADOW is active in observer-only mode with fail-closed outage and restart/restore evidence PASS. Continue bounded SHADOW observation; PILOT remains blocked until its named-scope, credential re-binding, revocation/rotation, correlated-effect, recovery/upgrade-rollback and separate promotion requirements are satisfied.",
   "winner": "composition-zitadel-opa-openbao",
   "composition_gate": {
     "status": "PASS",
@@ -137,5 +137,21 @@
     "production_credentials_bound": false,
     "production_authority_change": false,
     "shadow_promoted": false
+  },
+  "shadow_runtime": {
+    "status": "SHADOW_ACTIVE_OBSERVER_ONLY",
+    "active_ref": "docs/implementation/office-v2/phase3b/shadow-active-v0.json",
+    "selected_composition": "composition-zitadel-opa-openbao",
+    "project_state": "PHASE_3B_SHADOW_ACTIVE",
+    "health": "READY",
+    "fail_closed_outage_drill": "PASS",
+    "restart_restore": "PASS",
+    "host_port_bindings_empty": true,
+    "lease_managed": true,
+    "production_path": "INCUMBENTS_CANONICAL",
+    "production_credentials_used": false,
+    "external_effects_allowed": false,
+    "production_authority_change": false,
+    "pilot_promoted": false
   }
 }

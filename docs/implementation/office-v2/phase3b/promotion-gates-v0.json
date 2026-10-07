@@ -1,16 +1,16 @@
 {
   "schema": "velvetos.office-v2.phase3b-promotion-gates.v0",
-  "status": "PRE_SHADOW_READY_AWAITING_EXPLICIT_PROMOTION",
+  "status": "SHADOW_ACTIVE_OBSERVER_ONLY_PILOT_BLOCKED",
   "selected_composition": "composition-zitadel-opa-openbao",
   "shadow_readiness_ref": "docs/implementation/office-v2/phase3b/shadow-readiness-v0.json",
-  "current_authority": "NONE",
+  "current_authority": "INCUMBENTS_CANONICAL",
   "production_authority_change": false,
   "production_writer_change": false,
   "production_credentials_bound": false,
-  "shadow_promoted": false,
+  "shadow_promoted": true,
   "pilot_promoted": false,
   "production_promoted": false,
-  "current_project_state_must_remain": "PHASE_3A_CLOSED_GREEN__PHASE_3B_READY",
+  "current_project_state_must_remain": "PHASE_3B_SHADOW_ACTIVE",
   "integration_gate": {
     "status": "PASS_NO_RUNTIME_PROMOTION",
     "requires": [
@@ -19,11 +19,18 @@
       "full canonical sensor suite remains green",
       "no production endpoints, credentials, secret material or external effects are introduced"
     ],
-    "grants": ["integration-contract-complete"],
-    "does_not_grant": ["SHADOW", "PILOT", "PRODUCTION_AUTHORITY", "PRODUCTION_WRITER"]
+    "grants": [
+      "integration-contract-complete"
+    ],
+    "does_not_grant": [
+      "SHADOW",
+      "PILOT",
+      "PRODUCTION_AUTHORITY",
+      "PRODUCTION_WRITER"
+    ]
   },
   "shadow_gate": {
-    "status": "READY_FOR_EXPLICIT_SHADOW_PROMOTION_NOT_PROMOTED",
+    "status": "PASS_SHADOW_ACTIVE_OBSERVER_ONLY",
     "persistence_readiness": {
       "status": "PASS",
       "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/persistence-readiness.json",
@@ -63,18 +70,27 @@
       "persistent LAB key-material handling outside Git plus cross-process DPAPI proof",
       "exact regression and negative-control suite after runtime-readiness wiring"
     ],
-    "remaining_preconditions": [
-      "separate explicit project-state promotion receipt"
-    ],
+    "remaining_preconditions": [],
     "forbids": [
       "production credential binding",
       "production external effects",
       "authority transfer",
       "changing canonical business truth"
-    ]
+    ],
+    "runtime_evidence": {
+      "status": "PASS",
+      "shadow_active_ref": "docs/implementation/office-v2/phase3b/shadow-active-v0.json",
+      "project_state_checkpoint": "office-v2-phase3b-v0-cp014-shadow-active",
+      "project_state_content_hash": "648350ed02620881dcea831db6985c4737ffbe9c5ea4a8a18bb12c958225f5b8",
+      "outage_fail_closed": "PASS_3_OF_3",
+      "restart_restore": "PASS",
+      "temporary_task_cleanup": "PASS",
+      "production_path": "INCUMBENTS_CANONICAL",
+      "external_effects_allowed": false
+    }
   },
   "pilot_gate": {
-    "status": "BLOCKED_UNTIL_SHADOW_PASS_AND_SEPARATE_PROMOTION",
+    "status": "BLOCKED_PENDING_BOUNDED_SCOPE_AND_SEPARATE_PROMOTION",
     "requires": [
       "SHADOW promotion receipt and SHADOW evidence PASS",
       "separate explicit PILOT promotion receipt",
