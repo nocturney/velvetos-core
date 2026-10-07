@@ -26,10 +26,13 @@ def load_json(path: str | Path) -> dict:
 
 def contract(_: argparse.Namespace) -> int:
     registry = load_json(REGISTRY)
+    patterns = load_json(ROOT / registry["exact_cad_patterns"])
     return emit({
         "status": "PASS",
         "schema": registry["schema"],
         "max_repair_iterations": registry["max_repair_iterations"],
+        "exact_cad_patterns": registry["exact_cad_patterns"],
+        "coordinate_frame": patterns["coordinate_frame"]["primitive_local_origin"],
         "engines": registry["engines"],
     })
 
@@ -183,6 +186,39 @@ def runtime_paths() -> dict[str, Path]:
     }
 
 
+def _engine_runtime_version(engine: str) -> str:
+    if engine in {"build123d", "cadquery"}:
+        runtime = runtime_paths()[engine]
+        proc = subprocess.run(
+            [
+                str(runtime),
+                "-c",
+                (
+                    "import importlib.metadata as m;"
+                    f"print(m.version({engine!r}))"
+                ),
+            ],
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            capture_output=True,
+            timeout=30,
+        )
+        if proc.returncode != 0 or not proc.stdout.strip():
+            raise RuntimeError(f"version probe failed for {engine}: {proc.stderr[-500:]}")
+        return proc.stdout.strip().splitlines()[-1]
+
+    if engine == "jscad":
+        root = stack_root() / "jscad" / "node_modules" / "@jscad"
+        versions = []
+        for package in ("modeling", "stl-serializer"):
+            payload = load_json(root / package / "package.json")
+            versions.append(f"{payload['name']} {payload['version']}")
+        return " + ".join(versions)
+
+    raise RuntimeError(f"unsupported engine version probe: {engine}")
+
+
 def doctor(_: argparse.Namespace) -> int:
     registry = load_json(REGISTRY)
     root = stack_root()
@@ -207,8 +243,50 @@ def doctor(_: argparse.Namespace) -> int:
     )
 
 
-def _engine_artifacts(engine: str) -> list[str]:
-    return ["model.step", "model.stl"] if engine in {"build123d", "cadquery"} else ["model.stl"]
+ENGINE_FORMATS = {
+    "build123d": {
+        "step": "model.step",
+        "stl": "model.stl",
+        "3mf": "model.3mf",
+        "glb": "model.glb",
+        "dxf": "model-top.dxf",
+        "svg": "model-top.svg",
+    },
+    "cadquery": {
+        "step": "model.step",
+        "stl": "model.stl",
+    },
+    "jscad": {
+        "stl": "model.stl",
+    },
+}
+DEFAULT_ENGINE_FORMATS = {
+    "build123d": ["step", "stl"],
+    "cadquery": ["step", "stl"],
+    "jscad": ["stl"],
+}
+
+
+def _requested_formats(engine: str, raw: str | None) -> tuple[list[str] | None, str | None]:
+    if not raw:
+        return list(DEFAULT_ENGINE_FORMATS[engine]), None
+    requested: list[str] = []
+    for value in raw.split(","):
+        normalized = value.strip().lower()
+        if not normalized or normalized in requested:
+            continue
+        requested.append(normalized)
+    if not requested:
+        return None, "formats_empty"
+    unsupported = [name for name in requested if name not in ENGINE_FORMATS[engine]]
+    if unsupported:
+        return None, f"unsupported_formats:{engine}:{','.join(unsupported)}"
+    return requested, None
+
+
+def _engine_artifacts(engine: str, formats: list[str] | None = None) -> list[str]:
+    selected = formats or DEFAULT_ENGINE_FORMATS[engine]
+    return [ENGINE_FORMATS[engine][name] for name in selected]
 
 
 def _select_engine(requested: str, plan_only: bool) -> tuple[str | None, str | None]:
@@ -241,17 +319,35 @@ def _select_engine(requested: str, plan_only: bool) -> tuple[str | None, str | N
 def _build123d_driver() -> str:
     return """from pathlib import Path
 import json, sys
-from build123d import Box, Cylinder, Location, export_step, export_stl
+from build123d import (
+    Align,
+    Box,
+    Cylinder,
+    ExportDXF,
+    ExportSVG,
+    Location,
+    Mesher,
+    export_gltf,
+    export_step,
+    export_stl,
+)
 
 data=json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
 out=Path(sys.argv[2])
+formats=set(json.loads(sys.argv[3]))
 solid=None
 for part in data['parts']:
     dims=part['dimensions']
     if part['kind']=='box':
-        obj=Box(dims['x'],dims['y'],dims['z'])
+        obj=Box(
+            dims['x'],dims['y'],dims['z'],
+            align=(Align.CENTER,Align.CENTER,Align.MIN),
+        )
     elif part['kind']=='cylinder':
-        obj=Cylinder(dims['diameter']/2,dims['height'])
+        obj=Cylinder(
+            dims['diameter']/2,dims['height'],
+            align=(Align.CENTER,Align.CENTER,Align.MIN),
+        )
     else:
         raise ValueError('unsupported kind: '+part['kind'])
     obj=obj.move(Location(tuple(part.get('translate_mm',[0,0,0]))))
@@ -264,8 +360,29 @@ for part in data['parts']:
         solid=solid+obj
     else:
         solid=solid-obj
-export_step(solid,out/'model.step')
-export_stl(solid,out/'model.stl')
+
+if 'step' in formats:
+    export_step(solid,out/'model.step')
+if 'stl' in formats:
+    export_stl(solid,out/'model.stl')
+if '3mf' in formats:
+    mesher=Mesher()
+    mesher.add_shape(solid)
+    mesher.write(out/'model.3mf')
+if 'glb' in formats:
+    ok=export_gltf(solid,out/'model.glb',binary=True)
+    if ok is False:
+        raise RuntimeError('glb export failed')
+if 'dxf' in formats or 'svg' in formats:
+    top_face=max(solid.faces(),key=lambda face: face.center().Z)
+    if 'dxf' in formats:
+        exporter=ExportDXF()
+        exporter.add_shape(top_face)
+        exporter.write(out/'model-top.dxf')
+    if 'svg' in formats:
+        exporter=ExportSVG()
+        exporter.add_shape(top_face)
+        exporter.write(out/'model-top.svg')
 """
 
 
@@ -281,9 +398,12 @@ solid=None
 for part in data['parts']:
     dims=part['dimensions']
     if part['kind']=='box':
-        obj=cq.Workplane('XY').box(dims['x'],dims['y'],dims['z'])
+        obj=cq.Workplane('XY').box(
+            dims['x'],dims['y'],dims['z'],
+            centered=(True,True,False),
+        )
     elif part['kind']=='cylinder':
-        obj=cq.Workplane('XY').circle(dims['diameter']/2).extrude(dims['height']/2,both=True)
+        obj=cq.Workplane('XY').circle(dims['diameter']/2).extrude(dims['height'])
     else:
         raise ValueError('unsupported kind: '+part['kind'])
     obj=obj.translate(tuple(part.get('translate_mm',[0,0,0])))
@@ -315,9 +435,15 @@ let solid=null;
 for (const part of data.parts) {
   const d=part.dimensions;
   let obj;
-  if (part.kind==='box') obj=cuboid({size:[d.x,d.y,d.z]});
-  else if (part.kind==='cylinder') obj=cylinder({radius:d.diameter/2,height:d.height,segments:64});
-  else throw new Error('unsupported kind: '+part.kind);
+  let localOffset;
+  if (part.kind==='box') {
+    obj=cuboid({size:[d.x,d.y,d.z]});
+    localOffset=[0,0,d.z/2];
+  } else if (part.kind==='cylinder') {
+    obj=cylinder({radius:d.diameter/2,height:d.height,segments:64});
+    localOffset=[0,0,d.height/2];
+  } else throw new Error('unsupported kind: '+part.kind);
+  obj=translate(localOffset,obj);
   obj=translate(part.translate_mm || [0,0,0],obj);
   const op=part.operation || 'add';
   if (solid===null) {
@@ -351,13 +477,39 @@ def build(args: argparse.Namespace) -> int:
     if engine_error or engine is None:
         return emit({"status": "BLOCKED", "reason": engine_error}, 2)
 
-    artifacts = _engine_artifacts(engine)
+    formats, formats_error = _requested_formats(engine, args.formats)
+    if formats_error or formats is None:
+        return emit({"status": "BLOCKED", "reason": formats_error, "engine": engine}, 2)
+
+    artifacts = _engine_artifacts(engine, formats)
+    engine_version = None
+    if not args.plan_only:
+        try:
+            engine_version = _engine_runtime_version(engine)
+        except Exception as exc:
+            return emit(
+                {
+                    "status": "BLOCKED",
+                    "reason": f"engine_version_unavailable:{exc}",
+                    "engine": engine,
+                },
+                2,
+            )
+
     out_dir = Path(args.out_dir).resolve()
     plan = {
         "status": "PASS",
         "engine": engine,
+        "engine_version": engine_version,
+        "coordinate_frame": "xy_center_z_min",
+        "formats": formats,
         "plan_only": bool(args.plan_only),
         "input": str(source),
+        "input_sha256": _sha256(source),
+        "profile_refs": [
+            "packages/vfprod/CAD-ENGINE-REGISTRY.json",
+            "packages/vfprod/EXACT-CAD-PATTERNS.json",
+        ],
         "out_dir": str(out_dir),
         "artifacts": artifacts,
         "parts": len(data["parts"]),
@@ -373,7 +525,13 @@ def build(args: argparse.Namespace) -> int:
     driver = out_dir / ("_driver.mjs" if engine == "jscad" else "_driver.py")
     if engine == "build123d":
         driver.write_text(_build123d_driver(), encoding="utf-8")
-        command = [str(runtime_paths()[engine]), str(driver), str(normalized), str(out_dir)]
+        command = [
+            str(runtime_paths()[engine]),
+            str(driver),
+            str(normalized),
+            str(out_dir),
+            json.dumps(formats),
+        ]
         cwd = ROOT
     elif engine == "cadquery":
         driver.write_text(_cadquery_driver(), encoding="utf-8")
@@ -434,6 +592,7 @@ def build(args: argparse.Namespace) -> int:
         "plan_only": False,
         "status": "PASS",
         "normalized_ir": str(normalized),
+        "normalized_ir_sha256": _sha256(normalized),
         "artifact_evidence": evidence,
     }
     receipt_path = out_dir / "build-receipt.json"
@@ -454,6 +613,7 @@ def parser() -> argparse.ArgumentParser:
     command = subs.add_parser("build")
     command.add_argument("--input", required=True)
     command.add_argument("--engine", default="auto", choices=["auto", "build123d", "cadquery", "jscad"])
+    command.add_argument("--formats", help="comma-separated export formats; defaults preserve existing engine behavior")
     command.add_argument("--out-dir", required=True)
     command.add_argument("--plan-only", action="store_true")
 

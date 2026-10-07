@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.ai3d.cad-capability-registry.v1",
   "non_authoritative_staging": true,
-  "generated_at": "2026-10-07T12:58:43.363039+00:00",
+  "generated_at": "2026-10-07T14:09:05.470797+00:00",
   "authority_invariant": "This registry grants no authority. Fabrication Router/vf-3d-router, CreativeCraft, Blender Capability Host, slicer and production authorities remain unchanged.",
   "records": [
     {
@@ -577,23 +577,23 @@
       "status": "PROVEN"
     },
     {
-      "record_id": "cad.solid.parametric--build123d",
-      "capability_id": "cad.solid.parametric",
+      "record_id": "cad.primitives.mechanical--bd_warehouse",
+      "capability_id": "cad.primitives.mechanical",
       "problem_class": "exact_cad",
       "authority": {
         "id": "fabrication-router",
         "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
       },
       "engine": {
-        "id": "build123d",
-        "version": "0.13.0"
+        "id": "bd_warehouse",
+        "version": "0.3.0"
       },
       "adapter": {
-        "id": "vf-cad-stack",
-        "source_ref": "scripts/vf_cad_stack.py"
+        "id": "vf-cad-stack+bd-warehouse",
+        "source_ref": "packages/vfprod/EXACT-CAD-PATTERNS.json"
       },
       "runtime": {
-        "id": "cad-build123d-py312",
+        "id": "vf-cad-stack:build123d-venv",
         "host_classes": [
           "windows-primary"
         ]
@@ -612,16 +612,86 @@
         "units_and_dimensions"
       ],
       "headless": true,
-      "license_lane": "review-required",
+      "license_lane": "commercial-clean",
       "license": {
-        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_build123d",
-        "code_license": null,
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase4-bd-warehouse-runtime-install-20261007.json",
+        "code_license": "Apache-2.0",
         "data_license": null,
-        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
         "attribution": "follow upstream license/notice requirements; none may be silently stripped",
         "redistribution": "not authorized by this registry beyond the recorded upstream terms",
         "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
         "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase4-bd-warehouse-runtime-install-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase4_exact_cad"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase4-exact-cad-acceptance-20261007.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase4-bd-warehouse-runtime-install-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "build123d",
+          "runtime": "vf-cad-stack:build123d-venv"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "cad.solid.parametric--build123d",
+      "capability_id": "cad.solid.parametric",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "build123d",
+        "version": "0.11.1"
+      },
+      "adapter": {
+        "id": "vf-cad-stack",
+        "source_ref": "scripts/vf_cad_stack.py"
+      },
+      "runtime": {
+        "id": "vf-cad-stack:build123d-venv",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_cad_request",
+        "cad_artifact_or_geometry_ir"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
+        "code_license": "Apache-2.0",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
           "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_build123d"
         ]
       },
@@ -629,10 +699,13 @@
         "state": "PROVEN_PROVIDER",
         "validators": [
           "check-vf-fabrication-router",
-          "check-vf-3d-router"
+          "check-vf-3d-router",
+          "check-vf-cad-stack"
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
+          "D:\\Velvet\\Worktrees\\ai-3d-modeling-engineering-core-20261007\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
           "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_build123d"
         ]
       },
@@ -677,26 +750,25 @@
       "headless": true,
       "license_lane": "review-required",
       "license": {
-        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:cad-cae-copilot",
+        "license_source": null,
         "code_license": null,
         "data_license": null,
         "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
         "attribution": "follow upstream license/notice requirements; none may be silently stripped",
         "redistribution": "not authorized by this registry beyond the recorded upstream terms",
         "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
-        "provenance": [
-          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:cad-cae-copilot"
-        ]
+        "provenance": []
       },
       "verification": {
         "state": "CANDIDATE",
         "validators": [
           "check-vf-fabrication-router",
-          "check-vf-3d-router"
+          "check-vf-3d-router",
+          "check-vf-cad-stack"
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:cad-cae-copilot"
+          "D:\\Velvet\\Worktrees\\ai-3d-modeling-engineering-core-20261007\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json"
         ]
       },
       "fallback": [],
@@ -719,7 +791,7 @@
         "source_ref": "scripts/vf_cad_stack.py"
       },
       "runtime": {
-        "id": "cad-cadquery-py312",
+        "id": "vf-cad-stack:cadquery-venv",
         "host_classes": [
           "windows-primary"
         ]
@@ -738,16 +810,17 @@
         "units_and_dimensions"
       ],
       "headless": true,
-      "license_lane": "review-required",
+      "license_lane": "commercial-clean",
       "license": {
-        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_cadquery",
-        "code_license": null,
+        "license_source": "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\cadquery\\.venv\\Scripts\\python.exe",
+        "code_license": "Apache Public License 2.0",
         "data_license": null,
-        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
         "attribution": "follow upstream license/notice requirements; none may be silently stripped",
         "redistribution": "not authorized by this registry beyond the recorded upstream terms",
         "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
         "provenance": [
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\cadquery\\.venv\\Scripts\\python.exe",
           "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_cadquery"
         ]
       },
@@ -755,10 +828,13 @@
         "state": "PROVEN_PROVIDER",
         "validators": [
           "check-vf-fabrication-router",
-          "check-vf-3d-router"
+          "check-vf-3d-router",
+          "check-vf-cad-stack"
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
+          "D:\\Velvet\\Worktrees\\ai-3d-modeling-engineering-core-20261007\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\cadquery\\.venv\\Scripts\\python.exe",
           "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_cadquery"
         ]
       },
@@ -803,26 +879,25 @@
       "headless": false,
       "license_lane": "review-required",
       "license": {
-        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:forgent3d",
+        "license_source": null,
         "code_license": null,
         "data_license": null,
         "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
         "attribution": "follow upstream license/notice requirements; none may be silently stripped",
         "redistribution": "not authorized by this registry beyond the recorded upstream terms",
         "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
-        "provenance": [
-          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:forgent3d"
-        ]
+        "provenance": []
       },
       "verification": {
         "state": "CANDIDATE",
         "validators": [
           "check-vf-fabrication-router",
-          "check-vf-3d-router"
+          "check-vf-3d-router",
+          "check-vf-cad-stack"
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:forgent3d"
+          "D:\\Velvet\\Worktrees\\ai-3d-modeling-engineering-core-20261007\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json"
         ]
       },
       "fallback": [],
@@ -838,14 +913,14 @@
       },
       "engine": {
         "id": "jscad",
-        "version": null
+        "version": "@jscad/modeling 2.13.0 + @jscad/stl-serializer 2.1.23"
       },
       "adapter": {
         "id": "vf-cad-stack",
         "source_ref": "scripts/vf_cad_stack.py"
       },
       "runtime": {
-        "id": "local_node",
+        "id": "vf-cad-stack:jscad-node",
         "host_classes": [
           "windows-primary"
         ]
@@ -864,32 +939,34 @@
         "units_and_dimensions"
       ],
       "headless": true,
-      "license_lane": "review-required",
+      "license_lane": "commercial-clean",
       "license": {
-        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:jscad",
-        "code_license": null,
+        "license_source": "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\jscad",
+        "code_license": "MIT",
         "data_license": null,
-        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
         "attribution": "follow upstream license/notice requirements; none may be silently stripped",
         "redistribution": "not authorized by this registry beyond the recorded upstream terms",
         "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
         "provenance": [
-          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:jscad"
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\jscad"
         ]
       },
       "verification": {
-        "state": "READY_BOUNDED",
+        "state": "PROVEN_PROVIDER",
         "validators": [
           "check-vf-fabrication-router",
-          "check-vf-3d-router"
+          "check-vf-3d-router",
+          "check-vf-cad-stack"
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:jscad"
+          "D:\\Velvet\\Worktrees\\ai-3d-modeling-engineering-core-20261007\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\jscad"
         ]
       },
       "fallback": [],
-      "status": "READY_BOUNDED"
+      "status": "PROVEN"
     },
     {
       "record_id": "cad.solid.parametric--sidecar_freecad",

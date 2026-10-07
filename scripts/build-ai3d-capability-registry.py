@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -145,6 +146,75 @@ def version_for(provider: dict | None) -> str | None:
     return None if value is None else str(value)
 
 
+def canonical_engine_metadata(engine_id: str) -> dict:
+    """Probe the runtime that vf_cad_stack actually executes.
+
+    Blender sidecars may carry a different version of the same library. For
+    Fabrication Router authority records, execution-runtime truth wins.
+    """
+    if engine_id not in {"build123d", "cadquery", "bd_warehouse", "jscad"}:
+        return {}
+    try:
+        import vf_cad_stack as cad_stack
+    except Exception:
+        return {}
+
+    if engine_id in {"build123d", "cadquery", "bd_warehouse"}:
+        runtime_key = "build123d" if engine_id == "bd_warehouse" else engine_id
+        runtime = cad_stack.runtime_paths().get(runtime_key)
+        if runtime is None:
+            return {}
+        result = {
+            "runtime_id": f"vf-cad-stack:{runtime_key}-venv",
+            "evidence_ref": f"runtime:{runtime}",
+        }
+        if not runtime.is_file():
+            return result
+        distribution = engine_id
+        code = (
+            "import importlib.metadata as m,json;"
+            f"d=m.metadata({distribution!r});"
+            f"print(json.dumps(dict(version=m.version({distribution!r}),"
+            "license=d.get('License-Expression') or d.get('License'))))"
+        )
+        try:
+            proc = subprocess.run(
+                [str(runtime), "-c", code],
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                capture_output=True,
+                timeout=30,
+            )
+            if proc.returncode == 0:
+                payload = json.loads(proc.stdout.strip().splitlines()[-1])
+                result.update(payload)
+        except Exception:
+            pass
+        return result
+
+    package_root = cad_stack.stack_root() / "jscad"
+    dependencies = []
+    licenses = set()
+    for relative in (
+        Path("node_modules") / "@jscad" / "modeling" / "package.json",
+        Path("node_modules") / "@jscad" / "stl-serializer" / "package.json",
+    ):
+        path = package_root / relative
+        if not path.is_file():
+            continue
+        payload = load(path)
+        dependencies.append(f"{payload.get('name')} {payload.get('version')}")
+        if payload.get("license"):
+            licenses.add(str(payload["license"]))
+    return {
+        "runtime_id": "vf-cad-stack:jscad-node",
+        "version": " + ".join(dependencies) if dependencies else None,
+        "license": " + ".join(sorted(licenses)) if licenses else None,
+        "evidence_ref": f"runtime:{package_root}",
+    }
+
+
 def make_record(
     *,
     record_id: str,
@@ -202,19 +272,52 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
     providers = {item["id"]: item for item in blender["providers"]}
     records: list[dict] = []
 
+    host_acceptance_path = (
+        repo_root
+        / "packages"
+        / "vfharness"
+        / "state"
+        / "cad-engine-stack-host-acceptance-2026-09-27.json"
+    )
+    host_acceptance = load(host_acceptance_path)
     engine_provider_ids = {
         "build123d": "sidecar_build123d",
         "cadquery": "sidecar_cadquery",
     }
     for engine_id, engine in cad["engines"].items():
         provider = providers.get(engine_provider_ids.get(engine_id, ""))
+        canonical = canonical_engine_metadata(engine_id)
+        record_provider = dict(provider or {})
+        if canonical.get("version"):
+            record_provider["version"] = canonical["version"]
+        if canonical.get("license"):
+            record_provider["license"] = canonical["license"]
+
+        host_row = host_acceptance.get("engines", {}).get(engine_id, {})
+        host_proven = host_row.get("status") == "PASS"
         if engine["role"] == "primary":
-            status, verify = "ACTIVE_AUTHORITY", "PROVEN_PROVIDER"
+            status = "ACTIVE_AUTHORITY"
+            verify = "PROVEN_PROVIDER" if host_proven else "READY_BOUNDED"
         elif engine["role"] == "secondary":
-            status = "PROVEN" if is_functional(provider) else "READY_BOUNDED"
-            verify = "PROVEN_PROVIDER" if is_functional(provider) else "READY_BOUNDED"
+            status = "PROVEN" if host_proven else "READY_BOUNDED"
+            verify = "PROVEN_PROVIDER" if host_proven else "READY_BOUNDED"
         else:
             status, verify = "CANDIDATE", "CANDIDATE"
+
+        evidence_refs = [
+            "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
+            str(host_acceptance_path),
+        ]
+        license_provenance = []
+        if canonical.get("evidence_ref"):
+            evidence_refs.append(canonical["evidence_ref"])
+            license_provenance.append(canonical["evidence_ref"])
+        provider_id = engine_provider_ids.get(engine_id)
+        if provider_id:
+            provider_ref = f"{blender_path}#provider:{provider_id}"
+            evidence_refs.append(provider_ref)
+            license_provenance.append(provider_ref)
+
         records.append(
             make_record(
                 record_id=f"cad.solid.parametric--{engine_id}",
@@ -222,22 +325,66 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
                 authority_id="fabrication-router",
                 authority_ref="packages/vfprod/FABRICATION-ROUTER.json",
                 engine_id=engine_id,
-                engine_version=version_for(provider),
+                engine_version=canonical.get("version") or version_for(provider),
                 adapter_id="vf-cad-stack",
                 adapter_ref="scripts/vf_cad_stack.py",
-                runtime_id=provider.get("runtime") if provider else str(engine["mode"]),
+                runtime_id=canonical.get("runtime_id")
+                or (provider.get("runtime") if provider else str(engine["mode"])),
                 host_classes=["windows-primary"],
                 headless=str(engine["mode"]) != "local_desktop_workbench",
                 verification_state=verify,
-                validators=["check-vf-fabrication-router", "check-vf-3d-router"],
-                evidence_refs=[
-                    "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-                    f"{blender_path}#provider:{engine_provider_ids.get(engine_id, engine_id)}",
+                validators=[
+                    "check-vf-fabrication-router",
+                    "check-vf-3d-router",
+                    "check-vf-cad-stack",
                 ],
+                evidence_refs=evidence_refs,
                 fallbacks=[],
                 status=status,
-                provider=provider,
-                license_provenance=[f"{blender_path}#provider:{engine_provider_ids.get(engine_id, engine_id)}"],
+                provider=record_provider or None,
+                license_provenance=license_provenance,
+            )
+        )
+
+    bd_warehouse = canonical_engine_metadata("bd_warehouse")
+    if bd_warehouse.get("version"):
+        bd_provider = {
+            "version": bd_warehouse["version"],
+            "license": bd_warehouse.get("license"),
+            "capabilities": ["cad.primitives.mechanical"],
+        }
+        records.append(
+            make_record(
+                record_id="cad.primitives.mechanical--bd_warehouse",
+                capability_id="cad.primitives.mechanical",
+                authority_id="fabrication-router",
+                authority_ref="packages/vfprod/FABRICATION-ROUTER.json",
+                engine_id="bd_warehouse",
+                engine_version=bd_warehouse["version"],
+                adapter_id="vf-cad-stack+bd-warehouse",
+                adapter_ref="packages/vfprod/EXACT-CAD-PATTERNS.json",
+                runtime_id=bd_warehouse["runtime_id"],
+                host_classes=["windows-primary"],
+                headless=True,
+                verification_state="PROVEN_PROVIDER",
+                validators=["validate_ai3d_phase4_exact_cad"],
+                evidence_refs=[
+                    "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase4-exact-cad-acceptance-20261007.json",
+                    "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase4-bd-warehouse-runtime-install-20261007.json",
+                    bd_warehouse["evidence_ref"],
+                ],
+                fallbacks=[
+                    {
+                        "engine": "build123d",
+                        "runtime": "vf-cad-stack:build123d-venv",
+                    }
+                ],
+                status="PROVEN",
+                provider=bd_provider,
+                license_provenance=[
+                    "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase4-bd-warehouse-runtime-install-20261007.json",
+                    bd_warehouse["evidence_ref"],
+                ],
             )
         )
 

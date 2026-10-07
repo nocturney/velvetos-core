@@ -13,11 +13,13 @@ from tool_status_resolver import compose_tool_status  # noqa: E402
 
 registry_path = ROOT / "packages" / "vfprod" / "CAD-ENGINE-REGISTRY.json"
 schema_path = ROOT / "packages" / "vfprod" / "GEOMETRY-IR.schema.json"
+patterns_path = ROOT / "packages" / "vfprod" / "EXACT-CAD-PATTERNS.json"
 doc_path = ROOT / "packages" / "vfprod" / "CAD-ENGINE-STACK.md"
 cli = ROOT / "scripts" / "vf_cad_stack.py"
 
 assert registry_path.is_file(), registry_path
 assert schema_path.is_file(), schema_path
+assert patterns_path.is_file(), patterns_path
 assert doc_path.is_file(), doc_path
 assert cli.is_file(), cli
 
@@ -26,10 +28,27 @@ assert registry["schema"] == "velvetos.cad-engines.v1"
 assert registry["authority"] == "packages/vfprod/FABRICATION-ROUTER.md"
 assert registry["printer_actions_allowed"] is False
 assert registry["max_repair_iterations"] == 2
+assert registry["exact_cad_patterns"] == "packages/vfprod/EXACT-CAD-PATTERNS.json"
+
+patterns = json.loads(patterns_path.read_text(encoding="utf-8"))
+assert patterns["schema"] == "velvetos.exact-cad-patterns.v1"
+assert patterns["authority"] == "packages/vfprod/FABRICATION-ROUTER.md"
+assert patterns["coordinate_frame"]["primitive_local_origin"] == "xy_center_z_min"
+assert patterns["coordinate_frame"]["hidden_transform_inference"] is False
+assert patterns["semantic_selection"]["numeric_face_index_fallback"] is False
+assert patterns["semantic_selection"]["ambiguous_selection"] == "BLOCKED"
+assert patterns["curated_primitives"]["bd_warehouse"]["version"] == "0.3.0"
+assert patterns["curated_primitives"]["bd_warehouse"]["license"] == "Apache-2.0"
+assert patterns["safety"]["printer_actions_allowed"] is False
+assert patterns["safety"]["machine_control_allowed"] is False
 
 engines = registry["engines"]
 assert set(engines) == {"build123d", "cadquery", "jscad", "cad-cae-copilot", "forgent3d"}
 assert engines["build123d"]["role"] == "primary"
+assert engines["build123d"]["default_artifact_formats"] == ["STEP", "STL"]
+assert {"STEP", "STL", "3MF", "GLB", "DXF", "SVG"} <= set(
+    engines["build123d"]["artifact_formats"]
+)
 assert engines["cadquery"]["role"] == "secondary"
 assert engines["jscad"]["role"] == "secondary"
 assert engines["cad-cae-copilot"]["role"] == "pilot"
@@ -87,6 +106,8 @@ assert proc.returncode == 0, proc.stdout + proc.stderr
 contract = json.loads(proc.stdout)
 assert contract["status"] == "PASS"
 assert contract["max_repair_iterations"] == 2
+assert contract["exact_cad_patterns"] == "packages/vfprod/EXACT-CAD-PATTERNS.json"
+assert contract["coordinate_frame"] == "xy_center_z_min"
 
 sample = ROOT / "packages" / "vfharness" / "state" / "cad-engine-stack-20260927" / "geometry-ir-sample.json"
 proc = subprocess.run([sys.executable, str(cli), "ir-validate", "--input", str(sample)], cwd=ROOT, text=True, capture_output=True)
@@ -103,8 +124,66 @@ assert proc.returncode == 0, proc.stdout + proc.stderr
 plan = json.loads(proc.stdout)
 assert plan["status"] == "PASS"
 assert plan["engine"] == "build123d"
+assert plan["engine_version"] is None
+assert plan["coordinate_frame"] == "xy_center_z_min"
+assert plan["formats"] == ["step", "stl"]
 assert plan["plan_only"] is True
+assert len(plan["input_sha256"]) == 64
 assert plan["artifacts"] == ["model.step", "model.stl"]
+
+proc = subprocess.run(
+    [
+        sys.executable,
+        str(cli),
+        "build",
+        "--input",
+        str(sample),
+        "--engine",
+        "build123d",
+        "--formats",
+        "step,stl,3mf,dxf,svg",
+        "--out-dir",
+        str(plan_out),
+        "--plan-only",
+    ],
+    cwd=ROOT,
+    text=True,
+    capture_output=True,
+)
+assert proc.returncode == 0, proc.stdout + proc.stderr
+expanded_plan = json.loads(proc.stdout)
+assert expanded_plan["formats"] == ["step", "stl", "3mf", "dxf", "svg"]
+assert expanded_plan["artifacts"] == [
+    "model.step",
+    "model.stl",
+    "model.3mf",
+    "model-top.dxf",
+    "model-top.svg",
+]
+
+proc = subprocess.run(
+    [
+        sys.executable,
+        str(cli),
+        "build",
+        "--input",
+        str(sample),
+        "--engine",
+        "build123d",
+        "--formats",
+        "step,unknown-format",
+        "--out-dir",
+        str(plan_out),
+        "--plan-only",
+    ],
+    cwd=ROOT,
+    text=True,
+    capture_output=True,
+)
+assert proc.returncode == 2, proc.stdout + proc.stderr
+blocked = json.loads(proc.stdout)
+assert blocked["status"] == "BLOCKED"
+assert blocked["reason"].startswith("unsupported_formats:build123d:")
 
 state = ROOT / "packages" / "vfharness" / "state" / "cad-engine-stack-20260927" / "repair-state-test.json"
 if state.exists():

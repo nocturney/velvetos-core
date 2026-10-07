@@ -3,8 +3,9 @@
   "authority": "packages/vfprod/FABRICATION-ROUTER.md",
   "printer_actions_allowed": false,
   "max_repair_iterations": 2,
+  "exact_cad_patterns": "packages/vfprod/EXACT-CAD-PATTERNS.json",
   "engines": {
-    "build123d": {"role":"primary","mode":"local_python","artifact_formats":["STEP","STL","3MF","GLB"],"paid_provider_required":false,"printer_control":false},
+    "build123d": {"role":"primary","mode":"local_python","artifact_formats":["STEP","STL","3MF","GLB","DXF","SVG"],"default_artifact_formats":["STEP","STL"],"paid_provider_required":false,"printer_control":false},
     "cadquery": {"role":"secondary","mode":"local_python_venv","artifact_formats":["STEP","STL"],"paid_provider_required":false,"printer_control":false},
     "jscad": {"role":"secondary","mode":"local_node","artifact_formats":["STL"],"paid_provider_required":false,"printer_control":false},
     "cad-cae-copilot": {"role":"pilot","mode":"local_mcp_backend","artifact_formats":["STEP","STL","GLB"],"paid_provider_required":false,"printer_control":false},

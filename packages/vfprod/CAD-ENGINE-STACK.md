@@ -29,3 +29,15 @@ A fabrication chat request is resolved by `vf_fabrication_router.py decide`, the
 ## Host paths
 
 All heavy runtimes live under `%VELVET_PRINTLAB_ROOT%\tools\cad-stack\` and are intentionally excluded from Core. Core stores only contracts, routing, sensors and evidence.
+## Exact CAD hardening
+
+Phase 4 keeps this stack under the same Fabrication Router authority.
+
+- Primitive local frame is fixed to XY-centered with Z-min at zero; `translate_mm` is then applied as an explicit global translation.
+- build123d remains the primary engine. Its default output remains STEP + STL for backward compatibility.
+- Explicit `--formats` may request build123d STEP, STL, 3MF, GLB, DXF and SVG. DXF/SVG are semantic 2D face/profile exports, not arbitrary projections.
+- CadQuery remains a separate fallback environment. JSCAD remains a lightweight secondary mesh engine.
+- Every executed build receipt records the exact engine version, coordinate frame, input SHA-256, normalized-IR SHA-256, profile references and per-output SHA-256.
+- Reopen acceptance for exact-CAD uses deterministic geometry/semantic checks. Byte equality is recorded but is not required for serializers such as STEP/3MF/DXF that may encode non-geometric metadata.
+- Semantic selection rules live in `EXACT-CAD-PATTERNS.json`: geometry predicates and explicit datums are required; numeric face-index fallback is forbidden and ambiguity fails closed.
+- `bd_warehouse==0.3.0` is the bounded curated mechanical primitive library in the canonical build123d venv. It is not a new authority. Initial proven fixtures are socket-head cap screw, hex nut and plain washer; broader feature packs are promoted separately.

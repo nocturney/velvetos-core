@@ -1,0 +1,348 @@
+{
+  "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+  "bd_warehouse": {
+    "build123d_version": "0.11.1",
+    "license": "Apache-2.0",
+    "primitives": {
+      "fastener.hex_nut": {
+        "area": 175.39849367157495,
+        "bbox_max": [
+          4.040451884327379,
+          3.5,
+          3.2000000000000006
+        ],
+        "bbox_min": [
+          -4.040451884327379,
+          -3.5000000000000004,
+          -2.220446049250313e-16
+        ],
+        "bbox_size": [
+          8.080903768654759,
+          7.0,
+          3.200000000000001
+        ],
+        "type": "HexNut",
+        "volume": 95.23412307085282
+      },
+      "fastener.plain_washer": {
+        "area": 135.79534245141878,
+        "bbox_max": [
+          4.5,
+          4.5,
+          0.9
+        ],
+        "bbox_min": [
+          -4.5,
+          -4.5,
+          0.0
+        ],
+        "bbox_size": [
+          9.0,
+          9.0,
+          0.9
+        ],
+        "type": "PlainWasher",
+        "volume": 44.18571527457704
+      },
+      "fastener.socket_head_cap_screw": {
+        "area": 353.4084149868037,
+        "bbox_max": [
+          3.61,
+          3.61,
+          4.0000001
+        ],
+        "bbox_min": [
+          -3.61,
+          -3.61,
+          -16.0
+        ],
+        "bbox_size": [
+          7.22,
+          7.22,
+          20.0000001
+        ],
+        "type": "SocketHeadCapScrew",
+        "volume": 279.8459849944561
+      }
+    },
+    "version": "0.3.0"
+  },
+  "build123d": {
+    "byte_determinism": {
+      "model-top.dxf": false,
+      "model-top.svg": true,
+      "model.3mf": false,
+      "model.step": false,
+      "model.stl": true
+    },
+    "geometry_signature": {
+      "3mf": {
+        "bbox_max": [
+          60.0,
+          40.0,
+          12.0
+        ],
+        "bbox_min": [
+          -60.0,
+          -40.0,
+          0.0
+        ],
+        "bbox_size": [
+          120.0,
+          80.0,
+          12.0
+        ]
+      },
+      "dxf": {
+        "bbox_size": [
+          20.0,
+          20.0,
+          0.0
+        ]
+      },
+      "step": {
+        "bbox_max": [
+          60.0,
+          40.0,
+          12.0
+        ],
+        "bbox_min": [
+          -60.0,
+          -40.0,
+          0.0
+        ],
+        "bbox_size": [
+          120.0,
+          80.0,
+          12.0
+        ]
+      },
+      "stl": {
+        "bbox_max": [
+          60.0000001,
+          40.0000001,
+          12.0000001
+        ],
+        "bbox_min": [
+          -60.0000001,
+          -40.0000001,
+          -1e-07
+        ],
+        "bbox_size": [
+          120.0000002,
+          80.0000002,
+          12.000000199999999
+        ]
+      },
+      "svg": {
+        "bbox_size": [
+          20.000007199999352,
+          20.000007199999352,
+          0.0
+        ]
+      }
+    },
+    "note": "Geometry/semantic determinism is acceptance-critical. Serializer metadata may make some valid formats byte-nondeterministic.",
+    "repeat_geometry_signature": {
+      "3mf": {
+        "bbox_max": [
+          60.0,
+          40.0,
+          12.0
+        ],
+        "bbox_min": [
+          -60.0,
+          -40.0,
+          0.0
+        ],
+        "bbox_size": [
+          120.0,
+          80.0,
+          12.0
+        ]
+      },
+      "dxf": {
+        "bbox_size": [
+          20.0,
+          20.0,
+          0.0
+        ]
+      },
+      "step": {
+        "bbox_max": [
+          60.0,
+          40.0,
+          12.0
+        ],
+        "bbox_min": [
+          -60.0,
+          -40.0,
+          0.0
+        ],
+        "bbox_size": [
+          120.0,
+          80.0,
+          12.0
+        ]
+      },
+      "stl": {
+        "bbox_max": [
+          60.0000001,
+          40.0000001,
+          12.0000001
+        ],
+        "bbox_min": [
+          -60.0000001,
+          -40.0000001,
+          -1e-07
+        ],
+        "bbox_size": [
+          120.0000002,
+          80.0000002,
+          12.000000199999999
+        ]
+      },
+      "svg": {
+        "bbox_size": [
+          20.000007199999352,
+          20.000007199999352,
+          0.0
+        ]
+      }
+    },
+    "runtime": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
+    "version": "0.11.1"
+  },
+  "cadquery": {
+    "geometry_signature": {
+      "step": {
+        "bbox_max": [
+          60.0,
+          40.0,
+          12.0
+        ],
+        "bbox_min": [
+          -60.0,
+          -40.0,
+          0.0
+        ],
+        "bbox_size": [
+          120.0,
+          80.0,
+          12.0
+        ]
+      },
+      "stl": {
+        "bbox_max": [
+          60.0000001,
+          40.0000001,
+          12.0000001
+        ],
+        "bbox_min": [
+          -60.0000001,
+          -40.0000001,
+          -1e-07
+        ],
+        "bbox_size": [
+          120.0000002,
+          80.0000002,
+          12.000000199999999
+        ]
+      }
+    },
+    "runtime": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\cadquery\\.venv\\Scripts\\python.exe"
+  },
+  "coordinate_frame": "xy_center_z_min",
+  "jscad": {
+    "geometry_signature": {
+      "stl": {
+        "bbox_max": [
+          60.000240425927736,
+          40.00016031728516,
+          11.999906639916992
+        ],
+        "bbox_min": [
+          -60.000240425927736,
+          -40.00016031728516,
+          -1e-07
+        ],
+        "bbox_size": [
+          120.00048085185547,
+          80.00032063457031,
+          11.999906739916991
+        ]
+      }
+    }
+  },
+  "negative_controls": {
+    "numeric_face_index_fallback": false,
+    "printer_actions_allowed": false,
+    "unknown_export_format": "BLOCKED"
+  },
+  "patterns": "packages/vfprod/EXACT-CAD-PATTERNS.json",
+  "required_export_reopen_formats": [
+    "STEP",
+    "3MF",
+    "STL",
+    "DXF",
+    "SVG"
+  ],
+  "schema": "velvetos.ai3d.phase4-exact-cad-acceptance.v1",
+  "semantic_selection": {
+    "bottom_planar_face": {
+      "area": 9600.0,
+      "bbox_max": [
+        60.0,
+        40.0,
+        0.0
+      ],
+      "bbox_min": [
+        -60.0,
+        -40.0,
+        0.0
+      ],
+      "bbox_size": [
+        120.0,
+        80.0,
+        0.0
+      ],
+      "center_z": 0.0,
+      "normal": [
+        -0.0,
+        -0.0,
+        -1.0
+      ],
+      "type": "Face",
+      "volume": 0.0
+    },
+    "cylindrical_face_count": 1,
+    "numeric_face_index_used": false,
+    "top_planar_face": {
+      "area": 314.1592653589793,
+      "bbox_max": [
+        10.0,
+        10.0,
+        12.0
+      ],
+      "bbox_min": [
+        -10.0,
+        -10.0,
+        12.0
+      ],
+      "bbox_size": [
+        20.0,
+        20.0,
+        0.0
+      ],
+      "center_z": 12.0,
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "type": "Face",
+      "volume": 0.0
+    }
+  },
+  "status": "PASS"
+}

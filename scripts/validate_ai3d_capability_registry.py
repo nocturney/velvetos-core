@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
+
+import vf_cad_stack
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / "docs" / "implementation" / "ai-3d-modeling-engineering-core"
@@ -22,6 +25,29 @@ def validate_schema(instance: dict, schema: dict) -> None:
     except ImportError:
         return
     jsonschema.Draft202012Validator(schema).validate(instance)
+
+
+def runtime_distribution_version(
+    distribution: str, runtime_engine: str | None = None
+) -> str:
+    runtime = vf_cad_stack.runtime_paths()[runtime_engine or distribution]
+    proc = subprocess.run(
+        [
+            str(runtime),
+            "-c",
+            (
+                "import importlib.metadata as m;"
+                f"print(m.version({distribution!r}))"
+            ),
+        ],
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        capture_output=True,
+        timeout=30,
+    )
+    assert proc.returncode == 0, proc.stderr
+    return proc.stdout.strip().splitlines()[-1]
 
 
 def main() -> int:
@@ -91,11 +117,40 @@ def main() -> int:
     assert build123d["authority"]["id"] == "fabrication-router"
     assert build123d["status"] == "ACTIVE_AUTHORITY"
     assert build123d["precision_model"] == "exact_brep"
+    assert build123d["engine"]["version"] == runtime_distribution_version("build123d")
+    assert build123d["runtime"]["id"] == "vf-cad-stack:build123d-venv"
+    assert build123d["license_lane"] == "commercial-clean"
+    assert "apache" in build123d["license"]["code_license"].lower()
 
     cadquery = next(
         row for row in records if row["record_id"] == "cad.solid.parametric--cadquery"
     )
     assert cadquery["status"] == "PROVEN"
+    assert cadquery["engine"]["version"] == runtime_distribution_version("cadquery")
+    assert cadquery["runtime"]["id"] == "vf-cad-stack:cadquery-venv"
+    assert cadquery["license_lane"] == "commercial-clean"
+
+    jscad = next(
+        row for row in records if row["record_id"] == "cad.solid.parametric--jscad"
+    )
+    assert jscad["status"] == "PROVEN"
+    assert jscad["verification"]["state"] == "PROVEN_PROVIDER"
+    assert jscad["runtime"]["id"] == "vf-cad-stack:jscad-node"
+    assert jscad["license_lane"] == "commercial-clean"
+
+    bd_warehouse = next(
+        row
+        for row in records
+        if row["record_id"] == "cad.primitives.mechanical--bd_warehouse"
+    )
+    assert bd_warehouse["status"] == "PROVEN"
+    assert bd_warehouse["verification"]["state"] == "PROVEN_PROVIDER"
+    assert bd_warehouse["engine"]["version"] == runtime_distribution_version(
+        "bd_warehouse", "build123d"
+    )
+    assert bd_warehouse["runtime"]["id"] == "vf-cad-stack:build123d-venv"
+    assert bd_warehouse["license_lane"] == "commercial-clean"
+    assert bd_warehouse["license"]["code_license"] == "Apache-2.0"
 
     forgent = next(
         row for row in records if row["record_id"] == "cad.solid.parametric--forgent3d"

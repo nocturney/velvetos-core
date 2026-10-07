@@ -64,7 +64,7 @@ Files:
 
 The registry is deliberately non-authoritative staging. Existing proven routes are recorded first. Research candidates remain CANDIDATE until fixture, license and resource qualification pass.
 
-Current generated registry: 41 records; 31 PROVEN, 1 ACTIVE_AUTHORITY, 1 READY_BOUNDED, 8 CANDIDATE. Exactly 20 Blender cross-station entries are PROVEN_TYPED.
+Current generated registry: 42 records; 33 PROVEN, 1 ACTIVE_AUTHORITY, 8 CANDIDATE. Exactly 20 Blender cross-station entries are PROVEN_TYPED. Fabrication-authority engine versions come from the runtimes that vf_cad_stack actually executes; bd_warehouse is registered as a bounded proven primitive capability after Phase 4 host acceptance.
 
 ## Phase 3 - Engineering Contract and common artifact protocol
 
@@ -89,6 +89,36 @@ Artifact reports require exact engine/version/adapter/runtime/profile plus SHA-2
 
 Negative tests prove fail-closed behavior for assumed critical dimensions, unresolved manufacturing blockers and tampered artifact hashes.
 
+## Phase 4 - Core exact CAD expansion
+
+Files and authority surfaces:
+
+- packages/vfprod/EXACT-CAD-PATTERNS.json
+- packages/vfprod/CAD-ENGINE-REGISTRY.json
+- scripts/vf_cad_stack.py
+- scripts/ai3d_exact_cad_probe.py
+- scripts/validate_ai3d_phase4_exact_cad.py
+- evidence/phase4-exact-cad-acceptance-20261007.json
+- evidence/phase4-bd-warehouse-runtime-install-20261007.json
+
+Implemented and proven:
+
+- one cross-engine primitive frame: XY-centered, Z-min at zero, then explicit global translate_mm.
+- build123d remains primary and preserves STEP+STL as the default artifact set.
+- explicit build123d export profiles add 3MF, GLB, DXF and SVG without changing default behavior.
+- STEP/3MF/STL/DXF/SVG are reopened and geometry-checked, not accepted merely because files exist.
+- CadQuery remains a separate fallback venv and now proves the same fixture bounds as build123d.
+- JSCAD remains secondary and proves the same coordinate frame within tessellation tolerance.
+- semantic face selection uses geometry predicates and unique extrema; numeric face-index fallback is forbidden.
+- planar-mate, concentric-axis, fixed-offset and clearance-interface patterns require explicit datums/dimensions and fail closed on missing evidence.
+- bd_warehouse 0.3.0 is installed in the canonical build123d venv with --no-deps; build123d stayed at 0.11.1 and the existing OCP package stayed unchanged.
+- first curated bd_warehouse fixtures are SocketHeadCapScrew, HexNut and PlainWasher; broader mechanical packs remain deferred to Phase 5.
+- serializer byte identity is recorded but is not falsely required for STEP/3MF/DXF; acceptance requires per-artifact hashes plus deterministic reopened geometry/semantics.
+
+Phase 4 validation:
+
+  py -3.11 scripts/validate_ai3d_phase4_exact_cad.py
+
 ## Validation state
 
 Explicit AI3D validation stack: PASS.
@@ -98,8 +128,8 @@ Repository regression:
 - scripts/check-all.py: 116/116 PASS
 - exit code: 0
 - sensor side-effect check: repository files unchanged
-- full-suite log: evidence/check-all-phase3-20261007.log
+- full-suite log: evidence/check-all-phase4-20261007.log
 
 ## Next implementation phase
 
-Phase 4 is exact-CAD expansion. It must harden the existing build123d primary adapter and CadQuery fallback, qualify bd_warehouse/OCCT-related primitives where useful, add deterministic export/reopen fixtures, and preserve the existing Fabrication Router authority and isolated environment boundaries.
+Phase 5 is the mechanical feature-pack layer: fasteners/threads/gears/bearings/inserts/magnets/fits/snap-fit/living-hinge/enclosure/sheet-metal packs, with unit tests and adversarial parameter/property tests. Mature upstream libraries should be wrapped rather than copied.
