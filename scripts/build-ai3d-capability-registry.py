@@ -25,7 +25,7 @@ def load(path: Path) -> dict:
 
 
 def problem_class(capability: str) -> str:
-    if capability.startswith("cad."):
+    if capability.startswith("cad.") or capability.startswith("assembly."):
         return "exact_cad"
     if capability.startswith("mesh.") or capability.startswith("implicit."):
         return "mesh_geometry"
@@ -51,6 +51,8 @@ def problem_class(capability: str) -> str:
 def precision_model(capability: str) -> str:
     if capability == "cad.feature.fits":
         return "not_applicable"
+    if capability.startswith("assembly."):
+        return "mixed"
     if capability.startswith("cad.") or capability == "cam.toolpath":
         return "exact_brep"
     if capability.startswith("implicit."):
@@ -71,6 +73,14 @@ def precision_model(capability: str) -> str:
 def io_types(capability: str) -> tuple[list[str], list[str]]:
     if capability == "cam.toolpath":
         return ["bounded_cam_request"], ["offline_grbl_artifact", "verification_receipt"]
+    if capability == "assembly.joint.revolute":
+        return ["cad_parts", "explicit_joint_contract"], ["assembly_state", "verification_receipt"]
+    if capability == "assembly.motion.sweep":
+        return ["assembly_state", "motion_contract"], ["sampled_motion_report", "verification_receipt"]
+    if capability == "assembly.collision.static":
+        return ["cad_parts", "placement_state"], ["collision_report", "verification_receipt"]
+    if capability == "assembly.freecad.fixed_joint":
+        return ["cad_parts", "joint_connectors"], ["freecad_assembly_artifact", "verification_receipt"]
     if capability == "cad.reverse_engineer":
         return [
             "scan_or_mesh_evidence",
@@ -142,6 +152,16 @@ def constraints(capability: str) -> list[str]:
             "surface_evidence_only",
             "separate_exact_cad_contract_required",
         ])
+    if capability == "assembly.joint.revolute":
+        values.extend(["explicit_joint_axis", "explicit_angle_range", "no_inferred_joint_axis"])
+    if capability == "assembly.motion.sweep":
+        values.extend(["sampled_motion_only", "no_continuous_collision_guarantee"])
+    if capability == "assembly.collision.static":
+        values.append("exact_brep_intersection")
+    if capability == "assembly.freecad.fixed_joint":
+        values.append("explicit_joint_connectors")
+    if capability.startswith("electronics."):
+        values.append("no_component_complete_claim_when_models_missing")
     if capability.startswith("print."):
         values.append("no_printer_network_action")
     if capability == "cam.toolpath":
@@ -334,6 +354,14 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
         / "reverse-engineering-scan-to-cad-v1.json"
     )
     reverse_engineering = load(reverse_engineering_path)
+    assembly_motion_ecad_path = (
+        repo_root
+        / "docs"
+        / "implementation"
+        / "ai-3d-modeling-engineering-core"
+        / "assembly-motion-ecad-v1.json"
+    )
+    assembly_motion_ecad = load(assembly_motion_ecad_path)
     creative = load(creative_path)
     blender = load(blender_path)
     stations = load(station_path)
@@ -888,6 +916,242 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
             status="CANDIDATE",
             provider=nurbsfit_provider,
             license_provenance=[phase7_config, nurbsfit["source"]],
+        )
+    )
+
+    phase8_config = (
+        "docs/implementation/ai-3d-modeling-engineering-core/"
+        "assembly-motion-ecad-v1.json"
+    )
+    phase8_acceptance = (
+        "docs/implementation/ai-3d-modeling-engineering-core/evidence/"
+        "phase8-assembly-ecad-acceptance-20261007.json"
+    )
+    phase8_caps = assembly_motion_ecad["capabilities"]
+
+    phase8_build123d = canonical_engine_metadata("build123d")
+    build123d_provider = {
+        "version": phase8_build123d.get("version"),
+        "license": phase8_build123d.get("license"),
+        "capabilities": [
+            "assembly.joint.revolute",
+            "assembly.motion.sweep",
+            "assembly.collision.static",
+        ],
+    }
+    for capability_id in (
+        "assembly.joint.revolute",
+        "assembly.motion.sweep",
+        "assembly.collision.static",
+    ):
+        row = phase8_caps[capability_id]
+        assert str(row["status"]).startswith("PROVEN")
+        records.append(
+            make_record(
+                record_id=f"{capability_id}--build123d-phase8",
+                capability_id=capability_id,
+                authority_id="fabrication-router",
+                authority_ref="packages/vfprod/FABRICATION-ROUTER.json",
+                engine_id="build123d",
+                engine_version=phase8_build123d.get("version"),
+                adapter_id="ai3d-assembly-motion-ecad",
+                adapter_ref="scripts/ai3d_assembly_motion_ecad.py",
+                runtime_id=phase8_build123d.get(
+                    "runtime_id", "vf-cad-stack:build123d-venv"
+                ),
+                host_classes=["windows-primary"],
+                headless=True,
+                verification_state="PROVEN_PROVIDER",
+                validators=["validate_ai3d_phase8_assembly_ecad"],
+                evidence_refs=[phase8_config, phase8_acceptance],
+                fallbacks=[],
+                status="PROVEN",
+                provider=build123d_provider,
+                license_provenance=[
+                    phase8_config,
+                    phase8_acceptance,
+                    phase8_build123d.get(
+                        "evidence_ref", "runtime:build123d-canonical"
+                    ),
+                ],
+            )
+        )
+
+    freecad_provider = providers.get("sidecar_freecad")
+    if freecad_provider:
+        freecad_record = dict(freecad_provider)
+        freecad_record["license"] = assembly_motion_ecad["runtime_truth"]["freecad"][
+            "license"
+        ]
+        records.append(
+            make_record(
+                record_id="assembly.freecad.fixed_joint--sidecar_freecad",
+                capability_id="assembly.freecad.fixed_joint",
+                authority_id="fabrication-router",
+                authority_ref="packages/vfprod/FABRICATION-ROUTER.json",
+                engine_id="sidecar_freecad",
+                engine_version=version_for(freecad_provider),
+                adapter_id="ai3d-assembly-motion-ecad",
+                adapter_ref="scripts/ai3d_assembly_motion_ecad.py",
+                runtime_id=str(freecad_provider.get("runtime") or "freecad-1.1"),
+                host_classes=["windows-primary"],
+                headless=freecad_provider.get("headless_operation") == "available",
+                verification_state="PROVEN_PROVIDER",
+                validators=["validate_ai3d_phase8_assembly_ecad"],
+                evidence_refs=[
+                    f"{blender_path}#provider:sidecar_freecad",
+                    phase8_config,
+                    phase8_acceptance,
+                ],
+                fallbacks=[
+                    {
+                        "engine": "build123d",
+                        "runtime": "vf-cad-stack:build123d-venv",
+                    }
+                ],
+                status="PROVEN",
+                provider=freecad_record,
+                license_provenance=[
+                    phase8_config,
+                    f"{blender_path}#provider:sidecar_freecad",
+                ],
+            )
+        )
+
+    kicad_provider = providers.get("sidecar_kicad_cli")
+    if kicad_provider:
+        records.append(
+            make_record(
+                record_id="electronics.pcb_step_export--sidecar_kicad_cli-phase8",
+                capability_id="electronics.pcb_step_export",
+                authority_id="blender-capability-host",
+                authority_ref=str(blender_path),
+                engine_id="sidecar_kicad_cli",
+                engine_version=version_for(kicad_provider),
+                adapter_id="ai3d-assembly-motion-ecad",
+                adapter_ref="scripts/ai3d_assembly_motion_ecad.py",
+                runtime_id=str(kicad_provider.get("runtime") or "kicad-10.0.6"),
+                host_classes=["windows-primary"],
+                headless=kicad_provider.get("headless_operation") == "available",
+                verification_state="PROVEN_PROVIDER",
+                validators=["validate_ai3d_phase8_assembly_ecad"],
+                evidence_refs=[
+                    f"{blender_path}#provider:sidecar_kicad_cli",
+                    phase8_config,
+                    phase8_acceptance,
+                ],
+                fallbacks=[],
+                status="PROVEN",
+                provider=kicad_provider,
+                license_provenance=[
+                    f"{blender_path}#provider:sidecar_kicad_cli",
+                    phase8_config,
+                ],
+            )
+        )
+
+    enclosure_provider = providers.get("pipeline_pcb_to_enclosure")
+    if enclosure_provider:
+        records.append(
+            make_record(
+                record_id="electronics.enclosure_fit--pipeline_pcb_to_enclosure-phase8",
+                capability_id="electronics.enclosure_fit",
+                authority_id="blender-capability-host",
+                authority_ref=str(blender_path),
+                engine_id="pipeline_pcb_to_enclosure",
+                engine_version=version_for(enclosure_provider),
+                adapter_id="existing-pcb-to-enclosure+phase8-validation",
+                adapter_ref=str(blender_path) + "#provider:pipeline_pcb_to_enclosure",
+                runtime_id=str(enclosure_provider.get("runtime") or "multi-provider"),
+                host_classes=["windows-primary"],
+                headless=enclosure_provider.get("headless_operation") == "available",
+                verification_state="PROVEN_PROVIDER",
+                validators=[
+                    "existing component probes",
+                    "validate_ai3d_phase8_assembly_ecad",
+                ],
+                evidence_refs=[
+                    str(blender_path) + "#provider:pipeline_pcb_to_enclosure",
+                    phase8_config,
+                    phase8_acceptance,
+                ],
+                fallbacks=[],
+                status="PROVEN",
+                provider=enclosure_provider,
+                license_provenance=[
+                    str(blender_path) + "#provider:pipeline_pcb_to_enclosure",
+                    phase8_config,
+                ],
+            )
+        )
+
+    records.append(
+        make_record(
+            record_id="electronics.pcb_step_export_components--candidate-kicad-models",
+            capability_id="electronics.pcb_step_export_components",
+            authority_id="blender-capability-host",
+            authority_ref=phase8_config,
+            engine_id="sidecar_kicad_cli",
+            engine_version=assembly_motion_ecad["runtime_truth"]["kicad_cli"][
+                "version"
+            ],
+            adapter_id="not-admitted-component-complete",
+            adapter_ref="scripts/ai3d_assembly_motion_ecad.py",
+            runtime_id="kicad-10.0.6",
+            host_classes=["windows-primary"],
+            headless=True,
+            verification_state="CANDIDATE",
+            validators=[
+                "component-complete STEP fixture required",
+                "all referenced 3D models must resolve",
+            ],
+            evidence_refs=[phase8_config, phase8_acceptance],
+            fallbacks=[
+                {
+                    "engine": "sidecar_kicad_cli",
+                    "runtime": "kicad-10.0.6:board-only",
+                }
+            ],
+            status="CANDIDATE",
+            provider=None,
+            license_provenance=[phase8_config, phase8_acceptance],
+        )
+    )
+
+    records.append(
+        make_record(
+            record_id="robotics.urdf_pinocchio--candidate-pinocchio",
+            capability_id="robotics.urdf_pinocchio",
+            authority_id="fabrication-router",
+            authority_ref=phase8_config,
+            engine_id="pinocchio",
+            engine_version=None,
+            adapter_id="not-admitted",
+            adapter_ref=phase8_config,
+            runtime_id="not-admitted",
+            host_classes=["windows-primary"],
+            headless=False,
+            verification_state="CANDIDATE",
+            validators=[
+                "articulated-mechanism use case required",
+                "isolated dependency qualification required",
+                "license qualification required",
+                "positive and negative URDF fixtures required",
+            ],
+            evidence_refs=[phase8_config, phase8_acceptance],
+            fallbacks=[
+                {
+                    "engine": "build123d",
+                    "runtime": "vf-cad-stack:build123d-venv",
+                },
+                {
+                    "engine": "sidecar_freecad",
+                    "runtime": "freecad-1.1",
+                },
+            ],
+            status="CANDIDATE",
+            provider=None,
+            license_provenance=[phase8_config],
         )
     )
 

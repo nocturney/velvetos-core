@@ -212,6 +212,32 @@ Phase 7 validation:
   py -3.11 scripts/validate_ai3d_phase7_reverse_engineering.py
   py -3.11 scripts/validate_ai3d_capability_registry.py
 
+## Phase 8 - Assemblies, motion, collision and ECAD/MCAD
+
+Files:
+
+- assembly-motion-ecad-v1.json
+- scripts/ai3d_assembly_motion_ecad.py
+- scripts/validate_ai3d_phase8_assembly_ecad.py
+- evidence/phase8-assembly-ecad-acceptance-20261007.json
+
+Proven bounded behavior:
+
+- build123d 0.11.1 RevoluteJoint fixture uses an explicit Z-axis and 0-180 degree range; the 15-degree sampled sweep detects the expected obstacle collision window and blocks an out-of-range 181-degree request.
+- static collision is measured by exact B-Rep intersection volume; the fixture is clear at non-colliding states and reaches approximately 199.529 mm^3 collision volume at 45 degrees.
+- FreeCAD 1.1.3 Assembly runs headless with Assembly::AssemblyObject, Assembly::JointGroup, a grounded part and a real Fixed joint. The solver converges and emits FCStd + STEP evidence.
+- KiCad CLI 10.0.6 exports the installed Arduino Nano template as a board-only STEP. Reopened board bounds are 43.18 x 17.78 x 1.51 mm.
+- the existing pipeline_pcb_to_enclosure is reused. A clearance-positive enclosure reports 0 mm^3 interference; the negative fixture reports approximately 165.263 mm^3.
+- component-complete KiCad STEP remains CANDIDATE_BLOCKED_FIXTURE because the installed Arduino Nano template references KICAD9_3DMODEL_DIR .wrl headers that do not resolve in the KiCad 10 model tree.
+- URDF/Pinocchio remains CANDIDATE_NOT_INSTALLED. It is optional and will only be admitted if a real articulated-mechanism task exceeds the proven build123d/FreeCAD joint path.
+
+Capability Registry after Phase 8: 68 records, 52 PROVEN, 15 CANDIDATE, 1 ACTIVE_AUTHORITY, and still exactly 20 PROVEN_TYPED.
+
+Phase 8 validation:
+
+  py -3.11 scripts/validate_ai3d_phase8_assembly_ecad.py
+  py -3.11 scripts/validate_ai3d_capability_registry.py
+
 ## Validation state
 
 Explicit AI3D validation stack: PASS.
@@ -221,8 +247,8 @@ Repository regression:
 - scripts/check-all.py: 116/116 PASS
 - exit code: 0
 - sensor side-effect check: repository files unchanged
-- full-suite log: evidence/check-all-phase7-20261007.log
+- full-suite log: evidence/check-all-phase8-20261007.log
 
 ## Next implementation phase
 
-Phase 8 is assemblies, motion, collision and ECAD: keep assembly semantics separate from mesh/CAD geometry truth, qualify motion/collision evidence, and reuse existing PCB/import authorities rather than creating another assembly or electronics router.
+Phase 9 is drawings, vectors and sheet metal: qualify ezdxf and any drawing/vector helpers already present, prove a headless FreeCAD TechDraw handoff, qualify a bend-aware SheetMetal unfold-to-DXF path before promoting the Phase 5 sheet-metal candidate, and build robust text/glyph/vector fixtures without adding a second drawing or fabrication authority.

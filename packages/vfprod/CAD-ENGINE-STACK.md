@@ -48,3 +48,17 @@ Phase 4 keeps this stack under the same Fabrication Router authority.
 Promoted packs wrap mature upstream primitives where available: fasteners, solid ISO threads, spur gears, deep-groove bearings and heat-set inserts use `bd_warehouse`. Magnet pockets, explicit fit calculations and the bounded open-top enclosure use small native build123d/VelvetOS wrappers with all dimensions/clearances explicit.
 
 Snap-fit, living-hinge and sheet-metal packs are intentionally non-executable candidates until their material/process or bend-policy blockers are qualified. Unknown feature IDs and invalid/adversarial parameters return BLOCKED.
+
+## Assemblies, motion, collision and ECAD/MCAD
+
+Phase 8 remains beneath the same Fabrication Router and reuses the existing FreeCAD, KiCad and PCB-to-enclosure providers.
+
+- build123d revolute joints require an explicit axis and angle range. The proven motion path samples a bounded sweep; it does not claim continuous collision detection between samples.
+- build123d static collision uses exact B-Rep intersection volume. A positive fixture proves clear states and colliding states, and an out-of-range joint angle fails closed.
+- FreeCAD 1.1.3 Assembly is proven headless with a real Assembly::AssemblyObject, Assembly::JointGroup, grounded part and Fixed joint solver fixture. This is a provider capability, not a second assembly authority.
+- KiCad CLI 10.0.6 is proven for board-only STEP export. The resulting board solid is reopened in the canonical build123d runtime and checked against enclosure shells with positive and negative interference fixtures.
+- The existing pipeline_pcb_to_enclosure remains the composite electronics/enclosure route. Phase 8 validates it rather than replacing it.
+- Component-complete KiCad STEP export remains a candidate for the current Arduino Nano fixture because the installed template references KICAD9_3DMODEL_DIR .wrl pin-header models while the KiCad 10 install contains same-name .step models. Board-only proof must not be reported as component-complete proof.
+- URDF/Pinocchio remains an optional non-installed candidate until an articulated-mechanism task demonstrates a capability gap not already covered by build123d/FreeCAD joints and an isolated runtime passes dependency/license fixtures.
+
+The bounded contract is docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json; host acceptance is scripts/validate_ai3d_phase8_assembly_ecad.py.

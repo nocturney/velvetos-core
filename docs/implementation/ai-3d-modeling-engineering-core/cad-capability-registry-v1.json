@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.ai3d.cad-capability-registry.v1",
   "non_authoritative_staging": true,
-  "generated_at": "2026-10-07T15:55:41.637672+00:00",
+  "generated_at": "2026-10-07T16:52:48.608109+00:00",
   "authority_invariant": "This registry grants no authority. Fabrication Router/vf-3d-router, CreativeCraft, Blender Capability Host, slicer and production authorities remain unchanged.",
   "records": [
     {
@@ -445,6 +445,270 @@
           "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_pymeshlab",
           "docs/implementation/ai-3d-modeling-engineering-core/mesh-organic-specialists-v1.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase6-mesh-organic-acceptance-20261007.json"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "assembly.collision.static--build123d-phase8",
+      "capability_id": "assembly.collision.static",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "build123d",
+        "version": "0.11.1"
+      },
+      "adapter": {
+        "id": "ai3d-assembly-motion-ecad",
+        "source_ref": "scripts/ai3d_assembly_motion_ecad.py"
+      },
+      "runtime": {
+        "id": "vf-cad-stack:build123d-venv",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "cad_parts",
+        "placement_state"
+      ],
+      "output_types": [
+        "collision_report",
+        "verification_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request",
+        "exact_brep_intersection"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+        "code_license": "Apache-2.0",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase8-assembly-ecad-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase8_assembly_ecad"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase8-assembly-ecad-acceptance-20261007.json"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "assembly.freecad.fixed_joint--sidecar_freecad",
+      "capability_id": "assembly.freecad.fixed_joint",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "sidecar_freecad",
+        "version": "1.1.3"
+      },
+      "adapter": {
+        "id": "ai3d-assembly-motion-ecad",
+        "source_ref": "scripts/ai3d_assembly_motion_ecad.py"
+      },
+      "runtime": {
+        "id": "freecad-1.1",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "cad_parts",
+        "joint_connectors"
+      ],
+      "output_types": [
+        "freecad_assembly_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request",
+        "explicit_joint_connectors"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+        "code_license": "LGPL-2.1-or-later",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_freecad"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase8_assembly_ecad"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_freecad",
+          "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase8-assembly-ecad-acceptance-20261007.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "build123d",
+          "runtime": "vf-cad-stack:build123d-venv"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "assembly.joint.revolute--build123d-phase8",
+      "capability_id": "assembly.joint.revolute",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "build123d",
+        "version": "0.11.1"
+      },
+      "adapter": {
+        "id": "ai3d-assembly-motion-ecad",
+        "source_ref": "scripts/ai3d_assembly_motion_ecad.py"
+      },
+      "runtime": {
+        "id": "vf-cad-stack:build123d-venv",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "cad_parts",
+        "explicit_joint_contract"
+      ],
+      "output_types": [
+        "assembly_state",
+        "verification_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request",
+        "explicit_joint_axis",
+        "explicit_angle_range",
+        "no_inferred_joint_axis"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+        "code_license": "Apache-2.0",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase8-assembly-ecad-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase8_assembly_ecad"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase8-assembly-ecad-acceptance-20261007.json"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "assembly.motion.sweep--build123d-phase8",
+      "capability_id": "assembly.motion.sweep",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "build123d",
+        "version": "0.11.1"
+      },
+      "adapter": {
+        "id": "ai3d-assembly-motion-ecad",
+        "source_ref": "scripts/ai3d_assembly_motion_ecad.py"
+      },
+      "runtime": {
+        "id": "vf-cad-stack:build123d-venv",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "assembly_state",
+        "motion_contract"
+      ],
+      "output_types": [
+        "sampled_motion_report",
+        "verification_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request",
+        "sampled_motion_only",
+        "no_continuous_collision_guarantee"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+        "code_license": "Apache-2.0",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase8-assembly-ecad-acceptance-20261007.json",
+          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase8_assembly_ecad"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase8-assembly-ecad-acceptance-20261007.json"
         ]
       },
       "fallback": [],
@@ -1965,6 +2229,70 @@
       "status": "PROVEN"
     },
     {
+      "record_id": "electronics.enclosure_fit--pipeline_pcb_to_enclosure-phase8",
+      "capability_id": "electronics.enclosure_fit",
+      "problem_class": "electronics",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json"
+      },
+      "engine": {
+        "id": "pipeline_pcb_to_enclosure",
+        "version": null
+      },
+      "adapter": {
+        "id": "existing-pcb-to-enclosure+phase8-validation",
+        "source_ref": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:pipeline_pcb_to_enclosure"
+      },
+      "runtime": {
+        "id": "multi-provider",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "pcb_artifact"
+      ],
+      "output_types": [
+        "3d_geometry_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request",
+        "no_component_complete_claim_when_models_missing"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:pipeline_pcb_to_enclosure",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:pipeline_pcb_to_enclosure",
+          "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "existing component probes",
+          "validate_ai3d_phase8_assembly_ecad"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:pipeline_pcb_to_enclosure",
+          "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase8-assembly-ecad-acceptance-20261007.json"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
       "record_id": "electronics.pcb_import--blender-host",
       "capability_id": "electronics.pcb_import",
       "problem_class": "electronics",
@@ -1996,7 +2324,8 @@
       ],
       "precision_model": "mixed",
       "constraints_support": [
-        "bounded_typed_request"
+        "bounded_typed_request",
+        "no_component_complete_claim_when_models_missing"
       ],
       "headless": true,
       "license_lane": "review-required",
@@ -2033,6 +2362,137 @@
         }
       ],
       "status": "PROVEN"
+    },
+    {
+      "record_id": "electronics.pcb_step_export--sidecar_kicad_cli-phase8",
+      "capability_id": "electronics.pcb_step_export",
+      "problem_class": "electronics",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json"
+      },
+      "engine": {
+        "id": "sidecar_kicad_cli",
+        "version": "10.0.6"
+      },
+      "adapter": {
+        "id": "ai3d-assembly-motion-ecad",
+        "source_ref": "scripts/ai3d_assembly_motion_ecad.py"
+      },
+      "runtime": {
+        "id": "kicad-10.0.6",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "pcb_artifact"
+      ],
+      "output_types": [
+        "3d_geometry_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request",
+        "no_component_complete_claim_when_models_missing"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_kicad_cli",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_kicad_cli",
+          "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase8_assembly_ecad"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_kicad_cli",
+          "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase8-assembly-ecad-acceptance-20261007.json"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "electronics.pcb_step_export_components--candidate-kicad-models",
+      "capability_id": "electronics.pcb_step_export_components",
+      "problem_class": "electronics",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json"
+      },
+      "engine": {
+        "id": "sidecar_kicad_cli",
+        "version": "10.0.6"
+      },
+      "adapter": {
+        "id": "not-admitted-component-complete",
+        "source_ref": "scripts/ai3d_assembly_motion_ecad.py"
+      },
+      "runtime": {
+        "id": "kicad-10.0.6",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "pcb_artifact"
+      ],
+      "output_types": [
+        "3d_geometry_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request",
+        "no_component_complete_claim_when_models_missing"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase8-assembly-ecad-acceptance-20261007.json"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "component-complete STEP fixture required",
+          "all referenced 3D models must resolve"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase8-assembly-ecad-acceptance-20261007.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "sidecar_kicad_cli",
+          "runtime": "kicad-10.0.6:board-only"
+        }
+      ],
+      "status": "CANDIDATE"
     },
     {
       "record_id": "geometry.variant_batch--sidecar_trimesh",
@@ -3390,6 +3850,77 @@
       },
       "fallback": [],
       "status": "PROVEN"
+    },
+    {
+      "record_id": "robotics.urdf_pinocchio--candidate-pinocchio",
+      "capability_id": "robotics.urdf_pinocchio",
+      "problem_class": "automation",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json"
+      },
+      "engine": {
+        "id": "pinocchio",
+        "version": null
+      },
+      "adapter": {
+        "id": "not-admitted",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json"
+      },
+      "runtime": {
+        "id": "not-admitted",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_request"
+      ],
+      "output_types": [
+        "artifact_or_receipt"
+      ],
+      "precision_model": "not_applicable",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": false,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "articulated-mechanism use case required",
+          "isolated dependency qualification required",
+          "license qualification required",
+          "positive and negative URDF fixtures required"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase8-assembly-ecad-acceptance-20261007.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "build123d",
+          "runtime": "vf-cad-stack:build123d-venv"
+        },
+        {
+          "engine": "sidecar_freecad",
+          "runtime": "freecad-1.1"
+        }
+      ],
+      "status": "CANDIDATE"
     },
     {
       "record_id": "scan.clean--blender-host",

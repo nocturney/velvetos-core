@@ -5,6 +5,7 @@
   "max_repair_iterations": 2,
   "exact_cad_patterns": "packages/vfprod/EXACT-CAD-PATTERNS.json",
   "mechanical_feature_packs": "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
+  "assembly_motion_ecad": "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
   "engines": {
     "build123d": {"role":"primary","mode":"local_python","artifact_formats":["STEP","STL","3MF","GLB","DXF","SVG"],"default_artifact_formats":["STEP","STL"],"paid_provider_required":false,"printer_control":false},
     "cadquery": {"role":"secondary","mode":"local_python_venv","artifact_formats":["STEP","STL"],"paid_provider_required":false,"printer_control":false},

@@ -23,6 +23,14 @@ reverse_path = (
     / "reverse-engineering-scan-to-cad-v1.json"
 )
 reverse_adapter = ROOT / "scripts" / "ai3d_reverse_engineering.py"
+assembly_ecad_path = (
+    ROOT
+    / "docs"
+    / "implementation"
+    / "ai-3d-modeling-engineering-core"
+    / "assembly-motion-ecad-v1.json"
+)
+assembly_ecad_adapter = ROOT / "scripts" / "ai3d_assembly_motion_ecad.py"
 doc_path = ROOT / "packages" / "vfprod" / "CAD-ENGINE-STACK.md"
 cli = ROOT / "scripts" / "vf_cad_stack.py"
 
@@ -32,6 +40,8 @@ assert patterns_path.is_file(), patterns_path
 assert mechanical_path.is_file(), mechanical_path
 assert reverse_path.is_file(), reverse_path
 assert reverse_adapter.is_file(), reverse_adapter
+assert assembly_ecad_path.is_file(), assembly_ecad_path
+assert assembly_ecad_adapter.is_file(), assembly_ecad_adapter
 assert doc_path.is_file(), doc_path
 assert cli.is_file(), cli
 
@@ -42,6 +52,10 @@ assert registry["printer_actions_allowed"] is False
 assert registry["max_repair_iterations"] == 2
 assert registry["exact_cad_patterns"] == "packages/vfprod/EXACT-CAD-PATTERNS.json"
 assert registry["mechanical_feature_packs"] == "packages/vfprod/MECHANICAL-FEATURE-PACKS.json"
+assert (
+    registry["assembly_motion_ecad"]
+    == "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json"
+)
 
 patterns = json.loads(patterns_path.read_text(encoding="utf-8"))
 assert patterns["schema"] == "velvetos.exact-cad-patterns.v1"
@@ -92,6 +106,27 @@ assert reverse["epistemic_policy"]["hidden_dimensions_may_be_invented"] is False
 assert reverse["safety"]["duplicate_scan_router"] is False
 assert reverse["safety"]["duplicate_cad_router"] is False
 assert reverse["safety"]["printer_actions_allowed"] is False
+
+assembly_ecad = json.loads(assembly_ecad_path.read_text(encoding="utf-8"))
+assert assembly_ecad["schema"] == "velvetos.ai3d.assembly-motion-ecad.v1"
+assert assembly_ecad["authority"] == "packages/vfprod/FABRICATION-ROUTER.md"
+assert assembly_ecad["runtime_truth"]["build123d"]["version"] == "0.11.1"
+assert assembly_ecad["runtime_truth"]["freecad"]["version"] == "1.1.3"
+assert assembly_ecad["runtime_truth"]["kicad_cli"]["version"] == "10.0.6"
+assert assembly_ecad["capabilities"]["assembly.joint.revolute"]["status"].startswith("PROVEN")
+assert assembly_ecad["capabilities"]["assembly.freecad.fixed_joint"]["status"].startswith("PROVEN")
+assert assembly_ecad["capabilities"]["electronics.enclosure_fit"]["status"].startswith("PROVEN")
+assert (
+    assembly_ecad["capabilities"]["electronics.pcb_step_export_components"]["status"]
+    == "CANDIDATE_BLOCKED_FIXTURE"
+)
+assert (
+    assembly_ecad["capabilities"]["robotics.urdf_pinocchio"]["status"]
+    == "CANDIDATE_NOT_INSTALLED"
+)
+assert assembly_ecad["safety"]["printer_actions_allowed"] is False
+assert assembly_ecad["safety"]["machine_control_allowed"] is False
+assert assembly_ecad["safety"]["invent_joint_axes_or_limits"] is False
 
 engines = registry["engines"]
 assert set(engines) == {"build123d", "cadquery", "jscad", "cad-cae-copilot", "forgent3d"}

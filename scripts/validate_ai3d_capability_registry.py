@@ -14,6 +14,7 @@ SCHEMA_PATH = BASE / "cad-capability-registry-v1.schema.json"
 REGISTRY_PATH = BASE / "cad-capability-registry-v1.json"
 SPECIALISTS_PATH = BASE / "mesh-organic-specialists-v1.json"
 REVERSE_PATH = BASE / "reverse-engineering-scan-to-cad-v1.json"
+ASSEMBLY_ECAD_PATH = BASE / "assembly-motion-ecad-v1.json"
 
 
 def load(path: Path) -> dict:
@@ -57,6 +58,7 @@ def main() -> int:
     registry = load(REGISTRY_PATH)
     specialists = load(SPECIALISTS_PATH)
     reverse = load(REVERSE_PATH)
+    assembly_ecad = load(ASSEMBLY_ECAD_PATH)
     validate_schema(registry, schema)
 
     assert registry["schema"] == "velvetos.ai3d.cad-capability-registry.v1"
@@ -327,6 +329,109 @@ def main() -> int:
     assert nurbsfit["runtime"]["id"] == "not-admitted"
     assert nurbsfit["license_lane"] == "commercial-clean"
     assert nurbsfit["license"]["code_license"] == "MIT"
+
+    assert assembly_ecad["schema"] == "velvetos.ai3d.assembly-motion-ecad.v1"
+    assert assembly_ecad["authority"] == "packages/vfprod/FABRICATION-ROUTER.md"
+    assert assembly_ecad["safety"]["printer_actions_allowed"] is False
+    assert assembly_ecad["safety"]["machine_control_allowed"] is False
+    assert assembly_ecad["safety"]["continuous_motion_claim_without_sampling"] is False
+    assert assembly_ecad["safety"]["component_complete_ecad_claim_when_models_missing"] is False
+
+    phase8_proven = {
+        "assembly.joint.revolute--build123d-phase8": "assembly.joint.revolute",
+        "assembly.motion.sweep--build123d-phase8": "assembly.motion.sweep",
+        "assembly.collision.static--build123d-phase8": "assembly.collision.static",
+        "assembly.freecad.fixed_joint--sidecar_freecad": "assembly.freecad.fixed_joint",
+        "electronics.pcb_step_export--sidecar_kicad_cli-phase8": "electronics.pcb_step_export",
+        "electronics.enclosure_fit--pipeline_pcb_to_enclosure-phase8": "electronics.enclosure_fit",
+    }
+    for record_id, capability_id in phase8_proven.items():
+        row = next(item for item in records if item["record_id"] == record_id)
+        assert row["capability_id"] == capability_id
+        assert row["status"] == "PROVEN"
+        assert row["verification"]["state"] == "PROVEN_PROVIDER"
+        assert "validate_ai3d_phase8_assembly_ecad" in row["verification"]["validators"]
+
+    revolute = next(
+        row
+        for row in records
+        if row["record_id"] == "assembly.joint.revolute--build123d-phase8"
+    )
+    assert revolute["authority"]["id"] == "fabrication-router"
+    assert revolute["engine"]["id"] == "build123d"
+    assert revolute["engine"]["version"] == runtime_distribution_version("build123d")
+    assert revolute["precision_model"] == "mixed"
+    assert "explicit_joint_axis" in revolute["constraints_support"]
+    assert "explicit_angle_range" in revolute["constraints_support"]
+    assert "no_inferred_joint_axis" in revolute["constraints_support"]
+    assert revolute["license_lane"] == "commercial-clean"
+
+    sweep = next(
+        row
+        for row in records
+        if row["record_id"] == "assembly.motion.sweep--build123d-phase8"
+    )
+    assert "sampled_motion_only" in sweep["constraints_support"]
+    assert "no_continuous_collision_guarantee" in sweep["constraints_support"]
+    assert "sampled_motion_report" in sweep["output_types"]
+
+    collision = next(
+        row
+        for row in records
+        if row["record_id"] == "assembly.collision.static--build123d-phase8"
+    )
+    assert "exact_brep_intersection" in collision["constraints_support"]
+    assert "collision_report" in collision["output_types"]
+
+    freecad_assembly = next(
+        row
+        for row in records
+        if row["record_id"] == "assembly.freecad.fixed_joint--sidecar_freecad"
+    )
+    assert freecad_assembly["engine"]["version"] == "1.1.3"
+    assert freecad_assembly["runtime"]["id"] == "freecad-1.1"
+    assert freecad_assembly["headless"] is True
+    assert freecad_assembly["license_lane"] == "commercial-clean"
+    assert "lgpl" in freecad_assembly["license"]["code_license"].lower()
+
+    pcb_export = next(
+        row
+        for row in records
+        if row["record_id"] == "electronics.pcb_step_export--sidecar_kicad_cli-phase8"
+    )
+    assert pcb_export["engine"]["version"] == "10.0.6"
+    assert pcb_export["runtime"]["id"] == "kicad-10.0.6"
+    assert pcb_export["headless"] is True
+    assert "no_component_complete_claim_when_models_missing" in pcb_export["constraints_support"]
+
+    enclosure_fit = next(
+        row
+        for row in records
+        if row["record_id"] == "electronics.enclosure_fit--pipeline_pcb_to_enclosure-phase8"
+    )
+    assert enclosure_fit["engine"]["id"] == "pipeline_pcb_to_enclosure"
+    assert enclosure_fit["runtime"]["id"] == "multi-provider"
+    assert enclosure_fit["verification"]["state"] != "PROVEN_TYPED"
+
+    component_candidate = next(
+        row
+        for row in records
+        if row["record_id"]
+        == "electronics.pcb_step_export_components--candidate-kicad-models"
+    )
+    assert component_candidate["status"] == "CANDIDATE"
+    assert component_candidate["verification"]["state"] == "CANDIDATE"
+    assert component_candidate["license_lane"] == "review-required"
+
+    robotics_candidate = next(
+        row
+        for row in records
+        if row["record_id"] == "robotics.urdf_pinocchio--candidate-pinocchio"
+    )
+    assert robotics_candidate["status"] == "CANDIDATE"
+    assert robotics_candidate["verification"]["state"] == "CANDIDATE"
+    assert robotics_candidate["runtime"]["id"] == "not-admitted"
+    assert robotics_candidate["headless"] is False
 
     research_candidate_engines = {
         "hunyuan3d-2.1-shape",

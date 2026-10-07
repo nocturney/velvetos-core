@@ -1,0 +1,88 @@
+{
+  "schema": "velvetos.ai3d.assembly-motion-ecad.v1",
+  "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+  "registry_role": "bounded-capability-contract",
+  "runtime_truth": {
+    "build123d": {
+      "version": "0.11.1",
+      "runtime": "vf-cad-stack:build123d-venv",
+      "status": "PROVEN_PROVIDER"
+    },
+    "freecad": {
+      "version": "1.1.3",
+      "runtime": "C:/Program Files/FreeCAD 1.1/bin/freecadcmd.exe",
+      "license": "LGPL-2.1-or-later",
+      "status": "PROVEN_PROVIDER"
+    },
+    "kicad_cli": {
+      "version": "10.0.6",
+      "runtime": "C:/Program Files/KiCad/10.0/bin/kicad-cli.exe",
+      "status": "PROVEN_PROVIDER"
+    }
+  },
+  "capabilities": {
+    "assembly.joint.revolute": {
+      "status": "PROVEN_BOUNDED",
+      "provider": "build123d",
+      "contract": {
+        "requires_explicit_axis": true,
+        "requires_explicit_angle_range": true,
+        "sampled_motion_only": true
+      }
+    },
+    "assembly.motion.sweep": {
+      "status": "PROVEN_BOUNDED",
+      "provider": "build123d",
+      "contract": {
+        "sampling_degrees": 15,
+        "continuous_collision_guarantee": false,
+        "range_enforced": true
+      }
+    },
+    "assembly.collision.static": {
+      "status": "PROVEN_BOUNDED",
+      "provider": "build123d",
+      "method": "exact_brep_intersection_volume"
+    },
+    "assembly.freecad.fixed_joint": {
+      "status": "PROVEN_BOUNDED",
+      "provider": "sidecar_freecad",
+      "method": "Assembly::AssemblyObject + Assembly::JointGroup + JointObject"
+    },
+    "electronics.pcb_step_export": {
+      "status": "PROVEN_BOARD_ONLY",
+      "provider": "sidecar_kicad_cli",
+      "fixture": "installed Arduino_Nano template",
+      "mode": "--board-only"
+    },
+    "electronics.enclosure_fit": {
+      "status": "PROVEN_BOARD_ONLY",
+      "provider": "pipeline_pcb_to_enclosure",
+      "method": "KiCad board STEP + build123d exact BREP interference"
+    },
+    "electronics.pcb_step_export_components": {
+      "status": "CANDIDATE_BLOCKED_FIXTURE",
+      "provider": "sidecar_kicad_cli",
+      "blocker": "Installed Arduino Nano template references KICAD9_3DMODEL_DIR .wrl pin headers while KiCad 10 install provides same-name .step models; current export reports missing component models."
+    },
+    "robotics.urdf_pinocchio": {
+      "status": "CANDIDATE_NOT_INSTALLED",
+      "optional": true,
+      "admission_rule": "Only admit after an articulated-mechanism task demonstrates capability not already covered by build123d/FreeCAD joints and after isolated dependency/license qualification."
+    }
+  },
+  "existing_authorities_reused": [
+    "packages/vfprod/FABRICATION-ROUTER.md",
+    "packages/vfprod/CAD-ENGINE-REGISTRY.json",
+    "sidecar_freecad",
+    "sidecar_kicad_cli",
+    "pipeline_pcb_to_enclosure"
+  ],
+  "safety": {
+    "printer_actions_allowed": false,
+    "machine_control_allowed": false,
+    "continuous_motion_claim_without_sampling": false,
+    "component_complete_ecad_claim_when_models_missing": false,
+    "invent_joint_axes_or_limits": false
+  }
+}
