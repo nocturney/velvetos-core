@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.office-v2.phase3b-promotion-gates.v0",
-  "status": "SHADOW_ACTIVE_OBSERVER_ONLY_PILOT_READY",
+  "status": "PILOT_ACTIVE_PRODUCTION_READY_FOR_EXPLICIT_AUTHORITY_TRANSFER",
   "selected_composition": "composition-zitadel-opa-openbao",
   "shadow_readiness_ref": "docs/implementation/office-v2/phase3b/shadow-readiness-v0.json",
   "current_authority": "INCUMBENTS_CANONICAL",
@@ -8,9 +8,9 @@
   "production_writer_change": false,
   "production_credentials_bound": false,
   "shadow_promoted": true,
-  "pilot_promoted": false,
+  "pilot_promoted": true,
   "production_promoted": false,
-  "current_project_state_must_remain": "PHASE_3B_SHADOW_ACTIVE",
+  "current_project_state_must_remain": "PHASE_3B_PILOT_ACTIVE",
   "integration_gate": {
     "status": "PASS_NO_RUNTIME_PROMOTION",
     "requires": [
@@ -90,7 +90,7 @@
     }
   },
   "pilot_gate": {
-    "status": "PASS_READY_FOR_EXPLICIT_PROMOTION",
+    "status": "PASS_PILOT_ACTIVE",
     "requires": [
       "SHADOW promotion receipt and SHADOW evidence PASS",
       "separate explicit PILOT promotion receipt",
@@ -115,9 +115,7 @@
       "provider source has a dedicated read-only SNAPSHOT_TOKEN separate from CONTROL_TOKEN",
       "SNAPSHOT_TOKEN is absent before PILOT issuance"
     ],
-    "remaining_live_preconditions": [
-      "separate explicit PILOT promotion receipt"
-    ],
+    "remaining_live_preconditions": [],
     "completed_live_preconditions": [
       "dedicated SNAPSHOT_TOKEN issue/read/write-deny proof",
       "provider-native rotation and revocation drill",
@@ -131,10 +129,12 @@
     ],
     "live_readiness_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/pilot-live-readiness-progress.json",
     "readiness_sha": "856b4387da9e66e7489d6c7011a2b370a7e1db2f",
-    "promotion_contract_ref": "docs/implementation/office-v2/phase3b/pilot-promotion-v0.json"
+    "promotion_contract_ref": "docs/implementation/office-v2/phase3b/pilot-promotion-v0.json",
+    "runtime_promotion_receipt_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/pilot-promotion.json",
+    "project_state_checkpoint": "office-v2-phase3b-v0-cp016-pilot-active"
   },
   "production_gate": {
-    "status": "BLOCKED_UNTIL_PILOT_PASS_AND_SEPARATE_AUTHORITY_TRANSFER",
+    "status": "READY_AWAITING_EXPLICIT_AUTHORITY_TRANSFER",
     "requires": [
       "PILOT evidence PASS",
       "explicit production authority-transfer receipt",
@@ -144,7 +144,12 @@
       "rollback and disaster-recovery evidence",
       "full canonical sensor suite PASS on the exact promotion SHA"
     ],
-    "implicit_promotion_allowed": false
+    "implicit_promotion_allowed": false,
+    "contract_ref": "docs/implementation/office-v2/phase3b/production-promotion-v0.json",
+    "selected_scope_id": "instagram-publisher-snapshot-read",
+    "selected_credential_class": "PRODUCTION_READ",
+    "production_writer_change": false,
+    "external_mutation_allowed": false
   },
   "safety_invariants": [
     "Authentication does not imply authorization.",
