@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos.ai3d.cad-capability-registry.v1",
+  "title": "AI 3D Modeling & Engineering Core - CAD Capability Registry v1",
+  "description": "Staging registry contract. It records existing capability routes and candidates but grants no authority and performs no runtime promotion.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "non_authoritative_staging",
+    "generated_at",
+    "authority_invariant",
+    "records"
+  ],
+  "properties": {
+    "schema": {
+      "const": "velvetos.ai3d.cad-capability-registry.v1"
+    },
+    "non_authoritative_staging": {
+      "const": true
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "authority_invariant": {
+      "type": "string",
+      "minLength": 1
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/capabilityRecord"
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stringList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      },
+      "uniqueItems": true
+    },
+    "engineRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "version": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "adapterRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source_ref"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "runtimeRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "host_classes"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "host_classes": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "authorityRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source_ref"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "licenseRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "license_source",
+        "code_license",
+        "data_license",
+        "allowed_use",
+        "attribution",
+        "redistribution",
+        "bundle_policy",
+        "provenance"
+      ],
+      "properties": {
+        "license_source": {
+          "type": ["string", "null"]
+        },
+        "code_license": {
+          "type": ["string", "null"]
+        },
+        "data_license": {
+          "type": ["string", "null"]
+        },
+        "allowed_use": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "attribution": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "redistribution": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "bundle_policy": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "provenance": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "verificationRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "validators", "evidence_refs"],
+      "properties": {
+        "state": {
+          "enum": [
+            "PROVEN_TYPED",
+            "PROVEN_PROVIDER",
+            "READY_BOUNDED",
+            "CANDIDATE",
+            "RESEARCH_ONLY",
+            "BLOCKED"
+          ]
+        },
+        "validators": {
+          "$ref": "#/$defs/stringList"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "fallbackRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["engine", "runtime"],
+      "properties": {
+        "engine": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "runtime": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "capabilityRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_id",
+        "capability_id",
+        "problem_class",
+        "authority",
+        "engine",
+        "adapter",
+        "runtime",
+        "input_types",
+        "output_types",
+        "precision_model",
+        "constraints_support",
+        "headless",
+        "license_lane",
+        "license",
+        "verification",
+        "fallback",
+        "status"
+      ],
+      "properties": {
+        "record_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]+$"
+        },
+        "capability_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]+$"
+        },
+        "problem_class": {
+          "enum": [
+            "exact_cad",
+            "mesh_geometry",
+            "organic_sculpt",
+            "reconstruction",
+            "ai_generation",
+            "manufacturing",
+            "interchange",
+            "simulation",
+            "electronics",
+            "automation"
+          ]
+        },
+        "authority": {
+          "$ref": "#/$defs/authorityRef"
+        },
+        "engine": {
+          "$ref": "#/$defs/engineRef"
+        },
+        "adapter": {
+          "$ref": "#/$defs/adapterRef"
+        },
+        "runtime": {
+          "$ref": "#/$defs/runtimeRef"
+        },
+        "input_types": {
+          "$ref": "#/$defs/stringList"
+        },
+        "output_types": {
+          "$ref": "#/$defs/stringList"
+        },
+        "precision_model": {
+          "enum": [
+            "exact_brep",
+            "parametric_solid",
+            "polygonal_mesh",
+            "point_cloud",
+            "process_output",
+            "mixed",
+            "not_applicable"
+          ]
+        },
+        "constraints_support": {
+          "$ref": "#/$defs/stringList"
+        },
+        "headless": {
+          "type": "boolean"
+        },
+        "license_lane": {
+          "enum": [
+            "commercial-clean",
+            "research-nc",
+            "service-terms",
+            "review-required"
+          ]
+        },
+        "license": {
+          "$ref": "#/$defs/licenseRecord"
+        },
+        "verification": {
+          "$ref": "#/$defs/verificationRecord"
+        },
+        "fallback": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fallbackRef"
+          }
+        },
+        "status": {
+          "enum": [
+            "ACTIVE_AUTHORITY",
+            "PROVEN",
+            "READY_BOUNDED",
+            "CANDIDATE",
+            "RESEARCH_ONLY",
+            "BLOCKED",
+            "RETIRED"
+          ]
+        }
+      }
+    }
+  }
+}

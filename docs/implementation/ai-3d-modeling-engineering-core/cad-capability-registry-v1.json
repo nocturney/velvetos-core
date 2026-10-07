@@ -1,0 +1,2716 @@
+{
+  "schema": "velvetos.ai3d.cad-capability-registry.v1",
+  "non_authoritative_staging": true,
+  "generated_at": "2026-10-07T12:58:43.363039+00:00",
+  "authority_invariant": "This registry grants no authority. Fabrication Router/vf-3d-router, CreativeCraft, Blender Capability Host, slicer and production authorities remain unchanged.",
+  "records": [
+    {
+      "record_id": "agent.blender.control--blender-host",
+      "capability_id": "agent.blender.control",
+      "problem_class": "automation",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_blender_ai_mcp",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_request"
+      ],
+      "output_types": [
+        "artifact_or_receipt"
+      ],
+      "precision_model": "not_applicable",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_blender_ai_mcp",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_blender_ai_mcp",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_blender_control_readonly_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "station-default:windows-primary",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "ai.image_to_3d--candidate-hunyuan3d-2.1-shape",
+      "capability_id": "ai.image_to_3d",
+      "problem_class": "ai_generation",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "hunyuan3d-2.1-shape",
+        "version": null
+      },
+      "adapter": {
+        "id": "not-admitted",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/phase1-overlap-gap-map-v0.json"
+      },
+      "runtime": {
+        "id": "ai-generation-local",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "image_text_or_multiview_evidence"
+      ],
+      "output_types": [
+        "mesh_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "polygonal_mesh",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+          "gdrive://1rx__tzqFaMl1fzBxtywbKWjRx3EOny6AfEr0ChByM1I"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "golden fixture required",
+          "license qualification required",
+          "resource qualification required"
+        ],
+        "evidence_refs": [
+          "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+          "gdrive://1rx__tzqFaMl1fzBxtywbKWjRx3EOny6AfEr0ChByM1I"
+        ]
+      },
+      "fallback": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "record_id": "ai.image_to_3d--candidate-pixal3d",
+      "capability_id": "ai.image_to_3d",
+      "problem_class": "ai_generation",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "pixal3d",
+        "version": null
+      },
+      "adapter": {
+        "id": "not-admitted",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/phase1-overlap-gap-map-v0.json"
+      },
+      "runtime": {
+        "id": "ai-generation-local",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "image_text_or_multiview_evidence"
+      ],
+      "output_types": [
+        "mesh_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "polygonal_mesh",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+          "gdrive://1rx__tzqFaMl1fzBxtywbKWjRx3EOny6AfEr0ChByM1I"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "golden fixture required",
+          "license qualification required",
+          "resource qualification required"
+        ],
+        "evidence_refs": [
+          "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+          "gdrive://1rx__tzqFaMl1fzBxtywbKWjRx3EOny6AfEr0ChByM1I"
+        ]
+      },
+      "fallback": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "record_id": "ai.image_to_3d--candidate-spar3d",
+      "capability_id": "ai.image_to_3d",
+      "problem_class": "ai_generation",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "spar3d",
+        "version": null
+      },
+      "adapter": {
+        "id": "not-admitted",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/phase1-overlap-gap-map-v0.json"
+      },
+      "runtime": {
+        "id": "ai-generation-local",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "image_text_or_multiview_evidence"
+      ],
+      "output_types": [
+        "mesh_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "polygonal_mesh",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+          "gdrive://1rx__tzqFaMl1fzBxtywbKWjRx3EOny6AfEr0ChByM1I"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "golden fixture required",
+          "license qualification required",
+          "resource qualification required"
+        ],
+        "evidence_refs": [
+          "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+          "gdrive://1rx__tzqFaMl1fzBxtywbKWjRx3EOny6AfEr0ChByM1I"
+        ]
+      },
+      "fallback": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "record_id": "ai.image_to_3d--candidate-triposg",
+      "capability_id": "ai.image_to_3d",
+      "problem_class": "ai_generation",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "triposg",
+        "version": null
+      },
+      "adapter": {
+        "id": "not-admitted",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/phase1-overlap-gap-map-v0.json"
+      },
+      "runtime": {
+        "id": "ai-generation-local",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "image_text_or_multiview_evidence"
+      ],
+      "output_types": [
+        "mesh_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "polygonal_mesh",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+          "gdrive://1rx__tzqFaMl1fzBxtywbKWjRx3EOny6AfEr0ChByM1I"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "golden fixture required",
+          "license qualification required",
+          "resource qualification required"
+        ],
+        "evidence_refs": [
+          "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+          "gdrive://1rx__tzqFaMl1fzBxtywbKWjRx3EOny6AfEr0ChByM1I"
+        ]
+      },
+      "fallback": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "record_id": "ai.image_to_3d--sidecar_triposr",
+      "capability_id": "ai.image_to_3d",
+      "problem_class": "ai_generation",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json"
+      },
+      "engine": {
+        "id": "sidecar_triposr",
+        "version": "git-main-2026-06-04"
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "triposr-py311-torch213-cu132",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "image_text_or_multiview_evidence"
+      ],
+      "output_types": [
+        "mesh_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "polygonal_mesh",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_triposr",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_triposr"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "provider functional probe",
+          "artifact verification"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_triposr"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "ai.image_to_3d.print_cleanup--sidecar_pymeshlab",
+      "capability_id": "ai.image_to_3d.print_cleanup",
+      "problem_class": "ai_generation",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json"
+      },
+      "engine": {
+        "id": "sidecar_pymeshlab",
+        "version": "2025.7.post1"
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "geometry-core-py312",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "image_text_or_multiview_evidence"
+      ],
+      "output_types": [
+        "mesh_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "polygonal_mesh",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_pymeshlab",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_pymeshlab"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "provider functional probe",
+          "artifact verification"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_pymeshlab"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "automation.geometry--sidecar_trimesh",
+      "capability_id": "automation.geometry",
+      "problem_class": "automation",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json"
+      },
+      "engine": {
+        "id": "sidecar_trimesh",
+        "version": "5.1.1"
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "geometry-core-py312",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_request"
+      ],
+      "output_types": [
+        "artifact_or_receipt"
+      ],
+      "precision_model": "not_applicable",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_trimesh",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_trimesh"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "provider functional probe",
+          "artifact verification"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_trimesh"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "cad.export_step--blender-host",
+      "capability_id": "cad.export_step",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_build123d_gmsh",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_cad_request",
+        "cad_artifact_or_geometry_ir"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_build123d_gmsh",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_build123d_gmsh",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_cad_export_step_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "station-default:windows-primary",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "cad.solid.parametric--build123d",
+      "capability_id": "cad.solid.parametric",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "build123d",
+        "version": "0.13.0"
+      },
+      "adapter": {
+        "id": "vf-cad-stack",
+        "source_ref": "scripts/vf_cad_stack.py"
+      },
+      "runtime": {
+        "id": "cad-build123d-py312",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_cad_request",
+        "cad_artifact_or_geometry_ir"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_build123d",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_build123d"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "check-vf-fabrication-router",
+          "check-vf-3d-router"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_build123d"
+        ]
+      },
+      "fallback": [],
+      "status": "ACTIVE_AUTHORITY"
+    },
+    {
+      "record_id": "cad.solid.parametric--cad-cae-copilot",
+      "capability_id": "cad.solid.parametric",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "cad-cae-copilot",
+        "version": null
+      },
+      "adapter": {
+        "id": "vf-cad-stack",
+        "source_ref": "scripts/vf_cad_stack.py"
+      },
+      "runtime": {
+        "id": "local_mcp_backend",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_cad_request",
+        "cad_artifact_or_geometry_ir"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:cad-cae-copilot",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:cad-cae-copilot"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "check-vf-fabrication-router",
+          "check-vf-3d-router"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:cad-cae-copilot"
+        ]
+      },
+      "fallback": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "record_id": "cad.solid.parametric--cadquery",
+      "capability_id": "cad.solid.parametric",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "cadquery",
+        "version": "2.8.0"
+      },
+      "adapter": {
+        "id": "vf-cad-stack",
+        "source_ref": "scripts/vf_cad_stack.py"
+      },
+      "runtime": {
+        "id": "cad-cadquery-py312",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_cad_request",
+        "cad_artifact_or_geometry_ir"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_cadquery",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_cadquery"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "check-vf-fabrication-router",
+          "check-vf-3d-router"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_cadquery"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "cad.solid.parametric--forgent3d",
+      "capability_id": "cad.solid.parametric",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "forgent3d",
+        "version": null
+      },
+      "adapter": {
+        "id": "vf-cad-stack",
+        "source_ref": "scripts/vf_cad_stack.py"
+      },
+      "runtime": {
+        "id": "local_desktop_workbench",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_cad_request",
+        "cad_artifact_or_geometry_ir"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": false,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:forgent3d",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:forgent3d"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "check-vf-fabrication-router",
+          "check-vf-3d-router"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:forgent3d"
+        ]
+      },
+      "fallback": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "record_id": "cad.solid.parametric--jscad",
+      "capability_id": "cad.solid.parametric",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "jscad",
+        "version": null
+      },
+      "adapter": {
+        "id": "vf-cad-stack",
+        "source_ref": "scripts/vf_cad_stack.py"
+      },
+      "runtime": {
+        "id": "local_node",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_cad_request",
+        "cad_artifact_or_geometry_ir"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:jscad",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:jscad"
+        ]
+      },
+      "verification": {
+        "state": "READY_BOUNDED",
+        "validators": [
+          "check-vf-fabrication-router",
+          "check-vf-3d-router"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:jscad"
+        ]
+      },
+      "fallback": [],
+      "status": "READY_BOUNDED"
+    },
+    {
+      "record_id": "cad.solid.parametric--sidecar_freecad",
+      "capability_id": "cad.solid.parametric",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json"
+      },
+      "engine": {
+        "id": "sidecar_freecad",
+        "version": "1.1.3"
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "freecad-1.1",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_cad_request",
+        "cad_artifact_or_geometry_ir"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_freecad",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_freecad"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "provider functional probe",
+          "artifact verification"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_freecad"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "cad.validate_step--blender-host",
+      "capability_id": "cad.validate_step",
+      "problem_class": "exact_cad",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_cadquery",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_cad_request",
+        "cad_artifact_or_geometry_ir"
+      ],
+      "output_types": [
+        "cad_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "units_and_dimensions"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_cadquery",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_cadquery",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_cad_validate_step_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "station-default:windows-primary",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "cam.toolpath--blender-host",
+      "capability_id": "cam.toolpath",
+      "problem_class": "manufacturing",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_fabexcnc",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "bounded_cam_request"
+      ],
+      "output_types": [
+        "offline_grbl_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "exact_brep",
+      "constraints_support": [
+        "bounded_typed_request",
+        "fixed_promoted_fixture_bounds",
+        "offline_output_only",
+        "no_machine_control"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_fabexcnc",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_fabexcnc",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_cam_toolpath_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "fabexcnc",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "electronics.pcb_import--blender-host",
+      "capability_id": "electronics.pcb_import",
+      "problem_class": "electronics",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_pcb3d_importer",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "pcb_artifact"
+      ],
+      "output_types": [
+        "3d_geometry_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_pcb3d_importer",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_pcb3d_importer",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_pcb_import_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "pcb3d_importer",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "geometry.variant_batch--sidecar_trimesh",
+      "capability_id": "geometry.variant_batch",
+      "problem_class": "mesh_geometry",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json"
+      },
+      "engine": {
+        "id": "sidecar_trimesh",
+        "version": "5.1.1"
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "geometry-core-py312",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_request"
+      ],
+      "output_types": [
+        "artifact_or_receipt"
+      ],
+      "precision_model": "not_applicable",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_trimesh",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_trimesh"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "provider functional probe",
+          "artifact verification"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_trimesh"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "interchange.3mf--blender-host",
+      "capability_id": "interchange.3mf",
+      "problem_class": "interchange",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_threemf_io",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "geometry_artifact"
+      ],
+      "output_types": [
+        "3mf_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_threemf_io",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_threemf_io",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_interchange_3mf_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "station-default:windows-primary",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "mesh.analysis--blender-host",
+      "capability_id": "mesh.analysis",
+      "problem_class": "mesh_geometry",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_geometry_core",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "mesh_artifact"
+      ],
+      "output_types": [
+        "mesh_artifact_or_analysis",
+        "verification_receipt"
+      ],
+      "precision_model": "polygonal_mesh",
+      "constraints_support": [
+        "bounded_typed_request",
+        "topology_validation"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_geometry_core",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_geometry_core",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_mesh_analysis_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "station-default:windows-primary",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "mesh.boolean_hardsurface--blender-host",
+      "capability_id": "mesh.boolean_hardsurface",
+      "problem_class": "mesh_geometry",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_native_boolean",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "mesh_artifact"
+      ],
+      "output_types": [
+        "mesh_artifact_or_analysis",
+        "verification_receipt"
+      ],
+      "precision_model": "polygonal_mesh",
+      "constraints_support": [
+        "bounded_typed_request",
+        "topology_validation"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_native_boolean",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_native_boolean",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_mesh_boolean_hardsurface_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "station-default:windows-primary",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "mesh.remesh_repair--blender-host",
+      "capability_id": "mesh.remesh_repair",
+      "problem_class": "mesh_geometry",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_geometry_core",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "mesh_artifact"
+      ],
+      "output_types": [
+        "mesh_artifact_or_analysis",
+        "verification_receipt"
+      ],
+      "precision_model": "polygonal_mesh",
+      "constraints_support": [
+        "bounded_typed_request",
+        "topology_validation"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_geometry_core",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_geometry_core",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_mesh_remesh_repair_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "station-default:windows-primary",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "mesh.repair--blender-host",
+      "capability_id": "mesh.repair",
+      "problem_class": "mesh_geometry",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_geometry_core",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "mesh_artifact"
+      ],
+      "output_types": [
+        "mesh_artifact_or_analysis",
+        "verification_receipt"
+      ],
+      "precision_model": "polygonal_mesh",
+      "constraints_support": [
+        "bounded_typed_request",
+        "topology_validation"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_geometry_core",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_geometry_core",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_mesh_repair_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "station-default:windows-primary",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "mesh.retopology--blender-host",
+      "capability_id": "mesh.retopology",
+      "problem_class": "mesh_geometry",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_native_quadriflow",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "mesh_artifact"
+      ],
+      "output_types": [
+        "mesh_artifact_or_analysis",
+        "verification_receipt"
+      ],
+      "precision_model": "polygonal_mesh",
+      "constraints_support": [
+        "bounded_typed_request",
+        "topology_validation"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_native_quadriflow",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_native_quadriflow",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_mesh_retopology_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "station-default:windows-primary",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "photogrammetry.object_reconstruct--sidecar_meshroom",
+      "capability_id": "photogrammetry.object_reconstruct",
+      "problem_class": "reconstruction",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json"
+      },
+      "engine": {
+        "id": "sidecar_meshroom",
+        "version": "2025.1.0"
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "meshroom-2025.1.0-windows-cuda12",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "scan_or_point_cloud_artifact"
+      ],
+      "output_types": [
+        "point_cloud_or_mesh_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "point_cloud",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_meshroom",
+        "code_license": "MPL-2.0 (Meshroom); AliceVision bundled licenses per upstream",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_meshroom"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "provider functional probe",
+          "artifact verification"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_meshroom"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "photogrammetry.sfm--sidecar_colmap",
+      "capability_id": "photogrammetry.sfm",
+      "problem_class": "reconstruction",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json"
+      },
+      "engine": {
+        "id": "sidecar_colmap",
+        "version": "4.2.1"
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "colmap-4.2.1-cuda",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "scan_or_point_cloud_artifact"
+      ],
+      "output_types": [
+        "point_cloud_or_mesh_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "point_cloud",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_colmap",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_colmap"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "provider functional probe",
+          "artifact verification"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_colmap"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "print.format.3mf--blender-host",
+      "capability_id": "print.format.3mf",
+      "problem_class": "manufacturing",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_threemf_io",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "mesh_or_3mf_artifact"
+      ],
+      "output_types": [
+        "manufacturing_artifact_or_report",
+        "verification_receipt"
+      ],
+      "precision_model": "process_output",
+      "constraints_support": [
+        "bounded_typed_request",
+        "no_printer_network_action"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_threemf_io",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_threemf_io",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_print_format_3mf_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "station-default:windows-primary",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "print.slice--blender-host",
+      "capability_id": "print.slice",
+      "problem_class": "manufacturing",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_prusaslicer_cli",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "mesh_or_3mf_artifact",
+        "slice_profile_ref"
+      ],
+      "output_types": [
+        "gcode_or_slice_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "process_output",
+      "constraints_support": [
+        "bounded_typed_request",
+        "no_printer_network_action"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_prusaslicer_cli",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_prusaslicer_cli",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_print_slice_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "station-default:windows-primary",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "print.slice.blender_integrated--blender-host",
+      "capability_id": "print.slice.blender_integrated",
+      "problem_class": "manufacturing",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_unexpected_slicer",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "mesh_or_3mf_artifact",
+        "slice_profile_ref"
+      ],
+      "output_types": [
+        "gcode_or_slice_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "process_output",
+      "constraints_support": [
+        "bounded_typed_request",
+        "no_printer_network_action"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_unexpected_slicer",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_unexpected_slicer",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_blender_integrated_slice_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "unexpected_slicer",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "print.support_generation.support_fins--blender-host",
+      "capability_id": "print.support_generation.support_fins",
+      "problem_class": "manufacturing",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_support_fins",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "mesh_or_3mf_artifact"
+      ],
+      "output_types": [
+        "manufacturing_artifact_or_report",
+        "verification_receipt"
+      ],
+      "precision_model": "process_output",
+      "constraints_support": [
+        "bounded_typed_request",
+        "no_printer_network_action"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_support_fins",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_support_fins",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_support_fins_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "station-default:windows-primary",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "reconstruction.depth-evidence--candidate-moge",
+      "capability_id": "reconstruction.depth-evidence",
+      "problem_class": "reconstruction",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "moge",
+        "version": null
+      },
+      "adapter": {
+        "id": "not-admitted",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/phase1-overlap-gap-map-v0.json"
+      },
+      "runtime": {
+        "id": "reconstruction-local",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_request"
+      ],
+      "output_types": [
+        "artifact_or_receipt"
+      ],
+      "precision_model": "not_applicable",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+          "gdrive://1rx__tzqFaMl1fzBxtywbKWjRx3EOny6AfEr0ChByM1I"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "golden fixture required",
+          "license qualification required",
+          "resource qualification required"
+        ],
+        "evidence_refs": [
+          "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+          "gdrive://1rx__tzqFaMl1fzBxtywbKWjRx3EOny6AfEr0ChByM1I"
+        ]
+      },
+      "fallback": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "record_id": "reconstruction.geometry-evidence--candidate-vggt-commercial-checkpoint",
+      "capability_id": "reconstruction.geometry-evidence",
+      "problem_class": "reconstruction",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "vggt-commercial-checkpoint",
+        "version": null
+      },
+      "adapter": {
+        "id": "not-admitted",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/phase1-overlap-gap-map-v0.json"
+      },
+      "runtime": {
+        "id": "reconstruction-local",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_request"
+      ],
+      "output_types": [
+        "artifact_or_receipt"
+      ],
+      "precision_model": "not_applicable",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+          "gdrive://1rx__tzqFaMl1fzBxtywbKWjRx3EOny6AfEr0ChByM1I"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "golden fixture required",
+          "license qualification required",
+          "resource qualification required"
+        ],
+        "evidence_refs": [
+          "gdrive://1qel9QfKZSjF1eHFh5myL8wvCIJR5WlzY5stm9Uv2sgg",
+          "gdrive://1rx__tzqFaMl1fzBxtywbKWjRx3EOny6AfEr0ChByM1I"
+        ]
+      },
+      "fallback": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "record_id": "scan.clean--blender-host",
+      "capability_id": "scan.clean",
+      "problem_class": "reconstruction",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_pdal",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "scan_or_point_cloud_artifact"
+      ],
+      "output_types": [
+        "point_cloud_or_mesh_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "point_cloud",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_pdal",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_pdal",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_scan_clean_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "sidecar_cloudcompare",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "scan.pointcloud--blender-host",
+      "capability_id": "scan.pointcloud",
+      "problem_class": "reconstruction",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_pdal",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "scan_or_point_cloud_artifact"
+      ],
+      "output_types": [
+        "point_cloud_or_mesh_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "point_cloud",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_pdal",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_pdal",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_scan_pointcloud_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "sidecar_pdal",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "scan.pointcloud.e57_io--blender-host",
+      "capability_id": "scan.pointcloud.e57_io",
+      "problem_class": "reconstruction",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_scan_stack",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "scan_or_point_cloud_artifact"
+      ],
+      "output_types": [
+        "point_cloud_or_mesh_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "point_cloud",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_scan_stack",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_scan_stack",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_scan_e57_io_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "station-default:windows-primary",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "scan.pointcloud.las_laz_io--blender-host",
+      "capability_id": "scan.pointcloud.las_laz_io",
+      "problem_class": "reconstruction",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_scan_stack",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "scan_or_point_cloud_artifact"
+      ],
+      "output_types": [
+        "point_cloud_or_mesh_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "point_cloud",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_scan_stack",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_scan_stack",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_scan_las_laz_io_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "station-default:windows-primary",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "scan.reconstruct--sidecar_open3d",
+      "capability_id": "scan.reconstruct",
+      "problem_class": "reconstruction",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json"
+      },
+      "engine": {
+        "id": "sidecar_open3d",
+        "version": "0.20.0"
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "scan-reconstruction-py312",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "scan_or_point_cloud_artifact"
+      ],
+      "output_types": [
+        "point_cloud_or_mesh_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "point_cloud",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_open3d",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_open3d"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "provider functional probe",
+          "artifact verification"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_open3d"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "scan.register--blender-host",
+      "capability_id": "scan.register",
+      "problem_class": "reconstruction",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json#tools.blender.station_transport"
+      },
+      "engine": {
+        "id": "mac_scan_stack",
+        "version": null
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "mac-mini-office",
+        "host_classes": [
+          "mac-mini-office",
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "scan_or_point_cloud_artifact"
+      ],
+      "output_types": [
+        "point_cloud_or_mesh_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "point_cloud",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_scan_stack",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:mac_scan_stack",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_TYPED",
+        "validators": [
+          "station-route",
+          "station-health",
+          "execute-typed",
+          "artifact-verify"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\BlenderStack\\tests\\cross_station_scan_register_report.json",
+          "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "station-default:windows-primary",
+          "runtime": "windows-primary"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "sculpt.organic--native_sculpt",
+      "capability_id": "sculpt.organic",
+      "problem_class": "organic_sculpt",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json"
+      },
+      "engine": {
+        "id": "native_sculpt",
+        "version": "5.2.2"
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "blender-5.2.2-main",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "mesh_artifact",
+        "bounded_sculpt_request"
+      ],
+      "output_types": [
+        "mesh_artifact",
+        "verification_receipt"
+      ],
+      "precision_model": "polygonal_mesh",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:native_sculpt",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:native_sculpt"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "provider functional probe",
+          "artifact verification"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:native_sculpt"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "simulation.geometry--sidecar_gmsh",
+      "capability_id": "simulation.geometry",
+      "problem_class": "simulation",
+      "authority": {
+        "id": "blender-capability-host",
+        "source_ref": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json"
+      },
+      "engine": {
+        "id": "sidecar_gmsh",
+        "version": "4.15.2"
+      },
+      "adapter": {
+        "id": "blender-provider-router",
+        "source_ref": "D:\\Velvet\\Runtime\\CreativeCraft\\BlenderProviderRouter.py"
+      },
+      "runtime": {
+        "id": "cad-build123d-py312",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_request"
+      ],
+      "output_types": [
+        "artifact_or_receipt"
+      ],
+      "precision_model": "not_applicable",
+      "constraints_support": [
+        "bounded_typed_request"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_gmsh",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_gmsh"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "provider functional probe",
+          "artifact verification"
+        ],
+        "evidence_refs": [
+          "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_gmsh"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    }
+  ]
+}
