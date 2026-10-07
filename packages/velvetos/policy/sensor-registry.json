@@ -1485,7 +1485,7 @@
         "check-policy-architecture"
       ],
       "enforces": [],
-      "lifecycle": "EVENT_ACCEPTANCE",
+      "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 60,
       "failure_effect": {
