@@ -1,0 +1,56 @@
+{
+  "schema": "velvetos.office-v2.phase3b-production-promotion.v0",
+  "status": "READY_AWAITING_EXPLICIT_RUNTIME_AUTHORITY_TRANSFER",
+  "scope_id": "instagram-publisher-snapshot-read",
+  "production_domain": "instagram_read",
+  "capability": "instagram.publisher.snapshot.read",
+  "selected_composition": "composition-zitadel-opa-openbao",
+  "required_project_state_before_promotion": {
+    "phase": "PHASE_3B_PILOT_ACTIVE",
+    "checkpoint": "office-v2-phase3b-v0-cp016-pilot-active",
+    "gate": "GREEN"
+  },
+  "authority": {
+    "identity_owner": "ZITADEL production service principal svc:officev2-p3b-prod-publisher-snapshot",
+    "authorization_decision_owner": "OPA production policy",
+    "credential_broker_owner": "OpenBao production exact-scope role",
+    "provider_read_effect_owner": "Cloudflare Worker velvetos-instagram-publisher GET surface",
+    "publication_writer_owner": "Cloudflare Worker velvetos-instagram-publisher unchanged",
+    "production_writer_change": false,
+    "external_mutation_allowed": false
+  },
+  "credential_binding": {
+    "class": "PRODUCTION_READ",
+    "provider_credential": "SNAPSHOT_TOKEN",
+    "broker_path": "officev2-prod/data/instagram-publisher-snapshot",
+    "broker_role": "officev2-prod-publisher-snapshot",
+    "control_token_forbidden": true,
+    "meta_access_token_forbidden": true,
+    "raw_secret_in_repository_forbidden": true
+  },
+  "promotion_conditions": [
+    "PILOT project state is GREEN at cp016",
+    "authority-map names exact identity, decision, broker and read-effect owners",
+    "credential-trust binds only PRODUCTION_READ for the named scope",
+    "machine-writer and policy-architecture guards PASS",
+    "production-specific persistent service identity and exact OpenBao role/path are created without raw secret evidence",
+    "provider SNAPSHOT_TOKEN is rotated for production cutover and old PILOT credential is invalidated",
+    "production correlated read returns 200 while write remains 401 and unrelated broker scope remains 403",
+    "production rollback and disaster-recovery drill PASS",
+    "full canonical sensor suite PASS on exact promotion branch SHA",
+    "contract merged to main and exact merged main CI PASS",
+    "separate sanitized production authority-transfer receipt is written before Project State advances"
+  ],
+  "rollback": {
+    "provider": "delete or rotate SNAPSHOT_TOKEN and verify former production token returns 401",
+    "broker": "invalidate production AppRole and remove/reinitialize production exact-scope path",
+    "identity": "revoke/delete production ZITADEL service principal",
+    "project_state": "repoint to cp016 PILOT_ACTIVE",
+    "fallback": "incumbent instagram.read path only; no fallback-to-seek-ALLOW"
+  },
+  "production_authority_change": true,
+  "production_writer_change": false,
+  "production_promoted": false,
+  "external_mutation_allowed": false,
+  "implicit_promotion_allowed": false
+}
