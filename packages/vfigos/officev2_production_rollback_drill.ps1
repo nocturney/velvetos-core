@@ -74,6 +74,9 @@ if($rotation.status -ne 'PASS' -or $rotation.pilot_provider_credential_invalidat
 
 $pilotToken=$null;$prodToken=$null;$prodBundle=$null;$providerChanged=$false;$brokerChanged=$false
 try{
+  $prodBundle=Unprotect-Text $prodBlob
+  $prodBundleObj=$prodBundle|ConvertFrom-Json
+  foreach($f in @('role_id','secret_id','admin_role_id','admin_secret_id')){if(-not [string]$prodBundleObj.$f){throw "rollback production bundle missing $f"}}
   $pilotToken=Read-Token $pilotBlob '/var/officev2/artifacts/phase3b-security/pilot-token-read.sh'
   $prodToken=Read-Token $prodBlob '/var/officev2/artifacts/phase3b-security/production-token-read.sh'
   $pilotHash=Hash-Text $pilotToken;$prodHash=Hash-Text $prodToken
@@ -89,13 +92,13 @@ try{
   $pilotMeta=Http-Code $pilotToken 'GET' '/v1/meta-health';$pilotWrite=Http-Code $pilotToken 'POST' '/v1/run'
   if($prodAfter -ne 401 -or $pilotRead -ne 200 -or $pilotMeta -ne 200 -or $pilotWrite -ne 401){throw "provider rollback boundary failed prod=$prodAfter pilot=$pilotRead meta=$pilotMeta write=$pilotWrite"}
 
-  $bao=Invoke-Wsl '/var/officev2/artifacts/phase3b-security/production-openbao-bind.sh' @('Rotate') $pilotToken
+  $brokerInput=([ordered]@{admin_role_id=[string]$prodBundleObj.admin_role_id;admin_secret_id=[string]$prodBundleObj.admin_secret_id;role_id=[string]$prodBundleObj.role_id;secret_id=[string]$prodBundleObj.secret_id;provider_token=$pilotToken}|ConvertTo-Json -Compress)
+  $bao=Invoke-Wsl '/var/officev2/artifacts/phase3b-security/production-openbao-bind.sh' @('Rotate') $brokerInput
   if($bao.ExitCode -ne 0){throw 'production OpenBao rollback rotate denied'}
   $bp=$bao.Stdout.Trim()|ConvertFrom-Json
-  if($bp.status -ne 'PASS' -or [string]$bp.credential_reference_sha256 -ne $pilotHash -or $bp.root_revoked -ne $true){throw 'production OpenBao rollback proof mismatch'}
+  if($bp.status -ne 'PASS' -or [string]$bp.credential_reference_sha256 -ne $pilotHash -or $bp.admin_auth -ne 'APPROLE_NARROW' -or $bp.root_used -ne $false -or $bp.read_exact_scope_http -ne 200 -or $bp.read_unrelated_scope_http -ne 403){throw 'production OpenBao rollback proof mismatch'}
   $brokerChanged=$true
 
-  $prodBundle=Unprotect-Text $prodBlob
   $rr=Invoke-Wsl '/var/officev2/artifacts/phase3b-security/production-snapshot-read.sh' @($pilotHash) $prodBundle
   if($rr.ExitCode -ne 0){throw 'production path failed after rollback to PILOT credential'}
   $runtime=Get-Content $runtimeReceipt -Raw|ConvertFrom-Json
@@ -110,7 +113,7 @@ try{
     from_credential_reference_sha256=$prodHash
     restored_credential_reference_sha256=$pilotHash
     provider=[ordered]@{former_production_credential_http=$prodAfter;restored_pilot_runtime_http=$pilotRead;restored_pilot_meta_health_http=$pilotMeta;restored_pilot_write_run_http=$pilotWrite}
-    broker=[ordered]@{production_path_updated_to_restored_credential=$true;root_token_persisted=$false;generated_root_revoked=$true}
+    broker=[ordered]@{production_path_updated_to_restored_credential=$true;administration='APPROLE_NARROW';root_used=$false;root_token_persisted=$false;bootstrap_root_revoked=$true;admin_unrelated_scope_http=403}
     production_identity_preserved=$true
     production_correlated_read_after_rollback='PASS'
     raw_secret_recorded=$false
@@ -135,13 +138,13 @@ try{
     try{
       Put-Snapshot $prodToken
       for($i=0;$i -lt 30;$i++){if((Http-Code $prodToken 'GET' '/v1/runtime') -eq 200){break};Start-Sleep -Seconds 2}
-      if($brokerChanged){[void](Invoke-Wsl '/var/officev2/artifacts/phase3b-security/production-openbao-bind.sh' @('Rotate') $prodToken)}
+      if($brokerChanged){$restoreObj=$prodBundle|ConvertFrom-Json;$restoreObj|Add-Member -NotePropertyName provider_token -NotePropertyValue $prodToken -Force;$restoreInput=$restoreObj|ConvertTo-Json -Compress;[void](Invoke-Wsl '/var/officev2/artifacts/phase3b-security/production-openbao-bind.sh' @('Rotate') $restoreInput)}
     }catch{}
   }
   $fail=[ordered]@{schema='velvetos.office-v2.phase3b-production-rollback-drill.v0';captured_at=[DateTime]::UtcNow.ToString('o');status='FAIL_CLOSED';error=$cause;rollback_to_pre_drill_state_attempted=($providerChanged -and [bool]$prodToken);raw_secret_recorded=$false;production_authority_active=$false;production_writer_change=$false;external_mutation_performed=$false;production_promoted=$false}
   Write-Json $fail
   throw
 }finally{
-  $pilotToken=$null;$prodToken=$null;$prodBundle=$null
+  $pilotToken=$null;$prodToken=$null;$prodBundle=$null;$prodBundleObj=$null;$brokerInput=$null;$restoreObj=$null;$restoreInput=$null
   [GC]::Collect()
 }

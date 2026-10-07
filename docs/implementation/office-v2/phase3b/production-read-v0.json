@@ -30,7 +30,9 @@
     "opa_apply": "packages/vfigos/officev2_production_opa_apply.sh",
     "rollback_drill": "packages/vfigos/officev2_production_rollback_drill.ps1",
     "recovery_drill": "packages/vfigos/officev2_production_recovery_drill.sh",
-    "recovery_wrapper": "packages/vfigos/officev2_production_recovery.ps1"
+    "recovery_wrapper": "packages/vfigos/officev2_production_recovery.ps1",
+    "openbao_bootstrap": "packages/vfigos/officev2_production_openbao_bootstrap.sh",
+    "pilot_approle_capture": "packages/vfigos/officev2_pilot_approle_capture.sh"
   },
   "runtime_contract": {
     "dpapi_bundle": "D:/Velvet/OfficeV2Lab/state/phase3b-security/production/production-read-bundle.dpapi",
@@ -47,7 +49,17 @@
     "rotate_requires_new_provider_write_http": 401,
     "generated_openbao_root_must_be_revoked": true,
     "persistent_openbao_root_forbidden": true,
-    "raw_secret_evidence_forbidden": true
+    "raw_secret_evidence_forbidden": true,
+    "openbao_bootstrap_root_lifecycle": "fresh-broker-init-only; memory-only; revoked-before-exit",
+    "steady_state_broker_administration": "narrow AppRole officev2-prod-broker-admin",
+    "steady_state_generate_root_forbidden": true,
+    "unauthenticated_generate_root_endpoints_enabled": false,
+    "broker_admin_scope": [
+      "write/read exact production snapshot secret only",
+      "delete exact production snapshot metadata during cleanup",
+      "delete exact production read role/policy during cleanup",
+      "delete own narrow admin role/policy during cleanup"
+    ]
   },
   "active_consumer_after_promotion": "packages/vfigos/officev2_secure_publisher_snapshot.py",
   "legacy_rollback_consumer": "packages/vfigos/cloudflare_publisher_snapshot.py",

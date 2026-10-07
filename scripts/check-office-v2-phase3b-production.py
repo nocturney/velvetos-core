@@ -90,6 +90,9 @@ def main() -> None:
     require(runtime_contract.get("rotate_requires_old_provider_credential_http") == 401, "rotation old credential denial proof missing")
     require(runtime_contract.get("rotate_requires_new_provider_read_http") == 200 and runtime_contract.get("rotate_requires_new_provider_write_http") == 401, "rotation new credential read/write boundary mismatch")
     require(runtime_contract.get("generated_openbao_root_must_be_revoked") is True and runtime_contract.get("persistent_openbao_root_forbidden") is True, "generated OpenBao root boundary mismatch")
+    require(runtime_contract.get("openbao_bootstrap_root_lifecycle") == "fresh-broker-init-only; memory-only; revoked-before-exit", "OpenBao bootstrap root lifecycle mismatch")
+    require(runtime_contract.get("steady_state_broker_administration") == "narrow AppRole officev2-prod-broker-admin", "OpenBao steady-state admin path mismatch")
+    require(runtime_contract.get("steady_state_generate_root_forbidden") is True and runtime_contract.get("unauthenticated_generate_root_endpoints_enabled") is False, "OpenBao steady-state root/legacy endpoint boundary mismatch")
     require(runtime_contract.get("raw_secret_evidence_forbidden") is True, "production raw-secret evidence must remain forbidden")
 
     require(prod_authority.get("domain") == "instagram_read", "production authority extension domain mismatch")
@@ -108,6 +111,8 @@ def main() -> None:
         "pilot_token_read_for_cutover_only": "packages/vfigos/officev2_pilot_token_read.sh",
         "production_token_read_for_rollback_only": "packages/vfigos/officev2_production_token_read.sh",
         "openbao_binding": "packages/vfigos/officev2_production_openbao_bind.sh",
+        "openbao_bootstrap": "packages/vfigos/officev2_production_openbao_bootstrap.sh",
+        "pilot_approle_capture": "packages/vfigos/officev2_pilot_approle_capture.sh",
         "zitadel_bootstrap": "packages/vfigos/officev2_production_zitadel_bootstrap.sh",
         "zitadel_cleanup": "packages/vfigos/officev2_production_zitadel_delete.sh",
         "opa_apply": "packages/vfigos/officev2_production_opa_apply.sh",
@@ -123,6 +128,8 @@ def main() -> None:
     snapshot_read = (VFIGOS / "officev2_production_snapshot_read.sh").read_text(encoding="utf-8-sig")
     runtime_bind = (VFIGOS / "officev2_production_runtime_bind.ps1").read_text(encoding="utf-8-sig")
     openbao_bind = (VFIGOS / "officev2_production_openbao_bind.sh").read_text(encoding="utf-8-sig")
+    openbao_bootstrap = (VFIGOS / "officev2_production_openbao_bootstrap.sh").read_text(encoding="utf-8-sig")
+    pilot_approle_capture = (VFIGOS / "officev2_pilot_approle_capture.sh").read_text(encoding="utf-8-sig")
     zitadel_bootstrap = (VFIGOS / "officev2_production_zitadel_bootstrap.sh").read_text(encoding="utf-8-sig")
     opa_apply = (VFIGOS / "officev2_production_opa_apply.sh").read_text(encoding="utf-8-sig")
     rollback_drill = (VFIGOS / "officev2_production_rollback_drill.ps1").read_text(encoding="utf-8-sig")
@@ -167,20 +174,48 @@ def main() -> None:
         "Put-Snapshot $oldToken",
         "production_authority_active=$false",
         "Protect-Text",
+        "Refresh-Pilot-AppRole",
+        "Recapture-ShadowRuntimeSecrets",
+        "APPROLE_NARROW",
+        "production-openbao-bootstrap.sh",
     ):
         require(marker in runtime_bind, "production runtime binding missing fail-closed marker: " + marker)
 
     for marker in (
-        "operator generate-root",
-        "officev2-prod/data/instagram-publisher-snapshot",
+        "APPROLE_NARROW",
+        "admin_role_id",
+        "admin_secret_id",
+        "secret/data/officev2-prod/instagram-publisher-snapshot",
         "officev2-prod-publisher-snapshot",
+        "officev2-prod-broker-admin",
+        "read_exact_scope_http",
+        "admin_unrelated_scope_http",
+        "root_used",
+    ):
+        require(marker in openbao_bind, "production OpenBao steady-state binder missing marker: " + marker)
+    for forbidden in ("operator generate-root", "generate-root-token", "disable_unauthed_generate_root_endpoints", "secret/data/officev2-pilot/instagram-publisher-snapshot"):
+        require(forbidden not in openbao_bind, "production OpenBao steady-state binder contains forbidden root/PILOT path: " + forbidden)
+
+    for marker in (
+        "recreate_openbao",
+        "v1/sys/init",
+        "openbao-unseal.key",
+        "officev2-shadow-health",
+        "officev2-pilot-publisher-snapshot",
+        "officev2-prod-publisher-snapshot",
+        "officev2-prod-broker-admin",
         "token_no_default_policy",
         "auth/token/revoke-self",
-        "auth/token/lookup-self",
         "root_after",
+        "generated_root_revoked",
+        "root_token_persisted",
+        "PROD_BOOTSTRAP_ROLLBACK=PASS_PILOT_ONLY_ROOT_REVOKED",
     ):
-        require(marker in openbao_bind, "production OpenBao binder missing marker: " + marker)
-    require("secret/data/officev2-pilot/instagram-publisher-snapshot" not in openbao_bind, "production OpenBao binder may not write/read PILOT secret path")
+        require(marker in openbao_bootstrap, "production OpenBao bootstrap missing marker: " + marker)
+    for forbidden in ("operator generate-root", "generate-root-token", "disable_unauthed_generate_root_endpoints"):
+        require(forbidden not in openbao_bootstrap, "production OpenBao bootstrap must not use post-init/unauth generate-root: " + forbidden)
+    for marker in ("pilot-meta.json", "openbao-pilot-secret-id", "credential_reference_sha256", "Cleanup"):
+        require(marker in pilot_approle_capture, "PILOT AppRole capture helper missing marker: " + marker)
 
     for marker in ("SUCCESS=false", "client_credentials", "wrong-", "SUCCESS=true"):
         require(marker in zitadel_bootstrap, "production ZITADEL bootstrap missing marker: " + marker)
@@ -191,7 +226,7 @@ def main() -> None:
         require(marker in recovery, "production recovery drill missing marker: " + marker)
     for marker in ("production-recovery.json", "ROTATED_PRODUCTION_CREDENTIAL_READY_FOR_PROMOTION", "outage_fail_closed", "unseal_without_persistent_root"):
         require(marker in recovery_wrapper, "production recovery wrapper missing marker: " + marker)
-    for marker in ("production-rollback-drill.json", "former_production_credential_http", "restored_pilot_runtime_http", "Put-Snapshot $prodToken", "ROLLBACK_DRILL_COMPLETE_REQUIRES_FRESH_ROTATE"):
+    for marker in ("production-rollback-drill.json", "former_production_credential_http", "restored_pilot_runtime_http", "Put-Snapshot $prodToken", "ROLLBACK_DRILL_COMPLETE_REQUIRES_FRESH_ROTATE", "APPROLE_NARROW", "root_used"):
         require(marker in rollback_drill, "production rollback drill missing marker: " + marker)
     for marker in ("Resolve-Phase3B-ProductionSnapshot.ps1", "--mode", "Production", "vf.instagram.schedule-snapshot.v1"):
         require(marker in adapter, "secure production snapshot adapter missing marker: " + marker)
