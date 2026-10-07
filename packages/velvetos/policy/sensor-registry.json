@@ -1468,15 +1468,21 @@
       "id": "check-office-v2-phase3b-production",
       "path": "scripts/check-office-v2-phase3b-production.py",
       "owns": [
-        "docs/implementation/office-v2/phase3b/production-promotion-v0.json",
         "docs/implementation/office-v2/phase0/authority-map-v0.1.json",
         "docs/implementation/office-v2/phase0/credential-trust-classes-v0.json",
+        "docs/implementation/office-v2/phase3b/production-*",
+        "packages/vfigos/officev2_production_*",
+        "packages/vfigos/officev2_pilot_token_read.sh",
+        "packages/vfigos/officev2_secure_publisher_snapshot.py",
         "scripts/check-office-v2-phase3b-production.py"
       ],
       "triggered_by": [
-        "docs/implementation/office-v2/phase3b/production-promotion-v0.json",
         "docs/implementation/office-v2/phase0/authority-map-v0.1.json",
         "docs/implementation/office-v2/phase0/credential-trust-classes-v0.json",
+        "docs/implementation/office-v2/phase3b/production-*",
+        "packages/vfigos/officev2_production_*",
+        "packages/vfigos/officev2_pilot_token_read.sh",
+        "packages/vfigos/officev2_secure_publisher_snapshot.py",
         "scripts/check-office-v2-phase3b-production.py"
       ],
       "depends_on": [
