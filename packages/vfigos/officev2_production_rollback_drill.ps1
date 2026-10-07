@@ -76,6 +76,9 @@ $pilotToken=$null;$prodToken=$null;$prodBundle=$null;$providerChanged=$false;$br
 try{
   $pilotToken=Read-Token $pilotBlob '/var/officev2/artifacts/phase3b-security/pilot-token-read.sh'
   $prodToken=Read-Token $prodBlob '/var/officev2/artifacts/phase3b-security/production-token-read.sh'
+  $prodBundle=Unprotect-Text $prodBlob
+  $prodBundleObj=$prodBundle|ConvertFrom-Json
+  foreach($f in @('rotator_role_id','rotator_secret_id')){if(-not [string]$prodBundleObj.$f){throw "rollback production bundle missing $f"}}
   $pilotHash=Hash-Text $pilotToken;$prodHash=Hash-Text $prodToken
   if($pilotHash -ne [string]$rotation.old_credential_reference_sha256){throw 'rollback PILOT credential lineage mismatch'}
   if($prodHash -ne [string]$rotation.new_credential_reference_sha256 -or $prodHash -ne [string]$binding.active_credential_reference_sha256){throw 'rollback production credential lineage mismatch'}
@@ -89,13 +92,13 @@ try{
   $pilotMeta=Http-Code $pilotToken 'GET' '/v1/meta-health';$pilotWrite=Http-Code $pilotToken 'POST' '/v1/run'
   if($prodAfter -ne 401 -or $pilotRead -ne 200 -or $pilotMeta -ne 200 -or $pilotWrite -ne 401){throw "provider rollback boundary failed prod=$prodAfter pilot=$pilotRead meta=$pilotMeta write=$pilotWrite"}
 
-  $bao=Invoke-Wsl '/var/officev2/artifacts/phase3b-security/production-openbao-bind.sh' @('Rotate') $pilotToken
+  $rollbackBaoInput=[ordered]@{provider_token=$pilotToken;rotator_role_id=[string]$prodBundleObj.rotator_role_id;rotator_secret_id=[string]$prodBundleObj.rotator_secret_id}|ConvertTo-Json -Compress
+  $bao=Invoke-Wsl '/var/officev2/artifacts/phase3b-security/production-openbao-bind.sh' @('Rotate') $rollbackBaoInput
   if($bao.ExitCode -ne 0){throw 'production OpenBao rollback rotate denied'}
   $bp=$bao.Stdout.Trim()|ConvertFrom-Json
   if($bp.status -ne 'PASS' -or [string]$bp.credential_reference_sha256 -ne $pilotHash -or $bp.root_revoked -ne $true){throw 'production OpenBao rollback proof mismatch'}
   $brokerChanged=$true
 
-  $prodBundle=Unprotect-Text $prodBlob
   $rr=Invoke-Wsl '/var/officev2/artifacts/phase3b-security/production-snapshot-read.sh' @($pilotHash) $prodBundle
   if($rr.ExitCode -ne 0){throw 'production path failed after rollback to PILOT credential'}
   $runtime=Get-Content $runtimeReceipt -Raw|ConvertFrom-Json
