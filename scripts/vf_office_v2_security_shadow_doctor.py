@@ -124,10 +124,14 @@ def validate_contract() -> dict[str, Any]:
         require(row.get("authority_role") == "PRODUCTION_INCUMBENT", f"incumbent authority drift: {role}")
         require(row.get("decision_verdict") == "KEEP_INCUMBENT", f"incumbent verdict drift: {role}")
 
-    require(promotion.get("status") == "PRE_SHADOW_READY_AWAITING_EXPLICIT_PROMOTION", "promotion status drift")
-    require(promotion.get("shadow_promoted") is False, "promotion unexpectedly grants SHADOW")
-    require(shadow.get("status") == "PRE_SHADOW_READINESS_COMPLETE_NO_PROMOTION", "shadow readiness status drift")
-    require(shadow.get("shadow_promoted") is False, "shadow readiness unexpectedly promoted")
+    require(promotion.get("status") == "SHADOW_ACTIVE_OBSERVER_ONLY_PILOT_BLOCKED", "promotion status drift")
+    require(promotion.get("current_authority") == "INCUMBENTS_CANONICAL", "production incumbents must remain canonical")
+    require(promotion.get("shadow_promoted") is True, "explicit SHADOW promotion missing")
+    require(promotion.get("pilot_promoted") is False and promotion.get("production_promoted") is False, "SHADOW must not imply PILOT/production")
+    for field in ("production_authority_change", "production_writer_change", "production_credentials_bound"):
+        require(promotion.get(field) is False, f"promotion unsafe field: {field}")
+    require(shadow.get("status") == "PRE_SHADOW_READINESS_COMPLETE_NO_PROMOTION", "historical shadow readiness status drift")
+    require(shadow.get("shadow_promoted") is False, "historical readiness receipt must remain pre-promotion")
     exact = shadow.get("exact_regression") or {}
     require(exact.get("status") == "PASS" and exact.get("suite") == "116/116", "exact regression status mismatch")
     require(exact.get("validated_after_rebase") is True and exact.get("repository_files_unchanged") is True, "exact regression proof incomplete")

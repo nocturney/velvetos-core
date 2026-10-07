@@ -28,6 +28,7 @@ REQUIRED = [
     P3B / "promotion-gates-v0.json",
     P3B / "shadow-readiness-v0.json",
     P3B / "runtime-readiness-v0.json",
+    P3B / "shadow-active-v0.json",
     WIRING_SCRIPT,
     SHADOW_DOCTOR,
     P3B / "scorecards" / "credential-candidate-openbao.json",
@@ -296,6 +297,18 @@ def main() -> None:
     for field in ("external_effects_allowed", "production_credentials_bound", "production_authority_change", "shadow_promoted"):
         if lab_runtime.get(field) is not False:
             fail("Phase 3B LAB runtime readiness unsafe field: " + field)
+    lab_shadow = lab_status.get("shadow_runtime") or {}
+    if lab_shadow.get("status") != "SHADOW_ACTIVE_OBSERVER_ONLY" or lab_shadow.get("active_ref") != "docs/implementation/office-v2/phase3b/shadow-active-v0.json":
+        fail("Phase 3B LAB status missing active SHADOW runtime")
+    if lab_shadow.get("selected_composition") != "composition-zitadel-opa-openbao" or lab_shadow.get("project_state") != "PHASE_3B_SHADOW_ACTIVE" or lab_shadow.get("health") != "READY":
+        fail("Phase 3B LAB SHADOW composition/project-state/health mismatch")
+    if lab_shadow.get("fail_closed_outage_drill") != "PASS" or lab_shadow.get("restart_restore") != "PASS":
+        fail("Phase 3B LAB SHADOW fail-closed/restart evidence missing")
+    if lab_shadow.get("host_port_bindings_empty") is not True or lab_shadow.get("lease_managed") is not True or lab_shadow.get("production_path") != "INCUMBENTS_CANONICAL":
+        fail("Phase 3B LAB SHADOW isolation/lifecycle mismatch")
+    for field in ("production_credentials_used", "external_effects_allowed", "production_authority_change", "pilot_promoted"):
+        if lab_shadow.get(field) is not False:
+            fail("Phase 3B LAB SHADOW unsafe field: " + field)
 
     zit = by_id.get("candidate-zitadel") or {}
     if zit.get("lifecycle_state") != "LAB" or zit.get("decision_verdict") != "LAB_VALIDATED":
@@ -500,21 +513,23 @@ def main() -> None:
         fail("Phase 3B integration wiring must not embed runtime endpoints")
 
     promotion = load(P3B / "promotion-gates-v0.json")
-    if promotion.get("status") != "PRE_SHADOW_READY_AWAITING_EXPLICIT_PROMOTION" or promotion.get("current_authority") != "NONE":
-        fail("Phase 3B promotion gate status/authority mismatch")
+    if promotion.get("status") != "SHADOW_ACTIVE_OBSERVER_ONLY_PILOT_BLOCKED" or promotion.get("current_authority") != "INCUMBENTS_CANONICAL":
+        fail("Phase 3B promotion gate active SHADOW status/authority mismatch")
     if promotion.get("shadow_readiness_ref") != "docs/implementation/office-v2/phase3b/shadow-readiness-v0.json":
         fail("Phase 3B shadow readiness ref missing")
-    if promotion.get("current_project_state_must_remain") != "PHASE_3A_CLOSED_GREEN__PHASE_3B_READY":
-        fail("Phase 3B promotion gate must preserve current project state")
-    for field in ("production_authority_change", "production_writer_change", "production_credentials_bound", "shadow_promoted", "pilot_promoted", "production_promoted"):
+    if promotion.get("current_project_state_must_remain") != "PHASE_3B_SHADOW_ACTIVE":
+        fail("Phase 3B promotion gate project-state mismatch")
+    for field in ("production_authority_change", "production_writer_change", "production_credentials_bound", "pilot_promoted", "production_promoted"):
         if promotion.get(field) is not False:
-            fail("Phase 3B promotion field must remain false: " + field)
+            fail("Phase 3B promotion unsafe field: " + field)
+    if promotion.get("shadow_promoted") is not True:
+        fail("Phase 3B SHADOW promotion must be explicit and recorded")
     integration_gate = promotion.get("integration_gate") or {}
     if integration_gate.get("status") != "PASS_NO_RUNTIME_PROMOTION":
-        fail("Phase 3B integration gate must be PASS without runtime promotion")
+        fail("Phase 3B integration gate must remain a historical non-promotion gate")
     shadow_gate = promotion.get("shadow_gate") or {}
-    if shadow_gate.get("status") != "READY_FOR_EXPLICIT_SHADOW_PROMOTION_NOT_PROMOTED":
-        fail("Phase 3B SHADOW gate must be ready but remain explicitly unpromoted")
+    if shadow_gate.get("status") != "PASS_SHADOW_ACTIVE_OBSERVER_ONLY":
+        fail("Phase 3B SHADOW gate must record observer-only active state")
     persistence = shadow_gate.get("persistence_readiness") or {}
     if persistence.get("status") != "PASS" or persistence.get("evidence_ref") != "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/persistence-readiness.json" or len(persistence.get("evidence_sha256") or "") != 64:
         fail("Phase 3B promotion gate persistence evidence mismatch")
@@ -524,11 +539,21 @@ def main() -> None:
     if gate_regression.get("status") != "PASS" or gate_regression.get("suite") != "116/116" or gate_regression.get("repository_files_unchanged") is not True:
         fail("Phase 3B promotion gate exact regression mismatch")
     if gate_regression.get("production_authority_change") is not False or gate_regression.get("shadow_promoted") is not False:
-        fail("Phase 3B promotion gate regression changed authority")
-    if (shadow_gate.get("remaining_preconditions") or []) != ["separate explicit project-state promotion receipt"]:
-        fail("Phase 3B SHADOW gate remaining preconditions drift")
-    if "separate explicit project-state promotion receipt" not in (shadow_gate.get("remaining_preconditions") or []):
-        fail("Phase 3B SHADOW gate lost explicit project-state promotion requirement")
+        fail("Phase 3B historical pre-promotion regression receipt drift")
+    if (shadow_gate.get("remaining_preconditions") or []) != []:
+        fail("Phase 3B SHADOW gate should have no remaining SHADOW preconditions after explicit promotion")
+    runtime_evidence = shadow_gate.get("runtime_evidence") or {}
+    if runtime_evidence.get("status") != "PASS" or runtime_evidence.get("shadow_active_ref") != "docs/implementation/office-v2/phase3b/shadow-active-v0.json":
+        fail("Phase 3B SHADOW runtime evidence missing")
+    if runtime_evidence.get("project_state_checkpoint") != "office-v2-phase3b-v0-cp014-shadow-active" or len(runtime_evidence.get("project_state_content_hash") or "") != 64:
+        fail("Phase 3B SHADOW project-state evidence mismatch")
+    if runtime_evidence.get("outage_fail_closed") != "PASS_3_OF_3" or runtime_evidence.get("restart_restore") != "PASS" or runtime_evidence.get("temporary_task_cleanup") != "PASS":
+        fail("Phase 3B SHADOW operational evidence incomplete")
+    if runtime_evidence.get("production_path") != "INCUMBENTS_CANONICAL" or runtime_evidence.get("external_effects_allowed") is not False:
+        fail("Phase 3B SHADOW runtime authority boundary drift")
+    pilot_gate = promotion.get("pilot_gate") or {}
+    if pilot_gate.get("status") != "BLOCKED_PENDING_BOUNDED_SCOPE_AND_SEPARATE_PROMOTION" or pilot_gate.get("production_class_must_be_explicitly_rebound") is not True:
+        fail("Phase 3B PILOT gate must remain blocked")
     if (promotion.get("production_gate") or {}).get("implicit_promotion_allowed") is not False:
         fail("Phase 3B implicit production promotion must remain forbidden")
 
@@ -573,7 +598,56 @@ def main() -> None:
         fail("Phase 3B shadow exact regression crossed activation/authority boundary")
     remaining = readiness.get("remaining_preconditions_before_shadow_can_be_considered") or []
     if remaining != ["separate explicit project-state SHADOW promotion receipt"]:
-        fail("Phase 3B shadow readiness remaining preconditions drift")
+        fail("Phase 3B historical shadow readiness remaining preconditions drift")
+
+    active = load(P3B / "shadow-active-v0.json")
+    if active.get("status") != "SHADOW_ACTIVE_OBSERVER_ONLY" or active.get("selected_composition") != "composition-zitadel-opa-openbao" or active.get("mode") != "SHADOW_OBSERVER_ONLY":
+        fail("Phase 3B active SHADOW receipt status/composition/mode mismatch")
+    if active.get("promotion_baseline_sha") != "5799dd5553b10b8dac4e5119e9b71a0fb343bac7":
+        fail("Phase 3B active SHADOW promotion baseline mismatch")
+    project_state = active.get("project_state") or {}
+    if project_state.get("phase") != "PHASE_3B_SHADOW_ACTIVE" or project_state.get("checkpoint_id") != "office-v2-phase3b-v0-cp014-shadow-active":
+        fail("Phase 3B active SHADOW project state mismatch")
+    for field in ("checkpoint_content_hash", "checkpoint_file_sha256", "promotion_receipt_sha256"):
+        if len(project_state.get(field) or "") != 64:
+            fail("Phase 3B active SHADOW project-state hash missing: " + field)
+    runtime = active.get("runtime") or {}
+    if runtime.get("target_active") is not True or runtime.get("target_enabled") is not False or runtime.get("lease_managed") is not True or runtime.get("permanent_windows_task") != "OfficeV2 LAB Lease":
+        fail("Phase 3B active SHADOW lifecycle ownership mismatch")
+    if runtime.get("new_permanent_windows_tasks") != 0 or runtime.get("candidate_host_port_bindings_empty") is not True or runtime.get("production_endpoint_bindings") is not False:
+        fail("Phase 3B active SHADOW runtime isolation mismatch")
+    health = active.get("health") or {}
+    for field in ("identity_ready", "identity_issue_and_readback", "authorization_health", "authorization_allow_control", "authorization_deny_control", "credential_broker_health", "credential_exact_scope_read", "credential_unrelated_scope_denied", "credential_value_hash_match"):
+        if health.get(field) is not True:
+            fail("Phase 3B active SHADOW health proof missing: " + field)
+    if health.get("status") != "READY" or health.get("automatic_fallback_to_seek_allow") is not False or health.get("shadow_result") != "SHADOW_OBSERVE_ONLY":
+        fail("Phase 3B active SHADOW health semantics mismatch")
+    outage = active.get("fail_closed_outage_drill") or {}
+    if outage.get("status") != "PASS" or outage.get("cases") != 3 or outage.get("final_status") != "READY" or len(outage.get("evidence_sha256") or "") != 64:
+        fail("Phase 3B active SHADOW outage drill evidence mismatch")
+    restart = active.get("restart_restore") or {}
+    if restart.get("status") != "PASS" or restart.get("wsl_terminate") is not True or restart.get("lab_lease_restart") is not True or restart.get("dpapi_bundle_unchanged") is not True or restart.get("marker_unchanged") is not True or restart.get("health_after_restore") != "READY" or len(restart.get("evidence_sha256") or "") != 64:
+        fail("Phase 3B active SHADOW restart/restore evidence mismatch")
+    key_material = active.get("key_material") or {}
+    if key_material.get("status") != "PASS" or key_material.get("credential_class") != "LAB_ONLY_SECRET" or key_material.get("protection") != "Windows DPAPI CurrentUser":
+        fail("Phase 3B active SHADOW key material contract mismatch")
+    for field in ("acl_protected", "runtime_plaintext_only"):
+        if key_material.get(field) is not True:
+            fail("Phase 3B active SHADOW key-material safety missing: " + field)
+    for field in ("openbao_root_token_persisted", "raw_secret_recorded_in_evidence", "production_credentials_used"):
+        if key_material.get(field) is not False:
+            fail("Phase 3B active SHADOW key-material unsafe field: " + field)
+    cleanup = active.get("temporary_task_cleanup") or {}
+    if cleanup.get("status") != "PASS" or cleanup.get("removed_count") != 14 or cleanup.get("remaining_officev2_tasks") != ["OfficeV2 LAB Lease"] or cleanup.get("lab_lease_running") is not True:
+        fail("Phase 3B active SHADOW temporary-task cleanup mismatch")
+    authority = active.get("authority") or {}
+    if authority.get("candidate_authority") != "NONE" or authority.get("production_path") != "INCUMBENTS_CANONICAL":
+        fail("Phase 3B active SHADOW authority owner mismatch")
+    for field in ("production_authority_change", "production_writer_change", "production_credentials_bound", "production_secret_material_used", "external_effects_allowed", "canonical_business_truth_change"):
+        if authority.get(field) is not False:
+            fail("Phase 3B active SHADOW authority boundary drift: " + field)
+    if (active.get("pilot_gate") or {}).get("status") != "BLOCKED":
+        fail("Phase 3B active SHADOW must not imply PILOT")
 
     wiring_source = WIRING_SCRIPT.read_text(encoding="utf-8-sig")
     for forbidden_import in ("import requests", "from requests", "import httpx", "from httpx", "import socket", "import urllib"):
@@ -591,11 +665,11 @@ def main() -> None:
         fail("Phase 3B shadow readiness selftest failed: " + (shadow_selftest.stderr.strip() or shadow_selftest.stdout.strip()))
 
     readme = (P3B / "README.md").read_text(encoding="utf-8-sig")
-    for marker in ("CROSS-ROLE COMPOSITION PASS", "INTEGRATION WIRING PASS", "PERSISTENCE RESTORE PASS", "RUNTIME READINESS PASS NOT ACTIVATED", "EXACT REGRESSION PASS", "PRE-SHADOW READY", "NOT SHADOW", "NO PRODUCTION AUTHORITY CHANGE", "Authentication never implies authorization", "shared 20-step composition fixture", "composition-gate-verdict-v0.json", "LAB_SIMULATION_ONLY", "promotion-gates-v0.json", "shadow-readiness-v0.json"):
+    for marker in ("CROSS-ROLE COMPOSITION PASS", "SHADOW ACTIVE", "OBSERVER-ONLY", "FAIL-CLOSED", "RESTART-RESTORE PASS", "PILOT BLOCKED", "NO PRODUCTION AUTHORITY CHANGE", "Authentication never implies authorization", "shared 20-step composition fixture", "composition-gate-verdict-v0.json", "LAB_SIMULATION_ONLY", "promotion-gates-v0.json", "shadow-readiness-v0.json", "shadow-active-v0.json", "OfficeV2 LAB Lease"):
         if marker not in readme:
             fail("Phase 3B README missing safety/composition marker: " + marker)
 
-    print(f"OK office-v2-phase3b contract=FROZEN fixture=20-STEP lanes=3 candidates={len(items)} source-import=68/68 winner=composition-zitadel-opa-openbao authority=NONE")
+    print(f"OK office-v2-phase3b contract=FROZEN fixture=20-STEP lanes=3 candidates={len(items)} source-import=68/68 winner=composition-zitadel-opa-openbao shadow=ACTIVE candidate_authority=NONE production=INCUMBENTS_CANONICAL")
 
 if __name__ == "__main__":
     main()
