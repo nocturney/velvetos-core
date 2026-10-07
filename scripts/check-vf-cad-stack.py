@@ -31,6 +31,14 @@ assembly_ecad_path = (
     / "assembly-motion-ecad-v1.json"
 )
 assembly_ecad_adapter = ROOT / "scripts" / "ai3d_assembly_motion_ecad.py"
+drawings_sheetmetal_path = (
+    ROOT
+    / "docs"
+    / "implementation"
+    / "ai-3d-modeling-engineering-core"
+    / "drawings-vectors-sheetmetal-v1.json"
+)
+drawings_sheetmetal_adapter = ROOT / "scripts" / "ai3d_drawings_vectors_sheetmetal.py"
 doc_path = ROOT / "packages" / "vfprod" / "CAD-ENGINE-STACK.md"
 cli = ROOT / "scripts" / "vf_cad_stack.py"
 
@@ -42,6 +50,8 @@ assert reverse_path.is_file(), reverse_path
 assert reverse_adapter.is_file(), reverse_adapter
 assert assembly_ecad_path.is_file(), assembly_ecad_path
 assert assembly_ecad_adapter.is_file(), assembly_ecad_adapter
+assert drawings_sheetmetal_path.is_file(), drawings_sheetmetal_path
+assert drawings_sheetmetal_adapter.is_file(), drawings_sheetmetal_adapter
 assert doc_path.is_file(), doc_path
 assert cli.is_file(), cli
 
@@ -55,6 +65,10 @@ assert registry["mechanical_feature_packs"] == "packages/vfprod/MECHANICAL-FEATU
 assert (
     registry["assembly_motion_ecad"]
     == "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json"
+)
+assert (
+    registry["drawings_vectors_sheetmetal"]
+    == "docs/implementation/ai-3d-modeling-engineering-core/drawings-vectors-sheetmetal-v1.json"
 )
 
 patterns = json.loads(patterns_path.read_text(encoding="utf-8"))
@@ -128,6 +142,27 @@ assert assembly_ecad["safety"]["printer_actions_allowed"] is False
 assert assembly_ecad["safety"]["machine_control_allowed"] is False
 assert assembly_ecad["safety"]["invent_joint_axes_or_limits"] is False
 
+drawings_sheetmetal = json.loads(drawings_sheetmetal_path.read_text(encoding="utf-8"))
+assert drawings_sheetmetal["schema"] == "velvetos.ai3d.drawings-vectors-sheetmetal.v1"
+assert drawings_sheetmetal["authority"] == "packages/vfprod/FABRICATION-ROUTER.md"
+for capability_id in (
+    "drawing.techdraw.page",
+    "drawing.dxf.roundtrip",
+    "vector.text_glyph",
+    "sheetmetal.unfold",
+):
+    assert drawings_sheetmetal["capabilities"][capability_id]["status"].startswith("PROVEN")
+assert drawings_sheetmetal["capabilities"]["drawing.draftwright"]["status"] == "CANDIDATE_ISOLATED_EVAL"
+assert drawings_sheetmetal["runtime_truth"]["sheetmetal"]["version"] == "0.8.24"
+assert drawings_sheetmetal["runtime_truth"]["draftwright"]["version"] == "0.4.34"
+assert drawings_sheetmetal["runtime_truth"]["draftwright"]["license"] == "AGPL-3.0"
+assert drawings_sheetmetal["safety"]["printer_actions_allowed"] is False
+assert drawings_sheetmetal["safety"]["machine_control_allowed"] is False
+assert drawings_sheetmetal["safety"]["invent_k_factor"] is False
+assert drawings_sheetmetal["safety"]["accept_unparseable_dxf"] is False
+assert drawings_sheetmetal["safety"]["copy_or_bundle_font_files"] is False
+assert drawings_sheetmetal["safety"]["draftwright_in_canonical_runtime"] is False
+
 engines = registry["engines"]
 assert set(engines) == {"build123d", "cadquery", "jscad", "cad-cae-copilot", "forgent3d"}
 assert engines["build123d"]["role"] == "primary"
@@ -194,6 +229,14 @@ assert contract["status"] == "PASS"
 assert contract["max_repair_iterations"] == 2
 assert contract["exact_cad_patterns"] == "packages/vfprod/EXACT-CAD-PATTERNS.json"
 assert contract["mechanical_feature_packs"] == "packages/vfprod/MECHANICAL-FEATURE-PACKS.json"
+assert (
+    contract["assembly_motion_ecad"]
+    == "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json"
+)
+assert (
+    contract["drawings_vectors_sheetmetal"]
+    == "docs/implementation/ai-3d-modeling-engineering-core/drawings-vectors-sheetmetal-v1.json"
+)
 assert contract["coordinate_frame"] == "xy_center_z_min"
 
 sample = ROOT / "packages" / "vfharness" / "state" / "cad-engine-stack-20260927" / "geometry-ir-sample.json"

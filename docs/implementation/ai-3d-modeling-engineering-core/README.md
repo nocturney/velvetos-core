@@ -64,7 +64,7 @@ Files:
 
 The registry is deliberately non-authoritative staging. Existing proven routes are recorded first. Research candidates remain CANDIDATE until fixture, license and resource qualification pass.
 
-Current generated registry: 53 records; 41 PROVEN, 1 ACTIVE_AUTHORITY, 11 CANDIDATE. Exactly 20 Blender cross-station entries are PROVEN_TYPED. Fabrication-authority engine versions come from the runtimes that vf_cad_stack actually executes; Phase 4/5 CAD and mechanical capability records are admitted only after host acceptance evidence.
+Current generated registry: 73 records; 56 PROVEN, 1 ACTIVE_AUTHORITY, 16 CANDIDATE. Exactly 20 Blender cross-station entries are PROVEN_TYPED. Fabrication-authority engine versions come from the runtimes that vf_cad_stack actually executes; Phase 4-9 records are admitted only after their bounded validation evidence passes.
 
 ## Phase 3 - Engineering Contract and common artifact protocol
 
@@ -238,6 +238,32 @@ Phase 8 validation:
   py -3.11 scripts/validate_ai3d_phase8_assembly_ecad.py
   py -3.11 scripts/validate_ai3d_capability_registry.py
 
+## Phase 9 - Drawings, vectors and sheet metal
+
+Files:
+
+- drawings-vectors-sheetmetal-v1.json
+- scripts/ai3d_drawings_vectors_sheetmetal.py
+- scripts/validate_ai3d_phase9_drawings_vectors_sheetmetal.py
+- evidence/phase9-drawings-vectors-sheetmetal-acceptance-20261007.json
+
+Proven bounded behavior:
+
+- FreeCAD 1.1.3 TechDraw runs headless with a real DrawPage, DrawSVGTemplate and DrawViewPart. The formal drawing fixture emits a complete DXF and reopens it independently through ezdxf/build123d.
+- DXF acceptance is fail-closed: a projection fragment is not accepted as a DXF file, and an intentionally invalid DXF is rejected by the independent parser.
+- build123d text/glyph fixtures cover Latin and Hebrew text using an explicit Arial font name. DXF round-trip preserves the fixture bounds within 1e-6 mm; SVG is accepted within 0.001 mm. No font file is copied or bundled.
+- FreeCAD SheetMetal 0.8.24 is pinned at commit a1cf212d8b86b3849e5cc12070226d5d4bded2a3 in an isolated runtime. NetworkX 3.5 is injected from a separate isolated site-packages directory; the global FreeCAD installation is unchanged.
+- Sheet-metal unfold requires explicit thickness, bend radius, K-factor and K-factor standard. The fixture uses 1 mm thickness, 1 mm radius and K=0.38 ANSI, unfolds one 90-degree bend, emits a complete DXF with 8 LINE entities, and reopens at 60 x 48.16769893 mm planar bounds.
+- Draftwright 0.4.34 is installed only in an isolated evaluation venv. It remains CANDIDATE: the package is AGPL-3.0, Alpha, and resolves build123d 0.10.0 because it requires build123d <0.11, while the canonical runtime remains build123d 0.11.1.
+- The license classifier explicitly treats AGPL as review-required before generic GPL matching, preventing Draftwright from contaminating the commercial-clean lane.
+
+Capability Registry after Phase 9: 73 records, 56 PROVEN, 16 CANDIDATE, 1 ACTIVE_AUTHORITY, and still exactly 20 PROVEN_TYPED.
+
+Phase 9 validation:
+
+  py -3.11 scripts/validate_ai3d_phase9_drawings_vectors_sheetmetal.py
+  py -3.11 scripts/validate_ai3d_capability_registry.py
+
 ## Validation state
 
 Explicit AI3D validation stack: PASS.
@@ -247,8 +273,8 @@ Repository regression:
 - scripts/check-all.py: 116/116 PASS
 - exit code: 0
 - sensor side-effect check: repository files unchanged
-- full-suite log: evidence/check-all-phase8-20261007.log
+- full-suite log: evidence/check-all-phase9-20261007.log
 
 ## Next implementation phase
 
-Phase 9 is drawings, vectors and sheet metal: qualify ezdxf and any drawing/vector helpers already present, prove a headless FreeCAD TechDraw handoff, qualify a bend-aware SheetMetal unfold-to-DXF path before promoting the Phase 5 sheet-metal candidate, and build robust text/glyph/vector fixtures without adding a second drawing or fabrication authority.
+Phase 10 is simulation and optimization: qualify the already-present Gmsh and FreeCAD FEM/CalculiX path first, evaluate SfePy/DOLFINx only when they add a distinct bounded capability, and keep TPMS/lattice/implicit optimization in an explicit research lane. No optimization result may be accepted without explicit loads, materials, constraints and independent validation.

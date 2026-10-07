@@ -15,6 +15,7 @@ REGISTRY_PATH = BASE / "cad-capability-registry-v1.json"
 SPECIALISTS_PATH = BASE / "mesh-organic-specialists-v1.json"
 REVERSE_PATH = BASE / "reverse-engineering-scan-to-cad-v1.json"
 ASSEMBLY_ECAD_PATH = BASE / "assembly-motion-ecad-v1.json"
+DRAWINGS_SHEETMETAL_PATH = BASE / "drawings-vectors-sheetmetal-v1.json"
 
 
 def load(path: Path) -> dict:
@@ -59,6 +60,7 @@ def main() -> int:
     specialists = load(SPECIALISTS_PATH)
     reverse = load(REVERSE_PATH)
     assembly_ecad = load(ASSEMBLY_ECAD_PATH)
+    drawings_sheetmetal = load(DRAWINGS_SHEETMETAL_PATH)
     validate_schema(registry, schema)
 
     assert registry["schema"] == "velvetos.ai3d.cad-capability-registry.v1"
@@ -432,6 +434,102 @@ def main() -> int:
     assert robotics_candidate["verification"]["state"] == "CANDIDATE"
     assert robotics_candidate["runtime"]["id"] == "not-admitted"
     assert robotics_candidate["headless"] is False
+
+    assert drawings_sheetmetal["schema"] == "velvetos.ai3d.drawings-vectors-sheetmetal.v1"
+    assert drawings_sheetmetal["authority"] == "packages/vfprod/FABRICATION-ROUTER.md"
+    assert drawings_sheetmetal["safety"]["printer_actions_allowed"] is False
+    assert drawings_sheetmetal["safety"]["machine_control_allowed"] is False
+    assert drawings_sheetmetal["safety"]["invent_k_factor"] is False
+    assert drawings_sheetmetal["safety"]["accept_unparseable_dxf"] is False
+    assert drawings_sheetmetal["safety"]["copy_or_bundle_font_files"] is False
+    assert drawings_sheetmetal["safety"]["draftwright_in_canonical_runtime"] is False
+
+    phase9_proven = {
+        "drawing.techdraw.page--freecad-techdraw": "drawing.techdraw.page",
+        "drawing.dxf.roundtrip--freecad-techdraw-ezdxf": "drawing.dxf.roundtrip",
+        "vector.text_glyph--build123d-phase9": "vector.text_glyph",
+        "sheetmetal.unfold--freecad-sheetmetal-0.8.24": "sheetmetal.unfold",
+    }
+    for record_id, capability_id in phase9_proven.items():
+        row = next(item for item in records if item["record_id"] == record_id)
+        assert row["capability_id"] == capability_id
+        assert row["status"] == "PROVEN"
+        assert row["verification"]["state"] == "PROVEN_PROVIDER"
+        assert "validate_ai3d_phase9_drawings_vectors_sheetmetal" in row["verification"]["validators"]
+
+    techdraw = next(
+        row for row in records
+        if row["record_id"] == "drawing.techdraw.page--freecad-techdraw"
+    )
+    assert techdraw["problem_class"] == "drawing_vector"
+    assert techdraw["engine"]["version"] == "1.1.3"
+    assert techdraw["runtime"]["id"] == "freecad-1.1"
+    assert techdraw["headless"] is True
+    assert techdraw["license_lane"] == "commercial-clean"
+    assert "lgpl" in techdraw["license"]["code_license"].lower()
+    assert "template_explicit" in techdraw["constraints_support"]
+    assert "headless_page_fixture" in techdraw["constraints_support"]
+
+    dxf_roundtrip = next(
+        row for row in records
+        if row["record_id"] == "drawing.dxf.roundtrip--freecad-techdraw-ezdxf"
+    )
+    assert dxf_roundtrip["problem_class"] == "drawing_vector"
+    assert dxf_roundtrip["license_lane"] == "commercial-clean"
+    assert "dxf_artifact" in dxf_roundtrip["output_types"]
+    assert "roundtrip_report" in dxf_roundtrip["output_types"]
+    assert "full_dxf_file_required" in dxf_roundtrip["constraints_support"]
+    assert "reopen_required" in dxf_roundtrip["constraints_support"]
+
+    text_glyph = next(
+        row for row in records
+        if row["record_id"] == "vector.text_glyph--build123d-phase9"
+    )
+    assert text_glyph["problem_class"] == "drawing_vector"
+    assert text_glyph["engine"]["id"] == "build123d"
+    assert text_glyph["engine"]["version"] == runtime_distribution_version("build123d")
+    assert text_glyph["runtime"]["id"] == "vf-cad-stack:build123d-venv"
+    assert text_glyph["license_lane"] == "commercial-clean"
+    assert "dxf_artifact" in text_glyph["output_types"]
+    assert "svg_artifact" in text_glyph["output_types"]
+    assert "font_name_required" in text_glyph["constraints_support"]
+    assert "no_font_file_bundling" in text_glyph["constraints_support"]
+    assert "unicode_roundtrip_validation" in text_glyph["constraints_support"]
+
+    sheetmetal = next(
+        row for row in records
+        if row["record_id"] == "sheetmetal.unfold--freecad-sheetmetal-0.8.24"
+    )
+    assert sheetmetal["problem_class"] == "manufacturing"
+    assert sheetmetal["precision_model"] == "exact_brep"
+    assert sheetmetal["engine"]["version"] == "0.8.24"
+    assert sheetmetal["runtime"]["id"] == "phase9-freecad-sheetmetal-0.8.24"
+    assert sheetmetal["license_lane"] == "commercial-clean"
+    assert "lgpl" in sheetmetal["license"]["code_license"].lower()
+    for constraint in (
+        "explicit_thickness",
+        "explicit_bend_radius",
+        "explicit_k_factor",
+        "explicit_k_factor_standard",
+        "dxf_reopen_required",
+    ):
+        assert constraint in sheetmetal["constraints_support"]
+
+    draftwright = next(
+        row for row in records
+        if row["record_id"] == "drawing.draftwright--candidate-draftwright-0.4.34"
+    )
+    assert draftwright["status"] == "CANDIDATE"
+    assert draftwright["verification"]["state"] == "CANDIDATE"
+    assert draftwright["engine"]["version"] == "0.4.34"
+    assert draftwright["runtime"]["id"] == "phase9-draftwright-eval"
+    assert draftwright["problem_class"] == "drawing_vector"
+    assert draftwright["license_lane"] == "review-required"
+    assert "agpl" in draftwright["license"]["code_license"].lower()
+    assert "isolated_eval_only" in draftwright["constraints_support"]
+    assert "no_canonical_runtime_install" in draftwright["constraints_support"]
+    assert "license_review_required" in draftwright["constraints_support"]
+    assert "canonical_build123d_not_downgraded" in draftwright["constraints_support"]
 
     research_candidate_engines = {
         "hunyuan3d-2.1-shape",

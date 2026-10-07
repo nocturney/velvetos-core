@@ -62,3 +62,17 @@ Phase 8 remains beneath the same Fabrication Router and reuses the existing Free
 - URDF/Pinocchio remains an optional non-installed candidate until an articulated-mechanism task demonstrates a capability gap not already covered by build123d/FreeCAD joints and an isolated runtime passes dependency/license fixtures.
 
 The bounded contract is docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json; host acceptance is scripts/validate_ai3d_phase8_assembly_ecad.py.
+
+
+## Drawings, vectors and sheet metal
+
+Phase 9 remains beneath the Fabrication Router and reuses the existing build123d and FreeCAD runtimes.
+
+- FreeCAD 1.1.3 TechDraw is proven headless with a real `TechDraw::DrawPage`, `TechDraw::DrawViewPart`, explicit A4 template and full DXF output. Acceptance requires independent reopen by ezdxf/build123d; projection fragments are not accepted as DXF files.
+- `ezdxf 1.4.4` is the independent DXF parser/validator in the canonical build123d environment. A file that cannot be parsed as a complete DXF fails closed.
+- The text/glyph path uses build123d `Text` plus explicit font name and exports DXF + SVG. Latin and Hebrew fixtures are reopened and geometry-compared; font files are never copied or bundled as artifacts.
+- FreeCAD SheetMetal 0.8.24 is pinned in an isolated checkout with an isolated NetworkX 3.5 dependency. It is not copied into the global FreeCAD installation. Unfold requires explicit thickness, bend radius, K-factor and K-factor standard.
+- The proven SheetMetal fixture unfolds an L-shape with 1 mm thickness, 1 mm bend radius and K=0.38 ANSI, then writes a complete DXF and independently reopens it at the same 60 x 48.16769893 mm planar bounds.
+- Draftwright 0.4.34 remains an isolated evaluation candidate. It is AGPL-3.0, Alpha, and requires build123d <0.11; it must not downgrade or enter the canonical build123d 0.11.1 environment without a separate product/license and compatibility decision.
+
+The bounded contract is `docs/implementation/ai-3d-modeling-engineering-core/drawings-vectors-sheetmetal-v1.json`; acceptance is `scripts/validate_ai3d_phase9_drawings_vectors_sheetmetal.py`.

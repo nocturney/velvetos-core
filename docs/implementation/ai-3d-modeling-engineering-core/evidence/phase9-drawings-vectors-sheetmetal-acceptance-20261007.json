@@ -1,0 +1,337 @@
+{
+  "schema": "velvetos.ai3d.phase9-drawings-vectors-sheetmetal-acceptance.v1",
+  "status": "PASS",
+  "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+  "sheetmetal_checkout": {
+    "path": "D:\\Velvet\\Runtimes\\AI3D\\phase9-20261007\\FreeCAD_SheetMetal-0.8.24",
+    "commit": "a1cf212d8b86b3849e5cc12070226d5d4bded2a3",
+    "version": "0.8.24",
+    "license": "LGPL-2.1-or-later"
+  },
+  "suite": {
+    "schema": "velvetos.ai3d.phase9-fixture-suite.v1",
+    "status": "PASS",
+    "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+    "techdraw": {
+      "schema": "velvetos.ai3d.phase9-techdraw-fixture.v1",
+      "status": "PASS",
+      "freecad_version": "1.1.3",
+      "page_type": "TechDraw::DrawPage",
+      "view_type": "TechDraw::DrawViewPart",
+      "template": "C:\\Program Files\\FreeCAD 1.1\\data\\Mod\\TechDraw\\Templates\\ISO\\A4_Landscape_TD.svg",
+      "visible_edges": 5,
+      "scale": 2.0,
+      "svg_fragment_bytes": 342,
+      "printer_actions_allowed": false,
+      "dxf_page_probe": {
+        "dxf_version": "AC1015",
+        "entity_count": 5,
+        "entity_types": [
+          "CIRCLE",
+          "LINE"
+        ],
+        "ezdxf_extmin": [
+          108.5,
+          75.0,
+          0.0
+        ],
+        "ezdxf_extmax": [
+          188.5,
+          135.0,
+          0.0
+        ],
+        "build123d_shape_count": 5,
+        "build123d_bbox_size": [
+          80.0,
+          60.0,
+          0.0
+        ],
+        "build123d_bbox_min": [
+          108.5,
+          75.0,
+          0.0
+        ],
+        "build123d_bbox_max": [
+          188.5,
+          135.0,
+          0.0
+        ]
+      },
+      "dxf_view_probe": {
+        "dxf_version": "AC1015",
+        "entity_count": 5,
+        "entity_types": [
+          "CIRCLE",
+          "LINE"
+        ],
+        "ezdxf_extmin": [
+          108.5,
+          75.0,
+          0.0
+        ],
+        "ezdxf_extmax": [
+          188.5,
+          135.0,
+          0.0
+        ],
+        "build123d_shape_count": 5,
+        "build123d_bbox_size": [
+          80.0,
+          60.0,
+          0.0
+        ],
+        "build123d_bbox_min": [
+          108.5,
+          75.0,
+          0.0
+        ],
+        "build123d_bbox_max": [
+          188.5,
+          135.0,
+          0.0
+        ]
+      },
+      "artifacts": {
+        "techdraw-report.json": {
+          "path": "techdraw-report.json",
+          "bytes": 406,
+          "sha256": "20bb8ae7d96ad5dffe2244c3c16eec7a28372ed02930199ccc768caa28ad6a1b"
+        },
+        "techdraw-page.dxf": {
+          "path": "techdraw-page.dxf",
+          "bytes": 5883,
+          "sha256": "9b2de96f6eff705b90c55f7c0c5136036615d27e471f622bdc8470e21c298820"
+        },
+        "techdraw-view.dxf": {
+          "path": "techdraw-view.dxf",
+          "bytes": 5883,
+          "sha256": "9b2de96f6eff705b90c55f7c0c5136036615d27e471f622bdc8470e21c298820"
+        },
+        "techdraw-view.svgfrag": {
+          "path": "techdraw-view.svgfrag",
+          "bytes": 348,
+          "sha256": "67c858f6d599be95d9774b21accbc0716b9a827a1f817d67688ea820e8621536"
+        },
+        "techdraw-page.FCStd": {
+          "path": "techdraw-page.FCStd",
+          "bytes": 11845,
+          "sha256": "ad53f74b3a529275a6a88a96892f384646c51d819df6ebe1e1051a991e279406"
+        }
+      }
+    },
+    "sheetmetal": {
+      "schema": "velvetos.ai3d.phase9-sheetmetal-fixture.v1",
+      "status": "PASS",
+      "freecad_version": "1.1.3",
+      "sheetmetal_version": "0.8.24",
+      "networkx_version": "3.5",
+      "root_face": "Face3",
+      "root_normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "thickness_mm": 1.0,
+      "bend_radius_mm": 1.0,
+      "k_factor": 0.38,
+      "k_factor_standard": "ANSI",
+      "unfold_bbox_mm": [
+        60.0,
+        48.167698930976954,
+        1.0
+      ],
+      "unfold_volume_mm3": 2890.0619358586173,
+      "bend_count": 1,
+      "bend_angles_deg": [
+        90.0
+      ],
+      "bend_radii_mm": [
+        1.0
+      ],
+      "printer_actions_allowed": false,
+      "dxf_probe": {
+        "dxf_version": "AC1015",
+        "entity_count": 8,
+        "entity_types": [
+          "LINE"
+        ],
+        "ezdxf_extmin": [
+          118.5,
+          80.916150535,
+          0.0
+        ],
+        "ezdxf_extmax": [
+          178.5,
+          129.083849465,
+          0.0
+        ],
+        "build123d_shape_count": 8,
+        "build123d_bbox_size": [
+          60.0,
+          48.167698929999986,
+          0.0
+        ],
+        "build123d_bbox_min": [
+          118.5,
+          80.916150535,
+          0.0
+        ],
+        "build123d_bbox_max": [
+          178.5,
+          129.083849465,
+          0.0
+        ]
+      },
+      "artifacts": {
+        "sheetmetal-report.json": {
+          "path": "sheetmetal-report.json",
+          "bytes": 614,
+          "sha256": "cc62967740390b139c5d3f03706df6024df4aec32a256036dbd6756a6b82bcbd"
+        },
+        "sheetmetal-folded.step": {
+          "path": "sheetmetal-folded.step",
+          "bytes": 14466,
+          "sha256": "cdb4a0aacd8719d849a6ad0b505e840d2eeb1c0ee7b44445a5d6fe961bd4b09d"
+        },
+        "sheetmetal-unfolded.step": {
+          "path": "sheetmetal-unfolded.step",
+          "bytes": 12336,
+          "sha256": "c07161e0613cf3ddde0227690a1c76a89d5e59750a6e33a9d6cd1f8011f1d96c"
+        },
+        "sheetmetal-unfolded.dxf": {
+          "path": "sheetmetal-unfolded.dxf",
+          "bytes": 6524,
+          "sha256": "199af05abed2981133e947e1c1e0986422737ca7e2bf7f1f3101706f301bcaa2"
+        },
+        "sheetmetal-unfold.FCStd": {
+          "path": "sheetmetal-unfold.FCStd",
+          "bytes": 5848,
+          "sha256": "7e61678ec1fff883c04c1b4623c45e58da358c541e158ba62c58ef7e75a15afe"
+        }
+      }
+    },
+    "text_vector": {
+      "schema": "velvetos.ai3d.phase9-text-vector-fixture.v1",
+      "status": "PASS",
+      "samples": {
+        "latin": {
+          "text": "VELVET 3D",
+          "font": "Arial",
+          "source_bbox_mm": [
+            52.412109575,
+            7.314453325,
+            2e-07
+          ],
+          "dxf_bbox_mm": [
+            52.412109475,
+            7.314453325,
+            2e-07
+          ],
+          "svg_bbox_mm": [
+            52.41213740253887,
+            7.314457149804619,
+            2e-07
+          ],
+          "source_faces": 8,
+          "dxf_shapes": 108,
+          "svg_shapes": 9,
+          "dxf": "latin.dxf",
+          "svg": "latin.svg"
+        },
+        "hebrew": {
+          "text": "\u05d5\u05dc\u05d5\u05d5\u05d8 3D",
+          "font": "Arial",
+          "source_bbox_mm": [
+            32.197265725,
+            7.3291017625,
+            2e-07
+          ],
+          "dxf_bbox_mm": [
+            32.197265725,
+            7.3291017625,
+            2e-07
+          ],
+          "svg_bbox_mm": [
+            32.197283486523645,
+            7.32910515771454,
+            2e-07
+          ],
+          "source_faces": 7,
+          "dxf_shapes": 105,
+          "svg_shapes": 8,
+          "dxf": "hebrew.dxf",
+          "svg": "hebrew.svg"
+        }
+      },
+      "font_files_copied": false,
+      "printer_actions_allowed": false,
+      "artifacts": {
+        "text-vector-report.json": {
+          "path": "text-vector-report.json",
+          "bytes": 1420,
+          "sha256": "23d030b1bdbbdaf45dfe581aeab7d23317a84fa9317e4b3b5a826d9133bed4ef"
+        },
+        "latin.dxf": {
+          "path": "latin.dxf",
+          "bytes": 43865,
+          "sha256": "070dc728951b10907f1b95b6a9678e0083bea19b13c5324b4cf4234da8982834"
+        },
+        "latin.svg": {
+          "path": "latin.svg",
+          "bytes": 3889,
+          "sha256": "3f53eee0da20d04325a9264e383517592d8a645c5261c66e00f7011f4de4cfdb"
+        },
+        "hebrew.dxf": {
+          "path": "hebrew.dxf",
+          "bytes": 46215,
+          "sha256": "c34391b297fcaa1a355d45a57498791b098d12bf9c70ed0dfb0a5f46236bac2d"
+        },
+        "hebrew.svg": {
+          "path": "hebrew.svg",
+          "bytes": 4106,
+          "sha256": "22aa71ded3b3828849982556bec5928788c19caaabaa8117efc2619c9b67b8a9"
+        }
+      }
+    },
+    "draftwright": {
+      "status": "CANDIDATE_ISOLATED_EVAL",
+      "installed": true,
+      "metadata": {
+        "draftwright_version": "0.4.34",
+        "license": "AGPL-3.0",
+        "build123d_version": "0.10.0",
+        "module": "D:\\Velvet\\Runtimes\\AI3D\\phase9-20261007\\draftwright-eval\\Lib\\site-packages\\draftwright\\__init__.py"
+      },
+      "canonical_build123d_version": "0.11.1",
+      "admission": "BLOCKED_FROM_CANONICAL_RUNTIME",
+      "reasons": [
+        "AGPL-3.0 product/license decision required before reusable commercial tooling",
+        "draftwright 0.4.34 requires build123d<0.11 and isolated env resolves build123d 0.10.0",
+        "upstream development status is Alpha"
+      ]
+    },
+    "safety": {
+      "printer_actions_allowed": false,
+      "machine_control_allowed": false,
+      "invent_k_factor": false,
+      "invent_material_thickness": false,
+      "accept_unparseable_dxf": false,
+      "copy_or_bundle_font_files": false,
+      "draftwright_in_canonical_runtime": false
+    }
+  },
+  "artifact_retention": "Fixture files are ephemeral validation artifacts; evidence retains artifact names, SHA-256 hashes, byte counts and geometry metrics.",
+  "negative_controls": {
+    "missing_or_invalid_k_factor": "BLOCKED",
+    "invalid_k_factor_standard": "BLOCKED",
+    "unparseable_dxf": "BLOCKED"
+  },
+  "license_lanes": {
+    "build123d": "Apache-2.0 / commercial-clean",
+    "ezdxf": "MIT / commercial-clean",
+    "svgwrite": "MIT / commercial-clean",
+    "networkx": "BSD / commercial-clean",
+    "sheetmetal": "LGPL-2.1-or-later / commercial-clean",
+    "draftwright": "AGPL-3.0 / candidate isolated evaluation only"
+  }
+}

@@ -33,6 +33,8 @@ def contract(_: argparse.Namespace) -> int:
         "max_repair_iterations": registry["max_repair_iterations"],
         "exact_cad_patterns": registry["exact_cad_patterns"],
         "mechanical_feature_packs": registry["mechanical_feature_packs"],
+        "assembly_motion_ecad": registry["assembly_motion_ecad"],
+        "drawings_vectors_sheetmetal": registry["drawings_vectors_sheetmetal"],
         "coordinate_frame": patterns["coordinate_frame"]["primitive_local_origin"],
         "engines": registry["engines"],
     })

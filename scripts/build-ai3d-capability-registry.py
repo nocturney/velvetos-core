@@ -27,6 +27,10 @@ def load(path: Path) -> dict:
 def problem_class(capability: str) -> str:
     if capability.startswith("cad.") or capability.startswith("assembly."):
         return "exact_cad"
+    if capability.startswith("drawing.") or capability.startswith("vector."):
+        return "drawing_vector"
+    if capability.startswith("sheetmetal."):
+        return "manufacturing"
     if capability.startswith("mesh.") or capability.startswith("implicit."):
         return "mesh_geometry"
     if capability.startswith("scan.") or capability.startswith("photogrammetry.") or capability.startswith("reconstruction."):
@@ -51,6 +55,10 @@ def problem_class(capability: str) -> str:
 def precision_model(capability: str) -> str:
     if capability == "cad.feature.fits":
         return "not_applicable"
+    if capability.startswith("sheetmetal."):
+        return "exact_brep"
+    if capability.startswith("drawing.") or capability.startswith("vector."):
+        return "mixed"
     if capability.startswith("assembly."):
         return "mixed"
     if capability.startswith("cad.") or capability == "cam.toolpath":
@@ -103,6 +111,16 @@ def io_types(capability: str) -> tuple[list[str], list[str]]:
         return ["mesh_artifact", "query_points"], ["signed_distance_field", "verification_receipt"]
     if capability == "implicit.openvdb":
         return ["mesh_or_volume_artifact"], ["vdb_volume_artifact", "verification_receipt"]
+    if capability == "drawing.techdraw.page":
+        return ["cad_artifact", "drawing_contract"], ["freecad_drawing_page", "dxf_artifact", "verification_receipt"]
+    if capability == "drawing.dxf.roundtrip":
+        return ["drawing_or_planar_geometry"], ["dxf_artifact", "roundtrip_report", "verification_receipt"]
+    if capability == "vector.text_glyph":
+        return ["unicode_text", "font_name", "vector_contract"], ["dxf_artifact", "svg_artifact", "roundtrip_report", "verification_receipt"]
+    if capability == "sheetmetal.unfold":
+        return ["sheetmetal_solid", "explicit_bend_allowance_contract"], ["unfolded_cad_artifact", "dxf_artifact", "verification_receipt"]
+    if capability == "drawing.draftwright":
+        return ["cad_artifact", "drawing_contract"], ["technical_drawing_artifact", "verification_receipt"]
     if capability == "cad.feature.fits":
         return ["typed_fit_request"], ["fit_calculation", "verification_receipt"]
     if capability.startswith("cad.feature."):
@@ -162,6 +180,16 @@ def constraints(capability: str) -> list[str]:
         values.append("explicit_joint_connectors")
     if capability.startswith("electronics."):
         values.append("no_component_complete_claim_when_models_missing")
+    if capability == "drawing.techdraw.page":
+        values.extend(["template_explicit", "headless_page_fixture"])
+    if capability == "drawing.dxf.roundtrip":
+        values.extend(["full_dxf_file_required", "reopen_required"])
+    if capability == "vector.text_glyph":
+        values.extend(["font_name_required", "no_font_file_bundling", "unicode_roundtrip_validation"])
+    if capability == "sheetmetal.unfold":
+        values.extend(["explicit_thickness", "explicit_bend_radius", "explicit_k_factor", "explicit_k_factor_standard", "dxf_reopen_required"])
+    if capability == "drawing.draftwright":
+        values.extend(["isolated_eval_only", "no_canonical_runtime_install", "license_review_required", "canonical_build123d_not_downgraded"])
     if capability.startswith("print."):
         values.append("no_printer_network_action")
     if capability == "cam.toolpath":
@@ -181,8 +209,11 @@ def license_info(provider: dict | None, provenance: list[str]) -> tuple[str, dic
     license_text = None if raw is None else str(raw)
     lowered = "" if license_text is None else license_text.lower()
     nc = any(token in lowered for token in ("non-commercial", "noncommercial", "research only", "cc-by-nc"))
+    network_reciprocal = "agpl" in lowered
     known_commercial = any(token in lowered for token in ("mit", "bsd", "apache", "mpl", "gpl", "lgpl"))
-    if nc:
+    if network_reciprocal:
+        lane = "review-required"
+    elif nc:
         lane = "research-nc"
     elif known_commercial and not any(
         cap.startswith("ai.") for cap in (provider or {}).get("capabilities", [])
@@ -362,6 +393,14 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
         / "assembly-motion-ecad-v1.json"
     )
     assembly_motion_ecad = load(assembly_motion_ecad_path)
+    drawings_vectors_sheetmetal_path = (
+        repo_root
+        / "docs"
+        / "implementation"
+        / "ai-3d-modeling-engineering-core"
+        / "drawings-vectors-sheetmetal-v1.json"
+    )
+    drawings_vectors_sheetmetal = load(drawings_vectors_sheetmetal_path)
     creative = load(creative_path)
     blender = load(blender_path)
     stations = load(station_path)
@@ -1152,6 +1191,204 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
             status="CANDIDATE",
             provider=None,
             license_provenance=[phase8_config],
+        )
+    )
+
+    phase9_config = (
+        "docs/implementation/ai-3d-modeling-engineering-core/"
+        "drawings-vectors-sheetmetal-v1.json"
+    )
+    phase9_acceptance = (
+        "docs/implementation/ai-3d-modeling-engineering-core/evidence/"
+        "phase9-drawings-vectors-sheetmetal-acceptance-20261007.json"
+    )
+    phase9_caps = drawings_vectors_sheetmetal["capabilities"]
+    phase9_runtime = drawings_vectors_sheetmetal["runtime_truth"]
+
+    freecad_provider = providers.get("sidecar_freecad")
+    if freecad_provider:
+        freecad_techdraw_provider = dict(freecad_provider)
+        freecad_techdraw_provider["license"] = phase9_runtime["freecad_techdraw"]["license"]
+        freecad_techdraw_provider["capabilities"] = ["drawing.techdraw.page"]
+        records.append(
+            make_record(
+                record_id="drawing.techdraw.page--freecad-techdraw",
+                capability_id="drawing.techdraw.page",
+                authority_id="fabrication-router",
+                authority_ref="packages/vfprod/FABRICATION-ROUTER.json",
+                engine_id="sidecar_freecad",
+                engine_version=phase9_runtime["freecad_techdraw"]["version"],
+                adapter_id="ai3d-drawings-vectors-sheetmetal",
+                adapter_ref="scripts/ai3d_drawings_vectors_sheetmetal.py",
+                runtime_id=str(freecad_provider.get("runtime") or "freecad-1.1"),
+                host_classes=["windows-primary"],
+                headless=True,
+                verification_state="PROVEN_PROVIDER",
+                validators=["validate_ai3d_phase9_drawings_vectors_sheetmetal"],
+                evidence_refs=[
+                    f"{blender_path}#provider:sidecar_freecad",
+                    phase9_config,
+                    phase9_acceptance,
+                ],
+                fallbacks=[],
+                status="PROVEN",
+                provider=freecad_techdraw_provider,
+                license_provenance=[
+                    f"{blender_path}#provider:sidecar_freecad",
+                    phase9_config,
+                    phase9_acceptance,
+                ],
+            )
+        )
+
+    dxf_provider = {
+        "version": (
+            f"FreeCAD {phase9_runtime['freecad_techdraw']['version']} + "
+            f"ezdxf {phase9_runtime['ezdxf']['version']}"
+        ),
+        "license": "LGPL-2.1-or-later + MIT",
+        "capabilities": ["drawing.dxf.roundtrip"],
+    }
+    records.append(
+        make_record(
+            record_id="drawing.dxf.roundtrip--freecad-techdraw-ezdxf",
+            capability_id="drawing.dxf.roundtrip",
+            authority_id="fabrication-router",
+            authority_ref="packages/vfprod/FABRICATION-ROUTER.json",
+            engine_id="freecad-techdraw+ezdxf",
+            engine_version=dxf_provider["version"],
+            adapter_id="ai3d-drawings-vectors-sheetmetal",
+            adapter_ref="scripts/ai3d_drawings_vectors_sheetmetal.py",
+            runtime_id="freecad-1.1+vf-cad-stack:build123d-venv",
+            host_classes=["windows-primary"],
+            headless=True,
+            verification_state="PROVEN_PROVIDER",
+            validators=["validate_ai3d_phase9_drawings_vectors_sheetmetal"],
+            evidence_refs=[phase9_config, phase9_acceptance],
+            fallbacks=[
+                {
+                    "engine": "build123d",
+                    "runtime": "vf-cad-stack:build123d-venv",
+                }
+            ],
+            status="PROVEN",
+            provider=dxf_provider,
+            license_provenance=[phase9_config, phase9_acceptance],
+        )
+    )
+
+    phase9_build123d = canonical_engine_metadata("build123d")
+    text_provider = {
+        "version": phase9_build123d.get("version"),
+        "license": phase9_build123d.get("license"),
+        "capabilities": ["vector.text_glyph"],
+    }
+    records.append(
+        make_record(
+            record_id="vector.text_glyph--build123d-phase9",
+            capability_id="vector.text_glyph",
+            authority_id="fabrication-router",
+            authority_ref="packages/vfprod/FABRICATION-ROUTER.json",
+            engine_id="build123d",
+            engine_version=phase9_build123d.get("version"),
+            adapter_id="ai3d-drawings-vectors-sheetmetal",
+            adapter_ref="scripts/ai3d_drawings_vectors_sheetmetal.py",
+            runtime_id=phase9_build123d.get(
+                "runtime_id", "vf-cad-stack:build123d-venv"
+            ),
+            host_classes=["windows-primary"],
+            headless=True,
+            verification_state="PROVEN_PROVIDER",
+            validators=["validate_ai3d_phase9_drawings_vectors_sheetmetal"],
+            evidence_refs=[
+                phase9_config,
+                phase9_acceptance,
+                phase9_build123d.get(
+                    "evidence_ref", "runtime:build123d-canonical"
+                ),
+            ],
+            fallbacks=[],
+            status="PROVEN",
+            provider=text_provider,
+            license_provenance=[
+                phase9_config,
+                phase9_acceptance,
+                phase9_build123d.get(
+                    "evidence_ref", "runtime:build123d-canonical"
+                ),
+            ],
+        )
+    )
+
+    sheetmetal_provider = {
+        "version": phase9_runtime["sheetmetal"]["version"],
+        "license": phase9_runtime["sheetmetal"]["license"],
+        "capabilities": ["sheetmetal.unfold"],
+    }
+    records.append(
+        make_record(
+            record_id="sheetmetal.unfold--freecad-sheetmetal-0.8.24",
+            capability_id="sheetmetal.unfold",
+            authority_id="fabrication-router",
+            authority_ref="packages/vfprod/FABRICATION-ROUTER.json",
+            engine_id="freecad-sheetmetal",
+            engine_version=phase9_runtime["sheetmetal"]["version"],
+            adapter_id="ai3d-drawings-vectors-sheetmetal",
+            adapter_ref="scripts/ai3d_drawings_vectors_sheetmetal.py",
+            runtime_id="phase9-freecad-sheetmetal-0.8.24",
+            host_classes=["windows-primary"],
+            headless=True,
+            verification_state="PROVEN_PROVIDER",
+            validators=["validate_ai3d_phase9_drawings_vectors_sheetmetal"],
+            evidence_refs=[phase9_config, phase9_acceptance],
+            fallbacks=[
+                {
+                    "engine": "sidecar_freecad",
+                    "runtime": "freecad-1.1",
+                }
+            ],
+            status="PROVEN",
+            provider=sheetmetal_provider,
+            license_provenance=[phase9_config, phase9_acceptance],
+        )
+    )
+
+    draftwright_cfg = phase9_runtime["draftwright"]
+    draftwright_provider = {
+        "version": draftwright_cfg["version"],
+        "license": draftwright_cfg["license"],
+        "capabilities": ["drawing.draftwright"],
+    }
+    records.append(
+        make_record(
+            record_id="drawing.draftwright--candidate-draftwright-0.4.34",
+            capability_id="drawing.draftwright",
+            authority_id="fabrication-router",
+            authority_ref=phase9_config,
+            engine_id="draftwright",
+            engine_version=draftwright_cfg["version"],
+            adapter_id="not-admitted",
+            adapter_ref=phase9_config,
+            runtime_id="phase9-draftwright-eval",
+            host_classes=["windows-primary"],
+            headless=True,
+            verification_state="CANDIDATE",
+            validators=[
+                "AGPL product/license decision required",
+                "canonical build123d compatibility required",
+                "non-alpha release or explicit alpha acceptance required",
+                "positive and negative VelvetOS drawing fixtures required before promotion",
+            ],
+            evidence_refs=[phase9_config, phase9_acceptance],
+            fallbacks=[
+                {
+                    "engine": "sidecar_freecad",
+                    "runtime": "freecad-1.1",
+                }
+            ],
+            status="CANDIDATE",
+            provider=draftwright_provider,
+            license_provenance=[phase9_config, phase9_acceptance],
         )
     )
 

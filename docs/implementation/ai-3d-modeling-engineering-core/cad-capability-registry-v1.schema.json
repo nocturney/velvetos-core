@@ -216,6 +216,7 @@
             "interchange",
             "simulation",
             "electronics",
+            "drawing_vector",
             "automation"
           ]
         },
