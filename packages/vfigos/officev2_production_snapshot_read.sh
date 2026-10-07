@@ -18,7 +18,7 @@ cleanup(){
 trap cleanup EXIT
 
 INPUT="$(cat)"
-readarray -t PARTS < <(printf '%s' "$INPUT" | python3 - <<'PY'
+readarray -t PARTS < <(printf '%s' "$INPUT" | python3 -c '
 import json,sys
 d=json.load(sys.stdin)
 print(d.get("role_id",""))
@@ -27,8 +27,8 @@ print(d.get("zitadel_username",""))
 print(d.get("zitadel_client_secret",""))
 print(d.get("zitadel_machine_id",""))
 print(d.get("scope_id",""))
-PY
-)
+')
+[ "${#PARTS[@]}" -eq 6 ] || { echo "PROD_RUNTIME_BUNDLE_PARSE_FAIL" >&2; exit 250; }
 ROLE_ID="${PARTS[0]}"; SECRET_ID="${PARTS[1]}"; ZITADEL_USERNAME="${PARTS[2]}"
 ZITADEL_CLIENT_SECRET="${PARTS[3]}"; ZITADEL_MACHINE_ID="${PARTS[4]}"; SCOPE_ID="${PARTS[5]}"
 [ -n "$ROLE_ID" ] && [ -n "$SECRET_ID" ] && [ -n "$ZITADEL_USERNAME" ] && [ -n "$ZITADEL_CLIENT_SECRET" ] && [ -n "$ZITADEL_MACHINE_ID" ] || { echo "PROD_RUNTIME_BUNDLE_INVALID" >&2; exit 251; }
