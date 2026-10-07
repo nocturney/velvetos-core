@@ -1,0 +1,14 @@
+{
+  "schema": "velvetos.external-skill-audit.v1",
+  "sourceIndex": "VoltAgent/awesome-openclaw-skills",
+  "date": "2026-10-07",
+  "runtimeAuthorityGranted": false,
+  "candidates": [
+    {"id":"bambu-cli","source":"tobiasbischoff/bambu-cli","risk":"HIGH","verdict":"READ_ONLY_ADAPTER_AUDIT","scope":"status and telemetry only; printer-changing commands remain outside this intake"},
+    {"id":"cad-agent","source":"clawd-maf/cad-agent","risk":"MEDIUM_HIGH","verdict":"ISOLATED_RENDER_PATTERN_ONLY","scope":"render and visual-feedback pattern; no second CAD authority"},
+    {"id":"adobe-automator","source":"abdul-karim-mia/adobe-automator","risk":"HIGH","verdict":"COMPARE_ONLY","scope":"compare application coverage against existing bounded Adobe bridges; do not adopt the broad scripting surface"},
+    {"id":"agent-passport","source":"agentpassportai/agent-passport","risk":"LICENSE_AND_AUTHORITY","verdict":"PATTERN_ONLY_PENDING_LICENSE_REVIEW","scope":"TTL, allowlist, caps and revocation patterns only"},
+    {"id":"mixpost","source":"Mixpost skill listing","risk":"AUTHORITY_OVERLAP","verdict":"BENCHMARK_ONLY","scope":"feature comparison only; current publication authority remains canonical"},
+    {"id":"postiz","source":"Postiz skill listing","risk":"AUTHORITY_OVERLAP","verdict":"BENCHMARK_ONLY","scope":"feature comparison only; current publication authority remains canonical"}
+  ]
+}

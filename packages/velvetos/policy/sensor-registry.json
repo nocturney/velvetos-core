@@ -1465,6 +1465,44 @@
       "mapping_state": "mapped"
     },
     {
+      "id": "check-office-v2-phase3b-production",
+      "path": "scripts/check-office-v2-phase3b-production.py",
+      "owns": [
+        "docs/implementation/office-v2/phase0/authority-map-v0.1.json",
+        "docs/implementation/office-v2/phase0/credential-trust-classes-v0.json",
+        "docs/implementation/office-v2/phase3b/production-*",
+        "packages/vfigos/officev2_production_*",
+        "packages/vfigos/officev2_pilot_token_read.sh",
+        "packages/vfigos/officev2_secure_publisher_snapshot.py",
+        "scripts/check-office-v2-phase3b-production.py"
+      ],
+      "triggered_by": [
+        "docs/implementation/office-v2/phase0/authority-map-v0.1.json",
+        "docs/implementation/office-v2/phase0/credential-trust-classes-v0.json",
+        "docs/implementation/office-v2/phase3b/production-*",
+        "packages/vfigos/officev2_production_*",
+        "packages/vfigos/officev2_pilot_token_read.sh",
+        "packages/vfigos/officev2_secure_publisher_snapshot.py",
+        "scripts/check-office-v2-phase3b-production.py"
+      ],
+      "depends_on": [
+        "check-office-v2-phase3b",
+        "check-machine-writers",
+        "check-policy-architecture"
+      ],
+      "enforces": [],
+      "lifecycle": "DOMAIN",
+      "risk": "high",
+      "timeout_seconds": 60,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK",
+        "runtime": "BLOCK_PROMOTION"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
       "id": "check-openpost-status",
       "path": "scripts/check-openpost-status.py",
       "owns": [
@@ -4256,6 +4294,56 @@
       "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-repo-intake",
+      "path": "scripts/check-repo-intake.py",
+      "owns": [
+        "packages/vfharness/devtools/repo-intake-2026-10-07.json",
+        "packages/vfharness/devtools/execution-providers.json",
+        "packages/vfharness/devtools/approved-cli.json",
+        "packages/vfharness/devtools/dashy-launchpad.json",
+        "packages/vfharness/devtools/openclaw-candidate-audit.json",
+        "packages/vfharness/playbooks/skill-intake-evaluation.md",
+        "packages/vfharness/playbooks/automation-standards.md",
+        "packages/vfharness/state/vtracer-pilot-2026-10-07.json",
+        "packages/vfharness/cost-preflight/vtracer-1.0.0a4-local.json",
+        "packages/vfresearch/sources/2026-10-07-repo-intake.md",
+        "packages/vfresearch/sources/2026-10-07-cad-native-matrix.md",
+        "scripts/vf_vtracer.py",
+        "scripts/vf_skill_eval.py",
+        "scripts/check-repo-intake.py"
+      ],
+      "triggered_by": [
+        "packages/vfharness/devtools/repo-intake-2026-10-07.json",
+        "packages/vfharness/devtools/execution-providers.json",
+        "packages/vfharness/devtools/approved-cli.json",
+        "packages/vfharness/devtools/dashy-launchpad.json",
+        "packages/vfharness/devtools/openclaw-candidate-audit.json",
+        "packages/vfharness/playbooks/skill-intake-evaluation.md",
+        "packages/vfharness/playbooks/automation-standards.md",
+        "packages/vfharness/state/vtracer-pilot-2026-10-07.json",
+        "packages/vfharness/SKILL.md",
+        "packages/vfresearch/LINKS.json",
+        "scripts/vf_vtracer.py",
+        "scripts/vf_skill_eval.py",
+        "scripts/check-repo-intake.py"
+      ],
+      "depends_on": [
+        "check-agent-surface-security",
+        "check-skill-health"
+      ],
+      "enforces": [],
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
+      "timeout_seconds": 120,
       "failure_effect": {
         "merge": "BLOCK",
         "release": "BLOCK_IF_RELEVANT",

@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "component": "visioncortex/vtracer Python bindings 1.0.0a4",
+  "classification": "FREE_LOCAL",
+  "license": "MIT OR Apache-2.0",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none identified for local use under the declared dual open-source license",
+  "deployment_model": "isolated local Python virtual environment; no service, daemon, auto-update or cloud API",
+  "api_dependencies": [],
+  "billing_risk": "none; local execution only",
+  "selected_mode": "PINNED_PYTHON_BINDINGS_1.0.0a4_FIXED_PALETTE_CUTOUT",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "local CPU/RAM/disk only when invoked",
+  "api_cost_notes": "none",
+  "subscription_notes": "none",
+  "hidden_secondary_cost_notes": "no hosted service enabled",
+  "quota_controls": "not applicable; local process only",
+  "pricing_verified_at": "2026-10-07",
+  "evidence": [
+    "https://github.com/visioncortex/vtracer/blob/master/crates/vtracer-py/pyproject.toml declares MIT OR Apache-2.0",
+    "https://github.com/visioncortex/vtracer/blob/master/README.md documents fixed palette and cutout modes"
+  ],
+  "approval": null
+}

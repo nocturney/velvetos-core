@@ -70,6 +70,18 @@
       "note": "Missing source = חסר. No invented report."
     },
     {
+      "name": "UFO",
+      "url": "https://github.com/microsoft/UFO",
+      "verdict": "later",
+      "pattern": "bounded Windows GUI execution provider after deterministic surfaces and Cua baseline",
+      "packs": [
+        "vfharness",
+        "vfigos"
+      ],
+      "crew": "crews/run.md",
+      "note": "Reclassified 2026-10-07 from blanket unattended-UI skip to bounded provider research. No unattended authority; no printer/social/customer-send authority; compare only after Cua pilot."
+    },
+    {
       "name": "Aomni",
       "url": "https://www.aomni.com/",
       "verdict": "embed",
@@ -649,7 +661,6 @@
         "Self-operating computer",
         "Taxy AI",
         "MultiOn",
-        "UFO",
         "Sentius",
         "Cykel",
         "iMean.AI",

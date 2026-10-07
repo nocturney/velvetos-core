@@ -13,6 +13,8 @@ ROOT = Path(__file__).resolve().parents[1]
 LAYERS = ROOT / "packages" / "vfharness" / "layers.json"
 MANIFEST = ROOT / "packages" / "manifest.json"
 AGENTS = ROOT / "packages" / "vfharness" / "AGENTS.md"
+CONSTITUTION = ROOT / "constitution" / "CONSTITUTION.md"
+PERMISSIONS = ROOT / "packages" / "vfharness" / "PERMISSIONS.md"
 STAGE5B_REPORT = ROOT / "packages" / "velvetos" / "policy" / "reports" / "stage5b-harness-consolidation.json"
 STAGE5B_GENERATOR = ROOT / "scripts" / "generate-stage5b-harness-consolidation-report.py"
 STAGE6C_REPORT = ROOT / "packages" / "velvetos" / "policy" / "reports" / "stage6c-dcc-capability-gating.json"
@@ -70,6 +72,8 @@ def main() -> None:
         fail(f"missing {MANIFEST.relative_to(ROOT)}")
     if not AGENTS.is_file():
         fail("missing AGENTS.md (layer 1 guide)")
+    if not CONSTITUTION.is_file() or not PERMISSIONS.is_file():
+        fail("missing canonical constitution/permissions surface")
     for path in (STAGE5B_REPORT, STAGE5B_GENERATOR, STAGE6C_REPORT, STAGE6C_GENERATOR, DCC_ADOBE_VALIDATOR):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
@@ -78,6 +82,27 @@ def main() -> None:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     pack_names = {p["name"] for p in manifest.get("packs", [])}
     agents_text = AGENTS.read_text(encoding="utf-8")
+    constitution_text = CONSTITUTION.read_text(encoding="utf-8")
+    permissions_text = PERMISSIONS.read_text(encoding="utf-8")
+
+    for needle in (
+        "Standing implementation authorization — Git delivery",
+        "אין לבקש מהבעלים אישור נוסף רק עבור push או merge",
+        "force-push",
+        "branch protection",
+    ):
+        if needle not in constitution_text:
+            fail(f"constitution missing Git delivery authority marker {needle!r}")
+    for needle in (
+        "ALLOW git delivery",
+        "owner already approved the implementation scope",
+        "Push / PR / Merge",
+        "ללא force-push",
+    ):
+        if needle not in permissions_text:
+            fail(f"PERMISSIONS.md missing Git delivery authority marker {needle!r}")
+    if "ASK before: git push" in permissions_text:
+        fail("PERMISSIONS.md reintroduced redundant owner approval for git push")
 
     if spec.get("name") != "vfharness":
         fail("layers.json name must be vfharness")

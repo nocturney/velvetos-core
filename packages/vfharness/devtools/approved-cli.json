@@ -1,0 +1,31 @@
+{
+  "schema": "velvetos.approved-cli.v1",
+  "role": "DISCOVERABLE_LOCAL_TOOLING_NOT_AUTHORITY",
+  "observedAt": "2026-10-07",
+  "hosts": {
+    "Chris": {"platform":"windows","observed":{"gh":true}},
+    "MacMiniOffice.local": {"platform":"macos","observed":{"jq":true}}
+  },
+  "tools": [
+    {"id":"rg","category":"search","installPolicy":"APPROVED_ON_DEMAND","windowsObserved":false,"macObserved":false},
+    {"id":"fd","category":"search","installPolicy":"APPROVED_ON_DEMAND","windowsObserved":false,"macObserved":false},
+    {"id":"fzf","category":"search","installPolicy":"APPROVED_ON_DEMAND","windowsObserved":false,"macObserved":false},
+    {"id":"jq","category":"structured-data","installPolicy":"APPROVED_ON_DEMAND","windowsObserved":false,"macObserved":true},
+    {"id":"yq","category":"structured-data","installPolicy":"APPROVED_ON_DEMAND","windowsObserved":false,"macObserved":false},
+    {"id":"dasel","category":"structured-data","installPolicy":"APPROVED_ON_DEMAND","windowsObserved":false,"macObserved":false},
+    {"id":"jc","category":"structured-data","installPolicy":"APPROVED_ON_DEMAND","windowsObserved":false,"macObserved":false},
+    {"id":"ast-grep","category":"code-structure","installPolicy":"APPROVED_ON_DEMAND","windowsObserved":false,"macObserved":false},
+    {"id":"just","category":"task-runner","installPolicy":"APPROVED_ON_DEMAND","windowsObserved":false,"macObserved":false},
+    {"id":"gh","category":"git-host","installPolicy":"APPROVED","windowsObserved":true,"macObserved":false},
+    {"id":"gita","category":"multi-repo","installPolicy":"APPROVED_ON_DEMAND","windowsObserved":false,"macObserved":false},
+    {"id":"lazygit","category":"git-ui","installPolicy":"OPTIONAL","windowsObserved":false,"macObserved":false},
+    {"id":"httpie","category":"http","installPolicy":"APPROVED_ON_DEMAND","windowsObserved":false,"macObserved":false},
+    {"id":"atac","category":"http","installPolicy":"OPTIONAL","windowsObserved":false,"macObserved":false},
+    {"id":"lnav","category":"logs","installPolicy":"APPROVED_ON_DEMAND","windowsObserved":false,"macObserved":false},
+    {"id":"bottom","category":"system","installPolicy":"OPTIONAL","windowsObserved":false,"macObserved":false},
+    {"id":"shellcheck","category":"quality","installPolicy":"APPROVED_ON_DEMAND","windowsObserved":false,"macObserved":false},
+    {"id":"shfmt","category":"quality","installPolicy":"APPROVED_ON_DEMAND","windowsObserved":false,"macObserved":false},
+    {"id":"bats","category":"testing","installPolicy":"APPROVED_ON_DEMAND","windowsObserved":false,"macObserved":false}
+  ],
+  "rule": "Approval means the tool may be installed when a concrete task needs it; do not bulk-install the catalog or grant new authority."
+}
