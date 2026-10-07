@@ -3,18 +3,18 @@
   "stage": "2A",
   "behavior_change": false,
   "suite_runner": "scripts/check-all.py",
-  "registered_sensor_count": 125,
-  "live_sensor_count": 125,
+  "registered_sensor_count": 126,
+  "live_sensor_count": 126,
   "registry_matches_live": true,
   "mapping_state_counts": {
-    "mapped": 125
+    "mapped": 126
   },
   "fallback_scope_counts": {
     "ALWAYS_ON": 4,
-    "FULL_SUITE": 121
+    "FULL_SUITE": 122
   },
-  "dependency_edge_count": 55,
-  "sensors_with_dependencies": 32,
+  "dependency_edge_count": 57,
+  "sensors_with_dependencies": 33,
   "critical_always_on": [
     "check-agent-surface-security",
     "check-critical-syntax",

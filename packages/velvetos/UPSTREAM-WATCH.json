@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.upstream-watch.v1",
-  "updatedAt": "2026-09-28",
+  "updatedAt": "2026-10-07",
   "authority": "owner-explicit",
   "purpose": "Track update signals for installed tools and repository-only skills/agents/pattern sources without auto-upgrading or version-locking normal work.",
   "policy": {
@@ -1009,6 +1009,51 @@
       "kind": "embedded-provenance",
       "integration": [
         ".agents/skills/gcode/references/slicer-backends.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "trycua/cua",
+      "kind": "runtime-pilot-source",
+      "integration": [
+        "packages/vfharness/devtools/execution-providers.json",
+        "packages/vfharness/devtools/repo-intake-2026-10-07.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "visioncortex/vtracer",
+      "kind": "runtime-pilot-source",
+      "integration": [
+        "scripts/vf_vtracer.py",
+        "packages/vfharness/state/vtracer-pilot-2026-10-07.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false,
+      "adoptedRelease": "1.0.0a4",
+      "adoptionClass": "isolated-pilot"
+    },
+    {
+      "repo": "microsoft/UFO",
+      "kind": "research-provider-source",
+      "integration": [
+        "packages/vfe2b/catalog.json",
+        "packages/vfharness/devtools/execution-providers.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "Lissy93/dashy",
+      "kind": "launchpad-pilot-source",
+      "integration": [
+        "packages/vfharness/devtools/dashy-launchpad.json"
       ],
       "tracking": "default-branch-head-and-release-if-present",
       "updatePolicy": "latest-compatible",

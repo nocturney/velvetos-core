@@ -1,0 +1,26 @@
+{
+  "schema": "velvetos.dashy-launchpad.v1",
+  "role": "READ_ONLY_LAUNCHPAD_NOT_CONTROL_PLANE",
+  "source": "Lissy93/dashy",
+  "license": "MIT",
+  "state": "BLOCKED_PREREQUISITE",
+  "observedHosts": {
+    "Chris": {"docker": false},
+    "MacMiniOffice.local": {"docker": false}
+  },
+  "canonicalInputs": [
+    "office/control-plane.json",
+    "explicit deployed Control Center URL",
+    "explicit deployed VelvetOS Control API URL"
+  ],
+  "mustNot": [
+    "invent service URLs",
+    "store canonical business state",
+    "own approvals",
+    "own actions",
+    "replace VelvetOS Control Center",
+    "become a second control plane"
+  ],
+  "promotionGate": "container/runtime selected + ports checked + canonical URLs resolved + read-only smoke passes",
+  "incrementalRecurringCost": "0 ILS/month target"
+}
