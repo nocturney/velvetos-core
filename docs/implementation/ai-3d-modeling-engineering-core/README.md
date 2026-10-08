@@ -64,7 +64,7 @@ Files:
 
 The registry is deliberately non-authoritative staging. Existing proven routes are recorded first. Research candidates remain CANDIDATE until fixture, license and resource qualification pass.
 
-Current generated registry: 73 records; 56 PROVEN, 1 ACTIVE_AUTHORITY, 16 CANDIDATE. Exactly 20 Blender cross-station entries are PROVEN_TYPED. Fabrication-authority engine versions come from the runtimes that vf_cad_stack actually executes; Phase 4-9 records are admitted only after their bounded validation evidence passes.
+Current generated registry after Phase 10: 79 records; 58 PROVEN, 1 ACTIVE_AUTHORITY, 18 CANDIDATE, 1 RESEARCH_ONLY and 1 BLOCKED. Exactly 20 Blender cross-station entries are PROVEN_TYPED. Fabrication-authority engine versions come from the runtimes that vf_cad_stack actually executes; Phase 4-10 PROVEN records require bounded validation evidence.
 
 ## Phase 3 - Engineering Contract and common artifact protocol
 
@@ -264,6 +264,35 @@ Phase 9 validation:
   py -3.11 scripts/validate_ai3d_phase9_drawings_vectors_sheetmetal.py
   py -3.11 scripts/validate_ai3d_capability_registry.py
 
+## Phase 10 - Simulation, optimization and TPMS research
+
+Files:
+
+- simulation-optimization-v1.json
+- fixtures/phase10/axial-bar-tension.json
+- scripts/ai3d_simulation_contract.py
+- scripts/ai3d_phase10_freecad_driver.py
+- scripts/validate_ai3d_phase10_simulation.py
+- scripts/ai3d_tpms_research.py
+- evidence/phase10-simulation-acceptance-20261008.json
+
+The existing FreeCAD 1.1.3 FEM runtime includes Gmsh 4.15.0 and CalculiX 2.22 as CLI executables; no new solver or parallel authority was installed. A synthetic steel axial-tension reference bar (40 x 10 x 10 mm; 210000 MPa Young's modulus; Poisson 0.30; explicitly fixed x-min face; 10 MPa outward pressure on x-max face) is verified by real second-order Gmsh volume meshing and a genuine CalculiX linear-static solve.
+
+- Coarse mesh: 1052 nodes, 493 volume elements, mean end displacement 0.001888454 mm.
+- Fine mesh: 2018 nodes, 1033 volume elements, mean end displacement 0.001889190 mm.
+- Analytical elastic reference: 0.001904762 mm; fine-mesh relative error 0.8175%; normalized intermesh displacement difference 0.03894%.
+- Both solver runs yield .inp/.frd/.dat/FCStd artifacts with SHA-256 and byte-count receipts.
+- 12 adversarial contract controls block missing/inferred material, loading, supports, unsafe/unbounded resources, mismatched units and unauthorized optimization acceptance.
+- The bounded TPMS gyroid periodic-level-set experiment remains RESEARCH_ONLY. It outputs no manufacturable mesh and makes no strength or printability claim.
+- SfePy and DOLFINx remain CANDIDATE_NOT_INSTALLED; automated design optimization acceptance remains BLOCKED.
+- Gmsh and CalculiX are reused as external FreeCAD-bundled CLI tools. Binary redistribution or bundling requires separate GPL compliance review; proving a local solve does not authorize a product bundle.
+- The Fabrication Router, printer, slicer and machine safety boundaries are unchanged. This fixture is not structural certification or a customer design.
+
+Phase 10 validation:
+
+  py -3.11 scripts/validate_ai3d_phase10_simulation.py
+  py -3.11 scripts/validate_ai3d_capability_registry.py
+
 ## Validation state
 
 Explicit AI3D validation stack: PASS.
@@ -273,8 +302,8 @@ Repository regression:
 - scripts/check-all.py: 118/118 PASS
 - exit code: 0
 - sensor side-effect check: repository files unchanged
-- full-suite log: evidence/check-all-phase9-merged-main-20261007.log
+- full-suite log: evidence/check-all-phase10-20261008.log
 
 ## Next implementation phase
 
-Phase 10 is simulation and optimization: qualify the already-present Gmsh and FreeCAD FEM/CalculiX path first, evaluate SfePy/DOLFINx only when they add a distinct bounded capability, and keep TPMS/lattice/implicit optimization in an explicit research lane. No optimization result may be accepted without explicit loads, materials, constraints and independent validation.
+Phase 11 is DfAM and slicer validation: preserve the existing vf_cad/Orca authoritative route, parse actual slicer outputs/logs (never assume undocumented JSON), check per-printer/material calibrated constraints, and cross-check STEP geometry against 3MF/STL and the sliced result. No printer upload/start or machine action is authorized.

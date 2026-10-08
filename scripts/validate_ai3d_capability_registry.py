@@ -531,6 +531,68 @@ def main() -> int:
     assert "license_review_required" in draftwright["constraints_support"]
     assert "canonical_build123d_not_downgraded" in draftwright["constraints_support"]
 
+    phase10_base = (
+        ROOT / "docs" / "implementation" / "ai-3d-modeling-engineering-core"
+    )
+    simulation = load(phase10_base / "simulation-optimization-v1.json")
+    sim_proof = load(
+        phase10_base / "evidence"
+        / "phase10-simulation-acceptance-20261008.json"
+    )
+    assert simulation["schema"] == "velvetos.ai3d.simulation-optimization.v1"
+    assert simulation["non_authoritative_staging"] is True
+    assert sim_proof["status"] == "PASS"
+    assert sim_proof["fine"]["solver"]["returncode"] == 0
+    assert sim_proof["fine"]["relative_error"] < 0.03
+    assert sim_proof["mesh_convergence"]["normalized_mean_displacement_difference"] < 0.02
+    assert len(sim_proof["negative_controls"]) >= 12
+
+    phase10_proven = {
+        "simulation.mesh.gmsh_tetra10--phase10-freecad": "4.15.0",
+        "simulation.linear_elastic_static--phase10-freecad": "2.22",
+    }
+    for record_id, version in phase10_proven.items():
+        item = next(row for row in records if row["record_id"] == record_id)
+        assert item["authority"]["id"] == "fabrication-router"
+        assert item["problem_class"] == "simulation"
+        assert item["status"] == "PROVEN"
+        assert item["verification"]["state"] == "PROVEN_PROVIDER"
+        assert "validate_ai3d_phase10_simulation" in item["verification"]["validators"]
+        assert item["engine"]["version"] == version
+        assert item["license_lane"] == "review-required"
+        assert item["headless"] is True
+        assert "no_automatic_optimization_acceptance" in item["constraints_support"]
+        assert "no inclusion in a proprietary installer" in item["license"]["bundle_policy"]
+
+    tpms = next(
+        row for row in records
+        if row["record_id"] == "implicit.tpms_gyroid--research-phase10"
+    )
+    assert tpms["status"] == "RESEARCH_ONLY"
+    assert tpms["verification"]["state"] == "RESEARCH_ONLY"
+    assert "no_strength_claim" in tpms["constraints_support"]
+    assert "no_printability_claim" in tpms["constraints_support"]
+    assert sim_proof["tpms_research"]["mesh_generated"] is False
+
+    for engine in ("sfepy", "dolfinx"):
+        item = next(
+            row for row in records
+            if row["record_id"] == f"simulation.advanced_{engine}--candidate-{engine}"
+        )
+        assert item["status"] == "CANDIDATE"
+        assert item["verification"]["state"] == "CANDIDATE"
+        assert item["runtime"]["id"] == "not-installed"
+        assert item["headless"] is False
+
+    auto = next(
+        row for row in records
+        if row["record_id"] == "optimization.auto_accept--blocked-phase10"
+    )
+    assert auto["status"] == "BLOCKED"
+    assert auto["verification"]["state"] == "BLOCKED"
+    assert auto["headless"] is False
+    assert simulation["safety"]["auto_optimization_acceptance"] is False
+
     research_candidate_engines = {
         "hunyuan3d-2.1-shape",
         "triposg",

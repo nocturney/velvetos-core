@@ -76,3 +76,21 @@ Phase 9 remains beneath the Fabrication Router and reuses the existing build123d
 - Draftwright 0.4.34 remains an isolated evaluation candidate. It is AGPL-3.0, Alpha, and requires build123d <0.11; it must not downgrade or enter the canonical build123d 0.11.1 environment without a separate product/license and compatibility decision.
 
 The bounded contract is `docs/implementation/ai-3d-modeling-engineering-core/drawings-vectors-sheetmetal-v1.json`; acceptance is `scripts/validate_ai3d_phase9_drawings_vectors_sheetmetal.py`.
+
+## Simulation and optimization (Phase 10)
+
+The existing FreeCAD 1.1.3 FEM runtime is reused, including its bundled Gmsh 4.15.0 mesher and CalculiX 2.22 linear-static solver. This is a bounded provider-level capability under the existing Fabrication Router, not a new FEM or optimization control plane.
+
+- The reference fixture specifies all geometry, material properties, Poisson ratio, supports, pressure direction, units and resource limits explicitly.
+- A 40 x 10 x 10 mm synthetic axial-tension bar is solved with two separate second-order tetrahedral Gmsh meshes. Mesh sizes 5 mm and 3 mm yield 1052 and 2018 nodes respectively.
+- Independent analytic extension is 0.001904762 mm; fine-mesh mean extension is 0.001889190 mm (0.82% relative error). Normalized mesh-refinement discrepancy is 0.039%.
+- Acceptance requires real CalculiX exit code 0, nonempty FRD stress/displacement fields, analytic error threshold, two-mesh agreement, 12 fail-closed negative cases and SHA-256 receipts for .inp/.frd/.dat/FCStd evidence.
+- Material, loads, constraints, precision and mesh resource bounds must be present; unknowns fail closed. Solver success is not structural certification or design acceptance.
+- No new solver is installed and neither SfePy nor DOLFINx enters the canonical runtime: both remain research candidates.
+- TPMS gyroid level-set sampling is RESEARCH_ONLY; it generates no production mesh or strength/printability claims.
+- Automatic optimization/promotion into manufacturing remains BLOCKED. Gmsh/CalculiX binaries remain separate GPL-governed CLI dependencies; redistribution or bundling needs an explicit compliance review.
+- No printer network, machine action or slicer authority changes are granted.
+
+Contract: `docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json`.
+Evidence: `docs/implementation/ai-3d-modeling-engineering-core/evidence/phase10-simulation-acceptance-20261008.json`.
+Validator: `scripts/validate_ai3d_phase10_simulation.py`.

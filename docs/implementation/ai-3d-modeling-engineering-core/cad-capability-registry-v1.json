@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.ai3d.cad-capability-registry.v1",
   "non_authoritative_staging": true,
-  "generated_at": "2026-10-07T19:31:21.745528+00:00",
+  "generated_at": "2026-10-08T04:03:16.028857+00:00",
   "authority_invariant": "This registry grants no authority. Fabrication Router/vf-3d-router, CreativeCraft, Blender Capability Host, slicer and production authorities remain unchanged.",
   "records": [
     {
@@ -1409,7 +1409,7 @@
         "provenance": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "D:\\Velvet\\Worktrees\\ai3d-phase9-20261007\\packages\\vfprod\\MECHANICAL-FEATURE-PACKS.json"
+          "D:\\Velvet\\Worktrees\\ai3d-phase10-20261008\\packages\\vfprod\\MECHANICAL-FEATURE-PACKS.json"
         ]
       },
       "verification": {
@@ -1420,7 +1420,7 @@
         "evidence_refs": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "D:\\Velvet\\Worktrees\\ai3d-phase9-20261007\\packages\\vfprod\\MECHANICAL-FEATURE-PACKS.json"
+          "D:\\Velvet\\Worktrees\\ai3d-phase10-20261008\\packages\\vfprod\\MECHANICAL-FEATURE-PACKS.json"
         ]
       },
       "fallback": [],
@@ -1757,7 +1757,7 @@
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\Worktrees\\ai3d-phase9-20261007\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
+          "D:\\Velvet\\Worktrees\\ai3d-phase10-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
           "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
           "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_build123d"
         ]
@@ -1821,7 +1821,7 @@
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\Worktrees\\ai3d-phase9-20261007\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json"
+          "D:\\Velvet\\Worktrees\\ai3d-phase10-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json"
         ]
       },
       "fallback": [],
@@ -1886,7 +1886,7 @@
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\Worktrees\\ai3d-phase9-20261007\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
+          "D:\\Velvet\\Worktrees\\ai3d-phase10-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
           "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\cadquery\\.venv\\Scripts\\python.exe",
           "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_cadquery"
         ]
@@ -1950,7 +1950,7 @@
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\Worktrees\\ai3d-phase9-20261007\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json"
+          "D:\\Velvet\\Worktrees\\ai3d-phase10-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json"
         ]
       },
       "fallback": [],
@@ -2014,7 +2014,7 @@
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\Worktrees\\ai3d-phase9-20261007\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
+          "D:\\Velvet\\Worktrees\\ai3d-phase10-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
           "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\jscad"
         ]
       },
@@ -2893,6 +2893,71 @@
       "status": "PROVEN"
     },
     {
+      "record_id": "implicit.tpms_gyroid--research-phase10",
+      "capability_id": "implicit.tpms_gyroid",
+      "problem_class": "mesh_geometry",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json"
+      },
+      "engine": {
+        "id": "numpy-periodic-gyroid",
+        "version": "1.0"
+      },
+      "adapter": {
+        "id": "ai3d-tpms-research",
+        "source_ref": "scripts/ai3d_tpms_research.py"
+      },
+      "runtime": {
+        "id": "vf-cad-stack:build123d-venv",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "explicit_periodic_cell",
+        "bounded_grid"
+      ],
+      "output_types": [
+        "sampled_level_set_evidence"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request",
+        "research_only",
+        "no_strength_claim",
+        "no_printability_claim"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase10-simulation-acceptance-20261008.json"
+        ]
+      },
+      "verification": {
+        "state": "RESEARCH_ONLY",
+        "validators": [
+          "validate_ai3d_phase10_simulation",
+          "no-mesh-or-strength-claim"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase10-simulation-acceptance-20261008.json"
+        ]
+      },
+      "fallback": [],
+      "status": "RESEARCH_ONLY"
+    },
+    {
       "record_id": "interchange.3mf--blender-host",
       "capability_id": "interchange.3mf",
       "problem_class": "interchange",
@@ -3316,6 +3381,72 @@
         }
       ],
       "status": "PROVEN"
+    },
+    {
+      "record_id": "optimization.auto_accept--blocked-phase10",
+      "capability_id": "optimization.auto_accept",
+      "problem_class": "simulation",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json"
+      },
+      "engine": {
+        "id": "not-admitted",
+        "version": null
+      },
+      "adapter": {
+        "id": "not-admitted",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json"
+      },
+      "runtime": {
+        "id": "not-admitted",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "validated_simulation",
+        "human_review"
+      ],
+      "output_types": [
+        "candidate_only_or_blocked"
+      ],
+      "precision_model": "not_applicable",
+      "constraints_support": [
+        "bounded_typed_request",
+        "explicit_material_loads_supports",
+        "bounded_resources",
+        "independent_evidence",
+        "no_automatic_optimization_acceptance"
+      ],
+      "headless": false,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json"
+        ]
+      },
+      "verification": {
+        "state": "BLOCKED",
+        "validators": [
+          "no auto-promotion from FEM output",
+          "explicit independent structural engineering review required",
+          "loads, materials, constraints, safety factors, fatigue and other applicable cases required"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase10-simulation-acceptance-20261008.json"
+        ]
+      },
+      "fallback": [],
+      "status": "BLOCKED"
     },
     {
       "record_id": "photogrammetry.object_reconstruct--sidecar_meshroom",
@@ -4687,6 +4818,146 @@
       "status": "PROVEN"
     },
     {
+      "record_id": "simulation.advanced_dolfinx--candidate-dolfinx",
+      "capability_id": "simulation.advanced_dolfinx",
+      "problem_class": "simulation",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json"
+      },
+      "engine": {
+        "id": "dolfinx",
+        "version": null
+      },
+      "adapter": {
+        "id": "not-admitted",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json"
+      },
+      "runtime": {
+        "id": "not-installed",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_request"
+      ],
+      "output_types": [
+        "artifact_or_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request",
+        "explicit_material_loads_supports",
+        "bounded_resources",
+        "independent_evidence",
+        "no_automatic_optimization_acceptance"
+      ],
+      "headless": false,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "advanced PDE use case and resource need required",
+          "isolated environment and license qualification required",
+          "positive and negative FEM fixtures required"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase10-simulation-acceptance-20261008.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "freecad-calculix-cli",
+          "runtime": "freecad-1.1:FEM+Gmsh+CalculiX"
+        }
+      ],
+      "status": "CANDIDATE"
+    },
+    {
+      "record_id": "simulation.advanced_sfepy--candidate-sfepy",
+      "capability_id": "simulation.advanced_sfepy",
+      "problem_class": "simulation",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json"
+      },
+      "engine": {
+        "id": "sfepy",
+        "version": null
+      },
+      "adapter": {
+        "id": "not-admitted",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json"
+      },
+      "runtime": {
+        "id": "not-installed",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "typed_request"
+      ],
+      "output_types": [
+        "artifact_or_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request",
+        "explicit_material_loads_supports",
+        "bounded_resources",
+        "independent_evidence",
+        "no_automatic_optimization_acceptance"
+      ],
+      "headless": false,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json",
+        "code_license": "BSD-3-Clause",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "advanced PDE use case and resource need required",
+          "isolated environment and license qualification required",
+          "positive and negative FEM fixtures required"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase10-simulation-acceptance-20261008.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "freecad-calculix-cli",
+          "runtime": "freecad-1.1:FEM+Gmsh+CalculiX"
+        }
+      ],
+      "status": "CANDIDATE"
+    },
+    {
       "record_id": "simulation.analysis--sidecar_libigl",
       "capability_id": "simulation.analysis",
       "problem_class": "simulation",
@@ -4714,9 +4985,13 @@
       "output_types": [
         "artifact_or_receipt"
       ],
-      "precision_model": "not_applicable",
+      "precision_model": "mixed",
       "constraints_support": [
-        "bounded_typed_request"
+        "bounded_typed_request",
+        "explicit_material_loads_supports",
+        "bounded_resources",
+        "independent_evidence",
+        "no_automatic_optimization_acceptance"
       ],
       "headless": true,
       "license_lane": "review-required",
@@ -4778,9 +5053,13 @@
       "output_types": [
         "artifact_or_receipt"
       ],
-      "precision_model": "not_applicable",
+      "precision_model": "mixed",
       "constraints_support": [
-        "bounded_typed_request"
+        "bounded_typed_request",
+        "explicit_material_loads_supports",
+        "bounded_resources",
+        "independent_evidence",
+        "no_automatic_optimization_acceptance"
       ],
       "headless": true,
       "license_lane": "review-required",
@@ -4804,6 +5083,142 @@
         ],
         "evidence_refs": [
           "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_gmsh"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "simulation.linear_elastic_static--phase10-freecad",
+      "capability_id": "simulation.linear_elastic_static",
+      "problem_class": "simulation",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "freecad-calculix-cli",
+        "version": "2.22"
+      },
+      "adapter": {
+        "id": "ai3d-phase10-freecad-fem",
+        "source_ref": "scripts/ai3d_phase10_freecad_driver.py"
+      },
+      "runtime": {
+        "id": "freecad-1.1:FEM+Gmsh+CalculiX",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "cad_solid",
+        "material_evidence",
+        "load_and_support_contract",
+        "tetra10_mesh"
+      ],
+      "output_types": [
+        "solver_input",
+        "frd_result",
+        "displacement_and_stress_report",
+        "verification_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request",
+        "explicit_material_loads_supports",
+        "bounded_resources",
+        "independent_evidence",
+        "no_automatic_optimization_acceptance"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json",
+        "code_license": "GPL-2.0",
+        "data_license": null,
+        "allowed_use": "existing standalone FreeCAD-bundled command-line execution only; separate legal review before combining or distributing binaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "no inclusion in a proprietary installer, product, or binary bundle without a recorded GPL compliance/legal approval",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase10-simulation-acceptance-20261008.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase10_simulation"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase10-simulation-acceptance-20261008.json"
+        ]
+      },
+      "fallback": [],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "simulation.mesh.gmsh_tetra10--phase10-freecad",
+      "capability_id": "simulation.mesh.gmsh_tetra10",
+      "problem_class": "simulation",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "freecad-gmsh-cli",
+        "version": "4.15.0"
+      },
+      "adapter": {
+        "id": "ai3d-phase10-freecad-fem",
+        "source_ref": "scripts/ai3d_phase10_freecad_driver.py"
+      },
+      "runtime": {
+        "id": "freecad-1.1:FEM+Gmsh+CalculiX",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "cad_solid",
+        "explicit_mesh_spec"
+      ],
+      "output_types": [
+        "tetra10_mesh_receipt",
+        "verification_receipt"
+      ],
+      "precision_model": "mixed",
+      "constraints_support": [
+        "bounded_typed_request",
+        "explicit_material_loads_supports",
+        "bounded_resources",
+        "independent_evidence",
+        "no_automatic_optimization_acceptance"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json",
+        "code_license": "GPL-2.0-or-later with linking exception",
+        "data_license": null,
+        "allowed_use": "existing standalone FreeCAD-bundled command-line execution only; separate legal review before combining or distributing binaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "no inclusion in a proprietary installer, product, or binary bundle without a recorded GPL compliance/legal approval",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase10-simulation-acceptance-20261008.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase10_simulation"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase10-simulation-acceptance-20261008.json"
         ]
       },
       "fallback": [],

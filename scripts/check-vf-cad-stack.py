@@ -39,6 +39,12 @@ drawings_sheetmetal_path = (
     / "drawings-vectors-sheetmetal-v1.json"
 )
 drawings_sheetmetal_adapter = ROOT / "scripts" / "ai3d_drawings_vectors_sheetmetal.py"
+simulation_path = (
+    ROOT / "docs" / "implementation" /
+    "ai-3d-modeling-engineering-core" / "simulation-optimization-v1.json"
+)
+simulation_driver = ROOT / "scripts" / "ai3d_phase10_freecad_driver.py"
+simulation_validator = ROOT / "scripts" / "validate_ai3d_phase10_simulation.py"
 doc_path = ROOT / "packages" / "vfprod" / "CAD-ENGINE-STACK.md"
 cli = ROOT / "scripts" / "vf_cad_stack.py"
 
@@ -52,6 +58,9 @@ assert assembly_ecad_path.is_file(), assembly_ecad_path
 assert assembly_ecad_adapter.is_file(), assembly_ecad_adapter
 assert drawings_sheetmetal_path.is_file(), drawings_sheetmetal_path
 assert drawings_sheetmetal_adapter.is_file(), drawings_sheetmetal_adapter
+assert simulation_path.is_file(), simulation_path
+assert simulation_driver.is_file(), simulation_driver
+assert simulation_validator.is_file(), simulation_validator
 assert doc_path.is_file(), doc_path
 assert cli.is_file(), cli
 
@@ -70,6 +79,19 @@ assert (
     registry["drawings_vectors_sheetmetal"]
     == "docs/implementation/ai-3d-modeling-engineering-core/drawings-vectors-sheetmetal-v1.json"
 )
+assert (
+    registry["simulation_optimization"]
+    == "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json"
+)
+simulation = json.loads(simulation_path.read_text(encoding="utf-8"))
+assert simulation["schema"] == "velvetos.ai3d.simulation-optimization.v1"
+assert simulation["non_authoritative_staging"] is True
+assert simulation["safety"]["auto_optimization_acceptance"] is False
+assert simulation["safety"]["assume_unknown_material"] is False
+assert simulation["safety"]["assume_unknown_load"] is False
+assert simulation["safety"]["assume_unknown_constraints"] is False
+assert simulation["safety"]["printer_actions_allowed"] is False
+assert simulation["safety"]["machine_control_allowed"] is False
 
 patterns = json.loads(patterns_path.read_text(encoding="utf-8"))
 assert patterns["schema"] == "velvetos.exact-cad-patterns.v1"
@@ -236,6 +258,10 @@ assert (
 assert (
     contract["drawings_vectors_sheetmetal"]
     == "docs/implementation/ai-3d-modeling-engineering-core/drawings-vectors-sheetmetal-v1.json"
+)
+assert (
+    contract["simulation_optimization"]
+    == "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json"
 )
 assert contract["coordinate_frame"] == "xy_center_z_min"
 

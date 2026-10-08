@@ -31,6 +31,8 @@ def problem_class(capability: str) -> str:
         return "drawing_vector"
     if capability.startswith("sheetmetal."):
         return "manufacturing"
+    if capability.startswith("optimization."):
+        return "simulation"
     if capability.startswith("mesh.") or capability.startswith("implicit."):
         return "mesh_geometry"
     if capability.startswith("scan.") or capability.startswith("photogrammetry.") or capability.startswith("reconstruction."):
@@ -59,7 +61,7 @@ def precision_model(capability: str) -> str:
         return "exact_brep"
     if capability.startswith("drawing.") or capability.startswith("vector."):
         return "mixed"
-    if capability.startswith("assembly."):
+    if capability.startswith("assembly.") or capability.startswith("simulation."):
         return "mixed"
     if capability.startswith("cad.") or capability == "cam.toolpath":
         return "exact_brep"
@@ -111,6 +113,14 @@ def io_types(capability: str) -> tuple[list[str], list[str]]:
         return ["mesh_artifact", "query_points"], ["signed_distance_field", "verification_receipt"]
     if capability == "implicit.openvdb":
         return ["mesh_or_volume_artifact"], ["vdb_volume_artifact", "verification_receipt"]
+    if capability == "simulation.mesh.gmsh_tetra10":
+        return ["cad_solid", "explicit_mesh_spec"], ["tetra10_mesh_receipt", "verification_receipt"]
+    if capability == "simulation.linear_elastic_static":
+        return ["cad_solid", "material_evidence", "load_and_support_contract", "tetra10_mesh"], ["solver_input", "frd_result", "displacement_and_stress_report", "verification_receipt"]
+    if capability == "implicit.tpms_gyroid":
+        return ["explicit_periodic_cell", "bounded_grid"], ["sampled_level_set_evidence"]
+    if capability.startswith("optimization."):
+        return ["validated_simulation", "human_review"], ["candidate_only_or_blocked"]
     if capability == "drawing.techdraw.page":
         return ["cad_artifact", "drawing_contract"], ["freecad_drawing_page", "dxf_artifact", "verification_receipt"]
     if capability == "drawing.dxf.roundtrip":
@@ -188,6 +198,10 @@ def constraints(capability: str) -> list[str]:
         values.extend(["font_name_required", "no_font_file_bundling", "unicode_roundtrip_validation"])
     if capability == "sheetmetal.unfold":
         values.extend(["explicit_thickness", "explicit_bend_radius", "explicit_k_factor", "explicit_k_factor_standard", "dxf_reopen_required"])
+    if capability.startswith("simulation.") or capability.startswith("optimization."):
+        values.extend(["explicit_material_loads_supports", "bounded_resources", "independent_evidence", "no_automatic_optimization_acceptance"])
+    if capability == "implicit.tpms_gyroid":
+        values.extend(["research_only", "no_strength_claim", "no_printability_claim"])
     if capability == "drawing.draftwright":
         values.extend(["isolated_eval_only", "no_canonical_runtime_install", "license_review_required", "canonical_build123d_not_downgraded"])
     if capability.startswith("print."):
@@ -1389,6 +1403,168 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
             status="CANDIDATE",
             provider=draftwright_provider,
             license_provenance=[phase9_config, phase9_acceptance],
+        )
+    )
+
+    # Phase 10 records are admitted only against a complete solver/mesh
+    # acceptance proof. This is an extension of existing Fabrication authority,
+    # not a FEM, optimizer, or printer-control authority of its own.
+    phase10_config = (
+        "docs/implementation/ai-3d-modeling-engineering-core/"
+        "simulation-optimization-v1.json"
+    )
+    phase10_evidence = (
+        "docs/implementation/ai-3d-modeling-engineering-core/evidence/"
+        "phase10-simulation-acceptance-20261008.json"
+    )
+    phase10 = load(repo_root / phase10_config)
+    proof10 = load(repo_root / phase10_evidence)
+    assert phase10["schema"] == "velvetos.ai3d.simulation-optimization.v1"
+    assert phase10["non_authoritative_staging"] is True
+    assert proof10["status"] == "PASS"
+    assert proof10["coarse"]["solver"]["returncode"] == 0
+    assert proof10["fine"]["solver"]["returncode"] == 0
+    assert len(proof10["negative_controls"]) >= 12
+    assert proof10["tpms_research"]["status"] == "RESEARCH_ONLY"
+
+    runtime10 = phase10["runtime_truth"]
+    for cap_id, engine_id, version, status in (
+        ("simulation.mesh.gmsh_tetra10", "freecad-gmsh-cli", runtime10["gmsh"]["bundled_version"], "PROVEN"),
+        ("simulation.linear_elastic_static", "freecad-calculix-cli", runtime10["calculix"]["version"], "PROVEN"),
+    ):
+        source_license = (
+            runtime10["gmsh"]["license"]
+            if cap_id == "simulation.mesh.gmsh_tetra10"
+            else runtime10["calculix"]["license"]
+        )
+        entry = make_record(
+            record_id=f"{cap_id}--phase10-freecad",
+            capability_id=cap_id,
+            authority_id="fabrication-router",
+            authority_ref="packages/vfprod/FABRICATION-ROUTER.json",
+            engine_id=engine_id,
+            engine_version=version,
+            adapter_id="ai3d-phase10-freecad-fem",
+            adapter_ref="scripts/ai3d_phase10_freecad_driver.py",
+            runtime_id="freecad-1.1:FEM+Gmsh+CalculiX",
+            host_classes=["windows-primary"],
+            headless=True,
+            verification_state="PROVEN_PROVIDER",
+            validators=["validate_ai3d_phase10_simulation"],
+            evidence_refs=[phase10_config, phase10_evidence],
+            fallbacks=[],
+            status=status,
+            provider={
+                "version": version,
+                "license": source_license,
+                "capabilities": [cap_id],
+            },
+            license_provenance=[phase10_config, phase10_evidence],
+        )
+        # GPL solvers are permitted for bounded existing local use, but they
+        # must never be silently rebundled into commercial/closed deliverables.
+        entry["license_lane"] = "review-required"
+        entry["license"]["allowed_use"] = (
+            "existing standalone FreeCAD-bundled command-line execution only; "
+            "separate legal review before combining or distributing binaries"
+        )
+        entry["license"]["bundle_policy"] = (
+            "no inclusion in a proprietary installer, product, or binary bundle "
+            "without a recorded GPL compliance/legal approval"
+        )
+        records.append(entry)
+
+    records.append(
+        make_record(
+            record_id="implicit.tpms_gyroid--research-phase10",
+            capability_id="implicit.tpms_gyroid",
+            authority_id="fabrication-router",
+            authority_ref=phase10_config,
+            engine_id="numpy-periodic-gyroid",
+            engine_version="1.0",
+            adapter_id="ai3d-tpms-research",
+            adapter_ref="scripts/ai3d_tpms_research.py",
+            runtime_id="vf-cad-stack:build123d-venv",
+            host_classes=["windows-primary"],
+            headless=True,
+            verification_state="RESEARCH_ONLY",
+            validators=["validate_ai3d_phase10_simulation", "no-mesh-or-strength-claim"],
+            evidence_refs=[phase10_config, phase10_evidence],
+            fallbacks=[],
+            status="RESEARCH_ONLY",
+            provider={
+                "version": "1.0",
+                "license": None,
+                "capabilities": ["implicit.tpms_gyroid"],
+            },
+            license_provenance=[phase10_config, phase10_evidence],
+        )
+    )
+
+    for cap_id, engine_id, licence in (
+        ("simulation.advanced_sfepy", "sfepy", "BSD-3-Clause"),
+        ("simulation.advanced_dolfinx", "dolfinx", None),
+    ):
+        records.append(
+            make_record(
+                record_id=f"{cap_id}--candidate-{engine_id}",
+                capability_id=cap_id,
+                authority_id="fabrication-router",
+                authority_ref=phase10_config,
+                engine_id=engine_id,
+                engine_version=None,
+                adapter_id="not-admitted",
+                adapter_ref=phase10_config,
+                runtime_id="not-installed",
+                host_classes=["windows-primary"],
+                headless=False,
+                verification_state="CANDIDATE",
+                validators=[
+                    "advanced PDE use case and resource need required",
+                    "isolated environment and license qualification required",
+                    "positive and negative FEM fixtures required",
+                ],
+                evidence_refs=[phase10_config, phase10_evidence],
+                fallbacks=[
+                    {
+                        "engine": "freecad-calculix-cli",
+                        "runtime": "freecad-1.1:FEM+Gmsh+CalculiX",
+                    }
+                ],
+                status="CANDIDATE",
+                provider={
+                    "version": None,
+                    "license": licence,
+                    "capabilities": [cap_id],
+                },
+                license_provenance=[phase10_config],
+            )
+        )
+
+    records.append(
+        make_record(
+            record_id="optimization.auto_accept--blocked-phase10",
+            capability_id="optimization.auto_accept",
+            authority_id="fabrication-router",
+            authority_ref=phase10_config,
+            engine_id="not-admitted",
+            engine_version=None,
+            adapter_id="not-admitted",
+            adapter_ref=phase10_config,
+            runtime_id="not-admitted",
+            host_classes=["windows-primary"],
+            headless=False,
+            verification_state="BLOCKED",
+            validators=[
+                "no auto-promotion from FEM output",
+                "explicit independent structural engineering review required",
+                "loads, materials, constraints, safety factors, fatigue and other applicable cases required",
+            ],
+            evidence_refs=[phase10_config, phase10_evidence],
+            fallbacks=[],
+            status="BLOCKED",
+            provider=None,
+            license_provenance=[phase10_config],
         )
     )
 
