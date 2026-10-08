@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-08T11:13:48.651863Z",
+  "updated_at": "2026-10-08T16:34:16.891Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 98,
+  "candidate_count": 99,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -3165,6 +3165,75 @@
         "evidence_status": "RESEARCH_ONLY",
         "next_action": "P0.5 only: after useful code runner works, compare native isolated worker vs OpenShell sandbox with intentional file/network denial, worker exit/restart, latency and host resource footprint.",
         "rationale": "Potential hardening complement to execution, not a prerequisite to first two real P0 coding PRs.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-odysseus",
+      "source_item_id": null,
+      "name": "Odysseus self-hosted AI workspace",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "POST_POLICY_OWNER_RECENT_REPO_REVIEW",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Credible self-hosted AI agent/workspace with local-model, tool selection and context-management features; compare as a later P1 challenger only after the existing #612 P0 coding/PR/resume proof, not as a replacement for the current pilot.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime",
+        "self-hosted",
+        "local-models",
+        "mcp",
+        "tool-routing",
+        "context-compaction",
+        "model-comparison",
+        "teacher-fallback",
+        "skills",
+        "deep-research",
+        "memory-context",
+        "docker",
+        "windows",
+        "macos"
+      ],
+      "platform_constraints": [
+        "AGPL-3.0-or-later: review networked-service/derivative and third-party license obligations before code reuse, modification, distribution or hosted deployment.",
+        "Python/FastAPI, Docker Compose and optional ChromaDB/SearXNG/local inference; validate installation and model/tool readiness independently on each chosen host.",
+        "Native Windows shell execution and sandbox capability are not equivalent to Linux bubblewrap; fail-closed process containment and tool-RAG fallback require fresh validation. Apple Silicon Docker cannot use Metal GPU serving.",
+        "Privileged host-shell/file/email/MCP tools demand isolated LAB, no live secrets, Docker socket, host workspace writes, production credentials or public network exposure.",
+        "Only evaluate after #612 P0 end-to-end protected coding PR/CI and crash/resume gates are verified and spare CPU/GPU/GUI capacity is confirmed; no Codex CLI, extra paid model endpoint, new scheduler/watch or global install."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime",
+        "memory-context"
+      ],
+      "evidence_refs": [
+        "https://github.com/odysseus-dev/odysseus",
+        "https://github.com/odysseus-dev/odysseus/commit/a8c147b238db01dbd00b57774ed8b453f1e43971",
+        "https://github.com/odysseus-dev/odysseus/blob/dev/README.md",
+        "https://github.com/odysseus-dev/odysseus/blob/dev/ROADMAP.md",
+        "https://github.com/odysseus-dev/odysseus/blob/dev/THREAT_MODEL.md",
+        "docs/implementation/office-v2/phase2/admission-policy-v0.md",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "Reviewed public upstream repo, current files and recent commits on 2026-10-08; source review is not an installed, tested or security-approved runtime.",
+        "Research-only P1 queued candidate; active 2-3 challenger sets, Restate durable-execution winner, live #612 P0 fixtures and #604/#602 scope are unchanged.",
+        "Evaluate whole-workspace replacement, selective context/tool-management components and hybrid adapter fairly; do not reject on overlap alone.",
+        "Teacher handoff is opt-in, failure detection is imperfect, and background skill-learning must not be assumed to be automatic or production-safe.",
+        "Use pinned upstream revision for reproducible isolated LAB; record model/tool success, independent verifier, context fidelity, wall time p50/p95 where samples permit, tokens, cost, CPU/RAM/GPU, operator minutes, security, rollback and provenance."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "P1 only after the #612 two-host coding/PR/CI/resume gate is independently green: license/security/host preflight; pin upstream revision; run isolated same-fixture agent/tool/context/model-fallback and memory-provenance comparisons against incumbents. Capture independent verifier receipts and cost/resource metrics; promote only through the existing approval lifecycle.",
+        "rationale": "A full self-hosted AI workspace could replace or complement the current agent/runtime/context stack, but documentation and source inspection do not prove equal or superior artifact completion, security or operational fitness.",
         "decision_evidence_refs": []
       }
     }
