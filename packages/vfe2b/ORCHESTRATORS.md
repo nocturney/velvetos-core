@@ -1,5 +1,8 @@
 # vfe2b — שכבת תזמורת (orchestrators)
 
+> **COMPETITOR_NEUTRAL_ADMISSION_V1:** הוראות "דפוסים בלבד / לא מתקינים" של משמרת 2026-08-31 אינן איסור על מתחרים בבדיקת Office v2. מחקר והשוואת מימוש חלופי (כולל החלפת orchestrator קיים) מותרות; LAB מחייב admission ובידוד ו־production מחייב promotion נפרד. מקורות: `constitution/CONSTITUTION.md` · `docs/implementation/office-v2/phase2/admission-policy-v0.md`. אין runtime ייצור מקביל בלי שער.
+
+
 לא פק חדש. לא ADE שני. מקור: [andyrewlee/awesome-agent-orchestrators](https://github.com/andyrewlee/awesome-agent-orchestrators) — **194** רשומות (נקרא 31.8.2026).
 
 הרשימה מחליטה *על מה* סוכן עובד, *מתי*, *איפה*, ו*מה קורה לתוצר*. אצלנו זה כבר `crews/run.md` + `vfharness`. מטמיעים דפוסים. לא מתקינים את הכלים.
