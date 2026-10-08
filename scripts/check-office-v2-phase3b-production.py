@@ -219,6 +219,17 @@ def main() -> None:
     for marker in ("production-rollback-drill.json", "former_production_credential_http", "restored_pilot_runtime_http", "Put-Snapshot $prodToken", "ROLLBACK_DRILL_COMPLETE_REQUIRES_FRESH_ROTATE", "[string[]]$ScriptArgs", "[string[]]$CommandArgs"):
         require(marker in rollback_drill, "production rollback drill missing marker: " + marker)
     require("[string[]]$Args" not in rollback_drill, "production rollback helpers may not shadow PowerShell automatic $Args")
+    for marker in (
+        "rollback_provider_restored=$providerRestored",
+        "rollback_broker_restored=$brokerRestored",
+        "rollback_restore_error=$restoreFailure",
+        "rotator_role_id=[string]$prodBundleObj.rotator_role_id",
+        "rotator_secret_id=[string]$prodBundleObj.rotator_secret_id",
+        "credential_reference_sha256 -ne (Hash-Text $prodToken)",
+        "root_revoked -ne $true",
+    ):
+        require(marker in rollback_drill, "production rollback exception path missing verified scoped restoration: " + marker)
+    require(" @('Rotate') $prodToken" not in rollback_drill, "production rollback exception path may not pass raw token instead of scoped rotator JSON")
     for marker in ("Resolve-Phase3B-ProductionSnapshot.ps1", "--mode", "Production", "vf.instagram.schedule-snapshot.v1"):
         require(marker in adapter, "secure production snapshot adapter missing marker: " + marker)
     for forbidden in ("VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN", "cloudflare-publisher-control.dpapi", "resolve_token"):
