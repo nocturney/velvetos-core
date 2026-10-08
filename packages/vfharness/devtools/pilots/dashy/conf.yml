@@ -1,0 +1,26 @@
+pageInfo:
+  title: Velvet Office
+  description: Read-only launchpad for verified VelvetOS surfaces. This is not a control plane.
+appConfig:
+  theme: minimal-dark
+  layout: auto
+  disableConfiguration: true
+  preventWriteToDisk: true
+  preventLocalSave: true
+  enableServiceWorker: false
+sections:
+  - name: Canonical VelvetOS surfaces
+    icon: fas fa-link
+    items:
+      - title: VelvetOS Control Center
+        description: Existing staging console, guarded by Google IAP. Actions stay in the canonical system.
+        url: https://velvetos-control-center-staging-3sz7smh74a-zf.a.run.app/
+        icon: fas fa-desktop
+      - title: VelvetOS Control API Health
+        description: Process readiness endpoint only. Does not prove downstream integrations.
+        url: https://velvetos-control-api-3sz7smh74a-zf.a.run.app/health
+        icon: fas fa-heartbeat
+      - title: VelvetOS Core Repository
+        description: Source and governed delivery history. This launchpad cannot mutate Git.
+        url: https://github.com/nocturney/velvetos-core
+        icon: fab fa-github

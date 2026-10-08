@@ -1,0 +1,18 @@
+version: 3
+expires_after: 1h
+idle_timeout: 10m
+allow:
+  tools:
+    - start_session
+    - end_session
+    - get_window_state
+    - verify_state
+    - click
+    - type_text
+resources:
+  apps:
+    - executable: D:\Velvet\Tools\CuaPilot\0.34.0\fixture\CuaSmokeFixture.exe
+      launch: false
+      windows: all
+  desktop:
+    display: false
