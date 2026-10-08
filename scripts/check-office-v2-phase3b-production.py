@@ -173,7 +173,7 @@ def main() -> None:
         "officev2-prod-publisher-snapshot",
         "oldAfter -eq 401",
         "newRead -eq 200",
-        "newWrite -ne 401",
+        "newWrite -eq 401",
         "Put-Snapshot $oldToken",
         "production_authority_active=$false",
         "Protect-Text",
@@ -192,13 +192,25 @@ def main() -> None:
         "preceding_rollback_receipt_sha256",
         "production-provider-fresh-rerotate-attempt-fail.json",
         "prior rotation archive conflicts with canonical receipt",
-        "stableSamples -lt 2",
         "newJobs -eq 200",
         "newMeta -eq 200",
         "newWrite -eq 401",
     ):
         require(marker in runtime_bind, "production re-rotation and duplicate safety guard missing: " + marker)
     require("already-rotated live correlated proof mismatch" in runtime_bind, "already-rotated branch must perform live read-only revalidation")
+    for marker in (
+        "$rotationConsecutivePass=0",
+        "$rotationConsecutivePass++",
+        "$rotationConsecutivePass -ge 2",
+        "$rotationConsecutivePass -lt 2",
+        "$newJobs=Http-Code $newToken 'GET' '/v1/jobs'",
+        "stable_full_boundary_checks=$rotationConsecutivePass",
+        "rollback_provider_confirmed=$rollbackProviderConfirmed",
+        "rollback_broker_confirmed=$rollbackBrokerConfirmed",
+        "rollback_error=$rollbackError",
+    ):
+        require(marker in runtime_bind, "production rotation consistency/fail-closed restoration missing: " + marker)
+    require("for($i=0;$i -lt 45;$i++)" in runtime_bind, "production rotation must allow bounded propagation checks")
 
     for marker in (
         "officev2-p3b-prod-openbao",
