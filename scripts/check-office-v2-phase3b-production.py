@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -271,7 +273,17 @@ def main() -> None:
     for forbidden in ('"secret_value"', '"raw_token"', '"access_token"', '"client_secret"', '"private_key"'):
         require(forbidden not in serialized, "raw credential material field forbidden: " + forbidden)
 
-    print("OK office-v2-phase3b-production contract=READY scope=instagram-publisher-snapshot-read writer_change=FALSE mutation=FALSE promotion=EXPLICIT_ONLY")
+    router = (VFIGOS / "cloudflare_publisher_snapshot.py").read_text(encoding="utf-8-sig")
+    resolver = (VFIGOS / "officev2_production_snapshot_resolver.ps1").read_text(encoding="utf-8-sig")
+    for marker in ("snapshot_route(", "PILOT_CHECKPOINT", "PRODUCTION_CHECKPOINT", "calculated_hash != declared_hash", "OFFICEV2_PRODUCTION_READ", "secure_snapshot(DEFAULT_RESOLVER, \"Production\")", "production read forbids publisher endpoint override"):
+        require(marker in router, "canonical publisher reader routing guard missing: " + marker)
+    require(router.index("route=snapshot_route()") < router.index("token=resolve_token()", router.index("def main()")), "legacy token resolution must be behind the checkpoint router")
+    for marker in ("production binding not explicitly activated", "production receipt/binding credential hash mismatch", "production promotion includes forbidden writer/mutation authority"):
+        require(marker in resolver, "production resolver cp017 gate missing: " + marker)
+    suite = subprocess.run([sys.executable, str(ROOT / "scripts" / "check-office-v2-phase3b-reader-route.py")], cwd=ROOT, text=True, capture_output=True, timeout=30)
+    require(suite.returncode == 0 and "admin-fallback=FORBIDDEN" in suite.stdout, "production reader negative cases failed: " + (suite.stdout + suite.stderr)[-1200:])
+
+    print("OK office-v2-phase3b-production contract=READY scope=instagram-publisher-snapshot-read reader_route=GATED writer_change=FALSE mutation=FALSE promotion=EXPLICIT_ONLY")
 
 if __name__ == "__main__":
     main()

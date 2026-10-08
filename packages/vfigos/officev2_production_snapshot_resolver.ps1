@@ -33,7 +33,11 @@ if($Mode -eq 'Probe'){
   if(-not (Test-Path $productionPromotion)){throw 'production promotion receipt missing'}
   $promotion=Get-Content $productionPromotion -Raw | ConvertFrom-Json
   if($promotion.status -ne 'PASS' -or $promotion.production_promoted -ne $true){throw 'production promotion receipt not PASS'}
+  if($promotion.scope_id -ne 'instagram-publisher-snapshot-read' -or $promotion.credential_class -ne 'PRODUCTION_READ' -or $promotion.exact_main_sha -ne $state.code_commit){throw 'production receipt scope/commit mismatch'}
+  if($promotion.production_writer_change -ne $false -or $promotion.external_mutation_allowed -ne $false){throw 'production promotion includes forbidden writer/mutation authority'}
+  if($binding.mode -ne 'ROTATED_PRODUCTION_CREDENTIAL_READY_FOR_PROMOTION' -or $binding.production_authority_active -ne $true -or $binding.production_promoted -ne $true){throw 'production binding not explicitly activated'}
   $expected=[string]$promotion.active_credential_reference_sha256
+  if($expected -ne [string]$binding.active_credential_reference_sha256){throw 'production receipt/binding credential hash mismatch'}
 }
 if(-not $expected){throw 'expected production read credential reference missing'}
 
