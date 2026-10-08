@@ -172,6 +172,53 @@ def main() -> int:
         or evidence_summary.get("operator_reissue_verified") is not True):
         fail("P0 concurrency evidence incomplete or exaggerated")
     
+    # Distinct #612 v1 model-aware Task Envelope. Only its OFFLINE contract
+    # selftest runs in CI; it MUST NOT invoke Ollama, Aider or production effects.
+    local_worker_check = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_p0_local_model_worker.py"), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=45,
+    )
+    if local_worker_check.returncode != 0:
+        fail("P0 local model LAB contract test failed: " + local_worker_check.stdout[:240])
+    try:
+        local_worker = json.loads(local_worker_check.stdout)
+    except json.JSONDecodeError:
+        fail("P0 local model LAB selftest returned invalid JSON")
+    if (
+        local_worker.get("status") != "PASS"
+        or local_worker.get("tests", 0) < 17
+        or local_worker.get("actual_model_invocations") != 0
+        or local_worker.get("live_model_agent_proven_by_selftest") is not False
+        or local_worker.get("paid_api_calls") != 0
+    ):
+        fail("P0 local model LAB selftest failed or misclaimed actual inference")
+
+    # Past REAL two-host model invocations are attested by hashed receipts.
+    # This separate pure verifier only reads static evidence, never runs a model.
+    local_proof_check = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_p0_local_model_evidence.py"),
+         "--evidence", str(P2 / "p0-local-agent-envelope-lab-2026-10-08.json")],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if local_proof_check.returncode != 0:
+        fail("P0 local model execution receipts invalid: " + local_proof_check.stdout[:240])
+    try:
+        local_proof = json.loads(local_proof_check.stdout)
+    except json.JSONDecodeError:
+        fail("P0 local model evidence returned invalid JSON")
+    if (
+        local_proof.get("status") != "PASS_SCOPED_LAB"
+        or local_proof.get("successful_real_model_receipts") != 4
+        or local_proof.get("historical_non_success_receipts") != 3
+        or local_proof.get("negative_controls_rejected") != 5
+        or local_proof.get("forced_live_model_worker_kill") is not True
+        or local_proof.get("explicit_new_local_model_attempt_after_loss") is not True
+        or local_proof.get("actual_model_calls_during_verification") != 0
+        or local_proof.get("automatic_failover_proven") is not False
+        or local_proof.get("production_promotion_allowed") is not False
+    ):
+        fail("P0 live model receipts/limits failed independent acceptance")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
