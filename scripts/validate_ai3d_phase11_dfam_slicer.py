@@ -169,7 +169,7 @@ def slicer_call(mesh:pathlib.Path,printer:str,target:pathlib.Path)->dict[str,Any
     assert slicer_plan["dry_run"] is False
     assert pathlib.Path(slicer_plan["generated"]["path"]).resolve()==target.resolve()
     assert target.is_file(),target
-    assert validation["path"]==str(target)
+    assert pathlib.Path(validation["path"]).resolve()==target.resolve(), (validation["path"],str(target))
     return {
         "bridge_returncode":process.returncode,
         "slicer_returncode":slicer_plan["returncode"],

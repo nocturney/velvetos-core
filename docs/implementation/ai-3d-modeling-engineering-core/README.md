@@ -343,16 +343,36 @@ Phase 12 validation:
   py -3.11 scripts/validate_ai3d_phase12_cam.py --artifacts-root D:\\Velvet\\Artifacts\\AI3D\\YYYY-MM-DD\\new-phase12-artifact-directory
   py -3.11 scripts/validate_ai3d_capability_registry.py
 
+## Phase 13 - Integration against latest origin/main
+
+The Phase 12 feature tree at `9d9e4be2` was reconciled against
+`origin/main@a2d065cb` in an isolated Phase 13 worktree. Git
+reported no conflicts; the reviewed local merge commit is `ca4037d8`.
+The upstream main changes (Office 2.0, DeerFlow comparative-research policy
+and other unrelated work) were preserved without modification of their source.
+
+- Phase 10 Gmsh/CalculiX two-mesh FEM recheck: PASS, no machine control.
+- Phase 11 STEP/STL/3MF -> Orca offline slicing recheck: PASS, C5 STL and 3MF each 60 layers; H2D remains BLOCKED_MOTION_BOUNDS.
+- Phase 12 FreeCAD GRBL post + reused historical Fabex cross-station proof recheck: PASS, 15 malformed CAM requests and 18 bad G-code mutations blocked.
+- Windows path normalization in the Phase 11 validator compares canonical resolved paths rather than literal string spelling. No G-code safety bound was relaxed.
+- Full merged-tree regression: 118/118 PASS; sensors reported no repository file mutations.
+- Merge receipt: `evidence/phase13-integration-acceptance-20261008.json`.
+- Full suite log: `evidence/check-all-phase13-integrated-main-20261008.log`.
+- This is a local, separately reviewed merge into the feature branch, not a statement that the remote GitHub `main` has already been updated.
+
 ## Validation state
 
-Explicit AI3D validation stack: PASS.
+Explicit AI3D validation stack: PASS. Current integration branch tested against
+`origin/main@a2d065cb`, with the physical H2D/CNC and
+automatic manufacturing-release gates still blocked.
+
 
 Repository regression:
 
 - scripts/check-all.py: 118/118 PASS
 - exit code: 0
 - sensor side-effect check: repository files unchanged
-- full-suite log: evidence/check-all-phase12-20261008.log
+- full-suite log: evidence/check-all-phase13-integrated-main-20261008.log
 
 ## Next implementation phase
 
