@@ -1,0 +1,156 @@
+{
+  "schema": "velvetos.office-v2.golden-fixture.v0",
+  "fixture_id": "worker-fleet-placement-loss-postcondition",
+  "status": "CONTRACT_V0",
+  "title": "Capability routing -> worker loss -> bounded retry -> independent postcondition",
+  "capability_scope": [
+    "fleet.capability_admission",
+    "fleet.resource_reservation",
+    "fleet.cross_host_dispatch",
+    "fleet.worker_loss_detection",
+    "fleet.retry_and_reconciliation",
+    "fleet.verified_readback",
+    "fleet.gui_session_boundary"
+  ],
+  "input_contract": {
+    "required": [
+      "task_id",
+      "correlation_id",
+      "required_os",
+      "capability_tags",
+      "memory_reservation_mb",
+      "host_inventory",
+      "retry_policy",
+      "expected_sha256",
+      "worker_loss_plan",
+      "postcondition_reader"
+    ],
+    "vendor_specific_fields_forbidden": true,
+    "synthetic_payload": "b'velvetos_fleet_synthetic_v1'*32768",
+    "synthetic_payload_bytes": 884736,
+    "expected_sha256": "d5d7a4ca0b3763074c62a08ba762c307ab2f986240bd9a267e3a4eed41783976",
+    "test_batches": [
+      1,
+      2,
+      4
+    ],
+    "host_requirement": "at least one verified Windows and one verified macOS host; planned workers excluded from real metrics"
+  },
+  "semantic_steps": [
+    {
+      "step_id": "inventory",
+      "capability": "fleet.worker.inspect",
+      "side_effect_class": "READ",
+      "expected_evidence": [
+        "host_inventory"
+      ]
+    },
+    {
+      "step_id": "admission",
+      "capability": "fleet.candidate.admission_check",
+      "side_effect_class": "READ",
+      "expected_evidence": [
+        "adapter_admission",
+        "authority_boundary"
+      ]
+    },
+    {
+      "step_id": "route",
+      "capability": "fleet.capability_route_and_reserve",
+      "side_effect_class": "READ",
+      "expected_evidence": [
+        "dispatches"
+      ]
+    },
+    {
+      "step_id": "execute",
+      "capability": "fleet.run_synthetic_native_task",
+      "side_effect_class": "REVERSIBLE_WRITE",
+      "expected_evidence": [
+        "attempts"
+      ]
+    },
+    {
+      "step_id": "lose_worker",
+      "capability": "fleet.detect_scoped_worker_loss",
+      "side_effect_class": "NONE",
+      "expected_evidence": [
+        "loss_event"
+      ]
+    },
+    {
+      "step_id": "recover",
+      "capability": "fleet.retry_on_other_capable_host",
+      "side_effect_class": "REVERSIBLE_WRITE",
+      "expected_evidence": [
+        "attempts",
+        "loss_event"
+      ]
+    },
+    {
+      "step_id": "verify",
+      "capability": "fleet.independent_postcondition_readback",
+      "side_effect_class": "READ",
+      "expected_evidence": [
+        "postconditions"
+      ]
+    },
+    {
+      "step_id": "deny",
+      "capability": "fleet.negative_capability_and_authority_gates",
+      "side_effect_class": "READ",
+      "expected_evidence": [
+        "negative_controls"
+      ]
+    },
+    {
+      "step_id": "measure",
+      "capability": "fleet.latency_resource_and_footprint_capture",
+      "side_effect_class": "READ",
+      "expected_evidence": [
+        "measurement_batches",
+        "maintenance_footprint"
+      ]
+    }
+  ],
+  "success_contract": [
+    "1/2/4-job batches completed with truthful independent readback on both physically online hosts, not a simulated five-host fleet",
+    "every executed task satisfies OS, capability, memory and GUI-session constraints before dispatch",
+    "scoped remote worker loss is observed by an actual scheduler and automatically retried on another suitable worker without duplicate committed effects",
+    "missing worker, capacity overflow, wrong OS/capability, GUI Session0, stale receipt and false-success controls fail closed",
+    "portable SHA-256 task returns exactly 884736 bytes with the recorded expected digest and separate reader process",
+    "p50/p95, CPU/RAM, optional GPU/VRAM, network, operating burden and teardown evidence are captured; manually orchestrated bridge calls do not count as a scheduler"
+  ],
+  "evidence_contract": {
+    "required": [
+      "host_inventory",
+      "adapter_admission",
+      "authority_boundary",
+      "dispatches",
+      "attempts",
+      "loss_event",
+      "postconditions",
+      "negative_controls",
+      "measurement_batches",
+      "maintenance_footprint"
+    ]
+  },
+  "rollback_contract": [
+    "use only test-specific scratch artifacts and destroy their own state after verified receipt capture",
+    "terminate only an independently owned test worker process; never stop production bridge, scheduler, browser, printer or owner GUI",
+    "remove test runtime by recorded teardown; no durable host agent, credentials, paid service, reboot or system setting changes"
+  ],
+  "resource_capture": [
+    "wall_seconds",
+    "cpu_peak_pct",
+    "ram_peak_mb",
+    "gpu_peak_pct",
+    "vram_peak_mb",
+    "storage_delta_mb",
+    "network_mb",
+    "external_cost",
+    "recurring_cost",
+    "operator_minutes"
+  ],
+  "external_effect_policy": "PROVIDER_ADAPTER_REQUIRED_NO_DIRECT_RUNNER_MUTATION"
+}
