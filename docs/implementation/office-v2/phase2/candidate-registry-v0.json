@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-08T06:33:00+03:00",
+  "updated_at": "2026-10-08T08:44:00+03:00",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 83,
+  "candidate_count": 86,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -15,7 +15,8 @@
     "Derived incumbents describe current compositions only; they do not create new production authority.",
     "A shortlist is a benchmark set, not a winner declaration.",
     "Prior research is evidence input, not current runtime verification.",
-    "COMPETITOR_NEUTRAL_ADMISSION_V1: preserve every new credible alternative with comparative evidence and queue when shortlists are full, without shifting the closed 68-source import."
+    "COMPETITOR_NEUTRAL_ADMISSION_V1: preserve every new credible alternative with comparative evidence and queue when shortlists are full, without shifting the closed 68-source import.",
+    "Historical competitor-neutral backfill on 2026-10-08 reopens evidence-free deferrals and preserves established candidate IDs/source_item_id lineage; no LAB or production promotion."
   ],
   "items": [
     {
@@ -1477,20 +1478,39 @@
       "category": "AGENT",
       "provenance_class": "PRIOR_RESEARCH",
       "lifecycle_state": "RESEARCHED",
-      "decision_verdict": "DEFERRED_WITH_REASON",
-      "verdict_reason": "Prior decision is deferred; it remains visible and may reopen only under the research-reopen rules.",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Potential complete local agent gateway and memory replacement; prior rejection was based on autonomous chat/WhatsApp surface, not a comparable sandboxed backend evaluation.",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "capability_tags": [
         "agent-framework"
       ],
       "platform_constraints": [],
-      "shortlist_lanes": [],
-      "evidence_refs": [
-        "prior-research://agents"
+      "shortlist_lanes": [
+        "agent-runtime"
       ],
-      "notes": [],
-      "original_office_v2_verdict": "DEFER"
+      "evidence_refs": [
+        "prior-research://agents",
+        "https://github.com/openclaw/openclaw",
+        "docs/implementation/office-v2/phase2/competitor-neutral-backfill-2026-10-08.md"
+      ],
+      "notes": [
+        "Historical deferral re-opened 2026-10-08 under COMPETITOR_NEUTRAL_ADMISSION_V1; no LAB benchmark or production rights granted."
+      ],
+      "original_office_v2_verdict": "DEFER",
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Security review of gateway tool/sandbox and consent boundaries, then same-fixture LAB comparison with incumbent and DeerFlow.",
+        "rationale": "Potential complete local agent gateway and memory replacement; prior rejection was based on autonomous chat/WhatsApp surface, not a comparable sandboxed backend evaluation.",
+        "decision_evidence_refs": []
+      }
     },
     {
       "candidate_id": "deferred-crewai",
@@ -1499,20 +1519,39 @@
       "category": "RUNTIME",
       "provenance_class": "PRIOR_RESEARCH",
       "lifecycle_state": "RESEARCHED",
-      "decision_verdict": "DEFERRED_WITH_REASON",
-      "verdict_reason": "Prior decision is deferred; it remains visible and may reopen only under the research-reopen rules.",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Active MIT multi-agent runtime; 'patterns only/no second runtime' does not establish inferior fitness.",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "capability_tags": [
         "agent-framework"
       ],
       "platform_constraints": [],
-      "shortlist_lanes": [],
-      "evidence_refs": [
-        "prior-research://agents"
+      "shortlist_lanes": [
+        "agent-runtime"
       ],
-      "notes": [],
-      "original_office_v2_verdict": "DEFER"
+      "evidence_refs": [
+        "prior-research://agents",
+        "https://github.com/crewAIInc/crewAI",
+        "docs/implementation/office-v2/phase2/competitor-neutral-backfill-2026-10-08.md"
+      ],
+      "notes": [
+        "Historical deferral re-opened 2026-10-08 under COMPETITOR_NEUTRAL_ADMISSION_V1; no LAB benchmark or production rights granted."
+      ],
+      "original_office_v2_verdict": "DEFER",
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Run same agent-runtime fixtures with typed tools, audit receipts, resumability and policy gates, first under synthetic no-cost LAB.",
+        "rationale": "Active MIT multi-agent runtime; 'patterns only/no second runtime' does not establish inferior fitness.",
+        "decision_evidence_refs": []
+      }
     },
     {
       "candidate_id": "deferred-autogen",
@@ -1522,7 +1561,7 @@
       "provenance_class": "PRIOR_RESEARCH",
       "lifecycle_state": "RESEARCHED",
       "decision_verdict": "DEFERRED_WITH_REASON",
-      "verdict_reason": "Prior decision is deferred; it remains visible and may reopen only under the research-reopen rules.",
+      "verdict_reason": "Microsoft AutoGen official README explicitly states maintenance mode and recommends Microsoft Agent Framework for new projects; keep historic AutoGen as reference while evaluating its current successor.",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "capability_tags": [
@@ -1531,10 +1570,29 @@
       "platform_constraints": [],
       "shortlist_lanes": [],
       "evidence_refs": [
-        "prior-research://agents"
+        "prior-research://agents",
+        "https://github.com/microsoft/autogen",
+        "https://github.com/microsoft/agent-framework",
+        "docs/implementation/office-v2/phase2/competitor-neutral-backfill-2026-10-08.md"
       ],
-      "notes": [],
-      "original_office_v2_verdict": "DEFER"
+      "notes": [
+        "Evidence-based upstream maintenance transition replaces generic historical defer; successor entered as separate canonical candidate."
+      ],
+      "original_office_v2_verdict": "DEFER",
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "DEFERRED_WITH_REASON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare the actively developed Microsoft Agent Framework successor on the agent-runtime fixture; revisit AutoGen only for compatibility or documented successor regression.",
+        "rationale": "Microsoft AutoGen official README explicitly states maintenance mode and recommends Microsoft Agent Framework for new projects; keep historic AutoGen as reference while evaluating its current successor.",
+        "decision_evidence_refs": [
+          "https://github.com/microsoft/autogen/blob/main/README.md"
+        ]
+      }
     },
     {
       "candidate_id": "deferred-langgraph",
@@ -1543,20 +1601,39 @@
       "category": "RUNTIME",
       "provenance_class": "PRIOR_RESEARCH",
       "lifecycle_state": "RESEARCHED",
-      "decision_verdict": "DEFERRED_WITH_REASON",
-      "verdict_reason": "Prior decision is deferred; it remains visible and may reopen only under the research-reopen rules.",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Active MIT durable agent workflow framework and DeerFlow foundation; prior blanket defer lacks same-contract results.",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "capability_tags": [
         "agent-framework"
       ],
       "platform_constraints": [],
-      "shortlist_lanes": [],
-      "evidence_refs": [
-        "prior-research://agents"
+      "shortlist_lanes": [
+        "agent-runtime"
       ],
-      "notes": [],
-      "original_office_v2_verdict": "DEFER"
+      "evidence_refs": [
+        "prior-research://agents",
+        "https://github.com/langchain-ai/langgraph",
+        "docs/implementation/office-v2/phase2/competitor-neutral-backfill-2026-10-08.md"
+      ],
+      "notes": [
+        "Historical deferral re-opened 2026-10-08 under COMPETITOR_NEUTRAL_ADMISSION_V1; no LAB benchmark or production rights granted."
+      ],
+      "original_office_v2_verdict": "DEFER",
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Benchmark bare LangGraph composition and DeerFlow built-on-LangGraph separately against current incumbent and Restate interoperability.",
+        "rationale": "Active MIT durable agent workflow framework and DeerFlow foundation; prior blanket defer lacks same-contract results.",
+        "decision_evidence_refs": []
+      }
     },
     {
       "candidate_id": "deferred-orca",
@@ -1566,7 +1643,7 @@
       "provenance_class": "PRIOR_RESEARCH",
       "lifecycle_state": "RESEARCHED",
       "decision_verdict": "DEFERRED_WITH_REASON",
-      "verdict_reason": "Prior decision is deferred; it remains visible and may reopen only under the research-reopen rules.",
+      "verdict_reason": "Orca targets multi-agent coding IDE/worktree orchestration rather than the current business agent-runtime semantics; merits developer-workflow comparison, not automatic rejection for being a second desk.",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "capability_tags": [
@@ -1575,10 +1652,26 @@
       "platform_constraints": [],
       "shortlist_lanes": [],
       "evidence_refs": [
-        "prior-research://agents"
+        "prior-research://agents",
+        "https://github.com/stablyai/orca",
+        "docs/implementation/office-v2/phase2/competitor-neutral-backfill-2026-10-08.md"
       ],
       "notes": [],
-      "original_office_v2_verdict": "DEFER"
+      "original_office_v2_verdict": "DEFER",
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "DEFERRED_WITH_REASON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Define a dedicated developer-workflow/worktree orchestration contract and compare Orca and Superset against current Cursor workflows before deciding.",
+        "rationale": "Orca targets multi-agent coding IDE/worktree orchestration rather than the current business agent-runtime semantics; merits developer-workflow comparison, not automatic rejection for being a second desk.",
+        "decision_evidence_refs": [
+          "https://github.com/stablyai/orca"
+        ]
+      }
     },
     {
       "candidate_id": "deferred-ruflo",
@@ -1587,20 +1680,39 @@
       "category": "RUNTIME",
       "provenance_class": "PRIOR_RESEARCH",
       "lifecycle_state": "RESEARCHED",
-      "decision_verdict": "DEFERRED_WITH_REASON",
-      "verdict_reason": "Prior decision is deferred; it remains visible and may reopen only under the research-reopen rules.",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Active MIT meta-harness; 'unattended swarm' is a deployment risk to constrain in LAB rather than grounds for not comparing a bounded agent runtime.",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "capability_tags": [
         "agent-runtime"
       ],
       "platform_constraints": [],
-      "shortlist_lanes": [],
-      "evidence_refs": [
-        "prior-research://agents"
+      "shortlist_lanes": [
+        "agent-runtime"
       ],
-      "notes": [],
-      "original_office_v2_verdict": "DEFER"
+      "evidence_refs": [
+        "prior-research://agents",
+        "https://github.com/ruvnet/ruflo",
+        "docs/implementation/office-v2/phase2/competitor-neutral-backfill-2026-10-08.md"
+      ],
+      "notes": [
+        "Historical deferral re-opened 2026-10-08 under COMPETITOR_NEUTRAL_ADMISSION_V1; no LAB benchmark or production rights granted."
+      ],
+      "original_office_v2_verdict": "DEFER",
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Evaluate isolated, bounded low-fanout configuration with verifiable cancel/recovery and trusted-tool gates before deciding fitness.",
+        "rationale": "Active MIT meta-harness; 'unattended swarm' is a deployment risk to constrain in LAB rather than grounds for not comparing a bounded agent runtime.",
+        "decision_evidence_refs": []
+      }
     },
     {
       "candidate_id": "device-xtool-m2",
@@ -2236,14 +2348,18 @@
         "https://github.com/bytedance/deer-flow/blob/main/README.md",
         "https://github.com/bytedance/deer-flow/blob/main/LICENSE",
         "packages/vfe2b/DEER-FLOW-PATTERNS.md",
-        "docs/implementation/office-v2/phase2/admission-policy-v0.md"
+        "docs/implementation/office-v2/phase2/admission-policy-v0.md",
+        "docs/implementation/office-v2/phase2/deerflow-v2-comparative-readiness-2026-10-08.md",
+        "https://github.com/bytedance/deer-flow/tree/be34cc46d00b373407c22651dc20fdded4863af9"
       ],
       "notes": [
         "First pattern-only review recorded 2026-08-31; 2026-10-08 correction removes incumbent/overlap veto.",
         "Queue in agent-runtime and memory-context while active benchmark shortlist capacity is full; do not displace prior challengers without comparable triage.",
         "Do not preemptively reopen the Restate durable-execution winner; reopen if same-fixture challenger evidence warrants it.",
         "Research/intake only; no isolated LAB install, fixture benchmark, security acceptance or production promotion proven.",
-        "Upstream DeerFlow 2.0 is ground-up rewrite; v1 pattern-only treatment is not evidence of current v2 fitness."
+        "Upstream DeerFlow 2.0 is ground-up rewrite; v1 pattern-only treatment is not evidence of current v2 fitness.",
+        "Upstream be34cc46d00b373407c22651dc20fdded4863af9 cloned read-only on 2026-10-08; official harness dependency-boundary test PASS using Python 3.12. Still no isolated runtime Golden Fixture or model invocation.",
+        "Desktop Commander Windows LocalSystem has no docker CLI and cannot invoke WSL directly; LAB path must be resolved through admitted runner, never by exposing production creds."
       ],
       "original_office_v2_verdict": null,
       "comparison_review": {
@@ -2257,6 +2373,154 @@
         "evidence_status": "RESEARCH_ONLY",
         "next_action": "Triage whole-system vs incumbent and hybrid; then run agent-runtime Golden Fixtures plus security, persistence and operations gates in isolated LAB.",
         "rationale": "Feature overlap is precisely why this is a credible replacement candidate; no equivalent contract-aligned outcome has yet been demonstrated.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-microsoft-agent-framework",
+      "name": "Microsoft Agent Framework",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "HISTORICAL_COMPETITOR_SUCCESSOR_DISCOVERY",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Official successor to the maintenance-mode AutoGen framework, MIT, active; credible whole agent-runtime or component replacement but no VelvetOS fixture comparison completed.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime",
+        "multi-agent",
+        "workflow-orchestration",
+        "mcp",
+        "a2a",
+        "python",
+        "dotnet"
+      ],
+      "platform_constraints": [
+        "Python/.NET runtime and current dependency requirements require isolated LAB admission.",
+        "No paid model calls, subscriptions or production credentials without separate cost/authorization gates."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/microsoft/agent-framework",
+        "https://github.com/microsoft/autogen/blob/main/README.md",
+        "docs/implementation/office-v2/phase2/competitor-neutral-backfill-2026-10-08.md"
+      ],
+      "notes": [
+        "Discovered as AutoGen official migration target; unlike the historical framework, this is a new entrant.",
+        "MIT according to upstream GitHub repository metadata; validate dependencies before deployment.",
+        "No benchmarking, paid model API or production use authorized."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Review current MAF reference architecture/license/security; execute same synthetic agent-runtime Golden Fixtures vs Grokbot, DeerFlow and LangGraph.",
+        "rationale": "Replacing an EOL/maintenance-mode ancestor with its supported successor prevents retaining an artificially weak or obsolete comparison baseline.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-lobehub",
+      "name": "LobeHub Chief Agent Operator",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "HISTORICAL_PATTERN_ONLY_CORRECTION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Active agent operator and orchestration product previously limited to patterns because it was viewed as a second office; technical comparison is warranted, while commercial derivative distribution requires separate license review.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime",
+        "agent-operator",
+        "scheduled-tasks",
+        "mcp",
+        "multi-agent",
+        "frontend"
+      ],
+      "platform_constraints": [
+        "LobeHub Community License (not unrestricted Apache/MIT): developing and distributing a derivative commercial product requires a commercial license.",
+        "License/extension usage and any billed provider costs need review before LAB install; no automatic production adoption."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/lobehub/lobehub",
+        "https://raw.githubusercontent.com/lobehub/lobehub/canary/LICENSE",
+        "docs/implementation/office-v2/phase2/competitor-neutral-backfill-2026-10-08.md"
+      ],
+      "notes": [
+        "Was previously pattern-only under packages/vfe2b/LOCK.md because Cursor already covered the office.",
+        "Legality of deployed use and redistributed modified product are distinct; do not treat source accessibility as redistribution permission.",
+        "No LAB run or runtime authority."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Obtain scope-specific licensing interpretation, then benchmark acceptable unmodified/commercial scenarios and compare operator features against DeerFlow and VelvetOS.",
+        "rationale": "An existing-office overlap veto did not establish product fitness. License restrictions are material to actual redistribution, but not to initial research.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-bindu",
+      "name": "Bindu Agent Interoperability",
+      "category": "AGENT_INTEROPERABILITY",
+      "provenance_class": "HISTORICAL_PATTERN_ONLY_CORRECTION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "A2A identity/agent discovery can compete with the current tool gateway; earlier pattern-only verdict bundled a payment/x402 concern with unrelated interoperability features.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-identity",
+        "a2a",
+        "agent-interoperability",
+        "tool-gateway",
+        "discovery"
+      ],
+      "platform_constraints": [
+        "x402/cryptocurrency payment functionality must remain fully disabled in evaluation.",
+        "Repository license/third-party dependencies unresolved; review before installation."
+      ],
+      "shortlist_lanes": [
+        "tool-gateway-interoperability"
+      ],
+      "evidence_refs": [
+        "https://github.com/GetBindu/Bindu",
+        "packages/vfresearch/sources/2026-08-31-bindu.md",
+        "docs/implementation/office-v2/phase2/competitor-neutral-backfill-2026-10-08.md"
+      ],
+      "notes": [
+        "Reopen interoperability portions only; no crypto payments or public agent gateway activation.",
+        "Historical no-second-runtime rule no longer a standalone rejection reason."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Perform security/license and no-payment isolation review; test A2A tool-gateway discovery/identity using local synthetic agents.",
+        "rationale": "Tool gateway/identity could be useful independent of any forbidden payment or public-exposure features.",
         "decision_evidence_refs": []
       }
     }

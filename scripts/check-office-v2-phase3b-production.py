@@ -182,6 +182,23 @@ def main() -> None:
         require(marker in runtime_bind, "production runtime binding missing fail-closed marker: " + marker)
     require("[string[]]$Args" not in runtime_bind, "production runtime Invoke-Wsl may not shadow PowerShell automatic $Args")
     for marker in (
+        "PRODUCTION_RUNTIME_ROTATE_ALREADY_ACTIVE_NO_MUTATION",
+        "ROLLBACK_DRILL_COMPLETE_REQUIRES_FRESH_ROTATE",
+        "production-rollback-drill.json",
+        "restored_credential_reference_sha256",
+        "from_credential_reference_sha256",
+        "production-provider-rotation-before-fresh-rerotate.json",
+        "rerotation_after_verified_rollback",
+        "preceding_rollback_receipt_sha256",
+        "production-provider-fresh-rerotate-attempt-fail.json",
+        "prior rotation archive conflicts with canonical receipt",
+        "newJobs -eq 200",
+        "newMeta -eq 200",
+        "newWrite -eq 401",
+    ):
+        require(marker in runtime_bind, "production re-rotation and duplicate safety guard missing: " + marker)
+    require("already-rotated live correlated proof mismatch" in runtime_bind, "already-rotated branch must perform live read-only revalidation")
+    for marker in (
         "$rotationConsecutivePass=0",
         "$rotationConsecutivePass++",
         "$rotationConsecutivePass -ge 2",
