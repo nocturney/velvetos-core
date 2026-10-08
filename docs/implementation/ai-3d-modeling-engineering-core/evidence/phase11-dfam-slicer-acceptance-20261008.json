@@ -1,0 +1,191 @@
+{
+  "schema": "velvetos.ai3d.phase11-dfam-slicer-acceptance.v1",
+  "status": "PASS_BOUNDED_OFFLINE",
+  "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+  "source_ir": "packages/vfharness/state/cad-engine-stack-20260927/geometry-ir-sample.json",
+  "source_ir_sha256": "398b88cbd3be64d5b2c26a83e1c4b444b2fe1b080ca848036d215aaec071ec68",
+  "slicer_runtime": "OrcaSlicer 2.4.2 via existing vf_cad.py/gcode_tool.py",
+  "engine": "build123d via existing vf_cad_stack.py",
+  "source_geometry": {
+    "bbox_mm": [
+      120.0,
+      80.0,
+      12.0
+    ],
+    "step_volume_mm3": 78056.63706143587,
+    "stl_volume_mm3": 78056.11631510906,
+    "mesh_watertight": true,
+    "single_body": true,
+    "reopen_parity": "PASS"
+  },
+  "cad_artifacts": [
+    {
+      "name": "model.step",
+      "bytes": 19289,
+      "sha256": "117da6c0605249fd452cbe8768b57c8b66e05f144fdc083bf0a5cb678b18b1c7"
+    },
+    {
+      "name": "model.stl",
+      "bytes": 25884,
+      "sha256": "ca0b831fa527894897665f874187e1bde49a2f024948f9b7c07d77dd7162b73d"
+    },
+    {
+      "name": "model.3mf",
+      "bytes": 7419,
+      "sha256": "31b8877ae5725b27191daefeac3adf3f34e9c8e81ffc24c886e701eff3dc66d5"
+    }
+  ],
+  "dfam": {
+    "partial": false,
+    "source_stl_sha256": "ca0b831fa527894897665f874187e1bde49a2f024948f9b7c07d77dd7162b73d",
+    "support_estimate": {
+      "angle_limit_used_deg": 45.0,
+      "estimated_support_volume_mm3": 0.0,
+      "part_volume_mm3": 78056.1,
+      "support_to_part_ratio_pct": 0.0,
+      "method": "prism from face centroid to build plate; coarse upper-bound estimate"
+    },
+    "other_sections": [
+      "file",
+      "mesh",
+      "overhangs",
+      "partial",
+      "scale",
+      "wall_thickness"
+    ],
+    "caveat": "coarse geometric support estimate; not structural/printability approval"
+  },
+  "verified_offline": {
+    "c5_stl": {
+      "bridge_returncode": 0,
+      "slicer_returncode": 0,
+      "validation_ok": true,
+      "validation_errors": [],
+      "validation_warnings": [
+        "Unknown or unsupported commands were left unchanged: G17 line 758, M191 line 25, SET_PRESSURE_ADVANCE line 42, SET_VELOCITY_LIMIT line 54."
+      ],
+      "stats": {
+        "extrusion_moves": 10207,
+        "lines": 15381,
+        "movement_commands": 12362,
+        "non_comment_lines": 13590,
+        "temperature_commands": 5
+      },
+      "command_backend": "orcaslicer",
+      "input_extension": ".stl",
+      "artifact": {
+        "name": "c5-from-stl.gcode",
+        "bytes": 405498,
+        "sha256": "25db42b3f65d6697ad604daad7595ea401607f3cd820d6082e1a8af4f3e2dd56"
+      },
+      "generator": "OrcaSlicer",
+      "reported_version": "2.4.2",
+      "reported_layer_count": 60,
+      "reported_max_z_mm": 12.05,
+      "source_cad_max_z_mm": 12.0,
+      "max_height_delta_mm": 0.05000000000000071,
+      "status": "PASS_OFFLINE_ONLY"
+    },
+    "c5_3mf": {
+      "bridge_returncode": 0,
+      "slicer_returncode": 0,
+      "validation_ok": true,
+      "validation_errors": [],
+      "validation_warnings": [
+        "Unknown or unsupported commands were left unchanged: G17 line 758, M191 line 25, SET_PRESSURE_ADVANCE line 42, SET_VELOCITY_LIMIT line 54."
+      ],
+      "stats": {
+        "extrusion_moves": 10204,
+        "lines": 15377,
+        "movement_commands": 12358,
+        "non_comment_lines": 13586,
+        "temperature_commands": 5
+      },
+      "command_backend": "orcaslicer",
+      "input_extension": ".3mf",
+      "artifact": {
+        "name": "c5-from-3mf.gcode",
+        "bytes": 405481,
+        "sha256": "bedaedd7902c646163914d5ad685a5fa5418b08efa4403313ef66e187ce4fa68"
+      },
+      "generator": "OrcaSlicer",
+      "reported_version": "2.4.2",
+      "reported_layer_count": 60,
+      "reported_max_z_mm": 12.05,
+      "source_cad_max_z_mm": 12.0,
+      "max_height_delta_mm": 0.05000000000000071,
+      "status": "PASS_OFFLINE_ONLY"
+    }
+  },
+  "quarantined_profiles": {
+    "h2d": {
+      "bridge_returncode": 1,
+      "slicer_returncode": 0,
+      "validation_ok": false,
+      "validation_errors": [
+        "Line 1099: Y=-0.5 is outside Y motion range 0.0..320.0 mm."
+      ],
+      "validation_warnings": [
+        "Relative positioning found; XYZ bounds validation is skipped while relative mode is active.",
+        "Unknown or unsupported commands were left unchanged: G150 line 903, G150.1 line 748, G150.2 line 889, G150.3 line 749, G17 line 1816, G28.14 line 1100, G29.1 line 693, G29.2 line 795, G29.20 line 933, G29.7 line 1087, G29.99 line 1133, G380 line 703."
+      ],
+      "stats": {
+        "extrusion_moves": 35064,
+        "lines": 43482,
+        "movement_commands": 37491,
+        "non_comment_lines": 40376,
+        "temperature_commands": 18
+      },
+      "command_backend": "orcaslicer",
+      "input_extension": ".stl",
+      "artifact": {
+        "name": "h2d-from-stl.gcode",
+        "bytes": 1195641,
+        "sha256": "aeba02e16f32a40a125c3e08406f212010899a8fec016d855025635fdefcafa0"
+      },
+      "status": "BLOCKED_MOTION_BOUNDS",
+      "source_native_profile_has_start_service_move": true
+    }
+  },
+  "profile_file_sha256_before_after": {
+    "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\slicer-router\\native-full\\c5\\filament.json": "19f378e42c5f53066abfc80cbea8ccf9779a72892596351364af51e8ef4a57e5",
+    "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\slicer-router\\native-full\\c5\\machine.json": "e1081594f826af0a879513851520f878fb5823999b96f3a4b8a73ea8f02faf8c",
+    "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\slicer-router\\native-full\\c5\\process.json": "4185837608007e189c34c8629a8a9068ea66d04f2077fc6ee1bcb32ed1445710",
+    "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\slicer-router\\text-to-cad-profiles\\c5.json": "d2175600de6af562d9271b399b06b9c99e252500cc4691bed36d5473a88e7548",
+    "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\slicer-router\\native-full\\h2d\\filament.json": "2a9bd1b7aa12d778e2229feff8f576e4c9b908fbfc3e0f328634c21ff58923a6",
+    "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\slicer-router\\native-full\\h2d\\machine.json": "10c00068ae6e1d152747446d20a58c1f8df6b7419dacaab2406137025cbc9302",
+    "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\slicer-router\\native-full\\h2d\\process.json": "ffb9a7e9bc3ff9dcb399b76d6bacc236413664924ee42975795400f9ad37c8da",
+    "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\slicer-router\\text-to-cad-profiles\\h2d.json": "4282cf38e796eec3501f75d15783960ce6fdf3a570e5bd2520a34bb436513c13"
+  },
+  "native_profiles_unchanged": true,
+  "negative_controls": {
+    "oversized_model_preflight": "BLOCKED",
+    "direct_step_input_to_slicer": "BLOCKED",
+    "injected_out_of_bounds_gcode": "BLOCKED",
+    "h2d_start_motion_without_bounds_evidence": "BLOCKED"
+  },
+  "remaining_profiles_not_qualified": [
+    "u1",
+    "ecc2",
+    "c5pro"
+  ],
+  "print_release": "NOT_AUTHORIZED",
+  "safety": {
+    "duplicate_fabrication_router": false,
+    "native_profile_modification": false,
+    "slicer_profile_overwrite": false,
+    "network_printer_control": false,
+    "upload": false,
+    "start_print": false,
+    "auto_manufacturing_release": false,
+    "silently_relax_motion_bounds": false,
+    "emit_unverified_profile_as_print_ready": false
+  },
+  "notes": [
+    "Offline toolchain capability only, not printer firmware validation or material calibration.",
+    "G-code unknown-dialect warnings are preserved; no commands sent to hardware.",
+    "H2D machine-start service Y=-0.5 movement remains BLOCKED pending independently verified motion envelope.",
+    "Do not assume the G-code is a safe production job based on a local validator PASS."
+  ],
+  "artifact_directory": "D:\\Velvet\\Artifacts\\AI3D\\2026-10-08\\phase11-verified-001"
+}

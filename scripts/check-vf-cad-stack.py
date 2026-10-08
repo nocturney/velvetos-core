@@ -45,6 +45,11 @@ simulation_path = (
 )
 simulation_driver = ROOT / "scripts" / "ai3d_phase10_freecad_driver.py"
 simulation_validator = ROOT / "scripts" / "validate_ai3d_phase10_simulation.py"
+dfam_slicer_path = (
+    ROOT / "docs" / "implementation" /
+    "ai-3d-modeling-engineering-core" / "dfam-slicer-v1.json"
+)
+dfam_slicer_validator = ROOT / "scripts" / "validate_ai3d_phase11_dfam_slicer.py"
 doc_path = ROOT / "packages" / "vfprod" / "CAD-ENGINE-STACK.md"
 cli = ROOT / "scripts" / "vf_cad_stack.py"
 
@@ -61,6 +66,8 @@ assert drawings_sheetmetal_adapter.is_file(), drawings_sheetmetal_adapter
 assert simulation_path.is_file(), simulation_path
 assert simulation_driver.is_file(), simulation_driver
 assert simulation_validator.is_file(), simulation_validator
+assert dfam_slicer_path.is_file(), dfam_slicer_path
+assert dfam_slicer_validator.is_file(), dfam_slicer_validator
 assert doc_path.is_file(), doc_path
 assert cli.is_file(), cli
 
@@ -92,6 +99,17 @@ assert simulation["safety"]["assume_unknown_load"] is False
 assert simulation["safety"]["assume_unknown_constraints"] is False
 assert simulation["safety"]["printer_actions_allowed"] is False
 assert simulation["safety"]["machine_control_allowed"] is False
+assert (
+    registry["dfam_slicer"]
+    == "docs/implementation/ai-3d-modeling-engineering-core/dfam-slicer-v1.json"
+)
+dfam_slicer = json.loads(dfam_slicer_path.read_text(encoding="utf-8"))
+assert dfam_slicer["schema"] == "velvetos.ai3d.dfam-slicer.v1"
+assert dfam_slicer["non_authoritative_staging"] is True
+assert dfam_slicer["existing_slicer_authority"] == "scripts/vf_cad.py"
+assert dfam_slicer["slicer"]["verified_profiles"]["h2d"]["state"] == "BLOCKED_MOTION_BOUNDS"
+assert dfam_slicer["slicer"]["verified_profiles"]["c5"]["state"] == "PROVEN_OFFLINE_ONLY"
+assert all(v is False for v in dfam_slicer["prohibitions"].values())
 
 patterns = json.loads(patterns_path.read_text(encoding="utf-8"))
 assert patterns["schema"] == "velvetos.exact-cad-patterns.v1"
@@ -262,6 +280,10 @@ assert (
 assert (
     contract["simulation_optimization"]
     == "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json"
+)
+assert (
+    contract["dfam_slicer"]
+    == "docs/implementation/ai-3d-modeling-engineering-core/dfam-slicer-v1.json"
 )
 assert contract["coordinate_frame"] == "xy_center_z_min"
 

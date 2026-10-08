@@ -36,6 +36,7 @@ def contract(_: argparse.Namespace) -> int:
         "assembly_motion_ecad": registry["assembly_motion_ecad"],
         "drawings_vectors_sheetmetal": registry["drawings_vectors_sheetmetal"],
         "simulation_optimization": registry["simulation_optimization"],
+        "dfam_slicer": registry["dfam_slicer"],
         "coordinate_frame": patterns["coordinate_frame"]["primitive_local_origin"],
         "engines": registry["engines"],
     })

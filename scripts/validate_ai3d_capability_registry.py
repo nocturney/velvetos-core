@@ -593,6 +593,61 @@ def main() -> int:
     assert auto["headless"] is False
     assert simulation["safety"]["auto_optimization_acceptance"] is False
 
+    phase11_base = (
+        ROOT / "docs" / "implementation" / "ai-3d-modeling-engineering-core"
+    )
+    phase11 = load(phase11_base / "dfam-slicer-v1.json")
+    phase11_proof = load(
+        phase11_base / "evidence"
+        / "phase11-dfam-slicer-acceptance-20261008.json"
+    )
+    assert phase11["schema"] == "velvetos.ai3d.dfam-slicer.v1"
+    assert phase11["non_authoritative_staging"] is True
+    assert phase11["existing_slicer_authority"] == "scripts/vf_cad.py"
+    assert all(value is False for value in phase11["prohibitions"].values())
+    assert phase11_proof["status"] == "PASS_BOUNDED_OFFLINE"
+    assert phase11_proof["native_profiles_unchanged"] is True
+    assert phase11_proof["source_geometry"]["reopen_parity"] == "PASS"
+    assert phase11_proof["print_release"] == "NOT_AUTHORIZED"
+    assert len(phase11_proof["negative_controls"]) >= 4
+    assert phase11_proof["verified_offline"]["c5_stl"]["validation_ok"] is True
+    assert phase11_proof["verified_offline"]["c5_3mf"]["validation_ok"] is True
+    assert phase11_proof["quarantined_profiles"]["h2d"]["status"] == "BLOCKED_MOTION_BOUNDS"
+
+    for capability in ("print.prepare.dfam", "print.slice.orca_offline"):
+        item = next(
+            row for row in records
+            if row["record_id"] == f"{capability}--phase11-vf-cad"
+        )
+        assert item["authority"]["id"] == "fabrication-router"
+        assert item["status"] == "PROVEN"
+        assert item["verification"]["state"] == "PROVEN_PROVIDER"
+        assert "validate_ai3d_phase11_dfam_slicer" in item["verification"]["validators"]
+        assert "no_auto_print_release" in item["constraints_support"]
+        assert "native_profiles_immutable" in item["constraints_support"]
+        assert item["problem_class"] == "manufacturing"
+        assert "offline" in " ".join(item["output_types"] + item["constraints_support"])
+
+    dfam_slice = next(
+        row for row in records
+        if row["record_id"] == "print.slice.orca_offline--phase11-vf-cad"
+    )
+    assert dfam_slice["engine"]["version"] == "2.4.2"
+    assert dfam_slice["license_lane"] == "review-required"
+    assert dfam_slice["license"]["code_license"] == "AGPL-3.0"
+    assert "AGPL review" in dfam_slice["license"]["bundle_policy"]
+    assert "actual_gcode_header_and_extrusion" in dfam_slice["constraints_support"]
+
+    h2d = next(
+        row for row in records
+        if row["record_id"] == "print.slice.h2d_motion_validation--phase11-vf-cad"
+    )
+    assert h2d["status"] == "BLOCKED"
+    assert h2d["verification"]["state"] == "BLOCKED"
+    assert h2d["license_lane"] == "review-required"
+    assert "independent_motion_envelope_evidence_required" in h2d["constraints_support"]
+    assert h2d["authority"]["id"] == "fabrication-router"
+
     research_candidate_engines = {
         "hunyuan3d-2.1-shape",
         "triposg",

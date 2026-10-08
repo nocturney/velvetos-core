@@ -83,6 +83,10 @@ def precision_model(capability: str) -> str:
 def io_types(capability: str) -> tuple[list[str], list[str]]:
     if capability == "cam.toolpath":
         return ["bounded_cam_request"], ["offline_grbl_artifact", "verification_receipt"]
+    if capability == "print.prepare.dfam":
+        return ["watertight_mesh", "bounded_overhang_angle"], ["dfam_geometry_report", "support_estimate", "verification_receipt"]
+    if capability.startswith("print.slice."):
+        return ["verified_mesh_or_3mf", "existing_native_printer_profile"], ["offline_gcode", "gcode_validation_report", "verification_receipt"]
     if capability == "assembly.joint.revolute":
         return ["cad_parts", "explicit_joint_contract"], ["assembly_state", "verification_receipt"]
     if capability == "assembly.motion.sweep":
@@ -206,6 +210,12 @@ def constraints(capability: str) -> list[str]:
         values.extend(["isolated_eval_only", "no_canonical_runtime_install", "license_review_required", "canonical_build123d_not_downgraded"])
     if capability.startswith("print."):
         values.append("no_printer_network_action")
+    if capability == "print.prepare.dfam" or capability.startswith("print.slice."):
+        values.extend(["offline_only", "no_auto_print_release", "native_profiles_immutable"])
+    if capability == "print.slice.orca_offline":
+        values.extend(["reopen_step_stl_3mf_parity", "actual_gcode_header_and_extrusion", "bounded_machine_motion"])
+    if capability == "print.slice.h2d_motion_validation":
+        values.extend(["native_start_service_move_outside_declared_y_range", "independent_motion_envelope_evidence_required"])
     if capability == "cam.toolpath":
         values.extend(["fixed_promoted_fixture_bounds", "offline_output_only", "no_machine_control"])
     return values
@@ -1567,6 +1577,83 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
             license_provenance=[phase10_config],
         )
     )
+
+    # Phase 11: local DfAM / Orca proof. The canonical vf_cad.py and the
+    # existing printer-specific slicer profiles remain the only execution
+    # surfaces. This registry is non-authoritative and cannot start a printer.
+    phase11_config = (
+        "docs/implementation/ai-3d-modeling-engineering-core/"
+        "dfam-slicer-v1.json"
+    )
+    phase11_evidence = (
+        "docs/implementation/ai-3d-modeling-engineering-core/evidence/"
+        "phase11-dfam-slicer-acceptance-20261008.json"
+    )
+    dfam_contract = load(repo_root / phase11_config)
+    dfam_proof = load(repo_root / phase11_evidence)
+    assert dfam_contract["schema"] == "velvetos.ai3d.dfam-slicer.v1"
+    assert dfam_contract["non_authoritative_staging"] is True
+    assert dfam_proof["status"] == "PASS_BOUNDED_OFFLINE"
+    assert dfam_proof["native_profiles_unchanged"] is True
+    assert dfam_proof["print_release"] == "NOT_AUTHORIZED"
+    assert dfam_proof["quarantined_profiles"]["h2d"]["status"] == "BLOCKED_MOTION_BOUNDS"
+    for kind in ("c5_stl", "c5_3mf"):
+        assert dfam_proof["verified_offline"][kind]["validation_ok"] is True
+        assert dfam_proof["verified_offline"][kind]["reported_layer_count"] > 0
+    assert len(dfam_proof["negative_controls"]) >= 4
+
+    phase11_rows = (
+        ("print.prepare.dfam", "vf-cad-dfam", "1.0", "PROVEN", "PROVEN_PROVIDER", None),
+        ("print.slice.orca_offline", "orcaslicer", "2.4.2", "PROVEN", "PROVEN_PROVIDER", "AGPL-3.0"),
+        ("print.slice.h2d_motion_validation", "orcaslicer", "2.4.2", "BLOCKED", "BLOCKED", "AGPL-3.0"),
+    )
+    for cap_id, engine_id, version, status, verification, license_text in phase11_rows:
+        entry = make_record(
+            record_id=f"{cap_id}--phase11-vf-cad",
+            capability_id=cap_id,
+            authority_id="fabrication-router",
+            authority_ref="packages/vfprod/FABRICATION-ROUTER.json",
+            engine_id=engine_id,
+            engine_version=version,
+            adapter_id="vf-cad-existing-bridge",
+            adapter_ref="scripts/vf_cad.py",
+            runtime_id=(
+                "vf-cad:OrcaSlicer-2.4.2" if engine_id == "orcaslicer"
+                else "vf-cad:dfam-check"
+            ),
+            host_classes=["windows-primary"],
+            headless=True,
+            verification_state=verification,
+            validators=(
+                ["validate_ai3d_phase11_dfam_slicer", "profile-motion-envelope-proof-required"]
+                if status == "BLOCKED"
+                else ["validate_ai3d_phase11_dfam_slicer", "native-profiles-unchanged"]
+            ),
+            evidence_refs=[phase11_config, phase11_evidence],
+            fallbacks=[],
+            status=status,
+            provider={
+                "version": version,
+                "license": license_text,
+                "capabilities": [cap_id],
+            },
+            license_provenance=[phase11_config, phase11_evidence],
+        )
+        if engine_id == "orcaslicer":
+            entry["license_lane"] = "review-required"
+            entry["license"]["code_license"] = "AGPL-3.0"
+            entry["license"]["license_source"] = (
+                "runtime:C:/Users/Chris/Documents/VelvetPrintLab/tools/"
+                "OrcaSlicer-2.4.2/LICENSE.txt"
+            )
+            entry["license"]["bundle_policy"] = (
+                "standalone existing local CLI only; no binary, code or hosted "
+                "service integration into closed product without AGPL review"
+            )
+            entry["license"]["allowed_use"] = (
+                "bounded offline generation/verification only; no printer control"
+            )
+        records.append(entry)
 
     research_candidates = [
         ("ai.image_to_3d", "hunyuan3d-2.1-shape", "ai-generation-local"),

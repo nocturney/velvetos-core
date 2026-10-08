@@ -94,3 +94,21 @@ The existing FreeCAD 1.1.3 FEM runtime is reused, including its bundled Gmsh 4.1
 Contract: `docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json`.
 Evidence: `docs/implementation/ai-3d-modeling-engineering-core/evidence/phase10-simulation-acceptance-20261008.json`.
 Validator: `scripts/validate_ai3d_phase10_simulation.py`.
+
+## DfAM / slicer validation (Phase 11)
+
+The existing `vf_cad.py` bridge and upstream `gcode_tool.py` are retained. This phase does not create another slicer router, overwrite calibrated native profiles or grant access to device upload/start APIs.
+
+- The synthetic Geometry IR model (120 x 80 x 12 mm) is exported by the canonical build123d path as STEP, watertight STL and 3MF. Independent reopen/bounding-box and volume comparisons are required before slicing.
+- `vf_cad.py dfam` provides a coarse geometric overhang/support report only. It does not certify strength, fit, layer adhesion or printability.
+- Two actual OrcaSlicer 2.4.2 CLI runs via `vf_cad.py slice --execute` were proven offline with the existing Flashforge Creator 5 (`c5`) profile: STL and 3MF each produce 60 layers, 12.05 mm max G-code Z, and pass the canonical G-code validator. No printer is connected.
+- The H2D profile emits a documented `G1 X270 Y-0.5 F60000` service travel in its native machine-start G-code, outside the wrapper's current Y>=0 machine envelope. Its offline G-code remains BLOCKED and cannot become print-ready until independently verified motion bounds are supplied; the validator must not silently widen the machine envelope.
+- Negative checks block oversize models, direct STEP input, artificially injected out-of-range G-code and unverified H2D service motion.
+- All native machine/process/filament profiles and wrappers are checked for exact-byte immutability before and after slicing.
+- Other printer keys `u1`, `ecc2`, `c5pro` remain unqualified by this fixture. Even a passing `c5` proof is an offline software-toolchain proof, not approval of a printer or calibrated material.
+- OrcaSlicer is installed as a separate AGPL-3.0 application; it must not be included in a closed product installer or bundled as an executable without explicit license compliance review.
+- No printer upload, start-print, firmware command execution, machine-control or automatic manufacturing release is permitted.
+
+Contract: `docs/implementation/ai-3d-modeling-engineering-core/dfam-slicer-v1.json`.
+Evidence: `docs/implementation/ai-3d-modeling-engineering-core/evidence/phase11-dfam-slicer-acceptance-20261008.json`.
+Validator: `scripts/validate_ai3d_phase11_dfam_slicer.py`.

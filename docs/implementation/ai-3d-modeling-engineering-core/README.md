@@ -64,7 +64,7 @@ Files:
 
 The registry is deliberately non-authoritative staging. Existing proven routes are recorded first. Research candidates remain CANDIDATE until fixture, license and resource qualification pass.
 
-Current generated registry after Phase 10: 79 records; 58 PROVEN, 1 ACTIVE_AUTHORITY, 18 CANDIDATE, 1 RESEARCH_ONLY and 1 BLOCKED. Exactly 20 Blender cross-station entries are PROVEN_TYPED. Fabrication-authority engine versions come from the runtimes that vf_cad_stack actually executes; Phase 4-10 PROVEN records require bounded validation evidence.
+Current generated registry after Phase 11: 82 records; 60 PROVEN, 1 ACTIVE_AUTHORITY, 18 CANDIDATE, 1 RESEARCH_ONLY and 2 BLOCKED. Exactly 20 Blender cross-station entries are PROVEN_TYPED. Fabrication-authority engine versions come from the runtimes that vf_cad_stack actually executes; Phase 4-11 PROVEN records require bounded validation evidence.
 
 ## Phase 3 - Engineering Contract and common artifact protocol
 
@@ -293,6 +293,29 @@ Phase 10 validation:
   py -3.11 scripts/validate_ai3d_phase10_simulation.py
   py -3.11 scripts/validate_ai3d_capability_registry.py
 
+## Phase 11 - DfAM and slicer validation
+
+Files:
+
+- dfam-slicer-v1.json
+- scripts/validate_ai3d_phase11_dfam_slicer.py
+- evidence/phase11-dfam-slicer-acceptance-20261008.json
+
+The existing `vf_cad.py` and `gcode_tool.py` are reused as the sole offline slicer authority; no new slicer router or native machine profile was written. OrcaSlicer 2.4.2 is used as a standalone installed CLI and remains subject to its AGPL-3.0 licensing and no-bundling-without-review policy.
+
+- The synthetic 120 x 80 x 12 mm Geometry IR source is built through the existing build123d CAD authority to STEP, STL and 3MF with SHA-256 receipts. STEP/STL/3MF are reopened and bounds/mesh topology validated.
+- The existing DfAM tool measures geometrical support/overhang estimates. This is not a strength assessment, certified fit, or manufacturing approval.
+- Real offline Orca slicing from both STL and 3MF succeeds with the existing Flashforge Creator 5 `c5` profile: both emit 60 layers, 12.05 mm reported max-z, nonempty extrusion and temperature commands, and G-code accepted by the canonical bounds validator.
+- The real H2D native machine-start script contains `G1 X270 Y-0.5 F60000`, while the current generic validation profile declares Y >= 0 mm. The generated Orca G-code therefore remains BLOCKED_MOTION_BOUNDS until an independently verified service-motion envelope can be adopted. No machine limits were silently relaxed.
+- The 4 negative checks block out-of-bed geometries, STEP submitted directly for slicing, injected out-of-range G-code and unsupported H2D start motion. All native profile and wrapper hashes remain unchanged.
+- Other printers (`u1`, `ecc2`, `c5pro`) are not marked proven by this Phase 11 fixture.
+- `PROVEN_OFFLINE_ONLY` is a CLI/toolchain claim, not a printer-firmware command audit, calibrated material claim or production print authorization. All device upload/start/network controls remain disabled.
+
+Phase 11 validation:
+
+  py -3.11 scripts/validate_ai3d_phase11_dfam_slicer.py
+  py -3.11 scripts/validate_ai3d_capability_registry.py
+
 ## Validation state
 
 Explicit AI3D validation stack: PASS.
@@ -302,8 +325,8 @@ Repository regression:
 - scripts/check-all.py: 118/118 PASS
 - exit code: 0
 - sensor side-effect check: repository files unchanged
-- full-suite log: evidence/check-all-phase10-20261008.log
+- full-suite log: evidence/check-all-phase11-20261008.log
 
 ## Next implementation phase
 
-Phase 11 is DfAM and slicer validation: preserve the existing vf_cad/Orca authoritative route, parse actual slicer outputs/logs (never assume undocumented JSON), check per-printer/material calibrated constraints, and cross-check STEP geometry against 3MF/STL and the sliced result. No printer upload/start or machine action is authorized.
+Phase 12 is expanded CAM/toolpath qualification: reuse the already-promoted offline cam.toolpath candidate and FreeCAD Path GRBL post, add explicit process/material bounds plus independent G-code verification, and keep machine control, spindle/laser activation and printer actions strictly disabled. Do not promote new CAM operations without independent fixtures.
