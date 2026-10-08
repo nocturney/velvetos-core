@@ -166,7 +166,37 @@ def main() -> None:
     final_receipt = promoter.production_receipt("a" * 40, "123", "b" * 64, "PASS")
     require(stage_receipt["production_promoted"] is False and final_receipt["production_promoted"] is True, "activation receipt phase separation failed")
     require(stage_receipt["production_writer_change"] is False and final_receipt["external_mutation_allowed"] is False, "promotion must remain read-only")
-    print("OK phase3b production-reader-route cases=17 cp016=incumbent cp017=secure activating_probe=secure_only promotion_model=PASS failclosed=PASS admin-fallback=FORBIDDEN")
+    pinned = "a" * 40
+    descendant = "b" * 40
+    observed_args = []
+    def fake_git(*args):
+        observed_args.append(args)
+        if args == ("rev-parse", "HEAD"):
+            return pinned
+        if args == ("rev-parse", "origin/main"):
+            return descendant
+        if args == ("merge-base", "--is-ancestor", pinned, "origin/main"):
+            return ""
+        if args[:3] == ("diff", "--name-only", pinned + "..origin/main"):
+            return ""
+        raise RuntimeError("unexpected git operation")
+    with mock.patch.object(promoter, "git", side_effect=fake_git):
+        require(promoter.verify_scope_preserving_main_lineage(pinned) == descendant, "safe descendant main should pass")
+    protected_diff = next(args for args in observed_args if args[0] == "diff")
+    require("packages/vfigos" in protected_diff and "docs/implementation/office-v2/phase3b" in protected_diff, "protected surface incomplete")
+    def changed_git(*args):
+        if args[:3] == ("diff", "--name-only", pinned + "..origin/main"):
+            return "packages/vfigos/cloudflare_publisher_snapshot.py"
+        return fake_git(*args)
+    with mock.patch.object(promoter, "git", side_effect=changed_git):
+        expect_denied(lambda: promoter.verify_scope_preserving_main_lineage(pinned), "protected main change")
+    def unrelated_rewrite(*args):
+        if args[:2] == ("merge-base", "--is-ancestor"):
+            raise RuntimeError("not ancestor")
+        return fake_git(*args)
+    with mock.patch.object(promoter, "git", side_effect=unrelated_rewrite):
+        expect_denied(lambda: promoter.verify_scope_preserving_main_lineage(pinned), "rewritten main")
+    print("OK phase3b production-reader-route cases=20 cp016=incumbent cp017=secure activating_probe=secure_only main_descendant_scope=GUARDED failclosed=PASS admin-fallback=FORBIDDEN")
 
 
 if __name__ == "__main__":
