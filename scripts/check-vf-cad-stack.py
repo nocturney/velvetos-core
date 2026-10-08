@@ -55,6 +55,15 @@ printer_profile_audit_path = (
     "ai-3d-modeling-engineering-core" / "printer-profile-audit-v1.json"
 )
 printer_profile_audit_validator = ROOT / "scripts" / "validate_ai3d_phase14_printer_profiles.py"
+firmware_inventory_config_path = (
+    ROOT / "docs" / "implementation" / "ai-3d-modeling-engineering-core"
+    / "firmware-dialect-audit-v1.json"
+)
+firmware_inventory_receipt_path = (
+    ROOT / "docs" / "implementation" / "ai-3d-modeling-engineering-core"
+    / "evidence" / "phase15-firmware-dialect-inventory-20261008.json"
+)
+firmware_inventory_validator = ROOT / "scripts" / "ai3d_phase15_firmware_dialect_inventory.py"
 printer_profile_audit_receipt = (
     ROOT / "docs" / "implementation" / "ai-3d-modeling-engineering-core"
     / "evidence" / "phase14-printer-profiles-acceptance-20261008.json"
@@ -86,6 +95,9 @@ assert dfam_slicer_path.is_file(), dfam_slicer_path
 assert dfam_slicer_validator.is_file(), dfam_slicer_validator
 assert printer_profile_audit_path.is_file(), printer_profile_audit_path
 assert printer_profile_audit_validator.is_file(), printer_profile_audit_validator
+assert firmware_inventory_config_path.is_file(), firmware_inventory_config_path
+assert firmware_inventory_receipt_path.is_file(), firmware_inventory_receipt_path
+assert firmware_inventory_validator.is_file(), firmware_inventory_validator
 assert printer_profile_audit_receipt.is_file(), printer_profile_audit_receipt
 assert cam_validation_path.is_file(), cam_validation_path
 assert cam_validation_script.is_file(), cam_validation_script
@@ -156,6 +168,26 @@ phase14_receipt_check = subprocess.run(
     cwd=ROOT, text=True, capture_output=True, timeout=25,
 )
 assert phase14_receipt_check.returncode == 0, phase14_receipt_check.stdout + phase14_receipt_check.stderr
+assert registry["firmware_dialect_audit"] == (
+    "docs/implementation/ai-3d-modeling-engineering-core/firmware-dialect-audit-v1.json"
+)
+firmware_config = json.loads(firmware_inventory_config_path.read_text(encoding="utf-8"))
+firmware_receipt = json.loads(firmware_inventory_receipt_path.read_text(encoding="utf-8"))
+assert firmware_config["schema"] == "velvetos.ai3d.phase15-dialect-audit-contract.v1"
+assert firmware_config["non_authoritative_staging"] is True
+assert firmware_config["source_of_truth"] == "scripts/vf_cad.py"
+assert all(v is False for v in firmware_config["prohibitions"].values())
+assert firmware_receipt["status"] == "PASS_STATIC_INVENTORY_ONLY_NO_MACHINE_RELEASE"
+assert firmware_receipt["native_profiles_unchanged"] is True
+assert firmware_receipt["production_release"] is False
+assert firmware_receipt["device_firmware_version_verified"] is False
+assert firmware_receipt["machine_commands_executed"] is False
+assert firmware_receipt["motion_envelopes_widened"] is False
+phase15_static_check = subprocess.run(
+    [sys.executable, str(firmware_inventory_validator), "--verify-recorded"],
+    cwd=ROOT, text=True, capture_output=True, timeout=25,
+)
+assert phase15_static_check.returncode == 0, phase15_static_check.stdout + phase15_static_check.stderr
 assert (
     registry["cam_toolpath_validation"]
     == "docs/implementation/ai-3d-modeling-engineering-core/cam-toolpath-v1.json"
@@ -345,6 +377,10 @@ assert (
 assert (
     contract["printer_profile_audit"]
     == "docs/implementation/ai-3d-modeling-engineering-core/printer-profile-audit-v1.json"
+)
+assert (
+    contract["firmware_dialect_audit"]
+    == "docs/implementation/ai-3d-modeling-engineering-core/firmware-dialect-audit-v1.json"
 )
 assert (
     contract["cam_toolpath_validation"]

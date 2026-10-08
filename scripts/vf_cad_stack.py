@@ -38,6 +38,7 @@ def contract(_: argparse.Namespace) -> int:
         "simulation_optimization": registry["simulation_optimization"],
         "dfam_slicer": registry["dfam_slicer"],
         "printer_profile_audit": registry["printer_profile_audit"],
+        "firmware_dialect_audit": registry["firmware_dialect_audit"],
         "cam_toolpath_validation": registry["cam_toolpath_validation"],
         "coordinate_frame": patterns["coordinate_frame"]["primitive_local_origin"],
         "engines": registry["engines"],
