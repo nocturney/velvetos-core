@@ -358,12 +358,14 @@ and other unrelated work) were preserved without modification of their source.
 - Full merged-tree regression: 118/118 PASS; sensors reported no repository file mutations.
 - Merge receipt: `evidence/phase13-integration-acceptance-20261008.json`.
 - Full suite log: `evidence/check-all-phase13-integrated-main-20261008.log`.
-- This is a local, separately reviewed merge into the feature branch, not a statement that the remote GitHub `main` has already been updated.
+- Subsequent `origin/main@08fd11f8` competitor-research update was merged separately at commit `755301dc` without conflicts or modifying upstream source. The Office Phase 2, fabrication and capability registry checks passed, followed by another full 118/118 merged-tree regression.
+- Latest-main receipt: `evidence/phase13-latest-main-acceptance-20261008.json` and `evidence/check-all-phase13-latest-main-20261008.log`.
+- These are local feature-branch merges, not evidence that remote GitHub `main` has already been updated.
 
 ## Validation state
 
 Explicit AI3D validation stack: PASS. Current integration branch tested against
-`origin/main@a2d065cb`, with the physical H2D/CNC and
+`origin/main@08fd11f8`, with the physical H2D/CNC and
 automatic manufacturing-release gates still blocked.
 
 
@@ -372,8 +374,8 @@ Repository regression:
 - scripts/check-all.py: 118/118 PASS
 - exit code: 0
 - sensor side-effect check: repository files unchanged
-- full-suite log: evidence/check-all-phase13-integrated-main-20261008.log
+- full-suite log: evidence/check-all-phase13-latest-main-20261008.log
 
 ## Next implementation phase
 
-Next: verify the consolidated Phase 0-12 branch against the current origin/main, run cross-phase benchmarks and regression, publish a non-force-pushed feature branch and merge only with conflict-aware authority/CI checks. Remaining material/tool qualification, the H2D service-motion envelope and additional printer profiles must remain explicit deferred blockers rather than being silently promoted.
+Next: publish the fully tested integrated feature branch with a non-force push, open a PR targeting the current GitHub main, verify current CI and protected-branch policy, and merge only when those gates pass. Remaining material/tool qualification, the H2D service-motion envelope and additional printer profiles must remain explicit deferred blockers rather than being silently promoted.
