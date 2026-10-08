@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.office-v2.fleet.dagu-queue-partial-lab.v1",
   "date": "2026-10-08",
-  "status": "PARTIAL_HEADLESS_LAB_QUEUE_PASS_WITH_OWNER_CLEANUP_BLOCKER",
+  "status": "PARTIAL_HEADLESS_LAB_QUEUE_PASS_CLEANUP_VERIFIED_NOT_PRODUCTION",
   "candidate_id": "candidate-dagu-worker-fleet",
   "version": "2.18.2",
   "source_basis": "docs/implementation/office-v2/phase2/dagu-two-host-lab-2026-10-08.json",
@@ -150,25 +150,59 @@
     "gpu_peak_mb": null
   },
   "cleanup": {
-    "completed": false,
-    "state": "BLOCKED_BY_REMOTE_PROCESS_CONTROL_SAFETY_CHECKS",
-    "attempted_controls": [
-      "mac pilot process SIGTERM",
-      "Mac pilot session Ctrl-C",
-      "Mac pilot force_terminate",
-      "Mac pilot kill_process"
-    ],
-    "all_denied": true,
-    "last_observed": {
-      "mac_coordinator_pid": 84170,
-      "mac_worker_pid": 84211,
-      "windows_dagu_pid": 27124,
-      "mac_tcp_listeners": [
+    "completed": true,
+    "state": "VERIFIED_3_PILOT_PROCESSES_STOPPED_AND_2_MAC_PORTS_CLOSED",
+    "historical_blocker": {
+      "state": "BLOCKED_BY_REMOTE_PROCESS_CONTROL_SAFETY_CHECKS",
+      "attempted_controls": [
+        "mac pilot process SIGTERM",
+        "Mac pilot session Ctrl-C",
+        "Mac pilot force_terminate",
+        "Mac pilot kill_process"
+      ],
+      "original_attempts_all_denied": true,
+      "previously_observed": {
+        "mac_coordinator_pid": 84170,
+        "mac_worker_pid": 84211,
+        "windows_dagu_pid": 27124,
+        "mac_tcp_listeners": [
+          "192.168.0.217:31556",
+          "127.0.0.1:31809"
+        ]
+      }
+    },
+    "verified_follow_up": {
+      "date": "2026-10-08",
+      "means": "Remote Desktop Commander targeted PID kill_process after exact executable and command-line verification",
+      "killed": [
+        {
+          "host": "MacMiniOffice.local",
+          "pid": 84211,
+          "role": "dagu worker",
+          "verified_absent": true
+        },
+        {
+          "host": "Chris Windows",
+          "pid": 27124,
+          "role": "dagu worker",
+          "verified_absent": true
+        },
+        {
+          "host": "MacMiniOffice.local",
+          "pid": 84170,
+          "role": "dagu start-all coordinator",
+          "verified_absent": true
+        }
+      ],
+      "pre_stop_mac_listeners": [
         "192.168.0.217:31556",
         "127.0.0.1:31809"
-      ]
+      ],
+      "post_stop_mac_listeners": [],
+      "verification": "post-kill Mac ps (84170,84211) empty; Mac lsof for TCP 31556,31809 listeners empty; Win32_Process PID 27124 empty",
+      "other_office_or_cad_services_stopped": false
     },
-    "owner_action_needed": "Authorized, scoped shutdown of only these three temporary Dagu pilot processes and confirmation that both temporary Mac ports close. Do not stop other user/Office/CAD processes or WSL.",
+    "owner_action_needed": null,
     "run_further_tasks_before_cleanup": false
   },
   "unproven": [
@@ -184,5 +218,13 @@
   "authority_role": "NONE",
   "accepted_production_fleet": false,
   "pilot_acceptance_complete": false,
-  "recurring_cost_increment": 0
+  "recurring_cost_increment": 0,
+  "handoff": {
+    "canonical_owner_issue": "https://github.com/nocturney/velvetos-core/issues/604",
+    "p0_acceleration_dependency": "https://github.com/nocturney/velvetos-core/issues/612",
+    "cua_reliability_separate_owner": "https://github.com/nocturney/velvetos-core/issues/602",
+    "source_role": "EVIDENCE_ONLY_NOT_RUNTIME_REGISTRY_OR_NEW_ORCHESTRATOR",
+    "next": "Constrained independent 1/2/4 worker scheduling, worker-loss/rejoin, retry/no-false-success, latency/resources, Restate-only and Nomad comparison only when P0 resources nonconflicting",
+    "no_prod_promotion": true
+  }
 }
