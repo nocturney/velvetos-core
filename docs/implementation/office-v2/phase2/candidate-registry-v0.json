@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-08T16:35:39.239Z",
+  "updated_at": "2026-10-08T18:03:33.885Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 99,
+  "candidate_count": 100,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -3232,6 +3232,70 @@
           "https://github.com/robbietilton/Compositor",
           "https://github.com/robbietilton/Compositor/blob/main/docs/writing-comp-files.md",
           "https://github.com/robbietilton/Compositor/issues/119"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-flashml-freevideo",
+      "source_item_id": null,
+      "name": "FreeVideo — local MiniMax H3 video generator for ComfyUI",
+      "category": "TOOL",
+      "provenance_class": "POST_POLICY_OWNER_SUBMITTED_REPO_REVIEW",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "DEFERRED_WITH_REASON",
+      "verdict_reason": "The owner explicitly requested a creative video-generation evaluation. Record the candidate now; defer installation and GPU-bound LAB until #612 P0 coding-agent work has cleared the resource gate or independent available GPU/RAM capacity is verified. Actual video quality, local pipeline integration, environment compatibility, security and rollback have not been tested.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "creative",
+        "video-generation",
+        "image-to-video",
+        "text-to-video",
+        "local-inference",
+        "minimax-h3",
+        "comfyui",
+        "multimodal-reference",
+        "product-reels",
+        "video-assets"
+      ],
+      "platform_constraints": [
+        "Windows RTX 4080 SUPER (16 GB VRAM) is the proposed initial host, not a verified FreeVideo benchmark result. Reconfirm idle GPU/VRAM/RAM, free disk space and active worker leases before any install or inference; do not interrupt #612 P0 workloads.",
+        "FreeVideo may be added as a ComfyUI custom node or through its launcher; isolate the environment/model cache, pin versions and dependencies, and verify no interference with existing ComfyUI installations before use.",
+        "Apple Silicon support is upstream preview only; MacMiniOffice.local with 16 GiB unified RAM is not a proven suitable production host, and is not the first benchmark target.",
+        "FreeVideo code is Apache-2.0, but MiniMax H3 model weights have a separate Community License with territorial and acceptable-use terms. Owner is comfortable proceeding to non-public evaluation; do not infer that this waives independent distribution/publication requirements."
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "https://github.com/FlashML-org/FreeVideo",
+        "https://github.com/FlashML-org/FreeVideo/blob/main/README.md",
+        "https://github.com/FlashML-org/FreeVideo/blob/main/docs/execution-planning.md",
+        "https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6065993577",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "INTAKE: Owner submitted FreeVideo on 2026-10-08 and requested inclusion in Velvet Factory / Office 2.0 evaluation; licensing concern is not a personal blocker for research. This record is not an installation, LAB PASS or publishing approval.",
+        "PHASE MAPPING: Office Master v3 Phase 6 assets/tool compatibility and Phase 8 controlled creative/Instagram workflows; VelvetOS Creative Craft/DaVinci/Topaz integration is future evaluation, not live orchestration.",
+        "GOLDEN FIXTURE: Take one authorized real studio product photograph and a text-only control; generate a 5–10-second short-form vertical 9:16 clip, preserving shape, color, material, brand/logo truth and product identity. No invented specs or claims.",
+        "MEASURE: image/product fidelity and temporal consistency, visual artifacts, prompt/reference control, output aspect/resolution, repeatability (version/seed/settings), elapsed time, GPU/VRAM/RAM/CPU usage, downloads/storage, model/asset provenance, incremental cost and operator minutes.",
+        "COMPARISON: Evaluate against incumbent image/video creation options under the same reference image and output contract, then test a local MP4/artifact handoff through existing ffmpeg, Topaz Video and DaVinci Resolve paths only if those paths and permissions are verified.",
+        "SAFETY/ROLLBACK: Separate ComfyUI/model directories and service ports; preserve current working install; use LAB-only storage, hashes/receipts, health/readback, cleanup plan, no production social credentials, no automated publication, no DM and no new watcher or scheduler.",
+        "UPSTREAM MATURITY: Rapid October 2026 releases; pin a verified upstream tag or commit at LAB time and re-evaluate current issues, dependency and model-download requirements. No performance projection for our RTX 4080 SUPER is accepted without local measurement."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "DEFERRED_WITH_REASON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "After #612 P0 coding-agent/PR/CI acceptance, or after a separate fresh GPU-headroom/lease check proves independent capacity, plan an isolated and version-pinned no-recurring-cost Windows ComfyUI LAB test of a 5–10s vertical product video. Collect resource, fidelity, timing, artifact and teardown receipts, compare on the same fixture, and then update the one canonical registry verdict without granting publishing authority.",
+        "rationale": "FreeVideo plausibly extends our local-first creative pipeline with consumer-GPU image-to-video generation for genuine product Reels. Its role is upstream asset generation, not an editor, publishing controller or second orchestration layer. Its fast-changing dependencies and unverified 4080 SUPER video quality justify a bounded benchmark after resource safety verification instead of immediate promotion.",
+        "decision_evidence_refs": [
+          "https://github.com/FlashML-org/FreeVideo/blob/main/README.md",
+          "https://github.com/nocturney/velvetos-core/issues/612",
+          "https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6065993577"
         ]
       }
     }
