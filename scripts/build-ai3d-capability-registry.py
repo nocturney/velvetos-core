@@ -220,6 +220,12 @@ def constraints(capability: str) -> list[str]:
         values.extend(["reopen_step_stl_3mf_parity", "actual_gcode_header_and_extrusion", "bounded_machine_motion"])
     if capability == "print.slice.h2d_motion_validation":
         values.extend(["native_start_service_move_outside_declared_y_range", "independent_motion_envelope_evidence_required"])
+    if capability in ("print.slice.u1_dialect_review", "print.slice.c5pro_dialect_review"):
+        values.extend(["offline_stl_3mf_parity_only", "vendor_firmware_dialect_unaudited",
+                       "not_production_qualified", "no_machine_control"])
+    if capability == "print.slice.ecc2_motion_validation":
+        values.extend(["native_service_move_y_negative", "independent_motion_envelope_evidence_required",
+                       "gcode_validation_blocks_release", "no_machine_control"])
     if capability == "cam.toolpath":
         values.extend(["fixed_promoted_fixture_bounds", "offline_output_only", "no_machine_control"])
     if capability == "cam.grbl_post.freecad":
@@ -1661,6 +1667,86 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
             entry["license"]["allowed_use"] = (
                 "bounded offline generation/verification only; no printer control"
             )
+        records.append(entry)
+
+    # Phase 14: evidence from real offline Orca CLI on the remaining
+    # synthetic printer fixtures, without qualifying firmware dialects.
+    # These are explicitly CANDIDATE (U1/C5Pro) or BLOCKED (ECC2), never
+    # new PROVEN printer routes or automated machine authority.
+    phase14_config = (
+        "docs/implementation/ai-3d-modeling-engineering-core/"
+        "printer-profile-audit-v1.json"
+    )
+    phase14_evidence = (
+        "docs/implementation/ai-3d-modeling-engineering-core/evidence/"
+        "phase14-printer-profiles-acceptance-20261008.json"
+    )
+    phase14 = load(repo_root / phase14_config)
+    phase14_proof = load(repo_root / phase14_evidence)
+    assert phase14["schema"] == "velvetos.ai3d.printer-profile-audit.v1"
+    assert phase14["non_authoritative_staging"] is True
+    assert phase14_proof["status"] == "PASS_OFFLINE_AUDIT_WITH_EXPLICIT_BLOCKERS"
+    assert phase14_proof["native_profiles_unchanged"] is True
+    assert phase14_proof["printer_actions_executed"] is False
+    assert phase14_proof["production_release_authorized"] is False
+    assert phase14_proof["machine_firmware_commands_verified"] is False
+    assert phase14_proof["h2d_motion"] == "BLOCKED_MOTION_BOUNDS"
+    assert len(phase14_proof["native_profile_hashes"]) == 17
+    for printer_key,cap_id,state,verdict in (
+        ("u1","print.slice.u1_dialect_review","CANDIDATE","OFFLINE_GCODE_VERIFIED_DIALECT_REVIEW"),
+        ("c5pro","print.slice.c5pro_dialect_review","CANDIDATE","OFFLINE_GCODE_VERIFIED_DIALECT_REVIEW"),
+        ("ecc2","print.slice.ecc2_motion_validation","BLOCKED","BLOCKED_MOTION_BOUNDS"),
+    ):
+        proof = phase14_proof["profiles"][printer_key]
+        assert proof["state"] == verdict
+        assert proof["manufacturing_qualified"] is False
+        assert proof["firmware_command_set_audited"] is False
+        assert set(proof["offline_slices"]) == {"stl","3mf"}
+        for mesh_format in ("stl","3mf"):
+            assert proof["offline_slices"][mesh_format]["slicer_returncode"] == 0
+            assert proof["offline_slices"][mesh_format]["header"]["reported_layer_count"] == 60
+            assert proof["offline_slices"][mesh_format]["warnings"]
+        entry = make_record(
+            record_id=f"{cap_id}--phase14-vf-cad",
+            capability_id=cap_id,
+            authority_id="fabrication-router",
+            authority_ref="packages/vfprod/FABRICATION-ROUTER.json",
+            engine_id="orcaslicer",
+            engine_version="2.4.2",
+            adapter_id="vf-cad-existing-bridge",
+            adapter_ref="scripts/vf_cad.py",
+            runtime_id="vf-cad:OrcaSlicer-2.4.2",
+            host_classes=["windows-primary"],
+            headless=True,
+            verification_state=state,
+            validators=[
+                "validate_ai3d_phase14_printer_profiles",
+                "vendor_firmware_dialect_and_machine_envelope_not_qualified",
+                "offline_only_no_machine_execution",
+            ],
+            evidence_refs=[phase14_config,phase14_evidence],
+            fallbacks=[],
+            status=state,
+            provider={
+                "version":"2.4.2",
+                "license":"AGPL-3.0",
+                "capabilities":[cap_id],
+            },
+            license_provenance=[phase14_config,phase14_evidence],
+        )
+        entry["license_lane"] = "review-required"
+        entry["license"]["code_license"] = "AGPL-3.0"
+        entry["license"]["license_source"] = (
+            "runtime:C:/Users/Chris/Documents/VelvetPrintLab/"
+            "tools/OrcaSlicer-2.4.2/LICENSE.txt"
+        )
+        entry["license"]["bundle_policy"] = (
+            "standalone existing local CLI only; no binary, code or hosted "
+            "service integration into closed product without AGPL review"
+        )
+        entry["license"]["allowed_use"] = (
+            "synthetic offline G-code validation only; machine firmware audit missing"
+        )
         records.append(entry)
 
     # Phase 12: reuse the already PROVEN_TYPED Fabex CAM route unchanged.

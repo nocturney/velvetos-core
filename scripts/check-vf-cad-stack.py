@@ -50,6 +50,15 @@ dfam_slicer_path = (
     "ai-3d-modeling-engineering-core" / "dfam-slicer-v1.json"
 )
 dfam_slicer_validator = ROOT / "scripts" / "validate_ai3d_phase11_dfam_slicer.py"
+printer_profile_audit_path = (
+    ROOT / "docs" / "implementation" /
+    "ai-3d-modeling-engineering-core" / "printer-profile-audit-v1.json"
+)
+printer_profile_audit_validator = ROOT / "scripts" / "validate_ai3d_phase14_printer_profiles.py"
+printer_profile_audit_receipt = (
+    ROOT / "docs" / "implementation" / "ai-3d-modeling-engineering-core"
+    / "evidence" / "phase14-printer-profiles-acceptance-20261008.json"
+)
 cam_validation_path = (
     ROOT / "docs" / "implementation" /
     "ai-3d-modeling-engineering-core" / "cam-toolpath-v1.json"
@@ -75,6 +84,9 @@ assert simulation_driver.is_file(), simulation_driver
 assert simulation_validator.is_file(), simulation_validator
 assert dfam_slicer_path.is_file(), dfam_slicer_path
 assert dfam_slicer_validator.is_file(), dfam_slicer_validator
+assert printer_profile_audit_path.is_file(), printer_profile_audit_path
+assert printer_profile_audit_validator.is_file(), printer_profile_audit_validator
+assert printer_profile_audit_receipt.is_file(), printer_profile_audit_receipt
 assert cam_validation_path.is_file(), cam_validation_path
 assert cam_validation_script.is_file(), cam_validation_script
 assert cam_validation_post.is_file(), cam_validation_post
@@ -121,6 +133,29 @@ assert dfam_slicer["existing_slicer_authority"] == "scripts/vf_cad.py"
 assert dfam_slicer["slicer"]["verified_profiles"]["h2d"]["state"] == "BLOCKED_MOTION_BOUNDS"
 assert dfam_slicer["slicer"]["verified_profiles"]["c5"]["state"] == "PROVEN_OFFLINE_ONLY"
 assert all(v is False for v in dfam_slicer["prohibitions"].values())
+assert registry["printer_profile_audit"] == (
+    "docs/implementation/ai-3d-modeling-engineering-core/printer-profile-audit-v1.json"
+)
+printer_audit = json.loads(printer_profile_audit_path.read_text(encoding="utf-8"))
+printer_proof = json.loads(printer_profile_audit_receipt.read_text(encoding="utf-8"))
+assert printer_audit["schema"] == "velvetos.ai3d.printer-profile-audit.v1"
+assert printer_audit["non_authoritative_staging"] is True
+assert printer_audit["existing_slicer_authority"] == "scripts/vf_cad.py"
+assert all(v is False for v in printer_audit["prohibitions"].values())
+assert printer_proof["status"] == "PASS_OFFLINE_AUDIT_WITH_EXPLICIT_BLOCKERS"
+assert printer_proof["native_profiles_unchanged"] is True
+assert printer_proof["printer_actions_executed"] is False
+assert printer_proof["production_release_authorized"] is False
+assert printer_proof["machine_firmware_commands_verified"] is False
+assert printer_proof["profiles"]["u1"]["state"] == "OFFLINE_GCODE_VERIFIED_DIALECT_REVIEW"
+assert printer_proof["profiles"]["c5pro"]["state"] == "OFFLINE_GCODE_VERIFIED_DIALECT_REVIEW"
+assert printer_proof["profiles"]["ecc2"]["state"] == "BLOCKED_MOTION_BOUNDS"
+assert printer_proof["h2d_motion"] == "BLOCKED_MOTION_BOUNDS"
+phase14_receipt_check = subprocess.run(
+    [sys.executable, str(printer_profile_audit_validator), "--verify-recorded"],
+    cwd=ROOT, text=True, capture_output=True, timeout=25,
+)
+assert phase14_receipt_check.returncode == 0, phase14_receipt_check.stdout + phase14_receipt_check.stderr
 assert (
     registry["cam_toolpath_validation"]
     == "docs/implementation/ai-3d-modeling-engineering-core/cam-toolpath-v1.json"
@@ -306,6 +341,10 @@ assert (
 assert (
     contract["dfam_slicer"]
     == "docs/implementation/ai-3d-modeling-engineering-core/dfam-slicer-v1.json"
+)
+assert (
+    contract["printer_profile_audit"]
+    == "docs/implementation/ai-3d-modeling-engineering-core/printer-profile-audit-v1.json"
 )
 assert (
     contract["cam_toolpath_validation"]

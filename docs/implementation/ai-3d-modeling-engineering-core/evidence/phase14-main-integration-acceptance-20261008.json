@@ -1,0 +1,34 @@
+{
+    "schema":  "velvetos.ai3d.phase14-main-integration-acceptance.v1",
+    "status":  "PASS_LOCAL_INTEGRATION_WITH_EXPLICIT_BLOCKERS",
+    "feature_branch":  "feat/ai3d-phase14-printer-validation-20261008",
+    "merge_commit":  "2fc3d9b46c27c7db4365a68b2d250583d25351ee",
+    "phase14_base_commit":  "8ab33d3afab7d18686b39b893f74afc274cc8b73",
+    "upstream_main_at_merge":  "75410a2f2152116d1b0fbcb2524367d43055c8b7",
+    "merge_conflicts":  [
+
+                        ],
+    "Office_v2_phase3b_targeted":  "PASS",
+    "CAD_stack_targeted":  "PASS",
+    "Fabrication_router_targeted":  "PASS",
+    "registry_targeted":  "PASS",
+    "readme_contract_targeted":  "PASS",
+    "full_suite":  {
+                       "passed":  118,
+                       "failed":  0,
+                       "repository_files_unchanged":  true,
+                       "log":  "evidence/check-all-phase14-integrated-main-20261008.log",
+                       "log_sha256":  "fd5673769f6c2b382d64f0fbf4e16a8b9f742609ca5570a6d0363afcaf5004f7"
+                   },
+    "phase14_receipt_sha256":  "178a3897fcd6779ba7f12f93b5e10d923d025f87fb5726c7d0b0516c4f42da0f",
+    "printer_profile_policy":  {
+                                   "u1":  "OFFLINE_DIALECT_REVIEW",
+                                   "c5pro":  "OFFLINE_DIALECT_REVIEW",
+                                   "ecc2":  "BLOCKED_MOTION_BOUNDS",
+                                   "h2d":  "BLOCKED_MOTION_BOUNDS",
+                                   "device_actions_performed":  false,
+                                   "production_release_approved":  false,
+                                   "native_profiles_unchanged":  true
+                               },
+    "remote_main_merged_as_of_receipt":  false
+}
