@@ -1,0 +1,34 @@
+{
+    "schema":  "velvetos.ai3d.phase4-runtime-install.v1",
+    "status":  "PASS",
+    "captured_at":  "2026-10-07T14:02:44.4441174Z",
+    "runtime":  "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv",
+    "install":  {
+                    "package":  "bd_warehouse",
+                    "version":  "0.3.0",
+                    "mode":  "pip install --no-deps",
+                    "license":  "Apache-2.0"
+                },
+    "dependency_guard":  {
+                             "dry_run":  "Would install bd_warehouse-0.3.0 only",
+                             "added":  [
+                                           "bd_warehouse==0.3.0"
+                                       ],
+                             "removed":  [
+
+                                         ],
+                             "build123d_before":  "0.11.1",
+                             "build123d_after":  "0.11.1",
+                             "ocp_after":  "7.9.3.1.1"
+                         },
+    "source_evidence":  {
+                            "pre_freeze_sha256":  "75d41aa1ce86c3071ec992e5658caf262b20067b1037af572ca65573b67d1c79",
+                            "post_freeze_sha256":  "61920576d011414254e92d1bc12dfacd57d2a93f31a0172bfd3b9d01ad5295ac",
+                            "acceptance":  "evidence/phase4-exact-cad-acceptance-20261007.json"
+                        },
+    "safety":  {
+                   "printer_actions_allowed":  false,
+                   "machine_control_allowed":  false,
+                   "recurring_cost_added":  false
+               }
+}

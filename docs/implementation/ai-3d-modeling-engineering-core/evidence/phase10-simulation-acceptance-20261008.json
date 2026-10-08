@@ -1,0 +1,258 @@
+{
+  "schema": "velvetos.ai3d.phase10-simulation-acceptance.v1",
+  "status": "PASS",
+  "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+  "fixture_sha256": "83b2e172e3fd573cbdf2fe057d1b90d44d67c8478a29a863c5cd8e234a11b08f",
+  "fixture": "axial-bar-tension-explicit-v1",
+  "runtime": {
+    "freecad": {
+      "version": "1.1.3",
+      "executable": "C:/Program Files/FreeCAD 1.1/bin/freecadcmd.exe",
+      "status": "EXISTING"
+    },
+    "gmsh": {
+      "bundled_version": "4.15.0",
+      "bundled_executable": "C:/Program Files/FreeCAD 1.1/bin/gmsh.exe",
+      "blender_sidecar_version": "4.15.2",
+      "license": "GPL-2.0-or-later with linking exception",
+      "license_lane": "external_cli_runtime_review_required_for_bundling",
+      "status": "PROVEN_MESHER"
+    },
+    "calculix": {
+      "version": "2.22",
+      "executable": "C:/Program Files/FreeCAD 1.1/bin/ccx.exe",
+      "license": "GPL-2.0",
+      "license_lane": "external_cli_runtime_review_required_for_bundling",
+      "status": "PROVEN_SOLVER"
+    }
+  },
+  "coarse": {
+    "schema": "velvetos.ai3d.phase10-fem-run.v1",
+    "status": "PASS",
+    "fixture_id": "axial-bar-tension-explicit-v1",
+    "case_sha256": "83b2e172e3fd573cbdf2fe057d1b90d44d67c8478a29a863c5cd8e234a11b08f",
+    "source_type": "synthetic-mechanical-reference-fixture",
+    "solver": {
+      "name": "CalculiX ccx",
+      "version": "2.22",
+      "returncode": 0
+    },
+    "mesher": {
+      "name": "Gmsh",
+      "version": "4.15.0",
+      "node_count": 1052,
+      "volume_elements": 493,
+      "element_order": 2,
+      "max_element_size_mm": 5.0
+    },
+    "freecad_version": "1.1.3",
+    "geometry": {
+      "kind": "rectangular_bar",
+      "length_mm": 40,
+      "width_mm": 10,
+      "height_mm": 10,
+      "source": "explicit-fixture-geometry"
+    },
+    "material": {
+      "name": "Steel-Synthetic-Fixture",
+      "youngs_modulus_mpa": 210000,
+      "poisson_ratio": 0.3,
+      "density_kg_m3": 7850,
+      "source": "explicit-synthetic-material-reference"
+    },
+    "supports": {
+      "face": "x_min",
+      "condition": "all_translations_fixed",
+      "source": "explicit-fixture-boundary"
+    },
+    "loads": {
+      "face": "x_max",
+      "type": "surface_pressure",
+      "pressure_mpa": 10,
+      "direction": "outward",
+      "source": "explicit-fixture-load"
+    },
+    "selection": {
+      "fixed": "Face1",
+      "loaded": "Face2",
+      "numeric_face_guess": false
+    },
+    "mean_free_end_displacement_x_mm": 0.0018884543478260875,
+    "max_free_end_displacement_x_mm": 0.00188848,
+    "loaded_result_nodes": 69,
+    "analytical_extension_mm": 0.0019047619047619048,
+    "relative_error": 0.008561467391304058,
+    "von_mises_max_mpa": 10.954191877177369,
+    "expected_nominal_axial_stress_mpa": 10.0,
+    "elapsed_seconds": 0.75,
+    "artifacts": [
+      {
+        "name": "Mesh.inp",
+        "bytes": 72166,
+        "sha256": "b70ccbd7ecff23d16698158c62d657ec5b0ee419e07f5708df7ab66056ac7f53"
+      },
+      {
+        "name": "Mesh.frd",
+        "bytes": 381246,
+        "sha256": "e81f62a864d83e5578a6a7326328add2b5258156136e01db0f0e5abe1b473f73"
+      },
+      {
+        "name": "Mesh.dat",
+        "bytes": 219,
+        "sha256": "db250b411306de2cb84ad4d8b0ad2d651bada8622b995d07a1fac54225b322cb"
+      },
+      {
+        "name": "tension-bar.FM.FCStd",
+        "bytes": 379151,
+        "sha256": "7a5d9942c6471c16c2fe222c52e58eb23332782b630b14d8acc0f755cbc27eb0"
+      }
+    ],
+    "safety": {
+      "printer_actions_allowed": false,
+      "machine_control_allowed": false,
+      "invent_hidden_loads": false,
+      "invent_material_properties": false,
+      "invent_constraints": false
+    }
+  },
+  "fine": {
+    "schema": "velvetos.ai3d.phase10-fem-run.v1",
+    "status": "PASS",
+    "fixture_id": "axial-bar-tension-explicit-v1",
+    "case_sha256": "83b2e172e3fd573cbdf2fe057d1b90d44d67c8478a29a863c5cd8e234a11b08f",
+    "source_type": "synthetic-mechanical-reference-fixture",
+    "solver": {
+      "name": "CalculiX ccx",
+      "version": "2.22",
+      "returncode": 0
+    },
+    "mesher": {
+      "name": "Gmsh",
+      "version": "4.15.0",
+      "node_count": 2018,
+      "volume_elements": 1033,
+      "element_order": 2,
+      "max_element_size_mm": 3.0
+    },
+    "freecad_version": "1.1.3",
+    "geometry": {
+      "kind": "rectangular_bar",
+      "length_mm": 40,
+      "width_mm": 10,
+      "height_mm": 10,
+      "source": "explicit-fixture-geometry"
+    },
+    "material": {
+      "name": "Steel-Synthetic-Fixture",
+      "youngs_modulus_mpa": 210000,
+      "poisson_ratio": 0.3,
+      "density_kg_m3": 7850,
+      "source": "explicit-synthetic-material-reference"
+    },
+    "supports": {
+      "face": "x_min",
+      "condition": "all_translations_fixed",
+      "source": "explicit-fixture-boundary"
+    },
+    "loads": {
+      "face": "x_max",
+      "type": "surface_pressure",
+      "pressure_mpa": 10,
+      "direction": "outward",
+      "source": "explicit-fixture-load"
+    },
+    "selection": {
+      "fixed": "Face1",
+      "loaded": "Face2",
+      "numeric_face_guess": false
+    },
+    "mean_free_end_displacement_x_mm": 0.0018891900000000033,
+    "max_free_end_displacement_x_mm": 0.00188919,
+    "loaded_result_nodes": 97,
+    "analytical_extension_mm": 0.0019047619047619048,
+    "relative_error": 0.008175249999998286,
+    "von_mises_max_mpa": 13.167542085652432,
+    "expected_nominal_axial_stress_mpa": 10.0,
+    "elapsed_seconds": 0.969,
+    "artifacts": [
+      {
+        "name": "Mesh.inp",
+        "bytes": 153938,
+        "sha256": "9a0db9b09dd03a83dc94c0e2421c617bd4ee2f6bd3e1cd708788cbbb48ee0fe5"
+      },
+      {
+        "name": "Mesh.frd",
+        "bytes": 740934,
+        "sha256": "0f158b738421aec8c3a8cf791c223f1cc80c9cb952bc91462ede168dace9f7e2"
+      },
+      {
+        "name": "Mesh.dat",
+        "bytes": 219,
+        "sha256": "f2e74e740285db96cb4ddf620e45986fc1396adae1fa972850d5e9e3bace7f44"
+      },
+      {
+        "name": "tension-bar.FM.FCStd",
+        "bytes": 725308,
+        "sha256": "b522a05acae752cdbdba7c0b6e2e50ed91f08d26712fabdea5357a2687b116d9"
+      }
+    ],
+    "safety": {
+      "printer_actions_allowed": false,
+      "machine_control_allowed": false,
+      "invent_hidden_loads": false,
+      "invent_material_properties": false,
+      "invent_constraints": false
+    }
+  },
+  "mesh_convergence": {
+    "normalized_mean_displacement_difference": 0.0003894008405272914,
+    "coarse_relative_analytic_error": 0.008561467391304058,
+    "fine_relative_analytic_error": 0.008175249999998286,
+    "refinement_increases_volume_elements": true,
+    "tolerance": 0.02
+  },
+  "tpms_research": {
+    "schema": "velvetos.ai3d.tpms-gyroid-sampling.v1",
+    "status": "RESEARCH_ONLY",
+    "model": "sin(x)cos(y)+sin(y)cos(z)+sin(z)cos(x)",
+    "cell_size_mm": 20.0,
+    "grid_per_axis": 41,
+    "sample_count": 68921,
+    "periodicity_max_boundary_error": 4.440892098500626e-16,
+    "level_set_min": -1.5,
+    "level_set_max": 1.5000000000000004,
+    "occupancy_proxies": {
+      "threshold_minus_0_3": 0.4040625,
+      "threshold_zero": 0.4999375,
+      "threshold_plus_0_3": 0.5959375
+    },
+    "mesh_generated": false,
+    "strength_claim": false,
+    "printability_claim": false,
+    "optimization_accepted": false,
+    "printer_actions_allowed": false
+  },
+  "negative_controls": {
+    "missing_elastic_modulus": "BLOCKED",
+    "invented_material_source": "BLOCKED",
+    "unstable_poisson_ratio": "BLOCKED",
+    "missing_force_or_pressure": "BLOCKED",
+    "unknown_load_direction": "BLOCKED",
+    "missing_support": "BLOCKED",
+    "unbounded_mesh_resources": "BLOCKED",
+    "unbounded_solver_time": "BLOCKED",
+    "automatic_optimization_acceptance": "BLOCKED",
+    "machine_action": "BLOCKED",
+    "unit_drift": "BLOCKED",
+    "unbounded_tpms_grid": "BLOCKED"
+  },
+  "optimization_acceptance": "BLOCKED_NO_STRUCTURAL_CERTIFICATION",
+  "solver_production_scope": "reference-only / not structural certification",
+  "artifact_persistence": "D:\\Velvet\\Artifacts\\AI3D\\2026-10-08\\phase10-verified-001",
+  "distribution_license_gate": {
+    "gmsh": "GPL-2.0-or-later with exception; existing FreeCAD external CLI; no bundling without review",
+    "calculix": "GPL-2.0; existing FreeCAD external CLI; no bundling without review",
+    "sfepy": "BSD-3-Clause / candidate not installed",
+    "dolfinx": "license and platform review required / candidate not installed"
+  }
+}

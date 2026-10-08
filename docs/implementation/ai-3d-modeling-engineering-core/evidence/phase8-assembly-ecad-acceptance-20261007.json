@@ -1,0 +1,387 @@
+{
+  "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+  "capabilities": {
+    "assembly.collision.static": {
+      "method": "exact_brep_intersection_volume",
+      "provider": "build123d",
+      "status": "PROVEN_BOUNDED"
+    },
+    "assembly.freecad.fixed_joint": {
+      "method": "Assembly::AssemblyObject + Assembly::JointGroup + JointObject",
+      "provider": "sidecar_freecad",
+      "status": "PROVEN_BOUNDED"
+    },
+    "assembly.joint.revolute": {
+      "contract": {
+        "requires_explicit_angle_range": true,
+        "requires_explicit_axis": true,
+        "sampled_motion_only": true
+      },
+      "provider": "build123d",
+      "status": "PROVEN_BOUNDED"
+    },
+    "assembly.motion.sweep": {
+      "contract": {
+        "continuous_collision_guarantee": false,
+        "range_enforced": true,
+        "sampling_degrees": 15
+      },
+      "provider": "build123d",
+      "status": "PROVEN_BOUNDED"
+    },
+    "electronics.enclosure_fit": {
+      "method": "KiCad board STEP + build123d exact BREP interference",
+      "provider": "pipeline_pcb_to_enclosure",
+      "status": "PROVEN_BOARD_ONLY"
+    },
+    "electronics.pcb_step_export": {
+      "fixture": "installed Arduino_Nano template",
+      "mode": "--board-only",
+      "provider": "sidecar_kicad_cli",
+      "status": "PROVEN_BOARD_ONLY"
+    },
+    "electronics.pcb_step_export_components": {
+      "blocker": "Installed Arduino Nano template references KICAD9_3DMODEL_DIR .wrl pin headers while KiCad 10 install provides same-name .step models; current export reports missing component models.",
+      "provider": "sidecar_kicad_cli",
+      "status": "CANDIDATE_BLOCKED_FIXTURE"
+    },
+    "robotics.urdf_pinocchio": {
+      "admission_rule": "Only admit after an articulated-mechanism task demonstrates capability not already covered by build123d/FreeCAD joints and after isolated dependency/license qualification.",
+      "optional": true,
+      "status": "CANDIDATE_NOT_INSTALLED"
+    }
+  },
+  "ecad": {
+    "artifacts": {
+      "arduino-nano-board-normalized.step": {
+        "bytes": 186822,
+        "path": "C:\\WINDOWS\\TEMP\\ai3d-phase8-w9tcrnou\\ecad\\arduino-nano-board-normalized.step",
+        "sha256": "f1629c023aaf4e611147066f286c3abab60aaa1f2d1153f86717efeccdb2cc24"
+      },
+      "arduino-nano-board-only.step": {
+        "bytes": 61515,
+        "path": "C:\\WINDOWS\\TEMP\\ai3d-phase8-w9tcrnou\\ecad\\arduino-nano-board-only.step",
+        "sha256": "a8fc674da96b87c81bf932d8b37411c0b83aa9b83152cfab9b562939efe688b8"
+      },
+      "arduino-nano-component-attempt.step": {
+        "bytes": 61536,
+        "path": "C:\\WINDOWS\\TEMP\\ai3d-phase8-w9tcrnou\\ecad\\arduino-nano-component-attempt.step",
+        "sha256": "748ddb55ea0002b54bde0e2a67f9e371da235095b0598e79dac76d3d36eb160c"
+      },
+      "arduino-nano-enclosure-good.step": {
+        "bytes": 29606,
+        "path": "C:\\WINDOWS\\TEMP\\ai3d-phase8-w9tcrnou\\ecad\\arduino-nano-enclosure-good.step",
+        "sha256": "a409807becf0bfc3c7ffee701eb03d48d47f118a61366444a5af93d8f7cb24e7"
+      },
+      "ecad-enclosure-report.json": {
+        "bytes": 393,
+        "path": "C:\\WINDOWS\\TEMP\\ai3d-phase8-w9tcrnou\\ecad\\ecad-enclosure-report.json",
+        "sha256": "67843026d23dda832f5d6320f84cb452f2ea0f00871240a07ef1dc7764351679"
+      }
+    },
+    "board_bbox_mm": [
+      43.18000000000001,
+      17.78,
+      1.5099999999999998
+    ],
+    "board_solids": 1,
+    "board_source": "C:\\Program Files\\KiCad\\10.0\\share\\kicad\\template\\Arduino_Nano\\Arduino_Nano.kicad_pcb",
+    "build123d_runtime": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
+    "component_complete_attempt": {
+      "missing_model_messages": [
+        "Could not add 3D model for J1.",
+        "File not found: ${KICAD9_3DMODEL_DIR}/Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x15_P2.54mm_Vertical.wrl",
+        "Could not add 3D model for J2.",
+        "File not found: ${KICAD9_3DMODEL_DIR}/Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x15_P2.54mm_Vertical.wrl"
+      ],
+      "returncode": 0,
+      "status": "CANDIDATE_BLOCKED_FIXTURE"
+    },
+    "good_clearance_xy_mm": 1.0,
+    "good_collision_volume_mm3": 0.0,
+    "kicad_runtime": "C:\\Program Files\\KiCad\\10.0\\bin\\kicad-cli.exe",
+    "negative_clearance_xy_mm": -1.0,
+    "negative_collision_volume_mm3": 165.26329318508624,
+    "printer_actions_allowed": false,
+    "schema": "velvetos.ai3d.phase8-ecad-interference.v1",
+    "status": "PASS"
+  },
+  "freecad": {
+    "artifacts": {
+      "freecad-assembly-report.json": {
+        "bytes": 508,
+        "path": "C:\\WINDOWS\\TEMP\\ai3d-phase8-w9tcrnou\\freecad\\freecad-assembly-report.json",
+        "sha256": "8179034ca123903390ba2bb164176cbe01a797d6547115c621f1559300ea7d81"
+      },
+      "freecad-assembly.FCStd": {
+        "bytes": 5360,
+        "path": "C:\\WINDOWS\\TEMP\\ai3d-phase8-w9tcrnou\\freecad\\freecad-assembly.FCStd",
+        "sha256": "fe13f3b8b06f27c197e2c01ab93136b3537b381e2ce09af0a4f552e742979ac0"
+      },
+      "freecad-assembly.step": {
+        "bytes": 13119,
+        "path": "C:\\WINDOWS\\TEMP\\ai3d-phase8-w9tcrnou\\freecad\\freecad-assembly.step",
+        "sha256": "c7cdf732bb80033b9f6c421649c1f9a6f904e6a29138a27c3a1990e0f626edc2"
+      }
+    },
+    "assembly_type": "Assembly::AssemblyObject",
+    "fixed_placement": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+    "freecad_version": "1.1.3",
+    "grounded_object": "FixedBox",
+    "joint_group_type": "Assembly::JointGroup",
+    "joint_type": "Fixed",
+    "moving_placement": "Placement [Pos=(-7.35523e-16,-2.29991e-31,7.35523e-16), Yaw-Pitch-Roll=(0,0,0)]",
+    "placement_match": true,
+    "printer_actions_allowed": false,
+    "runtime": "C:\\Program Files\\FreeCAD 1.1\\bin\\freecadcmd.exe",
+    "schema": "velvetos.ai3d.phase8-freecad-assembly-fixture.v1",
+    "status": "PASS"
+  },
+  "limitations": {
+    "ecad_components": "component-complete Arduino Nano fixture remains blocked by installed template/model-reference mismatch; board-only STEP path is proven",
+    "motion": "sampled 15-degree sweep; no continuous-collision guarantee",
+    "robotics": "URDF/Pinocchio remains optional candidate and is not installed"
+  },
+  "motion": {
+    "angular_range_deg": [
+      0,
+      180
+    ],
+    "artifacts": {
+      "build123d-motion-report.json": {
+        "bytes": 4089,
+        "path": "C:\\WINDOWS\\TEMP\\ai3d-phase8-w9tcrnou\\motion\\build123d-motion-report.json",
+        "sha256": "e413572cedb9ca35e463b1dd76029d882c97dafe53815eaee067259955b56902"
+      },
+      "motion-angle0.step": {
+        "bytes": 43577,
+        "path": "C:\\WINDOWS\\TEMP\\ai3d-phase8-w9tcrnou\\motion\\motion-angle0.step",
+        "sha256": "117a36a977116be7c513dc0daae6599adfd13325f07f68323c897d3f81b6f025"
+      },
+      "motion-angle45.step": {
+        "bytes": 44190,
+        "path": "C:\\WINDOWS\\TEMP\\ai3d-phase8-w9tcrnou\\motion\\motion-angle45.step",
+        "sha256": "f9afa672fda67008476d486327194f2783b0f11e77407adf0af8c6b325e1998b"
+      },
+      "motion-angle90.step": {
+        "bytes": 43247,
+        "path": "C:\\WINDOWS\\TEMP\\ai3d-phase8-w9tcrnou\\motion\\motion-angle90.step",
+        "sha256": "e179ca8ca591434a8b20a4d552b6f2c07f136024c7287a4d175e29b9fce7596d"
+      }
+    },
+    "axis_direction": [
+      0,
+      0,
+      1
+    ],
+    "axis_origin_mm": [
+      0,
+      0,
+      5
+    ],
+    "joint_type": "RevoluteJoint",
+    "printer_actions_allowed": false,
+    "range_negative_control": {
+      "angle_deg": 181,
+      "blocked": true,
+      "error": "angle (181) must in range of (0, 180)"
+    },
+    "runtime": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
+    "samples": [
+      {
+        "angle_deg": 0,
+        "arm_bbox_max": [
+          30.0,
+          3.0,
+          9.0
+        ],
+        "arm_bbox_min": [
+          0.0,
+          -3.0000000000000075,
+          5.0
+        ],
+        "collision_volume_mm3": 0.0
+      },
+      {
+        "angle_deg": 15,
+        "arm_bbox_max": [
+          29.754231923979614,
+          10.662348831942827,
+          9.0
+        ],
+        "arm_bbox_min": [
+          -0.7764571353075613,
+          -2.897777478867205,
+          5.0
+        ],
+        "collision_volume_mm3": 0.0
+      },
+      {
+        "angle_deg": 30,
+        "arm_bbox_max": [
+          27.48076211353316,
+          17.598076211353316,
+          9.0
+        ],
+        "arm_bbox_min": [
+          -1.4999999999999996,
+          -2.598076211353317,
+          5.0
+        ],
+        "collision_volume_mm3": 40.84413191870046
+      },
+      {
+        "angle_deg": 45,
+        "arm_bbox_max": [
+          23.334523779156065,
+          23.33452377915607,
+          9.0
+        ],
+        "arm_bbox_min": [
+          -2.121320343559642,
+          -2.121320343559642,
+          5.0
+        ],
+        "collision_volume_mm3": 199.52900397563428
+      },
+      {
+        "angle_deg": 60,
+        "arm_bbox_max": [
+          17.59807621135332,
+          27.480762113533157,
+          9.0
+        ],
+        "arm_bbox_min": [
+          -2.598076211353316,
+          -1.5,
+          5.0
+        ],
+        "collision_volume_mm3": 40.844131918700555
+      },
+      {
+        "angle_deg": 75,
+        "arm_bbox_max": [
+          10.662348831942827,
+          29.754231923979614,
+          9.0
+        ],
+        "arm_bbox_min": [
+          -2.897777478867205,
+          -0.7764571353075631,
+          5.0
+        ],
+        "collision_volume_mm3": 0.0
+      },
+      {
+        "angle_deg": 90,
+        "arm_bbox_max": [
+          3.0,
+          30.0,
+          9.0
+        ],
+        "arm_bbox_min": [
+          -3.0,
+          0.0,
+          5.0
+        ],
+        "collision_volume_mm3": 0.0
+      },
+      {
+        "angle_deg": 105,
+        "arm_bbox_max": [
+          2.897777478867205,
+          29.754231923979614,
+          9.0
+        ],
+        "arm_bbox_min": [
+          -10.662348831942827,
+          -0.7764571353075613,
+          5.0
+        ],
+        "collision_volume_mm3": 0.0
+      },
+      {
+        "angle_deg": 120,
+        "arm_bbox_max": [
+          2.598076211353316,
+          27.480762113533164,
+          9.0
+        ],
+        "arm_bbox_min": [
+          -17.59807621135331,
+          -1.4999999999999987,
+          5.0
+        ],
+        "collision_volume_mm3": 0.0
+      },
+      {
+        "angle_deg": 135,
+        "arm_bbox_max": [
+          2.1213203435596437,
+          23.334523779156072,
+          9.0
+        ],
+        "arm_bbox_min": [
+          -23.334523779156065,
+          -2.121320343559643,
+          5.0
+        ],
+        "collision_volume_mm3": 0.0
+      },
+      {
+        "angle_deg": 150,
+        "arm_bbox_max": [
+          1.5,
+          17.598076211353316,
+          9.0
+        ],
+        "arm_bbox_min": [
+          -27.480762113533164,
+          -2.598076211353316,
+          5.0
+        ],
+        "collision_volume_mm3": 0.0
+      },
+      {
+        "angle_deg": 165,
+        "arm_bbox_max": [
+          0.7764571353075631,
+          10.662348831942834,
+          9.0
+        ],
+        "arm_bbox_min": [
+          -29.75423192397961,
+          -2.8977774788672046,
+          5.0
+        ],
+        "collision_volume_mm3": 0.0
+      },
+      {
+        "angle_deg": 180,
+        "arm_bbox_max": [
+          0.0,
+          3.0000000000000036,
+          9.0
+        ],
+        "arm_bbox_min": [
+          -30.0,
+          -3.0,
+          5.0
+        ],
+        "collision_volume_mm3": 0.0
+      }
+    ],
+    "sampling_step_deg": 15,
+    "schema": "velvetos.ai3d.phase8-motion-fixture.v1",
+    "status": "PASS"
+  },
+  "safety": {
+    "component_complete_ecad_claim_when_models_missing": false,
+    "continuous_motion_claim_without_sampling": false,
+    "invent_joint_axes_or_limits": false,
+    "machine_control_allowed": false,
+    "printer_actions_allowed": false
+  },
+  "schema": "velvetos.ai3d.phase8-assembly-ecad-acceptance.v1",
+  "status": "PASS"
+}

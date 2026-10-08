@@ -1,0 +1,111 @@
+{
+  "schema": "velvetos.ai3d.drawings-vectors-sheetmetal.v1",
+  "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+  "registry_role": "bounded-capability-contract",
+  "runtime_truth": {
+    "build123d": {
+      "version": "0.11.1",
+      "runtime": "vf-cad-stack:build123d-venv",
+      "status": "PROVEN_PROVIDER"
+    },
+    "ezdxf": {
+      "version": "1.4.4",
+      "runtime": "vf-cad-stack:build123d-venv",
+      "status": "PROVEN_PROVIDER"
+    },
+    "svgwrite": {
+      "version": "1.4.3",
+      "runtime": "vf-cad-stack:build123d-venv",
+      "status": "PROVEN_PROVIDER"
+    },
+    "freecad_techdraw": {
+      "version": "1.1.3",
+      "runtime": "C:/Program Files/FreeCAD 1.1/bin/freecadcmd.exe",
+      "license": "LGPL-2.1-or-later",
+      "status": "PROVEN_PROVIDER"
+    },
+    "sheetmetal": {
+      "version": "0.8.24",
+      "tag": "V0.8.24-beta",
+      "commit": "a1cf212d8b86b3849e5cc12070226d5d4bded2a3",
+      "runtime": "D:/Velvet/Runtimes/AI3D/phase9-20261007/FreeCAD_SheetMetal-0.8.24",
+      "license": "LGPL-2.1-or-later",
+      "dependency_networkx": "3.5",
+      "dependency_runtime": "D:/Velvet/Runtimes/AI3D/phase9-20261007/freecad-site-packages",
+      "status": "PROVEN_ISOLATED"
+    },
+    "draftwright": {
+      "version": "0.4.34",
+      "runtime": "D:/Velvet/Runtimes/AI3D/phase9-20261007/draftwright-eval",
+      "license": "AGPL-3.0",
+      "development_status": "alpha",
+      "required_build123d": "<0.11,>=0.9.0",
+      "isolated_build123d": "0.10.0",
+      "canonical_build123d": "0.11.1",
+      "status": "CANDIDATE_ISOLATED_EVAL"
+    }
+  },
+  "capabilities": {
+    "drawing.techdraw.page": {
+      "status": "PROVEN_BOUNDED",
+      "provider": "sidecar_freecad",
+      "contract": {
+        "page_type": "TechDraw::DrawPage",
+        "view_type": "TechDraw::DrawViewPart",
+        "template": "A4_Landscape_TD.svg",
+        "headless": true
+      }
+    },
+    "drawing.dxf.roundtrip": {
+      "status": "PROVEN_BOUNDED",
+      "providers": ["FreeCAD TechDraw", "ezdxf 1.4.4", "build123d 0.11.1"],
+      "contract": {
+        "full_dxf_file_required": true,
+        "fragment_only_output_rejected": true,
+        "reopen_required": true
+      }
+    },
+    "vector.text_glyph": {
+      "status": "PROVEN_BOUNDED",
+      "provider": "build123d",
+      "formats": ["DXF", "SVG"],
+      "fixtures": ["latin", "hebrew"],
+      "contract": {
+        "font_name_required": true,
+        "reopen_bbox_tolerance_mm": 0.001,
+        "source_font_files_are_not_artifacts": true
+      }
+    },
+    "sheetmetal.unfold": {
+      "status": "PROVEN_BOUNDED",
+      "provider": "FreeCAD_SheetMetal 0.8.24",
+      "contract": {
+        "explicit_thickness_required": true,
+        "explicit_bend_radius_required": true,
+        "explicit_k_factor_required": true,
+        "k_factor_standard_required": true,
+        "fixture_k_factor": 0.38,
+        "fixture_k_factor_standard": "ANSI",
+        "dxf_reopen_required": true
+      }
+    },
+    "drawing.draftwright": {
+      "status": "CANDIDATE_ISOLATED_EVAL",
+      "provider": "draftwright 0.4.34",
+      "blockers": [
+        "AGPL-3.0 reciprocal license requires separate product/legal decision before reusable commercial tooling.",
+        "Current release requires build123d<0.11 and would downgrade the canonical build123d 0.11.1 runtime.",
+        "PyPI development status is Alpha."
+      ]
+    }
+  },
+  "safety": {
+    "printer_actions_allowed": false,
+    "machine_control_allowed": false,
+    "invent_k_factor": false,
+    "invent_material_thickness": false,
+    "accept_unparseable_dxf": false,
+    "copy_or_bundle_font_files": false,
+    "draftwright_in_canonical_runtime": false
+  }
+}
