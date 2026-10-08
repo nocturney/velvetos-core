@@ -1,0 +1,37 @@
+{
+  "schema": "velvetos.office-v2.repo-link-intake-contract.v1",
+  "authority": "NONE",
+  "source_of_truth": "docs/implementation/office-v2/phase2/candidate-registry-v0.json",
+  "queue_field": "pending_repo_intakes",
+  "normalization": "HTTPS official github.com OWNER/REPO only; dedupe by lowercase canonical repository URL; preserve provenance refs",
+  "entry_required": [
+    "intake_id",
+    "canonical_repo_url",
+    "provenance_refs",
+    "status",
+    "candidate_id",
+    "next_action",
+    "content_sha256"
+  ],
+  "states": [
+    "NEEDS_TRIAGE",
+    "LINKED_EXISTING"
+  ],
+  "requirements": [
+    "reject credential-bearing, malformed, foreign-host and ambiguous URLs",
+    "same repo URL never creates duplicate queue entries",
+    "do not infer alias from display name",
+    "immutable historical 68-source inventory",
+    "unknown source remains explicitly NEEDS_TRIAGE",
+    "never promote into admitted/production without separate review",
+    "atomic isolated worktree update requires exact pre-write SHA-256",
+    "verified post-write readback and receipt",
+    "protected CI and ordinary PR merge before durable main"
+  ],
+  "proof_status": "CONTRACT_ONLY_NOT_IMPLEMENTED",
+  "related_issues": [
+    595,
+    612
+  ],
+  "runtime_authority": false
+}
