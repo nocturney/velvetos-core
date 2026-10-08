@@ -4,7 +4,7 @@
 
 | קובץ | תפקיד |
 |---|---|
-| [`CONSTITUTION.md`](CONSTITUTION.md) | כללי בית (ChatGPT + סדר יום Gemini + נעילת תזמורת) |
+| [`CONSTITUTION.md`](CONSTITUTION.md) | כללי בית, כולל CAPABILITY_NOT_AUTHORITY_V1: פיתוח יכולת מותר; פעולה רגישה דרך Computer Use דורשת הנחיה/אישור ושער פעולה |
 | [`INSTANCE.md`](INSTANCE.md) | מופע החי + מצביע למודולים / ריפואים |
 | [`TENANT.md`](TENANT.md) | הפניה ישנה → INSTANCE |
 | [`STUDIO.md`](STUDIO.md) | עובדות סטודיו VF |
