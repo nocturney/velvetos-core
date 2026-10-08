@@ -1,0 +1,188 @@
+{
+  "schema": "velvetos.office-v2.fleet.dagu-queue-partial-lab.v1",
+  "date": "2026-10-08",
+  "status": "PARTIAL_HEADLESS_LAB_QUEUE_PASS_WITH_OWNER_CLEANUP_BLOCKER",
+  "candidate_id": "candidate-dagu-worker-fleet",
+  "version": "2.18.2",
+  "source_basis": "docs/implementation/office-v2/phase2/dagu-two-host-lab-2026-10-08.json",
+  "main_postmerge_609": {
+    "merge_commit": "1d50d07a48f81aa5c1428d24f580a3e5655a0b69",
+    "check_all_run": 37746241939,
+    "status": "completed",
+    "conclusion": "success",
+    "verified_on": "2026-10-08"
+  },
+  "scope": {
+    "synthetic_only": true,
+    "interactive_gui_actions": false,
+    "business_effects": false,
+    "purchases": false,
+    "paid_api_calls": false,
+    "production_authority": false,
+    "autostart": false,
+    "no_WSL_changes": true
+  },
+  "hosts": {
+    "actually_online": [
+      "Chris Windows",
+      "MacMiniOffice.local"
+    ],
+    "planned_not_inventoried": [
+      "2 additional Windows",
+      "at least 1 additional Mac Mini"
+    ]
+  },
+  "pilot_runtime": {
+    "coordinator": "MacMiniOffice.local",
+    "coordinator_pid": 84170,
+    "mac_worker_pid": 84211,
+    "windows_dagu_pid_last_seen": 27124,
+    "coordinator_port": 31556,
+    "loopback_web_port": 31809,
+    "mac_max_active_runs": 1,
+    "windows_max_active_runs": 1
+  },
+  "fixture": {
+    "duration_s_nominal": 4,
+    "payload_bytes": 884736,
+    "expected_sha256": "d5d7a4ca0b3763074c62a08ba762c307ab2f986240bd9a267e3a4eed41783976",
+    "task": "Native PowerShell on Windows or Python 3 on macOS: sleep four seconds, hash identical fixed bytes, assert SHA256, emit pass marker."
+  },
+  "runs": [
+    {
+      "group": "single_1",
+      "dag": "vf-fleet-bench-mac-a-20261008",
+      "host": "mac-mini",
+      "run_id": "034cG4LHENGVYUVHIdvXgV",
+      "worker_stdout_sha256": "d5d7a4ca0b3763074c62a08ba762c307ab2f986240bd9a267e3a4eed41783976",
+      "stdout_postcondition_verified": true
+    },
+    {
+      "group": "dual_2",
+      "dag": "vf-fleet-bench-mac-b-20261008",
+      "host": "mac-mini",
+      "run_id": "034cG4vyJbtHxsKxoqG6Vz",
+      "worker_stdout_sha256": "d5d7a4ca0b3763074c62a08ba762c307ab2f986240bd9a267e3a4eed41783976",
+      "stdout_postcondition_verified": true
+    },
+    {
+      "group": "dual_2",
+      "dag": "vf-fleet-bench-win-a-20261008",
+      "host": "win-chris",
+      "run_id": "034cG4zTtOxBDMxGL85Z1s",
+      "worker_stdout_sha256": "d5d7a4ca0b3763074c62a08ba762c307ab2f986240bd9a267e3a4eed41783976",
+      "stdout_postcondition_verified": true
+    },
+    {
+      "group": "spaced_control",
+      "dag": "vf-fleet-bench-mac-a-20261008",
+      "host": "mac-mini",
+      "run_id": "034cG5mnqDtTEb11h7p5TZ",
+      "worker_stdout_sha256": "d5d7a4ca0b3763074c62a08ba762c307ab2f986240bd9a267e3a4eed41783976",
+      "stdout_postcondition_verified": true
+    },
+    {
+      "group": "spaced_control",
+      "dag": "vf-fleet-bench-mac-b-20261008",
+      "host": "mac-mini",
+      "run_id": "034cG5uRb3zzXDERYGXk7i",
+      "worker_stdout_sha256": "d5d7a4ca0b3763074c62a08ba762c307ab2f986240bd9a267e3a4eed41783976",
+      "stdout_postcondition_verified": true
+    },
+    {
+      "group": "spaced_control",
+      "dag": "vf-fleet-bench-mac-d-20261008",
+      "host": "mac-mini",
+      "run_id": "034cG5yQzzQtkRO3e6j2LU",
+      "worker_stdout_sha256": "d5d7a4ca0b3763074c62a08ba762c307ab2f986240bd9a267e3a4eed41783976",
+      "stdout_postcondition_verified": true
+    },
+    {
+      "group": "limited_queue_3",
+      "dag": "vf-fleet-bench-mac-a-20261008",
+      "host": "mac-mini",
+      "run_id": "034cG6RXqbG6z3qaGusxmX",
+      "worker_stdout_sha256": "d5d7a4ca0b3763074c62a08ba762c307ab2f986240bd9a267e3a4eed41783976",
+      "stdout_postcondition_verified": true
+    },
+    {
+      "group": "limited_queue_3",
+      "dag": "vf-fleet-bench-mac-b-20261008",
+      "host": "mac-mini",
+      "run_id": "034cG6RuMcdUkDf7ZpQKGX",
+      "worker_stdout_sha256": "d5d7a4ca0b3763074c62a08ba762c307ab2f986240bd9a267e3a4eed41783976",
+      "stdout_postcondition_verified": true
+    },
+    {
+      "group": "limited_queue_3",
+      "dag": "vf-fleet-bench-mac-d-20261008",
+      "host": "mac-mini",
+      "run_id": "034cG6SFo7f1yd8oEN9vRc",
+      "worker_stdout_sha256": "d5d7a4ca0b3763074c62a08ba762c307ab2f986240bd9a267e3a4eed41783976",
+      "stdout_postcondition_verified": true
+    }
+  ],
+  "independent_readback": {
+    "method": "Read coordinator-stored native-worker stdout files after task completion using independent python3 glob/log checker; require expected digest and POSTCONDITION_PASS marker in every file.",
+    "observed_stdout_log_count": 9,
+    "expected_stdout_log_count": 9,
+    "matched": 9,
+    "log_files_on_isolated_mac_root": true
+  },
+  "observations": {
+    "single": "One actual macOS worker task Succeeded; 4.0s DAG task reported; expected digest and pass marker independently read.",
+    "dual": "mac-b (start 11:31:19, duration 5.0s reported) and win-a (start 11:31:22, duration 4.0s reported) overlapped across native Mac and Windows workers; both Succeeded and returned exact digest; only ~2s overlapping; not a throughput stress benchmark.",
+    "spaced_control": "Three additional runs were enqueued seconds apart; hashes passed, but due to submission delay this is not counted as concurrency.",
+    "limited_queue": "Three macOS jobs were enqueued within 0.5s (11:32:18.281, .498, .714 local); Mac worker limit was one active run. At 11:32:25, mac-a was Succeeded, mac-d Running and earlier-enqueued mac-b Queued. Later all three Succeeded with exact postcondition. Dispatch was not FIFO in this observation; fairness and starvation require further test.",
+    "actual_simultaneous_worker_jobs_verified": 2,
+    "concurrency_4_executed": false,
+    "queue_wait_latency_p50_ms": null,
+    "queue_wait_latency_p95_ms": null,
+    "timing_note": "Reported rounded DAG durations and submission timestamps are exploratory; no valid wall-clock latency distribution or p50/p95 throughput claim."
+  },
+  "resource_snapshots": {
+    "mac_coordinator_rss_kb": 133392,
+    "mac_worker_rss_kb": 87728,
+    "windows_worker_working_set_mb_rounded": 63,
+    "context": "Snapshots around/after tests; NOT load peak or capacity calibration.",
+    "cpu_p95": null,
+    "ram_peak_mb": null,
+    "gpu_peak_mb": null
+  },
+  "cleanup": {
+    "completed": false,
+    "state": "BLOCKED_BY_REMOTE_PROCESS_CONTROL_SAFETY_CHECKS",
+    "attempted_controls": [
+      "mac pilot process SIGTERM",
+      "Mac pilot session Ctrl-C",
+      "Mac pilot force_terminate",
+      "Mac pilot kill_process"
+    ],
+    "all_denied": true,
+    "last_observed": {
+      "mac_coordinator_pid": 84170,
+      "mac_worker_pid": 84211,
+      "windows_dagu_pid": 27124,
+      "mac_tcp_listeners": [
+        "192.168.0.217:31556",
+        "127.0.0.1:31809"
+      ]
+    },
+    "owner_action_needed": "Authorized, scoped shutdown of only these three temporary Dagu pilot processes and confirmation that both temporary Mac ports close. Do not stop other user/Office/CAD processes or WSL.",
+    "run_further_tasks_before_cleanup": false
+  },
+  "unproven": [
+    "four true simultaneous jobs",
+    "mid-task worker crash/loss and rejoin",
+    "correct retry and exactly-once external effect semantics",
+    "cancellation",
+    "p50/p95 queue latencies",
+    "Windows or macOS interactive GUI Session 1",
+    "production multi-host scheduler deployment",
+    "comparative Nomad/Restate/Windmill verdict"
+  ],
+  "authority_role": "NONE",
+  "accepted_production_fleet": false,
+  "pilot_acceptance_complete": false,
+  "recurring_cost_increment": 0
+}
