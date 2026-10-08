@@ -132,6 +132,70 @@
         "string",
         "null"
       ]
+    },
+    "comparison_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy",
+        "eligibility",
+        "variants",
+        "evidence_status",
+        "next_action",
+        "rationale",
+        "decision_evidence_refs"
+      ],
+      "properties": {
+        "policy": {
+          "const": "COMPETITOR_NEUTRAL_ADMISSION_V1"
+        },
+        "eligibility": {
+          "enum": [
+            "OPEN_FOR_COMPARISON",
+            "BENCHMARKED",
+            "EVIDENCE_BASED_REJECTED",
+            "DEFERRED_WITH_REASON"
+          ]
+        },
+        "variants": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "full_replacement",
+              "component_replacement",
+              "hybrid"
+            ]
+          }
+        },
+        "evidence_status": {
+          "enum": [
+            "RESEARCH_ONLY",
+            "ADMISSION_REVIEWED",
+            "LAB_VERIFIED",
+            "SHADOW_VERIFIED",
+            "PILOT_VERIFIED",
+            "PRODUCTION_VERIFIED",
+            "BENCHMARKED"
+          ]
+        },
+        "next_action": {
+          "type": "string",
+          "minLength": 10
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 10
+        },
+        "decision_evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
     }
   }
 }

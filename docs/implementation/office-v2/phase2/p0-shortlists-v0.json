@@ -50,7 +50,11 @@
         "candidate-graphiti"
       ],
       "winner": null,
-      "freeze_state": "OPEN_UNTIL_FIXTURES_AND_SCORECARDS"
+      "freeze_state": "OPEN_UNTIL_FIXTURES_AND_SCORECARDS",
+      "queued_challengers": [
+        "candidate-deerflow"
+      ],
+      "queue_policy": "Competitor-neutral overflow: preserve for fair shortlist triage or lane reopen; queued is neither rejected nor LAB admission."
     },
     {
       "lane_id": "agent-runtime",
@@ -62,7 +66,11 @@
         "candidate-mastra"
       ],
       "winner": null,
-      "freeze_state": "OPEN_UNTIL_FIXTURES_AND_SCORECARDS"
+      "freeze_state": "OPEN_UNTIL_FIXTURES_AND_SCORECARDS",
+      "queued_challengers": [
+        "candidate-deerflow"
+      ],
+      "queue_policy": "Competitor-neutral overflow: preserve for fair shortlist triage or lane reopen; queued is neither rejected nor LAB admission."
     }
   ]
 }
