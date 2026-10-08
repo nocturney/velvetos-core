@@ -1,0 +1,317 @@
+{
+  "schema": "vf.office-v2.p0-two-host-evidence-bundle.v0",
+  "issue": "https://github.com/nocturney/velvetos-core/issues/612",
+  "authority": "LAB_ONLY_NO_PRODUCTION_EFFECT",
+  "executor": "Aider 0.86.2 + local Ollama Qwen 3.5 (Windows 9B; Mac 4B)",
+  "fixture_description": "Identical slug.py (buggy) and unittest file pinned by same Git blobs on both computers; each source edited in isolated Git repo.",
+  "inputs": {
+    "source_sha256": "b97dfdee85fdb6f083acf9372cb50b42534ce1e4b16535d395e60a5004bdd430",
+    "source_blob_sha1": "62f22e42701997037df6454501a22f03c8d53433",
+    "test_sha256": "81134cc5640d34646e2419bcc4c4be737dac1a6ca98b35ba9282bd69fa7b5f60"
+  },
+  "receipts": {
+    "win-serial": {
+      "schema": "vf.office-v2.same-fixture-two-host-lab.v0",
+      "trial": "win-serial",
+      "host": "Chris",
+      "platform": "Windows-10-10.0.26300-SP0",
+      "model": "qwen3.5:9b",
+      "executor": "Aider 0.86.2",
+      "source_sha256": "b97dfdee85fdb6f083acf9372cb50b42534ce1e4b16535d395e60a5004bdd430",
+      "source_blob": "62f22e42701997037df6454501a22f03c8d53433",
+      "base_sha": "c8b6fa07e77bcd4a7b02c00d3df7d13c7cc11ffd",
+      "started_utc": "2026-10-08T17:46:20.406047+00:00",
+      "finished_utc": "2026-10-08T17:46:48.037156+00:00",
+      "elapsed_seconds": 27.625,
+      "exit_code": 0,
+      "state": "FINISHED",
+      "changed_paths": [
+        " M slug.py"
+      ],
+      "after_sha256": "2b9f7037f8061b41b48b37b24345ee952687e58ad5d80c55f6838db4248dd696",
+      "stdout_sha256": "5ccd85c7f74999077dd839416f7c0ea1b2638e9a1e3ddbd0129c3cb728b549ff",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "independent_qa": {
+        "pass": true,
+        "unit_exit": 0,
+        "unit_summary": [
+          "Ran 3 tests in 0.000s"
+        ],
+        "edge_exit": 0,
+        "edge_ok": true,
+        "changed_paths": [
+          " M slug.py"
+        ],
+        "replayed_sha256": "2b9f7037f8061b41b48b37b24345ee952687e58ad5d80c55f6838db4248dd696"
+      },
+      "verified_success": true,
+      "external_spend_usd": 0,
+      "model_invoked_locally": true,
+      "codex_cli": false,
+      "scheduler_or_os_sandbox_proven": false,
+      "receipt_sha256": "6b3826ce2192df84cafcd10f4f60825d44ed5c6f995eb54dde87cd4ec7dc4a0b"
+    },
+    "mac-serial": {
+      "schema": "vf.office-v2.same-fixture-two-host-lab.v0",
+      "trial": "mac-serial",
+      "host": "MacMiniOffice.local",
+      "platform": "macOS-27.2-arm64-arm-64bit",
+      "model": "qwen3.5:4b",
+      "executor": "Aider 0.86.2",
+      "source_sha256": "b97dfdee85fdb6f083acf9372cb50b42534ce1e4b16535d395e60a5004bdd430",
+      "source_blob": "62f22e42701997037df6454501a22f03c8d53433",
+      "base_sha": "0fe7288dfee515779ccc0a6c3ad0130c9efb8d2c",
+      "started_utc": "2026-10-08T17:47:07.198549+00:00",
+      "finished_utc": "2026-10-08T17:47:59.539185+00:00",
+      "elapsed_seconds": 52.34,
+      "exit_code": 0,
+      "state": "FINISHED",
+      "changed_paths": [
+        " M slug.py"
+      ],
+      "after_sha256": "56d570d84c2f81c6fb28c917b5e4815a6cbf6adbf89d3776f5eac921d2a2d571",
+      "stdout_sha256": "823b57e6f3fa1643ffea1b5b6f2dbdd215d5cb8f6b775c91df500ed18b9d7d07",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "independent_qa": {
+        "pass": true,
+        "unit_exit": 0,
+        "unit_summary": [
+          "Ran 3 tests in 0.000s"
+        ],
+        "edge_exit": 0,
+        "edge_ok": true,
+        "changed_paths": [
+          " M slug.py"
+        ],
+        "replayed_sha256": "56d570d84c2f81c6fb28c917b5e4815a6cbf6adbf89d3776f5eac921d2a2d571"
+      },
+      "verified_success": true,
+      "external_spend_usd": 0,
+      "model_invoked_locally": true,
+      "codex_cli": false,
+      "scheduler_or_os_sandbox_proven": false,
+      "receipt_sha256": "1aaa3cee0fa97ea3fcf57b52daf58680e46ace92172af5af71eddd19de62ce99"
+    },
+    "win-parallel": {
+      "schema": "vf.office-v2.same-fixture-two-host-lab.v0",
+      "trial": "win-parallel",
+      "host": "Chris",
+      "platform": "Windows-10-10.0.26300-SP0",
+      "model": "qwen3.5:9b",
+      "executor": "Aider 0.86.2",
+      "source_sha256": "b97dfdee85fdb6f083acf9372cb50b42534ce1e4b16535d395e60a5004bdd430",
+      "source_blob": "62f22e42701997037df6454501a22f03c8d53433",
+      "base_sha": "c8b6fa07e77bcd4a7b02c00d3df7d13c7cc11ffd",
+      "started_utc": "2026-10-08T17:48:45.841203+00:00",
+      "finished_utc": "2026-10-08T17:49:12.339996+00:00",
+      "elapsed_seconds": 26.5,
+      "exit_code": 0,
+      "state": "FINISHED",
+      "changed_paths": [
+        " M slug.py"
+      ],
+      "after_sha256": "2b9f7037f8061b41b48b37b24345ee952687e58ad5d80c55f6838db4248dd696",
+      "stdout_sha256": "5ccd85c7f74999077dd839416f7c0ea1b2638e9a1e3ddbd0129c3cb728b549ff",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "independent_qa": {
+        "pass": true,
+        "unit_exit": 0,
+        "unit_summary": [
+          "Ran 3 tests in 0.000s"
+        ],
+        "edge_exit": 0,
+        "edge_ok": true,
+        "changed_paths": [
+          " M slug.py"
+        ],
+        "replayed_sha256": "2b9f7037f8061b41b48b37b24345ee952687e58ad5d80c55f6838db4248dd696"
+      },
+      "verified_success": true,
+      "external_spend_usd": 0,
+      "model_invoked_locally": true,
+      "codex_cli": false,
+      "scheduler_or_os_sandbox_proven": false,
+      "receipt_sha256": "8b4c4a8c7e608adb7d831b5907154457938e49124ec528f3ca01a3d82041446f"
+    },
+    "mac-parallel": {
+      "schema": "vf.office-v2.same-fixture-two-host-lab.v0",
+      "trial": "mac-parallel",
+      "host": "MacMiniOffice.local",
+      "platform": "macOS-27.2-arm64-arm-64bit",
+      "model": "qwen3.5:4b",
+      "executor": "Aider 0.86.2",
+      "source_sha256": "b97dfdee85fdb6f083acf9372cb50b42534ce1e4b16535d395e60a5004bdd430",
+      "source_blob": "62f22e42701997037df6454501a22f03c8d53433",
+      "base_sha": "8ab86baf2cca2d7e319fe43bef4ece295581af10",
+      "started_utc": "2026-10-08T17:48:41.324577+00:00",
+      "finished_utc": "2026-10-08T17:49:32.605094+00:00",
+      "elapsed_seconds": 51.279,
+      "exit_code": 0,
+      "state": "FINISHED",
+      "changed_paths": [
+        " M slug.py"
+      ],
+      "after_sha256": "56d570d84c2f81c6fb28c917b5e4815a6cbf6adbf89d3776f5eac921d2a2d571",
+      "stdout_sha256": "823b57e6f3fa1643ffea1b5b6f2dbdd215d5cb8f6b775c91df500ed18b9d7d07",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "independent_qa": {
+        "pass": true,
+        "unit_exit": 0,
+        "unit_summary": [
+          "Ran 3 tests in 0.000s"
+        ],
+        "edge_exit": 0,
+        "edge_ok": true,
+        "changed_paths": [
+          " M slug.py"
+        ],
+        "replayed_sha256": "56d570d84c2f81c6fb28c917b5e4815a6cbf6adbf89d3776f5eac921d2a2d571"
+      },
+      "verified_success": true,
+      "external_spend_usd": 0,
+      "model_invoked_locally": true,
+      "codex_cli": false,
+      "scheduler_or_os_sandbox_proven": false,
+      "receipt_sha256": "48b377f20495833a13ca585d7c6806f38e98e12d6c4c2c0888feb91517278e0a"
+    },
+    "forced-crash": {
+      "schema": "vf.office-v2.forced-worker-loss-lab.v0",
+      "observed_utc": "2026-10-08T17:50:19.049216+00:00",
+      "issue": "#612",
+      "host": "MacMiniOffice.local",
+      "source_git_sha": "b6eaddd078eb186de3d96dca309cc16779db47dc",
+      "fixture_base_sha": "7e24253293217a170ab9a52521ae4d224d18f359",
+      "worker_returncode": -9,
+      "worker_killed_pid": 33223,
+      "verified_child_killed_pid": 33228,
+      "running_journal_present": true,
+      "final_receipt_present": false,
+      "partial_output_present": true,
+      "complete_output_present": false,
+      "dirty_paths": [
+        "?? started.txt"
+      ],
+      "journal_sha256": "a0d5c2abd54de80faf8f2d854dcab4e26c8676f04cc163b254df45284a7ac203",
+      "envelope_sha256": "71194dc3372aaadb4218104f1e0e94e8b080000f4f73963c744094b8dff96fef",
+      "checkpoint_unchanged": true,
+      "blind_replay_exit_code": 1,
+      "blind_replay_rejection": "DUPLICATE_OR_UNKNOWN_OUTCOME_NO_RETRY",
+      "no_false_success": true,
+      "external_business_effects": 0,
+      "actual_scheduler_failover_tested": false,
+      "autonomous_resume_tested": false,
+      "receipt_sha256": "f1a639a042c93f1fdd634db02b52b626d7a1d925e8754eaecef1a26af115452f"
+    }
+  },
+  "independent_summary": {
+    "all_four_real_local_model_invocations_verified": true,
+    "autonomous_scheduler_failover_proven": false,
+    "canonical_issue": "https://github.com/nocturney/velvetos-core/issues/612",
+    "codex_cli_used": false,
+    "concurrent_inference_did_not_fail_qa": true,
+    "cross_host_crash_resume_proven": false,
+    "cross_host_model_parity": "DIFFERENT_QWEN_4B_AND_9B; same model on same host for serial/parallel",
+    "end_to_end_agent_placement_proven": false,
+    "fixture": {
+      "source_git_blob": "62f22e42701997037df6454501a22f03c8d53433",
+      "source_sha256": "b97dfdee85fdb6f083acf9372cb50b42534ce1e4b16535d395e60a5004bdd430"
+    },
+    "forced_worker_interruption": {
+      "force_killed_parent_and_owned_child": true,
+      "host": "MacMiniOffice.local",
+      "no_blind_retry_rejection": "DUPLICATE_OR_UNKNOWN_OUTCOME_NO_RETRY",
+      "no_false_success": true,
+      "partial_effect_detected": true,
+      "receipt_sha256": "f1a639a042c93f1fdd634db02b52b626d7a1d925e8754eaecef1a26af115452f",
+      "running_journal_preserved": true,
+      "source_git_sha": "b6eaddd078eb186de3d96dca309cc16779db47dc"
+    },
+    "independent_negative_controls": [
+      "tampered_hash",
+      "false_qa",
+      "cross_host_claim",
+      "false_crash"
+    ],
+    "no_p50_p95_claim": "one pair per mode; repeats required for confidence",
+    "notes": [
+      "This experiment was directly dispatched via authenticated remote tooling, not Dagu or an Office scheduler.",
+      "Serial one-at-a-time work spans two hosts; not a single physical host throughput measurement.",
+      "No uncontrolled business mutation or customer/printer/social side effects.",
+      "Repeated identical fixture on same host may benefit from warm caches; this is one paired observation."
+    ],
+    "paid_model_api_calls": 0,
+    "parallel_overlap_seconds": 26.499,
+    "parallel_wall_seconds": 51.281,
+    "production_authority": "NONE",
+    "protected_ci_delivery_proven_by_this_trial": false,
+    "receipt_sha256": "b7d00c7bfeb458521a02c3bb16d00e665ec14626da9798ec7fc5fe1a6bfc0029",
+    "resource_peak_metrics": "NOT_MEASURED; after-run memory snapshots are not peak measurements",
+    "runs": {
+      "mac-parallel": {
+        "after_sha256": "56d570d84c2f81c6fb28c917b5e4815a6cbf6adbf89d3776f5eac921d2a2d571",
+        "edge_passed": 12,
+        "finished_utc": "2026-10-08T17:49:32.605094+00:00",
+        "host": "MacMiniOffice.local",
+        "independent_qa_pass": true,
+        "model": "qwen3.5:4b",
+        "model_elapsed_seconds": 51.279,
+        "receipt_sha256": "48b377f20495833a13ca585d7c6806f38e98e12d6c4c2c0888feb91517278e0a",
+        "started_utc": "2026-10-08T17:48:41.324577+00:00",
+        "unit_passed": 3
+      },
+      "mac-serial": {
+        "after_sha256": "56d570d84c2f81c6fb28c917b5e4815a6cbf6adbf89d3776f5eac921d2a2d571",
+        "edge_passed": 12,
+        "finished_utc": "2026-10-08T17:47:59.539185+00:00",
+        "host": "MacMiniOffice.local",
+        "independent_qa_pass": true,
+        "model": "qwen3.5:4b",
+        "model_elapsed_seconds": 52.34,
+        "receipt_sha256": "1aaa3cee0fa97ea3fcf57b52daf58680e46ace92172af5af71eddd19de62ce99",
+        "started_utc": "2026-10-08T17:47:07.198549+00:00",
+        "unit_passed": 3
+      },
+      "win-parallel": {
+        "after_sha256": "2b9f7037f8061b41b48b37b24345ee952687e58ad5d80c55f6838db4248dd696",
+        "edge_passed": 12,
+        "finished_utc": "2026-10-08T17:49:12.339996+00:00",
+        "host": "Chris",
+        "independent_qa_pass": true,
+        "model": "qwen3.5:9b",
+        "model_elapsed_seconds": 26.5,
+        "receipt_sha256": "8b4c4a8c7e608adb7d831b5907154457938e49124ec528f3ca01a3d82041446f",
+        "started_utc": "2026-10-08T17:48:45.841203+00:00",
+        "unit_passed": 3
+      },
+      "win-serial": {
+        "after_sha256": "2b9f7037f8061b41b48b37b24345ee952687e58ad5d80c55f6838db4248dd696",
+        "edge_passed": 12,
+        "finished_utc": "2026-10-08T17:46:48.037156+00:00",
+        "host": "Chris",
+        "independent_qa_pass": true,
+        "model": "qwen3.5:9b",
+        "model_elapsed_seconds": 27.625,
+        "receipt_sha256": "6b3826ce2192df84cafcd10f4f60825d44ed5c6f995eb54dde87cd4ec7dc4a0b",
+        "started_utc": "2026-10-08T17:46:20.406047+00:00",
+        "unit_passed": 3
+      }
+    },
+    "schema": "vf.office-v2.p0-two-host-measured-concurrency-and-loss.v0",
+    "serial_sum_model_seconds": 79.965,
+    "serial_wall_seconds": 99.133,
+    "speedup_model_time_upper_bound": 1.559,
+    "speedup_total_dispatch_wall": 1.933,
+    "status": "PASS_SCOPED_LAB",
+    "test": "two identical source/test coding tasks, serial dispatch on Windows then Mac versus overlapping dispatch"
+  },
+  "limits": [
+    "Direct remote dispatcher, not zero-touch scheduler.",
+    "Four actual local LLM code invocations; no model-API spend.",
+    "One serial pair and one parallel pair; no honest p50/p95.",
+    "Serial wall includes measured dispatch gap; use model-only ratio separately.",
+    "No peak CPU/RAM/VRAM capture; snapshots are not peaks.",
+    "Crash was pinned offline Python worker, not an interrupted coding-model failover.",
+    "No autonomous cross-host recovery or production authority.",
+    "Core #612 owns coding; Fleet #604 remains sole placement/scheduler owner."
+  ]
+}
