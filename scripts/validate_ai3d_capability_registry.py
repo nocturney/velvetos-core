@@ -648,6 +648,63 @@ def main() -> int:
     assert "independent_motion_envelope_evidence_required" in h2d["constraints_support"]
     assert h2d["authority"]["id"] == "fabrication-router"
 
+    # Phase 14 records a real offline Orca fixture on all remaining printers
+    # but DOES NOT promote hardware or vendor-firmware compatibility.
+    p14_config=load(phase11_base/"printer-profile-audit-v1.json")
+    p14_proof=load(
+        phase11_base/"evidence"/"phase14-printer-profiles-acceptance-20261008.json"
+    )
+    assert p14_config["schema"]=="velvetos.ai3d.printer-profile-audit.v1"
+    assert p14_config["non_authoritative_staging"] is True
+    assert p14_config["existing_slicer_authority"]=="scripts/vf_cad.py"
+    assert all(value is False for value in p14_config["prohibitions"].values())
+    assert p14_proof["status"]=="PASS_OFFLINE_AUDIT_WITH_EXPLICIT_BLOCKERS"
+    assert p14_proof["native_profiles_unchanged"] is True
+    assert p14_proof["printer_actions_executed"] is False
+    assert p14_proof["production_release_authorized"] is False
+    assert p14_proof["machine_firmware_commands_verified"] is False
+    assert p14_proof["h2d_motion"]=="BLOCKED_MOTION_BOUNDS"
+    assert len(p14_proof["native_profile_hashes"])==17
+    assert p14_proof["negative_controls"]["native_profile_hash_unchanged"]=="PASS_UNCHANGED"
+    for key,cap_id,registry_state,verdict in (
+        ("u1","print.slice.u1_dialect_review","CANDIDATE","OFFLINE_GCODE_VERIFIED_DIALECT_REVIEW"),
+        ("c5pro","print.slice.c5pro_dialect_review","CANDIDATE","OFFLINE_GCODE_VERIFIED_DIALECT_REVIEW"),
+        ("ecc2","print.slice.ecc2_motion_validation","BLOCKED","BLOCKED_MOTION_BOUNDS"),
+    ):
+        proof=p14_proof["profiles"][key]
+        assert proof["state"]==verdict
+        assert proof["manufacturing_qualified"] is False
+        assert proof["firmware_command_set_audited"] is False
+        assert set(proof["offline_slices"])=={"stl","3mf"}
+        for mesh in ("stl","3mf"):
+            assert proof["offline_slices"][mesh]["header"]["reported_layer_count"]==60
+            assert proof["offline_slices"][mesh]["warnings"]
+        entry=next(
+            row for row in records if row["record_id"]==f"{cap_id}--phase14-vf-cad"
+        )
+        assert entry["status"]==registry_state
+        assert entry["verification"]["state"]==registry_state
+        assert entry["engine"]["version"]=="2.4.2"
+        assert entry["license_lane"]=="review-required"
+        assert entry["license"]["code_license"]=="AGPL-3.0"
+        assert entry["authority"]["id"]=="fabrication-router"
+        assert entry["problem_class"]=="manufacturing"
+        assert entry["precision_model"]=="process_output"
+        assert entry["headless"] is True
+        assert "no_auto_print_release" in entry["constraints_support"]
+        assert "native_profiles_immutable" in entry["constraints_support"]
+        assert "no_machine_control" in entry["constraints_support"]
+        assert "validate_ai3d_phase14_printer_profiles" in entry["verification"]["validators"]
+        if key=="ecc2":
+            assert "native_service_move_y_negative" in entry["constraints_support"]
+            assert "independent_motion_envelope_evidence_required" in entry["constraints_support"]
+            assert all(not proof["offline_slices"][fmt]["bounds_validation_ok"] for fmt in ("stl","3mf"))
+        else:
+            assert "vendor_firmware_dialect_unaudited" in entry["constraints_support"]
+            assert all(proof["offline_slices"][fmt]["bounds_validation_ok"] for fmt in ("stl","3mf"))
+    assert sum(1 for item in records if item["capability_id"]=="print.slice.orca_offline" and item["status"]=="PROVEN")==1
+    assert [item["capability_id"] for item in records if item["capability_id"].startswith("print.slice.") and item["verification"]["state"]=="PROVEN_TYPED"] == ["print.slice.blender_integrated"]
+
     # Phase 12 proves only a bounded GRBL post; the existing Fabex CAM route
     # remains the sole cross-station typed cam.toolpath authority.
     phase12_base = ROOT / "docs" / "implementation" / "ai-3d-modeling-engineering-core"

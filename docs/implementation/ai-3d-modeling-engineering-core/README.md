@@ -362,11 +362,74 @@ and other unrelated work) were preserved without modification of their source.
 - Latest-main receipt: `evidence/phase13-latest-main-acceptance-20261008.json` and `evidence/check-all-phase13-latest-main-20261008.log`.
 - These are local feature-branch merges, not evidence that remote GitHub `main` has already been updated.
 
+## Phase 14 - Additional printer profiles, offline only (2026-10-08)
+
+Phase 13/PR #601 merged on GitHub `main` at `8ee3b5a4`.
+Phase 14 was developed on a separate feature branch based on
+`main@d838d790`; it is not a claim of hardware qualification or printer activation.
+
+Evidence and sources:
+
+- `printer-profile-audit-v1.json`
+- `scripts/validate_ai3d_phase14_printer_profiles.py`
+- `evidence/phase14-printer-profiles-acceptance-20261008.json`
+- `packages/vfprod/CAD-ENGINE-REGISTRY.json` (pointer, not source of truth)
+- The existing `slicer-router/printer_matrix.json` remains authoritative; no duplicate slicer router or local/native printer profiles were edited
+
+A new copy of the explicit 120 x 80 x 12 mm synthetic Geometry IR fixture
+was exported as STEP/STL/3MF, then genuinely sliced by the already-installed
+OrcaSlicer 2.4.2 through the canonical `vf_cad.py` bridge.
+Both STL and 3MF generated G-code for all three profiles, with 60 layers
+and explicit nozzle/bed commands:
+
+| Profile | Offline slicer+generic validator | Manufacturing / firmware status |
+|---|---|---|
+| Snapmaker U1 | Both STL and 3MF passed generic XY/Z bounds and extrusion | CANDIDATE: vendor-specific executable commands unaudited |
+| Flashforge Creator 5 Pro | Both STL and 3MF passed generic XY/Z bounds and extrusion | CANDIDATE: vendor-specific executable commands unaudited |
+| Elegoo Centauri Carbon 2 | Both generated output; generic validator rejected native service move `G1 X127 Y-1.2 F20000` following `G180 S7` | BLOCKED_MOTION_BOUNDS: independent service envelope needed |
+| Bambu H2D | Phase 11 native Y=-0.5 failure retained; not requalified | BLOCKED_MOTION_BOUNDS |
+
+Generated files are external offline artifacts; the git evidence includes
+SHA-256 hashes and bounded command reports, not production G-code to be
+flashed or uploaded. The generic parser leaves some vendor-specific commands
+unrecognized, including U1-specific and C5Pro machine macros; a clean generic
+motion report is **not** a safe-firmware certification.
+
+The source snapshot includes three native files and one deterministic wrapper
+for each of U1, C5Pro, ECC2 and H2D, plus the canonical matrix (17 SHA-256
+identities total). Every source file and wrapper was hash-identical
+before/after.
+Negative fixtures block STEP input, oversized geometry, injected unsafe
+U1/C5Pro motions, ECC2 negative-Y movement and unchanged H2D service travel.
+No profile rewrite, printer network/upload/start, temperature action or physical
+machine motion was performed.
+
+Read-only receipt verification:
+
+  py -3.11 scripts/validate_ai3d_phase14_printer_profiles.py --verify-recorded
+
+To repeat on a connected authorized Windows host only, use an unused, isolated
+destination below `D:/Velvet/Artifacts/AI3D`:
+
+  py -3.11 scripts/validate_ai3d_phase14_printer_profiles.py --capture-root D:\\Velvet\\Artifacts\\AI3D\\YYYY-MM-DD\\new-proof-directory
+
+All vendor firmware dialect, workholding/print reality, material calibration,
+print-start and machine-service-motion permissions require separate,
+model-specific provenance, tests and explicit production authority.
+
+Phase 14 integration onto `main@75410a2f` was reviewed as local merge
+`2fc3d9b4`, without conflicts. Office v2 Phase 3B, fabrication and AI3D
+validators passed, followed by the full 118/118 regression. The phase remains
+in the feature branch pending GitHub PR/CI and is not a production release.
+Integration receipt: `evidence/phase14-main-integration-acceptance-20261008.json`.
+Full-suite log: `evidence/check-all-phase14-integrated-main-20261008.log`.
+
 ## Validation state
 
 Explicit AI3D validation stack: PASS. Current integration branch tested against
-`origin/main@08fd11f8`, with the physical H2D/CNC and
-automatic manufacturing-release gates still blocked.
+`origin/main@08fd11f8` for Phase 13. Phase 14 runs independently on
+`main@d838d790` with an additional 118/118 regression. Physical H2D/CNC
+and automatic manufacturing-release gates remain blocked.
 
 
 Repository regression:
@@ -374,8 +437,8 @@ Repository regression:
 - scripts/check-all.py: 118/118 PASS
 - exit code: 0
 - sensor side-effect check: repository files unchanged
-- full-suite log: evidence/check-all-phase13-latest-main-20261008.log
+- Phase 14 full-suite log: evidence/check-all-phase14-20261008.log
 
 ## Next implementation phase
 
-Next: publish the fully tested integrated feature branch with a non-force push, open a PR targeting the current GitHub main, verify current CI and protected-branch policy, and merge only when those gates pass. Remaining material/tool qualification, the H2D service-motion envelope and additional printer profiles must remain explicit deferred blockers rather than being silently promoted.
+Next: after Phase 14 is independently integrated, qualify vendor-specific U1/C5Pro firmware commands and separately investigate ECC2/H2D service-motion envelopes using authoritative device evidence. Unverified profiles remain blocked for production. Material/tool qualification and automatic manufacturing approval also remain explicitly deferred.

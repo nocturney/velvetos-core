@@ -129,3 +129,37 @@ This phase reuses the already-promoted CreativeCraft `cam.toolpath` route, prefe
 Contract: `docs/implementation/ai-3d-modeling-engineering-core/cam-toolpath-v1.json`.
 Evidence: `docs/implementation/ai-3d-modeling-engineering-core/evidence/phase12-cam-acceptance-20261008.json`.
 Validator: `scripts/validate_ai3d_phase12_cam.py`.
+
+## Phase 14 additional printer profiles — offline capability only
+
+The existing canonical `vf_cad.py` route generated real OrcaSlicer 2.4.2
+G-code for a 120×80×12 mm synthetic part on STL and 3MF separately, for
+Snapmaker U1, Elegoo Centauri Carbon 2 and Creator 5 Pro. Each emitted 60
+layers, declared temperature commands and nonempty extrusion.
+
+- U1: generic bounds/extrusion validation **PASS** on both inputs, but
+  vendor-specific executable G-code commands were reported unknown. Registered
+  **CANDIDATE**, not a qualified production job.
+- Creator 5 Pro: generic bounds/extrusion validation **PASS** on both inputs,
+  but vendor-specific executable commands were reported unknown. Registered
+  **CANDIDATE**, not a qualified production job.
+- ECC2: actual offline slices generated but existing generic validator
+  blocked native start service `G180 S7` -> `G1 X127 Y-1.2 F20000`,
+  outside declared Y>=0. Registered **BLOCKED**, with no silent relaxation.
+- H2D: retains its separate Phase 11 Y=-0.5 **BLOCKED** status; neither
+  hardware service envelope has independent verification.
+
+An immutable source fingerprint covers the existing printer matrix, three
+native vendor JSON files + one deterministic text-to-CAD wrapper per machine
+(four machines including H2D); 17 identities unchanged after the full
+six-slice validation. Negative controls block STEP input, over-bed geometry,
+injected unsafe G-code coordinates, and both known service-envelope cases.
+
+Phase 14 does not modify the canonical printer profile source of truth,
+create duplicate routing authority, bundle upstream AGPL components,
+connect to any printer, upload/heat/move, or approve manufacturing. Generic
+G-code parser success cannot certify unsupported vendor firmware commands.
+
+Contract: `docs/implementation/ai-3d-modeling-engineering-core/printer-profile-audit-v1.json`.
+Evidence: `docs/implementation/ai-3d-modeling-engineering-core/evidence/phase14-printer-profiles-acceptance-20261008.json`.
+Validator: `scripts/validate_ai3d_phase14_printer_profiles.py --verify-recorded`.
