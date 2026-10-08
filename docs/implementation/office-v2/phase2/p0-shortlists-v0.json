@@ -57,7 +57,8 @@
       "freeze_state": "OPEN_UNTIL_FIXTURES_AND_SCORECARDS",
       "queued_challengers": [
         "candidate-deerflow",
-        "candidate-context-mode"
+        "candidate-context-mode",
+        "candidate-odysseus"
       ],
       "queue_policy": "Competitor-neutral overflow: preserve for fair shortlist triage or lane reopen; queued is neither rejected nor LAB admission."
     },
@@ -82,7 +83,8 @@
         "candidate-lobehub",
         "candidate-opencode-cli",
         "candidate-goose-cli",
-        "candidate-octop-agent-team"
+        "candidate-octop-agent-team",
+        "candidate-odysseus"
       ],
       "queue_policy": "Competitor-neutral overflow, preserving all credible contenders for contract-matched evaluation. Queue membership grants no runtime or production authority; current 2-3 benchmark shortlist unchanged."
     },
