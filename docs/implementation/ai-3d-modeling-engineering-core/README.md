@@ -417,6 +417,13 @@ All vendor firmware dialect, workholding/print reality, material calibration,
 print-start and machine-service-motion permissions require separate,
 model-specific provenance, tests and explicit production authority.
 
+Phase 14 integration onto `main@75410a2f` was reviewed as local merge
+`2fc3d9b4`, without conflicts. Office v2 Phase 3B, fabrication and AI3D
+validators passed, followed by the full 118/118 regression. The phase remains
+in the feature branch pending GitHub PR/CI and is not a production release.
+Integration receipt: `evidence/phase14-main-integration-acceptance-20261008.json`.
+Full-suite log: `evidence/check-all-phase14-integrated-main-20261008.log`.
+
 ## Validation state
 
 Explicit AI3D validation stack: PASS. Current integration branch tested against
