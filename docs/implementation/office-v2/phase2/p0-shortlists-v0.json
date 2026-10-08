@@ -93,7 +93,9 @@
       ],
       "queued_challengers": [
         "candidate-kestra-worker-fleet",
-        "candidate-ray-worker-fleet"
+        "candidate-ray-worker-fleet",
+        "candidate-dagu-worker-fleet",
+        "candidate-selenium-grid-browser-pool"
       ],
       "winner": null,
       "freeze_state": "OPEN_UNTIL_MULTI_HOST_FLEET_FIXTURE",

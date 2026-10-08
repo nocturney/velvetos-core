@@ -26,3 +26,11 @@ https://kestra.io/docs/installation/windows
 https://docs.ray.io/en/latest/ray-overview/installation.html
 https://learn.microsoft.com/en-us/windows/desktop/Services/interactive-services
 https://github.com/nocturney/velvetos-core/issues/604
+
+## Additional overlooked off-the-shelf systems (2026-10-08)
+
+**Dagu 2.18.2**: self-hosted GPL-3.0 Community tool, one binary, runs on Windows/macOS/Linux; coordinator assigns runs to workers via labels/heartbeats and ships status/logs/artifacts through gRPC. Release provides checksum-pinned Windows AMD64 and macOS ARM64 standalone assets and Sigstore packslip. No required external database and no Community license key. Strong candidate for a 5-host mixed OS fleet; compare carefully against Nomad and Restate-only, especially cancellation, failure/recovery and workflow duplication. Official sources: https://github.com/dagucloud/dagu/releases/tag/v2.18.2 and https://docs.dagu.sh/overview/deployment-models . At candidate-record time NO Dagu binary was installed or tested locally.
+
+**Selenium Grid 4.50**: Apache-2.0, ready-made cross-OS browser node/slot/distributor/queue layer, documented mixed Windows/Mac/Linux nodes; particularly relevant to browser-only computer-use. Unlike full-agent frameworks it controls browser session capacity, not the AI policy, workflow or native CAD GUI. Compare to native Playwright BrowserContexts and browser process pool; Java runtime and browser drivers are additional dependencies (Java not in default PATH/runtime on verified Chris and Mac Mini hosts). Official sources: https://www.selenium.dev/documentation/grid/components/ and https://github.com/SeleniumHQ/selenium/releases/tag/selenium-4.50.0 . At candidate-record time NOT installed/tested locally.
+
+Both candidates are **queued, not rejected or promoted** in the existing Office v2 worker-fleet-placement comparison lane. Source discovery ≠ benchmark; do not claim their tasks succeeded in VelvetOS before measured runs.
