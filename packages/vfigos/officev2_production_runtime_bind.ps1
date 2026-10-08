@@ -318,17 +318,26 @@ try {
 
   Put-Snapshot $newToken
   $providerChanged=$true
-  $oldAfter=0; $newRead=0
-  for($i=0;$i -lt 30;$i++){
+  # Cloudflare's read endpoints can observe a newly deployed secret at different
+  # edge replicas. Never accept a partial 200: require the entire read/write
+  # boundary twice consecutively before touching the production broker.
+  $oldAfter=0; $newRead=0; $newMeta=0; $newJobs=0; $newWrite=0
+  $rotationConsecutivePass=0
+  for($i=0;$i -lt 45;$i++){
     $oldAfter=Http-Code $oldToken 'GET' '/v1/runtime'
     $newRead=Http-Code $newToken 'GET' '/v1/runtime'
-    if($oldAfter -eq 401 -and $newRead -eq 200){break}
+    $newMeta=Http-Code $newToken 'GET' '/v1/meta-health'
+    $newJobs=Http-Code $newToken 'GET' '/v1/jobs'
+    $newWrite=Http-Code $newToken 'POST' '/v1/run'
+    if($oldAfter -eq 401 -and $newRead -eq 200 -and $newMeta -eq 200 -and $newJobs -eq 200 -and $newWrite -eq 401){
+      $rotationConsecutivePass++
+      if($rotationConsecutivePass -ge 2){break}
+    }else{
+      $rotationConsecutivePass=0
+    }
     Start-Sleep -Seconds 2
   }
-  $newMeta=Http-Code $newToken 'GET' '/v1/meta-health'
-  $newJobs=Http-Code $newToken 'GET' '/v1/jobs'
-  $newWrite=Http-Code $newToken 'POST' '/v1/run'
-  if($oldAfter -ne 401 -or $newRead -ne 200 -or $newMeta -ne 200 -or $newJobs -ne 200 -or $newWrite -ne 401){throw "provider rotation boundary failed old=$oldAfter read=$newRead meta=$newMeta jobs=$newJobs write=$newWrite"}
+  if($rotationConsecutivePass -lt 2){throw "provider rotation boundary did not stabilize old=$oldAfter read=$newRead meta=$newMeta jobs=$newJobs write=$newWrite"}
 
   $baoInput=[ordered]@{provider_token=$newToken;rotator_role_id=[string]$bundleObj.rotator_role_id;rotator_secret_id=[string]$bundleObj.rotator_secret_id}|ConvertTo-Json -Compress
   $bao=Invoke-Wsl $openbaoBind @('Rotate') $baoInput
@@ -348,7 +357,7 @@ try {
     scope_id='instagram-publisher-snapshot-read'
     old_credential_reference_sha256=$oldHash
     new_credential_reference_sha256=$newHash
-    provider=[ordered]@{old_after_rotate_http=$oldAfter;new_runtime_http=$newRead;new_meta_health_http=$newMeta;new_jobs_http=$newJobs;new_write_run_http=$newWrite}
+    provider=[ordered]@{old_after_rotate_http=$oldAfter;new_runtime_http=$newRead;new_meta_health_http=$newMeta;new_jobs_http=$newJobs;new_write_run_http=$newWrite;stable_full_boundary_checks=$rotationConsecutivePass}
     broker=[ordered]@{role='officev2-prod-publisher-snapshot';logical_path='officev2-prod/data/instagram-publisher-snapshot';credential_reference_sha256=$newHash;root_token_persisted=$false;generated_root_revoked=$true}
     correlated_read=[ordered]@{status=$runtime.status;identity_persistent=$runtime.identity.persistent_principal;authorization_decision=$runtime.authorization.decision;exact_scope_read_http=$runtime.broker.exact_scope_read_http;unrelated_scope_http=$runtime.broker.unrelated_scope_http;provider_write_run_http=$runtime.provider.write_run_http}
     pilot_provider_credential_invalidated=($oldAfter -eq 401)
@@ -371,15 +380,36 @@ try {
   exit 0
 } catch {
   $cause=$_.Exception.Message
+  $rollbackProviderConfirmed=$false
+  $rollbackBrokerConfirmed=$false
+  $rollbackError=$null
   if($providerChanged -and $oldToken){
     try {
       Put-Snapshot $oldToken
-      for($i=0;$i -lt 30;$i++){if((Http-Code $oldToken 'GET' '/v1/runtime') -eq 200){break};Start-Sleep -Seconds 2}
+      $oldRestoreRead=0; $oldRestoreMeta=0; $oldRestoreJobs=0; $oldRestoreWrite=0
+      for($i=0;$i -lt 45;$i++){
+        $oldRestoreRead=Http-Code $oldToken 'GET' '/v1/runtime'
+        $oldRestoreMeta=Http-Code $oldToken 'GET' '/v1/meta-health'
+        $oldRestoreJobs=Http-Code $oldToken 'GET' '/v1/jobs'
+        $oldRestoreWrite=Http-Code $oldToken 'POST' '/v1/run'
+        if($oldRestoreRead -eq 200 -and $oldRestoreMeta -eq 200 -and $oldRestoreJobs -eq 200 -and $oldRestoreWrite -eq 401){break}
+        Start-Sleep -Seconds 2
+      }
+      if($oldRestoreRead -ne 200 -or $oldRestoreMeta -ne 200 -or $oldRestoreJobs -ne 200 -or $oldRestoreWrite -ne 401){
+        throw "pre-rotation provider restoration not proven read=$oldRestoreRead meta=$oldRestoreMeta jobs=$oldRestoreJobs write=$oldRestoreWrite"
+      }
+      $rollbackProviderConfirmed=$true
       if($brokerChanged){
         $rollbackBaoInput=[ordered]@{provider_token=$oldToken;rotator_role_id=[string]$bundleObj.rotator_role_id;rotator_secret_id=[string]$bundleObj.rotator_secret_id}|ConvertTo-Json -Compress
-        [void](Invoke-Wsl $openbaoBind @('Rotate') $rollbackBaoInput)
+        $rollbackBao=Invoke-Wsl $openbaoBind @('Rotate') $rollbackBaoInput
+        if($rollbackBao.ExitCode -ne 0){throw 'scoped production broker restoration failed'}
+        $rb=$rollbackBao.Stdout.Trim()|ConvertFrom-Json
+        if($rb.status -ne 'PASS' -or [string]$rb.credential_reference_sha256 -ne (Hash-Text $oldToken) -or $rb.root_revoked -ne $true){throw 'scoped production broker restoration proof mismatch'}
+        $rollbackBrokerConfirmed=$true
       }
-    } catch {}
+    } catch {
+      $rollbackError=$_.Exception.Message
+    }
   }
   $fail=[ordered]@{
     schema='velvetos.office-v2.phase3b-production-provider-rotation.v0'
@@ -389,6 +419,10 @@ try {
     provider_change_attempted=$providerChanged
     broker_change_attempted=$brokerChanged
     rollback_attempted=($providerChanged -and [bool]$oldToken)
+    rollback_provider_confirmed=$rollbackProviderConfirmed
+    rollback_broker_restore_required=$brokerChanged
+    rollback_broker_confirmed=$rollbackBrokerConfirmed
+    rollback_error=$rollbackError
     raw_secret_recorded=$false
     production_authority_active=$false
     production_writer_change=$false
