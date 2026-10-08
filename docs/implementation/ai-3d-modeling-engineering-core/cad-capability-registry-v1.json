@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.ai3d.cad-capability-registry.v1",
   "non_authoritative_staging": true,
-  "generated_at": "2026-10-08T05:46:52.515920+00:00",
+  "generated_at": "2026-10-08T06:58:22.926245+00:00",
   "authority_invariant": "This registry grants no authority. Fabrication Router/vf-3d-router, CreativeCraft, Blender Capability Host, slicer and production authorities remain unchanged.",
   "records": [
     {
@@ -1409,7 +1409,7 @@
         "provenance": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "D:\\Velvet\\Worktrees\\ai3d-phase12-20261008\\packages\\vfprod\\MECHANICAL-FEATURE-PACKS.json"
+          "D:\\Velvet\\Worktrees\\ai3d-phase14-printer-validation-20261008\\packages\\vfprod\\MECHANICAL-FEATURE-PACKS.json"
         ]
       },
       "verification": {
@@ -1420,7 +1420,7 @@
         "evidence_refs": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "D:\\Velvet\\Worktrees\\ai3d-phase12-20261008\\packages\\vfprod\\MECHANICAL-FEATURE-PACKS.json"
+          "D:\\Velvet\\Worktrees\\ai3d-phase14-printer-validation-20261008\\packages\\vfprod\\MECHANICAL-FEATURE-PACKS.json"
         ]
       },
       "fallback": [],
@@ -1757,7 +1757,7 @@
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\Worktrees\\ai3d-phase12-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
+          "D:\\Velvet\\Worktrees\\ai3d-phase14-printer-validation-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
           "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
           "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_build123d"
         ]
@@ -1821,7 +1821,7 @@
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\Worktrees\\ai3d-phase12-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json"
+          "D:\\Velvet\\Worktrees\\ai3d-phase14-printer-validation-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json"
         ]
       },
       "fallback": [],
@@ -1886,7 +1886,7 @@
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\Worktrees\\ai3d-phase12-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
+          "D:\\Velvet\\Worktrees\\ai3d-phase14-printer-validation-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
           "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\cadquery\\.venv\\Scripts\\python.exe",
           "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_cadquery"
         ]
@@ -1950,7 +1950,7 @@
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\Worktrees\\ai3d-phase12-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json"
+          "D:\\Velvet\\Worktrees\\ai3d-phase14-printer-validation-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json"
         ]
       },
       "fallback": [],
@@ -2014,7 +2014,7 @@
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\Worktrees\\ai3d-phase12-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
+          "D:\\Velvet\\Worktrees\\ai3d-phase14-printer-validation-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
           "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\jscad"
         ]
       },
@@ -4001,6 +4001,152 @@
       "status": "PROVEN"
     },
     {
+      "record_id": "print.slice.c5pro_dialect_review--phase14-vf-cad",
+      "capability_id": "print.slice.c5pro_dialect_review",
+      "problem_class": "manufacturing",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "orcaslicer",
+        "version": "2.4.2"
+      },
+      "adapter": {
+        "id": "vf-cad-existing-bridge",
+        "source_ref": "scripts/vf_cad.py"
+      },
+      "runtime": {
+        "id": "vf-cad:OrcaSlicer-2.4.2",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "verified_mesh_or_3mf",
+        "existing_native_printer_profile"
+      ],
+      "output_types": [
+        "offline_gcode",
+        "gcode_validation_report",
+        "verification_receipt"
+      ],
+      "precision_model": "process_output",
+      "constraints_support": [
+        "bounded_typed_request",
+        "no_printer_network_action",
+        "offline_only",
+        "no_auto_print_release",
+        "native_profiles_immutable",
+        "offline_stl_3mf_parity_only",
+        "vendor_firmware_dialect_unaudited",
+        "not_production_qualified",
+        "no_machine_control"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "runtime:C:/Users/Chris/Documents/VelvetPrintLab/tools/OrcaSlicer-2.4.2/LICENSE.txt",
+        "code_license": "AGPL-3.0",
+        "data_license": null,
+        "allowed_use": "synthetic offline G-code validation only; machine firmware audit missing",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "standalone existing local CLI only; no binary, code or hosted service integration into closed product without AGPL review",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/printer-profile-audit-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase14-printer-profiles-acceptance-20261008.json"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "validate_ai3d_phase14_printer_profiles",
+          "vendor_firmware_dialect_and_machine_envelope_not_qualified",
+          "offline_only_no_machine_execution"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/printer-profile-audit-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase14-printer-profiles-acceptance-20261008.json"
+        ]
+      },
+      "fallback": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "record_id": "print.slice.ecc2_motion_validation--phase14-vf-cad",
+      "capability_id": "print.slice.ecc2_motion_validation",
+      "problem_class": "manufacturing",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "orcaslicer",
+        "version": "2.4.2"
+      },
+      "adapter": {
+        "id": "vf-cad-existing-bridge",
+        "source_ref": "scripts/vf_cad.py"
+      },
+      "runtime": {
+        "id": "vf-cad:OrcaSlicer-2.4.2",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "verified_mesh_or_3mf",
+        "existing_native_printer_profile"
+      ],
+      "output_types": [
+        "offline_gcode",
+        "gcode_validation_report",
+        "verification_receipt"
+      ],
+      "precision_model": "process_output",
+      "constraints_support": [
+        "bounded_typed_request",
+        "no_printer_network_action",
+        "offline_only",
+        "no_auto_print_release",
+        "native_profiles_immutable",
+        "native_service_move_y_negative",
+        "independent_motion_envelope_evidence_required",
+        "gcode_validation_blocks_release",
+        "no_machine_control"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "runtime:C:/Users/Chris/Documents/VelvetPrintLab/tools/OrcaSlicer-2.4.2/LICENSE.txt",
+        "code_license": "AGPL-3.0",
+        "data_license": null,
+        "allowed_use": "synthetic offline G-code validation only; machine firmware audit missing",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "standalone existing local CLI only; no binary, code or hosted service integration into closed product without AGPL review",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/printer-profile-audit-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase14-printer-profiles-acceptance-20261008.json"
+        ]
+      },
+      "verification": {
+        "state": "BLOCKED",
+        "validators": [
+          "validate_ai3d_phase14_printer_profiles",
+          "vendor_firmware_dialect_and_machine_envelope_not_qualified",
+          "offline_only_no_machine_execution"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/printer-profile-audit-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase14-printer-profiles-acceptance-20261008.json"
+        ]
+      },
+      "fallback": [],
+      "status": "BLOCKED"
+    },
+    {
       "record_id": "print.slice.h2d_motion_validation--phase11-vf-cad",
       "capability_id": "print.slice.h2d_motion_validation",
       "problem_class": "manufacturing",
@@ -4140,6 +4286,79 @@
       },
       "fallback": [],
       "status": "PROVEN"
+    },
+    {
+      "record_id": "print.slice.u1_dialect_review--phase14-vf-cad",
+      "capability_id": "print.slice.u1_dialect_review",
+      "problem_class": "manufacturing",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "orcaslicer",
+        "version": "2.4.2"
+      },
+      "adapter": {
+        "id": "vf-cad-existing-bridge",
+        "source_ref": "scripts/vf_cad.py"
+      },
+      "runtime": {
+        "id": "vf-cad:OrcaSlicer-2.4.2",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "verified_mesh_or_3mf",
+        "existing_native_printer_profile"
+      ],
+      "output_types": [
+        "offline_gcode",
+        "gcode_validation_report",
+        "verification_receipt"
+      ],
+      "precision_model": "process_output",
+      "constraints_support": [
+        "bounded_typed_request",
+        "no_printer_network_action",
+        "offline_only",
+        "no_auto_print_release",
+        "native_profiles_immutable",
+        "offline_stl_3mf_parity_only",
+        "vendor_firmware_dialect_unaudited",
+        "not_production_qualified",
+        "no_machine_control"
+      ],
+      "headless": true,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "runtime:C:/Users/Chris/Documents/VelvetPrintLab/tools/OrcaSlicer-2.4.2/LICENSE.txt",
+        "code_license": "AGPL-3.0",
+        "data_license": null,
+        "allowed_use": "synthetic offline G-code validation only; machine firmware audit missing",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "standalone existing local CLI only; no binary, code or hosted service integration into closed product without AGPL review",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/printer-profile-audit-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase14-printer-profiles-acceptance-20261008.json"
+        ]
+      },
+      "verification": {
+        "state": "CANDIDATE",
+        "validators": [
+          "validate_ai3d_phase14_printer_profiles",
+          "vendor_firmware_dialect_and_machine_envelope_not_qualified",
+          "offline_only_no_machine_execution"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/printer-profile-audit-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase14-printer-profiles-acceptance-20261008.json"
+        ]
+      },
+      "fallback": [],
+      "status": "CANDIDATE"
     },
     {
       "record_id": "print.support_generation.support_fins--blender-host",
