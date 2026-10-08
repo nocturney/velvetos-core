@@ -16,8 +16,8 @@ def snapshot_route(pointer_path: Path = PROJECT_STATE) -> str:
     if not pointer_path.exists():
         return "INCUMBENT"
     pointer = json.loads(pointer_path.read_text(encoding="utf-8-sig"))
-    if pointer.get("schema") != "velvetos.office-v2.project-state-pointer.v0" or pointer.get("gate") != "GREEN":
-        raise RuntimeError("Office v2 project-state pointer invalid or not GREEN")
+    if pointer.get("schema") != "velvetos.office-v2.project-state-pointer.v0" or pointer.get("gate") not in ("GREEN", "ACTIVATING"):
+        raise RuntimeError("Office v2 project-state pointer invalid or not an allowed reader gate")
     checkpoint_id = pointer.get("checkpoint_id")
     expected = {
         PILOT_CHECKPOINT: ("PHASE_3B_PILOT_ACTIVE", "INCUMBENT", "checkpoint-016-v0-phase3b-pilot-active.json"),
@@ -25,6 +25,9 @@ def snapshot_route(pointer_path: Path = PROJECT_STATE) -> str:
     }.get(checkpoint_id)
     if expected is None or pointer.get("phase") != expected[0]:
         raise RuntimeError("Office v2 checkpoint/phase is not a recognized reader route")
+    if checkpoint_id == PILOT_CHECKPOINT and pointer["gate"] != "GREEN":
+        raise RuntimeError("PILOT route must remain GREEN")
+    # The explicit ACTIVATING state admits only the secure read-only probe, never incumbent fallback.
     checkpoint_path = pointer_path.parent / expected[2]
     ref = str(pointer.get("current_checkpoint_ref") or "").replace("\\", "/")
     if ref.casefold() != str(checkpoint_path).replace("\\", "/").casefold():
@@ -36,7 +39,7 @@ def snapshot_route(pointer_path: Path = PROJECT_STATE) -> str:
     if (checkpoint.get("schema_version") != "velvetos.office-v2.project-state.v0"
             or checkpoint.get("checkpoint_id") != checkpoint_id
             or checkpoint.get("migration_phase") != expected[0]
-            or (checkpoint.get("gate_status") or {}).get("verdict") != "GREEN"
+            or (checkpoint.get("gate_status") or {}).get("verdict") != pointer["gate"]
             or not declared_hash or calculated_hash != declared_hash
             or pointer.get("content_hash") != declared_hash):
         raise RuntimeError("Office v2 checkpoint integrity or gate verification failed")

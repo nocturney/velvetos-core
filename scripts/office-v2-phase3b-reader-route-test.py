@@ -20,7 +20,7 @@ def require(condition: bool, message: str) -> None:
         raise AssertionError(message)
 
 
-def fixture(folder: Path, checkpoint_id: str, phase: str) -> Path:
+def fixture(folder: Path, checkpoint_id: str, phase: str, gate: str = "GREEN") -> Path:
     name = (
         "checkpoint-016-v0-phase3b-pilot-active.json"
         if checkpoint_id.endswith("cp016-pilot-active")
@@ -30,7 +30,7 @@ def fixture(folder: Path, checkpoint_id: str, phase: str) -> Path:
         "schema_version": "velvetos.office-v2.project-state.v0",
         "checkpoint_id": checkpoint_id,
         "migration_phase": phase,
-        "gate_status": {"verdict": "GREEN"},
+        "gate_status": {"verdict": gate},
     }
     cp["content_hash"] = hashlib.sha256(
         json.dumps(cp, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -43,7 +43,7 @@ def fixture(folder: Path, checkpoint_id: str, phase: str) -> Path:
         "checkpoint_id": checkpoint_id,
         "content_hash": cp["content_hash"],
         "phase": phase,
-        "gate": "GREEN",
+        "gate": gate,
     }
     pointer_path = folder / "CURRENT.json"
     pointer_path.write_text(json.dumps(pointer), encoding="utf-8")
@@ -74,7 +74,13 @@ def main() -> None:
         cp16 = fixture(folder, router.PILOT_CHECKPOINT, "PHASE_3B_PILOT_ACTIVE")
         require(router.snapshot_route(cp16) == "INCUMBENT", "cp016 must remain incumbent")
         cp17 = fixture(folder, router.PRODUCTION_CHECKPOINT, "PHASE_3B_PRODUCTION_READ_ACTIVE")
-        require(router.snapshot_route(cp17) == "OFFICEV2_PRODUCTION_READ", "cp017 must select secure read")
+        require(router.snapshot_route(cp17) == "OFFICEV2_PRODUCTION_READ", "cp017 GREEN must select secure read")
+        cp17 = fixture(folder, router.PRODUCTION_CHECKPOINT, "PHASE_3B_PRODUCTION_READ_ACTIVE", "ACTIVATING")
+        require(router.snapshot_route(cp17) == "OFFICEV2_PRODUCTION_READ", "cp017 ACTIVATING must select secure-only read probe")
+        cp16 = fixture(folder, router.PILOT_CHECKPOINT, "PHASE_3B_PILOT_ACTIVE", "ACTIVATING")
+        expect_denied(lambda: router.snapshot_route(cp16), "PILOT cannot be activating")
+        cp16 = fixture(folder, router.PILOT_CHECKPOINT, "PHASE_3B_PILOT_ACTIVE")
+        cp17 = fixture(folder, router.PRODUCTION_CHECKPOINT, "PHASE_3B_PRODUCTION_READ_ACTIVE")
         pointer = json.loads(cp17.read_text(encoding="utf-8"))
         malformed = dict(pointer, phase="PHASE_3B_PILOT_ACTIVE")
         cp17.write_text(json.dumps(malformed), encoding="utf-8")
@@ -145,7 +151,22 @@ def main() -> None:
             old_snapshot.assert_called_once()
         require(incumbent_file.is_file(), "incumbent route must remain functional")
 
-    print("OK phase3b production-reader-route cases=11 cp016=incumbent cp017=secure failclosed=PASS admin-fallback=FORBIDDEN")
+    promoter_path = ROOT / "scripts" / "office-v2-phase3b-production-promote.py"
+    pspec = importlib.util.spec_from_file_location("vf_phase3b_promotion_model", promoter_path)
+    require(pspec is not None and pspec.loader is not None, "production promotion module missing")
+    promoter = importlib.util.module_from_spec(pspec)
+    pspec.loader.exec_module(promoter)
+    sample_cp = {"checkpoint_id": router.PILOT_CHECKPOINT, "scope_and_constraints": [], "completed_work": [], "receipt_refs": []}
+    for gate in ("ACTIVATING", "GREEN"):
+        generated = promoter.new_checkpoint(sample_cp, "a" * 40, gate)
+        require(generated["checkpoint_id"] == router.PRODUCTION_CHECKPOINT, "cp017 generated ID drift")
+        require(generated["gate_status"]["verdict"] == gate, "cp017 staging gate drift")
+        require(generated["content_hash"] == promoter.content_hash(generated), "cp017 model self-hash failure")
+    stage_receipt = promoter.production_receipt("a" * 40, "123", "b" * 64, "READY_FOR_READ_PROBE")
+    final_receipt = promoter.production_receipt("a" * 40, "123", "b" * 64, "PASS")
+    require(stage_receipt["production_promoted"] is False and final_receipt["production_promoted"] is True, "activation receipt phase separation failed")
+    require(stage_receipt["production_writer_change"] is False and final_receipt["external_mutation_allowed"] is False, "promotion must remain read-only")
+    print("OK phase3b production-reader-route cases=17 cp016=incumbent cp017=secure activating_probe=secure_only promotion_model=PASS failclosed=PASS admin-fallback=FORBIDDEN")
 
 
 if __name__ == "__main__":

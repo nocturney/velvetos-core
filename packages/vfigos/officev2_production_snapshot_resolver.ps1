@@ -29,13 +29,19 @@ if($Mode -eq 'Probe'){
   if($auth.status -ne 'AUTHORIZED' -or $auth.production_promoted -ne $false){throw 'production authority-transfer authorization invalid'}
   $expected=[string]$binding.active_credential_reference_sha256
 }else{
-  if($state.phase -ne 'PHASE_3B_PRODUCTION_READ_ACTIVE' -or $state.checkpoint_id -ne 'office-v2-phase3b-v0-cp017-production-read-active' -or $state.gate -ne 'GREEN'){throw 'Production resolver requires exact cp017 PHASE_3B_PRODUCTION_READ_ACTIVE GREEN'}
+  if($state.phase -ne 'PHASE_3B_PRODUCTION_READ_ACTIVE' -or $state.checkpoint_id -ne 'office-v2-phase3b-v0-cp017-production-read-active' -or @('GREEN','ACTIVATING') -notcontains $state.gate){throw 'Production resolver requires exact cp017 PHASE_3B_PRODUCTION_READ_ACTIVE with allowed gate'}
   if(-not (Test-Path $productionPromotion)){throw 'production promotion receipt missing'}
   $promotion=Get-Content $productionPromotion -Raw | ConvertFrom-Json
-  if($promotion.status -ne 'PASS' -or $promotion.production_promoted -ne $true){throw 'production promotion receipt not PASS'}
   if($promotion.scope_id -ne 'instagram-publisher-snapshot-read' -or $promotion.credential_class -ne 'PRODUCTION_READ' -or $promotion.exact_main_sha -ne $state.code_commit){throw 'production receipt scope/commit mismatch'}
   if($promotion.production_writer_change -ne $false -or $promotion.external_mutation_allowed -ne $false){throw 'production promotion includes forbidden writer/mutation authority'}
-  if($binding.mode -ne 'ROTATED_PRODUCTION_CREDENTIAL_READY_FOR_PROMOTION' -or $binding.production_authority_active -ne $true -or $binding.production_promoted -ne $true){throw 'production binding not explicitly activated'}
+  if($binding.mode -ne 'ROTATED_PRODUCTION_CREDENTIAL_READY_FOR_PROMOTION'){throw 'production binding must remain rotated'}
+  if($state.gate -eq 'ACTIVATING'){
+    if($promotion.status -ne 'READY_FOR_READ_PROBE' -or $promotion.production_promoted -ne $false){throw 'production activation probe receipt invalid'}
+    if($binding.production_authority_active -ne $false -or $binding.production_promoted -ne $false){throw 'activation probe cannot have active authority'}
+  }else{
+    if($promotion.status -ne 'PASS' -or $promotion.production_promoted -ne $true){throw 'production promotion receipt not PASS'}
+    if($binding.production_authority_active -ne $true -or $binding.production_promoted -ne $true){throw 'production binding not explicitly activated'}
+  }
   $expected=[string]$promotion.active_credential_reference_sha256
   if($expected -ne [string]$binding.active_credential_reference_sha256){throw 'production receipt/binding credential hash mismatch'}
 }
