@@ -1,0 +1,39 @@
+{
+  "schema": "velvetos.fleet.two-host-synthetic-readback.v1",
+  "date": "2026-10-08",
+  "task": "SHA256 on identical Python byte payload via existing remote connector",
+  "payload_python": "b'velvetos_fleet_synthetic_v1'*32768",
+  "payload_bytes": 884736,
+  "results": [
+    {
+      "host": "Chris",
+      "os": "Windows",
+      "python": "3.11.9",
+      "sha256": "d5d7a4ca0b3763074c62a08ba762c307ab2f986240bd9a267e3a4eed41783976",
+      "postcondition": true,
+      "local_hash_ms_one_run": 0.334
+    },
+    {
+      "host": "MacMiniOffice.local",
+      "os": "Darwin",
+      "python": "3.9.6",
+      "sha256": "d5d7a4ca0b3763074c62a08ba762c307ab2f986240bd9a267e3a4eed41783976",
+      "postcondition": true,
+      "local_hash_ms_one_run": 1.092
+    }
+  ],
+  "outcome": "PASS_TWO_HOST_REMOTE_EXECUTION_ONLY",
+  "not_proven": [
+    "automatic scheduling",
+    "queue durability",
+    "worker failure recovery",
+    "GUI control",
+    "concurrency throughput",
+    "third party runtime"
+  ],
+  "notes": [
+    "Initial commands failed due to shell quoting; corrected identical Python program succeeded on both machines.",
+    "No software installed, no user desktop actions, no external business effects. One-off hash timing is not a throughput benchmark."
+  ],
+  "runtime_authority_change": false
+}

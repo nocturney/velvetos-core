@@ -129,3 +129,67 @@ This phase reuses the already-promoted CreativeCraft `cam.toolpath` route, prefe
 Contract: `docs/implementation/ai-3d-modeling-engineering-core/cam-toolpath-v1.json`.
 Evidence: `docs/implementation/ai-3d-modeling-engineering-core/evidence/phase12-cam-acceptance-20261008.json`.
 Validator: `scripts/validate_ai3d_phase12_cam.py`.
+
+## Phase 14 additional printer profiles — offline capability only
+
+The existing canonical `vf_cad.py` route generated real OrcaSlicer 2.4.2
+G-code for a 120×80×12 mm synthetic part on STL and 3MF separately, for
+Snapmaker U1, Elegoo Centauri Carbon 2 and Creator 5 Pro. Each emitted 60
+layers, declared temperature commands and nonempty extrusion.
+
+- U1: generic bounds/extrusion validation **PASS** on both inputs, but
+  vendor-specific executable G-code commands were reported unknown. Registered
+  **CANDIDATE**, not a qualified production job.
+- Creator 5 Pro: generic bounds/extrusion validation **PASS** on both inputs,
+  but vendor-specific executable commands were reported unknown. Registered
+  **CANDIDATE**, not a qualified production job.
+- ECC2: actual offline slices generated but existing generic validator
+  blocked native start service `G180 S7` -> `G1 X127 Y-1.2 F20000`,
+  outside declared Y>=0. Registered **BLOCKED**, with no silent relaxation.
+- H2D: retains its separate Phase 11 Y=-0.5 **BLOCKED** status; neither
+  hardware service envelope has independent verification.
+
+An immutable source fingerprint covers the existing printer matrix, three
+native vendor JSON files + one deterministic text-to-CAD wrapper per machine
+(four machines including H2D); 17 identities unchanged after the full
+six-slice validation. Negative controls block STEP input, over-bed geometry,
+injected unsafe G-code coordinates, and both known service-envelope cases.
+
+Phase 14 does not modify the canonical printer profile source of truth,
+create duplicate routing authority, bundle upstream AGPL components,
+connect to any printer, upload/heat/move, or approve manufacturing. Generic
+G-code parser success cannot certify unsupported vendor firmware commands.
+
+Contract: `docs/implementation/ai-3d-modeling-engineering-core/printer-profile-audit-v1.json`.
+Evidence: `docs/implementation/ai-3d-modeling-engineering-core/evidence/phase14-printer-profiles-acceptance-20261008.json`.
+Validator: `scripts/validate_ai3d_phase14_printer_profiles.py --verify-recorded`.
+
+## Phase 15 command/dialect inventory — static research only
+
+The repository now records **unrecognized executable G-code tokens** from
+the six Phase 14 offline STL and 3MF fixture outputs, using their original
+SHA-256 receipts and the existing canonical generic G-code parser's literal
+supported-command set. This inventory neither recognizes vendor commands
+as approved nor connects to devices.
+
+- U1: 29 distinct token types outside the generic parser; 24 appear in
+  native machine/process script text. Some are expected Snapmaker macros,
+  others generic slicer constructs or conventional G-code such as `G17`.
+- ECC2: six token types outside that parser, four mentioned in native source.
+  Its documented upstream Orca profile contains the same `G180 S7` and
+  `Y=-1.2` sequence, but **physical** service motion is not qualified.
+- C5Pro: four unrecognized types, with only `M191` mentioned in the
+  native machine start script. An independently verified firmware dialect
+  mapping is still missing.
+- No source contains production firmware-version attestation. The 17 native
+  profile/wrapper/matrix SHA-256 identities stayed unchanged, and each local
+  G-code SHA-256 matches the previous accepted fixture receipt.
+- Negative tests prove that new unknown commands and malformed tokens are
+  surfaced instead of silently accepted. The analyzer executes no G-code.
+  A machine or slicer control plane is not introduced.
+- The existing U1/C5Pro CANDIDATE and ECC2/H2D BLOCKED status remain
+  unchanged. No machine hardware may be heated/moved/started by this route.
+
+Contract: `docs/implementation/ai-3d-modeling-engineering-core/firmware-dialect-audit-v1.json`.
+Evidence: `docs/implementation/ai-3d-modeling-engineering-core/evidence/phase15-firmware-dialect-inventory-20261008.json`.
+Validator: `scripts/ai3d_phase15_firmware_dialect_inventory.py --verify-recorded`.

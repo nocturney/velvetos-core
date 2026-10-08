@@ -9,6 +9,8 @@
   "drawings_vectors_sheetmetal": "docs/implementation/ai-3d-modeling-engineering-core/drawings-vectors-sheetmetal-v1.json",
   "simulation_optimization": "docs/implementation/ai-3d-modeling-engineering-core/simulation-optimization-v1.json",
   "dfam_slicer": "docs/implementation/ai-3d-modeling-engineering-core/dfam-slicer-v1.json",
+  "printer_profile_audit": "docs/implementation/ai-3d-modeling-engineering-core/printer-profile-audit-v1.json",
+  "firmware_dialect_audit": "docs/implementation/ai-3d-modeling-engineering-core/firmware-dialect-audit-v1.json",
   "cam_toolpath_validation": "docs/implementation/ai-3d-modeling-engineering-core/cam-toolpath-v1.json",
   "engines": {
     "build123d": {"role":"primary","mode":"local_python","artifact_formats":["STEP","STL","3MF","GLB","DXF","SVG"],"default_artifact_formats":["STEP","STL"],"paid_provider_required":false,"printer_control":false},

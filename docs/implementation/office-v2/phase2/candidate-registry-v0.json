@@ -7,7 +7,7 @@
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 86,
+  "candidate_count": 92,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -296,11 +296,15 @@
         "Windows",
         "macOS"
       ],
-      "shortlist_lanes": [],
+      "shortlist_lanes": [
+        "worker-fleet-placement"
+      ],
       "evidence_refs": [
         "D:/Velvet/Artifacts/OfficeV2/phase0/evidence/2026-10-05/live-state-receipt-20261005T201816+0300.json"
       ],
-      "notes": [],
+      "notes": [
+        "Fleet evaluation 2026-10-08: existing remote execution on Chris Windows and MacMiniOffice.local passed same hash readback; no automatic scheduling yet."
+      ],
       "original_office_v2_verdict": "KEEP"
     },
     {
@@ -881,13 +885,15 @@
       ],
       "platform_constraints": [],
       "shortlist_lanes": [
-        "durable-execution"
+        "durable-execution",
+        "worker-fleet-placement"
       ],
       "evidence_refs": [
         "prior-research://office-v2-master-plan"
       ],
       "notes": [
-        "no durable-engine winner in Phase 0"
+        "no durable-engine winner in Phase 0",
+        "Fleet evaluation 2026-10-08: selected Phase3A durable engine only, not a proven five-host resource placement system."
       ],
       "original_office_v2_verdict": "BENCHMARK"
     },
@@ -2521,6 +2527,312 @@
         "evidence_status": "RESEARCH_ONLY",
         "next_action": "Perform security/license and no-payment isolation review; test A2A tool-gateway discovery/identity using local synthetic agents.",
         "rationale": "Tool gateway/identity could be useful independent of any forbidden payment or public-exposure features.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-nomad-worker-placement",
+      "source_item_id": null,
+      "name": "HashiCorp Nomad Community Edition 2.0",
+      "category": "WORKLOAD_SCHEDULER",
+      "provenance_class": "POST_POLICY_READY_MADE_FLEET_COMPARISON",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Hardware resource and operating-system placement is a real Nomad capability; it may replace writing a custom scheduler.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "fleet-placement",
+        "windows",
+        "macos",
+        "linux",
+        "resource-binpacking"
+      ],
+      "platform_constraints": [
+        "BUSL-1.1 with internal-use grant; paid support not included.",
+        "Windows services and raw_exec do not provide interactive GUI in user session 1."
+      ],
+      "shortlist_lanes": [
+        "worker-fleet-placement"
+      ],
+      "evidence_refs": [
+        "https://developer.hashicorp.com/nomad/docs/what-is-nomad",
+        "https://github.com/hashicorp/nomad/blob/main/LICENSE",
+        "https://github.com/hashicorp/nomad/releases/tag/v2.0.7",
+        "https://github.com/nocturney/velvetos-core/issues/604"
+      ],
+      "notes": [
+        "Source-researched only, not installed, runtime acceptance and production authorization unproven."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Run synthetic multi-host placement and node-loss test; compare 5-host Restate-only against Restate+Nomad CE with verified readback.",
+        "rationale": "Hardware resource and operating-system placement is a real Nomad capability; it may replace writing a custom scheduler.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-windmill-worker-fleet",
+      "source_item_id": null,
+      "name": "Windmill distributed worker infrastructure",
+      "category": "WORKFLOW_PLATFORM",
+      "provenance_class": "POST_POLICY_READY_MADE_FLEET_COMPARISON",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Mature ready-made remote-worker UI and tags could avoid substantial internal development if licensing and integration are suitable.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "fleet-placement",
+        "remote-worker",
+        "worker-groups",
+        "windows",
+        "macos"
+      ],
+      "platform_constraints": [
+        "Native Windows workers and remote Agent workers documented as Enterprise/Cloud features; any new fee requires separate approval.",
+        "Full workflows and queues may replace rather than complement Office2 Restate."
+      ],
+      "shortlist_lanes": [
+        "worker-fleet-placement"
+      ],
+      "evidence_refs": [
+        "https://www.windmill.dev/docs/core_concepts/agent_workers",
+        "https://www.windmill.dev/docs/misc/windows_workers",
+        "https://github.com/windmill-labs/windmill/releases/tag/v1.827.0",
+        "https://github.com/nocturney/velvetos-core/issues/604"
+      ],
+      "notes": [
+        "Source-researched only, not installed, runtime acceptance and production authorization unproven."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare Community versus paid remote-worker feature and actual entitlement before evaluating as zero-new-cost replacement.",
+        "rationale": "Mature ready-made remote-worker UI and tags could avoid substantial internal development if licensing and integration are suitable.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-kestra-worker-fleet",
+      "source_item_id": null,
+      "name": "Kestra 2.0 worker fleet",
+      "category": "WORKFLOW_PLATFORM",
+      "provenance_class": "POST_POLICY_READY_MADE_FLEET_COMPARISON",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Could provide a complete alternate worker orchestration UX without building scheduler logic.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "fleet-placement",
+        "windows",
+        "linux",
+        "java21",
+        "worker-groups"
+      ],
+      "platform_constraints": [
+        "Apache-2.0 community core; remote/distributed edition capabilities and Java21/plugins require review.",
+        "Full workflow/queue platform may overlap selected Restate."
+      ],
+      "shortlist_lanes": [
+        "worker-fleet-placement"
+      ],
+      "evidence_refs": [
+        "https://kestra.io/docs/installation/windows",
+        "https://github.com/kestra-io/kestra/releases/tag/v2.0.5",
+        "https://github.com/nocturney/velvetos-core/issues/604"
+      ],
+      "notes": [
+        "Source-researched only, not installed, runtime acceptance and production authorization unproven."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Test Windows standalone JAR with isolated synthetic worker groups only after edition and Java21 readiness checks.",
+        "rationale": "Could provide a complete alternate worker orchestration UX without building scheduler logic.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-ray-worker-fleet",
+      "source_item_id": null,
+      "name": "Ray 2.59 distributed Python/GPU",
+      "category": "COMPUTE_SCHEDULER",
+      "provenance_class": "POST_POLICY_READY_MADE_FLEET_COMPARISON",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Potential specialized GPU/AI subpool even if Nomad or Restate controls the heterogeneous fleet.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "fleet-placement",
+        "python",
+        "gpu",
+        "linux",
+        "macos",
+        "windows-beta"
+      ],
+      "platform_constraints": [
+        "Windows support beta and cross-Windows multi-node untested according to upstream; native GUI target remains separate."
+      ],
+      "shortlist_lanes": [
+        "worker-fleet-placement"
+      ],
+      "evidence_refs": [
+        "https://docs.ray.io/en/latest/ray-overview/installation.html",
+        "https://github.com/ray-project/ray/releases/tag/ray-2.59.0",
+        "https://github.com/nocturney/velvetos-core/issues/604"
+      ],
+      "notes": [
+        "Source-researched only, not installed, runtime acceptance and production authorization unproven."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare Linux/Apple Silicon CPU/GPU worker subset only after core worker-placement baseline; do not assume Windows production support.",
+        "rationale": "Potential specialized GPU/AI subpool even if Nomad or Restate controls the heterogeneous fleet.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-dagu-worker-fleet",
+      "source_item_id": null,
+      "name": "Dagu 2.18.2 — self-hosted distributed workers",
+      "category": "WORKFLOW_PLATFORM",
+      "provenance_class": "POST_POLICY_READY_MADE_FLEET_COMPARISON",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "verdict_reason": "Checksum-pinned Dagu 2.18.2 coordinated real workers on Mac and Windows; host-label routing and exact final SHA256 readbacks passed. A no-match selector remained queued, then was dequeued. No active-job host-loss or GUI benchmark.",
+      "runtime_verification": "PASS",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "fleet-placement",
+        "windows",
+        "macos",
+        "linux",
+        "worker-labels",
+        "distributed-queue",
+        "single-binary",
+        "headless"
+      ],
+      "platform_constraints": [
+        "GPL-3.0; self-hosted Community Edition does not require a license key, but separate licensed features exist.",
+        "Dagu itself is a workflow engine; compare complete replacement or scoped worker placement without duplicating production authority.",
+        "Coordinator gRPC (default 50055) and worker networking must be verified; no shared office service changes without scoped pilot."
+      ],
+      "shortlist_lanes": [
+        "worker-fleet-placement"
+      ],
+      "evidence_refs": [
+        "https://github.com/dagucloud/dagu",
+        "https://github.com/dagucloud/dagu/releases/tag/v2.18.2",
+        "https://github.com/dagucloud/dagu/blob/main/LICENSE",
+        "https://docs.dagu.sh/overview/deployment-models",
+        "https://docs.dagu.sh/server-admin/distributed/workers/",
+        "https://github.com/nocturney/velvetos-core/issues/604",
+        "docs/implementation/office-v2/phase2/ready-made-fleet-placement-2026-10-08.md",
+        "docs/implementation/office-v2/phase2/dagu-two-host-lab-2026-10-08.json"
+      ],
+      "notes": [
+        "No production authority or new recurring subscription permitted by research verdict.",
+        "2026-10-08 isolated reversible Dagu lab on both connected hosts completed: no paid API, new system service, autostart, sensitive workflow or GUI action; processes and ports stopped."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "LAB_VERIFIED",
+        "next_action": "Compare synthetic queueing, 1/2/4 concurrent jobs, mid-task worker loss, retries, actual GUI sessions and footprint against Restate-only and Nomad CE before production placement.",
+        "rationale": "It directly addresses owner request to reuse ready-made cross-OS multi-host scheduling without writing a custom fleet controller.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-selenium-grid-browser-pool",
+      "source_item_id": null,
+      "name": "Selenium Grid 4.50 cross-OS browser session fleet",
+      "category": "BROWSER_SESSION_GRID",
+      "provenance_class": "POST_POLICY_READY_MADE_FLEET_COMPARISON",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Off-the-shelf multi-node browser-session distribution may meet most browser-only agent needs on heterogeneous future hosts without provisioning separate Linux desktops per agent.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "fleet-placement",
+        "browser-pool",
+        "browser-session",
+        "windows",
+        "macos",
+        "linux",
+        "browser-capabilities"
+      ],
+      "platform_constraints": [
+        "Apache-2.0; Java runtime and WebDriver/browser prerequisites on worker hosts.",
+        "Browser-specific, not a native Windows CAD/GUI agent fleet or an AI workflow orchestrator.",
+        "Official Selenium Grid offers browser slots across independent Windows/Mac/Linux nodes; benchmark against Playwright BrowserContexts, not an assumed faster replacement."
+      ],
+      "shortlist_lanes": [
+        "worker-fleet-placement"
+      ],
+      "evidence_refs": [
+        "https://github.com/SeleniumHQ/selenium",
+        "https://github.com/SeleniumHQ/selenium/releases/tag/selenium-4.50.0",
+        "https://www.selenium.dev/documentation/grid/components/",
+        "https://www.selenium.dev/documentation/grid/getting_started/",
+        "https://github.com/nocturney/velvetos-core/issues/604",
+        "docs/implementation/office-v2/phase2/ready-made-fleet-placement-2026-10-08.md"
+      ],
+      "notes": [
+        "2026-10-08: official source/release/docs verified for discovery, but not installed or accepted by VelvetOS.",
+        "No production authority or new recurring subscription permitted by research verdict."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Measure identical headless browser tasks and session isolation with native Playwright contexts vs Selenium Grid Node slots; do not add Java to working hosts before target-app and resource gate.",
+        "rationale": "Selenium Grid is a purpose-built and Apache-licensed browser capacity layer; evaluate separately from workflow scheduling and native app computer-use.",
         "decision_evidence_refs": []
       }
     }
