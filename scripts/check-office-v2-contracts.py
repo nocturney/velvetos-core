@@ -130,6 +130,28 @@ def main() -> int:
     if model_summary.get("production_promotion_allowed") is not False:
         fail("Phase 3C contract must not enable production promotion")
 
+    # P0 execution proof is intentionally OFFLINE: it validates real bounded
+    # process execution, hashed outputs, replay prevention and context recovery.
+    # It must never be misreported as live LLM-based autonomous coding.
+    worker_check = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_p0_worker.py"), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=45,
+    )
+    if worker_check.returncode != 0:
+        fail("P0 worker offline selftest failed: " + worker_check.stdout[:220])
+    try:
+        worker_summary = json.loads(worker_check.stdout)
+    except json.JSONDecodeError:
+        fail("P0 worker selftest did not return JSON")
+    if (
+        worker_summary.get("status") != "PASS"
+        or worker_summary.get("tests", 0) < 11
+        or worker_summary.get("autonomous_coding_agent_proven") is not False
+        or worker_summary.get("model_invocations") != 0
+        or worker_summary.get("additional_spend_usd") != 0
+    ):
+        fail("P0 worker gate failed or exaggerated its runtime proof")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
