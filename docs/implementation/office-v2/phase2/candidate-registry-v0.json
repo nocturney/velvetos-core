@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-08T08:44:00+03:00",
+  "updated_at": "2026-10-08T13:25:33+03:00",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 92,
+  "candidate_count": 94,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -2833,6 +2833,117 @@
         "evidence_status": "RESEARCH_ONLY",
         "next_action": "Measure identical headless browser tasks and session isolation with native Playwright contexts vs Selenium Grid Node slots; do not add Java to working hosts before target-app and resource gate.",
         "rationale": "Selenium Grid is a purpose-built and Apache-licensed browser capacity layer; evaluate separately from workflow scheduling and native app computer-use.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-opencode-cli",
+      "source_item_id": null,
+      "name": "OpenCode noninteractive coding agent CLI",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "POST_POLICY_P0_AGENT_EXECUTOR_COMPARISON",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Official documented headless run command, JSON events, selectable provider/model and code-editing agent. Strong direct candidate for P0 agent execution; model/tool-call correctness and durable resume are unproven.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime",
+        "coding-agent",
+        "cli",
+        "headless-candidate",
+        "local-model-possible",
+        "windows",
+        "macos"
+      ],
+      "platform_constraints": [
+        "MIT; pin binary version and checksum, inspect permissions/network access before LAB.",
+        "OpenCode-Ollama official integration recommends 64k+ model context; local VRAM/RAM and tool-use quality are NOT yet proven.",
+        "Neither host had an installed OpenCode binary or local Ollama/llama server on 2026-10-08."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/anomalyco/opencode",
+        "https://opencode.ai/v2/docs/cli/commands/",
+        "https://github.com/ollama/ollama/blob/main/docs/integrations/opencode.mdx",
+        "https://github.com/nocturney/velvetos-core/issues/612",
+        "docs/implementation/office-v2/phase2/p0-agent-cli-comparison-2026-10-08.md"
+      ],
+      "notes": [
+        "Official source/docs research only as of 2026-10-08; no executable or model run accepted by VelvetOS.",
+        "Open-source CLI does not guarantee zero-spend inference. No Codex CLI, paid calls or business writers.",
+        "Only same-fixture, isolated worktree coding/QA tests can promote this candidate."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Stage only pinned isolated CLI --help and version with no model calls; verify local keyless code-capable provider resources before running one bounded coding fixture with full postconditions.",
+        "rationale": "A ready-made code-agent core may avoid building a new agent runner while retaining canonical Task Envelopes and independent verifier.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-goose-cli",
+      "source_item_id": null,
+      "name": "AAIF Goose cross-OS coding and MCP CLI",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "POST_POLICY_P0_AGENT_EXECUTOR_COMPARISON",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Official Apache-licensed cross-platform extensible CLI and API supports MCP, Ollama and ACP/provider integrations; real headless zero-spend execution has not been tested.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime",
+        "coding-agent",
+        "cli",
+        "headless-candidate",
+        "local-model-possible",
+        "windows",
+        "macos"
+      ],
+      "platform_constraints": [
+        "Apache-2.0; pin binary and check telemetry/permissions before LAB.",
+        "Consumer ACP/subscription access does not itself authorize headless usage or bypass the separate Codex quota prohibition.",
+        "Neither host had a Goose binary or local inference server; test exactly the OpenCode coding fixture, never assume parity."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/aaif-goose/goose",
+        "https://github.com/aaif-goose/goose/blob/main/LICENSE",
+        "https://github.com/aaif-goose/goose/blob/main/CUSTOM_DISTROS.md",
+        "https://github.com/ollama/ollama/blob/main/docs/integrations/goose.mdx",
+        "https://github.com/nocturney/velvetos-core/issues/612",
+        "docs/implementation/office-v2/phase2/p0-agent-cli-comparison-2026-10-08.md"
+      ],
+      "notes": [
+        "Official source/docs research only as of 2026-10-08; no executable or model run accepted by VelvetOS.",
+        "Open-source CLI does not guarantee zero-spend inference. No Codex CLI, paid calls or business writers.",
+        "Only same-fixture, isolated worktree coding/QA tests can promote this candidate."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Verify the official noninteractive CLI command and per-tool permissions; stage only in isolated zero-spend LAB, then compare same coded output and recovery to OpenCode and DeerFlow.",
+        "rationale": "Competing mature cross-platform agent framework may be a full or hybrid replacement for custom agent logic.",
         "decision_evidence_refs": []
       }
     }
