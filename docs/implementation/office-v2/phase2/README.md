@@ -17,6 +17,14 @@ Turn all prior research into a closed, measurable decision system. The source in
 - There is no universal “20% better” or “100% of contract” requirement. The decision gate is fitness, safety, operability and evidence.
 - Benchmark fixtures target capability semantics, not product-specific APIs.
 
+## COMPETITOR_NEUTRAL_ADMISSION_V1 — never silently discard credible alternatives
+
+- Every new repo/tool/challenger with plausible contract fit enters the **existing** `candidate-registry-v0.json`, even if it replaces the entire current stack, duplicates an incumbent, or challenges a frozen winner. Preserve provenance and an evidence-based comparison path; the fixed original 68-source import remains intact.
+- Compare **incumbent vs complete alternative vs composition/hybrid**, where applicable. Pre-existing investment, "second orchestrator", "we already have it", and shortlist capacity are never standalone rejection reasons.
+- Keep the main benchmark shortlist at incumbent plus 2–3 challengers. Additional credible alternatives go into `queued_challengers` for that same lane with a next evaluation gate; queued means **not rejected and not admitted to LAB**. A challenger may replace a shortlist participant only after recorded, fair triage — never via silent omission.
+- A credible new challenger or substantive evidence can trigger the existing research-freeze reopen rule. A previous winner keeps its bounded authority until safe, separately approved promotion; discovery/research does not authorize installation in production.
+- New, post-policy registry entries must carry `comparison_review` with review scope, evidence state and explicit replacement/hybrid options. The Phase 2 sensor checks the rule and that all queued IDs are resolvable in the registry.
+
 ## Candidate lifecycle
 
 `DISCOVERED → RESEARCHED → CANDIDATE → ADMITTED → LAB → SHADOW → PILOT → PRODUCTION → FALLBACK → RETIRED`.

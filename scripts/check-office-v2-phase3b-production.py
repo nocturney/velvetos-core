@@ -173,7 +173,7 @@ def main() -> None:
         "officev2-prod-publisher-snapshot",
         "oldAfter -eq 401",
         "newRead -eq 200",
-        "newWrite -ne 401",
+        "newWrite -eq 401",
         "Put-Snapshot $oldToken",
         "production_authority_active=$false",
         "Protect-Text",
@@ -181,6 +181,19 @@ def main() -> None:
     ):
         require(marker in runtime_bind, "production runtime binding missing fail-closed marker: " + marker)
     require("[string[]]$Args" not in runtime_bind, "production runtime Invoke-Wsl may not shadow PowerShell automatic $Args")
+    for marker in (
+        "$rotationConsecutivePass=0",
+        "$rotationConsecutivePass++",
+        "$rotationConsecutivePass -ge 2",
+        "$rotationConsecutivePass -lt 2",
+        "$newJobs=Http-Code $newToken 'GET' '/v1/jobs'",
+        "stable_full_boundary_checks=$rotationConsecutivePass",
+        "rollback_provider_confirmed=$rollbackProviderConfirmed",
+        "rollback_broker_confirmed=$rollbackBrokerConfirmed",
+        "rollback_error=$rollbackError",
+    ):
+        require(marker in runtime_bind, "production rotation consistency/fail-closed restoration missing: " + marker)
+    require("for($i=0;$i -lt 45;$i++)" in runtime_bind, "production rotation must allow bounded propagation checks")
 
     for marker in (
         "officev2-p3b-prod-openbao",
