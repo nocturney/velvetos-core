@@ -1,7 +1,13 @@
 {
   "schema": "velvetos.execution-providers.v1",
   "role": "EXECUTION_CAPABILITY_REGISTRY_NOT_AUTHORITY",
-  "selectionOrder": ["API_OR_MCP","CLI","DETERMINISTIC_DESKTOP_AUTOMATION","COMPUTER_USE","VISION_FALLBACK"],
+  "selectionOrder": [
+    "API_OR_MCP",
+    "CLI",
+    "DETERMINISTIC_DESKTOP_AUTOMATION",
+    "COMPUTER_USE",
+    "VISION_FALLBACK"
+  ],
   "rules": {
     "preferDeterministicSurface": true,
     "genericGuiMayNotGainBusinessAuthority": true,
@@ -12,8 +18,32 @@
     "verificationRequiredAfterGuiMutation": true
   },
   "providers": [
-    {"id":"remote-desktop-commander","class":"DETERMINISTIC_DESKTOP_AUTOMATION","state":"ACTIVE_EXISTING","runtimeAuthority":false,"notes":"Existing host/file/process bridge. Preserve current authority boundaries."},
-    {"id":"cua","source":"trycua/cua","class":"COMPUTER_USE","state":"STAGED_PILOT","runtimeAuthority":false,"promotionGate":"benign GUI smoke + readback + no interference with Office/CAD active work + rollback documented"},
-    {"id":"ufo","source":"microsoft/UFO","class":"COMPUTER_USE","state":"RESEARCH_COMPARE_AFTER_CUA","runtimeAuthority":false,"promotionGate":"Cua baseline exists; isolated Windows evaluation shows a material gap it uniquely closes"}
+    {
+      "id": "remote-desktop-commander",
+      "class": "DETERMINISTIC_DESKTOP_AUTOMATION",
+      "state": "ACTIVE_EXISTING",
+      "runtimeAuthority": false,
+      "notes": "Existing host/file/process bridge. Preserve current authority boundaries."
+    },
+    {
+      "id": "cua",
+      "source": "trycua/cua",
+      "class": "COMPUTER_USE",
+      "state": "PILOT_VERIFIED_BOUNDED",
+      "runtimeAuthority": false,
+      "activationAllowed": false,
+      "pilotReceipt": "packages/vfharness/state/cua-pilot-complete-2026-10-08.json",
+      "promotionGate": "Pilot proves isolated UIA action/readback only. Any business task or expanded executable scope requires the separate authority gate; printer, social, customer, purchase, credential actions remain forbidden."
+    },
+    {
+      "id": "ufo",
+      "source": "microsoft/UFO",
+      "class": "COMPUTER_USE",
+      "state": "NOT_NEEDED_BASELINE_SUFFICIENT",
+      "runtimeAuthority": false,
+      "installed": false,
+      "decisionReceipt": "packages/vfharness/state/cua-pilot-complete-2026-10-08.json",
+      "promotionGate": "Reconsider only if a new material Windows-control gap is established after the bounded Cua baseline, with a separate explicit scope and authority review."
+    }
   ]
 }

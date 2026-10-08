@@ -2,11 +2,17 @@
   "schema": "velvetos.dashy-launchpad.v1",
   "role": "READ_ONLY_LAUNCHPAD_NOT_CONTROL_PLANE",
   "source": "Lissy93/dashy",
+  "sourceTag": "4.7.0",
   "license": "MIT",
-  "state": "BLOCKED_PREREQUISITE",
+  "state": "PILOT_DEPLOYED_READ_ONLY",
   "observedHosts": {
-    "Chris": {"docker": false},
-    "MacMiniOffice.local": {"docker": false}
+    "Chris": {
+      "docker": false,
+      "node": "v24.19.0"
+    },
+    "MacMiniOffice.local": {
+      "docker": false
+    }
   },
   "canonicalInputs": [
     "office/control-plane.json",
@@ -21,6 +27,18 @@
     "replace VelvetOS Control Center",
     "become a second control plane"
   ],
-  "promotionGate": "container/runtime selected + ports checked + canonical URLs resolved + read-only smoke passes",
-  "incrementalRecurringCost": "0 ILS/month target"
+  "promotionGate": "verified pre-built release checksum + loopback-only static hosting + canonical URLs + no write API + isolated browser smoke",
+  "deployed": {
+    "host": "Chris",
+    "url": "http://127.0.0.1:4000",
+    "listenAddress": "127.0.0.1",
+    "port": 4000,
+    "hosting": "static-only Node HTTP; not the Dashy API server",
+    "configReadOnly": true,
+    "managementApi": false,
+    "runtimeAuthority": false,
+    "smokeReceipt": "packages/vfharness/state/dashy-launchpad-smoke-2026-10-08.json"
+  },
+  "incrementalRecurringCost": "0 ILS/month target",
+  "runtimeAuthority": false
 }

@@ -1,0 +1,99 @@
+{
+  "schema": "velvetos.repo-intake.cua-windows-bounded-pilot.v1",
+  "receiptId": "repo-intake-cua-windows-2026-10-08",
+  "host": "Chris",
+  "officeGate": {
+    "requiredCommit": "7762d8cb701d10ab8532c24d185bac52d8145df0",
+    "mergedEquivalent": "3c11f20c194fee084633df3ad71e2b17e84489cb",
+    "stablePatchId": "8ff3d9febf9e6c5242df88fc065a8215f248ae42",
+    "verifiedCanonicalMain": "639719eb4097016fa36aed3aa753444ef435b194",
+    "verifiedAncestor": true,
+    "conflictingOfficeGuiMutationObserved": false,
+    "status": "PASS"
+  },
+  "release": {
+    "repository": "trycua/cua",
+    "tag": "cua-driver-rs-v0.34.0",
+    "version": "0.34.0",
+    "license": "MIT",
+    "windowsNativePackageLicense": "MIT AND MPL-2.0",
+    "optionalPerceptionComponentsInstalled": false,
+    "standaloneZip": {
+      "name": "cua-driver-rs-0.34.0-windows-x86_64.zip",
+      "sizeBytes": 31316916,
+      "expectedSha256": "f96cc1632bc88e6f268eab745277c1fc302bb0f7d123e04373e35afecad6439f",
+      "observedSha256": "f96cc1632bc88e6f268eab745277c1fc302bb0f7d123e04373e35afecad6439f",
+      "verification": "PASS"
+    },
+    "executableSha256": "77f5cac754b42b6a8bae126414fc8f7487432ace93466967965188e24e9e53fb",
+    "executableAuthenticodeStatus": "Valid",
+    "executableSigner": "Cua AI, Inc.",
+    "embeddedGitSha": "b0968e1b12834e485dda68789541a3cc57664a9f"
+  },
+  "install": {
+    "root": "D:\\Velvet\\Tools\\CuaPilot\\0.34.0",
+    "method": "verified-local-zip-extraction",
+    "globalInstall": false,
+    "systemPathModified": false,
+    "pipeToShellUsed": false,
+    "telemetry": "disabled",
+    "autostartEnabled": false,
+    "rollback": "Stop matching pilot executable(s); remove isolated D:\\Velvet\\Tools\\CuaPilot\\0.34.0 folder after preserving receipts."
+  },
+  "boundary": {
+    "processUser": "CHRIS\\Chris",
+    "windowsSession": 1,
+    "permissionMode": "bounded",
+    "approvedManifestFileSha256": "1fb22a80176e1c2c9f781566ab160f5fad4e1b723ecf9f7b63cd7cce45c1e449",
+    "daemonReportedManifestSha256": "5c4086f4f26e826a79dd1f9ddee0c3d58f368162ff1f5bf5358ea42e77db597e",
+    "allowedExecutable": "D:\\Velvet\\Tools\\CuaPilot\\0.34.0\\fixture\\CuaSmokeFixture.exe",
+    "desktopDisplay": false,
+    "genericWindowEnumeration": "REFUSED_OUTSIDE_MANIFEST",
+    "runtimeAuthority": false,
+    "prohibited": [
+      "printers",
+      "social-publishing",
+      "customer-sends",
+      "purchases",
+      "credential-entry"
+    ],
+    "credentialsUsed": false
+  },
+  "guiSmoke": {
+    "testedAt": "2026-10-08T07:01:34.5910455+03:00",
+    "fixtureExeSha256": "18998f3dd929806486eaf17426ce715d6bcc6f39ab409c021a934f02e23a0d4c",
+    "initialTitle": "VelvetOS Cua Isolated GUI Smoke",
+    "clickedElement": "Compute 6 times 7",
+    "nativeActionRoute": "accessibility",
+    "nativeDeliveryMode": "background",
+    "nativeActionEffect": "unverifiable",
+    "afterTitle": "VelvetOS Cua Isolated GUI Smoke - 42",
+    "afterUiAText": "Result: 42",
+    "titleReadback": true,
+    "textReadback": true,
+    "status": "PASS",
+    "testAppOnly": true,
+    "unrelatedUserFilesWrittenByPilot": false,
+    "evidence": [
+      "D:\\Velvet\\Tools\\CuaPilot\\0.34.0\\logs\\fixture-smoke-before.json",
+      "D:\\Velvet\\Tools\\CuaPilot\\0.34.0\\logs\\fixture-smoke-click.json",
+      "D:\\Velvet\\Tools\\CuaPilot\\0.34.0\\logs\\fixture-smoke-after.json",
+      "D:\\Velvet\\Tools\\CuaPilot\\0.34.0\\logs\\fixture-smoke-summary.json"
+    ]
+  },
+  "ufo": {
+    "candidate": "microsoft/UFO",
+    "decision": "NOT_NEEDED_BASELINE_SUFFICIENT",
+    "evaluatedAfterCua": true,
+    "installed": false,
+    "rationale": "The isolated Windows GUI action completed with accessibility readback, bounded authorization, and no identified material Windows-control capability gap. UFO execution would add an unnecessary control surface."
+  },
+  "cleanup": {
+    "cuaPilotDaemonStopped": true,
+    "fixtureProcessStopped": true,
+    "ephemeralCuaTasksRemoved": true,
+    "isolatedFilesRetainedForRollback": true
+  },
+  "promotion": "BOUNDED_PILOT_VALIDATED_NOT_PRODUCTION_CONTROL",
+  "runtimeAuthority": false
+}
