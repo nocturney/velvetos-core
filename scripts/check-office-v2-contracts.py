@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -11,6 +12,7 @@ P0 = ROOT / "docs" / "implementation" / "office-v2" / "phase0"
 P1 = ROOT / "docs" / "implementation" / "office-v2" / "phase1"
 P2 = ROOT / "docs" / "implementation" / "office-v2" / "phase2"
 P3 = ROOT / "docs" / "implementation" / "office-v2" / "phase3"
+P3C = ROOT / "docs" / "implementation" / "office-v2" / "phase3c"
 
 FORWARD = {
     "DISCOVERED", "RESEARCHED", "CANDIDATE", "ADMITTED", "LAB",
@@ -105,6 +107,28 @@ def main() -> int:
         fail("Phase 3 verdict changed production writer")
     if verdict.get("production_credentials_used") is not False:
         fail("Phase 3 verdict used production credentials")
+
+    model_contract = load(P3C / "model-gateway-contract-v0.json")
+    if model_contract.get("production_authority_change") is not False:
+        fail("Phase 3C expanded authority")
+    if model_contract.get("production_writer_change") is not False:
+        fail("Phase 3C expanded production writer")
+    if model_contract.get("production_credentials_allowed") is not False:
+        fail("Phase 3C admitted production credentials")
+    model_check = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_model_gateway.py"), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if model_check.returncode != 0:
+        fail("Phase 3C synthetic model-gateway contract selftest failed")
+    try:
+        model_summary = json.loads(model_check.stdout)
+    except json.JSONDecodeError:
+        fail("Phase 3C synthetic contract selftest did not return valid JSON")
+    if model_summary.get("status") != "PASS" or model_summary.get("runtime_proven") is not False:
+        fail("Phase 3C selftest is incomplete or incorrectly claims live proof")
+    if model_summary.get("production_promotion_allowed") is not False:
+        fail("Phase 3C contract must not enable production promotion")
 
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
