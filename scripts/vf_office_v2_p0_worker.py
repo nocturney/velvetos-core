@@ -82,7 +82,7 @@ def git(worktree, *args):
     )
     if result.returncode != 0:
         raise Rejected("GIT_PRECONDITION_FAILED")
-    return result.stdout.strip()
+    return result.stdout.rstrip('\n')
 
 
 def contained(root, relative):
@@ -393,6 +393,14 @@ def demo_selftest():
         except Rejected as exc:
             assert str(exc) == "DUPLICATE_OR_UNKNOWN_OUTCOME_NO_RETRY"
         tests.append("orphan_journal_no_blind_retry")
+        # `git status --porcelain` uses the first two columns as state. A leading
+        # space is significant for a tracked, unstaged change and must survive git().
+        script.write_text(script.read_text(encoding="utf-8") + "# tracked edit\n", encoding="utf-8")
+        assert git_changed(worktree) == {"job.py"}, "TRACKED_PORCELAIN_FILENAME_CORRUPTED"
+        tests.append("git_porcelain_tracked_leading_space")
+        (worktree / "new-file.txt").write_text("new\n", encoding="utf-8")
+        assert git_changed(worktree) == {"job.py", "new-file.txt"}, "MIXED_PORCELAIN_FILENAMES_CORRUPTED"
+        tests.append("git_porcelain_tracked_and_untracked")
     return {"status": "PASS", "tests": len(tests), "cases": tests,
             "model_invocations": 0, "additional_spend_usd": 0,
             "autonomous_coding_agent_proven": False, "worker_fleet_proven": False}
