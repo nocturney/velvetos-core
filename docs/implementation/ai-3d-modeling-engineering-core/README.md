@@ -419,17 +419,70 @@ model-specific provenance, tests and explicit production authority.
 
 Phase 14 integration onto `main@75410a2f` was reviewed as local merge
 `2fc3d9b4`, without conflicts. Office v2 Phase 3B, fabrication and AI3D
-validators passed, followed by the full 118/118 regression. The phase remains
-in the feature branch pending GitHub PR/CI and is not a production release.
+validators passed, followed by the full 118/118 regression. GitHub PR #608
+passed CI and merged into main at `86ee1a96`; none of the firmware or
+hardware release blockers was promoted.
 Integration receipt: `evidence/phase14-main-integration-acceptance-20261008.json`.
 Full-suite log: `evidence/check-all-phase14-integrated-main-20261008.log`.
 
+## Phase 15 - Firmware dialect command provenance (static, no hardware)
+
+This phase begins on a new feature branch after Phase 14 merged into main.
+It does not add slicer/firmware routing, widen service motion or authorize
+printer upload/start/heating. The Phase 14 six generated STL/3MF G-code files
+were re-opened by SHA-256 from the signed Phase 14 receipt.
+
+- `scripts/ai3d_phase15_firmware_dialect_inventory.py` statically scans
+  executable command tokens without parsing them as executable programs.
+  The recognized set is extracted **as literal data** from the existing
+  canonical `gcode_tool.py` parser; no new competing G-code allowlist
+  is introduced.
+- Snapmaker U1: 29 distinct unrecognized token types in the six-file
+  fixture set; 24 have textual mentions in native machine/process scripts.
+  This includes nozzle-cleaning and defect-detection macros. Source
+  mentions do **not** prove their safety or firmware availability.
+- ECC2: six unrecognized token types, four mentioned in native scripts.
+  `G180 S7` then `G1 X127 Y-1.2` is also present in the upstream
+  OrcaSlicer ECC2 machine start profile, but neither that source nor a
+  clean CLI exit validates the printer's physical service travel.
+- Creator 5 Pro: four unrecognized token types, one mentioned in native
+  scripts (including `M191`). Firmware command semantics and chamber
+  temperature behavior remain unqualified.
+- All six G-code file hashes exactly match Phase 14 evidence. Canonical
+  parser source and 17 native/wrapper sources have cryptographic hashes.
+  No absolute personal profile paths are included in the report.
+- Four read-only negative checks confirm that unrecognized and malformed
+  command tokens are surfaced, prior G-code receipts are identical,
+  and the native source fingerprint did not change.
+- `G17` is itself a standard G-code mode token that the *current
+  generic parser* does not list; unknown-to-parser must not be conflated
+  with undocumented vendor firmware syntax.
+
+Public contextual sources (none establishes the installed firmware build):
+
+- Snapmaker U1 official firmware context:
+  https://wiki.snapmaker.com/en/FAQ/u1
+- OrcaSlicer official upstream ECC2 profile:
+  https://github.com/OrcaSlicer/OrcaSlicer/blob/main/resources/profiles/Elegoo/machine/ECC2/Elegoo%20Centauri%20Carbon%202%200.4%20nozzle.json
+- Flashforge Creator 5 series official product documentation:
+  https://wiki.flashforge.com/en/creator-series/creator-5-series
+
+The result is a **static audit inventory**, not any kind of print approval.
+All U1/C5Pro firmware-dialect gates remain review-required, ECC2/H2D
+motion bounds remain BLOCKED, and production authority is unchanged.
+
+Contract: `firmware-dialect-audit-v1.json`.
+Evidence: `evidence/phase15-firmware-dialect-inventory-20261008.json`.
+Portable read-only validator:
+
+  py -3.11 scripts/ai3d_phase15_firmware_dialect_inventory.py --verify-recorded
+
 ## Validation state
 
-Explicit AI3D validation stack: PASS. Current integration branch tested against
-`origin/main@08fd11f8` for Phase 13. Phase 14 runs independently on
-`main@d838d790` with an additional 118/118 regression. Physical H2D/CNC
-and automatic manufacturing-release gates remain blocked.
+Explicit AI3D validation stack: PASS for Phases 0-14. Phase 15 static
+command inventory passes portable evidence validation and 118/118 repository
+sensors, but remains evidence-only; physical H2D/ECC2 motion, vendor
+firmware dialects and automatic manufacturing-release gates remain blocked.
 
 
 Repository regression:
@@ -437,8 +490,8 @@ Repository regression:
 - scripts/check-all.py: 118/118 PASS
 - exit code: 0
 - sensor side-effect check: repository files unchanged
-- Phase 14 full-suite log: evidence/check-all-phase14-20261008.log
+- Phase 15 full-suite log: evidence/check-all-phase15-20261008.log
 
 ## Next implementation phase
 
-Next: after Phase 14 is independently integrated, qualify vendor-specific U1/C5Pro firmware commands and separately investigate ECC2/H2D service-motion envelopes using authoritative device evidence. Unverified profiles remain blocked for production. Material/tool qualification and automatic manufacturing approval also remain explicitly deferred.
+Next: correlate Phase 15 command inventory with version-pinned firmware sources and machine-reported firmware identity. Only then design independent offline dialect tests. ECC2/H2D service-motion envelopes require model-specific evidence, not merely upstream slicer profile text. Material calibration, live first-print inspection and automatic manufacturing release remain outside current authorization.
