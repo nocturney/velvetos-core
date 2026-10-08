@@ -173,7 +173,7 @@ def main() -> None:
         "officev2-prod-publisher-snapshot",
         "oldAfter -eq 401",
         "newRead -eq 200",
-        "newWrite -ne 401",
+        "newWrite -eq 401",
         "Put-Snapshot $oldToken",
         "production_authority_active=$false",
         "Protect-Text",
@@ -181,6 +181,36 @@ def main() -> None:
     ):
         require(marker in runtime_bind, "production runtime binding missing fail-closed marker: " + marker)
     require("[string[]]$Args" not in runtime_bind, "production runtime Invoke-Wsl may not shadow PowerShell automatic $Args")
+    for marker in (
+        "PRODUCTION_RUNTIME_ROTATE_ALREADY_ACTIVE_NO_MUTATION",
+        "ROLLBACK_DRILL_COMPLETE_REQUIRES_FRESH_ROTATE",
+        "production-rollback-drill.json",
+        "restored_credential_reference_sha256",
+        "from_credential_reference_sha256",
+        "production-provider-rotation-before-fresh-rerotate.json",
+        "rerotation_after_verified_rollback",
+        "preceding_rollback_receipt_sha256",
+        "production-provider-fresh-rerotate-attempt-fail.json",
+        "prior rotation archive conflicts with canonical receipt",
+        "newJobs -eq 200",
+        "newMeta -eq 200",
+        "newWrite -eq 401",
+    ):
+        require(marker in runtime_bind, "production re-rotation and duplicate safety guard missing: " + marker)
+    require("already-rotated live correlated proof mismatch" in runtime_bind, "already-rotated branch must perform live read-only revalidation")
+    for marker in (
+        "$rotationConsecutivePass=0",
+        "$rotationConsecutivePass++",
+        "$rotationConsecutivePass -ge 2",
+        "$rotationConsecutivePass -lt 2",
+        "$newJobs=Http-Code $newToken 'GET' '/v1/jobs'",
+        "stable_full_boundary_checks=$rotationConsecutivePass",
+        "rollback_provider_confirmed=$rollbackProviderConfirmed",
+        "rollback_broker_confirmed=$rollbackBrokerConfirmed",
+        "rollback_error=$rollbackError",
+    ):
+        require(marker in runtime_bind, "production rotation consistency/fail-closed restoration missing: " + marker)
+    require("for($i=0;$i -lt 45;$i++)" in runtime_bind, "production rotation must allow bounded propagation checks")
 
     for marker in (
         "officev2-p3b-prod-openbao",
@@ -219,6 +249,19 @@ def main() -> None:
     for marker in ("production-rollback-drill.json", "former_production_credential_http", "restored_pilot_runtime_http", "Put-Snapshot $prodToken", "ROLLBACK_DRILL_COMPLETE_REQUIRES_FRESH_ROTATE", "[string[]]$ScriptArgs", "[string[]]$CommandArgs"):
         require(marker in rollback_drill, "production rollback drill missing marker: " + marker)
     require("[string[]]$Args" not in rollback_drill, "production rollback helpers may not shadow PowerShell automatic $Args")
+    require("$binding | Add-Member -MemberType NoteProperty -Name rollback_drill_completed -Value $true -Force" in rollback_drill, "rollback receipt must add its new PSCustomObject property safely")
+    require("$binding.rollback_drill_completed=$true" not in rollback_drill, "rollback must not assign an absent PSCustomObject property")
+    for marker in (
+        "rollback_provider_restored=$providerRestored",
+        "rollback_broker_restored=$brokerRestored",
+        "rollback_restore_error=$restoreFailure",
+        "rotator_role_id=[string]$prodBundleObj.rotator_role_id",
+        "rotator_secret_id=[string]$prodBundleObj.rotator_secret_id",
+        "credential_reference_sha256 -ne (Hash-Text $prodToken)",
+        "root_revoked -ne $true",
+    ):
+        require(marker in rollback_drill, "production rollback exception path missing verified scoped restoration: " + marker)
+    require(" @('Rotate') $prodToken" not in rollback_drill, "production rollback exception path may not pass raw token instead of scoped rotator JSON")
     for marker in ("Resolve-Phase3B-ProductionSnapshot.ps1", "--mode", "Production", "vf.instagram.schedule-snapshot.v1"):
         require(marker in adapter, "secure production snapshot adapter missing marker: " + marker)
     for forbidden in ("VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN", "cloudflare-publisher-control.dpapi", "resolve_token"):

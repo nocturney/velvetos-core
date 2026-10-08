@@ -1,20 +1,21 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-06T13:48:03.498551Z",
+  "updated_at": "2026-10-08T06:33:00+03:00",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 82,
+  "candidate_count": 83,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
     "Every prior inventory item is preserved and receives a meaningful Phase 2 verdict.",
     "Derived incumbents describe current compositions only; they do not create new production authority.",
     "A shortlist is a benchmark set, not a winner declaration.",
-    "Prior research is evidence input, not current runtime verification."
+    "Prior research is evidence input, not current runtime verification.",
+    "COMPETITOR_NEUTRAL_ADMISSION_V1: preserve every new credible alternative with comparative evidence and queue when shortlists are full, without shifting the closed 68-source import."
   ],
   "items": [
     {
@@ -2199,6 +2200,65 @@
         "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/openbao-lab-smoke-pass.json",
         "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/openbao-smoke-task-cleanup.json"
       ]
+    },
+    {
+      "candidate_id": "candidate-deerflow",
+      "source_item_id": null,
+      "name": "ByteDance DeerFlow 2.0",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "POST_POLICY_COMPARATIVE_REVIEW",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "A prior pattern-only recommendation did not compare full DeerFlow against incumbent VelvetOS. Scope is credible for whole agent-runtime replacement, component replacement or hybrid; comparable Golden Fixtures and operational evidence have not yet been run.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime",
+        "long-horizon-execution",
+        "multi-agent",
+        "sandbox",
+        "skills",
+        "mcp",
+        "context-memory",
+        "scheduled-tasks",
+        "browser-control"
+      ],
+      "platform_constraints": [
+        "Persistent server deployment prefers Linux+Docker; upstream recommends at least 8 vCPU / 16 GB RAM / 40 GB SSD for longer-running shared use; local evaluation has different sizing.",
+        "LLM hosting, API usage, credentials, licenses of bundled integrations and sandbox isolation require separate preflight."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime",
+        "memory-context"
+      ],
+      "evidence_refs": [
+        "https://github.com/bytedance/deer-flow",
+        "https://github.com/bytedance/deer-flow/blob/main/README.md",
+        "https://github.com/bytedance/deer-flow/blob/main/LICENSE",
+        "packages/vfe2b/DEER-FLOW-PATTERNS.md",
+        "docs/implementation/office-v2/phase2/admission-policy-v0.md"
+      ],
+      "notes": [
+        "First pattern-only review recorded 2026-08-31; 2026-10-08 correction removes incumbent/overlap veto.",
+        "Queue in agent-runtime and memory-context while active benchmark shortlist capacity is full; do not displace prior challengers without comparable triage.",
+        "Do not preemptively reopen the Restate durable-execution winner; reopen if same-fixture challenger evidence warrants it.",
+        "Research/intake only; no isolated LAB install, fixture benchmark, security acceptance or production promotion proven.",
+        "Upstream DeerFlow 2.0 is ground-up rewrite; v1 pattern-only treatment is not evidence of current v2 fitness."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Triage whole-system vs incumbent and hybrid; then run agent-runtime Golden Fixtures plus security, persistence and operations gates in isolated LAB.",
+        "rationale": "Feature overlap is precisely why this is a credible replacement candidate; no equivalent contract-aligned outcome has yet been demonstrated.",
+        "decision_evidence_refs": []
+      }
     }
   ]
 }

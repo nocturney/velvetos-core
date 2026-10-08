@@ -128,21 +128,59 @@ try{
   $binding.active_credential_reference_sha256=$pilotHash
   $binding.mode='ROLLBACK_DRILL_COMPLETE_REQUIRES_FRESH_ROTATE'
   $binding.provider_credential_rotated=$false
-  $binding.rollback_drill_completed=$true
+  # ConvertFrom-Json returns a fixed-property PSCustomObject; append the new receipt field explicitly.
+  $binding | Add-Member -MemberType NoteProperty -Name rollback_drill_completed -Value $true -Force
   $binding.captured_at=[DateTime]::UtcNow.ToString('o')
   [IO.File]::WriteAllText($bindingPath,($binding|ConvertTo-Json -Depth 14)+[Environment]::NewLine,[Text.UTF8Encoding]::new($false))
   Write-Output ('PASS PRODUCTION_ROLLBACK_DRILL receipt_sha256='+(Get-FileHash $out -Algorithm SHA256).Hash.ToLowerInvariant())
   exit 0
 }catch{
   $cause=$_.Exception.Message
+  $providerRestored=$false
+  $brokerRestored=$false
+  $restoreFailure=$null
   if($providerChanged -and $prodToken){
     try{
       Put-Snapshot $prodToken
-      for($i=0;$i -lt 30;$i++){if((Http-Code $prodToken 'GET' '/v1/runtime') -eq 200){break};Start-Sleep -Seconds 2}
-      if($brokerChanged){[void](Invoke-Wsl '/var/officev2/artifacts/phase3b-security/production-openbao-bind.sh' @('Rotate') $prodToken)}
-    }catch{}
+      $restoreHttp=0
+      for($i=0;$i -lt 30;$i++){
+        $restoreHttp=Http-Code $prodToken 'GET' '/v1/runtime'
+        if($restoreHttp -eq 200){break}
+        Start-Sleep -Seconds 2
+      }
+      if($restoreHttp -ne 200){throw 'pre-drill provider credential not restored'}
+      $providerRestored=$true
+      if($brokerChanged){
+        # OpenBao Rotate requires the scoped rotator AppRole bundle, never the raw token alone.
+        $restoreInput=[ordered]@{provider_token=$prodToken;rotator_role_id=[string]$prodBundleObj.rotator_role_id;rotator_secret_id=[string]$prodBundleObj.rotator_secret_id}|ConvertTo-Json -Compress
+        $restoreBao=Invoke-Wsl '/var/officev2/artifacts/phase3b-security/production-openbao-bind.sh' @('Rotate') $restoreInput
+        if($restoreBao.ExitCode -ne 0){throw 'pre-drill OpenBao credential restoration denied'}
+        $restoreProof=$restoreBao.Stdout.Trim()|ConvertFrom-Json
+        if($restoreProof.status -ne 'PASS' -or [string]$restoreProof.credential_reference_sha256 -ne (Hash-Text $prodToken) -or $restoreProof.root_revoked -ne $true){
+          throw 'pre-drill OpenBao credential restoration proof mismatch'
+        }
+        $brokerRestored=$true
+      }
+    }catch{
+      $restoreFailure=$_.Exception.Message
+    }
   }
-  $fail=[ordered]@{schema='velvetos.office-v2.phase3b-production-rollback-drill.v0';captured_at=[DateTime]::UtcNow.ToString('o');status='FAIL_CLOSED';error=$cause;rollback_to_pre_drill_state_attempted=($providerChanged -and [bool]$prodToken);raw_secret_recorded=$false;production_authority_active=$false;production_writer_change=$false;external_mutation_performed=$false;production_promoted=$false}
+  $fail=[ordered]@{
+    schema='velvetos.office-v2.phase3b-production-rollback-drill.v0'
+    captured_at=[DateTime]::UtcNow.ToString('o')
+    status='FAIL_CLOSED'
+    error=$cause
+    rollback_to_pre_drill_state_attempted=($providerChanged -and [bool]$prodToken)
+    rollback_provider_restored=$providerRestored
+    rollback_broker_restore_required=$brokerChanged
+    rollback_broker_restored=$brokerRestored
+    rollback_restore_error=$restoreFailure
+    raw_secret_recorded=$false
+    production_authority_active=$false
+    production_writer_change=$false
+    external_mutation_performed=$false
+    production_promoted=$false
+  }
   Write-Json $fail
   throw
 }finally{
