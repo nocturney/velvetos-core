@@ -280,7 +280,7 @@ def main() -> None:
     require(router.index("route=snapshot_route()") < router.index("token=resolve_token()", router.index("def main()")), "legacy token resolution must be behind the checkpoint router")
     for marker in ("production binding not explicitly activated", "production receipt/binding credential hash mismatch", "production promotion includes forbidden writer/mutation authority"):
         require(marker in resolver, "production resolver cp017 gate missing: " + marker)
-    suite = subprocess.run([sys.executable, str(ROOT / "scripts" / "check-office-v2-phase3b-reader-route.py")], cwd=ROOT, text=True, capture_output=True, timeout=30)
+    suite = subprocess.run([sys.executable, str(ROOT / "scripts" / "office-v2-phase3b-reader-route-test.py")], cwd=ROOT, text=True, capture_output=True, timeout=30)
     require(suite.returncode == 0 and "admin-fallback=FORBIDDEN" in suite.stdout, "production reader negative cases failed: " + (suite.stdout + suite.stderr)[-1200:])
 
     print("OK office-v2-phase3b-production contract=READY scope=instagram-publisher-snapshot-read reader_route=GATED writer_change=FALSE mutation=FALSE promotion=EXPLICIT_ONLY")
