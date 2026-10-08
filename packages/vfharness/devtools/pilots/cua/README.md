@@ -1,6 +1,6 @@
 # Cua Windows bounded pilot (Chris, 2026-10-08)
 
-This is a **closed, evidence-backed pilot**, not an active business execution provider. The canonical execution-provider registry retains `runtimeAuthority: false` and `activationAllowed: false`. Never broaden this capability to printers, social publishing, customer sends, purchases, credential entry, or unreviewed app windows.
+This is a **closed, evidence-backed pilot**, not an active business execution provider. The canonical execution-provider registry retains `runtimeAuthority: false` and `activationAllowed: false`. **Capability is not authority:** future design, isolated testing and integration for printers, social publishing, customer sends, purchases, credential-mediated workflows and other GUI operations are permitted in principle. They cannot execute in the current pilot. Any business action or executable allowlist expansion needs separately reviewed promotion, task-specific owner instruction or explicit bounded owner approval, the existing effect-specific policy gate, verified runtime safety and post-action readback. This clarification grants no new runtime permission.
 
 ## Supply chain and staging
 

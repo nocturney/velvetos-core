@@ -26,6 +26,12 @@ def main() -> int:
     assert {row['priority'] for row in sources} <= {'P0','P1','P2','P3'}
     assert all(row.get('runtimeAuthority') is False for row in sources), 'repo intake granted runtime authority'
     rules=providers['rules']
+    # Capability engineering is allowed, but this registry cannot mint execution authority.
+    assert rules['sensitiveCapabilityDevelopmentAllowed'] is True
+    assert rules['capabilityDevelopmentDoesNotAuthorizeExecution'] is True
+    assert rules['computerUseSensitiveExecutionRequiresOwnerDirectionOrExplicitApproval'] is True
+    assert rules['computerUseCannotInheritOtherProviderAuthority'] is True
+    assert rules['computerUseStillRequiresCanonicalEffectPolicy'] is True
     assert rules['printerMutationViaGenericGui'] is False
     assert rules['socialMutationViaGenericGui'] is False
     assert rules['customerSendViaGenericGui'] is False
@@ -35,6 +41,15 @@ def main() -> int:
     p={row['id']:row for row in providers['providers']}
     assert p['cua']['state']=='PILOT_VERIFIED_BOUNDED' and p['cua']['runtimeAuthority'] is False
     assert p['cua']['activationAllowed'] is False
+    assert p['cua']['sensitiveCapabilityDevelopmentAllowed'] is True
+    assert p['cua']['sensitiveExternalEffectExecutionAllowedNow'] is False
+    assert p['cua']['authorizationModel']=='OWNER_DIRECTED_OR_EXPLICIT_BOUNDED_APPROVAL_PLUS_CANONICAL_EFFECT_GATE'
+    constitution=(ROOT/'constitution'/'CONSTITUTION.md').read_text(encoding='utf-8')
+    assert 'CAPABILITY_NOT_AUTHORITY_V1' in constitution
+    assert 'runtimeAuthority=false, activationAllowed=false' in constitution
+    assert 'policy_id: instagram.publish' in constitution
+    assert 'policy_id: customer.whatsapp.send' in constitution
+    assert 'CAPABILITY_NOT_AUTHORITY_V1' in (ROOT/'README.md').read_text(encoding='utf-8')
     assert p['ufo']['state']=='RESEARCH_PENDING_MATERIAL_CALCULATOR_GAP' and p['ufo']['runtimeAuthority'] is False
     assert p['ufo']['installed'] is False
     assert cua_receipt['promotion']=='BOUNDED_PILOT_VALIDATED_NOT_PRODUCTION_CONTROL'
