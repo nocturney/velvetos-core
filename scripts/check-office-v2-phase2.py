@@ -144,6 +144,29 @@ def validate_competitor_neutrality(registry: dict, items: list[dict], lanes: lis
             if not lane_ids:
                 fail(f"{cid}: unassigned open candidate needs a real evaluation lane or a documented lane addition")
 
+    # Historical backfill must remain visible. A previous "second runtime" veto
+    # cannot reappear as an unevidenced defer on these directly competing runtimes.
+    reopen_required = {
+        "deferred-openclaw", "deferred-crewai", "deferred-langgraph", "deferred-ruflo",
+    }
+    for cid in reopen_required:
+        candidate = by_id.get(cid)
+        if not candidate:
+            fail("historical challenger disappeared: " + cid)
+        review = candidate.get("comparison_review") or {}
+        if candidate.get("decision_verdict") != "BENCHMARK_REQUIRED" or review.get("eligibility") != "OPEN_FOR_COMPARISON":
+            fail("historical competitor reopened without active comparison: " + cid)
+        if cid not in active_or_queued.get("agent-runtime", set()):
+            fail("reopened challenger silently dropped from agent-runtime: " + cid)
+        if review.get("evidence_status") != "RESEARCH_ONLY":
+            fail("historic challenger incorrectly marked as tested: " + cid)
+    successor = by_id.get("candidate-microsoft-agent-framework")
+    ancestor = by_id.get("deferred-autogen")
+    if not successor or not ancestor or "github.com/microsoft/agent-framework" not in " ".join(successor.get("evidence_refs") or []):
+        fail("maintenance-mode AutoGen successor is not recorded")
+    if ancestor.get("decision_verdict") != "DEFERRED_WITH_REASON" or not (ancestor.get("comparison_review") or {}).get("decision_evidence_refs"):
+        fail("AutoGen historical deferral must have explicit upstream maintenance evidence")
+
     deerflow = by_id.get("candidate-deerflow")
     if not deerflow:
         fail("DeerFlow challenger disappeared from canonical registry")
