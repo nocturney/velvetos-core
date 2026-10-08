@@ -312,6 +312,31 @@
     "No peak CPU/RAM/VRAM capture; snapshots are not peaks.",
     "Crash was pinned offline Python worker, not an interrupted coding-model failover.",
     "No autonomous cross-host recovery or production authority.",
-    "Core #612 owns coding; Fleet #604 remains sole placement/scheduler owner."
-  ]
+    "Core #612 owns coding; Fleet #604 remains sole placement/scheduler owner.",
+    "After forced loss, a separately observed operator-only reissue succeeded in a fresh checkout; it was NOT autonomous resume of the killed task."
+  ],
+  "operator_reissue_after_loss": {
+    "schema": "vf.office-v2.p0-manual-reissue-after-forced-loss.v0",
+    "old_attempt_state": "UNKNOWN_OUTCOME_RETAINED",
+    "old_journal_sha256": "a0d5c2abd54de80faf8f2d854dcab4e26c8676f04cc163b254df45284a7ac203",
+    "old_partial_output_sha256": "809e14eeb1c55ec77c152a67ebeebcc428414b266e02b606c2b1be4f5da80f27",
+    "old_final_receipt_absent": true,
+    "fresh_checkout": true,
+    "fresh_task_id": "p0-verified-new-attempt-after-loss-002",
+    "fresh_base_sha": "a470ec60fa8e11fb3fa6808d76cf44f89457f1ab",
+    "new_attempt_state": "SUCCEEDED",
+    "new_attempt_receipt_sha256": "2c6338e55ed5d04c0d60e5af2f36614cf5e6f2422d4889d3c3b7d9ab5d07f391",
+    "new_attempt_artifact_sha256": {
+      "started.txt": "d0e8c31bd07ea87549687ce1ea0455cdf4ecbef6ce396c229a3ee91025cba73e",
+      "result.txt": "a4712055ea63542328df4cd8d0d322c051e3a9d8ce00d254d9609c4af0185d66"
+    },
+    "separate_process_verification": "PASS",
+    "new_task_has_zero_business_effects": true,
+    "production_authority": "NONE",
+    "automatic_retry_tested": false,
+    "cross_host_failover_tested": false,
+    "owner_intervention_required": true,
+    "observed_at": "2026-10-08T18:00:43.139374+00:00",
+    "receipt_sha256": "287368342dbaba1c6b4f32b8ecfbc0d00d38a64f996a489ad29fdb2f1ee68883"
+  }
 }

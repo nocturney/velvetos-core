@@ -167,8 +167,9 @@ def main() -> int:
         fail("P0 two-host evidence verifier output is not JSON")
     if (evidence_summary.get("status") != "PASS_SCOPED_LAB"
         or evidence_summary.get("verified_model_runs") != 4
-        or evidence_summary.get("negative_cases") != 4
-        or evidence_summary.get("forced_loss_no_false_success") is not True):
+        or evidence_summary.get("negative_cases") != 5
+        or evidence_summary.get("forced_loss_no_false_success") is not True
+        or evidence_summary.get("operator_reissue_verified") is not True):
         fail("P0 concurrency evidence incomplete or exaggerated")
     
     print(

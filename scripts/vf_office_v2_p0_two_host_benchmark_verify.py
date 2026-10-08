@@ -130,6 +130,25 @@ def self_test(receipts):
     assert len(negative)==4
     return negative
 
+
+def verify_operator_reissue(rec, old_crash):
+    """A distinct, explicitly reconciled new LAB task; NOT automatic failover."""
+    verify_sig(rec)
+    assert rec.get("schema")=="vf.office-v2.p0-manual-reissue-after-forced-loss.v0","REISSUE_SCHEMA"
+    assert rec.get("old_attempt_state")=="UNKNOWN_OUTCOME_RETAINED","OLD_UNKNOWN_NOT_RETAINED"
+    assert rec.get("old_journal_sha256")==old_crash.get("journal_sha256"),"OLD_JOURNAL_DRIFT"
+    assert rec.get("old_final_receipt_absent") is True,"OLD_FALSE_SUCCESS"
+    assert rec.get("fresh_checkout") is True,"REISSUE_NOT_ISOLATED"
+    assert rec.get("new_attempt_state")=="SUCCEEDED","NEW_ATTEMPT_NOT_COMPLETE"
+    assert rec.get("separate_process_verification")=="PASS","NEW_QA_NOT_INDEPENDENT"
+    assert rec.get("new_task_has_zero_business_effects") is True,"REISSUE_EFFECTS_NOT_ZERO"
+    assert rec.get("owner_intervention_required") is True,"FALSE_AUTONOMY_CLAIM"
+    assert rec.get("automatic_retry_tested") is False and rec.get("cross_host_failover_tested") is False,"AUTONOMY_CLAIM"
+    outputs=rec.get("new_attempt_artifact_sha256") or {}
+    assert set(outputs)=={"started.txt","result.txt"} and all(len(x)==64 for x in outputs.values()),"NEW_ARTIFACT_HASHES"
+    assert len(rec.get("new_attempt_receipt_sha256",""))==64,"NEW_RECEIPT_HASH_MISSING"
+    return True
+
 def main():
     ap=argparse.ArgumentParser(description="Verify exact signed #612 evidence bundle offline")
     ap.add_argument("--evidence",required=True)
@@ -149,12 +168,24 @@ def main():
         raise AssertionError("EVIDENCE_SUMMARY_HASH_OR_CONTENT_DRIFT")
     if bundle.get("authority")!="LAB_ONLY_NO_PRODUCTION_EFFECT":
         raise AssertionError("AUTHORITY_MISMATCH")
+    manual=bundle.get("operator_reissue_after_loss") or {}
+    verify_operator_reissue(manual,receipts["forced-crash"])
+    # A validly re-sealed false recovery MUST still be refused.
+    invalid=copy.deepcopy(manual)
+    invalid["new_attempt_state"]="UNKNOWN_OUTCOME"
+    invalid["receipt_sha256"]=digest({k:v for k,v in invalid.items() if k!="receipt_sha256"})
+    try:
+        verify_operator_reissue(invalid,receipts["forced-crash"])
+    except AssertionError:
+        pass
+    else:
+        raise AssertionError("FALSE_REISSUE_SUCCESS_ACCEPTED")
     print(json.dumps({"status":"PASS_SCOPED_LAB",
         "serial_wall_seconds":independent["serial_wall_seconds"],
         "parallel_wall_seconds":independent["parallel_wall_seconds"],
         "observed_speedup":independent["speedup_total_dispatch_wall"],
         "verified_model_runs":4,"forced_loss_no_false_success":True,
-        "negative_cases":len(negatives),
+        "negative_cases":len(negatives)+1,"operator_reissue_verified":True,
         "summary_sha256":independent["receipt_sha256"]}))
 if __name__=="__main__":
     try:main()
