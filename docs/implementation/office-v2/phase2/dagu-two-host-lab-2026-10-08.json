@@ -1,0 +1,88 @@
+{
+  "schema": "velvetos.office-v2.fleet.dagu-two-host-lab.v1",
+  "date": "2026-10-08",
+  "status": "LAB_TWO_HOST_DISTRIBUTED_LABEL_ROUTING_VERIFIED_NOT_PRODUCTION",
+  "candidate": "candidate-dagu-worker-fleet",
+  "version": "2.18.2",
+  "pinnedRelease": {
+    "source": "https://github.com/dagucloud/dagu/releases/tag/v2.18.2",
+    "windows_amd64_tar_gz_sha256": "f11c274af01f2c603b39132ad6f95a070119689092540eb73faacb44d0f5fb07",
+    "macos_arm64_tar_gz_sha256": "f69887d35c765d80514c7644199a563d5b6af7198bb97798e8c8a25858091bec",
+    "checksums_verified": true,
+    "version_output_verified_on_both_hosts": true
+  },
+  "environment": {
+    "coordinator": "MacMiniOffice.local",
+    "coordinator_lan_endpoint": "192.168.0.217:31555",
+    "web_ui": "127.0.0.1:31808",
+    "workers": [
+      "chris-windows-headless",
+      "mac-mini-headless"
+    ],
+    "worker_labels": [
+      "host=win-chris",
+      "host=mac-mini"
+    ],
+    "synthetic_only": true,
+    "no_paid_model_or_api": true,
+    "no_windows_gui_actions": true,
+    "no_business_effects": true
+  },
+  "postcondition": {
+    "payload": "b'velvetos_fleet_synthetic_v1'*32768",
+    "payload_bytes": 884736,
+    "expected_sha256": "d5d7a4ca0b3763074c62a08ba762c307ab2f986240bd9a267e3a4eed41783976"
+  },
+  "runs": [
+    {
+      "dag": "vf-fleet-win-synthetic-20261008",
+      "run_id": "034cEt3MePNRg8PDt3Zosm",
+      "worker_id": "chris-windows-headless",
+      "selector": "host=win-chris",
+      "finished_at": "2026-10-08T10:42:46+03:00",
+      "status": "Succeeded",
+      "observed_hash": "d5d7a4ca0b3763074c62a08ba762c307ab2f986240bd9a267e3a4eed41783976",
+      "stdout_marker": "FLEET_WIN_POSTCONDITION_PASS",
+      "independent_worker_log_status": "succeeded"
+    },
+    {
+      "dag": "vf-fleet-mac-synthetic-20261008",
+      "run_id": "034cEt3hJNHPeIAkzWLMpo",
+      "worker_id": "mac-mini-headless",
+      "selector": "host=mac-mini",
+      "finished_at": "2026-10-08T10:42:46+03:00",
+      "status": "Succeeded",
+      "observed_hash": "d5d7a4ca0b3763074c62a08ba762c307ab2f986240bd9a267e3a4eed41783976",
+      "stdout_marker": "FLEET_MAC_POSTCONDITION_PASS",
+      "independent_worker_log_status": "succeeded"
+    }
+  ],
+  "negativeControl": {
+    "dag": "vf-fleet-unmatched-synthetic-20261008",
+    "run_id": "034cEvznelUnxl4JM1pAB0",
+    "selector": "host=no-such-worker-fleetpilot",
+    "observed_status_after_three_seconds": "Queued",
+    "result": "PASS_NO_WRONG_WORKER_EXECUTION",
+    "queue_item_removed_by_dequeue": true,
+    "after_dequeue_status_data_hidden": true
+  },
+  "cleanup": {
+    "windows_pilot_dagu_processes_after": 0,
+    "mac_worker_process_stopped": true,
+    "mac_coordinator_process_stopped": true,
+    "mac_listening_pilot_ports_after": [],
+    "global_path_or_service_modified": false,
+    "autostart_enabled": false,
+    "isolated_reversible_files_left_for_auditable_retest": true
+  },
+  "notProven": [
+    "mid-task worker-loss recovery",
+    "automatic rescheduling",
+    "high-concurrency throughput",
+    "native GUI control on Windows/macOS",
+    "production deployment or runtime authority"
+  ],
+  "runtimeAuthority": false,
+  "recurringCostIncrement": 0,
+  "note": "Mac dry-run of Windows PowerShell DAG warned that PowerShell was not installed locally; that simulation is excluded from actual cross-host PASS. Real Windows execution was observed in Windows worker logs and coordinator readback."
+}

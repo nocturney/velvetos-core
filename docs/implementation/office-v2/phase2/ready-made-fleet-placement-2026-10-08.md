@@ -1,6 +1,6 @@
 # Ready-made worker placement alternatives — 2026-10-08
 
-Status: SOURCE-RESEARCHED / TWO-HOST CLI BASELINE PASS / NO FLEET SCHEDULER YET.
+Status: DAGU TWO-HOST DISTRIBUTED LAB PASS / NO PRODUCTION FLEET SELECTED.
 
 Owner expectation: prefer existing tools and alternate architectures over building from scratch. Fleet roadmap: three Windows plus at least two Mac Minis; only current Chris Windows and MacMiniOffice.local are connected and verified. Workers can be per-process, browser context, Linux/WSL distro or an interactive native GUI helper; these are not equivalent. Restate won the durable-execution Phase 3A benchmark, but this does not prove hardware-aware fleet scheduling or production authority.
 
@@ -13,7 +13,7 @@ Prebuilt architectures, to compare fairly:
 
 Proof: see worker-fleet-two-host-readback-2026-10-08.json. The same 884736 bytes were SHA256-hashed independently on both real hosts. Both returned sha256 d5d7a4ca0b3763074c62a08ba762c307ab2f986240bd9a267e3a4eed41783976 and postcondition true. This is a valid cross-host remote connector smoke, NOT a queue/placement/agent-failover benchmark.
 
-Next: create equivalent synthetic workload fixture with target OS, capability tag, memory reservation, busy/idle status, exact final hash/readback, cancellation and missing-worker failure. Compare incumbent bridge + Restate-only remote services against Restate+Nomad CE placement and a competing complete workflow platform. Begin on two verified hosts; five-host topology may only be SIMULATED until more hardware is physically connected. Repeat 1/2/4 jobs and measure p50/p95 overall completion, false success, recovery, memory, CPU and human GUI interference. Native Windows GUI work requires an appropriate interactive-session helper; a system service alone cannot provide that. Prefer Playwright BrowserContexts or CLI over full VM per browser task. Add new components only if benchmarked improvements justify operational footprint. No fleet vendor has been installed as part of this research.
+Next: create equivalent synthetic workload fixture with target OS, capability tag, memory reservation, busy/idle status, exact final hash/readback, cancellation and missing-worker failure. Compare incumbent bridge + Restate-only remote services against Restate+Nomad CE placement and a competing complete workflow platform. Begin on two verified hosts; five-host topology may only be SIMULATED until more hardware is physically connected. Repeat 1/2/4 jobs and measure p50/p95 overall completion, false success, recovery, memory, CPU and human GUI interference. Native Windows GUI work requires an appropriate interactive-session helper; a system service alone cannot provide that. Prefer Playwright BrowserContexts or CLI over full VM per browser task. Add new components only if benchmarked improvements justify operational footprint. At initial intake no fleet vendor had been installed. Dagu 2.18.2 has since run in a narrow two-host LAB with no autostart/service; no production fleet provider has been selected.
 
 Sources:
 https://docs.restate.dev/ai/patterns/multi-agent
@@ -26,3 +26,17 @@ https://kestra.io/docs/installation/windows
 https://docs.ray.io/en/latest/ray-overview/installation.html
 https://learn.microsoft.com/en-us/windows/desktop/Services/interactive-services
 https://github.com/nocturney/velvetos-core/issues/604
+
+## Additional overlooked off-the-shelf systems (2026-10-08)
+
+**Dagu 2.18.2**: self-hosted GPL-3.0 Community tool, one binary, runs on Windows/macOS/Linux; coordinator assigns runs to workers via labels/heartbeats and ships status/logs/artifacts through gRPC. Release provides checksum-pinned Windows AMD64 and macOS ARM64 standalone assets and Sigstore packslip. No required external database and no Community license key. Strong candidate for a 5-host mixed OS fleet; compare carefully against Nomad and Restate-only, especially cancellation, failure/recovery and workflow duplication. Official sources: https://github.com/dagucloud/dagu/releases/tag/v2.18.2 and https://docs.dagu.sh/overview/deployment-models . At candidate-record time NO Dagu binary was installed or tested locally.
+
+**Selenium Grid 4.50**: Apache-2.0, ready-made cross-OS browser node/slot/distributor/queue layer, documented mixed Windows/Mac/Linux nodes; particularly relevant to browser-only computer-use. Unlike full-agent frameworks it controls browser session capacity, not the AI policy, workflow or native CAD GUI. Compare to native Playwright BrowserContexts and browser process pool; Java runtime and browser drivers are additional dependencies (Java not in default PATH/runtime on verified Chris and Mac Mini hosts). Official sources: https://www.selenium.dev/documentation/grid/components/ and https://github.com/SeleniumHQ/selenium/releases/tag/selenium-4.50.0 . At candidate-record time NOT installed/tested locally.
+
+Both candidates are **queued, not rejected or promoted** in the existing Office v2 worker-fleet-placement comparison lane. Source discovery ≠ benchmark; do not claim their tasks succeeded in VelvetOS before measured runs.
+
+## Verified Dagu cross-host LAB (2026-10-08)
+
+The official release v2.18.2 Windows AMD64 and macOS ARM64 archives passed their documented SHA256 values and binaries returned version 2.18.2. A Mac-only temporary coordinator received two queued synthetic workflows. One matched host=win-chris and executed on the actual Chris Windows worker, the other matched host=mac-mini and executed on MacMiniOffice.local. Each worker returned the exact expected SHA256 and an explicit postcondition marker. Both coordinator statuses were Succeeded. A deliberately nonmatching host label remained Queued three seconds after submission; that item was dequeued without running on an incorrect host. All pilot processes were stopped and Mac test ports closed. The machine-readable, evidence-derived run IDs, hashes, label selection, negative result and cleanup are in dagu-two-host-lab-2026-10-08.json. No production credentials, GUI mutation, subscriptions or policy promotions were used.
+
+Dagu was promoted only into the ACTIVE FLEET-COMPARISON SHORTLIST (not production). Windmill remains eligible in the queue pending a paid worker-feature/license gate. Still outstanding are worker loss mid-run, recovery correctness, real 1/2/4 concurrency, heavy-browser resource demand and Windows/Mac native GUI actions. The earlier dry-run of a Windows-specific PowerShell DAG on Mac emitted an expected missing-shell warning and is not counted as an execution result.
