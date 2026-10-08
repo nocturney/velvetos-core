@@ -289,7 +289,7 @@ def main() -> None:
     for marker in ("production activation probe receipt invalid", "production binding not explicitly activated", "production receipt/binding credential hash mismatch"):
         require(marker in resolver, "production two-phase resolver gate missing: " + marker)
     suite = subprocess.run([sys.executable, str(ROOT / "scripts" / "office-v2-phase3b-reader-route-test.py")], cwd=ROOT, text=True, capture_output=True, timeout=30)
-    require(suite.returncode == 0 and "admin-fallback=FORBIDDEN" in suite.stdout, "production reader negative cases failed: " + (suite.stdout + suite.stderr)[-1200:])
+    require(suite.returncode == 0 and "admin-fallback=FORBIDDEN" in suite.stdout and "main_descendant_scope=GUARDED" in suite.stdout, "production reader negative cases failed: " + (suite.stdout + suite.stderr)[-1200:])
 
     print("OK office-v2-phase3b-production contract=READY scope=instagram-publisher-snapshot-read reader_route=GATED writer_change=FALSE mutation=FALSE promotion=EXPLICIT_ONLY")
 

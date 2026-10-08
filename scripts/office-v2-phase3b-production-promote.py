@@ -72,6 +72,38 @@ def git(*arguments: str) -> str:
     return call.stdout.strip()
 
 
+# Concurrent Office work may advance main after this exact SHA passed CI.
+# Admit only an unchanged production-read trust surface on a direct main descendant.
+PROTECTED_MAIN_PATHS = (
+    "packages/vfigos",
+    "packages/vfbriefux/FEED-SOURCE.json",
+    "packages/vfbriefux/MORNING-GREEN.md",
+    "packages/vfbriefux/build_morning_green.py",
+    "packages/vfbriefux/prepare_morning_green.py",
+    "packages/vfbriefux/render_morning_green.py",
+    "scripts/check-office-v2-phase3b-production.py",
+    "scripts/office-v2-phase3b-reader-route-test.py",
+    "scripts/office-v2-phase3b-production-promote.py",
+    "scripts/check-morning-green.py",
+    "docs/implementation/office-v2/phase3b",
+    "docs/implementation/office-v2/phase0/authority-map-v0.1.json",
+    "docs/implementation/office-v2/phase0/credential-trust-classes-v0.json",
+    "packages/velvetos/policy",
+    ".github/workflows/check-all.yml",
+)
+
+
+def verify_scope_preserving_main_lineage(main_sha: str) -> str:
+    require(git("rev-parse", "HEAD") == main_sha, "promotion source not checked out at exact verified merge SHA")
+    current_main = git("rev-parse", "origin/main")
+    # Any rewrite, disappeared commit, or non-descendant main is fail-closed.
+    git("merge-base", "--is-ancestor", main_sha, "origin/main")
+    changes = git("diff", "--name-only", main_sha + "..origin/main", "--", *PROTECTED_MAIN_PATHS)
+    require(not changes, "main advanced with protected production-read/security changes: " + changes[:240])
+    require(git("rev-parse", "origin/main") == current_main, "origin/main changed during promotion preflight")
+    return current_main
+
+
 def exact_ci(sha: str, run: str) -> None:
     proc = subprocess.run(["gh", "run", "view", run, "--repo", "nocturney/velvetos-core", "--json", "headSha,status,conclusion,event"], text=True, capture_output=True, timeout=35)
     require(proc.returncode == 0, "exact merged-main CI receipt is unreachable")
@@ -84,7 +116,8 @@ def baseline(main_sha: str, ci_run: str, regression_path: Path) -> dict:
     who = subprocess.run(["whoami"], text=True, capture_output=True, timeout=10)
     require(who.returncode == 0 and who.stdout.strip().lower() == "chris\\chris", "owner DPAPI identity mismatch")
     require(len(main_sha) == 40 and all(c in "0123456789abcdef" for c in main_sha), "merged main SHA invalid")
-    require(git("rev-parse", "HEAD") == main_sha and git("rev-parse", "origin/main") == main_sha, "exact checked-out merged main required")
+    descendant_main = verify_scope_preserving_main_lineage(main_sha)
+    require(descendant_main, "current main not independently verified")
     require(not git("status", "--porcelain=v1"), "merged main working tree is not clean")
     exact_ci(main_sha, ci_run)
     regression = read(regression_path)
