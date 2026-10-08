@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-08T11:13:48.651863Z",
+  "updated_at": "2026-10-08T16:35:39.239Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 98,
+  "candidate_count": 99,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -3166,6 +3166,73 @@
         "next_action": "P0.5 only: after useful code runner works, compare native isolated worker vs OpenShell sandbox with intentional file/network denial, worker exit/restart, latency and host resource footprint.",
         "rationale": "Potential hardening complement to execution, not a prerequisite to first two real P0 coding PRs.",
         "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-robbietilton-compositor",
+      "source_item_id": null,
+      "name": "Compositor — native macOS image editor with file-native AI project editing",
+      "category": "TOOL",
+      "provenance_class": "POST_POLICY_OWNER_SUBMITTED_REPO_REVIEW",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "DEFERRED_WITH_REASON",
+      "verdict_reason": "Owner requested placement in LATER controlled creative/graphics experiments, not in the current Office 2.0 P0 coding-agent infrastructure lane. Defer execution until #612 P0 proof and relevant Creative Craft/asset prerequisites are satisfied; macOS 26+ Apple Silicon and export/RTL/security gates remain unverified.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "creative",
+        "image-editing",
+        "raster-compositing",
+        "macos",
+        "layered-projects",
+        "file-native-agent-editing",
+        "social-creative-assets",
+        "photo-retouching"
+      ],
+      "platform_constraints": [
+        "Official app requires macOS 26+ on Apple Silicon; actual MacMiniOffice.local OS compatibility not checked.",
+        "PSD/PSB intake supports 8-bit RGB, not CMYK; typography/RTL parity and accurate editable round-trip require real fixtures.",
+        "No official in-app MCP, scripting endpoint or proven headless app export. External scripts edit .comp packages with manifest.json and PNG layers.",
+        "Third-party in-app MCP bridge variants can require patching the application and disabling App Sandbox; do not enable without dedicated isolation/security review."
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "https://github.com/robbietilton/Compositor",
+        "https://github.com/robbietilton/Compositor/blob/main/README.md",
+        "https://github.com/robbietilton/Compositor/blob/main/docs/writing-comp-files.md",
+        "https://github.com/robbietilton/Compositor/blob/main/docs/project-format.md",
+        "https://github.com/robbietilton/Compositor/issues/119",
+        "https://github.com/Josusanz/compositor-mcp",
+        "https://github.com/marcushorndt/compositor-mcp",
+        "https://github.com/md-f-sarker/compositor-mcp",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "INTAKE STATUS: Research-backed deferred candidate only; no install, configured MCP, runtime test, scheduler, GPU contention, publication authority or production substitution authorized.",
+        "LATER PHASE MAPPING: Office Master v3 Phase 6 asset compatibility review; Phase 8 controlled creative/Instagram workflow pilot; align with VelvetOS Reform Stage 6 Creative/DCC capability gate. Not part of Phase 3C or #612 P0.",
+        "LAB fixture once admitted: harmless local product/sample image -> script-built layered .comp -> Mac editor read/reload -> masks/transform/adjustments -> Hebrew RTL text -> controlled PNG/JPEG export -> visual and hash/receipt checks; compare source/product identity and output to existing Photoshop/Affinity/PHOTO-PAINT paths.",
+        "Compare file-format bridge (cross-OS Node/.comp writer) first; treat headless renderer or patched in-app MCP as separate, more constrained alternatives requiring new compatibility/security evidence.",
+        "Capture visual QA, PSD/PSB preservation, Hebrew directionality, repeatability, export automation, RAM/latency, rollback and incremental spend. Do not use Codex CLI or paid-model inference. No auto-publish/auto-DM.",
+        "Upstream reviewed 2026-10-08, latest observed release v1.4.7; rerun source, platform and maintenance validation at trial time."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "DEFERRED_WITH_REASON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "AFTER #612 P0 acceptance and Creative/DCC prerequisites, assess Mac compatibility and run a reversible no-spend Golden Fixture to compare editable .comp authoring, Hebrew/RTL, masked retouch and PNG/JPEG export against existing creative providers. Record evidence and promotion/deferral verdict in the canonical registry; no setup or production changes now.",
+        "rationale": "A plausible MIT-licensed local image-editing and AI-file-workflow challenger with layered .comp projects and live reload, but macOS 26+ Apple Silicon requirement, third-party MCP/security implications, and unverified headless exports/RTL justify a late isolated benchmark rather than immediate integration.",
+        "decision_evidence_refs": [
+          "https://github.com/robbietilton/Compositor",
+          "https://github.com/robbietilton/Compositor/blob/main/docs/writing-comp-files.md",
+          "https://github.com/robbietilton/Compositor/issues/119"
+        ]
       }
     }
   ]
