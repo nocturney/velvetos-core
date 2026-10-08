@@ -3,7 +3,7 @@
 Source pattern: [stablyai/orca](https://github.com/stablyai/orca) — isolate a job, name who owns it, end in one of three states.
 Orchestrator overlay (2026-08-31): [andyrewlee/awesome-agent-orchestrators](https://github.com/andyrewlee/awesome-agent-orchestrators) — pulse, independent verify, artifact on disk, bounded loop. See `packages/vfe2b/ORCHESTRATORS.md`.
 DeerFlow overlay (2026-08-31): [bytedance/deer-flow](https://github.com/bytedance/deer-flow) — session goal, sub-agent bounds, skill gates, verification receipts. Patterns only. See `packages/vfe2b/DEER-FLOW-PATTERNS.md`.
-Do **not** install Orca, DeerFlow, amux, OpenClaw, or a second orchestrator. Cursor is the office.
+Do **not** install Orca, DeerFlow, amux, OpenClaw, or a second orchestrator **as part of this routine crew run**. Cursor currently runs this crew; this restriction does not exclude an alternative from the Office v2 Candidate Registry, comparative benchmark or admitted isolated LAB. **COMPETITOR_NEUTRAL_ADMISSION_V1** allows replacing the existing implementation after verified selection; no unapproved production duplicate.
 Packs: `vfops` plus whichever crew this משמרת wraps (`vfconvert`, `vfsales`, `vfcost`, `vfcopy`, `vfcovers`, `vfigos`, `vfprod`, `vfresearch`, `vfbooks`).
 
 ## Map
