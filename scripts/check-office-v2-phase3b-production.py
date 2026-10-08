@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -108,6 +110,9 @@ def main() -> None:
     refs = prod_read.get("implementation_refs") or {}
     required_refs = {
         "consumer": "packages/vfigos/officev2_secure_publisher_snapshot.py",
+        "checkpoint_router": "packages/vfigos/cloudflare_publisher_snapshot.py",
+        "two_stage_promotion": "scripts/office-v2-phase3b-production-promote.py",
+        "promotion_negative_controls": "scripts/office-v2-phase3b-reader-route-test.py",
         "resolver": "packages/vfigos/officev2_production_snapshot_resolver.ps1",
         "runtime_binding": "packages/vfigos/officev2_production_runtime_bind.ps1",
         "snapshot_read": "packages/vfigos/officev2_production_snapshot_read.sh",
@@ -271,7 +276,22 @@ def main() -> None:
     for forbidden in ('"secret_value"', '"raw_token"', '"access_token"', '"client_secret"', '"private_key"'):
         require(forbidden not in serialized, "raw credential material field forbidden: " + forbidden)
 
-    print("OK office-v2-phase3b-production contract=READY scope=instagram-publisher-snapshot-read writer_change=FALSE mutation=FALSE promotion=EXPLICIT_ONLY")
+    router = (VFIGOS / "cloudflare_publisher_snapshot.py").read_text(encoding="utf-8-sig")
+    resolver = (VFIGOS / "officev2_production_snapshot_resolver.ps1").read_text(encoding="utf-8-sig")
+    for marker in ("snapshot_route(", "PILOT_CHECKPOINT", "PRODUCTION_CHECKPOINT", "calculated_hash != declared_hash", "OFFICEV2_PRODUCTION_READ", "secure_snapshot(DEFAULT_RESOLVER, \"Production\")", "production read forbids publisher endpoint override"):
+        require(marker in router, "canonical publisher reader routing guard missing: " + marker)
+    require(router.index("route=snapshot_route()") < router.index("token=resolve_token()", router.index("def main()")), "legacy token resolution must be behind the checkpoint router")
+    for marker in ("production binding not explicitly activated", "production receipt/binding credential hash mismatch", "production promotion includes forbidden writer/mutation authority"):
+        require(marker in resolver, "production resolver cp017 gate missing: " + marker)
+    promoter = (ROOT / "scripts" / "office-v2-phase3b-production-promote.py").read_text(encoding="utf-8-sig")
+    for marker in ("READY_FOR_READ_PROBE", "ACTIVATING", "production-read-activating-snapshot.json", "production-read-active-snapshot.json", "PHASE_3B_PRODUCTION_READ_ACTIVE", "content_hash", "atomic_write(POINTER", "exact_ci(", "production_writer_change", "control_token_fallback_allowed", "original_current"):
+        require(marker in promoter, "production checkpoint transition safety guard missing: " + marker)
+    for marker in ("production activation probe receipt invalid", "production binding not explicitly activated", "production receipt/binding credential hash mismatch"):
+        require(marker in resolver, "production two-phase resolver gate missing: " + marker)
+    suite = subprocess.run([sys.executable, str(ROOT / "scripts" / "office-v2-phase3b-reader-route-test.py")], cwd=ROOT, text=True, capture_output=True, timeout=30)
+    require(suite.returncode == 0 and "admin-fallback=FORBIDDEN" in suite.stdout, "production reader negative cases failed: " + (suite.stdout + suite.stderr)[-1200:])
+
+    print("OK office-v2-phase3b-production contract=READY scope=instagram-publisher-snapshot-read reader_route=GATED writer_change=FALSE mutation=FALSE promotion=EXPLICIT_ONLY")
 
 if __name__ == "__main__":
     main()

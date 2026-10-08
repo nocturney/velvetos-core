@@ -19,6 +19,9 @@
   "opa_policy_ref": "docs/implementation/office-v2/phase3b/production-opa-policy.rego",
   "implementation_refs": {
     "consumer": "packages/vfigos/officev2_secure_publisher_snapshot.py",
+    "checkpoint_router": "packages/vfigos/cloudflare_publisher_snapshot.py",
+    "two_stage_promotion": "scripts/office-v2-phase3b-production-promote.py",
+    "promotion_negative_controls": "scripts/office-v2-phase3b-reader-route-test.py",
     "resolver": "packages/vfigos/officev2_production_snapshot_resolver.ps1",
     "runtime_binding": "packages/vfigos/officev2_production_runtime_bind.ps1",
     "snapshot_read": "packages/vfigos/officev2_production_snapshot_read.sh",
