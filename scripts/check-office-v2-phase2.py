@@ -63,7 +63,7 @@ LEGACY_ID_FNV1A = "2c986691"
 COMPETITOR_POLICY = "COMPETITOR_NEUTRAL_ADMISSION_V1"
 COMPETITOR_DOCS = [
     ROOT / "constitution" / "CONSTITUTION.md",
-    ROOT / "AGENTS.md",
+    ROOT / "packages" / "velvetos" / "AGENTS.md",
     P2 / "README.md",
     P2 / "admission-policy-v0.md",
     ROOT / "packages" / "vfe2b" / "LOCK.md",
