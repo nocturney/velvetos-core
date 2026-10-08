@@ -35,7 +35,7 @@ def main() -> int:
     p={row['id']:row for row in providers['providers']}
     assert p['cua']['state']=='PILOT_VERIFIED_BOUNDED' and p['cua']['runtimeAuthority'] is False
     assert p['cua']['activationAllowed'] is False
-    assert p['ufo']['state']=='NOT_NEEDED_BASELINE_SUFFICIENT' and p['ufo']['runtimeAuthority'] is False
+    assert p['ufo']['state']=='RESEARCH_PENDING_MATERIAL_CALCULATOR_GAP' and p['ufo']['runtimeAuthority'] is False
     assert p['ufo']['installed'] is False
     assert cua_receipt['promotion']=='BOUNDED_PILOT_VALIDATED_NOT_PRODUCTION_CONTROL'
     assert cua_receipt['runtimeAuthority'] is False and cua_receipt['boundary']['runtimeAuthority'] is False
@@ -47,7 +47,7 @@ def main() -> int:
     assert cua_receipt['guiSmoke']['afterUiAText']=='Result: 42'
     assert cua_receipt['boundary']['desktopDisplay'] is False
     assert cua_receipt['boundary']['genericWindowEnumeration']=='REFUSED_OUTSIDE_MANIFEST'
-    assert cua_receipt['ufo']['decision']=='NOT_NEEDED_BASELINE_SUFFICIENT'
+    assert cua_receipt['ufo']['decision']=='RESEARCH_PENDING_MATERIAL_CALCULATOR_GAP'
     assert all(term in cua_receipt['boundary']['prohibited'] for term in (
         'printers','social-publishing','customer-sends','purchases','credential-entry'))
     audits={row['id']:row for row in intake['candidateAudits']}
@@ -103,7 +103,7 @@ def main() -> int:
     assert "'No control APIs'" in server_source and "'Read-only launchpad'" in server_source
     config=(pilot_root/'dashy'/'conf.yml').read_text(encoding='utf-8')
     assert all(flag in config for flag in ('disableConfiguration: true','preventWriteToDisk: true','preventLocalSave: true'))
-    print('OK repo-intake sources=17 authority=none vtracer=PASS cua=BOUNDED_SMOKE_PASS ufo=NOT_NEEDED dashy=READ_ONLY_SMOKE_PASS')
+    print('OK repo-intake sources=17 authority=none vtracer=PASS cua=BOUNDED_SMOKE_PASS ufo=RESEARCH_PENDING dashy=READ_ONLY_SMOKE_PASS')
     return 0
 
 if __name__=='__main__':

@@ -80,5 +80,18 @@
   "writesCanonicalState": false,
   "sourceOfTruth": false,
   "runtimeAuthority": false,
-  "rollback": "Stop and remove exact scheduled task Velvet-Dashy-ReadOnly-Launchpad, stop matching Node process for serve-readonly.js, then remove D:\\Velvet\\Tools\\DashyLaunchpad\\4.7.0."
+  "rollback": "Stop and remove exact scheduled task Velvet-Dashy-ReadOnly-Launchpad, stop matching Node process for serve-readonly.js, then remove D:\\Velvet\\Tools\\DashyLaunchpad\\4.7.0.",
+  "revalidatedAt": "2026-10-08T09:01:01.824856+03:00",
+  "revalidation": {
+    "listener": "127.0.0.1:4000",
+    "nodeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+    "serverScript": "D:\\Velvet\\Tools\\DashyLaunchpad\\4.7.0\\serve-readonly.js",
+    "getIndex": 200,
+    "getConfig": 200,
+    "getApiConfig": 404,
+    "postConfig": 405,
+    "controlApiHealth": 200,
+    "controlCenterIapRedirect": 302,
+    "runtimeAuthority": false
+  }
 }

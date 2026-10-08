@@ -33,17 +33,20 @@
       "runtimeAuthority": false,
       "activationAllowed": false,
       "pilotReceipt": "packages/vfharness/state/cua-pilot-complete-2026-10-08.json",
-      "promotionGate": "Pilot proves isolated UIA action/readback only. Any business task or expanded executable scope requires the separate authority gate; printer, social, customer, purchase, credential actions remain forbidden."
+      "promotionGate": "Pilot proves isolated UIA action/readback only. Any business task or expanded executable scope requires the separate authority gate; printer, social, customer, purchase, credential actions remain forbidden.",
+      "windowsCalculatorAcceptance": "BLOCKED_NO_VERIFIED_42",
+      "notes": "Bounded WinForms fixture pass; Windows Calculator 6x7 acceptance failed due intermittent UIA tree loss and native click error. Activation remains prohibited."
     },
     {
       "id": "ufo",
       "source": "microsoft/UFO",
       "class": "COMPUTER_USE",
-      "state": "NOT_NEEDED_BASELINE_SUFFICIENT",
+      "state": "RESEARCH_PENDING_MATERIAL_CALCULATOR_GAP",
       "runtimeAuthority": false,
       "installed": false,
       "decisionReceipt": "packages/vfharness/state/cua-pilot-complete-2026-10-08.json",
-      "promotionGate": "Reconsider only if a new material Windows-control gap is established after the bounded Cua baseline, with a separate explicit scope and authority review."
+      "promotionGate": "Only compare in a separately gated read-only lab after Cua fixture baseline and demonstrated Calculator gap; no installation or production authority.",
+      "notes": "Uninstalled. A real Windows Calculator GUI gap now remains, root cause unresolved; do not assume UFO fixes it."
     }
   ]
 }
