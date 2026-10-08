@@ -128,7 +128,8 @@ try{
   $binding.active_credential_reference_sha256=$pilotHash
   $binding.mode='ROLLBACK_DRILL_COMPLETE_REQUIRES_FRESH_ROTATE'
   $binding.provider_credential_rotated=$false
-  $binding.rollback_drill_completed=$true
+  # ConvertFrom-Json returns a fixed-property PSCustomObject; append the new receipt field explicitly.
+  $binding | Add-Member -MemberType NoteProperty -Name rollback_drill_completed -Value $true -Force
   $binding.captured_at=[DateTime]::UtcNow.ToString('o')
   [IO.File]::WriteAllText($bindingPath,($binding|ConvertTo-Json -Depth 14)+[Environment]::NewLine,[Text.UTF8Encoding]::new($false))
   Write-Output ('PASS PRODUCTION_ROLLBACK_DRILL receipt_sha256='+(Get-FileHash $out -Algorithm SHA256).Hash.ToLowerInvariant())

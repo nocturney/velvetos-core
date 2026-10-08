@@ -219,6 +219,8 @@ def main() -> None:
     for marker in ("production-rollback-drill.json", "former_production_credential_http", "restored_pilot_runtime_http", "Put-Snapshot $prodToken", "ROLLBACK_DRILL_COMPLETE_REQUIRES_FRESH_ROTATE", "[string[]]$ScriptArgs", "[string[]]$CommandArgs"):
         require(marker in rollback_drill, "production rollback drill missing marker: " + marker)
     require("[string[]]$Args" not in rollback_drill, "production rollback helpers may not shadow PowerShell automatic $Args")
+    require("$binding | Add-Member -MemberType NoteProperty -Name rollback_drill_completed -Value $true -Force" in rollback_drill, "rollback receipt must add its new PSCustomObject property safely")
+    require("$binding.rollback_drill_completed=$true" not in rollback_drill, "rollback must not assign an absent PSCustomObject property")
     for marker in (
         "rollback_provider_restored=$providerRestored",
         "rollback_broker_restored=$brokerRestored",
