@@ -89,17 +89,17 @@
       "challengers": [
         "candidate-restate",
         "candidate-nomad-worker-placement",
-        "candidate-windmill-worker-fleet"
+        "candidate-dagu-worker-fleet"
       ],
       "queued_challengers": [
         "candidate-kestra-worker-fleet",
         "candidate-ray-worker-fleet",
-        "candidate-dagu-worker-fleet",
-        "candidate-selenium-grid-browser-pool"
+        "candidate-selenium-grid-browser-pool",
+        "candidate-windmill-worker-fleet"
       ],
       "winner": null,
       "freeze_state": "OPEN_UNTIL_MULTI_HOST_FLEET_FIXTURE",
-      "queue_policy": "Do not exclude complete replacements or hybrids. Restate is Phase3A durable winner, not yet fleet placement winner."
+      "queue_policy": "Dagu promoted into active research shortlist after measured two-host LAB outcome; Windmill remains queued due currently unapproved paid Windows-worker fit, not rejected. Restate is durable-execution winner, not yet a fleet placement winner."
     }
   ]
 }

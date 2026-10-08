@@ -2730,10 +2730,10 @@
       "name": "Dagu 2.18.2 — self-hosted distributed workers",
       "category": "WORKFLOW_PLATFORM",
       "provenance_class": "POST_POLICY_READY_MADE_FLEET_COMPARISON",
-      "lifecycle_state": "RESEARCHED",
-      "decision_verdict": "BENCHMARK_REQUIRED",
-      "verdict_reason": "Lightweight single-binary, no-required-database distributed workers across Windows/Mac/Linux could fit an approximately five-host office fleet with lower operations overhead than a full workload scheduler.",
-      "runtime_verification": "NOT_RUN",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "verdict_reason": "Checksum-pinned Dagu 2.18.2 coordinated real workers on Mac and Windows; host-label routing and exact final SHA256 readbacks passed. A no-match selector remained queued, then was dequeued. No active-job host-loss or GUI benchmark.",
+      "runtime_verification": "PASS",
       "authority_role": "NONE",
       "capability_tags": [
         "fleet-placement",
@@ -2760,11 +2760,12 @@
         "https://docs.dagu.sh/overview/deployment-models",
         "https://docs.dagu.sh/server-admin/distributed/workers/",
         "https://github.com/nocturney/velvetos-core/issues/604",
-        "docs/implementation/office-v2/phase2/ready-made-fleet-placement-2026-10-08.md"
+        "docs/implementation/office-v2/phase2/ready-made-fleet-placement-2026-10-08.md",
+        "docs/implementation/office-v2/phase2/dagu-two-host-lab-2026-10-08.json"
       ],
       "notes": [
-        "2026-10-08: official source/release/docs verified for discovery, but not installed or accepted by VelvetOS.",
-        "No production authority or new recurring subscription permitted by research verdict."
+        "No production authority or new recurring subscription permitted by research verdict.",
+        "2026-10-08 isolated reversible Dagu lab on both connected hosts completed: no paid API, new system service, autostart, sensitive workflow or GUI action; processes and ports stopped."
       ],
       "original_office_v2_verdict": null,
       "comparison_review": {
@@ -2775,8 +2776,8 @@
           "component_replacement",
           "hybrid"
         ],
-        "evidence_status": "RESEARCH_ONLY",
-        "next_action": "Stage checksum-pinned isolated binary on verified hosts, compare no-GUI synthetic job routing by worker os/labels, queueing, restart and readback with Restate-only baseline and Nomad; document GPL applicability and zero recurring charges.",
+        "evidence_status": "LAB_VERIFIED",
+        "next_action": "Compare synthetic queueing, 1/2/4 concurrent jobs, mid-task worker loss, retries, actual GUI sessions and footprint against Restate-only and Nomad CE before production placement.",
         "rationale": "It directly addresses owner request to reuse ready-made cross-OS multi-host scheduling without writing a custom fleet controller.",
         "decision_evidence_refs": []
       }
