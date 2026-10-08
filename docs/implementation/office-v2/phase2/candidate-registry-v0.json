@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-08T13:25:33+03:00",
+  "updated_at": "2026-10-08T11:13:48.651863Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 94,
+  "candidate_count": 98,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -2944,6 +2944,227 @@
         "evidence_status": "RESEARCH_ONLY",
         "next_action": "Verify the official noninteractive CLI command and per-tool permissions; stage only in isolated zero-spend LAB, then compare same coded output and recovery to OpenCode and DeerFlow.",
         "rationale": "Competing mature cross-platform agent framework may be a full or hybrid replacement for custom agent logic.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-worktrunk-parallel-worktrees",
+      "source_item_id": null,
+      "name": "Worktrunk 0.80.0 - isolated Git worktree lifecycle",
+      "category": "DEVELOPMENT_TOOL",
+      "provenance_class": "POST_POLICY_P0_OWNER_RECENT_REPO_REVIEW",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "verdict_reason": "PASS both hosts for create/list, dirty remove denied, clean remove accepted, retained branch; application-level auto lifecycle and performance not yet proven.",
+      "runtime_verification": "PASS",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "git",
+        "worktree",
+        "parallel-branches",
+        "coding-worker",
+        "windows",
+        "macos",
+        "cli"
+      ],
+      "platform_constraints": [
+        "Official release archive SHA-256 verified Windows and Apple Silicon; only isolated disposable test repos, NOT existing Office checkout.",
+        "Does not implement model, agent, queue, branch protection, test verification or autonomous resume.",
+        "Run without shell integration/hooks and never auto merge/delete dirty branches; Windows uses git-wt.exe due wt alias."
+      ],
+      "shortlist_lanes": [
+        "development-worktree-lifecycle"
+      ],
+      "evidence_refs": [
+        "https://github.com/max-sixty/worktrunk",
+        "https://github.com/max-sixty/worktrunk/releases/tag/v0.80.0",
+        "docs/implementation/office-v2/phase2/p0-recent-repo-accelerators-2026-10-08.md",
+        "docs/implementation/office-v2/phase2/p0-ready-made-accelerators-lab-2026-10-08.json",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "Source reviewed 2026-10-08; scoped LAB verification must not be misreported as autonomous coding/production.",
+        "No Codex CLI/quota, new paid model endpoint, production writer or parallel fleet scheduler is authorized.",
+        "No canonical VelvetOS authority change; incumbent remains eligible for fair same-fixture comparison."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "LAB_VERIFIED",
+        "next_action": "Compare same-workload worktree setup/cleanup with raw git under pinned task envelope; integrate only a thin optional lifecycle adapter with evidence and no auto merge.",
+        "rationale": "PASS both hosts for create/list, dirty remove denied, clean remove accepted, retained branch; application-level auto lifecycle and performance not yet proven.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-context-mode",
+      "source_item_id": null,
+      "name": "Context Mode 1.0.169 - token/context virtualization",
+      "category": "CONTEXT_OPTIMIZATION",
+      "provenance_class": "POST_POLICY_P0_OWNER_RECENT_REPO_REVIEW",
+      "lifecycle_state": "LAB",
+      "decision_verdict": "LAB_VALIDATED",
+      "verdict_reason": "Both hosts indexed and searched a single benign Markdown fixture under isolated local storage; NOT evidence of reduced tokens or durable agent memory.",
+      "runtime_verification": "PASS",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "context",
+        "session",
+        "tool-output",
+        "mcp",
+        "opencode-plugin",
+        "fts5",
+        "windows",
+        "macos"
+      ],
+      "platform_constraints": [
+        "Elastic License 2.0; assess embedding/redistribution boundaries and upstream OpenCode experimental hooks.",
+        "Only local CLI FTS index/search verified on both hosts with CONTEXT_MODE_DIR isolated. No OpenCode plugin registered globally.",
+        "Token savings >=30%, answer quality, safe tool routing and cross-session compaction remain UNTESTED; Project State remains canonical."
+      ],
+      "shortlist_lanes": [
+        "memory-context"
+      ],
+      "evidence_refs": [
+        "https://github.com/mksglu/context-mode",
+        "https://github.com/mksglu/context-mode/blob/main/docs/platform-support.md",
+        "docs/implementation/office-v2/phase2/p0-recent-repo-accelerators-2026-10-08.md",
+        "docs/implementation/office-v2/phase2/p0-ready-made-accelerators-lab-2026-10-08.json",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "Source reviewed 2026-10-08; scoped LAB verification must not be misreported as autonomous coding/production.",
+        "No Codex CLI/quota, new paid model endpoint, production writer or parallel fleet scheduler is authorized.",
+        "No canonical VelvetOS authority change; incumbent remains eligible for fair same-fixture comparison."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "LAB_VERIFIED",
+        "next_action": "After real OpenCode coding task baseline, run plugin-on/off same tasks measuring actual input tokens/quality/permissions and compaction continuity; promote only with evidence.",
+        "rationale": "Both hosts indexed and searched a single benign Markdown fixture under isolated local storage; NOT evidence of reduced tokens or durable agent memory.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-octop-agent-team",
+      "source_item_id": null,
+      "name": "TencentCloud Octop - agent team + ACP and memory",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "POST_POLICY_P0_OWNER_RECENT_REPO_REVIEW",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Credible full/hybrid agent-workflow contender, but no proof it reduces two-host workload time versus existing Dagu/Restate composition.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime",
+        "multi-agent",
+        "agentteams-beta",
+        "acp",
+        "opencode-integration",
+        "memory",
+        "mcp"
+      ],
+      "platform_constraints": [
+        "AgentTeams is beta; single-server architecture must not be misread as multi-host worker placement.",
+        "OpenCode/ACP outbound runner and model route are separately required; no Octop LAB install or live coding run.",
+        "Preserve Dagu/Restate and canonical checkpoints during same-fixture comparator; no duplicate scheduler."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/TencentCloud/Octop",
+        "https://github.com/TencentCloud/Octop/blob/main/docs/acp.md",
+        "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6058355944",
+        "docs/implementation/office-v2/phase2/p0-recent-repo-accelerators-2026-10-08.md",
+        "docs/implementation/office-v2/phase2/p0-ready-made-accelerators-lab-2026-10-08.json",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "Source reviewed 2026-10-08; scoped LAB verification must not be misreported as autonomous coding/production.",
+        "No Codex CLI/quota, new paid model endpoint, production writer or parallel fleet scheduler is authorized.",
+        "No canonical VelvetOS authority change; incumbent remains eligible for fair same-fixture comparison."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "After independently validated code-capable OpenCode/model, compare identical two-host coding work against native pipeline in an isolated Octop fixture with recovery, time and cost receipts.",
+        "rationale": "Credible full/hybrid agent-workflow contender, but no proof it reduces two-host workload time versus existing Dagu/Restate composition.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-nvidia-openshell",
+      "source_item_id": null,
+      "name": "NVIDIA OpenShell - isolated agent sandbox gateway",
+      "category": "AGENT_ISOLATION",
+      "provenance_class": "POST_POLICY_P0_OWNER_RECENT_REPO_REVIEW",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Potential hardening complement to execution, not a prerequisite to first two real P0 coding PRs.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "sandbox",
+        "agent-isolation",
+        "network-policy",
+        "filesystem-policy",
+        "docker",
+        "podman"
+      ],
+      "platform_constraints": [
+        "Not an LLM, durable scheduler, memory authority or native Windows UI driver.",
+        "Linux/Docker/Podman preferred, Windows WSL2 route cannot use RDM LocalSystem's blocked WSL and OfficeV2-Lab must remain untouched.",
+        "No install, sandbox, policy violation drill or production promotion as of 2026-10-08."
+      ],
+      "shortlist_lanes": [
+        "agent-sandbox-isolation"
+      ],
+      "evidence_refs": [
+        "https://github.com/NVIDIA/OpenShell",
+        "https://docs.nvidia.com/openshell/latest/how-it-works/sandboxes/runtimes",
+        "docs/implementation/office-v2/phase2/p0-recent-repo-accelerators-2026-10-08.md",
+        "docs/implementation/office-v2/phase2/p0-ready-made-accelerators-lab-2026-10-08.json",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "Source reviewed 2026-10-08; scoped LAB verification must not be misreported as autonomous coding/production.",
+        "No Codex CLI/quota, new paid model endpoint, production writer or parallel fleet scheduler is authorized.",
+        "No canonical VelvetOS authority change; incumbent remains eligible for fair same-fixture comparison."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "P0.5 only: after useful code runner works, compare native isolated worker vs OpenShell sandbox with intentional file/network denial, worker exit/restart, latency and host resource footprint.",
+        "rationale": "Potential hardening complement to execution, not a prerequisite to first two real P0 coding PRs.",
         "decision_evidence_refs": []
       }
     }
