@@ -1,0 +1,234 @@
+{
+  "schema": "velvetos.ai3d.phase12-cam-acceptance.v1",
+  "status": "PASS_BOUNDED_OFFLINE",
+  "fixture_id": "rect-outline-40x30-two-depths",
+  "fixture_sha256": "7fb7d06795f198b840d5fbb398614159541d79fb9c4dac8edb1ba37701e60808",
+  "contract_sha256": "67e11bea85c2ea9305de12a997e7c3e5b31402b09630c79c12f48ed00bc7e8b5",
+  "existing_provider": {
+    "provenance": "existing-historical-cross-station-receipt-revalidated-locally",
+    "historical_remote_proof_status": "PASS",
+    "existing_typed_route": "cam.toolpath",
+    "route_prefers_mac": true,
+    "source_artifact": {
+      "name": "cross_station_cam_toolpath.gcode",
+      "bytes": 470,
+      "sha256": "dfbc2d4f5f3ac8d4fe306ab15c7484ca7d36b1b5e8ff50086b145f4bbd9572a3"
+    },
+    "existing_windows_probe": "PASS",
+    "fresh_strict_parser": {
+      "schema": "velvetos.ai3d.phase12-grbl-validation.v1",
+      "status": "PASS",
+      "errors": [],
+      "metric_absolute_xy": true,
+      "g_codes": [
+        0,
+        1,
+        17,
+        21,
+        90
+      ],
+      "m_codes": [
+        3,
+        5,
+        30
+      ],
+      "bounds_mm": {
+        "x": [
+          -21.5,
+          21.5
+        ],
+        "y": [
+          -16.501,
+          16.501
+        ],
+        "z": [
+          -2.0,
+          5.0
+        ]
+      },
+      "motion_count": 26,
+      "contour_motion_count": 22,
+      "safe_rapids": 4,
+      "depths_mm": [
+        -2.0,
+        -1.0
+      ],
+      "feeds_mm_min": [
+        5.0,
+        10.0
+      ],
+      "spindle_start_count": 1,
+      "spindle_stop_count": 1,
+      "program_end_count": 1,
+      "no_machine_control": true
+    },
+    "existing_source_sha256": {
+      "D:\\Velvet\\BlenderStack\\tests\\cross_station_cam_toolpath.gcode": "dfbc2d4f5f3ac8d4fe306ab15c7484ca7d36b1b5e8ff50086b145f4bbd9572a3",
+      "D:\\Velvet\\BlenderStack\\tests\\cross_station_cam_toolpath_report.json": "1f47f940e4778cd4af67a7693401ecb740d3118afdfff4303cfb646149eb2e57",
+      "D:\\Velvet\\Runtime\\CreativeCraft\\CncGcodeProbe.py": "6d9e0a25add50d5cdd0df42c7cf7904dd0b9f1f18ef27519e35d011e8e900fcf",
+      "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json": "3a94f4191ef1c7946926bc72d5a8a39c7342d6e19149d3b8ea7eabe39436ff33"
+    },
+    "external_sources_unchanged": true
+  },
+  "freecad_grbl_post": {
+    "driver": {
+      "schema": "velvetos.ai3d.phase12-freecad-post-receipt.v1",
+      "status": "PASS_POST_ONLY",
+      "fixture_id": "rect-outline-40x30-two-depths",
+      "fixture_sha256": "7fb7d06795f198b840d5fbb398614159541d79fb9c4dac8edb1ba37701e60808",
+      "path_command_count": 14,
+      "depths_mm": [
+        -1.0,
+        -2.0
+      ],
+      "reference_outline_xy_mm": [
+        -21.5,
+        21.5,
+        -16.5,
+        16.5
+      ],
+      "source_feed_mm_min": 10.0,
+      "path_internal_feed_mm_sec": 0.16666666666666666,
+      "source_plunge_mm_min": 5.0,
+      "path_internal_plunge_mm_sec": 0.08333333333333333,
+      "spindle_reference_rpm": 12000.0,
+      "postprocessor": "Path.Post.scripts.grbl_post",
+      "freecad_version": "1.1.3",
+      "gcode": {
+        "name": "synthetic-grbl-post.nc",
+        "bytes": 575,
+        "sha256": "46d01babc0c58ee289ae6ed03550fe2054720ef3c0535761e08f09eb4d56f862"
+      },
+      "safety": {
+        "machine_control": false,
+        "spindle_control": false,
+        "laser_activation": false,
+        "printer_actions": false,
+        "production_approval": false
+      },
+      "warning": "Post-processing only: no stock-aware cutting, collision, machine compatibility or material feed verification."
+    },
+    "strict_gcode": {
+      "schema": "velvetos.ai3d.phase12-grbl-validation.v1",
+      "status": "PASS",
+      "errors": [],
+      "metric_absolute_xy": true,
+      "g_codes": [
+        0,
+        1,
+        17,
+        21,
+        90
+      ],
+      "m_codes": [
+        2,
+        3,
+        5
+      ],
+      "bounds_mm": {
+        "x": [
+          -21.5,
+          21.5
+        ],
+        "y": [
+          -16.5,
+          16.5
+        ],
+        "z": [
+          -2.0,
+          5.0
+        ]
+      },
+      "motion_count": 13,
+      "contour_motion_count": 10,
+      "safe_rapids": 3,
+      "depths_mm": [
+        -2.0,
+        -1.0
+      ],
+      "feeds_mm_min": [
+        5.0,
+        10.0
+      ],
+      "spindle_start_count": 1,
+      "spindle_stop_count": 1,
+      "program_end_count": 1,
+      "no_machine_control": true
+    },
+    "artifact": {
+      "name": "synthetic-grbl-post.nc",
+      "bytes": 575,
+      "sha256": "46d01babc0c58ee289ae6ed03550fe2054720ef3c0535761e08f09eb4d56f862"
+    }
+  },
+  "cross_provider_compatibility": {
+    "matched_bounds_within_mm": 0.15,
+    "matched_cut_depths_mm": [
+      -2,
+      -1
+    ],
+    "matched_feedrates_mm_min": [
+      5,
+      10
+    ],
+    "identical_spindle_start_stop_counts": true,
+    "different_planners_or_contours_do_not_imply_equal_machining_quality": true
+  },
+  "negative_controls": {
+    "input_contract": {
+      "production_scope": "BLOCKED",
+      "unsupported_units": "BLOCKED",
+      "oversize_stock": "BLOCKED",
+      "missing_dimension": "BLOCKED",
+      "wrong_origin": "BLOCKED",
+      "unknown_tool": "BLOCKED",
+      "excessive_cut_depth": "BLOCKED",
+      "arbitrary_feed": "BLOCKED",
+      "arbitrary_spindle": "BLOCKED",
+      "real_material_without_qualification": "BLOCKED",
+      "false_material_qualification": "BLOCKED",
+      "connected_machine": "BLOCKED",
+      "unsupported_postprocessor": "BLOCKED",
+      "upload_or_machine_execution": "BLOCKED",
+      "printer_control": "BLOCKED"
+    },
+    "gcode_dialect": {
+      "inch_mode": "BLOCKED",
+      "relative_mode": "BLOCKED",
+      "outside_xy": "BLOCKED",
+      "plunge_too_deep": "BLOCKED",
+      "arbitrary_feed": "BLOCKED",
+      "arbitrary_spindle_rpm": "BLOCKED",
+      "laser_spindle_reverse": "BLOCKED",
+      "missing_spindle_start": "BLOCKED",
+      "missing_spindle_stop": "BLOCKED",
+      "missing_end": "BLOCKED",
+      "rapid_below_stock": "BLOCKED",
+      "trailing_unsafe_command": "BLOCKED",
+      "extruder_axis": "BLOCKED",
+      "heater": "BLOCKED",
+      "wrong_plane": "BLOCKED",
+      "incremental_zero_reset": "BLOCKED",
+      "missing_units": "BLOCKED",
+      "unexpected_axis": "BLOCKED"
+    }
+  },
+  "material_qualified": false,
+  "physical_machine_validated": false,
+  "production_gcode_authorized": false,
+  "laser_machining_allowed": false,
+  "spindle_hardware_control_allowed": false,
+  "printer_actions_allowed": false,
+  "new_cam_toolpath_router_added": false,
+  "licenses": [
+    "FreeCAD standalone LGPL external runtime; local postprocessor only",
+    "Existing Fabex provider reused; redistribution and commercial deployment require independent license review"
+  ],
+  "artifact_dir": "D:\\Velvet\\Artifacts\\AI3D\\2026-10-08\\phase12-verified-001",
+  "limitations": [
+    "Synthetic two-pass rectangular outline only, material unqualified",
+    "FreeCAD path consists of explicit synthetic waypoints; not a generated stock-aware CAM machining operation",
+    "Existing cross-station Fabex proof is historical but artifact hash and Windows-side validation were rechecked",
+    "No tool-life, fixture/workholding, tool deflection, collisions, CNC firmware execution or real-machine motion is validated"
+  ]
+}

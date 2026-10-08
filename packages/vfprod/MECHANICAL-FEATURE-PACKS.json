@@ -1,0 +1,107 @@
+{
+  "schema": "velvetos.ai3d.mechanical-feature-packs.v1",
+  "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+  "exact_cad_patterns": "packages/vfprod/EXACT-CAD-PATTERNS.json",
+  "runtime": "vf-cad-stack:build123d-venv",
+  "promotion_rule": "PROVEN requires a valid fixture plus adversarial parameter/property tests; process-sensitive geometry remains CANDIDATE until material/process evidence exists.",
+  "upstream": {
+    "build123d": {
+      "version": "0.11.1",
+      "license": "Apache-2.0"
+    },
+    "bd_warehouse": {
+      "version": "0.3.0",
+      "license": "Apache-2.0",
+      "policy": "wrap mature upstream primitives; do not copy their geometry tables or implementation"
+    }
+  },
+  "packs": {
+    "fasteners": {
+      "status": "PROVEN_BOUNDED",
+      "provider": "bd_warehouse.fastener",
+      "primitives": [
+        "fastener.socket_head_cap_screw",
+        "fastener.hex_nut",
+        "fastener.plain_washer"
+      ],
+      "fixture_family": "metric ISO"
+    },
+    "threads": {
+      "status": "PROVEN_BOUNDED",
+      "provider": "bd_warehouse.thread.IsoThread",
+      "primitives": ["thread.iso"],
+      "geometry_rule": "simple=false is required for solid geometry"
+    },
+    "gears": {
+      "status": "PROVEN_BOUNDED",
+      "provider": "bd_warehouse.gear.SpurGear",
+      "primitives": ["gear.spur"]
+    },
+    "bearings": {
+      "status": "PROVEN_BOUNDED",
+      "provider": "bd_warehouse.bearing.SingleRowDeepGrooveBallBearing",
+      "primitives": ["bearing.deep_groove"]
+    },
+    "inserts": {
+      "status": "PROVEN_BOUNDED",
+      "provider": "bd_warehouse.fastener.HeatSetNut",
+      "primitives": ["insert.heat_set"]
+    },
+    "magnets": {
+      "status": "PROVEN_GEOMETRY_ONLY",
+      "provider": "build123d.native",
+      "primitives": ["magnet.cylindrical_pocket"],
+      "constraint": "radial and axial clearances must be explicit; no material/process fit is inferred"
+    },
+    "fits": {
+      "status": "PROVEN_CALC_ONLY",
+      "provider": "velvetos.explicit-fit-calculator",
+      "primitives": [
+        "fit.clearance_cylindrical",
+        "fit.interference_cylindrical"
+      ],
+      "constraint": "clearance/interference values must be explicit evidence; no fit class is guessed"
+    },
+    "snap_fit": {
+      "status": "CANDIDATE_PROCESS_SENSITIVE",
+      "provider": "build123d.native",
+      "blockers": [
+        "material strain limit",
+        "print orientation",
+        "layer adhesion",
+        "cycle-life target"
+      ]
+    },
+    "living_hinge": {
+      "status": "CANDIDATE_PROCESS_SENSITIVE",
+      "provider": "build123d.native",
+      "blockers": [
+        "material/process compatibility",
+        "hinge thickness evidence",
+        "bend radius",
+        "cycle-life target"
+      ]
+    },
+    "enclosure": {
+      "status": "PROVEN_BOUNDED",
+      "provider": "build123d.native",
+      "primitives": ["enclosure.rect_open_top"],
+      "constraint": "outer dimensions, wall and floor thickness must all be explicit"
+    },
+    "sheet_metal": {
+      "status": "CANDIDATE_RUNTIME_GAP",
+      "provider": null,
+      "blockers": [
+        "no validated bend-aware sheet-metal runtime in the canonical stack",
+        "bend allowance/K-factor policy not yet qualified"
+      ]
+    }
+  },
+  "safety": {
+    "printer_actions_allowed": false,
+    "machine_control_allowed": false,
+    "invent_fit_clearance": false,
+    "invent_material_properties": false,
+    "promote_process_sensitive_geometry_without_evidence": false
+  }
+}
