@@ -50,6 +50,13 @@ dfam_slicer_path = (
     "ai-3d-modeling-engineering-core" / "dfam-slicer-v1.json"
 )
 dfam_slicer_validator = ROOT / "scripts" / "validate_ai3d_phase11_dfam_slicer.py"
+cam_validation_path = (
+    ROOT / "docs" / "implementation" /
+    "ai-3d-modeling-engineering-core" / "cam-toolpath-v1.json"
+)
+cam_validation_script = ROOT / "scripts" / "validate_ai3d_phase12_cam.py"
+cam_validation_post = ROOT / "scripts" / "ai3d_phase12_freecad_post.py"
+cam_validation_parser = ROOT / "scripts" / "ai3d_cam_gcode_validator.py"
 doc_path = ROOT / "packages" / "vfprod" / "CAD-ENGINE-STACK.md"
 cli = ROOT / "scripts" / "vf_cad_stack.py"
 
@@ -68,6 +75,10 @@ assert simulation_driver.is_file(), simulation_driver
 assert simulation_validator.is_file(), simulation_validator
 assert dfam_slicer_path.is_file(), dfam_slicer_path
 assert dfam_slicer_validator.is_file(), dfam_slicer_validator
+assert cam_validation_path.is_file(), cam_validation_path
+assert cam_validation_script.is_file(), cam_validation_script
+assert cam_validation_post.is_file(), cam_validation_post
+assert cam_validation_parser.is_file(), cam_validation_parser
 assert doc_path.is_file(), doc_path
 assert cli.is_file(), cli
 
@@ -110,6 +121,17 @@ assert dfam_slicer["existing_slicer_authority"] == "scripts/vf_cad.py"
 assert dfam_slicer["slicer"]["verified_profiles"]["h2d"]["state"] == "BLOCKED_MOTION_BOUNDS"
 assert dfam_slicer["slicer"]["verified_profiles"]["c5"]["state"] == "PROVEN_OFFLINE_ONLY"
 assert all(v is False for v in dfam_slicer["prohibitions"].values())
+assert (
+    registry["cam_toolpath_validation"]
+    == "docs/implementation/ai-3d-modeling-engineering-core/cam-toolpath-v1.json"
+)
+cam_contract = json.loads(cam_validation_path.read_text(encoding="utf-8"))
+assert cam_contract["schema"] == "velvetos.ai3d.cam-toolpath.v1"
+assert cam_contract["non_authoritative_staging"] is True
+assert cam_contract["toolpath_provider"]["reuse_not_duplicate"] is True
+assert cam_contract["freecad_post"]["no_native_job_strategy_claim"] is True
+assert all(v is False for v in cam_contract["safety"].values())
+assert cam_contract["existing_capability"] == "cam.toolpath"
 
 patterns = json.loads(patterns_path.read_text(encoding="utf-8"))
 assert patterns["schema"] == "velvetos.exact-cad-patterns.v1"
@@ -284,6 +306,10 @@ assert (
 assert (
     contract["dfam_slicer"]
     == "docs/implementation/ai-3d-modeling-engineering-core/dfam-slicer-v1.json"
+)
+assert (
+    contract["cam_toolpath_validation"]
+    == "docs/implementation/ai-3d-modeling-engineering-core/cam-toolpath-v1.json"
 )
 assert contract["coordinate_frame"] == "xy_center_z_min"
 

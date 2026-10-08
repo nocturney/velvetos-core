@@ -73,7 +73,7 @@ def precision_model(capability: str) -> str:
         return "point_cloud"
     if capability.startswith("reconstruction."):
         return "mixed"
-    if capability.startswith("print."):
+    if capability.startswith("print.") or capability.startswith("cam."):
         return "process_output"
     if capability.startswith("interchange.") or capability.startswith("electronics."):
         return "mixed"
@@ -83,6 +83,10 @@ def precision_model(capability: str) -> str:
 def io_types(capability: str) -> tuple[list[str], list[str]]:
     if capability == "cam.toolpath":
         return ["bounded_cam_request"], ["offline_grbl_artifact", "verification_receipt"]
+    if capability == "cam.grbl_post.freecad":
+        return ["synthetic_typed_path_commands", "explicit_cam_reference"], ["offline_grbl_artifact", "independent_grbl_report", "verification_receipt"]
+    if capability == "cam.qualified_machining_process":
+        return ["material_and_machine_qualification", "tool_cutter_clearance", "engineering_review"], ["blocked_pending_real_process_evidence"]
     if capability == "print.prepare.dfam":
         return ["watertight_mesh", "bounded_overhang_angle"], ["dfam_geometry_report", "support_estimate", "verification_receipt"]
     if capability.startswith("print.slice."):
@@ -218,6 +222,10 @@ def constraints(capability: str) -> list[str]:
         values.extend(["native_start_service_move_outside_declared_y_range", "independent_motion_envelope_evidence_required"])
     if capability == "cam.toolpath":
         values.extend(["fixed_promoted_fixture_bounds", "offline_output_only", "no_machine_control"])
+    if capability == "cam.grbl_post.freecad":
+        values.extend(["synthetic_waypoints_only", "fixed_reference_tool_and_cut", "two_explicit_depth_passes", "real_postprocessor_artifact", "independent_modal_gcode_validation", "no_stock_aware_machining_claim", "no_machine_control"])
+    if capability == "cam.qualified_machining_process":
+        values.extend(["unqualified_material", "machine_envelope_not_verified", "tool_fixturing_collision_review_required", "no_auto_release"])
     return values
 
 
@@ -1654,6 +1662,88 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
                 "bounded offline generation/verification only; no printer control"
             )
         records.append(entry)
+
+    # Phase 12: reuse the already PROVEN_TYPED Fabex CAM route unchanged.
+    # Only the FreeCAD GRBL post-only adapter is registered as new provider
+    # proof; machine-ready CAM and CNC hardware execution remain BLOCKED.
+    phase12_config = (
+        "docs/implementation/ai-3d-modeling-engineering-core/"
+        "cam-toolpath-v1.json"
+    )
+    phase12_evidence = (
+        "docs/implementation/ai-3d-modeling-engineering-core/evidence/"
+        "phase12-cam-acceptance-20261008.json"
+    )
+    phase12 = load(repo_root / phase12_config)
+    phase12_proof = load(repo_root / phase12_evidence)
+    assert phase12["schema"] == "velvetos.ai3d.cam-toolpath.v1"
+    assert phase12["non_authoritative_staging"] is True
+    assert phase12_proof["status"] == "PASS_BOUNDED_OFFLINE"
+    assert phase12_proof["new_cam_toolpath_router_added"] is False
+    assert phase12_proof["production_gcode_authorized"] is False
+    assert phase12_proof["freecad_grbl_post"]["strict_gcode"]["status"] == "PASS"
+    assert phase12_proof["existing_provider"]["fresh_strict_parser"]["status"] == "PASS"
+    assert len(phase12_proof["negative_controls"]["gcode_dialect"]) >= 18
+    assert len(phase12_proof["negative_controls"]["input_contract"]) >= 15
+    assert phase12["toolpath_provider"]["reuse_not_duplicate"] is True
+
+    records.append(
+        make_record(
+            record_id="cam.grbl_post.freecad--phase12",
+            capability_id="cam.grbl_post.freecad",
+            authority_id="fabrication-router",
+            authority_ref="packages/vfprod/FABRICATION-ROUTER.json",
+            engine_id="sidecar_freecad",
+            engine_version="1.1.3",
+            adapter_id="ai3d-phase12-freecad-post-only",
+            adapter_ref="scripts/ai3d_phase12_freecad_post.py",
+            runtime_id="freecad-1.1:CAM-Path-GRBL-post",
+            host_classes=["windows-primary"],
+            headless=True,
+            verification_state="PROVEN_PROVIDER",
+            validators=["validate_ai3d_phase12_cam", "no_machine_execution"],
+            evidence_refs=[phase12_config, phase12_evidence],
+            fallbacks=[
+                {"engine": "fabexcnc", "runtime": "existing-cam.toolpath-typed-route"}
+            ],
+            status="PROVEN",
+            provider={
+                "version": "1.1.3",
+                "license": "LGPL-2.0-or-later",
+                "capabilities": ["cam.grbl_post.freecad"],
+            },
+            license_provenance=[phase12_config, phase12_evidence],
+        )
+    )
+
+    records.append(
+        make_record(
+            record_id="cam.qualified_machining_process--phase12-blocked",
+            capability_id="cam.qualified_machining_process",
+            authority_id="fabrication-router",
+            authority_ref=phase12_config,
+            engine_id="not-admitted",
+            engine_version=None,
+            adapter_id="not-admitted",
+            adapter_ref=phase12_config,
+            runtime_id="not-admitted",
+            host_classes=["windows-primary"],
+            headless=False,
+            verification_state="BLOCKED",
+            validators=[
+                "verified real machine work envelope",
+                "cutting tool feeds speeds and material qualification",
+                "workholding and collision evidence",
+                "independent engineering approval",
+                "physical machine execution requires separate explicit authorization",
+            ],
+            evidence_refs=[phase12_config, phase12_evidence],
+            fallbacks=[],
+            status="BLOCKED",
+            provider=None,
+            license_provenance=[phase12_config],
+        )
+    )
 
     research_candidates = [
         ("ai.image_to_3d", "hunyuan3d-2.1-shape", "ai-generation-local"),

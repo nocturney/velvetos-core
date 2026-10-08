@@ -648,6 +648,61 @@ def main() -> int:
     assert "independent_motion_envelope_evidence_required" in h2d["constraints_support"]
     assert h2d["authority"]["id"] == "fabrication-router"
 
+    # Phase 12 proves only a bounded GRBL post; the existing Fabex CAM route
+    # remains the sole cross-station typed cam.toolpath authority.
+    phase12_base = ROOT / "docs" / "implementation" / "ai-3d-modeling-engineering-core"
+    cam_contract = load(phase12_base / "cam-toolpath-v1.json")
+    cam_proof = load(
+        phase12_base / "evidence"
+        / "phase12-cam-acceptance-20261008.json"
+    )
+    assert cam_contract["schema"] == "velvetos.ai3d.cam-toolpath.v1"
+    assert cam_contract["non_authoritative_staging"] is True
+    assert cam_contract["toolpath_provider"]["reuse_not_duplicate"] is True
+    assert cam_proof["status"] == "PASS_BOUNDED_OFFLINE"
+    assert cam_proof["new_cam_toolpath_router_added"] is False
+    assert cam_proof["production_gcode_authorized"] is False
+    assert cam_proof["material_qualified"] is False
+    assert cam_proof["physical_machine_validated"] is False
+    assert cam_proof["existing_provider"]["fresh_strict_parser"]["status"] == "PASS"
+    assert cam_proof["existing_provider"]["existing_windows_probe"] == "PASS"
+    assert cam_proof["freecad_grbl_post"]["strict_gcode"]["status"] == "PASS"
+    assert len(cam_proof["negative_controls"]["input_contract"]) >= 15
+    assert len(cam_proof["negative_controls"]["gcode_dialect"]) >= 18
+    assert cam_proof["cross_provider_compatibility"]["identical_spindle_start_stop_counts"] is True
+    assert all(cam_proof[flag] is False for flag in (
+        "laser_machining_allowed", "spindle_hardware_control_allowed",
+        "printer_actions_allowed",
+    ))
+    toolpath = next(
+        item for item in records
+        if item["record_id"] == "cam.grbl_post.freecad--phase12"
+    )
+    assert toolpath["authority"]["id"] == "fabrication-router"
+    assert toolpath["problem_class"] == "manufacturing"
+    assert toolpath["engine"]["version"] == "1.1.3"
+    assert toolpath["status"] == "PROVEN"
+    assert toolpath["verification"]["state"] == "PROVEN_PROVIDER"
+    assert toolpath["precision_model"] == "process_output"
+    assert toolpath["license_lane"] == "commercial-clean"
+    assert "no_stock_aware_machining_claim" in toolpath["constraints_support"]
+    assert "independent_modal_gcode_validation" in toolpath["constraints_support"]
+    assert "no_machine_control" in toolpath["constraints_support"]
+    assert "validate_ai3d_phase12_cam" in toolpath["verification"]["validators"]
+
+    process = next(
+        item for item in records
+        if item["record_id"] == "cam.qualified_machining_process--phase12-blocked"
+    )
+    assert process["status"] == "BLOCKED"
+    assert process["verification"]["state"] == "BLOCKED"
+    assert process["runtime"]["id"] == "not-admitted"
+    assert process["headless"] is False
+    assert "tool_fixturing_collision_review_required" in process["constraints_support"]
+    assert "no_auto_release" in process["constraints_support"]
+    assert sum(1 for item in records if item["capability_id"] == "cam.toolpath"
+               and item["verification"]["state"] == "PROVEN_TYPED") == 1
+
     research_candidate_engines = {
         "hunyuan3d-2.1-shape",
         "triposg",

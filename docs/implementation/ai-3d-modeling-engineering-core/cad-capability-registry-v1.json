@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.ai3d.cad-capability-registry.v1",
   "non_authoritative_staging": true,
-  "generated_at": "2026-10-08T04:17:18.347886+00:00",
+  "generated_at": "2026-10-08T05:46:52.515920+00:00",
   "authority_invariant": "This registry grants no authority. Fabrication Router/vf-3d-router, CreativeCraft, Blender Capability Host, slicer and production authorities remain unchanged.",
   "records": [
     {
@@ -1409,7 +1409,7 @@
         "provenance": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "D:\\Velvet\\Worktrees\\ai3d-phase11-20261008\\packages\\vfprod\\MECHANICAL-FEATURE-PACKS.json"
+          "D:\\Velvet\\Worktrees\\ai3d-phase12-20261008\\packages\\vfprod\\MECHANICAL-FEATURE-PACKS.json"
         ]
       },
       "verification": {
@@ -1420,7 +1420,7 @@
         "evidence_refs": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "D:\\Velvet\\Worktrees\\ai3d-phase11-20261008\\packages\\vfprod\\MECHANICAL-FEATURE-PACKS.json"
+          "D:\\Velvet\\Worktrees\\ai3d-phase12-20261008\\packages\\vfprod\\MECHANICAL-FEATURE-PACKS.json"
         ]
       },
       "fallback": [],
@@ -1757,7 +1757,7 @@
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\Worktrees\\ai3d-phase11-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
+          "D:\\Velvet\\Worktrees\\ai3d-phase12-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
           "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
           "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_build123d"
         ]
@@ -1821,7 +1821,7 @@
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\Worktrees\\ai3d-phase11-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json"
+          "D:\\Velvet\\Worktrees\\ai3d-phase12-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json"
         ]
       },
       "fallback": [],
@@ -1886,7 +1886,7 @@
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\Worktrees\\ai3d-phase11-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
+          "D:\\Velvet\\Worktrees\\ai3d-phase12-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
           "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\cadquery\\.venv\\Scripts\\python.exe",
           "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_cadquery"
         ]
@@ -1950,7 +1950,7 @@
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\Worktrees\\ai3d-phase11-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json"
+          "D:\\Velvet\\Worktrees\\ai3d-phase12-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json"
         ]
       },
       "fallback": [],
@@ -2014,7 +2014,7 @@
         ],
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
-          "D:\\Velvet\\Worktrees\\ai3d-phase11-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
+          "D:\\Velvet\\Worktrees\\ai3d-phase12-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
           "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\jscad"
         ]
       },
@@ -2154,6 +2154,151 @@
         }
       ],
       "status": "PROVEN"
+    },
+    {
+      "record_id": "cam.grbl_post.freecad--phase12",
+      "capability_id": "cam.grbl_post.freecad",
+      "problem_class": "manufacturing",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "packages/vfprod/FABRICATION-ROUTER.json"
+      },
+      "engine": {
+        "id": "sidecar_freecad",
+        "version": "1.1.3"
+      },
+      "adapter": {
+        "id": "ai3d-phase12-freecad-post-only",
+        "source_ref": "scripts/ai3d_phase12_freecad_post.py"
+      },
+      "runtime": {
+        "id": "freecad-1.1:CAM-Path-GRBL-post",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "synthetic_typed_path_commands",
+        "explicit_cam_reference"
+      ],
+      "output_types": [
+        "offline_grbl_artifact",
+        "independent_grbl_report",
+        "verification_receipt"
+      ],
+      "precision_model": "process_output",
+      "constraints_support": [
+        "bounded_typed_request",
+        "synthetic_waypoints_only",
+        "fixed_reference_tool_and_cut",
+        "two_explicit_depth_passes",
+        "real_postprocessor_artifact",
+        "independent_modal_gcode_validation",
+        "no_stock_aware_machining_claim",
+        "no_machine_control"
+      ],
+      "headless": true,
+      "license_lane": "commercial-clean",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/cam-toolpath-v1.json",
+        "code_license": "LGPL-2.0-or-later",
+        "data_license": null,
+        "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/cam-toolpath-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase12-cam-acceptance-20261008.json"
+        ]
+      },
+      "verification": {
+        "state": "PROVEN_PROVIDER",
+        "validators": [
+          "validate_ai3d_phase12_cam",
+          "no_machine_execution"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/cam-toolpath-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase12-cam-acceptance-20261008.json"
+        ]
+      },
+      "fallback": [
+        {
+          "engine": "fabexcnc",
+          "runtime": "existing-cam.toolpath-typed-route"
+        }
+      ],
+      "status": "PROVEN"
+    },
+    {
+      "record_id": "cam.qualified_machining_process--phase12-blocked",
+      "capability_id": "cam.qualified_machining_process",
+      "problem_class": "manufacturing",
+      "authority": {
+        "id": "fabrication-router",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/cam-toolpath-v1.json"
+      },
+      "engine": {
+        "id": "not-admitted",
+        "version": null
+      },
+      "adapter": {
+        "id": "not-admitted",
+        "source_ref": "docs/implementation/ai-3d-modeling-engineering-core/cam-toolpath-v1.json"
+      },
+      "runtime": {
+        "id": "not-admitted",
+        "host_classes": [
+          "windows-primary"
+        ]
+      },
+      "input_types": [
+        "material_and_machine_qualification",
+        "tool_cutter_clearance",
+        "engineering_review"
+      ],
+      "output_types": [
+        "blocked_pending_real_process_evidence"
+      ],
+      "precision_model": "process_output",
+      "constraints_support": [
+        "bounded_typed_request",
+        "unqualified_material",
+        "machine_envelope_not_verified",
+        "tool_fixturing_collision_review_required",
+        "no_auto_release"
+      ],
+      "headless": false,
+      "license_lane": "review-required",
+      "license": {
+        "license_source": "docs/implementation/ai-3d-modeling-engineering-core/cam-toolpath-v1.json",
+        "code_license": null,
+        "data_license": null,
+        "allowed_use": "existing routed use only; no new redistribution/bundling until license review is complete",
+        "attribution": "follow upstream license/notice requirements; none may be silently stripped",
+        "redistribution": "not authorized by this registry beyond the recorded upstream terms",
+        "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
+        "provenance": [
+          "docs/implementation/ai-3d-modeling-engineering-core/cam-toolpath-v1.json"
+        ]
+      },
+      "verification": {
+        "state": "BLOCKED",
+        "validators": [
+          "verified real machine work envelope",
+          "cutting tool feeds speeds and material qualification",
+          "workholding and collision evidence",
+          "independent engineering approval",
+          "physical machine execution requires separate explicit authorization"
+        ],
+        "evidence_refs": [
+          "docs/implementation/ai-3d-modeling-engineering-core/cam-toolpath-v1.json",
+          "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase12-cam-acceptance-20261008.json"
+        ]
+      },
+      "fallback": [],
+      "status": "BLOCKED"
     },
     {
       "record_id": "cam.toolpath--blender-host",

@@ -64,7 +64,7 @@ Files:
 
 The registry is deliberately non-authoritative staging. Existing proven routes are recorded first. Research candidates remain CANDIDATE until fixture, license and resource qualification pass.
 
-Current generated registry after Phase 11: 82 records; 60 PROVEN, 1 ACTIVE_AUTHORITY, 18 CANDIDATE, 1 RESEARCH_ONLY and 2 BLOCKED. Exactly 20 Blender cross-station entries are PROVEN_TYPED. Fabrication-authority engine versions come from the runtimes that vf_cad_stack actually executes; Phase 4-11 PROVEN records require bounded validation evidence.
+Current generated registry after Phase 12: 84 records; 61 PROVEN, 1 ACTIVE_AUTHORITY, 18 CANDIDATE, 1 RESEARCH_ONLY and 3 BLOCKED. Exactly 20 Blender cross-station entries are PROVEN_TYPED. Fabrication-authority engine versions come from the runtimes that vf_cad_stack actually executes; Phase 4-12 PROVEN records require bounded validation evidence.
 
 ## Phase 3 - Engineering Contract and common artifact protocol
 
@@ -316,6 +316,33 @@ Phase 11 validation:
   py -3.11 scripts/validate_ai3d_phase11_dfam_slicer.py
   py -3.11 scripts/validate_ai3d_capability_registry.py
 
+## Phase 12 - Bounded offline CAM and GRBL verification
+
+Files:
+
+- cam-toolpath-v1.json
+- fixtures/phase12/rect-outline.json
+- scripts/ai3d_cam_contract.py
+- scripts/ai3d_phase12_freecad_post.py
+- scripts/ai3d_cam_gcode_validator.py
+- scripts/validate_ai3d_phase12_cam.py
+- evidence/phase12-cam-acceptance-20261008.json
+
+The pre-existing `cam.toolpath` PROVEN_TYPED route remains unchanged, preferring mac-mini-office with Fabex CNC 3.0.2 and Windows fallback. This phase does not create another CAM routing operation or change the CreativeCraft station configuration.
+
+- Existing cross-station Fabex `rect_cutout_grbl_v1` report and G-code were checked for unchanged SHA-256, exact fixed profile, Mac/Windows provenance and fresh Windows-side independent G-code validation. The historical Mac execution was not repeated or falsely described as a fresh dispatch.
+- FreeCAD 1.1.3 CAM/Path `grbl_post` runs headless and produces actual GRBL output from synthetic, explicitly specified contour waypoints; it is a proven **postprocessing** path only, not a stock-aware machining operation.
+- Both variants agree within 0.15 mm contour bounds on a 40 x 30 mm outer rectangular benchmark with 3 mm end mill, two passes to -1 and -2 mm, 5 mm safe clearance, 5/10 mm/min plunge/cut feed and 12,000 rpm *synthetic fixture* spindle reference.
+- The independent modal parser accepts the two bounded GRBL dialects while blocking 18 adversarial alterations, including G20/inches, G91/incremental, M4/laser, heater codes, excessive feeds, out-of-envelope travel, rapid below stock, incorrect spindle, missing shutdown and trailing commands.
+- The input contract separately blocks 15 invalid/unqualified material, tool, geometry, feed, units, postprocessor, machine and safety cases.
+- A `PROVEN_PROVIDER` record is added only for FreeCAD GRBL post. The existing 20 PROVEN_TYPED records stay at 20; `cam.qualified_machining_process` is BLOCKED until real-material cutting data, workholding, tool collisions, machine envelope and independent acceptance exist.
+- No printer upload/start, CNC dispatch, spindle/laser actuation, actual machining or automatic manufacturing approval occurred.
+
+Phase 12 validation:
+
+  py -3.11 scripts/validate_ai3d_phase12_cam.py --artifacts-root D:\\Velvet\\Artifacts\\AI3D\\YYYY-MM-DD\\new-phase12-artifact-directory
+  py -3.11 scripts/validate_ai3d_capability_registry.py
+
 ## Validation state
 
 Explicit AI3D validation stack: PASS.
@@ -325,8 +352,8 @@ Repository regression:
 - scripts/check-all.py: 118/118 PASS
 - exit code: 0
 - sensor side-effect check: repository files unchanged
-- full-suite log: evidence/check-all-phase11-20261008.log
+- full-suite log: evidence/check-all-phase12-20261008.log
 
 ## Next implementation phase
 
-Phase 12 is expanded CAM/toolpath qualification: reuse the already-promoted offline cam.toolpath candidate and FreeCAD Path GRBL post, add explicit process/material bounds plus independent G-code verification, and keep machine control, spindle/laser activation and printer actions strictly disabled. Do not promote new CAM operations without independent fixtures.
+Next: verify the consolidated Phase 0-12 branch against the current origin/main, run cross-phase benchmarks and regression, publish a non-force-pushed feature branch and merge only with conflict-aware authority/CI checks. Remaining material/tool qualification, the H2D service-motion envelope and additional printer profiles must remain explicit deferred blockers rather than being silently promoted.

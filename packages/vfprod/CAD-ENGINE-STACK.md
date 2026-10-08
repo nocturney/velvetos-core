@@ -112,3 +112,20 @@ The existing `vf_cad.py` bridge and upstream `gcode_tool.py` are retained. This 
 Contract: `docs/implementation/ai-3d-modeling-engineering-core/dfam-slicer-v1.json`.
 Evidence: `docs/implementation/ai-3d-modeling-engineering-core/evidence/phase11-dfam-slicer-acceptance-20261008.json`.
 Validator: `scripts/validate_ai3d_phase11_dfam_slicer.py`.
+
+## CAM and GRBL post-only verification (Phase 12)
+
+This phase reuses the already-promoted CreativeCraft `cam.toolpath` route, preferred on mac-mini-office with Fabex 3.0.2 and falling back to Windows. There is no second cross-station CAM router or machine action path.
+
+- A 40 x 30 mm synthetic rectangular contour has explicit source dimensions, a 3 mm flat end mill, 2 mm depth split into -1/-2 mm passes, 5 mm safe clearance, 5/10 mm/min feed/plunge and a 12000 rpm fixture spindle reference. Those numbers are fixture constants **not qualified machining recipes**.
+- The existing cross-station Fabex 3.0.2 GRBL output is hash-checked against its existing provenance report and independently re-validated on Windows; the historical Mac run was not repeated during this phase.
+- FreeCAD 1.1.3 CAM/Path `grbl_post` is proven headless against a second, explicit-waypoint GRBL fixture. This proves only G-code **postprocessing** of known Path commands, not stock-aware CAM toolpath planning.
+- The modal GRBL parser blocks unrecognized machine commands, inch/relative modes, unsafe plunge/rapid movement, missing spindle shutdown, missing terminator, non-fixture feedrates and any trailing motion after shutdown. In total 15 malformed input cases and 18 adversarial G-code variants fail closed.
+- CAM executable artifacts have hashes, exact file size, source-geometry bounds and feed/phase receipts. FreeCAD's output timestamps are not expected to be byte-for-byte deterministic, and acceptance relies on decoded geometry and command semantics.
+- `cam.grbl_post.freecad` receives bounded provider evidence. The existing `cam.toolpath` remains one `PROVEN_TYPED` route, not duplicated.
+- `cam.qualified_machining_process` is BLOCKED: unqualified material, spindle/load/workholding, physical controller dialect, tool collisions, machine motion envelope and independent approval are not established.
+- No GRBL was executed on a machine. No spindle, laser or printer network action is authorized and no G-code is labeled production-ready.
+
+Contract: `docs/implementation/ai-3d-modeling-engineering-core/cam-toolpath-v1.json`.
+Evidence: `docs/implementation/ai-3d-modeling-engineering-core/evidence/phase12-cam-acceptance-20261008.json`.
+Validator: `scripts/validate_ai3d_phase12_cam.py`.
