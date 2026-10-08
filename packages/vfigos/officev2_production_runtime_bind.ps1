@@ -303,6 +303,36 @@ if(-not (Test-Path $prodBlob)){throw 'production runtime bundle missing; run Pre
 if(-not (Test-Path $bindingReceipt)){throw 'production runtime binding receipt missing; run Prepare first'}
 $binding=Get-Content $bindingReceipt -Raw | ConvertFrom-Json
 if($binding.status -ne 'PASS' -or $binding.production_promoted -ne $false){throw 'production runtime binding is not ready for Rotate'}
+$reRotation=$false
+$priorRotationReceipt=$null
+$rollbackReceipt=$null
+if($binding.mode -eq 'ROTATED_PRODUCTION_CREDENTIAL_READY_FOR_PROMOTION') {
+  # A duplicate scheduled invocation must never rotate again or overwrite a proven PASS receipt.
+  if(-not(Test-Path $rotationReceipt)){throw 'already-rotated binding has no canonical rotation receipt'}
+  $existing=Get-Content $rotationReceipt -Raw | ConvertFrom-Json
+  if($existing.status -ne 'PASS' -or $existing.new_credential_reference_sha256 -ne $binding.active_credential_reference_sha256 -or $existing.pilot_provider_credential_invalidated -ne $true){throw 'already-rotated binding/receipt mismatch; refusing duplicate rotation'}
+  $verifyBundle=Unprotect-Text $prodBlob
+  try {
+    [void](Invoke-Production-Read $verifyBundle ([string]$binding.active_credential_reference_sha256))
+    $verified=Get-Content $runtimeReceipt -Raw|ConvertFrom-Json
+    if($verified.status -ne 'PASS' -or $verified.provider.write_run_http -ne 401 -or $verified.broker.unrelated_scope_http -ne 403 -or $verified.broker.credential_reference_sha256 -ne $binding.active_credential_reference_sha256){throw 'already-rotated live correlated proof mismatch'}
+    Write-Output ('PASS PRODUCTION_RUNTIME_ROTATE_ALREADY_ACTIVE_NO_MUTATION credential_ref='+$binding.active_credential_reference_sha256)
+    exit 0
+  } finally { $verifyBundle=$null; [GC]::Collect() }
+} elseif($binding.mode -eq 'ROLLBACK_DRILL_COMPLETE_REQUIRES_FRESH_ROTATE') {
+  # A successful rollback restores the PILOT credential. It must be possible to re-rotate safely.
+  $rollbackPath=Join-Path $ev 'production-rollback-drill.json'
+  if(-not(Test-Path $rollbackPath) -or -not(Test-Path $rotationReceipt)){throw 'fresh Rotate requires rollback and previous rotation receipts'}
+  $rollbackReceipt=Get-Content $rollbackPath -Raw|ConvertFrom-Json
+  $priorRotationReceipt=Get-Content $rotationReceipt -Raw|ConvertFrom-Json
+  if($rollbackReceipt.status -ne 'PASS' -or $rollbackReceipt.restored_credential_reference_sha256 -ne $binding.active_credential_reference_sha256 -or $rollbackReceipt.restored_credential_reference_sha256 -ne $pilotExpected -or $priorRotationReceipt.status -ne 'PASS' -or $priorRotationReceipt.new_credential_reference_sha256 -ne $rollbackReceipt.from_credential_reference_sha256){throw 'rollback-to-fresh-rotation credential lineage mismatch'}
+  $priorArchive=Join-Path $ev 'production-provider-rotation-before-fresh-rerotate.json'
+  if(Test-Path $priorArchive){if((Get-FileHash $priorArchive -Algorithm SHA256).Hash -ne (Get-FileHash $rotationReceipt -Algorithm SHA256).Hash){throw 'prior rotation archive conflicts with canonical receipt'}}
+  else { Copy-Item -LiteralPath $rotationReceipt -Destination $priorArchive }
+  $reRotation=$true
+} elseif($binding.mode -ne 'PREPARED_WITH_PILOT_PROVIDER_CREDENTIAL_NO_CUTOVER') {
+  throw ('Rotate not permitted from binding mode '+$binding.mode)
+}
 $bundleJson=Unprotect-Text $prodBlob
 $bundleObj=$bundleJson | ConvertFrom-Json
 foreach($f in @('rotator_role_id','rotator_secret_id')){if(-not [string]$bundleObj.$f){throw "production runtime bundle missing $f"}}
@@ -358,6 +388,11 @@ try {
     external_mutation_allowed=$false
     production_promoted=$false
   }
+  if($reRotation) {
+    $rotation['rerotation_after_verified_rollback']=$true
+    $rotation['preceding_rollback_receipt_sha256']=(Get-FileHash (Join-Path $ev 'production-rollback-drill.json') -Algorithm SHA256).Hash.ToLowerInvariant()
+    $rotation['preceding_rotation_receipt_sha256']=(Get-FileHash (Join-Path $ev 'production-provider-rotation-before-fresh-rerotate.json') -Algorithm SHA256).Hash.ToLowerInvariant()
+  }
   Write-Json $rotationReceipt $rotation
 
   $binding.active_credential_reference_sha256=$newHash
@@ -395,7 +430,10 @@ try {
     external_mutation_allowed=$false
     production_promoted=$false
   }
-  Write-Json $rotationReceipt $fail
+  # Preserve the earlier PASS receipt if a fresh re-rotation fails after a successful rollback.
+  # The binding remains in ROLLBACK_DRILL_COMPLETE mode, so promotion stays blocked.
+  $failureReceipt=if($reRotation){Join-Path $ev 'production-provider-fresh-rerotate-attempt-fail.json'}else{$rotationReceipt}
+  Write-Json $failureReceipt $fail
   throw ('production rotation failed closed: '+$cause)
 } finally {
   $oldToken=$null; $newToken=$null; $bundleJson=$null; $bundleObj=$null; $baoInput=$null; $rollbackBaoInput=$null
