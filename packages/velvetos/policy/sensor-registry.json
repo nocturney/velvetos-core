@@ -1287,6 +1287,8 @@
         "docs/implementation/office-v2/phase3/durable-execution-contract-v0.json",
         "docs/implementation/office-v2/phase3/durable-execution-lab-plan-v0.json",
         "docs/implementation/office-v2/phase3/durable-execution-verdict-v0.json",
+        "docs/implementation/office-v2/phase2/p0-worker-offline-contract-2026-10-08.md",
+        "scripts/vf_office_v2_p0_worker.py",
         "scripts/check-office-v2-contracts.py"
       ],
       "triggered_by": [
@@ -1294,6 +1296,7 @@
         "docs/implementation/office-v2/phase1/**",
         "docs/implementation/office-v2/phase2/**",
         "docs/implementation/office-v2/phase3/**",
+        "scripts/vf_office_v2_p0_worker.py",
         "scripts/check-office-v2-contracts.py"
       ],
       "depends_on": [],
