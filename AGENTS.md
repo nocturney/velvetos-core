@@ -29,6 +29,12 @@ Unknown domain, missing local instructions, contradictory authority or stale cri
 - Provider/tool success is not inferred. Claims such as sent, published, synced, deployed or deleted require the canonical postcondition evidence.
 - Irreversible/destructive, permission, rights/privacy and physical-world effects remain protected by their mapped policy boundary.
 
+## COMPETITOR_NEUTRAL_ADMISSION_V1
+
+For research, repo intake, architecture or integration decisions, **never exclude an alternative solely because it overlaps Core, competes with an incumbent, adds a second harness in evaluation, or would replace work already done**. Include whole-system replacement and hybrid compositions as valid options. Capture the challenger in the canonical Office v2 Candidate Registry; if a benchmark lane is full, preserve it in the lane's `queued_challengers` rather than silently dropping it. Require an evidence-based disposition against the same capability contract. Legacy `no-second-orchestrator` prohibitions restrict unapproved **production duplication**, not read-only review or an admitted isolated LAB comparison. No new production authority or bypass of security/cost gates results from this rule.
+
+Canonical authority: `constitution/CONSTITUTION.md#competitor_neutral_admission_v1`; procedure: `docs/implementation/office-v2/phase2/admission-policy-v0.md`; regression sensor: `scripts/check-office-v2-phase2.py`.
+
 ## VISIBLE TEXT
 
 **Visible Text Gate is global.** Human-visible AI-authored or rewritten text follows `constitution/VISIBLE_TEXT.md` on the actual candidate text.
