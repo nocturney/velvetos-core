@@ -121,9 +121,18 @@ def evaluate(data: dict[str, Any], receipt: dict[str, Any]) -> dict[str, Any]:
         rp.append("fixture_id_mismatch")
     if receipt.get("status") != "PASS":
         rp.append("adapter_status_not_pass")
-    evidence = receipt.get("evidence") or {}
-    missing_ev = sorted(set(data["evidence_contract"]["required"]) - set(evidence))
+    raw_evidence = receipt.get("evidence")
+    if raw_evidence is not None and not isinstance(raw_evidence, dict):
+        rp.append("evidence_must_be_object")
+    evidence = raw_evidence if isinstance(raw_evidence, dict) else {}
+    required_evidence = set(data["evidence_contract"]["required"])
+    missing_ev = sorted(required_evidence - set(evidence))
     rp.extend("missing_evidence:" + key for key in missing_ev)
+    # Model-identified false-success: a present key is not proof if its value is empty.
+    for key in sorted(required_evidence & set(evidence)):
+        value = evidence[key]
+        if value is None or value is False or value == {} or value == [] or value == "":
+            rp.append(f"invalid_evidence_value:{key}")
     resources = receipt.get("resources") or {}
     missing_res = sorted(set(data["resource_capture"]) - set(resources))
     rp.extend("missing_resource:" + key for key in missing_res)
@@ -169,7 +178,16 @@ def self_test() -> dict[str, Any]:
         "direct_runner_mutation": False,
     }
     evaluated = evaluate(fixture, receipt)
-    ok = not good and "external_effect_policy_invalid" in bad and evaluated["status"] == "PASS"
+    # Required receipt evidence must contain a real value, not just a key.
+    negative_none = evaluate(fixture, {**receipt, "evidence": {"readback": None}})
+    negative_empty = evaluate(fixture, {**receipt, "evidence": {"readback": {}}})
+    ok = (
+        not good
+        and "external_effect_policy_invalid" in bad
+        and evaluated["status"] == "PASS"
+        and negative_none["status"] == "FAIL"
+        and negative_empty["status"] == "FAIL"
+    )
     return {
         "status": "PASS" if ok else "FAIL",
         "good_problems": good,
