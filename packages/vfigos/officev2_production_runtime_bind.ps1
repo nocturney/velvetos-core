@@ -348,17 +348,20 @@ try {
 
   Put-Snapshot $newToken
   $providerChanged=$true
-  $oldAfter=0; $newRead=0
+  # Cloudflare edge instances may observe a freshly rotated secret at different times.
+  # Never accept a single successful endpoint as proof of the full read-only boundary.
+  $oldAfter=0; $newRead=0; $newMeta=0; $newJobs=0; $newWrite=0; $stableSamples=0
   for($i=0;$i -lt 30;$i++){
-    $oldAfter=Http-Code $oldToken 'GET' '/v1/runtime'
-    $newRead=Http-Code $newToken 'GET' '/v1/runtime'
-    if($oldAfter -eq 401 -and $newRead -eq 200){break}
+    try{$oldAfter=Http-Code $oldToken 'GET' '/v1/runtime'}catch{$oldAfter=0}
+    try{$newRead=Http-Code $newToken 'GET' '/v1/runtime'}catch{$newRead=0}
+    try{$newMeta=Http-Code $newToken 'GET' '/v1/meta-health'}catch{$newMeta=0}
+    try{$newJobs=Http-Code $newToken 'GET' '/v1/jobs'}catch{$newJobs=0}
+    try{$newWrite=Http-Code $newToken 'POST' '/v1/run'}catch{$newWrite=0}
+    if($oldAfter -eq 401 -and $newRead -eq 200 -and $newMeta -eq 200 -and $newJobs -eq 200 -and $newWrite -eq 401){$stableSamples++}else{$stableSamples=0}
+    if($stableSamples -ge 2){break}
     Start-Sleep -Seconds 2
   }
-  $newMeta=Http-Code $newToken 'GET' '/v1/meta-health'
-  $newJobs=Http-Code $newToken 'GET' '/v1/jobs'
-  $newWrite=Http-Code $newToken 'POST' '/v1/run'
-  if($oldAfter -ne 401 -or $newRead -ne 200 -or $newMeta -ne 200 -or $newJobs -ne 200 -or $newWrite -ne 401){throw "provider rotation boundary failed old=$oldAfter read=$newRead meta=$newMeta jobs=$newJobs write=$newWrite"}
+  if($stableSamples -lt 2 -or $oldAfter -ne 401 -or $newRead -ne 200 -or $newMeta -ne 200 -or $newJobs -ne 200 -or $newWrite -ne 401){throw "provider rotation boundary failed after stable probes old=$oldAfter read=$newRead meta=$newMeta jobs=$newJobs write=$newWrite stable=$stableSamples"}
 
   $baoInput=[ordered]@{provider_token=$newToken;rotator_role_id=[string]$bundleObj.rotator_role_id;rotator_secret_id=[string]$bundleObj.rotator_secret_id}|ConvertTo-Json -Compress
   $bao=Invoke-Wsl $openbaoBind @('Rotate') $baoInput

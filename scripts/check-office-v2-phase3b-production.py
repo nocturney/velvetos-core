@@ -192,6 +192,10 @@ def main() -> None:
         "preceding_rollback_receipt_sha256",
         "production-provider-fresh-rerotate-attempt-fail.json",
         "prior rotation archive conflicts with canonical receipt",
+        "stableSamples -lt 2",
+        "newJobs -eq 200",
+        "newMeta -eq 200",
+        "newWrite -eq 401",
     ):
         require(marker in runtime_bind, "production re-rotation and duplicate safety guard missing: " + marker)
     require("already-rotated live correlated proof mismatch" in runtime_bind, "already-rotated branch must perform live read-only revalidation")
