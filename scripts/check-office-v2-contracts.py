@@ -312,6 +312,34 @@ def main() -> int:
     ):
         fail("P0 OS birth evidence overstated orphan exclusion/recovery")
 
+    # Offline only: previously verified local Aider source-fix and OS-birth evidence.
+    # Do not run a model or enumerate running processes inside CI.
+    pinned_check = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_p0_live_birth_evidence.py"),
+         "--evidence", str(P2 / "p0-real-aider-kernel-birth-2026-10-09.json"),
+         "--worker-source", str(ROOT / "scripts" / "vf_office_v2_p0_local_model_worker.py")],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if pinned_check.returncode != 0:
+        fail("P0 real local model birth-pin LAB receipts invalid: " + pinned_check.stdout[:220])
+    try:
+        pinned = json.loads(pinned_check.stdout)
+    except json.JSONDecodeError:
+        fail("P0 real local model birth-pin evidence returned invalid JSON")
+    if (
+        pinned.get("status") != "PASS_SCOPED_LAB"
+        or pinned.get("actual_local_model_success_receipt_refs") != 3
+        or pinned.get("negative_controls_rejected") != 11
+        or pinned.get("pinned_live_model_killed_and_unknown_preserved") is not True
+        or pinned.get("explicit_new_local_attempt_verified") is not True
+        or pinned.get("original_retry_permitted") is not False
+        or pinned.get("reissued_old_task") is not False
+        or pinned.get("model_invocations_during_verification") != 0
+        or pinned.get("auto_cross_host_failover_proven") is not False
+        or pinned.get("production_promotion_allowed") is not False
+    ):
+        fail("P0 live Aider OS-birth proof overstated its recovery scope")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
