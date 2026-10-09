@@ -293,6 +293,52 @@ def main() -> int:
     ):
         fail("P0 manual new-attempt lineage overstated safety or authority")
 
+    # #612: Five distinct real local Qwen/Aider Mac Task Envelopes already
+    # independently QA-verified on origin host. CI validates ONLY sanitized
+    # historical receipt identifiers/metrics; no inference, callbacks or launch.
+    repeat_evidence_script = ROOT / "scripts" / "vf_office_v2_p0_repeat_model_evidence.py"
+    repeat_evidence_path = P2 / "p0-mac-five-real-model-sequential-metrics-2026-10-09.json"
+    if hashlib.sha256(repeat_evidence_script.read_bytes()).hexdigest() != (
+            "ff33f05214562d278dc16173386107052e82800eee599242f796b19ff056af21"):
+        fail("P0 real Mac repeat validator source bytes drift")
+    for mode in ("selftest", "verify"):
+        attempt = subprocess.run(
+            [sys.executable, str(repeat_evidence_script), mode,
+             "--evidence", str(repeat_evidence_path)],
+            cwd=ROOT, text=True, capture_output=True, timeout=25,
+        )
+        if attempt.returncode:
+            fail("P0 real Mac repeat evidence " + mode +
+                 " rejected: " + attempt.stdout[:220])
+        try:
+            parsed = json.loads(attempt.stdout)
+        except json.JSONDecodeError:
+            fail("P0 real Mac repeat evidence returned invalid JSON")
+        if mode == "selftest":
+            if (
+                parsed.get("status") != "PASS_OFFLINE"
+                or parsed.get("tests") != 25
+                or parsed.get("model_invocations") != 0
+                or parsed.get("automatic_retries") != 0
+                or parsed.get("scheduler_authority") is not False
+                or parsed.get("statistically_robust_p95") is not False
+                or parsed.get("production_effects") != 0
+            ):
+                fail("P0 real Mac repeat LAB offline negatives falsely passed")
+        elif (
+            parsed.get("status") !=
+            "PASS_OFFLINE_HISTORICAL_RECORD_VALIDATED_NOT_LIVE_REPLAY"
+            or parsed.get("samples") != 5
+            or parsed.get("independent_worker_verifies_reported") != 5
+            or parsed.get("median_seconds") != 46.331
+            or parsed.get("sample_p95_nearest_rank_seconds") != 48.576
+            or parsed.get("model_calls_during_verification") != 0
+            or parsed.get("production_or_scheduler_authority") is not False
+            or parsed.get("statistically_robust_p95") is not False
+            or parsed.get("automatic_retries_authorized") is not False
+        ):
+            fail("P0 Mac repeat metrics promoted unsupported model/P95 claims")
+
     # #612: two real physical hosts tested O_EXCL same-host singleflight and
     # post-owner-loss sticky refusal. CI does NOT spawn any live subprocesses
     # from this experiment or mint a #604 cross-host lease.
