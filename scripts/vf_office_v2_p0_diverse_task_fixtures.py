@@ -285,8 +285,8 @@ def prepare(root, task_id, fixture_id):
     checkout.mkdir()
     target, test = checkout / row["target"], checkout / row["test"]
     test.parent.mkdir()
-    target.write_text(row["source"], encoding="utf-8")
-    test.write_text(row["visible"], encoding="utf-8")
+    target.write_bytes(row["source"].encode("utf-8"))
+    test.write_bytes(row["visible"].encode("utf-8"))
     branch = BRANCH + task_id
     git("init", "-q", "-b", branch, str(checkout))
     git("-C", str(checkout), "config", "core.autocrlf", "false")
@@ -298,8 +298,8 @@ def prepare(root, task_id, fixture_id):
     require(not git("-C", str(checkout), "status", "--porcelain=v1"),
             "PREPARED_REPO_DIRTY")
     prompt, hidden = dest / "task.prompt.txt", dest / "hidden.qa.py"
-    prompt.write_text(row["prompt"], encoding="utf-8")
-    hidden.write_text(row["hidden"], encoding="utf-8")
+    prompt.write_bytes(row["prompt"].encode("utf-8"))
+    hidden.write_bytes(row["hidden"].encode("utf-8"))
     before = continuity.self_test_manifest()
     before["active_external_effects"] = []
     before["code_baseline"] = {
@@ -340,6 +340,92 @@ def prepare(root, task_id, fixture_id):
             "model_invocations": 0, "production_authority": False}
 
 
+
+def verify_candidate(raw):
+    """Independent read-only prepared fixture readback. Never runs a model."""
+    file = Path(raw)
+    require(file.is_absolute() and file.name == "candidate.json"
+            and not file.is_symlink() and file.is_file()
+            and file.parent.is_dir()
+            and ID.fullmatch(file.parent.name) is not None
+            and file.parent.parent.name.startswith("p0-diverse-fixtures-")
+            and file.parent.parent.parent.name == "AgentEnvelopeLab",
+            "ONLY_EXPLICIT_PREPARED_CANDIDATE")
+    require(all(not p.is_symlink() for p in
+                (file.parent, file.parent.parent, file.parent.parent.parent)),
+            "SYMLINK_REPOINTING_DENIED")
+    data = json.loads(file.read_text(encoding="utf-8"))
+    require(isinstance(data, dict) and data.get("schema") == SCHEMA
+            and data.get("authority") == AUTHORITY
+            and data.get("issue") == ISSUE
+            and data.get("status") == "PREPARED_ONLY_NOT_EXECUTABLE_BY_V1_WORKER",
+            "HISTORIC_CANDIDATE_SHAPE_DRIFT")
+    seal = data.get("proof_sha256")
+    require(isinstance(seal, str) and len(seal) == 64
+            and seal == canon({k:v for k,v in data.items() if k!="proof_sha256"}),
+            "CANDIDATE_MANIFEST_HASH_DRIFT")
+    fixture = data.get("fixture_id")
+    rows = catalog()
+    require(fixture in rows and data.get("task_id") == file.parent.name
+            and data.get("host") == __import__("platform").node(),
+            "WRONG_LAB_FIXTURE_HOST_OR_TASK")
+    spec = rows[fixture]
+    root = file.parent / "repo"
+    require(root.is_dir() and (root / ".git").is_dir()
+            and not root.is_symlink() and
+            data.get("worktree_path") == str(root.resolve()),
+            "ORIGINAL_CHECKOUT_MISSING")
+    require(Path(git("-C", str(root), "rev-parse", "--show-toplevel")).resolve() == root.resolve()
+            and git("-C", str(root), "rev-parse", "HEAD") == data.get("base_sha")
+            and git("-C", str(root), "branch", "--show-current") == data.get("branch")
+            and not git("-C", str(root), "status", "--porcelain=v1"),
+            "FIXTURE_GIT_BASE_BRANCH_OR_DIRTY_DRIFT")
+    require(data["branch"] == BRANCH + data["task_id"]
+            and data.get("target_file") == spec["target"]
+            and data.get("visible_test_file") == spec["test"],
+            "UNREGISTERED_TARGET_OR_BRANCH")
+    target = root / spec["target"]
+    visible = root / spec["test"]
+    prompt = file.parent / "task.prompt.txt"
+    hidden = file.parent / "hidden.qa.py"
+    cp = file.parent / "checkpoint.json"
+    for actual in (target, visible, prompt, hidden, cp):
+        require(actual.is_file() and not actual.is_symlink(),
+                "PREPARED_SOURCE_TAMPER_OR_MISSING")
+    require(
+        file_hash(target) == data.get("target_seed_sha256") == sha(spec["source"])
+        and file_hash(visible) == data.get("visible_test_sha256") == sha(spec["visible"])
+        and file_hash(prompt) == data.get("prompt_sha256") == sha(spec["prompt"])
+        and file_hash(hidden) == data.get("hidden_qa_sha256") == sha(spec["hidden"])
+        and file_hash(cp) == data.get("checkpoint_sha256"),
+        "PREPARED_SOURCE_BYTES_CHANGED")
+    require(
+        data.get("prompt_file") == str(prompt.resolve())
+        and data.get("hidden_qa_file") == str(hidden.resolve())
+        and data.get("context_checkpoint") == str(cp.resolve()),
+        "PREPARED_PATH_BINDING_DRIFT")
+    before = json.loads(cp.read_text(encoding="utf-8"))
+    baseline = before.get("code_baseline") or {}
+    require(not continuity.required_shape(before)
+            and before.get("active_external_effects") == []
+            and baseline.get("repo") == "nocturney/velvetos-core"
+            and baseline.get("base_sha") == data["base_sha"]
+            and baseline.get("branch") == data["branch"]
+            and baseline.get("worktree_path") == str(root.resolve()),
+            "CONTEXT_OR_BASELINE_MISMATCH")
+    for key in ("real_coding_worker_or_pr_proven", "autonomous_retry",
+                "production_authority", "scheduler_or_fleet_lease_authority"):
+        require(data.get(key) is False, "CANDIDATE_AUTHORITY_ESCALATION_"+key)
+    require(data.get("approved_model_executor") is None
+            and data.get("model_invocations") == 0,
+            "UNAUTHORIZED_PREPARED_EXECUTOR")
+    replay(spec, target.read_text(encoding="utf-8"), expected_pass=False)
+    return {"status":"PASS_PREPARED_ONLY_INDEPENDENT_BYTE_GIT_QA_READBACK",
+            "task_id":data["task_id"],"fixture":fixture,
+            "base_sha":data["base_sha"],"proof_sha256":seal,
+            "model_invocations":0,"v1_worker_ready":False,
+            "production_authority":False}
+
 def selftest():
     out = inspect()
     assert out["status"] == "PASS_TWO_DISTINCT_OFFLINE_QA_FIXTURES_ONLY"
@@ -352,6 +438,7 @@ def selftest():
         ("wrong_name", lambda row: allowed_root("/tmp/random", "p0-diverse-selftest")),
         ("wrong_task", lambda row: allowed_root("/tmp/p0-diverse-fixtures-lab", "../outside")),
         ("wrong_path", lambda row: allowed_root("/tmp/p0-diverse-fixtures-lab", "not-a-task")),
+        ("relative_candidate", lambda row: verify_candidate("candidate.json")),
     ]
     checks = ["two_different_seed_targets", "seed_fails_and_golden_passes_both_families"]
     canonical = catalog()["canonical-tag-v1"]
@@ -362,7 +449,7 @@ def selftest():
             checks.append(label+"_DENIED")
         else:
             raise AssertionError("UNSAFE_FIXTURE_REQUEST_ACCEPTED:"+label)
-    require(len(checks) == 10, "SELFTEST_COUNT_DRIFT")
+    require(len(checks) == 11, "SELFTEST_COUNT_DRIFT")
     return {"status":"PASS_OFFLINE","tests":len(checks),
             "fixture_count":2,"model_calls":0,
             "external_effects":0,"production_authority":False,
@@ -378,9 +465,15 @@ def main():
     prep.add_argument("--root",required=True)
     prep.add_argument("--task-id",required=True)
     prep.add_argument("--fixture",choices=list(catalog()),required=True)
+    verify=subs.add_parser("verify")
+    verify.add_argument("--candidate",required=True)
     args=p.parse_args()
-    result=selftest() if args.mode=="selftest" else prepare(
-        args.root,args.task_id,args.fixture)
+    if args.mode=="selftest":
+        result=selftest()
+    elif args.mode=="verify":
+        result=verify_candidate(args.candidate)
+    else:
+        result=prepare(args.root,args.task_id,args.fixture)
     print(json.dumps(result,sort_keys=True))
 
 
