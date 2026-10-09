@@ -448,6 +448,7 @@ def main() -> int:
     if (
         supervised_job.get("status") != "PASS_SCOPED_WINDOWS_SUPERVISED_AIDER_LAB"
         or supervised_job.get("negative_controls_rejected") != 19
+        or supervised_job.get("receipt_sha256") != "f4df14dc17d98e9788b3ef246ff00121341c945ce300ea72e084c74428cd7c88"
         or supervised_job.get("two_distinct_real_task_envelopes") is not True
         or supervised_job.get("historical_interrupt") != "UNKNOWN_NO_BLIND_RETRY"
         or supervised_job.get("historical_new_attempt") != "SUCCEEDED_INDEPENDENT_LAB_QA"

@@ -51,7 +51,7 @@ def sealed(value, key):
 
 
 def exact_bytes(entry, field):
-    raw = entry.get(field + "_base64")
+    raw = entry.get(field + "_file_base64")
     expected = entry.get(field + "_file_sha256")
     require(isinstance(raw, str) and len(raw) < 100000, "FILE_BYTES_MISSING_" + field)
     require(isinstance(expected, str) and SHA.fullmatch(expected), "FILE_HASH_MISSING_" + field)
@@ -90,7 +90,8 @@ def check_sample(sample, mode):
     exact_bytes(sample, "pin")
     sealed(pin, "pin_sha256")
     require(job.get("schema") == JOB_SCHEMA and job.get("task_id") == task and
-            job.get("host") == "Chris" and job.get("mode") == mode, "JOB_IDENTITY")
+            job.get("host") == "Chris" and job.get("mode") ==
+            ("complete" if mode == "success" else "interrupt"), "JOB_IDENTITY")
     sealed(job, "selfhash_sha256")
     envelope_sha = digest(env)
     require(job.get("envelope_sha256") == envelope_sha and
