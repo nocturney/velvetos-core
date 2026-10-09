@@ -242,6 +242,28 @@ def main() -> int:
     ):
         fail("P0 UNKNOWN state did not preserve fail-closed LAB safety")
 
+    # P0 historical PID inspection CI tests use MOCK processes only;
+    # no live process enumeration or implicit recovery is run by CI.
+    pid_check = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_p0_owner_snapshot.py"), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if pid_check.returncode != 0:
+        fail("P0 historical PID selftest failed: " + pid_check.stdout[:220])
+    try:
+        pid_result = json.loads(pid_check.stdout)
+    except json.JSONDecodeError:
+        fail("P0 historical PID selftest returned invalid JSON")
+    if (
+        pid_result.get("status") != "PASS"
+        or pid_result.get("tests", 0) < 15
+        or pid_result.get("model_invocations") != 0
+        or pid_result.get("processes_killed") != 0
+        or pid_result.get("new_task_authorized") is not False
+        or pid_result.get("orphan_exclusion_proven") is not False
+    ):
+        fail("P0 historical PID check falsely claimed ownership or recovery")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
