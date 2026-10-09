@@ -1,0 +1,236 @@
+{
+  "schema": "velvetos.office-v2.p0-native-owned-process-cpu-rss-dual-host-lab.v0",
+  "status": "PASS_TWO_NATIVE_OWNED_RESOURCE_PROBES_SYNTHETIC_ONLY",
+  "issue": "https://github.com/nocturney/velvetos-core/issues/612",
+  "observed_date_utc": "2026-10-09",
+  "original_source": {
+    "repo": "nocturney/velvetos-core",
+    "main_at_clone": "cdbb557938628938577d698925e0007dc902da65",
+    "script_checkpoint_commit": "405c7af4862bc11a1de285eb1f221b8f7183448e",
+    "script_git_blob": "e50ebddae5ccfc7463980958340be34e3b5bef9c",
+    "script_raw_source_sha256": "a640328463d43ed1ab1b74c9585c1edc7681534aa3ac6928da001fbcb60d6b1e"
+  },
+  "scope": "Two independent physical hosts, only each probe's own new synthetic Python child, native PID+OS process birth readback for every sample, 6 bounded read-only RSS/CPU observations, owned fixture natural exit.",
+  "hosts": {
+    "windows": {
+      "raw_report_sha256": "71e9bbb1cd301d8978deb45cf17a8f5dcb22ba5513ece4561dd8d99ede4d6529",
+      "report": {
+        "all_possible_descendants_excluded": false,
+        "autonomous_recovery_proven": false,
+        "canonical_fleet_lease": false,
+        "cpu_rss_sampled": true,
+        "distributed_fencing_verified": false,
+        "first_cpu_time_ms": 31,
+        "gpu_vram_measured": false,
+        "host": "Chris",
+        "host_wide_processes_inspected": false,
+        "issue": "https://github.com/nocturney/velvetos-core/issues/612",
+        "kernel_backend": "WINDOWS_CIM_CREATION_DATE",
+        "last_cpu_time_ms": 47,
+        "min_rss_bytes": 32198656,
+        "model_invocations": 0,
+        "new_job_execution_authorized": false,
+        "observed_at_utc": "2026-10-09T19:24:43.237672+00:00",
+        "only_owned_child_sampled": true,
+        "original_child_alive_at_sample_times": true,
+        "owned_child_finished_after_stop": true,
+        "owner_child_kernel_birth": {
+          "birth_us": 1791573877411621,
+          "pgid": null,
+          "pid": 41764,
+          "ppid": 61536,
+          "source": "WINDOWS_CIM_CREATION_DATE"
+        },
+        "paid_api_spend_usd": 0,
+        "peak_rss_bytes": 32198656,
+        "production_authority": false,
+        "receipt_sha256": "a872b53f5d560db404cc13d8bdee56f56b571f4c80d11d3213b8c79c5b7703ed",
+        "sample_count": 6,
+        "sampled_with_os_birth_check_each_time": true,
+        "samples": [
+          {
+            "cpu_time_ms": 31,
+            "index": 1,
+            "kernel_birth_us": 1791573877411621,
+            "kernel_pid": 41764,
+            "kernel_source": "WINDOWS_CIM_CREATION_DATE",
+            "monotonic_offset_ms": 1219,
+            "observed_utc": "2026-10-09T19:24:38.627939+00:00",
+            "rss_bytes": 32198656
+          },
+          {
+            "cpu_time_ms": 31,
+            "index": 2,
+            "kernel_birth_us": 1791573877411621,
+            "kernel_pid": 41764,
+            "kernel_source": "WINDOWS_CIM_CREATION_DATE",
+            "monotonic_offset_ms": 2125,
+            "observed_utc": "2026-10-09T19:24:39.531051+00:00",
+            "rss_bytes": 32198656
+          },
+          {
+            "cpu_time_ms": 31,
+            "index": 3,
+            "kernel_birth_us": 1791573877411621,
+            "kernel_pid": 41764,
+            "kernel_source": "WINDOWS_CIM_CREATION_DATE",
+            "monotonic_offset_ms": 3062,
+            "observed_utc": "2026-10-09T19:24:40.473237+00:00",
+            "rss_bytes": 32198656
+          },
+          {
+            "cpu_time_ms": 31,
+            "index": 4,
+            "kernel_birth_us": 1791573877411621,
+            "kernel_pid": 41764,
+            "kernel_source": "WINDOWS_CIM_CREATION_DATE",
+            "monotonic_offset_ms": 3953,
+            "observed_utc": "2026-10-09T19:24:41.362543+00:00",
+            "rss_bytes": 32198656
+          },
+          {
+            "cpu_time_ms": 31,
+            "index": 5,
+            "kernel_birth_us": 1791573877411621,
+            "kernel_pid": 41764,
+            "kernel_source": "WINDOWS_CIM_CREATION_DATE",
+            "monotonic_offset_ms": 4891,
+            "observed_utc": "2026-10-09T19:24:42.295011+00:00",
+            "rss_bytes": 32198656
+          },
+          {
+            "cpu_time_ms": 47,
+            "index": 6,
+            "kernel_birth_us": 1791573877411621,
+            "kernel_pid": 41764,
+            "kernel_source": "WINDOWS_CIM_CREATION_DATE",
+            "monotonic_offset_ms": 5797,
+            "observed_utc": "2026-10-09T19:24:43.201861+00:00",
+            "rss_bytes": 32198656
+          }
+        ],
+        "schema": "velvetos.office-v2.p0-native-owned-process-resource-lab.v0",
+        "scope": "EXCLUSIVE_TEMP_PYTHON_CHILD_ONLY",
+        "source_sha256": "a640328463d43ed1ab1b74c9585c1edc7681534aa3ac6928da001fbcb60d6b1e"
+      }
+    },
+    "mac": {
+      "raw_report_sha256": "0a38e8af93e7e6431dca4646a5c9ff6fe9bd7a9febf33d31b7dc94f684bde5d7",
+      "report": {
+        "all_possible_descendants_excluded": false,
+        "autonomous_recovery_proven": false,
+        "canonical_fleet_lease": false,
+        "cpu_rss_sampled": true,
+        "distributed_fencing_verified": false,
+        "first_cpu_time_ms": 131,
+        "gpu_vram_measured": false,
+        "host": "MacMiniOffice.local",
+        "host_wide_processes_inspected": false,
+        "issue": "https://github.com/nocturney/velvetos-core/issues/612",
+        "kernel_backend": "PSUTIL_OS_CREATE_TIME",
+        "last_cpu_time_ms": 135,
+        "min_rss_bytes": 38584320,
+        "model_invocations": 0,
+        "new_job_execution_authorized": false,
+        "observed_at_utc": "2026-10-09T19:25:11.744292+00:00",
+        "only_owned_child_sampled": true,
+        "original_child_alive_at_sample_times": true,
+        "owned_child_finished_after_stop": true,
+        "owner_child_kernel_birth": {
+          "birth_us": 1791573909072208,
+          "pgid": 59537,
+          "pid": 59537,
+          "ppid": 59535,
+          "source": "PSUTIL_OS_CREATE_TIME"
+        },
+        "paid_api_spend_usd": 0,
+        "peak_rss_bytes": 38584320,
+        "production_authority": false,
+        "receipt_sha256": "5be67076bd3a46cb2c97d062a1fd5a7096b1dc6ed1897cf444fbf815852bb98f",
+        "sample_count": 6,
+        "sampled_with_os_birth_check_each_time": true,
+        "samples": [
+          {
+            "cpu_time_ms": 131,
+            "index": 1,
+            "kernel_birth_us": 1791573909072208,
+            "kernel_pid": 59537,
+            "kernel_source": "PSUTIL_OS_CREATE_TIME",
+            "monotonic_offset_ms": 683,
+            "observed_utc": "2026-10-09T19:25:09.754198+00:00",
+            "rss_bytes": 38584320
+          },
+          {
+            "cpu_time_ms": 131,
+            "index": 2,
+            "kernel_birth_us": 1791573909072208,
+            "kernel_pid": 59537,
+            "kernel_source": "PSUTIL_OS_CREATE_TIME",
+            "monotonic_offset_ms": 924,
+            "observed_utc": "2026-10-09T19:25:09.995025+00:00",
+            "rss_bytes": 38584320
+          },
+          {
+            "cpu_time_ms": 133,
+            "index": 3,
+            "kernel_birth_us": 1791573909072208,
+            "kernel_pid": 59537,
+            "kernel_source": "PSUTIL_OS_CREATE_TIME",
+            "monotonic_offset_ms": 1317,
+            "observed_utc": "2026-10-09T19:25:10.388285+00:00",
+            "rss_bytes": 38584320
+          },
+          {
+            "cpu_time_ms": 134,
+            "index": 4,
+            "kernel_birth_us": 1791573909072208,
+            "kernel_pid": 59537,
+            "kernel_source": "PSUTIL_OS_CREATE_TIME",
+            "monotonic_offset_ms": 1686,
+            "observed_utc": "2026-10-09T19:25:10.757451+00:00",
+            "rss_bytes": 38584320
+          },
+          {
+            "cpu_time_ms": 134,
+            "index": 5,
+            "kernel_birth_us": 1791573909072208,
+            "kernel_pid": 59537,
+            "kernel_source": "PSUTIL_OS_CREATE_TIME",
+            "monotonic_offset_ms": 1889,
+            "observed_utc": "2026-10-09T19:25:10.960831+00:00",
+            "rss_bytes": 38584320
+          },
+          {
+            "cpu_time_ms": 135,
+            "index": 6,
+            "kernel_birth_us": 1791573909072208,
+            "kernel_pid": 59537,
+            "kernel_source": "PSUTIL_OS_CREATE_TIME",
+            "monotonic_offset_ms": 2269,
+            "observed_utc": "2026-10-09T19:25:11.340865+00:00",
+            "rss_bytes": 38584320
+          }
+        ],
+        "schema": "velvetos.office-v2.p0-native-owned-process-resource-lab.v0",
+        "scope": "EXCLUSIVE_TEMP_PYTHON_CHILD_ONLY",
+        "source_sha256": "a640328463d43ed1ab1b74c9585c1edc7681534aa3ac6928da001fbcb60d6b1e"
+      }
+    }
+  },
+  "limits": {
+    "actual_model_process_resource_usage_proven": false,
+    "per_model_cpu_ram_peak_measured": false,
+    "gpu_vram_observed": false,
+    "process_family_exhaustive": false,
+    "all_escaped_descendants_excluded": false,
+    "automatic_recovery_proven": false,
+    "cross_host_fencing_verified": false,
+    "production_writer": false,
+    "canonical_fleet_lease": false,
+    "model_invocations": 0,
+    "additional_api_spend_usd": 0,
+    "host_process_enumeration": false,
+    "unrelated_process_termination": false
+  },
+  "readback": "Original raw exact host report receipts preserved under AgentEnvelopeLab/p0-resource-probe-{win,mac}-20261009-a; static hash/shape checks are not live OS attestations or external digital signatures."
+}

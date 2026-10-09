@@ -293,6 +293,82 @@ def main() -> int:
     ):
         fail("P0 manual new-attempt lineage overstated safety or authority")
 
+    # #612: Native OS PID/birth-pinned RSS/CPU measurement on two owned
+    # synthetic Python children. Pure offline replay only in CI.
+    resource_script = ROOT / "scripts" / "vf_office_v2_p0_native_resource_probe_lab.py"
+    resource_receipts = P2 / "p0-two-host-owned-resource-probe-2026-10-09.json"
+    expected_resource_source = "a640328463d43ed1ab1b74c9585c1edc7681534aa3ac6928da001fbcb60d6b1e"
+    if hashlib.sha256(resource_script.read_bytes()).hexdigest() != expected_resource_source:
+        fail("P0 native resource observer source bytes changed")
+    resource_test = subprocess.run(
+        [sys.executable, str(resource_script), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if resource_test.returncode:
+        fail("P0 native resource pure tests failed: " + resource_test.stdout[:220])
+    try:
+        sample_contract = json.loads(resource_test.stdout)
+        historic_resource = json.loads(resource_receipts.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        fail("P0 native resource historical evidence invalid")
+    if (
+        sample_contract.get("status") != "PASS_OFFLINE"
+        or sample_contract.get("tests") != 22
+        or sample_contract.get("native_children_spawned") != 0
+        or sample_contract.get("model_invocations") != 0
+        or sample_contract.get("gpu_vram_measured") is not False
+        or sample_contract.get("distributed_fencing_verified") is not False
+        or sample_contract.get("all_possible_descendants_excluded") is not False
+        or historic_resource.get("schema") !=
+           "velvetos.office-v2.p0-native-owned-process-cpu-rss-dual-host-lab.v0"
+        or historic_resource.get("status") !=
+           "PASS_TWO_NATIVE_OWNED_RESOURCE_PROBES_SYNTHETIC_ONLY"
+        or (historic_resource.get("original_source") or {}).get("script_git_blob") !=
+           "e50ebddae5ccfc7463980958340be34e3b5bef9c"
+        or (historic_resource.get("original_source") or {}).get("script_raw_source_sha256") !=
+           expected_resource_source
+    ):
+        fail("P0 native resource historical controls overstated authority")
+    resource_limits = historic_resource.get("limits") or {}
+    for key in ("actual_model_process_resource_usage_proven",
+                "per_model_cpu_ram_peak_measured",
+                "gpu_vram_observed", "process_family_exhaustive",
+                "all_escaped_descendants_excluded",
+                "automatic_recovery_proven", "cross_host_fencing_verified",
+                "production_writer", "canonical_fleet_lease",
+                "host_process_enumeration", "unrelated_process_termination"):
+        if resource_limits.get(key) is not False:
+            fail("P0 native resource LAB falsely claims " + key)
+    if (resource_limits.get("model_invocations") != 0
+            or resource_limits.get("additional_api_spend_usd") != 0):
+        fail("P0 native resource LAB falsified zero spend or model activity")
+    import vf_office_v2_p0_native_resource_probe_lab as resource
+    expected_reports = {
+        "windows": ("Chris", "WINDOWS_CIM_CREATION_DATE",
+                    "a872b53f5d560db404cc13d8bdee56f56b571f4c80d11d3213b8c79c5b7703ed",
+                    "71e9bbb1cd301d8978deb45cf17a8f5dcb22ba5513ece4561dd8d99ede4d6529"),
+        "mac": ("MacMiniOffice.local", "PSUTIL_OS_CREATE_TIME",
+                "5be67076bd3a46cb2c97d062a1fd5a7096b1dc6ed1897cf444fbf815852bb98f",
+                "0a38e8af93e7e6431dca4646a5c9ff6fe9bd7a9febf33d31b7dc94f684bde5d7"),
+    }
+    seen_resource = historic_resource.get("hosts") or {}
+    if set(seen_resource) != set(expected_reports):
+        fail("P0 native resource two real host proofs required")
+    for host_label, (host_id, backend, seal, raw_sha) in expected_reports.items():
+        row = seen_resource[host_label]
+        record = row.get("report") or {}
+        try:
+            resource.validate(record)
+        except Exception as exc:
+            fail("P0 native resource sample receipt failed: " + str(exc)[:120])
+        if (record.get("host") != host_id or record.get("kernel_backend") != backend
+                or record.get("receipt_sha256") != seal
+                or record.get("source_sha256") != expected_resource_source
+                or row.get("raw_report_sha256") != raw_sha
+                or record.get("sample_count") != 6
+                or record.get("gpu_vram_measured") is not False):
+            fail("P0 native resource physical host, source or historic hash drift")
+
     # #612: Five distinct real local Qwen/Aider Mac Task Envelopes already
     # independently QA-verified on origin host. CI validates ONLY sanitized
     # historical receipt identifiers/metrics; no inference, callbacks or launch.
