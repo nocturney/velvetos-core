@@ -264,6 +264,54 @@ def main() -> int:
     ):
         fail("P0 historical PID check falsely claimed ownership or recovery")
 
+    # P0 OS birth identity: pure offline negative controls, no process enumeration
+    # in CI. Historic killed Aider has no birth pin and stays UNKNOWN.
+    kernel_check = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_p0_kernel_identity.py"), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if kernel_check.returncode != 0:
+        fail("P0 native process birth selftest failed: " + kernel_check.stdout[:240])
+    try:
+        kernel_state = json.loads(kernel_check.stdout)
+    except json.JSONDecodeError:
+        fail("P0 native process birth selftest returned invalid JSON")
+    if (
+        kernel_state.get("status") != "PASS"
+        or kernel_state.get("tests", 0) < 24
+        or kernel_state.get("model_invocations") != 0
+        or kernel_state.get("processes_killed") != 0
+        or kernel_state.get("new_tasks_started") != 0
+        or kernel_state.get("no_auto_retries") is not True
+        or kernel_state.get("all_orphans_excluded") is not False
+    ):
+        fail("P0 kernel birth fixture claimed unsupported ownership or effects")
+
+    # Separately check hash-pinned real Mac/Windows readbacks plus false-evidence
+    # negatives. This subprocess does not query the live OS process table.
+    kernel_proof = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_p0_kernel_evidence.py"),
+         "--evidence", str(P2 / "p0-kernel-process-identity-lab-2026-10-09.json"),
+         "--source", str(ROOT / "scripts" / "vf_office_v2_p0_kernel_identity.py")],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if kernel_proof.returncode != 0:
+        fail("P0 OS birth dual-host evidence invalid: " + kernel_proof.stdout[:240])
+    try:
+        kernel_attested = json.loads(kernel_proof.stdout)
+    except json.JSONDecodeError:
+        fail("P0 OS birth dual-host verifier output invalid JSON")
+    if (
+        kernel_attested.get("status") != "PASS_SCOPED_LAB"
+        or kernel_attested.get("native_dual_host_observations") != 2
+        or kernel_attested.get("negative_controls_rejected") != 8
+        or kernel_attested.get("processes_killed") != 0
+        or kernel_attested.get("model_invocations") != 0
+        or kernel_attested.get("automatic_retry_permitted") is not False
+        or kernel_attested.get("all_orphans_excluded") is not False
+    ):
+        fail("P0 OS birth evidence overstated orphan exclusion/recovery")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
