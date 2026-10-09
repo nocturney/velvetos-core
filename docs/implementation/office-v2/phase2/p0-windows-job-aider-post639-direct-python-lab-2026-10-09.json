@@ -81,6 +81,46 @@
       "raw_kernel_pin_sha256": "37037953966cfd94c7d41e839274fa073cb93c30b261acb126e07e1cb6c6e130",
       "job_record_selfhash": "865f0225bd0e13f3125f63bcd75b4722a3402227d995b5082d422f05edfc8c0c",
       "raw_job_record_sha256": "96111adb6d3b9827774741b8d5d1a835ccd5414f22c0950ea78d2dfbbeeea60f"
+    },
+    {
+      "task_id": "p0-win-job-guard-gpt6-nextchat-newafterunknown-20261009-i",
+      "state": "SUCCEEDED_LOCAL_MODEL_QA_VERIFIED",
+      "outcome": "PASS_SCOPED_JOB_CONTAINED_MODEL_LAB",
+      "new_attempt_after_unknown": true,
+      "not_retry_of_prior_unknown": true,
+      "recovery_mode": "MANUAL_NEW_TASK_NOT_AUTOMATIC_REQUEUE_OR_OLD_TASK_RESUME",
+      "source_main_sha": "e82dc1871148dc93cfe7c4c5c2cbdbfbff5525ce",
+      "source_supervisor_sha256": "505dc727d8dc539ebf4b2c43e309ec6e7723393aff0899938efdea595e85d461",
+      "base_sha": "b01395c27a5f6b988345fbedbb58822de78f5817",
+      "branch": "lab-p0-agent-p0-win-job-guard-gpt6-nextchat-newafterunknown-20261009-i",
+      "sealed_envelope_sha256": "9694d73817bea7c541dacf23c4c5eb9ce9e21b9f4e033210dc4757de259c04b1",
+      "supervisor_interpreter": "C:\\Python311\\python.exe (direct base interpreter)",
+      "helper_pid": 24652,
+      "worker_pid": 57172,
+      "aider_pid": 59552,
+      "all_three_job_members_observed": true,
+      "all_possible_escaped_processes_excluded": false,
+      "model": "qwen3.5:9b",
+      "model_elapsed_seconds": 27.891,
+      "model_invocations_min": 1,
+      "exact_model_calls": null,
+      "changed_paths": [
+        "slug.py"
+      ],
+      "visible_unit_tests": "3/3",
+      "independent_hidden_qa": "12/12",
+      "independent_worker_verify": "PASS (separate process)",
+      "additional_api_spend_usd": 0,
+      "receipt_selfhash": "4ed79c002cbfb7a95515e4a5755eb6f819f2a173010e41c1054fc9ca69eb018f",
+      "raw_envelope_sha256": "d8d619cfb298897d48a28485e362bc94891cbcf32608860abcf2e617f1d946f5",
+      "raw_receipt_sha256": "a30c7f61bd301eba8e077be7abb69762fbe505db15ad9b264b9a30fe5415b573",
+      "raw_kernel_pin_sha256": "44f5a83910b570bf324e8d7380fff2f36de72aa9ec61dd3054e2654e77ed7afd",
+      "job_record_selfhash": "a4fe8298305ba2e34337cc564d6288b8e11eb9911103daabca8d435fcd197321",
+      "raw_job_record_sha256": "ba36fd34a71fd6aec256abfb69cd27005aa507dc46e1c55245f577eabfb65d60",
+      "final_receipt_present": true,
+      "running_journal_absent_after_success": true,
+      "prior_unknown_attempts_f_h_journals_unchanged": true,
+      "original_task_retry_allowed": false
     }
   ],
   "preventive_fix": {
@@ -91,7 +131,8 @@
     "candidate_source_offline_tests": "20/20 PASS_OFFLINE using base Python and venv Python",
     "live_negative_preflight": "Venv interpreter rejected with exit 2 and no scratch/report creation, no model call",
     "live_positive_interpreter_validation": "The unchanged post639 source successfully ran g and h using a direct base interpreter; the additional guard itself has only been offline/negative-preflight tested",
-    "candidate_source_git_blob": "b2e7740145c4b5dfaffbae7d70933b89ed5ebd35"
+    "candidate_source_git_blob": "b2e7740145c4b5dfaffbae7d70933b89ed5ebd35",
+    "live_positive_postmerge": "After #640 merged, Task i was deliberately admitted with an entirely new envelope, checkpoint, base Git commit, branch and receipt, then a real local model/Aider process passed independent QA on the merged source. Old f/h UNKNOWN journals remain untouched."
   },
   "limits": {
     "all_possible_escaped_processes_excluded": false,
@@ -112,6 +153,22 @@
     "Do not retry f or h: both retain RUNNING journals and UNKNOWN outcomes.",
     "New attempt g is unrelated to f; new attempt h is unrelated to g and f.",
     "Preflight regression may be replayed offline by running: python scripts/vf_office_v2_p0_supervised_aider_lab.py selftest.",
-    "Do not promote to production or implement a second host scheduler; follow #612 and #604 ownership."
-  ]
+    "Do not promote to production or implement a second host scheduler; follow #612 and #604 ownership.",
+    "After #640 postmerge main_full succeeded on exact merged commit, one wholly new independent Task i passed locally with the merged #640 source. It is NOT a retry/resumption of f or h; the prior UNKNOWN state remains preserved."
+  ],
+  "postmerge_reverification": {
+    "source_pr": "https://github.com/nocturney/velvetos-core/pull/640",
+    "merged_main_sha": "e82dc1871148dc93cfe7c4c5c2cbdbfbff5525ce",
+    "supervisor_blob_sha": "b2e7740145c4b5dfaffbae7d70933b89ed5ebd35",
+    "supervisor_sha256": "505dc727d8dc539ebf4b2c43e309ec6e7723393aff0899938efdea595e85d461",
+    "protected_ci_run": "https://github.com/nocturney/velvetos-core/actions/runs/37956726618",
+    "protected_ci_conclusion": "SUCCESS",
+    "postmerge_main_full_run": "https://github.com/nocturney/velvetos-core/actions/runs/37956972607",
+    "postmerge_main_full_exact_sha": "e82dc1871148dc93cfe7c4c5c2cbdbfbff5525ce",
+    "postmerge_main_full_conclusion": "SUCCESS",
+    "postmerge_suite_passed": 118,
+    "postmerge_real_model_task_id": "p0-win-job-guard-gpt6-nextchat-newafterunknown-20261009-i",
+    "new_attempt_scope": "manual isolated synthetic source-fix only",
+    "automated_recovery_or_failover_proven": false
+  }
 }
