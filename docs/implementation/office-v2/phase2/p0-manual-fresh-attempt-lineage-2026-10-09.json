@@ -11,9 +11,9 @@
   "source": {
     "main_at_clone": "5cd6dfda905231df25de3f1e6083454c30f49b29",
     "script": "scripts/vf_office_v2_p0_fresh_attempt_lineage.py",
-    "script_commit_sha": "5f62a376af390bf7ed60d8fc508289e7ca6bf009",
-    "script_git_blob": "783575ff1784bb7165ec4cb1a73b1c643dccfed7",
-    "script_file_sha256": "b2eb921c37ace4f979f98433f069df07484e7b0b5f1e670c112efabf6a90ea73"
+    "script_commit_sha": "0b020a02e9831e15b32ac632eedd38ec94be6399",
+    "script_git_blob": "138cc0ec9906822fcb8fc9da1952f5ba89e37c5d",
+    "script_file_sha256": "00882aa96d6e22e785b4c3c6ba30ff1048f655284256b455f760a366c437bddc"
   },
   "actual_host_local_readback": {
     "original_task_id": "p0-win-job-guard-gpt6-nextchat-interrupt-20261009-h",

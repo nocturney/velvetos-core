@@ -13,7 +13,7 @@ The new pure verifier `scripts/vf_office_v2_p0_fresh_attempt_lineage.py` was eva
 
 ## Code, tests and negative gates
 
-Source base at clone: `5cd6dfda905231df25de3f1e6083454c30f49b29`; exact executed script was committed at `5f62a376af390bf7ed60d8fc508289e7ca6bf009`. Script Git blob `783575ff1784bb7165ec4cb1a73b1c643dccfed7`, raw Windows file SHA256 `b2eb921c37ace4f979f98433f069df07484e7b0b5f1e670c112efabf6a90ea73`.
+Source base at clone: `5cd6dfda905231df25de3f1e6083454c30f49b29`; exact executed script was committed at `0b020a02e9831e15b32ac632eedd38ec94be6399`. Script Git blob `138cc0ec9906822fcb8fc9da1952f5ba89e37c5d`, raw Windows file SHA256 `00882aa96d6e22e785b4c3c6ba30ff1048f655284256b455f760a366c437bddc`.
 
 **21/21 pure offline selftests** under temporary isolated data: separate acceptable unstarted/new success claim (still no authority), and denials for identity reuse (task ID, Git base, branch, worktree, checkpoint), invalid/aliased paths, Codex CLI, paid API, multiple attempts, non-LAB authority, modified/missing or conflicting old journal, conflicting or tampered new evidence, and symlinked envelope.
 
