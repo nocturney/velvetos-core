@@ -233,7 +233,7 @@ def main() -> int:
         fail("P0 UNKNOWN read-only classifier returned invalid JSON")
     if (
         unknown_proof.get("status") != "PASS"
-        or unknown_proof.get("tests", 0) < 33
+        or unknown_proof.get("tests", 0) < 41
         or unknown_proof.get("model_invocations") != 0
         or unknown_proof.get("automatic_retries") != 0
         or unknown_proof.get("production_effects") != 0

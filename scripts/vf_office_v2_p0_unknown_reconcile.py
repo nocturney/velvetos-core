@@ -13,6 +13,7 @@ import copy
 import hashlib
 import json
 import pathlib
+import platform
 import re
 import stat
 import tempfile
@@ -192,6 +193,68 @@ def reconcile(envelope_path, receipt_path):
     }
 
 
+def accept_independent_worker_proof(readback, proof):
+    """Only a separate trusted worker check_run result can close a claimed success."""
+    correct = (
+        readback.get("status") == "SUCCESS_CLAIM_NEEDS_INDEPENDENT_WORKER_VERIFY"
+        and isinstance(proof, dict) and proof.get("status") == "PASS"
+        and proof.get("task_id") == readback.get("task_id")
+        and proof.get("real_local_model_min_invocations") == 1
+        and proof.get("model_calls_exact") is None
+        and proof.get("offline_fixture") is False
+        and proof.get("scheduler_proven") is False
+    )
+    result = dict(readback)
+    result["verified_success"] = bool(correct)
+    result["status"] = ("VERIFIED_TERMINAL_SUCCESS_NO_RETRY" if correct
+                        else "INDEPENDENT_VERIFICATION_REFUSED_HOLD")
+    result["independent_source_log_checkpoint_qa"] = "PASS" if correct else "NOT_PROVEN"
+    # Even fully checked success does not confer any authority to run again.
+    result["automatic_retry_allowed"] = False
+    result["new_task_authorized"] = False
+    result["autonomous_failover_proven"] = False
+    result["original_worker_liveness_attested"] = False
+    result["next_gate"] = ("TERMINAL_VERIFIED_CLOSE_ONLY_NO_NEW_TASK_AUTHORITY" if correct
+                            else "OPERATOR_REVIEW_NO_BLIND_RETRY")
+    return result
+
+
+def verify_success(envelope_path, receipt_path):
+    """Explicit host-local independent readback; NO inference/model execution."""
+    baseline = reconcile(envelope_path, receipt_path)
+    if baseline["status"] != "SUCCESS_CLAIM_NEEDS_INDEPENDENT_WORKER_VERIFY":
+        return accept_independent_worker_proof(baseline, None)
+    if baseline["host"] != platform.node():
+        denied = accept_independent_worker_proof(baseline, None)
+        denied["status"] = "WRONG_HOST_INDEPENDENT_VERIFY_DENIED"
+        return denied
+    ep, rp = pathlib.Path(envelope_path).absolute(), pathlib.Path(receipt_path).absolute()
+    env, rec = read_optional(ep), read_optional(rp)
+    original_env, original_receipt = digest(env), digest(rec)
+    try:
+        # Imported ONLY for explicit verify-success on the originating host.
+        # check_run replays pinned Git/source diff, log hashes, continuity, and
+        # fresh-clone unit + hidden QA. It never invokes Ollama/Aider.
+        import vf_office_v2_p0_local_model_worker as worker
+        if (worker.SCHEMA != SCHEMA or worker.RECEIPT != RECEIPT_SCHEMA
+                or worker.AUTHORITY != AUTHORITY):
+            raise Refused("WORKER_CONTRACT_DRIFT")
+        proof = worker.check_run(env, rec)
+    except Exception:
+        refused = accept_independent_worker_proof(baseline, None)
+        refused["status"] = "INDEPENDENT_WORKER_READBACK_FAILED_HOLD"
+        return refused
+    # Detect concurrent journal/receipt or envelope changes during QA replay.
+    refreshed = reconcile(ep, rp)
+    if (refreshed["status"] != "SUCCESS_CLAIM_NEEDS_INDEPENDENT_WORKER_VERIFY"
+            or digest(read_optional(ep)) != original_env
+            or digest(read_optional(rp)) != original_receipt):
+        refused = accept_independent_worker_proof(refreshed, None)
+        refused["status"] = "EVIDENCE_CHANGED_DURING_INDEPENDENT_QA_HOLD"
+        return refused
+    return accept_independent_worker_proof(refreshed, proof)
+
+
 def selftest():
     """Fresh temporary synthetic cases. No model, network, scheduler or business state."""
     checks = []
@@ -331,7 +394,39 @@ def selftest():
         bad = reconcile(ep, rp)
         assert bad["status"] == "CONFLICT_OR_TAMPER_REFUSE"
         checks.append("unsealed_raw_receipt_tamper")
-        assert len(checks) >= 31, len(checks)
+        # Verification promotion is a distinct explicitly requested readback.
+        raw = {"status": "SUCCESS_CLAIM_NEEDS_INDEPENDENT_WORKER_VERIFY",
+               "task_id": env["task_id"], "host": env["host"],
+               "verified_success": False, "automatic_retry_allowed": False}
+        proof = {"status": "PASS", "task_id": env["task_id"],
+                 "real_local_model_min_invocations": 1,
+                 "model_calls_exact": None, "offline_fixture": False,
+                 "scheduler_proven": False}
+        granted = accept_independent_worker_proof(raw, proof)
+        assert granted["status"] == "VERIFIED_TERMINAL_SUCCESS_NO_RETRY"
+        assert granted["verified_success"] is True
+        assert granted["automatic_retry_allowed"] is False
+        assert granted["new_task_authorized"] is False
+        assert granted["next_gate"] == "TERMINAL_VERIFIED_CLOSE_ONLY_NO_NEW_TASK_AUTHORITY"
+        checks.append("independent_readback_accepts_exact_proof_only")
+        for key, value in (
+            ("status", "ERROR"),
+            ("task_id", "other-task-99"),
+            ("real_local_model_min_invocations", 0),
+            ("model_calls_exact", 9),
+            ("offline_fixture", True),
+            ("scheduler_proven", True),
+        ):
+            wrong = copy.deepcopy(proof)
+            wrong[key] = value
+            denied = accept_independent_worker_proof(raw, wrong)
+            assert denied["status"] == "INDEPENDENT_VERIFICATION_REFUSED_HOLD"
+            assert denied["verified_success"] is False
+            checks.append("independent_proof_" + key + "_denied")
+        raw_bad = dict(raw, status="UNKNOWN_RUNNING_JOURNAL_NO_BLIND_RETRY")
+        assert not accept_independent_worker_proof(raw_bad, proof)["verified_success"]
+        checks.append("journal_cannot_be_upgraded_to_success")
+        assert len(checks) >= 41, len(checks)
     return {"status": "PASS", "tests": len(checks), "checks": checks,
             "model_invocations": 0, "automatic_retries": 0,
             "production_effects": 0, "external_processes_inspected": 0,
@@ -345,10 +440,15 @@ def main():
     scan = sub.add_parser("inspect")
     scan.add_argument("--envelope", required=True)
     scan.add_argument("--receipt", required=True)
+    verify = sub.add_parser("verify-success")
+    verify.add_argument("--envelope", required=True)
+    verify.add_argument("--receipt", required=True)
     args = parser.parse_args()
-    result = selftest() if args.command == "selftest" else reconcile(args.envelope, args.receipt)
+    result = (selftest() if args.command == "selftest" else
+              verify_success(args.envelope, args.receipt) if args.command == "verify-success" else
+              reconcile(args.envelope, args.receipt))
     print(json.dumps(result, ensure_ascii=False, sort_keys=True))
-    return 0
+    return 0 if args.command != "verify-success" or result.get("verified_success") is True else 3
 
 
 if __name__ == "__main__":
