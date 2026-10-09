@@ -210,18 +210,23 @@ def selftest():
             initial = snapshots()
             try:
                 result = inspect(oep, orp, nep, nrp)
-                require(accepted, "UNSAFE_LINEAGE_ACCEPTED_" + label)
-                require(result["status"] ==
-                        "DISTINCT_MANUAL_ATTEMPT_LINEAGE_ONLY_NOT_ADMISSION" and
-                        result["original_unknown_retry_authorized"] is False and
-                        result["new_task_execution_authorized"] is False and
-                        result["autonomous_recovery_proven"] is False and
-                        result["all_orphan_descendants_excluded"] is False and
-                        result["model_invocations"] == 0,
-                        "FALSE_LINEAGE_AUTHORITY")
-            except reconciliation.Refused:
-                require(not accepted, "SAFE_TEST_REJECTED_" + label)
-            require(snapshots() == initial, "LINEAGE_TEST_MUTATED_EVIDENCE")
+            except reconciliation.Refused as exc:
+                if accepted:
+                    raise AssertionError("EXPECTED_VALID_LINEAGE_REJECTED:" + label) from exc
+            else:
+                if not accepted:
+                    raise AssertionError("UNSAFE_LINEAGE_ACCEPTED:" + label)
+                if not (
+                    result["status"] == "DISTINCT_MANUAL_ATTEMPT_LINEAGE_ONLY_NOT_ADMISSION"
+                    and result["original_unknown_retry_authorized"] is False
+                    and result["new_task_execution_authorized"] is False
+                    and result["autonomous_recovery_proven"] is False
+                    and result["all_orphan_descendants_excluded"] is False
+                    and result["model_invocations"] == 0
+                ):
+                    raise AssertionError("FALSE_LINEAGE_AUTHORITY:" + label)
+            if snapshots() != initial:
+                raise AssertionError("LINEAGE_TEST_MUTATED_EVIDENCE:" + label)
             passed.append(label)
         expect("positive_distinct_unstarted_not_admission", accepted=True)
         expect("positive_new_success_claim_needs_worker_QA", accepted=True,
