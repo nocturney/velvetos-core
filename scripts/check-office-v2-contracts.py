@@ -429,6 +429,47 @@ def main() -> int:
     ):
         fail("P0 Windows native containment LAB became unsafe or falsified")
 
+    # #612: exact Windows detached-grandchild negative-escape test. Only read
+    # historical evidence and run offline validations; NEVER launch a Job in CI.
+    detached_script = ROOT / "scripts" / "vf_office_v2_p0_detached_descendant_lab.py"
+    detached_proof = P2 / "p0-windows-job-detached-descendant-lab-2026-10-09.json"
+    detached_test = subprocess.run(
+        [sys.executable, str(detached_script), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if detached_test.returncode:
+        fail("P0 detached-descendant pure selftest failed: " + detached_test.stdout[:220])
+    try:
+        detached_test_record = json.loads(detached_test.stdout)
+    except json.JSONDecodeError:
+        fail("P0 detached-descendant selftest invalid JSON")
+    if (detached_test_record.get("status") != "PASS_OFFLINE"
+            or detached_test_record.get("tests") != 14
+            or detached_test_record.get("native_jobs_created") != 0
+            or detached_test_record.get("model_calls") != 0
+            or detached_test_record.get("all_possible_escaped_processes_excluded") is not False):
+        fail("P0 detached-descendant selftest overstated native containment")
+
+    detached_verify = subprocess.run(
+        [sys.executable, str(detached_script), "verify", "--evidence", str(detached_proof)],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if detached_verify.returncode:
+        fail("P0 historical detached-descendant receipt invalid: " + detached_verify.stdout[:220])
+    try:
+        detached_check = json.loads(detached_verify.stdout)
+        detached_raw = json.loads(detached_proof.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        fail("P0 detached-descendant evidence readback invalid")
+    if (detached_check.get("status") !=
+            "PASS_SHAPE_SELF_HASH_ONLY_NOT_INDEPENDENT_OS_ATTESTATION"
+            or detached_check.get("model_calls") != 0
+            or detached_check.get("all_possible_escaped_processes_excluded") is not False
+            or detached_raw.get("receipt_sha256") !=
+            "13272458fa66476b71a4a025e197fa6888dde168adc16612bc23089b0667737f"
+            or detached_raw.get("all_possible_escaped_processes_excluded") is not False):
+        fail("P0 detached-descendant re-sealed receipt or authority drift")
+
     # #612: real historical Windows Job-supervised Aider interruption + completion.
     # Pure offline verification only. No model, scheduler, Win32 process launch or
     # external effect occurs during CI or this evidence check.
