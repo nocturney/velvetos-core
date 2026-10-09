@@ -8,6 +8,7 @@ No scheduler, lease, production effects, automatic retry or blind recovery.
 """
 from __future__ import annotations
 import argparse
+import copy
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -459,6 +460,141 @@ def execute(raw_env,raw_receipt):
             "production_authority":False}
 
 
+
+AUDIT_SCHEMA = "velvetos.office-v2.p0-diverse-manual-failed-qa-readback.v0"
+
+
+def audit_record_validate(row):
+    require(isinstance(row,dict) and row.get("schema")==AUDIT_SCHEMA
+            and row.get("status")=="FAILED_INDEPENDENT_QA_NO_SUCCESS"
+            and row.get("authority")=="READ_ONLY_DIAGNOSIS_NO_RECOVERY",
+            "NOT_OWNED_QA_FAILURE_AUDIT")
+    require(row.get("original_journal_preserved") is True
+            and row.get("original_success_receipt_absent") is True
+            and row.get("original_attempt_retried") is False
+            and row.get("automatic_requeue_authorized") is False
+            and row.get("all_detached_descendants_excluded") is False
+            and row.get("production_authority") is False
+            and row.get("model_calls_during_audit")==0,
+            "FALSE_RECOVERY_AUTHORITY")
+    for field in ("envelope_sha256","journal_sha256_raw","kernel_pin_sha256_raw",
+                  "observed_source_sha256"):
+        require(isinstance(row.get(field),str) and SHA.fullmatch(row[field]),
+                "MISSING_OR_FALSE_ORIGINAL_RAW_HASH")
+    qa=row.get("independent_failed_qa") or {}
+    require(qa.get("pass") is False
+            and qa.get("unit_exit") in (0,1)
+            and qa.get("hidden_exit") in (0,1)
+            and (qa["unit_exit"] or qa["hidden_exit"]),
+            "NOT_A_CONFIRMED_FAILED_QA")
+    for owner in ("worker","aider"):
+        state=(row.get("historical_native_process_readback") or {}).get(owner)
+        require(state in ("HISTORICAL_PID_ABSENT",
+                          "PID_REUSED_DIFFERENT_BIRTH"),
+                "LIVE_OR_UNKNOWN_HISTORIC_PROCESS")
+    require(row.get("audit_sha256")==
+            seal({k:v for k,v in row.items() if k!="audit_sha256"}),
+            "READ_ONLY_AUDIT_SEAL_DRIFT")
+    return True
+
+
+def audit_failed_qa(raw_env,raw_audit_root):
+    task=task_file(raw_env)
+    env=read(task)
+    root,spec=check(env,fresh=False)
+    out=root.parent/"output"
+    journal_path=out/"receipt.json.running"
+    pin_path=out/"kernel-pin.json"
+    require(journal_path.is_file() and pin_path.is_file()
+            and not (out/"receipt.json").exists(),
+            "NOT_ORIGINAL_NO_SUCCESS_RUNNING_JOURNAL")
+    original={
+        "envelope_sha256":old.hash_file(task),
+        "journal_sha256_raw":old.hash_file(journal_path),
+        "kernel_pin_sha256_raw":old.hash_file(pin_path),
+        "observed_source_sha256":old.hash_file(root/spec["target"]),
+    }
+    journal=read(journal_path)
+    pin=read(pin_path)
+    require(journal.get("state")=="RUNNING"
+            and journal.get("unknown_outcome_rule")=="NO_BLIND_RETRY"
+            and journal.get("task_id")==env["task_id"]
+            and journal.get("envelope_sha256")==seal(env)
+            and pin.get("journal_sha256")==seal(journal)
+            and pin.get("envelope_sha256")==seal(env)
+            and pin.get("task_id")==env["task_id"]
+            and pin.get("pin_sha256")==
+                seal({k:v for k,v in pin.items() if k!="pin_sha256"}),
+            "NATIVE_PIN_OR_RUNNING_JOURNAL_DRIFT")
+    results={}
+    for label in ("worker","aider"):
+        expected=pin[label]
+        kernel.require_row(expected)
+        actual=kernel.sample(expected["pid"])
+        verdict=kernel.match(expected,actual)
+        require(verdict!="SAME_KERNEL_INSTANCE_AT_SNAPSHOT",
+                "ORIGINAL_MODEL_CHILD_STILL_RUNNING")
+        results[label]=verdict
+    qa=independent_qa(root,spec,env["hidden_file"],
+                      (root/spec["target"]).read_bytes())
+    require(qa["pass"] is False,
+            "DO_NOT_MARK_WORKING_CODE_A_FAILED_QA")
+    report={
+        "schema":AUDIT_SCHEMA,
+        "status":"FAILED_INDEPENDENT_QA_NO_SUCCESS",
+        "authority":"READ_ONLY_DIAGNOSIS_NO_RECOVERY",
+        "task_id":env["task_id"],"host":platform.node(),
+        "fixture_id":env["fixture_id"],"base_sha":env["base_sha"],
+        "branch":env["branch"],"model":env["executor"]["model"],
+        "model_digest":env["executor"]["model_digest"],
+        "observed_utc":datetime.now(timezone.utc).isoformat(),
+        **original,
+        "kernel_pin_selfhash":pin["pin_sha256"],
+        "historical_native_process_readback":results,
+        "independent_failed_qa":qa,
+        "original_journal_preserved":True,
+        "original_success_receipt_absent":True,
+        "original_attempt_retried":False,
+        "automatic_requeue_authorized":False,
+        "all_detached_descendants_excluded":False,
+        "production_authority":False,"model_calls_during_audit":0,
+    }
+    for field,path in (("envelope_sha256",task),
+                       ("journal_sha256_raw",journal_path),
+                       ("kernel_pin_sha256_raw",pin_path),
+                       ("observed_source_sha256",root/spec["target"])):
+        require(old.hash_file(path)==original[field],
+                "ORIGINAL_FAILED_SOURCE_CHANGED_DURING_READ")
+    require(not (out/"receipt.json").exists(),
+            "SUCCESS_RECEIPT_CREATED_WHILE_AUDITING")
+    report["audit_sha256"]=seal(report)
+    audit_record_validate(report)
+    dest=Path(raw_audit_root)
+    require(dest.is_absolute()
+            and dest.parent.name=="AgentEnvelopeLab"
+            and dest.name.startswith("p0-diverse-audit-")
+            and not dest.exists() and not dest.is_symlink(),
+            "FRESH_AUDIT_STORAGE_ONLY")
+    dest.mkdir(exist_ok=False)
+    old.save_new(dest/"audit.json",report)
+    return {"status":report["status"],"task_id":report["task_id"],
+            "audit_file":str(dest/"audit.json"),
+            "audit_sha256":report["audit_sha256"],
+            "unit_exit":qa["unit_exit"],"hidden_exit":qa["hidden_exit"],
+            "original_journal_preserved":True,"new_model_calls":0,
+            "automatic_requeue_authorized":False}
+
+
+def verify_failed_qa_audit(raw):
+    report=read(raw)
+    audit_record_validate(report)
+    return {"status":"PASS_OFFLINE_HISTORICAL_FAILED_QA_REPORT",
+            "task_id":report["task_id"],
+            "audit_sha256":report["audit_sha256"],
+            "native_process_currently_attested":False,
+            "original_retry_authorized":False,
+            "model_calls":0}
+
 def selftest():
     checks=[
       SCHEMA!=old.SCHEMA, AUTH!=old.AUTHORITY,
@@ -473,6 +609,57 @@ def selftest():
       AUTH.endswith("NO_EFFECT"),
     ]
     require(all(checks) and len(checks)==11,"OFFLINE_DIVERSE_ADMISSION_FAILED")
+    example={
+      "schema":AUDIT_SCHEMA,"status":"FAILED_INDEPENDENT_QA_NO_SUCCESS",
+      "authority":"READ_ONLY_DIAGNOSIS_NO_RECOVERY",
+      "task_id":"p0-diverse-run-mac-merge-20261009-a",
+      "envelope_sha256":"a"*64,"journal_sha256_raw":"b"*64,
+      "kernel_pin_sha256_raw":"c"*64,"observed_source_sha256":"d"*64,
+      "original_journal_preserved":True,
+      "original_success_receipt_absent":True,
+      "original_attempt_retried":False,
+      "automatic_requeue_authorized":False,
+      "all_detached_descendants_excluded":False,
+      "production_authority":False,"model_calls_during_audit":0,
+      "historical_native_process_readback":{
+        "worker":"HISTORICAL_PID_ABSENT",
+        "aider":"HISTORICAL_PID_ABSENT"},
+      "independent_failed_qa":{"pass":False,"unit_exit":0,"hidden_exit":1},
+    }
+    example["audit_sha256"]=seal(example)
+    audit_record_validate(example)
+    checks.append(True)
+    negatives=[
+      ("journal_cleared",lambda d:d.update(original_journal_preserved=False)),
+      ("fake_final_receipt",lambda d:d.update(original_success_receipt_absent=False)),
+      ("blind_retry",lambda d:d.update(original_attempt_retried=True)),
+      ("auto_requeue",lambda d:d.update(automatic_requeue_authorized=True)),
+      ("all_orphans",lambda d:d.update(all_detached_descendants_excluded=True)),
+      ("production",lambda d:d.update(production_authority=True)),
+      ("model_call",lambda d:d.update(model_calls_during_audit=1)),
+      ("qa_pass",lambda d:d["independent_failed_qa"].update(pass_=True)),
+      ("no_qa_failure",lambda d:d["independent_failed_qa"].update(unit_exit=0,hidden_exit=0)),
+      ("live_original",lambda d:d["historical_native_process_readback"].update(
+                         aider="SAME_KERNEL_INSTANCE_AT_SNAPSHOT")),
+      ("raw_hash_corrupt",lambda d:d.update(journal_sha256_raw="invalid")),
+      ("fake_schema",lambda d:d.update(schema="PRODUCTION")),
+    ]
+    for label,mutate in negatives:
+        altered=copy.deepcopy(example)
+        mutate(altered)
+        if label=="qa_pass":
+            altered["independent_failed_qa"]["pass"]=True
+        altered["audit_sha256"]=seal({k:v for k,v in altered.items()
+                                      if k!="audit_sha256"})
+        try: audit_record_validate(altered)
+        except Refused: checks.append(True)
+        else: raise AssertionError("FALSE_RESEALED_FAILED_QA_ACCEPTED:"+label)
+    directly_corrupt=copy.deepcopy(example)
+    directly_corrupt["audit_sha256"]="0"*64
+    try: audit_record_validate(directly_corrupt)
+    except Refused: checks.append(True)
+    else: raise AssertionError("RAW_AUDIT_TAMPER_ACCEPTED")
+    require(all(checks) and len(checks)==25,"NEGATIVE_TEST_COUNT_DRIFT")
     return {"status":"PASS_OFFLINE","tests":len(checks),
             "model_invocations":0,"different_tasks_model_proven":False,
             "automatic_retry":False,"production_authority":False,
@@ -490,6 +677,11 @@ def main():
     prepare.add_argument("--timeout",type=int,default=140)
     run=sub.add_parser("run")
     verify=sub.add_parser("verify")
+    audit=sub.add_parser("audit-failed-qa")
+    audit.add_argument("--envelope",required=True)
+    audit.add_argument("--root",required=True)
+    audit_read=sub.add_parser("verify-failed-audit")
+    audit_read.add_argument("--audit",required=True)
     for op in (run,verify):
         op.add_argument("--envelope",required=True)
         op.add_argument("--receipt",required=True)
@@ -499,6 +691,10 @@ def main():
         result=admit(args.root,args.task_id,args.candidate,
                      args.aider,args.model,args.port,args.timeout)
     elif args.mode=="run":result=execute(args.envelope,args.receipt)
+    elif args.mode=="audit-failed-qa":
+        result=audit_failed_qa(args.envelope,args.root)
+    elif args.mode=="verify-failed-audit":
+        result=verify_failed_qa_audit(args.audit)
     else:
         task=task_file(args.envelope)
         require(Path(args.receipt)==task.parent/"output"/"receipt.json",
