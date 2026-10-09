@@ -293,6 +293,84 @@ def main() -> int:
     ):
         fail("P0 manual new-attempt lineage overstated safety or authority")
 
+    # #612: two real physical hosts tested O_EXCL same-host singleflight and
+    # post-owner-loss sticky refusal. CI does NOT spawn any live subprocesses
+    # from this experiment or mint a #604 cross-host lease.
+    singleflight_script = ROOT / "scripts" / "vf_office_v2_p0_local_singleflight_lab.py"
+    singleflight_test = subprocess.run(
+        [sys.executable, str(singleflight_script), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if singleflight_test.returncode:
+        fail("P0 same-host reservation selftest failed: " + singleflight_test.stdout[:220])
+    try:
+        singleflight_checks = json.loads(singleflight_test.stdout)
+        singleflight_proof = json.loads((P2 / "p0-two-host-local-singleflight-loss-2026-10-09.json").read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        fail("P0 same-host historical receipts missing or invalid JSON")
+    expected_source_sha = "c02e1374ad2a6775baef8c1231f0662932c0fb72d768188ae8666911e0826b8c"
+    if (
+        singleflight_checks.get("status") != "PASS_OFFLINE"
+        or singleflight_checks.get("tests") != 25
+        or singleflight_checks.get("real_children_spawned") != 0
+        or singleflight_checks.get("model_calls") != 0
+        or singleflight_checks.get("canonical_fleet_lease") is not False
+        or singleflight_checks.get("distributed_fencing_verified") is not False
+        or singleflight_checks.get("new_job_execution_authorized") is not False
+        or singleflight_checks.get("original_unknown_retry_authorized") is not False
+        or hashlib.sha256(singleflight_script.read_bytes()).hexdigest() != expected_source_sha
+        or singleflight_proof.get("schema") !=
+           "velvetos.office-v2.p0-two-host-local-exclusive-loss-proof.v0"
+        or singleflight_proof.get("status") != "PASS_TWO_INDEPENDENT_SAME_HOST_LABS_ONLY"
+        or singleflight_proof.get("executed_source_git_blob") !=
+           "2526682600bb2b99b7bf4792bab091658c297607"
+        or singleflight_proof.get("executed_source_windows_file_sha256") != expected_source_sha
+        or singleflight_proof.get("offline_source_selftests") != "25/25 each Windows and Mac"
+    ):
+        fail("P0 same-host LAB source/negative-safety claims drift")
+    singleflight_limits = singleflight_proof.get("limits") or {}
+    for flag in ("canonical_fleet_lease", "distributed_fencing_verified",
+                 "all_orphan_descendants_excluded", "original_unknown_retry_authorized",
+                 "new_job_execution_authorized", "autonomous_recovery_proven",
+                 "production_writer"):
+        if singleflight_limits.get(flag) is not False:
+            fail("P0 same-host LAB falsely grants " + flag)
+    if (singleflight_limits.get("model_calls") != 0 or
+        singleflight_limits.get("additional_api_spend_usd") != 0 or
+        singleflight_limits.get("no_cross_host_shared_resource") is not True):
+        fail("P0 same-host LAB misrepresents spend or cross-host lease")
+    import vf_office_v2_p0_local_singleflight_lab as singleflight
+    observed = singleflight_proof.get("observations") or {}
+    expected_hosts = {
+        "windows": ("Chris", "WINDOWS_CIM_CREATION_DATE",
+                    "e4ca551d64d8284fc1848fc37aaf995fd5368576901cdccf832a70517354d65d",
+                    "840a442f8e47dc5aa12244b0c56d9fc2ef64f81c00b437e525f8fc3dda75e25c"),
+        "mac": ("MacMiniOffice.local", "PSUTIL_OS_CREATE_TIME",
+                "4103291fc75701fe75bf9784e1c72e1d2d07a9468223b9ee8f3a5e08d06002f8",
+                "5b7112d32e4c5e4ef03a831e6a29a0822803320304ad36610319c7e10a8a5b8c"),
+    }
+    if set(observed) != set(expected_hosts):
+        fail("P0 same-host expected distinct physical host evidence missing")
+    for key, (expected_host, backend, receipt_hash, raw_hash) in expected_hosts.items():
+        pair = observed[key]
+        claim = pair.get("claim") or {}
+        report = pair.get("report") or {}
+        try:
+            singleflight.verify_claim(claim)
+            singleflight.verify_report(report)
+        except Exception as exc:
+            fail("P0 same-host historical receipt failed: " + str(exc)[:150])
+        if (claim.get("host") != expected_host
+                or report.get("host") != expected_host
+                or claim.get("kernel_identity", {}).get("source") != backend
+                or report.get("winner") != claim.get("contender")
+                or report.get("receipt_sha256") != receipt_hash
+                or report.get("claim_sha256_raw") != raw_hash
+                or report.get("model_calls") != 0
+                or report.get("canonical_fleet_lease") is not False
+                or report.get("distributed_fencing_verified") is not False):
+            fail("P0 same-host historical win/mac receipt pin or authority drift")
+
     # P0 historical PID inspection CI tests use MOCK processes only;
     # no live process enumeration or implicit recovery is run by CI.
     pid_check = subprocess.run(
