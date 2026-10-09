@@ -24,6 +24,22 @@ The second command **only reads** the envelope/receipt and derives /path/to/rece
 | Journal plus final receipt | JOURNAL_RECEIPT_CONFLICT_REVIEW | Review ambiguous crash boundary |
 | Mismatched/altered identity or receipt, unknown state, forbidden permissions | CONFLICT_OR_TAMPER_REFUSE or FAIL_CLOSED | Refuse release/retry and examine reason codes |
 
+## Explicit independently verified terminal readback (second gate)
+
+Default inspect mode remains **pure file inspection** and never imports or starts the local-model worker. A NEW **opt-in** command explicitly replays its independent verification (no model call):
+
+~~~sh
+python scripts/vf_office_v2_p0_unknown_reconcile.py verify-success --envelope /path/to/envelope.json --receipt /path/to/receipt.json
+~~~
+
+The action first performs the same fail-closed read-only evidence classifier. It only proceeds if there is a single structurally valid SUCCEEDED receipt **and no RUNNING journal**, and the envelope host equals the current physical machine. It then imports the existing local-model worker from the trusted scripts checkout and calls its existing check_run function: pinned Git worktree/base/branch, allowed source edit, three model/log hashes, checkpoint continuity, and independent fresh-clone visible+hidden QA. That independent verification creates only temporary QA clones, **not** a new local model run, new business effects, new task, queue, process kill or scheduler lease. The reconciler re-reads the envelope and receipt after the QA to detect drift.
+
+It accepts only an exact PASS with the same task ID, minimum one proven local-model invocation (exact token/call count still unknown), not an offline fixture, and scheduler_proven=false. On success it returns VERIFIED_TERMINAL_SUCCESS_NO_RETRY and TERMINAL_VERIFIED_CLOSE_ONLY_NO_NEW_TASK_AUTHORITY. In every other state it returns a non-success hold; the original journal always remains untouched and automatic_retry_allowed=false. This verifies historical success without authorizing another attempt or production promotion.
+
+**Actual independent two-host readbacks before delivery:** Mac Mini p0-mac-afterloss-1 and p0-mac-live-3 returned VERIFIED_TERMINAL_SUCCESS_NO_RETRY; Chris Windows p0-win-final-3 and p0-win-live-2 returned the same. The known SIGKILL task p0-mac-kill-1 and the failed Windows p0-win-live-1 remained INDEPENDENT_VERIFICATION_REFUSED_HOLD. Each case used the existing local pinned model-worker check_run; no Ollama or Aider inference was called in the readback. Python offline selftests increased from 33 to **41** including contradictory/forged verification results, wrong task ID/model-call assertions, fake offline/scheduler proof and refusal to promote a journal.
+
+**Still unproven:** independently timestamped live-worker PID ownership, absence of orphan descendants, host transfer, autonomous restart and production authority. This mode is a read-only verification gate, not a retry mechanism.
+
 ## Ownership, trust and scope
 
 The existing v1 journal contains a task ID, host label, envelope SHA256, kind, start time and a NO_BLIND_RETRY rule, **but no trustworthy OS worker PID or process creation identity**. Therefore owner_process_state is always UNKNOWN_NOT_ATTESTED. The reconciler does not claim to see live Aider processes, prove a worker died, clean up orphaned descendants, or attest absent external effects. Process-owner proof requires a separate admitted observable contract; mere journal presence or absence cannot authorize a new worker.
