@@ -1,0 +1,272 @@
+{
+  "schema": "vf.office-v2.p0-supervised-real-aider-win-job-two-modes.v0",
+  "owner_issue": "https://github.com/nocturney/velvetos-core/issues/612",
+  "scope": "EXCLUSIVE_SYNTHETIC_WINDOWS_LAB_ONLY",
+  "producer_git_blob": "605ca7d82a8b461d8a34043305bad8c671561ea0",
+  "worker_source_pin": "030eccbe98e5165115faa37253ad82208fc59614",
+  "run_model": "qwen3.5:9b",
+  "samples": {
+    "interrupt": {
+      "envelope": {
+        "authority": "LAB_LOCAL_MODEL_SYNTHETIC_ONLY_NO_EFFECT",
+        "base_sha": "3b5e11d277fba0a085befa432bd0bebacd17dbd3",
+        "branch": "lab-p0-agent-p0-win-job-guard-gpt6-interrupt-20261009-c",
+        "budget": {
+          "max_attempts": 1,
+          "max_cost_usd": 0,
+          "timeout_seconds": 170
+        },
+        "context_checkpoint": "D:\\Velvet\\Pilots\\OfficeAccelerator\\AgentEnvelopeLab\\win-native-job-model-20261009\\p0-win-job-guard-gpt6-interrupt-20261009-c\\checkpoint.json",
+        "executor": {
+          "aider_binary": "D:\\Velvet\\Tools\\OfficeAccelerator\\AiderPilot\\v0.86.2\\venv\\Scripts\\aider.exe",
+          "aider_sha256": "b7ecd66dd266af16d98b8c6b6bb6b46958d4a889404559c2822bc585a101e0e3",
+          "hidden_qa_file": "D:\\Velvet\\Pilots\\OfficeAccelerator\\AgentEnvelopeLab\\win-native-job-model-20261009\\p0-win-job-guard-gpt6-interrupt-20261009-c\\hidden.qa.py",
+          "hidden_qa_sha256": "0cff0a12e7e7bd034e1be6fd5a3e75deca514ae5dc44a4d2dba570bae48ddca5",
+          "kind": "LOCAL_AIDER_OLLAMA_SYNTHETIC_V1",
+          "model": "qwen3.5:9b",
+          "model_digest": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90",
+          "ollama_port": 11555,
+          "prompt_file": "D:\\Velvet\\Pilots\\OfficeAccelerator\\AgentEnvelopeLab\\win-native-job-model-20261009\\p0-win-job-guard-gpt6-interrupt-20261009-c\\task.prompt.txt",
+          "prompt_sha256": "08c9ae29fbfc16dd4b95362e7ea1aeee1f10448fd0547f5b2829bbcf4bd5dcb9"
+        },
+        "host": "Chris",
+        "issue_url": "https://github.com/nocturney/velvetos-core/issues/612",
+        "kernel_birth_capture": "REQUIRE_OS_BIRTH_BEFORE_QA_V1",
+        "schema": "velvetos.office-v2.p0-local-model-envelope.v1",
+        "task_id": "p0-win-job-guard-gpt6-interrupt-20261009-c",
+        "worktree_path": "D:\\Velvet\\Pilots\\OfficeAccelerator\\AgentEnvelopeLab\\win-native-job-model-20261009\\p0-win-job-guard-gpt6-interrupt-20261009-c\\repo"
+      },
+      "job": {
+        "aider_birth_us": 1791557233515588,
+        "aider_pid": 46500,
+        "all_possible_escaped_processes_excluded": false,
+        "all_three_job_members_observed": true,
+        "container": "WINDOWS_UNNAMED_JOB_KILL_ON_LAST_HANDLE_CLOSE",
+        "envelope_sha256": "736ffaa5686d1c87843f95f55bae6f55c03826db2082578d1a9d196209603a37",
+        "final_receipt_absent": true,
+        "fleet_scheduler_authority": false,
+        "helper_assigned_before_model_spawn": true,
+        "helper_birth_us": 1791557233279075,
+        "helper_pid": 60132,
+        "host": "Chris",
+        "job_descendants_terminated": true,
+        "mode": "interrupt",
+        "model_completion_claim": false,
+        "model_worker_birth_us": 1791557233333281,
+        "model_worker_pid": 53808,
+        "original_task_retry_allowed": false,
+        "pin_sha256": "327a193f7741f98e908fe6d8fb44b3ac72492f741670bd4c025972265a90ba1f",
+        "production_authority": "NONE",
+        "running_journal_persists": true,
+        "same_envelope_reissue_permitted": false,
+        "schema": "vf.office-v2.p0-job-contained-aider-attempt.v0",
+        "selfhash_sha256": "7546dc7ef85808b578ef61f15ebe499a34abadbf8ecc2e13f22f0ff48309c309",
+        "state": "INTERRUPTED_OWNED_JOB_TREE",
+        "task_id": "p0-win-job-guard-gpt6-interrupt-20261009-c"
+      },
+      "pin": {
+        "aider": {
+          "birth_us": 1791557233515588,
+          "pgid": null,
+          "pid": 46500,
+          "ppid": 53808,
+          "source": "WINDOWS_CIM_CREATION_DATE"
+        },
+        "all_orphans_excluded": false,
+        "authority": "READ_ONLY_PROCESS_IDENTITY_NO_RECOVERY",
+        "capture_time_utc": "2026-10-09T14:47:14.380902+00:00",
+        "envelope_sha256": "736ffaa5686d1c87843f95f55bae6f55c03826db2082578d1a9d196209603a37",
+        "host": "Chris",
+        "journal_sha256": "ff21ebbd12c506de13ed620a869f3101c54bb2a3a8290e36bc06597a8141cc53",
+        "kind": "LOCAL_AIDER_OLLAMA_SYNTHETIC_V1",
+        "pin_sha256": "327a193f7741f98e908fe6d8fb44b3ac72492f741670bd4c025972265a90ba1f",
+        "retry_permitted": false,
+        "schema": "velvetos.office-v2.p0-kernel-process-pin.v1",
+        "task_id": "p0-win-job-guard-gpt6-interrupt-20261009-c",
+        "worker": {
+          "birth_us": 1791557233333281,
+          "pgid": null,
+          "pid": 53808,
+          "ppid": 60132,
+          "source": "WINDOWS_CIM_CREATION_DATE"
+        }
+      },
+      "pin_file_base64": "ew0KICAiYWlkZXIiOiB7DQogICAgImJpcnRoX3VzIjogMTc5MTU1NzIzMzUxNTU4OCwNCiAgICAicGdpZCI6IG51bGwsDQogICAgInBpZCI6IDQ2NTAwLA0KICAgICJwcGlkIjogNTM4MDgsDQogICAgInNvdXJjZSI6ICJXSU5ET1dTX0NJTV9DUkVBVElPTl9EQVRFIg0KICB9LA0KICAiYWxsX29ycGhhbnNfZXhjbHVkZWQiOiBmYWxzZSwNCiAgImF1dGhvcml0eSI6ICJSRUFEX09OTFlfUFJPQ0VTU19JREVOVElUWV9OT19SRUNPVkVSWSIsDQogICJjYXB0dXJlX3RpbWVfdXRjIjogIjIwMjYtMTAtMDlUMTQ6NDc6MTQuMzgwOTAyKzAwOjAwIiwNCiAgImVudmVsb3BlX3NoYTI1NiI6ICI3MzZmZmFhNTY4NmQxYzg3ODQzZjk1ZjU1YmFlNmY1NWMwMzgyNmRiMjA4MjU3OGQxYTlkMTk2MjA5NjAzYTM3IiwNCiAgImhvc3QiOiAiQ2hyaXMiLA0KICAiam91cm5hbF9zaGEyNTYiOiAiZmYyMWViYmQxMmM1MDZkZTEzZWQ2MjBhODY5ZjMxMDFjNTRiYjJhM2E4MjkwZTM2YmMwNjU5N2E4MTQxY2M1MyIsDQogICJraW5kIjogIkxPQ0FMX0FJREVSX09MTEFNQV9TWU5USEVUSUNfVjEiLA0KICAicGluX3NoYTI1NiI6ICIzMjdhMTkzZjc3NDFmOThlOTA4ZmU2ZDhmYjQ0YjNhYzcyNDkyZjc0MTY3MGJkNGMwMjU5NzIyNjVhOTBiYTFmIiwNCiAgInJldHJ5X3Blcm1pdHRlZCI6IGZhbHNlLA0KICAic2NoZW1hIjogInZlbHZldG9zLm9mZmljZS12Mi5wMC1rZXJuZWwtcHJvY2Vzcy1waW4udjEiLA0KICAidGFza19pZCI6ICJwMC13aW4tam9iLWd1YXJkLWdwdDYtaW50ZXJydXB0LTIwMjYxMDA5LWMiLA0KICAid29ya2VyIjogew0KICAgICJiaXJ0aF91cyI6IDE3OTE1NTcyMzMzMzMyODEsDQogICAgInBnaWQiOiBudWxsLA0KICAgICJwaWQiOiA1MzgwOCwNCiAgICAicHBpZCI6IDYwMTMyLA0KICAgICJzb3VyY2UiOiAiV0lORE9XU19DSU1fQ1JFQVRJT05fREFURSINCiAgfQ0KfQ0K",
+      "pin_file_sha256": "abba0e79ae2c9f9a290c6d1cb12e5b6ad396d1dba5e85d225c1a6a1dc7304b05",
+      "journal": {
+        "envelope_sha256": "736ffaa5686d1c87843f95f55bae6f55c03826db2082578d1a9d196209603a37",
+        "host": "Chris",
+        "kind": "LOCAL_AIDER_OLLAMA_SYNTHETIC_V1",
+        "started_at": "2026-10-09T14:47:13.508613+00:00",
+        "state": "RUNNING",
+        "task_id": "p0-win-job-guard-gpt6-interrupt-20261009-c",
+        "unknown_outcome_rule": "NO_BLIND_RETRY"
+      },
+      "journal_file_base64": "ew0KICAiZW52ZWxvcGVfc2hhMjU2IjogIjczNmZmYWE1Njg2ZDFjODc4NDNmOTVmNTViYWU2ZjU1YzAzODI2ZGIyMDgyNTc4ZDFhOWQxOTYyMDk2MDNhMzciLA0KICAiaG9zdCI6ICJDaHJpcyIsDQogICJraW5kIjogIkxPQ0FMX0FJREVSX09MTEFNQV9TWU5USEVUSUNfVjEiLA0KICAic3RhcnRlZF9hdCI6ICIyMDI2LTEwLTA5VDE0OjQ3OjEzLjUwODYxMyswMDowMCIsDQogICJzdGF0ZSI6ICJSVU5OSU5HIiwNCiAgInRhc2tfaWQiOiAicDAtd2luLWpvYi1ndWFyZC1ncHQ2LWludGVycnVwdC0yMDI2MTAwOS1jIiwNCiAgInVua25vd25fb3V0Y29tZV9ydWxlIjogIk5PX0JMSU5EX1JFVFJZIg0KfQ0K",
+      "journal_file_sha256": "86155bfeabbe717c5c1441a47bce449a1af1c563dc284a80308d9160f401023c",
+      "worker_receipt": null,
+      "readback": {
+        "running_journal_present": true,
+        "final_receipt_absent": true,
+        "same_envelope_run_refused": true,
+        "observed_exact_helper_worker_aider_pid_absent": true
+      }
+    },
+    "success": {
+      "envelope": {
+        "authority": "LAB_LOCAL_MODEL_SYNTHETIC_ONLY_NO_EFFECT",
+        "base_sha": "1a65f37c897e28df7b2855fe624c64d454772bd1",
+        "branch": "lab-p0-agent-p0-win-job-guard-gpt6-success-20261009-d",
+        "budget": {
+          "max_attempts": 1,
+          "max_cost_usd": 0,
+          "timeout_seconds": 170
+        },
+        "context_checkpoint": "D:\\Velvet\\Pilots\\OfficeAccelerator\\AgentEnvelopeLab\\win-native-job-model-20261009\\p0-win-job-guard-gpt6-success-20261009-d\\checkpoint.json",
+        "executor": {
+          "aider_binary": "D:\\Velvet\\Tools\\OfficeAccelerator\\AiderPilot\\v0.86.2\\venv\\Scripts\\aider.exe",
+          "aider_sha256": "b7ecd66dd266af16d98b8c6b6bb6b46958d4a889404559c2822bc585a101e0e3",
+          "hidden_qa_file": "D:\\Velvet\\Pilots\\OfficeAccelerator\\AgentEnvelopeLab\\win-native-job-model-20261009\\p0-win-job-guard-gpt6-success-20261009-d\\hidden.qa.py",
+          "hidden_qa_sha256": "0cff0a12e7e7bd034e1be6fd5a3e75deca514ae5dc44a4d2dba570bae48ddca5",
+          "kind": "LOCAL_AIDER_OLLAMA_SYNTHETIC_V1",
+          "model": "qwen3.5:9b",
+          "model_digest": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90",
+          "ollama_port": 11555,
+          "prompt_file": "D:\\Velvet\\Pilots\\OfficeAccelerator\\AgentEnvelopeLab\\win-native-job-model-20261009\\p0-win-job-guard-gpt6-success-20261009-d\\task.prompt.txt",
+          "prompt_sha256": "08c9ae29fbfc16dd4b95362e7ea1aeee1f10448fd0547f5b2829bbcf4bd5dcb9"
+        },
+        "host": "Chris",
+        "issue_url": "https://github.com/nocturney/velvetos-core/issues/612",
+        "kernel_birth_capture": "REQUIRE_OS_BIRTH_BEFORE_QA_V1",
+        "schema": "velvetos.office-v2.p0-local-model-envelope.v1",
+        "task_id": "p0-win-job-guard-gpt6-success-20261009-d",
+        "worktree_path": "D:\\Velvet\\Pilots\\OfficeAccelerator\\AgentEnvelopeLab\\win-native-job-model-20261009\\p0-win-job-guard-gpt6-success-20261009-d\\repo"
+      },
+      "job": {
+        "aider_birth_us": 1791557306523198,
+        "aider_pid": 46304,
+        "all_possible_escaped_processes_excluded": false,
+        "all_three_job_members_observed": true,
+        "container": "WINDOWS_UNNAMED_JOB_KILL_ON_LAST_HANDLE_CLOSE",
+        "envelope_sha256": "da03ba7180a3594239b419a0d36ec2229fda1231e1628c4d328784b6f18726e1",
+        "fleet_scheduler_authority": false,
+        "helper_assigned_before_model_spawn": true,
+        "helper_birth_us": 1791557306282999,
+        "helper_pid": 57316,
+        "host": "Chris",
+        "mode": "complete",
+        "model_completion_claim": true,
+        "model_invocations_min": 1,
+        "model_worker_birth_us": 1791557306335586,
+        "model_worker_pid": 47608,
+        "original_task_reissue_permitted": false,
+        "original_task_retry_allowed": false,
+        "pin_sha256": "ff3ad05ed10381936ad56d23158f60718dd7a10da1a40c9630ab8c8409610ef4",
+        "production_authority": "NONE",
+        "schema": "vf.office-v2.p0-job-contained-aider-attempt.v0",
+        "selfhash_sha256": "02b41e9e86bb7dc1e2413f4bd235bbbc71b3095030daf1093b9da41d617d336b",
+        "state": "SUCCEEDED_LOCAL_MODEL_QA_VERIFIED",
+        "task_id": "p0-win-job-guard-gpt6-success-20261009-d",
+        "worker_receipt_sha256": "4424b020ead05e6d30bd4467f105792f98fc37f0aca039144f0413432a5eec02"
+      },
+      "pin": {
+        "aider": {
+          "birth_us": 1791557306523198,
+          "pgid": null,
+          "pid": 46304,
+          "ppid": 47608,
+          "source": "WINDOWS_CIM_CREATION_DATE"
+        },
+        "all_orphans_excluded": false,
+        "authority": "READ_ONLY_PROCESS_IDENTITY_NO_RECOVERY",
+        "capture_time_utc": "2026-10-09T14:48:27.354398+00:00",
+        "envelope_sha256": "da03ba7180a3594239b419a0d36ec2229fda1231e1628c4d328784b6f18726e1",
+        "host": "Chris",
+        "journal_sha256": "2cdaab0038145a5504606bd79d1c8a260d41a88d20c8d39a6802bf53e89bd214",
+        "kind": "LOCAL_AIDER_OLLAMA_SYNTHETIC_V1",
+        "pin_sha256": "ff3ad05ed10381936ad56d23158f60718dd7a10da1a40c9630ab8c8409610ef4",
+        "retry_permitted": false,
+        "schema": "velvetos.office-v2.p0-kernel-process-pin.v1",
+        "task_id": "p0-win-job-guard-gpt6-success-20261009-d",
+        "worker": {
+          "birth_us": 1791557306335586,
+          "pgid": null,
+          "pid": 47608,
+          "ppid": 57316,
+          "source": "WINDOWS_CIM_CREATION_DATE"
+        }
+      },
+      "pin_file_base64": "ew0KICAiYWlkZXIiOiB7DQogICAgImJpcnRoX3VzIjogMTc5MTU1NzMwNjUyMzE5OCwNCiAgICAicGdpZCI6IG51bGwsDQogICAgInBpZCI6IDQ2MzA0LA0KICAgICJwcGlkIjogNDc2MDgsDQogICAgInNvdXJjZSI6ICJXSU5ET1dTX0NJTV9DUkVBVElPTl9EQVRFIg0KICB9LA0KICAiYWxsX29ycGhhbnNfZXhjbHVkZWQiOiBmYWxzZSwNCiAgImF1dGhvcml0eSI6ICJSRUFEX09OTFlfUFJPQ0VTU19JREVOVElUWV9OT19SRUNPVkVSWSIsDQogICJjYXB0dXJlX3RpbWVfdXRjIjogIjIwMjYtMTAtMDlUMTQ6NDg6MjcuMzU0Mzk4KzAwOjAwIiwNCiAgImVudmVsb3BlX3NoYTI1NiI6ICJkYTAzYmE3MTgwYTM1OTQyMzliNDE5YTBkMzZlYzIyMjlmZGExMjMxZTE2MjhjNGQzMjg3ODRiNmYxODcyNmUxIiwNCiAgImhvc3QiOiAiQ2hyaXMiLA0KICAiam91cm5hbF9zaGEyNTYiOiAiMmNkYWFiMDAzODE0NWE1NTA0NjA2YmQ3OWQxYzhhMjYwZDQxYTg4ZDIwYzhkMzlhNjgwMmJmNTNlODliZDIxNCIsDQogICJraW5kIjogIkxPQ0FMX0FJREVSX09MTEFNQV9TWU5USEVUSUNfVjEiLA0KICAicGluX3NoYTI1NiI6ICJmZjNhZDA1ZWQxMDM4MTkzNmFkNTZkMjMxNThmNjA3MThkZDdhMTBkYTFhNDBjOTYzMGFiOGM4NDA5NjEwZWY0IiwNCiAgInJldHJ5X3Blcm1pdHRlZCI6IGZhbHNlLA0KICAic2NoZW1hIjogInZlbHZldG9zLm9mZmljZS12Mi5wMC1rZXJuZWwtcHJvY2Vzcy1waW4udjEiLA0KICAidGFza19pZCI6ICJwMC13aW4tam9iLWd1YXJkLWdwdDYtc3VjY2Vzcy0yMDI2MTAwOS1kIiwNCiAgIndvcmtlciI6IHsNCiAgICAiYmlydGhfdXMiOiAxNzkxNTU3MzA2MzM1NTg2LA0KICAgICJwZ2lkIjogbnVsbCwNCiAgICAicGlkIjogNDc2MDgsDQogICAgInBwaWQiOiA1NzMxNiwNCiAgICAic291cmNlIjogIldJTkRPV1NfQ0lNX0NSRUFUSU9OX0RBVEUiDQogIH0NCn0NCg==",
+      "pin_file_sha256": "dec8e1eeb74c3d7d16f1ca7fbaad9a6b800c45ed04fa137ba0719e4accc6ba81",
+      "worker_receipt": {
+        "additional_api_spend_usd": 0,
+        "artifact_sha256": "2888baafb26b4e23bd223a8b98366b5437ee4acc3c2229fe8a81b1d7a58b2b25",
+        "autonomous_retry": false,
+        "base_sha": "1a65f37c897e28df7b2855fe624c64d454772bd1",
+        "branch": "lab-p0-agent-p0-win-job-guard-gpt6-success-20261009-d",
+        "changed_paths": [
+          "slug.py"
+        ],
+        "checkpoint_after_path": "D:\\Velvet\\Pilots\\OfficeAccelerator\\AgentEnvelopeLab\\win-native-job-model-20261009\\p0-win-job-guard-gpt6-success-20261009-d\\output\\receipt.json.checkpoint.json",
+        "checkpoint_after_sha256": "46587b797e463f914d184341f52d1dc732faed22fd29f02f66723e393f74551d",
+        "checkpoint_before_sha256": "896e32944ae9caf6311206d1a9e4a308518a39d3f058f941c7e3d6aa52eb9662",
+        "elapsed_seconds": 30.172,
+        "envelope_sha256": "da03ba7180a3594239b419a0d36ec2229fda1231e1628c4d328784b6f18726e1",
+        "exact_model_calls": null,
+        "exit_code": 0,
+        "finished_at": "2026-10-09T14:48:56.687097+00:00",
+        "host": "Chris",
+        "independent_qa": {
+          "hidden_12_verified": true,
+          "hidden_exit": 0,
+          "hidden_stdout_sha256": "2626a2e15064a259d44549c2ca99e2e78e74e709aa0b858775973f11f3d7a2d4",
+          "pass": true,
+          "replay_changed_paths": [
+            "slug.py"
+          ],
+          "replay_source_sha256": "2888baafb26b4e23bd223a8b98366b5437ee4acc3c2229fe8a81b1d7a58b2b25",
+          "unit_3_verified": true,
+          "unit_exit": 0
+        },
+        "kernel_birth_mode": "REQUIRE_OS_BIRTH_BEFORE_QA_V1",
+        "kernel_pin_file_sha256": "dec8e1eeb74c3d7d16f1ca7fbaad9a6b800c45ed04fa137ba0719e4accc6ba81",
+        "kernel_pin_sha256": "ff3ad05ed10381936ad56d23158f60718dd7a10da1a40c9630ab8c8409610ef4",
+        "llm_history_sha256": "541b6fa1a2962ebd48bc5d7bee2d29daff81ea4b2375e1d046ea446ed1099073",
+        "local_model_usage_tokens": null,
+        "model": "qwen3.5:9b",
+        "model_digest": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90",
+        "model_invocations_min": 1,
+        "os_network_sandbox_proven": false,
+        "production_authority": "NONE",
+        "receipt_directory": "D:\\Velvet\\Pilots\\OfficeAccelerator\\AgentEnvelopeLab\\win-native-job-model-20261009\\p0-win-job-guard-gpt6-success-20261009-d\\output",
+        "receipt_sha256": "4424b020ead05e6d30bd4467f105792f98fc37f0aca039144f0413432a5eec02",
+        "scheduler_proven": false,
+        "schema": "velvetos.office-v2.p0-local-model-receipt.v1",
+        "started_at": "2026-10-09T14:48:26.516818+00:00",
+        "state": "SUCCEEDED",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "00002ad672922c1daa707228e8b35bd8503b01443c828d9b44c2c012941a53a2",
+        "task_id": "p0-win-job-guard-gpt6-success-20261009-d"
+      },
+      "readback": {
+        "separate_worker_verify_pass": true,
+        "model_run_was_manual": true,
+        "source_change_only_slug_py": true,
+        "observed_exact_helper_worker_aider_pid_absent": true
+      }
+    }
+  },
+  "automatic_recovery_proven": false,
+  "scheduler_proven": false,
+  "production_authority": "NONE",
+  "all_possible_escaped_processes_excluded": false,
+  "notes": [
+    "Original unknown task was NEVER restarted; a different isolated task ID and base SHA was explicitly prepared for success.",
+    "Owned native unnamed Windows Job Object inherited helper, model worker, and Aider. Closing the sole owned Job handle terminated all three observed owned processes.",
+    "Original interrupted journal remains RUNNING/NO_BLIND_RETRY; missing final receipt and separate refusal readbacks were independently observed.",
+    "Success receipt passed independent existing worker verify on original Windows host, with 3 visible and 12 hidden QA.",
+    "Static receipt hashes detect alteration but are not external signatures. GitHub CI cannot replay physical past process creation/termination.",
+    "Windows Job Object proof is only on observed inherited process tree, NOT all possible escaped descendants.",
+    "No scheduler, autonomous retry, cross-host failover, production writer, paid inference API or Codex CLI."
+  ]
+}

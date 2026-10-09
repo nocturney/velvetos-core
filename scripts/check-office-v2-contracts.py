@@ -429,6 +429,39 @@ def main() -> int:
     ):
         fail("P0 Windows native containment LAB became unsafe or falsified")
 
+    # #612: real historical Windows Job-supervised Aider interruption + completion.
+    # Pure offline verification only. No model, scheduler, Win32 process launch or
+    # external effect occurs during CI or this evidence check.
+    supervised_job_check = subprocess.run(
+        [sys.executable,
+         str(ROOT / "scripts" / "vf_office_v2_p0_supervised_aider_evidence.py"),
+         "--evidence", str(P2 / "p0-supervised-aider-windows-job-2026-10-09.json")],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if supervised_job_check.returncode != 0:
+        fail("P0 supervised real Aider Job LAB evidence invalid: " +
+             supervised_job_check.stdout[:230])
+    try:
+        supervised_job = json.loads(supervised_job_check.stdout)
+    except json.JSONDecodeError:
+        fail("P0 supervised real Aider Job evidence not JSON")
+    if (
+        supervised_job.get("status") != "PASS_SCOPED_WINDOWS_SUPERVISED_AIDER_LAB"
+        or supervised_job.get("negative_controls_rejected") != 19
+        or supervised_job.get("receipt_sha256") != "f4df14dc17d98e9788b3ef246ff00121341c945ce300ea72e084c74428cd7c88"
+        or supervised_job.get("two_distinct_real_task_envelopes") is not True
+        or supervised_job.get("historical_interrupt") != "UNKNOWN_NO_BLIND_RETRY"
+        or supervised_job.get("historical_new_attempt") != "SUCCEEDED_INDEPENDENT_LAB_QA"
+        or supervised_job.get("verified_real_local_model_min_invocations") != 1
+        or supervised_job.get("model_calls_during_verification") != 0
+        or supervised_job.get("original_task_retry_allowed") is not False
+        or supervised_job.get("all_possible_escaped_processes_excluded") is not False
+        or supervised_job.get("automatic_recovery_proven") is not False
+        or supervised_job.get("scheduler_proven") is not False
+        or supervised_job.get("production_effects") != 0
+    ):
+        fail("P0 supervised Aider historical Job claims exceeded scoped LAB proof")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
