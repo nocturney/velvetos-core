@@ -32,7 +32,7 @@
     "status": "PASS_OFFLINE",
     "tests": 21,
     "windows": true,
-    "mac": "PENDING_AT_INITIAL_EVIDENCE",
+    "mac": "PASS_OFFLINE_21_OF_21_AND_OFFICE_CONTRACTS",
     "model_calls": 0,
     "production_effects": 0
   },
