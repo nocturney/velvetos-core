@@ -1,0 +1,42 @@
+{
+  "additional_api_spend_usd": 0,
+  "all_orphans_excluded": false,
+  "escaped_child_alive_at_snapshot": true,
+  "escaped_child_at_snapshot": {
+    "birth_us": 1791553224398994,
+    "pgid": 20829,
+    "pid": 20829,
+    "ppid": 1,
+    "source": "PSUTIL_OS_CREATE_TIME"
+  },
+  "escaped_child_at_spawn": {
+    "birth_us": 1791553224398994,
+    "pgid": 20829,
+    "pid": 20829,
+    "ppid": 20828,
+    "source": "PSUTIL_OS_CREATE_TIME"
+  },
+  "fleet_scheduler_authority": false,
+  "model_invocations": 0,
+  "new_task_authorized": false,
+  "observed_at_utc": "2026-10-09T13:40:24.903011+00:00",
+  "original_attempt_retry_permitted": false,
+  "original_group_at_snapshot": {
+    "candidate_count": 0,
+    "status": "NO_GROUP_MEMBERS_SEEN"
+  },
+  "original_group_owner_exited": true,
+  "original_parent": {
+    "birth_us": 1791553224256573,
+    "pgid": 20828,
+    "pid": 20828,
+    "ppid": 20825,
+    "source": "PSUTIL_OS_CREATE_TIME"
+  },
+  "owner_issue": "https://github.com/nocturney/velvetos-core/issues/612",
+  "production_writer": false,
+  "receipt_sha256": "6b69eadd2b20bc25e5f73d257f8a8f671fee1a2b9219d2a92cfca7de690f5ff8",
+  "result": "GROUP_EMPTY_ESCAPED_CHILD_STILL_LIVE",
+  "schema": "vf.office-v2.p0-detached-descendant-negative.v0",
+  "scope": "EPHEMERAL_PYTHON_LAB_ONLY"
+}
