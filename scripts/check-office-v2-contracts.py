@@ -340,6 +340,50 @@ def main() -> int:
     ):
         fail("P0 live Aider OS-birth proof overstated its recovery scope")
 
+    # Exact P0 negative: an empty original POSIX group does NOT prove all
+    # descendants have exited. CI verifies a real historical LAB receipt only;
+    # it NEVER launches the live detached-child fixture or any worker/model.
+    detached_test = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_p0_orphan_escape_negative.py"), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if detached_test.returncode != 0:
+        fail("P0 detached descendant offline selftest failed: " + detached_test.stdout[:240])
+    try:
+        detached = json.loads(detached_test.stdout)
+    except json.JSONDecodeError:
+        fail("P0 detached descendant selftest output invalid JSON")
+    if (
+        detached.get("status") != "PASS"
+        or detached.get("tests") != 16
+        or detached.get("live_processes_launched") != 0
+        or detached.get("model_invocations") != 0
+        or detached.get("original_attempt_retry_permitted") is not False
+        or detached.get("all_orphans_excluded") is not False
+    ):
+        fail("P0 detached descendant false-negative safety regression")
+
+    escaped_check = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_p0_orphan_escape_negative.py"),
+         "verify", "--evidence", str(P2 / "p0-orphan-escape-negative-2026-10-09.json")],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if escaped_check.returncode != 0:
+        fail("P0 real detached descendant LAB receipt failed: " + escaped_check.stdout[:240])
+    try:
+        escaped = json.loads(escaped_check.stdout)
+    except json.JSONDecodeError:
+        fail("P0 detached descendant receipt verification did not return JSON")
+    if (
+        escaped.get("status") != "PASS"
+        or escaped.get("result") != "GROUP_EMPTY_ESCAPED_CHILD_STILL_LIVE"
+        or escaped.get("receipt_sha256") != "64f1662300c035cd5be3b06b1438bab6ecb72cb308194d5234a3f124e35afc7c"
+        or escaped.get("independent_offline_verify") is not True
+        or escaped.get("no_auto_retry") is not True
+        or escaped.get("model_invocations") != 0
+    ):
+        fail("P0 orphan escape evidence incorrectly admitted unsafe recovery")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
