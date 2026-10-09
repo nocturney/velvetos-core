@@ -293,6 +293,109 @@ def main() -> int:
     ):
         fail("P0 manual new-attempt lineage overstated safety or authority")
 
+    # #612: Two genuinely distinct synthetic coding task families have
+    # been byte-exact prepared on independent real Windows/Mac hosts. This
+    # does NOT mean either model worker has been run, PR created, or lease won.
+    diverse_script = ROOT / "scripts" / "vf_office_v2_p0_diverse_task_fixtures.py"
+    diverse_proof_path = P2 / "p0-two-host-diverse-prepared-fixtures-2026-10-09.json"
+    expected_diverse_source = "2bc85ad0b028c959ba2b958c6184ef682bc68325aca1c6a78a93e49385378af3"
+    if hashlib.sha256(diverse_script.read_bytes()).hexdigest() != expected_diverse_source:
+        fail("P0 diverse preparation source bytes changed")
+    prep_tests = subprocess.run(
+        [sys.executable, str(diverse_script), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=35,
+    )
+    if prep_tests.returncode:
+        fail("P0 diverse fixture source/golden adversarial QA failed: " +
+             prep_tests.stdout[:180])
+    try:
+        prep_result = json.loads(prep_tests.stdout)
+        prepared_record = json.loads(diverse_proof_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        fail("P0 two-host diverse preparation evidence absent or invalid")
+    if (
+        prep_result.get("status") != "PASS_OFFLINE"
+        or prep_result.get("tests") != 11
+        or prep_result.get("fixture_count") != 2
+        or prep_result.get("model_calls") != 0
+        or prep_result.get("external_effects") != 0
+        or prep_result.get("v1_worker_ready") is not False
+        or prep_result.get("different_live_coding_tasks_proven") is not False
+        or prepared_record.get("schema") !=
+           "velvetos.office-v2.p0-two-host-diverse-fixtures-preparation-evidence.v0"
+        or prepared_record.get("status") !=
+           "PASS_TWO_DIFFERENT_HOST_BOUND_PREPARATIONS_ONLY_NOT_MODEL_TASKS"
+    ):
+        fail("P0 diverse preparation is not limited to offline tasks")
+    executed = prepared_record.get("executed_source") or {}
+    if (
+        executed.get("main_at_start") !=
+           "4f1cc80537430b5d18bf5747f543118a7ee54887"
+        or executed.get("script_commit") !=
+           "5823591da1072e87c1290de9d3bfdb461b7ea565"
+        or executed.get("script_source_sha256") != expected_diverse_source
+        or executed.get("script_git_blob") !=
+           "8bd62db1065501cec356f4e554184dbac15e10a7"
+        or executed.get("offline_adversarial_selftests_each_host") != 11
+        or executed.get("seed_fails_visible_or_hidden_for_each") is not True
+        or executed.get("golden_passes_visible_three_and_hidden_twelve_for_each") is not True
+    ):
+        fail("P0 diverse fixture original source or QA proof drift")
+    bounds = prepared_record.get("limits") or {}
+    for k in ("cross_host_concurrent_workers_proven",
+              "actual_software_product_changes_proven",
+              "protected_pr_from_coding_worker_proven",
+              "original_v1_worker_accepts_these_tasks",
+              "autonomous_recovery_proven", "distributed_fencing_verified",
+              "canonical_fleet_lease", "production_writer",
+              "customer_or_printer_effects"):
+        if bounds.get(k) is not False:
+            fail("P0 diverse prepared-only claim inflated: " + k)
+    if (
+        bounds.get("actual_model_tasks_executed") != 0
+        or bounds.get("paid_api_calls") != 0
+        or bounds.get("model_invocations") != 0
+        or (prepared_record.get("failed_preliminary_windows") or {}).get(
+            "automatic_retry") is not False
+    ):
+        fail("P0 diverse prep falsely claims models/cost/retries")
+    origins = prepared_record.get("prepared") or {}
+    expected_origins = {
+        "windows": ("Chris", "canonical-tag-v1",
+                    "p0-diverse-win-canonical-tag-20261009-b",
+                    "9463e189c29f48e7a9a8c956a38e6f9cadcf8f8d",
+                    "92aa42ba0e6795e0b2a2a243d43bf7ed185684611abb40a1cae536fac6e565f6",
+                    "ae04bb38ed2c3df118b658b04d413a20112899b83cf2b003d3c99191782e1582"),
+        "mac": ("MacMiniOffice.local", "merge-windows-v1",
+                "p0-diverse-mac-merge-windows-20261009",
+                "336318a6440bbbc5efd6d56fec66007405722923",
+                "ab9d7c1da5b167b275a732201c2f501ad864db0891421381c9d8e2874e1c58d8",
+                "5e215da8c7fe14eee06fd81bcf07e81b989c6e1ec12edf8efc3a64dd5672782a"),
+    }
+    if set(origins) != set(expected_origins):
+        fail("P0 two different physical host preparations required")
+    for host_key, (host, family, task, base, raw, selfhash) in expected_origins.items():
+        obj = origins[host_key]
+        fixture = (prep_result.get("fixtures") or {}).get(family) or {}
+        if (
+            obj.get("host") != host or obj.get("fixture_id") != family
+            or obj.get("task_id") != task or obj.get("base_sha") != base
+            or obj.get("raw_candidate_sha256") != raw
+            or obj.get("proof_self_hash") != selfhash
+            or obj.get("source_sha256") != fixture.get("seed_sha256")
+            or obj.get("visible_sha256") != fixture.get("visible_sha256")
+            or obj.get("hidden_sha256") != fixture.get("hidden_sha256")
+            or obj.get("prompt_sha256") != fixture.get("prompt_sha256")
+            or obj.get("target_file") != fixture.get("target")
+            or obj.get("candidate_status") !=
+               "PREPARED_ONLY_NOT_EXECUTABLE_BY_V1_WORKER"
+            or obj.get("independent_host_verify") !=
+               "PASS_PREPARED_ONLY_INDEPENDENT_BYTE_GIT_QA_READBACK"
+            or obj.get("model_invocations") != 0
+            or obj.get("production_authority") is not False
+        ):
+            fail("P0 original distinct task fixture/hash/host drift")
+
     # #612: Native Ollama serve+runner observed beside one original real
     # Qwen/Aider Mac Worker. CI runs ONLY offline tests/receipt verification.
     ollama_observer_script = ROOT / "scripts" / "vf_office_v2_p0_ollama_runner_resource_lab.py"
