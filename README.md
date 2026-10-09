@@ -445,6 +445,8 @@ Windows host paths: on `sderot-windows` every agent (ChatGPT, Codex, Grok Bot, C
 
 Archived one-shots live in `scripts/archive/` (inert, history only; see its README).
 
+**Office v2 — P0 UNKNOWN-OUTCOME EVIDENCE RECONCILIATION (LAB ONLY):** `scripts/vf_office_v2_p0_reconcile.py` offers read-only, fail-closed inspection of a pinned local-model Task Envelope, RUNNING journal and independently replayed Worker Receipt. A journal without a terminal receipt remains `UNKNOWN_OUTCOME`; PID/process ownership, autonomous retry, cross-host failover and external-effect reconciliation are **NOT** proven. Self-hash alone never verifies success; run `python3 scripts/vf_office_v2_p0_reconcile.py selftest` for 21 deterministic cases. No model invocation, production mutation or new scheduler is performed by this inspector. Canonical acceptance remains [Office P0 #612](https://github.com/nocturney/velvetos-core/issues/612).
+
 ## Read next · המשך קריאה
 
 [`CHANGELOG.md`](CHANGELOG.md) · [`AGENTS.md`](AGENTS.md) · [`docs/chief-of-staff/`](docs/chief-of-staff/) · [`docs/HARNESS.md`](docs/HARNESS.md) · [`docs/FAILOVER.md`](docs/FAILOVER.md) · [`docs/MEDIA-VAULT.md`](docs/MEDIA-VAULT.md) · [`constitution/`](constitution/) · [`packages/velvetos/`](packages/velvetos/)
