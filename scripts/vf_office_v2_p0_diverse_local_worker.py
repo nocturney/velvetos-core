@@ -185,7 +185,7 @@ def admit(root_raw,task,candidate_raw,aider_raw,model,port,timeout):
     dest=parent/task
     dest.mkdir(exist_ok=False)
     root=dest/"repo"
-    cp=subprocess.run(["git","clone","--quiet","--no-hardlinks","--local",
+    cp=subprocess.run(["git","-c","core.autocrlf=false","clone","--quiet","--no-hardlinks","--local",
                        str(candidate_path.parent/"repo"),str(root)],
                       capture_output=True,timeout=28)
     require(cp.returncode==0 and (root/".git").is_dir(),
