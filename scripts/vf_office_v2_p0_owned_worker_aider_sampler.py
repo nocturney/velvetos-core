@@ -16,6 +16,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 import os
+import platform
 from pathlib import Path
 import re
 import sys
@@ -376,6 +377,8 @@ def sample_fixture():
 
 
 def selftest():
+    require(isinstance(platform.node(), str) and bool(platform.node()),
+            "OS_HOST_IDENTITY_REQUIRED")
     good = sample_fixture()
     validate(good)
     cases = ["valid_offline_claim_shape_not_execution"]
