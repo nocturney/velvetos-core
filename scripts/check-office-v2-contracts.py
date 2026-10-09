@@ -377,7 +377,7 @@ def main() -> int:
     if (
         escaped.get("status") != "PASS"
         or escaped.get("result") != "GROUP_EMPTY_ESCAPED_CHILD_STILL_LIVE"
-        or escaped.get("receipt_sha256") != "6b69eadd2b20bc25e5f73d257f8a8f671fee1a2b9219d2a92cfca7de690f5ff8"
+        or escaped.get("receipt_sha256") != "64f1662300c035cd5be3b06b1438bab6ecb72cb308194d5234a3f124e35afc7c"
         or escaped.get("independent_offline_verify") is not True
         or escaped.get("no_auto_retry") is not True
         or escaped.get("model_invocations") != 0
