@@ -42,6 +42,9 @@ def validate(env, killed):
     require(isinstance(seal, str) and bool(reconcile.SHA256.fullmatch(seal)) and
             seal == reconcile.digest({k: v for k, v in killed.items() if k != "receipt_sha256"}),
             "KILL_OBSERVATION_SELF_SEAL_INVALID")
+    require(isinstance(killed.get("journal_sha256"), str) and
+            bool(reconcile.SHA256.fullmatch(killed["journal_sha256"])),
+            "KILL_JOURNAL_HASH_INVALID")
     for key in ("owned_worker_pid", "owned_aider_pid", "owned_aider_process_group"):
         require(type(killed.get(key)) is int and 1 <= killed[key] < 2**31,
                 "KILL_PID_INVALID")
@@ -153,6 +156,7 @@ def selftest():
                   "worker_killed_by_sigkill": True,
                   "aider_group_killed_by_sigkill": True,
                   "live_model_executable_seen_before_kill": True,
+                  "journal_sha256": "c" * 64,
                   "journal_preserved": True, "old_final_receipt_absent": True,
                   "retry_rejected_reason": "DUPLICATE_OR_UNKNOWN_OUTCOME_NO_RETRY",
                   "cross_host_failover_proven": False}
@@ -194,6 +198,11 @@ def selftest():
             try: evaluate(env, modified, [], "synthetic-host")
             except reconcile.Refused: checks.append("resealed_" + label + "_denied")
             else: raise AssertionError(label + "_ACCEPTED")
+        malformed=dict(killed);malformed["journal_sha256"]="bad"
+        malformed=seal(malformed)
+        try: evaluate(env, malformed, [], "synthetic-host")
+        except reconcile.Refused: checks.append("invalid_journal_hash_denied")
+        else: raise AssertionError("INVALID_JOURNAL_HASH_ACCEPTED")
         invalid=dict(killed);invalid["receipt_sha256"]="0"*64
         try: evaluate(env, invalid, [], "synthetic-host")
         except reconcile.Refused: checks.append("invalid_hash_denied")
@@ -230,9 +239,18 @@ def main():
         require(before["status"] == "UNKNOWN_RUNNING_JOURNAL_NO_BLIND_RETRY" and
                 before["envelope_sha256"] == reconcile.digest(env),
                 "ORIGINAL_UNKNOWN_JOURNAL_NOT_PRESERVED")
+        journal = pathlib.Path(args.receipt).absolute().with_suffix(
+            pathlib.Path(args.receipt).suffix + ".running")
+        require(not journal.is_symlink(), "SYMLINK_JOURNAL_REFUSE")
+        journal_dict = reconcile.read_optional(journal)
+        require(journal_dict is not None, "MISSING_ORIGINAL_JOURNAL")
+        journal_sha = hashlib.sha256(journal.read_bytes()).hexdigest()
+        require(journal_sha == killed["journal_sha256"],
+                "HISTORICAL_JOURNAL_HASH_CHANGED")
         result = evaluate(env, killed, collect_rows(), platform.node())
         after = reconcile.reconcile(args.envelope, args.receipt)
-        require(after == before, "JOURNAL_CHANGED_DURING_PROCESS_SNAPSHOT")
+        require(after == before and hashlib.sha256(journal.read_bytes()).hexdigest() == journal_sha,
+                "JOURNAL_CHANGED_DURING_PROCESS_SNAPSHOT")
         result["observed_utc"] = datetime.now(timezone.utc).isoformat()
         result["original_unknown_journal_still_present"] = True
         result["receipt_sha256"] = reconcile.digest(result)

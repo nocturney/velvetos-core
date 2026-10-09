@@ -256,7 +256,7 @@ def main() -> int:
         fail("P0 historical PID selftest returned invalid JSON")
     if (
         pid_result.get("status") != "PASS"
-        or pid_result.get("tests", 0) < 15
+        or pid_result.get("tests", 0) < 16
         or pid_result.get("model_invocations") != 0
         or pid_result.get("processes_killed") != 0
         or pid_result.get("new_task_authorized") is not False
