@@ -293,6 +293,128 @@ def main() -> int:
     ):
         fail("P0 manual new-attempt lineage overstated safety or authority")
 
+    # #612: One real Mac local Aider+Qwen coding run had its exact Worker
+    # and child Aider OS PID/birth pinned BEFORE/AFTER 12 read-only CPU/RSS
+    # samples. Static CI checks historical receipts only, never starts model.
+    owned_sampler = ROOT / "scripts" / "vf_office_v2_p0_owned_worker_aider_sampler.py"
+    owned_data = P2 / "p0-mac-real-worker-aider-resource-observation-2026-10-09.json"
+    expected_owned_src = "ad52d5ce56f504ac1e6105b4e4cc32801fea6f21cb3104512a2b3a01cd2fcaf7"
+    if hashlib.sha256(owned_sampler.read_bytes()).hexdigest() != expected_owned_src:
+        fail("P0 real Worker/Aider OS sampler source pin drift")
+    owned_contract = subprocess.run(
+        [sys.executable, str(owned_sampler), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if owned_contract.returncode:
+        fail("P0 real Worker/Aider sampling negatives failed: " +
+             owned_contract.stdout[:220])
+    try:
+        owned_checks = json.loads(owned_contract.stdout)
+        owned_proof = json.loads(owned_data.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        fail("P0 real Worker/Aider historical evidence missing/invalid")
+    if (
+        owned_checks.get("status") != "PASS_OFFLINE"
+        or owned_checks.get("tests") != 26
+        or owned_checks.get("live_os_calls") != 0
+        or owned_checks.get("model_calls_by_observer") != 0
+        or owned_checks.get("automatic_retries_authorized") is not False
+        or owned_checks.get("production_authority") is not False
+        or owned_checks.get("gpu_vram_measured") is not False
+        or owned_proof.get("schema") !=
+           "velvetos.office-v2.p0-live-mac-worker-aider-cpu-rss-evidence.v0"
+        or owned_proof.get("status") !=
+           "PASS_REAL_LOCAL_MODEL_WORKER_AND_AIDER_OS_PINNED_METRICS_LAB"
+    ):
+        fail("P0 real Worker/Aider LAB false execution, authority or evidence")
+    real_src = owned_proof.get("source") or {}
+    expected_id = "p0-observed-worker-mac-20261009-01"
+    model_digest = "7f3251fa6878a78a606bcb3c074283306e5ad2ea411a7774a9dd98a4bc7f2d13"
+    if (
+        real_src.get("host") != "MacMiniOffice.local"
+        or real_src.get("executed_head") !=
+           "5d8b6613c18b3973344efe193fac139ec9bc458d"
+        or real_src.get("observer_source_sha256") != expected_owned_src
+        or real_src.get("original_model_worker_source_sha256") !=
+           "7b4cb176c9c66351f9658c08589f45ec94d50c2a8b6450fe8e5cb1d8f09d86f7"
+        or real_src.get("model") != "qwen3.5:4b"
+        or real_src.get("model_digest") != model_digest
+    ):
+        fail("P0 real Worker/Aider pin/model identity drift")
+    expected_raw = {
+        "envelope": "b45932d4feae257f0de11329d3f84288ac3e45745301e08ecd91cec012ef0767",
+        "receipt": "0ec632d2fecd772756ddbaf5a0eff5aaf4ef49220fa3bc2ece7475e3e19fdefe",
+        "pin": "8c5bc727bea0ee9a4d2c3893370693b437c82f9cc167d61f91ea5f07843ee319",
+        "observer": "6d764e33f210fe207d399919daa073a8e0a4816fdc3e2919859ff50053d4ce28",
+    }
+    if owned_proof.get("raw_artifact_hashes") != expected_raw:
+        fail("P0 real Worker/Aider original Mac raw hashes changed")
+    owned_task = owned_proof.get("task") or {}
+    owned_rcpt = owned_task.get("worker_model_receipt") or {}
+    qa = owned_rcpt.get("independent_qa") or {}
+    if (
+        owned_task.get("task_id") != expected_id
+        or owned_task.get("base_sha") !=
+           "17e304738bd05f526b6c29174dd3f6b6cc9b8d9e"
+        or owned_rcpt.get("task_id") != expected_id
+        or owned_rcpt.get("state") != "SUCCEEDED"
+        or owned_rcpt.get("receipt_selfhash") !=
+           "9de9ff084b1bfd8e5258f7732ad8e2a449681b131143522308e9a4d3b185f1ba"
+        or owned_rcpt.get("model_digest") != model_digest
+        or owned_rcpt.get("elapsed_seconds") != 49.241
+        or owned_rcpt.get("artifact_sha256") !=
+           "456f89bec0af23e6287e88956b8b85e992d4926b89e9613238bee7f77302ab45"
+        or owned_rcpt.get("model_invocations_min") != 1
+        or owned_rcpt.get("exact_model_calls") is not None
+        or owned_rcpt.get("additional_api_spend_usd") != 0
+        or owned_task.get("separate_original_worker_verify") != "PASS"
+        or qa.get("pass") is not True
+        or qa.get("unit_3_verified") is not True
+        or qa.get("hidden_12_verified") is not True
+        or qa.get("replay_changed_paths") != ["slug.py"]
+    ):
+        fail("P0 real Worker receipt not independently proven")
+    owned_limits = owned_proof.get("limits") or {}
+    for flag in ("separate_sampling_process_spawned_model", "model_inference_server_measured",
+                 "gpu_vram_measured", "entire_process_family_measured",
+                 "production_authority", "canonical_fleet_lease",
+                 "distributed_fencing_verified", "automated_unknown_recovery_proven",
+                 "statistically_reliable_peak_or_p95_proven",
+                 "complete_os_orphan_exclusion"):
+        if owned_limits.get(flag) is not False:
+            fail("P0 actual Mac sampler overstated " + flag)
+    if (owned_limits.get("actual_worker_and_aider_pair_cpu_rss_measured") is not True
+            or owned_limits.get("model_calls_by_observer") != 0
+            or owned_limits.get("additional_paid_api_spend_usd") != 0):
+        fail("P0 actual Mac sampler misreported effects or coverage")
+    import vf_office_v2_p0_owned_worker_aider_sampler as owned_observer
+    owned_pin = owned_proof.get("process_pin") or {}
+    witnessed = (owned_proof.get("observer") or {}).get("report") or {}
+    try:
+        owned_observer.validate(witnessed)
+    except Exception as exc:
+        fail("P0 real Mac sampled Worker/Aider historical report failed: "+
+             str(exc)[:120])
+    if (
+        owned_pin.get("task_id") != expected_id
+        or owned_pin.get("pin_sha256") != witnessed.get("kernel_pin_sha256")
+        or owned_rcpt.get("kernel_pin_sha256") != witnessed.get("kernel_pin_sha256")
+        or owned_pin.get("worker") != witnessed.get("worker_birth")
+        or owned_pin.get("aider") != witnessed.get("aider_birth")
+        or owned_pin.get("retry_permitted") is not False
+        or witnessed.get("task_id") != expected_id
+        or witnessed.get("observation_sha256") !=
+           "06c68d07487b120389601a503089cfd7b050d2a4aa13ec6eab59aff53a5623cb"
+        or witnessed.get("sample_count") != 12
+        or witnessed.get("observed_peak_worker_rss_bytes") != 34930688
+        or witnessed.get("observed_peak_aider_rss_bytes") != 172425216
+        or witnessed.get("observed_peak_pair_rss_bytes") != 207339520
+        or witnessed.get("observed_aider_cpu_delta_ms") != 4949
+        or witnessed.get("observed_worker_cpu_delta_ms") != 0
+        or (owned_proof.get("observer") or {}).get("separate_offline_verify") != "PASS"
+    ):
+        fail("P0 real Worker+Aider paired kernel resource proof drift")
+
     # #612: Native OS PID/birth-pinned RSS/CPU measurement on two owned
     # synthetic Python children. Pure offline replay only in CI.
     resource_script = ROOT / "scripts" / "vf_office_v2_p0_native_resource_probe_lab.py"
