@@ -211,6 +211,10 @@ def validate(v):
          v["paid_api_spend_usd"] == 0 and
          type(v.get("observer_model_calls")) is int and
          v["observer_model_calls"] == 0, "PAID_OR_MODEL_CALL_BY_OBSERVER")
+    need(type(v.get("baseline_model_preloaded")) is bool
+         and type(v.get("startup_api_unavailable_count")) is int
+         and 0 <= v["startup_api_unavailable_count"] < 100,
+         "PRELOAD_OR_TRANSIENT_API_METRIC_DRIFT")
     samples = v.get("samples")
     need(isinstance(samples, list) and
          len(samples) == OBS_COUNT and v.get("sample_count") == OBS_COUNT,
@@ -257,7 +261,8 @@ def validate(v):
     return True
 
 
-def build(env, pin, journal_hash, server, runner, samples):
+def build(env, pin, journal_hash, server, runner, samples,
+          baseline_model_preloaded=False, startup_api_unavailable_count=0):
     return seal({
         "schema": SCHEMA, "issue": ISSUE, "scope": SCOPE,
         "host": env["host"], "task_id": env["task_id"],
@@ -269,6 +274,8 @@ def build(env, pin, journal_hash, server, runner, samples):
         "envelope_sha256": digest(env),
         "running_journal_raw_sha256": journal_hash,
         "sample_count": len(samples), "samples": samples,
+        "baseline_model_preloaded": baseline_model_preloaded,
+        "startup_api_unavailable_count": startup_api_unavailable_count,
         "peak_runner_rss_bytes": max(x["runner"]["rss_bytes"] for x in samples),
         "peak_server_rss_bytes": max(x["serve"]["rss_bytes"] for x in samples),
         "observed_runner_cpu_delta_ms": samples[-1]["runner"]["cpu_time_ms"] -
@@ -312,9 +319,17 @@ def observe(envelope, root):
     need(not running.exists() and not pin_file.exists()
          and not (output / "receipt.json").exists(),
          "TASK_ALREADY_EXECUTED_OR_UNKNOWN_NO_RETRY")
-    need(not ollama_ps(), "INITIAL_MODEL_ALREADY_LOADED_ATTRIBUTION_AMBIGUOUS")
+    # An already resident SAME pinned model is allowed, but client exclusivity
+    # must remain explicitly unproven. The prior Worker has already exited.
+    baseline = ollama_ps()
+    if baseline:
+        active_model(baseline[0])
     server, runners = local_ollama_processes()
-    need(len(server) == 1 and not runners, "OLLAMA_SERVER_OR_RUNNERS_AMBIGUOUS")
+    need(len(server) == 1 and len(runners) <= 1,
+         "OLLAMA_SERVER_OR_RUNNERS_AMBIGUOUS")
+    if runners:
+        need(runners[0].ppid() == server[0].pid,
+             "PRELOADED_RUNNER_NOT_OWNED_BY_SERVER")
     server_row = kernel.sample(server[0].pid)
     need(server_row and server_row["source"] == "PSUTIL_OS_CREATE_TIME",
          "OLLAMA_SERVER_OS_IDENTITY_UNAVAILABLE")
@@ -340,8 +355,16 @@ def observe(envelope, root):
     need(is_same(pin["worker"]) and is_same(pin["aider"]),
          "WORKER_AIDER_OS_IDENTITY_NOT_LIVE")
     runner_row = None
+    startup_api_unavailable_count = 0
     while time.monotonic() - started < TIMEOUT:
-        models = ollama_ps()
+        try:
+            models = ollama_ps()
+        except kernel.Refused as exc:
+            if str(exc) != "LOCAL_OLLAMA_API_UNAVAILABLE":
+                raise
+            startup_api_unavailable_count += 1
+            time.sleep(.18)
+            continue
         _, runners = local_ollama_processes()
         accepted = [p for p in runners if p.ppid() == server_row["pid"]]
         need(len(accepted) <= 1, "MULTIPLE_RUNNERS_AMBIGUOUS")
@@ -363,7 +386,9 @@ def observe(envelope, root):
         samples.append(collect(server_row, runner_row, started, idx + 1, api))
         if idx < OBS_COUNT - 1:
             time.sleep(.5)
-    report = build(env, pin, journal_hash, server_row, runner_row, samples)
+    report = build(env, pin, journal_hash, server_row, runner_row, samples,
+                   baseline_model_preloaded=bool(baseline),
+                   startup_api_unavailable_count=startup_api_unavailable_count)
     validate(report)
     write_once(dest / "report.json", report)
     return {"status": "PASS_ONE_CORRELATED_OS_PINNED_OLLAMA_RUNNER",
@@ -376,6 +401,8 @@ def observe(envelope, root):
             "observed_runner_cpu_delta_ms": report["observed_runner_cpu_delta_ms"],
             "api_size_vram_bytes_first": samples[0]["api_size_vram_bytes"],
             "api_size_vram_is_gpu_measurement": False,
+        "baseline_model_preloaded": bool(baseline),
+        "startup_api_unavailable_count": startup_api_unavailable_count,
             "exclusive_model_client_use_proven": False,
             "observation_sha256": report["observation_sha256"],
             "model_calls_by_observer": 0,
@@ -438,6 +465,7 @@ def selftest():
         ("fake_fencing",lambda x:x.update(cross_host_fencing_verified=True)),
         ("fake_retry",lambda x:x.update(autonomous_retry_proven=True)),
         ("fake_paid",lambda x:x.update(paid_api_spend_usd=1)),
+        ("invalid_transient_count",lambda x:x.update(startup_api_unavailable_count=-1)),
         ("fake_model_call",lambda x:x.update(observer_model_calls=1)),
     ]
     for label, edit in negatives:
@@ -453,7 +481,7 @@ def selftest():
     try: validate(corrupt)
     except kernel.Refused: tests.append("raw_tamper_DENIED")
     else: raise AssertionError("UNSEALED_CHANGE_ACCEPTED")
-    need(len(tests)==25,"SELFTEST_COUNT_DRIFT")
+    need(len(tests)==26,"SELFTEST_COUNT_DRIFT")
     return {"status":"PASS_OFFLINE","tests":len(tests),
             "model_invocations":0,"operating_system_queries":0,
             "distributed_fencing_verified":False,
