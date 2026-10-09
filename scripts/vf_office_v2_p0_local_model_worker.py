@@ -25,6 +25,7 @@ import urllib.request
 from datetime import datetime, timezone
 
 import vf_office_v2_continuity as continuity
+import vf_office_v2_p0_kernel_identity as kernel
 
 SCHEMA = "velvetos.office-v2.p0-local-model-envelope.v1"
 RECEIPT = "velvetos.office-v2.p0-local-model-receipt.v1"
@@ -161,6 +162,9 @@ def preflight(env, *, network=True):
             raise Refuse("SYNTHETIC_FIXTURE_HASH_DRIFT")
         if git(root, "ls-files", "--error-unmatch", "--", rel) != rel:
             raise Refuse("UNTRACKED_INPUT")
+    birth_mode = env.get("kernel_birth_capture")
+    if birth_mode not in (None, BIRTH_MODE):
+        raise Refuse("UNAPPROVED_OS_BIRTH_CAPTURE_MODE")
     budget = env.get("budget") or {}
     timeout = budget.get("timeout_seconds")
     if type(timeout) is not int or not 25 <= timeout <= 180:
@@ -266,6 +270,7 @@ def check_run(env, receipt):
         raise Refuse("MODEL_IDENTITY_DRIFT")
     if receipt.get("additional_api_spend_usd") != 0 or receipt.get("production_authority") != "NONE":
         raise Refuse("AUTHORITY_OR_SPEND_DRIFT")
+    verify_kernel_birth_pin(env, receipt)
     if modified(root) != ["slug.py"] or hash_file(target) != receipt.get("artifact_sha256"):
         raise Refuse("SOURCE_EDIT_DRIFT")
     for key, field in (("stdout.log", "stdout_sha256"), ("stderr.log", "stderr_sha256"),
@@ -349,6 +354,55 @@ def command(aider, model, prompt, out):
         "--llm-history-file", str(out / "llm.history.log")]
 
 
+
+BIRTH_MODE = "REQUIRE_OS_BIRTH_BEFORE_QA_V1"
+
+
+def capture_kernel_birth_pin(env, journal_path, out, process):
+    """At original Aider spawn, pin both actual OS births to the fsynced journal."""
+    worker_birth = kernel.sample(os.getpid())
+    child_birth = kernel.sample(process.pid)
+    if worker_birth is None or child_birth is None:
+        raise Refuse("OS_BIRTH_CHILD_NOT_LIVE")
+    bound = kernel.make_pin(env, get_json(journal_path), worker_birth, child_birth)
+    destination = out / "kernel-pin.json"
+    save_new(destination, bound)
+    # PID reuse between the two observations leaves the task UNKNOWN, never green.
+    if kernel.sample(os.getpid()) != worker_birth or kernel.sample(process.pid) != child_birth:
+        raise Refuse("OS_PROCESS_BIRTH_CHANGED_DURING_CAPTURE")
+    return bound
+
+
+def verify_kernel_birth_pin(env, receipt):
+    """Pure readback; never samples the live process again or invokes a model."""
+    requested = env.get("kernel_birth_capture")
+    if requested is None:
+        if receipt.get("kernel_birth_mode") is not None or receipt.get("kernel_pin_sha256") is not None:
+            raise Refuse("UNREQUESTED_KERNEL_PIN_EVIDENCE")
+        return
+    if requested != BIRTH_MODE or receipt.get("kernel_birth_mode") != BIRTH_MODE:
+        raise Refuse("KERNEL_BIRTH_MODE_DRIFT")
+    out = pathlib.Path(receipt["receipt_directory"]).resolve()
+    root = pathlib.Path(env["worktree_path"]).resolve()
+    if out.is_relative_to(root):
+        raise Refuse("KERNEL_PIN_INSIDE_WORKTREE")
+    target = out / "kernel-pin.json"
+    if not target.is_file() or target.is_symlink() or hash_file(target) != receipt.get("kernel_pin_file_sha256"):
+        raise Refuse("KERNEL_PIN_FILE_DRIFT")
+    pin = get_json(target)
+    if pin.get("pin_sha256") != receipt.get("kernel_pin_sha256"):
+        raise Refuse("KERNEL_PIN_SELF_HASH_DRIFT")
+    original_journal = {
+        "state": "RUNNING", "task_id": env["task_id"],
+        "envelope_sha256": digest(env), "host": env["host"],
+        "started_at": receipt["started_at"], "unknown_outcome_rule": "NO_BLIND_RETRY",
+        "kind": "LOCAL_AIDER_OLLAMA_SYNTHETIC_V1",
+    }
+    try:
+        kernel.checked_pin(env, original_journal, pin)
+    except kernel.Refused:
+        raise Refuse("KERNEL_PIN_BINDING_NOT_VERIFIED")
+
 def run(task, output):
     task = pathlib.Path(task).resolve()
     receipt = pathlib.Path(output).resolve()
@@ -377,6 +431,8 @@ def run(task, output):
     (out / "empty.yml").write_bytes(b"{}\n")
     before_run = time.monotonic()
     proc = None
+    kernel_birth_pin = None
+    kernel_birth_failed = False
     exit_code = None
     stdout = stderr = b""
     state = "UNKNOWN_OUTCOME"
@@ -388,6 +444,11 @@ def run(task, output):
         else:
             opts["start_new_session"] = True
         proc = subprocess.Popen(command(aider, env["executor"]["model"], prompt, out), **opts)
+        if env.get("kernel_birth_capture") == BIRTH_MODE:
+            try:
+                kernel_birth_pin = capture_kernel_birth_pin(env, journal, out, proc)
+            except (kernel.Refused, Refuse, OSError, ValueError, TypeError, KeyError):
+                kernel_birth_failed = True
         try:
             stdout, stderr = proc.communicate(timeout=env["budget"]["timeout_seconds"])
             exit_code = proc.returncode
@@ -409,6 +470,8 @@ def run(task, output):
         llm_log.write_bytes(b"")
     changed = modified(root)
     candidate = target.read_bytes()
+    if kernel_birth_failed and state == "EXECUTOR_FINISHED":
+        state = "OS_BIRTH_PIN_NOT_VERIFIED"
     qa_result = {"pass": False, "reason": "NOT_RUN"}
     if state == "EXECUTOR_FINISHED" and changed == ["slug.py"] and hash_file(target) != SOURCE_SHA256:
         qa_result = qa_fresh(root, candidate, qa)
@@ -441,6 +504,9 @@ def run(task, output):
         "independent_qa": qa_result,
         "production_authority": "NONE", "scheduler_proven": False,
         "autonomous_retry": False, "os_network_sandbox_proven": False,
+        "kernel_birth_mode": env.get("kernel_birth_capture"),
+        "kernel_pin_sha256": kernel_birth_pin["pin_sha256"] if kernel_birth_pin else None,
+        "kernel_pin_file_sha256": hash_file(out / "kernel-pin.json") if kernel_birth_pin else None,
     }
     record["receipt_sha256"] = digest(record)
     # Verify the full independent replay BEFORE exposing a success receipt.
@@ -517,6 +583,19 @@ def selftest():
         }
         preflight(env, network=False)
         checks.append("positive_offline_preflight")
+        opt_in = copy.deepcopy(env)
+        opt_in["kernel_birth_capture"] = BIRTH_MODE
+        preflight(opt_in, network=False)
+        checks.append("native_birth_opt_in_preflight")
+        opt_bad = copy.deepcopy(env)
+        opt_bad["kernel_birth_capture"] = "AUTO_REQUEUE"
+        try:
+            preflight(opt_bad, network=False)
+        except Refuse as exc:
+            assert str(exc) == "UNAPPROVED_OS_BIRTH_CAPTURE_MODE"
+        else:
+            raise AssertionError("UNSAFE_BIRTH_MODE_ACCEPTED")
+        checks.append("invalid_birth_mode_denied")
         # Regression: hidden QA lives outside the clone, but imports slug from it.
         # Running the hidden file by absolute path would incorrectly fail imports.
         fixed_source = (
