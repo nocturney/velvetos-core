@@ -384,6 +384,51 @@ def main() -> int:
     ):
         fail("P0 orphan escape evidence incorrectly admitted unsafe recovery")
 
+    # P0 Windows native Job Object inheritance / kill-on-close: exact LAB proof.
+    # CI runs ONLY pure offline assertions and historical receipt verification.
+    # Never create a live Windows job or launch a process in this sensor.
+    job_lab_check = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_p0_windows_job_object_lab.py"), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if job_lab_check.returncode != 0:
+        fail("P0 Windows Job Object offline contract failed: " + job_lab_check.stdout[:220])
+    try:
+        job_lab = json.loads(job_lab_check.stdout)
+    except json.JSONDecodeError:
+        fail("P0 Windows Job Object selftest returned invalid JSON")
+    if (
+        job_lab.get("status") != "PASS"
+        or job_lab.get("tests") != 17
+        or job_lab.get("live_processes_launched") != 0
+        or job_lab.get("model_invocations") != 0
+        or job_lab.get("original_task_retry_allowed") is not False
+        or job_lab.get("all_possible_escaped_processes_excluded") is not False
+    ):
+        fail("P0 Windows Job Object LAB overstated its cleanup authority")
+
+    job_record_check = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_p0_windows_job_object_lab.py"),
+         "verify", "--evidence", str(P2 / "p0-windows-native-job-containment-2026-10-09.json")],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if job_record_check.returncode != 0:
+        fail("P0 real Windows Job Object receipt invalid: " + job_record_check.stdout[:220])
+    try:
+        job_record = json.loads(job_record_check.stdout)
+    except json.JSONDecodeError:
+        fail("P0 Windows native Job Object receipt returned invalid JSON")
+    if (
+        job_record.get("status") != "PASS"
+        or job_record.get("independent_offline_verification") is not True
+        or job_record.get("job_child_inherited_containment") is not True
+        or job_record.get("receipt_sha256") != "e44cb0fc832b57c8f194caf22646dab8b978381b83d3ca2e8bdb64486ac1b6ad"
+        or job_record.get("original_task_retry_allowed") is not False
+        or job_record.get("all_possible_escaped_processes_excluded") is not False
+        or job_record.get("model_invocations") != 0
+    ):
+        fail("P0 Windows native containment LAB became unsafe or falsified")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
