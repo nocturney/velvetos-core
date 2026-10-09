@@ -1,7 +1,7 @@
 {
   "format": "bento/slides",
   "version": 1,
-  "title": "Velvet Factory — דק שבועי 2026-10-02",
+  "title": "Velvet Factory — דק שבועי 2026-10-09",
   "size": {
     "width": 1280,
     "height": 720
@@ -34,7 +34,7 @@
           "rotation": 0,
           "opacity": 1,
           "role": "title",
-          "html": "Velvet Factory<br>דק שבועי · 2026-10-02",
+          "html": "Velvet Factory<br>דק שבועי · 2026-10-09",
           "fontSize": 64,
           "fontWeight": 800,
           "color": "#f4efe6",
@@ -208,7 +208,7 @@
           "rotation": 0,
           "opacity": 1,
           "role": "body",
-          "html": "סוף יום — רטרו משרד (ראש צוות)\\u003cbr>מודול: `office-learning`.\\u003cbr>**ראש הצוות** (`@studio-operations` / `@chief-of-staff`) מבקש מכל המושבים לעבור על השיחות של היום — לא כדי לשפוט, אלא כדי שהמשרד יהיה חי ומשתפר.\\u003cbr>**פעם ראשונה / לפני שהרוטינה הייתה קיימת:** הרץ `INITIAL-RETRO.md` (catch-up מ-CHANGELOG + checkpoints).\\u003cbr>מתי\\u003cbr>כל ערב, אחרי 18:00 Asia/Jerusalem (או לפני סגירת משמרת).",
+          "html": "סוף יום — רטרו משרד (ראש צוות)\\u003cbr>מודול: `office-learning`.\\u003cbr>**ראש הצוות** (`@studio-operations` / `@chief-of-staff`) מפעיל retro רק כשיש שינוי משמעותי, חומר חדש, correction/failure, handoff פתוח או בקשת בעלים. רק המושבים/הדומיינים שנגעו בחומר משתתפים; מושב שלא השתנה לא מייצר ritual ריק.\\u003cbr>**פעם ראשונה / לפני שהרוטינה הייתה קיימת:** הרץ `INITIAL-RETRO.md` (catch-up מ-CHANGELOG + checkpoints).\\u003cbr>מתי\\u003cbr>לפי אירוע/צורך: correction או failure משמעותי, שינוי workflow/policy, handoff רב־שלבי, material/revenue signal חדש, סיום משמרת עם חומר אמיתי ללמידה, או בקשת בעלים. אין standing 18:00 retro clock ואין חובה להריץ רק כי היום הסתיים.",
           "fontSize": 24,
           "fontWeight": 400,
           "color": "#f4efe6",
