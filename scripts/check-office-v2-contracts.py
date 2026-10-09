@@ -219,6 +219,29 @@ def main() -> int:
     ):
         fail("P0 live model receipts/limits failed independent acceptance")
 
+    # #612 P0 read-only UNKNOWN evidence: never execute local models or infer
+    # worker liveness/success from a still-present RUNNING journal.
+    unknown_check = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_p0_unknown_reconcile.py"), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if unknown_check.returncode != 0:
+        fail("P0 UNKNOWN journal read-only classifier failed: " + unknown_check.stdout[:220])
+    try:
+        unknown_proof = json.loads(unknown_check.stdout)
+    except json.JSONDecodeError:
+        fail("P0 UNKNOWN read-only classifier returned invalid JSON")
+    if (
+        unknown_proof.get("status") != "PASS"
+        or unknown_proof.get("tests", 0) < 33
+        or unknown_proof.get("model_invocations") != 0
+        or unknown_proof.get("automatic_retries") != 0
+        or unknown_proof.get("production_effects") != 0
+        or unknown_proof.get("external_processes_inspected") != 0
+        or unknown_proof.get("success_promotion_allowed") is not False
+    ):
+        fail("P0 UNKNOWN state did not preserve fail-closed LAB safety")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
