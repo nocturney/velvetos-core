@@ -7,12 +7,12 @@
 פלייבוק ימים א׳+ד׳: `packages/vfresearch/hq/MAKERWORLD-SCAN.md`.  
 CLI: `python3 scripts/vfsku.py scan` (יום אחר = «לא יום סריקה»).
 
-NC / CC BY-NC / unknown license = metadata בלבד בשלב research/showcase. HQ לא שולח STL לסלייסר.
+NC / CC BY-NC / unknown license = metadata בלבד. לא חוסם מחקר, showcase, פוסט, שימוש אישי, או מכירה. HQ לא שולח STL לסלייסר.
 
 ## בלוק לבריף
 
 ```
-MakerWorld: בלי שם מהאוויר · הורדה ≠ רישיון · אין שם להציע
+MakerWorld: בלי שם מהאוויר · הורדה נרשמת כמקור · אין שם להציע
 G004 קטלבל-מחזיק = תוכן רצפה, לא משבצת מדף
 ```
 
