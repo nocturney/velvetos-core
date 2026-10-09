@@ -293,6 +293,126 @@ def main() -> int:
     ):
         fail("P0 manual new-attempt lineage overstated safety or authority")
 
+    # #612: Native Ollama serve+runner observed beside one original real
+    # Qwen/Aider Mac Worker. CI runs ONLY offline tests/receipt verification.
+    ollama_observer_script = ROOT / "scripts" / "vf_office_v2_p0_ollama_runner_resource_lab.py"
+    ollama_history_path = P2 / "p0-mac-real-ollama-runner-correlated-resources-2026-10-09.json"
+    expected_ollama_source = "6c57e5c4bd06105134aeba6f5c960c0d08e4af605364dd7ca0699d4becefacc8"
+    if hashlib.sha256(ollama_observer_script.read_bytes()).hexdigest() != expected_ollama_source:
+        fail("P0 Ollama native runner observer source byte drift")
+    ollama_offline = subprocess.run(
+        [sys.executable, str(ollama_observer_script), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if ollama_offline.returncode:
+        fail("P0 Ollama offline test failed: " + ollama_offline.stdout[:180])
+    try:
+        ollama_checks = json.loads(ollama_offline.stdout)
+        ollama_history = json.loads(ollama_history_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        fail("P0 Ollama historic observations missing or malformed")
+    if (
+        ollama_checks.get("status") != "PASS_OFFLINE"
+        or ollama_checks.get("tests") != 26
+        or ollama_checks.get("model_invocations") != 0
+        or ollama_checks.get("operating_system_queries") != 0
+        or ollama_checks.get("actual_gpu_vram_measured") is not False
+        or ollama_checks.get("distributed_fencing_verified") is not False
+        or ollama_checks.get("production_authority") is not False
+        or ollama_history.get("schema") !=
+           "velvetos.office-v2.p0-real-mac-ollama-runner-observed-evidence.v0"
+        or ollama_history.get("status") !=
+           "PASS_CORRELATED_PINNED_MAC_OLLAMA_RUNNER_AND_INDEPENDENT_WORKER_QA"
+    ):
+        fail("P0 Ollama observer offline authority or report failed")
+    run_source = ollama_history.get("source") or {}
+    original_raw = ollama_history.get("raw_file_sha256") or {}
+    expected_raw = {
+        "envelope_sha256": "fda549a0feb58b5e03f456720a559e890d37e130eb75d7f99780e7453f6f3fae",
+        "receipt_sha256": "2522204a87f531d53faf97e3ab335066954da5cd40c6d1c751559a871e08f012",
+        "kernel_pin_sha256": "d0e02c179cbf56807c3f18b9524444fbacc05ae22192bd9b3ea3b4f82d20a116",
+        "observer_sha256": "488aa3bd22ae200b78f40c5e1a321fb81321bb994e4ff2c2ddcf4f962bbabff9",
+    }
+    if (
+        run_source.get("executed_script_commit") !=
+           "468f070da8d88c113210328b1be7cf8a7fbb9927"
+        or run_source.get("script_raw_sha256") != expected_ollama_source
+        or run_source.get("host") != "MacMiniOffice.local"
+        or run_source.get("model_name") != "qwen3.5:4b"
+        or run_source.get("model_digest") !=
+           "7f3251fa6878a78a606bcb3c074283306e5ad2ea411a7774a9dd98a4bc7f2d13"
+        or original_raw != expected_raw
+    ):
+        fail("P0 real Ollama source/model/raw byte pin drift")
+    original_task = ollama_history.get("envelope") or {}
+    original_worker = ollama_history.get("model_worker") or {}
+    model_qa = original_worker.get("independent_qa") or {}
+    expected_task = "p0-ollama-observed-mac-20261009-02"
+    original_pin = ollama_history.get("kernel_process_pin") or {}
+    if (
+        original_task.get("task_id") != expected_task
+        or original_task.get("base_sha") != "ecabd70a292bc11ae4d8009a44502cb42ca1c0c9"
+        or original_worker.get("task_id") != expected_task
+        or original_worker.get("state") != "SUCCEEDED"
+        or original_worker.get("elapsed_seconds") != 43.341
+        or original_worker.get("receipt_selfhash") !=
+           "3ef20205569c88108191e59d40ee7cf3d823d28a9a0da150d118b43bf66ec02b"
+        or original_worker.get("kernel_pin_sha256") != original_pin.get("pin_sha256")
+        or original_worker.get("model_invocations_min") != 1
+        or original_worker.get("exact_model_calls") is not None
+        or original_worker.get("additional_api_spend_usd") != 0
+        or original_worker.get("separate_worker_verify") != "PASS"
+        or model_qa.get("pass") is not True
+        or model_qa.get("unit_3_verified") is not True
+        or model_qa.get("hidden_12_verified") is not True
+        or model_qa.get("replay_changed_paths") != ["slug.py"]
+    ):
+        fail("P0 Ollama real coding Worker independent QA not proven")
+    lab_limits = ollama_history.get("limits") or {}
+    for flag in ("model_exclusive_clients_proven", "host_wide_memory_usage_attributed",
+                 "ollama_api_reported_size_vram_is_direct_gpu_measurement",
+                 "actual_gpu_vram_measured", "cross_host_distributed_fencing",
+                 "canonical_fleet_lease", "autonomous_retry_or_recovery_proven",
+                 "production_authority", "all_process_descendants_excluded",
+                 "exact_model_invocation_count_known", "long_tail_latency_reliably_estimated"):
+        if lab_limits.get(flag) is not False:
+            fail("P0 Ollama observation falsely grants " + flag)
+    if (
+        lab_limits.get("model_server_and_runner_rss_samples_observed") is not True
+        or lab_limits.get("paid_api_spend_usd") != 0
+        or lab_limits.get("observer_model_calls") != 0
+        or (ollama_history.get("failed_preliminary_observer") or {}).get(
+            "fresh_second_task_used") is not True
+    ):
+        fail("P0 Ollama observation spend and new-task negative control failed")
+    import vf_office_v2_p0_ollama_runner_resource_lab as ollama_lab
+    observed_report = (ollama_history.get("inference_runner_observer") or {}).get("report") or {}
+    try:
+        ollama_lab.validate(observed_report)
+    except Exception as exc:
+        fail("P0 real Ollama history not validated: " + str(exc)[:120])
+    if (
+        observed_report.get("task_id") != expected_task
+        or observed_report.get("observation_sha256") !=
+           "f1d020804841632d16c21766692b1bf9fc4d64e605d1f729b6a798c9916fe263"
+        or observed_report.get("sample_count") != 10
+        or observed_report.get("baseline_model_preloaded") is not False
+        or observed_report.get("startup_api_unavailable_count") != 1
+        or observed_report.get("runner_birth", {}).get("pid") != 69666
+        or observed_report.get("server_birth", {}).get("pid") != 99094
+        or observed_report.get("peak_runner_rss_bytes") != 3687776256
+        or observed_report.get("peak_server_rss_bytes") != 22429696
+        or observed_report.get("observed_runner_cpu_delta_ms") != 2126
+        or observed_report.get("samples", [{}])[0].get("api_size_vram_bytes") != 3953628688
+        or observed_report.get("pin_sha256") != original_worker.get("kernel_pin_sha256")
+        or observed_report.get("worker_birth") != original_pin.get("worker")
+        or observed_report.get("aider_birth") != original_pin.get("aider")
+        or (ollama_history.get("inference_runner_observer") or {}).get(
+            "separate_observer_verify") !=
+           "PASS_OFFLINE_HISTORICAL_REPORT_NOT_LIVE_ATTESTATION"
+    ):
+        fail("P0 original Ollama native born PID samples/source drift")
+
     # #612: One real Mac local Aider+Qwen coding run had its exact Worker
     # and child Aider OS PID/birth pinned BEFORE/AFTER 12 read-only CPU/RSS
     # samples. Static CI checks historical receipts only, never starts model.
