@@ -1,0 +1,84 @@
+{
+  "schema": "velvetos.office-v2.p0-two-host-diverse-fixtures-preparation-evidence.v0",
+  "status": "PASS_TWO_DIFFERENT_HOST_BOUND_PREPARATIONS_ONLY_NOT_MODEL_TASKS",
+  "issue": "https://github.com/nocturney/velvetos-core/issues/612",
+  "date_utc": "2026-10-09",
+  "executed_source": {
+    "repository": "nocturney/velvetos-core",
+    "main_at_start": "4f1cc80537430b5d18bf5747f543118a7ee54887",
+    "script_commit": "5823591da1072e87c1290de9d3bfdb461b7ea565",
+    "script_source_sha256": "2bc85ad0b028c959ba2b958c6184ef682bc68325aca1c6a78a93e49385378af3",
+    "script_git_blob": "8bd62db1065501cec356f4e554184dbac15e10a7",
+    "catalog_variants": [
+      "canonical-tag-v1",
+      "merge-windows-v1"
+    ],
+    "offline_adversarial_selftests_each_host": 11,
+    "seed_fails_visible_or_hidden_for_each": true,
+    "golden_passes_visible_three_and_hidden_twelve_for_each": true
+  },
+  "prepared": {
+    "windows": {
+      "host": "Chris",
+      "raw_candidate_sha256": "92aa42ba0e6795e0b2a2a243d43bf7ed185684611abb40a1cae536fac6e565f6",
+      "task_id": "p0-diverse-win-canonical-tag-20261009-b",
+      "fixture_id": "canonical-tag-v1",
+      "base_sha": "9463e189c29f48e7a9a8c956a38e6f9cadcf8f8d",
+      "branch": "lab-p0-diverse-p0-diverse-win-canonical-tag-20261009-b",
+      "target_file": "canonical_tag.py",
+      "visible_test_file": "tests/test_canonical_tag.py",
+      "source_sha256": "49db6ebbd729b352f6ad23db29081d32968fe1b5d2b63e1d73928b997b9b56f1",
+      "visible_sha256": "55ada6c9ae4bca3cba1633010795dae2e02dabed3071aca56ea1fdcede17d668",
+      "hidden_sha256": "fd3b286041bfe835416ab14e89dc6b56195c807f01bcc9bbe843095c463009db",
+      "prompt_sha256": "cf76a9c017931185918e0944aa97f424aefcbb294044accde8e4674304bad486",
+      "checkpoint_sha256": "2e401378f3f6703608deb4f2b256fd1346651a89df47307dd5acbf0b4f60eb48",
+      "proof_self_hash": "ae04bb38ed2c3df118b658b04d413a20112899b83cf2b003d3c99191782e1582",
+      "candidate_status": "PREPARED_ONLY_NOT_EXECUTABLE_BY_V1_WORKER",
+      "independent_host_verify": "PASS_PREPARED_ONLY_INDEPENDENT_BYTE_GIT_QA_READBACK",
+      "model_invocations": 0,
+      "production_authority": false
+    },
+    "mac": {
+      "host": "MacMiniOffice.local",
+      "raw_candidate_sha256": "ab9d7c1da5b167b275a732201c2f501ad864db0891421381c9d8e2874e1c58d8",
+      "task_id": "p0-diverse-mac-merge-windows-20261009",
+      "fixture_id": "merge-windows-v1",
+      "base_sha": "336318a6440bbbc5efd6d56fec66007405722923",
+      "branch": "lab-p0-diverse-p0-diverse-mac-merge-windows-20261009",
+      "target_file": "windows_merge.py",
+      "visible_test_file": "tests/test_windows_merge.py",
+      "source_sha256": "867689711c1e9ebd6dd356780e4e8a3a202ceb55e5d43c612e3d061aab4e1a8f",
+      "visible_sha256": "c2f84a610eb78121b74e88c83057d79974b3cd98422d71cb554d6ec360e27747",
+      "hidden_sha256": "a5b648d4877772f081e528dbf380695f0ce0da47009a586797fcf0dccd8025cc",
+      "prompt_sha256": "dac7845704d83226e6207d0a99c5e7d8685eb3578c5377d1c62436896cece45d",
+      "checkpoint_sha256": "ee7b14fdca7898df1322fa4fbb0045a73dd931c6b4787a27033188fbc64591b3",
+      "proof_self_hash": "5e215da8c7fe14eee06fd81bcf07e81b989c6e1ec12edf8efc3a64dd5672782a",
+      "candidate_status": "PREPARED_ONLY_NOT_EXECUTABLE_BY_V1_WORKER",
+      "independent_host_verify": "PASS_PREPARED_ONLY_INDEPENDENT_BYTE_GIT_QA_READBACK",
+      "model_invocations": 0,
+      "production_authority": false
+    }
+  },
+  "failed_preliminary_windows": {
+    "task_id": "p0-diverse-win-canonical-tag-20261009",
+    "reason": "First original candidate was blocked by independent verifier due to Git Windows slash-normalization and default text newline conversion; preserved original bytes, prepared separate new -b Task after deterministic byte/Path fix.",
+    "model_executed": false,
+    "source_files_overwritten": false,
+    "automatic_retry": false
+  },
+  "limits": {
+    "actual_model_tasks_executed": 0,
+    "cross_host_concurrent_workers_proven": false,
+    "actual_software_product_changes_proven": false,
+    "protected_pr_from_coding_worker_proven": false,
+    "original_v1_worker_accepts_these_tasks": false,
+    "autonomous_recovery_proven": false,
+    "distributed_fencing_verified": false,
+    "canonical_fleet_lease": false,
+    "production_writer": false,
+    "customer_or_printer_effects": false,
+    "paid_api_calls": 0,
+    "model_invocations": 0
+  },
+  "original_raw_locations": "Original candidate manifests, fixtures, prompts, hidden QA and context checkpoints remain in their host-local AgentEnvelopeLab directories. This document stores sanitized pinned identifiers and hashes only."
+}
