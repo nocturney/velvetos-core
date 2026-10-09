@@ -462,6 +462,32 @@ def main() -> int:
     ):
         fail("P0 supervised Aider historical Job claims exceeded scoped LAB proof")
 
+    # #612: harden MANUAL Windows Aider supervisor origin/path trust.
+    # CLI selftest only: disposable temporary Git & path assertions, no Win32
+    # Job object, no local model launch, no scheduler and no external effects.
+    supervised_guard_check = subprocess.run(
+        [sys.executable,
+         str(ROOT / "scripts" / "vf_office_v2_p0_supervised_aider_lab.py"),
+         "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=35,
+    )
+    if supervised_guard_check.returncode != 0:
+        fail("P0 supervised Aider admission source-pin selftest failed: " +
+             supervised_guard_check.stdout[:220])
+    try:
+        supervised_guard = json.loads(supervised_guard_check.stdout)
+    except json.JSONDecodeError:
+        fail("P0 supervised Aider admission selftest JSON invalid")
+    if (
+        supervised_guard.get("status") != "PASS_OFFLINE"
+        or supervised_guard.get("tests", 0) < 15
+        or supervised_guard.get("model_invocations") != 0
+        or supervised_guard.get("native_job_objects_created") != 0
+        or supervised_guard.get("production_effects") != 0
+        or supervised_guard.get("retries_authorized") != 0
+    ):
+        fail("P0 supervised Aider admission source integrity safety regression")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
