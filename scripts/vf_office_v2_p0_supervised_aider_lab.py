@@ -11,6 +11,7 @@ import argparse
 import hashlib
 import json
 import os
+import ntpath
 from pathlib import Path
 import subprocess
 import sys
@@ -76,6 +77,23 @@ def thin_environment():
                    "GIT_TERMINAL_PROMPT": "0"})
     return result
 
+
+def checked_direct_python(*, executable=None, base_executable=None):
+    """Reject Windows venv Python relays before any Job, journal or model launch.
+
+    A Windows venv python.exe shim can spawn a base-interpreter child: the PID
+    returned by Popen then differs from the actual worker kernel-birth PID.
+    Exact three-member Job proof cannot admit that unpinned extra process.
+    The separately pinned Aider venv executable remains permitted.
+    """
+    current = sys.executable if executable is None else executable
+    base = getattr(sys, "_base_executable", None) if base_executable is None else base_executable
+    ensure(isinstance(current, str) and isinstance(base, str)
+           and ntpath.isabs(current) and ntpath.isabs(base),
+           "DIRECT_WINDOWS_PYTHON_IDENTITY_REQUIRED")
+    ensure(ntpath.normcase(ntpath.normpath(current)) ==
+           ntpath.normcase(ntpath.normpath(base)),
+           "WINDOWS_VENV_PYTHON_RELAY_UNSUPPORTED")
 
 
 def _checked_git(source_root, *args):
@@ -179,6 +197,22 @@ def selftest():
         report.unlink()
         ensure(not scratch.exists() and not report.exists(), "OFFLINE_PATH_TEST_LEAK")
         cases.append("no_scoped_output_persisted")
+        checked_direct_python(executable=r"C:\Python311\python.exe",
+                              base_executable=r"c:\python311\python.exe")
+        cases.append("direct_windows_python_allowed")
+        must_refuse(lambda: checked_direct_python(
+            executable=r"D:\AiderPilot\venv\Scripts\python.exe",
+            base_executable=r"C:\Python311\python.exe"),
+            "windows_venv_relay_denied")
+        must_refuse(lambda: checked_direct_python(
+            executable="python.exe", base_executable=r"C:\Python311\python.exe"),
+            "relative_python_denied")
+        must_refuse(lambda: checked_direct_python(
+            executable=r"C:\Python311\python.exe", base_executable=""),
+            "missing_base_python_denied")
+        ensure(not scratch.exists() and not report.exists(),
+               "INTERPRETER_PREFLIGHT_CREATED_OUTPUT")
+        cases.append("interpreter_denials_have_no_lab_outputs")
 
         scripts = root / "AgentEnvelopeLab" / "kernel-birth-offline" / "source" / "scripts"
         scripts.mkdir(parents=True)
@@ -229,6 +263,7 @@ def selftest():
 
 def check_inputs(worker_script, envelope_path, receipt_path, scratch):
     ensure(os.name == "nt", "WINDOWS_ONLY")
+    checked_direct_python()
     worker_script = checked_pinned_source(worker_script)
     env_path = Path(envelope_path).resolve()
     target = Path(receipt_path).resolve()
