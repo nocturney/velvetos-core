@@ -1,0 +1,373 @@
+{
+  "schema": "velvetos.office-v2.p0-real-mac-ollama-runner-observed-evidence.v0",
+  "status": "PASS_CORRELATED_PINNED_MAC_OLLAMA_RUNNER_AND_INDEPENDENT_WORKER_QA",
+  "issue": "https://github.com/nocturney/velvetos-core/issues/612",
+  "date_utc": "2026-10-09",
+  "scope": "One genuinely new local Mac model coding task. Read-only OS-native Ollama serve and runner process samples correlated with actual Worker/Aider kernel pin, no exclusive model lease or full VRAM measurement.",
+  "source": {
+    "repo": "nocturney/velvetos-core",
+    "main_at_lab_start": "bf75080a15f1a0e7610af47e7f07d5f70452782a",
+    "executed_script_commit": "468f070da8d88c113210328b1be7cf8a7fbb9927",
+    "script_raw_sha256": "6c57e5c4bd06105134aeba6f5c960c0d08e4af605364dd7ca0699d4becefacc8",
+    "model_name": "qwen3.5:4b",
+    "model_digest": "7f3251fa6878a78a606bcb3c074283306e5ad2ea411a7774a9dd98a4bc7f2d13",
+    "model_runtime": "Ollama v0.40.1 Mac local 127.0.0.1:11556",
+    "host": "MacMiniOffice.local"
+  },
+  "raw_file_sha256": {
+    "envelope_sha256": "fda549a0feb58b5e03f456720a559e890d37e130eb75d7f99780e7453f6f3fae",
+    "receipt_sha256": "2522204a87f531d53faf97e3ab335066954da5cd40c6d1c751559a871e08f012",
+    "kernel_pin_sha256": "d0e02c179cbf56807c3f18b9524444fbacc05ae22192bd9b3ea3b4f82d20a116",
+    "observer_sha256": "488aa3bd22ae200b78f40c5e1a321fb81321bb994e4ff2c2ddcf4f962bbabff9"
+  },
+  "envelope": {
+    "task_id": "p0-ollama-observed-mac-20261009-02",
+    "host": "MacMiniOffice.local",
+    "base_sha": "ecabd70a292bc11ae4d8009a44502cb42ca1c0c9",
+    "branch": "lab-p0-agent-p0-ollama-observed-mac-20261009-02",
+    "checkpoint": "/Users/chris/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-ollama-observed-mac-20261009/p0-ollama-observed-mac-20261009-02/checkpoint.json",
+    "executor_kind": "LOCAL_AIDER_OLLAMA_SYNTHETIC_V1",
+    "model": "qwen3.5:4b",
+    "model_digest": "7f3251fa6878a78a606bcb3c074283306e5ad2ea411a7774a9dd98a4bc7f2d13",
+    "budget": {
+      "max_attempts": 1,
+      "max_cost_usd": 0,
+      "timeout_seconds": 140
+    }
+  },
+  "model_worker": {
+    "task_id": "p0-ollama-observed-mac-20261009-02",
+    "state": "SUCCEEDED",
+    "elapsed_seconds": 43.341,
+    "receipt_selfhash": "3ef20205569c88108191e59d40ee7cf3d823d28a9a0da150d118b43bf66ec02b",
+    "artifact_sha256": "456f89bec0af23e6287e88956b8b85e992d4926b89e9613238bee7f77302ab45",
+    "model_invocations_min": 1,
+    "exact_model_calls": null,
+    "local_model_usage_tokens": null,
+    "additional_api_spend_usd": 0,
+    "independent_qa": {
+      "hidden_12_verified": true,
+      "hidden_exit": 0,
+      "hidden_stdout_sha256": "34e6e7475be141677e1c66bf359a1e9b52b84143382e440500c4e74c94564f56",
+      "pass": true,
+      "replay_changed_paths": [
+        "slug.py"
+      ],
+      "replay_source_sha256": "456f89bec0af23e6287e88956b8b85e992d4926b89e9613238bee7f77302ab45",
+      "unit_3_verified": true,
+      "unit_exit": 0
+    },
+    "kernel_pin_sha256": "09aed1d90da791e2ffbb4c51a7dce61d3386ed17daffbdd2281d943284f6dcf6",
+    "separate_worker_verify": "PASS"
+  },
+  "kernel_process_pin": {
+    "schema": "velvetos.office-v2.p0-kernel-process-pin.v1",
+    "pin_sha256": "09aed1d90da791e2ffbb4c51a7dce61d3386ed17daffbdd2281d943284f6dcf6",
+    "worker": {
+      "birth_us": 1791579523101880,
+      "pgid": 1198,
+      "pid": 69639,
+      "ppid": 1242,
+      "source": "PSUTIL_OS_CREATE_TIME"
+    },
+    "aider": {
+      "birth_us": 1791579523729139,
+      "pgid": 69648,
+      "pid": 69648,
+      "ppid": 69639,
+      "source": "PSUTIL_OS_CREATE_TIME"
+    }
+  },
+  "inference_runner_observer": {
+    "report": {
+      "actual_gpu_vram_measured": false,
+      "aider_birth": {
+        "birth_us": 1791579523729139,
+        "pgid": 69648,
+        "pid": 69648,
+        "ppid": 69639,
+        "source": "PSUTIL_OS_CREATE_TIME"
+      },
+      "all_model_processes_accounted": false,
+      "autonomous_retry_proven": false,
+      "baseline_model_preloaded": false,
+      "canonical_fleet_lease": false,
+      "cross_host_fencing_verified": false,
+      "envelope_sha256": "24946ff3d9afc36fea6fc871f9b427d0736ad0445fea86d01f41d3baee6e146a",
+      "exact_model_call_count_known": false,
+      "exclusive_model_client_use_proven": false,
+      "host": "MacMiniOffice.local",
+      "issue": "https://github.com/nocturney/velvetos-core/issues/612",
+      "model": "qwen3.5:4b",
+      "model_digest": "7f3251fa6878a78a606bcb3c074283306e5ad2ea411a7774a9dd98a4bc7f2d13",
+      "model_started_by_observer": false,
+      "observation_sha256": "f1d020804841632d16c21766692b1bf9fc4d64e605d1f729b6a798c9916fe263",
+      "observed_runner_cpu_delta_ms": 2126,
+      "observed_server_cpu_delta_ms": 30,
+      "observer_model_calls": 0,
+      "observer_never_starts_or_controls_any_process": true,
+      "ollama_config_modified": false,
+      "original_pinned_worker_journal_validated": true,
+      "os_native_birth_before_and_after_each_metric": true,
+      "paid_api_spend_usd": 0,
+      "peak_runner_rss_bytes": 3687776256,
+      "peak_server_rss_bytes": 22429696,
+      "pin_sha256": "09aed1d90da791e2ffbb4c51a7dce61d3386ed17daffbdd2281d943284f6dcf6",
+      "production_authority": false,
+      "read_only_api_sole_model_digest_at_samples": true,
+      "recorded_at_utc": "2026-10-09T20:59:09.324529+00:00",
+      "runner_birth": {
+        "birth_us": 1791579539078745,
+        "pgid": 1198,
+        "pid": 69666,
+        "ppid": 99094,
+        "source": "PSUTIL_OS_CREATE_TIME"
+      },
+      "running_journal_raw_sha256": "8d60b2d090fec42871671d5d4a0e1bd5259fa1e39067f5d6a0c5ee319b5181b9",
+      "sample_count": 10,
+      "samples": [
+        {
+          "api_model_size_bytes": 3953628688,
+          "api_reported_only_not_gpu_measurement": true,
+          "api_size_vram_bytes": 3953628688,
+          "index": 1,
+          "monotonic_offset_ms": 31439,
+          "observed_at_utc": "2026-10-09T20:59:03.130542+00:00",
+          "runner": {
+            "birth_us": 1791579539078745,
+            "cpu_time_ms": 4372,
+            "pid": 69666,
+            "rss_bytes": 3687350272
+          },
+          "serve": {
+            "birth_us": 1791458729058590,
+            "cpu_time_ms": 12362,
+            "pid": 99094,
+            "rss_bytes": 21774336
+          }
+        },
+        {
+          "api_model_size_bytes": 3953628688,
+          "api_reported_only_not_gpu_measurement": true,
+          "api_size_vram_bytes": 3953628688,
+          "index": 2,
+          "monotonic_offset_ms": 32194,
+          "observed_at_utc": "2026-10-09T20:59:03.887837+00:00",
+          "runner": {
+            "birth_us": 1791579539078745,
+            "cpu_time_ms": 4410,
+            "pid": 69666,
+            "rss_bytes": 3687776256
+          },
+          "serve": {
+            "birth_us": 1791458729058590,
+            "cpu_time_ms": 12363,
+            "pid": 99094,
+            "rss_bytes": 21823488
+          }
+        },
+        {
+          "api_model_size_bytes": 3953628688,
+          "api_reported_only_not_gpu_measurement": true,
+          "api_size_vram_bytes": 3953628688,
+          "index": 3,
+          "monotonic_offset_ms": 32869,
+          "observed_at_utc": "2026-10-09T20:59:04.562347+00:00",
+          "runner": {
+            "birth_us": 1791579539078745,
+            "cpu_time_ms": 4443,
+            "pid": 69666,
+            "rss_bytes": 3680534528
+          },
+          "serve": {
+            "birth_us": 1791458729058590,
+            "cpu_time_ms": 12364,
+            "pid": 99094,
+            "rss_bytes": 21823488
+          }
+        },
+        {
+          "api_model_size_bytes": 3953628688,
+          "api_reported_only_not_gpu_measurement": true,
+          "api_size_vram_bytes": 3953628688,
+          "index": 4,
+          "monotonic_offset_ms": 33492,
+          "observed_at_utc": "2026-10-09T20:59:05.185833+00:00",
+          "runner": {
+            "birth_us": 1791579539078745,
+            "cpu_time_ms": 4541,
+            "pid": 69666,
+            "rss_bytes": 3672358912
+          },
+          "serve": {
+            "birth_us": 1791458729058590,
+            "cpu_time_ms": 12366,
+            "pid": 99094,
+            "rss_bytes": 21823488
+          }
+        },
+        {
+          "api_model_size_bytes": 3953628688,
+          "api_reported_only_not_gpu_measurement": true,
+          "api_size_vram_bytes": 3953628688,
+          "index": 5,
+          "monotonic_offset_ms": 34198,
+          "observed_at_utc": "2026-10-09T20:59:05.891691+00:00",
+          "runner": {
+            "birth_us": 1791579539078745,
+            "cpu_time_ms": 4891,
+            "pid": 69666,
+            "rss_bytes": 3672866816
+          },
+          "serve": {
+            "birth_us": 1791458729058590,
+            "cpu_time_ms": 12371,
+            "pid": 99094,
+            "rss_bytes": 22020096
+          }
+        },
+        {
+          "api_model_size_bytes": 3953628688,
+          "api_reported_only_not_gpu_measurement": true,
+          "api_size_vram_bytes": 3953628688,
+          "index": 6,
+          "monotonic_offset_ms": 34948,
+          "observed_at_utc": "2026-10-09T20:59:06.641939+00:00",
+          "runner": {
+            "birth_us": 1791579539078745,
+            "cpu_time_ms": 5233,
+            "pid": 69666,
+            "rss_bytes": 3673030656
+          },
+          "serve": {
+            "birth_us": 1791458729058590,
+            "cpu_time_ms": 12376,
+            "pid": 99094,
+            "rss_bytes": 22151168
+          }
+        },
+        {
+          "api_model_size_bytes": 3953628688,
+          "api_reported_only_not_gpu_measurement": true,
+          "api_size_vram_bytes": 3953628688,
+          "index": 7,
+          "monotonic_offset_ms": 35677,
+          "observed_at_utc": "2026-10-09T20:59:07.370624+00:00",
+          "runner": {
+            "birth_us": 1791579539078745,
+            "cpu_time_ms": 5576,
+            "pid": 69666,
+            "rss_bytes": 3673079808
+          },
+          "serve": {
+            "birth_us": 1791458729058590,
+            "cpu_time_ms": 12380,
+            "pid": 99094,
+            "rss_bytes": 22183936
+          }
+        },
+        {
+          "api_model_size_bytes": 3953628688,
+          "api_reported_only_not_gpu_measurement": true,
+          "api_size_vram_bytes": 3953628688,
+          "index": 8,
+          "monotonic_offset_ms": 36316,
+          "observed_at_utc": "2026-10-09T20:59:08.009448+00:00",
+          "runner": {
+            "birth_us": 1791579539078745,
+            "cpu_time_ms": 5879,
+            "pid": 69666,
+            "rss_bytes": 3673145344
+          },
+          "serve": {
+            "birth_us": 1791458729058590,
+            "cpu_time_ms": 12384,
+            "pid": 99094,
+            "rss_bytes": 22298624
+          }
+        },
+        {
+          "api_model_size_bytes": 3953628688,
+          "api_reported_only_not_gpu_measurement": true,
+          "api_size_vram_bytes": 3953628688,
+          "index": 9,
+          "monotonic_offset_ms": 36895,
+          "observed_at_utc": "2026-10-09T20:59:08.588837+00:00",
+          "runner": {
+            "birth_us": 1791579539078745,
+            "cpu_time_ms": 6155,
+            "pid": 69666,
+            "rss_bytes": 3673178112
+          },
+          "serve": {
+            "birth_us": 1791458729058590,
+            "cpu_time_ms": 12388,
+            "pid": 99094,
+            "rss_bytes": 22347776
+          }
+        },
+        {
+          "api_model_size_bytes": 3953628688,
+          "api_reported_only_not_gpu_measurement": true,
+          "api_size_vram_bytes": 3953628688,
+          "index": 10,
+          "monotonic_offset_ms": 37631,
+          "observed_at_utc": "2026-10-09T20:59:09.324435+00:00",
+          "runner": {
+            "birth_us": 1791579539078745,
+            "cpu_time_ms": 6498,
+            "pid": 69666,
+            "rss_bytes": 3673325568
+          },
+          "serve": {
+            "birth_us": 1791458729058590,
+            "cpu_time_ms": 12392,
+            "pid": 99094,
+            "rss_bytes": 22429696
+          }
+        }
+      ],
+      "schema": "velvetos.office-v2.p0-one-local-model-runner-passive-resource.v0",
+      "scope": "ONE_HOST_ONE_FRESH_TASK_CORRELATED_MODEL_RUNNER_NOT_EXCLUSIVE_USAGE",
+      "server_birth": {
+        "birth_us": 1791458729058590,
+        "pgid": 1198,
+        "pid": 99094,
+        "ppid": 1,
+        "source": "PSUTIL_OS_CREATE_TIME"
+      },
+      "startup_api_unavailable_count": 1,
+      "task_id": "p0-ollama-observed-mac-20261009-02",
+      "worker_birth": {
+        "birth_us": 1791579523101880,
+        "pgid": 1198,
+        "pid": 69639,
+        "ppid": 1242,
+        "source": "PSUTIL_OS_CREATE_TIME"
+      }
+    },
+    "separate_observer_verify": "PASS_OFFLINE_HISTORICAL_REPORT_NOT_LIVE_ATTESTATION"
+  },
+  "limits": {
+    "model_exclusive_clients_proven": false,
+    "model_server_and_runner_rss_samples_observed": true,
+    "host_wide_memory_usage_attributed": false,
+    "ollama_api_reported_size_vram_is_direct_gpu_measurement": false,
+    "actual_gpu_vram_measured": false,
+    "cross_host_distributed_fencing": false,
+    "canonical_fleet_lease": false,
+    "autonomous_retry_or_recovery_proven": false,
+    "production_authority": false,
+    "all_process_descendants_excluded": false,
+    "paid_api_spend_usd": 0,
+    "observer_model_calls": 0,
+    "exact_model_invocation_count_known": false,
+    "long_tail_latency_reliably_estimated": false
+  },
+  "failed_preliminary_observer": {
+    "task_id": "p0-ollama-observed-mac-20261009-01",
+    "failure": "LOCAL_OLLAMA_API_UNAVAILABLE during model warmup; observer-only failed closed, original Worker continued and SUCCEEDED with separate QA; first task was NEVER retried.",
+    "report_published": false,
+    "fresh_second_task_used": true
+  }
+}
