@@ -186,7 +186,7 @@ def main() -> int:
         fail("P0 local model LAB selftest returned invalid JSON")
     if (
         local_worker.get("status") != "PASS"
-        or local_worker.get("tests", 0) < 17
+        or local_worker.get("tests", 0) < 19
         or local_worker.get("actual_model_invocations") != 0
         or local_worker.get("live_model_agent_proven_by_selftest") is not False
         or local_worker.get("paid_api_calls") != 0
