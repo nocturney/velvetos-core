@@ -2,6 +2,7 @@
 """Canonical live Office v2 safety contracts, independent of phase-closure receipts."""
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -271,6 +272,9 @@ def main() -> int:
         or fresh_evidence.get("schema") != "velvetos.office-v2.p0-manual-new-attempt-lineage-lab.v1"
         or fresh_evidence.get("status") != "PASS_READ_ONLY_LINEAGE_NOT_ADMISSION"
         or fresh_source.get("script_git_blob") != "783575ff1784bb7165ec4cb1a73b1c643dccfed7"
+        or fresh_source.get("script_file_sha256") != "b2eb921c37ace4f979f98433f069df07484e7b0b5f1e670c112efabf6a90ea73"
+        or hashlib.sha256(fresh_script.read_bytes()).hexdigest() !=
+            "b2eb921c37ace4f979f98433f069df07484e7b0b5f1e670c112efabf6a90ea73"
         or fresh_original.get("original_state") != "UNKNOWN_RUNNING_JOURNAL_NO_BLIND_RETRY"
         or fresh_original.get("new_state") != "SUCCESS_CLAIM_NEEDS_INDEPENDENT_WORKER_VERIFY"
         or fresh_original.get("original_running_journal_raw_sha256") !=
