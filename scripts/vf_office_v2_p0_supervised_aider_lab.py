@@ -23,6 +23,13 @@ ALLOWED_LAB_NAME = "AgentEnvelopeLab"
 ALLOWED_MODEL = "qwen3.5:9b"
 ALLOWED_PORT = 11555
 ALLOWED_MODE = "REQUIRE_OS_BIRTH_BEFORE_QA_V1"
+PINNED_WORKER_REPO_HEAD = "030eccbe98e5165115faa37253ad82208fc59614"
+PINNED_WORKER_MODULES = {
+    "vf_office_v2_p0_local_model_worker.py": "7b4cb176c9c66351f9658c08589f45ec94d50c2a8b6450fe8e5cb1d8f09d86f7",
+    "vf_office_v2_p0_kernel_identity.py": "2268091d9129eb504fc17ce7e7374367deb5ae23cb1327872796f353a16043ce",
+    "vf_office_v2_continuity.py": "fba96dd7e1a398c393bf3c4237aed062d11369d62bf907a42f25810b04872ec2",
+}
+PINNED_WINDOWS_JOB_LAB = Path("D:/Velvet/Pilots/OfficeAccelerator/WindowsJobObjectLab")
 MAX_READY_SECONDS = 40
 OWNER_TIMEOUT_SECONDS = 14
 
@@ -70,9 +77,159 @@ def thin_environment():
     return result
 
 
+
+def _checked_git(source_root, *args):
+    result = subprocess.run(
+        ["git", "-C", str(source_root), *args],
+        capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=15,
+    )
+    ensure(result.returncode == 0, "PINNED_SOURCE_GIT_UNAVAILABLE")
+    return result.stdout.rstrip("\n")
+
+
+def checked_pinned_source(worker_script, *, expected_commit=None, expected_hashes=None):
+    """Validate the exact repo and all importable P0 trust-chain modules BEFORE import."""
+    raw = Path(worker_script)
+    ensure(raw.is_file() and not raw.is_symlink(), "PINNED_WORKER_FILE_REQUIRED")
+    worker = raw.resolve()
+    scripts, repository = worker.parent, worker.parent.parent
+    ensure(
+        worker.name == "vf_office_v2_p0_local_model_worker.py"
+        and scripts.name == "scripts"
+        and repository.name == "source"
+        and repository.parent.name.startswith("kernel-birth-")
+        and repository.parent.parent.name == "AgentEnvelopeLab",
+        "PINNED_AGENT_SOURCE_LAB_REQUIRED",
+    )
+    commit = PINNED_WORKER_REPO_HEAD if expected_commit is None else expected_commit
+    pins = PINNED_WORKER_MODULES if expected_hashes is None else expected_hashes
+    ensure(_checked_git(repository, "rev-parse", "HEAD") == commit,
+           "PINNED_AGENT_SOURCE_COMMIT_DRIFT")
+    ensure(not _checked_git(repository, "status", "--porcelain=v1", "--untracked-files=all"),
+           "PINNED_AGENT_SOURCE_DIRTY")
+    for name, expected in pins.items():
+        original = scripts / name
+        ensure(original.is_file() and not original.is_symlink(), "PINNED_IMPORT_MISSING")
+        actual = hashlib.sha256(original.read_bytes()).hexdigest()
+        ensure(actual == expected, "PINNED_IMPORT_SHA256_DRIFT")
+    ensure(set(pins) == set(PINNED_WORKER_MODULES), "INCOMPLETE_IMPORT_TRUST_CHAIN")
+    return worker
+
+
+def checked_lab_output_paths(scratch, report, *, allowed_root=None):
+    """Only new, adjacent files inside the dedicated WindowsJobObjectLab may be made."""
+    base = (PINNED_WINDOWS_JOB_LAB if allowed_root is None else Path(allowed_root)).resolve()
+    requested_scratch = Path(scratch).absolute()
+    requested_report = Path(report).absolute()
+    ensure(not requested_scratch.is_symlink() and not requested_report.is_symlink(),
+           "SYMLINKED_JOB_OUTPUT_DENIED")
+    scratch_parent = requested_scratch.parent.resolve()
+    report_parent = requested_report.parent.resolve()
+    ensure(
+        scratch_parent.parent == base
+        and report_parent == scratch_parent
+        and requested_scratch.name.startswith("job-model-")
+        and requested_report.name.startswith("job-guard-")
+        and requested_report.suffix == ".json",
+        "WINDOWS_JOB_LAB_OUTPUT_SCOPE_DENIED",
+    )
+    ensure(not requested_scratch.exists() and not requested_report.exists(),
+           "JOB_LAB_DESTINATION_NOT_FRESH")
+    return requested_scratch, requested_report
+
+
+def selftest():
+    """Pure offline/temporary Git regression; NEVER executes Aider or Win32 job APIs."""
+    import tempfile
+
+    cases = []
+
+    def must_refuse(callback, label):
+        try:
+            callback()
+        except Refused:
+            cases.append(label)
+        else:
+            raise AssertionError("UNSAFE_ADMISSION_ACCEPTED:" + label)
+
+    with tempfile.TemporaryDirectory(prefix="p0-supervised-aider-admission-") as td:
+        root = Path(td)
+        lab = root / "WindowsJobObjectLab"
+        host = lab / "20261009-fixture"
+        host.mkdir(parents=True)
+        scratch = host / "job-model-offline"
+        report = host / "job-guard-offline.json"
+        checked_lab_output_paths(scratch, report, allowed_root=lab)
+        cases.append("positive_new_scoped_lab_paths")
+        must_refuse(lambda: checked_lab_output_paths(
+            host / "wrong-scratch", report, allowed_root=lab), "wrong_scratch_name")
+        must_refuse(lambda: checked_lab_output_paths(
+            scratch, host / "unrestricted.txt", allowed_root=lab), "wrong_report_name")
+        must_refuse(lambda: checked_lab_output_paths(
+            scratch, root / "outside.json", allowed_root=lab), "outside_report")
+        must_refuse(lambda: checked_lab_output_paths(
+            root / "job-model-outside", report, allowed_root=lab), "outside_scratch")
+        scratch.mkdir()
+        must_refuse(lambda: checked_lab_output_paths(
+            scratch, report, allowed_root=lab), "reused_scratch")
+        scratch.rmdir()
+        report.write_text("old", encoding="utf-8")
+        must_refuse(lambda: checked_lab_output_paths(
+            scratch, report, allowed_root=lab), "reused_report")
+        report.unlink()
+        ensure(not scratch.exists() and not report.exists(), "OFFLINE_PATH_TEST_LEAK")
+        cases.append("no_scoped_output_persisted")
+
+        scripts = root / "AgentEnvelopeLab" / "kernel-birth-offline" / "source" / "scripts"
+        scripts.mkdir(parents=True)
+        for name in PINNED_WORKER_MODULES:
+            (scripts / name).write_text("# Offline placeholder: never imported or executed\n",
+                                        encoding="utf-8")
+        source_root = scripts.parent
+        init = subprocess.run(["git", "init", "-q", str(source_root)],
+                              capture_output=True, timeout=15)
+        ensure(init.returncode == 0, "OFFLINE_GIT_INIT_FAILED")
+        _checked_git(source_root, "config", "core.autocrlf", "false")
+        _checked_git(source_root, "add", "--", "scripts")
+        _checked_git(source_root, "-c", "user.name=LAB QA",
+                     "-c", "user.email=fixture@example.invalid", "commit", "-qm", "Synthetic pin")
+        baseline = _checked_git(source_root, "rev-parse", "HEAD")
+        test_hashes = {name: hashlib.sha256((scripts / name).read_bytes()).hexdigest()
+                       for name in PINNED_WORKER_MODULES}
+        worker = scripts / "vf_office_v2_p0_local_model_worker.py"
+        checked_pinned_source(worker, expected_commit=baseline, expected_hashes=test_hashes)
+        cases.append("positive_trusted_three_module_git_pin")
+        must_refuse(lambda: checked_pinned_source(
+            worker, expected_commit="f" * 40, expected_hashes=test_hashes),
+            "wrong_git_commit")
+        (scripts / "unexpected.py").write_text("unused\n", encoding="utf-8")
+        must_refuse(lambda: checked_pinned_source(
+            worker, expected_commit=baseline, expected_hashes=test_hashes),
+            "untracked_module")
+        (scripts / "unexpected.py").unlink()
+        (scripts / "vf_office_v2_p0_kernel_identity.py").write_text(
+            "# unauthorized drift\n", encoding="utf-8")
+        must_refuse(lambda: checked_pinned_source(
+            worker, expected_commit=baseline, expected_hashes=test_hashes),
+            "modified_import")
+        _checked_git(source_root, "checkout", "--", "scripts")
+        must_refuse(lambda: checked_pinned_source(
+            scripts / "wrong_worker.py", expected_commit=baseline, expected_hashes=test_hashes),
+            "wrong_worker_filename")
+        must_refuse(lambda: checked_pinned_source(
+            worker, expected_commit=baseline, expected_hashes={"x.py": "0" * 64}),
+            "missing_pinned_modules")
+        checked_pinned_source(worker, expected_commit=baseline, expected_hashes=test_hashes)
+        cases.append("pin_restoration_confirmed")
+
+    ensure(len(cases) >= 14, "SELFTEST_COUNT_DRIFT")
+    return {"status": "PASS_OFFLINE", "tests": len(cases), "cases": cases,
+            "model_invocations": 0, "native_job_objects_created": 0,
+            "production_effects": 0, "retries_authorized": 0}
+
 def check_inputs(worker_script, envelope_path, receipt_path, scratch):
     ensure(os.name == "nt", "WINDOWS_ONLY")
-    worker_script = Path(worker_script).resolve()
+    worker_script = checked_pinned_source(worker_script)
     env_path = Path(envelope_path).resolve()
     target = Path(receipt_path).resolve()
     directory = Path(scratch).absolute()
@@ -150,6 +307,7 @@ def await_json(path, timeout, living=None):
 
 
 def controller(args):
+    checked_lab_output_paths(args.scratch, args.output)
     env,worker=check_inputs(args.worker,args.envelope,args.receipt,args.scratch)
     scratch=Path(args.scratch).absolute()
     scratch.mkdir(parents=True, exist_ok=False)
@@ -276,6 +434,7 @@ def controller(args):
 def main():
     p=argparse.ArgumentParser()
     commands=p.add_subparsers(dest="command",required=True)
+    commands.add_parser("selftest")
     helper=commands.add_parser("_helper",help=argparse.SUPPRESS)
     run=commands.add_parser("run")
     for a in (helper,run):
@@ -286,6 +445,9 @@ def main():
     run.add_argument("--mode",choices=["complete","interrupt"],required=True)
     run.add_argument("--output",required=True)
     args=p.parse_args()
+    if args.command=="selftest":
+        print(json.dumps(selftest(),sort_keys=True))
+        return
     if args.command=="_helper":
         raise SystemExit(_helper(args.worker,args.envelope,args.receipt,args.scratch))
     result=controller(args)
