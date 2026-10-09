@@ -242,6 +242,53 @@ def main() -> int:
     ):
         fail("P0 UNKNOWN state did not preserve fail-closed LAB safety")
 
+    # #612: manual fresh-attempt evidence separation after preserved UNKNOWN.
+    # Pure offline only: never dispatch/requeue tasks or acquire a fleet lease.
+    fresh_script = ROOT / "scripts" / "vf_office_v2_p0_fresh_attempt_lineage.py"
+    fresh_check = subprocess.run(
+        [sys.executable, str(fresh_script), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=25,
+    )
+    if fresh_check.returncode:
+        fail("P0 fresh attempt fail-closed selftest failed: " + fresh_check.stdout[:220])
+    try:
+        fresh_proof = json.loads(fresh_check.stdout)
+        fresh_evidence = json.loads((P2 / "p0-manual-fresh-attempt-lineage-2026-10-09.json").read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        fail("P0 fresh attempt evidence invalid or missing")
+    fresh_original = fresh_evidence.get("actual_host_local_readback") or {}
+    fresh_limits = fresh_evidence.get("scope_limits") or {}
+    fresh_source = fresh_evidence.get("source") or {}
+    if (
+        fresh_check.returncode != 0
+        or fresh_proof.get("status") != "PASS_OFFLINE"
+        or fresh_proof.get("tests") != 21
+        or fresh_proof.get("model_invocations") != 0
+        or fresh_proof.get("auto_retry_authorized") is not False
+        or fresh_proof.get("new_task_execution_authorized") is not False
+        or fresh_proof.get("all_orphan_descendants_excluded") is not False
+        or fresh_proof.get("fleet_authority") is not False
+        or fresh_evidence.get("schema") != "velvetos.office-v2.p0-manual-new-attempt-lineage-lab.v1"
+        or fresh_evidence.get("status") != "PASS_READ_ONLY_LINEAGE_NOT_ADMISSION"
+        or fresh_source.get("script_git_blob") != "783575ff1784bb7165ec4cb1a73b1c643dccfed7"
+        or fresh_original.get("original_state") != "UNKNOWN_RUNNING_JOURNAL_NO_BLIND_RETRY"
+        or fresh_original.get("new_state") != "SUCCESS_CLAIM_NEEDS_INDEPENDENT_WORKER_VERIFY"
+        or fresh_original.get("original_running_journal_raw_sha256") !=
+            "798081231f7af3d13256de84653ca5abe283488b82b03fe67fe4477b0237cf18"
+        or fresh_original.get("new_envelope_sha256") !=
+            "9694d73817bea7c541dacf23c4c5eb9ce9e21b9f4e033210dc4757de259c04b1"
+        or fresh_original.get("new_task_success_independently_verified_by_this_tool") is not False
+        or fresh_limits.get("read_only") is not True
+        or fresh_limits.get("original_unknown_retry_authorized") is not False
+        or fresh_limits.get("new_task_execution_authorized") is not False
+        or fresh_limits.get("autonomous_recovery_proven") is not False
+        or fresh_limits.get("worker_fencing_proven") is not False
+        or fresh_limits.get("fleet_lease_or_scheduler_authority") is not False
+        or fresh_limits.get("production_writer_authority") is not False
+        or fresh_limits.get("actual_model_calls_this_check") != 0
+    ):
+        fail("P0 manual new-attempt lineage overstated safety or authority")
+
     # P0 historical PID inspection CI tests use MOCK processes only;
     # no live process enumeration or implicit recovery is run by CI.
     pid_check = subprocess.run(
