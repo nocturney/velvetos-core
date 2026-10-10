@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09",
+  "updatedAt": "2026-10-10",
   "rule": "Single office inbox. Do not create parallel inboxes per agent.",
   "buckets": {
     "content": [],
@@ -8,7 +8,7 @@
         "id": "vfmedia-auto-intake",
         "title": "קליטת מדיה אוטומטית — נכנס→מקור",
         "state": "Idle",
-        "updatedAt": "2026-10-09T18:25:10Z",
+        "updatedAt": "2026-10-10T00:59:02Z",
         "counts": {
           "registered_only": 2,
           "verified_and_intaken": 482,
