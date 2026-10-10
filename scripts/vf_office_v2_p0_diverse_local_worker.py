@@ -36,6 +36,7 @@ HOST_MODEL = {"Chris": ("qwen3.5:9b", 11555),
 
 
 PUBLIC_SPEC_PROFILE = "PUBLIC_SPEC_REMINDER_V1"
+PUBLIC_SPEC_STATE_PROFILE = "PUBLIC_SPEC_STATE_MACHINE_V2"
 # Only reminders already contained in the public fixture specification.
 # Do NOT expose private hidden QA, source solutions or user/business data.
 PUBLIC_SPEC_APPENDICES = {
@@ -62,10 +63,24 @@ PUBLIC_SPEC_APPENDICES = {
 def approved_prompt_bytes(fixture_id, profile):
     require(fixture_id in PUBLIC_SPEC_APPENDICES, "UNAPPROVED_FIXTURE")
     base = fixtures.catalog()[fixture_id]["prompt"]
-    require(profile in (None, PUBLIC_SPEC_PROFILE),
+    require(profile in (None, PUBLIC_SPEC_PROFILE, PUBLIC_SPEC_STATE_PROFILE),
             "UNAPPROVED_PUBLIC_SPEC_PROMPT_PROFILE")
     if profile == PUBLIC_SPEC_PROFILE:
         base += "\n\n" + PUBLIC_SPEC_APPENDICES[fixture_id]
+    if profile == PUBLIC_SPEC_STATE_PROFILE:
+        require(fixture_id == "canonical-tag-v1",
+                "STATE_MACHINE_ONLY_CANONICAL_TAG")
+        base += (
+            "\n\nPUBLIC SPEC STATE REMINDER (not hidden QA): After lowering "
+            "the whole input, scan one character at a time. On the FIRST "
+            "non-ASCII-alphanumeric character immediately after a letter "
+            "or digit, emit ONE underscore separator. On any additional "
+            "non-alphanumeric characters in the SAME consecutive run, "
+            "emit nothing else. Do not reverse that first-separator "
+            "condition. Remove leading/trailing separators, and use "
+            "untitled for an all-separator input. Treat Unicode letters "
+            "as non-ASCII separators. Change only canonical_tag.py."
+        )
     return base.encode("utf-8")
 
 
@@ -720,7 +735,21 @@ def selftest():
             checks.append(True)
         else:
             raise AssertionError("UNAPPROVED_PROFILE_ACCEPTED")
-    require(all(checks) and len(checks)==32,"NEGATIVE_TEST_COUNT_DRIFT")
+    v2 = approved_prompt_bytes("canonical-tag-v1", PUBLIC_SPEC_STATE_PROFILE)
+    require(v2.startswith(fixtures.catalog()["canonical-tag-v1"]["prompt"].encode("utf-8"))
+            and b"PUBLIC SPEC STATE REMINDER" in v2,
+            "PUBLIC_STATE_PROFILE_NOT_PINN")
+    checks.append(True)
+    require(v2 != approved_prompt_bytes("canonical-tag-v1", PUBLIC_SPEC_PROFILE),
+            "STATE_PROFILE_NOT_DISTINCT")
+    checks.append(True)
+    try:
+        approved_prompt_bytes("merge-windows-v1", PUBLIC_SPEC_STATE_PROFILE)
+    except Refused:
+        checks.append(True)
+    else:
+        raise AssertionError("STATE_PROFILE_WRONG_FIXTURE_ACCEPTED")
+    require(all(checks) and len(checks)==35,"NEGATIVE_TEST_COUNT_DRIFT")
     return {"status":"PASS_OFFLINE","tests":len(checks),
             "model_invocations":0,"different_tasks_model_proven":False,
             "automatic_retry":False,"production_authority":False,
@@ -736,7 +765,7 @@ def main():
         prepare.add_argument("--"+k,required=True)
     prepare.add_argument("--port",type=int,required=True)
     prepare.add_argument("--timeout",type=int,default=140)
-    prepare.add_argument("--prompt-profile",choices=("default", "public-spec-v1"),default="default")
+    prepare.add_argument("--prompt-profile",choices=("default", "public-spec-v1", "state-separator-v2"),default="default")
     run=sub.add_parser("run")
     verify=sub.add_parser("verify")
     audit=sub.add_parser("audit-failed-qa")
@@ -752,7 +781,9 @@ def main():
     elif args.mode=="admit":
         result=admit(args.root,args.task_id,args.candidate,
                      args.aider,args.model,args.port,args.timeout,
-                     None if args.prompt_profile=="default" else PUBLIC_SPEC_PROFILE)
+                     (None if args.prompt_profile=="default" else
+                      PUBLIC_SPEC_STATE_PROFILE if args.prompt_profile=="state-separator-v2" else
+                      PUBLIC_SPEC_PROFILE))
     elif args.mode=="run":result=execute(args.envelope,args.receipt)
     elif args.mode=="audit-failed-qa":
         result=audit_failed_qa(args.envelope,args.root)

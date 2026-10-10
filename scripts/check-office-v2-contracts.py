@@ -293,6 +293,46 @@ def main() -> int:
     ):
         fail("P0 manual new-attempt lineage overstated safety or authority")
 
+    # #612: Two real, different-code QA-green Task Envelopes on ONE Mac.
+    # Offline checks only; never start Ollama, requeue UNKNOWN or grant a lease.
+    two_family_script = ROOT / "scripts" / "vf_office_v2_p0_second_diverse_success_evidence.py"
+    two_family_data = P2 / "p0-two-families-mac-independent-qa-success-2026-10-10.json"
+    if hashlib.sha256(two_family_script.read_bytes()).hexdigest() != (
+            "80172813472c72fc11d3cf50f107d8cdce6b3bc1c89b704f811d432ef067033c"):
+        fail("P0 two-family historical verifier source bytes changed")
+    for proof_mode in ("selftest", "verify"):
+        proof_run = subprocess.run(
+            [sys.executable, str(two_family_script), proof_mode,
+             "--evidence", str(two_family_data)],
+            cwd=ROOT, capture_output=True, text=True, timeout=25)
+        if proof_run.returncode != 0:
+            fail("P0 two-family metadata " + proof_mode +
+                 " failed: " + proof_run.stdout[:180])
+        try:
+            check_family = json.loads(proof_run.stdout)
+        except ValueError:
+            fail("P0 two-family validator returned non-JSON")
+        if proof_mode == "selftest":
+            if (check_family.get("status") != "PASS_OFFLINE"
+                    or check_family.get("tests") != 25
+                    or check_family.get("model_invocations") != 0
+                    or check_family.get("scheduler_calls") != 0
+                    or check_family.get("production_actions") != 0
+                    or check_family.get("authority_promoted") is not False):
+                fail("P0 two-family offline negative cases overstated success")
+        elif (check_family.get("status") !=
+              "PASS_HISTORICAL_TWO_DIFFERENT_MAC_CODING_FAMILIES_OFFLINE_ONLY"
+              or check_family.get("different_target_files") != 2
+              or check_family.get("separate_original_worker_verifications") != 2
+              or check_family.get("different_physical_hosts") != 1
+              or check_family.get("prior_unknown_journals_intact") is not True
+              or check_family.get("original_model_tasks_retried") is not False
+              or check_family.get("reliable_p95") is not False
+              or check_family.get("additional_model_calls") != 0
+              or check_family.get("production_or_distributed_fencing_authority")
+                 is not False):
+            fail("P0 two-family Mac-only proof was falsified")
+
     # #612: TWO fresh new Mac public-spec guided Qwen coding attempts.
     # One original Worker independent QA PASS, one original journal remains
     # FAIL_CLOSED. Only historical/offline validation in CI; no model/OS run.
@@ -343,7 +383,7 @@ def main() -> int:
     diverse_worker_file = ROOT / "scripts" / "vf_office_v2_p0_diverse_local_worker.py"
     diverse_failure_path = (P2 / "p0-two-diverse-real-model-qa-failclosed-2026-10-09.json")
     executed_diverse_worker_src = "c08a8413f59a1924c013adc66f523c897f1e477fae810f2c76127699d4262087"
-    expected_diverse_worker_src = "0099792f8be5d20c4c698a417d83bf5d12d00bfeaeccd92a90aeef81865a2cbb"
+    expected_diverse_worker_src = "4bab56091da28e18d7ad5e28023ddaedbbdc5537c10340e02bdd330a862e6d06"
     if hashlib.sha256(diverse_worker_file.read_bytes()).hexdigest() != expected_diverse_worker_src:
         fail("P0 diverse model worker actual source byte pin changed")
     diverse_tests = subprocess.run(
@@ -360,7 +400,7 @@ def main() -> int:
         fail("P0 diverse Worker historical failures missing/invalid")
     if (
         check_result.get("status") != "PASS_OFFLINE"
-        or check_result.get("tests") != 32
+        or check_result.get("tests") != 35
         or check_result.get("model_invocations") != 0
         or check_result.get("different_tasks_model_proven") is not False
         or check_result.get("automatic_retry") is not False
