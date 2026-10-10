@@ -15,7 +15,6 @@ import json
 import os
 from pathlib import Path
 import re
-import resource
 import subprocess
 import sys
 import tempfile
@@ -111,6 +110,9 @@ def no_persisted_checkout_auth():
 
 
 def limited_child():
+    # Imported only on the admitted Linux runner; Windows static QA must not
+    # need the POSIX-only resource module.
+    import resource
     # The source is pinned; these are bounded process resources, not a VM.
     resource.setrlimit(resource.RLIMIT_CPU, (7, 7))
     resource.setrlimit(resource.RLIMIT_FSIZE, (2 * 1024 * 1024, 2 * 1024 * 1024))
