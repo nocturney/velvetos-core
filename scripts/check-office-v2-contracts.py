@@ -455,6 +455,97 @@ def main() -> int:
                   or value.get("production_authority") is not False):
                 fail("P0 #604 cleanup negative controls failed")
 
+    # #604: one REAL provider expiry accepted an unsafe old-owner GitHub
+    # ref update; a later sink-native Git epoch marker cutover then denied
+    # stale ref SHA before activating the new provider owner.
+    # This is HISTORICAL scoped LAB witness, never production global
+    # atomicity. CI calls ONLY isolated pure-offline subcommands below.
+    epoch_provider = ROOT / "scripts/vf_office_v2_604_provider_epoch_cutover_lab.py"
+    epoch_fixture = ROOT / "scripts/vf_office_v2_604_epoch_mtls_fixture_lab.py"
+    epoch_sink = ROOT / "scripts/vf_office_v2_604_epoch_native_git_sink_lab.py"
+    epoch_gate = ROOT / "scripts/vf_office_v2_604_epoch_cutover_receipt_gate.py"
+    epoch_receipt = P2 / "p0-real-etcd-expiry-github-epoch-cutover-2026-10-10.json"
+    epoch_report = P2 / "p0-real-etcd-expiry-github-epoch-cutover-2026-10-10.md"
+    for file, pinned_sha in (
+        (epoch_provider, "be2315a669cd1228de9681f83cd049edd12d76f4705d958898bf65936cf14e5c"),
+        (epoch_fixture, "d6876e80d7a6ccdee5382da094ae57d8d8154e6ac1f4ad2893e8c5a70049c4c5"),
+        (epoch_sink, "2d5c0bba882658bef67e4e8fd6dc5bd4686df7e9e0a7817908ad8c278bec5c34"),
+        (epoch_gate, "6246be0c48568cfa0433b3c157130f43ccdde36a712df92938b4d6ea0d935285"),
+        (epoch_receipt, "486784a0a488aa034ad10843da8308bac2048edf24deda24fee1a87305b07d24"),
+        (epoch_report, "f7fd0166f56ef0bf9de7a334607a3c45e00e572b04d0b206eca399d598ebabab"),
+    ):
+        if hashlib.sha256(file.read_bytes()).hexdigest() != pinned_sha:
+            fail("P0 #604 real provider expiry to GitHub epoch cutover LAB evidence or code unpinned")
+    for script, mode in (
+        (epoch_provider, "selftest"),
+        (epoch_fixture, "selftest"),
+        (epoch_sink, "selftest"),
+        (epoch_gate, "verify"),
+        (epoch_gate, "selftest"),
+    ):
+        process = subprocess.run(
+            [sys.executable, str(script), mode], cwd=ROOT,
+            text=True, capture_output=True, timeout=35,
+        )
+        if process.returncode:
+            fail("P0 #604 epoch cutover offline gate failed: " +
+                 script.name + " " + mode + ": " + process.stdout[:200])
+        try:
+            result = json.loads(process.stdout)
+        except ValueError:
+            fail("P0 #604 epoch cutover returned invalid JSON")
+        if script == epoch_provider:
+            if (result.get("status") != "PASS_OFFLINE"
+                    or result.get("tests") != 6
+                    or result.get("provider_calls") != 0
+                    or result.get("git_remote_calls") != 0
+                    or result.get("git_effect_writes") != 0
+                    or result.get("secret_files_read") != 0
+                    or result.get("cross_store_atomicity") is not False
+                    or result.get("production_authority") is not False):
+                fail("P0 #604 provider offline mode claims external effects")
+        elif script == epoch_fixture:
+            if (result.get("status") != "PASS_OFFLINE"
+                    or result.get("cases") != 66
+                    or result.get("real_provider_requests") != 0
+                    or result.get("http_listeners") != 0
+                    or result.get("git_remote_writes") != 0
+                    or result.get("production_authority") is not False):
+                fail("P0 #604 mTLS fixture offline mode unsafe")
+        elif script == epoch_sink:
+            if (result.get("status") != "PASS_OFFLINE"
+                    or result.get("cases") != 66
+                    or result.get("git_remote_writes") != 0
+                    or result.get("git_remote_reads") != 0
+                    or result.get("network_requests") != 0
+                    or result.get("private_credentials_read") != 0
+                    or result.get("two_native_host_git_writers") is not False
+                    or result.get("etcd_github_global_atomicity") is not False
+                    or result.get("production_authority") is not False):
+                fail("P0 #604 GitHub epoch sink offline or authority unsafe")
+        elif mode == "verify":
+            if (result.get("status") != "PASS_OFFLINE_REAL_EXPIRY_AND_EPOCH_CUTOVER"
+                    or result.get("physical_hosts") != 2
+                    or result.get("provider_generations") != [2, 5]
+                    or result.get("real_git_ref_pushes_accepted") != 4
+                    or result.get("unsafe_expired_owner_git_push_accepted") != 1
+                    or result.get("stale_after_epoch_git_push_denied") != 1
+                    or result.get("remote_scratch_refs_left") != 0
+                    or result.get("provider_owners_left") != 0
+                    or result.get("globally_atomic_fencing_proven") is not False
+                    or result.get("production_authority") is not False
+                    or result.get("git_remote_calls") != 0
+                    or result.get("model_calls") != 0):
+                fail("P0 #604 historical epoch native Git witness overstated")
+        elif (result.get("status") != "PASS_OFFLINE"
+              or result.get("cases") != 39
+              or result.get("git_effect_writes") != 0
+              or result.get("provider_requests") != 0
+              or result.get("github_network_calls") != 0
+              or result.get("certificate_secret_reads") != 0
+              or result.get("production_authority") is not False):
+            fail("P0 #604 epoch receipt adversarial offline gate unsafe")
+
     # #604: real Mac-origin, ONE native Windows GitHub CAS writer and
     # guarded scratch-ref cleanup. Historical external writes are evidence,
     # NOT provider-epoch fencing. Only offline bounded negative tests in CI:
