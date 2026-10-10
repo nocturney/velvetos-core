@@ -1319,6 +1319,41 @@ def main() -> int:
             or batch_lineage.get("production_effects") != 0):
         fail("P0 batch lineage guard unsafe or incomplete")
 
+    # #612 consumer-only fencing: *synthetic*, denial-only, no #604 lease
+    # issuance or integration with live effect/write boundaries.
+    fence_source = ROOT / "scripts" / "vf_office_v2_p0_fenced_effect_consumer_lab.py"
+    if hashlib.sha256(fence_source.read_bytes()).hexdigest() != (
+        "1359f5fbaf6902dbc02cf86e8174d11b0912f76f69b72df2ba48c98581d85dc5"
+    ):
+        fail("P0 fenced-effect consumer exact source provenance changed")
+    fenced_consumer_check = subprocess.run(
+        [sys.executable,
+         str(ROOT / "scripts" / "vf_office_v2_p0_fenced_effect_consumer_lab.py"),
+         "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=30,
+    )
+    if fenced_consumer_check.returncode != 0:
+        fail("P0 synthetic fenced-effect consumer tests failed: " +
+             fenced_consumer_check.stdout[:250] +
+             fenced_consumer_check.stderr[:150])
+    try:
+        fence_contract = json.loads(fenced_consumer_check.stdout)
+    except json.JSONDecodeError:
+        fail("P0 synthetic fenced-effect consumer JSON invalid")
+    if (
+        fence_contract.get("status") != "PASS_OFFLINE"
+        or fence_contract.get("tests") != 47
+        or fence_contract.get("synthetic_provider_only") is not True
+        or fence_contract.get("real_lease_issued") is not False
+        or fence_contract.get("model_invocations") != 0
+        or fence_contract.get("dispatches") != 0
+        or fence_contract.get("retries") != 0
+        or fence_contract.get("writes_authorized") != 0
+        or fence_contract.get("effects_committed") != 0
+        or fence_contract.get("production_effects") != 0
+    ):
+        fail("P0 fenced-effect consumer false-positive authority regression")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
