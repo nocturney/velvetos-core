@@ -9,7 +9,7 @@ No keychain, real credential helper, system ACL or production effect.
 """
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import re
 import shutil
 import stat
@@ -243,20 +243,20 @@ class PortableContract(unittest.TestCase):
         self.assertIn(b"NEVER_A_REAL_CREDENTIAL", SYNTHETIC_BYTES)
 
     def test_07_profiles_allow_default_for_negative_control(self):
-        text = profile_for(Path("/tmp/test-secret"))
+        text = profile_for(PurePosixPath("/tmp/test-secret"))
         self.assertIn("(version 1)", text)
         self.assertIn("(allow default)", text)
         self.assertIn('(literal "/tmp/test-secret")', text)
 
     def test_08_subpath_policy(self):
         self.assertIn('(subpath "/tmp/secret-dir")',
-                      profile_for(Path("/tmp/secret-dir"), subpath=True))
+                      profile_for(PurePosixPath("/tmp/secret-dir"), subpath=True))
 
     def test_09_refuse_sandbox_profile_injection(self):
         for token in ('/tmp/escape")\n(allow default)', '/tmp/unsafe("',
                       'relative/path', '/tmp/key\x00nul'):
             with self.assertRaises(ValueError):
-                profile_for(Path(token))
+                profile_for(PurePosixPath(token))
 
     def test_10_reject_relative_root(self):
         with self.assertRaises(ValueError):
