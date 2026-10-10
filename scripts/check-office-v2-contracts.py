@@ -2170,6 +2170,64 @@ def main() -> int:
         ):
             fail("#604 real etcd LAB attempted false production admission")
 
+    # #604 REAL etcd mTLS + RBAC, but ONLY in a disposable macOS loopback
+    # lab. The protected CI sensor runs 13 portable denial tests and verifies
+    # the source SHA + strictly false live proof for nonexecuting verify mode.
+    # It MUST NOT install a certificate, launch etcd, modify the system trust
+    # store, claim Git credential exclusivity, or promote authority.
+    tls_rbac_source = (
+        ROOT / "scripts" / "vf_office_v2_604_real_etcd_mtls_rbac_identity_lab.py"
+    )
+    if hashlib.sha256(tls_rbac_source.read_bytes()).hexdigest() != (
+        "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c"
+    ):
+        fail("#604 ephemeral mTLS/RBAC denial source SHA drift")
+    for tls_mode in ("selftest", "verify"):
+        tls_receipt = subprocess.run(
+            [sys.executable, str(tls_rbac_source), tls_mode],
+            cwd=ROOT, text=True, capture_output=True, timeout=45,
+        )
+        if tls_receipt.returncode != 0:
+            fail("#604 portable mTLS/RBAC denial failed: " + tls_mode +
+                 ": " + tls_receipt.stdout[:140] +
+                 tls_receipt.stderr[:140])
+        try:
+            tls_proof = json.loads(tls_receipt.stdout)
+        except json.JSONDecodeError:
+            fail("#604 portable mTLS/RBAC denial returned malformed JSON")
+        if (
+            tls_proof.get("status") != (
+                "PASS_PORTABLE_DENIAL" if tls_mode == "selftest"
+                else "DESIGN_ONLY_NOT_ADMITTED"
+            )
+            or (tls_mode == "selftest" and tls_proof.get("tests") != 13)
+            or tls_proof.get("portable_selftest_pass") is not (
+                tls_mode == "selftest"
+            )
+            or tls_proof.get("temporary_peer_transport") != "HTTP_LOOPBACK_ONLY"
+            or tls_proof.get("test_ca_stored_only_in_disposable_dir") is not True
+            or tls_proof.get("provider_identity_security_ownership") != "#604"
+            or tls_proof.get("downstream_consumer") != "#612"
+            or any(tls_proof.get(k) is not False for k in (
+                "real_server_mtls_rbac_proven",
+                "real_server_wal_recovery_proven",
+                "production_authority",
+                "worker_os_principal_isolation_proven",
+                "git_credential_exclusivity_proven",
+                "native_github_writer_fenced",
+                "cross_store_atomicity_proven",
+                "mid_push_expiry_proven",
+                "provider_cluster_mtls_proven",
+                "paid_model_used",
+                "created_scheduler",
+            ))
+            or any(tls_proof.get(k) != 0 for k in (
+                "remote_github_writes", "system_account_mutations",
+                "global_trust_store_mutations",
+            ))
+        ):
+            fail("#604 portable TLS/RBAC test falsely admitted production")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
