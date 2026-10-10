@@ -129,6 +129,7 @@ def meta_records(doc: dict, *, tz_name: str, asof: datetime) -> tuple[list[dict]
         raise ValueError("Meta snapshot rows missing")
     out: dict[str, dict] = {}
     skipped = 0
+    foreign_rows = 0
     for raw in rows:
         if not isinstance(raw, str):
             raise ValueError("Meta row must be text")
@@ -138,6 +139,9 @@ def meta_records(doc: dict, *, tz_name: str, asof: datetime) -> tuple[list[dict]
             continue
         scheduled = parse_meta_date(date_match.group(0), observed, tz_name)
         before = raw[:date_match.start()]
+        if 'velvets_cloud' not in before.casefold():
+            foreign_rows += 1
+            continue
         kind = META_KIND_RX.search(before)
         format_name = kind.group(1).lower() if kind else "unknown"
         caption = normalize_text(before[:kind.start()] if kind else before)
@@ -157,6 +161,12 @@ def meta_records(doc: dict, *, tz_name: str, asof: datetime) -> tuple[list[dict]
             "identity_strength": "time_and_exact_visible_caption",
         }
     items = sorted(out.values(), key=lambda x: (x["scheduled_at"], x["observation_id"]))
+    if foreign_rows:
+        raise ValueError('Meta Scheduled table mixes or excludes the expected Instagram account')
+    if not items:
+        ui_text = ' '.join(str(s.get('bodyText') or '') for s in (doc.get('scans') or []) if isinstance(s, dict)).lower()
+        if not re.search(r'no scheduled posts|no content to show|no scheduled content|nothing scheduled', ui_text):
+            raise ValueError('Meta UI empty state not independently verified')
     return items, {
         "input_rows": len(rows), "skipped_non_items": skipped,
         "deduplicated_rows": len(items), "duplicate_rows": len(rows)-skipped-len(items),
@@ -232,6 +242,8 @@ def calendar_records(doc: dict) -> tuple[list[dict], dict]:
 def graph_records(doc: dict) -> tuple[list[dict], dict]:
     if doc.get("schema") != "velvet.instagram_graph.media_snapshot.v1":
         raise ValueError("Instagram Graph import schema mismatch")
+    if doc.get('account') != 'velvets_cloud':
+        raise ValueError('Instagram Graph account identity not verified')
     media = doc.get("media")
     if not isinstance(media, list):
         raise ValueError("Graph published media list absent")
@@ -321,6 +333,10 @@ def reconcile(
                 rows, extra = meta_records(doc, tz_name=tz_name, asof=asof)
             elif spec.get("reader") == "extensible_source_snapshot":
                 rows, extra = external_records(doc, sid)
+            elif sid == 'google-calendar-mirror':
+                if doc.get('calendar_id') != spec.get('calendar_id'):
+                    raise ValueError('Google Calendar mirror identity mismatch')
+                rows, extra = calendar_records(doc)
             else:
                 rows, extra = parsers[sid](doc)
         except (ValueError, KeyError, TypeError, OverflowError) as exc:
