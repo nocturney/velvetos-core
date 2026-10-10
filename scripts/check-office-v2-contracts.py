@@ -981,7 +981,7 @@ def main() -> int:
     diverse_worker_file = ROOT / "scripts" / "vf_office_v2_p0_diverse_local_worker.py"
     diverse_failure_path = (P2 / "p0-two-diverse-real-model-qa-failclosed-2026-10-09.json")
     executed_diverse_worker_src = "c08a8413f59a1924c013adc66f523c897f1e477fae810f2c76127699d4262087"
-    expected_diverse_worker_src = "76dcd612dee33fa4aa01fdc1b73e856100cdf55db94dabb93b7b2a202d0c8c9c"
+    expected_diverse_worker_src = "9ed3f0b495008c44249867c87b664aa7b75178049b1c7d53f37d557bd12cfafb"
     if hashlib.sha256(diverse_worker_file.read_bytes()).hexdigest() != expected_diverse_worker_src:
         fail("P0 diverse model worker actual source byte pin changed")
     diverse_tests = subprocess.run(
@@ -998,7 +998,7 @@ def main() -> int:
         fail("P0 diverse Worker historical failures missing/invalid")
     if (
         check_result.get("status") != "PASS_OFFLINE"
-        or check_result.get("tests") != 38
+        or check_result.get("tests") != 44
         or check_result.get("model_invocations") != 0
         or check_result.get("different_tasks_model_proven") is not False
         or check_result.get("automatic_retry") is not False
