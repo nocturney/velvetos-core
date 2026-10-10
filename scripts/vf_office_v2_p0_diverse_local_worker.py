@@ -368,6 +368,74 @@ def born_pin(env,running,child):
     return row
 
 
+def _stop_owned_direct_child(child):
+    """Bounded Popen-handle cleanup; POSIX group only with live OS lineage.
+
+    A verified new session may contain ordinary descendants. Detached/reparented
+    descendants and Windows processes outside the Popen handle remain UNKNOWN.
+    Never issue a PID-only kill or assert that all orphans were excluded.
+    """
+    real = isinstance(child, subprocess.Popen)
+    if real and os.name != "nt":
+        try:
+            # The live, unreaped Popen leader prevents accidental PID reuse.
+            if child.poll() is None:
+                observed = kernel.sample(child.pid)
+                if (observed is not None and observed["ppid"] == os.getpid()
+                        and observed["pgid"] == child.pid
+                        and os.getsid(child.pid) == child.pid):
+                    os.killpg(child.pid, signal.SIGKILL)
+        except (OSError, kernel.Refused):
+            pass  # Uncertain OS identity: stop the direct handle only.
+    try:
+        if not real or child.poll() is None:
+            child.kill()
+    except (OSError, subprocess.SubprocessError):
+        pass
+    try:
+        child.communicate(timeout=3)
+    except (OSError, subprocess.SubprocessError, ValueError):
+        pass
+    return bool(real and child.poll() is not None)
+
+
+def _persist_unknown_child(out, env, child, phase, reaped):
+    """Best-effort additive evidence; the original RUNNING journal is immutable."""
+    record = {
+        "schema": "velvetos.office-v2.p0-aider-child-cleanup-unknown.v1",
+        "state": "UNKNOWN", "task_id": env["task_id"],
+        "envelope_sha256": seal(env), "phase": phase,
+        "direct_child_pid": child.pid,
+        "direct_child_reaped": bool(reaped),
+        "all_orphans_excluded": False,
+        "retry_permitted": False, "production_authority": False,
+        "original_running_journal_preserved": (out/"receipt.json.running").is_file(),
+        "observed_utc": datetime.now(timezone.utc).isoformat(),
+    }
+    try:
+        old.save_new(out/"child-cleanup.unknown.json", record)
+    except (OSError, old.Refuse, ValueError):
+        # The fsynced RUNNING journal already denies replay, even on disk errors.
+        pass
+
+
+def _guarded_capture_and_wait(child, capture, wait):
+    """Stop the owned process on pre-guard errors and unexpected IO failures."""
+    try:
+        pin = capture()
+    except BaseException:
+        _stop_owned_direct_child(child)
+        raise
+    try:
+        stdout, stderr = wait()
+    except subprocess.TimeoutExpired:
+        raise  # The caller records UNKNOWN and performs bounded owned cleanup.
+    except BaseException:
+        _stop_owned_direct_child(child)
+        raise
+    return pin, stdout, stderr
+
+
 def verify_receipt(env,receipt):
     require(receipt.get("schema")==RECEIPT
             and receipt.get("state")=="SUCCEEDED"
@@ -471,20 +539,26 @@ def execute(raw_env,raw_receipt):
     else:kw["start_new_session"]=True
     started=time.monotonic()
     child=subprocess.Popen(args,**kw)
-    pin=born_pin(env,running,child)
-    old.save_new(out/"kernel-pin.json",pin)
+    def capture_pin():
+        pin=born_pin(env,running,child)
+        old.save_new(out/"kernel-pin.json",pin)
+        return pin
     try:
-        stdout,stderr=child.communicate(timeout=env["budget"]["timeout_seconds"])
+        pin,stdout,stderr=_guarded_capture_and_wait(
+            child,capture_pin,
+            lambda:child.communicate(timeout=env["budget"]["timeout_seconds"]))
     except subprocess.TimeoutExpired:
-        if os.name=="nt":
-            subprocess.run(["taskkill","/T","/F","/PID",str(child.pid)],
-                           capture_output=True,timeout=9)
-        else:
-            os.killpg(child.pid,signal.SIGKILL)
+        reaped=_stop_owned_direct_child(child)
+        _persist_unknown_child(out,env,child,"TIMEOUT",reaped)
         # Detached descendants may survive; never remove journal or auto retry.
         return {"status":"TIMED_OUT_UNKNOWN_OUTCOME","task_id":env["task_id"],
                 "original_running_journal_preserved":True,
-                "all_orphans_excluded":False}
+                "direct_child_reaped":reaped,"all_orphans_excluded":False}
+    except BaseException:
+        # The guarded helper already stopped the Popen child where possible.
+        # Record the uncertainty without overwriting the fsynced RUNNING journal.
+        _persist_unknown_child(out,env,child,"PRE_PIN_OR_COMMUNICATE",child.poll() is not None)
+        raise
     for filename,contents in (("stdout.log",stdout),("stderr.log",stderr)):
         (out/filename).write_bytes(contents)
     log=out/"llm.history.log"
@@ -780,7 +854,56 @@ def selftest():
         checks.append(True)
     else:
         raise AssertionError("EXACT_INT_PROFILE_ON_WRONG_FIXTURE_ACCEPTED")
-    require(all(checks) and len(checks)==38,"NEGATIVE_TEST_COUNT_DRIFT")
+    # Synthetic process-handle injections: model=0, no external effects.
+    class FakeChild:
+        def __init__(self, cleanup_fault=False):
+            self.kills=0
+            self.reaps=0
+            self.cleanup_fault=cleanup_fault
+        def kill(self):
+            self.kills+=1
+            if self.cleanup_fault: raise OSError("injected cleanup failure")
+        def communicate(self, timeout=None):
+            self.reaps+=1
+            if self.cleanup_fault:
+                raise subprocess.TimeoutExpired("synthetic child",timeout)
+            return b"",b""
+    for stage,expected in (("birth",Refused),("persist",OSError),
+                           ("communicate",RuntimeError)):
+        child=FakeChild()
+        journal={"state":"RUNNING","unknown_outcome_rule":"NO_BLIND_RETRY"}
+        def capture(stage=stage):
+            if stage=="birth": raise Refused("injected birth pin failure")
+            if stage=="persist": raise OSError("injected pin write failure")
+            return {"pin":"synthetic"}
+        def wait(stage=stage):
+            if stage=="communicate": raise RuntimeError("injected IO failure")
+            return b"",b""
+        try: _guarded_capture_and_wait(child,capture,wait)
+        except expected:
+            checks.append(child.kills==1 and child.reaps==1
+                          and journal=={"state":"RUNNING",
+                                       "unknown_outcome_rule":"NO_BLIND_RETRY"})
+        else: raise AssertionError("PRE_GUARD_FALSE_SUCCESS:"+stage)
+    child=FakeChild()
+    try: _guarded_capture_and_wait(
+        child,lambda:{"pin":"synthetic"},
+        lambda:(_ for _ in ()).throw(subprocess.TimeoutExpired("synthetic",1)))
+    except subprocess.TimeoutExpired:
+        checks.append(child.kills==0 and child.reaps==0)
+    else: raise AssertionError("TIMEOUT_FALSE_SUCCESS")
+    child=FakeChild()
+    checks.append(_guarded_capture_and_wait(
+        child,lambda:{"pin":"synthetic"},lambda:(b"out",b"err"))==
+        ({"pin":"synthetic"},b"out",b"err") and child.kills==0)
+    child=FakeChild(cleanup_fault=True)
+    try: _guarded_capture_and_wait(
+        child,lambda:(_ for _ in ()).throw(Refused("injected birth failure")),
+        lambda:(b"",b""))
+    except Refused:
+        checks.append(child.kills==1 and child.reaps==1)
+    else: raise AssertionError("CLEANUP_FAILURE_FALSE_SUCCESS")
+    require(all(checks) and len(checks)==44,"NEGATIVE_TEST_COUNT_DRIFT")
     return {"status":"PASS_OFFLINE","tests":len(checks),
             "model_invocations":0,"different_tasks_model_proven":False,
             "automatic_retry":False,"production_authority":False,
