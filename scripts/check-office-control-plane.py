@@ -2,7 +2,9 @@
 """Validate Office Control Plane — unify existing SoT. No network. No send."""
 from __future__ import annotations
 
+import hashlib
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -192,6 +194,36 @@ def main() -> None:
     for command in ("watchdog", "memory-hygiene", "gaps", "handoff"):
         if f"vf_control_plane.py {command}" not in workflow:
             fail(f"office-control-plane.yml must own {command} execution")
+
+    # Execute the actual workflow Bash persistence block in an isolated fake
+    # Git repository: ignored runtime streams remain untracked; only explicit
+    # allowlisted evidence and learning candidates may be committed.
+    cache_ignore = (ROOT / "packages" / "velvetos" / "living-studio" /
+                    ".gitignore").read_text(encoding="utf-8").splitlines()
+    for cache in ("data/signal-room.jsonl", "data/receipts.jsonl"):
+        if cache not in cache_ignore:
+            fail("Living Studio disposable cache ignore policy drift: " + cache)
+    stage_fixture = ROOT / "scripts" / "vf_office_control_persistence_lab.py"
+    if hashlib.sha256(stage_fixture.read_bytes()).hexdigest() != (
+        "5756a353dd8a72c42b973bd6d4d1b3cdf2fc3107c7e8a0cdd2f88013ef059fba"
+    ):
+        fail("Office persistence fixture source provenance drift")
+    staging = subprocess.run(
+        [sys.executable, str(stage_fixture), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=60,
+    )
+    if staging.returncode != 0:
+        fail("office control evidence persistence LAB rejected: " +
+             (staging.stdout + staging.stderr)[-550:])
+    try:
+        gate = json.loads(staging.stdout)
+    except json.JSONDecodeError:
+        fail("office control evidence persistence LAB output not JSON")
+    if (gate.get("status") != "PASS_OFFLINE" or gate.get("tests") != 7
+            or gate.get("real_git_pushes") != 0
+            or gate.get("production_effects") != 0
+            or gate.get("office_writes") != 0):
+        fail("office control evidence persistence LAB unsafe or incomplete")
 
     handoff_json = CONTROL / "HANDOFF.json"
     handoff_he = CONTROL / "HANDOFF-he.md"
