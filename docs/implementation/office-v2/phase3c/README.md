@@ -10,6 +10,12 @@ Phase 3A Restate winner and Phase 3B production *read* are already bounded. Phas
 
 Phase 2 shortlist: incumbent `incumbent-current-model-routing` against `candidate-litellm` and `candidate-tensorzero`. The Office Master Plan also lists Bifrost and any credible challengers: intake/triage them through the existing competitor-neutral registry before admission, rather than silently excluding or installing them. A working `candidate` is not an architectural winner by default.
 
+## Agent-composition cross-lane handoff — research only (2026-10-10)
+
+The [Phase 2 A/B/C agent-composition plan](../phase2/agent-composition-plan-v0.json) queues Rakazo and Hermes as possible whole-system or single-specialist agent runtimes, **not** as approved new model gateways. Later Phase 3D comparisons must reuse this Phase 3C contract and the existing production model-routing authority rather than allow each agent to buy or route its own provider calls.
+
+Required preflight for any model-backed comparison: benchmark local-first tool-calling correctness, vision/browser accuracy where applicable, context window behavior, provider timeout/fallback, token/latency/CPU/GPU/VRAM/network evidence and per-run cost; preserve denied-provider outcomes and unknown-effect reconciliation; never infer that optional hosted services or ChatGPT/Claude plans provide free production inference. **No Codex CLI, new paid model API, new recurring charge, or real-provider call is authorized by this research intake.** A candidate's README is not a Phase 3C benchmark receipt.
+
 ## Frozen first semantic scenarios
 
 The 13-case synthetic fixture checks allowed routing, retryable timeout/rate-limit fallback, policy/budget/credential/cross-tenant/capability DENY without provider invocation, local/cloud routing, exhausted providers, unknown-result reconciliation and trace/latency/token/cost evidence. All prompt/request data is synthetic metadata. A canonical policy DENY must never fall back to seek ALLOW; UNKNOWN must not blindly retry.

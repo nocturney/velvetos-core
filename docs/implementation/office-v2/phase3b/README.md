@@ -10,6 +10,12 @@ Phase 3B treats security as three explicit roles rather than forcing one product
 
 Authentication never implies authorization. Secret existence never implies authorization. A policy engine may not become a secret store. Evidence may contain IDs/hashes/metadata but never raw secrets, bearer tokens or private keys.
 
+## Agent-composition cross-lane handoff — research only (2026-10-10)
+
+The [Phase 2 agent-composition intake](../phase2/agent-composition-intake-2026-10-10.md) queues OpenBot (and other agent candidates) for a **later, isolated** comparison of tool approval, audit and secret boundaries. Its [A/B/C plan](../phase2/agent-composition-plan-v0.json) does **not** add a fourth Phase 3B policy authority or grant any model direct provider credentials.
+
+For any future Agent Runtime / OpenBot gateway adapter, the existing Phase 3B identity → normalized principal → OPA authorization → exact credential-scope broker → external-effect gate → sanitized decision receipt remains the sole authority path. Explicit negative controls must deny prompt-injection-originated instructions, mail OTP/magic-link disclosure, browser/shell data exfiltration, unauthorized connector writes, denial bypass through delegation, and secrets leaking into model-visible tools. A failed/absent policy or broker remains DENY; no fallback retries to obtain ALLOW. **Status: design acceptance requirement only; no live agent connected, no new pilot or shadow promotion.**
+
 ## Frozen gate
 
 Before any production-adjacent PILOT, the selected composition must prove:

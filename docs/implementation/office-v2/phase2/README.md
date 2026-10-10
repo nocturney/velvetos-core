@@ -25,6 +25,10 @@ Turn all prior research into a closed, measurable decision system. The source in
 - A credible new challenger or substantive evidence can trigger the existing research-freeze reopen rule. A previous winner keeps its bounded authority until safe, separately approved promotion; discovery/research does not authorize installation in production.
 - New, post-policy registry entries must carry `comparison_review` with review scope, evidence state and explicit replacement/hybrid options. The Phase 2 sensor checks the rule and that all queued IDs are resolvable in the registry.
 
+## Agent composition intake — 2026-10-10
+
+Eight distinct upstream agent candidates and the historical Letta memory candidate are now recorded as research/queued challengers, with the ambiguous historical OpenDots identity preserved separately. See [staged research handoff](agent-composition-intake-2026-10-10.md) and [A/B/C machine-readable comparison plan](agent-composition-plan-v0.json). This is **not** LAB admission, production promotion, authorization to spend, use new credentials or start another scheduler. The existing Phase 2 sensor enforces the candidate and queue invariants.
+
 ## Candidate lifecycle
 
 `DISCOVERED → RESEARCHED → CANDIDATE → ADMITTED → LAB → SHADOW → PILOT → PRODUCTION → FALLBACK → RETIRED`.
