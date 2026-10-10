@@ -100,13 +100,14 @@ class ObserverContract(unittest.TestCase):
             "title":"test","content_profile":"photo","status":"scheduled"
         }])
         cal={"schema":"velvet.google_calendar.instagram_snapshot.v1",
-             "observed_at":"2026-10-10T13:02:50Z","events":[]}
+             "observed_at":"2026-10-10T13:02:50Z",
+             "calendar_id":next(s["calendar_id"] for s in REG["sources"] if s["id"]=="google-calendar-mirror"),"events":[]}
         d=r.reconcile(REG,{"cloudflare-publisher":p,"google-calendar-mirror":cal},asof=NOW)
         self.assertIn("CALENDAR_MIRROR_MISSING_PUBLISHER_JOBS",[x["code"] for x in d["alerts"]])
 
     def test_graph_published_never_scheduled(self):
         graph={"schema":"velvet.instagram_graph.media_snapshot.v1",
-               "observed_at":"2026-10-10T13:02:56Z",
+               "observed_at":"2026-10-10T13:02:56Z","account":"velvets_cloud",
                "media":[{"id":"123","timestamp":"2026-10-01T12:00:00+0000","permalink":"https://www.instagram.com/p/abc/"}]}
         d=r.reconcile(REG,{"instagram-graph":graph},asof=NOW)
         self.assertEqual(d["counts"]["graph_published"],1)
@@ -123,6 +124,31 @@ class ObserverContract(unittest.TestCase):
         bad["policy"]["allow_side_effects"]=True
         with self.assertRaises(ValueError):
             r.reconcile(bad,{},asof=NOW)
+
+    def test_meta_foreign_account_not_attributed(self):
+        foreign=meta([row("other studio photo").replace("velvets_cloud","other_studio")])
+        d=r.reconcile(REG,{"meta-business-suite":foreign},asof=NOW)
+        self.assertEqual(d["source_health"][0]["state"],"INVALID")
+        self.assertEqual(d["counts"]["meta_scheduled_lower_bound"],0)
+
+    def test_meta_unproven_empty_is_invalid(self):
+        d=r.reconcile(REG,{"meta-business-suite":meta(["Title\nDate scheduled\nPrivacy\nStatus"])},asof=NOW)
+        self.assertEqual(d["source_health"][0]["state"],"INVALID")
+
+    def test_wrong_calendar_id_is_invalid(self):
+        doc={"schema":"velvet.google_calendar.instagram_snapshot.v1",
+             "observed_at":"2026-10-10T13:02:54Z",
+             "calendar_id":"wrong-calendar","events":[]}
+        d=r.reconcile(REG,{"google-calendar-mirror":doc},asof=NOW)
+        state=next(s for s in d["source_health"] if s["source_id"]=="google-calendar-mirror")
+        self.assertEqual(state["state"],"INVALID")
+
+    def test_wrong_graph_account_is_invalid(self):
+        doc={"schema":"velvet.instagram_graph.media_snapshot.v1",
+             "observed_at":"2026-10-10T13:02:54Z","account":"different-account","media":[]}
+        d=r.reconcile(REG,{"instagram-graph":doc},asof=NOW)
+        state=next(s for s in d["source_health"] if s["source_id"]=="instagram-graph")
+        self.assertEqual(state["state"],"INVALID")
 
     def test_approved_external_provider_extensible(self):
         registry=copy.deepcopy(REG)
