@@ -243,7 +243,7 @@ def main() -> None:
     # Strict research-only agent-composition intake: no automatic admission,
     # dual scheduler, OpenDots alias substitution, spend or authority promotion.
     composition = subprocess.run(
-        [sys.executable, str(ROOT / "scripts" / "check-office-v2-agent-composition.py"), "selftest"],
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_agent_composition_gate.py"), "selftest"],
         cwd=ROOT, capture_output=True, text=True, encoding="utf-8",
     )
     if composition.returncode != 0 or "OK office-v2-agent-composition" not in composition.stdout:
