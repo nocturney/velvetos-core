@@ -36,6 +36,7 @@
       "id": "google-calendar-mirror",
       "capability": "scheduled_mirror",
       "reader": "google_calendar_connector",
+      "calendar_id": "dbc5394e5344be5275a46dfa43b0c16e2673aea627b4d695162445a58c4f45f0@group.calendar.google.com",
       "active": true,
       "max_age_seconds": 3600,
       "confidence": "derived_mirror",
