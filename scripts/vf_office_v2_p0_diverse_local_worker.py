@@ -35,6 +35,40 @@ HOST_MODEL = {"Chris": ("qwen3.5:9b", 11555),
               "MacMiniOffice.local": ("qwen3.5:4b", 11556)}
 
 
+PUBLIC_SPEC_PROFILE = "PUBLIC_SPEC_REMINDER_V1"
+# Only reminders already contained in the public fixture specification.
+# Do NOT expose private hidden QA, source solutions or user/business data.
+PUBLIC_SPEC_APPENDICES = {
+    "canonical-tag-v1": (
+        "PUBLIC SPEC REMINDER (not hidden tests): Lowercase the entire input "
+        "BEFORE testing for ASCII a-z/0-9. A maximal run of other characters "
+        "becomes exactly one underscore, including repeated punctuation and "
+        "non-ASCII characters. Strip underscores from both ends. Return "
+        "untitled only when the resulting tag has no ASCII letters/digits. "
+        "Change only canonical_tag.py; preserve the function signature."
+    ),
+    "merge-windows-v1": (
+        "PUBLIC SPEC REMINDER (not hidden tests): First validate each interval "
+        "is a TUPLE of exactly two elements, NOT a list. Both endpoints must "
+        "have type exactly int (bool is not permitted), and start must not "
+        "exceed end; otherwise raise ValueError. Sorting precedes merging. "
+        "For inclusive integer intervals, directly adjacent windows merge "
+        "when next_start <= previous_end + 1. Return a new list of tuples. "
+        "Change only windows_merge.py; preserve the function signature."
+    ),
+}
+
+
+def approved_prompt_bytes(fixture_id, profile):
+    require(fixture_id in PUBLIC_SPEC_APPENDICES, "UNAPPROVED_FIXTURE")
+    base = fixtures.catalog()[fixture_id]["prompt"]
+    require(profile in (None, PUBLIC_SPEC_PROFILE),
+            "UNAPPROVED_PUBLIC_SPEC_PROMPT_PROFILE")
+    if profile == PUBLIC_SPEC_PROFILE:
+        base += "\n\n" + PUBLIC_SPEC_APPENDICES[fixture_id]
+    return base.encode("utf-8")
+
+
 class Refused(Exception):
     pass
 
@@ -137,6 +171,12 @@ def check(env, fresh):
             and old.hash_file(repo.parent/"hidden.qa.py")==env.get("hidden_sha256")
             and old.hash_file(repo.parent/"checkpoint.json")==env.get("checkpoint_sha256"),
             "PINNED_TASK_INPUT_BYTES_CHANGED")
+    require((repo.parent/"task.prompt.txt").read_bytes() ==
+            approved_prompt_bytes(env["fixture_id"], env.get("prompt_profile")),
+            "PUBLIC_SPEC_PROMPT_PROVENANCE_DRIFT")
+    require((repo.parent/"hidden.qa.py").read_bytes() ==
+            spec["hidden"].encode("utf-8"),
+            "ORIGINAL_QA_FIXTURE_PROVENANCE_DRIFT")
     before=read(repo.parent/"checkpoint.json")
     require(not continuity.required_shape(before)
             and before.get("active_external_effects")==[]
@@ -165,7 +205,7 @@ def check(env, fresh):
     return repo,spec
 
 
-def admit(root_raw,task,candidate_raw,aider_raw,model,port,timeout):
+def admit(root_raw,task,candidate_raw,aider_raw,model,port,timeout,prompt_profile=None):
     parent=Path(root_raw)
     require(parent.is_absolute() and
             parent.parent.name=="AgentEnvelopeLab"
@@ -177,6 +217,7 @@ def admit(root_raw,task,candidate_raw,aider_raw,model,port,timeout):
             "FRESH_LAB_HOST_MODEL_ADMISSION_DENIED")
     candidate_path=Path(candidate_raw)
     origin,spec=candidate_check(candidate_path)
+    prompt_bytes=approved_prompt_bytes(origin["fixture_id"], prompt_profile)
     aider=old.abs_file(aider_raw)
     require(aider.name.lower() in ("aider","aider.exe"),
             "EXPECTED_AIDER_BINARY_REQUIRED")
@@ -198,8 +239,8 @@ def admit(root_raw,task,candidate_raw,aider_raw,model,port,timeout):
                       capture_output=True,timeout=14)
     require(cp.returncode==0 and not old.modified(root),
             "EXECUTION_GIT_BRANCH_NOT_FRESH")
-    for filename in ("task.prompt.txt","hidden.qa.py"):
-        (dest/filename).write_bytes((candidate_path.parent/filename).read_bytes())
+    (dest/"task.prompt.txt").write_bytes(prompt_bytes)
+    (dest/"hidden.qa.py").write_bytes((candidate_path.parent/"hidden.qa.py").read_bytes())
     need_seed=root/spec["target"]
     require(old.hash_file(need_seed)==origin["target_seed_sha256"]
             and old.hash_file(root/spec["test"])==origin["visible_test_sha256"],
@@ -236,6 +277,8 @@ def admit(root_raw,task,candidate_raw,aider_raw,model,port,timeout):
       "production_authority":False,"automatic_retry":False,
       "canonical_fleet_lease":False,"distributed_fencing_verified":False,
     }
+    if prompt_profile is not None:
+        env["prompt_profile"]=prompt_profile
     check(env,fresh=True)
     old.save_new(dest/"envelope.json",env)
     return {"status":"ADMITTED_FRESH_LAB_ONLY_NO_MODEL_EXECUTION",
@@ -659,7 +702,25 @@ def selftest():
     try: audit_record_validate(directly_corrupt)
     except Refused: checks.append(True)
     else: raise AssertionError("RAW_AUDIT_TAMPER_ACCEPTED")
-    require(all(checks) and len(checks)==25,"NEGATIVE_TEST_COUNT_DRIFT")
+    for variant in ("canonical-tag-v1", "merge-windows-v1"):
+        base = fixtures.catalog()[variant]["prompt"].encode("utf-8")
+        require(approved_prompt_bytes(variant, None) == base,
+                "DEFAULT_PROFILE_CHANGED_LEGACY_CANDIDATE")
+        checks.append(True)
+        extra = approved_prompt_bytes(variant, PUBLIC_SPEC_PROFILE)
+        require(extra.startswith(base + bytes((10, 10)))
+                and len(extra) > len(base)
+                and b"PUBLIC SPEC REMINDER" in extra,
+                "PUBLIC_SPEC_PROFILE_NOT_PINNED")
+        checks.append(True)
+    for bad_profile in ("arbitrary-user-prompt", "", "AUTO_RETRY"):
+        try:
+            approved_prompt_bytes("canonical-tag-v1", bad_profile)
+        except Refused:
+            checks.append(True)
+        else:
+            raise AssertionError("UNAPPROVED_PROFILE_ACCEPTED")
+    require(all(checks) and len(checks)==32,"NEGATIVE_TEST_COUNT_DRIFT")
     return {"status":"PASS_OFFLINE","tests":len(checks),
             "model_invocations":0,"different_tasks_model_proven":False,
             "automatic_retry":False,"production_authority":False,
@@ -675,6 +736,7 @@ def main():
         prepare.add_argument("--"+k,required=True)
     prepare.add_argument("--port",type=int,required=True)
     prepare.add_argument("--timeout",type=int,default=140)
+    prepare.add_argument("--prompt-profile",choices=("default", "public-spec-v1"),default="default")
     run=sub.add_parser("run")
     verify=sub.add_parser("verify")
     audit=sub.add_parser("audit-failed-qa")
@@ -689,7 +751,8 @@ def main():
     if args.mode=="selftest": result=selftest()
     elif args.mode=="admit":
         result=admit(args.root,args.task_id,args.candidate,
-                     args.aider,args.model,args.port,args.timeout)
+                     args.aider,args.model,args.port,args.timeout,
+                     None if args.prompt_profile=="default" else PUBLIC_SPEC_PROFILE)
     elif args.mode=="run":result=execute(args.envelope,args.receipt)
     elif args.mode=="audit-failed-qa":
         result=audit_failed_qa(args.envelope,args.root)
