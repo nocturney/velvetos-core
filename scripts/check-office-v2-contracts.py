@@ -293,6 +293,49 @@ def main() -> int:
     ):
         fail("P0 manual new-attempt lineage overstated safety or authority")
 
+    # #612: TWO fresh new Mac public-spec guided Qwen coding attempts.
+    # One original Worker independent QA PASS, one original journal remains
+    # FAIL_CLOSED. Only historical/offline validation in CI; no model/OS run.
+    guided_data = P2 / "p0-two-fresh-guided-model-qa-2026-10-10.json"
+    guided_verifier = ROOT / "scripts" / "vf_office_v2_p0_guided_qa_evidence.py"
+    if hashlib.sha256(guided_verifier.read_bytes()).hexdigest() != (
+            "8208d1b978c0c8247f74a186dff28829b7b90a49d3d85a428e4a2fa066c35737"):
+        fail("P0 guided QA evidence validator source bytes drift")
+    for mode in ("selftest", "verify"):
+        check_guided = subprocess.run(
+            [sys.executable, str(guided_verifier), mode,
+             "--evidence", str(guided_data)],
+            cwd=ROOT, capture_output=True, text=True, timeout=25,
+        )
+        if check_guided.returncode:
+            fail("P0 Mac guided QA " + mode + " rejected: " +
+                 check_guided.stdout[:160])
+        try:
+            result_guided = json.loads(check_guided.stdout)
+        except ValueError:
+            fail("P0 Mac guided QA validator emitted invalid JSON")
+        if mode == "selftest":
+            if (result_guided.get("status") != "PASS_OFFLINE"
+                    or result_guided.get("tests") != 25
+                    or result_guided.get("model_calls") != 0
+                    or result_guided.get("new_model_worker_tasks") != 0
+                    or result_guided.get("production_writes") != 0
+                    or result_guided.get("cross_host_lease") is not False):
+                fail("P0 Mac guided QA negatives overstated green/authority")
+        else:
+            if (result_guided.get("status") != "PASS_HISTORICAL_METADATA_ONLY"
+                    or result_guided.get("successful_coding_tasks") != 1
+                    or result_guided.get("failed_qa_tasks") != 1
+                    or result_guided.get("distinct_task_families") != 2
+                    or result_guided.get("original_failed_journals_preserved")
+                       is not True
+                    or result_guided.get("model_invocations_by_verifier") != 0
+                    or result_guided.get("two_host_success_proven") is not False
+                    or result_guided.get("causal_prompt_improvement_proven")
+                       is not False
+                    or result_guided.get("production_authority") is not False):
+                fail("P0 Mac guided outcome failed sealed historical contract")
+
     # #612: New separate local-model diverse Worker emitted no false
     # successes for two actual Mac model-backed code attempts. Both exact
     # original journals remain UNKNOWN, independently read-only QA-audited.
