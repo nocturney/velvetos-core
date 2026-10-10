@@ -1296,6 +1296,29 @@ def main() -> int:
     ):
         fail("P0 supervised Aider admission source integrity safety regression")
 
+    # #612: an additional denial-only guard catches collisions *between* fresh
+    # attempts that individually pass comparison against an older UNKNOWN.
+    batch_lineage_check = subprocess.run(
+        [sys.executable,
+         str(ROOT / "scripts" / "vf_office_v2_p0_batch_lineage_guard.py"),
+         "--selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=30,
+    )
+    if batch_lineage_check.returncode != 0:
+        fail("P0 batch fresh-attempt collision negative controls failed: " +
+             batch_lineage_check.stdout[:250])
+    try:
+        batch_lineage = json.loads(batch_lineage_check.stdout)
+    except json.JSONDecodeError:
+        fail("P0 batch lineage audit JSON invalid")
+    if (batch_lineage.get("status") != "PASS_OFFLINE"
+            or batch_lineage.get("tests") != 15
+            or batch_lineage.get("model_invocations") != 0
+            or batch_lineage.get("dispatches") != 0
+            or batch_lineage.get("retries") != 0
+            or batch_lineage.get("production_effects") != 0):
+        fail("P0 batch lineage guard unsafe or incomplete")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"

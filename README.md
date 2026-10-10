@@ -496,3 +496,6 @@ Archived one-shots live in `scripts/archive/` (inert, history only; see its READ
 
 
 Proof: `python3 scripts/check-publication-evidence.py`; scope and trust boundary: `packages/vfom/PUBLICATION-PREP-EXECUTION.md`. These are repository checks, not a guarantee of visual taste or evidence that other ChatGPT/worker copies are deployed. Independent review, complete CI and runtime synchronization remain separate release gates.
+
+
+**Office 2.0 P0 (#612) — batch fresh-attempt collision audit (LAB, read-only):** `scripts/vf_office_v2_p0_batch_lineage_guard.py` checks 2–16 pre-existing synthetic fresh Task Envelopes against a preserved UNKNOWN attempt and each other across task ID, Git base, branch, checkpoint, and worktree. Fifteen offline positive/negative controls are wired into `check-office-v2-contracts.py`. This never grants a #604 lease, worker admission, retry, process-fencing, or production authority. [Scoped evidence](docs/implementation/office-v2/phase2/p0-batch-fresh-attempt-denial-2026-10-10.md).
