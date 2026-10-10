@@ -1,4 +1,4 @@
-# מסירת מנהל · Office Control Plane · 2026-10-05
+# מסירת מנהל · Office Control Plane · 2026-10-10
 
 לא מערכת משרד שנייה. מקורות אמת: `office/control-plane.json`.
 

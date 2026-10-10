@@ -1,0 +1,19 @@
+{
+  "schema": "vf.learning-candidate.v1",
+  "candidate_id": "learn-ci-readme-system-pulse",
+  "trigger": "GitHub Actions workflow 'README System Pulse' failed on main",
+  "action": "Open a fix PR from the failing run log; if the root cause can recur, add or tighten a sensor/contract; triage this candidate (accept/reject/prune) instead of letting it accumulate.",
+  "scope": "project",
+  "confidence": 0.3,
+  "status": "candidate",
+  "evidence": [
+    "gh-run:37370085951:failure:2026-10-05T20:29:46Z:https://github.com/nocturney/velvetos-core/actions/runs/37370085951"
+  ],
+  "first_seen": "2026-10-05T20:29:46Z",
+  "last_seen": "2026-10-05T20:29:46Z",
+  "owner_correction": false,
+  "promote_to": null,
+  "supersedes": null,
+  "source": "ci-failure-ingest",
+  "workflow": "README System Pulse"
+}

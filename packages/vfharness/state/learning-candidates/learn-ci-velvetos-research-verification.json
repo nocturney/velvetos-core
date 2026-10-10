@@ -1,0 +1,22 @@
+{
+  "schema": "vf.learning-candidate.v1",
+  "candidate_id": "learn-ci-velvetos-research-verification",
+  "trigger": "GitHub Actions workflow 'VelvetOS Research Verification' failed on main",
+  "action": "Open a fix PR from the failing run log; if the root cause can recur, add or tighten a sensor/contract; triage this candidate (accept/reject/prune) instead of letting it accumulate.",
+  "scope": "project",
+  "confidence": 0.6,
+  "status": "candidate",
+  "evidence": [
+    "gh-run:37114895150:failure:2026-10-03T09:59:41Z:https://github.com/nocturney/velvetos-core/actions/runs/37114895150",
+    "gh-run:37196231630:failure:2026-10-04T10:42:24Z:https://github.com/nocturney/velvetos-core/actions/runs/37196231630",
+    "gh-run:37304981139:failure:2026-10-05T11:45:24Z:https://github.com/nocturney/velvetos-core/actions/runs/37304981139",
+    "gh-run:37456380895:failure:2026-10-06T11:26:11Z:https://github.com/nocturney/velvetos-core/actions/runs/37456380895"
+  ],
+  "first_seen": "2026-10-03T09:59:41Z",
+  "last_seen": "2026-10-06T11:26:11Z",
+  "owner_correction": false,
+  "promote_to": null,
+  "supersedes": null,
+  "source": "ci-failure-ingest",
+  "workflow": "VelvetOS Research Verification"
+}
