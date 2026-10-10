@@ -2293,6 +2293,66 @@ def main() -> int:
         ):
             fail("#604 same-UID REAL BYPASS falsified as producer authority")
 
+    # #604 macOS actual sandbox path aliases. The isolated Mac kernel
+    # test proved both literal and subpath policies deny canonical/symlink,
+    # yet a PREEXISTING hardlink outside the denied subtree remains
+    # readable. Positive "PASS_EXPECTED_NEGATIVE" is RED, NEVER admission.
+    # CI is portable and invokes only selftest+verify, no real macOS
+    # kernel enforcement, native GitHub credential or system changes.
+    mac_alias_source = (
+        ROOT / "scripts" / "vf_office_v2_604_macos_sandbox_hardlink_alias_lab.py"
+    )
+    if hashlib.sha256(mac_alias_source.read_bytes()).hexdigest() != (
+        "d9d9061d2932f357a0e7e8f208ca84a45cd8f7f0cf7e31aeaf4565a1388cd3ff"
+    ):
+        fail("#604 Mac kernel path-alias negative source SHA drift")
+    for alias_mode in ("selftest", "verify"):
+        result = subprocess.run(
+            [sys.executable, str(mac_alias_source), alias_mode],
+            cwd=ROOT, text=True, capture_output=True, timeout=45,
+        )
+        if result.returncode != 0:
+            fail("#604 Mac alias portable negative: " + alias_mode +
+                 " " + result.stdout[:140] + result.stderr[:140])
+        try:
+            alias = json.loads(result.stdout)
+        except json.JSONDecodeError:
+            fail("#604 macOS alias portable malformed JSON")
+        if (
+            alias.get("status") != (
+                "PASS_PORTABLE_REFUSAL" if alias_mode == "selftest"
+                else "DESIGN_ONLY_NOT_ADMITTED"
+            )
+            or alias.get("tests") != (15 if alias_mode == "selftest" else 0)
+            or alias.get("mac_sandbox_exec_is_deprecated") is not True
+            or alias.get("windows_sandbox_live_verification") is not False
+            or alias.get("owner_issue") != "#604"
+            or alias.get("consumer_issue") != "#612"
+            or any(alias.get(k) is not False for k in (
+                "sandbox_direct_path_denied",
+                "sandbox_symlink_denied",
+                "sandbox_preexisting_hardlink_read_accepted",
+                "sandbox_directory_subpath_hardlink_read_accepted",
+                "unsandboxed_same_uid_sibling_can_read",
+                "production_authority",
+                "native_github_writer_denial_proven",
+                "os_principal_isolation_proven",
+                "all_path_aliases_denied",
+                "network_isolation_proven",
+                "same_user_untrusted_worker_secure",
+                "credential_exclusivity_proven",
+                "real_github_effect_executed",
+                "new_scheduler",
+            ))
+            or any(alias.get(k) != 0 for k in (
+                "remote_github_writes", "live_secrets_accessed",
+                "system_accounts_changed", "global_acl_changes",
+                "global_trust_changes", "services_changed",
+                "paid_api_calls",
+            ))
+        ):
+            fail("#604 macOS sandbox path-bypass falsely admitted")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
