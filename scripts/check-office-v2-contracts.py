@@ -293,6 +293,45 @@ def main() -> int:
     ):
         fail("P0 manual new-attempt lineage overstated safety or authority")
 
+    # #612: actual byte-preserved Mac local-model source files in quarantine.
+    # CI runs deterministic offline public-property QA in a temp subprocess,
+    # asserts one strict int-subclass bug DENIES production promotion.
+    # This is a manually reviewed evidence PR, NOT autonomous model Git writing.
+    artifact_gate = ROOT / "scripts" / "vf_office_v2_p0_model_artifact_pr_gate.py"
+    if hashlib.sha256(artifact_gate.read_bytes()).hexdigest() != (
+            "352c192ebfa9ea6b32739c1185fa06741c68430ed5b183db1c045df94e52c096"):
+        fail("P0 quarantined model-source QA gate actual script bytes drift")
+    for artifact_mode in ("verify", "selftest"):
+        artifact_run = subprocess.run(
+            [sys.executable, str(artifact_gate), artifact_mode],
+            cwd=ROOT, capture_output=True, text=True, timeout=35,
+        )
+        if artifact_run.returncode:
+            fail("P0 quarantined real model source " + artifact_mode +
+                 " failed: " + artifact_run.stdout[:220])
+        try:
+            artifact_status = json.loads(artifact_run.stdout)
+        except ValueError:
+            fail("P0 quarantined real model source emitted invalid JSON")
+        if artifact_mode == "verify":
+            if (artifact_status.get("status") !=
+                    "PASS_QUARANTINED_ORIGINAL_MODEL_BYTES_AND_EXPANDED_QA"
+                    or artifact_status.get("artifact_count") != 2
+                    or artifact_status.get("canonical_tag_expanded_pass") is not True
+                    or artifact_status.get("windows_merge_expanded_contract_gap")
+                       is not True
+                    or artifact_status.get("production_promoted") is not False
+                    or artifact_status.get("automated_pr_or_fleet_lease") is not False
+                    or artifact_status.get("model_calls_by_verifier") != 0):
+                fail("P0 model source quarantine or expanded QA overstated green")
+        elif (artifact_status.get("status") != "PASS_OFFLINE"
+              or artifact_status.get("tests") != 21
+              or artifact_status.get("model_calls") != 0
+              or artifact_status.get("external_git_effects") != 0
+              or artifact_status.get("production_code_promoted") is not False
+              or artifact_status.get("cross_host_fencing_proven") is not False):
+            fail("P0 model-source adversarial QA permitted promotion")
+
     # #612: Two real, different-code QA-green Task Envelopes on ONE Mac.
     # Offline checks only; never start Ollama, requeue UNKNOWN or grant a lease.
     two_family_script = ROOT / "scripts" / "vf_office_v2_p0_second_diverse_success_evidence.py"
