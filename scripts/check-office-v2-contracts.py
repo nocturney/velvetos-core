@@ -293,6 +293,52 @@ def main() -> int:
     ):
         fail("P0 manual new-attempt lineage overstated safety or authority")
 
+    # #612: Real GitHub *remote scratch ref* CAS effect-boundary LAB, two
+    # isolated native Windows Git clients raced; one accepted, stale rejected,
+    # exact SHA-CAS deletion; macOS verified READ-ONLY (Mac Git push auth absent).
+    # Protected CI invokes historical OFFLINE modes, never the live ref readback,
+    # never a Git push/delete or a #604 lease/production writer.
+    github_cas_witness = ROOT / "scripts" / "vf_office_v2_p0_remote_git_cas_witness.py"
+    if hashlib.sha256(github_cas_witness.read_bytes()).hexdigest() != (
+            "ae737c0767647431565d3744ed11394b8d4b62de7babb7f42d0f4a1b874cc49d"):
+        fail("P0 remote Git CAS witness source SHA drift")
+    for cas_mode in ("verify", "selftest"):
+        cas_result = subprocess.run(
+            [sys.executable, str(github_cas_witness), cas_mode],
+            cwd=ROOT, text=True, capture_output=True, timeout=25,
+        )
+        if cas_result.returncode:
+            fail("P0 offline GitHub CAS historical " + cas_mode +
+                 " failed: " + cas_result.stdout[:180])
+        try:
+            cas_row = json.loads(cas_result.stdout)
+        except ValueError:
+            fail("P0 GitHub CAS history verifier returned invalid JSON")
+        if cas_mode == "verify":
+            if (cas_row.get("status") !=
+                    "PASS_OFFLINE_HISTORICAL_ONE_HOST_REAL_GITHUB_REF_CAS"
+                    or cas_row.get("distinct_contenders") != 2
+                    or cas_row.get("accepted_remote_git_writers") != 1
+                    or cas_row.get("stale_denied_remote_git_writers") != 1
+                    or cas_row.get("stale_original_expected_ref_recheck_denied")
+                       is not True
+                    or cas_row.get("scratch_git_branch_deleted_and_read_back_on_both_hosts")
+                       is not True
+                    or cas_row.get("two_physical_host_writers_proven") is not False
+                    or cas_row.get("provider_lease_proven") is not False
+                    or cas_row.get("model_calls") != 0
+                    or cas_row.get("production_writes") != 0):
+                fail("P0 real GitHub CAS evidence overstated lease or writer authority")
+        else:
+            if (cas_row.get("status") != "PASS_OFFLINE"
+                    or cas_row.get("tests") != 25
+                    or cas_row.get("model_calls") != 0
+                    or cas_row.get("git_writes_by_selftest") != 0
+                    or cas_row.get("unqualified_force") is not False
+                    or cas_row.get("distributed_lease_proven") is not False
+                    or cas_row.get("production_authority") is not False):
+                fail("P0 GitHub remote CAS negatives did not deny unsafe states")
+
     # #612: A new, distinct actual Mac Qwen/Aider Task Envelope generated
     # a fixed exact-int source. Byte-pinned, quarantined and independently
     # property-QA verified against the old source's explicit subclass bug.
