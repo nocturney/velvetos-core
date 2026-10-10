@@ -980,7 +980,7 @@ def main() -> int:
     hosted_qa = ROOT / "scripts" / "vf_office_v2_p0_hosted_synthetic_qa_lab.py"
     hosted_qa_workflow = ROOT / ".github" / "workflows" / "office-p0-hosted-synthetic-qa.yml"
     if hashlib.sha256(hosted_qa.read_bytes()).hexdigest() != (
-            "c9f7ba70e08a9250cfc4c483963d07c501bf604e2a3e82eedf3a663eee4dcad8"):
+            "40cb7557f4f29c789cc7b9135d75ecdad8a1eaa95017dd3b0b3054934b774ace"):
         fail("P0 hosted synthetic QA LAB Python source byte pin changed")
     if hashlib.sha256(hosted_qa_workflow.read_bytes()).hexdigest() != (
             "f969446df7af39bf71fb00e2ae6e972d8d21b472eeb77a83234855289d12557b"):
