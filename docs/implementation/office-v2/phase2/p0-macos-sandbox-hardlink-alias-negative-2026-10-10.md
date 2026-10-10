@@ -5,7 +5,7 @@
 ## Reproduction, provenance and constraints
 
 - Code: `scripts/vf_office_v2_604_macos_sandbox_hardlink_alias_lab.py`
-- Exact original Mac source SHA256: `d9d9061d2932f357a0e7e8f208ca84a45cd8f7f0cf7e31aeaf4565a1388cd3ff`
+- Exact original Mac source SHA256: `f7d583fbaab683b69f96bfebae9cdb91c2a88609530beaae1153cf28f0a92add`
 - Mac machine: MacMiniOffice.local, `chris` UID 501. New isolated mode-0700 directory `/Users/chris/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-604-kernel-sandbox-hardlink-alias-20261010`.
 - Mac native `/usr/bin/sandbox-exec` exists and operated in this trial. It is a deprecated interface; no persistent profile or system-wide sandbox setting was installed.
 - Each run creates a fresh mode-0700 disposable directory containing **fake nonsecret marker bytes**, a mode-0600 file in a fake Sink-secrets directory, a symlink to that same file, and a preexisting hard link in the same filesystem **outside** the secrets directory. There are **no certificates, passwords, tokens, Keychain items, real Git helper files or production files**. The marker bytes never appear in the JSON report.
@@ -33,6 +33,8 @@
 Actual Mac integration exit 0, status `PASS_EXPECTED_NEGATIVE_HARDLINK_ALIAS`, 15 checks. Standalone portable `selftest`: **15/15 PASS** in Mac original test; `verify`: `DESIGN_ONLY_NOT_ADMITTED` with all live proof and production safety flags **false**. Both return JSON for CI. New disposable subdirectories were deleted and absence verified.
 
 **Interpretation:** The security test passed because the *attack path was observed*, not because the isolation is good. The experiment does not test full macOS Seatbelt/App Sandbox production design, different effective UIDs, mandatory controls over file descriptors/inodes, or a properly isolated VM. Not all sandbox policies will share this limitation. The exact tested policy is proven insufficient; robust OS principal or virtualization separation remains required.
+
+**Truthful portable QA correction:** The first independent Chris Windows test run failed two portable test assertions because `pathlib.Path('/tmp/...')` renders a Windows path instead of a POSIX path. No Mac live-bypass result was changed. Corrected only the portable test inputs to `pathlib.PurePosixPath`; reran Mac portable 15/15 and REAL Mac kernel 15/15 with source SHA updated. The original Windows failure was a genuine QA gate failure, not promoted to green; independent clean Windows checkout of the corrected exact PR head is required again.
 
 ## Windows and macOS independent read-only readiness
 
