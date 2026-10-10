@@ -974,6 +974,39 @@ def main() -> int:
                     or result_guided.get("production_authority") is not False):
                 fail("P0 Mac guided outcome failed sealed historical contract")
 
+    # #612: New physical-host throughput evidence is deliberately scoped.
+    # This read-only check rejects false P0 promotions and percentile claims;
+    # original local host receipts are NOT replayable by CI.
+    throughput_script = ROOT / "scripts" / "vf_office_v2_p0_two_host_throughput_gate.py"
+    throughput_report = P2 / "p0-612-two-host-same-fixture-throughput-negative-2026-10-10.json"
+    if hashlib.sha256(throughput_script.read_bytes()).hexdigest() != (
+            "8f5fc848ea946e76cf96238c08e006a9c8a74f19837f08908161362d4ab6af7c"):
+        fail("P0 two-host throughput validator source SHA mismatch")
+    if hashlib.sha256(throughput_report.read_bytes()).hexdigest() != (
+            "93f79ea448ce99c3cb0cbaf702f65086b99d4181a563bdc08732e59d354afd6d"):
+        fail("P0 two-host sanitized report SHA mismatch")
+    for mode in ("selftest", "verify"):
+        throughput_call = subprocess.run([sys.executable, str(throughput_script), mode],
+                                         cwd=ROOT, capture_output=True, text=True, timeout=20)
+        if throughput_call.returncode:
+            fail("P0 throughput negative-claim check failed: " + throughput_call.stdout[:150])
+        try:
+            value = json.loads(throughput_call.stdout)
+        except ValueError:
+            fail("P0 throughput verifier did not return JSON")
+        if (value.get("status") != "PASS_SCOPED_SAMPLE_NOT_P0_ADMISSION"
+                or value.get("windows_qa_successes") != 0
+                or value.get("mac_qa_successes") != 2
+                or value.get("distinct_accepted_source_hashes") != 1
+                or value.get("parallel_overlap_seconds_observed") != 36.195
+                or value.get("production_authority") is not False
+                or value.get("statistical_speedup_proven") is not False
+                or value.get("os_isolation_proven") is not False
+                or value.get("autonomous_git_sink_proven") is not False
+                or value.get("raw_host_receipt_bytes_authenticated_by_ci") is not False
+                or (mode == "selftest" and value.get("tests") != 19)):
+            fail("P0 two-host throughput evidence falsely claims autonomous GREEN")
+
     # #612: New separate local-model diverse Worker emitted no false
     # successes for two actual Mac model-backed code attempts. Both exact
     # original journals remain UNKNOWN, independently read-only QA-audited.
