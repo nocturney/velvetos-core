@@ -2034,6 +2034,44 @@ def main() -> int:
                     or witness.get("production_effects") != 0):
                 fail("P0 two-host evidence promoted beyond original historic QA scope")
 
+    # #604: explicit OFFLINE-only credential-owning Git sink admission/refusal
+    # prototype. This does not confer production authority or cross-store fencing.
+    exclusive_sink = ROOT / "scripts" / "vf_office_v2_604_exclusive_sink_failclosed_offline.py"
+    if hashlib.sha256(exclusive_sink.read_bytes()).hexdigest() != (
+        "6b3e67c6d226b785474893f5d37ae3edad2fb6904b7fc3f97d910598b84c4ad3"
+    ):
+        fail("#604 exclusive Git sink OFFLINE source provenance changed")
+    for sink_mode in ("selftest", "verify"):
+        sink_result = subprocess.run(
+            [sys.executable, str(exclusive_sink), sink_mode],
+            cwd=ROOT, text=True, capture_output=True, timeout=35,
+        )
+        if sink_result.returncode != 0:
+            fail("#604 exclusive sink refusal tests failed " + sink_mode + " " +
+                 sink_result.stdout[:180] + sink_result.stderr[:180])
+        try:
+            sink_proof = json.loads(sink_result.stdout)
+        except json.JSONDecodeError:
+            fail("#604 exclusive sink returned invalid OFFLINE JSON")
+        if (
+            sink_proof.get("status") != (
+                "PASS_OFFLINE" if sink_mode == "selftest"
+                else "DESIGN_ONLY_NOT_ADMITTED"
+            )
+            or (sink_mode == "selftest" and sink_proof.get("tests") != 32)
+            or sink_proof.get("manual_lab_only") is not True
+            or sink_proof.get("synthetic_provider_and_git_only") is not True
+            or sink_proof.get("production_authority") is not False
+            or sink_proof.get("credential_exclusivity_verified") is not False
+            or sink_proof.get("mid_push_expiry_fenced") is not False
+            or sink_proof.get("cross_store_atomicity_proven") is not False
+            or any(sink_proof.get(k) != 0 for k in (
+                "production_effects", "network_git_writes", "paid_api_calls",
+                "unknown_auto_replays"
+            ))
+        ):
+            fail("#604 exclusive sink false READY / false ATOMICITY / replay gate")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
