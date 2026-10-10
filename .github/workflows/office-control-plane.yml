@@ -1,6 +1,6 @@
 name: Office Control Plane
 
-# VELVET_MACHINE_WRITER_ALLOW: packages/velvetos/living-studio/data/activation-latest.json packages/velvetos/living-studio/data/activation-history.jsonl office/learning/failure-museum/entries.jsonl packages/velvetos/living-studio/data/signal-room.jsonl packages/velvetos/living-studio/data/receipts.jsonl packages/vfharness/state/learning-candidates
+# VELVET_MACHINE_WRITER_ALLOW: packages/velvetos/living-studio/data/activation-latest.json packages/velvetos/living-studio/data/activation-history.jsonl office/learning/failure-museum/entries.jsonl office/control/HANDOFF.json office/control/HANDOFF-he.md packages/vfharness/state/learning-candidates
 
 on:
   schedule:
@@ -61,6 +61,8 @@ jobs:
             packages/velvetos/living-studio/data/activation-latest.json
             packages/velvetos/living-studio/data/activation-history.jsonl
             office/learning/failure-museum/entries.jsonl
+            office/control/HANDOFF.json
+            office/control/HANDOFF-he.md
             packages/velvetos/living-studio/data/signal-room.jsonl
             packages/velvetos/living-studio/data/receipts.jsonl
           )
@@ -88,6 +90,14 @@ jobs:
           if [ -d "$learning" ]; then
             # CI ingest only adds/updates; never automatically stage deletions.
             git add --ignore-removal -- "$learning"
+          fi
+          # The control-plane handoff is a bounded canonical artifact. Any
+          # OTHER tracked mutation must refuse instead of breaking rebase
+          # or silently carrying dirty state into the machine writer.
+          if ! git diff --quiet; then
+            echo "::error::unapproved unstaged tracked files block protected machine rebase"
+            git diff --name-only
+            exit 1
           fi
           # The staged index includes fresh allowlisted files. An unstaged
           # git diff would silently miss those new files.
