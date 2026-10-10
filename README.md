@@ -18,6 +18,9 @@
 <!-- morning-green-2026-09-23 -->
 Latest verified owner Morning Brief artifact path remains historical evidence. Current scheduled Instagram truth is the Cloudflare Instagram Publisher; OpenPost is frozen and must not be used as schedule authority.
 
+**Instagram multi-source schedule observation (PR #668, read-only candidate):** Cloudflare Publisher remains the sole VelvetOS production scheduling **writer**. Its D1 queue is not a complete view of independently scheduled Meta Business Suite posts. The [schedule observer](packages/vfigos/schedule_observer/README.md) adds a source registry, bounded authenticated Meta Scheduled UI reader, Office v2 secure Cloudflare reader, Google Calendar mirror and Instagram Graph published-media observations, with source age, identity, deduplication and explicit unknown/unavailable states. Owner-context read has been proven in an attended Windows pilot; the work is not a second scheduler, not an authority promotion, and native Instagram-app-only scheduling remains uncovered until independently verified.
+
+
 **Memory backend:** `vfmem` remains canonical; Cognee `1.6.2` is integrated as an optional local/keyless derived semantic index over a curated 66-source / 13-category durable corpus. The active index uses local multilingual FastEmbed, provenance-mapped `CHUNKS`, canonical verification, deterministic vfmem fallback, and atomic `active-state.json` cutover with legacy `state.json` retained as rollback evidence. See `packages/vfmem/COGNEE.md`.
 
 **Zero-cost stack closeout:** PR #390 is merged to `main`; the canonical final-acceptance receipt/sensor records `MERGED / merge=YES` and the reconciled suite remains **109/109 PASS**. Declared limitations remain fail-closed and unchanged.
@@ -133,7 +136,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <tr>
 <td align="center"><strong>23</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
 <td align="center"><strong>126</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
-<td align="center"><strong>11</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
+<td align="center"><strong>12</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
 </table>
