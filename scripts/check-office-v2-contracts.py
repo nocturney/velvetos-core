@@ -2228,6 +2228,71 @@ def main() -> int:
         ):
             fail("#604 portable TLS/RBAC test falsely admitted production")
 
+    # #604: same OS UID can borrow a disposable sink private key and
+    # bypass otherwise working per-CN etcd mTLS/RBAC. This is a RED
+    # authority gate; a real positive security admission must NEVER be
+    # inferred from PASS_EXPECTED_NEGATIVE_... . CI only runs portable
+    # tests and refusal-only verify, not the live Mac credential fixture.
+    same_uid_negative = (
+        ROOT / "scripts" / "vf_office_v2_604_sameuid_sink_key_bypass_lab.py"
+    )
+    if hashlib.sha256(same_uid_negative.read_bytes()).hexdigest() != (
+        "7e2380e361e0595d817ba9ae1d217f841af36976246e246dff4a1b6f915b18fb"
+    ):
+        fail("#604 same-UID sink key negative source SHA drift")
+    for same_uid_mode in ("selftest", "verify"):
+        same_uid_probe = subprocess.run(
+            [sys.executable, str(same_uid_negative), same_uid_mode],
+            cwd=ROOT, text=True, capture_output=True, timeout=40,
+        )
+        if same_uid_probe.returncode != 0:
+            fail("#604 same-UID portable denial failed: " +
+                 same_uid_mode + ": " + same_uid_probe.stdout[:180] +
+                 same_uid_probe.stderr[:180])
+        try:
+            same_uid_result = json.loads(same_uid_probe.stdout)
+        except json.JSONDecodeError:
+            fail("#604 same-UID negative returned malformed JSON")
+        if (
+            same_uid_result.get("status") != (
+                "PASS_PORTABLE_REFUSAL" if same_uid_mode == "selftest"
+                else "DESIGN_ONLY_NOT_ADMITTED"
+            )
+            or same_uid_result.get("tests") != (
+                16 if same_uid_mode == "selftest" else 0
+            )
+            or same_uid_result.get("etcd_original_real_mtls_rbac_source_sha256") != (
+                "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c"
+            )
+            or same_uid_result.get("required_mac_uid") != (
+                "SAME_UID_IS_NOT_SEPARATE_SECURITY_PRINCIPAL"
+            )
+            or same_uid_result.get("owner_issue") != "#604"
+            or same_uid_result.get("consumer_issue") != "#612"
+            or any(same_uid_result.get(k) is not False for k in (
+                "same_uid_process_was_independently_launched",
+                "same_uid_disposable_sink_private_key_was_read",
+                "same_uid_sink_impersonation_succeeded",
+                "pending_unknown_deleted_by_untrusted_same_uid_process",
+                "new_epoch_admitted_after_untrusted_intent_delete",
+                "worker_cert_rbac_denial_enforced",
+                "production_authority",
+                "git_credential_exclusivity_proven",
+                "worker_os_principal_isolation_proven",
+                "provider_cross_host_authn_proven",
+                "remote_github_writer_denied_proven",
+                "native_github_mid_push_expiry_fenced",
+                "globally_exactly_once_proven",
+                "live_os_enforcement_deployed",
+                "new_scheduler_created",
+            ))
+            or any(same_uid_result.get(k) != 0 for k in (
+                "remote_github_writes", "paid_model_calls",
+                "system_accounts_changed", "global_trust_changes",
+            ))
+        ):
+            fail("#604 same-UID REAL BYPASS falsified as producer authority")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
