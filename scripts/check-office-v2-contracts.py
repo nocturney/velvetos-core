@@ -2303,7 +2303,7 @@ def main() -> int:
         ROOT / "scripts" / "vf_office_v2_604_macos_sandbox_hardlink_alias_lab.py"
     )
     if hashlib.sha256(mac_alias_source.read_bytes()).hexdigest() != (
-        "d9d9061d2932f357a0e7e8f208ca84a45cd8f7f0cf7e31aeaf4565a1388cd3ff"
+        "f7d583fbaab683b69f96bfebae9cdb91c2a88609530beaae1153cf28f0a92add"
     ):
         fail("#604 Mac kernel path-alias negative source SHA drift")
     for alias_mode in ("selftest", "verify"):
