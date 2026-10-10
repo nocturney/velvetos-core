@@ -108,6 +108,25 @@ def require(ok, reason):
     if not ok: raise Refused(reason)
 
 
+# A clean Git clone, sanitized subprocess environment, POSIX session and
+# Popen handle are NOT OS/credential isolation. Previous Chris runs executed
+# model-generated Python as SYSTEM Session 0; Mac UID501 is also unconfined.
+# No proof-backed execution adapter has been admitted by #604 or #612 yet.
+# This explicit code-locked denial cannot be enabled by worker-supplied JSON,
+# environment flags, task IDs, or permissions on same-user directories.
+OS_EXECUTION_BLOCK = "P0_GENERATED_SOURCE_OS_ISOLATION_NOT_ADMITTED"
+
+
+def require_isolated_generated_code_executor():
+    """Fail closed before any model spawn or generated-source QA subprocess.
+
+    A later protected, independently verified change may replace this only
+    with a real OS-isolated executor and credential-free QA receipt contract.
+    Read-only historical evidence validation remains available in this file.
+    """
+    raise Refused(OS_EXECUTION_BLOCK)
+
+
 def seal(row):
     return old.digest(row)
 
@@ -237,6 +256,7 @@ def check(env, fresh):
 
 
 def admit(root_raw,task,candidate_raw,aider_raw,model,port,timeout,prompt_profile=None):
+    require_isolated_generated_code_executor()
     parent=Path(root_raw)
     require(parent.is_absolute() and
             parent.parent.name=="AgentEnvelopeLab"
@@ -319,6 +339,7 @@ def admit(root_raw,task,candidate_raw,aider_raw,model,port,timeout,prompt_profil
 
 
 def independent_qa(root,spec,hidden_path,code):
+    require_isolated_generated_code_executor()
     with tempfile.TemporaryDirectory(prefix="vf-office-p0-diverse-qa-") as td:
         replay=Path(td)/"checkout"
         clone=subprocess.run(["git","clone","--quiet","--local",
@@ -501,6 +522,7 @@ def verify_receipt(env,receipt):
 
 
 def execute(raw_env,raw_receipt):
+    require_isolated_generated_code_executor()
     epath=task_file(raw_env)
     out=epath.parent/"output"
     receipt_path=Path(raw_receipt)
@@ -903,7 +925,31 @@ def selftest():
     except Refused:
         checks.append(child.kills==1 and child.reaps==1)
     else: raise AssertionError("CLEANUP_FAILURE_FALSE_SUCCESS")
-    require(all(checks) and len(checks)==44,"NEGATIVE_TEST_COUNT_DRIFT")
+    # Host protection is not a default opt-in flag. The exact direct host
+    # implementation must reject every fresh generated-code execution path.
+    probes=(
+        ("admit",lambda:admit(None,None,None,None,None,None,None)),
+        ("run",lambda:execute(None,None)),
+        ("qa",lambda:independent_qa(None,None,None,None)),
+    )
+    for label,probe in probes:
+        try: probe()
+        except Refused as error:
+            checks.append(str(error)==OS_EXECUTION_BLOCK)
+        else: raise AssertionError("LOCAL_GENERATED_CODE_UNSAFELY_ADMITTED_"+label)
+    # A task payload or environment override cannot grant OS isolation.
+    marker="VF_OFFICE_GENERATED_EXECUTION_ISOLATED"
+    prior=os.environ.get(marker)
+    os.environ[marker]="true"
+    try:
+        try: execute(None,None)
+        except Refused as error:
+            checks.append(str(error)==OS_EXECUTION_BLOCK)
+        else: raise AssertionError("ENVIRONMENT_SPOOFED_OS_ISOLATION")
+    finally:
+        if prior is None: os.environ.pop(marker,None)
+        else: os.environ[marker]=prior
+    require(all(checks) and len(checks)==48,"NEGATIVE_TEST_COUNT_DRIFT")
     return {"status":"PASS_OFFLINE","tests":len(checks),
             "model_invocations":0,"different_tasks_model_proven":False,
             "automatic_retry":False,"production_authority":False,
