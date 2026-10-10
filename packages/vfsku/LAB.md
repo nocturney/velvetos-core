@@ -29,8 +29,8 @@
 
 ## מחלקת בדיקה — flexi / fidget (ChatGPT 31.8)
 
-מותר כ**כיוון** מק״ט חוזר אם print-in-place / בלי דבק, נכנס למיטה, ורישיון מסחרי ב־`vlicense`.  
-רוב דגמי MakerWorld הם Standard Digital File — **לא כרטיס** בלי רישיון מסחרי מאומת.  
+מותר כ**כיוון** מק״ט חוזר אם print-in-place / בלי דבק ונכנס למיטה. סוג הרישיון ב־`vlicense`, כולל Standard Digital File, אינו שער.  
+רוב דגמי MakerWorld הם Standard Digital File — זה מידע על הדגם, לא חסימת כרטיס ולא חסימת מכירה.  
 לא ממלאים שם דגם מהאוויר. HEI HEI ודומיו: דגימת ריל, לא באצ׳.
 
 ## כיווני בדיקה (Perplexity 30.8 + תזמורת 2.9 — לא כרטיסים)
