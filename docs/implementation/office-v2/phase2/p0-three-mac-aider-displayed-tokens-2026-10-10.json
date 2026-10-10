@@ -1,0 +1,68 @@
+{
+  "issue": "https://github.com/nocturney/velvetos-core/issues/612",
+  "limits": {
+    "any_background_scheduler_added": false,
+    "any_model_replayed": false,
+    "cost_per_token_estimated": false,
+    "distributed_fleet_fencing_proven": false,
+    "exact_ollama_token_counts_proven": false,
+    "model_calls_during_observe": 0,
+    "original_receipts_or_logs_mutated": false,
+    "production_writer_authority": false,
+    "repeated_identical_workloads": false,
+    "statistically_valid_p95_proven": false,
+    "tokens_per_second_accurate_proven": false,
+    "two_host_execution_proven": false
+  },
+  "model": "qwen3.5:4b",
+  "model_digest": "7f3251fa6878a78a606bcb3c074283306e5ad2ea411a7774a9dd98a4bc7f2d13",
+  "recorded_date_utc": "2026-10-10",
+  "results": [
+    {
+      "displayed_tokens_are_not_exact": true,
+      "exact_model_call_count_known": false,
+      "fixture": "merge-windows-v1",
+      "original_elapsed_seconds": 65.527,
+      "original_independent_qa": "3_VISIBLE_12_HIDDEN_PASS",
+      "original_worker_receipt_raw_sha256": "f6dac1286bb1fad2ddb525ecf51d3fd86a9149d2a5cc8464f05c5569350cedda",
+      "original_worker_source_sha256": "999f8ae84cbca062a41297b6fadf6703ee69fa8a61e427a8441cd1a169c3b0a0",
+      "original_worker_stdout_raw_sha256": "8e6620973b4b636f5880071bce911d856c1cae71a3cae71b03da4de8be7c4aea",
+      "task_id": "p0-diverse-run-mac-merge-guided-20261010-a",
+      "terminal_usage_line_exact_text": "Tokens: 1.0k sent, 1.1k received.",
+      "terminal_usage_lines_found": 1,
+      "underlying_ollama_usage_tokens_known": false
+    },
+    {
+      "displayed_tokens_are_not_exact": true,
+      "exact_model_call_count_known": false,
+      "fixture": "canonical-tag-v1",
+      "original_elapsed_seconds": 58.344,
+      "original_independent_qa": "3_VISIBLE_12_HIDDEN_PASS",
+      "original_worker_receipt_raw_sha256": "c2f81cec7419219f942ec74524864a2159ca233759ba643e193cead7ed5087d5",
+      "original_worker_source_sha256": "b2ec92fed514a5e0e37aeca31155fe0d04cdfde70a3d46fafeeb9a09b0ef1ccb",
+      "original_worker_stdout_raw_sha256": "752719fe98d38a7cb31094e8f0c8681fd1b6f5da30e0f8209fe0db79a2f4c48b",
+      "task_id": "p0-diverse-run-mac-tag-state-v2-20261010-c",
+      "terminal_usage_line_exact_text": "Tokens: 1.0k sent, 940 received.",
+      "terminal_usage_lines_found": 1,
+      "underlying_ollama_usage_tokens_known": false
+    },
+    {
+      "displayed_tokens_are_not_exact": true,
+      "exact_model_call_count_known": false,
+      "fixture": "merge-windows-v1",
+      "original_elapsed_seconds": 62.586,
+      "original_independent_qa": "3_VISIBLE_12_HIDDEN_PASS",
+      "original_worker_receipt_raw_sha256": "b0cc5ff5e24d33243e65fa7c5f569f7c11bcc275060e76813ed4198e65236fda",
+      "original_worker_source_sha256": "0ec526a84d6a814aecbfc586c237ef59044811f920c0d73640cbf24b76e25479",
+      "original_worker_stdout_raw_sha256": "769685fd73a80d21961cd1994bd6aeb6a9fd165e08346d25c5cb6f336be675a5",
+      "task_id": "p0-diverse-run-mac-merge-exact-int-20261010-d",
+      "terminal_usage_line_exact_text": "Tokens: 1.1k sent, 1.0k received.",
+      "terminal_usage_lines_found": 1,
+      "underlying_ollama_usage_tokens_known": false
+    }
+  ],
+  "schema": "velvetos.office-v2.p0-three-mac-aider-display-usage.v0",
+  "source": "ORIGINAL_MAC_WORKER_RECEIPT_AND_AIDER_STDOUT_READ_ONLY",
+  "source_host": "MacMiniOffice.local",
+  "status": "PASS_THREE_ORIGINAL_QA_SUCCESSES_AIDER_DISPLAY_ONLY"
+}

@@ -293,6 +293,46 @@ def main() -> int:
     ):
         fail("P0 manual new-attempt lineage overstated safety or authority")
 
+    # #612: Original Mac three QA-green Aider terminal usage DISPLAY, SHA
+    # paired with actual original Worker stdout logs + Worker receipts.
+    # 1.0k/1.1k/940 are presentation tokens, not exact Ollama counters.
+    # CI uses only OFFLINE historical checks, never model or Mac log observe.
+    aider_display = ROOT / "scripts" / "vf_office_v2_p0_aider_display_usage_lab.py"
+    if hashlib.sha256(aider_display.read_bytes()).hexdigest() != (
+            "0ac71e674c803c0ff26a13c53983e05d5aec01dcec98c69ffbf6ffbea7b4e6a1"):
+        fail("P0 actual original Aider display usage source SHA drift")
+    for usage_mode in ("verify", "selftest"):
+        usage_check = subprocess.run(
+            [sys.executable, str(aider_display), usage_mode],
+            cwd=ROOT, capture_output=True, text=True, timeout=20,
+        )
+        if usage_check.returncode:
+            fail("P0 historical original Aider usage " + usage_mode +
+                 " failed: " + usage_check.stdout[:140])
+        try:
+            usage_status = json.loads(usage_check.stdout)
+        except ValueError:
+            fail("P0 original Aider usage offline tool emitted non-JSON")
+        if usage_mode == "verify":
+            if (usage_status.get("status") !=
+                    "PASS_HISTORICAL_AIDER_DISPLAY_ONLY_NO_EXACT_TOKENS"
+                    or usage_status.get("mac_original_successes") != 3
+                    or usage_status.get("unique_task_envelopes") != 3
+                    or usage_status.get("model_calls_by_verifier") != 0
+                    or usage_status.get("accurate_ollama_token_counts_proven")
+                       is not False
+                    or usage_status.get("statistically_reliable_p95_proven")
+                       is not False
+                    or usage_status.get("production_authority") is not False):
+                fail("P0 original model token display overstated accurate count")
+        elif (usage_status.get("status") != "PASS_OFFLINE"
+              or usage_status.get("tests") != 21
+              or usage_status.get("model_calls") != 0
+              or usage_status.get("production_writes") != 0
+              or usage_status.get("exact_tokens_proven") is not False
+              or usage_status.get("two_host_execution_proven") is not False):
+            fail("P0 display token negative tests did not deny false p95")
+
     # #612: Real GitHub *remote scratch ref* CAS effect-boundary LAB, two
     # isolated native Windows Git clients raced; one accepted, stale rejected,
     # exact SHA-CAS deletion; macOS verified READ-ONLY (Mac Git push auth absent).
