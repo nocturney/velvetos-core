@@ -2293,6 +2293,43 @@ def main() -> int:
         ):
             fail("#604 same-UID REAL BYPASS falsified as producer authority")
 
+    # #612 real two-host parallel coding: quarantined source from ONE physical
+    # Qwen/Aider LAB. Independently replay 3 visible + 12 hidden cases;
+    # never imply the model owned GitHub credentials, a fleet lease or merge.
+    artifact = ROOT / "docs/implementation/office-v2/phase2/quarantined-agent-sources-2026-10-10/parallel-mac-tag-20261010.py"
+    if hashlib.sha256(artifact.read_bytes()).hexdigest() != "b2ec92fed514a5e0e37aeca31155fe0d04cdfde70a3d46fafeeb9a09b0ef1ccb":
+        fail("#612 MacMiniOffice.local parallel model output changed")
+    local_replay = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_p0_parallel_mac_model_gate.py"),
+         "selftest"], cwd=ROOT, text=True, capture_output=True, timeout=45,
+    )
+    if local_replay.returncode != 0:
+        fail("#612 MacMiniOffice.local independent model replay failed: " +
+             local_replay.stdout[-200:] + local_replay.stderr[-200:])
+    try:
+        model_qa = json.loads(local_replay.stdout)
+    except json.JSONDecodeError:
+        fail("#612 MacMiniOffice.local replay returned malformed JSON")
+    if (
+        model_qa.get("status") != "PASS_QUARANTINED_3_VISIBLE_12_HIDDEN"
+        or model_qa.get("producer_task_id") != "p0-diverse-run-mac-speed-tag-20261010-c"
+        or model_qa.get("producer_host") != "MacMiniOffice.local"
+        or model_qa.get("producer_model") != "qwen3.5:4b"
+        or model_qa.get("fixture") != "canonical-tag-v1"
+        or model_qa.get("source_sha256") != "b2ec92fed514a5e0e37aeca31155fe0d04cdfde70a3d46fafeeb9a09b0ef1ccb"
+        or model_qa.get("independent_qa_visible_tests") != 3
+        or model_qa.get("independent_qa_hidden_cases") != 12
+        or model_qa.get("seed_negative_control_fails_as_expected") is not True
+        or any(model_qa.get(k) is not False for k in (
+            "model_executed_by_this_gate", "real_github_writer_fenced",
+            "autonomous_pr_authority", "production_authority",
+            "scheduler_created",
+        ))
+        or model_qa.get("github_writes") != 0
+        or model_qa.get("paid_model_calls") != 0
+    ):
+        fail("#612 MacMiniOffice.local model source falsely admitted to autonomous writer")
+
     # #604 macOS actual sandbox path aliases. The isolated Mac kernel
     # test proved both literal and subpath policies deny canonical/symlink,
     # yet a PREEXISTING hardlink outside the denied subtree remains
