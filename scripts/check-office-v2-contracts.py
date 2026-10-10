@@ -2228,6 +2228,43 @@ def main() -> int:
         ):
             fail("#604 portable TLS/RBAC test falsely admitted production")
 
+    # #612 real two-host parallel coding: quarantined source from ONE physical
+    # Qwen/Aider LAB. Independently replay 3 visible + 12 hidden cases;
+    # never imply the model owned GitHub credentials, a fleet lease or merge.
+    artifact = ROOT / "docs/implementation/office-v2/phase2/quarantined-agent-sources-2026-10-10/parallel-win-merge-20261010.py"
+    if hashlib.sha256(artifact.read_bytes()).hexdigest() != "e625ea816531000df82d15144f3155ebd59a868a2dd89c81c1f254115bafb2b9":
+        fail("#612 Chris parallel model output changed")
+    local_replay = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_p0_parallel_win_model_gate.py"),
+         "selftest"], cwd=ROOT, text=True, capture_output=True, timeout=45,
+    )
+    if local_replay.returncode != 0:
+        fail("#612 Chris independent model replay failed: " +
+             local_replay.stdout[-200:] + local_replay.stderr[-200:])
+    try:
+        model_qa = json.loads(local_replay.stdout)
+    except json.JSONDecodeError:
+        fail("#612 Chris replay returned malformed JSON")
+    if (
+        model_qa.get("status") != "PASS_QUARANTINED_3_VISIBLE_12_HIDDEN"
+        or model_qa.get("producer_task_id") != "p0-diverse-run-win-speed-merge-20261010-c"
+        or model_qa.get("producer_host") != "Chris"
+        or model_qa.get("producer_model") != "qwen3.5:9b"
+        or model_qa.get("fixture") != "merge-windows-v1"
+        or model_qa.get("source_sha256") != "e625ea816531000df82d15144f3155ebd59a868a2dd89c81c1f254115bafb2b9"
+        or model_qa.get("independent_qa_visible_tests") != 3
+        or model_qa.get("independent_qa_hidden_cases") != 12
+        or model_qa.get("seed_negative_control_fails_as_expected") is not True
+        or any(model_qa.get(k) is not False for k in (
+            "model_executed_by_this_gate", "real_github_writer_fenced",
+            "autonomous_pr_authority", "production_authority",
+            "scheduler_created",
+        ))
+        or model_qa.get("github_writes") != 0
+        or model_qa.get("paid_model_calls") != 0
+    ):
+        fail("#612 Chris model source falsely admitted to autonomous writer")
+
     # #604: same OS UID can borrow a disposable sink private key and
     # bypass otherwise working per-CN etcd mTLS/RBAC. This is a RED
     # authority gate; a real positive security admission must NEVER be
