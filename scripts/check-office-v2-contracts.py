@@ -2072,6 +2072,49 @@ def main() -> int:
         ):
             fail("#604 exclusive sink false READY / false ATOMICITY / replay gate")
 
+    # #604 independent two-OS OFFLINE native-local-Git crash and durable
+    # UNKNOWN receipt fixture. No GitHub remote, secrets, daemon or live provider.
+    native_crash_source = (
+        ROOT / "scripts" / "vf_office_v2_604_native_git_crash_reconcile_offline.py"
+    )
+    if hashlib.sha256(native_crash_source.read_bytes()).hexdigest() != (
+        "2bbd81c9c7f59c1b28937286d1c365ca46c0ceb9db96157859f7225e0dd6d632"
+    ):
+        fail("#604 native local Git crash source pinned provenance changed")
+    for native_mode in ("selftest", "verify"):
+        native = subprocess.run(
+            [sys.executable, str(native_crash_source), native_mode],
+            cwd=ROOT, capture_output=True, text=True, timeout=45,
+        )
+        if native.returncode != 0:
+            fail("#604 native Git crash OFFLINE test failure " + native_mode +
+                 ": " + native.stdout[:200] + native.stderr[:200])
+        try:
+            native_proof = json.loads(native.stdout)
+        except json.JSONDecodeError:
+            fail("#604 native Git crash fixture invalid JSON " + native_mode)
+        if (
+            native_proof.get("status") != (
+                "PASS_OFFLINE" if native_mode == "selftest"
+                else "DESIGN_ONLY_NOT_ADMITTED"
+            )
+            or (native_mode == "selftest" and native_proof.get("tests") != 19)
+            or native_proof.get("synthetic_provider_only") is not True
+            or native_proof.get("native_local_git_only") is not True
+            or native_proof.get("durable_fixture_intent_commit") is not True
+            or native_proof.get("credential_exclusivity_proven") is not False
+            or native_proof.get("provider_authoritative_journal_proven") is not False
+            or native_proof.get("mid_push_lease_expiry_fenced") is not False
+            or native_proof.get("exactly_once_across_git_provider_proven") is not False
+            or native_proof.get("live_github_credential_in_use") is not False
+            or native_proof.get("production_authority") is not False
+            or native_proof.get("scheduler_created") is not False
+            or any(native_proof.get(k) != 0 for k in (
+                "external_git_writes", "unknown_auto_retries", "paid_model_calls"
+            ))
+        ):
+            fail("#604 native Git crash falsely admitted authority or replay")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
