@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-08T18:03:33.885Z",
+  "updated_at": "2026-10-10T14:22:36.714Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 100,
+  "candidate_count": 108,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -16,7 +16,8 @@
     "A shortlist is a benchmark set, not a winner declaration.",
     "Prior research is evidence input, not current runtime verification.",
     "COMPETITOR_NEUTRAL_ADMISSION_V1: preserve every new credible alternative with comparative evidence and queue when shortlists are full, without shifting the closed 68-source import.",
-    "Historical competitor-neutral backfill on 2026-10-08 reopens evidence-free deferrals and preserves established candidate IDs/source_item_id lineage; no LAB or production promotion."
+    "Historical competitor-neutral backfill on 2026-10-08 reopens evidence-free deferrals and preserves established candidate IDs/source_item_id lineage; no LAB or production promotion.",
+    "2026-10-10 agent-composition intake: eight namespaced agents researched and queued; Letta historical memory candidate queued; ambiguous OpenDots lineage preserved; no rights or installs."
   ],
   "items": [
     {
@@ -529,7 +530,7 @@
       "provenance_class": "PRIOR_RESEARCH",
       "lifecycle_state": "RESEARCHED",
       "decision_verdict": "BENCHMARK_REQUIRED",
-      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "verdict_reason": "Historical generic OpenDots reference has unresolved exact upstream identity; it cannot be silently equated to any independently registered OpenDots repository.",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "capability_tags": [
@@ -541,7 +542,10 @@
       "evidence_refs": [
         "prior-research://agents"
       ],
-      "notes": [],
+      "notes": [
+        "Preserve original candidate ID and source_item_id; original upstream provenance remains ambiguous.",
+        "CopilotKit/OpenDots, Anil-matcha/open-dots and diggerhq/opendots are tracked independently; no alias-based promotion."
+      ],
       "original_office_v2_verdict": "BENCHMARK"
     },
     {
@@ -729,24 +733,46 @@
     {
       "candidate_id": "candidate-letta",
       "source_item_id": "candidate-letta",
-      "name": "Letta",
+      "name": "Letta (stateful agent memory, historical candidate)",
       "category": "RUNTIME",
       "provenance_class": "PRIOR_RESEARCH",
       "lifecycle_state": "RESEARCHED",
       "decision_verdict": "BENCHMARK_REQUIRED",
-      "verdict_reason": "Prior research is retained as a challenger and requires contract-aligned benchmark evidence.",
+      "verdict_reason": "Historical stateful-memory alternative requires same-fixture memory/context comparison before adoption; no production memory authority changes.",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "capability_tags": [
-        "agent-memory"
+        "agent-memory",
+        "stateful-agents",
+        "memory-context"
       ],
       "platform_constraints": [],
-      "shortlist_lanes": [],
-      "evidence_refs": [
-        "prior-research://agents"
+      "shortlist_lanes": [
+        "memory-context"
       ],
-      "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "evidence_refs": [
+        "prior-research://agents",
+        "https://github.com/letta-ai/letta",
+        "https://github.com/letta-ai/letta-code"
+      ],
+      "notes": [
+        "Historical source_item_id and original import position preserved.",
+        "Canonical vfmem and Office Project State remain source of truth; deletion, provenance, freshness and contradiction behavior must be tested."
+      ],
+      "original_office_v2_verdict": "BENCHMARK",
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Run derivative memory recall, contradiction, deletion and stale-source comparison against vfmem/Cognee on identical sanitized corpus.",
+        "rationale": "Persistent agent memory is a credible bounded component but not proven superior to canonical memory.",
+        "decision_evidence_refs": []
+      }
     },
     {
       "candidate_id": "candidate-infisical-agent-vault",
@@ -3297,6 +3323,392 @@
           "https://github.com/nocturney/velvetos-core/issues/612",
           "https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6065993577"
         ]
+      }
+    },
+    {
+      "candidate_id": "candidate-rakazo",
+      "source_item_id": null,
+      "name": "Rakazo (elie222)",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "OWNER_REQUEST_2026_10_10_AGENT_COMPOSITION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Credible whole-system, bounded specialist or design/component alternative; no comparable Office v2 Golden Fixture has run.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime",
+        "multi-agent",
+        "sandbox",
+        "routines",
+        "mcp",
+        "local-model"
+      ],
+      "platform_constraints": [
+        "Apache-2.0. Agent Pi runs outside the computer sandbox; some browser/shell/computer actions can bypass granular approval unless additional policies are configured. Docker Linux desktop is not native Windows GUI; no direct host or real mail account access.",
+        "No production credentials, new recurring cost, autonomous host access or side-effect writers; isolate and pin a version before LAB."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/elie222/rakazo",
+        "docs/implementation/office-v2/phase2/agent-composition-intake-2026-10-10.md"
+      ],
+      "notes": [
+        "Research only; not installed, deployed, tested with a model, or promoted.",
+        "Existing Office Task Envelope, #604 fleet, Phase 3B policies, Phase 3C model routing and production authority remain unchanged."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare full replacement and a single specialist-worker with incumbent GrokBot and canonical Office Task Envelope. Deny/exfiltration tests and zero-cost model checks required.",
+        "rationale": "Apache-2.0. Agent Pi runs outside the computer sandbox; some browser/shell/computer actions can bypass granular approval unless additional policies are configured. Docker Linux desktop is not native Windows GUI; no direct host or real mail account access.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-hermes-agent",
+      "source_item_id": null,
+      "name": "NousResearch Hermes Agent",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "OWNER_REQUEST_2026_10_10_AGENT_COMPOSITION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Credible whole-system, bounded specialist or design/component alternative; no comparable Office v2 Golden Fixture has run.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime",
+        "skills",
+        "memory",
+        "terminal",
+        "scheduled-tasks",
+        "mcp"
+      ],
+      "platform_constraints": [
+        "MIT. Can operate on the real host; use isolated non-production worker only. No Codex CLI, unapproved model quotas or duplicate scheduler.",
+        "No production credentials, new recurring cost, autonomous host access or side-effect writers; isolate and pin a version before LAB."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/NousResearch/hermes-agent",
+        "docs/implementation/office-v2/phase2/agent-composition-intake-2026-10-10.md"
+      ],
+      "notes": [
+        "Research only; not installed, deployed, tested with a model, or promoted.",
+        "Existing Office Task Envelope, #604 fleet, Phase 3B policies, Phase 3C model routing and production authority remain unchanged."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare one bounded coding/skills worker against incumbent on the same synthetic tasks and artifact QA; audit permissions, continuation and cancellation.",
+        "rationale": "MIT. Can operate on the real host; use isolated non-production worker only. No Codex CLI, unapproved model quotas or duplicate scheduler.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-agent-zero",
+      "source_item_id": null,
+      "name": "Agent Zero (agent0ai)",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "OWNER_REQUEST_2026_10_10_AGENT_COMPOSITION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Credible whole-system, bounded specialist or design/component alternative; no comparable Office v2 Golden Fixture has run.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime",
+        "linux-gui",
+        "browser",
+        "host-bridge",
+        "documents",
+        "multi-agent"
+      ],
+      "platform_constraints": [
+        "Root LICENSE text is MIT despite NOASSERTION metadata; independently audit plugin licenses. Host bridge and Codex OAuth remain off. Linux Docker GUI is not native Windows/Mac.",
+        "No production credentials, new recurring cost, autonomous host access or side-effect writers; isolate and pin a version before LAB."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/agent0ai/agent-zero",
+        "docs/implementation/office-v2/phase2/agent-composition-intake-2026-10-10.md"
+      ],
+      "notes": [
+        "Research only; not installed, deployed, tested with a model, or promoted.",
+        "Existing Office Task Envelope, #604 fleet, Phase 3B policies, Phase 3C model routing and production authority remain unchanged."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Isolated container-only computer/UI fixture; verify takeover, no host credential exposure and rollback before any native host bridge.",
+        "rationale": "Root LICENSE text is MIT despite NOASSERTION metadata; independently audit plugin licenses. Host bridge and Codex OAuth remain off. Linux Docker GUI is not native Windows/Mac.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-copilotkit-openbot",
+      "source_item_id": null,
+      "name": "CopilotKit OpenBot",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "OWNER_REQUEST_2026_10_10_AGENT_COMPOSITION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Credible whole-system, bounded specialist or design/component alternative; no comparable Office v2 Golden Fixture has run.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime",
+        "policy-gateway",
+        "audit",
+        "ag-ui",
+        "mcp",
+        "computer"
+      ],
+      "platform_constraints": [
+        "MIT app code; persistent conversations require CopilotKit Intelligence project/license, local developer evaluation is not verified free production. Single-user admin default is unsuitable for shared public use.",
+        "No production credentials, new recurring cost, autonomous host access or side-effect writers; isolate and pin a version before LAB."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime",
+        "tool-gateway-interoperability"
+      ],
+      "evidence_refs": [
+        "https://github.com/CopilotKit/OpenBot",
+        "docs/implementation/office-v2/phase2/agent-composition-intake-2026-10-10.md"
+      ],
+      "notes": [
+        "Research only; not installed, deployed, tested with a model, or promoted.",
+        "Existing Office Task Envelope, #604 fleet, Phase 3B policies, Phase 3C model routing and production authority remain unchanged."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare fail-closed tool approvals, deny/audit receipts and AG-UI patterns against existing Office 3B; do not create a second policy authority.",
+        "rationale": "MIT app code; persistent conversations require CopilotKit Intelligence project/license, local developer evaluation is not verified free production. Single-user admin default is unsuitable for shared public use.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-copilotkit-openmuse",
+      "source_item_id": null,
+      "name": "CopilotKit OpenMuse",
+      "category": "AGENT",
+      "provenance_class": "OWNER_REQUEST_2026_10_10_AGENT_COMPOSITION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Credible whole-system, bounded specialist or design/component alternative; no comparable Office v2 Golden Fixture has run.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-ui",
+        "proactive",
+        "long-running-tasks",
+        "browser",
+        "takeover"
+      ],
+      "platform_constraints": [
+        "MIT app; Alpha, one-owner account setup and CopilotKit Intelligence dependency. No live Google credentials or uncontrolled browser network egress.",
+        "No production credentials, new recurring cost, autonomous host access or side-effect writers; isolate and pin a version before LAB."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/CopilotKit/openmuse",
+        "docs/implementation/office-v2/phase2/agent-composition-intake-2026-10-10.md"
+      ],
+      "notes": [
+        "Research only; not installed, deployed, tested with a model, or promoted.",
+        "Existing Office Task Envelope, #604 fleet, Phase 3B policies, Phase 3C model routing and production authority remain unchanged."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Review proactive task UX and human takeover through mock data, then conditionally compare whole stack if licensing/cost and identity gates pass.",
+        "rationale": "MIT app; Alpha, one-owner account setup and CopilotKit Intelligence dependency. No live Google credentials or uncontrolled browser network egress.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-copilotkit-opendots",
+      "source_item_id": null,
+      "name": "CopilotKit OpenDots",
+      "category": "AGENT",
+      "provenance_class": "OWNER_REQUEST_2026_10_10_AGENT_COMPOSITION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Credible whole-system, bounded specialist or design/component alternative; no comparable Office v2 Golden Fixture has run.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-ui",
+        "spaces",
+        "documents",
+        "specialist-agents"
+      ],
+      "platform_constraints": [
+        "MIT template, but conversation requires CopilotKit Intelligence (managed, evaluation local or licensed self-host); Spaces do not become VelvetOS canonical truth.",
+        "No production credentials, new recurring cost, autonomous host access or side-effect writers; isolate and pin a version before LAB."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/CopilotKit/OpenDots",
+        "docs/implementation/office-v2/phase2/agent-composition-intake-2026-10-10.md"
+      ],
+      "notes": [
+        "Research only; not installed, deployed, tested with a model, or promoted.",
+        "Existing Office Task Envelope, #604 fleet, Phase 3B policies, Phase 3C model routing and production authority remain unchanged."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Benchmark document/Spaces UI patterns as an adapter first, then full system only after independent runtime/license review.",
+        "rationale": "MIT template, but conversation requires CopilotKit Intelligence (managed, evaluation local or licensed self-host); Spaces do not become VelvetOS canonical truth.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-anil-open-dots",
+      "source_item_id": null,
+      "name": "Anil-matcha/open-dots",
+      "category": "AGENT",
+      "provenance_class": "OWNER_REQUEST_2026_10_10_AGENT_COMPOSITION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Credible whole-system, bounded specialist or design/component alternative; no comparable Office v2 Golden Fixture has run.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "approval",
+        "coding-worker",
+        "telegram",
+        "recurring-prompts"
+      ],
+      "platform_constraints": [
+        "Early prototype relies on Boat sandboxes and Claude; remote billed services not authorized. No root LICENSE found 2026-10-10 though README claims MIT. Guest identity is not sufficient for production.",
+        "No production credentials, new recurring cost, autonomous host access or side-effect writers; isolate and pin a version before LAB."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/Anil-matcha/open-dots",
+        "docs/implementation/office-v2/phase2/agent-composition-intake-2026-10-10.md"
+      ],
+      "notes": [
+        "Research only; not installed, deployed, tested with a model, or promoted.",
+        "Existing Office Task Envelope, #604 fleet, Phase 3B policies, Phase 3C model routing and production authority remain unchanged."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Research-only permission/card pattern; confirm exact license, authentication and no-new-spend feasibility before any runnable comparison.",
+        "rationale": "Early prototype relies on Boat sandboxes and Claude; remote billed services not authorized. No root LICENSE found 2026-10-10 though README claims MIT. Guest identity is not sufficient for production.",
+        "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-diggerhq-opendots",
+      "source_item_id": null,
+      "name": "diggerhq/opendots",
+      "category": "AGENT",
+      "provenance_class": "OWNER_REQUEST_2026_10_10_AGENT_COMPOSITION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Credible whole-system, bounded specialist or design/component alternative; no comparable Office v2 Golden Fixture has run.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "delegation",
+        "topic-memory",
+        "long-running-tasks",
+        "agent-ui"
+      ],
+      "platform_constraints": [
+        "MIT app wrapper, but compute/agents use hosted OpenComputer; externally provisioned compute/account and potential charges not approved.",
+        "No production credentials, new recurring cost, autonomous host access or side-effect writers; isolate and pin a version before LAB."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/diggerhq/opendots",
+        "docs/implementation/office-v2/phase2/agent-composition-intake-2026-10-10.md"
+      ],
+      "notes": [
+        "Research only; not installed, deployed, tested with a model, or promoted.",
+        "Existing Office Task Envelope, #604 fleet, Phase 3B policies, Phase 3C model routing and production authority remain unchanged."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Study coordinator/topic worker/memory interface; compare only if cost, isolation, export and external account gates pass.",
+        "rationale": "MIT app wrapper, but compute/agents use hosted OpenComputer; externally provisioned compute/account and potential charges not approved.",
+        "decision_evidence_refs": []
       }
     }
   ]
