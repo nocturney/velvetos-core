@@ -379,6 +379,61 @@ def main() -> int:
                     or cas_row.get("production_authority") is not False):
                 fail("P0 GitHub remote CAS negatives did not deny unsafe states")
 
+    # #612: independent source-to-review bridge for the exact quarantined
+    # NEW Mac Qwen source. This reconstructs only a PUBLIC-fixture review
+    # diff and uses independent seeded metamorphic QA. Never runs Git/model,
+    # never promotes source, and never grants #604 lease/writer authority.
+    model_review_gate = ROOT / "scripts" / "vf_office_v2_p0_model_source_review_stress.py"
+    if hashlib.sha256(model_review_gate.read_bytes()).hexdigest() != (
+            "972aefbfc1366b74db4b02e769f16ee5246d3e64572b8e971947df34739b9c4a"):
+        fail("P0 source review gate byte pin drift")
+    model_review_evidence = (P2 / "p0-original-model-offline-review-2026-10-10.json")
+    if hashlib.sha256(model_review_evidence.read_bytes()).hexdigest() != (
+            "97a8eed20fd901760540bc73ae205da1dde4a941fba2cf455f8cf27f66b78126"):
+        fail("P0 source review evidence bytes drift")
+    for review_mode in ("verify", "selftest"):
+        review_result = subprocess.run(
+            [sys.executable, str(model_review_gate), review_mode],
+            cwd=ROOT, capture_output=True, text=True, timeout=60,
+        )
+        if review_result.returncode:
+            fail("P0 model source review " + review_mode + " failed: " +
+                 review_result.stdout[:220])
+        try:
+            review_row = json.loads(review_result.stdout)
+        except ValueError:
+            fail("P0 model source review output is not JSON")
+        if review_mode == "verify":
+            if (review_row != json.loads(model_review_evidence.read_text(encoding="utf-8"))
+                    or review_row.get("status") !=
+                    "OFFLINE_CANDIDATE_REVIEW_ONLY_NOT_PR_AUTHORIZED"
+                    or review_row.get("model_source_sha256") !=
+                    "0ec526a84d6a814aecbfc586c237ef59044811f920c0d73640cbf24b76e25479"
+                    or review_row.get("unified_review_diff_sha256") !=
+                    "8647a9f7eee41ae904883910f64a6d5c6de0e35c92ba2dfde03e72a4608cbd21"
+                    or review_row.get("review_target_allowlist") != ["windows_merge.py"]
+                    or review_row.get("source_authored_by") != "LOCAL_QWEN_MODEL"
+                    or review_row.get("git_commit_and_pr_authored_by") != "NONE_THIS_PROOF"
+                    or review_row.get("stress", {}).get("samples") != 512
+                    or review_row.get("stress", {}).get("seeds") != 4
+                    or set(review_row.get("stress", {}).get("counts", {}).values()) != {512}
+                    or review_row.get("limits", {}).get("agent_autonomous_pr_created")
+                       is not False
+                    or review_row.get("limits", {}).get("authorization_to_commit_or_merge")
+                       is not False
+                    or review_row.get("limits", {}).get("provider_lease_or_fence_proven")
+                       is not False
+                    or review_row.get("limits", {}).get("git_effects_this_run") != 0
+                    or review_row.get("limits", {}).get("model_calls_this_run") != 0):
+                fail("P0 model review overstated source/QA/effect authority")
+        elif (review_row.get("status") != "PASS_OFFLINE"
+              or review_row.get("tests") != 22
+              or review_row.get("model_calls") != 0
+              or review_row.get("git_effects") != 0
+              or review_row.get("production_promoted") is not False
+              or review_row.get("agent_pr_authorized") is not False):
+            fail("P0 model-review negative controls failed closed")
+
     # #612: A new, distinct actual Mac Qwen/Aider Task Envelope generated
     # a fixed exact-int source. Byte-pinned, quarantined and independently
     # property-QA verified against the old source's explicit subclass bug.
