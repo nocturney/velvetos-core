@@ -379,6 +379,82 @@ def main() -> int:
                     or cas_row.get("production_authority") is not False):
                 fail("P0 GitHub remote CAS negatives did not deny unsafe states")
 
+    # #604: source-pinned independent historical Dagu 1/2/4 raw-log witness
+    # and exact owned idle-LAB shutdown receipt. CI ONLY verifies sanitized
+    # immutable readback and denial tests: NEVER calls "observe", Dagu, kill,
+    # Git write, model or network. NOT a distributed lease/fencing promotion.
+    fleet_604_evidence = (
+        (
+            "vf_office_v2_604_dagu_raw_log_audit.py",
+            "e7e4c5f405b928cef651a598ef36ecdc5242c8f9d6b8f9475cbd59d2bbb861f3",
+            "p0-dagu-two-host-13-run-forensic-audit-2026-10-10.json",
+            "a9c056f2a2c4476b88ffda60799410279952d922c5edf6c5703487c600709d8e",
+        ),
+        (
+            "vf_office_v2_604_dagu_cleanup_gate.py",
+            "42bf85948c94355ceffebcad031243be80b3b6e61e78a557fb92db23be72c228",
+            "p0-dagu-fleet-idle-cleanup-2026-10-10.json",
+            "0f3b44caef3fb2ab0ddd28db2f2513b32428bb3bfdfde6d07c589ea03c4a0199",
+        ),
+    )
+    for script_name, script_sha, receipt_name, receipt_sha in fleet_604_evidence:
+        probe_script = ROOT / "scripts" / script_name
+        historic_data = P2 / receipt_name
+        if (hashlib.sha256(probe_script.read_bytes()).hexdigest() != script_sha
+                or hashlib.sha256(historic_data.read_bytes()).hexdigest() != receipt_sha):
+            fail("P0 #604 historical Dagu proof source/receipt hash drift")
+        for mode in ("verify", "selftest"):
+            proc = subprocess.run(
+                [sys.executable, str(probe_script), mode],
+                cwd=ROOT, capture_output=True, text=True, timeout=35,
+            )
+            if proc.returncode:
+                fail("P0 #604 offline Dagu "+script_name+" "+mode+
+                     " failed: "+proc.stdout[:220])
+            try:
+                value = json.loads(proc.stdout)
+            except ValueError:
+                fail("P0 #604 offline Dagu QA result not JSON")
+            if script_name == "vf_office_v2_604_dagu_raw_log_audit.py":
+                if mode == "verify":
+                    if (value.get("status") !=
+                            "VERIFIED_HISTORIC_RAW_13_OF_13_NO_CURRENT_LEASE"
+                            or value.get("historical_distinct_job_count") != 13
+                            or value.get("historical_physical_host_counts") !=
+                            {"mac": 10, "win": 3}
+                            or value.get("max_verified_overlap") !=
+                            {"solo": 1, "dual": 2, "quad": 4, "fair": 1}
+                            or value.get("historical_non_fifo_dispatch_inversions") != 4
+                            or value.get("conclusions", {}).get(
+                                "durable_distributed_lease_issued") is not False
+                            or value.get("conclusions", {}).get(
+                                "atomic_effect_boundary_fencing_proven") is not False
+                            or value.get("conclusions", {}).get("production_authority")
+                               is not False):
+                        fail("P0 #604 historical Dagu overclaimed provider authority")
+                elif (value.get("status") != "PASS_OFFLINE"
+                      or value.get("tests") != 18
+                      or value.get("fleet_writer_admission") is not False
+                      or value.get("model_calls") != 0
+                      or value.get("git_effects") != 0):
+                    fail("P0 #604 Dagu raw-log adversarial controls failed")
+            elif mode == "verify":
+                if (value.get("status") != "PASS_HISTORICAL_SCOPED_LAB_CLEANUP"
+                        or value.get("stopped_exact_synthetic_process_count") != 5
+                        or value.get("historical_source_files_preserved") is not True
+                        or value.get("windows_mac_absence_readback_recorded") is not True
+                        or value.get("provider_lease") is not False
+                        or value.get("production_authority") is not False
+                        or value.get("model_calls") != 0
+                        or value.get("effect_writes") != 0):
+                    fail("P0 #604 scoped cleanup verified wrong or invented authority")
+            elif (value.get("status") != "PASS_OFFLINE"
+                  or value.get("tests") != 21
+                  or value.get("stopped_processes_by_test") != 0
+                  or value.get("git_effects") != 0
+                  or value.get("production_authority") is not False):
+                fail("P0 #604 cleanup negative controls failed")
+
     # #612: independent source-to-review bridge for the exact quarantined
     # NEW Mac Qwen source. This reconstructs only a PUBLIC-fixture review
     # diff and uses independent seeded metamorphic QA. Never runs Git/model,
