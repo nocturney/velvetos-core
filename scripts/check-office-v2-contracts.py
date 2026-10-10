@@ -455,6 +455,81 @@ def main() -> int:
                   or value.get("production_authority") is not False):
                 fail("P0 #604 cleanup negative controls failed")
 
+    # #604: REAL Windows-initiated Mac filesystem effects under mTLS/RBAC,
+    # but not cross-store atomicity or a protected GitHub effect receiver.
+    # Only OFFLINE selftests and sanitized exact-byte receipts are invoked.
+    # Never start the LAB servers, mint a lease, connect to provider or write FS.
+    mtls_receiver = ROOT / "scripts/vf_office_v2_604_authenticated_artifact_receiver_lab.py"
+    mtls_client = ROOT / "scripts/vf_office_v2_604_authenticated_artifact_client_lab.py"
+    mtls_gate = ROOT / "scripts/vf_office_v2_604_authenticated_receiver_receipt_gate.py"
+    mtls_evidence = P2 / "p0-authenticated-two-host-external-fs-receiver-lab-2026-10-10.json"
+    mtls_doc = P2 / "p0-authenticated-two-host-external-fs-receiver-lab-2026-10-10.md"
+    for file, expected_hash in (
+        (mtls_receiver, "b8eee6b5491536ec8031a47297ea8c095119ceb9329daa075cae483bfe6bc9e0"),
+        (mtls_client, "99348d20e3f5da08ea098b87fd23d5ba31473d1b831f8903814995d8144e3d55"),
+        (mtls_gate, "a939be280feb1658efccd74ea079a1da5bb82e783093bfce8a7e2c37f34a4d82"),
+        (mtls_evidence, "4c1c390b2d5ac58b1c2d52e59f86ac20a1a9e55534dec1b642714dbc50f01bb7"),
+        (mtls_doc, "b754a3b17ad7a58bc72c2f4b65b98ba4541df625557405ee81c146cdc686482c"),
+    ):
+        if hashlib.sha256(file.read_bytes()).hexdigest() != expected_hash:
+            fail("P0 #604 mTLS external filesystem LAB bytes differ from original")
+    for script, mode in (
+        (mtls_receiver, "selftest"),
+        (mtls_client, "selftest"),
+        (mtls_gate, "verify"),
+        (mtls_gate, "selftest"),
+    ):
+        run = subprocess.run(
+            [sys.executable, str(script), mode], cwd=ROOT,
+            text=True, capture_output=True, timeout=35,
+        )
+        if run.returncode:
+            fail("P0 #604 mTLS offline gate failed " + script.name +
+                 " " + mode + ": " + run.stdout[:180])
+        try:
+            receipt = json.loads(run.stdout)
+        except ValueError:
+            fail("P0 #604 mTLS offline result is not parseable JSON")
+        if script == mtls_receiver:
+            if (receipt.get("status") != "PASS_OFFLINE"
+                    or receipt.get("tests") != 25
+                    or receipt.get("provider_requests") != 0
+                    or receipt.get("filesystem_effect_writes") != 0
+                    or receipt.get("server_started") is not False
+                    or receipt.get("model_calls") != 0
+                    or receipt.get("production_authority") is not False
+                    or receipt.get("external_atomicity_claimed") is not False):
+                fail("P0 #604 mTLS receiver offline contract unsafe")
+        elif script == mtls_client:
+            if (receipt.get("status") != "PASS_OFFLINE"
+                    or receipt.get("tests") != 14
+                    or receipt.get("receiver_requests") != 0
+                    or receipt.get("filesystem_effects") != 0
+                    or receipt.get("production_authority") is not False):
+                fail("P0 #604 mTLS client offline contract unsafe")
+        elif mode == "verify":
+            if (receipt.get("status") != "PASS_OFFLINE_AUTHENTICATED_TWO_HOST_EXTERNAL_FS_LAB"
+                    or receipt.get("physical_hosts") != 2
+                    or receipt.get("real_external_files") != 4
+                    or receipt.get("windows_initiated_files") != 1
+                    or receipt.get("pending_unknown_unresolved") != 1
+                    or receipt.get("active_leases_final") != 0
+                    or receipt.get("provider_revision") != 31
+                    or receipt.get("tls_rbac_denial_verified") is not True
+                    or receipt.get("cross_store_atomicity_proven") is not False
+                    or receipt.get("production_authority") is not False
+                    or receipt.get("server_actions") != 0):
+                fail("P0 #604 mTLS live evidence overstated effect authority")
+        elif (receipt.get("status") != "PASS_OFFLINE"
+              or receipt.get("tests") != 35
+              or receipt.get("provider_connections") != 0
+              or receipt.get("server_processes_started") != 0
+              or receipt.get("filesystem_effects_created") != 0
+              or receipt.get("git_remote_writes") != 0
+              or receipt.get("model_calls") != 0
+              or receipt.get("production_authority") is not False):
+            fail("P0 #604 mTLS independent adversarial gate failed")
+
     # #604: REAL Mac/Windows etcd 3.6.15 native transaction witness,
     # but ONLY etcd-managed synthetic KV effects. No unauthorized Git or
     # filesystem receiver. CI MUST NEVER call the client live modes, start
