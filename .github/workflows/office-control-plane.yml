@@ -64,23 +64,39 @@ jobs:
             packages/velvetos/living-studio/data/signal-room.jsonl
             packages/velvetos/living-studio/data/receipts.jsonl
           )
-          existing=()
-          for p in "${paths[@]}"; do [ -e "$p" ] && existing+=("$p"); done
+          # Respect the Living Studio .gitignore: runtime projections such as
+          # signal-room/receipts are disposable caches; never force-stage.
+          eligible=()
+          for p in "${paths[@]}"; do
+            if [ -f "$p" ]; then
+              if git check-ignore -q -- "$p"; then
+                echo "Skipping intentionally ignored runtime projection: $p"
+              else
+                rc=$?
+                if [ "$rc" -ne 1 ]; then
+                  echo "::error::git check-ignore failed for $p (exit $rc)"
+                  exit 1
+                fi
+                eligible+=("$p")
+              fi
+            fi
+          done
+          if [ ${#eligible[@]} -gt 0 ]; then
+            git add -- "${eligible[@]}"
+          fi
           learning=packages/vfharness/state/learning-candidates
-          learning_changed=""
-          if [ -d "$learning" ]; then learning_changed="$(git status --porcelain -- "$learning")"; fi
-          if { [ ${#existing[@]} -eq 0 ] || git diff --quiet -- "${existing[@]}"; } && [ -z "$learning_changed" ]; then
-            echo "No material Living Studio evidence or learning-candidate change"
+          if [ -d "$learning" ]; then
+            # CI ingest only adds/updates; never automatically stage deletions.
+            git add --ignore-removal -- "$learning"
+          fi
+          # The staged index includes fresh allowlisted files. An unstaged
+          # git diff would silently miss those new files.
+          if git diff --cached --quiet; then
+            echo "No material eligible activation evidence or learning-candidate change"
             exit 0
           fi
           git config user.name "velvetos-office-control-plane"
           git config user.email "noreply@velvetos.local"
-          if [ ${#existing[@]} -gt 0 ]; then
-            git add -- "${existing[@]}"
-          fi
-          if [ -n "$learning_changed" ]; then
-            git add -- "$learning"
-          fi
           git commit -m "office: persist Living Studio activation evidence / learning candidates"
           bash scripts/push-main-with-check-all.sh main
       - name: Fail on control-plane error
