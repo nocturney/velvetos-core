@@ -974,6 +974,34 @@ def main() -> int:
                     or result_guided.get("production_authority") is not False):
                 fail("P0 Mac guided outcome failed sealed historical contract")
 
+    # #612 hosted CI synthetic QA candidate: only the pure selftest runs in
+    # check-all. Actual previously generated Python executes exclusively in
+    # the separate no-permission GitHub-hosted LAB workflow when triggered.
+    hosted_qa = ROOT / "scripts" / "vf_office_v2_p0_hosted_synthetic_qa_lab.py"
+    hosted_qa_workflow = ROOT / ".github" / "workflows" / "office-p0-hosted-synthetic-qa.yml"
+    if hashlib.sha256(hosted_qa.read_bytes()).hexdigest() != (
+            "40cb7557f4f29c789cc7b9135d75ecdad8a1eaa95017dd3b0b3054934b774ace"):
+        fail("P0 hosted synthetic QA LAB Python source byte pin changed")
+    if hashlib.sha256(hosted_qa_workflow.read_bytes()).hexdigest() != (
+            "f969446df7af39bf71fb00e2ae6e972d8d21b472eeb77a83234855289d12557b"):
+        fail("P0 hosted synthetic QA LAB no-permission workflow byte pin changed")
+    hosted_selftest = subprocess.run([sys.executable, str(hosted_qa), "selftest"],
+                                    cwd=ROOT, capture_output=True, text=True, timeout=20)
+    if hosted_selftest.returncode != 0:
+        fail("P0 hosted QA static test failed: " + hosted_selftest.stdout[:160])
+    try:
+        hosted_row = json.loads(hosted_selftest.stdout)
+    except ValueError:
+        fail("P0 hosted QA static selftest JSON absent")
+    if (hosted_row.get("status") != "PASS_MODEL_FREE_STATIC_ONLY"
+            or hosted_row.get("tests") != 19
+            or hosted_row.get("generated_source_subprocesses") != 0
+            or hosted_row.get("model_invocations") != 0
+            or hosted_row.get("git_write_calls") != 0
+            or hosted_row.get("production_authority") is not False
+            or hosted_row.get("runner_isolation_proven_locally") is not False):
+        fail("P0 hosted synthetic QA falsely claimed runtime or write authority")
+
     # #612: New physical-host throughput evidence is deliberately scoped.
     # This read-only check rejects false P0 promotions and percentile claims;
     # original local host receipts are NOT replayable by CI.
