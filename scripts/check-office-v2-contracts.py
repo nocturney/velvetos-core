@@ -455,6 +455,82 @@ def main() -> int:
                   or value.get("production_authority") is not False):
                 fail("P0 #604 cleanup negative controls failed")
 
+    # #604: real Mac-origin, ONE native Windows GitHub CAS writer and
+    # guarded scratch-ref cleanup. Historical external writes are evidence,
+    # NOT provider-epoch fencing. Only offline bounded negative tests in CI:
+    # never start mTLS service, call gh, git push, create a branch or emit
+    # a GitHub token / certificate.
+    mac_cas_fixture = ROOT / "scripts/vf_office_v2_604_mac_fixture_mtls_lab.py"
+    win_cas_sink = ROOT / "scripts/vf_office_v2_604_windows_native_git_cas_sink_lab.py"
+    mac_cas_gate = ROOT / "scripts/vf_office_v2_604_mac_origin_native_git_cas_receipt_gate.py"
+    mac_cas_receipt = P2 / "p0-mac-origin-windows-real-github-ref-cas-2026-10-10.json"
+    mac_cas_doc = P2 / "p0-mac-origin-windows-real-github-ref-cas-2026-10-10.md"
+    for file, target in (
+        (mac_cas_fixture, "9ed711552f14ba099b8b4bc7d371f69ff36251caca66c2ce541046be9605fcec"),
+        (win_cas_sink, "a0eb08af718e3140d0cb8bb514fc8d7a8818a04019a90901890b4a923f1e02ea"),
+        (mac_cas_gate, "fbb800e129494a73c2dfed2ce7e8c45a939d617ca2a6126ea84f4771a7d74e84"),
+        (mac_cas_receipt, "75ab0caa3d715a43e3fc67f260378fc2c03c078b025abf8281aea929c564c80f"),
+        (mac_cas_doc, "9a5b96e4294b4571b653832ed4ff552846bd7b0f6a1bd1a238e9d11701627096"),
+    ):
+        if hashlib.sha256(file.read_bytes()).hexdigest() != target:
+            fail("P0 #604 Mac-origin real native GitHub CAS bytes are not pinned")
+    for script, mode in (
+        (mac_cas_fixture, "selftest"),
+        (win_cas_sink, "selftest"),
+        (mac_cas_gate, "verify"),
+        (mac_cas_gate, "selftest"),
+    ):
+        proc = subprocess.run(
+            [sys.executable, str(script), mode],
+            text=True, capture_output=True, cwd=ROOT, timeout=35,
+        )
+        if proc.returncode:
+            fail("P0 #604 Mac-origin GitHub CAS offline QA failed: " +
+                 script.name + " " + mode + " " + proc.stdout[:180])
+        try:
+            record = json.loads(proc.stdout)
+        except ValueError:
+            fail("P0 #604 Mac-origin GitHub CAS offline output not JSON")
+        if script == mac_cas_fixture:
+            if (record.get("result") != "PASS_OFFLINE"
+                    or record.get("cases") != 48
+                    or record.get("git_effect_writes") != 0
+                    or record.get("server_started") is not False
+                    or record.get("authenticated_requests") != 0
+                    or record.get("production_authority") is not False):
+                fail("P0 #604 Mac mTLS fixture executed live or changed")
+        elif script == win_cas_sink:
+            if (record.get("status") != "PASS_OFFLINE"
+                    or record.get("cases") != 54
+                    or record.get("external_pushes") != 0
+                    or record.get("github_network_operations") != 0
+                    or record.get("model_calls") != 0
+                    or record.get("client_secret_uses") != 0
+                    or record.get("production_authority") is not False):
+                fail("P0 #604 Win GitHub sink selftest unsafe")
+        elif mode == "verify":
+            if (record.get("status") !=
+                    "PASS_OFFLINE_MAC_ORIGIN_REAL_GITHUB_SINK_CAS_ONLY"
+                    or record.get("physical_hosts") != 2
+                    or record.get("native_git_writers") != 1
+                    or record.get("real_remote_ref_effect_pushes") != 3
+                    or record.get("stale_native_git_pushes_denied") != 2
+                    or record.get("guarded_deleted_test_refs") != 1
+                    or record.get("unremoved_test_refs") != 0
+                    or record.get("provider_fencing_integrated") is not False
+                    or record.get("mac_native_git_writer") is not False
+                    or record.get("git_effects_this_verification") != 0
+                    or record.get("production_authority") is not False):
+                fail("P0 #604 GitHub sink-native CAS witness overclaimed authority")
+        elif (record.get("status") != "PASS_OFFLINE"
+              or record.get("cases") != 34
+              or record.get("network_calls") != 0
+              or record.get("git_pushes") != 0
+              or record.get("server_started") is not False
+              or record.get("client_credentials_used") is not False
+              or record.get("production_authority") is not False):
+            fail("P0 #604 GitHub native CAS negative controls not exact")
+
     # #604: REAL Windows-initiated Mac filesystem effects under mTLS/RBAC,
     # but not cross-store atomicity or a protected GitHub effect receiver.
     # Only OFFLINE selftests and sanitized exact-byte receipts are invoked.
