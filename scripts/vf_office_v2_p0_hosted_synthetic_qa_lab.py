@@ -95,7 +95,7 @@ def runner_context_check(env, expected_root=ROOT):
     workspace = env.get("GITHUB_WORKSPACE", "")
     require(bool(workspace) and
             Path(workspace).resolve() == Path(expected_root).resolve() and
-            "/home/runner/work/" in str(expected_root),
+            "/home/runner/work/" in expected_root.as_posix(),
             "RUNNER_WORKSPACE_NOT_EXPECTED_EPHEMERAL_LOCATION")
     return True
 
