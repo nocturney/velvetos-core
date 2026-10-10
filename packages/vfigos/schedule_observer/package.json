@@ -1,0 +1,15 @@
+{
+  "name": "velvetos-meta-planner-reader",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Read-only local Meta Business Suite scheduling observation",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "puppeteer-core": "25.10.0"
+  },
+  "scripts": {
+    "verify": "node --check reader-v3.cjs"
+  }
+}
