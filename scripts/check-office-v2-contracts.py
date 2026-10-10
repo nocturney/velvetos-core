@@ -455,6 +455,65 @@ def main() -> int:
                   or value.get("production_authority") is not False):
                 fail("P0 #604 cleanup negative controls failed")
 
+    # #604: REAL Mac/Windows etcd 3.6.15 native transaction witness,
+    # but ONLY etcd-managed synthetic KV effects. No unauthorized Git or
+    # filesystem receiver. CI MUST NEVER call the client live modes, start
+    # etcd, mint a lease, perform model calls, or claim production admission.
+    etcd_client = ROOT / "scripts/vf_office_v2_604_etcd_provider_pilot.py"
+    etcd_gate = ROOT / "scripts/vf_office_v2_604_etcd_receipt_gate.py"
+    etcd_receipt = P2 / "p0-etcd-two-host-real-provider-atomic-kv-2026-10-10.json"
+    for file, target_hash in (
+        (etcd_client, "139f8e144d8d858ee38febc209ae6ba8f960f7eee178dd85b5ba9ac8ecf31893"),
+        (etcd_gate, "65e5b49891dd40c9d84003932ac622bb40665e61e525680e5b3030d0eddeb583"),
+        (etcd_receipt, "e6016a565bb2dfff5d2e5bca74a1f2c0f7cff36631477fd6af8f5813e6e62ebf"),
+    ):
+        if hashlib.sha256(file.read_bytes()).hexdigest() != target_hash:
+            fail("P0 #604 real etcd LAB source/receipt bytes differ from pinned probe")
+    for script, mode in (
+        (etcd_client, "selftest"),
+        (etcd_gate, "verify"),
+        (etcd_gate, "selftest"),
+    ):
+        run = subprocess.run(
+            [sys.executable, str(script), mode], capture_output=True,
+            text=True, cwd=ROOT, timeout=35,
+        )
+        if run.returncode:
+            fail("P0 #604 offline etcd "+script.name+" "+mode+
+                 " failed: "+run.stdout[:240])
+        try:
+            receipt = json.loads(run.stdout)
+        except ValueError:
+            fail("P0 #604 etcd offline result was not JSON")
+        if script == etcd_client:
+            if (receipt.get("result") != "PASS_OFFLINE"
+                    or receipt.get("tests") != 13
+                    or receipt.get("live_provider_calls") != 0
+                    or receipt.get("production_effects") != 0
+                    or receipt.get("external_github_writes") != 0
+                    or receipt.get("model_calls") != 0):
+                fail("P0 #604 etcd client selftest unsafe or not exact")
+        elif mode == "verify":
+            if (receipt.get("status") != "PASS_OFFLINE_ETCD_REAL_TWO_HOST_KV_ONLY"
+                    or receipt.get("real_physical_hosts") != 2
+                    or receipt.get("live_lease_attempts") != 8
+                    or receipt.get("lease_generations") != 7
+                    or receipt.get("atomic_provider_kv_effects") != 4
+                    or receipt.get("live_server_processes_still_running") != 0
+                    or receipt.get("provider_selection") is not False
+                    or receipt.get("external_effect_fence_proven") is not False
+                    or receipt.get("production_authority") is not False
+                    or receipt.get("paid_model_calls") != 0):
+                fail("P0 #604 real etcd probe overstated external authority")
+        elif (receipt.get("status") != "PASS_OFFLINE"
+              or receipt.get("cases") != 31
+              or receipt.get("remote_etcd_requests") != 0
+              or receipt.get("server_processes_started_or_stopped") != 0
+              or receipt.get("model_calls") != 0
+              or receipt.get("git_effect_writes") != 0
+              or receipt.get("production_authority") is not False):
+            fail("P0 #604 etcd gate offline adversarial cases failed")
+
     # #612: independent source-to-review bridge for the exact quarantined
     # NEW Mac Qwen source. This reconstructs only a PUBLIC-fixture review
     # diff and uses independent seeded metamorphic QA. Never runs Git/model,
