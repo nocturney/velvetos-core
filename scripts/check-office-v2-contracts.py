@@ -2115,6 +2115,61 @@ def main() -> int:
         ):
             fail("#604 native Git crash falsely admitted authority or replay")
 
+    # #604 REAL ephemeral loopback etcd + native LOCAL bare-Git proof.
+    # CI never starts etcd or authenticates GitHub: only 10 independent
+    # portable denial tests and a refusal-only source provenance gate.
+    # Actual pinned-etcd lease/SIGKILL test is manual Mac LAB evidence.
+    real_etcd_source = (
+        ROOT / "scripts" / "vf_office_v2_604_etcd_pending_intent_native_localgit_lab.py"
+    )
+    if hashlib.sha256(real_etcd_source.read_bytes()).hexdigest() != (
+        "cc2604fa439488970615cb564512d5fe8a58884c4c6244637f74e604812a82fb"
+    ):
+        fail("#604 real etcd provider-intent source SHA drift")
+    for real_etcd_mode in ("selftest", "verify"):
+        proof = subprocess.run(
+            [sys.executable, str(real_etcd_source), real_etcd_mode],
+            cwd=ROOT, text=True, capture_output=True, timeout=45,
+        )
+        if proof.returncode != 0:
+            fail("#604 real etcd source offline contract failed " +
+                 real_etcd_mode + " " + proof.stdout[:200] +
+                 proof.stderr[:200])
+        try:
+            real_etcd_receipt = json.loads(proof.stdout)
+        except json.JSONDecodeError:
+            fail("#604 real etcd offline contract malformed JSON")
+        expected_status = (
+            "PASS_OFFLINE_CONTRACT" if real_etcd_mode == "selftest"
+            else "DESIGN_ONLY_NOT_ADMITTED"
+        )
+        if (
+            real_etcd_receipt.get("status") != expected_status
+            or (real_etcd_mode == "selftest"
+                and real_etcd_receipt.get("tests") != 10)
+            or real_etcd_receipt.get("native_local_git_only") is not True
+            or real_etcd_receipt.get("provider_loopback_unauthenticated") is not True
+            or any(real_etcd_receipt.get(k) is not False for k in (
+                "real_etcd_lease_and_provider_txn",
+                "unleased_provider_pending_intent_survives_owner_expiry",
+                "etcd_sigkill_same_wal_recovery_proven",
+                "provider_mtls_rbac_proven",
+                "git_credential_exclusivity_proven",
+                "live_remote_github_provider_fencing_proven",
+                "mid_push_lease_expiry_fenced",
+                "provider_git_atomicity_proven",
+                "globally_exactly_once_proven",
+                "canonical_production_provider_selected",
+                "new_scheduler_created",
+                "production_authority",
+            ))
+            or any(real_etcd_receipt.get(k) != 0 for k in (
+                "remote_github_writes", "paid_model_calls",
+                "untrusted_worker_autoreplay",
+            ))
+        ):
+            fail("#604 real etcd LAB attempted false production admission")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
