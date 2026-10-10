@@ -1,0 +1,75 @@
+{
+  "schema": "velvetos.office-v2.p0-local-first-subscription-fallback-evidence.v0",
+  "date": "2026-10-08",
+  "issue": "https://github.com/nocturney/velvetos-core/issues/612",
+  "state": "LAB_COMPARISON_ONLY",
+  "automatic_dispatch_enabled": false,
+  "new_paid_api_invocations": 0,
+  "codex_cli_invocations": 0,
+  "local_first": true,
+  "host_fleet_owner": "#604",
+  "production_authority_changed": false,
+  "reference_scenarios": [
+    {
+      "lane": "mac_local_aider_qwen4b",
+      "host": "MacMiniOffice.local",
+      "task": "slug.py",
+      "base_sha": "9727db8ef4eb655ecf550860f3f12f8ac462be9a",
+      "elapsed_seconds": 95.26,
+      "unit_tests_pass": 3,
+      "edge_tests_pass": 10,
+      "receipt_sha256": "d6f9d3d28cfbfb451287bd0edc4c816cc19abb9e27222134e61a87b1836b07dc",
+      "state": "INDEPENDENT_QA_PASS",
+      "result_path": "AgentCodePilot/mac-aider-result-20261008/independent-final-pass.json"
+    },
+    {
+      "lane": "mac_cursor_composer25",
+      "host": "MacMiniOffice.local",
+      "task": "slug.py",
+      "base_sha": "9727db8ef4eb655ecf550860f3f12f8ac462be9a",
+      "elapsed_seconds": 20.27,
+      "unit_tests_pass": 3,
+      "edge_tests_pass": 12,
+      "input_tokens": 8859,
+      "output_tokens": 815,
+      "cached_read_tokens": 39127,
+      "receipt_sha256": "8d98e7f0d3cbfdb717725593d25c290d440bbe7304d0554b5ff6413f7bc05bfd",
+      "run_receipt_sha256": "7963cd0f6a9ba73b059bec513c4436b351e2354c68c1dad43831a21567fad0c6",
+      "state": "INDEPENDENT_QA_PASS",
+      "result_path": "CursorPilot/phase3c-cursor-20261008/cursor-composer-slug-20261008/independent-verified.json",
+      "subscription_extra_cost": "UNKNOWN"
+    },
+    {
+      "lane": "windows_local_aider_qwen9b",
+      "host": "Chris Windows",
+      "task": "clamp.py",
+      "elapsed_seconds": 23.74,
+      "unit_tests_pass": 4,
+      "edge_tests_pass": 5,
+      "receipt_sha256": "11f1611f0762f4b4a44d2e1ce42ef90563f72c1c1235ddb834f264ccce36cb77",
+      "state": "INDEPENDENT_QA_PASS",
+      "result_path": "AgentCodePilot/win-aider-utf8-result-20261008/independent-final-pass.json"
+    },
+    {
+      "lane": "mac_perplexity_search_research",
+      "host": "MacMiniOffice.local",
+      "task": "official Git worktree --lock documentation",
+      "elapsed_seconds": 18.87,
+      "explicit_visible_source_url": "https://git-scm.com/docs/git-worktree",
+      "source_http_status": 200,
+      "term_found": "--lock",
+      "native_gui_citation_chips_preserved": false,
+      "receipt_sha256": "d4a71c6173868237142ae89a0beebe537369876023b011289173cff0ce7156dc",
+      "state": "OFFICIAL_URL_AND_TOPIC_VERIFIED",
+      "result_path": "PerplexityGuiBridge/evidence/research-source-verified-20261008.json",
+      "pro_subscription_entitlement_verified": false
+    }
+  ],
+  "comparison_limitations": [
+    "Only one Mac code fixture run per executor; Windows task differs, p50/p95 not established.",
+    "Cursor subscription use was measured in tokens but not an invoice or quota balance.",
+    "Perplexity is a GUI research endpoint, not the Phase 3C model API gateway.",
+    "Citation chips or multi-source browsing traces not extracted; external source verification remains separate.",
+    "Lab-only, manual opt-in; no auto failover, production service or scheduler."
+  ]
+}
