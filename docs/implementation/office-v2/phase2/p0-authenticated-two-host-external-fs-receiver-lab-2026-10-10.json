@@ -1,0 +1,211 @@
+{
+  "schema": "velvetos.office-v2.604.authenticated-mtls-external-filesystem-lab.v1",
+  "date": "2026-10-10",
+  "status": "PASS_TWO_PHYSICAL_HOSTS_REAL_MAC_FILESYSTEM_AUTHENTICATED_GATE_WITH_UNKNOWN_FAIL_CLOSED",
+  "issues": {
+    "owner": 604,
+    "consumer": 612
+  },
+  "scope": {
+    "git_base": "aff483709c98f7e38a0d8597edf9c0fc56533889",
+    "isolated_lab_slug": "p0-fence604-mtls-fs-receiver-gpt6-20261010",
+    "hosts": [
+      "MacMiniOffice.local",
+      "Chris Windows"
+    ],
+    "real_physical_hosts": 2,
+    "provider": "etcd 3.6.15 OFFICIAL_PINNED_BINARY",
+    "provider_is_only_lease_clock_and_generation_authority": true,
+    "provider_binary_sha256": "dd2596ab902c23252da55e770cb7f7216522ae5599f84d2a20e0e7272d52fe82",
+    "etcdctl_binary_sha256": "05f34d3be92b0ba78dfc5aa9fd5d63224d551a7f8c2eadfbaa7dc2f35ae625ad",
+    "client_to_provider": "native_etcdctl_mtls_grpc_using_provider_issued_revision",
+    "worker_to_effect_receiver": "python_stdlib_https_mutual_tls_client_cert_required",
+    "provider_endpoint": "https://192.168.0.217:32579",
+    "receiver_endpoint": "https://192.168.0.217:32581",
+    "private_lan_temporary_only": true,
+    "ephemeral_lab_ca_not_global_trust": true,
+    "etcd_auth_enabled_and_verified": true,
+    "provider_auth_revision": 13,
+    "restricted_worker_role": "vf604-worker-read",
+    "receiver_write_role": "vf604-receiver-write",
+    "worker_direct_effect_key_write_authorized": false,
+    "receiver_direct_write_outside_exact_prefix_authorized": false,
+    "receiver_file_root": "runtime/artifacts - Mac, lab-only",
+    "external_effect_mode": "POSIX_O_EXCL_temp_then_atomic_hardlink_no_overwrite_and_fsync",
+    "cross_store_global_atomic_commit_proven": false,
+    "new_scheduler_or_production_authority": false,
+    "model_invocations": 0,
+    "codex_cli_calls": 0,
+    "paid_api_or_model_calls": 0,
+    "business_social_cad_printer_effects": 0
+  },
+  "code": {
+    "receiver": "scripts/vf_office_v2_604_authenticated_artifact_receiver_lab.py",
+    "receiver_final_sha256": "b8eee6b5491536ec8031a47297ea8c095119ceb9329daa075cae483bfe6bc9e0",
+    "receiver_earlier_lab_sha256": "0a0971084e4d5e9fbfb2179fdb2c54eaa079948884e74f7e84d3120de9c185aa",
+    "client": "scripts/vf_office_v2_604_authenticated_artifact_client_lab.py",
+    "client_final_sha256": "99348d20e3f5da08ea098b87fd23d5ba31473d1b831f8903814995d8144e3d55",
+    "win_source_sha_equal_mac_source": true,
+    "receiver_selftest_final_cases": 25,
+    "client_selftest_cases": 14,
+    "live_modes_ci_prohibited": true,
+    "evidence_not_signed_and_raw_tool_logs_not_committed": true
+  },
+  "auth": {
+    "test_ca_public_sha256": "74f334f452a7bbbaa602d592b71b2517fbaa1ae4d4b14e614d1ca6441d870618",
+    "public_cert_sha256": {
+      "server": "ee2a8acec538721a123b15c28dadfcc2abb4000568c71e7003ef0580195bb756",
+      "root": "a9bb315ed3553d07d06336e738ef25b372ccb2bcc4d2636970716f4bcb22452d",
+      "receiver": "40d92e59667fc813739d3291cdf9bdacb8b62dd7932abe09050e76ed386ef9ff",
+      "win": "1de1becb14a82d62758e8fad51bd4359e5db6a7d42f6b3f63ec8c265842975c5",
+      "mac": "8755dcec5ed6131efd18bc5e7b251d623ff87c94e98d45604ed153a4958c3df0"
+    },
+    "etcd_native_mac_worker_direct_raw_put_exit": 1,
+    "etcd_native_mac_worker_raw_put_denial": "etcdserver: permission denied",
+    "etcd_native_receiver_outside_prefix_put_exit": 1,
+    "etcd_native_receiver_outside_prefix_denial": "etcdserver: permission denied",
+    "win_unauthenticated_tls_no_client_cert_result": "URLError_DENIED",
+    "mac_mtls_worker_read_success": true,
+    "win_mtls_worker_real_remote_read_success": true,
+    "root_ca_and_mac_keys_ephemeral_lab_only": true,
+    "win_private_test_cert_copied_only_into_isolated_lab": true,
+    "global_machine_trust_stores_changed": false
+  },
+  "live_scenarios": {
+    "handoff": {
+      "win_original_generation": 5,
+      "mac_new_generation": 7,
+      "mac_competing_claim_during_win_ownership_denied": true,
+      "win_explicit_revoke_confirmed": true,
+      "stale_win_effect_http_status": 409,
+      "stale_win_effect_denial": "DENIED_STALE_OWNER_OR_EXPIRED",
+      "accepted_external_file_host": "vf604-mac",
+      "accepted_file_sha256": "e69b4ef188a37138495f0ec6cc678940519484e42285937559681b764fffa689",
+      "file_and_provider_committed_readback_match": true,
+      "repeat_mac_effect_denied_no_second_file": true
+    },
+    "expiry": {
+      "win_original_generation": 15,
+      "win_ttl_seconds": 6,
+      "original_owner_absent_provider_revision": 16,
+      "mac_new_generation": 17,
+      "win_stale_effect_exit": 3,
+      "win_stale_effect_denial": "DENIED_STALE_OWNER_OR_EXPIRED",
+      "accepted_external_file_host": "vf604-mac",
+      "accepted_file_sha256": "40f141c5710da60e4a2ecd5661d38603c80782e6cd311589c8515408ce89ef2c",
+      "file_and_provider_committed_readback_match": true
+    },
+    "unknown": {
+      "win_original_generation": 10,
+      "first_attempt_result": "UNKNOWN_OUTCOME_INTENT_COMMITTED_NO_EXTERNAL_WRITE",
+      "original_provider_intent_state": "PENDING_EXTERNAL_WRITE",
+      "external_file_created": false,
+      "old_win_repeat_exit": 4,
+      "mac_before_hardening_was_issued_new_lease_generation": 13,
+      "mac_before_hardening_effect_denied_no_blind_retry": true,
+      "hardening_added_to_grant": "guard_reassignment_on_intent",
+      "final_hardened_mac_owner_regrant_exit": 3,
+      "final_hardened_windows_owner_regrant_exit": 3,
+      "final_hardened_deny_reason": "DENIED_UNKNOWN_OUTCOME_RECONCILIATION_REQUIRED",
+      "final_provider_intent_still_pending": true,
+      "final_file_absent": true,
+      "safe_reconciliation_not_automated": true
+    },
+    "provider_outage": {
+      "win_original_generation": 21,
+      "original_ttl_seconds": 22,
+      "original_etcd_pid": 71082,
+      "original_etcd_stopped_verified": true,
+      "effect_receiver_stayed_running_on_mac_pid": 71849,
+      "win_effect_during_provider_down_exit": 3,
+      "win_observe_during_provider_down_exit": 3,
+      "provider_down_denial": "PROVIDER_UNAVAILABLE_OR_DENIED",
+      "no_external_file_before_restart": true,
+      "same_database_restart_etcd_pid": 72577,
+      "tls_auth_rbac_revision_still_13_after_restart": true,
+      "original_owner_survived_fast_restart_temporarily": true,
+      "old_win_lease_expired_provider_revision": 22,
+      "mac_reassignment_generation": 23,
+      "old_win_stale_effect_post_restart_exit": 3,
+      "mac_new_external_file_accepted": true,
+      "accepted_external_file_sha256": "b881f23a493166c45c00b670bda9f0be7e6cea4c324499b270443d9bd410989d",
+      "file_and_provider_committed_readback_match": true
+    },
+    "win_external_effect_hardened_receiver": {
+      "win_lease_generation": 28,
+      "win_initiated_and_receiver_wrote_real_mac_file": true,
+      "win_repeat_denied": true,
+      "file_exact_sha256": "9b349fbd2b1b40fd9ef732461815ba4621ed3a49e698b00e7462c0887f30ca94",
+      "mac_independent_filesystem_sha_readback": true,
+      "mac_new_owner_after_existing_file_claim_denied": true,
+      "etcd_provider_committed_readback_match": true
+    }
+  },
+  "independent_final_readback": {
+    "native_mac_etcdctl_and_real_fs_inspected": true,
+    "windows_mtls_independent_four_scenarios_readback": true,
+    "authoritative_final_global_provider_revision": 31,
+    "actual_mac_external_files_count": 4,
+    "actual_files": {
+      "handoff": {
+        "host": "vf604-mac",
+        "generation": 7,
+        "sha256": "e69b4ef188a37138495f0ec6cc678940519484e42285937559681b764fffa689"
+      },
+      "expiry": {
+        "host": "vf604-mac",
+        "generation": 17,
+        "sha256": "40f141c5710da60e4a2ecd5661d38603c80782e6cd311589c8515408ce89ef2c"
+      },
+      "outage": {
+        "host": "vf604-mac",
+        "generation": 23,
+        "sha256": "b881f23a493166c45c00b670bda9f0be7e6cea4c324499b270443d9bd410989d"
+      },
+      "duplicate": {
+        "host": "vf604-win",
+        "generation": 28,
+        "sha256": "9b349fbd2b1b40fd9ef732461815ba4621ed3a49e698b00e7462c0887f30ca94"
+      }
+    },
+    "pending_unknown_without_file_count": 1,
+    "live_provider_lease_keys_count": 0,
+    "unexpected_files_count": 0,
+    "local_sanitized_immutable_readback_sha256": "5b71562ea2b60c0f3f7dfda1e002d2ef44c12f6e674f8da8c86512b32357509e"
+  },
+  "cleanup": {
+    "initial_receiver_pid_71849_stopped": true,
+    "hardened_receiver_pid_73060_stopped": true,
+    "initial_etcd_pid_71082_stopped": true,
+    "restarted_etcd_pid_72577_stopped": true,
+    "final_mac_lab_listening_ports_count": 0,
+    "final_windows_tcp_to_provider_connected": false,
+    "final_windows_tcp_to_receiver_connected": false,
+    "stopped_provider_db_persisted_sha256": "5385d31493f9de012286c9208e2ab0358825f1d1dbc04940cfe04dbca511f9c6",
+    "windows_ephemeral_ca_and_worker_cert_key_deleted": true,
+    "mac_ephemeral_private_keys_deleted_count": 6,
+    "mac_ephemeral_public_certificates_preserved": true,
+    "production_cert_or_trust_stores_changed": false,
+    "no_autostart_or_service_installed": true,
+    "windows_ollama_original_pid43272_preserved": true,
+    "windows_mayapy_original_pid24392_preserved": true
+  },
+  "hard_limits_and_nonclaims": {
+    "provider_selected_for_production": false,
+    "external_mac_filesystem_and_etcd_2pc_atomic_proven": false,
+    "blind_safe_external_effect_retry_proven": false,
+    "mac_external_file_os_permissions_production_hardened": false,
+    "anonymous_or_malicious_same_os_user_bypass_blocked": false,
+    "multi_node_quorum_high_availability_proven": false,
+    "controlled_network_partition_and_clock_skew_proven": false,
+    "production_tls_certificate_rotation_or_revocation_proven": false,
+    "github_git_ref_or_pr_effect_fenced": false,
+    "mac_native_github_writer_credential_verified": false,
+    "agent_authored_protected_pr_or_autonomous_merge_proven": false,
+    "unknown_outcome_reconciled": false,
+    "customer_social_cad_printer_business_production_effects": false,
+    "second_fleet_scheduler_installed": false,
+    "model_call_paid_api_or_codex_used": false
+  },
+  "next_required_gate": "#604 compare ready-made provider plus secure effect-adapter receivers for Git or real artifact store; prove external native atomic fencing or explicitly retain UNKNOWN and no-blind-retry; #612 consumes without duplicate lease SoT."
+}
