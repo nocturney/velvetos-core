@@ -1,0 +1,67 @@
+{
+  "schema": "velvetos.office-v2.p0-exact-int-fresh-task-pr-evidence.v0",
+  "status": "PASS_NEW_FRESH_MODEL_QA_NOT_PRODUCTION_PROMOTION",
+  "issue": "https://github.com/nocturney/velvetos-core/issues/612",
+  "observed_date_utc": "2026-10-10",
+  "scope": "New fresh explicitly admitted LAB-only Qwen3.5:4B/Aider code task on Mac. Different Task Envelope, checkpoint, Git base and branch from previous independently QA-green model code. No old failure or success envelope retried.",
+  "new_original_worker": {
+    "task_id": "p0-diverse-run-mac-merge-exact-int-20261010-d",
+    "host": "MacMiniOffice.local",
+    "base_sha": "d89317730bc9ff5fac95bd064fea710847e1c404",
+    "branch": "lab-p0-diverse-run-p0-diverse-run-mac-merge-exact-int-20261010-d",
+    "model": "qwen3.5:4b",
+    "model_digest": "7f3251fa6878a78a606bcb3c074283306e5ad2ea411a7774a9dd98a4bc7f2d13",
+    "executed_worker_commit": "e5c9aca933efb99a8f548bed3ed11243ff4f41f7",
+    "executed_worker_source_sha256": "76dcd612dee33fa4aa01fdc1b73e856100cdf55db94dabb93b7b2a202d0c8c9c",
+    "prompt_profile": "PUBLIC_SPEC_EXACT_INT_ENDPOINT_V3",
+    "prompt_raw_sha256": "34bba908b71e26d6cb12310a4fb5a3fcb07a45e1fc0f8972dc4a4ef787102878",
+    "candidate_raw_sha256": "83e8ffcfd888f99d3bf1dc6ea094221062c677b639775f173dfd5eadef3e4281",
+    "envelope_raw_sha256": "dcc9c7eedb55c42028edb435ceb144e592355fa72e1760ba7f9928a8d831b6e1",
+    "kernel_pin_raw_sha256": "2114d80538c610d6a03f9ab26b5d50062fe2d14c6b94aa0a9f21862d13dc8749",
+    "model_result_source_sha256": "0ec526a84d6a814aecbfc586c237ef59044811f920c0d73640cbf24b76e25479",
+    "receipt_raw_sha256": "b0cc5ff5e24d33243e65fa7c5f569f7c11bcc275060e76813ed4198e65236fda",
+    "receipt_selfhash": "fa45eecd4d6bf6cc160eae5350cb9e15ef91735ae4064787e558f9efd491f774",
+    "original_worker_state": "SUCCEEDED",
+    "original_worker_verify": "PASS",
+    "original_independent_3_visible": true,
+    "original_independent_12_hidden": true,
+    "original_elapsed_seconds": 62.586,
+    "model_invocations_min": 1,
+    "exact_model_call_count": null,
+    "additional_paid_api_spend_usd": 0,
+    "original_running_journal_cleared_after_success": true
+  },
+  "expanded_qa": {
+    "previous_exact_model_bug_confirmed": {
+      "old_source_sha256": "999f8ae84cbca062a41297b6fadf6703ee69fa8a61e427a8441cd1a169c3b0a0",
+      "old_subclass_rejected": false,
+      "old_subclass_actual_if_accepted": "[(1, 2)]"
+    },
+    "new_independent_properties": {
+      "standard_samples": 256,
+      "standard_oracle_passed": 256,
+      "invalid_examples": 11,
+      "invalid_rejected": 11,
+      "both_int_subclass_positions_rejected": true,
+      "model_calls_during_qa": 0
+    }
+  },
+  "contrast": "The original successful Worker receipt and 3+12 hidden QA remain valid for the older code as history, but previously observed int subclass bug is now fixed in a DIFFERENT new LAB task source, not by rewriting the old source.",
+  "quarantined_source": "docs/implementation/office-v2/phase2/quarantined-agent-sources-2026-10-10/windows_merge_exact_int_v3.py",
+  "limits": {
+    "old_model_result_rewritten": false,
+    "old_journal_or_receipt_changed": false,
+    "automatic_retry_of_failed_task": false,
+    "production_code_promoted": false,
+    "autonomous_code_agent_pr_authored": false,
+    "canonical_fleet_lease": false,
+    "distributed_fencing_verified": false,
+    "autonomous_unknown_recovery": false,
+    "two_physical_host_success_newly_proven": false,
+    "model_calls_by_ci": false,
+    "paid_remote_model_api_calls": false,
+    "secure_os_sandbox_proven": false,
+    "new_model_generated_code_quarantined_only": true,
+    "manual_protected_pr_gate_only": true
+  }
+}

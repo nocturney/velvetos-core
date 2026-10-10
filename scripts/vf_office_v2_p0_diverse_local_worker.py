@@ -37,6 +37,7 @@ HOST_MODEL = {"Chris": ("qwen3.5:9b", 11555),
 
 PUBLIC_SPEC_PROFILE = "PUBLIC_SPEC_REMINDER_V1"
 PUBLIC_SPEC_STATE_PROFILE = "PUBLIC_SPEC_STATE_MACHINE_V2"
+PUBLIC_SPEC_INT_PROFILE = "PUBLIC_SPEC_EXACT_INT_ENDPOINT_V3"
 # Only reminders already contained in the public fixture specification.
 # Do NOT expose private hidden QA, source solutions or user/business data.
 PUBLIC_SPEC_APPENDICES = {
@@ -63,7 +64,8 @@ PUBLIC_SPEC_APPENDICES = {
 def approved_prompt_bytes(fixture_id, profile):
     require(fixture_id in PUBLIC_SPEC_APPENDICES, "UNAPPROVED_FIXTURE")
     base = fixtures.catalog()[fixture_id]["prompt"]
-    require(profile in (None, PUBLIC_SPEC_PROFILE, PUBLIC_SPEC_STATE_PROFILE),
+    require(profile in (None, PUBLIC_SPEC_PROFILE, PUBLIC_SPEC_STATE_PROFILE,
+                        PUBLIC_SPEC_INT_PROFILE),
             "UNAPPROVED_PUBLIC_SPEC_PROMPT_PROFILE")
     if profile == PUBLIC_SPEC_PROFILE:
         base += "\n\n" + PUBLIC_SPEC_APPENDICES[fixture_id]
@@ -80,6 +82,20 @@ def approved_prompt_bytes(fixture_id, profile):
             "condition. Remove leading/trailing separators, and use "
             "untitled for an all-separator input. Treat Unicode letters "
             "as non-ASCII separators. Change only canonical_tag.py."
+        )
+    if profile == PUBLIC_SPEC_INT_PROFILE:
+        require(fixture_id == "merge-windows-v1",
+                "EXACT_INT_ONLY_MERGE_WINDOWS")
+        base += (
+            "\n\nPUBLIC EXACT-TYPE REMINDER (already in task specification, "
+            "NOT hidden QA): Every endpoint must be a Python integer with "
+            "type(endpoint) is int, exactly. Do not rely on "
+            "isinstance(endpoint, int) because int subclasses also pass "
+            "that test but violate the exact-type contract. Reject bool, "
+            "int subclasses, floats, non-tuple pairs, non-pairs, and "
+            "reversed intervals with ValueError before sorting or merging. "
+            "Keep the documented inclusive adjacent merge behavior. "
+            "Change only windows_merge.py, not any tests."
         )
     return base.encode("utf-8")
 
@@ -749,7 +765,22 @@ def selftest():
         checks.append(True)
     else:
         raise AssertionError("STATE_PROFILE_WRONG_FIXTURE_ACCEPTED")
-    require(all(checks) and len(checks)==35,"NEGATIVE_TEST_COUNT_DRIFT")
+    v3 = approved_prompt_bytes("merge-windows-v1", PUBLIC_SPEC_INT_PROFILE)
+    require(v3.startswith(fixtures.catalog()["merge-windows-v1"]["prompt"].encode("utf-8"))
+            and b"PUBLIC EXACT-TYPE REMINDER" in v3
+            and b"type(endpoint) is int" in v3,
+            "EXACT_INT_PROFILE_NOT_PINNED")
+    checks.append(True)
+    require(v3 != approved_prompt_bytes("merge-windows-v1", PUBLIC_SPEC_PROFILE),
+            "EXACT_INT_PROFILE_NOT_DISTINCT")
+    checks.append(True)
+    try:
+        approved_prompt_bytes("canonical-tag-v1", PUBLIC_SPEC_INT_PROFILE)
+    except Refused:
+        checks.append(True)
+    else:
+        raise AssertionError("EXACT_INT_PROFILE_ON_WRONG_FIXTURE_ACCEPTED")
+    require(all(checks) and len(checks)==38,"NEGATIVE_TEST_COUNT_DRIFT")
     return {"status":"PASS_OFFLINE","tests":len(checks),
             "model_invocations":0,"different_tasks_model_proven":False,
             "automatic_retry":False,"production_authority":False,
@@ -765,7 +796,7 @@ def main():
         prepare.add_argument("--"+k,required=True)
     prepare.add_argument("--port",type=int,required=True)
     prepare.add_argument("--timeout",type=int,default=140)
-    prepare.add_argument("--prompt-profile",choices=("default", "public-spec-v1", "state-separator-v2"),default="default")
+    prepare.add_argument("--prompt-profile",choices=("default", "public-spec-v1", "state-separator-v2", "exact-int-v3"),default="default")
     run=sub.add_parser("run")
     verify=sub.add_parser("verify")
     audit=sub.add_parser("audit-failed-qa")
@@ -783,6 +814,7 @@ def main():
                      args.aider,args.model,args.port,args.timeout,
                      (None if args.prompt_profile=="default" else
                       PUBLIC_SPEC_STATE_PROFILE if args.prompt_profile=="state-separator-v2" else
+                      PUBLIC_SPEC_INT_PROFILE if args.prompt_profile=="exact-int-v3" else
                       PUBLIC_SPEC_PROFILE))
     elif args.mode=="run":result=execute(args.envelope,args.receipt)
     elif args.mode=="audit-failed-qa":

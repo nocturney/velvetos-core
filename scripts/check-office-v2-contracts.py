@@ -293,6 +293,47 @@ def main() -> int:
     ):
         fail("P0 manual new-attempt lineage overstated safety or authority")
 
+    # #612: A new, distinct actual Mac Qwen/Aider Task Envelope generated
+    # a fixed exact-int source. Byte-pinned, quarantined and independently
+    # property-QA verified against the old source's explicit subclass bug.
+    # CI ONLY invokes offline source/receipt/readback checks (no model).
+    exact_int_gate = ROOT / "scripts" / "vf_office_v2_p0_exact_int_model_qa_gate.py"
+    if hashlib.sha256(exact_int_gate.read_bytes()).hexdigest() != (
+            "600c46247aeb3c6ebf0c1ae9e20563e1e380faf8972c514547be8072a65dee0a"):
+        fail("P0 new exact-int model QA gate executed source-byte pin drift")
+    for stage in ("verify", "selftest"):
+        exact_int_result = subprocess.run(
+            [sys.executable, str(exact_int_gate), stage],
+            cwd=ROOT, capture_output=True, text=True, timeout=35,
+        )
+        if exact_int_result.returncode:
+            fail("P0 new strict-int model result " + stage + " failed: " +
+                 exact_int_result.stdout[:220])
+        try:
+            strict_observed = json.loads(exact_int_result.stdout)
+        except ValueError:
+            fail("P0 strict-int model verifier emitted invalid JSON")
+        if stage == "verify":
+            if (strict_observed.get("status") !=
+                    "PASS_NEW_LOCAL_MODEL_SOURCE_EXACT_BYTES_AND_PUBLIC_PROPERTY_QA"
+                    or strict_observed.get("original_worker_verified") is not True
+                    or strict_observed.get("standard_property_cases") != 256
+                    or strict_observed.get("invalid_examples_rejected") != 11
+                    or strict_observed.get("old_bug_still_pinned") is not True
+                    or strict_observed.get("new_result_quarantined") is not True
+                    or strict_observed.get("no_autonomous_pr_or_distributed_fence")
+                       is not True
+                    or strict_observed.get("no_new_model_calls_by_verifier")
+                       is not True):
+                fail("P0 new strict-int code model result overstated authority")
+        else:
+            if (strict_observed.get("status") != "PASS_OFFLINE"
+                    or strict_observed.get("tests") != 18
+                    or strict_observed.get("model_calls") != 0
+                    or strict_observed.get("production_code_promoted") is not False
+                    or strict_observed.get("cross_host_fencing") is not False):
+                fail("P0 new strict-int negative controls did not fail closed")
+
     # #612: actual byte-preserved Mac local-model source files in quarantine.
     # CI runs deterministic offline public-property QA in a temp subprocess,
     # asserts one strict int-subclass bug DENIES production promotion.
@@ -422,7 +463,7 @@ def main() -> int:
     diverse_worker_file = ROOT / "scripts" / "vf_office_v2_p0_diverse_local_worker.py"
     diverse_failure_path = (P2 / "p0-two-diverse-real-model-qa-failclosed-2026-10-09.json")
     executed_diverse_worker_src = "c08a8413f59a1924c013adc66f523c897f1e477fae810f2c76127699d4262087"
-    expected_diverse_worker_src = "4bab56091da28e18d7ad5e28023ddaedbbdc5537c10340e02bdd330a862e6d06"
+    expected_diverse_worker_src = "76dcd612dee33fa4aa01fdc1b73e856100cdf55db94dabb93b7b2a202d0c8c9c"
     if hashlib.sha256(diverse_worker_file.read_bytes()).hexdigest() != expected_diverse_worker_src:
         fail("P0 diverse model worker actual source byte pin changed")
     diverse_tests = subprocess.run(
@@ -439,7 +480,7 @@ def main() -> int:
         fail("P0 diverse Worker historical failures missing/invalid")
     if (
         check_result.get("status") != "PASS_OFFLINE"
-        or check_result.get("tests") != 35
+        or check_result.get("tests") != 38
         or check_result.get("model_invocations") != 0
         or check_result.get("different_tasks_model_proven") is not False
         or check_result.get("automatic_retry") is not False
