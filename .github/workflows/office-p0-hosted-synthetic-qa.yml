@@ -1,0 +1,46 @@
+name: Office P0 Hosted Synthetic QA LAB
+
+# Read-only, no scheduler, no live models, no consumer/business credentials.
+# The workflow runs only for changes to this explicit LAB and by manual trigger.
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/office-p0-hosted-synthetic-qa.yml"
+      - "scripts/vf_office_v2_p0_hosted_synthetic_qa_lab.py"
+  workflow_dispatch:
+
+# No token permissions are granted to any step or generated QA child.
+permissions: {}
+
+jobs:
+  pinned-synthetic-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout public source without persistent credentials
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Read-only runner preflight and 19 static admission controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${RUNNER_ENVIRONMENT:-}" = "github-hosted"
+          test "${RUNNER_OS:-}" = "Linux"
+          test "${GITHUB_REPOSITORY:-}" = "nocturney/velvetos-core"
+          test -z "${GH_TOKEN:-}"
+          test -z "${GITHUB_TOKEN:-}"
+          # Avoid printing any potential credential; fail if checkout persisted one.
+          if git config --local --get-regexp '^http[.].*[.]extraheader$' > /dev/null 2>&1; then
+            echo "::error::Unexpected persisted checkout credential"
+            exit 1
+          fi
+          python3 -B scripts/vf_office_v2_p0_hosted_synthetic_qa_lab.py selftest
+
+      - name: Re-run two SHA-pinned quarantined source QA fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B scripts/vf_office_v2_p0_hosted_synthetic_qa_lab.py run
