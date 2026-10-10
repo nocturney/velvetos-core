@@ -1,0 +1,158 @@
+{
+  "schema": "velvetos.office-v2.p0-diverse-model-worker-failclosed-experimental-evidence.v0",
+  "status": "PASS_TWO_REAL_MODEL_ATTEMPTS_FAILED_QA_AND_PRESERVED_JOURNALS_ONE_WINDOWS_ADMISSION_ONLY",
+  "issue": "https://github.com/nocturney/velvetos-core/issues/612",
+  "date_utc": "2026-10-09",
+  "scope": "Two different actual local Qwen3.5:4b Mac Aider code changes both independently QA-failed and retained original RUNNING journals without success; one Windows distinct canonical-tag task admitted no model due busy CAD GPU. Does not satisfy two verified coding tasks or PR throughput.",
+  "executed_source": {
+    "repository": "nocturney/velvetos-core",
+    "base_main": "017178eee2fe46bd8d0833d1a91b743505437776",
+    "initial_mac_worker_commit": "a90a42133526a6f4e989ac059ffc16e3a449a67b",
+    "subsequent_mac_worker_commit": "46cb07f5879d25c9a19a79f4c8e7bed713d381de",
+    "current_audit_source_commit": "949f948ca42ea20e1c9d8f1052b5bcf3ac5ec955",
+    "current_audit_source_raw_sha256": "c08a8413f59a1924c013adc66f523c897f1e477fae810f2c76127699d4262087",
+    "local_executor": "Aider v0.86.2",
+    "local_model": "qwen3.5:4b",
+    "model_digest": "7f3251fa6878a78a606bcb3c074283306e5ad2ea411a7774a9dd98a4bc7f2d13",
+    "mac_host": "MacMiniOffice.local",
+    "win_host": "Chris"
+  },
+  "mac_actual_failed_attempts": {
+    "merge-windows-v1": {
+      "raw_audit_sha256": "187da326e9f8931d6a1c08bff575a16f2615262a920e81b9351e45afd7e9d37a",
+      "audit": {
+        "all_detached_descendants_excluded": false,
+        "audit_sha256": "4607bc34a9a7ed7668f74fb290bf50786243d2727c7b1f41eaee17d1ba806427",
+        "authority": "READ_ONLY_DIAGNOSIS_NO_RECOVERY",
+        "automatic_requeue_authorized": false,
+        "base_sha": "336318a6440bbbc5efd6d56fec66007405722923",
+        "branch": "lab-p0-diverse-run-p0-diverse-run-mac-merge-20261009-a",
+        "envelope_sha256": "e232b249874bd7c0fa72ba5a5f4f7c04f60a7b3a221744969e88acabe993674e",
+        "fixture_id": "merge-windows-v1",
+        "historical_native_process_readback": {
+          "aider": "HISTORICAL_PID_ABSENT",
+          "worker": "HISTORICAL_PID_ABSENT"
+        },
+        "host": "MacMiniOffice.local",
+        "independent_failed_qa": {
+          "artifact_sha256": "8d29d92adb1908b0b3b9d765d44bc9d3dde99eb5df998cda10e8b864a913de17",
+          "hidden_12_verified": false,
+          "hidden_exit": 1,
+          "hidden_stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "pass": false,
+          "replay_changed_paths": [
+            "windows_merge.py"
+          ],
+          "unit_3_verified": true,
+          "unit_exit": 0
+        },
+        "journal_sha256_raw": "e909db6a1ab48bd5baaafece671c3a6cf825c6f804b7a273b7314e447fddd89d",
+        "kernel_pin_selfhash": "dd9b4c649970395dff7584bd51995ccb0808badcc80048aeb7f835451df57b8a",
+        "kernel_pin_sha256_raw": "7e03124351c3ad7ebe607d513a183df30023960fddef0c76ee6efe0d0eb83ad7",
+        "model": "qwen3.5:4b",
+        "model_calls_during_audit": 0,
+        "model_digest": "7f3251fa6878a78a606bcb3c074283306e5ad2ea411a7774a9dd98a4bc7f2d13",
+        "observed_source_sha256": "8d29d92adb1908b0b3b9d765d44bc9d3dde99eb5df998cda10e8b864a913de17",
+        "observed_utc": "2026-10-09T21:26:06.915555+00:00",
+        "original_attempt_retried": false,
+        "original_journal_preserved": true,
+        "original_success_receipt_absent": true,
+        "production_authority": false,
+        "schema": "velvetos.office-v2.p0-diverse-manual-failed-qa-readback.v0",
+        "status": "FAILED_INDEPENDENT_QA_NO_SUCCESS",
+        "task_id": "p0-diverse-run-mac-merge-20261009-a"
+      }
+    },
+    "canonical-tag-v1": {
+      "raw_audit_sha256": "12b61a9afda1148599dde31951519def6edda21072ba0e20d8f7a2792b18a3e8",
+      "audit": {
+        "all_detached_descendants_excluded": false,
+        "audit_sha256": "25c4cd2f22c2790dffef6173c7aae746e1cbf5304a8b75e17bc3677cb408b547",
+        "authority": "READ_ONLY_DIAGNOSIS_NO_RECOVERY",
+        "automatic_requeue_authorized": false,
+        "base_sha": "c944a8b1ff44040925856517a65d47cc3e5cf834",
+        "branch": "lab-p0-diverse-run-p0-diverse-run-mac-canonical-20261009-b",
+        "envelope_sha256": "a1ae451a2fecfefad7c6b158974027bebb75f47bf0d470f217fe9d4757c20a78",
+        "fixture_id": "canonical-tag-v1",
+        "historical_native_process_readback": {
+          "aider": "HISTORICAL_PID_ABSENT",
+          "worker": "HISTORICAL_PID_ABSENT"
+        },
+        "host": "MacMiniOffice.local",
+        "independent_failed_qa": {
+          "artifact_sha256": "55d24448d7407a38d832c2ffd2928935c31c2ed82720c8f79e67ef9cd5640545",
+          "hidden_12_verified": false,
+          "hidden_exit": 1,
+          "hidden_stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "pass": false,
+          "replay_changed_paths": [
+            "canonical_tag.py"
+          ],
+          "unit_3_verified": true,
+          "unit_exit": 1
+        },
+        "journal_sha256_raw": "dbf9fa62bfdf6c9da85586810e30dbc0a6fba4c10e6bd5286419375ba5f8e7a3",
+        "kernel_pin_selfhash": "5d03d335165f1c7940beb3f821468a05d6e4d81aed239ad684e51f9752993115",
+        "kernel_pin_sha256_raw": "7e081ddeaabbde95290a8ab1dd7529955401c0a6cf4a242add16d69de0ad1df2",
+        "model": "qwen3.5:4b",
+        "model_calls_during_audit": 0,
+        "model_digest": "7f3251fa6878a78a606bcb3c074283306e5ad2ea411a7774a9dd98a4bc7f2d13",
+        "observed_source_sha256": "55d24448d7407a38d832c2ffd2928935c31c2ed82720c8f79e67ef9cd5640545",
+        "observed_utc": "2026-10-09T21:26:10.269222+00:00",
+        "original_attempt_retried": false,
+        "original_journal_preserved": true,
+        "original_success_receipt_absent": true,
+        "production_authority": false,
+        "schema": "velvetos.office-v2.p0-diverse-manual-failed-qa-readback.v0",
+        "status": "FAILED_INDEPENDENT_QA_NO_SUCCESS",
+        "task_id": "p0-diverse-run-mac-canonical-20261009-b"
+      }
+    }
+  },
+  "win_admitted_not_run": {
+    "host": "Chris",
+    "task_id": "p0-diverse-run-win-canonical-20261009-b",
+    "base_sha": "9463e189c29f48e7a9a8c956a38e6f9cadcf8f8d",
+    "branch": "lab-p0-diverse-run-p0-diverse-run-win-canonical-20261009-b",
+    "fixture_id": "canonical-tag-v1",
+    "model": "qwen3.5:9b",
+    "model_digest": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90",
+    "admission_source_commit": "46cb07f5879d25c9a19a79f4c8e7bed713d381de",
+    "original_raw_envelope_sha256": "c84d36677b514595773516d4ebc990dd29c94868be0cd1ad9e823eb694df175f",
+    "admitted_only": true,
+    "journal_exists": false,
+    "receipt_exists": false,
+    "model_started": false,
+    "production_authority": false
+  },
+  "diagnosis": {
+    "merge": "3 visible tests pass, hidden QA rejects malformed pair supplied as list rather than tuple; model incorrectly accepted a list-of-list interval",
+    "tag": "2/3 visible tests failed: uppercase letters were dropped instead of lowercased; repeated punctuation/underscores not collapsed",
+    "source_changed_path_count_each": 1,
+    "source_change_paths": [
+      "windows_merge.py",
+      "canonical_tag.py"
+    ],
+    "independent_offline_separate_audit_verifies": [
+      "PASS",
+      "PASS"
+    ],
+    "original_same_envelope_retried": false,
+    "original_journals_retained_unchanged": true,
+    "full_orphan_exclusion_proven": false,
+    "local_model_success_for_diverse_targets": false
+  },
+  "limits": {
+    "original_v1_worker_modified": false,
+    "production_authority": false,
+    "canonical_fleet_lease": false,
+    "cross_host_fencing_verified": false,
+    "automated_unknown_recovery_proven": false,
+    "two_successful_distinct_model_tasks_proven": false,
+    "two_host_model_concurrency_proven": false,
+    "operator_effort_quantified": false,
+    "token_counts_known": false,
+    "paid_model_or_api_calls": 0,
+    "new_background_service": false
+  }
+}

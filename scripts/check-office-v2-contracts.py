@@ -293,6 +293,133 @@ def main() -> int:
     ):
         fail("P0 manual new-attempt lineage overstated safety or authority")
 
+    # #612: New separate local-model diverse Worker emitted no false
+    # successes for two actual Mac model-backed code attempts. Both exact
+    # original journals remain UNKNOWN, independently read-only QA-audited.
+    # Windows was admitted without touching active CAD/GPU or launching model.
+    diverse_worker_file = ROOT / "scripts" / "vf_office_v2_p0_diverse_local_worker.py"
+    diverse_failure_path = (P2 / "p0-two-diverse-real-model-qa-failclosed-2026-10-09.json")
+    expected_diverse_worker_src = "c08a8413f59a1924c013adc66f523c897f1e477fae810f2c76127699d4262087"
+    if hashlib.sha256(diverse_worker_file.read_bytes()).hexdigest() != expected_diverse_worker_src:
+        fail("P0 diverse model worker actual source byte pin changed")
+    diverse_tests = subprocess.run(
+        [sys.executable, str(diverse_worker_file), "selftest"],
+        cwd=ROOT, capture_output=True, text=True, timeout=35,
+    )
+    if diverse_tests.returncode:
+        fail("P0 diverse Worker offline negative suite failed: " +
+             diverse_tests.stdout[:150])
+    try:
+        check_result = json.loads(diverse_tests.stdout)
+        failure_proof = json.loads(diverse_failure_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        fail("P0 diverse Worker historical failures missing/invalid")
+    if (
+        check_result.get("status") != "PASS_OFFLINE"
+        or check_result.get("tests") != 25
+        or check_result.get("model_invocations") != 0
+        or check_result.get("different_tasks_model_proven") is not False
+        or check_result.get("automatic_retry") is not False
+        or check_result.get("production_authority") is not False
+        or check_result.get("distributed_fencing_verified") is not False
+        or failure_proof.get("schema") !=
+           "velvetos.office-v2.p0-diverse-model-worker-failclosed-experimental-evidence.v0"
+        or failure_proof.get("status") !=
+           "PASS_TWO_REAL_MODEL_ATTEMPTS_FAILED_QA_AND_PRESERVED_JOURNALS_ONE_WINDOWS_ADMISSION_ONLY"
+    ):
+        fail("P0 diverse Qwen experiment falsely claims success or authority")
+    diverse_source = failure_proof.get("executed_source") or {}
+    if (
+        diverse_source.get("base_main") !=
+           "017178eee2fe46bd8d0833d1a91b743505437776"
+        or diverse_source.get("initial_mac_worker_commit") !=
+           "a90a42133526a6f4e989ac059ffc16e3a449a67b"
+        or diverse_source.get("subsequent_mac_worker_commit") !=
+           "46cb07f5879d25c9a19a79f4c8e7bed713d381de"
+        or diverse_source.get("current_audit_source_commit") !=
+           "949f948ca42ea20e1c9d8f1052b5bcf3ac5ec955"
+        or diverse_source.get("current_audit_source_raw_sha256") !=
+           expected_diverse_worker_src
+        or diverse_source.get("model_digest") !=
+           "7f3251fa6878a78a606bcb3c074283306e5ad2ea411a7774a9dd98a4bc7f2d13"
+    ):
+        fail("P0 diverse model source, host or actual executed digest drift")
+    failed = failure_proof.get("mac_actual_failed_attempts") or {}
+    expected_failed = {
+        "merge-windows-v1": {
+            "task": "p0-diverse-run-mac-merge-20261009-a",
+            "raw": "187da326e9f8931d6a1c08bff575a16f2615262a920e81b9351e45afd7e9d37a",
+            "self": "4607bc34a9a7ed7668f74fb290bf50786243d2727c7b1f41eaee17d1ba806427",
+            "journal": "e909db6a1ab48bd5baaafece671c3a6cf825c6f804b7a273b7314e447fddd89d",
+            "base": "336318a6440bbbc5efd6d56fec66007405722923",
+            "target": "windows_merge.py",
+            "unit": 0,
+        },
+        "canonical-tag-v1": {
+            "task": "p0-diverse-run-mac-canonical-20261009-b",
+            "raw": "12b61a9afda1148599dde31951519def6edda21072ba0e20d8f7a2792b18a3e8",
+            "self": "25c4cd2f22c2790dffef6173c7aae746e1cbf5304a8b75e17bc3677cb408b547",
+            "journal": "dbf9fa62bfdf6c9da85586810e30dbc0a6fba4c10e6bd5286419375ba5f8e7a3",
+            "base": "c944a8b1ff44040925856517a65d47cc3e5cf834",
+            "target": "canonical_tag.py",
+            "unit": 1,
+        },
+    }
+    if set(failed) != set(expected_failed):
+        fail("P0 exactly two distinct real Mac negative coding outcomes needed")
+    import vf_office_v2_p0_diverse_local_worker as diverse_worker
+    for task_family, expect in expected_failed.items():
+        info = failed[task_family]
+        audit = info.get("audit") or {}
+        try:
+            diverse_worker.audit_record_validate(audit)
+        except Exception as exc:
+            fail("P0 historic failed original Aider QA was not validated: " + str(exc)[:120])
+        qa = audit.get("independent_failed_qa") or {}
+        historical = audit.get("historical_native_process_readback") or {}
+        if (
+            info.get("raw_audit_sha256") != expect["raw"]
+            or audit.get("audit_sha256") != expect["self"]
+            or audit.get("task_id") != expect["task"]
+            or audit.get("host") != "MacMiniOffice.local"
+            or audit.get("base_sha") != expect["base"]
+            or audit.get("fixture_id") != task_family
+            or audit.get("journal_sha256_raw") != expect["journal"]
+            or qa.get("replay_changed_paths") != [expect["target"]]
+            or qa.get("unit_exit") != expect["unit"]
+            or qa.get("hidden_exit") != 1
+            or qa.get("pass") is not False
+            or historical.get("worker") != "HISTORICAL_PID_ABSENT"
+            or historical.get("aider") != "HISTORICAL_PID_ABSENT"
+            or audit.get("automatic_requeue_authorized") is not False
+        ):
+            fail("P0 original negative QA, OS birth or preserved journal pin drift")
+    admitted = failure_proof.get("win_admitted_not_run") or {}
+    if (
+        admitted.get("task_id") != "p0-diverse-run-win-canonical-20261009-b"
+        or admitted.get("host") != "Chris"
+        or admitted.get("base_sha") !=
+           "9463e189c29f48e7a9a8c956a38e6f9cadcf8f8d"
+        or admitted.get("original_raw_envelope_sha256") !=
+           "c84d36677b514595773516d4ebc990dd29c94868be0cd1ad9e823eb694df175f"
+        or admitted.get("admitted_only") is not True
+        or admitted.get("journal_exists") is not False
+        or admitted.get("receipt_exists") is not False
+        or admitted.get("model_started") is not False
+    ):
+        fail("P0 Windows Qwen9b was wrongly claimed to have executed")
+    negative_limits = failure_proof.get("limits") or {}
+    for flag in ("original_v1_worker_modified","production_authority",
+                 "canonical_fleet_lease","cross_host_fencing_verified",
+                 "automated_unknown_recovery_proven",
+                 "two_successful_distinct_model_tasks_proven",
+                 "two_host_model_concurrency_proven",
+                 "operator_effort_quantified","token_counts_known",
+                 "new_background_service"):
+        if negative_limits.get(flag) is not False:
+            fail("P0 general Worker LAB falsely asserts " + flag)
+    if negative_limits.get("paid_model_or_api_calls") != 0:
+        fail("P0 general Worker LAB falsely claims an external inference cost")
     # #612: Two genuinely distinct synthetic coding task families have
     # been byte-exact prepared on independent real Windows/Mac hosts. This
     # does NOT mean either model worker has been run, PR created, or lease won.
