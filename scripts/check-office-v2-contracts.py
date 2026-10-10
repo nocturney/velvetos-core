@@ -1354,6 +1354,48 @@ def main() -> int:
     ):
         fail("P0 fenced-effect consumer false-positive authority regression")
 
+    # #612: independent comparison of TWO already-successful distinct local
+    # coding tasks on Chris Windows and Mac Mini; no new model/lease/PR run.
+    two_host_witness = ROOT / "scripts" / "vf_office_v2_p0_two_host_coding_witness.py"
+    if hashlib.sha256(two_host_witness.read_bytes()).hexdigest() != (
+        "93f34b7aa8fd9e4d58bf0d2ea07d2122393b8eda62503b140d7ca71edbc5a3b7"
+    ):
+        fail("P0 two-host historical coding witness source provenance drift")
+    for mode in ("selftest", "verify"):
+        result = subprocess.run(
+            [sys.executable, str(two_host_witness), mode],
+            cwd=ROOT, text=True, capture_output=True, timeout=35,
+        )
+        if result.returncode != 0:
+            fail("P0 two-host historical coding evidence refused " + mode + ": " +
+                 result.stdout[:200] + result.stderr[:100])
+        try:
+            witness = json.loads(result.stdout)
+        except json.JSONDecodeError:
+            fail("P0 two-host historical coding witness JSON invalid")
+        if mode == "selftest":
+            if (witness.get("status") != "PASS_OFFLINE"
+                    or witness.get("tests") != 31
+                    or witness.get("model_invocations") != 0
+                    or witness.get("production_effects") != 0
+                    or witness.get("no_retries") is not True):
+                fail("P0 two-host historic witness adversarial regression")
+        else:
+            if (witness.get("status") !=
+                    "PASS_TWO_HOST_DISTINCT_HISTORICAL_CODING_QA_ONLY"
+                    or witness.get("hosts") != ["Chris", "MacMiniOffice.local"]
+                    or witness.get("code_families") != ["slug.py", "windows_merge.py"]
+                    or witness.get("historic_successes_with_independent_qa") != 2
+                    or witness.get("original_receipt_bytes_checked_by_CI") is not False
+                    or witness.get("simultaneous_cross_host_execution_proven") is not False
+                    or witness.get("distributed_lease_proven") is not False
+                    or witness.get("agent_authored_pr_or_merge_proven") is not False
+                    or witness.get("autonomous_recovery_proven") is not False
+                    or witness.get("historical_failed_attempts_retried") is not False
+                    or witness.get("current_new_model_invocations") != 0
+                    or witness.get("production_effects") != 0):
+                fail("P0 two-host evidence promoted beyond original historic QA scope")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
