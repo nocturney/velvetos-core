@@ -8,3 +8,7 @@ packages/vfharness/state/pr228-rollout/* text eol=lf
 
 # Instance-owned ChatGPT Project distribution is a byte-for-byte compatibility snapshot; preserve legacy whitespace exactly.
 /instances/velvet-factory/distribution/chatgpt-project/** -whitespace
+
+# Byte-for-byte original Mac model outputs (quarantined LAB, never auto-imported).
+# Preserve their actual trailing spaces for SHA/Worker receipt provenance.
+/docs/implementation/office-v2/phase2/quarantined-agent-sources-2026-10-10/*.py -whitespace
