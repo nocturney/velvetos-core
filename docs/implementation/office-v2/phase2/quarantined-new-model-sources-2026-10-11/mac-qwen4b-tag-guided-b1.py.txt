@@ -1,0 +1,20 @@
+def canonical_tag(text: str) -> str:
+    parts = []
+    pending_separator = False
+    
+    for char in text.lower():
+        is_allowed = ('a' <= char <= 'z') or ('0' <= char <= '9')
+        
+        if is_allowed:
+            if pending_separator and len(parts) > 0:
+                parts.append('_')
+            parts.append(char)
+            pending_separator = False
+        else:
+            if len(parts) > 0:
+                pending_separator = True
+    
+    if not parts:
+        return "untitled"
+    
+    return ''.join(parts)
