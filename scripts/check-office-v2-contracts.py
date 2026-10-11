@@ -1126,6 +1126,56 @@ def main() -> int:
             or container_row.get("production_authority") is not False):
         fail("P0 hosted Docker negative probe falsely promoted guest or token authority")
 
+    # #612 two NEW native local-Qwen source-text outcomes (different tasks,
+    # separate hosts) execute ONLY as two pre-reviewed SHA-pinned sources in
+    # zero-write-token hosted Docker. Global sensors do STATIC checks only.
+    new_source_gate = ROOT / "scripts" / "vf_office_v2_p0_hosted_new_source_review_lab.py"
+    new_source_workflow = ROOT / ".github" / "workflows" / "office-p0-hosted-new-source-qa.yml"
+    new_source_receipt = P2 / "p0-612-new-two-host-local-ollama-text-only-2026-10-11.json"
+    for path, expected_sha in (
+        (new_source_gate, "7194763e3928cbd0570b18ecceca6b0c5effc6b3a64573884a4a7bfaa2c32db8"),
+        (new_source_workflow, "7afa9bf211dd27a4703bd273a442f22c15937640e8e8bad1b4b1c065b858e2bd"),
+        (new_source_receipt, "e86c08f6fb1002528457b16da92ae5e6066225497a94c0126e773645128e9359"),
+    ):
+        if hashlib.sha256(path.read_bytes()).hexdigest() != expected_sha:
+            fail("P0 two-host new-source QA gate/workflow/receipt bytes drift")
+    static_case = subprocess.run(
+        [sys.executable, "-B", str(new_source_gate), "selftest"],
+        cwd=ROOT, capture_output=True, text=True, timeout=20)
+    if static_case.returncode != 0:
+        fail("P0 new source static AST/guest admission denied: " + static_case.stdout[:200])
+    try:
+        new_result = json.loads(static_case.stdout)
+        native_generation = json.loads(new_source_receipt.read_text(encoding="utf-8"))
+    except ValueError:
+        fail("P0 new-source generation or static QA receipt invalid JSON")
+    expected_new_sha = [
+        "65bf260ac6f29c74337e0bea3c1079f7b0203cd9b1a0eade1b96569e19557bc1",
+        "337c6c159f5de53d3628a213a815b835a830ed72ee1b97e915f29ed609540677",
+    ]
+    if (new_result.get("status") != "PASS_STATIC_NEW_MODEL_OUTPUT_NO_HOST_EXECUTION"
+            or new_result.get("tests") != 24
+            or new_result.get("source_sha256") != expected_new_sha
+            or new_result.get("model_calls") != 0
+            or new_result.get("docker_calls") != 0
+            or new_result.get("git_writes") != 0
+            or new_result.get("generated_candidate_executed") is not False
+            or new_result.get("production_authority") is not False
+            or new_result.get("arbitrary_generated_code_isolation_proven") is not False):
+        fail("P0 new two-host generated-code static claim unsafe or incomplete")
+    reported = native_generation.get("results") or []
+    if (native_generation.get("status") != "TWO_NEW_LOCAL_MODEL_TEXT_OUTPUTS_NOT_EXECUTED"
+            or native_generation.get("model_calls") != 2
+            or native_generation.get("hosted_independent_QA_status") != "NOT_YET_OBSERVED"
+            or len(reported) != 2
+            or [row.get("candidate_sha256") for row in reported] != expected_new_sha
+            or any(row.get("locally_executed") is not False
+                   or row.get("local_QA_executed") is not False
+                   or row.get("model_retry") is not False
+                   or row.get("paid_api_usd") != 0
+                   for row in reported)):
+        fail("P0 new two-host local inference evidence overstated QA/authority")
+
     # #612 hosted CI synthetic QA candidate: only the pure selftest runs in
     # check-all. Actual previously generated Python executes exclusively in
     # the separate no-permission GitHub-hosted LAB workflow when triggered.
