@@ -169,7 +169,7 @@ def docker_args(image_id, fixture_dir, host_only_path, entry):
         "docker", "create", "--network=none", "--read-only",
         "--cap-drop=ALL", "--security-opt=no-new-privileges:true",
         "--pids-limit=32", "--memory=256m", "--cpus=1",
-        "--user=65534:65534", "--pid=private", "--ipc=none",
+        "--user=65534:65534", "--ipc=none",
         "--tmpfs=/tmp:rw,noexec,nosuid,size=32m,mode=1777",
         "--ulimit=nofile=64:64", "--ulimit=fsize=2097152:2097152",
         "--mount=type=bind,src=" + str(fixture_dir) + ",dst=/fixture,readonly",
@@ -243,7 +243,7 @@ def local_selftest():
         ("--memory=256m", "--memory=16g"),
         ("--cpus=1", "--cpus=8"),
         ("--user=65534:65534", "--user=0:0"),
-        ("--pid=private", "--pid=host"),
+        ("--ulimit=nofile=64:64", "--pid=host"),
         ("--ipc=none", "--ipc=host"),
         ("--tmpfs=/tmp:rw,noexec,nosuid,size=32m,mode=1777",
          "--tmpfs=/tmp:rw,exec,size=2g"),
@@ -288,7 +288,7 @@ def inspect_cid(cid, host_dir, image_id):
             and any(str(i).startswith("no-new-privileges") for i in host["SecurityOpt"])
             and host["PidsLimit"] == 32 and host["Memory"] == 268435456
             and host["NanoCpus"] == 1000000000
-            and host["IpcMode"] == "none" and host["PidMode"] == "private",
+            and host["IpcMode"] == "none" and host["PidMode"] in ("", "private"),
             "HOST_DOCKER_SECURITY_CONFIG_DRIFT")
     require(type(mounts) is list and len(mounts) == 1
             and mounts[0]["Type"] == "bind"
