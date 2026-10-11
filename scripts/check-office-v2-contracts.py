@@ -974,6 +974,36 @@ def main() -> int:
                     or result_guided.get("production_authority") is not False):
                 fail("P0 Mac guided outcome failed sealed historical contract")
 
+    # #604 ephemeral same-UID signer/worker custody lab: only pure static
+    # source/arg denial tests in this global sensor; actual key is synthetic,
+    # generated inside a disposable no-token GitHub-hosted signer tmpfs.
+    signer_lab = ROOT / "scripts" / "vf_office_v2_604_hosted_signer_custody_lab.py"
+    signer_workflow = ROOT / ".github" / "workflows" / "office-p0-synthetic-signer-custody-lab.yml"
+    if hashlib.sha256(signer_lab.read_bytes()).hexdigest() != (
+            "e62b415d37c618a3feb7c6ff32c91d8c4932e8601097607cc2e09a3377b97616"):
+        fail("P0 synthetic signer custody source SHA drift")
+    if hashlib.sha256(signer_workflow.read_bytes()).hexdigest() != (
+            "475bcc6114bdcf8d8417cea4a6915c1d5b89f7eabcc1c2c13183d1c6559925fe"):
+        fail("P0 synthetic signer custody workflow SHA drift")
+    signer_static = subprocess.run([sys.executable, str(signer_lab), "selftest"],
+                                  cwd=ROOT, capture_output=True, text=True, timeout=20)
+    if signer_static.returncode:
+        fail("P0 signer separation synthetic static suite failed: " +
+             signer_static.stdout[:180])
+    try:
+        signer_result = json.loads(signer_static.stdout)
+    except ValueError:
+        fail("P0 synthetic signer custody produced no parsed JSON")
+    if (signer_result.get("status") != "PASS_STATIC_SIGNER_CUSTODY_DENIAL"
+            or signer_result.get("tests") != 19
+            or signer_result.get("docker_calls") != 0
+            or signer_result.get("actual_key_created") is not False
+            or signer_result.get("model_calls") != 0
+            or signer_result.get("production_authority") is not False
+            or signer_result.get("git_write_authority") is not False
+            or signer_result.get("OS_SECRET_CUSTODY_PROVEN") is not False):
+        fail("P0 synthetic signer custody falsely asserts live OS or Git permission")
+
     # #612 ephemeral hosted Docker negative LAB. Only this pure static
     # selftest runs in check-all. Real pinned source QA and adversarial
     # socket/privilege tests run in a separate zero-permission hosted CI job.
