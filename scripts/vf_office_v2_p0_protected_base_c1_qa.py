@@ -211,12 +211,16 @@ def preflight_hosted():
     # checkout's canonical Git blob; never consult PR-supplied verifier.
     path_rel = "scripts/vf_office_v2_p0_protected_base_c1_qa.py"
     own = (POLICY / path_rel).read_bytes()
-    need(sha(own) == sha(git(POLICY, "show",
-         e["GITHUB_SHA"] + ":" + path_rel).encode("utf-8")),
-         "POLICY_SOURCE_NOT_EXACT_BASE_COMMIT")
-    need(require_regular(POLICY, WORKFLOW, 6000) ==
-         git(POLICY, "show", e["GITHUB_SHA"] + ":" + WORKFLOW).encode("utf-8"),
-         "WORKFLOW_NOT_EXACT_PROTECTED_BASE_COMMIT")
+    need(
+        git(POLICY, "hash-object", path_rel) ==
+        git(POLICY, "rev-parse", e["GITHUB_SHA"] + ":" + path_rel)
+        and sha(own) == sha(require_regular(POLICY, path_rel, 30000)),
+        "POLICY_SOURCE_NOT_EXACT_BASE_COMMIT")
+    need(
+        git(POLICY, "hash-object", WORKFLOW) ==
+        git(POLICY, "rev-parse", e["GITHUB_SHA"] + ":" + WORKFLOW)
+        and require_regular(POLICY, WORKFLOW, 6000),
+        "WORKFLOW_NOT_EXACT_PROTECTED_BASE_COMMIT")
     return workspace, candidate, e["GITHUB_SHA"], candidate_sha, upstream_run
 
 
@@ -299,10 +303,10 @@ def offline_selftest():
         need(no_writer_ticket(candidate).startswith("BLOCKED_"),
              "QA_FORGED_GIT_WRITE_AUTHORITY")
         rows.append("issuer_proof_never_git_token")
-    need(len(rows) == 33, "OFFLINE_TEST_COUNT_CHANGED")
+    need(len(rows) == 37, "OFFLINE_TEST_COUNT_CHANGED")
     return {
         "schema": SCHEMA,
-        "status": "PASS_33_OFFLINE_PROTECTED_BASE_ISSUER_NEGATIVES_ONLY",
+        "status": "PASS_37_OFFLINE_PROTECTED_BASE_ISSUER_NEGATIVES_ONLY",
         "tests": len(rows),
         "policy_from_protected_branch_tested_live": False,
         "model_code_executed_on_user_host": False,
