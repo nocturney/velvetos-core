@@ -2827,6 +2827,72 @@ def main() -> int:
     ):
         fail("#612 C1 static-only source transport FALSE model QA admission")
 
+    # #604: historical *real GitHub* issuer provenance and ruleset scope.
+    # The source-specific C1 model QA was real, but its QA workflow was
+    # introduced by its own PR; a passing check is not a pretrusted Git Sink
+    # approval. The snapshot is historical/unsigned and NEVER live authority.
+    # Only trusted pure offline negative tests run; no Git/network/credentials.
+    gh_issuer_gate = (
+        ROOT / "scripts" / "vf_office_v2_604_github_sink_ci_trust_gate.py"
+    )
+    gh_issuer_evidence = (
+        ROOT / "docs" / "implementation" / "office-v2" / "phase2" /
+        "p0-604-github-ci-trust-ingress-readonly-2026-10-11.json"
+    )
+    for source_file, pinned_sha in (
+        (gh_issuer_gate,
+         "3f5ebe8363fb3e33c984800189051ada3743bed437e50952b5b8e87621a492d9"),
+        (gh_issuer_evidence,
+         "38213c7534b3477b0b588988b096dd35be00211992f898ad7a3751c2111edbdb"),
+    ):
+        if hashlib.sha256(source_file.read_bytes()).hexdigest() != pinned_sha:
+            fail("#604 GitHub CI issuer / sole sink read-only gate SHA drift")
+    for mode in ("selftest", "inspect"):
+        check = subprocess.run(
+            [sys.executable, str(gh_issuer_gate), mode],
+            cwd=ROOT, text=True, capture_output=True, timeout=15,
+        )
+        if check.returncode != 0:
+            fail("#604 GitHub trust boundary offline gate rejected: " +
+                 check.stdout[:170] + check.stderr[:170])
+        try:
+            result = json.loads(check.stdout)
+        except json.JSONDecodeError:
+            fail("#604 GitHub trust boundary gate output is not JSON")
+        if mode == "selftest":
+            if (
+                result.get("status") !=
+                    "PASS_OFFLINE_GITHUB_CI_ISSUER_AND_SINK_TRUST_NEGATIVES"
+                or result.get("tests") != 90
+                or result.get("ci_policy_new_in_same_pr_not_pretrusted") is not True
+                or result.get("main_ruleset_does_not_fence_scratch_refs") is not True
+                or result.get("sole_git_writer_credential_proven") is not False
+                or result.get("github_git_writes") != 0
+                or result.get("network_calls") != 0
+                or result.get("provider_calls") != 0
+                or result.get("model_source_executed") is not False
+                or result.get("production_authority") is not False
+            ):
+                fail("#604 90 negative cases falsely admitted CI as Git Sink")
+        else:
+            if (
+                result.get("status") !=
+                    "PASS_HISTORICAL_GITHUB_TRUST_GAP_INVENTORY_WRITE_DENIED"
+                or result.get("source_qa_pass_observed") is not True
+                or result.get("mac_c1_qa_workflow_preexisted_on_base") is not False
+                or result.get("core_workflow_preexisted_on_base") is not True
+                or result.get("core_workflow_policy_scripts_immutable_proven") is not False
+                or result.get("approved_sole_credential_sink_principal_proven") is not False
+                or result.get("expired_owner_native_github_rejected_universally") is not False
+                or result.get("any_github_git_write_permitted") is not False
+                or result.get("actual_github_git_writes_by_gate") != 0
+                or result.get("provider_requests_by_gate") != 0
+                or result.get("credentials_read_by_gate") != 0
+                or result.get("unknown_effect_safe_auto_replayed") is not False
+                or result.get("production_authority") is not False
+            ):
+                fail("#604 historical GitHub issuer truth promoted to live writer")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
