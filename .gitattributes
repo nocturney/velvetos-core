@@ -26,3 +26,7 @@ packages/vfharness/state/pr228-rollout/* text eol=lf
 # Exact-byte, read-only #604 synthetic signer/key-custody experiment.
 /scripts/vf_office_v2_604_hosted_signer_custody_lab.py text eol=lf
 /.github/workflows/office-p0-synthetic-signer-custody-lab.yml text eol=lf
+
+# Bound exact bytes of new Docker host/daemon signer trust-boundary NEGATIVE pilot.
+/scripts/vf_office_v2_604_host_docker_daemon_key_negative.py text eol=lf
+/.github/workflows/office-p0-host-daemon-key-negative.yml text eol=lf
