@@ -1,0 +1,24 @@
+name: Office P0 Mac Qwen4B Feedback QA LAB
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/office-p0-hosted-mac4b-feedback-qa.yml'
+      - 'scripts/vf_office_v2_p0_hosted_mac4b_feedback_qa_lab.py'
+      - 'docs/implementation/office-v2/phase2/p0-612-mac-qwen4b-prompt-revision-2026-10-11.json'
+      - 'docs/implementation/office-v2/phase2/quarantined-new-model-sources-2026-10-11/mac-qwen4b-tag-feedback-a1.py.txt'
+      - 'docs/implementation/office-v2/phase2/quarantined-new-model-sources-2026-10-11/mac-qwen4b-tag-guided-b1.py.txt'
+permissions: {}
+jobs:
+  exact-reviewed-mac-candidate-one-use:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    permissions: {}
+    steps:
+      - name: Checkout without any persisted repository credential
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Reject static-bad Mac attempt and pin guided Mac source SHA
+        run: python3 -B scripts/vf_office_v2_p0_hosted_mac4b_feedback_qa_lab.py selftest
+      - name: Exact-guided-source three visible and twelve hidden QA in Docker
+        run: python3 -B scripts/vf_office_v2_p0_hosted_mac4b_feedback_qa_lab.py run
