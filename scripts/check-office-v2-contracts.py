@@ -173,8 +173,14 @@ def main() -> int:
         or evidence_summary.get("operator_reissue_verified") is not True):
         fail("P0 concurrency evidence incomplete or exaggerated")
     
-    # Distinct #612 v1 model-aware Task Envelope. Only its OFFLINE contract
-    # selftest runs in CI; it MUST NOT invoke Ollama, Aider or production effects.
+    # Distinct #612 v1 model-aware Task Envelope. The historical v1 Worker
+    # was not isolated on Chris SYSTEM or Mac UID501. Its model/QA entrypoints
+    # must stay code-locked until #604 admits a real OS-isolated executor.
+    # Only trusted fixture contract selftest (no generated candidate) runs.
+    local_v1_source = ROOT / "scripts" / "vf_office_v2_p0_local_model_worker.py"
+    if hashlib.sha256(local_v1_source.read_bytes()).hexdigest() != (
+            "eff2a82e37d40fb90c1746ddcc3adf4e7be28ddfc0f1677106e9796b47275161"):
+        fail("P0 v1 local Worker source isolation gate SHA drift")
     local_worker_check = subprocess.run(
         [sys.executable, str(ROOT / "scripts" / "vf_office_v2_p0_local_model_worker.py"), "selftest"],
         cwd=ROOT, text=True, capture_output=True, timeout=45,
@@ -187,12 +193,30 @@ def main() -> int:
         fail("P0 local model LAB selftest returned invalid JSON")
     if (
         local_worker.get("status") != "PASS"
-        or local_worker.get("tests", 0) < 19
+        or local_worker.get("tests") != 21
+        or not {"legacy_qa_blocked_before_input",
+                "legacy_run_blocked_before_input",
+                "legacy_verify_blocked_before_input",
+                "legacy_env_spoof_denied"}.issubset(set(local_worker.get("checks", [])))
         or local_worker.get("actual_model_invocations") != 0
         or local_worker.get("live_model_agent_proven_by_selftest") is not False
         or local_worker.get("paid_api_calls") != 0
     ):
         fail("P0 local model LAB selftest failed or misclaimed actual inference")
+    for command in ("run", "verify"):
+        denial = subprocess.run(
+            [sys.executable, "-B", str(local_v1_source), command,
+             "--envelope", "/p0-legacy-never-exists-envelope",
+             "--receipt", "/p0-legacy-never-exists-receipt"],
+            cwd=ROOT, capture_output=True, text=True, timeout=8)
+        try:
+            denied = json.loads(denial.stdout)
+        except ValueError:
+            fail("P0 v1 Worker produced invalid fail-closed denial")
+        if (denial.returncode != 2
+                or denied.get("status") != "FAIL_CLOSED"
+                or denied.get("reason") != "P0_GENERATED_SOURCE_OS_ISOLATION_NOT_ADMITTED"):
+            fail("P0 v1 unisolated run/verify CLI falsely admitted: " + command)
 
     # Past REAL two-host model invocations are attested by hashed receipts.
     # This separate pure verifier only reads static evidence, never runs a model.
