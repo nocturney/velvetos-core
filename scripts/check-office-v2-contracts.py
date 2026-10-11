@@ -173,6 +173,59 @@ def main() -> int:
         or evidence_summary.get("operator_reissue_verified") is not True):
         fail("P0 concurrency evidence incomplete or exaggerated")
     
+    # The first-generation LOCAL Aider and Windows Job supervisor must never
+    # execute generated source in unisolated Chris SYSTEM or Mac UID501.
+    # Historical original sources remain byte-for-byte QUARANTINED .py.txt;
+    # original Worker model run receipts still bind the original SHA, not the
+    # guarded modern CLI facade. No historical data/expected hashes are changed.
+    old_worker_archive = (P2 / "quarantined-worker-sources-2026-10-11"
+                          / "vf_office_v2_p0_local_model_worker-original.py.txt")
+    old_supervisor_archive = (P2 / "quarantined-worker-sources-2026-10-11"
+                              / "vf_office_v2_p0_supervised_aider_lab-original.py.txt")
+    for archive, expected in (
+        (old_worker_archive,
+         "7b4cb176c9c66351f9658c08589f45ec94d50c2a8b6450fe8e5cb1d8f09d86f7"),
+        (old_supervisor_archive,
+         "505dc727d8dc539ebf4b2c43e309ec6e7723393aff0899938efdea595e85d461"),
+        (ROOT / "scripts" / "vf_office_v2_p0_local_model_worker.py",
+         "299dbfba2909790d66dba261ffc98bf308956f687136145e475473a2e439bbf2"),
+        (ROOT / "scripts" / "vf_office_v2_p0_supervised_aider_lab.py",
+         "7d104cb55a7d2d87f2022f65bb4ff15c0e5aca6eb210b6bd4081df4cfd641586"),
+    ):
+        if not archive.is_file() or hashlib.sha256(archive.read_bytes()).hexdigest() != expected:
+            fail("P0 legacy generated-code Worker archival or new guard byte SHA drift")
+    for source, arguments in (
+        ("vf_office_v2_p0_local_model_worker.py",
+         ("run", "--envelope", "/invalid/never-read-envelope.json",
+          "--receipt", "/invalid/never-created-receipt.json")),
+        ("vf_office_v2_p0_local_model_worker.py",
+         ("verify", "--envelope", "/invalid/never-read-envelope.json",
+          "--receipt", "/invalid/never-created-receipt.json")),
+        ("vf_office_v2_p0_supervised_aider_lab.py",
+         ("run", "--worker", "/invalid/old-worker.py", "--envelope",
+          "/invalid/never-read-envelope.json", "--receipt",
+          "/invalid/never-created-receipt.json", "--scratch",
+          "/invalid/never-created-scratch", "--mode", "complete",
+          "--output", "/invalid/never-created-report.json")),
+        ("vf_office_v2_p0_supervised_aider_lab.py",
+         ("_helper", "--worker", "/invalid/old-worker.py", "--envelope",
+          "/invalid/never-read-envelope.json", "--receipt",
+          "/invalid/never-created-receipt.json", "--scratch",
+          "/invalid/never-created-scratch")),
+    ):
+        guarded = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / source), *arguments],
+            cwd=ROOT, text=True, capture_output=True, timeout=10)
+        try:
+            negative = json.loads(guarded.stdout)
+        except json.JSONDecodeError:
+            fail("P0 legacy Worker entrypoint denial output was not JSON")
+        if (guarded.returncode != 2
+                or negative.get("status") != "FAIL_CLOSED"
+                or negative.get("reason") !=
+                    "P0_GENERATED_SOURCE_OS_ISOLATION_NOT_ADMITTED"):
+            fail("P0 legacy Worker code-execution entrypoint FALSE ADMISSION")
+
     # Distinct #612 v1 model-aware Task Envelope. Only its OFFLINE contract
     # selftest runs in CI; it MUST NOT invoke Ollama, Aider or production effects.
     local_worker_check = subprocess.run(
@@ -191,6 +244,8 @@ def main() -> int:
         or local_worker.get("actual_model_invocations") != 0
         or local_worker.get("live_model_agent_proven_by_selftest") is not False
         or local_worker.get("paid_api_calls") != 0
+        or local_worker.get("legacy_live_run_admitted") is not False
+        or local_worker.get("generated_code_runtime_qa_admitted") is not False
     ):
         fail("P0 local model LAB selftest failed or misclaimed actual inference")
 
@@ -1880,7 +1935,7 @@ def main() -> int:
     pinned_check = subprocess.run(
         [sys.executable, str(ROOT / "scripts" / "vf_office_v2_p0_live_birth_evidence.py"),
          "--evidence", str(P2 / "p0-real-aider-kernel-birth-2026-10-09.json"),
-         "--worker-source", str(ROOT / "scripts" / "vf_office_v2_p0_local_model_worker.py")],
+         "--worker-source", str(old_worker_archive)],
         cwd=ROOT, text=True, capture_output=True, timeout=25,
     )
     if pinned_check.returncode != 0:
