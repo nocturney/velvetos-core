@@ -27,10 +27,11 @@ import vf_office_v2_p0_hosted_synthetic_qa_lab as hosted
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = "velvetos.office-v2.p0-hosted-docker-boundary-negative.v0"
 IMAGE_TAG = "python:3.11-slim-bookworm"
-# Discover image digest on a throwaway CI runner first. Do not call that a
-# cross-run image pin. Replace with exact observed manifest digest after
-# independently verifying the first read-only lab; then re-run exact head.
-EXPECTED_IMAGE_DIGEST = ""
+# Exact OCI RepoDigest observed on the first no-token hosted GitHub runner:
+# run 38109485054, result PASS_DISCOVERY_ONLY_IMAGE_NOT_CROSSRUN_PINNED.
+# Pull this immutable digest directly; do not use the mutable tag for admitted
+# checks. A new protected-head run must independently verify this same digest.
+EXPECTED_IMAGE_DIGEST = "python@sha256:0a310eeecf4e1f5a0743f9a6520c90c88d089c903ca5fd283f501e3a805f5f89"
 SOURCE_CASES = (
     {"label": "mac-existing-tag", "fixture": "canonical-tag-v1",
      "source": "docs/implementation/office-v2/phase2/quarantined-agent-sources-2026-10-10/parallel-mac-tag-20261010.py",
@@ -317,8 +318,9 @@ def run_real_hosted_lab():
     start = time.monotonic()
     require(docker_command(["docker", "version", "--format", "{{.Server.Version}}"],
                            timeout=12), "DOCKER_DAEMON_NOT_AVAILABLE")
-    docker_command(["docker", "pull", "--quiet", IMAGE_TAG], timeout=125)
-    image = json.loads(docker_command(["docker", "image", "inspect", IMAGE_TAG],
+    image_ref = EXPECTED_IMAGE_DIGEST or IMAGE_TAG
+    docker_command(["docker", "pull", "--quiet", image_ref], timeout=125)
+    image = json.loads(docker_command(["docker", "image", "inspect", image_ref],
                                       timeout=12))[0]
     image_id = image["Id"]
     digs = image["RepoDigests"]
