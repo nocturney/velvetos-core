@@ -43,6 +43,14 @@ class Refuse(Exception):
     pass
 
 
+def require_isolated_generated_code_executor():
+    # No admitted OS sandbox/principal exists on Chris SYSTEM Session0 or
+    # Mac remote UID501. Never run local model-generated Python or Aider.
+    # Deliberately NO environment/argument/task bypass; historical receipts
+    # remain read-only and are verified against the immutable archive.
+    raise Refuse("P0_GENERATED_SOURCE_OS_ISOLATION_NOT_ADMITTED")
+
+
 def canonical(obj):
     return json.dumps(obj, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
 
@@ -216,7 +224,8 @@ def preflight(env, *, network=True):
 
 
 def qa_fresh(root, candidate, hidden):
-    """A separate clean local Git clone; no model or network; original tests plus blind QA."""
+    """Historical independent QA; block local execution until OS isolation."""
+    require_isolated_generated_code_executor()
     with tempfile.TemporaryDirectory(prefix="vf-office-p0-aider-qa-") as tmp:
         clone = pathlib.Path(tmp) / "replay"
         p = subprocess.run(["git", "clone", "--quiet", "--no-hardlinks", "--local",
@@ -252,7 +261,8 @@ def qa_fresh(root, candidate, hidden):
 
 
 def check_run(env, receipt):
-    """Readback verification replays independent QA; never reruns the model."""
+    """Readback verification could execute generated code; deny locally."""
+    require_isolated_generated_code_executor()
     if receipt.get("schema") != RECEIPT or receipt.get("state") != "SUCCEEDED":
         raise Refuse("RECEIPT_NOT_SUCCEEDED")
     if receipt.get("receipt_sha256") != digest({k: v for k, v in receipt.items() if k != "receipt_sha256"}):
@@ -404,6 +414,7 @@ def verify_kernel_birth_pin(env, receipt):
         raise Refuse("KERNEL_PIN_BINDING_NOT_VERIFIED")
 
 def run(task, output):
+    require_isolated_generated_code_executor()
     task = pathlib.Path(task).resolve()
     receipt = pathlib.Path(output).resolve()
     journal = receipt.with_suffix(receipt.suffix + ".running")
@@ -603,12 +614,18 @@ def selftest():
             b"    cleaned = re.sub(r'[^a-z0-9]+', '-', value.lower()).strip('-')\n"
             b"    return cleaned or 'untitled'\n"
         )
-        replay_good = qa_fresh(root, fixed_source, qa)
-        assert replay_good["pass"] is True, replay_good
-        checks.append("external_hidden_qa_imports_fresh_clone")
-        replay_bad = qa_fresh(root, (root / "slug.py").read_bytes(), qa)
-        assert replay_bad["pass"] is False, replay_bad
-        checks.append("bad_source_fails_independent_qa")
+        # Historical known-good and known-bad source bytes are never run in
+        # the local unisolated QA subprocess, including inside selftest.
+        for label, candidate in (
+                ("known_generated_source_qa_blocked", fixed_source),
+                ("bad_generated_source_qa_blocked", (root / "slug.py").read_bytes())):
+            try:
+                qa_fresh(root, candidate, qa)
+            except Refuse as exc:
+                assert str(exc) == "P0_GENERATED_SOURCE_OS_ISOLATION_NOT_ADMITTED"
+            else:
+                raise AssertionError("LOCAL_GENERATED_CODE_QA_FALSE_ADMITTED")
+            checks.append(label)
         scenarios = [
             ("wrong_kind", ("executor", "kind", "CODEX_CLI"), "UNAPPROVED_EXECUTOR_KIND"),
             ("cloud_url", ("executor", "ollama_port", 8443), "UNAPPROVED_MODEL_OR_PORT"),
@@ -649,7 +666,9 @@ def selftest():
         checks.append("model_proof_not_fabricated")
     return {"status": "PASS", "tests": len(checks),
             "checks": checks, "actual_model_invocations": 0,
-            "live_model_agent_proven_by_selftest": False, "paid_api_calls": 0}
+            "live_model_agent_proven_by_selftest": False, "paid_api_calls": 0,
+        "legacy_live_run_admitted": False,
+        "generated_code_runtime_qa_admitted": False}
 
 
 def main():
@@ -663,6 +682,8 @@ def main():
     v.add_argument("--envelope", required=True)
     v.add_argument("--receipt", required=True)
     args = parser.parse_args()
+    if args.command != "selftest":
+        require_isolated_generated_code_executor()
     if args.command == "selftest":
         res = selftest()
     elif args.command == "run":
