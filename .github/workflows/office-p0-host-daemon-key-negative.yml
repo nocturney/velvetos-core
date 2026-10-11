@@ -1,0 +1,49 @@
+name: Office P0 Docker Daemon Signer Key NEGATIVE LAB
+
+# #604 intentional negative test only. Access only a disposable synthetic key
+# inside a fresh GitHub-hosted guest. DO NOT export the key or its MAC.
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/office-p0-host-daemon-key-negative.yml"
+      - "scripts/vf_office_v2_604_host_docker_daemon_key_negative.py"
+      - ".gitattributes"
+
+permissions: {}
+
+jobs:
+  privileged-host-daemon-negative-only:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: No persisted checkout credential
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Prohibit write token and unexpected credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${RUNNER_ENVIRONMENT:-}" = "github-hosted"
+          test "${RUNNER_OS:-}" = "Linux"
+          test "${GITHUB_REPOSITORY:-}" = "nocturney/velvetos-core"
+          test -z "${GITHUB_TOKEN:-}"
+          test -z "${GH_TOKEN:-}"
+          if git config --local --get-regexp '^http[.].*[.]extraheader$' >/dev/null 2>&1; then
+            echo "::error::Checkout credential accidentally persisted"
+            exit 1
+          fi
+
+      - name: Pure preflight no Docker no keys
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B scripts/vf_office_v2_604_host_docker_daemon_key_negative.py selftest
+
+      - name: Prove host Docker daemon bypasses synthetic guest key isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B scripts/vf_office_v2_604_host_docker_daemon_key_negative.py run
