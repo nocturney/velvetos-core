@@ -1,0 +1,22 @@
+def canonical_tag(text: str) -> str:
+    result = []
+    prev_is_sep = True
+    for char in text:
+        if 'a' <= char <= 'z' or 'A' <= char <= 'Z' or '0' <= char <= '9':
+            if not prev_is_sep:
+                result.append(char)
+            else:
+                result.append('_')
+            prev_is_sep = False
+        else:
+            if prev_is_sep:
+                continue
+            result.append('_')
+            prev_is_sep = True
+    if not result:
+        return "untitled"
+    while result and result[-1] == '_':
+        result.pop()
+    while result and result[0] == '_':
+        result.pop(0)
+    return ''.join(result)
