@@ -1,3 +1,11 @@
+# Preserve the actual Git-index LF bytes for portable trusted text on Windows,
+# even when the host Git core.autocrlf is true. Git-index survey at base main:
+# *.md 1280/1280 LF; *.py 551 LF + 1 historic CRLF + 2 empty;
+# *.json 868 LF + 5 historic CRLF + 1 mixed. Preserve exceptions below.
+*.py text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+
 scripts/vf_task_state.py text eol=lf
 scripts/check-vf-task-state.py text eol=lf
 
@@ -28,7 +36,7 @@ packages/vfharness/state/pr228-rollout/* text eol=lf
 # Byte-for-byte original Mac and Windows model outputs (quarantined LAB).
 # Disable line-ending conversion entirely: originals may use LF or CRLF.
 # Keep original trailing spaces for SHA/Worker receipt provenance.
-/docs/implementation/office-v2/phase2/quarantined-agent-sources-2026-10-10/*.py -text -whitespace
+/docs/implementation/office-v2/phase2/quarantined-agent-sources-2026-10-10/*.py -text !eol -whitespace
 
 # Office P0 hosted QA LAB sources are SHA-256 byte pinned and must not
 # acquire platform-specific CRLF from Windows checkout settings.
@@ -46,3 +54,12 @@ packages/vfharness/state/pr228-rollout/* text eol=lf
 # Exact-byte, read-only #604 synthetic signer/key-custody experiment.
 /scripts/vf_office_v2_604_hosted_signer_custody_lab.py text eol=lf
 /.github/workflows/office-p0-synthetic-signer-custody-lab.yml text eol=lf
+
+# CRLF and mixed-index historical Git blobs: retain EXACT original bytes.
+# These six JSON archives have i/crlf or i/mixed; NEVER rewrite them to LF.
+/docs/implementation/office-v2/phase0/authority-map-v0.1.json -text !eol
+/docs/implementation/office-v2/phase0/credential-trust-classes-v0.json -text !eol
+/docs/implementation/office-v2/phase3b/production-promotion-v0.json -text !eol
+/packages/vfharness/devtools/creative-craft/evals/fixtures/manifest.json -text !eol
+/packages/vfharness/devtools/creative-craft/skill/evals/fixtures/manifest.json -text !eol
+/packages/velvetos/policy/sensor-registry.json -text !eol
