@@ -61,6 +61,10 @@ packages/vfharness/state/pr228-rollout/* text eol=lf
 /scripts/vf_office_v2_604_hosted_signer_custody_lab.py text eol=lf
 /.github/workflows/office-p0-synthetic-signer-custody-lab.yml text eol=lf
 
+# Immutable source witness for the v1 Worker version actually executed in
+# 2026-10-09 birth-pinned model receipts. Preserve exact original bytes.
+/docs/implementation/office-v2/phase2/p0-612-historical-v1-worker-source-030eccbe.txt -text !eol
+
 # CRLF and mixed-index historical Git blobs: retain EXACT original bytes.
 # These six JSON archives have i/crlf or i/mixed; NEVER rewrite them to LF.
 /docs/implementation/office-v2/phase0/authority-map-v0.1.json -text !eol
