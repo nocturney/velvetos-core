@@ -1904,7 +1904,7 @@ def main() -> int:
     pinned_check = subprocess.run(
         [sys.executable, str(ROOT / "scripts" / "vf_office_v2_p0_live_birth_evidence.py"),
          "--evidence", str(P2 / "p0-real-aider-kernel-birth-2026-10-09.json"),
-         "--worker-source", str(ROOT / "scripts" / "vf_office_v2_p0_local_model_worker.py")],
+         "--worker-source", str(P2 / "p0-612-historical-v1-worker-source-030eccbe.txt")],
         cwd=ROOT, text=True, capture_output=True, timeout=25,
     )
     if pinned_check.returncode != 0:
