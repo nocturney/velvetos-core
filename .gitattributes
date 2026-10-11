@@ -22,3 +22,7 @@ packages/vfharness/state/pr228-rollout/* text eol=lf
 # Exact-byte host-side Docker security manifest and reusable offline probe.
 /scripts/vf_office_v2_p0_hosted_container_boundary_lab.py text eol=lf
 /.github/workflows/office-p0-hosted-docker-boundary-lab.yml text eol=lf
+
+# Exact-byte, read-only #604 synthetic signer/key-custody experiment.
+/scripts/vf_office_v2_604_hosted_signer_custody_lab.py text eol=lf
+/.github/workflows/office-p0-synthetic-signer-custody-lab.yml text eol=lf
