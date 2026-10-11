@@ -6,6 +6,11 @@ scripts/check-vf-task-state.py text eol=lf
 # CRLF and invalidate Office's pinned raw SHA-256/source attestations.
 /scripts/*.py text eol=lf
 /scripts/**/*.py text eol=lf
+
+# Historical Office Phase2 JSON receipts are SHA-256 pinned in Office sensors.
+# Every tracked Phase2 JSON blob is LF in Git; keep that byte identity on
+# Windows rather than silently converting all 51 receipt files to CRLF.
+/docs/implementation/office-v2/phase2/*.json text eol=lf
 packages/vfharness/playbooks/skillstate.md text eol=lf
 packages/vfharness/state/swc-codex-001.json text eol=lf
 packages/vfharness/state/pr228-rollout/* text eol=lf
