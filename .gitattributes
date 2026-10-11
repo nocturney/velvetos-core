@@ -11,6 +11,11 @@ scripts/check-vf-task-state.py text eol=lf
 # Every tracked Phase2 JSON blob is LF in Git; keep that byte identity on
 # Windows rather than silently converting all 51 receipt files to CRLF.
 /docs/implementation/office-v2/phase2/*.json text eol=lf
+/docs/implementation/office-v2/phase2/**/*.json text eol=lf
+
+# Source-pinned Phase2 Markdown witness reports are Git LF as well, not CRLF.
+/docs/implementation/office-v2/phase2/*.md text eol=lf
+/docs/implementation/office-v2/phase2/**/*.md text eol=lf
 packages/vfharness/playbooks/skillstate.md text eol=lf
 packages/vfharness/state/swc-codex-001.json text eol=lf
 packages/vfharness/state/pr228-rollout/* text eol=lf
