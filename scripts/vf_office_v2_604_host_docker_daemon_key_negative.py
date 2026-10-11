@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
-"""#604: prove the Docker HOST daemon, unlike a sibling guest, can read a
-synthetic signer tmpfs key. NEVER access real secrets or model outputs.
+"""#604: prove the Docker HOST daemon, unlike a sibling guest, can
+initiate synthetic key USE inside the signer guest without exporting bytes.
+NEVER access real secrets or model outputs.
 Only admitted on a temporary GitHub-hosted PR runner with permissions:{}.
 """
 from __future__ import annotations
 
 import hashlib
 import hmac
-import io
 import json
 import os
 from pathlib import Path
 import re
 import subprocess
 import sys
-import tarfile
 import tempfile
 
 import vf_office_v2_604_hosted_signer_custody_lab as signer
@@ -33,27 +32,20 @@ def require(value, reason):
         raise Refused(reason)
 
 
-def checked_tar(blob):
-    """Read one 32-byte synthetic key from a Docker cp stdout TAR, in memory."""
-    require(type(blob) is bytes and 512 <= len(blob) < 128 * 1024,
-            "DOCKER_CP_TAR_SIZE_UNEXPECTED")
-    with tarfile.open(fileobj=io.BytesIO(blob), mode="r:") as tf:
-        members = tf.getmembers()
-        require(len(members) == 1 and members[0].isfile()
-                and Path(members[0].name).name == "signer-only.key"
-                and members[0].size == 32,
-                "DOCKER_CP_ARCHIVE_NOT_EXACT_ONE_SYNTHETIC_KEY")
-        entry = tf.extractfile(members[0])
-        require(entry is not None, "DOCKER_CP_KEY_ENTRY_UNAVAILABLE")
-        key = entry.read()
-    require(len(key) == 32, "SYNTHETIC_KEY_LENGTH_CHANGED")
-    return key
-
-
 def daemon_command_args(container_id):
+    """Daemon-initiated code running as signer UID, never exporting key bytes."""
     require(type(container_id) is str and CID.fullmatch(container_id),
             "INVALID_OWNED_SYNTHETIC_CONTAINER_ID")
-    return ["docker", "cp", container_id + ":/sink/signer-only.key", "-"]
+    statement = (
+        "import hashlib,hmac,json,os,pathlib;"
+        "key=pathlib.Path('/sink/signer-only.key').read_bytes();"
+        "assert len(key)==32;"
+        "msg=" + repr(signer.MESSAGE.encode("utf-8")) + ";"
+        "print(json.dumps({'uid':os.getuid(),'key_length':len(key),"
+        "'mac':hmac.new(key,msg,hashlib.sha256).hexdigest()}))"
+    )
+    return ["docker", "exec", "--user=65534:65534", container_id,
+            "python", "-B", "-c", statement]
 
 
 def selftest():
@@ -65,10 +57,14 @@ def selftest():
             "FRESH_ONLY_SYNTHETIC_KEY_SOURCE_NOT_PRESENT")
     tests = ["pinned_image", "synthetic_only_fresh_key"]
     cid = "a" * 64
-    require(daemon_command_args(cid) ==
-            ["docker", "cp", cid + ":/sink/signer-only.key", "-"],
-            "DAEMON_CLI_ARGUMENTS_CHANGED")
-    tests.append("exact_docker_cp_single_owned_container")
+    args = daemon_command_args(cid)
+    require(args[:6] == ["docker", "exec", "--user=65534:65534",
+                          cid, "python", "-B"]
+            and args[6] == "-c"
+            and "read_bytes()" in args[7]
+            and "key_length" in args[7],
+            "DAEMON_EXEC_SOURCE_OR_CLI_CHANGED")
+    tests.append("exact_daemon_initiated_signer_key_use")
     for bad in ("", "0", "xyz", cid + "a", "c" * 63,
                 "a" * 20 + ";/etc/passwd", "sha256:" + "a" * 64):
         try:
@@ -128,34 +124,40 @@ def run():
             before = json.loads(signer.docker(["docker", "inspect", cid],
                                               timeout=12))[0]["State"]
             require(before["Running"] is True, "SIGNER_NOT_RUNNING_WHILE_DAEMON_ATTACKS")
-            # Intentionally proves privileged host Docker API access.
-            # stdout TAR is captured directly in host RAM; NO secret bytes,
-            # TAR, or key-derived value are logged/persisted to disk.
-            copied = subprocess.run(daemon_command_args(cid),
-                                    stdin=subprocess.DEVNULL,
-                                    capture_output=True, timeout=15)
-            require(copied.returncode == 0, "DAEMON_REFUSED_OWN_GUEST_KEY_COPY")
-            key = checked_tar(copied.stdout)
-            expected = hmac.new(key, signer.MESSAGE.encode("utf-8"),
-                                hashlib.sha256).hexdigest()
-            require(hmac.compare_digest(expected, receipt["mac"]),
-                    "COPIED_KEY_DID_NOT_MATCH_LIVE_SIGNER_HMAC")
+            # The first PR-head Docker cp archive probe was refused by Docker.
+            # Instead, test the more direct HOST privilege: daemon-initiated
+            # process creation INSIDE the owned signer namespace as its UID.
+            # The process signs the fixed synthetic challenge without exporting
+            # the secret key or TAR bytes. Its printed HMAC is kept in RAM.
+            invoked = subprocess.run(daemon_command_args(cid),
+                                     stdin=subprocess.DEVNULL,
+                                     capture_output=True, text=True, timeout=15)
+            require(invoked.returncode == 0,
+                    "DAEMON_REFUSED_INITIATED_SIGNER_KEY_USE")
+            used = json.loads(invoked.stdout.strip())
+            require(used.get("uid") == 65534
+                    and used.get("key_length") == 32
+                    and type(used.get("mac")) is str
+                    and SHA.fullmatch(used["mac"])
+                    and hmac.compare_digest(used["mac"], receipt["mac"]),
+                    "DAEMON_EXEC_DID_NOT_USE_CURRENT_SYNTHETIC_SIGNER_KEY")
             after = json.loads(signer.docker(["docker", "inspect", cid],
                                              timeout=12))[0]["State"]
             require(after["Running"] is True, "SIGNER_EXITED_DURING_DAEMON_ATTACK")
             return {
                 "schema": SCHEMA,
-                "status": "PASS_EXPECTED_NEGATIVE_PRIVILEGED_HOST_DAEMON_READS_SIGNER_KEY",
+                "status": "PASS_EXPECTED_NEGATIVE_DAEMON_CAN_INVOKE_SYNTHETIC_SIGNER_KEY_USE",
                 "github_run_id": os.environ["GITHUB_RUN_ID"],
                 "oci_digest": signer.IMAGE,
                 "image_id": image_id,
                 "signer_uid": config["uid"],
                 "signer_mounts": config["mounts"],
                 "signer_only_tmpfs": config["sink_only_private_tmpfs"],
-                "host_docker_daemon_key_access_succeeded": True,
-                "key_bytes_or_mac_logged": False,
+                "host_daemon_initiated_live_signer_key_use": True,
+                "raw_key_bytes_logged_or_exported": False,
+                "docker_cp_archive_test_succeeded": False,
                 "private_synthetic_key_generated_inside_guest_only": True,
-                "signer_live_before_and_after_copy": True,
+                "signer_live_before_and_after_daemon_exec": True,
                 "same_uid_sibling_guest_cannot_read_key_proven_by_prior_pr": True,
                 "production_git_secret_custody_safe": False,
                 "host_daemon_trust_required_for_signer": True,
@@ -183,7 +185,7 @@ if __name__ == "__main__":
         main()
     except (Refused, signer.Refused, signer.prior.Refused,
             signer.prior.hosted.Refused, OSError, ValueError, KeyError,
-            TypeError, tarfile.TarError, subprocess.TimeoutExpired) as err:
+            TypeError, subprocess.TimeoutExpired) as err:
         print(json.dumps({"status": "FAIL_CLOSED",
                           "reason": str(err)[:180],
                           "production_authority": False,
