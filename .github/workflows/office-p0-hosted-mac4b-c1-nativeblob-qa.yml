@@ -1,0 +1,23 @@
+name: Office P0 Mac4B C1 Native Git Blob QA LAB
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/office-p0-hosted-mac4b-c1-nativeblob-qa.yml'
+      - 'scripts/vf_office_v2_p0_hosted_mac4b_c1_nativeblob_qa.py'
+      - 'docs/implementation/office-v2/phase2/p0-612-mac-qwen4b-c1-nativeblob-hostedqa-2026-10-11.json'
+      - 'docs/implementation/office-v2/phase2/quarantined-new-model-sources-2026-10-11/mac-qwen4b-tag-byteexact-c1.py.txt'
+permissions: {}
+jobs:
+  credential-free-exact-original-source-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    permissions: {}
+    steps:
+      - name: Public checkout without retained GitHub credentials
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Exact Git blob and original C1 AST policy negatives (no execution)
+        run: python3 -B scripts/vf_office_v2_p0_hosted_mac4b_c1_nativeblob_qa.py selftest
+      - name: Execute exact C1 source only in pinned no-network nonroot Docker guest
+        run: python3 -B scripts/vf_office_v2_p0_hosted_mac4b_c1_nativeblob_qa.py run
