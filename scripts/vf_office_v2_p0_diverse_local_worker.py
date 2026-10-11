@@ -457,7 +457,27 @@ def _guarded_capture_and_wait(child, capture, wait):
     return pin, stdout, stderr
 
 
-def verify_receipt(env,receipt):
+def _require_success_marker_state(out, *, prepublish=False):
+    """Fail closed on an unresolved RUNNING journal or child-cleanup outcome.
+
+    The internal prepublication check is NOT a successful worker receipt.
+    A public final verify demands an original receipt with no ambiguity.
+    """
+    final = out / "receipt.json"
+    running = out / "receipt.json.running"
+    unknown = out / "child-cleanup.unknown.json"
+    def present(path):
+        return path.exists() or path.is_symlink()
+    require(not present(unknown), "CHILD_CLEANUP_UNKNOWN_NOT_SUCCESS")
+    if prepublish:
+        require(not present(final) and running.is_file() and
+                not running.is_symlink(), "PREPUBLISH_RECEIPT_STATE_AMBIGUOUS")
+    else:
+        require(final.is_file() and not final.is_symlink() and
+                not present(running), "FINAL_RECEIPT_STATE_AMBIGUOUS")
+
+
+def verify_receipt(env,receipt,*,prepublish=False):
     require(receipt.get("schema")==RECEIPT
             and receipt.get("state")=="SUCCEEDED"
             and receipt.get("receipt_sha256")==
@@ -471,6 +491,7 @@ def verify_receipt(env,receipt):
             "NOT_INDEPENDENTLY_VALID_RECEIPT")
     root,spec=check(env,fresh=False)
     output=root.parent/"output"
+    _require_success_marker_state(output,prepublish=prepublish)
     require(receipt.get("base_sha")==env["base_sha"]
             and receipt.get("branch")==env["branch"]
             and receipt.get("model")==env["executor"]["model"]
@@ -516,7 +537,8 @@ def verify_receipt(env,receipt):
                       (root/spec["target"]).read_bytes())
     require(qa["pass"] and qa==receipt.get("independent_qa"),
             "INDEPENDENT_HIDDEN_QA_DRIFT")
-    return {"status":"PASS","task_id":env["task_id"],
+    return {"status":("PREPUBLISH_CONTENT_VERIFIED_NOT_SUCCESS"
+                      if prepublish else "PASS"),"task_id":env["task_id"],
             "model_invocations_min":1,"exact_model_calls_known":False,
             "production_authority":False,"cross_host_lease_proven":False}
 
@@ -619,9 +641,13 @@ def execute(raw_env,raw_receipt):
       "distributed_fencing_verified":False,"all_orphans_excluded":False,
     }
     result["receipt_sha256"]=seal(result)
-    verify_receipt(env,result) # replays independent QA BEFORE publishing SUCCESS
+    preflight=verify_receipt(env,result,prepublish=True)
+    require(preflight["status"]=="PREPUBLISH_CONTENT_VERIFIED_NOT_SUCCESS",
+            "PREPUBLISH_IS_NOT_FINAL_SUCCESS")
     old.save_new(receipt_path,result)
     (out/"receipt.json.running").unlink()
+    final=verify_receipt(env,result)
+    require(final["status"]=="PASS","FINAL_SUCCESS_RECEIPT_NOT_VERIFIED")
     return {"status":"SUCCEEDED","task_id":env["task_id"],
             "elapsed_seconds":result["elapsed_seconds"],
             "source_sha256":result["source_sha256"],
@@ -949,7 +975,35 @@ def selftest():
     finally:
         if prior is None: os.environ.pop(marker,None)
         else: os.environ[marker]=prior
-    require(all(checks) and len(checks)==48,"NEGATIVE_TEST_COUNT_DRIFT")
+    # Model-free marker state negatives; a crash at receipt commit is NOT PASS.
+    marker_cases = [
+        ((),True,False),
+        (("receipt.json.running",),True,True),
+        (("receipt.json",),True,False),
+        (("receipt.json.running","receipt.json"),True,False),
+        (("receipt.json.running","child-cleanup.unknown.json"),True,False),
+        (("receipt.json",),False,True),
+        (("receipt.json.running",),False,False),
+        ((),False,False),
+        (("receipt.json","receipt.json.running"),False,False),
+        (("receipt.json","child-cleanup.unknown.json"),False,False),
+        (("receipt.json.running","child-cleanup.unknown.json"),False,False),
+        (("receipt.json","receipt.json.running","child-cleanup.unknown.json"),
+         False,False),
+    ]
+    for present,prepublish,accepted in marker_cases:
+        with tempfile.TemporaryDirectory(prefix="vf-office612-success-markers-") as tmp:
+            root=Path(tmp)
+            for marker in present:
+                (root/marker).write_bytes(b"synthetic")
+            try:
+                _require_success_marker_state(root,prepublish=prepublish)
+            except Refused:
+                actual=False
+            else:
+                actual=True
+            checks.append(actual==accepted)
+    require(all(checks) and len(checks)==60,"NEGATIVE_TEST_COUNT_DRIFT")
     return {"status":"PASS_OFFLINE","tests":len(checks),
             "model_invocations":0,"different_tasks_model_proven":False,
             "automatic_retry":False,"production_authority":False,
