@@ -15,8 +15,10 @@ on:
 permissions: {}
 
 jobs:
-  pretrusted-source-only-docker-qa:
-    if: ${{ github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success' }}
+  # Only explicit LAB request branches are eligible, not every unrelated PR.
+  # This affects CI cost only; the trusted runner independently verifies hashes.
+    pretrusted-source-only-docker-qa:
+    if: ${{ github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'test/office612-pretrusted-qa-') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 8
     permissions: {}
