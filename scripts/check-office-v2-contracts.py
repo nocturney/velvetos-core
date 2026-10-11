@@ -2727,6 +2727,57 @@ def main() -> int:
     ):
         fail("#604 writable guest report falsely admitted as a VM witness")
 
+    # #604: Real Host Compute events from ANOTHER VM must not be admitted
+    # as a trusted Windows Sandbox witness for this specific public WSB.
+    # Only OFFLINE portably deterministic identity-negative tests run in CI.
+    # The separate Windows collector is SHA-pinned but must NOT read OS
+    # event logs, start a guest, handle credentials or access network in CI.
+    host_event_probe = (
+        ROOT / "scripts" / "vf_office_v2_604_wsb_host_compute_probe.ps1"
+    )
+    host_event_gate = (
+        ROOT / "scripts" / "vf_office_v2_604_wsb_etw_identity_gate.py"
+    )
+    for artifact, exact in (
+        (host_event_probe,
+         "6c074d327ffbea8c2659cc2f39db3c542616c2e6f381b3f1e2fe3327dcea6f89"),
+        (host_event_gate,
+         "72bb8876b8c8819876ee73d4390426542431dafce3e72ea2b9a92d92147d1b86"),
+    ):
+        if hashlib.sha256(artifact.read_bytes()).hexdigest() != exact:
+            fail("#604 read-only host compute correlation source pin drift")
+    event_negative = subprocess.run(
+        [sys.executable, str(host_event_gate), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=15,
+    )
+    if event_negative.returncode != 0:
+        fail("#604 cross-guest Host Compute event negative selftest failed: "
+             + event_negative.stdout[:160] + event_negative.stderr[:160])
+    try:
+        host_event_result = json.loads(event_negative.stdout)
+    except json.JSONDecodeError:
+        fail("#604 cross-guest event negative result is not JSON")
+    if (
+        host_event_result.get("status") !=
+            "PASS_30_OFFLINE_CROSS_GUEST_IDENTITY_NEGATIVES_NOT_VM_ATTESTATION"
+        or host_event_result.get("tests") != 30
+        or host_event_result.get("admission_allowed") is not False
+        or host_event_result.get("actual_vm_launched") is not False
+        or host_event_result.get("guest_session_proven") is not False
+        or host_event_result.get("host_log_is_independent_cryptographic_attestation") is not False
+        or host_event_result.get("windows_session1_authorized_launch_witness_proven") is not False
+        or host_event_result.get("independent_user_session_witness_available") is not False
+        or host_event_result.get("sandbox_config_and_mounts_enforced_proven") is not False
+        or host_event_result.get("network_isolation_proven") is not False
+        or host_event_result.get("source_model_code_executed") is not False
+        or host_event_result.get("native_git_sink_credential_custody_proven") is not False
+        or host_event_result.get("production_authority") is not False
+        or host_event_result.get("external_effects") != 0
+        or host_event_result.get("model_calls") != 0
+        or host_event_result.get("credential_accesses") != 0
+    ):
+        fail("#604 unrelated VM events overclaimed sandbox/Sink authority")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
