@@ -39,6 +39,13 @@ class Refused(Exception):
     pass
 
 
+def require_isolated_generated_code_executor():
+    # A Windows kill-on-close Job proves process lifetime, NOT filesystem or
+    # code isolation from SYSTEM Session0. Existing historical evidence stays
+    # pinned; no current helper/controller may launch a generated-code worker.
+    raise Refused("P0_GENERATED_SOURCE_OS_ISOLATION_NOT_ADMITTED")
+
+
 def ensure(ok, why):
     if not ok:
         raise Refused(why)
@@ -262,6 +269,7 @@ def selftest():
             "production_effects": 0, "retries_authorized": 0}
 
 def check_inputs(worker_script, envelope_path, receipt_path, scratch):
+    require_isolated_generated_code_executor()
     ensure(os.name == "nt", "WINDOWS_ONLY")
     checked_direct_python()
     worker_script = checked_pinned_source(worker_script)
@@ -302,6 +310,7 @@ def check_inputs(worker_script, envelope_path, receipt_path, scratch):
 
 
 def _helper(worker_script, envelope, receipt, scratch):
+    require_isolated_generated_code_executor()
     root = Path(scratch)
     gate = root / "go.flag"
     deadline = time.monotonic() + OWNER_TIMEOUT_SECONDS
@@ -342,6 +351,7 @@ def await_json(path, timeout, living=None):
 
 
 def controller(args):
+    require_isolated_generated_code_executor()
     checked_lab_output_paths(args.scratch, args.output)
     env,worker=check_inputs(args.worker,args.envelope,args.receipt,args.scratch)
     scratch=Path(args.scratch).absolute()
@@ -480,6 +490,8 @@ def main():
     run.add_argument("--mode",choices=["complete","interrupt"],required=True)
     run.add_argument("--output",required=True)
     args=p.parse_args()
+    if args.command!="selftest":
+        require_isolated_generated_code_executor()
     if args.command=="selftest":
         print(json.dumps(selftest(),sort_keys=True))
         return
