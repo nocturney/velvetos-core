@@ -1,6 +1,6 @@
 # Office 2.0 P0 / #604 — real same-UID separate-container synthetic signer custody LAB
 
-**Date:** 2026-10-11. **Pre-admission status: LAB ONLY / no real Git writer.** This is a concrete, reversible test of one remaining #604 trust-boundary hypothesis, NOT an integration or a fix for [#675](https://github.com/nocturney/velvetos-core/pull/675)'s SAME-macOS-UID disposable Sink key theft and [#676](https://github.com/nocturney/velvetos-core/pull/676)'s pre-existing hardlink alias. Those earlier proofs remain true on the unconfined Mac host.
+**Date:** 2026-10-11. **Observed lab verdict: SAME-UID SYNTHETIC MOUNT DENIAL PASS; real Git Sink remains NOT ADMITTED.** This is a concrete, reversible test of one remaining #604 trust-boundary hypothesis, NOT an integration or a fix for [#675](https://github.com/nocturney/velvetos-core/pull/675)'s SAME-macOS-UID disposable Sink key theft and [#676](https://github.com/nocturney/velvetos-core/pull/676)'s pre-existing hardlink alias. Those earlier proofs remain true on the unconfined Mac host.
 
 ## Threat model and explicitly limited positive claim
 
@@ -17,6 +17,12 @@ A separate **uncredentialed worker container** runs concurrently under the **SAM
 Source: `scripts/vf_office_v2_604_hosted_signer_custody_lab.py`. Local selftest runs no Docker or generated-source QA: **19/19 PASS** on Mac at creation. It checks immutable image binding, source negative controls, strict expected signer+worker argv and 14 attempted unsafe privilege/network/capacity mutations. An attempted local `run` returns `FAIL_CLOSED`, reason `GH_HOSTED_LAB_CONTEXT_NOT_PRESENT`, exit 2. Live GitHub-hosted evidence and independent Chris Windows static check must pass before any broader note.
 
 No branch protection, ruleset, system keychain, OS user, Windows Sandbox/WSL, Ollama service, established GitHub workflow, scheduler or production business action is changed by this work.
+
+## Actual real GitHub-hosted negative result
+
+[Protected PR #686 hosted signer run #38109984782](https://github.com/nocturney/velvetos-core/actions/runs/38109984782) completed **SUCCESS** with the receipt `PASS_HOSTED_SAMEUID_SYNTHETIC_SIGNER_CUSTODY_NEGATIVE`. This was a **real simultaneous two-container run**, not just offline policy simulation. Actual `docker inspect` showed both guests using the **same UID65534**, one read-only public bind each, network=none, CapDrop ALL, no-new-privileges and separate mount namespaces. Only the signer had a private `/sink` tmpfs. The signer created the synthetic key inside that tmpfs and stayed alive while the worker attacked. Worker direct-read, hardlink alias, symlink alias, fake-HMAC forging and outbound TCP all **denied**, with no exported GitHub write credential or Docker socket. The exact immutable OCI digest matched prior #685 and no new model was called.
+
+The reporter correctly records `exclusive_native_git_sink_authority_proven=false`, `host_daemon_cannot_read_key_proven=false`, `kernel_escape_resistance_proven=false` and `provider_epoch_and_github_commit_fenced=false`. Independent Chris Windows pure static readback **19/19 PASS**, local `run` refused before Docker; Mac 19/19 and Office contracts passed. Protected full-suite and post-merge evidence remain separate acceptance gates; do not promote them until their exact results pass.
 
 ## Red boundary that this cannot close
 
