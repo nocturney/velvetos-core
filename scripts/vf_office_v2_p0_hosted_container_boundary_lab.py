@@ -315,7 +315,7 @@ def run_real_hosted_lab():
     require(os.environ.get("GITHUB_RUN_ID", "").isdigit(),
             "NO_GITHUB_WORKFLOW_EVIDENCE_ID")
     start = time.monotonic()
-    require(docker_command(["docker", "info", "--format", "{{.Server.Version}}"],
+    require(docker_command(["docker", "version", "--format", "{{.Server.Version}}"],
                            timeout=12), "DOCKER_DAEMON_NOT_AVAILABLE")
     docker_command(["docker", "pull", "--quiet", IMAGE_TAG], timeout=125)
     image = json.loads(docker_command(["docker", "image", "inspect", IMAGE_TAG],
