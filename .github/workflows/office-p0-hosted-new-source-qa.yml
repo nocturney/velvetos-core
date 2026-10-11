@@ -1,0 +1,22 @@
+name: Office P0 New Local Model Source QA LAB
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/office-p0-hosted-new-source-qa.yml'
+      - 'scripts/vf_office_v2_p0_hosted_new_source_review_lab.py'
+      - 'docs/implementation/office-v2/phase2/quarantined-new-model-sources-2026-10-11/**'
+permissions: {}
+jobs:
+  source-execution-in-locked-public-docker-only:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    permissions: {}
+    steps:
+      - name: Credential-free public repository checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Pre-execution source hashes and AST negatives
+        run: python3 -B scripts/vf_office_v2_p0_hosted_new_source_review_lab.py selftest
+      - name: Bounded exact-two-source independent QA in locked Docker guests
+        run: python3 -B scripts/vf_office_v2_p0_hosted_new_source_review_lab.py run
