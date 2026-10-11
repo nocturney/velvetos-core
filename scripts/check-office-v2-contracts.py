@@ -2690,6 +2690,43 @@ def main() -> int:
         ):
             fail("#604 macOS sandbox path-bypass falsely admitted")
 
+    # #604: A writable public guest JSON is never trusted VM-origin evidence.
+    # Portable OFFLINE regressions verify that even perfectly shaped forged
+    # receipts cannot green-light a Windows Sandbox guest or #612 local code.
+    # No VM, network, Git effect, model or OS/session bridge is invoked.
+    wsb_origin_gate = (ROOT / "scripts"
+                       / "vf_office_v2_604_wsb_receipt_origin_gate.py")
+    if hashlib.sha256(wsb_origin_gate.read_bytes()).hexdigest() != (
+            "357581e9b901579cc21f880577e44ae83a4fb89dde664d6371a1da9a51188266"):
+        fail("#604 Windows Sandbox receipt-origin negative gate source drift")
+    wsb_origin_run = subprocess.run(
+        [sys.executable, str(wsb_origin_gate), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=15,
+    )
+    if wsb_origin_run.returncode:
+        fail("#604 WSB forged-origin offline negatives failed: "
+             + wsb_origin_run.stdout[:170] + wsb_origin_run.stderr[:170])
+    try:
+        wsb_origin_result = json.loads(wsb_origin_run.stdout)
+    except json.JSONDecodeError:
+        fail("#604 WSB forged-origin offline output is not JSON")
+    if (
+        wsb_origin_result.get("status") !=
+            "PASS_18_OFFLINE_ORIGIN_NEGATIVES_NOT_VM_ATTESTATION"
+        or wsb_origin_result.get("tests") != 18
+        or wsb_origin_result.get("actual_vm_launched") is not False
+        or wsb_origin_result.get("guest_origin_attested") is not False
+        or wsb_origin_result.get("guest_receipt_acceptance_proven") is not False
+        or wsb_origin_result.get("independent_host_launch_witness_observed") is not False
+        or wsb_origin_result.get("actual_vm_guest_isolation_proven") is not False
+        or wsb_origin_result.get("git_sink_credential_custody_proven") is not False
+        or wsb_origin_result.get("production_authority") is not False
+        or wsb_origin_result.get("generated_code_executed") is not False
+        or wsb_origin_result.get("external_effects") != 0
+        or wsb_origin_result.get("model_calls") != 0
+    ):
+        fail("#604 writable guest report falsely admitted as a VM witness")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
