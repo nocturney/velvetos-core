@@ -1,0 +1,12 @@
+{
+  "schema": "velvetos.office-v2.p0-612-protected-base-c1-request.v0",
+  "task_id": "p0-mac-qwen4b-tag-byteexact-20261011-c1",
+  "source_path": "docs/implementation/office-v2/phase2/quarantined-new-model-sources-2026-10-11/mac-qwen4b-tag-byteexact-c1.py.txt",
+  "source_sha256": "084d446873fb871ad444f7704b7868b72e599829b9da6e0a2fca0f972d4dae6a",
+  "source_git_blob_sha1": "7ec37475b86cabe728b95be37e38e984a74e6264",
+  "source_size_bytes": 480,
+  "fixture": "canonical-tag-v1",
+  "source_trusted_as_executable": false,
+  "git_sink_write_authorized": false,
+  "production_effects": false
+}
