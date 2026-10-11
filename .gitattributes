@@ -5,6 +5,12 @@
 *.py text eol=lf
 *.json text eol=lf
 *.md text eol=lf
+# DCC Stage 6C exact-byte validator sources: every tracked patch (8),
+# JavaScript (7), PowerShell (44), and MJS (10) Git index blob is LF.
+*.patch text eol=lf
+*.js text eol=lf
+*.ps1 text eol=lf
+*.mjs text eol=lf
 
 scripts/vf_task_state.py text eol=lf
 scripts/check-vf-task-state.py text eol=lf
