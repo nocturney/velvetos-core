@@ -980,7 +980,7 @@ def main() -> int:
     signer_lab = ROOT / "scripts" / "vf_office_v2_604_hosted_signer_custody_lab.py"
     signer_workflow = ROOT / ".github" / "workflows" / "office-p0-synthetic-signer-custody-lab.yml"
     if hashlib.sha256(signer_lab.read_bytes()).hexdigest() != (
-            "e62b415d37c618a3feb7c6ff32c91d8c4932e8601097607cc2e09a3377b97616"):
+            "20cce6a09dec25de74d624361806a8ec2d758856217dd048123cdac8fc7281bd"):
         fail("P0 synthetic signer custody source SHA drift")
     if hashlib.sha256(signer_workflow.read_bytes()).hexdigest() != (
             "475bcc6114bdcf8d8417cea4a6915c1d5b89f7eabcc1c2c13183d1c6559925fe"):
@@ -995,7 +995,7 @@ def main() -> int:
     except ValueError:
         fail("P0 synthetic signer custody produced no parsed JSON")
     if (signer_result.get("status") != "PASS_STATIC_SIGNER_CUSTODY_DENIAL"
-            or signer_result.get("tests") != 19
+            or signer_result.get("tests") != 21
             or signer_result.get("docker_calls") != 0
             or signer_result.get("actual_key_created") is not False
             or signer_result.get("model_calls") != 0
