@@ -1,5 +1,11 @@
 scripts/vf_task_state.py text eol=lf
 scripts/check-vf-task-state.py text eol=lf
+
+# Portable exact-byte Python source on Windows (native core.autocrlf=true).
+# All tracked scripts/*.py blobs are LF in Git; do not silently checkout
+# CRLF and invalidate Office's pinned raw SHA-256/source attestations.
+/scripts/*.py text eol=lf
+/scripts/**/*.py text eol=lf
 packages/vfharness/playbooks/skillstate.md text eol=lf
 packages/vfharness/state/swc-codex-001.json text eol=lf
 packages/vfharness/state/pr228-rollout/* text eol=lf
