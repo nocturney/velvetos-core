@@ -120,6 +120,23 @@ print(json.dumps({"status":"PASS_SAME_UID_SYNTHETIC_PRIVATE_KEY_UNAVAILABLE",
 '''
 
 
+# The Docker *daemon operator*, unlike the uncredentialed Worker, can exec
+# code in the live signer namespace. Only a synthetic HMAC is computed;
+# no private bytes, signing token or real credential leave the guest.
+DAEMON_PROBE = (
+    "import hashlib,hmac;"
+    "from pathlib import Path;"
+    "print(hmac.new(Path('/sink/signer-only.key').read_bytes(),"
+    "Path('/public/intent.txt').read_bytes(),hashlib.sha256).hexdigest())"
+)
+
+
+def daemon_probe_argv(cid):
+    require(type(cid) is str and CID.fullmatch(cid),
+            "DAEMON_PROBE_REQUIRES_EXACT_OWNED_CONTAINER_ID")
+    return ["docker", "exec", cid, "python", "-B", "-c", DAEMON_PROBE]
+
+
 class Refused(Exception):
     pass
 
@@ -195,7 +212,15 @@ def selftest():
             try: strict_plan(bad,imageid,root,role,mac if role=="worker" else None)
             except Refused: checks.append("unsafe_"+role+"_flag_denied")
             else: raise Refused("UNSAFE_CONFIG_FALSE_ADMITTED")
-    require(len(checks)==19, "SAMEUID_SIGNER_NEGATIVE_COUNT_DRIFT")
+    require("'/sink/signer-only.key'" in DAEMON_PROBE
+            and "Path('/public/intent.txt')" in DAEMON_PROBE
+            and "hmac.new" in DAEMON_PROBE,
+            "HOST_DAEMON_ABUSE_NEGATIVE_SOURCE_MISSING")
+    checks.append("admin_can_request_synthetic_signature_from_signer")
+    try: daemon_probe_argv("invalid")
+    except Refused: checks.append("reject_unowned_daemon_exec_target")
+    else: raise Refused("HOST_DAEMON_UNOWNED_TARGET_ADMITTED")
+    require(len(checks)==21, "SAMEUID_SIGNER_NEGATIVE_COUNT_DRIFT")
     return {"status":"PASS_STATIC_SIGNER_CUSTODY_DENIAL",
             "tests":len(checks),"docker_calls":0,"actual_key_created":False,
             "model_calls":0,"production_authority":False,
@@ -306,6 +331,17 @@ def execute():
                              "egress_denied","no_exported_git_write_token",
                              "no_docker_socket")),
                     "SAMEUID_KEY_DENIAL_OR_CONCURRENT_SIGNER_FAILED")
+            # This deliberately records a counterexample to absolute signer
+            # custody: the runner's Docker daemon operator can inject a
+            # synthetic signing operation into the live signer container,
+            # even though the same-UID worker cannot mount/read /sink.
+            # Never print key bytes or the HMAC to logs.
+            require(signer_after["Running"] is True,
+                    "SYNTHETIC_SIGNER_EXITED_BEFORE_DAEMON_NEGATIVE")
+            probe = docker(daemon_probe_argv(signer), timeout=9).strip()
+            require(SHA.fullmatch(probe) and
+                    __import__("hmac").compare_digest(probe, receipt["mac"]),
+                    "DOCKER_DAEMON_SAME_KEY_SIGNATURE_PROBE_FAILED")
             return {"schema":SCHEMA,
                     "status":"PASS_HOSTED_SAMEUID_SYNTHETIC_SIGNER_CUSTODY_NEGATIVE",
                     "github_run_id":os.environ["GITHUB_RUN_ID"],
@@ -320,6 +356,9 @@ def execute():
                     "github_git_writer_credential_present":False,
                     "exclusive_native_git_sink_authority_proven":False,
                     "host_daemon_cannot_read_key_proven":False,
+                    "docker_daemon_can_command_live_signer_observed":True,
+                    "daemon_injected_synthetic_signature_matches":True,
+                    "synthetic_secret_bytes_exported":False,
                     "kernel_escape_resistance_proven":False,
                     "provider_epoch_and_github_commit_fenced":False,
                     "production_authority":False,
