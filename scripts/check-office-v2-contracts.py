@@ -2778,6 +2778,55 @@ def main() -> int:
     ):
         fail("#604 unrelated VM events overclaimed sandbox/Sink authority")
 
+    # #612: original Mac C1 model bytes are now stored with the native Git
+    # Base64 blob API, NOT a text wrapper that inserts terminal LF. Only
+    # the trusted STATIC gate runs in local sensors. Generated source is
+    # never imported or executed; behavioral QA is GitHub-hosted Docker only.
+    c1_static = (ROOT / "scripts" /
+                 "vf_office_v2_p0_hosted_mac4b_c1_nativeblob_qa.py")
+    c1_archive = (ROOT / "docs" / "implementation" / "office-v2" /
+                  "phase2" / "quarantined-new-model-sources-2026-10-11" /
+                  "mac-qwen4b-tag-byteexact-c1.py.txt")
+    c1_manifest = (ROOT / "docs" / "implementation" / "office-v2" /
+                   "phase2" /
+                   "p0-612-mac-qwen4b-c1-nativeblob-hostedqa-2026-10-11.json")
+    for source_file, original_sha in (
+        (c1_static,
+         "297d0bee0a0d6ce8449644a5a4ca31f60040d4d71b9b4f39364e2eb35a6ef18e"),
+        (c1_archive,
+         "084d446873fb871ad444f7704b7868b72e599829b9da6e0a2fca0f972d4dae6a"),
+        (c1_manifest,
+         "e20f020f21e70017eb5c6da7c3543718da13bdbecdc65cbe71a2816bbeb5d025"),
+    ):
+        if hashlib.sha256(source_file.read_bytes()).hexdigest() != original_sha:
+            fail("#612 Mac C1 exact original source/provenance/QA gate bytes drift")
+    c1_static_run = subprocess.run(
+        [sys.executable, str(c1_static), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=15,
+    )
+    if c1_static_run.returncode != 0:
+        fail("#612 C1 nativeblob 29 static selftests rejected: " +
+             c1_static_run.stdout[:160] + c1_static_run.stderr[:160])
+    try:
+        c1_static_result = json.loads(c1_static_run.stdout)
+    except json.JSONDecodeError:
+        fail("#612 C1 nativeblob offline selftest returned non-JSON")
+    if (
+        c1_static_result.get("status") !=
+            "PASS_29_STATIC_C1_NATIVEBLOB_AND_CONTAINER_NEGATIVES_NOT_QA"
+        or c1_static_result.get("tests") != 29
+        or c1_static_result.get("source_bytes") != 480
+        or c1_static_result.get("git_blob_sha1") !=
+            "7ec37475b86cabe728b95be37e38e984a74e6264"
+        or c1_static_result.get("local_model_generated_source_executed") is not False
+        or c1_static_result.get("hosted_source_qa_proven") is not False
+        or c1_static_result.get("docker_calls") != 0
+        or c1_static_result.get("model_calls") != 0
+        or c1_static_result.get("production_authority") is not False
+        or c1_static_result.get("git_sink_credential_custody_proven") is not False
+    ):
+        fail("#612 C1 static-only source transport FALSE model QA admission")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
