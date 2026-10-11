@@ -43,6 +43,19 @@ class Refuse(Exception):
     pass
 
 
+# Historical v1 also has local Aider execution and independent source QA.
+# Neither sanitized subprocess env nor a clean clone isolates model-generated
+# Python from Chris SYSTEM Session 0 or Mac UID501. Like the newer Diverse
+# Worker, all direct v1 execution paths remain code-locked FAIL_CLOSED until
+# a separately protected OS-isolated execution boundary is admitted.
+OS_EXECUTION_BLOCK = "P0_GENERATED_SOURCE_OS_ISOLATION_NOT_ADMITTED"
+
+
+def require_isolated_generated_code_executor():
+    """Reject before model start, generated-source QA or task-journal creation."""
+    raise Refuse(OS_EXECUTION_BLOCK)
+
+
 def canonical(obj):
     return json.dumps(obj, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
 
@@ -216,7 +229,8 @@ def preflight(env, *, network=True):
 
 
 def qa_fresh(root, candidate, hidden):
-    """A separate clean local Git clone; no model or network; original tests plus blind QA."""
+    """Historical QA implementation is not admitted on unisolated user hosts."""
+    require_isolated_generated_code_executor()
     with tempfile.TemporaryDirectory(prefix="vf-office-p0-aider-qa-") as tmp:
         clone = pathlib.Path(tmp) / "replay"
         p = subprocess.run(["git", "clone", "--quiet", "--no-hardlinks", "--local",
@@ -252,7 +266,8 @@ def qa_fresh(root, candidate, hidden):
 
 
 def check_run(env, receipt):
-    """Readback verification replays independent QA; never reruns the model."""
+    """Historical verify would replay generated Python on an unisolated host."""
+    require_isolated_generated_code_executor()
     if receipt.get("schema") != RECEIPT or receipt.get("state") != "SUCCEEDED":
         raise Refuse("RECEIPT_NOT_SUCCEEDED")
     if receipt.get("receipt_sha256") != digest({k: v for k, v in receipt.items() if k != "receipt_sha256"}):
@@ -404,6 +419,7 @@ def verify_kernel_birth_pin(env, receipt):
         raise Refuse("KERNEL_PIN_BINDING_NOT_VERIFIED")
 
 def run(task, output):
+    require_isolated_generated_code_executor()
     task = pathlib.Path(task).resolve()
     receipt = pathlib.Path(output).resolve()
     journal = receipt.with_suffix(receipt.suffix + ".running")
@@ -596,19 +612,40 @@ def selftest():
         else:
             raise AssertionError("UNSAFE_BIRTH_MODE_ACCEPTED")
         checks.append("invalid_birth_mode_denied")
-        # Regression: hidden QA lives outside the clone, but imports slug from it.
-        # Running the hidden file by absolute path would incorrectly fail imports.
-        fixed_source = (
-            b"import re\n\ndef slugify(value: str) -> str:\n"
-            b"    cleaned = re.sub(r'[^a-z0-9]+', '-', value.lower()).strip('-')\n"
-            b"    return cleaned or 'untitled'\n"
-        )
-        replay_good = qa_fresh(root, fixed_source, qa)
-        assert replay_good["pass"] is True, replay_good
-        checks.append("external_hidden_qa_imports_fresh_clone")
-        replay_bad = qa_fresh(root, (root / "slug.py").read_bytes(), qa)
-        assert replay_bad["pass"] is False, replay_bad
-        checks.append("bad_source_fails_independent_qa")
+        # The prior selftest replayed a locally executed replacement Python
+        # module here. That route is now deliberately blocked until isolation.
+        # Historical model-output QA is deliberately NOT re-executed by
+        # selftest: it previously ran Python on SYSTEM/UID501. Preserve the
+        # fixture hashes above and verify historical results via the separate
+        # static evidence gate, while testing fresh admission refusals here.
+        for label, probe in (
+            ("qa", lambda: qa_fresh(None, None, None)),
+            ("run", lambda: run(None, None)),
+            ("verify", lambda: check_run(None, None)),
+        ):
+            try:
+                probe()
+            except Refuse as exc:
+                assert str(exc) == OS_EXECUTION_BLOCK, (label, str(exc))
+            else:
+                raise AssertionError("LEGACY_GENERATED_CODE_FALSE_ADMITTED_" + label)
+            checks.append("legacy_" + label + "_blocked_before_input")
+        marker = "VF_OFFICE_GENERATED_EXECUTION_ISOLATED"
+        prior_marker = os.environ.get(marker)
+        os.environ[marker] = "true"
+        try:
+            try:
+                run(None, None)
+            except Refuse as exc:
+                assert str(exc) == OS_EXECUTION_BLOCK
+            else:
+                raise AssertionError("LEGACY_ENV_SPOOFED_ISOLATION")
+            checks.append("legacy_env_spoof_denied")
+        finally:
+            if prior_marker is None:
+                os.environ.pop(marker, None)
+            else:
+                os.environ[marker] = prior_marker
         scenarios = [
             ("wrong_kind", ("executor", "kind", "CODEX_CLI"), "UNAPPROVED_EXECUTOR_KIND"),
             ("cloud_url", ("executor", "ollama_port", 8443), "UNAPPROVED_MODEL_OR_PORT"),
@@ -668,6 +705,8 @@ def main():
     elif args.command == "run":
         res = run(args.envelope, args.receipt)
     else:
+        # Refuse before even reading user-controlled task/receipt paths.
+        require_isolated_generated_code_executor()
         res = check_run(get_json(args.envelope), get_json(args.receipt))
     print(json.dumps(res, sort_keys=True, ensure_ascii=False))
     return 0 if res.get("status") in ("PASS", "SUCCEEDED") else 2
