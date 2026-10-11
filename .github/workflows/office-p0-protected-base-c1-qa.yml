@@ -1,0 +1,43 @@
+name: Office P0 Protected Main C1 QA (No Credentials)
+
+# Crucial: workflow_run executes the workflow definition from the canonical
+# DEFAULT BRANCH, not from the pull request being evaluated. Do not replace
+# this with pull_request_target + PR-head checkout or a PR-authored workflow.
+on:
+  workflow_run:
+    workflows:
+      - VelvetOS Core Sensors
+    types:
+      - completed
+
+# The completed Core check is input provenance, NOT Git Sink permission.
+# workflow_run can normally gain a privileged token: explicitly remove it.
+permissions: {}
+
+jobs:
+  # Only explicit LAB request branches are eligible, not every unrelated PR.
+  # This affects CI cost only; the trusted runner independently verifies hashes.
+  pretrusted-source-only-docker-qa:
+    if: ${{ github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'test/office612-pretrusted-qa-') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    permissions: {}
+    steps:
+      - name: Checkout protected default-branch verifier and hidden tests only
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          path: policy
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Checkout untrusted PR commit strictly as source bytes
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          path: candidate
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Static trust-source and request denial tests without model execution
+        run: python3 -I -B policy/scripts/vf_office_v2_p0_protected_base_c1_qa.py selftest
+      - name: Verify provider event and run only byte-pinned C1 data in isolated Docker
+        run: python3 -I -B policy/scripts/vf_office_v2_p0_protected_base_c1_qa.py run

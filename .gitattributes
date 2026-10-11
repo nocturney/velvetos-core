@@ -78,3 +78,7 @@ packages/vfharness/state/pr228-rollout/* text eol=lf
 /packages/vfharness/devtools/creative-craft/evals/fixtures/manifest.json -text !eol
 /packages/vfharness/devtools/creative-craft/skill/evals/fixtures/manifest.json -text !eol
 /packages/velvetos/policy/sensor-registry.json -text !eol
+
+# Pretrusted default-branch workflow_run policy YAML must be LF on Windows;
+# otherwise physical-host SHA verification of the trusted policy is ambiguous.
+/.github/workflows/office-p0-protected-base-c1-qa.yml text eol=lf
