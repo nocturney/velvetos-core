@@ -2907,7 +2907,7 @@ def main() -> int:
     ):
         fail("#612 protected-base independent verifier source pin changed")
     if hashlib.sha256(protected_flow.read_bytes()).hexdigest() != (
-        "cdce2b02ba50a4f7416045858d68c0aa1c4dc386a9263f782e224023dace1145"
+        "931c2e208d53a5567c23ab3f0171fe92d88ba0209563a2ccb5b86c7dcb65d4c7"
     ):
         fail("#612 protected-default-branch workflow bytes drift across OS")
     attrs = (ROOT / ".gitattributes").read_text(encoding="utf-8")
@@ -2927,6 +2927,7 @@ def main() -> int:
         "ref: $" + "{{ github.event.workflow_run.head_sha }}",
         "path: candidate",
         "persist-credentials: false",
+        "startsWith(github.event.workflow_run.head_branch, 'test/office612-pretrusted-qa-')",
         "python3 -I -B policy/scripts/vf_office_v2_p0_protected_base_c1_qa.py",
     ):
         if must_have not in policy_yaml:
