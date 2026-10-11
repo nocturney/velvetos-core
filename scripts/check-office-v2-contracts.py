@@ -974,6 +974,41 @@ def main() -> int:
                     or result_guided.get("production_authority") is not False):
                 fail("P0 Mac guided outcome failed sealed historical contract")
 
+    # P0 cross-host source-byte integrity: 2695+ original Git-index LF blobs
+    # must checkout LF even on native Windows core.autocrlf=true. Six original
+    # non-LF JSON and five quarantined model outputs are explicitly excluded
+    # from conversion; their original Git bytes must remain unmodified.
+    repo_byte_gate = ROOT / "scripts" / "vf_office_v2_p0_repo_text_byte_gate.py"
+    if hashlib.sha256(repo_byte_gate.read_bytes()).hexdigest() != (
+            "0c8a98519803158f0944abc6ace592526e75f457bacc37ce4846d2712167cf86"):
+        fail("P0 exact-byte native Windows source gate SHA drift")
+    for gate_mode, expected_status in (
+            ("selftest", "PASS_CORE_EOL_STATIC_NEGATIVE_TESTS"),
+            ("verify", "PASS_CORE_INDEX_WORKTREE_EOL_BYTE_INTEGRITY")):
+        gate_call = subprocess.run(
+            [sys.executable, str(repo_byte_gate), gate_mode],
+            cwd=ROOT, capture_output=True, text=True, timeout=30)
+        if gate_call.returncode:
+            fail("P0 exact-byte Git index gate failed closed: " +
+                 gate_call.stdout[:190])
+        try:
+            gate_observed = json.loads(gate_call.stdout)
+        except json.JSONDecodeError:
+            fail("P0 exact-byte Git index gate returned invalid receipt")
+        if (gate_observed.get("status") != expected_status
+                or gate_observed.get("git_writes") != 0
+                or gate_observed.get("production_authority") is not False):
+            fail("P0 exact-byte Git index gate changed trust boundary")
+        if gate_mode == "selftest":
+            if (gate_observed.get("tests") != 13
+                    or gate_observed.get("code_executions") != 0
+                    or gate_observed.get("git_calls") != 0):
+                fail("P0 source-byte pure negative checks drift")
+        elif (gate_observed.get("historical_bytes_preserved") != 11
+              or gate_observed.get("lf_exact", 0) < 2600
+              or gate_observed.get("models") != 0):
+            fail("P0 source-byte original SHA lineage was altered")
+
     # #604 ephemeral same-UID signer/worker custody lab: only pure static
     # source/arg denial tests in this global sensor; actual key is synthetic,
     # generated inside a disposable no-token GitHub-hosted signer tmpfs.
