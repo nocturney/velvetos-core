@@ -974,6 +974,38 @@ def main() -> int:
                     or result_guided.get("production_authority") is not False):
                 fail("P0 Mac guided outcome failed sealed historical contract")
 
+    # #604 privileged HOST Docker daemon synthetic signer theft NEGATIVE.
+    # The global sensor runs pure static 11 tests ONLY; the actual deliberate
+    # fake-key access attempt lives exclusively in an ephemeral no-token
+    # GitHub-hosted PR workflow and is NEVER a security admission.
+    daemon_probe = ROOT / "scripts" / "vf_office_v2_604_host_docker_daemon_key_negative.py"
+    daemon_workflow = ROOT / ".github" / "workflows" / "office-p0-host-daemon-key-negative.yml"
+    if hashlib.sha256(daemon_probe.read_bytes()).hexdigest() != (
+            "7b14a44691464b26cc313338e7ba04ba286fa5b441214036750ed87fc665e795"):
+        fail("P0 synthetic daemon-theft NEGATIVE source SHA drift")
+    if hashlib.sha256(daemon_workflow.read_bytes()).hexdigest() != (
+            "50d3ae6adc771acb4c391baf6d3629e50f41ffc049ee443d41cf63a13aabf6b8"):
+        fail("P0 synthetic daemon-theft NEGATIVE workflow SHA drift")
+    daemon_static = subprocess.run([sys.executable, str(daemon_probe), "selftest"],
+                                   cwd=ROOT, capture_output=True, text=True,
+                                   timeout=20)
+    if daemon_static.returncode != 0:
+        fail("P0 daemon-key negative pure preflight failed: " +
+             daemon_static.stdout[:160])
+    try:
+        daemon_row = json.loads(daemon_static.stdout)
+    except ValueError:
+        fail("P0 daemon-key negative preflight invalid JSON")
+    if (daemon_row.get("status") != "PASS_PURE_DAEMON_NEGATIVE_PREFLIGHT"
+            or daemon_row.get("tests") != 11
+            or daemon_row.get("docker_invocations") != 0
+            or daemon_row.get("private_keys_created") != 0
+            or daemon_row.get("model_invocations") != 0
+            or daemon_row.get("git_write_authority") is not False
+            or daemon_row.get("production_authority") is not False
+            or daemon_row.get("host_docker_daemon_key_exposure_measured_live") is not False):
+        fail("P0 daemon host negative probe falsely claims protected real custody")
+
     # #604 ephemeral same-UID signer/worker custody lab: only pure static
     # source/arg denial tests in this global sensor; actual key is synthetic,
     # generated inside a disposable no-token GitHub-hosted signer tmpfs.
