@@ -13,7 +13,7 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[1]
-EXTENSIONS = (".py", ".json", ".md")
+EXTENSIONS = (".py", ".json", ".md", ".patch", ".js", ".ps1", ".mjs")
 HISTORICAL_RAW = {
     "docs/implementation/office-v2/phase0/authority-map-v0.1.json": "i/crlf",
     "docs/implementation/office-v2/phase0/credential-trust-classes-v0.json": "i/crlf",
@@ -73,6 +73,7 @@ def selftest():
         ("i/lf    w/lf    attr/text eol=lf\ttrusted.py", True),
         ("i/none  w/none  attr/text eol=lf\tempty.py", True),
         ("i/lf    w/crlf  attr/text eol=lf\ttrusted.json", False),
+        ("i/lf    w/crlf  attr/text eol=lf\tUpdateSentinel.ps1", False),
         ("i/lf    w/lf    attr/\ttrusted.md", False),
         ("i/crlf  w/crlf  attr/-text\tnew-unreviewed.json", False),
         ("i/lf    w/lf    attr/-text\ttrusted.py", False),
@@ -121,7 +122,7 @@ def verify():
             "CORE_EOL_SCOPE_INCOMPLETE")
     return {"status": "PASS_CORE_INDEX_WORKTREE_EOL_BYTE_INTEGRITY",
             "indexed_text_files": sum(stats.values()),
-            **stats, "static_negative_tests": 13,
+            **stats, "static_negative_tests": 14,
             "git_writes": 0, "models": 0,
             "production_authority": False}
 
