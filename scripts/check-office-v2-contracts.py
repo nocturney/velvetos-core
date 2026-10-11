@@ -974,6 +974,38 @@ def main() -> int:
                     or result_guided.get("production_authority") is not False):
                 fail("P0 Mac guided outcome failed sealed historical contract")
 
+    # #612 ephemeral hosted Docker negative LAB. Only this pure static
+    # selftest runs in check-all. Real pinned source QA and adversarial
+    # socket/privilege tests run in a separate zero-permission hosted CI job.
+    container_lab = ROOT / "scripts" / "vf_office_v2_p0_hosted_container_boundary_lab.py"
+    container_workflow = ROOT / ".github" / "workflows" / "office-p0-hosted-docker-boundary-lab.yml"
+    if hashlib.sha256(container_lab.read_bytes()).hexdigest() != (
+            "a4422b0a01ddf480ada0ca857d59c203a4e62f001de5567f1ae36ab524381ceb"):
+        fail("P0 hosted Docker isolation source byte pin drift")
+    if hashlib.sha256(container_workflow.read_bytes()).hexdigest() != (
+            "a60e3cf6a366681dbae472b590190282894f6b8fa8a93469087a38f89ab6833b"):
+        fail("P0 hosted Docker isolation no-credential workflow byte pin drift")
+    container_static = subprocess.run(
+        [sys.executable, str(container_lab), "selftest"],
+        cwd=ROOT, capture_output=True, text=True, timeout=20,
+    )
+    if container_static.returncode != 0:
+        fail("P0 hosted Docker static negative probe failure: " +
+             container_static.stdout[:180])
+    try:
+        container_row = json.loads(container_static.stdout)
+    except ValueError:
+        fail("P0 hosted Docker negative selftest invalid JSON")
+    if (container_row.get("status") != "PASS_STATIC_NO_UNTRUSTED_EXECUTION"
+            or container_row.get("tests") != 23
+            or container_row.get("docker_invocations") != 0
+            or container_row.get("generated_source_subprocesses") != 0
+            or container_row.get("model_invocations") != 0
+            or container_row.get("git_write_calls") != 0
+            or container_row.get("image_digest_crossrun_pin_present") is not True
+            or container_row.get("production_authority") is not False):
+        fail("P0 hosted Docker negative probe falsely promoted guest or token authority")
+
     # #612 hosted CI synthetic QA candidate: only the pure selftest runs in
     # check-all. Actual previously generated Python executes exclusively in
     # the separate no-permission GitHub-hosted LAB workflow when triggered.

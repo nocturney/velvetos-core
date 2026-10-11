@@ -18,3 +18,7 @@ packages/vfharness/state/pr228-rollout/* text eol=lf
 # acquire platform-specific CRLF from Windows checkout settings.
 /scripts/vf_office_v2_p0_hosted_synthetic_qa_lab.py text eol=lf
 /.github/workflows/office-p0-hosted-synthetic-qa.yml text eol=lf
+
+# Exact-byte host-side Docker security manifest and reusable offline probe.
+/scripts/vf_office_v2_p0_hosted_container_boundary_lab.py text eol=lf
+/.github/workflows/office-p0-hosted-docker-boundary-lab.yml text eol=lf
