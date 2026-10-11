@@ -1,0 +1,96 @@
+{
+  "schema": "velvetos.office-v2.p0-604-github-ci-issuer-trust-readonly.v0",
+  "capture_date": "2026-10-11",
+  "observation": "GITHUB_CONNECTOR_REST_READONLY_SNAPSHOT_NOT_SIGNED_AND_NOT_LIVE_ADMISSION",
+  "repository": "nocturney/velvetos-core",
+  "main_sha_at_capture": "975c72ed2c757a0c3d08776aa76f8d11ba687d71",
+  "ruleset": {
+    "id": 23284099,
+    "name": "VelvetOS main protection",
+    "enforcement": "active",
+    "target": "branch",
+    "include": [
+      "~DEFAULT_BRANCH"
+    ],
+    "exclude": [],
+    "bypass_actors": [],
+    "types": [
+      "deletion",
+      "non_fast_forward",
+      "required_status_checks"
+    ],
+    "required_status_context": "check-all",
+    "strict_required_status_checks_policy": false,
+    "requires_pull_request_rule": false,
+    "covers_scratch_refs": false
+  },
+  "case": {
+    "pr_number": 698,
+    "pr_head_sha": "33370b0a3750cfe4749c90f40349b1b8ffd9c4f0",
+    "pr_base_sha": "cd2385807aa5b981cb048520e969bd3d813e14f5",
+    "pr_squash_main_sha": "81beb1c19e89cc36141eff5c3520d20ed33687a7",
+    "source_path": "docs/implementation/office-v2/phase2/quarantined-new-model-sources-2026-10-11/mac-qwen4b-tag-byteexact-c1.py.txt",
+    "source_sha256": "084d446873fb871ad444f7704b7868b72e599829b9da6e0a2fca0f972d4dae6a",
+    "source_blob_sha1": "7ec37475b86cabe728b95be37e38e984a74e6264",
+    "source_bytes": 480,
+    "source_last_byte": 41,
+    "source_terminal_lf": false,
+    "visible_tests_passed": 3,
+    "hidden_tests_passed": 12,
+    "core_run": {
+      "id": 38124430291,
+      "event": "pull_request",
+      "workflow_id": 352155264,
+      "path": ".github/workflows/check-all.yml",
+      "head_sha": "33370b0a3750cfe4749c90f40349b1b8ffd9c4f0",
+      "status": "completed",
+      "conclusion": "success",
+      "attempt": 1,
+      "workflow_blob_at_protected_base": "02583e57bbc527056c89e8cb2e360ce515cce006",
+      "workflow_blob_at_pr_head": "02583e57bbc527056c89e8cb2e360ce515cce006"
+    },
+    "qa_run": {
+      "id": 38124430260,
+      "event": "pull_request",
+      "workflow_id": 381116266,
+      "path": ".github/workflows/office-p0-hosted-mac4b-c1-nativeblob-qa.yml",
+      "head_sha": "33370b0a3750cfe4749c90f40349b1b8ffd9c4f0",
+      "status": "completed",
+      "conclusion": "success",
+      "attempt": 1,
+      "workflow_blob_at_pr_head": "44b5545b24b77925a9eb41d8637e6f9248708b40",
+      "workflow_existed_at_protected_base": false,
+      "workflow_added_by_subject_pr": true
+    }
+  },
+  "risk": {
+    "protected_main_restriction_not_independent_scratch_fencing": true,
+    "existing_main_ruleset_mandates_pr": false,
+    "original_source_qa_succeeded": true,
+    "qa_workflow_preexisting_trusted_policy_at_pr_base": false,
+    "core_workflow_on_base_unchanged": true,
+    "head_can_modify_test_scripts_unless_independently_restricted": true,
+    "expired_etcd_owner_git_ref_write_accepted_in_prior_live_lab": true,
+    "etcd_github_atomic_commit_proven": false,
+    "sole_sink_credentials_os_isolated_proven": false,
+    "provider_epoch_read_authenticated_for_this_candidate": false,
+    "current_authoritative_lease_and_ttl_proven": false,
+    "unknown_effect_reconciled": false,
+    "worker_or_model_received_git_write_token": false,
+    "safe_general_generated_code_auto_promotion": false,
+    "existing_scratch_ref_protected_by_main_ruleset": false
+  },
+  "policy": {
+    "mode": "READ_ONLY_GATE_NOT_AN_ISSUER",
+    "request_writes_permitted": false,
+    "synthetic_provider_data_never_writer_authority": true,
+    "positive_qa_receipt_not_unattended_promotion": true,
+    "unknown_effect_never_replayed": true,
+    "require_different_verified_credentials_and_provider_atomic_sink_gate": true,
+    "model_executed_locally": false,
+    "network_or_git_mutations": 0,
+    "codex_calls": 0,
+    "paid_api_usd": 0,
+    "production_effects": false
+  }
+}
