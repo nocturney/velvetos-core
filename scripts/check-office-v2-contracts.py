@@ -980,7 +980,7 @@ def main() -> int:
     container_lab = ROOT / "scripts" / "vf_office_v2_p0_hosted_container_boundary_lab.py"
     container_workflow = ROOT / ".github" / "workflows" / "office-p0-hosted-docker-boundary-lab.yml"
     if hashlib.sha256(container_lab.read_bytes()).hexdigest() != (
-            "303df9d2d895a05b20243439637d5b181937d22aeb21e4f3541cca98c3bf478f"):
+            "a4422b0a01ddf480ada0ca857d59c203a4e62f001de5567f1ae36ab524381ceb"):
         fail("P0 hosted Docker isolation source byte pin drift")
     if hashlib.sha256(container_workflow.read_bytes()).hexdigest() != (
             "a60e3cf6a366681dbae472b590190282894f6b8fa8a93469087a38f89ab6833b"):
@@ -1002,7 +1002,7 @@ def main() -> int:
             or container_row.get("generated_source_subprocesses") != 0
             or container_row.get("model_invocations") != 0
             or container_row.get("git_write_calls") != 0
-            or container_row.get("image_digest_crossrun_pin_present") is not False
+            or container_row.get("image_digest_crossrun_pin_present") is not True
             or container_row.get("production_authority") is not False):
         fail("P0 hosted Docker negative probe falsely promoted guest or token authority")
 
