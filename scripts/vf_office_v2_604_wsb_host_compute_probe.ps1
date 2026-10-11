@@ -35,7 +35,11 @@ try {
         throw 'EXPECTED_PUBLIC_GUEST_SOURCE_SHA_DRIFT'
     }
     $OutputCount = @(Get-ChildItem -LiteralPath $OutPath -Force).Count
-    $End = [DateTime]::UtcNow
+    # Get-WinEvent's FilterHashtable StartTime/EndTime is interpreted in
+    # the host LOCAL timezone. Supplying UtcNow truncates/offsets the window
+    # by UTC offset on Chris (+03:00). Filter using Local DateTime, but emit
+    # strict UTC ISO timestamps for external correlation.
+    $End = [DateTime]::Now
     $Start = $End.AddMinutes(-$LookbackMinutes)
     $Raw = @(Get-WinEvent -FilterHashtable @{
         LogName = $Channel
@@ -74,8 +78,8 @@ try {
         event_channel = $Channel
         config_sha256 = $ExpectedConfigHash
         guest_script_sha256 = $ExpectedScriptHash
-        window_start_utc = $Start.ToString('o')
-        window_end_utc = $End.ToString('o')
+        window_start_utc = $Start.ToUniversalTime().ToString('o')
+        window_end_utc = $End.ToUniversalTime().ToString('o')
         records_limit_reached = ($Raw.Count -ge 400)
         original_public_output_count = $OutputCount
         host_event_count = $Safe.Count
