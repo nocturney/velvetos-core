@@ -981,7 +981,7 @@ def main() -> int:
     daemon_probe = ROOT / "scripts" / "vf_office_v2_604_host_docker_daemon_key_negative.py"
     daemon_workflow = ROOT / ".github" / "workflows" / "office-p0-host-daemon-key-negative.yml"
     if hashlib.sha256(daemon_probe.read_bytes()).hexdigest() != (
-            "7b14a44691464b26cc313338e7ba04ba286fa5b441214036750ed87fc665e795"):
+            "7b8ea310cac1acedefc6220d63eb15df31560305484026058a8203310131d366"):
         fail("P0 synthetic daemon-theft NEGATIVE source SHA drift")
     if hashlib.sha256(daemon_workflow.read_bytes()).hexdigest() != (
             "50d3ae6adc771acb4c391baf6d3629e50f41ffc049ee443d41cf63a13aabf6b8"):
