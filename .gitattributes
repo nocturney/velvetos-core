@@ -44,6 +44,10 @@ packages/vfharness/state/pr228-rollout/* text eol=lf
 # Keep original trailing spaces for SHA/Worker receipt provenance.
 /docs/implementation/office-v2/phase2/quarantined-agent-sources-2026-10-10/*.py -text !eol -whitespace
 
+# Historical pre-guard Worker and Job supervisor source bytes: archived as
+# non-executable .py.txt, with byte-for-byte raw provenance on all OSes.
+/docs/implementation/office-v2/phase2/quarantined-worker-sources-2026-10-11/*.py.txt -text !eol
+
 # Office P0 hosted QA LAB sources are SHA-256 byte pinned and must not
 # acquire platform-specific CRLF from Windows checkout settings.
 /scripts/vf_office_v2_p0_hosted_synthetic_qa_lab.py text eol=lf
