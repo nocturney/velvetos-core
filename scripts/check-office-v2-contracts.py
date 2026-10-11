@@ -980,7 +980,7 @@ def main() -> int:
     container_lab = ROOT / "scripts" / "vf_office_v2_p0_hosted_container_boundary_lab.py"
     container_workflow = ROOT / ".github" / "workflows" / "office-p0-hosted-docker-boundary-lab.yml"
     if hashlib.sha256(container_lab.read_bytes()).hexdigest() != (
-            "7d6e2c915fe9a80069f5e96abe55ceba2aaa7108f23734d6be9d33b9134c88c9"):
+            "303df9d2d895a05b20243439637d5b181937d22aeb21e4f3541cca98c3bf478f"):
         fail("P0 hosted Docker isolation source byte pin drift")
     if hashlib.sha256(container_workflow.read_bytes()).hexdigest() != (
             "a60e3cf6a366681dbae472b590190282894f6b8fa8a93469087a38f89ab6833b"):
