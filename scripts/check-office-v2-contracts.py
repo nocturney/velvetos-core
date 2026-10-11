@@ -2893,6 +2893,79 @@ def main() -> int:
             ):
                 fail("#604 historical GitHub issuer truth promoted to live writer")
 
+    # #612 Phase A: install a future pretrusted verifier on protected main.
+    # The bootstrap PR itself cannot be the already-trusted issuer. Never
+    # run generated code here; the actual later workflow_run must source
+    # policy only from its GitHub-provided default-branch checkout.
+    protected_qa = ROOT / "scripts" / "vf_office_v2_p0_protected_base_c1_qa.py"
+    protected_flow = (
+        ROOT / ".github" / "workflows" /
+        "office-p0-protected-base-c1-qa.yml"
+    )
+    if hashlib.sha256(protected_qa.read_bytes()).hexdigest() != (
+        "040b83ae5806f330c0e9562516af60016465c010ad3e33195941a2908dd939f7"
+    ):
+        fail("#612 protected-base independent verifier source pin changed")
+    if hashlib.sha256(protected_flow.read_bytes()).hexdigest() != (
+        "cdce2b02ba50a4f7416045858d68c0aa1c4dc386a9263f782e224023dace1145"
+    ):
+        fail("#612 protected-default-branch workflow bytes drift across OS")
+    attrs = (ROOT / ".gitattributes").read_text(encoding="utf-8")
+    if ("/.github/workflows/office-p0-protected-base-c1-qa.yml text eol=lf"
+            not in attrs):
+        fail("#612 trusted YAML not pinned LF on both Windows and Mac")
+    policy_yaml = protected_flow.read_text(encoding="utf-8")
+    for must_have in (
+        "  workflow_run:",
+        "      - VelvetOS Core Sensors",
+        "    types:",
+        "      - completed",
+        "permissions: {}",
+        "    permissions: {}",
+        "ref: $" + "{{ github.sha }}",
+        "path: policy",
+        "ref: $" + "{{ github.event.workflow_run.head_sha }}",
+        "path: candidate",
+        "persist-credentials: false",
+        "python3 -I -B policy/scripts/vf_office_v2_p0_protected_base_c1_qa.py",
+    ):
+        if must_have not in policy_yaml:
+            fail("#612 pretrusted GitHub workflow protected-base rule missing")
+    if (
+        policy_yaml.count("permissions: {}") != 2
+        or policy_yaml.count("persist-credentials: false") != 2
+        or "\n  pull_request_target:" in policy_yaml
+        or "\n  pull_request:" in policy_yaml
+        or "\n  workflow_dispatch:" in policy_yaml
+    ):
+        fail("#612 protected-base policy gained new credential scope or trigger")
+    policy_qa = subprocess.run(
+        [sys.executable, "-I", "-B", str(protected_qa), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=15,
+    )
+    if policy_qa.returncode != 0:
+        fail("#612 protected-base 37 negative tests failed: " +
+             policy_qa.stdout[:150] + policy_qa.stderr[:150])
+    try:
+        policy_evidence = json.loads(policy_qa.stdout)
+    except json.JSONDecodeError:
+        fail("#612 protected-base verifier returned non-JSON")
+    if (
+        policy_evidence.get("status") !=
+            "PASS_37_OFFLINE_PROTECTED_BASE_ISSUER_NEGATIVES_ONLY"
+        or policy_evidence.get("tests") != 37
+        or policy_evidence.get("policy_from_protected_branch_tested_live") is not False
+        or policy_evidence.get("git_sink_credential_custody_proven") is not False
+        or policy_evidence.get("model_code_executed_on_user_host") is not False
+        or policy_evidence.get("github_api_writes") != 0
+        or policy_evidence.get("docker_calls") != 0
+        or policy_evidence.get("network_calls") != 0
+        or policy_evidence.get("provider_leases") != 0
+        or policy_evidence.get("model_calls") != 0
+        or policy_evidence.get("production_authority") is not False
+    ):
+        fail("#612 new same-PR workflow falsely claimed pretrusted policy")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
