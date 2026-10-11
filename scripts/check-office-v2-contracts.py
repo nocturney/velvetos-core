@@ -980,7 +980,7 @@ def main() -> int:
     # from conversion; their original Git bytes must remain unmodified.
     repo_byte_gate = ROOT / "scripts" / "vf_office_v2_p0_repo_text_byte_gate.py"
     if hashlib.sha256(repo_byte_gate.read_bytes()).hexdigest() != (
-            "0c8a98519803158f0944abc6ace592526e75f457bacc37ce4846d2712167cf86"):
+            "aa0feb3bc873f6fbfb004855b8da1696ac4c033a7f0372c6224b5b6b2ed0e492"):
         fail("P0 exact-byte native Windows source gate SHA drift")
     for gate_mode, expected_status in (
             ("selftest", "PASS_CORE_EOL_STATIC_NEGATIVE_TESTS"),
@@ -1000,7 +1000,7 @@ def main() -> int:
                 or gate_observed.get("production_authority") is not False):
             fail("P0 exact-byte Git index gate changed trust boundary")
         if gate_mode == "selftest":
-            if (gate_observed.get("tests") != 13
+            if (gate_observed.get("tests") != 14
                     or gate_observed.get("code_executions") != 0
                     or gate_observed.get("git_calls") != 0):
                 fail("P0 source-byte pure negative checks drift")
