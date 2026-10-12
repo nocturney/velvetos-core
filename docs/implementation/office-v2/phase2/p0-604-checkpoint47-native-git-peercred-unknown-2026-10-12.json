@@ -1,0 +1,132 @@
+{
+  "cases": [
+    {
+      "case": "N01_NATIVE_INITIAL_GIT_OBJECT",
+      "evidence": "a859470543dcd6ffcb8607524f4173037dbcf8e0",
+      "passed": true
+    },
+    {
+      "case": "N02_WORKERS_OS_BLOCK_GIT_AND_FAKE_TOKEN",
+      "evidence": "[(0, {'bare_git_head': True, 'fake_token': True, 'native_git_direct_write_denied': True, 'sink_sqlite': True}), (0, {'bare_git_head': True, 'fake_token': True, 'native_git_direct_write_denied': True, 'sink_sqlite': True}), (0, {'bare_git_he",
+      "passed": true
+    },
+    {
+      "case": "N03_KERNEL_UID_REJECTS_SELF_ASSERTED_ID",
+      "evidence": "{'reason': 'KERNEL_UID_WORKER_BINDING', 'ref_sha': 'a859470543dcd6ffcb8607524f4173037dbcf8e0', 'status': 'DENIED'}",
+      "passed": true
+    },
+    {
+      "case": "N04_UNKNOWN_OS_UID_DENIED",
+      "evidence": "{'reason': 'OS_PRINCIPAL_UNKNOWN', 'ref_sha': 'a859470543dcd6ffcb8607524f4173037dbcf8e0', 'status': 'DENIED'}",
+      "passed": true
+    },
+    {
+      "case": "N05_REMOTE_CAPABILITY_DENIED",
+      "evidence": "{'reason': 'CAPABILITY_DENIED', 'ref_sha': 'a859470543dcd6ffcb8607524f4173037dbcf8e0', 'status': 'DENIED'}",
+      "passed": true
+    },
+    {
+      "case": "N06_WORKER_CANNOT_ROTATE_PROVIDER",
+      "evidence": "{'reason': 'INVALID_REQUEST', 'ref_sha': 'a859470543dcd6ffcb8607524f4173037dbcf8e0', 'status': 'DENIED'}",
+      "passed": true
+    },
+    {
+      "case": "N06B_WORKER_FAULT_INJECTION_DENIED",
+      "evidence": "{'reason': 'WORKER_CANNOT_REQUEST_FAULT_INJECTION', 'ref_sha': 'a859470543dcd6ffcb8607524f4173037dbcf8e0', 'status': 'DENIED'}",
+      "passed": true
+    },
+    {
+      "case": "N07_CONTROLLER_CUTOVER_NO_GIT_CHANGE",
+      "evidence": "{'reason': 'ROTATED_REF_UNCHANGED', 'ref_sha': 'a859470543dcd6ffcb8607524f4173037dbcf8e0', 'status': 'CONTROLLER'}",
+      "passed": true
+    },
+    {
+      "case": "N08_STALE_OWNER_CURRENT_REAL_GIT_SHA_DENIED",
+      "evidence": "{'reason': 'STALE_OR_FOREIGN_EPOCH_DENIED', 'ref_sha': 'a859470543dcd6ffcb8607524f4173037dbcf8e0', 'status': 'DENIED'}",
+      "passed": true
+    },
+    {
+      "case": "N09_TWO_UID_THREE_PROCESS_REAL_GIT_SINGLE_WRITER",
+      "evidence": "['ONE_NATIVE_GIT_REF_UPDATE', 'FROZEN_UNKNOWN_OR_COMMITTED', 'STALE_OR_FOREIGN_EPOCH_DENIED']",
+      "passed": true
+    },
+    {
+      "case": "N10_GIT_READBACK_MATCHES_DURABLE_RECEIPT",
+      "evidence": "6abc1ddfe8f260490d3f2835a41b4c7312813c7f",
+      "passed": true
+    },
+    {
+      "case": "N11_EXACT_LOGICAL_DUPLICATE_REFUSED",
+      "evidence": "{'reason': 'FROZEN_UNKNOWN_OR_COMMITTED', 'ref_sha': '6abc1ddfe8f260490d3f2835a41b4c7312813c7f', 'status': 'DENIED'}",
+      "passed": true
+    },
+    {
+      "case": "N12_PRE_GIT_CRASH_DURABLE_UNLEASED_INTENT",
+      "evidence": "[71, {'reason': 'NO_ACK', 'status': 'NO_ACK_UNKNOWN'}, 'EFFECT_IN_FLIGHT']",
+      "passed": true
+    },
+    {
+      "case": "N13_PRE_GIT_RECOVERY_UNKNOWN_FREEZE",
+      "evidence": "{'reason': 'FROZEN_UNKNOWN_OR_COMMITTED', 'ref_sha': 'a859470543dcd6ffcb8607524f4173037dbcf8e0', 'status': 'DENIED'}",
+      "passed": true
+    },
+    {
+      "case": "N14_MANUAL_NO_EFFECT_CLOSE_NO_RETRY",
+      "evidence": "{'reason': 'MANUAL_NO_EFFECT_NO_RETRY', 'ref_sha': 'a859470543dcd6ffcb8607524f4173037dbcf8e0', 'status': 'CONTROLLER'}",
+      "passed": true
+    },
+    {
+      "case": "N15_POST_GIT_PRE_ACK_CRASH_IS_AMBIGUOUS",
+      "evidence": "[72, 'EFFECT_IN_FLIGHT', '6abc1ddfe8f260490d3f2835a41b4c7312813c7f']",
+      "passed": true
+    },
+    {
+      "case": "N16_NO_ACK_RESTART_NEVER_BLIND_REPLAYS",
+      "evidence": "{'reason': 'FROZEN_UNKNOWN_OR_COMMITTED', 'ref_sha': '6abc1ddfe8f260490d3f2835a41b4c7312813c7f', 'status': 'DENIED'}",
+      "passed": true
+    },
+    {
+      "case": "N17_MANUAL_GIT_READBACK_VERIFIES_COMMIT",
+      "evidence": "COMMITTED_VERIFIED",
+      "passed": true
+    },
+    {
+      "case": "N18_NO_SECOND_GIT_EFFECT_AFTER_MANUAL_RECOVERY",
+      "evidence": "{'reason': 'FROZEN_UNKNOWN_OR_COMMITTED', 'ref_sha': '6abc1ddfe8f260490d3f2835a41b4c7312813c7f', 'status': 'DENIED'}",
+      "passed": true
+    },
+    {
+      "case": "N19_PROVIDER_UNAVAILABLE_DENIES_REAL_GIT",
+      "evidence": "{'reason': 'AUTHORITY_UNAVAILABLE', 'ref_sha': 'a859470543dcd6ffcb8607524f4173037dbcf8e0', 'status': 'DENIED'}",
+      "passed": true
+    }
+  ],
+  "cross_store_atomicity_proven": false,
+  "dagu_worker_identity_proven": false,
+  "external_git_remote_tested": false,
+  "external_github_effect": false,
+  "external_network_effects": 0,
+  "git_version": "git version 2.47.3",
+  "host_os": "linux",
+  "kernel_release": "6.18.44",
+  "mac_windows_isolation_proven": false,
+  "mid_push_expiry_fenced": false,
+  "multi_host_fence_proven": false,
+  "native_local_bare_git_update_ref": true,
+  "new_os_users": 0,
+  "new_tcp_listeners": 0,
+  "paid_api_calls": 0,
+  "passed": 20,
+  "production_credential_custody_proven": false,
+  "production_effects": 0,
+  "production_worker_admitted": false,
+  "python_version": "3.13.5",
+  "real_kernel_so_peercred": true,
+  "real_lease_provider": false,
+  "same_process_single_sink_git_and_sqlite": true,
+  "schema": "vf604.native-git-peercred-unknown-offline.v1",
+  "separate_numeric_os_uids": true,
+  "source_sha256": "e0c5a53aea2b54d4f13fe33d9cf4b635268da517327eb8488dd7a2332081c41d",
+  "status": "PASS_DISPOSABLE_LINUX_NATIVE_GIT_WITH_UNKNOWN",
+  "tests": 20
+}
