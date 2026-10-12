@@ -2491,6 +2491,58 @@ def main() -> int:
         ):
             fail("#604 portable TLS/RBAC test falsely admitted production")
 
+    # #604 Checkpoint46 Linux peercred LAB: static pin ONLY; NEVER execute
+    # model-authored root/worker fixture in production/Windows/Mac sensors.
+    # The fake provider/ref/effect all share one local SQLite DB.
+    cp46_src = ROOT / "scripts" / "vf_office_v2_604_linux_peercred_sink_lab.py"
+    cp46_expected = "2b9bf96e719363d4aca723b77deb9a07b9358bddc31211158b5cf8cb588b01b2"
+    if hashlib.sha256(cp46_src.read_bytes()).hexdigest() != cp46_expected:
+        fail("#604 checkpoint46 synthetic Linux peercred source drift")
+    cp46_receipt = P2 / "p0-604-checkpoint46-linux-peercred-sink-lab-2026-10-12.json"
+    if hashlib.sha256(cp46_receipt.read_bytes()).hexdigest() != (
+        "a7dc350ae6138f369f9c8da0921c362d48e4be876ee6fa831b1a1915f16e25d9"
+    ):
+        fail("#604 checkpoint46 original success evidence drift")
+    cp46 = load(cp46_receipt)
+    cp46_cases = cp46.get("cases")
+    if (
+        cp46.get("schema") != "vf604.linux-peercred-sink-offline.v1"
+        or cp46.get("source_sha256") != cp46_expected
+        or cp46.get("status") != "PASS_ISOLATED_LINUX_KERNEL_UID_SYNTHETIC_SINK"
+        or cp46.get("passed") != 17 or cp46.get("tests") != 17
+        or not isinstance(cp46_cases, list) or len(cp46_cases) != 17
+        or not all(isinstance(c, dict) and c.get("pass") is True for c in cp46_cases)
+        or not {"L08_STALE_OWNER_CURRENT_REF_DENIED",
+                "L09_THREE_PROCESS_TWO_UID_LOCAL_SINGLE_EFFECT",
+                "L13_ONLY_ONE_SINK_ACCEPTANCE"}.issubset(
+                    {c.get("id") for c in cp46_cases})
+        or cp46.get("local_sqlite_effect_only") is not True
+        or cp46.get("real_kernel_so_peercred") is not True
+        or any(cp46.get(k) is not False for k in (
+            "uses_git", "uses_github", "uses_etcd", "uses_dagu",
+            "native_github_epoch_fence_proven", "cross_store_atomicity_proven",
+            "mac_windows_security_isolation_proven",
+            "production_credential_custody_proven", "production_worker_admitted"))
+        or any(cp46.get(k) != 0 for k in (
+            "remote_effects", "new_os_users", "tcp_listeners"))
+    ):
+        fail("#604 checkpoint46 falsely admitted production or changed receipt")
+    for mutation, expected_sha, passed, failed_case in (
+        ("selfassert", "334e3108ff7cbab1598989b922316d523973d1994d8444ec76e0a72dbe970ae7",
+         11, "L01_KERNEL_UID_MISMATCH"),
+        ("staleepoch", "5265189ee22655a795cfa3ef6b3f5da0479a55f2be2fb3d23fc1befbf88427a3",
+         14, "L08_STALE_OWNER_CURRENT_REF_DENIED"),
+    ):
+        negative_file = P2 / f"p0-604-checkpoint46-mutation-{mutation}-2026-10-12.json"
+        if hashlib.sha256(negative_file.read_bytes()).hexdigest() != expected_sha:
+            fail("#604 checkpoint46 negative receipt SHA drift: " + mutation)
+        negative = load(negative_file)
+        if (negative.get("status") != "FAIL_CLOSED_INCOMPLETE_LAB"
+            or negative.get("tests") != 17 or negative.get("passed") != passed
+            or not any(isinstance(c, dict) and c.get("id") == failed_case
+                       and c.get("pass") is False for c in negative.get("cases", []))):
+            fail("#604 checkpoint46 mutation failure erased: " + mutation)
+
     # #612 real two-host parallel coding: quarantined source from ONE physical
     # Qwen/Aider LAB. Independently replay 3 visible + 12 hidden cases;
     # never imply the model owned GitHub credentials, a fleet lease or merge.
