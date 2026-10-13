@@ -14,7 +14,7 @@ This plan **preserves both incumbent awareness and open competition**: no incumb
 
 ### Existing baseline — evidence is dated
 
-- Existing [`packages/vfom/SPEECH-BACKEND.json`](../../../packages/vfom/SPEECH-BACKEND.json) routes `speech-provider-v1` through VoiceStudio >=0.5.2 with `vf_speech.py`, OmniVoice / MOSS-TTS-Nano and alternatives, Faster-Whisper/MLX Whisper and back-transcription QA.
+- Existing [`packages/vfom/SPEECH-BACKEND.json`](../../../../packages/vfom/SPEECH-BACKEND.json) routes `speech-provider-v1` through VoiceStudio >=0.5.2 with `vf_speech.py`, OmniVoice / MOSS-TTS-Nano and alternatives, Faster-Whisper/MLX Whisper and back-transcription QA.
 - Chris Windows VoiceStudio 0.5.2 installation and Hebrew TTS/ASR QA PASS were documented in early October. The 2026-10-09 intake reported no running VoiceStudio process/`:3900` listener. **No live status is asserted for 2026-10-13**; obtain fresh readback before claiming incumbent runtime success or failure.
 - KittenTTS 2 claims a 1.7B CPU-capable multilingual speech model, expression controls, voice cloning, and 47 voices. Lighter ONNX 15M–80M models are also offered. Upstream claims of Hebrew require direct testing; do not assume the old ONNX models have identical language support. Library code Apache-2.0 **does not cover model weights**; check the actual Stellon Labs Community License for selected models.
 
