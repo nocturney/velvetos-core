@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-13T13:23:07.122Z",
+  "updated_at": "2026-10-13T14:14:19.790Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 109,
+  "candidate_count": 110,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -4070,6 +4070,88 @@
         "evidence_refs": [
           "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md",
           "docs/implementation/office-v2/phase2/speech-tts-comparison-2026-10-13.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-lyogavin-airllm",
+      "source_item_id": null,
+      "name": "AirLLM (lyogavin) — streamed large-model inference / streamed LoRA on limited VRAM",
+      "category": "TOOL",
+      "provenance_class": "POST_POLICY_OWNER_SUBMITTED_REPO_REVIEW",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner supplied the repository for Office v2 intake. AirLLM offers layer/expert streaming when a model exceeds GPU VRAM and may serve as an offline local inference fallback. The upstream VRAM feats do not establish usable latency; published Windows/NVIDIA and AMD complaints plus extreme MoE token times require objective comparisons with existing local serving. Registered for read-only research and isolated, lease-gated same-task benchmarking, not for installation or promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "local-inference",
+        "large-language-model",
+        "disk-layer-streaming",
+        "gpu-memory-offload",
+        "oversize-model-fallback",
+        "streamed-lora",
+        "llm-benchmark"
+      ],
+      "platform_constraints": [
+        "Research reviewed v4.0.0 (2026-09); license for the project code is Apache-2.0. Each model's weights/license, dependency versions and permitted use must be checked independently.",
+        "Peak VRAM figures are NOT throughput: the Kimi K3 release reports ~292 seconds per token on RTX 6000 Ada while checkpoint files consume ~1.56 TB; a practical offline workflow must be demonstrated.",
+        "Open upstream report #364 measured 28.6 s/token for 3B on Windows/NVIDIA with NVMe; #301 reports AMD/ROCm Windows generate problems. They are third-party observations, not reproduced measurements on any Velvet host.",
+        "Open upstream issue #330 contests the older claim that blockwise 4-bit/8-bit compression yields up to 3x speedup; do not assume compression improves throughput on our machines.",
+        "Layer split can temporarily require both original model checkpoint and re-sliced copies. Verify independent disk/RAM/IO budget, model revision, teardown/rollback, and resource owner before any weight download.",
+        "Do not preempt #612 coding-agent, Studio/LOCAL3D/Genex, or #604 fleet resources. No automatic GPU, WSL/OS install, paid API, production server, public listener, credential or customer-data access."
+      ],
+      "shortlist_lanes": [
+        "local-llm-inference"
+      ],
+      "evidence_refs": [
+        "https://github.com/lyogavin/airllm",
+        "https://github.com/lyogavin/airllm/releases/tag/v4.0.0",
+        "https://github.com/lyogavin/airllm/releases/tag/v3.1.0",
+        "https://github.com/lyogavin/airllm/issues/364",
+        "https://github.com/lyogavin/airllm/issues/330",
+        "https://github.com/lyogavin/airllm/issues/301",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "docs/implementation/office-v2/phase2/local-inference-airllm-comparison-2026-10-13.md"
+      ],
+      "notes": [
+        "OWNER LINK 2026-10-13: https://github.com/lyogavin/airllm, manually captured in canonical Office v2 intake; no automated ChatGPT→registry bridge is implied.",
+        "CURRENT KNOWN INCUMBENT: Studio previously used local Ollama/loopback qwen3.5:9b on Chris; live process/port/GPU state is UNKNOWN for this intake. Per-host capability inventory must precede selection.",
+        "COMPETITION-NEUTRAL: evaluate Ollama/llama.cpp quantized and CPU/GPU offload, existing Transformers, and Mac/MLX when appropriate; do not reject AirLLM solely because a local LLM engine is installed.",
+        "SCOPE: potentially replace one inference component or add a selectively invoked offline oversize-model backend; not a full Office, orchestration, TTS, coding-agent or printer replacement.",
+        "PHASE NOW: source/license/compatibility review and synthetic fixture design. FUTURE: gated isolated same-workload benchmark only after hardware/disk/resource and existing service-owner verification.",
+        "TEST: tokens/s, TTFT, cold-start, quality, memory and storage high-water marks, disk throughput, CPU/GPU load, costs and rollback; separate quality differences caused by model quantization from engine performance.",
+        "NO RUNTIME ACTION: no model downloaded, no local AirLLM process run, no GPU leased, no network endpoint provisioned, no production permission changed."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "In Phase 2, verify current per-host model serving inventory and upstream version/license/Windows issues, define isolated 27B/32B oversize-model benchmark with synthetic CAD/code/Hebrew tasks and storage/throughput budget. When a genuinely independent host lease and model rights are available after the relevant #612/#604 gates, benchmark pinned AirLLM against verified existing quantized/offloaded inference and record a decision before any deployment.",
+        "rationale": "Streaming permits otherwise VRAM-infeasible models but can transfer a huge amount of data for every token. It deserves a fair targeted offline comparison against existing smaller faster quantized systems, not incumbent veto nor an automatic replacement.",
+        "decision_evidence_refs": [
+          "https://github.com/lyogavin/airllm",
+          "https://github.com/lyogavin/airllm/issues/364",
+          "https://github.com/lyogavin/airllm/issues/330",
+          "docs/implementation/office-v2/phase2/local-inference-airllm-comparison-2026-10-13.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "local-llm-inference",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and fixture research now; isolated local inference LAB only after Office P0 resource and installation gates",
+        "status": "RESEARCH_ACTIVE",
+        "next_gate": "Complete read-only installed-runtime and machine-inventory cross-check, upstream issue/license review, and reproducible no-customer-data fixture/benchmark definition; hold download/runtime for verified resource and approval gates.",
+        "unlock_condition": "No runnable LAB until verified independent GPU/CPU/disk owner lease, bounded model checkpoint and disk budget, OS/dependency isolation, no preemption of #612/#604, and permitted model weights with rollback.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/local-inference-airllm-comparison-2026-10-13.md",
+          "https://github.com/lyogavin/airllm",
+          "https://github.com/lyogavin/airllm/issues/364"
         ]
       }
     }
