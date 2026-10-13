@@ -196,6 +196,60 @@
           "uniqueItems": true
         }
       }
+    },
+    "evaluation_route": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "An evidence-backed, non-authorizing task route for benchmark-required candidates not in a canonical active or queued P0 shortlist; carried in the candidate registry rather than a parallel queue.",
+      "required": [
+        "workstream",
+        "owner_ref",
+        "phase",
+        "status",
+        "next_gate",
+        "unlock_condition",
+        "evidence_refs"
+      ],
+      "properties": {
+        "workstream": {
+          "type": "string",
+          "minLength": 3
+        },
+        "owner_ref": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Existing phase or issue owner; not a new schedule/authority."
+        },
+        "phase": {
+          "type": "string",
+          "minLength": 10
+        },
+        "status": {
+          "enum": [
+            "NEEDS_SOURCE_REVIEW",
+            "WAITING_GATE",
+            "RESEARCH_ACTIVE",
+            "READY_FOR_ADMISSION_REVIEW"
+          ]
+        },
+        "next_gate": {
+          "type": "string",
+          "minLength": 20
+        },
+        "unlock_condition": {
+          "type": "string",
+          "minLength": 20
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 5
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
     }
   }
 }
