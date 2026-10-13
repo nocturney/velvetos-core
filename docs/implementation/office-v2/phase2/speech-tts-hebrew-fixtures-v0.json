@@ -1,0 +1,110 @@
+{
+  "schema": "velvetos.office-v2.speech-tts-synthetic-fixture.v0",
+  "status": "FIXTURE_PREPARED_NOT_EXECUTED",
+  "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+  "candidate_id": "candidate-kittenml-kittentts",
+  "baseline_provider": "VoiceStudio/OmniVoice; other VoiceStudio TTS engines only if confirmed usable on the host",
+  "intended_providers": [
+    "existing-voicestudio-omnivoice",
+    "existing-voicestudio-other-qualified-engines",
+    "candidate-kittenml-kittentts-2",
+    "candidate-kittenml-legacy-onnx-if-hebrew-proven"
+  ],
+  "invariants": {
+    "synthetic_text_only": true,
+    "no_live_customer_copy": true,
+    "no_real_product_prices": true,
+    "no_publication": true,
+    "no_voice_cloning_without_explicit_consented_sample": true,
+    "speaker_reference": "NONE",
+    "reference_audio": "NONE",
+    "acceptance_baseline_similarity": 0.9,
+    "automated_asr_score": "MEASURE_ONLY; human review required for Hebrew pronunciation",
+    "results": "NOT_RUN",
+    "no_paid_api": true
+  },
+  "cases": [
+    {
+      "id": "he-short",
+      "locale": "he",
+      "text": "שלום, זו בדיקת קריינות בעברית.",
+      "focus": "Basic vowels, consonants and short utterance"
+    },
+    {
+      "id": "he-punctuation",
+      "locale": "he",
+      "text": "בוקר טוב! אפשר להתחיל? כן, בהחלט; נתחיל עכשיו.",
+      "focus": "Question, exclamation and pause prosody"
+    },
+    {
+      "id": "he-number",
+      "locale": "he",
+      "text": "יש כאן 12 ברגים, 3 אומים ו-24 חלקים קטנים.",
+      "focus": "Cardinal numbers in Hebrew"
+    },
+    {
+      "id": "he-decimal",
+      "locale": "he",
+      "text": "רוחב החלק הוא 35.5 מילימטר, והגובה 12.25 מילימטר.",
+      "focus": "Decimals and metric units"
+    },
+    {
+      "id": "he-currency",
+      "locale": "he",
+      "text": "זהו טקסט בדיקה בלבד: מאה ועשרים וחמישה שקלים, ולא מחיר של מוצר אמיתי.",
+      "focus": "Synthetic currency scenario, explicitly not a product price"
+    },
+    {
+      "id": "he-date",
+      "locale": "he",
+      "text": "התאריך לבדיקה הוא 13 באוקטובר 2026, והשעה היא 14:30.",
+      "focus": "Date and time normalization"
+    },
+    {
+      "id": "he-cad-terms",
+      "locale": "mixed",
+      "text": "את קובץ ה-STL אפשר לפתוח ב-Blender, ואת קובץ ה-STEP בתוכנת CAD.",
+      "focus": "Hebrew-English acronyms and product-agnostic CAD terms"
+    },
+    {
+      "id": "he-compute",
+      "locale": "mixed",
+      "text": "אנחנו מריצים את המודל על CPU, ובודקים אם גם GPU פנוי.",
+      "focus": "Hebrew-English technical terms and acronyms"
+    },
+    {
+      "id": "he-negation",
+      "locale": "he",
+      "text": "לא מדפיסים עדיין. קודם בודקים שהמידות נכונות, ורק אחר כך ממשיכים.",
+      "focus": "Negation/intelligibility for operational safety"
+    },
+    {
+      "id": "he-direction",
+      "locale": "he",
+      "text": "פונים שמאלה, ממשיכים ישר שני מטרים, ואז עוצרים ליד הדלת.",
+      "focus": "Left-right direction and imperative verbs"
+    },
+    {
+      "id": "he-long",
+      "locale": "he",
+      "text": "הכנת מודל להדפסה תלת-ממדית מתחילה בבדיקת מידות, עובי דופן וכיוון החלק. לאחר מכן בוחנים כיצד המודל יתמוך בתהליך הייצור, ומהן הנקודות שעלולות להקשות על ההדפסה. רק לאחר שהבדיקות מסתיימות בהצלחה, ניתן לבחור חומר, הגדרות הדפסה ותהליך ייצור מתאים. בכל שלב חשוב לתעד את התוצאה בצורה שניתן לבדוק מחדש.",
+      "focus": "Longer narration and paragraph chunking"
+    },
+    {
+      "id": "en-control",
+      "locale": "en",
+      "text": "This is a neutral English control sentence for speech synthesis comparison.",
+      "focus": "English control for multilingual context"
+    }
+  ],
+  "capture_per_case": [
+    "model/version and voice",
+    "WAV duration and sample rate",
+    "cold/warm wall time and real-time factor",
+    "CPU/RAM/GPU/VRAM peak",
+    "ASR back-transcript and normalized similarity",
+    "native Hebrew human review",
+    "clipping/repetition and long-form stability",
+    "licensing and provenance"
+  ]
+}

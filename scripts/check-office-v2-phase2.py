@@ -74,6 +74,50 @@ COMPETITOR_DOCS = [
 ]
 
 
+def evaluation_route_issues(items: list[dict], lanes: list[dict]) -> list[str]:
+    """Keep unshortlisted research actionable without inventing a second candidate queue."""
+    routed_ids = set()
+    for lane in lanes:
+        routed_ids.update(lane.get("challengers") or [])
+        routed_ids.update(lane.get("queued_challengers") or [])
+
+    problems: list[str] = []
+    statuses = {"NEEDS_SOURCE_REVIEW", "WAITING_GATE", "RESEARCH_ACTIVE", "READY_FOR_ADMISSION_REVIEW"}
+    required = ("workstream", "owner_ref", "phase", "status", "next_gate", "unlock_condition", "evidence_refs")
+    for item in items:
+        cid = item.get("candidate_id")
+        route = item.get("evaluation_route")
+        needs_explicit_route = (
+            item.get("decision_verdict") == "BENCHMARK_REQUIRED"
+            and item.get("lifecycle_state") in {"RESEARCHED", "CANDIDATE"}
+            and cid not in routed_ids
+        )
+        if needs_explicit_route and not isinstance(route, dict):
+            problems.append(f"{cid}: benchmark-required candidate missing shortlist membership or evaluation_route")
+            continue
+        if route is None:
+            continue
+        if not isinstance(route, dict):
+            problems.append(f"{cid}: evaluation_route must be an object")
+            continue
+        for key in required:
+            value = route.get(key)
+            if key == "evidence_refs":
+                if not isinstance(value, list) or not value or not all(
+                    isinstance(x, str) and x.strip() for x in value
+                ):
+                    problems.append(f"{cid}: evaluation_route.{key} missing evidence")
+            elif not isinstance(value, str) or not value.strip():
+                problems.append(f"{cid}: evaluation_route.{key} missing")
+        if route.get("status") not in statuses:
+            problems.append(f"{cid}: invalid evaluation_route.status")
+        if route.get("owner_ref") and not route["owner_ref"].startswith(("https://", "http://")):
+            problems.append(f"{cid}: evaluation_route.owner_ref must identify an existing authority or issue")
+        if item.get("lifecycle_state") in {"ADMITTED", "LAB", "SHADOW", "PILOT", "PRODUCTION"} and route.get("status") == "RESEARCH_ACTIVE":
+            problems.append(f"{cid}: research route cannot assert a promoted runtime state")
+    return problems
+
+
 def validate_competitor_neutrality(registry: dict, items: list[dict], lanes: list[dict]) -> None:
     for path in COMPETITOR_DOCS:
         if not path.is_file() or COMPETITOR_POLICY not in path.read_text(encoding="utf-8-sig"):
@@ -176,6 +220,22 @@ def validate_competitor_neutrality(registry: dict, items: list[dict], lanes: lis
         fail("DeerFlow may not be limited to pattern-only adoption")
     if deerflow.get("authority_role") != "NONE" and deerflow.get("lifecycle_state") != "PRODUCTION":
         fail("research-stage DeerFlow gained authority without production promotion")
+
+    routing_problems = evaluation_route_issues(items, lanes)
+    if routing_problems:
+        fail("candidate evaluation route integrity: " + "; ".join(routing_problems[:5]))
+
+    # Mandatory negative control: an unqueued new contender cannot silently remain unscheduled.
+    test_candidate = next(
+        (item for item in items if item.get("candidate_id") == "candidate-kittenml-kittentts"), None
+    )
+    if not test_candidate or not isinstance(test_candidate.get("evaluation_route"), dict):
+        fail("KittenTTS regression exemplar is absent or lacks an actionable route")
+    without_route = dict(test_candidate)
+    without_route.pop("evaluation_route", None)
+    test_items = [without_route]
+    if not evaluation_route_issues(test_items, lanes):
+        fail("candidate evaluation routing negative control failed to detect forgotten challenger")
 
 
 def main() -> None:

@@ -333,7 +333,18 @@
       "notes": [
         "bootstrap task exists; Phase 0 has not promoted it to project-state authority"
       ],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "memory-context",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Office Phase 3 memory/continuity, after worker checkpoint verification",
+        "status": "WAITING_GATE",
+        "next_gate": "Verify actual source, integration/maintenance costs and memory semantics; compare temporal contradiction, provenance, deletion and stale-vs-fresh retrieval under the existing vfmem / Project State contract.",
+        "unlock_condition": "Reliable checkpoint->compact->verify->resume handoff for a real P0 worker, with no new memory authority.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-hindsight",
@@ -406,7 +417,18 @@
         "prior-research://office-v2-master-plan"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "memory-context",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Office Phase 3 memory/continuity, after worker checkpoint verification",
+        "status": "WAITING_GATE",
+        "next_gate": "Verify actual source, integration/maintenance costs and memory semantics; compare temporal contradiction, provenance, deletion and stale-vs-fresh retrieval under the existing vfmem / Project State contract.",
+        "unlock_condition": "Reliable checkpoint->compact->verify->resume handoff for a real P0 worker, with no new memory authority.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-skillopt",
@@ -429,7 +451,18 @@
         "prior-research://skills"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "agent-quality",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "P0 / coding-worker quality after first verified source-to-PR acceptance",
+        "status": "WAITING_GATE",
+        "next_gate": "Run the existing #612 same-input skill/prompt-quality comparison with Promptfoo and independent model-level QA; record actual pass rate, latency, human minutes, costs and regression results.",
+        "unlock_condition": "A single independently verified no-extra-spend coding-worker reference run plus independently free evaluation resources.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-nvidia-skillevaluator",
@@ -451,7 +484,18 @@
         "prior-research://skills"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "agent-quality",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "P0 / coding-worker quality after first verified source-to-PR acceptance",
+        "status": "WAITING_GATE",
+        "next_gate": "Run the existing #612 same-input skill/prompt-quality comparison with Promptfoo and independent model-level QA; record actual pass rate, latency, human minutes, costs and regression results.",
+        "unlock_condition": "A single independently verified no-extra-spend coding-worker reference run plus independently free evaluation resources.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-agent-skill-eval",
@@ -473,7 +517,18 @@
         "prior-research://skills"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "agent-quality",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "P0 / coding-worker quality after first verified source-to-PR acceptance",
+        "status": "WAITING_GATE",
+        "next_gate": "Run the existing #612 same-input skill/prompt-quality comparison with Promptfoo and independent model-level QA; record actual pass rate, latency, human minutes, costs and regression results.",
+        "unlock_condition": "A single independently verified no-extra-spend coding-worker reference run plus independently free evaluation resources.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-google-skills",
@@ -546,7 +601,18 @@
         "Preserve original candidate ID and source_item_id; original upstream provenance remains ambiguous.",
         "CopilotKit/OpenDots, Anil-matcha/open-dots and diggerhq/opendots are tracked independently; no alias-based promotion."
       ],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "agent-runtime-provenance",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Phase 2 source triage, then #612 Phase 3D agent-runtime comparison",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Resolve exact upstream identity/version, rights, features and compatible Golden Fixture. Deduplicate aliases and queue genuine agent-runtime challengers through a narrowly reviewed canonical registry change, without displacing active contenders.",
+        "unlock_condition": "Source identity and contract fit confirmed; #612 P0 running without contested host/worktree resources.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-herdr",
@@ -592,7 +658,18 @@
         "prior-research://agents"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "agent-runtime-provenance",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Phase 2 source triage, then #612 Phase 3D agent-runtime comparison",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Resolve exact upstream identity/version, rights, features and compatible Golden Fixture. Deduplicate aliases and queue genuine agent-runtime challengers through a narrowly reviewed canonical registry change, without displacing active contenders.",
+        "unlock_condition": "Source identity and contract fit confirmed; #612 P0 running without contested host/worktree resources.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-pi-desktop",
@@ -614,7 +691,18 @@
         "prior-research://agents"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "agent-runtime-provenance",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Phase 2 source triage, then #612 Phase 3D agent-runtime comparison",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Resolve exact upstream identity/version, rights, features and compatible Golden Fixture. Deduplicate aliases and queue genuine agent-runtime challengers through a narrowly reviewed canonical registry change, without displacing active contenders.",
+        "unlock_condition": "Source identity and contract fit confirmed; #612 P0 running without contested host/worktree resources.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-laya",
@@ -636,7 +724,18 @@
         "prior-research://agents"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "agent-runtime-provenance",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Phase 2 source triage, then #612 Phase 3D agent-runtime comparison",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Resolve exact upstream identity/version, rights, features and compatible Golden Fixture. Deduplicate aliases and queue genuine agent-runtime challengers through a narrowly reviewed canonical registry change, without displacing active contenders.",
+        "unlock_condition": "Source identity and contract fit confirmed; #612 P0 running without contested host/worktree resources.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-reef",
@@ -658,7 +757,18 @@
         "prior-research://agents"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "agent-runtime-provenance",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Phase 2 source triage, then #612 Phase 3D agent-runtime comparison",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Resolve exact upstream identity/version, rights, features and compatible Golden Fixture. Deduplicate aliases and queue genuine agent-runtime challengers through a narrowly reviewed canonical registry change, without displacing active contenders.",
+        "unlock_condition": "Source identity and contract fit confirmed; #612 P0 running without contested host/worktree resources.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-pydantic-ai",
@@ -728,7 +838,18 @@
         "prior-research://agents"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "agent-runtime-provenance",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Phase 2 source triage, then #612 Phase 3D agent-runtime comparison",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Resolve exact upstream identity/version, rights, features and compatible Golden Fixture. Deduplicate aliases and queue genuine agent-runtime challengers through a narrowly reviewed canonical registry change, without displacing active contenders.",
+        "unlock_condition": "Source identity and contract fit confirmed; #612 P0 running without contested host/worktree resources.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-letta",
@@ -840,7 +961,18 @@
       "notes": [
         "no MCP/A2A winner in Phase 0"
       ],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "tool-gateway-interoperability",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Phase 2 source/contract triage; Office Phase 3 tool-gateway interoperability",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Distinguish protocol/pattern from deployable provider and find the actual upstream source; test typed discovery, trust, permissions and MCP/A2A interop only after contract fit is established.",
+        "unlock_condition": "Concrete upstream and comparable provider-or-protocol fixture established; existing tool gateway authority remains unchanged.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-agent-reach",
@@ -862,7 +994,18 @@
         "prior-research://office-v2-master-plan"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "tool-gateway-interoperability",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Phase 2 source/contract triage; Office Phase 3 tool-gateway interoperability",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Distinguish protocol/pattern from deployable provider and find the actual upstream source; test typed discovery, trust, permissions and MCP/A2A interop only after contract fit is established.",
+        "unlock_condition": "Concrete upstream and comparable provider-or-protocol fixture established; existing tool gateway authority remains unchanged.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-hatchet",
@@ -1101,7 +1244,18 @@
       "notes": [
         "not preselected as universal business SoT"
       ],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "business-manufacturing-authorities",
+        "owner_ref": "https://docs.google.com/document/d/15NMtyaUDjxiACPKEY_T5rW7IUFwtD2qU88yhbKQhEkw/edit",
+        "phase": "Office Master v3 Phase 5 business/manufacturing domain evaluation",
+        "status": "WAITING_GATE",
+        "next_gate": "Map each product to its actual domain (ERP/CRM/accounting/material inventory/manufacturing); benchmark relevant quote->order->inventory->production->payment fixture against working incumbent, including export/rollback and source-of-truth cutover feasibility.",
+        "unlock_condition": "Phase 5 domain-authority contracts and continuity gates are ready; read-only rights/feature research can proceed independently.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-twenty",
@@ -1123,7 +1277,18 @@
         "prior-research://office-v2-master-plan"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "business-manufacturing-authorities",
+        "owner_ref": "https://docs.google.com/document/d/15NMtyaUDjxiACPKEY_T5rW7IUFwtD2qU88yhbKQhEkw/edit",
+        "phase": "Office Master v3 Phase 5 business/manufacturing domain evaluation",
+        "status": "WAITING_GATE",
+        "next_gate": "Map each product to its actual domain (ERP/CRM/accounting/material inventory/manufacturing); benchmark relevant quote->order->inventory->production->payment fixture against working incumbent, including export/rollback and source-of-truth cutover feasibility.",
+        "unlock_condition": "Phase 5 domain-authority contracts and continuity gates are ready; read-only rights/feature research can proceed independently.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-akaunting",
@@ -1145,7 +1310,18 @@
         "prior-research://office-v2-master-plan"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "business-manufacturing-authorities",
+        "owner_ref": "https://docs.google.com/document/d/15NMtyaUDjxiACPKEY_T5rW7IUFwtD2qU88yhbKQhEkw/edit",
+        "phase": "Office Master v3 Phase 5 business/manufacturing domain evaluation",
+        "status": "WAITING_GATE",
+        "next_gate": "Map each product to its actual domain (ERP/CRM/accounting/material inventory/manufacturing); benchmark relevant quote->order->inventory->production->payment fixture against working incumbent, including export/rollback and source-of-truth cutover feasibility.",
+        "unlock_condition": "Phase 5 domain-authority contracts and continuity gates are ready; read-only rights/feature research can proceed independently.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-spoolman",
@@ -1168,7 +1344,18 @@
         "prior-research://office-v2-master-plan"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "business-manufacturing-authorities",
+        "owner_ref": "https://docs.google.com/document/d/15NMtyaUDjxiACPKEY_T5rW7IUFwtD2qU88yhbKQhEkw/edit",
+        "phase": "Office Master v3 Phase 5 business/manufacturing domain evaluation",
+        "status": "WAITING_GATE",
+        "next_gate": "Map each product to its actual domain (ERP/CRM/accounting/material inventory/manufacturing); benchmark relevant quote->order->inventory->production->payment fixture against working incumbent, including export/rollback and source-of-truth cutover feasibility.",
+        "unlock_condition": "Phase 5 domain-authority contracts and continuity gates are ready; read-only rights/feature research can proceed independently.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-carbon",
@@ -1191,7 +1378,18 @@
         "prior-research://office-v2-master-plan"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "business-manufacturing-authorities",
+        "owner_ref": "https://docs.google.com/document/d/15NMtyaUDjxiACPKEY_T5rW7IUFwtD2qU88yhbKQhEkw/edit",
+        "phase": "Office Master v3 Phase 5 business/manufacturing domain evaluation",
+        "status": "WAITING_GATE",
+        "next_gate": "Map each product to its actual domain (ERP/CRM/accounting/material inventory/manufacturing); benchmark relevant quote->order->inventory->production->payment fixture against working incumbent, including export/rollback and source-of-truth cutover feasibility.",
+        "unlock_condition": "Phase 5 domain-authority contracts and continuity gates are ready; read-only rights/feature research can proceed independently.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-inventree",
@@ -1216,7 +1414,18 @@
       "notes": [
         "no manufacturing SoT cutover in Phase 0"
       ],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "business-manufacturing-authorities",
+        "owner_ref": "https://docs.google.com/document/d/15NMtyaUDjxiACPKEY_T5rW7IUFwtD2qU88yhbKQhEkw/edit",
+        "phase": "Office Master v3 Phase 5 business/manufacturing domain evaluation",
+        "status": "WAITING_GATE",
+        "next_gate": "Map each product to its actual domain (ERP/CRM/accounting/material inventory/manufacturing); benchmark relevant quote->order->inventory->production->payment fixture against working incumbent, including export/rollback and source-of-truth cutover feasibility.",
+        "unlock_condition": "Phase 5 domain-authority contracts and continuity gates are ready; read-only rights/feature research can proceed independently.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-paperless",
@@ -1238,7 +1447,18 @@
         "prior-research://office-v2-master-plan"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "documents-assets-creative",
+        "owner_ref": "https://docs.google.com/document/d/15NMtyaUDjxiACPKEY_T5rW7IUFwtD2qU88yhbKQhEkw/edit",
+        "phase": "Office Master v3 Phases 5-6 documents, 3D and creative asset pipeline",
+        "status": "WAITING_GATE",
+        "next_gate": "Split into appropriate document, CAD/3D asset or production-tracking contract and run a bounded same-artifact import/export/metadata/rollback comparison after current authority and asset-location facts are verified.",
+        "unlock_condition": "Phase 5/6 document/asset Golden Fixture and incumbent location/ownership have been mapped; no duplicate source of truth.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-manyfold",
@@ -1260,7 +1480,18 @@
         "prior-research://office-v2-master-plan"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "documents-assets-creative",
+        "owner_ref": "https://docs.google.com/document/d/15NMtyaUDjxiACPKEY_T5rW7IUFwtD2qU88yhbKQhEkw/edit",
+        "phase": "Office Master v3 Phases 5-6 documents, 3D and creative asset pipeline",
+        "status": "WAITING_GATE",
+        "next_gate": "Split into appropriate document, CAD/3D asset or production-tracking contract and run a bounded same-artifact import/export/metadata/rollback comparison after current authority and asset-location facts are verified.",
+        "unlock_condition": "Phase 5/6 document/asset Golden Fixture and incumbent location/ownership have been mapped; no duplicate source of truth.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-kitsu",
@@ -1282,7 +1513,18 @@
         "prior-research://office-v2-master-plan"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "documents-assets-creative",
+        "owner_ref": "https://docs.google.com/document/d/15NMtyaUDjxiACPKEY_T5rW7IUFwtD2qU88yhbKQhEkw/edit",
+        "phase": "Office Master v3 Phases 5-6 documents, 3D and creative asset pipeline",
+        "status": "WAITING_GATE",
+        "next_gate": "Split into appropriate document, CAD/3D asset or production-tracking contract and run a bounded same-artifact import/export/metadata/rollback comparison after current authority and asset-location facts are verified.",
+        "unlock_condition": "Phase 5/6 document/asset Golden Fixture and incumbent location/ownership have been mapped; no duplicate source of truth.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-ayon",
@@ -1304,7 +1546,18 @@
         "prior-research://office-v2-master-plan"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "documents-assets-creative",
+        "owner_ref": "https://docs.google.com/document/d/15NMtyaUDjxiACPKEY_T5rW7IUFwtD2qU88yhbKQhEkw/edit",
+        "phase": "Office Master v3 Phases 5-6 documents, 3D and creative asset pipeline",
+        "status": "WAITING_GATE",
+        "next_gate": "Split into appropriate document, CAD/3D asset or production-tracking contract and run a bounded same-artifact import/export/metadata/rollback comparison after current authority and asset-location facts are verified.",
+        "unlock_condition": "Phase 5/6 document/asset Golden Fixture and incumbent location/ownership have been mapped; no duplicate source of truth.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-graphiti",
@@ -1351,7 +1604,18 @@
         "prior-research://office-v2-master-plan"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "memory-context",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Office Phase 3 memory/continuity, after worker checkpoint verification",
+        "status": "WAITING_GATE",
+        "next_gate": "Verify actual source, integration/maintenance costs and memory semantics; compare temporal contradiction, provenance, deletion and stale-vs-fresh retrieval under the existing vfmem / Project State contract.",
+        "unlock_condition": "Reliable checkpoint->compact->verify->resume handoff for a real P0 worker, with no new memory authority.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-deja-vu",
@@ -1374,7 +1638,18 @@
         "prior-research://office-v2-master-plan"
       ],
       "notes": [],
-      "original_office_v2_verdict": "BENCHMARK"
+      "original_office_v2_verdict": "BENCHMARK",
+      "evaluation_route": {
+        "workstream": "memory-context",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Office Phase 3 memory/continuity, after worker checkpoint verification",
+        "status": "WAITING_GATE",
+        "next_gate": "Verify actual source, integration/maintenance costs and memory semantics; compare temporal contradiction, provenance, deletion and stale-vs-fresh retrieval under the existing vfmem / Project State contract.",
+        "unlock_condition": "Reliable checkpoint->compact->verify->resume handoff for a real P0 worker, with no new memory authority.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
+      }
     },
     {
       "candidate_id": "candidate-cli-anything",
@@ -3192,6 +3467,17 @@
         "next_action": "P0.5 only: after useful code runner works, compare native isolated worker vs OpenShell sandbox with intentional file/network denial, worker exit/restart, latency and host resource footprint.",
         "rationale": "Potential hardening complement to execution, not a prerequisite to first two real P0 coding PRs.",
         "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-sandbox-isolation",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "P0.5 isolated agent hardening after first live coding-agent proof",
+        "status": "WAITING_GATE",
+        "next_gate": "Compare the existing isolated worker against OpenShell on synthetic file/network denial, cancellation, cleanup, resource impact and safe recovery; do not create a second scheduler or host bridge.",
+        "unlock_condition": "One independently verified coding worker and fresh noncontending LAB capacity.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md"
+        ]
       }
     },
     {
@@ -3772,6 +4058,18 @@
         "decision_evidence_refs": [
           "https://github.com/KittenML/KittenTTS/blob/main/README.md",
           "https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6146293572"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "speech-tts-local",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Phase 2 SP-0/SP-1 now, Phase 4/6 CreativeCraft speech pipeline next",
+        "status": "RESEARCH_ACTIVE",
+        "next_gate": "Complete model-weight license/source verification and pin Hebrew/mixed-language fixtures; check VoiceStudio live health, then execute an isolated CPU-first same-fixture benchmark when independent host capacity exists.",
+        "unlock_condition": "SP-0/SP-1 read-only now; SP-2 live readback and SP-3 isolated run only after resource/rights gates.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md",
+          "docs/implementation/office-v2/phase2/speech-tts-comparison-2026-10-13.md"
         ]
       }
     }
