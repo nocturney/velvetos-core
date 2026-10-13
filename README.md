@@ -180,6 +180,9 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 
 **Office v2 — #604 LINUX PEERCRED SINK DENIAL (2026-10-12, ISOLATED SYNTHETIC LAB ONLY):** An opt-in disposable Linux harness exercises actual kernel `SO_PEERCRED` UID admission and deny-by-default local file permissions across a fake sink, two worker identities and one unauthorized identity. All **17/17** local acceptance probes passed; two deliberately weakened policy mutations were correctly rejected (**11/17**, **14/17**). An old owner holding the **current simulated ref SHA** could not submit an effect after fixture epoch rotation, and three local contenders yielded one atomic same-SQLite synthetic effect. [Exact report and raw receipts](docs/implementation/office-v2/phase2/p0-604-checkpoint46-linux-peercred-sink-lab-2026-10-12.md) explicitly deny production GitHub/etcd fencing, cross-host isolation, Git credentials, CA-to-Worker binding, and Dagu fleet admission. #604 remains OPEN/RED; #612 OPEN/PARTIAL.
 
+
+**VFRESEARCH OCT13 SOURCE REVIEW (2026-10-13, EVIDENCE-LIMITED / NO RUNTIME CHANGE):** The [dated weekly report](packages/vfresearch/sources/2026-10-13-weekly-links.md) records 93 rechecked inspiration-source entries: 64 GitHub repo/README excerpts, 3 oversized GitHub metadata-only cases, 22 public vendor/research pages (including 2 official alternate pages), and **4 owner-origin historic conversation shares reread only from SHA-pinned archived source notes because live URLs were inaccessible** (`liveBodyVerified=false`). `LINKS.json` preserves the live-access caveats alongside revised review dates; canonical `openUrl` fixes only for Blender MCP (2) and the already-known Huly successor (1). The companion [Print · Demand · Sound](packages/vfresearch/sources/2026-10-13-print-demand.md) contains idea-only 2026-10-09 audio/visual observations; **Israel demand nothing-solid**, inventory/rights unknown, no content scheduled. Existing research, Office/VelvetOS single-writer, print/customer, Instagram/WhatsApp, model and credential admission policies are unchanged.
+
 <!-- OPERATIONAL-SNAPSHOT:START -->
 <table>
 <tr>
@@ -205,7 +208,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
-| **Last verified / refreshed evidence** | `2026-10-12T11:30:51+03:00` |
+| **Last verified / refreshed evidence** | `2026-10-13T00:57:32+03:00` |
 
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
