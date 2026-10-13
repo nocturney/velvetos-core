@@ -29,6 +29,10 @@ Turn all prior research into a closed, measurable decision system. The source in
 
 Eight distinct upstream agent candidates and the historical Letta memory candidate are now recorded as research/queued challengers, with the ambiguous historical OpenDots identity preserved separately. See [staged research handoff](agent-composition-intake-2026-10-10.md) and [A/B/C machine-readable comparison plan](agent-composition-plan-v0.json). This is **not** LAB admission, production promotion, authorization to spend, use new credentials or start another scheduler. The existing Phase 2 sensor enforces the candidate and queue invariants.
 
+## Owner-submitted 19-repo intake — 2026-10-13
+
+All 19 repositories from the owner-provided GitHub batch, including corrected `anus-dev/ANUS`, are registered for **research-only** comparative routing. Nine full agent-harness challengers are queued in the existing `agent-runtime` overflow; the other ten have named non-P0 phase/owner routes. [Intake and execution map](owner-repo-intake-2026-10-13.md) · [immutable batch receipt](owner-repo-intake-2026-10-13.json). This does **not** preempt #612 P0 proof, admit LAB execution, grant model/host credentials or produce benchmark winners.
+
 ## Candidate lifecycle
 
 `DISCOVERED → RESEARCHED → CANDIDATE → ADMITTED → LAB → SHADOW → PILOT → PRODUCTION → FALLBACK → RETIRED`.
