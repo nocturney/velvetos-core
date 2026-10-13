@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-13T13:23:07.122Z",
+  "updated_at": "2026-10-13T20:11:14.201Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 109,
+  "candidate_count": 128,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -4070,6 +4070,1191 @@
         "evidence_refs": [
           "docs/implementation/office-v2/phase2/candidate-routing-audit-2026-10-13.md",
           "docs/implementation/office-v2/phase2/speech-tts-comparison-2026-10-13.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-cyan4973-xxhash",
+      "source_item_id": null,
+      "name": "xxHash fast non-cryptographic hashing",
+      "category": "TOOL",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, TOOL candidate for VelvetOS artifacts; LOCAL3D; STOW. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "artifact-cache",
+        "non-cryptographic-hash",
+        "performance"
+      ],
+      "platform_constraints": [
+        "License observed: BSD-2-Clause.",
+        "Non-cryptographic hash: never replace security SHA-256, signatures, or provenance verification."
+      ],
+      "shortlist_lanes": [
+        "artifact-hash-cache"
+      ],
+      "evidence_refs": [
+        "https://github.com/Cyan4973/xxHash",
+        "https://github.com/Cyan4973/xxHash/tree/680bf463fa1ca0461b9a7c2dab7556e1f54cf4cf",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream 680bf463fa1ca0461b9a7c2dab7556e1f54cf4cf; correct ANUS path used.",
+        "Target projects: VelvetOS artifacts; LOCAL3D; STOW; intended phase Phase 4/6 artifact and caching diagnostics; #595 owns review.",
+        "Task gate: Measure cache/index speed on synthetic large file lists; preserve SHA-256 for all trusted receipts and security checks.",
+        "Non-P0 capability routed through evaluation_route, not a seventh active P0 shortlist.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Measure cache/index speed on synthetic large file lists; preserve SHA-256 for all trusted receipts and security checks.",
+        "rationale": "Capability fit: VelvetOS artifacts; LOCAL3D; STOW. Rights/operational blockers: Non-cryptographic hash: never replace security SHA-256, signatures, or provenance verification.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "artifact-hash-cache",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Phase 4/6 artifact and caching diagnostics",
+        "status": "RESEARCH_ACTIVE",
+        "next_gate": "Measure cache/index speed on synthetic large file lists; preserve SHA-256 for all trusted receipts and security checks.",
+        "unlock_condition": "Source/license/security review and task-specific fixture first; do not interrupt #612 priority or reserve resources without independent capacity.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/Cyan4973/xxHash/tree/680bf463fa1ca0461b9a7c2dab7556e1f54cf4cf"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-isair-jarvis",
+      "source_item_id": null,
+      "name": "Jarvis local-first voice assistant",
+      "category": "AGENT_UI",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, AGENT_UI candidate for VelvetOS Control Center; Office voice UX. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "voice-assistant",
+        "local-first",
+        "mcp",
+        "memory"
+      ],
+      "platform_constraints": [
+        "License observed: Custom non-commercial; commercial license required.",
+        "Commercial-use license required; microphone, memory and tool credentials need independent privacy review."
+      ],
+      "shortlist_lanes": [
+        "voice-assistant-ux"
+      ],
+      "evidence_refs": [
+        "https://github.com/isair/jarvis",
+        "https://github.com/isair/jarvis/tree/7eb5a303437350af8fb0b491a3e1e886608d596a",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream 7eb5a303437350af8fb0b491a3e1e886608d596a; correct ANUS path used.",
+        "Target projects: VelvetOS Control Center; Office voice UX; intended phase Phase 4/6 voice and interaction UX; #595 owns review.",
+        "Task gate: Review voice activation and local-memory interaction against read-only Office contracts; first clear commercial rights and consent.",
+        "Non-P0 capability routed through evaluation_route, not a seventh active P0 shortlist.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Review voice activation and local-memory interaction against read-only Office contracts; first clear commercial rights and consent.",
+        "rationale": "Capability fit: VelvetOS Control Center; Office voice UX. Rights/operational blockers: Commercial-use license required; microphone, memory and tool credentials need independent privacy review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "voice-assistant-ux",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Phase 4/6 voice and interaction UX",
+        "status": "RESEARCH_ACTIVE",
+        "next_gate": "Review voice activation and local-memory interaction against read-only Office contracts; first clear commercial rights and consent.",
+        "unlock_condition": "Source/license/security review and task-specific fixture first; do not interrupt #612 priority or reserve resources without independent capacity.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/isair/jarvis/tree/7eb5a303437350af8fb0b491a3e1e886608d596a"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-esengine-deepseek-reasonix",
+      "source_item_id": null,
+      "name": "Reasonix coding agent",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, AGENT_RUNTIME candidate for Office v2 P0; AI Development Studio comparison. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "coding-agent",
+        "cli",
+        "agent-runtime",
+        "desktop"
+      ],
+      "platform_constraints": [
+        "License observed: MIT.",
+        "Model/provider entitlement and real noninteractive quality are unverified; never activate unattended desktop or production filesystem tools."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/esengine/DeepSeek-Reasonix",
+        "https://github.com/esengine/DeepSeek-Reasonix/tree/6f9643f976b834ed6588825d0dfee280078a81bc",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream 6f9643f976b834ed6588825d0dfee280078a81bc; correct ANUS path used.",
+        "Target projects: Office v2 P0; AI Development Studio comparison; intended phase Phase 2/3D P0 coding-agent comparison; #612 owns review.",
+        "Task gate: After existing P0 baseline, inspect CLI noninteractive contract, isolate a synthetic code task, compare exact tests/diff/receipts/cost vs OpenCode.",
+        "P0 overflow: queue only. Active shortlist unaffected; no scheduler or production authorization.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "After existing P0 baseline, inspect CLI noninteractive contract, isolate a synthetic code task, compare exact tests/diff/receipts/cost vs OpenCode.",
+        "rationale": "Capability fit: Office v2 P0; AI Development Studio comparison. Rights/operational blockers: Model/provider entitlement and real noninteractive quality are unverified; never activate unattended desktop or production filesystem tools.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-runtime",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Phase 2/3D P0 coding-agent comparison",
+        "status": "WAITING_GATE",
+        "next_gate": "After existing P0 baseline, inspect CLI noninteractive contract, isolate a synthetic code task, compare exact tests/diff/receipts/cost vs OpenCode.",
+        "unlock_condition": "Existing #612 real, independently verified P0 agent PR/QA/recovery reference first; then rights/cost/security preflight and isolated fixture admission. No Codex CLI.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/esengine/DeepSeek-Reasonix/tree/6f9643f976b834ed6588825d0dfee280078a81bc"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-mpfaffenberger-code-puppy",
+      "source_item_id": null,
+      "name": "Code Puppy Python agent",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, AGENT_RUNTIME candidate for Office v2 P0; AI Development Studio comparison. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "coding-agent",
+        "python",
+        "tool-use"
+      ],
+      "platform_constraints": [
+        "License observed: MIT.",
+        "Model account cost/tool execution and extension permissions require checks; PyPI installation alone is not an execution proof."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/mpfaffenberger/code_puppy",
+        "https://github.com/mpfaffenberger/code_puppy/tree/741b4177e2a9169f4a614cbce8d4a2bf3f3b5831",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream 741b4177e2a9169f4a614cbce8d4a2bf3f3b5831; correct ANUS path used.",
+        "Target projects: Office v2 P0; AI Development Studio comparison; intended phase Phase 2/3D P0 coding-agent comparison; #612 owns review.",
+        "Task gate: Run pinned headless synthetic code change with identical model and strict task envelope; evaluate output, tests and resource footprint.",
+        "P0 overflow: queue only. Active shortlist unaffected; no scheduler or production authorization.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Run pinned headless synthetic code change with identical model and strict task envelope; evaluate output, tests and resource footprint.",
+        "rationale": "Capability fit: Office v2 P0; AI Development Studio comparison. Rights/operational blockers: Model account cost/tool execution and extension permissions require checks; PyPI installation alone is not an execution proof.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-runtime",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Phase 2/3D P0 coding-agent comparison",
+        "status": "WAITING_GATE",
+        "next_gate": "Run pinned headless synthetic code change with identical model and strict task envelope; evaluate output, tests and resource footprint.",
+        "unlock_condition": "Existing #612 real, independently verified P0 agent PR/QA/recovery reference first; then rights/cost/security preflight and isolated fixture admission. No Codex CLI.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/mpfaffenberger/code_puppy/tree/741b4177e2a9169f4a614cbce8d4a2bf3f3b5831"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-hiyouga-llamafactory",
+      "source_item_id": null,
+      "name": "LlamaFactory model fine-tuning",
+      "category": "MODEL_TRAINING",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, MODEL_TRAINING candidate for Office v2 local-model research; AI Development Studio. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "fine-tuning",
+        "local-inference",
+        "gpu",
+        "model-training"
+      ],
+      "platform_constraints": [
+        "License observed: Apache-2.0 (model/data licenses separate).",
+        "GPU/VRAM contention, dataset/privacy governance and model-weight licenses; no training should run before P0 capacity verification."
+      ],
+      "shortlist_lanes": [
+        "local-model-finetuning"
+      ],
+      "evidence_refs": [
+        "https://github.com/hiyouga/LlamaFactory",
+        "https://github.com/hiyouga/LlamaFactory/tree/1fded918ac4723ac9966363f51ed4500866c5d1d",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream 1fded918ac4723ac9966363f51ed4500866c5d1d; correct ANUS path used.",
+        "Target projects: Office v2 local-model research; AI Development Studio; intended phase Phase 3 model quality and future training, after P0 inference baseline; #612 owns review.",
+        "Task gate: Check if prompt/RAG wins first; only then benchmark a tiny synthetic LoRA fine-tune with dataset provenance and unchanged P0 leases.",
+        "Non-P0 capability routed through evaluation_route, not a seventh active P0 shortlist.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Check if prompt/RAG wins first; only then benchmark a tiny synthetic LoRA fine-tune with dataset provenance and unchanged P0 leases.",
+        "rationale": "Capability fit: Office v2 local-model research; AI Development Studio. Rights/operational blockers: GPU/VRAM contention, dataset/privacy governance and model-weight licenses; no training should run before P0 capacity verification.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "local-model-finetuning",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Phase 3 model quality and future training, after P0 inference baseline",
+        "status": "RESEARCH_ACTIVE",
+        "next_gate": "Check if prompt/RAG wins first; only then benchmark a tiny synthetic LoRA fine-tune with dataset provenance and unchanged P0 leases.",
+        "unlock_condition": "Source/license/security review and task-specific fixture first; do not interrupt #612 priority or reserve resources without independent capacity.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/hiyouga/LlamaFactory/tree/1fded918ac4723ac9966363f51ed4500866c5d1d"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-rtk-ai-rtk",
+      "source_item_id": null,
+      "name": "RTK CLI token-output optimizer",
+      "category": "TOOL",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, TOOL candidate for Office v2 agent tools; code QA. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "token-optimization",
+        "cli",
+        "performance",
+        "tool-output"
+      ],
+      "platform_constraints": [
+        "License observed: Apache-2.0 CLI; BUSL-1.1 engine and proxy subject to separate grants.",
+        "Compression may omit critical diagnostics; bundled engine/proxy business-source licenses require exact-scope review, not assumed MIT/Apache."
+      ],
+      "shortlist_lanes": [
+        "agent-token-efficiency"
+      ],
+      "evidence_refs": [
+        "https://github.com/rtk-ai/rtk",
+        "https://github.com/rtk-ai/rtk/tree/799ee990974d46f5507552113a39be36f37f41e6",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream 799ee990974d46f5507552113a39be36f37f41e6; correct ANUS path used.",
+        "Target projects: Office v2 agent tools; code QA; intended phase Phase 2/3D token/resource optimization after baseline; #612 owns review.",
+        "Task gate: Replay fixed CLI logs with and without RTK; check error/line/exit fidelity, token counts and license boundaries; no proxy interception in P0.",
+        "Non-P0 capability routed through evaluation_route, not a seventh active P0 shortlist.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Replay fixed CLI logs with and without RTK; check error/line/exit fidelity, token counts and license boundaries; no proxy interception in P0.",
+        "rationale": "Capability fit: Office v2 agent tools; code QA. Rights/operational blockers: Compression may omit critical diagnostics; bundled engine/proxy business-source licenses require exact-scope review, not assumed MIT/Apache.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-token-efficiency",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Phase 2/3D token/resource optimization after baseline",
+        "status": "RESEARCH_ACTIVE",
+        "next_gate": "Replay fixed CLI logs with and without RTK; check error/line/exit fidelity, token counts and license boundaries; no proxy interception in P0.",
+        "unlock_condition": "Source/license/security review and task-specific fixture first; do not interrupt #612 priority or reserve resources without independent capacity.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/rtk-ai/rtk/tree/799ee990974d46f5507552113a39be36f37f41e6"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-tirth8205-code-review-graph",
+      "source_item_id": null,
+      "name": "Code Review Graph local code intelligence",
+      "category": "CODE_INTELLIGENCE",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, CODE_INTELLIGENCE candidate for VelvetOS Core; AI Development Studio; LOCAL3D; STOW. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "code-intelligence",
+        "knowledge-graph",
+        "mcp",
+        "code-review"
+      ],
+      "platform_constraints": [
+        "License observed: MIT.",
+        "Repository benchmark claims are not our measurement; language coverage, index privacy and stale graph handling require test."
+      ],
+      "shortlist_lanes": [
+        "code-intelligence"
+      ],
+      "evidence_refs": [
+        "https://github.com/tirth8205/code-review-graph",
+        "https://github.com/tirth8205/code-review-graph/tree/6b12d11625cbec3b6773e076cb3d136464fa90e5",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream 6b12d11625cbec3b6773e076cb3d136464fa90e5; correct ANUS path used.",
+        "Target projects: VelvetOS Core; AI Development Studio; LOCAL3D; STOW; intended phase Phase 3D P0 coding QA and Phase 4 code topology UI; #612 owns review.",
+        "Task gate: Compare precise affected-symbol recall, false negatives, token usage and incremental reindex speed vs incumbent and Serena on pinned synthetic repos.",
+        "Non-P0 capability routed through evaluation_route, not a seventh active P0 shortlist.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare precise affected-symbol recall, false negatives, token usage and incremental reindex speed vs incumbent and Serena on pinned synthetic repos.",
+        "rationale": "Capability fit: VelvetOS Core; AI Development Studio; LOCAL3D; STOW. Rights/operational blockers: Repository benchmark claims are not our measurement; language coverage, index privacy and stale graph handling require test.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "code-intelligence",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Phase 3D P0 coding QA and Phase 4 code topology UI",
+        "status": "RESEARCH_ACTIVE",
+        "next_gate": "Compare precise affected-symbol recall, false negatives, token usage and incremental reindex speed vs incumbent and Serena on pinned synthetic repos.",
+        "unlock_condition": "Source/license/security review and task-specific fixture first; do not interrupt #612 priority or reserve resources without independent capacity.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/tirth8205/code-review-graph/tree/6b12d11625cbec3b6773e076cb3d136464fa90e5"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-oraios-serena",
+      "source_item_id": null,
+      "name": "Serena semantic coding MCP",
+      "category": "CODE_INTELLIGENCE",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, CODE_INTELLIGENCE candidate for Office v2 coding workers; AI Development Studio. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "code-intelligence",
+        "mcp",
+        "lsp",
+        "semantic-search"
+      ],
+      "platform_constraints": [
+        "License observed: Serena application GPL-3.0-or-later; SolidLSP MIT.",
+        "Copyleft licensing for Serena application; file edit tools and LSP server execution must remain isolated; SolidLSP has separate MIT scope."
+      ],
+      "shortlist_lanes": [
+        "code-intelligence"
+      ],
+      "evidence_refs": [
+        "https://github.com/oraios/serena",
+        "https://github.com/oraios/serena/tree/f9972a32c67359dd4c4a5ab597688bb10d21d1f3",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream f9972a32c67359dd4c4a5ab597688bb10d21d1f3; correct ANUS path used.",
+        "Target projects: Office v2 coding workers; AI Development Studio; intended phase Phase 3D P0 coding QA / optional MCP code tooling; #612 owns review.",
+        "Task gate: Compare safe read-only symbol retrieval and impact assessment vs Code Review Graph; require legal review before embedding/copying code.",
+        "Non-P0 capability routed through evaluation_route, not a seventh active P0 shortlist.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare safe read-only symbol retrieval and impact assessment vs Code Review Graph; require legal review before embedding/copying code.",
+        "rationale": "Capability fit: Office v2 coding workers; AI Development Studio. Rights/operational blockers: Copyleft licensing for Serena application; file edit tools and LSP server execution must remain isolated; SolidLSP has separate MIT scope.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "code-intelligence",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Phase 3D P0 coding QA / optional MCP code tooling",
+        "status": "RESEARCH_ACTIVE",
+        "next_gate": "Compare safe read-only symbol retrieval and impact assessment vs Code Review Graph; require legal review before embedding/copying code.",
+        "unlock_condition": "Source/license/security review and task-specific fixture first; do not interrupt #612 priority or reserve resources without independent capacity.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/oraios/serena/tree/f9972a32c67359dd4c4a5ab597688bb10d21d1f3"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-qwenlm-qwen-code",
+      "source_item_id": null,
+      "name": "Qwen Code terminal coding agent",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, AGENT_RUNTIME candidate for Office v2 P0; AI Development Studio comparison. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "coding-agent",
+        "cli",
+        "typescript",
+        "mcp"
+      ],
+      "platform_constraints": [
+        "License observed: Apache-2.0.",
+        "Free CLI source does not guarantee free model calls; verify Windows/Mac CLI and exact authenticated inference path."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/QwenLM/qwen-code",
+        "https://github.com/QwenLM/qwen-code/tree/6212189f1f8334da78a69e3fb6b63ff6ca88251e",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream 6212189f1f8334da78a69e3fb6b63ff6ca88251e; correct ANUS path used.",
+        "Target projects: Office v2 P0; AI Development Studio comparison; intended phase Phase 2/3D P0 coding-agent comparison; #612 owns review.",
+        "Task gate: Headless same-task code edit using only local or preauthorized model path; independent tests, receipt and rollback comparison vs OpenCode.",
+        "P0 overflow: queue only. Active shortlist unaffected; no scheduler or production authorization.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Headless same-task code edit using only local or preauthorized model path; independent tests, receipt and rollback comparison vs OpenCode.",
+        "rationale": "Capability fit: Office v2 P0; AI Development Studio comparison. Rights/operational blockers: Free CLI source does not guarantee free model calls; verify Windows/Mac CLI and exact authenticated inference path.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-runtime",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Phase 2/3D P0 coding-agent comparison",
+        "status": "WAITING_GATE",
+        "next_gate": "Headless same-task code edit using only local or preauthorized model path; independent tests, receipt and rollback comparison vs OpenCode.",
+        "unlock_condition": "Existing #612 real, independently verified P0 agent PR/QA/recovery reference first; then rights/cost/security preflight and isolated fixture admission. No Codex CLI.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/QwenLM/qwen-code/tree/6212189f1f8334da78a69e3fb6b63ff6ca88251e"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-kilo-org-kilocode",
+      "source_item_id": null,
+      "name": "Kilo Code all-in-one coding platform",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, AGENT_RUNTIME candidate for Office v2 P0; AI Development Studio comparison. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "coding-agent",
+        "agent-runtime",
+        "cli",
+        "ide"
+      ],
+      "platform_constraints": [
+        "License observed: MIT (verify subpackages).",
+        "Large integrated stack, model accounts and multiple automation surfaces may conflict with independent Office task ownership."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/Kilo-Org/kilocode",
+        "https://github.com/Kilo-Org/kilocode/tree/ff20ca72d29409ff9a412931d57ad088c4403430",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream ff20ca72d29409ff9a412931d57ad088c4403430; correct ANUS path used.",
+        "Target projects: Office v2 P0; AI Development Studio comparison; intended phase Phase 2/3D agent-runtime comparison after baseline; #612 owns review.",
+        "Task gate: Pin minimal CLI/headless mode; compare verified PR output and operator burden with incumbent; avoid enabling additional schedulers.",
+        "P0 overflow: queue only. Active shortlist unaffected; no scheduler or production authorization.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Pin minimal CLI/headless mode; compare verified PR output and operator burden with incumbent; avoid enabling additional schedulers.",
+        "rationale": "Capability fit: Office v2 P0; AI Development Studio comparison. Rights/operational blockers: Large integrated stack, model accounts and multiple automation surfaces may conflict with independent Office task ownership.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-runtime",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Phase 2/3D agent-runtime comparison after baseline",
+        "status": "WAITING_GATE",
+        "next_gate": "Pin minimal CLI/headless mode; compare verified PR output and operator burden with incumbent; avoid enabling additional schedulers.",
+        "unlock_condition": "Existing #612 real, independently verified P0 agent PR/QA/recovery reference first; then rights/cost/security preflight and isolated fixture admission. No Codex CLI.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/Kilo-Org/kilocode/tree/ff20ca72d29409ff9a412931d57ad088c4403430"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-cobusgreyling-loop-engineering",
+      "source_item_id": null,
+      "name": "Loop Engineering agent workflow patterns",
+      "category": "AGENT_QUALITY",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, AGENT_QUALITY candidate for Office v2 P0 QA; continuous agent workflow. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-quality",
+        "agent-loop",
+        "quality-gates",
+        "replay"
+      ],
+      "platform_constraints": [
+        "License observed: MIT.",
+        "Unattended agent loops can amplify mistakes and model spend; instructional patterns are not a standalone safe scheduler."
+      ],
+      "shortlist_lanes": [
+        "agent-quality-evaluation"
+      ],
+      "evidence_refs": [
+        "https://github.com/cobusgreyling/loop-engineering",
+        "https://github.com/cobusgreyling/loop-engineering/tree/078c9bf786181d872c06b8772d61bb5d778ab8ef",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream 078c9bf786181d872c06b8772d61bb5d778ab8ef; correct ANUS path used.",
+        "Target projects: Office v2 P0 QA; continuous agent workflow; intended phase Phase 3D quality and replayability after verified P0 baseline; #612 owns review.",
+        "Task gate: Run bounded replay/audit loops on identical synthetic code fixtures; measure verified output, runaway attempts and bounded spending.",
+        "Non-P0 capability routed through evaluation_route, not a seventh active P0 shortlist.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Run bounded replay/audit loops on identical synthetic code fixtures; measure verified output, runaway attempts and bounded spending.",
+        "rationale": "Capability fit: Office v2 P0 QA; continuous agent workflow. Rights/operational blockers: Unattended agent loops can amplify mistakes and model spend; instructional patterns are not a standalone safe scheduler.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-quality-evaluation",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Phase 3D quality and replayability after verified P0 baseline",
+        "status": "RESEARCH_ACTIVE",
+        "next_gate": "Run bounded replay/audit loops on identical synthetic code fixtures; measure verified output, runaway attempts and bounded spending.",
+        "unlock_condition": "Source/license/security review and task-specific fixture first; do not interrupt #612 priority or reserve resources without independent capacity.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/cobusgreyling/loop-engineering/tree/078c9bf786181d872c06b8772d61bb5d778ab8ef"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-gentleman-programming-gentle-ai",
+      "source_item_id": null,
+      "name": "Gentle AI coding workflow configuration",
+      "category": "AGENT_QUALITY",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, AGENT_QUALITY candidate for Office v2 agent policy; AI Development Studio. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-quality",
+        "agent-memory",
+        "spec-driven",
+        "mcp"
+      ],
+      "platform_constraints": [
+        "License observed: MIT.",
+        "Setup configures user agents, MCPs and memory; never apply globally or overwrite existing Office settings during research."
+      ],
+      "shortlist_lanes": [
+        "agent-quality-evaluation"
+      ],
+      "evidence_refs": [
+        "https://github.com/Gentleman-Programming/gentle-ai",
+        "https://github.com/Gentleman-Programming/gentle-ai/tree/61125bbe37bcf6afa1c4a93e140f03aa7a04a43a",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream 61125bbe37bcf6afa1c4a93e140f03aa7a04a43a; correct ANUS path used.",
+        "Target projects: Office v2 agent policy; AI Development Studio; intended phase Phase 3D memory/spec/review workflow after coding baseline; #612 owns review.",
+        "Task gate: Review spec/test-first and memory contracts; simulate in isolated throwaway HOME and compare tests/continuity against existing Office state.",
+        "Non-P0 capability routed through evaluation_route, not a seventh active P0 shortlist.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Review spec/test-first and memory contracts; simulate in isolated throwaway HOME and compare tests/continuity against existing Office state.",
+        "rationale": "Capability fit: Office v2 agent policy; AI Development Studio. Rights/operational blockers: Setup configures user agents, MCPs and memory; never apply globally or overwrite existing Office settings during research.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-quality-evaluation",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Phase 3D memory/spec/review workflow after coding baseline",
+        "status": "RESEARCH_ACTIVE",
+        "next_gate": "Review spec/test-first and memory contracts; simulate in isolated throwaway HOME and compare tests/continuity against existing Office state.",
+        "unlock_condition": "Source/license/security review and task-specific fixture first; do not interrupt #612 priority or reserve resources without independent capacity.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/Gentleman-Programming/gentle-ai/tree/61125bbe37bcf6afa1c4a93e140f03aa7a04a43a"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-mvschwarz-openrig",
+      "source_item_id": null,
+      "name": "OpenRig multi-agent team harness",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, AGENT_RUNTIME candidate for Office v2 agent-runtime; worker coordination research. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "multi-agent",
+        "agent-runtime",
+        "teams",
+        "tmux"
+      ],
+      "platform_constraints": [
+        "License observed: Apache-2.0.",
+        "Upstream favors tmux and macOS/Linux; Codex CLI must not be used due separate quota; no second production scheduler."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/mvschwarz/openrig",
+        "https://github.com/mvschwarz/openrig/tree/9c1d444f371c47eda11709af457983bf6236a75d",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream 9c1d444f371c47eda11709af457983bf6236a75d; correct ANUS path used.",
+        "Target projects: Office v2 agent-runtime; worker coordination research; intended phase Phase 3D agent-runtime and later #604 fleet comparison; #612 owns review.",
+        "Task gate: Evaluate single-owner agent/team task on isolated Linux/Mac synthetic fixture with permitted runtime; compare tasks and evidence, not dashboard appeal.",
+        "P0 overflow: queue only. Active shortlist unaffected; no scheduler or production authorization.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Evaluate single-owner agent/team task on isolated Linux/Mac synthetic fixture with permitted runtime; compare tasks and evidence, not dashboard appeal.",
+        "rationale": "Capability fit: Office v2 agent-runtime; worker coordination research. Rights/operational blockers: Upstream favors tmux and macOS/Linux; Codex CLI must not be used due separate quota; no second production scheduler.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-runtime",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Phase 3D agent-runtime and later #604 fleet comparison",
+        "status": "WAITING_GATE",
+        "next_gate": "Evaluate single-owner agent/team task on isolated Linux/Mac synthetic fixture with permitted runtime; compare tasks and evidence, not dashboard appeal.",
+        "unlock_condition": "Existing #612 real, independently verified P0 agent PR/QA/recovery reference first; then rights/cost/security preflight and isolated fixture admission. No Codex CLI.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/mvschwarz/openrig/tree/9c1d444f371c47eda11709af457983bf6236a75d"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-yaoapp-yao",
+      "source_item_id": null,
+      "name": "Yao Agents cross-device workspace",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, AGENT_RUNTIME candidate for Office v2 agent workspace; Control Center UX. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-workspace",
+        "multi-device",
+        "task-board",
+        "agent-runtime"
+      ],
+      "platform_constraints": [
+        "License observed: Modified Apache-2.0 with certificate/branding and enterprise conditions.",
+        "Nonstandard enterprise/branding/certificate license conditions; API/remote worker and identity permission boundaries unverified."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/YaoApp/yao",
+        "https://github.com/YaoApp/yao/tree/ae7524659f04a09c69d6c67e50075668dc5563a4",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream ae7524659f04a09c69d6c67e50075668dc5563a4; correct ANUS path used.",
+        "Target projects: Office v2 agent workspace; Control Center UX; intended phase Phase 3D/4 agent workspace comparison; #612 owns review.",
+        "Task gate: First complete license preflight; compare read-only board and agent handoff using synthetic workspaces, no secondary canonical task database.",
+        "P0 overflow: queue only. Active shortlist unaffected; no scheduler or production authorization.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "First complete license preflight; compare read-only board and agent handoff using synthetic workspaces, no secondary canonical task database.",
+        "rationale": "Capability fit: Office v2 agent workspace; Control Center UX. Rights/operational blockers: Nonstandard enterprise/branding/certificate license conditions; API/remote worker and identity permission boundaries unverified.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-runtime",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Phase 3D/4 agent workspace comparison",
+        "status": "WAITING_GATE",
+        "next_gate": "First complete license preflight; compare read-only board and agent handoff using synthetic workspaces, no secondary canonical task database.",
+        "unlock_condition": "Existing #612 real, independently verified P0 agent PR/QA/recovery reference first; then rights/cost/security preflight and isolated fixture admission. No Codex CLI.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/YaoApp/yao/tree/ae7524659f04a09c69d6c67e50075668dc5563a4"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-anus-dev-anus",
+      "source_item_id": null,
+      "name": "ANUS free-tier CLI coding agent",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, AGENT_RUNTIME candidate for Office v2 P0; optional CLI benchmark. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "coding-agent",
+        "free-tier-router",
+        "cli",
+        "provider-fallback"
+      ],
+      "platform_constraints": [
+        "License observed: MIT; Pi engine dependency reported MIT.",
+        "Free-tier providers may use transmitted source for training; model routing is remote/dynamic; zero-cost fields are not independent billing evidence."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/anus-dev/ANUS",
+        "https://github.com/anus-dev/ANUS/tree/3072a939ac00e925ebc8aba698f90206750e518c",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream 3072a939ac00e925ebc8aba698f90206750e518c; correct ANUS path used.",
+        "Target projects: Office v2 P0; optional CLI benchmark; intended phase Phase 2/3D coding-agent comparison after baseline; #612 owns review.",
+        "Task gate: Verify free-tier privacy, exact provider, quotas and no-spend route; synthetic non-secret CLI task only, with separate cost/egress evidence.",
+        "P0 overflow: queue only. Active shortlist unaffected; no scheduler or production authorization.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Verify free-tier privacy, exact provider, quotas and no-spend route; synthetic non-secret CLI task only, with separate cost/egress evidence.",
+        "rationale": "Capability fit: Office v2 P0; optional CLI benchmark. Rights/operational blockers: Free-tier providers may use transmitted source for training; model routing is remote/dynamic; zero-cost fields are not independent billing evidence.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-runtime",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Phase 2/3D coding-agent comparison after baseline",
+        "status": "WAITING_GATE",
+        "next_gate": "Verify free-tier privacy, exact provider, quotas and no-spend route; synthetic non-secret CLI task only, with separate cost/egress evidence.",
+        "unlock_condition": "Existing #612 real, independently verified P0 agent PR/QA/recovery reference first; then rights/cost/security preflight and isolated fixture admission. No Codex CLI.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/anus-dev/ANUS/tree/3072a939ac00e925ebc8aba698f90206750e518c"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-kunagent-kun",
+      "source_item_id": null,
+      "name": "Kun local agent workspace UI",
+      "category": "AGENT_UI",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, AGENT_UI candidate for VelvetOS Control Center UX; AI Development Studio. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-ui",
+        "local-first",
+        "desktop",
+        "workbench"
+      ],
+      "platform_constraints": [
+        "License observed: PolyForm Noncommercial 1.0; written commercial/internal permission needed.",
+        "Noncommercial license blocks unlicensed commercial integration; desktop UI architecture differs from STOW WPF and protected UI contracts."
+      ],
+      "shortlist_lanes": [
+        "agent-workbench-ux"
+      ],
+      "evidence_refs": [
+        "https://github.com/KunAgent/Kun",
+        "https://github.com/KunAgent/Kun/tree/8e167608c63d2ec67ea01f90962c906b878c3611",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream 8e167608c63d2ec67ea01f90962c906b878c3611; correct ANUS path used.",
+        "Target projects: VelvetOS Control Center UX; AI Development Studio; intended phase Phase 4 UI and local runtime design; #595 owns review.",
+        "Task gate: Study local code/document split, source receipts and human controls as design references only; seek explicit rights before code reuse.",
+        "Non-P0 capability routed through evaluation_route, not a seventh active P0 shortlist.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Study local code/document split, source receipts and human controls as design references only; seek explicit rights before code reuse.",
+        "rationale": "Capability fit: VelvetOS Control Center UX; AI Development Studio. Rights/operational blockers: Noncommercial license blocks unlicensed commercial integration; desktop UI architecture differs from STOW WPF and protected UI contracts.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-workbench-ux",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Phase 4 UI and local runtime design",
+        "status": "RESEARCH_ACTIVE",
+        "next_gate": "Study local code/document split, source receipts and human controls as design references only; seek explicit rights before code reuse.",
+        "unlock_condition": "Source/license/security review and task-specific fixture first; do not interrupt #612 priority or reserve resources without independent capacity.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/KunAgent/Kun/tree/8e167608c63d2ec67ea01f90962c906b878c3611"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-q00-ouroboros",
+      "source_item_id": null,
+      "name": "Ouroboros replayable agent OS",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, AGENT_RUNTIME candidate for Office v2 agent quality and runtime controls. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime",
+        "agent-evaluation",
+        "replay",
+        "budget-limit"
+      ],
+      "platform_constraints": [
+        "License observed: MIT.",
+        "Recursive agent improvement and retries need bounded budget, isolation, independent acceptance tests and no Codex CLI."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/Q00/ouroboros",
+        "https://github.com/Q00/ouroboros/tree/426b37c3b23d2d18f3a7adbd4edee25de0474a61",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream 426b37c3b23d2d18f3a7adbd4edee25de0474a61; correct ANUS path used.",
+        "Target projects: Office v2 agent quality and runtime controls; intended phase Phase 3D bounded-agent evolution comparison; #612 owns review.",
+        "Task gate: Compare gated staged synthetic-task iteration against frozen evaluator; detect reward hacking, incorrect retries, runaway cost and fail-closed behavior.",
+        "P0 overflow: queue only. Active shortlist unaffected; no scheduler or production authorization.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare gated staged synthetic-task iteration against frozen evaluator; detect reward hacking, incorrect retries, runaway cost and fail-closed behavior.",
+        "rationale": "Capability fit: Office v2 agent quality and runtime controls. Rights/operational blockers: Recursive agent improvement and retries need bounded budget, isolation, independent acceptance tests and no Codex CLI.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-runtime",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Phase 3D bounded-agent evolution comparison",
+        "status": "WAITING_GATE",
+        "next_gate": "Compare gated staged synthetic-task iteration against frozen evaluator; detect reward hacking, incorrect retries, runaway cost and fail-closed behavior.",
+        "unlock_condition": "Existing #612 real, independently verified P0 agent PR/QA/recovery reference first; then rights/cost/security preflight and isolated fixture admission. No Codex CLI.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/Q00/ouroboros/tree/426b37c3b23d2d18f3a7adbd4edee25de0474a61"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-nexu-io-html-video",
+      "source_item_id": null,
+      "name": "html-video local programmatic video pipeline",
+      "category": "MEDIA",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, MEDIA candidate for Velvet Factory marketing; Office creative pipeline. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "html-to-video",
+        "creative-pipeline",
+        "ffmpeg",
+        "local-render"
+      ],
+      "platform_constraints": [
+        "License observed: Apache-2.0.",
+        "Browser/ffmpeg execution and licensing of assets/audio require sandbox checks; no autonomous posting, Instagram scheduler or asset authority."
+      ],
+      "shortlist_lanes": [
+        "creative-video-rendering"
+      ],
+      "evidence_refs": [
+        "https://github.com/nexu-io/html-video",
+        "https://github.com/nexu-io/html-video/tree/c414ecc07f795add03807d5d9ce4baefd807cea2",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream c414ecc07f795add03807d5d9ce4baefd807cea2; correct ANUS path used.",
+        "Target projects: Velvet Factory marketing; Office creative pipeline; intended phase Phase 6 Creative Craft / social media preview; #595 owns review.",
+        "Task gate: Render a synthetic 9:16 Hebrew product video locally; check reproducible MP4, quality, subtitles, attribution and no cloud spend.",
+        "Non-P0 capability routed through evaluation_route, not a seventh active P0 shortlist.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Render a synthetic 9:16 Hebrew product video locally; check reproducible MP4, quality, subtitles, attribution and no cloud spend.",
+        "rationale": "Capability fit: Velvet Factory marketing; Office creative pipeline. Rights/operational blockers: Browser/ffmpeg execution and licensing of assets/audio require sandbox checks; no autonomous posting, Instagram scheduler or asset authority.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "creative-video-rendering",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Phase 6 Creative Craft / social media preview",
+        "status": "RESEARCH_ACTIVE",
+        "next_gate": "Render a synthetic 9:16 Hebrew product video locally; check reproducible MP4, quality, subtitles, attribution and no cloud spend.",
+        "unlock_condition": "Source/license/security review and task-specific fixture first; do not interrupt #612 priority or reserve resources without independent capacity.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/nexu-io/html-video/tree/c414ecc07f795add03807d5d9ce4baefd807cea2"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-mikedev115-aetox-harness",
+      "source_item_id": null,
+      "name": "Aetox Windows-native agent harness",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "OWNER_SUBMITTED_19_GITHUB_REPOS_2026_10_13",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted GitHub batch, AGENT_RUNTIME candidate for Office v2 Windows desktop executor; computer-use integration. Upstream identity, stated rights and capabilities reviewed; no same-fixture LAB or operational evidence permits promotion.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "windows-agent",
+        "desktop-tools",
+        "agent-runtime",
+        "source-available"
+      ],
+      "platform_constraints": [
+        "License observed: Proprietary source-available; standalone commercial use allowed, no code reuse.",
+        "Source license explicitly prohibits reusing/modifying in VelvetOS; broad desktop/shell permissions require secure guest isolation."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/Mikedev115/Aetox-Harness",
+        "https://github.com/Mikedev115/Aetox-Harness/tree/6e546c1374054048c7d5f3e11f7d1aa2140f075a",
+        "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md"
+      ],
+      "notes": [
+        "Provenance: owner 2026-10-13 GitHub batch; pinned upstream 6e546c1374054048c7d5f3e11f7d1aa2140f075a; correct ANUS path used.",
+        "Target projects: Office v2 Windows desktop executor; computer-use integration; intended phase Phase 3D Windows agent runtime and desktop comparison; #612 owns review.",
+        "Task gate: Read security/extension API and license; compare standalone app on disposable Windows synthetic workspace after #612 worker/sandbox proof.",
+        "P0 overflow: queue only. Active shortlist unaffected; no scheduler or production authorization.",
+        "No local install, inference, model charge, account authorization, external effects or live benchmark proven by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Read security/extension API and license; compare standalone app on disposable Windows synthetic workspace after #612 worker/sandbox proof.",
+        "rationale": "Capability fit: Office v2 Windows desktop executor; computer-use integration. Rights/operational blockers: Source license explicitly prohibits reusing/modifying in VelvetOS; broad desktop/shell permissions require secure guest isolation.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-runtime",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Phase 3D Windows agent runtime and desktop comparison",
+        "status": "WAITING_GATE",
+        "next_gate": "Read security/extension API and license; compare standalone app on disposable Windows synthetic workspace after #612 worker/sandbox proof.",
+        "unlock_condition": "Existing #612 real, independently verified P0 agent PR/QA/recovery reference first; then rights/cost/security preflight and isolated fixture admission. No Codex CLI.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
+          "https://github.com/Mikedev115/Aetox-Harness/tree/6e546c1374054048c7d5f3e11f7d1aa2140f075a"
         ]
       }
     }
