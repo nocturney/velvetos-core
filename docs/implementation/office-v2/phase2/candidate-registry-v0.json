@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-10T14:22:36.714Z",
+  "updated_at": "2026-10-13T13:23:07.122Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 108,
+  "candidate_count": 109,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -3709,6 +3709,70 @@
         "next_action": "Study coordinator/topic worker/memory interface; compare only if cost, isolation, export and external account gates pass.",
         "rationale": "MIT app wrapper, but compute/agents use hosted OpenComputer; externally provisioned compute/account and potential charges not approved.",
         "decision_evidence_refs": []
+      }
+    },
+    {
+      "candidate_id": "candidate-kittenml-kittentts",
+      "source_item_id": null,
+      "name": "KittenML KittenTTS — KittenTTS 2 / lightweight ONNX text-to-speech",
+      "category": "TOOL",
+      "provenance_class": "POST_POLICY_OWNER_SUBMITTED_REPO_REVIEW",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner explicitly requested an Office v2 evaluation against already installed VoiceStudio/OmniVoice and other existing speech engines. Provenance and credible Hebrew/CPU features reviewed; no local model or comparative Golden Fixture verified. Scheduled for no-spend research now and isolated speech capability benchmark at the first nonconflicting resource gate.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "speech-tts",
+        "local-inference",
+        "cpu-inference",
+        "hebrew-tts-candidate",
+        "expressive-speech",
+        "voice-cloning",
+        "speech-streaming"
+      ],
+      "platform_constraints": [
+        "KittenTTS 2 code is Apache-2.0, but model weights are separately licensed under Stellon Labs Community License; verify each exact weight repository and use scope before LAB/commercial publication.",
+        "KittenTTS 2 README claims multilingual including Hebrew, while some documentation lists fewer languages/voices; Hebrew fluency and available Hebrew-capable voices are NOT verified locally.",
+        "KittenTTS 2 may require considerable CPU RAM or CUDA resources and model download; version-pin, profile CPU first on verified idle host; do not preempt #612 coding-agent GPU/CPU leases.",
+        "Legacy ONNX 15M–80M models are lightweight but must not be assumed Hebrew capable without an individual smoke test.",
+        "Voice cloning and reference audio require speaker consent; no production copy/publication authority, recording collection, new paid API/service, or network exposure follows from research registration."
+      ],
+      "shortlist_lanes": [
+        "speech-tts-local"
+      ],
+      "evidence_refs": [
+        "https://github.com/KittenML/KittenTTS",
+        "https://github.com/KittenML/KittenTTS/blob/main/README.md",
+        "https://huggingface.co/KittenML/kitten-tts-2/blob/main/LICENSE.md",
+        "https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6146293572",
+        "packages/vfom/SPEECH-BACKEND.json",
+        "docs/implementation/office-v2/phase2/speech-tts-comparison-2026-10-13.md"
+      ],
+      "notes": [
+        "OWNER REQUEST 2026-10-13: Register KittenTTS in existing Office 2.0 canonical candidate registry, not merely a GitHub comment; evaluate fairly without excluding because VoiceStudio already exists.",
+        "INCUMBENT: VoiceStudio 0.5.2 installed historically on Chris; OmniVoice and Faster-Whisper QA Hebrew PASS on documented 2026-10-01; 2026-10-09 review observed :3900 not listening. No fresh live doctor has run for this intake. Existing SPEECH-BACKEND.json has OmniVoice/MOSS/VoxCPM options.",
+        "EXECUTION OWNER: #595 intake and candidate review; Phase 4 / Phase 6 Creative Craft speech pipeline owns same-fixture TTS bake-off; #612 P0 worker and any actual host/resource lease retain priority. See speech-tts-comparison-2026-10-13.md.",
+        "PHASE/QUEUE: Phase 2 research and license/fixture preparation now; isolated CPU-first LAB once an independently idle host is verified, or after #612 priority work releases capacity. Not gated on an arbitrary universal percentage improvement.",
+        "MEASURE: Hebrew numbers/punctuation/RTL and mixed-language fidelity, subjective voice naturalness, back-transcribed similarity/WER/CER, latency/RTF/streaming, RAM/VRAM/CPU, model footprint, stability, maintenance, license and rollback.",
+        "COMPETITION-NEUTRAL: preserve existing VoiceStudio route and compare TTS engine replacement, second TTS provider, or hybrid routing; KittenTTS is not an ASR replacement or second standalone publishing authority."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Immediately prepare the Phase 2 comparison/rights/fixture checklist under #595. At first verified independent idle CPU host window (or following #612 P0 resource release), run isolated pinned KittenTTS 2 and appropriate ONNX smoke against the existing VoiceStudio engines on identical Hebrew + mixed-language speech fixtures. Save evidence/scorecard, determine whether to add Kitten as a typed speech provider via existing SPEECH-BACKEND, and record explicit verdict before any promotion.",
+        "rationale": "KittenTTS 2 offers locally controlled CPU-capable multilingual TTS and voice/style features worth independent measurement; existing VoiceStudio provides installed Hebrew TTS, transcription, subtitles and QA. An added local TTS engine might be superior for some workloads or complement, not automatically replace, the working application/service. Registration must not be an incumbent veto or a runtime entitlement.",
+        "decision_evidence_refs": [
+          "https://github.com/KittenML/KittenTTS/blob/main/README.md",
+          "https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6146293572"
+        ]
       }
     }
   ]
