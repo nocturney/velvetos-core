@@ -2543,6 +2543,70 @@ def main() -> int:
                        and c.get("pass") is False for c in negative.get("cases", []))):
             fail("#604 checkpoint46 mutation failure erased: " + mutation)
 
+    # #604 Checkpoint47: real native LOCAL bare Git under independent Linux
+    # peer-UID sink plus SEPARATE SQLite recovery fixture. Static CI-only:
+    # do not execute the root Linux harness on hosted CI, Windows or macOS.
+    cp47_script = ROOT / "scripts" / "vf_office_v2_604_native_git_peercred_unknown_lab.py"
+    cp47_source_sha = "e0c5a53aea2b54d4f13fe33d9cf4b635268da517327eb8488dd7a2332081c41d"
+    if hashlib.sha256(cp47_script.read_bytes()).hexdigest() != cp47_source_sha:
+        fail("#604 checkpoint47 Linux native Git source SHA drift")
+    cp47_positive_file = P2 / "p0-604-checkpoint47-native-git-peercred-unknown-2026-10-12.json"
+    if hashlib.sha256(cp47_positive_file.read_bytes()).hexdigest() != (
+        "5fb8bb725bbc8c2b8111c5a4b2848197f879784fec34de8f56ec72f751c9f56c"
+    ):
+        fail("#604 checkpoint47 positive real local Git receipt bytes drift")
+    cp47 = load(cp47_positive_file)
+    cp47_cases = cp47.get("cases")
+    if (
+        cp47.get("schema") != "vf604.native-git-peercred-unknown-offline.v1"
+        or cp47.get("status") != "PASS_DISPOSABLE_LINUX_NATIVE_GIT_WITH_UNKNOWN"
+        or cp47.get("source_sha256") != cp47_source_sha
+        or cp47.get("passed") != 20 or cp47.get("tests") != 20
+        or not isinstance(cp47_cases, list) or len(cp47_cases) != 20
+        or not all(isinstance(c, dict) and c.get("passed") is True for c in cp47_cases)
+        or not {"N08_STALE_OWNER_CURRENT_REAL_GIT_SHA_DENIED",
+                "N09_TWO_UID_THREE_PROCESS_REAL_GIT_SINGLE_WRITER",
+                "N12_PRE_GIT_CRASH_DURABLE_UNLEASED_INTENT",
+                "N15_POST_GIT_PRE_ACK_CRASH_IS_AMBIGUOUS",
+                "N16_NO_ACK_RESTART_NEVER_BLIND_REPLAYS",
+                "N17_MANUAL_GIT_READBACK_VERIFIES_COMMIT"}.issubset(
+                    {c.get("case") for c in cp47_cases})
+        or cp47.get("native_local_bare_git_update_ref") is not True
+        or cp47.get("real_kernel_so_peercred") is not True
+        or cp47.get("separate_numeric_os_uids") is not True
+        or any(cp47.get(k) is not False for k in (
+            "external_github_effect", "real_lease_provider",
+            "cross_store_atomicity_proven", "production_credential_custody_proven",
+            "external_git_remote_tested", "multi_host_fence_proven",
+            "mid_push_expiry_fenced", "mac_windows_isolation_proven",
+            "dagu_worker_identity_proven", "production_worker_admitted"))
+        or any(cp47.get(k) != 0 for k in (
+            "external_network_effects", "new_os_users", "new_tcp_listeners",
+            "paid_api_calls", "production_effects"))
+    ):
+        fail("#604 checkpoint47 local Git incorrectly elevated to production proof")
+    for name, digest, count, required_failure in (
+        ("stale-epoch",
+         "bc2b6a0aceee9539e46694e318f25f5e545142ce5ab43e8fd85bd4a5cb4bb043",
+         18, "N08_STALE_OWNER_CURRENT_REAL_GIT_SHA_DENIED"),
+        ("unknown-freeze",
+         "0d0c06254a392176851b08346d9914028cc7a2c028eb0baca5c6a2e4ba8ebaf8",
+         16, "N16_NO_ACK_RESTART_NEVER_BLIND_REPLAYS"),
+    ):
+        negative_file = P2 / f"p0-604-checkpoint47-mutation-{name}-2026-10-12.json"
+        if hashlib.sha256(negative_file.read_bytes()).hexdigest() != digest:
+            fail("#604 checkpoint47 original mutation receipt drift: " + name)
+        negative = load(negative_file)
+        failures = negative.get("cases")
+        if (negative.get("status") != "FAIL_CLOSED_DO_NOT_ADMIT"
+            or negative.get("tests") != 20 or negative.get("passed") != count
+            or not isinstance(failures, list) or len(failures) != 20
+            or not any(isinstance(c, dict) and c.get("case") == required_failure
+                       and c.get("passed") is False for c in failures)
+            or negative.get("external_github_effect") is not False
+            or negative.get("production_worker_admitted") is not False):
+            fail("#604 checkpoint47 mutation control failure was erased: " + name)
+
     # #612 real two-host parallel coding: quarantined source from ONE physical
     # Qwen/Aider LAB. Independently replay 3 visible + 12 hidden cases;
     # never imply the model owned GitHub credentials, a fleet lease or merge.
