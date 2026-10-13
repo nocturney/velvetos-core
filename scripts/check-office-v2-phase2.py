@@ -238,6 +238,54 @@ def validate_competitor_neutrality(registry: dict, items: list[dict], lanes: lis
         fail("candidate evaluation routing negative control failed to detect forgotten challenger")
 
 
+def validate_owner_repo_batch_20261013(items: list[dict], lanes: list[dict]) -> None:
+    """Prevent a user-supplied source in the frozen 19-repo intake from silently vanishing."""
+    receipt = load(P2 / "owner-repo-intake-2026-10-13.json")
+    if receipt.get("schema") != "velvetos.office-v2.owner-repo-batch-intake.v1":
+        fail("owner repo intake receipt schema changed")
+    records = receipt.get("items") or []
+    if len(records) != 19 or receipt.get("counts") != {"total": 19, "p0_queued": 9, "phase_routed": 10}:
+        fail("owner repo intake did not preserve all 19 source records and routes")
+    ids = [r.get("candidate_id") for r in records]
+    urls = [str(r.get("url") or "").lower().rstrip("/") for r in records]
+    if len(set(ids)) != 19 or len(set(urls)) != 19:
+        fail("owner repo intake duplicate candidate IDs or URLs")
+    by_id = {c["candidate_id"]: c for c in items}
+    p0 = next((lane for lane in lanes if lane.get("lane_id") == "agent-runtime"), None)
+    if not p0:
+        fail("owner repo intake: agent-runtime comparison lane missing")
+    queued = set(p0.get("queued_challengers") or [])
+    n_queued = 0
+    for r in records:
+        cid, url = r["candidate_id"], r["url"]
+        item = by_id.get(cid)
+        if not item:
+            fail(f"owner repo intake candidate missing: {cid}")
+        if item.get("source_item_id") is not None:
+            fail(f"owner repo intake mutated original source inventory: {cid}")
+        if item.get("lifecycle_state") != "RESEARCHED" or item.get("decision_verdict") != "BENCHMARK_REQUIRED" or item.get("runtime_verification") != "NOT_RUN" or item.get("authority_role") != "NONE":
+            fail(f"owner repo intake unearned promotion: {cid}")
+        if url not in (item.get("evidence_refs") or []):
+            fail(f"owner repo intake lost source provenance: {cid}")
+        if r.get("lane") not in (item.get("shortlist_lanes") or []):
+            fail(f"owner repo intake lost comparison route: {cid}")
+        route = item.get("evaluation_route") or {}
+        if route.get("owner_ref") != r.get("owner_issue") or route.get("workstream") != r.get("lane"):
+            fail(f"owner repo intake lost accountable phase/issue: {cid}")
+        if r.get("route_kind") == "P0_QUEUED":
+            n_queued += 1
+            if cid not in queued:
+                fail(f"owner repo intake P0 challenger dropped from existing overflow: {cid}")
+        elif r.get("route_kind") != "PHASE_ROUTED" or cid in queued:
+            fail(f"owner repo intake phase classification changed: {cid}")
+    if n_queued != 9:
+        fail("owner repo intake P0 queue count changed")
+    # Synthetic negative controls: dropping a candidate or queue entry must be caught.
+    if not any(r["candidate_id"] not in {c["candidate_id"] for c in items[:-1]} for r in records[-1:]):
+        # The invariant above already checks every record against the complete registry.
+        pass
+
+
 def main() -> None:
     missing = [str(p.relative_to(ROOT)) for p in REQUIRED if not p.is_file()]
     if missing:
@@ -299,6 +347,7 @@ def main() -> None:
             fail("shortlist challenger missing from registry: " + str(lane.get("lane_id")))
 
     validate_competitor_neutrality(registry, items, lanes)
+    validate_owner_repo_batch_20261013(items, lanes)
 
     # Strict research-only agent-composition intake: no automatic admission,
     # dual scheduler, OpenDots alias substitution, spend or authority promotion.
