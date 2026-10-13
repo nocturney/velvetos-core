@@ -1,6 +1,6 @@
 # Office v2 — Speech/TTS provider comparison: KittenTTS vs existing VoiceStudio
 
-**Owner request:** 2026-10-13. **Status:** `PLANNED / RESEARCH_ACTIVE / LAB_NOT_RUN / PRODUCTION_UNCHANGED`.
+**Owner request:** 2026-10-13. **Status:** `SP-0 RESEARCH_ACTIVE / SP-1 FIXTURE_PREPARED / SP-2 LIVE_BASELINE_PARTIAL / SP-3 LAB_NOT_RUN / PRODUCTION_UNCHANGED`.
 **Canonical candidate:** `candidate-kittenml-kittentts` in [Phase 2 Candidate Registry](candidate-registry-v0.json).
 **Evaluation lane:** `speech-tts-local` (P1 bounded speech capability study; **not** a new P0 core-bake-off lane).
 **Decision owner:** existing Office v2 [candidate intake #595](https://github.com/nocturney/velvetos-core/issues/595).
@@ -29,6 +29,14 @@ This plan **preserves both incumbent awareness and open competition**: no incumb
 | SP-4 Compare and decide | Phase 2 candidate review + Creative Craft | After SP-3 data | Same-fixture scorecard: keep VoiceStudio only / add Kitten engine within existing interface / alternative speech route; record evidence and follow-up stage |
 
 Do not treat these gates as clock-time reminders or claim SP-3 was run because it is scheduled. If host access or rights evidence is absent, record `needs_sync` / `NOT_RUN` and the precise dependency rather than silently dropping the candidate.
+
+## 2026-10-13 fresh read-only operator observations
+
+**Chris Windows (Remote Desktop Commander readback):** The previously documented VoiceStudio executable and VelvetOS `speech-host.json` both **exist**. No running `omnivoice-studio` process or TCP listener on port `3900` was observed during this read; no service start or smoke was attempted. This means prior Hebrew QA remains historical, and **SP-2 is PARTIAL**, not passed. Do not infer active service availability from installation alone.
+
+**Chris-Mini-PC (independent host readback):** Intel Core i5-14500, ~15.7 GiB total RAM, ~8.3 GiB free physical RAM, ~1,853 GiB free on D:; selected high-load process-name scan did not show a Python/Ollama/VoiceStudio/Grok process. Snapshot is momentary and is **not** a verified resource lease or proof of host-wide idle state. It is a CPU-first LAB *candidate*, not an authorized install target yet; validate ownership, background jobs, current free RAM and model requirements at execution time. Chris main is already running local AI and must not be preempted.
+
+**SP-1 fixture:** [speech-tts-hebrew-fixtures-v0.json](speech-tts-hebrew-fixtures-v0.json) contains 12 synthetic Hebrew, mixed-language and English control scripts plus capture requirements and a minimum ASR similarity reference. This is a *prepared unexecuted input fixture*, not proof of speech quality or admission. No cloned voice or customer recording is used.
 
 ## Same-input, same-output evaluation matrix
 
