@@ -44,6 +44,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--style", choices=("product_reveal", "before_after", "shorts_hook"), default="product_reveal")
     parser.add_argument("--keep", action="store_true", help="keep synthetic render files under .staging for optional offline inspection")
+    parser.add_argument("--diagnose", action="store_true", help="diagnostic-only permissive render; NEVER a pass for production QA")
     args = parser.parse_args()
     if not shutil.which("ffmpeg") or not shutil.which("hyperframes"):
         print("FAIL missing ffmpeg/hyperframes; run vf_hyperframes doctor", file=sys.stderr)
@@ -101,11 +102,13 @@ def main() -> int:
         # the existing bridge's check+receipt gate; do not treat smoke as approval.
         cmd = [str(shutil.which("hyperframes")), "render", "--composition", request["composition"],
                "--output", request["output"], "--quality", "draft",
-               "--fps", "30", "--format", "mp4", "--strict", "--strict-variables",
+               "--fps", "30", "--format", "mp4", "--strict-variables",
                "--variables-file", request["variablesFile"]]
+        if not args.diagnose:
+            cmd.append("--strict")
         proc = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=240)
         if proc.returncode != 0:
-            print("FAIL direct smoke render: " + proc.stdout[-3000:] + proc.stderr[-3000:], file=sys.stderr)
+            print("FAIL direct smoke render in " + str(job) + ": " + proc.stdout[-7000:] + proc.stderr[-7000:], file=sys.stderr)
             return proc.returncode
         output = job / "rough.mp4"
         if not output.is_file():
@@ -133,6 +136,7 @@ def main() -> int:
             "audioStreams": probe.get("audioStreams"),
             "renderSha256": data.get("sha256"),
             "publishAuthorized": False,
+            "diagnosticOnly": args.diagnose,
             "keptUnder": str(job) if args.keep else None,
         }, ensure_ascii=False, indent=2))
         return 0
