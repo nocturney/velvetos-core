@@ -1,0 +1,25 @@
+{
+  "schema": "velvetos.cortendesk.staging_plan.v1",
+  "source_release": "v1.13.2",
+  "image": "ghcr.io/marcpope/cortendesk@sha256:3f91c02180d6ed59bfa3d4a938b0a52cf01e8fd1e953799be05435234c062373",
+  "colima_profile": "velvet-qa",
+  "containerd_namespace": "vf-cortendesk-staging",
+  "embedded_server": true,
+  "bind_address": "127.0.0.1",
+  "host_ports": {
+    "console_tcp": 18080,
+    "nat_tcp": 22115,
+    "id_tcp": 22116,
+    "id_udp": 22116,
+    "relay_tcp": 22117
+  },
+  "cpus": 0.5,
+  "memory_mb": 1024,
+  "data_mode": "ephemeral_new_only",
+  "production_server_mounted": false,
+  "production_keys_reused": false,
+  "production_clients_modified": false,
+  "test_client": "disposable_only",
+  "secrets": "out_of_band_unique_random",
+  "execution_status": "blocked_pending_permitted_runner"
+}

@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>VelvetOS — Remote Machines · Offline Pilot</title>
+<style>
+:root {font-family:"Segoe UI",Arial,sans-serif;color-scheme:dark;--bg:#0d1118;--panel:#151b26;--edge:#2b3443;--text:#eef1f6;--muted:#a3afbf;--accent:#92b9e5}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 100% -10%,#1b2b3f,transparent 52%),var(--bg);color:var(--text);min-height:100vh}
+.shell{max-width:1160px;margin:auto;padding:25px 26px 60px}
+.topline{display:flex;justify-content:space-between;gap:18px;align-items:center;padding-bottom:22px;border-bottom:1px solid var(--edge);font-size:12px;letter-spacing:.13em}
+.brand{display:flex;gap:10px;align-items:center;font-weight:750;color:#e7f0fc}
+.brand-mark{display:grid;place-items:center;width:29px;height:29px;border-radius:7px;border:1px solid #5b7090;background:#21354b;font-size:15px;letter-spacing:0}
+.build-status{border:1px solid #637187;border-radius:100px;padding:7px 11px;color:#d0dcec;letter-spacing:.04em;font-size:11px}
+.intro{padding:38px 0 30px;display:flex;align-items:flex-end;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.eyebrow{color:var(--accent);letter-spacing:.09em;font-size:12px;font-weight:600}
+h1{font-size:clamp(30px,4vw,43px);margin:8px 0 11px;line-height:1.22;letter-spacing:-.03em}
+h2{font-size:19px;margin:0;letter-spacing:-.01em}
+.subtitle{margin:0;color:var(--muted);font-size:14px;max-width:620px;line-height:1.75}
+.source-summary{display:flex;gap:7px;align-items:center;font-size:12px;color:var(--muted)}
+.indicator{height:8px;width:8px;display:inline-block;border-radius:50%;background:#e1b36b}
+.notice{padding:15px 18px;border:1px solid #46566b;border-radius:12px;background:#172331;color:#d9e6f3;font-size:13px;line-height:1.8}
+.notice b{font-weight:750}
+.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:22px 0 30px}
+.metric{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:20px 21px;min-height:120px}
+.metric .value{font-size:29px;line-height:1.2;font-weight:760;margin-bottom:13px;direction:ltr;text-align:right}
+.metric .label{font-size:12px;color:var(--muted)}
+.metric.unknown{background:#192333}
+.panel{background:#141a24;border:1px solid var(--edge);border-radius:16px;overflow:hidden}
+.panel-head{display:flex;justify-content:space-between;align-items:end;flex-wrap:wrap;gap:17px;padding:23px}
+.helper{font-size:12px;color:var(--muted);margin:7px 0 0;line-height:1.6}
+.filters{display:flex;gap:10px;flex-wrap:wrap}
+input,select{background:#0f1520;border:1px solid #374253;border-radius:9px;color:var(--text);padding:12px 13px;font:inherit;font-size:13px;outline-offset:3px;min-height:43px}
+input{width:232px;max-width:100%}
+input::placeholder{color:#8491a4}
+select{min-width:146px}
+.table-head,.machine{display:grid;grid-template-columns:minmax(190px,2.25fr) minmax(100px,1.05fr) minmax(115px,1.15fr) minmax(145px,1.45fr) auto;column-gap:12px;align-items:center}
+.table-head{font-size:11px;letter-spacing:.03em;color:#9ca9bc;background:#101722;border-top:1px solid var(--edge);padding:13px 24px}
+.machine{padding:19px 24px;min-height:78px;border-top:1px solid #273140}
+.machine:hover{background:#192334}
+.machine-id{display:block;margin-top:6px;font-family:Consolas,monospace;font-size:11px;direction:ltr;text-align:right;color:#a6b7cc;unicode-bidi:plaintext}
+.machine-title{font-size:16px;font-weight:700;overflow-wrap:anywhere}
+.os,.date{font-size:12px;color:#c5ceda;overflow-wrap:anywhere}
+.status{display:inline-flex;gap:7px;align-items:center;border-radius:99px;padding:7px 10px;font-size:12px;white-space:nowrap;border:1px solid #5b6473}
+.status::before{content:"";width:7px;height:7px;border-radius:50%;background:#9eabbc}
+.status.online{color:#bce4cf;border-color:#39614f}.status.online::before{background:#77d7a0}
+.status.offline{color:#f1c7be;border-color:#77504a}.status.offline::before{background:#d99d92}
+.status.unknown{color:#d5deed;border-color:#515f76}.status.unknown::before{background:#a0b0c8}
+.copy{border:1px solid #526079;border-radius:8px;color:#dce9fc;background:#1d2a3a;padding:9px 12px;cursor:pointer;font:inherit;font-size:12px}
+.copy:hover,.copy:focus-visible{background:#2a405b}
+.action-buttons{display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap}
+.native-link{display:inline-flex;align-items:center;border:1px solid #5b826d;border-radius:8px;color:#c4f1d5;background:#1d3930;padding:9px 12px;cursor:pointer;font:inherit;font-size:12px;text-decoration:none;white-space:nowrap}
+.native-link:hover,.native-link:focus-visible{background:#285140;outline-offset:3px}
+.empty{padding:44px 22px;text-align:center;color:var(--muted);font-size:14px}
+.bottom{display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap;color:#9eacbf;font-size:11px;margin-top:19px;line-height:1.8}
+@media(max-width:920px){.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.table-head{display:none}.machine{grid-template-columns:1fr 1fr;gap:13px}.machine>div:first-child{grid-column:1/-1}.machine .copy{justify-self:end}}
+@media(max-width:520px){.shell{padding:18px 14px 38px}.intro{padding:28px 0 21px}.summary{gap:9px}.metric{padding:17px 15px}.panel-head{padding:18px}.filters{width:100%}.filters input,.filters select{flex:1;min-width:120px}.machine{padding:16px 18px}.source-summary{width:100%}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="topline">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">V</span><span>VELVETOS / CONTROL</span></div>
+    <span class="build-status" id="buildStatus">RESEARCH · NO LIVE CONTROL</span>
+  </div>
+  <div class="intro">
+    <div>
+      <div class="eyebrow">REMOTE MACHINES / SINGLE OPERATOR</div>
+      <h1>ניהול מחשבים</h1>
+      <p class="subtitle" id="previewSubtitle">תצוגה מקומית לבדיקה של רשימת מחשבים, חיפוש ומיון. אין כאן שליטה מרחוק, ניטור חי או חיבור ל־Control Center.</p>
+    </div>
+    <div class="source-summary"><span class="indicator" aria-hidden="true"></span><span id="sourceType">מקור נתונים מקומי</span></div>
+  </div>
+  <div class="notice" role="note"><b id="dataKind">נתוני ניסוי בלבד.</b> התצוגה אינה מחוברת לרשת ואינה משקפת בהכרח את מצב המחשבים שלך. אין להשתמש בה לצורך החלטות תפעוליות.</div>
+  <div class="summary" aria-label="סיכום מכשירים">
+    <section class="metric"><div class="value" id="total">—</div><div class="label">מכשירים ברשימה</div></section>
+    <section class="metric"><div class="value" id="online">—</div><div class="label">מחוברים לפי המקור</div></section>
+    <section class="metric"><div class="value" id="offline">—</div><div class="label">מנותקים לפי המקור</div></section>
+    <section class="metric unknown"><div class="value" id="unknown">—</div><div class="label">זמינות לא ידועה</div></section>
+  </div>
+  <section class="panel" aria-labelledby="machines-title">
+    <div class="panel-head">
+      <div>
+        <h2 id="machines-title">רשימת מחשבים</h2>
+        <p class="helper" id="resultCount">מכין רשימה מקומית…</p>
+      </div>
+      <div class="filters">
+        <input id="search" type="search" placeholder="חיפוש לפי שם או מזהה" aria-label="חיפוש מחשבים">
+        <select id="presence" aria-label="סינון מצב">
+          <option value="ALL">כל המצבים</option>
+          <option value="ONLINE">מחוברים</option>
+          <option value="OFFLINE">מנותקים</option>
+          <option value="UNKNOWN">לא ידוע</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-head"><span>מחשב</span><span>מערכת</span><span>זמינות</span><span>חיבור אחרון</span><span>מזהה</span></div>
+    <div id="machines" role="list" aria-live="polite"></div>
+  </section>
+  <div class="bottom">
+    <span id="dataStamp">זמן קריאת מקור: לא זמין</span>
+    <span id="footerMode">קריאה בלבד · ללא גישה לרשת · ללא פקודות מרחוק</span>
+  </div>
+</div>
+<script id="embedded-inventory" type="application/json">__VELVETOS_INVENTORY_JSON__</script>
+<script>
+(function () {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const names = {ONLINE:"מחובר", OFFLINE:"מנותק", UNKNOWN:"לא ידוע"};
+  const classes = {ONLINE:"online", OFFLINE:"offline", UNKNOWN:"unknown"};
+  const root = $("machines");
+  let data;
+  try { data = JSON.parse($("embedded-inventory").textContent); }
+  catch (_) { fail("המידע המקומי פגום"); return; }
+  if (!data || !["FIXTURE_ONLY", "SNAPSHOT_ONLY", "REGISTRY_READ_ONLY"].includes(data.state) || !Array.isArray(data.devices)) {
+    fail("אין נתוני ניסוי תקינים להצגה"); return;
+  }
+  const isSnapshot = data.state === "SNAPSHOT_ONLY";
+  const isRegistry = data.state === "REGISTRY_READ_ONLY";
+  const presenceUnavailable = isSnapshot || isRegistry;
+  // Real local registry + a separate operator opt-in only. Synthetic and
+  // offline-copy views cannot offer a native remote-control launch.
+  const nativeLaunchAllowed = isRegistry && data.native_connect === true;
+  $("sourceType").textContent = isRegistry ? "RustDesk OSS / Local registry" : (isSnapshot ? "SQLite Snapshot / RustDesk OSS" : "Fixture / CortenDesk");
+  $("dataKind").textContent = isRegistry
+    ? "מזהים אמיתיים מקריאת רישום מקומית חד-פעמית. אין כאן זמינות חיה. הקובץ פרטי — אין לשתפו."
+    : (isSnapshot ? "רשימת מזהים מתוך Snapshot, ללא זמינות חיה." : "נתוני הדגמה סינתטיים בלבד.");
+  if (nativeLaunchAllowed) {
+    $("buildStatus").textContent = "LOCAL · MANUAL RUSTDESK LAUNCH";
+    $("previewSubtitle").textContent = "רשימת מחשבים מתוך הרישום הקיים. אפשר לפתוח את אפליקציית RustDesk המקומית בלחיצה מפורשת. זמינות המחשבים אינה ידועה; אין שליטה בדפדפן או ניטור חי.";
+    $("dataKind").textContent = "מזהי מחשבים אמיתיים מתוך קריאה חד־פעמית. כפתור פתיחה יציע לדפדפן להפעיל את RustDesk המקומי רק כשתלחץ עליו. הדפדפן עשוי לבקש אישור.";
+    $("footerMode").textContent = "ללא ניטור חי · פתיחה ידנית באפליקציית RustDesk · ללא שירות חדש";
+  }
+  if (isRegistry && Number.isInteger(data.named_devices) &&
+      data.named_devices >= 0 && data.named_devices <= data.devices.length) {
+    const named = data.named_devices;
+    $("sourceType").textContent = "RustDesk OSS / " + named + " שמות מזוהים";
+    $("dataKind").textContent = "זוהו שמות של " + named + " מתוך " + data.devices.length +
+      " מחשבים לפי התאמה למזהי RustDesk. המזהה המקורי נשמר מתחת לשם. הזמינות עדיין לא ידועה, והדוח פרטי.";
+  }
+  $("total").textContent = String(data.counts.total);
+  $("online").textContent = presenceUnavailable ? "—" : String(data.counts.online);
+  $("offline").textContent = presenceUnavailable ? "—" : String(data.counts.offline);
+  $("unknown").textContent = String(data.counts.unknown);
+  const ts = isRegistry ? data.registry_read_at : (isSnapshot ? data.snapshot_read_at : data.observed_at);
+  $("dataStamp").textContent = (isRegistry ? "קריאת הרישום המקומי: " : (isSnapshot ? "קריאת העותק: " : "זמן נתוני הדוגמה: ")) + (ts || "לא זמין");
+  $("search").addEventListener("input", render);
+  $("presence").addEventListener("change", render);
+  render();
+
+  function fail(message) {
+    root.textContent = message;
+    $("resultCount").textContent = "אין מידע זמין";
+  }
+  function node(tag, cls, value) {
+    const el = document.createElement(tag);
+    if (cls) el.className = cls;
+    if (value !== undefined && value !== null) el.textContent = String(value);
+    return el;
+  }
+  function render() {
+    const needle = $("search").value.trim().toLocaleLowerCase("he-IL");
+    const state = $("presence").value;
+    const filtered = data.devices.filter((d) => {
+      const searchable = (String(d.display_name || "") + " " + String(d.device_id || "")).toLocaleLowerCase("he-IL");
+      return searchable.includes(needle) && (state === "ALL" || d.presence === state);
+    });
+    root.replaceChildren();
+    $("resultCount").textContent = String(filtered.length) + " מתוך " + String(data.devices.length) + " מכשירים";
+    if (!filtered.length) {
+      root.append(node("div", "empty", "לא נמצאו מחשבים התואמים לסינון.")); return;
+    }
+    filtered.forEach((d) => {
+      const row = node("article", "machine");
+      row.setAttribute("role", "listitem");
+      const info = node("div");
+      const friendly = isRegistry && d.name_source === "unmatched"
+        ? "מחשב ללא שם מאומת" : (d.display_name || d.device_id);
+      info.append(node("div", "machine-title", friendly));
+      info.append(node("span", "machine-id", d.device_id));
+      const os = node("div", "os", d.platform || "לא ידועה");
+      const wrapper = node("div");
+      const badge = node("span", "status " + (classes[d.presence] || "unknown"), names[d.presence] || "לא ידוע");
+      wrapper.append(badge);
+      let lastSeen = "אין נתון";
+      if (typeof d.last_seen_at === "string" && d.last_seen_at) {
+        const when = new Date(d.last_seen_at);
+        if (!Number.isNaN(when.getTime())) lastSeen = when.toLocaleString("he-IL");
+      }
+      const last = node("div", "date", lastSeen);
+      const action = node("div", "action-buttons");
+      const copy = node("button", "copy", "העתק מזהה");
+      copy.type = "button";
+      copy.setAttribute("aria-label", "העתק מזהה מחשב " + String(d.device_id));
+      copy.addEventListener("click", async function () {
+        try {
+          if (!navigator.clipboard || !navigator.clipboard.writeText) throw Error("clipboard unavailable");
+          await navigator.clipboard.writeText(String(d.device_id));
+          copy.textContent = "הועתק";
+        } catch (_) {
+          window.prompt("בחר והעתק את מזהה המחשב:", String(d.device_id));
+        }
+      });
+      action.append(copy);
+      // A fixed trusted URI scheme; user-controlled device IDs are accepted
+      // only as a constrained token and encoded as ONE path component.
+      // Link navigation occurs solely on the operator's explicit click.
+      if (nativeLaunchAllowed && typeof d.device_id === "string" &&
+          /^[A-Za-z0-9][A-Za-z0-9._@-]{2,99}$/.test(d.device_id)) {
+        const launch = node("a", "native-link", "פתח ב־RustDesk");
+        launch.href = "rustdesk://connection/new/" + encodeURIComponent(d.device_id);
+        launch.rel = "noopener noreferrer";
+        launch.title = "פותח את אפליקציית RustDesk המקומית — לא חיבור אוטומטי";
+        launch.setAttribute("aria-label", "פתח את " + d.device_id + " באפליקציית RustDesk");
+        launch.setAttribute("data-manual-native-launch", "true");
+        action.append(launch);
+      }
+      row.append(info, os, wrapper, last, action);
+      root.append(row);
+    });
+  }
+})();
+</script>
+</body>
+</html>

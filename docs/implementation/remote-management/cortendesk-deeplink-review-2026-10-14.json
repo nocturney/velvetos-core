@@ -1,0 +1,69 @@
+{
+  "schema": "velvetos.cortendesk.deeplink_patch_receipt.v1",
+  "examined_at": "2026-10-14",
+  "upstream": {
+    "repository": "marcpope/cortendesk",
+    "tag": "v1.13.2"
+  },
+  "installed_client_source": {
+    "repository": "rustdesk/rustdesk",
+    "tag": "1.5.0",
+    "path": "flutter/lib/common.dart",
+    "line_range": [
+      2404,
+      2410
+    ],
+    "supported_route": "rustdesk://connection/new/<ID>"
+  },
+  "upstream_legacy_templates": {
+    "resources/views/livewire/device-list.blade.php": {
+      "blob": "adbe587c43d7f6f10ba2af0c12cda283e0a440f4",
+      "links": 2
+    },
+    "resources/views/livewire/device-detail.blade.php": {
+      "blob": "7e3ce7e8678734501b15e55ac5039590090def44",
+      "links": 1
+    },
+    "resources/views/livewire/address-book-manager.blade.php": {
+      "blob": "b1676518bbc9f2cfcb744a7e968340352b3077dd",
+      "links": 2
+    },
+    "resources/views/livewire/active-sessions.blade.php": {
+      "blob": "37adb5e439e06a7d9f1447fc74ce5058b9bbdc1f",
+      "links": 2
+    }
+  },
+  "produced_patch": "tools/rustdesk-pilot/patches/cortendesk-1.13.2-rustdesk-1.5-deeplinks.patch",
+  "patch_sha256": "cf838467cc0598dcb1c82782677a1bba37824b7c6bc684b80e1986155bc98276",
+  "patch_git_blob": "64b1d3a76ed12695ca6d0438749c346e0c4dc2e1",
+  "review": {
+    "pinned_blob_validation": "pass",
+    "changed_templates": 4,
+    "changed_links": 7,
+    "git_apply_check_on_untouched_source": "pass",
+    "upstream_files_unchanged_after_check": true,
+    "byte_for_byte_transfer_between_mac_and_windows": "pass",
+    "deployed": false,
+    "patch_applied": false,
+    "runtime_launch": false,
+    "live_deep_link_test": false
+  },
+  "environment": {
+    "source_review_location": "private Mac-only research directory",
+    "source_tree_in_repo": false,
+    "original_rustdesk_service_changed": false
+  },
+  "protocol_scheme_registration_read_only": {
+    "windows_hosts_inspected": 3,
+    "windows_hkcr_rustdesk_scheme_registered": 3,
+    "windows_url_protocol_marker_present": 3,
+    "windows_handler_references_rustdesk_executable": 3,
+    "windows_command_accepts_url_argument": 3,
+    "mac_hosts_inspected": 3,
+    "mac_app_bundle_declares_rustdesk_scheme": 3,
+    "mac_launchservices_default_handler_verified": false,
+    "actual_protocol_launch_tested": false,
+    "remote_control_connection_started": false
+  },
+  "next_gate": "authorized CortenDesk source build, disposable RustDesk 1.5.0 protocol-handler test, browser client and relay verification"
+}

@@ -1,0 +1,79 @@
+diff --git a/resources/views/livewire/device-list.blade.php b/resources/views/livewire/device-list.blade.php
+index adbe587c43d7f6f10ba2af0c12cda283e0a440f4..bf46a65cca5998eaa35774c7fdf6743022f404af 100644
+--- a/resources/views/livewire/device-list.blade.php
++++ b/resources/views/livewire/device-list.blade.php
+@@ -248,7 +248,7 @@
+                             @if ($trashed)
+                                 <span class="fw-semibold">{{ $device->rustdesk_id }}</span>
+                             @else
+-                                <a href="rustdesk://{{ $device->rustdesk_id }}" class="fw-semibold"
++                                <a href="rustdesk://connection/new/{{ rawurlencode($device->rustdesk_id) }}" class="fw-semibold"
+                                    title="Connect with RustDesk">{{ $device->rustdesk_id }}</a>
+                             @endif
+                         </td>
+@@ -399,7 +399,7 @@
+                                 @if ($trashed)
+                                     <span class="rd-mini-title text-truncate">{{ $device->rustdesk_id }}</span>
+                                 @else
+-                                    <a href="rustdesk://{{ $device->rustdesk_id }}" class="rd-mini-title text-truncate"
++                                    <a href="rustdesk://connection/new/{{ rawurlencode($device->rustdesk_id) }}" class="rd-mini-title text-truncate"
+                                        title="Connect with RustDesk">{{ $device->rustdesk_id }}</a>
+                                 @endif
+                                 @if ($trashed)
+diff --git a/resources/views/livewire/device-detail.blade.php b/resources/views/livewire/device-detail.blade.php
+index 7e3ce7e8678734501b15e55ac5039590090def44..8bff5a4f76fc50376bc01ba5474f52c730b60efd 100644
+--- a/resources/views/livewire/device-detail.blade.php
++++ b/resources/views/livewire/device-detail.blade.php
+@@ -24,7 +24,7 @@
+                     <span class="badge bg-info-subtle text-info rd-status-block" title="Can be controlled, cannot start sessions">Incoming only</span>
+                 @endif
+                 @unless ($device->trashed())
+-                    <a href="rustdesk://{{ $device->rustdesk_id }}" class="btn btn-sm btn-outline-light"
++                    <a href="rustdesk://connection/new/{{ rawurlencode($device->rustdesk_id) }}" class="btn btn-sm btn-outline-light"
+                        title="Connect with RustDesk"><i class="ri-links-line me-1"></i>RustDesk</a>
+                     @if (config('cortendesk.native_webclient'))
+                         <a href="{{ route('webclient') }}?id={{ $device->rustdesk_id }}"
+diff --git a/resources/views/livewire/address-book-manager.blade.php b/resources/views/livewire/address-book-manager.blade.php
+index b1676518bbc9f2cfcb744a7e968340352b3077dd..cb12fb0afb2901f7c55336cbffa0d05a1901e5db 100644
+--- a/resources/views/livewire/address-book-manager.blade.php
++++ b/resources/views/livewire/address-book-manager.blade.php
+@@ -222,7 +222,7 @@
+                                             <div class="rd-cell">
+                                                 <x-platform-icon :platform="$entry->platform ?: 'unknown'" size="fs-20"/>
+                                                 <div class="min-width-0">
+-                                                    <a href="rustdesk://{{ $entry->rustdesk_id }}"
++                                                    <a href="rustdesk://connection/new/{{ rawurlencode($entry->rustdesk_id) }}"
+                                                        class="rd-cell-title text-truncate"
+                                                        title="Connect with RustDesk">{{ $entry->hostname ?: $entry->rustdesk_id }}</a>
+                                                     <span class="rd-cell-sub">
+@@ -279,7 +279,7 @@
+                                             <div class="d-flex align-items-center gap-2 min-width-0">
+                                                 <x-platform-icon :platform="$entry->platform ?: 'unknown'" size="fs-22"/>
+                                                 <div class="min-width-0">
+-                                                    <a href="rustdesk://{{ $entry->rustdesk_id }}" class="rd-mini-title text-truncate"
++                                                    <a href="rustdesk://connection/new/{{ rawurlencode($entry->rustdesk_id) }}" class="rd-mini-title text-truncate"
+                                                        title="Connect with RustDesk">{{ $entry->hostname ?: $entry->rustdesk_id }}</a>
+                                                     <span class="rd-mini-sub text-truncate">
+                                                         {{ $entry->rustdesk_id }}@if ($entry->alias) · {{ $entry->alias }}@endif
+diff --git a/resources/views/livewire/active-sessions.blade.php b/resources/views/livewire/active-sessions.blade.php
+index 37adb5e439e06a7d9f1447fc74ce5058b9bbdc1f..ed36fc64a46807b7e80aeb72f1ff1cd2571ceff4 100644
+--- a/resources/views/livewire/active-sessions.blade.php
++++ b/resources/views/livewire/active-sessions.blade.php
+@@ -56,7 +56,7 @@
+                                     </div>
+                                 </td>
+                                 <td>
+-                                    <a href="rustdesk://{{ $s->rustdesk_id }}" title="Connect with RustDesk" class="fs-13">{{ $s->rustdesk_id }}</a>
++                                    <a href="rustdesk://connection/new/{{ rawurlencode($s->rustdesk_id) }}" title="Connect with RustDesk" class="fs-13">{{ $s->rustdesk_id }}</a>
+                                 </td>
+                                 <td>
+                                     @switch((int) $s->conn_type)
+@@ -123,7 +123,7 @@
+                                 </div>
+                             @endif
+                             <div class="rd-mini-foot">
+-                                <a href="rustdesk://{{ $s->rustdesk_id }}" title="Connect with RustDesk"
++                                <a href="rustdesk://connection/new/{{ rawurlencode($s->rustdesk_id) }}" title="Connect with RustDesk"
+                                    class="fs-13 text-truncate">{{ $s->rustdesk_id }}</a>
+                                 <span class="rd-mini-sub text-nowrap"><i class="rd-dot text-success"></i><span
+                                         title="{{ $s->created_at }}">{{ $s->created_at->diffForHumans(short: true) }}</span></span>

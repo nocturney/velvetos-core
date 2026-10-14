@@ -1,0 +1,138 @@
+# VelvetOS Remote Management — single-operator research intake
+
+Date: 2026-10-14
+Route: system_engineering (project_preflight: PASS for isolated code-only research)
+Status: PRIVATE_REGISTRY_READ_VERIFIED / CORTENDESK_LIVE_UNTESTED / NOT DEPLOYED
+Owner: one human operator; team/RBAC features are explicitly deprioritized.
+
+## Goal and user value
+
+Create a single-operator device cockpit for heterogeneous Windows/macOS/Linux machines: reliable machine list, last-seen, one-click connect, file transfer and diagnostics. Use existing functioning RustDesk clients and Desktop Commander until alternatives are independently accepted. Enterprise user hierarchies and shared address-book administration are not the product goal. Maintain baseline remote-access security even with one operator.
+
+## Source shortlist (GitHub source and documentation inspected 2026-10-14)
+
+- CortenDesk (marcpope/cortendesk; AGPL-3.0-only): current leading dashboard/server candidate. Implements browser client, read-only/controlled admin API, machine inventory and self-hosted ID+relay options. Its bundled server is a separate fork; replacement is NOT approved. CortenDesk v1.13.2 released 2026-10-13. API route and serializer verified against source. Active issues still require production suitability review.
+- RustDeskMCP (YaoxinCS/RustdeskMCP; AGPL-3.0): RustDesk client fork with localhost MCP desktop frame, keyboard/mouse and terminal operations. An independent local user-visible opt-in; never assume automatic fit with Remote Desktop Commander, user session or other endpoints.
+- rdcli (4nkitd/rustdesk-cli; AGPL-3.0): early-stage headless RustDesk client with file transfer, terminal, tunnel and ping capabilities. Repo v0.1.0; not yet production qualified.
+- QuickDesk (barry-ran/QuickDesk; MIT): AI-native remote desktop built on Chromium Remoting/WebRTC, NOT a drop-in RustDesk API plugin.
+- Rem0te (agit8or1/rem0te; MIT): impressive managed device inventory and Windows diagnostics, but service-provider/team architecture is excessive for one operator.
+
+## Current environment observations (read-only)
+
+Desktop Commander reports six online connector devices: three Windows and three macOS. These are not necessarily six RustDesk endpoints or proof of RustDesk connectivity. On Windows Chris, the RustDesk service was Running / Automatic and RustDesk client processes observed. Docker executable not found in the tested PATH on all six hosts. Chris Remote Desktop Commander executes under Windows SYSTEM Session 0, not an interactive user session; WSL refuses to run under that identity. No Docker/WSL installation, UI action, service restart, firewall/UAC/security change, agent/scheduler or client configuration modification was performed.
+
+Existing Core checkout at D:/Velvet/Repos/velvetos-core is on another active branch; it was not edited. This research lives in an isolated worktree based on origin/main: D:/Velvet/Worktrees/rustdesk-single-operator-20261014 on branch research/rustdesk-single-operator-20261014.
+
+## Implemented code and evidence
+
+The tools/rustdesk-pilot prototype parses the verified CortenDesk API envelope through an explicit read-only, one-shot adapter. It uses stable machine names/IDs and source-typed ONLINE/OFFLINE/UNKNOWN, validates pagination and source errors, never presents partial reads as complete data, and labels fixture output explicitly. The fixture has only invented TEST-* demo identities. No real device IDs, secrets or control credentials are in the code.
+
+Windows first-pass test: python -m unittest discover -s tools/rustdesk-pilot/tests -v (13 tests PASSED), 2026-10-14. Subsequent contract + localhost HTTP suite: 22/22 PASSED, including actual loopback GET transport, authentication headers, redirects, pagination, error envelopes, response-size guard and timestamp validation. This is not a real CortenDesk deployment.
+Windows fixture smoke: counts total=3 online=1 offline=1 unknown=1 and state=FIXTURE_ONLY.
+This is contract-shaped testing using synthetic fixtures, NOT real CortenDesk server integration.
+
+## Integration outline
+
+Existing UI / Control Center -> server-only VelvetOS adapter (future, read-only) -> CortenDesk Admin API device:r -> independently deployed/approved RustDesk staging infra. Use no browser-facing token, no duplicate scheduler, no live production writer inside Core and no fabricated status on disconnect. The remote-control action stays out of scope for this pilot. For a future one-click connect UI, prefer the installed, explicitly approved RustDesk client or a separately validated browser client.
+
+## Explicit exclusions / risks
+
+- NO cutover of RustDesk ID/relay server, user clients or keys.
+- NO production deployment or auto-start while unrelated Office/VelvetOS tasks execute.
+- NO new recurring paid services.
+- NO production token, no secrets in git, no telemetry claims inferred from Desktop Commander.
+- NO user-management/RBAC-heavy implementation.
+- NO assumption that third-party code is secure based on being open source; audit the upstream release, license and threat model before test exposure.
+- NO merge to main without separately passing routing/sensors/review.
+
+## Next bounded action
+
+Run the pilot tests and repository checks, then keep a draft PR for review. The next meaningful external action is an isolated CortenDesk server trial on a suitable host, which requires an approved runtime plan, nonconflicting ports, independent credentials and test-device enrollment. A future MCP or GUI control experiment should be separate and revertible.
+## Read-only six-host RustDesk compatibility snapshot (2026-10-14)
+
+- Windows Chris, Chris-Mini-PC and Chris-3DPC: installed RustDesk.exe file version 1.5.0+68 on all three; RustDesk service RUNNING with Automatic startup on all three.
+- macOS MacMiniOffice2, MacMiniOffice and Mac-Bedroom: /Applications/RustDesk.app version 1.5.0 installed on all three and its service process observed.
+- MacMiniOffice2 already has a live owner-managed RustDesk OSS server supervisor, running hbbs and hbbr via Colima profile named rustdesk (aarch64; 2 CPUs / 2 GiB), with existing listeners on 21115, 21116, 21117, 21118 and 21119. It also has a separate running Colima profile named velvet-qa (2 CPUs / 4 GiB); neither profile was reconfigured and no existing service process was changed. A later research-only pull added a pinned CortenDesk OCI image into a new, separate containerd namespace in velvet-qa, without launching a container. This is important existing production/test infrastructure, not a spare install target.
+- On the Macs, the Docker CLI was not in PATH, but MacMiniOffice2 does have colima and limactl, with containerd as runtime. The earlier absence of a Docker command must NOT be interpreted as absence of all container infrastructure.
+- No server secrets, RustDesk device IDs, authentication tokens, user sessions or remote endpoint addresses were collected. No live RustDesk server commands, client settings, or service process changes were made. A running RustDesk service is not proof the device has been enrolled in CortenDesk or would appear in that dashboard.
+- Strong constraint for next trial: CortenDesk supports an external hbbs/hbbr server in documentation, but its admin device inventory depends on clients reporting to the configured CortenDesk API server. Therefore standing up the dashboard alone is insufficient to populate a real inventory. Test client enrollment/API settings only on a separately approved disposable test identity and without changing the existing working server/client settings.
+- Actual compatibility of CortenDesk 1.13.2 with RustDesk client 1.5.0, the existing OSS server, and the Mac Colima environment remains UNTESTED.
+
+## Continuation receipt: image inspection and HTTP-contract hardening (2026-10-14)
+
+- Exact CortenDesk release contract pinned to git tag v1.13.2: `routes/api.php` blob sha `ba9a68a26c6bed89913c663dc0eb73ec7c39cd1e`, `DevicesController.php` blob sha `3e49efb078cfa5427bda50f0b2b278d8d4bed85f`. Required GET /api/v1/devices route is protected by `auth:api-token` and `device:r`; real device serializer provides the observed fields.
+- OCI ARM64 image for release 1.13.2 successfully pulled inside MacMiniOffice2 Colima `velvet-qa`, in the dedicated containerd namespace `vf-rustdesk-pilot`. Immutable registry digest: `ghcr.io/marcpope/cortendesk@sha256:3f91c02180d6ed59bfa3d4a938b0a52cf01e8fd1e953799be05435234c062373`; size shown by nerdctl approximately 280.7 MB. This is a cached research image, NOT a running deployment.
+- Proposed strictly bounded localhost-only CortenDesk smoke launch was REJECTED by the remote execution safety gate. The rejected command was not executed. No alternate path was used to bypass that denial. Follow-up read-only `nerdctl ps -a` showed no running/stopped trial containers in either the new namespace or the default namespace. Keep runtime acceptance BLOCKED until a permitted execution path is available.
+- Added nine real loopback HTTP transport tests and tightened the parser, bringing local suite to 22/22 PASS. Coverage verifies GET-only Bearer token delivery, no redirects/token forwarding, strict response codes/pagination, sanitized 401/503/network errors, maximum response size, proper JSON, robust timestamps. These tests use a temporary Python localhost stub, not the actual CortenDesk binary.
+- PR #717 had a GREEN GitHub `check-all` for its previous commit. A fresh CI check is required after this follow-up push before making any claim about the updated head.
+- Upstream open issue [#105](https://github.com/marcpope/cortendesk/issues/105), reported against CortenDesk 1.13.2 and RustDesk client 1.5.0, identifies a potentially broken legacy deep link for custom IDs. Do not ship one-click launch using unverified `rustdesk://{id}` or assume the proposed alternative from the issue is canonical without independent test.
+- Upstream open issue [#102](https://github.com/marcpope/cortendesk/issues/102) describes a possible client API SSO-only bypass for imported password-bearing accounts. Single-operator scope avoids enterprise SSO complexity, but does NOT permit bypassing basic security or deploying exposed unaudited server components.
+
+### Next verified gate
+
+Do not expose CortenDesk on LAN/WAN, reconfigure any existing RustDesk client, or touch the MacMiniOffice2 production hbbs/hbbr endpoints. When a permitted isolated execution runtime exists, validate /health/live and the authenticated device:r GET with a disposable instance and independent credentials. Until then the adapter is a fixture/loopback-tested candidate only, with live provider state UNKNOWN.
+
+## Research continuation: native OSS discovery + offline UI (2026-10-14)
+
+Fresh source examination of `rustdesk/rustdesk-server/src/database.rs` shows the hbbs SQLite peer schema with `peer.id`, `peer.created_at`, and other sensitive metadata. The stock schema does not give an authoritative live online/offline status or live host operating-system/alias fields. Consequently the new `tools/rustdesk-pilot/rustdesk_oss_snapshot.py` intentionally reads *only peer.id* from an explicitly supplied, complete offline SQLite backup and outputs `state=SNAPSHOT_ONLY`, `presence=UNKNOWN` for all devices, null `observed_at`, and a distinct snapshot-read time. It uses sqlite `mode=ro&immutable=1` and `query_only`, never opens a discovered live DB, and never queries UUID/public key/user/other private columns. A follow-up **metadata-only** read of the live MacMiniOffice2 hbbs SQLite registry using `mode=ro` and `query_only` confirmed `peer.id`/`peer.created_at` exist, `last_online_at` is absent, and `SELECT COUNT(*)` returns **6 registered peer rows**. No peer IDs, UUIDs, keys, usernames, notes or info data were selected, printed, copied or persisted. This validates the candidate schema against the actual installed server but **does not** demonstrate that the six rows correspond to the six Desktop Commander devices or prove online presence. No server settings changed.
+
+A standalone Hebrew RTL offline preview is generated by `render_preview.py` and `preview/template.html`. Its checked-in `preview/demo.html` contains only the synthetic CortenDesk fixture, prominently marked as non-live. It supports in-browser name/ID search, presence filter and copy-ID interaction, with no external network request and no remote-control action. Inline data is encoded against closing-script/HTML injection; a restrictive CSP disables all network connections. It is not a replacement for the approved Control Center V3 design and has not been deployed.
+
+Verification in the isolated Windows worktree:
+- Earlier 22/22 CortenDesk contract + HTTP tests remained green.
+- Added 12 offline SQLite snapshot tests (valid schema, missing/corrupt/malicious/oversized snapshots, pure read-only source shape, all presence UNKNOWN, no sensitive columns leaked).
+- Added 7 offline-renderer tests (fixture/snapshot states, reject live state, reject overwrite, prevent HTML injection, no remote resource links).
+- Combined suite 41/41 PASS on Python 3.11.9; generated `demo.html` succeeded, browser JavaScript passed independent `node --check`.
+- Security-gated CortenDesk container launch remains BLOCKED and was **not bypassed**. Server/client production configuration remains untouched.
+
+**Next**: visual browser QA on the offline demo, re-run Core policy sensors, then update the existing #717 draft PR. Only an explicitly permitted isolated runtime would authorize a real CortenDesk container health check, and any true live integration must be independently verified before rollout.
+
+## Current CI gate diagnosis (2026-10-14, after offline UI commit)
+
+The feature branch's local `python scripts/update-readme-snapshot.py --check` returns PASS and the worktree is clean. GitHub CI for PR #717 at `d0b345dd` fails ONLY at its `README System Pulse is current` step: the generated README snapshot is stale in the GitHub PR merge candidate. The selected VelvetOS suite reports 118/118 PASS in that very CI run; core/policy/visible-text local checks also PASS. The `main` branch advanced since this isolated worktree branched, with a change to `office/control/HANDOFF.json`, an input of the README snapshot generator. This is a shared derived-document maintenance issue; do not bypass the check or alter another domain owner's README/handoff state from this RustDesk feature lane. Keep PR #717 DRAFT / CI RED until the main/merge snapshot is reconciled through the canonical owner.
+
+The direct macOS headless browser visual smoke was not run successfully (Edge exited 1002 under the Windows SYSTEM executor). JS syntax verification and parser/renderer tests are PASS; pixel-level browser acceptance is still UNVERIFIED.
+
+## Single-operator next step: private local registry viewer (2026-10-14)
+
+A separate local-read mode was added, based on the existing OSS peer discovery.
+It uses an explicit path to the already running MacMiniOffice2 RustDesk
+database with SQLite read-only URI, `query_only` PRAGMA and a consistent
+one-shot SELECT of only `peer.id`. The live database is in WAL mode and a
+read-only query was verified (six registered rows at inspection time, not
+proof that six machines are online). No system settings, hbbs/hbbr services,
+client configuration, credentials, or port mappings change.
+
+The **new HTML output mode** is separate from the synthetic fixture and
+offline-copy preview: `REGISTRY_READ_ONLY`, observed/online time unknown,
+every presence `UNKNOWN`, only the time of the read known. It requires
+`--allow-live-local-read` and refuses any destination under a Git repository,
+uses exclusive file creation and owner-only mode 0600. HTML retains CSP
+`connect-src 'none'` with no remote network requests or control action.
+
+At coding verification: 52/52 tests passed on Windows including eleven new
+WAL/consent/non-leak/permission/injection/fail-closed cases. The existing
+CortenDesk image execution safety gate remains unchanged and is not bypassed.
+The registry viewer is a simpler path to partial utility without running
+another orchestrator, replacing RustDesk OSS, or enrolling clients into a
+third-party API. No online/offline monitoring is claimed.
+
+The local one-shot private HTML export gate was completed successfully on MacMiniOffice2; receipt below. Neither machine IDs nor raw database content belong in the repository.
+
+## Private live-registry observation receipt (2026-10-14, MacMiniOffice2)
+
+Outcome: VERIFIED PRIVATE ONE-SHOT READ; NOT LIVE REMOTE MANAGEMENT.
+
+- Code: commit `ca36e6b8f6b6fd73ac1736f9403aa3d4914a7a3b` from research branch, copied as four source/template files into an owner-private Mac pilot code directory. All four `git hash-object` blob IDs matched the GitHub source exactly.
+- Host Python 3.9.6 successfully compiled the Python modules. This independently establishes macOS runtime compatibility of the viewer (not RustDesk client interoperability).
+- Source: existing, authorized RustDesk OSS `db_v2.sqlite3` on MacMiniOffice2. SQLite URI was `mode=ro`; `PRAGMA query_only=ON`, `trusted_schema=OFF`, transaction and `SELECT id FROM peer` only. Existing WAL sidecars were present. No database copy was made, no schema changed, no service restarted.
+- Private report, local to MacMiniOffice2 only:
+  `~/Library/Application Support/VelvetOS/RustDeskPilot/2026-10-14/private/registered-machines-20261014T152023Z.html`
+- Report verified by parsing its embedded JSON **locally**, printing aggregates only: state `REGISTRY_READ_ONLY`; exactly **six registered device IDs**; every device `UNKNOWN` for presence and null for last-seen; **no presence claims**. Owner-private directory permission `0700`, report permission `0600`, size 14,182 bytes.
+- The report is NOT in GitHub, ChatGPT attachment storage, public web hosting, Dropbox or Drive, and no real RustDesk IDs or sensitive registry columns were logged. The template's CSP denies `connect-src` and there is no network service or remote command in the preview.
+- Existing hbbs/hbbr supervisor processes were verified running after the read. The CortenDesk container runtime remains BLOCKED (previous safety gate), separate from the successful local-only read.
+- Local Windows checks: 52/52 PASS, project preflight PASS, Core and policy architecture PASS, README pulse PASS, diff check PASS. GitHub `check-all` passed on commit `ca36e6b8`. For any following documentation-only commit, validate its CI again.
+
+Next functional gaps: device friendly-name enrichment and confirmed online/last-seen telemetry require additional trusted sources; a one-shot registry query must not be described as monitoring. Do not auto-refresh, expose real IDs in a publicly hosted page, change remote-service settings, or merge the research PR without separate review.
+
+- Source check: RustDesk OSS `src/peer.rs` does not establish `peer.status` as a live presence signal (the read-side disabled interpretation is commented out). The new regression test sets `peer.status=1` and verifies the viewer still reports presence `UNKNOWN`. Thus no claimed liveness or last-seen data is inferred from this column.
