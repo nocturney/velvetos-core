@@ -1,0 +1,17 @@
+{
+  "scenario": "synthetic_demo_only",
+  "pages": [
+    {
+      "code": 0,
+      "data": [
+        {"rustdesk_id": "TEST-001", "alias": "Workshop PC", "hostname": "demo-workshop", "online": true, "status": "active", "platform": "Windows", "last_online_at": "2026-10-14T10:00:00Z", "device_group": {"id": 1, "name": "Workshop"}, "version": "1.4.6"},
+        {"rustdesk_id": "TEST-002", "hostname": "demo-mac", "online": false, "status": "active", "platform": "macOS", "last_online_at": "2026-10-13T12:00:00Z", "device_group": null, "version": "1.4.6"},
+        {"rustdesk_id": "TEST-003", "alias": "Unknown demo", "online": null, "status": "pending", "platform": "Linux", "device_group": null}
+      ],
+      "total": 3,
+      "current": 1,
+      "total_pages": 1,
+      "message": ""
+    }
+  ]
+}
