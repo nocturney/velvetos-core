@@ -1,0 +1,98 @@
+{
+  "schema": "velvetos.motion-library.v1",
+  "status": "implemented-candidate-template",
+  "owner": "vfom",
+  "version": 1,
+  "source": {
+    "repo": "https://github.com/gongnyang/awesome-ai-motion",
+    "commit": "1e3c249073c61b42ceb556d7800f628d565d9312",
+    "license": "MIT",
+    "attributions": "https://github.com/gongnyang/awesome-ai-motion/blob/1e3c249073c61b42ceb556d7800f628d565d9312/ATTRIBUTIONS.md",
+    "integration": "pattern-adapted-not-vendored"
+  },
+  "noSecondRuntime": true,
+  "masterComposer": "hyperframes",
+  "template": "packages/vfom/hyperframes/templates/motion-story-reel.html",
+  "variableSchema": "packages/vfom/hyperframes/MOTION-STORY-VARIABLES.schema.json",
+  "planner": "scripts/vf_motion_plan.py",
+  "patterns": [
+    {
+      "id": "product_reveal",
+      "intent": "hero-product-reveal",
+      "sourceCards": [
+        "effects/mask-reveal/README.md",
+        "effects/light-sweep/README.md"
+      ],
+      "gsapPresets": [
+        "VF_MOTION_MASK_REVEAL",
+        "VF_MOTION_LIGHT_SWEEP"
+      ],
+      "requiredVariables": [
+        "heroImage",
+        "sourceAssetRef",
+        "headline",
+        "audioFile"
+      ],
+      "durationSeconds": 7,
+      "guard": "light sweep on typography only; actual physical product pixels not synthesized"
+    },
+    {
+      "id": "before_after",
+      "intent": "verified-before-after",
+      "sourceCards": [
+        "effects/split-compare/README.md",
+        "recipes/before-after/README.md"
+      ],
+      "gsapPresets": [
+        "VF_MOTION_SPLIT_COMPARE",
+        "VF_MOTION_MASK_REVEAL"
+      ],
+      "requiredVariables": [
+        "heroImage",
+        "sourceAssetRef",
+        "comparisonImage",
+        "comparisonAssetRef",
+        "comparisonEvidenceRef",
+        "headline",
+        "audioFile"
+      ],
+      "durationSeconds": 7,
+      "guard": "same subject and aligned framing; evidence ref does not grant claim authority"
+    },
+    {
+      "id": "shorts_hook",
+      "intent": "short-form-verified-hook",
+      "sourceCards": [
+        "effects/kinetic-beats/README.md",
+        "recipes/shorts-hook/README.md"
+      ],
+      "gsapPresets": [
+        "VF_MOTION_KINETIC_BEATS",
+        "VF_MOTION_MASK_REVEAL"
+      ],
+      "requiredVariables": [
+        "heroImage",
+        "sourceAssetRef",
+        "beat1",
+        "beat2",
+        "beat3",
+        "headline",
+        "audioFile"
+      ],
+      "durationSeconds": 7,
+      "guard": "only approved brief Hebrew beat copy; real subject visible on first frame"
+    }
+  ],
+  "gates": {
+    "mediaVaultAuthority": "packages/vfmedia/catalog.json",
+    "visualSource": "packages/vfom/VISUAL-OS.md",
+    "copyAuthority": "packages/vfcopy/SOFT-TOOLS-CONTRACT.md",
+    "publishPolicy": "instagram.publish",
+    "requiresIndependentReview": true,
+    "renderIsPublishAuthorization": false,
+    "allowSyntheticProductClaims": false,
+    "autoPublish": false,
+    "allowRemoteCodeFetchOnJob": false,
+    "providerSubscriptionRequired": false
+  }
+}
