@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-13T20:11:14.201Z",
+  "updated_at": "2026-10-14T14:30:01.001Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 128,
+  "candidate_count": 132,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -5255,6 +5255,283 @@
         "evidence_refs": [
           "docs/implementation/office-v2/phase2/owner-repo-intake-2026-10-13.md",
           "https://github.com/Mikedev115/Aetox-Harness/tree/6e546c1374054048c7d5f3e11f7d1aa2140f075a"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-ifixai-ai-ifixai",
+      "source_item_id": null,
+      "name": "iFixAi agent assurance and governance evaluator",
+      "category": "EVALUATION_TOOL",
+      "provenance_class": "OWNER_SUBMITTED_3_GITHUB_REPOS_2026_10_14",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted October 14 GitHub intake; phase-routed candidate with explicit benchmark contract and safety/cost gates. No actual LAB scorecard or runtime deployment verified.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-audit",
+        "governance-evaluation",
+        "authorization-testing",
+        "prompt-injection-evaluation",
+        "scorecards",
+        "python-cli"
+      ],
+      "platform_constraints": [
+        "Python >=3.10; v4.1.0 tagged release and repository pyproject 4.1.1 at inspected upstream HEAD, pin commit before any evaluation.",
+        "Provider/judge model inference can incur metered token spend; Codex CLI is excluded; first use only mock/synthetic fixtures with hard-zero external billing.",
+        "Default 10-inspection suite can make hundreds of agent/judge calls; full 60-inspection suite much larger. Telemetry requires explicit opt-out and scorecards/checkpoints contain raw model I/O.",
+        "Declared governance or a self-judge is not an independent proof of live authorization enforcement; require SUT adapter hooks/readback and record INCONCLUSIVE when evidence is absent."
+      ],
+      "shortlist_lanes": [
+        "agent-quality-evaluation"
+      ],
+      "evidence_refs": [
+        "https://github.com/ifixai-ai/iFixAi",
+        "https://github.com/ifixai-ai/iFixAi/tree/d86ba616fa4736b1239e63dd2422fa152cebf7da",
+        "docs/implementation/office-v2/phase2/owner-assurance-binary-tools-intake-2026-10-14.md",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "Upstream pinned d86ba616fa4736b1239e63dd2422fa152cebf7da; license review: Apache-2.0; API/judge-provider inference charges separate.",
+        "Target projects: Office v2 agent quality; Promptfoo incumbent evaluation; agent approval -> external effect -> reconciliation Golden Fixture.",
+        "Route: agent-quality; Office Phase 3D P0 coding-worker QA and independent agent policy/effect validation after the reference run; existing owner #612.",
+        "Admission prerequisite: A single independently verified #612 source-to-PR QA/recovery baseline; reviewed isolated mock configuration, zero paid API calls, no secrets, no Codex CLI, and benchmark fixture/admission approval.",
+        "No agent endpoint or real provider calls authorized by intake."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "After the verified #612 reference run, compare pinned iFixAi mock/no-telemetry synthetic permission, prompt-injection and destructive-action fixtures against Promptfoo and canonical postcondition checks; collect same-task false-positive/false-negative, evidence coverage, operator time and incremental resource cost.",
+        "rationale": "Independent behavioral/governance audit may improve coverage beyond existing Promptfoo and postcondition QA; compare its actual measured value and inconclusive cases instead of promoting on the vendor's scoring claims.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-quality",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Office Phase 3D P0 coding-worker QA and independent agent policy/effect validation after the reference run",
+        "status": "WAITING_GATE",
+        "next_gate": "After the verified #612 reference run, compare pinned iFixAi mock/no-telemetry synthetic permission, prompt-injection and destructive-action fixtures against Promptfoo and canonical postcondition checks; collect same-task false-positive/false-negative, evidence coverage, operator time and incremental resource cost.",
+        "unlock_condition": "A single independently verified #612 source-to-PR QA/recovery baseline; reviewed isolated mock configuration, zero paid API calls, no secrets, no Codex CLI, and benchmark fixture/admission approval.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-assurance-binary-tools-intake-2026-10-14.md",
+          "https://github.com/ifixai-ai/iFixAi/tree/d86ba616fa4736b1239e63dd2422fa152cebf7da"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-vxcontrol-pentagi",
+      "source_item_id": null,
+      "name": "PentAGI isolated autonomous penetration-testing system",
+      "category": "SECURITY_TOOL",
+      "provenance_class": "OWNER_SUBMITTED_3_GITHUB_REPOS_2026_10_14",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted October 14 GitHub intake; phase-routed candidate with explicit benchmark contract and safety/cost gates. No actual LAB scorecard or runtime deployment verified.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "penetration-testing",
+        "autonomous-security-agents",
+        "sandbox",
+        "security-assessment",
+        "rest-api",
+        "graphql"
+      ],
+      "platform_constraints": [
+        "PentAGI release v2.2.0 (2026-10-05) documents fix for CVE-2026-14784 present through 2.1.0; verify patched version and worker isolation before LAB.",
+        "Docker/Compose or Podman with documented minimum 2 vCPU, 4 GB RAM and 20 GB disk; full optional observability stack requires extra resources.",
+        "Never mount the host Docker socket into an autonomous worker; require separate hardened dind/TLS and startup policy tests, strict egress, no production secrets.",
+        "Flow callback ports may default to host-wide 0.0.0.0 exposure; restrict published ranges at the host/upstream firewall. No scans without explicit scope/target authorization.",
+        "Cloud LLMs, search services, enterprise features or optional VXControl Cloud can bill or transfer sensitive data; only independently verified zero-increment local path can be admitted."
+      ],
+      "shortlist_lanes": [
+        "security-assurance"
+      ],
+      "evidence_refs": [
+        "https://github.com/vxcontrol/pentagi",
+        "https://github.com/vxcontrol/pentagi/tree/843dfeb4bfc809c09d1bc5022e567c602d8fc9dd",
+        "docs/implementation/office-v2/phase2/owner-assurance-binary-tools-intake-2026-10-14.md",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "Upstream pinned 843dfeb4bfc809c09d1bc5022e567c602d8fc9dd; license review: MIT repository source; review bundled EULA, third-party tools and optional VXControl Cloud license separately.",
+        "Target projects: VelvetOS and Office security QA; test-only API/identity/sandbox contracts, not production penetration testing.",
+        "Route: security-assurance; Office Phase 3B/4 security-assurance research and isolated authorized-systems LAB after #612 P0 capacity gate; existing owner #595.",
+        "Admission prerequisite: A documented owned synthetic target, explicit authorized scope, hardened isolated host/network and verified dind worker-policy tests; no hidden spend or model calls; P0 #612 worker capacity must be unaffected.",
+        "NO pentest execution, Docker permissions, scan targets or production credentials granted."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Audit pinned v2.2.0+ release, CVE-2026-14784 remediation and Docker worker/network defaults; cost/license review, then design an isolated no-credential/no-production-target synthetic security fixture with explicit scope and teardown; score against deterministic existing security checks.",
+        "rationale": "May broaden independent security assessment and sandbox validation, but the prior Docker socket host-takeover CVE and broad tool/network access require dedicated isolation and a costed, authorized fixture.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "security-assurance",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office Phase 3B/4 security-assurance research and isolated authorized-systems LAB after #612 P0 capacity gate",
+        "status": "WAITING_GATE",
+        "next_gate": "Audit pinned v2.2.0+ release, CVE-2026-14784 remediation and Docker worker/network defaults; cost/license review, then design an isolated no-credential/no-production-target synthetic security fixture with explicit scope and teardown; score against deterministic existing security checks.",
+        "unlock_condition": "A documented owned synthetic target, explicit authorized scope, hardened isolated host/network and verified dind worker-policy tests; no hidden spend or model calls; P0 #612 worker capacity must be unaffected.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-assurance-binary-tools-intake-2026-10-14.md",
+          "https://github.com/vxcontrol/pentagi/tree/843dfeb4bfc809c09d1bc5022e567c602d8fc9dd"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-nsa-ghidra",
+      "source_item_id": null,
+      "name": "Ghidra native binary reverse-engineering toolkit",
+      "category": "REVERSE_ENGINEERING_TOOL",
+      "provenance_class": "OWNER_SUBMITTED_3_GITHUB_REPOS_2026_10_14",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted October 14 GitHub intake; phase-routed candidate with explicit benchmark contract and safety/cost gates. No actual LAB scorecard or runtime deployment verified.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "reverse-engineering",
+        "binary-analysis",
+        "decompiler",
+        "headless-analysis",
+        "pyghidra",
+        "offline-tool"
+      ],
+      "platform_constraints": [
+        "Official Ghidra 12.1.4 release (2026-09-21) calls for 64-bit JDK 25; verify advisories, installer signatures and current availability before local installation.",
+        "Analyze a copy of an explicitly authorized bounded artifact; never patch/repack/sign/execute a third-party binary or infer firmware rights.",
+        "Prefer on-demand headless/PyGhidra or read-only GUI; no background service, autostart, privileged account or broad credentials.",
+        "Do not replace REA's existing verified signed PE sidecar reconciliation or claim that a decompiler substitutes for Windows UIA/CUA observations."
+      ],
+      "shortlist_lanes": [
+        "binary-analysis"
+      ],
+      "evidence_refs": [
+        "https://github.com/NationalSecurityAgency/ghidra",
+        "https://github.com/NationalSecurityAgency/ghidra/tree/918acd744d17e3b95fbde44ec6ab3e59b6dbd45f",
+        "docs/implementation/office-v2/phase2/owner-assurance-binary-tools-intake-2026-10-14.md",
+        "https://github.com/nocturney/velvetos-core/issues/606"
+      ],
+      "notes": [
+        "Upstream pinned 918acd744d17e3b95fbde44ec6ab3e59b6dbd45f; license review: Apache-2.0 source; check separate runtime/JDK and bundled dependency licenses.",
+        "Target projects: REA 5.0.0 comparison for signed Windows PE / shipped desktop artifacts; optionally LOCAL3D/STOW under specific blocker.",
+        "Route: shipped-artifact-analysis; P1 parked issue #606; selective Office Phase 4/6 shipped-desktop-app diagnostics and binary analysis; existing owner #606.",
+        "Admission prerequisite: P1 #606 unparked by a real binary blocker or #612 P0 reference/capacity proven; target file rights, bounded scope, no-P0-contention resource lease, verified release/security and local cost preflight.",
+        "No install, local execution, binary modification or permanent service authorized."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "When #606 has a concrete shipped-binary integration blocker, benchmark pinned Ghidra headless/PyGhidra versus the existing REA/read-only deterministic path on the same authorized PE subset: decompilation fidelity, evidence/provenance, false positives, CPU/RAM, time and safe teardown.",
+        "rationale": "Potentially deeper native PE/ELF binary inspection than the current JavaScript/Electron-oriented REA pilot; complementary unless reproducible same-artifact evidence proves substitution.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "shipped-artifact-analysis",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/606",
+        "phase": "P1 parked issue #606; selective Office Phase 4/6 shipped-desktop-app diagnostics and binary analysis",
+        "status": "WAITING_GATE",
+        "next_gate": "When #606 has a concrete shipped-binary integration blocker, benchmark pinned Ghidra headless/PyGhidra versus the existing REA/read-only deterministic path on the same authorized PE subset: decompilation fidelity, evidence/provenance, false positives, CPU/RAM, time and safe teardown.",
+        "unlock_condition": "P1 #606 unparked by a real binary blocker or #612 P0 reference/capacity proven; target file rights, bounded scope, no-P0-contention resource lease, verified release/security and local cost preflight.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-assurance-binary-tools-intake-2026-10-14.md",
+          "https://github.com/NationalSecurityAgency/ghidra/tree/918acd744d17e3b95fbde44ec6ab3e59b6dbd45f"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-mozilla-ai-llamafile",
+      "source_item_id": null,
+      "name": "Mozilla AI llamafile portable local LLM inference runtime",
+      "category": "MODEL_INFERENCE_RUNTIME",
+      "provenance_class": "OWNER_SUBMITTED_SINGLE_GITHUB_REPO_2026_10_14",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted 2026-10-14 repo is source-pinned and phase-routed for fair local inference runtime comparison; no LAB run, benchmark, install or production effect.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "local-inference",
+        "portable-single-file-runtime",
+        "llama-cpp",
+        "gguf",
+        "openai-compatible-api",
+        "anthropic-compatible-messages-api",
+        "cuda",
+        "metal",
+        "offline-inference",
+        "optional-whisperfile"
+      ],
+      "platform_constraints": [
+        "Apache-2.0 source license verified; model weights, binary redistribution and linked dependencies require separate rights review.",
+        "Windows bundled-weight executables must stay below the 4GB executable limit; for larger models use separate external GGUF weights. Pin exact executable/binary digest before benchmark.",
+        "The observed v0.10.6 (2026-09-15) release belongs to evolving 0.10.x series; verify real NVIDIA/CUDA Windows and Apple Silicon Metal support/offload, detecting CPU fallback.",
+        "Local OpenAI/Anthropic-compatible server can propose tool calls but does not safely authorize or execute them; keep tool approval/dispatch with the existing VelvetOS effect authority and bind API to loopback.",
+        "No #612 P0 host/GPU/worktree contention, new model download, autostart, daemon, paid API, exposed service, new recurring cost or production cutover authorized."
+      ],
+      "shortlist_lanes": [
+        "local-model-inference"
+      ],
+      "evidence_refs": [
+        "https://github.com/mozilla-ai/llamafile",
+        "https://github.com/mozilla-ai/llamafile/tree/a3ccf098ed9c7c77687f5430b0143156d3bcc45a",
+        "https://github.com/mozilla-ai/llamafile/releases/tag/0.10.6",
+        "docs/implementation/office-v2/phase2/owner-local-inference-llamafile-intake-2026-10-14.md",
+        "docs/implementation/office-v2/phase3c/README.md",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "Inference runtime/provider challenger to Ollama, not a model-routing gateway challenger to LiteLLM/TensorZero and not an agent orchestrator.",
+        "Existing owner #612 local model inference baseline; compatible comparison contract in Phase 3C after independently verified local coding worker proof.",
+        "Use same licensed model, GGUF/quantization, context/task, prompt/schema and sampled settings, measure tool quality and resources before selecting replacement or fallback.",
+        "Whisperfile speech-to-text is only an optional later, separately gated voice comparison, not a service enabled by this intake.",
+        "Registry entry is research evidence only; it grants no LAB admission, credentials, execution, cost or production authority."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "After the independently verified #612 OpenCode/Ollama source-to-PR/QA/recovery reference and Phase 3C incumbent baseline, benchmark pinned llamafile vs the existing Ollama local runtime using the same licensed GGUF/model/quantization and synthetic tasks; record tool/API correctness, cold/warm latency, tokens/sec, RAM/VRAM/GPU/CPU, restart/rollback, and zero-incremental-cost evidence.",
+        "rationale": "Single-file cross-platform delivery and a local API may reduce provisioning or offer a portable Ollama alternative, but same-model benchmarks must prove fit and benefits; overlap with an incumbent is not a rejection reason.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "local-model-inference",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Office v2 Phase 3C provider compatibility / post-baseline #612 local model efficiency (not gateway selection)",
+        "status": "WAITING_GATE",
+        "next_gate": "After the independently verified #612 OpenCode/Ollama source-to-PR/QA/recovery reference and Phase 3C incumbent baseline, benchmark pinned llamafile vs the existing Ollama local runtime using the same licensed GGUF/model/quantization and synthetic tasks; record tool/API correctness, cold/warm latency, tokens/sec, RAM/VRAM/GPU/CPU, restart/rollback, and zero-incremental-cost evidence.",
+        "unlock_condition": "An independently verified #612 source-to-PR/QA/recovery baseline, bounded Phase 3C semantic/provider fixtures, a genuinely free isolated host/VRAM lease, and scoped license/model rights, binary/security, loopback/network, cost and rollback admission checks. No in-flight worker interruption, installation, download or API call.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-local-inference-llamafile-intake-2026-10-14.md",
+          "https://github.com/mozilla-ai/llamafile/tree/a3ccf098ed9c7c77687f5430b0143156d3bcc45a",
+          "docs/implementation/office-v2/phase3c/README.md"
         ]
       }
     }

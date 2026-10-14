@@ -15,6 +15,10 @@ REQUIRED = [
     P2 / "candidate-lifecycle-v0.json",
     P2 / "candidate-registry.schema.json",
     P2 / "candidate-registry-v0.json",
+    P2 / "owner-assurance-binary-tools-intake-2026-10-14.json",
+    P2 / "owner-assurance-binary-tools-intake-2026-10-14.md",
+    P2 / "owner-local-inference-llamafile-intake-2026-10-14.json",
+    P2 / "owner-local-inference-llamafile-intake-2026-10-14.md",
     P2 / "admission-policy-v0.md",
     P2 / "scorecard.schema.json",
     P2 / "golden-fixture-contract.schema.json",
@@ -316,6 +320,208 @@ def validate_owner_repo_batch_20261013(items: list[dict], lanes: list[dict]) -> 
         fail("owner repo intake dropped-queue negative control failed")
 
 
+
+def validate_owner_assurance_binary_tools_20261014(items: list[dict], lanes: list[dict]) -> None:
+    """Protect the owner's three 2026-10-14 source/phase routes without activating a tool."""
+    receipt = load(P2 / "owner-assurance-binary-tools-intake-2026-10-14.json")
+    if receipt.get("schema") != "velvetos.office-v2.owner-assurance-binary-intake.v1":
+        fail("assurance/binary intake receipt schema changed")
+    if receipt.get("status") != "RESEARCH_ROUTED_NOT_EXECUTED" or receipt.get("counts") != {
+        "total": 3, "p0_queued": 0, "phase_routed": 3,
+    }:
+        fail("assurance/binary intake state or counts drifted")
+    records = receipt.get("items") or []
+    expected = {
+        "candidate-ifixai-ai-ifixai": (
+            "https://github.com/ifixai-ai/iFixAi", "agent-quality-evaluation",
+            "agent-quality", "https://github.com/nocturney/velvetos-core/issues/612",
+            "telemetry",
+        ),
+        "candidate-vxcontrol-pentagi": (
+            "https://github.com/vxcontrol/pentagi", "security-assurance",
+            "security-assurance", "https://github.com/nocturney/velvetos-core/issues/595",
+            "CVE-2026-14784",
+        ),
+        "candidate-nsa-ghidra": (
+            "https://github.com/NationalSecurityAgency/ghidra", "binary-analysis",
+            "shipped-artifact-analysis",
+            "https://github.com/nocturney/velvetos-core/issues/606", "JDK 25",
+        ),
+    }
+    if len(records) != 3 or {r.get("candidate_id") for r in records} != set(expected):
+        fail("assurance/binary intake lost or duplicated its three sources")
+    docpath = P2 / "owner-assurance-binary-tools-intake-2026-10-14.md"
+    doc = docpath.read_text(encoding="utf-8-sig")
+    p0_ids: set[str] = set()
+    for lane in lanes:
+        p0_ids.add(lane.get("incumbent"))
+        p0_ids.update(lane.get("challengers") or [])
+        p0_ids.update(lane.get("queued_challengers") or [])
+
+    def issues(checked_items: list[dict]) -> list[str]:
+        problems: list[str] = []
+        by_id = {item["candidate_id"]: item for item in checked_items}
+        for record in records:
+            cid = record["candidate_id"]
+            expected_url, expected_lane, expected_workstream, expected_owner, risk_marker = expected[cid]
+            item = by_id.get(cid)
+            if not item:
+                problems.append(f"missing candidate {cid}")
+                continue
+            pin = record.get("upstream_pin") or ""
+            pinned = expected_url + "/tree/" + pin
+            if (record.get("url") != expected_url or len(pin) != 40 or
+                any(c not in "0123456789abcdef" for c in pin) or
+                record.get("lane") != expected_lane or
+                record.get("workstream") != expected_workstream or
+                record.get("owner_issue") != expected_owner or
+                record.get("route_kind") != "PHASE_ROUTED"):
+                problems.append(f"source/owner intake receipt drift {cid}")
+            if cid in p0_ids:
+                problems.append(f"research-only tool allocated a core P0 slot {cid}")
+            if item.get("source_item_id") is not None:
+                problems.append(f"closed historical import contaminated {cid}")
+            if (item.get("provenance_class") != "OWNER_SUBMITTED_3_GITHUB_REPOS_2026_10_14"
+                or item.get("lifecycle_state") != "RESEARCHED"
+                or item.get("decision_verdict") != "BENCHMARK_REQUIRED"
+                or item.get("runtime_verification") != "NOT_RUN"
+                or item.get("authority_role") != "NONE"):
+                problems.append(f"unearned promotion or provenance drift {cid}")
+            refs = item.get("evidence_refs") or []
+            if expected_url not in refs or pinned not in refs:
+                problems.append(f"missing original source and immutable upstream pin {cid}")
+            if item.get("shortlist_lanes") != [expected_lane]:
+                problems.append(f"incorrect phase evaluation lane {cid}")
+            review = item.get("comparison_review") or {}
+            if (review.get("policy") != "COMPETITOR_NEUTRAL_ADMISSION_V1" or
+                review.get("eligibility") != "OPEN_FOR_COMPARISON" or
+                review.get("evidence_status") != "RESEARCH_ONLY"):
+                problems.append(f"candidate comparison/evidence state drift {cid}")
+            route = item.get("evaluation_route") or {}
+            if (route.get("owner_ref") != expected_owner or
+                route.get("workstream") != expected_workstream or
+                route.get("status") != "WAITING_GATE" or
+                route.get("next_gate") != record.get("next_gate") or
+                route.get("unlock_condition") != record.get("unlock_condition")):
+                problems.append(f"lost exact phase owner or unlock condition {cid}")
+            if not all(token.lower() in doc.lower() for token in (cid, pin, risk_marker)):
+                problems.append(f"intake explanation/safety evidence missing {cid}")
+            if risk_marker.lower() not in " ".join(item.get("platform_constraints") or []).lower():
+                problems.append(f"safety/cost limitation missing from candidate {cid}")
+        return problems
+
+    problems = issues(items)
+    if problems:
+        fail("assurance/binary owner intake integrity: " + "; ".join(problems[:6]))
+    # Deliberate negative controls: source omission, route loss and false LAB success.
+    for cid in expected:
+        without = [item for item in items if item["candidate_id"] != cid]
+        if not issues(without):
+            fail("assurance/binary dropped-candidate negative control failed: " + cid)
+    lost_route = [
+        {**item, "evaluation_route": {}} if item["candidate_id"] == "candidate-ifixai-ai-ifixai"
+        else item for item in items
+    ]
+    if not issues(lost_route):
+        fail("assurance/binary missing-route negative control failed")
+    premature = [
+        {**item, "runtime_verification": "PASS"}
+        if item["candidate_id"] == "candidate-vxcontrol-pentagi"
+        else item for item in items
+    ]
+    if not issues(premature):
+        fail("assurance/binary false-runtime-attestation negative control failed")
+
+
+
+def validate_owner_llamafile_20261014(items: list[dict], lanes: list[dict]) -> None:
+    """Make this source-pinned provider research intake impossible to silently lose."""
+    cid = "candidate-mozilla-ai-llamafile"
+    source_url = "https://github.com/mozilla-ai/llamafile"
+    upstream_sha = "a3ccf098ed9c7c77687f5430b0143156d3bcc45a"
+    owner_issue = "https://github.com/nocturney/velvetos-core/issues/612"
+    receipt = load(P2 / "owner-local-inference-llamafile-intake-2026-10-14.json")
+    doc = (P2 / "owner-local-inference-llamafile-intake-2026-10-14.md").read_text(encoding="utf-8-sig")
+    phase3 = (ROOT / "docs/implementation/office-v2/phase3c/README.md").read_text(encoding="utf-8-sig")
+    active_or_queued = set()
+    for lane in lanes:
+        active_or_queued.add(lane.get("incumbent"))
+        active_or_queued.update(lane.get("challengers") or [])
+        active_or_queued.update(lane.get("queued_challengers") or [])
+
+    def issues(records: list[dict]) -> list[str]:
+        problems = []
+        by_id = {candidate.get("candidate_id"): candidate for candidate in records}
+        candidate = by_id.get(cid)
+        if (receipt.get("schema") != "velvetos.office-v2.owner-local-inference-intake.v1"
+            or receipt.get("status") != "RESEARCH_ROUTED_NOT_EXECUTED"
+            or receipt.get("candidate_id") != cid
+            or receipt.get("url") != source_url
+            or receipt.get("upstream_pin") != upstream_sha
+            or receipt.get("owner_issue") != owner_issue
+            or receipt.get("workstream") != "local-model-inference"
+            or receipt.get("route_kind") != "PHASE_ROUTED"
+            or receipt.get("p0_shortlist_changed") is not False
+            or receipt.get("runtime_executed") is not False
+            or receipt.get("paid_inference_authorized") is not False):
+            problems.append("source, phase owner or no-execution receipt drift")
+        if candidate is None:
+            return problems + ["missing owner-supplied llamafile candidate"]
+        if cid in active_or_queued:
+            problems.append("research-only local runner promoted to a P0 shortlist")
+        if (candidate.get("source_item_id") is not None
+            or candidate.get("provenance_class") != "OWNER_SUBMITTED_SINGLE_GITHUB_REPO_2026_10_14"
+            or candidate.get("lifecycle_state") != "RESEARCHED"
+            or candidate.get("decision_verdict") != "BENCHMARK_REQUIRED"
+            or candidate.get("runtime_verification") != "NOT_RUN"
+            or candidate.get("authority_role") != "NONE"):
+            problems.append("historical contamination or unearned promotion")
+        if candidate.get("shortlist_lanes") != ["local-model-inference"]:
+            problems.append("not a local model inference provider")
+        refs = candidate.get("evidence_refs") or []
+        if source_url not in refs or source_url + "/tree/" + upstream_sha not in refs:
+            problems.append("exact upstream identity or pin disappeared")
+        review = candidate.get("comparison_review") or {}
+        if (review.get("policy") != "COMPETITOR_NEUTRAL_ADMISSION_V1"
+            or review.get("eligibility") != "OPEN_FOR_COMPARISON"
+            or review.get("evidence_status") != "RESEARCH_ONLY"):
+            problems.append("invalid research-only competitor review")
+        route = candidate.get("evaluation_route") or {}
+        if (route.get("workstream") != "local-model-inference"
+            or route.get("owner_ref") != owner_issue
+            or route.get("status") != "WAITING_GATE"
+            or route.get("next_gate") != receipt.get("next_gate")
+            or route.get("unlock_condition") != receipt.get("unlock_condition")):
+            problems.append("phase routing owner or unlock gate missing")
+        for marker in (cid, upstream_sha, "Ollama", "NO_NEW_RECURRING_COST"):
+            if marker not in doc:
+                problems.append("source or benchmark context missing: " + marker)
+        if cid not in phase3 or "Ollama" not in phase3:
+            problems.append("Phase 3C local provider handoff missing")
+        return problems
+
+    if issues(items):
+        fail("llamafile local inference intake: " + "; ".join(issues(items)[:6]))
+    if not issues([x for x in items if x.get("candidate_id") != cid]):
+        fail("llamafile omitted candidate negative control failed")
+    if not issues([
+        {**x, "evaluation_route": {}} if x.get("candidate_id") == cid else x
+        for x in items
+    ]):
+        fail("llamafile lost route negative control failed")
+    if not issues([
+        {**x, "runtime_verification": "PASS"} if x.get("candidate_id") == cid else x
+        for x in items
+    ]):
+        fail("llamafile false runtime success negative control failed")
+    if not issues([
+        {**x, "evidence_refs": [ref for ref in x.get("evidence_refs", [])
+                               if ref != source_url + "/tree/" + upstream_sha]}
+        if x.get("candidate_id") == cid else x for x in items
+    ]):
+        fail("llamafile lost source-pin negative control failed")
+
+
 def main() -> None:
     missing = [str(p.relative_to(ROOT)) for p in REQUIRED if not p.is_file()]
     if missing:
@@ -378,6 +584,8 @@ def main() -> None:
 
     validate_competitor_neutrality(registry, items, lanes)
     validate_owner_repo_batch_20261013(items, lanes)
+    validate_owner_assurance_binary_tools_20261014(items, lanes)
+    validate_owner_llamafile_20261014(items, lanes)
 
     # Strict research-only agent-composition intake: no automatic admission,
     # dual scheduler, OpenDots alias substitution, spend or authority promotion.

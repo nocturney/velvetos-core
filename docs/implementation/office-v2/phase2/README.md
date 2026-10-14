@@ -33,6 +33,14 @@ Eight distinct upstream agent candidates and the historical Letta memory candida
 
 All 19 repositories from the owner-provided GitHub batch, including corrected `anus-dev/ANUS`, are registered for **research-only** comparative routing. Nine full agent-harness challengers are queued in the existing `agent-runtime` overflow; the other ten have named non-P0 phase/owner routes. [Intake and execution map](owner-repo-intake-2026-10-13.md) · [immutable batch receipt](owner-repo-intake-2026-10-13.json). This does **not** preempt #612 P0 proof, admit LAB execution, grant model/host credentials or produce benchmark winners.
 
+## Owner assurance, security and binary tools intake — 2026-10-14
+
+Owner-submitted [iFixAi](https://github.com/ifixai-ai/iFixAi), [PentAGI](https://github.com/vxcontrol/pentagi) and [Ghidra](https://github.com/NationalSecurityAgency/ghidra) now have immutable source pins and **phase-routed, research-only** Candidate Registry entries (128 → 131). Routes: iFixAi → #612 agent-quality/Promptfoo comparison, PentAGI → #595 isolated security-assurance review, and Ghidra → #606 parked P1 shipped-binary/REA comparison. No core P0 shortlist change, installation, scans, model spend, credentials, autostart, tool authority or LAB promotion follows from this intake. The existing Phase 2 sensor enforces all three source identities and routing/false-promotion negative controls. [Routing and admission gates](owner-assurance-binary-tools-intake-2026-10-14.md) · [fixed source receipt](owner-assurance-binary-tools-intake-2026-10-14.json).
+
+## Owner-supplied llamafile local inference — 2026-10-14
+
+[Mozilla AI llamafile](https://github.com/mozilla-ai/llamafile) is now source-pinned in the canonical Candidate Registry as `candidate-mozilla-ai-llamafile` (`RESEARCHED / BENCHMARK_REQUIRED / NOT_RUN`), count 131 → 132; historical imports and all P0 shortlists remain unchanged. This is a Phase 3C **local inference-provider** Ollama comparison routed under #612 after its independently verified local coding-worker baseline, **not** a model-routing gateway contender. No download, LAB admission, background service, added spend or production authority. [Source and benchmark gate](owner-local-inference-llamafile-intake-2026-10-14.md) · [immutable source receipt](owner-local-inference-llamafile-intake-2026-10-14.json).
+
 ## Candidate lifecycle
 
 `DISCOVERED → RESEARCHED → CANDIDATE → ADMITTED → LAB → SHADOW → PILOT → PRODUCTION → FALLBACK → RETIRED`.

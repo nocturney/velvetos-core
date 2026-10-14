@@ -10,6 +10,12 @@ Phase 3A Restate winner and Phase 3B production *read* are already bounded. Phas
 
 Phase 2 shortlist: incumbent `incumbent-current-model-routing` against `candidate-litellm` and `candidate-tensorzero`. The Office Master Plan also lists Bifrost and any credible challengers: intake/triage them through the existing competitor-neutral registry before admission, rather than silently excluding or installing them. A working `candidate` is not an architectural winner by default.
 
+## Mozilla llamafile: local inference provider intake — research only (2026-10-14)
+
+Owner-submitted [Mozilla AI llamafile](https://github.com/mozilla-ai/llamafile/tree/a3ccf098ed9c7c77687f5430b0143156d3bcc45a) is registered as `candidate-mozilla-ai-llamafile` under the existing Phase 2 Candidate Registry, with `evaluation_route.workstream=local-model-inference` and [#612](https://github.com/nocturney/velvetos-core/issues/612) as the owner. It is a **possible Ollama-style local inference provider replacement or fallback**, not an extra LiteLLM/TensorZero **model-routing gateway** or agent runtime. The active Phase 3C shortlist and 13-case contract stay unchanged.
+
+After #612 has a real independently verified local source-to-PR/QA/recovery result and an uncontended host, compare the same licensed GGUF/quantization/tasks via Phase 3C semantic/API checks. Measure actual Windows CUDA or Apple Metal offload (not silent CPU fallback), model/tool quality, cold/warm performance, CPU/GPU/VRAM/RAM, Windows external-weight >4GB workaround, startup/rollback, loopback security, license and `NO_NEW_RECURRING_COST`. Preserve canonical policy and tool-execution authority outside the inference endpoint. [Pinned intake and exact unlock gate](../phase2/owner-local-inference-llamafile-intake-2026-10-14.md) · [receipt](../phase2/owner-local-inference-llamafile-intake-2026-10-14.json). **No install, model download, LAB run, new routing or promotion is authorized.**
+
 ## Agent-composition cross-lane handoff — research only (2026-10-10)
 
 The [Phase 2 A/B/C agent-composition plan](../phase2/agent-composition-plan-v0.json) queues Rakazo and Hermes as possible whole-system or single-specialist agent runtimes, **not** as approved new model gateways. Later Phase 3D comparisons must reuse this Phase 3C contract and the existing production model-routing authority rather than allow each agent to buy or route its own provider calls.
