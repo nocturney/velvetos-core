@@ -1,8 +1,8 @@
 # RustDesk single-operator inventory pilot
 
-Status: RESEARCH / FIXTURE-AND-LOOPBACK-HTTP-VERIFIED / NOT DEPLOYED
+Status: RESEARCH / 41 UNIT+LOCALHOST TESTS / OFFLINE HTML PREVIEW / NOT DEPLOYED
 
-This is an optional one-shot read-only adapter for the CortenDesk admin API. It is intended to inform a future VelvetOS Remote Machines card, not run a production second control plane. The only supported operations are GET requests for device inventory and fixture parsing. There is no install script, background service, credential harvesting, process injection, remote-control command, device mutation or auto-start.
+This folder implements two alternative nonproduction inventory sources: an explicitly opted-in read-only adapter for the CortenDesk admin API, and a strictly offline read-only RustDesk OSS SQLite snapshot reader. A generated HTML dashboard preview renders only synthetic or snapshot data. This is intended to inform a future VelvetOS Remote Machines card, not run a second production control plane. There is no installation routine, background service, credential harvesting, process injection, remote-control command, device mutation or auto-start.
 
 ## Source contract
 
@@ -46,3 +46,27 @@ Acceptance for this PR is fixture tests and research documentation only. It does
 ## Current execution gate (2026-10-14)
 
 The real CortenDesk 1.13.2 ARM64 OCI image has been fetched into an isolated containerd namespace on a test Mac VM, but a proposed localhost-only container launch was rejected by the remote tool's safety policy. No service was started, no CortenDesk device API was queried, no RustDesk clients were moved and no workaround was attempted. Therefore `CONNECTED` is only a unit-test behavior, not a proven live integration. Do not use the mock data to populate the existing VelvetOS Control Center. See the dated research intake for the immutable image digest and the source/compatibility review.
+
+## Alternative: stock RustDesk OSS registry snapshot (no client API enrollment)
+
+The upstream RustDesk OSS hbbs source (`rustdesk/rustdesk-server/src/database.rs`) stores known peers in a SQLite `peer` table, including `id`, `created_at` and sensitive columns. This adapter reads ONLY the `id` column from an explicitly supplied **completed offline snapshot**; it never reads the PK, UUID, GUID, user, note or info columns. It does not access or locate the live database, open a TCP connection, nor modify RustDesk configurations. The SQLite URI is read-only/immutable. Do NOT pass a working/live database with WAL to an immutable reader: an inconsistent live view could be produced.
+
+    python rustdesk_oss_snapshot.py --snapshot path/to/a/completed-copy-of-db_v2.sqlite3
+
+The result uses the same `velvetos.remote_inventory.v0` envelope as the CortenDesk adapter, with `state=SNAPSHOT_ONLY`, `observed_at=null` and `snapshot_read_at` as the local file-read time (NOT the source capture time). Crucially **every device is presence UNKNOWN**. The stock hbbs SQLite `created_at` is not a proof of last-seen/online status. This offers basic registered-ID discovery without enrolling each RustDesk client into a CortenDesk API server.
+
+No actual server DB snapshot was created or read for this prototype. Unit tests construct disposable fake `peer` tables and verify no sensitive peer metadata leaks.
+
+## Standalone local preview (never a live dashboard)
+
+    python render_preview.py --fixture fixtures/devices-page1.json --output preview/demo.html
+
+Open `preview/demo.html` locally in your browser. It has Hebrew RTL, search, presence filtering and a copy-ID button. There are no network assets, external JavaScript, live data, real device IDs, remote-control links or control commands. An explicit non-live notice cannot be removed by the renderer. Content Security Policy blocks network requests. The file is safe to review separately from the production Control Center.
+
+To render a known *offline* SQLite snapshot instead, run `python render_preview.py --snapshot your-completed-snapshot.sqlite3 --output preview/your-snapshot.html`. This is still not live monitoring; snapshots show presence UNKNOWN.
+
+The renderer refuses `state=CONNECTED` and refuses overwriting an existing HTML file. Latest checks on Windows: 41/41 tests PASS (13 CortenDesk contract, 9 localhost HTTP, 12 OSS snapshot, 7 preview) plus independent `node --check` of the browser script. CI must be checked on the resulting PR commit independently.
+
+### Routing decision
+
+This work stays inside `tools/rustdesk-pilot/` as an isolated research candidate. There is no new runtime service, API writer, route registry, public frontend, or Control Center redesign. The existing live server and all six RustDesk clients remain unchanged.
