@@ -27,6 +27,10 @@ Use it when the edit needs multi-shot composition, kinetic type, designed overla
 
 The machine-readable policy is `HYPERFRAMES-BACKEND.json`. Render requests use `HYPERFRAMES-RENDER.schema.json`. Host execution goes through `scripts/vf_hyperframes.py`.
 
+## Optional Awesome AI Motion vocabulary
+
+`packages/vfom/MOTION-LIBRARY.json` is an **optional pattern reference** for the Edit Director. It adds three source-locked Reel mechanics and four paused GSAP preset helpers inside the existing `velvet-reel.js`/HyperFrames backend, not a second renderer. The candidate `motion-story-reel.html` template is separate from the five locked owner-approved v6.6.11 Project Reel templates. For approved source media, plan with `scripts/vf_motion_plan.py` and render only via `scripts/vf_hyperframes.py`. A selector success is a rough-candidate planning result, not a render receipt or publish permission. See `packages/vfom/MOTION-LIBRARY.md`.
+
 ## Host requirements
 
 The render host is Edge/Office, not the Core catalog runtime.
