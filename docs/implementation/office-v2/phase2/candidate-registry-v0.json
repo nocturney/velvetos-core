@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-14T10:53:00.000Z",
+  "updated_at": "2026-10-14T14:30:01.001Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 131,
+  "candidate_count": 132,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -5457,6 +5457,81 @@
         "evidence_refs": [
           "docs/implementation/office-v2/phase2/owner-assurance-binary-tools-intake-2026-10-14.md",
           "https://github.com/NationalSecurityAgency/ghidra/tree/918acd744d17e3b95fbde44ec6ab3e59b6dbd45f"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-mozilla-ai-llamafile",
+      "source_item_id": null,
+      "name": "Mozilla AI llamafile portable local LLM inference runtime",
+      "category": "MODEL_INFERENCE_RUNTIME",
+      "provenance_class": "OWNER_SUBMITTED_SINGLE_GITHUB_REPO_2026_10_14",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted 2026-10-14 repo is source-pinned and phase-routed for fair local inference runtime comparison; no LAB run, benchmark, install or production effect.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "local-inference",
+        "portable-single-file-runtime",
+        "llama-cpp",
+        "gguf",
+        "openai-compatible-api",
+        "anthropic-compatible-messages-api",
+        "cuda",
+        "metal",
+        "offline-inference",
+        "optional-whisperfile"
+      ],
+      "platform_constraints": [
+        "Apache-2.0 source license verified; model weights, binary redistribution and linked dependencies require separate rights review.",
+        "Windows bundled-weight executables must stay below the 4GB executable limit; for larger models use separate external GGUF weights. Pin exact executable/binary digest before benchmark.",
+        "The observed v0.10.6 (2026-09-15) release belongs to evolving 0.10.x series; verify real NVIDIA/CUDA Windows and Apple Silicon Metal support/offload, detecting CPU fallback.",
+        "Local OpenAI/Anthropic-compatible server can propose tool calls but does not safely authorize or execute them; keep tool approval/dispatch with the existing VelvetOS effect authority and bind API to loopback.",
+        "No #612 P0 host/GPU/worktree contention, new model download, autostart, daemon, paid API, exposed service, new recurring cost or production cutover authorized."
+      ],
+      "shortlist_lanes": [
+        "local-model-inference"
+      ],
+      "evidence_refs": [
+        "https://github.com/mozilla-ai/llamafile",
+        "https://github.com/mozilla-ai/llamafile/tree/a3ccf098ed9c7c77687f5430b0143156d3bcc45a",
+        "https://github.com/mozilla-ai/llamafile/releases/tag/0.10.6",
+        "docs/implementation/office-v2/phase2/owner-local-inference-llamafile-intake-2026-10-14.md",
+        "docs/implementation/office-v2/phase3c/README.md",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "Inference runtime/provider challenger to Ollama, not a model-routing gateway challenger to LiteLLM/TensorZero and not an agent orchestrator.",
+        "Existing owner #612 local model inference baseline; compatible comparison contract in Phase 3C after independently verified local coding worker proof.",
+        "Use same licensed model, GGUF/quantization, context/task, prompt/schema and sampled settings, measure tool quality and resources before selecting replacement or fallback.",
+        "Whisperfile speech-to-text is only an optional later, separately gated voice comparison, not a service enabled by this intake.",
+        "Registry entry is research evidence only; it grants no LAB admission, credentials, execution, cost or production authority."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "After the independently verified #612 OpenCode/Ollama source-to-PR/QA/recovery reference and Phase 3C incumbent baseline, benchmark pinned llamafile vs the existing Ollama local runtime using the same licensed GGUF/model/quantization and synthetic tasks; record tool/API correctness, cold/warm latency, tokens/sec, RAM/VRAM/GPU/CPU, restart/rollback, and zero-incremental-cost evidence.",
+        "rationale": "Single-file cross-platform delivery and a local API may reduce provisioning or offer a portable Ollama alternative, but same-model benchmarks must prove fit and benefits; overlap with an incumbent is not a rejection reason.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "local-model-inference",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Office v2 Phase 3C provider compatibility / post-baseline #612 local model efficiency (not gateway selection)",
+        "status": "WAITING_GATE",
+        "next_gate": "After the independently verified #612 OpenCode/Ollama source-to-PR/QA/recovery reference and Phase 3C incumbent baseline, benchmark pinned llamafile vs the existing Ollama local runtime using the same licensed GGUF/model/quantization and synthetic tasks; record tool/API correctness, cold/warm latency, tokens/sec, RAM/VRAM/GPU/CPU, restart/rollback, and zero-incremental-cost evidence.",
+        "unlock_condition": "An independently verified #612 source-to-PR/QA/recovery baseline, bounded Phase 3C semantic/provider fixtures, a genuinely free isolated host/VRAM lease, and scoped license/model rights, binary/security, loopback/network, cost and rollback admission checks. No in-flight worker interruption, installation, download or API call.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-local-inference-llamafile-intake-2026-10-14.md",
+          "https://github.com/mozilla-ai/llamafile/tree/a3ccf098ed9c7c77687f5430b0143156d3bcc45a",
+          "docs/implementation/office-v2/phase3c/README.md"
         ]
       }
     }

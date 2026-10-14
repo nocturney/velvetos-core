@@ -17,6 +17,8 @@ REQUIRED = [
     P2 / "candidate-registry-v0.json",
     P2 / "owner-assurance-binary-tools-intake-2026-10-14.json",
     P2 / "owner-assurance-binary-tools-intake-2026-10-14.md",
+    P2 / "owner-local-inference-llamafile-intake-2026-10-14.json",
+    P2 / "owner-local-inference-llamafile-intake-2026-10-14.md",
     P2 / "admission-policy-v0.md",
     P2 / "scorecard.schema.json",
     P2 / "golden-fixture-contract.schema.json",
@@ -431,6 +433,95 @@ def validate_owner_assurance_binary_tools_20261014(items: list[dict], lanes: lis
         fail("assurance/binary false-runtime-attestation negative control failed")
 
 
+
+def validate_owner_llamafile_20261014(items: list[dict], lanes: list[dict]) -> None:
+    """Make this source-pinned provider research intake impossible to silently lose."""
+    cid = "candidate-mozilla-ai-llamafile"
+    source_url = "https://github.com/mozilla-ai/llamafile"
+    upstream_sha = "a3ccf098ed9c7c77687f5430b0143156d3bcc45a"
+    owner_issue = "https://github.com/nocturney/velvetos-core/issues/612"
+    receipt = load(P2 / "owner-local-inference-llamafile-intake-2026-10-14.json")
+    doc = (P2 / "owner-local-inference-llamafile-intake-2026-10-14.md").read_text(encoding="utf-8-sig")
+    phase3 = (ROOT / "docs/implementation/office-v2/phase3c/README.md").read_text(encoding="utf-8-sig")
+    active_or_queued = set()
+    for lane in lanes:
+        active_or_queued.add(lane.get("incumbent"))
+        active_or_queued.update(lane.get("challengers") or [])
+        active_or_queued.update(lane.get("queued_challengers") or [])
+
+    def issues(records: list[dict]) -> list[str]:
+        problems = []
+        by_id = {candidate.get("candidate_id"): candidate for candidate in records}
+        candidate = by_id.get(cid)
+        if (receipt.get("schema") != "velvetos.office-v2.owner-local-inference-intake.v1"
+            or receipt.get("status") != "RESEARCH_ROUTED_NOT_EXECUTED"
+            or receipt.get("candidate_id") != cid
+            or receipt.get("url") != source_url
+            or receipt.get("upstream_pin") != upstream_sha
+            or receipt.get("owner_issue") != owner_issue
+            or receipt.get("workstream") != "local-model-inference"
+            or receipt.get("route_kind") != "PHASE_ROUTED"
+            or receipt.get("p0_shortlist_changed") is not False
+            or receipt.get("runtime_executed") is not False
+            or receipt.get("paid_inference_authorized") is not False):
+            problems.append("source, phase owner or no-execution receipt drift")
+        if candidate is None:
+            return problems + ["missing owner-supplied llamafile candidate"]
+        if cid in active_or_queued:
+            problems.append("research-only local runner promoted to a P0 shortlist")
+        if (candidate.get("source_item_id") is not None
+            or candidate.get("provenance_class") != "OWNER_SUBMITTED_SINGLE_GITHUB_REPO_2026_10_14"
+            or candidate.get("lifecycle_state") != "RESEARCHED"
+            or candidate.get("decision_verdict") != "BENCHMARK_REQUIRED"
+            or candidate.get("runtime_verification") != "NOT_RUN"
+            or candidate.get("authority_role") != "NONE"):
+            problems.append("historical contamination or unearned promotion")
+        if candidate.get("shortlist_lanes") != ["local-model-inference"]:
+            problems.append("not a local model inference provider")
+        refs = candidate.get("evidence_refs") or []
+        if source_url not in refs or source_url + "/tree/" + upstream_sha not in refs:
+            problems.append("exact upstream identity or pin disappeared")
+        review = candidate.get("comparison_review") or {}
+        if (review.get("policy") != "COMPETITOR_NEUTRAL_ADMISSION_V1"
+            or review.get("eligibility") != "OPEN_FOR_COMPARISON"
+            or review.get("evidence_status") != "RESEARCH_ONLY"):
+            problems.append("invalid research-only competitor review")
+        route = candidate.get("evaluation_route") or {}
+        if (route.get("workstream") != "local-model-inference"
+            or route.get("owner_ref") != owner_issue
+            or route.get("status") != "WAITING_GATE"
+            or route.get("next_gate") != receipt.get("next_gate")
+            or route.get("unlock_condition") != receipt.get("unlock_condition")):
+            problems.append("phase routing owner or unlock gate missing")
+        for marker in (cid, upstream_sha, "Ollama", "NO_NEW_RECURRING_COST"):
+            if marker not in doc:
+                problems.append("source or benchmark context missing: " + marker)
+        if cid not in phase3 or "Ollama" not in phase3:
+            problems.append("Phase 3C local provider handoff missing")
+        return problems
+
+    if issues(items):
+        fail("llamafile local inference intake: " + "; ".join(issues(items)[:6]))
+    if not issues([x for x in items if x.get("candidate_id") != cid]):
+        fail("llamafile omitted candidate negative control failed")
+    if not issues([
+        {**x, "evaluation_route": {}} if x.get("candidate_id") == cid else x
+        for x in items
+    ]):
+        fail("llamafile lost route negative control failed")
+    if not issues([
+        {**x, "runtime_verification": "PASS"} if x.get("candidate_id") == cid else x
+        for x in items
+    ]):
+        fail("llamafile false runtime success negative control failed")
+    if not issues([
+        {**x, "evidence_refs": [ref for ref in x.get("evidence_refs", [])
+                               if ref != source_url + "/tree/" + upstream_sha]}
+        if x.get("candidate_id") == cid else x for x in items
+    ]):
+        fail("llamafile lost source-pin negative control failed")
+
+
 def main() -> None:
     missing = [str(p.relative_to(ROOT)) for p in REQUIRED if not p.is_file()]
     if missing:
@@ -494,6 +585,7 @@ def main() -> None:
     validate_competitor_neutrality(registry, items, lanes)
     validate_owner_repo_batch_20261013(items, lanes)
     validate_owner_assurance_binary_tools_20261014(items, lanes)
+    validate_owner_llamafile_20261014(items, lanes)
 
     # Strict research-only agent-composition intake: no automatic admission,
     # dual scheduler, OpenDots alias substitution, spend or authority promotion.
