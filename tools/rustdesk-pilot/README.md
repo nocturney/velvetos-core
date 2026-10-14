@@ -1,6 +1,6 @@
 # RustDesk single-operator inventory pilot
 
-Status: RESEARCH / 41 UNIT+LOCALHOST TESTS / OFFLINE HTML PREVIEW / NOT DEPLOYED
+Status: RESEARCH / 51 UNIT+LOCALHOST TESTS / PRIVATE REGISTRY PREVIEW / NOT DEPLOYED
 
 This folder implements two alternative nonproduction inventory sources: an explicitly opted-in read-only adapter for the CortenDesk admin API, and a strictly offline read-only RustDesk OSS SQLite snapshot reader. A generated HTML dashboard preview renders only synthetic or snapshot data. This is intended to inform a future VelvetOS Remote Machines card, not run a second production control plane. There is no installation routine, background service, credential harvesting, process injection, remote-control command, device mutation or auto-start.
 
@@ -65,8 +65,41 @@ Open `preview/demo.html` locally in your browser. It has Hebrew RTL, search, pre
 
 To render a known *offline* SQLite snapshot instead, run `python render_preview.py --snapshot your-completed-snapshot.sqlite3 --output preview/your-snapshot.html`. This is still not live monitoring; snapshots show presence UNKNOWN.
 
-The renderer refuses `state=CONNECTED` and refuses overwriting an existing HTML file. Latest checks on Windows: 41/41 tests PASS (13 CortenDesk contract, 9 localhost HTTP, 12 OSS snapshot, 7 preview) plus independent `node --check` of the browser script. CI must be checked on the resulting PR commit independently.
+The renderer refuses `state=CONNECTED` and refuses overwriting an existing HTML file. The extended test suite has 51 cases (13 CortenDesk contract, 9 localhost HTTP, 12 OSS snapshot, 7 preview and 10 private live-registry tests). The earlier PR head's `check-all` passed; new CI must be rechecked on the resulting commit.
 
 ### Routing decision
 
 This work stays inside `tools/rustdesk-pilot/` as an isolated research candidate. There is no new runtime service, API writer, route registry, public frontend, or Control Center redesign. The existing live server and all six RustDesk clients remain unchanged.
+
+## Private one-shot viewer for the existing RustDesk OSS server
+
+For a **single human operator**, CortenDesk is optional if the immediate goal
+is registered device discovery. There is now an explicit, read-only *local
+registry* mode that queries a known SQLite `peer` table on the same host using
+SQLite `mode=ro`, `query_only=ON` and one read transaction (including WAL).
+Only `peer.id` is selected. No UUID, public key, notes, usernames, host system
+data or service secrets are exported. The server stays untouched.
+
+Example on MacMiniOffice2 (replace the destination filename each time):
+
+    mkdir -p "$HOME/Library/Application Support/VelvetOS/RustDeskPilot/private"
+    chmod 700 "$HOME/Library/Application Support/VelvetOS/RustDeskPilot/private"
+    python3 render_preview.py \
+      --registry-db "$HOME/Library/Application Support/Velvet/RustDesk/server/data/db_v2.sqlite3" \
+      --allow-live-local-read \
+      --output "$HOME/Library/Application Support/VelvetOS/RustDeskPilot/private/remote-machines-private.html"
+
+This one-off command **reads real registered RustDesk IDs**, so its output is
+private and must NOT be committed, shared, exposed via a web server or stored
+under a Git worktree. An explicit flag is mandatory and a restrictive
+owner-only `0600` file is created without overwriting an existing report.
+The page uses an offline `REGISTRY_READ_ONLY` state with every machine marked
+`UNKNOWN`. It is **not live device health**, has no auto-refresh, no
+background process, no server API, and no one-click remote access. Each
+refresh is an explicit new one-off invocation with a new output filename.
+
+The mode requires **local OS read access** to the actual registry database
+and does not request elevation or modify database records. This is distinct
+from the `SNAPSHOT_ONLY` mode, which accepts a separately completed copy.
+A denied read fails closed and produces no real-ID HTML. To view a real-ID
+report, open its local path on the host; do not place it in a public folder.

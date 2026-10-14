@@ -113,18 +113,22 @@ select{min-width:146px}
   let data;
   try { data = JSON.parse($("embedded-inventory").textContent); }
   catch (_) { fail("המידע המקומי פגום"); return; }
-  if (!data || !["FIXTURE_ONLY", "SNAPSHOT_ONLY"].includes(data.state) || !Array.isArray(data.devices)) {
+  if (!data || !["FIXTURE_ONLY", "SNAPSHOT_ONLY", "REGISTRY_READ_ONLY"].includes(data.state) || !Array.isArray(data.devices)) {
     fail("אין נתוני ניסוי תקינים להצגה"); return;
   }
   const isSnapshot = data.state === "SNAPSHOT_ONLY";
-  $("sourceType").textContent = isSnapshot ? "SQLite Snapshot / RustDesk OSS" : "Fixture / CortenDesk";
-  $("dataKind").textContent = isSnapshot ? "רשימת מזהים מתוך Snapshot, ללא זמינות חיה." : "נתוני הדגמה סינתטיים בלבד.";
+  const isRegistry = data.state === "REGISTRY_READ_ONLY";
+  const presenceUnavailable = isSnapshot || isRegistry;
+  $("sourceType").textContent = isRegistry ? "RustDesk OSS / Local registry" : (isSnapshot ? "SQLite Snapshot / RustDesk OSS" : "Fixture / CortenDesk");
+  $("dataKind").textContent = isRegistry
+    ? "מזהים אמיתיים מקריאת רישום מקומית חד-פעמית. אין כאן זמינות חיה. הקובץ פרטי — אין לשתפו."
+    : (isSnapshot ? "רשימת מזהים מתוך Snapshot, ללא זמינות חיה." : "נתוני הדגמה סינתטיים בלבד.");
   $("total").textContent = String(data.counts.total);
-  $("online").textContent = isSnapshot ? "—" : String(data.counts.online);
-  $("offline").textContent = isSnapshot ? "—" : String(data.counts.offline);
+  $("online").textContent = presenceUnavailable ? "—" : String(data.counts.online);
+  $("offline").textContent = presenceUnavailable ? "—" : String(data.counts.offline);
   $("unknown").textContent = String(data.counts.unknown);
-  const ts = isSnapshot ? data.snapshot_read_at : data.observed_at;
-  $("dataStamp").textContent = (isSnapshot ? "קריאת העותק: " : "זמן נתוני הדוגמה: ") + (ts || "לא זמין");
+  const ts = isRegistry ? data.registry_read_at : (isSnapshot ? data.snapshot_read_at : data.observed_at);
+  $("dataStamp").textContent = (isRegistry ? "קריאת הרישום המקומי: " : (isSnapshot ? "קריאת העותק: " : "זמן נתוני הדוגמה: ")) + (ts || "לא זמין");
   $("search").addEventListener("input", render);
   $("presence").addEventListener("change", render);
   render();

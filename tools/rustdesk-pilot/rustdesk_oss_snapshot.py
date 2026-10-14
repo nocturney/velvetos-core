@@ -92,6 +92,77 @@ def snapshot_inventory(path: Path, *, read_at: str | None = None) -> dict[str, A
     }
 
 
+def local_registry_inventory(path: Path, *, read_at: str | None = None) -> dict[str, Any]:
+    """Read ONLY registered peer IDs from a caller-selected live SQLite file.
+
+    Unlike an immutable offline snapshot this uses SQLite mode=ro, so WAL
+    transactions are visible. It is a one-time registry read, NOT a liveness
+    check, remote-control channel, database export, or persistent service.
+    No live DB contents beyond peer.id are included in the returned object.
+    """
+    try:
+        full = path.expanduser().resolve(strict=True)
+    except (OSError, RuntimeError) as exc:
+        raise AdapterError('registry_missing') from exc
+    if not full.is_file():
+        raise AdapterError('registry_not_file')
+
+    uri = full.as_uri() + '?mode=ro'
+    try:
+        with closing(sqlite3.connect(uri, uri=True, timeout=1)) as conn:
+            conn.execute('PRAGMA query_only=ON')
+            conn.execute('PRAGMA trusted_schema=OFF')
+            conn.execute('BEGIN')
+            table = conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='peer'"
+            ).fetchone()
+            if not table:
+                raise AdapterError('registry_schema_mismatch')
+            columns = {row[1] for row in conn.execute('PRAGMA table_info(peer)')}
+            if not {'id', 'created_at'}.issubset(columns):
+                raise AdapterError('registry_schema_mismatch')
+            ids = conn.execute(
+                'SELECT id FROM peer ORDER BY id LIMIT ?', (MAX_PEERS + 1,)
+            ).fetchall()
+    except sqlite3.Error as exc:
+        raise AdapterError('registry_read_failed') from exc
+
+    if len(ids) > MAX_PEERS:
+        raise AdapterError('registry_too_many_peers')
+    devices: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for (identifier,) in ids:
+        if (not isinstance(identifier, str) or not identifier.strip() or
+                len(identifier) > 100):
+            raise AdapterError('registry_invalid_peer_id')
+        if identifier in seen:
+            raise AdapterError('registry_duplicate_peer_id')
+        seen.add(identifier)
+        devices.append({
+            'device_id': identifier,
+            'display_name': identifier,
+            'platform': None,
+            'presence': 'UNKNOWN',
+            'enrollment': 'UNKNOWN',
+            'last_seen_at': None,
+            'group': None,
+            'client_version': None,
+        })
+    return {
+        'schema': SCHEMA,
+        'state': 'REGISTRY_READ_ONLY',
+        'source': 'rustdesk_oss_local_registry',
+        'mode': 'explicit_read_only_sqlite',
+        'observed_at': None,
+        'registry_read_at': read_at or datetime.now(timezone.utc).isoformat(),
+        'devices': devices,
+        'counts': {
+            'total': len(devices), 'online': 0, 'offline': 0,
+            'unknown': len(devices),
+        },
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description='RustDesk OSS offline snapshot inventory (never live)'

@@ -92,3 +92,32 @@ Verification in the isolated Windows worktree:
 The feature branch's local `python scripts/update-readme-snapshot.py --check` returns PASS and the worktree is clean. GitHub CI for PR #717 at `d0b345dd` fails ONLY at its `README System Pulse is current` step: the generated README snapshot is stale in the GitHub PR merge candidate. The selected VelvetOS suite reports 118/118 PASS in that very CI run; core/policy/visible-text local checks also PASS. The `main` branch advanced since this isolated worktree branched, with a change to `office/control/HANDOFF.json`, an input of the README snapshot generator. This is a shared derived-document maintenance issue; do not bypass the check or alter another domain owner's README/handoff state from this RustDesk feature lane. Keep PR #717 DRAFT / CI RED until the main/merge snapshot is reconciled through the canonical owner.
 
 The direct macOS headless browser visual smoke was not run successfully (Edge exited 1002 under the Windows SYSTEM executor). JS syntax verification and parser/renderer tests are PASS; pixel-level browser acceptance is still UNVERIFIED.
+
+## Single-operator next step: private local registry viewer (2026-10-14)
+
+A separate local-read mode was added, based on the existing OSS peer discovery.
+It uses an explicit path to the already running MacMiniOffice2 RustDesk
+database with SQLite read-only URI, `query_only` PRAGMA and a consistent
+one-shot SELECT of only `peer.id`. The live database is in WAL mode and a
+read-only query was verified (six registered rows at inspection time, not
+proof that six machines are online). No system settings, hbbs/hbbr services,
+client configuration, credentials, or port mappings change.
+
+The **new HTML output mode** is separate from the synthetic fixture and
+offline-copy preview: `REGISTRY_READ_ONLY`, observed/online time unknown,
+every presence `UNKNOWN`, only the time of the read known. It requires
+`--allow-live-local-read` and refuses any destination under a Git repository,
+uses exclusive file creation and owner-only mode 0600. HTML retains CSP
+`connect-src 'none'` with no remote network requests or control action.
+
+At coding verification: 51/51 tests passed on Windows including ten new
+WAL/consent/non-leak/permission/injection/fail-closed cases. The existing
+CortenDesk image execution safety gate remains unchanged and is not bypassed.
+The registry viewer is a simpler path to partial utility without running
+another orchestrator, replacing RustDesk OSS, or enrolling clients into a
+third-party API. No online/offline monitoring is claimed.
+
+The next acceptance step is a one-time *local private* HTML export on the Mac,
+with no device identifiers printed into logs or committed. The actual
+artifact path and metadata can be recorded after a successful run, but neither
+machine IDs nor raw database content belong in the repository.
