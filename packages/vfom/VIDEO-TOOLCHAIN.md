@@ -2,7 +2,7 @@
 
 Status: **implemented adapters; runtime truth remains per engine**.
 
-This layer adapts useful patterns from `browser-use/video-use`, Remotion and Manim **inside the existing Foundry**. It is not another editor product, orchestrator, queue, media catalog or publishing path.
+This layer adapts useful patterns from `browser-use/video-use`, Remotion, Manim and `gongnyang/awesome-ai-motion` **inside the existing Foundry**. It is not another editor product, orchestrator, queue, media catalog or publishing path.
 
 ## Routing
 
@@ -11,6 +11,8 @@ This layer adapts useful patterns from `browser-use/video-use`, Remotion and Man
 3. **FFmpeg/SVG remains the deterministic fallback** for simple overlays/captions and emergency render equivalence.
 4. **Remotion is an optional animation-slot engine, not a renderer replacement.** Current owner business headcount is 1, so it is **Free License eligible** for commercial use and automation. Re-check only if relevant project/company headcount reaches 4+ or upstream terms change.
 5. **Manim is an optional technical/explainer slot engine.** It is appropriate for diagrams, measurements and geometry explanations, not as proof that a physical print/test/customer result happened.
+
+6. **Awesome AI Motion is an optional pattern library**, adapted from a pinned upstream commit into four deterministic GSAP presets and a single three-style Reel composition. The source library is not a render engine or media source of truth. The existing Edit Director selects when to use it; HyperFrames remains responsible for composing the real, source-locked product footage.
 
 ## Brand assets for compositions
 
@@ -23,6 +25,14 @@ The owner-approved Reel compositions live under `packages/vfom/hyperframes/templ
 Render with the repository root as the HyperFrames project and the template as the composition, for example `hyperframes render . -c packages/vfom/hyperframes/templates/rich-still-reel.html --variables-file <vars.json> --strict-variables`. Media variables are repo-relative paths (`packages/...`) bound with `data-var-src`, so HyperFrames discovers the hero/inset images, extracts the real-motion video and mixes the audio track; the runtime resolves brand tokens, fonts and the logo relative to `velvet-reel.js`. Each template loads GSAP 3.14.2 from jsDelivr (the HyperFrames default), so the render host needs that URL reachable or cached.
 
 `scripts/vf_turntable.py` is a subordinate product-motion adapter. It imports a **real print file** (.3mf/.stl/.obj/.glb/.gltf/.blend) in Blender, preserves source geometry, renders a loopable 6–8s 1080x1920@30fps turntable in warm interior lighting, and records an input/output SHA-256 receipt. Colour stays embedded from the print file or uses an explicitly verified hex + evidence source. It never AI-generates the product and never authorizes publication.
+
+## Awesome AI Motion — source-pinned templates
+
+`packages/vfom/MOTION-LIBRARY.json` selects `product_reveal`, `before_after` and `shorts_hook`. The shared paused `velvet-reel.js` timeline implements `VF_MOTION_MASK_REVEAL`, `VF_MOTION_LIGHT_SWEEP` (text only), `VF_MOTION_SPLIT_COMPARE` and `VF_MOTION_KINETIC_BEATS`. The dedicated optional template `packages/vfom/hyperframes/templates/motion-story-reel.html` is 1080x1920 @30fps, 7s, RTL, and preserves the original image geometry. The existing owner-locked five-template v6.6.11 Project Reel contract is not expanded.
+
+Pass a strict `MOTION-STORY-VARIABLES.schema.json` variables file to `scripts/vf_motion_plan.py plan` before the existing `vf_hyperframes.py plan|run` bridge. The selector requires source media IDs already marked `verified_real` or `derived_real` in the **existing** Media Vault, local staged image/audio files, no missing input, approved Hebrew copy and evidence for a comparison. It returns only a rough draft request with `publicationAuthorized=false`. This is routing and syntactic/asset-truth validation, **not** independent rights/brand/copy/physical claims approval. Continue ordinary gates after rendering.
+
+The upstream commit is `1e3c249073c61b42ceb556d7800f628d565d9312`; original source uses MIT and bundles third-party assets with distinct attribution/licensing requirements. We **reimplemented patterns**, not upstream image/fonts/binaries/assets, and do not install or fetch anything during a content job. The detailed runbook is `packages/vfom/MOTION-LIBRARY.md`.
 
 ## video-use adaptation
 
