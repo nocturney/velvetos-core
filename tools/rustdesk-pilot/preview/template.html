@@ -51,6 +51,9 @@ select{min-width:146px}
 .status.unknown{color:#d5deed;border-color:#515f76}.status.unknown::before{background:#a0b0c8}
 .copy{border:1px solid #526079;border-radius:8px;color:#dce9fc;background:#1d2a3a;padding:9px 12px;cursor:pointer;font:inherit;font-size:12px}
 .copy:hover,.copy:focus-visible{background:#2a405b}
+.action-buttons{display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap}
+.native-link{display:inline-flex;align-items:center;border:1px solid #5b826d;border-radius:8px;color:#c4f1d5;background:#1d3930;padding:9px 12px;cursor:pointer;font:inherit;font-size:12px;text-decoration:none;white-space:nowrap}
+.native-link:hover,.native-link:focus-visible{background:#285140;outline-offset:3px}
 .empty{padding:44px 22px;text-align:center;color:var(--muted);font-size:14px}
 .bottom{display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap;color:#9eacbf;font-size:11px;margin-top:19px;line-height:1.8}
 @media(max-width:920px){.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.table-head{display:none}.machine{grid-template-columns:1fr 1fr;gap:13px}.machine>div:first-child{grid-column:1/-1}.machine .copy{justify-self:end}}
@@ -61,13 +64,13 @@ select{min-width:146px}
 <div class="shell">
   <div class="topline">
     <div class="brand"><span class="brand-mark" aria-hidden="true">V</span><span>VELVETOS / CONTROL</span></div>
-    <span class="build-status">RESEARCH · NO LIVE CONTROL</span>
+    <span class="build-status" id="buildStatus">RESEARCH · NO LIVE CONTROL</span>
   </div>
   <div class="intro">
     <div>
       <div class="eyebrow">REMOTE MACHINES / SINGLE OPERATOR</div>
       <h1>ניהול מחשבים</h1>
-      <p class="subtitle">תצוגה מקומית לבדיקה של רשימת מחשבים, חיפוש ומיון. אין כאן שליטה מרחוק, ניטור חי או חיבור ל־Control Center.</p>
+      <p class="subtitle" id="previewSubtitle">תצוגה מקומית לבדיקה של רשימת מחשבים, חיפוש ומיון. אין כאן שליטה מרחוק, ניטור חי או חיבור ל־Control Center.</p>
     </div>
     <div class="source-summary"><span class="indicator" aria-hidden="true"></span><span id="sourceType">מקור נתונים מקומי</span></div>
   </div>
@@ -99,7 +102,7 @@ select{min-width:146px}
   </section>
   <div class="bottom">
     <span id="dataStamp">זמן קריאת מקור: לא זמין</span>
-    <span>קריאה בלבד · ללא גישה לרשת · ללא פקודות מרחוק</span>
+    <span id="footerMode">קריאה בלבד · ללא גישה לרשת · ללא פקודות מרחוק</span>
   </div>
 </div>
 <script id="embedded-inventory" type="application/json">__VELVETOS_INVENTORY_JSON__</script>
@@ -119,10 +122,19 @@ select{min-width:146px}
   const isSnapshot = data.state === "SNAPSHOT_ONLY";
   const isRegistry = data.state === "REGISTRY_READ_ONLY";
   const presenceUnavailable = isSnapshot || isRegistry;
+  // Real local registry + a separate operator opt-in only. Synthetic and
+  // offline-copy views cannot offer a native remote-control launch.
+  const nativeLaunchAllowed = isRegistry && data.native_connect === true;
   $("sourceType").textContent = isRegistry ? "RustDesk OSS / Local registry" : (isSnapshot ? "SQLite Snapshot / RustDesk OSS" : "Fixture / CortenDesk");
   $("dataKind").textContent = isRegistry
     ? "מזהים אמיתיים מקריאת רישום מקומית חד-פעמית. אין כאן זמינות חיה. הקובץ פרטי — אין לשתפו."
     : (isSnapshot ? "רשימת מזהים מתוך Snapshot, ללא זמינות חיה." : "נתוני הדגמה סינתטיים בלבד.");
+  if (nativeLaunchAllowed) {
+    $("buildStatus").textContent = "LOCAL · MANUAL RUSTDESK LAUNCH";
+    $("previewSubtitle").textContent = "רשימת מחשבים מתוך הרישום הקיים. אפשר לפתוח את אפליקציית RustDesk המקומית בלחיצה מפורשת. זמינות המחשבים אינה ידועה; אין שליטה בדפדפן או ניטור חי.";
+    $("dataKind").textContent = "מזהי מחשבים אמיתיים מתוך קריאה חד־פעמית. כפתור פתיחה יציע לדפדפן להפעיל את RustDesk המקומי רק כשתלחץ עליו. הדפדפן עשוי לבקש אישור.";
+    $("footerMode").textContent = "ללא ניטור חי · פתיחה ידנית באפליקציית RustDesk · ללא שירות חדש";
+  }
   $("total").textContent = String(data.counts.total);
   $("online").textContent = presenceUnavailable ? "—" : String(data.counts.online);
   $("offline").textContent = presenceUnavailable ? "—" : String(data.counts.offline);
@@ -171,7 +183,7 @@ select{min-width:146px}
         if (!Number.isNaN(when.getTime())) lastSeen = when.toLocaleString("he-IL");
       }
       const last = node("div", "date", lastSeen);
-      const action = node("div");
+      const action = node("div", "action-buttons");
       const copy = node("button", "copy", "העתק מזהה");
       copy.type = "button";
       copy.setAttribute("aria-label", "העתק מזהה מחשב " + String(d.device_id));
@@ -185,6 +197,19 @@ select{min-width:146px}
         }
       });
       action.append(copy);
+      // A fixed trusted URI scheme; user-controlled device IDs are accepted
+      // only as a constrained token and encoded as ONE path component.
+      // Link navigation occurs solely on the operator's explicit click.
+      if (nativeLaunchAllowed && typeof d.device_id === "string" &&
+          /^[A-Za-z0-9][A-Za-z0-9._@-]{2,99}$/.test(d.device_id)) {
+        const launch = node("a", "native-link", "פתח ב־RustDesk");
+        launch.href = "rustdesk://connection/new/" + encodeURIComponent(d.device_id);
+        launch.rel = "noopener noreferrer";
+        launch.title = "פותח את אפליקציית RustDesk המקומית — לא חיבור אוטומטי";
+        launch.setAttribute("aria-label", "פתח את " + d.device_id + " באפליקציית RustDesk");
+        launch.setAttribute("data-manual-native-launch", "true");
+        action.append(launch);
+      }
       row.append(info, os, wrapper, last, action);
       root.append(row);
     });

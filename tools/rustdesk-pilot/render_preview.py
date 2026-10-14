@@ -2,8 +2,9 @@
 
 Not an HTTP server or Control Center integration. Real registered IDs are
 accepted only by an explicit, read-only local SQLite query with separate
-operator opt-in; presence always stays UNKNOWN. Resulting HTML is offline,
-private, and never contains remote-control or network functionality.
+operator opt-in; presence always stays UNKNOWN. The private offline viewer
+may optionally show native RustDesk protocol links that only the operator
+can click; no protocol is invoked when generating the report.
 """
 from __future__ import annotations
 
@@ -23,12 +24,19 @@ class PreviewError(ValueError):
     pass
 
 
-def render_html(inventory: dict, *, allow_private_registry: bool = False) -> str:
+def render_html(
+    inventory: dict, *, allow_private_registry: bool = False,
+    enable_native_connect: bool = False,
+) -> str:
     if not isinstance(inventory, dict):
         raise PreviewError('invalid_preview_input')
     allowed = {'FIXTURE_ONLY', 'SNAPSHOT_ONLY'}
     if allow_private_registry:
         allowed.add('REGISTRY_READ_ONLY')
+    if enable_native_connect and (
+        inventory.get('state') != 'REGISTRY_READ_ONLY' or not allow_private_registry
+    ):
+        raise PreviewError('native_connect_requires_private_registry')
     if inventory.get('state') not in allowed:
         raise PreviewError('live_data_not_permitted_in_preview')
     devices = inventory.get('devices')
@@ -49,7 +57,11 @@ def render_html(inventory: dict, *, allow_private_registry: bool = False) -> str
         raise PreviewError('invalid_preview_template')
     # JSON inside a script tag must NOT contain literal '<' or '</script>'.
     # Rendering uses textContent only, including for arbitrary device aliases.
-    embedded = json.dumps(inventory, ensure_ascii=False, separators=(',', ':'))
+    payload = dict(inventory)
+    # This flag is determined solely by explicit CLI/operator approval,
+    # never supplied by a caller-controlled JSON fixture or upstream source.
+    payload['native_connect'] = bool(enable_native_connect)
+    embedded = json.dumps(payload, ensure_ascii=False, separators=(',', ':'))
     embedded = (embedded.replace('&', '\\u0026').replace('<', '\\u003c')
                 .replace('>', '\\u003e').replace('\u2028', '\\u2028')
                 .replace('\u2029', '\\u2029'))
@@ -65,10 +77,16 @@ def main(argv: list[str] | None = None) -> int:
                          help='Explicit path to local RustDesk OSS SQLite registry (read-only)')
     parser.add_argument('--allow-live-local-read', action='store_true',
                         help='Required opt-in for a one-shot real local registry read')
+    parser.add_argument('--enable-native-connect', action='store_true',
+                        help='Separate opt-in: show manually clickable local RustDesk URI links')
     parser.add_argument('--output', type=Path, required=True, help='New local HTML output path')
     args = parser.parse_args(argv)
     try:
         is_registry = args.registry_db is not None
+        if args.enable_native_connect and (
+            not is_registry or not args.allow_live_local_read
+        ):
+            raise PreviewError('native_connect_requires_private_registry')
         if is_registry and not args.allow_live_local_read:
             raise PreviewError('local_registry_requires_explicit_opt_in')
         if args.allow_live_local_read and not is_registry:
@@ -84,7 +102,10 @@ def main(argv: list[str] | None = None) -> int:
             inventory = fixture_inventory(args.fixture)
         else:
             inventory = snapshot_inventory(args.snapshot)
-        html = render_html(inventory, allow_private_registry=is_registry)
+        html = render_html(
+            inventory, allow_private_registry=is_registry,
+            enable_native_connect=args.enable_native_connect,
+        )
         # Create a single new private file. No overwrite and no symlink follow.
         flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, 'O_NOFOLLOW', 0)
         fd = os.open(args.output, flags, 0o600)
@@ -97,8 +118,10 @@ def main(argv: list[str] | None = None) -> int:
             except OSError:
                 pass
             raise
-        print('PREVIEW_CREATED_REGISTRY_READ_ONLY' if is_registry
-              else 'PREVIEW_CREATED_NON_LIVE')
+        print('PREVIEW_CREATED_NATIVE_LINKS_MANUAL_ONLY'
+              if args.enable_native_connect else
+              ('PREVIEW_CREATED_REGISTRY_READ_ONLY' if is_registry
+               else 'PREVIEW_CREATED_NON_LIVE'))
         return 0
     except (PreviewError, AdapterError, OSError, ValueError) as exc:
         reason = str(exc) if isinstance(exc, (PreviewError, AdapterError)) else 'preview_write_failed'

@@ -1,6 +1,6 @@
 # RustDesk single-operator inventory pilot
 
-Status: CORTENDESK-FIRST RESEARCH / 101 OFFLINE+LOCALHOST TESTS / STAGING RUNTIME BLOCKED
+Status: CORTENDESK-FIRST RESEARCH / 111 OFFLINE+LOCALHOST+DOM TESTS / STAGING RUNTIME BLOCKED
 
 This folder supports three constrained inventory sources: an explicitly opted-in read-only CortenDesk API adapter, an offline read-only RustDesk OSS SQLite snapshot reader, and an expressly authorized one-shot local RustDesk OSS registry read. Its HTML preview renders only synthetic, offline-snapshot or locally read registration IDs, with explicit source labels and no false online inference. This research does not run a second production control plane or provide installation, background services, credential harvesting, remote-control commands, device mutations or auto-start.
 
@@ -190,3 +190,39 @@ in an isolated source checkout to review applicability, not on any production
 service. Applying/building/deploying requires a separate permitted runtime
 and follow-up acceptance against real RustDesk clients. This local fix is
 version-specific; do not silently carry it to a newer CortenDesk release.
+
+## Optional manual native RustDesk launch — private viewer only
+
+A single operator may now create an **opt-in private, offline** registry
+report with a native RustDesk link beside each valid registered ID:
+
+    python3 render_preview.py \
+      --registry-db "$HOME/Library/Application Support/Velvet/RustDesk/server/data/db_v2.sqlite3" \
+      --allow-live-local-read \
+      --enable-native-connect \
+      --output "$HOME/Library/Application Support/VelvetOS/RustDeskPilot/2026-10-14/private/registered-machines-manual-$(date -u +%Y%m%dT%H%M%SZ).html"
+
+The output is new and owner-private (mode `0600` on macOS/Linux).
+This mode is **not** enabled in fixtures, offline snapshots or ordinary
+registry views. The operator must separately choose both read permission
+(`--allow-live-local-read`) and native launch permission
+(`--enable-native-connect`). The generated page has no network fetch,
+auto-refresh, background process, embedded RustDesk client, or automatic
+navigation.
+
+Links are fixed `rustdesk://connection/new/<encoded-ID>` URIs supported by
+RustDesk 1.5.0 source. Only IDs matching a constrained token are offered a
+link; malformed IDs remain visible but have **copy only**. The browser may
+prompt to allow the RustDesk app to open, and the installed client's usual
+connection/authentication behavior then applies. An **actual one-click
+connection has not been tested**; do not treat presence as online. Never
+share or host the private HTML; it contains real registered machine IDs.
+
+Tests: `python -m unittest discover -s tests -q` (111 cases) and Node
+VM-based DOM behavior tests in `tests/native_launch_dom_check.js`, verifying
+no automatic navigation, case-preserving safe URIs, link gating, and no
+active-launch button in fixtures. The Mac report remains standalone.
+CortenDesk (including browser control) is still the preferred full cockpit
+and still requires a permitted runtime/isolated acceptance. This local
+launcher is only an interim native-client convenience, not a CortenDesk
+replacement or a change to VelvetOS Control Center.
