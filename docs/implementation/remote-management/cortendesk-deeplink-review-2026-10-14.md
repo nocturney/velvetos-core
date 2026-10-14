@@ -52,3 +52,21 @@ The patch covers the default `rustdesk://` URI handler only. A custom-branded cl
 Upstream CortenDesk is AGPL-3.0; retain upstream attribution and review license obligations if distributing or deploying modifications. Issue #102 (reported SSO password API bypass) and server/relay security review remain separate gates.
 
 Next gate: verify the patch in an independently authorized staging build, run a disposable RustDesk 1.5.0 client with a mixed-case ID, test desktop client link and native web client, and confirm the original working server is unaffected.
+
+## Read-only client URI-handler registration survey (2026-10-14)
+
+Surveyed all six connected Windows/macOS hosts **without opening any URI**.
+On the three Windows machines, the effective `HKCR\\rustdesk` URL-protocol
+registration exists, has a URL Protocol marker, its command references
+RustDesk, and the command accepts a `%1` URL argument (3/3). On the three
+macOS machines, `/Applications/RustDesk.app/Contents/Info.plist` declares
+the `rustdesk` scheme and RustDesk app version 1.5.0 (3/3). This confirms
+expected **registration/configuration**, not that the current macOS
+LaunchServices default handler or browser prompts have been tested, nor
+that actual native connections succeed. No link was launched, no client
+was configured and no sensitive command or registry values were logged.
+
+The eventual disposable acceptance test must explicitly launch a mixed-case
+ID and verify that the intended RustDesk client receives it unchanged on
+Windows and macOS. The test remains blocked pending a permitted isolated
+CortenDesk runner.

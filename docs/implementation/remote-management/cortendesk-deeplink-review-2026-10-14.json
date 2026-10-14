@@ -53,5 +53,17 @@
     "source_tree_in_repo": false,
     "original_rustdesk_service_changed": false
   },
+  "protocol_scheme_registration_read_only": {
+    "windows_hosts_inspected": 3,
+    "windows_hkcr_rustdesk_scheme_registered": 3,
+    "windows_url_protocol_marker_present": 3,
+    "windows_handler_references_rustdesk_executable": 3,
+    "windows_command_accepts_url_argument": 3,
+    "mac_hosts_inspected": 3,
+    "mac_app_bundle_declares_rustdesk_scheme": 3,
+    "mac_launchservices_default_handler_verified": false,
+    "actual_protocol_launch_tested": false,
+    "remote_control_connection_started": false
+  },
   "next_gate": "authorized CortenDesk source build, disposable RustDesk 1.5.0 protocol-handler test, browser client and relay verification"
 }
