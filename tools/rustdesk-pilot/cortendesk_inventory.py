@@ -82,6 +82,21 @@ def _nonempty(value: Any) -> str | None:
     return value.strip() if isinstance(value, str) and value.strip() else None
 
 
+def _validated_timestamp(value: Any) -> str | None:
+    if value is None:
+        return None
+    if not isinstance(value, str) or not value.strip():
+        raise AdapterError('invalid_last_seen_at')
+    stamp = value.strip()
+    try:
+        parsed = datetime.fromisoformat(stamp.replace('Z', '+00:00'))
+        if parsed.utcoffset() is None:
+            raise ValueError('naive timestamp')
+    except (TypeError, ValueError) as exc:
+        raise AdapterError('invalid_last_seen_at') from exc
+    return stamp
+
+
 def normalize_device(raw: Any) -> dict[str, Any]:
     if not isinstance(raw, dict):
         raise AdapterError('invalid_device')
@@ -109,14 +124,14 @@ def normalize_device(raw: Any) -> dict[str, Any]:
         'platform': _nonempty(raw.get('platform')),
         'presence': presence,
         'enrollment': enrollment.upper(),
-        'last_seen_at': _nonempty(raw.get('last_online_at')),
+        'last_seen_at': _validated_timestamp(raw.get('last_online_at')),
         'group': _nonempty(group.get('name')) if group else None,
         'client_version': _nonempty(raw.get('version')),
     }
 
 
 def parse_page(payload: Any, expected_page: int) -> tuple[list[Any], int, int]:
-    if not isinstance(payload, dict) or payload.get('code') != 0:
+    if (not isinstance(payload, dict) or type(payload.get('code')) is not int or payload['code'] != 0):
         raise AdapterError('upstream_rejected')
     rows = payload.get('data')
     current, total_pages, total = (payload.get('current'),
