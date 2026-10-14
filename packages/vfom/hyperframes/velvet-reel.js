@@ -93,6 +93,40 @@
     VELVET_MATERIAL_LABEL(tl, target, at = 0) {
       if (target) tl.fromTo(target, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.32 }, at);
     },
+    // Pattern-adapted from awesome-ai-motion at pinned source revision.
+    // These animate approved overlays and comparison masks, never product geometry.
+    VF_MOTION_MASK_REVEAL(tl, target, at = 0.30) {
+      if (target) tl.fromTo(target, { yPercent: 110, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 0.90, ease: "power3.out" }, at);
+    },
+    VF_MOTION_LIGHT_SWEEP(tl, target, at = 1.70) {
+      if (!target) return;
+      tl.set(target, { opacity: 1 }, at);
+      tl.fromTo(target, { backgroundPosition: "96.4% 0%" },
+        { backgroundPosition: "3.6% 0%", duration: 1.5, ease: "power1.inOut" }, at);
+      tl.set(target, { opacity: 0 }, at + 1.51);
+    },
+    VF_MOTION_SPLIT_COMPARE(tl, after, divider, at = 0.55) {
+      if (!after || !divider) return;
+      const stops = [35, 65, 50];
+      const starts = [0, 0.65, 1.30];
+      stops.forEach((percent, index) => {
+        const when = at + starts[index];
+        const options = { duration: index === 0 ? 0.60 : 0.65, ease: "power2.inOut" };
+        tl.to(after, { clipPath: "inset(0% 0% 0% " + percent + "%)", ...options }, when);
+        tl.to(divider, { left: percent + "%", ...options }, when);
+      });
+    },
+    VF_MOTION_KINETIC_BEATS(tl, targets, at = 0.20) {
+      const items = Array.from(targets || []);
+      items.forEach((target, index) => {
+        const when = at + index * 0.48;
+        tl.set(target, { opacity: 0, visibility: "hidden" }, 0);
+        tl.set(target, { opacity: 1, visibility: "visible", scale: 1.35 }, when);
+        tl.to(target, { scale: 1, duration: 0.25, ease: "power3.out" }, when);
+        if (index < items.length - 1) tl.set(target, { opacity: 0, visibility: "hidden" }, when + 0.48);
+      });
+    },
     VELVET_FINAL_STAMP(tl, target, at = 0) {
       if (target) tl.fromTo(target, { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.48 }, at);
     },
