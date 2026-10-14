@@ -17,8 +17,7 @@
     "chips.html",
     "detail-inset.html",
     "end-card.html",
-    "rich-still-reel.html",
-    "motion-story-reel.html"
+    "rich-still-reel.html"
   ],
   "presets": [
     "HEADLINE_REVEAL",
