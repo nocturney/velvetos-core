@@ -1,0 +1,23 @@
+# Office #604: typed desktop capability eligibility — synthetic-only contract v0
+
+**Status:** LAB DESIGN ONLY. Not an app bridge, controller, scheduler, lease issuer, authorizer, production service or permission to act. Office Phase 0/2 #604 owns comparative Desktop Runtime design. #612 P0 has precedence, #602 owns Cua-only diagnostics, and VelvetOS Core is the sole canonical task/lease and authorization authority.
+
+## Purpose
+A provider may advertise an operation through `native_api`, `named_accessibility` or `visual_replay`. That is NOT permission to execute it. A real runtime provider must authenticate and independently recheck app/version, OS principal/session, host/session lease, PID plus process-start identity and exact window, observation freshness, operation/effect scope, uncertain-effect state, and a verifiable postcondition.
+
+The adjacent JSON has an imaginary Notes app, synthetic OS principal, fixed test clock, dummy lease and no customer content. The no-side-effects checker can only return `ELIGIBLE_SIMULATION_ONLY`; it never calls a model or application. A future real provider must acquire a genuine authoritative Core lease; it cannot trust a fixture's `lease.granted=true` claim.
+
+## Negative contract
+- Native application API/CLI/MCP is normally preferred, named UIA/macOS AX second, visual/replay fallback third; benchmark task-specific outcomes, not an assumed universal winner.
+- Reject wrong app/version, wrong host or session, stale UI observation, foreign/reused PID, wrong process-start nonce and wrong window identity.
+- Host SYSTEM Session 0 never stands in for an ordinary Windows interactive user session. Never run model-sourced code as host SYSTEM.
+- Missing/wrong-owner/stale-epoch lease and unsupported operation or route deny eligibility. No competing scheduler or lease owner.
+- Do not automatically replay UNKNOWN external effects; reconcile via independent evidence first.
+- A named independent verifier plus expected target is necessary even for synthetic eligibility. Issued clicks or a positive route match are not success evidence.
+- Customer sends, publishing, money, physical/printing, credentials, paid models, new apps/services and real computer-use effects remain separately authorized gates.
+
+## Deterministic no-effect QA
+Run `python3 scripts/check-office-v2-desktop-eligibility.py` from the repo root. The pure stdlib test checks 31 positive/negative cases; no desktop, browser, WSB, provider, network, account, model, service or scheduler is invoked. Do not count a synthetic PASS as real UIA/AX/Windows SID proof. Do not wire this lab checker into production or replace established Phase 2 sensors without review.
+
+## Future separate pilot
+Require independently verified idle user-session host/GUI lease and #612 noninterference; compare native, named accessibility and visual/replay on the same fixture across at least two real harmless apps including a non-editor. Measure exact postconditions, false-success, UI drift, crash/UNKNOWN recovery, p50/p95 latency and rollback. Reuse #602 evidence; retain all external effect and production gates.
