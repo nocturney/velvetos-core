@@ -115,3 +115,33 @@ body { font-family: "Rubik", sans-serif; }
 .vf-hidden { opacity: 0; visibility: hidden; }
 
 [executed on device: Chris (516b9b39-92b7-4a73-8d4b-901cc1a70a98)]
+
+/* Optional source-locked motion-story template; shared reels remain unchanged. */
+.vf-motion-stage { position:absolute; inset:0; transform-origin:center; }
+.vf-motion-compare { position:absolute; inset:0; clip-path:inset(0% 0% 0% 50%); }
+.vf-motion-compare img { display:block; width:100%; height:100%; object-fit:cover; }
+.vf-motion-divider {
+  position:absolute; z-index:5; top:0; bottom:0; left:50%; width:5px;
+  transform:translateX(-50%); background:var(--vf-accent); pointer-events:none;
+}
+.vf-motion-window { position:relative; overflow:hidden; min-height:105px; }
+.vf-motion-headline { position:relative; }
+.vf-motion-sheen {
+  position:absolute; inset:0; opacity:0; pointer-events:none;
+  color:transparent; -webkit-background-clip:text; background-clip:text;
+  background-size:250% 100%;
+  background-image:linear-gradient(
+    112deg, transparent 45.5%, var(--vf-brand-gold) 49.2%,
+    var(--vf-brand-gold) 50%, var(--vf-brand-gold) 50.8%, transparent 54.5%
+  );
+}
+.vf-motion-beats {
+  position:absolute; z-index:30; top:440px; right:var(--vf-safe-x);
+  width:700px; min-height:140px; text-align:right;
+}
+.vf-motion-beat {
+  position:absolute; top:0; right:0; display:block; max-width:700px;
+  font-family:"Rubik",sans-serif; font-size:98px; font-weight:700;
+  line-height:1.15; color:#fff; opacity:0;
+}
+.vf-motion-beat.vf-accent-text { color:var(--vf-accent); }
