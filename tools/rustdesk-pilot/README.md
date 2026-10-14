@@ -1,8 +1,8 @@
 # RustDesk single-operator inventory pilot
 
-Status: RESEARCH / 51 UNIT+LOCALHOST TESTS / PRIVATE REGISTRY PREVIEW / NOT DEPLOYED
+Status: RESEARCH / 52 UNIT+LOCALHOST TESTS / PRIVATE REGISTRY PREVIEW / NOT DEPLOYED
 
-This folder implements two alternative nonproduction inventory sources: an explicitly opted-in read-only adapter for the CortenDesk admin API, and a strictly offline read-only RustDesk OSS SQLite snapshot reader. A generated HTML dashboard preview renders only synthetic or snapshot data. This is intended to inform a future VelvetOS Remote Machines card, not run a second production control plane. There is no installation routine, background service, credential harvesting, process injection, remote-control command, device mutation or auto-start.
+This folder supports three constrained inventory sources: an explicitly opted-in read-only CortenDesk API adapter, an offline read-only RustDesk OSS SQLite snapshot reader, and an expressly authorized one-shot local RustDesk OSS registry read. Its HTML preview renders only synthetic, offline-snapshot or locally read registration IDs, with explicit source labels and no false online inference. This research does not run a second production control plane or provide installation, background services, credential harvesting, remote-control commands, device mutations or auto-start.
 
 ## Source contract
 
@@ -16,7 +16,7 @@ From this directory:
     python -m unittest discover -s tests -v
     python cortendesk_inventory.py --fixture fixtures/devices-page1.json
 
-The sample contains synthetic TEST-001/002/003 devices. Its output explicitly marks state=FIXTURE_ONLY. Never treat fixture output as actual fleet status. The test suite currently contains 22 tests: 13 contract tests plus 9 loopback-only HTTP tests (including Bearer header/GET, pagination, redirect token protection, 401/503 errors, oversize/invalid JSON, strict envelope code, and invalid timestamps). No external network is contacted by those tests.
+The sample contains synthetic TEST-001/002/003 devices. Its output explicitly marks state=FIXTURE_ONLY. Never treat fixture output as actual fleet status. The CortenDesk portion includes 22 tests: 13 contract tests plus 9 loopback-only HTTP tests (including Bearer header/GET, pagination, redirect token protection, 401/503 errors, oversize/invalid JSON, strict envelope code, and invalid timestamps). No external network is contacted by those tests.
 
 ## Optional live inventory read, only after a separate approval and a real test service
 
@@ -55,7 +55,7 @@ The upstream RustDesk OSS hbbs source (`rustdesk/rustdesk-server/src/database.rs
 
 The result uses the same `velvetos.remote_inventory.v0` envelope as the CortenDesk adapter, with `state=SNAPSHOT_ONLY`, `observed_at=null` and `snapshot_read_at` as the local file-read time (NOT the source capture time). Crucially **every device is presence UNKNOWN**. The stock hbbs SQLite `created_at` is not a proof of last-seen/online status. This offers basic registered-ID discovery without enrolling each RustDesk client into a CortenDesk API server.
 
-No production database snapshot was created and no real peer IDs were exported for this prototype. A separate metadata-only read of the existing MacMiniOffice2 hbbs database confirmed that the `peer` table has the expected columns and six rows; neither the reader nor the dashboard was connected to it. Unit tests construct disposable fake `peer` tables and verify no sensitive peer metadata leaks.
+No full production database snapshot was created. An early metadata-only read confirmed the OSS `peer` schema and six rows; a later explicit read-only local query successfully produced a private HTML report containing only registered IDs on MacMiniOffice2. No real IDs, passwords, UUIDs, public keys or device records were committed or printed. Unit tests use disposable synthetic `peer` tables.
 
 ## Standalone local preview (never a live dashboard)
 
@@ -65,7 +65,7 @@ Open `preview/demo.html` locally in your browser. It has Hebrew RTL, search, pre
 
 To render a known *offline* SQLite snapshot instead, run `python render_preview.py --snapshot your-completed-snapshot.sqlite3 --output preview/your-snapshot.html`. This is still not live monitoring; snapshots show presence UNKNOWN.
 
-The renderer refuses `state=CONNECTED` and refuses overwriting an existing HTML file. The extended test suite has 51 cases (13 CortenDesk contract, 9 localhost HTTP, 12 OSS snapshot, 7 preview and 10 private live-registry tests). The earlier PR head's `check-all` passed; new CI must be rechecked on the resulting commit.
+The renderer refuses `state=CONNECTED` and refuses overwriting an existing HTML file. The extended test suite has 52 cases (13 CortenDesk contract, 9 localhost HTTP, 12 OSS snapshot, 7 preview and 11 private local-registry tests). The earlier PR head's `check-all` passed; new CI must be rechecked on the resulting commit.
 
 ### Routing decision
 

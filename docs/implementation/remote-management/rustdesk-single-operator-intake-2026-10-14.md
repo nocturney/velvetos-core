@@ -2,7 +2,7 @@
 
 Date: 2026-10-14
 Route: system_engineering (project_preflight: PASS for isolated code-only research)
-Status: CODE_VALID / SANDBOX_ONLY / NO LIVE ACCEPTANCE
+Status: PRIVATE_REGISTRY_READ_VERIFIED / CORTENDESK_LIVE_UNTESTED / NOT DEPLOYED
 Owner: one human operator; team/RBAC features are explicitly deprioritized.
 
 ## Goal and user value
@@ -110,14 +110,29 @@ every presence `UNKNOWN`, only the time of the read known. It requires
 uses exclusive file creation and owner-only mode 0600. HTML retains CSP
 `connect-src 'none'` with no remote network requests or control action.
 
-At coding verification: 51/51 tests passed on Windows including ten new
+At coding verification: 52/52 tests passed on Windows including eleven new
 WAL/consent/non-leak/permission/injection/fail-closed cases. The existing
 CortenDesk image execution safety gate remains unchanged and is not bypassed.
 The registry viewer is a simpler path to partial utility without running
 another orchestrator, replacing RustDesk OSS, or enrolling clients into a
 third-party API. No online/offline monitoring is claimed.
 
-The next acceptance step is a one-time *local private* HTML export on the Mac,
-with no device identifiers printed into logs or committed. The actual
-artifact path and metadata can be recorded after a successful run, but neither
-machine IDs nor raw database content belong in the repository.
+The local one-shot private HTML export gate was completed successfully on MacMiniOffice2; receipt below. Neither machine IDs nor raw database content belong in the repository.
+
+## Private live-registry observation receipt (2026-10-14, MacMiniOffice2)
+
+Outcome: VERIFIED PRIVATE ONE-SHOT READ; NOT LIVE REMOTE MANAGEMENT.
+
+- Code: commit `ca36e6b8f6b6fd73ac1736f9403aa3d4914a7a3b` from research branch, copied as four source/template files into an owner-private Mac pilot code directory. All four `git hash-object` blob IDs matched the GitHub source exactly.
+- Host Python 3.9.6 successfully compiled the Python modules. This independently establishes macOS runtime compatibility of the viewer (not RustDesk client interoperability).
+- Source: existing, authorized RustDesk OSS `db_v2.sqlite3` on MacMiniOffice2. SQLite URI was `mode=ro`; `PRAGMA query_only=ON`, `trusted_schema=OFF`, transaction and `SELECT id FROM peer` only. Existing WAL sidecars were present. No database copy was made, no schema changed, no service restarted.
+- Private report, local to MacMiniOffice2 only:
+  `~/Library/Application Support/VelvetOS/RustDeskPilot/2026-10-14/private/registered-machines-20261014T152023Z.html`
+- Report verified by parsing its embedded JSON **locally**, printing aggregates only: state `REGISTRY_READ_ONLY`; exactly **six registered device IDs**; every device `UNKNOWN` for presence and null for last-seen; **no presence claims**. Owner-private directory permission `0700`, report permission `0600`, size 14,182 bytes.
+- The report is NOT in GitHub, ChatGPT attachment storage, public web hosting, Dropbox or Drive, and no real RustDesk IDs or sensitive registry columns were logged. The template's CSP denies `connect-src` and there is no network service or remote command in the preview.
+- Existing hbbs/hbbr supervisor processes were verified running after the read. The CortenDesk container runtime remains BLOCKED (previous safety gate), separate from the successful local-only read.
+- Local Windows checks: 52/52 PASS, project preflight PASS, Core and policy architecture PASS, README pulse PASS, diff check PASS. GitHub `check-all` passed on commit `ca36e6b8`. For any following documentation-only commit, validate its CI again.
+
+Next functional gaps: device friendly-name enrichment and confirmed online/last-seen telemetry require additional trusted sources; a one-shot registry query must not be described as monitoring. Do not auto-refresh, expose real IDs in a publicly hosted page, change remote-service settings, or merge the research PR without separate review.
+
+- Source check: RustDesk OSS `src/peer.rs` does not establish `peer.status` as a live presence signal (the read-side disabled interpretation is commented out). The new regression test sets `peer.status=1` and verifies the viewer still reports presence `UNKNOWN`. Thus no claimed liveness or last-seen data is inferred from this column.

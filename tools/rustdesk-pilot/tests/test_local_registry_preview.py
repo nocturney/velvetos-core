@@ -183,6 +183,17 @@ class LiveRegistryTests(unittest.TestCase):
             with self.assertRaisesRegex(AdapterError, 'registry_schema_mismatch'):
                 registry.local_registry_inventory(db_path)
 
+    def test_peer_status_column_is_not_an_online_signal(self):
+        with TemporaryDirectory() as directory:
+            db_path = Path(directory) / 'local.sqlite3'
+            with closing(create_registry(db_path)) as db:
+                db.execute('UPDATE peer SET status=1')
+                db.commit()
+                inventory = registry.local_registry_inventory(db_path)
+            self.assertEqual(inventory['counts']['online'], 0)
+            self.assertTrue(all(d['presence'] == 'UNKNOWN'
+                                for d in inventory['devices']))
+
     def test_too_many_registered_ids_fail_closed(self):
         with TemporaryDirectory() as directory:
             db_path = Path(directory) / 'limit.sqlite3'
