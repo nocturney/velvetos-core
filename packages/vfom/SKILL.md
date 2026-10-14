@@ -20,6 +20,7 @@ Run `scripts/vf_publication_evidence.py --phase production` before production an
 - `CREATIVE-REFINE-LOOP.md` — provider-neutral product-shot fidelity, baseline+delta repair, MASTER derivation and video/format adaptation method.
 - `EDIT-DIRECTOR.md` — EDL אופרטיבי + shot-gap handling.
 - `MOTION-PRESETS.md` — motion vocabulary מצומצם וקנוני.
+- `MOTION-LIBRARY.md` + `MOTION-LIBRARY.json` — בחירה אופציונלית של אפקטים מתוך awesome-ai-motion לפני rough Reel, במנגנון HyperFrames הקיים ובכפוף לאמת מוצר/Copy/QA. `scripts/vf_motion_plan.py` הוא selector בלבד, לעולם לא מפרסם.
 - `FORMAT-GENOMES.md` — מבני סיפור חוזרים; mechanics ולא זהות מועתקת.
 - `experts/MEDIA-DIRECTOR.md` — Creative/Edit/Publishing Director מאוחד.
 
