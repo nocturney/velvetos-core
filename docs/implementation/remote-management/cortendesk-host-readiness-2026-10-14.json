@@ -1,0 +1,34 @@
+{
+  "schema": "velvetos.cortendesk.readiness.v1",
+  "observed_at": "2026-10-14T16:08:46.564819+00:00",
+  "state": "READ_ONLY_SURVEY_RUNTIME_BLOCKED",
+  "target_architecture": "darwin_arm64",
+  "profiles": {
+    "existing_rustdesk_running": true,
+    "isolated_qa_running": true
+  },
+  "host_port_status": {
+    "console_tcp": "free_at_observation",
+    "id_tcp": "free_at_observation",
+    "id_udp": "free_at_observation",
+    "nat_tcp": "free_at_observation",
+    "relay_tcp": "free_at_observation"
+  },
+  "guest_port_status": {
+    "console_tcp": "free_at_observation",
+    "id_tcp": "free_at_observation",
+    "id_udp": "free_at_observation",
+    "nat_tcp": "free_at_observation",
+    "relay_tcp": "free_at_observation"
+  },
+  "staging_ports_free_on_host_and_guest_at_observation": true,
+  "production_rendezvous_present_at_observation": true,
+  "pinned_image_cached_in_research_namespace": true,
+  "target_namespace_exists": false,
+  "findings": [
+    "target_namespace_not_present",
+    "runtime_launch_previously_denied"
+  ],
+  "may_execute": false,
+  "has_performed_mutation": false
+}

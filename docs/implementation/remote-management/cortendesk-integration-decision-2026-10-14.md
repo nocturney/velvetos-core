@@ -103,3 +103,18 @@ profile downtime, digest and namespace checks, fail-closed errors).
 After the following GitHub commit, copy the exact pinned source to the Mac
 and record *aggregate results only*; do not commit private machine data.
 This survey has no authority to clear the prior remote execution denial.
+
+## Verified host-and-guest probe result (MacMiniOffice2, 2026-10-14)
+
+Ran the pinned `dfce0a94` source on MacMiniOffice2 using Python 3.9.6 after confirming all three staged file/blob hashes exactly match GitHub. The probe performed read-only `colima list`, `lsof`, and Colima guest `ss` and `nerdctl images/namespace ls` inspections; no container was launched, pulled or reconfigured.
+
+**Point-in-time aggregate evidence** stored in
+`docs/implementation/remote-management/cortendesk-host-readiness-2026-10-14.json`:
+
+- Staging ports **18080/TCP, 22115/TCP, 22116/TCP+UDP, 22117/TCP** free on BOTH macOS host and the `velvet-qa` Linux guest at inspection time; they are NOT reserved.
+- Existing RustDesk original rendezvous service observed on original production ports; both `rustdesk` and `velvet-qa` Colima profiles running.
+- Pinned `v1.13.2` CortenDesk image digest matched in the earlier **research namespace**, but the separate planned `vf-cortendesk-staging` namespace **does not yet exist**. An image cached in a different containerd namespace is not sufficient to run the staging design unchanged.
+- **Runtime still BLOCKED** by prior remote execution safety denial; survey asserts `may_execute=false`. Remote command connector exposed no separate approval path and its security configuration was NOT altered.
+- These observations prove only staging infrastructure feasibility, not RustDesk 1.5.0 compatibility, working web control, server keys, password settings, persistent storage or ability for remote devices to reach loopback-only endpoints.
+
+Status: **HOST_AND_GUEST_PORTS_FREE_AT_OBSERVATION; SOURCE_IMAGE_CACHED_IN_RESEARCH_NS; EXECUTION_NOT_AUTHORIZED**.
