@@ -4,7 +4,7 @@
   "owner_issue": 604,
   "consumer_issue": 612,
   "scope": "NONPRODUCTION_FIXED_SYNTHETIC_LINUX_ARM64_NATIVE_BOUNDARY_TEST",
-  "status": "LAB_ONLY_RED_TO_GREEN_NO_WORKER_ADMISSION",
+  "status": "LAB_ONLY_CP055_METADATA_CP056_EXECVE_NO_WORKER_ADMISSION",
   "main_base_sha": "f7995aff4569ca14224c6cef4b5004f7a38d54b7",
   "physical_host": "MacMiniOffice2.local",
   "guest": "colima-velvet-qa",
@@ -18,10 +18,12 @@
     "resource RLIMIT_AS/CPU/FSIZE/NOFILE",
     "one-shot Python fixed benign fixture only"
   ],
-  "native_source_sha256": "362b77b0b64c1da40ea875fb38126a3039ece658fe81710f35dd7aeb527ad45e",
+  "native_source_sha256": "5d1f1769b36646c10d469e194d8338b6b038bfdeedc05f265fb3a5a7db9d1c36",
   "expected_cases": [
     "allowed_read_only_python_binary",
     "allowed_scratch_read_write",
+    "denied_execve_process_replacement",
+    "denied_execveat_image_replacement",
     "denied_outside_chmod",
     "denied_outside_sentinel_read",
     "denied_outside_tmp_write",
@@ -78,5 +80,29 @@
     "CORE_604_SIGNED_TASK_HOST_RESOURCE_LEASE_FENCING",
     "INDEPENDENT_MODEL_AUTHORED_PATCH_QA_AND_GIT_EFFECT_RECONCILE"
   ],
-  "evidence_kind": "OPERATOR_HASHES_AND_SYNTHETIC_RECEIPT_CLAIMS_NOT_SIGNED_ATTESTATION"
+  "evidence_kind": "OPERATOR_HASHES_AND_SYNTHETIC_RECEIPT_CLAIMS_NOT_SIGNED_ATTESTATION",
+  "execve_red": {
+    "source_sha256": "a566df3cb4b84248dcbd3733df44653f20d1d7afd15ca7cb55113dfa455279d4",
+    "status": "EXECVE_BYPASS_REPRODUCED_ON_FIXED_TRUE",
+    "target_binary": "/usr/bin/true",
+    "stdout_marker": "CP056_BEFORE_DIRECT_EXECVE_TRUE",
+    "exit_code": 0,
+    "bypass_observed": true,
+    "model_generated_code_executed": false,
+    "source_kind": "OPERATOR_FIXED_ONE_SHOT"
+  },
+  "execve_green": {
+    "source_sha256": "5d1f1769b36646c10d469e194d8338b6b038bfdeedc05f265fb3a5a7db9d1c36",
+    "receipt_sha256": "dc7a8875de833242fd68ccbf11d31c5bea0e11a77ac3ed6099151c5b3dd3c5db",
+    "status": "PASS_NATIVE_BOUNDARY_ONLY",
+    "case_count": 18,
+    "passed": 18,
+    "exit_code": 0,
+    "new_deny_cases": [
+      "denied_execve_process_replacement",
+      "denied_execveat_image_replacement"
+    ],
+    "model_generated_code_executed": false,
+    "model_code_executor_admitted": false
+  }
 }

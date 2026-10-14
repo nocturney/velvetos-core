@@ -15,7 +15,8 @@ ROOT=Path(__file__).resolve().parent.parent
 NATIVE=ROOT/"scripts/vf_office_v2_604_landlock_seccomp_native_lab.py"
 EVIDENCE=ROOT/"docs/implementation/office-v2/phase2/p0-604-landlock-seccomp-boundary-cp055-2026-10-14.json"
 SCHEMA="velvetos.office-v2.604.landlock-seccomp-boundary-lab.v1"
-EXPECTED_NATIVE_SHA="362b77b0b64c1da40ea875fb38126a3039ece658fe81710f35dd7aeb527ad45e"
+EXPECTED_NATIVE_SHA="5d1f1769b36646c10d469e194d8338b6b038bfdeedc05f265fb3a5a7db9d1c36"
+METADATA_GREEN_SHA="362b77b0b64c1da40ea875fb38126a3039ece658fe81710f35dd7aeb527ad45e"
 CASES={
  "allowed_scratch_read_write","denied_outside_sentinel_read",
  "denied_outside_chmod","denied_outside_utime","denied_outside_tmp_write",
@@ -23,6 +24,7 @@ CASES={
  "denied_proc_version","denied_unix_socket_creation",
  "denied_tcp_socket_creation","denied_udp_socket_creation",
  "denied_untrusted_child_spawn","denied_signal_even_to_self",
+ "denied_execve_process_replacement","denied_execveat_image_replacement",
  "prctl_no_new_privs_set","prctl_seccomp_filter_set",
  "allowed_read_only_python_binary"}
 NEGATIVES={
@@ -36,7 +38,7 @@ ROOT_KEYS={
  "schema","date","owner_issue","consumer_issue","scope","status",
  "main_base_sha","physical_host","guest","guest_kernel","guest_arch",
  "guest_uid","landlock_abi","mechanism","native_source_sha256",
- "expected_cases","red","green","negative_context",
+ "expected_cases","red","green","execve_red","execve_green","negative_context",
  "required_before_runtime","evidence_kind"}
 RUN_KEYS={"source_sha256","receipt_sha256","status","exit_code",
           "case_count","passed","unexpectedly_allowed"}
@@ -61,7 +63,7 @@ def exact_parts(record, native_bytes=None):
        and record["consumer_issue"]==612 and type(record["consumer_issue"]) is int,
        "WRONG_CANONICAL_OWNER")
     require(record["scope"]=="NONPRODUCTION_FIXED_SYNTHETIC_LINUX_ARM64_NATIVE_BOUNDARY_TEST"
-       and record["status"]=="LAB_ONLY_RED_TO_GREEN_NO_WORKER_ADMISSION",
+       and record["status"]=="LAB_ONLY_CP055_METADATA_CP056_EXECVE_NO_WORKER_ADMISSION",
        "FALSE_RUNTIME_PROMOTION")
     require(record["main_base_sha"]=="f7995aff4569ca14224c6cef4b5004f7a38d54b7",
        "BASE_SHA_DRIFT")
@@ -73,7 +75,7 @@ def exact_parts(record, native_bytes=None):
        and type(record["landlock_abi"]) is int and record["landlock_abi"]==4,
        "HOST_OR_ABI_DRIFT")
     require(type(record["expected_cases"]) is list
-       and len(record["expected_cases"])==16
+       and len(record["expected_cases"])==18
        and set(record["expected_cases"])==CASES
        and all(type(c) is str for c in record["expected_cases"]), "CASES_CHANGED")
     require(type(record["mechanism"]) is list
@@ -90,7 +92,7 @@ def exact_parts(record, native_bytes=None):
         ("red","FAIL_CLOSED",2,14,
          "8822b072d0dab3c235f2f4b27f2a6456d6343eda1e6947d1fe29f7c322642fbb",
          "ff126e5fd88384156306e54a4e824f982d8311ba0186c3392ea6578bf8ce9b67"),
-        ("green","PASS_NATIVE_BOUNDARY_ONLY",0,16,EXPECTED_NATIVE_SHA,
+        ("green","PASS_NATIVE_BOUNDARY_ONLY",0,16,METADATA_GREEN_SHA,
          "374ec43fc3bd9bfeab56e16746d4c65ad9e862abb04a64ad45f8f0b0e1965262")):
         row=record[name]
         require(type(row) is dict and set(row)==RUN_KEYS,"RUN_SHAPE_"+name)
@@ -109,6 +111,39 @@ def exact_parts(record, native_bytes=None):
            and set(row["unexpectedly_allowed"])==expected_fail
            and len(row["unexpectedly_allowed"])==len(expected_fail),
            "RUN_DENIED_CASES_"+name)
+    # CP056: preserve historical CP055 metadata red/green, and separately
+    # pin both the observed native execve escape and its narrower correction.
+    x=record["execve_red"]
+    require(type(x) is dict and set(x)=={
+        "source_sha256","status","target_binary","stdout_marker",
+        "exit_code","bypass_observed","model_generated_code_executed",
+        "source_kind"},"EXECVE_RED_SHAPE")
+    require(x["source_sha256"]=="a566df3cb4b84248dcbd3733df44653f20d1d7afd15ca7cb55113dfa455279d4"
+        and x["status"]=="EXECVE_BYPASS_REPRODUCED_ON_FIXED_TRUE"
+        and x["target_binary"]=="/usr/bin/true"
+        and x["stdout_marker"]=="CP056_BEFORE_DIRECT_EXECVE_TRUE"
+        and type(x["exit_code"]) is int and x["exit_code"]==0
+        and type(x["bypass_observed"]) is bool and x["bypass_observed"] is True
+        and x["model_generated_code_executed"] is False
+        and x["source_kind"]=="OPERATOR_FIXED_ONE_SHOT",
+        "EXECVE_RED_RESULT")
+    y=record["execve_green"]
+    require(type(y) is dict and set(y)=={
+        "source_sha256","receipt_sha256","status","case_count",
+        "passed","exit_code","new_deny_cases","model_generated_code_executed",
+        "model_code_executor_admitted"},"EXECVE_GREEN_SHAPE")
+    require(y["source_sha256"]==EXPECTED_NATIVE_SHA
+        and y["receipt_sha256"]=="dc7a8875de833242fd68ccbf11d31c5bea0e11a77ac3ed6099151c5b3dd3c5db"
+        and y["status"]=="PASS_NATIVE_BOUNDARY_ONLY"
+        and type(y["case_count"]) is int and y["case_count"]==18
+        and type(y["passed"]) is int and y["passed"]==18
+        and type(y["exit_code"]) is int and y["exit_code"]==0
+        and type(y["new_deny_cases"]) is list
+        and y["new_deny_cases"]==["denied_execve_process_replacement",
+                                "denied_execveat_image_replacement"]
+        and y["model_generated_code_executed"] is False
+        and y["model_code_executor_admitted"] is False,
+        "EXECVE_GREEN_RESULT")
     flags=record["negative_context"]
     require(type(flags) is dict and set(flags)==NEGATIVES
        and all(type(flags[k]) is bool and flags[k] is False for k in NEGATIVES),
@@ -120,7 +155,8 @@ def exact_parts(record, native_bytes=None):
     require(record["evidence_kind"]=="OPERATOR_HASHES_AND_SYNTHETIC_RECEIPT_CLAIMS_NOT_SIGNED_ATTESTATION",
        "FALSE_SIGNATURE_CLAIM")
     return {"status":"PASS_EVIDENCE_STRUCTURE_ONLY_NOT_AUTHORITY",
-        "case_count":16,"red_passed":14,"green_passed":16,
+        "case_count":18,"metadata_red_passed":14,"metadata_green_passed":16,
+        "execve_green_passed":18,
         "model_executed":False,"core_lease_admitted":False,
         "real_guest_boundary_native_trace_authenticated":False}
 
@@ -160,6 +196,16 @@ def selftest(doc,native):
        (("green","exit_code"),2),(("green","passed"),15),
        (("green","receipt_sha256"),"0"*64),
        (("green","unexpectedly_allowed"),["denied_outside_chmod"]),
+       (("execve_red","source_sha256"),"0"*64),
+       (("execve_red","bypass_observed"),False),
+       (("execve_red","stdout_marker"),"BYPASS_NOT_SEEN"),
+       (("execve_red","exit_code"),2),
+       (("execve_green","source_sha256"),"0"*64),
+       (("execve_green","receipt_sha256"),"0"*64),
+       (("execve_green","passed"),16),
+       (("execve_green","case_count"),True),
+       (("execve_green","new_deny_cases"),[]),
+       (("execve_green","model_code_executor_admitted"),True),
        (("negative_context","core_signed_lease"),True),
        (("negative_context","production_sandbox_admitted"),True),
        (("negative_context","model_generated_code_executed"),True),

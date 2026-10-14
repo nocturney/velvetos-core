@@ -17,7 +17,7 @@ import subprocess
 import sys
 
 SCHEMA = "velvetos.office2.cp055.landlock-seccomp-native-lab.v1"
-ROOT = Path("/tmp/office-p0-landlock-cp055-metadata-green")
+ROOT = Path("/tmp/office-p0-execve-cp056-green")
 SANDBOX = ROOT / "only-writable"
 FIXTURE = SANDBOX / "fixed-synthetic-fixture.py"
 OUTSIDE = ROOT / "outside-sentinel.txt"
@@ -57,6 +57,14 @@ denial("denied_unix_socket_creation",lambda:socket.socket(socket.AF_UNIX,socket.
 denial("denied_tcp_socket_creation",lambda:socket.socket(socket.AF_INET,socket.SOCK_STREAM))
 denial("denied_udp_socket_creation",lambda:socket.socket(socket.AF_INET,socket.SOCK_DGRAM))
 denial("denied_untrusted_child_spawn",lambda:subprocess.run(["/usr/bin/true"],check=True))
+denial("denied_execve_process_replacement",lambda:os.execve("/usr/bin/true",["/usr/bin/true"],{"PATH":"/usr/bin"}))
+def attempt_execveat():
+    libc=ctypes.CDLL(None,use_errno=True)
+    argv=(ctypes.c_char_p*2)(b"/usr/bin/true",None)
+    envp=(ctypes.c_char_p*1)(None)
+    value=libc.syscall(281,ctypes.c_int(-100),ctypes.c_char_p(b"/usr/bin/true"),ctypes.byref(argv),ctypes.byref(envp),ctypes.c_int(0))
+    if value<0: raise OSError(ctypes.get_errno(),"execveat")
+denial("denied_execveat_image_replacement",attempt_execveat)
 denial("denied_signal_even_to_self",lambda:os.kill(os.getpid(),0))
 libc=ctypes.CDLL(None,use_errno=True)
 cases["prctl_no_new_privs_set"]=libc.prctl(39,0,0,0,0)==1
@@ -118,7 +126,7 @@ def confine():
       280,282,424,425,426,427,428,429,430,431,432,433,434,435,438}
     # ABI4 Landlock cannot block these same-UID metadata mutations; explicitly
     # deny them in seccomp, including fchmodat2 and prlimit64 on other PIDs.
-    denied.update({5,6,7,14,15,16,52,53,54,55,88,119,122,140,261,452})
+    denied.update({5,6,7,14,15,16,52,53,54,55,88,119,122,140,221,261,281,452})
     # Userland syscalls unrelated to the policy are allowed only within
     # this one-shot LAB. This is NOT a hardened production seccomp profile.
     filters=[SockFilter(0x20,0,0,4),SockFilter(0x15,1,0,ARCH_AARCH64),
@@ -137,8 +145,12 @@ def confine():
     # No subprocess/tool executor. Fixed source, no model output.
     env={"PATH":"/usr/bin","LANG":"C","PYTHONNOUSERSITE":"1",
          "PYTHONDONTWRITEBYTECODE":"1"}
-    os.execve("/usr/bin/python3",["/usr/bin/python3","-B",str(FIXTURE),
-             str(SANDBOX),str(OUTSIDE)],env)
+    # Run only this operator-fixed literal fixture INSIDE THE CURRENT interpreter.
+    # The kernel now denies execve and execveat. This is NOT an interpreter
+    # interface for untrusted or model-authored source.
+    sys.argv=[str(FIXTURE),str(SANDBOX),str(OUTSIDE)]
+    code=compile(FIXTURE_TEXT,"<CP056_OPERATOR_FIXED_LITERAL>","exec")
+    exec(code,{"__name__":"__main__","__builtins__":__builtins__})
 
 def parent():
     if platform.machine()!="aarch64" or os.geteuid()==0 or not ROOT.is_dir():
@@ -161,7 +173,7 @@ def parent():
              "kernel":platform.release(),"uid":os.getuid(),
              "status":"PASS_NATIVE_BOUNDARY_ONLY" if
                run.returncode==0 and parsed.get("all_pass") and
-               len(results)==16 else "FAIL_CLOSED",
+               len(results)==18 else "FAIL_CLOSED",
              "child_exit":run.returncode,"fixture_sha256":
                  hashlib.sha256(FIXTURE_TEXT.encode()).hexdigest(),
              "case_count":len(results),"passed":sum(x is True for x in results.values()),
