@@ -99,7 +99,7 @@ def main() -> int:
         # This *technical-only* smoke calls render -c directly because check
         # currently requires a root index.html. Production must continue using
         # the existing bridge's check+receipt gate; do not treat smoke as approval.
-        cmd = ["hyperframes", "render", "--composition", request["composition"],
+        cmd = [str(shutil.which("hyperframes")), "render", "--composition", request["composition"],
                "--output", request["output"], "--quality", "draft",
                "--fps", "30", "--format", "mp4", "--strict", "--strict-variables",
                "--variables-file", request["variablesFile"]]
