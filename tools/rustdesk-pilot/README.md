@@ -55,7 +55,7 @@ The upstream RustDesk OSS hbbs source (`rustdesk/rustdesk-server/src/database.rs
 
 The result uses the same `velvetos.remote_inventory.v0` envelope as the CortenDesk adapter, with `state=SNAPSHOT_ONLY`, `observed_at=null` and `snapshot_read_at` as the local file-read time (NOT the source capture time). Crucially **every device is presence UNKNOWN**. The stock hbbs SQLite `created_at` is not a proof of last-seen/online status. This offers basic registered-ID discovery without enrolling each RustDesk client into a CortenDesk API server.
 
-No actual server DB snapshot was created or read for this prototype. Unit tests construct disposable fake `peer` tables and verify no sensitive peer metadata leaks.
+No production database snapshot was created and no real peer IDs were exported for this prototype. A separate metadata-only read of the existing MacMiniOffice2 hbbs database confirmed that the `peer` table has the expected columns and six rows; neither the reader nor the dashboard was connected to it. Unit tests construct disposable fake `peer` tables and verify no sensitive peer metadata leaks.
 
 ## Standalone local preview (never a live dashboard)
 
