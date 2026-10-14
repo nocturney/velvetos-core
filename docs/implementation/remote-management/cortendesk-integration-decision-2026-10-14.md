@@ -118,3 +118,26 @@ Ran the pinned `dfce0a94` source on MacMiniOffice2 using Python 3.9.6 after conf
 - These observations prove only staging infrastructure feasibility, not RustDesk 1.5.0 compatibility, working web control, server keys, password settings, persistent storage or ability for remote devices to reach loopback-only endpoints.
 
 Status: **HOST_AND_GUEST_PORTS_FREE_AT_OBSERVATION; SOURCE_IMAGE_CACHED_IN_RESEARCH_NS; EXECUTION_NOT_AUTHORIZED**.
+
+## CortenDesk v1.13.2 native-launch overlay (source verified 2026-10-14)
+
+Confirmed issue #105 is present in pinned CortenDesk 1.13.2: seven
+legacy `rustdesk://{{ device_id }}` links across four Blade UI templates.
+RustDesk client's **tag 1.5.0** parses
+`rustdesk://connection/new/<ID>` using the URI path, which is a viable
+source-backed route for preserving mixed-case custom IDs.
+
+A separately reviewable, source-hash-guarded patch has now been generated
+for those seven links. It uses a URL-encoded ID path component and does not
+alter the running server, its configuration or the pulled OCI image.
+`git apply --check` **passed** on pristine CortenDesk v1.13.2 source copies
+with exact GitHub blob hashes, and the copies remained unchanged. See
+`cortendesk-deeplink-review-2026-10-14.md` and
+`cortendesk-deeplink-review-2026-10-14.json`, plus
+`tools/rustdesk-pilot/patches/cortendesk-1.13.2-rustdesk-1.5-deeplinks.patch`.
+
+**Important:** patch applicability is not a live connection test.
+No CortenDesk service was started, no URL handler invoked, no client
+enrolled, no branch merged and no previously denied container-execution
+path circumvented. Actual integration still requires a permitted test
+runtime and mixed-case disposable-client acceptance.
