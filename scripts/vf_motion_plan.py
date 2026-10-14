@@ -68,7 +68,7 @@ def truth_level(row: dict) -> str:
     if isinstance(truth, str):
         return truth
     if isinstance(truth, dict):
-        return str(truth.get("level") or truth.get("classification") or "")
+        return str(truth.get("truthLevel") or truth.get("level") or truth.get("classification") or "")
     return ""
 
 
@@ -81,6 +81,9 @@ def require_real_media_ref(media: dict, ref: str) -> None:
         raise MotionInputError("asset ref absent/ambiguous in canonical Media Vault: " + ref)
     if truth_level(matching[0]) not in TRUTH_LEVELS:
         raise MotionInputError("Media Vault asset lacks verified-real/derived-real truth: " + ref)
+    truth = matching[0].get("truth")
+    if isinstance(truth, dict) and truth.get("rightsStatus") == "restricted":
+        raise MotionInputError("restricted source cannot be routed to motion: " + ref)
 
 
 def validate_variables(root: Path, variables: dict, catalog: dict, schema: dict) -> dict:
@@ -119,6 +122,9 @@ def validate_variables(root: Path, variables: dict, catalog: dict, schema: dict)
         require_real_media_ref(media_catalog, variables["comparisonAssetRef"])
         if not variables["comparisonEvidenceRef"].strip():
             raise MotionInputError("before_after needs external alignment/comparison evidence")
+        evidence_path = contained(root, variables["comparisonEvidenceRef"], must_exist=True)
+        if evidence_path.suffix.lower() not in {".json", ".png", ".jpg", ".jpeg", ".md"} or evidence_path.stat().st_size == 0:
+            raise MotionInputError("before_after evidence must be a nonempty local review artifact")
     if style == "shorts_hook":
         for key in ("beat1", "beat2", "beat3"):
             value = variables[key].strip()
@@ -201,10 +207,13 @@ def selftest() -> None:
         (root / "input/hero.png").write_bytes(b"structural-test-only")
         (root / "input/after.png").write_bytes(b"structural-test-only-after")
         (root / "input/audio.wav").write_bytes(b"structural-test-only")
+        (root / "review").mkdir()
+        (root / "review/compare.png").write_bytes(b"synthetic-proof-fixture-only")
         (root / MEDIA_CATALOG).write_text(json.dumps({"items": [
-            {"id": "media-test-before", "truth": "verified_real"},
-            {"id": "media-test-after", "truth": {"level": "derived_real"}},
-            {"id": "media-test-unverified", "truth": "unverified"},
+            {"id": "media-test-before", "truth": {"truthLevel": "verified_real", "rightsStatus": "approved"}},
+            {"id": "media-test-after", "truth": {"truthLevel": "derived_real", "rightsStatus": "approved"}},
+            {"id": "media-test-unverified", "truth": {"truthLevel": "unverified"}},
+            {"id": "media-test-restricted", "truth": {"truthLevel": "verified_real", "rightsStatus": "restricted"}},
         ]}), encoding="utf-8")
         base = {key: "" for key in load_json(SCHEMA)["required"]}
         base.update({
@@ -236,6 +245,7 @@ def selftest() -> None:
                           comparisonAssetRef="media-test-after", comparisonEvidenceRef="review/compare.png")
         run_variant(comparison, True)
         run_variant(dict(comparison, comparisonEvidenceRef=""), False)
+        run_variant(dict(comparison, comparisonEvidenceRef="review/missing.json"), False)
         run_variant(dict(comparison, comparisonAssetRef="media-test-before"), False)
         run_variant(dict(base, motionStyle="shorts_hook", beat1="צילום", beat2="הדפסה", beat3="מוצר"), True)
         run_variant(dict(base, motionStyle="shorts_hook"), False)
@@ -244,6 +254,7 @@ def selftest() -> None:
         run_variant(dict(base, heroImage="../../other.png"), False)
         run_variant(dict(base, heroImage="https://example.com/product.png"), False)
         run_variant(dict(base, sourceAssetRef="media-test-unverified"), False)
+        run_variant(dict(base, sourceAssetRef="media-test-restricted"), False)
         run_variant(dict(base, audioFile="input/no-audio.wav"), False)
         run_variant(dict(base, extra="untracked"), False)
         print("OK motion-plan source-pinned candidates=3 truth+path+copy+audio gates fail-closed publish=false")
@@ -258,12 +269,24 @@ def main() -> int:
     plan.add_argument("--project-dir", type=Path, required=True)
     plan.add_argument("--job-id", required=True)
     plan.add_argument("--output", required=True)
+    plan.add_argument("--request-out", default="", help="optional project-local JSON path for the existing HyperFrames bridge; never overwrite")
     args = parser.parse_args()
     try:
         if args.self_test:
             selftest()
         elif args.command == "plan":
             result = prepare(args.variables_file, args.project_dir, args.job_id, args.output)
+            if args.request_out:
+                path = contained(Path(args.project_dir).resolve(), args.request_out)
+                if path.suffix.lower() != ".json":
+                    raise MotionInputError("request-out must be a .json file")
+                if path.exists():
+                    raise MotionInputError("request-out already exists; refusing to overwrite")
+                path.parent.mkdir(parents=True, exist_ok=True)
+                with path.open("x", encoding="utf-8") as handle:
+                    json.dump(result["renderRequest"], handle, ensure_ascii=False, indent=2)
+                    handle.write("\n")
+                result["requestFile"] = str(path)
             print(json.dumps(result, ensure_ascii=False, indent=2))
         else:
             parser.print_help()
