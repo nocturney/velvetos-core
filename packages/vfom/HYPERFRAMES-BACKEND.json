@@ -19,7 +19,9 @@
     "frameContract": "packages/vfom/HYPERFRAMES-FRAME.md",
     "hostRegistry": "packages/vfmcp/RENDER-HOSTS.json",
     "defaultHost": "sderot-mac",
-    "fallbackHosts": ["sderot-windows"],
+    "fallbackHosts": [
+      "sderot-windows"
+    ],
     "hostSelection": "first-healthy",
     "hostConnectPlaybook": "packages/vfmcp/CONNECT-RENDER-HOST.md",
     "package": "hyperframes",
@@ -28,7 +30,11 @@
     "recoveryVersion": "0.8.34",
     "compatibilityGate": "doctor+real-smoke",
     "node": ">=22",
-    "requires": ["hyperframes", "ffmpeg", "ffprobe"],
+    "requires": [
+      "hyperframes",
+      "ffmpeg",
+      "ffprobe"
+    ],
     "parameterization": {
       "singleVariablesFlag": "--variables-file",
       "batchFlag": "--batch",
@@ -38,14 +44,33 @@
     "reelTemplates": "packages/vfom/hyperframes/templates",
     "networkInstallAllowed": false,
     "versionMismatch": "capability-check",
-    "note": "Normal execution accepts newer compatible HyperFrames versions after doctor/smoke proof. The exact recoveryVersion is retained only for rollback/reproducibility; the bridge never downloads dependencies or turns Core into a render daemon."
+    "note": "Normal execution accepts newer compatible HyperFrames versions after doctor/smoke proof. The exact recoveryVersion is retained only for rollback/reproducibility; the bridge never downloads dependencies or turns Core into a render daemon.",
+    "motionLibrary": "packages/vfom/MOTION-LIBRARY.json",
+    "motionStoryTemplate": "packages/vfom/hyperframes/templates/motion-story-reel.html"
   },
   "routing": {
     "primary": "hyperframes",
-    "fallback": ["ffmpeg-svg-caption-composition"],
-    "hostFailover": ["sderot-mac", "sderot-windows"],
-    "useHyperframesFor": ["reel_master", "story_master", "feed_video", "kinetic_typography", "deterministic_hebrew_overlay", "motion_graphics", "multi-shot_composition"],
-    "preferFallbackFor": ["single_static_overlay", "simple_caption_burn_in", "emergency_render_when_hyperframes_unavailable"]
+    "fallback": [
+      "ffmpeg-svg-caption-composition"
+    ],
+    "hostFailover": [
+      "sderot-mac",
+      "sderot-windows"
+    ],
+    "useHyperframesFor": [
+      "reel_master",
+      "story_master",
+      "feed_video",
+      "kinetic_typography",
+      "deterministic_hebrew_overlay",
+      "motion_graphics",
+      "multi-shot_composition"
+    ],
+    "preferFallbackFor": [
+      "single_static_overlay",
+      "simple_caption_burn_in",
+      "emergency_render_when_hyperframes_unavailable"
+    ]
   },
   "defaults": {
     "masterFormat": "mp4",
@@ -58,7 +83,20 @@
     "maxFinalRenders": 2,
     "audioRequiredForSocialVideo": true
   },
-  "pipeline": ["content_contract", "creative_manifest", "edit_decision_list", "media_truth_resolution", "hyperframes_composition", "hyperframes_check", "rough_render", "evaluation_and_repair", "final_render", "ffprobe_receipt", "derivative_factory", "publish_preflight"],
+  "pipeline": [
+    "content_contract",
+    "creative_manifest",
+    "edit_decision_list",
+    "media_truth_resolution",
+    "hyperframes_composition",
+    "hyperframes_check",
+    "rough_render",
+    "evaluation_and_repair",
+    "final_render",
+    "ffprobe_receipt",
+    "derivative_factory",
+    "publish_preflight"
+  ],
   "guardrails": {
     "realMediaRefsOnly": true,
     "noInventedAssets": true,
@@ -71,6 +109,7 @@
     "finalRequiresReceipt": true,
     "finalRequiresExistingQA": true,
     "receiptIsNotPublishReceipt": true,
-    "renderDoesNotAuthorizePublish": true
+    "renderDoesNotAuthorizePublish": true,
+    "motionSourceDoesNotAuthorizePublish": true
   }
 }
