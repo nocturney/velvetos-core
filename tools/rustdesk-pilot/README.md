@@ -1,6 +1,6 @@
 # RustDesk single-operator inventory pilot
 
-Status: CORTENDESK-FIRST RESEARCH / 89 OFFLINE+LOCALHOST TESTS / STAGING RUNTIME BLOCKED
+Status: CORTENDESK-FIRST RESEARCH / 101 OFFLINE+LOCALHOST TESTS / STAGING RUNTIME BLOCKED
 
 This folder supports three constrained inventory sources: an explicitly opted-in read-only CortenDesk API adapter, an offline read-only RustDesk OSS SQLite snapshot reader, and an expressly authorized one-shot local RustDesk OSS registry read. Its HTML preview renders only synthetic, offline-snapshot or locally read registration IDs, with explicit source labels and no false online inference. This research does not run a second production control plane or provide installation, background services, credential harvesting, remote-control commands, device mutations or auto-start.
 
@@ -160,3 +160,33 @@ host bindings with **new** test identities, keys and data. No production
 RustDesk server or six installed clients are involved. Real CortenDesk
 functional acceptance still requires a separately permitted execution
 environment and end-to-end disposable-client verification.
+
+## Pinned upstream CortenDesk RustDesk 1.5.0 deep-link fix (review only)
+
+CortenDesk [issue #105](https://github.com/marcpope/cortendesk/issues/105)
+reports a native-launch link problem for custom IDs with uppercase characters.
+CortenDesk v1.13.2 still renders seven `href="rustdesk://{{ ... }}"`
+links in four Blade templates. The RustDesk 1.5.0 tagged source
+(`flutter/lib/common.dart`, `urlLinkToCmdArgs`) explicitly supports
+`rustdesk://connection/new/<ID>` and reads ID from the **path**, not from
+URI authority, which avoids browser host normalization of capital letters.
+
+The standalone `cortendesk_deeplink_patch.py` generator validates all
+four exact upstream Git blobs and produces a reviewable git patch converting
+legacy links to `rustdesk://connection/new/{{ rawurlencode($x->rustdesk_id) }}`.
+`rawurlencode` keeps the dynamic ID inside a single URL path component
+instead of embedding it as a URL authority/query/fragment. It does **not**
+connect to any device, edit CortenDesk or compile an OCI image.
+
+With an unchanged local source checkout of CortenDesk tag `v1.13.2`:
+
+    python cortendesk_deeplink_patch.py --source-root /private/source/v1.13.2
+    python cortendesk_deeplink_patch.py --source-root /private/source/v1.13.2 \
+      --patch-output /private/output/cortendesk-1.13.2-rustdesk-deeplinks.patch
+
+Output is a **new file only**, never overwriting. The tool fails closed if
+one source blob, link target or expected count differs. Use `git apply --check`
+in an isolated source checkout to review applicability, not on any production
+service. Applying/building/deploying requires a separate permitted runtime
+and follow-up acceptance against real RustDesk clients. This local fix is
+version-specific; do not silently carry it to a newer CortenDesk release.
