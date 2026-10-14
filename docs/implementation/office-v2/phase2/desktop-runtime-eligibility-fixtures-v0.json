@@ -347,6 +347,378 @@
         }
       },
       "expected": "ROUTE_UNDECLARED"
+    },
+    {
+      "id": "N29-null-session",
+      "overrides": {
+        "session": null
+      },
+      "expected": "MALFORMED_CAPABILITY"
+    },
+    {
+      "id": "N30-list-scope",
+      "overrides": {
+        "scope": []
+      },
+      "expected": "MALFORMED_CAPABILITY"
+    },
+    {
+      "id": "N31-string-lease",
+      "overrides": {
+        "lease": "bad"
+      },
+      "expected": "MALFORMED_CAPABILITY"
+    },
+    {
+      "id": "N32-list-postcondition",
+      "overrides": {
+        "postcondition": []
+      },
+      "expected": "MALFORMED_CAPABILITY"
+    },
+    {
+      "id": "N33-scope-routes-string",
+      "overrides": {
+        "scope": {
+          "routes": "named_accessibility"
+        }
+      },
+      "expected": "MALFORMED_CAPABILITY"
+    },
+    {
+      "id": "N34-scope-operations-string",
+      "overrides": {
+        "scope": {
+          "operations": "text.replace_literal"
+        }
+      },
+      "expected": "MALFORMED_CAPABILITY"
+    },
+    {
+      "id": "N35-scope-effects-string",
+      "overrides": {
+        "scope": {
+          "effects": "local_write"
+        }
+      },
+      "expected": "MALFORMED_CAPABILITY"
+    },
+    {
+      "id": "N36-scope-routes-null-item",
+      "overrides": {
+        "scope": {
+          "routes": [
+            "named_accessibility",
+            null
+          ]
+        }
+      },
+      "expected": "MALFORMED_CAPABILITY"
+    },
+    {
+      "id": "N37-unsupported-session-kind",
+      "overrides": {
+        "session": {
+          "kind": "UNKNOWN"
+        }
+      },
+      "expected": "SESSION_KIND_UNVERIFIED"
+    },
+    {
+      "id": "N38-blank-principal",
+      "overrides": {
+        "session": {
+          "principal": "   "
+        }
+      },
+      "expected": "SESSION_PRINCIPAL_UNVERIFIED"
+    },
+    {
+      "id": "N39-null-app-collusion",
+      "overrides": {
+        "app": {
+          "id": null
+        },
+        "binding": {
+          "app_id": null
+        }
+      },
+      "expected": "APP_IDENTITY_UNVERIFIED"
+    },
+    {
+      "id": "N40-blank-app-version-collusion",
+      "overrides": {
+        "app": {
+          "version": "  "
+        },
+        "binding": {
+          "app_version": "  "
+        }
+      },
+      "expected": "APP_IDENTITY_UNVERIFIED"
+    },
+    {
+      "id": "N41-null-host-collusion",
+      "overrides": {
+        "host": {
+          "id": null
+        },
+        "binding": {
+          "host_id": null
+        },
+        "lease": {
+          "host_id": null
+        }
+      },
+      "expected": "HOST_SESSION_IDENTITY_UNVERIFIED"
+    },
+    {
+      "id": "N42-empty-session-collusion",
+      "overrides": {
+        "session": {
+          "session_id": ""
+        },
+        "binding": {
+          "session_id": ""
+        },
+        "lease": {
+          "session_id": ""
+        }
+      },
+      "expected": "HOST_SESSION_IDENTITY_UNVERIFIED"
+    },
+    {
+      "id": "N43-blank-task-collusion",
+      "overrides": {
+        "task": {
+          "id": " "
+        },
+        "lease": {
+          "owner_task": " "
+        }
+      },
+      "expected": "TASK_ID_UNVERIFIED"
+    },
+    {
+      "id": "N44-bool-lease-epoch",
+      "overrides": {
+        "lease": {
+          "epoch": true,
+          "observed_epoch": true
+        }
+      },
+      "expected": "LEASE_EPOCH_INVALID"
+    },
+    {
+      "id": "N45-zero-lease-epoch",
+      "overrides": {
+        "lease": {
+          "epoch": 0,
+          "observed_epoch": 0
+        }
+      },
+      "expected": "LEASE_EPOCH_INVALID"
+    },
+    {
+      "id": "N46-null-lease-epoch",
+      "overrides": {
+        "lease": {
+          "epoch": null,
+          "observed_epoch": null
+        }
+      },
+      "expected": "LEASE_EPOCH_INVALID"
+    },
+    {
+      "id": "N47-float-lease-epoch",
+      "overrides": {
+        "lease": {
+          "epoch": 7.5,
+          "observed_epoch": 7.5
+        }
+      },
+      "expected": "LEASE_EPOCH_INVALID"
+    },
+    {
+      "id": "N48-null-pid-collusion",
+      "overrides": {
+        "binding": {
+          "pid": null
+        },
+        "current_identity": {
+          "pid": null
+        }
+      },
+      "expected": "PROCESS_WINDOW_IDENTITY_UNVERIFIED"
+    },
+    {
+      "id": "N49-bool-pid-collusion",
+      "overrides": {
+        "binding": {
+          "pid": true
+        },
+        "current_identity": {
+          "pid": true
+        }
+      },
+      "expected": "PROCESS_WINDOW_IDENTITY_UNVERIFIED"
+    },
+    {
+      "id": "N50-empty-nonce-collusion",
+      "overrides": {
+        "binding": {
+          "start_nonce": ""
+        },
+        "current_identity": {
+          "start_nonce": ""
+        }
+      },
+      "expected": "PROCESS_WINDOW_IDENTITY_UNVERIFIED"
+    },
+    {
+      "id": "N51-empty-window-collusion",
+      "overrides": {
+        "binding": {
+          "window_id": ""
+        },
+        "current_identity": {
+          "window_id": ""
+        }
+      },
+      "expected": "PROCESS_WINDOW_IDENTITY_UNVERIFIED"
+    },
+    {
+      "id": "N52-null-window-collusion",
+      "overrides": {
+        "binding": {
+          "window_id": null
+        },
+        "current_identity": {
+          "window_id": null
+        }
+      },
+      "expected": "PROCESS_WINDOW_IDENTITY_UNVERIFIED"
+    },
+    {
+      "id": "N53-bool-observation",
+      "overrides": {
+        "binding": {
+          "observed_at_ms": true
+        }
+      },
+      "expected": "BINDING_CLOCK_INVALID"
+    },
+    {
+      "id": "N54-negative-observation",
+      "overrides": {
+        "binding": {
+          "observed_at_ms": -1
+        }
+      },
+      "expected": "BINDING_CLOCK_INVALID"
+    },
+    {
+      "id": "N55-fractional-observation",
+      "overrides": {
+        "binding": {
+          "observed_at_ms": 100000.5
+        }
+      },
+      "expected": "BINDING_CLOCK_INVALID"
+    },
+    {
+      "id": "N56-blank-verifier",
+      "overrides": {
+        "postcondition": {
+          "independent_verifier": "  "
+        }
+      },
+      "expected": "POSTCONDITION_NOT_INDEPENDENT"
+    },
+    {
+      "id": "N57-blank-postcondition-expected",
+      "overrides": {
+        "postcondition": {
+          "expected": "  "
+        }
+      },
+      "expected": "POSTCONDITION_NOT_INDEPENDENT"
+    },
+    {
+      "id": "N58-blank-postcondition-kind",
+      "overrides": {
+        "postcondition": {
+          "kind": "  "
+        }
+      },
+      "expected": "POSTCONDITION_NOT_INDEPENDENT"
+    },
+    {
+      "id": "N59-route-list",
+      "overrides": {
+        "route": []
+      },
+      "expected": "ROUTE_UNDECLARED"
+    },
+    {
+      "id": "N60-binding-list",
+      "overrides": {
+        "binding": []
+      },
+      "expected": "MALFORMED_CAPABILITY"
+    },
+    {
+      "id": "N61-task-null",
+      "overrides": {
+        "task": null
+      },
+      "expected": "MALFORMED_CAPABILITY"
+    },
+    {
+      "id": "N62-current-identity-list",
+      "overrides": {
+        "current_identity": []
+      },
+      "expected": "MALFORMED_CAPABILITY"
+    },
+    {
+      "id": "N63-host-os-blank",
+      "overrides": {
+        "host": {
+          "os": ""
+        }
+      },
+      "expected": "HOST_SESSION_IDENTITY_UNVERIFIED"
+    },
+    {
+      "id": "N64-session-principal-list",
+      "overrides": {
+        "session": {
+          "principal": []
+        }
+      },
+      "expected": "SESSION_PRINCIPAL_UNVERIFIED"
+    },
+    {
+      "id": "N65-negative-pid-collusion",
+      "overrides": {
+        "binding": {
+          "pid": -1
+        },
+        "current_identity": {
+          "pid": -1
+        }
+      },
+      "expected": "PROCESS_WINDOW_IDENTITY_UNVERIFIED"
+    },
+    {
+      "id": "N66-scope-routes-empty-array",
+      "overrides": {
+        "scope": {
+          "routes": []
+        }
+      },
+      "expected": "MALFORMED_CAPABILITY"
     }
   ]
 }

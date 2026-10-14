@@ -17,7 +17,12 @@ The adjacent JSON has an imaginary Notes app, synthetic OS principal, fixed test
 - Customer sends, publishing, money, physical/printing, credentials, paid models, new apps/services and real computer-use effects remain separately authorized gates.
 
 ## Deterministic no-effect QA
-Run `python3 docs/implementation/office-v2/phase2/desktop-runtime-eligibility-check-v0.py` from the repo root. The pure stdlib test checks 31 positive/negative cases; no desktop, browser, WSB, provider, network, account, model, service or scheduler is invoked. Do not count a synthetic PASS as real UIA/AX/Windows SID proof. Do not wire this lab checker into production or replace established Phase 2 sensors without review.
+Run `python3 docs/implementation/office-v2/phase2/desktop-runtime-eligibility-check-v0.py` from the repo root. The pure stdlib test checks 69 positive/negative cases (31 original plus 38 additional denials); no desktop, browser, WSB, provider, network, account, model, service or scheduler is invoked. Do not count a synthetic PASS as real UIA/AX/Windows SID proof. Do not wire this lab checker into production or replace established Phase 2 sensors without review.
+
+
+## Malformed-input negatives added after independent review
+
+This synthetic-only checker now rejects malformed nested objects and scope arrays, missing/blank or wrong-type host/session/app/task identities, nonpositive/bool lease epochs, invalid process PID/start/window identity, boolean/negative UI timestamps, unsupported session kinds, and blank postcondition fields. Equality of two missing, false or blank values must **never** count as verification. The original 31 deterministic cases remain unchanged; 38 new denial fixtures extend the matrix to 69. Tests also run under `python -O`, and five separate source mutation probes must be caught. All results remain simulated and do not attest a genuine Core-issued lease, independent window/SID identity, signed provider code, verified postcondition, nor runtime authorization.
 
 ## Future separate pilot
 Require independently verified idle user-session host/GUI lease and #612 noninterference; compare native, named accessibility and visual/replay on the same fixture across at least two real harmless apps including a non-editor. Measure exact postconditions, false-success, UI drift, crash/UNKNOWN recovery, p50/p95 latency and rollback. Reuse #602 evidence; retain all external effect and production gates.
