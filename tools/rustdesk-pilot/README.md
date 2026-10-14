@@ -1,8 +1,31 @@
 # RustDesk single-operator inventory pilot
 
-Status: RESEARCH / 52 UNIT+LOCALHOST TESTS / PRIVATE REGISTRY PREVIEW / NOT DEPLOYED
+Status: CORTENDESK-FIRST RESEARCH / 70 OFFLINE+LOCALHOST TESTS / STAGING RUNTIME BLOCKED
 
 This folder supports three constrained inventory sources: an explicitly opted-in read-only CortenDesk API adapter, an offline read-only RustDesk OSS SQLite snapshot reader, and an expressly authorized one-shot local RustDesk OSS registry read. Its HTML preview renders only synthetic, offline-snapshot or locally read registration IDs, with explicit source labels and no false online inference. This research does not run a second production control plane or provide installation, background services, credential harvesting, remote-control commands, device mutations or auto-start.
+
+## CortenDesk-first staging decision
+
+**The intended full remote-management solution is CortenDesk with its bundled
+CortenDesk Server fork**, subject to independent end-to-end verification. The
+local OSS ID viewer is a proven, read-only fallback, not a replacement for
+CortenDesk. The maintainer warns that the stock RustDesk OSS `hbbs` server
+can fail modern signed-in RustDesk 1.4.1+ signalling key exchange, so
+`CORTENDESK_EMBEDDED_SERVER=false` is not assured full address-book
+compatibility with our installed RustDesk 1.5.0 clients.
+
+A pinned, isolated staging **design** (not a launch/install command):
+
+    python cortendesk_staging_gate.py --plan fixtures/cortendesk-staging-plan.json
+
+This must report `STAGING_DESIGN_VALID_RUNTIME_BLOCKED` and
+`may_execute=false`. It statically checks a proposed localhost-only,
+nonproduction staging topology while honoring the earlier denied remote
+container-launch action. It does not query or change host services,
+accounts, credentials, Docker/Colima, clients, ports or the actual server.
+For source evidence, deployment limits and the stage acceptance matrix, see
+`../../docs/implementation/remote-management/cortendesk-integration-decision-2026-10-14.md`
+(from repository root: `docs/implementation/remote-management/...`).
 
 ## Source contract
 
