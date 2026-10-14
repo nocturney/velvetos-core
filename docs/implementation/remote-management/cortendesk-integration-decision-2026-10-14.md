@@ -55,7 +55,7 @@ Do not equate a browser HTML health 200 with proof of remote video, file transfe
 
 A separate **offline validation tool** under `tools/rustdesk-pilot/cortendesk_staging_gate.py` accepts `fixtures/cortendesk-staging-plan.json` and checks source digest, scope, resource limits, no production mounts, no client edits, exclusive localhost host-ports, a separate namespace and an external execution-approval gate. **It cannot start containers, set credentials, configure clients or modify any system.** Current result is deliberately `STAGING_DESIGN_VALID_RUNTIME_BLOCKED` with `may_execute=false`.
 
-Proposed profile `velvet-qa`, containerd namespace `vf-cortendesk-staging`, CortenDesk's bundled server ON, new ephemeral storage, disposable identity, CPU 0.5, RAM 768 MiB; staged *host* loopback-only ports 18080 (console), 22115 (NAT), 22116 TCP/UDP (rendezvous), 22117 (relay). These ports are **proposal only**; actual port availability, VM namespace networking, advertised relay address and ARM64 runtime compatibility must be reverified by an authorized operator immediately before execution. Do not expose the console or rendezvous publicly or assume localhost reaches devices on other hosts.
+Proposed profile `velvet-qa`, containerd namespace `vf-cortendesk-staging`, CortenDesk's bundled server ON, new ephemeral storage, disposable identity, CPU 0.5, RAM 1024 MiB; staged *host* loopback-only ports 18080 (console), 22115 (NAT), 22116 TCP/UDP (rendezvous), 22117 (relay). These ports are **proposal only**; actual port availability, VM namespace networking, advertised relay address and ARM64 runtime compatibility must be reverified by an authorized operator immediately before execution. Do not expose the console or rendezvous publicly or assume localhost reaches devices on other hosts.
 
 Prohibit: mapping `21115..21119` live ports, mounting the live server SQLite or signing keys, using the default admin password `changeme`, changing any installed RustDesk 1.5.0 client during trial, exposing an unpatched console on WAN, creating autostart services or adding recurring paid dependencies.
 
@@ -83,3 +83,23 @@ Relevant source-of-truth links:
 - https://github.com/marcpope/cortendesk/blob/v1.13.2/README.md
 - https://github.com/marcpope/cortendesk-server/blob/main/README.md
 - https://github.com/nocturney/velvetos-core/pull/717
+
+## Non-mutating host readiness survey (follow-up, 2026-10-14)
+
+Introduced `cortendesk_readiness_probe.py`: a source-controlled, one-shot,
+read-only Mac host + Colima guest survey. It consumes and validates the
+`cortendesk-staging-plan.json` design before running commands and
+explicitly limits subprocesses to `colima list`, read-only `lsof` socket
+enumeration and `colima ssh` queries of `ss`, `nerdctl images`,
+`nerdctl namespace ls`. No shell command is composed from unvalidated
+input. Runtime launch, image pull, server/client change, account changes
+and credentials are out of scope. Report excludes raw sockets, endpoint
+IPs, RustDesk identifiers and process IDs. On errors the status becomes
+UNKNOWN; it does not claim a port is free.
+
+The original 70 tests have been extended with dedicated simulated
+readiness-probe tests (both native and guest ports, conflicting ports,
+profile downtime, digest and namespace checks, fail-closed errors).
+After the following GitHub commit, copy the exact pinned source to the Mac
+and record *aggregate results only*; do not commit private machine data.
+This survey has no authority to clear the prior remote execution denial.

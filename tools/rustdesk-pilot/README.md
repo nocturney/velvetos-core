@@ -1,6 +1,6 @@
 # RustDesk single-operator inventory pilot
 
-Status: CORTENDESK-FIRST RESEARCH / 70 OFFLINE+LOCALHOST TESTS / STAGING RUNTIME BLOCKED
+Status: CORTENDESK-FIRST RESEARCH / 89 OFFLINE+LOCALHOST TESTS / STAGING RUNTIME BLOCKED
 
 This folder supports three constrained inventory sources: an explicitly opted-in read-only CortenDesk API adapter, an offline read-only RustDesk OSS SQLite snapshot reader, and an expressly authorized one-shot local RustDesk OSS registry read. Its HTML preview renders only synthetic, offline-snapshot or locally read registration IDs, with explicit source labels and no false online inference. This research does not run a second production control plane or provide installation, background services, credential harvesting, remote-control commands, device mutations or auto-start.
 
@@ -126,3 +126,37 @@ and does not request elevation or modify database records. This is distinct
 from the `SNAPSHOT_ONLY` mode, which accepts a separately completed copy.
 A denied read fails closed and produces no real-ID HTML. To view a real-ID
 report, open its local path on the host; do not place it in a public folder.
+
+## One-shot read-only Colima host readiness survey
+
+The CortenDesk-first **staging design** remains blocked from execution under the
+previous remote tool safety denial. A second, independent **read-only host
+survey** checks the plan against reality on the MacMiniOffice2 host and its
+currently running `velvet-qa` Colima VM; it never calls `nerdctl run/pull`,
+`docker`, changes configuration or reads credentials.
+
+Run only on the **MacMiniOffice2 host**, from this pilot folder:
+
+    python3 cortendesk_readiness_probe.py \
+      --plan fixtures/cortendesk-staging-plan.json
+
+The survey checks: both Colima profiles running, native-host TCP/UDP staging
+ports, guest Linux TCP/UDP staging ports (from a read-only `ss` listing),
+the original RustDesk production rendezvous ports, image digest in the
+**research** namespace, and whether the planned **staging** namespace exists.
+It retains no raw socket addresses, process IDs, machine identifiers, secret
+paths or command output.
+
+A "free" observation is point-in-time only, not a reserved port or verified
+network forwarding. `pinned_image_cached_in_research_namespace=true` does
+**not** mean the image is accessible from the staging namespace. If checks
+fail or output is unparseable, statuses are `unknown`, not success.
+Every result returns `may_execute=false` and
+`has_performed_mutation=false` even if all preconditions look good. The
+earlier container launch denial is NOT cleared by these read-only checks.
+
+Staging is intentionally scoped to 0.5 CPU / 1,024 MiB RAM and 127.0.0.1
+host bindings with **new** test identities, keys and data. No production
+RustDesk server or six installed clients are involved. Real CortenDesk
+functional acceptance still requires a separately permitted execution
+environment and end-to-end disposable-client verification.
