@@ -20,6 +20,19 @@
 
 The four rich-editorial presets and `VELVET_HARD_CUT`, `VELVET_MACRO_PUNCH`, `VELVET_MATERIAL_LABEL`, and `VELVET_FINAL_STAMP` are implemented in `packages/vfom/hyperframes/velvet-reel.js` as paused GSAP timeline helpers. HyperFrames owns seek/playback; templates register the populated timeline only after brand tokens and `document.fonts.ready` resolve.
 
+## Source-adapted optional motion vocabulary
+
+The original preset list above stays the preferred restrained vocabulary for standard product work. When an EDL specifically benefits from a verified product reveal, an actual same-subject before/after, or a fast three-beat hook, the `awesome-ai-motion`-inspired candidate route in `MOTION-LIBRARY.json` may choose these implemented helpers:
+
+| Preset | Job | Restriction |
+|---|---|---|
+| `VF_MOTION_MASK_REVEAL` | Bring in approved RTL title from below a clipped window | Product visible first; no verbose title card |
+| `VF_MOTION_LIGHT_SWEEP` | Single restrained gold sheen across typography | Never add synthetic light or change product surface/material |
+| `VF_MOTION_SPLIT_COMPARE` | Animate a verified aligned comparison mask | Two source-identified matching states and independent evidence required |
+| `VF_MOTION_KINETIC_BEATS` | Three short approved Hebrew words | No overlapping words or generic unverified claims |
+
+Implemented as paused GSAP helpers in `packages/vfom/hyperframes/velvet-reel.js`; canonical render stays HyperFrames. No owner/project route preset inventory changes. Upstream reference: `gongnyang/awesome-ai-motion` at `1e3c249073c61b42ceb556d7800f628d565d9312`; adapted patterns only, no upstream component/assets vendored.
+
 ## Rules
 
 - Hard cut is the default.
