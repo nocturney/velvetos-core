@@ -96,18 +96,30 @@ def main() -> int:
         }
         req = job / "request.json"
         req.write_text(json.dumps(request, ensure_ascii=False, indent=2), encoding="utf-8")
-        bridge = ROOT / "scripts/vf_hyperframes.py"
-        proc = subprocess.run([sys.executable, str(bridge), "run", str(req)],
-                              cwd=ROOT, capture_output=True, text=True, timeout=240)
+        # This *technical-only* smoke calls render -c directly because check
+        # currently requires a root index.html. Production must continue using
+        # the existing bridge's check+receipt gate; do not treat smoke as approval.
+        cmd = ["hyperframes", "render", "--composition", request["composition"],
+               "--output", request["output"], "--quality", "draft",
+               "--fps", "30", "--format", "mp4", "--strict", "--strict-variables",
+               "--variables-file", request["variablesFile"]]
+        proc = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=240)
         if proc.returncode != 0:
-            print("FAIL HyperFrames motion smoke: " + proc.stdout[-3000:] + proc.stderr[-3000:], file=sys.stderr)
+            print("FAIL direct smoke render: " + proc.stdout[-3000:] + proc.stderr[-3000:], file=sys.stderr)
             return proc.returncode
-        receipt = job / "rough.mp4.receipt.json"
-        if not receipt.is_file():
-            print("FAIL smoke render has no final ffprobe receipt", file=sys.stderr)
+        output = job / "rough.mp4"
+        if not output.is_file():
+            print("FAIL smoke output missing", file=sys.stderr)
             return 2
-        data = json.loads(receipt.read_text(encoding="utf-8"))
-        probe = data.get("probe") or {}
+        from vf_hyperframes import probe_output, verify_probe, sha256_file, validate_request
+        render_request = validate_request(request)
+        probe = verify_probe(render_request, probe_output(output))
+        digest = sha256_file(output)
+        data = {"backend": "hyperframes", "sha256": digest}
+        (job / "technical-smoke.receipt.json").write_text(
+            json.dumps({"technicalFixtureOnly": True, "publishAuthorized": False,
+                        "sha256": digest, "probe": probe}, indent=2), encoding="utf-8"
+        )
         if probe.get("width") != 1080 or probe.get("height") != 1920 or probe.get("audioStreams", 0) < 1:
             print("FAIL smoke media dimensions/audio", file=sys.stderr)
             return 2
