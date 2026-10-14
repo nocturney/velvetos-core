@@ -97,17 +97,25 @@ def _worker(args: list[str], timeout: int, memory_bytes: int, capture: bool) -> 
                 if process.poll() is not None:
                     return
                 try:
-                    sample = subprocess.run(
+                    observed = subprocess.run(
                         ['/bin/ps', '-o', 'rss=', '-p', str(process.pid)],
                         stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
                         stderr=subprocess.DEVNULL, text=True, timeout=1, check=False,
-                    ).stdout.strip()
-                    if sample and int(sample.split()[0]) * 1024 > memory_bytes:
+                    )
+                    sample = observed.stdout.strip()
+                    if observed.returncode != 0 or not sample:
+                        raise ValueError("macOS memory sampler returned no usable RSS")
+                    if int(sample.split()[0]) * 1024 > memory_bytes:
                         memory_exceeded.set()
                         stop()
                         return
                 except (OSError, ValueError, subprocess.SubprocessError):
-                    continue
+                    # No trusted RSS observation means no memory guarantee. Deny
+                    # the running child rather than silently dropping enforcement.
+                    if process.poll() is None:
+                        memory_exceeded.set()
+                        stop()
+                    return
 
         monitor = threading.Thread(target=monitor_darwin_rss, daemon=True)
         monitor.start()
