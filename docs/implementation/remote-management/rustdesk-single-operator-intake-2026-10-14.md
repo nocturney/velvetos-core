@@ -48,3 +48,12 @@ Existing UI / Control Center -> server-only VelvetOS adapter (future, read-only)
 ## Next bounded action
 
 Run the pilot tests and repository checks, then keep a draft PR for review. The next meaningful external action is an isolated CortenDesk server trial on a suitable host, which requires an approved runtime plan, nonconflicting ports, independent credentials and test-device enrollment. A future MCP or GUI control experiment should be separate and revertible.
+## Read-only six-host RustDesk compatibility snapshot (2026-10-14)
+
+- Windows Chris, Chris-Mini-PC and Chris-3DPC: installed RustDesk.exe file version 1.5.0+68 on all three; RustDesk service RUNNING with Automatic startup on all three.
+- macOS MacMiniOffice2, MacMiniOffice and Mac-Bedroom: /Applications/RustDesk.app version 1.5.0 installed on all three and its service process observed.
+- MacMiniOffice2 already has a live owner-managed RustDesk OSS server supervisor, running hbbs and hbbr via Colima profile named rustdesk (aarch64; 2 CPUs / 2 GiB), with existing listeners on 21115, 21116, 21117, 21118 and 21119. It also has a separate running Colima profile named velvet-qa (2 CPUs / 4 GiB); neither profile was touched or reconfigured. This is important existing production/test infrastructure, not a spare install target.
+- On the Macs, the Docker CLI was not in PATH, but MacMiniOffice2 does have colima and limactl, with containerd as runtime. The earlier absence of a Docker command must NOT be interpreted as absence of all container infrastructure.
+- No server secrets, RustDesk device IDs, authentication tokens, user sessions or remote endpoint addresses were collected. No server commands or process changes were made. A running RustDesk service is not proof the device has been enrolled in CortenDesk or would appear in that dashboard.
+- Strong constraint for next trial: CortenDesk supports an external hbbs/hbbr server in documentation, but its admin device inventory depends on clients reporting to the configured CortenDesk API server. Therefore standing up the dashboard alone is insufficient to populate a real inventory. Test client enrollment/API settings only on a separately approved disposable test identity and without changing the existing working server/client settings.
+- Actual compatibility of CortenDesk 1.13.2 with RustDesk client 1.5.0, the existing OSS server, and the Mac Colima environment remains UNTESTED.
