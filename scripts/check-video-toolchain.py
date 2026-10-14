@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -78,6 +79,67 @@ def main() -> None:
     slots = cfg.get("animationSlots") or {}
     if (slots.get("hyperframes") or {}).get("status") != "canonical":
         fail("HyperFrames animation slot must stay canonical")
+    # Optional pattern-adapted motion library: no new runtime or publication authority.
+    motion_slot = slots.get("awesomeAiMotion") or {}
+    motion = load(P / "MOTION-LIBRARY.json")
+    motion_schema = load(P / "hyperframes/MOTION-STORY-VARIABLES.schema.json")
+    hf = load(P / "HYPERFRAMES-BACKEND.json")
+    source = motion.get("source") or {}
+    revision = source.get("commit") or ""
+    if not re.fullmatch(r"[0-9a-f]{40}", str(revision)):
+        fail("motion source commit must be an immutable 40-char SHA")
+    if source.get("repo") != "https://github.com/gongnyang/awesome-ai-motion":
+        fail("motion library upstream origin mismatch")
+    if motion.get("masterComposer") != "hyperframes" or motion.get("noSecondRuntime") is not True:
+        fail("motion library must remain inside canonical HyperFrames")
+    if motion_slot.get("sourceRevision") != revision or motion_slot.get("integration") != "pattern-adapted-not-vendored":
+        fail("motion toolchain source pin or integration drift")
+    if motion_slot.get("installByDefault") is not False or motion_slot.get("masterRenderer") is not False:
+        fail("motion toolchain cannot install or own master render")
+    if motion_slot.get("status") != "implemented-candidate-template":
+        fail("motion library may only offer candidate route, not publish-ready status")
+    if hf.get("execution", {}).get("motionLibrary") != "packages/vfom/MOTION-LIBRARY.json":
+        fail("HyperFrames motion library binding drift")
+    if hf.get("guardrails", {}).get("motionSourceDoesNotAuthorizePublish") is not True:
+        fail("motion cannot authorize publishing")
+    if motion_slot.get("configuration") != "packages/vfom/MOTION-LIBRARY.json":
+        fail("motion slot must resolve authoritative catalog")
+    patterns = motion.get("patterns") or []
+    if {row.get("id") for row in patterns} != {"product_reveal", "before_after", "shorts_hook"}:
+        fail("motion pattern allowlist changed")
+    if len(patterns) != 3:
+        fail("motion pattern catalog duplicate/invalid")
+    preset_names = {name for row in patterns for name in row.get("gsapPresets", [])}
+    if preset_names != {"VF_MOTION_MASK_REVEAL", "VF_MOTION_LIGHT_SWEEP", "VF_MOTION_SPLIT_COMPARE", "VF_MOTION_KINETIC_BEATS"}:
+        fail("motion preset selection drift")
+    declared = set(motion_schema.get("required") or [])
+    if motion_schema.get("additionalProperties") is not False or declared != set((motion_schema.get("properties") or {}).keys()):
+        fail("motion variables must be strict and explicit")
+    if set((motion_schema["properties"]["motionStyle"] or {}).get("enum") or []) != {row["id"] for row in patterns}:
+        fail("motion style enum/catalog mismatch")
+    template = contains(
+        P / "hyperframes/templates/motion-story-reel.html",
+        'id="motion-story-reel"', 'data-width="1080"', 'data-height="1920"',
+        'data-fps="30"', 'dir="rtl"', 'data-var-src="heroImage"',
+        'data-var-src="comparisonImage"', 'data-var-src="audioFile"',
+        'variablesStatus', 'sourceAssetRef', 'comparisonEvidenceRef',
+        'VF_MOTION_MASK_REVEAL', 'VF_MOTION_LIGHT_SWEEP',
+        'VF_MOTION_SPLIT_COMPARE', 'VF_MOTION_KINETIC_BEATS',
+    )
+    if 'publish(' in template.lower() or 'window.open(' in template:
+        fail("motion template must not attempt publication")
+    contains(P / "hyperframes/velvet-reel.js", *sorted(preset_names))
+    contains(P / "hyperframes/velvet-reel.css", ".vf-motion-stage", ".vf-motion-sheen", ".vf-motion-beats")
+    contains(P / "MOTION-LIBRARY.md", "scripts/vf_motion_plan.py", "instagram.publish", "publicationAuthorized=false")
+    contains(P / "EDIT-DIRECTOR.md", "MOTION-LIBRARY.json", "scripts/vf_motion_plan.py")
+    contains(P / "MOTION-PRESETS.md", *sorted(preset_names))
+    planner = ROOT / "scripts/vf_motion_plan.py"
+    if motion_slot.get("selector") != "scripts/vf_motion_plan.py":
+        fail("motion planner binding mismatch")
+    test = subprocess.run([sys.executable, str(planner), "--self-test"], cwd=ROOT, text=True, capture_output=True, timeout=30)
+    if test.returncode:
+        fail("motion planner selftest: " + (test.stdout + " " + test.stderr).strip()[:500])
+
     remotion = slots.get("remotion") or {}
     if remotion.get("versionPolicy") != "latest-compatible" or remotion.get("status") != "free-license-eligible":
         fail("Remotion version policy/status mismatch")
@@ -221,7 +283,8 @@ def main() -> None:
     print(
         "OK video toolchain adapters "
         "edit=implemented remotion=free-license-eligible "
-        "manim=host-smoke-verified hyperframes=canonical"
+        "manim=host-smoke-verified hyperframes=canonical "
+        "motion=source-pinned-candidate"
     )
 
 
