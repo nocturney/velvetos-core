@@ -17,7 +17,7 @@ The adjacent JSON has an imaginary Notes app, synthetic OS principal, fixed test
 - Customer sends, publishing, money, physical/printing, credentials, paid models, new apps/services and real computer-use effects remain separately authorized gates.
 
 ## Deterministic no-effect QA
-Run `python3 scripts/check-office-v2-desktop-eligibility.py` from the repo root. The pure stdlib test checks 31 positive/negative cases; no desktop, browser, WSB, provider, network, account, model, service or scheduler is invoked. Do not count a synthetic PASS as real UIA/AX/Windows SID proof. Do not wire this lab checker into production or replace established Phase 2 sensors without review.
+Run `python3 docs/implementation/office-v2/phase2/desktop-runtime-eligibility-check-v0.py` from the repo root. The pure stdlib test checks 31 positive/negative cases; no desktop, browser, WSB, provider, network, account, model, service or scheduler is invoked. Do not count a synthetic PASS as real UIA/AX/Windows SID proof. Do not wire this lab checker into production or replace established Phase 2 sensors without review.
 
 ## Future separate pilot
 Require independently verified idle user-session host/GUI lease and #612 noninterference; compare native, named accessibility and visual/replay on the same fixture across at least two real harmless apps including a non-editor. Measure exact postconditions, false-success, UI drift, crash/UNKNOWN recovery, p50/p95 latency and rollback. Reuse #602 evidence; retain all external effect and production gates.
