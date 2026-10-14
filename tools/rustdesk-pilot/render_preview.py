@@ -15,6 +15,7 @@ from pathlib import Path
 
 from cortendesk_inventory import AdapterError, fixture_inventory
 from rustdesk_oss_snapshot import snapshot_inventory, local_registry_inventory
+from local_aliases import LocalAliasError, load_aliases, apply_aliases
 
 MARKER = '__VELVETOS_INVENTORY_JSON__'
 TEMPLATE = Path(__file__).resolve().parent / 'preview' / 'template.html'
@@ -79,6 +80,8 @@ def main(argv: list[str] | None = None) -> int:
                         help='Required opt-in for a one-shot real local registry read')
     parser.add_argument('--enable-native-connect', action='store_true',
                         help='Separate opt-in: show manually clickable local RustDesk URI links')
+    parser.add_argument('--aliases-file', type=Path,
+                        help='Owner-private SHA256(ID) friendly names, only for real local registry')
     parser.add_argument('--output', type=Path, required=True, help='New local HTML output path')
     args = parser.parse_args(argv)
     try:
@@ -87,6 +90,8 @@ def main(argv: list[str] | None = None) -> int:
             not is_registry or not args.allow_live_local_read
         ):
             raise PreviewError('native_connect_requires_private_registry')
+        if args.aliases_file and (not is_registry or not args.allow_live_local_read):
+            raise PreviewError('aliases_require_private_registry')
         if is_registry and not args.allow_live_local_read:
             raise PreviewError('local_registry_requires_explicit_opt_in')
         if args.allow_live_local_read and not is_registry:
@@ -98,6 +103,8 @@ def main(argv: list[str] | None = None) -> int:
                 if (ancestor / '.git').exists():
                     raise PreviewError('private_registry_output_must_be_outside_git')
             inventory = local_registry_inventory(args.registry_db)
+            if args.aliases_file:
+                inventory = apply_aliases(inventory, load_aliases(args.aliases_file))
         elif args.fixture:
             inventory = fixture_inventory(args.fixture)
         else:
@@ -123,8 +130,8 @@ def main(argv: list[str] | None = None) -> int:
               ('PREVIEW_CREATED_REGISTRY_READ_ONLY' if is_registry
                else 'PREVIEW_CREATED_NON_LIVE'))
         return 0
-    except (PreviewError, AdapterError, OSError, ValueError) as exc:
-        reason = str(exc) if isinstance(exc, (PreviewError, AdapterError)) else 'preview_write_failed'
+    except (PreviewError, AdapterError, LocalAliasError, OSError, ValueError) as exc:
+        reason = str(exc) if isinstance(exc, (PreviewError, AdapterError, LocalAliasError)) else 'preview_write_failed'
         print('PREVIEW_UNAVAILABLE:' + reason)
         return 2
 

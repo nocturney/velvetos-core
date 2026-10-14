@@ -1,6 +1,6 @@
 # RustDesk single-operator inventory pilot
 
-Status: CORTENDESK-FIRST RESEARCH / 111 OFFLINE+LOCALHOST+DOM TESTS / STAGING RUNTIME BLOCKED
+Status: CORTENDESK-FIRST RESEARCH / 130 OFFLINE+LOCALHOST+DOM TESTS / PRIVATE VERIFIED HOST NAMES
 
 This folder supports three constrained inventory sources: an explicitly opted-in read-only CortenDesk API adapter, an offline read-only RustDesk OSS SQLite snapshot reader, and an expressly authorized one-shot local RustDesk OSS registry read. Its HTML preview renders only synthetic, offline-snapshot or locally read registration IDs, with explicit source labels and no false online inference. This research does not run a second production control plane or provide installation, background services, credential harvesting, remote-control commands, device mutations or auto-start.
 
@@ -226,3 +226,41 @@ CortenDesk (including browser control) is still the preferred full cockpit
 and still requires a permitted runtime/isolated acceptance. This local
 launcher is only an interim native-client convenience, not a CortenDesk
 replacement or a change to VelvetOS Control Center.
+
+## Friendly names — verified offline overlay, no IDs in GitHub
+
+For the one-operator private RustDesk HTML view, supply an optional
+owner-private `--aliases-file` together with `--registry-db` and
+`--allow-live-local-read`. The file maps **SHA-256 hashes of exact registered
+RustDesk IDs** to friendly hostnames. It does **not** contain actual IDs or
+server credentials; do not commit or upload it. The loader enforces private
+POSIX file permissions, rejects symlinks/Git paths, duplicate IDs/names,
+unknown evidence types and invalid labels. Only an **exact hash match**
+changes the display name; mismatches retain the original ID and are
+explicitly labeled unknown. Remote-control URIs continue using the
+**original** registered ID, never a guessed label.
+
+The private mapping on MacMiniOffice2 was generated from six independently
+matched registry entries: four clients' read-only RustDesk `--get-id` hashes,
+plus two exact ID-to-hostname associations from the main Windows RustDesk
+peer cache cross-checked with the registered server IDs and Windows
+hostnames. No RustDesk ID, UUID, key, password, or alias mapping was
+committed to GitHub. The six private entries have owner-only mode `0600`.
+
+To build a new *named*, manual-link report on **MacMiniOffice2 only**:
+
+    python3 render_preview.py \
+      --registry-db "$HOME/Library/Application Support/Velvet/RustDesk/server/data/db_v2.sqlite3" \
+      --aliases-file "$HOME/Library/Application Support/VelvetOS/RustDeskPilot/2026-10-14/private/friendly-names-verified-20261014.json" \
+      --allow-live-local-read --enable-native-connect \
+      --output "$HOME/Library/Application Support/VelvetOS/RustDeskPilot/2026-10-14/private/registered-machines-named-$(date -u +%Y%m%dT%H%M%SZ).html"
+
+A different path/date is required on each invocation because reports use
+exclusive creation and never overwrite existing private files. If one host
+changes RustDesk ID, it is intentionally displayed as **unmatched** rather
+than reusing an incorrect name. Availability remains `UNKNOWN` and does
+not become live monitoring. This capability does not launch CortenDesk,
+change RustDesk clients or affect the existing `hbbs/hbbr` services.
+
+Source: `local_aliases.py`, `tests/test_local_aliases.py` plus the
+Node DOM test validating the visible name and original native URI.

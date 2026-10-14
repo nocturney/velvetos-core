@@ -42,7 +42,7 @@ select{min-width:146px}
 .machine{padding:19px 24px;min-height:78px;border-top:1px solid #273140}
 .machine:hover{background:#192334}
 .machine-id{display:block;margin-top:6px;font-family:Consolas,monospace;font-size:11px;direction:ltr;text-align:right;color:#a6b7cc;unicode-bidi:plaintext}
-.machine-title{font-size:14px;font-weight:650;overflow-wrap:anywhere}
+.machine-title{font-size:16px;font-weight:700;overflow-wrap:anywhere}
 .os,.date{font-size:12px;color:#c5ceda;overflow-wrap:anywhere}
 .status{display:inline-flex;gap:7px;align-items:center;border-radius:99px;padding:7px 10px;font-size:12px;white-space:nowrap;border:1px solid #5b6473}
 .status::before{content:"";width:7px;height:7px;border-radius:50%;background:#9eabbc}
@@ -135,6 +135,13 @@ select{min-width:146px}
     $("dataKind").textContent = "מזהי מחשבים אמיתיים מתוך קריאה חד־פעמית. כפתור פתיחה יציע לדפדפן להפעיל את RustDesk המקומי רק כשתלחץ עליו. הדפדפן עשוי לבקש אישור.";
     $("footerMode").textContent = "ללא ניטור חי · פתיחה ידנית באפליקציית RustDesk · ללא שירות חדש";
   }
+  if (isRegistry && Number.isInteger(data.named_devices) &&
+      data.named_devices >= 0 && data.named_devices <= data.devices.length) {
+    const named = data.named_devices;
+    $("sourceType").textContent = "RustDesk OSS / " + named + " שמות מזוהים";
+    $("dataKind").textContent = "זוהו שמות של " + named + " מתוך " + data.devices.length +
+      " מחשבים לפי התאמה למזהי RustDesk. המזהה המקורי נשמר מתחת לשם. הזמינות עדיין לא ידועה, והדוח פרטי.";
+  }
   $("total").textContent = String(data.counts.total);
   $("online").textContent = presenceUnavailable ? "—" : String(data.counts.online);
   $("offline").textContent = presenceUnavailable ? "—" : String(data.counts.offline);
@@ -171,7 +178,9 @@ select{min-width:146px}
       const row = node("article", "machine");
       row.setAttribute("role", "listitem");
       const info = node("div");
-      info.append(node("div", "machine-title", d.display_name || d.device_id));
+      const friendly = isRegistry && d.name_source === "unmatched"
+        ? "מחשב ללא שם מאומת" : (d.display_name || d.device_id);
+      info.append(node("div", "machine-title", friendly));
       info.append(node("span", "machine-id", d.device_id));
       const os = node("div", "os", d.platform || "לא ידועה");
       const wrapper = node("div");

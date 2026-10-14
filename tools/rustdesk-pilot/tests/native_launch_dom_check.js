@@ -52,6 +52,14 @@ function descend(el) {
   return [el, ...el.children.flatMap(child => descend(child))];
 }
 const all = descend(nodes["machines"]);
+const titles = all.filter(el => el.className === "machine-title");
+assert.strictEqual(titles.length, data.devices.length, "device title row count mismatch");
+data.devices.forEach((d, i) => {
+  const expectedTitle = data.state === "REGISTRY_READ_ONLY" && d.name_source === "unmatched"
+    ? "מחשב ללא שם מאומת" : (d.display_name || d.device_id);
+  assert.strictEqual(titles[i].textContent, expectedTitle,
+                     "human-friendly title mismatched for row " + i);
+});
 const native = all.filter(el => el.tagName === "a");
 const safe = data.devices.filter(d =>
   typeof d.device_id === "string" &&
