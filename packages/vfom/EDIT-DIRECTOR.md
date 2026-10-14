@@ -45,6 +45,18 @@ Run `scripts/vf_publication_evidence.py --phase production` before production an
 - שמור סאונד סטודיו ברגעי proof/test כאשר הוא מוסיף אמינות.
 - Motion presets הם vocabulary מצומצם: hard cut, macro punch, failure flash, proof freeze, blueprint overlay, stress slowmo, material label, final stamp. להשתמש רק כשיש הצדקה.
 
+## Optional motion-library route — Awesome AI Motion
+
+For a real, source-backed product reveal, an aligned before/after, or a verified three-beat short-form hook, consider `packages/vfom/MOTION-LIBRARY.json` during **EDL motion choice**. Select one of `product_reveal`, `before_after`, `shorts_hook` only when that mechanic improves the story over the existing restrained hard-cut vocabulary. Never force a motion treatment onto every Reel.
+
+1. Resolve the current Content Contract, Creative Manifest, exact vfcopy Hebrew, approved audio, verified Media Vault asset refs and approved brand tokens **before** choosing a style.
+2. Stage the actual approved files under the current job's project root. Populate the strict per-job variables specified in `packages/vfom/hyperframes/MOTION-STORY-VARIABLES.schema.json`; no invented photos, logo, claims or background prices.
+3. Run `python3 scripts/vf_motion_plan.py plan <variables.json> --project-dir <project-root> --job-id <job-id> --output <rough.mp4>`. This produces a **rough-only candidate plan**, not a render, approval, or publish decision. Inspect its renderRequest and pass it to the existing `vf_hyperframes.py plan|run` bridge on an authorized host.
+4. On `needs_input`, missing truth, unverified comparison/alignment, unsupported rights or missing local audio: **fail closed** and preserve the existing Media Vault/shot-gap path. Do not fabricate a before/after result.
+5. Evaluate source identity, visual quality, RTL/safe areas, audio, exact-vfcopy text, edit derivative distinctness and first-frame impact. Only then proceed through the existing final render, publication evidence, PRE-FLIGHT/EDIT-GATE and the existing Instagram publish authority. A rough plan cannot authorize publication.
+
+The reference library is pattern-adapted at commit `1e3c249073c61b42ceb556d7800f628d565d9312`, not vendored. No new renderer, job queue, catalog, background subscription, or publishing surface is installed.
+
 ## Gap handling
 
 אם EDL איכותי דורש shot שלא קיים, אל תבקש “עוד חומר” באופן כללי. החזר `shotRequest` מינימלי: מה לצלם, זווית, משך, פעולה, orientation ולמה הוא נדרש. זהו Human Required רק מפני שהעולם הפיזי חסר; כל שאר העריכה ממשיכה אוטונומית.
