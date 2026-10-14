@@ -115,6 +115,24 @@
         "sha256": "5c838d189315c9efc8b58cf1b88813a4a72ede21de96e990df2db71fdbc887fe",
         "verifiedAt": "2026-10-04T06:19:14Z"
       }
+    },
+    "awesomeAiMotion": {
+      "origin": "https://github.com/gongnyang/awesome-ai-motion",
+      "sourceRevision": "1e3c249073c61b42ceb556d7800f628d565d9312",
+      "integration": "pattern-adapted-not-vendored",
+      "license": "MIT-with-component-attribution-review",
+      "status": "implemented-candidate-template",
+      "installByDefault": false,
+      "masterRenderer": false,
+      "configuration": "packages/vfom/MOTION-LIBRARY.json",
+      "selector": "scripts/vf_motion_plan.py",
+      "template": "packages/vfom/hyperframes/templates/motion-story-reel.html",
+      "useFor": [
+        "real-product-reveal",
+        "verified-before-after",
+        "short-form-verified-hook"
+      ],
+      "rule": "Choose bounded overlay/comparison motion before the existing HyperFrames rough render. No foreign runtime, claims, authority or new publication route."
     }
   },
   "productMotion": {
