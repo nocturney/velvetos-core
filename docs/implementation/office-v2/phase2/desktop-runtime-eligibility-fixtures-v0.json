@@ -1,0 +1,352 @@
+{
+  "schema": "velvet.desktop.eligibility-fixtures.v0",
+  "owner_issue": 604,
+  "classification": "SYNTHETIC_LAB_ONLY",
+  "test_clock_ms": 100100,
+  "base_record": {
+    "schema": "velvet.desktop.capability-request.v0",
+    "provider_id": "synthetic.accessibility",
+    "route": "named_accessibility",
+    "host": {
+      "id": "synthetic-win-01",
+      "os": "windows"
+    },
+    "session": {
+      "kind": "interactive_user",
+      "principal": "synthetic-user",
+      "session_id": "1"
+    },
+    "app": {
+      "id": "synthetic.notes",
+      "version": "1.0.0"
+    },
+    "binding": {
+      "host_id": "synthetic-win-01",
+      "session_id": "1",
+      "app_id": "synthetic.notes",
+      "app_version": "1.0.0",
+      "pid": 1234,
+      "start_nonce": "boot-process-A",
+      "window_id": "notes-A",
+      "observed_at_ms": 100000
+    },
+    "current_identity": {
+      "pid": 1234,
+      "start_nonce": "boot-process-A",
+      "window_id": "notes-A"
+    },
+    "task": {
+      "id": "fixture-local-edit",
+      "operation": "text.replace_literal",
+      "data_class": "synthetic",
+      "requested_effect": "local_write"
+    },
+    "scope": {
+      "authority": "synthetic_only",
+      "routes": [
+        "named_accessibility",
+        "native_api",
+        "visual_replay"
+      ],
+      "operations": [
+        "text.replace_literal"
+      ],
+      "effects": [
+        "read",
+        "local_write"
+      ]
+    },
+    "lease": {
+      "granted": true,
+      "owner_task": "fixture-local-edit",
+      "host_id": "synthetic-win-01",
+      "session_id": "1",
+      "epoch": 7,
+      "observed_epoch": 7
+    },
+    "effect_state": "NOT_STARTED",
+    "postcondition": {
+      "kind": "exact_text",
+      "independent_verifier": "synthetic.second-read",
+      "expected": "approved fixture"
+    }
+  },
+  "cases": [
+    {
+      "id": "E01-accessibility-user",
+      "overrides": {},
+      "expected": "ELIGIBLE_SIMULATION_ONLY"
+    },
+    {
+      "id": "E02-native-headless",
+      "overrides": {
+        "route": "native_api",
+        "session": {
+          "kind": "isolated_headless"
+        },
+        "binding": {
+          "session_id": "1"
+        }
+      },
+      "expected": "ELIGIBLE_SIMULATION_ONLY"
+    },
+    {
+      "id": "E03-visual-user",
+      "overrides": {
+        "route": "visual_replay"
+      },
+      "expected": "ELIGIBLE_SIMULATION_ONLY"
+    },
+    {
+      "id": "N01-system-session-uia",
+      "overrides": {
+        "session": {
+          "kind": "system_session0"
+        }
+      },
+      "expected": "INTERACTIVE_USER_REQUIRED"
+    },
+    {
+      "id": "N02-system-session-vision",
+      "overrides": {
+        "route": "visual_replay",
+        "session": {
+          "kind": "system_session0"
+        }
+      },
+      "expected": "INTERACTIVE_USER_REQUIRED"
+    },
+    {
+      "id": "N03-binding-stale",
+      "overrides": {
+        "binding": {
+          "observed_at_ms": 90000
+        }
+      },
+      "expected": "BINDING_STALE"
+    },
+    {
+      "id": "N04-binding-from-future",
+      "overrides": {
+        "binding": {
+          "observed_at_ms": 100200
+        }
+      },
+      "expected": "BINDING_CLOCK_INVALID"
+    },
+    {
+      "id": "N05-wrong-window",
+      "overrides": {
+        "current_identity": {
+          "window_id": "foreign-window"
+        }
+      },
+      "expected": "PROCESS_WINDOW_IDENTITY_DRIFT"
+    },
+    {
+      "id": "N06-reused-pid",
+      "overrides": {
+        "current_identity": {
+          "start_nonce": "new-process"
+        }
+      },
+      "expected": "PROCESS_WINDOW_IDENTITY_DRIFT"
+    },
+    {
+      "id": "N07-wrong-application",
+      "overrides": {
+        "binding": {
+          "app_id": "synthetic.calculator"
+        }
+      },
+      "expected": "APP_BINDING_MISMATCH"
+    },
+    {
+      "id": "N08-version-drift",
+      "overrides": {
+        "binding": {
+          "app_version": "1.0.1"
+        }
+      },
+      "expected": "APP_BINDING_MISMATCH"
+    },
+    {
+      "id": "N09-host-swap",
+      "overrides": {
+        "binding": {
+          "host_id": "other-host"
+        }
+      },
+      "expected": "SESSION_BINDING_DRIFT"
+    },
+    {
+      "id": "N10-session-swap",
+      "overrides": {
+        "binding": {
+          "session_id": "2"
+        }
+      },
+      "expected": "SESSION_BINDING_DRIFT"
+    },
+    {
+      "id": "N11-lease-missing",
+      "overrides": {
+        "lease": {
+          "granted": false
+        }
+      },
+      "expected": "LEASE_NOT_GRANTED"
+    },
+    {
+      "id": "N12-stale-lease-epoch",
+      "overrides": {
+        "lease": {
+          "observed_epoch": 8
+        }
+      },
+      "expected": "LEASE_FENCED"
+    },
+    {
+      "id": "N13-wrong-lease-owner",
+      "overrides": {
+        "lease": {
+          "owner_task": "other-task"
+        }
+      },
+      "expected": "LEASE_OWNER_DRIFT"
+    },
+    {
+      "id": "N14-lease-host-swap",
+      "overrides": {
+        "lease": {
+          "host_id": "other-host"
+        }
+      },
+      "expected": "LEASE_OWNER_DRIFT"
+    },
+    {
+      "id": "N15-lease-session-swap",
+      "overrides": {
+        "lease": {
+          "session_id": "2"
+        }
+      },
+      "expected": "LEASE_OWNER_DRIFT"
+    },
+    {
+      "id": "N16-unknown-effect",
+      "overrides": {
+        "effect_state": "UNKNOWN"
+      },
+      "expected": "EFFECT_UNKNOWN_RECONCILE"
+    },
+    {
+      "id": "N17-replay-effect",
+      "overrides": {
+        "effect_state": "COMPLETED"
+      },
+      "expected": "EFFECT_NOT_FRESH"
+    },
+    {
+      "id": "N18-external-send",
+      "overrides": {
+        "task": {
+          "requested_effect": "external_send"
+        }
+      },
+      "expected": "EFFECT_OUT_OF_SCOPE"
+    },
+    {
+      "id": "N19-missing-verifier",
+      "overrides": {
+        "postcondition": {
+          "independent_verifier": ""
+        }
+      },
+      "expected": "POSTCONDITION_NOT_INDEPENDENT"
+    },
+    {
+      "id": "N20-operation-undeclared",
+      "overrides": {
+        "task": {
+          "operation": "email.send"
+        }
+      },
+      "expected": "OPERATION_UNDECLARED"
+    },
+    {
+      "id": "N21-route-undeclared",
+      "overrides": {
+        "route": "unknown_driver"
+      },
+      "expected": "ROUTE_UNDECLARED"
+    },
+    {
+      "id": "N22-customer-data",
+      "overrides": {
+        "task": {
+          "data_class": "customer"
+        }
+      },
+      "expected": "SYNTHETIC_DATA_ONLY"
+    },
+    {
+      "id": "N23-not-research-authority",
+      "overrides": {
+        "scope": {
+          "authority": "production"
+        }
+      },
+      "expected": "AUTHORITY_NOT_SYNTHETIC"
+    },
+    {
+      "id": "N24-binding-pid-replaced",
+      "overrides": {
+        "current_identity": {
+          "pid": 9
+        }
+      },
+      "expected": "PROCESS_WINDOW_IDENTITY_DRIFT"
+    },
+    {
+      "id": "N25-missing-postcondition",
+      "overrides": {
+        "postcondition": {
+          "expected": ""
+        }
+      },
+      "expected": "POSTCONDITION_NOT_INDEPENDENT"
+    },
+    {
+      "id": "N26-system-session-native",
+      "overrides": {
+        "route": "native_api",
+        "session": {
+          "kind": "system_session0"
+        }
+      },
+      "expected": "HOST_SYSTEM_SESSION_FORBIDDEN"
+    },
+    {
+      "id": "N27-no-principal",
+      "overrides": {
+        "session": {
+          "principal": ""
+        }
+      },
+      "expected": "SESSION_PRINCIPAL_UNVERIFIED"
+    },
+    {
+      "id": "N28-forged-route-scope",
+      "overrides": {
+        "route": "foreign_driver",
+        "scope": {
+          "routes": [
+            "foreign_driver"
+          ]
+        }
+      },
+      "expected": "ROUTE_UNDECLARED"
+    }
+  ]
+}
