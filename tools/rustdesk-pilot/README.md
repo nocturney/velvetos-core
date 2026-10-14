@@ -1,6 +1,6 @@
 # RustDesk single-operator inventory pilot
 
-Status: CORTENDESK-FIRST RESEARCH / 130 OFFLINE+LOCALHOST+DOM TESTS / PRIVATE VERIFIED HOST NAMES
+Status: CORTENDESK-FIRST RESEARCH / 146 OFFLINE+LOCALHOST+DOM TESTS / MOBILE BROWSER P0 GATED
 
 This folder supports three constrained inventory sources: an explicitly opted-in read-only CortenDesk API adapter, an offline read-only RustDesk OSS SQLite snapshot reader, and an expressly authorized one-shot local RustDesk OSS registry read. Its HTML preview renders only synthetic, offline-snapshot or locally read registration IDs, with explicit source labels and no false online inference. This research does not run a second production control plane or provide installation, background services, credential harvesting, remote-control commands, device mutations or auto-start.
 
@@ -264,3 +264,33 @@ change RustDesk clients or affect the existing `hbbs/hbbr` services.
 
 Source: `local_aliases.py`, `tests/test_local_aliases.py` plus the
 Node DOM test validating the visible name and original native URI.
+
+## P0 browser/mobile acceptance before monitoring
+
+The solo-operator requirement is a single authenticated **browser** portal
+for desktop, iPhone Safari and iPad Safari, without mobile management apps.
+Prioritize CortenDesk's existing web client, not the interim private
+RustDesk native-link viewer. **Do not start with Beszel/extra agents**
+before the mobile control proof. Windows/macOS OS updates, reinstalls,
+recovery, PXE and BIOS tasks are explicitly out of scope.
+
+Pinned upstream CortenDesk `routes/web.php` defines `/login` (guest),
+`/devices` (authenticated/device:r) and `/webclient` (authenticated).
+One-shot, no-cookie/no-login **local** auth surface probe for an *already*
+running independently authorized staging service:
+
+    python cortendesk_local_http_gate.py \
+      --plan fixtures/cortendesk-staging-plan.json \
+      --allow-local-staging-read
+
+This sends GET only to `127.0.0.1:18080`, never opens a browser session,
+never follows a redirect and never launches a container. It checks that the
+login route is available and neither protected page is public. Even PASS
+means `LOCAL_HTTP_AUTH_SURFACE_PASS_NOT_MOBILE`; it proves **none** of
+iPhone Safari, WebSocket, authenticated UI, video, clipboard or file transfer.
+All physical mobile checks remain `UNTESTED` until separately conducted.
+
+See `docs/implementation/remote-management/cortendesk-mobile-p0-2026-10-14.md`
+for the exact security boundary and real-device test matrix. The earlier
+denied runtime launch is still binding; no approval is implied by the
+read-only probe or this change.
