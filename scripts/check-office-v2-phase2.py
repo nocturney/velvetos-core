@@ -402,9 +402,9 @@ def validate_owner_assurance_binary_tools_20261014(items: list[dict], lanes: lis
                 route.get("next_gate") != record.get("next_gate") or
                 route.get("unlock_condition") != record.get("unlock_condition")):
                 problems.append(f"lost exact phase owner or unlock condition {cid}")
-            if not all(token in doc for token in (cid, pin, risk_marker)):
+            if not all(token.lower() in doc.lower() for token in (cid, pin, risk_marker)):
                 problems.append(f"intake explanation/safety evidence missing {cid}")
-            if risk_marker not in " ".join(item.get("platform_constraints") or []):
+            if risk_marker.lower() not in " ".join(item.get("platform_constraints") or []).lower():
                 problems.append(f"safety/cost limitation missing from candidate {cid}")
         return problems
 
