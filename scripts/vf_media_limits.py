@@ -21,7 +21,11 @@ def _apply_limits(memory_bytes: int, timeout: int) -> None:
         raise ValueError("Invalid media resource limits")
     if os.name == 'posix':
         import resource
-        resource.setrlimit(resource.RLIMIT_AS, (memory_bytes, memory_bytes))
+        # macOS frameworks reserve very large virtual ranges, so RLIMIT_AS/RLIMIT_DATA
+        # reject healthy Python/FFmpeg processes. Darwin is memory-bounded in _worker
+        # with a live RSS watchdog plus a post-exit max-RSS check. Linux keeps RLIMIT_AS.
+        if sys.platform != 'darwin':
+            resource.setrlimit(resource.RLIMIT_AS, (memory_bytes, memory_bytes))
         resource.setrlimit(resource.RLIMIT_CPU, (timeout, timeout))
         resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
         return
@@ -83,18 +87,51 @@ def _worker(args: list[str], timeout: int, memory_bytes: int, capture: bool) -> 
         timer = threading.Timer(timeout, stop)
         timer.daemon = True
         timer.start()
+        memory_exceeded = threading.Event()
+        monitor_stop = threading.Event()
+
+        def monitor_darwin_rss() -> None:
+            if sys.platform != 'darwin':
+                return
+            while not monitor_stop.wait(0.01):
+                if process.poll() is not None:
+                    return
+                try:
+                    sample = subprocess.run(
+                        ['/bin/ps', '-o', 'rss=', '-p', str(process.pid)],
+                        stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+                        stderr=subprocess.DEVNULL, text=True, timeout=1, check=False,
+                    ).stdout.strip()
+                    if sample and int(sample.split()[0]) * 1024 > memory_bytes:
+                        memory_exceeded.set()
+                        stop()
+                        return
+                except (OSError, ValueError, subprocess.SubprocessError):
+                    continue
+
+        monitor = threading.Thread(target=monitor_darwin_rss, daemon=True)
+        monitor.start()
         try:
             data = process.stdout.read(OUTPUT_BYTES + 1) if capture else b''
             if len(data) > OUTPUT_BYTES:
                 stop()
             code = process.wait(timeout=timeout + 1)
-            if expired.is_set() or code != 0:
+            monitor_stop.set()
+            monitor.join(timeout=1)
+            if sys.platform == 'darwin':
+                import resource
+                # Darwin reports ru_maxrss in bytes. The worker is fresh per invocation,
+                # so RUSAGE_CHILDREN covers this decoder plus tiny ps watchdog samples.
+                if resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss > memory_bytes:
+                    memory_exceeded.set()
+            if expired.is_set() or memory_exceeded.is_set() or code != 0:
                 return 2
             if capture:
                 sys.stdout.buffer.write(data)
                 sys.stdout.buffer.flush()
             return 0
         finally:
+            monitor_stop.set()
             timer.cancel()
 
 
