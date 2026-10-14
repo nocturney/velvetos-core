@@ -68,7 +68,19 @@ def verify(value: object, *, expected_sha256: str, expected_attempt: str) -> dic
     if type(value["observed_utc"]) is not str:
         raise Refused("TIME_UNTYPED")
     try:
-        observed = datetime.fromisoformat(value["observed_utc"].replace("Z", "+00:00"))
+        stamp = value["observed_utc"]
+        # .NET ToString("o") emits seven fractional digits. Python 3.9
+        # accepts at most six, so discard only the 100-ns digit for parsing.
+        # Reject excess precision, missing offsets and malformed timestamps.
+        if not re.fullmatch(
+            r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,7})?(?:Z|[+-]\d{2}:\d{2})",
+            stamp,
+        ):
+            raise ValueError("timestamp outside accepted RFC3339 subset")
+        normalized = re.sub(
+            r"(\.\d{6})\d(?=Z|[+-]\d{2}:\d{2}$)", r"\1", stamp
+        )
+        observed = datetime.fromisoformat(normalized.replace("Z", "+00:00"))
     except ValueError as exc:
         raise Refused("TIME_MALFORMED") from exc
     if observed.tzinfo is None:
@@ -112,7 +124,7 @@ def selftest() -> dict:
         "schema": SCHEMA, "status": "PASS_USER_CONTEXT_ONLY",
         "attempt_id": "a" * 32, "host": "CHRIS", "principal": "CHRIS\\Chris",
         "session_id": 1, "process_id": 501, "source_sha256": "b" * 64,
-        "observed_utc": "2026-10-14T15:20:00Z",
+        "observed_utc": "2026-10-14T15:20:00.1234567Z",
         **{field: False for field in FALSE_FIELDS},
     }
     assert set(model) == FIELDS, "test fixture keys drift"
@@ -135,6 +147,8 @@ def selftest() -> dict:
         ("session_id", 0), ("session_id", True),
         ("process_id", False), ("source_sha256", "c" * 64),
         ("observed_utc", "yesterday"), ("observed_utc", "2026-10-14T15:20:00"),
+        ("observed_utc", "2026-10-14T15:20:00.12345678Z"),
+        ("observed_utc", "2026-10-14T25:20:00.1234567Z"),
         ("is_system", True), ("elevated", True),
         ("gui_action_executed", True), ("model_called", True),
         ("model_generated_code_executed", True), ("git_or_provider_write", True),
