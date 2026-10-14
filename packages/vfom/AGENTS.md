@@ -4,6 +4,7 @@ Scope: Velvet creative preparation, visual treatment and publication-prep only. 
 
 Load the smallest relevant authorities:
 - `packages/vfom/PUBLICATION-PREP-EXECUTION.md`
+- `packages/vfom/MOTION-LIBRARY.md` only when optional source-locked Reel motion is requested; never treat motion selection as product or publication approval.
 - `packages/vfom/BRAND-ASSET-LOCK.md`
 - `packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md`
 - `packages/vfgrowth/PREFLIGHT.md` / `GATE.md`
