@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="he" data-composition-variables='[
+  {"id":"motionStyle","type":"string","label":"Approved motion route","default":"product_reveal"},
+  {"id":"variablesStatus","type":"string","label":"ready or needs_input","default":"needs_input"},
+  {"id":"neededInputs","type":"string","label":"Unresolved evidence","default":"verified media and copy"},
+  {"id":"headline","type":"string","label":"Approved Hebrew headline","default":""},
+  {"id":"subhead","type":"string","label":"Approved supporting copy","default":""},
+  {"id":"heroImage","type":"string","label":"Verified real subject source","default":""},
+  {"id":"sourceAssetRef","type":"string","label":"Canonical Media Vault source id","default":""},
+  {"id":"comparisonImage","type":"string","label":"Verified matching comparison image","default":""},
+  {"id":"comparisonAssetRef","type":"string","label":"Comparison Media Vault id","default":""},
+  {"id":"comparisonEvidenceRef","type":"string","label":"Comparison proof reference","default":""},
+  {"id":"beat1","type":"string","label":"First vetted short beat","default":""},
+  {"id":"beat2","type":"string","label":"Second vetted short beat","default":""},
+  {"id":"beat3","type":"string","label":"Third vetted short beat","default":""},
+  {"id":"audioFile","type":"string","label":"Approved audio","default":""},
+  {"id":"accentId","type":"string","label":"Verified token accent id","default":"copper"},
+  {"id":"accentHex","type":"color","label":"Verified product accent","default":"#a86838"},
+  {"id":"accentSource","type":"string","label":"Accent evidence","default":""}
+]'>
+<head>
+  <meta charset="utf-8">
+  <title>Velvet motion-story-reel</title>
+  <link rel="stylesheet" href="../velvet-reel.css">
+</head>
+<body>
+  <main id="motion-story-reel" class="vf-frame" data-composition-id="motion-story-reel"
+        data-width="1080" data-height="1920" data-fps="30" data-start="0" data-duration="7">
+    <div id="product-stage" class="vf-motion-stage">
+      <img id="hero" class="vf-hero" alt="" data-var-src="heroImage">
+      <div id="compare-layer" class="vf-motion-compare">
+        <img id="comparison-image" alt="" data-var-src="comparisonImage">
+      </div>
+      <div id="split-divider" class="vf-motion-divider" aria-hidden="true"></div>
+    </div>
+    <div class="vf-scrim"></div>
+    <section class="vf-copy" dir="rtl">
+      <div class="vf-motion-window">
+        <h1 id="headline" class="vf-headline vf-motion-headline"></h1>
+        <h1 id="sheen" class="vf-headline vf-motion-headline vf-motion-sheen" aria-hidden="true"></h1>
+      </div>
+      <div id="accent-rule" class="vf-rule"></div>
+      <p id="subhead" class="vf-subhead"></p>
+    </section>
+    <section id="kinetic-beats" class="vf-motion-beats vf-hidden" dir="rtl" aria-label="Short-form hook">
+      <span class="vf-motion-beat" id="beat1"></span>
+      <span class="vf-motion-beat" id="beat2"></span>
+      <span class="vf-motion-beat vf-accent-text" id="beat3"></span>
+    </section>
+    <audio id="audio-track" class="clip" data-var-src="audioFile" data-start="0"
+           data-duration="7" data-has-audio="true"></audio>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script src="../velvet-reel.js"></script>
+  <script>
+    VelvetReel.boot("motion-story-reel", ({vars, tl, presets, text, media}) => {
+      const approvedStyles = ["product_reveal", "before_after", "shorts_hook"];
+      if (!approvedStyles.includes(vars.motionStyle)) throw new Error("unapproved motion style");
+      if (vars.variablesStatus !== "ready" || vars.neededInputs) throw new Error("motion inputs/evidence incomplete");
+      if (!vars.heroImage || !vars.sourceAssetRef || !vars.audioFile || !vars.headline)
+        throw new Error("real source, catalog ref, approved copy and audio are required");
+      media("hero", vars.heroImage);
+      media("audio-track", vars.audioFile);
+      text("headline", vars.headline);
+      text("sheen", vars.headline);
+      text("subhead", vars.subhead);
+      const isCompare = vars.motionStyle === "before_after";
+      if (isCompare) {
+        if (!vars.comparisonImage || !vars.comparisonAssetRef || !vars.comparisonEvidenceRef)
+          throw new Error("before-after requires a verified matching second asset and evidence");
+        if (vars.comparisonAssetRef === vars.sourceAssetRef || vars.comparisonImage === vars.heroImage)
+          throw new Error("comparison must use a distinct verified state");
+        media("comparison-image", vars.comparisonImage);
+        presets.VF_MOTION_SPLIT_COMPARE(tl, "#compare-layer", "#split-divider", .55);
+        presets.VF_MOTION_MASK_REVEAL(tl, "#headline", 2.70);
+      } else {
+        document.getElementById("compare-layer").remove();
+        document.getElementById("split-divider").remove();
+        tl.fromTo("#product-stage", {scale:1}, {scale:1.025, duration:7, ease:"none"}, 0);
+        if (vars.motionStyle === "shorts_hook") {
+          const beats = [vars.beat1, vars.beat2, vars.beat3];
+          if (beats.some(x => !x || x.length > 18)) throw new Error("shorts hook requires three short verified beats");
+          ["beat1","beat2","beat3"].forEach((id, index) => text(id, beats[index]));
+          tl.set("#kinetic-beats", {opacity:1, visibility:"visible"}, 0);
+          presets.VF_MOTION_KINETIC_BEATS(tl, ["#beat1", "#beat2", "#beat3"], .24);
+          tl.set("#kinetic-beats", {opacity:0, visibility:"hidden"}, 1.75);
+          presets.VF_MOTION_MASK_REVEAL(tl, "#headline", 2.10);
+        } else {
+          presets.VF_MOTION_MASK_REVEAL(tl, "#headline", .36);
+          presets.VF_MOTION_LIGHT_SWEEP(tl, "#sheen", 1.72);
+        }
+      }
+      presets.ACCENT_RULE_WIPE(tl, "#accent-rule", isCompare ? 3.85 : 3.12);
+      presets.VELVET_MATERIAL_LABEL(tl, "#subhead", isCompare ? 4.10 : 3.52);
+    });
+  </script>
+</body>
+</html>
