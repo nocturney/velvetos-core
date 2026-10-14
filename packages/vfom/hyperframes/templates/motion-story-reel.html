@@ -21,7 +21,11 @@
 <head>
   <meta charset="utf-8">
   <title>Velvet motion-story-reel</title>
-  <link rel="stylesheet" href="../velvet-reel.css">
+  <link rel="stylesheet" href="packages/vfom/hyperframes/velvet-reel.css">
+  <style>
+    @font-face {font-family:"Rubik";src:url("packages/vfbrand/assets/fonts/rubik/Rubik-VariableFont_wght.ttf") format("truetype");font-weight:100 900;font-style:normal;}
+    @font-face {font-family:"Cinzel";src:url("packages/vfbrand/assets/fonts/cinzel/Cinzel-VariableFont_wght.ttf") format("truetype");font-weight:100 900;font-style:normal;}
+  </style>
 </head>
 <body>
   <main id="motion-story-reel" class="vf-frame" data-composition-id="motion-story-reel"
@@ -51,7 +55,7 @@
            data-duration="7" data-has-audio="true"></audio>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
-  <script src="../velvet-reel.js"></script>
+  <script src="packages/vfom/hyperframes/velvet-reel.js"></script>
   <script>
     VelvetReel.boot("motion-story-reel", ({vars, tl, presets, text, media}) => {
       const approvedStyles = ["product_reveal", "before_after", "shorts_hook"];
