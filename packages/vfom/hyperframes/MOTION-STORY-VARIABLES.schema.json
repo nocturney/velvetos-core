@@ -1,0 +1,200 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://velvetos.local/schemas/motion-story-variables.schema.json",
+  "title": "Velvet Factory motion-story Reel variables (awesome-ai-motion pattern-adapted)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "motionStyle",
+    "variablesStatus",
+    "neededInputs",
+    "headline",
+    "subhead",
+    "heroImage",
+    "sourceAssetRef",
+    "comparisonImage",
+    "comparisonAssetRef",
+    "comparisonEvidenceRef",
+    "beat1",
+    "beat2",
+    "beat3",
+    "audioFile",
+    "accentId",
+    "accentHex",
+    "accentSource"
+  ],
+  "properties": {
+    "motionStyle": {
+      "enum": [
+        "product_reveal",
+        "before_after",
+        "shorts_hook"
+      ]
+    },
+    "variablesStatus": {
+      "enum": [
+        "ready",
+        "needs_input"
+      ]
+    },
+    "neededInputs": {
+      "type": "string"
+    },
+    "headline": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subhead": {
+      "type": "string"
+    },
+    "heroImage": {
+      "type": "string"
+    },
+    "sourceAssetRef": {
+      "type": "string"
+    },
+    "comparisonImage": {
+      "type": "string"
+    },
+    "comparisonAssetRef": {
+      "type": "string"
+    },
+    "comparisonEvidenceRef": {
+      "type": "string"
+    },
+    "beat1": {
+      "type": "string",
+      "maxLength": 18
+    },
+    "beat2": {
+      "type": "string",
+      "maxLength": 18
+    },
+    "beat3": {
+      "type": "string",
+      "maxLength": 18
+    },
+    "audioFile": {
+      "type": "string"
+    },
+    "accentId": {
+      "enum": [
+        "copper",
+        "antique_gold",
+        "light_gold",
+        "amber"
+      ]
+    },
+    "accentHex": {
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{6}$"
+    },
+    "accentSource": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "variablesStatus": {
+            "const": "ready"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "neededInputs": {
+            "maxLength": 0
+          },
+          "heroImage": {
+            "minLength": 1
+          },
+          "sourceAssetRef": {
+            "minLength": 1
+          },
+          "headline": {
+            "minLength": 1
+          },
+          "audioFile": {
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "variablesStatus": {
+            "const": "needs_input"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "neededInputs": {
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "motionStyle": {
+            "const": "before_after"
+          },
+          "variablesStatus": {
+            "const": "ready"
+          }
+        },
+        "required": [
+          "motionStyle",
+          "variablesStatus"
+        ]
+      },
+      "then": {
+        "properties": {
+          "comparisonImage": {
+            "minLength": 1
+          },
+          "comparisonAssetRef": {
+            "minLength": 1
+          },
+          "comparisonEvidenceRef": {
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "motionStyle": {
+            "const": "shorts_hook"
+          },
+          "variablesStatus": {
+            "const": "ready"
+          }
+        },
+        "required": [
+          "motionStyle",
+          "variablesStatus"
+        ]
+      },
+      "then": {
+        "properties": {
+          "beat1": {
+            "minLength": 1
+          },
+          "beat2": {
+            "minLength": 1
+          },
+          "beat3": {
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ]
+}
