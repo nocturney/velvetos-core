@@ -16,7 +16,6 @@ import json
 import os
 from pathlib import Path
 import platform
-import pwd
 import select
 import socket
 import sqlite3
@@ -547,6 +546,7 @@ def run_native() -> dict:
          "REFUSE_OUTSIDE_DISPOSABLE_LINUX_ARM64_GUEST")
     need(os.path.exists("/run/containerd/containerd.sock"),
          "EXPECTED_EXISTING_COLIMA_GUEST_NOT_EVIDENCED")
+    import pwd  # Linux-only: offline checks must also work on Windows.
     for uid in (SIGNER_UID,SINK_UID,WORKER_UID,ATTACKER_UID):
         try:pwd.getpwuid(uid)
         except KeyError:pass

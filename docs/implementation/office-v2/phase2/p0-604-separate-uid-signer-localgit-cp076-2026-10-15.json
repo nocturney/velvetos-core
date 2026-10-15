@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.office-v2.604.cp076-linux-uid-crypto-localgit-evidence.v1",
   "date": "2026-10-15",
-  "source_sha256": "e156c17221810364d6491e0dd6ec4ba431258944f686698373943af767423265",
+  "source_sha256": "521fa48d10c3e95b91c98207dade1c5e8ad708ed5ba5afd9b9fb0cfdf167a547",
   "base_main_sha": "2c58539bf662af0c2e855dd5b3af2bd9b4fd2523",
   "physical_host": "MacMiniOffice2.local",
   "linux_guest": "existing-colima-velvet-qa",

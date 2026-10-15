@@ -44,7 +44,7 @@ def main() -> int:
     cp076 = ROOT / "scripts" / "vf_office_v2_604_linux_signed_uid_git_join_cp076.py"
     if (not cp076.is_file()
             or hashlib.sha256(cp076.read_bytes()).hexdigest() !=
-            "e156c17221810364d6491e0dd6ec4ba431258944f686698373943af767423265"):
+            "521fa48d10c3e95b91c98207dade1c5e8ad708ed5ba5afd9b9fb0cfdf167a547"):
         fail("#604 CP076 fixed OS-principal signer/sink source SHA drift")
     cp076_probe = subprocess.run(
         [sys.executable, "-B", str(cp076), "selftest"],
