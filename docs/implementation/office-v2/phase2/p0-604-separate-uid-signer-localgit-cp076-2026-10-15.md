@@ -1,0 +1,32 @@
+# Office v2 #604 / #612 — CP076 real Linux OS-separate signer, worker and local Git sink
+
+**15 October 2026 · Fixed synthetic Linux LAB, not production and not an admitted model executor.**
+
+## Newly composed trust boundary
+
+The earlier CP070 signed-scope QA used a temporary synthetic key but did not prove separate OS key custody; CP074 composed a real mTLS etcd lease with native *local* Git CAS but all clients ran under the same macOS UID. CP076 is the complementary **real OS-privilege separation test**: a signer, a worker, and the only local Git writer run as distinct Linux numeric users **in one ephemeral Linux guest**. The receiver authenticates the worker's actual kernel `SO_PEERCRED` UID, verifies a detached **OpenSSL Ed25519** signature, checks the exact synthetic allowed task/host/UID/source SHA/ref/action/epoch/nonce/deadline, durably records the intent before applying a one-shot local Git `update-ref` CAS, and requires explicit root-side local reconciliation after loss of ACK. No account was created and no actual GitHub or customer data was ever used.
+
+The existing pre-approved `colima-velvet-qa` aarch64 Linux guest on physical MacMiniOffice2.local runs the fixed `scripts/vf_office_v2_604_linux_signed_uid_git_join_cp076.py`, script SHA256 `521fa48d10c3e95b91c98207dade1c5e8ad708ed5ba5afd9b9fb0cfdf167a547`, with explicit opt-in `VF604_CP076_DISPOSABLE_GUEST_ONLY=VF604_CP076_EXPLICIT_FIXED_OS_TEST` and disposable guest `sudo -n`. It refuses local macOS/Windows/native unapproved execution. The temporary root-owned test tree is created via `TemporaryDirectory` under `/tmp` and automatically cleaned after each run.
+
+## Native evidence
+
+Two independent full disposable native runs, each **24/24 actual OS/crypto/Git/UNKNOWN checks PASS** (plus **19/19 malformed claim and 4/4 wrong UID static negatives**). The role ownership is real:
+
+- **Ed25519 signer:** Linux UID 62005 owns its temporary 0600 private key inside a 0700 directory. `openssl genpkey`, `openssl pkey -pubout`, and one-shot `openssl pkeyutl -sign -rawin -in` run only under UID62005. The payload bytes include a fixed signature namespace. The temporary public key is published read-only to the sink, never the private key. Neither sink UID62001 nor worker UID62002 can read the key.
+- **Worker:** Linux UID62002 cannot traverse the private Git directory or read the sink's synthetic canary. It sends a signed data-only claim over an ephemeral Unix-domain socket; the sink verifies `SO_PEERCRED`. A fourth caller UID62003 presenting a cryptographically valid signer signature was still refused.
+- **Only local writer:** Linux UID62001 owns a 0700 private test bare repository and a durable local SQLite intent store. A read/write attempt by worker UID62002 inside that directory is denied by POSIX DAC; the sink is the only OS user permitted to change the local ref. No Git remote or token exists. Exactly one cryptographically signed fixed request advances the ref using native Git CAS. Duplicated valid signed request is rejected.
+- **Valid crypto but wrong scope negatives:** separate, freshly signed claims for wrong host, wrong UID, wrong Git ref (`main`), escalated `GITHUB_PUSH` effect and expired time are all refused; an unsigned post-signature source mutation is refused; all leave the ref unchanged.
+- **Lost ACK:** second fully disposable repo intentionally SIGKILLs the sink subprocess **after** native Git ref update but **before** the receipt. The worker observes NO_ACK_UNKNOWN. Restart reads durable state and transitions to `FROZEN_UNKNOWN`; a new signed attempt is rejected. Only a separate kernel-root-scope fixture controller can explicitly read back the single local Git ref and mark `COMMITTED_VERIFIED`, after which replay remains rejected.
+
+**First-run RED and fixes:** `ssh-keygen` refused unregistered numeric UID62005 (`No user exists for uid`), so OpenSSL Ed25519 replaced it with no weaker key custody. OpenSSL required a seekable `-in` file for one-shot signing and verifying. Root-created endpoint permissions blocked the unprivileged sink until chown to UID62001. A *test-only* direct-git negative initially attempted `update-ref` against the real fixture ref using a zero SHA and disturbed that ref; the check failed closed and was replaced with a non-destructive permission test against a separate impossible lock path. Following cleanup, **both clean repeat runs passed 24/24**, with the same script SHA on host and guest. No production ref or file was ever involved.
+
+## What must remain RED
+
+1. The signer key is **synthetic and controlled by the disposable root test harness**, not a Core #604 host/task/GPU lease authority. There is **no** real provider-live time/epoch/revocation check at the irreversible Git effect boundary. Synthetic deadline checked against wall clock cannot substitute for a fenced Core lease.
+2. The only Git writer is a Linux numeric UID for a disposable no-remote local repository — not an independently operated long-lived privileged GitHub token holder or secure remote sink. The root test harness can access both UID-owned directories, as real Linux root can; real production host root isolation/host-level credential custody remains open.
+3. The trusted script fixes all task metadata and executes **no model-authored Python**; no actual CP058 3+12 hidden source QA, Core scheduler integration, two real independent coding-host PRs, production branch merge, or business effects. Local model worker's explicit `P0_GENERATED_SOURCE_OS_ISOLATION_NOT_ADMITTED` guard remains unchanged.
+4. Pending intent is inside local SQLite, not provider-signed external durable Core/etcd state. There is no cross-store provider↔Git atomic cutover or proof of crash reconciliation after a real GitHub push. Root-only manual fixture reconciliation here is not a production independent authorization.
+
+**Next engineering gate:** join this concrete independent OS key custody with CP074's actual externally authenticated Core-compatible lease provider and a single independently credentialed Git sink, prove live revocation at remote effect time with UNKNOWN-stop on lost ACK, then reviewed protected-main Phase B CP058 hidden QA. Only afterward consider granting general agent source execution; do not add Codex CLI, paid inference, second scheduler or business/physical-machine authority to this LAB.
+
+**Files:** new 710+ line Linux-only fixture, SHA-pinned canonical Office v2 static selftest, README, this MD+JSON receipt. This remains a DRAFT code proposal, not a merged or approved executor.

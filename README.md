@@ -18,6 +18,8 @@
 <!-- morning-green-2026-09-23 -->
 Latest verified owner Morning Brief artifact path remains historical evidence. Current scheduled Instagram truth is the Cloudflare Instagram Publisher; OpenPost is frozen and must not be used as schedule authority.
 
+**Office v2 — #604 CP076 Linux separated signer/worker/Git sink (2026-10-15, DRAFT FIXED LAB):** In existing `velvet-qa` Linux aarch64 guest, ephemeral OpenSSL Ed25519 signer UID62005, kernel-authenticated worker UID62002 and sole local Git writer UID62001 achieved **24/24 actual checks twice**, with 19/19 malformed-claim and 4/4 wrong-UID static refusals. Valid but wrong-scope signatures were rejected; a true post-ref-update/no-ACK sink crash froze UNKNOWN until explicit root-test reconciliation, with no replay. No real Core-issued lease, GitHub credentials, remote Git update, generated model-source execution, global OS account or Production permission. [CP076 native evidence](docs/implementation/office-v2/phase2/p0-604-separate-uid-signer-localgit-cp076-2026-10-15.md).
+
 **Instagram multi-source schedule observation (PR #668, read-only candidate):** Cloudflare Publisher remains the sole VelvetOS production scheduling **writer**. Its D1 queue is not a complete view of independently scheduled Meta Business Suite posts. The [schedule observer](packages/vfigos/schedule_observer/README.md) adds a source registry, bounded authenticated Meta Scheduled UI reader, Office v2 secure Cloudflare reader, Google Calendar mirror and Instagram Graph published-media observations, with source age, identity, deduplication and explicit unknown/unavailable states. Owner-context read has been proven in an attended Windows pilot; the work is not a second scheduler, not an authority promotion, and native Instagram-app-only scheduling remains uncovered until independently verified.
 
 
@@ -218,7 +220,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
-| **Last verified / refreshed evidence** | `2026-10-14T16:17:19+03:00` |
+| **Last verified / refreshed evidence** | `2026-10-15T09:54:00+03:00` |
 
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
