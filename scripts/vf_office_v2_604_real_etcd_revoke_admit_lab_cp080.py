@@ -183,11 +183,15 @@ class RealLab:
         self.put(k["owner"], PROVIDER_USER, lease=lease)
         read = self.get(k["owner"])
         require(read is not None and read[2] == lease, "REAL_LEASE_NOT_ATTACHED")
+        # Pin the real provider revision; a re-created owner with the same value
+        # is NOT the owner that received this grant.
+        k["owner_modrev"] = str(read[1])
         return k
 
     def admit(self, k: dict[str, str]) -> bool:
         cmp = [f'value("{k["gen"]}") = "ACTIVE"',
-               f'value("{k["owner"]}") = "{PROVIDER_USER}"']
+               f'value("{k["owner"]}") = "{PROVIDER_USER}"',
+               f'mod("{k["owner"]}") = "{k["owner_modrev"]}"']
         cmp += [f'version("{k[x]}") = "0"' for x in ("intent", "task", "host", "gpu", "ref")]
         ops = [f'put "{k["gen"]}" "COMMIT_ADMITTED"',
                f'put "{k["intent"]}" "COMMIT_ADMITTED"']
@@ -295,6 +299,13 @@ class RealLab:
             time.sleep(0.2)
         self.assert_case("real-etcd-lease-expiry-before-admission-denies",
                          self.get(k["owner"]) is None and not self.admit(k))
+        self.put(k["owner"], PROVIDER_USER, lease=self.lease(30))
+        self.assert_case("expired-owner-same-value-ABA-denied", not self.admit(k))
+
+        k = self.prepare("same-value-owner-rebind")
+        self.ctl("del", k["owner"])
+        self.put(k["owner"], PROVIDER_USER, lease=self.lease(30))
+        self.assert_case("deleted-owner-recreated-with-same-value-denied", not self.admit(k))
 
         k = self.prepare("ttl-after-admit", ttl=2)
         require(self.admit(k), "TTL_AFTER_ADMIT_SETUP")
