@@ -40,6 +40,27 @@ def load(path: Path) -> dict:
 
 
 def main() -> int:
+    # #604: candidate code tests must not share a status-writing token.
+    ci_gate = ROOT / "scripts" / "vf_office_v2_604_ci_token_boundary_gate.py"
+    if not ci_gate.is_file():
+        fail("missing P0 CI token boundary gate")
+    ci = subprocess.run([sys.executable, str(ci_gate), "selftest"],
+                        cwd=ROOT, capture_output=True, text=True, timeout=15)
+    if ci.returncode:
+        fail("P0 CI token boundary selftest failed: " + ci.stdout[:200])
+    try:
+        ci_result = json.loads(ci.stdout)
+    except ValueError:
+        fail("P0 CI token boundary selftest missing parsed result")
+    if (ci_result.get("status") != "PASS_CI_TOKEN_BOUNDARY_OFFLINE"
+            or ci_result.get("negative_cases") != 17
+            or ci_result.get("negative_denials") != 17
+            or ci_result.get("token_accessed") is not False
+            or ci_result.get("candidate_source_executed") is not False
+            or ci_result.get("core_lease_issued") is not False
+            or ci_result.get("production_authority") is not False):
+        fail("P0 CI status token privilege regression or false authority")
+
     authority = load(P0 / "authority-map-v0.1.json")
     if authority.get("single_external_effect_authority") is not True:
         fail("Phase 0 must preserve single external-effect authority")
