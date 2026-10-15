@@ -66,6 +66,34 @@ def main() -> int:
             or cp076_receipt.get("production_authority") is not False):
         fail("#604 CP076 offline guard falsely admitted a writer or issuer")
 
+    # CP077 stacked LAB: portable source SHA and offline-only provider/UID
+    # contracts; NEVER boot a real provider in the normal CI sensor.
+    cp077 = ROOT / "scripts" / "vf_office_v2_604_linux_etcd_uid_join_cp077.py"
+    if (not cp077.is_file()
+            or hashlib.sha256(cp077.read_bytes()).hexdigest() !=
+            "ee4ab16328609ac1a025fbfdd7596e297d409ed332961db90d75db3ef2ac9b54"):
+        fail("#604 CP077 composed mTLS provider/sink source SHA drift")
+    cp077_trial = subprocess.run(
+        [sys.executable, "-B", str(cp077), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=20)
+    if cp077_trial.returncode != 0:
+        fail("#604 CP077 offline guard refused: " + cp077_trial.stdout[:120])
+    try:
+        joined77 = json.loads(cp077_trial.stdout)
+    except ValueError:
+        fail("#604 CP077 offline guard returned invalid JSON")
+    if (joined77.get("status") != "PASS_CP077_OFFLINE_NO_PROVIDER_OR_OS_EFFECT"
+            or joined77.get("provider_config_mutants_denied") != 6
+            or joined77.get("inherited_cp076_claim_denials") != 19
+            or joined77.get("inherited_cp076_peer_uid_denials") != 4
+            or joined77.get("real_provider_started") is not False
+            or joined77.get("private_key_created") is not False
+            or joined77.get("native_git_effect") is not False
+            or joined77.get("github_remote_writes") != 0
+            or joined77.get("model_source_executed") is not False
+            or joined77.get("production_authority") is not False):
+        fail("#604 CP077 offline test improperly elevated scope")
+
     authority = load(P0 / "authority-map-v0.1.json")
     if authority.get("single_external_effect_authority") is not True:
         fail("Phase 0 must preserve single external-effect authority")
