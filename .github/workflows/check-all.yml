@@ -20,7 +20,6 @@ on:
 
 permissions:
   contents: read
-  statuses: write
 
 jobs:
   check-all:
@@ -29,11 +28,15 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
           python-version: "3.11"
+
+      - name: Offline P0 CI token boundary regression
+        run: python3 -B scripts/vf_office_v2_604_ci_token_boundary_gate.py selftest
 
       - name: Install sensor runtime dependencies
         run: |
@@ -86,18 +89,6 @@ jobs:
         if: ${{ !cancelled() && (github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.execution != 'main_full')) }}
         run: python3 scripts/check-all.py --selection sensor-selection.json --json-out sensor-selected-results.json
 
-      - name: Publish verified check-all commit status for machine precheck
-        if: ${{ success() && github.event_name == 'workflow_dispatch' && inputs.execution != 'main_full' }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA" \
-            -f state=success \
-            -f context=check-all \
-            -f description='VelvetOS exact-SHA precheck passed' \
-            -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
 
       - name: Run full VelvetOS sensor suite on main
         if: ${{ !cancelled() && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.execution == 'main_full')) }}
@@ -114,3 +105,25 @@ jobs:
       - name: Fail build on sensor error
         if: failure()
         run: echo "::error::One or more VelvetOS contract checks failed. See log above." && exit 1
+
+  # Credentialed status publication is separate from test-bearing code.
+  # Run only after the original check-all job succeeds on the same SHA.
+  # No repository checkout, candidate source, dependency setup or scripts here.
+  publish-machine-precheck-status:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.execution != 'main_full' }}
+    needs: check-all
+    runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+    steps:
+      - name: Publish verified check-all commit status for machine precheck
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA" \
+            -f state=success \
+            -f context=check-all \
+            -f description='VelvetOS exact-SHA precheck passed' \
+            -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"

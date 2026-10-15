@@ -40,6 +40,191 @@ def load(path: Path) -> dict:
 
 
 def main() -> int:
+    # #604: candidate code tests must not share a status-writing token.
+    ci_gate = ROOT / "scripts" / "vf_office_v2_604_ci_token_boundary_gate.py"
+    if not ci_gate.is_file():
+        fail("missing P0 CI token boundary gate")
+    ci = subprocess.run([sys.executable, str(ci_gate), "selftest"],
+                        cwd=ROOT, capture_output=True, text=True, timeout=15)
+    if ci.returncode:
+        fail("P0 CI token boundary selftest failed: " + ci.stdout[:200])
+    try:
+        ci_result = json.loads(ci.stdout)
+    except ValueError:
+        fail("P0 CI token boundary selftest missing parsed result")
+    if (ci_result.get("status") != "PASS_CI_TOKEN_BOUNDARY_OFFLINE"
+            or ci_result.get("negative_cases") != 17
+            or ci_result.get("negative_denials") != 17
+            or ci_result.get("token_accessed") is not False
+            or ci_result.get("candidate_source_executed") is not False
+            or ci_result.get("core_lease_issued") is not False
+            or ci_result.get("production_authority") is not False):
+        fail("P0 CI status token privilege regression or false authority")
+
+    # CP069: low-privilege namespace test is read-only and operator-fixed.
+    # A guest PASS never admits arbitrary model-authored code or a Core lease.
+    cp069 = ROOT / 'scripts' / 'vf_office_v2_604_lowpriv_namespaces_lab.py'
+    if not cp069.is_file() or hashlib.sha256(cp069.read_bytes()).hexdigest() != (
+            '7bef7efb34fa5611627f43c8f06cedf9c8d000c04190d9d80d25fb2ffda49eea'):
+        fail('CP069 fixed Linux namespace source SHA drift')
+    cp069_result = subprocess.run([sys.executable, '-B', str(cp069), 'selftest'],
+                                 cwd=ROOT, capture_output=True, text=True, timeout=15)
+    if cp069_result.returncode:
+        fail('CP069 static boundary test failed: ' + cp069_result.stdout[:180])
+    try:
+        cp069_row = json.loads(cp069_result.stdout)
+    except ValueError:
+        fail('CP069 boundary static result not JSON')
+    if (cp069_row.get('status') != 'PASS_CP069_STATIC_NO_LIVE_GUEST'
+            or cp069_row.get('fixed_case_count') != 13
+            or cp069_row.get('mutation_denials') != 17
+            or cp069_row.get('model_source_executed') is not False
+            or cp069_row.get('core_lease_issued') is not False
+            or cp069_row.get('git_write_calls') != 0
+            or cp069_row.get('production_authority') is not False):
+        fail('CP069 unsafe native OS/agent admission claim')
+
+    # CP070: cryptographic signature != authoritative live Core lease.
+    cp070 = ROOT / 'scripts' / 'vf_office_v2_604_signed_scope_lab.py'
+    if not cp070.is_file() or hashlib.sha256(cp070.read_bytes()).hexdigest() != (
+            '48dce2a1f72f768d0532049df5b4e4dc426ccd043339d966a498105f51c1a475'):
+        fail('CP070 detached signature verifier source SHA drift')
+    proof = subprocess.run([sys.executable, '-B', str(cp070), 'selftest'],
+                           cwd=ROOT, capture_output=True, text=True, timeout=18)
+    if proof.returncode:
+        fail('CP070 synthetic signature scope selftest failed: ' + proof.stdout[:200])
+    try:
+        proof_row = json.loads(proof.stdout)
+    except ValueError:
+        fail('CP070 signature proof is not JSON')
+    if (proof_row.get('status') != 'PASS_SYNTHETIC_ED25519_BINDING_NO_CORE_AUTHORITY'
+            or proof_row.get('valid_signatures') != 4
+            or proof_row.get('signed_wrong_identity_rejected') != 3
+            or proof_row.get('unsigned_tamper_denials') != 11
+            or proof_row.get('core_provider_live_authenticated') is not False
+            or proof_row.get('core_signed_lease_issued') is not False
+            or proof_row.get('external_git_effect_authorized') is not False
+            or proof_row.get('git_write_calls') != 0
+            or proof_row.get('production_authority') is not False):
+        fail('CP070 false issuer authority / signed scope acceptance')
+    denied = subprocess.run([sys.executable, '-B', str(cp070), 'admit'],
+                            cwd=ROOT, capture_output=True, text=True, timeout=8)
+    try:
+        denied_row = json.loads(denied.stdout)
+    except ValueError:
+        fail('CP070 admission denial not JSON')
+    if (denied.returncode != 2
+            or denied_row.get('status') != 'FAIL_CLOSED'
+            or denied_row.get('reason') != 'NO_CORE_PROVIDER_REVOCATION_AT_SINK_NEVER_ADMIT'):
+        fail('CP070 offline signature falsely authorizes live Git effect')
+
+    # CP071 native OS composition: LAB fixed literal only, never a model executor.
+    cp071 = ROOT / "scripts" / "vf_office_v2_604_uid_landlock_seccomp_compose_lab.py"
+    if (not cp071.is_file()
+            or hashlib.sha256(cp071.read_bytes()).hexdigest() !=
+            "36198125d3ce668017ffb54effce74ea1fc8c85f21b89b5ec246fd735f96e279"):
+        fail("CP071 fixed compositor source integrity drift")
+    p = subprocess.run([sys.executable, "-B", str(cp071), "selftest"],
+                       cwd=ROOT, capture_output=True, text=True, timeout=16)
+    if p.returncode:
+        fail("CP071 fixed compositor selftest failed: " + p.stdout[:200])
+    try:
+        result = json.loads(p.stdout)
+    except ValueError:
+        fail("CP071 compositor did not return JSON")
+    if (result.get("status") != "PASS_CP071_COMPOSED_STATIC_ONLY"
+            or result.get("negative_mutations") != 38
+            or result.get("native_cases") != 31
+            or result.get("model_source_executed") is not False
+            or result.get("core_signed_lease") is not False
+            or result.get("git_write_calls") != 0
+            or result.get("production_authority") is not False):
+        fail("CP071 false positive admission or unsafe compositor drift")
+
+    # CP072 Phase A: an unmerged workflow_run policy is not pretrusted QA.
+    # Selftest imports protected-source functions but NEVER executes model data.
+    cp058_protected = ROOT / "scripts/vf_office_v2_p0_protected_cp058_qa.py"
+    cp058_flow = ROOT / ".github/workflows/office-p0-protected-cp058-qa.yml"
+    for candidate, source_sha in (
+        (cp058_protected,
+         "c9e593c35cde0c654e1305a11c70f38797ba348d65624d05d1dd3a8f5c224309"),
+        (cp058_flow,
+         "2b38033140dc2ad7876d4259ccacd63b92bea87a0c412d1c424fa87eb0c5c4f9"),
+    ):
+        if not candidate.is_file() or hashlib.sha256(candidate.read_bytes()).hexdigest() != source_sha:
+            fail("CP058 protected-main bootstrap source/workflow SHA drift")
+    if ("/.github/workflows/office-p0-protected-cp058-qa.yml text eol=lf"
+            not in (ROOT / ".gitattributes").read_text(encoding="utf-8")):
+        fail("CP058 protected workflow LF transport not enforced")
+    cp058_yaml = cp058_flow.read_text(encoding="utf-8")
+    for must in (
+        "  workflow_run:", "      - VelvetOS Core Sensors",
+        "permissions: {}", "    permissions: {}",
+        "ref: $" + "{{ github.sha }}",
+        "ref: $" + "{{ github.event.workflow_run.head_sha }}",
+        "path: policy", "path: candidate",
+        "persist-credentials: false",
+        "startsWith(github.event.workflow_run.head_branch, 'test/office612-cp058-')",
+        "python3 -I -B policy/scripts/vf_office_v2_p0_protected_cp058_qa.py",
+    ):
+        if must not in cp058_yaml:
+            fail("CP058 workflow has lost its protected source / no-credential boundary")
+    if (cp058_yaml.count("permissions: {}") != 2
+            or cp058_yaml.count("persist-credentials: false") != 2
+            or "\n  pull_request_target:" in cp058_yaml
+            or "\n  pull_request:" in cp058_yaml
+            or "\n  workflow_dispatch:" in cp058_yaml):
+        fail("CP058 protected-only QA gained a writable token or unsafe trigger")
+    cp058_static = subprocess.run(
+        [sys.executable, "-I", "-B", str(cp058_protected), "selftest"],
+        cwd=ROOT, capture_output=True, text=True, timeout=18)
+    if cp058_static.returncode:
+        fail("CP058 pretrusted policy selftest rejected: " + cp058_static.stdout[:180])
+    try:
+        cp058_proof = json.loads(cp058_static.stdout)
+    except ValueError:
+        fail("CP058 protected policy returned invalid JSON")
+    if (cp058_proof.get("status") !=
+            "PASS_CP058_PRETRUSTED_POLICY_OFFLINE_NO_EXECUTION"
+            or cp058_proof.get("tests") != 35
+            or cp058_proof.get("repaired_source_sha256") !=
+               "544908a800b3546b9e5ee0bba57a6395b95f99a4aef6fd5d931e73e89631b5e3"
+            or cp058_proof.get("candidate_model_code_executed") is not False
+            or cp058_proof.get("docker_calls") != 0
+            or cp058_proof.get("model_calls") != 0
+            or cp058_proof.get("core_provider_lease") is not False
+            or cp058_proof.get("git_writer_credential") is not False
+            or cp058_proof.get("production_authority") is not False):
+        fail("CP058 untrusted source falsely admitted by static bootstrap")
+
+    # CP074: static contract for actual mTLS etcd + native local Git CAS
+    # composed LAB. This selftest never launches provider or executes a worker.
+    cp074 = ROOT / "scripts" / "vf_office_v2_604_auth_mtls_localgit_join_cp074.py"
+    if (not cp074.is_file()
+            or hashlib.sha256(cp074.read_bytes()).hexdigest() !=
+            "1b7f9edad5dc23fea5bdc12fc4ce49296645791da5ddfda9a532fa81e32a5639"):
+        fail("#604 CP074 native mTLS provider/local Git source pin drift")
+    native_join = subprocess.run(
+        [sys.executable, "-B", str(cp074), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=20)
+    if native_join.returncode != 0:
+        fail("#604 CP074 strict offline selftest failed: " + native_join.stdout[:160])
+    try:
+        joined = json.loads(native_join.stdout)
+    except ValueError:
+        fail("#604 CP074 strict offline selftest invalid JSON")
+    if (joined.get("status") != "PASS_CP074_STATIC_NO_PROVIDER_NO_GIT"
+            or joined.get("claim_mutations_denied") != 15
+            or joined.get("owner_and_intent_mutations_denied") != 9
+            or joined.get("native_expected_checks") != 22
+            or joined.get("signed_core_provider") is not False
+            or joined.get("live_provider_started") is not False
+            or joined.get("model_source_executed") is not False
+            or joined.get("github_credentials") is not False
+            or joined.get("remote_git_writes") != 0
+            or joined.get("production_authority") is not False):
+        fail("#604 CP074 static contract promoted LAB to Core authority")
+
     authority = load(P0 / "authority-map-v0.1.json")
     if authority.get("single_external_effect_authority") is not True:
         fail("Phase 0 must preserve single external-effect authority")

@@ -1,0 +1,18 @@
+{
+  "audience": "OFFICE_604_CP070_SYNTHETIC_VERIFY_ONLY",
+  "effect_kind": "NONE",
+  "host_id": "MacMiniOffice2.local",
+  "issuer_id": "vf604-cp070-synthetic-not-core",
+  "issuer_role": "LAB_SIMULATED_ONLY",
+  "job_key": "cp058-windows-merge-exact-int-proposal",
+  "lease_epoch": 7,
+  "model_source_sha256": "544908a800b3546b9e5ee0bba57a6395b95f99a4aef6fd5d931e73e89631b5e3",
+  "production_authority": false,
+  "provider_lease_id": "SYNTHETIC_NOT_ETCD",
+  "provider_live_revocation_checked": false,
+  "provider_revision": 42,
+  "resource": "colima-velvet-qa:cpu",
+  "schema": "velvetos.office-v2.604.synthetic-signed-bound-capability.v1",
+  "target": "quarantine/windows_merge.py",
+  "worker_os_uid": 65534
+}
