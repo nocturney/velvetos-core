@@ -40,6 +40,32 @@ def load(path: Path) -> dict:
 
 
 def main() -> int:
+    # CP076: only static mutation checks in CI; never invoke the Linux guest.
+    cp076 = ROOT / "scripts" / "vf_office_v2_604_linux_signed_uid_git_join_cp076.py"
+    if (not cp076.is_file()
+            or hashlib.sha256(cp076.read_bytes()).hexdigest() !=
+            "e156c17221810364d6491e0dd6ec4ba431258944f686698373943af767423265"):
+        fail("#604 CP076 fixed OS-principal signer/sink source SHA drift")
+    cp076_probe = subprocess.run(
+        [sys.executable, "-B", str(cp076), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=18)
+    if cp076_probe.returncode != 0:
+        fail("#604 CP076 offline signed-scope selftest denied: " + cp076_probe.stdout[:160])
+    try:
+        cp076_receipt = json.loads(cp076_probe.stdout)
+    except ValueError:
+        fail("#604 CP076 offline receipt is not valid JSON")
+    if (cp076_receipt.get("status") != "PASS_CP076_STATIC_23_NEGATIVES"
+            or cp076_receipt.get("claim_mutation_denials") != 19
+            or cp076_receipt.get("peer_uid_denials") != 4
+            or cp076_receipt.get("real_signer_created") is not False
+            or cp076_receipt.get("real_sink_launched") is not False
+            or cp076_receipt.get("provider_lease") is not False
+            or cp076_receipt.get("model_source_executed") is not False
+            or cp076_receipt.get("remote_git_writes") != 0
+            or cp076_receipt.get("production_authority") is not False):
+        fail("#604 CP076 offline guard falsely admitted a writer or issuer")
+
     authority = load(P0 / "authority-map-v0.1.json")
     if authority.get("single_external_effect_authority") is not True:
         fail("Phase 0 must preserve single external-effect authority")
