@@ -4,7 +4,7 @@
 
 ## Delivered implementation
 
-Source: [scripts/vf_office_v2_604_local_git_revoke_txn_cp079.py](../../../..//scripts/vf_office_v2_604_local_git_revoke_txn_cp079.py).
+Source: [scripts/vf_office_v2_604_local_git_revoke_txn_cp079.py](../../../../scripts/vf_office_v2_604_local_git_revoke_txn_cp079.py).
 
 Exact Python source SHA256: `15c47c393ff592acc3cb8e820c5f1a65626e2dc6cd475580d402393616b947b0`. Git content blob SHA: `8d212f849b599ba569f96d2b025f7ea92dad7020`.
 
