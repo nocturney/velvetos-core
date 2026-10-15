@@ -40,6 +40,29 @@ def load(path: Path) -> dict:
 
 
 def main() -> int:
+    # CP071 native OS composition: LAB fixed literal only, never a model executor.
+    cp071 = ROOT / "scripts" / "vf_office_v2_604_uid_landlock_seccomp_compose_lab.py"
+    if (not cp071.is_file()
+            or hashlib.sha256(cp071.read_bytes()).hexdigest() !=
+            "36198125d3ce668017ffb54effce74ea1fc8c85f21b89b5ec246fd735f96e279"):
+        fail("CP071 fixed compositor source integrity drift")
+    p = subprocess.run([sys.executable, "-B", str(cp071), "selftest"],
+                       cwd=ROOT, capture_output=True, text=True, timeout=16)
+    if p.returncode:
+        fail("CP071 fixed compositor selftest failed: " + p.stdout[:200])
+    try:
+        result = json.loads(p.stdout)
+    except ValueError:
+        fail("CP071 compositor did not return JSON")
+    if (result.get("status") != "PASS_CP071_COMPOSED_STATIC_ONLY"
+            or result.get("negative_mutations") != 38
+            or result.get("native_cases") != 31
+            or result.get("model_source_executed") is not False
+            or result.get("core_signed_lease") is not False
+            or result.get("git_write_calls") != 0
+            or result.get("production_authority") is not False):
+        fail("CP071 false positive admission or unsafe compositor drift")
+
     authority = load(P0 / "authority-map-v0.1.json")
     if authority.get("single_external_effect_authority") is not True:
         fail("Phase 0 must preserve single external-effect authority")
