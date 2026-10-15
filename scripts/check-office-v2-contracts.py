@@ -40,6 +40,34 @@ def load(path: Path) -> dict:
 
 
 def main() -> int:
+    # CP074: static contract for actual mTLS etcd + native local Git CAS
+    # composed LAB. This selftest never launches provider or executes a worker.
+    cp074 = ROOT / "scripts" / "vf_office_v2_604_auth_mtls_localgit_join_cp074.py"
+    if (not cp074.is_file()
+            or hashlib.sha256(cp074.read_bytes()).hexdigest() !=
+            "1b7f9edad5dc23fea5bdc12fc4ce49296645791da5ddfda9a532fa81e32a5639"):
+        fail("#604 CP074 native mTLS provider/local Git source pin drift")
+    native_join = subprocess.run(
+        [sys.executable, "-B", str(cp074), "selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=20)
+    if native_join.returncode != 0:
+        fail("#604 CP074 strict offline selftest failed: " + native_join.stdout[:160])
+    try:
+        joined = json.loads(native_join.stdout)
+    except ValueError:
+        fail("#604 CP074 strict offline selftest invalid JSON")
+    if (joined.get("status") != "PASS_CP074_STATIC_NO_PROVIDER_NO_GIT"
+            or joined.get("claim_mutations_denied") != 15
+            or joined.get("owner_and_intent_mutations_denied") != 9
+            or joined.get("native_expected_checks") != 22
+            or joined.get("signed_core_provider") is not False
+            or joined.get("live_provider_started") is not False
+            or joined.get("model_source_executed") is not False
+            or joined.get("github_credentials") is not False
+            or joined.get("remote_git_writes") != 0
+            or joined.get("production_authority") is not False):
+        fail("#604 CP074 static contract promoted LAB to Core authority")
+
     authority = load(P0 / "authority-map-v0.1.json")
     if authority.get("single_external_effect_authority") is not True:
         fail("Phase 0 must preserve single external-effect authority")
