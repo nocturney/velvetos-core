@@ -40,6 +40,40 @@ def load(path: Path) -> dict:
 
 
 def main() -> int:
+    # CP070: cryptographic signature != authoritative live Core lease.
+    cp070 = ROOT / 'scripts' / 'vf_office_v2_604_signed_scope_lab.py'
+    if not cp070.is_file() or hashlib.sha256(cp070.read_bytes()).hexdigest() != (
+            '48dce2a1f72f768d0532049df5b4e4dc426ccd043339d966a498105f51c1a475'):
+        fail('CP070 detached signature verifier source SHA drift')
+    proof = subprocess.run([sys.executable, '-B', str(cp070), 'selftest'],
+                           cwd=ROOT, capture_output=True, text=True, timeout=18)
+    if proof.returncode:
+        fail('CP070 synthetic signature scope selftest failed: ' + proof.stdout[:200])
+    try:
+        proof_row = json.loads(proof.stdout)
+    except ValueError:
+        fail('CP070 signature proof is not JSON')
+    if (proof_row.get('status') != 'PASS_SYNTHETIC_ED25519_BINDING_NO_CORE_AUTHORITY'
+            or proof_row.get('valid_signatures') != 4
+            or proof_row.get('signed_wrong_identity_rejected') != 3
+            or proof_row.get('unsigned_tamper_denials') != 11
+            or proof_row.get('core_provider_live_authenticated') is not False
+            or proof_row.get('core_signed_lease_issued') is not False
+            or proof_row.get('external_git_effect_authorized') is not False
+            or proof_row.get('git_write_calls') != 0
+            or proof_row.get('production_authority') is not False):
+        fail('CP070 false issuer authority / signed scope acceptance')
+    denied = subprocess.run([sys.executable, '-B', str(cp070), 'admit'],
+                            cwd=ROOT, capture_output=True, text=True, timeout=8)
+    try:
+        denied_row = json.loads(denied.stdout)
+    except ValueError:
+        fail('CP070 admission denial not JSON')
+    if (denied.returncode != 2
+            or denied_row.get('status') != 'FAIL_CLOSED'
+            or denied_row.get('reason') != 'NO_CORE_PROVIDER_REVOCATION_AT_SINK_NEVER_ADMIT'):
+        fail('CP070 offline signature falsely authorizes live Git effect')
+
     authority = load(P0 / "authority-map-v0.1.json")
     if authority.get("single_external_effect_authority") is not True:
         fail("Phase 0 must preserve single external-effect authority")
