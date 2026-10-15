@@ -40,6 +40,29 @@ def load(path: Path) -> dict:
 
 
 def main() -> int:
+    # CP069: low-privilege namespace test is read-only and operator-fixed.
+    # A guest PASS never admits arbitrary model-authored code or a Core lease.
+    cp069 = ROOT / 'scripts' / 'vf_office_v2_604_lowpriv_namespaces_lab.py'
+    if not cp069.is_file() or hashlib.sha256(cp069.read_bytes()).hexdigest() != (
+            '7bef7efb34fa5611627f43c8f06cedf9c8d000c04190d9d80d25fb2ffda49eea'):
+        fail('CP069 fixed Linux namespace source SHA drift')
+    cp069_result = subprocess.run([sys.executable, '-B', str(cp069), 'selftest'],
+                                 cwd=ROOT, capture_output=True, text=True, timeout=15)
+    if cp069_result.returncode:
+        fail('CP069 static boundary test failed: ' + cp069_result.stdout[:180])
+    try:
+        cp069_row = json.loads(cp069_result.stdout)
+    except ValueError:
+        fail('CP069 boundary static result not JSON')
+    if (cp069_row.get('status') != 'PASS_CP069_STATIC_NO_LIVE_GUEST'
+            or cp069_row.get('fixed_case_count') != 13
+            or cp069_row.get('mutation_denials') != 17
+            or cp069_row.get('model_source_executed') is not False
+            or cp069_row.get('core_lease_issued') is not False
+            or cp069_row.get('git_write_calls') != 0
+            or cp069_row.get('production_authority') is not False):
+        fail('CP069 unsafe native OS/agent admission claim')
+
     authority = load(P0 / "authority-map-v0.1.json")
     if authority.get("single_external_effect_authority") is not True:
         fail("Phase 0 must preserve single external-effect authority")
