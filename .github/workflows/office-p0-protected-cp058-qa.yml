@@ -1,0 +1,38 @@
+name: Office P0 CP058 Protected Main Repair QA (No Credentials)
+
+# Phase A (this PR): source-only. GitHub will NOT use this workflow_run YAML
+# until reviewed and merged into protected main. Never trust PR-authored policy.
+on:
+  workflow_run:
+    workflows:
+      - VelvetOS Core Sensors
+    types:
+      - completed
+
+# workflow_run otherwise permits elevated token. Explicitly ZERO permissions.
+permissions: {}
+jobs:
+  exact-cp058-protected-main-hidden-qa:
+    if: ${{ github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'test/office612-cp058-') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    permissions: {}
+    steps:
+      - name: Protected default-branch policy checkout only
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          path: policy
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Untrusted PR HEAD source bytes only (never execute its scripts)
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          path: candidate
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Exact CP058 repair byte/hash and negative-source admission
+        run: python3 -I -B policy/scripts/vf_office_v2_p0_protected_cp058_qa.py selftest
+      - name: Execute only pinned repaired source inside no-credential Docker guest
+        run: python3 -I -B policy/scripts/vf_office_v2_p0_protected_cp058_qa.py run
