@@ -1,0 +1,1016 @@
+{
+  "schema": "velvetos.office604.cp078.adversarial-schedules.review.v1",
+  "status": "DATA_ONLY_NOT_EXECUTED",
+  "date": "2026-10-15",
+  "safety_admission": "RED",
+  "main_sha_at_authoring": "2c58539bf662af0c2e855dd5b3af2bd9b4fd2523",
+  "cp077_head_sha": "2f9035b9b366353c35a6a224608c8e4c23709dc8",
+  "cp077_source_sha256": "ee4ab16328609ac1a025fbfdd7596e297d409ed332961db90d75db3ef2ac9b54",
+  "revocation_semantics": "OPTION_A_PROPOSED_NOT_APPROVED",
+  "notes": [
+    "These are unexecuted, data-only test specifications, except the historical CP077 unsafe witness which was previously reproduced.",
+    "Do not infer security admission from data-only schedules or 60/60 CP077 expected test outcomes.",
+    "No live GitHub credentials, provider, model-authored source or production effect authorized.",
+    "CP078-R1 added 28 data-only adversarial schedules; none were executed and no source admission follows."
+  ],
+  "case_count": 70,
+  "cases": [
+    {
+      "case_id": "legacy_late_revoke_unsafe",
+      "kind": "CP077_KNOWN_UNSAFE_BASELINE",
+      "description": "CP077 baseline: revoke after final etcd read before local Git CAS",
+      "schedule": [
+        "PREPARE",
+        "LAST_PROVIDER_READ_OK",
+        "REVOKE_REQUESTED",
+        "LOCAL_GIT_UPDATE"
+      ],
+      "expected_authority": "LEGACY_UNSAFE_EFFECT",
+      "expected_remote_effect": "UNSAFE_STALE_REF_CHANGED",
+      "security_assertion": "Baseline NEGATIVE witness; 60/60 expected outcomes included real security failure; NOT an acceptance PASS.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "revoke_before_prepare",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Issuer processes revoke before durable prepare",
+      "schedule": [
+        "REVOKE_REQUESTED",
+        "PREPARE"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Issuer must block prepare and admission.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "revoke_after_prepare_before_admission",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Issuer processes revoke after intent prepared",
+      "schedule": [
+        "PREPARE",
+        "REVOKE_REQUESTED",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "No extra etcd read may substitute for same-authority transaction.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "race_revoke_wins",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Concurrent revoke/admission serializes revoke first",
+      "schedule": [
+        "PREPARE",
+        "RACE_START",
+        "REVOKE_REQUESTED",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Provider transaction order is explicit.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "race_admit_wins",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Concurrent revoke/admission serializes admission first",
+      "schedule": [
+        "PREPARE",
+        "RACE_START",
+        "COMMIT_ADMITTED",
+        "REVOKE_REQUESTED",
+        "REMOTE_SEND",
+        "VERIFY_EFFECT"
+      ],
+      "expected_authority": "DRAIN_UNTIL_TERMINAL",
+      "expected_remote_effect": "AT_MOST_ONE_EXACT",
+      "security_assertion": "Option A: effect after request allowed; no effective revoke ACK until terminal.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "revoke_at_prior_last_check",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Revoke after last non-atomic read but before the new provider admission transaction",
+      "schedule": [
+        "PREPARE",
+        "LAST_PROVIDER_READ_OK",
+        "REVOKE_REQUESTED",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Permanent fixed version of CP077 unsafe postcheck barrier.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "revoke_after_admission_before_send",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Revoke request after irrevocable admission but before dispatch",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "REVOKE_REQUESTED",
+        "SEND_START",
+        "REMOTE_SEND",
+        "REMOTE_CAS_OK",
+        "VERIFY_EFFECT"
+      ],
+      "expected_authority": "DRAIN_UNTIL_TERMINAL",
+      "expected_remote_effect": "AT_MOST_ONE_EXACT",
+      "security_assertion": "Requires clear operator revocation semantics; no premature effective ACK.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "revoke_mid_network",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Revoke after network send but before response",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "SEND_START",
+        "REMOTE_SEND",
+        "REVOKE_REQUESTED",
+        "LOST_RESPONSE"
+      ],
+      "expected_authority": "FROZEN_UNKNOWN",
+      "expected_remote_effect": "AMBIGUOUS_UNKNOWN",
+      "security_assertion": "No retry; effect may land after request; no REVOKED_EFFECTIVE ACK.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "revoke_after_remote_before_readback",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Revoke while independent verifier has not confirmed effect",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "REMOTE_CAS_OK",
+        "REVOKE_REQUESTED",
+        "VERIFY_READBACK"
+      ],
+      "expected_authority": "DRAIN_UNTIL_TERMINAL",
+      "expected_remote_effect": "AT_MOST_ONE_EXACT",
+      "security_assertion": "Ack effective only after exact remote readback and authorship evidence.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "revoke_after_terminal",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Revocation after terminal reconciliation",
+      "schedule": [
+        "VERIFIED_EFFECT",
+        "REVOKE_REQUESTED",
+        "REVOKED_EFFECTIVE"
+      ],
+      "expected_authority": "EFFECTIVE",
+      "expected_remote_effect": "NONE_NEW",
+      "security_assertion": "No post-effective new effects.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "ttl_expires_before_admission",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Real provider TTL expiry before commit transaction",
+      "schedule": [
+        "PREPARE",
+        "LEASE_EXPIRED",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Provider must not issue grant on expired lease.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "ttl_expires_after_admission",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Natural TTL expiry after immutable admission",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "LEASE_EXPIRED",
+        "REMOTE_SEND",
+        "VERIFY_EFFECT"
+      ],
+      "expected_authority": "DRAIN_UNTIL_TERMINAL",
+      "expected_remote_effect": "AT_MOST_ONE_EXACT",
+      "security_assertion": "TTL does not revoke already admitted irreversible permission under Option A.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "clock_rollback",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Local wall clock moved backward after revoke",
+      "schedule": [
+        "REVOKE_REQUESTED",
+        "CLOCK_ROLLBACK",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Epoch/provider revision dominates local time.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "wrong_worker_uid",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Valid signature with kernel OS peer UID mismatch",
+      "schedule": [
+        "SIGNED_REQUEST",
+        "PEER_UID_MISMATCH",
+        "PREPARE"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Kernel peer verified by sink.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "wrong_signer_key",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Wrong Ed25519 signer public key fingerprints",
+      "schedule": [
+        "SIGNED_REQUEST",
+        "SIGNER_KEY_MISMATCH",
+        "PREPARE"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Exact issuer-approved key pin.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "wrong_generation",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Signed stale generation submitted after successor",
+      "schedule": [
+        "GENERATION_CHANGE",
+        "STALE_SIGNED_REQUEST",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Stale owner/generation rejected in provider txn.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "wrong_host",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Signed claim issued to a different physical host",
+      "schedule": [
+        "SIGNED_REQUEST",
+        "HOST_MISMATCH",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Physical host binding enforced, not online status.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "wrong_task",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Different task attempted with otherwise valid scope",
+      "schedule": [
+        "SIGNED_REQUEST",
+        "TASK_MISMATCH",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Task identity immutable.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "wrong_gpu",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Leased GPU differs from proposed executor GPU",
+      "schedule": [
+        "SIGNED_REQUEST",
+        "GPU_MISMATCH",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "No parallel GPU collision.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "wrong_ref",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Ref switched from task branch to protected main",
+      "schedule": [
+        "SIGNED_REQUEST",
+        "REF_MISMATCH",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Full ref fixed in grant.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "wrong_old_oid",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Worker replaces expected oldOID with current remote tip",
+      "schedule": [
+        "SIGNED_REQUEST",
+        "OLD_OID_SUBSTITUTION",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Never refresh an immutable expected-old ref.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "wrong_source_sha",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Byte-changed generated source after signing",
+      "schedule": [
+        "SIGNED_REQUEST",
+        "SOURCE_SHA_CHANGED",
+        "PREPARE"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Pinned exact source and Git tree verified.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "wrong_sink_uid",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Second sink process uses another OS identity",
+      "schedule": [
+        "SIGNED_REQUEST",
+        "SINK_OS_UID_MISMATCH",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Only credential owner and authorized SO_PEERCRED actor.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "replayed_nonce",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Valid previously consumed nonce replayed",
+      "schedule": [
+        "VERIFIED_EFFECT",
+        "REPLAY_IDENTICAL_NONCE",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Provider intent version prevents duplicate.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "two_hosts_same_ref",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Two authorized host/GPU claims try same repo/ref",
+      "schedule": [
+        "HOST_A_ADMIT",
+        "HOST_B_ADMIT_SAME_REF"
+      ],
+      "expected_authority": "SECOND_DENIED",
+      "expected_remote_effect": "AT_MOST_ONE_EXACT",
+      "security_assertion": "Repo/ref exclusion independent of GPU exclusivity.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "two_refs_same_gpu",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Two task refs share same physical GPU",
+      "schedule": [
+        "GPU_LEASE_A_ACTIVE",
+        "GPU_LEASE_B_ATTEMPT"
+      ],
+      "expected_authority": "SECOND_DENIED",
+      "expected_remote_effect": "NONE_SECOND",
+      "security_assertion": "Resource exclusion independent of repo/ref separation.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "issuer_crash_before_admission",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Issuer restarts after PREPARED before admission",
+      "schedule": [
+        "PREPARE",
+        "PROVIDER_CRASH_RESTART",
+        "COMMIT_ADMIT_STALE"
+      ],
+      "expected_authority": "DENY_UNTIL_RECONCILED",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "No unlogged grant from stale WAL.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "issuer_crash_after_admission",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Issuer restarts after durable admitted revision",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "PROVIDER_CRASH_RESTART",
+        "EFFECT_IN_FLIGHT"
+      ],
+      "expected_authority": "FROZEN_UNKNOWN_UNTIL_READBACK",
+      "expected_remote_effect": "AMBIGUOUS_UNKNOWN",
+      "security_assertion": "Admission survives restart; no successor while unknown.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "sink_crash_before_send_started",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Sink dies after grant, before durable send-start marker",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "SINK_CRASH_BEFORE_SEND_STARTED",
+        "INDEPENDENT_READBACK"
+      ],
+      "expected_authority": "FROZEN_UNTIL_PROVEN",
+      "expected_remote_effect": "NONE_IF_PROVEN",
+      "security_assertion": "No absence-of-effect inference from missing ACK alone.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "sink_crash_after_send_started",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Sink dies just after durable network send marker",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "SEND_START",
+        "SINK_CRASH",
+        "INDEPENDENT_READBACK"
+      ],
+      "expected_authority": "FROZEN_UNKNOWN",
+      "expected_remote_effect": "AMBIGUOUS_UNKNOWN",
+      "security_assertion": "Durable unknown, no blind retry.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "http_timeout_after_accept",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "GitHub accepts exact ref update but caller times out",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "REMOTE_CAS_OK",
+        "HTTP_TIMEOUT",
+        "RESTART"
+      ],
+      "expected_authority": "FROZEN_UNKNOWN_UNTIL_PROVEN",
+      "expected_remote_effect": "AMBIGUOUS_UNKNOWN",
+      "security_assertion": "Remote ref readback plus intent provenance required.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "github_409_ref_conflict",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Another owner advanced tip so beforeOid fails",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "THIRD_PARTY_ADVANCE",
+        "GRAPHQL_BEFORE_OID_MISMATCH"
+      ],
+      "expected_authority": "TERMINAL_DENIED_ONLY_IF_AUTHENTICATED",
+      "expected_remote_effect": "NONE_FROM_SINK",
+      "security_assertion": "Fast-forward success is not oldOID CAS.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "github_aba_ref_race",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Ref moves old -> thirdParty -> old before update",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "THIRD_PARTY_MOVE",
+        "THIRD_PARTY_RESTORE",
+        "GRAPHQL_CAS"
+      ],
+      "expected_authority": "FROZEN_UNKNOWN",
+      "expected_remote_effect": "AMBIGUOUS_UNKNOWN",
+      "security_assertion": "oldOID alone does not prove lack of intervening effects.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "same_after_oid_external_writer",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "A different writer sets exact same afterOID",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "EXTERNAL_IDENTICAL_REF_WRITE",
+        "READBACK_SAME_OID"
+      ],
+      "expected_authority": "FROZEN_UNKNOWN",
+      "expected_remote_effect": "AMBIGUOUS_UNKNOWN",
+      "security_assertion": "Readback alone does not prove sink authored the effect.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "api_5xx_unknown",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Remote API yields 5xx after request was transmitted",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "REMOTE_SEND",
+        "HTTP_5XX",
+        "READBACK_AMBIGUOUS"
+      ],
+      "expected_authority": "FROZEN_UNKNOWN",
+      "expected_remote_effect": "AMBIGUOUS_UNKNOWN",
+      "security_assertion": "No retry or false no-effect.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "graphql_unavailable",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "No approved GraphQL expected-old ref update capability",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "GRAPHQL_UNAVAILABLE",
+        "REST_FORCE_FALSE_FALLBACK_ATTEMPT"
+      ],
+      "expected_authority": "DENY_WEAKER_FALLBACK",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Never degrade to REST force:false as exact oldOID CAS.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "invalid_readback_checksum",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Verifier's audit digest differs from intended commit/tree",
+      "schedule": [
+        "REMOTE_RESPONSE_OK",
+        "READBACK_HASH_MISMATCH"
+      ],
+      "expected_authority": "FROZEN_UNKNOWN",
+      "expected_remote_effect": "AMBIGUOUS_UNKNOWN",
+      "security_assertion": "Receipt is not a success if source/tree differ.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "reconcile_when_undetermined",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Independent reconciler cannot distinguish no write from overwritten write",
+      "schedule": [
+        "EFFECT_IN_FLIGHT",
+        "CRASH",
+        "REMOTE_REF_EQUALS_OLD_OID",
+        "AUDIT_UNAVAILABLE"
+      ],
+      "expected_authority": "FROZEN_UNKNOWN",
+      "expected_remote_effect": "AMBIGUOUS_UNKNOWN",
+      "security_assertion": "Old remote ref alone cannot exclude ABA/rollbacks.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "unknown_blocks_successor",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Owner attempts to release host/GPU/ref during UNKNOWN",
+      "schedule": [
+        "FROZEN_UNKNOWN",
+        "REVOKE_REQUESTED",
+        "NEW_OWNER_REQUEST"
+      ],
+      "expected_authority": "REVOKE_PENDING_SUCCESSOR_DENIED",
+      "expected_remote_effect": "NONE_NEW",
+      "security_assertion": "Never show effective revoke or grant overlapping resource while unresolved.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "post_effective_replay",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "Closed generation submits newly signed but stale request",
+      "schedule": [
+        "REVOKED_EFFECTIVE",
+        "OLD_GENERATION_SIGNED_REQUEST",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "No effect after effective revoke.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "untrusted_ci_status_writer",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "PR code attempts to mark its own trusted check PASS",
+      "schedule": [
+        "UNTRUSTED_CHECK_ALL_JOB",
+        "STATUSES_WRITE_ATTEMPT",
+        "SECURITY_ATTESTATION"
+      ],
+      "expected_authority": "NOT_TRUSTED",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Separate policy runner and privileged status publisher required.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "delayed_webhook_out_of_scope",
+      "kind": "CP078_EXPECTED_ONLY",
+      "description": "GitHub Actions/webhook executes well after verified ref mutation",
+      "schedule": [
+        "VERIFIED_EFFECT",
+        "REVOKED_EFFECTIVE",
+        "ASYNC_WEBHOOK"
+      ],
+      "expected_authority": "OUT_OF_SCOPE_NEEDS_SEPARATE_FENCE",
+      "expected_remote_effect": "DOWNSTREAM_UNGOVERNED",
+      "security_assertion": "Must not imply ref-only revocation prevents downstream effects.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "revoke_submitted_not_committed",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "UI click before issuer transaction commits",
+      "schedule": [
+        "REVOKE_SUBMITTED",
+        "PROVIDER_PARTITION",
+        "COMMIT_ADMITTED"
+      ],
+      "expected_authority": "ACK_SUBMISSION_ONLY_COMMIT_MAY_WIN",
+      "expected_remote_effect": "AT_MOST_ONE_SCOPED",
+      "security_assertion": "Submission has not linearized; never display REVOKED_EFFECTIVE or promise strict click-time cutoff.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "revoke_submit_lost_ack",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Issuer commits revoke but client loses ACK",
+      "schedule": [
+        "REVOKE_REQUESTED_COMMITTED",
+        "RESPONSE_LOST",
+        "CLIENT_RETRIES_STATUS_QUERY"
+      ],
+      "expected_authority": "REVOKE_REQUEST_UNKNOWN_UNTIL_READBACK",
+      "expected_remote_effect": "NONE_NEW_AFTER_COMMITTED_REVOKE",
+      "security_assertion": "Read issuer quorum record, no naive duplicate revoke or premature ACK.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "issuer_follower_stale_read",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Follower returns owner state from before revoke commit",
+      "schedule": [
+        "REVOKE_REQUESTED_COMMITTED",
+        "FOLLOWER_READ_STALE_ACTIVE",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY_IN_QUORUM_TXN",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Only quorum-serialized current generation may issue grant.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "http_library_auto_retry",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "HTTP client retries updateRefs after lost response",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "SEND_START",
+        "REMOTE_CAS_OK",
+        "RESPONSE_LOST",
+        "SDK_RETRY"
+      ],
+      "expected_authority": "RETRY_DENIED_AND_FREEZE",
+      "expected_remote_effect": "AT_MOST_ONE_CLIENT_SEND",
+      "security_assertion": "Implicit middleware re-send breaks at-most-one-attempt guarantee; no retry.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "client_mutation_id_not_dedupe",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Caller assumes clientMutationId is server idempotency key",
+      "schedule": [
+        "REMOTE_SEND",
+        "TIMEOUT",
+        "RESEND_SAME_CLIENT_MUTATION_ID"
+      ],
+      "expected_authority": "DENY_REPLAY",
+      "expected_remote_effect": "AT_MOST_ONE_CLIENT_SEND",
+      "security_assertion": "GitHub documentation does not promise server-side deduplication by clientMutationId.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "crash_after_durable_send_marker_before_wire",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Sink records SEND_START then dies before socket call",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "SEND_START_DURABLE",
+        "SINK_SIGKILL",
+        "NO_WIRE_EVIDENCE"
+      ],
+      "expected_authority": "FROZEN_UNKNOWN_UNTIL_PROVEN",
+      "expected_remote_effect": "UNKNOWN_OR_NONE_PROVEN",
+      "security_assertion": "Cannot safely resend or claim no send from missing ACK.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "duplicate_after_ref_aba",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Duplicate send after remote ref returns to old OID",
+      "schedule": [
+        "SEND1_OLD_TO_NEW",
+        "THIRD_PARTY_RESET_TO_OLD",
+        "SEND2_SAME_BEFORE_OID"
+      ],
+      "expected_authority": "SECOND_SEND_FORBIDDEN",
+      "expected_remote_effect": "AT_MOST_ONE_CLIENT_SEND",
+      "security_assertion": "BeforeOid may match again after ABA; immutable intent cannot be retried.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "late_arrival_after_false_no_effect",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Remote send arrives after verifier observed old ref",
+      "schedule": [
+        "REMOTE_SEND_DELAYED",
+        "READBACK_OLD_OID",
+        "FALSE_VERIFIED_NO_EFFECT",
+        "REMOTE_CAS_LANDS"
+      ],
+      "expected_authority": "FROZEN_UNKNOWN_NO_EFFECTIVE_ACK",
+      "expected_remote_effect": "AMBIGUOUS_UNKNOWN",
+      "security_assertion": "Readback snapshot is not proof remote request cannot later commit.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "audit_record_missing",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Remote tip matches new OID but no authorship audit",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "REMOTE_SEND_AMBIGUOUS",
+        "READBACK_NEW_OID",
+        "NO_AUDIT"
+      ],
+      "expected_authority": "FROZEN_UNKNOWN",
+      "expected_remote_effect": "AMBIGUOUS_UNKNOWN",
+      "security_assertion": "Matching SHA alone does not prove actor or request provenance.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "readback_misattributes_same_oid",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Different principal wrote exactly target commit",
+      "schedule": [
+        "OTHER_WRITER_SETS_NEW_OID",
+        "SINK_READBACK_NEW_OID"
+      ],
+      "expected_authority": "FROZEN_UNKNOWN",
+      "expected_remote_effect": "EXTERNAL_REF_UPDATE",
+      "security_assertion": "Do not certify sink write merely from equal afterOid.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "aba_no_effect_false_positive",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Ref moved and restored prior to no-effect sampling",
+      "schedule": [
+        "REMOTE_EFFECT",
+        "THIRD_PARTY_REVERT",
+        "READBACK_OLD_OID"
+      ],
+      "expected_authority": "FROZEN_UNKNOWN",
+      "expected_remote_effect": "AMBIGUOUS_UNKNOWN",
+      "security_assertion": "Current oldOid cannot disprove historical effect.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "candidate_commit_missing_at_destination",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "afterOID has not been uploaded to destination database",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "VERIFY_DEST_COMMIT_MISSING",
+        "GRAPHQL_REF_UPDATE"
+      ],
+      "expected_authority": "DENY_UNTIL_SEPARATE_PRESTAGE",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Ref grants cannot authorize ad hoc remote object upload.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "object_prestage_wrong_source",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Remote object differs from pinned source/tree",
+      "schedule": [
+        "OBJECT_PRESTAGE_AUTHORIZED",
+        "DEST_TREE_SHA_MISMATCH",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Independently compare immutable commit/tree/parent/source scope.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "object_prestage_without_approval",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Untrusted worker attempts Git object write before ref grant",
+      "schedule": [
+        "WORKER_NO_PRESTAGE_SCOPE",
+        "GITHUB_BLOB_CREATE"
+      ],
+      "expected_authority": "DENY_EXTERNAL_OBJECT_WRITE",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Object staging needs separate approved credential/effect scope.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "objects_created_after_admission_before_send",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Sink tries to fill missing objects using ref-only admission",
+      "schedule": [
+        "COMMIT_ADMITTED_REF_ONLY",
+        "OBJECT_UPLOAD_NOT_PREAUTHORIZED",
+        "SEND_START"
+      ],
+      "expected_authority": "DENY_OR_FREEZE",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Cannot silently convert ref grant into arbitrary blob creation.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "external_admin_ref_update_during_revocation",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Other GitHub actor mutates ref while system revokes",
+      "schedule": [
+        "REVOKE_REQUESTED_COMMITTED",
+        "THIRD_PARTY_REF_UPDATE",
+        "SINK_READBACK"
+      ],
+      "expected_authority": "OUT_OF_SYSTEM_SCOPE_FREEZE",
+      "expected_remote_effect": "EXTERNAL_REF_UPDATE",
+      "security_assertion": "System guarantees cannot cover uncontrolled privileged third parties.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "credential_exposed_to_worker",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Worker can read GitHub App token belonging to sink",
+      "schedule": [
+        "WORKER_UID_READ_SINK_TOKEN",
+        "ATTEMPT_BYPASS_CORE"
+      ],
+      "expected_authority": "DENY_SECURITY_ADMISSION",
+      "expected_remote_effect": "NONE_ALLOWED",
+      "security_assertion": "Proof requires separate credential custody and runtime isolation.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "branch_ruleset_review_not_required",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Protected main only requires check-all, not mandatory PR review",
+      "schedule": [
+        "AUTO_WRITER_REQUESTS_MAIN",
+        "CHECK_ALL_SUCCESS",
+        "NO_REVIEW_RULE"
+      ],
+      "expected_authority": "OWNER_APPROVAL_BLOCK",
+      "expected_remote_effect": "NONE_AUTONOMOUS",
+      "security_assertion": "Green status does not replace human security review gate.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "multi_key_partial_acquire",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Task holds ref but GPU allocation split across separate transactions",
+      "schedule": [
+        "TASK_REF_RESERVE",
+        "INTERLEAVE_OTHER_HOST_GPU_RESERVE",
+        "ADMIT"
+      ],
+      "expected_authority": "DENY_NONATOMIC_SCOPE",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "All overlapping task/host/GPU/ref resources must serialize atomically.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "cross_task_same_ref_generation",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Different task IDs claim identical ref during unresolved intent",
+      "schedule": [
+        "TASK_A_COMMIT_ADMITTED",
+        "TASK_B_OTHER_EPOCH_SAME_REF",
+        "ADMIT_B"
+      ],
+      "expected_authority": "DENY_SECOND_GRANT",
+      "expected_remote_effect": "NONE_SECOND",
+      "security_assertion": "Ref reservation must be global across tasks.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "successor_during_draining_different_task",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Successor uses different GPU but same repo/ref while prior is draining",
+      "schedule": [
+        "REVOKE_DRAINING_A",
+        "TASK_B_DIFFERENT_GPU_SAME_REF",
+        "ADMIT_B"
+      ],
+      "expected_authority": "DENY_SUCCESSOR",
+      "expected_remote_effect": "NONE_SECOND",
+      "security_assertion": "Repo/ref overlaps blocked until all prior attempts terminal.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "graphql_before_oid_missing",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Ref update has null beforeOid on existing branch",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "GRAPHQL_BEFORE_OID_NULL",
+        "SEND"
+      ],
+      "expected_authority": "DENY_BEFORE_SEND",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Non-null exact expected-old OID is mandatory for normal ref mutation.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "graphql_force_true",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Signed request tries non-fast-forward override",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "GRAPHQL_FORCE_TRUE",
+        "SEND"
+      ],
+      "expected_authority": "DENY_BEFORE_SEND",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Force true not authorized by scope or branch rules.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "graphql_after_oid_zero_deletion",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "RefUpdate would delete branch via zero afterOid",
+      "schedule": [
+        "COMMIT_ADMITTED",
+        "AFTER_OID_ALL_ZERO",
+        "SEND"
+      ],
+      "expected_authority": "DENY_BEFORE_SEND",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Ref deletion is different unauthorized effect.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "lease_renewal_after_revoke",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Renewed TTL falsely reactivates revoked epoch",
+      "schedule": [
+        "REVOKE_REQUESTED_COMMITTED",
+        "RENEW_LEASE_SAME_EPOCH",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "A live TTL never overrides revoked generation.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "provider_quorum_lost_after_precheck",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Provider loses quorum after earlier owner read",
+      "schedule": [
+        "LAST_PROVIDER_READ_OK",
+        "QUORUM_LOST",
+        "COMMIT_ADMIT"
+      ],
+      "expected_authority": "DENY_AND_FREEZE",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "No grant without current authoritative provider transaction.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "branch_overrides_trusted_ci_policy",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "PR edits check-all workflow to mark tests pass",
+      "schedule": [
+        "PR_HEAD_EDIT_WORKFLOW",
+        "SELF_TEST_PASS",
+        "STATUS_PUBLICATION"
+      ],
+      "expected_authority": "NO_TRUSTED_STATUS",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Protected policy must be independently anchored, not the candidate YAML.",
+      "executed_in_cp078": false
+    },
+    {
+      "case_id": "status_publisher_trusts_candidate_fake_green",
+      "kind": "CP078_R1_EXPECTED_ONLY",
+      "description": "Publisher checks only success from edited candidate script",
+      "schedule": [
+        "CANDIDATE_TEST_ALWAYS_EXIT_ZERO",
+        "NEEDS_SUCCESS",
+        "STATUS_WRITE"
+      ],
+      "expected_authority": "NO_TRUSTED_STATUS",
+      "expected_remote_effect": "NONE",
+      "security_assertion": "Separating write token is necessary but cannot validate untrusted test oracle.",
+      "executed_in_cp078": false
+    }
+  ],
+  "review_revision": "R1_UNEXECUTED_SECURITY_DESK_REVIEW"
+}
