@@ -3,6 +3,8 @@
 **2026-10-15 | RFC / security-review candidate only | P0 SECURITY ADMISSION RED | DOCS ONLY**
 **Owner decision pending. Do not implement as a live GitHub writer, merge, or relax any P0 source-execution guard based on this RFC.**
 
+**R1 SECURITY CORRECTION:** This first-pass RFC has a [subsequent adversarial desk review](p0-604-cp078-r1-security-review-2026-10-15.md) and a revised [70-case data-only schedule set](p0-604-cp078-adversarial-schedules-2026-10-15.json) (formerly 42). Read those corrections BEFORE implementation. No cases in CP078 were executed. The desk review is not independent audit sign-off.
+
 ## 0. Why this RFC exists: a witnessed, not hypothetical, bug
 
 CP077 exact head: [2f9035b9b366353c35a6a224608c8e4c23709dc8](https://github.com/nocturney/velvetos-core/commit/2f9035b9b366353c35a6a224608c8e4c23709dc8).
@@ -183,3 +185,22 @@ None of A–E are completed by publishing this RFC. In particular **P0_GENERATED
 - Independently signed reviewer and evidence link: PENDING.
 
 **Current status: REVIEW-ONLY DESIGN / RED. Keep #729 and #730 Draft. Do not merge this CP078 RFC as a claim of security admission.**
+
+
+## 12. CP078-R1 security review (post-RFC)
+
+[Read the 9 detailed findings and ten strengthened invariants](p0-604-cp078-r1-security-review-2026-10-15.md). The RFC above is a candidate, NOT an implementation-ready or independently validated safety specification.
+
+**Clarifications that override ambiguous wording above:**
+
+1. **Revocation click versus authority:** REVOKE_SUBMITTED is a client/UI observation and is NOT a committed authority event. Only REVOKE_REQUESTED_COMMITTED with a provider quorum revision races atomically against COMMIT_ADMITTED. Lost submit ACK remains REVOKE_REQUEST_UNKNOWN until issuer readback. Under Option A a grant can win while a user's click has not been durably recorded; never promise strict click-time revocation.
+2. **One grant is not one network effect:** irreversible permission is separate from durable SEND_START and remote delivery. No automatic HTTP SDK/proxy/client replay. GitHub clientMutationId is documented as a client-generated identifier, not a guaranteed deduplication key. Crash/timeout may require indefinite FROZEN_UNKNOWN.
+3. **Readback versus causal completion:** an unchanged old ref is not no-effect proof (late arrival or ABA); a matching new ref is not proof the authorized sink wrote it. REVOKED_EFFECTIVE requires positive evidence no prior admitted request can still land; when evidence is unavailable, do not ACK effective revoke.
+4. **Object pre-stage is a separate external effect:** destination afterOID commit/tree/blob must be present and match source/parent/tree before ref promotion. Any necessary upload requires independent OBJ_PRESTAGE authority/data-classification approval; do not expand a ref-only grant into arbitrary remote object writes.
+5. **All resource identities atomically reserved:** authoritative compare-and-write covers task/generation, authenticated physical host, GPU and repo/ref reservations together; otherwise unrelated task IDs or distinct GPUs can race for the same destination ref.
+6. **Scope of guarantees:** without exclusively enforced GitHub principal and branch controls, property is about *the approved VelvetOS writer only*, not all admins/apps/webhooks. Protected main mandatory PR review and actual independent QA remain missing.
+7. **CI separation:** Draft #722's token-separate publisher is necessary but insufficient if candidate code controls the test oracle; Draft #726 protected-main candidate policy remains unmerged. Neither authorizes shortcut checks of stacked CP077 via current status-write workflow.
+
+The data-only JSON now specifies **70 distinct adversarial schedules**: prior 42 plus R1 28, all with executed_in_cp078=false. The historical CP077 late-revoke outcome is still the sole previously witnessed unsafe baseline and must NOT be counted as CP078's passing test. These statements do not select Option A or B on the owner's behalf.
+
+**Security gate remains RED.** No new model-generated code execution, native provider experiment, GitHub privileged remote ref write, change to main ruleset, Codex CLI, paid inference, or Production action is admitted.
