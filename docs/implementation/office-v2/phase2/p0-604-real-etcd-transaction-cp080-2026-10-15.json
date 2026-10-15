@@ -1,0 +1,114 @@
+{
+  "schema": "velvetos.office-v2.604.cp080.real-etcd-integration-evidence.v1",
+  "date": "2026-10-15",
+  "status": "PASS_REAL_ETCD_QUORUM_TXN_LOCAL_GIT_LAB_ONLY",
+  "security_admission": "RED",
+  "source_git_path": "scripts/vf_office_v2_604_real_etcd_revoke_admit_lab_cp080.py",
+  "source_sha256": "62cb8c6550c4e926056be0404e0b007996e931865cb6766eb9b32dd5cecdc6aa",
+  "source_git_blob": "5143831cbcac6542aa6ebe2208feed753e964f3a",
+  "main_at_test": "2c58539bf662af0c2e855dd5b3af2bd9b4fd2523",
+  "environment": {
+    "host": "MacMiniOffice2.local",
+    "guest": "existing colima velvet-qa Linux aarch64 non-root",
+    "etcd": "3.6.15",
+    "etcd_sha256": "117cc09981c0f1eb378e7520be6969756c2d6a762f376944e53f7bc9800c0c59",
+    "etcdctl_sha256": "de07257495499384f91f028dbc0c8e0394e0bd572b728ac486bbadbfa1cdf275",
+    "client_endpoint": "http://127.0.0.1 ephemeral dynamically allocated",
+    "peer_endpoint": "http://127.0.0.1 ephemeral dynamically allocated",
+    "cluster": "real one-member etcd/raft quorum",
+    "mtls": false,
+    "rbac": false,
+    "disk": "temporary guest /tmp/vf604-cp080-*, cleaned in finally"
+  },
+  "execution": {
+    "totals": {
+      "runs": 4,
+      "passed_named_scenarios": 60,
+      "real_etcd_admit_vs_revoke_races": 48,
+      "admission_first": 20,
+      "revoke_first": 28,
+      "critical_production_security_gates_passed": 0
+    },
+    "runs": [
+      {
+        "index": 1,
+        "receipt_sha256": null,
+        "receipt_note": "Original exact source SHA runner stdout captured in connected device tool receipt; no standalone file hash was materialized",
+        "case_assertions_passed": 15,
+        "concurrent_provider_txns_passed": 12,
+        "winners": {
+          "admission_first": 4,
+          "revoke_first": 8
+        }
+      },
+      {
+        "index": 2,
+        "receipt_sha256": "f2d93ee5b24a29f3482b5496fd62879955842fce74de38bb9066802ce23204f4",
+        "case_assertions_passed": 15,
+        "concurrent_provider_txns_passed": 12,
+        "winners": {
+          "admission_first": 6,
+          "revoke_first": 6
+        }
+      },
+      {
+        "index": 3,
+        "receipt_sha256": "e69b3c11b4242e273b81899e1398d08e7d54afbadcbc220d77b627749f57f156",
+        "case_assertions_passed": 15,
+        "concurrent_provider_txns_passed": 12,
+        "winners": {
+          "admission_first": 5,
+          "revoke_first": 7
+        }
+      },
+      {
+        "index": 4,
+        "receipt_sha256": "e69b3c11b4242e273b81899e1398d08e7d54afbadcbc220d77b627749f57f156",
+        "case_assertions_passed": 15,
+        "concurrent_provider_txns_passed": 12,
+        "winners": {
+          "admission_first": 5,
+          "revoke_first": 7
+        }
+      }
+    ],
+    "case_names_in_every_run": [
+      "real-etcd-admission-then-revoke",
+      "ack-denied-before-terminal",
+      "one-send-marker",
+      "late-local-effect-after-request-but-before-effective",
+      "real-etcd-revoke-before-admission",
+      "effective-without-admitted-work",
+      "unknown-blocks-ack-successor-and-retry",
+      "durable-unleased-intent-after-revoke",
+      "multi-key-resource-reservation-fences-other-task",
+      "real-etcd-lease-expiry-before-admission-denies",
+      "real-etcd-lease-expiry-does-not-delete-intent",
+      "ttl-after-admit-blocks-premature-effective",
+      "12-concurrent-real-quorum-txns-exactly-one-winner",
+      "real-etcd-single-send-start-on-double-dispatch",
+      "known-unsafe-cp077-unfenced-local-git-witness"
+    ],
+    "real_provider_admission_revocation_linearization": true,
+    "real_unleased_intent_after_ttl": true,
+    "real_local_git_cas_after_committed_request": true,
+    "double_dispatch_txn_serialized": true,
+    "multi_resource_fence_single_provider_txn": true,
+    "unknown_blocks_acked_effective": true,
+    "observed_unsafe_unfenced_git_after_effective": true,
+    "cleanup_confirmed_zero_guest_tmpdirs_and_zero_cp080_provider_processes": true
+  },
+  "disclaimers": {
+    "no_new_model_cp058_source_executed": true,
+    "no_github_credentials": true,
+    "no_remote_github_effect": true,
+    "no_production_changes": true,
+    "no_real_mtls_rbac_in_this_experiment": true,
+    "no_multi_node_etcd_quorum_or_physical_host_fleet": true,
+    "no_independent_security_review": true,
+    "no_GitHub_network_request_completion_proof": true,
+    "cp078_70_schedules_executed": false,
+    "owner_option_a_vs_b_approved": false
+  },
+  "signoff": "LAB ONLY: DO NOT MERGE OR ENABLE PRIVILEGED GITHUB SINK; P0_GENERATED_SOURCE_OS_ISOLATION_NOT_ADMITTED remains"
+}
