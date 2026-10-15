@@ -209,6 +209,18 @@ def real_provider_effect_gate(root: Path) -> None:
          and again["value"]==PROVIDER_MARK
          and again["mod_revision"]==pending["mod_revision"],
          "PROVIDER_PENDING_INTENT_CHANGED")
+    if root.name=="late-revoked":
+        # EXPLICIT TOCTOU RED WITNESS in the disposable LOCAL Git only.
+        # The root controller removes the real owner AFTER the final etcd
+        # check, before the native Git ref-update call. This MUST NOT be
+        # represented as a production-safe effect fence.
+        marker=root/"endpoint"/"cp077-after-last-provider-read"
+        resumed=root/"endpoint"/"cp077-revoke-finished-after-read"
+        marker.write_text("FINAL_ETCD_OWNER_AND_INTENT_READ_PASSED\n")
+        deadline=time.monotonic()+9
+        while not resumed.exists() and time.monotonic()<deadline:
+            time.sleep(0.02)
+        need(resumed.is_file(),"POSTCHECK_ROOT_REVOCATION_BARRIER_MISSING")
     # Returning control to the original native Git call immediately below.
 
 
@@ -364,12 +376,14 @@ def exercise_case(root:Path,scenario:str,e:identity.AuthenticatedEtcd,
         body=cp076.claim(initial,expires_utc_ms=int(time.time()*1000)+60000)
         signed={"action":"effect","claim":body,
                 "signature":cp076.signed_message(dir,body)}
-        if scenario=="revoked":
+        if scenario in ("revoked","late-revoked"):
             with ThreadPoolExecutor(max_workers=1) as executor:
                 future=executor.submit(cp076.os_request,dir,
                                        cp076.WORKER_UID,signed)
                 until=time.monotonic()+8
-                notified=dir/"endpoint"/"cp077-before-effect"
+                notified=(dir/"endpoint"/(
+                    "cp077-after-last-provider-read" if scenario=="late-revoked"
+                    else "cp077-before-effect"))
                 while not notified.exists() and time.monotonic()<until:
                     time.sleep(0.03)
                 need(notified.is_file(),
@@ -379,9 +393,13 @@ def exercise_case(root:Path,scenario:str,e:identity.AuthenticatedEtcd,
                    pre is not None and pre["value"]==PROVIDER_MARK
                    and pre["lease"]==0)
                 e.ctl_ok("root","del",owner)
-                (dir/"endpoint"/"cp077-root-revocation-complete").write_text("PROVIDER_OWNER_REVOKED\n")
+                resume=(dir/"endpoint"/(
+                    "cp077-revoke-finished-after-read"
+                    if scenario=="late-revoked"
+                    else "cp077-root-revocation-complete"))
+                resume.write_text("PROVIDER_OWNER_REVOKED\n")
                 denied=future.result(timeout=10)
-            ck("revoked_root_deleted_live_owner_before_git",
+            ck(scenario+"_root_revoked_owner_before_native_Git",
                e.cli_range("root",owner) is None)
         else:
             denied=cp076.os_request(dir,cp076.WORKER_UID,signed)
@@ -406,6 +424,19 @@ def exercise_case(root:Path,scenario:str,e:identity.AuthenticatedEtcd,
             ck("normal_replay_valid_signature_denied_after_effect",
                replay["status"]=="DENIED"
                and cp076.request(dir,{"action":"snapshot"})["head"]==snap["head"])
+        elif scenario=="late-revoked":
+            # This is a deliberate security FAILURE witness:
+            # the store cannot atomically fence the Git ref after
+            # a previously successful provider check.
+            ck("late_revocation_after_last_read_still_allows_stale_local_Git",
+               denied["status"]=="ONE_LOCAL_REF_EFFECT_VERIFIED"
+               and snap["head"]!=initial and snap["state"]["effects"]==1
+               and e.cli_range("root",owner) is None)
+            ck("late_revocation_leaves_provider_pending_UNRECONCILED",
+               pending["lease"]==0
+               and e.cli_range("root",intent)["value"]==PROVIDER_MARK)
+            ck("late_revocation_test_never_authorizes_remote_sink",
+               len(cp076.ENV)>0 and cp076.REF.endswith("-local-only"))
         elif scenario in ("expired","revoked"):
             ck(scenario+"_no_git_effect_after_live_provider_denial",
                denied["status"]=="DENIED"
@@ -468,7 +499,7 @@ def native(etcd_path:str,ctl_path:str)->dict:
     with tempfile.TemporaryDirectory(prefix=ROOT_PREFIX,dir="/tmp") as temp:
         owned=Path(temp)
         owned.chmod(0o755)
-        for scenario in ("normal","revoked","expired","after"):
+        for scenario in ("normal","revoked","expired","after","late-revoked"):
             # AuthenticatedEtcd is a fresh, real, independently rooted mTLS
             # provider per scenario. Each server and WAL is disposed after.
             p=owned/(scenario+"-provider")
@@ -493,6 +524,7 @@ def native(etcd_path:str,ctl_path:str)->dict:
         "native_local_git_CAS_once":True,
         "post_git_before_ack_crash_UNKNOWN":True,
         "provider_to_git_atomicity_proven":False,
+        "deliberate_postcheck_revocation_stale_local_git_effect_reproduced":True,
         "provider_is_canonical_core604":False,
         "os_privileged_root_trust_separate_host_proven":False,
         "provider_time_remote_git_effect_fenced":False,

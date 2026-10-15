@@ -71,7 +71,7 @@ def main() -> int:
     cp077 = ROOT / "scripts" / "vf_office_v2_604_linux_etcd_uid_join_cp077.py"
     if (not cp077.is_file()
             or hashlib.sha256(cp077.read_bytes()).hexdigest() !=
-            "66459118740fb727c8381b74b1bac55335f1d4a290d068c8e0a430a5e02fec1f"):
+            "ee4ab16328609ac1a025fbfdd7596e297d409ed332961db90d75db3ef2ac9b54"):
         fail("#604 CP077 composed mTLS provider/sink source SHA drift")
     cp077_trial = subprocess.run(
         [sys.executable, "-B", str(cp077), "selftest"],
