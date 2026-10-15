@@ -18,6 +18,8 @@
 <!-- morning-green-2026-09-23 -->
 Latest verified owner Morning Brief artifact path remains historical evidence. Current scheduled Instagram truth is the Cloudflare Instagram Publisher; OpenPost is frozen and must not be used as schedule authority.
 
+**Office v2 — #612 CP072 future pretrusted CP058 Qwen9B source QA (2026-10-15, Phase A DRAFT / NOT ADMITTED):** A new no-credential, default-branch-only `workflow_run` policy can later independently verify the **exact** CP058 model-authored one-line repair in a pinned isolated Docker guest with protected-base 3 visible + 12 hidden tests. Current proof is **35/35 offline static tests only**; physical Mac `run` refuses; candidate source and data request are deliberately absent until a separate Phase B PR *after* reviewed policy merge. No model source was executed here, no Core lease, Git Sink, writer credentials or production authority. [CP072 Phase A](docs/implementation/office-v2/phase2/p0-612-protected-cp058-qa-bootstrap-cp072-2026-10-15.md).
+
 **Instagram multi-source schedule observation (PR #668, read-only candidate):** Cloudflare Publisher remains the sole VelvetOS production scheduling **writer**. Its D1 queue is not a complete view of independently scheduled Meta Business Suite posts. The [schedule observer](packages/vfigos/schedule_observer/README.md) adds a source registry, bounded authenticated Meta Scheduled UI reader, Office v2 secure Cloudflare reader, Google Calendar mirror and Instagram Graph published-media observations, with source age, identity, deduplication and explicit unknown/unavailable states. Owner-context read has been proven in an attended Windows pilot; the work is not a second scheduler, not an authority promotion, and native Instagram-app-only scheduling remains uncovered until independently verified.
 
 
@@ -204,7 +206,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <tr>
 <td align="center"><strong>23</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
 <td align="center"><strong>126</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
-<td align="center"><strong>18</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
+<td align="center"><strong>19</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
 </table>
@@ -218,7 +220,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
-| **Last verified / refreshed evidence** | `2026-10-14T16:17:19+03:00` |
+| **Last verified / refreshed evidence** | `2026-10-15T01:56:48+03:00` |
 
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>

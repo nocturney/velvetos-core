@@ -82,3 +82,5 @@ packages/vfharness/state/pr228-rollout/* text eol=lf
 # Pretrusted default-branch workflow_run policy YAML must be LF on Windows;
 # otherwise physical-host SHA verification of the trusted policy is ambiguous.
 /.github/workflows/office-p0-protected-base-c1-qa.yml text eol=lf
+# CP058 protected-main QA must preserve exact workflow bytes across Mac/Windows.
+/.github/workflows/office-p0-protected-cp058-qa.yml text eol=lf

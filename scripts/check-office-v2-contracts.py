@@ -40,6 +40,62 @@ def load(path: Path) -> dict:
 
 
 def main() -> int:
+    # CP072 Phase A: an unmerged workflow_run policy is not pretrusted QA.
+    # Selftest imports protected-source functions but NEVER executes model data.
+    cp058_protected = ROOT / "scripts/vf_office_v2_p0_protected_cp058_qa.py"
+    cp058_flow = ROOT / ".github/workflows/office-p0-protected-cp058-qa.yml"
+    for candidate, source_sha in (
+        (cp058_protected,
+         "c9e593c35cde0c654e1305a11c70f38797ba348d65624d05d1dd3a8f5c224309"),
+        (cp058_flow,
+         "2b38033140dc2ad7876d4259ccacd63b92bea87a0c412d1c424fa87eb0c5c4f9"),
+    ):
+        if not candidate.is_file() or hashlib.sha256(candidate.read_bytes()).hexdigest() != source_sha:
+            fail("CP058 protected-main bootstrap source/workflow SHA drift")
+    if ("/.github/workflows/office-p0-protected-cp058-qa.yml text eol=lf"
+            not in (ROOT / ".gitattributes").read_text(encoding="utf-8")):
+        fail("CP058 protected workflow LF transport not enforced")
+    cp058_yaml = cp058_flow.read_text(encoding="utf-8")
+    for must in (
+        "  workflow_run:", "      - VelvetOS Core Sensors",
+        "permissions: {}", "    permissions: {}",
+        "ref: $" + "{{ github.sha }}",
+        "ref: $" + "{{ github.event.workflow_run.head_sha }}",
+        "path: policy", "path: candidate",
+        "persist-credentials: false",
+        "startsWith(github.event.workflow_run.head_branch, 'test/office612-cp058-')",
+        "python3 -I -B policy/scripts/vf_office_v2_p0_protected_cp058_qa.py",
+    ):
+        if must not in cp058_yaml:
+            fail("CP058 workflow has lost its protected source / no-credential boundary")
+    if (cp058_yaml.count("permissions: {}") != 2
+            or cp058_yaml.count("persist-credentials: false") != 2
+            or "\n  pull_request_target:" in cp058_yaml
+            or "\n  pull_request:" in cp058_yaml
+            or "\n  workflow_dispatch:" in cp058_yaml):
+        fail("CP058 protected-only QA gained a writable token or unsafe trigger")
+    cp058_static = subprocess.run(
+        [sys.executable, "-I", "-B", str(cp058_protected), "selftest"],
+        cwd=ROOT, capture_output=True, text=True, timeout=18)
+    if cp058_static.returncode:
+        fail("CP058 pretrusted policy selftest rejected: " + cp058_static.stdout[:180])
+    try:
+        cp058_proof = json.loads(cp058_static.stdout)
+    except ValueError:
+        fail("CP058 protected policy returned invalid JSON")
+    if (cp058_proof.get("status") !=
+            "PASS_CP058_PRETRUSTED_POLICY_OFFLINE_NO_EXECUTION"
+            or cp058_proof.get("tests") != 35
+            or cp058_proof.get("repaired_source_sha256") !=
+               "544908a800b3546b9e5ee0bba57a6395b95f99a4aef6fd5d931e73e89631b5e3"
+            or cp058_proof.get("candidate_model_code_executed") is not False
+            or cp058_proof.get("docker_calls") != 0
+            or cp058_proof.get("model_calls") != 0
+            or cp058_proof.get("core_provider_lease") is not False
+            or cp058_proof.get("git_writer_credential") is not False
+            or cp058_proof.get("production_authority") is not False):
+        fail("CP058 untrusted source falsely admitted by static bootstrap")
+
     authority = load(P0 / "authority-map-v0.1.json")
     if authority.get("single_external_effect_authority") is not True:
         fail("Phase 0 must preserve single external-effect authority")
