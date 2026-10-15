@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-14T14:30:01.001Z",
+  "updated_at": "2026-10-15T14:08:18.736Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 132,
+  "candidate_count": 133,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -5532,6 +5532,80 @@
           "docs/implementation/office-v2/phase2/owner-local-inference-llamafile-intake-2026-10-14.md",
           "https://github.com/mozilla-ai/llamafile/tree/a3ccf098ed9c7c77687f5430b0143156d3bcc45a",
           "docs/implementation/office-v2/phase3c/README.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-mohit67890-imajev",
+      "source_item_id": null,
+      "name": "imajev — local multimodal typed-decision scorer (2B / 4B / 9B)",
+      "category": "DECISION_MODEL",
+      "provenance_class": "OWNER_SUBMITTED_SINGLE_GITHUB_REPO_2026_10_15",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "User-directed P2 intake for multimodal photo-plus-state typed decisions; Apache-2.0 source, local model options and explicit unknown/abstention merit bounded same-fixture comparison against existing Decision Layer baselines. No independently validated Hebrew accuracy, two-photo real-world QA reliability or local hardware fit; no LAB/production authority.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "local-typed-decision",
+        "multimodal-decision",
+        "photo-vs-record",
+        "visual-qa-triage",
+        "state-grounded-classification",
+        "abstention",
+        "systemone-api",
+        "open-weights",
+        "calibration"
+      ],
+      "platform_constraints": [
+        "Upstream README identifies English-only support; Hebrew quality NOT_TESTED. Test Hebrew inputs separately rather than assuming Qwen3.5 multilingual ability transfers to the readout.",
+        "Maximum two images per request and eight questions, with bounded state; two-image comparison reported as the weakest visual task (41.8% on real pairs in an earlier 4B adapter; not rerun for shipped adapters). Do not infer production visual-defect detection capability.",
+        "ImajevBench v2.0-lite contains AI-generated images without a human audit; reported metrics and leaderboard ranks are upstream evidence, not VelvetOS measurements. Holdout and checkpoint-selection limitations acknowledged upstream.",
+        "Use source-pinned code/weights, review Apache-2.0 model/adapter and dataset/third-party licenses separately, calibrate and rotate option order; unknown/abstain output does not guarantee missing-evidence handling.",
+        "4B base weights ~9.3 GB before model/runtime/KV/vision overhead; RTX 4080 SUPER 16GB feasibility and actual free VRAM NOT_TESTED. MLX Apple Silicon is documented, but host capacity/resource ownership must be verified.",
+        "Only after #612/#604 P0 resource and safety gates: isolated synthetic fixtures, no unmasked customer photos/orders, no paid API, no direct printer, order, finance, WhatsApp, Instagram, or credential/authority writes."
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "https://github.com/mohit67890/imajev",
+        "https://github.com/mohit67890/imajev/tree/318e8dad55c12a1c6faddbec5f30489d2ee529ff",
+        "https://docs.google.com/document/d/1Fk27juwEU1Jbki3gH708WSMrZCnxPBRoNfZx6uZfQIk/edit",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "Placement: EXISTING cross-project Decision Layer Provider Adapter (scoring only) -> Visual Evidence / Photo-vs-Record QA. Do not introduce a new orchestrator, decision authority, scheduler or canonical data store.",
+        "Use-case consumers after approval: Velvet Factory product-photo-to-order checks; photo/reference quality triage; read-only Office/Studio/LOCAL3D/Genex routing. Geometry/manifold/wall thickness/slicer/print approval remains deterministic and independent.",
+        "Compare imajev-4b first with rules, existing local LLM+structured JSON, Kev-4B and H2O-Lightning-4B using the SAME synthetic fixtures; optionally 2B/9B only if measured fit warrants.",
+        "Metrics: per-use-case correctness, Hebrew/English stratification, false-allow/false-deny, unknown-selective-risk, ECE/Brier, option-order sensitivity, p50/p95, CPU/RAM/VRAM, cold start, operational burden and zero-increment-cost receipts.",
+        "Priority P2 research/queued via evaluation_route only; NOT active in model-routing gateway shortlist, NOT a production scoring service, and does not preempt #612 or #604 P0.",
+        "No repository install, model download, inference, host change, plugin/credential approval, print or business-data mutation authorized by this registry entry."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "After the #612/#604 P0 gates and host lease preflight, design a reproducible, isolated and synthetic Decision Layer visual/typed benchmark comparing imajev-4b to Rules, local LLM/JSON, Kev-4B and H2O-Lightning-4B, with calibrated abstention and Hebrew adversarial cases; only then seek LAB admission.",
+        "rationale": "imajev can replace or complement a typed DecisionProviderAdapter implementation for image-plus-record triage, but cannot replace the VelvetOS deterministic policy gate, core execution or CAD/print QA. Match semantic fixtures rather than rank claims; English-only, two-image weakness and unverified 16GB VRAM fit are real decision blockers.",
+        "decision_evidence_refs": [
+          "https://github.com/mohit67890/imajev/tree/318e8dad55c12a1c6faddbec5f30489d2ee529ff"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "decision-layer-visual-qa",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 intake -> later Phase 3C Decision Layer same-fixture provider benchmark -> Phase 4 Integration Factory -> optional Phase 8 Velvet Factory read-only Visual QA",
+        "status": "WAITING_GATE",
+        "next_gate": "Record pinned model/license/security and draft synthetic bilingual Golden Fixtures; after #612 and #604 verified P0 reference and independent free GPU/host lease, measure imajev-4b against incumbent Decision Layer baselines without installing a permanent service.",
+        "unlock_condition": "#612 P0 independently verified coding worker/CI/postmerge/abort-recovery, #604 relevant host-resource/epoch safety and real noncontentious GPU lease, owner-approved isolated fixture/LAB, no customer media or secrets, no recurring or unapproved cloud spend, explicit rollback.",
+        "evidence_refs": [
+          "https://github.com/nocturney/velvetos-core/issues/595",
+          "https://docs.google.com/document/d/1Fk27juwEU1Jbki3gH708WSMrZCnxPBRoNfZx6uZfQIk/edit",
+          "https://github.com/mohit67890/imajev/tree/318e8dad55c12a1c6faddbec5f30489d2ee529ff"
         ]
       }
     }
