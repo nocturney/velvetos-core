@@ -3119,14 +3119,16 @@ def main() -> int:
             cp080_exec.get("case_names_in_every_run", [])
     ):
         fail("#604 CP080 lab receipt improperly promoted or evidence drifted")
+    cp080_seen_indices = set()
     for raw in cp080_raw:
         original = raw.get("original_raw_json_with_final_LF")
         digest = raw.get("sha256_of_original_raw_file")
         idx = raw.get("run_index")
         if not isinstance(original, str) or not isinstance(digest, str):
             fail("#604 CP080 missing exact raw receipt bytes/hash")
-        if not isinstance(idx, int) or idx not in (2, 3, 4):
-            fail("#604 CP080 invalid historical raw receipt index")
+        if not isinstance(idx, int) or idx not in (2, 3, 4) or idx in cp080_seen_indices:
+            fail("#604 CP080 duplicate or invalid historical raw receipt index")
+        cp080_seen_indices.add(idx)
         if hashlib.sha256(original.encode("utf-8")).hexdigest() != digest:
             fail("#604 CP080 raw receipt SHA256 mismatch")
         if cp080_runs[idx - 1].get("receipt_sha256") != digest:
@@ -3143,6 +3145,13 @@ def main() -> int:
             or sealed.get("model_cp058_source_executed") is not False
         ):
             fail("#604 CP080 raw receipt claims unproven production authority")
+    if cp080_seen_indices != {2, 3, 4}:
+        fail("#604 CP080 missing one or more of the three sealed original receipts")
+    if (
+        sum(row.get("case_assertions_passed", 0) for row in cp080_runs) != 68
+        or sum(row.get("concurrent_provider_txns_passed", 0) for row in cp080_runs) != 48
+    ):
+        fail("#604 CP080 run totals disagree with the sealed summary")
 
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
