@@ -15,6 +15,8 @@ REQUIRED = [
     P2 / "candidate-lifecycle-v0.json",
     P2 / "candidate-registry.schema.json",
     P2 / "candidate-registry-v0.json",
+    P2 / "browser-automation-intake-2026-10-16.json",
+    P2 / "browser-automation-intake-2026-10-16.md",
     P2 / "owner-assurance-binary-tools-intake-2026-10-14.json",
     P2 / "owner-assurance-binary-tools-intake-2026-10-14.md",
     P2 / "owner-local-inference-llamafile-intake-2026-10-14.json",
@@ -240,6 +242,125 @@ def validate_competitor_neutrality(registry: dict, items: list[dict], lanes: lis
     test_items = [without_route]
     if not evaluation_route_issues(test_items, lanes):
         fail("candidate evaluation routing negative control failed to detect forgotten challenger")
+
+
+# Source-fixed 2026-10-16 browser tools intake regression; the JSON receipt is not an authority or scheduler.
+OWNER_BROWSER_20261016_SOURCES = {
+    "lexmount/moli", "browser-use/browser-use", "browser-use/browser-harness",
+    "browser-use/web-ui", "browser-use/bux", "guycrespin/browser-agent",
+    "scrapeless-ai/scrapeless-agent-browser", "pedro-scrapeless/scrapeless-playwright",
+    "lightpanda-io/browser", "CloakHQ/CloakBrowser", "h4ckf0r0day/obscura",
+    "apify/crawlee", "Skyvern-AI/skyvern", "FlareSolverr/FlareSolverr",
+    "browserless/browserless", "jo-inc/camofox-browser", "ntegrals/openbrowser",
+    "berstend/puppeteer-extra", "autoscrape-labs/pydoll", "GoogleChrome/rendertron",
+}
+
+
+def owner_browser_20261016_problems(items: list[dict], lanes: list[dict], receipt: dict) -> list[str]:
+    problems: list[str] = []
+    if receipt.get("schema") != "velvetos.office-v2.browser-automation-intake.v1":
+        problems.append("batch schema changed")
+    if receipt.get("status") != "RESEARCH_ROUTED_NOT_EXECUTED":
+        problems.append("batch falsely claims execution")
+    if receipt.get("counts") != {
+        "total": 20, "p0_queued": 5, "phase_routed": 13, "reference_only": 2,
+    }:
+        problems.append("batch disposition counts drifted")
+    records = receipt.get("items")
+    if not isinstance(records, list) or len(records) != 20:
+        return problems + ["batch lost or duplicated source records"]
+    expected_urls = {"https://github.com/" + r.lower() for r in OWNER_BROWSER_20261016_SOURCES}
+    actual_urls = [str(r.get("url", "")).lower().rstrip("/") for r in records]
+    if set(actual_urls) != expected_urls or len(set(actual_urls)) != len(records):
+        problems.append("source URL set lost, duplicated or aliased")
+    by_id = {i.get("candidate_id"): i for i in items}
+    by_lane = {lane.get("lane_id"): lane for lane in lanes}
+    seen_ids = set()
+    for r in records:
+        cid = r.get("candidate_id")
+        if cid in seen_ids:
+            problems.append("repeated browser candidate id: " + str(cid))
+        seen_ids.add(cid)
+        repo = str(r.get("url", "")).lower().removeprefix("https://github.com/").rstrip("/")
+        if cid != "candidate-" + repo.replace("/", "-"):
+            problems.append("source-to-candidate id mismatch: " + str(cid))
+        item = by_id.get(cid)
+        if not item:
+            problems.append("missing canonical browser candidate: " + str(cid))
+            continue
+        if item.get("source_item_id") is not None or item.get("provenance_class") != "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION":
+            problems.append("historical source or provenance changed: " + cid)
+        if item.get("lifecycle_state") != "RESEARCHED" or item.get("runtime_verification") != "NOT_RUN" or item.get("authority_role") != "NONE":
+            problems.append("browser candidate was falsely promoted: " + cid)
+        if r.get("url") not in (item.get("evidence_refs") or []):
+            problems.append("candidate missing exact source provenance: " + cid)
+        review = item.get("comparison_review") or {}
+        if review.get("policy") != COMPETITOR_POLICY or review.get("evidence_status") != "RESEARCH_ONLY":
+            problems.append("candidate falsely benchmarked or lost review: " + cid)
+        route = item.get("evaluation_route") or {}
+        if (route.get("owner_ref") != r.get("owner_ref")
+                or route.get("workstream") != r.get("evaluation_lane")
+                or route.get("status") != "WAITING_GATE"
+                or not route.get("next_gate")):
+            problems.append("candidate lost phase owner, gate or status: " + cid)
+        kind = r.get("route_kind")
+        p0lane = r.get("p0_lane")
+        if kind == "P0_QUEUED":
+            lane = by_lane.get(p0lane) or {}
+            if not lane or cid not in (lane.get("queued_challengers") or []):
+                problems.append("queued browser candidate omitted from P0: " + cid)
+            if cid in (lane.get("challengers") or []):
+                problems.append("browser candidate promoted into active shortlist: " + cid)
+            if p0lane not in (item.get("shortlist_lanes") or []):
+                problems.append("candidate missing declared P0 lane: " + cid)
+            if item.get("decision_verdict") != "BENCHMARK_REQUIRED":
+                problems.append("queued candidate lost comparison: " + cid)
+        elif kind == "PHASE_ROUTED":
+            if p0lane is not None or r.get("evaluation_lane") not in (item.get("shortlist_lanes") or []):
+                problems.append("phase route missing or incorrectly P0 queued: " + cid)
+            if item.get("decision_verdict") != "BENCHMARK_REQUIRED":
+                problems.append("routed candidate lost comparison: " + cid)
+        elif kind == "REFERENCE_ONLY":
+            if (p0lane is not None or item.get("decision_verdict") != "DEFERRED_WITH_REASON"
+                    or review.get("eligibility") != "DEFERRED_WITH_REASON"
+                    or not review.get("decision_evidence_refs")):
+                problems.append("source-only example/deprecated tool improperly promoted: " + cid)
+        else:
+            problems.append("unrecognized browser route kind: " + str(kind))
+    return problems
+
+
+def validate_owner_browser_20261016(items: list[dict], lanes: list[dict]) -> None:
+    receipt = load(P2 / "browser-automation-intake-2026-10-16.json")
+    errors = owner_browser_20261016_problems(items, lanes, receipt)
+    if errors:
+        fail("browser tool intake: " + "; ".join(errors[:5]))
+
+    # Negative controls: missing candidate, duplicate upstream URL, dropped P0
+    # lane, and unearned LAB/authority promotion must independently fail.
+    records = receipt["items"]
+    dropped = [x for x in items if x["candidate_id"] != records[0]["candidate_id"]]
+    if not owner_browser_20261016_problems(dropped, lanes, receipt):
+        fail("browser intake missing-record negative control failed")
+    duplicate = dict(receipt)
+    duplicate["items"] = records[:-1] + [dict(records[0])]
+    if not owner_browser_20261016_problems(items, lanes, duplicate):
+        fail("browser intake duplicate-source negative control failed")
+    queued = next(r for r in records if r["route_kind"] == "P0_QUEUED")
+    without_queue = [
+        {**lane, "queued_challengers": [
+            x for x in lane.get("queued_challengers", []) if x != queued["candidate_id"]
+        ]} if lane["lane_id"] == queued["p0_lane"] else lane
+        for lane in lanes
+    ]
+    if not owner_browser_20261016_problems(items, without_queue, receipt):
+        fail("browser intake missing-P0-queue negative control failed")
+    promoted = [
+        {**x, "authority_role": "PRODUCTION_INCUMBENT"}
+        if x["candidate_id"] == records[0]["candidate_id"] else x for x in items
+    ]
+    if not owner_browser_20261016_problems(promoted, lanes, receipt):
+        fail("browser intake false-production negative control failed")
 
 
 def validate_owner_repo_batch_20261013(items: list[dict], lanes: list[dict]) -> None:
@@ -584,6 +705,7 @@ def main() -> None:
 
     validate_competitor_neutrality(registry, items, lanes)
     validate_owner_repo_batch_20261013(items, lanes)
+    validate_owner_browser_20261016(items, lanes)
     validate_owner_assurance_binary_tools_20261014(items, lanes)
     validate_owner_llamafile_20261014(items, lanes)
 
