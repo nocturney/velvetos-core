@@ -3244,9 +3244,110 @@ def main() -> int:
             cp081_report.get("production_authority") is not False):
         fail("#604 CP081 offline verifier created or overstated provider authority")
 
+    # CP082 joins REAL mTLS/RBAC/etcd admission with native LOCAL Git/SQLite
+    # UNKNOWN recovery. Never import the provider script or start a live server
+    # in the canonical sensor. The evidence always remains LAB/SECURITY RED.
+    cp082_source = ROOT / "scripts" / "vf_office_v2_604_cp082_tls_native_git_reconcile_lab.py"
+    cp082_sha = "fa108cfd9bea1aec38a9e7e4c1a3e369e6ba4be94eef413ea0ec0304bb1a8eee"
+    if hashlib.sha256(cp082_source.read_bytes()).hexdigest() != cp082_sha:
+        fail("#604 CP082 integrated provider/local Git source hash changed")
+    cp082 = load(P2 / "p0-604-cp082-tls-localgit-unknown-2026-10-16.json")
+    cp082_totals = cp082.get("totals") or {}
+    cp082_receipts = cp082.get("raw_receipts") or []
+    cp082_unproven = cp082.get("not_proven") or {}
+    cp082_proven = cp082.get("proven") or {}
+    cp082_dep = cp082.get("preexisting_dependencies") or {}
+    if (
+        cp082.get("schema") != "velvetos.office-v2.604.cp082.sealed-native-integration-receipts.v1"
+        or cp082.get("status") !=
+            "PASS_REAL_ETCD_TLS_RBAC_LOCAL_GIT_SQLITE_UNKNOWN_LAB_ONLY"
+        or cp082.get("security_admission") != "RED"
+        or cp082.get("test_script_sha256") != cp082_sha
+        or cp082_dep.get("cp081_source_sha256") != cp081_sha
+        or cp082_dep.get("tls_rbac_identity_source_sha256") !=
+            "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c"
+        or cp082_dep.get("native_local_git_sqlite_source_sha256") !=
+            "2bbd81c9c7f59c1b28937286d1c365ca46c0ceb9db96157859f7225e0dd6d632"
+        or cp082_totals.get("independent_fresh_provider_runs") != 2
+        or cp082_totals.get("real_etcd_mtls_localgit_unknown_assertions_passed") != 52
+        or cp082_totals.get("assertions_per_run") != 26
+        or cp082_totals.get("distinct_provider_namespace_hashes") != 2
+        or cp082_totals.get("remote_github_writes") != 0
+        or cp082_totals.get("production_security_admission_gates_passed") != 0
+        or len(cp082_receipts) != 2
+        or len(cp082_unproven) != 9
+        or any(value is not True for value in cp082_unproven.values())
+        or len(cp082_proven) != 6
+        or any(value is not True for value in cp082_proven.values())
+    ):
+        fail("#604 CP082 evidence wrongly promoted or integrated totals drifted")
+    distinct_cp082 = set()
+    cp082_cases = None
+    for expected_index, item in zip((1, 2), cp082_receipts):
+        raw = item.get("raw_json_with_final_lf")
+        digest = item.get("raw_sha256")
+        if (item.get("run_index") != expected_index
+                or not isinstance(raw, str) or not raw.endswith("\n")
+                or not isinstance(digest, str)
+                or hashlib.sha256(raw.encode("utf8")).hexdigest() != digest):
+            fail("#604 CP082 sealed raw native provider+Git receipt changed")
+        try:
+            observed = json.loads(raw)
+        except json.JSONDecodeError:
+            fail("#604 CP082 raw provider/local Git receipt not valid JSON")
+        nonce = observed.get("disposable_prefix_sha256")
+        cases = observed.get("scenarios")
+        if (
+            observed.get("schema") !=
+                "velvetos.office-v2.604.cp082.authenticated-local-git-unknown-lab.v1"
+            or observed.get("status") !=
+                "PASS_REAL_ETCD_TLS_RBAC_LOCAL_GIT_SQLITE_UNKNOWN_LAB_ONLY"
+            or observed.get("security_admission") != "RED"
+            or not isinstance(nonce, str) or len(nonce) != 64
+            or nonce in distinct_cp082 or item.get("disposable_prefix_sha256") != nonce
+            or observed.get("scenario_count") != 26
+            or item.get("scenario_count") != 26
+            or not isinstance(cases, list) or len(cases) != 26
+            or len(set(cases)) != 26 or not all(isinstance(x, str) for x in cases)
+            or observed.get("real_etcd_tls_rbac") is not True
+            or observed.get("native_local_git_cas") is not True
+            or observed.get("durable_sqlite_unknown_reconciliation") is not True
+            or observed.get("mid_effect_revoke_reported_unknown") is not True
+            or observed.get("remote_github_writes") != 0
+            or observed.get("remote_github_credentials_used") is not False
+            or observed.get("worker_generated_source_executed") is not False
+            or observed.get("os_separate_sink_proven") is not False
+            or observed.get("real_protected_core_issuer_proven") is not False
+            or observed.get("cross_store_atomicity_proven") is not False
+            or observed.get("production_authority") is not False
+        ):
+            fail("#604 CP082 record claims unsupported production/remote effects")
+        if cp082_cases is not None and cases != cp082_cases:
+            fail("#604 CP082 independent provider runs disagree on named coverage")
+        cp082_cases = cases
+        distinct_cp082.add(nonce)
+    if len(distinct_cp082) != 2:
+        fail("#604 CP082 provider fixtures not independently distinct")
+    cp082_static = subprocess.run(
+        [sys.executable, "-B", str(cp082_source), "--selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=15,
+    )
+    if cp082_static.returncode != 0:
+        fail("#604 CP082 offline-only selftest failed")
+    try:
+        cp082_static_report = json.loads(cp082_static.stdout)
+    except json.JSONDecodeError:
+        fail("#604 CP082 offline-only selftest returned non-JSON")
+    if (cp082_static_report.get("status") != "OFFLINE_STATIC_ONLY"
+            or cp082_static_report.get("security_admission") != "RED"
+            or cp082_static_report.get("provider_started") is not False
+            or cp082_static_report.get("remote_github_writes") != 0
+            or cp082_static_report.get("production_authority") is not False):
+        fail("#604 CP082 offline sensor unexpectedly started provider/effects")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
-        f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY cp080=SEALED_RED_ONLY cp081=SEALED_RED_ONLY"
+        f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY cp080=SEALED_RED_ONLY cp081=SEALED_RED_ONLY cp082=SEALED_RED_ONLY"
     )
     return 0
 
