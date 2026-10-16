@@ -3345,9 +3345,46 @@ def main() -> int:
             or cp082_static_report.get("production_authority") is not False):
         fail("#604 CP082 offline sensor unexpectedly started provider/effects")
 
+    # Owner approved revocation semantics OPTION A on 2026-10-16:
+    # no new admission after revoke; already admitted effects DRAIN and keep
+    # durable UNKNOWN/freeze on missing or conflicting independent readback.
+    # This is NOT authorization to execute model source or write to GitHub.
+    owner_a_policy = P2 / "p0-604-owner-option-a-revocation-2026-10-16.json"
+    owner_a_script = ROOT / "scripts" / "check-office-v2-owner-option-a.py"
+    owner_a_policy_sha = "15a1c513f2dbc2da438d977e41f3c5c14a6929e7ec4499199116ed714c250271"
+    owner_a_script_sha = "33f42ccb00bb7d5ad407a24f1c315fc5b060cf9ce8188e55edd08d4d41309162"
+    if (hashlib.sha256(owner_a_policy.read_bytes()).hexdigest() != owner_a_policy_sha
+            or hashlib.sha256(owner_a_script.read_bytes()).hexdigest() != owner_a_script_sha):
+        fail("#604 owner Option A chat-recorded decision/policy SHA pin changed")
+    for owner_mode in ("--check", "--selftest"):
+        owner_gate = subprocess.run(
+            [sys.executable, "-B", str(owner_a_script), owner_mode],
+            cwd=ROOT, capture_output=True, text=True, timeout=15,
+        )
+        if owner_gate.returncode != 0:
+            fail("#604 owner Option A semantic gate failed closed: " + owner_mode)
+        try:
+            owner_result = json.loads(owner_gate.stdout)
+        except json.JSONDecodeError:
+            fail("#604 owner Option A semantic gate returned non-JSON")
+        if (
+            owner_result.get("schema") !=
+                "velvetos.office-v2.604.owner-option-a-revocation.v1"
+            or owner_result.get("owner_option") != "A"
+            or owner_result.get("owner_semantics_approved") is not True
+            or owner_result.get("security_admission") != "RED"
+            or owner_result.get("production_authority") is not False
+            or owner_result.get("authenticated_remote_github_proven") is not False
+            or owner_result.get("checked_original_provider_runs") != 2
+            or owner_result.get("checked_lab_cases") != 52
+            or owner_result.get("option_b_guarantee_rejected") is not True
+            or (owner_mode == "--selftest" and owner_result.get("selftest_cases") != 7)
+        ):
+            fail("#604 owner approved Option A misrepresented as production approval")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
-        f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY cp080=SEALED_RED_ONLY cp081=SEALED_RED_ONLY cp082=SEALED_RED_ONLY"
+        f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY cp080=SEALED_RED_ONLY cp081=SEALED_RED_ONLY cp082=SEALED_RED_ONLY option_a=OWNER_APPROVED_SECURITY_RED"
     )
     return 0
 
