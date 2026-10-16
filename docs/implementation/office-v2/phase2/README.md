@@ -41,6 +41,10 @@ Owner-submitted [iFixAi](https://github.com/ifixai-ai/iFixAi), [PentAGI](https:/
 
 [Mozilla AI llamafile](https://github.com/mozilla-ai/llamafile) is now source-pinned in the canonical Candidate Registry as `candidate-mozilla-ai-llamafile` (`RESEARCHED / BENCHMARK_REQUIRED / NOT_RUN`), count 131 → 132; historical imports and all P0 shortlists remain unchanged. This is a Phase 3C **local inference-provider** Ollama comparison routed under #612 after its independently verified local coding-worker baseline, **not** a model-routing gateway contender. No download, LAB admission, background service, added spend or production authority. [Source and benchmark gate](owner-local-inference-llamafile-intake-2026-10-14.md) · [immutable source receipt](owner-local-inference-llamafile-intake-2026-10-14.json).
 
+## Owner browser automation repos - 2026-10-16
+
+Twenty unique owner-provided browser/crawler/agent repositories enter the existing Candidate Registry as **research-only** (132 to 152), with five P0 queued challengers, thirteen non-P0 phase routes, and two source references. [Per-tool workflow routes and synthetic comparison gates](browser-automation-intake-2026-10-16.md) and [source-integrity receipt](browser-automation-intake-2026-10-16.json). No installation, LAB acceptance, new production authority, credentials, autonomous publishing or provider usage follows from registration.
+
 ## Candidate lifecycle
 
 `DISCOVERED → RESEARCHED → CANDIDATE → ADMITTED → LAB → SHADOW → PILOT → PRODUCTION → FALLBACK → RETIRED`.
