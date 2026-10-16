@@ -17,7 +17,7 @@
 
 Machine-readable decision: [Option A policy JSON](p0-604-owner-option-a-revocation-2026-10-16.json).
 
-`scripts/check-office-v2-owner-option-a.py` checks the exact owner choice, fixed transition vocabulary, no implicit production permission, and the relevant existing **CP082** authenticated etcd + local bare-Git + SQLite negative cases. Its selftest deliberately mutates approval to B, turns security GREEN, permits automatic retries and removes a required revocation case; each must fail closed.
+`scripts/vf_office_v2_604_owner_option_a_policy_gate.py` checks the exact owner choice, fixed transition vocabulary, no implicit production permission, and the relevant existing **CP082** authenticated etcd + local bare-Git + SQLite negative cases. Its selftest deliberately mutates approval to B, turns security GREEN, permits automatic retries and removes a required revocation case; each must fail closed.
 
 The canonical `scripts/check-office-v2-contracts.py` runs this checker and pins the decision source and checker bytes. The CP082 sealed raw receipts are unchanged: historical experiments remain evidence of **LOCAL** behavior and cannot become remote/prod proof because an owner made a policy choice.
 
