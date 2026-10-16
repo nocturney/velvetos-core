@@ -3350,7 +3350,7 @@ def main() -> int:
     # durable UNKNOWN/freeze on missing or conflicting independent readback.
     # This is NOT authorization to execute model source or write to GitHub.
     owner_a_policy = P2 / "p0-604-owner-option-a-revocation-2026-10-16.json"
-    owner_a_script = ROOT / "scripts" / "check-office-v2-owner-option-a.py"
+    owner_a_script = ROOT / "scripts" / "vf_office_v2_604_owner_option_a_policy_gate.py"
     owner_a_policy_sha = "15a1c513f2dbc2da438d977e41f3c5c14a6929e7ec4499199116ed714c250271"
     owner_a_script_sha = "33f42ccb00bb7d5ad407a24f1c315fc5b060cf9ce8188e55edd08d4d41309162"
     if (hashlib.sha256(owner_a_policy.read_bytes()).hexdigest() != owner_a_policy_sha
