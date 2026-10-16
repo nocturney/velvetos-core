@@ -3153,9 +3153,238 @@ def main() -> int:
     ):
         fail("#604 CP080 run totals disagree with the sealed summary")
 
+    # CP081 combines real etcd mTLS/RBAC with atomic issuer-only admission
+    # in a rootless guest. These historical observations remain LAB/RED only.
+    cp081_source = ROOT / "scripts" / "vf_office_v2_604_cp081_mtls_atomic_admission_lab.py"
+    cp081_sha = "eaab28424989b4b3a7a5de58f5571d9938b21c8c17c3dfb4c5d2eaa1d73670e2"
+    if hashlib.sha256(cp081_source.read_bytes()).hexdigest() != cp081_sha:
+        fail("#604 CP081 new provider lab source SHA pin changed")
+    cp081 = load(P2 / "p0-604-cp081-mtls-atomic-2026-10-16.json")
+    cp081_totals = cp081.get("totals") or {}
+    cp081_receipts = cp081.get("raw_receipts") or []
+    cp081_unproven = cp081.get("not_proven") or {}
+    if (
+        cp081.get("schema") != "velvetos.office-v2.604.cp081.live-mtls-atomic-receipts.v1"
+        or cp081.get("status") != "PASS_REAL_MTLS_RBAC_ATOMIC_PROVIDER_LAB_ONLY"
+        or cp081.get("security_admission") != "RED"
+        or cp081.get("test_script_sha256") != cp081_sha
+        or cp081.get("identity_helper_sha256") !=
+            "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c"
+        or cp081_totals.get("independent_fresh_provider_runs") != 2
+        or cp081_totals.get("passed_bounded_scenarios") != 38
+        or cp081_totals.get("real_etcd_atomic_race_rounds") != 8
+        or cp081_totals.get("admit_first", 0) + cp081_totals.get("revoke_first", 0) != 8
+        or cp081_totals.get("github_writes") != 0
+        or cp081_totals.get("production_security_admission_gates_passed") != 0
+        or len(cp081_receipts) != 2
+        or any(value is not True for value in cp081_unproven.values())
+        or len(cp081_unproven) != 8
+    ):
+        fail("#604 CP081 authenticated provider evidence promoted without security proof")
+    distinct = set()
+    cases = 0
+    races = 0
+    wins = {"admit": 0, "revoke": 0}
+    for expected_index, item in zip((3, 4), cp081_receipts):
+        raw = item.get("raw_json_with_final_lf")
+        digest = item.get("raw_sha256")
+        if (item.get("run_index") != expected_index or
+                not isinstance(raw, str) or not raw.endswith("\n") or
+                not isinstance(digest, str) or
+                hashlib.sha256(raw.encode("utf8")).hexdigest() != digest):
+            fail("#604 CP081 sealed independent raw receipt changed")
+        try:
+            observed = json.loads(raw)
+        except json.JSONDecodeError:
+            fail("#604 CP081 raw receipt is not JSON")
+        nonce = observed.get("disposable_fixture_id_sha256")
+        if (not isinstance(nonce, str) or len(nonce) != 64 or
+                nonce in distinct or item.get("fixture_id_sha256") != nonce or
+                observed.get("schema") !=
+                    "velvetos.office-v2.604.cp081.real-mtls-atomic-admission.lab.v1" or
+                observed.get("status") != "PASS_REAL_MTLS_RBAC_ATOMIC_PROVIDER_LAB_ONLY" or
+                observed.get("security_admission") != "RED" or
+                observed.get("real_etcd_mtls_rbac") is not True or
+                observed.get("real_etcd_atomic_issuer_transactions") is not True or
+                observed.get("cp058_worker_application_source_executed") is not False or
+                observed.get("actual_core_issuer_proven") is not False or
+                observed.get("os_separate_sink_proven") is not False or
+                observed.get("remote_github_effect_proven") is not False or
+                observed.get("production_authority") is not False or
+                observed.get("git_or_github_writes") != 0 or
+                observed.get("case_count") != 19 or
+                len(observed.get("cases") or []) != 19 or
+                len(set(observed.get("cases") or [])) != 19 or
+                observed.get("real_provider_race_rounds") != 4 or
+                sum((observed.get("race_winners") or {}).values()) != 4):
+            fail("#604 CP081 lab claimed unsupported provider or GitHub admission")
+        distinct.add(nonce)
+        cases += observed["case_count"]
+        races += observed["real_provider_race_rounds"]
+        for name in wins:
+            wins[name] += observed["race_winners"][name]
+    if (len(distinct) != 2 or cases != 38 or races != 8 or
+            wins["admit"] != cp081_totals.get("admit_first") or
+            wins["revoke"] != cp081_totals.get("revoke_first")):
+        fail("#604 CP081 independently distinct provider run totals drifted")
+    cp081_offline = subprocess.run(
+        [sys.executable, "-B", str(cp081_source), "--selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=15,
+    )
+    if cp081_offline.returncode != 0:
+        fail("#604 CP081 offline selftest failed (live provider not permitted)")
+    try:
+        cp081_report = json.loads(cp081_offline.stdout)
+    except json.JSONDecodeError:
+        fail("#604 CP081 offline selftest is not JSON")
+    if (cp081_report.get("status") != "OFFLINE_STATIC_ONLY" or
+            cp081_report.get("security_admission") != "RED" or
+            cp081_report.get("real_provider_started") is not False or
+            cp081_report.get("git_or_github_writes") != 0 or
+            cp081_report.get("production_authority") is not False):
+        fail("#604 CP081 offline verifier created or overstated provider authority")
+
+    # CP082 joins REAL mTLS/RBAC/etcd admission with native LOCAL Git/SQLite
+    # UNKNOWN recovery. Never import the provider script or start a live server
+    # in the canonical sensor. The evidence always remains LAB/SECURITY RED.
+    cp082_source = ROOT / "scripts" / "vf_office_v2_604_cp082_tls_native_git_reconcile_lab.py"
+    cp082_sha = "fa108cfd9bea1aec38a9e7e4c1a3e369e6ba4be94eef413ea0ec0304bb1a8eee"
+    if hashlib.sha256(cp082_source.read_bytes()).hexdigest() != cp082_sha:
+        fail("#604 CP082 integrated provider/local Git source hash changed")
+    cp082 = load(P2 / "p0-604-cp082-tls-localgit-unknown-2026-10-16.json")
+    cp082_totals = cp082.get("totals") or {}
+    cp082_receipts = cp082.get("raw_receipts") or []
+    cp082_unproven = cp082.get("not_proven") or {}
+    cp082_proven = cp082.get("proven") or {}
+    cp082_dep = cp082.get("preexisting_dependencies") or {}
+    if (
+        cp082.get("schema") != "velvetos.office-v2.604.cp082.sealed-native-integration-receipts.v1"
+        or cp082.get("status") !=
+            "PASS_REAL_ETCD_TLS_RBAC_LOCAL_GIT_SQLITE_UNKNOWN_LAB_ONLY"
+        or cp082.get("security_admission") != "RED"
+        or cp082.get("test_script_sha256") != cp082_sha
+        or cp082_dep.get("cp081_source_sha256") != cp081_sha
+        or cp082_dep.get("tls_rbac_identity_source_sha256") !=
+            "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c"
+        or cp082_dep.get("native_local_git_sqlite_source_sha256") !=
+            "2bbd81c9c7f59c1b28937286d1c365ca46c0ceb9db96157859f7225e0dd6d632"
+        or cp082_totals.get("independent_fresh_provider_runs") != 2
+        or cp082_totals.get("real_etcd_mtls_localgit_unknown_assertions_passed") != 52
+        or cp082_totals.get("assertions_per_run") != 26
+        or cp082_totals.get("distinct_provider_namespace_hashes") != 2
+        or cp082_totals.get("remote_github_writes") != 0
+        or cp082_totals.get("production_security_admission_gates_passed") != 0
+        or len(cp082_receipts) != 2
+        or len(cp082_unproven) != 9
+        or any(value is not True for value in cp082_unproven.values())
+        or len(cp082_proven) != 6
+        or any(value is not True for value in cp082_proven.values())
+    ):
+        fail("#604 CP082 evidence wrongly promoted or integrated totals drifted")
+    distinct_cp082 = set()
+    cp082_cases = None
+    for expected_index, item in zip((1, 2), cp082_receipts):
+        raw = item.get("raw_json_with_final_lf")
+        digest = item.get("raw_sha256")
+        if (item.get("run_index") != expected_index
+                or not isinstance(raw, str) or not raw.endswith("\n")
+                or not isinstance(digest, str)
+                or hashlib.sha256(raw.encode("utf8")).hexdigest() != digest):
+            fail("#604 CP082 sealed raw native provider+Git receipt changed")
+        try:
+            observed = json.loads(raw)
+        except json.JSONDecodeError:
+            fail("#604 CP082 raw provider/local Git receipt not valid JSON")
+        nonce = observed.get("disposable_prefix_sha256")
+        cases = observed.get("scenarios")
+        if (
+            observed.get("schema") !=
+                "velvetos.office-v2.604.cp082.authenticated-local-git-unknown-lab.v1"
+            or observed.get("status") !=
+                "PASS_REAL_ETCD_TLS_RBAC_LOCAL_GIT_SQLITE_UNKNOWN_LAB_ONLY"
+            or observed.get("security_admission") != "RED"
+            or not isinstance(nonce, str) or len(nonce) != 64
+            or nonce in distinct_cp082 or item.get("disposable_prefix_sha256") != nonce
+            or observed.get("scenario_count") != 26
+            or item.get("scenario_count") != 26
+            or not isinstance(cases, list) or len(cases) != 26
+            or len(set(cases)) != 26 or not all(isinstance(x, str) for x in cases)
+            or observed.get("real_etcd_tls_rbac") is not True
+            or observed.get("native_local_git_cas") is not True
+            or observed.get("durable_sqlite_unknown_reconciliation") is not True
+            or observed.get("mid_effect_revoke_reported_unknown") is not True
+            or observed.get("remote_github_writes") != 0
+            or observed.get("remote_github_credentials_used") is not False
+            or observed.get("worker_generated_source_executed") is not False
+            or observed.get("os_separate_sink_proven") is not False
+            or observed.get("real_protected_core_issuer_proven") is not False
+            or observed.get("cross_store_atomicity_proven") is not False
+            or observed.get("production_authority") is not False
+        ):
+            fail("#604 CP082 record claims unsupported production/remote effects")
+        if cp082_cases is not None and cases != cp082_cases:
+            fail("#604 CP082 independent provider runs disagree on named coverage")
+        cp082_cases = cases
+        distinct_cp082.add(nonce)
+    if len(distinct_cp082) != 2:
+        fail("#604 CP082 provider fixtures not independently distinct")
+    cp082_static = subprocess.run(
+        [sys.executable, "-B", str(cp082_source), "--selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=15,
+    )
+    if cp082_static.returncode != 0:
+        fail("#604 CP082 offline-only selftest failed")
+    try:
+        cp082_static_report = json.loads(cp082_static.stdout)
+    except json.JSONDecodeError:
+        fail("#604 CP082 offline-only selftest returned non-JSON")
+    if (cp082_static_report.get("status") != "OFFLINE_STATIC_ONLY"
+            or cp082_static_report.get("security_admission") != "RED"
+            or cp082_static_report.get("provider_started") is not False
+            or cp082_static_report.get("remote_github_writes") != 0
+            or cp082_static_report.get("production_authority") is not False):
+        fail("#604 CP082 offline sensor unexpectedly started provider/effects")
+
+    # Owner approved revocation semantics OPTION A on 2026-10-16:
+    # no new admission after revoke; already admitted effects DRAIN and keep
+    # durable UNKNOWN/freeze on missing or conflicting independent readback.
+    # This is NOT authorization to execute model source or write to GitHub.
+    owner_a_policy = P2 / "p0-604-owner-option-a-revocation-2026-10-16.json"
+    owner_a_script = ROOT / "scripts" / "vf_office_v2_604_owner_option_a_policy_gate.py"
+    owner_a_policy_sha = "15a1c513f2dbc2da438d977e41f3c5c14a6929e7ec4499199116ed714c250271"
+    owner_a_script_sha = "33f42ccb00bb7d5ad407a24f1c315fc5b060cf9ce8188e55edd08d4d41309162"
+    if (hashlib.sha256(owner_a_policy.read_bytes()).hexdigest() != owner_a_policy_sha
+            or hashlib.sha256(owner_a_script.read_bytes()).hexdigest() != owner_a_script_sha):
+        fail("#604 owner Option A chat-recorded decision/policy SHA pin changed")
+    for owner_mode in ("--check", "--selftest"):
+        owner_gate = subprocess.run(
+            [sys.executable, "-B", str(owner_a_script), owner_mode],
+            cwd=ROOT, capture_output=True, text=True, timeout=15,
+        )
+        if owner_gate.returncode != 0:
+            fail("#604 owner Option A semantic gate failed closed: " + owner_mode)
+        try:
+            owner_result = json.loads(owner_gate.stdout)
+        except json.JSONDecodeError:
+            fail("#604 owner Option A semantic gate returned non-JSON")
+        if (
+            owner_result.get("schema") !=
+                "velvetos.office-v2.604.owner-option-a-revocation.v1"
+            or owner_result.get("owner_option") != "A"
+            or owner_result.get("owner_semantics_approved") is not True
+            or owner_result.get("security_admission") != "RED"
+            or owner_result.get("production_authority") is not False
+            or owner_result.get("authenticated_remote_github_proven") is not False
+            or owner_result.get("checked_original_provider_runs") != 2
+            or owner_result.get("checked_lab_cases") != 52
+            or owner_result.get("option_b_guarantee_rejected") is not True
+            or (owner_mode == "--selftest" and owner_result.get("selftest_cases") != 7)
+        ):
+            fail("#604 owner approved Option A misrepresented as production approval")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
-        f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY cp080=SEALED_RED_ONLY"
+        f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY cp080=SEALED_RED_ONLY cp081=SEALED_RED_ONLY cp082=SEALED_RED_ONLY option_a=OWNER_APPROVED_SECURITY_RED"
     )
     return 0
 
