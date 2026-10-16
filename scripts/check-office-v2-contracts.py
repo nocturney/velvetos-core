@@ -3083,9 +3083,70 @@ def main() -> int:
     ):
         fail("#612 new same-PR workflow falsely claimed pretrusted policy")
 
+    # CP080 is a historical, potentially untrusted candidate: verify its
+    # exact bytes and fixture receipts as DATA, never import or run its source.
+    cp080_path = ROOT / "scripts" / "vf_office_v2_604_real_etcd_revoke_admit_lab_cp080.py"
+    cp080_expected_sha = "02c90170b3b741d4ba2d1fd985b1189b83ff4b5dcc515a6936ca50ca8068ddae"
+    if hashlib.sha256(cp080_path.read_bytes()).hexdigest() != cp080_expected_sha:
+        fail("#604 CP080 isolated lab source bytes changed without independent review")
+    cp080 = load(P2 / "p0-604-real-etcd-transaction-cp080-2026-10-15.json")
+    cp080_exec = cp080.get("execution") or {}
+    cp080_totals = cp080_exec.get("totals") or {}
+    cp080_environment = cp080.get("environment") or {}
+    cp080_denials = cp080.get("disclaimers") or {}
+    cp080_runs = cp080_exec.get("runs") or []
+    cp080_raw = cp080_exec.get("raw_receipts") or []
+    if (
+        cp080.get("source_sha256") != cp080_expected_sha
+        or cp080.get("schema") != "velvetos.office-v2.604.cp080.real-etcd-integration-evidence.v1"
+        or cp080.get("security_admission") != "RED"
+        or cp080.get("status") != "PASS_REAL_ETCD_QUORUM_TXN_LOCAL_GIT_LAB_ONLY"
+        or cp080_environment.get("mtls") is not False
+        or cp080_environment.get("rbac") is not False
+        or cp080_denials.get("no_github_credentials") is not True
+        or cp080_denials.get("no_remote_github_effect") is not True
+        or cp080_denials.get("no_independent_security_review") is not True
+        or cp080_denials.get("owner_option_a_vs_b_approved") is not False
+        or cp080_totals.get("critical_production_security_gates_passed") != 0
+        or cp080_totals.get("runs") != 4
+        or len(cp080_runs) != 4
+        or len(cp080_raw) != 3
+        or cp080_totals.get("passed_named_scenarios") != 68
+        or cp080_totals.get("real_etcd_admit_vs_revoke_races") != 48
+        or cp080_totals.get("admission_first", 0) + cp080_totals.get("revoke_first", 0) != 48
+        or cp080_exec.get("observed_unsafe_unfenced_git_after_effective") is not True
+        or "known-unsafe-cp077-unfenced-local-git-witness" not in
+            cp080_exec.get("case_names_in_every_run", [])
+    ):
+        fail("#604 CP080 lab receipt improperly promoted or evidence drifted")
+    for raw in cp080_raw:
+        original = raw.get("original_raw_json_with_final_LF")
+        digest = raw.get("sha256_of_original_raw_file")
+        idx = raw.get("run_index")
+        if not isinstance(original, str) or not isinstance(digest, str):
+            fail("#604 CP080 missing exact raw receipt bytes/hash")
+        if not isinstance(idx, int) or idx not in (2, 3, 4):
+            fail("#604 CP080 invalid historical raw receipt index")
+        if hashlib.sha256(original.encode("utf-8")).hexdigest() != digest:
+            fail("#604 CP080 raw receipt SHA256 mismatch")
+        if cp080_runs[idx - 1].get("receipt_sha256") != digest:
+            fail("#604 CP080 run/readback SHA256 mismatch")
+        try:
+            sealed = json.loads(original)
+        except json.JSONDecodeError:
+            fail("#604 CP080 raw receipt is not JSON")
+        if (
+            sealed.get("security_admission") != "RED"
+            or sealed.get("production_authority") is not False
+            or sealed.get("known_unfenced_local_git_after_effective") is not True
+            or sealed.get("real_github_remote_effect") is not False
+            or sealed.get("model_cp058_source_executed") is not False
+        ):
+            fail("#604 CP080 raw receipt claims unproven production authority")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
-        f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
+        f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY cp080=SEALED_RED_ONLY"
     )
     return 0
 
