@@ -457,7 +457,7 @@
     "instructions": "instance:surface:chatgptProject/PROJECT-INSTRUCTIONS-v6.6.4.txt",
     "productTruthGuide": "instance:surface:chatgptProject/PRODUCT-TRUTH-GUIDE-v1.txt",
     "authoritySha256": "db07dd973272a96b154b4771af1dbb13c03d039de595b56cd857bb0144025976",
-    "assetManifestSha256": "b7af4ccd29bdf47c077d02103923203b822b7b0368098a6e2ba39d0e4dda9ab0",
+    "assetManifestSha256": "de27bbe76701483ba8937e9a7b876e3ac3c64ca4313bb48cfff11d9dcf5087fb",
     "offlineCreativePublicationFallback": true,
     "offlineRepoStateLabel": "UNAVAILABLE_PROJECT_BUNDLE_FALLBACK",
     "referenceSeparation": "AESTHETIC_REFERENCES_ONLY_FOR_STYLE; PRODUCT_TRUTH=SOURCE_PIXELS_PLUS_TEXT_GUIDE"
