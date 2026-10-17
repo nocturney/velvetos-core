@@ -3382,9 +3382,36 @@ def main() -> int:
         ):
             fail("#604 owner approved Option A misrepresented as production approval")
 
+    # CP083 is a SEALED local OS-UID / real mTLS / native Git LAB only.
+    # Canonical CI validates raw receipts and negative mutants OFFLINE;
+    # it never starts etcd, executes generated worker source or writes GitHub.
+    cp083_gate = ROOT / "scripts" / "vf_office_v2_604_cp083_osuid_evidence_gate.py"
+    for cp083_mode in ("--check", "--selftest"):
+        cp083 = subprocess.run(
+            [sys.executable, "-B", str(cp083_gate), cp083_mode],
+            cwd=ROOT, capture_output=True, text=True, timeout=15,
+        )
+        if cp083.returncode:
+            fail("#604 CP083 separate-UID raw evidence gate failed closed: " + cp083_mode)
+        try:
+            cp083_result = json.loads(cp083.stdout)
+        except json.JSONDecodeError:
+            fail("#604 CP083 evidence gate returned non-JSON")
+        if (
+            cp083_result.get("status") != "CP083_SEALED_TEST_ONLY"
+            or cp083_result.get("checked_real_provider_runs") != 2
+            or cp083_result.get("checked_named_assertions") != 118
+            or cp083_result.get("security_admission") != "RED"
+            or cp083_result.get("production_authority") is not False
+            or cp083_result.get("authenticated_remote_github_proven") is not False
+            or (cp083_mode == "--selftest" and
+                cp083_result.get("negative_mutations_rejected") != 8)
+        ):
+            fail("#604 CP083 attempted to promote lab to trusted security admission")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
-        f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY cp080=SEALED_RED_ONLY cp081=SEALED_RED_ONLY cp082=SEALED_RED_ONLY option_a=OWNER_APPROVED_SECURITY_RED"
+        f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY cp080=SEALED_RED_ONLY cp081=SEALED_RED_ONLY cp082=SEALED_RED_ONLY cp083=SEALED_RED_ONLY option_a=OWNER_APPROVED_SECURITY_RED"
     )
     return 0
 
