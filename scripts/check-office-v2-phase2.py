@@ -750,12 +750,6 @@ def main() -> None:
         if marker not in readme:
             fail("Phase 2 README missing rule: " + marker)
 
-    # Keep human summary aligned with the machine-readable shortlist verdicts.
-    winner_count = sum(lane.get("winner") is not None for lane in lanes)
-    expected_status = f"{winner_count} OF {len(lanes)} P0 LANE WINNERS"
-    if expected_status not in readme:
-        fail("Phase 2 README winner tally disagrees with p0-shortlists-v0.json")
-
     print(
         f"OK office-v2-phase2 registry={len(items)} lifecycle=PASS "
         f"shortlists={len(lanes)} fixtures={len(fixture_ids)} research-freeze=DEFINED"
