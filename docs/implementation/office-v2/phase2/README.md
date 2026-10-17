@@ -2,7 +2,7 @@
 
 Authority: START HERE Phase 2. Baseline: `main@4ee8ca0ef50df169be95d3c4fb8e6a2c5e6e4334` after Phase 1 GREEN and current-main compatibility CI.
 
-Status: **FOUNDATION READY / BENCHMARKS NOT YET RUN / NO WINNERS**.
+Status: **FOUNDATION READY / PHASE 3A RESTATE WINNER RECORDED / 1 OF 6 P0 LANE WINNERS / FIVE LANES STILL OPEN / NO AUTOMATIC PRODUCTION AUTHORITY**.
 
 ## Objective
 
@@ -55,7 +55,7 @@ Registry: `candidate-registry-v0.json`. Admission policy: `admission-policy-v0.m
 
 ## P0 shortlists
 
-`p0-shortlists-v0.json` defines pre-benchmark sets only. A shortlist is not a winner declaration. Initial lanes are durable execution, model routing, tool-gateway interoperability, memory/context and agent runtime. Every lane has its incumbent and 2–3 serious challengers with `winner: null`.
+`p0-shortlists-v0.json` now tracks six P0 lanes with their incumbent and 2–3 challengers. **One of six** has a recorded benchmark verdict: `durable-execution` selected **Restate** (`candidate-restate`) as winner, with **Temporal** (`candidate-temporal`) as fallback, frozen under Phase 3A evidence. The other five lanes — `model-routing`, `tool-gateway-interoperability`, `memory-context`, `agent-runtime`, and `worker-fleet-placement` — still have `winner: null`, pending their own fixtures and scorecards. Shortlisting never grants LAB, PILOT or production authority. Phase 3B ZITADEL/OPA/OpenBao composition is a separate bounded security track, not another P0 shortlist winner.
 
 ## Golden Fixtures
 
