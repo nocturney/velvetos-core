@@ -1,0 +1,68 @@
+{
+  "schema": "velvetos.draft.context-continuity-contract.v0",
+  "status": "NON_NORMATIVE_REFORM_PREPARATION",
+  "authority": false,
+  "runtime_enabled": false,
+  "production_integration": false,
+  "prepared_against_main_sha": "dfd699dcee63d5175f03ae3312fbb89992ea78ca",
+  "purpose": "Define a future verified context-continuity layer that compacts working context without creating a second orchestrator, memory database, policy authority, or chat-transcript source of truth.",
+  "canonical_dependencies": {
+    "execution_loop": "packages/vfharness/LOOP.md",
+    "task_checkpoint_schema": "packages/vfharness/templates/checkpoint.schema.json",
+    "handoff": "office/control/HANDOFF.json",
+    "handoff_contract": "packages/vfmem/HANDOFF.md",
+    "semantic_state_model": "packages/velvetos/policy/state-evidence-model.json",
+    "context_thrift": "packages/vfharness/playbooks/context-thrift.md"
+  },
+  "invariants": [
+    "The vfharness loop remains the only global execution-loop authority.",
+    "Compaction changes working context only; it does not create or widen policy, approval, send, publish, spend, destructive-action, permission, or external-effect authority.",
+    "Task checkpoints remain canonical for bounded task execution/resume state.",
+    "office/control/HANDOFF.json remains the canonical cross-harness continuation/index surface.",
+    "A continuation manifest is a derived projection assembled from canonical sources and recent observations; it is not a new durable state store.",
+    "No full chat transcript is promoted into canonical state or durable memory by compaction.",
+    "Unknown stays unknown; compression may omit low-value history but may not invent missing facts, prices, Insights, receipts, approvals, provider results, or runtime health.",
+    "Raw tool output may be cached as evidence/history where existing retention rules allow; the working context receives only the smallest sufficient excerpt or summary.",
+    "Compaction is forbidden while an execution step has uncommitted state, an exact external action is in flight, or the next step depends on unpersisted local details.",
+    "A failed post-compaction verification invalidates the compacted result and requires recovery from canonical checkpoint/state plus uncompressed recent tail."
+  ],
+  "preserved_classes": [
+    "goal and explicit completion condition",
+    "completed_steps",
+    "next_step",
+    "unresolved blockers",
+    "open durable gate and waiting_for",
+    "planned_steps still relevant to the next phase",
+    "exact artifact paths and stable external IDs needed to resume",
+    "decision references and exact-action authorization receipt references",
+    "verification/evidence references",
+    "latest verified observation",
+    "domain-specific execution_state fields required by the next step",
+    "active constraints and must-not-repeat rules relevant to the bounded task"
+  ],
+  "never_self_authoritative": [
+    "summary prose",
+    "provider compacted payload",
+    "continuation manifest",
+    "tool-output summary",
+    "model inference",
+    "retrieved durable-memory fact without its canonical source when a more-specific source exists"
+  ],
+  "transition_rule": {
+    "from": "P + Sigma_t + O_t + recent_tail",
+    "to": "P + Sigma_t+1 + O_t+1 + compacted_recent_tail",
+    "required_before_compaction": [
+      "checkpoint/state patch is persisted",
+      "named artifacts/evidence needed for resume are addressable",
+      "no in-flight exact external action",
+      "trigger is eligible under compaction-policy-v0",
+      "pre-compaction manifest passes structural verification"
+    ],
+    "required_after_compaction": [
+      "preservation verifier passes",
+      "authority-neutrality verifier passes",
+      "resume-point verifier passes"
+    ]
+  },
+  "rollback": "Disable future compaction adapter and resume directly from existing checkpoint + HANDOFF + canonical sources; no canonical state migration is required."
+}
