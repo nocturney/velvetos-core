@@ -29,6 +29,8 @@ REQUIRED = [
     P2 / "research-freeze-record.schema.json",
     P2 / "p0-shortlists-v0.json",
     ROOT / "scripts" / "vf_office_v2_golden_fixture.py",
+    ROOT / "scripts" / "vf_office_v2_link_intake.py",
+    ROOT / "scripts" / "vf_office_v2_link_intake_selftest.py",
 ]
 
 EXPECTED_FORWARD = [
@@ -750,9 +752,17 @@ def main() -> None:
         if marker not in readme:
             fail("Phase 2 README missing rule: " + marker)
 
+    # #595 AC5/AC6: durable repo-link intake must keep links, dedupe and leave history intact.
+    intake = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_link_intake_selftest.py")],
+        cwd=ROOT, capture_output=True, text=True, encoding="utf-8", timeout=120,
+    )
+    if intake.returncode != 0:
+        fail("link intake self-test failed: " + (intake.stderr or intake.stdout).strip()[-400:])
+
     print(
         f"OK office-v2-phase2 registry={len(items)} lifecycle=PASS "
-        f"shortlists={len(lanes)} fixtures={len(fixture_ids)} research-freeze=DEFINED"
+        f"shortlists={len(lanes)} fixtures={len(fixture_ids)} research-freeze=DEFINED link-intake=PASS"
     )
 
 
