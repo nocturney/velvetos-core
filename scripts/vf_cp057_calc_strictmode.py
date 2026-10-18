@@ -39,6 +39,7 @@ EARLIER = "97e942bcccfb5c5bcbbe13e97badd058e027e1df3e803a4a24d9eaac933cbc6f"
 FIRST_READ = "32824ef410023d84a61c7ecd88edd872ade2e70bdee0ec22b27ae001a3b35f13"
 FRAME = "d851448d96791b1d5ec84575b8b923777217630b1dd8ee43a695ccc621425727"
 CONTENT = "18bb936d340441fb3a3434afef6792ea65074dc02e38879dd6f6143cf323fe75"
+ASCII_FRAME = "cf091c81a971c85bb3c1709dc1e5a91da3dcc33cf04f99a3753e8bf1dc870d00"
 UIA_WAIT_MS = 10000
 UIA_POLL_MS = 250
 TREE_IDS = (
@@ -598,6 +599,104 @@ def receipt_findings(text: str) -> list[str]:
     return problems
 
 
+
+def plm_findings(text: str) -> list[str]:
+    """PLM must be positively observed on the owned CalculatorApp only, at UIA timeout."""
+    problems: list[str] = []
+    spans = dict(function_spans(text))
+    probe = spans.get("Test-CalculatorPlmSuspension", "")
+    native = spans.get("Add-CalcContentNative", "")
+    wrapper = spans.get("Refuse-CalculatorUnavailable", "")
+    for token in (
+        "if($proc.ProcessName -ne 'CalculatorApp'){continue}",
+        "Test-StartedThisAttempt $proc",
+        "$thread.ThreadState -eq [System.Diagnostics.ThreadState]::Wait",
+        "$thread.WaitReason -eq [System.Diagnostics.ThreadWaitReason]::Suspended",
+        "$script:PlmSuspendedThreads++",
+        "$script:PlmTotalThreads++",
+        "if($script:PlmTotalThreads -eq 0){$allSuspended=$false}",
+        "Windows.UI.Core.CoreWindow",
+        "([CalcContentNativeCP057]::ProcessOf($hwnd))",
+        "[CalcContentNativeCP057]::CloakOf($hwnd)",
+        "$script:DwmCloaked=[int]$cloaked",
+        "if($cloaked -gt 0){return $true}",
+        "return $allSuspended",
+    ):
+        if token not in probe:
+            problems.append(f"PLM probe missing owned thread/cloak guard {token}")
+    for token in (
+        'DllImport("dwmapi.dll"',
+        "DwmGetWindowAttribute(hwnd,14,out state,sizeof(int))",
+        "if(hr != 0){return -1;}",
+    ):
+        if token not in native:
+            problems.append(f"DWM cloak probe missing {token}")
+    if "try {$plm=[bool](Test-CalculatorPlmSuspension)} catch {$plm=$false}" not in wrapper:
+        problems.append("PLM probe must fail closed to the original refusal on probe errors")
+    if "if($plm){Refuse 'CALCULATOR_SUSPENDED_BY_PLM'}" not in wrapper:
+        problems.append("positive PLM evidence must select the exact refusal code")
+    if "Refuse $fallback" not in wrapper:
+        problems.append("non-PLM UIA loss must preserve the original refusal code")
+    for func, tokens in (
+        ("FindElement", (
+            "Refuse-CalculatorUnavailable 'EXPECTED_CALCULATOR_WINDOW_ABSENT'",
+            "Refuse-CalculatorUnavailable ('CALCULATOR_ELEMENT_UNAVAILABLE_'+$id)",
+        )),
+        ("Wait-CalculatorTree", (
+            "Refuse-CalculatorUnavailable 'CALCULATOR_CONTENT_WINDOW_UNAVAILABLE'",
+            "Refuse-CalculatorUnavailable ('CALCULATOR_ELEMENT_UNAVAILABLE_'+$missing)",
+        )),
+    ):
+        body = spans.get(func, "")
+        for token in tokens:
+            if token not in body:
+                problems.append(f"{func} bypassed PLM diagnosis at timeout: {token}")
+        if re.search(r"\bRefuse\s+\('CALCULATOR_ELEMENT_UNAVAILABLE_", body):
+            problems.append(f"{func} directly emitted an unclassified element refusal")
+    child = text.split("if($Mode -eq 'Child'){", 1)
+    if len(child) != 2:
+        problems.append("missing Child receipt schema for PLM")
+        return problems
+    receipt, _, tail = child[1].partition("} catch {")
+    catch = tail.partition("} finally {")[0]
+    for field, initial in (
+        ("suspended_threads", "0"),
+        ("total_threads", "0"),
+        ("dwm_cloaked", "$null"),
+    ):
+        if f"{field}={initial}" not in receipt:
+            problems.append(f"receipt missing {field} initial value")
+    for field, value in (
+        ("suspended_threads", "[int]$script:PlmSuspendedThreads"),
+        ("total_threads", "[int]$script:PlmTotalThreads"),
+        ("dwm_cloaked", "$script:DwmCloaked"),
+    ):
+        if f"$rec.{field}={value}" not in catch:
+            problems.append(f"failure receipt does not capture {field}")
+    return problems
+
+
+def plm_model_findings() -> list[str]:
+    """Independent decision truth-table; absent/partial observations never prove suspension."""
+    def classified(suspended: int, total: int, cloak: int | None) -> bool:
+        return (total > 0 and suspended == total) or (cloak is not None and cloak > 0)
+
+    cases = (
+        (23, 23, None, True),
+        (0, 23, 2, True),
+        (22, 23, 0, False),
+        (0, 0, None, False),
+        (0, 0, -1, False),
+        (0, 0, 2, True),
+        (23, 24, None, False),
+        (23, 23, 0, True),
+    )
+    return [
+        f"PLM classification mismatch for {suspended}/{total}, cloak={cloak}"
+        for suspended, total, cloak, expected in cases
+        if classified(suspended, total, cloak) != expected
+    ]
+
 def sanitize_refusal(raw: str) -> tuple[str, str]:
     """Mirror of Format-RefusalMessage. Fixed REFUSED_* tokens pass through."""
     if not raw:
@@ -749,6 +848,30 @@ def mutate(text: str, kind: str) -> str:
         if anchor not in text:
             return text
         return text.replace(anchor, "")
+    if kind == "plm-bypass-initial-tree":
+        return text.replace(
+            "Refuse-CalculatorUnavailable ('CALCULATOR_ELEMENT_UNAVAILABLE_'+$missing)",
+            "Refuse ('CALCULATOR_ELEMENT_UNAVAILABLE_'+$missing)", 1)
+    if kind == "plm-bypass-followup-element":
+        return text.replace(
+            "Refuse-CalculatorUnavailable ('CALCULATOR_ELEMENT_UNAVAILABLE_'+$id)",
+            "Refuse ('CALCULATOR_ELEMENT_UNAVAILABLE_'+$id)", 1)
+    if kind == "plm-drop-suspended-reason":
+        return text.replace(
+            "[System.Diagnostics.ThreadWaitReason]::Suspended",
+            "[System.Diagnostics.ThreadWaitReason]::Executive", 1)
+    if kind == "plm-ignore-dwm-cloak":
+        return text.replace("if($cloaked -gt 0){return $true}",
+                            "if($false){return $true}", 1)
+    if kind == "plm-drop-receipt":
+        return text.replace("  $rec.dwm_cloaked=$script:DwmCloaked\n", "", 1)
+    if kind == "plm-allow-zero-threads":
+        return text.replace(
+            "if($script:PlmTotalThreads -eq 0){$allSuspended=$false}",
+            "if($script:PlmTotalThreads -lt 0){$allSuspended=$false}", 1)
+    if kind == "plm-drop-ownership":
+        return text.replace("if($proc.ProcessName -ne 'CalculatorApp'){continue}",
+                            "if($false){continue}", 1)
     if kind == "fake-closed":
         anchor = "$rec.calc_closed=(@(Calcs).Count -eq 0)"
         if anchor not in text:
@@ -777,6 +900,13 @@ def mutation_findings(text: str) -> list[str]:
         ("drop-toplevel", content_findings),
         ("owned-only-close", frame_findings),
         ("fake-closed", frame_findings),
+        ("plm-bypass-initial-tree", plm_findings),
+        ("plm-bypass-followup-element", plm_findings),
+        ("plm-drop-suspended-reason", plm_findings),
+        ("plm-ignore-dwm-cloak", plm_findings),
+        ("plm-drop-receipt", plm_findings),
+        ("plm-allow-zero-threads", plm_findings),
+        ("plm-drop-ownership", plm_findings),
     )
     for kind, checker in checks:
         mutated = mutate(text, kind)
@@ -817,8 +947,8 @@ def pin_findings(text: str) -> list[str]:
         problems.append("PIN path mismatch")
     if pin.get("sha256") != digest:
         problems.append(f"PIN sha256 {pin.get('sha256')} != file {digest}")
-    if str(pin.get("supersedes_sha256", "")).lower() != CONTENT:
-        problems.append("PIN supersedes_sha256 must be the content-window pin")
+    if str(pin.get("supersedes_sha256", "")).lower() != ASCII_FRAME:
+        problems.append("PIN supersedes_sha256 must be the owner-specified ASCII frame-select pin")
     pin_text = PIN.read_text(encoding="utf-8").lower()
     if EARLIER not in pin_text:
         problems.append("PIN lost the earlier strict-mode hash")
@@ -850,6 +980,10 @@ def pin_findings(text: str) -> list[str]:
             "CALCULATOR_CONTENT_WINDOW_UNAVAILABLE",
             "bound_via",
             "toplevel_corewindow",
+            "CALCULATOR_SUSPENDED_BY_PLM",
+            "suspended_threads",
+            "total_threads",
+            "dwm_cloaked",
         ):
             if token not in body:
                 problems.append(f"{path.relative_to(ROOT)} missing {token}")
@@ -878,8 +1012,10 @@ def main() -> int:
         problems.extend(content_findings(text))
         problems.extend(frame_findings(text))
         problems.extend(receipt_findings(text))
+        problems.extend(plm_findings(text))
         problems.extend(mutation_findings(text))
         problems.extend(sanitizer_model_findings())
+        problems.extend(plm_model_findings())
         if not problems:
             problems.extend(pin_findings(text))
     if problems:
@@ -894,9 +1030,13 @@ def main() -> int:
         "drop-corewindow=DETECTED rebind-frame=DETECTED drop-bound-receipt=DETECTED "
         "close-frame=DETECTED wrong-frame=DETECTED title-only=DETECTED "
         "drop-hebrew=DETECTED raw-hebrew=DETECTED drop-toplevel=DETECTED "
-        "owned-only-close=DETECTED fake-closed=DETECTED"
+        "owned-only-close=DETECTED fake-closed=DETECTED "
+        "plm-bypass-initial-tree=DETECTED plm-bypass-followup-element=DETECTED "
+        "plm-drop-suspended-reason=DETECTED plm-ignore-dwm-cloak=DETECTED "
+        "plm-drop-receipt=DETECTED plm-allow-zero-threads=DETECTED "
+        "plm-drop-ownership=DETECTED"
     )
-    print("OK green-after wait=BOUNDED receipt=REASON host=UWP content=COREWINDOW frame=OWNED")
+    print("OK green-after wait=BOUNDED receipt=REASON host=UWP content=COREWINDOW frame=OWNED plm=CLASSIFIED_OR_FALLBACK")
     print(f"OK cp057-calc-strictmode empty-result=GUARDED sha256={digest}")
     return 0
 
