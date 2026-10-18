@@ -3498,7 +3498,9 @@ def main() -> int:
         ("test_vf_office_v2_604_cp084_nonroot_sink_recovery.py", 5, 15),
         ("test_vf_office_v2_604_cp085_public_git_readback.py", 26, 15),
         # #762: offline-only byte-consistency negatives, NOT joined-run QA.
-        ("test_vf_office_v2_604_cp083_candidate_evidence_gate.py", 20, 20),
+        ("test_vf_office_v2_604_cp083_candidate_evidence_gate.py", 24, 30),
+        # ChatGPT-069: GAP_9 and GAP_6 stay expected failures. No candidate import.
+        ("test_vf_office_v2_604_cp083_chatgpt069_negatives.py", 3, 30),
         # ChatGPT-069 UID/guest negatives. SKIP_NEEDS_GUEST outside the guest.
         # Only the revoke test is expected-fail (GAP). No candidate import.
         (GUEST_UID_NEGATIVE_FILE, 5, 20),
