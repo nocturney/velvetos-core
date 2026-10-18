@@ -10,6 +10,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -205,17 +206,23 @@ def main(argv):
             "SEALED_EVIDENCE_HASH_CHANGED")
     evidence = json.loads(EVIDENCE.read_text(encoding="utf-8"))
     result = validate(evidence)
-    static = subprocess.run(
-        [sys.executable, "-B", str(SOURCE), "--selftest"],
-        cwd=ROOT, capture_output=True, text=True, timeout=8)
-    require(static.returncode == 0, "CP083_INERT_SELFTEST_FAILED")
-    obj = json.loads(static.stdout)
-    require(obj.get("status") == "OFFLINE_STATIC_ONLY" and
-            obj.get("provider_started") is False and
-            obj.get("remote_github_writes") == 0 and
-            obj.get("security_admission") == "RED" and
-            obj.get("production_authority") is False,
-            "CP083_SELFTEST_ESCALATED_AUTHORITY")
+    if os.name != "posix":
+        # Hash-pinned lab imports pwd at load, so even --selftest cannot
+        # start here. Receipt validation above still ran. Explicit skip.
+        result["inert_selftest"] = "SKIP_NON_POSIX"
+    else:
+        static = subprocess.run(
+            [sys.executable, "-B", str(SOURCE), "--selftest"],
+            cwd=ROOT, capture_output=True, text=True, timeout=8)
+        require(static.returncode == 0, "CP083_INERT_SELFTEST_FAILED")
+        obj = json.loads(static.stdout)
+        require(obj.get("status") == "OFFLINE_STATIC_ONLY" and
+                obj.get("provider_started") is False and
+                obj.get("remote_github_writes") == 0 and
+                obj.get("security_admission") == "RED" and
+                obj.get("production_authority") is False,
+                "CP083_SELFTEST_ESCALATED_AUTHORITY")
+        result["inert_selftest"] = obj["status"]
     if argv == ["--selftest"]:
         result["negative_mutations_rejected"] = test_mutations(evidence)
         require(result["negative_mutations_rejected"] == 8,
