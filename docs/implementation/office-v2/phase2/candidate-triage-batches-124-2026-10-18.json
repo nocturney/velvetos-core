@@ -1,0 +1,481 @@
+{
+  "schema": "velvetos.candidate-triage-batches.v1",
+  "issue": "nocturney/velvetos-core#595",
+  "checked_at": "2026-10-18T10:50:00Z",
+  "decisions_unchanged": true,
+  "registry_edited": false,
+  "source_comments": [
+    "https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6248268135",
+    "https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6248268285",
+    "https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6248268442"
+  ],
+  "qa_comment": "https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6248863214",
+  "qa_verdicts": {
+    "1": "FAIL",
+    "2": "PASS",
+    "4": "PASS"
+  },
+  "summary": {
+    "rows": 46,
+    "KEEP": 44,
+    "REJECT": 2,
+    "NEEDS_OWNER": 0,
+    "by_batch": {
+      "1": {
+        "KEEP": 14,
+        "REJECT": 1,
+        "NEEDS_OWNER": 0
+      },
+      "2": {
+        "KEEP": 14,
+        "REJECT": 1,
+        "NEEDS_OWNER": 0
+      },
+      "4": {
+        "KEEP": 16,
+        "REJECT": 0,
+        "NEEDS_OWNER": 0
+      }
+    }
+  },
+  "corrections": [
+    {
+      "n": 13,
+      "candidate": "dagger/container-use",
+      "verdict": "KEEP",
+      "original_reason": "Maintained development environments so coding agents can work in isolation (4,072 stars, Apache-2.0, last push 2026-09-21)",
+      "reason": "Coding-agent isolation environments. Repo pushed_at 2026-09-21T14:05:02Z is Dependabot branch dependabot/go_modules/minor-83ac690e78; default branch main last commit is 2026-08-12, 67 days before this check (4,072 stars, Apache-2.0)",
+      "evidence": {
+        "repo_pushed_at": "2026-09-21T14:05:02Z",
+        "default_branch": "main",
+        "default_branch_commit": "2e43e625e95216b719ec9338f4034fd3a0be2734",
+        "default_branch_commit_at": "2026-08-12T16:30:35Z",
+        "days_since_default_branch_commit": 67,
+        "dependabot_branch": "dependabot/go_modules/minor-83ac690e78",
+        "dependabot_commit_at": "2026-09-21T14:05:01Z"
+      }
+    },
+    {
+      "n": 14,
+      "candidate": "danielhanchen/llama.cpp",
+      "verdict": "REJECT",
+      "original_reason": "Identical fork of ggml-org/llama.cpp, candidate 27 in this intake (compare ahead 0, behind 0) (17 stars, MIT, last push 2026-10-16)",
+      "reason": "fork with no own commits (ahead 0, behind 2129 at check time) (17 stars, MIT, last push 2026-10-16)",
+      "evidence": {
+        "compare": "https://api.github.com/repos/ggml-org/llama.cpp/compare/master...danielhanchen:master",
+        "status": "behind",
+        "ahead_by": 0,
+        "behind_by": 2129,
+        "total_commits": 0,
+        "fork_pushed_at": "2026-10-16T12:18:29Z",
+        "parent": "ggml-org/llama.cpp"
+      }
+    },
+    {
+      "n": 20,
+      "candidate": "emilk/egui",
+      "verdict": "KEEP",
+      "original_reason": "Maintained immediate-mode Rust GUI for native and web, relevant to Control Center UI (31,555 stars, Apache-2.0, last push 2026-10-15)",
+      "reason": "Maintained immediate-mode Rust GUI for native and web, relevant to Control Center UI (31,555 stars, MIT OR Apache-2.0, last push 2026-10-15)",
+      "evidence": {
+        "github_license_spdx_id": "Apache-2.0",
+        "readme": "egui is licensed under MIT OR Apache-2.0",
+        "license_files": [
+          "LICENSE-MIT",
+          "LICENSE-APACHE"
+        ],
+        "pushed_at": "2026-10-15T16:28:09Z"
+      }
+    },
+    {
+      "n": 24,
+      "candidate": "gastownhall/gastown",
+      "verdict": "KEEP",
+      "original_reason": "Maintained multi-agent workspace manager named on the #612 executor comparison list (18,403 stars, MIT, last push 2026-10-18)",
+      "reason": "Named on the #612 executor comparison list. API pushed_at 2026-10-18T00:11:20Z is correct and is a Dependabot push (PRs 4928 and 4929 opened and closed that minute); default branch main last commit is 2026-07-23 (18,403 stars, MIT)",
+      "pushed_at_date_wrong": false,
+      "evidence": {
+        "pushed_at": "2026-10-18T00:11:20Z",
+        "default_branch": "main",
+        "default_branch_commit": "649b832b7672bc7a2dbef26f5983aba6198b819b",
+        "default_branch_commit_at": "2026-07-23T13:03:02Z",
+        "remaining_branches_checked": 138,
+        "newest_remaining_branch_commit": "2026-07-23T13:03:02Z",
+        "dependabot_prs": [
+          "https://github.com/gastownhall/gastown/pull/4928",
+          "https://github.com/gastownhall/gastown/pull/4929"
+        ]
+      }
+    }
+  ],
+  "rows": [
+    {
+      "n": 1,
+      "batch": 1,
+      "candidate": "agent-substrate/substrate",
+      "verdict": "KEEP",
+      "reason": "Maintained agent-core system (5,445 stars, Apache-2.0, last push 2026-10-18)",
+      "source": "https://github.com/agent-substrate/substrate"
+    },
+    {
+      "n": 2,
+      "batch": 1,
+      "candidate": "Astro-Han/karpathy-llm-wiki",
+      "verdict": "KEEP",
+      "reason": "Agent Skills-compatible LLM wiki for Claude Code, Cursor, and Codex (2,512 stars, MIT, last push 2026-07-23)",
+      "source": "https://github.com/Astro-Han/karpathy-llm-wiki"
+    },
+    {
+      "n": 3,
+      "batch": 1,
+      "candidate": "backnotprop/pstack",
+      "verdict": "KEEP",
+      "reason": "Maintained skills and principles for rigorous AI-assisted engineering with Claude, Codex, and pi (2,158 stars, MIT, last push 2026-10-15)",
+      "source": "https://github.com/backnotprop/pstack"
+    },
+    {
+      "n": 4,
+      "batch": 1,
+      "candidate": "earendil-works/pi",
+      "verdict": "KEEP",
+      "reason": "Registry entry badlogic/pi-mono redirects here; maintained AI agent toolkit with unified LLM API, agent loop, TUI, and coding CLI (116,021 stars, MIT, last push 2026-10-18)",
+      "source": "https://github.com/earendil-works/pi"
+    },
+    {
+      "n": 5,
+      "batch": 1,
+      "candidate": "BBuf/AI-Infra-Auto-Driven-SKILLS",
+      "verdict": "KEEP",
+      "reason": "Active agent skills for LLM-serving benchmarks, profiler triage, and inference stacks; GitHub license API 404 (982 stars, no license file, last push 2026-10-18)",
+      "source": "https://github.com/BBuf/AI-Infra-Auto-Driven-SKILLS"
+    },
+    {
+      "n": 6,
+      "batch": 1,
+      "candidate": "BerriAI/litellm",
+      "verdict": "KEEP",
+      "reason": "Maintained AI gateway for 100+ LLMs; LICENSE grants MIT outside enterprise/ (61,465 stars, GitHub SPDX NOASSERTION, last push 2026-10-18)",
+      "source": "https://github.com/BerriAI/litellm"
+    },
+    {
+      "n": 7,
+      "batch": 1,
+      "candidate": "cactus-compute/cactus",
+      "verdict": "KEEP",
+      "reason": "Maintained quantization, kernels, and inference runtime for phones, wearables, and robots (6,127 stars, custom license, GitHub SPDX NOASSERTION, last push 2026-09-26)",
+      "source": "https://github.com/cactus-compute/cactus"
+    },
+    {
+      "n": 8,
+      "batch": 1,
+      "candidate": "cactus-compute/needle",
+      "verdict": "KEEP",
+      "reason": "Maintained on-device automation foundation model with tool calls, ASR, and embeddings (14,075 stars, Apache-2.0, last push 2026-10-17)",
+      "source": "https://github.com/cactus-compute/needle"
+    },
+    {
+      "n": 9,
+      "batch": 1,
+      "candidate": "cbrock84/headcount",
+      "verdict": "KEEP",
+      "reason": "Maintained installable agent-organization skills for Claude Code and ChatGPT (2,067 stars, MIT, last push 2026-09-17)",
+      "source": "https://github.com/cbrock84/headcount"
+    },
+    {
+      "n": 10,
+      "batch": 1,
+      "candidate": "charlie947/social-media-skills",
+      "verdict": "KEEP",
+      "reason": "Public Codex and Claude skills for social writing, research, analytics, and Reel scripting (4,258 stars, MIT, last push 2026-09-15)",
+      "source": "https://github.com/charlie947/social-media-skills"
+    },
+    {
+      "n": 11,
+      "batch": 1,
+      "candidate": "collabs-inc/collab-public",
+      "verdict": "KEEP",
+      "reason": "Agentic development environment on an infinite canvas (3,075 stars, FSL-1.1-ALv2, GitHub SPDX NOASSERTION, last push 2026-08-08)",
+      "source": "https://github.com/collabs-inc/collab-public"
+    },
+    {
+      "n": 12,
+      "batch": 1,
+      "candidate": "ctate/3d-model-generator",
+      "verdict": "KEEP",
+      "reason": "Software app that generates 3D models through the Hyper3D Rodin API; GitHub license API 404 (233 stars, no license file, last push 2026-02-05)",
+      "source": "https://github.com/ctate/3d-model-generator"
+    },
+    {
+      "n": 13,
+      "batch": 1,
+      "candidate": "dagger/container-use",
+      "verdict": "KEEP",
+      "reason": "Coding-agent isolation environments. Repo pushed_at 2026-09-21T14:05:02Z is Dependabot branch dependabot/go_modules/minor-83ac690e78; default branch main last commit is 2026-08-12, 67 days before this check (4,072 stars, Apache-2.0)",
+      "source": "https://github.com/dagger/container-use"
+    },
+    {
+      "n": 14,
+      "batch": 1,
+      "candidate": "danielhanchen/llama.cpp",
+      "verdict": "REJECT",
+      "reason": "fork with no own commits (ahead 0, behind 2129 at check time) (17 stars, MIT, last push 2026-10-16)",
+      "source": "https://github.com/danielhanchen/llama.cpp"
+    },
+    {
+      "n": 15,
+      "batch": 1,
+      "candidate": "dbos-inc/dbos-transact-py",
+      "verdict": "KEEP",
+      "reason": "Maintained database-backed durable Python workflows (1,637 stars, MIT, last push 2026-10-16)",
+      "source": "https://github.com/dbos-inc/dbos-transact-py"
+    },
+    {
+      "n": 16,
+      "batch": 2,
+      "candidate": "debpalash/VoiceStudio",
+      "verdict": "KEEP",
+      "reason": "Maintained local voice studio for cloning, design, dubbing, and transcription, already on the speech comparison lane (74,008 stars, AGPL-3.0, last push 2026-10-18)",
+      "source": "https://github.com/debpalash/VoiceStudio"
+    },
+    {
+      "n": 17,
+      "batch": 2,
+      "candidate": "DeusData/codebase-memory-mcp",
+      "verdict": "KEEP",
+      "reason": "Maintained code-intelligence MCP that indexes a repo into a knowledge graph; cited vfmem pattern source (46,802 stars, MIT, last push 2026-10-18)",
+      "source": "https://github.com/DeusData/codebase-memory-mcp"
+    },
+    {
+      "n": 18,
+      "batch": 2,
+      "candidate": "Edge0-AI/Audio8_TTS",
+      "verdict": "KEEP",
+      "reason": "Maintained compact text-to-speech model (1,817 stars, Apache-2.0, last push 2026-09-02)",
+      "source": "https://github.com/Edge0-AI/Audio8_TTS"
+    },
+    {
+      "n": 19,
+      "batch": 2,
+      "candidate": "emdgroup/maestro",
+      "verdict": "KEEP",
+      "reason": "Active task orchestrator for a coding agent of choice (7 stars, Apache-2.0, last push 2026-10-18)",
+      "source": "https://github.com/emdgroup/maestro"
+    },
+    {
+      "n": 20,
+      "batch": 2,
+      "candidate": "emilk/egui",
+      "verdict": "KEEP",
+      "reason": "Maintained immediate-mode Rust GUI for native and web, relevant to Control Center UI (31,555 stars, MIT OR Apache-2.0, last push 2026-10-15)",
+      "source": "https://github.com/emilk/egui"
+    },
+    {
+      "n": 21,
+      "batch": 2,
+      "candidate": "etcd-io/etcd",
+      "verdict": "KEEP",
+      "reason": "Maintained distributed key-value store already used by the Office P0 lease work (52,389 stars, Apache-2.0, last push 2026-10-17)",
+      "source": "https://github.com/etcd-io/etcd"
+    },
+    {
+      "n": 22,
+      "batch": 2,
+      "candidate": "fishaudio/fish-speech",
+      "verdict": "KEEP",
+      "reason": "Maintained open-source TTS under the Fish Audio Community License 1.0 (33,245 stars, GitHub SPDX NOASSERTION, last push 2026-10-14)",
+      "source": "https://github.com/fishaudio/fish-speech"
+    },
+    {
+      "n": 23,
+      "batch": 2,
+      "candidate": "FlowiseAI/Flowise",
+      "verdict": "REJECT",
+      "reason": "GitHub archived visual agent builder (archived=true) (55,511 stars, GitHub SPDX NOASSERTION, last push 2026-08-13)",
+      "source": "https://github.com/FlowiseAI/Flowise"
+    },
+    {
+      "n": 24,
+      "batch": 2,
+      "candidate": "gastownhall/gastown",
+      "verdict": "KEEP",
+      "reason": "Named on the #612 executor comparison list. API pushed_at 2026-10-18T00:11:20Z is correct and is a Dependabot push (PRs 4928 and 4929 opened and closed that minute); default branch main last commit is 2026-07-23 (18,403 stars, MIT)",
+      "source": "https://github.com/gastownhall/gastown"
+    },
+    {
+      "n": 25,
+      "batch": 2,
+      "candidate": "generalaction/emdash",
+      "verdict": "KEEP",
+      "reason": "Maintained open-source agentic IDE for parallel coding agents, named on the #612 comparison list (6,024 stars, Apache-2.0, last push 2026-10-17)",
+      "source": "https://github.com/generalaction/emdash"
+    },
+    {
+      "n": 26,
+      "batch": 2,
+      "candidate": "getpaseo/paseo",
+      "verdict": "KEEP",
+      "reason": "Maintained orchestrator for multiple coding agents from desktop and mobile; LICENSE text is Apache-2.0 (21,245 stars, GitHub SPDX NOASSERTION, last push 2026-10-18)",
+      "source": "https://github.com/getpaseo/paseo"
+    },
+    {
+      "n": 27,
+      "batch": 2,
+      "candidate": "ggml-org/llama.cpp",
+      "verdict": "KEEP",
+      "reason": "Canonical maintained LLM inference engine in C/C++ (131,558 stars, MIT, last push 2026-10-18)",
+      "source": "https://github.com/ggml-org/llama.cpp"
+    },
+    {
+      "n": 28,
+      "batch": 2,
+      "candidate": "gmh5225/awesome-skills",
+      "verdict": "KEEP",
+      "reason": "Maintained curated list of agent skills and tools for Claude Code, Codex, Gemini CLI, and Copilot (94 stars, MIT, last push 2026-10-17)",
+      "source": "https://github.com/gmh5225/awesome-skills"
+    },
+    {
+      "n": 29,
+      "batch": 2,
+      "candidate": "Hikhakk/higgsfield-mcp-unified",
+      "verdict": "KEEP",
+      "reason": "Maintained local-first MCP server for Higgsfield image and video models (97 stars, MIT, last push 2026-10-17)",
+      "source": "https://github.com/Hikhakk/higgsfield-mcp-unified"
+    },
+    {
+      "n": 30,
+      "batch": 2,
+      "candidate": "huginn/huginn",
+      "verdict": "KEEP",
+      "reason": "Maintained self-hosted agents that monitor and act on a user's behalf (50,073 stars, MIT, last push 2026-10-18)",
+      "source": "https://github.com/huginn/huginn"
+    },
+    {
+      "n": 46,
+      "batch": 4,
+      "candidate": "openinterpreter/openinterpreter",
+      "verdict": "KEEP",
+      "reason": "Registry entry openinterpreter/open-interpreter redirects here; maintained coding agent for open models (68,600 stars, Apache-2.0, last push 2026-10-11)",
+      "source": "https://github.com/openinterpreter/openinterpreter"
+    },
+    {
+      "n": 47,
+      "batch": 4,
+      "candidate": "raine/workmux",
+      "verdict": "KEEP",
+      "reason": "Maintained git-worktree and tmux tool for parallel development (2,893 stars, MIT, last push 2026-10-17)",
+      "source": "https://github.com/raine/workmux"
+    },
+    {
+      "n": 48,
+      "batch": 4,
+      "candidate": "restatedev/restate",
+      "verdict": "KEEP",
+      "reason": "Maintained durable-execution platform under BUSL-1.1; #612 names it as the durable-engine role (4,569 stars, GitHub SPDX NOASSERTION, last push 2026-10-18)",
+      "source": "https://github.com/restatedev/restate"
+    },
+    {
+      "n": 49,
+      "batch": 4,
+      "candidate": "SaladDay/cc-switch-cli",
+      "verdict": "KEEP",
+      "reason": "Maintained cross-platform CLI assistant for Claude Code, Codex, and Gemini CLI (5,332 stars, MIT, last push 2026-10-16)",
+      "source": "https://github.com/SaladDay/cc-switch-cli"
+    },
+    {
+      "n": 50,
+      "batch": 4,
+      "candidate": "superset-sh/superset",
+      "verdict": "KEEP",
+      "reason": "Maintained agent workspace for running many CLI coding agents in parallel, under Elastic License 2.0 (15,330 stars, GitHub SPDX NOASSERTION, last push 2026-10-18)",
+      "source": "https://github.com/superset-sh/superset"
+    },
+    {
+      "n": 51,
+      "batch": 4,
+      "candidate": "tashfeenahmed/freellmapi",
+      "verdict": "KEEP",
+      "reason": "Maintained OpenAI-compatible router over free LLM providers; the repo description states personal experimentation only (36,787 stars, MIT, last push 2026-10-18)",
+      "source": "https://github.com/tashfeenahmed/freellmapi"
+    },
+    {
+      "n": 52,
+      "batch": 4,
+      "candidate": "Tejashmakwana/motionmaxxing",
+      "verdict": "KEEP",
+      "reason": "Maintained agent skill that turns video into motion-design-style films (853 stars, Apache-2.0, last push 2026-10-06)",
+      "source": "https://github.com/Tejashmakwana/motionmaxxing"
+    },
+    {
+      "n": 53,
+      "batch": 4,
+      "candidate": "temporalio/cli",
+      "verdict": "KEEP",
+      "reason": "Maintained CLI for Temporal Server, workflows, and activities (388 stars, MIT, last push 2026-10-17)",
+      "source": "https://github.com/temporalio/cli"
+    },
+    {
+      "n": 54,
+      "batch": 4,
+      "candidate": "temporalio/temporal",
+      "verdict": "KEEP",
+      "reason": "Maintained durable workflow service, a comparison candidate beside Restate (23,791 stars, MIT, last push 2026-10-18)",
+      "source": "https://github.com/temporalio/temporal"
+    },
+    {
+      "n": 55,
+      "batch": 4,
+      "candidate": "TencentCloud/octop-memory",
+      "verdict": "KEEP",
+      "reason": "Maintained agent memory for preferences and cross-session context (71 stars, MIT, last push 2026-10-16)",
+      "source": "https://github.com/TencentCloud/octop-memory"
+    },
+    {
+      "n": 56,
+      "batch": 4,
+      "candidate": "tester-army/e2e",
+      "verdict": "KEEP",
+      "reason": "Maintained end-to-end testing framework for web and mobile apps (11,118 stars, Apache-2.0, last push 2026-10-17)",
+      "source": "https://github.com/tester-army/e2e"
+    },
+    {
+      "n": 57,
+      "batch": 4,
+      "candidate": "tigerless-labs/autoharness",
+      "verdict": "KEEP",
+      "reason": "Maintained self-learning skill layer that distills Claude Code sessions into skills (11,135 stars, MIT, last push 2026-10-15)",
+      "source": "https://github.com/tigerless-labs/autoharness"
+    },
+    {
+      "n": 58,
+      "batch": 4,
+      "candidate": "tinhtran24/maestro",
+      "verdict": "KEEP",
+      "reason": "Open-source Go multi-agent coding workbench, a separate repo from emdgroup/maestro (6 stars, Apache-2.0, last push 2026-07-24)",
+      "source": "https://github.com/tinhtran24/maestro"
+    },
+    {
+      "n": 59,
+      "batch": 4,
+      "candidate": "tmchow/illo-skill",
+      "verdict": "KEEP",
+      "reason": "Maintained agent skill for print-style editorial illustrations (406 stars, MIT, last push 2026-09-21)",
+      "source": "https://github.com/tmchow/illo-skill"
+    },
+    {
+      "n": 60,
+      "batch": 4,
+      "candidate": "wheresryan22/anatomy",
+      "verdict": "KEEP",
+      "reason": "Maintained agent skill for isometric illustrations of machines and systems; already receipted as O-VIS-01 (15,494 stars, MIT, last push 2026-10-15)",
+      "source": "https://github.com/wheresryan22/anatomy"
+    },
+    {
+      "n": 61,
+      "batch": 4,
+      "candidate": "yetone/magpie",
+      "verdict": "KEEP",
+      "reason": "Maintained menu-bar model router across coding agents (15,435 stars, MIT, last push 2026-10-18)",
+      "source": "https://github.com/yetone/magpie"
+    }
+  ]
+}
