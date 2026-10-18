@@ -228,21 +228,30 @@ def shift_regression() -> None:
         for url, ids in SHIFT_ALIAS.items()
     }
 
-    def bound(line: int) -> list[str]:
-        url = enclosing_url(SHIFT_FIXTURE, line)
-        return ids_from(by_url.get(url or "", []))
+    def bound(line: int, item: str) -> list[str]:
+        # Exercise the production join, not just the URL parser. A mutation of
+        # expected_ids() to use nearest_preceding_url() must fail this fixture.
+        return expected_ids(
+            SHIFT_FIXTURE,
+            {"file": "fixture/shift.json", "line": line, "item": item},
+            by_url,
+            {},
+        )
 
     def shifted(line: int) -> list[str]:
         url = nearest_preceding_url(lines, line)
         return ids_from(by_url.get(url or "", []))
 
-    if bound(alpha_line) != ["candidate-alpha"]:
-        fail(f"url-after-text object bound {bound(alpha_line)} instead of its own id")
-    if bound(beta_line) != ["candidate-beta"]:
-        fail(f"enclosing object bound Beta to {bound(beta_line)}")
-    if shifted(beta_line) != ["candidate-alpha"]:
-        fail(f"shift fixture no longer reproduces a moved id: {shifted(beta_line)}")
-    if bound(beta_line) == shifted(beta_line):
+    alpha_ids = bound(alpha_line, "Alpha")
+    beta_ids = bound(beta_line, "Beta")
+    shifted_beta_ids = shifted(beta_line)
+    if alpha_ids != ["candidate-alpha"]:
+        fail(f"url-after-text object bound {alpha_ids} instead of its own id")
+    if beta_ids != ["candidate-beta"]:
+        fail(f"enclosing object bound Beta to {beta_ids}")
+    if shifted_beta_ids != ["candidate-alpha"]:
+        fail(f"shift fixture no longer reproduces a moved id: {shifted_beta_ids}")
+    if beta_ids == shifted_beta_ids:
         fail("shifted id was accepted")
 
 
@@ -335,8 +344,11 @@ def main() -> int:
         fail("markdown candidate count")
     if "enclosing JSON object" not in report:
         fail("markdown must describe enclosing-object binding")
-    if "Row 31 (Archon)" not in report or "row 23" in report or "Row 23" in report:
-        fail("Archon prose row reference")
+    # Only Archon's own prose reference is contractual. Other row numbers
+    # elsewhere in the report must not trip this sensor.
+    archon_refs = re.findall(r"\bRow\s+(\d+)\s*\(Archon\)", report, flags=re.I)
+    if archon_refs != [str(backed[0])]:
+        fail(f"Archon prose row references {archon_refs}; expected [{backed[0]}]")
     archon_cells = [
         line for line in report.splitlines()
         if line.startswith("| 31 |") and "Archon" in line and "curl" in line
