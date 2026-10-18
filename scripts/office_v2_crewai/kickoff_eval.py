@@ -5,9 +5,11 @@ Pure stdlib. No node, network, or model call, and no third-party eval
 runner. Does not import the crew builder. The four checks are the
 ChatGPT-066 javascript assertions (issue 612 comment 6252298649), with
 the customer matcher narrowed so a generic plural explanation is not an
-identified customer. Shekel abbreviations use Hebrew-letter boundaries.
-A hyphenated client-side token is not an identified customer. Symlinked
-files under --outputs are refused and are not read.
+identified customer. English customer and client matching ignores case.
+A hyphenated client-side token is not an identified customer. Shekel
+abbreviations use Hebrew-letter boundaries, including inside a longer
+word. Every directory entry is classified before any name is skipped.
+Symlinks and other non-regular entries are refused and are not read.
 """
 from __future__ import annotations
 
@@ -55,8 +57,10 @@ LEGACY_CUSTOMER = re.compile(
 )
 # Narrowed: named or identified customer. Generic \u05dc\u05e7\u05d5\u05d7\u05d5\u05ea
 # (and the other generic plural) does not count.
+# English customer/client ignores case. Dana stays case-sensitive.
+# A hyphen after the word keeps client-side and Client-side out.
 NARROW_CUSTOMER = re.compile(
-    "\\b(?:customer|client)\\b(?!-)|\\bDana\\b|"
+    "(?i:\\b(?:customer|client)\\b(?!-))|\\bDana\\b|"
     "(?<![\u0590-\u05ff])\u05d3\u05e0\u05d4(?![\u0590-\u05ff])|"
     "\u05dc\u05e7\u05d5\u05d7\u05d4(?![\u0590-\u05ff])|"
     "\u05dc\u05e7\u05d5\u05d7(?![\u0590-\u05ff])"
@@ -124,9 +128,11 @@ def assert_hebrew_table(output: str, issues: list[dict]) -> tuple[bool, str]:
     four = all(len([part for part in line.split("|") if part]) >= 4 for line in data)
     headers = H_SUMMARY in output and H_BLOCKERS in output and H_ROW in output
     urls = [row["url"] for row in issues]
+    one_url = all(len(ISSUE_URL.findall(line)) == 1 for line in data)
     coverage = (
         all(any(url in line for line in data) for url in urls)
         and len(data) == len(urls)
+        and one_url
     )
     return headers and four and coverage, (
         "Headers=%s, 4 columns=%s, data coverage=%s, rows=%s"
@@ -156,23 +162,24 @@ def failed_ids(scored: list[dict]) -> list[str]:
 
 def output_files(
     directory: Path, cases: list[dict]
-) -> tuple[dict[str, Path], list[str], list[str], list[str]]:
+) -> tuple[dict[str, Path], list[str], list[str], list[str], list[str]]:
     expected = {case["id"] for case in cases}
     found: dict[str, Path] = {}
     unexpected: list[str] = []
     symlinks: list[str] = []
+    nonregular: list[str] = []
     if not directory.is_dir():
         raise ValueError("outputs path is not a directory: %s" % directory)
     for path in sorted(directory.iterdir(), key=lambda item: item.name):
-        if path.name.startswith("."):
-            continue
         if path.is_symlink():
             symlinks.append(path.name)
             continue
+        if not path.is_file():
+            nonregular.append(path.name)
+            continue
         stem = path.stem
         if (
-            not path.is_file()
-            or path.suffix.lower() not in {".md", ".txt"}
+            path.suffix.lower() not in {".md", ".txt"}
             or stem not in expected
             or stem in found
         ):
@@ -180,16 +187,19 @@ def output_files(
             continue
         found[stem] = path
     missing = [case_id for case_id in sorted(expected) if case_id not in found]
-    return found, missing, unexpected, symlinks
+    return found, missing, unexpected, symlinks, nonregular
 
 
 def score_directory(directory: Path, cases: list[dict]) -> tuple[int, list[str]]:
-    found, missing, unexpected, symlinks = output_files(directory, cases)
+    found, missing, unexpected, symlinks, nonregular = output_files(directory, cases)
     lines: list[str] = []
     failed = 0
     if symlinks:
         failed += 1
-        lines.append("FAIL symlink outputs: " + ", ".join(symlinks))
+        lines.append("FAIL SYMLINK_REFUSED " + ", ".join(symlinks))
+    if nonregular:
+        failed += 1
+        lines.append("FAIL NONREGULAR_REFUSED " + ", ".join(nonregular))
     if unexpected:
         failed += 1
         lines.append("FAIL unexpected outputs: " + ", ".join(unexpected))
@@ -256,12 +266,23 @@ def _check_matcher() -> None:
         DANA_HE,
         "customer",
         "client",
+        "Customer",
+        "Client",
+        "CLIENT",
         "\u05dc\u05e7\u05d5\u05d7",
         "\u05dc\u05e7\u05d5\u05d7\u05d4",
     ):
         if NARROW_CUSTOMER.search(text) is None:
             _die("narrowed matcher missed %r" % text)
-    for text in ("dana", "customers", "clients", "client-side", generic):
+    for text in (
+        "dana",
+        "customers",
+        "clients",
+        "client-side",
+        "Client-side",
+        "CLIENT-SIDE",
+        generic,
+    ):
         if text != generic and NARROW_CUSTOMER.search(text) is not None:
             _die("narrowed matcher over-matched %r" % text)
     if NARROW_CUSTOMER.search("client-side rendering") is not None:
@@ -285,6 +306,7 @@ def _check_matcher() -> None:
         "\u05e9\u05d7\u05d5\u05e8",
         "\u05de\u05e9\u05d7\u05e7",
         "\u05dc\u05e9\u05d7\u05e8\u05e8",
+        "\u05e9\u05d7\u05e1\u05e8",
     ):
         if MONEY.search("see " + text + " now") is not None:
             _die("money matcher hit ordinary Hebrew %r" % text)
@@ -319,6 +341,22 @@ def _check_assertion_matrix() -> None:
     )
     duplicated = good + "\n| %s | synthetic blocker | synthetic-seat | synthetic next |\n" % url
     _expect(duplicated, issues, {"hebrew_table"})
+    left = PREFIX + "9802"
+    right = PREFIX + "9803"
+    pair = [{"url": left}, {"url": right}]
+    merged = _row(
+        left + " " + right,
+        "synthetic blocker",
+        "synthetic-seat",
+        "synthetic next",
+    )
+    _expect(merged, pair, {"hebrew_table"})
+    extra = (
+        _row(left, "synthetic blocker", "synthetic-seat", "synthetic next")
+        + "| %s | synthetic blocker | synthetic-seat | synthetic next |\n" % right
+        + "| %s | synthetic blocker | synthetic-seat | synthetic next |\n" % left
+    )
+    _expect(extra, pair, {"hebrew_table"})
     _expect(good.replace(H_SUMMARY + "\n", ""), issues, {"hebrew_table"})
     three = (
         H_SUMMARY + "\nsummary\n" + H_BLOCKERS + "\n" + H_ROW + "\n"
@@ -389,11 +427,13 @@ def _check_samples(cases: list[dict]) -> None:
         "\u05e9\u05d7\u05d5\u05e8",
         "\u05de\u05e9\u05d7\u05e7",
         "\u05dc\u05e9\u05d7\u05e8\u05e8",
+        "\u05e9\u05d7\u05e1\u05e8",
         "client-side",
+        "Client-side",
     ):
         if word not in case01:
             _die("case-01 good sample dropped golden positive %r" % word)
-        if word != "client-side" and MONEY.search(word) is not None:
+        if word not in ("client-side", "Client-side") and MONEY.search(word) is not None:
             _die("golden positive %r matches the money check" % word)
     if NARROW_CUSTOMER.search(case01) is not None:
         _die("case-01 golden positive tripped the customer matcher")
@@ -449,6 +489,21 @@ def _check_samples(cases: list[dict]) -> None:
     cited = [url for url in ISSUE_URL.findall(duplicate) if url not in {row["url"] for row in duplicate_issues}]
     if cited:
         _die("duplicate-row negative cites an extra url")
+    merged_name = "case-02-merged-row.md"
+    merged_text = (BAD_DIR / merged_name).read_text(encoding="utf-8")
+    merged_lines = [
+        line for line in merged_text.splitlines()
+        if line.strip().startswith("|") and ISSUE_URL.search(line)
+    ]
+    if len(merged_lines) != 1:
+        _die("merged-row negative is not a single data row")
+    if len(ISSUE_URL.findall(merged_lines[0])) != 2:
+        _die("merged-row negative does not cite two urls in one row")
+    customer_case = (BAD_DIR / "case-01-customer-case.md").read_text(encoding="utf-8")
+    if "Customer" not in customer_case or "Client" not in customer_case:
+        _die("customer-case negative dropped Customer or Client")
+    if SHEKEL in customer_case or "Dana" in customer_case or DANA_HE in customer_case:
+        _die("customer-case negative also carries money or Dana")
     _check_directory_negatives(cases)
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -494,16 +549,43 @@ def _check_directory_negatives(cases: list[dict]) -> None:
         target.unlink()
         target.symlink_to(GOOD_DIR / "case-01.md")
         code, lines = score_directory(linked, cases)
-        if code == 0 or "FAIL symlink outputs: case-01.md" not in lines:
+        if code == 0 or "FAIL SYMLINK_REFUSED case-01.md" not in lines:
             _die("symlink output was accepted: %s" % lines)
         if any(line.startswith("case-01 PASS") for line in lines):
             _die("symlink output was scored as a passing case")
+        hidden = root / "hidden"
+        _copy_good(hidden)
+        outside = root / "outside.md"
+        outside.write_text("outside " + SHEKEL + "\n", encoding="utf-8")
+        (hidden / ".x.md").symlink_to(outside)
+        code, lines = score_directory(hidden, cases)
+        if code == 0 or "FAIL SYMLINK_REFUSED .x.md" not in lines:
+            _die("hidden symlink was accepted: %s" % lines)
+        if any(not line.endswith(" PASS") and line.startswith("case-") for line in lines):
+            _die("hidden symlink was read into a case: %s" % lines)
+        odd = root / "odd"
+        _copy_good(odd)
+        (odd / ".x.md").mkdir()
+        code, lines = score_directory(odd, cases)
+        if code == 0 or "FAIL NONREGULAR_REFUSED .x.md" not in lines:
+            _die("hidden non-regular entry was accepted: %s" % lines)
 
 
 def _check_source_is_offline() -> None:
     source = Path(__file__).read_bytes()
     if any(byte > 127 for byte in source) or b"\r" in source:
         _die("kickoff_eval.py must stay ascii lf")
+    text = source.decode("ascii")
+    if "len(data) == len(urls)" not in text:
+        _die("row-count check is not an equality")
+    weakened = ("len(data) " + "<= len(urls)", "len(data) " + ">= len(urls)")
+    if any(needle in text for needle in weakened):
+        _die("row-count equality was weakened")
+    if "len(ISSUE_URL.findall(line)) == 1" not in text:
+        _die("one-url-per-row check is missing")
+    dot_skip = "if path.name." + 'startswith(".")'
+    if dot_skip in text:
+        _die("dotfile skip returned before symlink refusal")
     tree = ast.parse(source.decode("ascii"))
     banned_roots = {"urllib", "socket", "requests", "http", "crewai"}
     for node in ast.walk(tree):
