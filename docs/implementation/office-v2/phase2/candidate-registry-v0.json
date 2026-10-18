@@ -3145,8 +3145,8 @@
       "provenance_class": "POST_POLICY_P0_AGENT_EXECUTOR_COMPARISON",
       "lifecycle_state": "RESEARCHED",
       "decision_verdict": "BENCHMARK_REQUIRED",
-      "verdict_reason": "Official documented headless run command, JSON events, selectable provider/model and code-editing agent. Strong direct candidate for P0 agent execution; model/tool-call correctness and durable resume are unproven.",
-      "runtime_verification": "NOT_RUN",
+      "verdict_reason": "Historic 2026-10-08 isolated OpenCode v2.0.25 and v1.18.35 agent runs FAILED/INCONCLUSIVE on physical macOS and Windows (TIMEOUT_UNKNOWN_EFFECTS, zero tool events and zero code edits), despite working direct local Ollama text inference and successful Aider repairs. CP038 exact-runner fake-CLI replay identifies an open inherited non-TTY stdin hang reproducible before the model request; a one-line stdin=DEVNULL change fixes the synthetic replay, but the actual historical stdin state and future real model/tool results remain UNVERIFIED. Candidate remains RESEARCHED/BENCHMARK_REQUIRED, never admitted.",
+      "runtime_verification": "FAIL",
       "authority_role": "NONE",
       "capability_tags": [
         "agent-runtime",
@@ -3160,7 +3160,7 @@
       "platform_constraints": [
         "MIT; pin binary version and checksum, inspect permissions/network access before LAB.",
         "OpenCode-Ollama official integration recommends 64k+ model context; local VRAM/RAM and tool-use quality are NOT yet proven.",
-        "Neither host had an installed OpenCode binary or local Ollama/llama server on 2026-10-08."
+        "Staged OpenCode v2.0.25/v1.18.35 binaries and local Ollama were used on BOTH Mac and Windows in archived 2026-10-08 LAB; both OpenCode coding attempts timed out without edits/events. Current runtime, credentials, policy, hardware resource lease and operational readiness are NOT verified."
       ],
       "shortlist_lanes": [
         "agent-runtime"
@@ -3170,12 +3170,14 @@
         "https://opencode.ai/v2/docs/cli/commands/",
         "https://github.com/ollama/ollama/blob/main/docs/integrations/opencode.mdx",
         "https://github.com/nocturney/velvetos-core/issues/612",
-        "docs/implementation/office-v2/phase2/p0-agent-cli-comparison-2026-10-08.md"
+        "docs/implementation/office-v2/phase2/p0-agent-cli-comparison-2026-10-08.md",
+        "https://docs.google.com/document/d/1v9rCpOafTyiv5LMcCRfAM-vB4u2dTwrorqfBJMcGgGI/edit#CP038"
       ],
       "notes": [
-        "Official source/docs research only as of 2026-10-08; no executable or model run accepted by VelvetOS.",
+        "Archived 2026-10-08 real local provider OpenCode v2.0.25/v1.18.35 Mac+Windows coding trials failed after ~240 seconds, zero observed tool events/edits. Original physical receipt files preserved (see #612 and Ledger); research status is not 'NOT_RUN'.",
         "Open-source CLI does not guarantee zero-spend inference. No Codex CLI, paid calls or business writers.",
-        "Only same-fixture, isolated worktree coding/QA tests can promote this candidate."
+        "Only same-fixture, isolated worktree coding/QA tests can promote this candidate.",
+        "CP038 NO-MODEL diagnostic: exact archived p0_fixture_runner.py SHA256 fc9eea19acc8213e9963ef003b12941c7ffa81993d523b4b4332bdfe36d45d16 was read on both Windows and Mac. Local fake-CLI replay default inherited nonTTY stdin -> TIMEOUT and empty events; scratch-only stdin=DEVNULL -> clean fake event. Neither test called OpenCode vendor, model, network or production."
       ],
       "original_office_v2_verdict": null,
       "comparison_review": {
@@ -3187,7 +3189,7 @@
           "hybrid"
         ],
         "evidence_status": "RESEARCH_ONLY",
-        "next_action": "Stage only pinned isolated CLI --help and version with no model calls; verify local keyless code-capable provider resources before running one bounded coding fixture with full postconditions.",
+        "next_action": "First keep original negative receipts; read CP038 source/replay and use a scratch-only runner with explicit stdin=subprocess.DEVNULL, authenticated local provider package, fixed model/tool context and host resource lease. Only after separate authority do one bounded NO-PAID local-model tool-event+scoped code-patch pilot and independent red/green/hidden QA. Do not infer real OpenCode fix from synthetic EOF or auto-admit this candidate.",
         "rationale": "A ready-made code-agent core may avoid building a new agent runner while retaining canonical Task Envelopes and independent verifier.",
         "decision_evidence_refs": []
       }
