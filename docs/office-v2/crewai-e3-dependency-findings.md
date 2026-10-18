@@ -69,8 +69,9 @@ A completed kickoff saves its text at
 and records that path and sha256. The receipt status stays
 `NOT_VERIFIED`. Any exception during the run writes a `FAIL` receipt.
 On Windows, zero listening ports is proven from
-`C:\Windows\System32\netstat.exe -ano` plus a pid/ppid list for the pilot
-process tree. The netstat parser requires the English header
+`C:\Windows\System32\netstat.exe -ano` plus a Toolhelp pid/ppid list for
+the pilot process tree. The netstat child sets `SystemRoot` and `windir`
+to `C:\Windows`. The netstat parser requires the English header
 `Active Connections`. A localized Windows UI, including Hebrew on Chris,
 does not print that header. The observation stays `PILOT_LISTENER_UNPROVEN`.
 That is fail-closed: a localized table is not counted as zero listeners.

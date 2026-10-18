@@ -44,21 +44,20 @@ DARWIN_NETSTAT = "/usr/bin/netstat"
 WINDOWS_NETSTAT = "C:\\Windows\\System32\\netstat.exe"
 WINDOWS_POWERSHELL = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
 WINDOWS_LISTENER_PATH = "C:\\Windows\\System32;C:\\Windows\\System32\\WindowsPowerShell\\v1.0"
-# Pid and parent pid only. Digits stay ASCII, so the console code page cannot
-# turn the process list into unparseable JSON.
-_PS_PROCESSES = (
-    "$ErrorActionPreference = 'Stop'\n"
-    # PowerShell 5.1 writes UTF-16 to a pipe unless OutputEncoding is set.
-    # UTF-16 in a text capture is not a pid list, so the proof would stay unproven.
-    "$OutputEncoding = [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding $false\n"
-    "Get-CimInstance -ClassName Win32_Process -Property ProcessId,ParentProcessId | ForEach-Object {\n"
-    "  '{0} {1}' -f [int]$_.ProcessId, [int]$_.ParentProcessId\n"
-    "}\n"
-)
+WINDOWS_SYSTEM_ROOT = "C:\\Windows"
 
 
 class UsageRefusal(RuntimeError):
     """A pilot usage condition failed closed. No PASS is recorded."""
+
+    def __init__(self, message: str, detail: str | None = None) -> None:
+        super().__init__(message)
+        self.detail = detail
+
+
+def _unproven(detail: str) -> UsageRefusal:
+    """Same refusal code, with a stable detail for the receipt."""
+    return UsageRefusal("PILOT_LISTENER_UNPROVEN", detail)
 
 
 def module_is_forbidden(name: str) -> bool:
@@ -320,11 +319,14 @@ def guard_post_run(modules: dict, observe, commands: list | None = None, receipt
     assert_loaded_modules(modules)
     try:
         ports = observe()
-    except UsageRefusal:
+    except UsageRefusal as exc:
         if receipt is not None:
             teardown = receipt.setdefault("teardown", {})
             teardown["listener_count"] = None
             teardown["listener_source"] = "UNPROVEN"
+            detail = getattr(exc, "detail", None)
+            if isinstance(detail, str) and detail:
+                teardown["listener_detail"] = detail
         raise
     if receipt is not None:
         teardown = receipt.setdefault("teardown", {})
@@ -522,7 +524,7 @@ def process_tree(processes: list, root_pid: int) -> set[int]:
         seen.add(pid)
         by_parent.setdefault(ppid, []).append(pid)
     if root_pid not in seen:
-        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+        raise _unproven("PID_ABSENT")
     selected = {root_pid}
     changed = True
     while changed:
@@ -638,8 +640,8 @@ def _open_trusted_regular(path: str) -> int:
         if (info.st_dev, info.st_ino) != (current.st_dev, current.st_ino):
             raise OSError("trusted listener binary missing")
         if os.name == "nt":
-            final = os.path.normcase(os.path.realpath(path))
-            expected = os.path.normcase(os.path.abspath(path))
+            final = os.path.normcase(_strip_nt_prefix(os.path.realpath(path)))
+            expected = os.path.normcase(_strip_nt_prefix(os.path.abspath(path)))
             if final != expected:
                 raise OSError("trusted listener binary missing")
     except OSError:
@@ -683,12 +685,41 @@ def trusted_listener_binary(tool: str, platform: str | None = None) -> str | Non
     return candidate
 
 
+def _strip_nt_prefix(path: str) -> str:
+    """Drop the ``\\\\?\\`` prefix GetFinalPathNameByHandle can leave on."""
+    if not isinstance(path, str):
+        return path
+    if path.startswith("\\\\?\\UNC\\"):
+        return "\\\\" + path[8:]
+    if path.startswith("\\\\?\\"):
+        return path[4:]
+    return path
+
+
+def windows_tool_env(base: dict) -> dict:
+    """Environment for a System32 listener tool.
+
+    The kickoff sensor clears ``os.environ`` down to the sandbox map, which
+    drops ``SystemRoot``. ``netstat.exe`` then cannot start, and the proof
+    stays unproven. The child always receives ``C:\\Windows`` for
+    ``SystemRoot`` and ``windir``. A sandbox value cannot redirect it.
+    """
+    if not isinstance(base, dict):
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN", "TOOL_ENV")
+    env = dict(base)
+    env["SystemRoot"] = WINDOWS_SYSTEM_ROOT
+    env["SYSTEMROOT"] = WINDOWS_SYSTEM_ROOT
+    env["windir"] = WINDOWS_SYSTEM_ROOT
+    return env
+
+
 def run_trusted_listener(binary: str, args: list[str], path_value: str | None = None):
     """Run an absolute listener tool. PATH is only that binary's directory.
 
     The process image is the inode opened above. A later replacement of the
     path does not change which file runs, except on Windows (see
-    ``_open_trusted_regular``).
+    ``_open_trusted_regular``). On Windows the child ``SystemRoot`` is
+    ``C:\\Windows``.
     """
     import subprocess
 
@@ -697,6 +728,8 @@ def run_trusted_listener(binary: str, args: list[str], path_value: str | None = 
     fd = _open_trusted_regular(binary)
     env = os.environ.copy()
     env["PATH"] = str(Path(binary).parent) if path_value is None else path_value
+    if os.name == "nt":
+        env = windows_tool_env(env)
     executable = _fd_executable(fd)
     kwargs = {
         "capture_output": True,
@@ -736,39 +769,94 @@ def parse_process_lines(text: str) -> list:
     return rows
 
 
+def _windows_processes() -> list:
+    """Pid and parent pid from Toolhelp. No PowerShell and no code page.
+
+    ``ULONG_PTR`` is pointer-sized, so the heap field is ``c_size_t``. A
+    wrong layout would hide the pilot pid and stay unproven.
+    """
+    import ctypes
+    from ctypes import wintypes
+
+    class PROCESSENTRY32W(ctypes.Structure):
+        _fields_ = [
+            ("dwSize", wintypes.DWORD),
+            ("cntUsage", wintypes.DWORD),
+            ("th32ProcessID", wintypes.DWORD),
+            ("th32DefaultHeapID", ctypes.c_size_t),
+            ("th32ModuleID", wintypes.DWORD),
+            ("cntThreads", wintypes.DWORD),
+            ("th32ParentProcessID", wintypes.DWORD),
+            ("pcPriClassBase", ctypes.c_long),
+            ("dwFlags", wintypes.DWORD),
+            ("szExeFile", wintypes.WCHAR * 260),
+        ]
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.CreateToolhelp32Snapshot.argtypes = [wintypes.DWORD, wintypes.DWORD]
+    kernel32.CreateToolhelp32Snapshot.restype = wintypes.HANDLE
+    kernel32.Process32FirstW.argtypes = [wintypes.HANDLE, ctypes.POINTER(PROCESSENTRY32W)]
+    kernel32.Process32FirstW.restype = wintypes.BOOL
+    kernel32.Process32NextW.argtypes = [wintypes.HANDLE, ctypes.POINTER(PROCESSENTRY32W)]
+    kernel32.Process32NextW.restype = wintypes.BOOL
+    kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+    kernel32.CloseHandle.restype = wintypes.BOOL
+    snap = kernel32.CreateToolhelp32Snapshot(0x00000002, 0)
+    invalid = wintypes.HANDLE(-1).value
+    if snap in (None, 0, -1, invalid):
+        raise _unproven("TOOLHELP_OPEN")
+    try:
+        entry = PROCESSENTRY32W()
+        entry.dwSize = ctypes.sizeof(PROCESSENTRY32W)
+        if not kernel32.Process32FirstW(snap, ctypes.byref(entry)):
+            raise _unproven("TOOLHELP_EMPTY")
+        rows = []
+        while True:
+            rows.append({
+                "pid": int(entry.th32ProcessID),
+                "ppid": int(entry.th32ParentProcessID),
+            })
+            if not kernel32.Process32NextW(snap, ctypes.byref(entry)):
+                break
+        if not rows:
+            raise _unproven("TOOLHELP_EMPTY")
+        return rows
+    finally:
+        kernel32.CloseHandle(snap)
+
+
 def _windows_observe(spawn=None) -> dict:
     """Prove listeners with absolute ``netstat.exe -ano``. Never guess zero.
 
-    The previous observer asked one PowerShell process for every TCP
-    connection and every UDP endpoint. On the GitHub Windows runner that
-    exceeds the 30s subprocess timeout, and TimeoutExpired is
-    PILOT_LISTENER_UNPROVEN. Socket rows come from
-    ``C:\\Windows\\System32\\netstat.exe``. A short process-id list supplies
-    the pilot tree. A missing binary, a nonzero status, or text without the
-    English netstat header stays unproven.
+    Socket rows come from ``C:\\Windows\\System32\\netstat.exe``. The pilot
+    tree comes from Toolhelp, not a PowerShell census. A missing binary, a
+    nonzero status, or text without the English ``Active Connections`` header
+    stays unproven. A localized Windows UI, including Hebrew on Chris, does
+    not print that header.
     """
     import subprocess
 
     if spawn is None:
         netstat = trusted_listener_binary("netstat", "win32")
-        powershell = trusted_listener_binary("powershell", "win32")
-        if netstat != WINDOWS_NETSTAT or powershell != WINDOWS_POWERSHELL:
-            raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+        if netstat != WINDOWS_NETSTAT:
+            raise _unproven("NETSTAT_MISSING")
         try:
             net = run_trusted_listener(
                 netstat, [netstat, "-ano"], path_value=str(Path(netstat).parent),
             )
-            proc = run_trusted_listener(
-                powershell,
-                [powershell, "-NoProfile", "-NonInteractive", "-Command", _PS_PROCESSES],
-                path_value=WINDOWS_LISTENER_PATH,
-            )
+            processes = _windows_processes()
+        except UsageRefusal:
+            raise
         except (OSError, subprocess.SubprocessError, UnicodeError) as exc:
-            raise UsageRefusal("PILOT_LISTENER_UNPROVEN") from exc
+            raise _unproven(type(exc).__name__) from exc
         net_out, net_rc = net.stdout or "", net.returncode
-        proc_out, proc_rc = proc.stdout or "", proc.returncode
-    else:
-        net_out, net_rc, proc_out, proc_rc = spawn(WINDOWS_NETSTAT, WINDOWS_POWERSHELL)
+        if isinstance(net_rc, bool) or not isinstance(net_rc, int) or net_rc != 0:
+            raise _unproven("NETSTAT_RC")
+        if not isinstance(net_out, str) or "Active Connections" not in net_out:
+            raise _unproven("NETSTAT_HEADER")
+        parsed = parse_netstat(net_out)
+        return {"processes": processes, "tcp": parsed["tcp"], "udp": parsed["udp"]}
+    net_out, net_rc, proc_out, proc_rc = spawn(WINDOWS_NETSTAT)
     if isinstance(net_rc, bool) or not isinstance(net_rc, int) or net_rc != 0:
         raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
     if isinstance(proc_rc, bool) or not isinstance(proc_rc, int) or proc_rc != 0:

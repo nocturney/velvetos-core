@@ -245,7 +245,7 @@ Read **identity.gates**, **identity.gate_reasons**, **identity.model_status**, *
 
 **Preflight status priority:** BLOCKED_SECURITY first, then BLOCKED_STORAGE, then PARKED_CAPACITY, then NOT_RUN; all-pass preflight still yields NOT_VERIFIED, never automatic PASS. A recorded overall reason of E1,E6 or PREFLIGHT_CLOSED is a *summary*; inspect each gate's reason.
 
-**Windows listener proof language.** After kickoff, the runner counts pilot listeners from `C:\Windows\System32\netstat.exe -ano`. The parser accepts that table only when the text contains the English header `Active Connections`. GitHub `windows-latest` is an English image, so a hosted run can prove zero. Chris with a Hebrew UI prints a different header. Those bytes stay `PILOT_LISTENER_UNPROVEN`. The run does not treat a localized table as zero listeners. That refusal is fail-closed. The same English-header rule already applies to the provider's Ollama bind check (`OLLAMA_BIND_UNPROVEN`).
+**Windows listener proof language.** After kickoff, the runner counts pilot listeners from `C:\Windows\System32\netstat.exe -ano`. The process tree comes from Toolhelp. The netstat child sets `SystemRoot` and `windir` to `C:\Windows`, including when the pilot environment was cleared. The parser accepts that table only when the text contains the English header `Active Connections`. GitHub `windows-latest` is an English image, so a hosted run can prove zero. Chris with a Hebrew UI prints a different header. Those bytes stay `PILOT_LISTENER_UNPROVEN`. The run does not treat a localized table as zero listeners. That refusal is fail-closed. The same English-header rule already applies to the provider's Ollama bind check (`OLLAMA_BIND_UNPROVEN`).
 
 ## 3. E5 collector/validator reasons (a different receipt)
 
