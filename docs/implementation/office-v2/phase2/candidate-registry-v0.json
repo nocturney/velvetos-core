@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-18T09:16:56+03:00",
+  "updated_at": "2026-10-18T18:28:59+03:00",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
@@ -17,7 +17,8 @@
     "Prior research is evidence input, not current runtime verification.",
     "COMPETITOR_NEUTRAL_ADMISSION_V1: preserve every new credible alternative with comparative evidence and queue when shortlists are full, without shifting the closed 68-source import.",
     "Historical competitor-neutral backfill on 2026-10-08 reopens evidence-free deferrals and preserves established candidate IDs/source_item_id lineage; no LAB or production promotion.",
-    "2026-10-10 agent-composition intake: eight namespaced agents researched and queued; Letta historical memory candidate queued; ambiguous OpenDots lineage preserved; no rights or installs."
+    "2026-10-10 agent-composition intake: eight namespaced agents researched and queued; Letta historical memory candidate queued; ambiguous OpenDots lineage preserved; no rights or installs.",
+    "2026-10-18 source review upgrades the existing AirLLM and Odysseus auto-placeholders in place. Same candidate ids; research only; no install, deploy, or admission. Odysseus is queued on agent-runtime and memory-context. AirLLM stays off the P0 shortlist and keeps an evaluation_route."
   ],
   "items": [
     {
@@ -8681,55 +8682,84 @@
     {
       "candidate_id": "candidate-intake-lyogavin-airllm",
       "source_item_id": null,
-      "name": "lyogavin/airllm",
-      "category": "UNTRIAGED_REPO_INTAKE",
-      "provenance_class": "OWNER_LINK_INTAKE",
-      "lifecycle_state": "DISCOVERED",
+      "name": "AirLLM (lyogavin) — streamed large-model inference / streamed LoRA on limited VRAM",
+      "category": "TOOL",
+      "provenance_class": "POST_POLICY_OWNER_SUBMITTED_REPO_REVIEW",
+      "lifecycle_state": "RESEARCHED",
       "decision_verdict": "BENCHMARK_REQUIRED",
-      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "verdict_reason": "Owner supplied the repository for Office v2 intake. AirLLM offers layer/expert streaming when a model exceeds GPU VRAM and may serve as an offline local inference fallback. The upstream VRAM feats do not establish usable latency; published Windows/NVIDIA and AMD complaints plus extreme MoE token times require objective comparisons with existing local serving. Registered for read-only research and isolated, lease-gated same-task benchmarking, not for installation or promotion.",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "capability_tags": [
-        "untriaged"
+        "local-inference",
+        "large-language-model",
+        "disk-layer-streaming",
+        "gpu-memory-offload",
+        "oversize-model-fallback",
+        "streamed-lora",
+        "llm-benchmark"
       ],
       "platform_constraints": [
-        "Do not install, run or grant credentials until source review and admission gates pass."
+        "Research reviewed v4.0.0 (2026-09); license for the project code is Apache-2.0. Each model's weights/license, dependency versions and permitted use must be checked independently.",
+        "Peak VRAM figures are NOT throughput: the Kimi K3 release reports ~292 seconds per token on RTX 6000 Ada while checkpoint files consume ~1.56 TB; a practical offline workflow must be demonstrated.",
+        "Open upstream report #364 measured 28.6 s/token for 3B on Windows/NVIDIA with NVMe; #301 reports AMD/ROCm Windows generate problems. They are third-party observations, not reproduced measurements on any Velvet host.",
+        "Open upstream issue #330 contests the older claim that blockwise 4-bit/8-bit compression yields up to 3x speedup; do not assume compression improves throughput on our machines.",
+        "Layer split can temporarily require both original model checkpoint and re-sliced copies. Verify independent disk/RAM/IO budget, model revision, teardown/rollback, and resource owner before any weight download.",
+        "Do not preempt #612 coding-agent, Studio/LOCAL3D/Genex, or #604 fleet resources. No automatic GPU, WSL/OS install, paid API, production server, public listener, credential or customer-data access."
       ],
       "shortlist_lanes": [
-        "repo-link-intake-triage"
+        "local-llm-inference"
       ],
       "evidence_refs": [
         "https://github.com/lyogavin/airllm",
+        "https://github.com/lyogavin/airllm/releases/tag/v4.0.0",
+        "https://github.com/lyogavin/airllm/releases/tag/v3.1.0",
+        "https://github.com/lyogavin/airllm/issues/364",
+        "https://github.com/lyogavin/airllm/issues/330",
+        "https://github.com/lyogavin/airllm/issues/301",
         "https://github.com/nocturney/velvetos-core/issues/595",
+        "docs/implementation/office-v2/phase2/local-inference-airllm-comparison-2026-10-13.md",
         "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6147598958"
       ],
       "notes": [
-        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+        "OWNER LINK 2026-10-13: https://github.com/lyogavin/airllm, manually captured in canonical Office v2 intake; no automated ChatGPT→registry bridge is implied.",
+        "CURRENT KNOWN INCUMBENT: Studio previously used local Ollama/loopback qwen3.5:9b on Chris; live process/port/GPU state is UNKNOWN for this intake. Per-host capability inventory must precede selection.",
+        "COMPETITION-NEUTRAL: evaluate Ollama/llama.cpp quantized and CPU/GPU offload, existing Transformers, and Mac/MLX when appropriate; do not reject AirLLM solely because a local LLM engine is installed.",
+        "SCOPE: potentially replace one inference component or add a selectively invoked offline oversize-model backend; not a full Office, orchestration, TTS, coding-agent or printer replacement.",
+        "PHASE NOW: source/license/compatibility review and synthetic fixture design. FUTURE: gated isolated same-workload benchmark only after hardware/disk/resource and existing service-owner verification.",
+        "TEST: tokens/s, TTFT, cold-start, quality, memory and storage high-water marks, disk throughput, CPU/GPU load, costs and rollback; separate quality differences caused by model quantization from engine performance.",
+        "NO RUNTIME ACTION: no model downloaded, no local AirLLM process run, no GPU leased, no network endpoint provisioned, no production permission changed.",
+        "Upgraded in place from the auto-placeholder. Draft id candidate-lyogavin-airllm is not registered."
       ],
       "original_office_v2_verdict": null,
       "comparison_review": {
         "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
         "eligibility": "OPEN_FOR_COMPARISON",
         "variants": [
-          "full_replacement",
           "component_replacement",
           "hybrid"
         ],
         "evidence_status": "RESEARCH_ONLY",
-        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
-        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
-        "decision_evidence_refs": []
+        "next_action": "In Phase 2, verify current per-host model serving inventory and upstream version/license/Windows issues, define isolated 27B/32B oversize-model benchmark with synthetic CAD/code/Hebrew tasks and storage/throughput budget. When a genuinely independent host lease and model rights are available after the relevant #612/#604 gates, benchmark pinned AirLLM against verified existing quantized/offloaded inference and record a decision before any deployment.",
+        "rationale": "Streaming permits otherwise VRAM-infeasible models but can transfer a huge amount of data for every token. It deserves a fair targeted offline comparison against existing smaller faster quantized systems, not incumbent veto nor an automatic replacement.",
+        "decision_evidence_refs": [
+          "https://github.com/lyogavin/airllm",
+          "https://github.com/lyogavin/airllm/issues/364",
+          "https://github.com/lyogavin/airllm/issues/330",
+          "docs/implementation/office-v2/phase2/local-inference-airllm-comparison-2026-10-13.md"
+        ]
       },
       "evaluation_route": {
-        "workstream": "repo-link-intake-triage",
+        "workstream": "local-llm-inference",
         "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
-        "phase": "Office v2 Phase 2 source and capability evaluation",
-        "status": "NEEDS_SOURCE_REVIEW",
-        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
-        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "phase": "Office v2 Phase 2 source and fixture research now; isolated local inference LAB only after Office P0 resource and installation gates",
+        "status": "RESEARCH_ACTIVE",
+        "next_gate": "Complete read-only installed-runtime and machine-inventory cross-check, upstream issue/license review, and reproducible no-customer-data fixture/benchmark definition; hold download/runtime for verified resource and approval gates.",
+        "unlock_condition": "No runnable LAB until verified independent GPU/CPU/disk owner lease, bounded model checkpoint and disk budget, OS/dependency isolation, no preemption of #612/#604, and permitted model weights with rollback.",
         "evidence_refs": [
+          "docs/implementation/office-v2/phase2/local-inference-airllm-comparison-2026-10-13.md",
           "https://github.com/lyogavin/airllm",
-          "https://github.com/nocturney/velvetos-core/issues/595"
+          "https://github.com/lyogavin/airllm/issues/364"
         ]
       }
     },
@@ -9066,30 +9096,59 @@
     {
       "candidate_id": "candidate-intake-odysseus-dev-odysseus",
       "source_item_id": null,
-      "name": "odysseus-dev/odysseus",
-      "category": "UNTRIAGED_REPO_INTAKE",
-      "provenance_class": "OWNER_LINK_INTAKE",
-      "lifecycle_state": "DISCOVERED",
+      "name": "Odysseus self-hosted AI workspace",
+      "category": "AGENT_RUNTIME",
+      "provenance_class": "POST_POLICY_OWNER_RECENT_REPO_REVIEW",
+      "lifecycle_state": "RESEARCHED",
       "decision_verdict": "BENCHMARK_REQUIRED",
-      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "verdict_reason": "Credible self-hosted AI agent/workspace with local-model, tool selection and context-management features; compare as a later P1 challenger only after the existing #612 P0 coding/PR/resume proof, not as a replacement for the current pilot.",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "capability_tags": [
-        "untriaged"
+        "agent-runtime",
+        "self-hosted",
+        "local-models",
+        "mcp",
+        "tool-routing",
+        "context-compaction",
+        "model-comparison",
+        "teacher-fallback",
+        "skills",
+        "deep-research",
+        "memory-context",
+        "docker",
+        "windows",
+        "macos"
       ],
       "platform_constraints": [
-        "Do not install, run or grant credentials until source review and admission gates pass."
+        "AGPL-3.0-or-later: review networked-service/derivative and third-party license obligations before code reuse, modification, distribution or hosted deployment.",
+        "Python/FastAPI, Docker Compose and optional ChromaDB/SearXNG/local inference; validate installation and model/tool readiness independently on each chosen host.",
+        "Native Windows shell execution and sandbox capability are not equivalent to Linux bubblewrap; fail-closed process containment and tool-RAG fallback require fresh validation. Apple Silicon Docker cannot use Metal GPU serving.",
+        "Privileged host-shell/file/email/MCP tools demand isolated LAB, no live secrets, Docker socket, host workspace writes, production credentials or public network exposure.",
+        "Only evaluate after #612 P0 end-to-end protected coding PR/CI and crash/resume gates are verified and spare CPU/GPU/GUI capacity is confirmed; no Codex CLI, extra paid model endpoint, new scheduler/watch or global install."
       ],
       "shortlist_lanes": [
-        "repo-link-intake-triage"
+        "agent-runtime",
+        "memory-context"
       ],
       "evidence_refs": [
         "https://github.com/odysseus-dev/odysseus",
+        "https://github.com/odysseus-dev/odysseus/commit/a8c147b238db01dbd00b57774ed8b453f1e43971",
+        "https://github.com/odysseus-dev/odysseus/blob/dev/README.md",
+        "https://github.com/odysseus-dev/odysseus/blob/dev/ROADMAP.md",
+        "https://github.com/odysseus-dev/odysseus/blob/dev/THREAT_MODEL.md",
+        "docs/implementation/office-v2/phase2/admission-policy-v0.md",
+        "https://github.com/nocturney/velvetos-core/issues/612",
         "https://github.com/nocturney/velvetos-core/issues/595",
         "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6064551217"
       ],
       "notes": [
-        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+        "Reviewed public upstream repo, current files and recent commits on 2026-10-08; source review is not an installed, tested or security-approved runtime.",
+        "Research-only P1 queued candidate; active 2-3 challenger sets, Restate durable-execution winner, live #612 P0 fixtures and #604/#602 scope are unchanged.",
+        "Evaluate whole-workspace replacement, selective context/tool-management components and hybrid adapter fairly; do not reject on overlap alone.",
+        "Teacher handoff is opt-in, failure detection is imperfect, and background skill-learning must not be assumed to be automatic or production-safe.",
+        "Use pinned upstream revision for reproducible isolated LAB; record model/tool success, independent verifier, context fidelity, wall time p50/p95 where samples permit, tokens, cost, CPU/RAM/GPU, operator minutes, security, rollback and provenance.",
+        "Upgraded in place from the auto-placeholder. Draft id candidate-odysseus is not registered."
       ],
       "original_office_v2_verdict": null,
       "comparison_review": {
@@ -9101,21 +9160,9 @@
           "hybrid"
         ],
         "evidence_status": "RESEARCH_ONLY",
-        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
-        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "next_action": "P1 only after the #612 two-host coding/PR/CI/resume gate is independently green: license/security/host preflight; pin upstream revision; run isolated same-fixture agent/tool/context/model-fallback and memory-provenance comparisons against incumbents. Capture independent verifier receipts and cost/resource metrics; promote only through the existing approval lifecycle.",
+        "rationale": "A full self-hosted AI workspace could replace or complement the current agent/runtime/context stack, but documentation and source inspection do not prove equal or superior artifact completion, security or operational fitness.",
         "decision_evidence_refs": []
-      },
-      "evaluation_route": {
-        "workstream": "repo-link-intake-triage",
-        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
-        "phase": "Office v2 Phase 2 source and capability evaluation",
-        "status": "NEEDS_SOURCE_REVIEW",
-        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
-        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
-        "evidence_refs": [
-          "https://github.com/odysseus-dev/odysseus",
-          "https://github.com/nocturney/velvetos-core/issues/595"
-        ]
       }
     },
     {
