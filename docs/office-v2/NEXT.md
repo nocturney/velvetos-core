@@ -2,6 +2,8 @@
 
 **Status snapshot, not an execution authorization.** Owner of this queue: [#612](https://github.com/nocturney/velvetos-core/issues/612); team procedure: [OFFICE.md](OFFICE.md). This page records evidence available on 2026-10-18, not a promise that a running process, host lease, green security gate or new PR exists. Re-read the linked issue/PR and exact commit before acting. The read-only board is a view, not the system of record.
 
+**Verified three-tool research baseline:** [#595 independent review, receipt 6249011608](https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6249011608). This review is research evidence, **not** proof of a live CrewAI task, installed agent in the board, or UFO security admission. [#775 pilot plan](https://github.com/nocturney/velvetos-core/pull/775) and [#784 runbook](https://github.com/nocturney/velvetos-core/pull/784) narrow the permitted experiment.
+
 ## 1. What is proven today — and what is not
 
 | Lane | Proven / usable | Still open or explicitly denied | Owner and evidence |
