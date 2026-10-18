@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import types
 import unittest
@@ -32,6 +34,20 @@ class ReadbackTests(unittest.TestCase):
         if os.name != "posix":
             print("SKIP_NON_POSIX", flush=True)
             self.skipTest("SKIP_NON_POSIX")
+
+    def _mode_dir(self, root: Path, name: str, mode: int) -> Path:
+        directory = root / name
+        directory.mkdir(mode=0o700)
+        directory.chmod(mode)
+        self.assertEqual(directory.stat().st_mode & 0o777, mode)
+        return directory
+
+    def _receipt_dir_result(self, module, directory: Path, value: dict) -> str:
+        try:
+            module.write_private_receipt(directory / "proof.json", value)
+        except module.Refuse as exc:
+            return str(exc)
+        return "ACCEPTED"
 
     def test_01_candidate_seen_means_review_not_release(self):
         v = r.classify(self.intent, CANDIDATE)
@@ -280,6 +296,67 @@ class ReadbackTests(unittest.TestCase):
             self.assertIs(printed["frozen"], True)
             self.assertIs(printed["effect_proven"], False)
             self.assertEqual(printed["remote_github_writes"], 0)
+
+    def test_28_group_readable_receipt_directory_denied(self):
+        """0750 and 0740 are group-readable. 0700 stays private and is accepted."""
+        self.require_posix_permissions()
+        value = r.classify(self.intent, CANDIDATE)
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            for mode in (0o750, 0o740):
+                with self.subTest(mode=oct(mode)):
+                    directory = self._mode_dir(root, f"group-{mode:o}", mode)
+                    self.assertEqual(
+                        self._receipt_dir_result(r, directory, value),
+                        "RECEIPT_DIR_MUST_BE_PRIVATE",
+                    )
+            private = self._mode_dir(root, "private", 0o700)
+            self.assertEqual(
+                self._receipt_dir_result(r, private, value), "ACCEPTED")
+            self.assertEqual(
+                (private / "proof.json").stat().st_mode & 0o777, 0o600)
+
+    def test_29_weakened_receipt_dir_mask_is_caught(self):
+        """Mask 0o077→0o007 accepts a group-readable directory. The live gate must not."""
+        self.require_posix_permissions()
+        source = Path(r.__file__).resolve().read_text(encoding="utf-8")
+        needle = "path.parent.stat().st_mode & 0o077"
+        weakened = "path.parent.stat().st_mode & 0o007"
+        self.assertEqual(source.count(needle), 1)
+        mutated_source = source.replace(needle, weakened, 1)
+        self.assertNotIn(needle, mutated_source)
+        self.assertIn(weakened, mutated_source)
+        value = r.classify(self.intent, CANDIDATE)
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            mutant_path = root / "cp085_mask_007.py"
+            mutant_path.write_text(mutated_source, encoding="utf-8")
+            spec = importlib.util.spec_from_file_location(
+                "cp085_receipt_dir_mask_007", mutant_path)
+            if spec is None or spec.loader is None:
+                self.fail("cannot load weakened receipt-dir mask")
+            mutant = importlib.util.module_from_spec(spec)
+            sys.modules[spec.name] = mutant
+            try:
+                spec.loader.exec_module(mutant)
+            except Exception:
+                sys.modules.pop(spec.name, None)
+                raise
+            try:
+                for mode in (0o750, 0o740):
+                    with self.subTest(mode=oct(mode)):
+                        opened = self._mode_dir(root, f"weak-{mode:o}", mode)
+                        self.assertEqual(
+                            self._receipt_dir_result(mutant, opened, value),
+                            "ACCEPTED",
+                        )
+                        live = self._mode_dir(root, f"live-{mode:o}", mode)
+                        self.assertEqual(
+                            self._receipt_dir_result(r, live, value),
+                            "RECEIPT_DIR_MUST_BE_PRIVATE",
+                        )
+            finally:
+                sys.modules.pop(spec.name, None)
 
 
 if __name__ == "__main__":
