@@ -8,7 +8,9 @@ policy-manifest hashes.
 from __future__ import annotations
 
 import os
+import secrets
 import shutil
+import stat
 import subprocess
 import tempfile
 from pathlib import Path
@@ -133,28 +135,127 @@ def pinned_path(executable: str) -> str:
     return os.pathsep.join(str(entry) for entry in entries)
 
 
-def _private_dir(prefix: str) -> str:
-    path = Path(tempfile.mkdtemp(prefix=prefix))
+def _fixed_trusted_roots() -> list[Path]:
+    """Temp roots that do not come from TMPDIR, TEMP, TMP, or tempfile.tempdir."""
+    if os.name == "nt":
+        system = _system_root()
+        return [Path(system) / "Temp"] if system else []
+    return [Path("/tmp"), Path("/var/tmp")]
+
+
+def _trusted_dir(path: Path) -> bool:
+    """A spawn root is a real directory. A symlink is refused."""
     try:
-        path.chmod(0o700)
+        info = path.lstat()
     except OSError:
-        pass
-    return str(path)
+        return False
+    if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
+        return False
+    if os.name == "nt":
+        return True
+    return info.st_uid == 0 and bool(info.st_mode & stat.S_ISVTX)
+
+
+def _spawn_root() -> Path:
+    for root in _fixed_trusted_roots():
+        if _trusted_dir(root):
+            return root
+    raise SpawnRefusal("SPAWN_HOME_ROOT_REFUSED")
+
+
+def _under_fixed_root(path: Path) -> bool:
+    parent = path.parent
+    for root in _fixed_trusted_roots():
+        if os.name == "nt":
+            if os.path.normcase(str(parent)) == os.path.normcase(str(root)):
+                return True
+        elif parent == root:
+            return True
+    return False
+
+
+def _private_dir(prefix: str, *, readonly: bool) -> str:
+    """Create one owner-only directory under the fixed root. Never uses TMPDIR."""
+    root = _spawn_root()
+    last_error: Exception | None = None
+    for _ in range(8):
+        path = root / f"{prefix}{secrets.token_hex(8)}"
+        try:
+            os.mkdir(path, 0o700)
+        except FileExistsError:
+            continue
+        except OSError as exc:
+            last_error = exc
+            continue
+        info = path.lstat()
+        if (
+            stat.S_ISLNK(info.st_mode)
+            or not stat.S_ISDIR(info.st_mode)
+            or not _under_fixed_root(path)
+            or (os.name != "nt" and info.st_uid != os.getuid())
+        ):
+            raise SpawnRefusal("SPAWN_HOME_ROOT_REFUSED")
+        if os.name != "nt":
+            os.chmod(path, 0o500 if readonly else 0o700)
+        info = path.lstat()
+        mode = stat.S_IMODE(info.st_mode)
+        if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
+            raise SpawnRefusal("SPAWN_HOME_ROOT_REFUSED")
+        if os.name != "nt" and readonly and mode & 0o222:
+            raise SpawnRefusal("SPAWN_HOME_ROOT_REFUSED")
+        if os.name != "nt" and not readonly and mode & 0o077:
+            raise SpawnRefusal("SPAWN_HOME_ROOT_REFUSED")
+        return str(path)
+    raise SpawnRefusal("SPAWN_HOME_ROOT_REFUSED") from last_error
+
+
+def _home_is_clean(path: str) -> bool:
+    """True when this home is still an empty, non-writable directory we created."""
+    try:
+        info = os.lstat(path)
+    except OSError:
+        return False
+    if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
+        return False
+    if not _under_fixed_root(Path(path)):
+        return False
+    if os.name != "nt" and stat.S_IMODE(info.st_mode) & 0o222:
+        return False
+    try:
+        if any(Path(path).iterdir()):
+            return False
+    except OSError:
+        return False
+    return True
+
+
+def _temp_is_clean(path: str) -> bool:
+    try:
+        info = os.lstat(path)
+    except OSError:
+        return False
+    if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
+        return False
+    if not _under_fixed_root(Path(path)):
+        return False
+    if os.name != "nt" and stat.S_IMODE(info.st_mode) & 0o077:
+        return False
+    return True
 
 
 def controlled_home() -> str:
-    """Empty directory used as HOME for every allowlisted spawn."""
+    """Empty read-only directory used as HOME. Replaced when it is no longer clean."""
     global _home_dir
-    if _home_dir is None or not Path(_home_dir).is_dir():
-        _home_dir = _private_dir("vf-spawn-home-")
+    if _home_dir is None or not _home_is_clean(_home_dir):
+        _home_dir = _private_dir("vf-spawn-home-", readonly=True)
     return _home_dir
 
 
 def controlled_temp() -> str:
-    """Private temp directory. Inherited TEMP, TMP, and TMPDIR are not copied."""
+    """Private temp directory under the fixed root. Inherited TEMP, TMP, and TMPDIR are not copied."""
     global _temp_dir
-    if _temp_dir is None or not Path(_temp_dir).is_dir():
-        _temp_dir = _private_dir("vf-spawn-tmp-")
+    if _temp_dir is None or not _temp_is_clean(_temp_dir):
+        _temp_dir = _private_dir("vf-spawn-tmp-", readonly=False)
     return _temp_dir
 
 
@@ -385,12 +486,116 @@ def allowlisted_git_errors(argv: list[str], kwargs: dict, *, timeout: float) -> 
     return errors
 
 
+def _inside(child: Path, parent: Path) -> bool:
+    try:
+        child.resolve().relative_to(parent.resolve())
+    except (OSError, ValueError):
+        return False
+    return True
+
+
+def _prove_home_anchor() -> list[str]:
+    """QA #872: ambient TMPDIR does not hold the home, and global gitconfig does not survive."""
+    errors: list[str] = []
+    poison = Path(tempfile.mkdtemp(prefix="vf-spawn-ambient-"))
+    saved_tempdir = tempfile.tempdir
+    saved_env = {key: os.environ.get(key) for key in ("TMPDIR", "TEMP", "TMP")}
+    global _home_dir, _temp_dir
+    previous_home, previous_temp = _home_dir, _temp_dir
+    try:
+        target = poison / "target"
+        target.mkdir()
+        ambient = target
+        link = poison / "link"
+        try:
+            link.symlink_to(target, target_is_directory=True)
+        except OSError:
+            link = None
+        if link is not None:
+            if _trusted_dir(link):
+                errors.append("symlinked temp root was trusted")
+            ambient = link
+        tempfile.tempdir = None
+        os.environ["TMPDIR"] = str(ambient)
+        os.environ["TEMP"] = str(ambient)
+        os.environ["TMP"] = str(ambient)
+        tempfile.tempdir = str(ambient)
+        _home_dir = None
+        _temp_dir = None
+        home = controlled_home()
+        temp = controlled_temp()
+        home_path = Path(home)
+        if _inside(home_path, poison) or _inside(Path(temp), poison):
+            errors.append(f"controlled home followed ambient TMPDIR: home={home} temp={temp}")
+        if not _under_fixed_root(home_path) or not _under_fixed_root(Path(temp)):
+            errors.append(f"controlled home is not under a fixed root: home={home} temp={temp}")
+        if os.name != "nt":
+            mode = stat.S_IMODE(home_path.lstat().st_mode)
+            if mode & 0o222:
+                errors.append(f"spawn home is writable: {oct(mode)}")
+        marker = "vf-spawn-cross-spawn-marker"
+        run_git(["config", "--global", "core.fsmonitor", marker])
+        shown = run_git(["config", "--global", "--get", "core.fsmonitor"])
+        if marker in (shown.stdout or ""):
+            errors.append(f"global gitconfig survived across spawns: {shown.stdout!r}")
+        current = Path(controlled_home())
+        current.chmod(0o700)
+        (current / ".gitconfig").write_text(
+            "[core]\n\tfsmonitor = /evil/planted-hook\n",
+            encoding="utf-8",
+        )
+        planted = run_git(["config", "--global", "--get", "core.fsmonitor"])
+        if "/evil/planted-hook" in (planted.stdout or ""):
+            errors.append(f"planted gitconfig was reused: {planted.stdout!r}")
+        if Path(controlled_home()) == current:
+            errors.append("dirty spawn home was reused")
+        if os.name != "nt":
+            live = Path(controlled_home())
+            aside = Path(str(live) + "-aside")
+            evil = Path(tempfile.mkdtemp(prefix="vf-spawn-evil-home-"))
+            try:
+                (evil / ".gitconfig").write_text(
+                    "[core]\n\tfsmonitor = /evil/link-hook\n",
+                    encoding="utf-8",
+                )
+                live.rename(aside)
+                live.symlink_to(evil, target_is_directory=True)
+                linked = run_git(["config", "--global", "--get", "core.fsmonitor"])
+                if "/evil/link-hook" in (linked.stdout or ""):
+                    errors.append(f"symlinked spawn home was reused: {linked.stdout!r}")
+            finally:
+                if live.is_symlink():
+                    live.unlink()
+                if aside.exists():
+                    aside.chmod(0o700)
+                    shutil.rmtree(aside, ignore_errors=True)
+                shutil.rmtree(evil, ignore_errors=True)
+            if not _home_is_clean(_home_dir or ""):
+                _home_dir = None
+            controlled_home()
+    except SpawnRefusal as exc:
+        errors.append(f"spawn home anchor refused: {exc}")
+    finally:
+        tempfile.tempdir = saved_tempdir
+        for key, value in saved_env.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+        if previous_home is not None and _home_is_clean(previous_home):
+            _home_dir = previous_home
+        shutil.rmtree(poison, ignore_errors=True)
+        if previous_temp is not None and _temp_is_clean(previous_temp):
+            _temp_dir = previous_temp
+    return errors
+
+
 def prove_controlled_home() -> list[str]:
     """A poisoned home, temp, or COMSPEC does not reach the child or git config."""
     import json
     import sys
 
-    errors: list[str] = []
+    errors: list[str] = _prove_home_anchor()
     keys = (
         "HOME",
         "USERPROFILE",
