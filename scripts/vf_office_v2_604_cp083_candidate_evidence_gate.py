@@ -189,7 +189,9 @@ def validate_guest(raw: bytes, run_id: str) -> None:
 
 
 def validate_receipt(raw: bytes) -> str:
-    require(raw.endswith(b"\n") and raw.count(b"\n") == 1,
+    # CRLF still ends with LF and still has one LF, so a bare endswith/count
+    # check accepts it. Original receipts are LF-only; any CR is refused.
+    require(b"\r" not in raw and raw.endswith(b"\n") and raw.count(b"\n") == 1,
             "RECEIPT_MUST_BE_ORIGINAL_ONE_LINE_LF")
     receipt = decode(raw)
     require(set(receipt) == RECEIPT_KEYS and receipt["schema"] == RUN_SCHEMA and

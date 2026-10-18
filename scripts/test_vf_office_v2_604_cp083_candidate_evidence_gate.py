@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
 from pathlib import Path
 import tempfile
 import unittest
@@ -186,7 +187,14 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
 
     def test_12_symlink_receipt_refused(self):
         link = self.base / "run-1/symlink.jsonl"
-        link.symlink_to(self.base / "run-1/receipt.jsonl")
+        try:
+            link.symlink_to(self.base / "run-1/receipt.jsonl")
+        except (OSError, NotImplementedError):
+            # A Windows host without symlink permission cannot run this case.
+            # Never hide a failure to create the same fixture on Linux/macOS.
+            if sys.platform == "win32":
+                self.skipTest("Windows symlink creation not permitted by OS")
+            raise
         self.manifest["runs"][0]["receipt_path"] = "run-1/symlink.jsonl"
         self._save_manifest()
         self.assert_refused()
@@ -223,6 +231,19 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         self.manifest["runs"][0]["guest_sha256"] = sha(path.read_bytes())
         self._save_manifest()
         self.assert_refused()
+
+    def test_19_crlf_receipt_line_refused(self):
+        path = self.base / "run-1/receipt.jsonl"
+        raw = path.read_bytes()
+        self.assertTrue(raw.endswith(b"\n") and b"\r" not in raw)
+        altered = raw.replace(b"\n", b"\r\n")
+        self.assertTrue(altered.endswith(b"\r\n") and altered.count(b"\n") == 1)
+        path.write_bytes(altered)
+        self.manifest["runs"][0]["receipt_sha256"] = sha(altered)
+        self._save_manifest()
+        with self.assertRaises(gate.Refused) as caught:
+            gate.verify(self.manifest_path)
+        self.assertEqual(str(caught.exception), "RECEIPT_MUST_BE_ORIGINAL_ONE_LINE_LF")
 
 
 if __name__ == "__main__":
