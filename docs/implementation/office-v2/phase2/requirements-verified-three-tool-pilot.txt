@@ -1,0 +1,29 @@
+# Office 2.0 gated CrewAI / LangGraph pilot — candidate direct version pins
+# Source: verified-three-tool-local-pilot-2026-10-18.md (merged PR #775 follow-up).
+# PyPI release pages checked 2026-10-18. PLAN_ONLY / NOT INSTALLED / NOT RUN.
+# DO NOT install from this file: these are direct candidates, NOT a resolved,
+# compatibility-tested, transitive, SHA-256-hashed or approved offline lock.
+# Future installation requires separate approval, safe dependency resolution,
+# hash-locked artifact review and independent security / network / identity gates.
+# No UFO package: its runtime stays SECURITY_BLOCKED (all 18 repo advisories
+# lack a listed patched/fixed version in the 2026-10-18 verified inventory).
+#
+# Pilot's selected no-tools issue-triage lane:
+crewai==1.15.28
+#
+# Pilot's local checkpoint/replay lane (no remote SDK/server):
+langgraph==1.2.16
+langgraph-checkpoint==4.3.0
+langgraph-checkpoint-sqlite==3.1.2
+#
+# OPTIONAL future-scope candidates: intentionally NOT selected/installed.
+# crewai-tools==1.15.28
+# langgraph-sdk==0.4.8
+#
+# Upstream PyPI evidence:
+# https://pypi.org/project/crewai/1.15.28/
+# https://pypi.org/project/crewai-tools/1.15.28/
+# https://pypi.org/project/langgraph/1.2.16/
+# https://pypi.org/project/langgraph-checkpoint/4.3.0/
+# https://pypi.org/project/langgraph-sdk/0.4.8/
+# https://pypi.org/project/langgraph-checkpoint-sqlite/3.1.2/
