@@ -467,8 +467,24 @@ def content_findings(text: str) -> list[str]:
         problems.append("receipt schema must include bound_element and bound_process")
     if "$rec.bound_element=" not in text or "$rec.bound_process=" not in text:
         problems.append("receipt must record bound_element and bound_process")
-    if re.search(r"\bEnumWindows\b", text):
-        problems.append("EnumWindows is forbidden")
+    if "bound_via=''" not in text or "$rec.bound_via=" not in text:
+        problems.append("receipt must include bound_via")
+    if "toplevel_corewindow" not in text or "frame_child" not in text:
+        problems.append("bound_via must name toplevel_corewindow and frame_child")
+    if not re.search(r"\bEnumWindows\b", text):
+        problems.append("top-level CoreWindow pass must use EnumWindows")
+    spans = dict(function_spans(text))
+    top = spans.get("Find-TopLevelCoreWindow", "")
+    if "Test-StartedThisAttempt" not in top or "FromHandle" not in top:
+        problems.append("top-level CoreWindow must belong to a Calculator process started by this attempt")
+    if "CALCULATOR_CONTENT_WINDOW_AMBIGUOUS" not in top:
+        problems.append("more than one top-level CoreWindow must fail closed")
+    if "Windows.UI.Core.CoreWindow" not in top:
+        problems.append("top-level pass must filter Windows.UI.Core.CoreWindow")
+    frames = spans.get("Get-TopLevelFrames", "")
+    content = spans.get("Find-CalculatorContent", "")
+    if "Find-TopLevelCoreWindow" not in frames or "Find-TopLevelCoreWindow" not in content:
+        problems.append("Get-TopLevelFrames and Find-CalculatorContent must run the top-level CoreWindow pass")
     if re.search(r"EnumChildWindows\s*\(\s*(?:IntPtr\.Zero|\[IntPtr\]::Zero)", text):
         problems.append("EnumChildWindows must not start at the desktop")
     if re.search(r"Children\s*\(\s*\[IntPtr\]::Zero\s*\)", text):
@@ -681,7 +697,7 @@ def mutate(text: str, kind: str) -> str:
         mutated = mutated.replace("$window=Find-BoundRoot", "$window=FindWindow")
         return mutated
     if kind == "drop-bound-receipt":
-        anchor = "bound_element='';bound_process=''"
+        anchor = "bound_element='';bound_process='';bound_via=''"
         if anchor not in text:
             return text
         return text.replace(anchor, "", 1)
@@ -728,6 +744,11 @@ def mutate(text: str, kind: str) -> str:
             "if($owned -contains $pr.Id){ try { Stop-Process -Id ([int]$pr.Id) -Force -ErrorAction Stop } catch {} }",
             1,
         )
+    if kind == "drop-toplevel":
+        anchor = "$top=Find-TopLevelCoreWindow\n"
+        if anchor not in text:
+            return text
+        return text.replace(anchor, "")
     if kind == "fake-closed":
         anchor = "$rec.calc_closed=(@(Calcs).Count -eq 0)"
         if anchor not in text:
@@ -753,6 +774,7 @@ def mutation_findings(text: str) -> list[str]:
         ("title-only", frame_findings),
         ("drop-hebrew", frame_findings),
         ("raw-hebrew", frame_findings),
+        ("drop-toplevel", content_findings),
         ("owned-only-close", frame_findings),
         ("fake-closed", frame_findings),
     )
@@ -826,6 +848,8 @@ def pin_findings(text: str) -> list[str]:
             "מחשבון",
             "candidate_frame_titles",
             "CALCULATOR_CONTENT_WINDOW_UNAVAILABLE",
+            "bound_via",
+            "toplevel_corewindow",
         ):
             if token not in body:
                 problems.append(f"{path.relative_to(ROOT)} missing {token}")
@@ -869,7 +893,8 @@ def main() -> int:
         "drop-deadline=DETECTED drop-receipt-reason=DETECTED broaden-host-kill=DETECTED "
         "drop-corewindow=DETECTED rebind-frame=DETECTED drop-bound-receipt=DETECTED "
         "close-frame=DETECTED wrong-frame=DETECTED title-only=DETECTED "
-        "drop-hebrew=DETECTED raw-hebrew=DETECTED owned-only-close=DETECTED fake-closed=DETECTED"
+        "drop-hebrew=DETECTED raw-hebrew=DETECTED drop-toplevel=DETECTED "
+        "owned-only-close=DETECTED fake-closed=DETECTED"
     )
     print("OK green-after wait=BOUNDED receipt=REASON host=UWP content=COREWINDOW frame=OWNED")
     print(f"OK cp057-calc-strictmode empty-result=GUARDED sha256={digest}")
