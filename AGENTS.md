@@ -52,5 +52,15 @@ Rules:
 
 Run the routed sensor set for scoped changes, then `python3 scripts/check-all.py` for repository-wide changes. Do not claim success when a required computational sensor fails.
 
+## CHANGELOG FRAGMENTS
+
+Do not edit `CHANGELOG.md` for a normal pull request. Add one UTF-8 LF file, `changelog.d/<slug>.md`. The slug is the branch or PR name in lowercase words separated by hyphens. Each non-blank line is one Keep a Changelog bullet.
+
+A change under `packages/`, `office/`, `scripts/`, `.github/workflows/` or `constitution/` must include that fragment or a `CHANGELOG.md` edit. `scripts/check-changelog-fragments.py` accepts the fragment and rejects a capability diff that has neither.
+
+Fold fragments into `## [Unreleased]` only when a person runs `python3 scripts/changelog-compile.py`. Do not schedule that command. The script is idempotent and does not rewrite released sections.
+
+`.gitattributes` sets `CHANGELOG.md merge=union` (Git's built-in union driver) as a fallback for a pull request that still edits the file. Union keeps added lines from both parents, so two Unreleased bullets no longer conflict. It also keeps a line one side deleted or rewrote when the other side still has the old line, and it can leave duplicate bullets. Prefer a fragment so `CHANGELOG.md` is not touched. Details: `docs/CHANGELOG-FRAGMENTS.md`.
+
 For Kernel architecture, instance attachment and repository boundaries, use `packages/velvetos/AGENTS.md`, `packages/velvetos/KERNEL.md`, `packages/velvetos/LAYERS.md` and `packages/velvetos/REPOS.md`.
 Policy routing boundary: `policy_id: project.request.preflight` is a router only; destination external effects remain owned by their registry-mapped effect authority.

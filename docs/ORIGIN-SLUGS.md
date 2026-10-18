@@ -55,7 +55,7 @@ origin: <owner/repo>
 ```
 
 4. באותו יום: מעדכנים `ORIGIN.md` + `packages/manifest.json` (`originSlug`, `codebaseUrl`, `cloneUrl`, `vendorStatus`).
-5. שורת `CHANGELOG.md` Unreleased (עברית+אנגלית).
+5. קובץ `changelog.d/<slug>.md` (עברית+אנגלית). לא עורכים את `CHANGELOG.md` באותו שינוי.
 6. Vendor רק אם הטוקן באמת משכפל את ה-tmp:
 
 ```bash

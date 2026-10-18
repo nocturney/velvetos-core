@@ -1,0 +1,1 @@
+- 2026-10-18 - **CrewAI Ollama loopback:** the CrewAI pilot runbook records Christian's decision that the only Ollama address is `127.0.0.1:11434` and that port `11435` is refused. A bind on `0.0.0.0:11434` is not that address. No model call.
