@@ -143,14 +143,33 @@ class EmptyPath:
         os.environ["PATH"] = self._old
 
 
-def _load(name: str):
-    path = SCRIPTS / name
-    spec = importlib.util.spec_from_file_location(name.replace("-", "_").replace(".py", ""), path)
+def _load(name: str, path: Path | None = None):
+    path = path or (SCRIPTS / name)
+    mod_name = "vf_ffmpeg_case_" + path.stem.replace("-", "_")
+    spec = importlib.util.spec_from_file_location(mod_name, path)
     if spec is None or spec.loader is None:
         raise AssertionError(f"cannot load {path}")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def classify_ci_call(call) -> str:
+    """HARD_FAILURE when CI refuses the gap. GUARD_BYPASSED when a skip escapes.
+
+    unittest.SkipTest is not a subclass of the failure the sensors raise, so a
+    bare assertRaises lets a removed guard skip the test and still exit 0.
+    """
+    try:
+        call()
+    except unittest.SkipTest:
+        return "GUARD_BYPASSED"
+    except (RuntimeError, AssertionError) as exc:
+        if "SKIP_ENV_MISSING_" in str(exc):
+            return "HARD_FAILURE"
+        return "OTHER_FAILURE"
+    else:
+        return "NO_FAILURE"
 
 
 class FfmpegCapabilityTests(unittest.TestCase):
@@ -270,10 +289,10 @@ class FfmpegCapabilityTests(unittest.TestCase):
     def test_github_actions_fails_video_privacy_skip(self) -> None:
         module = _load("check-video-normalization.py")
         with github_actions("true"), EmptyPath():
-            with self.assertRaises(RuntimeError) as caught:
-                module.VideoNormalizationTests.setUpClass()
-        self.assertIn("SKIP_ENV_MISSING_FFMPEG", str(caught.exception))
-        self.assertNotIsInstance(caught.exception, unittest.SkipTest)
+            self.assertEqual(
+                classify_ci_call(module.VideoNormalizationTests.setUpClass),
+                "HARD_FAILURE",
+            )
 
     def test_github_actions_fails_public_video_skip(self) -> None:
         module = _load("check-publication-evidence.py")
@@ -281,11 +300,68 @@ class FfmpegCapabilityTests(unittest.TestCase):
         case.setUp()
         try:
             with github_actions("true"), EmptyPath():
-                with self.assertRaises(AssertionError) as caught:
-                    case.test_public_mp4_requires_hash_bound_normalization()
-            self.assertIn("SKIP_ENV_MISSING_FFMPEG", str(caught.exception))
+                self.assertEqual(
+                    classify_ci_call(case.test_public_mp4_requires_hash_bound_normalization),
+                    "HARD_FAILURE",
+                )
         finally:
             case.doCleanups()
+
+    def test_github_actions_missing_filter_and_flag_are_hard_failures(self) -> None:
+        """A missing filter and a missing build flag must not skip on CI."""
+        video = _load("check-video-normalization.py")
+        with tempfile.TemporaryDirectory() as tmp:
+            with FakeFfmpeg(Path(tmp), "missing-sidedata"), github_actions("true"):
+                self.assertEqual(
+                    classify_ci_call(video.VideoNormalizationTests.setUpClass),
+                    "HARD_FAILURE",
+                )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            with FakeFfmpeg(Path(tmp), "missing-fribidi"), github_actions("true"):
+                gap = vf_ffmpeg_env.caption_gap()
+                self.assertIsNotNone(gap)
+                assert gap is not None
+                self.assertEqual(gap.token, "SKIP_ENV_MISSING_FRIBIDI")
+                blocked = vf_ffmpeg_env.ci_skip_failure(gap)
+                self.assertIsNotNone(blocked)
+                assert blocked is not None
+                self.assertIn("SKIP_ENV_MISSING_FRIBIDI", blocked)
+                self.assertIn("--enable-libfribidi", blocked)
+
+        publication = _load("check-publication-evidence.py")
+        case = publication.EvidenceTests("test_valid_mp4_delivery_decodes")
+        case.setUp()
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                with FakeFfmpeg(Path(tmp), "missing-sidedata"), github_actions("true"):
+                    self.assertEqual(
+                        classify_ci_call(case.test_valid_mp4_delivery_decodes),
+                        "HARD_FAILURE",
+                    )
+        finally:
+            case.doCleanups()
+
+    def test_removed_github_actions_guard_is_caught(self) -> None:
+        """One mutation: delete the video-privacy raise and require a hard failure."""
+        source = (SCRIPTS / "check-video-normalization.py").read_text(encoding="utf-8")
+        guard = (
+            "        blocked = vf_ffmpeg_env.ci_skip_failure(gap)\n"
+            "        if blocked:\n"
+            "            raise RuntimeError(blocked)\n"
+        )
+        self.assertIn(guard, source)
+        mutated = source.replace(guard, "", 1)
+        self.assertNotIn("raise RuntimeError(blocked)", mutated)
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "check_video_normalization_unguarded.py"
+            path.write_text(mutated, encoding="utf-8")
+            module = _load(path.name, path)
+            with FakeFfmpeg(Path(tmp), "missing-sidedata"), github_actions("true"):
+                self.assertEqual(
+                    classify_ci_call(module.VideoNormalizationTests.setUpClass),
+                    "GUARD_BYPASSED",
+                )
 
 
 if __name__ == "__main__":

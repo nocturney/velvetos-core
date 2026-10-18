@@ -239,7 +239,18 @@ def main() -> None:
         ROOT / "scripts" / "check-video-normalization.py",
         "normalization_gap",
         "ci_skip_failure",
+        "raise RuntimeError(blocked)",
         "SkipTest",
+    )
+    contains(
+        ROOT / "scripts" / "test_vf_ffmpeg_env.py",
+        "def classify_ci_call(",
+        "GUARD_BYPASSED",
+        "HARD_FAILURE",
+        "def test_github_actions_missing_filter_and_flag_are_hard_failures(",
+        "def test_removed_github_actions_guard_is_caught(",
+        "missing-sidedata",
+        "missing-fribidi",
     )
     contains(
         ROOT / "scripts" / "check-publication-evidence.py",

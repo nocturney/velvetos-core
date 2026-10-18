@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-10-18 - **ffmpeg CI skip guard:** on `GITHUB_ACTIONS=true`, a missing ffmpeg filter or build flag is a hard failure in the video-privacy and publication tests. Removing that guard no longer records a skip: `classify_ci_call` reports `GUARD_BYPASSED`, and one source mutation of the video-privacy raise proves the bypass is caught. Local hosts may still skip.
+
 - 2026-10-18 - **ffmpeg capability skip:** hyperframes, video normalization, and publication evidence report `SKIP_ENV_MISSING_<CAP>` when local `ffmpeg -filters` or `ffmpeg -buildconf` lacks a required filter or library. The probe stays on the binary already on PATH. A render whose pixels do not match still fails. On GitHub Actions, that skip in the video-privacy and public-video normalization tests fails the run.
 
 - 2026-10-18 - **CP083 ChatGPT-069 offline negatives:** the evidence gate refuses a hardlinked receipt, reads artifacts from held directory fds, and refuses CR in guest and manifest JSON. Two self-issued receipts stay `REFUSED_UNSIGNED_SELF_ISSUED` and `refuse_host_attestation` will not promote them. Wire CRLF/duplicate keys (GAP_9), controller env/import canaries (GAP_6, benign fake variables only), and a hardlinked native SQLite journal (GAP_4, sealed source) are expected failures. `security_admission` stays RED. No remote GitHub lost-ACK test.
