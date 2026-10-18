@@ -12,7 +12,7 @@
   "blocker": "security|secret|credential|licen[cs]e|copyright|rights|archiv|deprecat|unmaintain|maintenance|cost|paid|subscription|GPU|hardware|Windows-only|macOS-only|privacy|PII|non-commercial|\\bNC\\b|terms of service|ToS|curl\\s*\\|\\s*bash",
   "citation": "https?://|\\b20\\d\\d-\\d\\d-\\d\\d\\b|archived upstream|per #\\d+|#\\d{2,4}\\b"
  },
- "method": "line-level regex over packages/vfe2b/catalog.json, packages/vfe2b/orchestrators.json, packages/vfe2b/ORCHESTRATORS.md, packages/vfe2b/LOCK.md, packages/vfe2b/DEER-FLOW-PATTERNS.md and packages/vfresearch/LINKS.json. Matches inside title/pattern/id/rule/item/kind/url values are skipped (descriptions, not dispositions): 7 lines. The two vocabulary tokens that only name the allowed value skip inside the verdicts arrays (packages/vfe2b/catalog.json:34 and packages/vfe2b/orchestrators.json:39) are excluded because they are not a disposition of an item. Per-item \"verdict\": \"skip\" lines are included. Item = same-line name/id/title, else nearest preceding one. Candidate IDs from the alias map (URL or exact label match only).",
+ "method": "line-level regex over packages/vfe2b/catalog.json, packages/vfe2b/orchestrators.json, packages/vfe2b/ORCHESTRATORS.md, packages/vfe2b/LOCK.md, packages/vfe2b/DEER-FLOW-PATTERNS.md and packages/vfresearch/LINKS.json. Matches inside title/pattern/id/rule/item/kind/url values are skipped (descriptions, not dispositions): 7 lines. The two vocabulary tokens that only name the allowed value skip inside the verdicts arrays (packages/vfe2b/catalog.json:34 and packages/vfe2b/orchestrators.json:39) are excluded because they are not a disposition of an item. Per-item \"verdict\": \"skip\" lines are included. Item = same-line name/id/title, else nearest preceding one. Candidate IDs are the alias-map match for this row's own URL (same-line url, else the nearest preceding one; never the following item). Statuses MATCHED_STRONG, MATCHED_BY_URL, AMBIGUOUS_STRONG and AMBIGUOUS_URL contribute url_matches, otherwise strong. Weak-only, not-found and non-GitHub rows contribute nothing. If the line has no URL, an exact alias-map label equal to the item is used under the same status rule. Mechanical check: python3 docs/implementation/office-v2/phase2/check-veto-inventory.py.",
  "rows": [
   {
    "file": "packages/vfe2b/catalog.json",
@@ -22,8 +22,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [
-    "candidate-microsoft-agent-framework",
-    "deferred-autogen"
+    "deferred-crewai"
    ],
    "blocker_term_without_citation": false
   },
@@ -136,9 +135,7 @@
    "quote": "\"note\": \"Already the HQ. Do not install a second coding agent.\"",
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
-   "canonical_candidate_ids": [
-    "deferred-orca"
-   ],
+   "canonical_candidate_ids": [],
    "blocker_term_without_citation": false
   },
   {
@@ -408,9 +405,7 @@
    "quote": "\"note\": \"Pattern only (plan→exec→verify). Already in crews/run.md + orchestrators overlay. Do not install OMC.\"",
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
-   "canonical_candidate_ids": [
-    "deferred-ruflo"
-   ],
+   "canonical_candidate_ids": [],
    "blocker_term_without_citation": false
   },
   {
@@ -420,7 +415,9 @@
    "quote": "\"note\": \"Skipped install — unattended swarms in orchestrators.json skip list. vfmem/vfgraft for memory pattern only.\"",
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
-   "canonical_candidate_ids": [],
+   "canonical_candidate_ids": [
+    "deferred-ruflo"
+   ],
    "blocker_term_without_citation": false
   },
   {
@@ -431,7 +428,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [
-    "candidate-lobehub"
+    "candidate-bindu"
    ],
    "blocker_term_without_citation": false
   },
@@ -443,7 +440,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [
-    "candidate-intake-huginn-huginn"
+    "candidate-lobehub"
    ],
    "blocker_term_without_citation": false
   },
@@ -455,7 +452,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [
-    "candidate-twenty"
+    "candidate-intake-superset-sh-superset"
    ],
    "blocker_term_without_citation": false
   },
@@ -467,7 +464,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [
-    "candidate-erpnext"
+    "candidate-twenty"
    ],
    "blocker_term_without_citation": false
   },
@@ -628,9 +625,7 @@
    "quote": "\"note\": \"Patterns only in lint_he.py + ai-tells-he.md. No Rust binary. Complements write-better + ai-copywriter embeds.\"",
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
-   "canonical_candidate_ids": [
-    "candidate-intake-debpalash-voicestudio"
-   ],
+   "canonical_candidate_ids": [],
    "blocker_term_without_citation": false
   },
   {
@@ -652,7 +647,9 @@
    "quote": "\"note\": \"Patterns only. No DMG/Docker/MCP on Cloud. Floor proof > AI voice for reels. Desktop VO optional after lead + model license gate. AGPL app; upstream weights may be NC.\"",
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
-   "canonical_candidate_ids": [],
+   "canonical_candidate_ids": [
+    "candidate-intake-debpalash-voicestudio"
+   ],
    "blocker_term_without_citation": true
   },
   {
@@ -712,7 +709,9 @@
    "quote": "\"note\": \"Patterns only: content matrix, measured scoring, reference-Reel mechanics, date-verified niche research. No second writer/runtime.\"",
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
-   "canonical_candidate_ids": [],
+   "canonical_candidate_ids": [
+    "candidate-intake-charlie947-social-media-skills"
+   ],
    "blocker_term_without_citation": false
   },
   {
