@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -3397,6 +3398,9 @@ def main() -> int:
             cp083_result = json.loads(cp083.stdout)
         except json.JSONDecodeError:
             fail("#604 CP083 evidence gate returned non-JSON")
+        expected_inert = (
+            "SKIP_NON_POSIX" if os.name != "posix" else "OFFLINE_STATIC_ONLY"
+        )
         if (
             cp083_result.get("status") != "CP083_SEALED_TEST_ONLY"
             or cp083_result.get("checked_real_provider_runs") != 2
@@ -3404,6 +3408,7 @@ def main() -> int:
             or cp083_result.get("security_admission") != "RED"
             or cp083_result.get("production_authority") is not False
             or cp083_result.get("authenticated_remote_github_proven") is not False
+            or cp083_result.get("inert_selftest") != expected_inert
             or (cp083_mode == "--selftest" and
                 cp083_result.get("negative_mutations_rejected") != 8)
         ):
