@@ -130,8 +130,9 @@ jobs:
         if: failure()
         run: echo "::error::One or more VelvetOS contract checks failed. See log above." && exit 1
 
-  # Non-blocking Windows signal. Ruleset 23284099 still requires only the
-  # Linux job's check-all status. This job publishes no commit status.
+  # Windows suite. A failing check-all fails this job and the workflow.
+  # Ruleset 23284099 still requires only the Linux job's check-all status.
+  # This job publishes no commit status.
   # pull_request and push only: machine workflow_dispatch stays on check-all.
   # GITHUB_ACTIONS=true turns a missing ffmpeg into a video-sensor failure, so
   # this job installs one hash-pinned full build before the suite. POSIX-only
@@ -140,7 +141,6 @@ jobs:
   check-all-windows:
     if: github.event_name == 'pull_request' || github.event_name == 'push'
     runs-on: windows-latest
-    continue-on-error: true
     permissions:
       contents: read
     timeout-minutes: 45

@@ -389,6 +389,15 @@ def flip_persist_credentials(job: str) -> str:
     return mutated
 
 
+def restore_windows_continue_on_error(job: str) -> str:
+    """Mutation: put continue-on-error back on the Windows job."""
+    needle = "runs-on: windows-latest\n"
+    mutated = job.replace(needle, needle + "    continue-on-error: true\n", 1)
+    if mutated == job:
+        raise ValueError("runs-on: windows-latest was not present to restore continue-on-error")
+    return mutated
+
+
 def reset_ffmpeg_exit(job: str) -> str:
     """Mutation from the #827 verdict: zero LASTEXITCODE on the verifier line."""
     needle = "python scripts/verify_ffmpeg_zip_sha256.py --path $zip --expected $expected"
@@ -402,7 +411,6 @@ def windows_job_problems(job: str) -> list[str]:
     problems: list[str] = []
     for needle in (
         "runs-on: windows-latest",
-        "continue-on-error: true",
         "github.event_name == 'pull_request' || github.event_name == 'push'",
         "python scripts/check-all.py",
         "requirements-sensors.py311.lock",
@@ -425,6 +433,8 @@ def windows_job_problems(job: str) -> list[str]:
     ):
         if needle not in job:
             problems.append(f"check-all-windows missing {needle}")
+    if "continue-on-error:" in job:
+        problems.append("check-all-windows must not continue on error")
     if not ffmpeg_sha_enforced(job):
         problems.append("check-all-windows does not enforce the ffmpeg zip sha256")
     if ffmpeg_exit_was_reset(job):
@@ -585,10 +595,20 @@ def main() -> int:
     cred_problems = windows_job_problems(creds)
     if not any("persist-credentials: false" in problem for problem in cred_problems):
         fail("flipping persist-credentials to true was not caught")
+    try:
+        continued = restore_windows_continue_on_error(windows_job)
+    except ValueError as exc:
+        fail(str(exc))
+    continued_problems = windows_job_problems(continued)
+    if not any(
+        problem == "check-all-windows must not continue on error" for problem in continued_problems
+    ):
+        fail("restoring continue-on-error on the windows job was not caught")
     gate_evidence = prove_ffmpeg_hash_gate()
     print(
         "OK check-all-windows ffmpeg-sha-enforce "
-        f"delete=caught operator_flip=caught exit_reset=caught credentials=caught {gate_evidence} permissions=contents:read"
+        "delete=caught operator_flip=caught exit_reset=caught credentials=caught "
+        f"continue_on_error=caught {gate_evidence} permissions=contents:read"
     )
     pin_evidence = prove_workflow_action_pins(core_workflow)
     for path in sorted(list(WORKFLOWS.glob("*.yml")) + list(WORKFLOWS.glob("*.yaml"))):
