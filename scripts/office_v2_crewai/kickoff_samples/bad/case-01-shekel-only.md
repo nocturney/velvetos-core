@@ -1,0 +1,7 @@
+## סיכום
+סיכום סינתטי לשורות הקלט.
+9801 ₪
+## חסמים וצעדים הבאים
+| Issue URL | חסם | בעלים | צעד הבא |
+| --- | --- | --- | --- |
+| https://github.com/nocturney/velvetos-core/issues/9801 | synthetic blocker: fixture queue is paused | synthetic-seat | synthetic next action: keep the row offline |
