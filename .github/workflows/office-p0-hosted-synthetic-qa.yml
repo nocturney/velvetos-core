@@ -18,7 +18,8 @@ jobs:
     timeout-minutes: 8
     steps:
       - name: Checkout public source without persistent credentials
-        uses: actions/checkout@v7
+        # actions/checkout v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
           fetch-depth: 1
