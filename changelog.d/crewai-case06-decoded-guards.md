@@ -1,0 +1,1 @@
+- 2026-10-18 - **CrewAI case 06 decoded guards:** the reviewed-runner sensor requires the triage `UNTRUSTED QUOTE` ignore sentence and the reviewer money and customer rejection sentence in decoded task text. A raw comment copy does not count. No model call.
