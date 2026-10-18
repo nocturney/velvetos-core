@@ -275,6 +275,197 @@ class WireJsonTests(unittest.TestCase):
         self.assertEqual(parsed["head"], "a" * 40)
         self.assertIs(parsed["frozen"], False)
 
+    def test_overflow_float_refused_on_request_and_ack(self):
+        # 1e999 is a finite-looking token. float() turns it into Infinity.
+        requests = (
+            b'{"action":"effect","case":"normal","n":1e999}\n',
+            b'{"action":"effect","case":"normal","n":-1e999}\n',
+        )
+        for payload in requests:
+            with self.subTest(request=payload):
+                self.assert_frame_reason(payload, "NON_FINITE_JSON")
+            with self.subTest(serve=payload):
+                reply, lab = self.serve_payload(payload, uid=candidate.WORKER_UID)
+                self.assertEqual(lab.git_calls, [])
+                self.assertEqual(lab.attempt_calls, [])
+                self.assertEqual(
+                    json.loads(reply.decode()),
+                    {"reason": "Refused", "status": "FAIL_CLOSED"})
+        for payload in (
+            b'{"status":"COMMITTED_READBACK","n":1e999}\n',
+            b'{"status":"COMMITTED_READBACK","n":-1e999}\n',
+        ):
+            with self.subTest(ack=payload):
+                answer, state = self.exercise_ack(payload)
+                self.assertEqual(answer, {"status": "NO_ACK_UNKNOWN"})
+                self.assertTrue(state.received)
+
+    def test_later_trailing_byte_refused_without_effect(self):
+        # The extra byte is not in the first recv. Only the post-frame peek sees it.
+        self._ack_later_byte()
+        reply, lab = self._serve_later_byte()
+        self.assertEqual(lab.git_calls, [])
+        self.assertEqual(lab.attempt_calls, [])
+        self.assertEqual(
+            json.loads(reply.decode()),
+            {"reason": "Refused", "status": "FAIL_CLOSED"})
+        self.assertNotIn(b"COMMITTED_READBACK", reply)
+
+    def _ack_later_byte(self):
+        release = threading.Event()
+        extra_sent = threading.Event()
+        real_decode = candidate.evidence_gate.decode_wire_frame
+
+        def wrapped(raw, limit):
+            obj = real_decode(raw, limit)
+            release.set()
+            if not extra_sent.wait(2):
+                raise AssertionError("trailing byte missing")
+            return obj
+
+        with tempfile.TemporaryDirectory(prefix="vf604-cp083-wire-trail-") as td:
+            endpoint_dir = Path(td) / "endpoint"
+            endpoint_dir.mkdir()
+            ready = threading.Event()
+            state = _SinkState()
+
+            def sink():
+                with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
+                    server.bind(str(endpoint_dir / "sink.sock"))
+                    server.listen(1)
+                    server.settimeout(5)
+                    ready.set()
+                    try:
+                        peer, _ = server.accept()
+                    except socket.timeout:
+                        return
+                    with peer:
+                        peer.settimeout(2)
+                        try:
+                            state.received = peer.recv(4096)
+                        except OSError:
+                            state.received = b""
+                        peer.sendall(b'{"status":"COMMITTED_READBACK"}\n')
+                        if not release.wait(2):
+                            return
+                        peer.sendall(b'x')
+                        extra_sent.set()
+
+            worker = threading.Thread(target=sink, daemon=True)
+            worker.start()
+            self.assertTrue(ready.wait(2), "fake socket did not listen")
+            original = candidate.SINK_UID
+            candidate.SINK_UID = os.geteuid()
+            try:
+                with mock.patch.object(
+                        candidate.evidence_gate, "decode_wire_frame", wrapped):
+                    answer = candidate.socket_exchange(
+                        td, {"action": "effect", "case": "normal"})
+            finally:
+                candidate.SINK_UID = original
+            worker.join(timeout=5)
+            self.assertFalse(worker.is_alive(), "synthetic endpoint leaked thread")
+        self.assertEqual(answer, {"status": "NO_ACK_UNKNOWN"})
+        self.assertTrue(state.received)
+        self.assertTrue(extra_sent.is_set(), "peek ran before the later byte")
+
+    def _serve_later_byte(self):
+        lab = _Lab()
+        errors = []
+        ready = threading.Event()
+        release = threading.Event()
+        extra_sent = threading.Event()
+        real_print = print
+        real_decode = candidate.evidence_gate.decode_wire_frame
+        frames = {"n": 0}
+
+        def spy(*args, **kwargs):
+            if args and args[0] == "READY":
+                ready.set()
+            return real_print(*args, **kwargs)
+
+        def wrapped(raw, limit):
+            obj = real_decode(raw, limit)
+            frames["n"] += 1
+            if frames["n"] == 1:
+                release.set()
+                if not extra_sent.wait(2):
+                    raise AssertionError("trailing byte missing")
+            return obj
+
+        seen = {"n": 0}
+        real_unpack = candidate.struct.unpack
+
+        def unpack(fmt, data):
+            if fmt == "3i":
+                seen["n"] += 1
+                peer = candidate.WORKER_UID if seen["n"] == 1 else 0
+                return (0, peer, 0)
+            return real_unpack(fmt, data)
+
+        def forbidden_git(*args, **kwargs):
+            lab.git_calls.append(("git_raw", args))
+            raise AssertionError("git")
+
+        def client(root):
+            sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+            sock.settimeout(3)
+            try:
+                sock.connect(str(Path(root) / "endpoint" / "sink.sock"))
+                sock.sendall(b'{"action":"effect","case":"normal"}\n')
+                if not release.wait(2):
+                    return b""
+                sock.sendall(b"x")
+                extra_sent.set()
+                data = bytearray()
+                while b"\n" not in data:
+                    part = sock.recv(4096)
+                    if not part:
+                        break
+                    data.extend(part)
+                return bytes(data)
+            finally:
+                sock.close()
+
+        with tempfile.TemporaryDirectory(prefix="vf604-cp083-wire-trail-req-") as td:
+            root = Path(td)
+            (root / "endpoint").mkdir()
+            with mock.patch.object(candidate.os, "geteuid", return_value=candidate.SINK_UID), \
+                    mock.patch.object(candidate.struct, "unpack", unpack), \
+                    mock.patch.object(candidate.offline.OfflineLab, "create", lambda path: lab), \
+                    mock.patch.object(candidate.offline, "git_raw", forbidden_git), \
+                    mock.patch.object(candidate.evidence_gate, "decode_wire_frame", wrapped), \
+                    mock.patch("builtins.print", spy):
+                worker = threading.Thread(
+                    target=self._run_serve, args=(root, errors), daemon=True)
+                worker.start()
+                self.assertTrue(ready.wait(2), "sink did not become ready: " + repr(errors))
+                reply = client(root)
+                shutdown = self._once(
+                    root, b'{"action":"shutdown","case":"controller"}\n')
+            worker.join(timeout=3)
+        self.assertFalse(worker.is_alive(), "sink thread leaked")
+        self.assertEqual(errors, [])
+        self.assertIn(b"ROOT_CONTROL_SHUTDOWN", shutdown)
+        self.assertTrue(extra_sent.is_set(), "peek ran before the later byte")
+        return reply, lab
+
+    def test_serve_non_string_action_or_case_fail_closed(self):
+        payloads = (
+            b'{"action":1,"case":"normal"}\n',
+            b'{"action":"effect","case":1}\n',
+            b'{"action":true,"case":"normal"}\n',
+        )
+        for payload in payloads:
+            with self.subTest(payload=payload):
+                reply, lab = self.serve_payload(payload, uid=candidate.WORKER_UID)
+                self.assertEqual(lab.git_calls, [])
+                self.assertEqual(lab.attempt_calls, [])
+                self.assertEqual(
+                    json.loads(reply.decode()),
+                    {"reason": "Refuse", "status": "FAIL_CLOSED"})
+                self.assertNotIn(b"COMMITTED_READBACK", reply)
+
 
 if __name__ == "__main__":
     unittest.main()
