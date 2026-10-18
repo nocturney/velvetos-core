@@ -44,6 +44,8 @@ FAKE = textwrap.dedent(
         ]
         if mode == "missing-drawtext":
             names.remove("drawtext")
+        if mode == "missing-zoompan":
+            names.remove("zoompan")
         if mode == "missing-sidedata":
             names = [item for item in names if item not in {"sidedata", "asidedata"}]
         for item in names:
@@ -143,6 +145,24 @@ class EmptyPath:
         os.environ["PATH"] = self._old
 
 
+def require_no_caption_gap(case: unittest.TestCase) -> None:
+    """Full caption ffmpeg has no gap. Missing zoompan skips on a local host.
+
+    ci_skip_failure returns the gap line when GITHUB_ACTIONS=true, and None
+    otherwise. Any other gap still fails the assertion.
+    """
+    gap = vf_ffmpeg_env.caption_gap()
+    if gap is None:
+        return
+    if gap.token == "SKIP_ENV_MISSING_ZOOMPAN":
+        blocked = vf_ffmpeg_env.ci_skip_failure(gap)
+        if blocked:
+            raise RuntimeError(blocked)
+        print(gap.line, flush=True)
+        raise unittest.SkipTest(gap.line)
+    case.assertIsNone(gap)
+
+
 def _load(name: str):
     path = SCRIPTS / name
     spec = importlib.util.spec_from_file_location(name.replace("-", "_").replace(".py", ""), path)
@@ -199,6 +219,31 @@ class FfmpegCapabilityTests(unittest.TestCase):
                 self.assertIn("ffmpeg -filters", gap.reason)
                 self.assertIn("drawtext", gap.reason)
 
+    def test_missing_zoompan_skips_locally_and_fails_on_ci(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            with FakeFfmpeg(Path(tmp), "missing-zoompan"), github_actions(None):
+                gap = vf_ffmpeg_env.caption_gap()
+                self.assertIsNotNone(gap)
+                assert gap is not None
+                self.assertEqual(gap.token, "SKIP_ENV_MISSING_ZOOMPAN")
+                self.assertIn("ffmpeg -filters", gap.reason)
+                self.assertIn("zoompan", gap.reason)
+                self.assertIsNone(vf_ffmpeg_env.ci_skip_failure(gap))
+                with self.assertRaises(unittest.SkipTest) as caught:
+                    require_no_caption_gap(self)
+                self.assertIn("SKIP_ENV_MISSING_ZOOMPAN", str(caught.exception))
+            with FakeFfmpeg(Path(tmp), "missing-zoompan"), github_actions("true"):
+                with self.assertRaises(RuntimeError) as caught_fail:
+                    require_no_caption_gap(self)
+                self.assertIn("SKIP_ENV_MISSING_ZOOMPAN", str(caught_fail.exception))
+                self.assertNotIsInstance(caught_fail.exception, unittest.SkipTest)
+        sensor = _load("check-hyperframes-backend.py")
+        self.assertEqual(sensor.zoompan_suite_action(gap, None), "skip")
+        self.assertEqual(sensor.zoompan_suite_action(gap, gap.line), "fail")
+        self.assertEqual(sensor.zoompan_suite_action(None, None), "run")
+        other = vf_ffmpeg_env.EnvGap("SKIP_ENV_MISSING_DRAWTEXT", "drawtext")
+        self.assertEqual(sensor.zoompan_suite_action(other, None), "run")
+
     def test_missing_sidedata_skips_normalization_only(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             with FakeFfmpeg(Path(tmp), "missing-sidedata"):
@@ -207,7 +252,7 @@ class FfmpegCapabilityTests(unittest.TestCase):
                 assert norm is not None
                 self.assertEqual(norm.token, "SKIP_ENV_MISSING_SIDEDATA")
                 self.assertIn("ffmpeg -filters", norm.reason)
-                self.assertIsNone(vf_ffmpeg_env.caption_gap())
+                require_no_caption_gap(self)
                 public = vf_ffmpeg_env.publication_gap()
                 self.assertIsNotNone(public)
                 assert public is not None
@@ -232,7 +277,7 @@ class FfmpegCapabilityTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp:
             with FakeFfmpeg(Path(tmp), "mismatch"):
-                self.assertIsNone(vf_ffmpeg_env.caption_gap())
+                require_no_caption_gap(self)
                 stdout = io.StringIO()
                 stderr = io.StringIO()
                 with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):

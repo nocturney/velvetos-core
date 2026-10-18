@@ -3,8 +3,10 @@
 
 Executes the local ffmpeg-svg caption tests when ffmpeg -filters and
 ffmpeg -buildconf advertise the required filters and libraries. A missing
-capability is SKIP_ENV_MISSING_<CAP>. A render whose pixels do not match
-still fails. No network and no send.
+capability is SKIP_ENV_MISSING_<CAP>. A missing zoompan filter skips those
+tests on a local host and fails them when GITHUB_ACTIONS=true, through
+ci_skip_failure. A render whose pixels do not match still fails. No network
+and no send.
 """
 from __future__ import annotations
 import json, re, shutil, subprocess, sys
@@ -27,6 +29,20 @@ SKILL = ROOT / ".cursor" / "skills" / "vf-content-sprint" / "SKILL.md"
 def fail(msg: str) -> None:
     print(f"FAIL {msg}", file=sys.stderr)
     raise SystemExit(1)
+
+
+def zoompan_suite_action(gap, blocked: str | None) -> str:
+    """Missing zoompan skips locally. ci_skip_failure's line fails the suite.
+
+    Any other gap keeps the existing test path. blocked is that failure line
+    or None when the host is not CI.
+    """
+    token = getattr(gap, "token", None)
+    if token != "SKIP_ENV_MISSING_ZOOMPAN":
+        return "run"
+    if blocked:
+        return "fail"
+    return "skip"
 
 
 def load(path: Path) -> dict:
@@ -311,34 +327,49 @@ def main() -> None:
     if "Installing pinned HyperFrames" in windows_bootstrap or '$HyperFramesVersion = "' in windows_bootstrap:
         fail("Windows bootstrap must not exact-pin normal HyperFrames execution")
 
-    env_tests = subprocess.run(
-        [sys.executable, str(ROOT / "scripts" / "test_vf_ffmpeg_env.py")],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
+    contains(
+        ROOT / "scripts" / "test_vf_ffmpeg_env.py",
+        "SKIP_ENV_MISSING_ZOOMPAN",
+        "def require_no_caption_gap(",
+        "missing-zoompan",
+        "ci_skip_failure",
+        "zoompan_suite_action",
     )
-    if env_tests.returncode != 0:
-        detail = ((env_tests.stdout or "") + "\n" + (env_tests.stderr or "")).strip()
-        fail("ffmpeg capability tests failed:\n" + detail[-4000:])
-
-    caption_tests = subprocess.run(
-        [sys.executable, str(ROOT / "scripts" / "test_vf_ffmpeg_svg_caption.py")],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-    )
-    if caption_tests.returncode != 0:
-        detail = (caption_tests.stderr or caption_tests.stdout or "").strip()
-        fail("ffmpeg-svg-caption tests failed:\n" + detail[-4000:])
 
     scripts = str(ROOT / "scripts")
     if scripts not in sys.path:
         sys.path.insert(0, scripts)
-    from vf_ffmpeg_env import caption_gap
+    from vf_ffmpeg_env import caption_gap, ci_skip_failure
 
     gap = caption_gap()
-    if gap is not None:
+    action = zoompan_suite_action(gap, ci_skip_failure(gap))
+    if action == "fail":
+        fail(gap.line)
+    if action == "skip":
         print(gap.line)
+    else:
+        env_tests = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "test_vf_ffmpeg_env.py")],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+        )
+        if env_tests.returncode != 0:
+            detail = ((env_tests.stdout or "") + "\n" + (env_tests.stderr or "")).strip()
+            fail("ffmpeg capability tests failed:\n" + detail[-4000:])
+
+        caption_tests = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "test_vf_ffmpeg_svg_caption.py")],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+        )
+        if caption_tests.returncode != 0:
+            detail = (caption_tests.stderr or caption_tests.stdout or "").strip()
+            fail("ffmpeg-svg-caption tests failed:\n" + detail[-4000:])
+
+        if gap is not None:
+            print(gap.line)
 
     print(
         f"OK hyperframes backend policy=latest-compatible minimum={minimum} recovery={recovery} "
