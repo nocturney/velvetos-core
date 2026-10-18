@@ -47,6 +47,19 @@ ATTEMPT8 = "36abe219c4cf4995b8ce95078e568ee3"
 RECEIPT8 = "0e0ae55b1ec00ee26a116be172eda17e3c7a917ffba4f3102c73bdbe4da6bb5c"
 ATTEMPT9 = "0ffe7808fd864ba68eeebf7c3310e51b"
 RECEIPT9 = "663db01cd7d7423a26d6cf36a15d06080de06a53c9565a5ed3e5263b1500e75e"
+# Sha256 values already named in the accepted PIN note. They are prior pins
+# and sources, not the attempt-8/9 receipts. Any other sha256 is unknown.
+RECORDED_NOTE_SHA256 = frozenset(
+    {
+        EARLIER,
+        FIRST_READ,
+        FRAME,
+        ASCII_FRAME,
+        ATTEMPT7,
+        "13590aac5adc76894f4b009d38e6fa51d8ec2642ca12b449a5d3c709b456a977",
+        "437eeb9505f2ed62620fbf221a7b4dbe6c7c89a9d6802211fcdb797018fba4f4",
+    }
+)
 ACCEPTED = "ACCEPTED"
 IDLE_GATE_SECONDS = 120
 UIA_WAIT_MS = 10000
@@ -1095,14 +1108,18 @@ def safety_findings(text: str) -> list[str]:
     return problems
 
 
-def _receipt_impostor(note: str) -> bool:
+def _sha256_runs(note: str) -> list[str]:
+    """Maximal hex runs long enough to be a sha256, including extra appended hex."""
+    return [run for run in re.findall(r"[0-9a-f]+", note) if len(run) >= 64]
+
+
+def _prefix_impostor(run: str) -> bool:
     """A 64-hex sha that wears a receipt prefix but is not that receipt."""
-    for token in re.findall(r"[0-9a-f]{64}", note):
-        if token in (RECEIPT8, RECEIPT9):
-            continue
-        if token.startswith(RECEIPT8[:8]) or token.startswith(RECEIPT9[:8]):
-            return True
-    return False
+    return (
+        len(run) == 64
+        and run not in (RECEIPT8, RECEIPT9)
+        and (run.startswith(RECEIPT8[:8]) or run.startswith(RECEIPT9[:8]))
+    )
 
 
 def acceptance_findings(pin: dict) -> list[str]:
@@ -1119,12 +1136,22 @@ def acceptance_findings(pin: dict) -> list[str]:
             problems.append("ACCEPTED_NOTE_MISSING_ATTEMPT8")
         if ATTEMPT9 not in note:
             problems.append("ACCEPTED_NOTE_MISSING_ATTEMPT9")
-        cited = sum(token in note for token in (RECEIPT8, RECEIPT9))
-        if _receipt_impostor(note):
+        runs = _sha256_runs(note)
+        cited = {run for run in runs if run in (RECEIPT8, RECEIPT9)}
+        unknown = [
+            run
+            for run in runs
+            if run not in (RECEIPT8, RECEIPT9)
+            and run not in RECORDED_NOTE_SHA256
+            and not _prefix_impostor(run)
+        ]
+        if unknown:
+            problems.append("RECEIPT_SHA_UNKNOWN")
+        elif any(_prefix_impostor(run) for run in runs):
             problems.append("ACCEPTED_RECEIPT_SHA_MISMATCH")
-        elif cited == 1:
+        elif len(cited) == 1:
             problems.append("ACCEPTED_NOTE_CITES_ONE_RECEIPT")
-        elif cited == 0:
+        elif len(cited) == 0:
             problems.append("ACCEPTED_NOTE_MISSING_RECEIPT")
     elif acceptance != "RED_UNVERIFIED":
         problems.append("PIN_ACCEPTANCE_NOT_ALLOWED")
@@ -1160,6 +1187,22 @@ def acceptance_mutation_findings(pin: dict) -> list[str]:
         "wrong-receipt-9": (
             {"note": note.replace(RECEIPT9, "663db01c" + ("f" * 56))},
             "ACCEPTED_RECEIPT_SHA_MISMATCH",
+        ),
+        "receipt-8-extra-hex": (
+            {"note": note.replace(RECEIPT8, RECEIPT8 + "ab")},
+            "RECEIPT_SHA_UNKNOWN",
+        ),
+        "receipt-9-extra-hex": (
+            {"note": note.replace(RECEIPT9, RECEIPT9 + "ab")},
+            "RECEIPT_SHA_UNKNOWN",
+        ),
+        "accepted-without-either-receipt": (
+            {"note": note.replace(RECEIPT8, "").replace(RECEIPT9, "")},
+            "ACCEPTED_NOTE_MISSING_RECEIPT",
+        ),
+        "unknown-receipt-sha": (
+            {"note": note.replace(RECEIPT8, "ab" * 32)},
+            "RECEIPT_SHA_UNKNOWN",
         ),
         "runtime-authority": ({"runtimeAuthority": True}, "RUNTIME_AUTHORITY_NOT_FALSE"),
         "activation-allowed": ({"activationAllowed": True}, "ACTIVATION_ALLOWED_NOT_FALSE"),

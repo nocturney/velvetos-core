@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-10-18 - **CP057 receipt hash boundary:** acceptance cites a receipt only when a maximal hex run equals that sha256. Extra hex appended to a known receipt fails. A note that cites neither receipt fails with `ACCEPTED_NOTE_MISSING_RECEIPT`. Any other sha256 that is not one of the two receipts fails with `RECEIPT_SHA_UNKNOWN`. `runtimeAuthority` and `activationAllowed` stay false.
+
 - 2026-10-18 - **CrewAI runner merge status:** docs now record #789 as merged into main (`3673920102693e355301637e15332131d3ce315b`, 16:59 IDT). The pilot stays NOT_RUN, E6 stays NOT_VERIFIED at 12 open issues, and the runner is not runtime-admitted.
 
 - 2026-10-18 - **CrewAI run receipt, Windows listeners, and LAB-2:** A completed kickoff saves its output under the D: sandbox and records the status and sha256. Every run exception writes a FAIL receipt. Windows proves zero listening ports from the pilot process tree, or fails closed. `LOCALAPPDATA` and `APPDATA` stay on the sandbox, and the E4 manifest includes `AppData\Local\CrewAI\credentials` (issue 595 comment 6250622621). The frozen model input and the crew LLM pass `reasoning_effort: none` because Ollama `/v1` ignores `think: false`. No model call from this tree.
