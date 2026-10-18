@@ -2130,7 +2130,29 @@ def check_review_mutations() -> None:
         shutil.rmtree(parent, ignore_errors=True)
 
 
-WINDOWS_FIXTURE_VARS = ("SystemRoot", "windir", "ComSpec")
+WINDOWS_FIXTURE_VARS = (
+    "SystemRoot",
+    "windir",
+    "ComSpec",
+    "SystemDrive",
+    "PATHEXT",
+    "NUMBER_OF_PROCESSORS",
+    "PROCESSOR_ARCHITECTURE",
+    "COMPUTERNAME",
+    "USERDOMAIN",
+)
+
+
+def _fixture_saved_value(saved: dict, name: str):
+    """Read one saved env value. Windows stores these names in uppercase."""
+    folded = {}
+    for key, value in saved.items():
+        if isinstance(key, str):
+            folded.setdefault(key.casefold(), value)
+    value = folded.get(name.casefold())
+    if isinstance(value, str) and value.strip():
+        return value
+    return None
 
 
 def apply_windows_fixture_env(ready: dict, saved: dict, platform: str | None = None) -> dict:
@@ -2139,14 +2161,16 @@ def apply_windows_fixture_env(ready: dict, saved: dict, platform: str | None = N
     Production listener code does not clear ``os.environ``. This sensor helper
     does. On win32, ``SystemRoot``, ``windir``, and ``ComSpec`` are copied
     from the process that started the sensor so a trusted child can start.
-    Missing or blank values are not invented. ``PATH`` stays the fixture value.
+    ``dict(os.environ)`` on Windows has uppercase keys, so the lookup ignores
+    case. Missing or blank values are not invented. ``PATH`` stays the fixture
+    value.
     """
     plat = sys.platform if platform is None else platform
     if plat != "win32" or not isinstance(saved, dict) or not isinstance(ready, dict):
         return ready
     for name in WINDOWS_FIXTURE_VARS:
-        value = saved.get(name)
-        if isinstance(value, str) and value.strip():
+        value = _fixture_saved_value(saved, name)
+        if value is not None:
             ready[name] = value
     return ready
 
@@ -2161,20 +2185,36 @@ def check_windows_fixture_env() -> None:
     }
     ready = {"PATH": "/usr/sbin:/usr/bin:/bin", "OLLAMA_NO_CLOUD": "1"}
     applied = apply_windows_fixture_env(dict(ready), saved, platform="win32")
-    for name in WINDOWS_FIXTURE_VARS:
+    for name in ("SystemRoot", "windir", "ComSpec"):
         if applied.get(name) != saved[name]:
             fail("Windows fixture dropped %s" % name)
     if applied.get("PATH") != ready["PATH"]:
         fail("Windows fixture rewrote PATH")
+    upper = apply_windows_fixture_env(
+        dict(ready),
+        {
+            "SYSTEMROOT": "C:\\Windows",
+            "WINDIR": "C:\\Windows",
+            "COMSPEC": "C:\\Windows\\System32\\cmd.exe",
+        },
+        platform="win32",
+    )
+    for name in ("SystemRoot", "windir", "ComSpec"):
+        if upper.get(name) != {
+            "SystemRoot": "C:\\Windows",
+            "windir": "C:\\Windows",
+            "ComSpec": "C:\\Windows\\System32\\cmd.exe",
+        }[name]:
+            fail("uppercase %s was not restored" % name.upper())
     blank = apply_windows_fixture_env(
         dict(ready),
         {"SystemRoot": "  ", "windir": "", "ComSpec": None},
         platform="win32",
     )
-    if any(name in blank for name in WINDOWS_FIXTURE_VARS):
+    if any(name in blank for name in ("SystemRoot", "windir", "ComSpec")):
         fail("blank Windows plumbing was invented")
     posix = apply_windows_fixture_env(dict(ready), saved, platform="linux")
-    if any(name in posix for name in WINDOWS_FIXTURE_VARS):
+    if any(name in posix for name in ("SystemRoot", "windir", "ComSpec")):
         fail("non-Windows fixture copied Windows plumbing")
     source = inspect.getsource(check_exit_contract)
     needle = "apply_windows_fixture_env(ready, saved_env)"
