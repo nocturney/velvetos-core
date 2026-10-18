@@ -314,6 +314,40 @@ class Gap6PinSplitTests(unittest.TestCase):
         for rel, digest in SEALED.items():
             self.assertEqual(sha256(ROOT / rel), digest, rel)
 
+    def test_sealed_key_uses_forward_slashes(self):
+        source = Path(__file__).read_text(encoding="utf-8")
+        body = source.split("def sealed_key", 1)[1].split("def assigned", 1)[0]
+        self.assertIn(".as_posix()", body)
+        self.assertNotIn("str(", body)
+        note = PHASE2 / "p0-sameuid-sink-key-disposable-bypass-real-2026-10-10.md"
+        key = sealed_key(note)
+        self.assertEqual(
+            key,
+            "docs/implementation/office-v2/phase2/"
+            "p0-sameuid-sink-key-disposable-bypass-real-2026-10-10.md")
+        self.assertNotIn("\\", key)
+        self.assertNotIn(key.replace("/", "\\"), SEALED)
+
+    def test_sensor_receipt_fields_stay_on_receipt_pins(self):
+        sensor = sensor_text()
+        for line in (
+            'test_script_sha256") != cp081_receipt_sha',
+            'identity_helper_sha256") != identity_receipt_sha',
+            'cp081_source_sha256") != cp081_receipt_sha',
+            'tls_rbac_identity_source_sha256") != identity_receipt_sha',
+            'native_local_git_sqlite_source_sha256") != native_receipt_sha',
+        ):
+            self.assertIn(line, sensor)
+        self.assertNotIn('identity_helper_sha256") != identity_live_sha', sensor)
+        self.assertNotIn('test_script_sha256") != cp081_live_sha', sensor)
+
+    def test_lostack_raw_native_hash_uses_receipt_pin(self):
+        gate = Path(lostack.__file__).read_text(encoding="utf-8")
+        self.assertIn(
+            'r.get("native_implementation_sha256") == NATIVE_RECEIPT_SHA', gate)
+        self.assertNotIn(
+            'r.get("native_implementation_sha256") == NATIVE_LIVE_SHA', gate)
+
 
 if __name__ == "__main__":
     unittest.main()
