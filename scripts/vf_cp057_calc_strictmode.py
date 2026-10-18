@@ -45,6 +45,8 @@ ASCII_FRAME = "cf091c81a971c85bb3c1709dc1e5a91da3dcc33cf04f99a3753e8bf1dc870d00"
 ATTEMPT7 = "ee6c41e0635256d662cbc74cb9bb126b9fa7d18681810cfff679810359947144"
 ATTEMPT8 = "36abe219c4cf4995b8ce95078e568ee3"
 RECEIPT8 = "0e0ae55b1ec00ee26a116be172eda17e3c7a917ffba4f3102c73bdbe4da6bb5c"
+ATTEMPT9 = "0ffe7808fd864ba68eeebf7c3310e51b"
+RECEIPT9 = "663db01cd7d7423a26d6cf36a15d06080de06a53c9565a5ed3e5263b1500e75e"
 ACCEPTED = "ACCEPTED"
 IDLE_GATE_SECONDS = 120
 UIA_WAIT_MS = 10000
@@ -1094,31 +1096,36 @@ def safety_findings(text: str) -> list[str]:
 
 
 def acceptance_findings(pin: dict) -> list[str]:
-    """ACCEPTED is allowed only when the note cites attempt 8 and its receipt."""
+    """ACCEPTED is allowed only when the note cites both receipt shas and attempt ids."""
     problems: list[str] = []
     if pin.get("runtimeAuthority") is not False or pin.get("activationAllowed") is not False:
         problems.append("PIN must keep runtimeAuthority and activationAllowed false")
     acceptance = pin.get("acceptance")
     note = str(pin.get("note") or "").lower()
     if acceptance == ACCEPTED:
-        if RECEIPT8 not in note:
-            problems.append("accepted PIN note must cite receipt sha 0e0ae55b")
-        if ATTEMPT8 not in note:
-            problems.append("accepted PIN note must cite attempt id 36abe219")
+        for label, token in (
+            ("receipt sha 0e0ae55b", RECEIPT8),
+            ("receipt sha 663db01c", RECEIPT9),
+            ("attempt id 36abe219", ATTEMPT8),
+            ("attempt id 0ffe7808", ATTEMPT9),
+        ):
+            if token not in note:
+                problems.append(f"accepted PIN note must cite {label}")
     elif acceptance != "RED_UNVERIFIED":
         problems.append("PIN must not claim Calculator acceptance")
     return problems
 
 
 def acceptance_mutation_findings(pin: dict) -> list[str]:
-    """False acceptance and authority flags must fail closed."""
+    """A missing or wrong receipt sha, or an authority flag, must fail closed."""
     if acceptance_findings(pin):
         return ["acceptance baseline failed before mutations"]
     note = str(pin.get("note") or "")
-    wrong_sha = "0e0ae55b" + ("f" * 56)
     cases = {
-        "accepted-without-receipt-sha": {"note": note.replace(RECEIPT8, "")},
-        "wrong-receipt-sha": {"note": note.replace(RECEIPT8, wrong_sha)},
+        "accepted-without-receipt-8": {"note": note.replace(RECEIPT8, "")},
+        "accepted-without-receipt-9": {"note": note.replace(RECEIPT9, "")},
+        "wrong-receipt-8": {"note": note.replace(RECEIPT8, "0e0ae55b" + ("f" * 56))},
+        "wrong-receipt-9": {"note": note.replace(RECEIPT9, "663db01c" + ("f" * 56))},
         "runtime-authority": {"runtimeAuthority": True},
         "activation-allowed": {"activationAllowed": True},
     }
