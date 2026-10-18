@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -3397,6 +3398,9 @@ def main() -> int:
             cp083_result = json.loads(cp083.stdout)
         except json.JSONDecodeError:
             fail("#604 CP083 evidence gate returned non-JSON")
+        expected_inert = (
+            "SKIP_NON_POSIX" if os.name != "posix" else "OFFLINE_STATIC_ONLY"
+        )
         if (
             cp083_result.get("status") != "CP083_SEALED_TEST_ONLY"
             or cp083_result.get("checked_real_provider_runs") != 2
@@ -3404,6 +3408,7 @@ def main() -> int:
             or cp083_result.get("security_admission") != "RED"
             or cp083_result.get("production_authority") is not False
             or cp083_result.get("authenticated_remote_github_proven") is not False
+            or cp083_result.get("inert_selftest") != expected_inert
             or (cp083_mode == "--selftest" and
                 cp083_result.get("negative_mutations_rejected") != 8)
         ):
@@ -3441,6 +3446,35 @@ def main() -> int:
                     and test_file != "test_vf_office_v2_604_cp083_reconcile_negative.py"
                     and "skipped" in test_run.stderr)):
             fail("#604 CP083 candidate negative tests failed: " + test_file)
+
+    # #764: offline two-host native Git/SQLite lost-ACK receipts. SECURITY RED.
+    # Not joined-run QA, not admission, not a remote GitHub effect.
+    receipt_gate = ROOT / "scripts" / "vf_office_v2_604_cp083_native_lostack_receipt_gate.py"
+    if not receipt_gate.is_file():
+        fail("#604 CP083 native lost-ACK receipt gate missing")
+    try:
+        receipt_run = subprocess.run(
+            [sys.executable, "-B", str(receipt_gate), "--selftest"],
+            cwd=ROOT, capture_output=True, text=True, timeout=20,
+        )
+    except subprocess.TimeoutExpired:
+        fail("#604 CP083 native lost-ACK receipt gate timed out")
+    if receipt_run.returncode != 0:
+        fail("#604 CP083 native lost-ACK receipt gate failed closed")
+    try:
+        receipt_result = json.loads(receipt_run.stdout)
+    except json.JSONDecodeError:
+        fail("#604 CP083 native lost-ACK receipt gate returned non-JSON")
+    if (
+        receipt_result.get("status") != "PASS_TWO_NATIVE_LOCAL_RECEIPTS_SECURITY_RED"
+        or receipt_result.get("security_admission") != "RED"
+        or receipt_result.get("remote_github_writes") != 0
+        or receipt_result.get("mutations_rejected") != 12
+        or receipt_result.get("real_native_git_sqlite_receipts") != 2
+        or receipt_result.get("named_assertions") != 116
+        or receipt_result.get("distinct_hosts") != 2
+    ):
+        fail("#604 CP083 native lost-ACK receipt gate must stay SECURITY RED")
 
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "

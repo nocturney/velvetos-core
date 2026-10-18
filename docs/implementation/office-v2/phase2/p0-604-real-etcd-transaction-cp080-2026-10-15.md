@@ -1,10 +1,10 @@
 # CP080 — real one-member etcd atomic admit/revoke + disposable local Git
 
-**2026-10-15 | Office #604 / #612 | DRAFT ONLY | P0 GENERATED-SOURCE ADMISSION RED**
+**2026-10-15 | Office #604 / #612 | merged into main via #758 (6cec8e86); lab-only, SECURITY RED | P0 GENERATED-SOURCE ADMISSION RED**
 
 ## Purpose and prior RED witness
 
-CP077 [Draft #730](https://github.com/nocturney/velvetos-core/pull/730) repeatedly reproduced the unsafe timing gap: after the last genuine mTLS etcd owner/intent read, the issuer can revoke owner before native local Git `update-ref`, yet the stale sink still writes. CP078 [Draft #731](https://github.com/nocturney/velvetos-core/pull/731) proposed separate **REVOKE_REQUESTED_COMMITTED** vs **REVOKED_EFFECTIVE** semantics; CP079 [Draft #732](https://github.com/nocturney/velvetos-core/pull/732) exercised these mechanics with SQLite + native Git only.
+CP077 [Draft #730](https://github.com/nocturney/velvetos-core/pull/730) repeatedly reproduced the unsafe timing gap: after the last genuine mTLS etcd owner/intent read, the issuer can revoke owner before native local Git `update-ref`, yet the stale sink still writes. CP078 [Draft #731](https://github.com/nocturney/velvetos-core/pull/731) proposed separate **REVOKE_REQUESTED_COMMITTED** vs **REVOKED_EFFECTIVE** semantics; CP079 [merged #732](https://github.com/nocturney/velvetos-core/pull/732) exercised these mechanics with SQLite + native Git only.
 
 **This CP080 moves the atomic admission/revocation and overlapping resource reservation to a REAL ephemeral etcd server with actual Raft-backed one-member transactions** while keeping any Git side effect strictly **LOCAL**. It is a tested **lab fixture**, not a production-suitable privileged Sink.
 
@@ -71,4 +71,4 @@ Independent cleanup check after the final suite: **zero** `/tmp/vf604-cp080-*` g
 5. **No independent external review:** all new CP080 harness logic was authored for the experiment and run inside the existing sandbox guest, not verified by independent security reviewers. No hidden CP058 3+12 real source QA or two autonomous coding PR tasks.
 6. **70 CP078/R1 adversarial provider schedules remain an unexecuted separate test contract.** CP080 implements only its own 17 narrower scenarios, one negative deliberately unsafe.
 
-**Verdict:** `REAL_ETCD_SINGLE_MEMBER_TRANSACTION_LAB_PASS` and `P0_SECURITY_ADMISSION_RED`. Draft branch is not authorization to merge, relax branch reviews, run the autonomous coding agent or use a credentialed GitHub Sink. Preserve `P0_GENERATED_SOURCE_OS_ISOLATION_NOT_ADMITTED`. No Codex CLI, paid inference, or customer/production effect occurred.
+**Verdict:** `REAL_ETCD_SINGLE_MEMBER_TRANSACTION_LAB_PASS` and `P0_SECURITY_ADMISSION_RED`. Merged into main via #758 (6cec8e86); lab-only, SECURITY RED. That merge is not authorization to relax branch reviews, run the autonomous coding agent, or use a credentialed GitHub Sink. Preserve `P0_GENERATED_SOURCE_OS_ISOLATION_NOT_ADMITTED`. No Codex CLI, paid inference, or customer/production effect occurred.

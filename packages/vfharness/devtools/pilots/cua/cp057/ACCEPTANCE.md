@@ -87,9 +87,9 @@ successful Calculator run.
 
 ## Next in the recorded roadmap (not a new authorization)
 
-[Office v2 NEXT.md](../../../../../../docs/office-v2/NEXT.md) is a dated
-**2026-10-18 snapshot** written before attempt 8; its CP057 attempt-6 row
-should not supersede #602's newer receipt. It defines **no CP058 milestone**.
+[Office v2 NEXT.md](../../../../../../docs/office-v2/NEXT.md) records that
+CP057 is accepted on receipts of attempts 8+9; runtimeAuthority=false,
+activationAllowed=false. It defines **no CP058 milestone**.
 The explicit surrounding work remains **CrewAI E1-E7** under
 [#612](https://github.com/nocturney/velvetos-core/issues/612), the
 read-only Office board's separately reviewed event-trigger work, and
