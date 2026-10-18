@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-10-18 - **CP085 non-POSIX receipt privacy:** POSIX receipt-directory mode tests print `SKIP_NON_POSIX` on non-POSIX. `write_private_receipt` still refuses a world-readable directory with `RECEIPT_DIR_MUST_BE_PRIVATE` on Linux and macOS. Observer path checks use `pathlib`. `security_admission` stays RED.
+
 - 2026-10-18 - **CP083 ChatGPT-069 offline negatives:** the evidence gate refuses a hardlinked receipt, reads artifacts from held directory fds, and refuses CR in guest and manifest JSON. Two self-issued receipts stay `REFUSED_UNSIGNED_SELF_ISSUED` and `refuse_host_attestation` will not promote them. Wire CRLF/duplicate keys (GAP_9), controller env/import canaries (GAP_6, benign fake variables only), and a hardlinked native SQLite journal (GAP_4, sealed source) are expected failures. `security_admission` stays RED. No remote GitHub lost-ACK test.
 
 - 2026-10-18 - **CP057 exact receipt boundary:** a receipt sha followed by a letter or digit is not an exact citation. A prefix impostor reports `ACCEPTED_RECEIPT_SHA_MISMATCH` even when another sha is unknown. `DRAFT_DIGEST_SHA256` and `ATTEMPT6_SOURCE_SHA256` name the two PIN-note shas that were previously bare literals; a note edit that does not update that list fails by naming the sha. `runtimeAuthority` and `activationAllowed` stay false.
