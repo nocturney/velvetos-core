@@ -1,0 +1,1 @@
+- 2026-10-18 - **CP085 receipt-dir mask:** POSIX tests refuse receipt directories `0o750` and `0o740` with `RECEIPT_DIR_MUST_BE_PRIVATE` and accept `0o700`. A copied mutation of the directory mask from `0o077` to `0o007` accepts a group-readable directory and is caught. Non-POSIX still prints `SKIP_NON_POSIX`. `write_private_receipt` is unchanged. `security_admission` stays RED.
