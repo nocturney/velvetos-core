@@ -29,4 +29,11 @@ assert "CAD פונקציונלי פרמטרי" in expert
 assert "printer_matrix.json" in doc
 assert "Physical printing remains a separate production-floor action." in doc
 
+import sys
+sys.path.insert(0, str(ROOT / "scripts"))
+import vf_cad  # noqa: E402
+
+git_errors = vf_cad.prove_upstream_git()
+assert not git_errors, "vf_cad rev-parse: " + "; ".join(git_errors)
+
 print("check-vf-cad-integration: PASS")

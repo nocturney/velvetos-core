@@ -21,10 +21,12 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import re
-import subprocess
 import sys
 from pathlib import Path
+
+from vf_spawn import SpawnRefusal, git_revision, run_git
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -67,13 +69,84 @@ def classify(paths: list[str]) -> tuple[list[str], list[str]]:
 
 
 def changed_files(base: str, head: str, repo: Path = ROOT) -> list[str]:
-    proc = subprocess.run(
-        ["git", "diff", "--name-only", f"{base}...{head}"],
-        cwd=repo, text=True, capture_output=True,
-    )
+    try:
+        spec = f"{git_revision(base)}...{git_revision(head)}"
+    except SpawnRefusal as exc:
+        raise SystemExit(f"FAIL git diff {base}...{head}: {exc}") from exc
+    proc = run_git(["diff", "--name-only"], revisions=[spec], cwd=repo)
     if proc.returncode != 0:
         raise SystemExit(f"FAIL git diff {base}...{head}: {proc.stderr.strip()}")
     return [line for line in proc.stdout.splitlines() if line.strip()]
+
+
+def prove_git_diff() -> list[str]:
+    """The README range stays before ``--`` and does not inherit GIT_*."""
+    import tempfile
+
+    import vf_spawn
+    from vf_spawn import GIT_TIMEOUT_SECONDS, allowlisted_git_errors, revision_form_errors
+
+    errors: list[str] = []
+    try:
+        changed_files("--output=/tmp/pwn", "HEAD", ROOT)
+    except SystemExit as exc:
+        if "GIT_REV_REFUSED" not in str(exc):
+            errors.append(f"dash revision refused as {exc}")
+    else:
+        errors.append("leading-dash revision was accepted")
+    previous = os.environ.get("GIT_EXEC_PATH")
+    os.environ["GIT_EXEC_PATH"] = "/evil/git-core"
+    captured: list[tuple[list[str], dict]] = []
+    original = vf_spawn.subprocess.run
+
+    def fake_run(argv, **kwargs):
+        captured.append((list(argv), kwargs))
+        return vf_spawn.subprocess.CompletedProcess(argv, 0, stdout="README.md\n", stderr="")
+
+    vf_spawn.subprocess.run = fake_run
+    try:
+        listed = changed_files("a", "b", ROOT)
+    except (SpawnRefusal, SystemExit) as exc:
+        errors.append(f"readme git diff refused: {exc}")
+        listed = []
+    finally:
+        vf_spawn.subprocess.run = original
+    if listed != ["README.md"]:
+        errors.append(f"readme git diff names were not returned: {listed}")
+    if len(captured) != 1:
+        errors.append("readme git diff did not spawn through the pinned runner")
+    else:
+        argv, kwargs = captured[0]
+        errors.extend(allowlisted_git_errors(argv, kwargs, timeout=GIT_TIMEOUT_SECONDS))
+        errors.extend(revision_form_errors(argv, ["a...b"]))
+        if "/evil/git-core" in str(kwargs.get("env")):
+            errors.append("GIT_EXEC_PATH reached the readme child")
+    names: list[str] | None = None
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            run_git(["init", "-q", "-b", "main"], cwd=repo)
+            run_git(["config", "user.email", "fixture@example.invalid"], cwd=repo)
+            run_git(["config", "user.name", "fixture"], cwd=repo)
+            (repo / "f").write_text("hi\n", encoding="utf-8")
+            run_git(["add"], user_args=["f"], cwd=repo)
+            run_git(["commit", "-qm", "c"], cwd=repo)
+            base = run_git(["rev-parse", "HEAD"], cwd=repo).stdout.strip()
+            (repo / "f").write_text("yo\n", encoding="utf-8")
+            run_git(["add"], user_args=["f"], cwd=repo)
+            run_git(["commit", "-qm", "d"], cwd=repo)
+            head = run_git(["rev-parse", "HEAD"], cwd=repo).stdout.strip()
+            names = changed_files(base, head, repo)
+    except (OSError, SpawnRefusal, SystemExit) as exc:
+        errors.append(f"real readme diff failed: {exc}")
+    finally:
+        if previous is None:
+            os.environ.pop("GIT_EXEC_PATH", None)
+        else:
+            os.environ["GIT_EXEC_PATH"] = previous
+    if names != ["f"]:
+        errors.append(f"real readme diff under a poisoned GIT_EXEC_PATH was {names}")
+    return errors
 
 
 def gate(paths: list[str]) -> int:
@@ -133,7 +206,7 @@ SELFTEST = {
 
 
 def selftest() -> int:
-    bad = []
+    bad = prove_git_diff()
     for path, requires in SELFTEST.items():
         need, _ = classify([path])
         if bool(need) != requires:
