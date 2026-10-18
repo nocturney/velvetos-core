@@ -261,6 +261,14 @@ def invert_hash_operator(job: str) -> str:
     return flipped
 
 
+def flip_persist_credentials(job: str) -> str:
+    """Mutation: persist-credentials: false becomes true, so the checkout keeps a token."""
+    mutated = job.replace("persist-credentials: false", "persist-credentials: true", 1)
+    if mutated == job:
+        raise ValueError("persist-credentials: false was not present to flip")
+    return mutated
+
+
 def reset_ffmpeg_exit(job: str) -> str:
     """Mutation from the #827 verdict: zero LASTEXITCODE on the verifier line."""
     needle = "python scripts/verify_ffmpeg_zip_sha256.py --path $zip --expected $expected"
@@ -450,10 +458,17 @@ def main() -> int:
         for problem in reset_problems
     ):
         fail("resetting LASTEXITCODE after the ffmpeg hash gate was not caught")
+    try:
+        creds = flip_persist_credentials(windows_job)
+    except ValueError as exc:
+        fail(str(exc))
+    cred_problems = windows_job_problems(creds)
+    if not any("persist-credentials: false" in problem for problem in cred_problems):
+        fail("flipping persist-credentials to true was not caught")
     gate_evidence = prove_ffmpeg_hash_gate()
     print(
         "OK check-all-windows ffmpeg-sha-enforce "
-        f"delete=caught operator_flip=caught exit_reset=caught {gate_evidence} permissions=contents:read"
+        f"delete=caught operator_flip=caught exit_reset=caught credentials=caught {gate_evidence} permissions=contents:read"
     )
     pin_evidence = prove_workflow_action_pins(core_workflow)
     for path in sorted(list(WORKFLOWS.glob("*.yml")) + list(WORKFLOWS.glob("*.yaml"))):

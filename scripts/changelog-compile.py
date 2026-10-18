@@ -65,7 +65,33 @@ def selftest() -> int:
         if (root / "CHANGELOG.md").read_bytes() != folded:
             print("FAIL changelog-compile is not idempotent", file=sys.stderr)
             return 1
-    print("OK changelog-compile selftest idempotent=yes history=unchanged")
+    crlf_tail = "## [1.0.0]\r\n\r\n- released line must stay byte for byte.\r\n"
+    crlf_source = (
+        "intro\r\n\r\n## [Unreleased]\r\n\r\n- 2026-10-01 - **Kept:** stays.\r\n\r\n" + crlf_tail
+    )
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        (root / "CHANGELOG.md").write_bytes(crlf_source.encode("utf-8"))
+        folder = root / "changelog.d"
+        folder.mkdir()
+        (folder / "example-pr.md").write_bytes(fragment.encode("utf-8"))
+        crlf_run = subprocess.run(
+            [sys.executable, script, "--root", str(root)],
+            text=True, capture_output=True,
+        )
+        if crlf_run.returncode != 0:
+            print(crlf_run.stderr or crlf_run.stdout, file=sys.stderr)
+            print("FAIL changelog-compile CRLF run", file=sys.stderr)
+            return 1
+        written = (root / "CHANGELOG.md").read_bytes()
+        marker = b"## [1.0.0]\r\n"
+        if marker not in written or written.split(marker, 1)[1] != crlf_tail.encode("utf-8").split(marker, 1)[1]:
+            print("FAIL compile rewrote a CRLF released section", file=sys.stderr)
+            return 1
+        if list(root.glob(".changelog.*.tmp")):
+            print("FAIL compile left a changelog temp file", file=sys.stderr)
+            return 1
+    print("OK changelog-compile selftest idempotent=yes history=unchanged crlf=kept")
     return 0
 
 

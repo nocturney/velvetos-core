@@ -595,9 +595,12 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         source = Path(gate.__file__).read_text(encoding="utf-8")
         live_open = "        base_fd = os.open(base, flags_dir)\n"
         weak_open = "        base_fd = os.open(base, os.O_RDONLY)\n"
+        anchor = "    refuse_symlinked_anchor(base)\n"
         self.assertEqual(source.count(live_open), 1)
-        mutated = source.replace(live_open, weak_open, 1)
+        self.assertEqual(source.count(anchor), 1)
+        mutated = source.replace(anchor, "", 1).replace(live_open, weak_open, 1)
         self.assertNotIn(live_open, mutated)
+        self.assertNotIn(anchor, mutated)
         real = self.base / "real-root"
         (real / "run-1").mkdir(parents=True)
         secret = b'{"root":"followed"}\n'
@@ -610,6 +613,47 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         mutant = self._load_gate_copy(mutated)
         try:
             followed = mutant.read_anchored(link, "run-1/receipt.jsonl", 4096)
+        finally:
+            sys.modules.pop(getattr(mutant, "__name__", ""), None)
+        self.assertEqual(followed, secret)
+
+    def test_base_anchor_itself_symlink_refused(self):
+        """The final component of base is already refused. Pin that without a mutant."""
+        self._skip_if_directory_open_unavailable()
+        real = self.base / "real-anchor"
+        (real / "run-1").mkdir(parents=True)
+        (real / "run-1" / "receipt.jsonl").write_bytes(b'{"anchor":"self"}\n')
+        link = self.base / "base-link"
+        link.symlink_to(real, target_is_directory=True)
+        with self.assertRaises(gate.Refused) as caught:
+            gate.read_anchored(link, "run-1/receipt.jsonl", 4096)
+        self.assertEqual(str(caught.exception), "ANCHORED_OPEN_REFUSED")
+
+    def test_symlinked_ancestor_of_base_refused(self):
+        """O_NOFOLLOW does not see a symlink above base. realpath must refuse it.
+
+        A copy that drops refuse_symlinked_anchor follows the ancestor and
+        returns the other tree's bytes.
+        """
+        self._skip_if_directory_open_unavailable()
+        foreign = self.base / "foreign"
+        (foreign / "subdir" / "run-1").mkdir(parents=True)
+        secret = b'{"secret":"reached-via-intermediate-symlink"}\n'
+        (foreign / "subdir" / "run-1" / "receipt.jsonl").write_bytes(secret)
+        mid = self.base / "mid"
+        mid.symlink_to(foreign, target_is_directory=True)
+        base = mid / "subdir"
+        with self.assertRaises(gate.Refused) as caught:
+            gate.read_anchored(base, "run-1/receipt.jsonl", 4096)
+        self.assertEqual(str(caught.exception), "ANCHORED_OPEN_REFUSED")
+        source = Path(gate.__file__).read_text(encoding="utf-8")
+        anchor = "    refuse_symlinked_anchor(base)\n"
+        self.assertEqual(source.count(anchor), 1)
+        mutated = source.replace(anchor, "", 1)
+        self.assertNotIn("refuse_symlinked_anchor(base)", mutated)
+        mutant = self._load_gate_copy(mutated)
+        try:
+            followed = mutant.read_anchored(base, "run-1/receipt.jsonl", 4096)
         finally:
             sys.modules.pop(getattr(mutant, "__name__", ""), None)
         self.assertEqual(followed, secret)
