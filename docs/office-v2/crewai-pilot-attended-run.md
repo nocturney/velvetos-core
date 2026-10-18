@@ -238,7 +238,7 @@ Read **identity.gates**, **identity.gate_reasons**, **identity.model_status**, *
 | NOT_AUTHORIZED; PARKED_CAPACITY; BLOCKED_SECURITY; BLOCKED_STORAGE; NO_GO | Gate states that forbid starting; security/storage/capacity/owner action respectively. **STOP**. The E3 security scan remains RED even when a *condition-specific* risk decision exists. |
 | NOT_RUN; PREFLIGHT_CLOSED; PREFLIGHT_REFUSED; MODEL_CONFIG_REFUSED | Refused before task; inspect gate_reasons **and** identity.model_status. **STOP/REVIEW**, not retry. |
 | NOT_VERIFIED; AWAITING_INDEPENDENT_REVIEW | Input/task may finish but has no independent result verdict. **REPORT** to reviewer; never translate to PASS. |
-| FAIL; PILOT_LISTENER_UNPROVEN | Post-kickoff or observation exception; inability to prove no pilot listeners. #799 addresses one PS5.1 .ToArray() bug but other observation failures can exist. **STOP/REPORT**. |
+| FAIL; PILOT_LISTENER_UNPROVEN | Post-kickoff or observation exception; inability to prove no pilot listeners. The Windows observer runs `C:\Windows\System32\netstat.exe -ano` and requires the English header `Active Connections`. A localized Windows UI, including Hebrew on Chris, does not print that header, so the proof stays unproven. That is fail-closed. **STOP/REPORT**. |
 | MODEL_DIGEST_MISMATCH | Wrong/absent/duplicated model tag digest from **/api/tags**. **STOP**; never substitute model or LAB-4 shim. |
 | OLLAMA_BIND_UNPROVEN; OLLAMA_BIND_WILDCARD | Real server bind evidence absent or address includes 0.0.0.0/::/LAN. **STOP**. A missing or unparseable English netstat observation is still **OLLAMA_BIND_UNPROVEN**. `binds=None` is not always that code: the provider collects netstat itself. |
 | PILOT_LISTENER_PRESENT; FORBIDDEN_MODULE_LOADED; CHROMA_CLI_REFUSED | Pilot-owned listening socket, prohibited loaded chromadb.server/fastapi/uvicorn/mcp/drift module, or forbidden chroma CLI. **STOP; security incident REVIEW**. Importing the chromadb base module alone is not disallowed. |
@@ -259,6 +259,8 @@ Read **identity.gates**, **identity.gate_reasons**, **identity.model_status**, *
 | FAIL with TypeError/OSError/other Python exception-class name instead of stable reason | runner._fail_reason() emits exception class name for unknown failures. **STOP/REPORT exact head and sanitized traceback**; classification is an OPEN QUESTION. |
 
 **Preflight status priority:** BLOCKED_SECURITY first, then BLOCKED_STORAGE, then PARKED_CAPACITY, then NOT_RUN; all-pass preflight still yields NOT_VERIFIED, never automatic PASS. A recorded overall reason of E1,E6 or PREFLIGHT_CLOSED is a *summary*; inspect each gate's reason.
+
+**Windows listener proof language.** After kickoff, the runner counts pilot listeners from `C:\Windows\System32\netstat.exe -ano`. The process tree comes from Toolhelp. The netstat child sets `SystemRoot` and `windir` to `C:\Windows`, including when the pilot environment was cleared. The parser accepts that table only when the text contains the English header `Active Connections`. GitHub `windows-latest` is an English image, so a hosted run can prove zero. Chris with a Hebrew UI prints a different header. Those bytes stay `PILOT_LISTENER_UNPROVEN`. The run does not treat a localized table as zero listeners. That refusal is fail-closed. The same English-header rule already applies to the provider's Ollama bind check (`OLLAMA_BIND_UNPROVEN`).
 
 ## 3. E5 collector/validator reasons (a different receipt)
 

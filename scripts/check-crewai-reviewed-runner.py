@@ -94,8 +94,13 @@ from office_v2_crewai.usage_guard import (  # noqa: E402
     DRIFT_FORBIDDEN_MODULES,
     LEFTOVER_RELS,
     WINDOWS_NETSTAT,
+    WINDOWS_SYSTEM_ROOT,
     UsageRefusal,
-    _PS_OBSERVE,
+    _open_trusted_regular,
+    _strip_nt_prefix,
+    _windows_observe,
+    windows_tool_env,
+    count_windows_listeners,
     assert_built_crew,
     assert_crew_spec,
     assert_dependency_drift,
@@ -1543,13 +1548,67 @@ def check_listeners() -> None:
         "PILOT_LISTENER_UNPROVEN",
     )
     _expect_usage(lambda: count_listening_sockets(10, platform="freebsd"), "PILOT_LISTENER_UNPROVEN")
-    if ".ToArray()" not in _PS_OBSERVE:
-        fail("PowerShell listener script does not call ToArray")
-    if WINDOWS_NETSTAT not in _PS_OBSERVE or "& netstat.exe" in _PS_OBSERVE:
-        fail("PowerShell listener script still resolves netstat from PATH")
-    for wrapped in ("@($processes)", "@($tcp)", "@($udp)"):
-        if wrapped in _PS_OBSERVE:
-            fail("PowerShell listener script still wraps %s" % wrapped)
+    header = "Active Connections\n\n  Proto  Local Address  Foreign Address  State  PID\n"
+    asked = {}
+
+    def spawn(netstat):
+        asked["netstat"] = netstat
+        return header, 0, "10 4\n", 0
+
+    observed = _windows_observe(spawn=spawn)
+    if asked.get("netstat") != WINDOWS_NETSTAT:
+        fail("observer did not use the absolute netstat path")
+    if count_windows_listeners(10, observed) != 0:
+        fail("header-only absolute netstat was not a proven zero")
+    listening = header + "  TCP    127.0.0.1:9    0.0.0.0:0    LISTENING    10\n"
+
+    def spawn_listen(netstat):
+        return listening, 0, "10 4\n1 0\n", 0
+
+    if count_windows_listeners(10, _windows_observe(spawn=spawn_listen)) != 1:
+        fail("absolute netstat LISTENING row was not counted")
+    udp = header + "  UDP    0.0.0.0:500    *:*    10\n"
+
+    def spawn_udp(netstat):
+        return udp, 0, "10 1\n", 0
+
+    if count_windows_listeners(10, _windows_observe(spawn=spawn_udp)) != 1:
+        fail("absolute netstat UDP row was not counted")
+
+    def spawn_bad(netstat):
+        return "not a table", 0, "10 4\n", 0
+
+    _expect_usage(lambda: _windows_observe(spawn=spawn_bad), "PILOT_LISTENER_UNPROVEN")
+
+    def spawn_rc(netstat):
+        return header, 1, "10 4\n", 0
+
+    _expect_usage(lambda: _windows_observe(spawn=spawn_rc), "PILOT_LISTENER_UNPROVEN")
+    source = (PACKAGE / "usage_guard.py").read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    fn = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "_windows_observe")
+    body = ast.get_source_segment(source, fn) or ""
+    if "Get-NetTCPConnection" in body or "Get-NetUDPEndpoint" in body:
+        fail("windows observer still calls Get-Net")
+    if "WINDOWS_NETSTAT" not in body or '"-ano"' not in body:
+        fail("windows observer does not run absolute netstat -ano")
+    if "CreateToolhelp32Snapshot" not in source:
+        fail("windows process tree does not use Toolhelp")
+    if "_windows_processes" not in body:
+        fail("windows observer does not read the Toolhelp process tree")
+    tool_env = windows_tool_env({"SystemRoot": "D:\\Velvet", "PATH": "x"})
+    if tool_env["SystemRoot"] != WINDOWS_SYSTEM_ROOT or tool_env["windir"] != WINDOWS_SYSTEM_ROOT:
+        fail("listener tool env did not pin SystemRoot to C:\\Windows")
+    if tool_env["PATH"] != "x":
+        fail("listener tool env dropped the caller PATH")
+    runner = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "run_trusted_listener")
+    launched = ast.get_source_segment(source, runner) or ""
+    if "windows_tool_env" not in launched:
+        fail("Windows listener child does not pin SystemRoot")
+    opener = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "_open_trusted_regular")
+    opened = ast.get_source_segment(source, opener) or ""
+    if 'os.name != "nt"' not in opened:
+        fail("O_NOFOLLOW is still applied on Windows opens")
     probed = []
 
     def listener_boom():
@@ -1560,6 +1619,104 @@ def check_listeners() -> None:
     _expect_usage(lambda: guard_post_run(loaded, listener_boom), "FORBIDDEN_MODULE_LOADED")
     if probed:
         fail("the module guard ran after the listener check")
+
+
+def check_windows_listener_pins() -> None:
+    """Pins the three Windows checks a source-only scan can leave alive.
+
+    A realpath that leaves the opened file is refused while ``os.name`` is
+    ``nt``. A ``\\\\?\\`` prefix on that same file is still accepted, so
+    stripping the prefix is required. The live observer runs only
+    ``C:\\Windows\\System32\\netstat.exe``.
+    """
+    import office_v2_crewai.usage_guard as usage_mod
+
+    same = "C:\\Windows\\System32\\netstat.exe"
+    if _strip_nt_prefix("\\\\?\\" + same) != same:
+        fail("\\\\?\\ prefix was not stripped")
+    unc = _strip_nt_prefix("\\\\?\\UNC\\server\\share\\netstat.exe")
+    if unc != "\\\\server\\share\\netstat.exe":
+        fail("UNC \\\\?\\ prefix was not stripped: %s" % unc)
+    if _strip_nt_prefix(same) != same:
+        fail("a plain Windows path was rewritten")
+
+    def open_as_windows(realpath):
+        saved_name = os.name
+        saved_realpath = os.path.realpath
+        os.name = "nt"
+        os.path.realpath = realpath
+        try:
+            return _open_trusted_regular(str(binary))
+        finally:
+            os.name = saved_name
+            os.path.realpath = saved_realpath
+
+    parent = Path(tempfile.mkdtemp(prefix="crewai-nt-open-"))
+    binary = parent / "netstat.exe"
+    outside = parent / "outside.exe"
+    binary.write_bytes(b"MZ")
+    outside.write_bytes(b"MZ")
+    try:
+        try:
+            fd = open_as_windows(lambda path: "\\\\?\\" + os.path.abspath(path))
+        except OSError as exc:
+            fail("same-file \\\\?\\ realpath was refused: %s" % exc)
+        else:
+            os.close(fd)
+        try:
+            fd = open_as_windows(lambda path: str(outside))
+        except OSError:
+            fd = None
+        else:
+            os.close(fd)
+            fail("Windows realpath escape was accepted")
+    finally:
+        shutil.rmtree(parent, ignore_errors=True)
+
+    calls = []
+    saved = (
+        usage_mod.trusted_listener_binary,
+        usage_mod.run_trusted_listener,
+        usage_mod._windows_processes,
+    )
+
+    def fake_binary(tool, platform=None):
+        return "C:\\Windows\\System32\\not-netstat.exe"
+
+    class _Proc:
+        stdout = "Active Connections\n"
+        returncode = 0
+
+    def fake_run(binary, args, path_value=None):
+        calls.append(binary)
+        return _Proc()
+
+    usage_mod.trusted_listener_binary = fake_binary
+    usage_mod.run_trusted_listener = fake_run
+    usage_mod._windows_processes = lambda: [{"pid": 10, "ppid": 1}]
+    try:
+        try:
+            _windows_observe()
+        except UsageRefusal as exc:
+            if str(exc) != "PILOT_LISTENER_UNPROVEN":
+                fail("other netstat path refused as %s" % exc)
+        else:
+            fail("a path other than %s was accepted" % WINDOWS_NETSTAT)
+        if calls:
+            fail("non-System32 netstat was executed")
+        calls.clear()
+        usage_mod.trusted_listener_binary = lambda tool, platform=None: WINDOWS_NETSTAT
+        observed = _windows_observe()
+        if calls != [WINDOWS_NETSTAT]:
+            fail("exact netstat.exe was not the binary that ran: %s" % calls)
+        if observed["tcp"] or observed["udp"]:
+            fail("header-only exact netstat was not empty")
+    finally:
+        (
+            usage_mod.trusted_listener_binary,
+            usage_mod.run_trusted_listener,
+            usage_mod._windows_processes,
+        ) = saved
 
 
 def check_run_record() -> None:
@@ -2346,7 +2503,10 @@ def check_exit_contract() -> None:
 
     code, receipt, postflight = run(cited, True)
     if code != 0 or completed_kickoff_exit(receipt) != 0:
-        fail("completed kickoff returned %s (%s)" % (code, receipt["identity"].get("reason")))
+        fail(
+            "completed kickoff returned %s (%s) detail=%s"
+            % (code, receipt["identity"].get("reason"), receipt.get("teardown", {}).get("listener_detail"))
+        )
     if (
         receipt["identity"]["pilot_status"] != "NOT_VERIFIED"
         or receipt["identity"]["task_status"] != "NOT_VERIFIED"
@@ -2590,6 +2750,7 @@ def main() -> int:
     check_spawn_hygiene()
     check_execute()
     check_listeners()
+    check_windows_listener_pins()
     check_trusted_listener_binaries()
     check_run_record()
     check_ast()
