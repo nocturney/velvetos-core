@@ -22,6 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import vf_office_v2_continuity as continuity
+from vf_spawn import allowlisted_git_errors, run_git
 
 TASK_SCHEMA = "velvetos.office-v2.p0-task-envelope.v0"
 RECEIPT_SCHEMA = "velvetos.office-v2.p0-worker-receipt.v0"
@@ -76,13 +77,15 @@ def save_new(path, value):
 
 
 def git(worktree, *args):
-    result = subprocess.run(
-        ["git", "-C", str(worktree)] + list(args),
-        capture_output=True, text=True, timeout=20,
-    )
+    result = run_git(["-C", str(worktree), *args], check=False, timeout=20)
     if result.returncode != 0:
         raise Rejected("GIT_PRECONDITION_FAILED")
+    # Trailing newlines only. A leading porcelain status space is part of the name.
     return result.stdout.rstrip('\n')
+
+
+def git_raw(*args):
+    run_git(list(args), check=True, timeout=30)
 
 
 def contained(root, relative):
@@ -310,19 +313,60 @@ def run(envelope_path, receipt_path):
             "autonomous_coding_agent_proven": False}
 
 
+def prove_git_spawn() -> None:
+    """Absolute git, timeout, allowlisted env, and the porcelain leading space."""
+    import vf_spawn
+
+    sentinel = "VF_SPAWN_SENTINEL"
+    previous = {
+        sentinel: os.environ.get(sentinel),
+        "GIT_EXEC_PATH": os.environ.get("GIT_EXEC_PATH"),
+    }
+    os.environ[sentinel] = "nope"
+    os.environ["GIT_EXEC_PATH"] = "/evil/git-core"
+    captured = []
+    original = vf_spawn.subprocess.run
+
+    def fake_run(argv, **kwargs):
+        captured.append((list(argv), kwargs))
+        return vf_spawn.subprocess.CompletedProcess(argv, 0, stdout=" M job.py\n", stderr="")
+
+    vf_spawn.subprocess.run = fake_run
+    try:
+        shown = git(Path("/tmp/work"), "status", "--porcelain", "--untracked-files=all")
+        git_raw("init", "-q", "/tmp/work")
+    finally:
+        vf_spawn.subprocess.run = original
+        for key, value in previous.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+    if shown != " M job.py":
+        raise Rejected("PORCELAIN_LEADING_SPACE_STRIPPED")
+    if len(captured) != 2:
+        raise Rejected("GIT_SPAWN_DID_NOT_RUN")
+    errors = allowlisted_git_errors(captured[0][0], captured[0][1], timeout=20)
+    errors.extend(allowlisted_git_errors(captured[1][0], captured[1][1], timeout=30))
+    if errors:
+        raise Rejected("GIT_SPAWN_NOT_ALLOWLISTED:" + ";".join(errors))
+
+
 def demo_selftest():
     tests = []
+    prove_git_spawn()
+    tests.append("git_spawn_allowlisted")
     with tempfile.TemporaryDirectory(prefix="vf-office-p0-worker-") as tmp:
         base = Path(tmp).resolve()
         worktree = base / "isolated-repo"
         worktree.mkdir()
-        subprocess.run(["git", "init", "-q", str(worktree)], check=True)
-        subprocess.run(["git", "-C", str(worktree), "checkout", "-q", "-b", "test-worker"], check=True)
+        git_raw("init", "-q", str(worktree))
+        git_raw("-C", str(worktree), "checkout", "-q", "-b", "test-worker")
         script = worktree / "job.py"
         script.write_text("from pathlib import Path\nPath('result.txt').write_text('safe output\\n', encoding='utf-8')\n", encoding="utf-8")
-        subprocess.run(["git", "-C", str(worktree), "add", "job.py"], check=True)
-        subprocess.run(["git", "-C", str(worktree), "-c", "user.name=Fixture",
-                        "-c", "user.email=fixture@example.invalid", "commit", "-qm", "fixture"], check=True)
+        git_raw("-C", str(worktree), "add", "job.py")
+        git_raw("-C", str(worktree), "-c", "user.name=Fixture",
+                "-c", "user.email=fixture@example.invalid", "commit", "-qm", "fixture")
         sha = git(worktree, "rev-parse", "HEAD")
         manifest = continuity.self_test_manifest()
         manifest["active_external_effects"] = []
