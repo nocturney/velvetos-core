@@ -449,7 +449,17 @@ def prove_git_hygiene() -> list[str]:
         if kwargs.get("timeout") != vf_spawn.GIT_TIMEOUT_SECONDS:
             errors.append("git timeout missing")
         env = kwargs.get("env")
-        if not isinstance(env, dict) or sentinel in env or any(key.upper().startswith("GIT_") for key in env):
+        git_keys = {
+            str(key).upper()
+            for key in (env or {})
+            if str(key).upper().startswith("GIT_")
+        }
+        if (
+            not isinstance(env, dict)
+            or sentinel in env
+            or git_keys != {"GIT_CONFIG_NOSYSTEM"}
+            or env.get("GIT_CONFIG_NOSYSTEM") != "1"
+        ):
             errors.append(f"git environment was not allowlisted: {env}")
             return errors
         first, *rest = env.get("PATH", "").split(os.pathsep)

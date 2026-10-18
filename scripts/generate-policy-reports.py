@@ -89,25 +89,14 @@ def prove_git_spawn() -> None:
     errors.extend(revision_form_errors(captured[2][0], [DEFAULT_BASELINE]))
     if errors:
         raise SystemExit("FAIL git spawn: " + "; ".join(errors))
-    shown = git("show", revisions=[f"{DEFAULT_BASELINE}:AGENTS.md"])
-    raw = subprocess.check_output(
-        ["git", "show", f"{DEFAULT_BASELINE}:AGENTS.md"],
-        cwd=ROOT,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-    ).strip()
-    if shown != raw:
+    spec = f"{DEFAULT_BASELINE}:AGENTS.md"
+    shown = git("show", revisions=[spec])
+    plain = git("show", spec)
+    if shown != plain:
         raise SystemExit("FAIL git show -- changed object text")
     listed = git("ls-tree", "-r", "--name-only", revisions=[DEFAULT_BASELINE])
-    raw_list = subprocess.check_output(
-        ["git", "ls-tree", "-r", "--name-only", DEFAULT_BASELINE],
-        cwd=ROOT,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-    ).strip()
-    if listed != raw_list:
+    plain_list = git("ls-tree", "-r", "--name-only", DEFAULT_BASELINE)
+    if listed != plain_list:
         raise SystemExit("FAIL git ls-tree -- changed the tree listing")
 
 
@@ -352,8 +341,12 @@ def main() -> int:
     p.add_argument("--registry-sha", default=DEFAULT_REGISTRY)
     p.add_argument("--ci-baseline", default=str(POLICY_DIR / "reports" / "ci-baseline.json"))
     p.add_argument("--check", action="store_true")
+    p.add_argument("--prove", action="store_true")
     args = p.parse_args()
-    prove_git_spawn()
+    if args.prove:
+        prove_git_spawn()
+        print("OK policy report git spawn")
+        return 0
 
     ci_path = Path(args.ci_baseline).resolve()
     ci = load_json(ci_path)

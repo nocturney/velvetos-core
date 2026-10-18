@@ -2,6 +2,7 @@
 """Validate the zero-cost behavioral regression contract without network access."""
 from __future__ import annotations
 
+import ast
 import importlib.util
 import json
 import os
@@ -13,7 +14,7 @@ from pathlib import Path
 
 import stat
 
-from vf_spawn import same_pinned_directory
+from vf_spawn import prove_controlled_home, same_pinned_directory
 
 ROOT = Path(__file__).resolve().parents[1]
 EVALS = ROOT / "packages" / "vfharness" / "evals"
@@ -134,7 +135,7 @@ def prove_promptfoo_hygiene() -> None:
     if kwargs.get("timeout") != module.PROMPTFOO_TIMEOUT_SECONDS:
         fail("promptfoo timeout missing")
     env = kwargs.get("env")
-    allowed = set(vf_spawn._BASE_ENV_KEYS) | set(module.HARDEN) | {"PATH"}
+    allowed = set(vf_spawn._BASE_ENV_KEYS) | set(vf_spawn.FORCED_ENV_KEYS) | set(module.HARDEN) | {"PATH"}
     if not isinstance(env, dict) or sentinel in env or "NODE_OPTIONS" in env or set(env) - allowed:
         fail(f"promptfoo environment was not allowlisted: {env}")
     for key, value in module.HARDEN.items():
@@ -255,7 +256,50 @@ def prove_promptfoo_refusal_line() -> None:
         fail(f"promptfoo refusal wrote stdout: {proc.stdout!r}")
 
 
+def prove_policy_generator_split() -> None:
+    """Report generation does not monkeypatch, and its git oracles stay pinned."""
+    path = ROOT / "scripts" / "generate-policy-reports.py"
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    main_fn = next(
+        (node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "main"),
+        None,
+    )
+    prove_fn = next(
+        (node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "prove_git_spawn"),
+        None,
+    )
+    if main_fn is None or prove_fn is None:
+        fail("policy generator lost main or prove_git_spawn")
+    for stmt in main_fn.body:
+        calls_prove = any(
+            isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == "prove_git_spawn"
+            for node in ast.walk(stmt)
+        )
+        prove_flag = isinstance(stmt, ast.If) and any(
+            isinstance(node, ast.Attribute) and node.attr == "prove" for node in ast.walk(stmt.test)
+        )
+        if calls_prove and not prove_flag:
+            fail("policy generator proves on the normal path")
+    if any(isinstance(node, ast.Attribute) and node.attr == "check_output" for node in ast.walk(prove_fn)):
+        fail("policy generator oracle uses check_output")
+    proc = subprocess.run(
+        [sys.executable, str(path), "--prove"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if proc.returncode != 0 or "OK policy report git spawn" not in proc.stdout:
+        fail(
+            "policy generator prove failed: "
+            f"exit={proc.returncode} stdout={proc.stdout!r} stderr={proc.stderr!r}"
+        )
+
+
 def main() -> None:
+    home_errors = prove_controlled_home()
+    if home_errors:
+        fail("spawn home: " + "; ".join(home_errors))
+    prove_policy_generator_split()
     prove_promptfoo_hygiene()
     prove_promptfoo_reachable()
     prove_promptfoo_python_symlink()
