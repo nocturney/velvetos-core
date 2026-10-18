@@ -19,7 +19,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -86,16 +85,76 @@ def inspect_receipt(receipt_id: str, max_age_hours: float) -> tuple[bool, str]:
     return True, f"{receipt_id}: healthy age={age_hours:.1f}h"
 
 
+def _rev_parse_operand_errors(argv: list[str]) -> list[str]:
+    """``HEAD`` is the rev-parse operand. ``--`` would be printed back."""
+    if "rev-parse" not in argv:
+        return [f"rev-parse missing: {argv}"]
+    idx = argv.index("rev-parse")
+    if argv[idx + 1:idx + 2] != ["HEAD"]:
+        return [f"HEAD was not the rev-parse revision: {argv}"]
+    if "--" in argv:
+        return [f"rev-parse must not be given --: {argv}"]
+    return []
+
+
+def prove_repo_git() -> list[str]:
+    """repo-main rev-parse is absolute, timed, and does not inherit GIT_*."""
+    import vf_spawn
+    from vf_spawn import GIT_TIMEOUT_SECONDS, allowlisted_git_errors
+
+    errors: list[str] = []
+    previous = os.environ.get("GIT_EXEC_PATH")
+    os.environ["GIT_EXEC_PATH"] = "/evil/git-core"
+    captured: list[tuple[list[str], dict]] = []
+    original = vf_spawn.subprocess.run
+
+    def fake_run(argv, **kwargs):
+        captured.append((list(argv), kwargs))
+        return vf_spawn.subprocess.CompletedProcess(argv, 0, stdout=("b" * 40) + "\n", stderr="")
+
+    component = {"id": "repo-main", "kind": "git"}
+    vf_spawn.subprocess.run = fake_run
+    try:
+        ok, detail = _builtin_proof(component)
+    finally:
+        vf_spawn.subprocess.run = original
+    if not ok or "git HEAD valid" not in detail:
+        errors.append(f"pinned repo-main proof failed: {detail}")
+    if len(captured) != 1:
+        errors.append("runtime doctor rev-parse did not spawn through the pinned runner")
+    else:
+        argv, kwargs = captured[0]
+        errors.extend(allowlisted_git_errors(argv, kwargs, timeout=GIT_TIMEOUT_SECONDS))
+        errors.extend(_rev_parse_operand_errors(argv))
+        if f"safe.directory={ROOT.as_posix()}" not in argv:
+            errors.append(f"safe.directory was dropped: {argv}")
+        if "/evil/git-core" in str(kwargs.get("env")):
+            errors.append("GIT_EXEC_PATH reached the runtime doctor child")
+    try:
+        ok, detail = _builtin_proof(component)
+    finally:
+        if previous is None:
+            os.environ.pop("GIT_EXEC_PATH", None)
+        else:
+            os.environ["GIT_EXEC_PATH"] = previous
+    if not ok:
+        errors.append(f"real repo-main proof under a poisoned GIT_EXEC_PATH failed: {detail}")
+    return errors
+
+
 def _builtin_proof(component: dict[str, Any]) -> tuple[bool, str]:
     cid = component.get("id")
     kind = component.get("kind")
     if kind == "git" and cid == "repo-main":
-        probe = subprocess.run(
-            ["git", "-c", f"safe.directory={ROOT.as_posix()}", "rev-parse", "HEAD"],
-            cwd=ROOT,
-            text=True,
-            capture_output=True,
-        )
+        from vf_spawn import SpawnRefusal, run_git
+
+        try:
+            probe = run_git(
+                ["-c", f"safe.directory={ROOT.as_posix()}", "rev-parse", "HEAD"],
+                cwd=ROOT,
+            )
+        except SpawnRefusal as exc:
+            return False, f"repo-main: git HEAD proof failed: {exc}"
         if probe.returncode == 0 and len(probe.stdout.strip()) == 40:
             return True, f"{cid}: git HEAD valid"
         return False, "repo-main: git HEAD proof failed"
@@ -184,6 +243,7 @@ def validate(request: RuntimeProofRequest) -> tuple[int, list[str]]:
 
     # CODE_VALID proves repository/runtime contract structure but intentionally
     # does not consume current provider/connector/host receipts.
+    errors.extend(prove_repo_git())
     repo_main = component_by_id.get("repo-main")
     if repo_main and repo_main.get("proofMode") == "builtin":
         ok, detail = _builtin_proof(repo_main)
