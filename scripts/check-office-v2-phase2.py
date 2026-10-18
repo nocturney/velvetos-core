@@ -31,6 +31,8 @@ REQUIRED = [
     ROOT / "scripts" / "vf_office_v2_golden_fixture.py",
     ROOT / "scripts" / "vf_office_v2_link_intake.py",
     ROOT / "scripts" / "vf_office_v2_link_intake_selftest.py",
+    ROOT / "scripts" / "vf_office_v2_link_intake_batch.py",
+    ROOT / "scripts" / "vf_office_v2_link_intake_batch_selftest.py",
 ]
 
 EXPECTED_FORWARD = [
@@ -759,6 +761,12 @@ def main() -> None:
     )
     if intake.returncode != 0:
         fail("link intake self-test failed: " + (intake.stderr or intake.stdout).strip()[-400:])
+    batch_intake = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vf_office_v2_link_intake_batch_selftest.py")],
+        cwd=ROOT, capture_output=True, text=True, encoding="utf-8", timeout=120,
+    )
+    if batch_intake.returncode != 0:
+        fail("batch link intake self-test failed: " + (batch_intake.stderr or batch_intake.stdout).strip()[-400:])
 
     print(
         f"OK office-v2-phase2 registry={len(items)} lifecycle=PASS "

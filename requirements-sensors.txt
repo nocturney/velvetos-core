@@ -6,6 +6,11 @@ Pillow==12.3.0          # PIL: publication/creative/cold-start/source-ingest sen
 cryptography==50.0.1    # vfigos delivery-approval signing (check-delivery-approval)
 starlette==1.7.0        # vfigos approval issuer HTTP app (check-delivery-approval)
 scikit-learn==1.9.1     # vfmem semantic index (vfresearch_cadence.py build-index)
+# Windows has no system IANA database, so ZoneInfo("Asia/Jerusalem") needs this
+# package. It is unconditional: pip-compile on Linux drops a sys_platform marker,
+# and check-sensor-locks accepts only python_version markers, so a win32 marker
+# never reaches the hashed lock a Windows checkout installs.
+tzdata==2026.5
 # Transitive pins (resolved together with the above on 2026-09-26):
 anyio==4.15.1
 cffi==2.1.1

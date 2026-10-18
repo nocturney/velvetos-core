@@ -797,6 +797,22 @@ def _us_weight_class(path: Path) -> int:
     raise AssertionError(f"OS/2 table missing in {path}")
 
 
+def _glyph_ink_filter(font: Path, textfile: Path) -> str:
+    """Build the drawtext graph used to count glyph ink.
+
+    Drive colons and backslashes must go through the production filter escaper.
+    A raw Windows path splits the graph on ':' and ffmpeg returns EINVAL.
+    """
+    import vf_ffmpeg_svg_caption as caption
+
+    return (
+        f"drawtext=fontfile={caption.escape_filter_path(font)}:"
+        f"textfile={caption.escape_filter_path(textfile)}:"
+        "text_shaping=0:expansion=none:"
+        "fontcolor=white:fontsize=140:x=30:y=30"
+    )
+
+
 def _glyph_ink(font: Path, text: str = "א") -> int:
     ffmpeg = shutil.which("ffmpeg")
     if not ffmpeg:
@@ -807,10 +823,7 @@ def _glyph_ink(font: Path, text: str = "א") -> int:
         txt = tmp_path / "ink.txt"
         txt.write_text(text, encoding="utf-8")
         width, height = 400, 220
-        vf = (
-            f"drawtext=fontfile={font}:textfile={txt}:text_shaping=0:expansion=none:"
-            f"fontcolor=white:fontsize=140:x=30:y=30"
-        )
+        vf = _glyph_ink_filter(font, txt)
         subprocess.run(
             [ffmpeg, "-y", "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i", f"color=c=black:s={width}x{height}:d=1",
              "-vf", vf, "-frames:v", "1", "-f", "rawvideo", "-pix_fmt", "rgb24", str(raw)],
@@ -819,6 +832,19 @@ def _glyph_ink(font: Path, text: str = "א") -> int:
         )
         blob = raw.read_bytes()
         return sum(1 for index in range(0, len(blob), 3) if blob[index] > 32)
+
+
+class GlyphInkFilterTests(unittest.TestCase):
+    def test_windows_drive_colon_is_escaped_in_the_drawtext_filter(self) -> None:
+        font = Path("D:/Velvet/fonts/Rubik-wght700.ttf")
+        textfile = Path("D:/Velvet/tmp/ink.txt")
+        vf = _glyph_ink_filter(font, textfile)
+        self.assertIn("fontfile=", vf)
+        self.assertIn("textfile=", vf)
+        self.assertIn("D\\\\:/Velvet/fonts/Rubik-wght700.ttf", vf)
+        self.assertIn("D\\\\:/Velvet/tmp/ink.txt", vf)
+        self.assertNotIn("fontfile=D:", vf)
+        self.assertNotIn("textfile=D:", vf)
 
 
 class CaptionDefectTests(unittest.TestCase):
