@@ -145,6 +145,26 @@ def runtime_tmp_dir(output: Path | None = None, explicit: str | None = None) -> 
     return root.resolve()
 
 
+def release_derived_tmp(tmp_root: Path, output: Path, explicit: str | None) -> None:
+    """Remove an empty derived .vf-tmp directory after a successful render.
+
+    An explicit --tmp-dir or VELVETOS_RUNTIME_ROOT is the operator's directory
+    and is left in place. A non-empty directory is left in place. Failure to
+    remove the directory does not discard the render.
+    """
+    if (explicit or "").strip() or os.environ.get("VELVETOS_RUNTIME_ROOT", "").strip():
+        return
+    derived = Path(output).expanduser().resolve().parent / ".vf-tmp"
+    try:
+        if tmp_root.resolve() != derived.resolve() or not derived.is_dir():
+            return
+        if any(derived.iterdir()):
+            return
+        derived.rmdir()
+    except OSError:
+        return
+
+
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -241,6 +261,19 @@ def rubik_weight_font(weight: int) -> Path:
     if actual != digest:
         fail(f"Rubik weight {weight} sha256 does not match")
     return path
+
+
+def drawn_font_record(weight: int) -> dict[str, Any]:
+    path = rubik_weight_font(weight)
+    return {"weight": weight, "file": path.name, "sha256": sha256_file(path)}
+
+
+def fonts_used(layout: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Hashes of the static Rubik files drawtext actually loads."""
+    used = {"headline": drawn_font_record(700)}
+    if layout.get("subheadLines"):
+        used["subhead"] = drawn_font_record(600)
+    return used
 
 
 def css_block(html: str, selector: str) -> str:
@@ -698,6 +731,7 @@ def layout_caption(info: dict[str, Any], font: Path, ffmpeg: str | None, tmp_dir
 
 
 def build_svg(info: dict[str, Any], layout: dict[str, Any], font: dict[str, Any]) -> str:
+    del font  # the variable-font record is not the face drawtext loads
     texts = []
     y = layout["top"]
     for line in layout["headlineLines"]:
@@ -720,11 +754,17 @@ def build_svg(info: dict[str, Any], layout: dict[str, Any], font: dict[str, Any]
         )
         y += layout["subLineH"]
     body = "\n  ".join(texts)
+    fonts = fonts_used(layout)
+    headline_font = fonts["headline"]
+    font_meta = f'headlineFont={headline_font["file"]}; headlineFontSha256={headline_font["sha256"]}'
+    subhead_font = fonts.get("subhead")
+    if subhead_font is not None:
+        font_meta += f'; subheadFont={subhead_font["file"]}; subheadFontSha256={subhead_font["sha256"]}'
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{info["width"]}" height="{info["height"]}" viewBox="0 0 {info["width"]} {info["height"]}">\n'
         f'  <metadata>headline={xml_escape(info["headline"])}; subhead={xml_escape(info["subhead"])}; '
-        f'font=Rubik; fontSha256={font["sha256"]}; accent={COPPER}; direction=rtl; '
+        f'font=Rubik; {font_meta}; accent={COPPER}; direction=rtl; '
         f'safeX={info["safeX"]}; safeTop={info["safeTop"]}; safeBottom={info["safeBottom"]}</metadata>\n'
         f"  {body}\n"
         "</svg>\n"
@@ -798,6 +838,7 @@ def plan(req: dict[str, Any]) -> dict[str, Any]:
     layout = layout_caption(info, req["font"]["path"], ffmpeg=None)
     svg_text = build_svg(info, layout, req["font"])
     built = build_commands(req, layout, svg_text, resolve_binary=False)
+    fonts = fonts_used(layout)
     return {
         "backend": BACKEND,
         "cwd": str(req["projectDir"]),
@@ -811,7 +852,8 @@ def plan(req: dict[str, Any]) -> dict[str, Any]:
         "frames": built["frames"],
         "accent": info["accent"],
         "fontFamily": "Rubik",
-        "fontSha256": req["font"]["sha256"],
+        "fontSha256": fonts["headline"]["sha256"],
+        "fonts": fonts,
         "safeArea": {"x": info["safeX"], "top": info["safeTop"], "bottom": info["safeBottom"]},
         "zoom": {"start": info["zoomStart"], "end": info["zoomEnd"], "panY": info["panY"], "originX": info["originX"], "originY": info["originY"]},
         "fadeInSec": built["fadeIn"],
@@ -991,6 +1033,7 @@ def render_prepared(req: dict[str, Any], receipt_override: str | None, failover:
         verified = verify_output(req, raw_probe, built["frames"])
         version = subprocess.run([ffmpeg, "-version"], text=True, capture_output=True, timeout=10)
         version_line = ((version.stdout or "ffmpeg").splitlines() or ["ffmpeg"])[0]
+        used_fonts = fonts_used(layout)
         receipt: dict[str, Any] = {
             "schemaVersion": 1,
             "jobId": req["jobId"],
@@ -1008,7 +1051,8 @@ def render_prepared(req: dict[str, Any], receipt_override: str | None, failover:
             "captionSvg": svg_path.relative_to(req["projectDir"]).as_posix(),
             "captionSvgSha256": sha256_file(svg_path),
             "fontFamily": "Rubik",
-            "fontSha256": font["sha256"],
+            "fontSha256": used_fonts["headline"]["sha256"],
+            "fonts": used_fonts,
             "accent": COPPER,
             "renderReceiptIsPublishReceipt": False,
             "qaLowered": False,
@@ -1019,6 +1063,7 @@ def render_prepared(req: dict[str, Any], receipt_override: str | None, failover:
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         committed = True
+        release_derived_tmp(tmp_root, output, explicit)
         print(f"OK render verified receipt={target}")
         return receipt
     finally:
