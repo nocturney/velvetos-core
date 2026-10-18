@@ -65,6 +65,7 @@ WINDOWS_ACTIONS = {
     SETUP_PYTHON,
     UPLOAD_ARTIFACT,
 }
+EXIT_RESET = re.compile(r"\$LASTEXITCODE\s*=\s*0\b")
 # Tag and branch refs are refused. This set is the only exception, and it starts empty.
 ACTION_REF_ALLOWLIST: frozenset[str] = frozenset()
 USE_LINE = re.compile(r"^(?P<prefix>\s*(?:-\s+)?)uses:\s+(?P<spec>\S+)\s*(?:#.*)?$")
@@ -189,6 +190,33 @@ def ffmpeg_sha_enforced(job: str) -> bool:
     )
 
 
+def ffmpeg_exit_was_reset(job: str) -> bool:
+    """True when LASTEXITCODE is set to 0 after the verifier and before the throw.
+
+    The assignment may sit on the verifier line. The -ne throw can still be present.
+    """
+    codes = [line.split("#", 1)[0] for line in job.splitlines()]
+    start = next(
+        (index for index, code in enumerate(codes) if "scripts/verify_ffmpeg_zip_sha256.py" in code),
+        None,
+    )
+    if start is None:
+        return False
+    end = None
+    for index in range(start, len(codes)):
+        code = codes[index]
+        if (
+            re.search(r"\$LASTEXITCODE\s+-ne\s+0\b", code)
+            and "throw" in code
+            and "sha256 mismatch" in code
+        ):
+            end = index
+            break
+    if end is None:
+        return False
+    return any(EXIT_RESET.search(code) for code in codes[start:end + 1])
+
+
 def windows_permissions_are_contents_read(job: str) -> bool:
     lines = job.splitlines()
     for index, line in enumerate(lines):
@@ -233,6 +261,15 @@ def invert_hash_operator(job: str) -> str:
     return flipped
 
 
+def reset_ffmpeg_exit(job: str) -> str:
+    """Mutation from the #827 verdict: zero LASTEXITCODE on the verifier line."""
+    needle = "python scripts/verify_ffmpeg_zip_sha256.py --path $zip --expected $expected"
+    mutated = job.replace(needle, needle + "; $LASTEXITCODE = 0", 1)
+    if mutated == job:
+        raise ValueError("ffmpeg verifier call was not present to reset LASTEXITCODE")
+    return mutated
+
+
 def windows_job_problems(job: str) -> list[str]:
     problems: list[str] = []
     for needle in (
@@ -262,6 +299,8 @@ def windows_job_problems(job: str) -> list[str]:
             problems.append(f"check-all-windows missing {needle}")
     if not ffmpeg_sha_enforced(job):
         problems.append("check-all-windows does not enforce the ffmpeg zip sha256")
+    if ffmpeg_exit_was_reset(job):
+        problems.append("check-all-windows resets LASTEXITCODE after the ffmpeg hash gate")
     if not windows_permissions_are_contents_read(job):
         problems.append("check-all-windows permissions must be contents: read only")
     if "statuses:" in job:
@@ -399,10 +438,22 @@ def main() -> int:
     flipped_problems = windows_job_problems(flipped)
     if not any(problem == "check-all-windows does not enforce the ffmpeg zip sha256" for problem in flipped_problems):
         fail("the -ne to -eq mutation still passed the windows job sensor")
+    try:
+        reset = reset_ffmpeg_exit(windows_job)
+    except ValueError as exc:
+        fail(str(exc))
+    if not ffmpeg_sha_enforced(reset):
+        fail("the LASTEXITCODE reset mutation must keep the -ne throw")
+    reset_problems = windows_job_problems(reset)
+    if not any(
+        problem == "check-all-windows resets LASTEXITCODE after the ffmpeg hash gate"
+        for problem in reset_problems
+    ):
+        fail("resetting LASTEXITCODE after the ffmpeg hash gate was not caught")
     gate_evidence = prove_ffmpeg_hash_gate()
     print(
         "OK check-all-windows ffmpeg-sha-enforce "
-        f"delete=caught operator_flip=caught {gate_evidence} permissions=contents:read"
+        f"delete=caught operator_flip=caught exit_reset=caught {gate_evidence} permissions=contents:read"
     )
     pin_evidence = prove_workflow_action_pins(core_workflow)
     for path in sorted(list(WORKFLOWS.glob("*.yml")) + list(WORKFLOWS.glob("*.yaml"))):
