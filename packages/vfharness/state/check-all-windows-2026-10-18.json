@@ -28,5 +28,5 @@
     "security_admission": "RED",
     "required_status_check": "check-all"
   },
-  "latest_observation": "The Windows job installs the hashed 3.11 lock and the pinned ffmpeg zip, then runs scripts/check-all.py. The log artifact is actions/upload-artifact v7.0.2 at cf430e030ddbb5b0abf93d22962f4752f3646cd9. Job permissions are contents: read. SKIP_NON_POSIX still applies on that runner."
+  "latest_observation": "Windows job permissions are contents: read, checkout persist-credentials false, shallow checkout. verify_ffmpeg_zip_sha256.py rejects a wrong digest (exit 1) and an inverted == accepts it (exit 0), which the sensor catches. Workflow -ne flipped to -eq is also caught."
 }

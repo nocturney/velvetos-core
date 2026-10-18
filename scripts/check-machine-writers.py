@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import hashlib
 import re
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -62,13 +65,22 @@ WINDOWS_ACTIONS = {
 }
 
 
-def ffmpeg_sha_enforced(job: str) -> bool:
-    """The hash literal is not enough. The job must compare it and throw."""
+def workflow_hash_operator(job: str) -> str | None:
+    """Return -ne or -eq from the throw that follows the hash gate. Comments do not count."""
     for line in job.splitlines():
         code = line.split("#", 1)[0]
-        if "$got -ne $expected" in code and "throw" in code and "sha256 mismatch" in code:
-            return True
-    return False
+        match = re.search(r"\$LASTEXITCODE\s+(-ne|-eq)\s+0\b", code)
+        if match and "throw" in code and "sha256 mismatch" in code:
+            return match.group(1)
+    return None
+
+
+def ffmpeg_sha_enforced(job: str) -> bool:
+    """The hash literal is not enough. A failed verifier must throw, and -eq must not."""
+    return (
+        "scripts/verify_ffmpeg_zip_sha256.py" in job
+        and workflow_hash_operator(job) == "-ne"
+    )
 
 
 def windows_permissions_are_contents_read(job: str) -> bool:
@@ -88,14 +100,14 @@ def windows_permissions_are_contents_read(job: str) -> bool:
 
 
 def drop_ffmpeg_enforcement(job: str) -> str:
-    """Mutation: delete the compare-and-throw line and keep the hash literal."""
+    """Mutation: delete the throw line and keep the hash literal."""
     kept: list[str] = []
     dropped = False
     for line in job.splitlines(keepends=True):
         code = line.split("#", 1)[0]
         if (
             not dropped
-            and "$got -ne $expected" in code
+            and "$LASTEXITCODE" in code
             and "throw" in code
             and "sha256 mismatch" in code
         ):
@@ -105,6 +117,14 @@ def drop_ffmpeg_enforcement(job: str) -> str:
     if not dropped:
         raise ValueError("ffmpeg enforcement line was not present to delete")
     return "".join(kept)
+
+
+def invert_hash_operator(job: str) -> str:
+    """Mutation Claude ran: -ne becomes -eq, so a matching zip throws and a bad zip continues."""
+    flipped = job.replace("$LASTEXITCODE -ne 0", "$LASTEXITCODE -eq 0", 1)
+    if flipped == job:
+        raise ValueError("ffmpeg -ne operator was not present to invert")
+    return flipped
 
 
 def windows_job_problems(job: str) -> list[str]:
@@ -146,7 +166,52 @@ def windows_job_problems(job: str) -> list[str]:
         )
     if "secrets." in job or "upload_gha_artifact" in job or "ACTIONS_RUNTIME_TOKEN" in job:
         problems.append("check-all-windows must not read a secret or call the internal artifact API")
+    if "fetch-depth:" in job:
+        problems.append("check-all-windows must not fetch full git history")
     return problems
+
+
+HASH_GATE = ROOT / "scripts" / "verify_ffmpeg_zip_sha256.py"
+
+
+def hash_gate_exits(script: Path, data: bytes, expected: str) -> int:
+    with tempfile.TemporaryDirectory() as tmp:
+        fixture = Path(tmp) / "fixture.bin"
+        fixture.write_bytes(data)
+        proc = subprocess.run(
+            [sys.executable, str(script), "--path", str(fixture), "--expected", expected],
+            text=True,
+            capture_output=True,
+            timeout=15,
+        )
+        return proc.returncode
+
+
+def prove_ffmpeg_hash_gate() -> str:
+    """Run the real verifier, then a copy whose comparison is inverted."""
+    if not HASH_GATE.is_file():
+        fail("missing ffmpeg hash gate: scripts/verify_ffmpeg_zip_sha256.py")
+    source = HASH_GATE.read_text(encoding="utf-8")
+    if source.count("got != expected") != 1:
+        fail("ffmpeg hash gate must compare with got != expected exactly once")
+    data = b"not-the-ffmpeg-zip"
+    wrong = "0" * 64
+    right = hashlib.sha256(data).hexdigest()
+    mismatch = hash_gate_exits(HASH_GATE, data, wrong)
+    match = hash_gate_exits(HASH_GATE, data, right)
+    if mismatch == 0 or match != 0:
+        fail(
+            "ffmpeg hash gate fixture failed: "
+            f"wrong_digest_exit={mismatch} match_exit={match}"
+        )
+    inverted = source.replace("got != expected", "got == expected", 1)
+    with tempfile.TemporaryDirectory() as tmp:
+        mutated = Path(tmp) / "verify_ffmpeg_zip_sha256.py"
+        mutated.write_text(inverted, encoding="utf-8")
+        inverted_exit = hash_gate_exits(mutated, data, wrong)
+    if inverted_exit != 0:
+        fail("inverting got != expected still rejected a wrong digest")
+    return f"wrong_digest_exit={mismatch} match_exit={match} inverted_operator_exit={inverted_exit}"
 
 
 def main() -> int:
@@ -217,7 +282,20 @@ def main() -> int:
     mutated_problems = windows_job_problems(mutated)
     if not any(problem == "check-all-windows does not enforce the ffmpeg zip sha256" for problem in mutated_problems):
         fail("deleting the ffmpeg sha256 enforcement line was not caught")
-    print("OK check-all-windows ffmpeg-sha-enforce mutation=caught permissions=contents:read")
+    try:
+        flipped = invert_hash_operator(windows_job)
+    except ValueError as exc:
+        fail(str(exc))
+    if ffmpeg_sha_enforced(flipped) or workflow_hash_operator(flipped) != "-eq":
+        fail("flipping the ffmpeg hash operator from -ne to -eq was not caught")
+    flipped_problems = windows_job_problems(flipped)
+    if not any(problem == "check-all-windows does not enforce the ffmpeg zip sha256" for problem in flipped_problems):
+        fail("the -ne to -eq mutation still passed the windows job sensor")
+    gate_evidence = prove_ffmpeg_hash_gate()
+    print(
+        "OK check-all-windows ffmpeg-sha-enforce "
+        f"delete=caught operator_flip=caught {gate_evidence} permissions=contents:read"
+    )
     if core_workflow.count("context=check-all") != 1:
         fail("check-all status context must stay the single required Linux context")
     if "context=check-all-windows" in core_workflow:

@@ -139,7 +139,6 @@ jobs:
 
       - uses: actions/checkout@v7
         with:
-          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Python
@@ -154,8 +153,8 @@ jobs:
           $expected = "d760e1b3574402ed18b4865851f87d87e73965a982e6453212df8621fed1c508"
           $zip = Join-Path $env:RUNNER_TEMP "ffmpeg-7.1.1-full_build.zip"
           curl.exe -fsSL -o "$zip" "https://github.com/GyanD/codexffmpeg/releases/download/7.1.1/ffmpeg-7.1.1-full_build.zip"
-          $got = (Get-FileHash -Algorithm SHA256 -Path $zip).Hash.ToLowerInvariant()
-          if ($got -ne $expected) { throw "ffmpeg zip sha256 mismatch: $got" }
+          python scripts/verify_ffmpeg_zip_sha256.py --path $zip --expected $expected
+          if ($LASTEXITCODE -ne 0) { throw "ffmpeg zip sha256 mismatch: $expected" }
           $dest = Join-Path $env:RUNNER_TEMP "ffmpeg"
           Expand-Archive -Path $zip -DestinationPath $dest
           $bin = Get-ChildItem -Path $dest -Recurse -Filter ffmpeg.exe | Select-Object -First 1
