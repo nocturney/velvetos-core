@@ -139,13 +139,50 @@ def assert_forbidden_env(env: dict) -> None:
         raise StorageRefusal("FORBIDDEN_ENV:" + key)
 
 
+def _protected_hits(env: dict, name: str) -> list[tuple[str, object]]:
+    """Every spelling of a protected name. POSIX proxy lookup is case-insensitive."""
+    upper = name.upper()
+    hits = []
+    for key, value in env.items():
+        if isinstance(key, str) and key.upper() == upper:
+            hits.append((key, value))
+    return hits
+
+
+def fold_protected_env(env: dict) -> dict:
+    """Keep one canonical spelling for OLLAMA_HOST and the proxy variables."""
+    if not isinstance(env, dict):
+        raise StorageRefusal("SANDBOX_ENV_ABSENT")
+    folded = {}
+    held: dict[str, object] = {}
+    for key, value in env.items():
+        if not isinstance(key, str):
+            raise StorageRefusal("SANDBOX_ENV_ABSENT")
+        upper = key.upper()
+        if upper == "OLLAMA_HOST" or upper in PROXY_KEYS:
+            if upper not in held or (isinstance(value, str) and value.strip()):
+                held[upper] = value
+            continue
+        folded[key] = value
+    if "OLLAMA_HOST" in held:
+        folded["OLLAMA_HOST"] = held["OLLAMA_HOST"]
+    for key in PROXY_KEYS:
+        if key not in held:
+            continue
+        folded[key] = held[key]
+        folded[key.lower()] = held[key]
+    return folded
+
+
 def assert_proxy_env(env: dict) -> None:
     """E5 tripwire. Anything other than the dead loopback proxy is a refusal."""
     if not isinstance(env, dict):
         raise StorageRefusal("E5_PROXY_ABSENT")
     for key, want in PROXY_KEYS.items():
-        for name in (key, key.lower()):
-            value = env.get(name)
+        hits = _protected_hits(env, key)
+        if not hits:
+            raise StorageRefusal("E5_PROXY_ABSENT:" + key)
+        for name, value in hits:
             if not isinstance(value, str) or not value:
                 raise StorageRefusal("E5_PROXY_ABSENT:" + name)
             if value != want:
@@ -301,15 +338,18 @@ def assert_no_system_temp_crewai(exists, system_root: str = "C:\\Windows") -> No
 
 
 def refuse_operator_env(env: dict) -> None:
-    """Refuse a present wrong OLLAMA_HOST or proxy. Absent keys may be filled."""
+    """Refuse a present wrong OLLAMA_HOST or proxy. Absent keys may be filled.
+
+    Names are compared case-insensitively. Https_Proxy is the same variable
+    as HTTPS_PROXY, and ollama_host is the same variable as OLLAMA_HOST.
+    """
     if not isinstance(env, dict):
         raise StorageRefusal("SANDBOX_ENV_ABSENT")
-    host = env.get("OLLAMA_HOST")
-    if isinstance(host, str) and host.strip() and host != APPROVED_OLLAMA_HOST:
-        raise StorageRefusal("OLLAMA_HOST_REFUSED")
+    for name, value in _protected_hits(env, "OLLAMA_HOST"):
+        if isinstance(value, str) and value.strip() and value != APPROVED_OLLAMA_HOST:
+            raise StorageRefusal("OLLAMA_HOST_REFUSED")
     for key, want in PROXY_KEYS.items():
-        for name in (key, key.lower()):
-            value = env.get(name)
+        for name, value in _protected_hits(env, key):
             if not isinstance(value, str) or not value.strip():
                 continue
             if value != want:

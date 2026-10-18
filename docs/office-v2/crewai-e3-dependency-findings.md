@@ -185,6 +185,18 @@ into CRLF, so a fresh emit differs from the committed LF bytes of
 `e4/control-run.json` even when the checkout itself is LF. The sensor
 replays that text mode and still requires a byte match.
 
+## Review mutations
+
+Issue 612 comment 6251717007. `complete()` collects listener rows when
+`binds` is omitted, then checks the bind. `main()` therefore reaches a
+model call instead of stopping at `OLLAMA_BIND_UNPROVEN`. The sandbox temp
+directories are created before `assert_sandbox_resolution`. A Python child
+is started with `python -I`. `PYTHONHOME`, `PYTHONUSERBASE`, a foreign
+`usercustomize`, and a `.pth` outside the interpreter prefix are refused.
+Kickoff text needs a data row, and every URL in it must be an issue URL
+from the input rows. Proxy variables and `OLLAMA_HOST` match
+case-insensitively.
+
 ## Lock identity
 
 The Chris lock file is `requirements-locked.txt`, sha256

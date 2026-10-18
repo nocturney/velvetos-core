@@ -185,6 +185,198 @@ def validate_config_document(document: object) -> dict:
     }
 
 
+def binds_from_proc(text: str, port: int, ipv6: bool = False) -> list:
+    """TCP LISTEN rows from /proc/net/tcp. This reads a file and does not open a socket."""
+    if not isinstance(text, str) or isinstance(port, bool) or not isinstance(port, int):
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+    rows = []
+    for line in text.splitlines()[1:]:
+        parts = line.split()
+        if len(parts) < 4 or parts[3] != "0A":
+            continue
+        local = parts[1]
+        if ":" not in local:
+            raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+        ip_hex, port_hex = local.rsplit(":", 1)
+        try:
+            row_port = int(port_hex, 16)
+        except ValueError as exc:
+            raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
+        if row_port != port:
+            continue
+        rows.append({"address": _proc_address(ip_hex, ipv6), "port": row_port})
+    return rows
+
+
+def _proc_address(ip_hex: str, ipv6: bool) -> str:
+    try:
+        raw = bytes.fromhex(ip_hex)
+    except ValueError as exc:
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
+    if not ipv6:
+        if len(raw) != 4:
+            raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+        return ".".join(str(byte) for byte in raw[::-1])
+    if len(raw) != 16:
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+    words = [raw[index:index + 4][::-1] for index in range(0, 16, 4)]
+    addr = b"".join(words)
+    if addr == b"\x00" * 16:
+        return "::"
+    if addr == b"\x00" * 15 + b"\x01":
+        return "::1"
+    return ":".join(addr[index:index + 2].hex() for index in range(0, 16, 2))
+
+
+def binds_from_netstat(text: str, port: int) -> list:
+    """LISTENING rows from netstat -ano. This does not open a socket."""
+    if not isinstance(text, str) or "Active Connections" not in text:
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+    if isinstance(port, bool) or not isinstance(port, int):
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+    rows = []
+    for line in text.splitlines():
+        parts = line.split()
+        if len(parts) < 5 or parts[0].upper() != "TCP":
+            continue
+        if parts[-2].upper() != "LISTENING":
+            continue
+        local = parts[1]
+        if local.startswith("[") and "]" in local:
+            host = local[1:local.index("]")]
+            port_text = local.rsplit(":", 1)[-1]
+        else:
+            host, sep, port_text = local.rpartition(":")
+            if not sep:
+                raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+        try:
+            row_port = int(port_text)
+        except ValueError as exc:
+            raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
+        if row_port != port:
+            continue
+        if host in {"*", "0.0.0.0"}:
+            host = "0.0.0.0"
+        rows.append({"address": host, "port": row_port})
+    return rows
+
+
+def binds_from_lsof(text: str, port: int) -> list:
+    """LISTEN rows from lsof -nP -iTCP -sTCP:LISTEN. A header alone is an empty set."""
+    if not isinstance(text, str) or isinstance(port, bool) or not isinstance(port, int):
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+    lines = [line for line in text.splitlines() if line.strip()]
+    if not lines:
+        return []
+    header = [part.upper() for part in lines[0].split()]
+    if "NAME" not in header:
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+    name_index = header.index("NAME")
+    rows = []
+    for line in lines[1:]:
+        parts = line.split()
+        if len(parts) <= name_index:
+            raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+        name = " ".join(parts[name_index:])
+        if "(LISTEN)" not in name.upper():
+            raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+        endpoint = name.split()[0]
+        if endpoint.startswith("[") and "]" in endpoint:
+            host = endpoint[1:endpoint.index("]")]
+            port_text = endpoint.rsplit(":", 1)[-1]
+        else:
+            host, sep, port_text = endpoint.rpartition(":")
+            if not sep:
+                raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+        try:
+            row_port = int(port_text)
+        except ValueError as exc:
+            raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
+        if row_port != port:
+            continue
+        if host == "*":
+            host = "0.0.0.0"
+        rows.append({"address": host, "port": row_port})
+    return rows
+
+
+def collect_ollama_binds(port: int = APPROVED_PORT, observe=None) -> list:
+    """Listener rows for the approved port. The default observer does not open a socket."""
+    if observe is not None:
+        try:
+            rows = observe()
+        except ProviderRefusal:
+            raise
+        except (OSError, ValueError, TypeError) as exc:
+            raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
+    else:
+        rows = _platform_ollama_binds(port)
+    if not isinstance(rows, list):
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+    return rows
+
+
+def _platform_ollama_binds(port: int) -> list:
+    import sys
+    from pathlib import Path
+
+    if sys.platform == "linux":
+        tcp = Path("/proc/net/tcp")
+        if not tcp.is_file():
+            raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+        try:
+            rows = binds_from_proc(tcp.read_text(encoding="ascii", errors="replace"), port, ipv6=False)
+            tcp6 = Path("/proc/net/tcp6")
+            if tcp6.is_file():
+                rows.extend(binds_from_proc(tcp6.read_text(encoding="ascii", errors="replace"), port, ipv6=True))
+        except OSError as exc:
+            raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
+        return rows
+    if sys.platform == "darwin":
+        return _lsof_binds(port)
+    if sys.platform == "win32":
+        return _netstat_binds(port)
+    raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+
+
+def _lsof_binds(port: int) -> list:
+    import subprocess
+
+    try:
+        proc = subprocess.run(
+            ["lsof", "-nP", "-iTCP:%s" % port, "-sTCP:LISTEN"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
+    if proc.returncode == 1 and not (proc.stdout or "").strip() and not (proc.stderr or "").strip():
+        return []
+    if proc.returncode != 0:
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+    return binds_from_lsof(proc.stdout or "", port)
+
+
+def _netstat_binds(port: int) -> list:
+    import subprocess
+
+    try:
+        proc = subprocess.run(
+            ["netstat", "-ano"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
+    if proc.returncode != 0 or "Active Connections" not in (proc.stdout or ""):
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+    return binds_from_netstat(proc.stdout, port)
+
+
 def digest_from_tags(body: object, model: str = APPROVED_MODEL) -> str:
     """Read the digest from Ollama /api/tags. /api/show on 0.40.6 has no digest."""
     if not isinstance(body, dict):
@@ -292,6 +484,8 @@ class LocalOllamaProvider:
         from office_v2_crewai.sandbox import assert_proxy_env
         assert_proxy_env(environment)
         timeout = _attempt_timeout(harness, started, now)
+        if binds is None:
+            binds = collect_ollama_binds()
         assert_ollama_bind(binds)
         base_url = assert_loopback_url(self.config.get("base_url"))
         if urlopen is None:

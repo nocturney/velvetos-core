@@ -14,6 +14,18 @@ class KillRefusal(RuntimeError):
     pass
 
 
+def isolated_argv(argv: list[str]) -> list[str]:
+    """Run a Python child with -I so user site, .pth, and PYTHONHOME do not load."""
+    if not argv or not isinstance(argv[0], str):
+        raise KillRefusal("SPAWN_ARGV_REFUSED")
+    base = argv[0].replace("\\", "/").rsplit("/", 1)[-1].lower()
+    if not (base == "python" or base.startswith("python")):
+        return list(argv)
+    if any(part in {"-I", "-E"} for part in argv[1:]):
+        return list(argv)
+    return [argv[0], "-I", *argv[1:]]
+
+
 class KillHarness:
     def __init__(self, timeout_seconds: int = ATTEMPT_TIMEOUT_SECONDS, cost_ceiling: int = COST_CEILING):
         if int(cost_ceiling) != 0:
@@ -26,8 +38,7 @@ class KillHarness:
         self.killed: list[int] = []
 
     def spawn(self, argv: list[str]) -> subprocess.Popen:
-        if not argv or not isinstance(argv[0], str):
-            raise KillRefusal("SPAWN_ARGV_REFUSED")
+        argv = isolated_argv(argv)
         try:
             assert_not_chroma_cli(argv)
         except UsageRefusal as exc:

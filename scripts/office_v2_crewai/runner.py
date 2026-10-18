@@ -109,17 +109,14 @@ def apply_telemetry(env: dict, root: str = SANDBOX_ROOT) -> dict:
     if not isinstance(env, dict):
         raise StorageRefusal("SANDBOX_ENV_ABSENT")
     refuse_operator_env(env)
-    updated = dict(env)
+    from office_v2_crewai.sandbox import PROXY_KEYS, fold_protected_env
+    updated = fold_protected_env(env)
     updated.update(TELEMETRY_FLAGS)
     approved = approved_environment(root)
-    protected = {"OLLAMA_HOST"}
-    from office_v2_crewai.sandbox import PROXY_KEYS
-    for key in PROXY_KEYS:
-        protected.add(key)
-        protected.add(key.lower())
+    protected = {"OLLAMA_HOST", *PROXY_KEYS}
     for key, value in approved.items():
         current = updated.get(key)
-        if key in protected and isinstance(current, str) and current.strip():
+        if key.upper() in protected and isinstance(current, str) and current.strip():
             continue
         updated[key] = value
     return updated
@@ -127,14 +124,20 @@ def apply_telemetry(env: dict, root: str = SANDBOX_ROOT) -> dict:
 
 def execute(input_dir: Path, output_dir: Path, evidence_dir: Path, model_config: Path,
             env: dict | None = None, sandbox_root: str = SANDBOX_ROOT,
-            modules: dict | None = None, binds: object = None) -> int:
+            modules: dict | None = None, binds: object = None, flags=None) -> int:
     """Run preflight. Import crewai only after every gate has passed."""
     assert_under_velvet(sandbox_root)
     raw = dict(os.environ if env is None else env)
     loaded = sys.modules if modules is None else modules
     early_reason = None
-    from office_v2_crewai.usage_guard import UsageRefusal, assert_loaded_modules, assert_no_pythonpath
+    from office_v2_crewai.usage_guard import (
+        UsageRefusal,
+        assert_interpreter_isolated,
+        assert_loaded_modules,
+        assert_no_pythonpath,
+    )
     try:
+        assert_interpreter_isolated(sys.flags if flags is None else flags)
         assert_no_pythonpath(raw, loaded)
         assert_loaded_modules(loaded)
         observed = apply_telemetry(raw, sandbox_root)
@@ -179,7 +182,7 @@ def execute(input_dir: Path, output_dir: Path, evidence_dir: Path, model_config:
         saved = save_kickoff_output(text, root=sandbox_root)
         apply_run_record(receipt, saved, root=sandbox_root)
         from office_v2_crewai.usage_guard import assert_kickoff_cites_rows
-        assert_kickoff_cites_rows(text)
+        assert_kickoff_cites_rows(text, issue_rows)
         from office_v2_crewai.sandbox import assert_no_system_temp_crewai
         from office_v2_crewai.usage_guard import (
             assert_no_pilot_leftovers,
@@ -217,7 +220,7 @@ def execute(input_dir: Path, output_dir: Path, evidence_dir: Path, model_config:
     return 2
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None, flags=None) -> int:
     parser = argparse.ArgumentParser(description="Fail-closed CrewAI pilot runner")
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
     parser.add_argument("--output", type=Path, required=True)
@@ -231,6 +234,7 @@ def main(argv: list[str] | None = None) -> int:
         args.evidence,
         args.model_config,
         sandbox_root=args.sandbox,
+        flags=flags,
     )
 
 

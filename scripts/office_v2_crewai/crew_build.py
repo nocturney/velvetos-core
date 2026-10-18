@@ -73,8 +73,8 @@ def build_crew(provider: LocalOllamaProvider, env: dict, sandbox_root: str = SAN
         "is_litellm": False,
     })
     assert_dependency_drift()
-    assert_sandbox_resolution(sandbox_root)
     prepare_sandbox_temp(sandbox_root)
+    assert_sandbox_resolution(sandbox_root)
     assert_no_pythonpath(bound_env)
     seed_trace_consent(Path(bound_env["CREWAI_STORAGE_DIR"]))
     import crewai

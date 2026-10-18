@@ -41,7 +41,7 @@ from office_v2_crewai.e4_evidence import (  # noqa: E402
     positive_files_present,
     write_observed_e4,
 )
-from office_v2_crewai.kill_harness import KillHarness, KillRefusal  # noqa: E402
+from office_v2_crewai.kill_harness import KillHarness, KillRefusal, isolated_argv  # noqa: E402
 from office_v2_crewai.preflight import evaluate, synthetic_passing_bundle, verify_manifest  # noqa: E402
 from office_v2_crewai.provider import (  # noqa: E402
     LocalOllamaProvider,
@@ -49,6 +49,10 @@ from office_v2_crewai.provider import (  # noqa: E402
     assert_llm_route,
     assert_loopback_url,
     assert_ollama_bind,
+    binds_from_lsof,
+    binds_from_netstat,
+    binds_from_proc,
+    collect_ollama_binds,
     digest_from_tags,
     effective_endpoint,
 )
@@ -69,9 +73,11 @@ from office_v2_crewai.sandbox import (  # noqa: E402
     bind_process_sandbox,
     enter_sandbox,
     prepare_sandbox_temp,
+    refuse_operator_env,
+    sandbox_temp_dir,
 )
 from office_v2_crewai.receipt import apply_run_record, kickoff_output_path, save_kickoff_output, write_receipts  # noqa: E402
-from office_v2_crewai.runner import apply_telemetry, execute, record_exception  # noqa: E402
+from office_v2_crewai.runner import apply_telemetry, execute, main as runner_main, record_exception  # noqa: E402
 from office_v2_crewai.usage_guard import (  # noqa: E402
     DRIFT_FORBIDDEN_MODULES,
     LEFTOVER_RELS,
@@ -80,6 +86,7 @@ from office_v2_crewai.usage_guard import (  # noqa: E402
     assert_built_crew,
     assert_crew_spec,
     assert_dependency_drift,
+    assert_interpreter_isolated,
     assert_kickoff_cites_rows,
     assert_no_pilot_leftovers,
     assert_no_pythonpath,
@@ -110,6 +117,15 @@ GROUPS = (
     "result",
     "teardown",
 )
+
+
+class _IsolatedFlags:
+    isolated = 1
+    ignore_environment = 1
+    no_user_site = 1
+
+
+ISOLATED_FLAGS = _IsolatedFlags()
 
 
 def fail(message: str) -> None:
@@ -569,7 +585,7 @@ def check_kill() -> None:
 def check_execute() -> None:
     out = Path(tempfile.mkdtemp(prefix="crewai-out-"))
     try:
-        code = execute(INPUTS, out, EVIDENCE, MODEL, env={})
+        code = execute(INPUTS, out, EVIDENCE, MODEL, env={}, flags=ISOLATED_FLAGS)
         if code != 2:
             fail("committed execute returned %s" % code)
         receipt = json.loads((out / "attempt-receipt.json").read_text(encoding="utf-8"))
@@ -667,12 +683,14 @@ def check_ast() -> None:
                     saw_route = True
                 if node.func.id == "assert_dependency_drift":
                     saw_drift = True
-                if node.func.id == "assert_sandbox_resolution":
-                    saw_resolution = True
                 if node.func.id == "seed_trace_consent":
                     saw_consent = True
                 if node.func.id == "prepare_sandbox_temp":
                     saw_temp = True
+                if node.func.id == "assert_sandbox_resolution":
+                    if not saw_temp:
+                        fail("temp resolution runs before the sandbox temp directories exist")
+                    saw_resolution = True
                 if node.func.id == "assert_no_pythonpath":
                     saw_pythonpath = True
                 if node.func.id == "assert_built_crew":
@@ -787,10 +805,11 @@ def check_sandbox_mutations() -> None:
         wrong[key] = "no"
         _expect_storage(lambda wrong=wrong: assert_sandbox_env(wrong), "SANDBOX_VALUE_MISMATCH:" + key)
     for key, want in PROXY_KEYS.items():
+        missing = dict(env)
+        del missing[key]
+        del missing[key.lower()]
+        _expect_storage(lambda missing=missing: assert_proxy_env(missing), "E5_PROXY_ABSENT:" + key)
         for name in (key, key.lower()):
-            missing = dict(env)
-            del missing[name]
-            _expect_storage(lambda missing=missing: assert_proxy_env(missing), "E5_PROXY_ABSENT:" + name)
             wrong = dict(env)
             wrong[name] = "http://10.0.0.8:8080" if name.upper() != "NO_PROXY" else "127.0.0.1,localhost"
             _expect_storage(lambda wrong=wrong: assert_proxy_env(wrong), "E5_PROXY_MISMATCH:" + name)
@@ -1257,7 +1276,7 @@ def check_run_record() -> None:
     crashed = Path(tempfile.mkdtemp(prefix="crewai-crash-"))
     crashed_late = Path(tempfile.mkdtemp(prefix="crewai-crash-late-"))
     try:
-        execute(INPUTS, out, EVIDENCE, MODEL, env={})
+        execute(INPUTS, out, EVIDENCE, MODEL, env={}, flags=ISOLATED_FLAGS)
         original = json.loads((out / "attempt-receipt.json").read_text(encoding="utf-8"))
         captured = []
 
@@ -1396,9 +1415,10 @@ def check_hardening() -> None:
     """Comment 6250954627. Spec mutations only. No model call and no machine run."""
     if TRACE_USER_BYTES != b'{"first_execution_done":true,"trace_consent":false}':
         fail("trace consent bytes drifted")
-    for path in (PACKAGE / "sandbox.py", PACKAGE / "crew_build.py", PACKAGE / "runner.py", PACKAGE / "contract.py"):
-        if "CREWAI_DISABLE_TRACING" in path.read_text(encoding="utf-8"):
-            fail("CREWAI_DISABLE_TRACING is present in %s" % path.name)
+    for path in sorted(PACKAGE.rglob("*")):
+        if path.is_file() and path.suffix in {".py", ".json", ".md", ".reg"}:
+            if "CREWAI_DISABLE_TRACING" in path.read_text(encoding="utf-8"):
+                fail("CREWAI_DISABLE_TRACING is present in %s" % path.relative_to(PACKAGE))
     runner_source = (PACKAGE / "runner.py").read_text(encoding="utf-8")
     if "assert_trace_consent(" not in runner_source or "assert_no_pilot_leftovers(" not in runner_source:
         fail("post-run consent or leftover check is missing")
@@ -1529,7 +1549,7 @@ def check_lab4() -> None:
     try:
         synthetic_passing_bundle(parent)
         host_out = parent / "host-out"
-        code = execute(parent / "inputs", host_out, parent / "evidence", MODEL, env=bad_host)
+        code = execute(parent / "inputs", host_out, parent / "evidence", MODEL, env=bad_host, flags=ISOLATED_FLAGS)
         host_receipt = json.loads((host_out / "attempt-receipt.json").read_text(encoding="utf-8"))
         if code != 2 or host_receipt["identity"]["reason"] != "OLLAMA_HOST_REFUSED":
             fail("wrong OLLAMA_HOST reason was %s" % host_receipt["identity"].get("reason"))
@@ -1540,7 +1560,7 @@ def check_lab4() -> None:
         bad_path = parent / "bad-model.json"
         bad_path.write_text(json.dumps(bad), encoding="ascii")
         model_out = parent / "model-out"
-        code = execute(parent / "inputs", model_out, parent / "evidence", bad_path, env=passing_env())
+        code = execute(parent / "inputs", model_out, parent / "evidence", bad_path, env=passing_env(), flags=ISOLATED_FLAGS)
         model_receipt = json.loads((model_out / "attempt-receipt.json").read_text(encoding="utf-8"))
         if code != 2 or model_receipt["identity"]["reason"] != "MODEL_URL_NOT_EXACT_APPROVAL":
             fail("model refusal reason was %s" % model_receipt["identity"].get("reason"))
@@ -1573,13 +1593,17 @@ def check_lab4() -> None:
     source = (PACKAGE / "crew_build.py").read_text(encoding="utf-8")
     if source.count("{issue_rows}") < 4:
         fail("issue_rows is not wired into the task text")
+    cited_rows = {
+        "issues": [{"url": "https://github.com/nocturney/velvetos-core/issues/612", "number": 612}],
+    }
     _expect_usage(
-        lambda: assert_kickoff_cites_rows("| Issue | Status |\n| --- | --- |\n| N/A | UNKNOWN |\n"),
+        lambda: assert_kickoff_cites_rows("| Issue | Status |\n| --- | --- |\n| N/A | UNKNOWN |\n", cited_rows),
         "KICKOFF_EMPTY_TABLE",
     )
-    _expect_usage(lambda: assert_kickoff_cites_rows("no rows were provided\n"), "KICKOFF_EMPTY_TABLE")
+    _expect_usage(lambda: assert_kickoff_cites_rows("no rows were provided\n", cited_rows), "KICKOFF_EMPTY_TABLE")
     assert_kickoff_cites_rows(
-        "| Issue | Status |\n| --- | --- |\n| https://github.com/nocturney/velvetos-core/issues/612 | open |\n"
+        "| Issue | Status |\n| --- | --- |\n| https://github.com/nocturney/velvetos-core/issues/612 | open |\n",
+        cited_rows,
     )
     _expect_usage(lambda: assert_no_pythonpath({"PYTHONPATH": "D:\\evil"}), "PYTHONPATH_REFUSED")
     _expect_usage(lambda: assert_no_pythonpath({}, {"sitecustomize": object()}), "SITECUSTOMIZE_REFUSED")
@@ -1590,6 +1614,213 @@ def check_lab4() -> None:
     runner = (PACKAGE / "runner.py").read_text(encoding="utf-8")
     if "--sandbox" not in runner or "guard_post_run(" not in runner or "assert_no_system_temp_crewai(" not in runner:
         fail("runner is missing the sandbox parameter, module guard, or Windows temp check")
+
+
+def _issue_rows(url: str) -> dict:
+    return {"issues": [{"url": url, "number": 612}]}
+
+
+def check_review_mutations() -> None:
+    """Comment 6251717007. The ten missing negative mutations, still with no live model."""
+    cited = "https://github.com/nocturney/velvetos-core/issues/612"
+    rows = _issue_rows(cited)
+    _expect_usage(lambda: assert_kickoff_cites_rows("| Issue | Status |\n| --- | --- |\n", rows), "KICKOFF_EMPTY_TABLE")
+    _expect_usage(
+        lambda: assert_kickoff_cites_rows("| Issue | Status |\n| --- | --- |\n| none | - |\n", rows),
+        "KICKOFF_EMPTY_TABLE",
+    )
+    _expect_usage(
+        lambda: assert_kickoff_cites_rows(
+            "| Issue |\n| --- |\n| https://github.com/nocturney/velvetos-core/issues/999999 |\n",
+            rows,
+        ),
+        "KICKOFF_UNCITED_ROW",
+    )
+    foreign = type("M", (), {})()
+    foreign.__file__ = "/tmp/evil/usercustomize.py"
+    _expect_usage(lambda: assert_no_pythonpath({}, {"usercustomize": foreign}), "USERCUSTOMIZE_REFUSED")
+    packaged = type("M", (), {})()
+    packaged.__file__ = sys.prefix + "/lib/site-packages/sitecustomize.py"
+    _expect_usage(lambda: assert_no_pythonpath({}, {"sitecustomize": packaged}), "SITECUSTOMIZE_REFUSED")
+    _expect_usage(lambda: assert_no_pythonpath({"PythonHome": "C:\\Python"}), "PYTHONHOME_REFUSED")
+    _expect_usage(lambda: assert_no_pythonpath({}, pth_files=["D:/evil/hook.pth"]), "PTH_REFUSED")
+    assert_no_pythonpath({}, {}, pth_files=[sys.prefix + "/lib/site-packages/stdlib.pth"])
+    _expect_storage(lambda: apply_telemetry({"Https_Proxy": "http://10.0.0.1:8080"}), "E5_PROXY_MISMATCH:Https_Proxy")
+    _expect_storage(lambda: refuse_operator_env({"ollama_host": "127.0.0.1:11434"}), "OLLAMA_HOST_REFUSED")
+    folded = apply_telemetry({"Https_Proxy": "http://127.0.0.1:9"})
+    if "Https_Proxy" in folded or folded.get("HTTPS_PROXY") != "http://127.0.0.1:9":
+        fail("mixed-case proxy was not folded to HTTPS_PROXY")
+    bad_agent = _agent(from_repository="x")
+    _expect_usage(lambda: assert_built_crew([], _crew(agents=[bad_agent])), "FROM_REPOSITORY_REFUSED")
+    document = json.loads((EVIDENCE / "e3-supply-chain.json").read_text(encoding="utf-8"))
+    wrong_lock = json.loads(json.dumps(document))
+    wrong_lock["lock_sha256"] = "0" * 64
+    _expect_usage(lambda: assert_supply_chain_record(wrong_lock), "LOCK_IDENTITY_MISMATCH")
+    wrong_count = json.loads(json.dumps(document))
+    wrong_count["wheel_count"] = 0
+    _expect_usage(lambda: assert_supply_chain_record(wrong_count), "LOCK_IDENTITY_MISMATCH")
+    _expect_provider(
+        lambda: digest_from_tags({"models": [
+            {"name": APPROVED_MODEL, "digest": APPROVED_MODEL_DIGEST},
+            {"name": APPROVED_MODEL, "digest": APPROVED_MODEL_DIGEST},
+        ]}),
+        "MODEL_DIGEST_MISMATCH",
+    )
+    proc = (
+        "  sl  local_address rem_address   st\n"
+        "   0: 0100007F:2CAB 00000000:0000 0A\n"
+        "   1: 00000000:2CAB 00000000:0000 0A\n"
+    )
+    parsed = binds_from_proc(proc, 11435)
+    if parsed != [
+        {"address": "127.0.0.1", "port": 11435},
+        {"address": "0.0.0.0", "port": 11435},
+    ]:
+        fail("proc listener rows were %s" % parsed)
+    _expect_provider(lambda: assert_ollama_bind(parsed), "OLLAMA_BIND_WILDCARD")
+    netstat = (
+        "Active Connections\n\n"
+        "  Proto  Local Address          Foreign Address        State           PID\n"
+        "  TCP    127.0.0.1:11435        0.0.0.0:0              LISTENING       4\n"
+    )
+    if binds_from_netstat(netstat, 11435) != [{"address": "127.0.0.1", "port": 11435}]:
+        fail("netstat listener row was not loopback")
+    lsof = "COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME\nPython 4 user 5u IPv4 0x1 0t0 TCP 127.0.0.1:11435 (LISTEN)\n"
+    if binds_from_lsof(lsof, 11435) != [{"address": "127.0.0.1", "port": 11435}]:
+        fail("lsof listener row was not loopback")
+    if isolated_argv([sys.executable, "-c", "print(1)"])[1] != "-I":
+        fail("python child argv did not insert -I")
+    if isolated_argv([sys.executable, "-I", "-c", "print(1)"])[2] == "-I":
+        fail("python -I was inserted twice")
+    import office_v2_crewai.kill_harness as kill_mod
+    captured = []
+
+    class _Proc:
+        pid = 424242
+
+        def poll(self):
+            return 0
+
+        def wait(self, timeout=None):
+            return 0
+
+        def kill(self):
+            return None
+
+    def fake_popen(argv, **kwargs):
+        captured.append(list(argv))
+        return _Proc()
+
+    original_popen = kill_mod.subprocess.Popen
+    kill_mod.subprocess.Popen = fake_popen
+    try:
+        KillHarness().spawn([sys.executable, "-c", "print(1)"])
+    finally:
+        kill_mod.subprocess.Popen = original_popen
+    if not captured or captured[0][1] != "-I":
+        fail("spawn did not launch python -I: %s" % captured)
+    root = SANDBOX_ROOT
+    created = []
+
+    def mkdir(path):
+        created.append(path)
+
+    def exists(path):
+        return path in created
+
+    if exists(sandbox_temp_dir(root)):
+        fail("fresh sandbox already had a temp directory")
+    prepare_sandbox_temp(root, mkdir=mkdir, exists=exists)
+    if sandbox_temp_dir(root) not in created:
+        fail("sandbox temp was not created before resolution")
+    saved_profile = os.environ.get("USERPROFILE")
+    os.environ["USERPROFILE"] = root
+    try:
+        assert_sandbox_resolution(root, home=root, temp=sandbox_temp_dir(root), platform="win32")
+    finally:
+        if saved_profile is None:
+            os.environ.pop("USERPROFILE", None)
+        else:
+            os.environ["USERPROFILE"] = saved_profile
+    from office_v2_crewai.usage_guard import enforcement_holds
+    if not enforcement_holds():
+        fail("enforcement_holds accepted one of the new guards")
+    _expect_usage(
+        lambda: assert_interpreter_isolated(type("Flags", (), {"isolated": 0, "ignore_environment": 0, "no_user_site": 0})()),
+        "PYTHON_ISOLATION_REFUSED",
+    )
+    blocked = Path(tempfile.mkdtemp(prefix="crewai-isolated-"))
+    try:
+        code = runner_main(["--output", str(blocked)])
+        receipt = json.loads((blocked / "attempt-receipt.json").read_text(encoding="utf-8"))
+        if code != 2 or receipt["identity"]["reason"] != "PYTHON_ISOLATION_REFUSED" or receipt["execution"]["model_calls"] != 0:
+            fail("main without python -I did not refuse: %s" % receipt["identity"].get("reason"))
+    finally:
+        shutil.rmtree(blocked, ignore_errors=True)
+    parent = Path(tempfile.mkdtemp(prefix="crewai-main-"))
+    try:
+        synthetic_passing_bundle(parent)
+        collected = []
+        opened = []
+
+        def observe():
+            collected.append("binds")
+            return [{"address": "127.0.0.1", "port": 11435}]
+
+        def stub_open(request, timeout=30):
+            opened.append(getattr(request, "full_url", ""))
+            if str(opened[-1]).endswith("/api/tags"):
+                return _Body({"models": [{"name": APPROVED_MODEL, "digest": APPROVED_MODEL_DIGEST}]})
+            return _Body({"message": {"content": "local"}})
+
+        import office_v2_crewai.crew_build as crew_mod
+        import office_v2_crewai.provider as provider_mod
+        import urllib.request as urlrequest
+
+        def fake_build(provider, env, sandbox_root=SANDBOX_ROOT, harness=None, started=None, binds=None):
+            class _Crew:
+                def kickoff(self, inputs):
+                    return provider.complete("ping", env=env)
+
+            return _Crew()
+
+        original_build = crew_mod.build_crew
+        original_collect = provider_mod.collect_ollama_binds
+        original_open = urlrequest.urlopen
+        crew_mod.build_crew = fake_build
+
+        def observe_default():
+            return observe()
+
+        provider_mod.collect_ollama_binds = observe_default
+        saved_env = dict(os.environ)
+        urlrequest.urlopen = stub_open
+        os.environ.clear()
+        ready = passing_env()
+        ready["OLLAMA_NO_CLOUD"] = "1"
+        os.environ.update(ready)
+        out = parent / "out"
+        try:
+            code = runner_main(
+                ["--input", str(parent / "inputs"), "--output", str(out), "--evidence", str(parent / "evidence"),
+                 "--model-config", str(MODEL), "--sandbox", SANDBOX_ROOT],
+                flags=ISOLATED_FLAGS,
+            )
+        finally:
+            crew_mod.build_crew = original_build
+            provider_mod.collect_ollama_binds = original_collect
+            urlrequest.urlopen = original_open
+            os.environ.clear()
+            os.environ.update(saved_env)
+        receipt = json.loads((out / "attempt-receipt.json").read_text(encoding="utf-8"))
+        if not collected or not opened or receipt["execution"]["model_calls"] == 0:
+            fail("main did not observe binds before the model call: %s" % receipt["identity"].get("reason"))
+        if receipt["identity"]["reason"] == "OLLAMA_BIND_UNPROVEN":
+            fail("main refused with OLLAMA_BIND_UNPROVEN")
+        if code == 0:
+            fail("main returned success")
+    finally:
+        shutil.rmtree(parent, ignore_errors=True)
 
 
 def check_evidence_eol() -> None:
@@ -1645,6 +1876,7 @@ def main() -> int:
     check_ast()
     check_hardening()
     check_lab4()
+    check_review_mutations()
     check_evidence_eol()
     check_workflows()
     if "crewai" in sys.modules:

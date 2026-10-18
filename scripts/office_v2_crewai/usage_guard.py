@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 from office_v2_crewai.contract import (
+    APPROVED_MODEL,
     CREWAI_TOOLS_NA,
     CREWAI_VERSION,
     E3_CONDITIONS,
@@ -15,6 +16,7 @@ from office_v2_crewai.contract import (
     MCP_ADVISORY,
     MCP_INSTALLED,
     MCP_NOT_AFFECTED,
+    PUBLIC_ISSUE_PREFIX,
     PYSEC_CVE_MAP,
     TRACE_USER_BYTES,
     ZDI_FROM_REPOSITORY,
@@ -340,49 +342,117 @@ def guard_post_run(modules: dict, observe, commands: list | None = None, receipt
     return ports
 
 
-def assert_no_pythonpath(env: dict, modules: dict | None = None) -> None:
-    """Refuse PYTHONPATH and a sitecustomize that is not the interpreter's own.
+def assert_interpreter_isolated(flags=None) -> None:
+    """The pilot process must be python -I. User site and environment hooks stay off."""
+    current = sys.flags if flags is None else flags
+    if (
+        not getattr(current, "isolated", 0)
+        or not getattr(current, "ignore_environment", 0)
+        or not getattr(current, "no_user_site", 0)
+    ):
+        raise UsageRefusal("PYTHON_ISOLATION_REFUSED")
 
-    A distro sitecustomize under sys.prefix is left alone. A module with no
-    file, or a file outside that prefix, is how a PYTHONPATH hook loaded
-    chromadb.server before the runner in LAB-4 attempt 07.
-    """
-    if isinstance(env, dict):
-        value = env.get("PYTHONPATH")
-        if isinstance(value, str) and value.strip():
-            raise UsageRefusal("PYTHONPATH_REFUSED")
-    loaded = sys.modules if modules is None else modules
-    module = loaded.get("sitecustomize") if isinstance(loaded, dict) else None
-    if module is None:
-        return
-    path = getattr(module, "__file__", None)
-    if not isinstance(path, str) or not path:
-        raise UsageRefusal("SITECUSTOMIZE_REFUSED")
-    norm = path.replace("\\", "/").casefold()
-    if "/site-packages/" in norm:
-        raise UsageRefusal("SITECUSTOMIZE_REFUSED")
+
+def _env_value(env: dict, name: str):
+    for key, value in env.items():
+        if isinstance(key, str) and key.upper() == name:
+            if isinstance(value, str) and value.strip():
+                return value
+    return None
+
+
+def _prefix_bases() -> list[str]:
     bases = []
     for base in (getattr(sys, "base_prefix", ""), getattr(sys, "prefix", "")):
         if isinstance(base, str) and base:
             bases.append(base.replace("\\", "/").casefold().rstrip("/") + "/")
-    if not any(norm.startswith(base) for base in bases):
-        raise UsageRefusal("SITECUSTOMIZE_REFUSED")
+    return bases
 
 
-def assert_kickoff_cites_rows(text: str) -> None:
-    """Refuse an empty N/A table. CrewAI would still save that text as kickoff.md."""
+def _under_prefix(path: str) -> bool:
+    norm = path.replace("\\", "/").casefold()
+    return any(norm.startswith(base) for base in _prefix_bases())
+
+
+def _assert_customize(module, reason: str) -> None:
+    if module is None:
+        return
+    path = getattr(module, "__file__", None)
+    if not isinstance(path, str) or not path:
+        raise UsageRefusal(reason)
+    norm = path.replace("\\", "/").casefold()
+    if norm.endswith(".pth"):
+        raise UsageRefusal("PTH_REFUSED")
+    if "/site-packages/" in norm or not _under_prefix(path):
+        raise UsageRefusal(reason)
+
+
+def _live_pth_files() -> list[str]:
+    found = []
+    for entry in sys.path:
+        if not isinstance(entry, str) or not entry:
+            continue
+        path = Path(entry)
+        try:
+            if path.is_file() and path.suffix.lower() == ".pth" and not _under_prefix(str(path)):
+                found.append(str(path))
+            if path.is_dir():
+                found.extend(str(hit) for hit in path.glob("*.pth") if not _under_prefix(str(hit)))
+        except OSError:
+            continue
+    return found
+
+
+def assert_no_pythonpath(env: dict, modules: dict | None = None, pth_files: list | None = None) -> None:
+    """Refuse interpreter hooks that can load code before the runner's guards.
+
+    python -I is the process boundary. This still refuses PYTHONPATH,
+    PYTHONHOME, PYTHONUSERBASE, a foreign sitecustomize or usercustomize,
+    and a .pth file outside the interpreter prefix.
+    """
+    if isinstance(env, dict):
+        if _env_value(env, "PYTHONPATH") is not None:
+            raise UsageRefusal("PYTHONPATH_REFUSED")
+        if _env_value(env, "PYTHONHOME") is not None:
+            raise UsageRefusal("PYTHONHOME_REFUSED")
+        if _env_value(env, "PYTHONUSERBASE") is not None:
+            raise UsageRefusal("PYTHONUSERBASE_REFUSED")
+    loaded = sys.modules if modules is None else modules
+    if isinstance(loaded, dict):
+        _assert_customize(loaded.get("sitecustomize"), "SITECUSTOMIZE_REFUSED")
+        _assert_customize(loaded.get("usercustomize"), "USERCUSTOMIZE_REFUSED")
+    files = _live_pth_files() if pth_files is None and modules is None else (pth_files or [])
+    for path in files:
+        if not isinstance(path, str) or not path:
+            raise UsageRefusal("PTH_REFUSED")
+        if not path.replace("\\", "/").casefold().endswith(".pth") or not _under_prefix(path):
+            raise UsageRefusal("PTH_REFUSED")
+
+
+def assert_kickoff_cites_rows(text: str, rows: object = None) -> None:
+    """Require a data row whose URLs are issue URLs from the input rows."""
     if not isinstance(text, str) or not text.strip():
         raise UsageRefusal("KICKOFF_EMPTY_TABLE")
     folded = " ".join(text.split()).casefold()
     if "no rows were provided" in folded:
         raise UsageRefusal("KICKOFF_EMPTY_TABLE")
-    if _empty_na_table(text):
+    data = _table_data_rows(text)
+    if not data or _rows_are_blank(data):
         raise UsageRefusal("KICKOFF_EMPTY_TABLE")
+    allowed = _input_issue_urls(rows)
+    cited = _cited_urls(text)
+    if not cited:
+        raise UsageRefusal("KICKOFF_UNCITED_ROW")
+    for url in cited:
+        if url not in allowed or not url.startswith(PUBLIC_ISSUE_PREFIX):
+            raise UsageRefusal("KICKOFF_UNCITED_ROW")
 
 
-def _empty_na_table(text: str) -> bool:
-    allowed = {"n/a", "unknown", "na", ""}
-    data = []
+_EMPTY_CELLS = {"n/a", "unknown", "na", "none", "-", ""}
+
+
+def _table_data_rows(text: str) -> list:
+    parsed = []
     for line in text.splitlines():
         if "|" not in line:
             continue
@@ -391,14 +461,44 @@ def _empty_na_table(text: str) -> bool:
             continue
         if all(cell and set(cell) <= set("-: ") for cell in cells):
             continue
-        data.append(cells)
-    if not data:
-        return False
-    header_is_real = any(cell.casefold() not in allowed for cell in data[0])
-    body = data[1:] if header_is_real else data
-    if not body:
-        return False
-    return all(all(cell.casefold() in allowed for cell in row) for row in body)
+        parsed.append(cells)
+    if not parsed:
+        return []
+    header_is_real = any(cell.casefold() not in _EMPTY_CELLS for cell in parsed[0])
+    return parsed[1:] if header_is_real else parsed
+
+
+def _rows_are_blank(rows: list) -> bool:
+    return all(all(cell.casefold() in _EMPTY_CELLS for cell in row) for row in rows)
+
+
+def _cited_urls(text: str) -> list[str]:
+    found = []
+    for token in text.replace("|", " ").replace("(", " ").replace(")", " ").split():
+        if not token.startswith("https://") and not token.startswith("http://"):
+            continue
+        found.append(token.rstrip(".,;"))
+    return found
+
+
+def _input_issue_urls(rows: object) -> set[str]:
+    if isinstance(rows, str):
+        try:
+            document = json.loads(rows)
+        except json.JSONDecodeError as exc:
+            raise UsageRefusal("KICKOFF_UNCITED_ROW") from exc
+    elif isinstance(rows, dict):
+        document = rows
+    else:
+        raise UsageRefusal("KICKOFF_UNCITED_ROW")
+    issues = document.get("issues") if isinstance(document, dict) else None
+    if not isinstance(issues, list):
+        raise UsageRefusal("KICKOFF_UNCITED_ROW")
+    found = set()
+    for row in issues:
+        if isinstance(row, dict) and isinstance(row.get("url"), str):
+            found.add(row["url"])
+    return found
 
 
 def _as_int(value) -> int:
@@ -697,6 +797,7 @@ def enforcement_holds() -> bool:
         {**spec, "tools": ["search"]},
         {**spec, "mcps": ["server"]},
         {**spec, "crewai_tools": True},
+        {**spec, "from_repository": "x"},
     ]
     for item in bad:
         try:
@@ -731,5 +832,40 @@ def enforcement_holds() -> bool:
     try:
         assert_post_run({"chromadb": object()}, 1, [])
     except UsageRefusal as exc:
-        return str(exc) == "PILOT_LISTENER_PRESENT"
-    return False
+        if str(exc) != "PILOT_LISTENER_PRESENT":
+            return False
+    else:
+        return False
+    guards = (
+        lambda: assert_no_pythonpath({"PYTHONPATH": "D:\\evil"}),
+        lambda: assert_no_pythonpath({"PYTHONHOME": "D:\\evil"}),
+        lambda: assert_no_pythonpath({}, {"usercustomize": object()}),
+        lambda: assert_no_pythonpath({}, pth_files=["D:/evil/hook.pth"]),
+        lambda: assert_kickoff_cites_rows("| Issue | Status |\n| --- | --- |\n"),
+        lambda: assert_interpreter_isolated(type("Flags", (), {"isolated": 0, "ignore_environment": 0, "no_user_site": 0})()),
+    )
+    for guard in guards:
+        try:
+            guard()
+        except UsageRefusal:
+            continue
+        return False
+    from office_v2_crewai.provider import ProviderRefusal, assert_ollama_bind, digest_from_tags
+    try:
+        assert_ollama_bind(None)
+    except ProviderRefusal as exc:
+        if str(exc) != "OLLAMA_BIND_UNPROVEN":
+            return False
+    else:
+        return False
+    try:
+        digest_from_tags({"models": [
+            {"name": APPROVED_MODEL, "digest": "aa"},
+            {"name": APPROVED_MODEL, "digest": "bb"},
+        ]})
+    except ProviderRefusal as exc:
+        if str(exc) != "MODEL_DIGEST_MISMATCH":
+            return False
+    else:
+        return False
+    return True
