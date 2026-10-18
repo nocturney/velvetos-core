@@ -1,0 +1,65 @@
+{
+  "schema": "velvetos.office-v2.604.cp082.sealed-native-integration-receipts.v1",
+  "date": "2026-10-16",
+  "status": "PASS_REAL_ETCD_TLS_RBAC_LOCAL_GIT_SQLITE_UNKNOWN_LAB_ONLY",
+  "security_admission": "RED",
+  "test_script": "scripts/vf_office_v2_604_cp082_tls_native_git_reconcile_lab.py",
+  "test_script_sha256": "fa108cfd9bea1aec38a9e7e4c1a3e369e6ba4be94eef413ea0ec0304bb1a8eee",
+  "preexisting_dependencies": {
+    "cp081_source_sha256": "eaab28424989b4b3a7a5de58f5571d9938b21c8c17c3dfb4c5d2eaa1d73670e2",
+    "tls_rbac_identity_source_sha256": "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c",
+    "native_local_git_sqlite_source_sha256": "2bbd81c9c7f59c1b28937286d1c365ca46c0ceb9db96157859f7225e0dd6d632"
+  },
+  "environment": {
+    "machine": "MacMiniOffice2.local",
+    "guest": "existing colima velvet-qa Linux aarch64 nonroot",
+    "official_etcd_version": "3.6.15",
+    "provider": "disposable real etcd with ephemeral mTLS CA and RBAC roles",
+    "effect": "native bare local Git refs/heads/vf604-offline-local-only in temp directory",
+    "journal": "SQLite synchronous=FULL isolated scratch; no network Git remote",
+    "credentials": "no GH_TOKEN, GITHUB_TOKEN, GIT_ASKPASS, SSH_AUTH_SOCK, AWS_ACCESS_KEY_ID or GOOGLE_APPLICATION_CREDENTIALS passed"
+  },
+  "totals": {
+    "independent_fresh_provider_runs": 2,
+    "real_etcd_mtls_localgit_unknown_assertions_passed": 52,
+    "assertions_per_run": 26,
+    "distinct_provider_namespace_hashes": 2,
+    "remote_github_writes": 0,
+    "production_security_admission_gates_passed": 0
+  },
+  "proven": {
+    "real_tls_rbac_etcd_admission_to_native_local_git_cas": true,
+    "genuine_provider_revoke_prevents_pre_effect_git": true,
+    "revoke_between_git_and_readback_forces_UNKNOWN": true,
+    "sqlite_journal_unknown_persists_for_reopened_reader": true,
+    "lost_ack_before_and_after_git_cannot_auto_retry": true,
+    "DRAINING_blocks_new_effects": true
+  },
+  "not_proven": {
+    "git_sink_separate_OS_UID_in_same_integration": true,
+    "protected_core_issuer": true,
+    "remote_github_authenticated_effect": true,
+    "GitHub_ack_loss_readback": true,
+    "cross_store_atomicity": true,
+    "two_physical_host_source_execution": true,
+    "owner_Option_A_or_B_approved": true,
+    "independent_security_signoff": true,
+    "production_authority": true
+  },
+  "raw_receipts": [
+    {
+      "run_index": 1,
+      "raw_sha256": "69b9454dae17dbe0b75369250e9d5ae6811fd4538f47ecccd05203f26685910b",
+      "raw_json_with_final_lf": "{\"cross_store_atomicity_proven\": false, \"disposable_prefix_sha256\": \"6359b4444d052d792069f93544087e34327b35d2c3a0eb750a7da238826273ef\", \"durable_sqlite_unknown_reconciliation\": true, \"mid_effect_revoke_reported_unknown\": true, \"native_local_git_cas\": true, \"os_separate_sink_proven\": false, \"production_authority\": false, \"real_etcd_tls_rbac\": true, \"real_protected_core_issuer_proven\": false, \"remote_github_credentials_used\": false, \"remote_github_writes\": 0, \"scenario_count\": 26, \"scenarios\": [\"normal_real_root_committed_admission\", \"normal_real_mtls_sink_grant_visible\", \"normal_local_native_git_cas_with_durable_sqlite_readback\", \"normal_revoke_transitions_to_drain_not_release\", \"already_granted_drain_refuses_any_new_local_effect\", \"revoke-before_real_root_committed_admission\", \"revoke-before_real_mtls_sink_grant_visible\", \"revocation_committed_before_local_effect\", \"revoke_before_native_git_ref_fails_closed\", \"revoke-mid_real_root_committed_admission\", \"revoke-mid_real_mtls_sink_grant_visible\", \"post_local_git_revoke_forces_unknown_not_safe_success\", \"durable_recovery_classifies_remote_advanced_without_retry\", \"unknown_persists_and_blocks_second_request\", \"ack-after_real_root_committed_admission\", \"ack-after_real_mtls_sink_grant_visible\", \"ack_lost_after_local_git_freezes_durable_journal\", \"ack_after_reconciliation_requires_explicit_review\", \"ack_after_no_blind_retry\", \"ack_after_new_SQLite_reader_cannot_unfreeze\", \"ack-before_real_root_committed_admission\", \"ack-before_real_mtls_sink_grant_visible\", \"ack_lost_before_git_freezes_without_effect\", \"ack_before_reconciliation_requires_explicit_review\", \"ack_before_no_blind_retry\", \"ack_before_new_SQLite_reader_cannot_unfreeze\"], \"schema\": \"velvetos.office-v2.604.cp082.authenticated-local-git-unknown-lab.v1\", \"security_admission\": \"RED\", \"status\": \"PASS_REAL_ETCD_TLS_RBAC_LOCAL_GIT_SQLITE_UNKNOWN_LAB_ONLY\", \"worker_generated_source_executed\": false}\n",
+      "disposable_prefix_sha256": "6359b4444d052d792069f93544087e34327b35d2c3a0eb750a7da238826273ef",
+      "scenario_count": 26
+    },
+    {
+      "run_index": 2,
+      "raw_sha256": "620ea5727815529954506c9e5f0f2848317fd7fc3b8c2383e06c38c385706935",
+      "raw_json_with_final_lf": "{\"cross_store_atomicity_proven\": false, \"disposable_prefix_sha256\": \"a7f2e0a8ede59109f4803c4d3f56e07c205c90d609b31d9a3bfee3571fd9e5f7\", \"durable_sqlite_unknown_reconciliation\": true, \"mid_effect_revoke_reported_unknown\": true, \"native_local_git_cas\": true, \"os_separate_sink_proven\": false, \"production_authority\": false, \"real_etcd_tls_rbac\": true, \"real_protected_core_issuer_proven\": false, \"remote_github_credentials_used\": false, \"remote_github_writes\": 0, \"scenario_count\": 26, \"scenarios\": [\"normal_real_root_committed_admission\", \"normal_real_mtls_sink_grant_visible\", \"normal_local_native_git_cas_with_durable_sqlite_readback\", \"normal_revoke_transitions_to_drain_not_release\", \"already_granted_drain_refuses_any_new_local_effect\", \"revoke-before_real_root_committed_admission\", \"revoke-before_real_mtls_sink_grant_visible\", \"revocation_committed_before_local_effect\", \"revoke_before_native_git_ref_fails_closed\", \"revoke-mid_real_root_committed_admission\", \"revoke-mid_real_mtls_sink_grant_visible\", \"post_local_git_revoke_forces_unknown_not_safe_success\", \"durable_recovery_classifies_remote_advanced_without_retry\", \"unknown_persists_and_blocks_second_request\", \"ack-after_real_root_committed_admission\", \"ack-after_real_mtls_sink_grant_visible\", \"ack_lost_after_local_git_freezes_durable_journal\", \"ack_after_reconciliation_requires_explicit_review\", \"ack_after_no_blind_retry\", \"ack_after_new_SQLite_reader_cannot_unfreeze\", \"ack-before_real_root_committed_admission\", \"ack-before_real_mtls_sink_grant_visible\", \"ack_lost_before_git_freezes_without_effect\", \"ack_before_reconciliation_requires_explicit_review\", \"ack_before_no_blind_retry\", \"ack_before_new_SQLite_reader_cannot_unfreeze\"], \"schema\": \"velvetos.office-v2.604.cp082.authenticated-local-git-unknown-lab.v1\", \"security_admission\": \"RED\", \"status\": \"PASS_REAL_ETCD_TLS_RBAC_LOCAL_GIT_SQLITE_UNKNOWN_LAB_ONLY\", \"worker_generated_source_executed\": false}\n",
+      "disposable_prefix_sha256": "a7f2e0a8ede59109f4803c4d3f56e07c205c90d609b31d9a3bfee3571fd9e5f7",
+      "scenario_count": 26
+    }
+  ]
+}
