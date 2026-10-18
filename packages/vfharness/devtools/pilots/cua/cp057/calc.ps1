@@ -16,6 +16,8 @@ $TaskExe='C:\Windows\System32\schtasks.exe'
 $PSExe='C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
 $UiaReadyWaitMs=10000
 $UiaReadyPollMs=250
+$script:BoundElementName=''
+$script:BoundProcessName=''
 function Refuse([string]$reason){throw ('REFUSED_'+$reason)}
 function Identity {
  $id=[Security.Principal.WindowsIdentity]::GetCurrent()
@@ -77,6 +79,125 @@ function FindWindow {
  if($kind -eq 'foreign'){Refuse 'CALCULATOR_WINDOW_HOST_MISMATCH'}
  return $null
 }
+function Test-ContentProcess([string]$name) {
+ if(@('CalculatorApp','Calculator','calc') -contains $name){return $true}
+ return $false
+}
+function Get-ContentProcessName($el) {
+ if($null -eq $el){return ''}
+ $contentPid=0
+ try { $contentPid=[int]$el.Current.ProcessId } catch { return '' }
+ if($contentPid -le 0){return ''}
+ $proc=Get-Process -Id $contentPid -ErrorAction SilentlyContinue
+ if($null -eq $proc){return ''}
+ return [string]$proc.ProcessName
+}
+function Get-ElementClass($el) {
+ if($null -eq $el){return ''}
+ try { return [string]$el.Current.ClassName } catch { return '' }
+}
+function Remember-BoundElement($el) {
+ if($null -eq $el){return}
+ $script:BoundElementName=Get-ElementClass $el
+ $script:BoundProcessName=Get-ContentProcessName $el
+}
+function Add-CalcContentNative {
+ if('CalcContentNativeCP057' -as [type]){return}
+ $cs=@'
+using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Text;
+public static class CalcContentNativeCP057 {
+ public delegate bool EnumProc(IntPtr hwnd, IntPtr lParam);
+ static EnumProc keepAlive;
+ [DllImport("user32.dll")] public static extern bool EnumChildWindows(IntPtr parent, EnumProc callback, IntPtr lParam);
+ [DllImport("user32.dll", CharSet=CharSet.Unicode)] public static extern int GetClassName(IntPtr hwnd, StringBuilder name, int max);
+ [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr hwnd, out uint processId);
+ public static IntPtr[] Children(IntPtr parent) {
+  if(parent == IntPtr.Zero){ return new IntPtr[0]; }
+  List<IntPtr> found = new List<IntPtr>();
+  keepAlive = delegate(IntPtr hwnd, IntPtr lParam) { found.Add(hwnd); return true; };
+  EnumChildWindows(parent, keepAlive, IntPtr.Zero);
+  return found.ToArray();
+ }
+ public static string ClassOf(IntPtr hwnd) {
+  StringBuilder name = new StringBuilder(256);
+  GetClassName(hwnd, name, name.Capacity);
+  return name.ToString();
+ }
+ public static int ProcessOf(IntPtr hwnd) {
+  uint pid;
+  GetWindowThreadProcessId(hwnd, out pid);
+  return (int)pid;
+ }
+}
+'@
+ Add-Type -TypeDefinition $cs -ErrorAction Stop
+}
+function Select-ContentElement($hits) {
+ $found=@()
+ foreach($item in $hits){
+  if($null -eq $item){continue}
+  if(Test-ContentProcess (Get-ContentProcessName $item)){ $found+=$item }
+ }
+ if($found.Count -gt 1){Refuse 'CALCULATOR_CONTENT_WINDOW_AMBIGUOUS'}
+ if($found.Count -eq 1){return $found[0]}
+ return $null
+}
+function Find-UiaCoreWindow($frame) {
+ if($null -eq $frame){return $null}
+ $classCond=[System.Windows.Automation.PropertyCondition]::new(
+   [System.Windows.Automation.AutomationElement]::ClassNameProperty,'Windows.UI.Core.CoreWindow')
+ $hits=$null
+ try { $hits=$frame.FindAll([System.Windows.Automation.TreeScope]::Children,$classCond) } catch { $hits=$null }
+ $match=Select-ContentElement $hits
+ if($null -ne $match){return $match}
+ try { $hits=$frame.FindAll([System.Windows.Automation.TreeScope]::Descendants,$classCond) } catch { $hits=$null }
+ return (Select-ContentElement $hits)
+}
+function Find-Win32CoreWindow($frame) {
+ if($null -eq $frame){return $null}
+ Add-CalcContentNative
+ $parent=[IntPtr]::Zero
+ try { $parent=[IntPtr]$frame.Current.NativeWindowHandle } catch { return $null }
+ if($parent -eq [IntPtr]::Zero){return $null}
+ $children=@([CalcContentNativeCP057]::Children($parent))
+ $matched=@()
+ foreach($hwnd in $children){
+  if([CalcContentNativeCP057]::ClassOf($hwnd) -ne 'Windows.UI.Core.CoreWindow'){continue}
+  $contentPid=[CalcContentNativeCP057]::ProcessOf($hwnd)
+  $proc=Get-Process -Id $contentPid -ErrorAction SilentlyContinue
+  if($null -eq $proc){continue}
+  if(-not (Test-ContentProcess ([string]$proc.ProcessName))){continue}
+  $matched+=$hwnd
+ }
+ if($matched.Count -gt 1){Refuse 'CALCULATOR_CONTENT_WINDOW_AMBIGUOUS'}
+ if($matched.Count -ne 1){return $null}
+ return [System.Windows.Automation.AutomationElement]::FromHandle($matched[0])
+}
+function Find-CalculatorContent($frame) {
+ if($null -eq $frame){return $null}
+ if(Test-ContentProcess (Get-ContentProcessName $frame)){
+  Remember-BoundElement $frame
+  return $frame
+ }
+ $core=Find-UiaCoreWindow $frame
+ if($null -eq $core){$core=Find-Win32CoreWindow $frame}
+ if($null -eq $core){return $null}
+ Remember-BoundElement $core
+ if(-not (Test-ContentProcess ([string]$script:BoundProcessName))){Refuse 'CALCULATOR_CONTENT_PROCESS_MISMATCH'}
+ return $core
+}
+function Find-BoundRoot {
+ $frame=FindWindow
+ if($null -eq $frame){return $null}
+ return (Find-CalculatorContent $frame)
+}
+function Resolve-ContentWindow($window) {
+ if($null -ne $window -and (Test-ContentProcess (Get-ContentProcessName $window))){return $window}
+ return (Find-BoundRoot)
+}
 function FindElementOnce($window,[string]$id) {
  if($null -eq $window){return $null}
  $c=[System.Windows.Automation.PropertyCondition]::new(
@@ -87,7 +208,7 @@ function FindElement($window,[string]$id) {
  $deadline=[DateTime]::UtcNow.AddMilliseconds($UiaReadyWaitMs)
  while($true){
   if((IdleSeconds) -lt 600){Refuse 'USER_BECAME_ACTIVE'}
-  if($null -eq $window){$window=FindWindow}
+  $window=Resolve-ContentWindow $window
   if($null -eq $window){
    if([DateTime]::UtcNow -ge $deadline){Refuse 'EXPECTED_CALCULATOR_WINDOW_ABSENT'}
   } else {
@@ -96,7 +217,7 @@ function FindElement($window,[string]$id) {
    if([DateTime]::UtcNow -ge $deadline){Refuse ('CALCULATOR_ELEMENT_UNAVAILABLE_'+$id)}
   }
   Start-Sleep -Milliseconds $UiaReadyPollMs
-  $window=FindWindow
+  $window=$null
  }
 }
 function Wait-CalculatorTree {
@@ -104,16 +225,21 @@ function Wait-CalculatorTree {
  $deadline=[DateTime]::UtcNow.AddMilliseconds($UiaReadyWaitMs)
  while($true){
   if((IdleSeconds) -lt 600){Refuse 'USER_BECAME_ACTIVE'}
-  $window=FindWindow
+  $frame=FindWindow
+  $window=$null
   $missing=$null
-  if($null -ne $window){
-   foreach($id in $ids){
-    if($null -eq (FindElementOnce $window $id)){$missing=$id;break}
+  if($null -ne $frame){
+   $window=Find-CalculatorContent $frame
+   if($null -ne $window){
+    foreach($id in $ids){
+     if($null -eq (FindElementOnce $window $id)){$missing=$id;break}
+    }
+    if($null -eq $missing){return $window}
    }
-   if($null -eq $missing){return $window}
   }
   if([DateTime]::UtcNow -ge $deadline){
-   if($null -eq $window){Refuse 'CALCULATOR_WINDOW_NOT_FOUND'}
+   if($null -eq $frame){Refuse 'CALCULATOR_WINDOW_NOT_FOUND'}
+   if($null -eq $window){Refuse 'CALCULATOR_CONTENT_WINDOW_UNAVAILABLE'}
    if($null -eq $missing){$missing='CalculatorResults'}
    Refuse ('CALCULATOR_ELEMENT_UNAVAILABLE_'+$missing)
   }
@@ -121,7 +247,7 @@ function Wait-CalculatorTree {
  }
 }
 function Display {
- $window=FindWindow
+ $window=Find-BoundRoot
  $display=FindElement $window 'CalculatorResults'
  return [string]$display.Current.Name
 }
@@ -141,7 +267,7 @@ function Format-RefusalMessage([string]$raw) {
 }
 function Press([string]$id) {
  if((IdleSeconds) -lt 600){Refuse 'USER_BECAME_ACTIVE'}
- $window=FindWindow
+ $window=Find-BoundRoot
  $button=FindElement $window $id
  if($button.Current.ControlType -ne [System.Windows.Automation.ControlType]::Button){
    Refuse 'WRONG_UIA_CONTROL_TYPE'
@@ -164,6 +290,7 @@ if($Mode -eq 'Child'){
   core_signed_lease=$false;private_desktop_capture=$false
   first_result='';last_result='';failure_class='';failure_message='';refusal_code='';failure_stage=''
   calculator_window_host=''
+  bound_element='';bound_process=''
  }
  $opened=$false
  $calcWindow=$null
@@ -194,8 +321,9 @@ if($Mode -eq 'Child'){
   $rec.calculator_window_pid=[int]$calcWindow.Current.ProcessId
   $rec.calculator_window_host=Get-CalculatorHostName $calcWindow
   $calcWindow=Wait-CalculatorTree
-  $rec.calculator_window_pid=[int]$calcWindow.Current.ProcessId
-  $rec.calculator_window_host=Get-CalculatorHostName $calcWindow
+  $rec.bound_element=[string]$script:BoundElementName
+  $rec.bound_process=[string]$script:BoundProcessName
+  if(-not (Test-ContentProcess $rec.bound_process)){Refuse 'CALCULATOR_CONTENT_PROCESS_MISMATCH'}
   $rec.first_result=Display
   if($rec.first_result -notmatch '0'){Refuse 'WRONG_CALCULATOR_INITIAL_STATE'}
   foreach($step in @(
@@ -226,12 +354,21 @@ if($Mode -eq 'Child'){
   } else {
    $rec.refusal_code=''
   }
+  if(-not [string]::IsNullOrEmpty([string]$script:BoundElementName)){
+   $rec.bound_element=[string]$script:BoundElementName
+  }
+  if(-not [string]::IsNullOrEmpty([string]$script:BoundProcessName)){
+   $rec.bound_process=[string]$script:BoundProcessName
+  }
  } finally {
   if($opened){
    try {
     if($null -ne $calcWindow){
-     $wpat=$calcWindow.GetCurrentPattern([System.Windows.Automation.WindowPattern]::Pattern)
-     if($null -ne $wpat){$wpat.Close()}
+     $closeName=Get-ContentProcessName $calcWindow
+     if(Test-ContentProcess $closeName){
+      $wpat=$calcWindow.GetCurrentPattern([System.Windows.Automation.WindowPattern]::Pattern)
+      if($null -ne $wpat){$wpat.Close()}
+     }
     }
    }catch{}
    Start-Sleep -Milliseconds 250
@@ -289,6 +426,8 @@ try {
  Write-Output ('FIRST_RESULT='+$data.first_result+' LAST_RESULT='+$data.last_result)
  if($data.failure_class){Write-Output ('FAILURE_CLASS='+$data.failure_class)}
  if($data.refusal_code){Write-Output ('REFUSAL_CODE='+$data.refusal_code)}
+ if($data.bound_process){Write-Output ('BOUND_PROCESS='+$data.bound_process)}
+ if($data.bound_element){Write-Output ('BOUND_ELEMENT='+$data.bound_element)}
  Get-FileHash -LiteralPath $receipt -Algorithm SHA256 | ForEach-Object{Write-Output ('RECEIPT_SHA256='+$_.Hash)}
  $ok=($data.status -eq 'PASS_NATIVE_UIA_CALCULATOR_42_ONLY')
 } finally {
