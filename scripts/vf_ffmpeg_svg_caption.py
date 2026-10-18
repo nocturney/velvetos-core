@@ -7,8 +7,9 @@ a Hebrew caption in Rubik with the copper accent, safe-area placement,
 and an audio track with fade in/out. The SVG keeps logical text with
 direction=rtl. The pixels come from drawtext, which has no RTL base option,
 so the line is reordered to visual RTL and drawn with text_shaping=0.
-It writes an ffprobe + SHA-256 receipt and fails closed. It does not install
-packages and it does not publish.
+It writes an ffprobe + SHA-256 receipt and fails closed. An ffprobe or ffmpeg
+timeout, and any unparsable probe field, exits with an explicit FAIL reason.
+It does not install packages and it does not publish.
 """
 from __future__ import annotations
 
@@ -22,7 +23,7 @@ import sys
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, NoReturn
 from xml.sax.saxutils import escape as xml_escape
 
 BACKEND = "ffmpeg-svg-caption-composition"
@@ -111,7 +112,7 @@ def visual_order(text: str) -> str:
     return "".join(ch for ch, _level in sequence)
 
 
-def fail(message: str, code: int = 2) -> None:
+def fail(message: str, code: int = 2) -> NoReturn:
     print(f"FAIL {message}", file=sys.stderr)
     raise SystemExit(code)
 
@@ -428,12 +429,27 @@ def run_ffmpeg(args: list[str], *, timeout: int = 180) -> None:
         fail(f"command failed with exit={proc.returncode}: {args[0]}", proc.returncode or 1)
 
 
+def run_ff_tool(args: list[str], *, timeout: int, role: str) -> subprocess.CompletedProcess[str]:
+    """Run ffprobe or ffmpeg and fail closed on timeout or a start error."""
+    try:
+        return subprocess.run(args, text=True, capture_output=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        fail(f"{role} timed out after {timeout}s", 1)
+    except OSError as exc:
+        fail(f"{role} failed to start: {exc}", 1)
+
+
+def ffmpeg_version_line(ffmpeg: str) -> str:
+    version = run_ff_tool([ffmpeg, "-version"], timeout=10, role="ffmpeg")
+    return ((version.stdout or "ffmpeg").splitlines() or ["ffmpeg"])[0]
+
+
 def tool_path(name: str) -> str | None:
     return shutil.which(name)
 
 
 def filter_names(ffmpeg: str) -> set[str]:
-    proc = subprocess.run([ffmpeg, "-hide_banner", "-filters"], text=True, capture_output=True, timeout=20)
+    proc = run_ff_tool([ffmpeg, "-hide_banner", "-filters"], timeout=20, role="ffmpeg")
     names = set()
     for line in (proc.stdout or "").splitlines():
         parts = line.split()
@@ -443,7 +459,7 @@ def filter_names(ffmpeg: str) -> set[str]:
 
 
 def encoder_names(ffmpeg: str) -> set[str]:
-    proc = subprocess.run([ffmpeg, "-hide_banner", "-encoders"], text=True, capture_output=True, timeout=20)
+    proc = run_ff_tool([ffmpeg, "-hide_banner", "-encoders"], timeout=20, role="ffmpeg")
     names = set()
     for line in (proc.stdout or "").splitlines():
         parts = line.split()
@@ -529,7 +545,7 @@ def doctor() -> int:
         font = rubik_font()
     except SystemExit:
         return 1
-    build = subprocess.run([ffmpeg, "-hide_banner", "-buildconf"], text=True, capture_output=True, timeout=20)
+    build = run_ff_tool([ffmpeg, "-hide_banner", "-buildconf"], timeout=20, role="ffmpeg")
     build_text = (build.stdout or "") + "\n" + (build.stderr or "")
     if "--enable-libfribidi" not in build_text or "--enable-libharfbuzz" not in build_text:
         print("FAIL ffmpeg build missing libfribidi or libharfbuzz", file=sys.stderr)
@@ -767,43 +783,99 @@ def plan(req: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def probe_streams(probe: dict[str, Any]) -> list[dict[str, Any]]:
+    streams = probe.get("streams")
+    if streams is None:
+        return []
+    if not isinstance(streams, list) or any(not isinstance(row, dict) for row in streams):
+        fail("ffprobe streams is unparsable", 1)
+    return streams
+
+
+def probe_format(probe: dict[str, Any]) -> dict[str, Any]:
+    fmt = probe.get("format")
+    if fmt is None:
+        fail("ffprobe duration is missing", 1)
+    if not isinstance(fmt, dict):
+        fail("ffprobe format is unparsable", 1)
+    return fmt
+
+
+def probe_float(value: Any, field: str) -> float:
+    if isinstance(value, bool):
+        fail(f"ffprobe {field} is unparsable: {value!r}", 1)
+    if value is None or (isinstance(value, str) and not value.strip()):
+        fail(f"ffprobe {field} is missing", 1)
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        fail(f"ffprobe {field} is unparsable: {value!r}", 1)
+    if number != number or number in (float("inf"), float("-inf")):
+        fail(f"ffprobe {field} is unparsable: {value!r}", 1)
+    return number
+
+
+def probe_int(value: Any, field: str) -> int:
+    if isinstance(value, bool):
+        fail(f"ffprobe {field} is unparsable: {value!r}", 1)
+    if value is None or (isinstance(value, str) and not value.strip()):
+        fail(f"ffprobe {field} is missing", 1)
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float):
+        if value != value or value in (float("inf"), float("-inf")) or not value.is_integer():
+            fail(f"ffprobe {field} is unparsable: {value!r}", 1)
+        return int(value)
+    if isinstance(value, str):
+        text = value.strip()
+        try:
+            number = float(text)
+        except ValueError:
+            fail(f"ffprobe {field} is unparsable: {value!r}", 1)
+        if number != number or number in (float("inf"), float("-inf")) or not number.is_integer():
+            fail(f"ffprobe {field} is unparsable: {value!r}", 1)
+        return int(number)
+    fail(f"ffprobe {field} is unparsable: {value!r}", 1)
+
+
 def probe_media(path: Path) -> dict[str, Any]:
     ffprobe = tool_path("ffprobe")
     if not ffprobe:
         fail("ffprobe is required to verify render output", 1)
-    proc = subprocess.run(
+    proc = run_ff_tool(
         [ffprobe, "-v", "error", "-show_entries", "format=duration:stream=index,codec_type,codec_name,width,height,avg_frame_rate,sample_rate,channels", "-of", "json", str(path)],
-        text=True, capture_output=True, timeout=30,
+        timeout=30,
+        role="ffprobe",
     )
     if proc.returncode != 0:
         fail(f"ffprobe failed: {(proc.stderr or '').strip()}", 1)
     try:
-        return json.loads(proc.stdout)
+        payload = json.loads(proc.stdout)
     except json.JSONDecodeError as exc:
         fail(f"ffprobe returned invalid JSON: {exc}", 1)
+    if not isinstance(payload, dict):
+        fail("ffprobe returned invalid JSON: expected an object", 1)
+    return payload
 
 
 def audio_duration(path: Path) -> float:
     probe = probe_media(path)
-    streams = [row for row in probe.get("streams") or [] if row.get("codec_type") == "audio"]
+    streams = [row for row in probe_streams(probe) if row.get("codec_type") == "audio"]
     if not streams:
         fail(f"audio source has no audio stream: {path}", 1)
-    try:
-        return float((probe.get("format") or {}).get("duration") or 0)
-    except (TypeError, ValueError):
-        return 0.0
+    return probe_float(probe_format(probe).get("duration"), "duration")
 
 
 def verify_output(req: dict[str, Any], probe: dict[str, Any], frames: int) -> dict[str, Any]:
     info = req["compositionInfo"]
-    streams = probe.get("streams") or []
+    streams = probe_streams(probe)
     videos = [row for row in streams if row.get("codec_type") == "video"]
     audios = [row for row in streams if row.get("codec_type") == "audio"]
     if not videos:
         fail("render has no video stream", 1)
     video = videos[0]
-    width = int(video.get("width") or 0)
-    height = int(video.get("height") or 0)
+    width = probe_int(video.get("width"), "width")
+    height = probe_int(video.get("height"), "height")
     if (width, height) != (info["width"], info["height"]) or height <= width:
         fail(f"render is not portrait {info['width']}x{info['height']}: {width}x{height}", 1)
     if video.get("codec_name") != "h264":
@@ -812,10 +884,7 @@ def verify_output(req: dict[str, Any], probe: dict[str, Any], frames: int) -> di
         fail("render requires audio but ffprobe found no audio stream", 1)
     if req["audioRequired"] and audios[0].get("codec_name") != "aac":
         fail(f"render audio codec must be aac, found {audios[0].get('codec_name')}", 1)
-    try:
-        duration = float((probe.get("format") or {}).get("duration") or 0)
-    except (TypeError, ValueError):
-        duration = 0
+    duration = probe_float(probe_format(probe).get("duration"), "duration")
     expected = frames / float(info["fps"])
     if duration <= 0 or abs(duration - expected) > max(0.15, 2 / float(info["fps"])):
         fail(f"render duration {duration} does not match {expected}", 1)
@@ -927,8 +996,7 @@ def render_prepared(req: dict[str, Any], receipt_override: str | None, failover:
             fail(f"render output missing or empty: {output}", 1)
         raw_probe = probe_media(output)
         verified = verify_output(req, raw_probe, built["frames"])
-        version = subprocess.run([ffmpeg, "-version"], text=True, capture_output=True, timeout=10)
-        version_line = ((version.stdout or "ffmpeg").splitlines() or ["ffmpeg"])[0]
+        version_line = ffmpeg_version_line(ffmpeg)
         receipt: dict[str, Any] = {
             "schemaVersion": 1,
             "jobId": req["jobId"],
