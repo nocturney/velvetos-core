@@ -114,3 +114,64 @@ jobs:
       - name: Fail build on sensor error
         if: failure()
         run: echo "::error::One or more VelvetOS contract checks failed. See log above." && exit 1
+
+  # Non-blocking Windows signal. Ruleset 23284099 still requires only the
+  # Linux job's check-all status. This job publishes no commit status.
+  # pull_request and push only: machine workflow_dispatch stays on check-all.
+  # GITHUB_ACTIONS=true turns a missing ffmpeg into a video-sensor failure, so
+  # this job installs one hash-pinned full build before the suite. POSIX-only
+  # tests still print SKIP_NON_POSIX on this runner. A local host without
+  # ffmpeg still reports SKIP_ENV_MISSING_<CAP>.
+  check-all-windows:
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    runs-on: windows-latest
+    continue-on-error: true
+    timeout-minutes: 45
+    env:
+      PYTHONUTF8: "1"
+      PYTHONIOENCODING: utf-8
+    steps:
+      - name: Keep repository bytes LF
+        shell: pwsh
+        run: git config --global core.autocrlf false
+
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Install hashed sensor lock and pinned ffmpeg
+        shell: pwsh
+        run: |
+          python -m pip install --disable-pip-version-check --require-hashes -r requirements-sensors.py311.lock
+          $expected = "d760e1b3574402ed18b4865851f87d87e73965a982e6453212df8621fed1c508"
+          $zip = Join-Path $env:RUNNER_TEMP "ffmpeg-7.1.1-full_build.zip"
+          curl.exe -fsSL -o "$zip" "https://github.com/GyanD/codexffmpeg/releases/download/7.1.1/ffmpeg-7.1.1-full_build.zip"
+          $got = (Get-FileHash -Algorithm SHA256 -Path $zip).Hash.ToLowerInvariant()
+          if ($got -ne $expected) { throw "ffmpeg zip sha256 mismatch: $got" }
+          $dest = Join-Path $env:RUNNER_TEMP "ffmpeg"
+          Expand-Archive -Path $zip -DestinationPath $dest
+          $bin = Get-ChildItem -Path $dest -Recurse -Filter ffmpeg.exe | Select-Object -First 1
+          if (-not $bin) { throw "ffmpeg.exe missing from the pinned zip" }
+          Add-Content -Path $env:GITHUB_PATH -Value $bin.DirectoryName
+
+      - name: Run check-all
+        shell: pwsh
+        run: |
+          $log = Join-Path $env:RUNNER_TEMP "check-all-windows.log"
+          python scripts/check-all.py *> "$log"
+          $code = $LASTEXITCODE
+          Get-Content -Path $log
+          exit $code
+
+      # Shell steps cannot see ACTIONS_RUNTIME_TOKEN. This local action can.
+      # scripts/upload_gha_artifact.py
+      - name: Upload check-all log
+        if: always()
+        uses: ./.github/actions/upload-check-all-log
+        with:
+          path: ${{ runner.temp }}/check-all-windows.log
