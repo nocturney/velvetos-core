@@ -673,6 +673,82 @@ def check_model_redirect(provider: LocalOllamaProvider) -> None:
         provider_mod.open_loopback = original
 
 
+def check_spawn_hygiene() -> None:
+    """Basename python is this interpreter, the child env is allowlisted, and taskkill is absolute."""
+    import subprocess
+
+    import office_v2_crewai.kill_harness as kill_mod
+
+    sentinel = "VF_KILL_HARNESS_SENTINEL"
+    os.environ[sentinel] = "nope"
+    captured: list[tuple[list[str], object]] = []
+
+    class _Proc:
+        pid = 424242
+
+        def poll(self):
+            return 0
+
+        def wait(self, timeout=None):
+            return 0
+
+        def kill(self):
+            return None
+
+    def fake_popen(argv, **kwargs):
+        captured.append((list(argv), kwargs.get("env")))
+        return _Proc()
+
+    original_popen = kill_mod.subprocess.Popen
+    kill_mod.subprocess.Popen = fake_popen
+    try:
+        KillHarness().spawn(["python", "-c", "print(1)"])
+    finally:
+        kill_mod.subprocess.Popen = original_popen
+        os.environ.pop(sentinel, None)
+    if len(captured) != 1:
+        fail("python basename spawn did not run")
+    argv, env = captured[0]
+    if argv[0] != sys.executable or not os.path.isabs(argv[0]) or argv[1] != "-I":
+        fail("python basename was not pinned to this interpreter: %s" % argv)
+    if not isinstance(env, dict) or sentinel in env:
+        fail("spawn inherited the parent environment")
+    if env.get("PATH") != str(Path(sys.executable).resolve().parent):
+        fail("spawn PATH was not limited to the interpreter directory: %s" % env.get("PATH"))
+    try:
+        KillHarness().spawn(["not-a-real-tool", "run"])
+    except KillRefusal as exc:
+        if str(exc) != "SPAWN_PATH_LOOKUP_REFUSED":
+            fail("relative spawn reason %s" % exc)
+    else:
+        fail("relative executable was accepted")
+    kill_argv = kill_mod.taskkill_argv(4242)
+    if kill_argv[0] == "taskkill" or not kill_argv[0].lower().endswith("taskkill.exe"):
+        fail("taskkill is not absolute: %s" % kill_argv)
+    if "system32" not in kill_argv[0].replace("/", "\\").lower():
+        fail("taskkill is not under System32: %s" % kill_argv)
+    killed: list[tuple[list[str], object]] = []
+
+    def fake_run(argv, **kwargs):
+        killed.append((list(argv), kwargs.get("timeout")))
+        return subprocess.CompletedProcess(argv, 0)
+
+    original_run = kill_mod.subprocess.run
+    original_name = kill_mod.os.name
+    kill_mod.os.name = "nt"
+    kill_mod.subprocess.run = fake_run
+    try:
+        harness = KillHarness()
+        harness.owned.add(4242)
+        if harness.signal_pid(4242) != "KILLED":
+            fail("owned windows pid was not killed")
+    finally:
+        kill_mod.os.name = original_name
+        kill_mod.subprocess.run = original_run
+    if not killed or killed[0][0] != kill_argv or killed[0][1] != kill_mod.TASKKILL_TIMEOUT_SECONDS:
+        fail("windows kill did not use absolute taskkill with a timeout: %s" % killed)
+
+
 def check_kill() -> None:
     harness = KillHarness()
     proc = harness.spawn([sys.executable, "-c", "import time; time.sleep(30)"])
@@ -2391,6 +2467,7 @@ def main() -> int:
     check_manifest_mutation()
     check_provider()
     check_kill()
+    check_spawn_hygiene()
     check_execute()
     check_listeners()
     check_trusted_listener_binaries()

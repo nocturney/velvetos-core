@@ -9,7 +9,7 @@ through ci_skip_failure. The fake-ffmpeg capability tests still run. A render
 whose pixels do not match still fails. No network and no send.
 """
 from __future__ import annotations
-import json, os, re, shutil, subprocess, sys
+import contextlib, io, json, os, re, shutil, subprocess, sys, tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -164,7 +164,80 @@ def check_common_host(host: dict, *, host_id: str, platform: str, recovery_versi
         fail(f"{host_id} missing video-render-host role")
 
 
+def prove_subprocess_hygiene() -> None:
+    """ffprobe is an absolute pinned binary with a timeout and allowlisted env."""
+    if os.environ.get("VF_HYPERFRAMES_PROOF") == "1":
+        return
+    import vf_hyperframes as bridge
+
+    sentinel = "VF_HYPERFRAMES_PROBE_SENTINEL"
+    os.environ[sentinel] = "nope"
+    root = Path(tempfile.mkdtemp(prefix="vf-ffprobe-"))
+    original_run = bridge.subprocess.run
+    original_which = bridge.shutil.which
+    try:
+        ffprobe = root / "ffprobe"
+        ffprobe.write_text("#!/bin/sh\n", encoding="utf-8")
+        calls: list[tuple[list[str], dict]] = []
+
+        def fake_run(argv, **kwargs):
+            calls.append((list(argv), kwargs))
+            stdout = (
+                '{"streams":[{"codec_type":"video","width":9,"height":16,"codec_name":"h264"}],'
+                '"format":{"duration":"1.5"}}'
+            )
+            return subprocess.CompletedProcess(argv, 0, stdout=stdout, stderr="")
+
+        bridge.subprocess.run = fake_run
+        bridge.shutil.which = lambda name: str(ffprobe) if name == "ffprobe" else original_which(name)
+        probe = bridge.probe_output(root / "out.mp4")
+        if (probe.get("streams") or [{}])[0].get("codec_name") != "h264":
+            fail("probe did not return the pinned ffprobe JSON")
+        argv, kwargs = calls[0]
+        if argv[0] != str(ffprobe) or not Path(argv[0]).is_absolute():
+            fail("ffprobe was not pinned to an absolute path")
+        if kwargs.get("timeout") != bridge.PROBE_TIMEOUT_SECONDS:
+            fail("ffprobe timeout missing")
+        env = kwargs.get("env")
+        if not isinstance(env, dict) or sentinel in env or env.get("PATH") != str(root):
+            fail("ffprobe environment was not allowlisted")
+
+        calls.clear()
+        bridge.shutil.which = lambda name: "ffprobe"
+        with contextlib.redirect_stderr(io.StringIO()):
+            try:
+                bridge.probe_output(root / "out.mp4")
+            except SystemExit:
+                refused = True
+            else:
+                refused = False
+        if not refused:
+            fail("relative ffprobe was accepted")
+
+        calls.clear()
+        bridge.subprocess.run = fake_run
+        with contextlib.redirect_stdout(io.StringIO()):
+            bridge.run_command([str(ffprobe), "check"], root)
+        if calls[0][1].get("timeout") != bridge.COMMAND_TIMEOUT_SECONDS:
+            fail("run_command timeout missing")
+        with contextlib.redirect_stderr(io.StringIO()):
+            try:
+                bridge.run_command(["hyperframes", "check"], root)
+            except SystemExit:
+                refused_cmd = True
+            else:
+                refused_cmd = False
+        if not refused_cmd:
+            fail("relative command was accepted")
+    finally:
+        bridge.subprocess.run = original_run
+        bridge.shutil.which = original_which
+        os.environ.pop(sentinel, None)
+        shutil.rmtree(root, ignore_errors=True)
+
+
 def main() -> None:
+    prove_subprocess_hygiene()
     cfg = load(CONFIG)
     exe = cfg.get("execution") or {}
     route = cfg.get("routing") or {}
