@@ -1,21 +1,39 @@
 {
- "schema": "velvetos.competitor-provenance-alias-map.v1",
+ "schema": "velvetos.competitor-provenance-alias-map.v2",
  "issue": "nocturney/velvetos-core#595",
  "scope": "read-only; no registry edits; no triage decisions; no promotion or install",
  "inputs": [
-  "packages/vfresearch/LINKS.json (109 research links)",
-  "packages/vfe2b/catalog.json (47 picks)",
-  "packages/vfe2b/orchestrators.json (30 picks)",
-  "docs/implementation/office-v2/phase2/candidate-registry-v0.json (213 items)"
+  {
+   "path": "packages/vfresearch/LINKS.json",
+   "count": 109,
+   "role": "research_link"
+  },
+  {
+   "path": "packages/vfe2b/catalog.json",
+   "count": 47,
+   "role": "catalog_pick"
+  },
+  {
+   "path": "packages/vfe2b/orchestrators.json",
+   "count": 30,
+   "role": "orchestrator_pick"
+  },
+  {
+   "path": "docs/implementation/office-v2/phase2/candidate-registry-v0.json",
+   "count": 213,
+   "role": "registry_items"
+  }
  ],
- "matching": "exact GitHub owner/repo against registry item text (URL-bearing fields); STRONG = repo slug equals candidate_id/source_item_id/name; WEAK = repo name token appears in text only (review, not a match)",
+ "matching": "GitHub owner/repo. STRONG: repo name equals candidate_id, source_item_id or name. URL: slug appears in registry item JSON. WEAK: a distinctive repo-name token (4+ chars, not generic) appears as a whole word in registry text; review only, never a match.",
  "statusMeaning": {
-  "MATCHED_STRONG": "repo token equals a candidate id/source id/name",
-  "MATCHED_BY_URL": "owner/repo appears in exactly one registry item",
-  "AMBIGUOUS_URL": "owner/repo in several items; needs manual choice",
-  "WEAK_ONLY_REVIEW": "only a name token overlaps; not a match",
-  "NOT_FOUND_IN_REGISTRY": "no registry link found; NOT evidence that the product was lost",
-  "NON_GITHUB_ORIGIN": "origin is not a GitHub repo; needs its own alias key"
+  "MATCHED_STRONG": "exactly one registry item has the repo name as its id, source id or name",
+  "MATCHED_BY_URL": "owner/repo appears in exactly one registry item and no strong key matched",
+  "AMBIGUOUS_URL": "owner/repo appears in two or more registry items",
+  "AMBIGUOUS_STRONG": "repo name matches several registry items as id/name",
+  "WEAK_ONLY_REVIEW": "only a shared word token overlaps; not a match",
+  "NOT_FOUND_IN_REGISTRY": "no registry link found; does NOT mean the product was lost",
+  "NON_GITHUB_ORIGIN": "origin is not a GitHub repo; needs a hand-written alias key",
+  "NO_URL": "no URL in the source row"
  },
  "rows": [
   {
@@ -25,7 +43,9 @@
    "origin": "chatgpt.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -34,7 +54,9 @@
    "origin": "chatgpt.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -43,7 +65,9 @@
    "origin": "share.gemini.google",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -52,7 +76,9 @@
    "origin": "perplexity.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -61,7 +87,9 @@
    "origin": "punkpeye/awesome-mcp-servers",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -71,11 +99,21 @@
    "status": "MATCHED_BY_URL",
    "strong": [],
    "weak": [
-    "candidate-intake-deusdata-codebase-memory-mcp"
+    "candidate-letta",
+    "deferred-openclaw",
+    "incumbent-current-memory",
+    "candidate-deerflow",
+    "candidate-context-mode",
+    "candidate-octop-agent-team",
+    "candidate-isair-jarvis",
+    "candidate-gentleman-programming-gentle-ai",
+    "candidate-intake-deusdata-codebase-memory-mcp",
+    "candidate-intake-tencentcloud-octop-memory"
    ],
    "url_matches": [
     "candidate-intake-deusdata-codebase-memory-mcp"
-   ]
+   ],
+   "url_hit": true
   },
   {
    "kind": "research_link",
@@ -84,7 +122,9 @@
    "origin": "trailhq/graft",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -93,7 +133,9 @@
    "origin": "alishahryar1/free-claude-code",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -102,7 +144,9 @@
    "origin": "ashishpatel26/500-ai-agents-projects",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -111,7 +155,9 @@
    "origin": "msitarzewski/agency-agents",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -120,7 +166,9 @@
    "origin": "heyorca.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -129,7 +177,9 @@
    "origin": "postplanify.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -138,7 +188,9 @@
    "origin": "e2b-dev/awesome-ai-agents",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -147,7 +199,9 @@
    "origin": "andyrewlee/awesome-agent-orchestrators",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -156,7 +210,9 @@
    "origin": "plannotator/effective-html",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -165,7 +221,9 @@
    "origin": "3daistudio.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -174,16 +232,23 @@
    "origin": "3daistudio.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
    "label": "plannotator-write-better",
    "url": "https://github.com/plannotator/write-better",
    "origin": "plannotator/write-better",
-   "status": "NOT_FOUND_IN_REGISTRY",
+   "status": "WEAK_ONLY_REVIEW",
    "strong": [],
-   "weak": []
+   "weak": [
+    "live-google-drive-connector",
+    "candidate-infisical-agent-vault"
+   ],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -192,16 +257,24 @@
    "origin": "voltagent/awesome-design-md",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
    "label": "planning-with-files",
    "url": "https://github.com/OthmanAdi/planning-with-files",
    "origin": "othmanadi/planning-with-files",
-   "status": "NOT_FOUND_IN_REGISTRY",
+   "status": "WEAK_ONLY_REVIEW",
    "strong": [],
-   "weak": []
+   "weak": [
+    "candidate-opencode-cli",
+    "candidate-robbietilton-compositor",
+    "candidate-flashml-freevideo"
+   ],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -210,7 +283,9 @@
    "origin": "nirdiamant/genai_agents",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -219,7 +294,9 @@
    "origin": "yeachan-heo/oh-my-claudecode",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -230,7 +307,11 @@
    "strong": [
     "deferred-ruflo"
    ],
-   "weak": []
+   "weak": [],
+   "url_matches": [
+    "deferred-ruflo"
+   ],
+   "url_hit": true
   },
   {
    "kind": "research_link",
@@ -239,7 +320,9 @@
    "origin": "f/prompts.chat",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -248,7 +331,9 @@
    "origin": "leonxlnx/taste-skill",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -262,7 +347,8 @@
    ],
    "url_matches": [
     "candidate-bindu"
-   ]
+   ],
+   "url_hit": true
   },
   {
    "kind": "research_link",
@@ -276,7 +362,8 @@
    ],
    "url_matches": [
     "candidate-lobehub"
-   ]
+   ],
+   "url_hit": true
   },
   {
    "kind": "research_link",
@@ -290,7 +377,8 @@
    ],
    "url_matches": [
     "candidate-intake-huginn-huginn"
-   ]
+   ],
+   "url_hit": true
   },
   {
    "kind": "research_link",
@@ -304,7 +392,8 @@
    ],
    "url_matches": [
     "candidate-intake-superset-sh-superset"
-   ]
+   ],
+   "url_hit": true
   },
   {
    "kind": "research_link",
@@ -315,7 +404,9 @@
    "strong": [
     "candidate-twenty"
    ],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -326,22 +417,20 @@
    "strong": [
     "candidate-erpnext"
    ],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
    "label": "huly-platform",
    "url": "https://github.com/hcengineering/platform",
    "origin": "hcengineering/platform",
-   "status": "WEAK_ONLY_REVIEW",
+   "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": [
-    "candidate-infisical-agent-vault",
-    "candidate-goose-cli",
-    "candidate-context-mode",
-    "candidate-robbietilton-compositor",
-    "candidate-kilo-org-kilocode"
-   ]
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -350,7 +439,9 @@
    "origin": "monicahq/monica",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -359,7 +450,9 @@
    "origin": "nocobase/nocobase",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -368,7 +461,9 @@
    "origin": "krayin/laravel-crm",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -379,7 +474,9 @@
    "strong": [
     "candidate-akaunting"
    ],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -388,7 +485,9 @@
    "origin": "idurar/idurar-erp-crm",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -397,7 +496,9 @@
    "origin": "dolibarr/dolibarr",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -406,7 +507,9 @@
    "origin": "odoo.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -415,7 +518,9 @@
    "origin": "zoho.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -424,7 +529,9 @@
    "origin": "salesforce.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -433,7 +540,9 @@
    "origin": "netsuite.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -442,7 +551,9 @@
    "origin": "monday.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -451,7 +562,9 @@
    "origin": "xenforo.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -460,7 +573,9 @@
    "origin": "vbulletin.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -469,7 +584,9 @@
    "origin": "invisioncommunity.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -478,7 +595,9 @@
    "origin": "woltlab.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -487,7 +606,9 @@
    "origin": "buildwithclaude.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -496,7 +617,9 @@
    "origin": "linklyai/best-skills",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -505,7 +628,9 @@
    "origin": "arxiv.org",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -514,7 +639,9 @@
    "origin": "mcpmarket.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -523,16 +650,23 @@
    "origin": "mcpmarket.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
    "label": "mcpmarket-blender-mcp",
    "url": "https://github.com/ahujasid/mcp-for-blender",
    "origin": "ahujasid/mcp-for-blender",
-   "status": "NOT_FOUND_IN_REGISTRY",
+   "status": "WEAK_ONLY_REVIEW",
    "strong": [],
-   "weak": []
+   "weak": [
+    "live-creativecraft",
+    "live-blender"
+   ],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -541,7 +675,9 @@
    "origin": "mcpmarket.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -550,7 +686,9 @@
    "origin": "mcpmarket.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -559,7 +697,9 @@
    "origin": "mcpmarket.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -568,16 +708,23 @@
    "origin": "mcpmarket.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
    "label": "mcpmarket-blender-ai",
    "url": "https://github.com/ahujasid/mcp-for-blender",
    "origin": "ahujasid/mcp-for-blender",
-   "status": "NOT_FOUND_IN_REGISTRY",
+   "status": "WEAK_ONLY_REVIEW",
    "strong": [],
-   "weak": []
+   "weak": [
+    "live-creativecraft",
+    "live-blender"
+   ],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -586,7 +733,9 @@
    "origin": "mcpmarket.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -595,7 +744,9 @@
    "origin": "mcpmarket.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -604,7 +755,9 @@
    "origin": "mcpmarket.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -613,7 +766,9 @@
    "origin": "mcpmarket.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -622,7 +777,9 @@
    "origin": "mcpmarket.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -631,7 +788,9 @@
    "origin": "mcpmarket.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -640,7 +799,9 @@
    "origin": "youmind.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -649,7 +810,9 @@
    "origin": "mcpmarket.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -658,7 +821,9 @@
    "origin": "footrue.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -667,22 +832,20 @@
    "origin": "mikiarlo3/ai-copywriter",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
    "label": "social-media-skills",
    "url": "https://github.com/social-media-skills/skills",
    "origin": "social-media-skills/skills",
-   "status": "WEAK_ONLY_REVIEW",
+   "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": [
-    "candidate-skillopt",
-    "candidate-nvidia-skillevaluator",
-    "candidate-agent-skill-eval",
-    "candidate-google-skills",
-    "candidate-promptfoo"
-   ]
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -691,7 +854,9 @@
    "origin": "thekozugroup/humanizer",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -706,7 +871,8 @@
    ],
    "url_matches": [
     "candidate-intake-debpalash-voicestudio"
-   ]
+   ],
+   "url_hit": true
   },
   {
    "kind": "research_link",
@@ -715,7 +881,9 @@
    "origin": "hkuds/deeptutor",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -724,7 +892,9 @@
    "origin": "examful.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -733,7 +903,9 @@
    "origin": "larashero3-dotcom/lieflat-charts",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -742,7 +914,9 @@
    "origin": "imbad0202/academic-research-skills",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -751,7 +925,9 @@
    "origin": "mvanhorn/last30days-skill",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -760,7 +936,9 @@
    "origin": "mcpmarket.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -769,7 +947,9 @@
    "origin": "jlbadano/ig-mcp",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -779,8 +959,13 @@
    "status": "WEAK_ONLY_REVIEW",
    "strong": [],
    "weak": [
-    "live-instagram-mcp"
-   ]
+    "live-cloudflare-instagram-publisher",
+    "live-instagram-mcp",
+    "candidate-robbietilton-compositor",
+    "candidate-flashml-freevideo"
+   ],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -790,11 +975,14 @@
    "status": "MATCHED_BY_URL",
    "strong": [],
    "weak": [
+    "candidate-flashml-freevideo",
+    "candidate-nexu-io-html-video",
     "candidate-intake-charlie947-social-media-skills"
    ],
    "url_matches": [
     "candidate-intake-charlie947-social-media-skills"
-   ]
+   ],
+   "url_hit": true
   },
   {
    "kind": "research_link",
@@ -803,25 +991,39 @@
    "origin": "cporter202/automate-for-growth",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
    "label": "cporter202-social-media-scraping-apis",
    "url": "https://github.com/cporter202/social-media-scraping-apis",
    "origin": "cporter202/social-media-scraping-apis",
-   "status": "NOT_FOUND_IN_REGISTRY",
+   "status": "WEAK_ONLY_REVIEW",
    "strong": [],
-   "weak": []
+   "weak": [
+    "candidate-flashml-freevideo",
+    "candidate-nexu-io-html-video",
+    "candidate-intake-charlie947-social-media-skills"
+   ],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
    "label": "cporter202-social-growth-apis-for-creators",
    "url": "https://github.com/cporter202/social-growth-apis-for-creators",
    "origin": "cporter202/social-growth-apis-for-creators",
-   "status": "NOT_FOUND_IN_REGISTRY",
+   "status": "WEAK_ONLY_REVIEW",
    "strong": [],
-   "weak": []
+   "weak": [
+    "candidate-flashml-freevideo",
+    "candidate-nexu-io-html-video",
+    "candidate-intake-charlie947-social-media-skills"
+   ],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -830,7 +1032,9 @@
    "origin": "cporter202/api-mega-list",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -839,22 +1043,20 @@
    "origin": "mlightcad/awesome-cad",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
    "label": "scenario-labs-skills",
    "url": "https://github.com/scenario-labs/skills",
    "origin": "scenario-labs/skills",
-   "status": "WEAK_ONLY_REVIEW",
+   "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": [
-    "candidate-skillopt",
-    "candidate-nvidia-skillevaluator",
-    "candidate-agent-skill-eval",
-    "candidate-google-skills",
-    "candidate-promptfoo"
-   ]
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -863,43 +1065,63 @@
    "origin": "petergyang/no-ai-slop",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
    "label": "roble3-cc-blender-skill",
    "url": "https://github.com/RobLe3/cc-blender-skill",
    "origin": "roble3/cc-blender-skill",
-   "status": "NOT_FOUND_IN_REGISTRY",
+   "status": "WEAK_ONLY_REVIEW",
    "strong": [],
-   "weak": []
+   "weak": [
+    "live-creativecraft",
+    "live-blender"
+   ],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
    "label": "arjun988-blender-skills",
    "url": "https://github.com/arjun988/blender-skills",
    "origin": "arjun988/blender-skills",
-   "status": "NOT_FOUND_IN_REGISTRY",
+   "status": "WEAK_ONLY_REVIEW",
    "strong": [],
-   "weak": []
+   "weak": [
+    "live-creativecraft",
+    "live-blender"
+   ],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
    "label": "kajisho5-ffmpeg-skill",
    "url": "https://github.com/kajisho5/ffmpeg-skill",
    "origin": "kajisho5/ffmpeg-skill",
-   "status": "NOT_FOUND_IN_REGISTRY",
+   "status": "WEAK_ONLY_REVIEW",
    "strong": [],
-   "weak": []
+   "weak": [
+    "candidate-flashml-freevideo"
+   ],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
    "label": "samuelgursky-davinci-resolve-mcp",
    "url": "https://github.com/samuelgursky/davinci-resolve-mcp",
    "origin": "samuelgursky/davinci-resolve-mcp",
-   "status": "NOT_FOUND_IN_REGISTRY",
+   "status": "WEAK_ONLY_REVIEW",
    "strong": [],
-   "weak": []
+   "weak": [
+    "candidate-flashml-freevideo"
+   ],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -908,22 +1130,20 @@
    "origin": "aedev-tools/adobe-agent-skills",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
    "label": "jablonkai-skills",
    "url": "https://github.com/jablonkai/skills",
    "origin": "jablonkai/skills",
-   "status": "WEAK_ONLY_REVIEW",
+   "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": [
-    "candidate-skillopt",
-    "candidate-nvidia-skillevaluator",
-    "candidate-agent-skill-eval",
-    "candidate-google-skills",
-    "candidate-promptfoo"
-   ]
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -932,7 +1152,9 @@
    "origin": "trycua/cua",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -941,7 +1163,9 @@
    "origin": "trycua/acu",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -950,7 +1174,9 @@
    "origin": "enescingoz/awesome-n8n-templates",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -959,7 +1185,9 @@
    "origin": "lissy93/dashy",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -968,7 +1196,9 @@
    "origin": "agarrharr/awesome-cli-apps",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -977,7 +1207,9 @@
    "origin": "alebcay/awesome-shell",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -986,16 +1218,22 @@
    "origin": "voltagent/awesome-agent-skills",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
    "label": "awesome-openclaw-skills",
    "url": "https://github.com/VoltAgent/awesome-openclaw-skills",
    "origin": "voltagent/awesome-openclaw-skills",
-   "status": "NOT_FOUND_IN_REGISTRY",
+   "status": "WEAK_ONLY_REVIEW",
    "strong": [],
-   "weak": []
+   "weak": [
+    "deferred-openclaw"
+   ],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -1004,7 +1242,9 @@
    "origin": "hesreallyhim/awesome-claude-code",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -1013,7 +1253,9 @@
    "origin": "aishwaryanr/awesome-generative-ai-guide",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -1022,7 +1264,9 @@
    "origin": "vinta/awesome-python",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -1031,7 +1275,9 @@
    "origin": "fffaraz/awesome-cpp",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -1040,16 +1286,25 @@
    "origin": "akullpp/awesome-java",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
    "label": "awesome-design-patterns",
    "url": "https://github.com/DovAmir/awesome-design-patterns",
    "origin": "dovamir/awesome-design-patterns",
-   "status": "NOT_FOUND_IN_REGISTRY",
+   "status": "WEAK_ONLY_REVIEW",
    "strong": [],
-   "weak": []
+   "weak": [
+    "deferred-crewai",
+    "candidate-deerflow",
+    "candidate-lobehub",
+    "candidate-cobusgreyling-loop-engineering"
+   ],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -1058,7 +1313,9 @@
    "origin": "goabstract/awesome-design-tools",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "research_link",
@@ -1067,7 +1324,9 @@
    "origin": "ellisonleao/magictools",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1078,20 +1337,27 @@
    "strong": [
     "deferred-crewai"
    ],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
    "label": "AutoGen",
    "url": "https://github.com/microsoft/autogen",
    "origin": "microsoft/autogen",
-   "status": "MATCHED_STRONG",
+   "status": "AMBIGUOUS_URL",
    "strong": [
     "deferred-autogen"
    ],
    "weak": [
     "candidate-microsoft-agent-framework"
-   ]
+   ],
+   "url_matches": [
+    "candidate-microsoft-agent-framework",
+    "deferred-autogen"
+   ],
+   "url_hit": true
   },
   {
    "kind": "catalog_pick",
@@ -1100,7 +1366,9 @@
    "origin": "assafelovic/gpt-researcher",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1112,7 +1380,8 @@
    "weak": [],
    "url_matches": [
     "candidate-intake-microsoft-ufo"
-   ]
+   ],
+   "url_hit": true
   },
   {
    "kind": "catalog_pick",
@@ -1121,7 +1390,9 @@
    "origin": "aomni.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1130,7 +1401,9 @@
    "origin": "lindy.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1139,7 +1412,9 @@
    "origin": "cal.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1148,7 +1423,9 @@
    "origin": "heymoon.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1157,7 +1434,9 @@
    "origin": "floodehq.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1166,7 +1445,9 @@
    "origin": "clay.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1175,7 +1456,9 @@
    "origin": "kadoa.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1184,7 +1467,9 @@
    "origin": "docketai.net",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1193,7 +1478,9 @@
    "origin": "asktosell.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1202,7 +1489,9 @@
    "origin": "wordware.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1211,7 +1500,9 @@
    "origin": "gocharlie.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1220,7 +1511,9 @@
    "origin": "wispy.technicalmagic.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1229,7 +1522,9 @@
    "origin": "diagram.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1238,7 +1533,9 @@
    "origin": "v0.dev",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1247,7 +1544,9 @@
    "origin": "julius.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1256,7 +1555,9 @@
    "origin": "vanna.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1265,7 +1566,9 @@
    "origin": "getwren.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1274,7 +1577,9 @@
    "origin": "powerdrill.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1283,7 +1588,9 @@
    "origin": "talktodata.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1292,7 +1599,9 @@
    "origin": "cpacker/memgpt",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1301,7 +1610,9 @@
    "origin": "privategpt.io",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1310,16 +1621,23 @@
    "origin": "promtengineer/localgpt",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
    "label": "GPT Runner",
    "url": "https://github.com/nicepkg/gpt-runner",
    "origin": "nicepkg/gpt-runner",
-   "status": "NOT_FOUND_IN_REGISTRY",
+   "status": "WEAK_ONLY_REVIEW",
    "strong": [],
-   "weak": []
+   "weak": [
+    "candidate-deerflow",
+    "candidate-opencode-cli"
+   ],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1328,7 +1646,9 @@
    "origin": "zapier.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1342,7 +1662,8 @@
    ],
    "url_matches": [
     "candidate-intake-huginn-huginn"
-   ]
+   ],
+   "url_hit": true
   },
   {
    "kind": "catalog_pick",
@@ -1351,7 +1672,9 @@
    "origin": "bardeen.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1360,7 +1683,9 @@
    "origin": "gumloop.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1369,7 +1694,9 @@
    "origin": "magicloops.dev",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1378,7 +1705,9 @@
    "origin": "lutra.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1387,7 +1716,9 @@
    "origin": "manaflow.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1396,7 +1727,9 @@
    "origin": "beam.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1405,7 +1738,9 @@
    "origin": "relevanceai.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1414,7 +1749,9 @@
    "origin": "taskade.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1423,7 +1760,9 @@
    "origin": "cursor.so",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1434,7 +1773,11 @@
    "strong": [
     "deferred-orca"
    ],
-   "weak": []
+   "weak": [],
+   "url_matches": [
+    "deferred-orca"
+   ],
+   "url_hit": true
   },
   {
    "kind": "catalog_pick",
@@ -1443,7 +1786,9 @@
    "origin": "superagent.sh",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1452,7 +1797,9 @@
    "origin": "openinterpreter.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1461,7 +1808,9 @@
    "origin": "flowiseai.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1470,7 +1819,9 @@
    "origin": "agpt.co",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1479,7 +1830,9 @@
    "origin": "chathelp.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1488,7 +1841,9 @@
    "origin": "github.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1497,7 +1852,9 @@
    "origin": "graphlit.com",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "catalog_pick",
@@ -1506,7 +1863,9 @@
    "origin": "agentscale.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1517,7 +1876,11 @@
    "strong": [
     "deferred-orca"
    ],
-   "weak": []
+   "weak": [],
+   "url_matches": [
+    "deferred-orca"
+   ],
+   "url_hit": true
   },
   {
    "kind": "orchestrator_pick",
@@ -1528,7 +1891,9 @@
    "strong": [
     "candidate-herdr"
    ],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1537,7 +1902,9 @@
    "origin": "runfusion/fusion",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1546,7 +1913,9 @@
    "origin": "ikamensh/kodo",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1555,7 +1924,9 @@
    "origin": "nutthouse/tutti",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1569,7 +1940,8 @@
    ],
    "url_matches": [
     "candidate-intake-gastownhall-gastown"
-   ]
+   ],
+   "url_hit": true
   },
   {
    "kind": "orchestrator_pick",
@@ -1578,7 +1950,9 @@
    "origin": "5dive-ai/5dive",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1587,7 +1961,9 @@
    "origin": "paperclipai/paperclip",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1596,7 +1972,9 @@
    "origin": "plasma-ai/fractal",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1605,7 +1983,9 @@
    "origin": "keesan12/martin-loop",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1614,7 +1994,9 @@
    "origin": "frankbria/ralph-claude-code",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1623,7 +2005,9 @@
    "origin": "umputun/ralphex",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1632,7 +2016,9 @@
    "origin": "ldbumble/taskuary",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1643,7 +2029,9 @@
    "strong": [],
    "weak": [
     "candidate-intake-cactus-compute-needle"
-   ]
+   ],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1652,7 +2040,9 @@
    "origin": "crewplaneai/crewplane",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1661,16 +2051,26 @@
    "origin": "moshthepitt/lionclaw",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
    "label": "Open Multi-Agent",
    "url": "https://github.com/open-multi-agent/open-multi-agent",
    "origin": "open-multi-agent/open-multi-agent",
-   "status": "NOT_FOUND_IN_REGISTRY",
+   "status": "WEAK_ONLY_REVIEW",
    "strong": [],
-   "weak": []
+   "weak": [
+    "deferred-crewai",
+    "deferred-orca",
+    "candidate-selenium-grid-browser-pool",
+    "candidate-mvschwarz-openrig",
+    "candidate-browser-use-browser-use"
+   ],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1679,7 +2079,9 @@
    "origin": "razzant/claudexor",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1688,7 +2090,9 @@
    "origin": "humanlayer/humanlayer",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1697,7 +2101,9 @@
    "origin": "ivy-interactive/ivy-tendril",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1706,7 +2112,9 @@
    "origin": "francescoalemanno/dex",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1715,7 +2123,9 @@
    "origin": "julius.ai",
    "status": "NON_GITHUB_ORIGIN",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1724,7 +2134,9 @@
    "origin": "andyrewlee/amux",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1738,7 +2150,8 @@
    ],
    "url_matches": [
     "deferred-openclaw"
-   ]
+   ],
+   "url_hit": true
   },
   {
    "kind": "orchestrator_pick",
@@ -1747,7 +2160,9 @@
    "origin": "asklokesh/loki-mode",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1756,7 +2171,9 @@
    "origin": "sipyourdrink-ltd/bernstein",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1765,16 +2182,24 @@
    "origin": "banteg/takopi",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
    "label": "claude-code-action",
    "url": "https://github.com/anthropics/claude-code-action",
    "origin": "anthropics/claude-code-action",
-   "status": "NOT_FOUND_IN_REGISTRY",
+   "status": "WEAK_ONLY_REVIEW",
    "strong": [],
-   "weak": []
+   "weak": [
+    "live-adobepy",
+    "incumbent-current-authorization",
+    "candidate-dagu-worker-fleet"
+   ],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
@@ -1783,22 +2208,20 @@
    "origin": "denchhq/denchclaw",
    "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": []
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   },
   {
    "kind": "orchestrator_pick",
    "label": "Archon",
    "url": "https://github.com/coleam00/Archon",
    "origin": "coleam00/archon",
-   "status": "WEAK_ONLY_REVIEW",
+   "status": "NOT_FOUND_IN_REGISTRY",
    "strong": [],
-   "weak": [
-    "candidate-goose-cli",
-    "candidate-rakazo",
-    "candidate-hermes-agent",
-    "candidate-agent-zero",
-    "candidate-copilotkit-openbot"
-   ]
+   "weak": [],
+   "url_matches": [],
+   "url_hit": false
   }
  ]
 }
