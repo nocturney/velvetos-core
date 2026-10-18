@@ -9,12 +9,14 @@ predeclared Stage 2 shadow exit criteria.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import os
 import re
 import shutil
 import subprocess
 import sys
+import tempfile
 
 import vf_subprocess_hygiene as hygiene
 from datetime import datetime, timezone
@@ -78,6 +80,142 @@ def _expose_gh_apart_from_git(source: str, directory: Path) -> None:
     dest.chmod(dest.stat().st_mode | 0o755)
 
 
+class GhUnavailable(RuntimeError):
+    """Local gh cannot authenticate or reach GitHub."""
+
+    def __init__(self, code: str = "SKIP_GH_UNAVAILABLE") -> None:
+        super().__init__(code)
+        self.code = code
+
+
+def hosted_ci() -> bool:
+    return os.environ.get("GITHUB_ACTIONS") == "true"
+
+
+def gh_credentials_present() -> bool:
+    if (os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN") or "").strip():
+        return True
+    try:
+        proc = hygiene.run_pinned(
+            "gh",
+            ["auth", "status"],
+            cwd=ROOT,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            capture_output=True,
+            timeout=10,
+            extra_keys=hygiene.GH_CONFIG_ENV_KEYS,
+        )
+    except (hygiene.HygieneError, subprocess.TimeoutExpired, OSError):
+        return False
+    return proc.returncode == 0
+
+
+def resolve_repo_slug() -> str:
+    """Live gh repo view.
+
+    A local machine with no gh auth, or a gh call that cannot reach GitHub,
+    raises GhUnavailable. Hosted CI never skips: the same failure stays red.
+    """
+    if not hosted_ci() and not gh_credentials_present():
+        raise GhUnavailable("SKIP_GH_UNAVAILABLE")
+    try:
+        return repo_slug()
+    except (RuntimeError, subprocess.TimeoutExpired, hygiene.HygieneError, OSError) as exc:
+        if hosted_ci():
+            raise
+        raise GhUnavailable("SKIP_GH_UNAVAILABLE") from exc
+
+
+@contextlib.contextmanager
+def _without_gh_auth():
+    keys = (
+        "GH_TOKEN",
+        "GITHUB_TOKEN",
+        "GH_CONFIG_DIR",
+        "XDG_CONFIG_HOME",
+        "HOME",
+        "USERPROFILE",
+        "AppData",
+        "APPDATA",
+        "LOCALAPPDATA",
+        "GITHUB_ACTIONS",
+    )
+    previous = {key: os.environ.get(key) for key in keys}
+    empty = tempfile.mkdtemp(prefix="vf-gh-unauth-")
+    try:
+        os.environ.pop("GH_TOKEN", None)
+        os.environ.pop("GITHUB_TOKEN", None)
+        os.environ.pop("GITHUB_ACTIONS", None)
+        for key in (
+            "GH_CONFIG_DIR",
+            "XDG_CONFIG_HOME",
+            "HOME",
+            "USERPROFILE",
+            "AppData",
+            "APPDATA",
+            "LOCALAPPDATA",
+        ):
+            os.environ[key] = empty
+        yield
+    finally:
+        for key, value in previous.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+        shutil.rmtree(empty, ignore_errors=True)
+
+
+def prove_gh_unavailable_codes() -> None:
+    """Local unauthenticated or offline gh skips. Hosted CI with the same failure stays red."""
+    original_slug = repo_slug
+    original_creds = gh_credentials_present
+
+    def refuse_slug() -> str:
+        raise AssertionError("repo_slug called without credentials")
+
+    def offline_slug() -> str:
+        raise RuntimeError("connection refused")
+
+    try:
+        globals()["repo_slug"] = refuse_slug
+        globals()["gh_credentials_present"] = lambda: False
+        with _without_gh_auth():
+            try:
+                resolve_repo_slug()
+            except GhUnavailable as exc:
+                if exc.code != "SKIP_GH_UNAVAILABLE":
+                    raise AssertionError(f"local skip code {exc.code}")
+            else:
+                raise AssertionError("unauthenticated local gh must skip")
+
+        globals()["repo_slug"] = offline_slug
+        globals()["gh_credentials_present"] = lambda: True
+        with _without_gh_auth():
+            try:
+                resolve_repo_slug()
+            except GhUnavailable as exc:
+                if exc.code != "SKIP_GH_UNAVAILABLE":
+                    raise AssertionError(f"offline skip code {exc.code}")
+            else:
+                raise AssertionError("offline local gh must skip")
+            os.environ["GITHUB_ACTIONS"] = "true"
+            try:
+                resolve_repo_slug()
+            except GhUnavailable:
+                raise AssertionError("hosted CI must not skip an unavailable gh read")
+            except RuntimeError as exc:
+                if "connection refused" not in str(exc):
+                    raise
+            else:
+                raise AssertionError("hosted CI accepted an unavailable gh read")
+    finally:
+        globals()["repo_slug"] = original_slug
+        globals()["gh_credentials_present"] = original_creds
+
+
 def prove_split_gh_git_repo_slug() -> str:
     """Real gh and real git, in different directories, still resolve the slug.
 
@@ -108,12 +246,14 @@ def prove_split_gh_git_repo_slug() -> str:
                     raise AssertionError("gh and git were not placed in separate directories")
                 if not hygiene.paths_match(hygiene.executable_directory(found_git), git_dir):
                     raise AssertionError("git was not the real binary")
-                slug = repo_slug()
+                slug = resolve_repo_slug()
             finally:
                 if previous is None:
                     os.environ.pop("PATH", None)
                 else:
                     os.environ["PATH"] = previous
+        except GhUnavailable:
+            raise
         except SystemExit:
             raise
         except Exception as exc:
@@ -653,10 +793,10 @@ def self_test() -> int:
     else:
         raise AssertionError("mismatched recovery evidence must fail closed")
 
+    prove_gh_unavailable_codes()
     with hygiene.record_pinned_spawn("gh") as (calls, short):
         gh(["repo", "view", "--json", "nameWithOwner"])
     hygiene.expect_pinned(calls, short, timeout=60, keep_gh_token=True)
-    slug = prove_split_gh_git_repo_slug()
     try:
         gh(["-c", "true"])
     except RuntimeError as exc:
@@ -664,6 +804,18 @@ def self_test() -> int:
             raise
     else:
         raise AssertionError("gh flag command was accepted")
+    try:
+        slug = prove_split_gh_git_repo_slug()
+    except GhUnavailable as exc:
+        if hosted_ci():
+            sys.stderr.write("SPLIT_GH_GIT_FAIL hosted CI must prove gh\n")
+            return 1
+        print(
+            "OK sensor-shadow-observation selftest "
+            "historical_miss_retention=PASS pr_dedupe=PASS incomplete_recovery=PASS "
+            f"gh_live={exc.code}"
+        )
+        return 0
 
     print(
         "OK sensor-shadow-observation selftest "

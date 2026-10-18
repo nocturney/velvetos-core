@@ -235,8 +235,8 @@ def policy_subprocess_run(*popenargs, **kwargs):
     All non-historical subprocesses always execute normally.
     """
     command = popenargs[0] if popenargs else kwargs.get("args")
+    rendered = [str(value) for value in command] if isinstance(command, (list, tuple)) else []
     if not HISTORICAL_REPLAY_ACTIVE and isinstance(command, (list, tuple)):
-        rendered = [str(value) for value in command]
         generator = next(
             (
                 Path(value).name
@@ -265,6 +265,15 @@ def policy_subprocess_run(*popenargs, **kwargs):
                     stdout="",
                     stderr=f"historical replay fast-path has no committed receipt for {target.name}",
                 )
+    keep_token = any(
+        part.endswith("collect-sensor-shadow-observations.py") for part in rendered
+    )
+    supplied = kwargs.get("env")
+    env = dict(supplied) if isinstance(supplied, dict) else os.environ.copy()
+    if not keep_token:
+        env.pop("GH_TOKEN", None)
+        env.pop("GITHUB_TOKEN", None)
+    kwargs["env"] = env
     return _REAL_SUBPROCESS_RUN(*popenargs, **kwargs)
 
 
@@ -765,9 +774,19 @@ def validate_registries(historical_replay: bool = False) -> tuple[list[str], set
                 encoding="utf-8",
                 errors="replace",
                 capture_output=True,
-                timeout=30,
+                timeout=60,
             )
-            require(proc.returncode == 0, "sensor shadow selftest failed " + shadow_rel + ": " + (proc.stderr or proc.stdout).strip()[:500], problems)
+            detail = (proc.stderr or proc.stdout or "").strip()[:500]
+            require(proc.returncode == 0, "sensor shadow selftest failed " + shadow_rel + ": " + detail, problems)
+            if (
+                proc.returncode == 0
+                and shadow_rel.endswith("collect-sensor-shadow-observations.py")
+                and "SKIP_GH_UNAVAILABLE" in (proc.stdout or "")
+            ):
+                if os.environ.get("GITHUB_ACTIONS") == "true":
+                    require(False, "hosted CI must prove the gh read; saw SKIP_GH_UNAVAILABLE", problems)
+                else:
+                    print("SKIP_GH_UNAVAILABLE collect-sensor-shadow-observations")
 
     for prep_rel in ("scripts/check-all.py", "scripts/stage3_preflight.py"):
         prep_harness = ROOT / prep_rel

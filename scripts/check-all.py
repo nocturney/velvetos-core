@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run VelvetOS computational HQ sensors. No network. No send.
+"""Run VelvetOS computational HQ sensors. No send.
 
 Default behavior is the authoritative active regression surface (CORE + DOMAIN).
 Stage 3 uses an exact selector output with --selection for pull requests while
@@ -9,6 +9,7 @@ explicit-only unless the selector directly activates a relevant event sensor.
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import os
 import subprocess
@@ -30,6 +31,103 @@ SENSOR_REGISTRY = ROOT / "packages" / "velvetos" / "policy" / "sensor-registry.j
 SKIP = {"check-all.py"}
 REGRESSION_LIFECYCLES = {"CORE", "DOMAIN"}
 RETIRED_LIFECYCLE = "RETIRED_RECEIPT"
+# The live gh read is the shadow-observation self-test inside this sensor.
+GH_SENSORS = frozenset({"check-policy-architecture.py"})
+GITHUB_TOKEN_KEYS = ("GH_TOKEN", "GITHUB_TOKEN")
+
+
+def sensor_env_for(path: Path, base: dict[str, str]) -> dict[str, str]:
+    """Forward GH_TOKEN only to the sensor that runs a live gh read."""
+    env = dict(base)
+    if path.name not in GH_SENSORS:
+        for key in GITHUB_TOKEN_KEYS:
+            env.pop(key, None)
+    return env
+
+
+def check_all_sensor_job(workflow: str) -> str:
+    start = workflow.find("\n  check-all:\n")
+    if start < 0:
+        raise ValueError("check-all job missing")
+    rest = workflow[start + 1:]
+    end = rest.find("\n  publish-check-all-status:\n")
+    if end < 0:
+        raise ValueError("publish-check-all-status job missing")
+    return rest[:end]
+
+
+def linux_sensor_job_problems(job: str) -> list[str]:
+    """The suite job is contents: read. statuses: write stays on the publisher."""
+    problems: list[str] = []
+    code = "\n".join(line.split("#", 1)[0] for line in job.splitlines())
+    if "contents: read" not in code:
+        problems.append("check-all job must be contents: read")
+    if "statuses:" in code:
+        problems.append("check-all job must not grant statuses")
+    if "persist-credentials: false" not in job:
+        problems.append("check-all checkout must not persist credentials")
+    if "GH_TOKEN: ${{ github.token }}" not in job:
+        problems.append("check-all job must receive GH_TOKEN so the gh sensor can")
+    return problems
+
+
+def prove_token_scope() -> list[str]:
+    errors: list[str] = []
+    base = {"GH_TOKEN": "job-token", "GITHUB_TOKEN": "also", "PATH": "/usr/bin"}
+    kept = sensor_env_for(Path("scripts/check-policy-architecture.py"), base)
+    other = sensor_env_for(Path("scripts/check-hq-overlay.py"), base)
+    if kept.get("GH_TOKEN") != "job-token" or kept.get("GITHUB_TOKEN") != "also":
+        errors.append("gh sensor lost the job token")
+    if "GH_TOKEN" in other or "GITHUB_TOKEN" in other:
+        errors.append("non-gh sensor received a GitHub token")
+    if other.get("PATH") != "/usr/bin":
+        errors.append("token scope dropped unrelated environment")
+    workflow = (ROOT / ".github" / "workflows" / "check-all.yml").read_text(encoding="utf-8")
+    job = check_all_sensor_job(workflow)
+    errors.extend(linux_sensor_job_problems(job))
+    mutated = job.replace(
+        "    permissions:\n      contents: read\n",
+        "    permissions:\n      contents: read\n      statuses: write\n",
+        1,
+    )
+    if mutated == job or not any("statuses" in item for item in linux_sensor_job_problems(mutated)):
+        errors.append("statuses: write on the sensor job was not caught")
+    errors.extend(prove_policy_forwards_token_only_to_collector())
+    return errors
+
+
+def prove_policy_forwards_token_only_to_collector() -> list[str]:
+    """The policy sensor keeps GH_TOKEN only for the collector self-test."""
+    spec = importlib.util.spec_from_file_location(
+        "policy_token_scope",
+        ROOT / "scripts" / "check-policy-architecture.py",
+    )
+    if spec is None or spec.loader is None:
+        return ["policy sensor could not be loaded"]
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    code = "import os,sys; sys.exit(0 if os.environ.get('GH_TOKEN')=='job' and os.environ.get('GITHUB_TOKEN')=='job' else 3)"
+    env = os.environ.copy()
+    env["GH_TOKEN"] = "job"
+    env["GITHUB_TOKEN"] = "job"
+    denied = module.policy_subprocess_run(
+        [sys.executable, "-c", code],
+        env=env,
+        capture_output=True,
+        text=True,
+    )
+    allowed = module.policy_subprocess_run(
+        [sys.executable, "-c", code, str(ROOT / "scripts" / "collect-sensor-shadow-observations.py")],
+        env=env,
+        capture_output=True,
+        text=True,
+    )
+    errors: list[str] = []
+    if denied.returncode != 3:
+        errors.append(f"policy subprocess kept GH_TOKEN, rc={denied.returncode}")
+    if allowed.returncode != 0:
+        errors.append(f"collector child lost GH_TOKEN, rc={allowed.returncode} {allowed.stderr}")
+    return errors
 
 
 def git_dirty_state() -> dict[str, bytes] | None:
@@ -250,6 +348,11 @@ def prove_git_hygiene() -> list[str]:
 
 
 def selftest() -> int:
+    token_errors = prove_token_scope()
+    if token_errors:
+        for error in token_errors:
+            print(f"FAIL check-all token scope: {error}", file=sys.stderr)
+        return 1
     git_errors = prove_git_hygiene()
     if git_errors:
         for error in git_errors:
@@ -320,7 +423,7 @@ def selftest() -> int:
     print(
         "OK check-all selftest default=ACTIVE_FULL selected_input=EXACT "
         "always_on=REQUIRED retired=EXPLICIT_ONLY all_lifecycle=AVAILABLE fail_closed=PASS "
-        "readme_gate=LOCAL_PARITY"
+        "readme_gate=LOCAL_PARITY gh_token=SCOPED job_permissions=contents:read"
     )
     return 0
 
@@ -386,7 +489,7 @@ def main() -> int:
             text=True,
             capture_output=True,
             encoding="utf-8",
-            env=sensor_env,
+            env=sensor_env_for(path, sensor_env),
             creationflags=sensor_creationflags,
         )
         duration = round(time.perf_counter() - started, 3)
