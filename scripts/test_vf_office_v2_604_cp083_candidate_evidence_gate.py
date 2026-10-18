@@ -431,6 +431,35 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
             gate.verify(self.manifest_path)
         self.assertEqual(str(caught.exception), "CR_IN_CANONICAL_JSON")
 
+    def test_overflow_float_refused_in_guest_and_manifest(self):
+        for raw in (b'{"a":1e999}', b'{"a":-1e999}'):
+            with self.subTest(raw=raw):
+                loaded = json.loads(raw.decode())
+                self.assertTrue(loaded["a"] == float("inf") or loaded["a"] == float("-inf"))
+                with self.assertRaises(gate.Refused) as caught:
+                    gate.decode(raw)
+                self.assertEqual(str(caught.exception), "NON_FINITE_JSON")
+        guest = self.base / "run-1" / "guest.json"
+        guest_raw = guest.read_bytes()
+        overflow_guest = guest_raw[:-1] + b',"n":1e999}'
+        self.assertEqual(json.loads(overflow_guest.decode())["n"], float("inf"))
+        guest.write_bytes(overflow_guest)
+        self.manifest["runs"][0]["guest_sha256"] = sha(overflow_guest)
+        self._save_manifest()
+        with self.assertRaises(gate.Refused) as caught:
+            gate.verify(self.manifest_path)
+        self.assertEqual(str(caught.exception), "NON_FINITE_JSON")
+        guest.write_bytes(guest_raw)
+        self.manifest["runs"][0]["guest_sha256"] = sha(guest_raw)
+        self._save_manifest()
+        manifest_raw = self.manifest_path.read_bytes()
+        overflow_manifest = manifest_raw[:-1] + b',"n":-1e999}'
+        self.assertEqual(json.loads(overflow_manifest.decode())["n"], float("-inf"))
+        self.manifest_path.write_bytes(overflow_manifest)
+        with self.assertRaises(gate.Refused) as caught:
+            gate.verify(self.manifest_path)
+        self.assertEqual(str(caught.exception), "NON_FINITE_JSON")
+
 
 if __name__ == "__main__":
     unittest.main()
