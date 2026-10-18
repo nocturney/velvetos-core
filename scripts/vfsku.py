@@ -91,13 +91,13 @@ def cmd_scan(args: argparse.Namespace) -> int:
         print(
             f"סריקת MakerWorld: לא יום סריקה (ראשון/רביעי בלבד) · {today.isoformat()}\n"
             f"{shelf}\n"
-            "NC ≠ מכירה · מותג ישראלי = עצור · HQ לא שולח STL לסלייסר"
+            "כל רישיון מותר כולל מכירה · מותג ישראלי = עצור · HQ לא שולח STL לסלייסר"
         )
     else:
         print(
             f"סריקת MakerWorld: יום סריקה · בלי שם מהאוויר · {today.isoformat()}\n"
             f"{shelf} עד GATE+רישיון+סלייס\n"
-            "NC ≠ מכירה · הורדה ≠ רישיון · סלייס ברצפה בלבד · בלי ₪ מכירה"
+            "כל רישיון מותר כולל מכירה · מותג ישראלי = עצור · סלייס ברצפה בלבד · בלי ₪ מכירה"
         )
     blocked: list[str] = []
     for slot in slots:
