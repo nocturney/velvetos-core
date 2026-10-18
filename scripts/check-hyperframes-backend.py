@@ -233,19 +233,43 @@ def main() -> None:
         "FRIBIDI",
         "LIBASS",
         "GITHUB_ACTIONS",
+        "_truthy_ci",
         "ci_skip_failure",
     )
     contains(
         ROOT / "scripts" / "check-video-normalization.py",
         "normalization_gap",
         "ci_skip_failure",
+        "raise RuntimeError(blocked)",
         "SkipTest",
+    )
+    contains(
+        ROOT / "scripts" / "test_vf_ffmpeg_env.py",
+        "def classify_ci_call(",
+        "GUARD_BYPASSED",
+        "HARD_FAILURE",
+        "def test_github_actions_missing_filter_and_flag_are_hard_failures(",
+        "def test_removed_github_actions_guard_is_caught(",
+        "def test_caption_fribidi_skip_is_a_hard_failure_on_ci(",
+        "def test_removed_caption_fribidi_guard_is_caught(",
+        "def test_ci_env_truthy_values_fail_and_empty_values_skip(",
+        "def test_exact_github_actions_true_check_is_caught(",
+        "def test_removed_publication_fail_is_caught(",
+        "missing-sidedata",
+        "missing-fribidi",
+        "ffmpeg_skip_reason",
     )
     contains(
         ROOT / "scripts" / "check-publication-evidence.py",
         "publication_gap",
         "ci_skip_failure",
+        "self.fail(blocked)",
         "skipTest",
+    )
+    contains(
+        ROOT / "scripts" / "test_vf_ffmpeg_svg_caption.py",
+        "ci_skip_failure",
+        "raise RuntimeError(blocked)",
     )
     if "version mismatch: required" in bridge or re.search(r"(?m)^HYPERFRAMES_VERSION\s*=", bridge):
         fail("bridge must not exact-pin normal HyperFrames execution")
