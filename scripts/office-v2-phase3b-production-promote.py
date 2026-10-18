@@ -122,7 +122,7 @@ def exact_ci(sha: str, run: str) -> None:
         "gh",
         ["run", "view", run, "--repo", "nocturney/velvetos-core", "--json", "headSha,status,conclusion,event"],
         timeout=35,
-        extra_keys=("GH_TOKEN",),
+        extra_keys=hygiene.GH_CONFIG_ENV_KEYS,
         text=True,
         capture_output=True,
     )

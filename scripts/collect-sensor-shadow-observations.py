@@ -50,7 +50,7 @@ def gh(args: list[str], timeout: int = 60) -> str:
             errors="replace",
             capture_output=True,
             timeout=timeout,
-            extra_keys=("GH_TOKEN",),
+            extra_keys=hygiene.GH_CONFIG_ENV_KEYS,
         )
     except hygiene.HygieneError as exc:
         raise RuntimeError("gh CLI is required") from exc

@@ -271,7 +271,7 @@ def _gh_get(path: str) -> dict:
             encoding="utf-8",
             errors="replace",
             timeout=90,
-            extra_keys=("GH_TOKEN",),
+            extra_keys=hygiene.GH_CONFIG_ENV_KEYS,
         )
     except (FileNotFoundError, hygiene.HygieneError) as exc:
         raise GitHubReadError("gh CLI is not installed") from exc

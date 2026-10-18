@@ -39,6 +39,31 @@ _BASE_ENV_KEYS = (
     "LC_CTYPE",
 )
 
+# go-gh ConfigDir reads GH_CONFIG_DIR, then XDG_CONFIG_HOME, then AppData
+# on Windows (%AppData%\GitHub CLI), then $HOME/.config/gh. GITHUB_TOKEN is
+# the other auth variable. USERPROFILE is already a base key. Git and ffmpeg
+# spawns do not receive this tuple.
+GH_CONFIG_ENV_KEYS = (
+    "GH_TOKEN",
+    "GITHUB_TOKEN",
+    "GH_CONFIG_DIR",
+    "XDG_CONFIG_HOME",
+    "AppData",
+    "APPDATA",
+    "LOCALAPPDATA",
+)
+
+_USERPROFILE_FIXTURE = "C:\\Users\\RUNNER~1"
+_GH_ONLY_FIXTURES = {
+    "GH_TOKEN": "fixture-gh-token",
+    "GITHUB_TOKEN": "fixture-github-token",
+    "GH_CONFIG_DIR": "C:\\Users\\RUNNER~1\\AppData\\Roaming\\GitHub CLI",
+    "XDG_CONFIG_HOME": "/tmp/RUNNER~1/xdg",
+    "AppData": "C:\\Users\\RUNNER~1\\AppData\\Roaming",
+    "APPDATA": "C:\\Users\\RUNNER~1\\AppData\\Roaming",
+    "LOCALAPPDATA": "C:\\Users\\RUNNER~1\\AppData\\Local",
+}
+
 
 def is_absolute_executable(path: str) -> bool:
     if os.path.isabs(path):
@@ -152,13 +177,22 @@ def record_pinned_spawn(
 ) -> Iterator[tuple[list[tuple[list[str], dict]], str]]:
     """Pin `name` to a short path and record the one spawn. resolve/realpath expand it."""
     sentinel = "VF_SUBPROCESS_HYGIENE_SENTINEL"
-    tracked = (sentinel, "GIT_EXEC_PATH", "GIT_CONFIG_GLOBAL", "GIT_CONFIG_COUNT", "GH_TOKEN")
+    tracked = (
+        sentinel,
+        "GIT_EXEC_PATH",
+        "GIT_CONFIG_GLOBAL",
+        "GIT_CONFIG_COUNT",
+        "USERPROFILE",
+        *GH_CONFIG_ENV_KEYS,
+    )
     previous = {key: os.environ.get(key) for key in tracked}
     os.environ[sentinel] = "leak"
     os.environ["GIT_EXEC_PATH"] = "/tmp/evil-git-exec"
     os.environ["GIT_CONFIG_GLOBAL"] = "/tmp/evil-gitconfig"
     os.environ["GIT_CONFIG_COUNT"] = "1"
-    os.environ["GH_TOKEN"] = "fixture-gh-token"
+    os.environ["USERPROFILE"] = _USERPROFILE_FIXTURE
+    for key, value in _GH_ONLY_FIXTURES.items():
+        os.environ[key] = value
     short = (
         "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\vf-pin\\" + name + ".exe"
         if os.name == "nt"
@@ -240,10 +274,16 @@ def expect_pinned(
         raise AssertionError(f"PATH expanded a short name: {path}")
     if not paths_match(first, executable_directory(argv[0])):
         raise AssertionError(f"PATH {path} != {executable_directory(argv[0])}")
-    if keep_gh_token and env.get("GH_TOKEN") != "fixture-gh-token":
-        raise AssertionError("GH_TOKEN was dropped")
-    if not keep_gh_token and "GH_TOKEN" in env:
-        raise AssertionError("GH_TOKEN leaked into a non-gh spawn")
+    if tuple(_GH_ONLY_FIXTURES) != GH_CONFIG_ENV_KEYS:
+        raise AssertionError("gh config fixture keys drifted from GH_CONFIG_ENV_KEYS")
+    if env.get("USERPROFILE") != _USERPROFILE_FIXTURE:
+        raise AssertionError("USERPROFILE was dropped")
+    for key, value in _GH_ONLY_FIXTURES.items():
+        if keep_gh_token:
+            if env.get(key) != value:
+                raise AssertionError(f"{key} was dropped from the gh allowlist")
+        elif key in env:
+            raise AssertionError(f"{key} leaked into a non-gh spawn")
     if not paths_match(r"C:\Windows\System32", r"c:\windows\system32", os_name="nt"):
         raise AssertionError("Windows path compare is case-sensitive")
     if paths_match("/Tmp/Bin", "/tmp/bin", os_name="posix"):
