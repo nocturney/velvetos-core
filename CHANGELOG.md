@@ -6,8 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- 2026-10-18 - **ffmpeg zoompan skip:** when `ffmpeg -filters` has no zoompan filter, the caption suite records `SKIP_ENV_MISSING_ZOOMPAN` and skips on a local host. The fake-ffmpeg capability tests still run. `ci_skip_failure` turns that gap into a failure when `GITHUB_ACTIONS=true`, in both the env helper and the hyperframes sensor. CI detection in `vf_ffmpeg_env.py` is unchanged.
-
 - 2026-10-18 - **CP083 wire JSON notes:** `1e999` and `-1e999` are refused in request, ACK, guest, and manifest JSON. A byte that arrives after the first frame, and a non-string `action` or `case`, fail closed in behaviour tests. The non-POSIX candidate-import skip count is four. GAP_6 stays an expected failure. `security_admission` stays RED.
 
 - 2026-10-18 - **CrewAI E4 evidence LF bytes (issue 612 comment 6252562047):** `e4_evidence.py` writes JSON with `(json.dumps(..., sort_keys=True, indent=2) + "\n").encode("ascii")` via `write_bytes`, and writes `.reg` and `NOT_OBSERVED` the same way. The strict byte comparison against the committed E4 files stays. `.gitattributes` pins `eol=lf` for `scripts/office_v2_crewai/evidence/e4/*.json`, `*.reg`, and `e4-containment.json`. The sensor simulates Windows text-mode newline translation and fails when the emitted bytes contain CR. An LF `write_text(..., newline="\n")` still passes. Plain `write_text` does not. Evidence content and security semantics are unchanged. No model call.
