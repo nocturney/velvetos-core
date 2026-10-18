@@ -23,10 +23,14 @@ from office_v2_crewai.contract import (  # noqa: E402
     APPROVED_MODEL_DIGEST,
     APPROVED_OLLAMA_HOST,
     APPROVED_OPENAI_BASE,
+    CREWAI_TOOLS_NA,
+    MCP_NOT_AFFECTED,
     PRIVATE_REPO_NEEDLE,
+    PYSEC_CVE_MAP,
     SANDBOX_ROOT,
     TELEMETRY_FLAGS,
     TOKEN_CREDENTIALS_REL,
+    TRACE_USER_BYTES,
 )
 from office_v2_crewai.e4_evidence import (  # noqa: E402
     REQUIRED_RELS,
@@ -57,19 +61,28 @@ from office_v2_crewai.sandbox import (  # noqa: E402
     assert_no_dotenv,
     assert_proxy_env,
     assert_sandbox_env,
+    assert_sandbox_resolution,
     bind_process_sandbox,
     enter_sandbox,
 )
 from office_v2_crewai.receipt import apply_run_record, save_kickoff_output, write_receipts  # noqa: E402
 from office_v2_crewai.runner import execute, record_exception  # noqa: E402
 from office_v2_crewai.usage_guard import (  # noqa: E402
+    DRIFT_FORBIDDEN_MODULES,
+    LEFTOVER_RELS,
     UsageRefusal,
+    assert_built_crew,
     assert_crew_spec,
+    assert_dependency_drift,
+    assert_no_pilot_leftovers,
     assert_not_chroma_cli,
     assert_post_run,
+    assert_supply_chain_record,
+    assert_trace_consent,
     count_listening_sockets,
-    parse_netstat,
     module_is_forbidden,
+    parse_netstat,
+    seed_trace_consent,
 )
 
 PACKAGE = SCRIPTS / "office_v2_crewai"
@@ -540,12 +553,18 @@ def check_ast() -> None:
     saw_bind = False
     saw_cwd = False
     saw_route = False
+    saw_drift = False
+    saw_resolution = False
+    saw_consent = False
+    saw_built = False
+    imported = False
     build = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "build_crew")
     for stmt in build.body:
         if isinstance(stmt, ast.Import) and any(alias.name == "crewai" for alias in stmt.names):
-            if not (saw_bind and saw_cwd and saw_route):
-                fail("crewai is imported before the sandbox and endpoint checks")
-            break
+            if not (saw_bind and saw_cwd and saw_route and saw_drift and saw_resolution and saw_consent):
+                fail("crewai is imported before the sandbox, drift, and consent checks")
+            imported = True
+            continue
         for node in ast.walk(stmt):
             if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
                 if node.func.id == "bind_process_sandbox":
@@ -554,8 +573,20 @@ def check_ast() -> None:
                     saw_cwd = True
                 if node.func.id == "assert_llm_route":
                     saw_route = True
-    else:
+                if node.func.id == "assert_dependency_drift":
+                    saw_drift = True
+                if node.func.id == "assert_sandbox_resolution":
+                    saw_resolution = True
+                if node.func.id == "seed_trace_consent":
+                    saw_consent = True
+                if node.func.id == "assert_built_crew":
+                    if not imported:
+                        fail("built crew is checked before import")
+                    saw_built = True
+    if not imported:
         fail("build_crew does not import crewai")
+    if not saw_built:
+        fail("built crew objects are not checked")
     for forbidden in ("allow_code_execution", "CodeInterpreter", "crewai-tools"):
         if forbidden in source:
             fail("crew source contains %s" % forbidden)
@@ -569,7 +600,7 @@ def check_ast() -> None:
             fail("crew source imports crewai-tools")
     for node in agents + crews:
         for keyword in node.keywords:
-            if keyword.arg in {"knowledge", "knowledge_sources", "rag", "mcps", "mcp_servers", "embedder"}:
+            if keyword.arg in {"knowledge", "knowledge_sources", "rag", "mcps", "mcp_servers", "embedder", "from_repository"}:
                 fail("crew passes %s" % keyword.arg)
 
 
@@ -635,6 +666,10 @@ def check_sandbox_mutations() -> None:
         fail("token credentials path is not in the E4 manifest")
     if "TIKTOKEN_CACHE_DIR" in approved_environment():
         fail("TIKTOKEN_CACHE_DIR was set")
+    if "CREWAI_DISABLE_TRACING" in approved_environment() or "CREWAI_DISABLE_TRACING" in VALUE_KEYS:
+        fail("CREWAI_DISABLE_TRACING was set")
+    if "CREWAI_DISABLE_TRACING" in TELEMETRY_FLAGS:
+        fail("CREWAI_DISABLE_TRACING was set")
     for key in PATH_KEYS:
         missing = dict(env)
         del missing[key]
@@ -1114,6 +1149,151 @@ def check_run_record() -> None:
         shutil.rmtree(crashed_late, ignore_errors=True)
 
 
+class _Built:
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
+
+def _agent(**overrides):
+    data = {
+        "from_repository": None,
+        "tools": [],
+        "mcps": None,
+        "mcp_servers": None,
+        "knowledge": None,
+        "knowledge_sources": None,
+    }
+    data.update(overrides)
+    return _Built(**data)
+
+
+def _crew(**overrides):
+    data = {"memory": False, "tracing": False}
+    data.update(overrides)
+    return _Built(**data)
+
+
+def check_hardening() -> None:
+    """Comment 6250954627. Spec mutations only. No model call and no machine run."""
+    if TRACE_USER_BYTES != b'{"first_execution_done":true,"trace_consent":false}':
+        fail("trace consent bytes drifted")
+    for path in (PACKAGE / "sandbox.py", PACKAGE / "crew_build.py", PACKAGE / "runner.py", PACKAGE / "contract.py"):
+        if "CREWAI_DISABLE_TRACING" in path.read_text(encoding="utf-8"):
+            fail("CREWAI_DISABLE_TRACING is present in %s" % path.name)
+    runner_source = (PACKAGE / "runner.py").read_text(encoding="utf-8")
+    if "assert_trace_consent(" not in runner_source or "assert_no_pilot_leftovers(" not in runner_source:
+        fail("post-run consent or leftover check is missing")
+    assert_dependency_drift()
+    for name in DRIFT_FORBIDDEN_MODULES:
+        def finder(wanted, name=name):
+            if wanted == name:
+                return object()
+            return None
+        _expect_usage(lambda finder=finder: assert_dependency_drift(finder), "BLOCKED_SECURITY")
+        _expect_usage(
+            lambda name=name: assert_post_run({name: object(), "chromadb": object()}, 0, []),
+            "FORBIDDEN_MODULE_LOADED",
+        )
+        if not module_is_forbidden(name):
+            fail("%s was not a forbidden module" % name)
+    parent = Path(tempfile.mkdtemp(prefix="crewai-consent-"))
+    try:
+        storage = parent / "crewai-storage"
+        written = seed_trace_consent(storage)
+        if written.read_bytes() != TRACE_USER_BYTES:
+            fail("seeded trace consent bytes drifted")
+        assert_trace_consent(written)
+        written.unlink()
+        _expect_usage(lambda: assert_trace_consent(written), "TRACE_CONSENT_ABSENT")
+        opted_in = parent / "opt-in"
+        opted_in.mkdir()
+        consent_true = b'{"first_execution_done":true,"trace_consent":true}'
+        (opted_in / ".crewai_user.json").write_bytes(consent_true)
+        _expect_usage(lambda: assert_trace_consent(opted_in / ".crewai_user.json"), "TRACE_CONSENT_TRUE")
+        _expect_usage(lambda: seed_trace_consent(opted_in), "TRACE_CONSENT_TRUE")
+        if (opted_in / ".crewai_user.json").read_bytes() != consent_true:
+            fail("trace consent true was overwritten")
+        changed = parent / "changed"
+        changed.mkdir()
+        target = changed / ".crewai_user.json"
+        target.write_bytes(b'{"first_execution_done":true,"trace_consent":false,"extra":1}')
+        _expect_usage(lambda: assert_trace_consent(target), "TRACE_CONSENT_CHANGED")
+    finally:
+        shutil.rmtree(parent, ignore_errors=True)
+    agents = [_agent(), _agent()]
+    crew = _crew(agents=agents)
+    assert_built_crew(agents, crew)
+    _expect_usage(lambda: assert_built_crew([_agent(from_repository="x"), _agent()], _crew()), "FROM_REPOSITORY_REFUSED")
+    _expect_usage(lambda: assert_built_crew([_agent(tools=["search"])], _crew()), "TOOLS_NOT_EMPTY")
+    _expect_usage(lambda: assert_built_crew([_agent(mcps=["srv"])], _crew()), "MCP_SERVERS_REFUSED")
+    _expect_usage(lambda: assert_built_crew([_agent(knowledge=["doc"])], _crew()), "KNOWLEDGE_OR_RAG_REFUSED")
+    _expect_usage(lambda: assert_built_crew(agents, _crew(memory=True)), "MEMORY_NOT_DISABLED")
+    _expect_usage(lambda: assert_built_crew(agents, _crew(tracing=True)), "TRACING_NOT_DISABLED")
+    spec = {"memory": False, "knowledge": None, "rag": None, "tools": [], "mcps": None, "crewai_tools": False}
+    _expect_usage(lambda: assert_crew_spec({**spec, "from_repository": "x"}), "FROM_REPOSITORY_REFUSED")
+    env_keys = ("USERPROFILE", "HOME", "TEMP", "TMP")
+    snapshot = {key: os.environ.get(key) for key in env_keys}
+    try:
+        os.environ["USERPROFILE"] = SANDBOX_ROOT
+        os.environ["HOME"] = SANDBOX_ROOT
+        os.environ["TEMP"] = SANDBOX_ROOT + "\\tmp"
+        os.environ["TMP"] = SANDBOX_ROOT + "\\tmp"
+        assert_sandbox_resolution(home=SANDBOX_ROOT, temp=SANDBOX_ROOT + "\\tmp", platform="win32")
+        os.environ["USERPROFILE"] = "C:\\Users\\Public"
+        os.environ["HOME"] = SANDBOX_ROOT
+        _expect_storage(
+            lambda: assert_sandbox_resolution(home=SANDBOX_ROOT, temp=SANDBOX_ROOT + "\\tmp", platform="win32"),
+            "SANDBOX_USERPROFILE_OUTSIDE_ROOT",
+        )
+    finally:
+        for key, value in snapshot.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+    leftover_root = Path(tempfile.mkdtemp(prefix="crewai-leftover-"))
+    try:
+        assert_no_pilot_leftovers(leftover_root)
+        for rel in LEFTOVER_RELS:
+            path = leftover_root.joinpath(*rel.split("\\"))
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"leftover")
+            _expect_usage(lambda rel=rel: assert_no_pilot_leftovers(leftover_root), "LEFTOVER_FILE:" + rel)
+            path.unlink()
+        assert_no_pilot_leftovers(leftover_root)
+    finally:
+        shutil.rmtree(leftover_root, ignore_errors=True)
+    document = json.loads((EVIDENCE / "e3-supply-chain.json").read_text(encoding="ascii"))
+    assert_supply_chain_record(document)
+    if document.get("lock_sha256") != "121c1bd04eee730b51eb71e49da503b0d0236cdd06d8687a5df792234f78a669":
+        fail("E3 lock sha changed")
+    if document.get("wheel_count") != 154 or document.get("scan_status") != "RED":
+        fail("E3 lock identity changed")
+    broken = json.loads(json.dumps(document))
+    broken["cve_map"] = dict(PYSEC_CVE_MAP)
+    broken["cve_map"]["PYSEC-2026-311"] = "CVE-2026-0000"
+    _expect_usage(lambda: assert_supply_chain_record(broken), "PYSEC_CVE_MAP_MISMATCH")
+    missing_fastapi = json.loads(json.dumps(document))
+    missing_fastapi["absent_from_lock"] = []
+    _expect_usage(lambda: assert_supply_chain_record(missing_fastapi), "FASTAPI_NOT_RECORDED")
+    tools = json.loads(json.dumps(document))
+    for row in tools["not_applicable"]:
+        if row["id"] == CREWAI_TOOLS_NA[0]:
+            row["status"] = "RED"
+    _expect_usage(lambda: assert_supply_chain_record(tools), "CREWAI_TOOLS_CVE_NOT_NA")
+    affected = json.loads(json.dumps(document))
+    for row in affected["not_affected"]:
+        if row["id"] == MCP_NOT_AFFECTED[0]:
+            row["status"] = "RED"
+    _expect_usage(lambda: assert_supply_chain_record(affected), "MCP_ADVISORY_STATUS_MISMATCH")
+    keep_red = json.loads(json.dumps(document))
+    keep_red["not_affected"].append({"id": "CVE-2026-59951", "package": "mcp", "status": "NOT_AFFECTED", "version": "1.28.1"})
+    _expect_usage(lambda: assert_supply_chain_record(keep_red), "MCP_59951_NOT_RED")
+    no_zdi = json.loads(json.dumps(document))
+    no_zdi["present_in_pin"] = []
+    _expect_usage(lambda: assert_supply_chain_record(no_zdi), "ZDI_26_706_RECORD_ABSENT")
+
+
 def check_workflows() -> None:
     folder = ROOT / ".github" / "workflows"
     for path in folder.glob("*"):
@@ -1144,6 +1324,7 @@ def main() -> int:
     check_listeners()
     check_run_record()
     check_ast()
+    check_hardening()
     check_workflows()
     if "crewai" in sys.modules:
         fail("crewai was imported by the sensor")

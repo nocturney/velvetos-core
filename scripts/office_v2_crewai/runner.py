@@ -130,7 +130,15 @@ def execute(input_dir: Path, output_dir: Path, evidence_dir: Path, model_config:
         result = crew.kickoff(inputs={"issue_rows": issue_rows})
         saved = save_kickoff_output(_kickoff_text(result))
         apply_run_record(receipt, saved)
-        from office_v2_crewai.usage_guard import assert_post_run, count_listening_sockets
+        from office_v2_crewai.usage_guard import (
+            assert_no_pilot_leftovers,
+            assert_post_run,
+            assert_trace_consent,
+            count_listening_sockets,
+        )
+        root = approved_environment()["USERPROFILE"]
+        assert_trace_consent(Path(root) / "crewai-storage" / ".crewai_user.json")
+        assert_no_pilot_leftovers(root)
         assert_post_run(sys.modules, count_listening_sockets(os.getpid()), [])
     except StorageRefusal as exc:
         calls = 0 if provider is None else provider.calls

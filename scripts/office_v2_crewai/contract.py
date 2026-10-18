@@ -58,6 +58,30 @@ MCP_FIX_VERSION = "1.30.0"
 CHROMADB_INSTALLED = "1.5.9"
 RED_ADVISORIES = CHROMADB_ADVISORIES + (MCP_ADVISORY,)
 
+# Comment 6250954627. These map the red PYSEC ids already on the lock.
+# PYSEC-2026-3815 stays unmapped. The lock sha and pins do not change.
+PYSEC_CVE_MAP = {
+    "PYSEC-2026-311": "CVE-2026-45829",
+    "PYSEC-2026-3813": "CVE-2026-45830",
+    "PYSEC-2026-3814": "CVE-2026-45833",
+}
+CREWAI_TOOLS_NA = (
+    "CVE-2026-2275",
+    "CVE-2026-2285",
+    "CVE-2026-2286",
+    "CVE-2026-2287",
+)
+MCP_NOT_AFFECTED = (
+    "CVE-2026-52869",
+    "CVE-2026-59950",
+)
+ZDI_FROM_REPOSITORY = "ZDI-26-706"
+ZDI_FROM_REPOSITORY_CVE = "CVE-2026-92206"
+
+# crewai 1.15.28 writes this before the first kickoff unless it already exists.
+# Exact bytes, no trailing newline.
+TRACE_USER_BYTES = b'{"first_execution_done":true,"trace_consent":false}'
+
 PRIVATE_REPO_NEEDLE = "velvetos-velvet-factory"
 PUBLIC_REPO = "nocturney/velvetos-core"
 PUBLIC_ISSUE_PREFIX = "https://github.com/nocturney/velvetos-core/issues/"

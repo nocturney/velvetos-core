@@ -94,6 +94,38 @@ in `sys.modules`. It does not treat the `chromadb` package itself as a
 violation, because `import crewai` loads that package. The runner also
 refuses the `chroma` CLI and any pilot listening port.
 
+## Egress hardening
+
+Issue 612 comment 6250954627. The runner still does not call a model, and the
+E3 lock sha and approved versions are unchanged. `CREWAI_DISABLE_TRACING` is
+not set, because that switch does not exist in crewai 1.15.28.
+`TIKTOKEN_CACHE_DIR` stays forbidden.
+
+Before `import crewai` the runner writes
+`crewai-storage\.crewai_user.json` as
+`{"first_execution_done":true,"trace_consent":false}` and, after the run,
+requires those exact bytes. A missing file or `trace_consent: true` is a
+refusal. A changed file is a failure.
+
+It also refuses an installed `litellm`, `tiktoken`, `posthog`,
+`crewai_tools`, or `fastapi` (`BLOCKED_SECURITY`) and treats those names as
+forbidden modules after the run. The constructed agents must have
+`from_repository is None`, empty tools, and no MCP or knowledge. The crew
+must have `memory=False` and `tracing=False`. `from_repository="x"` is the
+ZDI-26-706 / CVE-2026-92206 mutation.
+
+`Path.home()` and `tempfile.gettempdir()` must resolve inside the sandbox.
+On Windows, a wrong `USERPROFILE` is a refusal even when `HOME` is the
+sandbox. After the run these files must be absent:
+`.config\crewai\settings.json`, `%TEMP%\crewai_settings.json`,
+`.\crewai_settings.json`, and `.cache\chroma\telemetry_user_id`.
+
+`e3-supply-chain.json` maps PYSEC-2026-311/3813/3814 to CVE-2026-45829,
+CVE-2026-45830 and CVE-2026-45833. `fastapi` is recorded as absent from the
+lock. crewai-tools CVE-2026-2275/2285/2286/2287 are N-A. mcp CVE-2026-52869
+and CVE-2026-59950 are not affected at 1.28.1. CVE-2026-59951 stays RED.
+ZDI-26-706 is present in the pin and unreachable.
+
 ## Lock identity
 
 The Chris lock file is `requirements-locked.txt`, sha256

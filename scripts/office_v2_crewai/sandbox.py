@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import os
+import sys
+import tempfile
 from pathlib import Path
 
 from office_v2_crewai.contract import APPROVED_OLLAMA_HOST, SANDBOX_ROOT
@@ -202,6 +204,31 @@ def assert_cwd(cwd: str, root: str = SANDBOX_ROOT) -> None:
         raise StorageRefusal("SANDBOX_CWD_NOT_ON_D")
     if not under_root(cwd, root):
         raise StorageRefusal("SANDBOX_CWD_OUTSIDE_ROOT")
+
+
+def assert_sandbox_resolution(root: str = SANDBOX_ROOT, home: str | None = None,
+                              temp: str | None = None, platform: str | None = None) -> None:
+    """Path.home() and tempfile.gettempdir() must stay inside the sandbox.
+
+    Windows Python resolves home from USERPROFILE and ignores HOME. A correct
+    HOME with a wrong USERPROFILE is a refusal. Passing home/temp skips the
+    live calls so a sensor can simulate that Windows rule.
+    """
+    profile = os.environ.get("USERPROFILE")
+    if not isinstance(profile, str) or not _same(profile, root):
+        raise StorageRefusal("SANDBOX_USERPROFILE_OUTSIDE_ROOT")
+    if home is None:
+        home = str(Path.home())
+    if not isinstance(home, str) or (not _same(home, root) and not under_root(home, root)):
+        raise StorageRefusal("SANDBOX_HOME_OUTSIDE_ROOT")
+    plat = sys.platform if platform is None else platform
+    if plat == "win32" and not _same(home, profile):
+        raise StorageRefusal("SANDBOX_HOME_OUTSIDE_ROOT")
+    if temp is None:
+        tempfile.tempdir = None
+        temp = tempfile.gettempdir()
+    if not isinstance(temp, str) or not under_root(temp, root):
+        raise StorageRefusal("SANDBOX_TEMP_OUTSIDE_ROOT")
 
 
 def bind_process_sandbox(env: dict | None = None, root: str = SANDBOX_ROOT) -> dict:

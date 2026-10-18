@@ -1,6 +1,8 @@
 """Build the two-role crew. Imported only after every gate has passed."""
 from __future__ import annotations
 
+from pathlib import Path
+
 from office_v2_crewai.contract import (
     APPROVED_MODEL,
     APPROVED_MODEL_DIGEST,
@@ -17,8 +19,13 @@ from office_v2_crewai.provider import (
     assert_llm_route,
     no_cloud_enabled,
 )
-from office_v2_crewai.sandbox import bind_process_sandbox, enter_sandbox
-from office_v2_crewai.usage_guard import assert_crew_spec
+from office_v2_crewai.sandbox import assert_sandbox_resolution, bind_process_sandbox, enter_sandbox
+from office_v2_crewai.usage_guard import (
+    assert_built_crew,
+    assert_crew_spec,
+    assert_dependency_drift,
+    seed_trace_consent,
+)
 
 
 def flags_ready(env: dict) -> bool:
@@ -56,6 +63,9 @@ def build_crew(provider: LocalOllamaProvider, env: dict):
         "ollama_host": bound_env.get("OLLAMA_HOST", APPROVED_OLLAMA_HOST),
         "is_litellm": False,
     })
+    assert_dependency_drift()
+    assert_sandbox_resolution()
+    seed_trace_consent(Path(bound_env["CREWAI_STORAGE_DIR"]))
     import crewai
 
     if getattr(crewai, "__version__", None) != CREWAI_VERSION:
@@ -121,10 +131,12 @@ def build_crew(provider: LocalOllamaProvider, env: dict):
         expected_output="Reviewed Hebrew markdown. No fabricated fields.",
         agent=reviewer,
     )
-    return crewai.Crew(
+    crew = crewai.Crew(
         agents=[triage, reviewer],
         tasks=[triage_task, review_task],
         memory=False,
         tracing=False,
         verbose=False,
     )
+    assert_built_crew([triage, reviewer], crew)
+    return crew
