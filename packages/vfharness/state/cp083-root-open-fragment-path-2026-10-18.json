@@ -1,0 +1,29 @@
+{
+  "task_id": "cp083-root-open-fragment-path-2026-10-18",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfharness",
+  "goal": "Catch a CP083 evidence-root open that drops O_DIRECTORY and O_NOFOLLOW, and a changelog gate that ignores a Windows-style scripts path.",
+  "completed_steps": [
+    "CLAIM on #612 comment 6253758723",
+    "Behavioural test refuses a symlinked evidence root and shows the O_RDONLY copy follows it",
+    "Changelog self-test fails scripts\\tool.py with no fragment"
+  ],
+  "next_step": "Independent QA. security_admission stays RED.",
+  "artifacts": [
+    "scripts/test_vf_office_v2_604_cp083_candidate_evidence_gate.py",
+    "scripts/changelog_contract.py"
+  ],
+  "unresolved": [
+    "security_admission stays RED",
+    "the evidence gate source is unchanged"
+  ],
+  "last_updated": "2026-10-18",
+  "execution_state": {
+    "claim": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6253758723",
+    "security_admission": "RED",
+    "qa_838": "https://github.com/nocturney/velvetos-core/pull/838#issuecomment-6253641352",
+    "qa_839": "https://github.com/nocturney/velvetos-core/pull/839#issuecomment-6253715079"
+  },
+  "latest_observation": "Live read_anchored refuses a symlinked root. A copy that opens that root with O_RDONLY returns the file bytes. gate([\"scripts\\\\tool.py\"]) is 1, and removing the needs_note backslash replace makes that probe fail."
+}
