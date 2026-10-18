@@ -7,8 +7,11 @@ install must be an exact pin (`name==1.2.3` or `name@1.2.3`). `npm ci`,
 Arguments of `-r` / `--requirement` are lockfile names, not package specs.
 
 Wrappers are part of the command: `sudo -H`, `env`, `bash -c` / `sh -c`,
-a subshell, `$(...)`, and `python -I -m pip`. An install-shaped command
-whose argv this sensor still cannot classify is a failure.
+a subshell, `$(...)`, and `python -I -m pip`. Flags may sit before the
+subcommand (`pip -q install`, `python -m pip -q`, `python -mpip`,
+`pip3.11`). An armed package-manager executable (`pip*`, `python -m pip`
+/ `-mpip`, `uv`/`uvx`, `pipx`, `npm`/`npx`, `pnpm`, `yarn`, `bun`) must
+be a pinned or lock install, or it is refused as unclassified.
 
 `requirements-google-clients.py311.lock` must keep the direct pins from
 `requirements-google-clients.txt`, and every lock pin must have a sha256
@@ -74,6 +77,15 @@ PNPM_VALUE_FLAGS = {"--registry", "--dir", "--filter", "--store-dir", "--config"
 NPX_VALUE_FLAGS = {"-p", "--package", "-c", "--call", "--registry", "--userconfig", "--cache", "--prefix"}
 SUDO_VALUE_FLAGS = {"-u", "-g", "-h", "-p", "-C", "-D", "--user", "--group", "--host", "--prompt", "--chdir"}
 ENV_VALUE_FLAGS = {"-u", "--unset", "-S", "--split-string", "-C", "--chdir"}
+PIP_GLOBAL_VALUE = {
+    "-i", "--index-url", "--extra-index-url", "--trusted-host",
+    "--timeout", "--retries", "--log", "--cache-dir", "--proxy",
+    "--cert", "--client-cert", "--python", "--exists-action",
+    "-f", "--find-links", "-c", "--constraint",
+    "--report", "--config-settings",
+}
+UV_GLOBAL_VALUE = {"--python", "--cache-dir", "--directory", "--project", "--no-project"}
+UNCLASSIFIED = "unclassified install command"
 SHELLS = {"bash", "sh", "dash"}
 FLOATING_GOOGLE = "pip install --quiet google-api-python-client google-auth"
 LOCK_NAME = "requirements-google-clients.py311.lock"
@@ -88,6 +100,9 @@ class InstallRules:
     yarn: bool = True
     pnpm: bool = True
     npx: bool = True
+    pip_forms: bool = True
+    npm_aliases: bool = True
+    bun: bool = True
     lock_versions: bool = True
     lock_hashes: bool = True
 
@@ -414,29 +429,81 @@ def package_tokens(args: list[str], value_flags: set[str]) -> list[str]:
     return tokens
 
 
-def pip_args_of(argv: list[str], rules: InstallRules) -> list[str] | None:
-    if not argv:
+def is_versioned_pip(base: str) -> bool:
+    return re.fullmatch(r"pip\d+(?:\.\d+)+", base) is not None
+
+
+def is_pip_executable(base: str) -> bool:
+    return base in {"pip", "pip3"} or is_versioned_pip(base)
+
+
+def skip_options(args: list[str], value_flags: set[str]) -> int:
+    """Index of the first token that is not a leading option."""
+    index = 0
+    while index < len(args) and args[index].startswith("-"):
+        token = args[index]
+        flag = token.split("=", 1)[0]
+        index += 1
+        if "=" not in token and flag in value_flags and index < len(args):
+            index += 1
+    return index
+
+
+def unclassified(path: str) -> list[str]:
+    return [f"{path} {UNCLASSIFIED}"]
+
+
+def python_pip_tail(argv: list[str], rules: InstallRules) -> list[str] | None:
+    """Arguments after `python -m pip` or `python -mpip`. None when this is not pip."""
+    if not argv or not is_python(argv[0]):
         return None
-    if _base(argv[0]) in {"pip", "pip3"}:
-        return argv[1:]
-    if not is_python(argv[0]):
-        return None
-    if not rules.wrappers:
+    if not rules.wrappers and not rules.pip_forms:
         if len(argv) >= 3 and argv[1] == "-m" and argv[2] == "pip":
             return argv[3:]
         return None
     index = 1
-    while index < len(argv) and argv[index].startswith("-") and argv[index] != "-m":
+    while index < len(argv):
         token = argv[index]
-        flag = token.split("=", 1)[0]
-        index += 1
-        if flag == "-c" and "=" not in token:
+        if rules.pip_forms and token in {"-mpip", "-m=pip"}:
+            return argv[index + 1:]
+        if token == "-m":
+            if index + 1 < len(argv) and _base(argv[index + 1]) == "pip":
+                return argv[index + 2:]
             return None
-        if flag in {"-X", "-W"} and "=" not in token and index < len(argv):
+        if not token.startswith("-"):
+            return None
+        flag = token.split("=", 1)[0]
+        if flag in {"-c", "-m"}:
+            return None
+        if flag == "-I" and not rules.wrappers:
+            return None
+        if flag in {"-X", "-W"} and "=" not in token:
+            index += 2
+            continue
+        if rules.wrappers or flag in {"-q", "-v", "-E", "-s", "-S", "-B", "-O", "-OO", "-u", "-b"}:
             index += 1
-    if index + 1 < len(argv) and argv[index] == "-m" and argv[index + 1] == "pip":
-        return argv[index + 2:]
+            continue
+        return None
     return None
+
+
+def classify_pip_tail(
+    tail: list[str],
+    *,
+    path: str,
+    allowlist: frozenset[str],
+    forms: bool,
+) -> list[str] | None:
+    if not forms:
+        if not tail or tail[0] != "install":
+            return None
+        return pip_spec_problems(package_tokens(tail[1:], PIP_VALUE_FLAGS), path=path, allowlist=allowlist)
+    index = skip_options(tail, PIP_GLOBAL_VALUE)
+    if index >= len(tail) or tail[index] != "install":
+        return unclassified(path)
+    return pip_spec_problems(
+        package_tokens(tail[index + 1:], PIP_VALUE_FLAGS), path=path, allowlist=allowlist
+    )
 
 
 def pip_spec_problems(tokens: list[str], *, path: str, allowlist: frozenset[str]) -> list[str]:
@@ -457,54 +524,191 @@ def npm_spec_problems(tokens: list[str], *, path: str, allowlist: frozenset[str]
     return problems
 
 
-def pip_install_problems(pip_args: list[str], *, path: str, allowlist: frozenset[str]) -> list[str]:
-    if not pip_args or pip_args[0] != "install":
-        return []
-    return pip_spec_problems(package_tokens(pip_args[1:], PIP_VALUE_FLAGS), path=path, allowlist=allowlist)
-
-
-def npm_problems(argv: list[str], *, path: str, allowlist: frozenset[str]) -> list[str] | None:
-    if not argv or _base(argv[0]) != "npm" or len(argv) < 2 or argv[1] not in {"install", "i", "ci"}:
-        return None
-    kind = argv[1]
-    tokens = package_tokens(argv[2:], NPM_VALUE_FLAGS)
-    if kind == "ci" and not tokens:
-        return []
-    if kind in {"install", "i"} and not tokens:
-        return [f"{path} npm install has no exact package spec"]
-    return npm_spec_problems(tokens, path=path, allowlist=allowlist)
-
-
-def uv_problems(argv: list[str], *, path: str, allowlist: frozenset[str]) -> list[str] | None:
-    if len(argv) >= 3 and argv[1] == "pip" and argv[2] == "install":
-        return pip_spec_problems(package_tokens(argv[3:], PIP_VALUE_FLAGS), path=path, allowlist=allowlist)
-    if len(argv) >= 2 and argv[1] == "add":
-        tokens = package_tokens(argv[2:], UV_ADD_VALUE_FLAGS)
-        if not tokens:
-            return [f"{path} uv add has no exact package spec"]
-        return pip_spec_problems(tokens, path=path, allowlist=allowlist)
-    return None
-
-
-def tool_add_problems(
-    argv: list[str],
+def spec_from_runner(
+    args: list[str],
     *,
-    tool: str,
     path: str,
     allowlist: frozenset[str],
     value_flags: set[str],
-    install_word: str,
-) -> list[str] | None:
-    if len(argv) < 2 or argv[1] not in {install_word, "install"}:
+    spec_flags: set[str],
+    kind: str,
+) -> list[str]:
+    specs: list[str] = []
+    index = 0
+    while index < len(args):
+        token = args[index]
+        if token.startswith("--") and "=" in token:
+            flag, value = token.split("=", 1)
+            if flag in spec_flags:
+                specs.append(value)
+            index += 1
+            continue
+        flag = token.split("=", 1)[0]
+        if token.startswith("-"):
+            if flag in spec_flags and "=" not in token and index + 1 < len(args):
+                specs.append(args[index + 1])
+                index += 2
+                continue
+            if "=" not in token and flag in value_flags and index + 1 < len(args):
+                index += 2
+                continue
+            index += 1
+            continue
+        if not specs:
+            specs.append(token)
+        break
+    if not specs:
+        return unclassified(path)
+    if kind == "pip":
+        return pip_spec_problems(specs, path=path, allowlist=allowlist)
+    return npm_spec_problems(specs, path=path, allowlist=allowlist)
+
+
+def npm_problems(argv: list[str], *, path: str, allowlist: frozenset[str], aliases: bool) -> list[str] | None:
+    if not argv or _base(argv[0]) != "npm":
         return None
-    tokens = package_tokens(argv[2:], value_flags)
-    if argv[1] == "install" and not tokens:
+    args = argv[1:]
+    index = skip_options(args, NPM_VALUE_FLAGS)
+    if index >= len(args):
+        return unclassified(path) if aliases else None
+    kind = args[index]
+    tokens = package_tokens(args[index + 1:], NPM_VALUE_FLAGS)
+    if kind == "ci" and not tokens:
         return []
-    if not tokens:
-        return [f"{path} {tool} {argv[1]} has no exact package spec"]
-    if tool in {"yarn", "pnpm"}:
+    if kind in {"install", "i"}:
+        if not tokens:
+            return [f"{path} npm install has no exact package spec"]
         return npm_spec_problems(tokens, path=path, allowlist=allowlist)
-    return pip_spec_problems(tokens, path=path, allowlist=allowlist)
+    if kind == "add":
+        if not aliases:
+            return None
+        if not tokens:
+            return [f"{path} npm add has no exact package spec"]
+        return npm_spec_problems(tokens, path=path, allowlist=allowlist)
+    if kind == "exec":
+        if not aliases:
+            return None
+        return spec_from_runner(
+            args[index + 1:], path=path, allowlist=allowlist,
+            value_flags=NPM_VALUE_FLAGS, spec_flags={"--package"}, kind="npm",
+        )
+    return unclassified(path) if aliases else None
+
+
+def uv_problems(argv: list[str], *, path: str, allowlist: frozenset[str]) -> list[str]:
+    if _base(argv[0]) == "uvx":
+        return spec_from_runner(
+            argv[1:], path=path, allowlist=allowlist,
+            value_flags=UV_GLOBAL_VALUE, spec_flags={"--from"}, kind="pip",
+        )
+    args = argv[1:]
+    index = skip_options(args, UV_GLOBAL_VALUE)
+    if index >= len(args):
+        return unclassified(path)
+    sub = args[index]
+    rest = args[index + 1:]
+    if sub == "pip":
+        nested = skip_options(rest, PIP_GLOBAL_VALUE)
+        if nested < len(rest) and rest[nested] == "install":
+            return pip_spec_problems(
+                package_tokens(rest[nested + 1:], PIP_VALUE_FLAGS), path=path, allowlist=allowlist
+            )
+        return unclassified(path)
+    if sub == "add":
+        tokens = package_tokens(rest, UV_ADD_VALUE_FLAGS)
+        if not tokens:
+            return [f"{path} uv add has no exact package spec"]
+        return pip_spec_problems(tokens, path=path, allowlist=allowlist)
+    if sub == "tool":
+        nested = skip_options(rest, UV_ADD_VALUE_FLAGS)
+        if nested < len(rest) and rest[nested] == "install":
+            tokens = package_tokens(rest[nested + 1:], UV_ADD_VALUE_FLAGS)
+            if not tokens:
+                return unclassified(path)
+            return pip_spec_problems(tokens, path=path, allowlist=allowlist)
+        return unclassified(path)
+    if sub == "run":
+        return spec_from_runner(
+            rest, path=path, allowlist=allowlist,
+            value_flags=UV_GLOBAL_VALUE, spec_flags={"--with"}, kind="pip",
+        )
+    return unclassified(path)
+
+
+def yarn_problems(argv: list[str], *, path: str, allowlist: frozenset[str]) -> list[str]:
+    args = argv[1:]
+    index = skip_options(args, YARN_VALUE_FLAGS)
+    if index < len(args) and args[index] == "global":
+        index += 1
+        index += skip_options(args[index:], YARN_VALUE_FLAGS)
+    if index >= len(args):
+        return unclassified(path)
+    sub = args[index]
+    tokens = package_tokens(args[index + 1:], YARN_VALUE_FLAGS)
+    if sub == "install" and not tokens:
+        return []
+    if sub in {"add", "dlx"}:
+        if not tokens:
+            return [f"{path} yarn {sub} has no exact package spec"]
+        return npm_spec_problems(tokens, path=path, allowlist=allowlist)
+    return unclassified(path)
+
+
+def pnpm_problems(argv: list[str], *, path: str, allowlist: frozenset[str]) -> list[str]:
+    args = argv[1:]
+    index = skip_options(args, PNPM_VALUE_FLAGS)
+    if index >= len(args):
+        return unclassified(path)
+    sub = args[index]
+    tokens = package_tokens(args[index + 1:], PNPM_VALUE_FLAGS)
+    if sub in {"install", "i"} and not tokens:
+        return []
+    if sub in {"install", "i", "add", "dlx"}:
+        if not tokens:
+            return [f"{path} pnpm {sub} has no exact package spec"]
+        return npm_spec_problems(tokens, path=path, allowlist=allowlist)
+    return unclassified(path)
+
+
+def pipx_problems(argv: list[str], *, path: str, allowlist: frozenset[str]) -> list[str]:
+    args = argv[1:]
+    index = skip_options(args, PIPX_VALUE_FLAGS)
+    if index >= len(args):
+        return unclassified(path)
+    sub = args[index]
+    rest = args[index + 1:]
+    if sub == "install":
+        tokens = package_tokens(rest, PIPX_VALUE_FLAGS)
+        if not tokens:
+            return [f"{path} pipx install has no exact package spec"]
+        return pip_spec_problems(tokens, path=path, allowlist=allowlist)
+    if sub == "run":
+        return spec_from_runner(
+            rest, path=path, allowlist=allowlist,
+            value_flags=PIPX_VALUE_FLAGS, spec_flags={"--spec"}, kind="pip",
+        )
+    return unclassified(path)
+
+
+def bun_problems(argv: list[str], *, path: str, allowlist: frozenset[str]) -> list[str]:
+    if _base(argv[0]) == "bunx":
+        return spec_from_runner(
+            argv[1:], path=path, allowlist=allowlist,
+            value_flags=set(), spec_flags={"--package"}, kind="npm",
+        )
+    args = argv[1:]
+    index = skip_options(args, {"--cwd", "--config"})
+    if index >= len(args):
+        return unclassified(path)
+    sub = args[index]
+    tokens = package_tokens(args[index + 1:], {"--cwd", "--config"})
+    if sub in {"install", "i"} and not tokens:
+        return []
+    if sub in {"add", "x", "dlx"}:
+        if not tokens:
+            return unclassified(path)
+        return npm_spec_problems(tokens, path=path, allowlist=allowlist)
+    return unclassified(path)
 
 
 def npx_problems(argv: list[str], *, path: str, allowlist: frozenset[str]) -> list[str]:
@@ -546,41 +750,42 @@ def command_problems(
     if not argv:
         return None
     base = _base(argv[0])
-    if base == "uv":
+    if base in {"uv", "uvx"}:
         if not rules.uv:
             return None
         return uv_problems(argv, path=path, allowlist=allowlist)
     if base == "pipx":
         if not rules.pipx:
             return None
-        return tool_add_problems(
-            argv, tool="pipx", path=path, allowlist=allowlist,
-            value_flags=PIPX_VALUE_FLAGS, install_word="install",
-        )
+        return pipx_problems(argv, path=path, allowlist=allowlist)
     if base == "yarn":
         if not rules.yarn:
             return None
-        return tool_add_problems(
-            argv, tool="yarn", path=path, allowlist=allowlist,
-            value_flags=YARN_VALUE_FLAGS, install_word="add",
-        )
+        return yarn_problems(argv, path=path, allowlist=allowlist)
     if base == "pnpm":
         if not rules.pnpm:
             return None
-        return tool_add_problems(
-            argv, tool="pnpm", path=path, allowlist=allowlist,
-            value_flags=PNPM_VALUE_FLAGS, install_word="add",
-        )
+        return pnpm_problems(argv, path=path, allowlist=allowlist)
     if base == "npx":
         if not rules.npx:
             return None
         return npx_problems(argv, path=path, allowlist=allowlist)
     if base == "npm":
-        return npm_problems(argv, path=path, allowlist=allowlist)
-    pip_args = pip_args_of(argv, rules)
-    if pip_args is None:
+        return npm_problems(argv, path=path, allowlist=allowlist, aliases=rules.npm_aliases)
+    if base in {"bun", "bunx"}:
+        if not rules.bun:
+            return None
+        return bun_problems(argv, path=path, allowlist=allowlist)
+    if is_versioned_pip(base):
+        if not rules.pip_forms:
+            return None
+        return classify_pip_tail(argv[1:], path=path, allowlist=allowlist, forms=True)
+    if base in {"pip", "pip3"}:
+        return classify_pip_tail(argv[1:], path=path, allowlist=allowlist, forms=rules.pip_forms)
+    tail = python_pip_tail(argv, rules)
+    if tail is None:
         return None
-    return pip_install_problems(pip_args, path=path, allowlist=allowlist)
+    return classify_pip_tail(tail, path=path, allowlist=allowlist, forms=rules.pip_forms)
 
 
 def install_spec_problems(
@@ -596,24 +801,25 @@ def install_spec_problems(
     for script in run_scripts(text):
         for command in split_commands(join_continuations(script)):
             command = strip_comment(command)
-            if not command or not looks_like_install(command, active):
+            if not command:
                 continue
+            installish = looks_like_install(command, active)
             classified = False
             for leaf in expand_commands(command, active):
-                if not looks_like_install(leaf, active):
-                    continue
+                leaf_installish = looks_like_install(leaf, active)
                 argv = prepare_argv(leaf, active)
                 if argv is None:
-                    problems.append(f"{path} unparsable install command")
-                    classified = True
+                    if installish or leaf_installish:
+                        problems.append(f"{path} unparsable install command")
+                        classified = True
                     continue
                 found = command_problems(argv, path=path, allowlist=chosen, rules=active)
                 if found is None:
                     continue
                 classified = True
                 problems.extend(found)
-            if active.wrappers and not classified:
-                problems.append(f"{path} unclassified install command")
+            if active.wrappers and installish and not classified:
+                problems.append(f"{path} {UNCLASSIFIED}")
     return problems
 
 
@@ -717,10 +923,26 @@ def prove_bypasses() -> str:
         "python_i": "run: python3 -I -m pip install x\n",
         "uv_pip": "run: uv pip install x\n",
         "uv_add": "run: uv add x\n",
+        "uv_tool": "run: uv tool install x\n",
+        "uvx": "run: uvx x\n",
+        "uv_with": "run: uv run --with x foo\n",
         "pipx": "run: pipx install x\n",
+        "pipx_run": "run: pipx run x\n",
         "yarn": "run: yarn add x\n",
+        "yarn_global": "run: yarn global add x\n",
+        "yarn_dlx": "run: yarn dlx x\n",
         "pnpm": "run: pnpm add x\n",
+        "pnpm_i": "run: pnpm i x\n",
+        "pnpm_dlx": "run: pnpm dlx x\n",
         "npx": "run: npx x\n",
+        "pip_q": "run: pip -q install x\n",
+        "pip_isolated": "run: pip --isolated install x\n",
+        "pip_py_q": "run: python3 -m pip -q install x\n",
+        "pip_mpip": "run: python3 -mpip install x\n",
+        "pip311": "run: pip3.11 install x\n",
+        "npm_add": "run: npm add x\n",
+        "npm_exec": "run: npm exec x\n",
+        "bun_add": "run: bun add x\n",
     }
     exact = {
         "sudo": "run: sudo -H pip install x==1.2.3\n",
@@ -732,10 +954,26 @@ def prove_bypasses() -> str:
         "python_i": "run: python3 -I -m pip install x==1.2.3\n",
         "uv_pip": "run: uv pip install x==1.2.3\n",
         "uv_add": "run: uv add x==1.2.3\n",
+        "uv_tool": "run: uv tool install x==1.2.3\n",
+        "uvx": "run: uvx x==1.2.3\n",
+        "uv_with": "run: uv run --with x==1.2.3 foo\n",
         "pipx": "run: pipx install x==1.2.3\n",
+        "pipx_run": "run: pipx run x==1.2.3\n",
         "yarn": "run: yarn add x@1.2.3\n",
+        "yarn_global": "run: yarn global add x@1.2.3\n",
+        "yarn_dlx": "run: yarn dlx x@1.2.3\n",
         "pnpm": "run: pnpm add x@1.2.3\n",
+        "pnpm_i": "run: pnpm i x@1.2.3\n",
+        "pnpm_dlx": "run: pnpm dlx x@1.2.3\n",
         "npx": "run: npx x@1.2.3\n",
+        "pip_q": "run: pip -q install x==1.2.3\n",
+        "pip_isolated": "run: pip --isolated install x==1.2.3\n",
+        "pip_py_q": "run: python3 -m pip -q install x==1.2.3\n",
+        "pip_mpip": "run: python3 -mpip install x==1.2.3\n",
+        "pip311": "run: pip3.11 install x==1.2.3\n",
+        "npm_add": "run: npm add x@1.2.3\n",
+        "npm_exec": "run: npm exec x@1.2.3\n",
+        "bun_add": "run: bun add x@1.2.3\n",
     }
     needles = {
         "sudo": "floating pip spec x",
@@ -747,18 +985,37 @@ def prove_bypasses() -> str:
         "python_i": "floating pip spec x",
         "uv_pip": "floating pip spec x",
         "uv_add": "floating pip spec x",
+        "uv_tool": "floating pip spec x",
+        "uvx": "floating pip spec x",
+        "uv_with": "floating pip spec x",
         "pipx": "floating pip spec x",
+        "pipx_run": "floating pip spec x",
         "yarn": "floating npm spec x",
+        "yarn_global": "floating npm spec x",
+        "yarn_dlx": "floating npm spec x",
         "pnpm": "floating npm spec x",
+        "pnpm_i": "floating npm spec x",
+        "pnpm_dlx": "floating npm spec x",
         "npx": "floating npm spec x",
+        "pip_q": "floating pip spec x",
+        "pip_isolated": "floating pip spec x",
+        "pip_py_q": "floating pip spec x",
+        "pip_mpip": "floating pip spec x",
+        "pip311": "floating pip spec x",
+        "npm_add": "floating npm spec x",
+        "npm_exec": "floating npm spec x",
+        "bun_add": "floating npm spec x",
     }
     groups = {
         "wrappers": ["sudo", "env", "bash", "sh", "subshell", "subst", "python_i"],
-        "uv": ["uv_pip", "uv_add"],
-        "pipx": ["pipx"],
-        "yarn": ["yarn"],
-        "pnpm": ["pnpm"],
+        "uv": ["uv_pip", "uv_add", "uv_tool", "uvx", "uv_with"],
+        "pipx": ["pipx", "pipx_run"],
+        "yarn": ["yarn", "yarn_global", "yarn_dlx"],
+        "pnpm": ["pnpm", "pnpm_i", "pnpm_dlx"],
         "npx": ["npx"],
+        "pip_forms": ["pip_q", "pip_isolated", "pip_py_q", "pip_mpip", "pip311"],
+        "npm_aliases": ["npm_add", "npm_exec"],
+        "bun": ["bun_add"],
     }
     for name, text in fixtures.items():
         if not _caught(text, needles[name]):
@@ -777,6 +1034,16 @@ def prove_bypasses() -> str:
         fail("VAR=1 pip install escaped the pre-wrapper parser")
     if not _caught("run: sudo pip install x\n", "floating pip spec x", rules=InstallRules(wrappers=False)):
         fail("bare sudo pip install escaped the pre-wrapper parser")
+    if not _caught("run: pip freeze\n", UNCLASSIFIED):
+        fail("pip freeze was not refused as unclassified")
+    if _caught("run: pip freeze\n", UNCLASSIFIED, rules=InstallRules(pip_forms=False)):
+        fail("off pip_forms still refused pip freeze")
+    if not _caught("run: uv tool\n", UNCLASSIFIED):
+        fail("uv tool was not refused as unclassified")
+    if not _caught("run: timeout pip install x\n", UNCLASSIFIED):
+        fail("timeout wrapper was not refused as unclassified")
+    if not _caught("run: npm install left-pad\n", "floating npm spec left-pad", rules=InstallRules(npm_aliases=False)):
+        fail("off npm_aliases let npm install escape")
     escaped: list[str] = []
     for rule_name, members in groups.items():
         off = InstallRules(**{rule_name: False})
