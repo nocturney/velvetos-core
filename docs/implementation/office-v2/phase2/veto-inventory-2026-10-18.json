@@ -4,10 +4,15 @@
  "clq": "CLQ-3",
  "scope": "report only; no disposition changes; no registry edits",
  "classes": {
-  "EVIDENCE_BACKED_BLOCKER": "veto term plus a blocker term (security, rights, archived, cost, hardware, OS-only, license) AND a citation (URL, date, #issue or 'archived upstream') on the same line",
-  "EVIDENCE_FREE_VETO": "veto language with no blocker citation on its line; needs a fair comparison before it stands"
+  "EVIDENCE_BACKED_BLOCKER": "veto term AND a blocker term AND a citation on the same line",
+  "EVIDENCE_FREE_VETO": "veto term without (blocker term AND citation) on its line; needs a fair comparison before it stands"
  },
- "method": "line-level regex over the listed files; item = nearest preceding name/id/title; candidate IDs from the alias map (URL or exact label match only)",
+ "regexes": {
+  "veto": "pattern only|patterns only|do not install|do not add|do not buy|do not brew|do not curl|do not stand up|skip the install|do not connect|do not generate|do not invent|already the|already covered|no second|do not keep|do not stand|locked|not install|no runtime|\\bskip\\b",
+  "blocker": "security|secret|credential|licen[cs]e|copyright|rights|archiv|deprecat|unmaintain|maintenance|cost|paid|subscription|GPU|hardware|Windows-only|macOS-only|privacy|PII|non-commercial|\\bNC\\b|terms of service|ToS|curl\\s*\\|\\s*bash",
+  "citation": "https?://|\\b20\\d\\d-\\d\\d-\\d\\d\\b|archived upstream|per #\\d+|#\\d{2,4}\\b"
+ },
+ "method": "line-level regex over the listed files. Matches inside title/pattern/id/rule/item/kind/url values are skipped (descriptions, not dispositions). Item = same-line name/id/title, else nearest preceding one. Candidate IDs from the alias map (URL or exact label match only).",
  "rows": [
   {
    "file": "packages/vfe2b/catalog.json",
@@ -32,16 +37,6 @@
    "canonical_candidate_ids": [
     "candidate-intake-microsoft-ufo"
    ],
-   "blocker_term_without_citation": false
-  },
-  {
-   "file": "packages/vfe2b/catalog.json",
-   "line": 88,
-   "item": "Aomni",
-   "quote": "\"pattern\": \"plan then extract from sources; do not generate content\",",
-   "class": "EVIDENCE_FREE_VETO",
-   "basis": null,
-   "canonical_candidate_ids": [],
    "blocker_term_without_citation": false
   },
   {
@@ -134,7 +129,7 @@
    "canonical_candidate_ids": [
     "deferred-orca"
    ],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfe2b/catalog.json",
@@ -146,7 +141,7 @@
    "canonical_candidate_ids": [
     "deferred-orca"
    ],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfe2b/catalog.json",
@@ -170,16 +165,6 @@
   },
   {
    "file": "packages/vfe2b/orchestrators.json",
-   "line": 5,
-   "item": "Awesome-agent-orchestrators overlay",
-   "quote": "\"rule\": \"Embed orchestrator patterns onto existing vfe2b crews and vfharness. Do not install a second orchestrator.\",",
-   "class": "EVIDENCE_FREE_VETO",
-   "basis": null,
-   "canonical_candidate_ids": [],
-   "blocker_term_without_citation": true
-  },
-  {
-   "file": "packages/vfe2b/orchestrators.json",
    "line": 50,
    "item": "Orca",
    "quote": "\"note\": \"Already the משמרת overlay. Pattern only. Do not brew-install orca.\"",
@@ -187,18 +172,6 @@
    "basis": null,
    "canonical_candidate_ids": [
     "deferred-orca"
-   ],
-   "blocker_term_without_citation": true
-  },
-  {
-   "file": "packages/vfe2b/orchestrators.json",
-   "line": 57,
-   "item": "herdr",
-   "quote": "\"pattern\": \"pulse: working / blocked / idle on one job\",",
-   "class": "EVIDENCE_FREE_VETO",
-   "basis": null,
-   "canonical_candidate_ids": [
-    "candidate-herdr"
    ],
    "blocker_term_without_citation": false
   },
@@ -212,16 +185,6 @@
    "canonical_candidate_ids": [
     "candidate-herdr"
    ],
-   "blocker_term_without_citation": true
-  },
-  {
-   "file": "packages/vfe2b/orchestrators.json",
-   "line": 157,
-   "item": "ralphex",
-   "quote": "\"pattern\": \"fresh context per retry; do not keep guessing\",",
-   "class": "EVIDENCE_FREE_VETO",
-   "basis": null,
-   "canonical_candidate_ids": [],
    "blocker_term_without_citation": false
   },
   {
@@ -232,7 +195,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfe2b/orchestrators.json",
@@ -249,26 +212,16 @@
    "line": 340,
    "item": "Archon",
    "quote": "\"note\": \"Patterns only (gates → אימות/decision_gate; one job folder). Do not curl|bash, Docker, or install Archon CLI. mcpmarket listing may describe old v1 agenteer — GitHub is current harness builder. Reviewed 2026-09-05.\"",
-   "class": "EVIDENCE_FREE_VETO",
-   "basis": null,
+   "class": "EVIDENCE_BACKED_BLOCKER",
+   "basis": "curl|bash",
    "canonical_candidate_ids": [],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfe2b/ORCHESTRATORS.md",
    "line": 17,
    "item": null,
    "quote": "| דופק working / blocked / idle | herdr | שדה `דופק` בכרטיס |",
-   "class": "EVIDENCE_FREE_VETO",
-   "basis": null,
-   "canonical_candidate_ids": [],
-   "blocker_term_without_citation": false
-  },
-  {
-   "file": "packages/vfresearch/LINKS.json",
-   "line": 4,
-   "item": "קישורי השראה והטמעה — רישום שבועי",
-   "quote": "\"rule\": \"Re-read registered links weekly. Embed updates into existing packs only. Do not invent bodies, ₪, or Insights. Do not create a new pack per idea.\",",
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [],
@@ -294,7 +247,7 @@
    "canonical_candidate_ids": [
     "candidate-intake-deusdata-codebase-memory-mcp"
    ],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfresearch/LINKS.json",
@@ -336,7 +289,7 @@
    "canonical_candidate_ids": [
     "deferred-ruflo"
    ],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfresearch/LINKS.json",
@@ -346,7 +299,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfresearch/LINKS.json",
@@ -362,33 +315,9 @@
   },
   {
    "file": "packages/vfresearch/LINKS.json",
-   "line": 461,
-   "item": "lobehub-operator",
-   "quote": "\"title\": \"LobeHub — Chief Agent Operator (patterns only)\",",
-   "class": "EVIDENCE_FREE_VETO",
-   "basis": null,
-   "canonical_candidate_ids": [
-    "candidate-lobehub"
-   ],
-   "blocker_term_without_citation": false
-  },
-  {
-   "file": "packages/vfresearch/LINKS.json",
    "line": 471,
    "item": "LobeHub — Chief Agent Operator (patterns only)",
    "quote": "\"note\": \"Connector priority + schedule/report patterns on existing packs. No Docker install, no second runtime, no IM gateway.\"",
-   "class": "EVIDENCE_FREE_VETO",
-   "basis": null,
-   "canonical_candidate_ids": [
-    "candidate-intake-huginn-huginn"
-   ],
-   "blocker_term_without_citation": true
-  },
-  {
-   "file": "packages/vfresearch/LINKS.json",
-   "line": 477,
-   "item": "huginn",
-   "quote": "\"title\": \"Huginn — event-driven agents (pattern only)\",",
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [
@@ -418,7 +347,7 @@
    "canonical_candidate_ids": [
     "candidate-erpnext"
    ],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfresearch/LINKS.json",
@@ -428,7 +357,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfresearch/LINKS.json",
@@ -448,7 +377,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfresearch/LINKS.json",
@@ -468,7 +397,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfresearch/LINKS.json",
@@ -478,7 +407,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfresearch/LINKS.json",
@@ -488,7 +417,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfresearch/LINKS.json",
@@ -528,7 +457,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfresearch/LINKS.json",
@@ -558,7 +487,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfresearch/LINKS.json",
@@ -592,7 +521,7 @@
    "canonical_candidate_ids": [
     "candidate-intake-debpalash-voicestudio"
    ],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfresearch/LINKS.json",
@@ -612,7 +541,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfresearch/LINKS.json",
@@ -632,7 +561,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [],
-   "blocker_term_without_citation": false
+   "blocker_term_without_citation": true
   },
   {
    "file": "packages/vfresearch/LINKS.json",
@@ -682,7 +611,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfresearch/LINKS.json",
@@ -692,7 +621,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [],
-   "blocker_term_without_citation": true
+   "blocker_term_without_citation": false
   },
   {
    "file": "packages/vfresearch/LINKS.json",
@@ -722,7 +651,7 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [],
-   "blocker_term_without_citation": false
+   "blocker_term_without_citation": true
   },
   {
    "file": "packages/vfresearch/LINKS.json",
@@ -737,7 +666,7 @@
   {
    "file": "packages/vfresearch/LINKS.json",
    "line": 1534,
-   "item": "awesome-java",
+   "item": "awesome-design-patterns",
    "quote": "{\"id\":\"awesome-design-patterns\",\"kind\":\"repo\",\"url\":\"https://github.com/DovAmir/awesome-design-patterns\",\"title\":\"awesome-design-patterns\",\"firstEmbedded\":\"2026-10-07\",\"lastReviewed\":\"2026-10-17\",\"sourceNote\":\"packages/vfresearch/sources/20",
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
