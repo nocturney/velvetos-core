@@ -2090,11 +2090,10 @@ def check_exit_contract() -> None:
     barren = Path(tempfile.mkdtemp(prefix="crewai-nolsof-"))
     marker = barren / "fake-lsof-ran"
     fake = barren / "lsof"
+    # /bin/sh, not env python3. A python shebang never runs when PATH is only
+    # the binary's directory, so a restored shutil.which lookup would still pass.
     fake.write_text(
-        "#!/usr/bin/env python3\n"
-        "from pathlib import Path\n"
-        "Path(%r).write_text('ran', encoding='ascii')\n"
-        "raise SystemExit(1)\n" % str(marker),
+        "#!/bin/sh\n: > '%s'\nexit 1\n" % str(marker).replace("'", "'\\''"),
         encoding="ascii",
         newline="\n",
     )
@@ -2115,30 +2114,35 @@ def check_exit_contract() -> None:
         fail("missing lsof returned %s (%s)" % (missing, missing_receipt["identity"].get("reason")))
 
 
+def _sh_quote(text: str) -> str:
+    return "'" + str(text).replace("'", "'\\''") + "'"
+
+
 def check_trusted_listener_binaries() -> None:
-    """A fake lsof or netstat earlier on PATH must not be treated as proof."""
+    """A fake lsof or netstat earlier on PATH must not be treated as proof.
+
+    The fakes are ``#!/bin/sh`` and ``.cmd`` scripts. A ``#!/usr/bin/env python3``
+    fake never reaches its body when PATH is only the binary directory, so
+    restoring a ``shutil.which`` lookup would still look like a pass.
+    """
+    import subprocess
+
     import office_v2_crewai.usage_guard as usage_mod
 
     directory = Path(tempfile.mkdtemp(prefix="crewai-fake-listener-"))
     lsof_marker = directory / "lsof-ran"
     netstat_marker = directory / "netstat-ran"
-    lsof_body = (
-        "#!/usr/bin/env python3\n"
-        "from pathlib import Path\n"
-        "Path(%r).write_text('ran', encoding='ascii')\n"
-        "raise SystemExit(1)\n" % str(lsof_marker)
-    )
-    netstat_text = (
-        "Active Connections\n\n"
+    lsof_body = "#!/bin/sh\n: > %s\nexit 1\n" % _sh_quote(lsof_marker)
+    netstat_body = (
+        "#!/bin/sh\n"
+        ": > %s\n"
+        "cat <<'EOF'\n"
+        "Active Connections\n"
+        "\n"
         "  Proto  Local Address          Foreign Address        State           PID\n"
         "  TCP    127.0.0.1:11435        0.0.0.0:0              LISTENING       1\n"
-    )
-    netstat_body = (
-        "#!/usr/bin/env python3\n"
-        "from pathlib import Path\n"
-        "import sys\n"
-        "Path(%r).write_text('ran', encoding='ascii')\n"
-        "sys.stdout.write(%r)\n" % (str(netstat_marker), netstat_text)
+        "EOF\n"
+        "exit 0\n" % _sh_quote(netstat_marker)
     )
     (directory / "lsof").write_text(lsof_body, encoding="ascii", newline="\n")
     (directory / "netstat").write_text(netstat_body, encoding="ascii", newline="\n")
@@ -2190,6 +2194,48 @@ def check_trusted_listener_binaries() -> None:
             fail("fake netstat earlier on PATH was executed")
         if netstat_rows == [{"address": "127.0.0.1", "port": 11435}] and not os.path.isfile(WINDOWS_NETSTAT):
             fail("fake netstat output was trusted as a loopback bind")
+        link = directory / "lsof-symlink"
+        link.symlink_to(directory / "lsof")
+        saved_lsof = usage_mod.DARWIN_LSOF
+        usage_mod.DARWIN_LSOF = str(link)
+        try:
+            if usage_mod.trusted_listener_binary("lsof", "darwin") is not None:
+                fail("a symlink at the trusted lsof path was accepted")
+            try:
+                usage_mod.run_trusted_listener(str(link), [str(link)])
+            except OSError:
+                pass
+            else:
+                fail("run_trusted_listener executed a symlink")
+        finally:
+            usage_mod.DARWIN_LSOF = saved_lsof
+        if lsof_marker.exists():
+            fail("symlink lsof ran")
+        # Windows still execs the path after the fstat check. Unix execs the fd.
+        if usage_mod._fd_executable(0) is not None:
+            held = directory / "held-lsof"
+            held.write_text("#!/bin/sh\nprintf 'ok\\n'\n", encoding="ascii", newline="\n")
+            held.chmod(0o755)
+            real_run = subprocess.run
+
+            def swap_then_run(argv, **kwargs):
+                target = Path(argv[0])
+                target.unlink()
+                target.write_text(
+                    "#!/bin/sh\nprintf 'swapped\\n'\n",
+                    encoding="ascii",
+                    newline="\n",
+                )
+                target.chmod(0o755)
+                return real_run(argv, **kwargs)
+
+            subprocess.run = swap_then_run
+            try:
+                held_proc = usage_mod.run_trusted_listener(str(held), [str(held)])
+            finally:
+                subprocess.run = real_run
+            if held_proc.returncode != 0 or held_proc.stdout != "ok\n":
+                fail("listener exec followed a replaced path: %r" % held_proc.stdout)
     finally:
         if saved_path is None:
             os.environ.pop("PATH", None)

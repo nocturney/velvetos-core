@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import stat
 import sys
 from pathlib import Path
 
@@ -616,10 +617,59 @@ def count_windows_listeners(pid: int, observation: dict) -> int:
     return owned
 
 
+def _open_trusted_regular(path: str) -> int:
+    """Open one absolute regular file and return its fd. Symlinks are refused.
+
+    ``O_NOFOLLOW`` fails the open when the final path entry is a symlink.
+    ``fstat`` on that fd must match a later ``stat`` of the same path, so a
+    directory entry swapped for a different inode is not the opened file.
+    Unix execution uses this fd (``/proc/self/fd`` or ``/dev/fd``). Windows
+    has no fd exec, so the path is executed after this check. Replacing
+    ``System32\\netstat.exe`` in that remaining gap is the same privilege as
+    replacing the OS binary.
+    """
+    if not isinstance(path, str) or not os.path.isabs(path):
+        raise OSError("trusted listener binary missing")
+    flags = os.O_RDONLY
+    if hasattr(os, "O_CLOEXEC"):
+        flags |= os.O_CLOEXEC
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    try:
+        fd = os.open(path, flags)
+    except OSError as exc:
+        raise OSError("trusted listener binary missing") from exc
+    try:
+        info = os.fstat(fd)
+        if not stat.S_ISREG(info.st_mode):
+            raise OSError("trusted listener binary missing")
+        listed = os.lstat(path)
+        if stat.S_ISLNK(listed.st_mode):
+            raise OSError("trusted listener binary missing")
+        current = os.stat(path)
+        if (info.st_dev, info.st_ino) != (current.st_dev, current.st_ino):
+            raise OSError("trusted listener binary missing")
+    except OSError:
+        os.close(fd)
+        raise
+    return fd
+
+
+def _fd_executable(fd: int) -> str | None:
+    """Path that executes the opened inode, or None where fd exec is unavailable."""
+    if os.name == "nt":
+        return None
+    if os.path.isdir("/proc/self/fd"):
+        return "/proc/self/fd/%d" % fd
+    if os.path.isdir("/dev/fd"):
+        return "/dev/fd/%d" % fd
+    return None
+
+
 def trusted_listener_binary(tool: str, platform: str | None = None) -> str | None:
     """Return one absolute OS binary, or None when that file is not present.
 
-    Never searches PATH.
+    Never searches PATH. A symlink at the trusted path is not a binary.
     """
     plat = sys.platform if platform is None else platform
     if tool == "lsof" and plat == "darwin":
@@ -632,33 +682,43 @@ def trusted_listener_binary(tool: str, platform: str | None = None) -> str | Non
         candidate = WINDOWS_POWERSHELL
     else:
         return None
-    if not isinstance(candidate, str) or not os.path.isabs(candidate) or not os.path.isfile(candidate):
+    try:
+        fd = _open_trusted_regular(candidate)
+    except OSError:
         return None
+    os.close(fd)
     return candidate
 
 
 def run_trusted_listener(binary: str, args: list[str], path_value: str | None = None):
-    """Run an absolute listener tool. PATH is only that binary's directory."""
+    """Run an absolute listener tool. PATH is only that binary's directory.
+
+    The process image is the inode opened above. A later replacement of the
+    path does not change which file runs, except on Windows (see
+    ``_open_trusted_regular``).
+    """
     import subprocess
 
-    if (
-        not isinstance(binary, str)
-        or not os.path.isabs(binary)
-        or not os.path.isfile(binary)
-        or not args
-        or args[0] != binary
-    ):
+    if not isinstance(binary, str) or not args or args[0] != binary:
         raise OSError("trusted listener binary missing")
+    fd = _open_trusted_regular(binary)
     env = os.environ.copy()
     env["PATH"] = str(Path(binary).parent) if path_value is None else path_value
-    return subprocess.run(
-        args,
-        capture_output=True,
-        text=True,
-        timeout=30,
-        check=False,
-        env=env,
-    )
+    executable = _fd_executable(fd)
+    kwargs = {
+        "capture_output": True,
+        "text": True,
+        "timeout": 30,
+        "check": False,
+        "env": env,
+    }
+    if executable is not None:
+        kwargs["executable"] = executable
+        kwargs["pass_fds"] = (fd,)
+    try:
+        return subprocess.run(args, **kwargs)
+    finally:
+        os.close(fd)
 
 
 def _windows_observe() -> dict:

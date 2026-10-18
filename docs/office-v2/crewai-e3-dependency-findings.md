@@ -226,6 +226,15 @@ when that output came from the trusted binary.
 non-loopback URL is `MODEL_REDIRECT_REFUSED` and does not open a second
 connection. `normalize_pilot_path` does not strip surrounding whitespace.
 
+Issue 612 / #799 comment 6252955212. The PATH regression plants `#!/bin/sh`
+fakes (and `lsof.cmd` / `netstat.cmd` on Windows). A python shebang never
+ran under the pinned PATH, so a `shutil.which` revert still passed. The
+shell fake must not run, and its exit-1 empty output must not become a
+proven zero. The trusted file is opened with `O_NOFOLLOW` and `fstat`'d.
+Unix runs that fd. A symlink at `/usr/sbin/lsof` is unproven. Windows
+executes the path after the check; the remaining gap is the same privilege
+as replacing `System32\netstat.exe`.
+
 ## Lock identity
 
 The Chris lock file is `requirements-locked.txt`, sha256
