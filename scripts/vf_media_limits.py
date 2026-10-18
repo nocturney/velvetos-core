@@ -75,15 +75,25 @@ def _apply_limits(memory_bytes: int, timeout: int) -> None:
 def _worker(args: list[str], timeout: int, memory_bytes: int, capture: bool) -> int:
     _apply_limits(memory_bytes, timeout)
     expired = threading.Event()
+    # A Darwin decoder gets its own process group so the RSS watchdog sees
+    # ordinary forked helpers too and can kill the entire group on denial.
+    # This is a process-group boundary, not a sandbox against setsid() escapes.
     with subprocess.Popen(args, stdin=subprocess.DEVNULL,
                           stdout=subprocess.PIPE if capture else subprocess.DEVNULL,
-                          stderr=subprocess.DEVNULL) as process:
+                          stderr=subprocess.DEVNULL,
+                          start_new_session=sys.platform == 'darwin') as process:
+        def kill_decoder_group() -> None:
+            try:
+                if sys.platform == 'darwin':
+                    os.killpg(process.pid, signal.SIGKILL)
+                else:
+                    process.kill()
+            except ProcessLookupError:
+                pass
+
         def stop() -> None:
             expired.set()
-            try:
-                process.kill()
-            except OSError:
-                pass
+            kill_decoder_group()
         timer = threading.Timer(timeout, stop)
         timer.daemon = True
         timer.start()
@@ -98,14 +108,24 @@ def _worker(args: list[str], timeout: int, memory_bytes: int, capture: bool) -> 
                     return
                 try:
                     observed = subprocess.run(
-                        ['/bin/ps', '-o', 'rss=', '-p', str(process.pid)],
+                        ['/bin/ps', '-o', 'pid=,pgid=,rss=', '-g', str(process.pid)],
                         stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
                         stderr=subprocess.DEVNULL, text=True, timeout=1, check=False,
                     )
                     sample = observed.stdout.strip()
                     if observed.returncode != 0 or not sample:
-                        raise ValueError("macOS memory sampler returned no usable RSS")
-                    if int(sample.split()[0]) * 1024 > memory_bytes:
+                        raise ValueError("macOS process group sampler returned no usable RSS")
+                    total_kib = 0
+                    seen_pids = set()
+                    for line in sample.splitlines():
+                        fields = line.split()
+                        if (len(fields) != 3 or not all(v.isdecimal() for v in fields) or
+                                int(fields[1]) != process.pid or
+                                int(fields[0]) in seen_pids):
+                            raise ValueError("macOS process group RSS was malformed")
+                        seen_pids.add(int(fields[0]))
+                        total_kib += int(fields[2])
+                    if total_kib * 1024 > memory_bytes:
                         memory_exceeded.set()
                         stop()
                         return
@@ -141,6 +161,10 @@ def _worker(args: list[str], timeout: int, memory_bytes: int, capture: bool) -> 
         finally:
             monitor_stop.set()
             timer.cancel()
+            # A direct parent may exit while its children are still alive.
+            # Never let an ordinary, same-group orphan survive a completed job.
+            if sys.platform == 'darwin':
+                kill_decoder_group()
 
 
 def run_bounded(args: list[str], *, timeout: int = 90, capture: bool = False,
