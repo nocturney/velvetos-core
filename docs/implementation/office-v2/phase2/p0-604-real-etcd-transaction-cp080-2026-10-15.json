@@ -1,0 +1,145 @@
+{
+  "schema": "velvetos.office-v2.604.cp080.real-etcd-integration-evidence.v1",
+  "date": "2026-10-15",
+  "status": "PASS_REAL_ETCD_QUORUM_TXN_LOCAL_GIT_LAB_ONLY",
+  "security_admission": "RED",
+  "source_git_path": "scripts/vf_office_v2_604_real_etcd_revoke_admit_lab_cp080.py",
+  "source_sha256": "02c90170b3b741d4ba2d1fd985b1189b83ff4b5dcc515a6936ca50ca8068ddae",
+  "source_git_blob": "77698f88cc3c09084d9058b1cdf7c7e9c5fc9a9d",
+  "main_at_test": "2c58539bf662af0c2e855dd5b3af2bd9b4fd2523",
+  "environment": {
+    "host": "MacMiniOffice2.local",
+    "guest": "existing colima velvet-qa Linux aarch64 non-root",
+    "etcd": "3.6.15",
+    "etcd_sha256": "117cc09981c0f1eb378e7520be6969756c2d6a762f376944e53f7bc9800c0c59",
+    "etcdctl_sha256": "de07257495499384f91f028dbc0c8e0394e0bd572b728ac486bbadbfa1cdf275",
+    "client_endpoint": "http://127.0.0.1 ephemeral dynamically allocated",
+    "peer_endpoint": "http://127.0.0.1 ephemeral dynamically allocated",
+    "cluster": "real one-member etcd/raft quorum",
+    "mtls": false,
+    "rbac": false,
+    "disk": "temporary guest /tmp/vf604-cp080-*, cleaned in finally"
+  },
+  "execution": {
+    "totals": {
+      "runs": 4,
+      "passed_named_scenarios": 68,
+      "real_etcd_admit_vs_revoke_races": 48,
+      "admission_first": 20,
+      "revoke_first": 28,
+      "critical_production_security_gates_passed": 0
+    },
+    "runs": [
+      {
+        "index": 1,
+        "source_sha256": "02c90170b3b741d4ba2d1fd985b1189b83ff4b5dcc515a6936ca50ca8068ddae",
+        "receipt_sha256": null,
+        "receipt_note": "Observed original revised source runner JSON in connected MacMiniOffice2 tool output; no standalone file SHA for first revised run",
+        "case_assertions_passed": 17,
+        "concurrent_provider_txns_passed": 12,
+        "winners": {
+          "admission_first": 3,
+          "revoke_first": 9
+        }
+      },
+      {
+        "index": 2,
+        "source_sha256": "02c90170b3b741d4ba2d1fd985b1189b83ff4b5dcc515a6936ca50ca8068ddae",
+        "receipt_sha256": "f2df918c543710734f16a88665d394d1c464dcff749b1d398102ddba110c21a7",
+        "case_assertions_passed": 17,
+        "concurrent_provider_txns_passed": 12,
+        "winners": {
+          "admission_first": 5,
+          "revoke_first": 7
+        }
+      },
+      {
+        "index": 3,
+        "source_sha256": "02c90170b3b741d4ba2d1fd985b1189b83ff4b5dcc515a6936ca50ca8068ddae",
+        "receipt_sha256": "0aed7fb4f1bf0198caf071d1b55747d96df859abb56fb85a478e59d0e2a62729",
+        "case_assertions_passed": 17,
+        "concurrent_provider_txns_passed": 12,
+        "winners": {
+          "admission_first": 4,
+          "revoke_first": 8
+        }
+      },
+      {
+        "index": 4,
+        "source_sha256": "02c90170b3b741d4ba2d1fd985b1189b83ff4b5dcc515a6936ca50ca8068ddae",
+        "receipt_sha256": "840a8313688e53efce396639596750f383383b9af2a129bb25dd211208d691d3",
+        "case_assertions_passed": 17,
+        "concurrent_provider_txns_passed": 12,
+        "winners": {
+          "admission_first": 8,
+          "revoke_first": 4
+        }
+      }
+    ],
+    "case_names_in_every_run": [
+      "real-etcd-admission-then-revoke",
+      "ack-denied-before-terminal",
+      "one-send-marker",
+      "late-local-effect-after-request-but-before-effective",
+      "real-etcd-revoke-before-admission",
+      "effective-without-admitted-work",
+      "unknown-blocks-ack-successor-and-retry",
+      "durable-unleased-intent-after-revoke",
+      "multi-key-resource-reservation-fences-other-task",
+      "real-etcd-lease-expiry-before-admission-denies",
+      "expired-owner-same-value-ABA-denied",
+      "deleted-owner-recreated-with-same-value-denied",
+      "real-etcd-lease-expiry-does-not-delete-intent",
+      "ttl-after-admit-blocks-premature-effective",
+      "12-concurrent-real-quorum-txns-exactly-one-winner",
+      "real-etcd-single-send-start-on-double-dispatch",
+      "known-unsafe-cp077-unfenced-local-git-witness"
+    ],
+    "real_provider_admission_revocation_linearization": true,
+    "real_unleased_intent_after_ttl": true,
+    "real_local_git_cas_after_committed_request": true,
+    "double_dispatch_txn_serialized": true,
+    "multi_resource_fence_single_provider_txn": true,
+    "owner_mod_revision_pinned_in_admission_txn": true,
+    "lease_expiry_same_value_rebind_denied": true,
+    "owner_deleted_recreated_same_value_denied": true,
+    "unknown_blocks_acked_effective": true,
+    "observed_unsafe_unfenced_git_after_effective": true,
+    "cleanup_confirmed_zero_guest_tmpdirs_and_zero_cp080_provider_processes": true,
+    "raw_receipts": [
+      {
+        "run_index": 2,
+        "sha256_of_original_raw_file": "f2df918c543710734f16a88665d394d1c464dcff749b1d398102ddba110c21a7",
+        "original_raw_json_with_final_LF": "{\"actual_etcd_txn_concurrency_rounds\": 12, \"case_names\": [\"real-etcd-admission-then-revoke\", \"ack-denied-before-terminal\", \"one-send-marker\", \"late-local-effect-after-request-but-before-effective\", \"real-etcd-revoke-before-admission\", \"effective-without-admitted-work\", \"unknown-blocks-ack-successor-and-retry\", \"durable-unleased-intent-after-revoke\", \"multi-key-resource-reservation-fences-other-task\", \"real-etcd-lease-expiry-before-admission-denies\", \"expired-owner-same-value-ABA-denied\", \"deleted-owner-recreated-with-same-value-denied\", \"real-etcd-lease-expiry-does-not-delete-intent\", \"ttl-after-admit-blocks-premature-effective\", \"12-concurrent-real-quorum-txns-exactly-one-winner\", \"real-etcd-single-send-start-on-double-dispatch\", \"known-unsafe-cp077-unfenced-local-git-witness\"], \"ephemeral_storage_deleted\": \"on_process_exit\", \"etcd_binary_sha256\": \"117cc09981c0f1eb378e7520be6969756c2d6a762f376944e53f7bc9800c0c59\", \"etcd_concurrent_winner_counts\": {\"admission_first\": 5, \"revoke_first\": 7}, \"etcd_mtls_or_rbac_in_cp080\": false, \"etcdctl_binary_sha256\": \"de07257495499384f91f028dbc0c8e0394e0bd572b728ac486bbadbfa1cdf275\", \"known_unfenced_local_git_after_effective\": true, \"model_cp058_source_executed\": false, \"network_binding\": \"127.0.0.1-only-http-ephemeral\", \"new_test_case_count\": 17, \"production_authority\": false, \"real_etcd_3_6_15\": true, \"real_github_credentials\": false, \"real_github_remote_effect\": false, \"real_multi_host_core_issuer\": false, \"real_native_local_git_effect\": true, \"schema\": \"velvetos.office-v2.604.cp080.real-etcd-txn-localgit.lab.v1\", \"security_admission\": \"RED\", \"status\": \"PASS_REAL_ETCD_QUORUM_TXN_LOCAL_GIT_LAB_ONLY\"}\n",
+        "source": "Local scratch receipt read via MacMiniOffice2 connected device; no secrets"
+      },
+      {
+        "run_index": 3,
+        "sha256_of_original_raw_file": "0aed7fb4f1bf0198caf071d1b55747d96df859abb56fb85a478e59d0e2a62729",
+        "original_raw_json_with_final_LF": "{\"actual_etcd_txn_concurrency_rounds\": 12, \"case_names\": [\"real-etcd-admission-then-revoke\", \"ack-denied-before-terminal\", \"one-send-marker\", \"late-local-effect-after-request-but-before-effective\", \"real-etcd-revoke-before-admission\", \"effective-without-admitted-work\", \"unknown-blocks-ack-successor-and-retry\", \"durable-unleased-intent-after-revoke\", \"multi-key-resource-reservation-fences-other-task\", \"real-etcd-lease-expiry-before-admission-denies\", \"expired-owner-same-value-ABA-denied\", \"deleted-owner-recreated-with-same-value-denied\", \"real-etcd-lease-expiry-does-not-delete-intent\", \"ttl-after-admit-blocks-premature-effective\", \"12-concurrent-real-quorum-txns-exactly-one-winner\", \"real-etcd-single-send-start-on-double-dispatch\", \"known-unsafe-cp077-unfenced-local-git-witness\"], \"ephemeral_storage_deleted\": \"on_process_exit\", \"etcd_binary_sha256\": \"117cc09981c0f1eb378e7520be6969756c2d6a762f376944e53f7bc9800c0c59\", \"etcd_concurrent_winner_counts\": {\"admission_first\": 4, \"revoke_first\": 8}, \"etcd_mtls_or_rbac_in_cp080\": false, \"etcdctl_binary_sha256\": \"de07257495499384f91f028dbc0c8e0394e0bd572b728ac486bbadbfa1cdf275\", \"known_unfenced_local_git_after_effective\": true, \"model_cp058_source_executed\": false, \"network_binding\": \"127.0.0.1-only-http-ephemeral\", \"new_test_case_count\": 17, \"production_authority\": false, \"real_etcd_3_6_15\": true, \"real_github_credentials\": false, \"real_github_remote_effect\": false, \"real_multi_host_core_issuer\": false, \"real_native_local_git_effect\": true, \"schema\": \"velvetos.office-v2.604.cp080.real-etcd-txn-localgit.lab.v1\", \"security_admission\": \"RED\", \"status\": \"PASS_REAL_ETCD_QUORUM_TXN_LOCAL_GIT_LAB_ONLY\"}\n",
+        "source": "Local scratch receipt read via MacMiniOffice2 connected device; no secrets"
+      },
+      {
+        "run_index": 4,
+        "sha256_of_original_raw_file": "840a8313688e53efce396639596750f383383b9af2a129bb25dd211208d691d3",
+        "original_raw_json_with_final_LF": "{\"actual_etcd_txn_concurrency_rounds\": 12, \"case_names\": [\"real-etcd-admission-then-revoke\", \"ack-denied-before-terminal\", \"one-send-marker\", \"late-local-effect-after-request-but-before-effective\", \"real-etcd-revoke-before-admission\", \"effective-without-admitted-work\", \"unknown-blocks-ack-successor-and-retry\", \"durable-unleased-intent-after-revoke\", \"multi-key-resource-reservation-fences-other-task\", \"real-etcd-lease-expiry-before-admission-denies\", \"expired-owner-same-value-ABA-denied\", \"deleted-owner-recreated-with-same-value-denied\", \"real-etcd-lease-expiry-does-not-delete-intent\", \"ttl-after-admit-blocks-premature-effective\", \"12-concurrent-real-quorum-txns-exactly-one-winner\", \"real-etcd-single-send-start-on-double-dispatch\", \"known-unsafe-cp077-unfenced-local-git-witness\"], \"ephemeral_storage_deleted\": \"on_process_exit\", \"etcd_binary_sha256\": \"117cc09981c0f1eb378e7520be6969756c2d6a762f376944e53f7bc9800c0c59\", \"etcd_concurrent_winner_counts\": {\"admission_first\": 8, \"revoke_first\": 4}, \"etcd_mtls_or_rbac_in_cp080\": false, \"etcdctl_binary_sha256\": \"de07257495499384f91f028dbc0c8e0394e0bd572b728ac486bbadbfa1cdf275\", \"known_unfenced_local_git_after_effective\": true, \"model_cp058_source_executed\": false, \"network_binding\": \"127.0.0.1-only-http-ephemeral\", \"new_test_case_count\": 17, \"production_authority\": false, \"real_etcd_3_6_15\": true, \"real_github_credentials\": false, \"real_github_remote_effect\": false, \"real_multi_host_core_issuer\": false, \"real_native_local_git_effect\": true, \"schema\": \"velvetos.office-v2.604.cp080.real-etcd-txn-localgit.lab.v1\", \"security_admission\": \"RED\", \"status\": \"PASS_REAL_ETCD_QUORUM_TXN_LOCAL_GIT_LAB_ONLY\"}\n",
+        "source": "Local scratch receipt read via MacMiniOffice2 connected device; no secrets"
+      }
+    ],
+    "raw_receipt_reproduction_command": "For each raw_receipts entry: hashlib.sha256(entry['original_raw_json_with_final_LF'].encode('utf-8')).hexdigest() == entry['sha256_of_original_raw_file']"
+  },
+  "disclaimers": {
+    "no_new_model_cp058_source_executed": true,
+    "no_github_credentials": true,
+    "no_remote_github_effect": true,
+    "no_production_changes": true,
+    "no_real_mtls_rbac_in_this_experiment": true,
+    "no_multi_node_etcd_quorum_or_physical_host_fleet": true,
+    "no_independent_security_review": true,
+    "no_GitHub_network_request_completion_proof": true,
+    "cp078_70_schedules_executed": false,
+    "owner_option_a_vs_b_approved": false
+  },
+  "signoff": "LAB ONLY: DO NOT MERGE OR ENABLE PRIVILEGED GITHUB SINK; P0_GENERATED_SOURCE_OS_ISOLATION_NOT_ADMITTED remains",
+  "prior_revision_note": "Initial CP080 test code did not pin owner mod_revision; superseded after finding same-value owner replacement ABA risk. Initial 15-case runs are historical exploratory results only. These 68/68 results refer solely to exact revised source SHA256 02c901..."
+}
