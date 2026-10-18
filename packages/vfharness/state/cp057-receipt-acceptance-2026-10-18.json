@@ -1,0 +1,36 @@
+{
+  "task_id": "cp057-receipt-acceptance-2026-10-18",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfharness",
+  "goal": "Mark CP057 PIN acceptance for the attempt-8 Calculator receipt without runtime authority or activation.",
+  "completed_steps": [
+    "CLAIM on #612 comment 6250847892",
+    "Merged origin/main 36739201 into #795 and requested QA at d50deb3710724789e647f7fc77a90d8b7206b046",
+    "Set PIN acceptance to ACCEPTED citing attempt 36abe219 and receipt 0e0ae55b",
+    "Sensor allows ACCEPTED only with that receipt sha and attempt id"
+  ],
+  "next_step": "Independent QA on the acceptance PR. Do not merge it from this task.",
+  "artifacts": [
+    "packages/vfharness/devtools/pilots/cua/cp057/PIN.json",
+    "scripts/vf_cp057_calc_strictmode.py"
+  ],
+  "unresolved": [
+    "A second native Calculator run is not claimed",
+    "runtimeAuthority and activationAllowed stay false"
+  ],
+  "last_updated": "2026-10-18",
+  "execution_state": {
+    "claim": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250847892",
+    "receipt": "https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6250697930",
+    "qa": "https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6250839975",
+    "attempt_id": "36abe219c4cf4995b8ce95078e568ee3",
+    "receipt_sha256": "0e0ae55b1ec00ee26a116be172eda17e3c7a917ffba4f3102c73bdbe4da6bb5c",
+    "acceptance": "ACCEPTED",
+    "runtimeAuthority": false,
+    "activationAllowed": false,
+    "sha256": "2f70a3c26fe3cd8b75f06e60a6d1c220a41a979aeaffa97f6547177256e18eed",
+    "windows_execution": false
+  },
+  "latest_observation": "PIN acceptance is ACCEPTED for the attempt-8 receipt only. calc.ps1 bytes are unchanged. No Windows execution from this task."
+}
