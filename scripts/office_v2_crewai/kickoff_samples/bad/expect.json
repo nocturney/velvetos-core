@@ -64,6 +64,13 @@
     ]
   },
   {
+    "file": "case-02-merged-plus-duplicate.md",
+    "case_id": "case-02",
+    "fail": [
+      "hebrew_table"
+    ]
+  },
+  {
     "file": "case-01-customer-case.md",
     "case_id": "case-01",
     "fail": [

@@ -351,6 +351,24 @@ def _check_assertion_matrix() -> None:
         "synthetic next",
     )
     _expect(merged, pair, {"hebrew_table"})
+    # Equal row count: one merged row plus one repeated URL. Count and
+    # presence both pass, so only the one-url conjunct can fail this case.
+    # Append the data line only. A second separator is not part of the table.
+    equal_count = (
+        merged
+        + "| %s | synthetic blocker | synthetic-seat | synthetic next |\n" % left
+    )
+    if equal_count.count("| --- | --- | --- | --- |") != 1:
+        _die("equal-count fixture repeated the separator")
+    equal_lines = [
+        line for line in equal_count.splitlines()
+        if line.strip().startswith("|") and ISSUE_URL.search(line)
+    ]
+    if len(equal_lines) != len(pair):
+        _die("equal-count fixture does not keep the row count")
+    if sorted(len(ISSUE_URL.findall(line)) for line in equal_lines) != [1, 2]:
+        _die("equal-count fixture is not one merged row plus one single url")
+    _expect(equal_count, pair, {"hebrew_table"})
     extra = (
         _row(left, "synthetic blocker", "synthetic-seat", "synthetic next")
         + "| %s | synthetic blocker | synthetic-seat | synthetic next |\n" % right
@@ -499,6 +517,19 @@ def _check_samples(cases: list[dict]) -> None:
         _die("merged-row negative is not a single data row")
     if len(ISSUE_URL.findall(merged_lines[0])) != 2:
         _die("merged-row negative does not cite two urls in one row")
+    both_name = "case-02-merged-plus-duplicate.md"
+    both_text = (BAD_DIR / both_name).read_text(encoding="utf-8")
+    both_issues = by_id["case-02"]["issues"]
+    both_lines = [
+        line for line in both_text.splitlines()
+        if line.strip().startswith("|") and ISSUE_URL.search(line)
+    ]
+    if len(both_lines) != len(both_issues):
+        _die("merged-plus-duplicate negative does not keep an equal row count")
+    if sorted(len(ISSUE_URL.findall(line)) for line in both_lines) != [1, 2]:
+        _die("merged-plus-duplicate negative is not one merged row plus one single url")
+    if not all(row["url"] in both_text for row in both_issues):
+        _die("merged-plus-duplicate negative dropped a fixture url")
     customer_case = (BAD_DIR / "case-01-customer-case.md").read_text(encoding="utf-8")
     if "Customer" not in customer_case or "Client" not in customer_case:
         _die("customer-case negative dropped Customer or Client")
