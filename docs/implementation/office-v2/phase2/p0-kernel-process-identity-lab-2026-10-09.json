@@ -1,0 +1,75 @@
+{
+  "schema": "vf.office-v2.p0-kernel-birth-identity-dual-host-lab.v1",
+  "issue": "https://github.com/nocturney/velvetos-core/issues/612",
+  "authority": "NO_EFFECT_LAB",
+  "source_sha256": "2268091d9129eb504fc17ce7e7374367deb5ae23cb1327872796f353a16043ce",
+  "automatic_recovery_proven": false,
+  "all_orphans_excluded": false,
+  "method": "Two synthetic Python processes per host; the process pair's creation-time identity and parent-child relation were observed while alive and after natural exit, with no model, kill, or scheduler.",
+  "trials": {
+    "mac": {
+      "schema": "vf.office-v2.p0-native-process-pair-probe.v1",
+      "host": "MacMiniOffice.local",
+      "platform": "Darwin",
+      "os_process_birth_backend": "PSUTIL_OS_CREATE_TIME",
+      "source_sha256": "2268091d9129eb504fc17ce7e7374367deb5ae23cb1327872796f353a16043ce",
+      "pin_sha256": "033146c5d628f2113254f8e22ba430f7742a1cb8cd6b059e8a2d7f7283bd6918",
+      "source_of_test_processes": "TWO_SYNTHETIC_PYTHON_PROCESSES_NOT_AIDER",
+      "live_worker": "SAME_KERNEL_INSTANCE_AT_SNAPSHOT",
+      "live_child": "SAME_KERNEL_INSTANCE_AT_SNAPSHOT",
+      "after_exit_worker": "HISTORICAL_PID_ABSENT",
+      "after_exit_child": "HISTORICAL_PID_ABSENT",
+      "group_during": {
+        "candidate_count": 1,
+        "status": "POSSIBLE_GROUP_MEMBERS"
+      },
+      "group_after": {
+        "candidate_count": 0,
+        "status": "NO_GROUP_MEMBERS_SEEN"
+      },
+      "historical_journal_preserved": true,
+      "no_final_receipt": true,
+      "model_invocations": 0,
+      "business_effects": 0,
+      "no_process_signals_or_force_stop": true,
+      "safe_to_retry_old": false,
+      "automatic_failover_proven": false,
+      "all_orphan_descendants_excluded": false,
+      "captured_at_utc": "2026-10-09T11:37:58.861317+00:00",
+      "elapsed_seconds": 23.867,
+      "receipt_sha256": "31b43e7eb2b1cbd472a3466502443b1f172f772135a692cd791192773d8da73c"
+    },
+    "windows": {
+      "schema": "vf.office-v2.p0-native-process-pair-probe.v1",
+      "host": "Chris",
+      "platform": "Windows",
+      "os_process_birth_backend": "WINDOWS_CIM_CREATION_DATE",
+      "source_sha256": "2268091d9129eb504fc17ce7e7374367deb5ae23cb1327872796f353a16043ce",
+      "pin_sha256": "c163b5454ac7ef52e711b375a23a6eb5bd0562d34c69af36988d0bdea07b8e73",
+      "source_of_test_processes": "TWO_SYNTHETIC_PYTHON_PROCESSES_NOT_AIDER",
+      "live_worker": "SAME_KERNEL_INSTANCE_AT_SNAPSHOT",
+      "live_child": "SAME_KERNEL_INSTANCE_AT_SNAPSHOT",
+      "after_exit_worker": "HISTORICAL_PID_ABSENT",
+      "after_exit_child": "HISTORICAL_PID_ABSENT",
+      "group_during": {
+        "candidate_count": null,
+        "status": "NO_WINDOWS_JOB_OBJECT_IDENTITY"
+      },
+      "group_after": {
+        "candidate_count": null,
+        "status": "NO_WINDOWS_JOB_OBJECT_IDENTITY"
+      },
+      "historical_journal_preserved": true,
+      "no_final_receipt": true,
+      "model_invocations": 0,
+      "business_effects": 0,
+      "no_process_signals_or_force_stop": true,
+      "safe_to_retry_old": false,
+      "automatic_failover_proven": false,
+      "all_orphan_descendants_excluded": false,
+      "captured_at_utc": "2026-10-09T11:38:03.944736+00:00",
+      "elapsed_seconds": 23.875,
+      "receipt_sha256": "9a2d80625ce8ad568b5088aef6f76ebb3686feb9e1e6f73ebff4d4ff5ee554dc"
+    }
+  }
+}

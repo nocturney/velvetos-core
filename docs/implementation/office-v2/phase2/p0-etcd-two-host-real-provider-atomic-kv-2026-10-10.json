@@ -1,0 +1,232 @@
+{
+  "schema": "velvetos.office-v2.fleet.etcd-two-host-kv-fence-lab.v1",
+  "date": "2026-10-10",
+  "status": "PASS_TWO_PHYSICAL_HOST_ETCD_ATOMIC_KV_ONLY_NOT_EXTERNAL_WRITER",
+  "scope": {
+    "owner_issue": 604,
+    "consumer_issue": 612,
+    "provider_candidate": "etcd",
+    "candidate_version": "3.6.15",
+    "provider_selected_for_production": false,
+    "mac_host": "MacMiniOffice.local",
+    "windows_host": "Chris",
+    "physical_hosts_real": 2,
+    "future_hosts_claimed": 0,
+    "real_model_workers_run": 0,
+    "only_synthetic_etcd_namespace": "/velvet-office2/lab604/etcd-revision-20261010",
+    "provider_endpoint_during_lab": "http://192.168.0.217:32379",
+    "authentication_enabled": false,
+    "tls_enabled": false,
+    "temporary_lan_unauthenticated_hard_nonproduction": true,
+    "git_base": "3689168e48f85bd1008421d69f7484a800073adf",
+    "api_client_path": "scripts/vf_office_v2_604_etcd_provider_pilot.py",
+    "api_client_source_sha256": "139f8e144d8d858ee38febc209ae6ba8f960f7eee178dd85b5ba9ac8ecf31893",
+    "api_client_source_sha256_same_on_both_hosts": true,
+    "official_release": "https://github.com/etcd-io/etcd/releases/tag/v3.6.15",
+    "official_mac_arm64_archive_bytes": 24037957,
+    "official_mac_arm64_archive_sha256": "c791b3b8e94845e130994f99dc5be7db4f57e6481d15f0a78e9bead7028d1e91",
+    "native_etcd_binary_sha256": "dd2596ab902c23252da55e770cb7f7216522ae5599f84d2a20e0e7272d52fe82",
+    "native_etcdctl_binary_sha256": "05f34d3be92b0ba78dfc5aa9fd5d63224d551a7f8c2eadfbaa7dc2f35ae625ad",
+    "binary_version_output": "etcd Version: 3.6.15 / darwin arm64",
+    "data_path_scope": "p0-etcd604-provider-lab-20261010/runtime/etcd-data",
+    "new_scheduler_installed_or_started": false,
+    "production_credentials_copied": false,
+    "existing_fleet_service_changed": false,
+    "paid_model_or_api_calls": 0
+  },
+  "attempts": [
+    {
+      "scenario": "race",
+      "host": "mac",
+      "result": "GRANTED_REAL_ETCD_LEASE",
+      "generation": 2,
+      "ttl_s": 100
+    },
+    {
+      "scenario": "race",
+      "host": "win",
+      "result": "DENIED_COMPETING_CLAIM",
+      "provider_revision": 2,
+      "unused_lease_revoked": true
+    },
+    {
+      "scenario": "race",
+      "host": "win",
+      "result": "GRANTED_AFTER_MAC_REVOKE",
+      "generation": 5,
+      "ttl_s": 100
+    },
+    {
+      "scenario": "expiry",
+      "host": "win",
+      "result": "GRANTED_BEFORE_TTL_EXPIRY",
+      "generation": 7,
+      "ttl_s": 6
+    },
+    {
+      "scenario": "expiry",
+      "host": "mac",
+      "result": "GRANTED_AFTER_WIN_TTL_EXPIRY",
+      "generation": 9,
+      "ttl_s": 80
+    },
+    {
+      "scenario": "renew",
+      "host": "mac",
+      "result": "GRANTED_AND_RENEWED",
+      "generation": 12,
+      "initial_ttl_s": 9,
+      "reported_renewed_ttl_s": 9
+    },
+    {
+      "scenario": "outage",
+      "host": "mac",
+      "result": "GRANTED_PRE_STOP",
+      "generation": 15,
+      "ttl_s": 20
+    },
+    {
+      "scenario": "outage",
+      "host": "win",
+      "result": "GRANTED_AFTER_STOP_RESTART_OLD_LEASE_EXPIRY",
+      "generation": 17,
+      "ttl_s": 60
+    }
+  ],
+  "real_atomic_effect_postconditions": {
+    "race": {
+      "accepted_host": "mac",
+      "generation": 2,
+      "sha256": "4b807fa56468ba263cb7e35c8318095d183094b4f3d6b16fd1ec6642927dde02",
+      "repeat_original_owner_denied": true,
+      "post_handoff_new_owner_denied_duplicate": true,
+      "post_handoff_old_owner_denied_stale": true
+    },
+    "expiry": {
+      "accepted_host": "mac",
+      "generation": 9,
+      "sha256": "1b402124a276c262f1783b23a81da8bfb24b80895823fe321715c34e71a1e40b",
+      "old_win_generation": 7,
+      "ttl_s": 6,
+      "old_win_effect_denied": true,
+      "old_win_lease_absent_observed_revision": 8
+    },
+    "renew": {
+      "accepted_host": "mac",
+      "generation": 12,
+      "sha256": "cbafb47c8d80dee835d5b9978b04e1776922da7da63a970649036e3f42a7de0c",
+      "ttl_initial_s": 9,
+      "provider_keepalive_confirmed": true,
+      "ttl_after_renew_s": 9,
+      "effect_after_10_s_observed": true,
+      "late_revoke_returned_provider_http_error_not_false_success": true
+    },
+    "outage": {
+      "accepted_host": "win",
+      "generation": 17,
+      "sha256": "1cbf69a961f03f7f6c65f726cc08a6237e9085ec6b250391197bd111b3f4bb75",
+      "old_mac_generation": 15,
+      "mac_old_lease_survived_initial_fast_restart": true,
+      "old_mac_lease_expired_later_revision": 16,
+      "no_effect_before_reassignment": true,
+      "provider_down_mac_effect_exit": 3,
+      "provider_down_win_observe_exit": 3,
+      "provider_down_mac_and_win_result": "FAIL_CLOSED",
+      "old_mac_effect_denied_after_rejoin": true
+    }
+  },
+  "provider_epoch_sequence": [
+    2,
+    5,
+    7,
+    9,
+    12,
+    15,
+    17
+  ],
+  "provider_shutdown_restart": {
+    "original_mac_native_pid": 67630,
+    "restarted_mac_native_pid": 68234,
+    "first_pid_verified_birth_and_command": true,
+    "both_exact_pids_absent_after_cleanup": true,
+    "same_on_disk_etcd_data_directory_used": true,
+    "endpoint_health_true_after_restart": true,
+    "provider_down_clients_fail_closed": true,
+    "single_node_only_no_quorum_or_ha_proof": true
+  },
+  "independent_native_etcdctl_final_readback": {
+    "result": "PASS",
+    "provider_global_revision": 19,
+    "original_lease_keys_remaining": 0,
+    "synthetic_effect_keys_present": 4,
+    "effects": {
+      "race": {
+        "host": "mac",
+        "generation": 2,
+        "sha256": "4b807fa56468ba263cb7e35c8318095d183094b4f3d6b16fd1ec6642927dde02"
+      },
+      "expiry": {
+        "host": "mac",
+        "generation": 9,
+        "sha256": "1b402124a276c262f1783b23a81da8bfb24b80895823fe321715c34e71a1e40b"
+      },
+      "renew": {
+        "host": "mac",
+        "generation": 12,
+        "sha256": "cbafb47c8d80dee835d5b9978b04e1776922da7da63a970649036e3f42a7de0c"
+      },
+      "outage": {
+        "host": "win",
+        "generation": 17,
+        "sha256": "1cbf69a961f03f7f6c65f726cc08a6237e9085ec6b250391197bd111b3f4bb75"
+      }
+    },
+    "windows_independent_cross_host_final_observe_all_four_pass": true
+  },
+  "final_cleanup_readback": {
+    "mac_utc": "2026-10-10T12:25:33Z",
+    "windows_utc": "2026-10-10T12:25:35.8814713Z",
+    "server_processes_absent": true,
+    "mac_listening_pilot_ports_count": 0,
+    "windows_tcp_to_mac_lab_port_connected": false,
+    "software_left_installed_in_global_path": false,
+    "autostart_enabled": false,
+    "local_mac_binary_and_db_retained_for_forensic_replay": true,
+    "local_mac_etcd_db_sha256": "6270dd86521083f7b7130b804d318e98cb87e0374be4f8601d27484ed83bc548",
+    "mac_original_state_sha256": {
+      "state-mac-expiry.json": "c6f7fa8597ae31ab2d97f408ed0cd7c88bc2eb37747215524c027ef341d17acc",
+      "state-mac-outage.json": "b75f07b817ac4ae4e3e921615b9981b66071ac5c33140b21fae2dba7d875c18b",
+      "state-mac-race.json": "55a0953c81ed31eec4316410ecdd02912ec61e2afb95cdde8d2d6be0c3a52628",
+      "state-mac-renew.json": "4ddfcaf7679c2f474e422c5a20326c75cf2485b8deaedc07419d7eb2e506255b"
+    },
+    "windows_original_state_sha256": {
+      "state-win-expiry.json": "4637878845d722613c1f908dc6b681f7bdd6228d726c1aa247426d759bff45cb",
+      "state-win-outage.json": "0d843b5c979eb3548a0e35fb4110c86bcc3985668d30fff5a36e43727f1153e2",
+      "state-win-race.json": "7abd3da4bfd6a506c13bf51bb779a5c900a0cb6e7698f19c0001e0d494b94b87"
+    },
+    "preexisting_services_preserved": {
+      "windows_ollama_pid43272": true,
+      "windows_maya_pid24392": true,
+      "mac_ollama_pid99094": true
+    }
+  },
+  "nonclaims": {
+    "provider_selected": false,
+    "production_lease_or_writer_admission": false,
+    "production_safe_authentication": false,
+    "quorum_failure_tolerance_or_multinode_ha": false,
+    "malicious_direct_client_cannot_bypass_raw_kv_put": false,
+    "atomic_external_git_push_or_artifact_filesystem_fence": false,
+    "agent_authored_pr_or_autonomous_merge": false,
+    "controlled_network_partition_or_clock_skew_test": false,
+    "independent_git_writer_mac_verified": false,
+    "actual_worker_crash_unknown_recovery": false,
+    "queue_scheduler_dispatched_jobs": false,
+    "unverified_host_capacity_counted": false,
+    "reliable_p95_latency": false,
+    "cost_incurred": false,
+    "customer_printer_social_or_cad_effects": false,
+    "duplicate_runtime_controller_created": false
+  },
+  "future_gate": "#604 choose one canonical placement/lease design after off-the-shelf comparison, TLS/RBAC and topology and external Git/artifact receiver transaction semantics; #612 consumes it only after independent writer identity authorization."
+}

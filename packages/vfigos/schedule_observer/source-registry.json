@@ -1,0 +1,87 @@
+{
+  "schema": "velvet.read_source_registry.v1",
+  "domain": "instagram",
+  "tenant": "velvet-factory",
+  "user_timezone": "Asia/Jerusalem",
+  "policy": {
+    "read_only": true,
+    "authoritative_writer": "cloudflare-publisher",
+    "allow_side_effects": false,
+    "discovery": "exhaust_configured_and_report_unavailable",
+    "dedupe": "cross_source_exact_identity_or_time_plus_text",
+    "never_claim_empty_when_unavailable": true
+  },
+  "sources": [
+    {
+      "id": "meta-business-suite",
+      "capability": "scheduled",
+      "reader": "local_authenticated_browser_ui",
+      "active": true,
+      "max_age_seconds": 900,
+      "confidence": "observed_ui",
+      "source_of_truth_for": "meta_native_schedule",
+      "notes": "Meta scheduling UI; read scheduled tab, never write."
+    },
+    {
+      "id": "cloudflare-publisher",
+      "capability": "scheduled",
+      "reader": "officev2_production_read",
+      "active": true,
+      "max_age_seconds": 900,
+      "confidence": "authoritative_queue",
+      "source_of_truth_for": "velvetos_publishing_queue",
+      "notes": "Do not use incumbent control token when Office v2 active."
+    },
+    {
+      "id": "google-calendar-mirror",
+      "capability": "scheduled_mirror",
+      "reader": "google_calendar_connector",
+      "calendar_id": "dbc5394e5344be5275a46dfa43b0c16e2673aea627b4d695162445a58c4f45f0@group.calendar.google.com",
+      "active": true,
+      "max_age_seconds": 3600,
+      "confidence": "derived_mirror",
+      "source_of_truth_for": "none",
+      "notes": "One-way mirror of Cloudflare only; not independent scheduling authority."
+    },
+    {
+      "id": "instagram-graph",
+      "capability": "published",
+      "reader": "instagram_mcp_connector",
+      "active": true,
+      "max_age_seconds": 3600,
+      "confidence": "provider_verified",
+      "source_of_truth_for": "published_live_feed",
+      "notes": "No official read of Meta native scheduled queue; published records only."
+    },
+    {
+      "id": "instagram-app-native",
+      "capability": "scheduled",
+      "reader": "not_integrated",
+      "active": true,
+      "max_age_seconds": 0,
+      "confidence": "unknown",
+      "source_of_truth_for": "instagram_in_app_schedule",
+      "notes": "Native app Scheduled UI may not be reflected in Business Suite; never infer empty."
+    },
+    {
+      "id": "openpost",
+      "capability": "scheduled",
+      "reader": "legacy_disabled",
+      "active": false,
+      "max_age_seconds": 0,
+      "confidence": "historical",
+      "source_of_truth_for": "none",
+      "notes": "Frozen since 2026-09-24. No new schedules."
+    },
+    {
+      "id": "other-approved-provider",
+      "capability": "scheduled",
+      "reader": "extensible_source_snapshot",
+      "active": false,
+      "max_age_seconds": 3600,
+      "confidence": "unverified",
+      "source_of_truth_for": "none",
+      "notes": "Enable via reviewed registry update; no auto-connection to unknown services."
+    }
+  ]
+}

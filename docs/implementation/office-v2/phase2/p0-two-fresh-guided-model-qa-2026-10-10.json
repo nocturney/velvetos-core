@@ -1,0 +1,123 @@
+{
+  "schema": "velvetos.office-v2.p0-two-fresh-guided-model-qa-results.v0",
+  "issue": "https://github.com/nocturney/velvetos-core/issues/612",
+  "status": "ONE_SUCCESS_ONE_FAILED_QA_ORIGINAL_JOURNAL_PRESERVED",
+  "observed_date_utc": "2026-10-10",
+  "source": {
+    "repo": "nocturney/velvetos-core",
+    "base_main": "f329165c3e10e763913e1fe136f13e503ec66ac7",
+    "executed_code_commit": "9140b5a87acd2f0bec1ea55a5e591e17ef14b906",
+    "executed_worker_source_sha256": "0099792f8be5d20c4c698a417d83bf5d12d00bfeaeccd92a90aeef81865a2cbb",
+    "archived_failed_worker_source_sha256": "c08a8413f59a1924c013adc66f523c897f1e477fae810f2c76127699d4262087",
+    "host": "MacMiniOffice.local",
+    "model": "qwen3.5:4b",
+    "model_digest": "7f3251fa6878a78a606bcb3c074283306e5ad2ea411a7774a9dd98a4bc7f2d13",
+    "executor": "Aider 0.86.2 local via Ollama localhost:11556",
+    "prompt_profile": "PUBLIC_SPEC_REMINDER_V1"
+  },
+  "attempts": [
+    {
+      "task_id": "p0-diverse-run-mac-merge-guided-20261010-a",
+      "fixture": "merge-windows-v1",
+      "base_sha": "d081112707ad55ff9e848a380227223bc75dff63",
+      "target": "windows_merge.py",
+      "branch": "lab-p0-diverse-run-p0-diverse-run-mac-merge-guided-20261010-a",
+      "candidate_raw_sha256": "bf850cf6c147bc41135b1129e1c2d46d91be8a6b88c3bf86637142007e76fc7a",
+      "prompt_raw_sha256": "4f4d0b6bd11950defc786e41d6022dd3f512ab6c5a1193077401341ab9c2c663",
+      "envelope_raw_sha256": "6fb794fcca74d457fc84baaf143ccb727608da561e86e1b18e53d63c6b758b96",
+      "kernel_pin_raw_sha256": "873b186e5044d242d41bea958c4f4d1bbaabb59632992e03285c45872af0e02c",
+      "result": "SUCCEEDED",
+      "original_model_worker_verify": "PASS",
+      "independent_qa": {
+        "pass": true,
+        "unit_3_verified": true,
+        "hidden_12_verified": true,
+        "unit_exit": 0,
+        "hidden_exit": 0,
+        "changed_paths": [
+          "windows_merge.py"
+        ],
+        "artifact_sha256": "999f8ae84cbca062a41297b6fadf6703ee69fa8a61e427a8441cd1a169c3b0a0"
+      },
+      "model_invocations_min": 1,
+      "exact_model_calls": null,
+      "additional_api_spend_usd": 0,
+      "worker_elapsed_seconds": 65.527,
+      "receipt_selfhash": "431c9d94ac939c794da794e84175964508e77125397e1fcc36a5a7fdc8862524",
+      "receipt_raw_sha256": "f6dac1286bb1fad2ddb525ecf51d3fd86a9149d2a5cc8464f05c5569350cedda",
+      "running_journal_removed_only_after_independent_success": true,
+      "production_authority": false
+    },
+    {
+      "task_id": "p0-diverse-run-mac-tag-guided-20261010-b",
+      "fixture": "canonical-tag-v1",
+      "base_sha": "14d67645008a068b2f01aae31ff4c02c749308fa",
+      "target": "canonical_tag.py",
+      "branch": "lab-p0-diverse-run-p0-diverse-run-mac-tag-guided-20261010-b",
+      "candidate_raw_sha256": "9221e38da7f61f3544f2e8bc4042009403bb969ff6912cea3635cce6b88a6434",
+      "prompt_raw_sha256": "09863d9198d0705fb260b0b17b9f54580a87c4ee4e26bbec37111bee90376a57",
+      "envelope_raw_sha256": "5d45c89b138647e53b2619c9eb8ec32ecf0fd20563f55f811f458ccadcaf1bdd",
+      "kernel_pin_raw_sha256": "d6fa4ec7f1daf8aaf5b05e7f985de713df53940d5530a4ad815977d172e10c29",
+      "result": "FAILED_INDEPENDENT_QA_NO_SUCCESS",
+      "original_model_worker_verify": null,
+      "failed_audit_verify": "PASS_OFFLINE_HISTORICAL_FAILED_QA_REPORT",
+      "independent_qa": {
+        "pass": false,
+        "unit_3_verified": true,
+        "hidden_12_verified": false,
+        "unit_exit": 1,
+        "hidden_exit": 1,
+        "changed_paths": [
+          "canonical_tag.py"
+        ],
+        "artifact_sha256": "7cadf341335664b89b9dfc40effb127f6315d31429b4759a3c0ab5b6325003fc"
+      },
+      "model_invocations_min": 1,
+      "exact_model_calls": null,
+      "additional_api_spend_usd": 0,
+      "receipt_selfhash": null,
+      "receipt_raw_sha256": null,
+      "original_journal_raw_sha256": "316dcd74d082da4c8531a29ab8097ccbf5d753692e24a5f6a23d5312b2df7250",
+      "failed_audit_raw_sha256": "dd538dee3e06e4c50e635f25b823ce23a226a631991cd5a8b4cb07aba4ffbd3f",
+      "failed_audit_selfhash": "24945797067d6177d91b8b1de97b9fbdb0a4a65e1aec593f135b216e2b911227",
+      "original_journal_preserved": true,
+      "success_receipt_absent": true,
+      "original_attempt_retried": false,
+      "production_authority": false
+    }
+  ],
+  "previous_failed_qa_journals_unchanged": {
+    "merge-windows-v1": "e909db6a1ab48bd5baaafece671c3a6cf825c6f804b7a273b7314e447fddd89d",
+    "canonical-tag-v1": "dbf9fa62bfdf6c9da85586810e30dbc0a6fba4c10e6bd5286419375ba5f8e7a3"
+  },
+  "statistics": {
+    "attempted": 2,
+    "independent_qa_successes": 1,
+    "independent_qa_failures": 1,
+    "successful_targets": [
+      "windows_merge.py"
+    ],
+    "failed_targets": [
+      "canonical_tag.py"
+    ],
+    "successful_worker_elapsed_seconds": 65.527,
+    "comparison": "TWO_FRESH_TASKS_NOT_RANDOMIZED_CAUSAL_AB_TEST",
+    "two_host_execution_proven": false,
+    "reliable_p95_proven": false
+  },
+  "limits": {
+    "original_failed_envelopes_retried": false,
+    "autonomous_unknown_recovery_proven": false,
+    "all_orphan_descendants_excluded": false,
+    "cross_host_fencing_verified": false,
+    "canonical_fleet_lease": false,
+    "production_writer": false,
+    "model_calls_by_evidence_checker": 0,
+    "additional_paid_api_spend_usd": 0,
+    "two_independent_host_successes_proven": false,
+    "auto_requeue_authorized": false,
+    "confidence_of_prompt_causing_success_established": false,
+    "original_raw_files_shared_in_git": false
+  },
+  "original_evidence": "Original raw Mac files retained in exclusive AgentEnvelopeLab/p0-diverse-execution-mac-profile-20261010 and p0-diverse-execution-mac-profiletag-20261010 roots; proof contains hashed excerpts, not credentials or unredacted logs."
+}

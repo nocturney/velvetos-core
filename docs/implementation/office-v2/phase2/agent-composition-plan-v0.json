@@ -1,0 +1,164 @@
+{
+  "schema": "velvetos.office-v2.phase2-agent-composition-plan.v0",
+  "status": "RESEARCH_INTAKE_ONLY_NO_LAB",
+  "recorded_on": "2026-10-10",
+  "owner_issue": "https://github.com/nocturney/velvetos-core/issues/612",
+  "fleet_owner_issue": "https://github.com/nocturney/velvetos-core/issues/604",
+  "canonical_registry": "docs/implementation/office-v2/phase2/candidate-registry-v0.json",
+  "canonical_shortlist": "docs/implementation/office-v2/phase2/p0-shortlists-v0.json",
+  "new_candidate_ids": [
+    "candidate-rakazo",
+    "candidate-hermes-agent",
+    "candidate-agent-zero",
+    "candidate-copilotkit-openbot",
+    "candidate-copilotkit-openmuse",
+    "candidate-copilotkit-opendots",
+    "candidate-anil-open-dots",
+    "candidate-diggerhq-opendots"
+  ],
+  "historical_existing": [
+    "candidate-opendots",
+    "candidate-letta",
+    "deferred-openclaw"
+  ],
+  "existing_decisions": {
+    "durability": "Phase 3A Restate architecture selected; no new production authority",
+    "security": "Phase 3B ZITADEL/OPA/OpenBao observer-only shadow",
+    "model": "Phase 3C contract/preflight only",
+    "fleet": "Issue #604 owns dispatch/placement and leases",
+    "memory": "vfmem/Project State is canonical; all candidate memory derived"
+  },
+  "no_authority_expansion": {
+    "new_scheduler_or_queue_allowed": false,
+    "production_authority_change": false,
+    "production_writer_change": false,
+    "production_credentials_allowed": false,
+    "new_recurring_cost_allowed": false,
+    "codex_cli_allowed": false,
+    "unreviewed_host_access_allowed": false,
+    "provider_invocation_at_intake_allowed": false,
+    "unverified_fixture_claims_allowed": false,
+    "canonical_memory_replacement_allowed": false
+  },
+  "variants": [
+    {
+      "id": "A_INCUMBENT_ONLY",
+      "role": "Existing GrokBot + canonical Office Task Envelope/Project State + Desktop Commander; comparator",
+      "components": [
+        "live-grokbot",
+        "live-desktop-commander"
+      ],
+      "single_task_owner": true,
+      "production_enabled_by_plan": false
+    },
+    {
+      "id": "B_ONE_SPECIALIST",
+      "role": "One isolated bounded Hermes OR Rakazo specialist per task, controlled by same Office owner; never a second scheduler",
+      "components": [
+        "live-grokbot",
+        "candidate-hermes-agent",
+        "candidate-rakazo"
+      ],
+      "single_task_owner": true,
+      "mutually_exclusive_specialist": true,
+      "production_enabled_by_plan": false
+    },
+    {
+      "id": "C_MODULAR_COMPOSITION",
+      "role": "One task owner with optional runtime, governed tools, Workspace/Spaces UI and derivative memory adapters; pattern vs whole-system comparison",
+      "components": [
+        "candidate-rakazo",
+        "candidate-copilotkit-openbot",
+        "candidate-copilotkit-opendots",
+        "candidate-letta"
+      ],
+      "single_task_owner": true,
+      "production_enabled_by_plan": false
+    }
+  ],
+  "benchmark": {
+    "status": "NOT_RUN",
+    "fixture_ids": [
+      "instagram-request-publish-live-verify",
+      "customer-quote-production-ready-paid",
+      "3d-asset-dcc-slice-artifact",
+      "agent-approval-effect-reconciliation",
+      "long-job-crash-resume",
+      "morning-brief-compose-send-verify"
+    ],
+    "scorecard_schema": "docs/implementation/office-v2/phase2/scorecard.schema.json",
+    "winner": null,
+    "scorecards": [],
+    "negative_controls": [
+      "PROMPT_INJECTION_UNTRUSTED_EMAIL_OR_BROWSER",
+      "INBOUND_OTP_AND_MAGIC_LINK_REDACTION",
+      "EXFILTRATION_SEND_PURCHASE_PUBLISH_DENY",
+      "TOOLS_AND_SECRETS_NOT_EXPOSED_TO_MODEL",
+      "BROWSER_SHELL_EGRESS_DENY",
+      "AGENT_DELEGATION_CANNOT_BYPASS_APPROVAL",
+      "CRASH_UNKNOWN_NO_BLIND_RETRY",
+      "SINGLE_SCHEDULER_NO_DOUBLE_DISPATCH",
+      "MEMORY_DELETE_AND_PROVENANCE",
+      "NATIVE_WINDOWS_MAC_GUI_ACCESS_DENIED_UNTIL_AUTHORIZED"
+    ],
+    "metrics": [
+      "fixture_pass",
+      "wall_seconds",
+      "cpu_peak_pct",
+      "ram_peak_mb",
+      "gpu_peak_pct",
+      "vram_peak_mb",
+      "network_mb",
+      "storage_delta_mb",
+      "external_cost",
+      "recurring_cost",
+      "operator_minutes",
+      "interventions",
+      "rollback_status"
+    ],
+    "ground_rules": "Same model quality/cost band, capabilities and sanitized fixture; independent QA and exact receipt hashes. UNKNOWN remains unknown. Do not claim a benchmark from documentation."
+  },
+  "phase_gates": [
+    {
+      "phase": "PHASE_2",
+      "status": "RESEARCH_REGISTERED",
+      "gate": "Source identity, license/dependencies, queue and A/B/C contract only; no install"
+    },
+    {
+      "phase": "P0_612",
+      "status": "NO_NEW_RUNTIME",
+      "gate": "Reuse pinned Task Envelope, checkpoint, readback, protected PR; no extra orchestrator"
+    },
+    {
+      "phase": "PHASE_3A",
+      "status": "KEEP_SELECTED_RESTATE",
+      "gate": "A challenger may reopen only under the same destructive durability fixture, no silent replacement"
+    },
+    {
+      "phase": "PHASE_3B",
+      "status": "SECURITY_PATTERN_ONLY",
+      "gate": "Bind through existing identity/policy/secret/effect decisions, prove deny by default and audit"
+    },
+    {
+      "phase": "PHASE_3C",
+      "status": "MODEL_PREFLIGHT_ONLY",
+      "gate": "Zero-added-cost local-first model routing, tool and vision accuracy, resource traces"
+    },
+    {
+      "phase": "PHASE_3D",
+      "status": "NOT_RUN",
+      "gate": "Typed runtime A/B/C synthetic fixture after CANDIDATE/ADMITTED + isolation; comparable scorecards and rollback"
+    },
+    {
+      "phase": "PHASE_3E_604",
+      "status": "NOT_RUN",
+      "gate": "Native Windows/Mac GUI and multi-host placement/failover require independent #604 evidence"
+    },
+    {
+      "phase": "SHADOW_PILOT_PRODUCTION",
+      "status": "NOT_AUTHORIZED",
+      "gate": "Explicit authority, scoped policies and model access, approvals, immutable evidence, rollback and live readback"
+    }
+  ],
+  "next_required_action": "Before installing one contender, complete its immutable source/dependency/license/cost/security preflight and an isolated Golden Fixture adapter; evaluate A then B then C only if the prior result justifies extra complexity."
+}

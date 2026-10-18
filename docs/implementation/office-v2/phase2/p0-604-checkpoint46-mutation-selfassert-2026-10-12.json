@@ -1,0 +1,112 @@
+{
+  "cases": [
+    {
+      "detail": "UNTRUSTED_LABEL_DENIED",
+      "id": "L01_KERNEL_UID_MISMATCH",
+      "pass": false
+    },
+    {
+      "detail": "ONE_ATOMIC_LOCAL_EFFECT",
+      "id": "L02_UNKNOWN_PRINCIPAL",
+      "pass": false
+    },
+    {
+      "detail": "UNTRUSTED_LABEL_DENIED",
+      "id": "L03_FALSE_LABEL",
+      "pass": true
+    },
+    {
+      "detail": "CAPABILITY_DENIED",
+      "id": "L04_CAPABILITY_SCOPE",
+      "pass": true
+    },
+    {
+      "detail": "INPUT_SCOPE_NOT_BOUND",
+      "id": "L05_SOURCE_DIGEST",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "id": "L05B_WORKER_CANNOT_ROTATE_LEASE",
+      "pass": true
+    },
+    {
+      "detail": "[{'operation': 'read', 'denied': True}, {'operation': 'write', 'denied': True}]",
+      "id": "L06_OS_FILESYSTEM_DENY_A",
+      "pass": true
+    },
+    {
+      "detail": "[{'operation': 'read', 'denied': True}, {'operation': 'write', 'denied': True}]",
+      "id": "L06_OS_FILESYSTEM_DENY_B",
+      "pass": true
+    },
+    {
+      "detail": "[{'operation': 'read', 'denied': True}, {'operation': 'write', 'denied': True}]",
+      "id": "L06_OS_FILESYSTEM_DENY_C",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "id": "L07_PROVIDER_EPOCH_ROTATED_REF_UNCHANGED",
+      "pass": false
+    },
+    {
+      "detail": "DUPLICATE_LOGICAL_INTENT_DENIED",
+      "id": "L08_STALE_OWNER_CURRENT_REF_DENIED",
+      "pass": false
+    },
+    {
+      "detail": "DUPLICATE_LOGICAL_INTENT_DENIED/DUPLICATE_LOGICAL_INTENT_DENIED/DUPLICATE_LOGICAL_INTENT_DENIED",
+      "id": "L09_THREE_PROCESS_TWO_UID_LOCAL_SINGLE_EFFECT",
+      "pass": false
+    },
+    {
+      "detail": "",
+      "id": "L10_READBACK_COMMIT_TARGET",
+      "pass": false
+    },
+    {
+      "detail": "",
+      "id": "L11_UNKNOWN_FREEZE_DENY",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "id": "L12_PROVIDER_UNAVAILABLE_DENY",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "id": "L13_ONLY_ONE_SINK_ACCEPTANCE",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "id": "L14_CLEAN_SHUTDOWN",
+      "pass": true
+    }
+  ],
+  "cross_store_atomicity_proven": false,
+  "host_os": "linux",
+  "kernel_release": "6.18.44",
+  "local_sqlite_effect_only": true,
+  "mac_windows_security_isolation_proven": false,
+  "native_github_epoch_fence_proven": false,
+  "new_os_users": 0,
+  "passed": 11,
+  "production_credential_custody_proven": false,
+  "production_worker_admitted": false,
+  "python_version": "3.13.5",
+  "real_kernel_so_peercred": true,
+  "remote_effects": 0,
+  "schema": "vf604.linux-peercred-sink-offline.v1",
+  "separate_numeric_uids_without_creating_accounts": true,
+  "source_sha256": "477dcfca2f157528893662bad2c96e9d8595e5586e7b79261b9b62fdf9a0fdfe",
+  "status": "FAIL_CLOSED_INCOMPLETE_LAB",
+  "tcp_listeners": 0,
+  "tests": 17,
+  "uses_dagu": false,
+  "uses_etcd": false,
+  "uses_git": false,
+  "uses_github": false
+}

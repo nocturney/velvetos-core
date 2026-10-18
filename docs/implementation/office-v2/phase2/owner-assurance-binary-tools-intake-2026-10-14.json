@@ -1,0 +1,57 @@
+{
+  "schema": "velvetos.office-v2.owner-assurance-binary-intake.v1",
+  "status": "RESEARCH_ROUTED_NOT_EXECUTED",
+  "date": "2026-10-14",
+  "source_batch": "owner-supplied three GitHub repositories (iFixAi, PentAGI, Ghidra)",
+  "canonical_registry": "docs/implementation/office-v2/phase2/candidate-registry-v0.json",
+  "documentation": "docs/implementation/office-v2/phase2/owner-assurance-binary-tools-intake-2026-10-14.md",
+  "counts": {
+    "total": 3,
+    "p0_queued": 0,
+    "phase_routed": 3
+  },
+  "items": [
+    {
+      "candidate_id": "candidate-ifixai-ai-ifixai",
+      "url": "https://github.com/ifixai-ai/iFixAi",
+      "upstream_pin": "d86ba616fa4736b1239e63dd2422fa152cebf7da",
+      "license_review": "Apache-2.0; API/judge-provider inference charges separate",
+      "route_kind": "PHASE_ROUTED",
+      "lane": "agent-quality-evaluation",
+      "workstream": "agent-quality",
+      "owner_issue": "https://github.com/nocturney/velvetos-core/issues/612",
+      "targets": "Office v2 agent quality; Promptfoo incumbent evaluation; agent approval -> external effect -> reconciliation Golden Fixture",
+      "next_gate": "After the verified #612 reference run, compare pinned iFixAi mock/no-telemetry synthetic permission, prompt-injection and destructive-action fixtures against Promptfoo and canonical postcondition checks; collect same-task false-positive/false-negative, evidence coverage, operator time and incremental resource cost.",
+      "unlock_condition": "A single independently verified #612 source-to-PR QA/recovery baseline; reviewed isolated mock configuration, zero paid API calls, no secrets, no Codex CLI, and benchmark fixture/admission approval.",
+      "blocker": "Evaluators are not effect authorities; no production enforcement replacement, no paid provider/judge calls and no scorecards with customer/secret material."
+    },
+    {
+      "candidate_id": "candidate-vxcontrol-pentagi",
+      "url": "https://github.com/vxcontrol/pentagi",
+      "upstream_pin": "843dfeb4bfc809c09d1bc5022e567c602d8fc9dd",
+      "license_review": "MIT repository source; review bundled EULA, third-party tools and optional VXControl Cloud license separately",
+      "route_kind": "PHASE_ROUTED",
+      "lane": "security-assurance",
+      "workstream": "security-assurance",
+      "owner_issue": "https://github.com/nocturney/velvetos-core/issues/595",
+      "targets": "VelvetOS and Office security QA; test-only API/identity/sandbox contracts, not production penetration testing",
+      "next_gate": "Audit pinned v2.2.0+ release, CVE-2026-14784 remediation and Docker worker/network defaults; cost/license review, then design an isolated no-credential/no-production-target synthetic security fixture with explicit scope and teardown; score against deterministic existing security checks.",
+      "unlock_condition": "A documented owned synthetic target, explicit authorized scope, hardened isolated host/network and verified dind worker-policy tests; no hidden spend or model calls; P0 #612 worker capacity must be unaffected.",
+      "blocker": "Security-critical: do not install on the privileged primary workstation/production hosts, attach host docker.sock, expose callback ports, scan live systems, or launch autonomous tools from a registry entry."
+    },
+    {
+      "candidate_id": "candidate-nsa-ghidra",
+      "url": "https://github.com/NationalSecurityAgency/ghidra",
+      "upstream_pin": "918acd744d17e3b95fbde44ec6ab3e59b6dbd45f",
+      "license_review": "Apache-2.0 source; check separate runtime/JDK and bundled dependency licenses",
+      "route_kind": "PHASE_ROUTED",
+      "lane": "binary-analysis",
+      "workstream": "shipped-artifact-analysis",
+      "owner_issue": "https://github.com/nocturney/velvetos-core/issues/606",
+      "targets": "REA 5.0.0 comparison for signed Windows PE / shipped desktop artifacts; optionally LOCAL3D/STOW under specific blocker",
+      "next_gate": "When #606 has a concrete shipped-binary integration blocker, benchmark pinned Ghidra headless/PyGhidra versus the existing REA/read-only deterministic path on the same authorized PE subset: decompilation fidelity, evidence/provenance, false positives, CPU/RAM, time and safe teardown.",
+      "unlock_condition": "P1 #606 unparked by a real binary blocker or #612 P0 reference/capacity proven; target file rights, bounded scope, no-P0-contention resource lease, verified release/security and local cost preflight.",
+      "blocker": "Not a CAD tool and not a production agent; no binary mutation, firmware exploitation, privilege escalation, unnecessary installation or automatic startup."
+    }
+  ]
+}

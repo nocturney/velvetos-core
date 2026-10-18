@@ -117,6 +117,9 @@ def make(args):
         },
         "context_checkpoint": str(checkpoint),
     }
+    # New real OS child identity is opt-in until independently accepted on each host.
+    if args.kernel_birth_pin:
+        envelope["kernel_birth_capture"] = worker.BIRTH_MODE
     # Entire model+authority+checkpoint validation happens BEFORE any invocation.
     worker.preflight(envelope)
     file = destination / "envelope.json"
@@ -129,6 +132,7 @@ def make(args):
         "hidden_sha256": worker.hash_file(hidden),
         "envelope": str(file), "receipt": str(destination / "output" / "receipt.json"),
         "model_invocations": 0, "production_authority": "NONE",
+        "kernel_birth_capture": envelope.get("kernel_birth_capture"),
     }
 
 
@@ -140,6 +144,7 @@ def main():
     p.add_argument("--model", required=True)
     p.add_argument("--port", type=int, required=True)
     p.add_argument("--timeout", type=int, default=170)
+    p.add_argument("--kernel-birth-pin", action="store_true")
     args = p.parse_args()
     print(json.dumps(make(args), ensure_ascii=False, sort_keys=True))
 

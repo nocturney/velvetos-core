@@ -1,0 +1,61 @@
+{
+  "cleanup": "SEPARATE_LIVE_HOST_STOP_VERIFICATION_REQUIRED",
+  "conclusions": {
+    "atomic_effect_boundary_fencing_proven": false,
+    "cancellation_proven": false,
+    "crash_recovery_or_retry_proven": false,
+    "durable_distributed_lease_issued": false,
+    "fifo_order_proven": false,
+    "model_backed_coding_workers_proven": false,
+    "new_model_calls": 0,
+    "new_scheduler_runs": 0,
+    "original_lab_evidence_modified": false,
+    "production_authority": false,
+    "same_fixture_vendor_comparison_proven": false,
+    "synthetic_postconditions_rechecked_on_original_logs": true
+  },
+  "exact_original_stdout_hashes": {
+    "vf604-dual-mac-a-1423z": "fb38c3e83af1c7e8bce64dafca596683cc07ebea3b0c6e446d39072668fad478",
+    "vf604-dual-win-a-1423z": "9967ec1205554fbbe7086de86bbf5c41fdeb61cc1522eba351931a815fdc7fca",
+    "vf604-fair-fair-a-1423z": "2e21a28ab4c0af7b0f2252d1664de5c5cccd0e9b74c881dd4a4b8e9defba73a4",
+    "vf604-fair-fair-b-1423z": "13ffcc94dd76a7c90405f512d24650b93411287a761fc090e4cd662a5ac08ec2",
+    "vf604-fair-fair-c-1423z": "6c3bbf75b705633cb7ab3f1f64696044676b23b35e15dcd667b6ce953ec848b2",
+    "vf604-fair-fair-d-1423z": "c4fa79dc4fea7aaabcf98e57676815ce87f21fb5de3dd7ddb9585d251128cecd",
+    "vf604-fair-fair-e-1423z": "01d0d945c62a1587ff284c15ec754904d721c996b405584965042fe603144efe",
+    "vf604-fair-fair-f-1423z": "a83443e1b592ad95b572f25f7bbdd3c7d9174048dc015ca35aa85504e901b09b",
+    "vf604-quad-mac-a-1423z": "54713308bfbf752272b6550c5bbd97c5a8226a755e38dfb0fdb38ad447af2329",
+    "vf604-quad-mac-b-1423z": "9f9c73e184eaddc146fefd2a200ed406fb30b5a04eed005932037c317dc0e1c2",
+    "vf604-quad-win-a-1423z": "6c844e30880e31131130cfbcbff497fac7691c75ae4a54d41cf9060eed19804b",
+    "vf604-quad-win-b-1423z": "e3cd3e947279cc4ef61eadfc2345b628ad4cb448537c5d3a5fb1f94eebf55213",
+    "vf604-solo-mac-a-1423z": "66743de55b8e025ae31421c2c415fc86be40362802989b04f714e0815f61b15f"
+  },
+  "historical_distinct_job_count": 13,
+  "historical_group_counts": {
+    "dual": 2,
+    "fair": 6,
+    "quad": 4,
+    "solo": 1
+  },
+  "historical_non_fifo_dispatch_inversions": 4,
+  "historical_physical_host_counts": {
+    "mac": 10,
+    "win": 3
+  },
+  "historical_source_sha256": {
+    "fairness.json": "26dd1ec4c18caae6478db2bd939014fa736c70f96ac7ca096d901cb3fddd410b",
+    "groups-progress.json": "c4fac834e961ca44ed9c2ac2831989b99e75004eec6e64eb2631c82d3d1c58ec",
+    "independent-audit.json": "650e344a287d127caa9f974a360391b0ad6da0e45bca6a35fd807922aa65e9e6",
+    "manifest.json": "662ccfb7289f9481cc7e332c42886ba078d1575c89c866788efbd861e220c61b"
+  },
+  "historical_utc": "2026-10-08T14:35:42.810029+00:00",
+  "max_verified_overlap": {
+    "dual": 2,
+    "fair": 1,
+    "quad": 4,
+    "solo": 1
+  },
+  "schema": "velvetos.office-v2.fleet.dagu-13-run-forensic-audit.v0",
+  "scope": "#604_EXISTING_DAGU_2_18_2_SYNTHETIC_LAB_ONLY",
+  "statistical_limits": "ONE_ROUND_N_1_2_4_NO_STABLE_P95",
+  "status": "VERIFIED_HISTORIC_RAW_13_OF_13_NO_CURRENT_LEASE"
+}

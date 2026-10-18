@@ -1,0 +1,30 @@
+def canonical_tag(text: str) -> str:
+    import re
+    ascii_alnum = ''.join(c for c in text if c.isascii() and (c.isalnum() or c.isdigit()))
+    if not ascii_alnum:
+        return 'untitled'
+    filtered = [c for c in text if c.isascii() and (c.isalnum() or c.isdigit())]
+    runs = []
+    i = 0
+    while i < len(text):
+        if text[i].isascii() and (text[i].isalnum() or text[i].isdigit()):
+            filtered.append(text[i])
+            while i < len(text) and text[i].isascii() and (text[i].isalnum() or text[i].isdigit()):
+                i += 1
+        else:
+            runs.append((i, i))
+            while i < len(text) and not (text[i].isascii() and (text[i].isalnum() or text[i].isdigit())):
+                i += 1
+    if not filtered:
+        return 'untitled'
+    result = []
+    for idx, char in enumerate(filtered):
+        if idx == 0:
+            result.append(char)
+        elif char.isascii() and (char.isalnum() or char.isdigit()):
+            result.append(char)
+        else:
+            if len(result) > 1:
+                result.append('_')
+            result.append(char)
+    return ''.join(result).strip('_')
