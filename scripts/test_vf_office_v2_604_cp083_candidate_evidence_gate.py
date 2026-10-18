@@ -358,6 +358,79 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
             gate.refuse_host_attestation(forged)
         self.assertEqual(str(caught.exception), "NOT_HOST_ATTESTATION")
 
+    def test_guest_and_manifest_cr_or_duplicate_keys_refused(self):
+        # Same decoder as wire frames. Python's json.loads would accept these.
+        samples = (
+            (b'{"a":{"b":1,"b":2}}', "DUPLICATE_JSON_KEY"),
+            (b'{"a":[{"b":1,"b":2}]}', "DUPLICATE_JSON_KEY"),
+            (b'{"a":NaN}', "NON_FINITE_JSON"),
+            (b'{"a":Infinity}', "NON_FINITE_JSON"),
+            (b'{"a":-Infinity}', "NON_FINITE_JSON"),
+            (b'{"a":1}{"b":2}', "INVALID_UTF8_OR_JSON"),
+            (b"[1]", "JSON_OBJECT_REQUIRED"),
+            (b'{"a":"\xff"}', "INVALID_UTF8_OR_JSON"),
+            (b'{"a":1}\r\n', "CR_IN_CANONICAL_JSON"),
+        )
+        for raw, reason in samples:
+            with self.subTest(reason=reason, raw=raw):
+                with self.assertRaises(gate.Refused) as caught:
+                    gate.decode(raw)
+                self.assertEqual(str(caught.exception), reason)
+
+        guest = self.base / "run-1" / "guest.json"
+        original = json.loads(guest.read_bytes())
+        pretty = json.dumps(original, indent=2).encode()
+        self.assertIn(b"\n", pretty)
+        self.assertNotIn(b"\r", pretty)
+        guest.write_bytes(pretty)
+        self.manifest["runs"][0]["guest_sha256"] = sha(pretty)
+        self._save_manifest()
+        result = gate.verify(self.manifest_path)
+        self.assertEqual(result["status"],
+                         "OFFLINE_BYTE_CONSISTENCY_ONLY_NOT_RUNTIME_QA")
+        self.assertEqual(result["security_admission"], "RED")
+        self.assertEqual(result["host_attestation"],
+                         "REFUSED_UNSIGNED_SELF_ISSUED")
+
+        def plant(path, mutated):
+            path.write_bytes(mutated)
+            return mutated
+
+        guest_raw = guest.read_bytes()
+        duplicated_guest = guest_raw[:-1] + b',"run_id":"run-1"}'
+        self.assertEqual(
+            json.loads(duplicated_guest.decode())["run_id"], "run-1")
+        plant(guest, duplicated_guest)
+        self.manifest["runs"][0]["guest_sha256"] = sha(duplicated_guest)
+        self._save_manifest()
+        with self.assertRaises(gate.Refused) as caught:
+            gate.verify(self.manifest_path)
+        self.assertEqual(str(caught.exception), "DUPLICATE_JSON_KEY")
+
+        guest.write_bytes(guest_raw)
+        self.manifest["runs"][0]["guest_sha256"] = sha(guest_raw)
+        self._save_manifest()
+        cr_guest = guest_raw.replace(b"{", b"{\r", 1)
+        self.assertEqual(json.loads(cr_guest.decode()), json.loads(guest_raw.decode()))
+        plant(guest, cr_guest)
+        self.manifest["runs"][0]["guest_sha256"] = sha(cr_guest)
+        self._save_manifest()
+        with self.assertRaises(gate.Refused) as caught:
+            gate.verify(self.manifest_path)
+        self.assertEqual(str(caught.exception), "CR_IN_CANONICAL_JSON")
+
+        manifest_raw = self.manifest_path.read_bytes()
+        duplicated = manifest_raw[:-1] + b',"security_admission":"RED"}'
+        self.assertEqual(json.loads(duplicated.decode())["security_admission"], "RED")
+        self.manifest_path.write_bytes(duplicated)
+        with self.assertRaises(gate.Refused) as caught:
+            gate.verify(self.manifest_path)
+        self.assertEqual(str(caught.exception), "DUPLICATE_JSON_KEY")
+        self.manifest_path.write_bytes(manifest_raw.replace(b"{", b"{\r", 1))
+        with self.assertRaises(gate.Refused) as caught:
+            gate.verify(self.manifest_path)
+        self.assertEqual(str(caught.exception), "CR_IN_CANONICAL_JSON")
+
 
 if __name__ == "__main__":
     unittest.main()
