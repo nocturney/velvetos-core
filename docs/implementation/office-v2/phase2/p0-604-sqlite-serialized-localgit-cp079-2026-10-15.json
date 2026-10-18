@@ -1,0 +1,54 @@
+{
+  "schema": "vf604.cp079.sqlite-localgit.evidence.v1",
+  "date": "2026-10-15",
+  "status": "PASS_DISPOSABLE_NATIVE_LOCAL_GIT_SQLITE_ONLY",
+  "security_admission": "RED",
+  "branch": "lab/office604-cp079-sqlite-localgit-transaction-20261015",
+  "baseline_main_sha": "4f47c222fca2ac328773f7e0e80c86f0be3ad6b4",
+  "source_path": "scripts/vf_office_v2_604_local_git_revoke_txn_cp079.py",
+  "source_git_blob_sha": "8d212f849b599ba569f96d2b025f7ea92dad7020",
+  "source_sha256": "15c47c393ff592acc3cb8e820c5f1a65626e2dc6cd475580d402393616b947b0",
+  "source_receipt_sha256": "c8189d085927458820025a16d3f20e883a4156f8cf7402f11ca59bd53b4c3fb7",
+  "evidence_zip_sha256": "1e2525abfd46e476d9c9c57181b1b67659d91c07e067627f3520e6d553ba4472",
+  "runtime": {
+    "python": "3.13.5",
+    "git": "git version 2.47.3",
+    "environment": "assistant-disposable-container-/tmp",
+    "real_sqlite": true,
+    "sqlite_wal_full_sync": true,
+    "transaction_lock": "BEGIN IMMEDIATE",
+    "actual_local_bare_git": true
+  },
+  "results": {
+    "independent_runs": 30,
+    "tests_per_run": 16,
+    "passed_test_executions": 480,
+    "failed_runs": 0,
+    "post_revoke_legacy_unsafe_local_git_effect_reproduced": true,
+    "revoke_commit_vs_admission_atomic_in_sqlite": true,
+    "double_dispatch_atomic_marking_proven_in_fixture": true,
+    "unknown_retry_refused_in_fixture": true,
+    "local_ref_expected_old_CAS_conflict_refused": true,
+    "source_executed_on_user_machine": false
+  },
+  "exclusions": {
+    "real_etcd_mtls": false,
+    "real_github_remote_ref_update": false,
+    "live_github_credentials": false,
+    "independent_security_review": false,
+    "real_os_kernel_peer_identity": false,
+    "multi_host_gpu_allocation": false,
+    "actual_cp058_model_authored_source": false,
+    "cp078_70_cases_executed": false,
+    "production_effects": false,
+    "codex_cli_or_paid_inference": false
+  },
+  "pending": [
+    "owner revocation Option A versus Option B explicit decision",
+    "real Core issuer and GitHub sink signed credentials",
+    "provider quorum/epoch and multi-resource serialization",
+    "delayed GitHub delivery and no-effect independent proof",
+    "protected-main credential-free exact-head policy and CP058 source QA"
+  ],
+  "acceptance": "LAB_FIXTURE_ONLY_NOT_PRODUCTION"
+}
