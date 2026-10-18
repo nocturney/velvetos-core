@@ -22,7 +22,7 @@
   "execution_state": {
     "claim": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6253160713",
     "security_admission": "RED",
-    "tests": 26
+    "tests": 27
   },
   "latest_observation": "On POSIX, directory_open_flags includes O_DIRECTORY. Patching that flag to 0 raises SKIP_NON_POSIX. Dropping the nlink check lets verify succeed; the real function still raises HARDLINK_ALIAS_REFUSED. Symlink and FIFO reads stay refused."
 }
