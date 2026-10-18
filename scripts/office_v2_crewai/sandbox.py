@@ -6,7 +6,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from office_v2_crewai.contract import APPROVED_OLLAMA_HOST, SANDBOX_ROOT
+from office_v2_crewai.contract import APPROVED_OLLAMA_HOST, SANDBOX_ROOT, VELVET_ROOT
 
 
 class StorageRefusal(RuntimeError):
@@ -231,13 +231,96 @@ def assert_sandbox_resolution(root: str = SANDBOX_ROOT, home: str | None = None,
         raise StorageRefusal("SANDBOX_TEMP_OUTSIDE_ROOT")
 
 
-def bind_process_sandbox(env: dict | None = None, root: str = SANDBOX_ROOT) -> dict:
-    """Install the sandbox variables. Refuse before any assignment when the root is off D:."""
+def assert_under_velvet(root: str) -> None:
+    """A sandbox parameter must stay on D: and under D:\\Velvet."""
     if not on_drive_d(root):
         raise StorageRefusal("SANDBOX_NOT_ON_D:ROOT")
-    if not _same(root, SANDBOX_ROOT):
-        raise StorageRefusal("SANDBOX_OUTSIDE_ROOT:ROOT")
+    if not under_root(root, VELVET_ROOT):
+        raise StorageRefusal("SANDBOX_OUTSIDE_VELVET")
+
+
+def sandbox_temp_dir(root: str) -> str:
+    return root.rstrip("\\/") + "\\tmp"
+
+
+def profile_temp_dir(root: str) -> str:
+    return root.rstrip("\\/") + "\\AppData\\Local\\Temp"
+
+
+def assert_temp_will_not_fall_through(root: str, exists) -> None:
+    """CPython skips a TEMP that is not there and can land on %SYSTEMROOT%\\Temp."""
+    if not exists(sandbox_temp_dir(root)) or not exists(profile_temp_dir(root)):
+        raise StorageRefusal("SANDBOX_TEMP_ABSENT")
+
+
+def prepare_sandbox_temp(root: str, mkdir=None, exists=None) -> None:
+    """Create the sandbox temp dirs before import crewai.
+
+    crewai_core.lock_store names its file lock ``crewai:{md5}.lock``. On
+    Windows the colon is an NTFS alternate-data-stream separator, so
+    portalocker creates a 0-byte file whose name is ``crewai``. If the
+    sandbox temp directory does not exist, gettempdir() skips TEMP/TMP and
+    a SYSTEM process lands on C:\\Windows\\Temp.
+    """
+    assert_under_velvet(root)
+    targets = [sandbox_temp_dir(root), profile_temp_dir(root)]
+    if mkdir is None:
+        if os.name != "nt":
+            raise StorageRefusal("SANDBOX_TEMP_ABSENT")
+
+        def mkdir(path: str) -> None:
+            Path(path).mkdir(parents=True, exist_ok=True)
+
+    for path in targets:
+        mkdir(path)
+    if exists is None:
+        if os.name != "nt":
+            raise StorageRefusal("SANDBOX_TEMP_ABSENT")
+        return
+    assert_temp_will_not_fall_through(root, exists)
+
+
+def ads_host_basename(lock_filename: str) -> str:
+    """Return the file Windows creates when the lock name contains a colon."""
+    base = lock_filename.replace("/", "\\").split("\\")[-1]
+    if base.lower().endswith(".lock"):
+        base = base[: -len(".lock")]
+    if ":" in base:
+        base = base.split(":", 1)[0]
+    return base
+
+
+def system_temp_crewai(system_root: str = "C:\\Windows") -> str:
+    return system_root.rstrip("\\/") + "\\Temp\\crewai"
+
+
+def assert_no_system_temp_crewai(exists, system_root: str = "C:\\Windows") -> None:
+    """Refuse the 0-byte ADS host file outside the sandbox."""
+    if exists(system_temp_crewai(system_root)):
+        raise StorageRefusal("WINDOWS_TEMP_CREWAI")
+
+
+def refuse_operator_env(env: dict) -> None:
+    """Refuse a present wrong OLLAMA_HOST or proxy. Absent keys may be filled."""
+    if not isinstance(env, dict):
+        raise StorageRefusal("SANDBOX_ENV_ABSENT")
+    host = env.get("OLLAMA_HOST")
+    if isinstance(host, str) and host.strip() and host != APPROVED_OLLAMA_HOST:
+        raise StorageRefusal("OLLAMA_HOST_REFUSED")
+    for key, want in PROXY_KEYS.items():
+        for name in (key, key.lower()):
+            value = env.get(name)
+            if not isinstance(value, str) or not value.strip():
+                continue
+            if value != want:
+                raise StorageRefusal("E5_PROXY_MISMATCH:" + name)
+
+
+def bind_process_sandbox(env: dict | None = None, root: str = SANDBOX_ROOT) -> dict:
+    """Install the sandbox variables. Refuse before any assignment when the root is off D:."""
+    assert_under_velvet(root)
     ready = {} if env is None else dict(env)
+    refuse_operator_env(ready)
     ready.update(approved_environment(root))
     assert_sandbox_env(ready, root)
     for key, value in approved_environment(root).items():

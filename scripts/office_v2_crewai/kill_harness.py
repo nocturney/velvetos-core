@@ -45,6 +45,15 @@ class KillHarness:
         clock = time.monotonic() if now is None else now
         return (clock - started_monotonic) >= self.timeout_seconds
 
+    def socket_timeout(self, started_monotonic: float, now: float, cap: float = 30) -> float:
+        """Seconds left for one socket, never above cap. Zero remaining is a refusal."""
+        if self.expired(started_monotonic, now=now):
+            raise KillRefusal("ATTEMPT_TIMEOUT")
+        remaining = self.timeout_seconds - (now - started_monotonic)
+        if remaining <= 0:
+            raise KillRefusal("ATTEMPT_TIMEOUT")
+        return float(min(cap, remaining))
+
     def signal_pid(self, pid: int) -> str:
         if pid not in self.owned or pid <= 1 or pid == os.getpid():
             return "REFUSED_NOT_OWNED"

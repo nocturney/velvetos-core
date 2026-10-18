@@ -126,6 +126,46 @@ lock. crewai-tools CVE-2026-2275/2285/2286/2287 are N-A. mcp CVE-2026-52869
 and CVE-2026-59950 are not affected at 1.28.1. CVE-2026-59951 stays RED.
 ZDI-26-706 is present in the pin and unreachable.
 
+## LAB-4 rehearsal
+
+Issue 612 comment 6251061341. Still no model call and no machine run.
+The E3 lock sha and approved versions are unchanged.
+
+Ollama 0.40.6 `/api/show` has no digest. The provider reads
+`/api/tags` and matches the model name. A `/api/show` body is a mismatch.
+
+The Windows listener script passes `Generic.List` values through
+`.ToArray()`. Forbidden modules are checked before that observation, so a
+listener failure cannot hide `chromadb.server`, `fastapi`, `uvicorn`, or
+`mcp`.
+
+`apply_telemetry` checks `OLLAMA_HOST` and the proxy before it fills absent
+values. A wrong value is refused. The provider also refuses an Ollama
+listener on `0.0.0.0` or `::` for port 11435. A missing bind observation is
+unproven. The check does not open a socket.
+
+`crewai` 1.15.28 `crewai_core.lock_store.lock` writes
+`tempfile.gettempdir()/crewai:{md5}.lock`. On Windows the colon is an NTFS
+alternate-data-stream separator, so the call creates a 0-byte file named
+`crewai`. CPython skips `TEMP`/`TMP` when that directory does not exist, and
+a SYSTEM process then uses `C:\Windows\Temp`. The runner creates the sandbox
+temp directories before import and refuses `C:\Windows\Temp\crewai` after
+the run.
+
+Both tasks interpolate `{issue_rows}`. Kickoff text that says no rows were
+provided, or whose table cells are only `N/A` / `UNKNOWN`, fails.
+
+A preflight model refusal is stored as `model_status` and as the receipt
+reason. A FAIL after kickoff keeps the kickoff.md sha256. The receipt
+records the listener count and source.
+
+`KillHarness.socket_timeout` enforces the 600s budget and caps each
+`urlopen` at the time remaining, or 30s. `/api/chat` sends
+`options.temperature` 0.0. A non-empty `PYTHONPATH`, or a `sitecustomize`
+outside the interpreter prefix, is refused.
+
+`--sandbox` defaults to the E4 root and must stay on `D:` under `D:\Velvet`.
+
 ## Lock identity
 
 The Chris lock file is `requirements-locked.txt`, sha256

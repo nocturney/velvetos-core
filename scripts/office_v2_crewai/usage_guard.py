@@ -54,10 +54,10 @@ _PS_OBSERVE = (
     "  $source = 'netstat'\n"
     "  $raw = & netstat.exe -ano | Out-String\n"
     "  if ($LASTEXITCODE -ne 0 -or -not $raw) { throw 'NETSTAT_FAILED' }\n"
-    "  @{ processes = @($processes); netstat = $raw; source = $source } | ConvertTo-Json -Depth 6 -Compress\n"
+    "  @{ processes = $processes.ToArray(); netstat = $raw; source = $source } | ConvertTo-Json -Depth 6 -Compress\n"
     "  exit 0\n"
     "}\n"
-    "@{ processes = @($processes); tcp = @($tcp); udp = @($udp); source = $source } | "
+    "@{ processes = $processes.ToArray(); tcp = $tcp.ToArray(); udp = $udp.ToArray(); source = $source } | "
     "ConvertTo-Json -Depth 6 -Compress\n"
 )
 
@@ -304,13 +304,101 @@ def assert_not_chroma_cli(argv: list) -> None:
                 raise UsageRefusal("CHROMA_CLI_REFUSED")
 
 
+def assert_loaded_modules(modules: dict) -> None:
+    """Refuse forbidden modules before any listener observation is attempted."""
+    if any(module_is_forbidden(name) for name in modules):
+        raise UsageRefusal("FORBIDDEN_MODULE_LOADED")
+
+
 def assert_post_run(modules: dict, listening_ports: int, commands: list | None = None) -> None:
     for argv in commands or []:
         assert_not_chroma_cli(argv)
-    if any(module_is_forbidden(name) for name in modules):
-        raise UsageRefusal("FORBIDDEN_MODULE_LOADED")
+    assert_loaded_modules(modules)
     if listening_ports != 0:
         raise UsageRefusal("PILOT_LISTENER_PRESENT")
+
+
+def guard_post_run(modules: dict, observe, commands: list | None = None, receipt: dict | None = None) -> int:
+    """Check modules first. A listener failure must not hide a forbidden import."""
+    for argv in commands or []:
+        assert_not_chroma_cli(argv)
+    assert_loaded_modules(modules)
+    try:
+        ports = observe()
+    except UsageRefusal:
+        if receipt is not None:
+            teardown = receipt.setdefault("teardown", {})
+            teardown["listener_count"] = None
+            teardown["listener_source"] = "UNPROVEN"
+        raise
+    if receipt is not None:
+        teardown = receipt.setdefault("teardown", {})
+        teardown["listener_count"] = ports
+        teardown["listener_source"] = "OBSERVED"
+    if ports != 0:
+        raise UsageRefusal("PILOT_LISTENER_PRESENT")
+    return ports
+
+
+def assert_no_pythonpath(env: dict, modules: dict | None = None) -> None:
+    """Refuse PYTHONPATH and a sitecustomize that is not the interpreter's own.
+
+    A distro sitecustomize under sys.prefix is left alone. A module with no
+    file, or a file outside that prefix, is how a PYTHONPATH hook loaded
+    chromadb.server before the runner in LAB-4 attempt 07.
+    """
+    if isinstance(env, dict):
+        value = env.get("PYTHONPATH")
+        if isinstance(value, str) and value.strip():
+            raise UsageRefusal("PYTHONPATH_REFUSED")
+    loaded = sys.modules if modules is None else modules
+    module = loaded.get("sitecustomize") if isinstance(loaded, dict) else None
+    if module is None:
+        return
+    path = getattr(module, "__file__", None)
+    if not isinstance(path, str) or not path:
+        raise UsageRefusal("SITECUSTOMIZE_REFUSED")
+    norm = path.replace("\\", "/").casefold()
+    if "/site-packages/" in norm:
+        raise UsageRefusal("SITECUSTOMIZE_REFUSED")
+    bases = []
+    for base in (getattr(sys, "base_prefix", ""), getattr(sys, "prefix", "")):
+        if isinstance(base, str) and base:
+            bases.append(base.replace("\\", "/").casefold().rstrip("/") + "/")
+    if not any(norm.startswith(base) for base in bases):
+        raise UsageRefusal("SITECUSTOMIZE_REFUSED")
+
+
+def assert_kickoff_cites_rows(text: str) -> None:
+    """Refuse an empty N/A table. CrewAI would still save that text as kickoff.md."""
+    if not isinstance(text, str) or not text.strip():
+        raise UsageRefusal("KICKOFF_EMPTY_TABLE")
+    folded = " ".join(text.split()).casefold()
+    if "no rows were provided" in folded:
+        raise UsageRefusal("KICKOFF_EMPTY_TABLE")
+    if _empty_na_table(text):
+        raise UsageRefusal("KICKOFF_EMPTY_TABLE")
+
+
+def _empty_na_table(text: str) -> bool:
+    allowed = {"n/a", "unknown", "na", ""}
+    data = []
+    for line in text.splitlines():
+        if "|" not in line:
+            continue
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if not cells:
+            continue
+        if all(cell and set(cell) <= set("-: ") for cell in cells):
+            continue
+        data.append(cells)
+    if not data:
+        return False
+    header_is_real = any(cell.casefold() not in allowed for cell in data[0])
+    body = data[1:] if header_is_real else data
+    if not body:
+        return False
+    return all(all(cell.casefold() in allowed for cell in row) for row in body)
 
 
 def _as_int(value) -> int:

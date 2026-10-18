@@ -48,6 +48,8 @@ from office_v2_crewai.provider import (  # noqa: E402
     ProviderRefusal,
     assert_llm_route,
     assert_loopback_url,
+    assert_ollama_bind,
+    digest_from_tags,
     effective_endpoint,
 )
 from office_v2_crewai.sandbox import (  # noqa: E402
@@ -56,30 +58,37 @@ from office_v2_crewai.sandbox import (  # noqa: E402
     PROXY_KEYS,
     VALUE_KEYS,
     StorageRefusal,
+    ads_host_basename,
     approved_environment,
     assert_cwd,
     assert_no_dotenv,
+    assert_no_system_temp_crewai,
     assert_proxy_env,
     assert_sandbox_env,
     assert_sandbox_resolution,
     bind_process_sandbox,
     enter_sandbox,
+    prepare_sandbox_temp,
 )
-from office_v2_crewai.receipt import apply_run_record, save_kickoff_output, write_receipts  # noqa: E402
-from office_v2_crewai.runner import execute, record_exception  # noqa: E402
+from office_v2_crewai.receipt import apply_run_record, kickoff_output_path, save_kickoff_output, write_receipts  # noqa: E402
+from office_v2_crewai.runner import apply_telemetry, execute, record_exception  # noqa: E402
 from office_v2_crewai.usage_guard import (  # noqa: E402
     DRIFT_FORBIDDEN_MODULES,
     LEFTOVER_RELS,
     UsageRefusal,
+    _PS_OBSERVE,
     assert_built_crew,
     assert_crew_spec,
     assert_dependency_drift,
+    assert_kickoff_cites_rows,
     assert_no_pilot_leftovers,
+    assert_no_pythonpath,
     assert_not_chroma_cli,
     assert_post_run,
     assert_supply_chain_record,
     assert_trace_consent,
     count_listening_sockets,
+    guard_post_run,
     module_is_forbidden,
     parse_netstat,
     seed_trace_consent,
@@ -394,35 +403,110 @@ def check_provider() -> None:
     else:
         fail("missing OLLAMA_NO_CLOUD was accepted")
     seen = []
+    loopback = [{"address": "127.0.0.1", "port": 11435}]
 
-    def show_mismatch(request, timeout=30):
+    def tags_mismatch(request, timeout=30):
         seen.append(request.full_url)
-        return _Body({"digest": "b" * 64})
+        return _Body({"digest": APPROVED_MODEL_DIGEST})
 
     try:
-        provider.complete("hello", urlopen=show_mismatch, env=model_env())
+        provider.complete("hello", urlopen=tags_mismatch, env=model_env(), binds=loopback)
     except ProviderRefusal as exc:
         if str(exc) != "MODEL_DIGEST_MISMATCH":
             fail("served digest reason: %s" % exc)
-        if len(seen) != 1 or not seen[0].endswith("/api/show"):
-            fail("digest mismatch continued past /api/show: %s" % seen)
+        if len(seen) != 1 or not seen[0].endswith("/api/tags") or "/api/show" in seen[0]:
+            fail("digest mismatch continued past /api/tags: %s" % seen)
     else:
-        fail("served digest mismatch was accepted")
+        fail("a /api/show body was accepted as the digest")
+    missing_name = []
+
+    def tags_other(request, timeout=30):
+        missing_name.append(request.full_url)
+        return _Body({"models": [{"name": "other:9b", "digest": APPROVED_MODEL_DIGEST}]})
+
+    try:
+        provider.complete("hello", urlopen=tags_other, env=model_env(), binds=loopback)
+    except ProviderRefusal as exc:
+        if str(exc) != "MODEL_DIGEST_MISMATCH" or len(missing_name) != 1:
+            fail("missing tag name reason: %s" % exc)
+    else:
+        fail("a tags list without the approved model was accepted")
+    if digest_from_tags({"models": [{"name": "Qwen3.5:9b", "digest": APPROVED_MODEL_DIGEST}]}) != APPROVED_MODEL_DIGEST:
+        fail("tag name match was not case-insensitive")
     chat = []
 
-    def show_then_chat(request, timeout=30):
-        chat.append((request.full_url, request.data))
-        if request.full_url.endswith("/api/show"):
-            return _Body({"digest": APPROVED_MODEL_DIGEST})
+    def tags_then_chat(request, timeout=30):
+        chat.append((request.full_url, request.data, timeout, request.get_method()))
+        if request.full_url.endswith("/api/tags"):
+            return _Body({"models": [{"name": APPROVED_MODEL, "model": APPROVED_MODEL, "digest": APPROVED_MODEL_DIGEST}]})
         return _Body({"message": {"content": "local"}})
 
-    text = provider.complete("hello", urlopen=show_then_chat, env=model_env())
+    text = provider.complete("hello", urlopen=tags_then_chat, env=model_env(), binds=loopback)
     if text != "local" or provider.calls != 1 or len(chat) != 2:
         fail("approved local chat was not a single think-disabled call")
+    if chat[0][3] != "GET" or not chat[0][0].endswith("/api/tags") or chat[0][1] is not None:
+        fail("digest was not read with GET /api/tags")
     if b'"think": false' not in chat[1][1] or not chat[1][0].endswith("/api/chat"):
         fail("chat payload did not send think false")
     if b'"reasoning_effort": "none"' not in chat[1][1]:
         fail("chat payload did not send reasoning_effort none")
+    if b'"temperature": 0.0' not in chat[1][1]:
+        fail("chat payload did not send temperature 0.0")
+    timed = []
+
+    def timed_chat(request, timeout=30):
+        timed.append(timeout)
+        if request.full_url.endswith("/api/tags"):
+            return _Body({"models": [{"name": APPROVED_MODEL, "digest": APPROVED_MODEL_DIGEST}]})
+        return _Body({"message": {"content": "local"}})
+
+    provider.complete(
+        "hello",
+        urlopen=timed_chat,
+        env=model_env(),
+        binds=loopback,
+        harness=KillHarness(),
+        started=0,
+        now=580,
+    )
+    if timed != [20, 20]:
+        fail("socket timeout was not the time remaining under 600s: %s" % timed)
+    expired = []
+
+    def expired_open(*_args, **_kwargs):
+        expired.append("called")
+        raise AssertionError("urlopen")
+
+    try:
+        provider.complete(
+            "hello",
+            urlopen=expired_open,
+            env=model_env(),
+            binds=[{"address": "0.0.0.0", "port": 11435}],
+            harness=KillHarness(),
+            started=0,
+            now=600,
+        )
+    except KillRefusal as exc:
+        if str(exc) != "ATTEMPT_TIMEOUT" or expired:
+            fail("expired attempt reached the network: %s" % exc)
+    else:
+        fail("a 600s attempt was accepted")
+    wildcard = []
+
+    def wildcard_open(*_args, **_kwargs):
+        wildcard.append("called")
+        raise AssertionError("urlopen")
+
+    try:
+        provider.complete("hello", urlopen=wildcard_open, env=model_env(), binds=[{"address": "0.0.0.0", "port": 11435}])
+    except ProviderRefusal as exc:
+        if str(exc) != "OLLAMA_BIND_WILDCARD" or wildcard:
+            fail("wildcard bind reached the network: %s" % exc)
+    else:
+        fail("Ollama bound to 0.0.0.0 was accepted")
+    _expect_provider(lambda: assert_ollama_bind([{"address": "127.0.0.1", "port": 11434}]), "OLLAMA_BIND_UNPROVEN")
+    assert_ollama_bind([{"address": "::1", "port": 11435}])
     effort = json.loads(MODEL.read_text(encoding="ascii"))
     if effort.get("reasoning_effort") != "none":
         fail("frozen model input does not record reasoning_effort none")
@@ -556,12 +640,18 @@ def check_ast() -> None:
     saw_drift = False
     saw_resolution = False
     saw_consent = False
+    saw_temp = False
+    saw_pythonpath = False
     saw_built = False
     imported = False
     build = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "build_crew")
     for stmt in build.body:
         if isinstance(stmt, ast.Import) and any(alias.name == "crewai" for alias in stmt.names):
-            if not (saw_bind and saw_cwd and saw_route and saw_drift and saw_resolution and saw_consent):
+            ready = (
+                saw_bind and saw_cwd and saw_route and saw_drift and saw_resolution
+                and saw_consent and saw_temp and saw_pythonpath
+            )
+            if not ready:
                 fail("crewai is imported before the sandbox, drift, and consent checks")
             imported = True
             continue
@@ -579,6 +669,10 @@ def check_ast() -> None:
                     saw_resolution = True
                 if node.func.id == "seed_trace_consent":
                     saw_consent = True
+                if node.func.id == "prepare_sandbox_temp":
+                    saw_temp = True
+                if node.func.id == "assert_no_pythonpath":
+                    saw_pythonpath = True
                 if node.func.id == "assert_built_crew":
                     if not imported:
                         fail("built crew is checked before import")
@@ -724,7 +818,15 @@ def check_sandbox_mutations() -> None:
         _expect_storage(lambda: bind_process_sandbox(root="C:\\nope"), "SANDBOX_NOT_ON_D:ROOT")
         if os.environ.get("CREWAI_STORAGE_DIR", "").startswith("C:"):
             fail("bind wrote a C: storage dir")
-        _expect_storage(lambda: bind_process_sandbox(root="D:\\Velvet\\other"), "SANDBOX_OUTSIDE_ROOT:ROOT")
+        _expect_storage(lambda: bind_process_sandbox(root="D:\\NotVelvet\\sandbox"), "SANDBOX_OUTSIDE_VELVET")
+        _expect_storage(lambda: bind_process_sandbox(root="D:\\VelvetExtra\\sandbox"), "SANDBOX_OUTSIDE_VELVET")
+        _expect_storage(lambda: bind_process_sandbox(root="D:\\outside"), "SANDBOX_OUTSIDE_VELVET")
+        accepted = bind_process_sandbox(root="D:\\Velvet\\lab\\sandbox")
+        if accepted["USERPROFILE"] != "D:\\Velvet\\lab\\sandbox":
+            fail("a sandbox under D:\\Velvet was refused")
+        if kickoff_output_path("D:\\Velvet\\lab\\sandbox") != "D:\\Velvet\\lab\\sandbox\\crewai-output\\kickoff.md":
+            fail("kickoff path did not follow the sandbox parameter")
+        _expect_storage(lambda: kickoff_output_path("D:\\NotVelvet\\sandbox"), "OUTPUT_NOT_ON_D")
     finally:
         for key, value in snapshot.items():
             if value is None:
@@ -1050,6 +1152,21 @@ def check_listeners() -> None:
         fail("an empty netstat table was not a proven zero")
     if count_listening_sockets(os.getpid()) < 0:
         fail("linux listener count was unproven")
+    if ".ToArray()" not in _PS_OBSERVE:
+        fail("PowerShell listener script does not call ToArray")
+    for wrapped in ("@($processes)", "@($tcp)", "@($udp)"):
+        if wrapped in _PS_OBSERVE:
+            fail("PowerShell listener script still wraps %s" % wrapped)
+    probed = []
+
+    def listener_boom():
+        probed.append("called")
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+
+    loaded = {"fastapi": object(), "chromadb.server": object(), "uvicorn": object(), "mcp": object()}
+    _expect_usage(lambda: guard_post_run(loaded, listener_boom), "FORBIDDEN_MODULE_LOADED")
+    if probed:
+        fail("the module guard ran after the listener check")
 
 
 def check_run_record() -> None:
@@ -1142,6 +1259,26 @@ def check_run_record() -> None:
             fail("malformed reply did not record FAIL")
         if late_post["pilot_process_started"] is not True or "No pilot process was started" in late_post["note"]:
             fail("crash after start still says the pilot did not start")
+        hashed = json.loads(json.dumps(original))
+        apply_run_record(hashed, saved)
+        fail_after = Path(tempfile.mkdtemp(prefix="crewai-fail-after-"))
+        try:
+            code = record_exception(
+                hashed,
+                UsageRefusal("PILOT_LISTENER_UNPROVEN"),
+                fail_after,
+                provider_calls=2,
+                started=True,
+            )
+            failed = json.loads((fail_after / "attempt-receipt.json").read_text(encoding="utf-8"))
+            if code != 2 or failed["result"]["status"] != "FAIL":
+                fail("FAIL after kickoff did not stay FAIL")
+            if failed["result"]["output_sha256"].get("kickoff.md") != saved["sha256"]:
+                fail("FAIL after kickoff dropped the kickoff.md sha256")
+            if failed["teardown"].get("listener_source") != "UNPROVEN":
+                fail("FAIL after kickoff did not record the listener result")
+        finally:
+            shutil.rmtree(fail_after, ignore_errors=True)
     finally:
         shutil.rmtree(out, ignore_errors=True)
         shutil.rmtree(recorded, ignore_errors=True)
@@ -1294,6 +1431,85 @@ def check_hardening() -> None:
     _expect_usage(lambda: assert_supply_chain_record(no_zdi), "ZDI_26_706_RECORD_ABSENT")
 
 
+def check_lab4() -> None:
+    """Comment 6251061341. Spec mutations only. No model call and no machine run."""
+    filled = apply_telemetry({})
+    if filled.get("OLLAMA_HOST") != APPROVED_OLLAMA_HOST or filled.get("HTTP_PROXY") != "http://127.0.0.1:9":
+        fail("an absent host or proxy was not filled with the approved value")
+    bad_host = passing_env()
+    bad_host["OLLAMA_HOST"] = "0.0.0.0:11435"
+    _expect_storage(lambda: apply_telemetry(bad_host), "OLLAMA_HOST_REFUSED")
+    bad_proxy = passing_env()
+    bad_proxy["ALL_PROXY"] = "http://10.0.0.1:8080"
+    bad_proxy["all_proxy"] = bad_proxy["ALL_PROXY"]
+    _expect_storage(lambda: apply_telemetry(bad_proxy), "E5_PROXY_MISMATCH:ALL_PROXY")
+    parent = Path(tempfile.mkdtemp(prefix="crewai-lab4-"))
+    try:
+        synthetic_passing_bundle(parent)
+        host_out = parent / "host-out"
+        code = execute(parent / "inputs", host_out, parent / "evidence", MODEL, env=bad_host)
+        host_receipt = json.loads((host_out / "attempt-receipt.json").read_text(encoding="utf-8"))
+        if code != 2 or host_receipt["identity"]["reason"] != "OLLAMA_HOST_REFUSED":
+            fail("wrong OLLAMA_HOST reason was %s" % host_receipt["identity"].get("reason"))
+        if host_receipt["execution"]["model_calls"] != 0 or host_receipt["identity"]["gates"]["E5"] == "PASS":
+            fail("wrong OLLAMA_HOST was overwritten into an E5 pass")
+        bad = json.loads(MODEL.read_text(encoding="ascii"))
+        bad["base_url"] = "http://127.0.0.1:11436"
+        bad_path = parent / "bad-model.json"
+        bad_path.write_text(json.dumps(bad), encoding="ascii")
+        model_out = parent / "model-out"
+        code = execute(parent / "inputs", model_out, parent / "evidence", bad_path, env=passing_env())
+        model_receipt = json.loads((model_out / "attempt-receipt.json").read_text(encoding="utf-8"))
+        if code != 2 or model_receipt["identity"]["reason"] != "MODEL_URL_NOT_EXACT_APPROVAL":
+            fail("model refusal reason was %s" % model_receipt["identity"].get("reason"))
+        if model_receipt["identity"].get("model_status") != "MODEL_URL_NOT_EXACT_APPROVAL":
+            fail("model_status was not recorded")
+        if model_receipt["execution"]["model_calls"] != 0 or "crewai" in sys.modules:
+            fail("a model-config refusal reached the model")
+    finally:
+        shutil.rmtree(parent, ignore_errors=True)
+    channel = "crewai:" + ("ab" * 16) + ".lock"
+    if ads_host_basename(channel) != "crewai":
+        fail("the lock channel did not name the 0-byte crewai file")
+    _expect_storage(
+        lambda: assert_no_system_temp_crewai(lambda path: path.casefold().endswith("\\temp\\crewai")),
+        "WINDOWS_TEMP_CREWAI",
+    )
+    assert_no_system_temp_crewai(lambda path: False)
+    made = []
+
+    def mkdir(path):
+        made.append(path)
+
+    _expect_storage(
+        lambda: prepare_sandbox_temp("D:\\Velvet\\lab\\sandbox", mkdir=mkdir, exists=lambda path: False),
+        "SANDBOX_TEMP_ABSENT",
+    )
+    if len(made) != 2:
+        fail("sandbox temp directories were not created before the fall-through check")
+    prepare_sandbox_temp("D:\\Velvet\\lab\\sandbox", mkdir=mkdir, exists=lambda path: True)
+    source = (PACKAGE / "crew_build.py").read_text(encoding="utf-8")
+    if source.count("{issue_rows}") < 4:
+        fail("issue_rows is not wired into the task text")
+    _expect_usage(
+        lambda: assert_kickoff_cites_rows("| Issue | Status |\n| --- | --- |\n| N/A | UNKNOWN |\n"),
+        "KICKOFF_EMPTY_TABLE",
+    )
+    _expect_usage(lambda: assert_kickoff_cites_rows("no rows were provided\n"), "KICKOFF_EMPTY_TABLE")
+    assert_kickoff_cites_rows(
+        "| Issue | Status |\n| --- | --- |\n| https://github.com/nocturney/velvetos-core/issues/612 | open |\n"
+    )
+    _expect_usage(lambda: assert_no_pythonpath({"PYTHONPATH": "D:\\evil"}), "PYTHONPATH_REFUSED")
+    _expect_usage(lambda: assert_no_pythonpath({}, {"sitecustomize": object()}), "SITECUSTOMIZE_REFUSED")
+    evil = type("M", (), {})()
+    evil.__file__ = "D:/evil/sitecustomize.py"
+    _expect_usage(lambda: assert_no_pythonpath({}, {"sitecustomize": evil}), "SITECUSTOMIZE_REFUSED")
+    assert_no_pythonpath({})
+    runner = (PACKAGE / "runner.py").read_text(encoding="utf-8")
+    if "--sandbox" not in runner or "guard_post_run(" not in runner or "assert_no_system_temp_crewai(" not in runner:
+        fail("runner is missing the sandbox parameter, module guard, or Windows temp check")
+
+
 def check_workflows() -> None:
     folder = ROOT / ".github" / "workflows"
     for path in folder.glob("*"):
@@ -1325,6 +1541,7 @@ def main() -> int:
     check_run_record()
     check_ast()
     check_hardening()
+    check_lab4()
     check_workflows()
     if "crewai" in sys.modules:
         fail("crewai was imported by the sensor")

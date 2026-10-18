@@ -185,6 +185,56 @@ def validate_config_document(document: object) -> dict:
     }
 
 
+def digest_from_tags(body: object, model: str = APPROVED_MODEL) -> str:
+    """Read the digest from Ollama /api/tags. /api/show on 0.40.6 has no digest."""
+    if not isinstance(body, dict):
+        raise ProviderRefusal("MODEL_DIGEST_MISMATCH")
+    models = body.get("models")
+    if not isinstance(models, list) or not models:
+        raise ProviderRefusal("MODEL_DIGEST_MISMATCH")
+    wanted = model.casefold()
+    found = None
+    for row in models:
+        if not isinstance(row, dict):
+            continue
+        name = row.get("name") if isinstance(row.get("name"), str) else row.get("model")
+        if not isinstance(name, str) or name.casefold() != wanted:
+            continue
+        if found is not None:
+            raise ProviderRefusal("MODEL_DIGEST_MISMATCH")
+        found = row.get("digest")
+    if found is None:
+        raise ProviderRefusal("MODEL_DIGEST_MISMATCH")
+    return digest_hex(found)
+
+
+def assert_ollama_bind(listeners: object, port: int = APPROVED_PORT) -> None:
+    """Refuse a server on the approved port that is not bound to loopback.
+
+    0.0.0.0 and :: are refused. An empty observation is unproven. This does
+    not open a socket; the caller passes the listener rows.
+    """
+    if not isinstance(listeners, list) or not listeners:
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+    saw_loopback = False
+    for row in listeners:
+        if not isinstance(row, dict):
+            raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+        address = row.get("address")
+        row_port = row.get("port")
+        if not isinstance(address, str) or isinstance(row_port, bool) or not isinstance(row_port, int):
+            raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+        if row_port != port:
+            continue
+        host = address.strip().strip("[]").lower()
+        if host in {"127.0.0.1", "::1"}:
+            saw_loopback = True
+            continue
+        raise ProviderRefusal("OLLAMA_BIND_WILDCARD")
+    if not saw_loopback:
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+
+
 def inherited_paid_credentials(env: dict) -> list[str]:
     found = []
     for name in PAID_ENV_NAMES:
@@ -215,7 +265,9 @@ class LocalOllamaProvider:
     def authorize(self) -> None:
         self.authorized = True
 
-    def complete(self, messages: object, urlopen=None, env: dict | None = None) -> str:
+    def complete(self, messages: object, urlopen=None, env: dict | None = None,
+                 binds: object = None, harness=None, started: float | None = None,
+                 now: float | None = None) -> str:
         """Call loopback Ollama only when preflight has authorized this object."""
         import os
 
@@ -239,13 +291,14 @@ class LocalOllamaProvider:
         })
         from office_v2_crewai.sandbox import assert_proxy_env
         assert_proxy_env(environment)
+        timeout = _attempt_timeout(harness, started, now)
+        assert_ollama_bind(binds)
         base_url = assert_loopback_url(self.config.get("base_url"))
         if urlopen is None:
             from urllib import request as urlrequest
             urlopen = urlrequest.urlopen
-        shown = _post_json(urlopen, base_url + "/api/show", {"model": APPROVED_MODEL})
-        served = shown.get("digest")
-        if digest_hex(served) != APPROVED_MODEL_DIGEST:
+        listed = _open_json(urlopen, base_url + "/api/tags", None, timeout)
+        if digest_from_tags(listed) != APPROVED_MODEL_DIGEST:
             raise ProviderRefusal("MODEL_DIGEST_MISMATCH")
         self.calls += 1
         payload = {
@@ -254,8 +307,9 @@ class LocalOllamaProvider:
             "stream": False,
             "think": False,
             "reasoning_effort": REASONING_EFFORT,
+            "options": {"temperature": 0.0},
         }
-        body = _post_json(urlopen, base_url + "/api/chat", payload)
+        body = _open_json(urlopen, base_url + "/api/chat", payload, timeout)
         message = body.get("message") if isinstance(body, dict) else None
         content = message.get("content") if isinstance(message, dict) else None
         if not isinstance(content, str):
@@ -293,13 +347,33 @@ def _request(target: str, payload: bytes):
     )
 
 
-def _post_json(urlopen, target: str, payload: dict) -> dict:
+def _attempt_timeout(harness, started: float | None, now: float | None) -> float:
+    """Enforce the 600s harness once a start time exists. Otherwise cap the socket at 30s."""
+    if started is None:
+        return 30
+    if now is None:
+        import time
+        now = time.monotonic()
+    from office_v2_crewai.kill_harness import KillHarness
+    clock = harness if harness is not None else KillHarness()
+    return clock.socket_timeout(started, now)
+
+
+def _open_json(urlopen, target: str, payload: dict | None, timeout: float) -> dict:
     base, _, path = target.partition("/api/")
     assert_loopback_url(base)
-    if not path:
+    if path not in {"tags", "chat"}:
         raise ProviderRefusal("MODEL_URL_PATH_REFUSED")
-    request_obj = _request(target, json.dumps(payload).encode("utf-8"))
-    with urlopen(request_obj, timeout=30) as response:
+    if payload is None:
+        if path != "tags":
+            raise ProviderRefusal("MODEL_URL_PATH_REFUSED")
+        from urllib import request as urlrequest
+        request_obj = urlrequest.Request(target, method="GET")
+    else:
+        if path != "chat":
+            raise ProviderRefusal("MODEL_URL_PATH_REFUSED")
+        request_obj = _request(target, json.dumps(payload).encode("utf-8"))
+    with urlopen(request_obj, timeout=timeout) as response:
         raw = response.read()
     body = json.loads(raw.decode("utf-8"))
     if not isinstance(body, dict):

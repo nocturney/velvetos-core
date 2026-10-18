@@ -109,6 +109,8 @@ E4_COMMENT = "https://github.com/nocturney/velvetos-core/issues/612#issuecomment
 E4_CREWAI_VERSION = "1.15.28"
 E4_APPDIRS_VERSION = "1.4.4"
 SANDBOX_ROOT = "D:\\Velvet\\Pilots\\crewai-e4\\sandbox-home"
+# A pilot root may move, but it has to stay under this prefix. D:\VelvetExtra does not qualify.
+VELVET_ROOT = "D:\\Velvet"
 CREWAI_PROFILE_REL = "AppData\\Local\\CrewAI"
 TOKEN_CREDENTIALS_REL = "AppData\\Local\\CrewAI\\credentials"
 KICKOFF_OUTPUT_REL = "crewai-output\\kickoff.md"

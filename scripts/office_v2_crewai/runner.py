@@ -9,6 +9,7 @@ import argparse
 import json
 import os
 import sys
+import time
 import uuid
 from pathlib import Path
 
@@ -16,8 +17,8 @@ _SCRIPTS = Path(__file__).resolve().parents[1]
 if str(_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS))
 
-from office_v2_crewai.contract import COST_CEILING, TELEMETRY_FLAGS
-from office_v2_crewai.kill_harness import KillHarness
+from office_v2_crewai.contract import COST_CEILING, SANDBOX_ROOT, TELEMETRY_FLAGS
+from office_v2_crewai.kill_harness import KillHarness, KillRefusal
 from office_v2_crewai.preflight import evaluate
 from office_v2_crewai.provider import LocalOllamaProvider, ProviderRefusal
 from office_v2_crewai.receipt import (
@@ -26,7 +27,12 @@ from office_v2_crewai.receipt import (
     save_kickoff_output,
     write_receipts,
 )
-from office_v2_crewai.sandbox import StorageRefusal, approved_environment
+from office_v2_crewai.sandbox import (
+    StorageRefusal,
+    approved_environment,
+    assert_under_velvet,
+    refuse_operator_env,
+)
 
 PACKAGE = Path(__file__).resolve().parent
 DEFAULT_INPUT = PACKAGE / "inputs"
@@ -47,12 +53,8 @@ RUNNER_FILES = (
 
 
 def _fail_reason(exc: BaseException) -> str:
-    if isinstance(exc, (ProviderRefusal, StorageRefusal)):
-        text = str(exc)
-        if text and "\n" not in text and len(text) < 80:
-            return text
     from office_v2_crewai.usage_guard import UsageRefusal
-    if isinstance(exc, UsageRefusal):
+    if isinstance(exc, (ProviderRefusal, StorageRefusal, UsageRefusal, KillRefusal)):
         text = str(exc)
         if text and "\n" not in text and len(text) < 80:
             return text
@@ -74,6 +76,11 @@ def record_exception(receipt: dict, exc: BaseException, output_dir: Path,
                      provider_calls: int = 0, started: bool = False) -> int:
     """Write a FAIL receipt for any run exception. Never PASS."""
     reason = _fail_reason(exc)
+    if reason == "PILOT_LISTENER_UNPROVEN":
+        teardown = receipt.setdefault("teardown", {})
+        if teardown.get("listener_source") in {None, "NOT_RUN"}:
+            teardown["listener_count"] = None
+            teardown["listener_source"] = "UNPROVEN"
     receipt["identity"]["reason"] = reason
     receipt["identity"]["task_status"] = "FAIL"
     receipt["identity"]["pilot_status"] = "FAIL" if started else "NOT_RUN"
@@ -97,49 +104,100 @@ def record_exception(receipt: dict, exc: BaseException, output_dir: Path,
     return 2
 
 
-def apply_telemetry(env: dict) -> dict:
+def apply_telemetry(env: dict, root: str = SANDBOX_ROOT) -> dict:
+    """Fill absent approved values. A present wrong host or proxy is a refusal."""
+    if not isinstance(env, dict):
+        raise StorageRefusal("SANDBOX_ENV_ABSENT")
+    refuse_operator_env(env)
     updated = dict(env)
     updated.update(TELEMETRY_FLAGS)
-    updated.update(approved_environment())
+    approved = approved_environment(root)
+    protected = {"OLLAMA_HOST"}
+    from office_v2_crewai.sandbox import PROXY_KEYS
+    for key in PROXY_KEYS:
+        protected.add(key)
+        protected.add(key.lower())
+    for key, value in approved.items():
+        current = updated.get(key)
+        if key in protected and isinstance(current, str) and current.strip():
+            continue
+        updated[key] = value
     return updated
 
 
 def execute(input_dir: Path, output_dir: Path, evidence_dir: Path, model_config: Path,
-            env: dict | None = None) -> int:
+            env: dict | None = None, sandbox_root: str = SANDBOX_ROOT,
+            modules: dict | None = None, binds: object = None) -> int:
     """Run preflight. Import crewai only after every gate has passed."""
-    observed = apply_telemetry(os.environ if env is None else env)
+    assert_under_velvet(sandbox_root)
+    raw = dict(os.environ if env is None else env)
+    loaded = sys.modules if modules is None else modules
+    early_reason = None
+    from office_v2_crewai.usage_guard import UsageRefusal, assert_loaded_modules, assert_no_pythonpath
+    try:
+        assert_no_pythonpath(raw, loaded)
+        assert_loaded_modules(loaded)
+        observed = apply_telemetry(raw, sandbox_root)
+    except (StorageRefusal, UsageRefusal) as exc:
+        early_reason = str(exc)
+        observed = raw
     for key, value in TELEMETRY_FLAGS.items():
         os.environ[key] = value
-    KillHarness(cost_ceiling=COST_CEILING)
+    harness = KillHarness(cost_ceiling=COST_CEILING)
+    started_at = time.monotonic()
     report = evaluate(input_dir, evidence_dir, observed, model_config)
     attempt_id = "crewai-" + uuid.uuid4().hex[:12]
-    receipt = build_receipt(report, attempt_id, list(RUNNER_FILES))
+    receipt = build_receipt(report, attempt_id, list(RUNNER_FILES), sandbox_root=sandbox_root)
     receipt["reproducibility"]["python_executable"] = sys.executable
+    if early_reason:
+        receipt["identity"]["reason"] = early_reason
+        receipt["execution"]["abort_reason"] = early_reason
+        write_receipts(output_dir, receipt)
+        return 2
     if not report["ok"]:
         write_receipts(output_dir, receipt)
         return 2
     provider = None
     started = False
     try:
+        harness.socket_timeout(started_at, time.monotonic())
         provider = LocalOllamaProvider(model_config)
         provider.authorize()
         from office_v2_crewai.crew_build import build_crew
-        crew = build_crew(provider, observed)
+        crew = build_crew(
+            provider,
+            observed,
+            sandbox_root=sandbox_root,
+            harness=harness,
+            started=started_at,
+            binds=binds,
+        )
         issue_rows = (Path(input_dir) / "issues.json").read_text(encoding="utf-8")
         started = True
         result = crew.kickoff(inputs={"issue_rows": issue_rows})
-        saved = save_kickoff_output(_kickoff_text(result))
-        apply_run_record(receipt, saved)
+        text = _kickoff_text(result)
+        saved = save_kickoff_output(text, root=sandbox_root)
+        apply_run_record(receipt, saved, root=sandbox_root)
+        from office_v2_crewai.usage_guard import assert_kickoff_cites_rows
+        assert_kickoff_cites_rows(text)
+        from office_v2_crewai.sandbox import assert_no_system_temp_crewai
         from office_v2_crewai.usage_guard import (
             assert_no_pilot_leftovers,
-            assert_post_run,
             assert_trace_consent,
             count_listening_sockets,
+            guard_post_run,
         )
-        root = approved_environment()["USERPROFILE"]
+        root = approved_environment(sandbox_root)["USERPROFILE"]
         assert_trace_consent(Path(root) / "crewai-storage" / ".crewai_user.json")
         assert_no_pilot_leftovers(root)
-        assert_post_run(sys.modules, count_listening_sockets(os.getpid()), [])
+        assert_no_system_temp_crewai(os.path.exists)
+        guard_post_run(
+            sys.modules,
+            lambda: count_listening_sockets(os.getpid()),
+            [],
+            receipt,
+        )
+        harness.socket_timeout(started_at, time.monotonic())
     except StorageRefusal as exc:
         calls = 0 if provider is None else provider.calls
         if started:
@@ -165,8 +223,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--evidence", type=Path, default=DEFAULT_EVIDENCE)
     parser.add_argument("--model-config", type=Path, default=DEFAULT_MODEL)
+    parser.add_argument("--sandbox", default=SANDBOX_ROOT)
     args = parser.parse_args(argv)
-    return execute(args.input, args.output, args.evidence, args.model_config)
+    return execute(
+        args.input,
+        args.output,
+        args.evidence,
+        args.model_config,
+        sandbox_root=args.sandbox,
+    )
 
 
 if __name__ == "__main__":
