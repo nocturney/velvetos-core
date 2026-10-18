@@ -2,7 +2,7 @@
 
 Authority: START HERE Phase 2. Baseline: `main@4ee8ca0ef50df169be95d3c4fb8e6a2c5e6e4334` after Phase 1 GREEN and current-main compatibility CI.
 
-Status: **FOUNDATION READY / BENCHMARKS NOT YET RUN / NO WINNERS**.
+Status: **FOUNDATION READY / PHASE 3A RESTATE WINNER RECORDED / 1 OF 6 P0 LANE WINNERS / FIVE LANES STILL OPEN / NO AUTOMATIC PRODUCTION AUTHORITY**.
 
 ## Objective
 
@@ -37,6 +37,14 @@ All 19 repositories from the owner-provided GitHub batch, including corrected `a
 
 Owner-submitted [iFixAi](https://github.com/ifixai-ai/iFixAi), [PentAGI](https://github.com/vxcontrol/pentagi) and [Ghidra](https://github.com/NationalSecurityAgency/ghidra) now have immutable source pins and **phase-routed, research-only** Candidate Registry entries (128 → 131). Routes: iFixAi → #612 agent-quality/Promptfoo comparison, PentAGI → #595 isolated security-assurance review, and Ghidra → #606 parked P1 shipped-binary/REA comparison. No core P0 shortlist change, installation, scans, model spend, credentials, autostart, tool authority or LAB promotion follows from this intake. The existing Phase 2 sensor enforces all three source identities and routing/false-promotion negative controls. [Routing and admission gates](owner-assurance-binary-tools-intake-2026-10-14.md) · [fixed source receipt](owner-assurance-binary-tools-intake-2026-10-14.json).
 
+## Owner-supplied llamafile local inference — 2026-10-14
+
+[Mozilla AI llamafile](https://github.com/mozilla-ai/llamafile) is now source-pinned in the canonical Candidate Registry as `candidate-mozilla-ai-llamafile` (`RESEARCHED / BENCHMARK_REQUIRED / NOT_RUN`), count 131 → 132; historical imports and all P0 shortlists remain unchanged. This is a Phase 3C **local inference-provider** Ollama comparison routed under #612 after its independently verified local coding-worker baseline, **not** a model-routing gateway contender. No download, LAB admission, background service, added spend or production authority. [Source and benchmark gate](owner-local-inference-llamafile-intake-2026-10-14.md) · [immutable source receipt](owner-local-inference-llamafile-intake-2026-10-14.json).
+
+## Owner browser automation repos - 2026-10-16
+
+Twenty unique owner-provided browser/crawler/agent repositories enter the existing Candidate Registry as **research-only** (132 to 152), with five P0 queued challengers, thirteen non-P0 phase routes, and two source references. [Per-tool workflow routes and synthetic comparison gates](browser-automation-intake-2026-10-16.md) and [source-integrity receipt](browser-automation-intake-2026-10-16.json). No installation, LAB acceptance, new production authority, credentials, autonomous publishing or provider usage follows from registration.
+
 ## Candidate lifecycle
 
 `DISCOVERED → RESEARCHED → CANDIDATE → ADMITTED → LAB → SHADOW → PILOT → PRODUCTION → FALLBACK → RETIRED`.
@@ -47,7 +55,7 @@ Registry: `candidate-registry-v0.json`. Admission policy: `admission-policy-v0.m
 
 ## P0 shortlists
 
-`p0-shortlists-v0.json` defines pre-benchmark sets only. A shortlist is not a winner declaration. Initial lanes are durable execution, model routing, tool-gateway interoperability, memory/context and agent runtime. Every lane has its incumbent and 2–3 serious challengers with `winner: null`.
+`p0-shortlists-v0.json` now tracks six P0 lanes with their incumbent and 2–3 challengers. **One of six** has a recorded benchmark verdict: `durable-execution` selected **Restate** (`candidate-restate`) as winner, with **Temporal** (`candidate-temporal`) as fallback, frozen under Phase 3A evidence. The other five lanes — `model-routing`, `tool-gateway-interoperability`, `memory-context`, `agent-runtime`, and `worker-fleet-placement` — still have `winner: null`, pending their own fixtures and scorecards. Shortlisting never grants LAB, PILOT or production authority. Phase 3B ZITADEL/OPA/OpenBao composition is a separate bounded security track, not another P0 shortlist winner.
 
 ## Golden Fixtures
 

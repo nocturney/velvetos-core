@@ -15,8 +15,12 @@ REQUIRED = [
     P2 / "candidate-lifecycle-v0.json",
     P2 / "candidate-registry.schema.json",
     P2 / "candidate-registry-v0.json",
+    P2 / "browser-automation-intake-2026-10-16.json",
+    P2 / "browser-automation-intake-2026-10-16.md",
     P2 / "owner-assurance-binary-tools-intake-2026-10-14.json",
     P2 / "owner-assurance-binary-tools-intake-2026-10-14.md",
+    P2 / "owner-local-inference-llamafile-intake-2026-10-14.json",
+    P2 / "owner-local-inference-llamafile-intake-2026-10-14.md",
     P2 / "admission-policy-v0.md",
     P2 / "scorecard.schema.json",
     P2 / "golden-fixture-contract.schema.json",
@@ -240,6 +244,125 @@ def validate_competitor_neutrality(registry: dict, items: list[dict], lanes: lis
         fail("candidate evaluation routing negative control failed to detect forgotten challenger")
 
 
+# Source-fixed 2026-10-16 browser tools intake regression; the JSON receipt is not an authority or scheduler.
+OWNER_BROWSER_20261016_SOURCES = {
+    "lexmount/moli", "browser-use/browser-use", "browser-use/browser-harness",
+    "browser-use/web-ui", "browser-use/bux", "guycrespin/browser-agent",
+    "scrapeless-ai/scrapeless-agent-browser", "pedro-scrapeless/scrapeless-playwright",
+    "lightpanda-io/browser", "CloakHQ/CloakBrowser", "h4ckf0r0day/obscura",
+    "apify/crawlee", "Skyvern-AI/skyvern", "FlareSolverr/FlareSolverr",
+    "browserless/browserless", "jo-inc/camofox-browser", "ntegrals/openbrowser",
+    "berstend/puppeteer-extra", "autoscrape-labs/pydoll", "GoogleChrome/rendertron",
+}
+
+
+def owner_browser_20261016_problems(items: list[dict], lanes: list[dict], receipt: dict) -> list[str]:
+    problems: list[str] = []
+    if receipt.get("schema") != "velvetos.office-v2.browser-automation-intake.v1":
+        problems.append("batch schema changed")
+    if receipt.get("status") != "RESEARCH_ROUTED_NOT_EXECUTED":
+        problems.append("batch falsely claims execution")
+    if receipt.get("counts") != {
+        "total": 20, "p0_queued": 5, "phase_routed": 13, "reference_only": 2,
+    }:
+        problems.append("batch disposition counts drifted")
+    records = receipt.get("items")
+    if not isinstance(records, list) or len(records) != 20:
+        return problems + ["batch lost or duplicated source records"]
+    expected_urls = {"https://github.com/" + r.lower() for r in OWNER_BROWSER_20261016_SOURCES}
+    actual_urls = [str(r.get("url", "")).lower().rstrip("/") for r in records]
+    if set(actual_urls) != expected_urls or len(set(actual_urls)) != len(records):
+        problems.append("source URL set lost, duplicated or aliased")
+    by_id = {i.get("candidate_id"): i for i in items}
+    by_lane = {lane.get("lane_id"): lane for lane in lanes}
+    seen_ids = set()
+    for r in records:
+        cid = r.get("candidate_id")
+        if cid in seen_ids:
+            problems.append("repeated browser candidate id: " + str(cid))
+        seen_ids.add(cid)
+        repo = str(r.get("url", "")).lower().removeprefix("https://github.com/").rstrip("/")
+        if cid != "candidate-" + repo.replace("/", "-"):
+            problems.append("source-to-candidate id mismatch: " + str(cid))
+        item = by_id.get(cid)
+        if not item:
+            problems.append("missing canonical browser candidate: " + str(cid))
+            continue
+        if item.get("source_item_id") is not None or item.get("provenance_class") != "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION":
+            problems.append("historical source or provenance changed: " + cid)
+        if item.get("lifecycle_state") != "RESEARCHED" or item.get("runtime_verification") != "NOT_RUN" or item.get("authority_role") != "NONE":
+            problems.append("browser candidate was falsely promoted: " + cid)
+        if r.get("url") not in (item.get("evidence_refs") or []):
+            problems.append("candidate missing exact source provenance: " + cid)
+        review = item.get("comparison_review") or {}
+        if review.get("policy") != COMPETITOR_POLICY or review.get("evidence_status") != "RESEARCH_ONLY":
+            problems.append("candidate falsely benchmarked or lost review: " + cid)
+        route = item.get("evaluation_route") or {}
+        if (route.get("owner_ref") != r.get("owner_ref")
+                or route.get("workstream") != r.get("evaluation_lane")
+                or route.get("status") != "WAITING_GATE"
+                or not route.get("next_gate")):
+            problems.append("candidate lost phase owner, gate or status: " + cid)
+        kind = r.get("route_kind")
+        p0lane = r.get("p0_lane")
+        if kind == "P0_QUEUED":
+            lane = by_lane.get(p0lane) or {}
+            if not lane or cid not in (lane.get("queued_challengers") or []):
+                problems.append("queued browser candidate omitted from P0: " + cid)
+            if cid in (lane.get("challengers") or []):
+                problems.append("browser candidate promoted into active shortlist: " + cid)
+            if p0lane not in (item.get("shortlist_lanes") or []):
+                problems.append("candidate missing declared P0 lane: " + cid)
+            if item.get("decision_verdict") != "BENCHMARK_REQUIRED":
+                problems.append("queued candidate lost comparison: " + cid)
+        elif kind == "PHASE_ROUTED":
+            if p0lane is not None or r.get("evaluation_lane") not in (item.get("shortlist_lanes") or []):
+                problems.append("phase route missing or incorrectly P0 queued: " + cid)
+            if item.get("decision_verdict") != "BENCHMARK_REQUIRED":
+                problems.append("routed candidate lost comparison: " + cid)
+        elif kind == "REFERENCE_ONLY":
+            if (p0lane is not None or item.get("decision_verdict") != "DEFERRED_WITH_REASON"
+                    or review.get("eligibility") != "DEFERRED_WITH_REASON"
+                    or not review.get("decision_evidence_refs")):
+                problems.append("source-only example/deprecated tool improperly promoted: " + cid)
+        else:
+            problems.append("unrecognized browser route kind: " + str(kind))
+    return problems
+
+
+def validate_owner_browser_20261016(items: list[dict], lanes: list[dict]) -> None:
+    receipt = load(P2 / "browser-automation-intake-2026-10-16.json")
+    errors = owner_browser_20261016_problems(items, lanes, receipt)
+    if errors:
+        fail("browser tool intake: " + "; ".join(errors[:5]))
+
+    # Negative controls: missing candidate, duplicate upstream URL, dropped P0
+    # lane, and unearned LAB/authority promotion must independently fail.
+    records = receipt["items"]
+    dropped = [x for x in items if x["candidate_id"] != records[0]["candidate_id"]]
+    if not owner_browser_20261016_problems(dropped, lanes, receipt):
+        fail("browser intake missing-record negative control failed")
+    duplicate = dict(receipt)
+    duplicate["items"] = records[:-1] + [dict(records[0])]
+    if not owner_browser_20261016_problems(items, lanes, duplicate):
+        fail("browser intake duplicate-source negative control failed")
+    queued = next(r for r in records if r["route_kind"] == "P0_QUEUED")
+    without_queue = [
+        {**lane, "queued_challengers": [
+            x for x in lane.get("queued_challengers", []) if x != queued["candidate_id"]
+        ]} if lane["lane_id"] == queued["p0_lane"] else lane
+        for lane in lanes
+    ]
+    if not owner_browser_20261016_problems(items, without_queue, receipt):
+        fail("browser intake missing-P0-queue negative control failed")
+    promoted = [
+        {**x, "authority_role": "PRODUCTION_INCUMBENT"}
+        if x["candidate_id"] == records[0]["candidate_id"] else x for x in items
+    ]
+    if not owner_browser_20261016_problems(promoted, lanes, receipt):
+        fail("browser intake false-production negative control failed")
+
+
 def validate_owner_repo_batch_20261013(items: list[dict], lanes: list[dict]) -> None:
     """Keep the owner's 19-repo intake complete, source-linked and explicitly non-authorizing."""
     receipt = load(P2 / "owner-repo-intake-2026-10-13.json")
@@ -431,6 +554,95 @@ def validate_owner_assurance_binary_tools_20261014(items: list[dict], lanes: lis
         fail("assurance/binary false-runtime-attestation negative control failed")
 
 
+
+def validate_owner_llamafile_20261014(items: list[dict], lanes: list[dict]) -> None:
+    """Make this source-pinned provider research intake impossible to silently lose."""
+    cid = "candidate-mozilla-ai-llamafile"
+    source_url = "https://github.com/mozilla-ai/llamafile"
+    upstream_sha = "a3ccf098ed9c7c77687f5430b0143156d3bcc45a"
+    owner_issue = "https://github.com/nocturney/velvetos-core/issues/612"
+    receipt = load(P2 / "owner-local-inference-llamafile-intake-2026-10-14.json")
+    doc = (P2 / "owner-local-inference-llamafile-intake-2026-10-14.md").read_text(encoding="utf-8-sig")
+    phase3 = (ROOT / "docs/implementation/office-v2/phase3c/README.md").read_text(encoding="utf-8-sig")
+    active_or_queued = set()
+    for lane in lanes:
+        active_or_queued.add(lane.get("incumbent"))
+        active_or_queued.update(lane.get("challengers") or [])
+        active_or_queued.update(lane.get("queued_challengers") or [])
+
+    def issues(records: list[dict]) -> list[str]:
+        problems = []
+        by_id = {candidate.get("candidate_id"): candidate for candidate in records}
+        candidate = by_id.get(cid)
+        if (receipt.get("schema") != "velvetos.office-v2.owner-local-inference-intake.v1"
+            or receipt.get("status") != "RESEARCH_ROUTED_NOT_EXECUTED"
+            or receipt.get("candidate_id") != cid
+            or receipt.get("url") != source_url
+            or receipt.get("upstream_pin") != upstream_sha
+            or receipt.get("owner_issue") != owner_issue
+            or receipt.get("workstream") != "local-model-inference"
+            or receipt.get("route_kind") != "PHASE_ROUTED"
+            or receipt.get("p0_shortlist_changed") is not False
+            or receipt.get("runtime_executed") is not False
+            or receipt.get("paid_inference_authorized") is not False):
+            problems.append("source, phase owner or no-execution receipt drift")
+        if candidate is None:
+            return problems + ["missing owner-supplied llamafile candidate"]
+        if cid in active_or_queued:
+            problems.append("research-only local runner promoted to a P0 shortlist")
+        if (candidate.get("source_item_id") is not None
+            or candidate.get("provenance_class") != "OWNER_SUBMITTED_SINGLE_GITHUB_REPO_2026_10_14"
+            or candidate.get("lifecycle_state") != "RESEARCHED"
+            or candidate.get("decision_verdict") != "BENCHMARK_REQUIRED"
+            or candidate.get("runtime_verification") != "NOT_RUN"
+            or candidate.get("authority_role") != "NONE"):
+            problems.append("historical contamination or unearned promotion")
+        if candidate.get("shortlist_lanes") != ["local-model-inference"]:
+            problems.append("not a local model inference provider")
+        refs = candidate.get("evidence_refs") or []
+        if source_url not in refs or source_url + "/tree/" + upstream_sha not in refs:
+            problems.append("exact upstream identity or pin disappeared")
+        review = candidate.get("comparison_review") or {}
+        if (review.get("policy") != "COMPETITOR_NEUTRAL_ADMISSION_V1"
+            or review.get("eligibility") != "OPEN_FOR_COMPARISON"
+            or review.get("evidence_status") != "RESEARCH_ONLY"):
+            problems.append("invalid research-only competitor review")
+        route = candidate.get("evaluation_route") or {}
+        if (route.get("workstream") != "local-model-inference"
+            or route.get("owner_ref") != owner_issue
+            or route.get("status") != "WAITING_GATE"
+            or route.get("next_gate") != receipt.get("next_gate")
+            or route.get("unlock_condition") != receipt.get("unlock_condition")):
+            problems.append("phase routing owner or unlock gate missing")
+        for marker in (cid, upstream_sha, "Ollama", "NO_NEW_RECURRING_COST"):
+            if marker not in doc:
+                problems.append("source or benchmark context missing: " + marker)
+        if cid not in phase3 or "Ollama" not in phase3:
+            problems.append("Phase 3C local provider handoff missing")
+        return problems
+
+    if issues(items):
+        fail("llamafile local inference intake: " + "; ".join(issues(items)[:6]))
+    if not issues([x for x in items if x.get("candidate_id") != cid]):
+        fail("llamafile omitted candidate negative control failed")
+    if not issues([
+        {**x, "evaluation_route": {}} if x.get("candidate_id") == cid else x
+        for x in items
+    ]):
+        fail("llamafile lost route negative control failed")
+    if not issues([
+        {**x, "runtime_verification": "PASS"} if x.get("candidate_id") == cid else x
+        for x in items
+    ]):
+        fail("llamafile false runtime success negative control failed")
+    if not issues([
+        {**x, "evidence_refs": [ref for ref in x.get("evidence_refs", [])
+                               if ref != source_url + "/tree/" + upstream_sha]}
+        if x.get("candidate_id") == cid else x for x in items
+    ]):
+        fail("llamafile lost source-pin negative control failed")
+
+
 def main() -> None:
     missing = [str(p.relative_to(ROOT)) for p in REQUIRED if not p.is_file()]
     if missing:
@@ -493,7 +705,9 @@ def main() -> None:
 
     validate_competitor_neutrality(registry, items, lanes)
     validate_owner_repo_batch_20261013(items, lanes)
+    validate_owner_browser_20261016(items, lanes)
     validate_owner_assurance_binary_tools_20261014(items, lanes)
+    validate_owner_llamafile_20261014(items, lanes)
 
     # Strict research-only agent-composition intake: no automatic admission,
     # dual scheduler, OpenDots alias substitution, spend or authority promotion.

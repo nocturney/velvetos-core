@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-14T10:53:00.000Z",
+  "updated_at": "2026-10-16T10:30:00+03:00",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 131,
+  "candidate_count": 152,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -5457,6 +5457,1297 @@
         "evidence_refs": [
           "docs/implementation/office-v2/phase2/owner-assurance-binary-tools-intake-2026-10-14.md",
           "https://github.com/NationalSecurityAgency/ghidra/tree/918acd744d17e3b95fbde44ec6ab3e59b6dbd45f"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-mozilla-ai-llamafile",
+      "source_item_id": null,
+      "name": "Mozilla AI llamafile portable local LLM inference runtime",
+      "category": "MODEL_INFERENCE_RUNTIME",
+      "provenance_class": "OWNER_SUBMITTED_SINGLE_GITHUB_REPO_2026_10_14",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted 2026-10-14 repo is source-pinned and phase-routed for fair local inference runtime comparison; no LAB run, benchmark, install or production effect.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "local-inference",
+        "portable-single-file-runtime",
+        "llama-cpp",
+        "gguf",
+        "openai-compatible-api",
+        "anthropic-compatible-messages-api",
+        "cuda",
+        "metal",
+        "offline-inference",
+        "optional-whisperfile"
+      ],
+      "platform_constraints": [
+        "Apache-2.0 source license verified; model weights, binary redistribution and linked dependencies require separate rights review.",
+        "Windows bundled-weight executables must stay below the 4GB executable limit; for larger models use separate external GGUF weights. Pin exact executable/binary digest before benchmark.",
+        "The observed v0.10.6 (2026-09-15) release belongs to evolving 0.10.x series; verify real NVIDIA/CUDA Windows and Apple Silicon Metal support/offload, detecting CPU fallback.",
+        "Local OpenAI/Anthropic-compatible server can propose tool calls but does not safely authorize or execute them; keep tool approval/dispatch with the existing VelvetOS effect authority and bind API to loopback.",
+        "No #612 P0 host/GPU/worktree contention, new model download, autostart, daemon, paid API, exposed service, new recurring cost or production cutover authorized."
+      ],
+      "shortlist_lanes": [
+        "local-model-inference"
+      ],
+      "evidence_refs": [
+        "https://github.com/mozilla-ai/llamafile",
+        "https://github.com/mozilla-ai/llamafile/tree/a3ccf098ed9c7c77687f5430b0143156d3bcc45a",
+        "https://github.com/mozilla-ai/llamafile/releases/tag/0.10.6",
+        "docs/implementation/office-v2/phase2/owner-local-inference-llamafile-intake-2026-10-14.md",
+        "docs/implementation/office-v2/phase3c/README.md",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "Inference runtime/provider challenger to Ollama, not a model-routing gateway challenger to LiteLLM/TensorZero and not an agent orchestrator.",
+        "Existing owner #612 local model inference baseline; compatible comparison contract in Phase 3C after independently verified local coding worker proof.",
+        "Use same licensed model, GGUF/quantization, context/task, prompt/schema and sampled settings, measure tool quality and resources before selecting replacement or fallback.",
+        "Whisperfile speech-to-text is only an optional later, separately gated voice comparison, not a service enabled by this intake.",
+        "Registry entry is research evidence only; it grants no LAB admission, credentials, execution, cost or production authority."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "After the independently verified #612 OpenCode/Ollama source-to-PR/QA/recovery reference and Phase 3C incumbent baseline, benchmark pinned llamafile vs the existing Ollama local runtime using the same licensed GGUF/model/quantization and synthetic tasks; record tool/API correctness, cold/warm latency, tokens/sec, RAM/VRAM/GPU/CPU, restart/rollback, and zero-incremental-cost evidence.",
+        "rationale": "Single-file cross-platform delivery and a local API may reduce provisioning or offer a portable Ollama alternative, but same-model benchmarks must prove fit and benefits; overlap with an incumbent is not a rejection reason.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "local-model-inference",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Office v2 Phase 3C provider compatibility / post-baseline #612 local model efficiency (not gateway selection)",
+        "status": "WAITING_GATE",
+        "next_gate": "After the independently verified #612 OpenCode/Ollama source-to-PR/QA/recovery reference and Phase 3C incumbent baseline, benchmark pinned llamafile vs the existing Ollama local runtime using the same licensed GGUF/model/quantization and synthetic tasks; record tool/API correctness, cold/warm latency, tokens/sec, RAM/VRAM/GPU/CPU, restart/rollback, and zero-incremental-cost evidence.",
+        "unlock_condition": "An independently verified #612 source-to-PR/QA/recovery baseline, bounded Phase 3C semantic/provider fixtures, a genuinely free isolated host/VRAM lease, and scoped license/model rights, binary/security, loopback/network, cost and rollback admission checks. No in-flight worker interruption, installation, download or API call.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-local-inference-llamafile-intake-2026-10-14.md",
+          "https://github.com/mozilla-ai/llamafile/tree/a3ccf098ed9c7c77687f5430b0143156d3bcc45a",
+          "docs/implementation/office-v2/phase3c/README.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-lexmount-moli",
+      "source_item_id": null,
+      "name": "Moli headless browser",
+      "category": "BROWSER_ENGINE",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "web-crawl",
+        "headless-browser",
+        "cdp",
+        "web-extraction",
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "platform_constraints": [
+        "On-demand layout; no full graphical GPU compositor or high-fidelity Canvas/WebGL.",
+        "Run local benchmark before claiming performance or target-site parity."
+      ],
+      "shortlist_lanes": [
+        "browser-crawl-extraction"
+      ],
+      "evidence_refs": [
+        "https://github.com/lexmount/moli",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/604"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: fast structured public-web acquisition, DOM and optional layout"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare DOM/Markdown/JSON extraction and browser interoperability against Playwright Chromium on a three-site synthetic crawl.",
+        "rationale": "fast structured public-web acquisition, DOM and optional layout; On-demand layout; no full graphical GPU compositor or high-fidelity Canvas/WebGL.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "browser-crawl-extraction",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+        "phase": "Office v2 Phase 2/3E browser fleet LAB",
+        "status": "WAITING_GATE",
+        "next_gate": "Compare DOM/Markdown/JSON extraction and browser interoperability against Playwright Chromium on a three-site synthetic crawl.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/lexmount/moli",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-browser-use-browser-use",
+      "source_item_id": null,
+      "name": "Browser Use open-source agent",
+      "category": "BROWSER_AGENT",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "ai-agent",
+        "browser-control",
+        "python",
+        "llm",
+        "session-control"
+      ],
+      "platform_constraints": [
+        "Local Python path is distinct from optional metered model/browser cloud services.",
+        "Authenticated work needs scoped test profiles and postcondition checks."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime",
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/browser-use/browser-use",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: adaptive multi-step browser agent with local models or optional cloud browser"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Run adaptive form, navigation, download and recovery fixture versus direct Playwright and Skyvern.",
+        "rationale": "adaptive multi-step browser agent with local models or optional cloud browser; Local Python path is distinct from optional metered model/browser cloud services.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-runtime",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Office v2 Phase 3D agent-runtime evaluation",
+        "status": "WAITING_GATE",
+        "next_gate": "Run adaptive form, navigation, download and recovery fixture versus direct Playwright and Skyvern.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/browser-use/browser-use",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-browser-use-browser-harness",
+      "source_item_id": null,
+      "name": "Browser Harness MCP",
+      "category": "BROWSER_CONTROL",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "mcp",
+        "chrome",
+        "cdp",
+        "browser-control",
+        "authenticated-session"
+      ],
+      "platform_constraints": [
+        "Chrome-focused; Edge compatibility is not established.",
+        "Attached CDP can access a whole browser instance; use dedicated test profile and loopback."
+      ],
+      "shortlist_lanes": [
+        "browser-attached-session"
+      ],
+      "evidence_refs": [
+        "https://github.com/browser-use/browser-harness",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/604"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: MCP control of an existing logged-in Chrome session"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Use browser_list_tabs and upload/click/read on a controlled Chrome profile; verify host focus and session isolation.",
+        "rationale": "MCP control of an existing logged-in Chrome session; Chrome-focused; Edge compatibility is not established.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "browser-attached-session",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+        "phase": "Office v2 Phase 2/3E browser fleet LAB",
+        "status": "WAITING_GATE",
+        "next_gate": "Use browser_list_tabs and upload/click/read on a controlled Chrome profile; verify host focus and session isolation.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/browser-use/browser-harness",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-browser-use-web-ui",
+      "source_item_id": null,
+      "name": "Browser Use Web UI",
+      "category": "BROWSER_UI",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "browser-ui",
+        "gradio",
+        "agent-debugging",
+        "local-testing"
+      ],
+      "platform_constraints": [
+        "A UI for experimentation, not a canonical VelvetOS operator/approval surface.",
+        "Verify compatibility with current browser-use library before use."
+      ],
+      "shortlist_lanes": [
+        "browser-ui-testbed"
+      ],
+      "evidence_refs": [
+        "https://github.com/browser-use/web-ui",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: local Gradio interface for inspecting and testing browser agents"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Evaluate assisted agent debugging and session replay in the isolated LAB against the existing Office visibility surface.",
+        "rationale": "local Gradio interface for inspecting and testing browser agents; A UI for experimentation, not a canonical VelvetOS operator/approval surface.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "browser-ui-testbed",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "WAITING_GATE",
+        "next_gate": "Evaluate assisted agent debugging and session replay in the isolated LAB against the existing Office visibility surface.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/browser-use/web-ui",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-browser-use-bux",
+      "source_item_id": null,
+      "name": "Browser Use Box (BUX)",
+      "category": "BROWSER_AGENT",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime",
+        "long-running-task",
+        "telegram",
+        "linux",
+        "browser-cloud"
+      ],
+      "platform_constraints": [
+        "Ubuntu-based, Claude runtime and Browser Use Cloud dependencies documented.",
+        "Do not start a second production scheduler or connect real Telegram without gate."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime",
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/browser-use/bux",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: long-running remotely reachable browser agent on a personal host"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare restart/resume, operator takeover and browser state retention against existing Grokbot/Office long-job fixtures.",
+        "rationale": "long-running remotely reachable browser agent on a personal host; Ubuntu-based, Claude runtime and Browser Use Cloud dependencies documented.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-runtime",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Office v2 Phase 3D agent-runtime evaluation",
+        "status": "WAITING_GATE",
+        "next_gate": "Compare restart/resume, operator takeover and browser state retention against existing Grokbot/Office long-job fixtures.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/browser-use/bux",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-guycrespin-browser-agent",
+      "source_item_id": null,
+      "name": "Browser Agent Chrome extension",
+      "category": "BROWSER_AGENT",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "browser-extension",
+        "chrome",
+        "interactive-agent",
+        "human-approval"
+      ],
+      "platform_constraints": [
+        "Extension runs near authenticated sessions; prompt injection and local storage exposure require synthetic tests.",
+        "Cloud mode and bring-your-own-provider mode have different data flows."
+      ],
+      "shortlist_lanes": [
+        "browser-attached-session"
+      ],
+      "evidence_refs": [
+        "https://github.com/guycrespin/browser-agent",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/604"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: interactive page-local research and assisted browser actions"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Evaluate selective page read, guarded form interaction and malicious-page negative controls in a disposable Chrome profile.",
+        "rationale": "interactive page-local research and assisted browser actions; Extension runs near authenticated sessions; prompt injection and local storage exposure require synthetic tests.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "browser-attached-session",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+        "phase": "Office v2 Phase 2/3E browser fleet LAB",
+        "status": "WAITING_GATE",
+        "next_gate": "Evaluate selective page read, guarded form interaction and malicious-page negative controls in a disposable Chrome profile.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/guycrespin/browser-agent",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-scrapeless-ai-scrapeless-agent-browser",
+      "source_item_id": null,
+      "name": "Scrapeless Agent Browser CLI",
+      "category": "CLOUD_BROWSER",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "cloud-browser",
+        "cdp",
+        "cli",
+        "session-management",
+        "proxy"
+      ],
+      "platform_constraints": [
+        "Requires Scrapeless API key; availability or free trial does not approve usage charges.",
+        "Not a fully self-hosted browser engine."
+      ],
+      "shortlist_lanes": [
+        "browser-cloud-egress"
+      ],
+      "evidence_refs": [
+        "https://github.com/scrapeless-ai/scrapeless-agent-browser",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/604"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: optional hosted browser session and element-based automation"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare a synthetic remote-browser crawl against local Browserless on reproducibility, session teardown and per-task cost.",
+        "rationale": "optional hosted browser session and element-based automation; Requires Scrapeless API key; availability or free trial does not approve usage charges.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "browser-cloud-egress",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+        "phase": "Office v2 Phase 2/3E browser fleet LAB",
+        "status": "WAITING_GATE",
+        "next_gate": "Compare a synthetic remote-browser crawl against local Browserless on reproducibility, session teardown and per-task cost.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/scrapeless-ai/scrapeless-agent-browser",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-pedro-scrapeless-scrapeless-playwright",
+      "source_item_id": null,
+      "name": "Scrapeless Playwright examples",
+      "category": "REFERENCE_INTEGRATION",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "DEFERRED_WITH_REASON",
+      "verdict_reason": "Documented example or deprecated project, retained as source-linked reference, not an independent runnable challenger.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "playwright",
+        "cdp",
+        "cloud-browser",
+        "integration-example"
+      ],
+      "platform_constraints": [
+        "Illustrative client/examples rather than a standalone execution runtime.",
+        "Requires a Scrapeless-hosted browser and provider key."
+      ],
+      "shortlist_lanes": [
+        "browser-cloud-egress"
+      ],
+      "evidence_refs": [
+        "https://github.com/pedro-scrapeless/scrapeless-playwright",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: sample Playwright-to-Scrapeless CDP integration"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "DEFERRED_WITH_REASON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Retain as integration reference only; reopen if Scrapeless becomes an admitted remote-browser provider.",
+        "rationale": "sample Playwright-to-Scrapeless CDP integration; Illustrative client/examples rather than a standalone execution runtime.",
+        "decision_evidence_refs": [
+          "https://github.com/pedro-scrapeless/scrapeless-playwright/blob/main/README.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "browser-cloud-egress",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "WAITING_GATE",
+        "next_gate": "Retain as integration reference only; reopen if Scrapeless becomes an admitted remote-browser provider.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/pedro-scrapeless/scrapeless-playwright",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-lightpanda-io-browser",
+      "source_item_id": null,
+      "name": "Lightpanda browser",
+      "category": "BROWSER_ENGINE",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "headless-browser",
+        "mcp",
+        "agent",
+        "replay",
+        "web-extraction",
+        "linux",
+        "macos"
+      ],
+      "platform_constraints": [
+        "No native Windows binary; Windows evaluation uses WSL2 or Docker.",
+        "Web-platform/CDP compatibility and opt-out telemetry must be tested."
+      ],
+      "shortlist_lanes": [
+        "browser-crawl-extraction"
+      ],
+      "evidence_refs": [
+        "https://github.com/lightpanda-io/browser",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/604"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: low-resource agent browser, native MCP and replayable PandaScript"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare web-platform functionality, native MCP session isolation, capture-to-replay and memory/time against Chromium.",
+        "rationale": "low-resource agent browser, native MCP and replayable PandaScript; No native Windows binary; Windows evaluation uses WSL2 or Docker.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "browser-crawl-extraction",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+        "phase": "Office v2 Phase 2/3E browser fleet LAB",
+        "status": "WAITING_GATE",
+        "next_gate": "Compare web-platform functionality, native MCP session isolation, capture-to-replay and memory/time against Chromium.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/lightpanda-io/browser",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-cloakhq-cloakbrowser",
+      "source_item_id": null,
+      "name": "CloakBrowser and profile manager",
+      "category": "BROWSER_PROFILE",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "browser-profiles",
+        "chromium",
+        "cdp",
+        "playwright",
+        "persistent-session"
+      ],
+      "platform_constraints": [
+        "Wrapper MIT and compiled Chromium binary under separate vendor terms; current binary tiers differ.",
+        "Test normal allowed automation; never treat anti-detection claims as verified or as platform permission."
+      ],
+      "shortlist_lanes": [
+        "browser-profile-session"
+      ],
+      "evidence_refs": [
+        "https://github.com/CloakHQ/CloakBrowser",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/604"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: isolated persistent browser identities and visible CDP sessions"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare cold-start, profile separation, restore and manual takeover against ordinary isolated Playwright profiles.",
+        "rationale": "isolated persistent browser identities and visible CDP sessions; Wrapper MIT and compiled Chromium binary under separate vendor terms; current binary tiers differ.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "browser-profile-session",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+        "phase": "Office v2 Phase 2/3E browser fleet LAB",
+        "status": "WAITING_GATE",
+        "next_gate": "Compare cold-start, profile separation, restore and manual takeover against ordinary isolated Playwright profiles.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/CloakHQ/CloakBrowser",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-h4ckf0r0day-obscura",
+      "source_item_id": null,
+      "name": "Obscura headless browser",
+      "category": "BROWSER_ENGINE",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "rust",
+        "v8",
+        "headless-browser",
+        "cdp",
+        "web-extraction",
+        "windows"
+      ],
+      "platform_constraints": [
+        "Newer browser engine with bounded web-compatibility evidence.",
+        "Rendering and network transport vary by build flavor; record exact version."
+      ],
+      "shortlist_lanes": [
+        "browser-crawl-extraction"
+      ],
+      "evidence_refs": [
+        "https://github.com/h4ckf0r0day/obscura",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/604"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: Rust/V8 headless engine with local CDP and extraction"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Run the same structured extraction/CDP/render smoke as Moli and Lightpanda; measure throughput and crashes.",
+        "rationale": "Rust/V8 headless engine with local CDP and extraction; Newer browser engine with bounded web-compatibility evidence.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "browser-crawl-extraction",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+        "phase": "Office v2 Phase 2/3E browser fleet LAB",
+        "status": "WAITING_GATE",
+        "next_gate": "Run the same structured extraction/CDP/render smoke as Moli and Lightpanda; measure throughput and crashes.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/h4ckf0r0day/obscura",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-apify-crawlee",
+      "source_item_id": null,
+      "name": "Crawlee crawler framework",
+      "category": "WEB_CRAWLER",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "web-crawl",
+        "structured-extraction",
+        "playwright",
+        "puppeteer",
+        "nodejs",
+        "dataset"
+      ],
+      "platform_constraints": [
+        "Respect published site policies and permitted data access.",
+        "Page-level success must include schema/data validation and source links."
+      ],
+      "shortlist_lanes": [
+        "web-data-crawl"
+      ],
+      "evidence_refs": [
+        "https://github.com/apify/crawlee",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: repeatable crawling with queues, retries and structured extraction"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Run the public vendor-product/documentation fixture with duplicate control, retries, freshness and bounded parallelism.",
+        "rationale": "repeatable crawling with queues, retries and structured extraction; Respect published site policies and permitted data access.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "web-data-crawl",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "WAITING_GATE",
+        "next_gate": "Run the public vendor-product/documentation fixture with duplicate control, retries, freshness and bounded parallelism.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/apify/crawlee",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-skyvern-ai-skyvern",
+      "source_item_id": null,
+      "name": "Skyvern browser workflow automation",
+      "category": "BROWSER_AGENT",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "ai-agent",
+        "rpa",
+        "workflow",
+        "playwright",
+        "structured-output",
+        "browser-control"
+      ],
+      "platform_constraints": [
+        "Self-hosting still requires model inference and operational services.",
+        "Keep workflows dry-run/isolated until approvals and exact postconditions are proven."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime",
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/Skyvern-AI/skyvern",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: AI-assisted and scripted form/process automation with local UI"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare multi-step synthetic forms, files, interrupted workflow recovery and validator accuracy against Browser Use.",
+        "rationale": "AI-assisted and scripted form/process automation with local UI; Self-hosting still requires model inference and operational services.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-runtime",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Office v2 Phase 3D agent-runtime evaluation",
+        "status": "WAITING_GATE",
+        "next_gate": "Compare multi-step synthetic forms, files, interrupted workflow recovery and validator accuracy against Browser Use.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/Skyvern-AI/skyvern",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-flaresolverr-flaresolverr",
+      "source_item_id": null,
+      "name": "FlareSolverr proxy",
+      "category": "BROWSER_COMPAT",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "proxy",
+        "chromium",
+        "web-compatibility",
+        "docker"
+      ],
+      "platform_constraints": [
+        "Not a general browser agent; avoid any service whose access restrictions disallow automation.",
+        "Local service requires restricted loopback access and sanitized logs."
+      ],
+      "shortlist_lanes": [
+        "browser-protected-targets"
+      ],
+      "evidence_refs": [
+        "https://github.com/FlareSolverr/FlareSolverr",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: optional compatibility proxy for specifically authorized web sources"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Keep as a bounded compatibility reference after a documented, permitted target failure; no general-purpose default route.",
+        "rationale": "optional compatibility proxy for specifically authorized web sources; Not a general browser agent; avoid any service whose access restrictions disallow automation.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "browser-protected-targets",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "WAITING_GATE",
+        "next_gate": "Keep as a bounded compatibility reference after a documented, permitted target failure; no general-purpose default route.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/FlareSolverr/FlareSolverr",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-browserless-browserless",
+      "source_item_id": null,
+      "name": "Browserless self-hosted browser pool",
+      "category": "BROWSER_INFRA",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "browser-pool",
+        "browser-session",
+        "docker",
+        "playwright",
+        "puppeteer",
+        "session-health"
+      ],
+      "platform_constraints": [
+        "Self-hosted core differs from premium hosted features and session services.",
+        "Do not contend with ongoing #604 or OfficeV2-Lab worker leases."
+      ],
+      "shortlist_lanes": [
+        "worker-fleet-placement",
+        "worker-fleet-placement"
+      ],
+      "evidence_refs": [
+        "https://github.com/browserless/browserless",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/604"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: managed local browser sessions, concurrency queues and remote CDP"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare isolated Docker browser pool to current Playwright contexts and Selenium Grid on queues, crash recovery and multi-session state.",
+        "rationale": "managed local browser sessions, concurrency queues and remote CDP; Self-hosted core differs from premium hosted features and session services.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "worker-fleet-placement",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+        "phase": "Office v2 Phase 2/3E browser fleet LAB",
+        "status": "WAITING_GATE",
+        "next_gate": "Compare isolated Docker browser pool to current Playwright contexts and Selenium Grid on queues, crash recovery and multi-session state.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/browserless/browserless",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-jo-inc-camofox-browser",
+      "source_item_id": null,
+      "name": "Camofox browser server",
+      "category": "BROWSER_PROFILE",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "rest-api",
+        "browser-snapshot",
+        "session-isolation",
+        "structured-extraction",
+        "browser-control"
+      ],
+      "platform_constraints": [
+        "Separate downloaded Camoufox runtime and optional telemetry; disable telemetry for personal local trials.",
+        "Test cookie/session boundaries with synthetic identities; no live account import by default."
+      ],
+      "shortlist_lanes": [
+        "browser-profile-session"
+      ],
+      "evidence_refs": [
+        "https://github.com/jo-inc/camofox-browser",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/604"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: agent-friendly browser REST API with accessibility snapshots and session isolation"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare accessibility refs, file upload/download, snapshot cost, recoverability and REST integration against Browser Harness.",
+        "rationale": "agent-friendly browser REST API with accessibility snapshots and session isolation; Separate downloaded Camoufox runtime and optional telemetry; disable telemetry for personal local trials.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "browser-profile-session",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+        "phase": "Office v2 Phase 2/3E browser fleet LAB",
+        "status": "WAITING_GATE",
+        "next_gate": "Compare accessibility refs, file upload/download, snapshot cost, recoverability and REST integration against Browser Harness.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/jo-inc/camofox-browser",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-ntegrals-openbrowser",
+      "source_item_id": null,
+      "name": "OpenBrowser TypeScript agent",
+      "category": "BROWSER_AGENT",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "ai-agent",
+        "typescript",
+        "playwright",
+        "replay",
+        "cost-tracking"
+      ],
+      "platform_constraints": [
+        "Older latest push relative to highly active Browser Use; confirm dependency viability.",
+        "Do not duplicate Grokbot/Office task authority during comparison."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime",
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/ntegrals/openbrowser",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: TypeScript autonomous browser agent with replay and resource isolation"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Run the same browser-agent action and crash/resume fixture against Browser Use and Skyvern.",
+        "rationale": "TypeScript autonomous browser agent with replay and resource isolation; Older latest push relative to highly active Browser Use; confirm dependency viability.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "agent-runtime",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Office v2 Phase 3D agent-runtime evaluation",
+        "status": "WAITING_GATE",
+        "next_gate": "Run the same browser-agent action and crash/resume fixture against Browser Use and Skyvern.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/ntegrals/openbrowser",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-berstend-puppeteer-extra",
+      "source_item_id": null,
+      "name": "Puppeteer Extra plugin framework",
+      "category": "BROWSER_COMPAT",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "puppeteer",
+        "plugin",
+        "playwright",
+        "legacy-compatibility"
+      ],
+      "platform_constraints": [
+        "Upstream repository push is older; current package compatibility must be tested before adoption.",
+        "Do not treat stealth plugins as reliable or necessary for compliant tasks."
+      ],
+      "shortlist_lanes": [
+        "browser-compat-legacy"
+      ],
+      "evidence_refs": [
+        "https://github.com/berstend/puppeteer-extra",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: plugin-based Puppeteer/Playwright compatibility research"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Check version-pinned compatibility with current Node/Playwright and any legitimately required existing plugin.",
+        "rationale": "plugin-based Puppeteer/Playwright compatibility research; Upstream repository push is older; current package compatibility must be tested before adoption.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "browser-compat-legacy",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "WAITING_GATE",
+        "next_gate": "Check version-pinned compatibility with current Node/Playwright and any legitimately required existing plugin.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/berstend/puppeteer-extra",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-autoscrape-labs-pydoll",
+      "source_item_id": null,
+      "name": "Pydoll Python CDP browser automation",
+      "category": "BROWSER_CONTROL",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-selected personal-use browser capability; route to comparable synthetic tests before selecting local, hosted or hybrid execution.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "python",
+        "edge",
+        "chrome",
+        "cdp",
+        "structured-extraction",
+        "playwright-compatibility"
+      ],
+      "platform_constraints": [
+        "Sustained by a small maintainer team and v3 may have API differences.",
+        "Run against a disposable Edge profile, not unrestricted personal browsing."
+      ],
+      "shortlist_lanes": [
+        "browser-attached-session"
+      ],
+      "evidence_refs": [
+        "https://github.com/autoscrape-labs/pydoll",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/604"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: Python driverless CDP control of Chrome and Edge with typed extraction"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare Edge CDP tabs, reading, form, download and retained session with Playwright on synthetic authenticated fixture.",
+        "rationale": "Python driverless CDP control of Chrome and Edge with typed extraction; Sustained by a small maintainer team and v3 may have API differences.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "browser-attached-session",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+        "phase": "Office v2 Phase 2/3E browser fleet LAB",
+        "status": "WAITING_GATE",
+        "next_gate": "Compare Edge CDP tabs, reading, form, download and retained session with Playwright on synthetic authenticated fixture.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/autoscrape-labs/pydoll",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-googlechrome-rendertron",
+      "source_item_id": null,
+      "name": "Rendertron deprecated renderer",
+      "category": "REFERENCE_INTEGRATION",
+      "provenance_class": "OWNER_REQUEST_2026_10_16_BROWSER_AUTOMATION",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "DEFERRED_WITH_REASON",
+      "verdict_reason": "Documented example or deprecated project, retained as source-linked reference, not an independent runnable challenger.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "legacy",
+        "renderer",
+        "puppeteer",
+        "seo"
+      ],
+      "platform_constraints": [
+        "Upstream is archived and explicitly deprecated; modern dynamic rendering guidance no longer recommends it.",
+        "Do not install; preserve as an evidence-backed historical reference."
+      ],
+      "shortlist_lanes": [
+        "browser-compat-legacy"
+      ],
+      "evidence_refs": [
+        "https://github.com/GoogleChrome/rendertron",
+        "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "Requested personal-use workflow capability; intake into the existing registry only; no installation, credential grant, scheduler, network exposure, hosted usage or production effect.",
+        "Intended integration: historical headless Chrome dynamic-rendering reference"
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "DEFERRED_WITH_REASON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "No runtime benchmark. Revisit only if an exact historical rendering regression requires source archaeology.",
+        "rationale": "historical headless Chrome dynamic-rendering reference; Upstream is archived and explicitly deprecated; modern dynamic rendering guidance no longer recommends it.",
+        "decision_evidence_refs": [
+          "https://github.com/GoogleChrome/rendertron/blob/main/README.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "browser-compat-legacy",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "WAITING_GATE",
+        "next_gate": "No runtime benchmark. Revisit only if an exact historical rendering regression requires source archaeology.",
+        "unlock_condition": "Version/security/cost and fixture admission complete; #612 incumbent worker proof or #604 free-host confirmation as relevant; no production credentials or effects.",
+        "evidence_refs": [
+          "https://github.com/GoogleChrome/rendertron",
+          "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
         ]
       }
     }
