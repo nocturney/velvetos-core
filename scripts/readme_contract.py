@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -73,7 +74,10 @@ def changed_files(base: str, head: str, repo: Path = ROOT) -> list[str]:
         spec = f"{git_revision(base)}...{git_revision(head)}"
     except SpawnRefusal as exc:
         raise SystemExit(f"FAIL git diff {base}...{head}: {exc}") from exc
-    proc = run_git(["diff", "--name-only"], revisions=[spec], cwd=repo)
+    try:
+        proc = run_git(["diff", "--name-only"], revisions=[spec], cwd=repo)
+    except subprocess.TimeoutExpired as exc:
+        raise SystemExit(f"FAIL git diff {base}...{head}: GIT_TIMEOUT") from exc
     if proc.returncode != 0:
         raise SystemExit(f"FAIL git diff {base}...{head}: {proc.stderr.strip()}")
     return [line for line in proc.stdout.splitlines() if line.strip()]
@@ -146,6 +150,22 @@ def prove_git_diff() -> list[str]:
             os.environ["GIT_EXEC_PATH"] = previous
     if names != ["f"]:
         errors.append(f"real readme diff under a poisoned GIT_EXEC_PATH was {names}")
+
+    def expire(argv, **kwargs):
+        raise subprocess.TimeoutExpired(argv, timeout=kwargs.get("timeout") or 30)
+
+    vf_spawn.subprocess.run = expire
+    try:
+        changed_files("a", "b", ROOT)
+    except SystemExit as exc:
+        if "GIT_TIMEOUT" not in str(exc) or "Traceback" in str(exc):
+            errors.append(f"readme git timeout was {exc}")
+    except subprocess.TimeoutExpired:
+        errors.append("readme git timeout was not caught")
+    else:
+        errors.append("readme git timeout was accepted")
+    finally:
+        vf_spawn.subprocess.run = original
     return errors
 
 

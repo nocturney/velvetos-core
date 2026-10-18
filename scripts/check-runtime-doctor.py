@@ -12,13 +12,16 @@ Examples:
   python scripts/check-runtime-doctor.py --scope runtime --require-component edge-execution
   python scripts/check-runtime-doctor.py --scope external_action --require-component google-drive
   python scripts/check-runtime-doctor.py --strict   # legacy repository-wide live proof
+  python scripts/check-runtime-doctor.py --selftest  # git pin proof; not part of validate()
 """
 
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 import os
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -99,6 +102,7 @@ def _rev_parse_operand_errors(argv: list[str]) -> list[str]:
 
 def prove_repo_git() -> list[str]:
     """repo-main rev-parse is absolute, timed, and does not inherit GIT_*."""
+    prove_repo_git.calls = getattr(prove_repo_git, "calls", 0) + 1
     import vf_spawn
     from vf_spawn import GIT_TIMEOUT_SECONDS, allowlisted_git_errors
 
@@ -139,6 +143,21 @@ def prove_repo_git() -> list[str]:
             os.environ["GIT_EXEC_PATH"] = previous
     if not ok:
         errors.append(f"real repo-main proof under a poisoned GIT_EXEC_PATH failed: {detail}")
+
+    def expire(argv, **kwargs):
+        raise subprocess.TimeoutExpired(argv, timeout=kwargs.get("timeout") or 30)
+
+    vf_spawn.subprocess.run = expire
+    try:
+        try:
+            ok, detail = _builtin_proof(component)
+        except subprocess.TimeoutExpired:
+            errors.append("runtime doctor git timeout was not caught")
+            ok, detail = False, ""
+    finally:
+        vf_spawn.subprocess.run = original
+    if ok or "GIT_TIMEOUT" not in str(detail) or "Traceback" in str(detail):
+        errors.append(f"runtime doctor git timeout was not GIT_TIMEOUT: {detail!r}")
     return errors
 
 
@@ -153,6 +172,8 @@ def _builtin_proof(component: dict[str, Any]) -> tuple[bool, str]:
                 ["-c", f"safe.directory={ROOT.as_posix()}", "rev-parse", "HEAD"],
                 cwd=ROOT,
             )
+        except subprocess.TimeoutExpired:
+            return False, "repo-main: GIT_TIMEOUT"
         except SpawnRefusal as exc:
             return False, f"repo-main: git HEAD proof failed: {exc}"
         if probe.returncode == 0 and len(probe.stdout.strip()) == 40:
@@ -242,8 +263,8 @@ def validate(request: RuntimeProofRequest) -> tuple[int, list[str]]:
             errors.append(f"{cid}: invalid anyOf")
 
     # CODE_VALID proves repository/runtime contract structure but intentionally
-    # does not consume current provider/connector/host receipts.
-    errors.extend(prove_repo_git())
+    # does not consume current provider/connector/host receipts. The git
+    # self-test that monkeypatches subprocess lives on --selftest only.
     repo_main = component_by_id.get("repo-main")
     if repo_main and repo_main.get("proofMode") == "builtin":
         ok, detail = _builtin_proof(repo_main)
@@ -328,9 +349,67 @@ def validate(request: RuntimeProofRequest) -> tuple[int, list[str]]:
     return 0, lines
 
 
+def prove_validate_is_pure() -> list[str]:
+    """validate() does not monkeypatch subprocess.run or GIT_EXEC_PATH."""
+    import vf_spawn
+
+    errors: list[str] = []
+    tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
+    fn = next((node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "validate"), None)
+    if fn is None:
+        return ["validate() is missing"]
+    dumped = ast.dump(fn)
+    if "prove_repo_git" in dumped:
+        errors.append("validate() calls prove_repo_git")
+    if "GIT_EXEC_PATH" in dumped:
+        errors.append("validate() touches GIT_EXEC_PATH")
+    if "subprocess" in dumped:
+        errors.append("validate() touches subprocess")
+    before = getattr(prove_repo_git, "calls", 0)
+    env_before = os.environ.get("GIT_EXEC_PATH")
+    run_before = vf_spawn.subprocess.run
+    code, lines = validate(_request_from_cli([]))
+    if getattr(prove_repo_git, "calls", 0) != before:
+        errors.append("validate() ran prove_repo_git")
+    if vf_spawn.subprocess.run is not run_before:
+        errors.append("validate() left subprocess.run patched")
+    if os.environ.get("GIT_EXEC_PATH") != env_before:
+        errors.append("validate() left GIT_EXEC_PATH changed")
+    if code != 0:
+        errors.append("validate() failed during the purity check: " + " | ".join(lines))
+    return errors
+
+
+def run_selftest() -> int:
+    errors = prove_repo_git()
+    errors.extend(prove_validate_is_pure())
+    if errors:
+        print("FAIL runtime doctor selftest: " + "; ".join(errors), file=sys.stderr)
+        return 1
+    print("OK runtime doctor selftest")
+    return 0
+
+
 def main(argv: list[str] | None = None, *, request: RuntimeProofRequest | None = None) -> int:
+    supplied = list(sys.argv[1:] if argv is None else argv)
+    if supplied == ["--selftest"]:
+        return run_selftest()
+    if supplied == [] and request is None and os.environ.get("VF_RUNTIME_DOCTOR_INSIDE_SELFTEST") != "1":
+        child = subprocess.run(
+            [sys.executable, str(Path(__file__).resolve()), "--selftest"],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            env={**os.environ, "VF_RUNTIME_DOCTOR_INSIDE_SELFTEST": "1"},
+        )
+        if child.returncode != 0:
+            sys.stderr.write(child.stdout)
+            sys.stderr.write(child.stderr)
+            return child.returncode or 1
+        if child.stdout.strip():
+            print(child.stdout.strip())
     try:
-        resolved = request or _request_from_cli(argv)
+        resolved = request or _request_from_cli(None if argv is None else supplied)
     except ValueError as exc:
         print(f"FAIL runtime proof request: {exc}", file=sys.stderr)
         return 1
