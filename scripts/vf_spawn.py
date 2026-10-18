@@ -157,6 +157,7 @@ def run_tool(
     check: bool = False,
     input: str | None = None,
     path_dirs: list[str] | None = None,
+    close_stdin: bool = False,
 ) -> subprocess.CompletedProcess[str]:
     if not argv or not isinstance(argv[0], str):
         raise SpawnRefusal("SPAWN_ARGV_REFUSED")
@@ -166,23 +167,27 @@ def run_tool(
     env = allowlisted_env(executable, extra_env)
     if path_dirs is not None:
         env["PATH"] = join_tool_path([str(Path(executable).resolve().parent), *path_dirs])
-    return subprocess.run(
-        [executable, *argv[1:]],
-        cwd=cwd,
-        env=env,
-        timeout=timeout,
-        check=check,
-        capture_output=True,
-        text=True,
-        input=input,
-    )
+    call: dict = {
+        "cwd": cwd,
+        "env": env,
+        "timeout": timeout,
+        "check": check,
+        "capture_output": True,
+        "text": True,
+    }
+    if input is None and close_stdin:
+        call["stdin"] = subprocess.DEVNULL
+    elif input is not None:
+        call["input"] = input
+    return subprocess.run([executable, *argv[1:]], **call)
 
 
 def git_revision(token: str) -> str:
     """A revision git must see before ``--``.
 
     Git reads tokens after ``--`` as paths, not revisions. A leading dash is
-    an option, so it is refused before git runs.
+    an option, and a newline, CR, or NUL is an argument break, so both are
+    refused before git runs.
     """
     if (
         not isinstance(token, str)
@@ -208,7 +213,9 @@ def run_git(
 
     ``user_args`` (urls, refspecs, paths) are placed after ``--`` so git does
     not parse them as options. ``revisions`` stay before ``--`` because git
-    would otherwise treat them as paths; ``git_revision`` refuses a leading dash.
+    would otherwise treat them as paths; ``git_revision`` refuses a leading
+    dash and a newline, CR, or NUL. With no ``input``, stdin is ``DEVNULL``
+    so ``git apply --check`` cannot wait on an inherited pipe.
     """
     if any(not isinstance(arg, str) or arg == "" for arg in args):
         raise SpawnRefusal("GIT_ARGV_REFUSED")
@@ -222,7 +229,14 @@ def run_git(
                 raise SpawnRefusal("GIT_USER_ARG_REFUSED")
         argv.append("--")
         argv.extend(operands)
-    return run_tool(["git", *argv], cwd=cwd, check=check, timeout=timeout, input=input)
+    return run_tool(
+        ["git", *argv],
+        cwd=cwd,
+        check=check,
+        timeout=timeout,
+        input=input,
+        close_stdin=input is None,
+    )
 
 
 def user_arg_separator_errors(argv: list[str], user_args: list[str]) -> list[str]:

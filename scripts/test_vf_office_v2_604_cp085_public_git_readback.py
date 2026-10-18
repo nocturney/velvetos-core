@@ -358,6 +358,43 @@ class ReadbackTests(unittest.TestCase):
             finally:
                 sys.modules.pop(spec.name, None)
 
+    def test_30_symlink_receipt_parent_directory_refused(self):
+        """A symlink used as the receipt parent is not a private directory.
+
+        Dropping path.parent.is_symlink() follows the link and writes the file.
+        """
+        self.require_posix_permissions()
+        value = r.classify(self.intent, CANDIDATE)
+        source = Path(r.__file__).resolve().read_text(encoding="utf-8")
+        needle = "or path.parent.is_symlink()"
+        self.assertEqual(source.count(needle), 1)
+        mutated_source = source.replace(needle, "", 1)
+        self.assertNotIn(needle, mutated_source)
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            real = root / "real"
+            real.mkdir(mode=0o700)
+            real.chmod(0o700)
+            link = root / "link"
+            link.symlink_to(real, target_is_directory=True)
+            with self.assertRaisesRegex(r.Refuse, "^RECEIPT_PARENT_UNAVAILABLE$"):
+                r.write_private_receipt(link / "proof.json", value)
+            mutant_path = root / "cp085_parent_symlink.py"
+            mutant_path.write_text(mutated_source, encoding="utf-8")
+            spec = importlib.util.spec_from_file_location(
+                "cp085_parent_symlink", mutant_path)
+            if spec is None or spec.loader is None:
+                self.fail("cannot load parent-symlink mutant")
+            mutant = importlib.util.module_from_spec(spec)
+            sys.modules[spec.name] = mutant
+            try:
+                spec.loader.exec_module(mutant)
+                digest = mutant.write_private_receipt(link / "mutant-proof.json", value)
+                self.assertEqual(len(digest), 64)
+                self.assertTrue((real / "mutant-proof.json").is_file())
+            finally:
+                sys.modules.pop(spec.name, None)
+
 
 if __name__ == "__main__":
     unittest.main()
