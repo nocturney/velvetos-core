@@ -1,0 +1,5 @@
+# Direct pins for the CI-only Google clients used by jobs-write-through
+# and vfmedia-intake. CI installs requirements-google-clients.py311.lock
+# with --require-hashes. Do not add these packages to requirements-sensors.txt.
+google-api-python-client==2.201.0
+google-auth==2.62.0

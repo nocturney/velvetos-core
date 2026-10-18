@@ -47,7 +47,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install Google clients
-        run: pip install --quiet google-api-python-client google-auth
+        run: python3 -m pip install --disable-pip-version-check --require-hashes -r requirements-google-clients.py311.lock
 
       - name: Authenticate with Google via GitHub OIDC/WIF
         id: auth
