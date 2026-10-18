@@ -11,10 +11,12 @@ This sensor models that empty-result case and rejects a calc.ps1 whose
 Calcs call sites, or any other possibly-empty .Count/.Length, are left
 unwrapped. It also requires a 10000 ms poll for CalculatorResults and
 the buttons the script presses, a Calculator-only UWP host bind
-(ApplicationFrameHost or the Calculator process), and a receipt that
-records the refusal message and refusal code. Mutations of the fixed
-script must go red; the fixed script must stay green. It does not
-launch Calculator or touch a Windows session.
+(ApplicationFrameHost or the Calculator process), a content bind to the
+CalculatorApp window (Windows.UI.Core.CoreWindow) rather than the outer
+frame, and a receipt that records the refusal message, refusal code,
+bound element, and bound process. Mutations of the fixed script must go
+red; the fixed script must stay green. It does not launch Calculator or
+touch a Windows session.
 """
 from __future__ import annotations
 
@@ -30,7 +32,8 @@ PIN = ROOT / "packages/vfharness/devtools/pilots/cua/cp057/PIN.json"
 README = ROOT / "README.md"
 CUA_README = ROOT / "packages/vfharness/devtools/pilots/cua/README.md"
 EARLIER = "97e942bcccfb5c5bcbbe13e97badd058e027e1df3e803a4a24d9eaac933cbc6f"
-IMMEDIATE = "32824ef410023d84a61c7ecd88edd872ade2e70bdee0ec22b27ae001a3b35f13"
+FIRST_READ = "32824ef410023d84a61c7ecd88edd872ade2e70bdee0ec22b27ae001a3b35f13"
+FRAME = "d851448d96791b1d5ec84575b8b923777217630b1dd8ee43a695ccc621425727"
 UIA_WAIT_MS = 10000
 UIA_POLL_MS = 250
 TREE_IDS = (
@@ -438,6 +441,55 @@ def wait_findings(text: str) -> list[str]:
     return problems
 
 
+def content_findings(text: str) -> list[str]:
+    """Reads and presses bind to the CalculatorApp content window, not the frame."""
+    problems: list[str] = []
+    if "Windows.UI.Core.CoreWindow" not in text:
+        problems.append("content bind must name Windows.UI.Core.CoreWindow")
+    if "EnumChildWindows" not in text:
+        problems.append("content bind must enumerate child windows of the frame")
+    if "NativeWindowHandle" not in text:
+        problems.append("content bind must start from the frame NativeWindowHandle")
+    if "Find-CalculatorContent" not in text:
+        problems.append("missing Find-CalculatorContent")
+    if "CALCULATOR_CONTENT_WINDOW_UNAVAILABLE" not in text:
+        problems.append("missing CALCULATOR_CONTENT_WINDOW_UNAVAILABLE refusal")
+    if "bound_element=''" not in text or "bound_process=''" not in text:
+        problems.append("receipt schema must include bound_element and bound_process")
+    if "$rec.bound_element=" not in text or "$rec.bound_process=" not in text:
+        problems.append("receipt must record bound_element and bound_process")
+    if re.search(r"\bEnumWindows\b", text):
+        problems.append("EnumWindows is forbidden")
+    if re.search(r"EnumChildWindows\s*\(\s*(?:IntPtr\.Zero|\[IntPtr\]::Zero)", text):
+        problems.append("EnumChildWindows must not start at the desktop")
+    if re.search(r"Children\s*\(\s*\[IntPtr\]::Zero\s*\)", text):
+        problems.append("Win32 child search must not start at the desktop")
+    spans = dict(function_spans(text))
+    if "Resolve-ContentWindow" not in spans.get("FindElement", ""):
+        problems.append("FindElement must rebind to the content window")
+    tree = spans.get("Wait-CalculatorTree", "")
+    if "Find-CalculatorContent" not in tree:
+        problems.append("Wait-CalculatorTree must search the content window")
+    if "CALCULATOR_CONTENT_WINDOW_UNAVAILABLE" not in tree:
+        problems.append("Wait-CalculatorTree must fail closed when the content window is absent")
+    if "FindElementOnce $frame" in tree:
+        problems.append("Wait-CalculatorTree must not read automation ids from the outer frame")
+    if "Find-BoundRoot" not in spans.get("Display", ""):
+        problems.append("Display must read the bound content element")
+    if "Find-BoundRoot" not in spans.get("Press", ""):
+        problems.append("Press must invoke the bound content element")
+    parts = text.split("} finally {", 1)
+    if len(parts) != 2:
+        problems.append("missing cleanup finally")
+    else:
+        tail = parts[1]
+        close_at = tail.find(".Close()")
+        guard_at = tail.find("Test-ContentProcess")
+        if close_at < 0 or guard_at < 0 or guard_at > close_at:
+            problems.append("WindowPattern.Close must be limited to the Calculator content process")
+    return problems
+
+
 def receipt_findings(text: str) -> list[str]:
     problems: list[str] = []
     if "failure_message=''" not in text or "refusal_code=''" not in text:
@@ -506,6 +558,10 @@ def sanitizer_model_findings() -> list[str]:
             "REFUSED_CALCULATOR_ELEMENT_UNAVAILABLE_num6Button",
             "CALCULATOR_ELEMENT_UNAVAILABLE_num6Button",
         ),
+        "REFUSED_CALCULATOR_CONTENT_WINDOW_UNAVAILABLE": (
+            "REFUSED_CALCULATOR_CONTENT_WINDOW_UNAVAILABLE",
+            "CALCULATOR_CONTENT_WINDOW_UNAVAILABLE",
+        ),
     }
     for raw, expected in samples.items():
         if sanitize_refusal(raw) != expected:
@@ -552,6 +608,26 @@ def mutate(text: str, kind: str) -> str:
         if anchor not in text:
             return text
         return text.replace(anchor, "Get-Process -Name ApplicationFrameHost,CalculatorApp,Calculator,calc", 1)
+    if kind == "drop-corewindow":
+        anchor = "Windows.UI.Core.CoreWindow"
+        if anchor not in text:
+            return text
+        return text.replace(anchor, "ApplicationFrameWindow")
+    if kind == "rebind-frame":
+        mutated = text.replace("$window=Resolve-ContentWindow $window", "$window=FindWindow", 1)
+        mutated = mutated.replace("$window=Find-CalculatorContent $frame", "$window=$frame", 1)
+        mutated = mutated.replace("$window=Find-BoundRoot", "$window=FindWindow")
+        return mutated
+    if kind == "drop-bound-receipt":
+        anchor = "bound_element='';bound_process=''"
+        if anchor not in text:
+            return text
+        return text.replace(anchor, "", 1)
+    if kind == "close-frame":
+        anchor = "if(Test-ContentProcess $closeName){"
+        if anchor not in text:
+            return text
+        return text.replace(anchor, "if($true){", 1)
     return text
 
 
@@ -564,6 +640,10 @@ def mutation_findings(text: str) -> list[str]:
         ("drop-deadline", wait_findings),
         ("drop-receipt-reason", receipt_findings),
         ("broaden-host-kill", wait_findings),
+        ("drop-corewindow", content_findings),
+        ("rebind-frame", content_findings),
+        ("drop-bound-receipt", content_findings),
+        ("close-frame", content_findings),
     )
     for kind, checker in checks:
         mutated = mutate(text, kind)
@@ -604,11 +684,13 @@ def pin_findings(text: str) -> list[str]:
         problems.append("PIN path mismatch")
     if pin.get("sha256") != digest:
         problems.append(f"PIN sha256 {pin.get('sha256')} != file {digest}")
-    if str(pin.get("supersedes_sha256", "")).lower() != IMMEDIATE:
-        problems.append("PIN supersedes_sha256 must be the first-read failure pin")
+    if str(pin.get("supersedes_sha256", "")).lower() != FRAME:
+        problems.append("PIN supersedes_sha256 must be the frame-bind pin")
     pin_text = PIN.read_text(encoding="utf-8").lower()
     if EARLIER not in pin_text:
         problems.append("PIN lost the earlier strict-mode hash")
+    if FIRST_READ not in pin_text:
+        problems.append("PIN lost the first-read failure hash")
     if pin.get("runtimeAuthority") is not False or pin.get("activationAllowed") is not False:
         problems.append("PIN must keep runtimeAuthority and activationAllowed false")
     if pin.get("acceptance") != "RED_UNVERIFIED":
@@ -620,7 +702,15 @@ def pin_findings(text: str) -> list[str]:
     for path, body in ((README, root_readme), (CUA_README, cua_readme)):
         if digest not in body.lower():
             problems.append(f"{path.relative_to(ROOT)} does not record {digest}")
-        for token in ("CalculatorResults", "refusal_code", "ApplicationFrameHost", "RED/UNVERIFIED"):
+        for token in (
+            "CalculatorResults",
+            "refusal_code",
+            "ApplicationFrameHost",
+            "RED/UNVERIFIED",
+            "Windows.UI.Core.CoreWindow",
+            "bound_process",
+            "CALCULATOR_ELEMENT_UNAVAILABLE_CalculatorResults",
+        ):
             if token not in body:
                 problems.append(f"{path.relative_to(ROOT)} missing {token}")
     if "PropertyNotFoundException" not in root_readme:
@@ -645,6 +735,7 @@ def main() -> int:
         problems.extend(script_findings(text))
         problems.extend(safety_findings(text))
         problems.extend(wait_findings(text))
+        problems.extend(content_findings(text))
         problems.extend(receipt_findings(text))
         problems.extend(mutation_findings(text))
         problems.extend(sanitizer_model_findings())
@@ -658,9 +749,11 @@ def main() -> int:
     digest = hashlib.sha256(CALC.read_bytes()).hexdigest()
     print(
         "OK red-before drop-preread-wait=DETECTED unbounded-wait=DETECTED "
-        "drop-deadline=DETECTED drop-receipt-reason=DETECTED broaden-host-kill=DETECTED"
+        "drop-deadline=DETECTED drop-receipt-reason=DETECTED broaden-host-kill=DETECTED "
+        "drop-corewindow=DETECTED rebind-frame=DETECTED drop-bound-receipt=DETECTED "
+        "close-frame=DETECTED"
     )
-    print("OK green-after wait=BOUNDED receipt=REASON host=UWP")
+    print("OK green-after wait=BOUNDED receipt=REASON host=UWP content=COREWINDOW")
     print(f"OK cp057-calc-strictmode empty-result=GUARDED sha256={digest}")
     return 0
 

@@ -1,12 +1,12 @@
 {
   "schema": "velvetos.cp057.calc-ps1-pin.v1",
   "path": "packages/vfharness/devtools/pilots/cua/cp057/calc.ps1",
-  "sha256": "d851448d96791b1d5ec84575b8b923777217630b1dd8ee43a695ccc621425727",
-  "supersedes_sha256": "32824ef410023d84a61c7ecd88edd872ade2e70bdee0ec22b27ae001a3b35f13",
+  "sha256": "18bb936d340441fb3a3434afef6792ea65074dc02e38879dd6f6143cf323fe75",
+  "supersedes_sha256": "d851448d96791b1d5ec84575b8b923777217630b1dd8ee43a695ccc621425727",
   "algorithm": "SHA-256",
   "line_ending": "lf",
   "runtimeAuthority": false,
   "activationAllowed": false,
   "acceptance": "RED_UNVERIFIED",
-  "note": "Repo bytes are LF. supersedes_sha256 is the 2026-10-18 script that launched Calculator and failed closed on the first Display read (RuntimeException / OperationStopped, empty first_result, no refusal text). The earlier strict-mode pin 97e942bcccfb5c5bcbbe13e97badd058e027e1df3e803a4a24d9eaac933cbc6f failed closed before launch. This pin waits up to 10000 ms for CalculatorResults and the four buttons on the Calculator window only (ApplicationFrameHost or the Calculator process) and records failure_message plus refusal_code. Do not execute it from HQ."
+  "note": "Repo bytes are LF. supersedes_sha256 is the 2026-10-18 frame-bind pin. Attempt 3 bound the outer ApplicationFrameHost window and failed closed with CALCULATOR_ELEMENT_UNAVAILABLE_CalculatorResults because CalculatorResults was not reachable from that frame within 10000 ms. The first-read failure pin 32824ef410023d84a61c7ecd88edd872ade2e70bdee0ec22b27ae001a3b35f13 launched Calculator and failed closed on the first Display read (RuntimeException / OperationStopped). The earlier strict-mode pin 97e942bcccfb5c5bcbbe13e97badd058e027e1df3e803a4a24d9eaac933cbc6f failed closed before launch. This pin still waits up to 10000 ms, then binds reads and presses to the CalculatorApp content window (Windows.UI.Core.CoreWindow) and records bound_element plus bound_process. It does not close ApplicationFrameHost. Do not execute it from HQ."
 }
