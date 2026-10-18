@@ -57,7 +57,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 
 Hebrew-letter boundaries keep shekel abbreviations from matching inside שחור, משחק, and לשחרר. client-side is not an identified customer. Golden negatives pin a shekel-only output, a duplicate data row, a missing output, an unexpected output, and a symlinked output. The scorer refuses those files.
 
-Hidden names are classified too. A hidden symlink is `SYMLINK_REFUSED` and is not read. Each data row cites one issue URL, so a merged row fails. `Customer` and `Client` count. `שחסר` does not.
+Hidden names are classified too. A hidden symlink is `SYMLINK_REFUSED` and is not read. Each data row cites one issue URL, so a merged row fails. A merged row plus a duplicate row with the same row count also fails. `Customer` and `Client` count. `שחסר` does not.
 
 **ffmpeg zoompan skip:** `scripts/check-hyperframes-backend.py` treats a missing zoompan filter as `SKIP_ENV_MISSING_ZOOMPAN`. A local host skips the caption suite through `ci_skip_failure` and still runs the fake-ffmpeg capability tests. `GITHUB_ACTIONS=true` fails that same gap in the env helper and in the hyperframes sensor. How CI is detected stays in `scripts/vf_ffmpeg_env.py`.
 
