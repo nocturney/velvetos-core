@@ -1,0 +1,31 @@
+{
+  "task_id": "cp083-evidence-gate-2026-10-18",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfharness",
+  "goal": "Keep the CP083 lost-ACK evidence file untouched in tests, and fail closed with GATE_IMPORT_FAILED when the gate cannot be imported.",
+  "completed_steps": [
+    "CLAIM on #612 comment 6252045694",
+    "Missing and corrupt evidence checks use a temp path",
+    "Gate import failure returns GATE_IMPORT_FAILED and drops the seal row",
+    "#789 Draft wording was already corrected on main"
+  ],
+  "next_step": "Independent QA. security_admission stays RED.",
+  "artifacts": [
+    "scripts/office_v2_mvp.py",
+    "scripts/test_office_v2_mvp.py",
+    "scripts/check-office-v2-mvp.py"
+  ],
+  "unresolved": [
+    "security_admission stays RED",
+    "The committed lost-ACK evidence JSON is unchanged"
+  ],
+  "last_updated": "2026-10-18",
+  "execution_state": {
+    "claim": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6252045694",
+    "follows": "https://github.com/nocturney/velvetos-core/pull/803",
+    "security_admission": "RED",
+    "windows_execution": false
+  },
+  "latest_observation": "The board test no longer unlinks the real evidence file. A failed gate import is GATE_IMPORT_FAILED and does not render a seal."
+}
