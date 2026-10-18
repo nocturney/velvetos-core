@@ -38,7 +38,7 @@ This document specifies **which actual observations would close each gate**. It 
 New files:
 
 - scripts/vf_office_v2_604_cp083_candidate_evidence_gate.py
-- scripts/test_vf_office_v2_604_cp083_candidate_evidence_gate.py (20 synthetic author regression tests, including a CRLF receipt line and a CR byte inside the JSON)
+- scripts/test_vf_office_v2_604_cp083_candidate_evidence_gate.py (24 synthetic author regression tests, including a CRLF receipt line, a CR byte inside the JSON, hardlink refusal, anchored parent open, guest/manifest CR refusal, and self-issued receipts refused as host attestation)
 
 Run unit negatives with Python 3:
 
@@ -50,7 +50,7 @@ Run offline consistency check only **after** evidence exists:
 
     python3 -B scripts/vf_office_v2_604_cp083_candidate_evidence_gate.py --manifest /approved/guest-evidence/manifest.json
 
-Absent evidence, source drift, malformed/duplicate JSON, missing cases, old #738 receipt/prefix, SHA mismatch, wrong UID fields, unpinned etcd, unsafe path and any GREEN/production/QA claim **FAIL CLOSED**. The result intentionally says **OFFLINE_BYTE_CONSISTENCY_ONLY_NOT_RUNTIME_QA** and security_admission **RED**. The 20 synthetic unit cases use invented fixtures ONLY to exercise the verifier, **never** as proof of a guest/full-chain execution.
+Absent evidence, source drift, malformed/duplicate JSON, missing cases, old #738 receipt/prefix, SHA mismatch, wrong UID fields, unpinned etcd, unsafe path and any GREEN/production/QA claim **FAIL CLOSED**. The result intentionally says **OFFLINE_BYTE_CONSISTENCY_ONLY_NOT_RUNTIME_QA** and security_admission **RED**. The 24 synthetic unit cases use invented fixtures ONLY to exercise the verifier, **never** as proof of a guest/full-chain execution. A hardlinked receipt is refused. Artifact bytes are read through directory fds (`O_NOFOLLOW`). Guest and manifest JSON refuse a CR byte. `refuse_host_attestation` rejects the byte-consistency result as host attestation. Wire CRLF/duplicate keys (GAP_9), controller env/import canaries (GAP_6), and a hardlinked native SQLite journal (GAP_4) stay expected failures in `scripts/test_vf_office_v2_604_cp083_chatgpt069_negatives.py`. That does not change the pinned candidate, the pinned identity helper, or the sealed native Git/SQLite source.
 
 **Critical limitation:** An artifact hash stored beside its own artifact is byte consistency, not an authenticated signature; both can be rewritten. A self-declared guest observation is not runtime provenance. Independent reviewer must verify kernel, guest mounts, exact host/source/build, original stdout and complete command/provider evidence **outside the author's manifest** before closing steps 1–6.
 

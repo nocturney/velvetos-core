@@ -123,6 +123,9 @@ def unique_pairs(pairs):
 
 
 def decode(raw: bytes) -> dict:
+    # Guest and manifest JSON use the same CR rule as one-line receipts.
+    # json.loads treats CR as whitespace, so the byte check has to come first.
+    require(b"\r" not in raw, "CR_IN_CANONICAL_JSON")
     try:
         obj = json.loads(raw.decode("utf-8", errors="strict"),
                          object_pairs_hook=unique_pairs)
@@ -141,6 +144,7 @@ def read_bounded(path: Path, limit: int) -> bytes:
         info = os.fstat(fd)
         require(stat.S_ISREG(info.st_mode) and info.st_size <= limit,
                 "NONREGULAR_OR_OVERSIZED_FILE")
+        require(info.st_nlink == 1, "HARDLINK_ALIAS_REFUSED")
         raw = os.read(fd, limit + 1)
         require(len(raw) <= limit, "OVERSIZED_FILE")
         return raw
@@ -163,6 +167,57 @@ def artifact_path(base: Path, name: object) -> Path:
         require(not check.is_symlink() and check.is_dir(),
                 "ARTIFACT_PARENT_NOT_REAL_DIRECTORY")
     return base.joinpath(*parts)
+
+
+def read_anchored(base: Path, name: object, limit: int) -> bytes:
+    """Open each path component from a held directory fd. O_NOFOLLOW.
+
+    A parent name that changes after the fd is acquired is not the file read.
+    Hardlinked regular files are refused: another name can rewrite the inode.
+    """
+    require(type(name) is str and 1 <= len(name) <= 200 and "\\" not in name,
+            "UNSAFE_ARTIFACT_PATH")
+    path = PurePosixPath(name)
+    parts = path.parts
+    require(not path.is_absolute() and bool(parts) and
+            all(p not in (".", "..") and SEGMENT.fullmatch(p) for p in parts) and
+            "/./" not in name and "//" not in name,
+            "UNSAFE_ARTIFACT_PATH")
+    flags_dir = os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0)
+    flags_file = (os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) |
+                  getattr(os, "O_NONBLOCK", 0))
+    try:
+        base_fd = os.open(base, flags_dir)
+    except OSError as exc:
+        raise Refused("ANCHORED_OPEN_REFUSED") from exc
+    extra = []
+    dirfd = base_fd
+    try:
+        for part in parts[:-1]:
+            try:
+                nextfd = os.open(part, flags_dir, dir_fd=dirfd)
+            except OSError as exc:
+                raise Refused("ARTIFACT_PARENT_NOT_REAL_DIRECTORY") from exc
+            extra.append(nextfd)
+            dirfd = nextfd
+        try:
+            fd = os.open(parts[-1], flags_file, dir_fd=dirfd)
+        except OSError as exc:
+            raise Refused("SYMLINK_FILE_REFUSED") from exc
+        try:
+            info = os.fstat(fd)
+            require(stat.S_ISREG(info.st_mode) and info.st_size <= limit,
+                    "NONREGULAR_OR_OVERSIZED_FILE")
+            require(info.st_nlink == 1, "HARDLINK_ALIAS_REFUSED")
+            raw = os.read(fd, limit + 1)
+            require(len(raw) <= limit, "OVERSIZED_FILE")
+            return raw
+        finally:
+            os.close(fd)
+    finally:
+        for item in extra:
+            os.close(item)
+        os.close(base_fd)
 
 
 def validate_guest(raw: bytes, run_id: str) -> None:
@@ -250,7 +305,7 @@ def verify(manifest_path: Path) -> dict:
             require(relative not in paths, "REUSED_ARTIFACT_PATH")
             paths.add(relative)
             require(is_sha(entry[hash_key]), "ARTIFACT_SHA256_MISSING")
-            original = read_bounded(artifact_path(base, relative), cap)
+            original = read_anchored(base, relative, cap)
             require(sha(original) == entry[hash_key], "ARTIFACT_BYTES_MISMATCH")
             if path_key == "receipt_path":
                 require(entry[hash_key] not in OLD_RECEIPT_HASHES and
@@ -272,8 +327,21 @@ def verify(manifest_path: Path) -> dict:
         "guest_preflight_files": 2,
         "security_admission": "RED",
         "independent_runtime_provenance_verified": False,
+        "host_attestation": "REFUSED_UNSIGNED_SELF_ISSUED",
         "production_authority": False,
     }
+
+
+def refuse_host_attestation(result: dict) -> None:
+    """Byte-consistent self-issued receipts are not a host or admission proof."""
+    require(type(result) is dict and
+            result.get("status") == "OFFLINE_BYTE_CONSISTENCY_ONLY_NOT_RUNTIME_QA" and
+            result.get("security_admission") == "RED" and
+            result.get("independent_runtime_provenance_verified") is False and
+            result.get("host_attestation") == "REFUSED_UNSIGNED_SELF_ISSUED" and
+            result.get("production_authority") is False,
+            "NOT_HOST_ATTESTATION")
+    raise Refused("SELF_ISSUED_RECEIPTS_NOT_HOST_ATTESTATION")
 
 
 def main(args: list[str]) -> int:
