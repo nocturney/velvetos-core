@@ -817,6 +817,8 @@
         "scripts/bootstrap-edge-host-windows.ps1",
         "scripts/bootstrap-hyperframes-host-macos.sh",
         "scripts/check-hyperframes-backend.py",
+        "scripts/test_vf_ffmpeg_svg_caption.py",
+        "scripts/vf_ffmpeg_svg_caption.py",
         "scripts/vf_hyperframes.py"
       ],
       "triggered_by": [
@@ -826,6 +828,8 @@
         "scripts/bootstrap-edge-host-windows.ps1",
         "scripts/bootstrap-hyperframes-host-macos.sh",
         "scripts/check-hyperframes-backend.py",
+        "scripts/test_vf_ffmpeg_svg_caption.py",
+        "scripts/vf_ffmpeg_svg_caption.py",
         "scripts/vf_hyperframes.py"
       ],
       "depends_on": [],
