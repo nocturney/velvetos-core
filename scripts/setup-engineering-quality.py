@@ -7,6 +7,7 @@ import json
 import os
 import shutil
 import stat
+import tempfile
 from datetime import date
 from pathlib import Path
 
@@ -15,6 +16,7 @@ from vf_spawn import (
     SpawnRefusal,
     allowlisted_git_errors,
     run_git,
+    user_arg_separator_errors,
     windows_pin_case_errors,
 )
 
@@ -29,12 +31,20 @@ ACTIVE = ("impeccable", "diagram-design")
 GIT_FETCH_TIMEOUT_SECONDS = 120
 
 
-def run(*args: str, cwd: Path | None = None) -> str:
+def run(*args: str, cwd: Path | None = None, user_args: list[str] | None = None,
+        revisions: list[str] | None = None) -> str:
     if not args or args[0] != "git":
         raise SystemExit("FAIL engineering-quality setup only runs git")
     timeout = GIT_FETCH_TIMEOUT_SECONDS if "fetch" in args else GIT_TIMEOUT_SECONDS
     try:
-        proc = run_git(list(args[1:]), cwd=cwd, check=False, timeout=timeout)
+        proc = run_git(
+            list(args[1:]),
+            cwd=cwd,
+            check=False,
+            timeout=timeout,
+            user_args=user_args,
+            revisions=revisions,
+        )
     except SpawnRefusal as exc:
         raise SystemExit(f"FAIL git spawn: {exc}") from exc
     if proc.returncode:
@@ -47,6 +57,10 @@ def prove_git_hygiene() -> list[str]:
     import vf_spawn
 
     errors: list[str] = []
+    previous = {
+        "VF_SPAWN_SENTINEL": os.environ.get("VF_SPAWN_SENTINEL"),
+        "GIT_EXEC_PATH": os.environ.get("GIT_EXEC_PATH"),
+    }
     os.environ["VF_SPAWN_SENTINEL"] = "nope"
     os.environ["GIT_EXEC_PATH"] = "/evil/git-core"
     captured: list[tuple[list[str], dict]] = []
@@ -59,14 +73,19 @@ def prove_git_hygiene() -> list[str]:
     vf_spawn.subprocess.run = fake_run
     try:
         status = run("git", "status", cwd=ROOT)
-        fetched = run("git", "fetch", "-q", "--depth", "1", "origin", "pin", cwd=ROOT)
+        fetched = run(
+            "git", "fetch", "-q", "--depth", "1", "origin", user_args=["pin"], cwd=ROOT
+        )
     except (SpawnRefusal, SystemExit) as exc:
         errors.append(f"git spawn refused: {exc}")
         status = fetched = ""
     finally:
         vf_spawn.subprocess.run = original
-        os.environ.pop("VF_SPAWN_SENTINEL", None)
-        os.environ.pop("GIT_EXEC_PATH", None)
+        for key, value in previous.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
     if errors:
         return errors
     if status != "abc" or fetched != "abc" or len(captured) != 2:
@@ -75,7 +94,28 @@ def prove_git_hygiene() -> list[str]:
     errors.extend(
         allowlisted_git_errors(captured[1][0], captured[1][1], timeout=GIT_FETCH_TIMEOUT_SECONDS)
     )
+    errors.extend(user_arg_separator_errors(captured[1][0], ["pin"]))
     errors.extend(windows_pin_case_errors())
+    return errors
+
+
+def prove_git_real() -> list[str]:
+    """A real git remote add. ``--`` keeps a dash-leading url from being an option."""
+    errors: list[str] = []
+    with tempfile.TemporaryDirectory() as tmp:
+        repo = Path(tmp)
+        try:
+            run("git", "init", "-q", "-b", "main", cwd=repo)
+            run(
+                "git", "remote", "add", "origin",
+                user_args=["--upload-pack=not-an-option"],
+                cwd=repo,
+            )
+            url = run("git", "remote", "get-url", user_args=["origin"], cwd=repo)
+        except SystemExit as exc:
+            return [f"real git remote add failed: {exc}"]
+    if url != "--upload-pack=not-an-option":
+        errors.append(f"user url was parsed as a git option: {url!r}")
     return errors
 
 
@@ -95,7 +135,7 @@ def ensure_clone(component: dict) -> None:
     target = ROOT / component["local_source"]
     pin = component["pin"]
     if (target / ".git").is_dir():
-        head = run("git", "rev-parse", "HEAD", cwd=target)
+        head = run("git", "rev-parse", "--verify", "-q", revisions=["HEAD"], cwd=target)
         if head == pin:
             print(f"OK source {component['id']} {pin[:12]}")
             return
@@ -103,10 +143,10 @@ def ensure_clone(component: dict) -> None:
     target.parent.mkdir(parents=True, exist_ok=True)
     target.mkdir(parents=True, exist_ok=True)
     run("git", "init", "-q", cwd=target)
-    run("git", "remote", "add", "origin", component["source"], cwd=target)
-    run("git", "fetch", "-q", "--depth", "1", "origin", pin, cwd=target)
+    run("git", "remote", "add", "origin", user_args=[component["source"]], cwd=target)
+    run("git", "fetch", "-q", "--depth", "1", "origin", user_args=[pin], cwd=target)
     run("git", "checkout", "-q", "--detach", "FETCH_HEAD", cwd=target)
-    head = run("git", "rev-parse", "HEAD", cwd=target)
+    head = run("git", "rev-parse", "--verify", "-q", revisions=["HEAD"], cwd=target)
     if head != pin:
         raise SystemExit(f"FAIL pin mismatch {component['id']}: {head}")
     print(f"OK source {component['id']} {pin[:12]}")

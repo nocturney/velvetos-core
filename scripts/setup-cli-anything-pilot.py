@@ -10,10 +10,18 @@ import shutil
 import stat
 import subprocess
 import sys
+import tempfile
 import urllib.request
 from pathlib import Path
 
-from vf_spawn import GIT_TIMEOUT_SECONDS, SpawnRefusal, run_git, windows_pin_case_errors, allowlisted_git_errors
+from vf_spawn import (
+    GIT_TIMEOUT_SECONDS,
+    SpawnRefusal,
+    allowlisted_git_errors,
+    run_git,
+    user_arg_separator_errors,
+    windows_pin_case_errors,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY_PATH = ROOT / "packages" / "vfharness" / "devtools" / "cli-anything.json"
@@ -35,13 +43,21 @@ GIT_FETCH_TIMEOUT_SECONDS = 120
 
 
 def run(args: list[str], *, cwd: Path | None = None, check: bool = True,
-        env: dict[str, str] | None = None) -> subprocess.CompletedProcess:
+        env: dict[str, str] | None = None, user_args: list[str] | None = None,
+        revisions: list[str] | None = None) -> subprocess.CompletedProcess:
     if args and args[0] == "git":
         if env is not None:
             raise SystemExit("FAIL git spawn refuses a caller environment")
         timeout = GIT_FETCH_TIMEOUT_SECONDS if "fetch" in args else GIT_TIMEOUT_SECONDS
         try:
-            proc = run_git(list(args[1:]), cwd=cwd, check=False, timeout=timeout)
+            proc = run_git(
+                list(args[1:]),
+                cwd=cwd,
+                check=False,
+                timeout=timeout,
+                user_args=user_args,
+                revisions=revisions,
+            )
         except SpawnRefusal as exc:
             raise SystemExit(f"FAIL git spawn: {exc}") from exc
     else:
@@ -83,23 +99,24 @@ def validate_cost_preflights(registry: dict) -> None:
 def ensure_clone(registry: dict) -> None:
     pin = registry["pin"]
     if (CLONE / ".git").is_dir():
-        head = run(["git", "rev-parse", "HEAD"], cwd=CLONE).stdout.strip()
+        head = run(["git", "rev-parse", "--verify", "-q"], revisions=["HEAD"], cwd=CLONE).stdout.strip()
         if head != pin:
             remove_tree(CLONE)
     if not (CLONE / ".git").is_dir():
         CLONE.parent.mkdir(parents=True, exist_ok=True)
         CLONE.mkdir(parents=True, exist_ok=True)
         run(["git", "init", "-q"], cwd=CLONE)
-        run(["git", "remote", "add", "origin", registry["source"]], cwd=CLONE)
-        run(["git", "fetch", "-q", "--depth", "1", "origin", pin], cwd=CLONE)
+        run(["git", "remote", "add", "origin"], user_args=[registry["source"]], cwd=CLONE)
+        run(["git", "fetch", "-q", "--depth", "1", "origin"], user_args=[pin], cwd=CLONE)
         run(["git", "checkout", "-q", "--detach", "FETCH_HEAD"], cwd=CLONE)
-    head = run(["git", "rev-parse", "HEAD"], cwd=CLONE).stdout.strip()
+    head = run(["git", "rev-parse", "--verify", "-q"], revisions=["HEAD"], cwd=CLONE).stdout.strip()
     if head != pin:
         raise SystemExit(f"FAIL CLI-Anything pin mismatch: {head}")
     print(f"OK CLI-Anything source {head[:12]}")
 def overlay_applied() -> bool:
     return run(
-        ["git", "apply", "--unidiff-zero", "--reverse", "--check", str(PATCH_PATH)],
+        ["git", "apply", "--unidiff-zero", "--reverse", "--check"],
+        user_args=[str(PATCH_PATH)],
         cwd=CLONE,
         check=False,
     ).returncode == 0
@@ -116,13 +133,14 @@ def apply_overlay() -> None:
             "refusing to overwrite before overlay"
         )
     check = run(
-        ["git", "apply", "--unidiff-zero", "--check", str(PATCH_PATH)],
+        ["git", "apply", "--unidiff-zero", "--check"],
+        user_args=[str(PATCH_PATH)],
         cwd=CLONE,
         check=False,
     )
     if check.returncode:
         raise SystemExit(f"FAIL overlay no longer applies:\n{check.stderr}")
-    run(["git", "apply", "--unidiff-zero", str(PATCH_PATH)], cwd=CLONE)
+    run(["git", "apply", "--unidiff-zero"], user_args=[str(PATCH_PATH)], cwd=CLONE)
     if not overlay_applied():
         raise SystemExit("FAIL overlay applied but reverse check did not pass")
     print("OK FreeCAD boolean/export overlay applied")
@@ -209,6 +227,11 @@ def prove_git_hygiene() -> list[str]:
     import vf_spawn
 
     errors: list[str] = []
+    previous = {
+        "VF_SPAWN_SENTINEL": os.environ.get("VF_SPAWN_SENTINEL"),
+        "GIT_EXEC_PATH": os.environ.get("GIT_EXEC_PATH"),
+        "GIT_CONFIG_COUNT": os.environ.get("GIT_CONFIG_COUNT"),
+    }
     os.environ["VF_SPAWN_SENTINEL"] = "nope"
     os.environ["GIT_EXEC_PATH"] = "/evil/git-core"
     os.environ["GIT_CONFIG_COUNT"] = "1"
@@ -222,7 +245,12 @@ def prove_git_hygiene() -> list[str]:
     vf_spawn.subprocess.run = fake_run
     try:
         run(["git", "status"], cwd=ROOT, check=False)
-        run(["git", "fetch", "-q", "--depth", "1", "origin", "pin"], cwd=ROOT, check=False)
+        run(
+            ["git", "fetch", "-q", "--depth", "1", "origin"],
+            user_args=["pin"],
+            cwd=ROOT,
+            check=False,
+        )
         run([sys.executable, "-c", "print(1)"], check=False)
         try:
             run(["git", "status"], env={"PATH": "/evil"}, check=False)
@@ -234,9 +262,11 @@ def prove_git_hygiene() -> list[str]:
         errors.append(f"git spawn refused: {exc}")
     finally:
         vf_spawn.subprocess.run = original
-        os.environ.pop("VF_SPAWN_SENTINEL", None)
-        os.environ.pop("GIT_EXEC_PATH", None)
-        os.environ.pop("GIT_CONFIG_COUNT", None)
+        for key, value in previous.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
     if errors:
         return errors
     if len(captured) != 3:
@@ -245,12 +275,37 @@ def prove_git_hygiene() -> list[str]:
     errors.extend(
         allowlisted_git_errors(captured[1][0], captured[1][1], timeout=GIT_FETCH_TIMEOUT_SECONDS)
     )
+    errors.extend(user_arg_separator_errors(captured[1][0], ["pin"]))
     other_argv, other_kwargs = captured[2]
     if not other_argv or other_argv[0] != sys.executable:
         errors.append(f"non-git command was rewritten: {other_argv}")
     if other_kwargs.get("timeout") is not None or other_kwargs.get("env") is not None:
         errors.append("non-git command was forced through the git allowlist")
     errors.extend(windows_pin_case_errors())
+    return errors
+
+
+def prove_git_real() -> list[str]:
+    """A real git remote add. ``--`` keeps a dash-leading url from being an option."""
+    errors: list[str] = []
+    with tempfile.TemporaryDirectory() as tmp:
+        repo = Path(tmp)
+        try:
+            run(["git", "init", "-q", "-b", "main"], cwd=repo)
+            run(
+                ["git", "remote", "add", "origin"],
+                user_args=["--upload-pack=not-an-option"],
+                cwd=repo,
+            )
+            url = run(
+                ["git", "remote", "get-url"],
+                user_args=["origin"],
+                cwd=repo,
+            ).stdout.strip()
+        except SystemExit as exc:
+            return [f"real git remote add failed: {exc}"]
+    if url != "--upload-pack=not-an-option":
+        errors.append(f"user url was parsed as a git option: {url!r}")
     return errors
 
 

@@ -178,6 +178,22 @@ def run_tool(
     )
 
 
+def git_revision(token: str) -> str:
+    """A revision git must see before ``--``.
+
+    Git reads tokens after ``--`` as paths, not revisions. A leading dash is
+    an option, so it is refused before git runs.
+    """
+    if (
+        not isinstance(token, str)
+        or not token
+        or token.startswith("-")
+        or any(char in token for char in "\n\r\x00")
+    ):
+        raise SpawnRefusal("GIT_REV_REFUSED")
+    return token
+
+
 def run_git(
     args: list[str],
     *,
@@ -185,8 +201,50 @@ def run_git(
     check: bool = False,
     timeout: float = GIT_TIMEOUT_SECONDS,
     input: str | None = None,
+    user_args: list[str] | None = None,
+    revisions: list[str] | None = None,
 ) -> subprocess.CompletedProcess[str]:
-    return run_tool(["git", *args], cwd=cwd, check=check, timeout=timeout, input=input)
+    """Absolute git with a timeout and an allowlisted environment.
+
+    ``user_args`` (urls, refspecs, paths) are placed after ``--`` so git does
+    not parse them as options. ``revisions`` stay before ``--`` because git
+    would otherwise treat them as paths; ``git_revision`` refuses a leading dash.
+    """
+    if any(not isinstance(arg, str) or arg == "" for arg in args):
+        raise SpawnRefusal("GIT_ARGV_REFUSED")
+    argv = list(args)
+    if revisions:
+        argv.extend(git_revision(rev) for rev in revisions)
+    if user_args is not None or revisions:
+        operands = [] if user_args is None else list(user_args)
+        for item in operands:
+            if not isinstance(item, str) or item == "":
+                raise SpawnRefusal("GIT_USER_ARG_REFUSED")
+        argv.append("--")
+        argv.extend(operands)
+    return run_tool(["git", *argv], cwd=cwd, check=check, timeout=timeout, input=input)
+
+
+def user_arg_separator_errors(argv: list[str], user_args: list[str]) -> list[str]:
+    """Errors when ``--`` is not the separator immediately before user args."""
+    if len(argv) < 2 or "--" not in argv[1:]:
+        return ["git missing -- before user args"]
+    idx = argv.index("--")
+    if argv[idx + 1:] != list(user_args):
+        return [f"git -- was not before the user args: {argv}"]
+    return []
+
+
+def revision_form_errors(argv: list[str], revisions: list[str]) -> list[str]:
+    """Errors when revisions are not the tokens immediately before ``--``."""
+    if len(argv) < 2 or "--" not in argv[1:]:
+        return ["git missing -- after revisions"]
+    idx = argv.index("--")
+    if argv[idx - len(revisions):idx] != list(revisions):
+        return [f"git revisions were not directly before --: {argv}"]
+    if argv[idx + 1:]:
+        return [f"git revision form gained pathspecs: {argv}"]
+    return []
 
 
 def allowlisted_git_errors(argv: list[str], kwargs: dict, *, timeout: float) -> list[str]:
