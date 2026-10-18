@@ -49,14 +49,14 @@
 
 גם **מחיקה בלתי הפיכה, שינוי הרשאות, שימוש בסודות, הודעה חיצונית מחייבת ופעולת Computer Use בעלת השפעה חיצונית** חייבים לעבור את שער התחום שלהם; הרשאת Git אינה מאשרת אותם. אישור Christian לעבוד על קוד כולל פעולות Git רגילות באותו scope אחרי CI ו־QA, **לא** אישור אוטומטי לפריסה/פרסום/כסף/SYSTEM. אין לבקש אישור מחדש על כל push שגרתי שכבר הותר; מסלימים רק החלטה אמיתית או blocker קשיח.
 
-## 5. איך קוראים את הלוח `docs/office-v2/board/latest.md`
+## 5. איך קוראים את הלוח אחרי מיזוג #782
 
-זהו **snapshot קריא שנבנה בידי Cursor**, אם קיים בענף/ב־`main` שאותו קוראים; גרסת JSON נלווית עשויה להופיע ב־`board/latest.json`. אין להניח שהקובץ כבר מוזג, שנוצר היום או שכולל את כל המשימות. לוח אינו מקור סמכות, API כתיבה, approval queue, scheduler או ראיה לכך שסוכן באמת עובד.
+**מצב מוכח (18.10.2026):** [PR #782](https://github.com/nocturney/velvetos-core/pull/782) **מוזג** ב־[69395d40bb87787db960087e4dcb901ed14448ec](https://github.com/nocturney/velvetos-core/commit/69395d40bb87787db960087e4dcb901ed14448ec). סקריפט [office_v2_mvp.py](../../scripts/office_v2_mvp.py) קורא GitHub ב־GET בלבד; דוגמת [SAMPLE.md](board/SAMPLE.md) היא fixture סינתטי **ולא** מצב המשרד. הקבצים **board/latest.md** ו־**board/latest.json** נוצרים מקומית או ב־Actions, אך **מוחרגים מ־Git** ולא מוזגו כ־snapshot חי. ה־[workflow](../../.github/workflows/office-v2-board.yml) מופעל **רק ב־workflow_dispatch**, כותב artifact בלבד, ללא cron או הרשאות כתיבה; הוא לא מתזמן את עצמו. ראיות פרטיות של ריפו המפעל אינן מותרות בארטיפקט הציבורי. [QA עצמאי ותיקון החשיפה](https://github.com/nocturney/velvetos-core/pull/782#issuecomment-6249757109) · [כשל החשיפה שתוקן](https://github.com/nocturney/velvetos-core/pull/782#issuecomment-6249573484).
 
-1. **בדקו קודם freshness:** מאיזה ריפו/ענף/commit הופק? מה זמן העדכון ומקורו? התייחסו לזמן `Asia/Jerusalem` כ־תצוגה; timestamps/commits של GitHub הם אמת הראיה. אם חסר timestamp, מקור או קובץ – `UNKNOWN / NEEDS SYNC`, לא `EMPTY` או `DONE`.
-2. **קראו לפי תור פעולה:** `Waiting on Christian` – החלטת בעלים עם פעולה קטנה וקישור לשער; `Waiting on QA` – PR לא־טיוטה ו־`QA please` על SHA; `In progress` – CLAIM חי ובעלים; `Blocked` – blocker מדויק ומי מסירו; `Done today` – ראיית merge/postcondition מאומתת, לא הודעת סוכן בלבד. חלוקה ל־Cursor/ChatGPT/Claude/Gemini/auditor היא תצוגת בעלות בזמן snapshot, לא הקצאה קבועה.
-3. **לחצו על המקור:** כל שורה משמעותית חייבת לחזור ל־Issue/PR ול־head/CI/QA verdict העדכניים. PR הוא `DRAFT` לפי GitHub גם אם הטקסט בלוח אומר QA; `QA PASS` ישן אינו תקף אחרי head חדש; `MERGED` נקבע רק לפי GitHub.
-4. **כשיש פער:** GitHub (Issue/CLAIM, PR, reviews, commit checks ו־merge) יחד עם הרשומות הקנוניות של התחום גוברים על snapshot. מתקנים את מקור הנתונים/מחולל הלוח במסגרת CLAIM חדש; לא עורכים `latest.md` ידנית כדי להסתיר מצב ולא מקדמים פעולות מכוח הצבע בלוח.
+1. **מקור לפני תצוגה:** שואלים מתי snapshot נוצר, באיזה SHA/ריפו, האם היתה גישה למקור, והאם ה־workflow אכן הופעל. GitHub Issues, CLAIM, PR, head, CI, ביקורת עצמאית וה־receipts הקנוניים גוברים תמיד על כל טקסט בלוח. אם אין artifact או זמן יצירה – **UNKNOWN / NEEDS SYNC**, לא “הלוח ירוק”.
+2. **קטגוריות תפעול:** Waiting on Christian = שער החלטה של בעלים; Waiting on QA = PR שאינו טיוטה עם בקשת SHA מדויקת; In progress = CLAIM בר־תוקף; Blocked = סיבה וצעד הבא קטן; Done today = ראיית merge/postcondition עדכנית. כל שורה נבחנת מול המקור שמאחוריה. היעדר שורות בגלל HTTP denied/גישה חסרה אינו מעיד שאין משימות.
+3. **פרטיות והרשאות:** הלוח הציבורי מציג רק נתונים שמותר לחשוף. טוקן Actions אינו נותן גישה לריפו הפרטי. אל תעתיקו live board המכיל פרטי מפעל אל קובץ tracked, artifact ציבורי, issue או PR; אל תתייחסו ל־SAMPLE כנתוני אמת.
+4. **הפעלת אירועים עתידית:** רצוי PR נפרד למימוש **אירוע push ל־main** לצד dispatch ידני, עם permissions לקריאה בלבד, בדיקת דלף, artifact-only ו־QA עצמאי; **האירוע הזה עדיין לא קיים**. אין cron, scheduler כפול, polling לא תחום, merge אוטומטי או פעולה מתוך צבע בלוח. הבעלות על מחולל הלוח ו־PR עתידי כזה היא של **Cursor**; מבקר שאינו הכותב יבקר. [המצב בפועל של ה־workflow](../../.github/workflows/office-v2-board.yml) · [NEXT](NEXT.md#3-priority-2--run-the-board-automatically-without-cron).
 
 ## 6. כללי תיאום והתאוששות
 
@@ -65,5 +65,18 @@
 - לא חוסמים את כולם בגלל משימה אחת: משימות בלתי תלויות, עם בעלות נפרדת וללא contention על hosts, יכולות להתקדם במקביל; בעיה חסומה מתועדת עם smallest next step ו־executor.
 - כשמחלוקת נוגעת לסמכות: פותחים החלטה ל־Christian עם חלופות והשלכה, לא משנים את מדיניות המקור דרך OFFICE.md.
 - **בדיקות ואמת קודמות לנראות הלוח.** אם אי אפשר לקשור טענה ל־commit, PR, run או receipt אמיתי – מסמנים `UNVERIFIED`.
+
+## 7. מפת מעבר לתוכנית השבוע (18.10.2026)
+
+התמונה התפעולית המתוארכת ו־**מפת E1–E7 עם קבלות, חסמים, צעדים ובעלים לכל שער** נמצאות ב־[NEXT.md](NEXT.md). ה־CLAIM, מסמך התוכנית, לוח הבקרה או CI ירוק אינם משנים לבדם admission. בדיקת מצב בזמן הרצה תמיד נעשית מחדש מול הקישורים המקוריים.
+
+| עדיפות ובעלות | מה עובד; מה חסום | מקור סמכות/ראיה |
+| --- | --- | --- |
+| **1. פיילוט CrewAI:** **Cursor** — runner ו־fixture; **Christian** — GO תחום; **מפעיל Chris שיוקצה** — lease/בקרות; **auditor/security** — QA והכרעת E3–E5 | Runbook ו־preflight מתועדים אך **המשימה NOT_RUN**. נעילת 154 wheels אומתה; **E3 RED** בגלל ארבע התראות chromadb 1.5.9, ואחת ב־mcp 1.28.1. Python הועבר ל־D:, אך **E4 חסום** בלי ניטור/מניעת C:. מודל Ollama מקומי qwen3.5:9b עבד פעם אחת ב־**127.0.0.1:11435** והופסק; זה **לא** אישור לריצת CrewAI. **E1, E2, E5, E6, E7** לא הוכחו כ־PASS. | [preflight](https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6249900804) · [E3/E4](https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6249982906) · [מודל/פורט](https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250120048) · [CLAIM של Cursor](https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250043562). |
+| **2. אוטומציית הלוח:** **Cursor**, עם **QA בלתי תלוי** | הלוח ממוזג. **workflow_dispatch קיים**, artifact לקריאה בלבד; **טריגר אירוע אוטומטי עדיין חסר**. אין cron. | [#782](https://github.com/nocturney/velvetos-core/pull/782) · [workflow](../../.github/workflows/office-v2-board.yml). |
+| **3. CP057:** **מבצע #602 ב־Chris** ובודק עצמאי | [#786](https://github.com/nocturney/velvetos-core/pull/786) מוסיף זיהוי PLM; **לא הושג Calculator PASS**. ניסיון 6: 0 פעולות UI ו־CalculatorApp מושעה; **RED/UNVERIFIED** עד קבלה חדשה. | [#602 ניסיון 6](https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6249903313) · [מיזוג #786](https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250104404). |
+| **4. CP083:** **מבצע full-chain של #604** עם **מבקר אבטחה עצמאי** | ראיית Linux guest אמיתית של שני 59-case runs קיימת, אך **SECURITY RED** עד ראיות ל־protected issuer, GitHub remote effects, cross-store, 51-case matrix וביקורת עצמאית. אין הסמכת worker או פריסה. | [קבלת guest ועדויות חסרות](https://github.com/nocturney/velvetos-core/issues/604#issuecomment-6249984760) · [תלויות PR](https://github.com/nocturney/velvetos-core/issues/604#issuecomment-6249275082). |
+
+**כלל עצירה:** שינוי ה־endpoint של CrewAI מ־11434 (כפי שתואר ב־[CLAIM של Cursor](https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250043562)) ל־11435 (כפי שהוכח ב־[קבלת Ollama](https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250120048)) דורש התאמת קוד ובדיקת QA, לא הנחה ששני הפורטים שקולים. ההאזנה הנפרדת שנצפתה על **0.0.0.0:11434** היא נושא אבטחה לבעלים, לא פורט מאושר לפיילוט. #612 ו־#604 נשארים מקורות הפעולה ולא מחליפים אישור אבטחה, תהליך עצירה או receipts.
 
 **מקורות נורמטיביים:** [חוקת VelvetOS](../../constitution/CONSTITUTION.md) · [מדיניות Office](../../office/control/POLICY.md) · [תיאום משותף](../SHARED-WORK-COORDINATION.md) · [חוזה Living README](../../scripts/readme_contract.py) · [#612](https://github.com/nocturney/velvetos-core/issues/612).
