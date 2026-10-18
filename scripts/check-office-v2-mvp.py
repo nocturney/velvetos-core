@@ -6,6 +6,7 @@ import importlib.util
 import re
 import subprocess
 import sys
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -150,9 +151,42 @@ def main() -> int:
     }
     if mvp.seal_row_from_result(gate_result) is None:
         fail("RED lost-ACK gate result did not become a board row")
+    false_writes = dict(gate_result)
+    false_writes["remote_github_writes"] = False
+    if mvp.seal_row_from_result(false_writes) is not None:
+        fail("mutation: bool False counted as zero remote_github_writes")
+    one_write = dict(gate_result)
+    one_write["remote_github_writes"] = 1
+    if mvp.seal_row_from_result(one_write) is not None:
+        fail("mutation: remote_github_writes 1 became a board row")
     gate_result["security_admission"] = "GREEN"
     if mvp.seal_row_from_result(gate_result) is not None:
         fail("mutation: a GREEN gate result became a board row")
+    missing = ROOT / "docs" / "implementation" / "office-v2" / "phase2" / "missing-lostack-evidence.json"
+    missing_view = mvp.cp083_lostack_view(evidence_path=missing)
+    if missing_view.get("status") != "EVIDENCE_MISSING" or missing_view.get("row"):
+        fail("mutation: missing evidence did not drop the row as EVIDENCE_MISSING")
+    with tempfile.TemporaryDirectory() as tmp:
+        bad = Path(tmp) / "corrupt.json"
+        bad.write_text("{", encoding="utf-8")
+        corrupt_view = mvp.cp083_lostack_view(evidence_path=bad)
+    if corrupt_view.get("status") != "EVIDENCE_MISSING" or corrupt_view.get("row"):
+        fail("mutation: corrupt evidence did not drop the row as EVIDENCE_MISSING")
+    original_view = mvp.cp083_lostack_view
+
+    def _missing_view(evidence_path=None):
+        return {"status": "EVIDENCE_MISSING"}
+
+    mvp.cp083_lostack_view = _missing_view
+    try:
+        broken = mvp.build_board({}, datetime(2026, 10, 18, 12, 0, tzinfo=timezone.utc))
+        broken_text = mvp.render_markdown(broken)
+    finally:
+        mvp.cp083_lostack_view = original_view
+    if "EVIDENCE_MISSING" not in broken_text or "SEALED_RED_ONLY" in broken_text:
+        fail("mutation: missing evidence crashed the board or kept a sealed row")
+    if "מחכה לכריסטיאן" not in broken_text:
+        fail("mutation: missing evidence dropped sections other than the seal row")
     sample_text = sample.read_text(encoding="utf-8")
     if not mvp.sealed_lab_text_ok(sample_text):
         fail("committed sample board is missing the SEALED_RED_ONLY lost-ACK link")

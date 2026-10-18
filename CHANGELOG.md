@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-10-18 - **Office board lost-ACK seal:** a missing or corrupt CP083 evidence file drops only that row and the board shows EVIDENCE_MISSING. `remote_github_writes` must be the integer 0; bool False does not count. `security_admission` stays RED.
+
 - 2026-10-18 - **CrewAI run receipt, Windows listeners, and LAB-2:** A completed kickoff saves its output under the D: sandbox and records the status and sha256. Every run exception writes a FAIL receipt. Windows proves zero listening ports from the pilot process tree, or fails closed. `LOCALAPPDATA` and `APPDATA` stay on the sandbox, and the E4 manifest includes `AppData\Local\CrewAI\credentials` (issue 595 comment 6250622621). The frozen model input and the crew LLM pass `reasoning_effort: none` because Ollama `/v1` ignores `think: false`. No model call from this tree.
 
 - 2026-10-18 - **CrewAI E4 sandbox and 11435 client:** The runner sets `CREWAI_STORAGE_DIR`, `TEMP`, `TMP` and the other CLQ-16 variables under `D:\Velvet\Pilots\crewai-e4\sandbox-home` before import, and refuses a missing value or a path off D:. Committed before/after manifests, the HKCU diff, the no-pilot control and the positive db/lock check stay `NOT_OBSERVED` (comment 6250312836). CLQ-17 (comment 6250397852) pins `base_url=http://127.0.0.1:11435/v1`, `OLLAMA_HOST=127.0.0.1:11435`, `tracing=False` and `is_litellm=False`, drops `CHROMA_ANONYMIZED_TELEMETRY`, refuses `TIKTOKEN_CACHE_DIR` and a sandbox `.env`, and sets the E5 dead proxy `http://127.0.0.1:9` with `NO_PROXY=127.0.0.1`. The committed tree still does not call a model.

@@ -515,7 +515,8 @@ def seal_row_from_result(result: dict) -> dict | None:
         return None
     if result.get("status") != LOSTACK_STATUS:
         return None
-    if result.get("remote_github_writes") != 0:
+    writes = result.get("remote_github_writes")
+    if type(writes) is not int or writes != 0:
         return None
     if result.get("real_native_git_sqlite_receipts") != 2:
         return None
@@ -531,25 +532,43 @@ def seal_row_from_result(result: dict) -> dict | None:
     }
 
 
-def cp083_lostack_seal() -> dict | None:
-    module = _load_lostack_gate()
-    evidence = json.loads(module.EVIDENCE.read_text(encoding="utf-8"))
+def cp083_lostack_view(evidence_path: Path | None = None) -> dict:
+    """Seal the lost-ACK evidence, or drop only that row.
+
+    A missing or unreadable file is EVIDENCE_MISSING. Readable evidence that
+    fails the RED seal is OMITTED. Neither status crashes the rest of the board.
+    """
+    try:
+        module = _load_lostack_gate()
+    except (ImportError, OSError, SyntaxError):
+        return {"status": "EVIDENCE_MISSING"}
+    path = Path(evidence_path) if evidence_path is not None else module.EVIDENCE
+    try:
+        evidence = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError, ValueError):
+        return {"status": "EVIDENCE_MISSING"}
+    if not isinstance(evidence, dict):
+        return {"status": "EVIDENCE_MISSING"}
     try:
         result = module.validate(evidence)
     except (module.Refused, ValueError, TypeError, KeyError, json.JSONDecodeError):
-        return None
+        return {"status": "OMITTED"}
     row = seal_row_from_result(result)
     if row is None:
-        return None
+        return {"status": "OMITTED"}
     hosts = []
     for item in evidence.get("receipts") or []:
         device = item.get("device") if isinstance(item, dict) else None
         if isinstance(device, str):
             hosts.append(device)
     if tuple(hosts) != LOSTACK_HOSTS:
-        return None
+        return {"status": "OMITTED"}
     row["hosts"] = hosts
-    return row
+    return {"status": "SEALED_RED_ONLY", "row": row}
+
+
+def cp083_lostack_seal() -> dict | None:
+    return cp083_lostack_view().get("row")
 
 
 def sealed_lab_text_ok(text: str) -> bool:
@@ -691,6 +710,7 @@ def build_board(snapshot: dict, now: datetime) -> dict:
             sections[row["section"]].append(row)
 
     generated = now.astimezone(JERUSALEM)
+    lostack = cp083_lostack_view()
     return {
         "schema": SCHEMA,
         "generated_at": generated.isoformat(timespec="minutes"),
@@ -704,7 +724,8 @@ def build_board(snapshot: dict, now: datetime) -> dict:
         "queue": {"repo": QUEUE_REPO, "issue": QUEUE_ISSUE},
         "check_all_main": check_all,
         "sections": sections,
-        "sealed_labs": [row for row in (cp083_lostack_seal(),) if row],
+        "sealed_labs": [lostack["row"]] if lostack.get("row") else [],
+        "lostack_evidence_status": lostack.get("status") or "OMITTED",
         "next_step": {
             "framework": "plain-python",
             "reason": (
@@ -841,7 +862,9 @@ def render_markdown(board: dict) -> str:
             f"[#764](https://github.com/nocturney/velvetos-core/pull/764) "
             f"`9c2f3347` · {hosts}"
         )
-    if seal_lines:
+    if board.get("lostack_evidence_status") == "EVIDENCE_MISSING":
+        lines.append("- CP083 lost-ACK receipts · EVIDENCE_MISSING")
+    elif seal_lines:
         lines.extend(seal_lines)
     else:
         lines.append("_אין חותמת · none_")
