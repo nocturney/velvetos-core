@@ -1095,46 +1095,82 @@ def safety_findings(text: str) -> list[str]:
     return problems
 
 
+def _receipt_impostor(note: str) -> bool:
+    """A 64-hex sha that wears a receipt prefix but is not that receipt."""
+    for token in re.findall(r"[0-9a-f]{64}", note):
+        if token in (RECEIPT8, RECEIPT9):
+            continue
+        if token.startswith(RECEIPT8[:8]) or token.startswith(RECEIPT9[:8]):
+            return True
+    return False
+
+
 def acceptance_findings(pin: dict) -> list[str]:
     """ACCEPTED is allowed only when the note cites both receipt shas and attempt ids."""
     problems: list[str] = []
-    if pin.get("runtimeAuthority") is not False or pin.get("activationAllowed") is not False:
-        problems.append("PIN must keep runtimeAuthority and activationAllowed false")
+    if pin.get("runtimeAuthority") is not False:
+        problems.append("RUNTIME_AUTHORITY_NOT_FALSE")
+    if pin.get("activationAllowed") is not False:
+        problems.append("ACTIVATION_ALLOWED_NOT_FALSE")
     acceptance = pin.get("acceptance")
     note = str(pin.get("note") or "").lower()
     if acceptance == ACCEPTED:
-        for label, token in (
-            ("receipt sha 0e0ae55b", RECEIPT8),
-            ("receipt sha 663db01c", RECEIPT9),
-            ("attempt id 36abe219", ATTEMPT8),
-            ("attempt id 0ffe7808", ATTEMPT9),
-        ):
-            if token not in note:
-                problems.append(f"accepted PIN note must cite {label}")
+        if ATTEMPT8 not in note:
+            problems.append("ACCEPTED_NOTE_MISSING_ATTEMPT8")
+        if ATTEMPT9 not in note:
+            problems.append("ACCEPTED_NOTE_MISSING_ATTEMPT9")
+        cited = sum(token in note for token in (RECEIPT8, RECEIPT9))
+        if _receipt_impostor(note):
+            problems.append("ACCEPTED_RECEIPT_SHA_MISMATCH")
+        elif cited == 1:
+            problems.append("ACCEPTED_NOTE_CITES_ONE_RECEIPT")
+        elif cited == 0:
+            problems.append("ACCEPTED_NOTE_MISSING_RECEIPT")
     elif acceptance != "RED_UNVERIFIED":
-        problems.append("PIN must not claim Calculator acceptance")
+        problems.append("PIN_ACCEPTANCE_NOT_ALLOWED")
     return problems
 
 
 def acceptance_mutation_findings(pin: dict) -> list[str]:
-    """A missing or wrong receipt sha, or an authority flag, must fail closed."""
+    """Each acceptance defect fails closed with its own reason code."""
     if acceptance_findings(pin):
         return ["acceptance baseline failed before mutations"]
     note = str(pin.get("note") or "")
     cases = {
-        "accepted-without-receipt-8": {"note": note.replace(RECEIPT8, "")},
-        "accepted-without-receipt-9": {"note": note.replace(RECEIPT9, "")},
-        "wrong-receipt-8": {"note": note.replace(RECEIPT8, "0e0ae55b" + ("f" * 56))},
-        "wrong-receipt-9": {"note": note.replace(RECEIPT9, "663db01c" + ("f" * 56))},
-        "runtime-authority": {"runtimeAuthority": True},
-        "activation-allowed": {"activationAllowed": True},
+        "accepted-without-attempt-8": (
+            {"note": note.replace(ATTEMPT8, "")},
+            "ACCEPTED_NOTE_MISSING_ATTEMPT8",
+        ),
+        "accepted-without-attempt-9": (
+            {"note": note.replace(ATTEMPT9, "")},
+            "ACCEPTED_NOTE_MISSING_ATTEMPT9",
+        ),
+        "accepted-without-receipt-8": (
+            {"note": note.replace(RECEIPT8, "")},
+            "ACCEPTED_NOTE_CITES_ONE_RECEIPT",
+        ),
+        "accepted-without-receipt-9": (
+            {"note": note.replace(RECEIPT9, "")},
+            "ACCEPTED_NOTE_CITES_ONE_RECEIPT",
+        ),
+        "wrong-receipt-8": (
+            {"note": note.replace(RECEIPT8, "0e0ae55b" + ("f" * 56))},
+            "ACCEPTED_RECEIPT_SHA_MISMATCH",
+        ),
+        "wrong-receipt-9": (
+            {"note": note.replace(RECEIPT9, "663db01c" + ("f" * 56))},
+            "ACCEPTED_RECEIPT_SHA_MISMATCH",
+        ),
+        "runtime-authority": ({"runtimeAuthority": True}, "RUNTIME_AUTHORITY_NOT_FALSE"),
+        "activation-allowed": ({"activationAllowed": True}, "ACTIVATION_ALLOWED_NOT_FALSE"),
     }
     problems: list[str] = []
-    for name, changes in cases.items():
+    for name, (changes, code) in cases.items():
         mutated = dict(pin)
         mutated.update(changes)
-        if not acceptance_findings(mutated):
-            problems.append(f"acceptance mutation {name} was not detected")
+        found = acceptance_findings(mutated)
+        if code not in found:
+            problems.append(f"acceptance mutation {name} missing {code}: {found}")
     return problems
 
 
