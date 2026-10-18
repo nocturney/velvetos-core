@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
+import io
 import json
 import os
 import shutil
@@ -116,6 +118,111 @@ def prove_git_real() -> list[str]:
             return [f"real git remote add failed: {exc}"]
     if url != "--upload-pack=not-an-option":
         errors.append(f"user url was parsed as a git option: {url!r}")
+    return errors
+
+
+def _bare_commit(root: Path) -> tuple[Path, str, Path, Path]:
+    """Local bare repo plus an upload-pack script that would write a marker."""
+    wt = root / "wt"
+    wt.mkdir()
+    run("git", "init", "-q", "-b", "main", cwd=wt)
+    run("git", "config", "user.email", "fixture@example.invalid", cwd=wt)
+    run("git", "config", "user.name", "fixture", cwd=wt)
+    (wt / "f").write_text("hi\n", encoding="utf-8")
+    run("git", "add", user_args=["f"], cwd=wt)
+    run("git", "commit", "-qm", "c", cwd=wt)
+    sha = run("git", "rev-parse", "--verify", "-q", revisions=["HEAD"], cwd=wt)
+    bare = root / "bare.git"
+    run("git", "clone", "--bare", "-q", user_args=[str(wt), str(bare)])
+    marker = root / "PWN"
+    script = root / "upload-pack.sh"
+    script.write_text(
+        "#!/bin/sh\n"
+        f"echo pwned > {marker}\n"
+        "exec git-upload-pack \"$@\"\n",
+        encoding="utf-8",
+    )
+    script.chmod(script.stat().st_mode | stat.S_IEXEC)
+    return bare, sha, script, marker
+
+
+def prove_ensure_clone() -> list[str]:
+    """The real ensure_clone path, not only the fixture run() calls.
+
+    A local bare repo must check out. A `--upload-pack=` source is stored as
+    the url. A `--upload-pack=` pin is a refspec, so the script does not run.
+    """
+    global ROOT
+    errors: list[str] = []
+    previous = ROOT
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        try:
+            bare, sha, script, marker = _bare_commit(root)
+        except SystemExit as exc:
+            return [f"bare repo setup failed: {exc}"]
+        hostile = f"--upload-pack={script}"
+        ROOT = root / "office"
+        try:
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    ensure_clone({
+                        "id": "fixture",
+                        "local_source": "src",
+                        "pin": sha,
+                        "source": str(bare),
+                    })
+            except SystemExit as exc:
+                errors.append(f"ensure_clone did not fetch the bare repo: {exc}")
+            else:
+                head = run(
+                    "git", "rev-parse", "--verify", "-q",
+                    revisions=["HEAD"], cwd=ROOT / "src",
+                )
+                if head != sha:
+                    errors.append(f"ensure_clone checked out {head!r}, not {sha}")
+            marker.unlink(missing_ok=True)
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    ensure_clone({
+                        "id": "fixture",
+                        "local_source": "hostile-source",
+                        "pin": sha,
+                        "source": hostile,
+                    })
+            except SystemExit:
+                pass
+            else:
+                errors.append("hostile source fetch succeeded")
+            if marker.exists():
+                errors.append("hostile source executed upload-pack")
+            try:
+                url = run(
+                    "git", "remote", "get-url",
+                    user_args=["origin"], cwd=ROOT / "hostile-source",
+                )
+            except SystemExit as exc:
+                errors.append(f"hostile source was not stored after --: {exc}")
+            else:
+                if url != hostile:
+                    errors.append(f"source was parsed as a git option: {url!r}")
+            marker.unlink(missing_ok=True)
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    ensure_clone({
+                        "id": "fixture",
+                        "local_source": "hostile-pin",
+                        "pin": hostile,
+                        "source": str(bare),
+                    })
+            except SystemExit:
+                pass
+            else:
+                errors.append("hostile pin fetch succeeded")
+            if marker.exists():
+                errors.append("hostile pin executed upload-pack")
+        finally:
+            ROOT = previous
     return errors
 
 
