@@ -1800,6 +1800,18 @@ def check_lab4() -> None:
     source = (PACKAGE / "crew_build.py").read_text(encoding="utf-8")
     if source.count("{issue_rows}") < 4:
         fail("issue_rows is not wired into the task text")
+    if "extract columns independently from its own excerpt" not in source:
+        fail("triage task text lost the case 06 independent-field instruction")
+    if "Audit each output cell independently against that exact source issue" not in source:
+        fail("reviewer task text lost the case 06 independent-field instruction")
+    task_text = "\n".join(
+        node.value
+        for node in ast.walk(ast.parse(source))
+        if isinstance(node, ast.Constant) and isinstance(node.value, str)
+    )
+    for label in ("\u05d7\u05e1\u05dd:", "\u05d0\u05d7\u05e8\u05d0\u05d9:", "\u05e6\u05e2\u05d3 \u05d4\u05d1\u05d0:"):
+        if label not in task_text:
+            fail("case 06 Hebrew field label missing from task text")
     cited_rows = {
         "issues": [{"url": "https://github.com/nocturney/velvetos-core/issues/612", "number": 612}],
     }
