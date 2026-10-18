@@ -158,7 +158,8 @@ class Gap6PinSplitTests(unittest.TestCase):
         self.assertNotIn("os.environ", source)
         poison = {
             "VF_CANARY_SECRET": "not-a-real-secret",
-            "GIT_CONFIG_COUNT": "1",
+            "GIT_CONFIG_PARAMETERS": "'core.fsmonitor=/tmp/not-run'",
+            "GIT_SSH_COMMAND": "/tmp/not-run",
         }
         with mock.patch.dict(os.environ, poison, clear=False):
             env = native.require_git_env(native.git_subprocess_env())
@@ -171,7 +172,15 @@ class Gap6PinSplitTests(unittest.TestCase):
         for name in poison:
             self.assertNotIn(name, child)
         self.assertNotEqual(child.get("PATH"), os.environ.get("PATH"))
-        self.assertEqual(child["GIT_CONFIG_GLOBAL"], "/dev/null")
+        self.assertEqual(child["GIT_CONFIG_NOSYSTEM"], "1")
+        self.assertEqual(child["GIT_CONFIG_COUNT"], "0")
+        self.assertIn("vf604-git-home-", child["HOME"])
+        self.assertTrue(Path(child["HOME"]).is_dir())
+        self.assertFalse((Path(child["HOME"]) / ".gitconfig").exists())
+        self.assertTrue(Path(child["XDG_CONFIG_HOME"]).is_dir())
+        self.assertFalse((Path(child["XDG_CONFIG_HOME"]) / "git" / "config").exists())
+        self.assertEqual(Path(child["GIT_CONFIG_GLOBAL"]).read_bytes(), b"")
+        self.assertTrue(Path(child["GIT_EXEC_PATH"]).is_dir())
         self.assertEqual(child["GIT_AUTHOR_EMAIL"], "vf604@example.invalid")
 
     def test_poisoned_path_cannot_select_git(self):
@@ -243,6 +252,135 @@ class Gap6PinSplitTests(unittest.TestCase):
         if os.name != "nt":
             self.assertEqual(payload["rc"], 0)
             self.assertIn("git version", payload["out"])
+
+    def test_poisoned_home_cannot_run_gitconfig(self):
+        source = Path(native.__file__).read_text(encoding="utf-8")
+        self.assertNotIn("os.environ", source)
+        self.assertNotIn("os.getenv", source)
+        with tempfile.TemporaryDirectory(prefix="vf604-home-poison-") as tmp:
+            root = Path(tmp)
+            home = root / "home"
+            home.mkdir()
+            xdg = root / "xdg"
+            (xdg / "git").mkdir(parents=True)
+            marker = root / "marker"
+            if os.name == "nt":
+                hook = root / "hook.py"
+                hook.write_text(
+                    "import pathlib, sys\n"
+                    "pathlib.Path(sys.argv[1]).write_text('MALICIOUS_HOME_RAN')\n",
+                    encoding="ascii",
+                )
+                hook_cmd = subprocess.list2cmdline([sys.executable, str(hook), str(marker)])
+            else:
+                hook = root / "hook.sh"
+                hook.write_text(
+                    "#!/bin/sh\necho MALICIOUS_HOME_RAN >> \"$1\"\n",
+                    encoding="ascii",
+                )
+                hook.chmod(0o755)
+                hook_cmd = f"{hook} {marker}"
+            config = f"[core]\n\tfsmonitor = {hook_cmd}\n"
+            (home / ".gitconfig").write_text(config, encoding="ascii")
+            (xdg / "git" / "config").write_text(config, encoding="ascii")
+            system = root / "system.gitconfig"
+            system.write_text(config, encoding="ascii")
+            fake_exec = root / "fake-exec"
+            fake_exec.mkdir()
+            repo = root / "repo"
+            repo.mkdir()
+            if os.name != "nt":
+                control_env = {
+                    "PATH": "/usr/bin:/bin",
+                    "LC_ALL": "C",
+                    "HOME": str(home),
+                    "GIT_TERMINAL_PROMPT": "0",
+                }
+                subprocess.run(
+                    [native.GIT_EXECUTABLE, "init", "-q", str(repo)],
+                    env=control_env, check=True, timeout=10,
+                )
+                control = subprocess.run(
+                    [native.GIT_EXECUTABLE, "-C", str(repo), "status", "--porcelain"],
+                    env=control_env, capture_output=True, text=True, timeout=10,
+                )
+                self.assertEqual(control.returncode, 0, control.stderr)
+                self.assertTrue(marker.is_file(), "fsmonitor fixture did not run")
+                marker.unlink()
+            probe = (
+                "import json, subprocess, sys, tempfile\n"
+                "from pathlib import Path\n"
+                "sys.path.insert(0, sys.argv[1])\n"
+                "import vf_office_v2_604_native_git_crash_reconcile_offline as native\n"
+                "env = native.require_git_env(native.ENV)\n"
+                "repo = Path(tempfile.mkdtemp(prefix='vf604-home-repo-'))\n"
+                "init = subprocess.run([native.GIT_EXECUTABLE, 'init', '-q', str(repo)],\n"
+                "    env=env, capture_output=True, text=True, timeout=10)\n"
+                "status = subprocess.run([native.GIT_EXECUTABLE, '-C', str(repo), 'status', '--porcelain'],\n"
+                "    env=env, capture_output=True, text=True, timeout=10)\n"
+                "marker = Path(sys.argv[2])\n"
+                "out = (init.stdout or '') + (init.stderr or '') + (status.stdout or '') + (status.stderr or '')\n"
+                "sys.stdout.write(json.dumps({\n"
+                "    'keys': sorted(env),\n"
+                "    'home': env['HOME'],\n"
+                "    'xdg': env['XDG_CONFIG_HOME'],\n"
+                "    'global': env['GIT_CONFIG_GLOBAL'],\n"
+                "    'nosystem': env['GIT_CONFIG_NOSYSTEM'],\n"
+                "    'count': env['GIT_CONFIG_COUNT'],\n"
+                "    'exec': env['GIT_EXEC_PATH'],\n"
+                "    'rc': status.returncode,\n"
+                "    'marker': marker.is_file(),\n"
+                "    'out': out,\n"
+                "}))\n"
+            )
+            probe_path = root / "probe.py"
+            probe_path.write_text(probe, encoding="utf-8")
+            child_env = dict(os.environ)
+            child_env.update({
+                "HOME": str(home),
+                "USERPROFILE": str(home),
+                "XDG_CONFIG_HOME": str(xdg),
+                "GIT_EXEC_PATH": str(fake_exec),
+                "GIT_CONFIG_GLOBAL": str(home / ".gitconfig"),
+                "GIT_CONFIG_SYSTEM": str(system),
+                "GIT_CONFIG_COUNT": "1",
+                "GIT_CONFIG_KEY_0": "core.fsmonitor",
+                "GIT_CONFIG_VALUE_0": hook_cmd,
+                "GIT_CONFIG_PARAMETERS": "'core.fsmonitor=" + hook_cmd + "'",
+                "GIT_SSH_COMMAND": hook_cmd,
+            })
+            proc = subprocess.run(
+                [sys.executable, "-B", str(probe_path), str(ROOT / "scripts"), str(marker)],
+                env=child_env,
+                cwd=str(ROOT / "scripts"),
+                capture_output=True,
+                text=True,
+                timeout=20,
+            )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        payload = json.loads(proc.stdout)
+        self.assertEqual(payload["keys"], sorted(native.GIT_ENV_REQUIRED))
+        self.assertNotEqual(payload["home"], str(home))
+        self.assertIn("vf604-git-home-", payload["home"])
+        self.assertTrue(Path(payload["home"]).is_dir())
+        self.assertFalse((Path(payload["home"]) / ".gitconfig").exists())
+        self.assertNotEqual(payload["xdg"], str(xdg))
+        self.assertTrue(Path(payload["xdg"]).is_dir())
+        self.assertFalse((Path(payload["xdg"]) / "git" / "config").exists())
+        self.assertEqual(payload["nosystem"], "1")
+        self.assertEqual(payload["count"], "0")
+        self.assertEqual(Path(payload["global"]).read_bytes(), b"")
+        self.assertNotEqual(payload["global"], str(home / ".gitconfig"))
+        self.assertNotEqual(payload["exec"], str(fake_exec))
+        self.assertTrue(Path(payload["exec"]).is_dir())
+        self.assertFalse(payload["marker"])
+        self.assertNotIn("MALICIOUS_HOME_RAN", payload["out"])
+        self.assertEqual(payload["rc"], 0)
+        for leaked in (
+            "USERPROFILE", "GIT_CONFIG_SYSTEM", "GIT_CONFIG_KEY_0",
+            "GIT_CONFIG_VALUE_0", "GIT_CONFIG_PARAMETERS", "GIT_SSH_COMMAND",
+        ):
+            self.assertNotIn(leaked, payload["keys"])
 
     def test_native_missing_or_extra_name_refuses_before_spawn(self):
         def spawned(*args, **kwargs):

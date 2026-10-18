@@ -51,18 +51,13 @@ class NativeSinkRecoveryTests(unittest.TestCase):
         cp083.local_cert_observation = _synthetic_provider
 
         # No ambient cloud, SSH, Python or Git configuration reaches Git.
-        cp083.offline.ENV = {
-            "PATH": "/usr/bin:/bin",
-            "HOME": "/nonexistent",
-            "LC_ALL": "C",
-            "GIT_TERMINAL_PROMPT": "0",
-            "GIT_CONFIG_NOSYSTEM": "1",
-            "GIT_CONFIG_GLOBAL": "/dev/null",
-            "GIT_AUTHOR_NAME": "CP084 synthetic local fixture",
-            "GIT_AUTHOR_EMAIL": "cp084@example.invalid",
-            "GIT_COMMITTER_NAME": "CP084 synthetic local fixture",
-            "GIT_COMMITTER_EMAIL": "cp084@example.invalid",
-        }
+        # HOME and XDG_CONFIG_HOME come from the native empty directory.
+        env = cp083.offline.git_subprocess_env()
+        env["GIT_AUTHOR_NAME"] = "CP084 synthetic local fixture"
+        env["GIT_AUTHOR_EMAIL"] = "cp084@example.invalid"
+        env["GIT_COMMITTER_NAME"] = "CP084 synthetic local fixture"
+        env["GIT_COMMITTER_EMAIL"] = "cp084@example.invalid"
+        cp083.offline.ENV = env
 
     def tearDown(self):
         self.stop()
