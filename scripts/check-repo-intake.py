@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -110,15 +112,20 @@ def main() -> int:
     assert 'playbooks/skill-intake-evaluation.md' in skill
     assert 'playbooks/automation-standards.md' in skill
     pilot_root=ROOT/'packages'/'vfharness'/'devtools'/'pilots'
-    for rel in ('cua/README.md','cua/CuaSmokeFixture.cs','cua/pilot-capabilities.yaml','cua/Start-CuaPilot.ps1','cua/Run-CuaSmoke.ps1','dashy/README.md','dashy/serve-readonly.js','dashy/conf.yml','dashy/Run-DashyBrowserSmoke.ps1'):
+    for rel in ('cua/README.md','cua/CuaSmokeFixture.cs','cua/pilot-capabilities.yaml','cua/Start-CuaPilot.ps1','cua/Run-CuaSmoke.ps1','cua/cp057/calc.ps1','cua/cp057/PIN.json','dashy/README.md','dashy/serve-readonly.js','dashy/conf.yml','dashy/Run-DashyBrowserSmoke.ps1'):
         assert (pilot_root/rel).is_file(), f'missing pilot source: {rel}'
+    strict = subprocess.run(
+        [sys.executable, str(ROOT / 'scripts' / 'vf_cp057_calc_strictmode.py')],
+        cwd=ROOT, text=True, capture_output=True,
+    )
+    assert strict.returncode == 0, strict.stderr or strict.stdout
     assert '    display: false' in (pilot_root/'cua'/'pilot-capabilities.yaml').read_text(encoding='utf-8')
     server_source=(pilot_root/'dashy'/'serve-readonly.js').read_text(encoding='utf-8')
     assert "const host = '127.0.0.1'" in server_source
     assert "'No control APIs'" in server_source and "'Read-only launchpad'" in server_source
     config=(pilot_root/'dashy'/'conf.yml').read_text(encoding='utf-8')
     assert all(flag in config for flag in ('disableConfiguration: true','preventWriteToDisk: true','preventLocalSave: true'))
-    print('OK repo-intake sources=17 authority=none vtracer=PASS cua=BOUNDED_SMOKE_PASS ufo=RESEARCH_PENDING dashy=READ_ONLY_SMOKE_PASS')
+    print('OK repo-intake sources=17 authority=none vtracer=PASS cua=BOUNDED_SMOKE_PASS cp057=EMPTY_COUNT_GUARDED ufo=RESEARCH_PENDING dashy=READ_ONLY_SMOKE_PASS')
     return 0
 
 if __name__=='__main__':
