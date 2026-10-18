@@ -1317,6 +1317,40 @@
       "mapping_state": "mapped"
     },
     {
+      "id": "check-office-v2-mvp",
+      "path": "scripts/check-office-v2-mvp.py",
+      "owns": [
+        ".github/workflows/office-v2-board.yml",
+        "docs/office-v2/NEXT.md",
+        "docs/office-v2/board/**",
+        "scripts/check-office-v2-mvp.py",
+        "scripts/fixtures/office_v2_mvp/**",
+        "scripts/office_v2_mvp.py",
+        "scripts/test_office_v2_mvp.py"
+      ],
+      "triggered_by": [
+        ".github/workflows/office-v2-board.yml",
+        "docs/office-v2/NEXT.md",
+        "docs/office-v2/board/**",
+        "scripts/check-office-v2-mvp.py",
+        "scripts/fixtures/office_v2_mvp/**",
+        "scripts/office_v2_mvp.py",
+        "scripts/test_office_v2_mvp.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
+      "timeout_seconds": 60,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
       "id": "check-office-v2-phase0",
       "path": "scripts/check-office-v2-phase0.py",
       "owns": [

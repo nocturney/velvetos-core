@@ -1,0 +1,237 @@
+{
+  "pulls": {
+    "nocturney/velvetos-core": [
+      {
+        "number": 10,
+        "title": "Cursor: draft desk",
+        "body": "still editing",
+        "draft": true,
+        "state": "open",
+        "html_url": "https://github.com/nocturney/velvetos-core/pull/10",
+        "updated_at": "2026-10-18T09:00:00Z",
+        "head": {"sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}
+      },
+      {
+        "number": 11,
+        "title": "Claude: caption fix",
+        "body": "",
+        "draft": false,
+        "state": "open",
+        "html_url": "https://github.com/nocturney/velvetos-core/pull/11",
+        "updated_at": "2026-10-18T10:00:00Z",
+        "head": {"sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}
+      },
+      {
+        "number": 12,
+        "title": "ChatGPT: gate",
+        "body": "",
+        "draft": false,
+        "state": "open",
+        "html_url": "https://github.com/nocturney/velvetos-core/pull/12",
+        "updated_at": "2026-10-18T08:00:00Z",
+        "head": {"sha": "cccccccccccccccccccccccccccccccccccccccc"}
+      },
+      {
+        "number": 13,
+        "title": "Gemini: retry qa",
+        "body": "",
+        "draft": false,
+        "state": "open",
+        "html_url": "https://github.com/nocturney/velvetos-core/pull/13",
+        "updated_at": "2026-10-18T11:00:00Z",
+        "head": {"sha": "dddddddddddddddddddddddddddddddddddddddd"}
+      },
+      {
+        "number": 14,
+        "title": "auditor: owner gate",
+        "body": "ready",
+        "draft": false,
+        "state": "open",
+        "html_url": "https://github.com/nocturney/velvetos-core/pull/14",
+        "updated_at": "2026-10-18T11:30:00Z",
+        "head": {"sha": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"}
+      }
+    ],
+    "nocturney/velvetos-velvet-factory": [
+      {
+        "number": 3,
+        "title": "Gemini: portal draft",
+        "body": "",
+        "draft": true,
+        "state": "open",
+        "html_url": "https://github.com/nocturney/velvetos-velvet-factory/pull/3",
+        "updated_at": "2026-10-18T07:00:00Z",
+        "head": {"sha": "ffffffffffffffffffffffffffffffffffffffff"}
+      },
+      {
+        "number": 4,
+        "title": "portal tweak",
+        "body": "",
+        "draft": true,
+        "state": "open",
+        "html_url": "https://github.com/nocturney/velvetos-velvet-factory/pull/4",
+        "updated_at": "2026-10-18T06:30:00Z",
+        "head": {"sha": "1111111111111111111111111111111111111111"}
+      }
+    ]
+  },
+  "issue_comments": {
+    "nocturney/velvetos-core#11": [
+      {
+        "id": 1,
+        "body": "QA please @ bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "created_at": "2026-10-18T10:05:00Z",
+        "html_url": "https://github.com/nocturney/velvetos-core/pull/11#issuecomment-1"
+      }
+    ],
+    "nocturney/velvetos-core#12": [
+      {
+        "id": 2,
+        "body": "QA please @ cccccccccccccccccccccccccccccccccccccccc",
+        "created_at": "2026-10-18T08:00:00Z",
+        "html_url": "https://github.com/nocturney/velvetos-core/pull/12#issuecomment-2"
+      },
+      {
+        "id": 3,
+        "body": "QA verdict (ChatGPT): FAIL the gate",
+        "created_at": "2026-10-18T09:00:00Z",
+        "html_url": "https://github.com/nocturney/velvetos-core/pull/12#issuecomment-3"
+      }
+    ],
+    "nocturney/velvetos-core#13": [
+      {
+        "id": 4,
+        "body": "QA verdict (Gemini): FAIL",
+        "created_at": "2026-10-18T09:00:00Z",
+        "html_url": "https://github.com/nocturney/velvetos-core/pull/13#issuecomment-4"
+      },
+      {
+        "id": 5,
+        "body": "QA please @ dddddddddddddddddddddddddddddddddddddddd",
+        "created_at": "2026-10-18T11:00:00Z",
+        "html_url": "https://github.com/nocturney/velvetos-core/pull/13#issuecomment-5"
+      }
+    ],
+    "nocturney/velvetos-core#14": [
+      {
+        "id": 6,
+        "body": "QA verdict (auditor): PASS WITH NOTES. NEEDS OWNER before merge.",
+        "created_at": "2026-10-18T11:20:00Z",
+        "html_url": "https://github.com/nocturney/velvetos-core/pull/14#issuecomment-6"
+      }
+    ]
+  },
+  "review_comments": {},
+  "queue_comments": [
+    {
+      "id": 100,
+      "body": "Cursor: CLAIM CLQ-1 — started yesterday",
+      "created_at": "2026-10-17T10:00:00Z",
+      "html_url": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-100",
+      "user": {"login": "nocturney"}
+    },
+    {
+      "id": 101,
+      "body": "Cursor: DONE CLQ-1",
+      "created_at": "2026-10-17T22:30:00Z",
+      "html_url": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-101",
+      "user": {"login": "nocturney"}
+    },
+    {
+      "id": 102,
+      "body": "Claude: CLAIM CLQ-2 — alias map for #595",
+      "created_at": "2026-10-18T09:00:00Z",
+      "html_url": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-102",
+      "user": {"login": "nocturney"}
+    },
+    {
+      "id": 103,
+      "body": "ChatGPT: BLOCKED CP099 — host offline",
+      "created_at": "2026-10-18T08:00:00Z",
+      "html_url": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-103",
+      "user": {"login": "nocturney"}
+    },
+    {
+      "id": 104,
+      "body": "CLAIM (auditor) — waiting on Christian for the credential gate. See #604.",
+      "created_at": "2026-10-18T07:00:00Z",
+      "html_url": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-104",
+      "user": {"login": "nocturney"}
+    },
+    {
+      "id": 105,
+      "body": "Gemini: DONE CLQ-8 historical",
+      "created_at": "2026-10-16T12:00:00Z",
+      "html_url": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-105",
+      "user": {"login": "nocturney"}
+    },
+    {
+      "id": 107,
+      "body": "Cursor: CLAIM — follow #700 only",
+      "created_at": "2026-10-18T05:00:00Z",
+      "html_url": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-107",
+      "user": {"login": "nocturney"}
+    }
+  ],
+  "issues": {
+    "nocturney/velvetos-core#595": {
+      "number": 595,
+      "state": "open",
+      "title": "Recover overlooked competitors",
+      "html_url": "https://github.com/nocturney/velvetos-core/issues/595"
+    },
+    "nocturney/velvetos-core#604": {
+      "number": 604,
+      "state": "open",
+      "title": "Fleet",
+      "html_url": "https://github.com/nocturney/velvetos-core/issues/604"
+    },
+    "nocturney/velvetos-core#700": {
+      "number": 700,
+      "state": "closed",
+      "title": "already closed",
+      "html_url": "https://github.com/nocturney/velvetos-core/issues/700"
+    }
+  },
+  "merged_pulls": {
+    "nocturney/velvetos-core": [
+      {
+        "number": 9,
+        "title": "Cursor: merged today",
+        "draft": false,
+        "merged_at": "2026-10-18T01:00:00Z",
+        "html_url": "https://github.com/nocturney/velvetos-core/pull/9",
+        "head": {"sha": "9999999999999999999999999999999999999999"},
+        "updated_at": "2026-10-18T01:00:00Z"
+      },
+      {
+        "number": 8,
+        "title": "Cursor: old merge",
+        "merged_at": "2026-10-10T01:00:00Z",
+        "html_url": "https://github.com/nocturney/velvetos-core/pull/8",
+        "head": {"sha": "8888888888888888888888888888888888888888"}
+      }
+    ],
+    "nocturney/velvetos-velvet-factory": []
+  },
+  "check_all_runs": {
+    "nocturney/velvetos-core": {
+      "workflow_runs": [
+        {
+          "id": 39122151561,
+          "name": "VelvetOS Core Sensors",
+          "html_url": "https://github.com/nocturney/velvetos-core/actions/runs/39122151561",
+          "head_sha": "fcd92ba4dc8892130e48f8bdf46acddd84d3ff2c",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-10-18T11:10:16Z",
+          "event": "push"
+        }
+      ]
+    }
+  },
+  "repo_access": {
+    "nocturney/velvetos-core": {"ok": true},
+    "nocturney/velvetos-velvet-factory": {"ok": true}
+  }
+}
