@@ -54,6 +54,13 @@ def append_child(data: dict, pid: int, parent_pid: int) -> None:
     })
 
 
+def mutate_pid_reuse(data: dict) -> None:
+    another = copy.deepcopy(data["snapshots"]["during"][0])
+    another["captured_at_utc"] = "2026-10-18T12:00:02.500000Z"
+    another["process_tree"][0]["created_at_utc"] = "2026-10-18T12:00:01.050000Z"
+    data["snapshots"]["during"].append(another)
+
+
 def main() -> int:
     base = fixture()
     errors = []
@@ -94,6 +101,18 @@ def main() -> int:
         "two-node-cycle": (lambda d: (append_child(d, 4243, 4244), append_child(d, 4244, 4243)),
                            "INVALID_TREE_ANCESTRY"),
         "false-interval": (lambda d: d.update(sample_interval_ms=5000), "INVALID_SAMPLE_INTERVAL"),
+        "pid-reuse-across-snapshots": (mutate_pid_reuse, "PID_REUSED_OR_IDENTITY_CHANGED"),
+        "foreign-connection-owner": (
+            lambda d: d["snapshots"]["during"][0]["tcp"][0].update(pid=8999),
+            "TCP_OWNER_NOT_IN_TREE"),
+        "missing-tree": (
+            lambda d: d["snapshots"]["during"][0].pop("process_tree"), "INVALID_SNAPSHOT_SHAPE"),
+        "non-numeric-ppid": (
+            lambda d: d["snapshots"]["during"][0]["process_tree"][0].update(parent_pid="100"),
+            "INVALID_TREE_MEMBER"),
+        "missing-root-with-child": (
+            lambda d: d["snapshots"]["during"][0]["process_tree"][0].update(pid=4243),
+            "INVALID_TREE_ANCESTRY"),
     }
     for name, (mutate, expected) in cases.items():
         trial = copy.deepcopy(base)
@@ -166,6 +185,12 @@ def main() -> int:
             errors.append("collector must be ASCII/LF without BOM")
         if any(needle not in raw for needle in required):
             errors.append("collector missing critical snapshot / enforcement marker")
+        ancestry = (b"ParentProcessId", b"CreationDate", b"-gt 0.01",
+                    b"PROCESS_TREE_TOO_LARGE", b"PROCESS_TREE_CYCLE",
+                    b"PROCESS_TREE_ORPHAN", b"CHILD_CREATED_BEFORE_PARENT",
+                    b"PROCESS_IDENTITY_CHANGED_DURING_SAMPLE", b"$afterById")
+        if any(needle not in raw for needle in ancestry):
+            errors.append("collector must verify CIM parent chains and PID births around network sampling")
         if (b"$null = $script:Child.Handle" not in raw or b"$null -ne $observedExitCode" not in raw
                 or b"[int]$script:Child.ExitCode" in raw):
             errors.append("collector ExitCode must fail closed on null, with primed process handle")
