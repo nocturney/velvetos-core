@@ -1,0 +1,31 @@
+{
+  "task_id": "cp085-nonposix-skip-2026-10-18",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfharness",
+  "goal": "Skip CP085 POSIX receipt-directory mode tests on non-POSIX with SKIP_NON_POSIX, and keep RECEIPT_DIR_MUST_BE_PRIVATE strict on Linux and macOS.",
+  "completed_steps": [
+    "CLAIM on #612 comment 6252400682",
+    "Receipt-directory mode tests skip on non-POSIX",
+    "Observer cwd checks use pathlib and os.sep",
+    "A world-readable directory still raises RECEIPT_DIR_MUST_BE_PRIVATE on POSIX"
+  ],
+  "next_step": "Independent QA. security_admission stays RED.",
+  "artifacts": [
+    "scripts/test_vf_office_v2_604_cp085_public_git_readback.py",
+    "scripts/check-office-v2-contracts.py"
+  ],
+  "unresolved": [
+    "security_admission stays RED",
+    "The CP085 receipt JSON is unchanged"
+  ],
+  "last_updated": "2026-10-18",
+  "execution_state": {
+    "claim": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6252400682",
+    "windows_report": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6252132850",
+    "security_admission": "RED",
+    "posix_mode_check": "st_mode & 0o077",
+    "windows_execution": false
+  },
+  "latest_observation": "POSIX receipt-directory tests print SKIP_NON_POSIX on non-POSIX. On Linux a 0755 directory still refuses with RECEIPT_DIR_MUST_BE_PRIVATE."
+}

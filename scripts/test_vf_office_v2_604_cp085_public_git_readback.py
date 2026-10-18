@@ -27,6 +27,12 @@ class ReadbackTests(unittest.TestCase):
         self.intent = r.Intent(task="cp085-synthetic", ref=REF,
                                expected=EXPECTED, candidate=CANDIDATE)
 
+    def require_posix_permissions(self):
+        """Directory mode bits are a POSIX privacy gate. Elsewhere they are not."""
+        if os.name != "posix":
+            print("SKIP_NON_POSIX", flush=True)
+            self.skipTest("SKIP_NON_POSIX")
+
     def test_01_candidate_seen_means_review_not_release(self):
         v = r.classify(self.intent, CANDIDATE)
         self.assertEqual(v["classification"], "REMOTE_ADVANCED_REVIEW_REQUIRED")
@@ -130,7 +136,15 @@ class ReadbackTests(unittest.TestCase):
                 self.assertFalse(set(kwargs["env"]) &
                                  {"VF_SUPER_PRIVATE_CANARY", "GITHUB_TOKEN", "PYTHONPATH"})
                 self.assertNotEqual(kwargs["env"]["HOME"], "/private/home")
-                self.assertIn("/vf604-cp085-public-observer-", kwargs["cwd"])
+                observer = Path(kwargs["cwd"])
+                self.assertTrue(
+                    any(part.startswith("vf604-cp085-public-observer-")
+                        for part in observer.parts),
+                    observer)
+                self.assertIn(
+                    os.sep + "vf604-cp085-public-observer-",
+                    os.sep + os.sep.join(observer.parts),
+                )
                 self.assertTrue(kwargs["capture_output"])
 
     def test_15_external_command_error_denied_without_stderr_leak(self):
@@ -154,6 +168,7 @@ class ReadbackTests(unittest.TestCase):
                 r.observe_public_ref(self.intent)
 
     def test_18_receipt_canonical_roundtrip_and_digest(self):
+        self.require_posix_permissions()
         value = r.classify(self.intent, CANDIDATE)
         with tempfile.TemporaryDirectory() as td:
             path = Path(td) / "proof.json"
@@ -163,6 +178,7 @@ class ReadbackTests(unittest.TestCase):
             self.assertEqual(r.read_private_receipt(path), value)
 
     def test_19_receipt_creation_is_one_shot_not_mutable(self):
+        self.require_posix_permissions()
         with tempfile.TemporaryDirectory() as td:
             path = Path(td) / "proof.json"
             r.write_private_receipt(path, r.classify(self.intent, EXPECTED))
@@ -195,6 +211,7 @@ class ReadbackTests(unittest.TestCase):
             r.receipt_bytes(value)
 
     def test_22_mutated_and_truncated_local_receipt_denied(self):
+        self.require_posix_permissions()
         with tempfile.TemporaryDirectory() as td:
             path = Path(td) / "proof.json"
             r.write_private_receipt(path, r.classify(self.intent, CANDIDATE))
@@ -208,6 +225,7 @@ class ReadbackTests(unittest.TestCase):
                     r.read_private_receipt(path)
 
     def test_23_symlink_receipt_refused(self):
+        self.require_posix_permissions()
         with tempfile.TemporaryDirectory() as td:
             old = Path(td) / "proof.json"
             link = Path(td) / "pointer.json"
@@ -219,13 +237,32 @@ class ReadbackTests(unittest.TestCase):
                 r.write_private_receipt(link, r.classify(self.intent, EXPECTED))
 
     def test_24_world_readable_receipt_directory_denied(self):
+        self.require_posix_permissions()
         with tempfile.TemporaryDirectory() as td:
             directory = Path(td) / "unsafe"
             directory.mkdir(mode=0o755)
             directory.chmod(0o755)
-            with self.assertRaises(r.Refuse):
+            with self.assertRaisesRegex(r.Refuse, "^RECEIPT_DIR_MUST_BE_PRIVATE$"):
                 r.write_private_receipt(directory / "proof.json",
                                         r.classify(self.intent, CANDIDATE))
+
+    def test_27_posix_world_readable_dir_still_refuses(self):
+        """A 0700 directory accepts a receipt. A 0755 directory is refused."""
+        self.require_posix_permissions()
+        value = r.classify(self.intent, CANDIDATE)
+        with tempfile.TemporaryDirectory() as td:
+            private = Path(td) / "private"
+            private.mkdir(mode=0o700)
+            private.chmod(0o700)
+            written = private / "proof.json"
+            r.write_private_receipt(written, value)
+            self.assertEqual(written.stat().st_mode & 0o777, 0o600)
+            world = Path(td) / "world"
+            world.mkdir(mode=0o700)
+            world.chmod(0o755)
+            self.assertTrue(world.stat().st_mode & 0o077)
+            with self.assertRaisesRegex(r.Refuse, "^RECEIPT_DIR_MUST_BE_PRIVATE$"):
+                r.write_private_receipt(world / "proof.json", value)
 
     def test_25_selftest_and_cli_unknown_args_fail_closed(self):
         self.assertEqual(r.main(["tool", "--unexpected"]), 2)
