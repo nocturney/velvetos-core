@@ -207,11 +207,53 @@ def artifact_path(base: Path, name: object) -> Path:
     return base.joinpath(*parts)
 
 
+def _read_without_o_directory(base: Path, parts: tuple[str, ...], limit: int) -> bytes:
+    """No os.O_DIRECTORY (Windows). Refuse symlinks and non-directories. No dir_fd.
+
+    The POSIX walk below stays on directory fds with O_DIRECTORY and O_NOFOLLOW.
+    This branch does not follow a symlink and does not treat a file as a directory.
+    """
+    def real_dir(path: Path, reason: str) -> None:
+        try:
+            info = os.lstat(path)
+        except OSError as exc:
+            raise Refused(reason) from exc
+        if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
+            raise Refused(reason)
+
+    real_dir(base, "ANCHORED_OPEN_REFUSED")
+    current = base
+    for part in parts[:-1]:
+        current = current / part
+        real_dir(current, "ARTIFACT_PARENT_NOT_REAL_DIRECTORY")
+    target = current / parts[-1]
+    try:
+        info = os.lstat(target)
+    except OSError as exc:
+        raise Refused("SYMLINK_FILE_REFUSED") from exc
+    if stat.S_ISLNK(info.st_mode):
+        raise Refused("SYMLINK_FILE_REFUSED")
+    flags_file = (os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) |
+                  getattr(os, "O_NONBLOCK", 0) | getattr(os, "O_BINARY", 0))
+    try:
+        fd = os.open(target, flags_file)
+    except OSError as exc:
+        raise Refused("SYMLINK_FILE_REFUSED") from exc
+    try:
+        require_evidence_inode(os.fstat(fd), limit)
+        raw = os.read(fd, limit + 1)
+        require(len(raw) <= limit, "OVERSIZED_FILE")
+        return raw
+    finally:
+        os.close(fd)
+
+
 def read_anchored(base: Path, name: object, limit: int) -> bytes:
     """Open each path component from a held directory fd. O_NOFOLLOW.
 
     A parent name that changes after the fd is acquired is not the file read.
     Hardlinked regular files are refused: another name can rewrite the inode.
+    Hosts without O_DIRECTORY use lstat and never pass dir_fd.
     """
     require(type(name) is str and 1 <= len(name) <= 200 and "\\" not in name,
             "UNSAFE_ARTIFACT_PATH")
@@ -221,7 +263,10 @@ def read_anchored(base: Path, name: object, limit: int) -> bytes:
             all(p not in (".", "..") and SEGMENT.fullmatch(p) for p in parts) and
             "/./" not in name and "//" not in name,
             "UNSAFE_ARTIFACT_PATH")
-    flags_dir = os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0)
+    directory_flag = getattr(os, "O_DIRECTORY", None)
+    if directory_flag is None:
+        return _read_without_o_directory(base, parts, limit)
+    flags_dir = os.O_RDONLY | directory_flag | getattr(os, "O_NOFOLLOW", 0)
     flags_file = (os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) |
                   getattr(os, "O_NONBLOCK", 0))
     try:

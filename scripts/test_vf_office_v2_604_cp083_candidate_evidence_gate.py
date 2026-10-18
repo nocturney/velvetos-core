@@ -460,6 +460,65 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
             gate.verify(self.manifest_path)
         self.assertEqual(str(caught.exception), "NON_FINITE_JSON")
 
+    def _symlink_or_skip(self, link: Path, target: Path) -> None:
+        try:
+            link.symlink_to(target, target_is_directory=target.is_dir())
+        except (OSError, NotImplementedError):
+            if sys.platform == "win32":
+                self.skipTest("Windows symlink creation not permitted by OS")
+            raise
+
+    def _assert_symlink_and_nondirectory_anchors_refused(self) -> None:
+        receipt = (self.base / "run-1" / "receipt.jsonl").read_bytes()
+        outside = self.base / "outside-anchor"
+        outside.mkdir()
+        secret = b'{"outside":true}\n'
+        (outside / "receipt.jsonl").write_bytes(secret)
+        link = self.base / "linked-run"
+        self._symlink_or_skip(link, outside)
+        try:
+            got = gate.read_anchored(self.base, "linked-run/receipt.jsonl", 4096)
+        except gate.Refused as exc:
+            self.assertEqual(str(exc), "ARTIFACT_PARENT_NOT_REAL_DIRECTORY")
+        else:
+            self.fail("symlink directory anchor was followed: " + repr(got))
+        file_anchor = self.base / "not-a-directory"
+        file_anchor.write_bytes(b"not-dir")
+        with self.assertRaises(gate.Refused) as caught:
+            gate.read_anchored(file_anchor, "receipt.jsonl", 4096)
+        self.assertEqual(str(caught.exception), "ANCHORED_OPEN_REFUSED")
+        with self.assertRaises(gate.Refused) as caught:
+            gate.read_anchored(self.base, "run-1/receipt.jsonl/nested", 4096)
+        self.assertEqual(str(caught.exception), "ARTIFACT_PARENT_NOT_REAL_DIRECTORY")
+        self.assertEqual(
+            gate.read_anchored(self.base, "run-1/receipt.jsonl", 4096), receipt)
+
+    def test_posix_symlink_and_nondirectory_anchors_refused(self):
+        if not hasattr(os, "O_DIRECTORY"):
+            self.skipTest("POSIX O_DIRECTORY is absent")
+        opens = []
+        real_open = os.open
+
+        def opening(path, flags, mode=0o777, *, dir_fd=None):
+            opens.append(dir_fd)
+            return real_open(path, flags, mode, dir_fd=dir_fd)
+
+        with mock.patch.object(gate.os, "open", opening):
+            self._assert_symlink_and_nondirectory_anchors_refused()
+        self.assertTrue(any(item is not None for item in opens))
+
+    def test_missing_o_directory_still_refuses_symlink_and_nondirectory(self):
+        had = hasattr(os, "O_DIRECTORY")
+        saved = getattr(os, "O_DIRECTORY", None)
+        try:
+            if had:
+                del os.O_DIRECTORY
+            self.assertFalse(hasattr(os, "O_DIRECTORY"))
+            self._assert_symlink_and_nondirectory_anchors_refused()
+        finally:
+            if had:
+                os.O_DIRECTORY = saved
+
 
 if __name__ == "__main__":
     unittest.main()
