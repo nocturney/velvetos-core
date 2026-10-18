@@ -1,0 +1,12 @@
+{
+  "schema": "velvetos.cp057.calc-ps1-pin.v1",
+  "path": "packages/vfharness/devtools/pilots/cua/cp057/calc.ps1",
+  "sha256": "32824ef410023d84a61c7ecd88edd872ade2e70bdee0ec22b27ae001a3b35f13",
+  "supersedes_sha256": "97e942bcccfb5c5bcbbe13e97badd058e027e1df3e803a4a24d9eaac933cbc6f",
+  "algorithm": "SHA-256",
+  "line_ending": "lf",
+  "runtimeAuthority": false,
+  "activationAllowed": false,
+  "acceptance": "RED_UNVERIFIED",
+  "note": "Repo bytes are LF. supersedes_sha256 is the 2026-10-18 pre-fix Windows file that failed closed before Calculator launched. This pin is the fixed source. Do not execute it from HQ."
+}

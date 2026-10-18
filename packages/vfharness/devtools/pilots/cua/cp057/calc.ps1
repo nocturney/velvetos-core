@@ -1,0 +1,209 @@
+[CmdletBinding()]
+param(
+ [ValidateSet('Controller','Child')][string]$Mode='Controller',
+ [string]$Attempt='',
+ [string]$SourceSha256=''
+)
+Set-StrictMode -Version Latest
+$ErrorActionPreference='Stop'
+$Root='D:\Velvet\Pilots\CuaCalcCP057-20261014'
+$Script=Join-Path $Root 'calc.ps1'
+$Prefix='VelvetOS-CP057-Calc-'
+$AllowedHost='CHRIS'
+$AllowedUser='CHRIS\Chris'
+$Schema='velvetos.office2.cp057.native-calculator-uia-one-shot.v1'
+$TaskExe='C:\Windows\System32\schtasks.exe'
+$PSExe='C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
+function Refuse([string]$reason){throw ('REFUSED_'+$reason)}
+function Identity {
+ $id=[Security.Principal.WindowsIdentity]::GetCurrent()
+ $principal=New-Object Security.Principal.WindowsPrincipal($id)
+ return @{user=$id.Name;system=[bool]$id.IsSystem;elevated=[bool]$principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator);session=[int](Get-Process -Id $PID).SessionId}
+}
+function Calcs {
+ return @(Get-Process -Name CalculatorApp,Calculator,calc -ErrorAction SilentlyContinue | Where-Object {$_.SessionId -eq 1})
+}
+function IdleSeconds {
+ $cs=@'
+using System;
+using System.Runtime.InteropServices;
+public static class IdleNativeCP057 {
+ [StructLayout(LayoutKind.Sequential)] public struct LASTINPUTINFO { public UInt32 cbSize; public UInt32 dwTime; }
+ [DllImport("user32.dll",SetLastError=true)] public static extern bool GetLastInputInfo(ref LASTINPUTINFO value);
+ [DllImport("kernel32.dll")] public static extern UInt32 GetTickCount();
+}
+'@
+ if(-not ('IdleNativeCP057' -as [type])) {Add-Type -TypeDefinition $cs -ErrorAction Stop}
+ $li=New-Object IdleNativeCP057+LASTINPUTINFO
+ $li.cbSize=8
+ if(-not [IdleNativeCP057]::GetLastInputInfo([ref]$li)){Refuse 'IDLE_API_UNAVAILABLE'}
+ $now=[uint64][IdleNativeCP057]::GetTickCount()
+ return [math]::Round((($now+4294967296-[uint64]$li.dwTime)%4294967296)/1000,2)
+}
+function FindWindow {
+ $root=[System.Windows.Automation.AutomationElement]::RootElement
+ $cond=[System.Windows.Automation.PropertyCondition]::new(
+   [System.Windows.Automation.AutomationElement]::NameProperty,'Calculator')
+ return $root.FindFirst([System.Windows.Automation.TreeScope]::Children,$cond)
+}
+function FindElement($window,[string]$id) {
+ if($null -eq $window){Refuse 'EXPECTED_CALCULATOR_WINDOW_ABSENT'}
+ $c=[System.Windows.Automation.PropertyCondition]::new(
+   [System.Windows.Automation.AutomationElement]::AutomationIdProperty,$id)
+ $el=$window.FindFirst([System.Windows.Automation.TreeScope]::Descendants,$c)
+ if($null -eq $el){Refuse ('CALCULATOR_ELEMENT_UNAVAILABLE_'+$id)}
+ return $el
+}
+function Display {
+ $window=FindWindow
+ $display=FindElement $window 'CalculatorResults'
+ return [string]$display.Current.Name
+}
+function Press([string]$id) {
+ if((IdleSeconds) -lt 600){Refuse 'USER_BECAME_ACTIVE'}
+ $window=FindWindow
+ $button=FindElement $window $id
+ if($button.Current.ControlType -ne [System.Windows.Automation.ControlType]::Button){
+   Refuse 'WRONG_UIA_CONTROL_TYPE'
+ }
+ $pattern=$button.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern)
+ if($null -eq $pattern){Refuse ('NO_INVOKE_PATTERN_'+$id)}
+ $pattern.Invoke()
+}
+if([Environment]::MachineName -ine $AllowedHost){Refuse 'WRONG_HOST'}
+if([IO.Path]::GetFullPath($PSCommandPath) -ine $Script){Refuse 'WRONG_SOURCE_PATH'}
+if(-not (Test-Path -LiteralPath $Root -PathType Container)){Refuse 'ROOT_MISSING'}
+if($Mode -eq 'Child'){
+ if($Attempt -notmatch '^[0-9a-f]{32}$'){Refuse 'BAD_ATTEMPT'}
+ $rec=[ordered]@{
+  schema=$Schema; status='DENIED';attempt_id=$Attempt;host=$env:COMPUTERNAME
+  user='';session=-1;system_identity=$true;elevated=$true
+  idle_seconds=0;source_sha256='';model_called=$false
+  customer_or_production_effect=$false;gui_scope='CALCULATOR_ONLY'
+  calc_created=$false;calc_closed=$false;step_results=@()
+  core_signed_lease=$false;private_desktop_capture=$false
+  first_result='';last_result='';failure_class=''
+ }
+ $opened=$false
+ $calcWindow=$null
+ $prior=@()
+ $owned=@()
+ try {
+  $who=Identity
+  $rec.user=$who.user;$rec.session=$who.session
+  $rec.system_identity=$who.system;$rec.elevated=$who.elevated
+  if($who.system -or $who.elevated -or $who.session -ne 1 -or
+      $who.user -ine $AllowedUser){Refuse 'NOT_INTERACTIVE_LIMITED_USER'}
+  $rec.source_sha256=(Get-FileHash -LiteralPath $PSCommandPath -Algorithm SHA256).Hash.ToLowerInvariant()
+  $rec.idle_seconds=IdleSeconds
+  if($rec.idle_seconds -lt 600){$rec.status='DENIED_USER_ACTIVE';Refuse 'USER_ACTIVE'}
+  $prior=@(Calcs)
+  if($prior.Count -ne 0){Refuse 'CALCULATOR_ALREADY_OPEN'}
+  Add-Type -AssemblyName UIAutomationClient,UIAutomationTypes -ErrorAction Stop
+  $p=Start-Process -FilePath (Join-Path $env:WINDIR 'System32\calc.exe') -PassThru
+  $opened=$true;$rec.calc_created=$true
+  for($i=0;$i -lt 24;$i++){
+    Start-Sleep -Milliseconds 250
+    $calcWindow=FindWindow
+    if($null -ne $calcWindow){break}
+  }
+  if($null -eq $calcWindow){Refuse 'CALCULATOR_WINDOW_NOT_FOUND'}
+  $owned=@( @(Calcs) | Select-Object -ExpandProperty Id )
+  if($owned.Count -eq 0){Refuse 'OWNED_CALCULATOR_PROCESS_NOT_FOUND'}
+  $rec.calculator_window_pid=[int]$calcWindow.Current.ProcessId
+  $rec.first_result=Display
+  if($rec.first_result -notmatch '0'){Refuse 'WRONG_CALCULATOR_INITIAL_STATE'}
+  foreach($step in @(
+    @{id='num6Button';expected='6'},
+    @{id='multiplyButton';expected='6'},
+    @{id='num7Button';expected='7'},
+    @{id='equalButton';expected='42'}
+  )){
+    Press $step.id
+    Start-Sleep -Milliseconds 400
+    $label=Display
+    $rec.step_results+=@{step=$step.id;observed=$label}
+    if($label -notmatch [regex]::Escape($step.expected)){
+      Refuse ('CALCULATOR_POSTCONDITION_'+$step.id)
+    }
+  }
+  Start-Sleep -Milliseconds 500
+  $rec.last_result=Display
+  if($rec.last_result -notmatch '(^|[^\d])42\s*$'){Refuse 'CALCULATOR_42_READBACK_MISSING'}
+  $rec.status='PASS_NATIVE_UIA_CALCULATOR_42_ONLY'
+ } catch {
+  if($rec.status -ne 'DENIED_USER_ACTIVE'){$rec.status='FAIL_CLOSED_REAL_APP'}
+  $rec.failure_class=$_.Exception.GetType().Name
+  $rec.failure_stage=[string]$_.CategoryInfo.Category
+ } finally {
+  if($opened){
+   try {
+    if($null -ne $calcWindow){
+     $wpat=$calcWindow.GetCurrentPattern([System.Windows.Automation.WindowPattern]::Pattern)
+     if($null -ne $wpat){$wpat.Close()}
+    }
+   }catch{}
+   Start-Sleep -Milliseconds 250
+   foreach($pr in @(Calcs)){
+     if($owned -contains $pr.Id){
+      try{$pr.CloseMainWindow() | Out-Null;Start-Sleep -Milliseconds 100}catch{}
+      try{if(-not $pr.HasExited){Stop-Process -Id $pr.Id -Force -ErrorAction Stop}}catch{}
+     }
+   }
+   $rec.calc_closed=(@(Calcs).Count -eq 0)
+  } else {$rec.calc_closed=$true}
+  $dest=Join-Path $Root ('receipt-'+$Attempt+'.json')
+  if(Test-Path -LiteralPath $dest){Refuse 'RECEIPT_COLLISION'}
+  $temp=Join-Path $Root ('pending-'+$Attempt+'.tmp')
+  [IO.File]::WriteAllText($temp,($rec|ConvertTo-Json -Depth 10)+[Environment]::NewLine,
+    (New-Object Text.UTF8Encoding($false)))
+  Move-Item -LiteralPath $temp -Destination $dest -ErrorAction Stop
+ }
+ if($rec.status -eq 'PASS_NATIVE_UIA_CALCULATOR_42_ONLY' -and $rec.calc_closed){exit 0}
+ exit 2
+}
+# Controller: system management context solely for ephemeral task registration.
+if(-not [Security.Principal.WindowsIdentity]::GetCurrent().IsSystem){Refuse 'CONTROLLER_REQUIRES_SYSTEM'}
+if($SourceSha256 -notmatch '^[0-9a-fA-F]{64}$'){Refuse 'SOURCE_DIGEST_REQUIRED'}
+$actual=(Get-FileHash -LiteralPath $PSCommandPath -Algorithm SHA256).Hash
+if($actual -ine $SourceSha256){Refuse 'SOURCE_DIGEST_MISMATCH'}
+if((Get-ScheduledTask -TaskName ($Prefix+'*') -ErrorAction SilentlyContinue)){Refuse 'TASK_COLLISION'}
+if(@(Get-Process -Name CalculatorApp,Calculator,calc -ErrorAction SilentlyContinue).Count -ne 0){Refuse 'CALCULATOR_ALREADY_OPEN'}
+$attempt=[Guid]::NewGuid().ToString('N')
+$task=$Prefix+$attempt.Substring(0,12)
+$receipt=Join-Path $Root ('receipt-'+$attempt+'.json')
+$created=$false;$ok=$false
+try {
+ $run='powershell.exe -NoLogo -NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File "'+$PSCommandPath+'" -Mode Child -Attempt '+$attempt
+ if($run.Length -ge 261){Refuse 'TASK_COMMAND_TOO_LONG'}
+ $create=& $TaskExe /Create /SC ONCE /ST 23:59 /TN $task /TR $run /RU $AllowedUser /IT /RL LIMITED 2>&1
+ if($LASTEXITCODE -ne 0){Refuse 'TASK_REGISTRATION_DENIED'}
+ $created=$true
+ $info=Get-ScheduledTask -TaskName $task -ErrorAction Stop
+ if($info.Principal.LogonType -ne 'Interactive' -or $info.Principal.RunLevel -ne 'Limited'){Refuse 'TASK_PRINCIPAL_WRONG'}
+ if((Get-FileHash -LiteralPath $PSCommandPath -Algorithm SHA256).Hash -ine $actual){Refuse 'SOURCE_CHANGED'}
+ $started=& $TaskExe /Run /TN $task 2>&1
+ if($LASTEXITCODE -ne 0){Refuse 'TASK_START_DENIED'}
+ for($i=0;$i -lt 145;$i++){Start-Sleep -Milliseconds 500;if(Test-Path -LiteralPath $receipt){break}}
+ if(-not (Test-Path -LiteralPath $receipt -PathType Leaf)){Refuse 'RECEIPT_MISSING'}
+ $data=Get-Content -LiteralPath $receipt -Raw | ConvertFrom-Json
+ if($data.schema -ne $Schema -or $data.attempt_id -cne $attempt -or
+    $data.source_sha256 -ine $actual -or $data.user -ine $AllowedUser -or
+    $data.session -ne 1 -or $data.system_identity -ne $false -or
+    $data.elevated -ne $false -or $data.core_signed_lease -ne $false -or
+    $data.model_called -ne $false -or $data.calc_closed -ne $true){
+   Refuse 'CHILD_RECEIPT_IDENTITY_MISMATCH'
+ }
+ Write-Output ('CHILD_STATUS='+$data.status+' IDLE_SECONDS='+$data.idle_seconds+' STEP_COUNT='+@($data.step_results).Count)
+ Write-Output ('FIRST_RESULT='+$data.first_result+' LAST_RESULT='+$data.last_result)
+ if($data.failure_class){Write-Output ('FAILURE_CLASS='+$data.failure_class)}
+ Get-FileHash -LiteralPath $receipt -Algorithm SHA256 | ForEach-Object{Write-Output ('RECEIPT_SHA256='+$_.Hash)}
+ $ok=($data.status -eq 'PASS_NATIVE_UIA_CALCULATOR_42_ONLY')
+} finally {
+ if($created){
+  $deleted=& $TaskExe /Delete /TN $task /F 2>&1
+  if($LASTEXITCODE -ne 0){$ok=$false;Write-Output 'FAIL_TASK_CLEANUP'}
+ }
+ if(Get-ScheduledTask -TaskName $task -ErrorAction SilentlyContinue){$ok=$false;Write-Output 'TASK_STILL_PRESENT'}else{Write-Output 'TASK_REMOVED=true'}
+}
+if($ok){exit 0}else{exit 2}
