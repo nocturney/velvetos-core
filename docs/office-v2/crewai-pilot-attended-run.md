@@ -8,6 +8,7 @@ Sources: [original strict runbook](pilot-runbook-crewai.md), [current E1-E7 boar
 ## 0. Before any invocation: seven gates and code dependencies
 
 - [ ] **PR #799 must be merged, independently QA-reviewed and present in the staged approved runner**: [hardening PR](https://github.com/nocturney/velvetos-core/pull/799). Its proposed LAB-4 repairs use the **GET /api/tags** model digest instead of /api/show and .ToArray() for a Generic.List on PowerShell 5.1. Inspect the final merge, not an older PR head. [#789 runner](https://github.com/nocturney/velvetos-core/pull/789), [#795](https://github.com/nocturney/velvetos-core/pull/795) and [#797 ancestry](https://github.com/nocturney/velvetos-core/pull/797) are separately merged code predecessors. A merged code fix is not an attended-run authorization.
+- [ ] **Re-verify two snippets in this checklist against #799's final merged code.** #799 is still open. `apply_telemetry(dict(os.environ), SANDBOX_ROOT)` in section 1.3 is a two-argument call, and section 1.4 passes `--sandbox`. Both depend on that unmerged runner. A match to a pre-merge head is not enough.
 - [ ] **Refresh source-of-truth E1-E7 state at attempt time:** [board](NEXT.md#2-priority-1--first-bounded-crewai-pilot-e1e7) and [#612](https://github.com/nocturney/velvetos-core/issues/612). Record board timestamp and each independent evidence/approval URL. Do not transpose the board's dated status into a current PASS. All seven require actual PASS:
   - **E1 authorization:** separately recorded Christian one-run GO, named operator, time window, merged docs and approved exact scope; prior model-only approval is not this GO.
   - **E2 capacity:** fresh Chris lease, CPU/RAM headroom and no #612 P0, #604 Fleet or #602 Cua contention.
@@ -46,12 +47,13 @@ $Py = Join-Path $P '.venv\Scripts\python.exe'
 $Runner = Join-Path $Repo 'scripts\office_v2_crewai\runner.py'
 $Collector = Join-Path $Repo 'scripts\collect-crewai-e5-network.ps1'
 $Validator = Join-Path $Repo 'scripts\vf_office_v2_crewai_e5_network.py'
-$Input = Join-Path $P 'inputs'
+# $Input is a PowerShell automatic variable. The staged inputs directory is $InputDir.
+$InputDir = Join-Path $P 'inputs'
 $Evidence = Join-Path $P 'receipts\crewai-gates'
 $ReceiptRoot = Join-Path $P 'receipts'
 $Model = Join-Path $Repo 'scripts\office_v2_crewai\model\approved-local-ollama.json'
 $Sandbox = 'D:\Velvet\Pilots\crewai-e4\sandbox-home'
-foreach ($item in @($Repo,$Py,$Runner,$Collector,$Validator,$Input,$Evidence,$ReceiptRoot,$Model)) {
+foreach ($item in @($Repo,$Py,$Runner,$Collector,$Validator,$InputDir,$Evidence,$ReceiptRoot,$Model)) {
     if (-not (Test-Path -LiteralPath $item)) { throw ('STOP: staged path absent: ' + $item) }
 }
 $identity.Name
@@ -77,7 +79,7 @@ foreach ($name in @('e1-authorization.json','e2-capacity.json','e3-supply-chain.
     if (-not (Test-Path -LiteralPath $file -PathType Leaf)) { throw ('STOP: evidence missing: ' + $name) }
 }
 foreach ($name in @('manifest.json','issues.json','answer-sheet.json','adversarial.json')) {
-    if (-not (Test-Path -LiteralPath (Join-Path $Input $name) -PathType Leaf)) {
+    if (-not (Test-Path -LiteralPath (Join-Path $InputDir $name) -PathType Leaf)) {
         throw ('STOP: input missing: ' + $name)
     }
 }
@@ -119,7 +121,7 @@ if ($env:OLLAMA_HOST -and $env:OLLAMA_HOST -ne '127.0.0.1:11435') { throw 'STOP:
 $env:OLLAMA_NO_CLOUD = '1'
 $env:PYTHONDONTWRITEBYTECODE = '1'
 $env:VF064_REPO = $Repo
-$env:VF064_INPUT = $Input
+$env:VF064_INPUT = $InputDir
 $env:VF064_EVIDENCE = $Evidence
 $env:VF064_MODEL = $Model
 $probe = @'
@@ -130,6 +132,8 @@ from office_v2_crewai.runner import apply_telemetry
 from office_v2_crewai.preflight import evaluate
 from office_v2_crewai.contract import SANDBOX_ROOT
 try:
+    # DEPENDS ON OPEN PR #799: re-verify this two-argument call
+    # against #799's final merged code before use.
     env = apply_telemetry(dict(os.environ), SANDBOX_ROOT)
     result = evaluate(Path(os.environ["VF064_INPUT"]),
                       Path(os.environ["VF064_EVIDENCE"]), env,
@@ -154,7 +158,8 @@ if ($preflightExit -ne 0) { throw 'STOP: E1-E7 or model config refused' }
 ~~~powershell
 $Attempt = Join-Path $P ('crew\runs\crewai064-' + (Get-Date -Format 'yyyyMMdd-HHmmss'))
 New-Item -ItemType Directory -Path $Attempt -ErrorAction Stop | Out-Null
-$RunnerArgs = ('"{0}" --input "{1}" --output "{2}" --evidence "{3}" --model-config "{4}" --sandbox "{5}"' -f $Runner,$Input,$Attempt,$Evidence,$Model,$Sandbox)
+# DEPENDS ON OPEN PR #799: re-verify --sandbox against #799's final merged code before use.
+$RunnerArgs = ('"{0}" --input "{1}" --output "{2}" --evidence "{3}" --model-config "{4}" --sandbox "{5}"' -f $Runner,$InputDir,$Attempt,$Evidence,$Model,$Sandbox)
 $Collect = @{
     PilotExecutable = $Py
     PilotArguments = $RunnerArgs
