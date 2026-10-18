@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-18T18:28:59+03:00",
+  "updated_at": "2026-10-18T18:47:35+03:00",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
@@ -18,7 +18,7 @@
     "COMPETITOR_NEUTRAL_ADMISSION_V1: preserve every new credible alternative with comparative evidence and queue when shortlists are full, without shifting the closed 68-source import.",
     "Historical competitor-neutral backfill on 2026-10-08 reopens evidence-free deferrals and preserves established candidate IDs/source_item_id lineage; no LAB or production promotion.",
     "2026-10-10 agent-composition intake: eight namespaced agents researched and queued; Letta historical memory candidate queued; ambiguous OpenDots lineage preserved; no rights or installs.",
-    "2026-10-18 source review upgrades the existing AirLLM and Odysseus auto-placeholders in place. Same candidate ids; research only; no install, deploy, or admission. Odysseus is queued on agent-runtime and memory-context. AirLLM stays off the P0 shortlist and keeps an evaluation_route."
+    "2026-10-18 source review upgrades the existing AirLLM and Odysseus auto-placeholders in place. Same candidate ids; research only; no install, deploy, or admission. Odysseus is queued on agent-runtime and memory-context. AirLLM stays off the P0 shortlist and keeps an evaluation_route on the existing local-model-inference lane (folded from local-llm-inference)."
   ],
   "items": [
     {
@@ -8708,7 +8708,7 @@
         "Do not preempt #612 coding-agent, Studio/LOCAL3D/Genex, or #604 fleet resources. No automatic GPU, WSL/OS install, paid API, production server, public listener, credential or customer-data access."
       ],
       "shortlist_lanes": [
-        "local-llm-inference"
+        "local-model-inference"
       ],
       "evidence_refs": [
         "https://github.com/lyogavin/airllm",
@@ -8750,7 +8750,7 @@
         ]
       },
       "evaluation_route": {
-        "workstream": "local-llm-inference",
+        "workstream": "local-model-inference",
         "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
         "phase": "Office v2 Phase 2 source and fixture research now; isolated local inference LAB only after Office P0 resource and installation gates",
         "status": "RESEARCH_ACTIVE",
@@ -9162,7 +9162,15 @@
         "evidence_status": "RESEARCH_ONLY",
         "next_action": "P1 only after the #612 two-host coding/PR/CI/resume gate is independently green: license/security/host preflight; pin upstream revision; run isolated same-fixture agent/tool/context/model-fallback and memory-provenance comparisons against incumbents. Capture independent verifier receipts and cost/resource metrics; promote only through the existing approval lifecycle.",
         "rationale": "A full self-hosted AI workspace could replace or complement the current agent/runtime/context stack, but documentation and source inspection do not prove equal or superior artifact completion, security or operational fitness.",
-        "decision_evidence_refs": []
+        "decision_evidence_refs": [
+          "https://github.com/odysseus-dev/odysseus",
+          "https://github.com/odysseus-dev/odysseus/commit/a8c147b238db01dbd00b57774ed8b453f1e43971",
+          "https://github.com/odysseus-dev/odysseus/blob/dev/README.md",
+          "https://github.com/odysseus-dev/odysseus/blob/dev/ROADMAP.md",
+          "https://github.com/odysseus-dev/odysseus/blob/dev/THREAT_MODEL.md",
+          "docs/implementation/office-v2/phase2/admission-policy-v0.md",
+          "https://github.com/nocturney/velvetos-core/issues/612"
+        ]
       }
     },
     {

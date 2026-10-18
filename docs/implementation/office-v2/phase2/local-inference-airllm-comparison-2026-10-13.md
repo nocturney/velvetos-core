@@ -4,7 +4,7 @@
 
 **Canonical candidate:** `candidate-intake-lyogavin-airllm` in `candidate-registry-v0.json`  
 **Owner/receipt:** [Office v2 intake issue #595](https://github.com/nocturney/velvetos-core/issues/595)  
-**Evaluation workstream:** `local-llm-inference` (Phase 2 research; future isolated LAB subject to Office P0 and fleet/worker resource gates)  
+**Evaluation workstream:** `local-model-inference` (same lane as the existing local-model research route; the separate `local-llm-inference` label is folded in. Phase 2 research; future isolated LAB subject to Office P0 and fleet/worker resource gates. AirLLM stays off the P0 shortlist.)  
 **Primary source:** https://github.com/lyogavin/airllm  
 **Upstream latest reviewed:** v4.0.0, https://github.com/lyogavin/airllm/releases/tag/v4.0.0
 
