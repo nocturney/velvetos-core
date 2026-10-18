@@ -7,9 +7,16 @@ import json
 import os
 import shutil
 import stat
-import subprocess
 from datetime import date
 from pathlib import Path
+
+from vf_spawn import (
+    GIT_TIMEOUT_SECONDS,
+    SpawnRefusal,
+    allowlisted_git_errors,
+    run_git,
+    windows_pin_case_errors,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "packages" / "vfharness" / "devtools" / "components.json"
@@ -19,11 +26,57 @@ PROFILE_DIR = Path.home() / ".diagram-design" / "profiles"
 ACTIVE = ("impeccable", "diagram-design")
 
 
+GIT_FETCH_TIMEOUT_SECONDS = 120
+
+
 def run(*args: str, cwd: Path | None = None) -> str:
-    proc = subprocess.run(args, cwd=cwd, text=True, capture_output=True)
+    if not args or args[0] != "git":
+        raise SystemExit("FAIL engineering-quality setup only runs git")
+    timeout = GIT_FETCH_TIMEOUT_SECONDS if "fetch" in args else GIT_TIMEOUT_SECONDS
+    try:
+        proc = run_git(list(args[1:]), cwd=cwd, check=False, timeout=timeout)
+    except SpawnRefusal as exc:
+        raise SystemExit(f"FAIL git spawn: {exc}") from exc
     if proc.returncode:
         raise SystemExit(f"FAIL {' '.join(args)}\n{proc.stdout}{proc.stderr}")
     return proc.stdout.strip()
+
+
+def prove_git_hygiene() -> list[str]:
+    """Every setup git command is absolute, timed, and allowlisted."""
+    import vf_spawn
+
+    errors: list[str] = []
+    os.environ["VF_SPAWN_SENTINEL"] = "nope"
+    os.environ["GIT_EXEC_PATH"] = "/evil/git-core"
+    captured: list[tuple[list[str], dict]] = []
+    original = vf_spawn.subprocess.run
+
+    def fake_run(argv, **kwargs):
+        captured.append((list(argv), kwargs))
+        return vf_spawn.subprocess.CompletedProcess(argv, 0, stdout="abc\n", stderr="")
+
+    vf_spawn.subprocess.run = fake_run
+    try:
+        status = run("git", "status", cwd=ROOT)
+        fetched = run("git", "fetch", "-q", "--depth", "1", "origin", "pin", cwd=ROOT)
+    except (SpawnRefusal, SystemExit) as exc:
+        errors.append(f"git spawn refused: {exc}")
+        status = fetched = ""
+    finally:
+        vf_spawn.subprocess.run = original
+        os.environ.pop("VF_SPAWN_SENTINEL", None)
+        os.environ.pop("GIT_EXEC_PATH", None)
+    if errors:
+        return errors
+    if status != "abc" or fetched != "abc" or len(captured) != 2:
+        return [f"git spawn did not return captured output: {captured!r}"]
+    errors.extend(allowlisted_git_errors(captured[0][0], captured[0][1], timeout=GIT_TIMEOUT_SECONDS))
+    errors.extend(
+        allowlisted_git_errors(captured[1][0], captured[1][1], timeout=GIT_FETCH_TIMEOUT_SECONDS)
+    )
+    errors.extend(windows_pin_case_errors())
+    return errors
 
 
 def load_registry() -> dict:

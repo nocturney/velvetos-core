@@ -17,10 +17,11 @@ import contextlib
 import io
 import os
 import re
-import subprocess
 import sys
 import tempfile
 from pathlib import Path
+
+from vf_spawn import SpawnRefusal, run_git, same_pinned_directory
 
 ROOT = Path(__file__).resolve().parents[1]
 FRAGMENT_RE = re.compile(r"^changelog\.d/([a-z0-9]+(?:-[a-z0-9]+)*)\.md$")
@@ -72,10 +73,7 @@ def gate(paths: list[str]) -> int:
 
 
 def changed_files(base: str, head: str, repo: Path = ROOT) -> list[str]:
-    proc = subprocess.run(
-        ["git", "diff", "--name-only", f"{base}...{head}"],
-        cwd=repo, text=True, capture_output=True,
-    )
+    proc = run_git(["diff", "--name-only", f"{base}...{head}"], cwd=repo)
     if proc.returncode != 0:
         raise SystemExit(f"FAIL git diff {base}...{head}: {proc.stderr.strip()}")
     return [line for line in proc.stdout.splitlines() if line.strip()]
@@ -193,17 +191,85 @@ def live_gate(repo: Path = ROOT, base: str = "origin/main", head: str = "HEAD") 
     if os.environ.get("GITHUB_ACTIONS") == "true":
         print("SKIP changelog-contract (hosted workflow runs the fragment gate as its own step)")
         return 0
-    probe = subprocess.run(
-        ["git", "rev-parse", "--verify", "-q", f"{base}^{{commit}}"],
-        cwd=repo, text=True, capture_output=True,
-    )
+    probe = run_git(["rev-parse", "--verify", "-q", f"{base}^{{commit}}"], cwd=repo)
     if probe.returncode != 0:
         print(f"SKIP changelog-contract (no git base {base})")
         return 0
     return gate(changed_files(base, head, repo))
 
 
+def prove_git_hygiene() -> list[str]:
+    """Absolute git, a timeout, and no inherited GIT_* or parent environment."""
+    import vf_spawn
+
+    errors: list[str] = []
+    sentinel = "VF_SPAWN_SENTINEL"
+    os.environ[sentinel] = "nope"
+    os.environ["GIT_EXEC_PATH"] = "/evil/git-core"
+    os.environ["GIT_CONFIG_COUNT"] = "1"
+    captured: list[tuple[list[str], dict]] = []
+    original = vf_spawn.subprocess.run
+
+    def fake_run(argv, **kwargs):
+        captured.append((list(argv), kwargs))
+        return vf_spawn.subprocess.CompletedProcess(argv, 0, stdout="", stderr="")
+
+    vf_spawn.subprocess.run = fake_run
+    try:
+        run_git(["status"])
+        changed_files("a", "b", ROOT)
+    except (SpawnRefusal, SystemExit) as exc:
+        errors.append(f"git spawn refused: {exc}")
+    finally:
+        vf_spawn.subprocess.run = original
+        os.environ.pop(sentinel, None)
+        os.environ.pop("GIT_EXEC_PATH", None)
+        os.environ.pop("GIT_CONFIG_COUNT", None)
+    if errors:
+        return errors
+    if len(captured) != 2:
+        return ["git spawn did not run"]
+    for argv, kwargs in captured:
+        if not argv or not os.path.isabs(argv[0]):
+            errors.append(f"git was not absolute: {argv}")
+        if kwargs.get("timeout") != vf_spawn.GIT_TIMEOUT_SECONDS:
+            errors.append("git timeout missing")
+        env = kwargs.get("env")
+        if not isinstance(env, dict) or sentinel in env or any(key.upper().startswith("GIT_") for key in env):
+            errors.append(f"git environment was not allowlisted: {env}")
+            return errors
+        first, *rest = env.get("PATH", "").split(os.pathsep)
+        if not same_pinned_directory(first, str(Path(argv[0]).resolve().parent)):
+            errors.append(f"git PATH was not the executable directory: {env.get('PATH')}")
+        install = Path(argv[0]).resolve().parent
+        root = install.parent if os.name == "nt" and install.parent.name.lower() == "git" else install
+        for entry in rest:
+            resolved = Path(entry).resolve()
+            if resolved != root and root not in resolved.parents:
+                errors.append(f"git PATH escaped the install: {entry}")
+    short = "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\git-abc"
+    long = "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\git-abc"
+
+    def expand_short(path: str) -> str:
+        return str(path).replace("/", "\\").replace("RUNNER~1", "runneradmin")
+
+    if not same_pinned_directory(short, long, realpath=expand_short, fold_case=True, separator=";"):
+        errors.append("8.3 git directory did not match its long path")
+    if not same_pinned_directory(short, long.upper(), realpath=expand_short, fold_case=True, separator=";"):
+        errors.append("git pin comparison stayed case-sensitive")
+    if same_pinned_directory(short, long + "\\other", realpath=expand_short, fold_case=True, separator=";"):
+        errors.append("a different directory was accepted as the git pin")
+    if same_pinned_directory(long + ";" + short, long, realpath=expand_short, fold_case=True, separator=";"):
+        errors.append("a search PATH was accepted as the git pin")
+    return errors
+
+
 def selftest() -> int:
+    hygiene = prove_git_hygiene()
+    if hygiene:
+        for item in hygiene:
+            print(f"FAIL changelog-contract git spawn: {item}", file=sys.stderr)
+        return 1
     bad: list[str] = []
     counted = [0]
     with contextlib.redirect_stdout(io.StringIO()):
@@ -426,7 +492,7 @@ def git_fixture() -> list[str]:
     errors: list[str] = []
 
     def git(repo: Path, *args: str) -> None:
-        subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True, text=True)
+        run_git(list(args), cwd=repo, check=True)
 
     with tempfile.TemporaryDirectory() as tmp:
         repo = Path(tmp)
@@ -439,12 +505,12 @@ def git_fixture() -> list[str]:
         (repo / "CHANGELOG.md").write_text("## [Unreleased]\n\n- base.\n", encoding="utf-8")
         git(repo, "add", "-A")
         git(repo, "commit", "-qm", "base")
-        base = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
+        base = run_git(["rev-parse", "HEAD"], cwd=repo, check=True).stdout.strip()
 
         (repo / "scripts" / "tool.py").write_text("print(2)\n", encoding="utf-8")
         git(repo, "add", "-A")
         git(repo, "commit", "-qm", "neither")
-        head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
+        head = run_git(["rev-parse", "HEAD"], cwd=repo, check=True).stdout.strip()
         if gate(changed_files(base, head, repo)) != 1:
             errors.append("git PR with neither must fail")
 
@@ -455,7 +521,7 @@ def git_fixture() -> list[str]:
         (folder / "example-pr.md").write_text("- 2026-10-18 - **Example:** one line.\n", encoding="utf-8")
         git(repo, "add", "-A")
         git(repo, "commit", "-qm", "fragment only")
-        head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
+        head = run_git(["rev-parse", "HEAD"], cwd=repo, check=True).stdout.strip()
         names = changed_files(base, head, repo)
         if "CHANGELOG.md" in names:
             errors.append("fragment fixture must not touch CHANGELOG.md")
