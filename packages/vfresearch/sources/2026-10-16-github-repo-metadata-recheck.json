@@ -1,0 +1,194 @@
+{
+  "schema": "velvetos.vfresearch.public-repository-metadata-review.v1",
+  "reviewDate": "2026-10-16",
+  "source": "Read-only GitHub repository metadata through the connected GitHub integration",
+  "method": "GET_REPOSITORY_METADATA_ONLY",
+  "scope": "Exactly 16 previously dated 2026-10-07 LINKS.json kind=repo entries; confirm live public repository identity, default branch and archived flag. No README body, binary, license, model, vulnerability, content revision, installation, suitability or paid entitlement verified.",
+  "outcomes": {
+    "repositoriesQueried": 16,
+    "publicAccessible": 16,
+    "archived": [
+      "awesome-cli-apps"
+    ],
+    "runtimeAdoptions": 0,
+    "externalWrites": 0
+  },
+  "repositories": [
+    {
+      "id": "cua",
+      "url": "https://github.com/trycua/cua",
+      "canonicalFullName": "trycua/cua",
+      "repositoryId": "925270205",
+      "public": true,
+      "archived": false,
+      "defaultBranch": "main",
+      "verification": "REPO_METADATA_OBSERVED_ONLY",
+      "runtimeAdoption": "NOT_AUTHORIZED"
+    },
+    {
+      "id": "acu",
+      "url": "https://github.com/trycua/acu",
+      "canonicalFullName": "trycua/acu",
+      "repositoryId": "912449106",
+      "public": true,
+      "archived": false,
+      "defaultBranch": "main",
+      "verification": "REPO_METADATA_OBSERVED_ONLY",
+      "runtimeAdoption": "NOT_AUTHORIZED"
+    },
+    {
+      "id": "awesome-n8n-templates",
+      "url": "https://github.com/enescingoz/awesome-n8n-templates",
+      "canonicalFullName": "enescingoz/awesome-n8n-templates",
+      "repositoryId": "980205160",
+      "public": true,
+      "archived": false,
+      "defaultBranch": "main",
+      "verification": "REPO_METADATA_OBSERVED_ONLY",
+      "runtimeAdoption": "NOT_AUTHORIZED"
+    },
+    {
+      "id": "dashy",
+      "url": "https://github.com/Lissy93/dashy",
+      "canonicalFullName": "lissy93/dashy",
+      "repositoryId": "343078060",
+      "public": true,
+      "archived": false,
+      "defaultBranch": "master",
+      "verification": "REPO_METADATA_OBSERVED_ONLY",
+      "runtimeAdoption": "NOT_AUTHORIZED"
+    },
+    {
+      "id": "awesome-cli-apps",
+      "url": "https://github.com/agarrharr/awesome-cli-apps",
+      "canonicalFullName": "agarrharr/awesome-cli-apps",
+      "repositoryId": "38832942",
+      "public": true,
+      "archived": true,
+      "defaultBranch": "master",
+      "verification": "REPO_METADATA_OBSERVED_ONLY",
+      "runtimeAdoption": "NOT_AUTHORIZED"
+    },
+    {
+      "id": "awesome-shell",
+      "url": "https://github.com/alebcay/awesome-shell",
+      "canonicalFullName": "alebcay/awesome-shell",
+      "repositoryId": "21552971",
+      "public": true,
+      "archived": false,
+      "defaultBranch": "master",
+      "verification": "REPO_METADATA_OBSERVED_ONLY",
+      "runtimeAdoption": "NOT_AUTHORIZED"
+    },
+    {
+      "id": "awesome-agent-skills-voltagent",
+      "url": "https://github.com/VoltAgent/awesome-agent-skills",
+      "canonicalFullName": "VoltAgent/awesome-agent-skills",
+      "repositoryId": "1084853233",
+      "public": true,
+      "archived": false,
+      "defaultBranch": "main",
+      "verification": "REPO_METADATA_OBSERVED_ONLY",
+      "runtimeAdoption": "NOT_AUTHORIZED"
+    },
+    {
+      "id": "awesome-openclaw-skills",
+      "url": "https://github.com/VoltAgent/awesome-openclaw-skills",
+      "canonicalFullName": "VoltAgent/awesome-openclaw-skills",
+      "repositoryId": "1141704318",
+      "public": true,
+      "archived": false,
+      "defaultBranch": "main",
+      "verification": "REPO_METADATA_OBSERVED_ONLY",
+      "runtimeAdoption": "NOT_AUTHORIZED"
+    },
+    {
+      "id": "awesome-claude-code",
+      "url": "https://github.com/hesreallyhim/awesome-claude-code",
+      "canonicalFullName": "hesreallyhim/awesome-claude-code",
+      "repositoryId": "969302809",
+      "public": true,
+      "archived": false,
+      "defaultBranch": "main",
+      "verification": "REPO_METADATA_OBSERVED_ONLY",
+      "runtimeAdoption": "NOT_AUTHORIZED"
+    },
+    {
+      "id": "awesome-generative-ai-guide",
+      "url": "https://github.com/aishwaryanr/awesome-generative-ai-guide",
+      "canonicalFullName": "aishwaryanr/awesome-generative-ai-guide",
+      "repositoryId": "753750990",
+      "public": true,
+      "archived": false,
+      "defaultBranch": "main",
+      "verification": "REPO_METADATA_OBSERVED_ONLY",
+      "runtimeAdoption": "NOT_AUTHORIZED"
+    },
+    {
+      "id": "awesome-python",
+      "url": "https://github.com/vinta/awesome-python",
+      "canonicalFullName": "vinta/awesome-python",
+      "repositoryId": "21289110",
+      "public": true,
+      "archived": false,
+      "defaultBranch": "master",
+      "verification": "REPO_METADATA_OBSERVED_ONLY",
+      "runtimeAdoption": "NOT_AUTHORIZED"
+    },
+    {
+      "id": "awesome-cpp",
+      "url": "https://github.com/fffaraz/awesome-cpp",
+      "canonicalFullName": "fffaraz/awesome-cpp",
+      "repositoryId": "21935031",
+      "public": true,
+      "archived": false,
+      "defaultBranch": "master",
+      "verification": "REPO_METADATA_OBSERVED_ONLY",
+      "runtimeAdoption": "NOT_AUTHORIZED"
+    },
+    {
+      "id": "awesome-java",
+      "url": "https://github.com/akullpp/awesome-java",
+      "canonicalFullName": "akullpp/awesome-java",
+      "repositoryId": "21648001",
+      "public": true,
+      "archived": false,
+      "defaultBranch": "main",
+      "verification": "REPO_METADATA_OBSERVED_ONLY",
+      "runtimeAdoption": "NOT_AUTHORIZED"
+    },
+    {
+      "id": "awesome-design-patterns",
+      "url": "https://github.com/DovAmir/awesome-design-patterns",
+      "canonicalFullName": "DovAmir/awesome-design-patterns",
+      "repositoryId": "136062240",
+      "public": true,
+      "archived": false,
+      "defaultBranch": "master",
+      "verification": "REPO_METADATA_OBSERVED_ONLY",
+      "runtimeAdoption": "NOT_AUTHORIZED"
+    },
+    {
+      "id": "awesome-design-tools",
+      "url": "https://github.com/goabstract/Awesome-Design-Tools",
+      "canonicalFullName": "goabstract/Awesome-Design-Tools",
+      "repositoryId": "170326929",
+      "public": true,
+      "archived": false,
+      "defaultBranch": "master",
+      "verification": "REPO_METADATA_OBSERVED_ONLY",
+      "runtimeAdoption": "NOT_AUTHORIZED"
+    },
+    {
+      "id": "magictools",
+      "url": "https://github.com/ellisonleao/magictools",
+      "canonicalFullName": "ellisonleao/magictools",
+      "repositoryId": "21958186",
+      "public": true,
+      "archived": false,
+      "defaultBranch": "main",
+      "verification": "REPO_METADATA_OBSERVED_ONLY",
+      "runtimeAdoption": "NOT_AUTHORIZED"
+    }
+  ]
+}

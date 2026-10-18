@@ -18,7 +18,6 @@ RECEIPT_SCHEMA = "velvetos.office-v2.crewai-e5-receipt.v1"
 ALLOWED_ADDRESS = "127.0.0.1"
 ALLOWED_PORT = 11435
 MAX_SNAPSHOTS = 6000
-MAX_TREE_MEMBERS = 4096
 
 
 def utc_time(value: object) -> datetime | None:
@@ -29,84 +28,6 @@ def utc_time(value: object) -> datetime | None:
     except ValueError:
         return None
     return parsed if parsed.utcoffset() == timedelta(0) else None
-
-
-
-def verified_descendants(
-    tree: list, root_pid: object, birth_by_pid: dict[int, str], require_root: bool
-) -> tuple[set[int], set[str]]:
-    """Validate a complete CIM PID/PPID/birth chain anchored at the pilot root.
-
-    Tree rows must originate from Win32_Process, not the owning PID in a socket
-    row. An invalid node invalidates *all* memberships in this snapshot.
-    """
-    errors: set[str] = set()
-    if len(tree) > MAX_TREE_MEMBERS:
-        return set(), {"PROCESS_TREE_TOO_LARGE"}
-    nodes: dict[int, tuple[int, datetime]] = {}
-    for member in tree:
-        if not isinstance(member, dict):
-            errors.add("INVALID_TREE_MEMBER")
-            continue
-        pid, ppid, birth = (member.get("pid"), member.get("parent_pid"),
-                            member.get("created_at_utc"))
-        parsed = utc_time(birth)
-        if (type(pid) is not int or pid <= 0 or type(ppid) is not int
-                or ppid < 0 or parsed is None or pid in nodes):
-            errors.add("INVALID_TREE_MEMBER")
-            continue
-        nodes[pid] = (ppid, parsed)
-        if pid in birth_by_pid and birth_by_pid[pid] != birth:
-            errors.add("PID_REUSED_OR_IDENTITY_CHANGED")
-        birth_by_pid[pid] = birth
-
-    if require_root and not tree:
-        errors.add("EMPTY_PROCESS_TREE")
-    if nodes:
-        if type(root_pid) is not int or root_pid not in nodes:
-            errors.add("TREE_ROOT_MISSING")
-        else:
-            # The launcher, not a descendant, must be the root's parent.
-            if nodes[root_pid][0] in nodes:
-                errors.add("PROCESS_TREE_CYCLE")
-        for pid, (ppid, created) in nodes.items():
-            if pid == root_pid:
-                continue
-            if ppid not in nodes:
-                errors.add("PROCESS_TREE_ORPHAN")
-            elif created < nodes[ppid][1]:
-                errors.add("CHILD_CREATED_BEFORE_PARENT")
-
-        # Resolve ancestry iteratively: bounded depth, no recursion and no
-        # /proc dependency. Memoize paths for large/deep valid trees.
-        verified = {root_pid} if type(root_pid) is int and root_pid in nodes else set()
-        rejected: set[int] = set()
-        for pid in nodes:
-            if pid in verified or pid in rejected:
-                continue
-            path: list[int] = []
-            visiting: set[int] = set()
-            current = pid
-            while current not in verified and current not in rejected:
-                if current in visiting:
-                    errors.add("PROCESS_TREE_CYCLE")
-                    break
-                if current not in nodes:
-                    errors.add("PROCESS_TREE_ORPHAN")
-                    break
-                visiting.add(current)
-                path.append(current)
-                current = nodes[current][0]
-            if current in verified:
-                verified.update(path)
-            else:
-                rejected.update(path)
-        if len(verified) != len(nodes):
-            errors.add("PROCESS_TREE_NOT_ROOTED")
-
-    if require_root and (type(root_pid) is not int or root_pid not in nodes):
-        errors.add("TREE_ROOT_MISSING")
-    return (set(nodes) if not errors else set()), errors
 
 
 def evaluate(data: object) -> list[str]:
@@ -120,7 +41,8 @@ def evaluate(data: object) -> list[str]:
     if data.get("schema") != SCHEMA or data.get("host") != "Chris":
         bad("INVALID_IDENTITY_OR_SCHEMA")
     root_pid = data.get("root_pid")
-    if type(root_pid) is not int or root_pid <= 0:
+    valid_root_pid = type(root_pid) is int and root_pid > 0
+    if not valid_root_pid:
         bad("INVALID_ROOT_PID")
     if data.get("collector_complete") is not True or data.get("collector_errors") != []:
         bad("COLLECTOR_INCOMPLETE")
@@ -171,11 +93,41 @@ def evaluate(data: object) -> list[str]:
         if not isinstance(tree, list) or not isinstance(tcp, list) or not isinstance(udp, list):
             bad("INVALID_SNAPSHOT_SHAPE")
             continue
-        trusted, tree_errors = verified_descendants(
-            tree, root_pid, birth_by_pid, require_root=(phase == "during")
-        )
-        reasons.update(tree_errors)
-        if phase == "during" and type(root_pid) is int and root_pid in trusted:
+        pids: set[int] = set()
+        parents: dict[int, int] = {}
+        for member in tree:
+            if not isinstance(member, dict):
+                bad("INVALID_TREE_MEMBER")
+                continue
+            pid, ppid = member.get("pid"), member.get("parent_pid")
+            birth = member.get("created_at_utc")
+            if (type(pid) is not int or pid <= 0 or type(ppid) is not int
+                    or ppid < 0 or utc_time(birth) is None or pid in pids):
+                bad("INVALID_TREE_MEMBER")
+                continue
+            pids.add(pid)
+            parents[pid] = ppid
+            if pid in birth_by_pid and birth_by_pid[pid] != birth:
+                bad("PID_REUSED_OR_IDENTITY_CHANGED")
+            birth_by_pid[pid] = birth
+        if valid_root_pid and parents:
+            # A nonempty snapshot must contain root_pid. Every other PID
+            # must have an acyclic parent_pid chain leading to that root.
+            if root_pid not in parents or parents[root_pid] == root_pid:
+                bad("INVALID_TREE_ANCESTRY")
+            anchored = {root_pid}
+            for pid in parents:
+                cursor = pid
+                trail: set[int] = set()
+                while cursor not in anchored:
+                    if cursor in trail or cursor not in parents:
+                        bad("INVALID_TREE_ANCESTRY")
+                        break
+                    trail.add(cursor)
+                    cursor = parents[cursor]
+                else:
+                    anchored.update(trail)
+        if phase == "during" and valid_root_pid and root_pid in pids:
             seen_root = True
         if phase == "before" and (tree or tcp or udp):
             bad("PILOT_TREE_PRESENT_BEFORE_LAUNCH")
@@ -187,8 +139,8 @@ def evaluate(data: object) -> list[str]:
                 continue
             owner = item.get("pid")
             port = item.get("remote_port")
-            if type(owner) is not int or owner not in trusted:
-                bad("TCP_OWNER_NOT_VERIFIED_DESCENDANT")
+            if type(owner) is not int or owner not in pids:
+                bad("TCP_OWNER_NOT_IN_TREE")
             if str(item.get("state", "")).lower() == "listen":
                 bad("TCP_LISTENER_DETECTED")
             if not isinstance(item.get("state"), str) or not item["state"]:
@@ -201,8 +153,8 @@ def evaluate(data: object) -> list[str]:
                 bad("INVALID_TCP_ROW")
         for item in udp:
             bad("UDP_ENDPOINT_DETECTED")  # Bound UDP socket is a potential listener.
-            if not isinstance(item, dict) or type(item.get("pid")) is not int or item["pid"] not in trusted:
-                bad("UDP_OWNER_NOT_VERIFIED_DESCENDANT")
+            if not isinstance(item, dict) or type(item.get("pid")) is not int or item["pid"] not in pids:
+                bad("UDP_OWNER_NOT_IN_TREE")
     if not seen_root:
         bad("ROOT_NOT_OBSERVED_DURING")
     return sorted(reasons)
