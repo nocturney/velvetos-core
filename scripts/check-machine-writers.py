@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import re
-import subprocess
 import sys
 from pathlib import Path
 
@@ -52,6 +51,102 @@ def marker_paths(text: str) -> list[str]:
 def has_write_permission(text: str) -> bool:
     """Accept explicit workflow- or job-level contents: write, never implicit defaults."""
     return bool(re.search(r"(?m)^\s*contents:\s*write\s*(?:#.*)?$", text))
+
+
+FFMPEG_ZIP_SHA256 = "d760e1b3574402ed18b4865851f87d87e73965a982e6453212df8621fed1c508"
+UPLOAD_ARTIFACT = "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9"
+WINDOWS_ACTIONS = {
+    "actions/checkout@v7",
+    "actions/setup-python@v7",
+    UPLOAD_ARTIFACT,
+}
+
+
+def ffmpeg_sha_enforced(job: str) -> bool:
+    """The hash literal is not enough. The job must compare it and throw."""
+    for line in job.splitlines():
+        code = line.split("#", 1)[0]
+        if "$got -ne $expected" in code and "throw" in code and "sha256 mismatch" in code:
+            return True
+    return False
+
+
+def windows_permissions_are_contents_read(job: str) -> bool:
+    lines = job.splitlines()
+    for index, line in enumerate(lines):
+        if not re.match(r"^    permissions:\s*$", line):
+            continue
+        body = []
+        for nxt in lines[index + 1:]:
+            if nxt.strip() == "":
+                continue
+            if not nxt.startswith("      "):
+                break
+            body.append(nxt.split("#", 1)[0].strip())
+        return body == ["contents: read"]
+    return False
+
+
+def drop_ffmpeg_enforcement(job: str) -> str:
+    """Mutation: delete the compare-and-throw line and keep the hash literal."""
+    kept: list[str] = []
+    dropped = False
+    for line in job.splitlines(keepends=True):
+        code = line.split("#", 1)[0]
+        if (
+            not dropped
+            and "$got -ne $expected" in code
+            and "throw" in code
+            and "sha256 mismatch" in code
+        ):
+            dropped = True
+            continue
+        kept.append(line)
+    if not dropped:
+        raise ValueError("ffmpeg enforcement line was not present to delete")
+    return "".join(kept)
+
+
+def windows_job_problems(job: str) -> list[str]:
+    problems: list[str] = []
+    for needle in (
+        "runs-on: windows-latest",
+        "continue-on-error: true",
+        "github.event_name == 'pull_request' || github.event_name == 'push'",
+        "python scripts/check-all.py",
+        "requirements-sensors.py311.lock",
+        "--require-hashes",
+        FFMPEG_ZIP_SHA256,
+        "ffmpeg-7.1.1-full_build.zip",
+        "core.autocrlf false",
+        "actions/checkout@v7",
+        "actions/setup-python@v7",
+        UPLOAD_ARTIFACT,
+        "# actions/upload-artifact v7.0.2",
+        "name: check-all-windows",
+        "if-no-files-found: error",
+        "if: always()",
+        "persist-credentials: false",
+    ):
+        if needle not in job:
+            problems.append(f"check-all-windows missing {needle}")
+    if not ffmpeg_sha_enforced(job):
+        problems.append("check-all-windows does not enforce the ffmpeg zip sha256")
+    if not windows_permissions_are_contents_read(job):
+        problems.append("check-all-windows permissions must be contents: read only")
+    if "statuses:" in job:
+        problems.append("check-all-windows must not grant statuses")
+    extra_actions = [
+        use for use in re.findall(r"uses:\s*(\S+)", job)
+        if use not in WINDOWS_ACTIONS
+    ]
+    if extra_actions:
+        problems.append(
+            "check-all-windows uses an action outside the allowlist: " + ", ".join(extra_actions)
+        )
+    if "secrets." in job or "upload_gha_artifact" in job or "ACTIONS_RUNTIME_TOKEN" in job:
+        problems.append("check-all-windows must not read a secret or call the internal artifact API")
+    return problems
 
 
 def main() -> int:
@@ -111,49 +206,22 @@ def main() -> int:
     if "  check-all-windows:" not in core_workflow:
         fail("check-all.yml missing check-all-windows job")
     windows_job = core_workflow.split("  check-all-windows:", 1)[1]
-    for needle in (
-        "runs-on: windows-latest",
-        "continue-on-error: true",
-        "github.event_name == 'pull_request' || github.event_name == 'push'",
-        "python scripts/check-all.py",
-        "requirements-sensors.py311.lock",
-        "--require-hashes",
-        "d760e1b3574402ed18b4865851f87d87e73965a982e6453212df8621fed1c508",
-        "ffmpeg-7.1.1-full_build.zip",
-        "scripts/upload_gha_artifact.py",
-        "core.autocrlf false",
-        "actions/checkout@v7",
-        "actions/setup-python@v7",
-        "./.github/actions/upload-check-all-log",
-    ):
-        if needle not in windows_job:
-            fail(f"check-all-windows missing {needle}")
-    extra_actions = [
-        use for use in re.findall(r"uses:\s*(\S+)", windows_job)
-        if use not in {
-            "actions/checkout@v7",
-            "actions/setup-python@v7",
-            "./.github/actions/upload-check-all-log",
-        }
-    ]
-    if extra_actions:
-        fail("check-all-windows uses an action outside checkout and setup-python: " + ", ".join(extra_actions))
-    if "context=check-all-windows" in core_workflow or "secrets." in windows_job:
-        fail("check-all-windows must not publish a status or read a secret")
-    action_js = (ROOT / ".github" / "actions" / "upload-check-all-log" / "index.js").read_text(encoding="utf-8")
-    if "scripts/upload_gha_artifact.py" not in action_js or "ACTIONS_" in action_js:
-        fail("upload action must delegate to scripts/upload_gha_artifact.py without naming a token")
+    for problem in windows_job_problems(windows_job):
+        fail(problem)
+    try:
+        mutated = drop_ffmpeg_enforcement(windows_job)
+    except ValueError as exc:
+        fail(str(exc))
+    if FFMPEG_ZIP_SHA256 not in mutated:
+        fail("ffmpeg enforcement mutation also deleted the hash literal")
+    mutated_problems = windows_job_problems(mutated)
+    if not any(problem == "check-all-windows does not enforce the ffmpeg zip sha256" for problem in mutated_problems):
+        fail("deleting the ffmpeg sha256 enforcement line was not caught")
+    print("OK check-all-windows ffmpeg-sha-enforce mutation=caught permissions=contents:read")
     if core_workflow.count("context=check-all") != 1:
         fail("check-all status context must stay the single required Linux context")
-    artifact_selftest = subprocess.run(
-        [sys.executable, str(ROOT / "scripts" / "upload_gha_artifact.py"), "--self-test"],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-        timeout=15,
-    )
-    if artifact_selftest.returncode != 0:
-        fail("upload_gha_artifact self-test failed: " + (artifact_selftest.stderr or artifact_selftest.stdout))
+    if "context=check-all-windows" in core_workflow:
+        fail("check-all-windows must not publish a status")
 
     writers = []
     for path in sorted(list(WORKFLOWS.glob("*.yml")) + list(WORKFLOWS.glob("*.yaml"))):
