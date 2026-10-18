@@ -207,6 +207,15 @@ def coverage_problems(inputs: list[dict], outputs: list[dict], registry_path: Pa
                 path = ROOT / path
             if not path.is_file():
                 problems.append(f"input {n}: receipt file absent")
+            else:
+                try:
+                    saved_receipt = json.loads(path.read_text(encoding="utf-8"))
+                    fields = ("input_url", "normalized_url", "status", "candidate_ids",
+                              "triage_state", "source_sync", "next_action")
+                    if any(saved_receipt.get(field) != r.get(field) for field in fields):
+                        problems.append(f"input {n}: receipt content mismatch")
+                except (ValueError, OSError, UnicodeError):
+                    problems.append(f"input {n}: receipt not readable JSON")
         if r.get("status") in {"REGISTERED", "DUPLICATE"}:
             ids = r.get("candidate_ids", [])
             if not ids:

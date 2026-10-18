@@ -147,6 +147,11 @@ def main() -> int:
                                         [verified], registry),
                 "MUTATION: deleted registered candidate escaped coverage")
         registry.write_bytes(saved)
+        # Mutation 4: a receipt path points to a different input's durable file.
+        wrong_receipt = dict(rx, receipt_path=dup["receipt"]["receipt_path"])
+        require(any("receipt content mismatch" in e for e in batch.coverage_problems(
+            [{"url": new_url}], [{"receipt": wrong_receipt}], registry)),
+            "MUTATION: wrong durable receipt silently covered the incoming URL")
 
         lines = root / "links.txt"
         lines.write_text("# owner supplied\nhttps://github.com/qa-list-595/one\n"
@@ -171,7 +176,7 @@ def main() -> int:
 
     require(REGISTRY.read_bytes() == real_before, "sensor wrote to canonical registry")
     print("OK link-intake-batch offline=PASS alias=PASS duplicate=PASS invalid=PASS "
-          "private-needs-sync=PASS list=PASS mutations=3/3 history=immutable authority=NONE")
+          "private-needs-sync=PASS list=PASS mutations=4/4 history=immutable authority=NONE")
     return 0
 
 
