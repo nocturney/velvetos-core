@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-10-18 - **vfharness #205 cleanup (items 2-5):** superpowers-v63 checkpoint points at the final reviewed run #523, findings gap 6 closed (LOOP.md is the canonical ladder), and `check-vfharness-execution-discipline.py` restores `STATE_DIR` and covers 5 more failing-ruling paths (behavior 3 to 8) that must escalate with `ok=False` without leaking payloads.
+
 - 2026-10-18 - **README System Pulse refresh after machine writers:** `readme-system-pulse.yml` now also runs on `workflow_run` (completed, main) of Office Control Plane, VF Media Auto Intake and Jobs Sheet Write-Through, and on `office/ledger/live/sync-receipt.json` pushes. Their `GITHUB_TOKEN` pushes never trigger `push` workflows, so pulse inputs went stale on main and every PR had to regenerate README (a merge-conflict magnet). Still event-driven with no cron. The PR gate `update-readme-snapshot.py --check` and the BiDi check are unchanged.
 
 - 2026-10-07 - **Standing Git delivery authorization:** owner-approved implementation/embedding/execution scope now includes the routine Git delivery needed to finish that same work: branch/worktree, commit, push, PR create/update, non-scope-expanding conflict resolution and merge after required CI/reviews/branch protections pass. Redundant owner re-approval for push/merge is forbidden; scope expansion, force-push/history rewrite, ruleset bypass and independent money/security/destructive/external-authority gates remain separately governed. `check-vfharness.py` now fails on drift back to the old push-ask rule.
