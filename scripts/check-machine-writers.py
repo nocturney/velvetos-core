@@ -65,6 +65,111 @@ WINDOWS_ACTIONS = {
     SETUP_PYTHON,
     UPLOAD_ARTIFACT,
 }
+EXIT_RESET = re.compile(r"\$LASTEXITCODE\s*=\s*0\b")
+# Tag and branch refs are refused. This set is the only exception, and it starts empty.
+ACTION_REF_ALLOWLIST: frozenset[str] = frozenset()
+USE_LINE = re.compile(r"^(?P<prefix>\s*(?:-\s+)?)uses:\s+(?P<spec>\S+)\s*(?:#.*)?$")
+VERSION_COMMENT = re.compile(
+    r"^\s*#\s+(?P<action>\S+/\S+)\s+v(?P<version>\d+\.\d+\.\d+)\s*$"
+)
+SHA_REF = re.compile(r"^[0-9a-f]{40}$")
+
+
+def previous_nonempty(lines: list[str], index: int) -> str:
+    """Return the previous non-empty line. index is the 0-based current line."""
+    cursor = index - 1
+    while cursor >= 0 and lines[cursor].strip() == "":
+        cursor -= 1
+    return lines[cursor] if cursor >= 0 else ""
+
+
+def action_pin_problems(
+    text: str,
+    *,
+    path: str = "<fixture>",
+    allowlist: frozenset[str] | None = None,
+) -> list[str]:
+    """Every remote uses: is a 40-hex SHA plus a version comment, unless allowlisted."""
+    allowed = ACTION_REF_ALLOWLIST if allowlist is None else allowlist
+    problems: list[str] = []
+    lines = text.splitlines()
+    for number, line in enumerate(lines, start=1):
+        match = USE_LINE.match(line)
+        if not match:
+            continue
+        spec = match.group("spec").strip("'\"")
+        if spec.startswith("./") or spec.startswith("docker://"):
+            continue
+        if "@" not in spec:
+            problems.append(f"{path}:{number}: action ref has no pin: {spec}")
+            continue
+        action, ref = spec.rsplit("@", 1)
+        if spec in allowed:
+            continue
+        if not SHA_REF.fullmatch(ref):
+            problems.append(f"{path}:{number}: tag or branch ref is not allowlisted: {spec}")
+            continue
+        comment = VERSION_COMMENT.match(previous_nonempty(lines, number - 1))
+        if comment is None:
+            problems.append(f"{path}:{number}: SHA pin missing version comment: {spec}")
+            continue
+        commented = comment.group("action")
+        if action != commented and not action.startswith(commented + "/"):
+            problems.append(
+                f"{path}:{number}: version comment {commented} does not match {action}"
+            )
+    return problems
+
+
+def prove_workflow_action_pins(core_workflow: str) -> str:
+    """Fixtures plus mutations that revert the Linux and Windows checkouts to @v7."""
+    if ACTION_REF_ALLOWLIST:
+        fail("workflow action ref allowlist must start empty")
+    tag_fixture = "steps:\n  - uses: actions/checkout@v7\n"
+    if not any("not allowlisted" in problem for problem in action_pin_problems(tag_fixture)):
+        fail("@v7 fixture was not refused")
+    branch_fixture = "steps:\n  - uses: actions/checkout@main\n"
+    if not any("not allowlisted" in problem for problem in action_pin_problems(branch_fixture)):
+        fail("branch ref fixture was not refused")
+    pinned_fixture = (
+        "steps:\n"
+        "  # actions/checkout v7.0.1\n"
+        "  - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1\n"
+    )
+    pinned_problems = action_pin_problems(pinned_fixture)
+    if pinned_problems:
+        fail("pinned SHA fixture was refused: " + "; ".join(pinned_problems))
+    bare_sha = (
+        "steps:\n"
+        "  - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1\n"
+    )
+    if not any("missing version comment" in problem for problem in action_pin_problems(bare_sha)):
+        fail("SHA without a version comment was accepted")
+    if action_pin_problems(tag_fixture, allowlist=frozenset({"actions/checkout@v7"})):
+        fail("explicit allowlist did not accept actions/checkout@v7")
+    linux_reverted = core_workflow.replace(CHECKOUT, "actions/checkout@v7", 1)
+    if "  check-all-windows:" not in linux_reverted:
+        fail("linux pin mutation lost the windows job")
+    windows_of_linux_revert = linux_reverted.split("  check-all-windows:", 1)[1]
+    if windows_job_problems(windows_of_linux_revert):
+        fail("linux @v7 revert disturbed the windows job sensor")
+    if not any(
+        "not allowlisted" in problem and "@v7" in problem
+        for problem in action_pin_problems(linux_reverted, path=".github/workflows/check-all.yml")
+    ):
+        fail("reverting the Linux checkout to @v7 was not caught")
+    windows_unpinned = core_workflow.split("  check-all-windows:", 1)[1].replace(
+        CHECKOUT, "actions/checkout@v7", 1
+    )
+    if not any(
+        "not allowlisted" in problem and "@v7" in problem
+        for problem in action_pin_problems(windows_unpinned, path="check-all-windows")
+    ):
+        fail("reverting the Windows checkout to @v7 was not caught")
+    return (
+        "tag_fixture=caught sha_fixture=pass bare_sha=caught "
+        "linux_revert=caught windows_revert=caught allowlist=empty"
+    )
 
 
 def workflow_hash_operator(job: str) -> str | None:
@@ -83,6 +188,33 @@ def ffmpeg_sha_enforced(job: str) -> bool:
         "scripts/verify_ffmpeg_zip_sha256.py" in job
         and workflow_hash_operator(job) == "-ne"
     )
+
+
+def ffmpeg_exit_was_reset(job: str) -> bool:
+    """True when LASTEXITCODE is set to 0 after the verifier and before the throw.
+
+    The assignment may sit on the verifier line. The -ne throw can still be present.
+    """
+    codes = [line.split("#", 1)[0] for line in job.splitlines()]
+    start = next(
+        (index for index, code in enumerate(codes) if "scripts/verify_ffmpeg_zip_sha256.py" in code),
+        None,
+    )
+    if start is None:
+        return False
+    end = None
+    for index in range(start, len(codes)):
+        code = codes[index]
+        if (
+            re.search(r"\$LASTEXITCODE\s+-ne\s+0\b", code)
+            and "throw" in code
+            and "sha256 mismatch" in code
+        ):
+            end = index
+            break
+    if end is None:
+        return False
+    return any(EXIT_RESET.search(code) for code in codes[start:end + 1])
 
 
 def windows_permissions_are_contents_read(job: str) -> bool:
@@ -129,6 +261,15 @@ def invert_hash_operator(job: str) -> str:
     return flipped
 
 
+def reset_ffmpeg_exit(job: str) -> str:
+    """Mutation from the #827 verdict: zero LASTEXITCODE on the verifier line."""
+    needle = "python scripts/verify_ffmpeg_zip_sha256.py --path $zip --expected $expected"
+    mutated = job.replace(needle, needle + "; $LASTEXITCODE = 0", 1)
+    if mutated == job:
+        raise ValueError("ffmpeg verifier call was not present to reset LASTEXITCODE")
+    return mutated
+
+
 def windows_job_problems(job: str) -> list[str]:
     problems: list[str] = []
     for needle in (
@@ -158,6 +299,8 @@ def windows_job_problems(job: str) -> list[str]:
             problems.append(f"check-all-windows missing {needle}")
     if not ffmpeg_sha_enforced(job):
         problems.append("check-all-windows does not enforce the ffmpeg zip sha256")
+    if ffmpeg_exit_was_reset(job):
+        problems.append("check-all-windows resets LASTEXITCODE after the ffmpeg hash gate")
     if not windows_permissions_are_contents_read(job):
         problems.append("check-all-windows permissions must be contents: read only")
     if "statuses:" in job:
@@ -295,11 +438,29 @@ def main() -> int:
     flipped_problems = windows_job_problems(flipped)
     if not any(problem == "check-all-windows does not enforce the ffmpeg zip sha256" for problem in flipped_problems):
         fail("the -ne to -eq mutation still passed the windows job sensor")
+    try:
+        reset = reset_ffmpeg_exit(windows_job)
+    except ValueError as exc:
+        fail(str(exc))
+    if not ffmpeg_sha_enforced(reset):
+        fail("the LASTEXITCODE reset mutation must keep the -ne throw")
+    reset_problems = windows_job_problems(reset)
+    if not any(
+        problem == "check-all-windows resets LASTEXITCODE after the ffmpeg hash gate"
+        for problem in reset_problems
+    ):
+        fail("resetting LASTEXITCODE after the ffmpeg hash gate was not caught")
     gate_evidence = prove_ffmpeg_hash_gate()
     print(
         "OK check-all-windows ffmpeg-sha-enforce "
-        f"delete=caught operator_flip=caught {gate_evidence} permissions=contents:read"
+        f"delete=caught operator_flip=caught exit_reset=caught {gate_evidence} permissions=contents:read"
     )
+    pin_evidence = prove_workflow_action_pins(core_workflow)
+    for path in sorted(list(WORKFLOWS.glob("*.yml")) + list(WORKFLOWS.glob("*.yaml"))):
+        rel = path.relative_to(ROOT).as_posix()
+        for problem in action_pin_problems(path.read_text(encoding="utf-8"), path=rel):
+            fail(problem)
+    print(f"OK workflow-action-pins {pin_evidence}")
     if core_workflow.count("context=check-all") != 1:
         fail("check-all status context must stay the single required Linux context")
     if "context=check-all-windows" in core_workflow:

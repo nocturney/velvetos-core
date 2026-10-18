@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -26,6 +27,20 @@ SUPPORTED_FORMATS = {"mp4", "webm", "mov"}
 SUPPORTED_RESOLUTIONS = {"portrait", "portrait-4k"}
 SUPPORTED_FPS = {24, 30, 60}
 PLACEHOLDER_RE = re.compile(r"\{([A-Za-z0-9_.-]+)\}")
+PROBE_TIMEOUT_SECONDS = 20
+COMMAND_TIMEOUT_SECONDS = 600
+_TOOL_ENV_KEYS = (
+    "SystemRoot",
+    "SYSTEMROOT",
+    "WINDIR",
+    "TEMP",
+    "TMP",
+    "TMPDIR",
+    "HOME",
+    "LANG",
+    "LC_ALL",
+    "LC_CTYPE",
+)
 
 
 def fail(message: str, code: int = 2) -> None:
@@ -251,9 +266,24 @@ def doctor() -> int:
     return 0
 
 
+def tool_environment(executable: str) -> dict[str, str]:
+    env: dict[str, str] = {}
+    for key in _TOOL_ENV_KEYS:
+        value = os.environ.get(key)
+        if value:
+            env[key] = value
+    env["PATH"] = str(Path(executable).resolve().parent)
+    return env
+
+
 def run_command(cmd: list[str], cwd: Path) -> None:
+    if not cmd or not isinstance(cmd[0], str) or not Path(cmd[0]).is_absolute():
+        fail("command executable must be an absolute path")
     print("RUN " + " ".join(cmd))
-    proc = subprocess.run(cmd, cwd=cwd, text=True)
+    try:
+        proc = subprocess.run(cmd, cwd=cwd, text=True, timeout=COMMAND_TIMEOUT_SECONDS)
+    except subprocess.TimeoutExpired:
+        fail(f"command timed out after {COMMAND_TIMEOUT_SECONDS}s: {' '.join(cmd)}")
     if proc.returncode != 0:
         fail(f"command failed with exit={proc.returncode}: {' '.join(cmd)}", proc.returncode)
 
@@ -262,11 +292,18 @@ def probe_output(path: Path) -> dict[str, Any]:
     ffprobe = shutil.which("ffprobe")
     if not ffprobe:
         fail("ffprobe is required to verify render output")
-    proc = subprocess.run(
-        [ffprobe, "-v", "error", "-show_entries", "format=duration:stream=index,codec_type,width,height,codec_name", "-of", "json", str(path)],
-        text=True,
-        capture_output=True,
-    )
+    if not Path(ffprobe).is_absolute():
+        fail("ffprobe path must be absolute")
+    try:
+        proc = subprocess.run(
+            [ffprobe, "-v", "error", "-show_entries", "format=duration:stream=index,codec_type,width,height,codec_name", "-of", "json", str(path)],
+            text=True,
+            capture_output=True,
+            timeout=PROBE_TIMEOUT_SECONDS,
+            env=tool_environment(ffprobe),
+        )
+    except subprocess.TimeoutExpired:
+        fail(f"ffprobe timed out after {PROBE_TIMEOUT_SECONDS}s")
     if proc.returncode != 0:
         fail(f"ffprobe failed: {(proc.stderr or '').strip()}")
     try:

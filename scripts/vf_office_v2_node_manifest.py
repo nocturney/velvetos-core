@@ -26,17 +26,99 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
-def run(args: list[str], timeout: int = 15) -> tuple[int, str]:
+WINDOWS_FACTS_TIMEOUT = 15
+WINDOWS_FACTS_QUERY = (
+    "$os = Get-CimInstance Win32_OperatingSystem; "
+    "$cpu = @(Get-CimInstance Win32_Processor) | Select-Object -First 1; "
+    "$cs = Get-CimInstance Win32_ComputerSystem; "
+    "$c = Test-Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Component Based Servicing\\RebootPending'; "
+    "$w = Test-Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WindowsUpdate\\Auto Update\\RebootRequired'; "
+    "$p = (Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager' "
+    "-Name PendingFileRenameOperations -ErrorAction SilentlyContinue).PendingFileRenameOperations; "
+    "$meaningful = @($p | Where-Object { $_ -and $_.Trim() -ne '' }); "
+    "$reboot = $c.ToString() + '|' + $w.ToString() + '|' + $meaningful.Count; "
+    "@{ caption = [string]$os.Caption; version = [string]$os.Version; build = [string]$os.BuildNumber; "
+    "cpu = [string]$cpu.Name; ram_gb = [string]([math]::Round($cs.TotalPhysicalMemory / 1GB, 2)); "
+    "reboot = [string]$reboot } | ConvertTo-Json -Compress"
+)
+_POWERSHELL_ENV_KEYS = ("SystemRoot", "SYSTEMROOT", "WINDIR", "COMSPEC", "PATHEXT", "TEMP", "TMP")
+
+
+def run(args: list[str], timeout: int = 15, env: dict[str, str] | None = None) -> tuple[int, str]:
     try:
-        p = subprocess.run(args, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=timeout)
+        kwargs: dict[str, Any] = {
+            "capture_output": True,
+            "text": True,
+            "encoding": "utf-8",
+            "errors": "replace",
+            "timeout": timeout,
+        }
+        if env is not None:
+            kwargs["env"] = env
+        p = subprocess.run(args, **kwargs)
         return p.returncode, ((p.stdout or "") + (p.stderr or "")).strip()
     except (OSError, subprocess.TimeoutExpired) as exc:
         return 127, str(exc)
 
 
-def win_value(script: str) -> str:
-    code, out = run(["powershell", "-NoProfile", "-Command", script])
-    return out.splitlines()[-1].strip() if code == 0 and out.strip() else "UNKNOWN"
+def powershell_executable() -> str:
+    root = os.environ.get("SystemRoot") or os.environ.get("SYSTEMROOT")
+    if not root:
+        return ""
+    exe = Path(root) / "System32" / "WindowsPowerShell" / "v1.0" / "powershell.exe"
+    if not exe.is_file():
+        return ""
+    return str(exe)
+
+
+def powershell_environment(executable: str) -> dict[str, str]:
+    env: dict[str, str] = {}
+    for key in _POWERSHELL_ENV_KEYS:
+        value = os.environ.get(key)
+        if value:
+            env[key] = value
+    root = env.get("SystemRoot") or env.get("SYSTEMROOT")
+    env["PATH"] = str(Path(root) / "System32") if root else str(Path(executable).resolve().parent)
+    return env
+
+
+def _unknown_windows_facts() -> dict[str, str]:
+    return {
+        "caption": "UNKNOWN",
+        "version": "UNKNOWN",
+        "build": "UNKNOWN",
+        "cpu": "UNKNOWN",
+        "ram_gb": "UNKNOWN",
+        "reboot": "UNKNOWN",
+    }
+
+
+def windows_facts() -> dict[str, str]:
+    """One fixed CIM query. Callers cannot supply a PowerShell script."""
+    exe = powershell_executable()
+    if not exe:
+        return _unknown_windows_facts()
+    code, out = run(
+        [exe, "-NoProfile", "-NonInteractive", "-Command", WINDOWS_FACTS_QUERY],
+        timeout=WINDOWS_FACTS_TIMEOUT,
+        env=powershell_environment(exe),
+    )
+    if code != 0 or not out.strip():
+        return _unknown_windows_facts()
+    try:
+        row = json.loads(out)
+    except json.JSONDecodeError:
+        return _unknown_windows_facts()
+    if not isinstance(row, dict):
+        return _unknown_windows_facts()
+    facts = _unknown_windows_facts()
+    for key in facts:
+        value = row.get(key)
+        if isinstance(value, str) and value.strip():
+            facts[key] = value.strip()
+        elif key == "ram_gb" and isinstance(value, (int, float)):
+            facts[key] = str(value)
+    return facts
 
 
 def mac_value(args: list[str]) -> str:
@@ -72,11 +154,12 @@ def collect(node_id: str | None = None) -> dict[str, Any]:
         runtimes.append("Node.js " + node["version"])
 
     if system == "Windows":
-        os_caption = win_value("(Get-CimInstance Win32_OperatingSystem).Caption")
-        os_version = win_value("(Get-CimInstance Win32_OperatingSystem).Version")
-        os_build = win_value("(Get-CimInstance Win32_OperatingSystem).BuildNumber")
-        cpu = win_value("(Get-CimInstance Win32_Processor | Select-Object -First 1).Name")
-        ram_raw = win_value("[math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory/1GB,2)")
+        facts = windows_facts()
+        os_caption = facts["caption"]
+        os_version = facts["version"]
+        os_build = facts["build"]
+        cpu = facts["cpu"]
+        ram_raw = facts["ram_gb"]
         try:
             ram_gb = float(ram_raw)
         except ValueError:
@@ -105,14 +188,7 @@ def collect(node_id: str | None = None) -> dict[str, Any]:
             if path.is_file():
                 apps.append({"name": name, "version": "installed"})
 
-        reboot_probe = win_value(
-            "$c=Test-Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Component Based Servicing\\RebootPending';"
-            "$w=Test-Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WindowsUpdate\\Auto Update\\RebootRequired';"
-            "$p=(Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager' "
-            "-Name PendingFileRenameOperations -ErrorAction SilentlyContinue).PendingFileRenameOperations;"
-            "$meaningful=@($p | Where-Object {$_ -and $_.Trim() -ne ''});"
-            "Write-Output ($c.ToString()+'|'+$w.ToString()+'|'+$meaningful.Count)"
-        )
+        reboot_probe = facts["reboot"]
         parts = reboot_probe.split("|")
         cbs_pending = len(parts) > 0 and parts[0].strip().lower() == "true"
         wu_pending = len(parts) > 1 and parts[1].strip().lower() == "true"
