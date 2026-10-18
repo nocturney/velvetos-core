@@ -523,6 +523,242 @@ class FallbackHandoffTests(unittest.TestCase):
         self.assertIn('direction="rtl"', svg)
 
 
+def _portrait_request() -> dict:
+    return {
+        "compositionInfo": {"width": 1080, "height": 1920, "fps": 30, "duration": 1.0},
+        "audioRequired": False,
+    }
+
+
+def _video_probe(**overrides) -> dict:
+    probe = {
+        "streams": [{"codec_type": "video", "codec_name": "h264", "width": 1080, "height": 1920}],
+        "format": {"duration": "1.000000"},
+    }
+    probe.update(overrides)
+    return probe
+
+
+class ProbeFailClosedTests(unittest.TestCase):
+    """ffprobe/ffmpeg timeouts and unparsable probe fields fail closed with a reason."""
+
+    def assert_fail_closed(self, call, *includes: str, excludes: tuple[str, ...] = ("Traceback", "0.0")):
+        stderr = io.StringIO()
+        with contextlib.redirect_stderr(stderr):
+            with self.assertRaises(SystemExit) as caught:
+                call()
+        self.assertEqual(caught.exception.code, 1)
+        text = stderr.getvalue()
+        self.assertTrue(text.startswith("FAIL "), text)
+        for part in includes:
+            self.assertIn(part, text)
+        for part in excludes:
+            self.assertNotIn(part, text)
+        return text
+
+    def test_ffprobe_timeout_fails_closed(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        expired = subprocess.TimeoutExpired(["ffprobe", "out.mp4"], 30)
+        with mock.patch.object(caption, "tool_path", return_value="/usr/bin/ffprobe"), mock.patch.object(
+            caption.subprocess, "run", side_effect=expired
+        ):
+            self.assert_fail_closed(
+                lambda: caption.probe_media(Path("out.mp4")),
+                "ffprobe timed out after 30s",
+            )
+
+    def test_ffmpeg_timeout_fails_closed(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        expired = subprocess.TimeoutExpired(["ffmpeg", "-filters"], 20)
+        with mock.patch.object(caption.subprocess, "run", side_effect=expired):
+            self.assert_fail_closed(
+                lambda: caption.filter_names("/usr/bin/ffmpeg"),
+                "ffmpeg timed out after 20s",
+            )
+
+    def test_ffmpeg_encoder_timeout_fails_closed(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        expired = subprocess.TimeoutExpired(["ffmpeg", "-encoders"], 20)
+        with mock.patch.object(caption.subprocess, "run", side_effect=expired):
+            self.assert_fail_closed(
+                lambda: caption.encoder_names("/usr/bin/ffmpeg"),
+                "ffmpeg timed out after 20s",
+            )
+
+    def test_ffmpeg_version_timeout_fails_closed(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        expired = subprocess.TimeoutExpired(["ffmpeg", "-version"], 10)
+        with mock.patch.object(caption.subprocess, "run", side_effect=expired):
+            self.assert_fail_closed(
+                lambda: caption.ffmpeg_version_line("/usr/bin/ffmpeg"),
+                "ffmpeg timed out after 10s",
+            )
+
+    def test_ffprobe_start_error_fails_closed(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        with mock.patch.object(caption, "tool_path", return_value="/usr/bin/ffprobe"), mock.patch.object(
+            caption.subprocess, "run", side_effect=OSError("exec failed")
+        ):
+            self.assert_fail_closed(
+                lambda: caption.probe_media(Path("out.mp4")),
+                "ffprobe failed to start",
+                "exec failed",
+            )
+
+    def test_probe_json_must_be_an_object(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        proc = subprocess.CompletedProcess(["ffprobe"], 0, stdout="[1]", stderr="")
+        with mock.patch.object(caption, "tool_path", return_value="/usr/bin/ffprobe"), mock.patch.object(
+            caption.subprocess, "run", return_value=proc
+        ):
+            self.assert_fail_closed(
+                lambda: caption.probe_media(Path("out.mp4")),
+                "ffprobe returned invalid JSON",
+                "expected an object",
+            )
+
+    def test_audio_duration_rejects_unparsable_value(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        probe = {"streams": [{"codec_type": "audio", "codec_name": "aac"}], "format": {"duration": "nope"}}
+        with mock.patch.object(caption, "probe_media", return_value=probe):
+            self.assert_fail_closed(
+                lambda: caption.audio_duration(Path("music.m4a")),
+                "ffprobe duration is unparsable",
+                "'nope'",
+            )
+
+    def test_audio_duration_rejects_missing_value(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        probe = {"streams": [{"codec_type": "audio"}], "format": {}}
+        with mock.patch.object(caption, "probe_media", return_value=probe):
+            self.assert_fail_closed(
+                lambda: caption.audio_duration(Path("music.m4a")),
+                "ffprobe duration is missing",
+            )
+
+    def test_audio_duration_rejects_nan(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        probe = {"streams": [{"codec_type": "audio"}], "format": {"duration": "nan"}}
+        with mock.patch.object(caption, "probe_media", return_value=probe):
+            self.assert_fail_closed(
+                lambda: caption.audio_duration(Path("music.m4a")),
+                "ffprobe duration is unparsable",
+            )
+
+    def test_audio_duration_keeps_a_parsed_zero(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        probe = {"streams": [{"codec_type": "audio"}], "format": {"duration": "0.0"}}
+        with mock.patch.object(caption, "probe_media", return_value=probe):
+            self.assertEqual(caption.audio_duration(Path("music.m4a")), 0.0)
+
+    def test_audio_duration_keeps_a_parsed_number(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        probe = {"streams": [{"codec_type": "audio"}], "format": {"duration": "8.5"}}
+        with mock.patch.object(caption, "probe_media", return_value=probe):
+            self.assertEqual(caption.audio_duration(Path("music.m4a")), 8.5)
+
+    def test_verify_output_rejects_fractional_width(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        probe = _video_probe()
+        probe["streams"][0]["width"] = 1080.9
+        self.assert_fail_closed(
+            lambda: caption.verify_output(_portrait_request(), probe, 30),
+            "ffprobe width is unparsable",
+            "1080.9",
+        )
+
+    def test_verify_output_rejects_unparsable_width(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        probe = _video_probe()
+        probe["streams"][0]["width"] = "wide"
+        self.assert_fail_closed(
+            lambda: caption.verify_output(_portrait_request(), probe, 30),
+            "ffprobe width is unparsable",
+            "'wide'",
+        )
+
+    def test_verify_output_rejects_missing_width(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        probe = _video_probe()
+        del probe["streams"][0]["width"]
+        self.assert_fail_closed(
+            lambda: caption.verify_output(_portrait_request(), probe, 30),
+            "ffprobe width is missing",
+        )
+
+    def test_verify_output_rejects_unparsable_height(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        probe = _video_probe()
+        probe["streams"][0]["height"] = "tall"
+        self.assert_fail_closed(
+            lambda: caption.verify_output(_portrait_request(), probe, 30),
+            "ffprobe height is unparsable",
+            "'tall'",
+        )
+
+    def test_verify_output_rejects_missing_height(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        probe = _video_probe()
+        probe["streams"][0]["height"] = ""
+        self.assert_fail_closed(
+            lambda: caption.verify_output(_portrait_request(), probe, 30),
+            "ffprobe height is missing",
+        )
+
+    def test_verify_output_rejects_unparsable_duration(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        probe = _video_probe(format={"duration": "n/a"})
+        self.assert_fail_closed(
+            lambda: caption.verify_output(_portrait_request(), probe, 30),
+            "ffprobe duration is unparsable",
+            "'n/a'",
+            excludes=("Traceback", "does not match"),
+        )
+
+    def test_verify_output_rejects_missing_duration(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        probe = _video_probe(format={})
+        self.assert_fail_closed(
+            lambda: caption.verify_output(_portrait_request(), probe, 30),
+            "ffprobe duration is missing",
+            excludes=("Traceback", "does not match"),
+        )
+
+    def test_verify_output_rejects_unparsable_streams(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        self.assert_fail_closed(
+            lambda: caption.verify_output(_portrait_request(), {"streams": "nope", "format": {"duration": "1"}}, 30),
+            "ffprobe streams is unparsable",
+        )
+
+    def test_verify_output_accepts_a_parsed_probe(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        verified = caption.verify_output(_portrait_request(), _video_probe(), 30)
+        self.assertEqual(verified["width"], 1080)
+        self.assertEqual(verified["height"], 1920)
+        self.assertEqual(verified["durationSec"], 1.0)
+
+
 def _us_weight_class(path: Path) -> int:
     data = path.read_bytes()
     count = struct.unpack(">H", data[4:6])[0]
