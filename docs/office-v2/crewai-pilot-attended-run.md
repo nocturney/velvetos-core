@@ -14,7 +14,7 @@ Sources: [original strict runbook](pilot-runbook-crewai.md), [current E1-E7 boar
   - **E2 capacity:** fresh Chris lease, CPU/RAM headroom and no #612 P0, #604 Fleet or #602 Cua contention.
   - **E3 security:** Christian's conditional acceptance applies only to 154 hash-locked offline wheels, SHA-256 **121c1bd04eee730b51eb71e49da503b0d0236cdd06d8687a5df792234f78a669**, CrewAI 1.15.28, no tools/memory/knowledge/MCP/server, forbidden-import checks and independent review. The underlying vulnerability scan remains RED; no general waiver.
   - **E4 containment:** reviewed, enforced and independently witnessed absence of C: or out-of-D: writes for the whole process tree and OS helpers, negative controls, true paths, before/after manifests, HKCU and attribution. Setting TEMP or a D: venv is NOT proof.
-  - **E5 network:** restricted identity, enforceable deny-by-default outbound/inbound, independent whole-tree monitoring including brief sockets; only approved local Ollama **127.0.0.1:11435**, zero pilot listeners/UDP. Periodic socket samples alone do not prove enforcement.
+  - **E5 network:** restricted identity, enforceable deny-by-default outbound/inbound, independent whole-tree monitoring including brief sockets; only approved local Ollama **127.0.0.1:11434** (Christian, 2026-10-18 20:41 IDT; port 11435 is refused), zero pilot listeners/UDP. Periodic socket samples alone do not prove enforcement.
   - **E6 offline inputs:** at least **20 genuinely open public issues** including #612 and #595, dated immutable SHA manifest, human gold facts and adversarial fixture. The #789 committed snapshot has 12, and is not sufficient. Never use the synthetic_passing_bundle() test fixture to manufacture gates.
   - **E7 limits:** independently tested owned-PID stop, baseline and D: receipt sink, 600-second hard deadline, explicit CPU/RAM limit and **zero incremental spend**.
 - [ ] **Stop before a real model call if any BLOCKED or NEEDS_CHRISTIAN item below is unresolved**:
@@ -83,7 +83,7 @@ foreach ($name in @('manifest.json','issues.json','answer-sheet.json','adversari
         throw ('STOP: input missing: ' + $name)
     }
 }
-$listen = @(Get-NetTCPConnection -LocalPort 11435 -State Listen -ErrorAction SilentlyContinue)
+$listen = @(Get-NetTCPConnection -LocalPort 11434 -State Listen -ErrorAction SilentlyContinue)
 if ($listen.Count -lt 1) { throw 'STOP: Ollama listener absent' }
 if (@($listen | Where-Object { $_.LocalAddress -notin @('127.0.0.1','::1') }).Count -ne 0) {
     throw 'STOP: Ollama non-loopback/wildcard bind'
@@ -95,7 +95,7 @@ foreach ($pidValue in @($listen | Select-Object -ExpandProperty OwningProcess -U
     }
     $proc | Select-Object ProcessId,ExecutablePath
 }
-$tags = Invoke-RestMethod -Uri 'http://127.0.0.1:11435/api/tags' -Method Get -TimeoutSec 10
+$tags = Invoke-RestMethod -Uri 'http://127.0.0.1:11434/api/tags' -Method Get -TimeoutSec 10
 $selected = @($tags.models | Where-Object { $_.name -eq 'qwen3.5:9b' })
 if ($selected.Count -ne 1 -or
     $selected[0].digest -ne '56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90') {
@@ -104,7 +104,7 @@ if ($selected.Count -ne 1 -or
 $selected | Select-Object name,digest
 ~~~
 
-**Expect:** all reviewed E1-E7 evidence files exist and match independent gate proofs (existence by itself is NOT admission). Windows shows Ollama bound only to local loopback **127.0.0.1:11435** (optionally also ::1), owned by the approved D:-binary, and exactly **qwen3.5:9b** with SHA-256 digest **56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90**. Use **/api/tags**, not LAB-4's /api/show. If it is absent or mismatched **STOP**, do not start unreviewed Ollama, relocate model, open 11434, widen the bind or substitute a different digest. The provider collects that bind evidence itself with English `netstat -ano` (section 0 item 1). This Get-NetTCPConnection sample is not injected into the runner. A missing or unparseable English netstat observation is still **OLLAMA_BIND_UNPROVEN**.
+**Expect:** all reviewed E1-E7 evidence files exist and match independent gate proofs (existence by itself is NOT admission). Windows shows Ollama bound only to local loopback **127.0.0.1:11434** (optionally also ::1), owned by the approved D:-binary, and exactly **qwen3.5:9b** with SHA-256 digest **56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90**. Use **/api/tags**, not LAB-4's /api/show. If it is absent or mismatched **STOP**, do not start unreviewed Ollama, relocate the model, open 11435, widen the bind, or substitute a different digest. The provider collects that bind evidence itself with English `netstat -ano` (section 0 item 1). This Get-NetTCPConnection sample is not injected into the runner. A missing or unparseable English netstat observation is still **OLLAMA_BIND_UNPROVEN**. A wildcard `0.0.0.0` bind stays refused.
 
 ### 1.3 No-CrewAI-import preflight using exact reviewed Python functions
 
@@ -117,7 +117,7 @@ if ($env:PYTHONPATH -or $env:PYTHONHOME -or $env:TIKTOKEN_CACHE_DIR -or
     $env:CUSTOM_TIKTOKEN_CACHE_DIR -or $env:CHROMA_ANONYMIZED_TELEMETRY) {
     throw 'STOP: forbidden environment override'
 }
-if ($env:OLLAMA_HOST -and $env:OLLAMA_HOST -ne '127.0.0.1:11435') { throw 'STOP: inherited OLLAMA_HOST' }
+if ($env:OLLAMA_HOST -and $env:OLLAMA_HOST -ne '127.0.0.1:11434') { throw 'STOP: inherited OLLAMA_HOST' }
 $env:OLLAMA_NO_CLOUD = '1'
 $env:PYTHONDONTWRITEBYTECODE = '1'
 $env:VF064_REPO = $Repo
@@ -235,7 +235,7 @@ Read **identity.gates**, **identity.gate_reasons**, **identity.model_status**, *
 | SANDBOX_CWD_ABSENT; SANDBOX_CWD_NOT_ON_D; SANDBOX_CWD_OUTSIDE_ROOT; SANDBOX_USERPROFILE_OUTSIDE_ROOT; SANDBOX_HOME_OUTSIDE_ROOT; SANDBOX_TEMP_OUTSIDE_ROOT; SANDBOX_TEMP_ABSENT; WINDOWS_TEMP_CREWAI | Wrong CWD, Windows home/temp or 0-byte C:\Windows\Temp\crewai ADS host detected. **STOP; E4 C: investigation**. |
 | E5_PROXY_ABSENT[:name]; E5_PROXY_MISMATCH:name; OLLAMA_HOST_REFUSED; OLLAMA_NO_CLOUD_ABSENT | Dead-proxy/host/cloud denial not proven. **STOP; no network fallback.** |
 | MODEL_CONFIG_NOT_OBJECT; MODEL_CONFIG_SCHEMA; MODEL_CONFIG_UNREADABLE; MODEL_CONFIG_ABSENT; MODEL_APPROVAL_MISMATCH; MODEL_EVIDENCE_MISMATCH; MODEL_PROVIDER_REFUSED; MODEL_TAG_MISMATCH | Exact pinned model JSON unreadable/invalid/changed/unapproved. **STOP.** |
-| MODEL_URL_MISSING; MODEL_URL_SCHEME_REFUSED; MODEL_URL_USERINFO_REFUSED; MODEL_URL_NOT_LOOPBACK; MODEL_URL_NOT_EXACT_APPROVAL; MODEL_URL_PATH_REFUSED; MODEL_URL_QUERY_REFUSED; LLM_BASE_URL_REFUSED; LLM_ENDPOINT_MISMATCH; LITELLM_ROUTE_REFUSED | Model URL not exact local http://127.0.0.1:11435 and /v1 or wrong adapter. **STOP.** |
+| MODEL_URL_MISSING; MODEL_URL_SCHEME_REFUSED; MODEL_URL_USERINFO_REFUSED; MODEL_URL_NOT_LOOPBACK; MODEL_URL_NOT_EXACT_APPROVAL; MODEL_URL_PATH_REFUSED; MODEL_URL_QUERY_REFUSED; LLM_BASE_URL_REFUSED; LLM_ENDPOINT_MISMATCH; LITELLM_ROUTE_REFUSED | Model URL not exact local http://127.0.0.1:11434 and /v1, or port 11435, or wrong adapter. **STOP.** |
 | REMOTE_API_REFUSED; PAID_API_REFUSED; API_KEY_REFUSED; PAID_PROVIDER_FIELD_REFUSED; PAID_CREDENTIAL_INHERITED | Forbidden paid/cloud API capability or inherited paid key. **STOP**; report names not secrets. |
 | THINK_NOT_DISABLED; REASONING_EFFORT_REFUSED; TELEMETRY_FLAGS_NOT_SET_BEFORE_IMPORT; CREWAI_VERSION_MISMATCH | Frozen model flags, pre-import telemetry or CrewAI 1.15.28 identity mismatch. **STOP.** |
 | MODEL_CALL_BEFORE_PREFLIGHT; MODEL_MESSAGE_REFUSED; LOCAL_MODEL_RESPONSE_UNUSABLE; KICKOFF_EMPTY_TABLE | A premature call, malformed input/output or empty/no-real-issue kickoff. **STOP**; no fabricated fact table. |
@@ -254,7 +254,7 @@ These are produced by **scripts/collect-crewai-e5-network.ps1** and **scripts/vf
 | HOST_NOT_CHRIS; D_ABSOLUTE_PATH_REQUIRED; OUT_OF_PILOT_ROOT_PATH; INPUT_PATH_MISSING; OUTPUT_PARENT_MISSING; RECEIPT_DIRECTORY_MISSING; EVIDENCE_RECEIPT_COLLISION; REPARSE_POINT_REFUSED; OUTPUT_PATH_NOT_ADMITTED | Wrong host, absent/outside approved staged D: paths, reparse traversal, missing output directory or colliding files. Fix via separately reviewed staging, not a shortcut. |
 | PROCESS_BIRTH_MISSING; ROOT_PID_BIRTH_MISMATCH; TRACKED_PID_REUSED; PROCESS_IDENTITY_CHANGED_DURING_SAMPLE | CIM birth identity absent, changed, reused or disappeared between snapshots. May conservatively fail on ordinary process exit (#797); **REPORT, do not override**. |
 | PROCESS_TREE_TOO_LARGE; TREE_ROOT_MISSING; PROCESS_TREE_CYCLE; PROCESS_TREE_ORPHAN; CHILD_CREATED_BEFORE_PARENT | Cannot establish bounded PID/parent PID chain reaching verified root, or child birth time is impossible. STOP. |
-| TCP_LISTENER_DETECTED; UNAPPROVED_TCP_REMOTE; UDP_ENDPOINT_DETECTED | Pilot-owned TCP listener (even loopback), TCP remote other than literal 127.0.0.1:11435, or UDP endpoint. STOP/security review. |
+| TCP_LISTENER_DETECTED; UNAPPROVED_TCP_REMOTE; UDP_ENDPOINT_DETECTED | Pilot-owned TCP listener (even loopback), TCP remote other than literal 127.0.0.1:11434 (11435 is refused), or UDP endpoint. STOP/security review. |
 | MAX_RUNTIME_EXCEEDED; PROCESS_END_UNVERIFIED; OWNED_STOP_UNVERIFIED:pid; PILOT_EXIT_CODE_UNKNOWN; PILOT_EXIT_NOT_OBSERVED; PILOT_EXIT_CODE_UNAVAILABLE; AFTER_SNAPSHOT_FAILED:detail | Budget exceeded, owned-tree end not proved, null/unavailable exit code or final snapshot failed. STOP; never assume unknown ExitCode = 0. |
 | INVALID_JSON; INVALID_EVIDENCE; INVALID_IDENTITY_OR_SCHEMA; INVALID_ROOT_PID; INVALID_SAMPLE_INTERVAL; INVALID_RUN_TIMES; INVALID_SNAPSHOT; INVALID_SNAPSHOT_TIME; OUT_OF_ORDER_SNAPSHOT; BEFORE_NOT_BEFORE_RUN; DURING_OUTSIDE_RUN; AFTER_NOT_AFTER_RUN; MISSING_SNAPSHOT; MISSING_DURING_SNAPSHOT | Validator cannot prove well-formed JSON, root, timestamps, sequence and all before/during/after phases. STOP. |
 | INVALID_SNAPSHOT_SHAPE; INVALID_TREE_MEMBER; INVALID_TREE_ANCESTRY; PID_REUSED_OR_IDENTITY_CHANGED; ROOT_NOT_OBSERVED_DURING; PILOT_TREE_PRESENT_BEFORE_LAUNCH; PILOT_TREE_STILL_RUNNING | Invalid/foreign/orphan/cyclic tree, PID identity reuse, missing live root or lingering process. STOP. |

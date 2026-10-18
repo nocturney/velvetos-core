@@ -14,6 +14,7 @@ from office_v2_crewai.contract import (
     RESULT_STATUSES,
     SANDBOX_ROOT,
     TELEMETRY_FLAGS,
+    VELVET_ROOT,
 )
 from office_v2_crewai.sandbox import StorageRefusal, on_drive_d, under_root
 
@@ -41,11 +42,18 @@ def overall_status(report: dict) -> str:
     return "NOT_RUN"
 
 
-def build_receipt(report: dict, attempt_id: str, runner_files: list[Path]) -> dict:
+def build_receipt(report: dict, attempt_id: str, runner_files: list[Path],
+                  sandbox_root: str = SANDBOX_ROOT) -> dict:
     status = overall_status(report)
     if status not in RESULT_STATUSES or status == "PASS_TASK_ONLY":
         status = "NOT_VERIFIED"
     runner_hashes = {path.name: _digest(path) for path in runner_files}
+    model_status = report.get("model_status") or "NOT_CHECKED"
+    gate_reason = ",".join(report.get("missing_gates") or []) or "PREFLIGHT_CLOSED"
+    if model_status not in {"NOT_CHECKED", "CONFIG_ACCEPTED_NO_CALL"}:
+        reason = model_status
+    else:
+        reason = gate_reason
     return {
         "schema": "velvetos.office-v2.crewai-attempt-receipt.v1",
         "identity": {
@@ -62,7 +70,8 @@ def build_receipt(report: dict, attempt_id: str, runner_files: list[Path]) -> di
             "gate_reasons": {gate: report["gates"][gate]["reason"] for gate in GATES},
             "task_status": status,
             "pilot_status": "NOT_RUN",
-            "reason": ",".join(report.get("missing_gates") or []) or "PREFLIGHT_CLOSED",
+            "reason": reason,
+            "model_status": model_status,
         },
         "reproducibility": {
             "plan_commit": "d101809a88ea68ee4e2790aa3aba2d1fb5c40ea6",
@@ -86,7 +95,7 @@ def build_receipt(report: dict, attempt_id: str, runner_files: list[Path]) -> di
         },
         "graph_smoke": "NOT_RUN",
         "scope": {
-            "sandbox_root": SANDBOX_ROOT,
+            "sandbox_root": sandbox_root,
             "input_sha256": "SEE_MANIFEST",
             "adversarial_is_data": True,
             "private_repo_included": False,
@@ -110,13 +119,15 @@ def build_receipt(report: dict, attempt_id: str, runner_files: list[Path]) -> di
             "rollback_status": "NOT_RUN",
             "reviewer_verdict": "NOT_VERIFIED",
             "c_drive_audit": "NOT_VERIFIED",
+            "listener_count": "NOT_RUN",
+            "listener_source": "NOT_RUN",
         },
     }
 
 
 def kickoff_output_path(root: str = SANDBOX_ROOT) -> str:
-    """Canonical crew output. Anything off the approved D: sandbox is refused."""
-    if root != SANDBOX_ROOT:
+    """Canonical crew output. The root must stay on D: under D:\\Velvet."""
+    if not on_drive_d(root) or not under_root(root, VELVET_ROOT):
         raise StorageRefusal("OUTPUT_NOT_ON_D")
     path = root.rstrip("\\/") + "\\" + KICKOFF_OUTPUT_REL
     if not on_drive_d(path) or not under_root(path, root):
@@ -124,11 +135,11 @@ def kickoff_output_path(root: str = SANDBOX_ROOT) -> str:
     return path
 
 
-def save_kickoff_output(text: str, writer=None) -> dict:
+def save_kickoff_output(text: str, writer=None, root: str = SANDBOX_ROOT) -> dict:
     """Save kickoff text under the D: sandbox and return its sha256."""
     if not isinstance(text, str) or not text.strip():
         raise StorageRefusal("OUTPUT_DISCARDED")
-    path = kickoff_output_path()
+    path = kickoff_output_path(root)
     data = text.encode("utf-8")
     digest = hashlib.sha256(data).hexdigest()
     if writer is None:
@@ -142,12 +153,12 @@ def save_kickoff_output(text: str, writer=None) -> dict:
     return {"path": path, "sha256": digest, "body": data}
 
 
-def apply_run_record(receipt: dict, saved: dict) -> None:
+def apply_run_record(receipt: dict, saved: dict, root: str = SANDBOX_ROOT) -> None:
     """Record a completed kickoff. Status stays NOT_VERIFIED, never PASS."""
     path = saved.get("path") if isinstance(saved, dict) else None
     digest = saved.get("sha256") if isinstance(saved, dict) else None
     body = saved.get("body") if isinstance(saved, dict) else None
-    expected = kickoff_output_path()
+    expected = kickoff_output_path(root)
     if not isinstance(path, str) or path.replace("/", "\\").casefold() != expected.casefold():
         raise StorageRefusal("OUTPUT_NOT_ON_D")
     if isinstance(body, str):
@@ -191,13 +202,16 @@ def write_receipts(output_dir: Path, receipt: dict) -> dict:
     status = sealed.get("result", {}).get("status")
     kickoff_digest = None
     kickoff_path = None
+    sandbox_root = sealed.get("scope", {}).get("sandbox_root") or SANDBOX_ROOT
+    existing = sealed.get("result", {}).get("output_sha256") or {}
+    existing_digest = existing.get("kickoff.md") if isinstance(existing, dict) else None
     if started:
         if status in {"NOT_RUN", "PASS", "PASS_TASK_ONLY", None}:
             raise StorageRefusal("RUN_STATUS_NOT_RUN")
-        if status == "NOT_VERIFIED":
+        if status == "NOT_VERIFIED" or (isinstance(existing_digest, str) and len(existing_digest) == 64):
             kickoff_path = sealed.get("result", {}).get("output_path")
-            kickoff_digest = (sealed.get("result", {}).get("output_sha256") or {}).get("kickoff.md")
-            expected = kickoff_output_path()
+            kickoff_digest = existing_digest
+            expected = kickoff_output_path(sandbox_root)
             if not isinstance(kickoff_path, str) or kickoff_path.replace("/", "\\").casefold() != expected.casefold():
                 raise StorageRefusal("OUTPUT_NOT_ON_D")
             if not isinstance(kickoff_digest, str) or len(kickoff_digest) != 64:

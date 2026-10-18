@@ -2,9 +2,11 @@
 from __future__ import annotations
 
 import os
+import sys
+import tempfile
 from pathlib import Path
 
-from office_v2_crewai.contract import APPROVED_OLLAMA_HOST, SANDBOX_ROOT
+from office_v2_crewai.contract import APPROVED_OLLAMA_HOST, SANDBOX_ROOT, VELVET_ROOT
 
 
 class StorageRefusal(RuntimeError):
@@ -137,13 +139,50 @@ def assert_forbidden_env(env: dict) -> None:
         raise StorageRefusal("FORBIDDEN_ENV:" + key)
 
 
+def _protected_hits(env: dict, name: str) -> list[tuple[str, object]]:
+    """Every spelling of a protected name. POSIX proxy lookup is case-insensitive."""
+    upper = name.upper()
+    hits = []
+    for key, value in env.items():
+        if isinstance(key, str) and key.upper() == upper:
+            hits.append((key, value))
+    return hits
+
+
+def fold_protected_env(env: dict) -> dict:
+    """Keep one canonical spelling for OLLAMA_HOST and the proxy variables."""
+    if not isinstance(env, dict):
+        raise StorageRefusal("SANDBOX_ENV_ABSENT")
+    folded = {}
+    held: dict[str, object] = {}
+    for key, value in env.items():
+        if not isinstance(key, str):
+            raise StorageRefusal("SANDBOX_ENV_ABSENT")
+        upper = key.upper()
+        if upper == "OLLAMA_HOST" or upper in PROXY_KEYS:
+            if upper not in held or (isinstance(value, str) and value.strip()):
+                held[upper] = value
+            continue
+        folded[key] = value
+    if "OLLAMA_HOST" in held:
+        folded["OLLAMA_HOST"] = held["OLLAMA_HOST"]
+    for key in PROXY_KEYS:
+        if key not in held:
+            continue
+        folded[key] = held[key]
+        folded[key.lower()] = held[key]
+    return folded
+
+
 def assert_proxy_env(env: dict) -> None:
     """E5 tripwire. Anything other than the dead loopback proxy is a refusal."""
     if not isinstance(env, dict):
         raise StorageRefusal("E5_PROXY_ABSENT")
     for key, want in PROXY_KEYS.items():
-        for name in (key, key.lower()):
-            value = env.get(name)
+        hits = _protected_hits(env, key)
+        if not hits:
+            raise StorageRefusal("E5_PROXY_ABSENT:" + key)
+        for name, value in hits:
             if not isinstance(value, str) or not value:
                 raise StorageRefusal("E5_PROXY_ABSENT:" + name)
             if value != want:
@@ -204,13 +243,124 @@ def assert_cwd(cwd: str, root: str = SANDBOX_ROOT) -> None:
         raise StorageRefusal("SANDBOX_CWD_OUTSIDE_ROOT")
 
 
-def bind_process_sandbox(env: dict | None = None, root: str = SANDBOX_ROOT) -> dict:
-    """Install the sandbox variables. Refuse before any assignment when the root is off D:."""
+def assert_sandbox_resolution(root: str = SANDBOX_ROOT, home: str | None = None,
+                              temp: str | None = None, platform: str | None = None) -> None:
+    """Path.home() and tempfile.gettempdir() must stay inside the sandbox.
+
+    Windows Python resolves home from USERPROFILE and ignores HOME. A correct
+    HOME with a wrong USERPROFILE is a refusal. Passing home/temp skips the
+    live calls so a sensor can simulate that Windows rule.
+    """
+    profile = os.environ.get("USERPROFILE")
+    if not isinstance(profile, str) or not _same(profile, root):
+        raise StorageRefusal("SANDBOX_USERPROFILE_OUTSIDE_ROOT")
+    if home is None:
+        home = str(Path.home())
+    if not isinstance(home, str) or (not _same(home, root) and not under_root(home, root)):
+        raise StorageRefusal("SANDBOX_HOME_OUTSIDE_ROOT")
+    plat = sys.platform if platform is None else platform
+    if plat == "win32" and not _same(home, profile):
+        raise StorageRefusal("SANDBOX_HOME_OUTSIDE_ROOT")
+    if temp is None:
+        tempfile.tempdir = None
+        temp = tempfile.gettempdir()
+    if not isinstance(temp, str) or not under_root(temp, root):
+        raise StorageRefusal("SANDBOX_TEMP_OUTSIDE_ROOT")
+
+
+def assert_under_velvet(root: str) -> None:
+    """A sandbox parameter must stay on D: and under D:\\Velvet."""
     if not on_drive_d(root):
         raise StorageRefusal("SANDBOX_NOT_ON_D:ROOT")
-    if not _same(root, SANDBOX_ROOT):
-        raise StorageRefusal("SANDBOX_OUTSIDE_ROOT:ROOT")
+    if not under_root(root, VELVET_ROOT):
+        raise StorageRefusal("SANDBOX_OUTSIDE_VELVET")
+
+
+def sandbox_temp_dir(root: str) -> str:
+    return root.rstrip("\\/") + "\\tmp"
+
+
+def profile_temp_dir(root: str) -> str:
+    return root.rstrip("\\/") + "\\AppData\\Local\\Temp"
+
+
+def assert_temp_will_not_fall_through(root: str, exists) -> None:
+    """CPython skips a TEMP that is not there and can land on %SYSTEMROOT%\\Temp."""
+    if not exists(sandbox_temp_dir(root)) or not exists(profile_temp_dir(root)):
+        raise StorageRefusal("SANDBOX_TEMP_ABSENT")
+
+
+def prepare_sandbox_temp(root: str, mkdir=None, exists=None) -> None:
+    """Create the sandbox temp dirs before import crewai.
+
+    crewai_core.lock_store names its file lock ``crewai:{md5}.lock``. On
+    Windows the colon is an NTFS alternate-data-stream separator, so
+    portalocker creates a 0-byte file whose name is ``crewai``. If the
+    sandbox temp directory does not exist, gettempdir() skips TEMP/TMP and
+    a SYSTEM process lands on C:\\Windows\\Temp.
+    """
+    assert_under_velvet(root)
+    targets = [sandbox_temp_dir(root), profile_temp_dir(root)]
+    if mkdir is None:
+        if os.name != "nt":
+            raise StorageRefusal("SANDBOX_TEMP_ABSENT")
+
+        def mkdir(path: str) -> None:
+            Path(path).mkdir(parents=True, exist_ok=True)
+
+    for path in targets:
+        mkdir(path)
+    if exists is None:
+        if os.name != "nt":
+            raise StorageRefusal("SANDBOX_TEMP_ABSENT")
+        return
+    assert_temp_will_not_fall_through(root, exists)
+
+
+def ads_host_basename(lock_filename: str) -> str:
+    """Return the file Windows creates when the lock name contains a colon."""
+    base = lock_filename.replace("/", "\\").split("\\")[-1]
+    if base.lower().endswith(".lock"):
+        base = base[: -len(".lock")]
+    if ":" in base:
+        base = base.split(":", 1)[0]
+    return base
+
+
+def system_temp_crewai(system_root: str = "C:\\Windows") -> str:
+    return system_root.rstrip("\\/") + "\\Temp\\crewai"
+
+
+def assert_no_system_temp_crewai(exists, system_root: str = "C:\\Windows") -> None:
+    """Refuse the 0-byte ADS host file outside the sandbox."""
+    if exists(system_temp_crewai(system_root)):
+        raise StorageRefusal("WINDOWS_TEMP_CREWAI")
+
+
+def refuse_operator_env(env: dict) -> None:
+    """Refuse a present wrong OLLAMA_HOST or proxy. Absent keys may be filled.
+
+    Names are compared case-insensitively. Https_Proxy is the same variable
+    as HTTPS_PROXY, and ollama_host is the same variable as OLLAMA_HOST.
+    """
+    if not isinstance(env, dict):
+        raise StorageRefusal("SANDBOX_ENV_ABSENT")
+    for name, value in _protected_hits(env, "OLLAMA_HOST"):
+        if isinstance(value, str) and value.strip() and value != APPROVED_OLLAMA_HOST:
+            raise StorageRefusal("OLLAMA_HOST_REFUSED")
+    for key, want in PROXY_KEYS.items():
+        for name, value in _protected_hits(env, key):
+            if not isinstance(value, str) or not value.strip():
+                continue
+            if value != want:
+                raise StorageRefusal("E5_PROXY_MISMATCH:" + name)
+
+
+def bind_process_sandbox(env: dict | None = None, root: str = SANDBOX_ROOT) -> dict:
+    """Install the sandbox variables. Refuse before any assignment when the root is off D:."""
+    assert_under_velvet(root)
     ready = {} if env is None else dict(env)
+    refuse_operator_env(ready)
     ready.update(approved_environment(root))
     assert_sandbox_env(ready, root)
     for key, value in approved_environment(root).items():

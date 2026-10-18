@@ -23,10 +23,15 @@ from office_v2_crewai.contract import (  # noqa: E402
     APPROVED_MODEL_DIGEST,
     APPROVED_OLLAMA_HOST,
     APPROVED_OPENAI_BASE,
+    APPROVED_PORT,
+    CREWAI_TOOLS_NA,
+    MCP_NOT_AFFECTED,
     PRIVATE_REPO_NEEDLE,
+    PYSEC_CVE_MAP,
     SANDBOX_ROOT,
     TELEMETRY_FLAGS,
     TOKEN_CREDENTIALS_REL,
+    TRACE_USER_BYTES,
 )
 from office_v2_crewai.e4_evidence import (  # noqa: E402
     REQUIRED_RELS,
@@ -37,14 +42,23 @@ from office_v2_crewai.e4_evidence import (  # noqa: E402
     positive_files_present,
     write_observed_e4,
 )
-from office_v2_crewai.kill_harness import KillHarness, KillRefusal  # noqa: E402
+from office_v2_crewai.kill_harness import KillHarness, KillRefusal, isolated_argv  # noqa: E402
 from office_v2_crewai.preflight import evaluate, synthetic_passing_bundle, verify_manifest  # noqa: E402
 from office_v2_crewai.provider import (  # noqa: E402
     LocalOllamaProvider,
     ProviderRefusal,
     assert_llm_route,
     assert_loopback_url,
+    assert_ollama_bind,
+    binds_from_lsof,
+    binds_from_netstat,
+    binds_from_proc,
+    collect_ollama_binds,
+    digest_from_tags,
     effective_endpoint,
+    open_loopback,
+    _lsof_binds,
+    _netstat_binds,
 )
 from office_v2_crewai.sandbox import (  # noqa: E402
     FORBIDDEN_ENV,
@@ -52,24 +66,53 @@ from office_v2_crewai.sandbox import (  # noqa: E402
     PROXY_KEYS,
     VALUE_KEYS,
     StorageRefusal,
+    ads_host_basename,
     approved_environment,
     assert_cwd,
     assert_no_dotenv,
+    assert_no_system_temp_crewai,
     assert_proxy_env,
     assert_sandbox_env,
+    assert_sandbox_resolution,
     bind_process_sandbox,
     enter_sandbox,
+    prepare_sandbox_temp,
+    refuse_operator_env,
+    sandbox_temp_dir,
 )
-from office_v2_crewai.receipt import apply_run_record, save_kickoff_output, write_receipts  # noqa: E402
-from office_v2_crewai.runner import execute, record_exception  # noqa: E402
+from office_v2_crewai.receipt import apply_run_record, kickoff_output_path, save_kickoff_output, write_receipts  # noqa: E402
+from office_v2_crewai.runner import (  # noqa: E402
+    apply_telemetry,
+    completed_kickoff_exit,
+    execute,
+    main as runner_main,
+    record_exception,
+)
 from office_v2_crewai.usage_guard import (  # noqa: E402
+    DARWIN_LSOF,
+    DRIFT_FORBIDDEN_MODULES,
+    LEFTOVER_RELS,
+    WINDOWS_NETSTAT,
     UsageRefusal,
+    _PS_OBSERVE,
+    assert_built_crew,
     assert_crew_spec,
+    assert_dependency_drift,
+    assert_interpreter_isolated,
+    assert_kickoff_cites_rows,
+    assert_no_pilot_leftovers,
+    assert_no_pythonpath,
     assert_not_chroma_cli,
     assert_post_run,
+    assert_supply_chain_record,
+    assert_trace_consent,
     count_listening_sockets,
-    parse_netstat,
+    guard_post_run,
+    interpret_lsof,
     module_is_forbidden,
+    parse_lsof_listen,
+    parse_netstat,
+    seed_trace_consent,
 )
 
 PACKAGE = SCRIPTS / "office_v2_crewai"
@@ -86,6 +129,15 @@ GROUPS = (
     "result",
     "teardown",
 )
+
+
+class _IsolatedFlags:
+    isolated = 1
+    ignore_environment = 1
+    no_user_site = 1
+
+
+ISOLATED_FLAGS = _IsolatedFlags()
 
 
 def fail(message: str) -> None:
@@ -331,11 +383,11 @@ def check_provider() -> None:
     refused = {
         "http://example.com": "MODEL_URL_NOT_LOOPBACK",
         "http://10.0.0.1": "MODEL_URL_NOT_LOOPBACK",
-        "http://192.168.1.1:11435": "MODEL_URL_NOT_LOOPBACK",
+        "http://192.168.1.1:11434": "MODEL_URL_NOT_LOOPBACK",
         "https://api.openai.com": "MODEL_URL_SCHEME_REFUSED",
-        "http://localhost:11435": "MODEL_URL_NOT_EXACT_APPROVAL",
-        "http://127.0.0.1:11434": "MODEL_URL_NOT_EXACT_APPROVAL",
-        "https://127.0.0.1:11435": "MODEL_URL_SCHEME_REFUSED",
+        "http://localhost:11434": "MODEL_URL_NOT_EXACT_APPROVAL",
+        "http://127.0.0.1:11435": "MODEL_URL_NOT_EXACT_APPROVAL",
+        "https://127.0.0.1:11434": "MODEL_URL_SCHEME_REFUSED",
     }
     for url, code in refused.items():
         try:
@@ -345,6 +397,10 @@ def check_provider() -> None:
                 fail("%s refused as %s" % (url, exc))
         else:
             fail("%s was accepted" % url)
+    if APPROVED_PORT != 11434 or APPROVED_BASE_URL != "http://127.0.0.1:11434":
+        fail("approved endpoint is not 127.0.0.1:11434")
+    if assert_loopback_url("http://127.0.0.1:11434") != "http://127.0.0.1:11434":
+        fail("11434 was refused")
     if assert_loopback_url(APPROVED_BASE_URL) != APPROVED_BASE_URL:
         fail("approved loopback was not accepted")
     provider = LocalOllamaProvider(MODEL)
@@ -381,35 +437,111 @@ def check_provider() -> None:
     else:
         fail("missing OLLAMA_NO_CLOUD was accepted")
     seen = []
+    loopback = [{"address": "127.0.0.1", "port": 11434}]
 
-    def show_mismatch(request, timeout=30):
+    def tags_mismatch(request, timeout=30):
         seen.append(request.full_url)
-        return _Body({"digest": "b" * 64})
+        return _Body({"digest": APPROVED_MODEL_DIGEST})
 
     try:
-        provider.complete("hello", urlopen=show_mismatch, env=model_env())
+        provider.complete("hello", urlopen=tags_mismatch, env=model_env(), binds=loopback)
     except ProviderRefusal as exc:
         if str(exc) != "MODEL_DIGEST_MISMATCH":
             fail("served digest reason: %s" % exc)
-        if len(seen) != 1 or not seen[0].endswith("/api/show"):
-            fail("digest mismatch continued past /api/show: %s" % seen)
+        if len(seen) != 1 or not seen[0].endswith("/api/tags") or "/api/show" in seen[0]:
+            fail("digest mismatch continued past /api/tags: %s" % seen)
     else:
-        fail("served digest mismatch was accepted")
+        fail("a /api/show body was accepted as the digest")
+    missing_name = []
+
+    def tags_other(request, timeout=30):
+        missing_name.append(request.full_url)
+        return _Body({"models": [{"name": "other:9b", "digest": APPROVED_MODEL_DIGEST}]})
+
+    try:
+        provider.complete("hello", urlopen=tags_other, env=model_env(), binds=loopback)
+    except ProviderRefusal as exc:
+        if str(exc) != "MODEL_DIGEST_MISMATCH" or len(missing_name) != 1:
+            fail("missing tag name reason: %s" % exc)
+    else:
+        fail("a tags list without the approved model was accepted")
+    if digest_from_tags({"models": [{"name": "Qwen3.5:9b", "digest": APPROVED_MODEL_DIGEST}]}) != APPROVED_MODEL_DIGEST:
+        fail("tag name match was not case-insensitive")
     chat = []
 
-    def show_then_chat(request, timeout=30):
-        chat.append((request.full_url, request.data))
-        if request.full_url.endswith("/api/show"):
-            return _Body({"digest": APPROVED_MODEL_DIGEST})
+    def tags_then_chat(request, timeout=30):
+        chat.append((request.full_url, request.data, timeout, request.get_method()))
+        if request.full_url.endswith("/api/tags"):
+            return _Body({"models": [{"name": APPROVED_MODEL, "model": APPROVED_MODEL, "digest": APPROVED_MODEL_DIGEST}]})
         return _Body({"message": {"content": "local"}})
 
-    text = provider.complete("hello", urlopen=show_then_chat, env=model_env())
+    text = provider.complete("hello", urlopen=tags_then_chat, env=model_env(), binds=loopback)
     if text != "local" or provider.calls != 1 or len(chat) != 2:
         fail("approved local chat was not a single think-disabled call")
+    if chat[0][3] != "GET" or not chat[0][0].endswith("/api/tags") or chat[0][1] is not None:
+        fail("digest was not read with GET /api/tags")
     if b'"think": false' not in chat[1][1] or not chat[1][0].endswith("/api/chat"):
         fail("chat payload did not send think false")
     if b'"reasoning_effort": "none"' not in chat[1][1]:
         fail("chat payload did not send reasoning_effort none")
+    if b'"temperature": 0.0' not in chat[1][1]:
+        fail("chat payload did not send temperature 0.0")
+    timed = []
+
+    def timed_chat(request, timeout=30):
+        timed.append(timeout)
+        if request.full_url.endswith("/api/tags"):
+            return _Body({"models": [{"name": APPROVED_MODEL, "digest": APPROVED_MODEL_DIGEST}]})
+        return _Body({"message": {"content": "local"}})
+
+    provider.complete(
+        "hello",
+        urlopen=timed_chat,
+        env=model_env(),
+        binds=loopback,
+        harness=KillHarness(),
+        started=0,
+        now=580,
+    )
+    if timed != [20, 20]:
+        fail("socket timeout was not the time remaining under 600s: %s" % timed)
+    expired = []
+
+    def expired_open(*_args, **_kwargs):
+        expired.append("called")
+        raise AssertionError("urlopen")
+
+    try:
+        provider.complete(
+            "hello",
+            urlopen=expired_open,
+            env=model_env(),
+            binds=[{"address": "0.0.0.0", "port": 11434}],
+            harness=KillHarness(),
+            started=0,
+            now=600,
+        )
+    except KillRefusal as exc:
+        if str(exc) != "ATTEMPT_TIMEOUT" or expired:
+            fail("expired attempt reached the network: %s" % exc)
+    else:
+        fail("a 600s attempt was accepted")
+    wildcard = []
+
+    def wildcard_open(*_args, **_kwargs):
+        wildcard.append("called")
+        raise AssertionError("urlopen")
+
+    try:
+        provider.complete("hello", urlopen=wildcard_open, env=model_env(), binds=[{"address": "0.0.0.0", "port": 11434}])
+    except ProviderRefusal as exc:
+        if str(exc) != "OLLAMA_BIND_WILDCARD" or wildcard:
+            fail("wildcard bind reached the network: %s" % exc)
+    else:
+        fail("Ollama bound to 0.0.0.0 was accepted")
+    assert_ollama_bind([{"address": "127.0.0.1", "port": 11434}])
+    assert_ollama_bind([{"address": "::1", "port": 11434}])
+    _expect_provider(lambda: assert_ollama_bind([{"address": "127.0.0.1", "port": 11435}]), "OLLAMA_BIND_UNPROVEN")
     effort = json.loads(MODEL.read_text(encoding="ascii"))
     if effort.get("reasoning_effort") != "none":
         fail("frozen model input does not record reasoning_effort none")
@@ -436,7 +568,7 @@ def check_provider() -> None:
     if APPROVED_MODEL.encode("ascii") not in chat[1][1]:
         fail("chat payload did not use the approved model")
     wrong_host = model_env()
-    wrong_host["OLLAMA_HOST"] = "127.0.0.1:11434"
+    wrong_host["OLLAMA_HOST"] = "127.0.0.1:11435"
     try:
         provider.complete("hello", urlopen=boom, env=wrong_host)
     except ProviderRefusal as exc:
@@ -444,6 +576,101 @@ def check_provider() -> None:
             fail("wrong OLLAMA_HOST reached the network: %s" % exc)
     else:
         fail("wrong OLLAMA_HOST was accepted")
+    check_model_redirect(provider)
+
+
+def check_model_redirect(provider: LocalOllamaProvider) -> None:
+    """A 307 from loopback to a non-loopback URL is refused with no second request."""
+    import socket
+    import threading
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+    import urllib.request as urlrequest
+    import office_v2_crewai.provider as provider_mod
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.server.hits += 1
+            if self.path.startswith("/ok"):
+                body = b'{"ok": true}'
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+                return
+            self.send_response(307)
+            self.send_header("Location", "http://203.0.113.5/not-loopback")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+
+        def do_POST(self):
+            self.do_GET()
+
+        def log_message(self, _fmt, *_args):
+            return
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    server.hits = 0
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    allowed = server.server_address
+    foreign = []
+    real_connect = socket.create_connection
+
+    def guarded(address, *args, **kwargs):
+        host = address[0]
+        port = address[1] if len(address) > 1 else None
+        if (host, port) != (allowed[0], allowed[1]):
+            foreign.append(address)
+            raise OSError("second hop refused")
+        return real_connect(address, *args, **kwargs)
+
+    socket.create_connection = guarded
+    try:
+        ok_url = "http://%s:%d/ok" % (allowed[0], allowed[1])
+        opened = open_loopback(urlrequest.Request(ok_url, method="GET"), timeout=5)
+        try:
+            if opened.read() != b'{"ok": true}':
+                fail("loopback opener did not return the local body")
+        finally:
+            opened.close()
+        before = server.hits
+        target = "http://%s:%d/api/tags" % (allowed[0], allowed[1])
+        try:
+            open_loopback(urlrequest.Request(target, method="GET"), timeout=5)
+        except ProviderRefusal as exc:
+            if str(exc) != "MODEL_REDIRECT_REFUSED":
+                fail("redirect refused as %s" % exc)
+        else:
+            fail("307 to a non-loopback URL was followed")
+        if server.hits != before + 1 or foreign:
+            fail("redirect made another request: hits=%s foreign=%s" % (server.hits, foreign))
+    finally:
+        socket.create_connection = real_connect
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=5)
+    seen = []
+
+    def boom(request, timeout=30):
+        seen.append(getattr(request, "full_url", ""))
+        raise ProviderRefusal("MODEL_REDIRECT_REFUSED")
+
+    original = provider_mod.open_loopback
+    provider_mod.open_loopback = boom
+    try:
+        provider.complete(
+            "hello",
+            env=model_env(),
+            binds=[{"address": "127.0.0.1", "port": 11434}],
+        )
+    except ProviderRefusal as exc:
+        if str(exc) != "MODEL_REDIRECT_REFUSED" or len(seen) != 1 or not str(seen[0]).endswith("/api/tags"):
+            fail("complete did not use the redirect-refusing opener: %s %s" % (exc, seen))
+    else:
+        fail("complete ignored the redirect refusal")
+    finally:
+        provider_mod.open_loopback = original
 
 
 def check_kill() -> None:
@@ -470,7 +697,7 @@ def check_kill() -> None:
 def check_execute() -> None:
     out = Path(tempfile.mkdtemp(prefix="crewai-out-"))
     try:
-        code = execute(INPUTS, out, EVIDENCE, MODEL, env={})
+        code = execute(INPUTS, out, EVIDENCE, MODEL, env={}, flags=ISOLATED_FLAGS)
         if code != 2:
             fail("committed execute returned %s" % code)
         receipt = json.loads((out / "attempt-receipt.json").read_text(encoding="utf-8"))
@@ -535,17 +762,29 @@ def check_ast() -> None:
         fail("crew source does not pin the OpenAI-compatible base URL")
     if "reasoning_effort=REASONING_EFFORT" not in source:
         fail("crew source does not pass reasoning_effort none")
-    if APPROVED_OPENAI_BASE != "http://127.0.0.1:11435/v1":
-        fail("approved OpenAI base is not the 11435 /v1 endpoint")
+    if APPROVED_OPENAI_BASE != "http://127.0.0.1:11434/v1":
+        fail("approved OpenAI base is not the 11434 /v1 endpoint")
     saw_bind = False
     saw_cwd = False
     saw_route = False
+    saw_drift = False
+    saw_resolution = False
+    saw_consent = False
+    saw_temp = False
+    saw_pythonpath = False
+    saw_built = False
+    imported = False
     build = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "build_crew")
     for stmt in build.body:
         if isinstance(stmt, ast.Import) and any(alias.name == "crewai" for alias in stmt.names):
-            if not (saw_bind and saw_cwd and saw_route):
-                fail("crewai is imported before the sandbox and endpoint checks")
-            break
+            ready = (
+                saw_bind and saw_cwd and saw_route and saw_drift and saw_resolution
+                and saw_consent and saw_temp and saw_pythonpath
+            )
+            if not ready:
+                fail("crewai is imported before the sandbox, drift, and consent checks")
+            imported = True
+            continue
         for node in ast.walk(stmt):
             if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
                 if node.func.id == "bind_process_sandbox":
@@ -554,8 +793,26 @@ def check_ast() -> None:
                     saw_cwd = True
                 if node.func.id == "assert_llm_route":
                     saw_route = True
-    else:
+                if node.func.id == "assert_dependency_drift":
+                    saw_drift = True
+                if node.func.id == "seed_trace_consent":
+                    saw_consent = True
+                if node.func.id == "prepare_sandbox_temp":
+                    saw_temp = True
+                if node.func.id == "assert_sandbox_resolution":
+                    if not saw_temp:
+                        fail("temp resolution runs before the sandbox temp directories exist")
+                    saw_resolution = True
+                if node.func.id == "assert_no_pythonpath":
+                    saw_pythonpath = True
+                if node.func.id == "assert_built_crew":
+                    if not imported:
+                        fail("built crew is checked before import")
+                    saw_built = True
+    if not imported:
         fail("build_crew does not import crewai")
+    if not saw_built:
+        fail("built crew objects are not checked")
     for forbidden in ("allow_code_execution", "CodeInterpreter", "crewai-tools"):
         if forbidden in source:
             fail("crew source contains %s" % forbidden)
@@ -569,7 +826,7 @@ def check_ast() -> None:
             fail("crew source imports crewai-tools")
     for node in agents + crews:
         for keyword in node.keywords:
-            if keyword.arg in {"knowledge", "knowledge_sources", "rag", "mcps", "mcp_servers", "embedder"}:
+            if keyword.arg in {"knowledge", "knowledge_sources", "rag", "mcps", "mcp_servers", "embedder", "from_repository"}:
                 fail("crew passes %s" % keyword.arg)
 
 
@@ -584,11 +841,13 @@ def _good_route() -> dict:
 def check_endpoint_mutations() -> None:
     assert_llm_route(_good_route())
     if effective_endpoint(APPROVED_OPENAI_BASE) != APPROVED_ENDPOINT:
-        fail("approved base did not resolve to 11435")
+        fail("approved base did not resolve to 11434")
     if effective_endpoint(APPROVED_OLLAMA_HOST) != APPROVED_ENDPOINT:
-        fail("approved OLLAMA_HOST did not resolve to 11435")
-    if effective_endpoint("http://127.0.0.1:11435") != APPROVED_ENDPOINT:
-        fail("a 11435 URL without /v1 did not normalize to the approved endpoint")
+        fail("approved OLLAMA_HOST did not resolve to 11434")
+    if effective_endpoint("http://127.0.0.1:11434") != "127.0.0.1:11434":
+        fail("a 11434 URL without /v1 did not normalize to the approved endpoint")
+    _expect_provider(lambda: effective_endpoint("http://127.0.0.1:11435"), "LLM_ENDPOINT_MISMATCH")
+    _expect_provider(lambda: effective_endpoint("http://127.0.0.1:11435/v1"), "LLM_ENDPOINT_MISMATCH")
     _expect_provider(lambda: assert_llm_route({**_good_route(), "is_litellm": True}), "LITELLM_ROUTE_REFUSED")
     _expect_provider(lambda: assert_llm_route({**_good_route(), "is_litellm": None}), "LITELLM_ROUTE_REFUSED")
     _expect_provider(
@@ -596,7 +855,7 @@ def check_endpoint_mutations() -> None:
         "LLM_BASE_URL_REFUSED",
     )
     _expect_provider(
-        lambda: assert_llm_route({**_good_route(), "base_url": "http://127.0.0.1:11434/v1"}),
+        lambda: assert_llm_route({**_good_route(), "base_url": "http://127.0.0.1:11435/v1"}),
         "LLM_BASE_URL_REFUSED",
     )
     _expect_provider(
@@ -604,7 +863,7 @@ def check_endpoint_mutations() -> None:
         "LLM_BASE_URL_REFUSED",
     )
     _expect_provider(
-        lambda: assert_llm_route({**_good_route(), "ollama_host": "127.0.0.1:11434"}),
+        lambda: assert_llm_route({**_good_route(), "ollama_host": "127.0.0.1:11435"}),
         "OLLAMA_HOST_REFUSED",
     )
     _expect_provider(
@@ -613,10 +872,10 @@ def check_endpoint_mutations() -> None:
     )
     for bad in (
         "http://localhost:11434/v1",
-        "http://127.0.0.1:11434/v1",
+        "http://127.0.0.1:11435/v1",
         "http://0.0.0.0:11434/v1",
-        "127.0.0.1",
-        "127.0.0.1:11434",
+        "127.0.0.1:11435",
+        "http://127.0.0.1:11435",
     ):
         _expect_provider(lambda bad=bad: effective_endpoint(bad), "LLM_ENDPOINT_MISMATCH")
 
@@ -635,6 +894,10 @@ def check_sandbox_mutations() -> None:
         fail("token credentials path is not in the E4 manifest")
     if "TIKTOKEN_CACHE_DIR" in approved_environment():
         fail("TIKTOKEN_CACHE_DIR was set")
+    if "CREWAI_DISABLE_TRACING" in approved_environment() or "CREWAI_DISABLE_TRACING" in VALUE_KEYS:
+        fail("CREWAI_DISABLE_TRACING was set")
+    if "CREWAI_DISABLE_TRACING" in TELEMETRY_FLAGS:
+        fail("CREWAI_DISABLE_TRACING was set")
     for key in PATH_KEYS:
         missing = dict(env)
         del missing[key]
@@ -656,10 +919,11 @@ def check_sandbox_mutations() -> None:
         wrong[key] = "no"
         _expect_storage(lambda wrong=wrong: assert_sandbox_env(wrong), "SANDBOX_VALUE_MISMATCH:" + key)
     for key, want in PROXY_KEYS.items():
+        missing = dict(env)
+        del missing[key]
+        del missing[key.lower()]
+        _expect_storage(lambda missing=missing: assert_proxy_env(missing), "E5_PROXY_ABSENT:" + key)
         for name in (key, key.lower()):
-            missing = dict(env)
-            del missing[name]
-            _expect_storage(lambda missing=missing: assert_proxy_env(missing), "E5_PROXY_ABSENT:" + name)
             wrong = dict(env)
             wrong[name] = "http://10.0.0.8:8080" if name.upper() != "NO_PROXY" else "127.0.0.1,localhost"
             _expect_storage(lambda wrong=wrong: assert_proxy_env(wrong), "E5_PROXY_MISMATCH:" + name)
@@ -674,7 +938,10 @@ def check_sandbox_mutations() -> None:
     _expect_storage(lambda: assert_cwd("D:\\Velvet"), "SANDBOX_CWD_OUTSIDE_ROOT")
     _expect_storage(lambda: enter_sandbox(SANDBOX_ROOT + "\\tmp"), "SANDBOX_CWD_OUTSIDE_ROOT")
     _expect_storage(lambda: enter_sandbox(SANDBOX_ROOT), "SANDBOX_CWD_ABSENT")
-    _expect_storage(lambda: enter_sandbox(os.getcwd()), "SANDBOX_CWD_NOT_ON_D")
+    # A D:\Velvet checkout is on D: and outside the sandbox root, so the live
+    # cwd is not a stable NOT_ON_D case. These paths are.
+    _expect_storage(lambda: enter_sandbox("C:\\Users\\Public"), "SANDBOX_CWD_NOT_ON_D")
+    _expect_storage(lambda: enter_sandbox("D:\\Velvet\\checkout"), "SANDBOX_CWD_OUTSIDE_ROOT")
     dotted = Path(tempfile.mkdtemp(prefix="crewai-dotenv-"))
     clean = Path(tempfile.mkdtemp(prefix="crewai-clean-"))
     try:
@@ -689,7 +956,15 @@ def check_sandbox_mutations() -> None:
         _expect_storage(lambda: bind_process_sandbox(root="C:\\nope"), "SANDBOX_NOT_ON_D:ROOT")
         if os.environ.get("CREWAI_STORAGE_DIR", "").startswith("C:"):
             fail("bind wrote a C: storage dir")
-        _expect_storage(lambda: bind_process_sandbox(root="D:\\Velvet\\other"), "SANDBOX_OUTSIDE_ROOT:ROOT")
+        _expect_storage(lambda: bind_process_sandbox(root="D:\\NotVelvet\\sandbox"), "SANDBOX_OUTSIDE_VELVET")
+        _expect_storage(lambda: bind_process_sandbox(root="D:\\VelvetExtra\\sandbox"), "SANDBOX_OUTSIDE_VELVET")
+        _expect_storage(lambda: bind_process_sandbox(root="D:\\outside"), "SANDBOX_OUTSIDE_VELVET")
+        accepted = bind_process_sandbox(root="D:\\Velvet\\lab\\sandbox")
+        if accepted["USERPROFILE"] != "D:\\Velvet\\lab\\sandbox":
+            fail("a sandbox under D:\\Velvet was refused")
+        if kickoff_output_path("D:\\Velvet\\lab\\sandbox") != "D:\\Velvet\\lab\\sandbox\\crewai-output\\kickoff.md":
+            fail("kickoff path did not follow the sandbox parameter")
+        _expect_storage(lambda: kickoff_output_path("D:\\NotVelvet\\sandbox"), "OUTPUT_NOT_ON_D")
     finally:
         for key, value in snapshot.items():
             if value is None:
@@ -922,26 +1197,71 @@ def check_proxy_gate() -> None:
         if missed["gates"]["E5"]["reason"] != "E5_PROXY_MISMATCH:NO_PROXY":
             fail("broad NO_PROXY was accepted: %s" % missed["gates"]["E5"])
         env = passing_env()
-        env["OLLAMA_HOST"] = "127.0.0.1:11434"
+        env["OLLAMA_HOST"] = "127.0.0.1:11435"
         missed = evaluate(base / "inputs", base / "evidence", env, None)
         if missed["ok"] or missed["model_calls"] != 0:
-            fail("11434 host was accepted")
+            fail("11435 host was accepted")
         if missed["gates"]["E5"]["reason"] != "OLLAMA_HOST_REFUSED" and missed["gates"]["E4"]["reason"] != "SANDBOX_VALUE_MISMATCH:OLLAMA_HOST":
-            fail("11434 host reason was %s / %s" % (missed["gates"]["E4"], missed["gates"]["E5"]))
+            fail("11435 host reason was %s / %s" % (missed["gates"]["E4"], missed["gates"]["E5"]))
     finally:
         shutil.rmtree(base, ignore_errors=True)
+
+
+def _emit_matches_committed(fresh: Path) -> None:
+    for path in sorted(p for p in fresh.rglob("*") if p.is_file()):
+        blob = path.read_bytes()
+        if b"\r" in blob:
+            fail("E4 emit wrote CRLF: %s" % path.relative_to(fresh))
+        committed = EVIDENCE / path.relative_to(fresh)
+        if not committed.is_file() or committed.read_bytes() != blob:
+            fail("committed E4 evidence drifted: %s" % path.relative_to(fresh))
 
 
 def check_committed_e4_shape() -> None:
     fresh = Path(tempfile.mkdtemp(prefix="crewai-e4-emit-"))
     try:
         emit_not_observed(fresh)
-        for path in sorted(p for p in fresh.rglob("*") if p.is_file()):
-            committed = EVIDENCE / path.relative_to(fresh)
-            if not committed.is_file() or committed.read_bytes() != path.read_bytes():
-                fail("committed E4 evidence drifted: %s" % path.relative_to(fresh))
+        _emit_matches_committed(fresh)
     finally:
         shutil.rmtree(fresh, ignore_errors=True)
+    windows = Path(tempfile.mkdtemp(prefix="crewai-e4-crlf-"))
+    original = Path.open
+
+    def windows_text(self, mode="r", buffering=-1, encoding=None, errors=None, newline=None):
+        writing = any(flag in mode for flag in ("w", "a", "x")) and "b" not in mode
+        if not writing or newline is not None:
+            return original(self, mode, buffering, encoding, errors, newline)
+        stream = original(self, mode, buffering, encoding, errors, newline="")
+
+        class _CRLF:
+            def write(self, data):
+                if isinstance(data, str):
+                    data = data.replace("\n", "\r\n")
+                return stream.write(data)
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, tb):
+                return stream.__exit__(exc_type, exc, tb)
+
+        return _CRLF()
+
+    observed = Path(tempfile.mkdtemp(prefix="crewai-e4-observed-"))
+    try:
+        try:
+            Path.open = windows_text
+            emit_not_observed(windows)
+            write_observed_e4(observed)
+        finally:
+            Path.open = original
+        _emit_matches_committed(windows)
+        for path in sorted(p for p in observed.rglob("*") if p.is_file()):
+            if b"\r" in path.read_bytes():
+                fail("observed E4 emit wrote CRLF: %s" % path.relative_to(observed))
+    finally:
+        shutil.rmtree(windows, ignore_errors=True)
+        shutil.rmtree(observed, ignore_errors=True)
     before = json.loads((EVIDENCE / "e4" / "manifest-before.json").read_text(encoding="ascii"))
     rels = [row["rel"] for row in before["entries"]]
     if rels != list(REQUIRED_RELS):
@@ -1103,6 +1423,58 @@ def check_listeners() -> None:
         fail("an empty netstat table was not a proven zero")
     if count_listening_sockets(os.getpid()) < 0:
         fail("linux listener count was unproven")
+    lsof_header = "COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME\n"
+    if count_listening_sockets(10, platform="darwin", observation=lsof_header) != 0:
+        fail("an empty lsof table was not a proven zero")
+    listening = lsof_header + "Python 10 user 5u IPv4 0x1 0t0 TCP 127.0.0.1:11434 (LISTEN)\n"
+    if count_listening_sockets(10, platform="darwin", observation=listening) != 1:
+        fail("a darwin TCP listener was not counted")
+    other = lsof_header + "Python 99 user 5u IPv4 0x1 0t0 TCP *:80 (LISTEN)\n"
+    if count_listening_sockets(10, platform="darwin", observation=other) != 0:
+        fail("another pid's listener was counted")
+    _expect_usage(
+        lambda: count_listening_sockets(10, platform="darwin", observation="not a table"),
+        "PILOT_LISTENER_UNPROVEN",
+    )
+    _expect_usage(
+        lambda: count_listening_sockets(10, platform="darwin", observation={"tcp": []}),
+        "PILOT_LISTENER_UNPROVEN",
+    )
+    if interpret_lsof(10, 1, "", "") != 0:
+        fail("lsof no-match was not a proven zero")
+    if interpret_lsof(10, 0, lsof_header, "") != 0:
+        fail("lsof exit 0 with an empty table was not a proven zero")
+    _expect_usage(lambda: interpret_lsof(10, 0, "", ""), "PILOT_LISTENER_UNPROVEN")
+    _expect_usage(lambda: interpret_lsof(10, 1, "", "lsof: status error"), "PILOT_LISTENER_UNPROVEN")
+    _expect_usage(lambda: interpret_lsof(10, 2, "", ""), "PILOT_LISTENER_UNPROVEN")
+    if parse_lsof_listen(lsof_header, 10) != 0:
+        fail("parse_lsof_listen rejected a header-only table")
+
+    def lsof_missing():
+        raise OSError("lsof missing")
+
+    _expect_usage(
+        lambda: count_listening_sockets(10, platform="darwin", observe=lsof_missing),
+        "PILOT_LISTENER_UNPROVEN",
+    )
+    _expect_usage(lambda: count_listening_sockets(10, platform="freebsd"), "PILOT_LISTENER_UNPROVEN")
+    if ".ToArray()" not in _PS_OBSERVE:
+        fail("PowerShell listener script does not call ToArray")
+    if WINDOWS_NETSTAT not in _PS_OBSERVE or "& netstat.exe" in _PS_OBSERVE:
+        fail("PowerShell listener script still resolves netstat from PATH")
+    for wrapped in ("@($processes)", "@($tcp)", "@($udp)"):
+        if wrapped in _PS_OBSERVE:
+            fail("PowerShell listener script still wraps %s" % wrapped)
+    probed = []
+
+    def listener_boom():
+        probed.append("called")
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+
+    loaded = {"fastapi": object(), "chromadb.server": object(), "uvicorn": object(), "mcp": object()}
+    _expect_usage(lambda: guard_post_run(loaded, listener_boom), "FORBIDDEN_MODULE_LOADED")
+    if probed:
+        fail("the module guard ran after the listener check")
 
 
 def check_run_record() -> None:
@@ -1111,7 +1483,7 @@ def check_run_record() -> None:
     crashed = Path(tempfile.mkdtemp(prefix="crewai-crash-"))
     crashed_late = Path(tempfile.mkdtemp(prefix="crewai-crash-late-"))
     try:
-        execute(INPUTS, out, EVIDENCE, MODEL, env={})
+        execute(INPUTS, out, EVIDENCE, MODEL, env={}, flags=ISOLATED_FLAGS)
         original = json.loads((out / "attempt-receipt.json").read_text(encoding="utf-8"))
         captured = []
 
@@ -1195,11 +1567,801 @@ def check_run_record() -> None:
             fail("malformed reply did not record FAIL")
         if late_post["pilot_process_started"] is not True or "No pilot process was started" in late_post["note"]:
             fail("crash after start still says the pilot did not start")
+        hashed = json.loads(json.dumps(original))
+        apply_run_record(hashed, saved)
+        fail_after = Path(tempfile.mkdtemp(prefix="crewai-fail-after-"))
+        try:
+            code = record_exception(
+                hashed,
+                UsageRefusal("PILOT_LISTENER_UNPROVEN"),
+                fail_after,
+                provider_calls=2,
+                started=True,
+            )
+            failed = json.loads((fail_after / "attempt-receipt.json").read_text(encoding="utf-8"))
+            if code != 2 or failed["result"]["status"] != "FAIL":
+                fail("FAIL after kickoff did not stay FAIL")
+            if failed["result"]["output_sha256"].get("kickoff.md") != saved["sha256"]:
+                fail("FAIL after kickoff dropped the kickoff.md sha256")
+            if failed["teardown"].get("listener_source") != "UNPROVEN":
+                fail("FAIL after kickoff did not record the listener result")
+        finally:
+            shutil.rmtree(fail_after, ignore_errors=True)
     finally:
         shutil.rmtree(out, ignore_errors=True)
         shutil.rmtree(recorded, ignore_errors=True)
         shutil.rmtree(crashed, ignore_errors=True)
         shutil.rmtree(crashed_late, ignore_errors=True)
+
+
+class _Built:
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
+
+def _agent(**overrides):
+    data = {
+        "from_repository": None,
+        "tools": [],
+        "mcps": None,
+        "mcp_servers": None,
+        "knowledge": None,
+        "knowledge_sources": None,
+    }
+    data.update(overrides)
+    return _Built(**data)
+
+
+def _crew(**overrides):
+    data = {"memory": False, "tracing": False}
+    data.update(overrides)
+    return _Built(**data)
+
+
+def check_hardening() -> None:
+    """Comment 6250954627. Spec mutations only. No model call and no machine run."""
+    if TRACE_USER_BYTES != b'{"first_execution_done":true,"trace_consent":false}':
+        fail("trace consent bytes drifted")
+    for path in sorted(PACKAGE.rglob("*")):
+        if path.is_file() and path.suffix in {".py", ".json", ".md", ".reg"}:
+            if "CREWAI_DISABLE_TRACING" in path.read_text(encoding="utf-8"):
+                fail("CREWAI_DISABLE_TRACING is present in %s" % path.relative_to(PACKAGE))
+    runner_source = (PACKAGE / "runner.py").read_text(encoding="utf-8")
+    if "assert_trace_consent(" not in runner_source or "assert_no_pilot_leftovers(" not in runner_source:
+        fail("post-run consent or leftover check is missing")
+    assert_dependency_drift()
+    for name in DRIFT_FORBIDDEN_MODULES:
+        def finder(wanted, name=name):
+            if wanted == name:
+                return object()
+            return None
+        _expect_usage(lambda finder=finder: assert_dependency_drift(finder), "BLOCKED_SECURITY")
+        _expect_usage(
+            lambda name=name: assert_post_run({name: object(), "chromadb": object()}, 0, []),
+            "FORBIDDEN_MODULE_LOADED",
+        )
+        if not module_is_forbidden(name):
+            fail("%s was not a forbidden module" % name)
+    parent = Path(tempfile.mkdtemp(prefix="crewai-consent-"))
+    try:
+        storage = parent / "crewai-storage"
+        written = seed_trace_consent(storage)
+        if written.read_bytes() != TRACE_USER_BYTES:
+            fail("seeded trace consent bytes drifted")
+        assert_trace_consent(written)
+        written.unlink()
+        _expect_usage(lambda: assert_trace_consent(written), "TRACE_CONSENT_ABSENT")
+        opted_in = parent / "opt-in"
+        opted_in.mkdir()
+        consent_true = b'{"first_execution_done":true,"trace_consent":true}'
+        (opted_in / ".crewai_user.json").write_bytes(consent_true)
+        _expect_usage(lambda: assert_trace_consent(opted_in / ".crewai_user.json"), "TRACE_CONSENT_TRUE")
+        _expect_usage(lambda: seed_trace_consent(opted_in), "TRACE_CONSENT_TRUE")
+        if (opted_in / ".crewai_user.json").read_bytes() != consent_true:
+            fail("trace consent true was overwritten")
+        changed = parent / "changed"
+        changed.mkdir()
+        target = changed / ".crewai_user.json"
+        target.write_bytes(b'{"first_execution_done":true,"trace_consent":false,"extra":1}')
+        _expect_usage(lambda: assert_trace_consent(target), "TRACE_CONSENT_CHANGED")
+    finally:
+        shutil.rmtree(parent, ignore_errors=True)
+    agents = [_agent(), _agent()]
+    crew = _crew(agents=agents)
+    assert_built_crew(agents, crew)
+    _expect_usage(lambda: assert_built_crew([_agent(from_repository="x"), _agent()], _crew()), "FROM_REPOSITORY_REFUSED")
+    _expect_usage(lambda: assert_built_crew([_agent(tools=["search"])], _crew()), "TOOLS_NOT_EMPTY")
+    _expect_usage(lambda: assert_built_crew([_agent(mcps=["srv"])], _crew()), "MCP_SERVERS_REFUSED")
+    _expect_usage(lambda: assert_built_crew([_agent(knowledge=["doc"])], _crew()), "KNOWLEDGE_OR_RAG_REFUSED")
+    _expect_usage(lambda: assert_built_crew(agents, _crew(memory=True)), "MEMORY_NOT_DISABLED")
+    _expect_usage(lambda: assert_built_crew(agents, _crew(tracing=True)), "TRACING_NOT_DISABLED")
+    spec = {"memory": False, "knowledge": None, "rag": None, "tools": [], "mcps": None, "crewai_tools": False}
+    _expect_usage(lambda: assert_crew_spec({**spec, "from_repository": "x"}), "FROM_REPOSITORY_REFUSED")
+    env_keys = ("USERPROFILE", "HOME", "TEMP", "TMP")
+    snapshot = {key: os.environ.get(key) for key in env_keys}
+    try:
+        os.environ["USERPROFILE"] = SANDBOX_ROOT
+        os.environ["HOME"] = SANDBOX_ROOT
+        os.environ["TEMP"] = SANDBOX_ROOT + "\\tmp"
+        os.environ["TMP"] = SANDBOX_ROOT + "\\tmp"
+        assert_sandbox_resolution(home=SANDBOX_ROOT, temp=SANDBOX_ROOT + "\\tmp", platform="win32")
+        os.environ["USERPROFILE"] = "C:\\Users\\Public"
+        os.environ["HOME"] = SANDBOX_ROOT
+        _expect_storage(
+            lambda: assert_sandbox_resolution(home=SANDBOX_ROOT, temp=SANDBOX_ROOT + "\\tmp", platform="win32"),
+            "SANDBOX_USERPROFILE_OUTSIDE_ROOT",
+        )
+    finally:
+        for key, value in snapshot.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+    leftover_root = Path(tempfile.mkdtemp(prefix="crewai-leftover-"))
+    try:
+        assert_no_pilot_leftovers(leftover_root)
+        for rel in LEFTOVER_RELS:
+            path = leftover_root.joinpath(*rel.split("\\"))
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"leftover")
+            _expect_usage(lambda rel=rel: assert_no_pilot_leftovers(leftover_root), "LEFTOVER_FILE:" + rel)
+            path.unlink()
+        assert_no_pilot_leftovers(leftover_root)
+    finally:
+        shutil.rmtree(leftover_root, ignore_errors=True)
+    document = json.loads((EVIDENCE / "e3-supply-chain.json").read_text(encoding="ascii"))
+    assert_supply_chain_record(document)
+    if document.get("lock_sha256") != "121c1bd04eee730b51eb71e49da503b0d0236cdd06d8687a5df792234f78a669":
+        fail("E3 lock sha changed")
+    if document.get("wheel_count") != 154 or document.get("scan_status") != "RED":
+        fail("E3 lock identity changed")
+    broken = json.loads(json.dumps(document))
+    broken["cve_map"] = dict(PYSEC_CVE_MAP)
+    broken["cve_map"]["PYSEC-2026-311"] = "CVE-2026-0000"
+    _expect_usage(lambda: assert_supply_chain_record(broken), "PYSEC_CVE_MAP_MISMATCH")
+    missing_fastapi = json.loads(json.dumps(document))
+    missing_fastapi["absent_from_lock"] = []
+    _expect_usage(lambda: assert_supply_chain_record(missing_fastapi), "FASTAPI_NOT_RECORDED")
+    tools = json.loads(json.dumps(document))
+    for row in tools["not_applicable"]:
+        if row["id"] == CREWAI_TOOLS_NA[0]:
+            row["status"] = "RED"
+    _expect_usage(lambda: assert_supply_chain_record(tools), "CREWAI_TOOLS_CVE_NOT_NA")
+    affected = json.loads(json.dumps(document))
+    for row in affected["not_affected"]:
+        if row["id"] == MCP_NOT_AFFECTED[0]:
+            row["status"] = "RED"
+    _expect_usage(lambda: assert_supply_chain_record(affected), "MCP_ADVISORY_STATUS_MISMATCH")
+    keep_red = json.loads(json.dumps(document))
+    keep_red["not_affected"].append({"id": "CVE-2026-59951", "package": "mcp", "status": "NOT_AFFECTED", "version": "1.28.1"})
+    _expect_usage(lambda: assert_supply_chain_record(keep_red), "MCP_59951_NOT_RED")
+    no_zdi = json.loads(json.dumps(document))
+    no_zdi["present_in_pin"] = []
+    _expect_usage(lambda: assert_supply_chain_record(no_zdi), "ZDI_26_706_RECORD_ABSENT")
+
+
+def check_lab4() -> None:
+    """Comment 6251061341. Spec mutations only. No model call and no machine run."""
+    filled = apply_telemetry({})
+    if filled.get("OLLAMA_HOST") != APPROVED_OLLAMA_HOST or filled.get("HTTP_PROXY") != "http://127.0.0.1:9":
+        fail("an absent host or proxy was not filled with the approved value")
+    bad_host = passing_env()
+    bad_host["OLLAMA_HOST"] = "127.0.0.1:11435"
+    _expect_storage(lambda: apply_telemetry(bad_host), "OLLAMA_HOST_REFUSED")
+    bad_proxy = passing_env()
+    bad_proxy["ALL_PROXY"] = "http://10.0.0.1:8080"
+    bad_proxy["all_proxy"] = bad_proxy["ALL_PROXY"]
+    _expect_storage(lambda: apply_telemetry(bad_proxy), "E5_PROXY_MISMATCH:ALL_PROXY")
+    parent = Path(tempfile.mkdtemp(prefix="crewai-lab4-"))
+    try:
+        synthetic_passing_bundle(parent)
+        host_out = parent / "host-out"
+        code = execute(parent / "inputs", host_out, parent / "evidence", MODEL, env=bad_host, flags=ISOLATED_FLAGS)
+        host_receipt = json.loads((host_out / "attempt-receipt.json").read_text(encoding="utf-8"))
+        if code != 2 or host_receipt["identity"]["reason"] != "OLLAMA_HOST_REFUSED":
+            fail("wrong OLLAMA_HOST reason was %s" % host_receipt["identity"].get("reason"))
+        if host_receipt["execution"]["model_calls"] != 0 or host_receipt["identity"]["gates"]["E5"] == "PASS":
+            fail("wrong OLLAMA_HOST was overwritten into an E5 pass")
+        bad = json.loads(MODEL.read_text(encoding="ascii"))
+        bad["base_url"] = "http://127.0.0.1:11436"
+        bad_path = parent / "bad-model.json"
+        bad_path.write_text(json.dumps(bad), encoding="ascii")
+        model_out = parent / "model-out"
+        code = execute(parent / "inputs", model_out, parent / "evidence", bad_path, env=passing_env(), flags=ISOLATED_FLAGS)
+        model_receipt = json.loads((model_out / "attempt-receipt.json").read_text(encoding="utf-8"))
+        if code != 2 or model_receipt["identity"]["reason"] != "MODEL_URL_NOT_EXACT_APPROVAL":
+            fail("model refusal reason was %s" % model_receipt["identity"].get("reason"))
+        if model_receipt["identity"].get("model_status") != "MODEL_URL_NOT_EXACT_APPROVAL":
+            fail("model_status was not recorded")
+        if model_receipt["execution"]["model_calls"] != 0 or "crewai" in sys.modules:
+            fail("a model-config refusal reached the model")
+    finally:
+        shutil.rmtree(parent, ignore_errors=True)
+    channel = "crewai:" + ("ab" * 16) + ".lock"
+    if ads_host_basename(channel) != "crewai":
+        fail("the lock channel did not name the 0-byte crewai file")
+    _expect_storage(
+        lambda: assert_no_system_temp_crewai(lambda path: path.casefold().endswith("\\temp\\crewai")),
+        "WINDOWS_TEMP_CREWAI",
+    )
+    assert_no_system_temp_crewai(lambda path: False)
+    made = []
+
+    def mkdir(path):
+        made.append(path)
+
+    _expect_storage(
+        lambda: prepare_sandbox_temp("D:\\Velvet\\lab\\sandbox", mkdir=mkdir, exists=lambda path: False),
+        "SANDBOX_TEMP_ABSENT",
+    )
+    if len(made) != 2:
+        fail("sandbox temp directories were not created before the fall-through check")
+    prepare_sandbox_temp("D:\\Velvet\\lab\\sandbox", mkdir=mkdir, exists=lambda path: True)
+    source = (PACKAGE / "crew_build.py").read_text(encoding="utf-8")
+    if source.count("{issue_rows}") < 4:
+        fail("issue_rows is not wired into the task text")
+    cited_rows = {
+        "issues": [{"url": "https://github.com/nocturney/velvetos-core/issues/612", "number": 612}],
+    }
+    _expect_usage(
+        lambda: assert_kickoff_cites_rows("| Issue | Status |\n| --- | --- |\n| N/A | UNKNOWN |\n", cited_rows),
+        "KICKOFF_EMPTY_TABLE",
+    )
+    _expect_usage(lambda: assert_kickoff_cites_rows("no rows were provided\n", cited_rows), "KICKOFF_EMPTY_TABLE")
+    assert_kickoff_cites_rows(
+        "| Issue | Status |\n| --- | --- |\n| https://github.com/nocturney/velvetos-core/issues/612 | open |\n",
+        cited_rows,
+    )
+    _expect_usage(lambda: assert_no_pythonpath({"PYTHONPATH": "D:\\evil"}), "PYTHONPATH_REFUSED")
+    _expect_usage(lambda: assert_no_pythonpath({}, {"sitecustomize": object()}), "SITECUSTOMIZE_REFUSED")
+    evil = type("M", (), {})()
+    evil.__file__ = "D:/evil/sitecustomize.py"
+    _expect_usage(lambda: assert_no_pythonpath({}, {"sitecustomize": evil}), "SITECUSTOMIZE_REFUSED")
+    assert_no_pythonpath({})
+    runner = (PACKAGE / "runner.py").read_text(encoding="utf-8")
+    if "--sandbox" not in runner or "guard_post_run(" not in runner or "assert_no_system_temp_crewai(" not in runner:
+        fail("runner is missing the sandbox parameter, module guard, or Windows temp check")
+
+
+def _issue_rows(url: str) -> dict:
+    return {"issues": [{"url": url, "number": 612}]}
+
+
+def check_review_mutations() -> None:
+    """Comment 6251717007. The ten missing negative mutations, still with no live model."""
+    cited = "https://github.com/nocturney/velvetos-core/issues/612"
+    rows = _issue_rows(cited)
+    _expect_usage(lambda: assert_kickoff_cites_rows("| Issue | Status |\n| --- | --- |\n", rows), "KICKOFF_EMPTY_TABLE")
+    _expect_usage(
+        lambda: assert_kickoff_cites_rows("| Issue | Status |\n| --- | --- |\n| none | - |\n", rows),
+        "KICKOFF_EMPTY_TABLE",
+    )
+    _expect_usage(
+        lambda: assert_kickoff_cites_rows(
+            "| Issue |\n| --- |\n| https://github.com/nocturney/velvetos-core/issues/999999 |\n",
+            rows,
+        ),
+        "KICKOFF_UNCITED_ROW",
+    )
+    foreign = type("M", (), {})()
+    foreign.__file__ = "/tmp/evil/usercustomize.py"
+    _expect_usage(lambda: assert_no_pythonpath({}, {"usercustomize": foreign}), "USERCUSTOMIZE_REFUSED")
+    packaged = type("M", (), {})()
+    packaged.__file__ = sys.prefix + "/lib/site-packages/sitecustomize.py"
+    _expect_usage(lambda: assert_no_pythonpath({}, {"sitecustomize": packaged}), "SITECUSTOMIZE_REFUSED")
+    _expect_usage(lambda: assert_no_pythonpath({"PythonHome": "C:\\Python"}), "PYTHONHOME_REFUSED")
+    _expect_usage(lambda: assert_no_pythonpath({}, pth_files=["D:/evil/hook.pth"]), "PTH_REFUSED")
+    assert_no_pythonpath({}, {}, pth_files=[sys.prefix + "/lib/site-packages/stdlib.pth"])
+    _expect_storage(lambda: apply_telemetry({"Https_Proxy": "http://10.0.0.1:8080"}), "E5_PROXY_MISMATCH:Https_Proxy")
+    _expect_storage(lambda: refuse_operator_env({"ollama_host": "127.0.0.1:11435"}), "OLLAMA_HOST_REFUSED")
+    folded = apply_telemetry({"Https_Proxy": "http://127.0.0.1:9"})
+    if "Https_Proxy" in folded or folded.get("HTTPS_PROXY") != "http://127.0.0.1:9":
+        fail("mixed-case proxy was not folded to HTTPS_PROXY")
+    bad_agent = _agent(from_repository="x")
+    _expect_usage(lambda: assert_built_crew([], _crew(agents=[bad_agent])), "FROM_REPOSITORY_REFUSED")
+    document = json.loads((EVIDENCE / "e3-supply-chain.json").read_text(encoding="utf-8"))
+    wrong_lock = json.loads(json.dumps(document))
+    wrong_lock["lock_sha256"] = "0" * 64
+    _expect_usage(lambda: assert_supply_chain_record(wrong_lock), "LOCK_IDENTITY_MISMATCH")
+    wrong_count = json.loads(json.dumps(document))
+    wrong_count["wheel_count"] = 0
+    _expect_usage(lambda: assert_supply_chain_record(wrong_count), "LOCK_IDENTITY_MISMATCH")
+    _expect_provider(
+        lambda: digest_from_tags({"models": [
+            {"name": APPROVED_MODEL, "digest": APPROVED_MODEL_DIGEST},
+            {"name": APPROVED_MODEL, "digest": APPROVED_MODEL_DIGEST},
+        ]}),
+        "MODEL_DIGEST_MISMATCH",
+    )
+    proc = (
+        "  sl  local_address rem_address   st\n"
+        "   0: 0100007F:2CAA 00000000:0000 0A\n"
+        "   1: 00000000:2CAA 00000000:0000 0A\n"
+    )
+    parsed = binds_from_proc(proc, 11434)
+    if parsed != [
+        {"address": "127.0.0.1", "port": 11434},
+        {"address": "0.0.0.0", "port": 11434},
+    ]:
+        fail("proc listener rows were %s" % parsed)
+    _expect_provider(lambda: assert_ollama_bind(parsed), "OLLAMA_BIND_WILDCARD")
+    netstat = (
+        "Active Connections\n\n"
+        "  Proto  Local Address          Foreign Address        State           PID\n"
+        "  TCP    127.0.0.1:11434        0.0.0.0:0              LISTENING       4\n"
+    )
+    if binds_from_netstat(netstat, 11434) != [{"address": "127.0.0.1", "port": 11434}]:
+        fail("netstat listener row was not loopback")
+    lsof = "COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME\nPython 4 user 5u IPv4 0x1 0t0 TCP 127.0.0.1:11434 (LISTEN)\n"
+    if binds_from_lsof(lsof, 11434) != [{"address": "127.0.0.1", "port": 11434}]:
+        fail("lsof listener row was not loopback")
+    if isolated_argv([sys.executable, "-c", "print(1)"])[1] != "-I":
+        fail("python child argv did not insert -I")
+    if isolated_argv([sys.executable, "-I", "-c", "print(1)"])[2] == "-I":
+        fail("python -I was inserted twice")
+    import office_v2_crewai.kill_harness as kill_mod
+    captured = []
+
+    class _Proc:
+        pid = 424242
+
+        def poll(self):
+            return 0
+
+        def wait(self, timeout=None):
+            return 0
+
+        def kill(self):
+            return None
+
+    def fake_popen(argv, **kwargs):
+        captured.append(list(argv))
+        return _Proc()
+
+    original_popen = kill_mod.subprocess.Popen
+    kill_mod.subprocess.Popen = fake_popen
+    try:
+        KillHarness().spawn([sys.executable, "-c", "print(1)"])
+    finally:
+        kill_mod.subprocess.Popen = original_popen
+    if not captured or captured[0][1] != "-I":
+        fail("spawn did not launch python -I: %s" % captured)
+    root = SANDBOX_ROOT
+    created = []
+
+    def mkdir(path):
+        created.append(path)
+
+    def exists(path):
+        return path in created
+
+    if exists(sandbox_temp_dir(root)):
+        fail("fresh sandbox already had a temp directory")
+    prepare_sandbox_temp(root, mkdir=mkdir, exists=exists)
+    if sandbox_temp_dir(root) not in created:
+        fail("sandbox temp was not created before resolution")
+    saved_profile = os.environ.get("USERPROFILE")
+    os.environ["USERPROFILE"] = root
+    try:
+        assert_sandbox_resolution(root, home=root, temp=sandbox_temp_dir(root), platform="win32")
+    finally:
+        if saved_profile is None:
+            os.environ.pop("USERPROFILE", None)
+        else:
+            os.environ["USERPROFILE"] = saved_profile
+    from office_v2_crewai.usage_guard import enforcement_holds
+    if not enforcement_holds():
+        fail("enforcement_holds accepted one of the new guards")
+    _expect_usage(
+        lambda: assert_interpreter_isolated(type("Flags", (), {"isolated": 0, "ignore_environment": 0, "no_user_site": 0})()),
+        "PYTHON_ISOLATION_REFUSED",
+    )
+    blocked = Path(tempfile.mkdtemp(prefix="crewai-isolated-"))
+    try:
+        code = runner_main(["--output", str(blocked)])
+        receipt = json.loads((blocked / "attempt-receipt.json").read_text(encoding="utf-8"))
+        if code != 2 or receipt["identity"]["reason"] != "PYTHON_ISOLATION_REFUSED" or receipt["execution"]["model_calls"] != 0:
+            fail("main without python -I did not refuse: %s" % receipt["identity"].get("reason"))
+    finally:
+        shutil.rmtree(blocked, ignore_errors=True)
+    parent = Path(tempfile.mkdtemp(prefix="crewai-main-"))
+    try:
+        synthetic_passing_bundle(parent)
+        collected = []
+        opened = []
+
+        def observe():
+            collected.append("binds")
+            return [{"address": "127.0.0.1", "port": 11434}]
+
+        def stub_open(request, timeout=30):
+            opened.append(getattr(request, "full_url", ""))
+            if str(opened[-1]).endswith("/api/tags"):
+                return _Body({"models": [{"name": APPROVED_MODEL, "digest": APPROVED_MODEL_DIGEST}]})
+            return _Body({"message": {"content": "local"}})
+
+        import office_v2_crewai.crew_build as crew_mod
+        import office_v2_crewai.provider as provider_mod
+
+        def fake_build(provider, env, sandbox_root=SANDBOX_ROOT, harness=None, started=None, binds=None):
+            class _Crew:
+                def kickoff(self, inputs):
+                    return provider.complete("ping", env=env)
+
+            return _Crew()
+
+        original_build = crew_mod.build_crew
+        original_collect = provider_mod.collect_ollama_binds
+        original_open = provider_mod.open_loopback
+        crew_mod.build_crew = fake_build
+
+        def observe_default():
+            return observe()
+
+        provider_mod.collect_ollama_binds = observe_default
+        saved_env = dict(os.environ)
+        provider_mod.open_loopback = stub_open
+        os.environ.clear()
+        ready = passing_env()
+        ready["OLLAMA_NO_CLOUD"] = "1"
+        os.environ.update(ready)
+        out = parent / "out"
+        try:
+            code = runner_main(
+                ["--input", str(parent / "inputs"), "--output", str(out), "--evidence", str(parent / "evidence"),
+                 "--model-config", str(MODEL), "--sandbox", SANDBOX_ROOT],
+                flags=ISOLATED_FLAGS,
+            )
+        finally:
+            crew_mod.build_crew = original_build
+            provider_mod.collect_ollama_binds = original_collect
+            provider_mod.open_loopback = original_open
+            os.environ.clear()
+            os.environ.update(saved_env)
+        receipt = json.loads((out / "attempt-receipt.json").read_text(encoding="utf-8"))
+        if not collected or not opened or receipt["execution"]["model_calls"] == 0:
+            fail("main did not observe binds before the model call: %s" % receipt["identity"].get("reason"))
+        if receipt["identity"]["reason"] == "OLLAMA_BIND_UNPROVEN":
+            fail("main refused with OLLAMA_BIND_UNPROVEN")
+        if code == 0:
+            fail("main returned success")
+    finally:
+        shutil.rmtree(parent, ignore_errors=True)
+
+
+def check_exit_contract() -> None:
+    """Exit 0 only after a post-guarded kickoff that is still unreviewed."""
+    cited = (
+        "| Issue | Note |\n"
+        "| --- | --- |\n"
+        "| 612 | https://github.com/nocturney/velvetos-core/issues/612 |\n"
+    )
+    refusals = (
+        (
+            "uncited-url",
+            "| Issue | Note |\n| --- | --- |\n"
+            "| 999999 | https://github.com/nocturney/velvetos-core/issues/999999 |\n",
+            True,
+        ),
+        ("header-only", "| Issue | Note |\n| --- | --- |\n", True),
+        ("trace-consent", cited, False),
+    )
+
+    def run(text: str, consent_ok: bool, path: str | None = None,
+            force_darwin: bool = False) -> tuple[int, dict, dict]:
+        parent = Path(tempfile.mkdtemp(prefix="crewai-exit-"))
+        import office_v2_crewai.crew_build as crew_mod
+        import office_v2_crewai.provider as provider_mod
+        import office_v2_crewai.runner as runner_mod
+        import office_v2_crewai.usage_guard as usage_mod
+
+        def observe():
+            return [{"address": "127.0.0.1", "port": 11434}]
+
+        def stub_open(request, timeout=30):
+            target = str(getattr(request, "full_url", ""))
+            if target.endswith("/api/tags"):
+                return _Body({"models": [{"name": APPROVED_MODEL, "digest": APPROVED_MODEL_DIGEST}]})
+            return _Body({"message": {"content": "local"}})
+
+        def fake_build(provider, env, sandbox_root=SANDBOX_ROOT, harness=None, started=None, binds=None):
+            class _Crew:
+                def kickoff(self, inputs):
+                    provider.complete("ping", env=env)
+                    return text
+
+            return _Crew()
+
+        def fake_save(body, writer=None, root=SANDBOX_ROOT):
+            data = body.encode("utf-8")
+            return {
+                "path": kickoff_output_path(root),
+                "sha256": hashlib.sha256(data).hexdigest(),
+                "body": data,
+            }
+
+        def consent(path, expected=TRACE_USER_BYTES):
+            if not consent_ok:
+                raise UsageRefusal("TRACE_CONSENT_ABSENT")
+            mirror = parent / ".crewai_user.json"
+            mirror.write_bytes(TRACE_USER_BYTES)
+            assert_trace_consent(mirror)
+            folded = str(path).replace("/", "\\").casefold()
+            if not folded.endswith("crewai-storage\\.crewai_user.json"):
+                raise UsageRefusal("TRACE_CONSENT_ABSENT")
+
+        original = (
+            crew_mod.build_crew,
+            provider_mod.collect_ollama_binds,
+            provider_mod.open_loopback,
+            runner_mod.save_kickoff_output,
+            usage_mod.assert_trace_consent,
+        )
+        saved_env = dict(os.environ)
+        saved_platform = sys.platform
+        saved_lsof = usage_mod.DARWIN_LSOF
+        try:
+            synthetic_passing_bundle(parent)
+            crew_mod.build_crew = fake_build
+            provider_mod.collect_ollama_binds = observe
+            provider_mod.open_loopback = stub_open
+            runner_mod.save_kickoff_output = fake_save
+            usage_mod.assert_trace_consent = consent
+            os.environ.clear()
+            ready = passing_env()
+            ready["OLLAMA_NO_CLOUD"] = "1"
+            # Listener proof uses /usr/sbin/lsof, not PATH. The positive fixture
+            # still sets a normal PATH for the rest of the process.
+            ready["PATH"] = "/usr/sbin:/usr/bin:/bin" if path is None else path
+            os.environ.update(ready)
+            out = parent / "out"
+            if force_darwin:
+                usage_mod.DARWIN_LSOF = str(Path(path) / "trusted-lsof-absent")
+                sys.platform = "darwin"
+                try:
+                    count_listening_sockets(os.getpid(), platform="darwin")
+                except UsageRefusal as exc:
+                    if str(exc) != "PILOT_LISTENER_UNPROVEN":
+                        fail("unresolvable lsof refused as %s" % exc)
+                else:
+                    fail("lsof on a barren PATH was treated as proven")
+            code = runner_main(
+                ["--input", str(parent / "inputs"), "--output", str(out),
+                 "--evidence", str(parent / "evidence"), "--model-config", str(MODEL),
+                 "--sandbox", SANDBOX_ROOT],
+                flags=ISOLATED_FLAGS,
+            )
+            receipt = json.loads((out / "attempt-receipt.json").read_text(encoding="utf-8"))
+            postflight = json.loads((out / "postflight-receipt.json").read_text(encoding="utf-8"))
+            return code, receipt, postflight
+        finally:
+            (
+                crew_mod.build_crew,
+                provider_mod.collect_ollama_binds,
+                provider_mod.open_loopback,
+                runner_mod.save_kickoff_output,
+                usage_mod.assert_trace_consent,
+            ) = original
+            usage_mod.DARWIN_LSOF = saved_lsof
+            sys.platform = saved_platform
+            os.environ.clear()
+            os.environ.update(saved_env)
+            shutil.rmtree(parent, ignore_errors=True)
+
+    code, receipt, postflight = run(cited, True)
+    if code != 0 or completed_kickoff_exit(receipt) != 0:
+        fail("completed kickoff returned %s (%s)" % (code, receipt["identity"].get("reason")))
+    if (
+        receipt["identity"]["pilot_status"] != "NOT_VERIFIED"
+        or receipt["identity"]["task_status"] != "NOT_VERIFIED"
+        or receipt["identity"]["reason"] != "AWAITING_INDEPENDENT_REVIEW"
+        or receipt["result"]["status"] != "NOT_VERIFIED"
+        or receipt["teardown"]["reviewer_verdict"] != "NOT_VERIFIED"
+        or postflight["reviewer_verdict"] != "NOT_VERIFIED"
+        or postflight["result_status"] != "NOT_VERIFIED"
+    ):
+        fail("completed kickoff was marked reviewed or failed")
+    if receipt["result"]["status"] in {"PASS", "PASS_TASK_ONLY"}:
+        fail("completed kickoff fabricated PASS")
+    mutated = json.loads(json.dumps(receipt))
+    for name, edit in (
+        ("pass-status", lambda row: row["result"].update(status="PASS")),
+        ("fail-reason", lambda row: row["identity"].update(reason="FAIL")),
+        ("zero-calls", lambda row: row["execution"].update(model_calls=0)),
+        ("reviewer-pass", lambda row: row["teardown"].update(reviewer_verdict="PASS")),
+        ("drop-hash", lambda row: row["result"]["output_sha256"].pop("kickoff.md")),
+    ):
+        trial = json.loads(json.dumps(mutated))
+        edit(trial)
+        if completed_kickoff_exit(trial) == 0:
+            fail("mutated receipt %s was treated as a clean exit" % name)
+    for name, text, consent_ok in refusals:
+        refused, refused_receipt, _post = run(text, consent_ok)
+        if refused == 0 or refused_receipt["result"]["status"] in {"PASS", "PASS_TASK_ONLY"}:
+            fail("refusal %s returned %s" % (name, refused))
+    blocked = Path(tempfile.mkdtemp(prefix="crewai-exit-refused-"))
+    try:
+        refused_code = execute(INPUTS, blocked, EVIDENCE, MODEL, env={}, flags=ISOLATED_FLAGS)
+        if refused_code == 0:
+            fail("preflight refusal returned 0")
+    finally:
+        shutil.rmtree(blocked, ignore_errors=True)
+    barren = Path(tempfile.mkdtemp(prefix="crewai-nolsof-"))
+    marker = barren / "fake-lsof-ran"
+    fake = barren / "lsof"
+    # /bin/sh, not env python3. A python shebang never runs when PATH is only
+    # the binary's directory, so a restored shutil.which lookup would still pass.
+    fake.write_text(
+        "#!/bin/sh\n: > '%s'\nexit 1\n" % str(marker).replace("'", "'\\''"),
+        encoding="ascii",
+        newline="\n",
+    )
+    fake.chmod(0o755)
+    (barren / "lsof.cmd").write_text(
+        "@echo off\nbreak>\"%s\"\nexit /b 1\n" % marker,
+        encoding="ascii",
+        newline="\n",
+    )
+    try:
+        missing, missing_receipt, _post = run(cited, True, path=str(barren), force_darwin=True)
+        fake_ran = marker.exists()
+    finally:
+        shutil.rmtree(barren, ignore_errors=True)
+    if fake_ran:
+        fail("fake lsof on PATH was executed during the exit-contract refusal")
+    if missing == 0 or missing_receipt["identity"].get("reason") != "PILOT_LISTENER_UNPROVEN":
+        fail("missing lsof returned %s (%s)" % (missing, missing_receipt["identity"].get("reason")))
+
+
+def _sh_quote(text: str) -> str:
+    return "'" + str(text).replace("'", "'\\''") + "'"
+
+
+def check_trusted_listener_binaries() -> None:
+    """A fake lsof or netstat earlier on PATH must not be treated as proof.
+
+    The fakes are ``#!/bin/sh`` and ``.cmd`` scripts. A ``#!/usr/bin/env python3``
+    fake never reaches its body when PATH is only the binary directory, so
+    restoring a ``shutil.which`` lookup would still look like a pass.
+    """
+    import subprocess
+
+    import office_v2_crewai.usage_guard as usage_mod
+
+    directory = Path(tempfile.mkdtemp(prefix="crewai-fake-listener-"))
+    lsof_marker = directory / "lsof-ran"
+    netstat_marker = directory / "netstat-ran"
+    lsof_body = "#!/bin/sh\n: > %s\nexit 1\n" % _sh_quote(lsof_marker)
+    netstat_body = (
+        "#!/bin/sh\n"
+        ": > %s\n"
+        "cat <<'EOF'\n"
+        "Active Connections\n"
+        "\n"
+        "  Proto  Local Address          Foreign Address        State           PID\n"
+        "  TCP    127.0.0.1:11434        0.0.0.0:0              LISTENING       1\n"
+        "EOF\n"
+        "exit 0\n" % _sh_quote(netstat_marker)
+    )
+    (directory / "lsof").write_text(lsof_body, encoding="ascii", newline="\n")
+    (directory / "netstat").write_text(netstat_body, encoding="ascii", newline="\n")
+    (directory / "lsof").chmod(0o755)
+    (directory / "netstat").chmod(0o755)
+    (directory / "lsof.cmd").write_text(
+        "@echo off\nbreak>\"%s\"\nexit /b 1\n" % lsof_marker,
+        encoding="ascii",
+        newline="\n",
+    )
+    (directory / "netstat.cmd").write_text(
+        "@echo off\nbreak>\"%s\"\n" % netstat_marker
+        + "echo Active Connections\n"
+        + "echo   TCP    127.0.0.1:11434        0.0.0.0:0              LISTENING       1\n"
+        + "exit /b 0\n",
+        encoding="ascii",
+        newline="\n",
+    )
+    saved_path = os.environ.get("PATH")
+    os.environ["PATH"] = str(directory) + os.pathsep + (saved_path or "")
+    try:
+        try:
+            observed = count_listening_sockets(os.getpid(), platform="darwin")
+        except UsageRefusal as exc:
+            if str(exc) != "PILOT_LISTENER_UNPROVEN":
+                fail("fake lsof refused as %s" % exc)
+            observed = None
+        if lsof_marker.exists():
+            fail("fake lsof earlier on PATH was executed")
+        if observed == 0 and not os.path.isfile(DARWIN_LSOF):
+            fail("a fake lsof that prints nothing was trusted as zero listeners")
+        try:
+            lsof_rows = _lsof_binds(11434)
+        except ProviderRefusal as exc:
+            if str(exc) != "OLLAMA_BIND_UNPROVEN":
+                fail("provider lsof refused as %s" % exc)
+            lsof_rows = None
+        if lsof_marker.exists():
+            fail("provider trusted a fake lsof on PATH")
+        if lsof_rows == [] and not os.path.isfile(usage_mod.DARWIN_LSOF):
+            fail("provider treated a missing trusted lsof as an empty bind set")
+        try:
+            netstat_rows = _netstat_binds(11434)
+        except ProviderRefusal as exc:
+            if str(exc) != "OLLAMA_BIND_UNPROVEN":
+                fail("provider netstat refused as %s" % exc)
+            netstat_rows = None
+        if netstat_marker.exists():
+            fail("fake netstat earlier on PATH was executed")
+        if netstat_rows == [{"address": "127.0.0.1", "port": 11434}] and not os.path.isfile(WINDOWS_NETSTAT):
+            fail("fake netstat output was trusted as a loopback bind")
+        link = directory / "lsof-symlink"
+        link.symlink_to(directory / "lsof")
+        saved_lsof = usage_mod.DARWIN_LSOF
+        usage_mod.DARWIN_LSOF = str(link)
+        try:
+            if usage_mod.trusted_listener_binary("lsof", "darwin") is not None:
+                fail("a symlink at the trusted lsof path was accepted")
+            try:
+                usage_mod.run_trusted_listener(str(link), [str(link)])
+            except OSError:
+                pass
+            else:
+                fail("run_trusted_listener executed a symlink")
+        finally:
+            usage_mod.DARWIN_LSOF = saved_lsof
+        if lsof_marker.exists():
+            fail("symlink lsof ran")
+        # Windows still execs the path after the fstat check. Unix execs the fd.
+        if usage_mod._fd_executable(0) is not None:
+            held = directory / "held-lsof"
+            held.write_text("#!/bin/sh\nprintf 'ok\\n'\n", encoding="ascii", newline="\n")
+            held.chmod(0o755)
+            real_run = subprocess.run
+
+            def swap_then_run(argv, **kwargs):
+                target = Path(argv[0])
+                target.unlink()
+                target.write_text(
+                    "#!/bin/sh\nprintf 'swapped\\n'\n",
+                    encoding="ascii",
+                    newline="\n",
+                )
+                target.chmod(0o755)
+                return real_run(argv, **kwargs)
+
+            subprocess.run = swap_then_run
+            try:
+                held_proc = usage_mod.run_trusted_listener(str(held), [str(held)])
+            finally:
+                subprocess.run = real_run
+            if held_proc.returncode != 0 or held_proc.stdout != "ok\n":
+                fail("listener exec followed a replaced path: %r" % held_proc.stdout)
+    finally:
+        if saved_path is None:
+            os.environ.pop("PATH", None)
+        else:
+            os.environ["PATH"] = saved_path
+        shutil.rmtree(directory, ignore_errors=True)
+
+
+def check_evidence_eol() -> None:
+    """Every evidence suffix needs an LF checkout rule. autocrlf must not rewrite .reg."""
+    evidence = PACKAGE / "evidence"
+    suffixes = set()
+    for path in evidence.rglob("*"):
+        if not path.is_file():
+            continue
+        if not path.suffix:
+            fail("evidence file has no suffix: %s" % path.relative_to(ROOT))
+        suffixes.add(path.suffix)
+        if b"\r" in path.read_bytes():
+            fail("CRLF in evidence %s" % path.relative_to(ROOT))
+    if not suffixes:
+        fail("evidence directory has no files")
+    attributes = (ROOT / ".gitattributes").read_text(encoding="utf-8")
+    for suffix in sorted(suffixes):
+        rule = "/scripts/office_v2_crewai/evidence/**/*" + suffix + " text eol=lf"
+        if rule not in attributes:
+            fail("evidence %s is not pinned to LF" % suffix)
 
 
 def check_workflows() -> None:
@@ -1231,8 +2393,14 @@ def main() -> int:
     check_kill()
     check_execute()
     check_listeners()
+    check_trusted_listener_binaries()
     check_run_record()
     check_ast()
+    check_hardening()
+    check_lab4()
+    check_review_mutations()
+    check_exit_contract()
+    check_evidence_eol()
     check_workflows()
     if "crewai" in sys.modules:
         fail("crewai was imported by the sensor")

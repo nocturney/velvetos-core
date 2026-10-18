@@ -14,7 +14,7 @@ Preflight passes E3 only when that file is present and every condition below
 is enforced. E1, E2, E5, E6 and E7 still refuse this tree, and E4 is
 NOT_OBSERVED, so this tree does not start a pilot.
 
-## E4 sandbox and the 11435 client
+## E4 sandbox and the 11434 client
 
 Comment 6250312836 (CLQ-16) verified that `import crewai` creates
 `<LocalAppData>\\CrewAI\\<name>` through appdirs 1.4.4 `SHGetFolderPathW`.
@@ -36,9 +36,11 @@ The committed before/after manifest, HKCU export diff, no-pilot control
 run, and positive db/lock check are NOT_OBSERVED. Nothing was run on Chris.
 
 Comment 6250397852 (CLQ-17) verified that an `ollama/` model uses CrewAI's
-native OpenAI-compatible client, whose default is `localhost:11434`. That
-port on Chris is the wrong Ollama. The runner passes
-`base_url=http://127.0.0.1:11435/v1`, sets `OLLAMA_HOST=127.0.0.1:11435`,
+native OpenAI-compatible client, whose default is `localhost:11434`.
+Christian's decision at 2026-10-18 20:41 IDT makes that existing D: boot
+server the only pilot endpoint: `127.0.0.1:11434`. Port 11435 is refused.
+`localhost` stays refused. The runner passes
+`base_url=http://127.0.0.1:11434/v1`, sets `OLLAMA_HOST=127.0.0.1:11434`,
 and refuses `is_litellm=True` or any other effective endpoint. It also
 sets `Crew(tracing=False)`, keeps the litellm local-cost and telemetry
 flags, and does not set `CHROMA_ANONYMIZED_TELEMETRY` or
@@ -48,11 +50,13 @@ flags, and does not set `CHROMA_ANONYMIZED_TELEMETRY` or
 
 ## Approved local model
 
-Owner approval at 2026-10-18 15:28 IDT, recorded in issue 612 comment
-6250120048. The approved endpoint is `http://127.0.0.1:11435` with model
-`qwen3.5:9b`, digest
+The model digest was approved at 2026-10-18 15:28 IDT, recorded in issue
+612 comment 6250120048. Model `qwen3.5:9b`, digest
 `56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90`.
-Port 11434 is not the pilot listener. The provider sends `think: false`.
+Christian's later decision at 2026-10-18 20:41 IDT sets the only endpoint
+to `http://127.0.0.1:11434`, the existing D: boot server on Chris. Port
+11435 is refused. A wildcard bind on 11434 stays refused. The provider
+sends `think: false`.
 LAB-2 showed that Ollama's `/v1` endpoint ignores `think: false` and that
 `reasoning_effort: "none"` disables qwen3.5 reasoning there. The frozen
 model input records `reasoning_effort: "none"`, and the crew LLM passes
@@ -93,6 +97,148 @@ therefore fails closed on `chromadb.server`, `fastapi`, `uvicorn` and `mcp`
 in `sys.modules`. It does not treat the `chromadb` package itself as a
 violation, because `import crewai` loads that package. The runner also
 refuses the `chroma` CLI and any pilot listening port.
+
+## Egress hardening
+
+Issue 612 comment 6250954627. The runner still does not call a model, and the
+E3 lock sha and approved versions are unchanged. `CREWAI_DISABLE_TRACING` is
+not set, because that switch does not exist in crewai 1.15.28.
+`TIKTOKEN_CACHE_DIR` stays forbidden.
+
+Before `import crewai` the runner writes
+`crewai-storage\.crewai_user.json` as
+`{"first_execution_done":true,"trace_consent":false}` and, after the run,
+requires those exact bytes. A missing file or `trace_consent: true` is a
+refusal. A changed file is a failure.
+
+It also refuses an installed `litellm`, `tiktoken`, `posthog`,
+`crewai_tools`, or `fastapi` (`BLOCKED_SECURITY`) and treats those names as
+forbidden modules after the run. The constructed agents must have
+`from_repository is None`, empty tools, and no MCP or knowledge. The crew
+must have `memory=False` and `tracing=False`. `from_repository="x"` is the
+ZDI-26-706 / CVE-2026-92206 mutation.
+
+`Path.home()` and `tempfile.gettempdir()` must resolve inside the sandbox.
+On Windows, a wrong `USERPROFILE` is a refusal even when `HOME` is the
+sandbox. After the run these files must be absent:
+`.config\crewai\settings.json`, `%TEMP%\crewai_settings.json`,
+`.\crewai_settings.json`, and `.cache\chroma\telemetry_user_id`.
+
+`e3-supply-chain.json` maps PYSEC-2026-311/3813/3814 to CVE-2026-45829,
+CVE-2026-45830 and CVE-2026-45833. `fastapi` is recorded as absent from the
+lock. crewai-tools CVE-2026-2275/2285/2286/2287 are N-A. mcp CVE-2026-52869
+and CVE-2026-59950 are not affected at 1.28.1. CVE-2026-59951 stays RED.
+ZDI-26-706 is present in the pin and unreachable.
+
+## LAB-4 rehearsal
+
+Issue 612 comment 6251061341. Still no model call and no machine run.
+The E3 lock sha and approved versions are unchanged.
+
+Ollama 0.40.6 `/api/show` has no digest. The provider reads
+`/api/tags` and matches the model name. A `/api/show` body is a mismatch.
+
+The Windows listener script passes `Generic.List` values through
+`.ToArray()`. Forbidden modules are checked before that observation, so a
+listener failure cannot hide `chromadb.server`, `fastapi`, `uvicorn`, or
+`mcp`.
+
+`apply_telemetry` checks `OLLAMA_HOST` and the proxy before it fills absent
+values. A wrong value is refused. The provider also refuses an Ollama
+listener on `0.0.0.0` or `::` for port 11434. A listener only on port
+11435 is unproven for the approved port. A missing bind observation is
+unproven. The check does not open a socket.
+
+`crewai` 1.15.28 `crewai_core.lock_store.lock` writes
+`tempfile.gettempdir()/crewai:{md5}.lock`. On Windows the colon is an NTFS
+alternate-data-stream separator, so the call creates a 0-byte file named
+`crewai`. CPython skips `TEMP`/`TMP` when that directory does not exist, and
+a SYSTEM process then uses `C:\Windows\Temp`. The runner creates the sandbox
+temp directories before import and refuses `C:\Windows\Temp\crewai` after
+the run.
+
+Both tasks interpolate `{issue_rows}`. Kickoff text that says no rows were
+provided, or whose table cells are only `N/A` / `UNKNOWN`, fails.
+
+A preflight model refusal is stored as `model_status` and as the receipt
+reason. A FAIL after kickoff keeps the kickoff.md sha256. The receipt
+records the listener count and source.
+
+`KillHarness.socket_timeout` enforces the 600s budget and caps each
+`urlopen` at the time remaining, or 30s. `/api/chat` sends
+`options.temperature` 0.0. A non-empty `PYTHONPATH`, or a `sitecustomize`
+outside the interpreter prefix, is refused.
+
+`--sandbox` defaults to the E4 root and must stay on `D:` under `D:\Velvet`.
+
+## Listener portability
+
+Issue 612 comment 6251194655. On macOS the listener check uses
+`/usr/sbin/lsof -nP -a -p <pid> -iTCP -sTCP:LISTEN`. A header with no rows, or lsof
+exit 1 with empty stdout and stderr, is a proven zero. A missing `lsof`,
+stderr, or any other status is unproven. Linux still reads `/proc/net/tcp`.
+Anything that is neither Windows, macOS, nor Linux fails closed.
+
+`scripts/office_v2_crewai/evidence/**/*.reg` and `**/*.json` are
+`text eol=lf`. The sensor requires that rule for every suffix in the
+evidence directory, so a Windows checkout with `core.autocrlf=true` does
+not turn `hkcu-after.reg` into CRLF. That checkout rule is still required.
+
+Issue 612 comment 6251561284. `emit_not_observed` writes every E4 JSON and
+`.reg` file with `newline="\n"`. Windows text mode otherwise turns `\n`
+into CRLF, so a fresh emit differs from the committed LF bytes of
+`e4/control-run.json` even when the checkout itself is LF. The sensor
+replays that text mode and still requires a byte match.
+
+## Review mutations
+
+Issue 612 comment 6251717007. `complete()` collects listener rows when
+`binds` is omitted, then checks the bind. `main()` therefore reaches a
+model call instead of stopping at `OLLAMA_BIND_UNPROVEN`. The sandbox temp
+directories are created before `assert_sandbox_resolution`. A Python child
+is started with `python -I`. `PYTHONHOME`, `PYTHONUSERBASE`, a foreign
+`usercustomize`, and a `.pth` outside the interpreter prefix are refused.
+Kickoff text needs a data row, and every URL in it must be an issue URL
+from the input rows. Proxy variables and `OLLAMA_HOST` match
+case-insensitively.
+
+## Exit and stage root
+
+Issue 612 / #810 comment 6252017719. `execute` returns 0 only when the
+kickoff finished, the post-run guards passed, and the receipt is still
+`NOT_VERIFIED` with reason `AWAITING_INDEPENDENT_REVIEW`. A refusal, a
+failure, or a `PASS` receipt returns nonzero. The E5 validator still
+requires integer `exit_code` 0 and still records `PILOT_EXIT_NOT_ZERO`
+for every other value.
+
+The E5 collector admits a working directory equal to
+`D:\Velvet\Pilots\OfficeV2-VerifiedTrio` and any directory under it.
+`OfficeV2-VerifiedTrioX` and a `..` path that normalizes outside that
+root stay `OUT_OF_PILOT_ROOT_PATH`. `SANDBOX_ROOT` stays
+`D:\Velvet\Pilots\crewai-e4\sandbox-home`.
+
+## Trusted listener binaries and redirects
+
+Issue 612 / #799 comment 6252628498. Darwin listener proof and the Ollama
+bind check execute `/usr/sbin/lsof`. Windows netstat is
+`C:\Windows\System32\netstat.exe`. `PATH` for that subprocess is only the
+binary's directory. A fake `lsof` earlier on `PATH` is not executed, and a
+missing trusted file is `PILOT_LISTENER_UNPROVEN` (the bind check reports
+`OLLAMA_BIND_UNPROVEN`). Exit 1 with empty output is a proven zero only
+when that output came from the trusted binary.
+
+`open_loopback` refuses every HTTP redirect. A 307 from `127.0.0.1` to a
+non-loopback URL is `MODEL_REDIRECT_REFUSED` and does not open a second
+connection. `normalize_pilot_path` does not strip surrounding whitespace.
+
+Issue 612 / #799 comment 6252955212. The PATH regression plants `#!/bin/sh`
+fakes (and `lsof.cmd` / `netstat.cmd` on Windows). A python shebang never
+ran under the pinned PATH, so a `shutil.which` revert still passed. The
+shell fake must not run, and its exit-1 empty output must not become a
+proven zero. The trusted file is opened with `O_NOFOLLOW` and `fstat`'d.
+Unix runs that fd. A symlink at `/usr/sbin/lsof` is unproven. Windows
+executes the path after the check; the remaining gap is the same privilege
+as replacing `System32\netstat.exe`.
 
 ## Lock identity
 
