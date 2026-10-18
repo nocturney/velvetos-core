@@ -47,11 +47,58 @@ def fixture() -> dict:
     }
 
 
+def add_deep_tree(data: dict) -> None:
+    snap = data["snapshots"]["during"][0]
+    snap["process_tree"].extend([
+        {"pid": 4243, "parent_pid": 4242, "created_at_utc": "2026-10-18T12:00:01.100000Z"},
+        {"pid": 4244, "parent_pid": 4243, "created_at_utc": "2026-10-18T12:00:01.200000Z"},
+        {"pid": 4245, "parent_pid": 4244, "created_at_utc": "2026-10-18T12:00:01.300000Z"},
+    ])
+    snap["tcp"][0]["pid"] = 4245
+
+
+def mutate_pid_reuse(data: dict) -> None:
+    another = copy.deepcopy(data["snapshots"]["during"][0])
+    another["captured_at_utc"] = "2026-10-18T12:00:02.500000Z"
+    another["process_tree"][0]["created_at_utc"] = "2026-10-18T12:00:01.050000Z"
+    data["snapshots"]["during"].append(another)
+
+
+def mutate_cycle(data: dict) -> None:
+    data["snapshots"]["during"][0]["process_tree"].extend([
+        {"pid": 4243, "parent_pid": 4244, "created_at_utc": "2026-10-18T12:00:01.100000Z"},
+        {"pid": 4244, "parent_pid": 4243, "created_at_utc": "2026-10-18T12:00:01.200000Z"},
+    ])
+
+
+def mutate_orphan(data: dict) -> None:
+    data["snapshots"]["during"][0]["process_tree"].append(
+        {"pid": 4243, "parent_pid": 9999, "created_at_utc": "2026-10-18T12:00:01.100000Z"}
+    )
+
+
+def mutate_child_before_parent(data: dict) -> None:
+    data["snapshots"]["during"][0]["process_tree"].append(
+        {"pid": 4243, "parent_pid": 4242, "created_at_utc": "2026-10-18T11:59:59Z"}
+    )
+
+
+def mutate_root_cycle(data: dict) -> None:
+    add_deep_tree(data)
+    data["snapshots"]["during"][0]["process_tree"][0]["parent_pid"] = 4245
+
+
 def main() -> int:
     base = fixture()
     errors = []
     if evaluate(base):
         errors.append("valid baseline refused: %s" % evaluate(base))
+    deep = copy.deepcopy(base)
+    add_deep_tree(deep)
+    if evaluate(deep):
+        errors.append("valid deep (3-generation child) ancestry refused: %s" % evaluate(deep))
+    if create_receipt(json.dumps(deep).encode("ascii"), deep)["status"] != "PASS_SAMPLED_NOT_ENFORCEMENT":
+        errors.append("valid deep ancestry did not produce sampled PASS")
     cases = {
         "tcp-listening": (lambda d: d["snapshots"]["during"][0]["tcp"][0].update(state="Listen"),
                           "TCP_LISTENER_DETECTED"),
@@ -75,6 +122,24 @@ def main() -> int:
         "missing-exit-code": (lambda d: d.pop("exit_code"), "PILOT_EXIT_NOT_ZERO"),
         "non-scalar-root-pid": (lambda d: d.update(root_pid=[4242]), "INVALID_ROOT_PID"),
         "false-interval": (lambda d: d.update(sample_interval_ms=5000), "INVALID_SAMPLE_INTERVAL"),
+        "pid-reuse-across-snapshots": (mutate_pid_reuse, "PID_REUSED_OR_IDENTITY_CHANGED"),
+        "cycle-outside-root": (mutate_cycle, "PROCESS_TREE_CYCLE"),
+        "cycle-through-root": (mutate_root_cycle, "PROCESS_TREE_CYCLE"),
+        "orphaned-process": (mutate_orphan, "PROCESS_TREE_ORPHAN"),
+        "foreign-connection-owner": (
+            lambda d: d["snapshots"]["during"][0]["tcp"][0].update(pid=8999),
+            "TCP_OWNER_NOT_VERIFIED_DESCENDANT"),
+        "empty-during-tree": (
+            lambda d: d["snapshots"]["during"][0].update(process_tree=[]), "EMPTY_PROCESS_TREE"),
+        "missing-tree": (
+            lambda d: d["snapshots"]["during"][0].pop("process_tree"), "INVALID_SNAPSHOT_SHAPE"),
+        "non-numeric-ppid": (
+            lambda d: d["snapshots"]["during"][0]["process_tree"][0].update(parent_pid="100"),
+            "INVALID_TREE_MEMBER"),
+        "child-before-parent": (mutate_child_before_parent, "CHILD_CREATED_BEFORE_PARENT"),
+        "missing-root-with-child": (
+            lambda d: d["snapshots"]["during"][0]["process_tree"][0].update(pid=4243),
+            "TREE_ROOT_MISSING"),
     }
     for name, (mutate, expected) in cases.items():
         trial = copy.deepcopy(base)
@@ -96,7 +161,7 @@ def main() -> int:
 
     with tempfile.TemporaryDirectory() as tmp:
         src, dest = Path(tmp) / "snapshots.json", Path(tmp) / "receipt.json"
-        src.write_bytes(json.dumps(base).encode("ascii"))
+        src.write_bytes(json.dumps(deep).encode("ascii"))
         validator = ROOT / "scripts" / "vf_office_v2_crewai_e5_network.py"
         ok = subprocess.run([sys.executable, str(validator), "--evidence", str(src), "--receipt", str(dest)],
                             text=True, capture_output=True, timeout=10)
@@ -137,6 +202,11 @@ def main() -> int:
             errors.append("collector must be ASCII/LF without BOM")
         if any(needle not in raw for needle in required):
             errors.append("collector missing critical snapshot / enforcement marker")
+        ancestry = (b"ParentProcessId", b"CreationDate", b"PROCESS_TREE_CYCLE",
+                    b"PROCESS_TREE_ORPHAN", b"CHILD_CREATED_BEFORE_PARENT",
+                    b"PROCESS_IDENTITY_CHANGED_DURING_SAMPLE", b"$afterById")
+        if any(needle not in raw for needle in ancestry):
+            errors.append("collector must verify CIM parent chains and PID births around network sampling")
         if (b"$null = $script:Child.Handle" not in raw or b"$null -ne $observedExitCode" not in raw
                 or b"[int]$script:Child.ExitCode" in raw):
             errors.append("collector ExitCode must fail closed on null, with primed process handle")
