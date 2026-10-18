@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ast
 import hashlib
+import inspect
 import json
 import os
 import shutil
@@ -2129,6 +2130,60 @@ def check_review_mutations() -> None:
         shutil.rmtree(parent, ignore_errors=True)
 
 
+WINDOWS_FIXTURE_VARS = ("SystemRoot", "windir", "ComSpec")
+
+
+def apply_windows_fixture_env(ready: dict, saved: dict, platform: str | None = None) -> dict:
+    """Copy Windows process plumbing into the cleared kickoff fixture.
+
+    Production listener code does not clear ``os.environ``. This sensor helper
+    does. On win32, ``SystemRoot``, ``windir``, and ``ComSpec`` are copied
+    from the process that started the sensor so a trusted child can start.
+    Missing or blank values are not invented. ``PATH`` stays the fixture value.
+    """
+    plat = sys.platform if platform is None else platform
+    if plat != "win32" or not isinstance(saved, dict) or not isinstance(ready, dict):
+        return ready
+    for name in WINDOWS_FIXTURE_VARS:
+        value = saved.get(name)
+        if isinstance(value, str) and value.strip():
+            ready[name] = value
+    return ready
+
+
+def check_windows_fixture_env() -> None:
+    """The completed-kickoff helper keeps SystemRoot, windir, and ComSpec on win32."""
+    saved = {
+        "SystemRoot": "C:\\Windows",
+        "windir": "C:\\Windows",
+        "ComSpec": "C:\\Windows\\System32\\cmd.exe",
+        "PATH": "C:\\Windows\\System32",
+    }
+    ready = {"PATH": "/usr/sbin:/usr/bin:/bin", "OLLAMA_NO_CLOUD": "1"}
+    applied = apply_windows_fixture_env(dict(ready), saved, platform="win32")
+    for name in WINDOWS_FIXTURE_VARS:
+        if applied.get(name) != saved[name]:
+            fail("Windows fixture dropped %s" % name)
+    if applied.get("PATH") != ready["PATH"]:
+        fail("Windows fixture rewrote PATH")
+    blank = apply_windows_fixture_env(
+        dict(ready),
+        {"SystemRoot": "  ", "windir": "", "ComSpec": None},
+        platform="win32",
+    )
+    if any(name in blank for name in WINDOWS_FIXTURE_VARS):
+        fail("blank Windows plumbing was invented")
+    posix = apply_windows_fixture_env(dict(ready), saved, platform="linux")
+    if any(name in posix for name in WINDOWS_FIXTURE_VARS):
+        fail("non-Windows fixture copied Windows plumbing")
+    source = inspect.getsource(check_exit_contract)
+    needle = "apply_windows_fixture_env(ready, saved_env)"
+    clear_at = source.find("os.environ.clear()")
+    apply_at = source.find(needle)
+    if clear_at < 0 or apply_at < clear_at:
+        fail("completed-kickoff helper does not keep Windows plumbing after the clear")
+
+
 def check_exit_contract() -> None:
     """Exit 0 only after a post-guarded kickoff that is still unreviewed."""
     cited = (
@@ -2213,6 +2268,7 @@ def check_exit_contract() -> None:
             # Listener proof uses /usr/sbin/lsof, not PATH. The positive fixture
             # still sets a normal PATH for the rest of the process.
             ready["PATH"] = "/usr/sbin:/usr/bin:/bin" if path is None else path
+            apply_windows_fixture_env(ready, saved_env)
             os.environ.update(ready)
             out = parent / "out"
             if force_darwin:
@@ -2500,6 +2556,7 @@ def main() -> int:
     check_hardening()
     check_lab4()
     check_review_mutations()
+    check_windows_fixture_env()
     check_exit_contract()
     check_evidence_eol()
     check_workflows()
