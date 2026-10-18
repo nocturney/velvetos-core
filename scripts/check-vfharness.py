@@ -182,6 +182,47 @@ def main() -> None:
     for needle in ("Canonical execution contract", "retry(step, budget=2)", "fallback(step)", "downgrade_scope(step)", "safe ruling", "skillstate.md", "office/control/HANDOFF.json", "packages/vfmem/HANDOFF.md"):
         if needle not in canonical_text:
             fail(f"canonical LOOP.md missing {needle!r}")
+    # Ladder mirror: layers.json "ladder" must equal the escalation ladder in LOOP.md.
+    # Pure text parsing, no clock or network, so the result is deterministic.
+    ladder = spec.get("ladder")
+    if not isinstance(ladder, dict):
+        fail("layers.json missing ladder mirror")
+    if ladder.get("canonical") != "packages/vfharness/LOOP.md":
+        fail("ladder.canonical must be packages/vfharness/LOOP.md")
+    for key in ("maxRetries", "escalateAfter", "sameSensorFailTrip", "stoppingCondition"):
+        if key not in loop:
+            fail(f"loop.{key} must be preserved (additive schema only)")
+    code_block = re.search(r"```text\n(plan = steps.*?)```", canonical_text, re.S)
+    if not code_block:
+        fail("LOOP.md execution code block missing")
+    ladder_steps = re.findall(
+        r"retry\(step, budget=(\d+)\)|(fallback)\(step\)|(downgrade_scope)\(step\)|(ruling)\(step\)|(escalate)\(step\)",
+        code_block.group(1),
+    )
+    parsed_order = []
+    parsed_budget = None
+    for budget, fb, dg, rl, esc in ladder_steps:
+        if budget:
+            parsed_order.append("retry")
+            parsed_budget = int(budget)
+        elif fb:
+            parsed_order.append("fallback")
+        elif dg:
+            parsed_order.append("downgrade_scope")
+        elif rl:
+            parsed_order.append("safe_ruling")
+        elif esc:
+            parsed_order.append("escalate")
+    if parsed_order != ladder.get("order"):
+        fail(f"ladder.order {ladder.get('order')} drifts from LOOP.md {parsed_order}")
+    if parsed_budget != ladder.get("retryBudget"):
+        fail(f"ladder.retryBudget {ladder.get('retryBudget')} drifts from LOOP.md budget={parsed_budget}")
+    if "| fallback | פעם אחת" not in canonical_text or ladder.get("fallbackAttempts") != 1:
+        fail("ladder.fallbackAttempts drifts from LOOP.md (fallback once)")
+    if "`safe_to_rule=False`" not in canonical_text or ladder.get("safeRulingDefault") is not False:
+        fail("ladder.safeRulingDefault drifts from LOOP.md (safe ruling is opt-in)")
+    if "לא ניתן לעקיפה ב־ruling" not in canonical_text or ladder.get("requiredSensorRedOverridable") is not False:
+        fail("ladder.requiredSensorRedOverridable drifts from LOOP.md")
     secondary = execution.get("secondarySurfaces") or []
     if len(secondary) != 5 or len(secondary) != len(set(secondary)):
         fail("executionContract secondary surfaces must contain five unique active pointers")

@@ -34,7 +34,7 @@
     "packages/vfharness/state/superpowers-v63-harness-2026-09-13/preflight.md",
     "packages/vfresearch/sources/2026-09-13-superpowers-v63.md",
     "scripts/check-vfharness-execution-discipline.py",
-    "https://github.com/nocturney/velvetos-core/actions/runs/34761289350"
+    "https://github.com/nocturney/velvetos-core/actions/runs/34761452108"
   ],
   "unresolved": [
     "Second independent high-risk reviewer is unavailable in the current execution environment.",
@@ -42,7 +42,7 @@
   ],
   "outcome": "decision_gate",
   "pulse": "blocked",
-  "verification": "GitHub Actions run #521 / 34761289350 PASS: Living README, README System Pulse, full VelvetOS sensors 58/58, commission isolation. Focused Windows verification also proved safe-ruling behavior, structural wiring, existing vfsales caller compatibility, and self-test state isolation.",
+  "verification": "Final reviewed head 5770a365 GitHub Actions run #523 / 34761452108 PASS (supersedes pre-final run #521 / 34761289350): Living README, README System Pulse, full VelvetOS sensors 58/58, commission isolation. Focused Windows verification also proved safe-ruling behavior, structural wiring, existing vfsales caller compatibility, and self-test state isolation.",
   "gate": {
     "kind": "approval",
     "waiting_for": "second independent high-risk reviewer",

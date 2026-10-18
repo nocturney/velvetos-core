@@ -1,0 +1,24 @@
+{
+  "task_id": "595-triage-row-corrections-2026-10-18",
+  "status": "completed",
+  "component_state": "Idle",
+  "pack": "office-v2",
+  "goal": "Correct #595 triage rows 13, 14, 20 and 24 after Claude CLQ-8. KEEP and REJECT stay.",
+  "completed_steps": [
+    "CLAIM on #612 and #595",
+    "REST compare ggml-org/llama.cpp master...danielhanchen:master: ahead_by 0, behind_by 2129",
+    "REST dagger/container-use: pushed_at 2026-09-21 is Dependabot; main last commit 2026-08-12",
+    "emilk/egui README and LICENSE-MIT plus LICENSE-APACHE: MIT OR Apache-2.0",
+    "gastownhall/gastown pushed_at 2026-10-18T00:11:20Z confirmed; Dependabot PRs 4928 and 4929; main last commit 2026-07-23",
+    "Wrote candidate-triage-batches-124-2026-10-18.md and .json"
+  ],
+  "next_step": "Independent QA on the PR. Do not merge from this task.",
+  "artifacts": [
+    "docs/implementation/office-v2/phase2/candidate-triage-batches-124-2026-10-18.md",
+    "docs/implementation/office-v2/phase2/candidate-triage-batches-124-2026-10-18.json"
+  ],
+  "unresolved": [],
+  "last_updated": "2026-10-18",
+  "decisions_unchanged": true,
+  "registry_edited": false
+}

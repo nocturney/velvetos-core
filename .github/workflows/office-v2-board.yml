@@ -1,0 +1,43 @@
+name: Office 2.0 board
+
+# Manual dispatch only. Scheduler authority belongs to ChatGPT automations.
+# This job reads GitHub and uploads the board. It does not push or comment.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+  actions: read
+
+jobs:
+  board:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Build the office board
+        env:
+          GH_TOKEN: ${{ github.token }}
+        # Artifact only. --omit-private keeps a private repo out of this public upload.
+        # latest.md and latest.json are gitignored, so this job does not commit them.
+        run: python3 scripts/office_v2_mvp.py --write --omit-private
+
+      - name: Upload the office board
+        uses: actions/upload-artifact@v7
+        with:
+          name: office-v2-board
+          path: |
+            docs/office-v2/board/latest.md
+            docs/office-v2/board/latest.json
+          if-no-files-found: error
+          retention-days: 7

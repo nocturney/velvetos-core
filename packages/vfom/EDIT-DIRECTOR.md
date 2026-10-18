@@ -34,7 +34,7 @@ Run `scripts/vf_publication_evidence.py --phase production` before production an
 - rough = `draft`, review = `standard`, final = `high` + strict-all.
 - Hebrew visual text נשאר שכבת RTL דטרמיניסטית; אין טקסט עברי שנוצר כחלק מ־AI footage.
 - final חייב להסתיים ב־ffprobe render receipt; receipt זה אינו publish receipt ואינו authorizes publish.
-- אם HyperFrames נכשל אחרי retry בר־פעולה אחד, עבור ל־`ffmpeg-svg-caption-composition` כאשר הוא יכול לשמר את אותה כוונת EDL. אין להוריד QA כדי להעביר backend.
+- אם HyperFrames נכשל אחרי retry בר־פעולה אחד, עבור ל־`ffmpeg-svg-caption-composition` (`python3 scripts/vf_ffmpeg_svg_caption.py plan|run`) כאשר הוא יכול לשמר את אותה כוונת EDL. אין להוריד QA כדי להעביר backend.
 
 ## כללי עריכה
 

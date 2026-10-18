@@ -1,0 +1,30 @@
+{
+  "task_id": "595-perplexity-10-tool-verification-2026-10-18",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "office-v2",
+  "goal": "Record the auditor's verified Perplexity 10-tool scan. Re-check license and archived status. Do not edit the candidate registry.",
+  "completed_steps": [
+    "CLAIM on #612 comment 6249230356",
+    "Read auditor comment 6249011608",
+    "GitHub REST license and archived at 2026-10-18T11:16:07Z",
+    "UFO security-advisories count 18 at 2026-10-18T11:18:22Z, patched_versions empty or null",
+    "Wrote perplexity-10-tool-verification-2026-10-18.md and .json"
+  ],
+  "next_step": "Independent QA on the PR. Do not merge from this task.",
+  "artifacts": [
+    "docs/implementation/office-v2/phase2/perplexity-10-tool-verification-2026-10-18.md",
+    "docs/implementation/office-v2/phase2/perplexity-10-tool-verification-2026-10-18.json"
+  ],
+  "unresolved": [
+    "OpenHands enterprise-licence note UNVERIFIABLE",
+    "Temporal upgrade guidance UNVERIFIABLE"
+  ],
+  "last_updated": "2026-10-18",
+  "execution_state": {
+    "registry_edited": false,
+    "github_api_checked_at": "2026-10-18T11:16:07Z",
+    "verified_top3": ["CrewAI", "LangGraph", "UFO localhost-only"]
+  },
+  "latest_observation": "All ten GitHub archived flags are false. AutoGen README says archived and points to microsoft/agent-framework. UFO advisory API returned 18 rows and no patched versions."
+}

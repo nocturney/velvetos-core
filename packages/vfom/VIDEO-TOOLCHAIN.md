@@ -8,7 +8,7 @@ This layer adapts useful patterns from `browser-use/video-use`, Remotion and Man
 
 1. **Edit Intelligence** (`scripts/vf_video_edit.py`) prepares a deterministic base cut from real/approved media staged for the job. It borrows useful production rules from video-use: audio-first decisions, word-boundary cuts when transcript evidence exists, 30–200ms edge padding, 30ms audio fades, rendered-output inspection and at most three repair passes.
 2. **HyperFrames remains the canonical master compositor.** Hebrew RTL overlays, kinetic typography, multi-shot composition and the social master continue through `HYPERFRAMES-BACKEND.json`.
-3. **FFmpeg/SVG remains the deterministic fallback** for simple overlays/captions and emergency render equivalence.
+3. **FFmpeg/SVG remains the deterministic fallback** for simple overlays/captions and emergency render equivalence. The executable bridge is `scripts/vf_ffmpeg_svg_caption.py` (`plan` / `run`); `scripts/vf_hyperframes.py` calls it after HyperFrames and one retry both fail.
 4. **Remotion is an optional animation-slot engine, not a renderer replacement.** Current owner business headcount is 1, so it is **Free License eligible** for commercial use and automation. Re-check only if relevant project/company headcount reaches 4+ or upstream terms change.
 5. **Manim is an optional technical/explainer slot engine.** It is appropriate for diagrams, measurements and geometry explanations, not as proof that a physical print/test/customer result happened.
 
