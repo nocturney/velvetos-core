@@ -353,12 +353,13 @@ def _check_assertion_matrix() -> None:
     _expect(merged, pair, {"hebrew_table"})
     # Equal row count: one merged row plus one repeated URL. Count and
     # presence both pass, so only the one-url conjunct can fail this case.
-    equal_count = merged + _row(
-        left,
-        "synthetic blocker",
-        "synthetic-seat",
-        "synthetic next",
-    ).split(H_ROW, 1)[-1]
+    # Append the data line only. A second separator is not part of the table.
+    equal_count = (
+        merged
+        + "| %s | synthetic blocker | synthetic-seat | synthetic next |\n" % left
+    )
+    if equal_count.count("| --- | --- | --- | --- |") != 1:
+        _die("equal-count fixture repeated the separator")
     equal_lines = [
         line for line in equal_count.splitlines()
         if line.strip().startswith("|") and ISSUE_URL.search(line)
