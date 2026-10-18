@@ -346,7 +346,44 @@ def batch_receipt_path(req: dict[str, Any], outputs: list[Path], override: str |
     return common / f"{req['jobId']}.batch.receipt.json"
 
 
+def failover_after_primary(req: dict[str, Any], receipt_override: str | None, primary, fallback) -> dict[str, Any]:
+    """Run HyperFrames once, retry once, then switch to the caption fallback.
+
+    `primary` and `fallback` raise SystemExit on failure. A successful primary
+    receipt is returned unchanged. The fallback receipt records the switch.
+    """
+    errors: list[dict[str, Any]] = []
+    for attempt in (1, 2):
+        try:
+            return primary(req, receipt_override)
+        except SystemExit as exc:
+            code = exc.code if isinstance(exc.code, int) else 1
+            errors.append({"attempt": attempt, "exitCode": code})
+            print(f"FAIL hyperframes attempt {attempt}/2 exit={code}", file=sys.stderr)
+    return fallback(req, receipt_override, {
+        "from": "hyperframes",
+        "to": "ffmpeg-svg-caption-composition",
+        "attempts": 2,
+        "qaLowered": False,
+        "errors": errors,
+    })
+
+
+def _caption_fallback(req: dict[str, Any], receipt_override: str | None, failover: dict[str, Any]) -> dict[str, Any]:
+    try:
+        import vf_ffmpeg_svg_caption as caption
+    except ImportError as exc:
+        fail(f"fallback renderer missing: {exc}", 1)
+    return caption.render_prepared(req, receipt_override, failover)
+
+
 def execute(req: dict[str, Any], receipt_override: str | None) -> dict[str, Any]:
+    if req.get("batchFile"):
+        return execute_body(req, receipt_override)
+    return failover_after_primary(req, receipt_override, execute_body, _caption_fallback)
+
+
+def execute_body(req: dict[str, Any], receipt_override: str | None) -> dict[str, Any]:
     if doctor() != 0:
         raise SystemExit(1)
     commands = build_commands(req, resolve_binary=True)

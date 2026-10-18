@@ -1,0 +1,843 @@
+#!/usr/bin/env python3
+"""Deterministic ffmpeg + SVG caption fallback for Velvet reel stills.
+
+HyperFrames stays the primary compositor. This bridge renders the same
+request.json when HyperFrames is unavailable: a product still, a slow zoom,
+a Hebrew RTL SVG caption in Rubik with the copper accent, safe-area placement,
+and an audio track with fade in/out. It writes an ffprobe + SHA-256 receipt
+and fails closed. It does not install packages and it does not publish.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+from xml.sax.saxutils import escape as xml_escape
+
+BACKEND = "ffmpeg-svg-caption-composition"
+ACCEPTED_BACKENDS = {"hyperframes", BACKEND}
+COPPER = "#a86838"
+BRAND_SAFE_X = 86
+BRAND_SAFE_TOP = 150
+BRAND_SAFE_BOTTOM = 230
+FADE_IN_SEC = 0.6
+FADE_OUT_SEC = 1.7
+DEFAULT_ZOOM_END = 1.08
+DEFAULT_PAN_Y = 20.0
+DEFAULT_ORIGIN = (0.5, 0.40)
+HEBREW_RE = re.compile(r"[\u0590-\u05FF]")
+PORTRAIT = (1080, 1920)
+
+
+def fail(message: str, code: int = 2) -> None:
+    print(f"FAIL {message}", file=sys.stderr)
+    raise SystemExit(code)
+
+
+def repo_root() -> Path:
+    return Path(__file__).resolve().parents[1]
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def read_json(path: Path) -> dict[str, Any]:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        fail(f"request not found: {path}")
+    except json.JSONDecodeError as exc:
+        fail(f"invalid request JSON: {exc}")
+    if not isinstance(value, dict):
+        fail("request must be a JSON object")
+    return value
+
+
+def require_text(obj: dict[str, Any], key: str) -> str:
+    value = obj.get(key)
+    if not isinstance(value, str) or not value.strip():
+        fail(f"request.{key} must be a non-empty string")
+    return value.strip()
+
+
+def resolve_under(base: Path, raw: str, label: str) -> Path:
+    candidate = (base / raw).resolve() if not Path(raw).is_absolute() else Path(raw).resolve()
+    try:
+        candidate.relative_to(base.resolve())
+    except ValueError:
+        fail(f"{label} must stay under projectDir")
+    return candidate
+
+
+def escape_filter_text(text: str) -> str:
+    """Escape a path string for an ffmpeg filtergraph argv.
+
+    Windows drive colons must be escaped with a doubled backslash. That is the
+    form ffmpeg 9 essentials accepts when the graph is a direct argument.
+    """
+    text = text.replace("\\", "/")
+    if any(char in text for char in (" ", "'", ",", "[", "]")):
+        fail(f"path is not safe inside an ffmpeg filtergraph: {text}")
+    return text.replace(":", "\\\\:")
+
+
+def escape_filter_path(path: Path) -> str:
+    return escape_filter_text(path.resolve().as_posix())
+
+
+def rubik_font() -> dict[str, Any]:
+    tokens_path = repo_root() / "packages" / "vfbrand" / "brand-tokens.json"
+    if not tokens_path.is_file():
+        fail(f"brand tokens missing: {tokens_path}")
+    tokens = json.loads(tokens_path.read_text(encoding="utf-8"))
+    families = ((tokens.get("fonts") or {}).get("families") or [])
+    rubik = next((row for row in families if row.get("family") == "Rubik"), None)
+    if not rubik:
+        fail("brand tokens have no Rubik family")
+    path = repo_root() / str(rubik["file"])
+    if not path.is_file():
+        fail(f"Rubik font file missing: {path}")
+    actual = sha256_file(path)
+    if actual != rubik.get("sha256"):
+        fail("Rubik font sha256 does not match brand-tokens.json")
+    return {"path": path, "family": "Rubik", "sha256": actual}
+
+
+def css_block(html: str, selector: str) -> str:
+    match = re.search(rf"{re.escape(selector)}\s*\{{([^}}]*)\}}", html)
+    return match.group(1) if match else ""
+
+
+def keyframes_body(html: str, name: str) -> str:
+    match = re.search(rf"@keyframes\s+{re.escape(name)}\s*\{{", html)
+    if not match:
+        return ""
+    depth = 1
+    index = match.end()
+    while index < len(html) and depth:
+        if html[index] == "{":
+            depth += 1
+        elif html[index] == "}":
+            depth -= 1
+        index += 1
+    return html[match.end():index - 1]
+
+
+def css_px(block: str, prop: str, default: float) -> float:
+    match = re.search(rf"(?:^|[;{{])\s*{prop}\s*:\s*(-?[0-9.]+)px", block)
+    return float(match.group(1)) if match else default
+
+
+def tag_attr(html: str, tag: str, class_name: str, attr: str) -> str | None:
+    for match in re.finditer(rf"<{tag}\b[^>]*>", html, flags=re.IGNORECASE):
+        blob = match.group(0)
+        if class_name and not re.search(rf'class="[^"]*\b{re.escape(class_name)}\b', blob):
+            continue
+        found = re.search(rf'\b{attr}="([^"]*)"', blob)
+        if found and found.group(1).strip():
+            return found.group(1).strip()
+    return None
+
+
+def inner_text(html: str, tag: str, class_name: str) -> str:
+    match = re.search(
+        rf"<{tag}\b[^>]*class=\"[^\"]*\b{re.escape(class_name)}\b[^\"]*\"[^>]*>(.*?)</{tag}>",
+        html,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    if not match:
+        return ""
+    text = re.sub(r"<[^>]+>", "", match.group(1))
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def parse_composition(html: str, project: Path, variables: dict[str, Any] | None) -> dict[str, Any]:
+    variables = variables or {}
+    width = int(re.search(r'data-width="(\d+)"', html).group(1)) if re.search(r'data-width="(\d+)"', html) else 0
+    height = int(re.search(r'data-height="(\d+)"', html).group(1)) if re.search(r'data-height="(\d+)"', html) else 0
+    fps_match = re.search(r'data-fps="(\d+)"', html)
+    duration_match = re.search(r'data-duration="([0-9.]+)"', html)
+    if not width or not height or not duration_match:
+        fail("composition frame must declare data-width, data-height and data-duration")
+    duration = float(duration_match.group(1))
+    if duration <= 0:
+        fail("composition duration must be positive")
+    fps = int(fps_match.group(1)) if fps_match else 30
+
+    hero_raw = str(variables.get("heroImage") or "").strip() or tag_attr(html, "img", "hero", "src") or tag_attr(html, "img", "", "src")
+    if not hero_raw:
+        fail("composition has no hero image")
+    hero = resolve_under(project, hero_raw, "hero image")
+    if not hero.is_file():
+        fail(f"hero image missing: {hero}")
+
+    audio_raw = str(variables.get("audioFile") or "").strip() or tag_attr(html, "audio", "", "src")
+    audio = None
+    if audio_raw:
+        audio = resolve_under(project, audio_raw, "audio")
+        if not audio.is_file():
+            fail(f"audio file missing: {audio}")
+
+    headline = str(variables.get("headline") or "").strip() or inner_text(html, "h1", "headline")
+    subhead = str(variables.get("subhead") or "").strip() or inner_text(html, "p", "subhead")
+    if not headline:
+        fail("composition has no Hebrew headline")
+    if not HEBREW_RE.search(headline):
+        fail("caption headline must include Hebrew")
+
+    accent = str(variables.get("accentHex") or "").strip() or ""
+    rule = css_block(html, ".rule")
+    color_match = re.search(r"background\s*:\s*(#[0-9A-Fa-f]{6})", rule)
+    if not accent and color_match:
+        accent = color_match.group(1)
+    accent = (accent or COPPER).lower()
+    if accent != COPPER:
+        fail(f"caption accent must be copper {COPPER}")
+
+    copy = css_block(html, ".copy")
+    safe_x = max(BRAND_SAFE_X, css_px(copy, "left", 80), css_px(copy, "right", 80))
+    safe_bottom = max(BRAND_SAFE_BOTTOM, css_px(copy, "bottom", 220))
+    headline_css = css_block(html, ".headline")
+    subhead_css = css_block(html, ".subhead")
+    headline_size = css_px(headline_css, "font-size", 84)
+    subhead_size = css_px(subhead_css, "font-size", 50)
+    rule_w = css_px(rule, "width", 180)
+    rule_h = css_px(rule, "height", 10)
+
+    motion = keyframes_body(html, "kenburns")
+    scales = [float(value) for value in re.findall(r"scale\(\s*([0-9.]+)\s*\)", motion)]
+    if len(scales) >= 2:
+        zoom_start, zoom_end = scales[0], scales[-1]
+    elif len(scales) == 1:
+        zoom_start, zoom_end = 1.0, scales[0]
+    else:
+        zoom_start, zoom_end = 1.0, DEFAULT_ZOOM_END
+    translate = re.search(r"translateY\(\s*(-?[0-9.]+)px", motion)
+    origin = re.search(r"transform-origin:\s*([0-9.]+)%\s+([0-9.]+)%", html)
+    # CSS translateY(-20px) moves the still up, so the viewport samples lower.
+    pan_y = -float(translate.group(1)) if translate else DEFAULT_PAN_Y
+    return {
+        "width": width,
+        "height": height,
+        "fps": fps,
+        "duration": duration,
+        "hero": hero,
+        "audio": audio,
+        "headline": headline,
+        "subhead": subhead,
+        "accent": accent,
+        "safeX": safe_x,
+        "safeTop": BRAND_SAFE_TOP,
+        "safeBottom": safe_bottom,
+        "headlineSize": headline_size,
+        "subheadSize": subhead_size,
+        "ruleWidth": rule_w,
+        "ruleHeight": rule_h,
+        "zoomStart": zoom_start,
+        "zoomEnd": zoom_end,
+        "panY": pan_y,
+        "originX": float(origin.group(1)) / 100 if origin else DEFAULT_ORIGIN[0],
+        "originY": float(origin.group(2)) / 100 if origin else DEFAULT_ORIGIN[1],
+    }
+
+
+def prepare_request(data: dict[str, Any]) -> dict[str, Any]:
+    if data.get("backend") not in ACCEPTED_BACKENDS:
+        fail("request.backend must be 'hyperframes' or 'ffmpeg-svg-caption-composition'")
+    job_id = require_text(data, "jobId")
+    if not re.fullmatch(r"[A-Za-z0-9._-]+", job_id):
+        fail("request.jobId contains unsupported characters")
+    project = Path(require_text(data, "projectDir")).expanduser().resolve()
+    if not project.is_dir():
+        fail(f"projectDir is not a directory: {project}")
+    composition = resolve_under(project, str(data.get("composition") or "index.html"), "composition")
+    if not composition.is_file():
+        fail(f"composition not found: {composition}")
+    stage = str(data.get("stage") or "rough")
+    if stage not in {"rough", "review", "final"}:
+        fail("stage must be rough, review or final")
+    output_format = str(data.get("format") or "mp4")
+    if output_format != "mp4":
+        fail("ffmpeg-svg-caption-composition renders mp4 only")
+    resolution = str(data.get("resolution") or "portrait")
+    if resolution != "portrait":
+        fail("ffmpeg-svg-caption-composition renders portrait 1080x1920 only")
+    fps = int(data.get("fps") or 30)
+    if fps != 30:
+        fail("ffmpeg-svg-caption-composition renders 30 fps only")
+    quality_default = "high" if stage == "final" else "draft" if stage == "rough" else "standard"
+    quality = str(data.get("quality") or quality_default)
+    if quality not in {"draft", "standard", "high"}:
+        fail("quality must be draft, standard or high")
+    if stage == "final" and quality != "high":
+        fail("final stage requires quality=high")
+    target = str(data.get("target") or "reel_master")
+    output = resolve_under(project, require_text(data, "output"), "output")
+    if output.suffix.lower() != ".mp4":
+        fail("output extension must be .mp4")
+    variables = None
+    variables_file = None
+    if data.get("variablesFile"):
+        variables_file = resolve_under(project, str(data["variablesFile"]), "variablesFile")
+        if not variables_file.is_file():
+            fail(f"variablesFile not found: {variables_file}")
+        variables = read_json(variables_file)
+    audio_required = bool(data.get("audioRequired", target in {"reel_master", "story_master", "feed_video"}))
+    composition_info = parse_composition(composition.read_text(encoding="utf-8"), project, variables)
+    if (composition_info["width"], composition_info["height"]) != PORTRAIT:
+        fail(f"composition must be portrait {PORTRAIT[0]}x{PORTRAIT[1]}")
+    if composition_info["fps"] != fps:
+        fail("composition data-fps must match request.fps")
+    if audio_required and composition_info["audio"] is None:
+        fail("audioRequired but the composition has no audio track")
+    font = rubik_font()
+    return {
+        "jobId": job_id,
+        "projectDir": project,
+        "composition": composition,
+        "compositionArg": composition.relative_to(project).as_posix(),
+        "stage": stage,
+        "target": target,
+        "format": output_format,
+        "resolution": resolution,
+        "fps": fps,
+        "quality": quality,
+        "output": output,
+        "outputArg": output.relative_to(project).as_posix(),
+        "audioRequired": audio_required,
+        "strictAll": bool(data.get("strictAll", stage == "final")),
+        "variablesFile": variables_file,
+        "compositionInfo": composition_info,
+        "font": font,
+    }
+
+
+def fades_for(duration: float) -> tuple[float, float]:
+    fade_in, fade_out = FADE_IN_SEC, FADE_OUT_SEC
+    if fade_in + fade_out >= duration:
+        fade_in = duration * 0.2
+        fade_out = duration * 0.3
+    if fade_in <= 0 or fade_out <= 0 or fade_in + fade_out >= duration:
+        fail("audio fade does not fit the composition duration")
+    return fade_in, fade_out
+
+
+def frame_count(info: dict[str, Any]) -> int:
+    frames = int(round(float(info["duration"]) * int(info["fps"])))
+    if frames < 1:
+        fail("composition is shorter than one frame")
+    return frames
+
+
+def run_ffmpeg(args: list[str], *, timeout: int = 180) -> None:
+    print("RUN " + " ".join(args))
+    try:
+        proc = subprocess.run(args, text=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        fail(f"ffmpeg timed out after {timeout}s", 1)
+    except OSError as exc:
+        fail(f"ffmpeg failed to start: {exc}", 1)
+    if proc.returncode != 0:
+        fail(f"command failed with exit={proc.returncode}: {args[0]}", proc.returncode or 1)
+
+
+def tool_path(name: str) -> str | None:
+    return shutil.which(name)
+
+
+def filter_names(ffmpeg: str) -> set[str]:
+    proc = subprocess.run([ffmpeg, "-hide_banner", "-filters"], text=True, capture_output=True, timeout=20)
+    names = set()
+    for line in (proc.stdout or "").splitlines():
+        parts = line.split()
+        if len(parts) >= 2 and parts[0] and parts[1] and not parts[0].startswith("-"):
+            names.add(parts[1])
+    return names
+
+
+def encoder_names(ffmpeg: str) -> set[str]:
+    proc = subprocess.run([ffmpeg, "-hide_banner", "-encoders"], text=True, capture_output=True, timeout=20)
+    names = set()
+    for line in (proc.stdout or "").splitlines():
+        parts = line.split()
+        if len(parts) >= 2 and parts[0][:1] in {"V", "A", "."}:
+            names.add(parts[1])
+    return names
+
+
+def doctor() -> int:
+    ffmpeg = tool_path("ffmpeg")
+    ffprobe = tool_path("ffprobe")
+    facts = {"ffmpeg": ffmpeg, "ffprobe": ffprobe}
+    print(json.dumps(facts, ensure_ascii=False, indent=2))
+    if not ffmpeg or not ffprobe:
+        print("FAIL missing tools: ffmpeg, ffprobe", file=sys.stderr)
+        return 1
+    filters = filter_names(ffmpeg)
+    encoders = encoder_names(ffmpeg)
+    needed_filters = {"zoompan", "drawtext", "overlay", "afade", "scale", "crop", "format"}
+    missing_filters = sorted(needed_filters - filters)
+    missing_encoders = sorted({"libx264", "aac"} - encoders)
+    if missing_filters or missing_encoders:
+        print(
+            "FAIL ffmpeg build cannot render ffmpeg-svg-caption-composition "
+            f"missing_filters={missing_filters} missing_encoders={missing_encoders}",
+            file=sys.stderr,
+        )
+        return 1
+    try:
+        rubik_font()
+    except SystemExit:
+        return 1
+    print(f"OK {BACKEND} ffmpeg+ffprobe drawtext/zoompan/libx264/aac Rubik")
+    return 0
+
+
+def text_ink_width(font: Path, text: str, size: float, ffmpeg: str) -> int:
+    if not text:
+        return 0
+    width, height = 4096, max(int(size * 3), 32)
+    with tempfile.TemporaryDirectory() as tmp:
+        text_path = Path(tmp) / "line.txt"
+        raw_path = Path(tmp) / "line.raw"
+        text_path.write_text(text, encoding="utf-8")
+        vf = (
+            f"drawtext=fontfile={escape_filter_path(font)}:textfile={escape_filter_path(text_path)}"
+            f":text_shaping=1:expansion=none:fontcolor=white:fontsize={size:.2f}:x=0:y=0"
+        )
+        proc = subprocess.run(
+            [ffmpeg, "-y", "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i", f"color=c=black:s={width}x{height}:d=1",
+             "-vf", vf, "-frames:v", "1", "-f", "rawvideo", "-pix_fmt", "rgb24", str(raw_path)],
+            text=True, timeout=30,
+        )
+        if proc.returncode != 0 or not raw_path.is_file():
+            fail("could not measure caption text with ffmpeg drawtext", 1)
+        data = raw_path.read_bytes()
+        if len(data) != width * height * 3:
+            fail("caption measurement frame has an unexpected size", 1)
+        max_x = -1
+        for y in range(height):
+            row = data[y * width * 3:(y + 1) * width * 3]
+            for x in range(width):
+                if row[x * 3] > 16:
+                    max_x = max(max_x, x)
+        if max_x < 0:
+            fail("caption text produced no ink", 1)
+        return max_x + 1
+
+
+def wrap_text(font: Path, text: str, size: float, max_width: float, ffmpeg: str) -> list[str]:
+    words = text.split()
+    if not words:
+        return []
+    lines: list[str] = []
+    current = ""
+    for word in words:
+        trial = word if not current else f"{current} {word}"
+        if text_ink_width(font, trial, size, ffmpeg) <= max_width:
+            current = trial
+            continue
+        if not current:
+            fail(f"caption word does not fit the safe area: {word}")
+        lines.append(current)
+        current = word
+    if current:
+        if text_ink_width(font, current, size, ffmpeg) > max_width:
+            fail("caption line does not fit the safe area")
+        lines.append(current)
+    return lines
+
+
+def layout_caption(info: dict[str, Any], font: Path, ffmpeg: str | None) -> dict[str, Any]:
+    content_width = info["width"] - (2 * info["safeX"])
+    if content_width < 120:
+        fail("safe area leaves no room for the caption")
+    if ffmpeg:
+        headline_lines = wrap_text(font, info["headline"], info["headlineSize"], content_width, ffmpeg)
+        subhead_lines = wrap_text(font, info["subhead"], info["subheadSize"], content_width, ffmpeg) if info["subhead"] else []
+    else:
+        headline_lines = [info["headline"]]
+        subhead_lines = [info["subhead"]] if info["subhead"] else []
+    head_line_h = info["headlineSize"] * 1.12
+    sub_line_h = info["subheadSize"] * 1.25
+    head_block = len(headline_lines) * head_line_h
+    sub_block = len(subhead_lines) * sub_line_h
+    gap_after_head = 36 if subhead_lines or True else 0
+    gap_after_rule = 30 if subhead_lines else 0
+    block = head_block + gap_after_head + info["ruleHeight"] + gap_after_rule + sub_block
+    bottom = info["height"] - info["safeBottom"]
+    top = bottom - block
+    if top < info["safeTop"]:
+        fail("caption does not fit inside the safe area")
+    rule_x = info["width"] - info["safeX"] - info["ruleWidth"]
+    rule_y = top + head_block + gap_after_head
+    return {
+        "headlineLines": headline_lines,
+        "subheadLines": subhead_lines,
+        "top": top,
+        "headLineH": head_line_h,
+        "subLineH": sub_line_h,
+        "ruleX": rule_x,
+        "ruleY": rule_y,
+        "subTop": rule_y + info["ruleHeight"] + gap_after_rule,
+        "contentRight": info["width"] - info["safeX"],
+    }
+
+
+def build_svg(info: dict[str, Any], layout: dict[str, Any], font: dict[str, Any]) -> str:
+    texts = []
+    y = layout["top"]
+    for line in layout["headlineLines"]:
+        texts.append(
+            f'<text x="{layout["contentRight"]:.1f}" y="{y:.1f}" text-anchor="start" direction="rtl" '
+            f'unicode-bidi="embed" font-family="Rubik" font-size="{info["headlineSize"]:.1f}" '
+            f'font-weight="700" fill="#ffffff" dominant-baseline="hanging">{xml_escape(line)}</text>'
+        )
+        y += layout["headLineH"]
+    texts.append(
+        f'<rect x="{layout["ruleX"]:.1f}" y="{layout["ruleY"]:.1f}" width="{info["ruleWidth"]:.1f}" '
+        f'height="{info["ruleHeight"]:.1f}" fill="{COPPER}"/>'
+    )
+    y = layout["subTop"]
+    for line in layout["subheadLines"]:
+        texts.append(
+            f'<text x="{layout["contentRight"]:.1f}" y="{y:.1f}" text-anchor="start" direction="rtl" '
+            f'unicode-bidi="embed" font-family="Rubik" font-size="{info["subheadSize"]:.1f}" '
+            f'font-weight="600" fill="#ffffff" dominant-baseline="hanging">{xml_escape(line)}</text>'
+        )
+        y += layout["subLineH"]
+    body = "\n  ".join(texts)
+    return (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{info["width"]}" height="{info["height"]}" viewBox="0 0 {info["width"]} {info["height"]}">\n'
+        f'  <metadata>headline={xml_escape(info["headline"])}; subhead={xml_escape(info["subhead"])}; '
+        f'font=Rubik; fontSha256={font["sha256"]}; accent={COPPER}; direction=rtl; '
+        f'safeX={info["safeX"]}; safeTop={info["safeTop"]}; safeBottom={info["safeBottom"]}</metadata>\n'
+        f"  {body}\n"
+        "</svg>\n"
+    )
+
+
+def crf_for(quality: str) -> tuple[str, str]:
+    if quality == "high":
+        return "18", "veryfast"
+    if quality == "standard":
+        return "23", "veryfast"
+    return "28", "ultrafast"
+
+
+def build_commands(req: dict[str, Any], layout: dict[str, Any], svg_text: str, *, resolve_binary: bool) -> dict[str, Any]:
+    info = req["compositionInfo"]
+    frames = frame_count(info)
+    fade_in, fade_out = fades_for(info["duration"])
+    fade_out_start = info["duration"] - fade_out
+    zoom_delta = max(0.0, float(info["zoomEnd"]) - float(info["zoomStart"]))
+    denom = max(frames - 1, 1)
+    zoom = (
+        f"zoompan=z='{info['zoomStart']:.6f}+{zoom_delta:.6f}*on/{denom}'"
+        f":x='iw*{info['originX']:.6f}*(1-1/zoom)'"
+        f":y='ih*{info['originY']:.6f}*(1-1/zoom)+{info['panY']:.4f}*on/{denom}'"
+        f":d={frames}:s={info['width']}x{info['height']}:fps={info['fps']}"
+    )
+    video = (
+        f"[0:v]scale={info['width']}:{info['height']}:force_original_aspect_ratio=increase,"
+        f"crop={info['width']}:{info['height']},setsar=1,{zoom},format=yuv420p[bg]"
+    )
+    caption_index = 1
+    inputs = [["-loop", "1", "-i", str(info["hero"])]]
+    maps = []
+    if info["audio"] is not None:
+        inputs.append(["-i", str(info["audio"])])
+        caption_index = 2
+        graph = (
+            f"{video};[bg][{caption_index}:v]overlay=0:0:format=auto[v];"
+            f"[1:a]atrim=start=0:end={info['duration']:.6f},asetpts=PTS-STARTPTS,"
+            f"afade=t=in:st=0:d={fade_in:.6f},afade=t=out:st={fade_out_start:.6f}:d={fade_out:.6f},"
+            f"aresample=48000[a]"
+        )
+        maps = ["-map", "[v]", "-map", "[a]", "-c:a", "aac", "-b:a", "192k", "-ac", "2", "-ar", "48000"]
+    else:
+        graph = f"{video};[bg][{caption_index}:v]overlay=0:0:format=auto[v]"
+        maps = ["-map", "[v]"]
+    crf, preset = crf_for(req["quality"])
+    binary = tool_path("ffmpeg") if resolve_binary else "ffmpeg"
+    if resolve_binary and not binary:
+        fail("ffmpeg is required", 1)
+    command = [binary or "ffmpeg", "-y", "-hide_banner"]
+    for group in inputs:
+        command.extend(group)
+    command.extend(["-i", "CAPTION_PNG", "-filter_complex", graph, *maps,
+                    "-c:v", "libx264", "-pix_fmt", "yuv420p", "-preset", preset, "-crf", crf,
+                    "-r", str(info["fps"]), "-frames:v", str(frames),
+                    "-movflags", "+faststart", str(req["output"])])
+    return {
+        "command": command,
+        "frames": frames,
+        "fadeIn": fade_in,
+        "fadeOut": fade_out,
+        "graph": graph,
+        "svg": svg_text,
+    }
+
+
+def plan(req: dict[str, Any]) -> dict[str, Any]:
+    info = req["compositionInfo"]
+    layout = layout_caption(info, req["font"]["path"], ffmpeg=None)
+    svg_text = build_svg(info, layout, req["font"])
+    built = build_commands(req, layout, svg_text, resolve_binary=False)
+    return {
+        "backend": BACKEND,
+        "cwd": str(req["projectDir"]),
+        "commands": [built["command"]],
+        "svg": svg_text,
+        "output": str(req["output"]),
+        "width": info["width"],
+        "height": info["height"],
+        "fps": info["fps"],
+        "durationSec": info["duration"],
+        "frames": built["frames"],
+        "accent": info["accent"],
+        "fontFamily": "Rubik",
+        "fontSha256": req["font"]["sha256"],
+        "safeArea": {"x": info["safeX"], "top": info["safeTop"], "bottom": info["safeBottom"]},
+        "zoom": {"start": info["zoomStart"], "end": info["zoomEnd"], "panY": info["panY"], "originX": info["originX"], "originY": info["originY"]},
+        "fadeInSec": built["fadeIn"],
+        "fadeOutSec": built["fadeOut"],
+        "audioRequired": req["audioRequired"],
+        "renderedOutput": None,
+        "note": "plan does not render or install ffmpeg",
+    }
+
+
+def probe_media(path: Path) -> dict[str, Any]:
+    ffprobe = tool_path("ffprobe")
+    if not ffprobe:
+        fail("ffprobe is required to verify render output", 1)
+    proc = subprocess.run(
+        [ffprobe, "-v", "error", "-show_entries", "format=duration:stream=index,codec_type,codec_name,width,height,avg_frame_rate,sample_rate,channels", "-of", "json", str(path)],
+        text=True, capture_output=True, timeout=30,
+    )
+    if proc.returncode != 0:
+        fail(f"ffprobe failed: {(proc.stderr or '').strip()}", 1)
+    try:
+        return json.loads(proc.stdout)
+    except json.JSONDecodeError as exc:
+        fail(f"ffprobe returned invalid JSON: {exc}", 1)
+
+
+def audio_duration(path: Path) -> float:
+    probe = probe_media(path)
+    streams = [row for row in probe.get("streams") or [] if row.get("codec_type") == "audio"]
+    if not streams:
+        fail(f"audio source has no audio stream: {path}", 1)
+    try:
+        return float((probe.get("format") or {}).get("duration") or 0)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def verify_output(req: dict[str, Any], probe: dict[str, Any], frames: int) -> dict[str, Any]:
+    info = req["compositionInfo"]
+    streams = probe.get("streams") or []
+    videos = [row for row in streams if row.get("codec_type") == "video"]
+    audios = [row for row in streams if row.get("codec_type") == "audio"]
+    if not videos:
+        fail("render has no video stream", 1)
+    video = videos[0]
+    width = int(video.get("width") or 0)
+    height = int(video.get("height") or 0)
+    if (width, height) != (info["width"], info["height"]) or height <= width:
+        fail(f"render is not portrait {info['width']}x{info['height']}: {width}x{height}", 1)
+    if video.get("codec_name") != "h264":
+        fail(f"render video codec must be h264, found {video.get('codec_name')}", 1)
+    if req["audioRequired"] and not audios:
+        fail("render requires audio but ffprobe found no audio stream", 1)
+    if req["audioRequired"] and audios[0].get("codec_name") != "aac":
+        fail(f"render audio codec must be aac, found {audios[0].get('codec_name')}", 1)
+    try:
+        duration = float((probe.get("format") or {}).get("duration") or 0)
+    except (TypeError, ValueError):
+        duration = 0
+    expected = frames / float(info["fps"])
+    if duration <= 0 or abs(duration - expected) > max(0.15, 2 / float(info["fps"])):
+        fail(f"render duration {duration} does not match {expected}", 1)
+    return {
+        "durationSec": round(duration, 3),
+        "width": width,
+        "height": height,
+        "videoCodec": video.get("codec_name"),
+        "audioStreams": len(audios),
+        "audioRequired": req["audioRequired"],
+    }
+
+
+def drawtext_filters(info: dict[str, Any], layout: dict[str, Any], font: Path, work: Path) -> str:
+    filters = [
+        f"drawbox=x=0:y={info['height'] - 760:.0f}:w={info['width']}:h=760:color=black@0.45:t=fill",
+        (
+            f"drawbox=x={layout['ruleX']:.1f}:y={layout['ruleY']:.1f}:w={info['ruleWidth']:.1f}:"
+            f"h={info['ruleHeight']:.1f}:color={COPPER}@1:t=fill"
+        ),
+    ]
+    y = layout["top"]
+    index = 0
+    for line in layout["headlineLines"]:
+        path = work / f"headline-{index}.txt"
+        path.write_text(line, encoding="utf-8")
+        filters.append(
+            "drawtext=fontfile=" + escape_filter_path(font)
+            + ":textfile=" + escape_filter_path(path)
+            + f":text_shaping=1:expansion=none:fontcolor=white:fontsize={info['headlineSize']:.2f}"
+            + f":x=w-text_w-{info['safeX']:.1f}:y={y:.1f}"
+        )
+        y += layout["headLineH"]
+        index += 1
+    y = layout["subTop"]
+    index = 0
+    for line in layout["subheadLines"]:
+        path = work / f"subhead-{index}.txt"
+        path.write_text(line, encoding="utf-8")
+        filters.append(
+            "drawtext=fontfile=" + escape_filter_path(font)
+            + ":textfile=" + escape_filter_path(path)
+            + f":text_shaping=1:expansion=none:fontcolor=white:fontsize={info['subheadSize']:.2f}"
+            + f":x=w-text_w-{info['safeX']:.1f}:y={y:.1f}"
+        )
+        y += layout["subLineH"]
+        index += 1
+    return ",".join(filters)
+
+
+def render_caption_png(info: dict[str, Any], layout: dict[str, Any], font: Path, png: Path, work: Path, ffmpeg: str) -> list[str]:
+    vf = drawtext_filters(info, layout, font, work)
+    command = [
+        ffmpeg, "-y", "-hide_banner", "-loglevel", "error",
+        "-f", "lavfi", "-i", f"color=c=black@0.0:s={info['width']}x{info['height']}:d=1,format=rgba",
+        "-vf", vf, "-frames:v", "1", "-pix_fmt", "rgba", str(png),
+    ]
+    run_ffmpeg(command, timeout=60)
+    if not png.is_file() or png.stat().st_size <= 0:
+        fail("caption PNG was not written", 1)
+    return command
+
+
+def receipt_path(req: dict[str, Any], override: str | None) -> Path:
+    if override:
+        return resolve_under(req["projectDir"], override, "receipt")
+    return req["output"].with_suffix(req["output"].suffix + ".receipt.json")
+
+
+def command_for_receipt(command: list[str]) -> list[str]:
+    if not command:
+        return command
+    return [Path(command[0]).name, *command[1:]]
+
+
+def render_prepared(req: dict[str, Any], receipt_override: str | None, failover: dict[str, Any] | None) -> dict[str, Any]:
+    if req.get("batchFile") or req.get("batchRows"):
+        fail("ffmpeg-svg-caption-composition does not render HyperFrames batches", 1)
+    if doctor() != 0:
+        raise SystemExit(1)
+    ffmpeg = tool_path("ffmpeg")
+    if not ffmpeg:
+        fail("ffmpeg is required", 1)
+    info = req["compositionInfo"]
+    if req["audioRequired"]:
+        if info["audio"] is None:
+            fail("audioRequired but the composition has no audio track", 1)
+        duration = audio_duration(info["audio"])
+        if duration + 0.02 < float(info["duration"]):
+            fail(f"audio is shorter than the composition ({duration:.3f}s < {info['duration']}s)", 1)
+    font = req["font"]
+    layout = layout_caption(info, font["path"], ffmpeg)
+    svg_text = build_svg(info, layout, font)
+    svg_path = req["output"].with_suffix(req["output"].suffix + ".caption.svg")
+    svg_path.parent.mkdir(parents=True, exist_ok=True)
+    svg_path.write_text(svg_text, encoding="utf-8")
+    output = req["output"]
+    committed = False
+    try:
+        with tempfile.TemporaryDirectory(prefix="vf-svg-caption-") as tmp:
+            work = Path(tmp)
+            png = work / "caption.png"
+            caption_cmd = render_caption_png(info, layout, font["path"], png, work, ffmpeg)
+            built = build_commands(req, layout, svg_text, resolve_binary=True)
+            command = [png.as_posix() if part == "CAPTION_PNG" else part for part in built["command"]]
+            output.parent.mkdir(parents=True, exist_ok=True)
+            run_ffmpeg(command, timeout=max(180, built["frames"] * 2))
+        if not output.is_file() or output.stat().st_size <= 0:
+            fail(f"render output missing or empty: {output}", 1)
+        raw_probe = probe_media(output)
+        verified = verify_output(req, raw_probe, built["frames"])
+        version = subprocess.run([ffmpeg, "-version"], text=True, capture_output=True, timeout=10)
+        version_line = ((version.stdout or "ffmpeg").splitlines() or ["ffmpeg"])[0]
+        receipt: dict[str, Any] = {
+            "schemaVersion": 1,
+            "jobId": req["jobId"],
+            "backend": BACKEND,
+            "package": f"{BACKEND} ({version_line})",
+            "stage": req["stage"],
+            "target": req["target"],
+            "output": req["outputArg"],
+            "bytes": output.stat().st_size,
+            "sha256": sha256_file(output),
+            "verifiedAt": datetime.now(timezone.utc).isoformat(),
+            "probe": verified,
+            "ffprobe": raw_probe,
+            "commands": [command_for_receipt(caption_cmd), command_for_receipt(command)],
+            "captionSvg": svg_path.relative_to(req["projectDir"]).as_posix(),
+            "captionSvgSha256": sha256_file(svg_path),
+            "fontFamily": "Rubik",
+            "fontSha256": font["sha256"],
+            "accent": COPPER,
+            "renderReceiptIsPublishReceipt": False,
+            "qaLowered": False,
+        }
+        if failover is not None:
+            receipt["failover"] = failover
+        target = receipt_path(req, receipt_override)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        committed = True
+        print(f"OK render verified receipt={target}")
+        return receipt
+    finally:
+        if not committed and output.exists():
+            output.unlink()
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="VelvetOS ffmpeg SVG caption composition")
+    sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("doctor", help="check ffmpeg/ffprobe filters and the Rubik font")
+    plan_parser = sub.add_parser("plan", help="validate a HyperFrames-shaped request and print the ffmpeg plan")
+    plan_parser.add_argument("request", type=Path)
+    run_parser = sub.add_parser("run", help="render and write an ffprobe/SHA-256 receipt")
+    run_parser.add_argument("request", type=Path)
+    run_parser.add_argument("--receipt", help="receipt path relative to projectDir")
+    args = parser.parse_args()
+    if args.command == "doctor":
+        return doctor()
+    req = prepare_request(read_json(args.request))
+    if args.command == "plan":
+        print(json.dumps(plan(req), ensure_ascii=False, indent=2))
+        return 0
+    render_prepared(req, args.receipt, failover=None)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

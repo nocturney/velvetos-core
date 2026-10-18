@@ -76,6 +76,7 @@
     "bridge": "scripts/vf_hyperframes.py",
     "executionLayer": "edge-or-office-host",
     "fallback": "ffmpeg-svg-caption-composition",
+    "fallbackBridge": "scripts/vf_ffmpeg_svg_caption.py",
     "finalRequiresReceipt": true,
     "renderReceiptIsPublishReceipt": false,
     "rule": "HyperFrames is a deterministic backend only; Content Contract, Media Vault truth, vfcopy, Visual OS, Instagram decision policy, Evaluation Engine and publish preflight remain authoritative."

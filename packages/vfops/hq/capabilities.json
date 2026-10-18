@@ -414,6 +414,17 @@
       ],
       "gate": "lead",
       "notes": "Only after proven organic offer. No auto-DM."
+    },
+    {
+      "id": "render.ffmpeg-svg-caption",
+      "label": "רינדור גיבוי ffmpeg+SVG",
+      "tool": "scripts/vf_ffmpeg_svg_caption.py",
+      "packs": [
+        "vfom"
+      ],
+      "gate": "none",
+      "path": "scripts/vf_ffmpeg_svg_caption.py",
+      "notes": "Deterministic portrait caption composition after HyperFrames fails and its one retry fails. Render receipt is not a publish receipt. No Instagram authority."
     }
   ]
 }

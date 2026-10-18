@@ -43,7 +43,7 @@
     }
   },
   "after": {
-    "foundry_sha256": "eb79d8f0cabf6700aa9939e8c25000698c2b0c3234b8084d54de4e0b918b43b5",
+    "foundry_sha256": "57373d2f2e85340c0f4b4f6a33b0695334440848700731192e50bcf270e14500",
     "manifest_schema_sha256": "9d346a7e443bc152d139ce0524939ea8c10c2a818c0257e9b598c303541e34f4",
     "creative_manifest": {
       "enabled": true,
