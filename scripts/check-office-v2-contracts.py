@@ -3454,7 +3454,9 @@ def main() -> int:
             fail("#604 CP083 candidate-import set drifted: " + test_file)
         if os.name != "posix" and imports_candidate:
             skipped_candidate_imports.append(test_file)
+            # stderr too: check-all keeps only stderr when the sensor later fails.
             print("SKIP_NON_POSIX " + test_file)
+            print("SKIP_NON_POSIX " + test_file, file=sys.stderr)
             continue
         try:
             test_run = subprocess.run(
@@ -3468,7 +3470,10 @@ def main() -> int:
                 or (sys.platform == "linux"
                     and test_file != "test_vf_office_v2_604_cp083_reconcile_negative.py"
                     and "skipped" in test_run.stderr)):
-            fail("#604 CP083 candidate negative tests failed: " + test_file)
+            captured = ((test_run.stderr or "") + "\n" + (test_run.stdout or "")).splitlines()
+            tail = " | ".join(line.strip() for line in captured if line.strip())[-400:]
+            extra = (" :: " + tail) if tail else ""
+            fail("#604 CP083 candidate negative tests failed: " + test_file + extra)
     if os.name != "posix":
         if set(skipped_candidate_imports) != candidate_import_skip:
             fail("#604 CP083 candidate-import tests must SKIP_NON_POSIX")
