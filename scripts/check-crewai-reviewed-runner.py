@@ -953,6 +953,122 @@ def check_committed_e4_shape() -> None:
         fail("committed containment claims an observation")
 
 
+_E4_EOL_RULES = (
+    "/scripts/office_v2_crewai/evidence/e4/*.json text eol=lf",
+    "/scripts/office_v2_crewai/evidence/e4/*.reg text eol=lf",
+    "/scripts/office_v2_crewai/evidence/e4-containment.json text eol=lf",
+)
+_E4_WRITE_BYTES = 'path.write_bytes((json.dumps(payload, sort_keys=True, indent=2) + "\\n").encode("ascii"))'
+_E4_WRITE_TEXT = 'path.write_text(json.dumps(payload, sort_keys=True, indent=2) + "\\n", encoding="ascii")'
+
+
+class _WindowsTextMode:
+    """Translate text-mode ``\\n`` to CRLF the way Windows ``newline=None`` does.
+
+    CPython's TextIOWrapper does not re-read ``os.linesep`` on this host, so
+    the patch sets ``os.linesep`` and passes that value as ``open``'s newline
+    when the caller left newline unset. ``write_bytes`` never enters this path.
+    An explicit ``newline="\\n"`` stays LF.
+    """
+
+    def __enter__(self):
+        self._linesep = os.linesep
+        self._open = Path.open
+        os.linesep = "\r\n"
+        original = self._open
+
+        def windows_text(opened, mode="r", buffering=-1, encoding=None, errors=None, newline=None):
+            text_write = isinstance(mode, str) and "b" not in mode and any(flag in mode for flag in ("w", "a", "x"))
+            if text_write and newline is None:
+                newline = os.linesep
+            return original(opened, mode, buffering, encoding, errors, newline)
+
+        Path.open = windows_text
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        os.linesep = self._linesep
+        Path.open = self._open
+        return False
+
+
+def _e4_blobs(root: Path) -> list[tuple[Path, bytes]]:
+    return [(path, path.read_bytes()) for path in sorted(p for p in root.rglob("*") if p.is_file())]
+
+
+def _assert_e4_lf(root: Path, *, match_committed: bool) -> None:
+    blobs = _e4_blobs(root)
+    if not blobs:
+        fail("E4 emit wrote no files")
+    for path, blob in blobs:
+        if b"\r" in blob:
+            fail("E4 emit wrote CRLF: %s" % path.relative_to(root))
+        if match_committed:
+            committed = EVIDENCE / path.relative_to(root)
+            if not committed.is_file() or committed.read_bytes() != blob:
+                fail("committed E4 evidence drifted: %s" % path.relative_to(root))
+
+
+def _write_text_e4_source() -> str:
+    source = (PACKAGE / "e4_evidence.py").read_text(encoding="ascii")
+    if source.count(_E4_WRITE_BYTES) != 1:
+        fail("E4 JSON writer is not the pinned write_bytes form")
+    mutated = source.replace(_E4_WRITE_BYTES, _E4_WRITE_TEXT, 1)
+    reg_from = '.write_bytes(reg.encode("ascii"))'
+    reg_to = '.write_text(reg, encoding="ascii")'
+    marker_from = '.write_bytes(b"NOT_OBSERVED\\n")'
+    marker_to = '.write_text("NOT_OBSERVED\\n", encoding="ascii")'
+    if mutated.count(reg_from) != 2 or mutated.count(marker_from) != 2:
+        fail("E4 .reg writer is not the pinned write_bytes form")
+    mutated = mutated.replace(reg_from, reg_to).replace(marker_from, marker_to)
+    if "write_bytes" in mutated.split("def _load", 1)[0]:
+        fail("write_text mutation left a writer on write_bytes")
+    return mutated
+
+
+def _load_write_text_e4():
+    import types
+
+    name = "office_v2_crewai._e4_write_text_mutation"
+    module = types.ModuleType(name)
+    module.__file__ = str(PACKAGE / "e4_evidence.py")
+    module.__package__ = "office_v2_crewai"
+    sys.modules[name] = module
+    exec(compile(_write_text_e4_source(), module.__file__, "exec"), module.__dict__)
+    return module
+
+
+def check_e4_newline_mutation() -> None:
+    attributes = (ROOT / ".gitattributes").read_text(encoding="utf-8")
+    for rule in _E4_EOL_RULES:
+        if rule not in attributes:
+            fail("E4 evidence eol pin missing: %s" % rule)
+    fresh = Path(tempfile.mkdtemp(prefix="crewai-e4-lf-"))
+    observed = Path(tempfile.mkdtemp(prefix="crewai-e4-lf-observed-"))
+    mutated_root = Path(tempfile.mkdtemp(prefix="crewai-e4-write-text-"))
+    module_name = "office_v2_crewai._e4_write_text_mutation"
+    try:
+        mutated = _load_write_text_e4()
+        with _WindowsTextMode():
+            emit_not_observed(fresh)
+            write_observed_e4(observed)
+            mutated.emit_not_observed(mutated_root)
+        _assert_e4_lf(fresh, match_committed=True)
+        _assert_e4_lf(observed, match_committed=False)
+        mutated_blobs = _e4_blobs(mutated_root)
+        if not mutated_blobs:
+            fail("write_text mutation wrote no files")
+        for path, blob in mutated_blobs:
+            committed = EVIDENCE / path.relative_to(mutated_root)
+            if b"\r" not in blob or not committed.is_file() or committed.read_bytes() == blob:
+                fail("write_text mutation was not caught: %s" % path.relative_to(mutated_root))
+    finally:
+        sys.modules.pop(module_name, None)
+        shutil.rmtree(fresh, ignore_errors=True)
+        shutil.rmtree(observed, ignore_errors=True)
+        shutil.rmtree(mutated_root, ignore_errors=True)
+
+
 def _pilot_tree() -> dict:
     return {
         "processes": [
@@ -1131,6 +1247,7 @@ def main() -> int:
     check_manifest()
     check_committed_gates()
     check_committed_e4_shape()
+    check_e4_newline_mutation()
     check_gate_mutations()
     check_condition_mutations()
     check_e4_mutations()
