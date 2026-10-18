@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-10-18 - **Office 2.0 board stays out of the public tree:** the live `docs/office-v2/board/latest.md` and `latest.json` are gitignored. The committed sample is fixture-only and has no private `velvetos-velvet-factory` rows. The generator refuses those rows on a tracked path, the manual workflow uploads an `--omit-private` artifact only, and `check-office-v2-mvp.py` fails if a committed board contains that repo. A denied check-all read is shown as denied. Issue lookups follow the latest non-DONE #612 claim.
+
+- 2026-10-18 - **Office 2.0 read-only desk MVP:** `scripts/office_v2_mvp.py` writes a Hebrew+English board (`docs/office-v2/board/latest.md` and `latest.json`) from GitHub GETs only: open PRs with draft / QA please / QA verdict / head SHA, open issues named by active #612 claims, latest check-all on main, and owner waits. Times are Asia/Jerusalem. Fixture unit test plus `check-office-v2-mvp.py` run offline. `.github/workflows/office-v2-board.yml` is manual dispatch only and uploads the board. CrewAI/LangGraph stay documented in `docs/office-v2/NEXT.md` against #595 comment 6249011608. No LLM calls and no GitHub writes from the desk.
+
 - 2026-10-18 - **License wording + vfharness EMBED pointer:** `vfsku/hq/PLAYBOOK.md` drops the retired 'הורדה ≠ מכירה' line and follows the #632 policy (any license, including NC, may be sold; only Israeli creators/brands go to Christian; piracy/stolen-source rules and Product Truth still apply). `vfharness/EMBED.md` §3 now names `LOOP.md` as the single source of truth for the execution cycle instead of restating it (#205 findings gap 6).
 
 - 2026-10-18 - **Office v2 durable repo-link intake (#595 AC5/AC6):** offline `vf_office_v2_link_intake.py` normalizes and deduplicates GitHub repo links into the existing Phase 2 candidate registry (new rows `DISCOVERED / BENCHMARK_REQUIRED`, not promoted) and writes a receipt for every outcome; its self-test runs inside `check-office-v2-phase2.py`.
