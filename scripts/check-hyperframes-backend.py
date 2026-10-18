@@ -200,7 +200,7 @@ def main() -> None:
     policy = contains(POLICY, "not a second orchestrator", "ffmpeg-svg-caption-composition", "ffprobe receipt", "render receipt", "vfcopy", "RTL")
     contains(FRAME, "portrait 9:16", "explicit RTL", "Do not invent font", "Subject lock", "Evaluation Engine")
     contains(EDIT, "HYPERFRAMES-BACKEND.json", "HYPERFRAMES-RENDER.schema.json", "vf_hyperframes.py plan", "ffmpeg-svg-caption-composition")
-    bridge = contains(BRIDGE, 'MIN_HYPERFRAMES_VERSION =', f'RECOVERY_HYPERFRAMES_VERSION = "{recovery}"', 'HYPERFRAMES_PACKAGE = "hyperframes"', 'policy=latest-compatible', 'SUPPORTED_STAGES = {"rough", "review", "final"}', 'shutil.which("hyperframes")', '"--strict-all"', '"ffprobe"', '"sha256"', '"audioRequired"', 'failover_after_primary', 'vf_ffmpeg_svg_caption', '"qaLowered": False')
+    bridge = contains(BRIDGE, 'MIN_HYPERFRAMES_VERSION =', f'RECOVERY_HYPERFRAMES_VERSION = "{recovery}"', 'HYPERFRAMES_PACKAGE = "hyperframes"', 'policy=latest-compatible', 'SUPPORTED_STAGES = {"rough", "review", "final"}', 'shutil.which("hyperframes")', '"--strict-all"', '"ffprobe"', '"sha256"', '"audioRequired"', 'failover_after_primary', 'vf_ffmpeg_svg_caption', '"qaLowered": False', "sourceRequest", "prepare_request", '"--tmp-dir"')
     contains(
         ROOT / "scripts" / "vf_ffmpeg_svg_caption.py",
         'BACKEND = "ffmpeg-svg-caption-composition"',
@@ -210,6 +210,17 @@ def main() -> None:
         '"sha256"',
         "def plan",
         "def render_prepared",
+        "def prepare_request",
+        "def visual_order",
+        "text_shaping=0",
+        "bidi-self-test=pass",
+        "def runtime_tmp_dir",
+        "VELVETOS_RUNTIME_ROOT",
+        "replace=1",
+        "Rubik-wght700",
+        '"--tmp-dir"',
+        "headlineFontSha256",
+        "def release_derived_tmp",
     )
     if "version mismatch: required" in bridge or re.search(r"(?m)^HYPERFRAMES_VERSION\s*=", bridge):
         fail("bridge must not exact-pin normal HyperFrames execution")

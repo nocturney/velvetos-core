@@ -3,15 +3,20 @@
 
 HyperFrames stays the primary compositor. This bridge renders the same
 request.json when HyperFrames is unavailable: a product still, a slow zoom,
-a Hebrew RTL SVG caption in Rubik with the copper accent, safe-area placement,
-and an audio track with fade in/out. It writes an ffprobe + SHA-256 receipt
-and fails closed. It does not install packages and it does not publish.
+a Hebrew caption in Rubik with the copper accent, safe-area placement,
+and an audio track with fade in/out. The SVG keeps logical text with
+direction=rtl. The pixels come from drawtext, which has no RTL base option,
+so the line is reordered to visual RTL and drawn with text_shaping=0.
+It writes an ffprobe + SHA-256 receipt and fails closed. An ffprobe or ffmpeg
+timeout, and any unparsable probe field, exits with an explicit FAIL reason.
+It does not install packages and it does not publish.
 """
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -19,7 +24,7 @@ import sys
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, NoReturn
 from xml.sax.saxutils import escape as xml_escape
 
 BACKEND = "ffmpeg-svg-caption-composition"
@@ -35,15 +40,130 @@ DEFAULT_PAN_Y = 20.0
 DEFAULT_ORIGIN = (0.5, 0.40)
 HEBREW_RE = re.compile(r"[\u0590-\u05FF]")
 PORTRAIT = (1080, 1920)
+_BIDI_CONTROLS = set("\u200e\u200f\u202a\u202b\u202c\u202d\u202e\u2066\u2067\u2068\u2069")
 
 
-def fail(message: str, code: int = 2) -> None:
+def _bidi_class(ch: str) -> str:
+    if ch in _BIDI_CONTROLS:
+        return "BN"
+    if ("\u0590" <= ch <= "\u05FF") or ("\uFB1D" <= ch <= "\uFB4F") or ("\u0600" <= ch <= "\u06FF"):
+        return "R"
+    code = ord(ch)
+    if ("A" <= ch <= "Z") or ("a" <= ch <= "z") or (0x00C0 <= code <= 0x024F):
+        return "L"
+    if "0" <= ch <= "9":
+        return "EN"
+    return "ON"
+
+
+def visual_order(text: str) -> str:
+    """Return LTR glyph order for a caption whose paragraph base is RTL.
+
+    ffmpeg drawtext hardcodes an LTR fribidi paragraph and exposes no
+    base-direction option. Hebrew does not need complex shaping, so the
+    caption is pre-ordered and drawn with text_shaping=0. Browsers still
+    receive the logical string in the SVG.
+    """
+    if not text:
+        return text
+    chars = list(text)
+    classes = [_bidi_class(ch) for ch in chars]
+    for index, ch in enumerate(chars):
+        if classes[index] != "ON" or ch not in ".,:/":
+            continue
+        previous = next((classes[pos] for pos in range(index - 1, -1, -1) if classes[pos] != "BN"), None)
+        following = next((classes[pos] for pos in range(index + 1, len(classes)) if classes[pos] != "BN"), None)
+        if previous == "EN" and following == "EN":
+            classes[index] = "EN"
+
+    def nearest(start: int, step: int) -> str:
+        pos = start
+        while 0 <= pos < len(classes):
+            if classes[pos] in {"R", "L", "EN"}:
+                return "L" if classes[pos] in {"L", "EN"} else "R"
+            pos += step
+        return "R"
+
+    resolved: list[str] = []
+    for index, kind in enumerate(classes):
+        if kind in {"R", "L", "EN"}:
+            resolved.append(kind)
+            continue
+        left = nearest(index - 1, -1)
+        right = nearest(index + 1, 1)
+        resolved.append(left if left == right else "R")
+    kept = [(ch, 1 if kind == "R" else 2) for ch, kind, cls in zip(chars, resolved, classes) if cls != "BN"]
+    if not kept:
+        return ""
+    sequence = kept
+    for level in range(max(item[1] for item in sequence), 0, -1):
+        rewritten: list[tuple[str, int]] = []
+        index = 0
+        while index < len(sequence):
+            if sequence[index][1] >= level:
+                end = index + 1
+                while end < len(sequence) and sequence[end][1] >= level:
+                    end += 1
+                rewritten.extend(reversed(sequence[index:end]))
+                index = end
+            else:
+                rewritten.append(sequence[index])
+                index += 1
+        sequence = rewritten
+    # UAX #9 L4: mirror paired brackets that resolved to an RTL level.
+    # Reversal alone leaves "(" facing the wrong way once the run is drawn LTR.
+    mirrors = str.maketrans("()[]{}<>«»‹›", ")(][}{><»«›‹")
+    return "".join(ch.translate(mirrors) if level % 2 else ch for ch, level in sequence)
+
+
+def fail(message: str, code: int = 2) -> NoReturn:
     print(f"FAIL {message}", file=sys.stderr)
     raise SystemExit(code)
 
 
 def repo_root() -> Path:
     return Path(__file__).resolve().parents[1]
+
+
+def runtime_tmp_dir(output: Path | None = None, explicit: str | None = None) -> Path:
+    """Temp directory for caption work. Never the process system temp.
+
+    Precedence is an explicit --tmp-dir, then VELVETOS_RUNTIME_ROOT/tmp,
+    then a directory beside the render output, then a gitignored repo-local
+    directory for doctor when no request exists.
+    """
+    chosen = (explicit or "").strip()
+    env = os.environ.get("VELVETOS_RUNTIME_ROOT", "").strip()
+    if chosen:
+        root = Path(chosen).expanduser()
+    elif env:
+        root = Path(env).expanduser() / "tmp"
+    elif output is not None:
+        root = Path(output).expanduser().resolve().parent / ".vf-tmp"
+    else:
+        root = repo_root() / ".local-devtools" / "vf-caption-tmp"
+    root.mkdir(parents=True, exist_ok=True)
+    return root.resolve()
+
+
+def release_derived_tmp(tmp_root: Path, output: Path, explicit: str | None) -> None:
+    """Remove an empty derived .vf-tmp directory after a successful render.
+
+    An explicit --tmp-dir or VELVETOS_RUNTIME_ROOT is the operator's directory
+    and is left in place. A non-empty directory is left in place. Failure to
+    remove the directory does not discard the render.
+    """
+    if (explicit or "").strip() or os.environ.get("VELVETOS_RUNTIME_ROOT", "").strip():
+        return
+    derived = Path(output).expanduser().resolve().parent / ".vf-tmp"
+    try:
+        if tmp_root.resolve() != derived.resolve() or not derived.is_dir():
+            return
+        if any(derived.iterdir()):
+            return
+        derived.rmdir()
+    except OSError:
+        return
 
 
 def sha256_file(path: Path) -> str:
@@ -114,6 +234,47 @@ def rubik_font() -> dict[str, Any]:
     if actual != rubik.get("sha256"):
         fail("Rubik font sha256 does not match brand-tokens.json")
     return {"path": path, "family": "Rubik", "sha256": actual}
+
+
+# Static instances of the pinned variable font. drawtext does not apply the
+# wght axis, so the headline and subhead use these files (brand roles 700 / 600).
+RUBIK_WEIGHTS = {
+    700: (
+        "packages/vfbrand/assets/fonts/rubik/Rubik-wght700.ttf",
+        "c8ccdd2d106f02d7652beb11f9c41ab3264cca727ae6e7eaa570414d14d0eb1e",
+    ),
+    600: (
+        "packages/vfbrand/assets/fonts/rubik/Rubik-wght600.ttf",
+        "d09a67cea25e5a1f03cbf26d2702b126ff1d45c49861068bd3376559b7eaede3",
+    ),
+}
+
+
+def rubik_weight_font(weight: int) -> Path:
+    spec = RUBIK_WEIGHTS.get(weight)
+    if spec is None:
+        fail(f"Rubik weight instance is not pinned: {weight}")
+    rel, digest = spec
+    path = repo_root() / rel
+    if not path.is_file():
+        fail(f"Rubik weight {weight} instance missing: {path}")
+    actual = sha256_file(path)
+    if actual != digest:
+        fail(f"Rubik weight {weight} sha256 does not match")
+    return path
+
+
+def drawn_font_record(weight: int) -> dict[str, Any]:
+    path = rubik_weight_font(weight)
+    return {"weight": weight, "file": path.name, "sha256": sha256_file(path)}
+
+
+def fonts_used(layout: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Hashes of the static Rubik files drawtext actually loads."""
+    used = {"headline": drawn_font_record(700)}
+    if layout.get("subheadLines"):
+        used["subhead"] = drawn_font_record(600)
+    return used
 
 
 def css_block(html: str, selector: str) -> str:
@@ -354,12 +515,27 @@ def run_ffmpeg(args: list[str], *, timeout: int = 180) -> None:
         fail(f"command failed with exit={proc.returncode}: {args[0]}", proc.returncode or 1)
 
 
+def run_ff_tool(args: list[str], *, timeout: int, role: str) -> subprocess.CompletedProcess[str]:
+    """Run ffprobe or ffmpeg and fail closed on timeout or a start error."""
+    try:
+        return subprocess.run(args, text=True, capture_output=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        fail(f"{role} timed out after {timeout}s", 1)
+    except OSError as exc:
+        fail(f"{role} failed to start: {exc}", 1)
+
+
+def ffmpeg_version_line(ffmpeg: str) -> str:
+    version = run_ff_tool([ffmpeg, "-version"], timeout=10, role="ffmpeg")
+    return ((version.stdout or "ffmpeg").splitlines() or ["ffmpeg"])[0]
+
+
 def tool_path(name: str) -> str | None:
     return shutil.which(name)
 
 
 def filter_names(ffmpeg: str) -> set[str]:
-    proc = subprocess.run([ffmpeg, "-hide_banner", "-filters"], text=True, capture_output=True, timeout=20)
+    proc = run_ff_tool([ffmpeg, "-hide_banner", "-filters"], timeout=20, role="ffmpeg")
     names = set()
     for line in (proc.stdout or "").splitlines():
         parts = line.split()
@@ -369,7 +545,7 @@ def filter_names(ffmpeg: str) -> set[str]:
 
 
 def encoder_names(ffmpeg: str) -> set[str]:
-    proc = subprocess.run([ffmpeg, "-hide_banner", "-encoders"], text=True, capture_output=True, timeout=20)
+    proc = run_ff_tool([ffmpeg, "-hide_banner", "-encoders"], timeout=20, role="ffmpeg")
     names = set()
     for line in (proc.stdout or "").splitlines():
         parts = line.split()
@@ -378,7 +554,60 @@ def encoder_names(ffmpeg: str) -> set[str]:
     return names
 
 
-def doctor() -> int:
+def _right_aligned_ink(text: str, ffmpeg: str, font: Path, tmp_dir: Path) -> tuple[int, int] | None:
+    """Ink bounds of one right-aligned caption line, scrim and rule excluded."""
+    width = 1800
+    info = {
+        "width": width,
+        "height": 1920,
+        "safeX": 40.0,
+        "headlineSize": 72.0,
+        "subheadSize": 40.0,
+        "ruleWidth": 12.0,
+        "ruleHeight": 4.0,
+    }
+    layout = {
+        "headlineLines": [text],
+        "subheadLines": [],
+        "top": 80.0,
+        "headLineH": 100.0,
+        "ruleX": 40.0,
+        "ruleY": 1700.0,
+        "subTop": 1760.0,
+        "subLineH": 50.0,
+    }
+    with tempfile.TemporaryDirectory(dir=tmp_dir) as tmp:
+        work = Path(tmp)
+        png = work / "line.png"
+        try:
+            render_caption_png(info, layout, font, png, work, ffmpeg)
+        except SystemExit:
+            return None
+        raw = work / "line.raw"
+        proc = subprocess.run(
+            [ffmpeg, "-y", "-hide_banner", "-loglevel", "error", "-i", str(png), "-f", "rawvideo", "-pix_fmt", "rgb24", str(raw)],
+            text=True,
+            timeout=30,
+        )
+        if proc.returncode != 0 or not raw.is_file():
+            return None
+        data = raw.read_bytes()
+        min_x, max_x = width, -1
+        row_bytes = width * 3
+        for y in range(60, 200):
+            row = data[y * row_bytes:(y + 1) * row_bytes]
+            for x in range(width):
+                if row[x * 3] > 16 or row[x * 3 + 1] > 16 or row[x * 3 + 2] > 16:
+                    if x < min_x:
+                        min_x = x
+                    if x > max_x:
+                        max_x = x
+        if max_x < 0:
+            return None
+        return min_x, max_x
+
+
+def doctor(tmp_dir: Path | None = None) -> int:
     ffmpeg = tool_path("ffmpeg")
     ffprobe = tool_path("ffprobe")
     facts = {"ffmpeg": ffmpeg, "ffprobe": ffprobe}
@@ -399,24 +628,43 @@ def doctor() -> int:
         )
         return 1
     try:
-        rubik_font()
+        font = rubik_font()
     except SystemExit:
         return 1
-    print(f"OK {BACKEND} ffmpeg+ffprobe drawtext/zoompan/libx264/aac Rubik")
+    build = run_ff_tool([ffmpeg, "-hide_banner", "-buildconf"], timeout=20, role="ffmpeg")
+    build_text = (build.stdout or "") + "\n" + (build.stderr or "")
+    if "--enable-libfribidi" not in build_text or "--enable-libharfbuzz" not in build_text:
+        print("FAIL ffmpeg build missing libfribidi or libharfbuzz", file=sys.stderr)
+        return 1
+    probe_dir = tmp_dir or runtime_tmp_dir()
+    plain = _right_aligned_ink("שלום", ffmpeg, font["path"], probe_dir)
+    dotted = _right_aligned_ink("שלום.", ffmpeg, font["path"], probe_dir)
+    if (
+        plain is None
+        or dotted is None
+        or plain[0] - dotted[0] < 8
+        or abs(plain[1] - dotted[1]) > 4
+    ):
+        print("FAIL bidi self-test: trailing punctuation did not land on the left", file=sys.stderr)
+        return 1
+    print(
+        f"OK {BACKEND} ffmpeg+ffprobe drawtext/zoompan/libx264/aac Rubik "
+        "--enable-libfribidi --enable-libharfbuzz bidi-self-test=pass"
+    )
     return 0
 
 
-def text_ink_width(font: Path, text: str, size: float, ffmpeg: str) -> int:
+def text_ink_width(font: Path, text: str, size: float, ffmpeg: str, tmp_dir: Path) -> int:
     if not text:
         return 0
     width, height = 4096, max(int(size * 3), 32)
-    with tempfile.TemporaryDirectory() as tmp:
+    with tempfile.TemporaryDirectory(dir=tmp_dir) as tmp:
         text_path = Path(tmp) / "line.txt"
         raw_path = Path(tmp) / "line.raw"
-        text_path.write_text(text, encoding="utf-8")
+        text_path.write_text(visual_order(text), encoding="utf-8")
         vf = (
             f"drawtext=fontfile={escape_filter_path(font)}:textfile={escape_filter_path(text_path)}"
-            f":text_shaping=1:expansion=none:fontcolor=white:fontsize={size:.2f}:x=0:y=0"
+            f":text_shaping=0:expansion=none:fontcolor=white:fontsize={size:.2f}:x=0:y=0"
         )
         proc = subprocess.run(
             [ffmpeg, "-y", "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i", f"color=c=black:s={width}x{height}:d=1",
@@ -439,7 +687,7 @@ def text_ink_width(font: Path, text: str, size: float, ffmpeg: str) -> int:
         return max_x + 1
 
 
-def wrap_text(font: Path, text: str, size: float, max_width: float, ffmpeg: str) -> list[str]:
+def wrap_text(font: Path, text: str, size: float, max_width: float, ffmpeg: str, tmp_dir: Path) -> list[str]:
     words = text.split()
     if not words:
         return []
@@ -447,7 +695,7 @@ def wrap_text(font: Path, text: str, size: float, max_width: float, ffmpeg: str)
     current = ""
     for word in words:
         trial = word if not current else f"{current} {word}"
-        if text_ink_width(font, trial, size, ffmpeg) <= max_width:
+        if text_ink_width(font, trial, size, ffmpeg, tmp_dir) <= max_width:
             current = trial
             continue
         if not current:
@@ -455,19 +703,20 @@ def wrap_text(font: Path, text: str, size: float, max_width: float, ffmpeg: str)
         lines.append(current)
         current = word
     if current:
-        if text_ink_width(font, current, size, ffmpeg) > max_width:
+        if text_ink_width(font, current, size, ffmpeg, tmp_dir) > max_width:
             fail("caption line does not fit the safe area")
         lines.append(current)
     return lines
 
 
-def layout_caption(info: dict[str, Any], font: Path, ffmpeg: str | None) -> dict[str, Any]:
+def layout_caption(info: dict[str, Any], font: Path, ffmpeg: str | None, tmp_dir: Path | None = None) -> dict[str, Any]:
     content_width = info["width"] - (2 * info["safeX"])
     if content_width < 120:
         fail("safe area leaves no room for the caption")
     if ffmpeg:
-        headline_lines = wrap_text(font, info["headline"], info["headlineSize"], content_width, ffmpeg)
-        subhead_lines = wrap_text(font, info["subhead"], info["subheadSize"], content_width, ffmpeg) if info["subhead"] else []
+        measure_dir = tmp_dir or runtime_tmp_dir()
+        headline_lines = wrap_text(rubik_weight_font(700), info["headline"], info["headlineSize"], content_width, ffmpeg, measure_dir)
+        subhead_lines = wrap_text(rubik_weight_font(600), info["subhead"], info["subheadSize"], content_width, ffmpeg, measure_dir) if info["subhead"] else []
     else:
         headline_lines = [info["headline"]]
         subhead_lines = [info["subhead"]] if info["subhead"] else []
@@ -498,6 +747,7 @@ def layout_caption(info: dict[str, Any], font: Path, ffmpeg: str | None) -> dict
 
 
 def build_svg(info: dict[str, Any], layout: dict[str, Any], font: dict[str, Any]) -> str:
+    del font  # the variable-font record is not the face drawtext loads
     texts = []
     y = layout["top"]
     for line in layout["headlineLines"]:
@@ -520,11 +770,17 @@ def build_svg(info: dict[str, Any], layout: dict[str, Any], font: dict[str, Any]
         )
         y += layout["subLineH"]
     body = "\n  ".join(texts)
+    fonts = fonts_used(layout)
+    headline_font = fonts["headline"]
+    font_meta = f'headlineFont={headline_font["file"]}; headlineFontSha256={headline_font["sha256"]}'
+    subhead_font = fonts.get("subhead")
+    if subhead_font is not None:
+        font_meta += f'; subheadFont={subhead_font["file"]}; subheadFontSha256={subhead_font["sha256"]}'
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{info["width"]}" height="{info["height"]}" viewBox="0 0 {info["width"]} {info["height"]}">\n'
         f'  <metadata>headline={xml_escape(info["headline"])}; subhead={xml_escape(info["subhead"])}; '
-        f'font=Rubik; fontSha256={font["sha256"]}; accent={COPPER}; direction=rtl; '
+        f'font=Rubik; {font_meta}; accent={COPPER}; direction=rtl; '
         f'safeX={info["safeX"]}; safeTop={info["safeTop"]}; safeBottom={info["safeBottom"]}</metadata>\n'
         f"  {body}\n"
         "</svg>\n"
@@ -598,6 +854,7 @@ def plan(req: dict[str, Any]) -> dict[str, Any]:
     layout = layout_caption(info, req["font"]["path"], ffmpeg=None)
     svg_text = build_svg(info, layout, req["font"])
     built = build_commands(req, layout, svg_text, resolve_binary=False)
+    fonts = fonts_used(layout)
     return {
         "backend": BACKEND,
         "cwd": str(req["projectDir"]),
@@ -611,7 +868,8 @@ def plan(req: dict[str, Any]) -> dict[str, Any]:
         "frames": built["frames"],
         "accent": info["accent"],
         "fontFamily": "Rubik",
-        "fontSha256": req["font"]["sha256"],
+        "fontSha256": fonts["headline"]["sha256"],
+        "fonts": fonts,
         "safeArea": {"x": info["safeX"], "top": info["safeTop"], "bottom": info["safeBottom"]},
         "zoom": {"start": info["zoomStart"], "end": info["zoomEnd"], "panY": info["panY"], "originX": info["originX"], "originY": info["originY"]},
         "fadeInSec": built["fadeIn"],
@@ -622,43 +880,99 @@ def plan(req: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def probe_streams(probe: dict[str, Any]) -> list[dict[str, Any]]:
+    streams = probe.get("streams")
+    if streams is None:
+        return []
+    if not isinstance(streams, list) or any(not isinstance(row, dict) for row in streams):
+        fail("ffprobe streams is unparsable", 1)
+    return streams
+
+
+def probe_format(probe: dict[str, Any]) -> dict[str, Any]:
+    fmt = probe.get("format")
+    if fmt is None:
+        fail("ffprobe duration is missing", 1)
+    if not isinstance(fmt, dict):
+        fail("ffprobe format is unparsable", 1)
+    return fmt
+
+
+def probe_float(value: Any, field: str) -> float:
+    if isinstance(value, bool):
+        fail(f"ffprobe {field} is unparsable: {value!r}", 1)
+    if value is None or (isinstance(value, str) and not value.strip()):
+        fail(f"ffprobe {field} is missing", 1)
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        fail(f"ffprobe {field} is unparsable: {value!r}", 1)
+    if number != number or number in (float("inf"), float("-inf")):
+        fail(f"ffprobe {field} is unparsable: {value!r}", 1)
+    return number
+
+
+def probe_int(value: Any, field: str) -> int:
+    if isinstance(value, bool):
+        fail(f"ffprobe {field} is unparsable: {value!r}", 1)
+    if value is None or (isinstance(value, str) and not value.strip()):
+        fail(f"ffprobe {field} is missing", 1)
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float):
+        if value != value or value in (float("inf"), float("-inf")) or not value.is_integer():
+            fail(f"ffprobe {field} is unparsable: {value!r}", 1)
+        return int(value)
+    if isinstance(value, str):
+        text = value.strip()
+        try:
+            number = float(text)
+        except ValueError:
+            fail(f"ffprobe {field} is unparsable: {value!r}", 1)
+        if number != number or number in (float("inf"), float("-inf")) or not number.is_integer():
+            fail(f"ffprobe {field} is unparsable: {value!r}", 1)
+        return int(number)
+    fail(f"ffprobe {field} is unparsable: {value!r}", 1)
+
+
 def probe_media(path: Path) -> dict[str, Any]:
     ffprobe = tool_path("ffprobe")
     if not ffprobe:
         fail("ffprobe is required to verify render output", 1)
-    proc = subprocess.run(
+    proc = run_ff_tool(
         [ffprobe, "-v", "error", "-show_entries", "format=duration:stream=index,codec_type,codec_name,width,height,avg_frame_rate,sample_rate,channels", "-of", "json", str(path)],
-        text=True, capture_output=True, timeout=30,
+        timeout=30,
+        role="ffprobe",
     )
     if proc.returncode != 0:
         fail(f"ffprobe failed: {(proc.stderr or '').strip()}", 1)
     try:
-        return json.loads(proc.stdout)
+        payload = json.loads(proc.stdout)
     except json.JSONDecodeError as exc:
         fail(f"ffprobe returned invalid JSON: {exc}", 1)
+    if not isinstance(payload, dict):
+        fail("ffprobe returned invalid JSON: expected an object", 1)
+    return payload
 
 
 def audio_duration(path: Path) -> float:
     probe = probe_media(path)
-    streams = [row for row in probe.get("streams") or [] if row.get("codec_type") == "audio"]
+    streams = [row for row in probe_streams(probe) if row.get("codec_type") == "audio"]
     if not streams:
         fail(f"audio source has no audio stream: {path}", 1)
-    try:
-        return float((probe.get("format") or {}).get("duration") or 0)
-    except (TypeError, ValueError):
-        return 0.0
+    return probe_float(probe_format(probe).get("duration"), "duration")
 
 
 def verify_output(req: dict[str, Any], probe: dict[str, Any], frames: int) -> dict[str, Any]:
     info = req["compositionInfo"]
-    streams = probe.get("streams") or []
+    streams = probe_streams(probe)
     videos = [row for row in streams if row.get("codec_type") == "video"]
     audios = [row for row in streams if row.get("codec_type") == "audio"]
     if not videos:
         fail("render has no video stream", 1)
     video = videos[0]
-    width = int(video.get("width") or 0)
-    height = int(video.get("height") or 0)
+    width = probe_int(video.get("width"), "width")
+    height = probe_int(video.get("height"), "height")
     if (width, height) != (info["width"], info["height"]) or height <= width:
         fail(f"render is not portrait {info['width']}x{info['height']}: {width}x{height}", 1)
     if video.get("codec_name") != "h264":
@@ -667,10 +981,7 @@ def verify_output(req: dict[str, Any], probe: dict[str, Any], frames: int) -> di
         fail("render requires audio but ffprobe found no audio stream", 1)
     if req["audioRequired"] and audios[0].get("codec_name") != "aac":
         fail(f"render audio codec must be aac, found {audios[0].get('codec_name')}", 1)
-    try:
-        duration = float((probe.get("format") or {}).get("duration") or 0)
-    except (TypeError, ValueError):
-        duration = 0
+    duration = probe_float(probe_format(probe).get("duration"), "duration")
     expected = frames / float(info["fps"])
     if duration <= 0 or abs(duration - expected) > max(0.15, 2 / float(info["fps"])):
         fail(f"render duration {duration} does not match {expected}", 1)
@@ -685,22 +996,27 @@ def verify_output(req: dict[str, Any], probe: dict[str, Any], frames: int) -> di
 
 
 def drawtext_filters(info: dict[str, Any], layout: dict[str, Any], font: Path, work: Path) -> str:
+    # replace=1 writes alpha. Without it, drawbox on a transparent canvas keeps
+    # alpha at 0 and the scrim and copper rule disappear in the overlay.
+    del font
+    headline_font = rubik_weight_font(700)
+    subhead_font = rubik_weight_font(600)
     filters = [
-        f"drawbox=x=0:y={info['height'] - 760:.0f}:w={info['width']}:h=760:color=black@0.45:t=fill",
+        f"drawbox=x=0:y={info['height'] - 760:.0f}:w={info['width']}:h=760:color=black@0.45:t=fill:replace=1",
         (
             f"drawbox=x={layout['ruleX']:.1f}:y={layout['ruleY']:.1f}:w={info['ruleWidth']:.1f}:"
-            f"h={info['ruleHeight']:.1f}:color={COPPER}@1:t=fill"
+            f"h={info['ruleHeight']:.1f}:color={COPPER}@1:t=fill:replace=1"
         ),
     ]
     y = layout["top"]
     index = 0
     for line in layout["headlineLines"]:
         path = work / f"headline-{index}.txt"
-        path.write_text(line, encoding="utf-8")
+        path.write_text(visual_order(line), encoding="utf-8")
         filters.append(
-            "drawtext=fontfile=" + escape_filter_path(font)
+            "drawtext=fontfile=" + escape_filter_path(headline_font)
             + ":textfile=" + escape_filter_path(path)
-            + f":text_shaping=1:expansion=none:fontcolor=white:fontsize={info['headlineSize']:.2f}"
+            + f":text_shaping=0:expansion=none:fontcolor=white:fontsize={info['headlineSize']:.2f}"
             + f":x=w-text_w-{info['safeX']:.1f}:y={y:.1f}"
         )
         y += layout["headLineH"]
@@ -709,11 +1025,11 @@ def drawtext_filters(info: dict[str, Any], layout: dict[str, Any], font: Path, w
     index = 0
     for line in layout["subheadLines"]:
         path = work / f"subhead-{index}.txt"
-        path.write_text(line, encoding="utf-8")
+        path.write_text(visual_order(line), encoding="utf-8")
         filters.append(
-            "drawtext=fontfile=" + escape_filter_path(font)
+            "drawtext=fontfile=" + escape_filter_path(subhead_font)
             + ":textfile=" + escape_filter_path(path)
-            + f":text_shaping=1:expansion=none:fontcolor=white:fontsize={info['subheadSize']:.2f}"
+            + f":text_shaping=0:expansion=none:fontcolor=white:fontsize={info['subheadSize']:.2f}"
             + f":x=w-text_w-{info['safeX']:.1f}:y={y:.1f}"
         )
         y += layout["subLineH"]
@@ -749,7 +1065,9 @@ def command_for_receipt(command: list[str]) -> list[str]:
 def render_prepared(req: dict[str, Any], receipt_override: str | None, failover: dict[str, Any] | None) -> dict[str, Any]:
     if req.get("batchFile") or req.get("batchRows"):
         fail("ffmpeg-svg-caption-composition does not render HyperFrames batches", 1)
-    if doctor() != 0:
+    explicit = req.get("tmpDir") if isinstance(req.get("tmpDir"), str) else None
+    tmp_root = runtime_tmp_dir(req["output"], explicit)
+    if doctor(tmp_root) != 0:
         raise SystemExit(1)
     ffmpeg = tool_path("ffmpeg")
     if not ffmpeg:
@@ -762,7 +1080,7 @@ def render_prepared(req: dict[str, Any], receipt_override: str | None, failover:
         if duration + 0.02 < float(info["duration"]):
             fail(f"audio is shorter than the composition ({duration:.3f}s < {info['duration']}s)", 1)
     font = req["font"]
-    layout = layout_caption(info, font["path"], ffmpeg)
+    layout = layout_caption(info, font["path"], ffmpeg, tmp_root)
     svg_text = build_svg(info, layout, font)
     svg_path = req["output"].with_suffix(req["output"].suffix + ".caption.svg")
     svg_path.parent.mkdir(parents=True, exist_ok=True)
@@ -770,7 +1088,7 @@ def render_prepared(req: dict[str, Any], receipt_override: str | None, failover:
     output = req["output"]
     committed = False
     try:
-        with tempfile.TemporaryDirectory(prefix="vf-svg-caption-") as tmp:
+        with tempfile.TemporaryDirectory(prefix="vf-svg-caption-", dir=tmp_root) as tmp:
             work = Path(tmp)
             png = work / "caption.png"
             caption_cmd = render_caption_png(info, layout, font["path"], png, work, ffmpeg)
@@ -782,8 +1100,8 @@ def render_prepared(req: dict[str, Any], receipt_override: str | None, failover:
             fail(f"render output missing or empty: {output}", 1)
         raw_probe = probe_media(output)
         verified = verify_output(req, raw_probe, built["frames"])
-        version = subprocess.run([ffmpeg, "-version"], text=True, capture_output=True, timeout=10)
-        version_line = ((version.stdout or "ffmpeg").splitlines() or ["ffmpeg"])[0]
+        version_line = ffmpeg_version_line(ffmpeg)
+        used_fonts = fonts_used(layout)
         receipt: dict[str, Any] = {
             "schemaVersion": 1,
             "jobId": req["jobId"],
@@ -801,7 +1119,8 @@ def render_prepared(req: dict[str, Any], receipt_override: str | None, failover:
             "captionSvg": svg_path.relative_to(req["projectDir"]).as_posix(),
             "captionSvgSha256": sha256_file(svg_path),
             "fontFamily": "Rubik",
-            "fontSha256": font["sha256"],
+            "fontSha256": used_fonts["headline"]["sha256"],
+            "fonts": used_fonts,
             "accent": COPPER,
             "renderReceiptIsPublishReceipt": False,
             "qaLowered": False,
@@ -812,6 +1131,7 @@ def render_prepared(req: dict[str, Any], receipt_override: str | None, failover:
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         committed = True
+        release_derived_tmp(tmp_root, output, explicit)
         print(f"OK render verified receipt={target}")
         return receipt
     finally:
@@ -822,16 +1142,21 @@ def render_prepared(req: dict[str, Any], receipt_override: str | None, failover:
 def main() -> int:
     parser = argparse.ArgumentParser(description="VelvetOS ffmpeg SVG caption composition")
     sub = parser.add_subparsers(dest="command", required=True)
-    sub.add_parser("doctor", help="check ffmpeg/ffprobe filters and the Rubik font")
+    doctor_parser = sub.add_parser("doctor", help="check ffmpeg/ffprobe filters and the Rubik font")
+    doctor_parser.add_argument("--tmp-dir", dest="tmp_dir", help="temp directory, instead of the system temp")
     plan_parser = sub.add_parser("plan", help="validate a HyperFrames-shaped request and print the ffmpeg plan")
     plan_parser.add_argument("request", type=Path)
+    plan_parser.add_argument("--tmp-dir", dest="tmp_dir", help="temp directory, instead of the system temp")
     run_parser = sub.add_parser("run", help="render and write an ffprobe/SHA-256 receipt")
     run_parser.add_argument("request", type=Path)
     run_parser.add_argument("--receipt", help="receipt path relative to projectDir")
+    run_parser.add_argument("--tmp-dir", dest="tmp_dir", help="temp directory, instead of the system temp")
     args = parser.parse_args()
     if args.command == "doctor":
-        return doctor()
+        return doctor(runtime_tmp_dir(explicit=getattr(args, "tmp_dir", None)))
     req = prepare_request(read_json(args.request))
+    if getattr(args, "tmp_dir", None):
+        req["tmpDir"] = args.tmp_dir
     if args.command == "plan":
         print(json.dumps(plan(req), ensure_ascii=False, indent=2))
         return 0
