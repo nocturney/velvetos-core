@@ -149,6 +149,28 @@ class ChatGPT069ExpectedGaps(unittest.TestCase):
                 gate.read_bounded(fifo, 1024)
             self.assertEqual(str(caught.exception), "NONREGULAR_FILE")
 
+    def test_lostack_main_refuses_hardlinked_evidence(self):
+        """main() itself must refuse a hardlinked evidence JSON.
+
+        A copy of the sealed evidence would otherwise validate. The extra
+        link is the only defect. Reading the path with read_text would accept it.
+        """
+        import vf_office_v2_604_cp083_candidate_evidence_gate as gate
+        import vf_office_v2_604_cp083_native_lostack_receipt_gate as lostack
+        lab_dir = tempfile.TemporaryDirectory(prefix="vf604-cp083-lostack-main-")
+        self.addCleanup(lab_dir.cleanup)
+        root = Path(lab_dir.name)
+        evidence = root / "evidence.json"
+        evidence.write_bytes(lostack.EVIDENCE.read_bytes())
+        alias = root / "evidence-alias.json"
+        os.link(evidence, alias)
+        self.assertEqual(evidence.stat().st_ino, alias.stat().st_ino)
+        self.assertGreater(evidence.stat().st_nlink, 1)
+        with mock.patch.object(lostack, "EVIDENCE", evidence):
+            with self.assertRaises(gate.Refused) as caught:
+                lostack.main([])
+        self.assertEqual(str(caught.exception), "HARDLINK_ALIAS_REFUSED")
+
 
 if __name__ == "__main__":
     unittest.main()
