@@ -9,6 +9,7 @@ from pathlib import Path
 
 from office_v2_crewai.contract import (
     APPROVED_MODEL,
+    APPROVED_PORT,
     CREWAI_TOOLS_NA,
     CREWAI_VERSION,
     E3_CONDITIONS,
@@ -43,8 +44,18 @@ DARWIN_LSOF = "/usr/sbin/lsof"
 DARWIN_NETSTAT = "/usr/bin/netstat"
 WINDOWS_NETSTAT = "C:\\Windows\\System32\\netstat.exe"
 WINDOWS_POWERSHELL = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+WINDOWS_NETTCPIP = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\Modules\\NetTCPIP\\NetTCPIP.psd1"
 WINDOWS_LISTENER_PATH = "C:\\Windows\\System32;C:\\Windows\\System32\\WindowsPowerShell\\v1.0"
 WINDOWS_SYSTEM_ROOT = "C:\\Windows"
+# Foreign address of a TCP listener. The state word is not consulted: a Hebrew
+# UI does not print LISTENING. ``state`` is accepted so a regression to the
+# English word is a visible mutation.
+_LISTENER_FOREIGN = (
+    ("0.0.0.0", "0"),
+    ("::", "0"),
+    ("*", "*"),
+    ("*", "0"),
+)
 
 
 class UsageRefusal(RuntimeError):
@@ -569,32 +580,217 @@ def process_tree(processes: list, root_pid: int) -> set[int]:
     return selected
 
 
+def _unclassified_row() -> None:
+    """One row that is not a banner or a shaped socket row fails the whole check."""
+    raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+
+
+def _tcp_listening(foreign_host: str, foreign_port: str, state: str) -> bool:
+    """Listener means the foreign column is the wildcard zero shape.
+
+    ``state`` is ignored. The English word LISTENING is not the test.
+    A listener is 0.0.0.0:0, [::]:0, *:* or *:0.
+    """
+    return (foreign_host, foreign_port) in _LISTENER_FOREIGN
+
+
+def _split_endpoint(token: str) -> tuple[str, str] | None:
+    """Split ``host:port`` or ``[ipv6]:port``. ``*:*`` is the wildcard token."""
+    if not isinstance(token, str) or not token or any(char.isspace() for char in token):
+        return None
+    if token == "*:*":
+        return "*", "*"
+    if token.startswith("[") and "]" in token:
+        end = token.index("]")
+        host = token[1:end]
+        rest = token[end + 1:]
+        if not host or not rest.startswith(":") or len(rest) < 2:
+            return None
+        return host, rest[1:]
+    if token.count(":") != 1:
+        return None
+    host, port_text = token.split(":", 1)
+    if not host or not port_text:
+        return None
+    return host, port_text
+
+
+def _classify_tcp_row(parts: list[str]) -> dict | None:
+    """Five columns: proto, local, foreign, state, pid. None if the shape fails."""
+    if len(parts) != 5 or parts[0].upper() != "TCP":
+        return None
+    local = _split_endpoint(parts[1])
+    foreign = _split_endpoint(parts[2])
+    state = parts[3]
+    pid_text = parts[4]
+    if local is None or foreign is None or not state or not pid_text.isdigit():
+        return None
+    host, port_text = local
+    foreign_host, foreign_port = foreign
+    if not port_text.isdigit():
+        return None
+    if foreign_port != "*" and not foreign_port.isdigit():
+        return None
+    listening = _tcp_listening(foreign_host.lower(), foreign_port, state)
+    return {
+        "pid": int(pid_text),
+        "state": "LISTENING" if listening else "CONNECTED",
+        "host": host,
+        "port": int(port_text),
+        "listening": listening,
+    }
+
+
+def _classify_udp_row(parts: list[str]) -> dict | None:
+    """Four columns: proto, local, foreign, pid. UDP has no state word."""
+    if len(parts) != 4 or parts[0].upper() != "UDP":
+        return None
+    if _split_endpoint(parts[1]) is None or _split_endpoint(parts[2]) is None:
+        return None
+    if not parts[3].isdigit():
+        return None
+    return {"pid": int(parts[3])}
+
+
+def _netstat_marks_table(parts: list[str]) -> bool:
+    """A column header ends in PID. The English banner is the other empty-table mark."""
+    if not parts:
+        return False
+    if parts[-1] == "PID":
+        return True
+    return len(parts) == 2 and parts[0] == "Active" and parts[1] == "Connections"
+
+
 def parse_netstat(text: str) -> dict:
-    """Parse `netstat -ano`. A header with no rows is a proven empty set."""
-    if not isinstance(text, str) or "Active Connections" not in text:
+    """Parse ``netstat -ano`` by column shape.
+
+    A TCP listener is a foreign address ``0.0.0.0:0``, ``[::]:0``, ``*:*`` or
+    ``*:0``. The state column may be any locale. A TCP/UDP row that is not
+    that shape, or any other row that contains ``:``, fails the whole buffer.
+    A header with no socket rows is a proven empty set. Text that never marks
+    a table stays unproven, so a missing observation is not zero listeners.
+    """
+    if not isinstance(text, str) or not text.strip():
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+    tcp = []
+    udp = []
+    marked = False
+    for line in text.splitlines():
+        if not line.strip():
+            continue
+        parts = line.split()
+        proto = parts[0].upper()
+        if proto == "TCP":
+            row = _classify_tcp_row(parts)
+            if row is None:
+                _unclassified_row()
+                continue
+            tcp.append(row)
+            marked = True
+            continue
+        if proto == "UDP":
+            row = _classify_udp_row(parts)
+            if row is None:
+                _unclassified_row()
+                continue
+            udp.append(row)
+            marked = True
+            continue
+        if any(":" in part for part in parts):
+            _unclassified_row()
+            continue
+        if _netstat_marks_table(parts):
+            marked = True
+    if not marked:
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+    return {"tcp": tcp, "udp": udp}
+
+
+def windows_listener_argv(powershell: str) -> list[str]:
+    """``-NoProfile`` Get-NetTCPConnection via the absolute System32 binaries.
+
+    The module path is the argument, not a PATH lookup. A different powershell
+    path is refused.
+    """
+    if powershell != WINDOWS_POWERSHELL:
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+    command = (
+        "Import-Module -Name '%s'; "
+        "Get-NetTCPConnection | ForEach-Object { "
+        "'{0}|{1}|{2}|{3}|{4}' -f $_.LocalAddress,$_.LocalPort,$_.RemoteAddress,$_.RemotePort,$_.OwningProcess "
+        "}; "
+        "Get-NetUDPEndpoint | ForEach-Object { "
+        "'UDP|{0}|{1}|{2}' -f $_.LocalAddress,$_.LocalPort,$_.OwningProcess "
+        "}"
+    ) % WINDOWS_NETTCPIP
+    return [powershell, "-NoProfile", "-NonInteractive", "-Command", command]
+
+
+def parse_powershell_listeners(text: str) -> dict:
+    """Parse the fixed ``local|port|remote|rport|pid`` rows. A bad row fails all."""
+    if not isinstance(text, str) or not text.strip():
         raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
     tcp = []
     udp = []
     for line in text.splitlines():
-        parts = line.split()
-        if len(parts) < 4:
+        if not line.strip():
             continue
-        proto = parts[0].upper()
-        if proto == "TCP":
-            if len(parts) < 5:
-                raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
-            try:
-                pid = int(parts[-1])
-            except ValueError as exc:
-                raise UsageRefusal("PILOT_LISTENER_UNPROVEN") from exc
-            tcp.append({"pid": pid, "state": parts[-2]})
-        elif proto == "UDP":
-            try:
-                pid = int(parts[-1])
-            except ValueError as exc:
-                raise UsageRefusal("PILOT_LISTENER_UNPROVEN") from exc
-            udp.append({"pid": pid})
+        parts = [part.strip() for part in line.strip().split("|")]
+        if parts and parts[0] == "UDP":
+            row = None
+            if len(parts) == 4 and parts[1] and parts[2].isdigit() and parts[3].isdigit():
+                row = {"pid": int(parts[3])}
+            if row is None:
+                _unclassified_row()
+                continue
+            udp.append(row)
+            continue
+        row = None
+        if (
+            len(parts) == 5
+            and parts[0]
+            and parts[1].isdigit()
+            and parts[2]
+            and parts[3].isdigit()
+            and parts[4].isdigit()
+        ):
+            foreign_host = parts[2].strip("[]").lower()
+            listening = _tcp_listening(foreign_host, parts[3], "")
+            row = {
+                "pid": int(parts[4]),
+                "state": "LISTENING" if listening else "CONNECTED",
+                "host": parts[0].strip("[]"),
+                "port": int(parts[1]),
+                "listening": listening,
+            }
+        if row is None:
+            _unclassified_row()
+            continue
+        tcp.append(row)
+    if not tcp and not udp:
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
     return {"tcp": tcp, "udp": udp}
+
+
+def tcp_listener_binds(parsed: dict, port: int) -> list:
+    """Listening TCP rows for the approved Ollama port only. 11435 is refused."""
+    if not isinstance(parsed, dict) or isinstance(port, bool) or not isinstance(port, int):
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+    if port != APPROVED_PORT:
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+    rows = []
+    for row in parsed.get("tcp") or []:
+        if not isinstance(row, dict) or not row.get("listening"):
+            continue
+        if row.get("port") != port:
+            continue
+        host = row.get("host")
+        if not isinstance(host, str) or not host:
+            raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+        if host in {"*", "0.0.0.0"}:
+            host = "0.0.0.0"
+        rows.append({"address": host, "port": port})
+    return rows
 
 
 def _normalize_windows(payload: dict) -> dict:
@@ -858,38 +1054,69 @@ def _windows_processes() -> list:
 
 
 def _windows_observe(spawn=None) -> dict:
-    """Prove listeners with absolute ``netstat.exe -ano``. Never guess zero.
+    """Prove listeners without trusting a localized netstat banner.
 
-    Socket rows come from ``C:\\Windows\\System32\\netstat.exe``. The pilot
-    tree comes from Toolhelp, not a PowerShell census. A missing binary, a
-    nonzero status, or text without the English ``Active Connections`` header
-    stays unproven. A localized Windows UI, including Hebrew on Chris, does
-    not print that header.
+    The first query is ``powershell.exe -NoProfile`` by full path, importing
+    ``NetTCPIP.psd1`` by full path and reading ``Get-NetTCPConnection``. A
+    missing binary, a nonzero status, an empty stdout, or a timeout falls
+    back to ``C:\\Windows\\System32\\netstat.exe -ano``. A row that cannot be
+    classified fails the whole check and does not fall back. The pilot tree
+    comes from Toolhelp. Empty or unrecognized text stays unproven.
     """
     import subprocess
 
     if spawn is None:
-        netstat = trusted_listener_binary("netstat", "win32")
-        if netstat != WINDOWS_NETSTAT:
-            raise _unproven(listener_reason("netstat", "missing"))
+        parsed = None
+        powershell = trusted_listener_binary("powershell", "win32")
+        if powershell == WINDOWS_POWERSHELL:
+            try:
+                queried = run_trusted_listener(
+                    powershell,
+                    windows_listener_argv(powershell),
+                    path_value=str(Path(powershell).parent),
+                )
+            except UsageRefusal:
+                raise
+            except (OSError, subprocess.SubprocessError, UnicodeError):
+                queried = None
+            if queried is not None:
+                query_rc = queried.returncode
+                query_out = queried.stdout or ""
+                if (
+                    not isinstance(query_rc, bool)
+                    and isinstance(query_rc, int)
+                    and query_rc == 0
+                    and isinstance(query_out, str)
+                    and query_out.strip()
+                ):
+                    parsed = parse_powershell_listeners(query_out)
+        if parsed is None:
+            netstat = trusted_listener_binary("netstat", "win32")
+            if netstat != WINDOWS_NETSTAT:
+                raise _unproven(listener_reason("netstat", "missing"))
+            try:
+                net = run_trusted_listener(
+                    netstat, [netstat, "-ano"], path_value=str(Path(netstat).parent),
+                )
+            except UsageRefusal:
+                raise
+            except (OSError, subprocess.SubprocessError, UnicodeError) as exc:
+                raise _unproven(listener_reason("netstat", "child", rc=type(exc).__name__)) from exc
+            net_out, net_rc = net.stdout or "", net.returncode
+            if isinstance(net_rc, bool) or not isinstance(net_rc, int) or net_rc != 0:
+                raise _unproven(listener_reason("netstat", "status", rc=net_rc, stdout=net_out))
+            if not isinstance(net_out, str) or not net_out.strip():
+                raise _unproven(listener_reason("netstat", "empty"))
+            try:
+                parsed = parse_netstat(net_out)
+            except UsageRefusal as exc:
+                raise _unproven(listener_reason("netstat", "parse")) from exc
         try:
-            net = run_trusted_listener(
-                netstat, [netstat, "-ano"], path_value=str(Path(netstat).parent),
-            )
             processes = _windows_processes()
         except UsageRefusal:
             raise
         except (OSError, subprocess.SubprocessError, UnicodeError) as exc:
-            raise _unproven(listener_reason("netstat", "child", rc=type(exc).__name__)) from exc
-        net_out, net_rc = net.stdout or "", net.returncode
-        if isinstance(net_rc, bool) or not isinstance(net_rc, int) or net_rc != 0:
-            raise _unproven(listener_reason("netstat", "status", rc=net_rc, stdout=net_out))
-        if not isinstance(net_out, str) or "Active Connections" not in net_out:
-            raise _unproven(listener_reason("netstat", "parse"))
-        try:
-            parsed = parse_netstat(net_out)
-        except UsageRefusal as exc:
-            raise _unproven(listener_reason("netstat", "parse")) from exc
+            raise _unproven(listener_reason("toolhelp", "child", rc=type(exc).__name__)) from exc
         return {"processes": processes, "tcp": parsed["tcp"], "udp": parsed["udp"]}
     net_out, net_rc, proc_out, proc_rc = spawn(WINDOWS_NETSTAT)
     if isinstance(net_rc, bool) or not isinstance(net_rc, int) or net_rc != 0:

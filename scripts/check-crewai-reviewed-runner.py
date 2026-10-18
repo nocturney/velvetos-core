@@ -94,6 +94,8 @@ from office_v2_crewai.usage_guard import (  # noqa: E402
     DRIFT_FORBIDDEN_MODULES,
     LEFTOVER_RELS,
     WINDOWS_NETSTAT,
+    WINDOWS_NETTCPIP,
+    WINDOWS_POWERSHELL,
     WINDOWS_SYSTEM_ROOT,
     UsageRefusal,
     _open_trusted_regular,
@@ -120,7 +122,10 @@ from office_v2_crewai.usage_guard import (  # noqa: E402
     module_is_forbidden,
     parse_lsof_listen,
     parse_netstat,
+    parse_powershell_listeners,
     seed_trace_consent,
+    tcp_listener_binds,
+    windows_listener_argv,
 )
 
 PACKAGE = SCRIPTS / "office_v2_crewai"
@@ -1631,10 +1636,18 @@ def check_listeners() -> None:
     tree = ast.parse(source)
     fn = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "_windows_observe")
     body = ast.get_source_segment(source, fn) or ""
-    if "Get-NetTCPConnection" in body or "Get-NetUDPEndpoint" in body:
-        fail("windows observer still calls Get-Net")
-    if "WINDOWS_NETSTAT" not in body or '"-ano"' not in body:
-        fail("windows observer does not run absolute netstat -ano")
+    if "windows_listener_argv" not in body or "parse_powershell_listeners" not in body:
+        fail("windows observer does not try the absolute powershell object query")
+    if "parse_netstat" not in body or "WINDOWS_NETSTAT" not in body or '"-ano"' not in body:
+        fail("windows observer does not fall back to absolute netstat -ano")
+    argv_fn = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "windows_listener_argv")
+    argv_body = ast.get_source_segment(source, argv_fn) or ""
+    if "-NoProfile" not in argv_body or "Get-NetTCPConnection" not in argv_body:
+        fail("powershell listener is not Get-NetTCPConnection -NoProfile")
+    if "WINDOWS_NETTCPIP" not in argv_body or "Get-NetUDPEndpoint" not in argv_body:
+        fail("powershell listener does not import NetTCPIP by absolute path")
+    if "shutil.which" in source or "shutil.which" in (PACKAGE / "provider.py").read_text(encoding="utf-8"):
+        fail("listener proof searches PATH")
     if "CreateToolhelp32Snapshot" not in source:
         fail("windows process tree does not use Toolhelp")
     if "_windows_processes" not in body:
@@ -2657,6 +2670,7 @@ def check_trusted_listener_binaries() -> None:
     directory = Path(tempfile.mkdtemp(prefix="crewai-fake-listener-"))
     lsof_marker = directory / "lsof-ran"
     netstat_marker = directory / "netstat-ran"
+    powershell_marker = directory / "powershell-ran"
     lsof_body = "#!/bin/sh\n: > %s\nexit 1\n" % _sh_quote(lsof_marker)
     netstat_body = (
         "#!/bin/sh\n"
@@ -2669,10 +2683,18 @@ def check_trusted_listener_binaries() -> None:
         "EOF\n"
         "exit 0\n" % _sh_quote(netstat_marker)
     )
+    powershell_body = (
+        "#!/bin/sh\n"
+        ": > %s\n"
+        "printf '127.0.0.1|11434|0.0.0.0|0|1\\n'\n"
+        "exit 0\n" % _sh_quote(powershell_marker)
+    )
     (directory / "lsof").write_text(lsof_body, encoding="ascii", newline="\n")
     (directory / "netstat").write_text(netstat_body, encoding="ascii", newline="\n")
+    (directory / "powershell").write_text(powershell_body, encoding="ascii", newline="\n")
     (directory / "lsof").chmod(0o755)
     (directory / "netstat").chmod(0o755)
+    (directory / "powershell").chmod(0o755)
     (directory / "lsof.cmd").write_text(
         "@echo off\nbreak>\"%s\"\nexit /b 1\n" % lsof_marker,
         encoding="ascii",
@@ -2682,6 +2704,13 @@ def check_trusted_listener_binaries() -> None:
         "@echo off\nbreak>\"%s\"\n" % netstat_marker
         + "echo Active Connections\n"
         + "echo   TCP    127.0.0.1:11434        0.0.0.0:0              LISTENING       1\n"
+        + "exit /b 0\n",
+        encoding="ascii",
+        newline="\n",
+    )
+    (directory / "powershell.cmd").write_text(
+        "@echo off\nbreak>\"%s\"\n" % powershell_marker
+        + "echo 127.0.0.1^|11434^|0.0.0.0^|0^|1\n"
         + "exit /b 0\n",
         encoding="ascii",
         newline="\n",
@@ -2717,8 +2746,18 @@ def check_trusted_listener_binaries() -> None:
             netstat_rows = None
         if netstat_marker.exists():
             fail("fake netstat earlier on PATH was executed")
+        if powershell_marker.exists():
+            fail("fake powershell earlier on PATH was executed")
         if netstat_rows == [{"address": "127.0.0.1", "port": 11434}] and not os.path.isfile(WINDOWS_NETSTAT):
             fail("fake netstat output was trusted as a loopback bind")
+        import shutil as _shutil
+        visible = _shutil.which("powershell")
+        if visible is None:
+            fail("spoofed powershell was not visible on PATH")
+        probed = subprocess.run([visible], check=False, capture_output=True, text=True)
+        if not powershell_marker.exists() or b"11434" not in probed.stdout.encode("ascii"):
+            fail("PATH lookup mutant did not execute the spoofed powershell")
+        powershell_marker.unlink()
         link = directory / "lsof-symlink"
         link.symlink_to(directory / "lsof")
         saved_lsof = usage_mod.DARWIN_LSOF
@@ -2797,6 +2836,231 @@ def check_workflows() -> None:
             fail("workflow mentions the runner: %s" % path.name)
 
 
+def _load_usage_mutant(source: str, old: str, new: str, name: str):
+    import importlib.util
+
+    if source.count(old) != 1:
+        fail("mutation anchor missing for %s" % name)
+    folder = Path(tempfile.mkdtemp(prefix="crewai-locale-mut-"))
+    path = folder / (name + ".py")
+    path.write_text(source.replace(old, new, 1), encoding="ascii", newline="\n")
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module, folder
+
+
+def check_locale_listeners() -> None:
+    """English and Hebrew netstat, a garbage row, and a spoofed object query."""
+    import office_v2_crewai.usage_guard as usage_mod
+
+    english = (
+        "Active Connections\n\n"
+        "  Proto  Local Address          Foreign Address        State           PID\n"
+        "  TCP    127.0.0.1:11434        0.0.0.0:0              LISTENING       4\n"
+        "  TCP    127.0.0.1:11434        127.0.0.1:50000        ESTABLISHED     4\n"
+        "  TCP    [::1]:11434            [::]:0                 LISTENING       4\n"
+    )
+    hebrew = (
+        "\u05d7\u05d9\u05d1\u05d5\u05e8\u05d9\u05dd \u05e4\u05e2\u05d9\u05dc\u05d9\u05dd\n\n"
+        "  \u05e4\u05e8\u05d5\u05d8\u05d5\u05e7\u05d5\u05dc  \u05db\u05ea\u05d5\u05d1\u05ea \u05de\u05e7\u05d5\u05de\u05d9\u05ea"
+        "          \u05db\u05ea\u05d5\u05d1\u05ea \u05d6\u05e8\u05d4        \u05de\u05e6\u05d1           PID\n"
+        "  TCP    127.0.0.1:11434        0.0.0.0:0              \u05de\u05d0\u05d6\u05d9\u05df       4\n"
+        "  TCP    127.0.0.1:11434        127.0.0.1:50000        \u05de\u05d7\u05d5\u05d1\u05e8     4\n"
+    )
+    if "LISTENING" in hebrew or "Active Connections" in hebrew:
+        fail("Hebrew fixture still depends on the English banner or state word")
+    loopback = [
+        {"address": "127.0.0.1", "port": 11434},
+        {"address": "::1", "port": 11434},
+    ]
+    if binds_from_netstat(english, 11434) != loopback:
+        fail("English netstat rows were not classified by foreign-address shape")
+    hebrew_rows = binds_from_netstat(hebrew, 11434)
+    if hebrew_rows != [{"address": "127.0.0.1", "port": 11434}]:
+        fail("Hebrew netstat listener was not counted: %s" % hebrew_rows)
+    assert_ollama_bind(hebrew_rows)
+    processes = [{"pid": 4, "ppid": 1}]
+    if count_listening_sockets(4, platform="win32", observation={"processes": processes, "netstat": hebrew}) != 1:
+        fail("pilot parser dropped the Hebrew listener")
+    if count_listening_sockets(4, platform="win32", observation={"processes": processes, "netstat": english}) != 2:
+        fail("pilot parser dropped an English listener")
+    established = (
+        "\u05d7\u05d9\u05d1\u05d5\u05e8\u05d9\u05dd \u05e4\u05e2\u05d9\u05dc\u05d9\u05dd\n\n"
+        "  PID\n"
+        "  TCP    127.0.0.1:11434        127.0.0.1:50000        \u05de\u05d7\u05d5\u05d1\u05e8     4\n"
+    )
+    if binds_from_netstat(established, 11434) != []:
+        fail("a Hebrew established row was treated as a listener")
+    _expect_provider(lambda: assert_ollama_bind(binds_from_netstat(established, 11434)), "OLLAMA_BIND_UNPROVEN")
+    wildcard = (
+        "Active Connections\n\n"
+        "  Proto  Local Address          Foreign Address        State           PID\n"
+        "  TCP    0.0.0.0:11434          0.0.0.0:0              LISTENING       4\n"
+        "  TCP    *:11434                *:0                    LISTENING       4\n"
+    )
+    _expect_provider(lambda: assert_ollama_bind(binds_from_netstat(wildcard, 11434)), "OLLAMA_BIND_WILDCARD")
+    other_port = (
+        "Active Connections\n\n"
+        "  Proto  Local Address          Foreign Address        State           PID\n"
+        "  TCP    127.0.0.1:11435        0.0.0.0:0              LISTENING       4\n"
+    )
+    if binds_from_netstat(other_port, 11434) != []:
+        fail("port 11435 was returned for the approved port")
+    _expect_provider(lambda: binds_from_netstat(other_port, 11435), "OLLAMA_BIND_UNPROVEN")
+    _expect_provider(
+        lambda: assert_ollama_bind([{"address": "127.0.0.1", "port": 11435}], port=11435),
+        "OLLAMA_BIND_UNPROVEN",
+    )
+    _expect_provider(lambda: collect_ollama_binds(port=11435), "OLLAMA_BIND_UNPROVEN")
+    quiet_hebrew = (
+        "\u05d7\u05d9\u05d1\u05d5\u05e8\u05d9\u05dd \u05e4\u05e2\u05d9\u05dc\u05d9\u05dd\n\n"
+        "  \u05e4\u05e8\u05d5\u05d8\u05d5\u05e7\u05d5\u05dc  \u05db\u05ea\u05d5\u05d1\u05ea \u05de\u05e7\u05d5\u05de\u05d9\u05ea          PID\n"
+    )
+    if parse_netstat(quiet_hebrew) != {"tcp": [], "udp": []}:
+        fail("a Hebrew header with no rows was not a proven empty set")
+    garbage = english + "  TCP    not-an-address    nowhere    ???    zz\n"
+    _expect_usage(lambda: parse_netstat(garbage), "PILOT_LISTENER_UNPROVEN")
+    _expect_provider(lambda: binds_from_netstat(garbage, 11434), "OLLAMA_BIND_UNPROVEN")
+    _expect_usage(
+        lambda: count_listening_sockets(4, platform="win32", observation={"processes": processes, "netstat": garbage}),
+        "PILOT_LISTENER_UNPROVEN",
+    )
+    object_rows = "127.0.0.1|11434|0.0.0.0|0|4\n127.0.0.1|11434|127.0.0.1|50000|4\nUDP|0.0.0.0|53|9\n"
+    if tcp_listener_binds(parse_powershell_listeners(object_rows), 11434) != [{"address": "127.0.0.1", "port": 11434}]:
+        fail("Get-NetTCPConnection rows were not classified by remote port 0")
+    _expect_usage(lambda: parse_powershell_listeners(object_rows + "NOT-A-ROW\n"), "PILOT_LISTENER_UNPROVEN")
+    argv = windows_listener_argv(WINDOWS_POWERSHELL)
+    if argv[:4] != [WINDOWS_POWERSHELL, "-NoProfile", "-NonInteractive", "-Command"]:
+        fail("powershell argv was %s" % argv[:4])
+    if WINDOWS_NETTCPIP not in argv[-1] or "Get-NetTCPConnection" not in argv[-1]:
+        fail("powershell command did not name the absolute NetTCPIP module")
+    _expect_usage(lambda: windows_listener_argv("powershell"), "PILOT_LISTENER_UNPROVEN")
+    _expect_usage(
+        lambda: windows_listener_argv("C:\\Windows\\System32\\spoof\\powershell.exe"),
+        "PILOT_LISTENER_UNPROVEN",
+    )
+
+    calls = []
+
+    class _Proc:
+        def __init__(self, stdout: str, returncode: int) -> None:
+            self.stdout = stdout
+            self.returncode = returncode
+
+    def binary_of(tool, platform=None):
+        if tool == "powershell":
+            return WINDOWS_POWERSHELL
+        if tool == "netstat":
+            return WINDOWS_NETSTAT
+        return None
+
+    def run_object(binary, args, path_value=None):
+        calls.append(binary)
+        if binary != WINDOWS_POWERSHELL:
+            fail("netstat ran after a classifiable object query")
+        if path_value != str(Path(WINDOWS_POWERSHELL).parent):
+            fail("object query PATH was not the powershell directory")
+        if args[0] != WINDOWS_POWERSHELL or "-NoProfile" not in args or WINDOWS_NETTCPIP not in args[-1]:
+            fail("object query was not the absolute -NoProfile command")
+        return _Proc("127.0.0.1|11434|0.0.0.0|0|4\n", 0)
+
+    saved = (
+        usage_mod.trusted_listener_binary,
+        usage_mod.run_trusted_listener,
+        usage_mod._windows_processes,
+    )
+    usage_mod.trusted_listener_binary = binary_of
+    usage_mod.run_trusted_listener = run_object
+    usage_mod._windows_processes = lambda: processes
+    try:
+        observed = _windows_observe()
+        if calls != [WINDOWS_POWERSHELL]:
+            fail("object query did not use only powershell.exe: %s" % calls)
+        if count_windows_listeners(4, observed) != 1:
+            fail("object query listener was not counted")
+        calls.clear()
+
+        def run_garbage(binary, args, path_value=None):
+            calls.append(binary)
+            if binary == WINDOWS_POWERSHELL:
+                return _Proc("127.0.0.1|11434|0.0.0.0|0|4\nNOT-A-ROW\n", 0)
+            return _Proc(english, 0)
+
+        usage_mod.run_trusted_listener = run_garbage
+        _expect_usage(_windows_observe, "PILOT_LISTENER_UNPROVEN")
+        if calls != [WINDOWS_POWERSHELL]:
+            fail("an unclassifiable object row fell back to netstat: %s" % calls)
+        calls.clear()
+        _expect_provider(lambda: _netstat_binds(11434), "OLLAMA_BIND_UNPROVEN")
+        if calls != [WINDOWS_POWERSHELL]:
+            fail("Ollama binder fell back after an unclassifiable object row: %s" % calls)
+        calls.clear()
+        usage_mod.run_trusted_listener = run_object
+        if _netstat_binds(11434) != [{"address": "127.0.0.1", "port": 11434}]:
+            fail("Ollama binder did not accept the object-query loopback row")
+        if calls != [WINDOWS_POWERSHELL]:
+            fail("Ollama binder ran netstat after a classifiable object query: %s" % calls)
+        calls.clear()
+
+        def run_fallback(binary, args, path_value=None):
+            calls.append((binary, path_value))
+            if binary == WINDOWS_POWERSHELL:
+                return _Proc("", 1)
+            if path_value != str(Path(WINDOWS_NETSTAT).parent):
+                fail("netstat fallback PATH was not System32")
+            return _Proc(hebrew, 0)
+
+        usage_mod.run_trusted_listener = run_fallback
+        fallback = _windows_observe()
+        if [item[0] for item in calls] != [WINDOWS_POWERSHELL, WINDOWS_NETSTAT]:
+            fail("failed object query did not fall back to netstat: %s" % calls)
+        if count_windows_listeners(4, fallback) != 1:
+            fail("Hebrew netstat fallback was not counted")
+    finally:
+        (
+            usage_mod.trusted_listener_binary,
+            usage_mod.run_trusted_listener,
+            usage_mod._windows_processes,
+        ) = saved
+
+    source = (PACKAGE / "usage_guard.py").read_text(encoding="utf-8")
+    skipped, skipped_dir = _load_usage_mutant(
+        source,
+        "def _unclassified_row() -> None:\n"
+        "    \"\"\"One row that is not a banner or a shaped socket row fails the whole check.\"\"\"\n"
+        "    raise UsageRefusal(\"PILOT_LISTENER_UNPROVEN\")\n",
+        "def _unclassified_row() -> None:\n"
+        "    \"\"\"One row that is not a banner or a shaped socket row fails the whole check.\"\"\"\n"
+        "    return\n",
+        "usage_skip_mutant",
+    )
+    try:
+        if skipped.parse_netstat(garbage)["tcp"] == []:
+            fail("skip mutant did not keep the good row")
+        try:
+            skipped.parse_netstat(garbage)
+        except UsageRefusal:
+            fail("skip mutant still failed the whole buffer")
+        if skipped.tcp_listener_binds(skipped.parse_netstat(garbage), 11434) == []:
+            fail("skip mutant dropped the classified listener")
+    finally:
+        shutil.rmtree(skipped_dir, ignore_errors=True)
+    english_word, english_dir = _load_usage_mutant(
+        source,
+        "return (foreign_host, foreign_port) in _LISTENER_FOREIGN\n",
+        "return state.upper() == \"LISTENING\"\n",
+        "usage_english_mutant",
+    )
+    try:
+        if english_word.tcp_listener_binds(english_word.parse_netstat(hebrew), 11434) != []:
+            fail("English-word mutant still counted a Hebrew listener")
+        if english_word.parse_netstat(english)["tcp"][0]["state"] != "LISTENING":
+            fail("English-word mutant did not keep the English fixture, so the mutation is not the contrast")
+    finally:
+        shutil.rmtree(english_dir, ignore_errors=True)
+
+
 def main() -> int:
     if "crewai" in sys.modules:
         fail("crewai was already imported")
@@ -2820,6 +3084,7 @@ def main() -> int:
     check_spawn_hygiene()
     check_execute()
     check_listeners()
+    check_locale_listeners()
     check_windows_listener_pins()
     check_trusted_listener_binaries()
     check_run_record()

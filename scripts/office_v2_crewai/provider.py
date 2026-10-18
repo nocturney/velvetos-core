@@ -234,36 +234,16 @@ def _proc_address(ip_hex: str, ipv6: bool) -> str:
 
 
 def binds_from_netstat(text: str, port: int) -> list:
-    """LISTENING rows from netstat -ano. This does not open a socket."""
-    if not isinstance(text, str) or "Active Connections" not in text:
-        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
-    if isinstance(port, bool) or not isinstance(port, int):
-        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
-    rows = []
-    for line in text.splitlines():
-        parts = line.split()
-        if len(parts) < 5 or parts[0].upper() != "TCP":
-            continue
-        if parts[-2].upper() != "LISTENING":
-            continue
-        local = parts[1]
-        if local.startswith("[") and "]" in local:
-            host = local[1:local.index("]")]
-            port_text = local.rsplit(":", 1)[-1]
-        else:
-            host, sep, port_text = local.rpartition(":")
-            if not sep:
-                raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
-        try:
-            row_port = int(port_text)
-        except ValueError as exc:
-            raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
-        if row_port != port:
-            continue
-        if host in {"*", "0.0.0.0"}:
-            host = "0.0.0.0"
-        rows.append({"address": host, "port": row_port})
-    return rows
+    """Listening TCP rows from netstat -ano, by column shape. No socket is opened.
+
+    The English word LISTENING is not required. Port 11435 is refused.
+    """
+    from office_v2_crewai.usage_guard import UsageRefusal, parse_netstat, tcp_listener_binds
+
+    try:
+        return tcp_listener_binds(parse_netstat(text), port)
+    except UsageRefusal as exc:
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
 
 
 def binds_from_lsof(text: str, port: int) -> list:
@@ -307,6 +287,8 @@ def binds_from_lsof(text: str, port: int) -> list:
 
 def collect_ollama_binds(port: int = APPROVED_PORT, observe=None) -> list:
     """Listener rows for the approved port. The default observer does not open a socket."""
+    if isinstance(port, bool) or port != APPROVED_PORT:
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
     if observe is not None:
         try:
             rows = observe()
@@ -367,20 +349,53 @@ def _lsof_binds(port: int) -> list:
 
 
 def _netstat_binds(port: int) -> list:
+    """Approved-port binds. Object query first, netstat column shape as fallback."""
     import subprocess
 
-    from office_v2_crewai.usage_guard import run_trusted_listener, trusted_listener_binary
+    from office_v2_crewai.usage_guard import (
+        WINDOWS_NETSTAT,
+        WINDOWS_POWERSHELL,
+        UsageRefusal,
+        parse_netstat,
+        parse_powershell_listeners,
+        run_trusted_listener,
+        tcp_listener_binds,
+        trusted_listener_binary,
+        windows_listener_argv,
+    )
 
+    if isinstance(port, bool) or port != APPROVED_PORT:
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
+    powershell = trusted_listener_binary("powershell", "win32")
+    if powershell == WINDOWS_POWERSHELL:
+        try:
+            queried = run_trusted_listener(
+                powershell,
+                windows_listener_argv(powershell),
+                path_value=str(Path(powershell).parent),
+            )
+        except (OSError, subprocess.SubprocessError):
+            queried = None
+        if queried is not None and queried.returncode == 0 and (queried.stdout or "").strip():
+            try:
+                return tcp_listener_binds(parse_powershell_listeners(queried.stdout), port)
+            except UsageRefusal as exc:
+                raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
     binary = trusted_listener_binary("netstat", "win32")
-    if binary is None:
+    if binary != WINDOWS_NETSTAT:
         raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
     try:
-        proc = run_trusted_listener(binary, [binary, "-ano"])
+        proc = run_trusted_listener(
+            binary, [binary, "-ano"], path_value=str(Path(binary).parent),
+        )
     except (OSError, subprocess.SubprocessError) as exc:
         raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
-    if proc.returncode != 0 or "Active Connections" not in (proc.stdout or ""):
+    if proc.returncode != 0:
         raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
-    return binds_from_netstat(proc.stdout, port)
+    try:
+        return tcp_listener_binds(parse_netstat(proc.stdout or ""), port)
+    except UsageRefusal as exc:
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
 
 
 def digest_from_tags(body: object, model: str = APPROVED_MODEL) -> str:
@@ -412,7 +427,7 @@ def assert_ollama_bind(listeners: object, port: int = APPROVED_PORT) -> None:
     0.0.0.0 and :: are refused. An empty observation is unproven. This does
     not open a socket; the caller passes the listener rows.
     """
-    if not isinstance(listeners, list) or not listeners:
+    if port != APPROVED_PORT or not isinstance(listeners, list) or not listeners:
         raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
     saw_loopback = False
     for row in listeners:
