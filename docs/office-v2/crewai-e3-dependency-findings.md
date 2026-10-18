@@ -11,8 +11,33 @@ of comment 6250224612. The decision is
 `scripts/office_v2_crewai/evidence/e3-security-decision.json` and it matches
 lock sha256 `121c1bd04eee730b51eb71e49da503b0d0236cdd06d8687a5df792234f78a669`.
 Preflight passes E3 only when that file is present and every condition below
-is enforced. E1, E2, E4, E5, E6 and E7 are unchanged, so this tree does not
-start a pilot.
+is enforced. E1, E2, E5, E6 and E7 still refuse this tree, and E4 is
+NOT_OBSERVED, so this tree does not start a pilot.
+
+## E4 sandbox and the 11435 client
+
+Comment 6250312836 (CLQ-16) verified that `import crewai` creates
+`<LocalAppData>\\CrewAI\\<name>` through appdirs 1.4.4 `SHGetFolderPathW`.
+Setting LOCALAPPDATA does not move that write. `Crew()` then writes
+`latest_kickoff_task_outputs.db` there and a lock file under TEMP.
+`CREWAI_STORAGE_DIR` must be the absolute path
+`D:\\Velvet\\Pilots\\crewai-e4\\sandbox-home\\crewai-storage`. The runner
+sets that variable, TEMP, TMP, and the other CLQ-16 paths before import.
+A missing value or a path that is not on D: is refused.
+
+The committed before/after manifest, HKCU export diff, no-pilot control
+run, and positive db/lock check are NOT_OBSERVED. Nothing was run on Chris.
+
+Comment 6250397852 (CLQ-17) verified that an `ollama/` model uses CrewAI's
+native OpenAI-compatible client, whose default is `localhost:11434`. That
+port on Chris is the wrong Ollama. The runner passes
+`base_url=http://127.0.0.1:11435/v1`, sets `OLLAMA_HOST=127.0.0.1:11435`,
+and refuses `is_litellm=True` or any other effective endpoint. It also
+sets `Crew(tracing=False)`, keeps the litellm local-cost and telemetry
+flags, and does not set `CHROMA_ANONYMIZED_TELEMETRY` or
+`TIKTOKEN_CACHE_DIR`. The working directory is the D: sandbox, and a
+`.env` there is refused. E5 sets `HTTP_PROXY`, `HTTPS_PROXY` and
+`ALL_PROXY` to `http://127.0.0.1:9` with `NO_PROXY=127.0.0.1`.
 
 ## Approved local model
 

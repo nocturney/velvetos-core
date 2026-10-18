@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 
 from office_v2_crewai.contract import (
+    APPROVED_ENDPOINT,
+    APPROVED_OLLAMA_HOST,
     E3_BASIS,
     E3_CONDITIONS,
     E3_DECIDED_AT,
@@ -24,7 +26,14 @@ from office_v2_crewai.contract import (
     RUNBOOK_MINIMUM_ISSUES,
     TELEMETRY_FLAGS,
 )
-from office_v2_crewai.provider import ProviderRefusal, inherited_paid_credentials, validate_config_document
+from office_v2_crewai.e4_evidence import assess_evidence, write_observed_e4
+from office_v2_crewai.provider import (
+    ProviderRefusal,
+    effective_endpoint,
+    inherited_paid_credentials,
+    validate_config_document,
+)
+from office_v2_crewai.sandbox import StorageRefusal, assert_proxy_env
 from office_v2_crewai.usage_guard import enforcement_holds
 
 
@@ -138,13 +147,10 @@ def check_e3(evidence_dir: Path) -> dict:
     return _pass("E3")
 
 
-def check_e4(evidence_dir: Path) -> dict:
-    data = _load_json(evidence_dir / "e4-containment.json")
-    if data is None:
-        return _fail("E4", "CONTAINMENT_EVIDENCE_ABSENT")
-    flags = ("roots_under_approved_d", "negative_write_denial", "os_monitor", "c_drive_not_writable")
-    if any(data.get(flag) is not True for flag in flags):
-        return _fail("E4", "CONTAINMENT_FLAG_ABSENT")
+def check_e4(evidence_dir: Path, env: dict) -> dict:
+    reason = assess_evidence(evidence_dir, env)
+    if reason != "PASS":
+        return _fail("E4", reason)
     return _pass("E4")
 
 
@@ -160,6 +166,17 @@ def check_e5(evidence_dir: Path, env: dict) -> dict:
     paid = inherited_paid_credentials(env)
     if paid:
         return _fail("E5", "PAID_CREDENTIAL_INHERITED")
+    try:
+        assert_proxy_env(env)
+    except StorageRefusal as exc:
+        return _fail("E5", str(exc))
+    if env.get("OLLAMA_HOST") != APPROVED_OLLAMA_HOST:
+        return _fail("E5", "OLLAMA_HOST_REFUSED")
+    try:
+        if effective_endpoint(env.get("OLLAMA_HOST")) != APPROVED_ENDPOINT:
+            return _fail("E5", "LLM_ENDPOINT_MISMATCH")
+    except ProviderRefusal as exc:
+        return _fail("E5", str(exc))
     return _pass("E5")
 
 
@@ -249,7 +266,7 @@ def evaluate(input_dir: Path, evidence_dir: Path, env: dict | None = None, model
         "E1": check_e1(evidence_dir),
         "E2": check_e2(evidence_dir),
         "E3": check_e3(evidence_dir),
-        "E4": check_e4(evidence_dir),
+        "E4": check_e4(evidence_dir, environment),
         "E5": check_e5(evidence_dir, environment),
         "E6": check_e6(input_dir),
         "E7": check_e7(evidence_dir, environment),
@@ -302,12 +319,7 @@ def synthetic_passing_bundle(root: Path) -> None:
         "scan_status": "RED",
     })
     _write(evidence / "e3-security-decision.json", approved_decision_document())
-    _write(evidence / "e4-containment.json", {
-        "roots_under_approved_d": True,
-        "negative_write_denial": True,
-        "os_monitor": True,
-        "c_drive_not_writable": True,
-    })
+    write_observed_e4(evidence)
     _write(evidence / "e5-network.json", {
         "deny_by_default": True,
         "zero_unauthorized_listeners": True,

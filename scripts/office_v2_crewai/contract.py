@@ -5,6 +5,9 @@ ASCII only. No network. No model import.
 from __future__ import annotations
 
 APPROVED_BASE_URL = "http://127.0.0.1:11435"
+APPROVED_OPENAI_BASE = "http://127.0.0.1:11435/v1"
+APPROVED_OLLAMA_HOST = "127.0.0.1:11435"
+APPROVED_ENDPOINT = "127.0.0.1:11435"
 APPROVED_HOST = "127.0.0.1"
 APPROVED_PORT = 11435
 APPROVED_AT = "2026-10-18T15:28:00+03:00"
@@ -70,6 +73,16 @@ TELEMETRY_FLAGS = {
 ATTEMPT_TIMEOUT_SECONDS = 600
 COST_CEILING = 0
 ROLES = ("Triage", "Reviewer")
+
+# CLQ-16, issue 612 comment 6250312836. appdirs 1.4.4 resolves LocalAppData
+# through SHGetFolderPathW, so LOCALAPPDATA does not move the CrewAI mkdir.
+# CREWAI_STORAGE_DIR must be an absolute path on D:.
+E4_COMMENT = "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250312836"
+E4_CREWAI_VERSION = "1.15.28"
+E4_APPDIRS_VERSION = "1.4.4"
+SANDBOX_ROOT = "D:\\Velvet\\Pilots\\crewai-e4\\sandbox-home"
+CREWAI_PROFILE_REL = "AppData\\Local\\CrewAI"
+POSITIVE_DB_NAME = "latest_kickoff_task_outputs.db"
 
 GATES = ("E1", "E2", "E3", "E4", "E5", "E6", "E7")
 GATE_FAIL_STATUS = {

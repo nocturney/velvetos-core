@@ -20,6 +20,7 @@ from office_v2_crewai.kill_harness import KillHarness
 from office_v2_crewai.preflight import evaluate
 from office_v2_crewai.provider import LocalOllamaProvider, ProviderRefusal
 from office_v2_crewai.receipt import build_receipt, write_receipts
+from office_v2_crewai.sandbox import StorageRefusal, approved_environment
 
 PACKAGE = Path(__file__).resolve().parent
 DEFAULT_INPUT = PACKAGE / "inputs"
@@ -33,6 +34,8 @@ RUNNER_FILES = (
     PACKAGE / "receipt.py",
     PACKAGE / "crew_build.py",
     PACKAGE / "usage_guard.py",
+    PACKAGE / "sandbox.py",
+    PACKAGE / "e4_evidence.py",
     PACKAGE / "runner.py",
 )
 
@@ -40,6 +43,7 @@ RUNNER_FILES = (
 def apply_telemetry(env: dict) -> dict:
     updated = dict(env)
     updated.update(TELEMETRY_FLAGS)
+    updated.update(approved_environment())
     return updated
 
 
@@ -67,6 +71,14 @@ def execute(input_dir: Path, output_dir: Path, evidence_dir: Path, model_config:
         crew.kickoff(inputs={"issue_rows": issue_rows})
         from office_v2_crewai.usage_guard import assert_post_run, count_listening_sockets
         assert_post_run(sys.modules, count_listening_sockets(os.getpid()), [])
+    except StorageRefusal as exc:
+        receipt["identity"]["reason"] = str(exc)
+        receipt["identity"]["task_status"] = "BLOCKED_STORAGE"
+        receipt["result"]["status"] = "BLOCKED_STORAGE"
+        receipt["execution"]["model_calls"] = 0 if provider is None else provider.calls
+        receipt["execution"]["abort_reason"] = str(exc)
+        write_receipts(output_dir, receipt)
+        return 2
     except (ProviderRefusal, ImportError, ModuleNotFoundError, OSError, RuntimeError) as exc:
         receipt["identity"]["reason"] = type(exc).__name__
         receipt["identity"]["task_status"] = "NOT_VERIFIED"

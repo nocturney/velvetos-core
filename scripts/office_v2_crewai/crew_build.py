@@ -1,9 +1,23 @@
 """Build the two-role crew. Imported only after every gate has passed."""
 from __future__ import annotations
 
-from office_v2_crewai.contract import APPROVED_MODEL, APPROVED_MODEL_DIGEST, CREWAI_VERSION, TELEMETRY_FLAGS
-from office_v2_crewai.provider import LocalOllamaProvider, ProviderRefusal, no_cloud_enabled
-from office_v2_crewai.usage_guard import UsageRefusal, assert_crew_spec
+from office_v2_crewai.contract import (
+    APPROVED_MODEL,
+    APPROVED_MODEL_DIGEST,
+    APPROVED_OLLAMA_HOST,
+    APPROVED_OPENAI_BASE,
+    CREWAI_VERSION,
+    SANDBOX_ROOT,
+    TELEMETRY_FLAGS,
+)
+from office_v2_crewai.provider import (
+    LocalOllamaProvider,
+    ProviderRefusal,
+    assert_llm_route,
+    no_cloud_enabled,
+)
+from office_v2_crewai.sandbox import bind_process_sandbox, enter_sandbox
+from office_v2_crewai.usage_guard import assert_crew_spec
 
 
 def flags_ready(env: dict) -> bool:
@@ -34,6 +48,13 @@ def build_crew(provider: LocalOllamaProvider, env: dict):
         "mcps": None,
         "crewai_tools": False,
     })
+    bound_env = bind_process_sandbox(env)
+    enter_sandbox(SANDBOX_ROOT)
+    assert_llm_route({
+        "base_url": APPROVED_OPENAI_BASE,
+        "ollama_host": bound_env.get("OLLAMA_HOST", APPROVED_OLLAMA_HOST),
+        "is_litellm": False,
+    })
     import crewai
 
     if getattr(crewai, "__version__", None) != CREWAI_VERSION:
@@ -42,14 +63,19 @@ def build_crew(provider: LocalOllamaProvider, env: dict):
     class LocalOllamaLLM(crewai.BaseLLM):
         def __init__(self, bound):
             super().__init__(
-                model="local-approved",
+                model="ollama/" + APPROVED_MODEL,
                 temperature=0.0,
                 provider="ollama",
                 api_key=None,
-                base_url=bound.config["base_url"],
+                base_url=APPROVED_OPENAI_BASE,
+                is_litellm=False,
             )
             object.__setattr__(self, "_bound", bound)
-            object.__setattr__(self, "_env", env)
+            object.__setattr__(self, "_env", bound_env)
+            if self.base_url != APPROVED_OPENAI_BASE or self.is_litellm is not False:
+                raise ProviderRefusal("LLM_ENDPOINT_MISMATCH")
+            if self.provider != "ollama":
+                raise ProviderRefusal("LITELLM_ROUTE_REFUSED")
 
         def call(self, messages, tools=None, callbacks=None, available_functions=None,
                  from_task=None, from_agent=None, response_model=None):
@@ -95,5 +121,6 @@ def build_crew(provider: LocalOllamaProvider, env: dict):
         agents=[triage, reviewer],
         tasks=[triage_task, review_task],
         memory=False,
+        tracing=False,
         verbose=False,
     )

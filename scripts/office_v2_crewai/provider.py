@@ -8,14 +8,18 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from urllib.parse import urlsplit
+
+from urllib.parse import urlsplit, urlunsplit
 
 from office_v2_crewai.contract import (
     APPROVED_BASE_URL,
     APPROVED_BY,
+    APPROVED_ENDPOINT,
     APPROVED_HOST,
     APPROVED_MODEL,
     APPROVED_MODEL_DIGEST,
+    APPROVED_OLLAMA_HOST,
+    APPROVED_OPENAI_BASE,
     APPROVED_PORT,
     EVIDENCE_COMMENT,
     PAID_ENV_NAMES,
@@ -80,6 +84,54 @@ def assert_loopback_url(url: object) -> str:
     if url.strip().rstrip("/") != APPROVED_BASE_URL:
         raise ProviderRefusal("MODEL_URL_NOT_EXACT_APPROVAL")
     return APPROVED_BASE_URL
+
+
+def normalize_ollama_base_url(base_url: str) -> str:
+    """Match crewai's ollama normalizer. A bare host gets port 11434, which is refused."""
+    if "://" not in base_url:
+        base_url = "http://" + base_url
+    parts = urlsplit(base_url)
+    netloc = parts.netloc
+    if parts.scheme == "http" and parts.port is None:
+        netloc = netloc + ":11434"
+    path = parts.path.rstrip("/")
+    if not path.endswith("/v1"):
+        path = path + "/v1"
+    return urlunsplit((parts.scheme, netloc, path, parts.query, parts.fragment))
+
+
+def effective_endpoint(value: object) -> str:
+    """Return host:port only when the URL is exactly the approved loopback."""
+    if not isinstance(value, str) or not value.strip():
+        raise ProviderRefusal("LLM_ENDPOINT_MISMATCH")
+    parts = urlsplit(normalize_ollama_base_url(value.strip()))
+    if (
+        parts.scheme != "http"
+        or parts.hostname != APPROVED_HOST
+        or parts.port != APPROVED_PORT
+        or parts.path.rstrip("/") != "/v1"
+        or parts.query
+        or parts.fragment
+        or parts.username
+    ):
+        raise ProviderRefusal("LLM_ENDPOINT_MISMATCH")
+    return APPROVED_ENDPOINT
+
+
+def assert_llm_route(spec: object) -> None:
+    """Refuse litellm, the default 11434 client, and any non-approved endpoint."""
+    if not isinstance(spec, dict):
+        raise ProviderRefusal("LLM_ENDPOINT_MISMATCH")
+    if spec.get("is_litellm") is not False:
+        raise ProviderRefusal("LITELLM_ROUTE_REFUSED")
+    if spec.get("base_url") != APPROVED_OPENAI_BASE:
+        raise ProviderRefusal("LLM_BASE_URL_REFUSED")
+    if spec.get("ollama_host") != APPROVED_OLLAMA_HOST:
+        raise ProviderRefusal("OLLAMA_HOST_REFUSED")
+    if effective_endpoint(spec["base_url"]) != APPROVED_ENDPOINT:
+        raise ProviderRefusal("LLM_ENDPOINT_MISMATCH")
+    if effective_endpoint(spec["ollama_host"]) != APPROVED_ENDPOINT:
+        raise ProviderRefusal("LLM_ENDPOINT_MISMATCH")
 
 
 def no_cloud_enabled(env: dict) -> bool:
@@ -174,6 +226,13 @@ class LocalOllamaProvider:
             raise ProviderRefusal("THINK_NOT_DISABLED")
         if not no_cloud_enabled(environment):
             raise ProviderRefusal("OLLAMA_NO_CLOUD_ABSENT")
+        assert_llm_route({
+            "base_url": APPROVED_OPENAI_BASE,
+            "ollama_host": environment.get("OLLAMA_HOST"),
+            "is_litellm": False,
+        })
+        from office_v2_crewai.sandbox import assert_proxy_env
+        assert_proxy_env(environment)
         base_url = assert_loopback_url(self.config.get("base_url"))
         if urlopen is None:
             from urllib import request as urlrequest

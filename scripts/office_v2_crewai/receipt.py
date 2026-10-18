@@ -6,7 +6,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from office_v2_crewai.contract import DIRECT_PINS, GATES, RESULT_STATUSES, TELEMETRY_FLAGS
+from office_v2_crewai.contract import DIRECT_PINS, GATES, RESULT_STATUSES, SANDBOX_ROOT, TELEMETRY_FLAGS
 
 
 def _now() -> str:
@@ -77,7 +77,7 @@ def build_receipt(report: dict, attempt_id: str, runner_files: list[Path]) -> di
         },
         "graph_smoke": "NOT_RUN",
         "scope": {
-            "sandbox_root": "D:/Velvet/Pilots/OfficeV2-VerifiedTrio",
+            "sandbox_root": SANDBOX_ROOT,
             "input_sha256": "SEE_MANIFEST",
             "adversarial_is_data": True,
             "private_repo_included": False,
