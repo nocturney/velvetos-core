@@ -1,0 +1,1804 @@
+{
+ "schema": "velvetos.competitor-provenance-alias-map.v1",
+ "issue": "nocturney/velvetos-core#595",
+ "scope": "read-only; no registry edits; no triage decisions; no promotion or install",
+ "inputs": [
+  "packages/vfresearch/LINKS.json (109 research links)",
+  "packages/vfe2b/catalog.json (47 picks)",
+  "packages/vfe2b/orchestrators.json (30 picks)",
+  "docs/implementation/office-v2/phase2/candidate-registry-v0.json (213 items)"
+ ],
+ "matching": "exact GitHub owner/repo against registry item text (URL-bearing fields); STRONG = repo slug equals candidate_id/source_item_id/name; WEAK = repo name token appears in text only (review, not a match)",
+ "statusMeaning": {
+  "MATCHED_STRONG": "repo token equals a candidate id/source id/name",
+  "MATCHED_BY_URL": "owner/repo appears in exactly one registry item",
+  "AMBIGUOUS_URL": "owner/repo in several items; needs manual choice",
+  "WEAK_ONLY_REVIEW": "only a name token overlaps; not a match",
+  "NOT_FOUND_IN_REGISTRY": "no registry link found; NOT evidence that the product was lost",
+  "NON_GITHUB_ORIGIN": "origin is not a GitHub repo; needs its own alias key"
+ },
+ "rows": [
+  {
+   "kind": "research_link",
+   "label": "chatgpt-office-2026-08-31",
+   "url": "https://chatgpt.com/c/6a94f50b-f964-83eb-a89f-91b7c5e439fa",
+   "origin": "chatgpt.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "chatgpt-building-agents",
+   "url": "https://chatgpt.com/s/t_6a94208d21048191a67144976f50de19",
+   "origin": "chatgpt.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "gemini-3dprint-agents",
+   "url": "https://share.gemini.google/hbuCq3MEy5po",
+   "origin": "share.gemini.google",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "perplexity-c950af30",
+   "url": "https://www.perplexity.ai/search/c950af30-8c60-4667-b7d6-84db67f62218",
+   "origin": "perplexity.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "awesome-mcp-servers",
+   "url": "https://github.com/punkpeye/awesome-mcp-servers",
+   "origin": "punkpeye/awesome-mcp-servers",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "codebase-memory-mcp",
+   "url": "https://github.com/DeusData/codebase-memory-mcp",
+   "origin": "deusdata/codebase-memory-mcp",
+   "status": "MATCHED_BY_URL",
+   "strong": [],
+   "weak": [
+    "candidate-intake-deusdata-codebase-memory-mcp"
+   ],
+   "url_matches": [
+    "candidate-intake-deusdata-codebase-memory-mcp"
+   ]
+  },
+  {
+   "kind": "research_link",
+   "label": "trailhq-graft",
+   "url": "https://github.com/trailhq/Graft",
+   "origin": "trailhq/graft",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "free-claude-code",
+   "url": "https://github.com/Alishahryar1/free-claude-code",
+   "origin": "alishahryar1/free-claude-code",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "500-ai-agents",
+   "url": "https://github.com/ashishpatel26/500-AI-Agents-Projects",
+   "origin": "ashishpatel26/500-ai-agents-projects",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "agency-agents",
+   "url": "https://github.com/msitarzewski/agency-agents",
+   "origin": "msitarzewski/agency-agents",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "heyorca-weekly-trending-audio",
+   "url": "https://www.heyorca.com/blog/trending-audio-for-reels-tiktok",
+   "origin": "heyorca.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "postplanify-ig-trending-audio",
+   "url": "https://postplanify.com/blog/trending-audio-on-instagram",
+   "origin": "postplanify.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "awesome-ai-agents",
+   "url": "https://github.com/e2b-dev/awesome-ai-agents",
+   "origin": "e2b-dev/awesome-ai-agents",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "awesome-agent-orchestrators",
+   "url": "https://github.com/andyrewlee/awesome-agent-orchestrators",
+   "origin": "andyrewlee/awesome-agent-orchestrators",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "effective-html",
+   "url": "https://github.com/plannotator/effective-html",
+   "origin": "plannotator/effective-html",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "3daistudio-home",
+   "url": "https://www.3daistudio.com",
+   "origin": "3daistudio.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "3daistudio-mcp",
+   "url": "https://www.3daistudio.com/MCP",
+   "origin": "3daistudio.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "plannotator-write-better",
+   "url": "https://github.com/plannotator/write-better",
+   "origin": "plannotator/write-better",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "awesome-design-md",
+   "url": "https://github.com/VoltAgent/awesome-design-md",
+   "origin": "voltagent/awesome-design-md",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "planning-with-files",
+   "url": "https://github.com/OthmanAdi/planning-with-files",
+   "origin": "othmanadi/planning-with-files",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "genai-agents-nirdiamant",
+   "url": "https://github.com/NirDiamant/GenAI_Agents",
+   "origin": "nirdiamant/genai_agents",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "oh-my-claudecode",
+   "url": "https://github.com/Yeachan-Heo/oh-my-claudecode",
+   "origin": "yeachan-heo/oh-my-claudecode",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "ruflo",
+   "url": "https://github.com/ruvnet/ruflo",
+   "origin": "ruvnet/ruflo",
+   "status": "MATCHED_STRONG",
+   "strong": [
+    "deferred-ruflo"
+   ],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "prompts-chat",
+   "url": "https://github.com/f/prompts.chat",
+   "origin": "f/prompts.chat",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "taste-skill",
+   "url": "https://github.com/Leonxlnx/taste-skill",
+   "origin": "leonxlnx/taste-skill",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "getbindu-bindu",
+   "url": "https://github.com/GetBindu/Bindu",
+   "origin": "getbindu/bindu",
+   "status": "MATCHED_BY_URL",
+   "strong": [],
+   "weak": [
+    "candidate-bindu"
+   ],
+   "url_matches": [
+    "candidate-bindu"
+   ]
+  },
+  {
+   "kind": "research_link",
+   "label": "lobehub-operator",
+   "url": "https://github.com/lobehub/lobehub",
+   "origin": "lobehub/lobehub",
+   "status": "MATCHED_BY_URL",
+   "strong": [],
+   "weak": [
+    "candidate-lobehub"
+   ],
+   "url_matches": [
+    "candidate-lobehub"
+   ]
+  },
+  {
+   "kind": "research_link",
+   "label": "huginn",
+   "url": "https://github.com/huginn/huginn",
+   "origin": "huginn/huginn",
+   "status": "MATCHED_BY_URL",
+   "strong": [],
+   "weak": [
+    "candidate-intake-huginn-huginn"
+   ],
+   "url_matches": [
+    "candidate-intake-huginn-huginn"
+   ]
+  },
+  {
+   "kind": "research_link",
+   "label": "superset-sh-superset",
+   "url": "https://github.com/superset-sh/superset",
+   "origin": "superset-sh/superset",
+   "status": "MATCHED_BY_URL",
+   "strong": [],
+   "weak": [
+    "candidate-intake-superset-sh-superset"
+   ],
+   "url_matches": [
+    "candidate-intake-superset-sh-superset"
+   ]
+  },
+  {
+   "kind": "research_link",
+   "label": "twentyhq-twenty",
+   "url": "https://github.com/twentyhq/twenty",
+   "origin": "twentyhq/twenty",
+   "status": "MATCHED_STRONG",
+   "strong": [
+    "candidate-twenty"
+   ],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "frappe-erpnext",
+   "url": "https://github.com/frappe/erpnext",
+   "origin": "frappe/erpnext",
+   "status": "MATCHED_STRONG",
+   "strong": [
+    "candidate-erpnext"
+   ],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "huly-platform",
+   "url": "https://github.com/hcengineering/platform",
+   "origin": "hcengineering/platform",
+   "status": "WEAK_ONLY_REVIEW",
+   "strong": [],
+   "weak": [
+    "candidate-infisical-agent-vault",
+    "candidate-goose-cli",
+    "candidate-context-mode",
+    "candidate-robbietilton-compositor",
+    "candidate-kilo-org-kilocode"
+   ]
+  },
+  {
+   "kind": "research_link",
+   "label": "monica-prm",
+   "url": "https://github.com/monicahq/monica",
+   "origin": "monicahq/monica",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "nocobase",
+   "url": "https://github.com/nocobase/nocobase",
+   "origin": "nocobase/nocobase",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "krayin-laravel-crm",
+   "url": "https://github.com/krayin/laravel-crm",
+   "origin": "krayin/laravel-crm",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "akaunting",
+   "url": "https://github.com/akaunting/akaunting",
+   "origin": "akaunting/akaunting",
+   "status": "MATCHED_STRONG",
+   "strong": [
+    "candidate-akaunting"
+   ],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "idurar-erp-crm",
+   "url": "https://github.com/idurar/idurar-erp-crm",
+   "origin": "idurar/idurar-erp-crm",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "dolibarr",
+   "url": "https://github.com/Dolibarr/dolibarr",
+   "origin": "dolibarr/dolibarr",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "odoo",
+   "url": "https://www.odoo.com/",
+   "origin": "odoo.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "zoho-all-products",
+   "url": "https://www.zoho.com/all-products.html?src=zGlobalAllProductsbottom",
+   "origin": "zoho.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "salesforce-pro-suite",
+   "url": "https://www.salesforce.com/eu/small-business/pro-suite/",
+   "origin": "salesforce.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "netsuite-home",
+   "url": "https://www.netsuite.com/portal/home.shtml",
+   "origin": "netsuite.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "monday-com",
+   "url": "https://monday.com/",
+   "origin": "monday.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "xenforo",
+   "url": "https://xenforo.com/",
+   "origin": "xenforo.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "vbulletin",
+   "url": "https://www.vbulletin.com/",
+   "origin": "vbulletin.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "invisioncommunity",
+   "url": "https://invisioncommunity.com/",
+   "origin": "invisioncommunity.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "woltlab",
+   "url": "https://www.woltlab.com/en/",
+   "origin": "woltlab.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "buildwithclaude-marketplace",
+   "url": "https://buildwithclaude.com/",
+   "origin": "buildwithclaude.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "linklyai-best-skills",
+   "url": "https://github.com/LinklyAI/best-skills",
+   "origin": "linklyai/best-skills",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "arxiv-skillstate",
+   "url": "https://arxiv.org/abs/2608.26263",
+   "origin": "arxiv.org",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "strategic-compact",
+   "url": "https://mcpmarket.com/tools/skills/strategic-context-compaction-1787987503518",
+   "origin": "mcpmarket.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "diagram-maker-visualizer",
+   "url": "https://mcpmarket.com/tools/skills/diagram-maker-visualizer",
+   "origin": "mcpmarket.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "mcpmarket-blender-mcp",
+   "url": "https://github.com/ahujasid/mcp-for-blender",
+   "origin": "ahujasid/mcp-for-blender",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "mcpmarket-archon",
+   "url": "https://mcpmarket.com/server/archon",
+   "origin": "mcpmarket.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "mcpmarket-fullstack-skills",
+   "url": "https://mcpmarket.com/server/fullstack-dev-skills-plugin",
+   "origin": "mcpmarket.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "mcpmarket-excalidraw-4",
+   "url": "https://mcpmarket.com/server/excalidraw-4",
+   "origin": "mcpmarket.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "mcpmarket-blender-open",
+   "url": "https://mcpmarket.com/server/blender-open",
+   "origin": "mcpmarket.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "mcpmarket-blender-ai",
+   "url": "https://github.com/ahujasid/mcp-for-blender",
+   "origin": "ahujasid/mcp-for-blender",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "mcpmarket-svgmaker",
+   "url": "https://mcpmarket.com/server/svgmaker",
+   "origin": "mcpmarket.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "mcpmarket-multicad",
+   "url": "https://mcpmarket.com/server/multicad",
+   "origin": "mcpmarket.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "mcpmarket-openscad-2",
+   "url": "https://mcpmarket.com/server/openscad-2",
+   "origin": "mcpmarket.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "mcpmarket-blender-vxai",
+   "url": "https://mcpmarket.com/server/blender-vxai",
+   "origin": "mcpmarket.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "mcpmarket-sketchup-1",
+   "url": "https://mcpmarket.com/server/sketchup-1",
+   "origin": "mcpmarket.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "mcpmarket-freecad-1",
+   "url": "https://mcpmarket.com/server/freecad-1",
+   "origin": "mcpmarket.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "youmind-prompts",
+   "url": "https://youmind.com/ru-RU/prompts",
+   "origin": "youmind.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "mcpmarket-market-research-intelligence",
+   "url": "https://mcpmarket.com/tools/skills/market-research-intelligence-1787987613965",
+   "origin": "mcpmarket.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "footrue-toolbox",
+   "url": "https://footrue.com/",
+   "origin": "footrue.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "mikiarlo3-ai-copywriter",
+   "url": "https://github.com/mikiarlo3/ai-copywriter",
+   "origin": "mikiarlo3/ai-copywriter",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "social-media-skills",
+   "url": "https://github.com/social-media-skills/skills",
+   "origin": "social-media-skills/skills",
+   "status": "WEAK_ONLY_REVIEW",
+   "strong": [],
+   "weak": [
+    "candidate-skillopt",
+    "candidate-nvidia-skillevaluator",
+    "candidate-agent-skill-eval",
+    "candidate-google-skills",
+    "candidate-promptfoo"
+   ]
+  },
+  {
+   "kind": "research_link",
+   "label": "thekozugroup-humanizer",
+   "url": "https://github.com/thekozugroup/humanizer",
+   "origin": "thekozugroup/humanizer",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "debpalash-voicestudio",
+   "url": "https://github.com/debpalash/VoiceStudio",
+   "origin": "debpalash/voicestudio",
+   "status": "MATCHED_BY_URL",
+   "strong": [],
+   "weak": [
+    "candidate-kittenml-kittentts",
+    "candidate-intake-debpalash-voicestudio"
+   ],
+   "url_matches": [
+    "candidate-intake-debpalash-voicestudio"
+   ]
+  },
+  {
+   "kind": "research_link",
+   "label": "hkuds-deeptutor",
+   "url": "https://github.com/HKUDS/DeepTutor",
+   "origin": "hkuds/deeptutor",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "examful-ai",
+   "url": "https://examful.ai/",
+   "origin": "examful.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "lieflat-charts",
+   "url": "https://github.com/larashero3-dotcom/lieflat-charts",
+   "origin": "larashero3-dotcom/lieflat-charts",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "academic-research-skills",
+   "url": "https://github.com/Imbad0202/academic-research-skills",
+   "origin": "imbad0202/academic-research-skills",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "mvanhorn-last30days-skill",
+   "url": "https://github.com/mvanhorn/last30days-skill",
+   "origin": "mvanhorn/last30days-skill",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "mcpmarket-social-media-publisher-2",
+   "url": "https://mcpmarket.com/tools/skills/social-media-publisher-2",
+   "origin": "mcpmarket.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "ig-mcp-jlbadano",
+   "url": "https://github.com/jlbadano/ig-mcp",
+   "origin": "jlbadano/ig-mcp",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "instagram-mcp-adelaidasofia",
+   "url": "https://github.com/adelaidasofia/instagram-mcp",
+   "origin": "adelaidasofia/instagram-mcp",
+   "status": "WEAK_ONLY_REVIEW",
+   "strong": [],
+   "weak": [
+    "live-instagram-mcp"
+   ]
+  },
+  {
+   "kind": "research_link",
+   "label": "charlie947-social-media-skills",
+   "url": "https://github.com/charlie947/social-media-skills",
+   "origin": "charlie947/social-media-skills",
+   "status": "MATCHED_BY_URL",
+   "strong": [],
+   "weak": [
+    "candidate-intake-charlie947-social-media-skills"
+   ],
+   "url_matches": [
+    "candidate-intake-charlie947-social-media-skills"
+   ]
+  },
+  {
+   "kind": "research_link",
+   "label": "cporter202-automate-for-growth",
+   "url": "https://github.com/cporter202/automate-for-growth",
+   "origin": "cporter202/automate-for-growth",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "cporter202-social-media-scraping-apis",
+   "url": "https://github.com/cporter202/social-media-scraping-apis",
+   "origin": "cporter202/social-media-scraping-apis",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "cporter202-social-growth-apis-for-creators",
+   "url": "https://github.com/cporter202/social-growth-apis-for-creators",
+   "origin": "cporter202/social-growth-apis-for-creators",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "cporter202-api-mega-list",
+   "url": "https://github.com/cporter202/API-mega-list",
+   "origin": "cporter202/api-mega-list",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "awesome-cad",
+   "url": "https://github.com/mlightcad/awesome-cad",
+   "origin": "mlightcad/awesome-cad",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "scenario-labs-skills",
+   "url": "https://github.com/scenario-labs/skills",
+   "origin": "scenario-labs/skills",
+   "status": "WEAK_ONLY_REVIEW",
+   "strong": [],
+   "weak": [
+    "candidate-skillopt",
+    "candidate-nvidia-skillevaluator",
+    "candidate-agent-skill-eval",
+    "candidate-google-skills",
+    "candidate-promptfoo"
+   ]
+  },
+  {
+   "kind": "research_link",
+   "label": "no-ai-slop",
+   "url": "https://github.com/petergyang/no-ai-slop",
+   "origin": "petergyang/no-ai-slop",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "roble3-cc-blender-skill",
+   "url": "https://github.com/RobLe3/cc-blender-skill",
+   "origin": "roble3/cc-blender-skill",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "arjun988-blender-skills",
+   "url": "https://github.com/arjun988/blender-skills",
+   "origin": "arjun988/blender-skills",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "kajisho5-ffmpeg-skill",
+   "url": "https://github.com/kajisho5/ffmpeg-skill",
+   "origin": "kajisho5/ffmpeg-skill",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "samuelgursky-davinci-resolve-mcp",
+   "url": "https://github.com/samuelgursky/davinci-resolve-mcp",
+   "origin": "samuelgursky/davinci-resolve-mcp",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "aedev-tools-adobe-agent-skills",
+   "url": "https://github.com/aedev-tools/adobe-agent-skills",
+   "origin": "aedev-tools/adobe-agent-skills",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "jablonkai-skills",
+   "url": "https://github.com/jablonkai/skills",
+   "origin": "jablonkai/skills",
+   "status": "WEAK_ONLY_REVIEW",
+   "strong": [],
+   "weak": [
+    "candidate-skillopt",
+    "candidate-nvidia-skillevaluator",
+    "candidate-agent-skill-eval",
+    "candidate-google-skills",
+    "candidate-promptfoo"
+   ]
+  },
+  {
+   "kind": "research_link",
+   "label": "cua",
+   "url": "https://github.com/trycua/cua",
+   "origin": "trycua/cua",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "acu",
+   "url": "https://github.com/trycua/acu",
+   "origin": "trycua/acu",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "awesome-n8n-templates",
+   "url": "https://github.com/enescingoz/awesome-n8n-templates",
+   "origin": "enescingoz/awesome-n8n-templates",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "dashy",
+   "url": "https://github.com/Lissy93/dashy",
+   "origin": "lissy93/dashy",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "awesome-cli-apps",
+   "url": "https://github.com/agarrharr/awesome-cli-apps",
+   "origin": "agarrharr/awesome-cli-apps",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "awesome-shell",
+   "url": "https://github.com/alebcay/awesome-shell",
+   "origin": "alebcay/awesome-shell",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "awesome-agent-skills-voltagent",
+   "url": "https://github.com/VoltAgent/awesome-agent-skills",
+   "origin": "voltagent/awesome-agent-skills",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "awesome-openclaw-skills",
+   "url": "https://github.com/VoltAgent/awesome-openclaw-skills",
+   "origin": "voltagent/awesome-openclaw-skills",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "awesome-claude-code",
+   "url": "https://github.com/hesreallyhim/awesome-claude-code",
+   "origin": "hesreallyhim/awesome-claude-code",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "awesome-generative-ai-guide",
+   "url": "https://github.com/aishwaryanr/awesome-generative-ai-guide",
+   "origin": "aishwaryanr/awesome-generative-ai-guide",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "awesome-python",
+   "url": "https://github.com/vinta/awesome-python",
+   "origin": "vinta/awesome-python",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "awesome-cpp",
+   "url": "https://github.com/fffaraz/awesome-cpp",
+   "origin": "fffaraz/awesome-cpp",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "awesome-java",
+   "url": "https://github.com/akullpp/awesome-java",
+   "origin": "akullpp/awesome-java",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "awesome-design-patterns",
+   "url": "https://github.com/DovAmir/awesome-design-patterns",
+   "origin": "dovamir/awesome-design-patterns",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "awesome-design-tools",
+   "url": "https://github.com/goabstract/Awesome-Design-Tools",
+   "origin": "goabstract/awesome-design-tools",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "research_link",
+   "label": "magictools",
+   "url": "https://github.com/ellisonleao/magictools",
+   "origin": "ellisonleao/magictools",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "CrewAI",
+   "url": "https://github.com/joaomdmoura/crewai",
+   "origin": "joaomdmoura/crewai",
+   "status": "MATCHED_STRONG",
+   "strong": [
+    "deferred-crewai"
+   ],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "AutoGen",
+   "url": "https://github.com/microsoft/autogen",
+   "origin": "microsoft/autogen",
+   "status": "MATCHED_STRONG",
+   "strong": [
+    "deferred-autogen"
+   ],
+   "weak": [
+    "candidate-microsoft-agent-framework"
+   ]
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "GPT Researcher",
+   "url": "https://github.com/assafelovic/gpt-researcher",
+   "origin": "assafelovic/gpt-researcher",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "UFO",
+   "url": "https://github.com/microsoft/UFO",
+   "origin": "microsoft/ufo",
+   "status": "MATCHED_BY_URL",
+   "strong": [],
+   "weak": [],
+   "url_matches": [
+    "candidate-intake-microsoft-ufo"
+   ]
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Aomni",
+   "url": "https://www.aomni.com/",
+   "origin": "aomni.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Lindy",
+   "url": "https://www.lindy.ai/",
+   "origin": "lindy.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Cal.ai",
+   "url": "https://cal.ai",
+   "origin": "cal.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Heymoon.ai",
+   "url": "https://heymoon.ai/",
+   "origin": "heymoon.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Floode",
+   "url": "https://floodehq.com/",
+   "origin": "floodehq.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Claygent",
+   "url": "https://www.clay.com/learn/claygent",
+   "origin": "clay.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Kadoa",
+   "url": "https://www.kadoa.com/",
+   "origin": "kadoa.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Docket AI",
+   "url": "https://docketai.net/",
+   "origin": "docketai.net",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "AskToSell",
+   "url": "https://asktosell.com/",
+   "origin": "asktosell.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Wordware",
+   "url": "https://www.wordware.ai/",
+   "origin": "wordware.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "GoCharlie",
+   "url": "https://gocharlie.ai/",
+   "origin": "gocharlie.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Wispy",
+   "url": "https://wispy.technicalmagic.ai/",
+   "origin": "wispy.technicalmagic.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Diagram",
+   "url": "https://diagram.com/",
+   "origin": "diagram.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "v0 by Vercel",
+   "url": "https://v0.dev/",
+   "origin": "v0.dev",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Julius",
+   "url": "https://julius.ai/",
+   "origin": "julius.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Vanna.AI",
+   "url": "https://vanna.ai/",
+   "origin": "vanna.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Wren",
+   "url": "https://www.getwren.ai/",
+   "origin": "getwren.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Powerdrill AI",
+   "url": "https://powerdrill.ai/",
+   "origin": "powerdrill.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "TalktoData",
+   "url": "https://talktodata.ai/",
+   "origin": "talktodata.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "MemGPT",
+   "url": "https://github.com/cpacker/MemGPT",
+   "origin": "cpacker/memgpt",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Private GPT",
+   "url": "https://www.privategpt.io/",
+   "origin": "privategpt.io",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Local GPT",
+   "url": "https://github.com/PromtEngineer/localGPT",
+   "origin": "promtengineer/localgpt",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "GPT Runner",
+   "url": "https://github.com/nicepkg/gpt-runner",
+   "origin": "nicepkg/gpt-runner",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Zapier Central",
+   "url": "https://zapier.com/central",
+   "origin": "zapier.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Huginn",
+   "url": "https://github.com/huginn/huginn",
+   "origin": "huginn/huginn",
+   "status": "MATCHED_BY_URL",
+   "strong": [],
+   "weak": [
+    "candidate-intake-huginn-huginn"
+   ],
+   "url_matches": [
+    "candidate-intake-huginn-huginn"
+   ]
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Bardeen",
+   "url": "https://www.bardeen.ai/",
+   "origin": "bardeen.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Gumloop",
+   "url": "https://www.gumloop.com/",
+   "origin": "gumloop.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Magic Loops",
+   "url": "https://magicloops.dev/",
+   "origin": "magicloops.dev",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Lutra AI",
+   "url": "https://lutra.ai/",
+   "origin": "lutra.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Manaflow",
+   "url": "https://manaflow.ai/",
+   "origin": "manaflow.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Beam",
+   "url": "https://beam.ai/",
+   "origin": "beam.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Relevance AI",
+   "url": "https://relevanceai.com/",
+   "origin": "relevanceai.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Taskade",
+   "url": "https://www.taskade.com/",
+   "origin": "taskade.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Cursor",
+   "url": "https://www.cursor.so/",
+   "origin": "cursor.so",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Orca",
+   "url": "https://github.com/stablyai/orca",
+   "origin": "stablyai/orca",
+   "status": "MATCHED_STRONG",
+   "strong": [
+    "deferred-orca"
+   ],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Superagent",
+   "url": "https://www.superagent.sh/",
+   "origin": "superagent.sh",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Open Interpreter",
+   "url": "https://openinterpreter.com/",
+   "origin": "openinterpreter.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Flowise",
+   "url": "https://flowiseai.com/",
+   "origin": "flowiseai.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "AutoGPT",
+   "url": "https://agpt.co/",
+   "origin": "agpt.co",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "ChatHelp",
+   "url": "https://chathelp.ai/",
+   "origin": "chathelp.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Artisian AI",
+   "url": "https://github.com/Artisan-AI",
+   "origin": "github.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "Graphlit",
+   "url": "https://www.graphlit.com/",
+   "origin": "graphlit.com",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "catalog_pick",
+   "label": "AgentScale",
+   "url": "https://agentscale.ai/",
+   "origin": "agentscale.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "Orca",
+   "url": "https://github.com/stablyai/orca",
+   "origin": "stablyai/orca",
+   "status": "MATCHED_STRONG",
+   "strong": [
+    "deferred-orca"
+   ],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "herdr",
+   "url": "https://github.com/herdrdev/herdr",
+   "origin": "herdrdev/herdr",
+   "status": "MATCHED_STRONG",
+   "strong": [
+    "candidate-herdr"
+   ],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "Fusion",
+   "url": "https://github.com/Runfusion/Fusion",
+   "origin": "runfusion/fusion",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "kodo",
+   "url": "https://github.com/ikamensh/kodo",
+   "origin": "ikamensh/kodo",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "tutti",
+   "url": "https://github.com/nutthouse/tutti",
+   "origin": "nutthouse/tutti",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "gastown",
+   "url": "https://github.com/gastownhall/gastown",
+   "origin": "gastownhall/gastown",
+   "status": "MATCHED_BY_URL",
+   "strong": [],
+   "weak": [
+    "candidate-intake-gastownhall-gastown"
+   ],
+   "url_matches": [
+    "candidate-intake-gastownhall-gastown"
+   ]
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "5dive",
+   "url": "https://github.com/5dive-ai/5dive",
+   "origin": "5dive-ai/5dive",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "paperclip",
+   "url": "https://github.com/paperclipai/paperclip",
+   "origin": "paperclipai/paperclip",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "fractal",
+   "url": "https://github.com/plasma-ai/fractal",
+   "origin": "plasma-ai/fractal",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "MartinLoop",
+   "url": "https://github.com/Keesan12/martin-loop",
+   "origin": "keesan12/martin-loop",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "ralph-claude-code",
+   "url": "https://github.com/frankbria/ralph-claude-code",
+   "origin": "frankbria/ralph-claude-code",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "ralphex",
+   "url": "https://github.com/umputun/ralphex",
+   "origin": "umputun/ralphex",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "Taskuary",
+   "url": "https://github.com/ldbumble/taskuary",
+   "origin": "ldbumble/taskuary",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "NEEDLE",
+   "url": "https://github.com/jedarden/NEEDLE",
+   "origin": "jedarden/needle",
+   "status": "WEAK_ONLY_REVIEW",
+   "strong": [],
+   "weak": [
+    "candidate-intake-cactus-compute-needle"
+   ]
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "Crewplane",
+   "url": "https://github.com/crewplaneai/crewplane",
+   "origin": "crewplaneai/crewplane",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "LionClaw",
+   "url": "https://github.com/moshthepitt/lionclaw",
+   "origin": "moshthepitt/lionclaw",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "Open Multi-Agent",
+   "url": "https://github.com/open-multi-agent/open-multi-agent",
+   "origin": "open-multi-agent/open-multi-agent",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "Claudexor",
+   "url": "https://github.com/razzant/claudexor",
+   "origin": "razzant/claudexor",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "humanlayer",
+   "url": "https://github.com/humanlayer/humanlayer",
+   "origin": "humanlayer/humanlayer",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "ivy-tendril",
+   "url": "https://github.com/Ivy-Interactive/Ivy-Tendril",
+   "origin": "ivy-interactive/ivy-tendril",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "Dex",
+   "url": "https://github.com/francescoalemanno/dex",
+   "origin": "francescoalemanno/dex",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "Julius / books verify",
+   "url": "https://julius.ai/",
+   "origin": "julius.ai",
+   "status": "NON_GITHUB_ORIGIN",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "amux",
+   "url": "https://github.com/andyrewlee/amux",
+   "origin": "andyrewlee/amux",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "OpenClaw",
+   "url": "https://github.com/openclaw/openclaw",
+   "origin": "openclaw/openclaw",
+   "status": "MATCHED_BY_URL",
+   "strong": [],
+   "weak": [
+    "deferred-openclaw"
+   ],
+   "url_matches": [
+    "deferred-openclaw"
+   ]
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "loki-mode",
+   "url": "https://github.com/asklokesh/loki-mode",
+   "origin": "asklokesh/loki-mode",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "bernstein",
+   "url": "https://github.com/sipyourdrink-ltd/bernstein",
+   "origin": "sipyourdrink-ltd/bernstein",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "takopi",
+   "url": "https://github.com/banteg/takopi",
+   "origin": "banteg/takopi",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "claude-code-action",
+   "url": "https://github.com/anthropics/claude-code-action",
+   "origin": "anthropics/claude-code-action",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "denchclaw",
+   "url": "https://github.com/DenchHQ/DenchClaw",
+   "origin": "denchhq/denchclaw",
+   "status": "NOT_FOUND_IN_REGISTRY",
+   "strong": [],
+   "weak": []
+  },
+  {
+   "kind": "orchestrator_pick",
+   "label": "Archon",
+   "url": "https://github.com/coleam00/Archon",
+   "origin": "coleam00/archon",
+   "status": "WEAK_ONLY_REVIEW",
+   "strong": [],
+   "weak": [
+    "candidate-goose-cli",
+    "candidate-rakazo",
+    "candidate-hermes-agent",
+    "candidate-agent-zero",
+    "candidate-copilotkit-openbot"
+   ]
+  }
+ ]
+}
