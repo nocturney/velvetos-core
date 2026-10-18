@@ -600,7 +600,7 @@ def validate_registries(historical_replay: bool = False) -> tuple[list[str], set
     # observer match can never turn an unknown path into mapped coverage.
     broad_trigger_allow = {
         "scripts/**": set(),
-        ".github/**": {"check-machine-writers", "check-sensor-locks"},
+        ".github/**": {"check-install-pins", "check-machine-writers", "check-sensor-locks"},
         ".cursor/**": {"check-agent-surface-security"},
         "office/**": set(),
         "docs/**": set(),

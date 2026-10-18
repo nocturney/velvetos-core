@@ -1018,8 +1018,6 @@
       "id": "check-install-pins",
       "path": "scripts/check-install-pins.py",
       "owns": [
-        ".github/workflows/jobs-write-through.yml",
-        ".github/workflows/vfmedia-intake.yml",
         "requirements-google-clients.py311.lock",
         "requirements-google-clients.txt",
         "scripts/check-install-pins.py"
