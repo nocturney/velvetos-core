@@ -16,6 +16,8 @@ $TaskExe='C:\Windows\System32\schtasks.exe'
 $PSExe='C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
 $UiaReadyWaitMs=10000
 $UiaReadyPollMs=250
+$IdleGateSeconds=120
+$script:ConsoleSession=-1
 $script:BoundElementName=''
 $script:BoundProcessName=''
 $script:AttemptStarted=$null
@@ -36,7 +38,46 @@ function Identity {
  return @{user=$id.Name;system=[bool]$id.IsSystem;elevated=[bool]$principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator);session=[int](Get-Process -Id $PID).SessionId}
 }
 function Calcs {
- return @(Get-Process -Name CalculatorApp,Calculator,calc -ErrorAction SilentlyContinue | Where-Object {$_.SessionId -eq 1})
+ if($script:ConsoleSession -lt 1){Refuse 'CONSOLE_SESSION_UNAVAILABLE'}
+ return @(Get-Process -Name CalculatorApp,Calculator,calc -ErrorAction SilentlyContinue | Where-Object {$_.SessionId -eq $script:ConsoleSession})
+}
+function Resolve-ConsoleSession {
+ $cs=@'
+using System;
+using System.Runtime.InteropServices;
+public static class ConsoleSessionNativeCP057 {
+ [DllImport("kernel32.dll")] public static extern UInt32 WTSGetActiveConsoleSessionId();
+}
+'@
+ if(-not ('ConsoleSessionNativeCP057' -as [type])) {Add-Type -TypeDefinition $cs -ErrorAction Stop}
+ $wts=[uint32][ConsoleSessionNativeCP057]::WTSGetActiveConsoleSessionId()
+ if($wts -eq [uint32]0 -or $wts -eq [uint32]4294967295){Refuse 'CONSOLE_SESSION_UNAVAILABLE'}
+ $rows=@(Get-CimInstance -ClassName Win32_Process -Filter "Name='explorer.exe'" -ErrorAction SilentlyContinue | Where-Object {$null -ne $_})
+ if($rows.Count -eq 0){Refuse 'CONSOLE_SESSION_MISMATCH'}
+ $consoleOwned=$false
+ $userOnConsole=$false
+ foreach($proc in $rows){
+  $sid=[uint32]0
+  $owner=$null
+  try { $sid=[uint32]$proc.SessionId }
+  catch { Refuse 'CONSOLE_SESSION_MISMATCH' }
+  try { $owner=Invoke-CimMethod -InputObject $proc -MethodName GetOwner -ErrorAction Stop }
+  catch { $owner=$null }
+  $known=$false
+  $isUser=$false
+  if($null -ne $owner -and [int]$owner.ReturnValue -eq 0){
+   $known=$true
+   $isUser=((([string]$owner.Domain)+'\'+([string]$owner.User)) -ieq $AllowedUser)
+  }
+  if($sid -eq $wts){
+   if(-not $known -or -not $isUser){Refuse 'CONSOLE_USER_MISMATCH'}
+   $consoleOwned=$true
+   $userOnConsole=$true
+  }
+ }
+ if(-not $consoleOwned -or -not $userOnConsole){Refuse 'CONSOLE_SESSION_MISMATCH'}
+ $script:ConsoleSession=[int]$wts
+ return [int]$script:ConsoleSession
 }
 function IdleSeconds {
  $cs=@'
@@ -96,7 +137,7 @@ function Update-OwnedPids {
 function Test-StartedThisAttempt($proc) {
  if($null -eq $proc){return $false}
  if(-not (Test-ContentProcess ([string]$proc.ProcessName))){return $false}
- try { if([int]$proc.SessionId -ne 1){return $false} } catch { return $false }
+ try { if([int]$proc.SessionId -ne $script:ConsoleSession){return $false} } catch { return $false }
  $ownedId=[int]$proc.Id
  if(@($script:OwnedPids) -contains $ownedId){return $true}
  if($null -eq $script:AttemptStarted){return $false}
@@ -398,7 +439,7 @@ function FindElementOnce($window,[string]$id) {
 function FindElement($window,[string]$id) {
  $deadline=[DateTime]::UtcNow.AddMilliseconds($UiaReadyWaitMs)
  while($true){
-  if((IdleSeconds) -lt 600){Refuse 'USER_BECAME_ACTIVE'}
+  if((IdleSeconds) -lt $IdleGateSeconds){Refuse 'USER_BECAME_ACTIVE'}
   $window=Resolve-ContentWindow $window
   if($null -eq $window){
    if([DateTime]::UtcNow -ge $deadline){Refuse-CalculatorUnavailable 'EXPECTED_CALCULATOR_WINDOW_ABSENT'}
@@ -415,7 +456,7 @@ function Wait-CalculatorTree {
  $ids=@('CalculatorResults','num6Button','multiplyButton','num7Button','equalButton')
  $deadline=[DateTime]::UtcNow.AddMilliseconds($UiaReadyWaitMs)
  while($true){
-  if((IdleSeconds) -lt 600){Refuse 'USER_BECAME_ACTIVE'}
+  if((IdleSeconds) -lt $IdleGateSeconds){Refuse 'USER_BECAME_ACTIVE'}
   $frame=FindWindow
   $window=Find-CalculatorContent $frame
   $missing=$null
@@ -457,7 +498,7 @@ function Format-RefusalMessage([string]$raw) {
  return $limited.Trim()
 }
 function Press([string]$id) {
- if((IdleSeconds) -lt 600){Refuse 'USER_BECAME_ACTIVE'}
+ if((IdleSeconds) -lt $IdleGateSeconds){Refuse 'USER_BECAME_ACTIVE'}
  $window=Find-BoundRoot
  $button=FindElement $window $id
  if($button.Current.ControlType -ne [System.Windows.Automation.ControlType]::Button){
@@ -474,7 +515,7 @@ if($Mode -eq 'Child'){
  if($Attempt -notmatch '^[0-9a-f]{32}$'){Refuse 'BAD_ATTEMPT'}
  $rec=[ordered]@{
   schema=$Schema; status='DENIED';attempt_id=$Attempt;host=$env:COMPUTERNAME
-  user='';session=-1;system_identity=$true;elevated=$true
+  user='';session=-1;console_session=-1;system_identity=$true;elevated=$true
   idle_seconds=0;source_sha256='';model_called=$false
   customer_or_production_effect=$false;gui_scope='CALCULATOR_ONLY'
   calc_created=$false;calc_closed=$false;step_results=@()
@@ -493,11 +534,13 @@ if($Mode -eq 'Child'){
   $who=Identity
   $rec.user=$who.user;$rec.session=$who.session
   $rec.system_identity=$who.system;$rec.elevated=$who.elevated
-  if($who.system -or $who.elevated -or $who.session -ne 1 -or
+  $console=Resolve-ConsoleSession
+  $rec.console_session=$console
+  if($who.system -or $who.elevated -or $who.session -ne $console -or
       $who.user -ine $AllowedUser){Refuse 'NOT_INTERACTIVE_LIMITED_USER'}
   $rec.source_sha256=(Get-FileHash -LiteralPath $PSCommandPath -Algorithm SHA256).Hash.ToLowerInvariant()
   $rec.idle_seconds=IdleSeconds
-  if($rec.idle_seconds -lt 600){$rec.status='DENIED_USER_ACTIVE';Refuse 'USER_ACTIVE'}
+  if($rec.idle_seconds -lt $IdleGateSeconds){$rec.status='DENIED_USER_ACTIVE';Refuse 'USER_ACTIVE'}
   $prior=@(Calcs)
   if($prior.Count -ne 0){Refuse 'CALCULATOR_ALREADY_OPEN'}
   Add-Type -AssemblyName UIAutomationClient,UIAutomationTypes -ErrorAction Stop
@@ -593,6 +636,7 @@ if($Mode -eq 'Child'){
 }
 # Controller: system management context solely for ephemeral task registration.
 if(-not [Security.Principal.WindowsIdentity]::GetCurrent().IsSystem){Refuse 'CONTROLLER_REQUIRES_SYSTEM'}
+$console=Resolve-ConsoleSession
 if($SourceSha256 -notmatch '^[0-9a-fA-F]{64}$'){Refuse 'SOURCE_DIGEST_REQUIRED'}
 $actual=(Get-FileHash -LiteralPath $PSCommandPath -Algorithm SHA256).Hash
 if($actual -ine $SourceSha256){Refuse 'SOURCE_DIGEST_MISMATCH'}
@@ -618,7 +662,8 @@ try {
  $data=Get-Content -LiteralPath $receipt -Raw | ConvertFrom-Json
  if($data.schema -ne $Schema -or $data.attempt_id -cne $attempt -or
     $data.source_sha256 -ine $actual -or $data.user -ine $AllowedUser -or
-    $data.session -ne 1 -or $data.system_identity -ne $false -or
+    $data.session -ne $console -or $data.console_session -ne $console -or
+    $data.system_identity -ne $false -or
     $data.elevated -ne $false -or $data.core_signed_lease -ne $false -or
     $data.model_called -ne $false -or $data.calc_closed -ne $true){
    Refuse 'CHILD_RECEIPT_IDENTITY_MISMATCH'

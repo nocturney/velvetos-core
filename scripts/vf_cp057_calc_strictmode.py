@@ -18,9 +18,11 @@ by this attempt instead of the shared ApplicationFrameHost process or an
 English title alone. The receipt records the refusal message, refusal
 code, bound element, bound process, and redacted candidate-frame titles.
 A refusal still stops that Calculator process and records calc_closed
-from what remains. Mutations of the fixed script must go red; the fixed
-script must stay green. It does not launch Calculator or touch a Windows
-session.
+from what remains. The console session is resolved with
+WTSGetActiveConsoleSessionId and the expected user's explorer.exe, and
+the idle gate is the single constant 120 seconds. Mutations of the fixed
+script must go red; the fixed script must stay green. It does not launch
+Calculator or touch a Windows session.
 """
 from __future__ import annotations
 
@@ -40,6 +42,8 @@ FIRST_READ = "32824ef410023d84a61c7ecd88edd872ade2e70bdee0ec22b27ae001a3b35f13"
 FRAME = "d851448d96791b1d5ec84575b8b923777217630b1dd8ee43a695ccc621425727"
 CONTENT = "18bb936d340441fb3a3434afef6792ea65074dc02e38879dd6f6143cf323fe75"
 ASCII_FRAME = "cf091c81a971c85bb3c1709dc1e5a91da3dcc33cf04f99a3753e8bf1dc870d00"
+ATTEMPT7 = "ee6c41e0635256d662cbc74cb9bb126b9fa7d18681810cfff679810359947144"
+IDLE_GATE_SECONDS = 120
 UIA_WAIT_MS = 10000
 UIA_POLL_MS = 250
 TREE_IDS = (
@@ -57,6 +61,18 @@ REQUIRED = (
     "$AllowedUser='CHRIS\\Chris'",
     "$Root='D:\\Velvet\\Pilots\\CuaCalcCP057-20261014'",
     "Refuse 'NOT_INTERACTIVE_LIMITED_USER'",
+    "Refuse 'CONSOLE_SESSION_UNAVAILABLE'",
+    "Refuse 'CONSOLE_SESSION_MISMATCH'",
+    "Refuse 'CONSOLE_USER_MISMATCH'",
+    "WTSGetActiveConsoleSessionId",
+    "$IdleGateSeconds=120",
+    "$who.session -ne $console",
+    "$_.SessionId -eq $script:ConsoleSession",
+    "$data.session -ne $console",
+    "$data.console_session -ne $console",
+    "console_session=-1",
+    "if($rec.idle_seconds -lt $IdleGateSeconds)",
+    "if((IdleSeconds) -lt $IdleGateSeconds)",
     "Refuse 'USER_ACTIVE'",
     "Refuse 'CALCULATOR_ALREADY_OPEN'",
     "Refuse 'WRONG_HOST'",
@@ -68,10 +84,6 @@ REQUIRED = (
     "FAIL_CLOSED_REAL_APP",
     "DENIED_USER_ACTIVE",
     "gui_scope='CALCULATOR_ONLY'",
-    "$who.session -ne 1",
-    "$_.SessionId -eq 1",
-    "if($rec.idle_seconds -lt 600)",
-    "if((IdleSeconds) -lt 600)",
     "/IT /RL LIMITED",
     "num6Button",
     "multiplyButton",
@@ -877,6 +889,26 @@ def mutate(text: str, kind: str) -> str:
         if anchor not in text:
             return text
         return text.replace(anchor, "$rec.calc_closed=$true", 1)
+    if kind == "hardcode-session-1":
+        mutated = text.replace("$_.SessionId -eq $script:ConsoleSession", "$_.SessionId -eq 1", 1)
+        mutated = mutated.replace("$who.session -ne $console", "$who.session -ne 1", 1)
+        mutated = mutated.replace("$data.session -ne $console", "$data.session -ne 1", 1)
+        return mutated.replace("SessionId -ne $script:ConsoleSession", "SessionId -ne 1", 1)
+    if kind == "accept-nonconsole":
+        mutated = text.replace(
+            "if(-not $consoleOwned -or -not $userOnConsole){Refuse 'CONSOLE_SESSION_MISMATCH'}",
+            "if($false){Refuse 'CONSOLE_SESSION_MISMATCH'}",
+            1,
+        )
+        return mutated.replace("$who.session -ne $console", "$who.session -ge 0", 1)
+    if kind == "drop-session-match":
+        return text.replace(
+            "$data.session -ne $console -or $data.console_session -ne $console -or\n",
+            "",
+            1,
+        )
+    if kind == "weaken-idle":
+        return text.replace("$IdleGateSeconds=120", "$IdleGateSeconds=600", 1)
     return text
 
 
@@ -907,6 +939,10 @@ def mutation_findings(text: str) -> list[str]:
         ("plm-drop-receipt", plm_findings),
         ("plm-allow-zero-threads", plm_findings),
         ("plm-drop-ownership", plm_findings),
+        ("hardcode-session-1", session_findings),
+        ("accept-nonconsole", session_findings),
+        ("drop-session-match", session_findings),
+        ("weaken-idle", idle_findings),
     )
     for kind, checker in checks:
         mutated = mutate(text, kind)
@@ -919,12 +955,134 @@ def mutation_findings(text: str) -> list[str]:
     return problems
 
 
+def idle_findings(text: str) -> list[str]:
+    """The idle gate is one named constant, 120 seconds."""
+    problems: list[str] = []
+    assigned = re.findall(r"\$IdleGateSeconds\s*=\s*(\d+)", text)
+    if assigned != [str(IDLE_GATE_SECONDS)]:
+        problems.append("idle constant must be assigned once as 120")
+    if re.search(r"idle_seconds\s*-lt\s+\d+", text) or re.search(
+        r"IdleSeconds\)\s*-lt\s+\d+", text
+    ):
+        problems.append("idle gate must use the named constant")
+    uses = text.count("-lt $IdleGateSeconds")
+    if uses != 4:
+        problems.append(f"idle gate must use the named constant at all 4 checks, found {uses}")
+    return problems
+
+
+def session_findings(text: str) -> list[str]:
+    """Console session comes from WTS plus the expected user's explorer.exe."""
+    problems: list[str] = []
+    if re.search(r"(?i)(?:sessionid|\.session)\s*-(?:eq|ne)\s+1\b", text):
+        problems.append("hardcoded session 1")
+    spans = dict(function_spans(text))
+    resolve = spans.get("Resolve-ConsoleSession", "")
+    calcs = spans.get("Calcs", "")
+    started = spans.get("Test-StartedThisAttempt", "")
+    for token in (
+        "WTSGetActiveConsoleSessionId",
+        "$wts -eq [uint32]0",
+        "$wts -eq [uint32]4294967295",
+        "Refuse 'CONSOLE_SESSION_UNAVAILABLE'",
+        "Name='explorer.exe'",
+        "Invoke-CimMethod -InputObject $proc -MethodName GetOwner",
+        "-ieq $AllowedUser",
+        "Refuse 'CONSOLE_USER_MISMATCH'",
+        "if(-not $consoleOwned -or -not $userOnConsole){Refuse 'CONSOLE_SESSION_MISMATCH'}",
+        "$script:ConsoleSession=[int]$wts",
+    ):
+        if token not in resolve:
+            problems.append(f"console resolver missing {token}")
+    if "$_.SessionId -eq $script:ConsoleSession" not in calcs:
+        problems.append("Calcs must filter on the resolved console session")
+    if "if($script:ConsoleSession -lt 1){Refuse 'CONSOLE_SESSION_UNAVAILABLE'}" not in calcs:
+        problems.append("Calcs must refuse session 0 and an unresolved console session")
+    if "SessionId -ne $script:ConsoleSession" not in started:
+        problems.append("attempt ownership must stay on the resolved console session")
+    parts = text.split("if($Mode -eq 'Child'){", 1)
+    if len(parts) != 2 or "# Controller:" not in parts[1]:
+        return problems + ["missing Child or Controller console gate"]
+    child_only, _, controller = parts[1].partition("# Controller:")
+    for token in (
+        "$console=Resolve-ConsoleSession",
+        "$rec.console_session=$console",
+        "$who.session -ne $console",
+        "console_session=-1",
+    ):
+        if token not in child_only:
+            problems.append(f"child console gate missing {token}")
+    call_at = controller.find("$console=Resolve-ConsoleSession")
+    run_at = controller.find("/Run /TN")
+    if call_at < 0 or run_at < 0 or call_at > run_at:
+        problems.append("controller must resolve the console session before /Run")
+    if "$data.session -ne $console" not in controller or "$data.console_session -ne $console" not in controller:
+        problems.append("controller must refuse a child/controller session mismatch")
+    return problems
+
+
+def console_refusal(
+    wts: int,
+    explorers: list[tuple[int, str]],
+    child_session: int,
+    child_user: str,
+    controller_session: int,
+    receipt_session: int,
+    receipt_console: int,
+) -> str:
+    """Policy mirror for the console gate. Empty string means the identity is acceptable."""
+    expected = "CHRIS\\Chris"
+    if wts in (0, 0xFFFFFFFF) or wts < 1:
+        return "CONSOLE_SESSION_UNAVAILABLE"
+    on_console = [user for sid, user in explorers if sid == wts]
+    if not on_console:
+        return "CONSOLE_SESSION_MISMATCH"
+    if any(user != expected for user in on_console):
+        return "CONSOLE_USER_MISMATCH"
+    if child_session != wts or child_user != expected:
+        return "NOT_INTERACTIVE_LIMITED_USER"
+    if (
+        controller_session != wts
+        or receipt_session != controller_session
+        or receipt_console != controller_session
+    ):
+        return "CHILD_RECEIPT_IDENTITY_MISMATCH"
+    return ""
+
+
+def session_model_findings() -> list[str]:
+    """Non-console, RDP, session 0, and Child/Controller disagreement stay refused."""
+    problems: list[str] = []
+    user = "CHRIS\\Chris"
+    other = "CHRIS\\Other"
+    cases = (
+        (0, [(0, user)], 0, user, 0, 0, 0, "CONSOLE_SESSION_UNAVAILABLE"),
+        (0xFFFFFFFF, [(2, user)], 2, user, 2, 2, 2, "CONSOLE_SESSION_UNAVAILABLE"),
+        (2, [], 2, user, 2, 2, 2, "CONSOLE_SESSION_MISMATCH"),
+        (2, [(3, user)], 3, user, 2, 3, 2, "CONSOLE_SESSION_MISMATCH"),
+        (2, [(2, other)], 2, other, 2, 2, 2, "CONSOLE_USER_MISMATCH"),
+        (2, [(2, user)], 3, user, 2, 3, 2, "NOT_INTERACTIVE_LIMITED_USER"),
+        (2, [(2, user), (3, user)], 3, user, 2, 3, 2, "NOT_INTERACTIVE_LIMITED_USER"),
+        (2, [(2, user)], 2, user, 2, 1, 2, "CHILD_RECEIPT_IDENTITY_MISMATCH"),
+        (2, [(2, user)], 2, user, 1, 2, 2, "CHILD_RECEIPT_IDENTITY_MISMATCH"),
+        (2, [(2, user)], 2, user, 2, 2, 1, "CHILD_RECEIPT_IDENTITY_MISMATCH"),
+        (2, [(2, user)], 2, user, 2, 2, 2, ""),
+    )
+    for wts, explorers, child_session, child_user, controller, receipt, receipt_console, expected_code in cases:
+        got = console_refusal(
+            wts, explorers, child_session, child_user, controller, receipt, receipt_console
+        )
+        if got != expected_code:
+            problems.append(
+                f"console policy {wts}/{child_session}/{receipt} returned {got or 'ACCEPT'} "
+                f"expected {expected_code or 'ACCEPT'}"
+            )
+    return problems
+
+
 def safety_findings(text: str) -> list[str]:
     problems = [f"missing safety text: {item}" for item in REQUIRED if item not in text]
-    if re.search(r"idle_seconds\s*-lt\s+(?!600\b)\d+", text):
-        problems.append("idle gate threshold was weakened")
-    if re.search(r"IdleSeconds\)\s*-lt\s+(?!600\b)\d+", text):
-        problems.append("press idle gate threshold was weakened")
+    problems.extend(idle_findings(text))
     if "activationAllowed" in text or "runtimeAuthority" in text:
         problems.append("calc.ps1 must not declare runtime authority")
     if re.search(r"SessionId\s*-eq\s+0", text):
@@ -947,8 +1105,8 @@ def pin_findings(text: str) -> list[str]:
         problems.append("PIN path mismatch")
     if pin.get("sha256") != digest:
         problems.append(f"PIN sha256 {pin.get('sha256')} != file {digest}")
-    if str(pin.get("supersedes_sha256", "")).lower() != ASCII_FRAME:
-        problems.append("PIN supersedes_sha256 must be the owner-specified ASCII frame-select pin")
+    if str(pin.get("supersedes_sha256", "")).lower() != ATTEMPT7:
+        problems.append("PIN supersedes_sha256 must be the attempt-7 pin ee6c41e0")
     pin_text = PIN.read_text(encoding="utf-8").lower()
     if EARLIER not in pin_text:
         problems.append("PIN lost the earlier strict-mode hash")
@@ -956,6 +1114,8 @@ def pin_findings(text: str) -> list[str]:
         problems.append("PIN lost the first-read failure hash")
     if FRAME not in pin_text:
         problems.append("PIN lost the frame-bind hash")
+    if ASCII_FRAME not in pin_text:
+        problems.append("PIN lost the ASCII frame-select hash")
     if pin.get("runtimeAuthority") is not False or pin.get("activationAllowed") is not False:
         problems.append("PIN must keep runtimeAuthority and activationAllowed false")
     if pin.get("acceptance") != "RED_UNVERIFIED":
@@ -1013,9 +1173,11 @@ def main() -> int:
         problems.extend(frame_findings(text))
         problems.extend(receipt_findings(text))
         problems.extend(plm_findings(text))
+        problems.extend(session_findings(text))
         problems.extend(mutation_findings(text))
         problems.extend(sanitizer_model_findings())
         problems.extend(plm_model_findings())
+        problems.extend(session_model_findings())
         if not problems:
             problems.extend(pin_findings(text))
     if problems:
@@ -1034,7 +1196,9 @@ def main() -> int:
         "plm-bypass-initial-tree=DETECTED plm-bypass-followup-element=DETECTED "
         "plm-drop-suspended-reason=DETECTED plm-ignore-dwm-cloak=DETECTED "
         "plm-drop-receipt=DETECTED plm-allow-zero-threads=DETECTED "
-        "plm-drop-ownership=DETECTED"
+        "plm-drop-ownership=DETECTED "
+        "hardcode-session-1=DETECTED accept-nonconsole=DETECTED "
+        "drop-session-match=DETECTED weaken-idle=DETECTED"
     )
     print("OK green-after wait=BOUNDED receipt=REASON host=UWP content=COREWINDOW frame=OWNED plm=CLASSIFIED_OR_FALLBACK")
     print(f"OK cp057-calc-strictmode empty-result=GUARDED sha256={digest}")
