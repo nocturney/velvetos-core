@@ -99,6 +99,8 @@ from office_v2_crewai.usage_guard import (  # noqa: E402
     _open_trusted_regular,
     _strip_nt_prefix,
     _windows_observe,
+    listener_reason,
+    process_tree,
     windows_tool_env,
     count_windows_listeners,
     assert_built_crew,
@@ -1583,7 +1585,48 @@ def check_listeners() -> None:
     def spawn_rc(netstat):
         return header, 1, "10 4\n", 0
 
-    _expect_usage(lambda: _windows_observe(spawn=spawn_rc), "PILOT_LISTENER_UNPROVEN")
+    try:
+        _windows_observe(spawn=spawn_rc)
+    except UsageRefusal as exc:
+        if str(exc) != "PILOT_LISTENER_UNPROVEN" or exc.detail != "probe=netstat rc=1 stdout=present":
+            fail("netstat refusal hid its sub-code: %s" % getattr(exc, "detail", None))
+    else:
+        fail("nonzero netstat was accepted")
+    secret = "C:\\Users\\secret SystemRoot=C:\\Windows"
+
+    def spawn_empty(netstat):
+        return secret, 2, "10 4\n", 0
+
+    try:
+        _windows_observe(spawn=spawn_empty)
+    except UsageRefusal as exc:
+        if exc.detail != "probe=netstat rc=2 stdout=present":
+            fail("netstat stdout leaked into the sub-code: %s" % getattr(exc, "detail", None))
+        if "secret" in exc.detail or "SystemRoot" in exc.detail or "\\" in exc.detail:
+            fail("listener sub-code recorded environment or output")
+    else:
+        fail("netstat with a secret stdout was accepted")
+
+    def spawn_blank(netstat):
+        return "   ", 1, "10 4\n", 0
+
+    try:
+        _windows_observe(spawn=spawn_blank)
+    except UsageRefusal as exc:
+        if exc.detail != "probe=netstat rc=1 stdout=empty":
+            fail("empty netstat stdout was not named: %s" % getattr(exc, "detail", None))
+    else:
+        fail("empty netstat stdout was accepted")
+    try:
+        process_tree([{"pid": 1, "ppid": 0}], 99)
+    except UsageRefusal as exc:
+        if exc.detail != "probe=toolhelp pid-absent":
+            fail("missing process-tree pid was not named: %s" % getattr(exc, "detail", None))
+    else:
+        fail("a missing process-tree pid was treated as zero")
+    leaked = listener_reason("netstat", "status", rc=1, stdout=secret)
+    if leaked != "probe=netstat rc=1 stdout=present" or "secret" in leaked:
+        fail("listener_reason copied output: %s" % leaked)
     source = (PACKAGE / "usage_guard.py").read_text(encoding="utf-8")
     tree = ast.parse(source)
     fn = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "_windows_observe")
@@ -2297,6 +2340,10 @@ WINDOWS_FIXTURE_VARS = (
     "PROCESSOR_ARCHITECTURE",
     "COMPUTERNAME",
     "USERDOMAIN",
+    "TEMP",
+    "TMP",
+    "USERPROFILE",
+    "PSModulePath",
 )
 
 
@@ -2363,6 +2410,29 @@ def check_windows_fixture_env() -> None:
             "ComSpec": "C:\\Windows\\System32\\cmd.exe",
         }[name]:
             fail("uppercase %s was not restored" % name.upper())
+    plumbing = apply_windows_fixture_env(
+        dict(ready),
+        {
+            "PATHEXT": ".COM;.EXE",
+            "TEMP": "C:\\Windows\\Temp",
+            "TMP": "C:\\Windows\\Temp",
+            "USERPROFILE": "C:\\Users\\runner",
+            "PSMODULEPATH": "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules",
+            "PATH": "C:\\should-not-copy",
+        },
+        platform="win32",
+    )
+    for name, value in (
+        ("PATHEXT", ".COM;.EXE"),
+        ("TEMP", "C:\\Windows\\Temp"),
+        ("TMP", "C:\\Windows\\Temp"),
+        ("USERPROFILE", "C:\\Users\\runner"),
+        ("PSModulePath", "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules"),
+    ):
+        if plumbing.get(name) != value:
+            fail("Windows fixture dropped %s" % name)
+    if plumbing.get("PATH") != ready["PATH"]:
+        fail("Windows fixture copied PATH")
     blank = apply_windows_fixture_env(
         dict(ready),
         {"SystemRoot": "  ", "windir": "", "ComSpec": None},

@@ -60,6 +60,38 @@ def _unproven(detail: str) -> UsageRefusal:
     return UsageRefusal("PILOT_LISTENER_UNPROVEN", detail)
 
 
+def listener_reason(probe: str, kind: str, rc: object = None, stdout: object = None) -> str:
+    """One ASCII refusal line. Output text and environment values stay out.
+
+    ``kind`` is ``missing``, ``open``, ``empty``, ``parse``, ``pid-absent``,
+    ``child``, or ``status``. ``status`` records only the exit code and
+    whether stdout was empty.
+    """
+    if probe not in ("netstat", "toolhelp"):
+        probe = "listener"
+    if kind == "missing":
+        return "probe=%s missing" % probe
+    if kind == "open":
+        return "probe=%s open" % probe
+    if kind == "empty":
+        return "probe=%s empty" % probe
+    if kind == "parse":
+        return "probe=%s parse" % probe
+    if kind == "pid-absent":
+        return "probe=%s pid-absent" % probe
+    if kind == "child":
+        name = rc if isinstance(rc, str) and rc.isalpha() else "error"
+        return "probe=%s child=%s" % (probe, name)
+    if kind == "status":
+        if isinstance(rc, bool) or not isinstance(rc, int) or rc < 0 or rc > 255:
+            code = "bad"
+        else:
+            code = str(rc)
+        empty = "empty" if not isinstance(stdout, str) or not stdout.strip() else "present"
+        return "probe=%s rc=%s stdout=%s" % (probe, code, empty)
+    return "probe=%s unknown" % probe
+
+
 def module_is_forbidden(name: str) -> bool:
     """Flag server stacks and drift packages. The chromadb package itself is not forbidden."""
     if not isinstance(name, str) or not name:
@@ -524,7 +556,7 @@ def process_tree(processes: list, root_pid: int) -> set[int]:
         seen.add(pid)
         by_parent.setdefault(ppid, []).append(pid)
     if root_pid not in seen:
-        raise _unproven("PID_ABSENT")
+        raise _unproven(listener_reason("toolhelp", "pid-absent"))
     selected = {root_pid}
     changed = True
     while changed:
@@ -804,12 +836,12 @@ def _windows_processes() -> list:
     snap = kernel32.CreateToolhelp32Snapshot(0x00000002, 0)
     invalid = wintypes.HANDLE(-1).value
     if snap in (None, 0, -1, invalid):
-        raise _unproven("TOOLHELP_OPEN")
+        raise _unproven(listener_reason("toolhelp", "open"))
     try:
         entry = PROCESSENTRY32W()
         entry.dwSize = ctypes.sizeof(PROCESSENTRY32W)
         if not kernel32.Process32FirstW(snap, ctypes.byref(entry)):
-            raise _unproven("TOOLHELP_EMPTY")
+            raise _unproven(listener_reason("toolhelp", "empty"))
         rows = []
         while True:
             rows.append({
@@ -819,7 +851,7 @@ def _windows_processes() -> list:
             if not kernel32.Process32NextW(snap, ctypes.byref(entry)):
                 break
         if not rows:
-            raise _unproven("TOOLHELP_EMPTY")
+            raise _unproven(listener_reason("toolhelp", "empty"))
         return rows
     finally:
         kernel32.CloseHandle(snap)
@@ -839,7 +871,7 @@ def _windows_observe(spawn=None) -> dict:
     if spawn is None:
         netstat = trusted_listener_binary("netstat", "win32")
         if netstat != WINDOWS_NETSTAT:
-            raise _unproven("NETSTAT_MISSING")
+            raise _unproven(listener_reason("netstat", "missing"))
         try:
             net = run_trusted_listener(
                 netstat, [netstat, "-ano"], path_value=str(Path(netstat).parent),
@@ -848,20 +880,26 @@ def _windows_observe(spawn=None) -> dict:
         except UsageRefusal:
             raise
         except (OSError, subprocess.SubprocessError, UnicodeError) as exc:
-            raise _unproven(type(exc).__name__) from exc
+            raise _unproven(listener_reason("netstat", "child", rc=type(exc).__name__)) from exc
         net_out, net_rc = net.stdout or "", net.returncode
         if isinstance(net_rc, bool) or not isinstance(net_rc, int) or net_rc != 0:
-            raise _unproven("NETSTAT_RC")
+            raise _unproven(listener_reason("netstat", "status", rc=net_rc, stdout=net_out))
         if not isinstance(net_out, str) or "Active Connections" not in net_out:
-            raise _unproven("NETSTAT_HEADER")
-        parsed = parse_netstat(net_out)
+            raise _unproven(listener_reason("netstat", "parse"))
+        try:
+            parsed = parse_netstat(net_out)
+        except UsageRefusal as exc:
+            raise _unproven(listener_reason("netstat", "parse")) from exc
         return {"processes": processes, "tcp": parsed["tcp"], "udp": parsed["udp"]}
     net_out, net_rc, proc_out, proc_rc = spawn(WINDOWS_NETSTAT)
     if isinstance(net_rc, bool) or not isinstance(net_rc, int) or net_rc != 0:
-        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+        raise _unproven(listener_reason("netstat", "status", rc=net_rc, stdout=net_out))
     if isinstance(proc_rc, bool) or not isinstance(proc_rc, int) or proc_rc != 0:
-        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
-    parsed = parse_netstat(net_out)
+        raise _unproven(listener_reason("toolhelp", "empty"))
+    try:
+        parsed = parse_netstat(net_out)
+    except UsageRefusal as exc:
+        raise _unproven(listener_reason("netstat", "parse")) from exc
     return {
         "processes": parse_process_lines(proc_out),
         "tcp": parsed["tcp"],
