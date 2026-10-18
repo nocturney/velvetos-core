@@ -13,6 +13,13 @@ subcommand (`pip -q install`, `python -m pip -q`, `python -mpip`,
 / `-mpip`, `uv`/`uvx`, `pipx`, `npm`/`npx`, `pnpm`, `yarn`, `bun`) must
 be a pinned or lock install, or it is refused as unclassified.
 
+The backstop is the words, not a wrapper list. Every `run:` block is
+split with `shlex`, including nested `-c` and `eval` strings. A word
+whose basename is pip, pip3*, uv, uvx, pipx, npm, npx, pnpm, yarn, or
+bun, or a `python*` followed by `-m pip` / `-mpip`, must belong to a
+pinned or lock install. Otherwise the step is unclassified. A `shlex`
+failure refuses the step too.
+
 `requirements-google-clients.py311.lock` must keep the direct pins from
 `requirements-google-clients.txt`, and every lock pin must have a sha256
 hash. INSTALL_SPEC_ALLOWLIST starts empty; a non-empty committed set fails
@@ -87,6 +94,8 @@ PIP_GLOBAL_VALUE = {
 UV_GLOBAL_VALUE = {"--python", "--cache-dir", "--directory", "--project", "--no-project"}
 UNCLASSIFIED = "unclassified install command"
 SHELLS = {"bash", "sh", "dash"}
+SHELL_END = {"fi", "done", "esac", "else", "elif", "then", "do", "{", "}"}
+PM_BASES = {"uv", "uvx", "pipx", "npm", "npx", "pnpm", "yarn", "bun", "bunx"}
 FLOATING_GOOGLE = "pip install --quiet google-api-python-client google-auth"
 LOCK_NAME = "requirements-google-clients.py311.lock"
 REQ_NAME = "requirements-google-clients.txt"
@@ -103,6 +112,7 @@ class InstallRules:
     pip_forms: bool = True
     npm_aliases: bool = True
     bun: bool = True
+    tokens: bool = True
     lock_versions: bool = True
     lock_hashes: bool = True
 
@@ -497,13 +507,152 @@ def classify_pip_tail(
     if not forms:
         if not tail or tail[0] != "install":
             return None
-        return pip_spec_problems(package_tokens(tail[1:], PIP_VALUE_FLAGS), path=path, allowlist=allowlist)
-    index = skip_options(tail, PIP_GLOBAL_VALUE)
-    if index >= len(tail) or tail[index] != "install":
+        rest = tail[1:]
+    else:
+        index = skip_options(tail, PIP_GLOBAL_VALUE)
+        if index >= len(tail) or tail[index] != "install":
+            return unclassified(path)
+        rest = tail[index + 1:]
+    specs = package_tokens(rest, PIP_VALUE_FLAGS)
+    if not specs and not _has_requirement(rest):
         return unclassified(path)
-    return pip_spec_problems(
-        package_tokens(tail[index + 1:], PIP_VALUE_FLAGS), path=path, allowlist=allowlist
-    )
+    return pip_spec_problems(specs, path=path, allowlist=allowlist)
+
+
+def _has_requirement(args: list[str]) -> bool:
+    return any(token.split("=", 1)[0] in {"-r", "--requirement"} for token in args)
+
+
+def _normalize_token(token: str) -> str:
+    text = token.rstrip(";")
+    while text.startswith("$("):
+        text = text[2:]
+    if text.startswith("(") or text.startswith("`"):
+        text = text[1:]
+    return text.rstrip(")")
+
+
+def _shell_c_flag(token: str) -> bool:
+    if token.startswith("--") or not token.startswith("-"):
+        return False
+    body = token[1:].split("=", 1)[0]
+    return bool(body) and body.isalpha() and "c" in body
+
+
+def command_slice(words: list[str], start: int) -> list[str]:
+    chunk: list[str] = []
+    for token in words[start:]:
+        bare = _normalize_token(token)
+        if not bare or bare in SHELL_END or bare in {"&&", "||", "|"}:
+            break
+        chunk.append(bare)
+    return chunk
+
+
+def _nested_scripts(words: list[str]) -> list[str]:
+    scripts: list[str] = []
+    index = 0
+    while index < len(words):
+        base = _base(_normalize_token(words[index]))
+        if base == "eval" and index + 1 < len(words) and any(char.isspace() for char in words[index + 1]):
+            scripts.append(words[index + 1])
+        if base in SHELLS:
+            nxt = index + 1
+            while nxt < len(words) and words[nxt].startswith("-") and not _shell_c_flag(words[nxt]):
+                nxt += 1
+            if nxt + 1 < len(words) and _shell_c_flag(words[nxt]):
+                scripts.append(words[nxt + 1])
+                index = nxt + 2
+                continue
+        index += 1
+    return scripts
+
+
+def word_lists(text: str, seen: set[str] | None = None) -> list[list[str]] | None:
+    """shlex words for one script and every nested -c or eval string."""
+    seen = set() if seen is None else set(seen)
+    cleaned = "\n".join(strip_comment(line) for line in text.splitlines()).strip()
+    if not cleaned or cleaned in seen:
+        return []
+    seen.add(cleaned)
+    try:
+        words = shlex.split(cleaned, posix=True)
+    except ValueError:
+        return None
+    lists = [words]
+    for script in _nested_scripts(words):
+        nested = word_lists(script, seen)
+        if nested is None:
+            return None
+        lists.extend(nested)
+    return lists
+
+
+def armed_indexes(words: list[str], rules: InstallRules) -> list[int]:
+    found: list[int] = []
+    for index, token in enumerate(words):
+        bare = _normalize_token(token)
+        base = _base(bare)
+        if base in PM_BASES or is_pip_executable(base):
+            found.append(index)
+            continue
+        if is_python(bare):
+            normalized = [_normalize_token(word) for word in words[index:]]
+            if python_pip_tail(normalized, rules) is not None:
+                found.append(index)
+    return found
+
+
+def shlex_chunks(script: str) -> list[str] | None:
+    """Split a run block into chunks that each survive shlex.
+
+    A line with an open quote stays with the lines that close it. The whole
+    block is refused when shlex cannot parse it at all.
+    """
+    joined = join_continuations(script)
+    if word_lists(joined) is None:
+        return None
+    chunks: list[str] = []
+    buf = ""
+    for line in joined.splitlines():
+        buf = f"{buf}\n{line}" if buf else line
+        if word_lists(buf) is None:
+            continue
+        if buf.strip():
+            chunks.append(buf)
+        buf = ""
+    if buf.strip():
+        return None
+    return chunks
+
+
+def token_backstop(
+    script: str,
+    *,
+    path: str,
+    allowlist: frozenset[str],
+    rules: InstallRules,
+) -> list[str]:
+    """Refuse an armed package-manager word that is not a pinned or lock install."""
+    if not rules.tokens:
+        return []
+    chunks = shlex_chunks(script)
+    if chunks is None:
+        return unclassified(path)
+    problems: list[str] = []
+    for line in chunks:
+        lists = word_lists(line)
+        if lists is None:
+            return unclassified(path)
+        for words in lists:
+            for index in armed_indexes(words, rules):
+                found = command_problems(
+                    command_slice(words, index), path=path, allowlist=allowlist, rules=rules
+                )
+                if not found:
+                    continue
+                problems.extend(found)
+    return problems
 
 
 def pip_spec_problems(tokens: list[str], *, path: str, allowlist: frozenset[str]) -> list[str]:
@@ -799,6 +948,8 @@ def install_spec_problems(
     active = InstallRules() if rules is None else rules
     problems: list[str] = []
     for script in run_scripts(text):
+        if active.tokens:
+            problems.extend(token_backstop(script, path=path, allowlist=chosen, rules=active))
         for command in split_commands(join_continuations(script)):
             command = strip_comment(command)
             if not command:
@@ -943,6 +1094,27 @@ def prove_bypasses() -> str:
         "npm_add": "run: npm add x\n",
         "npm_exec": "run: npm exec x\n",
         "bun_add": "run: bun add x\n",
+        "if_then": "run: if true; then pip -q install x; fi\n",
+        "for_do": "run: for i in 1; do uvx x; done\n",
+        "brace": "run: { pip -q install x; }\n",
+        "bang": "run: ! pip -q install x\n",
+        "timeout": "run: timeout 60 pip -q install x\n",
+        "nohup": "run: nohup python3 -mpip install x\n",
+        "eval": "run: eval pip -q install x\n",
+        "eval_quote": "run: eval 'pip -q install x'\n",
+        "xargs": "run: xargs pip -q install\n",
+        "bash_lc": "run: bash -lc 'pip -q install x'\n",
+        "if_npm": "run: if true; then npm add x; fi\n",
+        "while_pip": "run: while false; do pip3.11 install x; done\n",
+        "else_pip": "run: if a; then :; else pip -q install x; fi\n",
+        "case_pip": "run: case a in a) pip -q install x;; esac\n",
+        "timeout_npm": "run: timeout 60 npm add x\n",
+        "timeout_pnpm": "run: timeout 5 pnpm dlx x\n",
+        "nice_bun": "run: nice bun add x\n",
+        "stdbuf_pnpm": "run: stdbuf -oL pnpm i x\n",
+        "time_uvx": "run: time uvx x\n",
+        "command_pip": "run: command pip -q install x\n",
+        "exec_npm": "run: exec npm add x\n",
     }
     exact = {
         "sudo": "run: sudo -H pip install x==1.2.3\n",
@@ -974,6 +1146,27 @@ def prove_bypasses() -> str:
         "npm_add": "run: npm add x@1.2.3\n",
         "npm_exec": "run: npm exec x@1.2.3\n",
         "bun_add": "run: bun add x@1.2.3\n",
+        "if_then": "run: if true; then pip -q install x==1.2.3; fi\n",
+        "for_do": "run: for i in 1; do uvx x==1.2.3; done\n",
+        "brace": "run: { pip -q install x==1.2.3; }\n",
+        "bang": "run: ! pip -q install x==1.2.3\n",
+        "timeout": "run: timeout 60 pip -q install x==1.2.3\n",
+        "nohup": "run: nohup python3 -mpip install x==1.2.3\n",
+        "eval": "run: eval pip -q install x==1.2.3\n",
+        "eval_quote": "run: eval 'pip -q install x==1.2.3'\n",
+        "xargs": "run: xargs pip -q install x==1.2.3\n",
+        "bash_lc": "run: bash -lc 'pip -q install x==1.2.3'\n",
+        "if_npm": "run: if true; then npm add x@1.2.3; fi\n",
+        "while_pip": "run: while false; do pip3.11 install x==1.2.3; done\n",
+        "else_pip": "run: if a; then :; else pip -q install x==1.2.3; fi\n",
+        "case_pip": "run: case a in a) pip -q install x==1.2.3;; esac\n",
+        "timeout_npm": "run: timeout 60 npm add x@1.2.3\n",
+        "timeout_pnpm": "run: timeout 5 pnpm dlx x@1.2.3\n",
+        "nice_bun": "run: nice bun add x@1.2.3\n",
+        "stdbuf_pnpm": "run: stdbuf -oL pnpm i x@1.2.3\n",
+        "time_uvx": "run: time uvx x==1.2.3\n",
+        "command_pip": "run: command pip -q install x==1.2.3\n",
+        "exec_npm": "run: exec npm add x@1.2.3\n",
     }
     needles = {
         "sudo": "floating pip spec x",
@@ -1005,17 +1198,48 @@ def prove_bypasses() -> str:
         "npm_add": "floating npm spec x",
         "npm_exec": "floating npm spec x",
         "bun_add": "floating npm spec x",
+        "if_then": "floating pip spec x",
+        "for_do": "floating pip spec x",
+        "brace": "floating pip spec x",
+        "bang": "floating pip spec x",
+        "timeout": "floating pip spec x",
+        "nohup": "floating pip spec x",
+        "eval": "floating pip spec x",
+        "eval_quote": "floating pip spec x",
+        "xargs": UNCLASSIFIED,
+        "bash_lc": "floating pip spec x",
+        "if_npm": "floating npm spec x",
+        "while_pip": "floating pip spec x",
+        "else_pip": "floating pip spec x",
+        "case_pip": "floating pip spec x",
+        "timeout_npm": "floating npm spec x",
+        "timeout_pnpm": "floating npm spec x",
+        "nice_bun": "floating npm spec x",
+        "stdbuf_pnpm": "floating npm spec x",
+        "time_uvx": "floating pip spec x",
+        "command_pip": "floating pip spec x",
+        "exec_npm": "floating npm spec x",
     }
     groups = {
-        "wrappers": ["sudo", "env", "bash", "sh", "subshell", "subst", "python_i"],
-        "uv": ["uv_pip", "uv_add", "uv_tool", "uvx", "uv_with"],
+        "wrappers": [],
+        "uv": ["uv_add", "uv_tool", "uvx", "uv_with", "for_do", "time_uvx"],
         "pipx": ["pipx", "pipx_run"],
         "yarn": ["yarn", "yarn_global", "yarn_dlx"],
-        "pnpm": ["pnpm", "pnpm_i", "pnpm_dlx"],
+        "pnpm": ["pnpm", "pnpm_i", "pnpm_dlx", "timeout_pnpm", "stdbuf_pnpm"],
         "npx": ["npx"],
-        "pip_forms": ["pip_q", "pip_isolated", "pip_py_q", "pip_mpip", "pip311"],
-        "npm_aliases": ["npm_add", "npm_exec"],
-        "bun": ["bun_add"],
+        "pip_forms": [
+            "pip_q", "pip_isolated", "pip_py_q", "pip_mpip", "pip311",
+            "if_then", "brace", "bang", "timeout", "nohup", "eval", "eval_quote",
+            "xargs", "bash_lc", "while_pip", "else_pip", "case_pip", "command_pip",
+        ],
+        "npm_aliases": ["npm_add", "npm_exec", "if_npm", "timeout_npm", "exec_npm"],
+        "bun": ["bun_add", "nice_bun"],
+        "tokens": [
+            "if_then", "for_do", "brace", "bang", "timeout", "nohup", "eval", "eval_quote",
+            "xargs", "bash_lc", "if_npm", "while_pip", "else_pip", "case_pip",
+            "timeout_npm", "timeout_pnpm", "nice_bun", "stdbuf_pnpm", "time_uvx",
+            "command_pip", "exec_npm",
+        ],
     }
     for name, text in fixtures.items():
         if not _caught(text, needles[name]):
@@ -1042,6 +1266,10 @@ def prove_bypasses() -> str:
         fail("uv tool was not refused as unclassified")
     if not _caught("run: timeout pip install x\n", UNCLASSIFIED):
         fail("timeout wrapper was not refused as unclassified")
+    if not _caught("run: echo '\n", UNCLASSIFIED):
+        fail("shlex failure was not refused")
+    if _caught("run: echo '\n", UNCLASSIFIED, rules=InstallRules(tokens=False)):
+        fail("off tokens still refused a shlex failure")
     if not _caught("run: npm install left-pad\n", "floating npm spec left-pad", rules=InstallRules(npm_aliases=False)):
         fail("off npm_aliases let npm install escape")
     escaped: list[str] = []
@@ -1055,7 +1283,10 @@ def prove_bypasses() -> str:
                 fail(f"off_{rule_name} still caught {name}")
             if name not in members and not caught:
                 fail(f"off_{rule_name} let {name} escape")
-        escaped.append(f"off_{rule_name}=escaped")
+        if members:
+            escaped.append(f"off_{rule_name}=escaped")
+        else:
+            escaped.append(f"off_{rule_name}=still_closed")
     return (
         "bypass=" + ",".join(f"{name}=caught" for name in fixtures)
         + " exact=pass lockfile_install=pass"
