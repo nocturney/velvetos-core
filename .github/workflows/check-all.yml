@@ -95,6 +95,8 @@ jobs:
 
       - name: Run selected VelvetOS sensors on pull request or machine precheck
         if: ${{ !cancelled() && (github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.execution != 'main_full')) }}
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: python3 scripts/check-all.py --selection sensor-selection.json --json-out sensor-selected-results.json
 
       - name: Publish verified check-all commit status for machine precheck
@@ -112,6 +114,8 @@ jobs:
 
       - name: Run full VelvetOS sensor suite on main
         if: ${{ !cancelled() && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.execution == 'main_full')) }}
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: python3 scripts/check-all.py --json-out sensor-full-results.json
 
       # Report-only. The frontend repo is private, so GITHUB_TOKEN normally cannot
@@ -178,6 +182,8 @@ jobs:
 
       - name: Run check-all
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           $log = Join-Path $env:RUNNER_TEMP "check-all-windows.log"
           python scripts/check-all.py *> "$log"

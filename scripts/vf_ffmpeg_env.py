@@ -9,9 +9,15 @@ capability and then produces the wrong pixels is not a skip.
 from __future__ import annotations
 
 import os
-import shutil
 import subprocess
+import sys
 from dataclasses import dataclass
+
+import vf_subprocess_hygiene as hygiene
+
+# The capability suite's fake ffmpeg is #!/usr/bin/env python3 and reads these.
+# They are not a parent PATH. A real ffmpeg binary ignores them.
+_PROBE_ENV = ("VF_FAKE_FFMPEG", "VF_FAKE_LOG")
 
 PROBE_TIMEOUT = 20
 
@@ -48,12 +54,21 @@ def ci_skip_failure(gap: EnvGap | None) -> str | None:
 
 
 def _run(binary: str, flag: str) -> str:
-    command = [binary, "-hide_banner", "-nostdin", flag]
+    if not hygiene.is_absolute_executable(binary):
+        raise _ProbeError(flag, "ffmpeg path must be absolute")
     try:
-        proc = subprocess.run(command, text=True, capture_output=True, timeout=PROBE_TIMEOUT)
+        proc = hygiene.run_absolute(
+            binary,
+            ["-hide_banner", "-nostdin", flag],
+            timeout=PROBE_TIMEOUT,
+            extra_keys=_PROBE_ENV,
+            path_suffix=(os.path.dirname(sys.executable),),
+            text=True,
+            capture_output=True,
+        )
     except subprocess.TimeoutExpired as exc:
         raise _ProbeError(flag, f"timed out after {PROBE_TIMEOUT}s") from exc
-    except OSError as exc:
+    except (OSError, hygiene.HygieneError) as exc:
         raise _ProbeError(flag, str(exc)) from exc
     return (proc.stdout or "") + "\n" + (proc.stderr or "")
 
@@ -77,18 +92,34 @@ def _encoder_names(text: str) -> set[str]:
 
 
 def _tools() -> tuple[str | None, EnvGap | None]:
-    ffmpeg = shutil.which("ffmpeg")
-    if not ffmpeg:
+    try:
+        ffmpeg = hygiene.pin_which("ffmpeg")
+    except hygiene.HygieneError:
         return None, _gap(
             "FFMPEG",
             "ffmpeg is not on PATH, so ffmpeg -filters and ffmpeg -buildconf were not run",
         )
-    if shutil.which("ffprobe") is None:
+    try:
+        hygiene.pin_which("ffprobe")
+    except hygiene.HygieneError:
         return None, _gap(
             "FFPROBE",
             "ffprobe is not on PATH, so ffmpeg -filters and ffmpeg -buildconf were not run",
         )
     return ffmpeg, None
+
+
+def run_pinned(name: str, args: list[str], **kwargs) -> subprocess.CompletedProcess:
+    """Absolute ffmpeg/ffprobe with the probe timeout unless the caller sets one."""
+    timeout = kwargs.pop("timeout", PROBE_TIMEOUT)
+    return hygiene.run_pinned(
+        name,
+        args,
+        timeout=timeout,
+        extra_keys=_PROBE_ENV,
+        path_suffix=(os.path.dirname(sys.executable),),
+        **kwargs,
+    )
 
 
 @dataclass(frozen=True)
