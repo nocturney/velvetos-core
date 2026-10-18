@@ -1,0 +1,45 @@
+[
+  {
+    "file": "case-05-extra-url.md",
+    "case_id": "case-05",
+    "fail": [
+      "url_coverage"
+    ]
+  },
+  {
+    "file": "case-04-echo.md",
+    "case_id": "case-04",
+    "fail": [
+      "money_customer"
+    ]
+  },
+  {
+    "file": "case-06-all-unknown.md",
+    "case_id": "case-06",
+    "fail": [
+      "blank_table"
+    ]
+  },
+  {
+    "file": "case-07-empty-phrase.md",
+    "case_id": "case-07",
+    "fail": [
+      "blank_table"
+    ]
+  },
+  {
+    "file": "case-01-three-columns.md",
+    "case_id": "case-01",
+    "fail": [
+      "hebrew_table"
+    ]
+  },
+  {
+    "file": "case-01-missing-url.md",
+    "case_id": "case-01",
+    "fail": [
+      "url_coverage",
+      "hebrew_table"
+    ]
+  }
+]
