@@ -1,6 +1,6 @@
 # Office #604 CP083 — joined Linux OS-UID / mTLS / native LOCAL Git
 
-**Date:** 2026-10-17. **Admission:** SECURITY RED / DRAFT ONLY. **Owner semantics:** Option A approved on 2026-10-16, implemented here only as a disposable local fixture.
+**Date:** 2026-10-17. **Admission:** merged into main via #758 (6cec8e86); lab-only, SECURITY RED. **Owner semantics:** Option A approved on 2026-10-16, implemented here only as a disposable local fixture.
 
 ## Purpose / provenance
 
@@ -32,6 +32,6 @@ CP077 used real separate Linux UIDs, mTLS and native local Git but exposed a del
 
 ## Reproduction
 
-Offline: python3 -B scripts/vf_office_v2_604_cp083_osuid_evidence_gate.py --check and --selftest. Native tests require a disposable Linux ARM64 Colima guest, root test controller, exact-pinned official etcd and etcdctl, and VF604_CP083_DISPOSABLE_GUEST_ONLY=VF604_CP083_EXPLICIT_NO_REMOTE. The guard rejects ambient remote credentials and other hosts.
+Offline: python3 -B scripts/vf_office_v2_604_cp083_osuid_evidence_gate.py --check and --selftest. On POSIX the gate runs the lab's inert --selftest and records inert_selftest OFFLINE_STATIC_ONLY. On non-POSIX it does not import the hash-pinned lab (top-level import pwd) and records inert_selftest SKIP_NON_POSIX. That skip is not a pass of the lab selftest. Receipt checks still run, and security_admission stays RED. Native tests require a disposable Linux ARM64 Colima guest, root test controller, exact-pinned official etcd and etcdctl, and VF604_CP083_DISPOSABLE_GUEST_ONLY=VF604_CP083_EXPLICIT_NO_REMOTE. The guard rejects ambient remote credentials and other hosts.
 
-**Conclusion:** The narrowly scoped *local joined separate-UID provider/effect demonstration* passed, but Office P0 security admission remains RED. All changes Draft-only.
+**Conclusion:** The narrowly scoped *local joined separate-UID provider/effect demonstration* passed, but Office P0 security admission remains RED. merged into main via #758 (6cec8e86); lab-only, SECURITY RED.

@@ -67,6 +67,12 @@ class HardeningCandidateStaticTests(unittest.TestCase):
     def test_client_peer_auth_and_absolute_ack_deadline(self):
         exchange = self.source.split("def socket_exchange(root, payload):", 1)[1].split("\ndef local_cert_observation(", 1)[0]
         self.assertIn('socket.SO_PEERCRED', exchange)
+        # Platform capability gate must precede connect (non-Linux opens nothing).
+        self.assertLess(
+            exchange.index('sys.platform != "linux"'),
+            exchange.index('sock.connect('),
+        )
+        self.assertLess(exchange.index('sock.connect('), exchange.index('peer_uid'))
         self.assertIn('peer_uid != SINK_UID', exchange)
         self.assertLess(exchange.index('peer_uid != SINK_UID'), exchange.index('sock.sendall('))
         self.assertIn('deadline = time.monotonic() + 3.0', exchange)
@@ -74,6 +80,14 @@ class HardeningCandidateStaticTests(unittest.TestCase):
         self.assertLess(exchange.index('remaining = deadline - time.monotonic()'), exchange.index('sock.recv('))
         self.assertIn('len(buffer) > MAX_MESSAGE', exchange)
         self.assertIn('"NO_ACK_UNKNOWN"', exchange)
+        self.assertIn('_allowlisted_reply', exchange)
+
+    def test_reply_allowlist_strips_unsolicited_keys(self):
+        helper = self.source.split("def _allowlisted_reply(reply):", 1)[1].split(
+            "\ndef socket_exchange(", 1)[0]
+        self.assertIn('"status"', helper)
+        self.assertIn('("head", "record", "frozen")', helper)
+        self.assertNotIn("extra", helper)
 
     def test_red_only_no_production_promotion(self):
         self.assertIn('"production_authority": False', self.source)

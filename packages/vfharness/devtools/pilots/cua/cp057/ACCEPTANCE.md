@@ -1,10 +1,14 @@
 # CP057 - native Windows Calculator acceptance packet (2026-10-18)
 
-**Gate: `RED_UNVERIFIED` (unchanged).** One real, bounded Windows Calculator
-run reported `PASS_NATIVE_UIA_CALCULATOR_42_ONLY` on PC Chris; it does **not**
-complete independent receipt QA, a repeat run, or acceptance promotion. This
-native PowerShell/UIA result is **not** a Cua Driver 0.34.0 acceptance pass and
-grants no general computer-use authority. Source of record:
+**Gate: `ACCEPTED` for attempts 8 and 9.** Both receipts are
+`PASS_NATIVE_UIA_CALCULATOR_42_ONLY` on the same pinned bytes, and each has
+independent QA PASS WITH NOTES. The receipts differ only in `attempt_id` and
+`idle_seconds`. QA notes, which do not block: there is no timestamp field, the
+thread fields are template defaults, and the cleanup evidence lives only in
+the comment. `PIN.json` `acceptance` is `ACCEPTED`. `runtimeAuthority` and
+`activationAllowed` stay `false`. This native PowerShell/UIA result is **not**
+a Cua Driver 0.34.0 acceptance pass and grants no runtime or activation
+authority. Source of record:
 [#602](https://github.com/nocturney/velvetos-core/issues/602);
 coordination: [#612](https://github.com/nocturney/velvetos-core/issues/612).
 
@@ -25,7 +29,8 @@ successful Calculator run.
 | **5**, 15:04 IDT | [#602 receipt and read-only probes](https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6249714629): `CALCULATOR_CONTENT_WINDOW_UNAVAILABLE`, exit 2, zero UI steps; cleanup succeeded. | The CalculatorApp `Windows.UI.Core.CoreWindow` was **top-level**, not an `ApplicationFrameWindow` child on that build. An `EnumWindows`/owned-process binding was added. |
 | **6**, 15:23 IDT | [#602 receipt and probes](https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6249903313): `CALCULATOR_ELEMENT_UNAVAILABLE_CalculatorResults`, exit 2, zero UI steps. | Owned top-level CoreWindow binding now worked; read-only probes observed **23/23 suspended** CalculatorApp threads and DWM cloak value 2, consistent with Windows PLM. [#786](https://github.com/nocturney/velvetos-core/pull/786) added a fail-closed PLM diagnostic, not a Windows PLM repair. |
 | **7**, 16:17:57 IDT | [#602 receipt](https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6250391790): `NOT_INTERACTIVE_LIMITED_USER`, followed by controller `CHILD_RECEIPT_IDENTITY_MISMATCH`, no Calculator launch/UI steps. | Console logon moved to **session 2** after sign-out/in; Child, `Calcs` and Controller hardcoded **session 1**. [#794](https://github.com/nocturney/velvetos-core/pull/794), merged as [`4593b8a1`](https://github.com/nocturney/velvetos-core/commit/4593b8a1), resolves and cross-checks the active console session; idle gate is 120 s. |
-| **8**, 16:49:30 IDT | [#602 receipt](https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6250697930): **`PASS_NATIVE_UIA_CALCULATOR_42_ONLY`**, exit 0, real fresh display readback `Display is 42`. | First run of the post-#794 pin. No retry was made. **Evidence of one successful bounded native attempt, not `ACCEPTED`.** |
+| **8**, 16:49:30 IDT | [#602 receipt](https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6250697930): **`PASS_NATIVE_UIA_CALCULATOR_42_ONLY`**, exit 0, real fresh display readback `Display is 42`. Receipt SHA-256 `0e0ae55b1ec00ee26a116be172eda17e3c7a917ffba4f3102c73bdbe4da6bb5c`. | First run of the post-#794 pin. No retry was made. Independent QA is PASS WITH NOTES ([verdict](https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6250839975)). |
+| **9**, 17:10:40 IDT | [#602 receipt](https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6250908821): **`PASS_NATIVE_UIA_CALCULATOR_42_ONLY`**, exit 0, attempt id `0ffe7808fd864ba68eeebf7c3310e51b`, receipt SHA-256 `663db01cd7d7423a26d6cf36a15d06080de06a53c9565a5ed3e5263b1500e75e`. | Confirmation run on the same pinned bytes. Differs from attempt 8 only in `attempt_id` and `idle_seconds`. Independent QA is PASS WITH NOTES ([verdict](https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6250936010)). QA notes: no timestamp field, thread fields are template defaults, and cleanup evidence lives only in the comment. |
 
 ## Attempt 8 - exact receipt and scope
 
@@ -50,45 +55,45 @@ successful Calculator run.
 - Reported cleanup: `calc_created=true`, `calc_closed=true`,
   `suspended_threads=0`, `model_called=false`,
   controller `TASK_REMOVED=true`; no Calculator process/CP057 task/pending file
-  left, no C: write reported. These remain **report claims** pending receipt QA.
+  left, no C: write reported. Independent receipt QA is PASS WITH NOTES
+  ([verdict](https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6250839975)).
 
 ## Requirements to change `RED_UNVERIFIED` to `ACCEPTED`
 
 - [x] One source-pinned, bounded, read-after-each-action native Calculator
   attempt with explicit `42` readback and hashed receipt **reported** on #602.
-- [ ] **Independent receipt QA**: obtain actual receipt bytes and recompute the
-  SHA-256; compare `source_sha256` with the pinned file; verify
-  identity/console/idle, Calculator-only window ownership, every UI step and
-  fresh final read, exit code, refusals (if any), teardown, and lack of
-  unrelated GUI effects. Publish a separate signed-off QA result tied to
-  specific bytes and #602. A comment alone is not cryptographic verification.
-- [ ] **Second separately admitted native run** with the same safety boundaries
-  and a *new* nonce/receipt/hash; independently verify a second final `42`
-  readback and teardown. Stop on any new failure, mismatch, or scope deviation;
-  do not silently reclassify the first success.
-- [ ] **Independent comparison and scoped owner decision** on both receipts,
-  including the continuing difference between a native UIA Calculator result
-  and the earlier Cua 0.34.0 Driver failure. No broader Cua/production admission
-  follows from these two runs.
-- [ ] **Separate, reviewed status-change PR only after those gates**: in
-  `packages/vfharness/devtools/pilots/cua/cp057/PIN.json`, change the single
-  `acceptance` field from `RED_UNVERIFIED` to `ACCEPTED`; update `note` with
-  the exact two receipt IDs/hashes, QA verdict and decision links. Keep
-  `runtimeAuthority=false` and `activationAllowed=false`; do **not** rotate
-  `sha256`/`supersedes_sha256` without a source revision, and keep
-  `algorithm` and `line_ending` unchanged. The current
-  `scripts/vf_cp057_calc_strictmode.py` enforces `RED_UNVERIFIED` and will
-  need a separately reviewed acceptance-contract change at that future time.
-  This PR does **not** make any of these changes.
+- [x] **Independent receipt QA**: PASS WITH NOTES on receipt
+  `0e0ae55b1ec00ee26a116be172eda17e3c7a917ffba4f3102c73bdbe4da6bb5c`, attempt
+  id `36abe219c4cf4995b8ce95078e568ee3`
+  ([verdict](https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6250839975)).
+- [x] **Second separately admitted native run.** Attempt 9 id
+  `0ffe7808fd864ba68eeebf7c3310e51b`, receipt
+  `663db01cd7d7423a26d6cf36a15d06080de06a53c9565a5ed3e5263b1500e75e`
+  ([receipt](https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6250908821),
+  [QA PASS WITH NOTES](https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6250936010)).
+  The receipts differ only in `attempt_id` and `idle_seconds`. QA notes: there
+  is no timestamp field, the thread fields are template defaults, and the
+  cleanup evidence lives only in the comment.
+- [x] **Receipt acceptance, not runtime authority.** `PIN.json` `acceptance`
+  is `ACCEPTED` for both receipts. The note cites both attempt ids, both
+  receipt sha256 values, and both QA verdicts. `runtimeAuthority=false` and
+  `activationAllowed=false`. `sha256` stays
+  `2f70a3c26fe3cd8b75f06e60a6d1c220a41a979aeaffa97f6547177256e18eed` and
+  `supersedes_sha256` stays `ee6c41e0…`. `scripts/vf_cp057_calc_strictmode.py`
+  allows `ACCEPTED` only when the note cites both receipt shas and both
+  attempt ids. Dropping either sha fails, a wrong sha fails, and
+  `runtimeAuthority=true` or `activationAllowed=true` fails. This is not a
+  Cua Driver pass.
 
 ## Next in the recorded roadmap (not a new authorization)
 
-[Office v2 NEXT.md](../../../../../../docs/office-v2/NEXT.md) is a dated
-**2026-10-18 snapshot** written before attempt 8; its CP057 attempt-6 row
-should not supersede #602's newer receipt. It defines **no CP058 milestone**.
+[Office v2 NEXT.md](../../../../../../docs/office-v2/NEXT.md) records that
+CP057 is accepted on receipts of attempts 8+9; runtimeAuthority=false,
+activationAllowed=false. It defines **no CP058 milestone**.
 The explicit surrounding work remains **CrewAI E1-E7** under
 [#612](https://github.com/nocturney/velvetos-core/issues/612), the
 read-only Office board's separately reviewed event-trigger work, and
 **CP083 security evidence** under [#604](https://github.com/nocturney/velvetos-core/issues/604)
-(which remains SECURITY RED). No operator action, machine run, activation,
-or acceptance promotion is authorized by this documentation packet.
+(which remains SECURITY RED). No operator action, machine run, or activation
+is authorized by this packet. Receipt `acceptance=ACCEPTED` does not grant
+runtime authority.
