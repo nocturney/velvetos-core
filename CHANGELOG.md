@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-10-18 - **CP057 receipt hash boundary:** acceptance cites a receipt only when a maximal hex run equals that sha256. Extra hex appended to a known receipt fails. A note that cites neither receipt fails with `ACCEPTED_NOTE_MISSING_RECEIPT`. Any other sha256 that is not one of the two receipts fails with `RECEIPT_SHA_UNKNOWN`. `runtimeAuthority` and `activationAllowed` stay false.
+
 - 2026-10-18 - **Office board lost-ACK seal:** a missing or corrupt CP083 evidence file drops only that row and the board shows EVIDENCE_MISSING. `remote_github_writes` must be the integer 0; bool False does not count. `security_admission` stays RED.
 
 - 2026-10-18 - **CrewAI runner merge status:** docs now record #789 as merged into main (`3673920102693e355301637e15332131d3ce315b`, 16:59 IDT). The pilot stays NOT_RUN, E6 stays NOT_VERIFIED at 12 open issues, and the runner is not runtime-admitted.
