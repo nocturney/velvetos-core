@@ -1147,8 +1147,8 @@ def validate_registries(historical_replay: bool = False) -> tuple[list[str], set
                 and main5.get("log_markers") == ["SENSORS 116 mode=full", "OK suite passed=116"],
                 "Stage 5 main full-suite evidence drift", problems)
         context5 = stage5.get("context_locality") or {}
-        require(context5.get("root_lines") == 56
-                and context5.get("root_words") == 453
+        require(context5.get("root_lines") == 66
+                and context5.get("root_words") == 619
                 and context5.get("root_domain_leakage_total") == 0
                 and context5.get("domain_count") == 10
                 and context5.get("warehouse_default") == "off"
