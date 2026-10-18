@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""ChatGPT-069 gaps that stay expected failures. No guest, no remote GitHub.
+"""ChatGPT-069 gaps. No guest, no remote GitHub.
 
-GAP_9 and GAP_6 fail on current main. The hardened candidate and the pinned
-identity helper are not edited here. Benign fake variables only.
+GAP_4 is a passing gate refusal: a hardlinked SQLite journal and a non-regular
+evidence file fail closed. The sealed native engine is not edited. GAP_9 and
+GAP_6 stay expected failures. The hardened candidate and the pinned identity
+helper are not edited here. Benign fake variables only.
 """
 from __future__ import annotations
 
@@ -108,25 +110,44 @@ class ChatGPT069ExpectedGaps(unittest.TestCase):
         body = start.split("def start(self):", 1)[1].split("\n    def health", 1)[0]
         self.assertIn("env=", body, "GAP_6")
 
-    @unittest.expectedFailure
     def test_hardlinked_sqlite_alias_rejected(self):
-        """GAP_4: the sealed native SQLite lab still accepts a hardlinked journal.
+        """GAP_4: a hardlinked journal is not evidence, and neither is a non-file.
 
-        The receipt half is refused by the evidence gate. This file's bytes are
-        pinned by the lost-ACK seal and CP082, so the journal check stays an
-        expected failure instead of rewriting those receipts.
+        The sealed native engine still path-checks the lab. Rewriting it would
+        move the lost-ACK pin. The evidence gate refuses the inode instead.
         """
         import vf_office_v2_604_native_git_crash_reconcile_offline as offline
+        import vf_office_v2_604_cp083_candidate_evidence_gate as gate
+        import vf_office_v2_604_cp083_native_lostack_receipt_gate as lostack
         lab_dir = tempfile.TemporaryDirectory(prefix="vf604-cp083-sqlite-alias-")
         self.addCleanup(lab_dir.cleanup)
-        lab = offline.OfflineLab.create(Path(lab_dir.name) / "lab")
-        alias = Path(lab_dir.name) / "alias.sqlite3"
+        root = Path(lab_dir.name)
+        lab = offline.OfflineLab.create(root / "lab")
+        alias = root / "alias.sqlite3"
         os.link(lab.db, alias)
+        self.assertEqual(lab.db.stat().st_ino, alias.stat().st_ino)
         self.assertGreater(lab.db.stat().st_nlink, 1)
-        self.assertFalse(lab.verified(), "GAP_4")
-        with self.assertRaises(offline.sqlite3.DatabaseError):
-            with lab.connect():
-                pass
+        with self.assertRaises(gate.Refused) as caught:
+            gate.read_bounded(lab.db, 8 * 1024 * 1024)
+        self.assertEqual(str(caught.exception), "HARDLINK_ALIAS_REFUSED")
+        evidence = root / "evidence.json"
+        evidence.write_bytes(b'{"schema":"synthetic"}\n')
+        os.link(evidence, root / "evidence-alias.json")
+        self.assertGreater(evidence.stat().st_nlink, 1)
+        with self.assertRaises(gate.Refused) as caught:
+            lostack.read_evidence(evidence)
+        self.assertEqual(str(caught.exception), "HARDLINK_ALIAS_REFUSED")
+        live = lostack.read_evidence(lostack.EVIDENCE)
+        self.assertEqual(live.get("security_admission"), "RED")
+        if os.name == "posix" and hasattr(os, "mkfifo"):
+            fifo = root / "not-regular"
+            os.mkfifo(fifo)
+            with self.assertRaises(gate.Refused) as caught:
+                gate.read_anchored(root, "not-regular", 1024)
+            self.assertEqual(str(caught.exception), "NONREGULAR_FILE")
+            with self.assertRaises(gate.Refused) as caught:
+                gate.read_bounded(fifo, 1024)
+            self.assertEqual(str(caught.exception), "NONREGULAR_FILE")
 
 
 if __name__ == "__main__":
