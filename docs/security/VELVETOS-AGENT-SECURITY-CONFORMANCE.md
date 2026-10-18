@@ -35,6 +35,8 @@ This is not a claim that every language-model jailbreak technique has been exhau
 2. **Promptfoo local runner — PARTIAL.** Promptfoo documents custom/script providers as unsandboxed local code. VelvetOS therefore permits only the committed local provider in this suite and supplies no model/API credentials.
 3. **Promptfoo network controls are defense-in-depth, not an air gap.** Telemetry, remote generation, sharing and update paths are disabled by the runner, but the integration does not treat those flags as proof of zero network egress. Cost remains zero because no paid provider is configured or called.
 
+ChatGPT-066 (issue 612 comment 6252298649) saw an unconfined promptfoo process open outbound IPv6 HTTPS even though telemetry was disabled. Any live run of promptfoo, or a similar third-party eval tool, must run under OS-level egress denial. See `docs/office-v2/kickoff-eval.md`.
+
 ## Verification
 
 Run:

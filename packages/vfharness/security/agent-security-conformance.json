@@ -140,7 +140,8 @@
       ],
       "residual": [
         "Promptfoo custom/script providers execute trusted local code without sandboxing; only repo-owned configs/providers are permitted.",
-        "Promptfoo telemetry/update/remote-generation/sharing flags are disabled, but these are not treated as a network sandbox."
+        "Promptfoo telemetry/update/remote-generation/sharing flags are disabled, but these are not treated as a network sandbox.",
+        "ChatGPT-066 saw unconfined promptfoo open outbound IPv6 HTTPS with telemetry off. A live third-party eval run needs OS-level egress denial (docs/office-v2/kickoff-eval.md)."
       ]
     }
   ]
