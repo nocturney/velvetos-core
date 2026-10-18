@@ -581,6 +581,17 @@ def prove_workflow_action_pins(core_workflow: str) -> str:
         fail("reverting the Windows checkout to @v7 was not caught")
     flow_quoted = 'steps:\n  - { "uses": "actions/checkout@v7" }\n'
     _require(action_pin_problems(flow_quoted), "not allowlisted", "quoted flow-style uses")
+    quoted_block = 'steps:\n  - "uses": actions/checkout@v7\n'
+    _require(action_pin_problems(quoted_block), "not allowlisted", "quoted uses key")
+    spaced_colon = "steps:\n  - uses : actions/checkout@v7\n"
+    _require(action_pin_problems(spaced_colon), "not allowlisted", "space before uses colon")
+    multiline_flow = (
+        "steps:\n"
+        "  - {\n"
+        "    name: x,\n"
+        "    uses: actions/checkout@v7 }\n"
+    )
+    _require(action_pin_problems(multiline_flow), "not allowlisted", "multi-line flow uses")
     flow_local = "steps:\n  - { uses: ./.github/actions/local }\n"
     _require_clean(action_pin_problems(flow_local), "local flow action")
     smoke_path = WORKFLOWS / "instagram-read-smoke.yml"
@@ -615,7 +626,8 @@ def prove_workflow_action_pins(core_workflow: str) -> str:
         "tag_fixture=caught sha_fixture=pass bare_sha=caught "
         "linux_revert=caught windows_revert=caught allowlist=empty "
         "flow=caught docker_tag=caught docker_digest=pass duplicate=caught "
-        "anchor=caught alias=caught merge=caught reusable=caught composite=caught"
+        "anchor=caught alias=caught merge=caught reusable=caught composite=caught "
+        "quoted_key=caught spaced_colon=caught multiline_flow=caught"
     )
 
 
