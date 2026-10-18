@@ -76,7 +76,7 @@ Post-publish performance feedback is appended only when real evidence exists.
 - `vfmedia` — canonical asset intake/catalog + Asset Truth.
 - `vfcopy` — mandatory `SOFT-TOOLS-CONTRACT.md`: reader-first, voice, Hebrew copy, Humanizer/AI-tells, actual-copy lint and factual gate.
 - HyperFrames — deterministic multi-shot/motion/RTL video backend through `scripts/vf_hyperframes.py`; never a creative authority or second runtime.
-- `ffmpeg-svg-caption-composition` — deterministic fallback/simple-overlay path.
+- `ffmpeg-svg-caption-composition` — deterministic fallback/simple-overlay path via `scripts/vf_ffmpeg_svg_caption.py` (`plan` / `run`).
 - `vfgrowth` — calendar, rubric, policy, preflight.
 - `vfigos` — real Instagram tool send + verification/failover.
 - `vfresearch` — public Social Intelligence / reference mechanics via `SOCIAL-INTELLIGENCE.md`; research only, never publish authority.

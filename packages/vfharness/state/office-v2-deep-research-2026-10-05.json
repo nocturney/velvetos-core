@@ -1,0 +1,25 @@
+{
+  "task_id": "office-v2-deep-research-2026-10-05",
+  "component_state": "Idle",
+  "updated_at": "2026-10-05T15:30:00Z",
+  "pack": "vfresearch",
+  "mention": "@research-synthesist",
+  "artifact": "packages/vfresearch/sources/2026-10-05-office-v2-deep-research.md",
+  "pointer": "docs/OFFICE-V2-DEEP-RESEARCH.md",
+  "latest_observation": {
+    "summary": "Capability-first Office v2 landscape scan complete. No installs. P0 bake-offs: LiteLLM, Hatchet vs DBOS, Spoolman, PrintFarmer vs Teila, ToolHive/agentgateway.",
+    "category_killers": [
+      "Hatchet",
+      "LiteLLM",
+      "ToolHive",
+      "Spoolman+farm-manager",
+      "Langfuse"
+    ],
+    "confidence": "medium-high on gaps; medium on numeric scores (no live bake-off)"
+  },
+  "execution_state": {
+    "phase": "research_delivered",
+    "installs": false,
+    "sensors_pending": true
+  }
+}

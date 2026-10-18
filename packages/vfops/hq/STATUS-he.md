@@ -63,5 +63,5 @@
 | `vfsales` | docs-playbook | on-inquiry | X ₪ עד סכום מאומת |
 | `vfseason` | docs-playbook | on-content | אין חלון עונה בלי תאריך סטודיו |
 | `vfsku` | working-cli | on-brief | — |
-| `vlicense` | docs-playbook | on-shelf | הורדה ≠ רישיון |
+| `vlicense` | docs-playbook | on-shelf | יוצר/מותג ישראלי |
 

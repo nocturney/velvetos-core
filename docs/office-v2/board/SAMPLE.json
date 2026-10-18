@@ -1,0 +1,305 @@
+{
+  "schema": "velvetos.office-v2.board.v0",
+  "generated_at": "2026-10-18T15:00+03:00",
+  "generated_at_jerusalem": "2026-10-18 15:00 Asia/Jerusalem",
+  "timezone": "Asia/Jerusalem",
+  "read_only": true,
+  "writes_to_github": false,
+  "llm_calls": false,
+  "repos": [
+    "nocturney/velvetos-core"
+  ],
+  "repo_access": {
+    "nocturney/velvetos-core": {
+      "ok": true
+    }
+  },
+  "queue": {
+    "repo": "nocturney/velvetos-core",
+    "issue": 612
+  },
+  "check_all_main": {
+    "repo": "nocturney/velvetos-core",
+    "name": "VelvetOS Core Sensors",
+    "status": "completed",
+    "conclusion": "success",
+    "event": "push",
+    "head_sha": "fcd92ba4dc8892130e48f8bdf46acddd84d3ff2c",
+    "url": "https://github.com/nocturney/velvetos-core/actions/runs/39122151561",
+    "created_at": "2026-10-18T11:10:16Z",
+    "created_at_jerusalem": "2026-10-18 14:10 Asia/Jerusalem"
+  },
+  "sections": {
+    "waiting_on_christian": [
+      {
+        "kind": "pull_request",
+        "repo": "nocturney/velvetos-core",
+        "number": 14,
+        "title": "auditor: owner gate",
+        "url": "https://github.com/nocturney/velvetos-core/pull/14",
+        "section": "waiting_on_christian",
+        "agent": "auditor",
+        "status": "waiting_on_christian",
+        "draft": false,
+        "head_sha": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "qa_please": null,
+        "qa_verdict": {
+          "id": 6,
+          "url": "https://github.com/nocturney/velvetos-core/pull/14#issuecomment-6",
+          "created_at": "2026-10-18T11:20:00Z",
+          "created_at_jerusalem": "2026-10-18 14:20 Asia/Jerusalem",
+          "excerpt": "QA verdict (auditor): PASS WITH NOTES. NEEDS OWNER before merge."
+        },
+        "open_issues": [],
+        "when": "2026-10-18T11:30:00Z",
+        "when_jerusalem": "2026-10-18 14:30 Asia/Jerusalem"
+      },
+      {
+        "kind": "claim",
+        "repo": "nocturney/velvetos-core",
+        "number": 612,
+        "title": "CLAIM (auditor) — waiting on Christian for the credential gate. See #604.",
+        "url": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-104",
+        "section": "waiting_on_christian",
+        "agent": "auditor",
+        "status": "claim",
+        "draft": null,
+        "head_sha": "",
+        "qa_please": null,
+        "qa_verdict": null,
+        "open_issues": [
+          {
+            "repo": "nocturney/velvetos-core",
+            "number": 604,
+            "title": "Fleet",
+            "url": "https://github.com/nocturney/velvetos-core/issues/604",
+            "state": "open"
+          }
+        ],
+        "when": "2026-10-18T07:00:00Z",
+        "when_jerusalem": "2026-10-18 10:00 Asia/Jerusalem",
+        "claim_key": "nocturney/velvetos-core#604"
+      }
+    ],
+    "waiting_on_qa": [
+      {
+        "kind": "pull_request",
+        "repo": "nocturney/velvetos-core",
+        "number": 13,
+        "title": "Gemini: retry qa",
+        "url": "https://github.com/nocturney/velvetos-core/pull/13",
+        "section": "waiting_on_qa",
+        "agent": "gemini",
+        "status": "waiting_on_qa",
+        "draft": false,
+        "head_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "qa_please": {
+          "id": 5,
+          "url": "https://github.com/nocturney/velvetos-core/pull/13#issuecomment-5",
+          "created_at": "2026-10-18T11:00:00Z",
+          "created_at_jerusalem": "2026-10-18 14:00 Asia/Jerusalem",
+          "excerpt": "QA please @ dddddddddddddddddddddddddddddddddddddddd"
+        },
+        "qa_verdict": {
+          "id": 4,
+          "url": "https://github.com/nocturney/velvetos-core/pull/13#issuecomment-4",
+          "created_at": "2026-10-18T09:00:00Z",
+          "created_at_jerusalem": "2026-10-18 12:00 Asia/Jerusalem",
+          "excerpt": "QA verdict (Gemini): FAIL"
+        },
+        "open_issues": [],
+        "when": "2026-10-18T11:00:00Z",
+        "when_jerusalem": "2026-10-18 14:00 Asia/Jerusalem"
+      },
+      {
+        "kind": "pull_request",
+        "repo": "nocturney/velvetos-core",
+        "number": 11,
+        "title": "Claude: caption fix",
+        "url": "https://github.com/nocturney/velvetos-core/pull/11",
+        "section": "waiting_on_qa",
+        "agent": "claude",
+        "status": "waiting_on_qa",
+        "draft": false,
+        "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "qa_please": {
+          "id": 1,
+          "url": "https://github.com/nocturney/velvetos-core/pull/11#issuecomment-1",
+          "created_at": "2026-10-18T10:05:00Z",
+          "created_at_jerusalem": "2026-10-18 13:05 Asia/Jerusalem",
+          "excerpt": "QA please @ bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "qa_verdict": null,
+        "open_issues": [],
+        "when": "2026-10-18T10:00:00Z",
+        "when_jerusalem": "2026-10-18 13:00 Asia/Jerusalem"
+      }
+    ],
+    "in_progress": {
+      "cursor": [
+        {
+          "kind": "pull_request",
+          "repo": "nocturney/velvetos-core",
+          "number": 10,
+          "title": "Cursor: draft desk",
+          "url": "https://github.com/nocturney/velvetos-core/pull/10",
+          "section": "in_progress",
+          "agent": "cursor",
+          "status": "draft",
+          "draft": true,
+          "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "qa_please": null,
+          "qa_verdict": null,
+          "open_issues": [],
+          "when": "2026-10-18T09:00:00Z",
+          "when_jerusalem": "2026-10-18 12:00 Asia/Jerusalem"
+        },
+        {
+          "kind": "claim",
+          "repo": "nocturney/velvetos-core",
+          "number": 612,
+          "title": "Cursor: CLAIM — follow #700 only",
+          "url": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-107",
+          "section": "in_progress",
+          "agent": "cursor",
+          "status": "claim",
+          "draft": null,
+          "head_sha": "",
+          "qa_please": null,
+          "qa_verdict": null,
+          "open_issues": [],
+          "when": "2026-10-18T05:00:00Z",
+          "when_jerusalem": "2026-10-18 08:00 Asia/Jerusalem",
+          "claim_key": "nocturney/velvetos-core#700"
+        }
+      ],
+      "chatgpt": [],
+      "claude": [
+        {
+          "kind": "claim",
+          "repo": "nocturney/velvetos-core",
+          "number": 612,
+          "title": "Claude: CLAIM CLQ-2 — alias map for #595",
+          "url": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-102",
+          "section": "in_progress",
+          "agent": "claude",
+          "status": "claim",
+          "draft": null,
+          "head_sha": "",
+          "qa_please": null,
+          "qa_verdict": null,
+          "open_issues": [
+            {
+              "repo": "nocturney/velvetos-core",
+              "number": 595,
+              "title": "Recover overlooked competitors",
+              "url": "https://github.com/nocturney/velvetos-core/issues/595",
+              "state": "open"
+            }
+          ],
+          "when": "2026-10-18T09:00:00Z",
+          "when_jerusalem": "2026-10-18 12:00 Asia/Jerusalem",
+          "claim_key": "CLQ-2"
+        }
+      ],
+      "gemini": [],
+      "auditor": [],
+      "unassigned": []
+    },
+    "blocked": [
+      {
+        "kind": "pull_request",
+        "repo": "nocturney/velvetos-core",
+        "number": 12,
+        "title": "ChatGPT: gate",
+        "url": "https://github.com/nocturney/velvetos-core/pull/12",
+        "section": "blocked",
+        "agent": "chatgpt",
+        "status": "qa_fail",
+        "draft": false,
+        "head_sha": "cccccccccccccccccccccccccccccccccccccccc",
+        "qa_please": {
+          "id": 2,
+          "url": "https://github.com/nocturney/velvetos-core/pull/12#issuecomment-2",
+          "created_at": "2026-10-18T08:00:00Z",
+          "created_at_jerusalem": "2026-10-18 11:00 Asia/Jerusalem",
+          "excerpt": "QA please @ cccccccccccccccccccccccccccccccccccccccc"
+        },
+        "qa_verdict": {
+          "id": 3,
+          "url": "https://github.com/nocturney/velvetos-core/pull/12#issuecomment-3",
+          "created_at": "2026-10-18T09:00:00Z",
+          "created_at_jerusalem": "2026-10-18 12:00 Asia/Jerusalem",
+          "excerpt": "QA verdict (ChatGPT): FAIL the gate"
+        },
+        "open_issues": [],
+        "when": "2026-10-18T08:00:00Z",
+        "when_jerusalem": "2026-10-18 11:00 Asia/Jerusalem"
+      },
+      {
+        "kind": "claim",
+        "repo": "nocturney/velvetos-core",
+        "number": 612,
+        "title": "ChatGPT: BLOCKED CP099 — host offline",
+        "url": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-103",
+        "section": "blocked",
+        "agent": "chatgpt",
+        "status": "blocked",
+        "draft": null,
+        "head_sha": "",
+        "qa_please": null,
+        "qa_verdict": null,
+        "open_issues": [],
+        "when": "2026-10-18T08:00:00Z",
+        "when_jerusalem": "2026-10-18 11:00 Asia/Jerusalem",
+        "claim_key": "CP099"
+      }
+    ],
+    "done_today": [
+      {
+        "kind": "pull_request",
+        "repo": "nocturney/velvetos-core",
+        "number": 9,
+        "title": "Cursor: merged today",
+        "url": "https://github.com/nocturney/velvetos-core/pull/9",
+        "section": "done_today",
+        "agent": "cursor",
+        "status": "merged",
+        "draft": false,
+        "head_sha": "9999999999999999999999999999999999999999",
+        "qa_please": null,
+        "qa_verdict": null,
+        "open_issues": [],
+        "when": "2026-10-18T01:00:00Z",
+        "when_jerusalem": "2026-10-18 04:00 Asia/Jerusalem"
+      },
+      {
+        "kind": "claim",
+        "repo": "nocturney/velvetos-core",
+        "number": 612,
+        "title": "Cursor: DONE CLQ-1",
+        "url": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-101",
+        "section": "done_today",
+        "agent": "cursor",
+        "status": "done",
+        "draft": null,
+        "head_sha": "",
+        "qa_please": null,
+        "qa_verdict": null,
+        "open_issues": [],
+        "when": "2026-10-17T22:30:00Z",
+        "when_jerusalem": "2026-10-18 01:30 Asia/Jerusalem",
+        "claim_key": "CLQ-1"
+      }
+    ]
+  },
+  "next_step": {
+    "framework": "plain-python",
+    "reason": "CrewAI and LangGraph are not in requirements-sensors.txt or the hashed lockfiles. Do not import them until a protected admission adds them.",
+    "research_comment": "https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6249011608",
+    "research_comment_id": 6249011608,
+    "doc": "docs/office-v2/NEXT.md"
+  },
+  "private_rows_omitted": true,
+  "board_kind": "fixture-sample"
+}

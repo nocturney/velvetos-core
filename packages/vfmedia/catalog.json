@@ -2,7 +2,7 @@
   "name": "vfmedia-catalog",
   "title": "VelvetOS shared media catalog",
   "oneCatalog": true,
-  "updatedAt": "2026-10-09",
+  "updatedAt": "2026-10-18",
   "vaultRootId": "1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv",
   "locks": [
     "one-catalog",
@@ -18220,7 +18220,7 @@
       "truth": {
         "origin": "studio_camera",
         "truthLevel": "derived_real",
-        "rightsStatus": "unknown",
+        "rightsStatus": "approved",
         "usableFor": [
           "hero"
         ],
@@ -18238,9 +18238,10 @@
         "verifiedAt": "2026-09-18",
         "evidenceRefs": [
           "https://drive.google.com/file/d/1QaN3H4CEjC9k8Drq0lG5TL7jJBbbPNIp/view?usp=drivesdk",
-          "https://drive.google.com/file/d/1FHyXtmZEoMnbDPs4Sed5p07LvBB3JUl8/view?usp=drivesdk"
+          "https://drive.google.com/file/d/1FHyXtmZEoMnbDPs4Sed5p07LvBB3JUl8/view?usp=drivesdk",
+          "velvetos-core#180 issuecomment-6248328808 (owner rights approval, gate 1)"
         ],
-        "note": "Latest package version in approved-media folder. Publication itself not performed."
+        "note": "Latest package version in approved-media folder. Publication itself not performed. rightsStatus=approved by owner Christian at 2026-10-18T12:39+03:00 (own studio photo of own print; relayed via #180 gate 1). Rights approval is not publish authorization."
       },
       "visualReview": {
         "state": "done",

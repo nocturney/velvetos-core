@@ -506,6 +506,61 @@
       "fallback_scope": "FULL_SUITE",
       "mapping_state": "mapped"
     },
+
+    {
+      "id": "check-crewai-reviewed-runner",
+      "path": "scripts/check-crewai-reviewed-runner.py",
+      "owns": [
+        "docs/office-v2/crewai-e3-dependency-findings.md",
+        "scripts/check-crewai-reviewed-runner.py",
+        "scripts/office_v2_crewai/**"
+      ],
+      "triggered_by": [
+        "docs/office-v2/crewai-e3-dependency-findings.md",
+        "scripts/check-crewai-reviewed-runner.py",
+        "scripts/office_v2_crewai/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "lifecycle": "DOMAIN",
+      "risk": "high",
+      "timeout_seconds": 120,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-crewai-e5-network",
+      "path": "scripts/check-crewai-e5-network.py",
+      "owns": [
+        "docs/office-v2/pilot-e5-network-evidence.md",
+        "scripts/check-crewai-e5-network.py",
+        "scripts/collect-crewai-e5-network.ps1",
+        "scripts/vf_office_v2_crewai_e5_network.py"
+      ],
+      "triggered_by": [
+        "docs/office-v2/pilot-e5-network-evidence.md",
+        "scripts/check-crewai-e5-network.py",
+        "scripts/collect-crewai-e5-network.ps1",
+        "scripts/vf_office_v2_crewai_e5_network.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "lifecycle": "DOMAIN",
+      "risk": "high",
+      "timeout_seconds": 60,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
     {
       "id": "check-critical-syntax",
       "path": "scripts/check-critical-syntax.py",
@@ -817,6 +872,8 @@
         "scripts/bootstrap-edge-host-windows.ps1",
         "scripts/bootstrap-hyperframes-host-macos.sh",
         "scripts/check-hyperframes-backend.py",
+        "scripts/test_vf_ffmpeg_svg_caption.py",
+        "scripts/vf_ffmpeg_svg_caption.py",
         "scripts/vf_hyperframes.py"
       ],
       "triggered_by": [
@@ -826,6 +883,8 @@
         "scripts/bootstrap-edge-host-windows.ps1",
         "scripts/bootstrap-hyperframes-host-macos.sh",
         "scripts/check-hyperframes-backend.py",
+        "scripts/test_vf_ffmpeg_svg_caption.py",
+        "scripts/vf_ffmpeg_svg_caption.py",
         "scripts/vf_hyperframes.py"
       ],
       "depends_on": [],
@@ -1303,6 +1362,40 @@
       "enforces": [],
       "lifecycle": "DOMAIN",
       "risk": "high",
+      "timeout_seconds": 60,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-office-v2-mvp",
+      "path": "scripts/check-office-v2-mvp.py",
+      "owns": [
+        ".github/workflows/office-v2-board.yml",
+        "docs/office-v2/NEXT.md",
+        "docs/office-v2/board/**",
+        "scripts/check-office-v2-mvp.py",
+        "scripts/fixtures/office_v2_mvp/**",
+        "scripts/office_v2_mvp.py",
+        "scripts/test_office_v2_mvp.py"
+      ],
+      "triggered_by": [
+        ".github/workflows/office-v2-board.yml",
+        "docs/office-v2/NEXT.md",
+        "docs/office-v2/board/**",
+        "scripts/check-office-v2-mvp.py",
+        "scripts/fixtures/office_v2_mvp/**",
+        "scripts/office_v2_mvp.py",
+        "scripts/test_office_v2_mvp.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
       "timeout_seconds": 60,
       "failure_effect": {
         "merge": "BLOCK",
@@ -2883,6 +2976,46 @@
       "enforces": [],
       "lifecycle": "DOMAIN",
       "risk": "medium",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-veto-inventory",
+      "path": "scripts/check-veto-inventory.py",
+      "owns": [
+        "docs/implementation/office-v2/phase2/competitor-provenance-alias-map-2026-10-18.json",
+        "docs/implementation/office-v2/phase2/veto-inventory-2026-10-18.json",
+        "docs/implementation/office-v2/phase2/veto-inventory-2026-10-18.md",
+        "packages/vfe2b/DEER-FLOW-PATTERNS.md",
+        "packages/vfe2b/LOCK.md",
+        "packages/vfe2b/ORCHESTRATORS.md",
+        "packages/vfe2b/catalog.json",
+        "packages/vfe2b/orchestrators.json",
+        "packages/vfresearch/LINKS.json",
+        "scripts/check-veto-inventory.py"
+      ],
+      "triggered_by": [
+        "docs/implementation/office-v2/phase2/competitor-provenance-alias-map-2026-10-18.json",
+        "docs/implementation/office-v2/phase2/veto-inventory-2026-10-18.json",
+        "docs/implementation/office-v2/phase2/veto-inventory-2026-10-18.md",
+        "packages/vfe2b/DEER-FLOW-PATTERNS.md",
+        "packages/vfe2b/LOCK.md",
+        "packages/vfe2b/ORCHESTRATORS.md",
+        "packages/vfe2b/catalog.json",
+        "packages/vfe2b/orchestrators.json",
+        "packages/vfresearch/LINKS.json",
+        "scripts/check-veto-inventory.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "lifecycle": "DOMAIN",
+      "risk": "low",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",

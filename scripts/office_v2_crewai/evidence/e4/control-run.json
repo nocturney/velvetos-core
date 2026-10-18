@@ -1,0 +1,10 @@
+{
+  "allowlist_fixed_before_run": false,
+  "duration_matches_pilot": false,
+  "hkcu_noise": [],
+  "noise_rels": [],
+  "overlap_with_candidate": false,
+  "pilot_started": false,
+  "schema": "velvetos.office-v2.crewai-e4-control-run.v1",
+  "status": "NOT_OBSERVED"
+}
