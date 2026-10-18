@@ -2,6 +2,8 @@
 """Unit and small-render tests for the ffmpeg SVG caption fallback."""
 from __future__ import annotations
 
+import contextlib
+import io
 import json
 import shutil
 import subprocess
@@ -205,6 +207,7 @@ class FailoverDecisionTests(unittest.TestCase):
         def fake_render(prepared, receipt_override, failover):
             seen["failover"] = failover
             seen["jobId"] = prepared["jobId"]
+            seen["prepared"] = prepared
             return {"backend": "ffmpeg-svg-caption-composition", "failover": failover, "jobId": prepared["jobId"]}
 
         real_which = shutil.which
@@ -221,6 +224,11 @@ class FailoverDecisionTests(unittest.TestCase):
         ):
             receipt = vf_hyperframes.execute(req, None)
         self.assertEqual(seen["jobId"], "hf180-fallback-unit")
+        self.assertIn("compositionInfo", seen["prepared"])
+        self.assertIn("font", seen["prepared"])
+        self.assertIsInstance(req["sourceRequest"], dict)
+        self.assertEqual(req["sourceRequest"]["backend"], "hyperframes")
+        self.assertIsInstance(req["sourceRequest"]["projectDir"], str)
         self.assertEqual(receipt["backend"], "ffmpeg-svg-caption-composition")
         self.assertEqual(seen["failover"]["attempts"], 2)
         self.assertIs(seen["failover"]["qaLowered"], False)
@@ -274,6 +282,242 @@ class RealRenderTests(unittest.TestCase):
         svg = svg_path.read_text(encoding="utf-8")
         self.assertIn(HEADLINE, svg)
         self.assertIn(COPPER, svg)
+        self.assertIn('direction="rtl"', svg)
+
+
+def _headline_ink_bounds(text: str) -> tuple[int, int, str, str]:
+    """Render one caption line through the production drawtext path.
+
+    Returns (left, right, textfile contents, filter graph). The scrim and
+    copper rule sit outside the scanned band so only glyph ink is measured.
+    """
+    import vf_ffmpeg_svg_caption as caption
+
+    font = caption.rubik_font()["path"]
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        raise unittest.SkipTest("ffmpeg or ffprobe is not on PATH")
+    width, height = 1800, 1920
+    info = {
+        "width": width,
+        "height": height,
+        "safeX": 40.0,
+        "headlineSize": 72.0,
+        "subheadSize": 40.0,
+        "ruleWidth": 12.0,
+        "ruleHeight": 4.0,
+    }
+    layout = {
+        "headlineLines": [text],
+        "subheadLines": [],
+        "top": 80.0,
+        "headLineH": 100.0,
+        "ruleX": 40.0,
+        "ruleY": 1700.0,
+        "subTop": 1760.0,
+        "subLineH": 50.0,
+    }
+    with tempfile.TemporaryDirectory() as tmp:
+        work = Path(tmp)
+        graph = caption.drawtext_filters(info, layout, font, work)
+        written = (work / "headline-0.txt").read_text(encoding="utf-8")
+        png = work / "line.png"
+        caption.render_caption_png(info, layout, font, png, work, ffmpeg)
+        raw = work / "line.raw"
+        subprocess.run(
+            [ffmpeg, "-y", "-hide_banner", "-loglevel", "error", "-i", str(png), "-f", "rawvideo", "-pix_fmt", "rgb24", str(raw)],
+            check=True,
+            timeout=30,
+        )
+        data = raw.read_bytes()
+        min_x, max_x = width, -1
+        for y in range(60, 200):
+            row = data[y * width * 3:(y + 1) * width * 3]
+            for x in range(width):
+                if row[x * 3] > 16 or row[x * 3 + 1] > 16 or row[x * 3 + 2] > 16:
+                    if x < min_x:
+                        min_x = x
+                    if x > max_x:
+                        max_x = x
+        if max_x < 0:
+            raise AssertionError(f"caption line produced no ink: {text!r}")
+        return min_x, max_x, written, graph
+
+
+class BidiCaptionTests(unittest.TestCase):
+    def test_visual_order_puts_punctuation_and_latin_runs_in_rtl(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        self.assertEqual(caption.visual_order("שלום."), ".םולש")
+        self.assertEqual(caption.visual_order("שלום!"), "!םולש")
+        self.assertEqual(caption.visual_order("אב."), ".בא")
+        self.assertEqual(caption.visual_order("קשה Velvet"), "Velvet השק")
+        self.assertEqual(caption.visual_order("קשה DEF"), "DEF השק")
+        self.assertEqual(caption.visual_order("קשה Velvet להתווכח."), ".חכוותהל Velvet השק")
+        self.assertEqual(caption.visual_order("קשה 12"), "12 השק")
+
+    def test_trailing_punctuation_extends_the_left_edge(self) -> None:
+        reason = ffmpeg_skip_reason()
+        if reason:
+            self.skipTest(reason)
+        base_left, base_right, base_text, base_graph = _headline_ink_bounds("שלום")
+        dot_left, dot_right, dot_text, dot_graph = _headline_ink_bounds("שלום.")
+        bang_left, bang_right, bang_text, bang_graph = _headline_ink_bounds("שלום!")
+        self.assertEqual(base_text, "םולש")
+        self.assertEqual(dot_text, ".םולש")
+        self.assertEqual(bang_text, "!םולש")
+        self.assertIn("text_shaping=0", base_graph)
+        self.assertIn("text_shaping=0", dot_graph)
+        self.assertIn("text_shaping=0", bang_graph)
+        self.assertNotIn("text_shaping=1", dot_graph)
+        self.assertLessEqual(dot_left, base_left - 8)
+        self.assertLessEqual(bang_left, base_left - 8)
+        self.assertLessEqual(abs(dot_right - base_right), 4)
+        self.assertLessEqual(abs(bang_right - base_right), 4)
+
+    def test_latin_run_in_hebrew_line_extends_the_left_edge(self) -> None:
+        reason = ffmpeg_skip_reason()
+        if reason:
+            self.skipTest(reason)
+        base_left, base_right, base_text, _graph = _headline_ink_bounds("קשה")
+        velvet_left, velvet_right, velvet_text, velvet_graph = _headline_ink_bounds("קשה Velvet")
+        def_left, def_right, def_text, _def_graph = _headline_ink_bounds("קשה DEF")
+        self.assertEqual(base_text, "השק")
+        self.assertEqual(velvet_text, "Velvet השק")
+        self.assertEqual(def_text, "DEF השק")
+        self.assertIn("text_shaping=0", velvet_graph)
+        self.assertLessEqual(velvet_left, base_left - 40)
+        self.assertLessEqual(def_left, base_left - 20)
+        self.assertLessEqual(abs(velvet_right - base_right), 4)
+        self.assertLessEqual(abs(def_right - base_right), 4)
+
+    def test_doctor_records_fribidi_harfbuzz_and_bidi_self_test(self) -> None:
+        reason = ffmpeg_skip_reason()
+        if reason:
+            self.skipTest(reason)
+        import vf_ffmpeg_svg_caption as caption
+
+        stdout = io.StringIO()
+        with contextlib.redirect_stdout(stdout):
+            code = caption.doctor()
+        text = stdout.getvalue()
+        self.assertEqual(code, 0, text)
+        self.assertIn("--enable-libfribidi", text)
+        self.assertIn("--enable-libharfbuzz", text)
+        self.assertIn("bidi-self-test=pass", text)
+
+
+class FallbackHandoffTests(unittest.TestCase):
+    def _owl_root(self, root: Path, *, real_media: bool) -> dict:
+        write_composition(
+            root,
+            duration="0.2",
+            hero="assets/owl-v13-hero.jpg",
+            audio="assets/owl-v13-music-sirens-cc0.m4a",
+        )
+        hero = root / "assets" / "owl-v13-hero.jpg"
+        audio = root / "assets" / "owl-v13-music-sirens-cc0.m4a"
+        if real_media:
+            subprocess.run(
+                ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i", "testsrc2=s=640x360:d=1", "-frames:v", "1", str(hero)],
+                check=True,
+                timeout=30,
+            )
+            subprocess.run(
+                ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i", "sine=frequency=440:duration=1:sample_rate=48000", "-c:a", "aac", str(audio)],
+                check=True,
+                timeout=30,
+            )
+        else:
+            hero.write_bytes(b"\xff\xd8\xff\xd9")
+            audio.write_bytes(b"not-audio")
+        return request_body(
+            root,
+            jobId="hf180-gate2-fallback",
+            stage="final",
+            quality="high",
+            output="out/reel.mp4",
+            audioRequired=True,
+        )
+
+    def test_fallback_exception_writes_fail_receipt_without_traceback(self) -> None:
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        root = Path(tmp.name)
+        raw = self._owl_root(root, real_media=False)
+        req = vf_hyperframes.validate_request(raw)
+        import vf_ffmpeg_svg_caption as caption
+
+        real_which = shutil.which
+
+        def hide_hyperframes(name: str):
+            if name == "hyperframes":
+                return None
+            return real_which(name)
+
+        stderr = io.StringIO()
+        with mock.patch.object(vf_hyperframes.shutil, "which", side_effect=hide_hyperframes), mock.patch.object(
+            caption, "render_prepared", side_effect=KeyError("compositionInfo")
+        ), contextlib.redirect_stderr(stderr):
+            with self.assertRaises(SystemExit) as caught:
+                vf_hyperframes.execute(req, None)
+        self.assertEqual(caught.exception.code, 1)
+        err = stderr.getvalue()
+        self.assertIn("FAIL", err)
+        self.assertNotIn("Traceback", err)
+        receipt_path = root / "out" / "reel.mp4.receipt.json"
+        self.assertTrue(receipt_path.is_file())
+        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+        self.assertIs(receipt["ok"], False)
+        self.assertIs(receipt["verified"], False)
+        self.assertNotIn("sha256", receipt)
+        self.assertIs(receipt["qaLowered"], False)
+        self.assertIs(receipt["renderReceiptIsPublishReceipt"], False)
+        self.assertEqual(receipt["failover"]["attempts"], 2)
+        self.assertEqual(receipt["backend"], "ffmpeg-svg-caption-composition")
+        self.assertIn("KeyError", receipt["fail"])
+
+    def test_execute_raw_hyperframes_request_renders_when_primary_missing(self) -> None:
+        reason = ffmpeg_skip_reason()
+        if reason:
+            self.skipTest(reason)
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        root = Path(tmp.name)
+        raw = self._owl_root(root, real_media=True)
+        self.assertEqual(raw["backend"], "hyperframes")
+        self.assertEqual(raw["resolution"], "portrait")
+        self.assertEqual(raw["fps"], 30)
+        self.assertEqual(raw["format"], "mp4")
+        self.assertIs(raw["audioRequired"], True)
+        req = vf_hyperframes.validate_request(raw)
+        real_which = shutil.which
+
+        def hide_hyperframes(name: str):
+            if name == "hyperframes":
+                return None
+            return real_which(name)
+
+        with mock.patch.object(vf_hyperframes.shutil, "which", side_effect=hide_hyperframes):
+            receipt = vf_hyperframes.execute(req, None)
+        output = root / "out" / "reel.mp4"
+        self.assertTrue(output.is_file())
+        self.assertGreater(output.stat().st_size, 0)
+        self.assertEqual(receipt["backend"], "ffmpeg-svg-caption-composition")
+        self.assertEqual(receipt["failover"]["from"], "hyperframes")
+        self.assertEqual(receipt["failover"]["to"], "ffmpeg-svg-caption-composition")
+        self.assertEqual(receipt["failover"]["attempts"], 2)
+        self.assertIs(receipt["failover"]["qaLowered"], False)
+        self.assertIs(receipt["renderReceiptIsPublishReceipt"], False)
+        self.assertEqual(receipt["probe"]["width"], 1080)
+        self.assertEqual(receipt["probe"]["height"], 1920)
+        self.assertEqual(receipt["probe"]["videoCodec"], "h264")
+        self.assertGreaterEqual(receipt["probe"]["audioStreams"], 1)
+        streams = {stream["codec_type"]: stream["codec_name"] for stream in receipt["ffprobe"]["streams"]}
+        self.assertEqual(streams["video"], "h264")
+        self.assertEqual(streams["audio"], "aac")
+        svg = (output.with_suffix(output.suffix + ".caption.svg")).read_text(encoding="utf-8")
+        self.assertIn(HEADLINE, svg)
         self.assertIn('direction="rtl"', svg)
 
 

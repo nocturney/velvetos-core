@@ -3,9 +3,12 @@
 
 HyperFrames stays the primary compositor. This bridge renders the same
 request.json when HyperFrames is unavailable: a product still, a slow zoom,
-a Hebrew RTL SVG caption in Rubik with the copper accent, safe-area placement,
-and an audio track with fade in/out. It writes an ffprobe + SHA-256 receipt
-and fails closed. It does not install packages and it does not publish.
+a Hebrew caption in Rubik with the copper accent, safe-area placement,
+and an audio track with fade in/out. The SVG keeps logical text with
+direction=rtl. The pixels come from drawtext, which has no RTL base option,
+so the line is reordered to visual RTL and drawn with text_shaping=0.
+It writes an ffprobe + SHA-256 receipt and fails closed. It does not install
+packages and it does not publish.
 """
 from __future__ import annotations
 
@@ -35,6 +38,77 @@ DEFAULT_PAN_Y = 20.0
 DEFAULT_ORIGIN = (0.5, 0.40)
 HEBREW_RE = re.compile(r"[\u0590-\u05FF]")
 PORTRAIT = (1080, 1920)
+_BIDI_CONTROLS = set("\u200e\u200f\u202a\u202b\u202c\u202d\u202e\u2066\u2067\u2068\u2069")
+
+
+def _bidi_class(ch: str) -> str:
+    if ch in _BIDI_CONTROLS:
+        return "BN"
+    if ("\u0590" <= ch <= "\u05FF") or ("\uFB1D" <= ch <= "\uFB4F") or ("\u0600" <= ch <= "\u06FF"):
+        return "R"
+    code = ord(ch)
+    if ("A" <= ch <= "Z") or ("a" <= ch <= "z") or (0x00C0 <= code <= 0x024F):
+        return "L"
+    if "0" <= ch <= "9":
+        return "EN"
+    return "ON"
+
+
+def visual_order(text: str) -> str:
+    """Return LTR glyph order for a caption whose paragraph base is RTL.
+
+    ffmpeg drawtext hardcodes an LTR fribidi paragraph and exposes no
+    base-direction option. Hebrew does not need complex shaping, so the
+    caption is pre-ordered and drawn with text_shaping=0. Browsers still
+    receive the logical string in the SVG.
+    """
+    if not text:
+        return text
+    chars = list(text)
+    classes = [_bidi_class(ch) for ch in chars]
+    for index, ch in enumerate(chars):
+        if classes[index] != "ON" or ch not in ".,:/":
+            continue
+        previous = next((classes[pos] for pos in range(index - 1, -1, -1) if classes[pos] != "BN"), None)
+        following = next((classes[pos] for pos in range(index + 1, len(classes)) if classes[pos] != "BN"), None)
+        if previous == "EN" and following == "EN":
+            classes[index] = "EN"
+
+    def nearest(start: int, step: int) -> str:
+        pos = start
+        while 0 <= pos < len(classes):
+            if classes[pos] in {"R", "L", "EN"}:
+                return "L" if classes[pos] in {"L", "EN"} else "R"
+            pos += step
+        return "R"
+
+    resolved: list[str] = []
+    for index, kind in enumerate(classes):
+        if kind in {"R", "L", "EN"}:
+            resolved.append(kind)
+            continue
+        left = nearest(index - 1, -1)
+        right = nearest(index + 1, 1)
+        resolved.append(left if left == right else "R")
+    kept = [(ch, 1 if kind == "R" else 2) for ch, kind, cls in zip(chars, resolved, classes) if cls != "BN"]
+    if not kept:
+        return ""
+    sequence = kept
+    for level in range(max(item[1] for item in sequence), 0, -1):
+        rewritten: list[tuple[str, int]] = []
+        index = 0
+        while index < len(sequence):
+            if sequence[index][1] >= level:
+                end = index + 1
+                while end < len(sequence) and sequence[end][1] >= level:
+                    end += 1
+                rewritten.extend(reversed(sequence[index:end]))
+                index = end
+            else:
+                rewritten.append(sequence[index])
+                index += 1
+        sequence = rewritten
+    return "".join(ch for ch, _level in sequence)
 
 
 def fail(message: str, code: int = 2) -> None:
@@ -378,6 +452,59 @@ def encoder_names(ffmpeg: str) -> set[str]:
     return names
 
 
+def _right_aligned_ink(text: str, ffmpeg: str, font: Path) -> tuple[int, int] | None:
+    """Ink bounds of one right-aligned caption line, scrim and rule excluded."""
+    width = 1800
+    info = {
+        "width": width,
+        "height": 1920,
+        "safeX": 40.0,
+        "headlineSize": 72.0,
+        "subheadSize": 40.0,
+        "ruleWidth": 12.0,
+        "ruleHeight": 4.0,
+    }
+    layout = {
+        "headlineLines": [text],
+        "subheadLines": [],
+        "top": 80.0,
+        "headLineH": 100.0,
+        "ruleX": 40.0,
+        "ruleY": 1700.0,
+        "subTop": 1760.0,
+        "subLineH": 50.0,
+    }
+    with tempfile.TemporaryDirectory() as tmp:
+        work = Path(tmp)
+        png = work / "line.png"
+        try:
+            render_caption_png(info, layout, font, png, work, ffmpeg)
+        except SystemExit:
+            return None
+        raw = work / "line.raw"
+        proc = subprocess.run(
+            [ffmpeg, "-y", "-hide_banner", "-loglevel", "error", "-i", str(png), "-f", "rawvideo", "-pix_fmt", "rgb24", str(raw)],
+            text=True,
+            timeout=30,
+        )
+        if proc.returncode != 0 or not raw.is_file():
+            return None
+        data = raw.read_bytes()
+        min_x, max_x = width, -1
+        row_bytes = width * 3
+        for y in range(60, 200):
+            row = data[y * row_bytes:(y + 1) * row_bytes]
+            for x in range(width):
+                if row[x * 3] > 16 or row[x * 3 + 1] > 16 or row[x * 3 + 2] > 16:
+                    if x < min_x:
+                        min_x = x
+                    if x > max_x:
+                        max_x = x
+        if max_x < 0:
+            return None
+        return min_x, max_x
+
+
 def doctor() -> int:
     ffmpeg = tool_path("ffmpeg")
     ffprobe = tool_path("ffprobe")
@@ -399,10 +526,28 @@ def doctor() -> int:
         )
         return 1
     try:
-        rubik_font()
+        font = rubik_font()
     except SystemExit:
         return 1
-    print(f"OK {BACKEND} ffmpeg+ffprobe drawtext/zoompan/libx264/aac Rubik")
+    build = subprocess.run([ffmpeg, "-hide_banner", "-buildconf"], text=True, capture_output=True, timeout=20)
+    build_text = (build.stdout or "") + "\n" + (build.stderr or "")
+    if "--enable-libfribidi" not in build_text or "--enable-libharfbuzz" not in build_text:
+        print("FAIL ffmpeg build missing libfribidi or libharfbuzz", file=sys.stderr)
+        return 1
+    plain = _right_aligned_ink("שלום", ffmpeg, font["path"])
+    dotted = _right_aligned_ink("שלום.", ffmpeg, font["path"])
+    if (
+        plain is None
+        or dotted is None
+        or plain[0] - dotted[0] < 8
+        or abs(plain[1] - dotted[1]) > 4
+    ):
+        print("FAIL bidi self-test: trailing punctuation did not land on the left", file=sys.stderr)
+        return 1
+    print(
+        f"OK {BACKEND} ffmpeg+ffprobe drawtext/zoompan/libx264/aac Rubik "
+        "--enable-libfribidi --enable-libharfbuzz bidi-self-test=pass"
+    )
     return 0
 
 
@@ -413,10 +558,10 @@ def text_ink_width(font: Path, text: str, size: float, ffmpeg: str) -> int:
     with tempfile.TemporaryDirectory() as tmp:
         text_path = Path(tmp) / "line.txt"
         raw_path = Path(tmp) / "line.raw"
-        text_path.write_text(text, encoding="utf-8")
+        text_path.write_text(visual_order(text), encoding="utf-8")
         vf = (
             f"drawtext=fontfile={escape_filter_path(font)}:textfile={escape_filter_path(text_path)}"
-            f":text_shaping=1:expansion=none:fontcolor=white:fontsize={size:.2f}:x=0:y=0"
+            f":text_shaping=0:expansion=none:fontcolor=white:fontsize={size:.2f}:x=0:y=0"
         )
         proc = subprocess.run(
             [ffmpeg, "-y", "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i", f"color=c=black:s={width}x{height}:d=1",
@@ -696,11 +841,11 @@ def drawtext_filters(info: dict[str, Any], layout: dict[str, Any], font: Path, w
     index = 0
     for line in layout["headlineLines"]:
         path = work / f"headline-{index}.txt"
-        path.write_text(line, encoding="utf-8")
+        path.write_text(visual_order(line), encoding="utf-8")
         filters.append(
             "drawtext=fontfile=" + escape_filter_path(font)
             + ":textfile=" + escape_filter_path(path)
-            + f":text_shaping=1:expansion=none:fontcolor=white:fontsize={info['headlineSize']:.2f}"
+            + f":text_shaping=0:expansion=none:fontcolor=white:fontsize={info['headlineSize']:.2f}"
             + f":x=w-text_w-{info['safeX']:.1f}:y={y:.1f}"
         )
         y += layout["headLineH"]
@@ -709,11 +854,11 @@ def drawtext_filters(info: dict[str, Any], layout: dict[str, Any], font: Path, w
     index = 0
     for line in layout["subheadLines"]:
         path = work / f"subhead-{index}.txt"
-        path.write_text(line, encoding="utf-8")
+        path.write_text(visual_order(line), encoding="utf-8")
         filters.append(
             "drawtext=fontfile=" + escape_filter_path(font)
             + ":textfile=" + escape_filter_path(path)
-            + f":text_shaping=1:expansion=none:fontcolor=white:fontsize={info['subheadSize']:.2f}"
+            + f":text_shaping=0:expansion=none:fontcolor=white:fontsize={info['subheadSize']:.2f}"
             + f":x=w-text_w-{info['safeX']:.1f}:y={y:.1f}"
         )
         y += layout["subLineH"]
