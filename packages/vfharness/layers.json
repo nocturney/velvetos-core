@@ -26,6 +26,21 @@
     "sameSensorFailTrip": 3,
     "stoppingCondition": "best-artifact-plus-unresolved"
   },
+  "ladder": {
+    "canonical": "packages/vfharness/LOOP.md",
+    "mirrorOf": "Mechanical mirror of the escalation ladder in LOOP.md. Not an independent policy source; drift is checked by scripts/check-vfharness.py.",
+    "order": [
+      "retry",
+      "fallback",
+      "downgrade_scope",
+      "safe_ruling",
+      "escalate"
+    ],
+    "retryBudget": 2,
+    "fallbackAttempts": 1,
+    "safeRulingDefault": false,
+    "requiredSensorRedOverridable": false
+  },
   "layers": [
     {
       "id": 1,
