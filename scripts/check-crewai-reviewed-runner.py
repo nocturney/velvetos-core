@@ -1847,7 +1847,8 @@ def check_exit_contract() -> None:
         ("trace-consent", cited, False),
     )
 
-    def run(text: str, consent_ok: bool) -> tuple[int, dict, dict]:
+    def run(text: str, consent_ok: bool, path: str | None = None,
+            force_darwin: bool = False) -> tuple[int, dict, dict]:
         parent = Path(tempfile.mkdtemp(prefix="crewai-exit-"))
         import office_v2_crewai.crew_build as crew_mod
         import office_v2_crewai.provider as provider_mod
@@ -1898,6 +1899,7 @@ def check_exit_contract() -> None:
             usage_mod.assert_trace_consent,
         )
         saved_env = dict(os.environ)
+        saved_platform = sys.platform
         try:
             synthetic_passing_bundle(parent)
             crew_mod.build_crew = fake_build
@@ -1908,8 +1910,20 @@ def check_exit_contract() -> None:
             os.environ.clear()
             ready = passing_env()
             ready["OLLAMA_NO_CLOUD"] = "1"
+            # passing_env has no PATH. macOS lsof is in /usr/sbin, and a missing
+            # PATH makes subprocess use os.defpath (/bin:/usr/bin).
+            ready["PATH"] = "/usr/sbin:/usr/bin:/bin" if path is None else path
             os.environ.update(ready)
             out = parent / "out"
+            if force_darwin:
+                sys.platform = "darwin"
+                try:
+                    count_listening_sockets(os.getpid(), platform="darwin")
+                except UsageRefusal as exc:
+                    if str(exc) != "PILOT_LISTENER_UNPROVEN":
+                        fail("unresolvable lsof refused as %s" % exc)
+                else:
+                    fail("lsof on a barren PATH was treated as proven")
             code = runner_main(
                 ["--input", str(parent / "inputs"), "--output", str(out),
                  "--evidence", str(parent / "evidence"), "--model-config", str(MODEL),
@@ -1927,6 +1941,7 @@ def check_exit_contract() -> None:
                 runner_mod.save_kickoff_output,
                 usage_mod.assert_trace_consent,
             ) = original
+            sys.platform = saved_platform
             os.environ.clear()
             os.environ.update(saved_env)
             shutil.rmtree(parent, ignore_errors=True)
@@ -1969,6 +1984,13 @@ def check_exit_contract() -> None:
             fail("preflight refusal returned 0")
     finally:
         shutil.rmtree(blocked, ignore_errors=True)
+    barren = Path(tempfile.mkdtemp(prefix="crewai-nolsof-"))
+    try:
+        missing, missing_receipt, _post = run(cited, True, path=str(barren), force_darwin=True)
+    finally:
+        shutil.rmtree(barren, ignore_errors=True)
+    if missing == 0 or missing_receipt["identity"].get("reason") != "PILOT_LISTENER_UNPROVEN":
+        fail("missing lsof returned %s (%s)" % (missing, missing_receipt["identity"].get("reason")))
 
 
 def check_evidence_eol() -> None:

@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-10-18 - **CrewAI exit-contract sensor PATH (#799 comment 6252214780):** The synthetic kickoff env now sets `PATH` to `/usr/sbin:/usr/bin:/bin`. A cleared `passing_env()` has no `PATH`, and macOS `lsof` lives in `/usr/sbin`, outside `os.defpath`, so the completed kickoff was `PILOT_LISTENER_UNPROVEN`. A barren `PATH` still refuses with that reason and a nonzero exit. `usage_guard.py` is unchanged. No model call.
 - 2026-10-18 - **CrewAI exit and E5 root (issue 612 / #810 comment 6252017719):** `runner.execute` returns 0 only after a post-guarded kickoff whose receipt stays `NOT_VERIFIED` / `AWAITING_INDEPENDENT_REVIEW`. Every refusal stays nonzero. E5 still requires `exit_code` 0. The E5 collector admits the exact stage root `D:\Velvet\Pilots\OfficeV2-VerifiedTrio` and still rejects `..` escapes and a sibling prefix such as `OfficeV2-VerifiedTrioX`. The E4 sandbox root is unchanged. No model call.
 - 2026-10-18 - **CrewAI review mutations (issue 612 comment 6251717007):** `main()` collects Ollama listener rows before the bind check, so a real model call is not refused as `OLLAMA_BIND_UNPROVEN`. Sandbox temp directories are created before the temp path is resolved. The child is `python -I`, and `PYTHONHOME`, `usercustomize`, and an outside `.pth` are refused. Kickoff text must cite an input issue URL. Proxy and `OLLAMA_HOST` names are case-insensitive. No model call.
 
