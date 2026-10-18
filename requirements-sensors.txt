@@ -11,6 +11,7 @@ scikit-learn==1.9.1     # vfmem semantic index (vfresearch_cadence.py build-inde
 # and check-sensor-locks accepts only python_version markers, so a win32 marker
 # never reaches the hashed lock a Windows checkout installs.
 tzdata==2026.5
+PyYAML==6.0.3           # unique_yaml.SafeLoader: workflow key refusal
 # Transitive pins (resolved together with the above on 2026-09-26):
 anyio==4.15.1
 cffi==2.1.1

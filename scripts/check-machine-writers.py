@@ -3,10 +3,13 @@ from __future__ import annotations
 
 import hashlib
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
+
+from unique_yaml import UniqueYamlError, load_yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOWS = ROOT / ".github" / "workflows"
@@ -152,6 +155,35 @@ def _uses_problems(
     return []
 
 
+def _collect_uses(node: object, found: list[str]) -> None:
+    """Every string ``uses`` value in a loaded workflow, in document order."""
+    if isinstance(node, dict):
+        uses = node.get("uses")
+        if isinstance(uses, str):
+            found.append(uses)
+        for value in node.values():
+            _collect_uses(value, found)
+    elif isinstance(node, list):
+        for item in node:
+            _collect_uses(item, found)
+
+
+def _spec_line(lines: list[str], spec: str, start: int) -> int | None:
+    """Index of the next raw line that still contains this ``uses`` value."""
+    for index in range(start, len(lines)):
+        if spec in _yaml_code(lines[index]):
+            return index
+    return None
+
+
+def _extend_unique(problems: list[str], extra: list[str]) -> None:
+    seen = set(problems)
+    for item in extra:
+        if item not in seen:
+            problems.append(item)
+            seen.add(item)
+
+
 def action_pin_problems(
     text: str,
     *,
@@ -159,13 +191,17 @@ def action_pin_problems(
     allowlist: frozenset[str] | None = None,
     scan_flow: bool = True,
     scan_docker: bool = True,
+    parse_yaml: bool = True,
 ) -> list[str]:
     """Every remote uses: is a 40-hex SHA plus a version comment, unless allowlisted.
 
-    A one-line flow mapping is scanned too. ``docker://`` must be
-    ``docker://name@sha256:<64 hex>``. ``./`` local actions stay unpinned.
-    ``scan_flow=False`` and ``scan_docker=False`` exist so the mutation log
-    can show those checks are load-bearing.
+    The parsed YAML tree is the authority, so a continued flow map and a
+    quoted ``uses`` key are steps. A one-line flow mapping is scanned too.
+    ``docker://`` must be ``docker://name@sha256:<64 hex>``. ``./`` local
+    actions stay unpinned. ``scan_flow=False``, ``scan_docker=False``, and
+    ``parse_yaml=False`` exist so the mutation log can show those checks
+    are load-bearing. Anchors, aliases, merge keys, and explicit ``?`` keys
+    refuse the document.
     """
     allowed = ACTION_REF_ALLOWLIST if allowlist is None else allowlist
     problems: list[str] = []
@@ -184,6 +220,39 @@ def action_pin_problems(
                     spec, number, lines, path, allowed, scan_docker=scan_docker
                 )
             )
+    if not parse_yaml:
+        return problems
+    try:
+        document = load_yaml(text)
+    except UniqueYamlError as exc:
+        detail = f": {exc.detail}" if exc.detail else ""
+        _extend_unique(problems, [f"{path}: YAML {exc.kind}{detail}"])
+        return problems
+    specs: list[str] = []
+    _collect_uses(document, specs)
+    cursor = 0
+    for spec in specs:
+        found = _spec_line(lines, spec, cursor)
+        number = found + 1 if found is not None else 1
+        if found is not None:
+            cursor = found + 1
+        _extend_unique(
+            problems,
+            _uses_problems(spec, number, lines, path, allowed, scan_docker=scan_docker),
+        )
+    return problems
+
+
+def workflow_pin_problems(directory: Path) -> list[str]:
+    """The production glob: every workflow file in ``directory``."""
+    problems: list[str] = []
+    paths = sorted([*directory.glob("*.yml"), *directory.glob("*.yaml")])
+    for path in paths:
+        try:
+            rel = path.relative_to(ROOT).as_posix()
+        except ValueError:
+            rel = path.name
+        problems.extend(action_pin_problems(path.read_text(encoding="utf-8"), path=rel))
     return problems
 
 
@@ -235,8 +304,10 @@ def prove_workflow_action_pins(core_workflow: str) -> str:
     flow_tag = "steps:\n  - { name: Sneaky, uses: actions/checkout@v7 }\n"
     if not any("not allowlisted" in problem for problem in action_pin_problems(flow_tag)):
         fail("flow-mapping @v7 was not refused")
-    if action_pin_problems(flow_tag, scan_flow=False):
-        fail("turning off the flow scan still caught @v7")
+    if not any("not allowlisted" in problem for problem in action_pin_problems(flow_tag, scan_flow=False)):
+        fail("turning off the line flow scan hid a one-line flow step the YAML tree still sees")
+    if action_pin_problems(flow_tag, scan_flow=False, parse_yaml=False):
+        fail("turning off both the line flow scan and the YAML parse still caught @v7")
     flow_quoted = 'steps:\n  - { "uses": "actions/checkout@v7" }\n'
     if not any("not allowlisted" in problem for problem in action_pin_problems(flow_quoted)):
         fail("quoted flow-mapping @v7 was not refused")
@@ -284,11 +355,78 @@ def prove_workflow_action_pins(core_workflow: str) -> str:
         for problem in action_pin_problems(smoke_docker, path=smoke_path.as_posix())
     ):
         fail("docker://alpine:latest appended to a real workflow was not caught")
+    continued = "steps:\n  - { name: Sneaky,\n      uses: actions/checkout@v7 }\n"
+    if not any("not allowlisted" in problem for problem in action_pin_problems(continued)):
+        fail("continued flow-mapping @v7 was not refused")
+    if action_pin_problems(continued, parse_yaml=False):
+        fail("turning off the YAML parse still caught continued flow @v7")
+    quoted_block = 'steps:\n  - name: Sneaky\n    "uses": actions/checkout@v7\n'
+    if not any("not allowlisted" in problem for problem in action_pin_problems(quoted_block)):
+        fail("quoted uses key @v7 was not refused")
+    if action_pin_problems(quoted_block, parse_yaml=False):
+        fail("turning off the YAML parse still caught a quoted uses key")
+    quoted_sha = (
+        "steps:\n"
+        "  - name: Sneaky\n"
+        "    # actions/checkout v7.0.1\n"
+        '    "uses": actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1\n'
+    )
+    quoted_sha_problems = action_pin_problems(quoted_sha)
+    if quoted_sha_problems:
+        fail("quoted SHA uses key was refused: " + "; ".join(quoted_sha_problems))
+    continued_docker = "steps:\n  - { name: Sneaky,\n      uses: docker://alpine:latest }\n"
+    if not any("not digest-pinned" in problem for problem in action_pin_problems(continued_docker)):
+        fail("continued flow docker://alpine:latest was not refused")
+    if action_pin_problems(continued_docker, parse_yaml=False):
+        fail("turning off the YAML parse still caught continued docker://")
+    if action_pin_problems(continued_docker, scan_docker=False):
+        fail("turning off the docker scan still caught continued docker://")
+    continued_sha = (
+        "steps:\n"
+        "  - {\n"
+        "      # actions/checkout v7.0.1\n"
+        "      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 }\n"
+    )
+    continued_sha_problems = action_pin_problems(continued_sha)
+    if continued_sha_problems:
+        fail("continued flow SHA was refused: " + "; ".join(continued_sha_problems))
+    anchored = "steps:\n  - name: Sneaky\n    uses: &pin actions/checkout@v7\n"
+    if not any("YAML anchor" in problem for problem in action_pin_problems(anchored)):
+        fail("an anchored uses value was not refused")
+    if action_pin_problems(anchored, parse_yaml=False):
+        fail("turning off the YAML parse still caught an anchored uses value")
+    with tempfile.TemporaryDirectory() as tmp:
+        dest = Path(tmp)
+        shutil.copy(smoke_path, dest / smoke_path.name)
+        mutated = dest / smoke_path.name
+        mutated.write_text(
+            smoke + "\n      - { name: Sneaky,\n          uses: actions/checkout@v7 }\n",
+            encoding="utf-8",
+        )
+        glob_problems = workflow_pin_problems(dest)
+        if not any(
+            "not allowlisted" in problem and smoke_path.name in problem
+            for problem in glob_problems
+        ):
+            fail("workflow glob missed continued flow @v7 on a real workflow copy")
+        mutated.write_text(
+            smoke + "\n      - { name: Sneaky,\n          uses: docker://alpine:latest }\n",
+            encoding="utf-8",
+        )
+        glob_docker = workflow_pin_problems(dest)
+        if not any(
+            "not digest-pinned" in problem and smoke_path.name in problem
+            for problem in glob_docker
+        ):
+            fail("workflow glob missed continued docker:// on a real workflow copy")
     return (
         "tag_fixture=caught sha_fixture=pass bare_sha=caught "
         "linux_revert=caught windows_revert=caught allowlist=empty "
-        "flow_v7=caught flow_sha=pass flow_off=escaped "
-        "docker_tag=caught docker_digest=pass docker_off=escaped"
+        "flow_v7=caught flow_sha=pass flow_line_off=still_caught flow_both_off=escaped "
+        "docker_tag=caught docker_digest=pass docker_off=escaped "
+        "continued_flow=caught continued_off=escaped "
+        "quoted_uses=caught quoted_off=escaped quoted_sha=pass "
+        "continued_docker=caught continued_sha=pass anchor=caught glob=caught"
     )
 
 
@@ -948,10 +1086,8 @@ def main() -> int:
         f"{gate_evidence} permissions=contents:read"
     )
     pin_evidence = prove_workflow_action_pins(core_workflow)
-    for path in sorted(list(WORKFLOWS.glob("*.yml")) + list(WORKFLOWS.glob("*.yaml"))):
-        rel = path.relative_to(ROOT).as_posix()
-        for problem in action_pin_problems(path.read_text(encoding="utf-8"), path=rel):
-            fail(problem)
+    for problem in workflow_pin_problems(WORKFLOWS):
+        fail(problem)
     print(f"OK workflow-action-pins {pin_evidence}")
     if core_workflow.count("context=check-all") != 1:
         fail("check-all status context must stay the single required Linux context")
