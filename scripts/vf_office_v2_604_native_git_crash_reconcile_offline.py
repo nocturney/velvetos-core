@@ -14,7 +14,6 @@ import json
 import os
 from pathlib import Path
 import re
-import shutil
 import sqlite3
 import subprocess
 import sys
@@ -29,9 +28,18 @@ ZERO = "0" * 40
 BLOCKING = ("EFFECT_IN_FLIGHT", "UNKNOWN_EFFECT_RECONCILE")
 MARKER = ".vf604-offline-no-network"
 # Constructed git/worker env. The parent environment is not copied.
-# PATH is only the directory that contains git, plus the fixed system dirs.
+# PATH is the fixed literal /usr/bin:/bin. The git binary is the first
+# executable file in a fixed directory list. Ambient PATH is not consulted.
 # Key set matches the CP084 local fixture, which assigns this module's ENV.
 # LANG is not required; LC_ALL=C is the stable locale.
+FIXED_GIT_PATH = "/usr/bin:/bin"
+if os.name == "nt":
+    _GIT_CANDIDATES = (
+        Path(r"C:\Program Files\Git\cmd\git.exe"),
+        Path(r"C:\Program Files\Git\bin\git.exe"),
+    )
+else:
+    _GIT_CANDIDATES = (Path("/usr/bin/git"), Path("/bin/git"))
 GIT_ENV_REQUIRED = (
     "GIT_AUTHOR_EMAIL",
     "GIT_AUTHOR_NAME",
@@ -58,14 +66,17 @@ def require_git_env(env):
     return {key: env[key] for key in GIT_ENV_REQUIRED}
 
 
+def git_executable():
+    for candidate in _GIT_CANDIDATES:
+        if candidate.is_file() and os.access(candidate, os.X_OK):
+            return str(candidate)
+    raise RuntimeError("REQUIRED_ENV_MISSING")
+
+
 def git_subprocess_env():
-    git = shutil.which("git")
-    if not git:
-        raise RuntimeError("REQUIRED_ENV_MISSING")
-    git_dir = str(Path(git).resolve().parent)
-    path = git_dir + os.pathsep + os.pathsep.join(("/usr/bin", "/bin"))
+    git_executable()
     return require_git_env({
-        "PATH": path,
+        "PATH": FIXED_GIT_PATH,
         "LC_ALL": "C",
         "HOME": "/nonexistent",
         "GIT_TERMINAL_PROMPT": "0",
@@ -81,6 +92,7 @@ def git_subprocess_env():
 # Callers that already bind this name, including the sealed lost-ACK driver
 # and the CP084 fixture, receive the constructed map. The parent environment
 # is not copied.
+GIT_EXECUTABLE = git_executable()
 ENV = git_subprocess_env()
 
 
@@ -89,7 +101,7 @@ def sha(value):
 
 
 def git_raw(args, *, stdin=None):
-    return subprocess.run(["git"] + list(args), input=stdin, capture_output=True,
+    return subprocess.run([GIT_EXECUTABLE] + list(args), input=stdin, capture_output=True,
                           text=True, env=require_git_env(ENV),
                           timeout=15)
 

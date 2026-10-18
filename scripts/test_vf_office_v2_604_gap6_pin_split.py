@@ -174,6 +174,76 @@ class Gap6PinSplitTests(unittest.TestCase):
         self.assertEqual(child["GIT_CONFIG_GLOBAL"], "/dev/null")
         self.assertEqual(child["GIT_AUTHOR_EMAIL"], "vf604@example.invalid")
 
+    def test_poisoned_path_cannot_select_git(self):
+        source = Path(native.__file__).read_text(encoding="utf-8")
+        self.assertNotIn("shutil", source)
+        self.assertNotIn("os.environ", source)
+        self.assertEqual(native.FIXED_GIT_PATH, "/usr/bin:/bin")
+        self.assertEqual(native.ENV["PATH"], native.FIXED_GIT_PATH)
+        closed = native.require_git_env(native.git_subprocess_env())
+        self.assertEqual(closed["PATH"], native.FIXED_GIT_PATH)
+        self.assertEqual(set(closed), set(native.GIT_ENV_REQUIRED))
+        resolved = Path(native.GIT_EXECUTABLE)
+        self.assertTrue(resolved.is_absolute())
+        if os.name == "nt":
+            allowed = (
+                Path(r"C:\Program Files\Git\cmd\git.exe"),
+                Path(r"C:\Program Files\Git\bin\git.exe"),
+            )
+        else:
+            allowed = (Path("/usr/bin/git"), Path("/bin/git"))
+        self.assertIn(resolved, allowed)
+        self.assertTrue(resolved.is_file())
+        self.assertTrue(os.access(resolved, os.X_OK))
+        self.assertIn("subprocess.run([GIT_EXECUTABLE]", source)
+        probe = (
+            "import json, subprocess, sys\n"
+            "sys.path.insert(0, sys.argv[1])\n"
+            "import vf_office_v2_604_native_git_crash_reconcile_offline as native\n"
+            "env = native.require_git_env(native.ENV)\n"
+            "proc = subprocess.run(['git', '--version'], env=env,\n"
+            "    capture_output=True, text=True, timeout=10)\n"
+            "sys.stdout.write(json.dumps({\n"
+            "    'path': env['PATH'],\n"
+            "    'built': native.git_subprocess_env()['PATH'],\n"
+            "    'git': native.GIT_EXECUTABLE,\n"
+            "    'rc': proc.returncode,\n"
+            "    'out': proc.stdout + proc.stderr,\n"
+            "}))\n"
+        )
+        with tempfile.TemporaryDirectory(prefix="vf604-path-poison-") as tmp:
+            root = Path(tmp)
+            poison = root / "poison-git-bin"
+            poison.mkdir()
+            fake = poison / "git"
+            fake.write_text("#!/bin/sh\necho MALICIOUS_GIT_RAN\nexit 9\n", encoding="ascii")
+            fake.chmod(0o755)
+            if os.name == "nt":
+                (poison / "git.cmd").write_text(
+                    "@echo MALICIOUS_GIT_RAN\r\n@exit /b 9\r\n", encoding="ascii")
+            probe_path = root / "probe.py"
+            probe_path.write_text(probe, encoding="utf-8")
+            child_env = dict(os.environ)
+            child_env["PATH"] = str(poison) + os.pathsep + child_env.get("PATH", "")
+            proc = subprocess.run(
+                [sys.executable, "-B", str(probe_path), str(ROOT / "scripts")],
+                env=child_env,
+                cwd=str(ROOT / "scripts"),
+                capture_output=True,
+                text=True,
+                timeout=15,
+            )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        payload = json.loads(proc.stdout)
+        self.assertEqual(payload["path"], "/usr/bin:/bin")
+        self.assertEqual(payload["built"], "/usr/bin:/bin")
+        self.assertNotIn(str(poison), payload["path"])
+        self.assertNotIn("MALICIOUS_GIT_RAN", payload["out"])
+        self.assertIn(Path(payload["git"]), allowed)
+        if os.name != "nt":
+            self.assertEqual(payload["rc"], 0)
+            self.assertIn("git version", payload["out"])
+
     def test_native_missing_or_extra_name_refuses_before_spawn(self):
         def spawned(*args, **kwargs):
             raise AssertionError("git spawned without a closed env")
