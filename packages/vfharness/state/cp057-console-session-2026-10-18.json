@@ -1,0 +1,31 @@
+{
+  "task_id": "cp057-console-session-2026-10-18",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfharness",
+  "goal": "CP057 calc.ps1 resolves the active console session and uses a 120 second idle constant.",
+  "completed_steps": [
+    "CLAIM on #612 comment 6250442457",
+    "Replaced hardcoded session 1 with WTSGetActiveConsoleSessionId cross-checked against explorer.exe",
+    "Idle gate is the single constant 120",
+    "Sensor mutations: hardcode-session-1, accept-nonconsole, drop-session-match, weaken-idle"
+  ],
+  "next_step": "Independent QA on the PR. Do not run calc.ps1 on a Windows host from this task.",
+  "artifacts": [
+    "packages/vfharness/devtools/pilots/cua/cp057/calc.ps1",
+    "packages/vfharness/devtools/pilots/cua/cp057/PIN.json",
+    "scripts/vf_cp057_calc_strictmode.py"
+  ],
+  "unresolved": [
+    "Acceptance stays RED_UNVERIFIED until a Windows attempt runs outside this task"
+  ],
+  "last_updated": "2026-10-18",
+  "execution_state": {
+    "claim": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250442457",
+    "evidence": "https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6250391790",
+    "supersedes_sha256": "ee6c41e0635256d662cbc74cb9bb126b9fa7d18681810cfff679810359947144",
+    "sha256": "2f70a3c26fe3cd8b75f06e60a6d1c220a41a979aeaffa97f6547177256e18eed",
+    "windows_execution": false
+  },
+  "latest_observation": "calc.ps1 is ASCII, LF, no BOM. PowerShell language parser reported 0 errors for the cp1252, cp1255, and utf-8 code points. The CP057 sensor is green, including the four new mutations."
+}

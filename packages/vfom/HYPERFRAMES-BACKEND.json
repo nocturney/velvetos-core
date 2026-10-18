@@ -43,6 +43,7 @@
   "routing": {
     "primary": "hyperframes",
     "fallback": ["ffmpeg-svg-caption-composition"],
+    "fallbackBridge": "scripts/vf_ffmpeg_svg_caption.py",
     "hostFailover": ["sderot-mac", "sderot-windows"],
     "useHyperframesFor": ["reel_master", "story_master", "feed_video", "kinetic_typography", "deterministic_hebrew_overlay", "motion_graphics", "multi-shot_composition"],
     "preferFallbackFor": ["single_static_overlay", "simple_caption_burn_in", "emergency_render_when_hyperframes_unavailable"]

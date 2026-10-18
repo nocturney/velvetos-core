@@ -14,6 +14,7 @@ ROUTINE_OUTPUT below are exempt. Everything else under the capability roots
 
 Usage:
   python3 scripts/readme_contract.py --base <sha> --head <sha>   # PR gate (merge-base diff)
+  python3 scripts/readme_contract.py --repo <dir> --base <ref> --head <ref>  # diff another checkout (fixtures)
   python3 scripts/readme_contract.py --files a b c               # classify explicit paths
   python3 scripts/readme_contract.py --selftest
 """
@@ -65,10 +66,10 @@ def classify(paths: list[str]) -> tuple[list[str], list[str]]:
     return need, exempt
 
 
-def changed_files(base: str, head: str) -> list[str]:
+def changed_files(base: str, head: str, repo: Path = ROOT) -> list[str]:
     proc = subprocess.run(
         ["git", "diff", "--name-only", f"{base}...{head}"],
-        cwd=ROOT, text=True, capture_output=True,
+        cwd=repo, text=True, capture_output=True,
     )
     if proc.returncode != 0:
         raise SystemExit(f"FAIL git diff {base}...{head}: {proc.stderr.strip()}")
@@ -157,6 +158,7 @@ def main() -> int:
     ap.add_argument("--base")
     ap.add_argument("--head")
     ap.add_argument("--files", nargs="*")
+    ap.add_argument("--repo", type=Path, default=ROOT, help="git repository to diff (default: this checkout)")
     ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args()
     if args.selftest:
@@ -165,7 +167,7 @@ def main() -> int:
         return gate(args.files)
     if not (args.base and args.head):
         ap.error("--base and --head are required (or --files / --selftest)")
-    return gate(changed_files(args.base, args.head))
+    return gate(changed_files(args.base, args.head, args.repo))
 
 
 if __name__ == "__main__":

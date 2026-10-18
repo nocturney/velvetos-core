@@ -159,6 +159,7 @@ def validate_request(data: dict[str, Any]) -> dict[str, Any]:
         "batchRows": batch_rows,
         "audioRequired": audio_required,
         "strictAll": bool(data.get("strictAll", stage == "final")),
+        "sourceRequest": dict(data),
     }
 
 
@@ -346,7 +347,123 @@ def batch_receipt_path(req: dict[str, Any], outputs: list[Path], override: str |
     return common / f"{req['jobId']}.batch.receipt.json"
 
 
-def execute(req: dict[str, Any], receipt_override: str | None) -> dict[str, Any]:
+def failover_after_primary(req: dict[str, Any], receipt_override: str | None, primary, fallback) -> dict[str, Any]:
+    """Run HyperFrames once, retry once, then switch to the caption fallback.
+
+    `primary` and `fallback` raise SystemExit on failure. A successful primary
+    receipt is returned unchanged. The fallback receipt records the switch.
+    """
+    errors: list[dict[str, Any]] = []
+    for attempt in (1, 2):
+        try:
+            return primary(req, receipt_override)
+        except SystemExit as exc:
+            code = exc.code if isinstance(exc.code, int) else 1
+            errors.append({"attempt": attempt, "exitCode": code})
+            print(f"FAIL hyperframes attempt {attempt}/2 exit={code}", file=sys.stderr)
+    return fallback(req, receipt_override, {
+        "from": "hyperframes",
+        "to": "ffmpeg-svg-caption-composition",
+        "attempts": 2,
+        "qaLowered": False,
+        "errors": errors,
+    })
+
+
+def _fallback_payload(req: dict[str, Any]) -> dict[str, Any]:
+    source = req.get("sourceRequest")
+    if isinstance(source, dict):
+        payload = dict(source)
+    else:
+        payload = {
+            key: value
+            for key, value in req.items()
+            if key != "sourceRequest" and (isinstance(value, (str, int, float, bool)) or value is None)
+        }
+    payload["backend"] = "ffmpeg-svg-caption-composition"
+    return payload
+
+
+def _write_fallback_failure_receipt(
+    req: dict[str, Any],
+    payload: dict[str, Any],
+    receipt_override: str | None,
+    failover: dict[str, Any],
+    message: str,
+) -> None:
+    project = req.get("projectDir") if isinstance(req.get("projectDir"), Path) else None
+    output = req.get("output") if isinstance(req.get("output"), Path) else None
+    if project is None or output is None:
+        raw_project = payload.get("projectDir")
+        raw_output = payload.get("output")
+        if not isinstance(raw_project, str) or not isinstance(raw_output, str):
+            return
+        project = Path(raw_project).expanduser().resolve()
+        output = Path(raw_output).resolve() if Path(raw_output).is_absolute() else (project / raw_output).resolve()
+        try:
+            output.relative_to(project)
+        except ValueError:
+            return
+    if isinstance(receipt_override, str) and receipt_override.strip():
+        candidate = Path(receipt_override).resolve() if Path(receipt_override).is_absolute() else (project / receipt_override).resolve()
+        try:
+            candidate.relative_to(project)
+        except ValueError:
+            candidate = output.with_suffix(output.suffix + ".receipt.json")
+        target = candidate
+    else:
+        target = output.with_suffix(output.suffix + ".receipt.json")
+    job_id = req.get("jobId") if isinstance(req.get("jobId"), str) else payload.get("jobId")
+    body = {
+        "schemaVersion": 1,
+        "jobId": job_id,
+        "backend": "ffmpeg-svg-caption-composition",
+        "ok": False,
+        "verified": False,
+        "fail": message,
+        "failover": failover,
+        "renderReceiptIsPublishReceipt": False,
+        "qaLowered": False,
+    }
+    try:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(body, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    except OSError as exc:
+        print(f"FAIL could not write fallback failure receipt: {exc}", file=sys.stderr)
+
+
+def _caption_fallback(req: dict[str, Any], receipt_override: str | None, failover: dict[str, Any]) -> dict[str, Any]:
+    try:
+        import vf_ffmpeg_svg_caption as caption
+    except ImportError as exc:
+        _write_fallback_failure_receipt(req, {}, receipt_override, failover, f"fallback renderer missing: {exc}")
+        fail(f"fallback renderer missing: {exc}", 1)
+    payload = _fallback_payload(req)
+    try:
+        prepared = caption.prepare_request(payload)
+        if isinstance(req.get("tmpDir"), str) and req["tmpDir"].strip():
+            prepared["tmpDir"] = req["tmpDir"]
+        return caption.render_prepared(prepared, receipt_override, failover)
+    except SystemExit as exc:
+        _write_fallback_failure_receipt(req, payload, receipt_override, failover, f"fallback exit={exc.code}")
+        raise
+    except Exception as exc:
+        message = f"{exc.__class__.__name__}: {exc}"
+        print(f"FAIL {message}", file=sys.stderr)
+        _write_fallback_failure_receipt(req, payload, receipt_override, failover, message)
+        raise SystemExit(1) from None
+
+
+def execute(req: dict[str, Any], receipt_override: str | None, tmp_dir: str | None = None) -> dict[str, Any]:
+    if tmp_dir:
+        req = dict(req)
+        req["tmpDir"] = tmp_dir
+    if req.get("batchFile"):
+        return execute_body(req, receipt_override)
+    return failover_after_primary(req, receipt_override, execute_body, _caption_fallback)
+
+
+def execute_body(req: dict[str, Any], receipt_override: str | None) -> dict[str, Any]:
     if doctor() != 0:
         raise SystemExit(1)
     commands = build_commands(req, resolve_binary=True)
@@ -440,6 +557,7 @@ def main() -> int:
     run_parser.add_argument("--variables-file", dest="variables_file", help="override variablesFile relative to projectDir")
     run_parser.add_argument("--batch", help="HyperFrames variable-row batch JSON relative to projectDir")
     run_parser.add_argument("--receipt", help="receipt path relative to projectDir")
+    run_parser.add_argument("--tmp-dir", dest="tmp_dir", help="caption fallback temp directory, instead of the system temp")
     args = parser.parse_args()
     if args.command == "doctor":
         return doctor()
@@ -452,7 +570,7 @@ def main() -> int:
     if args.command == "plan":
         plan(req)
         return 0
-    execute(req, args.receipt)
+    execute(req, args.receipt, getattr(args, "tmp_dir", None))
     return 0
 
 
