@@ -54,6 +54,10 @@ _אין פריטים · none_
 - [velvetos-core#9](https://github.com/nocturney/velvetos-core/pull/9) · merged · head `9999999999999999999999999999999999999999` · 2026-10-18 04:00 Asia/Jerusalem — Cursor: merged today
 - [velvetos-core#612](https://github.com/nocturney/velvetos-core/issues/612#issuecomment-101) · done · 2026-10-18 01:30 Asia/Jerusalem — Cursor: DONE CLQ-1
 
+## חותמות מעבדה · Sealed labs
+
+- CP083 lost-ACK receipts · SEALED_RED_ONLY · security_admission=RED · [evidence](https://github.com/nocturney/velvetos-core/blob/9c2f33474ab00007093c4e1913235004a4bc025d/docs/implementation/office-v2/phase2/p0-604-cp083-native-lostack-two-receipts-2026-10-18.md) · [#764](https://github.com/nocturney/velvetos-core/pull/764) `9c2f3347` · MacMiniOffice.local, Mac-Bedroom.local
+
 ## הצעד הבא · Next step
 
 Python רגיל · plain Python. CrewAI / LangGraph stay out until the lockfile admits them. Verified research: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6249011608

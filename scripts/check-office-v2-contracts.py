@@ -3535,7 +3535,7 @@ def main() -> int:
 
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
-        f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY cp080=SEALED_RED_ONLY cp081=SEALED_RED_ONLY cp082=SEALED_RED_ONLY cp083=SEALED_RED_ONLY candidate_import_tests={candidate_import_tests} option_a=OWNER_APPROVED_SECURITY_RED"
+        f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY cp080=SEALED_RED_ONLY cp081=SEALED_RED_ONLY cp082=SEALED_RED_ONLY cp083=SEALED_RED_ONLY cp083_lostack=SEALED_RED_ONLY candidate_import_tests={candidate_import_tests} option_a=OWNER_APPROVED_SECURITY_RED"
     )
     return 0
 
