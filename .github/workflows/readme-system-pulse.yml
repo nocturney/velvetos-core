@@ -15,6 +15,19 @@ on:
       - "packages/manifest.json"
       - "scripts/update-readme-snapshot.py"
       - "scripts/fix-readme-bidi.py"
+      - "office/ledger/live/sync-receipt.json"
+  # Machine writers push their evidence with GITHUB_TOKEN, and GitHub never
+  # starts a `push` workflow for GITHUB_TOKEN pushes. Without this trigger the
+  # pulse inputs they commit (HANDOFF.json, intake-runner.json, sync-receipt.json)
+  # leave README stale on main, and every unrelated PR fails the PR-only
+  # "README System Pulse is current" gate. Still event-driven: no cron here.
+  workflow_run:
+    workflows:
+      - "Office Control Plane"
+      - "VF Media Auto Intake"
+      - "Jobs Sheet Write-Through"
+    types: [completed]
+    branches: [main]
 
 permissions:
   contents: write

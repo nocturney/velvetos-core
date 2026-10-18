@@ -26,6 +26,19 @@ def _fail():
 
 def main() -> int:
     ladder = _load_module()
+    original_state_dir = ladder.STATE_DIR
+    try:
+        return _run(ladder)
+    finally:
+        ladder.STATE_DIR = original_state_dir
+
+
+def _ruling_entry(ladder, tmp: str, task: str) -> dict:
+    history = json.loads((Path(tmp) / f"ladder-{task}.json").read_text(encoding="utf-8"))
+    return next(row for row in history if row.get("rung") == ladder.Rung.SAFE_RULING)
+
+
+def _run(ladder) -> int:
     with tempfile.TemporaryDirectory(prefix="vf-harness-ruling-") as tmp:
         ladder.STATE_DIR = Path(tmp)
 
@@ -116,7 +129,52 @@ def main() -> int:
         )
         assert malformed_entry["reason"] == "invalid_or_failed_ruling"
 
-    print("OK vfharness-execution-discipline safe-ruling behavior=3")
+        valid_payload = {
+            "decision": "valid-looking ruling",
+            "why": "callback itself reported failure",
+            "cost_if_wrong": "none",
+        }
+
+        def not_ok_ruling():
+            return False, "should-not-pass", dict(valid_payload)
+
+        def raising_ruling():
+            raise RuntimeError("secret-payload-must-not-leak")
+
+        def list_ruling():
+            return [True, "should-not-pass", dict(valid_payload)]
+
+        def short_tuple_ruling():
+            return True, "should-not-pass"
+
+        def none_ruling():
+            return None
+
+        failure_cases = {
+            "behavior-not-ok": not_ok_ruling,
+            "behavior-raises": raising_ruling,
+            "behavior-list": list_ruling,
+            "behavior-short-tuple": short_tuple_ruling,
+            "behavior-none": none_ruling,
+        }
+        for task, fn in failure_cases.items():
+            outcome = ladder.run_ladder(
+                task,
+                pack="vfharness",
+                attempt_fn=_fail,
+                fallback_fn=_fail,
+                downgrade_fn=_fail,
+                max_retries=1,
+                ruling_fn=fn,
+                safe_to_rule=True,
+            )
+            assert outcome["rung"] == ladder.Rung.ESCALATE, task
+            assert outcome.get("result") != "should-not-pass", task
+            entry = _ruling_entry(ladder, tmp, task)
+            assert entry["ok"] is False, task
+            assert "secret-payload-must-not-leak" not in json.dumps(entry), task
+
+    print("OK vfharness-execution-discipline safe-ruling behavior=8")
     return 0
 
 
