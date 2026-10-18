@@ -134,14 +134,15 @@ README_CONTRACT = SCRIPTS / "readme_contract.py"
 README_BASE = "origin/main"
 
 
-def local_readme_gate(repo: Path = ROOT, base: str = README_BASE, head: str = "HEAD") -> tuple[str, int]:
+def local_readme_gate(repo: Path = ROOT, base: str = README_BASE, head: str = "HEAD", hosted_skip: bool = True) -> tuple[str, int]:
     """Run the Living README contract locally, the same gate the hosted PR workflow runs.
 
     Returns (message, returncode). Skips with a clear line when there is no git base
     (not a git repo, or origin/main missing) and when running under GitHub Actions,
-    where the workflow runs readme_contract.py as its own step.
+    where the workflow runs readme_contract.py as its own step. The fixture passes
+    hosted_skip=False so its pass/fail cases hold on hosted runners too.
     """
-    if os.environ.get("GITHUB_ACTIONS") == "true":
+    if hosted_skip and os.environ.get("GITHUB_ACTIONS") == "true":
         return "SKIP readme-contract (hosted workflow runs the README gate as its own step)", 0
     probe = subprocess.run(
         ["git", "rev-parse", "--verify", "-q", f"{base}^{{commit}}"],
@@ -179,22 +180,22 @@ def readme_gate_fixture() -> list[str]:
 
         (repo / "scripts" / "tool.py").write_text("print(2)\n", encoding="utf-8")
         git(repo, "commit", "-qam", "capability change without README")
-        _, rc = local_readme_gate(repo, base="origin/main", head="HEAD")
+        _, rc = local_readme_gate(repo, base="origin/main", head="HEAD", hosted_skip=False)
         if rc != 1:
             errors.append(f"capability change without README must fail locally, got rc={rc}")
 
         (repo / "README.md").write_text("base\nupdated\n", encoding="utf-8")
         git(repo, "commit", "-qam", "README update")
-        _, rc = local_readme_gate(repo, base="origin/main", head="HEAD")
+        _, rc = local_readme_gate(repo, base="origin/main", head="HEAD", hosted_skip=False)
         if rc != 0:
             errors.append(f"capability change with README must pass locally, got rc={rc}")
 
-        msg, rc = local_readme_gate(repo, base="origin/does-not-exist", head="HEAD")
+        msg, rc = local_readme_gate(repo, base="origin/does-not-exist", head="HEAD", hosted_skip=False)
         if rc != 0 or not msg.startswith("SKIP readme-contract"):
             errors.append(f"missing base must skip with rc=0, got rc={rc} msg={msg!r}")
 
     with tempfile.TemporaryDirectory() as plain:
-        msg, rc = local_readme_gate(Path(plain), base="origin/main", head="HEAD")
+        msg, rc = local_readme_gate(Path(plain), base="origin/main", head="HEAD", hosted_skip=False)
         if rc != 0 or not msg.startswith("SKIP readme-contract"):
             errors.append(f"non-git directory must skip with rc=0, got rc={rc} msg={msg!r}")
     return errors
