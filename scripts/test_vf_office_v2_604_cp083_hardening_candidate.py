@@ -35,29 +35,46 @@ class HardeningCandidateStaticTests(unittest.TestCase):
             "cc6a576a57b76c6578c54af36c6d3306976cf92ea5814c3f28de7787285f69b0",
         )
 
+    def _serve(self):
+        return self.source.split("def serve(root, case):", 1)[1].split("\ndef probe(", 1)[0]
+
+    def _frame(self):
+        return self.source.split("def read_json_frame(", 1)[1].split(
+            "\ndef socket_exchange(", 1)[0]
+
     def test_unauthorized_uid_rejected_before_socket_read(self):
-        serve = self.source.split("def serve(root, case):", 1)[1].split("\ndef probe(", 1)[0]
+        serve = self._serve()
+        frame = self._frame()
         self.assertIn("socket.SO_PEERCRED", serve)
         self.assertIn("if uid not in (0, WORKER_UID):", serve)
-        self.assertLess(serve.index("if uid not in (0, WORKER_UID):"), serve.index("c.recv(512)"))
+        self.assertLess(serve.index("if uid not in (0, WORKER_UID):"),
+                        serve.index("read_json_frame("))
+        self.assertNotIn("c.recv(", serve[:serve.index("read_json_frame(")])
+        self.assertIn("sock.recv(min(512, space))", frame)
 
     def test_authorized_socket_is_bounded(self):
-        serve = self.source.split("def serve(root, case):", 1)[1].split("\ndef probe(", 1)[0]
+        serve = self._serve()
+        frame = self._frame()
         self.assertIn("c.settimeout(2.0)", serve)
         self.assertIn("except socket.timeout:", serve)
-        self.assertLess(serve.index("c.settimeout(2.0)"), serve.index("c.recv(512)"))
+        self.assertLess(serve.index("c.settimeout(2.0)"), serve.index("read_json_frame("))
+        self.assertIn("len(buffer) <= limit", frame)
+        self.assertIn("sock.recv(min(512, space))", frame)
 
     def test_slow_drip_peer_cannot_reset_frame_timeout(self):
-        serve = self.source.split("def serve(root, case):", 1)[1].split("\n" + "def probe(", 1)[0]
-        deadline = "deadline = time.monotonic() + 2.0"
-        remaining = "remaining = deadline - time.monotonic()"
-        frame_loop = 'while b"\\n" not in incoming'
-        self.assertEqual(serve.count(deadline), 1)
-        self.assertLess(serve.index(deadline), serve.index(frame_loop))
-        self.assertLess(serve.index(frame_loop), serve.index(remaining))
-        self.assertLess(serve.index(remaining), serve.index("c.settimeout(remaining)"))
-        self.assertLess(serve.index("c.settimeout(remaining)"), serve.index("c.recv(512)"))
-        self.assertIn("if remaining <= 0:", serve)
+        serve = self._serve()
+        frame = self._frame()
+        call = "read_json_frame(c, MAX_MESSAGE, time.monotonic() + 2.0)"
+        self.assertEqual(serve.count(call), 1)
+        self.assertIn("remaining = deadline - time.monotonic()", frame)
+        self.assertIn("if remaining <= 0:", frame)
+        self.assertLess(frame.index('while b"\\n" not in buffer'),
+                        frame.index("remaining = deadline - time.monotonic()"))
+        self.assertLess(frame.index("remaining = deadline - time.monotonic()"),
+                        frame.index("sock.settimeout(remaining)"))
+        self.assertLess(frame.index("sock.settimeout(remaining)"),
+                        frame.index("sock.recv(min(512, space))"))
+        self.assertNotIn("sock.settimeout(2.0)", frame)
 
     def test_normal_committed_head_matches_journal(self):
         normal = self.source.split('if case == "normal":', 1)[-1]
@@ -75,16 +92,23 @@ class HardeningCandidateStaticTests(unittest.TestCase):
         self.assertLess(exchange.index('sock.connect('), exchange.index('peer_uid'))
         self.assertIn('peer_uid != SINK_UID', exchange)
         self.assertLess(exchange.index('peer_uid != SINK_UID'), exchange.index('sock.sendall('))
-        self.assertIn('deadline = time.monotonic() + 3.0', exchange)
-        self.assertIn('remaining = deadline - time.monotonic()', exchange)
-        self.assertLess(exchange.index('remaining = deadline - time.monotonic()'), exchange.index('sock.recv('))
-        self.assertIn('len(buffer) > MAX_MESSAGE', exchange)
+        self.assertIn(
+            'read_json_frame(sock, MAX_MESSAGE, time.monotonic() + 3.0)', exchange)
+        self.assertLess(exchange.index('sock.sendall('), exchange.index('read_json_frame('))
+        frame = self._frame()
+        self.assertIn('remaining = deadline - time.monotonic()', frame)
+        self.assertLess(frame.index('remaining = deadline - time.monotonic()'),
+                        frame.index('sock.recv('))
+        self.assertIn('len(buffer) <= limit', frame)
+        gate = (ROOT / "scripts/vf_office_v2_604_cp083_candidate_evidence_gate.py").read_text(
+            encoding="utf-8")
+        self.assertIn('require(len(raw) <= limit, "MESSAGE_SIZE_REFUSED")', gate)
         self.assertIn('"NO_ACK_UNKNOWN"', exchange)
         self.assertIn('_allowlisted_reply', exchange)
 
     def test_reply_allowlist_strips_unsolicited_keys(self):
         helper = self.source.split("def _allowlisted_reply(reply):", 1)[1].split(
-            "\ndef socket_exchange(", 1)[0]
+            "\ndef read_json_frame(", 1)[0]
         self.assertIn('"status"', helper)
         self.assertIn('("head", "record", "frozen")', helper)
         self.assertNotIn("extra", helper)
