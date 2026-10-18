@@ -18,6 +18,13 @@ $UiaReadyWaitMs=10000
 $UiaReadyPollMs=250
 $script:BoundElementName=''
 $script:BoundProcessName=''
+$script:AttemptStarted=$null
+$script:OwnedPids=@()
+$script:CandidateFrameCount=0
+$script:CandidateFrameTitles=''
+$script:SelectedHost=''
+$script:SelectedHostPid=0
+$script:MatchedTitle=''
 function Refuse([string]$reason){throw ('REFUSED_'+$reason)}
 function Identity {
  $id=[Security.Principal.WindowsIdentity]::GetCurrent()
@@ -44,40 +51,133 @@ public static class IdleNativeCP057 {
  $now=[uint64][IdleNativeCP057]::GetTickCount()
  return [math]::Round((($now+4294967296-[uint64]$li.dwTime)%4294967296)/1000,2)
 }
-function Get-CalculatorHostKind($window) {
- if($null -eq $window){return 'absent'}
- $hostPid=0
- $title=''
- try {
-  $hostPid=[int]$window.Current.ProcessId
-  $title=[string]$window.Current.Name
- } catch { return 'pending' }
- if($title -ne 'Calculator'){return 'foreign'}
- $proc=Get-Process -Id $hostPid -ErrorAction SilentlyContinue
- if($null -eq $proc){return 'pending'}
- $name=[string]$proc.ProcessName
- if($name -eq 'ApplicationFrameHost'){return 'ready'}
- if(@('CalculatorApp','Calculator','calc') -contains $name){return 'ready'}
- return 'foreign'
-}
 function Get-CalculatorHostName($window) {
- if((Get-CalculatorHostKind $window) -ne 'ready'){Refuse 'CALCULATOR_WINDOW_HOST_MISMATCH'}
- $name=[string](Get-Process -Id ([int]$window.Current.ProcessId) -ErrorAction Stop).ProcessName
- if(@('ApplicationFrameHost','CalculatorApp','Calculator','calc') -notcontains $name){
+ if($null -eq $window){Refuse 'CALCULATOR_WINDOW_HOST_MISMATCH'}
+ $name=''
+ try { $name=[string](Get-Process -Id ([int]$window.Current.ProcessId) -ErrorAction Stop).ProcessName } catch {
   Refuse 'CALCULATOR_WINDOW_HOST_MISMATCH'
  }
- return $name
+ if($name -eq 'ApplicationFrameHost'){return $name}
+ if(Test-ContentProcess $name){return $name}
+ Refuse 'CALCULATOR_WINDOW_HOST_MISMATCH'
 }
-function FindWindow {
+function Get-HebrewCalculatorTitle {
+ return (-join [char[]](0x05DE,0x05D7,0x05E9,0x05D1,0x05D5,0x05DF))
+}
+function Test-CalculatorTitle([string]$title) {
+ if($title -eq 'Calculator'){return $true}
+ if($title -eq (Get-HebrewCalculatorTitle)){return $true}
+ return $false
+}
+function Get-FrameTitle($el) {
+ if($null -eq $el){return ''}
+ try { return [string]$el.Current.Name } catch { return '' }
+}
+function Format-FrameTitles([string]$raw) {
+ if([string]::IsNullOrEmpty($raw)){return ''}
+ $text=(($raw -replace '[\r\n\t]+',' ').Trim())
+ $text=$text -replace '(?i)[A-Za-z]:\\[^\s''";]+','<path>'
+ $text=$text -replace '(?i)\\\\[^\s''";]+','<path>'
+ $text=$text -replace '(?i)CHRIS\\Chris','<user>'
+ $limited=$text
+ if($text.Length -gt 160){$limited=$text.Substring(0,160)}
+ return $limited.Trim()
+}
+function Update-OwnedPids {
+ foreach($pr in @(Calcs)){
+  $ownedId=[int]$pr.Id
+  if(@($script:OwnedPids) -notcontains $ownedId){ $script:OwnedPids+=$ownedId }
+ }
+}
+function Test-StartedThisAttempt($proc) {
+ if($null -eq $proc){return $false}
+ if(-not (Test-ContentProcess ([string]$proc.ProcessName))){return $false}
+ try { if([int]$proc.SessionId -ne 1){return $false} } catch { return $false }
+ $ownedId=[int]$proc.Id
+ if(@($script:OwnedPids) -contains $ownedId){return $true}
+ if($null -eq $script:AttemptStarted){return $false}
+ $started=$null
+ try { $started=$proc.StartTime.ToUniversalTime() } catch { return $false }
+ if($started -lt $script:AttemptStarted.AddSeconds(-2)){return $false}
+ if(@($script:OwnedPids) -notcontains $ownedId){ $script:OwnedPids+=$ownedId }
+ return $true
+}
+function Get-FrameContentPid($frame) {
+ if($null -eq $frame){return 0}
+ $core=Find-UiaCoreWindow $frame
+ if($null -eq $core){$core=Find-Win32CoreWindow $frame}
+ if($null -eq $core){return 0}
+ try { return [int]$core.Current.ProcessId } catch { return 0 }
+}
+function Test-FrameOwnsAttempt($frame) {
+ if($null -eq $frame){return $false}
+ $frameName=Get-ContentProcessName $frame
+ $proc=$null
+ if(Test-ContentProcess $frameName){
+  try { $proc=Get-Process -Id ([int]$frame.Current.ProcessId) -ErrorAction SilentlyContinue } catch { $proc=$null }
+ } else {
+  $corePid=Get-FrameContentPid $frame
+  if($corePid -le 0){return $false}
+  try { $proc=Get-Process -Id $corePid -ErrorAction SilentlyContinue } catch { $proc=$null }
+ }
+ if(-not (Test-StartedThisAttempt $proc)){return $false}
+ $title=Get-FrameTitle $frame
+ if(Test-CalculatorTitle $title){ $script:MatchedTitle=[string]$title }
+ $script:SelectedHost=Get-CalculatorHostName $frame
+ $script:SelectedHostPid=[int]$frame.Current.ProcessId
+ return $true
+}
+function Get-TopLevelFrames {
  $root=[System.Windows.Automation.AutomationElement]::RootElement
  $cond=[System.Windows.Automation.PropertyCondition]::new(
-   [System.Windows.Automation.AutomationElement]::NameProperty,'Calculator')
- $window=$root.FindFirst([System.Windows.Automation.TreeScope]::Children,$cond)
- if($null -eq $window){return $null}
- $kind=Get-CalculatorHostKind $window
- if($kind -eq 'ready'){return $window}
- if($kind -eq 'foreign'){Refuse 'CALCULATOR_WINDOW_HOST_MISMATCH'}
+   [System.Windows.Automation.AutomationElement]::ClassNameProperty,'ApplicationFrameWindow')
+ $hits=$null
+ try { $hits=$root.FindAll([System.Windows.Automation.TreeScope]::Children,$cond) } catch { $hits=$null }
+ $found=@()
+ foreach($item in $hits){
+  if($null -ne $item){$found+=$item}
+ }
+ Update-OwnedPids
+ foreach($pr in @(Calcs)){
+  $pidCond=[System.Windows.Automation.PropertyCondition]::new(
+    [System.Windows.Automation.AutomationElement]::ProcessIdProperty,[int]$pr.Id)
+  $self=$null
+  try { $self=$root.FindFirst([System.Windows.Automation.TreeScope]::Children,$pidCond) } catch { $self=$null }
+  if($null -ne $self){$found+=$self}
+ }
+ $seen=@()
+ foreach($item in $found){
+  $handle=0
+  try { $handle=[int]$item.Current.NativeWindowHandle } catch { $handle=0 }
+  if($handle -ne 0){
+   if($seen -contains $handle){continue}
+   $seen+=$handle
+  }
+  $item
+ }
+}
+function Remember-CandidateFrames($frames) {
+ $titles=@()
+ foreach($frame in @($frames)){
+  if($null -eq $frame){continue}
+  $titles+=(Get-FrameTitle $frame)
+ }
+ $script:CandidateFrameCount=$titles.Count
+ $script:CandidateFrameTitles=Format-FrameTitles ($titles -join ' | ')
+}
+function Find-OwnedFrame {
+ $frames=@(Get-TopLevelFrames)
+ Remember-CandidateFrames $frames
+ $chosen=@()
+ foreach($frame in $frames){
+  if(Test-FrameOwnsAttempt $frame){ $chosen+=$frame }
+ }
+ if($chosen.Count -gt 1){Refuse 'CALCULATOR_FRAME_AMBIGUOUS'}
+ if($chosen.Count -eq 1){return $chosen[0]}
  return $null
+}
+function FindWindow {
+ return (Find-OwnedFrame)
 }
 function Test-ContentProcess([string]$name) {
  if(@('CalculatorApp','Calculator','calc') -contains $name){return $true}
@@ -238,7 +338,11 @@ function Wait-CalculatorTree {
    }
   }
   if([DateTime]::UtcNow -ge $deadline){
-   if($null -eq $frame){Refuse 'CALCULATOR_WINDOW_NOT_FOUND'}
+   Update-OwnedPids
+   if($null -eq $frame){
+    if(@($script:OwnedPids).Count -eq 0){Refuse 'OWNED_CALCULATOR_PROCESS_NOT_FOUND'}
+    Refuse 'CALCULATOR_CONTENT_WINDOW_UNAVAILABLE'
+   }
    if($null -eq $window){Refuse 'CALCULATOR_CONTENT_WINDOW_UNAVAILABLE'}
    if($null -eq $missing){$missing='CalculatorResults'}
    Refuse ('CALCULATOR_ELEMENT_UNAVAILABLE_'+$missing)
@@ -291,6 +395,7 @@ if($Mode -eq 'Child'){
   first_result='';last_result='';failure_class='';failure_message='';refusal_code='';failure_stage=''
   calculator_window_host=''
   bound_element='';bound_process=''
+  candidate_frame_count=0;candidate_frame_titles=''
  }
  $opened=$false
  $calcWindow=$null
@@ -308,21 +413,19 @@ if($Mode -eq 'Child'){
   $prior=@(Calcs)
   if($prior.Count -ne 0){Refuse 'CALCULATOR_ALREADY_OPEN'}
   Add-Type -AssemblyName UIAutomationClient,UIAutomationTypes -ErrorAction Stop
+  $script:AttemptStarted=[DateTime]::UtcNow
   $p=Start-Process -FilePath (Join-Path $env:WINDIR 'System32\calc.exe') -PassThru
   $opened=$true;$rec.calc_created=$true
-  for($i=0;$i -lt 24;$i++){
-    Start-Sleep -Milliseconds 250
-    $calcWindow=FindWindow
-    if($null -ne $calcWindow){break}
-  }
-  if($null -eq $calcWindow){Refuse 'CALCULATOR_WINDOW_NOT_FOUND'}
   $owned=@( @(Calcs) | Select-Object -ExpandProperty Id )
-  if($owned.Count -eq 0){Refuse 'OWNED_CALCULATOR_PROCESS_NOT_FOUND'}
-  $rec.calculator_window_pid=[int]$calcWindow.Current.ProcessId
-  $rec.calculator_window_host=Get-CalculatorHostName $calcWindow
+  Update-OwnedPids
   $calcWindow=Wait-CalculatorTree
+  $rec.calculator_window_pid=[int]$script:SelectedHostPid
+  $rec.calculator_window_host=[string]$script:SelectedHost
+  if([string]::IsNullOrEmpty([string]$rec.calculator_window_host)){Refuse 'CALCULATOR_WINDOW_HOST_MISMATCH'}
   $rec.bound_element=[string]$script:BoundElementName
   $rec.bound_process=[string]$script:BoundProcessName
+  $rec.candidate_frame_count=[int]$script:CandidateFrameCount
+  $rec.candidate_frame_titles=Format-FrameTitles ([string]$script:CandidateFrameTitles)
   if(-not (Test-ContentProcess $rec.bound_process)){Refuse 'CALCULATOR_CONTENT_PROCESS_MISMATCH'}
   $rec.first_result=Display
   if($rec.first_result -notmatch '0'){Refuse 'WRONG_CALCULATOR_INITIAL_STATE'}
@@ -372,13 +475,18 @@ if($Mode -eq 'Child'){
     }
    }catch{}
    Start-Sleep -Milliseconds 250
+   Update-OwnedPids
    foreach($pr in @(Calcs)){
-     if($owned -contains $pr.Id){
-      try{$pr.CloseMainWindow() | Out-Null;Start-Sleep -Milliseconds 100}catch{}
-      try{if(-not $pr.HasExited){Stop-Process -Id $pr.Id -Force -ErrorAction Stop}}catch{}
-     }
+    try { Stop-Process -Id ([int]$pr.Id) -Force -ErrorAction Stop } catch {}
    }
+   Start-Sleep -Milliseconds 250
    $rec.calc_closed=(@(Calcs).Count -eq 0)
+   $rec.candidate_frame_count=[int]$script:CandidateFrameCount
+   $rec.candidate_frame_titles=Format-FrameTitles ([string]$script:CandidateFrameTitles)
+   if($script:SelectedHostPid -gt 0){
+    $rec.calculator_window_pid=[int]$script:SelectedHostPid
+    $rec.calculator_window_host=[string]$script:SelectedHost
+   }
   } else {$rec.calc_closed=$true}
   $dest=Join-Path $Root ('receipt-'+$Attempt+'.json')
   if(Test-Path -LiteralPath $dest){Refuse 'RECEIPT_COLLISION'}
@@ -428,6 +536,7 @@ try {
  if($data.refusal_code){Write-Output ('REFUSAL_CODE='+$data.refusal_code)}
  if($data.bound_process){Write-Output ('BOUND_PROCESS='+$data.bound_process)}
  if($data.bound_element){Write-Output ('BOUND_ELEMENT='+$data.bound_element)}
+ Write-Output ('CANDIDATE_FRAMES='+$data.candidate_frame_count+' TITLES='+$data.candidate_frame_titles)
  Get-FileHash -LiteralPath $receipt -Algorithm SHA256 | ForEach-Object{Write-Output ('RECEIPT_SHA256='+$_.Hash)}
  $ok=($data.status -eq 'PASS_NATIVE_UIA_CALCULATOR_42_ONLY')
 } finally {

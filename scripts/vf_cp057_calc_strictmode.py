@@ -13,10 +13,14 @@ unwrapped. It also requires a 10000 ms poll for CalculatorResults and
 the buttons the script presses, a Calculator-only UWP host bind
 (ApplicationFrameHost or the Calculator process), a content bind to the
 CalculatorApp window (Windows.UI.Core.CoreWindow) rather than the outer
-frame, and a receipt that records the refusal message, refusal code,
-bound element, and bound process. Mutations of the fixed script must go
-red; the fixed script must stay green. It does not launch Calculator or
-touch a Windows session.
+frame, and a frame choice that follows the CalculatorApp process started
+by this attempt instead of the shared ApplicationFrameHost process or an
+English title alone. The receipt records the refusal message, refusal
+code, bound element, bound process, and redacted candidate-frame titles.
+A refusal still stops that Calculator process and records calc_closed
+from what remains. Mutations of the fixed script must go red; the fixed
+script must stay green. It does not launch Calculator or touch a Windows
+session.
 """
 from __future__ import annotations
 
@@ -34,6 +38,7 @@ CUA_README = ROOT / "packages/vfharness/devtools/pilots/cua/README.md"
 EARLIER = "97e942bcccfb5c5bcbbe13e97badd058e027e1df3e803a4a24d9eaac933cbc6f"
 FIRST_READ = "32824ef410023d84a61c7ecd88edd872ade2e70bdee0ec22b27ae001a3b35f13"
 FRAME = "d851448d96791b1d5ec84575b8b923777217630b1dd8ee43a695ccc621425727"
+CONTENT = "18bb936d340441fb3a3434afef6792ea65074dc02e38879dd6f6143cf323fe75"
 UIA_WAIT_MS = 10000
 UIA_POLL_MS = 250
 TREE_IDS = (
@@ -434,8 +439,12 @@ def wait_findings(text: str) -> list[str]:
             problems.append("ApplicationFrameHost must not be selected as a Calculator process")
     if "Stop-Process -Name" in text or re.search(r"Stop-Process\b[^\n]*ApplicationFrameHost", text):
         problems.append("the script must not stop ApplicationFrameHost")
-    if "$root.FindAll(" in text or re.search(r"\$root\.FindFirst\([^\n]*Descendants", text):
-        problems.append("desktop search must stay one FindFirst of a top-level window named Calculator")
+    if re.search(r"\$root\.FindAll\([^\n]*Descendants", text) or re.search(
+        r"\$root\.FindFirst\([^\n]*Descendants", text
+    ):
+        problems.append("desktop search must not walk descendants from the root")
+    if "$root.FindAll(" not in text or "ApplicationFrameWindow" not in text:
+        problems.append("frame search must enumerate top-level ApplicationFrameWindow windows")
     if "TreeScope]::Children,$cond)" not in text:
         problems.append("window search must stay on immediate children")
     return problems
@@ -487,6 +496,59 @@ def content_findings(text: str) -> list[str]:
         guard_at = tail.find("Test-ContentProcess")
         if close_at < 0 or guard_at < 0 or guard_at > close_at:
             problems.append("WindowPattern.Close must be limited to the Calculator content process")
+    return problems
+
+
+def frame_findings(text: str) -> list[str]:
+    """Select the frame by the Calculator process this attempt started."""
+    problems: list[str] = []
+    spans = dict(function_spans(text))
+    if "Test-StartedThisAttempt" not in text:
+        problems.append("frame selection must require a Calculator process started by this attempt")
+    if re.search(r"if\(\$frameName -eq 'ApplicationFrameHost'\)\{return \$true\}", text):
+        problems.append("a frame must not be selected only because its process is ApplicationFrameHost")
+    if re.search(r"if\(\$name -eq 'ApplicationFrameHost'\)\{return 'ready'\}", text):
+        problems.append("ApplicationFrameHost must not be treated as a ready Calculator frame")
+    owns = spans.get("Test-FrameOwnsAttempt", "")
+    if "Test-StartedThisAttempt" not in owns or "Get-FrameContentPid" not in owns:
+        problems.append("an ApplicationFrameHost frame is accepted only through its Calculator CoreWindow")
+    if re.search(r"if\(-not \(Test-CalculatorTitle", owns):
+        problems.append("a title mismatch must not reject an owned Calculator frame")
+    title = spans.get("Test-CalculatorTitle", "")
+    hebrew = spans.get("Get-HebrewCalculatorTitle", "")
+    if "'Calculator'" not in title or "Get-HebrewCalculatorTitle" not in title:
+        problems.append("Test-CalculatorTitle must accept Calculator and the Hebrew title")
+    if "0x05DE,0x05D7,0x05E9,0x05D1,0x05D5,0x05DF" not in hebrew:
+        problems.append("Hebrew Calculator title must be built from ASCII code points")
+    built = "".join(chr(n) for n in (0x05DE, 0x05D7, 0x05E9, 0x05D1, 0x05D5, 0x05DF))
+    if built != "מחשבון":
+        problems.append("Hebrew code points do not spell the Calculator title")
+    raw = text.encode("utf-8")
+    if raw.startswith(b"\xef\xbb\xbf") or any(byte >= 128 for byte in raw):
+        problems.append(
+            "calc.ps1 must stay ASCII-only; Windows PowerShell 5.1 reads a BOM-less file as ANSI"
+        )
+    if "candidate_frame_count=0" not in text or "candidate_frame_titles=''" not in text:
+        problems.append("receipt must include candidate frame count and titles")
+    if "$rec.candidate_frame_titles=" not in text:
+        problems.append("receipt must record candidate frame titles")
+    formatted = spans.get("Format-FrameTitles", "")
+    for token in ("<path>", "<user>", "160"):
+        if token not in formatted:
+            problems.append(f"Format-FrameTitles missing {token}")
+    parts = text.split("} finally {", 1)
+    if len(parts) != 2:
+        problems.append("missing cleanup finally")
+        return problems
+    tail = parts[1]
+    if "Stop-Process -Id" not in tail:
+        problems.append("refusal path must stop the Calculator process it created")
+    if re.search(r"if\(\$owned -contains \$pr\.Id\)\{[^}]*Stop-Process -Id", tail):
+        problems.append("refusal cleanup must not skip a Calculator pid outside the early snapshot")
+    stop_at = tail.find("Stop-Process -Id")
+    closed_at = tail.find("$rec.calc_closed=(@(Calcs).Count -eq 0)")
+    if stop_at < 0 or closed_at < 0 or closed_at < stop_at:
+        problems.append("calc_closed must be recorded from the process list after the stop")
     return problems
 
 
@@ -628,6 +690,49 @@ def mutate(text: str, kind: str) -> str:
         if anchor not in text:
             return text
         return text.replace(anchor, "if($true){", 1)
+    if kind == "wrong-frame":
+        anchor = "$frameName=Get-ContentProcessName $frame\n"
+        if anchor not in text:
+            return text
+        return text.replace(
+            anchor,
+            "$frameName=Get-ContentProcessName $frame\n"
+            " if($frameName -eq 'ApplicationFrameHost'){return $true}\n",
+            1,
+        )
+    if kind == "title-only":
+        anchor = "$title=Get-FrameTitle $frame\n"
+        if anchor not in text:
+            return text
+        return text.replace(
+            anchor,
+            "$title=Get-FrameTitle $frame\n if(-not (Test-CalculatorTitle $title)){return $false}\n",
+            1,
+        )
+    if kind == "drop-hebrew":
+        anchor = "0x05DE,0x05D7,0x05E9,0x05D1,0x05D5,0x05DF"
+        if anchor not in text:
+            return text
+        return text.replace(anchor, "0x0041", 1)
+    if kind == "raw-hebrew":
+        anchor = "if($title -eq (Get-HebrewCalculatorTitle)){return $true}"
+        if anchor not in text:
+            return text
+        return text.replace(anchor, "if($title -eq '\u05de\u05d7\u05e9\u05d1\u05d5\u05df'){return $true}", 1)
+    if kind == "owned-only-close":
+        anchor = "try { Stop-Process -Id ([int]$pr.Id) -Force -ErrorAction Stop } catch {}"
+        if anchor not in text:
+            return text
+        return text.replace(
+            anchor,
+            "if($owned -contains $pr.Id){ try { Stop-Process -Id ([int]$pr.Id) -Force -ErrorAction Stop } catch {} }",
+            1,
+        )
+    if kind == "fake-closed":
+        anchor = "$rec.calc_closed=(@(Calcs).Count -eq 0)"
+        if anchor not in text:
+            return text
+        return text.replace(anchor, "$rec.calc_closed=$true", 1)
     return text
 
 
@@ -644,6 +749,12 @@ def mutation_findings(text: str) -> list[str]:
         ("rebind-frame", content_findings),
         ("drop-bound-receipt", content_findings),
         ("close-frame", content_findings),
+        ("wrong-frame", frame_findings),
+        ("title-only", frame_findings),
+        ("drop-hebrew", frame_findings),
+        ("raw-hebrew", frame_findings),
+        ("owned-only-close", frame_findings),
+        ("fake-closed", frame_findings),
     )
     for kind, checker in checks:
         mutated = mutate(text, kind)
@@ -684,13 +795,15 @@ def pin_findings(text: str) -> list[str]:
         problems.append("PIN path mismatch")
     if pin.get("sha256") != digest:
         problems.append(f"PIN sha256 {pin.get('sha256')} != file {digest}")
-    if str(pin.get("supersedes_sha256", "")).lower() != FRAME:
-        problems.append("PIN supersedes_sha256 must be the frame-bind pin")
+    if str(pin.get("supersedes_sha256", "")).lower() != CONTENT:
+        problems.append("PIN supersedes_sha256 must be the content-window pin")
     pin_text = PIN.read_text(encoding="utf-8").lower()
     if EARLIER not in pin_text:
         problems.append("PIN lost the earlier strict-mode hash")
     if FIRST_READ not in pin_text:
         problems.append("PIN lost the first-read failure hash")
+    if FRAME not in pin_text:
+        problems.append("PIN lost the frame-bind hash")
     if pin.get("runtimeAuthority") is not False or pin.get("activationAllowed") is not False:
         problems.append("PIN must keep runtimeAuthority and activationAllowed false")
     if pin.get("acceptance") != "RED_UNVERIFIED":
@@ -710,6 +823,9 @@ def pin_findings(text: str) -> list[str]:
             "Windows.UI.Core.CoreWindow",
             "bound_process",
             "CALCULATOR_ELEMENT_UNAVAILABLE_CalculatorResults",
+            "מחשבון",
+            "candidate_frame_titles",
+            "CALCULATOR_CONTENT_WINDOW_UNAVAILABLE",
         ):
             if token not in body:
                 problems.append(f"{path.relative_to(ROOT)} missing {token}")
@@ -736,6 +852,7 @@ def main() -> int:
         problems.extend(safety_findings(text))
         problems.extend(wait_findings(text))
         problems.extend(content_findings(text))
+        problems.extend(frame_findings(text))
         problems.extend(receipt_findings(text))
         problems.extend(mutation_findings(text))
         problems.extend(sanitizer_model_findings())
@@ -751,9 +868,10 @@ def main() -> int:
         "OK red-before drop-preread-wait=DETECTED unbounded-wait=DETECTED "
         "drop-deadline=DETECTED drop-receipt-reason=DETECTED broaden-host-kill=DETECTED "
         "drop-corewindow=DETECTED rebind-frame=DETECTED drop-bound-receipt=DETECTED "
-        "close-frame=DETECTED"
+        "close-frame=DETECTED wrong-frame=DETECTED title-only=DETECTED "
+        "drop-hebrew=DETECTED raw-hebrew=DETECTED owned-only-close=DETECTED fake-closed=DETECTED"
     )
-    print("OK green-after wait=BOUNDED receipt=REASON host=UWP content=COREWINDOW")
+    print("OK green-after wait=BOUNDED receipt=REASON host=UWP content=COREWINDOW frame=OWNED")
     print(f"OK cp057-calc-strictmode empty-result=GUARDED sha256={digest}")
     return 0
 
