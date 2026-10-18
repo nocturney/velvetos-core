@@ -1,0 +1,16 @@
+{
+  "schema": "velvetos.office-v2.phase2-link-intake-receipt.v0",
+  "received_at": "2026-10-18T09:16:54+03:00",
+  "input_url": "https://github.com/emilk/egui",
+  "registry_ref": "docs/implementation/office-v2/phase2/candidate-registry-v0.json",
+  "network_used": false,
+  "authority_granted": false,
+  "normalized_url": "https://github.com/emilk/egui",
+  "status": "REGISTERED",
+  "candidate_ids": [
+    "candidate-intake-emilk-egui"
+  ],
+  "candidate_count_before": 171,
+  "candidate_count_after": 172,
+  "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime."
+}
