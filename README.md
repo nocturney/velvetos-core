@@ -576,7 +576,7 @@ python3 scripts/update-readme-snapshot.py
 python3 scripts/update-readme-snapshot.py --check
 ```
 
-Capability changes record history as `changelog.d/<slug>.md` instead of editing `CHANGELOG.md` in the same PR. `python3 scripts/changelog-compile.py` folds fragments under Unreleased when someone runs it. That command is manual and is not a scheduled workflow. A direct `CHANGELOG.md` edit still satisfies the gate. `merge=union` on `CHANGELOG.md` is only a fallback for those direct edits: added lines from both sides survive, and a line one side deleted survives too when the other side still has it. Details: [`docs/CHANGELOG-FRAGMENTS.md`](docs/CHANGELOG-FRAGMENTS.md).
+Capability changes record history as `changelog.d/<slug>.md` instead of editing `CHANGELOG.md` in the same PR. `python3 scripts/changelog-compile.py` folds fragments under Unreleased when someone runs it. That command is manual and is not a scheduled workflow. A direct `CHANGELOG.md` edit still satisfies the gate. `merge=union` on `CHANGELOG.md` is only a fallback for those direct edits: added lines from both sides survive, and a line one side deleted survives too when the other side still has it. The fragment self-test rejects a missing final LF, a non-bullet line, an empty fragment, a git conflict marker, a bad filename, and a fold that treats the next release section as Unreleased. Details: [`docs/CHANGELOG-FRAGMENTS.md`](docs/CHANGELOG-FRAGMENTS.md).
 
 **Definition of Done:** implementation + evidence/sensor + changelog fragment (`changelog.d/<slug>.md`) + README capability/status update.
 
