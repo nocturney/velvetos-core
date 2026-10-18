@@ -87,6 +87,10 @@ A useful pattern may be adopted without adopting the product. `pattern-adoption-
 
 It does not install every candidate, choose a durable engine/model gateway/MCP-A2A gateway, move a business source of truth, or create a new production writer. Bake-offs start only after this foundation is GREEN.
 
+## #595 triage batches 1, 2 and 4 — corrected rows (2026-10-18)
+
+Cursor's KEEP/REJECT tables for the 46 software candidates in batches 1, 2 and 4 now live in [the corrected report](candidate-triage-batches-124-2026-10-18.md) and [the JSON inventory](candidate-triage-batches-124-2026-10-18.json). Claude's CLQ-8 verdict stands: batch 1 FAIL on the row 14 evidence text, batches 2 and 4 PASS. Four rows were corrected after a live GitHub REST check, and no KEEP or REJECT changed: row 14 `danielhanchen/llama.cpp` stays REJECT as a fork with no own commits (ahead 0, behind 2129); row 13 `dagger/container-use` stays KEEP, with the 2026-09-21 push identified as Dependabot while `main` last moved on 2026-08-12; row 20 `emilk/egui` stays KEEP under MIT OR Apache-2.0; row 24 `gastownhall/gastown` stays KEEP, and its API `pushed_at` of 2026-10-18 is a closed Dependabot push, not a `main` commit. This report does not edit the candidate registry and does not admit, install, or promote anything.
+
 ## Durable repo-link intake (#595)
 
 `scripts/vf_office_v2_link_intake.py <github-url>` records an incoming GitHub repo link in the one canonical `candidate-registry-v0.json`. It works offline. It normalizes case, `.git`, trailing slashes and sub-paths, and deduplicates against the `evidence_refs` of existing candidates. A new repo is appended as `DISCOVERED` / `BENCHMARK_REQUIRED` with a `NEEDS_SOURCE_REVIEW` `evaluation_route`. It is not promoted and gets no authority. Every outcome writes a receipt under `link-intake-receipts/`: `REGISTERED`, `DUPLICATE`, `INVALID_INPUT` or `NEEDS_SYNC`. `scripts/vf_office_v2_link_intake_selftest.py` (run by `scripts/check-office-v2-phase2.py`) proves that a link can't be lost, that duplicates add nothing and that historical rows don't change. COMPETITOR_NEUTRAL_ADMISSION_V1 applies.
