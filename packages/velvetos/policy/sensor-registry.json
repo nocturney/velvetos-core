@@ -2893,6 +2893,46 @@
       "mapping_state": "mapped"
     },
     {
+      "id": "check-veto-inventory",
+      "path": "scripts/check-veto-inventory.py",
+      "owns": [
+        "docs/implementation/office-v2/phase2/competitor-provenance-alias-map-2026-10-18.json",
+        "docs/implementation/office-v2/phase2/veto-inventory-2026-10-18.json",
+        "docs/implementation/office-v2/phase2/veto-inventory-2026-10-18.md",
+        "packages/vfe2b/DEER-FLOW-PATTERNS.md",
+        "packages/vfe2b/LOCK.md",
+        "packages/vfe2b/ORCHESTRATORS.md",
+        "packages/vfe2b/catalog.json",
+        "packages/vfe2b/orchestrators.json",
+        "packages/vfresearch/LINKS.json",
+        "scripts/check-veto-inventory.py"
+      ],
+      "triggered_by": [
+        "docs/implementation/office-v2/phase2/competitor-provenance-alias-map-2026-10-18.json",
+        "docs/implementation/office-v2/phase2/veto-inventory-2026-10-18.json",
+        "docs/implementation/office-v2/phase2/veto-inventory-2026-10-18.md",
+        "packages/vfe2b/DEER-FLOW-PATTERNS.md",
+        "packages/vfe2b/LOCK.md",
+        "packages/vfe2b/ORCHESTRATORS.md",
+        "packages/vfe2b/catalog.json",
+        "packages/vfe2b/orchestrators.json",
+        "packages/vfresearch/LINKS.json",
+        "scripts/check-veto-inventory.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "lifecycle": "DOMAIN",
+      "risk": "low",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
       "id": "check-vf-3d-router",
       "path": "scripts/check-vf-3d-router.py",
       "owns": [
