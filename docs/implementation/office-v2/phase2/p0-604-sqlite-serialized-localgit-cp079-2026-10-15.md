@@ -1,6 +1,6 @@
 # CP079 — disposable serialized admission/revocation + native local Git CAS
 
-**2026-10-15 | Office #604 / #612 | TESTED LOCAL-ONLY | SECURITY ADMISSION RED | DRAFT / NO PRODUCTION**
+**2026-10-15 | Office #604 / #612 | merged into main via #732 (8dbde3a2); lab-only, SECURITY RED | NO PRODUCTION**
 
 ## Delivered implementation
 
@@ -43,7 +43,7 @@ Run only in the assistant's **isolated container**, not on any user-controlled m
 - Source SHA256 `15c47c393ff592acc3cb8e820c5f1a65626e2dc6cd475580d402393616b947b0`.
 - Aggregate receipt SHA256 `c8189d085927458820025a16d3f20e883a4156f8cf7402f11ca59bd53b4c3fb7`.
 - Full ZIP evidence SHA256 `1e2525abfd46e476d9c9c57181b1b67659d91c07e067627f3520e6d553ba4472`.
-- The ZIP, source, evidence JSON and representative test log are available as user-facing artifacts in the originating ChatGPT conversation; the *reviewable source code itself* is also committed in this Draft branch.
+- The ZIP, source, evidence JSON and representative test log are available as user-facing artifacts in the originating ChatGPT conversation; the *reviewable source code itself* is also committed on main via #732 (8dbde3a2); lab-only, SECURITY RED.
 
 The observed 480 PASS counts do **not** mean 480 adversarial etcd/GitHub effect-time cases. All 70 CP078-R1 schedule definitions remain **DATA ONLY / NOT EXECUTED as native real-provider tests**. CP079's 16 local-fixture cases are a distinct set.
 
@@ -65,4 +65,4 @@ The observed 480 PASS counts do **not** mean 480 adversarial etcd/GitHub effect-
 
 **Verdict: LOCAL-NATIVE ADMISSION/REVOCATION MECHANICS TESTED, REAL EFFECT-TIME SECURITY STILL RED.**
 
-`P0_GENERATED_SOURCE_OS_ISOLATION_NOT_ADMITTED` remains binding. This Draft does not authorize a live GitHub writer, allow a remote ref effect, merge protected main, use paid inference/Codex CLI, mount host drives or execute model-generated CP058 source. No production or customer work was touched.
+`P0_GENERATED_SOURCE_OS_ISOLATION_NOT_ADMITTED` remains binding. Merged into main via #732 (8dbde3a2); lab-only, SECURITY RED. That merge does not authorize a live GitHub writer, allow a remote ref effect, relax protected main, use paid inference/Codex CLI, mount host drives or execute model-generated CP058 source. No production or customer work was touched.

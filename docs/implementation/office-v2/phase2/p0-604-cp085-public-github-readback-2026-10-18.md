@@ -1,6 +1,6 @@
 # Office #604 — CP085 public GitHub readback, non-authoritative (2026-10-18)
 
-**Admission: SECURITY RED / DRAFT ONLY.** Refs #604, #612. Stacked on Draft #753 -> #749. This work does not supply an authenticated remote writer, credential custodian, protected Core issuer, signed workload claim or a production release mechanism.
+**Admission: merged into main via #758 (6cec8e86); lab-only, SECURITY RED.** Refs #604, #612. #749 and #753 were closed without their own merge commits. This work does not supply an authenticated remote writer, credential custodian, protected Core issuer, signed workload claim or a production release mechanism.
 
 ## Narrow goal
 
@@ -15,7 +15,7 @@ Close the *preparatory read-path gap* without requiring a new key, paid service 
 
 ## First live readback: public reference only
 
-- Author host: `Mac-Bedroom.local`, Python 3.12. Single remote read against an already-existing public **Draft #753 branch**, not a write.
+- Author host: `Mac-Bedroom.local`, Python 3.12. Single remote read against the then-public lab branch `refs/heads/lab/office604-cp084-nonroot-sink-recovery-20261018` (the #753 head at the time), not a write. #753 later closed; this readback is merged into main via #758 (6cec8e86); lab-only, SECURITY RED.
 - Ref: `refs/heads/lab/office604-cp084-nonroot-sink-recovery-20261018`
 - Expected old SHA: `85de7e7e42c8e427204a0f32143193d3377597fb`
 - Candidate SHA: `313767104158023c365bce9b012588490a56e7ce`
