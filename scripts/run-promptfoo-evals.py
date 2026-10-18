@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import json
 import os
-import subprocess
 import sys
 import tempfile
 from pathlib import Path
+
+from vf_spawn import SpawnRefusal, resolve_executable, run_tool
 
 ROOT = Path(__file__).resolve().parents[1]
 EVALS = ROOT / "packages" / "vfharness" / "evals"
@@ -34,12 +35,22 @@ def metrics(path: Path) -> dict:
         raise RuntimeError("expected exactly one local provider")
     return prompts[0]["metrics"]
 
-def run(config: Path, output: Path) -> subprocess.CompletedProcess[str]:
-    env = os.environ.copy()
-    env.update(HARDEN)
-    return subprocess.run(
-        [str(BIN), "eval", "-c", str(config), "-o", str(output), "--no-cache"],
-        cwd=ROOT, env=env, text=True, capture_output=True, timeout=120,
+PROMPTFOO_TIMEOUT_SECONDS = 120
+
+
+def promptfoo_executable() -> str:
+    if not BIN.is_file():
+        raise SpawnRefusal("SPAWN_EXECUTABLE_MISSING")
+    return resolve_executable(str(BIN))
+
+
+def run(config: Path, output: Path):
+    executable = promptfoo_executable()
+    return run_tool(
+        [executable, "eval", "-c", str(config), "-o", str(output), "--no-cache"],
+        cwd=ROOT,
+        timeout=PROMPTFOO_TIMEOUT_SECONDS,
+        extra_env=HARDEN,
     )
 
 def main() -> int:

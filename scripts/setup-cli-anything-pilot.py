@@ -13,6 +13,8 @@ import sys
 import urllib.request
 from pathlib import Path
 
+from vf_spawn import GIT_TIMEOUT_SECONDS, SpawnRefusal, run_git, windows_pin_case_errors, allowlisted_git_errors
+
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY_PATH = ROOT / "packages" / "vfharness" / "devtools" / "cli-anything.json"
 PATCH_PATH = ROOT / "packages" / "vfharness" / "devtools" / "cli-anything-freecad-overlay.patch"
@@ -29,9 +31,21 @@ FREECAD_URL = (
     "FreeCAD_1.1.3-Windows-x86_64-py311.7z"
 )
 FREECAD_SHA256 = "9c6959dc9c4dba64dd818a62447e3dfedb4221d776fb044b239d462f150bcec4"
+GIT_FETCH_TIMEOUT_SECONDS = 120
+
+
 def run(args: list[str], *, cwd: Path | None = None, check: bool = True,
         env: dict[str, str] | None = None) -> subprocess.CompletedProcess:
-    proc = subprocess.run(args, cwd=cwd, text=True, capture_output=True, env=env)
+    if args and args[0] == "git":
+        if env is not None:
+            raise SystemExit("FAIL git spawn refuses a caller environment")
+        timeout = GIT_FETCH_TIMEOUT_SECONDS if "fetch" in args else GIT_TIMEOUT_SECONDS
+        try:
+            proc = run_git(list(args[1:]), cwd=cwd, check=False, timeout=timeout)
+        except SpawnRefusal as exc:
+            raise SystemExit(f"FAIL git spawn: {exc}") from exc
+    else:
+        proc = subprocess.run(args, cwd=cwd, text=True, capture_output=True, env=env)
     if check and proc.returncode:
         raise SystemExit(
             f"FAIL {' '.join(args)}\nstdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
@@ -188,6 +202,56 @@ def uninstall(remove_freecad: bool) -> None:
     if remove_freecad and FREECAD_ARCHIVE.exists():
         FREECAD_ARCHIVE.unlink()
         print(f"OK removed {FREECAD_ARCHIVE}")
+
+
+def prove_git_hygiene() -> list[str]:
+    """Git is absolute and allowlisted. Other tools keep their own spawn."""
+    import vf_spawn
+
+    errors: list[str] = []
+    os.environ["VF_SPAWN_SENTINEL"] = "nope"
+    os.environ["GIT_EXEC_PATH"] = "/evil/git-core"
+    os.environ["GIT_CONFIG_COUNT"] = "1"
+    captured: list[tuple[list[str], dict]] = []
+    original = vf_spawn.subprocess.run
+
+    def fake_run(argv, **kwargs):
+        captured.append((list(argv), kwargs))
+        return vf_spawn.subprocess.CompletedProcess(argv, 0, stdout="", stderr="")
+
+    vf_spawn.subprocess.run = fake_run
+    try:
+        run(["git", "status"], cwd=ROOT, check=False)
+        run(["git", "fetch", "-q", "--depth", "1", "origin", "pin"], cwd=ROOT, check=False)
+        run([sys.executable, "-c", "print(1)"], check=False)
+        try:
+            run(["git", "status"], env={"PATH": "/evil"}, check=False)
+        except SystemExit:
+            pass
+        else:
+            errors.append("git accepted a caller environment")
+    except (SpawnRefusal, SystemExit) as exc:
+        errors.append(f"git spawn refused: {exc}")
+    finally:
+        vf_spawn.subprocess.run = original
+        os.environ.pop("VF_SPAWN_SENTINEL", None)
+        os.environ.pop("GIT_EXEC_PATH", None)
+        os.environ.pop("GIT_CONFIG_COUNT", None)
+    if errors:
+        return errors
+    if len(captured) != 3:
+        return [f"expected 3 spawns, saw {len(captured)}"]
+    errors.extend(allowlisted_git_errors(captured[0][0], captured[0][1], timeout=GIT_TIMEOUT_SECONDS))
+    errors.extend(
+        allowlisted_git_errors(captured[1][0], captured[1][1], timeout=GIT_FETCH_TIMEOUT_SECONDS)
+    )
+    other_argv, other_kwargs = captured[2]
+    if not other_argv or other_argv[0] != sys.executable:
+        errors.append(f"non-git command was rewritten: {other_argv}")
+    if other_kwargs.get("timeout") is not None or other_kwargs.get("env") is not None:
+        errors.append("non-git command was forced through the git allowlist")
+    errors.extend(windows_pin_case_errors())
+    return errors
 
 
 def main() -> None:
