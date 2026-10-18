@@ -3418,6 +3418,8 @@ def main() -> int:
         ("test_vf_office_v2_604_cp083_socket_negative.py", 2, 15),
         ("test_vf_office_v2_604_cp083_client_socket_negative.py", 10, 45),
         ("test_vf_office_v2_604_cp083_reconcile_negative.py", 5, 15),
+        # #762: offline-only byte-consistency negatives, NOT joined-run QA.
+        ("test_vf_office_v2_604_cp083_candidate_evidence_gate.py", 18, 20),
     ):
         candidate_test = ROOT / "scripts" / test_file
         if not candidate_test.is_file():
