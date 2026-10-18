@@ -26,6 +26,9 @@ $script:SelectedHost=''
 $script:SelectedHostPid=0
 $script:MatchedTitle=''
 $script:BoundVia=''
+$script:PlmSuspendedThreads=0
+$script:PlmTotalThreads=0
+$script:DwmCloaked=$null
 function Refuse([string]$reason){throw ('REFUSED_'+$reason)}
 function Identity {
  $id=[Security.Principal.WindowsIdentity]::GetCurrent()
@@ -218,6 +221,13 @@ public static class CalcContentNativeCP057 {
  [DllImport("user32.dll")] public static extern bool EnumWindows(EnumProc callback, IntPtr lParam);
  [DllImport("user32.dll", CharSet=CharSet.Unicode)] public static extern int GetClassName(IntPtr hwnd, StringBuilder name, int max);
  [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr hwnd, out uint processId);
+ [DllImport("dwmapi.dll", PreserveSig=true)] public static extern int DwmGetWindowAttribute(IntPtr hwnd, int attribute, out int value, int size);
+ public static int CloakOf(IntPtr hwnd) {
+  int state = 0;
+  int hr = DwmGetWindowAttribute(hwnd,14,out state,sizeof(int));
+  if(hr != 0){return -1;}
+  return state;
+ }
  public static IntPtr[] TopLevel() {
   List<IntPtr> found = new List<IntPtr>();
   keepAlive = delegate(IntPtr hwnd, IntPtr lParam) { found.Add(hwnd); return true; };
@@ -324,6 +334,53 @@ function Find-CalculatorContent($frame) {
  $script:BoundVia='frame_child'
  return $core
 }
+function Test-CalculatorPlmSuspension {
+ # Diagnostic read only; never claim PLM from missing/inaccessible thread data.
+ $script:PlmSuspendedThreads=0
+ $script:PlmTotalThreads=0
+ $script:DwmCloaked=$null
+ $allSuspended=$true
+ $pids=@()
+ foreach($proc in @(Calcs)){
+  if($proc.ProcessName -ne 'CalculatorApp'){continue}
+  if(-not (Test-StartedThisAttempt $proc)){continue}
+  $pids+=[int]$proc.Id
+  try {
+   foreach($thread in @($proc.Threads)){
+    $script:PlmTotalThreads++
+    try {
+     if($thread.ThreadState -eq [System.Diagnostics.ThreadState]::Wait -and
+        $thread.WaitReason -eq [System.Diagnostics.ThreadWaitReason]::Suspended){
+      $script:PlmSuspendedThreads++
+     } else {$allSuspended=$false}
+    } catch {$allSuspended=$false}
+   }
+  } catch {$allSuspended=$false}
+ }
+ if($script:PlmTotalThreads -eq 0){$allSuspended=$false}
+ # DWMWA_CLOAKED=14; preserve the raw DWM value (2 means shell-cloaked).
+ try {
+  if(@($pids).Count -gt 0){
+   Add-CalcContentNative
+   foreach($hwnd in @([CalcContentNativeCP057]::TopLevel())){
+    if([CalcContentNativeCP057]::ClassOf($hwnd) -ne 'Windows.UI.Core.CoreWindow'){continue}
+    if(@($pids) -notcontains ([CalcContentNativeCP057]::ProcessOf($hwnd))){continue}
+    $cloaked=[CalcContentNativeCP057]::CloakOf($hwnd)
+    if($cloaked -ge 0){
+     $script:DwmCloaked=[int]$cloaked
+     if($cloaked -gt 0){return $true}
+    }
+   }
+  }
+ } catch {}
+ return $allSuspended
+}
+function Refuse-CalculatorUnavailable([string]$fallback) {
+ $plm=$false
+ try {$plm=[bool](Test-CalculatorPlmSuspension)} catch {$plm=$false}
+ if($plm){Refuse 'CALCULATOR_SUSPENDED_BY_PLM'}
+ Refuse $fallback
+}
 function Find-BoundRoot {
  $frame=FindWindow
  return (Find-CalculatorContent $frame)
@@ -344,11 +401,11 @@ function FindElement($window,[string]$id) {
   if((IdleSeconds) -lt 600){Refuse 'USER_BECAME_ACTIVE'}
   $window=Resolve-ContentWindow $window
   if($null -eq $window){
-   if([DateTime]::UtcNow -ge $deadline){Refuse 'EXPECTED_CALCULATOR_WINDOW_ABSENT'}
+   if([DateTime]::UtcNow -ge $deadline){Refuse-CalculatorUnavailable 'EXPECTED_CALCULATOR_WINDOW_ABSENT'}
   } else {
    $el=FindElementOnce $window $id
    if($null -ne $el){return $el}
-   if([DateTime]::UtcNow -ge $deadline){Refuse ('CALCULATOR_ELEMENT_UNAVAILABLE_'+$id)}
+   if([DateTime]::UtcNow -ge $deadline){Refuse-CalculatorUnavailable ('CALCULATOR_ELEMENT_UNAVAILABLE_'+$id)}
   }
   Start-Sleep -Milliseconds $UiaReadyPollMs
   $window=$null
@@ -372,10 +429,10 @@ function Wait-CalculatorTree {
    Update-OwnedPids
    if($null -eq $window){
     if($null -eq $frame -and @($script:OwnedPids).Count -eq 0){Refuse 'OWNED_CALCULATOR_PROCESS_NOT_FOUND'}
-    Refuse 'CALCULATOR_CONTENT_WINDOW_UNAVAILABLE'
+    Refuse-CalculatorUnavailable 'CALCULATOR_CONTENT_WINDOW_UNAVAILABLE'
    }
    if($null -eq $missing){$missing='CalculatorResults'}
-   Refuse ('CALCULATOR_ELEMENT_UNAVAILABLE_'+$missing)
+   Refuse-CalculatorUnavailable ('CALCULATOR_ELEMENT_UNAVAILABLE_'+$missing)
   }
   Start-Sleep -Milliseconds $UiaReadyPollMs
  }
@@ -426,6 +483,7 @@ if($Mode -eq 'Child'){
   calculator_window_host=''
   bound_element='';bound_process='';bound_via=''
   candidate_frame_count=0;candidate_frame_titles=''
+  suspended_threads=0;total_threads=0;dwm_cloaked=$null
  }
  $opened=$false
  $calcWindow=$null
@@ -488,6 +546,9 @@ if($Mode -eq 'Child'){
   } else {
    $rec.refusal_code=''
   }
+  $rec.suspended_threads=[int]$script:PlmSuspendedThreads
+  $rec.total_threads=[int]$script:PlmTotalThreads
+  $rec.dwm_cloaked=$script:DwmCloaked
   if(-not [string]::IsNullOrEmpty([string]$script:BoundElementName)){
    $rec.bound_element=[string]$script:BoundElementName
   }
