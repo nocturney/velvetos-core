@@ -8,7 +8,7 @@
   "source_receipts": {
     "stage5a": {
       "path": "packages/velvetos/policy/reports/stage5a-context-locality.json",
-      "sha256": "10615f462b1e9e04da7b481b28365dee93ba9207ab3a69f2ea761a0c6799c26d"
+      "sha256": "b6b1937cfbe38241eed9230ff8fda9201214d3de31cab315bd0d118ebf0fb162"
     },
     "stage5b": {
       "path": "packages/velvetos/policy/reports/stage5b-harness-consolidation.json",
@@ -43,8 +43,8 @@
     "main_full_sensor_suite_116_of_116": true
   },
   "context_locality": {
-    "root_lines": 56,
-    "root_words": 453,
+    "root_lines": 66,
+    "root_words": 619,
     "root_domain_leakage_total": 0,
     "domain_count": 10,
     "warehouse_default": "off",

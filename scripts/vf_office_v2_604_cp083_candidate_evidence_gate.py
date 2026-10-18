@@ -17,7 +17,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "scripts/vf_office_v2_604_cp083_hardened_candidate.py"
-SOURCE_SHA = "39b0c918f906980f1ba87c49a03cc6cbf10b4d144b157b3221605a14ad3626b6"
+SOURCE_SHA = "83260c77846b34c4f459eaa812f477e51764fa1eee261af1d542a39dd561cd2c"
 SOURCE_COMMIT = "e065552825d64e9151dca0a53d4b3c7a896ab479"
 PIN_ETCD = "117cc09981c0f1eb378e7520be6969756c2d6a762f376944e53f7bc9800c0c59"
 PIN_CTL = "de07257495499384f91f028dbc0c8e0394e0bd572b728ac486bbadbfa1cdf275"
@@ -122,17 +122,51 @@ def unique_pairs(pairs):
     return obj
 
 
+def _reject_non_finite(_text):
+    raise Refused("NON_FINITE_JSON")
+
+
+def _finite_float(text):
+    value = float(text)
+    if value != value or value in (float("inf"), float("-inf")):
+        raise Refused("NON_FINITE_JSON")
+    return value
+
+
 def decode(raw: bytes) -> dict:
-    # Guest and manifest JSON use the same CR rule as one-line receipts.
-    # json.loads treats CR as whitespace, so the byte check has to come first.
+    """Strict JSON object. CR, duplicate keys, NaN/Infinity and extra values fail."""
+    # json.loads treats CR as whitespace and keeps the last duplicate key.
+    # Both checks have to happen before a value is trusted.
+    require(type(raw) is bytes or type(raw) is bytearray, "JSON_BYTES_REQUIRED")
+    raw = bytes(raw)
     require(b"\r" not in raw, "CR_IN_CANONICAL_JSON")
     try:
-        obj = json.loads(raw.decode("utf-8", errors="strict"),
-                         object_pairs_hook=unique_pairs)
-    except (UnicodeError, json.JSONDecodeError) as exc:
+        text = raw.decode("utf-8", errors="strict")
+    except UnicodeError as exc:
+        raise Refused("INVALID_UTF8_OR_JSON") from exc
+    try:
+        obj = json.loads(text, object_pairs_hook=unique_pairs,
+                         parse_constant=_reject_non_finite,
+                         parse_float=_finite_float)
+    except Refused:
+        raise
+    except (UnicodeError, json.JSONDecodeError, ValueError) as exc:
         raise Refused("INVALID_UTF8_OR_JSON") from exc
     require(type(obj) is dict, "JSON_OBJECT_REQUIRED")
     return obj
+
+
+def decode_wire_frame(raw: bytes, limit: int) -> dict:
+    """One LF-terminated JSON object. A second frame or a CR byte is refused."""
+    require(type(raw) is bytes or type(raw) is bytearray, "WIRE_FRAME_BYTES")
+    raw = bytes(raw)
+    require(b"\r" not in raw, "CR_IN_CANONICAL_JSON")
+    require(len(raw) <= limit, "MESSAGE_SIZE_REFUSED")
+    if b"\n" not in raw:
+        raise Refused("WIRE_FRAME_REQUIRED")
+    if raw.count(b"\n") != 1 or not raw.endswith(b"\n"):
+        raise Refused("WIRE_TRAILING_PAYLOAD")
+    return decode(raw[:-1])
 
 
 def require_evidence_inode(info: os.stat_result, limit: int) -> None:
@@ -140,6 +174,18 @@ def require_evidence_inode(info: os.stat_result, limit: int) -> None:
     require(stat.S_ISREG(info.st_mode), "NONREGULAR_FILE")
     require(info.st_nlink == 1, "HARDLINK_ALIAS_REFUSED")
     require(info.st_size <= limit, "OVERSIZED_FILE")
+
+
+def directory_open_flags() -> int:
+    """POSIX directory open. Zero is not a directory requirement.
+
+    Windows has no O_DIRECTORY. Substituting 0 would open a non-directory.
+    That host fails closed before the open. POSIX still passes the real flag.
+    """
+    flag = getattr(os, "O_DIRECTORY", 0)
+    if os.name != "posix" or type(flag) is not int or flag == 0:
+        raise Refused("SKIP_NON_POSIX")
+    return os.O_RDONLY | flag | getattr(os, "O_NOFOLLOW", 0)
 
 
 def read_bounded(path: Path, limit: int) -> bytes:
@@ -187,7 +233,7 @@ def read_anchored(base: Path, name: object, limit: int) -> bytes:
             all(p not in (".", "..") and SEGMENT.fullmatch(p) for p in parts) and
             "/./" not in name and "//" not in name,
             "UNSAFE_ARTIFACT_PATH")
-    flags_dir = os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0)
+    flags_dir = directory_open_flags()
     flags_file = (os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) |
                   getattr(os, "O_NONBLOCK", 0))
     try:

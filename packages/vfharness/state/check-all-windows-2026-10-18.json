@@ -1,0 +1,31 @@
+{
+  "task_id": "check-all-windows-2026-10-18",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfharness",
+  "goal": "Add a non-blocking windows-latest check-all job that runs the same suite entry point and uploads its log.",
+  "completed_steps": [
+    "CLAIM on #612 comment 6252551756",
+    "check-all-windows runs on pull_request and push with continue-on-error",
+    "Pinned Gyan ffmpeg 7.1.1 full build so GITHUB_ACTIONS does not fail the video sensors for a missing binary",
+    "Log upload uses the runner token, not a new action or secret"
+  ],
+  "next_step": "Independent QA. The required status stays check-all. security_admission stays RED.",
+  "artifacts": [
+    ".github/workflows/check-all.yml",
+    "scripts/upload_gha_artifact.py",
+    "scripts/check-machine-writers.py"
+  ],
+  "unresolved": [
+    "security_admission stays RED",
+    "The Windows job is not a required status check"
+  ],
+  "last_updated": "2026-10-18",
+  "execution_state": {
+    "claim": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6252551756",
+    "ffmpeg_zip_sha256": "d760e1b3574402ed18b4865851f87d87e73965a982e6453212df8621fed1c508",
+    "security_admission": "RED",
+    "required_status_check": "check-all"
+  },
+  "latest_observation": "The Windows job installs the hashed 3.11 lock and the pinned ffmpeg zip, then runs scripts/check-all.py. SKIP_NON_POSIX still applies on that runner. A local host without ffmpeg still skips with SKIP_ENV_MISSING."
+}

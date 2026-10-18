@@ -31,6 +31,7 @@ import vf_office_v2_604_cp081_mtls_atomic_admission_lab as cp081
 import vf_office_v2_604_cp082_tls_native_git_reconcile_lab as cp082
 import vf_office_v2_604_real_etcd_mtls_rbac_identity_lab as identity
 import vf_office_v2_604_native_git_crash_reconcile_offline as offline
+import vf_office_v2_604_cp083_candidate_evidence_gate as evidence_gate
 
 SCHEMA = "velvetos.office-v2.604.cp083.osuid-mtls-localgit-option-a.v1"
 PERMIT_ENV = "VF604_CP083_DISPOSABLE_GUEST_ONLY"
@@ -109,6 +110,43 @@ def _allowlisted_reply(reply):
     return out
 
 
+def read_json_frame(sock, limit, deadline):
+    """One bounded LF frame, then the shared strict JSON object decoder.
+
+    Used by the sink request path and the client ACK path. Returns only
+    after the frame is the entire payload. No Git or journal call.
+    """
+    buffer = bytearray()
+    while b"\n" not in buffer and len(buffer) <= limit:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise evidence_gate.Refused("WIRE_FRAME_TIMEOUT")
+        sock.settimeout(remaining)
+        space = limit + 1 - len(buffer)
+        if space <= 0:
+            break
+        try:
+            part = sock.recv(min(512, space))
+        except socket.timeout as exc:
+            raise evidence_gate.Refused("WIRE_FRAME_TIMEOUT") from exc
+        if not part:
+            break
+        buffer.extend(part)
+    decoded = evidence_gate.decode_wire_frame(bytes(buffer), limit)
+    previous = sock.gettimeout()
+    try:
+        sock.settimeout(0)
+        try:
+            extra = sock.recv(1)
+        except (socket.timeout, BlockingIOError):
+            extra = b""
+    finally:
+        sock.settimeout(previous)
+    if extra:
+        raise evidence_gate.Refused("WIRE_TRAILING_PAYLOAD")
+    return decoded
+
+
 def socket_exchange(root, payload):
     """One bounded response from the verified sink principal; never blind-retry."""
     # Platform capability gate before connect: non-Linux must not open the socket.
@@ -124,20 +162,7 @@ def socket_exchange(root, payload):
         if peer_uid != SINK_UID:
             return {"status": "NO_ACK_UNKNOWN"}
         sock.sendall((json.dumps(payload, sort_keys=True) + "\n").encode())
-        deadline = time.monotonic() + 3.0
-        buffer = bytearray()
-        while b"\n" not in buffer and len(buffer) <= MAX_MESSAGE:
-            remaining = deadline - time.monotonic()
-            if remaining <= 0:
-                return {"status": "NO_ACK_UNKNOWN"}
-            sock.settimeout(remaining)
-            part = sock.recv(min(1024, MAX_MESSAGE + 1 - len(buffer)))
-            if not part:
-                break
-            buffer.extend(part)
-        if not buffer or len(buffer) > MAX_MESSAGE or b"\n" not in buffer:
-            return {"status": "NO_ACK_UNKNOWN"}
-        reply = json.loads(bytes(buffer.split(b"\n", 1)[0]))
+        reply = read_json_frame(sock, MAX_MESSAGE, time.monotonic() + 3.0)
         return _allowlisted_reply(reply)
     except (OSError, ValueError, TypeError, struct.error):
         return {"status": "NO_ACK_UNKNOWN"}
@@ -236,25 +261,11 @@ def serve(root, case):
                 # this single-threaded sink for up to MAX_MESSAGE frames.
                 # Bound the *whole frame* with one monotonic deadline.
                 c.settimeout(2.0)
-                deadline = time.monotonic() + 2.0
-                incoming = bytearray()
-                while b"\n" not in incoming and len(incoming) <= MAX_MESSAGE:
-                    remaining = deadline - time.monotonic()
-                    if remaining <= 0:
-                        break
-                    c.settimeout(remaining)
-                    try:
-                        bit = c.recv(512)
-                    except socket.timeout:
-                        break
-                    if not bit:
-                        break
-                    incoming.extend(bit)
                 try:
-                    need(b"\n" in incoming and len(incoming) <= MAX_MESSAGE,
-                         "MESSAGE_SIZE_REFUSED")
-                    req = json.loads(bytes(incoming.split(b"\n", 1)[0]))
-                    need(type(req) is dict and set(req) == {"action", "case"},
+                    req = read_json_frame(c, MAX_MESSAGE, time.monotonic() + 2.0)
+                    need(set(req) == {"action", "case"}
+                         and type(req["action"]) is str
+                         and type(req["case"]) is str,
                          "EXACT_PROTOCOL_FIELDS_REQUIRED")
                     action = req["action"]
                     if uid == 0 and action in ("snapshot", "shutdown"):

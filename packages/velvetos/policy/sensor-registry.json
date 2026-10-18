@@ -139,6 +139,34 @@
       "mapping_state": "mapped"
     },
     {
+      "id": "check-changelog-fragments",
+      "path": "scripts/check-changelog-fragments.py",
+      "owns": [
+        "changelog.d/**",
+        "scripts/changelog-compile.py",
+        "scripts/changelog_contract.py",
+        "scripts/check-changelog-fragments.py"
+      ],
+      "triggered_by": [
+        "changelog.d/**",
+        "scripts/changelog-compile.py",
+        "scripts/changelog_contract.py",
+        "scripts/check-changelog-fragments.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "lifecycle": "DOMAIN",
+      "risk": "medium",
+      "timeout_seconds": 60,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
       "id": "check-chat-cold-start-preflight",
       "path": "scripts/check-chat-cold-start-preflight.py",
       "owns": [
@@ -525,6 +553,36 @@
       "lifecycle": "DOMAIN",
       "risk": "high",
       "timeout_seconds": 120,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-crewai-kickoff-eval",
+      "path": "scripts/check-crewai-kickoff-eval.py",
+      "owns": [
+        "docs/office-v2/kickoff-eval.md",
+        "scripts/check-crewai-kickoff-eval.py",
+        "scripts/office_v2_crewai/kickoff_eval.py",
+        "scripts/office_v2_crewai/kickoff_fixtures/**",
+        "scripts/office_v2_crewai/kickoff_samples/**"
+      ],
+      "triggered_by": [
+        "docs/office-v2/kickoff-eval.md",
+        "scripts/check-crewai-kickoff-eval.py",
+        "scripts/office_v2_crewai/kickoff_eval.py",
+        "scripts/office_v2_crewai/kickoff_fixtures/**",
+        "scripts/office_v2_crewai/kickoff_samples/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "lifecycle": "DOMAIN",
+      "risk": "high",
+      "timeout_seconds": 60,
       "failure_effect": {
         "merge": "BLOCK",
         "release": "BLOCK_IF_RELEVANT",

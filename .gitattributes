@@ -5,6 +5,11 @@
 *.py text eol=lf
 *.json text eol=lf
 *.md text eol=lf
+# Fallback only. New PRs add changelog.d/<slug>.md and leave CHANGELOG.md alone.
+# Git's built-in union driver keeps added lines from both parents. It also
+# keeps a line one side deleted or edited when the other side still has it.
+# See docs/CHANGELOG-FRAGMENTS.md.
+CHANGELOG.md merge=union
 # DCC Stage 6C exact-byte validator sources: every tracked patch (8),
 # JavaScript (7), PowerShell (44), and MJS (10) Git index blob is LF.
 *.patch text eol=lf
@@ -82,3 +87,9 @@ packages/vfharness/state/pr228-rollout/* text eol=lf
 # Pretrusted default-branch workflow_run policy YAML must be LF on Windows;
 # otherwise physical-host SHA verification of the trusted policy is ambiguous.
 /.github/workflows/office-p0-protected-base-c1-qa.yml text eol=lf
+
+# Committed CrewAI E4 evidence is byte-compared. Without these pins,
+# core.autocrlf=true checks the .reg files out as CRLF and the sensor fails.
+/scripts/office_v2_crewai/evidence/e4/*.json text eol=lf
+/scripts/office_v2_crewai/evidence/e4/*.reg text eol=lf
+/scripts/office_v2_crewai/evidence/e4-containment.json text eol=lf

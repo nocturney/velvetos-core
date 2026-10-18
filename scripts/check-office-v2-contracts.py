@@ -3427,6 +3427,7 @@ def main() -> int:
         "test_vf_office_v2_604_cp083_socket_negative.py",
         "test_vf_office_v2_604_cp083_client_socket_negative.py",
         "test_vf_office_v2_604_cp084_nonroot_sink_recovery.py",
+        "test_vf_office_v2_604_cp083_wire_json.py",
     }
     skipped_candidate_imports = []
     for test_file, count, timeout_s in (
@@ -3437,10 +3438,12 @@ def main() -> int:
         ("test_vf_office_v2_604_cp084_nonroot_sink_recovery.py", 5, 15),
         ("test_vf_office_v2_604_cp085_public_git_readback.py", 29, 15),
         # #762: offline-only byte-consistency negatives, NOT joined-run QA.
-        ("test_vf_office_v2_604_cp083_candidate_evidence_gate.py", 24, 30),
-        # ChatGPT-069: GAP_4 is a passing inode refusal. GAP_9 and GAP_6 stay
-        # expected failures. No candidate import.
+        ("test_vf_office_v2_604_cp083_candidate_evidence_gate.py", 27, 30),
+        # ChatGPT-069: GAP_4 and GAP_9 are passing refusals. GAP_6 stays an
+        # expected failure. This file does not import the candidate.
         ("test_vf_office_v2_604_cp083_chatgpt069_negatives.py", 4, 30),
+        # GAP_9 socket frames. Imports the candidate, so non-POSIX skips it.
+        ("test_vf_office_v2_604_cp083_wire_json.py", 7, 30),
     ):
         candidate_test = ROOT / "scripts" / test_file
         if not candidate_test.is_file():
@@ -3454,7 +3457,9 @@ def main() -> int:
             fail("#604 CP083 candidate-import set drifted: " + test_file)
         if os.name != "posix" and imports_candidate:
             skipped_candidate_imports.append(test_file)
+            # stderr too: check-all keeps only stderr when the sensor later fails.
             print("SKIP_NON_POSIX " + test_file)
+            print("SKIP_NON_POSIX " + test_file, file=sys.stderr)
             continue
         try:
             test_run = subprocess.run(
@@ -3468,7 +3473,10 @@ def main() -> int:
                 or (sys.platform == "linux"
                     and test_file != "test_vf_office_v2_604_cp083_reconcile_negative.py"
                     and "skipped" in test_run.stderr)):
-            fail("#604 CP083 candidate negative tests failed: " + test_file)
+            captured = ((test_run.stderr or "") + "\n" + (test_run.stdout or "")).splitlines()
+            tail = " | ".join(line.strip() for line in captured if line.strip())[-400:]
+            extra = (" :: " + tail) if tail else ""
+            fail("#604 CP083 candidate negative tests failed: " + test_file + extra)
     if os.name != "posix":
         if set(skipped_candidate_imports) != candidate_import_skip:
             fail("#604 CP083 candidate-import tests must SKIP_NON_POSIX")
