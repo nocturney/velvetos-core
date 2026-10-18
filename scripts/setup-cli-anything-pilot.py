@@ -260,6 +260,27 @@ def prove_git_hygiene() -> list[str]:
             pass
         else:
             errors.append("git accepted a caller environment")
+        before = len(captured)
+        for label, token in (
+            ("newline and nul", "rev\n\x00"),
+            ("newline", "rev\nmore"),
+            ("nul", "rev\x00more"),
+            ("cr", "rev\rmore"),
+        ):
+            try:
+                run(
+                    ["git", "rev-parse", "--verify", "-q"],
+                    revisions=[token],
+                    cwd=ROOT,
+                    check=False,
+                )
+            except SystemExit as exc:
+                if "GIT_REV_REFUSED" not in str(exc):
+                    errors.append(f"{label} revision refused as {exc}")
+            else:
+                errors.append(f"{label} revision was accepted")
+        if len(captured) != before:
+            errors.append("control-byte revision spawned git")
     except (SpawnRefusal, SystemExit) as exc:
         errors.append(f"git spawn refused: {exc}")
     finally:
