@@ -159,12 +159,17 @@ def run_pinned(
     path_suffix: tuple[str, ...] = (),
     **kwargs,
 ) -> subprocess.CompletedProcess:
+    suffix = path_suffix
+    if name == "gh":
+        # gh repo view and gh run view shell out to git. The gh directory and
+        # the git directory differ on a normal Windows install and on this box.
+        suffix = (executable_directory(pin_which("git")), *path_suffix)
     return run_absolute(
         pin_which(name),
         args,
         timeout=timeout,
         extra_keys=extra_keys,
-        path_suffix=path_suffix,
+        path_suffix=suffix,
         **kwargs,
     )
 
@@ -284,6 +289,10 @@ def expect_pinned(
                 raise AssertionError(f"{key} was dropped from the gh allowlist")
         elif key in env:
             raise AssertionError(f"{key} leaked into a non-gh spawn")
+    if keep_gh_token:
+        git_dir = executable_directory(pin_which("git"))
+        if not any(paths_match(part, git_dir) for part in path.split(os.pathsep)):
+            raise AssertionError("git directory missing from gh PATH: " + path)
     if not paths_match(r"C:\Windows\System32", r"c:\windows\system32", os_name="nt"):
         raise AssertionError("Windows path compare is case-sensitive")
     if paths_match("/Tmp/Bin", "/tmp/bin", os_name="posix"):

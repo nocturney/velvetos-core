@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -61,6 +62,46 @@ def gh(args: list[str], timeout: int = 60) -> str:
 
 def parse_time(value: str) -> datetime:
     return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone(timezone.utc)
+
+
+def prove_split_gh_git_repo_slug() -> str:
+    """Real gh and real git, in different directories, still resolve the slug.
+
+    The allowlisted PATH used to be only gh's directory. `gh repo view` then
+    cannot find git when the two binaries do not share a directory.
+    """
+    import tempfile
+
+    gh_bin = hygiene.pin_which("gh")
+    git_bin = hygiene.pin_which("git")
+    gh_name = "gh.exe" if os.name == "nt" else "gh"
+    git_name = "git.exe" if os.name == "nt" else "git"
+    with tempfile.TemporaryDirectory(prefix="vf-gh-git-") as tmp:
+        gh_dir = Path(tmp) / "gh-bin"
+        git_dir = Path(tmp) / "git-bin"
+        gh_dir.mkdir()
+        git_dir.mkdir()
+        os.symlink(gh_bin, gh_dir / gh_name)
+        os.symlink(git_bin, git_dir / git_name)
+        previous = os.environ.get("PATH")
+        os.environ["PATH"] = os.pathsep.join((str(gh_dir), str(git_dir)))
+        try:
+            found_gh = hygiene.pin_which("gh")
+            found_git = hygiene.pin_which("git")
+            if hygiene.paths_match(
+                hygiene.executable_directory(found_gh),
+                hygiene.executable_directory(found_git),
+            ):
+                raise AssertionError("gh and git were not placed in separate directories")
+            slug = repo_slug()
+        finally:
+            if previous is None:
+                os.environ.pop("PATH", None)
+            else:
+                os.environ["PATH"] = previous
+    if slug != "nocturney/velvetos-core":
+        raise AssertionError(f"repo slug {slug!r} != nocturney/velvetos-core")
+    return slug
 
 
 def repo_slug() -> str:
@@ -593,6 +634,7 @@ def self_test() -> int:
     with hygiene.record_pinned_spawn("gh") as (calls, short):
         gh(["repo", "view", "--json", "nameWithOwner"])
     hygiene.expect_pinned(calls, short, timeout=60, keep_gh_token=True)
+    slug = prove_split_gh_git_repo_slug()
     try:
         gh(["-c", "true"])
     except RuntimeError as exc:
@@ -601,7 +643,11 @@ def self_test() -> int:
     else:
         raise AssertionError("gh flag command was accepted")
 
-    print("OK sensor-shadow-observation selftest historical_miss_retention=PASS pr_dedupe=PASS incomplete_recovery=PASS")
+    print(
+        "OK sensor-shadow-observation selftest "
+        "historical_miss_retention=PASS pr_dedupe=PASS incomplete_recovery=PASS "
+        f"repo_slug={slug}"
+    )
     return 0
 
 
