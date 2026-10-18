@@ -1,0 +1,152 @@
+#!/usr/bin/env python3
+"""Offline adversarial fixtures for the CrewAI E5 network-evidence validator."""
+from __future__ import annotations
+
+import copy
+import hashlib
+import json
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+from vf_office_v2_crewai_e5_network import (  # noqa: E402
+    SCHEMA, canonical_bytes, create_receipt, evaluate,
+)
+
+
+def fixture() -> dict:
+    def snap(ts: str, running: bool) -> dict:
+        return {
+            "captured_at_utc": ts,
+            "process_tree": ([{"pid": 4242, "parent_pid": 100,
+                              "created_at_utc": "2026-10-18T12:00:01Z"}] if running else []),
+            "tcp": ([{"pid": 4242, "state": "Established", "local_address": "127.0.0.1",
+                      "local_port": 50123, "remote_address": "127.0.0.1", "remote_port": 11435}]
+                    if running else []),
+            "udp": [],
+        }
+    return {
+        "schema": SCHEMA,
+        "host": "Chris",
+        "root_pid": 4242,
+        "sample_interval_ms": 250,
+        "started_at_utc": "2026-10-18T12:00:01Z",
+        "ended_at_utc": "2026-10-18T12:00:03Z",
+        "collector_complete": True,
+        "collector_errors": [],
+        "timed_out": False,
+        "exit_code": 0,
+        "snapshots": {
+            "before": snap("2026-10-18T12:00:00Z", False),
+            "during": [snap("2026-10-18T12:00:02Z", True)],
+            "after": snap("2026-10-18T12:00:04Z", False),
+        },
+    }
+
+
+def main() -> int:
+    base = fixture()
+    errors = []
+    if evaluate(base):
+        errors.append("valid baseline refused: %s" % evaluate(base))
+    cases = {
+        "tcp-listening": (lambda d: d["snapshots"]["during"][0]["tcp"][0].update(state="Listen"),
+                          "TCP_LISTENER_DETECTED"),
+        "non-loopback-remote": (lambda d: d["snapshots"]["during"][0]["tcp"][0].update(remote_address="10.0.0.10"),
+                                "UNAPPROVED_REMOTE_ENDPOINT"),
+        "wrong-ollama-port": (lambda d: d["snapshots"]["during"][0]["tcp"][0].update(remote_port=11434),
+                              "WRONG_OLLAMA_PORT"),
+        "missing-after": (lambda d: d["snapshots"].pop("after"), "MISSING_SNAPSHOT"),
+        "missing-before": (lambda d: d["snapshots"].pop("before"), "MISSING_SNAPSHOT"),
+        "missing-during": (lambda d: d["snapshots"].update(during=[]), "MISSING_DURING_SNAPSHOT"),
+        "udp-bound-listener": (lambda d: d["snapshots"]["during"][0]["udp"].append({"pid": 4242, "local_port": 5353}),
+                               "UDP_ENDPOINT_DETECTED"),
+        "missing-collector": (lambda d: d.update(collector_complete=False), "COLLECTOR_INCOMPLETE"),
+        "collector-error": (lambda d: d.update(collector_errors=["ACCESS_DENIED"]), "COLLECTOR_INCOMPLETE"),
+        "orphan-child": (lambda d: d["snapshots"]["after"]["process_tree"].append({"pid": 4243, "parent_pid": 4242,
+                                                "created_at_utc": "2026-10-18T12:00:02Z"}), "PILOT_TREE_STILL_RUNNING"),
+        "root-not-seen": (lambda d: d["snapshots"]["during"][0].update(process_tree=[]), "ROOT_NOT_OBSERVED_DURING"),
+        "bad-utc": (lambda d: d.update(started_at_utc="2026-10-18T15:00:01+03:00"), "INVALID_RUN_TIMES"),
+        "nonzero-exit": (lambda d: d.update(exit_code=2), "PILOT_EXIT_NOT_ZERO"),
+        "null-exit-code": (lambda d: d.update(exit_code=None), "PILOT_EXIT_NOT_ZERO"),
+        "missing-exit-code": (lambda d: d.pop("exit_code"), "PILOT_EXIT_NOT_ZERO"),
+        "non-scalar-root-pid": (lambda d: d.update(root_pid=[4242]), "INVALID_ROOT_PID"),
+        "false-interval": (lambda d: d.update(sample_interval_ms=5000), "INVALID_SAMPLE_INTERVAL"),
+    }
+    for name, (mutate, expected) in cases.items():
+        trial = copy.deepcopy(base)
+        mutate(trial)
+        reasons = evaluate(trial)
+        if expected not in reasons:
+            errors.append("%s was not fail-closed (%s)" % (name, reasons))
+        receipt = create_receipt(json.dumps(trial).encode("ascii"), trial)
+        if receipt["status"] != "FAIL" or receipt["pilot_authorized"] is not False:
+            errors.append("%s emitted positive receipt" % name)
+
+    good = create_receipt(json.dumps(base).encode("ascii"), base)
+    if (good["status"] != "PASS_SAMPLED_NOT_ENFORCEMENT" or good["network_enforcement_proven"]
+            or good["pilot_authorized"]):
+        errors.append("sampled observation misrepresented enforcement or GO")
+    saved_hash = good.pop("sha256")
+    if hashlib.sha256(canonical_bytes(good)).hexdigest() != saved_hash:
+        errors.append("receipt self-hash mismatch")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        src, dest = Path(tmp) / "snapshots.json", Path(tmp) / "receipt.json"
+        src.write_bytes(json.dumps(base).encode("ascii"))
+        validator = ROOT / "scripts" / "vf_office_v2_crewai_e5_network.py"
+        ok = subprocess.run([sys.executable, str(validator), "--evidence", str(src), "--receipt", str(dest)],
+                            text=True, capture_output=True, timeout=10)
+        if ok.returncode != 0 or json.loads(dest.read_text())["status"] != "PASS_SAMPLED_NOT_ENFORCEMENT":
+            errors.append("CLI positive fixture failed")
+        bad = copy.deepcopy(base)
+        bad["snapshots"].pop("after")
+        src.write_bytes(json.dumps(bad).encode("ascii"))
+        denied = subprocess.run([sys.executable, str(validator), "--evidence", str(src), "--receipt", str(dest)],
+                                text=True, capture_output=True, timeout=10)
+        if denied.returncode == 0 or json.loads(dest.read_text())["status"] != "FAIL":
+            errors.append("CLI missing snapshot did not fail")
+        bad_root = copy.deepcopy(base)
+        bad_root["root_pid"] = [4242]
+        src.write_bytes(json.dumps(bad_root).encode("ascii"))
+        invalid_root = subprocess.run([sys.executable, str(validator), "--evidence", str(src), "--receipt", str(dest)],
+                                      text=True, capture_output=True, timeout=10)
+        invalid_receipt = json.loads(dest.read_text())
+        if (invalid_root.returncode == 0 or "INVALID_ROOT_PID" not in invalid_receipt["reason_codes"]
+                or "Traceback" in invalid_root.stderr):
+            errors.append("CLI non-scalar root_pid failed to issue a clean FAIL receipt")
+        src.write_text("{broken", encoding="ascii")
+        malformed = subprocess.run([sys.executable, str(validator), "--evidence", str(src), "--receipt", str(dest)],
+                                   text=True, capture_output=True, timeout=10)
+        if malformed.returncode == 0 or "INVALID_JSON" not in json.loads(dest.read_text())["reason_codes"]:
+            errors.append("CLI malformed input did not fail")
+
+    ps = ROOT / "scripts" / "collect-crewai-e5-network.ps1"
+    if not ps.is_file():
+        errors.append("PowerShell collector missing")
+    else:
+        raw = ps.read_bytes()
+        required = (b"Get-NetTCPConnection", b"Get-NetUDPEndpoint", b"Get-CimInstance",
+                    b"Start-Process", b"captured_at_utc", b"collector_errors", b"127.0.0.1",
+                    b"11435", b"--evidence", b"--receipt")
+        if (raw.startswith(b"\xef\xbb\xbf") or b"\r" in raw or any(b > 127 for b in raw)
+                or not raw.endswith(b"\n")):
+            errors.append("collector must be ASCII/LF without BOM")
+        if any(needle not in raw for needle in required):
+            errors.append("collector missing critical snapshot / enforcement marker")
+        if (b"$null = $script:Child.Handle" not in raw or b"$null -ne $observedExitCode" not in raw
+                or b"[int]$script:Child.ExitCode" in raw):
+            errors.append("collector ExitCode must fail closed on null, with primed process handle")
+    if errors:
+        for error in errors:
+            print("FAIL check-crewai-e5-network: %s" % error, file=sys.stderr)
+        return 1
+    print("OK crewai E5 offline fixture baseline+%d fail-closed mutants, CLI/hash/ASCII checks; no model/network" % len(cases))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

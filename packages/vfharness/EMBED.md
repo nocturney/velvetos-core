@@ -21,15 +21,10 @@ python3 scripts/check-all.py
 
 ## 3. Loop — משימה רב-שלבית
 
-1. תכנן צעדים על פק קיים (לא פק חדש) וקשר ל־`Spec / אישור` מחייב.
-2. לפני Task 1, כתוב evidence-bearing preflight לפי `playbooks/executing-plans.md`: self-consistency לכל Task + producer/consumer לכל shared file/interface/state.
-3. בצע צעד אחד והרץ את ה־proof שלו.
-4. נכשל → retry תחום → fallback → downgrade scope בטוח.
-5. עדיין חסום, אבל ההחלטה מקומית+הפיכה וללא security/authority/external-side-effect gate → `safe_ruling` מתועד: `Ruling: <decision> — <why> — <cost_if_wrong>`.
-6. בכל stop class, required sensor/receipt אדום, או ruling שאינו בטוח → `templates/escalation.md`; לא עוקפים gate.
-7. שתי משימות עצמאיות באמת יכולות fan-out; shared-write/prod→consumer נשארים סדרתיים. אחרי fan-in — integration proof + fresh whole-plan review.
+מקור האמת היחיד למחזור הביצוע הוא `LOOP.md` (תכנן → בצע → אמת → retry/fallback/downgrade → ruling בטוח או הסלמה, כולל גבולות, preflight ו-fan-out). לא משכפלים אותו כאן.
 
-מימוש ladder: `scripts/vf_graceful_escalation.py` — `safe_ruling` opt-in/fail-closed (`safe_to_rule=False` כברירת מחדל).
+1. תכנן צעדים על פק קיים (לא פק חדש) וקשר ל־`Spec / אישור` מחייב.
+2. בצע לפי `LOOP.md`. preflight: `playbooks/executing-plans.md`; הסלמה: `templates/escalation.md`; מימוש: `scripts/vf_graceful_escalation.py`.
 
 ## 4. Memory — לפני סגירת סשן ארוך
 

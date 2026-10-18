@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Validate HyperFrames + canonical Mac/Windows Edge render-host failover. No network/render/send."""
+"""Validate HyperFrames + canonical Mac/Windows Edge render-host failover.
+
+Executes the local ffmpeg-svg caption tests (a real small render when ffmpeg
+is on PATH). No network and no send.
+"""
 from __future__ import annotations
 import json, re, shutil, subprocess, sys
 from pathlib import Path
@@ -100,6 +104,8 @@ def main() -> None:
         fail("render host connect playbook mismatch")
     if route.get("primary") != "hyperframes" or "ffmpeg-svg-caption-composition" not in set(route.get("fallback") or []):
         fail("primary/fallback routing invalid")
+    if route.get("fallbackBridge") != "scripts/vf_ffmpeg_svg_caption.py":
+        fail("ffmpeg-svg-caption fallback bridge missing")
     if defaults.get("masterResolution") != "portrait" or defaults.get("masterFormat") != "mp4" or defaults.get("finalQuality") != "high" or defaults.get("strictFinal") is not True:
         fail("final master defaults invalid")
     if int(defaults.get("maxFinalRenders", 99)) > 2:
@@ -194,7 +200,28 @@ def main() -> None:
     policy = contains(POLICY, "not a second orchestrator", "ffmpeg-svg-caption-composition", "ffprobe receipt", "render receipt", "vfcopy", "RTL")
     contains(FRAME, "portrait 9:16", "explicit RTL", "Do not invent font", "Subject lock", "Evaluation Engine")
     contains(EDIT, "HYPERFRAMES-BACKEND.json", "HYPERFRAMES-RENDER.schema.json", "vf_hyperframes.py plan", "ffmpeg-svg-caption-composition")
-    bridge = contains(BRIDGE, 'MIN_HYPERFRAMES_VERSION =', f'RECOVERY_HYPERFRAMES_VERSION = "{recovery}"', 'HYPERFRAMES_PACKAGE = "hyperframes"', 'policy=latest-compatible', 'SUPPORTED_STAGES = {"rough", "review", "final"}', 'shutil.which("hyperframes")', '"--strict-all"', '"ffprobe"', '"sha256"', '"audioRequired"')
+    bridge = contains(BRIDGE, 'MIN_HYPERFRAMES_VERSION =', f'RECOVERY_HYPERFRAMES_VERSION = "{recovery}"', 'HYPERFRAMES_PACKAGE = "hyperframes"', 'policy=latest-compatible', 'SUPPORTED_STAGES = {"rough", "review", "final"}', 'shutil.which("hyperframes")', '"--strict-all"', '"ffprobe"', '"sha256"', '"audioRequired"', 'failover_after_primary', 'vf_ffmpeg_svg_caption', '"qaLowered": False', "sourceRequest", "prepare_request", '"--tmp-dir"')
+    contains(
+        ROOT / "scripts" / "vf_ffmpeg_svg_caption.py",
+        'BACKEND = "ffmpeg-svg-caption-composition"',
+        "Rubik",
+        "#a86838",
+        '"audioRequired"',
+        '"sha256"',
+        "def plan",
+        "def render_prepared",
+        "def prepare_request",
+        "def visual_order",
+        "text_shaping=0",
+        "bidi-self-test=pass",
+        "def runtime_tmp_dir",
+        "VELVETOS_RUNTIME_ROOT",
+        "replace=1",
+        "Rubik-wght700",
+        '"--tmp-dir"',
+        "headlineFontSha256",
+        "def release_derived_tmp",
+    )
     if "version mismatch: required" in bridge or re.search(r"(?m)^HYPERFRAMES_VERSION\s*=", bridge):
         fail("bridge must not exact-pin normal HyperFrames execution")
     if "npx" in bridge or "shell=True" in bridge:
@@ -258,6 +285,16 @@ def main() -> None:
 
     if "Installing pinned HyperFrames" in windows_bootstrap or '$HyperFramesVersion = "' in windows_bootstrap:
         fail("Windows bootstrap must not exact-pin normal HyperFrames execution")
+
+    caption_tests = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "test_vf_ffmpeg_svg_caption.py")],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if caption_tests.returncode != 0:
+        detail = (caption_tests.stderr or caption_tests.stdout or "").strip()
+        fail("ffmpeg-svg-caption tests failed:\n" + detail[-4000:])
 
     print(
         f"OK hyperframes backend policy=latest-compatible minimum={minimum} recovery={recovery} "
