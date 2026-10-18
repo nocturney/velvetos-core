@@ -43,12 +43,14 @@ def backend_ids(token: str) -> tuple[str, str]:
 
 
 def create_body(run_id: str, job_id: str, name: str) -> dict:
+    # protobuf-ts toJson(useProtoFieldName) plus proto3 JSON wrappers:
+    # google.protobuf.StringValue is a JSON string, not {"value": "..."}.
     return {
         "workflow_run_backend_id": run_id,
         "workflow_job_run_backend_id": job_id,
         "name": name,
         "version": 7,
-        "mime_type": {"value": "application/zip"},
+        "mime_type": "application/zip",
     }
 
 
@@ -58,7 +60,7 @@ def finalize_body(run_id: str, job_id: str, name: str, size: int, digest: str) -
         "workflow_job_run_backend_id": job_id,
         "name": name,
         "size": str(size),
-        "hash": {"value": "sha256:" + digest},
+        "hash": "sha256:" + digest,
     }
 
 
@@ -185,8 +187,15 @@ def selftest() -> int:
         print("FAIL bare token accepted", file=sys.stderr)
         return 1
     body = create_body("run-id", "job-id", ARTIFACT_NAME)
-    if body["version"] != 7 or body["mime_type"] != {"value": "application/zip"}:
+    if body["version"] != 7 or body["mime_type"] != "application/zip":
         print("FAIL create body", file=sys.stderr)
+        return 1
+    if body["workflow_run_backend_id"] != "run-id" or "mimeType" in body:
+        print("FAIL create body field names", file=sys.stderr)
+        return 1
+    final = finalize_body("run-id", "job-id", ARTIFACT_NAME, 4, "ab")
+    if final["size"] != "4" or final["hash"] != "sha256:ab":
+        print("FAIL finalize body", file=sys.stderr)
         return 1
     if "signed_upload_url" in json.dumps(body):
         print("FAIL create body leaked an upload URL field", file=sys.stderr)
