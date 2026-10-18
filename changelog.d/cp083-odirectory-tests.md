@@ -1,0 +1,1 @@
+- 2026-10-18 - **CP083 directory-open tests:** evidence-gate tests require `read_anchored` to call `directory_open_flags`, refuse a zero `O_DIRECTORY`, and refuse a symlinked parent when directory `O_NOFOLLOW` is dropped. File opens skip on a non-POSIX host. Decoder cases still run. No production-code change. `security_admission` stays RED.

@@ -26,12 +26,6 @@ def jsonbytes(obj, *, lf=False):
 
 class CandidateEvidenceNegativeTests(unittest.TestCase):
     def setUp(self):
-        # Anchored opens require a real directory flag. A missing flag is not
-        # a successful verify, and these fixtures are not evidence on Windows.
-        flag = getattr(os, "O_DIRECTORY", 0)
-        if os.name != "posix" or type(flag) is not int or flag == 0:
-            print("SKIP_NON_POSIX", flush=True)
-            self.skipTest("SKIP_NON_POSIX")
         self.tmp = tempfile.TemporaryDirectory(prefix="vf604-cp083-evidence-synth-")
         self.addCleanup(self.tmp.cleanup)
         self.base = Path(self.tmp.name)
@@ -127,11 +121,20 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         entry[shkey] = sha(new)
         self._save_manifest()
 
+    def _skip_if_directory_open_unavailable(self):
+        """File opens need a real POSIX directory flag. Decoder cases do not."""
+        flag = getattr(os, "O_DIRECTORY", 0)
+        if os.name != "posix" or type(flag) is not int or flag == 0:
+            print("SKIP_NON_POSIX", flush=True)
+            self.skipTest("SKIP_NON_POSIX")
+
     def assert_refused(self):
+        self._skip_if_directory_open_unavailable()
         with self.assertRaises(gate.Refused):
             gate.verify(self.manifest_path)
 
     def test_01_synthetic_positive_format_only_never_security_pass(self):
+        self._skip_if_directory_open_unavailable()
         result = gate.verify(self.manifest_path)
         self.assertEqual(result["status"],
                          "OFFLINE_BYTE_CONSISTENCY_ONLY_NOT_RUNTIME_QA")
@@ -141,6 +144,7 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         self.assertFalse(result["production_authority"])
 
     def test_02_missing_manifest_is_refused(self):
+        self._skip_if_directory_open_unavailable()
         self.manifest_path.unlink()
         with self.assertRaises(OSError):
             gate.verify(self.manifest_path)
@@ -241,6 +245,7 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         self.assert_refused()
 
     def test_19_crlf_receipt_line_refused(self):
+        self._skip_if_directory_open_unavailable()
         path = self.base / "run-1/receipt.jsonl"
         raw = path.read_bytes()
         self.assertTrue(raw.endswith(b"\n") and b"\r" not in raw)
@@ -254,6 +259,7 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         self.assertEqual(str(caught.exception), "RECEIPT_MUST_BE_ORIGINAL_ONE_LINE_LF")
 
     def test_20_cr_inside_json_refused(self):
+        self._skip_if_directory_open_unavailable()
         path = self.base / "run-1/receipt.jsonl"
         raw = path.read_bytes()
         self.assertTrue(raw.startswith(b"{") and raw.endswith(b"\n") and b"\r" not in raw)
@@ -270,6 +276,7 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         self.assertEqual(str(caught.exception), "RECEIPT_MUST_BE_ORIGINAL_ONE_LINE_LF")
 
     def test_21_hardlinked_receipt_alias_rejected(self):
+        self._skip_if_directory_open_unavailable()
         # GAP_4 on an unfixed gate: nlink is unchecked, so a same-bytes alias verifies.
         receipt = self.base / "run-1" / "receipt.jsonl"
         alias = self.base / "run-1" / "receipt-alias.jsonl"
@@ -281,6 +288,7 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         self.assertEqual(str(caught.exception), "HARDLINK_ALIAS_REFUSED")
 
     def test_22_evidence_parent_swap_race_cannot_escape_root(self):
+        self._skip_if_directory_open_unavailable()
         # GAP_3 on an unfixed gate: a parent swap between the path check and
         # open still feeds the outside inode when the bytes match.
         receipt = self.base / "run-1" / "receipt.jsonl"
@@ -328,6 +336,7 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         self.assertIn(original_ino, opened["inos"])
 
     def test_23_guest_manifest_cr_canonical_policy(self):
+        self._skip_if_directory_open_unavailable()
         # CR is refused in guest and manifest JSON, same canonical rule as receipts.
         guest = self.base / "run-1" / "guest.json"
         raw = guest.read_bytes()
@@ -349,6 +358,7 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         self.assertEqual(str(caught.exception), "CR_IN_CANONICAL_JSON")
 
     def test_24_self_issued_two_receipts_not_accepted_as_host_attestation(self):
+        self._skip_if_directory_open_unavailable()
         result = gate.verify(self.manifest_path)
         self.assertEqual(result["status"],
                          "OFFLINE_BYTE_CONSISTENCY_ONLY_NOT_RUNTIME_QA")
@@ -383,6 +393,8 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
                     gate.decode(raw)
                 self.assertEqual(str(caught.exception), reason)
 
+    def test_guest_and_manifest_file_bytes_refused(self):
+        self._skip_if_directory_open_unavailable()
         guest = self.base / "run-1" / "guest.json"
         original = json.loads(guest.read_bytes())
         pretty = json.dumps(original, indent=2).encode()
@@ -446,6 +458,7 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         """
         source = Path(gate.__file__).read_text(encoding="utf-8")
         self.assertNotIn("os.O_DIRECTORY", source)
+        self._skip_if_directory_open_unavailable()
         flags = gate.directory_open_flags()
         self.assertNotEqual(os.O_DIRECTORY, 0)
         self.assertEqual(flags & os.O_DIRECTORY, os.O_DIRECTORY)
@@ -501,6 +514,9 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
                 with self.assertRaises(gate.Refused) as caught:
                     gate.decode(raw)
                 self.assertEqual(str(caught.exception), "NON_FINITE_JSON")
+
+    def test_overflow_float_in_guest_and_manifest_files(self):
+        self._skip_if_directory_open_unavailable()
         guest = self.base / "run-1" / "guest.json"
         guest_raw = guest.read_bytes()
         overflow_guest = guest_raw[:-1] + b',"n":1e999}'
@@ -521,6 +537,37 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         with self.assertRaises(gate.Refused) as caught:
             gate.verify(self.manifest_path)
         self.assertEqual(str(caught.exception), "NON_FINITE_JSON")
+
+
+    def test_read_anchored_calls_directory_open_flags(self):
+        def boom():
+            raise gate.Refused("DIRECTORY_OPEN_FLAGS_NOT_USED")
+
+        with mock.patch.object(gate, "directory_open_flags", boom):
+            with self.assertRaises(gate.Refused) as caught:
+                gate.read_anchored(self.base, "run-1/receipt.jsonl", 4096)
+            self.assertEqual(str(caught.exception), "DIRECTORY_OPEN_FLAGS_NOT_USED")
+
+    def test_read_anchored_refuses_zero_directory_flag(self):
+        with mock.patch.object(gate.os, "O_DIRECTORY", 0, create=True):
+            with self.assertRaises(gate.Refused) as caught:
+                gate.read_anchored(self.base, "run-1/receipt.jsonl", 4096)
+            self.assertEqual(str(caught.exception), "SKIP_NON_POSIX")
+
+    def test_symlink_directory_anchor_requires_nofollow(self):
+        self._skip_if_directory_open_unavailable()
+        outside = self.base / "outside-anchor"
+        outside.mkdir()
+        secret = b'{"outside":true}\n'
+        (outside / "receipt.jsonl").write_bytes(secret)
+        link = self.base / "linked-run"
+        link.symlink_to(outside, target_is_directory=True)
+        try:
+            got = gate.read_anchored(self.base, "linked-run/receipt.jsonl", 4096)
+        except gate.Refused as exc:
+            self.assertEqual(str(exc), "ARTIFACT_PARENT_NOT_REAL_DIRECTORY")
+        else:
+            self.fail("symlink directory anchor was followed: " + repr(got))
 
 
 if __name__ == "__main__":
