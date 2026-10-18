@@ -64,10 +64,22 @@ def prove_windows_skip_codes() -> None:
     if format_inert_selftest_skip("OFFLINE_STATIC_ONLY") is not None:
         fail("POSIX inert selftest must not print a skip")
     source = Path(__file__).read_text(encoding="utf-8")
-    prints_child = "for line in format_" + "child_skips("
-    prints_inert = "print(" + "inert_line)"
-    if prints_child not in source or prints_inert not in source:
+    loop = "for line in format_" + "child_skips("
+    parts = source.split(loop)
+    printed = "print(" + "line)"
+    if len(parts) != 2 or printed not in parts[1][:180]:
+        fail("child skip codes must be printed")
+    if "print(" + "inert_line)" not in source:
         fail("Windows skip codes must be printed on the suite log")
+    # main() runs to EOF, so stop before the module entrypoint. That entrypoint
+    # also calls the proof, and must not count as the call inside main().
+    main_tail = source.split("def main() -> int:", 1)
+    entry = "\nif __" + "name__"
+    if len(main_tail) != 2 or entry not in main_tail[1]:
+        fail("main must call prove_windows_skip_codes")
+    main_body = main_tail[1].split(entry, 1)[0]
+    if "prove_" + "windows_skip_codes()" not in main_body:
+        fail("main must call prove_windows_skip_codes")
 
 
 def load(path: Path) -> dict:
@@ -3573,4 +3585,6 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    # Runs even if the call inside main() is removed, so that mutant still fails.
+    prove_windows_skip_codes()
     raise SystemExit(main())

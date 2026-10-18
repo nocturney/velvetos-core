@@ -158,8 +158,15 @@ def prove_host_default_path_skip() -> None:
         fail("Windows must print SKIP_HOST_IS_WINDOWS for the non-Windows Cognee default path")
     if host_default_path_skip("posix") is not None:
         fail("POSIX must still run the non-Windows Cognee default path")
-    if "print(" + "skip)" not in Path(__file__).read_text(encoding="utf-8"):
+    source = Path(__file__).read_text(encoding="utf-8")
+    if "print(" + "skip)" not in source:
         fail("SKIP_HOST_IS_WINDOWS must be printed")
+    # The live call must pass os.name. host_default_path_skip("nt") would skip
+    # the real Cognee default-path check on Linux and Mac as well.
+    marker = "skip = host_" + "default_path_skip("
+    parts = source.split(marker)
+    if len(parts) != 2 or not parts[1].startswith("os.name)"):
+        fail("Cognee default-path skip must be host_default_path_skip(os.name)")
 
 
 def check_python_windows_fail_closed() -> None:
