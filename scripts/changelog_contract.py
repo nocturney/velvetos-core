@@ -21,7 +21,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from vf_spawn import SpawnRefusal, run_git, same_pinned_directory
+from vf_spawn import SpawnRefusal, revision_form_errors, run_git, same_pinned_directory, git_revision
 
 ROOT = Path(__file__).resolve().parents[1]
 FRAGMENT_RE = re.compile(r"^changelog\.d/([a-z0-9]+(?:-[a-z0-9]+)*)\.md$")
@@ -73,7 +73,8 @@ def gate(paths: list[str]) -> int:
 
 
 def changed_files(base: str, head: str, repo: Path = ROOT) -> list[str]:
-    proc = run_git(["diff", "--name-only", f"{base}...{head}"], cwd=repo)
+    spec = f"{git_revision(base)}...{git_revision(head)}"
+    proc = run_git(["diff", "--name-only"], revisions=[spec], cwd=repo)
     if proc.returncode != 0:
         raise SystemExit(f"FAIL git diff {base}...{head}: {proc.stderr.strip()}")
     return [line for line in proc.stdout.splitlines() if line.strip()]
@@ -191,7 +192,11 @@ def live_gate(repo: Path = ROOT, base: str = "origin/main", head: str = "HEAD") 
     if os.environ.get("GITHUB_ACTIONS") == "true":
         print("SKIP changelog-contract (hosted workflow runs the fragment gate as its own step)")
         return 0
-    probe = run_git(["rev-parse", "--verify", "-q", f"{base}^{{commit}}"], cwd=repo)
+    probe = run_git(
+        ["rev-parse", "--verify", "-q"],
+        revisions=[f"{git_revision(base)}^{{commit}}"],
+        cwd=repo,
+    )
     if probe.returncode != 0:
         print(f"SKIP changelog-contract (no git base {base})")
         return 0
@@ -204,6 +209,11 @@ def prove_git_hygiene() -> list[str]:
 
     errors: list[str] = []
     sentinel = "VF_SPAWN_SENTINEL"
+    previous = {
+        sentinel: os.environ.get(sentinel),
+        "GIT_EXEC_PATH": os.environ.get("GIT_EXEC_PATH"),
+        "GIT_CONFIG_COUNT": os.environ.get("GIT_CONFIG_COUNT"),
+    }
     os.environ[sentinel] = "nope"
     os.environ["GIT_EXEC_PATH"] = "/evil/git-core"
     os.environ["GIT_CONFIG_COUNT"] = "1"
@@ -218,13 +228,22 @@ def prove_git_hygiene() -> list[str]:
     try:
         run_git(["status"])
         changed_files("a", "b", ROOT)
+        try:
+            changed_files("--output=/tmp/pwn", "b", ROOT)
+        except SpawnRefusal as exc:
+            if str(exc) != "GIT_REV_REFUSED":
+                errors.append(f"dash revision refused as {exc}")
+        else:
+            errors.append("leading-dash revision was accepted")
     except (SpawnRefusal, SystemExit) as exc:
         errors.append(f"git spawn refused: {exc}")
     finally:
         vf_spawn.subprocess.run = original
-        os.environ.pop(sentinel, None)
-        os.environ.pop("GIT_EXEC_PATH", None)
-        os.environ.pop("GIT_CONFIG_COUNT", None)
+        for key, value in previous.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
     if errors:
         return errors
     if len(captured) != 2:
@@ -247,6 +266,7 @@ def prove_git_hygiene() -> list[str]:
             resolved = Path(entry).resolve()
             if resolved != root and root not in resolved.parents:
                 errors.append(f"git PATH escaped the install: {entry}")
+    errors.extend(revision_form_errors(captured[1][0], ["a...b"]))
     short = "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\git-abc"
     long = "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\git-abc"
 
@@ -505,12 +525,16 @@ def git_fixture() -> list[str]:
         (repo / "CHANGELOG.md").write_text("## [Unreleased]\n\n- base.\n", encoding="utf-8")
         git(repo, "add", "-A")
         git(repo, "commit", "-qm", "base")
-        base = run_git(["rev-parse", "HEAD"], cwd=repo, check=True).stdout.strip()
+        base = run_git(
+            ["rev-parse", "--verify", "-q"], revisions=["HEAD"], cwd=repo, check=True
+        ).stdout.strip()
 
         (repo / "scripts" / "tool.py").write_text("print(2)\n", encoding="utf-8")
         git(repo, "add", "-A")
         git(repo, "commit", "-qm", "neither")
-        head = run_git(["rev-parse", "HEAD"], cwd=repo, check=True).stdout.strip()
+        head = run_git(
+            ["rev-parse", "--verify", "-q"], revisions=["HEAD"], cwd=repo, check=True
+        ).stdout.strip()
         if gate(changed_files(base, head, repo)) != 1:
             errors.append("git PR with neither must fail")
 
@@ -521,7 +545,9 @@ def git_fixture() -> list[str]:
         (folder / "example-pr.md").write_text("- 2026-10-18 - **Example:** one line.\n", encoding="utf-8")
         git(repo, "add", "-A")
         git(repo, "commit", "-qm", "fragment only")
-        head = run_git(["rev-parse", "HEAD"], cwd=repo, check=True).stdout.strip()
+        head = run_git(
+            ["rev-parse", "--verify", "-q"], revisions=["HEAD"], cwd=repo, check=True
+        ).stdout.strip()
         names = changed_files(base, head, repo)
         if "CHANGELOG.md" in names:
             errors.append("fragment fixture must not touch CHANGELOG.md")
@@ -538,13 +564,17 @@ def main() -> int:
     ap.add_argument("--repo", type=Path, default=ROOT)
     ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args()
-    if args.selftest:
-        return selftest()
-    if args.files is not None:
-        return gate(args.files)
-    if not (args.base and args.head):
-        ap.error("--base and --head are required (or --files / --selftest)")
-    return gate(changed_files(args.base, args.head, args.repo))
+    try:
+        if args.selftest:
+            return selftest()
+        if args.files is not None:
+            return gate(args.files)
+        if not (args.base and args.head):
+            ap.error("--base and --head are required (or --files / --selftest)")
+        return gate(changed_files(args.base, args.head, args.repo))
+    except SpawnRefusal as exc:
+        print(exc, file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":

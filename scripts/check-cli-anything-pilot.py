@@ -173,6 +173,7 @@ def prove_setup_git() -> None:
     assert spec and spec.loader
     spec.loader.exec_module(module)
     errors = module.prove_git_hygiene()
+    errors.extend(module.prove_git_real())
     if errors:
         fail("setup git spawn: " + "; ".join(errors))
 

@@ -5,6 +5,8 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import shutil
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -197,10 +199,67 @@ def prove_promptfoo_reachable() -> None:
         )
 
 
+def node_directory_without_python(root: Path) -> str:
+    found = shutil.which("node")
+    if not found:
+        fail("node missing")
+    parent = Path(found).resolve().parent
+    names = {path.name.lower() for path in parent.iterdir()}
+    if not any(name.startswith("python") for name in names):
+        return str(parent)
+    only = root / "node-only"
+    only.mkdir()
+    if os.name == "nt":
+        (only / "node.cmd").write_text("@echo off\r\n", encoding="utf-8")
+    else:
+        (only / "node").symlink_to(found)
+    return str(only)
+
+
+def prove_promptfoo_refusal_line() -> None:
+    """A missing python prints SPAWN_PYTHON_REFUSED and no traceback."""
+    module = load_promptfoo_runner()
+    doc = module.promptfoo_plan.__doc__ or ""
+    if "/usr/bin" not in doc:
+        fail("promptfoo shared-directory PATH exposure is undocumented")
+    directory = Path(tempfile.mkdtemp(prefix="vf-promptfoo-refuse-"))
+    shim, _entry, _py_dir = promptfoo_fixture(directory)
+    env = os.environ.copy()
+    env["PATH"] = node_directory_without_python(directory)
+    env["PYTHONPATH"] = str(ROOT / "scripts")
+    env["FIXTURE_BIN"] = str(shim)
+    env["RUNNER"] = str(ROOT / "scripts" / "run-promptfoo-evals.py")
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import importlib.util, os, sys\n"
+            "from pathlib import Path\n"
+            "spec = importlib.util.spec_from_file_location('run_promptfoo_evals', os.environ['RUNNER'])\n"
+            "mod = importlib.util.module_from_spec(spec)\n"
+            "spec.loader.exec_module(mod)\n"
+            "mod.BIN = Path(os.environ['FIXTURE_BIN'])\n"
+            "raise SystemExit(mod.main())\n",
+        ],
+        cwd=ROOT,
+        env=env,
+        text=True,
+        capture_output=True,
+    )
+    if proc.returncode != 1 or proc.stderr.strip() != "SPAWN_PYTHON_REFUSED" or "Traceback" in proc.stderr:
+        fail(
+            "promptfoo refusal was not one line: "
+            f"exit={proc.returncode} stdout={proc.stdout!r} stderr={proc.stderr!r}"
+        )
+    if proc.stdout.strip():
+        fail(f"promptfoo refusal wrote stdout: {proc.stdout!r}")
+
+
 def main() -> None:
     prove_promptfoo_hygiene()
     prove_promptfoo_reachable()
     prove_promptfoo_python_symlink()
+    prove_promptfoo_refusal_line()
     for path in (CONFIG, TARGET, PACKAGE, LOCK):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")

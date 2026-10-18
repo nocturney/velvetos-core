@@ -77,6 +77,9 @@ def promptfoo_plan(bin_path: Path, args: list[str]) -> tuple[list[str], str, str
 
     PATH is the node command directory plus the python command directory.
     It is not the inherited search PATH and not the JS directory.
+    When node and python share one directory, often /usr/bin, that pin is the
+    whole directory: the child can execute every binary there. The provider
+    execs python by name, so the pin cannot shrink to one file.
     """
     entry = javascript_entrypoint(bin_path)
     node, node_dir = command_pin("node")
@@ -98,6 +101,14 @@ def run(config: Path, output: Path):
     )
 
 def main() -> int:
+    try:
+        return _main()
+    except SpawnRefusal as exc:
+        print(exc, file=sys.stderr)
+        return 1
+
+
+def _main() -> int:
     if not BIN.is_file():
         print("FAIL Promptfoo local install missing; run npm ci --prefix tools/promptfoo --ignore-scripts --no-audit --no-fund", file=sys.stderr)
         return 2
