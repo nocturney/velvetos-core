@@ -1,0 +1,1 @@
+- 2026-10-18 - **Workflow uses pins:** Workflow files and in-repo composite actions are parsed with a PyYAML safe loader that rejects duplicate keys. Anchors, aliases, and merge keys on steps and jobs are refused. A remote `uses` is a 40-hex SHA with a version comment, and a `docker://` ref must be `@sha256:` plus 64 hex. No model call.
