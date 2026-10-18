@@ -9,7 +9,12 @@ not the repair: it has Count 1 and would refuse a closed Calculator.
 
 This sensor models that empty-result case and rejects a calc.ps1 whose
 Calcs call sites, or any other possibly-empty .Count/.Length, are left
-unwrapped. It does not launch Calculator or touch a Windows session.
+unwrapped. It also requires a 10000 ms poll for CalculatorResults and
+the buttons the script presses, a Calculator-only UWP host bind
+(ApplicationFrameHost or the Calculator process), and a receipt that
+records the refusal message and refusal code. Mutations of the fixed
+script must go red; the fixed script must stay green. It does not
+launch Calculator or touch a Windows session.
 """
 from __future__ import annotations
 
@@ -24,7 +29,17 @@ CALC = ROOT / "packages/vfharness/devtools/pilots/cua/cp057/calc.ps1"
 PIN = ROOT / "packages/vfharness/devtools/pilots/cua/cp057/PIN.json"
 README = ROOT / "README.md"
 CUA_README = ROOT / "packages/vfharness/devtools/pilots/cua/README.md"
-SUPERSEDES = "97e942bcccfb5c5bcbbe13e97badd058e027e1df3e803a4a24d9eaac933cbc6f"
+EARLIER = "97e942bcccfb5c5bcbbe13e97badd058e027e1df3e803a4a24d9eaac933cbc6f"
+IMMEDIATE = "32824ef410023d84a61c7ecd88edd872ade2e70bdee0ec22b27ae001a3b35f13"
+UIA_WAIT_MS = 10000
+UIA_POLL_MS = 250
+TREE_IDS = (
+    "CalculatorResults",
+    "num6Button",
+    "multiplyButton",
+    "num7Button",
+    "equalButton",
+)
 
 REQUIRED = (
     "Set-StrictMode -Version Latest",
@@ -55,6 +70,14 @@ REQUIRED = (
     "equalButton",
     "CalculatorResults",
     "PASS_NATIVE_UIA_CALCULATOR_42_ONLY",
+    "Refuse 'CALCULATOR_WINDOW_HOST_MISMATCH'",
+    "$UiaReadyWaitMs=10000",
+    "$UiaReadyPollMs=250",
+    "failure_message=''",
+    "refusal_code=''",
+    "Format-RefusalMessage",
+    "Wait-CalculatorTree",
+    "ApplicationFrameHost",
 )
 
 BUGGY = """
@@ -302,8 +325,13 @@ def count_findings(code: str, original: str) -> list[str]:
             rhs = last_rhs(original, var.group(1))
             if rhs is not None and rhs.lstrip().startswith("@("):
                 continue
-            if prop == "Length" and rhs is not None and rhs.lstrip()[:1] in "'\"":
-                continue
+            if prop == "Length" and rhs is not None:
+                stripped = rhs.lstrip()
+                if stripped[:1] in "'\"":
+                    continue
+                # -replace and .Trim() yield [string]. Strict mode exposes Length.
+                if "-replace" in stripped or ".Trim()" in stripped:
+                    continue
         findings.append(
             f"line {line}: {recv}.{prop} can throw PropertyNotFoundException "
             "on an empty or scalar pipeline result; wrap the result in @()"
@@ -314,6 +342,238 @@ def count_findings(code: str, original: str) -> list[str]:
 def script_findings(text: str) -> list[str]:
     code = blank_non_code(text)
     return calcs_call_findings(code) + count_findings(code, text)
+
+
+def function_spans(text: str) -> list[tuple[str, str]]:
+    matches = list(re.finditer(r"(?m)^function ([^\s({]+)", text))
+    spans: list[tuple[str, str]] = []
+    if not matches:
+        return [("script", text)]
+    spans.append(("script-preamble", text[: matches[0].start()]))
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+        spans.append((match.group(1), text[match.start() : end]))
+    return spans
+
+
+def _compact(body: str) -> str:
+    return re.sub(r"\s+", "", body)
+
+
+def loop_is_bounded(body: str) -> bool:
+    compact = _compact(body)
+    while_at = compact.find("while($true)")
+    if while_at < 0:
+        return True
+    segment = compact[while_at:]
+    deadline = segment.find("UtcNow-ge$deadline")
+    sleep = segment.find("Start-Sleep-Milliseconds$UiaReadyPollMs")
+    refuse = segment.find("Refuse")
+    ceiling = compact.find("AddMilliseconds($UiaReadyWaitMs)")
+    return (
+        deadline >= 0
+        and sleep >= 0
+        and refuse >= 0
+        and ceiling >= 0
+        and ceiling < while_at
+        and deadline < sleep
+    )
+
+
+def wait_findings(text: str) -> list[str]:
+    problems: list[str] = []
+    ceilings = re.findall(r"\$UiaReadyWaitMs\s*=\s*(\d+)", text)
+    if ceilings != [str(UIA_WAIT_MS)]:
+        problems.append(
+            f"UIA wait ceiling must be assigned once as {UIA_WAIT_MS} ms, found {ceilings or 'none'}"
+        )
+    polls = re.findall(r"\$UiaReadyPollMs\s*=\s*(\d+)", text)
+    if polls != [str(UIA_POLL_MS)]:
+        problems.append(
+            f"UIA poll interval must be assigned once as {UIA_POLL_MS} ms, found {polls or 'none'}"
+        )
+    if "AddMilliseconds($UiaReadyWaitMs)" not in text:
+        problems.append("wait deadline is not derived from $UiaReadyWaitMs")
+    if re.search(r"AddMilliseconds\(\s*(?!\$UiaReadyWaitMs\b)\d+", text):
+        problems.append("a wait uses a numeric deadline instead of $UiaReadyWaitMs")
+    spans = dict(function_spans(text))
+    for name, body in function_spans(text):
+        if "while($true)" not in body:
+            continue
+        if not loop_is_bounded(body):
+            problems.append(f"{name}: while($true) is not a bounded poll that fail-closes on the deadline")
+    tree = spans.get("Wait-CalculatorTree", "")
+    if not tree:
+        problems.append("missing Wait-CalculatorTree")
+    else:
+        for token in TREE_IDS:
+            if token not in tree:
+                problems.append(f"Wait-CalculatorTree does not wait for {token}")
+        if "AddMilliseconds($UiaReadyWaitMs)" not in tree:
+            problems.append("Wait-CalculatorTree has no $UiaReadyWaitMs deadline")
+    finder = spans.get("FindElement", "")
+    if "AddMilliseconds($UiaReadyWaitMs)" not in finder:
+        problems.append("FindElement does not bound its wait with $UiaReadyWaitMs")
+    press = spans.get("Press", "")
+    if "FindElement" not in press:
+        problems.append("Press must resolve buttons through the bounded FindElement wait")
+    tree_at = text.find("$calcWindow=Wait-CalculatorTree")
+    read_at = text.find("$rec.first_result=Display")
+    if tree_at < 0 or read_at < 0 or tree_at > read_at:
+        problems.append("the CalculatorResults wait must run before the first Display read")
+    if "ApplicationFrameHost" not in text or "CalculatorApp" not in text:
+        problems.append("window bind must name ApplicationFrameHost and CalculatorApp")
+    name_lines = [line for line in text.splitlines() if "Get-Process -Name" in line]
+    if not name_lines:
+        problems.append("missing Calculator process filter")
+    for line in name_lines:
+        if "ApplicationFrameHost" in line:
+            problems.append("ApplicationFrameHost must not be selected as a Calculator process")
+    if "Stop-Process -Name" in text or re.search(r"Stop-Process\b[^\n]*ApplicationFrameHost", text):
+        problems.append("the script must not stop ApplicationFrameHost")
+    if "$root.FindAll(" in text or re.search(r"\$root\.FindFirst\([^\n]*Descendants", text):
+        problems.append("desktop search must stay one FindFirst of a top-level window named Calculator")
+    if "TreeScope]::Children,$cond)" not in text:
+        problems.append("window search must stay on immediate children")
+    return problems
+
+
+def receipt_findings(text: str) -> list[str]:
+    problems: list[str] = []
+    if "failure_message=''" not in text or "refusal_code=''" not in text:
+        problems.append("receipt schema must include failure_message and refusal_code")
+    parts = text.split("} catch {", 1)
+    if len(parts) != 2:
+        return problems + ["missing fail-closed catch"]
+    catch = parts[1].split("} finally {", 1)[0]
+    if "$rec.failure_message=" not in catch:
+        problems.append("catch does not record failure_message")
+    if "$rec.refusal_code=" not in catch:
+        problems.append("catch does not record refusal_code")
+    if "Exception.Message" not in catch:
+        problems.append("catch does not read the exception message")
+    if "Format-RefusalMessage" not in catch:
+        problems.append("catch does not pass the exception message through the sanitizer")
+    if "REFUSED_" not in catch:
+        problems.append("catch does not extract the REFUSED_ code")
+    sanitizer = dict(function_spans(text)).get("Format-RefusalMessage", "")
+    if not sanitizer:
+        problems.append("missing Format-RefusalMessage")
+    else:
+        for token in ("<path>", "<user>", "REFUSED_", "-cmatch", "160", "A-Za-z0-9_"):
+            if token not in sanitizer:
+                problems.append(f"Format-RefusalMessage missing {token}")
+    if "A-Za-z0-9_" not in catch:
+        problems.append("refusal code pattern must keep mixed-case automation ids")
+    return problems
+
+
+def sanitize_refusal(raw: str) -> tuple[str, str]:
+    """Mirror of Format-RefusalMessage. Fixed REFUSED_* tokens pass through."""
+    if not raw:
+        return "", ""
+    text = re.sub(r"[\r\n\t]+", " ", raw).strip()
+    if re.fullmatch(r"REFUSED_[A-Za-z0-9_]+", text):
+        return text, text[len("REFUSED_") :]
+    found = re.search(r"REFUSED_[A-Za-z0-9_]+", text)
+    if found:
+        token = found.group(0)
+        return token, token[len("REFUSED_") :]
+    text = re.sub(r"(?i)[A-Za-z]:\\[^\s'\";]+", "<path>", text)
+    text = re.sub(r"(?i)\\\\[^\s'\";]+", "<path>", text)
+    text = re.sub(r"(?i)CHRIS\\Chris", "<user>", text)
+    if len(text) > 160:
+        text = text[:160]
+    return text.strip(), ""
+
+
+def sanitizer_model_findings() -> list[str]:
+    problems: list[str] = []
+    samples = {
+        "REFUSED_CALCULATOR_ELEMENT_UNAVAILABLE_CalculatorResults": (
+            "REFUSED_CALCULATOR_ELEMENT_UNAVAILABLE_CalculatorResults",
+            "CALCULATOR_ELEMENT_UNAVAILABLE_CalculatorResults",
+        ),
+        "REFUSED_EXPECTED_CALCULATOR_WINDOW_ABSENT": (
+            "REFUSED_EXPECTED_CALCULATOR_WINDOW_ABSENT",
+            "EXPECTED_CALCULATOR_WINDOW_ABSENT",
+        ),
+        "REFUSED_CALCULATOR_WINDOW_HOST_MISMATCH": (
+            "REFUSED_CALCULATOR_WINDOW_HOST_MISMATCH",
+            "CALCULATOR_WINDOW_HOST_MISMATCH",
+        ),
+        "REFUSED_CALCULATOR_ELEMENT_UNAVAILABLE_num6Button": (
+            "REFUSED_CALCULATOR_ELEMENT_UNAVAILABLE_num6Button",
+            "CALCULATOR_ELEMENT_UNAVAILABLE_num6Button",
+        ),
+    }
+    for raw, expected in samples.items():
+        if sanitize_refusal(raw) != expected:
+            problems.append(f"sanitizer dropped the refusal token {raw}")
+    leaked = "failed at D:\\Velvet\\Pilots\\secret.txt for CHRIS\\Chris"
+    message, code = sanitize_refusal(leaked)
+    if code:
+        problems.append("a non-refusal exception must not invent a refusal code")
+    if "D:\\" in message or "CHRIS\\Chris" in message or "secret" in message:
+        problems.append("sanitizer kept a path or the account name")
+    if "<path>" not in message or "<user>" not in message:
+        problems.append("sanitizer did not redact the path and account")
+    long_message, _code = sanitize_refusal("x" * 400)
+    if len(long_message) > 160:
+        problems.append("sanitizer did not cap the message at 160 characters")
+    if sanitize_refusal("") != ("", ""):
+        problems.append("empty exception message must stay empty")
+    return problems
+
+
+def mutate(text: str, kind: str) -> str:
+    if kind == "drop-preread-wait":
+        anchor = "$calcWindow=Wait-CalculatorTree\n"
+        if anchor not in text:
+            return text
+        return text.replace(anchor, "", 1)
+    if kind == "unbounded-wait":
+        anchor = "$UiaReadyWaitMs=10000"
+        if anchor not in text:
+            return text
+        return text.replace(anchor, "$UiaReadyWaitMs=600000", 1)
+    if kind == "drop-deadline":
+        anchor = "AddMilliseconds($UiaReadyWaitMs)"
+        if anchor not in text:
+            return text
+        return text.replace(anchor, "AddMilliseconds(0)")
+    if kind == "drop-receipt-reason":
+        anchor = "$rec.failure_message=Format-RefusalMessage ([string]$_.Exception.Message)\n"
+        if anchor not in text:
+            return text
+        return text.replace(anchor, "", 1)
+    if kind == "broaden-host-kill":
+        anchor = "Get-Process -Name CalculatorApp,Calculator,calc"
+        if anchor not in text:
+            return text
+        return text.replace(anchor, "Get-Process -Name ApplicationFrameHost,CalculatorApp,Calculator,calc", 1)
+    return text
+
+
+def mutation_findings(text: str) -> list[str]:
+    """Red before the fix, green after. Each mutation is the fixed script with one guard removed."""
+    problems: list[str] = []
+    checks = (
+        ("drop-preread-wait", wait_findings),
+        ("unbounded-wait", wait_findings),
+        ("drop-deadline", wait_findings),
+        ("drop-receipt-reason", receipt_findings),
+        ("broaden-host-kill", wait_findings),
+    )
+    for kind, checker in checks:
+        mutated = mutate(text, kind)
+        if mutated == text:
+            problems.append(f"red-before {kind} did not change the script")
+            continue
+        found = checker(mutated)
+        if not found:
+            problems.append(f"red-before {kind} was not detected")
+    return problems
 
 
 def safety_findings(text: str) -> list[str]:
@@ -344,18 +604,29 @@ def pin_findings(text: str) -> list[str]:
         problems.append("PIN path mismatch")
     if pin.get("sha256") != digest:
         problems.append(f"PIN sha256 {pin.get('sha256')} != file {digest}")
-    if str(pin.get("supersedes_sha256", "")).lower() != SUPERSEDES:
-        problems.append("PIN lost the pre-fix Windows hash")
+    if str(pin.get("supersedes_sha256", "")).lower() != IMMEDIATE:
+        problems.append("PIN supersedes_sha256 must be the first-read failure pin")
+    pin_text = PIN.read_text(encoding="utf-8").lower()
+    if EARLIER not in pin_text:
+        problems.append("PIN lost the earlier strict-mode hash")
     if pin.get("runtimeAuthority") is not False or pin.get("activationAllowed") is not False:
         problems.append("PIN must keep runtimeAuthority and activationAllowed false")
     if pin.get("acceptance") != "RED_UNVERIFIED":
         problems.append("PIN must not claim Calculator acceptance")
-    for path in (README, CUA_README):
-        body = path.read_text(encoding="utf-8")
+    if pin.get("line_ending") != "lf":
+        problems.append("PIN line_ending must stay lf")
+    root_readme = README.read_text(encoding="utf-8")
+    cua_readme = CUA_README.read_text(encoding="utf-8")
+    for path, body in ((README, root_readme), (CUA_README, cua_readme)):
         if digest not in body.lower():
             problems.append(f"{path.relative_to(ROOT)} does not record {digest}")
-    if "PropertyNotFoundException" not in text and "PropertyNotFoundException" not in README.read_text(encoding="utf-8"):
+        for token in ("CalculatorResults", "refusal_code", "ApplicationFrameHost", "RED/UNVERIFIED"):
+            if token not in body:
+                problems.append(f"{path.relative_to(ROOT)} missing {token}")
+    if "PropertyNotFoundException" not in root_readme:
         problems.append("README must record the strict-mode failure class")
+    if "RuntimeException" not in root_readme or "RuntimeException" not in cua_readme:
+        problems.append("README must record the first-read RuntimeException")
     return problems
 
 
@@ -373,6 +644,10 @@ def main() -> int:
         text = CALC.read_text(encoding="utf-8")
         problems.extend(script_findings(text))
         problems.extend(safety_findings(text))
+        problems.extend(wait_findings(text))
+        problems.extend(receipt_findings(text))
+        problems.extend(mutation_findings(text))
+        problems.extend(sanitizer_model_findings())
         if not problems:
             problems.extend(pin_findings(text))
     if problems:
@@ -381,6 +656,11 @@ def main() -> int:
             print(f"FAIL {item}", file=sys.stderr)
         return 1
     digest = hashlib.sha256(CALC.read_bytes()).hexdigest()
+    print(
+        "OK red-before drop-preread-wait=DETECTED unbounded-wait=DETECTED "
+        "drop-deadline=DETECTED drop-receipt-reason=DETECTED broaden-host-kill=DETECTED"
+    )
+    print("OK green-after wait=BOUNDED receipt=REASON host=UWP")
     print(f"OK cp057-calc-strictmode empty-result=GUARDED sha256={digest}")
     return 0
 
