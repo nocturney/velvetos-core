@@ -85,9 +85,48 @@ def pinned_executable(binary, sha):
     return b
 
 
+# openssl and etcdctl children. Values are fixed here. The parent environment
+# is not copied. The etcd server Popen and git sites do not use this map.
+IDENTITY_ENV_REQUIRED = (
+    "ETCDCTL_API",
+    "GIT_CONFIG_GLOBAL",
+    "GIT_CONFIG_NOSYSTEM",
+    "GIT_TERMINAL_PROMPT",
+    "HOME",
+    "LANG",
+    "LC_ALL",
+    "PATH",
+)
+
+
+def identity_subprocess_env():
+    return require_identity_env({
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "HOME": "/nonexistent",
+        "GIT_TERMINAL_PROMPT": "0",
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "GIT_CONFIG_GLOBAL": "/dev/null",
+        "ETCDCTL_API": "3",
+    })
+
+
+def require_identity_env(env):
+    if type(env) is not dict:
+        raise RuntimeError("REQUIRED_ENV_MISSING")
+    missing = [
+        key for key in IDENTITY_ENV_REQUIRED
+        if type(env.get(key)) is not str or env[key] == ""
+    ]
+    if missing or set(env) != set(IDENTITY_ENV_REQUIRED):
+        raise RuntimeError("REQUIRED_ENV_MISSING")
+    return {key: env[key] for key in IDENTITY_ENV_REQUIRED}
+
+
 def subprocess_safe(args, *, cwd=None, timeout=10, data=None):
     p = subprocess.run(list(map(str, args)), cwd=str(cwd) if cwd else None,
-                       env=dict(os.environ, GIT_TERMINAL_PROMPT="0"),
+                       env=require_identity_env(identity_subprocess_env()),
                        text=True, capture_output=True, timeout=timeout,
                        input=data)
     return p

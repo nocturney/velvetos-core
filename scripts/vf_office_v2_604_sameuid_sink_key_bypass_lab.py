@@ -28,7 +28,7 @@ import uuid
 import vf_office_v2_604_real_etcd_mtls_rbac_identity_lab as base
 
 SCHEMA = "vf604.same-os-uid-private-sink-key-bypass.v1"
-BASE_SOURCE_SHA = "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c"
+BASE_SOURCE_SHA = "a824e4d38e4ca91d376360f70bb33867a41b23cfb4b7fb0d3d688d038a5aa0e4"
 OWNER_ROOT_NAME = "p0-604-sameuid-sink-custody-bypass-20261010"
 TEMP_PREFIX = "vf604-custody-live-"
 KEY_PREFIX = "/vf604/custody-negative/"

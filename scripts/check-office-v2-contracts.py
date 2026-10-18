@@ -2443,7 +2443,7 @@ def main() -> int:
         ROOT / "scripts" / "vf_office_v2_604_real_etcd_mtls_rbac_identity_lab.py"
     )
     if hashlib.sha256(tls_rbac_source.read_bytes()).hexdigest() != (
-        "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c"
+        "a824e4d38e4ca91d376360f70bb33867a41b23cfb4b7fb0d3d688d038a5aa0e4"
     ):
         fail("#604 ephemeral mTLS/RBAC denial source SHA drift")
     for tls_mode in ("selftest", "verify"):
@@ -2654,7 +2654,7 @@ def main() -> int:
         ROOT / "scripts" / "vf_office_v2_604_sameuid_sink_key_bypass_lab.py"
     )
     if hashlib.sha256(same_uid_negative.read_bytes()).hexdigest() != (
-        "7e2380e361e0595d817ba9ae1d217f841af36976246e246dff4a1b6f915b18fb"
+        "16e2ca1d702a28a033abd0622815d2ecae98508a179d306820a3381f0a17e465"
     ):
         fail("#604 same-UID sink key negative source SHA drift")
     for same_uid_mode in ("selftest", "verify"):
@@ -2679,7 +2679,7 @@ def main() -> int:
                 16 if same_uid_mode == "selftest" else 0
             )
             or same_uid_result.get("etcd_original_real_mtls_rbac_source_sha256") != (
-                "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c"
+                "a824e4d38e4ca91d376360f70bb33867a41b23cfb4b7fb0d3d688d038a5aa0e4"
             )
             or same_uid_result.get("required_mac_uid") != (
                 "SAME_UID_IS_NOT_SEPARATE_SECURITY_PRINCIPAL"
@@ -3431,6 +3431,7 @@ def main() -> int:
     }
     skipped_candidate_imports = []
     for test_file, count, timeout_s in (
+        ("test_vf_office_v2_604_identity_subprocess_env.py", 2, 15),
         ("test_vf_office_v2_604_cp083_hardening_candidate.py", 10, 15),
         ("test_vf_office_v2_604_cp083_socket_negative.py", 2, 15),
         ("test_vf_office_v2_604_cp083_client_socket_negative.py", 10, 45),
