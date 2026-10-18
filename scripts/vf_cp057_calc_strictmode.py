@@ -515,8 +515,19 @@ def frame_findings(text: str) -> list[str]:
     if re.search(r"if\(-not \(Test-CalculatorTitle", owns):
         problems.append("a title mismatch must not reject an owned Calculator frame")
     title = spans.get("Test-CalculatorTitle", "")
-    if "'Calculator'" not in title or "מחשבון" not in title:
-        problems.append("Test-CalculatorTitle must accept Calculator and מחשבון")
+    hebrew = spans.get("Get-HebrewCalculatorTitle", "")
+    if "'Calculator'" not in title or "Get-HebrewCalculatorTitle" not in title:
+        problems.append("Test-CalculatorTitle must accept Calculator and the Hebrew title")
+    if "0x05DE,0x05D7,0x05E9,0x05D1,0x05D5,0x05DF" not in hebrew:
+        problems.append("Hebrew Calculator title must be built from ASCII code points")
+    built = "".join(chr(n) for n in (0x05DE, 0x05D7, 0x05E9, 0x05D1, 0x05D5, 0x05DF))
+    if built != "מחשבון":
+        problems.append("Hebrew code points do not spell the Calculator title")
+    raw = text.encode("utf-8")
+    if raw.startswith(b"\xef\xbb\xbf") or any(byte >= 128 for byte in raw):
+        problems.append(
+            "calc.ps1 must stay ASCII-only; Windows PowerShell 5.1 reads a BOM-less file as ANSI"
+        )
     if "candidate_frame_count=0" not in text or "candidate_frame_titles=''" not in text:
         problems.append("receipt must include candidate frame count and titles")
     if "$rec.candidate_frame_titles=" not in text:
@@ -699,9 +710,15 @@ def mutate(text: str, kind: str) -> str:
             1,
         )
     if kind == "drop-hebrew":
-        if "מחשבון" not in text:
+        anchor = "0x05DE,0x05D7,0x05E9,0x05D1,0x05D5,0x05DF"
+        if anchor not in text:
             return text
-        return text.replace("מחשבון", "Calculator")
+        return text.replace(anchor, "0x0041", 1)
+    if kind == "raw-hebrew":
+        anchor = "if($title -eq (Get-HebrewCalculatorTitle)){return $true}"
+        if anchor not in text:
+            return text
+        return text.replace(anchor, "if($title -eq '\u05de\u05d7\u05e9\u05d1\u05d5\u05df'){return $true}", 1)
     if kind == "owned-only-close":
         anchor = "try { Stop-Process -Id ([int]$pr.Id) -Force -ErrorAction Stop } catch {}"
         if anchor not in text:
@@ -735,6 +752,7 @@ def mutation_findings(text: str) -> list[str]:
         ("wrong-frame", frame_findings),
         ("title-only", frame_findings),
         ("drop-hebrew", frame_findings),
+        ("raw-hebrew", frame_findings),
         ("owned-only-close", frame_findings),
         ("fake-closed", frame_findings),
     )
@@ -851,7 +869,7 @@ def main() -> int:
         "drop-deadline=DETECTED drop-receipt-reason=DETECTED broaden-host-kill=DETECTED "
         "drop-corewindow=DETECTED rebind-frame=DETECTED drop-bound-receipt=DETECTED "
         "close-frame=DETECTED wrong-frame=DETECTED title-only=DETECTED "
-        "drop-hebrew=DETECTED owned-only-close=DETECTED fake-closed=DETECTED"
+        "drop-hebrew=DETECTED raw-hebrew=DETECTED owned-only-close=DETECTED fake-closed=DETECTED"
     )
     print("OK green-after wait=BOUNDED receipt=REASON host=UWP content=COREWINDOW frame=OWNED")
     print(f"OK cp057-calc-strictmode empty-result=GUARDED sha256={digest}")

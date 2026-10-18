@@ -61,9 +61,12 @@ function Get-CalculatorHostName($window) {
  if(Test-ContentProcess $name){return $name}
  Refuse 'CALCULATOR_WINDOW_HOST_MISMATCH'
 }
+function Get-HebrewCalculatorTitle {
+ return (-join [char[]](0x05DE,0x05D7,0x05E9,0x05D1,0x05D5,0x05DF))
+}
 function Test-CalculatorTitle([string]$title) {
  if($title -eq 'Calculator'){return $true}
- if($title -eq 'מחשבון'){return $true}
+ if($title -eq (Get-HebrewCalculatorTitle)){return $true}
  return $false
 }
 function Get-FrameTitle($el) {
