@@ -14,6 +14,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -27,15 +28,60 @@ REF = "refs/heads/vf604-offline-local-only"
 ZERO = "0" * 40
 BLOCKING = ("EFFECT_IN_FLIGHT", "UNKNOWN_EFFECT_RECONCILE")
 MARKER = ".vf604-offline-no-network"
-ENV = dict(os.environ)
-ENV.update({
-    "GIT_TERMINAL_PROMPT": "0",
-    "GIT_CONFIG_NOSYSTEM": "1",
-    "GIT_AUTHOR_NAME": "VF604 isolated local Git LAB",
-    "GIT_AUTHOR_EMAIL": "vf604@example.invalid",
-    "GIT_COMMITTER_NAME": "VF604 isolated local Git LAB",
-    "GIT_COMMITTER_EMAIL": "vf604@example.invalid",
-})
+# Constructed git/worker env. The parent environment is not copied.
+# PATH is only the directory that contains git, plus the fixed system dirs.
+# Key set matches the CP084 local fixture, which assigns this module's ENV.
+# LANG is not required; LC_ALL=C is the stable locale.
+GIT_ENV_REQUIRED = (
+    "GIT_AUTHOR_EMAIL",
+    "GIT_AUTHOR_NAME",
+    "GIT_COMMITTER_EMAIL",
+    "GIT_COMMITTER_NAME",
+    "GIT_CONFIG_GLOBAL",
+    "GIT_CONFIG_NOSYSTEM",
+    "GIT_TERMINAL_PROMPT",
+    "HOME",
+    "LC_ALL",
+    "PATH",
+)
+
+
+def require_git_env(env):
+    if type(env) is not dict:
+        raise RuntimeError("REQUIRED_ENV_MISSING")
+    missing = [
+        key for key in GIT_ENV_REQUIRED
+        if type(env.get(key)) is not str or env[key] == ""
+    ]
+    if missing or set(env) != set(GIT_ENV_REQUIRED):
+        raise RuntimeError("REQUIRED_ENV_MISSING")
+    return {key: env[key] for key in GIT_ENV_REQUIRED}
+
+
+def git_subprocess_env():
+    git = shutil.which("git")
+    if not git:
+        raise RuntimeError("REQUIRED_ENV_MISSING")
+    git_dir = str(Path(git).resolve().parent)
+    path = git_dir + os.pathsep + os.pathsep.join(("/usr/bin", "/bin"))
+    return require_git_env({
+        "PATH": path,
+        "LC_ALL": "C",
+        "HOME": "/nonexistent",
+        "GIT_TERMINAL_PROMPT": "0",
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "GIT_CONFIG_GLOBAL": "/dev/null",
+        "GIT_AUTHOR_NAME": "VF604 isolated local Git LAB",
+        "GIT_AUTHOR_EMAIL": "vf604@example.invalid",
+        "GIT_COMMITTER_NAME": "VF604 isolated local Git LAB",
+        "GIT_COMMITTER_EMAIL": "vf604@example.invalid",
+    })
+
+
+# Callers that already bind this name, including the sealed lost-ACK driver
+# and the CP084 fixture, receive the constructed map. The parent environment
+# is not copied.
+ENV = git_subprocess_env()
 
 
 def sha(value):
@@ -44,7 +90,8 @@ def sha(value):
 
 def git_raw(args, *, stdin=None):
     return subprocess.run(["git"] + list(args), input=stdin, capture_output=True,
-                          text=True, env=ENV, timeout=15)
+                          text=True, env=require_git_env(ENV),
+                          timeout=15)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -393,7 +440,7 @@ class DurableGitOfflineTests(unittest.TestCase):
         if barrier:
             args.append("barrier")
         return subprocess.run(args, text=True, capture_output=True,
-                              timeout=12)
+                              timeout=12, env=require_git_env(ENV))
 
     def test_01_local_native_git_exact_cas_with_readback(self):
         it = self.request()
@@ -486,7 +533,8 @@ class DurableGitOfflineTests(unittest.TestCase):
         args = [sys.executable, str(Path(__file__).resolve()), "worker",
                 str(self.lab.root), "t1", "none", "barrier"]
         first = subprocess.Popen(args, stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE, text=True)
+                                 stderr=subprocess.PIPE, text=True,
+                                 env=require_git_env(ENV))
         try:
             deadline = time.monotonic() + 6
             while not (self.lab.root / "holding.ready").exists():
