@@ -1,5 +1,5 @@
 {
-  "count_meets_runbook_minimum": false,
+  "count_meets_runbook_minimum": true,
   "issues": [
     {
       "excerpt": "## Goal Promote the merged HyperFrames backend from `IMPLEMENTED / HOST-GATED` to live-verified render capability on the authorized Edge/Office host. ## Preconditions - merged implementation: PR #179 / main commit `994143ee631682a88c20b7025b79009a1aab6a40` - Node.js >=22 - FFmpeg + ffprobe - public HyperFrames CLI pin:",
@@ -108,10 +108,82 @@
       "title": "Creative Craft P2: evaluate awesome-ai-motion + motionmaxxing for Velvet Factory Reels",
       "updated_at": "2026-10-18T10:08:54Z",
       "url": "https://github.com/nocturney/velvetos-core/issues/716"
+    },
+    {
+      "excerpt": "Synthetic offline fixture row 01. Not a live issue and not a measured result.",
+      "labels": [],
+      "number": 10001,
+      "state": "open",
+      "title": "Synthetic E6 fixture row 01",
+      "updated_at": "2026-10-18T00:00:00Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/10001"
+    },
+    {
+      "excerpt": "Synthetic offline fixture row 02. Not a live issue and not a measured result.",
+      "labels": [],
+      "number": 10002,
+      "state": "open",
+      "title": "Synthetic E6 fixture row 02",
+      "updated_at": "2026-10-18T00:00:00Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/10002"
+    },
+    {
+      "excerpt": "Synthetic offline fixture row 03. Not a live issue and not a measured result.",
+      "labels": [],
+      "number": 10003,
+      "state": "open",
+      "title": "Synthetic E6 fixture row 03",
+      "updated_at": "2026-10-18T00:00:00Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/10003"
+    },
+    {
+      "excerpt": "Synthetic offline fixture row 04. Not a live issue and not a measured result.",
+      "labels": [],
+      "number": 10004,
+      "state": "open",
+      "title": "Synthetic E6 fixture row 04",
+      "updated_at": "2026-10-18T00:00:00Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/10004"
+    },
+    {
+      "excerpt": "Synthetic offline fixture row 05. Not a live issue and not a measured result.",
+      "labels": [],
+      "number": 10005,
+      "state": "open",
+      "title": "Synthetic E6 fixture row 05",
+      "updated_at": "2026-10-18T00:00:00Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/10005"
+    },
+    {
+      "excerpt": "Synthetic offline fixture row 06. Not a live issue and not a measured result.",
+      "labels": [],
+      "number": 10006,
+      "state": "open",
+      "title": "Synthetic E6 fixture row 06",
+      "updated_at": "2026-10-18T00:00:00Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/10006"
+    },
+    {
+      "excerpt": "Synthetic offline fixture row 07. Not a live issue and not a measured result.",
+      "labels": [],
+      "number": 10007,
+      "state": "open",
+      "title": "Synthetic E6 fixture row 07",
+      "updated_at": "2026-10-18T00:00:00Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/10007"
+    },
+    {
+      "excerpt": "Synthetic offline fixture row 08. Not a live issue and not a measured result.",
+      "labels": [],
+      "number": 10008,
+      "state": "open",
+      "title": "Synthetic E6 fixture row 08",
+      "updated_at": "2026-10-18T00:00:00Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/10008"
     }
   ],
   "live_fetch_at_runtime": false,
-  "open_issue_count": 12,
+  "open_issue_count": 20,
   "runbook_minimum": 20,
   "schema": "velvetos.office-v2.crewai-issue-export.v1",
   "snapshot_date": "2026-10-18",

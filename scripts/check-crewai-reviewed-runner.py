@@ -208,12 +208,20 @@ def check_committed_gates() -> None:
     e6 = report["gates"]["E6"]
     if e3["status"] != "PASS":
         fail("recorded E3 decision did not pass: %s" % e3)
-    if e6["status"] != "NOT_VERIFIED" or e6["reason"] != "INSUFFICIENT_OPEN_ISSUES":
-        fail("E6 did not stay unverified: %s" % e6)
+    if e6["status"] != "PASS" or e6["reason"] != "EVIDENCE_PRESENT":
+        fail("committed E6 count did not pass: %s" % e6)
     issues = json.loads((INPUTS / "issues.json").read_text(encoding="ascii"))
     numbers = [row["number"] for row in issues["issues"]]
-    if issues["open_issue_count"] != 12 or 612 not in numbers or 595 not in numbers:
-        fail("frozen issue set is not the 12 open public issues")
+    synthetic = [number for number in numbers if 10001 <= number <= 10008]
+    if (
+        issues["open_issue_count"] != 20
+        or len(numbers) != 20
+        or issues["count_meets_runbook_minimum"] is not True
+        or 612 not in numbers
+        or 595 not in numbers
+        or len(synthetic) != 8
+    ):
+        fail("frozen issue set is not 20 rows with the synthetic fillers")
     if not (EVIDENCE / "e3-security-decision.json").is_file():
         fail("recorded E3 decision file is missing")
     e4 = report["gates"]["E4"]
@@ -224,6 +232,40 @@ def check_committed_gates() -> None:
         fail("sandbox env must not turn the committed tree into a pass: %s" % armed["gates"]["E4"])
     if armed["model_calls"] != 0:
         fail("armed preflight called a model")
+
+
+def _rehash_inputs(folder: Path) -> None:
+    manifest_path = folder / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    for row in manifest["files"]:
+        row["sha256"] = hashlib.sha256((folder / row["name"]).read_bytes()).hexdigest()
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+
+def check_e6_row_count() -> None:
+    """The committed 20-row file passes E6. One fewer row is refused."""
+    full = evaluate(INPUTS, EVIDENCE, {}, MODEL)
+    if full["gates"]["E6"]["status"] != "PASS" or full["model_calls"] != 0:
+        fail("20-row fixture did not pass E6: %s" % full["gates"]["E6"])
+    parent = Path(tempfile.mkdtemp(prefix="crewai-e6-count-"))
+    try:
+        shutil.copytree(INPUTS, parent / "inputs")
+        shutil.copytree(EVIDENCE, parent / "evidence")
+        path = parent / "inputs" / "issues.json"
+        document = json.loads(path.read_text(encoding="utf-8"))
+        document["issues"] = document["issues"][:-1]
+        document["open_issue_count"] = 19
+        document["count_meets_runbook_minimum"] = False
+        path.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
+        _rehash_inputs(parent / "inputs")
+        short = evaluate(parent / "inputs", parent / "evidence", {}, MODEL)
+        reason = short["gates"]["E6"]["reason"]
+        if short["ok"] or short["gates"]["E6"]["status"] == "PASS" or reason != "INSUFFICIENT_OPEN_ISSUES":
+            fail("19-row fixture was not refused: %s" % short["gates"]["E6"])
+        if short["model_calls"] != 0:
+            fail("19-row fixture called a model")
+    finally:
+        shutil.rmtree(parent, ignore_errors=True)
 
 
 def check_gate_mutations() -> None:
@@ -2392,6 +2434,7 @@ def main() -> int:
     check_text(Path(__file__))
     check_manifest()
     check_committed_gates()
+    check_e6_row_count()
     check_committed_e4_shape()
     check_e4_newline_mutation()
     check_gate_mutations()

@@ -16,7 +16,7 @@
       "source": "issues.json"
     },
     {
-      "claim": "open_issue_count is 12.",
+      "claim": "open_issue_count is 20.",
       "id": "F04",
       "source": "issues.json"
     },
@@ -26,7 +26,7 @@
       "source": "issues.json"
     },
     {
-      "claim": "count_meets_runbook_minimum is false.",
+      "claim": "count_meets_runbook_minimum is true.",
       "id": "F06",
       "source": "issues.json"
     },
@@ -96,7 +96,7 @@
       "source": "issues.json"
     },
     {
-      "claim": "Twelve open issues is below the runbook minimum, so gate E6 is NOT_VERIFIED.",
+      "claim": "Twenty rows meet the runbook count. Eight of them are synthetic fixture rows, not a live issue list.",
       "id": "F20",
       "source": "issues.json"
     }

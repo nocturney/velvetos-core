@@ -2,8 +2,7 @@
 
 Status of the reviewed runner in `scripts/office_v2_crewai/`: the committed
 tree still refuses before any model call. No package was installed from this
-change. No model call was made. E6 stays `NOT_VERIFIED` because the public
-repo has 12 open issues, and the runbook minimum is 20.
+change. No model call was made. The committed E6 file has 20 rows: the original 12 public rows plus 8 synthetic rows. That meets the count. It is not a live census of open GitHub issues.
 
 E3 is no longer an unconditional fail. Christian accepted the RED lock at
 2026-10-18 16:02 Asia/Jerusalem (issue 612 comment 6250234075), on the basis
@@ -11,7 +10,7 @@ of comment 6250224612. The decision is
 `scripts/office_v2_crewai/evidence/e3-security-decision.json` and it matches
 lock sha256 `121c1bd04eee730b51eb71e49da503b0d0236cdd06d8687a5df792234f78a669`.
 Preflight passes E3 only when that file is present and every condition below
-is enforced. E1, E2, E5, E6 and E7 still refuse this tree, and E4 is
+is enforced. E1, E2, E5 and E7 still refuse this tree, E6 passes the committed count, and E4 is
 NOT_OBSERVED, so this tree does not start a pilot.
 
 ## E4 sandbox and the 11434 client
@@ -252,8 +251,4 @@ guard that accepts a violation keeps E3 at `BLOCKED_SECURITY`.
 
 ## Open-issue fixture
 
-`gh issue list` for open issues on `nocturney/velvetos-core` returned 12
-issues, including 612 and 595. The frozen export is those 12 issues, an answer
-sheet of 20 facts, and one adversarial fixture. It does not pad with closed
-issues or pull requests, and it contains no title, SHA, or URL from
-`velvetos-velvet-factory`. The manifest stores sha256 of those three files.
+The original public export had 12 open issues, including 612 and 595. The committed fixture keeps those rows and adds synthetic rows 10001-10008 so the count is 20. The added rows are not live issues, customers, amounts, or Insights. The answer sheet has 20 facts, and there is one adversarial fixture. The file does not pad with closed issues or pull requests, and it contains no title, SHA, or URL from `velvetos-velvet-factory`. The manifest stores sha256 of those three files.

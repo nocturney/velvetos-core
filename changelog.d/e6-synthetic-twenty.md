@@ -1,0 +1,1 @@
+- 2026-10-18 - **CrewAI E6 fixture count:** the committed offline issue file is 20 rows: the original 12 public rows plus 8 synthetic rows (10001-10008). A 19-row copy is refused as `INSUFFICIENT_OPEN_ISSUES` and the 20-row file passes that count. No model call. The synthetic rows are not customers, amounts, or Insights, and they are not a live issue census.
