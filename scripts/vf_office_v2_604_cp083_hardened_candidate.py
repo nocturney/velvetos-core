@@ -99,21 +99,37 @@ def drop(uid):
 
 
 def socket_exchange(root, payload):
+    """One bounded response from the verified sink principal; never blind-retry."""
     sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    sock.settimeout(12)
+    sock.settimeout(3.5)
     try:
         sock.connect(str(Path(root) / "endpoint" / "sink.sock"))
+        # Verify the server's *kernel* identity, not a user-supplied JSON claim.
+        if sys.platform != "linux" or not hasattr(socket, "SO_PEERCRED"):
+            return {"status": "NO_ACK_UNKNOWN"}
+        peer_uid = struct.unpack("3i", sock.getsockopt(
+            socket.SOL_SOCKET, socket.SO_PEERCRED, 12))[1]
+        if peer_uid != SINK_UID:
+            return {"status": "NO_ACK_UNKNOWN"}
         sock.sendall((json.dumps(payload, sort_keys=True) + "\n").encode())
+        deadline = time.monotonic() + 3.0
         buffer = bytearray()
-        while b"\n" not in buffer and len(buffer) < MAX_MESSAGE:
-            part = sock.recv(1024)
+        while b"\n" not in buffer and len(buffer) <= MAX_MESSAGE:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                return {"status": "NO_ACK_UNKNOWN"}
+            sock.settimeout(remaining)
+            part = sock.recv(min(1024, MAX_MESSAGE + 1 - len(buffer)))
             if not part:
                 break
             buffer.extend(part)
-        if not buffer or b"\n" not in buffer:
+        if not buffer or len(buffer) > MAX_MESSAGE or b"\n" not in buffer:
             return {"status": "NO_ACK_UNKNOWN"}
-        return json.loads(bytes(buffer.split(b"\n", 1)[0]))
-    except (OSError, ValueError):
+        reply = json.loads(bytes(buffer.split(b"\n", 1)[0]))
+        if type(reply) is not dict or type(reply.get("status")) is not str:
+            return {"status": "NO_ACK_UNKNOWN"}
+        return reply
+    except (OSError, ValueError, TypeError, struct.error):
         return {"status": "NO_ACK_UNKNOWN"}
     finally:
         sock.close()

@@ -3413,8 +3413,9 @@ def main() -> int:
     # historical sealed CP083 receipts or imply protected security admission.
     # Linux CI must actually execute the kernel socket negatives, not skip them.
     for test_file, count in (
-        ("test_vf_office_v2_604_cp083_hardening_candidate.py", 8),
+        ("test_vf_office_v2_604_cp083_hardening_candidate.py", 9),
         ("test_vf_office_v2_604_cp083_socket_negative.py", 2),
+        ("test_vf_office_v2_604_cp083_client_socket_negative.py", 3),
     ):
         candidate_test = ROOT / "scripts" / test_file
         if not candidate_test.is_file():
