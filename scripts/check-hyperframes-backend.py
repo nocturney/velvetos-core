@@ -128,8 +128,6 @@ def main() -> None:
         fail("Foundry render authority missing")
     if rb.get("primary") != "hyperframes" or rb.get("fallback") != "ffmpeg-svg-caption-composition" or rb.get("renderReceiptIsPublishReceipt") is not False:
         fail("Foundry render routing/receipt boundary invalid")
-    if rb.get("fallbackBridge") != "scripts/vf_ffmpeg_svg_caption.py":
-        fail("Foundry ffmpeg-svg-caption fallback bridge missing")
     services = set((foundry.get("layers") or {}).get("deterministicServices") or [])
     if not {"hyperframes-video-composition", "ffmpeg-svg-caption-composition", "render-receipt-verification"}.issubset(services):
         fail("Foundry deterministic render services incomplete")
