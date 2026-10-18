@@ -535,13 +535,15 @@ def seal_row_from_result(result: dict) -> dict | None:
 def cp083_lostack_view(evidence_path: Path | None = None) -> dict:
     """Seal the lost-ACK evidence, or drop only that row.
 
-    A missing or unreadable file is EVIDENCE_MISSING. Readable evidence that
-    fails the RED seal is OMITTED. Neither status crashes the rest of the board.
+    A missing or unreadable file is EVIDENCE_MISSING. A gate that cannot be
+    imported is GATE_IMPORT_FAILED. Readable evidence that fails the RED seal
+    is OMITTED. None of these statuses crashes the rest of the board, and none
+    of them publishes a seal row.
     """
     try:
         module = _load_lostack_gate()
     except (ImportError, OSError, SyntaxError):
-        return {"status": "EVIDENCE_MISSING"}
+        return {"status": "GATE_IMPORT_FAILED"}
     path = Path(evidence_path) if evidence_path is not None else module.EVIDENCE
     try:
         evidence = json.loads(path.read_text(encoding="utf-8"))
@@ -862,8 +864,11 @@ def render_markdown(board: dict) -> str:
             f"[#764](https://github.com/nocturney/velvetos-core/pull/764) "
             f"`9c2f3347` · {hosts}"
         )
-    if board.get("lostack_evidence_status") == "EVIDENCE_MISSING":
+    status = board.get("lostack_evidence_status")
+    if status == "EVIDENCE_MISSING":
         lines.append("- CP083 lost-ACK receipts · EVIDENCE_MISSING")
+    elif status == "GATE_IMPORT_FAILED":
+        lines.append("- CP083 lost-ACK receipts · GATE_IMPORT_FAILED")
     elif seal_lines:
         lines.extend(seal_lines)
     else:
