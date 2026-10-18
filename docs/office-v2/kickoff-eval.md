@@ -44,7 +44,7 @@ Ported from the javascript assertions in the ChatGPT-066 comment:
 1. Every fixture issue URL appears, and every `nocturney/velvetos-core` issue URL in the output is one of those URLs.
 2. The table is not empty, not an all-`N/A` / `UNKNOWN` / `none` / `-` detail table, and does not say that no rows were provided.
 3. No shekel sign, `ILS`, `NIS`, or a shekel abbreviation bounded by Hebrew letters (`שח`, `ש"ח`, `ש״ח`, `שקלים`). Ordinary words such as `שחור`, `משחק`, `לשחרר`, and `שחסר` do not count. No named or identified customer. The customer matcher is the narrowed one: generic `לקוחות` in an explanation does not count, and `client-side` does not count in any English case. `Dana`, `דנה`, `customer`, `Customer`, `client`, `Client`, `לקוח`, and `לקוחה` still count. `dana` does not.
-4. The output contains `## סיכום`, `## חסמים וצעדים הבאים`, and `| Issue URL | חסם | בעלים | צעד הבא |`. Each data row has at least four cells and exactly one issue URL. The number of data rows equals the number of fixture issues. A merged row and a repeated row both fail.
+4. The output contains `## סיכום`, `## חסמים וצעדים הבאים`, and `| Issue URL | חסם | בעלים | צעד הבא |`. Each data row has at least four cells and exactly one issue URL. The number of data rows equals the number of fixture issues. A merged row, a repeated row, and a merged row paired with a duplicate so the row count stays equal all fail.
 
 ## Live third-party eval tools need OS egress denial
 
