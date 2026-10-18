@@ -9,6 +9,7 @@ explicit-only unless the selector directly activates a relevant event sensor.
 from __future__ import annotations
 
 import argparse
+import base64
 import importlib.util
 import json
 import os
@@ -56,6 +57,28 @@ def check_all_sensor_job(workflow: str) -> str:
     return rest[:end]
 
 
+def github_https_basic_header(token: str) -> str:
+    """Base64 of ``x-access-token:<token>`` for GitHub git-over-HTTPS."""
+    return base64.b64encode(f"x-access-token:{token}".encode("ascii")).decode("ascii")
+
+
+def fetch_header_problems(job: str) -> list[str]:
+    """The machine-precheck fetch must send masked basic auth, never bearer."""
+    problems: list[str] = []
+    lowered = job.lower()
+    if "authorization: bearer" in lowered:
+        problems.append("git fetch must not send AUTHORIZATION: bearer")
+    if "authorization: basic" not in lowered:
+        problems.append("git fetch must send AUTHORIZATION: basic")
+    if "x-access-token:" not in job:
+        problems.append("git fetch basic header must encode x-access-token:")
+    if "::add-mask::" not in job:
+        problems.append("git fetch basic header must be masked")
+    if "base64 -w0" not in job:
+        problems.append("git fetch basic header must use base64 -w0")
+    return problems
+
+
 def linux_sensor_job_problems(job: str) -> list[str]:
     """The suite job is contents: read. statuses: write stays on the publisher."""
     problems: list[str] = []
@@ -85,6 +108,28 @@ def prove_token_scope() -> list[str]:
     workflow = (ROOT / ".github" / "workflows" / "check-all.yml").read_text(encoding="utf-8")
     job = check_all_sensor_job(workflow)
     errors.extend(linux_sensor_job_problems(job))
+    errors.extend(fetch_header_problems(job))
+    bearer = job.replace("AUTHORIZATION: basic", "AUTHORIZATION: bearer", 1)
+    if bearer == job or not any("bearer" in item for item in fetch_header_problems(bearer)):
+        errors.append("bearer git fetch header was not caught")
+    unmasked = job.replace('echo "::add-mask::$basic"\n', "", 1)
+    if unmasked == job or not any("masked" in item for item in fetch_header_problems(unmasked)):
+        errors.append("unmasked git fetch header was not caught")
+    sample = "ghs_example"
+    expected = github_https_basic_header(sample)
+    decoded = base64.b64decode(expected).decode("ascii")
+    if decoded != f"x-access-token:{sample}":
+        errors.append("basic header did not round-trip x-access-token")
+    if os.name != "nt":
+        proc = subprocess.run(
+            ["bash", "-c", "printf 'x-access-token:%s' \"$1\" | base64 -w0", "bash", sample],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+        if proc.returncode != 0 or proc.stdout.strip() != expected:
+            errors.append("basic header round-trip disagreed with base64(x-access-token:TOKEN)")
     mutated = job.replace(
         "    permissions:\n      contents: read\n",
         "    permissions:\n      contents: read\n      statuses: write\n",
@@ -423,7 +468,7 @@ def selftest() -> int:
     print(
         "OK check-all selftest default=ACTIVE_FULL selected_input=EXACT "
         "always_on=REQUIRED retired=EXPLICIT_ONLY all_lifecycle=AVAILABLE fail_closed=PASS "
-        "readme_gate=LOCAL_PARITY gh_token=SCOPED job_permissions=contents:read"
+        "readme_gate=LOCAL_PARITY gh_token=SCOPED job_permissions=contents:read fetch_header=BASIC"
     )
     return 0
 

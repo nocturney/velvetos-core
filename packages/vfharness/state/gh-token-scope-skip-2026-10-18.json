@@ -22,5 +22,5 @@
     "claim": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6255992431",
     "security_admission": "RED"
   },
-  "latest_observation": "Non-gh sensors lose GH_TOKEN. The sensor job is contents: read. Local unauthenticated gh prints SKIP_GH_UNAVAILABLE. Hosted CI still fails closed."
+  "latest_observation": "Machine precheck fetches origin/main with masked AUTHORIZATION basic x-access-token. Local auth or network failure prints LOUD SKIP_GH_UNAVAILABLE. A missing git on gh PATH stays a hard failure, including offline."
 }

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import inspect
 import json
 import os
 import re
@@ -81,11 +82,46 @@ def _expose_gh_apart_from_git(source: str, directory: Path) -> None:
 
 
 class GhUnavailable(RuntimeError):
-    """Local gh cannot authenticate or reach GitHub."""
+    """Local gh cannot authenticate or reach GitHub. A missing git is not this skip."""
 
     def __init__(self, code: str = "SKIP_GH_UNAVAILABLE") -> None:
         super().__init__(code)
         self.code = code
+
+
+LOUD_SKIP = (
+    "LOUD SKIP_GH_UNAVAILABLE: live gh repo view was not proven (auth or network). "
+    "Offline git-on-PATH check passed. A git-missing failure is not this skip."
+)
+
+_AUTH_OR_NETWORK = (
+    "gh auth login",
+    "authentication",
+    "unauthorized",
+    "bad credentials",
+    "invalid token",
+    "could not resolve",
+    "connection refused",
+    "error connecting",
+    "network",
+    "timed out",
+    "timeout",
+    "tls",
+    "temporary failure",
+    "no such host",
+    "dial tcp",
+)
+
+
+def _is_git_missing(text: str) -> bool:
+    return "unable to find git executable" in text.lower()
+
+
+def _auth_or_network(text: str) -> bool:
+    if _is_git_missing(text):
+        return False
+    lowered = text.lower()
+    return any(signature in lowered for signature in _AUTH_OR_NETWORK)
 
 
 def hosted_ci() -> bool:
@@ -116,14 +152,16 @@ def resolve_repo_slug() -> str:
     """Live gh repo view.
 
     A local machine with no gh auth, or a gh call that cannot reach GitHub,
-    raises GhUnavailable. Hosted CI never skips: the same failure stays red.
+    raises GhUnavailable. A missing git executable is never that skip.
+    Hosted CI never skips: the same failure stays red.
     """
     if not hosted_ci() and not gh_credentials_present():
         raise GhUnavailable("SKIP_GH_UNAVAILABLE")
     try:
         return repo_slug()
     except (RuntimeError, subprocess.TimeoutExpired, hygiene.HygieneError, OSError) as exc:
-        if hosted_ci():
+        detail = str(exc)
+        if hosted_ci() or not _auth_or_network(detail):
             raise
         raise GhUnavailable("SKIP_GH_UNAVAILABLE") from exc
 
@@ -211,6 +249,29 @@ def prove_gh_unavailable_codes() -> None:
                     raise
             else:
                 raise AssertionError("hosted CI accepted an unavailable gh read")
+
+        def missing_git() -> str:
+            raise RuntimeError(
+                "unable to find git executable in PATH; authentication failed"
+            )
+
+        globals()["repo_slug"] = missing_git
+        globals()["gh_credentials_present"] = lambda: True
+        os.environ.pop("GITHUB_ACTIONS", None)
+        with _without_gh_auth():
+            try:
+                resolve_repo_slug()
+            except GhUnavailable:
+                raise AssertionError("git-missing must not be SKIP_GH_UNAVAILABLE")
+            except RuntimeError as exc:
+                if not _is_git_missing(str(exc)):
+                    raise
+            else:
+                raise AssertionError("git-missing was accepted")
+
+        split_source = inspect.getsource(prove_split_gh_git_repo_slug)
+        if "path_suffix=()" not in split_source or "not _is_git_missing(bare_text)" not in split_source:
+            raise AssertionError("offline gh-without-git check is missing")
     finally:
         globals()["repo_slug"] = original_slug
         globals()["gh_credentials_present"] = original_creds
@@ -246,7 +307,52 @@ def prove_split_gh_git_repo_slug() -> str:
                     raise AssertionError("gh and git were not placed in separate directories")
                 if not hygiene.paths_match(hygiene.executable_directory(found_git), git_dir):
                     raise AssertionError("git was not the real binary")
-                slug = resolve_repo_slug()
+                copied = gh_dir / ("gh.exe" if os.name == "nt" else "gh")
+                bare = hygiene.run_absolute(
+                    str(copied),
+                    ["repo", "view", "--json", "nameWithOwner"],
+                    timeout=20,
+                    extra_keys=hygiene.GH_CONFIG_ENV_KEYS,
+                    path_suffix=(),
+                    cwd=ROOT,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    capture_output=True,
+                )
+                bare_text = f"{bare.stderr or ''}\n{bare.stdout or ''}"
+                if bare.returncode == 0 or not _is_git_missing(bare_text):
+                    raise AssertionError(
+                        "copied gh without git on PATH did not report a missing git executable"
+                    )
+                try:
+                    proc = hygiene.run_pinned(
+                        "gh",
+                        ["repo", "view", "--json", "nameWithOwner"],
+                        timeout=60,
+                        extra_keys=hygiene.GH_CONFIG_ENV_KEYS,
+                        cwd=ROOT,
+                        text=True,
+                        encoding="utf-8",
+                        errors="replace",
+                        capture_output=True,
+                    )
+                except (RuntimeError, subprocess.TimeoutExpired, hygiene.HygieneError, OSError) as exc:
+                    if _is_git_missing(str(exc)):
+                        raise AssertionError("run_pinned hid git from gh") from exc
+                    if hosted_ci() or not _auth_or_network(str(exc)):
+                        raise
+                    raise GhUnavailable("SKIP_GH_UNAVAILABLE") from exc
+                pinned_text = f"{proc.stderr or ''}\n{proc.stdout or ''}"
+                if _is_git_missing(pinned_text):
+                    raise AssertionError("run_pinned hid git from gh")
+                if proc.returncode != 0:
+                    if hosted_ci() or not _auth_or_network(pinned_text):
+                        detail = pinned_text.strip() or f"gh repo view rc={proc.returncode}"
+                        raise RuntimeError(detail)
+                    raise GhUnavailable("SKIP_GH_UNAVAILABLE")
+                data = json.loads(proc.stdout)
+                slug = str(data.get("nameWithOwner") or "").strip()
             finally:
                 if previous is None:
                     os.environ.pop("PATH", None)
@@ -815,6 +921,8 @@ def self_test() -> int:
             "historical_miss_retention=PASS pr_dedupe=PASS incomplete_recovery=PASS "
             f"gh_live={exc.code}"
         )
+        print(LOUD_SKIP)
+        sys.stderr.write(LOUD_SKIP + "\n")
         return 0
 
     print(
