@@ -33,11 +33,19 @@ def fragment_name(path: str) -> bool:
     return FRAGMENT_RE.match(path.replace("\\", "/")) is not None
 
 
-def needs_note(paths: list[str]) -> list[str]:
+def _entry(item: str | tuple[str, str]) -> tuple[str, str]:
+    """A plain path counts as a modification. A pair is (status, path)."""
+    if isinstance(item, tuple):
+        status, path = item
+        return status, str(path).replace("\\", "/")
+    return "M", str(item).replace("\\", "/")
+
+
+def needs_note(paths: list) -> list[str]:
     """Capability paths that must ship with a changelog note."""
     found = []
-    for path in paths:
-        normal = path.replace("\\", "/")
+    for item in paths:
+        _status, normal = _entry(item)
         if fragment_name(normal):
             continue
         if CAPABILITY_RE.search(normal):
@@ -45,10 +53,13 @@ def needs_note(paths: list[str]) -> list[str]:
     return found
 
 
-def covered(paths: list[str]) -> bool:
-    for path in paths:
-        normal = path.replace("\\", "/")
-        if normal == "CHANGELOG.md" or fragment_name(normal):
+def covered(paths: list) -> bool:
+    """A fragment covers the gate. Deleting CHANGELOG.md does not."""
+    for item in paths:
+        status, normal = _entry(item)
+        if fragment_name(normal):
+            return True
+        if normal == "CHANGELOG.md" and not status.startswith("D"):
             return True
     return False
 
@@ -59,7 +70,7 @@ def gate(paths: list[str]) -> int:
         print("OK changelog fragment contract (no capability change)")
         return 0
     if covered(paths):
-        how = "fragment" if any(fragment_name(p.replace("\\", "/")) for p in paths) else "CHANGELOG.md"
+        how = "fragment" if any(fragment_name(_entry(p)[1]) for p in paths) else "CHANGELOG.md"
         print(f"OK changelog fragment contract ({how})")
         return 0
     print(
@@ -72,12 +83,30 @@ def gate(paths: list[str]) -> int:
     return 1
 
 
-def changed_files(base: str, head: str, repo: Path = ROOT) -> list[str]:
+def changed_files(base: str, head: str, repo: Path = ROOT) -> list[tuple[str, str]]:
+    """Name and status. A rename of CHANGELOG.md away is a delete of that file."""
     spec = f"{git_revision(base)}...{git_revision(head)}"
-    proc = run_git(["diff", "--name-only"], revisions=[spec], cwd=repo)
+    proc = run_git(
+        ["diff", "--name-status", "--find-renames"], revisions=[spec], cwd=repo
+    )
     if proc.returncode != 0:
         raise SystemExit(f"FAIL git diff {base}...{head}: {proc.stderr.strip()}")
-    return [line for line in proc.stdout.splitlines() if line.strip()]
+    entries: list[tuple[str, str]] = []
+    for line in proc.stdout.splitlines():
+        if not line.strip():
+            continue
+        parts = line.split("\t")
+        status = parts[0]
+        if status[:1] in {"R", "C"} and len(parts) >= 3:
+            old, new = parts[1], parts[2]
+            old_normal = old.replace("\\", "/")
+            new_normal = new.replace("\\", "/")
+            if old_normal == "CHANGELOG.md" and new_normal != "CHANGELOG.md":
+                entries.append(("D", old))
+            entries.append(("A" if new_normal == "CHANGELOG.md" else status[:1], new))
+            continue
+        entries.append((status, parts[-1]))
+    return entries
 
 
 def bullets_in(text: str, label: str) -> list[str]:
@@ -93,6 +122,8 @@ def bullets_in(text: str, label: str) -> list[str]:
             raise ValueError(f"{label} contains a conflict marker")
         if not line.startswith("- "):
             raise ValueError(f"{label} line is not a bullet: {line[:80]}")
+        if not line[2:].strip():
+            raise ValueError(f"{label} bullet is empty")
         bullets.append(line)
     if not bullets:
         raise ValueError(f"{label} has no bullets")
@@ -153,12 +184,29 @@ def fold(changelog: str, bullets: list[str]) -> str:
     return "".join(lines[:header + 1] + chunk + body + lines[nxt:])
 
 
+def write_bytes_atomic(path: Path, data: bytes) -> None:
+    """Replace path only after the new bytes are on disk. A failed replace keeps the old file."""
+    fd, name = tempfile.mkstemp(dir=path.parent, prefix=".changelog.", suffix=".tmp")
+    tmp = Path(name)
+    try:
+        with os.fdopen(fd, "wb") as handle:
+            handle.write(data)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(tmp, path)
+    except BaseException:
+        if tmp.exists():
+            tmp.unlink()
+        raise
+
+
 def compile_tree(root: Path) -> int:
     changelog_path = root / "CHANGELOG.md"
     if not changelog_path.is_file():
         print("FAIL CHANGELOG.md is missing", file=sys.stderr)
         return 1
-    original = changelog_path.read_text(encoding="utf-8")
+    # read_bytes keeps CRLF. Path.read_text() translates newlines before fold().
+    original = changelog_path.read_bytes().decode("utf-8")
     folder = root / "changelog.d"
     paths = sorted(folder.glob("*.md")) if folder.is_dir() else []
     bullets: list[str] = []
@@ -181,7 +229,7 @@ def compile_tree(root: Path) -> int:
         print(f"FAIL {exc}", file=sys.stderr)
         return 1
     if folded != original:
-        changelog_path.write_bytes(folded.encode("utf-8"))
+        write_bytes_atomic(changelog_path, folded.encode("utf-8"))
     for path in ready:
         path.unlink()
     print(f"OK changelog compile fragments={len(ready)} changed={str(folded != original).lower()}")
@@ -342,6 +390,8 @@ def _negative_checks(bad: list[str]) -> int:
     _expect_bullet_error("<<<<<<< HEAD\n", "conflict marker", bad, "conflict start")
     _expect_bullet_error(">>>>>>> other\n", "conflict marker", bad, "conflict end")
     _expect_bullet_error("=======\n", "conflict marker", bad, "conflict middle")
+    _expect_bullet_error("-   \n", "bullet is empty", bad, "whitespace bullet")
+    _expect_bullet_error("- \t\n", "bullet is empty", bad, "tab bullet")
     try:
         kept = bullets_in("- a\n\n- b\n", "blank lines")
     except ValueError as exc:
@@ -439,6 +489,49 @@ def _negative_checks(bad: list[str]) -> int:
     crlf_folded = fold(crlf, [repeated])
     if "\r\n" + repeated + "\r\n" not in crlf_folded:
         bad.append("fold dropped CRLF on a CRLF changelog")
+    released_tail = crlf.split("## [1.0.0]\r\n", 1)[1].encode("utf-8")
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        changelog = root / "CHANGELOG.md"
+        changelog.write_bytes(crlf.encode("utf-8"))
+        folder = root / "changelog.d"
+        folder.mkdir()
+        (folder / "example-pr.md").write_text(sample, encoding="utf-8")
+        try:
+            rc, text = _capture_call(lambda: compile_tree(root))
+        except Exception as exc:
+            bad.append(f"CRLF compile raised {type(exc).__name__}: {exc}")
+        else:
+            if rc != 0:
+                bad.append(f"CRLF compile failed: {text}")
+            written = changelog.read_bytes()
+            marker = b"## [1.0.0]\r\n"
+            if marker not in written or written.split(marker, 1)[1] != released_tail:
+                bad.append("compile rewrote the CRLF released section")
+            if list(root.glob(".changelog.*.tmp")):
+                bad.append("compile left a changelog temp file")
+        changelog.write_bytes(crlf.encode("utf-8"))
+        (folder / "example-pr.md").write_text(sample, encoding="utf-8")
+        original_replace = os.replace
+
+        def replace_fails(src, dst):
+            raise OSError("disk full")
+
+        os.replace = replace_fails
+        try:
+            try:
+                compile_tree(root)
+            except OSError as exc:
+                if "disk full" not in str(exc):
+                    bad.append(f"atomic replace raised the wrong error: {exc}")
+            else:
+                bad.append("a failed changelog replace was swallowed")
+            if changelog.read_bytes() != crlf.encode("utf-8"):
+                bad.append("a failed changelog replace rewrote CHANGELOG.md")
+            if list(root.glob(".changelog.*.tmp")):
+                bad.append("a failed changelog replace left a temp file")
+        finally:
+            os.replace = original_replace
 
     out = io.StringIO()
     with contextlib.redirect_stdout(out):
@@ -478,7 +571,7 @@ def _negative_checks(bad: list[str]) -> int:
         bad.append("windows fragment must cover a windows capability path")
     if gate(["scripts\\tool.py"]) != 1:
         bad.append("windows capability path without a fragment must fail")
-    return 29
+    return 33
 
 
 def _selftest(bad: list[str], counted: list[int]) -> int:
@@ -487,6 +580,8 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
         (gate(["scripts/tool.py"]) == 1, "capability PR with neither must fail"),
         (gate(["scripts\\tool.py"]) == 1, "windows capability path without a fragment must fail"),
         (gate(["scripts/tool.py", "CHANGELOG.md"]) == 0, "CHANGELOG.md edit must still pass"),
+        (gate([("M", "scripts/tool.py"), ("D", "CHANGELOG.md")]) == 1, "deleting CHANGELOG.md must not cover a capability PR"),
+        (gate([("M", "scripts/tool.py"), ("D", "CHANGELOG.md"), ("A", "changelog.d/example-pr.md")]) == 0, "a fragment still covers a deleted changelog"),
         (gate(["docs/NOTE.md"]) == 0, "docs-only PR must pass without a fragment"),
         (gate(["changelog.d/example-pr.md"]) == 0, "fragment file alone must pass"),
     ]
@@ -569,6 +664,20 @@ def git_fixture() -> list[str]:
             errors.append("fragment fixture must not touch CHANGELOG.md")
         if gate(names) != 0:
             errors.append("git fragment-only PR must pass")
+
+        git(repo, "reset", "--hard", base)
+        (repo / "scripts" / "tool.py").write_text("print(4)\n", encoding="utf-8")
+        git(repo, "rm", "-q", "CHANGELOG.md")
+        git(repo, "add", "-A")
+        git(repo, "commit", "-qm", "delete changelog")
+        head = run_git(
+            ["rev-parse", "--verify", "-q"], revisions=["HEAD"], cwd=repo, check=True
+        ).stdout.strip()
+        deleted = changed_files(base, head, repo)
+        if ("D", "CHANGELOG.md") not in [(status, path.replace("\\", "/")) for status, path in deleted]:
+            errors.append(f"name-status did not report the changelog delete: {deleted}")
+        if gate(deleted) != 1:
+            errors.append("git PR that deletes CHANGELOG.md must fail")
     return errors
 
 
