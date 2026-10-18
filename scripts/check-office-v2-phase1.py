@@ -101,6 +101,20 @@ def prove_windows_facts_hygiene() -> None:
         env = kwargs.get("env")
         if not isinstance(env, dict) or sentinel in env or env.get("PATH") != str(root / "System32"):
             fail("powershell environment was not allowlisted: %s" % env)
+
+        def fake_list(args, **kwargs):
+            return subprocess.CompletedProcess(args, 0, stdout="[]", stderr="")
+
+        manifest.subprocess.run = fake_list
+        try:
+            try:
+                listed = manifest.windows_facts()
+            except Exception as exc:
+                fail("non-object powershell JSON raised %s" % type(exc).__name__)
+        finally:
+            manifest.subprocess.run = original
+        if listed.get("caption") != "UNKNOWN" or listed.get("reboot") != "UNKNOWN":
+            fail("non-object powershell JSON was not UNKNOWN: %s" % listed)
     finally:
         os.environ.pop(sentinel, None)
         if saved_root is None:

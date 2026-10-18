@@ -31,6 +31,30 @@ def fail(msg: str) -> None:
     raise SystemExit(1)
 
 
+def same_pinned_directory(actual: str, expected: str, *, realpath=os.path.realpath, fold_case: bool | None = None, separator: str | None = None) -> bool:
+    """True when both strings are one directory and name the same real path.
+
+    A search PATH (more than one entry) is not a pin. Windows compares
+    case-insensitively. realpath expands an 8.3 temp directory to its long name.
+    """
+    if fold_case is None:
+        fold_case = os.name == "nt"
+    if separator is None:
+        separator = os.pathsep
+    if not isinstance(actual, str) or not isinstance(expected, str):
+        return False
+    if not actual or not expected:
+        return False
+    if separator in actual or separator in expected:
+        return False
+    left = realpath(actual)
+    right = realpath(expected)
+    if fold_case:
+        left = os.path.normcase(left).casefold()
+        right = os.path.normcase(right).casefold()
+    return left == right
+
+
 def zoompan_suite_action(gap, blocked: str | None) -> str:
     """Missing zoompan skips the caption suite locally.
 
@@ -199,9 +223,26 @@ def prove_subprocess_hygiene() -> None:
         if kwargs.get("timeout") != bridge.PROBE_TIMEOUT_SECONDS:
             fail("ffprobe timeout missing")
         env = kwargs.get("env")
-        pinned_dir = str(Path(ffprobe).resolve().parent)
-        if not isinstance(env, dict) or sentinel in env or env.get("PATH") != pinned_dir:
-            fail("ffprobe environment was not allowlisted")
+        if not isinstance(env, dict) or sentinel in env:
+            fail("ffprobe environment was not allowlisted: %r" % env)
+        pinned = str(Path(argv[0]).parent)
+        if not same_pinned_directory(env.get("PATH"), pinned):
+            fail("ffprobe environment was not allowlisted: PATH=%r exe_dir=%r" % (env.get("PATH"), pinned))
+        short = "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\vf-ffprobe-abc"
+        long = "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\vf-ffprobe-abc"
+        other = "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\vf-ffprobe-other"
+
+        def expand_short(path: str) -> str:
+            return str(path).replace("/", "\\").replace("RUNNER~1", "runneradmin")
+
+        if not same_pinned_directory(short, long, realpath=expand_short, fold_case=True, separator=";"):
+            fail("8.3 temp path did not match its long directory")
+        if not same_pinned_directory(short, long.upper(), realpath=expand_short, fold_case=True, separator=";"):
+            fail("windows pin comparison stayed case-sensitive")
+        if same_pinned_directory(short, other, realpath=expand_short, fold_case=True, separator=";"):
+            fail("a different directory was accepted as the ffprobe pin")
+        if same_pinned_directory(long + ";" + other, long, realpath=expand_short, fold_case=True, separator=";"):
+            fail("a search PATH was accepted as the ffprobe pin")
 
         calls.clear()
         bridge.shutil.which = lambda name: "ffprobe"

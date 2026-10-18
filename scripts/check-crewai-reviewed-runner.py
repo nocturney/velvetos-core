@@ -727,6 +727,14 @@ def check_spawn_hygiene() -> None:
         fail("taskkill is not absolute: %s" % kill_argv)
     if "system32" not in kill_argv[0].replace("/", "\\").lower():
         fail("taskkill is not under System32: %s" % kill_argv)
+    for bad_pid in (True, 0, 1, -1, "4242"):
+        try:
+            kill_mod.taskkill_argv(bad_pid)
+        except KillRefusal as exc:
+            if str(exc) != "TASKKILL_PID_REFUSED":
+                fail("taskkill pid %r refused as %s" % (bad_pid, exc))
+        else:
+            fail("taskkill accepted pid %r" % (bad_pid,))
     killed: list[tuple[list[str], object]] = []
 
     def fake_run(argv, **kwargs):
