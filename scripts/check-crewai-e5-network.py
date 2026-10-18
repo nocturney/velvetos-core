@@ -12,8 +12,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
+from office_v2_crewai.contract import SANDBOX_ROOT  # noqa: E402
 from vf_office_v2_crewai_e5_network import (  # noqa: E402
-    SCHEMA, canonical_bytes, create_receipt, evaluate,
+    PILOT_STAGE_ROOT, SCHEMA, canonical_bytes, create_receipt, evaluate,
+    normalize_pilot_path, pilot_path_admitted,
 )
 
 
@@ -194,6 +196,40 @@ def main() -> int:
         if (b"$null = $script:Child.Handle" not in raw or b"$null -ne $observedExitCode" not in raw
                 or b"[int]$script:Child.ExitCode" in raw):
             errors.append("collector ExitCode must fail closed on null, with primed process handle")
+        if (b"Test-PilotPathAdmitted" not in raw or b"TrimEnd('\\')" not in raw
+                or b"$full.StartsWith($Root" in raw):
+            errors.append("collector must admit the exact pilot root and still reject a sibling prefix")
+    root = PILOT_STAGE_ROOT
+    admitted = (
+        root,
+        root + "\\",
+        root + "\\crew",
+        root + "\\crew\\..",
+        "d:/velvet/pilots/officev2-verifiedtrio",
+    )
+    rejected = (
+        root + "X",
+        root + "X\\crew",
+        root + "\\..",
+        root + "\\..\\OfficeV2-VerifiedTrioX",
+        "D:\\Velvet\\Pilots",
+        "C:\\Velvet\\Pilots\\OfficeV2-VerifiedTrio",
+        "OfficeV2-VerifiedTrio",
+        "",
+    )
+    if any(not pilot_path_admitted(path) for path in admitted):
+        errors.append("exact pilot root or a child directory was rejected")
+    if any(pilot_path_admitted(path) for path in rejected):
+        errors.append("dotdot or sibling prefix was admitted: %s" % [
+            path for path in rejected if pilot_path_admitted(path)
+        ])
+    if normalize_pilot_path(root + "\\..\\OfficeV2-VerifiedTrioX") != "D:\\Velvet\\Pilots\\OfficeV2-VerifiedTrioX":
+        errors.append("dotdot sibling was not normalized outside the pilot root")
+    if SANDBOX_ROOT != "D:\\Velvet\\Pilots\\crewai-e4\\sandbox-home" or pilot_path_admitted(SANDBOX_ROOT):
+        errors.append("E4 sandbox root moved under the E5 stage")
+    validator_source = (ROOT / "scripts" / "vf_office_v2_crewai_e5_network.py").read_text(encoding="utf-8")
+    if 'data.get("exit_code") != 0' not in validator_source or "PILOT_EXIT_NOT_ZERO" not in validator_source:
+        errors.append("E5 exit_code==0 contract was weakened")
     if errors:
         for error in errors:
             print("FAIL check-crewai-e5-network: %s" % error, file=sys.stderr)

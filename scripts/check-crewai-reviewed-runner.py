@@ -77,7 +77,13 @@ from office_v2_crewai.sandbox import (  # noqa: E402
     sandbox_temp_dir,
 )
 from office_v2_crewai.receipt import apply_run_record, kickoff_output_path, save_kickoff_output, write_receipts  # noqa: E402
-from office_v2_crewai.runner import apply_telemetry, execute, main as runner_main, record_exception  # noqa: E402
+from office_v2_crewai.runner import (  # noqa: E402
+    apply_telemetry,
+    completed_kickoff_exit,
+    execute,
+    main as runner_main,
+    record_exception,
+)
 from office_v2_crewai.usage_guard import (  # noqa: E402
     DRIFT_FORBIDDEN_MODULES,
     LEFTOVER_RELS,
@@ -1823,6 +1829,148 @@ def check_review_mutations() -> None:
         shutil.rmtree(parent, ignore_errors=True)
 
 
+def check_exit_contract() -> None:
+    """Exit 0 only after a post-guarded kickoff that is still unreviewed."""
+    cited = (
+        "| Issue | Note |\n"
+        "| --- | --- |\n"
+        "| 612 | https://github.com/nocturney/velvetos-core/issues/612 |\n"
+    )
+    refusals = (
+        (
+            "uncited-url",
+            "| Issue | Note |\n| --- | --- |\n"
+            "| 999999 | https://github.com/nocturney/velvetos-core/issues/999999 |\n",
+            True,
+        ),
+        ("header-only", "| Issue | Note |\n| --- | --- |\n", True),
+        ("trace-consent", cited, False),
+    )
+
+    def run(text: str, consent_ok: bool) -> tuple[int, dict, dict]:
+        parent = Path(tempfile.mkdtemp(prefix="crewai-exit-"))
+        import office_v2_crewai.crew_build as crew_mod
+        import office_v2_crewai.provider as provider_mod
+        import office_v2_crewai.runner as runner_mod
+        import office_v2_crewai.usage_guard as usage_mod
+        import urllib.request as urlrequest
+
+        def observe():
+            return [{"address": "127.0.0.1", "port": 11435}]
+
+        def stub_open(request, timeout=30):
+            target = str(getattr(request, "full_url", ""))
+            if target.endswith("/api/tags"):
+                return _Body({"models": [{"name": APPROVED_MODEL, "digest": APPROVED_MODEL_DIGEST}]})
+            return _Body({"message": {"content": "local"}})
+
+        def fake_build(provider, env, sandbox_root=SANDBOX_ROOT, harness=None, started=None, binds=None):
+            class _Crew:
+                def kickoff(self, inputs):
+                    provider.complete("ping", env=env)
+                    return text
+
+            return _Crew()
+
+        def fake_save(body, writer=None, root=SANDBOX_ROOT):
+            data = body.encode("utf-8")
+            return {
+                "path": kickoff_output_path(root),
+                "sha256": hashlib.sha256(data).hexdigest(),
+                "body": data,
+            }
+
+        def consent(path, expected=TRACE_USER_BYTES):
+            if not consent_ok:
+                raise UsageRefusal("TRACE_CONSENT_ABSENT")
+            mirror = parent / ".crewai_user.json"
+            mirror.write_bytes(TRACE_USER_BYTES)
+            assert_trace_consent(mirror)
+            folded = str(path).replace("/", "\\").casefold()
+            if not folded.endswith("crewai-storage\\.crewai_user.json"):
+                raise UsageRefusal("TRACE_CONSENT_ABSENT")
+
+        original = (
+            crew_mod.build_crew,
+            provider_mod.collect_ollama_binds,
+            urlrequest.urlopen,
+            runner_mod.save_kickoff_output,
+            usage_mod.assert_trace_consent,
+        )
+        saved_env = dict(os.environ)
+        try:
+            synthetic_passing_bundle(parent)
+            crew_mod.build_crew = fake_build
+            provider_mod.collect_ollama_binds = observe
+            urlrequest.urlopen = stub_open
+            runner_mod.save_kickoff_output = fake_save
+            usage_mod.assert_trace_consent = consent
+            os.environ.clear()
+            ready = passing_env()
+            ready["OLLAMA_NO_CLOUD"] = "1"
+            os.environ.update(ready)
+            out = parent / "out"
+            code = runner_main(
+                ["--input", str(parent / "inputs"), "--output", str(out),
+                 "--evidence", str(parent / "evidence"), "--model-config", str(MODEL),
+                 "--sandbox", SANDBOX_ROOT],
+                flags=ISOLATED_FLAGS,
+            )
+            receipt = json.loads((out / "attempt-receipt.json").read_text(encoding="utf-8"))
+            postflight = json.loads((out / "postflight-receipt.json").read_text(encoding="utf-8"))
+            return code, receipt, postflight
+        finally:
+            (
+                crew_mod.build_crew,
+                provider_mod.collect_ollama_binds,
+                urlrequest.urlopen,
+                runner_mod.save_kickoff_output,
+                usage_mod.assert_trace_consent,
+            ) = original
+            os.environ.clear()
+            os.environ.update(saved_env)
+            shutil.rmtree(parent, ignore_errors=True)
+
+    code, receipt, postflight = run(cited, True)
+    if code != 0 or completed_kickoff_exit(receipt) != 0:
+        fail("completed kickoff returned %s (%s)" % (code, receipt["identity"].get("reason")))
+    if (
+        receipt["identity"]["pilot_status"] != "NOT_VERIFIED"
+        or receipt["identity"]["task_status"] != "NOT_VERIFIED"
+        or receipt["identity"]["reason"] != "AWAITING_INDEPENDENT_REVIEW"
+        or receipt["result"]["status"] != "NOT_VERIFIED"
+        or receipt["teardown"]["reviewer_verdict"] != "NOT_VERIFIED"
+        or postflight["reviewer_verdict"] != "NOT_VERIFIED"
+        or postflight["result_status"] != "NOT_VERIFIED"
+    ):
+        fail("completed kickoff was marked reviewed or failed")
+    if receipt["result"]["status"] in {"PASS", "PASS_TASK_ONLY"}:
+        fail("completed kickoff fabricated PASS")
+    mutated = json.loads(json.dumps(receipt))
+    for name, edit in (
+        ("pass-status", lambda row: row["result"].update(status="PASS")),
+        ("fail-reason", lambda row: row["identity"].update(reason="FAIL")),
+        ("zero-calls", lambda row: row["execution"].update(model_calls=0)),
+        ("reviewer-pass", lambda row: row["teardown"].update(reviewer_verdict="PASS")),
+        ("drop-hash", lambda row: row["result"]["output_sha256"].pop("kickoff.md")),
+    ):
+        trial = json.loads(json.dumps(mutated))
+        edit(trial)
+        if completed_kickoff_exit(trial) == 0:
+            fail("mutated receipt %s was treated as a clean exit" % name)
+    for name, text, consent_ok in refusals:
+        refused, refused_receipt, _post = run(text, consent_ok)
+        if refused == 0 or refused_receipt["result"]["status"] in {"PASS", "PASS_TASK_ONLY"}:
+            fail("refusal %s returned %s" % (name, refused))
+    blocked = Path(tempfile.mkdtemp(prefix="crewai-exit-refused-"))
+    try:
+        refused_code = execute(INPUTS, blocked, EVIDENCE, MODEL, env={}, flags=ISOLATED_FLAGS)
+        if refused_code == 0:
+            fail("preflight refusal returned 0")
+    finally:
+        shutil.rmtree(blocked, ignore_errors=True)
+
+
 def check_evidence_eol() -> None:
     """Every evidence suffix needs an LF checkout rule. autocrlf must not rewrite .reg."""
     evidence = PACKAGE / "evidence"
@@ -1877,6 +2025,7 @@ def main() -> int:
     check_hardening()
     check_lab4()
     check_review_mutations()
+    check_exit_contract()
     check_evidence_eol()
     check_workflows()
     if "crewai" in sys.modules:

@@ -104,6 +104,38 @@ def record_exception(receipt: dict, exc: BaseException, output_dir: Path,
     return 2
 
 
+def completed_kickoff_exit(receipt: dict) -> int:
+    """0 only for a post-guarded kickoff that is still awaiting review.
+
+    A PASS, a FAIL, or any other receipt stays nonzero. E5 still requires 0.
+    """
+    if not isinstance(receipt, dict):
+        return 2
+    identity = receipt.get("identity")
+    result = receipt.get("result")
+    teardown = receipt.get("teardown")
+    execution = receipt.get("execution")
+    if not all(isinstance(part, dict) for part in (identity, result, teardown, execution)):
+        return 2
+    hashes = result.get("output_sha256")
+    kickoff = hashes.get("kickoff.md") if isinstance(hashes, dict) else None
+    calls = execution.get("model_calls")
+    if (
+        identity.get("pilot_status") == "NOT_VERIFIED"
+        and identity.get("task_status") == "NOT_VERIFIED"
+        and identity.get("reason") == "AWAITING_INDEPENDENT_REVIEW"
+        and result.get("status") == "NOT_VERIFIED"
+        and teardown.get("reviewer_verdict") == "NOT_VERIFIED"
+        and teardown.get("pilot_process_started") is True
+        and isinstance(calls, int)
+        and calls > 0
+        and isinstance(kickoff, str)
+        and len(kickoff) == 64
+    ):
+        return 0
+    return 2
+
+
 def apply_telemetry(env: dict, root: str = SANDBOX_ROOT) -> dict:
     """Fill absent approved values. A present wrong host or proxy is a refusal."""
     if not isinstance(env, dict):
@@ -216,8 +248,11 @@ def execute(input_dir: Path, output_dir: Path, evidence_dir: Path, model_config:
         calls = 0 if provider is None else provider.calls
         return record_exception(receipt, exc, output_dir, calls, started=started)
     receipt["execution"]["model_calls"] = provider.calls
-    write_receipts(output_dir, receipt)
-    return 2
+    try:
+        write_receipts(output_dir, receipt)
+    except Exception as exc:
+        return record_exception(receipt, exc, output_dir, provider.calls, started=True)
+    return completed_kickoff_exit(receipt)
 
 
 def main(argv: list[str] | None = None, flags=None) -> int:

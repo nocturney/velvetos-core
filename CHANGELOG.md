@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-10-18 - **CrewAI exit and E5 root (issue 612 / #810 comment 6252017719):** `runner.execute` returns 0 only after a post-guarded kickoff whose receipt stays `NOT_VERIFIED` / `AWAITING_INDEPENDENT_REVIEW`. Every refusal stays nonzero. E5 still requires `exit_code` 0. The E5 collector admits the exact stage root `D:\Velvet\Pilots\OfficeV2-VerifiedTrio` and still rejects `..` escapes and a sibling prefix such as `OfficeV2-VerifiedTrioX`. The E4 sandbox root is unchanged. No model call.
 - 2026-10-18 - **CrewAI review mutations (issue 612 comment 6251717007):** `main()` collects Ollama listener rows before the bind check, so a real model call is not refused as `OLLAMA_BIND_UNPROVEN`. Sandbox temp directories are created before the temp path is resolved. The child is `python -I`, and `PYTHONHOME`, `usercustomize`, and an outside `.pth` are refused. Kickoff text must cite an input issue URL. Proxy and `OLLAMA_HOST` names are case-insensitive. No model call.
 
 - 2026-10-18 - **CrewAI E4 emit line endings (issue 612 comment 6251561284):** `emit_not_observed` writes JSON and `.reg` with `newline="\n"`. Windows text mode was emitting CRLF, so `e4/control-run.json` drifted from the committed LF bytes even when the checkout was LF. The evidence `text eol=lf` rules stay. No model call.

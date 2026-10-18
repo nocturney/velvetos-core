@@ -197,6 +197,21 @@ Kickoff text needs a data row, and every URL in it must be an issue URL
 from the input rows. Proxy variables and `OLLAMA_HOST` match
 case-insensitively.
 
+## Exit and stage root
+
+Issue 612 / #810 comment 6252017719. `execute` returns 0 only when the
+kickoff finished, the post-run guards passed, and the receipt is still
+`NOT_VERIFIED` with reason `AWAITING_INDEPENDENT_REVIEW`. A refusal, a
+failure, or a `PASS` receipt returns nonzero. The E5 validator still
+requires integer `exit_code` 0 and still records `PILOT_EXIT_NOT_ZERO`
+for every other value.
+
+The E5 collector admits a working directory equal to
+`D:\Velvet\Pilots\OfficeV2-VerifiedTrio` and any directory under it.
+`OfficeV2-VerifiedTrioX` and a `..` path that normalizes outside that
+root stay `OUT_OF_PILOT_ROOT_PATH`. `SANDBOX_ROOT` stays
+`D:\Velvet\Pilots\crewai-e4\sandbox-home`.
+
 ## Lock identity
 
 The Chris lock file is `requirements-locked.txt`, sha256
