@@ -89,7 +89,9 @@ from office_v2_crewai.usage_guard import (  # noqa: E402
     assert_trace_consent,
     count_listening_sockets,
     guard_post_run,
+    interpret_lsof,
     module_is_forbidden,
+    parse_lsof_listen,
     parse_netstat,
     seed_trace_consent,
 )
@@ -1152,6 +1154,41 @@ def check_listeners() -> None:
         fail("an empty netstat table was not a proven zero")
     if count_listening_sockets(os.getpid()) < 0:
         fail("linux listener count was unproven")
+    lsof_header = "COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME\n"
+    if count_listening_sockets(10, platform="darwin", observation=lsof_header) != 0:
+        fail("an empty lsof table was not a proven zero")
+    listening = lsof_header + "Python 10 user 5u IPv4 0x1 0t0 TCP 127.0.0.1:11435 (LISTEN)\n"
+    if count_listening_sockets(10, platform="darwin", observation=listening) != 1:
+        fail("a darwin TCP listener was not counted")
+    other = lsof_header + "Python 99 user 5u IPv4 0x1 0t0 TCP *:80 (LISTEN)\n"
+    if count_listening_sockets(10, platform="darwin", observation=other) != 0:
+        fail("another pid's listener was counted")
+    _expect_usage(
+        lambda: count_listening_sockets(10, platform="darwin", observation="not a table"),
+        "PILOT_LISTENER_UNPROVEN",
+    )
+    _expect_usage(
+        lambda: count_listening_sockets(10, platform="darwin", observation={"tcp": []}),
+        "PILOT_LISTENER_UNPROVEN",
+    )
+    if interpret_lsof(10, 1, "", "") != 0:
+        fail("lsof no-match was not a proven zero")
+    if interpret_lsof(10, 0, lsof_header, "") != 0:
+        fail("lsof exit 0 with an empty table was not a proven zero")
+    _expect_usage(lambda: interpret_lsof(10, 0, "", ""), "PILOT_LISTENER_UNPROVEN")
+    _expect_usage(lambda: interpret_lsof(10, 1, "", "lsof: status error"), "PILOT_LISTENER_UNPROVEN")
+    _expect_usage(lambda: interpret_lsof(10, 2, "", ""), "PILOT_LISTENER_UNPROVEN")
+    if parse_lsof_listen(lsof_header, 10) != 0:
+        fail("parse_lsof_listen rejected a header-only table")
+
+    def lsof_missing():
+        raise OSError("lsof missing")
+
+    _expect_usage(
+        lambda: count_listening_sockets(10, platform="darwin", observe=lsof_missing),
+        "PILOT_LISTENER_UNPROVEN",
+    )
+    _expect_usage(lambda: count_listening_sockets(10, platform="freebsd"), "PILOT_LISTENER_UNPROVEN")
     if ".ToArray()" not in _PS_OBSERVE:
         fail("PowerShell listener script does not call ToArray")
     for wrapped in ("@($processes)", "@($tcp)", "@($udp)"):
@@ -1510,6 +1547,27 @@ def check_lab4() -> None:
         fail("runner is missing the sandbox parameter, module guard, or Windows temp check")
 
 
+def check_evidence_eol() -> None:
+    """Every evidence suffix needs an LF checkout rule. autocrlf must not rewrite .reg."""
+    evidence = PACKAGE / "evidence"
+    suffixes = set()
+    for path in evidence.rglob("*"):
+        if not path.is_file():
+            continue
+        if not path.suffix:
+            fail("evidence file has no suffix: %s" % path.relative_to(ROOT))
+        suffixes.add(path.suffix)
+        if b"\r" in path.read_bytes():
+            fail("CRLF in evidence %s" % path.relative_to(ROOT))
+    if not suffixes:
+        fail("evidence directory has no files")
+    attributes = (ROOT / ".gitattributes").read_text(encoding="utf-8")
+    for suffix in sorted(suffixes):
+        rule = "/scripts/office_v2_crewai/evidence/**/*" + suffix + " text eol=lf"
+        if rule not in attributes:
+            fail("evidence %s is not pinned to LF" % suffix)
+
+
 def check_workflows() -> None:
     folder = ROOT / ".github" / "workflows"
     for path in folder.glob("*"):
@@ -1542,6 +1600,7 @@ def main() -> int:
     check_ast()
     check_hardening()
     check_lab4()
+    check_evidence_eol()
     check_workflows()
     if "crewai" in sys.modules:
         fail("crewai was imported by the sensor")

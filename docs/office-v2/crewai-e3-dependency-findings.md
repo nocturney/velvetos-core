@@ -166,6 +166,19 @@ outside the interpreter prefix, is refused.
 
 `--sandbox` defaults to the E4 root and must stay on `D:` under `D:\Velvet`.
 
+## Listener portability
+
+Issue 612 comment 6251194655. On macOS the listener check uses
+`lsof -nP -a -p <pid> -iTCP -sTCP:LISTEN`. A header with no rows, or lsof
+exit 1 with empty stdout and stderr, is a proven zero. A missing `lsof`,
+stderr, or any other status is unproven. Linux still reads `/proc/net/tcp`.
+Anything that is neither Windows, macOS, nor Linux fails closed.
+
+`scripts/office_v2_crewai/evidence/**/*.reg` and `**/*.json` are
+`text eol=lf`. The sensor requires that rule for every suffix in the
+evidence directory, so a Windows checkout with `core.autocrlf=true` does
+not turn `hkcu-after.reg` into CRLF.
+
 ## Lock identity
 
 The Chris lock file is `requirements-locked.txt`, sha256

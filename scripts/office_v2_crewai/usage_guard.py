@@ -530,7 +530,72 @@ def _windows_observe() -> dict:
     return _normalize_windows(payload)
 
 
-def count_listening_sockets(pid: int, platform: str | None = None, observation: dict | None = None,
+def parse_lsof_listen(text: str, pid: int) -> int:
+    """Count TCP LISTEN rows for pid in `lsof -nP -iTCP -sTCP:LISTEN` output.
+
+    A header with no data rows is a proven zero. A missing header is unproven.
+    """
+    if not isinstance(text, str) or isinstance(pid, bool) or not isinstance(pid, int) or pid <= 0:
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+    lines = [line for line in text.splitlines() if line.strip()]
+    if not lines:
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+    header = [part.upper() for part in lines[0].split()]
+    if "COMMAND" not in header or "PID" not in header or "NAME" not in header:
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+    pid_index = header.index("PID")
+    name_index = header.index("NAME")
+    owned = 0
+    for line in lines[1:]:
+        parts = line.split()
+        if len(parts) <= max(pid_index, name_index):
+            raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+        try:
+            row_pid = int(parts[pid_index])
+        except ValueError as exc:
+            raise UsageRefusal("PILOT_LISTENER_UNPROVEN") from exc
+        name = " ".join(parts[name_index:])
+        if "(LISTEN)" not in name.upper():
+            raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+        if row_pid == pid:
+            owned += 1
+    return owned
+
+
+def interpret_lsof(pid: int, returncode: int, stdout: str, stderr: str) -> int:
+    """lsof exit 1 with empty stdout and stderr is the no-match case, a proven zero.
+
+    Any diagnostic on stderr, or any other status, cannot prove the set is empty.
+    """
+    if isinstance(returncode, bool) or not isinstance(returncode, int):
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+    if not isinstance(stdout, str) or not isinstance(stderr, str):
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+    if returncode == 1 and not stdout.strip() and not stderr.strip():
+        return 0
+    if returncode != 0:
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+    return parse_lsof_listen(stdout, pid)
+
+
+def _darwin_observe(pid: int) -> int:
+    """lsof for this pid only. A missing binary or a bad status fails closed."""
+    import subprocess
+
+    try:
+        proc = subprocess.run(
+            ["lsof", "-nP", "-a", "-p", str(pid), "-iTCP", "-sTCP:LISTEN"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN") from exc
+    return interpret_lsof(pid, proc.returncode, proc.stdout or "", proc.stderr or "")
+
+
+def count_listening_sockets(pid: int, platform: str | None = None, observation: object = None,
                             observe=None) -> int:
     """Count pilot listeners. An unproven observation fails closed."""
     plat = sys.platform if platform is None else platform
@@ -543,6 +608,26 @@ def count_listening_sockets(pid: int, platform: str | None = None, observation: 
             except (OSError, ValueError, TypeError) as exc:
                 raise UsageRefusal("PILOT_LISTENER_UNPROVEN") from exc
         return count_windows_listeners(pid, observation)
+    if plat == "darwin":
+        if isinstance(observation, str):
+            return parse_lsof_listen(observation, pid)
+        if observation is not None:
+            raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+        if observe is None:
+            return _darwin_observe(pid)
+        try:
+            result = observe()
+        except UsageRefusal:
+            raise
+        except (OSError, ValueError, TypeError) as exc:
+            raise UsageRefusal("PILOT_LISTENER_UNPROVEN") from exc
+        if isinstance(result, str):
+            return parse_lsof_listen(result, pid)
+        if isinstance(result, tuple) and len(result) == 3:
+            return interpret_lsof(pid, result[0], result[1], result[2])
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+    if plat != "linux":
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
     if observation is not None or observe is not None:
         raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
     return _count_linux_listeners(pid)
