@@ -370,6 +370,7 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
     probes = [
         (gate(["scripts/tool.py", "changelog.d/example-pr.md"]) == 0, "fragment-only capability PR must pass"),
         (gate(["scripts/tool.py"]) == 1, "capability PR with neither must fail"),
+        (gate(["scripts\\tool.py"]) == 1, "windows capability path without a fragment must fail"),
         (gate(["scripts/tool.py", "CHANGELOG.md"]) == 0, "CHANGELOG.md edit must still pass"),
         (gate(["docs/NOTE.md"]) == 0, "docs-only PR must pass without a fragment"),
         (gate(["changelog.d/example-pr.md"]) == 0, "fragment file alone must pass"),
