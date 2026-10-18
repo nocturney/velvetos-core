@@ -28,5 +28,5 @@
     "security_admission": "RED",
     "required_status_check": "check-all"
   },
-  "latest_observation": "Windows job permissions are contents: read, checkout persist-credentials false, shallow checkout. verify_ffmpeg_zip_sha256.py rejects a wrong digest (exit 1) and an inverted == accepts it (exit 0), which the sensor catches. Workflow -ne flipped to -eq is also caught."
+  "latest_observation": "Windows job permissions are contents: read, checkout persist-credentials false, full history (fetch-depth: 0) because git show <sha>:path needs those blobs. verify_ffmpeg_zip_sha256.py rejects a wrong digest (exit 1) and an inverted == accepts it (exit 0), which the sensor catches. Workflow -ne flipped to -eq is also caught."
 }

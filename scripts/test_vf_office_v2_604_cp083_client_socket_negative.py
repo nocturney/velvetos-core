@@ -182,9 +182,9 @@ class ClientNegativeTests(unittest.TestCase):
                 self.assertTrue(state.received)
 
     def test_two_json_values_on_one_stream_use_first_line_only(self):
-        # First line is well-formed; second must not enlarge the accepted object.
+        # First line is well-formed; a second frame is trailing payload and is refused.
         response, _, state = self.exercise("two-json", os.geteuid())
-        self.assertEqual(response, {"status": "COMMITTED_READBACK"})
+        self.assertEqual(response, {"status": "NO_ACK_UNKNOWN"})
         self.assertTrue(state.received)
 
     def test_platform_guard_skips_connect_on_non_linux(self):
