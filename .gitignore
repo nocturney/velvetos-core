@@ -19,6 +19,7 @@ packages/vfharness/evals/latest-results.json
 *.p12
 tmp-clone/
 __pycache__/
+.vf-tmp/
 *.pyc
 packages/vfops/data/cli-runs.jsonl
 packages/vfops/out/report-*.md

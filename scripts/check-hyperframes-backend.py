@@ -219,6 +219,8 @@ def main() -> None:
         "replace=1",
         "Rubik-wght700",
         '"--tmp-dir"',
+        "headlineFontSha256",
+        "def release_derived_tmp",
     )
     if "version mismatch: required" in bridge or re.search(r"(?m)^HYPERFRAMES_VERSION\s*=", bridge):
         fail("bridge must not exact-pin normal HyperFrames execution")

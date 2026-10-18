@@ -6,6 +6,7 @@ import contextlib
 import io
 import json
 import os
+import re
 import shutil
 import struct
 import subprocess
@@ -285,6 +286,8 @@ class RealRenderTests(unittest.TestCase):
         self.assertIn(HEADLINE, svg)
         self.assertIn(COPPER, svg)
         self.assertIn('direction="rtl"', svg)
+        _assert_receipt_fonts_match_drawn_files(self, caption, receipt, svg)
+        self.assertFalse((root / "out" / ".vf-tmp").exists())
 
 
 def _headline_ink_bounds(text: str) -> tuple[int, int, str, str]:
@@ -521,6 +524,29 @@ class FallbackHandoffTests(unittest.TestCase):
         svg = (output.with_suffix(output.suffix + ".caption.svg")).read_text(encoding="utf-8")
         self.assertIn(HEADLINE, svg)
         self.assertIn('direction="rtl"', svg)
+
+
+def _drawn_font_paths(command: list[str]) -> list[Path]:
+    blob = " ".join(command)
+    found = re.findall(r"fontfile=((?:\\\\.|[^:])+)", blob)
+    return [Path(item.replace("\\\\:", ":")) for item in found]
+
+
+def _assert_receipt_fonts_match_drawn_files(test: unittest.TestCase, caption, receipt: dict, svg: str) -> None:
+    paths = _drawn_font_paths(receipt["commands"][0])
+    by_name = {}
+    for path in paths:
+        test.assertTrue(path.is_file(), str(path))
+        by_name[path.name] = caption.sha256_file(path)
+    test.assertIn("Rubik-wght700.ttf", by_name)
+    test.assertIn("Rubik-wght600.ttf", by_name)
+    test.assertEqual(receipt["fonts"]["headline"]["sha256"], by_name["Rubik-wght700.ttf"])
+    test.assertEqual(receipt["fonts"]["subhead"]["sha256"], by_name["Rubik-wght600.ttf"])
+    test.assertEqual(receipt["fontSha256"], by_name["Rubik-wght700.ttf"])
+    test.assertNotEqual(receipt["fontSha256"], caption.rubik_font()["sha256"])
+    test.assertIn(by_name["Rubik-wght700.ttf"], svg)
+    test.assertIn(by_name["Rubik-wght600.ttf"], svg)
+    test.assertNotIn(caption.rubik_font()["sha256"], svg)
 
 
 def _portrait_request() -> dict:
@@ -968,6 +994,60 @@ class CaptionDefectTests(unittest.TestCase):
             caption.text_ink_width(caption.rubik_weight_font(700), "שלום", 48, shutil.which("ffmpeg"), caption.runtime_tmp_dir())
         self.assertTrue(seen)
         self.assertEqual(Path(seen[0]).resolve(), (env_root / "tmp").resolve())
+
+    def test_receipt_font_hash_matches_the_drawn_font_file(self) -> None:
+        reason = ffmpeg_skip_reason()
+        if reason:
+            self.skipTest(reason)
+        import vf_ffmpeg_svg_caption as caption
+
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        root = Path(tmp.name)
+        write_composition(root, duration="0.2")
+        hero = root / "assets" / "hero.jpg"
+        audio = root / "assets" / "music.m4a"
+        subprocess.run(
+            ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i", "color=c=white:s=320x180:d=1", "-frames:v", "1", str(hero)],
+            check=True,
+            timeout=30,
+        )
+        subprocess.run(
+            ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i", "sine=frequency=440:duration=1:sample_rate=48000", "-c:a", "aac", str(audio)],
+            check=True,
+            timeout=30,
+        )
+        env = os.environ.copy()
+        env.pop("VELVETOS_RUNTIME_ROOT", None)
+        with mock.patch.dict(os.environ, env, clear=True):
+            receipt = caption.render_prepared(
+                caption.prepare_request(request_body(root, jobId="font-hash", stage="review", quality="draft")),
+                None,
+                failover=None,
+            )
+        svg = (root / "out" / "reel.mp4.caption.svg").read_text(encoding="utf-8")
+        _assert_receipt_fonts_match_drawn_files(self, caption, receipt, svg)
+        self.assertFalse((root / "out" / ".vf-tmp").exists())
+
+    def test_release_derived_tmp_removes_only_an_empty_derived_directory(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        root = Path(tmp.name)
+        output = root / "out" / "reel.mp4"
+        derived = root / "out" / ".vf-tmp"
+        derived.mkdir(parents=True)
+        caption.release_derived_tmp(derived, output, None)
+        self.assertFalse(derived.exists())
+        derived.mkdir()
+        (derived / "keep.txt").write_text("x", encoding="utf-8")
+        caption.release_derived_tmp(derived, output, None)
+        self.assertTrue((derived / "keep.txt").is_file())
+        explicit = root / "keep-tmp"
+        explicit.mkdir()
+        caption.release_derived_tmp(explicit, output, str(explicit))
+        self.assertTrue(explicit.is_dir())
 
     def test_hyperframes_forwards_tmp_dir_into_the_prepared_fallback(self) -> None:
         tmp = tempfile.TemporaryDirectory()
