@@ -650,6 +650,34 @@
       "mapping_state": "mapped"
     },
     {
+      "id": "check-desktop-runtime-eligibility",
+      "path": "scripts/check-desktop-runtime-eligibility.py",
+      "owns": [
+        "docs/implementation/office-v2/phase2/desktop-runtime-capability-contract-v0.md",
+        "docs/implementation/office-v2/phase2/desktop-runtime-eligibility-check-v0.py",
+        "docs/implementation/office-v2/phase2/desktop-runtime-eligibility-fixtures-v0.json",
+        "scripts/check-desktop-runtime-eligibility.py"
+      ],
+      "triggered_by": [
+        "docs/implementation/office-v2/phase2/desktop-runtime-capability-contract-v0.md",
+        "docs/implementation/office-v2/phase2/desktop-runtime-eligibility-check-v0.py",
+        "docs/implementation/office-v2/phase2/desktop-runtime-eligibility-fixtures-v0.json",
+        "scripts/check-desktop-runtime-eligibility.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "lifecycle": "DOMAIN",
+      "risk": "low",
+      "timeout_seconds": 60,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
       "id": "check-ecosystem-radar-phase9",
       "path": "scripts/check-ecosystem-radar-phase9.py",
       "owns": [
