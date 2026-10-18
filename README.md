@@ -570,6 +570,10 @@ Office Control Plane schedule: `.github/workflows/office-control-plane.yml` runs
 
 לוח Office Control Plane: 05:00/11:00/17:00/23:00 שעון ישראל, לא מתנגש ב־Office Loop של 10:30/18:30.
 
+README System Pulse refresh: `.github/workflows/readme-system-pulse.yml` stays event-driven with no cron. It also runs on `workflow_run` after Office Control Plane, VF Media Auto Intake and Jobs Sheet Write-Through. Those machine writers push pulse evidence with `GITHUB_TOKEN`, and GitHub does not start `push` workflows for such pushes, so README on main used to go stale. That made every unrelated PR fail the PR-only `update-readme-snapshot.py --check` gate. The gate itself is unchanged.
+
+רענון README System Pulse: רץ גם אחרי שהכותבים האוטומטיים (Control Plane, קליטת מדיה, Jobs) דוחפים ראיות, כדי ש־README ב־main יישאר עדכני. בדיקת ה־PR לא הוחלשה.
+
 Windows host paths: on `sderot-windows` every agent (ChatGPT, Codex, Grok Bot, Cursor, Gemini, Perplexity, local scripts) works from `D:\Velvet` (`VELVET_ROOT`) and never uses the Windows Desktop (incl. OneDrive Desktop) for clones, scratch or output. If D: is unavailable, agents stop and report. Contract: `packages/velvetos/WINDOWS-PATH-CONTRACT.md`; sensor: `scripts/check-windows-path-contract.py`.
 
 נתיבי Windows: כל הסוכנים עובדים מ־`D:\Velvet` ולעולם לא משולחן העבודה (Desktop). אם D: לא זמין — עוצרים ומדווחים.
