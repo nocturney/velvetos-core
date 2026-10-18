@@ -20,6 +20,8 @@ from vf_spawn import (
     GIT_TIMEOUT_SECONDS,
     SpawnRefusal,
     allowlisted_git_errors,
+    captured_rev_parse_errors,
+    prove_refused_git_args,
     run_git,
     user_arg_separator_errors,
     windows_pin_case_errors,
@@ -229,6 +231,9 @@ def prove_git_hygiene() -> list[str]:
     import vf_spawn
 
     errors: list[str] = []
+    errors.extend(prove_refused_git_args())
+    if errors:
+        return errors
     previous = {
         "VF_SPAWN_SENTINEL": os.environ.get("VF_SPAWN_SENTINEL"),
         "GIT_EXEC_PATH": os.environ.get("GIT_EXEC_PATH"),
@@ -266,6 +271,12 @@ def prove_git_hygiene() -> list[str]:
             ("newline", "rev\nmore"),
             ("nul", "rev\x00more"),
             ("cr", "rev\rmore"),
+            ("leading newline", "\nrev"),
+            ("leading nul", "\x00rev"),
+            ("leading cr", "\rrev"),
+            ("bare newline", "\n"),
+            ("bare nul", "\x00"),
+            ("bare cr", "\r"),
         ):
             try:
                 run(
@@ -372,21 +383,48 @@ def prove_ensure_clone() -> list[str]:
             return [f"bare repo setup failed: {exc}"]
         hostile = f"--upload-pack={script}"
 
-        def check_out(name: str, source: str, pin: str) -> SystemExit | None:
+        def check_out(name: str, source: str, pin: str) -> tuple[SystemExit | None, list[list[str]]]:
             global CLONE
+            import vf_spawn
+
             CLONE = root / name
+            captured: list[list[str]] = []
+            original = vf_spawn.subprocess.run
+
+            def spy(argv, **kwargs):
+                captured.append(list(argv))
+                return original(argv, **kwargs)
+
+            vf_spawn.subprocess.run = spy
             try:
                 with contextlib.redirect_stdout(io.StringIO()):
                     ensure_clone({"pin": pin, "source": source})
             except SystemExit as exc:
-                return exc
-            return None
+                return exc, captured
+            finally:
+                vf_spawn.subprocess.run = original
+            return None, captured
 
         try:
-            failed = check_out("src", str(bare), sha)
+            failed, captured = check_out("src", str(bare), sha)
             if failed is not None:
                 errors.append(f"ensure_clone did not fetch the bare repo: {failed}")
             else:
+                fresh_parses = captured_rev_parse_errors(captured, ["HEAD"])
+                errors.extend(fresh_parses)
+                failed_again, captured_again = check_out("src", str(bare), sha)
+                if failed_again is not None:
+                    errors.append(f"ensure_clone existing checkout failed: {failed_again}")
+                else:
+                    again = [
+                        argv for argv in captured_again
+                        if len(argv) > 1 and argv[1] == "rev-parse"
+                    ]
+                    if len(again) < 2:
+                        errors.append(
+                            "ensure_clone existing checkout did not rev-parse before and after"
+                        )
+                    errors.extend(captured_rev_parse_errors(captured_again, ["HEAD"]))
                 head = run(
                     ["git", "rev-parse", "--verify", "-q"],
                     revisions=["HEAD"],
@@ -395,7 +433,7 @@ def prove_ensure_clone() -> list[str]:
                 if head != sha:
                     errors.append(f"ensure_clone checked out {head!r}, not {sha}")
             marker.unlink(missing_ok=True)
-            failed = check_out("hostile-source", hostile, sha)
+            failed, _captured = check_out("hostile-source", hostile, sha)
             if failed is None:
                 errors.append("hostile source fetch succeeded")
             if marker.exists():
@@ -412,7 +450,7 @@ def prove_ensure_clone() -> list[str]:
                 if url != hostile:
                     errors.append(f"source was parsed as a git option: {url!r}")
             marker.unlink(missing_ok=True)
-            failed = check_out("hostile-pin", str(bare), hostile)
+            failed, _captured = check_out("hostile-pin", str(bare), hostile)
             if failed is None:
                 errors.append("hostile pin fetch succeeded")
             if marker.exists():

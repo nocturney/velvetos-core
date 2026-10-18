@@ -17,6 +17,8 @@ from vf_spawn import (
     GIT_TIMEOUT_SECONDS,
     SpawnRefusal,
     allowlisted_git_errors,
+    captured_rev_parse_errors,
+    prove_refused_git_args,
     run_git,
     user_arg_separator_errors,
     windows_pin_case_errors,
@@ -59,6 +61,9 @@ def prove_git_hygiene() -> list[str]:
     import vf_spawn
 
     errors: list[str] = []
+    errors.extend(prove_refused_git_args())
+    if errors:
+        return errors
     previous = {
         "VF_SPAWN_SENTINEL": os.environ.get("VF_SPAWN_SENTINEL"),
         "GIT_EXEC_PATH": os.environ.get("GIT_EXEC_PATH"),
@@ -84,6 +89,12 @@ def prove_git_hygiene() -> list[str]:
             ("newline", "rev\nmore"),
             ("nul", "rev\x00more"),
             ("cr", "rev\rmore"),
+            ("leading newline", "\nrev"),
+            ("leading nul", "\x00rev"),
+            ("leading cr", "\rrev"),
+            ("bare newline", "\n"),
+            ("bare nul", "\x00"),
+            ("bare cr", "\r"),
         ):
             try:
                 run("git", "rev-parse", "--verify", "-q", revisions=[token], cwd=ROOT)
@@ -179,18 +190,43 @@ def prove_ensure_clone() -> list[str]:
             return [f"bare repo setup failed: {exc}"]
         hostile = f"--upload-pack={script}"
         ROOT = root / "office"
-        try:
+        import vf_spawn
+
+        def watched(component: dict) -> tuple[SystemExit | None, list[list[str]]]:
+            captured: list[list[str]] = []
+            original = vf_spawn.subprocess.run
+
+            def spy(argv, **kwargs):
+                captured.append(list(argv))
+                return original(argv, **kwargs)
+
+            vf_spawn.subprocess.run = spy
             try:
                 with contextlib.redirect_stdout(io.StringIO()):
-                    ensure_clone({
-                        "id": "fixture",
-                        "local_source": "src",
-                        "pin": sha,
-                        "source": str(bare),
-                    })
+                    ensure_clone(component)
             except SystemExit as exc:
-                errors.append(f"ensure_clone did not fetch the bare repo: {exc}")
+                return exc, captured
+            finally:
+                vf_spawn.subprocess.run = original
+            return None, captured
+
+        fresh = {
+            "id": "fixture",
+            "local_source": "src",
+            "pin": sha,
+            "source": str(bare),
+        }
+        try:
+            failed, captured = watched(fresh)
+            if failed is not None:
+                errors.append(f"ensure_clone did not fetch the bare repo: {failed}")
             else:
+                errors.extend(captured_rev_parse_errors(captured, ["HEAD"]))
+                failed_again, captured_again = watched(fresh)
+                if failed_again is not None:
+                    errors.append(f"ensure_clone existing checkout failed: {failed_again}")
+                else:
+                    errors.extend(captured_rev_parse_errors(captured_again, ["HEAD"]))
                 head = run(
                     "git", "rev-parse", "--verify", "-q",
                     revisions=["HEAD"], cwd=ROOT / "src",

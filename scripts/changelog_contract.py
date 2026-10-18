@@ -21,7 +21,14 @@ import sys
 import tempfile
 from pathlib import Path
 
-from vf_spawn import SpawnRefusal, revision_form_errors, run_git, same_pinned_directory, git_revision
+from vf_spawn import (
+    SpawnRefusal,
+    git_revision,
+    prove_refused_git_args,
+    revision_form_errors,
+    run_git,
+    same_pinned_directory,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 FRAGMENT_RE = re.compile(r"^changelog\.d/([a-z0-9]+(?:-[a-z0-9]+)*)\.md$")
@@ -387,6 +394,9 @@ def prove_git_hygiene() -> list[str]:
     import vf_spawn
 
     errors: list[str] = []
+    errors.extend(prove_refused_git_args())
+    if errors:
+        return errors
     sentinel = "VF_SPAWN_SENTINEL"
     previous = {
         sentinel: os.environ.get(sentinel),
@@ -420,14 +430,21 @@ def prove_git_hygiene() -> list[str]:
             ("newline", "rev\nmore"),
             ("nul", "rev\x00more"),
             ("cr", "rev\rmore"),
+            ("leading newline", "\nrev"),
+            ("leading nul", "\x00rev"),
+            ("leading cr", "\rrev"),
+            ("bare newline", "\n"),
+            ("bare nul", "\x00"),
+            ("bare cr", "\r"),
         ):
-            try:
-                changed_files(token, "b", ROOT)
-            except SpawnRefusal as exc:
-                if str(exc) != "GIT_REV_REFUSED":
-                    errors.append(f"{label} revision refused as {exc}")
-            else:
-                errors.append(f"{label} revision was accepted")
+            for side, base, head in (("base", token, "b"), ("head", "a", token)):
+                try:
+                    changed_files(base, head, ROOT)
+                except SpawnRefusal as exc:
+                    if str(exc) != "GIT_REV_REFUSED":
+                        errors.append(f"{label} {side} revision refused as {exc}")
+                else:
+                    errors.append(f"{label} {side} revision was accepted")
         if len(captured) != before:
             errors.append("control-byte revision spawned git")
     except (SpawnRefusal, SystemExit) as exc:

@@ -22,7 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import vf_office_v2_continuity as continuity
-from vf_spawn import SpawnRefusal, allowlisted_git_errors, run_git
+from vf_spawn import SpawnRefusal, allowlisted_git_errors, run_git, user_arg_separator_errors
 
 TASK_SCHEMA = "velvetos.office-v2.p0-task-envelope.v0"
 RECEIPT_SCHEMA = "velvetos.office-v2.p0-worker-receipt.v0"
@@ -412,7 +412,9 @@ def demo_selftest():
         script.write_text("from pathlib import Path\nPath('result.txt').write_text('safe output\\n', encoding='utf-8')\n", encoding="utf-8")
         dashed = worktree / "--dashed.py"
         dashed.write_text("print(1)\n", encoding="utf-8")
-        git_raw("-C", str(worktree), "add", user_args=["job.py", "--dashed.py"])
+        short = worktree / "-x.py"
+        short.write_text("print(2)\n", encoding="utf-8")
+        git_raw("-C", str(worktree), "add", user_args=["job.py", "--dashed.py", "-x.py"])
         git_raw("-C", str(worktree), "-c", "user.name=Fixture",
                 "-c", "user.email=fixture@example.invalid", "commit", "-qm", "fixture")
         sha = git(worktree, "rev-parse", "HEAD")
@@ -433,6 +435,32 @@ def demo_selftest():
                          "sha256": file_hash(script), "args": []},
             "allowed_outputs": ["result.txt"], "context_checkpoint": str(checkpoint),
         }
+        short_env = copy.deepcopy(env)
+        short_env["executor"] = {
+            "kind": "PINNED_PYTHON_FIXTURE",
+            "script": "-x.py",
+            "sha256": file_hash(short),
+            "args": [],
+        }
+        import vf_spawn
+        listed_argv: list[list[str]] = []
+        original_run = vf_spawn.subprocess.run
+
+        def spy_run(argv, **kwargs):
+            listed_argv.append(list(argv))
+            return original_run(argv, **kwargs)
+
+        vf_spawn.subprocess.run = spy_run
+        try:
+            validate(short_env)
+        except Rejected as exc:
+            raise Rejected("SHORT_OPTION_EXECUTOR_PATH_REFUSED:" + str(exc))
+        finally:
+            vf_spawn.subprocess.run = original_run
+        ls_files = [argv for argv in listed_argv if "ls-files" in argv]
+        if len(ls_files) != 1 or user_arg_separator_errors(ls_files[0], ["-x.py"]):
+            raise Rejected("SHORT_OPTION_LS_FILES_NOT_AFTER_DASH:" + repr(ls_files))
+        tests.append("short_option_executor_behind_double_dash")
         dashed_env = copy.deepcopy(env)
         dashed_env["executor"] = {
             "kind": "PINNED_PYTHON_FIXTURE",

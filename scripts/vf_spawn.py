@@ -239,6 +239,39 @@ def run_git(
     )
 
 
+def prove_refused_git_args() -> list[str]:
+    """An empty argv item and an empty user arg are refused before git runs."""
+    errors: list[str] = []
+    spawned: list[list[str]] = []
+    original = subprocess.run
+
+    def fake_run(argv, **kwargs):
+        spawned.append(list(argv))
+        return subprocess.CompletedProcess(argv, 0, stdout="", stderr="")
+
+    subprocess.run = fake_run
+    try:
+        try:
+            run_git([""])
+        except SpawnRefusal as exc:
+            if str(exc) != "GIT_ARGV_REFUSED":
+                errors.append(f"empty argv refused as {exc}")
+        else:
+            errors.append("empty argv item was accepted")
+        try:
+            run_git(["status"], user_args=[""])
+        except SpawnRefusal as exc:
+            if str(exc) != "GIT_USER_ARG_REFUSED":
+                errors.append(f"empty user arg refused as {exc}")
+        else:
+            errors.append("empty user arg was accepted")
+    finally:
+        subprocess.run = original
+    if spawned:
+        errors.append("refused git argv spawned git")
+    return errors
+
+
 def user_arg_separator_errors(argv: list[str], user_args: list[str]) -> list[str]:
     """Errors when ``--`` is not the separator immediately before user args."""
     if len(argv) < 2 or "--" not in argv[1:]:
@@ -259,6 +292,17 @@ def revision_form_errors(argv: list[str], revisions: list[str]) -> list[str]:
     if argv[idx + 1:]:
         return [f"git revision form gained pathspecs: {argv}"]
     return []
+
+
+def captured_rev_parse_errors(captured: list[list[str]], revisions: list[str]) -> list[str]:
+    """Every captured ``rev-parse`` keeps ``revisions`` immediately before ``--``."""
+    parses = [argv for argv in captured if len(argv) > 1 and argv[1] == "rev-parse"]
+    if not parses:
+        return ["rev-parse was not captured"]
+    errors: list[str] = []
+    for argv in parses:
+        errors.extend(revision_form_errors(argv, revisions))
+    return errors
 
 
 def allowlisted_git_errors(argv: list[str], kwargs: dict, *, timeout: float) -> list[str]:
