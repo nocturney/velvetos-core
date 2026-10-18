@@ -5,7 +5,9 @@ from __future__ import annotations
 import contextlib
 import io
 import json
+import os
 import shutil
+import struct
 import subprocess
 import sys
 import tempfile
@@ -519,6 +521,246 @@ class FallbackHandoffTests(unittest.TestCase):
         svg = (output.with_suffix(output.suffix + ".caption.svg")).read_text(encoding="utf-8")
         self.assertIn(HEADLINE, svg)
         self.assertIn('direction="rtl"', svg)
+
+
+def _us_weight_class(path: Path) -> int:
+    data = path.read_bytes()
+    count = struct.unpack(">H", data[4:6])[0]
+    for index in range(count):
+        rec = 12 + index * 16
+        if data[rec:rec + 4] != b"OS/2":
+            continue
+        offset = struct.unpack(">I", data[rec + 8:rec + 12])[0]
+        return struct.unpack(">H", data[offset + 4:offset + 6])[0]
+    raise AssertionError(f"OS/2 table missing in {path}")
+
+
+def _glyph_ink(font: Path, text: str = "א") -> int:
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        raise unittest.SkipTest("ffmpeg or ffprobe is not on PATH")
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_path = Path(tmp)
+        raw = tmp_path / "ink.raw"
+        txt = tmp_path / "ink.txt"
+        txt.write_text(text, encoding="utf-8")
+        width, height = 400, 220
+        vf = (
+            f"drawtext=fontfile={font}:textfile={txt}:text_shaping=0:expansion=none:"
+            f"fontcolor=white:fontsize=140:x=30:y=30"
+        )
+        subprocess.run(
+            [ffmpeg, "-y", "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i", f"color=c=black:s={width}x{height}:d=1",
+             "-vf", vf, "-frames:v", "1", "-f", "rawvideo", "-pix_fmt", "rgb24", str(raw)],
+            check=True,
+            timeout=30,
+        )
+        blob = raw.read_bytes()
+        return sum(1 for index in range(0, len(blob), 3) if blob[index] > 32)
+
+
+class CaptionDefectTests(unittest.TestCase):
+    def test_parentheses_mirror_on_rtl_level(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        self.assertEqual(caption.visual_order("שלום (Velvet)"), "(Velvet) םולש")
+        self.assertEqual(caption.visual_order("(קשה)"), "(השק)")
+        self.assertEqual(caption.visual_order("קשה [א]"), "[א] השק")
+        reason = ffmpeg_skip_reason()
+        if reason:
+            return
+        _left, _right, written, graph = _headline_ink_bounds("שלום (Velvet)")
+        self.assertEqual(written, "(Velvet) םולש")
+        self.assertIn("text_shaping=0", graph)
+        self.assertIn("replace=1", graph)
+
+    def test_headline_font_is_weight_700_and_heavier_than_the_default_master(self) -> None:
+        reason = ffmpeg_skip_reason()
+        if reason:
+            self.skipTest(reason)
+        import vf_ffmpeg_svg_caption as caption
+
+        bold = caption.rubik_weight_font(700)
+        variable = caption.rubik_font()["path"]
+        self.assertEqual(_us_weight_class(bold), 700)
+        self.assertGreater(_glyph_ink(bold), int(_glyph_ink(variable) * 1.5))
+        info = {
+            "width": 1800,
+            "height": 1920,
+            "safeX": 40.0,
+            "headlineSize": 72.0,
+            "subheadSize": 40.0,
+            "ruleWidth": 12.0,
+            "ruleHeight": 4.0,
+        }
+        layout = {
+            "headlineLines": ["קשה"],
+            "subheadLines": ["התחלה"],
+            "top": 80.0,
+            "headLineH": 100.0,
+            "ruleX": 40.0,
+            "ruleY": 1700.0,
+            "subTop": 1760.0,
+            "subLineH": 50.0,
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            graph = caption.drawtext_filters(info, layout, variable, Path(tmp))
+        self.assertIn("Rubik-wght700", graph)
+        self.assertIn("Rubik-wght600", graph)
+        self.assertNotIn(variable.name, graph)
+        self.assertIn("replace=1", graph)
+
+    def test_real_render_keeps_copper_rule_and_darker_scrim(self) -> None:
+        reason = ffmpeg_skip_reason()
+        if reason:
+            self.skipTest(reason)
+        import vf_ffmpeg_svg_caption as caption
+
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        root = Path(tmp.name)
+        write_composition(root, duration="0.2")
+        hero = root / "assets" / "hero.jpg"
+        audio = root / "assets" / "music.m4a"
+        subprocess.run(
+            ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i", "color=c=white:s=640x360:d=1", "-frames:v", "1", str(hero)],
+            check=True,
+            timeout=30,
+        )
+        subprocess.run(
+            ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i", "sine=frequency=440:duration=1:sample_rate=48000", "-c:a", "aac", str(audio)],
+            check=True,
+            timeout=30,
+        )
+        req = caption.prepare_request(request_body(root, jobId="copper-scrim", stage="review", quality="draft"))
+        caption.render_prepared(req, None, failover=None)
+        output = root / "out" / "reel.mp4"
+        raw = root / "frame.raw"
+        subprocess.run(
+            ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-i", str(output), "-frames:v", "1", "-f", "rawvideo", "-pix_fmt", "rgb24", str(raw)],
+            check=True,
+            timeout=30,
+        )
+        width, height = 1080, 1920
+        data = raw.read_bytes()
+        self.assertEqual(len(data), width * height * 3)
+        copper = 0
+        for y in range(height - 800, height):
+            row = data[y * width * 3:(y + 1) * width * 3]
+            for x in range(width):
+                red, green, blue = row[x * 3], row[x * 3 + 1], row[x * 3 + 2]
+                if abs(red - 168) <= 18 and abs(green - 104) <= 18 and abs(blue - 56) <= 18:
+                    copper += 1
+        self.assertGreater(copper, 100)
+
+        def mean_luma(y0: int, y1: int) -> float:
+            total = 0
+            for y in range(y0, y1):
+                row = data[y * width * 3:(y + 1) * width * 3]
+                total += sum(row)
+            return total / (3 * (y1 - y0) * width)
+
+        upper = mean_luma(400, 700)
+        scrim = mean_luma(1180, 1280)
+        self.assertLess(scrim, upper - 30)
+
+    def test_tempfile_is_called_with_the_output_runtime_dir(self) -> None:
+        reason = ffmpeg_skip_reason()
+        if reason:
+            self.skipTest(reason)
+        import vf_ffmpeg_svg_caption as caption
+
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        root = Path(tmp.name)
+        write_composition(root, duration="0.2")
+        hero = root / "assets" / "hero.jpg"
+        audio = root / "assets" / "music.m4a"
+        subprocess.run(
+            ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i", "color=c=gray:s=320x180:d=1", "-frames:v", "1", str(hero)],
+            check=True,
+            timeout=30,
+        )
+        subprocess.run(
+            ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i", "sine=frequency=440:duration=1:sample_rate=48000", "-c:a", "aac", str(audio)],
+            check=True,
+            timeout=30,
+        )
+        req = caption.prepare_request(request_body(root, jobId="tmp-dir", stage="review", quality="draft"))
+        seen: list[str | None] = []
+        real = tempfile.TemporaryDirectory
+
+        def spy(*args, **kwargs):
+            seen.append(kwargs.get("dir"))
+            return real(*args, **kwargs)
+
+        expected = (root / "out" / ".vf-tmp").resolve()
+        env = os.environ.copy()
+        env.pop("VELVETOS_RUNTIME_ROOT", None)
+        with mock.patch.dict(os.environ, env, clear=True), mock.patch.object(caption.tempfile, "TemporaryDirectory", spy):
+            caption.render_prepared(req, None, failover=None)
+        self.assertTrue(seen)
+        for item in seen:
+            self.assertIsNotNone(item)
+            self.assertEqual(Path(item).resolve(), expected)
+
+    def test_runtime_root_and_explicit_tmp_dir_override_the_output_dir(self) -> None:
+        import vf_ffmpeg_svg_caption as caption
+
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        root = Path(tmp.name)
+        output = root / "out" / "reel.mp4"
+        explicit = root / "custom-tmp"
+        self.assertEqual(caption.runtime_tmp_dir(output, str(explicit)), explicit.resolve())
+        env_root = root / "runtime-root"
+        with mock.patch.dict(os.environ, {"VELVETOS_RUNTIME_ROOT": str(env_root)}):
+            self.assertEqual(caption.runtime_tmp_dir(output), (env_root / "tmp").resolve())
+        reason = ffmpeg_skip_reason()
+        if reason:
+            return
+        seen: list[str | None] = []
+        real = tempfile.TemporaryDirectory
+
+        def spy(*args, **kwargs):
+            seen.append(kwargs.get("dir"))
+            return real(*args, **kwargs)
+
+        with mock.patch.dict(os.environ, {"VELVETOS_RUNTIME_ROOT": str(env_root)}), mock.patch.object(
+            caption.tempfile, "TemporaryDirectory", spy
+        ):
+            caption.text_ink_width(caption.rubik_weight_font(700), "שלום", 48, shutil.which("ffmpeg"), caption.runtime_tmp_dir())
+        self.assertTrue(seen)
+        self.assertEqual(Path(seen[0]).resolve(), (env_root / "tmp").resolve())
+
+    def test_hyperframes_forwards_tmp_dir_into_the_prepared_fallback(self) -> None:
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        root = Path(tmp.name)
+        write_composition(root, duration="0.2")
+        (root / "assets" / "hero.jpg").write_bytes(b"\xff\xd8\xff\xd9")
+        (root / "assets" / "music.m4a").write_bytes(b"not-audio")
+        req = vf_hyperframes.validate_request(request_body(root))
+        seen = {}
+
+        def fake_render(prepared, receipt_override, failover):
+            seen["tmpDir"] = prepared.get("tmpDir")
+            return {"backend": "ffmpeg-svg-caption-composition", "failover": failover}
+
+        real_which = shutil.which
+
+        def hide_hyperframes(name: str):
+            if name == "hyperframes":
+                return None
+            return real_which(name)
+
+        import vf_ffmpeg_svg_caption as caption
+
+        with mock.patch.object(vf_hyperframes.shutil, "which", side_effect=hide_hyperframes), mock.patch.object(
+            caption, "render_prepared", side_effect=fake_render
+        ):
+            vf_hyperframes.execute(req, None, tmp_dir=str(root / "explicit-tmp"))
+        self.assertEqual(seen["tmpDir"], str(root / "explicit-tmp"))
 
 
 if __name__ == "__main__":

@@ -441,6 +441,8 @@ def _caption_fallback(req: dict[str, Any], receipt_override: str | None, failove
     payload = _fallback_payload(req)
     try:
         prepared = caption.prepare_request(payload)
+        if isinstance(req.get("tmpDir"), str) and req["tmpDir"].strip():
+            prepared["tmpDir"] = req["tmpDir"]
         return caption.render_prepared(prepared, receipt_override, failover)
     except SystemExit as exc:
         _write_fallback_failure_receipt(req, payload, receipt_override, failover, f"fallback exit={exc.code}")
@@ -452,7 +454,10 @@ def _caption_fallback(req: dict[str, Any], receipt_override: str | None, failove
         raise SystemExit(1) from None
 
 
-def execute(req: dict[str, Any], receipt_override: str | None) -> dict[str, Any]:
+def execute(req: dict[str, Any], receipt_override: str | None, tmp_dir: str | None = None) -> dict[str, Any]:
+    if tmp_dir:
+        req = dict(req)
+        req["tmpDir"] = tmp_dir
     if req.get("batchFile"):
         return execute_body(req, receipt_override)
     return failover_after_primary(req, receipt_override, execute_body, _caption_fallback)
@@ -552,6 +557,7 @@ def main() -> int:
     run_parser.add_argument("--variables-file", dest="variables_file", help="override variablesFile relative to projectDir")
     run_parser.add_argument("--batch", help="HyperFrames variable-row batch JSON relative to projectDir")
     run_parser.add_argument("--receipt", help="receipt path relative to projectDir")
+    run_parser.add_argument("--tmp-dir", dest="tmp_dir", help="caption fallback temp directory, instead of the system temp")
     args = parser.parse_args()
     if args.command == "doctor":
         return doctor()
@@ -564,7 +570,7 @@ def main() -> int:
     if args.command == "plan":
         plan(req)
         return 0
-    execute(req, args.receipt)
+    execute(req, args.receipt, getattr(args, "tmp_dir", None))
     return 0
 
 
