@@ -359,6 +359,8 @@ def git_changed_files(root: Path = ROOT) -> list[str]:
 
     try:
         proc = run_git(["diff", "--name-only"], revisions=["HEAD"], cwd=root)
+    except subprocess.TimeoutExpired:
+        raise SystemExit("GIT_TIMEOUT")
     except (OSError, SpawnRefusal):
         return []
     if proc.returncode != 0:
@@ -419,6 +421,22 @@ def prove_git_changed() -> list[str]:
             os.environ["GIT_EXEC_PATH"] = previous
     if names != ["f"]:
         errors.append(f"real vfmem diff under a poisoned GIT_EXEC_PATH was {names}")
+
+    def expire(argv, **kwargs):
+        raise subprocess.TimeoutExpired(argv, timeout=kwargs.get("timeout") or 30)
+
+    vf_spawn.subprocess.run = expire
+    try:
+        git_changed_files(ROOT)
+    except SystemExit as exc:
+        if str(exc) != "GIT_TIMEOUT":
+            errors.append(f"vfmem git timeout was {exc}")
+    except subprocess.TimeoutExpired:
+        errors.append("vfmem git timeout was not caught")
+    else:
+        errors.append("vfmem git timeout was accepted")
+    finally:
+        vf_spawn.subprocess.run = original
     return errors
 
 

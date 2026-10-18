@@ -260,6 +260,8 @@ def upstream_commit(repo: Path) -> str:
 
     try:
         proc = run_git(["rev-parse", "HEAD"], cwd=repo)
+    except subprocess.TimeoutExpired:
+        raise SystemExit("GIT_TIMEOUT")
     except SpawnRefusal:
         return ""
     if proc.returncode != 0:
@@ -319,6 +321,22 @@ def prove_upstream_git() -> list[str]:
             os.environ["GIT_EXEC_PATH"] = previous
     if len(sha) != 40:
         errors.append(f"real vf_cad rev-parse under a poisoned GIT_EXEC_PATH was {sha!r}")
+
+    def expire(argv, **kwargs):
+        raise subprocess.TimeoutExpired(argv, timeout=kwargs.get("timeout") or 30)
+
+    vf_spawn.subprocess.run = expire
+    try:
+        upstream_commit(Path("/tmp/text-to-cad"))
+    except SystemExit as exc:
+        if str(exc) != "GIT_TIMEOUT":
+            errors.append(f"vf_cad git timeout was {exc}")
+    except subprocess.TimeoutExpired:
+        errors.append("vf_cad git timeout was not caught")
+    else:
+        errors.append("vf_cad git timeout was accepted")
+    finally:
+        vf_spawn.subprocess.run = original
     return errors
 
 
