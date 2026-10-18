@@ -17,9 +17,9 @@
   },
   "after": {
     "root_agents": {
-      "lines": 56,
-      "words": 453,
-      "characters": 3823
+      "lines": 66,
+      "words": 619,
+      "characters": 4978
     },
     "root_domain_leakage_marker_counts": {
       "reference_studio": 0,
@@ -60,7 +60,7 @@
       "packages/vfresearch/AGENTS.md",
       "packages/vfsales/AGENTS.md"
     ],
-    "root_word_reduction_percent": 87.1
+    "root_word_reduction_percent": 82.4
   },
   "instruction_locality": {
     "mode": "root_plus_selected_domain",
