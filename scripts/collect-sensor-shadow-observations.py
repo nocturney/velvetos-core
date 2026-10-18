@@ -221,8 +221,32 @@ def _without_gh_auth():
         shutil.rmtree(empty, ignore_errors=True)
 
 
+def _restore_scoped_env(previous: dict[str, str | None]) -> None:
+    for key, value in previous.items():
+        if value is None:
+            os.environ.pop(key, None)
+        else:
+            os.environ[key] = value
+
+
+@contextlib.contextmanager
+def _scoped_env(updates: dict[str, str | None]):
+    """Apply env updates for one assertion and put every key back."""
+    previous = {key: os.environ.get(key) for key in updates}
+    try:
+        for key, value in updates.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+        yield
+    finally:
+        _restore_scoped_env(previous)
+
+
 def prove_gh_unavailable_codes() -> None:
     """Local unauthenticated or offline gh skips. Hosted CI with the same failure stays red."""
+    hosted_before = os.environ.get("GITHUB_ACTIONS")
     original_slug = repo_slug
     original_creds = gh_credentials_present
 
@@ -272,7 +296,6 @@ def prove_gh_unavailable_codes() -> None:
 
         globals()["repo_slug"] = missing_git
         globals()["gh_credentials_present"] = lambda: True
-        os.environ.pop("GITHUB_ACTIONS", None)
         with _without_gh_auth():
             try:
                 resolve_repo_slug()
@@ -294,25 +317,26 @@ def prove_gh_unavailable_codes() -> None:
             raise AssertionError("offline gh-without-git check is missing")
 
         globals()["gh_credentials_present"] = lambda: False
-        os.environ.pop("GITHUB_ACTIONS", None)
-        if gh_without_git_probe_allowed():
-            raise AssertionError("unauthenticated local gh ran the git-missing probe")
-        os.environ["GITHUB_ACTIONS"] = "true"
-        try:
-            gh_without_git_probe_allowed()
-        except RuntimeError as exc:
-            if "hosted CI has no gh credentials" not in str(exc):
-                raise
-        else:
-            raise AssertionError("hosted CI skipped the gh read without credentials")
-        finally:
-            os.environ.pop("GITHUB_ACTIONS", None)
+        with _scoped_env({"GITHUB_ACTIONS": None}):
+            if gh_without_git_probe_allowed():
+                raise AssertionError("unauthenticated local gh ran the git-missing probe")
+        with _scoped_env({"GITHUB_ACTIONS": "true"}):
+            try:
+                gh_without_git_probe_allowed()
+            except RuntimeError as exc:
+                if "hosted CI has no gh credentials" not in str(exc):
+                    raise
+            else:
+                raise AssertionError("hosted CI skipped the gh read without credentials")
         globals()["gh_credentials_present"] = lambda: True
-        if not gh_without_git_probe_allowed():
-            raise AssertionError("authenticated gh skipped the git-missing probe")
+        with _scoped_env({"GITHUB_ACTIONS": None}):
+            if not gh_without_git_probe_allowed():
+                raise AssertionError("authenticated gh skipped the git-missing probe")
     finally:
         globals()["repo_slug"] = original_slug
         globals()["gh_credentials_present"] = original_creds
+        if os.environ.get("GITHUB_ACTIONS") != hosted_before:
+            raise AssertionError("GITHUB_ACTIONS leaked from the gh self-test")
 
 
 def _gh_view_text(proc: subprocess.CompletedProcess) -> str:
@@ -871,6 +895,97 @@ def collect(limit: int, classifications_path: Path | None, recoveries_path: Path
     }
 
 
+def _hosted_probe_env(empty: str, *, token: str | None) -> dict[str, str]:
+    """Child env for a hosted fail-closed proof. The parent os.environ stays put."""
+    env = os.environ.copy()
+    env["GITHUB_ACTIONS"] = "true"
+    env["VF_GH_HOSTED_PROBE"] = "1"
+    env.pop("GH_TOKEN", None)
+    env.pop("GITHUB_TOKEN", None)
+    for key in (
+        "GH_CONFIG_DIR",
+        "XDG_CONFIG_HOME",
+        "HOME",
+        "USERPROFILE",
+        "AppData",
+        "APPDATA",
+        "LOCALAPPDATA",
+    ):
+        env[key] = empty
+    if token is not None:
+        env["GH_TOKEN"] = token
+    return env
+
+
+def _hosted_fail_closed(proc: subprocess.CompletedProcess) -> bool:
+    text = f"{proc.stdout or ''}\n{proc.stderr or ''}"
+    if "gh_live=SKIP_GH_UNAVAILABLE" in text:
+        return False
+    return proc.returncode == 1 and "SPLIT_GH_GIT_FAIL" in text
+
+
+def _require_hosted_fail_closed(proc: subprocess.CompletedProcess, label: str) -> None:
+    if _hosted_fail_closed(proc):
+        return
+    tail = f"{proc.stdout or ''}\n{proc.stderr or ''}"[-400:]
+    raise AssertionError(f"{label} did not fail closed rc={proc.returncode} {tail}")
+
+
+def _run_hosted_self_test(env: dict[str, str], script: Path) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        [sys.executable, str(script), "--self-test"],
+        cwd=ROOT,
+        env=env,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        capture_output=True,
+        timeout=45,
+    )
+
+
+def prove_hosted_gh_fail_closed() -> None:
+    """After the in-process self-test, hosted CI with no or bad credentials exits 1.
+
+    A child that only loses ``GITHUB_ACTIONS`` prints ``SKIP_GH_UNAVAILABLE`` and
+    exits 0. That is not fail-closed. Dropping ``_restore_scoped_env`` must fail
+    this same check.
+    """
+    script = Path(__file__).resolve()
+    empty = tempfile.mkdtemp(prefix="vf-gh-hosted-probe-")
+    mutant_path = script.parent / "_vf_gh_restore_mutant.py"
+    try:
+        no_cred = _run_hosted_self_test(_hosted_probe_env(empty, token=None), script)
+        _require_hosted_fail_closed(no_cred, "hosted CI with no credentials")
+        bad = _run_hosted_self_test(
+            _hosted_probe_env(empty, token="ghs_invalid_example"),
+            script,
+        )
+        _require_hosted_fail_closed(bad, "hosted CI with a bad GH_TOKEN")
+
+        source = script.read_text(encoding="utf-8")
+        needle = "        " + "_restore_scoped_env(" + "previous)\n"
+        if source.count(needle) != 1:
+            raise AssertionError("scoped env restore call is not unique")
+        mutant_path.write_text(source.replace(needle, "        pass\n", 1), encoding="utf-8")
+        mutant = _run_hosted_self_test(_hosted_probe_env(empty, token=None), mutant_path)
+        try:
+            _require_hosted_fail_closed(mutant, "restore mutant")
+        except AssertionError:
+            return
+        raise AssertionError("dropping the scoped env restore still fail-closed")
+    finally:
+        mutant_path.unlink(missing_ok=True)
+        shutil.rmtree(empty, ignore_errors=True)
+
+
+def _finish_self_test(rc: int) -> int:
+    if rc != 0 or os.environ.get("VF_GH_HOSTED_PROBE") == "1":
+        return rc
+    prove_hosted_gh_fail_closed()
+    return 0
+
+
 def self_test() -> int:
     early = {
         "pull_request": 407,
@@ -1009,14 +1124,14 @@ def self_test() -> int:
         )
         print(LOUD_SKIP)
         sys.stderr.write(LOUD_SKIP + "\n")
-        return 0
+        return _finish_self_test(0)
 
     print(
         "OK sensor-shadow-observation selftest "
         "historical_miss_retention=PASS pr_dedupe=PASS incomplete_recovery=PASS "
         f"repo_slug={slug}"
     )
-    return 0
+    return _finish_self_test(0)
 
 
 def main() -> int:
