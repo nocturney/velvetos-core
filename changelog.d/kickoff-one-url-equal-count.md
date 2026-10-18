@@ -1,0 +1,1 @@
+- 2026-10-18 - **CrewAI kickoff one-url row:** a merged row plus a duplicate row with the same row count fails the Hebrew table check. Deleting the one-url conjunct from coverage fails the self-test. No model call.
