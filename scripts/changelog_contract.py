@@ -420,16 +420,42 @@ def prove_git_hygiene() -> list[str]:
             ("newline", "rev\nmore"),
             ("nul", "rev\x00more"),
             ("cr", "rev\rmore"),
+            ("leading newline", "\nrev"),
+            ("leading nul", "\x00rev"),
+            ("leading cr", "\rrev"),
+            ("bare newline", "\n"),
+            ("bare cr", "\r"),
+            ("bare nul", "\x00"),
         ):
-            try:
-                changed_files(token, "b", ROOT)
-            except SpawnRefusal as exc:
-                if str(exc) != "GIT_REV_REFUSED":
-                    errors.append(f"{label} revision refused as {exc}")
-            else:
-                errors.append(f"{label} revision was accepted")
+            for slot, caller in (
+                ("base", lambda token=token: changed_files(token, "b", ROOT)),
+                ("head", lambda token=token: changed_files("b", token, ROOT)),
+            ):
+                try:
+                    caller()
+                except SpawnRefusal as exc:
+                    if str(exc) != "GIT_REV_REFUSED":
+                        errors.append(f"{label} {slot} revision refused as {exc}")
+                else:
+                    errors.append(f"{label} {slot} revision was accepted")
         if len(captured) != before:
             errors.append("control-byte revision spawned git")
+        held = len(captured)
+        for label, caller, code in (
+            ("empty argv", lambda: run_git([""]), "GIT_ARGV_REFUSED"),
+            ("non-string argv", lambda: run_git(["status", None]), "GIT_ARGV_REFUSED"),
+            ("empty user arg", lambda: run_git(["status"], user_args=[""]), "GIT_USER_ARG_REFUSED"),
+            ("non-string user arg", lambda: run_git(["status"], user_args=[None]), "GIT_USER_ARG_REFUSED"),
+        ):
+            try:
+                caller()
+            except SpawnRefusal as exc:
+                if str(exc) != code:
+                    errors.append(f"{label} refused as {exc}")
+            else:
+                errors.append(f"{label} was accepted")
+        if len(captured) != held:
+            errors.append("refused git argv spawned git")
     except (SpawnRefusal, SystemExit) as exc:
         errors.append(f"git spawn refused: {exc}")
     finally:

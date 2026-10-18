@@ -20,6 +20,7 @@ from vf_spawn import (
     GIT_TIMEOUT_SECONDS,
     SpawnRefusal,
     allowlisted_git_errors,
+    revision_form_errors,
     run_git,
     user_arg_separator_errors,
     windows_pin_case_errors,
@@ -266,6 +267,12 @@ def prove_git_hygiene() -> list[str]:
             ("newline", "rev\nmore"),
             ("nul", "rev\x00more"),
             ("cr", "rev\rmore"),
+            ("leading newline", "\nrev"),
+            ("leading nul", "\x00rev"),
+            ("leading cr", "\rrev"),
+            ("bare newline", "\n"),
+            ("bare cr", "\r"),
+            ("bare nul", "\x00"),
         ):
             try:
                 run(
@@ -281,6 +288,30 @@ def prove_git_hygiene() -> list[str]:
                 errors.append(f"{label} revision was accepted")
         if len(captured) != before:
             errors.append("control-byte revision spawned git")
+        held = len(captured)
+        for label, caller, code in (
+            ("empty argv", lambda: run(["git", ""], check=False), "GIT_ARGV_REFUSED"),
+            ("non-string argv", lambda: run(["git", "status", None], check=False), "GIT_ARGV_REFUSED"),
+            (
+                "empty user arg",
+                lambda: run(["git", "status"], user_args=[""], check=False),
+                "GIT_USER_ARG_REFUSED",
+            ),
+            (
+                "non-string user arg",
+                lambda: run(["git", "status"], user_args=[None], check=False),
+                "GIT_USER_ARG_REFUSED",
+            ),
+        ):
+            try:
+                caller()
+            except SystemExit as exc:
+                if code not in str(exc):
+                    errors.append(f"{label} refused as {exc}")
+            else:
+                errors.append(f"{label} was accepted")
+        if len(captured) != held:
+            errors.append("refused git argv spawned git")
     except (SpawnRefusal, SystemExit) as exc:
         errors.append(f"git spawn refused: {exc}")
     finally:
@@ -419,6 +450,42 @@ def prove_ensure_clone() -> list[str]:
                 errors.append("hostile pin executed upload-pack")
         finally:
             CLONE = previous
+    return errors
+
+
+def prove_ensure_clone_rev_parse() -> list[str]:
+    """Both ensure_clone HEAD reads keep the revision immediately before --."""
+    import vf_spawn
+
+    global CLONE
+    errors: list[str] = []
+    previous = CLONE
+    sha = "a" * 40
+    captured: list[list[str]] = []
+    original = vf_spawn.subprocess.run
+
+    def fake_run(argv, **kwargs):
+        captured.append(list(argv))
+        return vf_spawn.subprocess.CompletedProcess(argv, 0, stdout=sha + "\n", stderr="")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp) / "clone"
+        (root / ".git").mkdir(parents=True)
+        CLONE = root
+        vf_spawn.subprocess.run = fake_run
+        try:
+            with contextlib.redirect_stdout(io.StringIO()):
+                ensure_clone({"pin": sha, "source": "unused"})
+        except SystemExit as exc:
+            errors.append(f"ensure_clone rev-parse fixture exited: {exc}")
+        finally:
+            vf_spawn.subprocess.run = original
+            CLONE = previous
+    parses = [argv for argv in captured if "rev-parse" in argv]
+    if len(parses) != 2:
+        return errors + [f"ensure_clone rev-parse count {len(parses)}: {captured}"]
+    for argv in parses:
+        errors.extend(revision_form_errors(argv, ["HEAD"]))
     return errors
 
 
