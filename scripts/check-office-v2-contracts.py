@@ -1074,7 +1074,7 @@ def main() -> int:
             "20cce6a09dec25de74d624361806a8ec2d758856217dd048123cdac8fc7281bd"):
         fail("P0 synthetic signer custody source SHA drift")
     if hashlib.sha256(signer_workflow.read_bytes()).hexdigest() != (
-            "475bcc6114bdcf8d8417cea4a6915c1d5b89f7eabcc1c2c13183d1c6559925fe"):
+            "089ffb2fd25d6eb92e741a90d3faf7f4c5240dbef5dc2bba5b4f9972d4f238d0"):
         fail("P0 synthetic signer custody workflow SHA drift")
     signer_static = subprocess.run([sys.executable, str(signer_lab), "selftest"],
                                   cwd=ROOT, capture_output=True, text=True, timeout=20)
@@ -1104,7 +1104,7 @@ def main() -> int:
             "a4422b0a01ddf480ada0ca857d59c203a4e62f001de5567f1ae36ab524381ceb"):
         fail("P0 hosted Docker isolation source byte pin drift")
     if hashlib.sha256(container_workflow.read_bytes()).hexdigest() != (
-            "a60e3cf6a366681dbae472b590190282894f6b8fa8a93469087a38f89ab6833b"):
+            "65f267523991c3e2db0f77363a2ad00bde83acb2a17a3bc65e6a42cd897338f7"):
         fail("P0 hosted Docker isolation no-credential workflow byte pin drift")
     container_static = subprocess.run(
         [sys.executable, str(container_lab), "selftest"],
@@ -1135,7 +1135,7 @@ def main() -> int:
     new_source_receipt = P2 / "p0-612-new-two-host-local-ollama-text-only-2026-10-11.json"
     for path, expected_sha in (
         (new_source_gate, "7194763e3928cbd0570b18ecceca6b0c5effc6b3a64573884a4a7bfaa2c32db8"),
-        (new_source_workflow, "7afa9bf211dd27a4703bd273a442f22c15937640e8e8bad1b4b1c065b858e2bd"),
+        (new_source_workflow, "631b1f35d756d5d78444324f9022b5fec7a6f468c33cb9f36ee819b51c893b8f"),
         (new_source_receipt, "e86c08f6fb1002528457b16da92ae5e6066225497a94c0126e773645128e9359"),
     ):
         if hashlib.sha256(path.read_bytes()).hexdigest() != expected_sha:
@@ -1186,7 +1186,7 @@ def main() -> int:
             "40cb7557f4f29c789cc7b9135d75ecdad8a1eaa95017dd3b0b3054934b774ace"):
         fail("P0 hosted synthetic QA LAB Python source byte pin changed")
     if hashlib.sha256(hosted_qa_workflow.read_bytes()).hexdigest() != (
-            "f969446df7af39bf71fb00e2ae6e972d8d21b472eeb77a83234855289d12557b"):
+            "89650b88bf7a3206e095fb00e26aa2ce942cbdff89eda2c9240b89f6f3a851c8"):
         fail("P0 hosted synthetic QA LAB no-permission workflow byte pin changed")
     hosted_selftest = subprocess.run([sys.executable, str(hosted_qa), "selftest"],
                                     cwd=ROOT, capture_output=True, text=True, timeout=20)
@@ -3024,7 +3024,7 @@ def main() -> int:
     ):
         fail("#612 protected-base independent verifier source pin changed")
     if hashlib.sha256(protected_flow.read_bytes()).hexdigest() != (
-        "931c2e208d53a5567c23ab3f0171fe92d88ba0209563a2ccb5b86c7dcb65d4c7"
+        "13c8412135e84a9f2eb6e65058091c238ca741e1b8b9f8582ed594d13f003f5f"
     ):
         fail("#612 protected-default-branch workflow bytes drift across OS")
     attrs = (ROOT / ".gitattributes").read_text(encoding="utf-8")
