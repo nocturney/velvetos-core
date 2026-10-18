@@ -14,8 +14,20 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
+import vf_ffmpeg_env
 import vf_publication_evidence as evidence
 import vf_send_preflight as send
+import vf_subprocess_hygiene as hygiene
+
+
+def ffmpeg_lavfi(output: Path) -> None:
+    vf_ffmpeg_env.run_pinned(
+        'ffmpeg',
+        ['-v', 'error', '-f', 'lavfi', '-i', 'color=s=120x150:d=0.1:r=10',
+         '-c:v', 'mpeg4', '-pix_fmt', 'yuv420p', str(output)],
+        check=True,
+        timeout=20,
+    )
 
 
 def fixture(root):
@@ -394,7 +406,6 @@ class EvidenceTests(unittest.TestCase):
         self.assertFalse(self.result('production')['ok'])
 
     def test_valid_mp4_delivery_decodes(self):
-        import subprocess
         import vf_ffmpeg_env
         gap = vf_ffmpeg_env.publication_gap()
         blocked = vf_ffmpeg_env.ci_skip_failure(gap)
@@ -404,15 +415,13 @@ class EvidenceTests(unittest.TestCase):
             print(gap.line, flush=True)
             self.skipTest(gap.line)
         video = self.root/'smoke.mp4'
-        subprocess.run(['ffmpeg', '-v', 'error', '-f', 'lavfi', '-i',
-                        'color=s=120x150:d=0.1:r=10', '-c:v', 'mpeg4',
-                        '-pix_fmt', 'yuv420p', str(video)], check=True, timeout=20)
+        ffmpeg_lavfi(video)
         self._rebind_test_visual('final.mp4', video.read_bytes())
         self.manifest['format'] = 'reel'
         self.assertTrue(self.result()['ok'])
 
     def test_public_mp4_requires_hash_bound_normalization(self):
-        import subprocess, struct
+        import struct
         import vf_ffmpeg_env
         import vf_publish_bridge as bridge
         gap = vf_ffmpeg_env.publication_gap()
@@ -423,9 +432,7 @@ class EvidenceTests(unittest.TestCase):
             print(gap.line, flush=True)
             self.skipTest(gap.line)
         master = self.root/'edited-master.mp4'
-        subprocess.run(['ffmpeg', '-v', 'error', '-f', 'lavfi', '-i',
-                        'color=s=120x150:d=0.1:r=10', '-c:v', 'mpeg4',
-                        '-pix_fmt', 'yuv420p', str(master)], check=True, timeout=20)
+        ffmpeg_lavfi(master)
         normalized = self.root/'normalized.mp4'
         bridge.normalize_video(master, normalized)
         self._rebind_test_visual('final.mp4', normalized.read_bytes())
@@ -821,6 +828,13 @@ class IntegrationTests(unittest.TestCase):
             with patch.object(send, 'ROOT', root), patch.object(send, 'PREFLIGHT_ROOT', folder):
                 result = send.validate_publication_approval('packages/vfgrowth/preflight/TEST.md', 'TEST', 'post', 'b' * 64)
             self.assertFalse(result['ok'], 'FALSE POSITIVE: missing files / failed Product Truth accepted')
+
+
+class PublicationFfmpegHygieneTests(unittest.TestCase):
+    def test_lavfi_spawn_is_absolute_timed_and_allowlisted(self):
+        with hygiene.record_pinned_spawn('ffmpeg') as (calls, short):
+            ffmpeg_lavfi(Path('smoke.mp4'))
+        hygiene.expect_pinned(calls, short, timeout=20, keep_gh_token=False)
 
 
 if __name__ == '__main__':

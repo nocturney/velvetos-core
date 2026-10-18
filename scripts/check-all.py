@@ -17,6 +17,8 @@ import tempfile
 import time
 from pathlib import Path
 
+import vf_subprocess_hygiene as hygiene
+
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 if hasattr(sys.stderr, "reconfigure"):
@@ -33,14 +35,15 @@ RETIRED_LIFECYCLE = "RETIRED_RECEIPT"
 def git_dirty_state() -> dict[str, bytes] | None:
     """Return {path: current bytes or b''} for git-visible changes, or None without git."""
     try:
-        proc = subprocess.run(
-            ["git", "status", "--porcelain", "--untracked-files=all"],
+        proc = hygiene.run_pinned(
+            "git",
+            ["status", "--porcelain", "--untracked-files=all"],
             cwd=ROOT,
             text=True,
             capture_output=True,
             timeout=60,
         )
-    except (OSError, subprocess.SubprocessError):
+    except (OSError, subprocess.SubprocessError, hygiene.HygieneError):
         return None
     if proc.returncode != 0:
         return None
@@ -144,9 +147,13 @@ def local_readme_gate(repo: Path = ROOT, base: str = README_BASE, head: str = "H
     """
     if hosted_skip and os.environ.get("GITHUB_ACTIONS") == "true":
         return "SKIP readme-contract (hosted workflow runs the README gate as its own step)", 0
-    probe = subprocess.run(
-        ["git", "rev-parse", "--verify", "-q", f"{base}^{{commit}}"],
-        cwd=repo, text=True, capture_output=True,
+    probe = hygiene.run_pinned(
+        "git",
+        ["rev-parse", "--verify", "-q", f"{base}^{{commit}}"],
+        cwd=repo,
+        text=True,
+        capture_output=True,
+        timeout=30,
     )
     if probe.returncode != 0:
         return f"SKIP readme-contract (no git base {base} in {repo})", 0
@@ -163,7 +170,15 @@ def readme_gate_fixture() -> list[str]:
     errors: list[str] = []
 
     def git(repo: Path, *args: str) -> None:
-        subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True, text=True)
+        hygiene.run_pinned(
+            "git",
+            list(args),
+            cwd=repo,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
 
     with tempfile.TemporaryDirectory() as tmp:
         repo = Path(tmp)
@@ -217,7 +232,29 @@ def readme_gate_fixture() -> list[str]:
     return errors
 
 
+def prove_git_hygiene() -> list[str]:
+    """The live git spawns are absolute, timed, and do not inherit GIT_*."""
+    errors: list[str] = []
+    cases = (
+        ("status", lambda: git_dirty_state(), 60),
+        ("rev-parse", lambda: local_readme_gate(ROOT, hosted_skip=False), 30),
+    )
+    for label, invoke, timeout in cases:
+        try:
+            with hygiene.record_pinned_spawn("git", returncode=1) as (calls, short):
+                invoke()
+            hygiene.expect_pinned(calls, short, timeout=timeout, keep_gh_token=False)
+        except Exception as exc:
+            errors.append(f"git {label} spawn: {exc}")
+    return errors
+
+
 def selftest() -> int:
+    git_errors = prove_git_hygiene()
+    if git_errors:
+        for error in git_errors:
+            print(f"FAIL check-all git hygiene: {error}", file=sys.stderr)
+        return 1
     fixture_errors = readme_gate_fixture()
     if fixture_errors:
         for error in fixture_errors:

@@ -11,9 +11,10 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import shutil
 import subprocess
 import sys
+
+import vf_subprocess_hygiene as hygiene
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -37,17 +38,22 @@ def load(path: Path) -> dict:
 
 
 def gh(args: list[str], timeout: int = 60) -> str:
-    if not shutil.which("gh"):
-        raise RuntimeError("gh CLI is required")
-    proc = subprocess.run(
-        ["gh", *args],
-        cwd=ROOT,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        capture_output=True,
-        timeout=timeout,
-    )
+    if not args or not isinstance(args[0], str) or args[0][:1] == "-":
+        raise RuntimeError("gh command was refused")
+    try:
+        proc = hygiene.run_pinned(
+            "gh",
+            args,
+            cwd=ROOT,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            capture_output=True,
+            timeout=timeout,
+            extra_keys=("GH_TOKEN",),
+        )
+    except hygiene.HygieneError as exc:
+        raise RuntimeError("gh CLI is required") from exc
     if proc.returncode != 0:
         raise RuntimeError((proc.stderr or proc.stdout or "gh command failed").strip())
     return proc.stdout
@@ -583,6 +589,17 @@ def self_test() -> int:
         pass
     else:
         raise AssertionError("mismatched recovery evidence must fail closed")
+
+    with hygiene.record_pinned_spawn("gh") as (calls, short):
+        gh(["repo", "view", "--json", "nameWithOwner"])
+    hygiene.expect_pinned(calls, short, timeout=60, keep_gh_token=True)
+    try:
+        gh(["-c", "true"])
+    except RuntimeError as exc:
+        if "refused" not in str(exc):
+            raise
+    else:
+        raise AssertionError("gh flag command was accepted")
 
     print("OK sensor-shadow-observation selftest historical_miss_retention=PASS pr_dedupe=PASS incomplete_recovery=PASS")
     return 0

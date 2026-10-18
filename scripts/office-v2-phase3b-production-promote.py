@@ -8,6 +8,8 @@ import json
 import os
 import subprocess
 import sys
+
+import vf_subprocess_hygiene as hygiene
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -67,9 +69,20 @@ def atomic_write(path: Path, payload: dict) -> None:
 
 
 def git(*arguments: str) -> str:
-    call = subprocess.run(["git", "-C", str(REPO), *arguments], text=True, capture_output=True, timeout=30)
+    call = hygiene.run_pinned(
+        "git",
+        ["-C", str(REPO), *arguments],
+        cwd=REPO,
+        text=True,
+        capture_output=True,
+        timeout=30,
+    )
     require(call.returncode == 0, "git verification failed")
     return call.stdout.strip()
+
+
+def windows_identity() -> subprocess.CompletedProcess[str]:
+    return hygiene.run_pinned("whoami", [], timeout=10, text=True, capture_output=True)
 
 
 # Concurrent Office work may advance main after this exact SHA passed CI.
@@ -105,7 +118,14 @@ def verify_scope_preserving_main_lineage(main_sha: str) -> str:
 
 
 def exact_ci(sha: str, run: str) -> None:
-    proc = subprocess.run(["gh", "run", "view", run, "--repo", "nocturney/velvetos-core", "--json", "headSha,status,conclusion,event"], text=True, capture_output=True, timeout=35)
+    proc = hygiene.run_pinned(
+        "gh",
+        ["run", "view", run, "--repo", "nocturney/velvetos-core", "--json", "headSha,status,conclusion,event"],
+        timeout=35,
+        extra_keys=("GH_TOKEN",),
+        text=True,
+        capture_output=True,
+    )
     require(proc.returncode == 0, "exact merged-main CI receipt is unreachable")
     result = json.loads(proc.stdout)
     require(result.get("headSha") == sha and result.get("status") == "completed" and result.get("conclusion") == "success" and result.get("event") == "push", "exact-main CI did not pass")
@@ -113,7 +133,7 @@ def exact_ci(sha: str, run: str) -> None:
 
 def baseline(main_sha: str, ci_run: str, regression_path: Path) -> dict:
     require(os.name == "nt", "owner Windows machine is required for production cutover")
-    who = subprocess.run(["whoami"], text=True, capture_output=True, timeout=10)
+    who = windows_identity()
     require(who.returncode == 0 and who.stdout.strip().lower() == "chris\\chris", "owner DPAPI identity mismatch")
     require(len(main_sha) == 40 and all(c in "0123456789abcdef" for c in main_sha), "merged main SHA invalid")
     descendant_main = verify_scope_preserving_main_lineage(main_sha)
