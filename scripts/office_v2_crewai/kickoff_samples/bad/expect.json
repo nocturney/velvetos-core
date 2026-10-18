@@ -41,5 +41,19 @@
       "url_coverage",
       "hebrew_table"
     ]
+  },
+  {
+    "file": "case-01-shekel-only.md",
+    "case_id": "case-01",
+    "fail": [
+      "money_customer"
+    ]
+  },
+  {
+    "file": "case-02-duplicate-row.md",
+    "case_id": "case-02",
+    "fail": [
+      "hebrew_table"
+    ]
   }
 ]

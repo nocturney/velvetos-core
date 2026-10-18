@@ -5,7 +5,9 @@ Pure stdlib. No node, network, or model call, and no third-party eval
 runner. Does not import the crew builder. The four checks are the
 ChatGPT-066 javascript assertions (issue 612 comment 6252298649), with
 the customer matcher narrowed so a generic plural explanation is not an
-identified customer.
+identified customer. Shekel abbreviations use Hebrew-letter boundaries.
+A hyphenated client-side token is not an identified customer. Symlinked
+files under --outputs are refused and are not read.
 """
 from __future__ import annotations
 
@@ -36,9 +38,12 @@ H_ROW = (
     "\u05e6\u05e2\u05d3 \u05d4\u05d1\u05d0 |"
 )
 
-# Money check keeps the original ignore-case pattern.
+# Money check keeps the original ignore-case tokens. Shekel abbreviations
+# need Hebrew-letter boundaries so they do not match inside ordinary words.
 MONEY = re.compile(
-    "\u20aa|\\b(?:ILS|NIS)\\b|\u05e9[\"\u05f4]?\u05d7|\u05e9\u05e7\u05dc\u05d9\u05dd",
+    "\u20aa|\\b(?:ILS|NIS)\\b|"
+    "(?<![\u0590-\u05ff])\u05e9[\"\u05f4]?\u05d7(?![\u0590-\u05ff])|"
+    "\u05e9\u05e7\u05dc\u05d9\u05dd",
     re.IGNORECASE,
 )
 # Original customer check. The optional Hebrew suffix also matched the
@@ -51,7 +56,7 @@ LEGACY_CUSTOMER = re.compile(
 # Narrowed: named or identified customer. Generic \u05dc\u05e7\u05d5\u05d7\u05d5\u05ea
 # (and the other generic plural) does not count.
 NARROW_CUSTOMER = re.compile(
-    "\\b(?:customer|client)\\b|\\bDana\\b|"
+    "\\b(?:customer|client)\\b(?!-)|\\bDana\\b|"
     "(?<![\u0590-\u05ff])\u05d3\u05e0\u05d4(?![\u0590-\u05ff])|"
     "\u05dc\u05e7\u05d5\u05d7\u05d4(?![\u0590-\u05ff])|"
     "\u05dc\u05e7\u05d5\u05d7(?![\u0590-\u05ff])"
@@ -149,14 +154,20 @@ def failed_ids(scored: list[dict]) -> list[str]:
     return [row["id"] for row in scored if not row["pass"]]
 
 
-def output_files(directory: Path, cases: list[dict]) -> tuple[dict[str, Path], list[str], list[str]]:
+def output_files(
+    directory: Path, cases: list[dict]
+) -> tuple[dict[str, Path], list[str], list[str], list[str]]:
     expected = {case["id"] for case in cases}
     found: dict[str, Path] = {}
     unexpected: list[str] = []
+    symlinks: list[str] = []
     if not directory.is_dir():
         raise ValueError("outputs path is not a directory: %s" % directory)
     for path in sorted(directory.iterdir(), key=lambda item: item.name):
         if path.name.startswith("."):
+            continue
+        if path.is_symlink():
+            symlinks.append(path.name)
             continue
         stem = path.stem
         if (
@@ -169,13 +180,16 @@ def output_files(directory: Path, cases: list[dict]) -> tuple[dict[str, Path], l
             continue
         found[stem] = path
     missing = [case_id for case_id in sorted(expected) if case_id not in found]
-    return found, missing, unexpected
+    return found, missing, unexpected, symlinks
 
 
 def score_directory(directory: Path, cases: list[dict]) -> tuple[int, list[str]]:
-    found, missing, unexpected = output_files(directory, cases)
+    found, missing, unexpected, symlinks = output_files(directory, cases)
     lines: list[str] = []
     failed = 0
+    if symlinks:
+        failed += 1
+        lines.append("FAIL symlink outputs: " + ", ".join(symlinks))
     if unexpected:
         failed += 1
         lines.append("FAIL unexpected outputs: " + ", ".join(unexpected))
@@ -247,9 +261,13 @@ def _check_matcher() -> None:
     ):
         if NARROW_CUSTOMER.search(text) is None:
             _die("narrowed matcher missed %r" % text)
-    for text in ("dana", "customers", "clients", generic):
+    for text in ("dana", "customers", "clients", "client-side", generic):
         if text != generic and NARROW_CUSTOMER.search(text) is not None:
             _die("narrowed matcher over-matched %r" % text)
+    if NARROW_CUSTOMER.search("client-side rendering") is not None:
+        _die("narrowed matcher flagged client-side")
+    if NARROW_CUSTOMER.search("the client") is None:
+        _die("narrowed matcher missed a standalone client")
     if NARROW_CUSTOMER.search("dana") is not None:
         _die("Dana match must stay case-sensitive")
     for text in (
@@ -261,8 +279,15 @@ def _check_matcher() -> None:
         "\u05e9\u05f4\u05d7",
         "\u05e9\u05e7\u05dc\u05d9\u05dd",
     ):
-        if MONEY.search("see " + text) is None:
+        if MONEY.search("see " + text + " now") is None:
             _die("money matcher missed %r" % text)
+    for text in (
+        "\u05e9\u05d7\u05d5\u05e8",
+        "\u05de\u05e9\u05d7\u05e7",
+        "\u05dc\u05e9\u05d7\u05e8\u05e8",
+    ):
+        if MONEY.search("see " + text + " now") is not None:
+            _die("money matcher hit ordinary Hebrew %r" % text)
 
 
 def _check_assertion_matrix() -> None:
@@ -284,7 +309,16 @@ def _check_assertion_matrix() -> None:
         {"url_coverage"},
     )
     _expect(good + "\nDana " + DANA_HE + " 9807 " + SHEKEL + "\n", issues, {"money_customer"})
+    _expect(good + "\n" + SHEKEL + "\n", issues, {"money_customer"})
+    _expect(good + "\n\u05e9\"\u05d7\n", issues, {"money_customer"})
     _expect(good + "\ncustomer\n", issues, {"money_customer"})
+    _expect(
+        good + "\n\u05e9\u05d7\u05d5\u05e8 \u05de\u05e9\u05d7\u05e7 \u05dc\u05e9\u05d7\u05e8\u05e8 client-side\n",
+        issues,
+        set(),
+    )
+    duplicated = good + "\n| %s | synthetic blocker | synthetic-seat | synthetic next |\n" % url
+    _expect(duplicated, issues, {"hebrew_table"})
     _expect(good.replace(H_SUMMARY + "\n", ""), issues, {"hebrew_table"})
     three = (
         H_SUMMARY + "\nsummary\n" + H_BLOCKERS + "\n" + H_ROW + "\n"
@@ -350,6 +384,19 @@ def _check_samples(cases: list[dict]) -> None:
                     _die("%s dropped supplied %s" % (case_id, field))
         if SHEKEL in text or "Dana" in text or DANA_HE in text:
             _die("%s echoed money or a named customer" % case_id)
+    case01 = (GOOD_DIR / "case-01.md").read_text(encoding="utf-8")
+    for word in (
+        "\u05e9\u05d7\u05d5\u05e8",
+        "\u05de\u05e9\u05d7\u05e7",
+        "\u05dc\u05e9\u05d7\u05e8\u05e8",
+        "client-side",
+    ):
+        if word not in case01:
+            _die("case-01 good sample dropped golden positive %r" % word)
+        if word != "client-side" and MONEY.search(word) is not None:
+            _die("golden positive %r matches the money check" % word)
+    if NARROW_CUSTOMER.search(case01) is not None:
+        _die("case-01 golden positive tripped the customer matcher")
     case04 = (GOOD_DIR / "case-04.md").read_text(encoding="utf-8")
     if GENERIC_PLURAL not in case04:
         _die("case-04 good sample does not use the generic plural")
@@ -382,6 +429,27 @@ def _check_samples(cases: list[dict]) -> None:
     ]
     if extras:
         _die("unlisted bad samples: %s" % extras)
+    shekel_name = "case-01-shekel-only.md"
+    shekel_only = (BAD_DIR / shekel_name).read_text(encoding="utf-8")
+    if SHEKEL not in shekel_only or MONEY.search(shekel_only) is None:
+        _die("shekel-only negative has no money token")
+    if NARROW_CUSTOMER.search(shekel_only) is not None:
+        _die("shekel-only negative also trips the customer matcher")
+    duplicate_name = "case-02-duplicate-row.md"
+    duplicate = (BAD_DIR / duplicate_name).read_text(encoding="utf-8")
+    duplicate_issues = by_id["case-02"]["issues"]
+    data_lines = [
+        line for line in duplicate.splitlines()
+        if line.strip().startswith("|") and ISSUE_URL.search(line)
+    ]
+    if len(data_lines) <= len(duplicate_issues):
+        _die("duplicate-row negative does not add a row")
+    if not all(row["url"] in duplicate for row in duplicate_issues):
+        _die("duplicate-row negative dropped a fixture url")
+    cited = [url for url in ISSUE_URL.findall(duplicate) if url not in {row["url"] for row in duplicate_issues}]
+    if cited:
+        _die("duplicate-row negative cites an extra url")
+    _check_directory_negatives(cases)
 
     with tempfile.TemporaryDirectory() as tmp:
         broken = Path(tmp)
@@ -395,6 +463,41 @@ def _check_samples(cases: list[dict]) -> None:
         code, lines = score_directory(broken, cases)
         if code == 0 or not any(line.startswith("case-06 FAIL") for line in lines):
             _die("--outputs accepted an all-UNKNOWN case 06")
+
+
+def _copy_good(dest: Path) -> None:
+    dest.mkdir()
+    for path in sorted(GOOD_DIR.iterdir()):
+        if path.is_symlink() or not path.is_file():
+            _die("good sample is not a regular file: %s" % path.name)
+        (dest / path.name).write_text(path.read_text(encoding="utf-8"), encoding="utf-8")
+
+
+def _check_directory_negatives(cases: list[dict]) -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        missing = root / "missing"
+        _copy_good(missing)
+        (missing / "case-03.md").unlink()
+        code, lines = score_directory(missing, cases)
+        if code == 0 or "case-03 FAIL missing output file" not in lines:
+            _die("missing output file was accepted: %s" % lines)
+        unexpected = root / "unexpected"
+        _copy_good(unexpected)
+        (unexpected / "notes.md").write_text("not a case file\n", encoding="utf-8")
+        code, lines = score_directory(unexpected, cases)
+        if code == 0 or "FAIL unexpected outputs: notes.md" not in lines:
+            _die("unexpected output file was accepted: %s" % lines)
+        linked = root / "linked"
+        _copy_good(linked)
+        target = linked / "case-01.md"
+        target.unlink()
+        target.symlink_to(GOOD_DIR / "case-01.md")
+        code, lines = score_directory(linked, cases)
+        if code == 0 or "FAIL symlink outputs: case-01.md" not in lines:
+            _die("symlink output was accepted: %s" % lines)
+        if any(line.startswith("case-01 PASS") for line in lines):
+            _die("symlink output was scored as a passing case")
 
 
 def _check_source_is_offline() -> None:
