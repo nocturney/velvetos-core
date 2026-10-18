@@ -142,31 +142,59 @@ def inspect(record: dict, test_clock_ms: int) -> str:
     return "ELIGIBLE_SIMULATION_ONLY"
 
 
-def main() -> int:
-    data = json.loads(FIXTURE.read_text(encoding="utf-8"))
+def evaluate(data: dict, *, quiet: bool = False) -> tuple[list[tuple[str, str, str]], dict]:
+    """Run every case. A repeated id fails closed and does not reduce the pass total.
+
+    ``passed`` counts only cases whose inspect result equals ``expected``.
+    A duplicate is an extra executed failure with reason ``DUPLICATE_CASE_ID``
+    and is not inserted into the seen set. ``passed + failed == executed_cases``.
+    """
     if (data.get("classification") != "SYNTHETIC_LAB_ONLY" or
             data.get("owner_issue") != 604):
         raise SystemExit("unsafe fixture scope")
     seen: set[str] = set()
-    fails = []
+    fails: list[tuple[str, str, str]] = []
+    passed = 0
+    executed = 0
     for case in data["cases"]:
+        executed += 1
         cid = case["id"]
+        expected = case["expected"]
         if cid in seen:
-            fails.append((cid, "duplicate id", case["expected"]))
+            fails.append((cid, "DUPLICATE_CASE_ID", expected))
+            if not quiet:
+                print(f"FAIL {cid}: DUPLICATE_CASE_ID")
             continue
         seen.add(cid)
         got = inspect(overlay(data["base_record"], case["overrides"]),
                       data["test_clock_ms"])
-        if got != case["expected"]:
-            fails.append((cid, got, case["expected"]))
-        print(f"{'PASS' if got == case['expected'] else 'FAIL'} {cid}: {got}")
-    print(json.dumps({
+        if got == expected:
+            passed += 1
+        else:
+            fails.append((cid, got, expected))
+        if not quiet:
+            print(f"{'PASS' if got == expected else 'FAIL'} {cid}: {got}")
+    failed = len(fails)
+    if passed + failed != executed:
+        raise SystemExit("receipt accounting mismatch")
+    receipt = {
         "schema": "velvet.desktop.eligibility-lab-receipt.v0",
-        "owner_issue": 604, "executed_cases": len(seen),
-        "passed": len(seen)-len(fails), "failed": len(fails),
-        "model_invoked": False, "desktop_invoked": False,
-        "external_effects": False, "production_authority": False,
-    }, sort_keys=True))
+        "owner_issue": 604,
+        "executed_cases": executed,
+        "passed": passed,
+        "failed": failed,
+        "model_invoked": False,
+        "desktop_invoked": False,
+        "external_effects": False,
+        "production_authority": False,
+    }
+    return fails, receipt
+
+
+def main() -> int:
+    data = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    fails, receipt = evaluate(data)
+    print(json.dumps(receipt, sort_keys=True))
     return 1 if fails else 0
 
 
