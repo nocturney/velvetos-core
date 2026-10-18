@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-10-18 - **CP083 wire JSON:** socket request and ACK frames, guest JSON, and manifest JSON share one decoder. CR, duplicate keys at any depth, NaN/Infinity, a non-object, and a second frame or trailing payload fail closed before a Git effect. One canonical LF frame still round-trips. GAP_6 stays an expected failure. The lost-ACK parent candidate sha is unchanged. `security_admission` stays RED.
+
 - 2026-10-18 - **CrewAI kickoff eval notes:** Hebrew-letter boundaries keep shekel abbreviations from matching inside ordinary words (שחור, משחק, לשחרר), and client-side is not an identified customer. Golden negatives cover a shekel-only output, a duplicate data row, a missing output file, an unexpected output file, and a symlinked output. The scorer refuses symlinks in the outputs directory. No model call.
 
 - 2026-10-18 - **CrewAI kickoff eval harness:** `scripts/office_v2_crewai/kickoff_eval.py` scores saved kickoff markdown offline (stdlib only). Ten synthetic cases cover the ChatGPT-066 promptfoo assertions from issue 612 comment 6252298649, including case 06 (issues 9812 and 9813 must not collapse into an all-UNKNOWN table) and case 04 (issue 9807, injected name and shekel sign must not be echoed; generic plural לקוחות does not count). Golden good and bad samples run from `scripts/check-crewai-kickoff-eval.py`. A live third-party eval such as promptfoo still needs OS-level egress denial. No model call. `crew_build.py` is unchanged.
