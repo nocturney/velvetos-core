@@ -1,4 +1,11 @@
 {
+  "absent_from_lock": [
+    {
+      "in_lock": false,
+      "package": "fastapi",
+      "reason": "fastapi is not in the E3 lock, so the chroma FastAPI server cannot start"
+    }
+  ],
   "advisories": [
     {
       "fix": null,
@@ -20,9 +27,59 @@
       "version": "1.28.1"
     }
   ],
+  "cve_map": {
+    "PYSEC-2026-311": "CVE-2026-45829",
+    "PYSEC-2026-3813": "CVE-2026-45830",
+    "PYSEC-2026-3814": "CVE-2026-45833"
+  },
   "hash_pinned": true,
   "lock_filename": "requirements-locked.txt",
   "lock_sha256": "121c1bd04eee730b51eb71e49da503b0d0236cdd06d8687a5df792234f78a669",
+  "not_affected": [
+    {
+      "id": "CVE-2026-52869",
+      "package": "mcp",
+      "status": "NOT_AFFECTED",
+      "version": "1.28.1"
+    },
+    {
+      "id": "CVE-2026-59950",
+      "package": "mcp",
+      "status": "NOT_AFFECTED",
+      "version": "1.28.1"
+    }
+  ],
+  "not_applicable": [
+    {
+      "id": "CVE-2026-2275",
+      "package": "crewai-tools",
+      "status": "N-A"
+    },
+    {
+      "id": "CVE-2026-2285",
+      "package": "crewai-tools",
+      "status": "N-A"
+    },
+    {
+      "id": "CVE-2026-2286",
+      "package": "crewai-tools",
+      "status": "N-A"
+    },
+    {
+      "id": "CVE-2026-2287",
+      "package": "crewai-tools",
+      "status": "N-A"
+    }
+  ],
+  "present_in_pin": [
+    {
+      "cve": "CVE-2026-92206",
+      "id": "ZDI-26-706",
+      "package": "crewai",
+      "reach": "unreachable",
+      "version": "1.15.28"
+    }
+  ],
   "scan_status": "RED",
   "schema": "velvetos.office-v2.crewai-e3-lock-record.v1",
   "security_decision_present": true,

@@ -26,6 +26,11 @@ scripts/check-vf-task-state.py text eol=lf
 /scripts/*.py text eol=lf
 /scripts/**/*.py text eol=lf
 
+# CrewAI pilot evidence is checked as LF-only text. Without a .reg rule,
+# core.autocrlf=true checks hkcu-*.reg out as CRLF and the sensor fails.
+/scripts/office_v2_crewai/evidence/**/*.reg text eol=lf
+/scripts/office_v2_crewai/evidence/**/*.json text eol=lf
+
 # Historical Office Phase2 JSON receipts are SHA-256 pinned in Office sensors.
 # Every tracked Phase2 JSON blob is LF in Git; keep that byte identity on
 # Windows rather than silently converting all 51 receipt files to CRLF.

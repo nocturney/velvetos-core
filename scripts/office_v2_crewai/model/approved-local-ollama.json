@@ -1,8 +1,8 @@
 {
   "api_key": null,
-  "approved_at": "2026-10-18T15:28:00+03:00",
+  "approved_at": "2026-10-18T20:41:00+03:00",
   "approved_by": "Christian",
-  "base_url": "http://127.0.0.1:11435",
+  "base_url": "http://127.0.0.1:11434",
   "evidence": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250120048",
   "model": "qwen3.5:9b",
   "model_digest": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90",

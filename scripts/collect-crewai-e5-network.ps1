@@ -32,12 +32,23 @@ function UtcBirth($processRow) {
     if ($null -eq $processRow.CreationDate) { throw 'PROCESS_BIRTH_MISSING' }
     return ([DateTime]$processRow.CreationDate).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffffffZ', [Globalization.CultureInfo]::InvariantCulture)
 }
+function Test-PilotPathAdmitted([string]$Full, [string]$Root) {
+    # Exact root equality is admitted. A sibling such as OfficeV2-VerifiedTrioX
+    # does not match the trailing-separator prefix. GetFullPath resolves '..' first.
+    $normRoot = $Root.TrimEnd('\')
+    $normFull = $Full.TrimEnd('\')
+    if ($normFull.Equals($normRoot, [StringComparison]::OrdinalIgnoreCase)) {
+        return $true
+    }
+    $prefix = $normRoot + '\'
+    return $normFull.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase)
+}
 function Assert-PilotPath([string]$Path, [bool]$MustExist) {
     if (-not [IO.Path]::IsPathRooted($Path) -or $Path -notmatch '^[Dd]:\\') {
         throw 'D_ABSOLUTE_PATH_REQUIRED'
     }
     $full = [IO.Path]::GetFullPath($Path)
-    if (-not $full.StartsWith($Root, [StringComparison]::OrdinalIgnoreCase)) {
+    if (-not (Test-PilotPathAdmitted $full $Root)) {
         throw 'OUT_OF_PILOT_ROOT_PATH'
     }
     if ($MustExist -and -not (Test-Path -LiteralPath $full)) { throw 'INPUT_PATH_MISSING' }
@@ -177,7 +188,8 @@ function Take-Snapshot {
 function Assert-Network-Safe($snapshot) {
     foreach ($row in $snapshot.tcp) {
         if ($row.state -eq 'Listen') { throw 'TCP_LISTENER_DETECTED' }
-        if ($row.remote_address -cne '127.0.0.1' -or $row.remote_port -ne 11435) {
+        # Owner decision 2026-10-18 20:41 IDT. 127.0.0.1:11434 only. 11435 is refused.
+        if ($row.remote_address -cne '127.0.0.1' -or $row.remote_port -ne 11434) {
             throw 'UNAPPROVED_TCP_REMOTE'
         }
     }
