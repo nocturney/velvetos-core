@@ -121,19 +121,28 @@ def main() -> int:
         "d760e1b3574402ed18b4865851f87d87e73965a982e6453212df8621fed1c508",
         "ffmpeg-7.1.1-full_build.zip",
         "scripts/upload_gha_artifact.py",
+        "core.autocrlf false",
         "actions/checkout@v7",
         "actions/setup-python@v7",
+        "./.github/actions/upload-check-all-log",
     ):
         if needle not in windows_job:
             fail(f"check-all-windows missing {needle}")
     extra_actions = [
         use for use in re.findall(r"uses:\s*(\S+)", windows_job)
-        if use not in {"actions/checkout@v7", "actions/setup-python@v7"}
+        if use not in {
+            "actions/checkout@v7",
+            "actions/setup-python@v7",
+            "./.github/actions/upload-check-all-log",
+        }
     ]
     if extra_actions:
         fail("check-all-windows uses an action outside checkout and setup-python: " + ", ".join(extra_actions))
     if "context=check-all-windows" in core_workflow or "secrets." in windows_job:
         fail("check-all-windows must not publish a status or read a secret")
+    action_js = (ROOT / ".github" / "actions" / "upload-check-all-log" / "index.js").read_text(encoding="utf-8")
+    if "scripts/upload_gha_artifact.py" not in action_js or "ACTIONS_" in action_js:
+        fail("upload action must delegate to scripts/upload_gha_artifact.py without naming a token")
     if core_workflow.count("context=check-all") != 1:
         fail("check-all status context must stay the single required Linux context")
     artifact_selftest = subprocess.run(

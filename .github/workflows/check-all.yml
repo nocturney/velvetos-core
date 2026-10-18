@@ -131,6 +131,10 @@ jobs:
       PYTHONUTF8: "1"
       PYTHONIOENCODING: utf-8
     steps:
+      - name: Keep repository bytes LF
+        shell: pwsh
+        run: git config --global core.autocrlf false
+
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
@@ -158,12 +162,16 @@ jobs:
       - name: Run check-all
         shell: pwsh
         run: |
-          python scripts/check-all.py *> check-all-windows.log
+          $log = Join-Path $env:RUNNER_TEMP "check-all-windows.log"
+          python scripts/check-all.py *> "$log"
           $code = $LASTEXITCODE
-          Get-Content -Path check-all-windows.log
+          Get-Content -Path $log
           exit $code
 
+      # Shell steps cannot see ACTIONS_RUNTIME_TOKEN. This local action can.
+      # scripts/upload_gha_artifact.py
       - name: Upload check-all log
         if: always()
-        shell: pwsh
-        run: python scripts/upload_gha_artifact.py check-all-windows.log
+        uses: ./.github/actions/upload-check-all-log
+        with:
+          path: ${{ runner.temp }}/check-all-windows.log
