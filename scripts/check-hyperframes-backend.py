@@ -199,7 +199,8 @@ def prove_subprocess_hygiene() -> None:
         if kwargs.get("timeout") != bridge.PROBE_TIMEOUT_SECONDS:
             fail("ffprobe timeout missing")
         env = kwargs.get("env")
-        if not isinstance(env, dict) or sentinel in env or env.get("PATH") != str(root):
+        pinned_dir = str(Path(ffprobe).resolve().parent)
+        if not isinstance(env, dict) or sentinel in env or env.get("PATH") != pinned_dir:
             fail("ffprobe environment was not allowlisted")
 
         calls.clear()
