@@ -36,13 +36,22 @@ def _gap(cap: str, reason: str) -> EnvGap:
     return EnvGap(f"SKIP_ENV_MISSING_{cap}", reason)
 
 
-def ci_skip_failure(gap: EnvGap | None) -> str | None:
-    """GitHub Actions must run the video-privacy and public-video tests.
+def _truthy_ci(value: str | None) -> bool:
+    if value is None:
+        return False
+    return value.strip().lower() in {"true", "1"}
 
-    A local host may skip. When GITHUB_ACTIONS=true the same gap is a failure
-    line, so a missing ffmpeg cannot pass those sensors silently.
+
+def ci_skip_failure(gap: EnvGap | None) -> str | None:
+    """CI must run the video-privacy, public-video, and caption tests.
+
+    A local host may skip. When GITHUB_ACTIONS or CI is true/True/TRUE/1 the
+    same gap is a failure line, so a missing ffmpeg cannot pass those sensors
+    silently. Empty and unset values are not CI.
     """
-    if gap is not None and os.environ.get("GITHUB_ACTIONS") == "true":
+    if gap is None:
+        return None
+    if _truthy_ci(os.environ.get("GITHUB_ACTIONS")) or _truthy_ci(os.environ.get("CI")):
         return gap.line
     return None
 

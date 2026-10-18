@@ -117,19 +117,36 @@ class FakeFfmpeg:
 
 
 @contextlib.contextmanager
-def github_actions(value: str | None):
-    old = os.environ.get("GITHUB_ACTIONS")
-    if value is None:
-        os.environ.pop("GITHUB_ACTIONS", None)
-    else:
-        os.environ["GITHUB_ACTIONS"] = value
+def ci_vars(github_actions_value: str | None, ci_value: str | None):
+    """Set GITHUB_ACTIONS and CI. None removes the variable for this block."""
+    saved = {
+        "GITHUB_ACTIONS": os.environ.get("GITHUB_ACTIONS"),
+        "CI": os.environ.get("CI"),
+    }
+    updates = {
+        "GITHUB_ACTIONS": github_actions_value,
+        "CI": ci_value,
+    }
+    for name, value in updates.items():
+        if value is None:
+            os.environ.pop(name, None)
+        else:
+            os.environ[name] = value
     try:
         yield
     finally:
-        if old is None:
-            os.environ.pop("GITHUB_ACTIONS", None)
-        else:
-            os.environ["GITHUB_ACTIONS"] = old
+        for name, previous in saved.items():
+            if previous is None:
+                os.environ.pop(name, None)
+            else:
+                os.environ[name] = previous
+
+
+@contextlib.contextmanager
+def github_actions(value: str | None):
+    """Set GITHUB_ACTIONS and clear CI so the runner's CI=true cannot leak in."""
+    with ci_vars(value, None):
+        yield
 
 
 class EmptyPath:
@@ -150,7 +167,12 @@ def _load(name: str, path: Path | None = None):
     if spec is None or spec.loader is None:
         raise AssertionError(f"cannot load {path}")
     module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    sys.modules[mod_name] = module
+    try:
+        spec.loader.exec_module(module)
+    except Exception:
+        sys.modules.pop(mod_name, None)
+        raise
     return module
 
 
@@ -317,17 +339,19 @@ class FfmpegCapabilityTests(unittest.TestCase):
                     "HARD_FAILURE",
                 )
 
+        import test_vf_ffmpeg_svg_caption as caption_tests
+
         with tempfile.TemporaryDirectory() as tmp:
             with FakeFfmpeg(Path(tmp), "missing-fribidi"), github_actions("true"):
                 gap = vf_ffmpeg_env.caption_gap()
                 self.assertIsNotNone(gap)
                 assert gap is not None
                 self.assertEqual(gap.token, "SKIP_ENV_MISSING_FRIBIDI")
-                blocked = vf_ffmpeg_env.ci_skip_failure(gap)
-                self.assertIsNotNone(blocked)
-                assert blocked is not None
-                self.assertIn("SKIP_ENV_MISSING_FRIBIDI", blocked)
-                self.assertIn("--enable-libfribidi", blocked)
+                self.assertIn("--enable-libfribidi", gap.reason)
+                self.assertEqual(
+                    classify_ci_call(caption_tests.ffmpeg_skip_reason),
+                    "HARD_FAILURE",
+                )
 
         publication = _load("check-publication-evidence.py")
         case = publication.EvidenceTests("test_valid_mp4_delivery_decodes")
@@ -362,6 +386,124 @@ class FfmpegCapabilityTests(unittest.TestCase):
                     classify_ci_call(module.VideoNormalizationTests.setUpClass),
                     "GUARD_BYPASSED",
                 )
+
+    def test_caption_fribidi_skip_is_a_hard_failure_on_ci(self) -> None:
+        """The caption suite itself fails when the fribidi build flag is missing."""
+        import test_vf_ffmpeg_svg_caption as caption_tests
+
+        with tempfile.TemporaryDirectory() as tmp:
+            with FakeFfmpeg(Path(tmp), "missing-fribidi"), github_actions("true"):
+                self.assertEqual(
+                    classify_ci_call(caption_tests.ffmpeg_skip_reason),
+                    "HARD_FAILURE",
+                )
+
+    def test_removed_caption_fribidi_guard_is_caught(self) -> None:
+        """Deleting the caption ci_skip_failure raise lets the fribidi gap skip."""
+        source = (SCRIPTS / "test_vf_ffmpeg_svg_caption.py").read_text(encoding="utf-8")
+        guard = (
+            "    blocked = vf_ffmpeg_env.ci_skip_failure(gap)\n"
+            "    if blocked:\n"
+            "        raise RuntimeError(blocked)\n"
+        )
+        self.assertEqual(source.count(guard), 1)
+        mutated = source.replace(guard, "", 1)
+        self.assertNotIn("raise RuntimeError(blocked)", mutated)
+        start = mutated.index("def ffmpeg_skip_reason")
+        end = mutated.index("\ndef write_composition")
+        namespace: dict = {}
+        exec(mutated[start:end], namespace)
+        unguarded = namespace["ffmpeg_skip_reason"]
+        with tempfile.TemporaryDirectory() as tmp:
+            with FakeFfmpeg(Path(tmp), "missing-fribidi"), github_actions("true"):
+
+                def skipped() -> None:
+                    reason = unguarded()
+                    if reason:
+                        raise unittest.SkipTest(reason)
+
+                self.assertEqual(classify_ci_call(skipped), "GUARD_BYPASSED")
+                import test_vf_ffmpeg_svg_caption as caption_tests
+
+                self.assertEqual(
+                    classify_ci_call(caption_tests.ffmpeg_skip_reason),
+                    "HARD_FAILURE",
+                )
+
+    def test_ci_env_truthy_values_fail_and_empty_values_skip(self) -> None:
+        """true/True/TRUE/1 and CI=true are CI. Empty and unset still skip."""
+        with EmptyPath():
+            gap = vf_ffmpeg_env.normalization_gap()
+            self.assertIsNotNone(gap)
+            assert gap is not None
+            cases = (
+                ("True", None, gap.line),
+                ("TRUE", None, gap.line),
+                ("1", None, gap.line),
+                (None, "true", gap.line),
+                ("", None, None),
+                (None, None, None),
+            )
+            for github_value, ci_value, expected in cases:
+                with self.subTest(github_actions=github_value, ci=ci_value):
+                    with ci_vars(github_value, ci_value):
+                        self.assertEqual(vf_ffmpeg_env.ci_skip_failure(gap), expected)
+
+    def test_exact_github_actions_true_check_is_caught(self) -> None:
+        """Restoring GITHUB_ACTIONS=='true' accepts True and CI=true. The live gate must not."""
+        source = (SCRIPTS / "vf_ffmpeg_env.py").read_text(encoding="utf-8")
+        live = (
+            "    if _truthy_ci(os.environ.get(\"GITHUB_ACTIONS\")) or _truthy_ci(os.environ.get(\"CI\")):\n"
+        )
+        exact = "    if os.environ.get(\"GITHUB_ACTIONS\") == \"true\":\n"
+        self.assertEqual(source.count(live), 1)
+        mutated_source = source.replace(live, exact, 1)
+        self.assertNotIn("_truthy_ci(os.environ.get(\"CI\"))", mutated_source)
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "vf_ffmpeg_env_exact.py"
+            path.write_text(mutated_source, encoding="utf-8")
+            mutant = _load(path.name, path)
+            with EmptyPath():
+                gap = vf_ffmpeg_env.normalization_gap()
+                self.assertIsNotNone(gap)
+                assert gap is not None
+                for github_value, ci_value in (("True", None), (None, "true"), ("1", None)):
+                    with self.subTest(github_actions=github_value, ci=ci_value):
+                        with ci_vars(github_value, ci_value):
+                            self.assertIsNone(mutant.ci_skip_failure(gap))
+                            self.assertEqual(vf_ffmpeg_env.ci_skip_failure(gap), gap.line)
+
+    def test_removed_publication_fail_is_caught(self) -> None:
+        """Deleting self.fail(blocked) lets the publication test skip. The static check names it."""
+        checker = (SCRIPTS / "check-hyperframes-backend.py").read_text(encoding="utf-8")
+        start = checker.index('ROOT / "scripts" / "check-publication-evidence.py"')
+        block = checker[start:checker.index("\n    )", start)]
+        self.assertIn('"self.fail(blocked)"', block)
+        source = (SCRIPTS / "check-publication-evidence.py").read_text(encoding="utf-8")
+        fail_block = "        if blocked:\n            self.fail(blocked)\n"
+        self.assertGreaterEqual(source.count(fail_block), 2)
+        mutated = source.replace(fail_block, "")
+        mutated = mutated.replace(
+            "ROOT = Path(__file__).resolve().parents[1]",
+            f"ROOT = Path({str(ROOT)!r})",
+            1,
+        )
+        self.assertNotIn("self.fail(blocked)", mutated)
+        self.assertIn("ci_skip_failure", mutated)
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "check_publication_evidence_nofail.py"
+            path.write_text(mutated, encoding="utf-8")
+            module = _load(path.name, path)
+            case = module.EvidenceTests("test_public_mp4_requires_hash_bound_normalization")
+            case.setUp()
+            try:
+                with github_actions("true"), EmptyPath():
+                    self.assertEqual(
+                        classify_ci_call(case.test_public_mp4_requires_hash_bound_normalization),
+                        "GUARD_BYPASSED",
+                    )
+            finally:
+                case.doCleanups()
 
 
 if __name__ == "__main__":

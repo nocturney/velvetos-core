@@ -1,0 +1,9 @@
+name: Upload check-all log
+description: Upload the Windows check-all log with the runner artifact token.
+inputs:
+  path:
+    description: Path to check-all-windows.log
+    required: true
+runs:
+  using: node20
+  main: index.js

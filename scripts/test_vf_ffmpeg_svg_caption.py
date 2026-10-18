@@ -32,6 +32,9 @@ def ffmpeg_skip_reason() -> str | None:
     import vf_ffmpeg_env
 
     gap = vf_ffmpeg_env.caption_gap()
+    blocked = vf_ffmpeg_env.ci_skip_failure(gap)
+    if blocked:
+        raise RuntimeError(blocked)
     if gap is not None:
         return gap.line
     return None
