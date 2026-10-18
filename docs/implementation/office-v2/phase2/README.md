@@ -86,3 +86,7 @@ A useful pattern may be adopted without adopting the product. `pattern-adoption-
 ## What this foundation does not do
 
 It does not install every candidate, choose a durable engine/model gateway/MCP-A2A gateway, move a business source of truth, or create a new production writer. Bake-offs start only after this foundation is GREEN.
+
+## Durable repo-link intake (#595)
+
+`scripts/vf_office_v2_link_intake.py <github-url>` records an incoming GitHub repo link in the one canonical `candidate-registry-v0.json`. It works offline. It normalizes case, `.git`, trailing slashes and sub-paths, and deduplicates against the `evidence_refs` of existing candidates. A new repo is appended as `DISCOVERED` / `BENCHMARK_REQUIRED` with a `NEEDS_SOURCE_REVIEW` `evaluation_route`. It is not promoted and gets no authority. Every outcome writes a receipt under `link-intake-receipts/`: `REGISTERED`, `DUPLICATE`, `INVALID_INPUT` or `NEEDS_SYNC`. `scripts/vf_office_v2_link_intake_selftest.py` (run by `scripts/check-office-v2-phase2.py`) proves that a link can't be lost, that duplicates add nothing and that historical rows don't change. COMPETITOR_NEUTRAL_ADMISSION_V1 applies.
