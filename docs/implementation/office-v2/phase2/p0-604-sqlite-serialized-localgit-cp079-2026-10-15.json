@@ -4,7 +4,7 @@
   "status": "PASS_DISPOSABLE_NATIVE_LOCAL_GIT_SQLITE_ONLY",
   "security_admission": "RED",
   "branch": "lab/office604-cp079-sqlite-localgit-transaction-20261015",
-  "baseline_main_sha": "6cec8e866fb046463e8a718aae3fd1c3381c53dd",
+  "baseline_main_sha": "4f47c222fca2ac328773f7e0e80c86f0be3ad6b4",
   "source_path": "scripts/vf_office_v2_604_local_git_revoke_txn_cp079.py",
   "source_git_blob_sha": "8d212f849b599ba569f96d2b025f7ea92dad7020",
   "source_sha256": "15c47c393ff592acc3cb8e820c5f1a65626e2dc6cd475580d402393616b947b0",

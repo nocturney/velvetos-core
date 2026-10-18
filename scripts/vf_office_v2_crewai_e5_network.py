@@ -41,7 +41,8 @@ def evaluate(data: object) -> list[str]:
     if data.get("schema") != SCHEMA or data.get("host") != "Chris":
         bad("INVALID_IDENTITY_OR_SCHEMA")
     root_pid = data.get("root_pid")
-    if type(root_pid) is not int or root_pid <= 0:
+    valid_root_pid = type(root_pid) is int and root_pid > 0
+    if not valid_root_pid:
         bad("INVALID_ROOT_PID")
     if data.get("collector_complete") is not True or data.get("collector_errors") != []:
         bad("COLLECTOR_INCOMPLETE")
@@ -93,6 +94,7 @@ def evaluate(data: object) -> list[str]:
             bad("INVALID_SNAPSHOT_SHAPE")
             continue
         pids: set[int] = set()
+        parents: dict[int, int] = {}
         for member in tree:
             if not isinstance(member, dict):
                 bad("INVALID_TREE_MEMBER")
@@ -104,10 +106,28 @@ def evaluate(data: object) -> list[str]:
                 bad("INVALID_TREE_MEMBER")
                 continue
             pids.add(pid)
+            parents[pid] = ppid
             if pid in birth_by_pid and birth_by_pid[pid] != birth:
                 bad("PID_REUSED_OR_IDENTITY_CHANGED")
             birth_by_pid[pid] = birth
-        if phase == "during" and type(root_pid) is int and root_pid in pids:
+        if valid_root_pid and parents:
+            # A nonempty snapshot must contain root_pid. Every other PID
+            # must have an acyclic parent_pid chain leading to that root.
+            if root_pid not in parents or parents[root_pid] == root_pid:
+                bad("INVALID_TREE_ANCESTRY")
+            anchored = {root_pid}
+            for pid in parents:
+                cursor = pid
+                trail: set[int] = set()
+                while cursor not in anchored:
+                    if cursor in trail or cursor not in parents:
+                        bad("INVALID_TREE_ANCESTRY")
+                        break
+                    trail.add(cursor)
+                    cursor = parents[cursor]
+                else:
+                    anchored.update(trail)
+        if phase == "during" and valid_root_pid and root_pid in pids:
             seen_root = True
         if phase == "before" and (tree or tcp or udp):
             bad("PILOT_TREE_PRESENT_BEFORE_LAUNCH")
