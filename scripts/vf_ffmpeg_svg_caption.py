@@ -608,33 +608,22 @@ def _right_aligned_ink(text: str, ffmpeg: str, font: Path, tmp_dir: Path) -> tup
 
 
 def doctor(tmp_dir: Path | None = None) -> int:
+    from vf_ffmpeg_env import caption_gap
+
     ffmpeg = tool_path("ffmpeg")
     ffprobe = tool_path("ffprobe")
     facts = {"ffmpeg": ffmpeg, "ffprobe": ffprobe}
     print(json.dumps(facts, ensure_ascii=False, indent=2))
-    if not ffmpeg or not ffprobe:
-        print("FAIL missing tools: ffmpeg, ffprobe", file=sys.stderr)
-        return 1
-    filters = filter_names(ffmpeg)
-    encoders = encoder_names(ffmpeg)
-    needed_filters = {"zoompan", "drawtext", "overlay", "afade", "scale", "crop", "format"}
-    missing_filters = sorted(needed_filters - filters)
-    missing_encoders = sorted({"libx264", "aac"} - encoders)
-    if missing_filters or missing_encoders:
-        print(
-            "FAIL ffmpeg build cannot render ffmpeg-svg-caption-composition "
-            f"missing_filters={missing_filters} missing_encoders={missing_encoders}",
-            file=sys.stderr,
-        )
-        return 1
+    gap = caption_gap()
+    if gap is not None:
+        print(gap.line)
+        return 2
     try:
         font = rubik_font()
     except SystemExit:
         return 1
-    build = run_ff_tool([ffmpeg, "-hide_banner", "-buildconf"], timeout=20, role="ffmpeg")
-    build_text = (build.stdout or "") + "\n" + (build.stderr or "")
-    if "--enable-libfribidi" not in build_text or "--enable-libharfbuzz" not in build_text:
-        print("FAIL ffmpeg build missing libfribidi or libharfbuzz", file=sys.stderr)
+    if not ffmpeg:
+        print("FAIL missing tools: ffmpeg, ffprobe", file=sys.stderr)
         return 1
     probe_dir = tmp_dir or runtime_tmp_dir()
     plain = _right_aligned_ink("שלום", ffmpeg, font["path"], probe_dir)

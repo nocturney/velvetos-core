@@ -29,8 +29,11 @@ COPPER = "#a86838"
 
 
 def ffmpeg_skip_reason() -> str | None:
-    if shutil.which("ffmpeg") is None or shutil.which("ffprobe") is None:
-        return "ffmpeg or ffprobe is not on PATH"
+    import vf_ffmpeg_env
+
+    gap = vf_ffmpeg_env.caption_gap()
+    if gap is not None:
+        return gap.line
     return None
 
 
@@ -298,10 +301,13 @@ def _headline_ink_bounds(text: str) -> tuple[int, int, str, str]:
     """
     import vf_ffmpeg_svg_caption as caption
 
+    reason = ffmpeg_skip_reason()
+    if reason:
+        raise unittest.SkipTest(reason)
     font = caption.rubik_font()["path"]
     ffmpeg = shutil.which("ffmpeg")
     if not ffmpeg:
-        raise unittest.SkipTest("ffmpeg or ffprobe is not on PATH")
+        raise unittest.SkipTest(reason or "SKIP_ENV_MISSING_FFMPEG")
     width, height = 1800, 1920
     info = {
         "width": width,
@@ -814,9 +820,12 @@ def _glyph_ink_filter(font: Path, textfile: Path) -> str:
 
 
 def _glyph_ink(font: Path, text: str = "א") -> int:
+    reason = ffmpeg_skip_reason()
+    if reason:
+        raise unittest.SkipTest(reason)
     ffmpeg = shutil.which("ffmpeg")
     if not ffmpeg:
-        raise unittest.SkipTest("ffmpeg or ffprobe is not on PATH")
+        raise unittest.SkipTest(reason or "SKIP_ENV_MISSING_FFMPEG")
     with tempfile.TemporaryDirectory() as tmp:
         tmp_path = Path(tmp)
         raw = tmp_path / "ink.raw"

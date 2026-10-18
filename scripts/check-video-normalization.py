@@ -3,7 +3,6 @@
 from __future__ import annotations
 import hashlib
 import json
-import shutil
 import struct
 import subprocess
 import tempfile
@@ -33,8 +32,12 @@ def probe(path):
 class VideoNormalizationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        if not shutil.which('ffmpeg') or not shutil.which('ffprobe'):
-            raise RuntimeError('Video privacy regressions require real ffmpeg and ffprobe')
+        import vf_ffmpeg_env
+
+        gap = vf_ffmpeg_env.normalization_gap()
+        if gap is not None:
+            print(gap.line, flush=True)
+            raise unittest.SkipTest(gap.line)
 
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
