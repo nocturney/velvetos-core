@@ -245,6 +245,22 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
             gate.verify(self.manifest_path)
         self.assertEqual(str(caught.exception), "RECEIPT_MUST_BE_ORIGINAL_ONE_LINE_LF")
 
+    def test_20_cr_inside_json_refused(self):
+        path = self.base / "run-1/receipt.jsonl"
+        raw = path.read_bytes()
+        self.assertTrue(raw.startswith(b"{") and raw.endswith(b"\n") and b"\r" not in raw)
+        altered = raw[:1] + b"\r" + raw[1:]
+        self.assertEqual(altered.count(b"\n"), 1)
+        self.assertTrue(altered.endswith(b"\n") and not altered.endswith(b"\r\n"))
+        self.assertEqual(altered.count(b"\r"), 1)
+        self.assertEqual(json.loads(altered.decode()), json.loads(raw.decode()))
+        path.write_bytes(altered)
+        self.manifest["runs"][0]["receipt_sha256"] = sha(altered)
+        self._save_manifest()
+        with self.assertRaises(gate.Refused) as caught:
+            gate.verify(self.manifest_path)
+        self.assertEqual(str(caught.exception), "RECEIPT_MUST_BE_ORIGINAL_ONE_LINE_LF")
+
 
 if __name__ == "__main__":
     unittest.main()

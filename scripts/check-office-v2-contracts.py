@@ -3437,7 +3437,7 @@ def main() -> int:
         ("test_vf_office_v2_604_cp084_nonroot_sink_recovery.py", 5, 15),
         ("test_vf_office_v2_604_cp085_public_git_readback.py", 26, 15),
         # #762: offline-only byte-consistency negatives, NOT joined-run QA.
-        ("test_vf_office_v2_604_cp083_candidate_evidence_gate.py", 19, 20),
+        ("test_vf_office_v2_604_cp083_candidate_evidence_gate.py", 20, 20),
     ):
         candidate_test = ROOT / "scripts" / test_file
         if not candidate_test.is_file():
@@ -3474,35 +3474,6 @@ def main() -> int:
         if skipped_candidate_imports:
             fail("#604 CP083 candidate-import tests must run on POSIX")
         candidate_import_tests = "RAN"
-
-    # #764: offline two-host native Git/SQLite lost-ACK receipts. SECURITY RED.
-    # Not joined-run QA, not admission, not a remote GitHub effect.
-    receipt_gate = ROOT / "scripts" / "vf_office_v2_604_cp083_native_lostack_receipt_gate.py"
-    if not receipt_gate.is_file():
-        fail("#604 CP083 native lost-ACK receipt gate missing")
-    try:
-        receipt_run = subprocess.run(
-            [sys.executable, "-B", str(receipt_gate), "--selftest"],
-            cwd=ROOT, capture_output=True, text=True, timeout=20,
-        )
-    except subprocess.TimeoutExpired:
-        fail("#604 CP083 native lost-ACK receipt gate timed out")
-    if receipt_run.returncode != 0:
-        fail("#604 CP083 native lost-ACK receipt gate failed closed")
-    try:
-        receipt_result = json.loads(receipt_run.stdout)
-    except json.JSONDecodeError:
-        fail("#604 CP083 native lost-ACK receipt gate returned non-JSON")
-    if (
-        receipt_result.get("status") != "PASS_TWO_NATIVE_LOCAL_RECEIPTS_SECURITY_RED"
-        or receipt_result.get("security_admission") != "RED"
-        or receipt_result.get("remote_github_writes") != 0
-        or receipt_result.get("mutations_rejected") != 12
-        or receipt_result.get("real_native_git_sqlite_receipts") != 2
-        or receipt_result.get("named_assertions") != 116
-        or receipt_result.get("distinct_hosts") != 2
-    ):
-        fail("#604 CP083 native lost-ACK receipt gate must stay SECURITY RED")
 
     # #764: offline two-host native Git/SQLite lost-ACK receipts. SECURITY RED.
     # Not joined-run QA, not admission, not a remote GitHub effect.
