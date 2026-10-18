@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
 from pathlib import Path
 import tempfile
 import unittest
@@ -186,7 +187,14 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
 
     def test_12_symlink_receipt_refused(self):
         link = self.base / "run-1/symlink.jsonl"
-        link.symlink_to(self.base / "run-1/receipt.jsonl")
+        try:
+            link.symlink_to(self.base / "run-1/receipt.jsonl")
+        except (OSError, NotImplementedError):
+            # A Windows host without symlink permission cannot run this case.
+            # Never hide a failure to create the same fixture on Linux/macOS.
+            if sys.platform == "win32":
+                self.skipTest("Windows symlink creation not permitted by OS")
+            raise
         self.manifest["runs"][0]["receipt_path"] = "run-1/symlink.jsonl"
         self._save_manifest()
         self.assert_refused()
