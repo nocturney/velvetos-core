@@ -1,0 +1,58 @@
+{
+  "schema": "velvetos.office-v2.604.owner-option-a-revocation.v1",
+  "recorded_date": "2026-10-16",
+  "recorded_source": "EXPLICIT_PROJECT_OWNER_CONFIRMATION_IN_THIS_CHAT",
+  "approval_basis": "OWNER_CHOSE_A_AFTER_EXPLANATION_OF_NO_CROSS_STORE_CANCEL_GUARANTEE",
+  "owner_decision": "OPTION_A_APPROVED",
+  "scope": "OFFICE_2_0_REVOCATION_SEMANTICS_ONLY",
+  "design_effect": "ADOPT_OPTION_A_FOR_FUTURE_IMPLEMENTATION_AND_TESTS",
+  "policy": {
+    "revoke_wins_before_admit": "DENY_NEW_ADMISSION",
+    "revoke_after_admit": "DRAINING_ADMITTED_KEEP_REF_AND_TASK_RESERVATIONS",
+    "already_dispatched_external_git_effect": "MAY_COMPLETE_CANNOT_BE_ATOMICALLY_UNSENT",
+    "unknown_effect_or_lost_ack": "DURABLE_UNKNOWN_EFFECT_RECONCILE_AND_FREEZE",
+    "recovery": "INDEPENDENT_REMOTE_READBACK_NO_BLIND_RETRY",
+    "uncertain_or_conflicting_readback": "REVIEW_REQUIRED_KEEP_FROZEN",
+    "new_work_during_drain_or_unknown": "DENY",
+    "process_restart": "PRESERVE_JOURNAL_AND_FREEZE",
+    "safe_reopening": "ONLY_AFTER_CONFIRMED_OUTCOME_AND_SEPARATE_AUTHORIZED_CLEARANCE",
+    "option_b_immediate_cancel_guarantee": "REJECTED_UNPROVABLE_FOR_DISPATCHED_REMOTE_EFFECT"
+  },
+  "required_cp082_cases": [
+    "normal_revoke_transitions_to_drain_not_release",
+    "already_granted_drain_refuses_any_new_local_effect",
+    "revocation_committed_before_local_effect",
+    "revoke_before_native_git_ref_fails_closed",
+    "post_local_git_revoke_forces_unknown_not_safe_success",
+    "durable_recovery_classifies_remote_advanced_without_retry",
+    "unknown_persists_and_blocks_second_request",
+    "ack_lost_after_local_git_freezes_durable_journal",
+    "ack_after_no_blind_retry",
+    "ack_after_new_SQLite_reader_cannot_unfreeze",
+    "ack_lost_before_git_freezes_without_effect",
+    "ack_before_no_blind_retry",
+    "ack_before_new_SQLite_reader_cannot_unfreeze"
+  ],
+  "existing_lab_reference": {
+    "cp082_source_sha256": "fa108cfd9bea1aec38a9e7e4c1a3e369e6ba4be94eef413ea0ec0304bb1a8eee",
+    "cp082_evidence_schema": "velvetos.office-v2.604.cp082.sealed-native-integration-receipts.v1",
+    "real_live_github_proof": false,
+    "distinct_temporary_etcd_instances": 2,
+    "bounded_synthetic_assertions": 52
+  },
+  "security_admission": "RED",
+  "explicitly_not_authorized": {
+    "production_deploy": false,
+    "production_merge": false,
+    "production_credentials": false,
+    "protected_remote_github_writes": false,
+    "generated_source_execution": false,
+    "grant_issuance_or_security_signoff": false,
+    "cross_store_atomicity_claim": false,
+    "automatic_unknown_retries": false,
+    "automatic_drain_lock_release": false,
+    "bypass_of_owner_authentication": false
+  },
+  "approval_is_not_cryptographic_credential": true,
+  "existing_security_gates_remain_required": true
+}
