@@ -1,0 +1,34 @@
+{
+  "task_id": "cp057-receipt-boundary-2026-10-18",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfharness",
+  "goal": "Fail closed when a CP057 acceptance note cites a receipt sha that is not an exact maximal hex run of attempt 8 or attempt 9.",
+  "completed_steps": [
+    "#804 is merged, so this is a follow-up branch from origin/main",
+    "Receipt citations match maximal hex runs equal to the two receipt shas",
+    "Extra hex appended to a known receipt fails with RECEIPT_SHA_UNKNOWN",
+    "A note that cites neither receipt fails with ACCEPTED_NOTE_MISSING_RECEIPT",
+    "Any other sha256 that is not one of the two receipts fails with RECEIPT_SHA_UNKNOWN"
+  ],
+  "next_step": "Independent QA on the follow-up PR. Runtime authority and activation stay forbidden.",
+  "artifacts": [
+    "scripts/vf_cp057_calc_strictmode.py",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "unresolved": [
+    "runtimeAuthority and activationAllowed stay false",
+    "calc.ps1 and PIN.json values are unchanged"
+  ],
+  "last_updated": "2026-10-18",
+  "execution_state": {
+    "follows": "https://github.com/nocturney/velvetos-core/pull/804",
+    "receipt8": "0e0ae55b1ec00ee26a116be172eda17e3c7a917ffba4f3102c73bdbe4da6bb5c",
+    "receipt9": "663db01cd7d7423a26d6cf36a15d06080de06a53c9565a5ed3e5263b1500e75e",
+    "runtimeAuthority": false,
+    "activationAllowed": false,
+    "windows_execution": false
+  },
+  "latest_observation": "Local strictmode sensor is green. A known receipt sha with extra hex appended is not a citation. Narrative pins already in the accepted note stay recorded and do not count as unknown receipt hashes."
+}
