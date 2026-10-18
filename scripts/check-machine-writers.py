@@ -411,6 +411,7 @@ def _read_pwsh_paren(text: str, index: int) -> tuple[str, int]:
     return text[index + 1:], len(text)
 
 
+# Residual if(0), while, trap, try, and uncalled function or scriptblock shapes belong to scripts/check-ffmpeg-hash-gate.ps1.
 def powershell_reachable(text: str) -> str:
     """PowerShell that can run. Comments, strings, here-strings, if($false), and code after exit/return are gone.
 
@@ -754,6 +755,7 @@ def windows_job_problems(job: str) -> list[str]:
         "persist-credentials: false",
         "fetch-depth: 0",
         "git show <sha>:path",
+        "scripts/check-ffmpeg-hash-gate.ps1",
     ):
         if needle not in job:
             problems.append(f"check-all-windows missing {needle}")
@@ -781,6 +783,54 @@ def windows_job_problems(job: str) -> list[str]:
 
 
 HASH_GATE = ROOT / "scripts" / "verify_ffmpeg_zip_sha256.py"
+HASH_GATE_PARSER = ROOT / "scripts" / "check-ffmpeg-hash-gate.ps1"
+HASH_GATE_PARSER_NEEDLES = (
+    "Parser]::ParseInput",
+    "EndBlock",
+    "TrapStatementAst",
+    "BreakStatementAst",
+    "ContinueStatementAst",
+    "ExitStatementAst",
+    "ReturnStatementAst",
+    "TokenKind]::Ine",
+    "scripts/verify_ffmpeg_zip_sha256.py",
+    "'if-zero'",
+    "'if-null'",
+    "'if-not'",
+    "'if-bang'",
+    "'if-parens'",
+    "'if-var'",
+    "'if-backtick'",
+    "'while-false'",
+    "'function-never'",
+    "'scriptblock'",
+    "'else-branch'",
+    "'try-catch'",
+    "'trap'",
+    "'break-before'",
+    "'midword-hash'",
+)
+
+
+def hash_gate_parser_problems(text: str) -> list[str]:
+    """Linux presence pin. The parser itself runs on the Windows job."""
+    problems: list[str] = []
+    for needle in HASH_GATE_PARSER_NEEDLES:
+        if needle not in text:
+            problems.append(f"ffmpeg hash-gate parser missing {needle}")
+    return problems
+
+
+def drop_hash_gate_parser_step(job: str) -> str:
+    """Mutation: the Windows job no longer invokes the parser allowlist."""
+    mutated = job.replace(
+        "scripts/check-ffmpeg-hash-gate.ps1",
+        "scripts/check-ffmpeg-hash-gate-removed.ps1",
+        1,
+    )
+    if mutated == job:
+        raise ValueError("ffmpeg hash-gate parser step was not present to remove")
+    return mutated
 
 
 def hash_gate_exits(script: Path, data: bytes, expected: str) -> int:
@@ -939,12 +989,36 @@ def main() -> int:
             for problem in continued_problems
         ):
             fail("continue-on-error variant was not caught: " + line)
+    if not HASH_GATE_PARSER.is_file():
+        fail("missing ffmpeg hash-gate parser: scripts/check-ffmpeg-hash-gate.ps1")
+    parser_text = HASH_GATE_PARSER.read_text(encoding="utf-8")
+    for problem in hash_gate_parser_problems(parser_text):
+        fail(problem)
+    stripped = parser_text.replace("'if-zero'", "'gone'", 1)
+    if stripped == parser_text:
+        fail("if-zero mutant label was not present to delete")
+    stripped_problems = hash_gate_parser_problems(stripped)
+    if not any(
+        problem == "ffmpeg hash-gate parser missing 'if-zero'"
+        for problem in stripped_problems
+    ):
+        fail("deleting the if-zero mutant label was not caught")
+    try:
+        dropped_parser = drop_hash_gate_parser_step(windows_job)
+    except ValueError as exc:
+        fail(str(exc))
+    dropped_parser_problems = windows_job_problems(dropped_parser)
+    if not any(
+        problem == "check-all-windows missing scripts/check-ffmpeg-hash-gate.ps1"
+        for problem in dropped_parser_problems
+    ):
+        fail("removing the ffmpeg hash-gate parser step was not caught")
     throw_evidence = prove_ffmpeg_throw_reachable(windows_job)
     gate_evidence = prove_ffmpeg_hash_gate()
     print(
         "OK check-all-windows ffmpeg-sha-enforce "
         "delete=caught operator_flip=caught exit_reset=caught credentials=caught "
-        f"continue_on_error=caught variants=quoted,spaced {throw_evidence} "
+        f"continue_on_error=caught variants=quoted,spaced parser_step=caught label=caught {throw_evidence} "
         f"{gate_evidence} permissions=contents:read"
     )
     pin_evidence = prove_workflow_action_pins(core_workflow)

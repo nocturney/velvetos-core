@@ -159,6 +159,11 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      # Positive allowlist: Parser::ParseInput on the ffmpeg step body.
+      - name: ffmpeg hash-gate allowlist
+        shell: pwsh
+        run: pwsh -NoProfile -NonInteractive -File scripts/check-ffmpeg-hash-gate.ps1
+
       - name: Set up Python
         # actions/setup-python v7.0.0
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
