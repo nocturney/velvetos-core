@@ -71,6 +71,9 @@ def main() -> int:
         "root-not-seen": (lambda d: d["snapshots"]["during"][0].update(process_tree=[]), "ROOT_NOT_OBSERVED_DURING"),
         "bad-utc": (lambda d: d.update(started_at_utc="2026-10-18T15:00:01+03:00"), "INVALID_RUN_TIMES"),
         "nonzero-exit": (lambda d: d.update(exit_code=2), "PILOT_EXIT_NOT_ZERO"),
+        "null-exit-code": (lambda d: d.update(exit_code=None), "PILOT_EXIT_NOT_ZERO"),
+        "missing-exit-code": (lambda d: d.pop("exit_code"), "PILOT_EXIT_NOT_ZERO"),
+        "non-scalar-root-pid": (lambda d: d.update(root_pid=[4242]), "INVALID_ROOT_PID"),
         "false-interval": (lambda d: d.update(sample_interval_ms=5000), "INVALID_SAMPLE_INTERVAL"),
     }
     for name, (mutate, expected) in cases.items():
@@ -106,6 +109,15 @@ def main() -> int:
                                 text=True, capture_output=True, timeout=10)
         if denied.returncode == 0 or json.loads(dest.read_text())["status"] != "FAIL":
             errors.append("CLI missing snapshot did not fail")
+        bad_root = copy.deepcopy(base)
+        bad_root["root_pid"] = [4242]
+        src.write_bytes(json.dumps(bad_root).encode("ascii"))
+        invalid_root = subprocess.run([sys.executable, str(validator), "--evidence", str(src), "--receipt", str(dest)],
+                                      text=True, capture_output=True, timeout=10)
+        invalid_receipt = json.loads(dest.read_text())
+        if (invalid_root.returncode == 0 or "INVALID_ROOT_PID" not in invalid_receipt["reason_codes"]
+                or "Traceback" in invalid_root.stderr):
+            errors.append("CLI non-scalar root_pid failed to issue a clean FAIL receipt")
         src.write_text("{broken", encoding="ascii")
         malformed = subprocess.run([sys.executable, str(validator), "--evidence", str(src), "--receipt", str(dest)],
                                    text=True, capture_output=True, timeout=10)
@@ -125,6 +137,9 @@ def main() -> int:
             errors.append("collector must be ASCII/LF without BOM")
         if any(needle not in raw for needle in required):
             errors.append("collector missing critical snapshot / enforcement marker")
+        if (b"$null = $script:Child.Handle" not in raw or b"$null -ne $observedExitCode" not in raw
+                or b"[int]$script:Child.ExitCode" in raw):
+            errors.append("collector ExitCode must fail closed on null, with primed process handle")
     if errors:
         for error in errors:
             print("FAIL check-crewai-e5-network: %s" % error, file=sys.stderr)
