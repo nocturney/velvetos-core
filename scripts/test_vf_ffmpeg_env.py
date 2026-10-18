@@ -256,6 +256,7 @@ class FfmpegCapabilityTests(unittest.TestCase):
         main_body = sensor_text.split("def main", 1)[1]
         self.assertIn('if action == "fail":\n        fail(gap.line)', main_body)
         self.assertIn("prove_zoompan_ci_branches()", main_body)
+        self.assertIn('ffmpeg.cmd', sensor_text)
         launch = main_body.rindex("test_vf_ffmpeg_env.py")
         self.assertLess(launch, main_body.index('if action == "skip":'))
 

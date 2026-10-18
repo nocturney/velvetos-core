@@ -83,8 +83,13 @@ raise SystemExit(0)
         probe = root / "ffprobe"
         probe.write_bytes(binary.read_bytes())
         probe.chmod(binary.stat().st_mode)
+        # Windows resolves ffmpeg via PATHEXT (.cmd), not an extensionless file.
+        (root / "ffmpeg.cmd").write_text('@python "%~dp0ffmpeg" %*\r\n', encoding="utf-8")
+        (root / "ffprobe.cmd").write_text('@python "%~dp0ffprobe" %*\r\n', encoding="utf-8")
         base = os.environ.copy()
         base["VF_HYPERFRAMES_PROOF"] = "1"
+        base.pop("VF_FAKE_FFMPEG", None)
+        base.pop("VF_FAKE_LOG", None)
         base["PATH"] = str(root) + os.pathsep + base.get("PATH", "")
         ci_env = base.copy()
         ci_env["GITHUB_ACTIONS"] = "true"
