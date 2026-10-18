@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-10-18 - **CP083 guest UID negatives:** five kernel-UID tests run only in the disposable Linux guest (root plus `VF604_CP083_DISPOSABLE_GUEST_ONLY=VF604_CP083_EXPLICIT_NO_REMOTE`) and record `SKIP_NEEDS_GUEST` on hosted CI, Windows, and Chris. The revoke-between-pre-git-check-and-update-ref test is expected-fail `GAP_revoke_between_pre_git_check_and_update_ref_denies_effect`. The other four keep real denial assertions. `security_admission` stays RED.
+
 - 2026-10-18 - **CP057 exact receipt boundary:** a receipt sha followed by a letter or digit is not an exact citation. A prefix impostor reports `ACCEPTED_RECEIPT_SHA_MISMATCH` even when another sha is unknown. `DRAFT_DIGEST_SHA256` and `ATTEMPT6_SOURCE_SHA256` name the two PIN-note shas that were previously bare literals; a note edit that does not update that list fails by naming the sha. `runtimeAuthority` and `activationAllowed` stay false.
 
 - 2026-10-18 - **CP083 lost-ACK board faults:** the missing-evidence test copies the path into a temp file and leaves the committed evidence JSON untouched. A gate that cannot be imported fails closed as `GATE_IMPORT_FAILED` rather than `EVIDENCE_MISSING`. `security_admission` stays RED.
