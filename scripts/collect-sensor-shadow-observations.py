@@ -12,6 +12,7 @@ import argparse
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 
@@ -64,6 +65,19 @@ def parse_time(value: str) -> datetime:
     return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone(timezone.utc)
 
 
+def _expose_gh_apart_from_git(source: str, directory: Path) -> None:
+    """Copy gh into an empty directory. Leave git in its real directory.
+
+    Symlinking git out of `Git\\cmd` breaks the Windows launcher that finds
+    mingw64 beside its own file, and creating a symlink needs a privilege the
+    hosted runner often does not have. gh is one file, so a copy still runs.
+    """
+    name = "gh.exe" if os.name == "nt" else "gh"
+    dest = directory / name
+    shutil.copy2(source, dest)
+    dest.chmod(dest.stat().st_mode | 0o755)
+
+
 def prove_split_gh_git_repo_slug() -> str:
     """Real gh and real git, in different directories, still resolve the slug.
 
@@ -74,33 +88,41 @@ def prove_split_gh_git_repo_slug() -> str:
 
     gh_bin = hygiene.pin_which("gh")
     git_bin = hygiene.pin_which("git")
-    gh_name = "gh.exe" if os.name == "nt" else "gh"
-    git_name = "git.exe" if os.name == "nt" else "git"
-    with tempfile.TemporaryDirectory(prefix="vf-gh-git-") as tmp:
+    git_dir = hygiene.executable_directory(git_bin)
+    # The workspace filesystem is executable. A noexec temp mount would refuse
+    # the copied gh, and Path.resolve() would expand Windows 8.3 names.
+    with tempfile.TemporaryDirectory(prefix="vf-gh-git-", dir=ROOT) as tmp:
         gh_dir = Path(tmp) / "gh-bin"
-        git_dir = Path(tmp) / "git-bin"
         gh_dir.mkdir()
-        git_dir.mkdir()
-        os.symlink(gh_bin, gh_dir / gh_name)
-        os.symlink(git_bin, git_dir / git_name)
-        previous = os.environ.get("PATH")
-        os.environ["PATH"] = os.pathsep.join((str(gh_dir), str(git_dir)))
         try:
-            found_gh = hygiene.pin_which("gh")
-            found_git = hygiene.pin_which("git")
-            if hygiene.paths_match(
-                hygiene.executable_directory(found_gh),
-                hygiene.executable_directory(found_git),
-            ):
-                raise AssertionError("gh and git were not placed in separate directories")
-            slug = repo_slug()
-        finally:
-            if previous is None:
-                os.environ.pop("PATH", None)
-            else:
-                os.environ["PATH"] = previous
+            _expose_gh_apart_from_git(gh_bin, gh_dir)
+            previous = os.environ.get("PATH")
+            os.environ["PATH"] = os.pathsep.join((str(gh_dir), git_dir))
+            try:
+                found_gh = hygiene.pin_which("gh")
+                found_git = hygiene.pin_which("git")
+                if hygiene.paths_match(
+                    hygiene.executable_directory(found_gh),
+                    hygiene.executable_directory(found_git),
+                ):
+                    raise AssertionError("gh and git were not placed in separate directories")
+                if not hygiene.paths_match(hygiene.executable_directory(found_git), git_dir):
+                    raise AssertionError("git was not the real binary")
+                slug = repo_slug()
+            finally:
+                if previous is None:
+                    os.environ.pop("PATH", None)
+                else:
+                    os.environ["PATH"] = previous
+        except SystemExit:
+            raise
+        except Exception as exc:
+            detail = " ".join(str(exc).split())[:240]
+            sys.stderr.write(f"SPLIT_GH_GIT_FAIL {type(exc).__name__}: {detail}\n")
+            raise SystemExit(1) from None
     if slug != "nocturney/velvetos-core":
-        raise AssertionError(f"repo slug {slug!r} != nocturney/velvetos-core")
+        sys.stderr.write(f"SPLIT_GH_GIT_FAIL slug {slug!r}\n")
+        raise SystemExit(1)
     return slug
 
 
