@@ -73,8 +73,28 @@ def same_pinned_directory(
     return left == right
 
 
+def join_tool_path(dirs: list[str]) -> str:
+    """Join absolute tool directories. A copied search PATH is refused."""
+    cleaned: list[str] = []
+    for entry in dirs:
+        if not isinstance(entry, str) or not entry or os.pathsep in entry:
+            raise SpawnRefusal("SPAWN_PATH_REFUSED")
+        if not executable_is_absolute(entry):
+            raise SpawnRefusal("SPAWN_PATH_REFUSED")
+        resolved = str(Path(entry).resolve())
+        if resolved not in cleaned:
+            cleaned.append(resolved)
+    if not cleaned:
+        raise SpawnRefusal("SPAWN_PATH_REFUSED")
+    return os.pathsep.join(cleaned)
+
+
 def resolve_executable(name_or_path: str) -> str:
-    """Return one absolute executable. A bare name is resolved once, then pinned."""
+    """Return one absolute executable.
+
+    A bare name is looked up once on the ambient PATH, then pinned.
+    Later spawns do not search that PATH again.
+    """
     if not isinstance(name_or_path, str) or not name_or_path.strip():
         raise SpawnRefusal("SPAWN_ARGV_REFUSED")
     if name_or_path.startswith("-"):
@@ -136,16 +156,20 @@ def run_tool(
     cwd: Path | str | None = None,
     check: bool = False,
     input: str | None = None,
+    path_dirs: list[str] | None = None,
 ) -> subprocess.CompletedProcess[str]:
     if not argv or not isinstance(argv[0], str):
         raise SpawnRefusal("SPAWN_ARGV_REFUSED")
     if not isinstance(timeout, (int, float)) or isinstance(timeout, bool) or timeout <= 0:
         raise SpawnRefusal("SPAWN_TIMEOUT_REFUSED")
     executable = resolve_executable(argv[0])
+    env = allowlisted_env(executable, extra_env)
+    if path_dirs is not None:
+        env["PATH"] = join_tool_path([str(Path(executable).resolve().parent), *path_dirs])
     return subprocess.run(
         [executable, *argv[1:]],
         cwd=cwd,
-        env=allowlisted_env(executable, extra_env),
+        env=env,
         timeout=timeout,
         check=check,
         capture_output=True,
