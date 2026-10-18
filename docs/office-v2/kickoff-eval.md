@@ -50,6 +50,6 @@ Ported from the javascript assertions in the ChatGPT-066 comment:
 
 Any live run of a third-party eval tool such as promptfoo must run under **OS-level egress denial**.
 
-ChatGPT-066 disabled promptfoo telemetry, updates, and sharing, then still observed an unconfined promptfoo process open outbound IPv6 HTTPS to `[2606:4700:10::6814:2369]:443`. That attempt was aborted. The three scored rounds were contained only after macOS Seatbelt denied outbound traffic except `localhost:11435`. Telemetry flags are not an air gap. Do not treat a promptfoo configuration as zero-egress unless the operating system enforces it.
+ChatGPT-066 disabled promptfoo telemetry, updates, and sharing, then still observed an unconfined promptfoo process open outbound IPv6 HTTPS to `[2606:4700:10::6814:2369]:443`. That attempt was aborted. The three scored rounds were contained only after macOS Seatbelt denied outbound traffic except `localhost:11435`. That observation is historical. The current pilot endpoint is `127.0.0.1:11434`; port 11435 is refused. Telemetry flags are not an air gap. Do not treat a promptfoo configuration as zero-egress unless the operating system enforces it.
 
 This repository harness does not launch that tool.

@@ -14,6 +14,18 @@ class KillRefusal(RuntimeError):
     pass
 
 
+def isolated_argv(argv: list[str]) -> list[str]:
+    """Run a Python child with -I so user site, .pth, and PYTHONHOME do not load."""
+    if not argv or not isinstance(argv[0], str):
+        raise KillRefusal("SPAWN_ARGV_REFUSED")
+    base = argv[0].replace("\\", "/").rsplit("/", 1)[-1].lower()
+    if not (base == "python" or base.startswith("python")):
+        return list(argv)
+    if any(part in {"-I", "-E"} for part in argv[1:]):
+        return list(argv)
+    return [argv[0], "-I", *argv[1:]]
+
+
 class KillHarness:
     def __init__(self, timeout_seconds: int = ATTEMPT_TIMEOUT_SECONDS, cost_ceiling: int = COST_CEILING):
         if int(cost_ceiling) != 0:
@@ -26,8 +38,7 @@ class KillHarness:
         self.killed: list[int] = []
 
     def spawn(self, argv: list[str]) -> subprocess.Popen:
-        if not argv or not isinstance(argv[0], str):
-            raise KillRefusal("SPAWN_ARGV_REFUSED")
+        argv = isolated_argv(argv)
         try:
             assert_not_chroma_cli(argv)
         except UsageRefusal as exc:
@@ -44,6 +55,15 @@ class KillHarness:
     def expired(self, started_monotonic: float, now: float | None = None) -> bool:
         clock = time.monotonic() if now is None else now
         return (clock - started_monotonic) >= self.timeout_seconds
+
+    def socket_timeout(self, started_monotonic: float, now: float, cap: float = 30) -> float:
+        """Seconds left for one socket, never above cap. Zero remaining is a refusal."""
+        if self.expired(started_monotonic, now=now):
+            raise KillRefusal("ATTEMPT_TIMEOUT")
+        remaining = self.timeout_seconds - (now - started_monotonic)
+        if remaining <= 0:
+            raise KillRefusal("ATTEMPT_TIMEOUT")
+        return float(min(cap, remaining))
 
     def signal_pid(self, pid: int) -> str:
         if pid not in self.owned or pid <= 1 or pid == os.getpid():

@@ -4,13 +4,15 @@ ASCII only. No network. No model import.
 """
 from __future__ import annotations
 
-APPROVED_BASE_URL = "http://127.0.0.1:11435"
-APPROVED_OPENAI_BASE = "http://127.0.0.1:11435/v1"
-APPROVED_OLLAMA_HOST = "127.0.0.1:11435"
-APPROVED_ENDPOINT = "127.0.0.1:11435"
+# Owner decision 2026-10-18 20:41 IDT: the only pilot endpoint is the existing
+# D: boot server. Port 11435 is refused.
+APPROVED_BASE_URL = "http://127.0.0.1:11434"
+APPROVED_OPENAI_BASE = "http://127.0.0.1:11434/v1"
+APPROVED_OLLAMA_HOST = "127.0.0.1:11434"
+APPROVED_ENDPOINT = "127.0.0.1:11434"
 APPROVED_HOST = "127.0.0.1"
-APPROVED_PORT = 11435
-APPROVED_AT = "2026-10-18T15:28:00+03:00"
+APPROVED_PORT = 11434
+APPROVED_AT = "2026-10-18T20:41:00+03:00"
 APPROVED_BY = "Christian"
 APPROVED_MODEL = "qwen3.5:9b"
 REASONING_EFFORT = "none"
@@ -58,6 +60,30 @@ MCP_FIX_VERSION = "1.30.0"
 CHROMADB_INSTALLED = "1.5.9"
 RED_ADVISORIES = CHROMADB_ADVISORIES + (MCP_ADVISORY,)
 
+# Comment 6250954627. These map the red PYSEC ids already on the lock.
+# PYSEC-2026-3815 stays unmapped. The lock sha and pins do not change.
+PYSEC_CVE_MAP = {
+    "PYSEC-2026-311": "CVE-2026-45829",
+    "PYSEC-2026-3813": "CVE-2026-45830",
+    "PYSEC-2026-3814": "CVE-2026-45833",
+}
+CREWAI_TOOLS_NA = (
+    "CVE-2026-2275",
+    "CVE-2026-2285",
+    "CVE-2026-2286",
+    "CVE-2026-2287",
+)
+MCP_NOT_AFFECTED = (
+    "CVE-2026-52869",
+    "CVE-2026-59950",
+)
+ZDI_FROM_REPOSITORY = "ZDI-26-706"
+ZDI_FROM_REPOSITORY_CVE = "CVE-2026-92206"
+
+# crewai 1.15.28 writes this before the first kickoff unless it already exists.
+# Exact bytes, no trailing newline.
+TRACE_USER_BYTES = b'{"first_execution_done":true,"trace_consent":false}'
+
 PRIVATE_REPO_NEEDLE = "velvetos-velvet-factory"
 PUBLIC_REPO = "nocturney/velvetos-core"
 PUBLIC_ISSUE_PREFIX = "https://github.com/nocturney/velvetos-core/issues/"
@@ -85,6 +111,8 @@ E4_COMMENT = "https://github.com/nocturney/velvetos-core/issues/612#issuecomment
 E4_CREWAI_VERSION = "1.15.28"
 E4_APPDIRS_VERSION = "1.4.4"
 SANDBOX_ROOT = "D:\\Velvet\\Pilots\\crewai-e4\\sandbox-home"
+# A pilot root may move, but it has to stay under this prefix. D:\VelvetExtra does not qualify.
+VELVET_ROOT = "D:\\Velvet"
 CREWAI_PROFILE_REL = "AppData\\Local\\CrewAI"
 TOKEN_CREDENTIALS_REL = "AppData\\Local\\CrewAI\\credentials"
 KICKOFF_OUTPUT_REL = "crewai-output\\kickoff.md"

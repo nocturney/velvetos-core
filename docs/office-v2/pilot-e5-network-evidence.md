@@ -12,7 +12,7 @@ adds a bounded observer, NOT a firewall, network sandbox, GO, or model run.
 
 ## Endpoint policy (exact and conservative)
 
-Use `Get-CimInstance Win32_Process` (`ProcessId`, `ParentProcessId`, `CreationDate`) to select the newly launched pilot PID and observed descendants, recording `pid`, `parent_pid` and UTC `created_at_utc` for each member. At each phase sample **both** unfiltered Windows network tables, `Get-NetTCPConnection` and `Get-NetUDPEndpoint`, then keep only endpoints whose `OwningProcess` belongs to the validated pilot tree. This excludes the **separate** Ollama server listener, even if it resides on `127.0.0.1:11435`.
+Use `Get-CimInstance Win32_Process` (`ProcessId`, `ParentProcessId`, `CreationDate`) to select the newly launched pilot PID and observed descendants, recording `pid`, `parent_pid` and UTC `created_at_utc` for each member. At each phase sample **both** unfiltered Windows network tables, `Get-NetTCPConnection` and `Get-NetUDPEndpoint`, then keep only endpoints whose `OwningProcess` belongs to the validated pilot tree. This excludes the **separate** Ollama server listener, even if it resides on `127.0.0.1:11434`.
 
 **Process ancestry is an independent E5 gate.** The Windows collector validates the CIM chain before it reads sockets. A tree larger than 4096 members fails `PROCESS_TREE_TOO_LARGE`. A nonempty sample whose root is absent fails `TREE_ROOT_MISSING`. A root whose parent is inside the tree, or any visited cycle, fails `PROCESS_TREE_CYCLE`. A missing parent fails `PROCESS_TREE_ORPHAN`. A child CIM birth earlier than its parent fails `CHILD_CREATED_BEFORE_PARENT`. The root's CIM `CreationDate` must match the process-handle `StartTime` within 0.01 seconds or the sample fails `ROOT_PID_BIRTH_MISMATCH`. That tolerance assumes the two clocks share FILETIME precision; a mismatch fails closed. After the TCP/UDP queries the collector re-queries CIM and fails `PROCESS_IDENTITY_CHANGED_DURING_SAMPLE` if a member's UTC birth changed or the PID disappeared. Only then are validated members added to the stop-list. A descendant whose parent has already exited is an orphan and fails closed.
 
@@ -21,7 +21,7 @@ The offline evaluator is the single one in `scripts/vf_office_v2_crewai_e5_netwo
 | Observation in pilot process tree | Verdict |
 | --- | --- |
 | Any TCP state `Listen`, including `127.0.0.1` | **FAIL** |
-| Any TCP remote other than literal `127.0.0.1:11435`, including LAN, public IP, IPv6, `127.0.0.1:11434`, unconnected/unknown remote `0.0.0.0:0` | **FAIL** |
+| Any TCP remote other than literal `127.0.0.1:11434`, including LAN, public IP, IPv6, `127.0.0.1:11435`, unconnected/unknown remote `0.0.0.0:0` | **FAIL** |
 | Any bound UDP endpoint, including loopback | **FAIL** (UDP has no `Listen` TCP state, but can receive datagrams) |
 | Missing `before`, `during`, `after`, missing root observation during, failed network/CIM query, unverified PID reuse, timeout, nonzero exit, lingering child, malformed timestamps/evidence | **FAIL** |
 | Complete bounded sample sequence with none of the above | `PASS_SAMPLED_NOT_ENFORCEMENT` **only**; never pilot GO |
@@ -34,6 +34,8 @@ The **before** sample is taken before launch and filtered to the as-yet absent p
 
 1. First record E1 owner GO and current E2 capacity, E3 actual locked imports and conditions, E4 effective D:-only containment with OS-side C: write attribution, E6 immutable fixture, E7 pilot-only bounded stop, no credential inheritance, and effective inbound/outbound network **deny-by-default** for the pilot identity. Failure of any gate stops the run; do not start the evidence wrapper. Verify exact SHA-256 of the reviewed scripts and executable and stage **all** dependencies/sources, Python/venv, writable temp, receipt directory and home inside the approved D: subtree, with no reparse points.
 2. In a preapproved attended PowerShell console, point all paths below to the **reviewed staged copies** under `D:\Velvet\Pilots\OfficeV2-VerifiedTrio`. The arguments are the reviewed runner command line; do not invent new flags or invoke it before runner E1-E7 preflight can actually pass. The following is a shape example **only**, not a runnable approval or a scheduled workflow:
+
+   The collector admits `WorkingDirectory` equal to `$p` and any directory under `$p`. A sibling prefix such as `D:\Velvet\Pilots\OfficeV2-VerifiedTrioX`, or a `..` path that normalizes outside `$p`, is `OUT_OF_PILOT_ROOT_PATH`. The E4 sandbox root stays `D:\Velvet\Pilots\crewai-e4\sandbox-home` and is not an E5 working directory. The reviewed runner returns process exit 0 only after a post-guarded kickoff whose receipt is still `NOT_VERIFIED` / `AWAITING_INDEPENDENT_REVIEW`. Every refusal returns nonzero. This validator still requires integer `exit_code` 0 and records `PILOT_EXIT_NOT_ZERO` otherwise.
 
    ```powershell
    $p = 'D:\Velvet\Pilots\OfficeV2-VerifiedTrio'
