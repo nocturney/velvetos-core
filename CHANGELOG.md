@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-10-18 - **CP083 ChatGPT-069 offline negatives:** the evidence gate refuses a hardlinked receipt, reads artifacts from held directory fds, and refuses CR in guest and manifest JSON. Two self-issued receipts stay `REFUSED_UNSIGNED_SELF_ISSUED` and `refuse_host_attestation` will not promote them. Wire CRLF/duplicate keys (GAP_9), controller env/import canaries (GAP_6, benign fake variables only), and a hardlinked native SQLite journal (GAP_4, sealed source) are expected failures. `security_admission` stays RED. No remote GitHub lost-ACK test.
+
 - 2026-10-18 - **CP057 exact receipt boundary:** a receipt sha followed by a letter or digit is not an exact citation. A prefix impostor reports `ACCEPTED_RECEIPT_SHA_MISMATCH` even when another sha is unknown. `DRAFT_DIGEST_SHA256` and `ATTEMPT6_SOURCE_SHA256` name the two PIN-note shas that were previously bare literals; a note edit that does not update that list fails by naming the sha. `runtimeAuthority` and `activationAllowed` stay false.
 
 - 2026-10-18 - **CP083 lost-ACK board faults:** the missing-evidence test copies the path into a temp file and leaves the committed evidence JSON untouched. A gate that cannot be imported fails closed as `GATE_IMPORT_FAILED` rather than `EVIDENCE_MISSING`. `security_admission` stays RED.
