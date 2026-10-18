@@ -8,12 +8,13 @@
     "CLAIM on #612 comment 6252551756",
     "check-all-windows runs on pull_request and push with continue-on-error",
     "Pinned Gyan ffmpeg 7.1.1 full build so GITHUB_ACTIONS does not fail the video sensors for a missing binary",
-    "Log upload uses the runner token, not a new action or secret"
+    "Log upload uses actions/upload-artifact v7.0.2 pinned by commit SHA",
+    "Windows job permissions are contents: read only",
+    "Sensor mutation catches a deleted ffmpeg sha256 throw"
   ],
   "next_step": "Independent QA. The required status stays check-all. security_admission stays RED.",
   "artifacts": [
     ".github/workflows/check-all.yml",
-    "scripts/upload_gha_artifact.py",
     "scripts/check-machine-writers.py"
   ],
   "unresolved": [
@@ -27,5 +28,5 @@
     "security_admission": "RED",
     "required_status_check": "check-all"
   },
-  "latest_observation": "The Windows job installs the hashed 3.11 lock and the pinned ffmpeg zip, then runs scripts/check-all.py. SKIP_NON_POSIX still applies on that runner. A local host without ffmpeg still skips with SKIP_ENV_MISSING."
+  "latest_observation": "Windows job permissions are contents: read, checkout persist-credentials false, full history (fetch-depth: 0) because git show <sha>:path needs those blobs. verify_ffmpeg_zip_sha256.py rejects a wrong digest (exit 1) and an inverted == accepts it (exit 0), which the sensor catches. Workflow -ne flipped to -eq is also caught."
 }

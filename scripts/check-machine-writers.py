@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import hashlib
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -52,6 +54,164 @@ def marker_paths(text: str) -> list[str]:
 def has_write_permission(text: str) -> bool:
     """Accept explicit workflow- or job-level contents: write, never implicit defaults."""
     return bool(re.search(r"(?m)^\s*contents:\s*write\s*(?:#.*)?$", text))
+
+
+FFMPEG_ZIP_SHA256 = "d760e1b3574402ed18b4865851f87d87e73965a982e6453212df8621fed1c508"
+UPLOAD_ARTIFACT = "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9"
+WINDOWS_ACTIONS = {
+    "actions/checkout@v7",
+    "actions/setup-python@v7",
+    UPLOAD_ARTIFACT,
+}
+
+
+def workflow_hash_operator(job: str) -> str | None:
+    """Return -ne or -eq from the throw that follows the hash gate. Comments do not count."""
+    for line in job.splitlines():
+        code = line.split("#", 1)[0]
+        match = re.search(r"\$LASTEXITCODE\s+(-ne|-eq)\s+0\b", code)
+        if match and "throw" in code and "sha256 mismatch" in code:
+            return match.group(1)
+    return None
+
+
+def ffmpeg_sha_enforced(job: str) -> bool:
+    """The hash literal is not enough. A failed verifier must throw, and -eq must not."""
+    return (
+        "scripts/verify_ffmpeg_zip_sha256.py" in job
+        and workflow_hash_operator(job) == "-ne"
+    )
+
+
+def windows_permissions_are_contents_read(job: str) -> bool:
+    lines = job.splitlines()
+    for index, line in enumerate(lines):
+        if not re.match(r"^    permissions:\s*$", line):
+            continue
+        body = []
+        for nxt in lines[index + 1:]:
+            if nxt.strip() == "":
+                continue
+            if not nxt.startswith("      "):
+                break
+            body.append(nxt.split("#", 1)[0].strip())
+        return body == ["contents: read"]
+    return False
+
+
+def drop_ffmpeg_enforcement(job: str) -> str:
+    """Mutation: delete the throw line and keep the hash literal."""
+    kept: list[str] = []
+    dropped = False
+    for line in job.splitlines(keepends=True):
+        code = line.split("#", 1)[0]
+        if (
+            not dropped
+            and "$LASTEXITCODE" in code
+            and "throw" in code
+            and "sha256 mismatch" in code
+        ):
+            dropped = True
+            continue
+        kept.append(line)
+    if not dropped:
+        raise ValueError("ffmpeg enforcement line was not present to delete")
+    return "".join(kept)
+
+
+def invert_hash_operator(job: str) -> str:
+    """Mutation Claude ran: -ne becomes -eq, so a matching zip throws and a bad zip continues."""
+    flipped = job.replace("$LASTEXITCODE -ne 0", "$LASTEXITCODE -eq 0", 1)
+    if flipped == job:
+        raise ValueError("ffmpeg -ne operator was not present to invert")
+    return flipped
+
+
+def windows_job_problems(job: str) -> list[str]:
+    problems: list[str] = []
+    for needle in (
+        "runs-on: windows-latest",
+        "continue-on-error: true",
+        "github.event_name == 'pull_request' || github.event_name == 'push'",
+        "python scripts/check-all.py",
+        "requirements-sensors.py311.lock",
+        "--require-hashes",
+        FFMPEG_ZIP_SHA256,
+        "ffmpeg-7.1.1-full_build.zip",
+        "core.autocrlf false",
+        "actions/checkout@v7",
+        "actions/setup-python@v7",
+        UPLOAD_ARTIFACT,
+        "# actions/upload-artifact v7.0.2",
+        "name: check-all-windows",
+        "if-no-files-found: error",
+        "if: always()",
+        "persist-credentials: false",
+        "fetch-depth: 0",
+        "git show <sha>:path",
+    ):
+        if needle not in job:
+            problems.append(f"check-all-windows missing {needle}")
+    if not ffmpeg_sha_enforced(job):
+        problems.append("check-all-windows does not enforce the ffmpeg zip sha256")
+    if not windows_permissions_are_contents_read(job):
+        problems.append("check-all-windows permissions must be contents: read only")
+    if "statuses:" in job:
+        problems.append("check-all-windows must not grant statuses")
+    extra_actions = [
+        use for use in re.findall(r"uses:\s*(\S+)", job)
+        if use not in WINDOWS_ACTIONS
+    ]
+    if extra_actions:
+        problems.append(
+            "check-all-windows uses an action outside the allowlist: " + ", ".join(extra_actions)
+        )
+    if "secrets." in job or "upload_gha_artifact" in job or "ACTIONS_RUNTIME_TOKEN" in job:
+        problems.append("check-all-windows must not read a secret or call the internal artifact API")
+    return problems
+
+
+HASH_GATE = ROOT / "scripts" / "verify_ffmpeg_zip_sha256.py"
+
+
+def hash_gate_exits(script: Path, data: bytes, expected: str) -> int:
+    with tempfile.TemporaryDirectory() as tmp:
+        fixture = Path(tmp) / "fixture.bin"
+        fixture.write_bytes(data)
+        proc = subprocess.run(
+            [sys.executable, str(script), "--path", str(fixture), "--expected", expected],
+            text=True,
+            capture_output=True,
+            timeout=15,
+        )
+        return proc.returncode
+
+
+def prove_ffmpeg_hash_gate() -> str:
+    """Run the real verifier, then a copy whose comparison is inverted."""
+    if not HASH_GATE.is_file():
+        fail("missing ffmpeg hash gate: scripts/verify_ffmpeg_zip_sha256.py")
+    source = HASH_GATE.read_text(encoding="utf-8")
+    if source.count("got != expected") != 1:
+        fail("ffmpeg hash gate must compare with got != expected exactly once")
+    data = b"not-the-ffmpeg-zip"
+    wrong = "0" * 64
+    right = hashlib.sha256(data).hexdigest()
+    mismatch = hash_gate_exits(HASH_GATE, data, wrong)
+    match = hash_gate_exits(HASH_GATE, data, right)
+    if mismatch == 0 or match != 0:
+        fail(
+            "ffmpeg hash gate fixture failed: "
+            f"wrong_digest_exit={mismatch} match_exit={match}"
+        )
+    inverted = source.replace("got != expected", "got == expected", 1)
+    with tempfile.TemporaryDirectory() as tmp:
+        mutated = Path(tmp) / "verify_ffmpeg_zip_sha256.py"
+        mutated.write_text(inverted, encoding="utf-8")
+        inverted_exit = hash_gate_exits(mutated, data, wrong)
+    if inverted_exit != 0:
+        fail("inverting got != expected still rejected a wrong digest")
+    return f"wrong_digest_exit={mismatch} match_exit={match} inverted_operator_exit={inverted_exit}"
 
 
 def main() -> int:
@@ -111,49 +271,35 @@ def main() -> int:
     if "  check-all-windows:" not in core_workflow:
         fail("check-all.yml missing check-all-windows job")
     windows_job = core_workflow.split("  check-all-windows:", 1)[1]
-    for needle in (
-        "runs-on: windows-latest",
-        "continue-on-error: true",
-        "github.event_name == 'pull_request' || github.event_name == 'push'",
-        "python scripts/check-all.py",
-        "requirements-sensors.py311.lock",
-        "--require-hashes",
-        "d760e1b3574402ed18b4865851f87d87e73965a982e6453212df8621fed1c508",
-        "ffmpeg-7.1.1-full_build.zip",
-        "scripts/upload_gha_artifact.py",
-        "core.autocrlf false",
-        "actions/checkout@v7",
-        "actions/setup-python@v7",
-        "./.github/actions/upload-check-all-log",
-    ):
-        if needle not in windows_job:
-            fail(f"check-all-windows missing {needle}")
-    extra_actions = [
-        use for use in re.findall(r"uses:\s*(\S+)", windows_job)
-        if use not in {
-            "actions/checkout@v7",
-            "actions/setup-python@v7",
-            "./.github/actions/upload-check-all-log",
-        }
-    ]
-    if extra_actions:
-        fail("check-all-windows uses an action outside checkout and setup-python: " + ", ".join(extra_actions))
-    if "context=check-all-windows" in core_workflow or "secrets." in windows_job:
-        fail("check-all-windows must not publish a status or read a secret")
-    action_js = (ROOT / ".github" / "actions" / "upload-check-all-log" / "index.js").read_text(encoding="utf-8")
-    if "scripts/upload_gha_artifact.py" not in action_js or "ACTIONS_" in action_js:
-        fail("upload action must delegate to scripts/upload_gha_artifact.py without naming a token")
+    for problem in windows_job_problems(windows_job):
+        fail(problem)
+    try:
+        mutated = drop_ffmpeg_enforcement(windows_job)
+    except ValueError as exc:
+        fail(str(exc))
+    if FFMPEG_ZIP_SHA256 not in mutated:
+        fail("ffmpeg enforcement mutation also deleted the hash literal")
+    mutated_problems = windows_job_problems(mutated)
+    if not any(problem == "check-all-windows does not enforce the ffmpeg zip sha256" for problem in mutated_problems):
+        fail("deleting the ffmpeg sha256 enforcement line was not caught")
+    try:
+        flipped = invert_hash_operator(windows_job)
+    except ValueError as exc:
+        fail(str(exc))
+    if ffmpeg_sha_enforced(flipped) or workflow_hash_operator(flipped) != "-eq":
+        fail("flipping the ffmpeg hash operator from -ne to -eq was not caught")
+    flipped_problems = windows_job_problems(flipped)
+    if not any(problem == "check-all-windows does not enforce the ffmpeg zip sha256" for problem in flipped_problems):
+        fail("the -ne to -eq mutation still passed the windows job sensor")
+    gate_evidence = prove_ffmpeg_hash_gate()
+    print(
+        "OK check-all-windows ffmpeg-sha-enforce "
+        f"delete=caught operator_flip=caught {gate_evidence} permissions=contents:read"
+    )
     if core_workflow.count("context=check-all") != 1:
         fail("check-all status context must stay the single required Linux context")
-    artifact_selftest = subprocess.run(
-        [sys.executable, str(ROOT / "scripts" / "upload_gha_artifact.py"), "--self-test"],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-        timeout=15,
-    )
-    if artifact_selftest.returncode != 0:
-        fail("upload_gha_artifact self-test failed: " + (artifact_selftest.stderr or artifact_selftest.stdout))
+    if "context=check-all-windows" in core_workflow:
+        fail("check-all-windows must not publish a status")
 
     writers = []
     for path in sorted(list(WORKFLOWS.glob("*.yml")) + list(WORKFLOWS.glob("*.yaml"))):
