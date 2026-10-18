@@ -1,9 +1,9 @@
 # Office 2.0 — verified three-tool pilot plan (CrewAI / LangGraph / UFO)
 
-**Date:** 2026-10-18  
-**State:** PLAN_ONLY / NOT INSTALLED / NOT RUN / NOT ADMITTED TO LAB  
-**Authority:** [#595 auditor-verified research, comment 6249011608](https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6249011608), [#612 P0 execution priority](https://github.com/nocturney/velvetos-core/issues/612), Phase 2 [admission policy](admission-policy-v0.md), existing [candidate registry](candidate-registry-v0.json) and [Golden Fixtures](golden-fixtures/).  
-**Change scope:** This PR creates **documentation only**. It neither installs tools nor introduces a script, service, firewall rule, package lock, runtime permission, model cost, registry promotion or production change.
+- **Date:** 2026-10-18
+- **State:** PLAN_ONLY / NOT INSTALLED / NOT RUN / NOT ADMITTED TO LAB
+- **Authority:** [#595 auditor-verified research, comment 6249011608](https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6249011608), [#612 P0 execution priority](https://github.com/nocturney/velvetos-core/issues/612), Phase 2 [admission policy](admission-policy-v0.md), existing [candidate registry](candidate-registry-v0.json) and [Golden Fixtures](golden-fixtures/).
+- **Change scope:** This PR creates **documentation only**. It neither installs tools nor introduces a script, service, firewall rule, package lock, runtime permission, model cost, registry promotion or production change.
 
 ## 1. Purpose and decision to be made
 
