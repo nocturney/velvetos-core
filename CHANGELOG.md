@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-10-18 - **CP083 guest UID negatives:** five kernel-UID tests run only in the disposable Linux guest (root plus `VF604_CP083_DISPOSABLE_GUEST_ONLY=VF604_CP083_EXPLICIT_NO_REMOTE`) and record `SKIP_NEEDS_GUEST` on hosted CI, Windows, and Chris. The revoke-between-pre-git-check-and-update-ref test is expected-fail `GAP_revoke_between_pre_git_check_and_update_ref_denies_effect`. The other four keep real denial assertions. `security_admission` stays RED.
+
 - 2026-10-18 - **ffmpeg capability skip:** hyperframes, video normalization, and publication evidence report `SKIP_ENV_MISSING_<CAP>` when local `ffmpeg -filters` or `ffmpeg -buildconf` lacks a required filter or library. The probe stays on the binary already on PATH. A render whose pixels do not match still fails. On GitHub Actions, that skip in the video-privacy and public-video normalization tests fails the run.
 
 - 2026-10-18 - **CP083 ChatGPT-069 offline negatives:** the evidence gate refuses a hardlinked receipt, reads artifacts from held directory fds, and refuses CR in guest and manifest JSON. Two self-issued receipts stay `REFUSED_UNSIGNED_SELF_ISSUED` and `refuse_host_attestation` will not promote them. Wire CRLF/duplicate keys (GAP_9), controller env/import canaries (GAP_6, benign fake variables only), and a hardlinked native SQLite journal (GAP_4, sealed source) are expected failures. `security_admission` stays RED. No remote GitHub lost-ACK test.

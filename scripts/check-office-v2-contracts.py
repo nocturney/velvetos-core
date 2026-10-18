@@ -28,6 +28,64 @@ def fail(message: str) -> None:
     raise SystemExit(1)
 
 
+GUEST_UID_NEGATIVE_FILE = "test_vf_office_v2_604_cp083_guest_uid_negatives.py"
+GUEST_UID_NEGATIVE_TESTS = (
+    "test_same_worker_uid_unissued_process_cannot_effect",
+    "test_same_sink_uid_fake_ack_not_accepted_without_effect_proof",
+    "test_live_unallocated_numeric_uid_does_not_pass_guard",
+    "test_replay_after_fresh_fixture_with_same_issuer_claim_denied",
+    "test_revoke_between_pre_git_check_and_update_ref_denies_effect",
+)
+
+
+def _cp083_disposable_guest() -> bool:
+    """Root plus the explicit disposable marker. Never Chris. Never hosted CI."""
+    if sys.platform != "linux" or not hasattr(os, "geteuid") or os.geteuid() != 0:
+        return False
+    if os.environ.get("VF604_CP083_DISPOSABLE_GUEST_ONLY") != "VF604_CP083_EXPLICIT_NO_REMOTE":
+        return False
+    host = os.uname().nodename.lower() if hasattr(os, "uname") else ""
+    user = (
+        os.environ.get("USER")
+        or os.environ.get("LOGNAME")
+        or os.environ.get("USERNAME")
+        or ""
+    ).lower()
+    if user == "chris" or "chris" in host:
+        return False
+    return True
+
+
+def _require_guest_uid_negative_source(source: str) -> None:
+    for name in GUEST_UID_NEGATIVE_TESTS:
+        if f"def {name}(" not in source:
+            fail("#604 CP083 guest UID negative missing " + name)
+    if source.count("@unittest.expectedFailure") != 1:
+        fail("#604 CP083 guest UID negatives: only the revoke GAP is expected-fail")
+    needle = (
+        "@unittest.expectedFailure\n"
+        "    def test_revoke_between_pre_git_check_and_update_ref_denies_effect("
+    )
+    if needle not in source:
+        fail("#604 CP083 revoke GAP must be the only expectedFailure")
+    for token in (
+        "SKIP_NEEDS_GUEST",
+        "GAP_revoke_between_pre_git_check_and_update_ref_denies_effect",
+        "VF604_CP083_DISPOSABLE_GUEST_ONLY",
+        "VF604_CP083_EXPLICIT_NO_REMOTE",
+        "security_admission",
+        '"RED"',
+    ):
+        if token not in source:
+            fail("#604 CP083 guest UID negative source missing " + token)
+    if "import vf_office_v2_604_cp083_hardened_candidate" in source:
+        fail("#604 CP083 guest UID negatives must not import the candidate at load")
+    if "from vf_office_v2_604_cp083_hardened_candidate" in source:
+        fail("#604 CP083 guest UID negatives must not import the candidate at load")
+    if '== "COMMITTED_READBACK"' in source or "== 'COMMITTED_READBACK'" in source:
+        fail("#604 CP083 guest UID negatives must not treat COMMITTED_READBACK as success")
+
+
 def load(path: Path) -> dict:
     if not path.is_file():
         fail(f"missing {path.relative_to(ROOT)}")
@@ -3417,6 +3475,9 @@ def main() -> int:
     # New CP083 hardening candidate gates: LOCAL-only. Do not change the
     # historical sealed CP083 receipts or imply protected security admission.
     # Linux CI must actually execute the kernel socket negatives, not skip them.
+    # The guest UID suite is the exception: hosted CI, Windows, and every host
+    # that is not the disposable Linux guest record SKIP_NEEDS_GUEST. That skip
+    # is not a security pass. security_admission stays RED.
     # Client suite includes two ~3s deadline probes; allow headroom.
     # Union of the stack loop and main's CP084/CP085 rows. Counts match the
     # merged files. security_admission stays RED.
@@ -3440,6 +3501,9 @@ def main() -> int:
         ("test_vf_office_v2_604_cp083_candidate_evidence_gate.py", 24, 30),
         # ChatGPT-069: GAP_9 and GAP_6 stay expected failures. No candidate import.
         ("test_vf_office_v2_604_cp083_chatgpt069_negatives.py", 3, 30),
+        # ChatGPT-069 UID/guest negatives. SKIP_NEEDS_GUEST outside the guest.
+        # Only the revoke test is expected-fail (GAP). No candidate import.
+        (GUEST_UID_NEGATIVE_FILE, 5, 20),
     ):
         candidate_test = ROOT / "scripts" / test_file
         if not candidate_test.is_file():
@@ -3451,6 +3515,8 @@ def main() -> int:
         )
         if imports_candidate != (test_file in candidate_import_skip):
             fail("#604 CP083 candidate-import set drifted: " + test_file)
+        if test_file == GUEST_UID_NEGATIVE_FILE:
+            _require_guest_uid_negative_source(source)
         if os.name != "posix" and imports_candidate:
             skipped_candidate_imports.append(test_file)
             print("SKIP_NON_POSIX " + test_file)
@@ -3462,12 +3528,19 @@ def main() -> int:
             )
         except subprocess.TimeoutExpired:
             fail("#604 CP083 candidate negative test timed out: " + test_file)
+        linux_skip_allowed = {
+            "test_vf_office_v2_604_cp083_reconcile_negative.py",
+            GUEST_UID_NEGATIVE_FILE,
+        }
         if (test_run.returncode != 0
                 or f"Ran {count} tests" not in test_run.stderr
                 or (sys.platform == "linux"
-                    and test_file != "test_vf_office_v2_604_cp083_reconcile_negative.py"
+                    and test_file not in linux_skip_allowed
                     and "skipped" in test_run.stderr)):
             fail("#604 CP083 candidate negative tests failed: " + test_file)
+        if test_file == GUEST_UID_NEGATIVE_FILE and not _cp083_disposable_guest():
+            if "SKIP_NEEDS_GUEST" not in test_run.stderr or "skipped=5" not in test_run.stderr:
+                fail("#604 CP083 guest UID negatives must SKIP_NEEDS_GUEST outside the disposable guest")
     if os.name != "posix":
         if set(skipped_candidate_imports) != candidate_import_skip:
             fail("#604 CP083 candidate-import tests must SKIP_NON_POSIX")
