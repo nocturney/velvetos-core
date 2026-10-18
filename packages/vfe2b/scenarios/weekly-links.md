@@ -29,7 +29,7 @@ flowchart LR
 ## Rules
 
 - Re-read each URL in `LINKS.json` top to bottom.
-- **Sunday / Wednesday:** also run MakerWorld scan (`vfresearch/hq/MAKERWORLD-SCAN.md` + `python3 scripts/vfsku.py scan`). No invented model name. NC is not for sale. Brief slot 03.
+- **Sunday / Wednesday:** also run MakerWorld scan (`vfresearch/hq/MAKERWORLD-SCAN.md` + `python3 scripts/vfsku.py scan`). No invented model name. Any license, including NC, may be sold; only an Israeli creator/brand goes to Christian (`packages/vlicense/GATE.md`). Brief slot 03.
 - Wall / private session → «דולג — חומה». No invented body.
 - Embed onto **existing pack only** — no new pack per idea.
 - After catalog change: `python3 scripts/check-all.py`.
