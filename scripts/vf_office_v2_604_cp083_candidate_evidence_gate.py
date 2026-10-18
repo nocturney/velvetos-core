@@ -135,16 +135,20 @@ def decode(raw: bytes) -> dict:
     return obj
 
 
+def require_evidence_inode(info: os.stat_result, limit: int) -> None:
+    """One regular file, one name. A second link or a non-file is not evidence."""
+    require(stat.S_ISREG(info.st_mode), "NONREGULAR_FILE")
+    require(info.st_nlink == 1, "HARDLINK_ALIAS_REFUSED")
+    require(info.st_size <= limit, "OVERSIZED_FILE")
+
+
 def read_bounded(path: Path, limit: int) -> bytes:
-    """Reject symlink endpoints and non-regular files; enforce file byte cap."""
+    """Reject symlink endpoints, non-regular files, and hardlinks; cap bytes."""
     require(not path.is_symlink(), "SYMLINK_FILE_REFUSED")
     flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
     fd = os.open(path, flags)
     try:
-        info = os.fstat(fd)
-        require(stat.S_ISREG(info.st_mode) and info.st_size <= limit,
-                "NONREGULAR_OR_OVERSIZED_FILE")
-        require(info.st_nlink == 1, "HARDLINK_ALIAS_REFUSED")
+        require_evidence_inode(os.fstat(fd), limit)
         raw = os.read(fd, limit + 1)
         require(len(raw) <= limit, "OVERSIZED_FILE")
         return raw
@@ -205,10 +209,7 @@ def read_anchored(base: Path, name: object, limit: int) -> bytes:
         except OSError as exc:
             raise Refused("SYMLINK_FILE_REFUSED") from exc
         try:
-            info = os.fstat(fd)
-            require(stat.S_ISREG(info.st_mode) and info.st_size <= limit,
-                    "NONREGULAR_OR_OVERSIZED_FILE")
-            require(info.st_nlink == 1, "HARDLINK_ALIAS_REFUSED")
+            require_evidence_inode(os.fstat(fd), limit)
             raw = os.read(fd, limit + 1)
             require(len(raw) <= limit, "OVERSIZED_FILE")
             return raw

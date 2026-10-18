@@ -14,6 +14,8 @@ from pathlib import Path
 import re
 import sys
 
+import vf_office_v2_604_cp083_candidate_evidence_gate as evidence_gate
+
 ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = ROOT / "docs/implementation/office-v2/phase2/p0-604-cp083-native-lostack-two-receipts-2026-10-18.json"
 DRIVER = ROOT / "scripts/vf_office_v2_604_cp083_native_lostack_two_receipts.py"
@@ -249,10 +251,16 @@ def negatives(original):
     return denied
 
 
+def read_evidence(path: Path) -> dict:
+    """Load sealed evidence only when it is one regular file with one name."""
+    raw = evidence_gate.read_bounded(Path(path), 1024 * 1024)
+    return json.loads(raw.decode("utf-8"))
+
+
 def main(argv):
     if argv not in ([], ["--selftest"]):
         raise Refused("OFFLINE_VERIFY_ONLY")
-    data = json.loads(EVIDENCE.read_text(encoding="utf-8"))
+    data = read_evidence(EVIDENCE)
     result = validate(data)
     if argv == ["--selftest"]:
         result["mutations_rejected"] = negatives(data)
