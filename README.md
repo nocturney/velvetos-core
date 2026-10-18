@@ -220,7 +220,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
-| **Last verified / refreshed evidence** | `2026-10-16T09:41:28+03:00` |
+| **Last verified / refreshed evidence** | `2026-10-18T00:56:58+03:00` |
 
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
