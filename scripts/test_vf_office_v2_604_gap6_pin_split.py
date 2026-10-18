@@ -76,6 +76,10 @@ def sha256(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def sealed_key(path):
+    return Path(path).resolve().relative_to(ROOT).as_posix()
+
+
 def assigned(source, name):
     found = re.search(
         rf"{name} = \(\n\s*\"([0-9a-f]{{64}})\"", source)
@@ -219,10 +223,10 @@ class Gap6PinSplitTests(unittest.TestCase):
     def test_identity_receipt_byte_change_fails(self):
         path = PHASE2 / "p0-604-cp081-mtls-atomic-2026-10-16.json"
         raw = path.read_bytes()
-        self.assertEqual(sha256(path), SEALED[str(path.relative_to(ROOT))])
+        self.assertEqual(sha256(path), SEALED[sealed_key(path)])
         self.assertIn(IDENTITY_RECEIPT.encode("ascii"), raw)
         flipped = bytes([raw[0] ^ 1]) + raw[1:]
-        self.assertNotEqual(hashlib.sha256(flipped).hexdigest(), SEALED[str(path.relative_to(ROOT))])
+        self.assertNotEqual(hashlib.sha256(flipped).hexdigest(), SEALED[sealed_key(path)])
 
     def test_cp081_live_pin_differs_from_receipt_pin(self):
         sensor = sensor_text()
@@ -304,7 +308,7 @@ class Gap6PinSplitTests(unittest.TestCase):
         text = note.read_text(encoding="utf-8")
         self.assertIn(SAMEUID_HISTORICAL, text)
         self.assertIn(IDENTITY_RECEIPT, text)
-        self.assertEqual(sha256(note), SEALED[str(note.relative_to(ROOT))])
+        self.assertEqual(sha256(note), SEALED[sealed_key(note)])
 
     def test_sealed_comparison_files_stay_byte_identical(self):
         for rel, digest in SEALED.items():
