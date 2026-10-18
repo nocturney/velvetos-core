@@ -3420,6 +3420,15 @@ def main() -> int:
     # Client suite includes two ~3s deadline probes; allow headroom.
     # Union of the stack loop and main's CP084/CP085 rows. Counts match the
     # merged files. security_admission stays RED.
+    # The hardened candidate imports pwd at load. Tests that import it cannot
+    # even be collected on non-POSIX. Skip those with an explicit result.
+    # Static readers of the candidate source still run.
+    candidate_import_skip = {
+        "test_vf_office_v2_604_cp083_socket_negative.py",
+        "test_vf_office_v2_604_cp083_client_socket_negative.py",
+        "test_vf_office_v2_604_cp084_nonroot_sink_recovery.py",
+    }
+    skipped_candidate_imports = []
     for test_file, count, timeout_s in (
         ("test_vf_office_v2_604_cp083_hardening_candidate.py", 10, 15),
         ("test_vf_office_v2_604_cp083_socket_negative.py", 2, 15),
@@ -3431,6 +3440,17 @@ def main() -> int:
         candidate_test = ROOT / "scripts" / test_file
         if not candidate_test.is_file():
             fail("#604 CP083 candidate negative test missing: " + test_file)
+        source = candidate_test.read_text(encoding="utf-8")
+        imports_candidate = (
+            "import vf_office_v2_604_cp083_hardened_candidate" in source
+            or "from vf_office_v2_604_cp083_hardened_candidate" in source
+        )
+        if imports_candidate != (test_file in candidate_import_skip):
+            fail("#604 CP083 candidate-import set drifted: " + test_file)
+        if os.name != "posix" and imports_candidate:
+            skipped_candidate_imports.append(test_file)
+            print("SKIP_NON_POSIX " + test_file)
+            continue
         try:
             test_run = subprocess.run(
                 [sys.executable, "-B", str(candidate_test)],
@@ -3444,6 +3464,14 @@ def main() -> int:
                     and test_file != "test_vf_office_v2_604_cp083_reconcile_negative.py"
                     and "skipped" in test_run.stderr)):
             fail("#604 CP083 candidate negative tests failed: " + test_file)
+    if os.name != "posix":
+        if set(skipped_candidate_imports) != candidate_import_skip:
+            fail("#604 CP083 candidate-import tests must SKIP_NON_POSIX")
+        candidate_import_tests = "SKIP_NON_POSIX"
+    else:
+        if skipped_candidate_imports:
+            fail("#604 CP083 candidate-import tests must run on POSIX")
+        candidate_import_tests = "RAN"
 
     # #764: offline two-host native Git/SQLite lost-ACK receipts. SECURITY RED.
     # Not joined-run QA, not admission, not a remote GitHub effect.
@@ -3476,7 +3504,7 @@ def main() -> int:
 
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
-        f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY cp080=SEALED_RED_ONLY cp081=SEALED_RED_ONLY cp082=SEALED_RED_ONLY cp083=SEALED_RED_ONLY option_a=OWNER_APPROVED_SECURITY_RED"
+        f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY cp080=SEALED_RED_ONLY cp081=SEALED_RED_ONLY cp082=SEALED_RED_ONLY cp083=SEALED_RED_ONLY candidate_import_tests={candidate_import_tests} option_a=OWNER_APPROVED_SECURITY_RED"
     )
     return 0
 
