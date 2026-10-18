@@ -1,0 +1,1 @@
+- 2026-10-18 - **CP083 identity-helper env:** `subprocess_safe` passes a constructed allowlist and refuses the spawn when a required name is missing. The parent environment is not copied. The etcd server spawn and git sites are unchanged. `security_admission` stays RED.

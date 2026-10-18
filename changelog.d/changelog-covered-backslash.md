@@ -1,0 +1,1 @@
+- 2026-10-18 - **Changelog covered() paths:** `changelog.d\foo.md` counts as a fragment, and `scripts\tool.py` with no fragment still fails. The self-test swaps in a fragment check that does not fold backslashes, so dropping the fold inside `covered` fails. The case count pin is 29. `needs_note` is unchanged.

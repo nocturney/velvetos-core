@@ -1,0 +1,1 @@
+- 2026-10-18 - **CrewAI case 06 task text:** the Triage and Reviewer descriptions tell each field to be taken from that issue's own excerpt, including a known blocker or next action when another cell is unknown. Offline sensor only. No model call.

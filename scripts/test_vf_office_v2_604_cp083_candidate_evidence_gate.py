@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import os
 import stat
@@ -568,6 +569,50 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
             self.assertEqual(str(exc), "ARTIFACT_PARENT_NOT_REAL_DIRECTORY")
         else:
             self.fail("symlink directory anchor was followed: " + repr(got))
+
+    def _load_gate_copy(self, source: str):
+        path = self.base / "cp083_root_open_mutant.py"
+        path.write_text(source, encoding="utf-8")
+        spec = importlib.util.spec_from_file_location("cp083_root_open_mutant", path)
+        if spec is None or spec.loader is None:
+            self.fail("cannot load root-open mutant")
+        mutant = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = mutant
+        try:
+            spec.loader.exec_module(mutant)
+        except Exception:
+            sys.modules.pop(spec.name, None)
+            raise
+        return mutant
+
+    def test_symlinked_evidence_root_requires_directory_flags(self):
+        """The caller-supplied root is opened with O_DIRECTORY|O_NOFOLLOW.
+
+        Replacing that root with a symlink must be refused. A copy that opens
+        the root with O_RDONLY follows the link and reads the file.
+        """
+        self._skip_if_directory_open_unavailable()
+        source = Path(gate.__file__).read_text(encoding="utf-8")
+        live_open = "        base_fd = os.open(base, flags_dir)\n"
+        weak_open = "        base_fd = os.open(base, os.O_RDONLY)\n"
+        self.assertEqual(source.count(live_open), 1)
+        mutated = source.replace(live_open, weak_open, 1)
+        self.assertNotIn(live_open, mutated)
+        real = self.base / "real-root"
+        (real / "run-1").mkdir(parents=True)
+        secret = b'{"root":"followed"}\n'
+        (real / "run-1" / "receipt.jsonl").write_bytes(secret)
+        link = self.base / "linked-root"
+        link.symlink_to(real, target_is_directory=True)
+        with self.assertRaises(gate.Refused) as caught:
+            gate.read_anchored(link, "run-1/receipt.jsonl", 4096)
+        self.assertEqual(str(caught.exception), "ANCHORED_OPEN_REFUSED")
+        mutant = self._load_gate_copy(mutated)
+        try:
+            followed = mutant.read_anchored(link, "run-1/receipt.jsonl", 4096)
+        finally:
+            sys.modules.pop(getattr(mutant, "__name__", ""), None)
+        self.assertEqual(followed, secret)
 
 
 if __name__ == "__main__":
