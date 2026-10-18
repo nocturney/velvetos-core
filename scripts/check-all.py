@@ -194,6 +194,22 @@ def readme_gate_fixture() -> list[str]:
         if rc != 0 or not msg.startswith("SKIP readme-contract"):
             errors.append(f"missing base must skip with rc=0, got rc={rc} msg={msg!r}")
 
+        # The real gate still skips on a hosted runner. The fixture cases above
+        # pass hosted_skip=False so they keep exercising the contract there.
+        previous = os.environ.get("GITHUB_ACTIONS")
+        os.environ["GITHUB_ACTIONS"] = "true"
+        try:
+            msg, rc = local_readme_gate(repo, base="origin/main", head="HEAD")
+            if rc != 0 or not msg.startswith("SKIP readme-contract (hosted workflow"):
+                errors.append(
+                    f"GITHUB_ACTIONS must skip the real gate with rc=0, got rc={rc} msg={msg!r}"
+                )
+        finally:
+            if previous is None:
+                os.environ.pop("GITHUB_ACTIONS", None)
+            else:
+                os.environ["GITHUB_ACTIONS"] = previous
+
     with tempfile.TemporaryDirectory() as plain:
         msg, rc = local_readme_gate(Path(plain), base="origin/main", head="HEAD", hosted_skip=False)
         if rc != 0 or not msg.startswith("SKIP readme-contract"):
