@@ -83,14 +83,18 @@ def fragment_text(item, repo: Path | None, base: str | None, head: str | None) -
 
 
 def fragment_covers(item, repo: Path | None = None, base: str | None = None, head: str | None = None) -> bool:
-    """Only an added or modified fragment with a valid non-empty bullet covers."""
+    """Only an added fragment with a valid non-empty bullet covers.
+
+    A bare path string is the older name-only probe. Status M is an existing
+    fragment overwritten in place and does not cover.
+    """
     status, normal = _entry(item)
     if not fragment_name(normal):
         return False
-    if not (status.startswith("A") or status.startswith("M")):
-        return False
     if isinstance(item, str):
         return True
+    if not status.startswith("A"):
+        return False
     text = fragment_text(item, repo, base, head)
     if text is None:
         return False
@@ -157,7 +161,8 @@ def compile_step(paths: list, repo: Path | None = None, base: str | None = None,
             bullets = bullets_in(text, _entry(item)[1])
         except ValueError:
             return False
-        if any(bullet not in changelog for bullet in bullets):
+        folded = set(changelog.splitlines())
+        if any(bullet not in folded for bullet in bullets):
             return False
     return True
 
@@ -730,6 +735,9 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
         (gate([("M", "changelog.d/someone-else.md", "-   \n"), ("A", "changelog.d/mine.md", "- 2026-10-18 - **Mine:** one line.\n"), ("M", "scripts/check-all.py")]) == 1, "a new fragment must not excuse emptying an existing one"),
         (gate([("A", "changelog.d/mine.md", "- 2026-10-18 - **Mine:** one line.\n"), ("M", "scripts/check-all.py")]) == 0, "an added fragment with a real bullet must cover"),
         (gate([("M", "CHANGELOG.md", "## [Unreleased]\n\n- 2026-10-18 - **Theirs:** stays.\n"), ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Theirs:** stays.\n")]) == 0, "the compile step may delete a fragment whose bullet is in CHANGELOG.md"),
+        (gate([("M", "CHANGELOG.md", "## [Unreleased]\n\n- 2026-10-18 - **Unrelated:** other.\n"), ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Theirs:** stays.\n")]) == 1, "the compile step refuses a deleted bullet that was not folded"),
+        (gate([("M", "CHANGELOG.md", "## [Unreleased]\n\n- 2026-10-18 - **Theirs:** stays. extra words.\n"), ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Theirs:** stays.\n")]) == 1, "a longer changelog line is not a folded bullet"),
+        (gate([("M", "changelog.d/someone-else.md", "- 2026-10-18 - **Replacement:** erases theirs.\n"), ("M", "scripts/check-all.py")]) == 1, "overwriting an existing fragment must not cover a capability PR"),
         (gate([("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Theirs:** stays.\n")]) == 1, "deleting a fragment without folding it into CHANGELOG.md must fail"),
         (gate([("M", "CHANGELOG.md", "## [Unreleased]\n\n- 2026-10-18 - **Theirs:** stays.\n"), ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Theirs:** stays.\n"), ("M", "docs/NOTE.md")]) == 1, "a docs edit beside a fragment deletion is not the compile step"),
         (gate(["docs/NOTE.md"]) == 0, "docs-only PR must pass without a fragment"),
@@ -878,6 +886,37 @@ def git_fixture() -> list[str]:
         head = commit_from_parent("compile their fragment")
         if gate(changed_files(parent, head, repo), repo, parent, head) != 0:
             errors.append("git compile step that folds a fragment must pass")
+
+        git(repo, "reset", "--hard", parent)
+        git(repo, "mv", "changelog.d/someone-else.md", "changelog.d/mine.md")
+        (repo / "scripts" / "tool.py").write_text("print(8)\n", encoding="utf-8")
+        head = commit_from_parent("rename their fragment")
+        raw = run_git(
+            ["diff", "--name-status", "--find-renames"],
+            revisions=[f"{parent}...{head}"],
+            cwd=repo,
+            check=True,
+        )
+        if not any(
+            line.split("\t")[0][:1] == "R" and "changelog.d/someone-else.md" in line
+            for line in raw.stdout.splitlines()
+        ):
+            errors.append(f"fixture did not produce a fragment rename: {raw.stdout!r}")
+        renamed = changed_files(parent, head, repo)
+        normalized = [(status, path.replace("\\", "/")) for status, path in renamed]
+        if ("D", "changelog.d/someone-else.md") not in normalized:
+            errors.append(f"renaming a fragment must be a deletion: {renamed}")
+        if gate(renamed, repo, parent, head) != 1:
+            errors.append("renaming a fragment must not cover a capability PR")
+
+        git(repo, "reset", "--hard", parent)
+        (repo / "scripts" / "tool.py").write_text("print(9)\n", encoding="utf-8")
+        (folder / "someone-else.md").write_text(
+            "- 2026-10-18 - **Replacement:** erases theirs.\n", encoding="utf-8"
+        )
+        head = commit_from_parent("overwrite their fragment")
+        if gate(changed_files(parent, head, repo), repo, parent, head) != 1:
+            errors.append("git PR that overwrites an existing fragment must fail")
     return errors
 
 
