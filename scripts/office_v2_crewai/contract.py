@@ -13,6 +13,7 @@ APPROVED_PORT = 11435
 APPROVED_AT = "2026-10-18T15:28:00+03:00"
 APPROVED_BY = "Christian"
 APPROVED_MODEL = "qwen3.5:9b"
+REASONING_EFFORT = "none"
 APPROVED_MODEL_DIGEST = "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90"
 EVIDENCE_COMMENT = "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250120048"
 E3_DECISION = "ACCEPTED_RISK"
@@ -75,13 +76,18 @@ COST_CEILING = 0
 ROLES = ("Triage", "Reviewer")
 
 # CLQ-16, issue 612 comment 6250312836. appdirs 1.4.4 resolves LocalAppData
-# through SHGetFolderPathW, so LOCALAPPDATA does not move the CrewAI mkdir.
+# through SHGetFolderPathW, so LOCALAPPDATA does not move that mkdir.
 # CREWAI_STORAGE_DIR must be an absolute path on D:.
+# LAB-2, issue 595 comment 6250622621: token_manager reads LOCALAPPDATA
+# (CrewAI\credentials\secret.key) even when tracing is off. LOCALAPPDATA
+# and APPDATA must still be sandbox paths.
 E4_COMMENT = "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250312836"
 E4_CREWAI_VERSION = "1.15.28"
 E4_APPDIRS_VERSION = "1.4.4"
 SANDBOX_ROOT = "D:\\Velvet\\Pilots\\crewai-e4\\sandbox-home"
 CREWAI_PROFILE_REL = "AppData\\Local\\CrewAI"
+TOKEN_CREDENTIALS_REL = "AppData\\Local\\CrewAI\\credentials"
+KICKOFF_OUTPUT_REL = "crewai-output\\kickoff.md"
 POSITIVE_DB_NAME = "latest_kickoff_task_outputs.db"
 
 GATES = ("E1", "E2", "E3", "E4", "E5", "E6", "E7")

@@ -25,6 +25,13 @@ Setting LOCALAPPDATA does not move that write. `Crew()` then writes
 sets that variable, TEMP, TMP, and the other CLQ-16 paths before import.
 A missing value or a path that is not on D: is refused.
 
+LAB-2 (issue 595 comment 6250622621) showed a second write:
+`%LOCALAPPDATA%\\CrewAI\\credentials\\secret.key`, from
+`token_manager.py`, even with tracing off and `CREWAI_STORAGE_DIR` set.
+That path reads `LOCALAPPDATA`, so the runner also sets `LOCALAPPDATA`
+and `APPDATA` to sandbox paths. The E4 manifest lists
+`AppData\\Local\\CrewAI\\credentials`. A missing row is refused.
+
 The committed before/after manifest, HKCU export diff, no-pilot control
 run, and positive db/lock check are NOT_OBSERVED. Nothing was run on Chris.
 
@@ -46,9 +53,20 @@ Owner approval at 2026-10-18 15:28 IDT, recorded in issue 612 comment
 `qwen3.5:9b`, digest
 `56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90`.
 Port 11434 is not the pilot listener. The provider sends `think: false`.
-It refuses any non-loopback host, any digest other than the approved digest,
-and any process that does not have `OLLAMA_NO_CLOUD` set to `1` or `true`.
-Remote and paid APIs stay refused.
+LAB-2 showed that Ollama's `/v1` endpoint ignores `think: false` and that
+`reasoning_effort: "none"` disables qwen3.5 reasoning there. The frozen
+model input records `reasoning_effort: "none"`, and the crew LLM passes
+that value. It refuses any non-loopback host, any digest other than the
+approved digest, and any process that does not have `OLLAMA_NO_CLOUD`
+set to `1` or `true`. Remote and paid APIs stay refused.
+
+A completed kickoff saves its text at
+`D:\\Velvet\\Pilots\\crewai-e4\\sandbox-home\\crewai-output\\kickoff.md`
+and records that path and sha256. The receipt status stays
+`NOT_VERIFIED`. Any exception during the run writes a `FAIL` receipt.
+On Windows, zero listening ports is proven from the pilot process tree
+with Get-NetTCPConnection / Get-NetUDPEndpoint, or `netstat -ano` when
+those cmdlets fail. An unproven observation is refused.
 
 ## Pins that block the CVE fixes
 

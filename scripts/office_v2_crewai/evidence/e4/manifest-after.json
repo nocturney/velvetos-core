@@ -10,6 +10,13 @@
     {
       "mtime": null,
       "present": null,
+      "rel": "AppData\\Local\\CrewAI\\credentials",
+      "sha256": null,
+      "size": null
+    },
+    {
+      "mtime": null,
+      "present": null,
       "rel": "AppData\\Roaming\\CrewAI",
       "sha256": null,
       "size": null

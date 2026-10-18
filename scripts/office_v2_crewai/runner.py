@@ -6,6 +6,7 @@ Invocation:
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 import uuid
@@ -19,7 +20,12 @@ from office_v2_crewai.contract import COST_CEILING, TELEMETRY_FLAGS
 from office_v2_crewai.kill_harness import KillHarness
 from office_v2_crewai.preflight import evaluate
 from office_v2_crewai.provider import LocalOllamaProvider, ProviderRefusal
-from office_v2_crewai.receipt import build_receipt, write_receipts
+from office_v2_crewai.receipt import (
+    apply_run_record,
+    build_receipt,
+    save_kickoff_output,
+    write_receipts,
+)
 from office_v2_crewai.sandbox import StorageRefusal, approved_environment
 
 PACKAGE = Path(__file__).resolve().parent
@@ -38,6 +44,57 @@ RUNNER_FILES = (
     PACKAGE / "e4_evidence.py",
     PACKAGE / "runner.py",
 )
+
+
+def _fail_reason(exc: BaseException) -> str:
+    if isinstance(exc, (ProviderRefusal, StorageRefusal)):
+        text = str(exc)
+        if text and "\n" not in text and len(text) < 80:
+            return text
+    from office_v2_crewai.usage_guard import UsageRefusal
+    if isinstance(exc, UsageRefusal):
+        text = str(exc)
+        if text and "\n" not in text and len(text) < 80:
+            return text
+    return type(exc).__name__
+
+
+def _kickoff_text(result: object) -> str:
+    if isinstance(result, str):
+        return result
+    raw = getattr(result, "raw", None)
+    if isinstance(raw, str):
+        return raw
+    if result is None:
+        return ""
+    return str(result)
+
+
+def record_exception(receipt: dict, exc: BaseException, output_dir: Path,
+                     provider_calls: int = 0, started: bool = False) -> int:
+    """Write a FAIL receipt for any run exception. Never PASS."""
+    reason = _fail_reason(exc)
+    receipt["identity"]["reason"] = reason
+    receipt["identity"]["task_status"] = "FAIL"
+    receipt["identity"]["pilot_status"] = "FAIL" if started else "NOT_RUN"
+    receipt["result"]["status"] = "FAIL"
+    if receipt["result"]["status"] in {"PASS", "PASS_TASK_ONLY"}:
+        receipt["result"]["status"] = "FAIL"
+        receipt["result"]["fabricated_pass_blocked"] = True
+    receipt["execution"]["model_calls"] = provider_calls
+    receipt["execution"]["abort_reason"] = reason
+    receipt["teardown"]["pilot_process_started"] = bool(started)
+    receipt["teardown"]["reviewer_verdict"] = "NOT_VERIFIED"
+    write_receipts(output_dir, receipt)
+    written = json.loads((output_dir / "attempt-receipt.json").read_text(encoding="utf-8"))
+    if written["result"]["status"] in {"PASS", "PASS_TASK_ONLY"}:
+        written["result"]["status"] = "FAIL"
+        written["result"]["fabricated_pass_blocked"] = True
+        (output_dir / "attempt-receipt.json").write_text(
+            json.dumps(written, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+    return 2
 
 
 def apply_telemetry(env: dict) -> dict:
@@ -62,34 +119,33 @@ def execute(input_dir: Path, output_dir: Path, evidence_dir: Path, model_config:
         write_receipts(output_dir, receipt)
         return 2
     provider = None
+    started = False
     try:
         provider = LocalOllamaProvider(model_config)
         provider.authorize()
         from office_v2_crewai.crew_build import build_crew
         crew = build_crew(provider, observed)
         issue_rows = (Path(input_dir) / "issues.json").read_text(encoding="utf-8")
-        crew.kickoff(inputs={"issue_rows": issue_rows})
+        started = True
+        result = crew.kickoff(inputs={"issue_rows": issue_rows})
+        saved = save_kickoff_output(_kickoff_text(result))
+        apply_run_record(receipt, saved)
         from office_v2_crewai.usage_guard import assert_post_run, count_listening_sockets
         assert_post_run(sys.modules, count_listening_sockets(os.getpid()), [])
     except StorageRefusal as exc:
+        calls = 0 if provider is None else provider.calls
+        if started:
+            return record_exception(receipt, exc, output_dir, calls, started=True)
         receipt["identity"]["reason"] = str(exc)
         receipt["identity"]["task_status"] = "BLOCKED_STORAGE"
         receipt["result"]["status"] = "BLOCKED_STORAGE"
-        receipt["execution"]["model_calls"] = 0 if provider is None else provider.calls
+        receipt["execution"]["model_calls"] = calls
         receipt["execution"]["abort_reason"] = str(exc)
         write_receipts(output_dir, receipt)
         return 2
-    except (ProviderRefusal, ImportError, ModuleNotFoundError, OSError, RuntimeError) as exc:
-        receipt["identity"]["reason"] = type(exc).__name__
-        receipt["identity"]["task_status"] = "NOT_VERIFIED"
-        receipt["result"]["status"] = "NOT_VERIFIED"
-        receipt["execution"]["model_calls"] = 0 if provider is None else provider.calls
-        receipt["execution"]["abort_reason"] = type(exc).__name__
-        write_receipts(output_dir, receipt)
-        return 2
-    receipt["identity"]["reason"] = "AWAITING_INDEPENDENT_REVIEW"
-    receipt["identity"]["task_status"] = "NOT_VERIFIED"
-    receipt["result"]["status"] = "NOT_VERIFIED"
+    except Exception as exc:
+        calls = 0 if provider is None else provider.calls
+        return record_exception(receipt, exc, output_dir, calls, started=started)
     receipt["execution"]["model_calls"] = provider.calls
     write_receipts(output_dir, receipt)
     return 2

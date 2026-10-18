@@ -7,6 +7,7 @@ from office_v2_crewai.contract import (
     APPROVED_OLLAMA_HOST,
     APPROVED_OPENAI_BASE,
     CREWAI_VERSION,
+    REASONING_EFFORT,
     SANDBOX_ROOT,
     TELEMETRY_FLAGS,
 )
@@ -69,11 +70,14 @@ def build_crew(provider: LocalOllamaProvider, env: dict):
                 api_key=None,
                 base_url=APPROVED_OPENAI_BASE,
                 is_litellm=False,
+                reasoning_effort=REASONING_EFFORT,
             )
             object.__setattr__(self, "_bound", bound)
             object.__setattr__(self, "_env", bound_env)
             if self.base_url != APPROVED_OPENAI_BASE or self.is_litellm is not False:
                 raise ProviderRefusal("LLM_ENDPOINT_MISMATCH")
+            if (self.additional_params or {}).get("reasoning_effort") != REASONING_EFFORT:
+                raise ProviderRefusal("REASONING_EFFORT_REFUSED")
             if self.provider != "ollama":
                 raise ProviderRefusal("LITELLM_ROUTE_REFUSED")
 

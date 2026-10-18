@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import ast
+import hashlib
 import json
 import os
 import shutil
@@ -25,6 +26,7 @@ from office_v2_crewai.contract import (  # noqa: E402
     PRIVATE_REPO_NEEDLE,
     SANDBOX_ROOT,
     TELEMETRY_FLAGS,
+    TOKEN_CREDENTIALS_REL,
 )
 from office_v2_crewai.e4_evidence import (  # noqa: E402
     REQUIRED_RELS,
@@ -58,12 +60,15 @@ from office_v2_crewai.sandbox import (  # noqa: E402
     bind_process_sandbox,
     enter_sandbox,
 )
-from office_v2_crewai.runner import execute  # noqa: E402
+from office_v2_crewai.receipt import apply_run_record, save_kickoff_output, write_receipts  # noqa: E402
+from office_v2_crewai.runner import execute, record_exception  # noqa: E402
 from office_v2_crewai.usage_guard import (  # noqa: E402
     UsageRefusal,
     assert_crew_spec,
     assert_not_chroma_cli,
     assert_post_run,
+    count_listening_sockets,
+    parse_netstat,
     module_is_forbidden,
 )
 
@@ -403,6 +408,31 @@ def check_provider() -> None:
         fail("approved local chat was not a single think-disabled call")
     if b'"think": false' not in chat[1][1] or not chat[1][0].endswith("/api/chat"):
         fail("chat payload did not send think false")
+    if b'"reasoning_effort": "none"' not in chat[1][1]:
+        fail("chat payload did not send reasoning_effort none")
+    effort = json.loads(MODEL.read_text(encoding="ascii"))
+    if effort.get("reasoning_effort") != "none":
+        fail("frozen model input does not record reasoning_effort none")
+    dropped = dict(effort)
+    del dropped["reasoning_effort"]
+    dropped_path = missing.parent / "effort.json"
+    dropped_path.write_text(json.dumps(dropped), encoding="ascii")
+    try:
+        LocalOllamaProvider(dropped_path)
+    except ProviderRefusal as exc:
+        if str(exc) != "REASONING_EFFORT_REFUSED":
+            fail("missing reasoning_effort reason: %s" % exc)
+    else:
+        fail("missing reasoning_effort was accepted")
+    dropped["reasoning_effort"] = "low"
+    dropped_path.write_text(json.dumps(dropped), encoding="ascii")
+    try:
+        LocalOllamaProvider(dropped_path)
+    except ProviderRefusal as exc:
+        if str(exc) != "REASONING_EFFORT_REFUSED":
+            fail("low reasoning_effort reason: %s" % exc)
+    else:
+        fail("low reasoning_effort was accepted")
     if APPROVED_MODEL.encode("ascii") not in chat[1][1]:
         fail("chat payload did not use the approved model")
     wrong_host = model_env()
@@ -503,6 +533,8 @@ def check_ast() -> None:
         fail("crew source sets is_litellm True")
     if "base_url=APPROVED_OPENAI_BASE" not in source:
         fail("crew source does not pin the OpenAI-compatible base URL")
+    if "reasoning_effort=REASONING_EFFORT" not in source:
+        fail("crew source does not pass reasoning_effort none")
     if APPROVED_OPENAI_BASE != "http://127.0.0.1:11435/v1":
         fail("approved OpenAI base is not the 11435 /v1 endpoint")
     saw_bind = False
@@ -595,6 +627,12 @@ def check_sandbox_mutations() -> None:
     assert_proxy_env(env)
     if "CHROMA_ANONYMIZED_TELEMETRY" in approved_environment():
         fail("removed chroma telemetry variable was set")
+    if approved_environment()["LOCALAPPDATA"] != SANDBOX_ROOT + "\\AppData\\Local":
+        fail("LOCALAPPDATA is not the sandbox profile")
+    if approved_environment()["APPDATA"] != SANDBOX_ROOT + "\\AppData\\Roaming":
+        fail("APPDATA is not the sandbox roaming profile")
+    if TOKEN_CREDENTIALS_REL not in REQUIRED_RELS:
+        fail("token credentials path is not in the E4 manifest")
     if "TIKTOKEN_CACHE_DIR" in approved_environment():
         fail("TIKTOKEN_CACHE_DIR was set")
     for key in PATH_KEYS:
@@ -748,6 +786,30 @@ def check_e4_mutations() -> None:
 
         mutate(crewai_hash, "MANIFEST_CREWAI_PROFILE_WRITE")
 
+        def drop_credentials(root: Path) -> None:
+            for name in ("manifest-before.json", "manifest-after.json"):
+                path = root / "e4" / name
+                document = load(path)
+                document["entries"] = [
+                    row for row in document["entries"] if row["rel"] != TOKEN_CREDENTIALS_REL
+                ]
+                dump(path, document)
+
+        mutate(drop_credentials, "MANIFEST_PATH_MISSING")
+
+        def credentials_hash(root: Path) -> None:
+            path = root / "e4" / "manifest-after.json"
+            document = load(path)
+            for row in document["entries"]:
+                if row["rel"] == TOKEN_CREDENTIALS_REL:
+                    row["present"] = True
+                    row["sha256"] = "c" * 64
+                    row["size"] = 44
+                    row["mtime"] = 3
+            dump(path, document)
+
+        mutate(credentials_hash, "MANIFEST_TOKEN_CREDENTIALS_WRITE")
+
         def cache_hash(root: Path) -> None:
             path = root / "e4" / "manifest-after.json"
             document = load(path)
@@ -891,6 +953,167 @@ def check_committed_e4_shape() -> None:
         fail("committed containment claims an observation")
 
 
+def _pilot_tree() -> dict:
+    return {
+        "processes": [
+            {"pid": 10, "ppid": 1},
+            {"pid": 11, "ppid": 10},
+            {"pid": 99, "ppid": 1},
+        ],
+        "tcp": [{"pid": 99, "state": "Listen"}, {"pid": 11, "state": "Established"}],
+        "udp": [],
+    }
+
+
+def check_listeners() -> None:
+    tree = _pilot_tree()
+    if count_listening_sockets(10, platform="win32", observation=tree) != 0:
+        fail("a listener outside the pilot tree was counted")
+    listening = json.loads(json.dumps(tree))
+    listening["tcp"].append({"pid": 11, "state": "LISTENING"})
+    if count_listening_sockets(10, platform="win32", observation=listening) != 1:
+        fail("a child TCP listener was not counted")
+    udp = json.loads(json.dumps(tree))
+    udp["udp"].append({"pid": 11})
+    if count_listening_sockets(10, platform="win32", observation=udp) != 1:
+        fail("a child UDP endpoint was not counted")
+    _expect_usage(
+        lambda: count_listening_sockets(10, platform="win32", observation={"processes": []}),
+        "PILOT_LISTENER_UNPROVEN",
+    )
+    _expect_usage(
+        lambda: count_listening_sockets(123, platform="win32", observation=tree),
+        "PILOT_LISTENER_UNPROVEN",
+    )
+
+    def boom():
+        raise OSError("powershell missing")
+
+    _expect_usage(
+        lambda: count_listening_sockets(10, platform="win32", observe=boom),
+        "PILOT_LISTENER_UNPROVEN",
+    )
+    text = (
+        "Active Connections\n\n"
+        "  Proto  Local Address          Foreign Address        State           PID\n"
+        "  TCP    127.0.0.1:9            0.0.0.0:0              LISTENING       11\n"
+        "  UDP    0.0.0.0:53             *:*                                    99\n"
+    )
+    if count_listening_sockets(10, platform="win32", observation={"processes": tree["processes"], "netstat": text}) != 1:
+        fail("netstat listener was not filtered to the pilot tree")
+    _expect_usage(lambda: parse_netstat("not a table"), "PILOT_LISTENER_UNPROVEN")
+    quiet = (
+        "Active Connections\n\n"
+        "  Proto  Local Address          Foreign Address        State           PID\n"
+    )
+    parsed = parse_netstat(quiet)
+    if count_listening_sockets(
+        10,
+        platform="win32",
+        observation={"processes": tree["processes"], "tcp": parsed["tcp"], "udp": parsed["udp"]},
+    ) != 0:
+        fail("an empty netstat table was not a proven zero")
+    if count_listening_sockets(os.getpid()) < 0:
+        fail("linux listener count was unproven")
+
+
+def check_run_record() -> None:
+    out = Path(tempfile.mkdtemp(prefix="crewai-run-"))
+    recorded = Path(tempfile.mkdtemp(prefix="crewai-recorded-"))
+    crashed = Path(tempfile.mkdtemp(prefix="crewai-crash-"))
+    crashed_late = Path(tempfile.mkdtemp(prefix="crewai-crash-late-"))
+    try:
+        execute(INPUTS, out, EVIDENCE, MODEL, env={})
+        original = json.loads((out / "attempt-receipt.json").read_text(encoding="utf-8"))
+        captured = []
+
+        def writer(path, data):
+            captured.append((path, data))
+
+        saved = save_kickoff_output("reviewed output\n", writer=writer)
+        if len(captured) != 1 or not captured[0][0].startswith(SANDBOX_ROOT + "\\crewai-output\\"):
+            fail("kickoff output was not saved under the D: sandbox")
+        if hashlib.sha256(captured[0][1]).hexdigest() != saved["sha256"]:
+            fail("saved output sha256 does not match the bytes")
+        completed = json.loads(json.dumps(original))
+        apply_run_record(completed, saved)
+        write_receipts(recorded, completed)
+        if (recorded / "summary.md").read_text(encoding="utf-8") == "NOT_RUN\n":
+            fail("a completed run still recorded NOT_RUN")
+        post = json.loads((recorded / "postflight-receipt.json").read_text(encoding="utf-8"))
+        attempt = json.loads((recorded / "attempt-receipt.json").read_text(encoding="utf-8"))
+        if post["pilot_process_started"] is not True or "No pilot process was started" in post["note"]:
+            fail("postflight still says the pilot did not start")
+        if post["output_sha256"] != saved["sha256"] or post["result_status"] != "NOT_VERIFIED":
+            fail("completed receipt did not record the output sha256")
+        if attempt["result"]["status"] in {"PASS", "PASS_TASK_ONLY", "NOT_RUN"}:
+            fail("completed receipt status was %s" % attempt["result"]["status"])
+        if not str(post["output_path"]).startswith(SANDBOX_ROOT + "\\"):
+            fail("recorded output path left the sandbox")
+        try:
+            save_kickoff_output("   ", writer=writer)
+        except StorageRefusal as exc:
+            if str(exc) != "OUTPUT_DISCARDED":
+                fail("discarded output reason: %s" % exc)
+        else:
+            fail("discarded output was saved")
+        bad_path = dict(saved)
+        bad_path["path"] = "C:\\Users\\Public\\kickoff.md"
+        try:
+            apply_run_record(json.loads(json.dumps(original)), bad_path)
+        except StorageRefusal as exc:
+            if str(exc) != "OUTPUT_NOT_ON_D":
+                fail("C: output reason: %s" % exc)
+        else:
+            fail("C: output path was accepted")
+        bad_hash = dict(saved)
+        bad_hash["sha256"] = "0" * 64
+        try:
+            apply_run_record(json.loads(json.dumps(original)), bad_hash)
+        except StorageRefusal as exc:
+            if str(exc) != "OUTPUT_HASH_MISMATCH":
+                fail("bad output hash reason: %s" % exc)
+        else:
+            fail("bad output hash was accepted")
+        forged = json.loads(json.dumps(original))
+        forged["teardown"]["pilot_process_started"] = True
+        forged["result"]["status"] = "NOT_RUN"
+        try:
+            write_receipts(recorded, forged)
+        except StorageRefusal as exc:
+            if str(exc) != "RUN_STATUS_NOT_RUN":
+                fail("NOT_RUN after start reason: %s" % exc)
+        else:
+            fail("NOT_RUN after start was accepted")
+        fresh = json.loads(json.dumps(original))
+        code = record_exception(fresh, ValueError("malformed"), crashed, provider_calls=1, started=False)
+        written = json.loads((crashed / "attempt-receipt.json").read_text(encoding="utf-8"))
+        if code != 2 or written["result"]["status"] != "FAIL":
+            fail("ValueError did not write a FAIL receipt: %s" % written["result"]["status"])
+        if written["result"]["status"] in {"PASS", "PASS_TASK_ONLY"}:
+            fail("exception receipt recorded PASS")
+        late = json.loads(json.dumps(original))
+        code = record_exception(
+            late,
+            json.JSONDecodeError("Expecting value", "doc", 0),
+            crashed_late,
+            provider_calls=1,
+            started=True,
+        )
+        late_receipt = json.loads((crashed_late / "attempt-receipt.json").read_text(encoding="utf-8"))
+        late_post = json.loads((crashed_late / "postflight-receipt.json").read_text(encoding="utf-8"))
+        late_summary = (crashed_late / "summary.md").read_text(encoding="utf-8")
+        if code != 2 or late_receipt["result"]["status"] != "FAIL" or late_summary != "FAIL\n":
+            fail("malformed reply did not record FAIL")
+        if late_post["pilot_process_started"] is not True or "No pilot process was started" in late_post["note"]:
+            fail("crash after start still says the pilot did not start")
+    finally:
+        shutil.rmtree(out, ignore_errors=True)
+        shutil.rmtree(recorded, ignore_errors=True)
+        shutil.rmtree(crashed, ignore_errors=True)
+        shutil.rmtree(crashed_late, ignore_errors=True)
+
+
 def check_workflows() -> None:
     folder = ROOT / ".github" / "workflows"
     for path in folder.glob("*"):
@@ -918,6 +1141,8 @@ def main() -> int:
     check_provider()
     check_kill()
     check_execute()
+    check_listeners()
+    check_run_record()
     check_ast()
     check_workflows()
     if "crewai" in sys.modules:

@@ -9,6 +9,7 @@ from pathlib import Path
 from office_v2_crewai.contract import (
     CREWAI_PROFILE_REL,
     E4_APPDIRS_VERSION,
+    TOKEN_CREDENTIALS_REL,
     E4_COMMENT,
     E4_CREWAI_VERSION,
     POSITIVE_DB_NAME,
@@ -25,6 +26,7 @@ PROFILE_SOURCE = "SHGetFolderPathW"
 
 REQUIRED_RELS = (
     "AppData\\Local\\CrewAI",
+    "AppData\\Local\\CrewAI\\credentials",
     "AppData\\Roaming\\CrewAI",
     "AppData\\Local\\crewai",
     "AppData\\Local\\crewai\\credentials",
@@ -243,6 +245,8 @@ def judge_manifests(before: dict, after: dict, control: dict) -> str:
     changed = [rel for rel in REQUIRED_RELS if _identity(before_map[rel]) != _identity(after_map[rel])]
     if CREWAI_PROFILE_REL in changed:
         return "MANIFEST_CREWAI_PROFILE_WRITE"
+    if TOKEN_CREDENTIALS_REL in changed:
+        return "MANIFEST_TOKEN_CREDENTIALS_WRITE"
     for rel in changed:
         if rel not in noise:
             return "MANIFEST_CHANGED"

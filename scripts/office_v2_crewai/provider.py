@@ -20,6 +20,7 @@ from office_v2_crewai.contract import (
     APPROVED_MODEL_DIGEST,
     APPROVED_OLLAMA_HOST,
     APPROVED_OPENAI_BASE,
+    REASONING_EFFORT,
     APPROVED_PORT,
     EVIDENCE_COMMENT,
     PAID_ENV_NAMES,
@@ -160,6 +161,8 @@ def validate_config_document(document: object) -> dict:
         raise ProviderRefusal("API_KEY_REFUSED")
     if data.get("think") is not False:
         raise ProviderRefusal("THINK_NOT_DISABLED")
+    if data.get("reasoning_effort") != REASONING_EFFORT:
+        raise ProviderRefusal("REASONING_EFFORT_REFUSED")
     if data.get("ollama_no_cloud") != "1":
         raise ProviderRefusal("OLLAMA_NO_CLOUD_ABSENT")
     for forbidden in ("openai", "anthropic", "gemini", "openrouter", "azure", "groq"):
@@ -176,6 +179,7 @@ def validate_config_document(document: object) -> dict:
         "model": APPROVED_MODEL,
         "model_digest": APPROVED_MODEL_DIGEST,
         "think": False,
+        "reasoning_effort": REASONING_EFFORT,
         "remote_apis_allowed": False,
         "paid_apis_allowed": False,
     }
@@ -224,6 +228,8 @@ class LocalOllamaProvider:
             raise ProviderRefusal("MODEL_DIGEST_MISMATCH")
         if self.config.get("think") is not False:
             raise ProviderRefusal("THINK_NOT_DISABLED")
+        if self.config.get("reasoning_effort") != REASONING_EFFORT:
+            raise ProviderRefusal("REASONING_EFFORT_REFUSED")
         if not no_cloud_enabled(environment):
             raise ProviderRefusal("OLLAMA_NO_CLOUD_ABSENT")
         assert_llm_route({
@@ -247,6 +253,7 @@ class LocalOllamaProvider:
             "messages": _messages(messages),
             "stream": False,
             "think": False,
+            "reasoning_effort": REASONING_EFFORT,
         }
         body = _post_json(urlopen, base_url + "/api/chat", payload)
         message = body.get("message") if isinstance(body, dict) else None

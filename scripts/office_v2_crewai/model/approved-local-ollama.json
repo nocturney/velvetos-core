@@ -9,6 +9,7 @@
   "ollama_no_cloud": "1",
   "paid_apis_allowed": false,
   "provider": "ollama",
+  "reasoning_effort": "none",
   "remote_apis_allowed": false,
   "schema": "velvetos.office-v2.crewai-local-model.v1",
   "think": false
