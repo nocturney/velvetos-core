@@ -292,20 +292,266 @@ def prove_workflow_action_pins(core_workflow: str) -> str:
     )
 
 
+class _PwshScope:
+    __slots__ = ("dead", "killed")
+
+    def __init__(self, dead: bool) -> None:
+        self.dead = dead
+        self.killed = False
+
+
+def _pwsh_edge(text: str, start: int, end: int) -> bool:
+    before = text[start - 1] if start else ""
+    after = text[end] if end < len(text) else ""
+    return not (before.isalnum() or before in "_$") and not (after.isalnum() or after in "_$")
+
+
+def _skip_sq(text: str, index: int) -> int:
+    cursor = index + 1
+    while cursor < len(text):
+        if text[cursor] == "'":
+            if cursor + 1 < len(text) and text[cursor + 1] == "'":
+                cursor += 2
+                continue
+            return cursor + 1
+        cursor += 1
+    return len(text)
+
+
+def _skip_dq(text: str, index: int) -> int:
+    cursor = index + 1
+    while cursor < len(text):
+        if text[cursor] == "`":
+            cursor += 2
+            continue
+        if text[cursor] == '"':
+            return cursor + 1
+        cursor += 1
+    return len(text)
+
+
+def _split_pwsh_op(text: str, op: str) -> list[str]:
+    parts: list[str] = []
+    buf: list[str] = []
+    cursor = 0
+    depth = 0
+    while cursor < len(text):
+        char = text[cursor]
+        if char in "'\"":
+            end = _skip_sq(text, cursor) if char == "'" else _skip_dq(text, cursor)
+            buf.append(text[cursor:end])
+            cursor = end
+            continue
+        if char == "(":
+            depth += 1
+        elif char == ")" and depth:
+            depth -= 1
+        if (
+            depth == 0
+            and text[cursor:cursor + len(op)].lower() == op.lower()
+            and _pwsh_edge(text, cursor, cursor + len(op))
+        ):
+            parts.append("".join(buf))
+            buf = []
+            cursor += len(op)
+            continue
+        buf.append(char)
+        cursor += 1
+    parts.append("".join(buf))
+    return parts
+
+
+def _pwsh_disjunct_false(part: str) -> bool:
+    if re.sub(r"\s+", "", part).lower() == "$false":
+        return True
+    arms = _split_pwsh_op(part, "-and")
+    if len(arms) > 1:
+        return any(re.sub(r"\s+", "", arm).lower() == "$false" for arm in arms)
+    return False
+
+
+def _pwsh_condition_false(condition: str) -> bool:
+    arms = [arm for arm in _split_pwsh_op(condition, "-or") if arm.strip()]
+    return bool(arms) and all(_pwsh_disjunct_false(arm) for arm in arms)
+
+
+def _read_pwsh_word(text: str, index: int) -> tuple[str, int] | None:
+    cursor = index
+    if text[cursor] == "$":
+        cursor += 1
+    if cursor >= len(text) or not (text[cursor].isalpha() or text[cursor] == "_"):
+        return None
+    cursor += 1
+    while cursor < len(text) and (text[cursor].isalnum() or text[cursor] == "_"):
+        cursor += 1
+    return text[index:cursor], cursor
+
+
+def _skip_pwsh_ws(text: str, index: int) -> int:
+    while index < len(text) and text[index] in " \t\r\n":
+        index += 1
+    return index
+
+
+def _read_pwsh_paren(text: str, index: int) -> tuple[str, int]:
+    depth = 0
+    cursor = index
+    while cursor < len(text):
+        char = text[cursor]
+        if char in "'\"":
+            cursor = _skip_sq(text, cursor) if char == "'" else _skip_dq(text, cursor)
+            continue
+        if char == "(":
+            depth += 1
+        elif char == ")":
+            depth -= 1
+            if depth == 0:
+                return text[index + 1:cursor], cursor + 1
+        cursor += 1
+    return text[index + 1:], len(text)
+
+
+def powershell_reachable(text: str) -> str:
+    """PowerShell that can run. Comments, strings, here-strings, if($false), and code after exit/return are gone.
+
+    A reachable throw keeps the words sha256 mismatch so the hash-gate matcher can see them.
+    #861 exact-matches the workflow step body; this tokenizer does not change that body.
+    """
+    out: list[str] = []
+    scopes = [_PwshScope(False)]
+    index = 0
+    pending_dead_block = False
+    pending_dead_stmt = False
+    at_stmt = True
+
+    def dead() -> bool:
+        top = scopes[-1]
+        return top.dead or top.killed or pending_dead_stmt
+
+    def emit(piece: str) -> None:
+        if not dead():
+            out.append(piece)
+
+    while index < len(text):
+        if text.startswith("<#", index):
+            end = text.find("#>", index + 2)
+            chunk = text[index:] if end < 0 else text[index:end + 2]
+            out.append("\n" * chunk.count("\n"))
+            index = len(text) if end < 0 else end + 2
+            continue
+        if text[index] == "#":
+            end = text.find("\n", index)
+            out.append("\n")
+            at_stmt = True
+            pending_dead_stmt = False
+            index = len(text) if end < 0 else end + 1
+            continue
+        if text[index] == "@" and index + 2 < len(text) and text[index + 1] in "'\"":
+            closer = "\n'@" if text[index + 1] == "'" else '\n"@'
+            line_end = index + 2
+            if line_end < len(text) and text[line_end] == "\r":
+                line_end += 1
+            if line_end < len(text) and text[line_end] == "\n":
+                end = text.find(closer, line_end)
+                chunk = text[index:] if end < 0 else text[index:end + len(closer)]
+                out.append("\n" * chunk.count("\n"))
+                index = len(text) if end < 0 else end + len(closer)
+                continue
+        if text[index] in "'\"":
+            end = _skip_sq(text, index) if text[index] == "'" else _skip_dq(text, index)
+            content = text[index + 1:end - 1] if end > index and text[end - 1:end] == text[index] else text[index + 1:end]
+            if "sha256 mismatch" in content.lower():
+                emit('"sha256 mismatch"')
+            else:
+                emit('""')
+            at_stmt = False
+            index = end
+            continue
+        char = text[index]
+        if char == "\n":
+            out.append("\n")
+            at_stmt = True
+            pending_dead_stmt = False
+            index += 1
+            continue
+        if char in " \t\r":
+            emit(char)
+            index += 1
+            continue
+        if char == "{":
+            if pending_dead_block:
+                scopes.append(_PwshScope(True))
+                pending_dead_block = False
+            else:
+                scopes.append(_PwshScope(dead()))
+            emit("{")
+            at_stmt = True
+            index += 1
+            continue
+        if char == "}":
+            if len(scopes) > 1:
+                scopes.pop()
+            emit("}")
+            at_stmt = True
+            index += 1
+            continue
+        if char == ";":
+            emit(";")
+            at_stmt = True
+            pending_dead_stmt = False
+            index += 1
+            continue
+        word = _read_pwsh_word(text, index)
+        if word is not None:
+            token, nxt = word
+            lowered = token.lower()
+            if lowered == "if" and at_stmt and not dead():
+                paren_at = _skip_pwsh_ws(text, nxt)
+                if paren_at < len(text) and text[paren_at] == "(":
+                    condition, after = _read_pwsh_paren(text, paren_at)
+                    body_at = _skip_pwsh_ws(text, after)
+                    if _pwsh_condition_false(condition):
+                        if body_at < len(text) and text[body_at] == "{":
+                            pending_dead_block = True
+                            index = body_at
+                        else:
+                            pending_dead_stmt = True
+                            index = body_at
+                        continue
+                    emit("if ")
+                    emit(condition)
+                    at_stmt = False
+                    index = after
+                    continue
+            if lowered in ("exit", "return") and at_stmt and not dead():
+                scopes[-1].killed = True
+                at_stmt = False
+                index = nxt
+                continue
+            emit(token)
+            at_stmt = False
+            index = nxt
+            continue
+        emit(char)
+        at_stmt = False
+        index += 1
+    return "".join(out)
+
+
 def workflow_hash_operator(job: str) -> str | None:
-    """Return -ne or -eq from the throw that follows the hash gate. Comments do not count."""
-    for line in job.splitlines():
-        code = line.split("#", 1)[0]
-        match = re.search(r"\$LASTEXITCODE\s+(-ne|-eq)\s+0\b", code)
-        if match and "throw" in code and "sha256 mismatch" in code:
+    """Return -ne or -eq from a reachable hash-gate throw."""
+    for line in powershell_reachable(job).splitlines():
+        match = re.search(r"\$LASTEXITCODE\s+(-ne|-eq)\s+0\b", line)
+        if match and "throw" in line and "sha256 mismatch" in line:
             return match.group(1)
     return None
 
 
 def ffmpeg_sha_enforced(job: str) -> bool:
     """The hash literal is not enough. A failed verifier must throw, and -eq must not."""
+    reached = powershell_reachable(job)
     return (
-        "scripts/verify_ffmpeg_zip_sha256.py" in job
+        "scripts/verify_ffmpeg_zip_sha256.py" in reached
         and workflow_hash_operator(job) == "-ne"
     )
 
@@ -314,8 +560,9 @@ def ffmpeg_exit_was_reset(job: str) -> bool:
     """True when LASTEXITCODE is set to 0 after the verifier and before the throw.
 
     The assignment may sit on the verifier line. The -ne throw can still be present.
+    Only reachable PowerShell counts.
     """
-    codes = [line.split("#", 1)[0] for line in job.splitlines()]
+    codes = powershell_reachable(job).splitlines()
     start = next(
         (index for index, code in enumerate(codes) if "scripts/verify_ffmpeg_zip_sha256.py" in code),
         None,
@@ -416,6 +663,72 @@ def reset_ffmpeg_exit(job: str) -> str:
     if mutated == job:
         raise ValueError("ffmpeg verifier call was not present to reset LASTEXITCODE")
     return mutated
+
+
+FFMPEG_THROW = 'if ($LASTEXITCODE -ne 0) { throw "ffmpeg zip sha256 mismatch: $expected" }'
+
+
+def line_comment_hash_operator(job: str) -> str | None:
+    """The pre-tokenization matcher. A multiline <# #> comment still looks live to it."""
+    for line in job.splitlines():
+        code = line.split("#", 1)[0]
+        match = re.search(r"\$LASTEXITCODE\s+(-ne|-eq)\s+0\b", code)
+        if match and "throw" in code and "sha256 mismatch" in code:
+            return match.group(1)
+    return None
+
+
+def hide_ffmpeg_throw(job: str, wrapped: str) -> str:
+    if job.count(FFMPEG_THROW) != 1:
+        raise ValueError("ffmpeg throw was not present once")
+    return job.replace(FFMPEG_THROW, wrapped, 1)
+
+
+def prove_ffmpeg_throw_reachable(job: str) -> str:
+    """Mutations that keep the throw text but make it unreachable."""
+    if workflow_hash_operator(job) != "-ne" or not ffmpeg_sha_enforced(job):
+        fail("live ffmpeg throw is not a reachable -ne gate")
+    if ffmpeg_exit_was_reset(job):
+        fail("live ffmpeg throw was treated as an exit reset")
+    hides = {
+        "block": "<#\n" + FFMPEG_THROW + "\n#>",
+        "inline_block": "<# " + FFMPEG_THROW + " #>",
+        "here_literal": "@'\n" + FFMPEG_THROW + "\n'@",
+        "here_expand": '@"\n' + FFMPEG_THROW + '\n"@',
+        "if_false": "if ($false) { " + FFMPEG_THROW + " }",
+        "if_false_case": "If ($False) { " + FFMPEG_THROW + " }",
+        "and_false": 'if ($LASTEXITCODE -ne 0 -and $false) { throw "ffmpeg zip sha256 mismatch: $expected" }',
+        "or_true": None,
+        "exit": "exit 0\n" + FFMPEG_THROW,
+        "return": "return\n" + FFMPEG_THROW,
+        "string": "$note = '" + FFMPEG_THROW + "'",
+    }
+    # A false disjunct beside a true one must stay reachable.
+    or_true = 'if ($false -or $true) { ' + FFMPEG_THROW + " }"
+    if not ffmpeg_sha_enforced(hide_ffmpeg_throw(job, or_true)):
+        fail("if ($false -or $true) hid a reachable throw")
+    conditional_exit = "if ($true) { exit }\n" + FFMPEG_THROW
+    if not ffmpeg_sha_enforced(hide_ffmpeg_throw(job, conditional_exit)):
+        fail("exit inside if hid a later throw")
+    fooled = ("block", "here_literal", "here_expand", "if_false", "and_false", "exit", "return", "string")
+    for name, wrapped in hides.items():
+        if wrapped is None:
+            continue
+        mutated = hide_ffmpeg_throw(job, wrapped)
+        old = line_comment_hash_operator(mutated)
+        if name in fooled and old != "-ne":
+            fail("line-comment matcher was not fooled by " + name)
+        if name == "inline_block" and old is not None:
+            fail("single-line block comment still matched after a hash split")
+        if ffmpeg_sha_enforced(mutated) or workflow_hash_operator(mutated) is not None:
+            fail("hidden ffmpeg throw still counted as enforced: " + name)
+        problems = windows_job_problems(mutated)
+        if not any(
+            problem == "check-all-windows does not enforce the ffmpeg zip sha256"
+            for problem in problems
+        ):
+            fail("hidden ffmpeg throw was not caught: " + name)
+    return "throw_hidden=caught"
 
 
 def windows_job_problems(job: str) -> list[str]:
@@ -626,11 +939,13 @@ def main() -> int:
             for problem in continued_problems
         ):
             fail("continue-on-error variant was not caught: " + line)
+    throw_evidence = prove_ffmpeg_throw_reachable(windows_job)
     gate_evidence = prove_ffmpeg_hash_gate()
     print(
         "OK check-all-windows ffmpeg-sha-enforce "
         "delete=caught operator_flip=caught exit_reset=caught credentials=caught "
-        f"continue_on_error=caught variants=quoted,spaced {gate_evidence} permissions=contents:read"
+        f"continue_on_error=caught variants=quoted,spaced {throw_evidence} "
+        f"{gate_evidence} permissions=contents:read"
     )
     pin_evidence = prove_workflow_action_pins(core_workflow)
     for path in sorted(list(WORKFLOWS.glob("*.yml")) + list(WORKFLOWS.glob("*.yaml"))):
