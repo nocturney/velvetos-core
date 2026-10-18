@@ -139,6 +139,8 @@ jobs:
 
       - uses: actions/checkout@v7
         with:
+          # The suite reads pinned blobs with git show <sha>:path.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Python

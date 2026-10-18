@@ -147,6 +147,8 @@ def windows_job_problems(job: str) -> list[str]:
         "if-no-files-found: error",
         "if: always()",
         "persist-credentials: false",
+        "fetch-depth: 0",
+        "git show <sha>:path",
     ):
         if needle not in job:
             problems.append(f"check-all-windows missing {needle}")
@@ -166,8 +168,6 @@ def windows_job_problems(job: str) -> list[str]:
         )
     if "secrets." in job or "upload_gha_artifact" in job or "ACTIONS_RUNTIME_TOKEN" in job:
         problems.append("check-all-windows must not read a secret or call the internal artifact API")
-    if "fetch-depth:" in job:
-        problems.append("check-all-windows must not fetch full git history")
     return problems
 
 
