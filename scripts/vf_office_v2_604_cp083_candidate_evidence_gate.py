@@ -176,6 +176,18 @@ def require_evidence_inode(info: os.stat_result, limit: int) -> None:
     require(info.st_size <= limit, "OVERSIZED_FILE")
 
 
+def directory_open_flags() -> int:
+    """POSIX directory open. Zero is not a directory requirement.
+
+    Windows has no O_DIRECTORY. Substituting 0 would open a non-directory.
+    That host fails closed before the open. POSIX still passes the real flag.
+    """
+    flag = getattr(os, "O_DIRECTORY", 0)
+    if os.name != "posix" or type(flag) is not int or flag == 0:
+        raise Refused("SKIP_NON_POSIX")
+    return os.O_RDONLY | flag | getattr(os, "O_NOFOLLOW", 0)
+
+
 def read_bounded(path: Path, limit: int) -> bytes:
     """Reject symlink endpoints, non-regular files, and hardlinks; cap bytes."""
     require(not path.is_symlink(), "SYMLINK_FILE_REFUSED")
@@ -221,7 +233,7 @@ def read_anchored(base: Path, name: object, limit: int) -> bytes:
             all(p not in (".", "..") and SEGMENT.fullmatch(p) for p in parts) and
             "/./" not in name and "//" not in name,
             "UNSAFE_ARTIFACT_PATH")
-    flags_dir = os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0)
+    flags_dir = directory_open_flags()
     flags_file = (os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) |
                   getattr(os, "O_NONBLOCK", 0))
     try:

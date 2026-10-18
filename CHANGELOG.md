@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-10-18 - **CP083 directory open on non-POSIX:** `read_anchored` no longer reads `os.O_DIRECTORY` directly. A missing or zero flag, or a non-POSIX host, fails closed as `SKIP_NON_POSIX` before the open. On POSIX the directory fd still includes `O_DIRECTORY`. Hardlink, symlink, and non-regular refusals stay in force, and a mutation that drops the `st_nlink` check is still caught by the real gate. `security_admission` stays RED.
+
 - 2026-10-18 - **CP083 wire JSON notes:** `1e999` and `-1e999` are refused in request, ACK, guest, and manifest JSON. A byte that arrives after the first frame, and a non-string `action` or `case`, fail closed in behaviour tests. The non-POSIX candidate-import skip count is four. GAP_6 stays an expected failure. `security_admission` stays RED.
 
 - 2026-10-18 - **CrewAI E4 evidence LF bytes (issue 612 comment 6252562047):** `e4_evidence.py` writes JSON with `(json.dumps(..., sort_keys=True, indent=2) + "\n").encode("ascii")` via `write_bytes`, and writes `.reg` and `NOT_OBSERVED` the same way. The strict byte comparison against the committed E4 files stays. `.gitattributes` pins `eol=lf` for `scripts/office_v2_crewai/evidence/e4/*.json`, `*.reg`, and `e4-containment.json`. The sensor simulates Windows text-mode newline translation and fails when the emitted bytes contain CR. An LF `write_text(..., newline="\n")` still passes. Plain `write_text` does not. Evidence content and security semantics are unchanged. No model call.

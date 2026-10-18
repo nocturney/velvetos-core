@@ -72,7 +72,7 @@ python3 scripts/check-all.py
 
 ## 6. Observability — בסוף העבודה
 
-שורה ב-`CHANGELOG.md` Unreleased (עברית+אנגלית) לכל הטמעה.  
+קובץ `changelog.d/<slug>.md` (כדור Unreleased, עברית+אנגלית) לכל הטמעה. לא עורכים את `CHANGELOG.md` בכל PR.  
 `ORIGIN.md` לפק חדש באותו יום.  
 אם הסנסור נכשל — לא לטעון שהמשימה הושלמה.
 

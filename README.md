@@ -37,7 +37,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 
 **Office v2 — #604 CP083 CANDIDATE IMPORT ON NON-POSIX (SECURITY RED):** `vf_office_v2_604_cp083_hardened_candidate.py` imports `pwd` at load and its hash stays pinned. On non-POSIX, `scripts/check-office-v2-contracts.py` does not run the four tests that import that module (`test_vf_office_v2_604_cp083_socket_negative.py`, `test_vf_office_v2_604_cp083_client_socket_negative.py`, `test_vf_office_v2_604_cp084_nonroot_sink_recovery.py`, `test_vf_office_v2_604_cp083_wire_json.py`) and prints `SKIP_NON_POSIX` for each. That skip is not a pass of those tests. POSIX still runs them. The static candidate readers still run on every host. `security_admission` stays RED.
 
-**Office v2 — #604 CP083 CANDIDATE EVIDENCE BYTE GATE (LAB ONLY / SECURITY RED):** `scripts/vf_office_v2_604_cp083_candidate_evidence_gate.py` checks two distinct hardened-candidate receipt bytes offline. Success is `OFFLINE_BYTE_CONSISTENCY_ONLY_NOT_RUNTIME_QA` with `security_admission` RED. `scripts/test_vf_office_v2_604_cp083_candidate_evidence_gate.py` is 26 synthetic mutation tests. A one-line receipt that ends in CRLF is refused. A one-line LF receipt with a CR byte inside the JSON is refused. Guest and manifest JSON refuse CR. A hardlinked receipt is refused. A hardlinked SQLite journal and any other evidence file with `st_nlink>1` is refused as `HARDLINK_ALIAS_REFUSED`. A FIFO or other non-regular evidence file is refused as `NONREGULAR_FILE`. The sealed native engine is not edited, so its own path check still does not see the extra link. The lost-ACK gate `main()` uses that read and refuses a hardlinked evidence JSON. Artifact opens are anchored on directory fds. Two self-issued receipts stay `REFUSED_UNSIGNED_SELF_ISSUED` and cannot be host attestation. `scripts/test_vf_office_v2_604_cp083_chatgpt069_negatives.py` keeps GAP_6 (controller env/import canaries, benign fake variables only) as an expected failure. Socket request and ACK frames use the same strict JSON decoder as guest and manifest JSON: no CR, no duplicate key at any depth, no NaN, Infinity, or an overflowing exponent, one LF-terminated frame, and no trailing frame. This is not a joined guest run. Fresh native ARM64, real UID/root, authenticated etcd, native Git+SQLite Option A receipts, a signed Core issuer, a remote GitHub effect, and two autonomous workers remain open. No admission and no deploy.
+**Office v2 — #604 CP083 CANDIDATE EVIDENCE BYTE GATE (LAB ONLY / SECURITY RED):** `scripts/vf_office_v2_604_cp083_candidate_evidence_gate.py` checks two distinct hardened-candidate receipt bytes offline. Success is `OFFLINE_BYTE_CONSISTENCY_ONLY_NOT_RUNTIME_QA` with `security_admission` RED. `scripts/test_vf_office_v2_604_cp083_candidate_evidence_gate.py` is 27 synthetic mutation tests. A one-line receipt that ends in CRLF is refused. A one-line LF receipt with a CR byte inside the JSON is refused. Guest and manifest JSON refuse CR. A hardlinked receipt is refused. A hardlinked SQLite journal and any other evidence file with `st_nlink>1` is refused as `HARDLINK_ALIAS_REFUSED`. A FIFO or other non-regular evidence file is refused as `NONREGULAR_FILE`. The sealed native engine is not edited, so its own path check still does not see the extra link. The lost-ACK gate `main()` uses that read and refuses a hardlinked evidence JSON. Artifact opens are anchored on directory fds. A missing or zero `O_DIRECTORY`, or a non-POSIX host, fails closed as `SKIP_NON_POSIX` and is not used as an open flag. On POSIX the open still requires `O_DIRECTORY`. A mutation that drops the hardlink check would accept an alias that the real gate still refuses. Two self-issued receipts stay `REFUSED_UNSIGNED_SELF_ISSUED` and cannot be host attestation. `scripts/test_vf_office_v2_604_cp083_chatgpt069_negatives.py` keeps GAP_6 (controller env/import canaries, benign fake variables only) as an expected failure. Socket request and ACK frames use the same strict JSON decoder as guest and manifest JSON: no CR, no duplicate key at any depth, no NaN, Infinity, or an overflowing exponent, one LF-terminated frame, and no trailing frame. This is not a joined guest run. Fresh native ARM64, real UID/root, authenticated etcd, native Git+SQLite Option A receipts, a signed Core issuer, a remote GitHub effect, and two autonomous workers remain open. No admission and no deploy.
 
 **Office v2 — #604 CP083 NATIVE LOST-ACK RECEIPT GATE ONCE (LAB ONLY / SECURITY RED):** `scripts/check-office-v2-contracts.py` runs `vf_office_v2_604_cp083_native_lostack_receipt_gate.py --selftest` once. The duplicate block left by the #765 merge is removed. The result stays `PASS_TWO_NATIVE_LOCAL_RECEIPTS_SECURITY_RED` with `security_admission` RED, `mutations_rejected` 12, `real_native_git_sqlite_receipts` 2, `named_assertions` 116, `distinct_hosts` 2, and `remote_github_writes` 0.
 
@@ -249,7 +249,7 @@ Hidden names are classified too. A hidden symlink is `SYMLINK_REFUSED` and is no
 </tr>
 <tr>
 <td align="center"><strong>23</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>132</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>133</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>19</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -435,7 +435,7 @@ python3 scripts/update-readme-snapshot.py
 python3 scripts/update-readme-snapshot.py --check
 ```
 
-**Definition of Done:** implementation + evidence/sensor + changelog + README capability/status update.
+**Definition of Done:** implementation + evidence/sensor + changelog fragment (`changelog.d/<slug>.md`) + README capability/status update.
 
 ---
 
@@ -560,7 +560,7 @@ A workflow file proves automation exists; provider-dependent behavior is **LIVE*
 | Constitution | `constitution/` |
 | Sensors | `scripts/check-*.py` · CI runtime: hashed locks `requirements-sensors.py311.lock` / `.py312.lock` (from `requirements-sensors.txt`) |
 | Workflows | `.github/workflows/` |
-| Change history | [`CHANGELOG.md`](CHANGELOG.md) |
+| Change history | [`changelog.d/`](changelog.d/) fragments, folded by `scripts/changelog-compile.py` into [`CHANGELOG.md`](CHANGELOG.md) |
 | Agent guidance | [`AGENTS.md`](AGENTS.md) |
 
 ## README + System Pulse contract
@@ -576,7 +576,9 @@ python3 scripts/update-readme-snapshot.py
 python3 scripts/update-readme-snapshot.py --check
 ```
 
-**Definition of Done:** implementation + evidence/sensor + changelog + README capability/status update.
+Capability changes record history as `changelog.d/<slug>.md` instead of editing `CHANGELOG.md` in the same PR. `python3 scripts/changelog-compile.py` folds fragments under Unreleased when someone runs it. That command is manual and is not a scheduled workflow. A direct `CHANGELOG.md` edit still satisfies the gate. `merge=union` on `CHANGELOG.md` is only a fallback for those direct edits: added lines from both sides survive, and a line one side deleted survives too when the other side still has it. Details: [`docs/CHANGELOG-FRAGMENTS.md`](docs/CHANGELOG-FRAGMENTS.md).
+
+**Definition of Done:** implementation + evidence/sensor + changelog fragment (`changelog.d/<slug>.md`) + README capability/status update.
 
 ---
 
