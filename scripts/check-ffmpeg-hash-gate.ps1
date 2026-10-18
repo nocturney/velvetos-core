@@ -7,6 +7,9 @@ Set-StrictMode -Version Latest
 $ThrowLine = 'if ($LASTEXITCODE -ne 0) { throw "ffmpeg zip sha256 mismatch: $expected" }'
 $VerifyArg = 'scripts/verify_ffmpeg_zip_sha256.py'
 $ThrowText = '"ffmpeg zip sha256 mismatch: $expected"'
+$ExpectedSha = 'd760e1b3574402ed18b4865851f87d87e73965a982e6453212df8621fed1c508'
+$ExpectedLine = '$expected = "' + $ExpectedSha + '"'
+$VerifyLine = 'python ' + $VerifyArg + ' --path $zip --expected $expected'
 
 function Count-Nodes($nodes) {
     if ($null -eq $nodes) { return 0 }
@@ -36,17 +39,35 @@ function Test-HasJump($stmt) {
     return (Count-Nodes $hits) -gt 0
 }
 
+function Test-LeafName($user) {
+    if ([string]::IsNullOrEmpty($user)) { return '' }
+    $parts = $user.Split(':')
+    return $parts[$parts.Length - 1]
+}
+
+function Test-ExactVerify($cmd) {
+    $want = @(
+        'python',
+        $script:VerifyArg,
+        '--path',
+        '$zip',
+        '--expected',
+        '$expected'
+    )
+    if ($cmd.CommandElements.Count -ne $want.Count) { return $false }
+    for ($i = 0; $i -lt $want.Count; $i++) {
+        if ($cmd.CommandElements[$i].Extent.Text -ne $want[$i]) { return $false }
+    }
+    return $true
+}
+
 function Test-VerifyCommand($stmt) {
     if ($stmt -isnot [System.Management.Automation.Language.PipelineAst]) { return $false }
     if ($stmt.PipelineElements.Count -ne 1) { return $false }
     $cmd = $stmt.PipelineElements[0]
     if ($cmd -isnot [System.Management.Automation.Language.CommandAst]) { return $false }
     if ($cmd.Redirections.Count -gt 0) { return $false }
-    if ($cmd.GetCommandName() -ne 'python') { return $false }
-    foreach ($element in $cmd.CommandElements) {
-        if ($element.Extent.Text -eq $script:VerifyArg) { return $true }
-    }
-    return $false
+    return (Test-ExactVerify $cmd)
 }
 
 function Test-HashIf($stmt) {
@@ -77,6 +98,80 @@ function Test-HashIf($stmt) {
     return $true
 }
 
+function Test-PythonShadow($ast) {
+    $funcs = $ast.FindAll({
+        $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst]
+    }, $true)
+    foreach ($node in @($funcs)) {
+        if ($null -eq $node) { continue }
+        if ((Test-LeafName $node.Name) -eq 'python') { return 'python-shadow' }
+    }
+    $cmds = $ast.FindAll({
+        $args[0] -is [System.Management.Automation.Language.CommandAst]
+    }, $true)
+    foreach ($node in @($cmds)) {
+        if ($null -eq $node) { continue }
+        $name = $node.GetCommandName()
+        if ($name -eq 'Set-Alias' -or $name -eq 'New-Alias' -or $name -eq 'sal') {
+            return 'python-shadow'
+        }
+    }
+    return $null
+}
+
+function Test-StaticExit($ast) {
+    if ($null -eq $ast.EndBlock) { return $null }
+    $calls = $ast.EndBlock.FindAll({
+        $args[0] -is [System.Management.Automation.Language.MemberExpressionAst]
+    }, $true)
+    foreach ($node in @($calls)) {
+        if ($null -eq $node -or -not $node.Static) { continue }
+        $member = [string]$node.Member
+        if ($member -eq 'Exit' -or $member -eq 'FailFast' -or $member -eq 'ExitProcess') {
+            return 'static-exit'
+        }
+    }
+    return $null
+}
+
+function Test-ExpectedBinding($ast) {
+    $assigns = $ast.FindAll({
+        $args[0] -is [System.Management.Automation.Language.AssignmentStatementAst]
+    }, $true)
+    $hits = New-Object System.Collections.Generic.List[object]
+    foreach ($node in @($assigns)) {
+        if ($null -eq $node) { continue }
+        if ($node.Left -isnot [System.Management.Automation.Language.VariableExpressionAst]) { continue }
+        if ((Test-LeafName $node.Left.VariablePath.UserPath) -eq 'expected') { $hits.Add($node) }
+    }
+    if ($hits.Count -ne 1) { return 'expected-reassign' }
+    $const = $hits[0].Right
+    if ($const -is [System.Management.Automation.Language.CommandExpressionAst]) {
+        $const = $const.Expression
+    }
+    if ($const -isnot [System.Management.Automation.Language.StringConstantExpressionAst]) {
+        return 'expected-reassign'
+    }
+    if ($const.Value -ne $script:ExpectedSha) { return 'expected-reassign' }
+    return $null
+}
+
+function Test-VerifyArgs($ast) {
+    $cmds = $ast.FindAll({
+        $args[0] -is [System.Management.Automation.Language.CommandAst]
+    }, $true)
+    foreach ($cmd in @($cmds)) {
+        if ($null -eq $cmd) { continue }
+        if ($cmd.GetCommandName() -ne 'python') { continue }
+        $mentions = $false
+        foreach ($element in $cmd.CommandElements) {
+            if ($element.Extent.Text -eq $script:VerifyArg) { $mentions = $true }
+        }
+        if ($mentions -and -not (Test-ExactVerify $cmd)) { return 'verify-args' }
+    }
+    return $null
+}
+
 function Test-HashGate([string]$Source) {
     $tokens = $null
     $errors = $null
@@ -94,6 +189,14 @@ function Test-HashGate([string]$Source) {
         $args[0] -is [System.Management.Automation.Language.TrapStatementAst]
     }, $true)
     if ((Count-Nodes $traps) -gt 0) { return 'trap' }
+    $shadow = Test-PythonShadow $ast
+    if ($null -ne $shadow) { return $shadow }
+    $staticExit = Test-StaticExit $ast
+    if ($null -ne $staticExit) { return $staticExit }
+    $expectedBinding = Test-ExpectedBinding $ast
+    if ($null -ne $expectedBinding) { return $expectedBinding }
+    $verifyArgs = Test-VerifyArgs $ast
+    if ($null -ne $verifyArgs) { return $verifyArgs }
 
     $hashIfs = $ast.FindAll({
         $args[0] -is [System.Management.Automation.Language.IfStatementAst]
@@ -218,7 +321,30 @@ $mutants = [ordered]@{
     'break-before'    = 'break' + $nl + $ThrowLine
     'midword-hash'    = 'Write-Host a#b; exit 0' + $nl + $ThrowLine
 }
-if ($mutants.Count -ne 15) { throw "FAIL mutant count $($mutants.Count)" }
+$inserts = [ordered]@{
+    'function-python'        = 'function python { }'
+    'filter-python'          = 'filter python { $_ }'
+    'function-global-python' = 'function global:python { }'
+    'set-alias'              = 'Set-Alias python Write-Output'
+    'new-alias'              = 'New-Alias python Write-Output'
+    'sal-python'             = 'sal python Write-Output'
+    'expected-reassign'      = '$expected = ''deadbeef'''
+    'static-exit'            = '[Environment]::Exit(0)'
+    'static-system-exit'     = '[System.Environment]::Exit(0)'
+    'static-failfast'        = '[Environment]::FailFast("x")'
+}
+$verifyEdits = [ordered]@{
+    'verify-c'    = 'python -c "pass" ' + $VerifyArg
+    'verify-help' = 'python ' + $VerifyArg + ' --help'
+    'verify-path' = 'python ' + $VerifyArg + ' --path $other --expected $expected'
+}
+if ($mutants.Count -ne 15 -or $inserts.Count -ne 10 -or $verifyEdits.Count -ne 3) {
+    throw "FAIL mutant count throw=$($mutants.Count) insert=$($inserts.Count) verify=$($verifyEdits.Count)"
+}
+$verifyHits = ([regex]::Matches($script, [regex]::Escape($VerifyLine))).Count
+if ($verifyHits -ne 1) { throw "FAIL verify line count=$verifyHits" }
+$expectedHits = ([regex]::Matches($script, [regex]::Escape($ExpectedLine))).Count
+if ($expectedHits -ne 1) { throw "FAIL expected line count=$expectedHits" }
 
 foreach ($name in $mutants.Keys) {
     $mutated = $script.Replace($ThrowLine, [string]$mutants[$name])
@@ -227,5 +353,25 @@ foreach ($name in $mutants.Keys) {
     if ($null -eq $reason) { throw "hidden ffmpeg hash gate was allowed: $name" }
     Write-Output "REFUSE $name reason=$reason"
 }
+foreach ($name in $inserts.Keys) {
+    $mutated = $script.Replace($VerifyLine, ([string]$inserts[$name] + $nl + $VerifyLine))
+    if ($mutated -eq $script) { throw "FAIL mutant did not insert before verify: $name" }
+    $reason = Test-HashGate $mutated
+    if ($null -eq $reason) { throw "hidden ffmpeg hash gate was allowed: $name" }
+    Write-Output "REFUSE $name reason=$reason"
+}
+foreach ($name in $verifyEdits.Keys) {
+    $mutated = $script.Replace($VerifyLine, [string]$verifyEdits[$name])
+    if ($mutated -eq $script) { throw "FAIL mutant did not replace the verify line: $name" }
+    $reason = Test-HashGate $mutated
+    if ($null -eq $reason) { throw "hidden ffmpeg hash gate was allowed: $name" }
+    Write-Output "REFUSE $name reason=$reason"
+}
+$deadbeefLabel = 'expected-deadbeef'
+$deadbeef = $script.Replace($ExpectedLine, '$expected = ''deadbeef''')
+if ($deadbeef -eq $script) { throw 'FAIL mutant did not replace the expected assignment: expected-deadbeef' }
+$deadbeefReason = Test-HashGate $deadbeef
+if ($null -eq $deadbeefReason) { throw 'hidden ffmpeg hash gate was allowed: expected-deadbeef' }
+Write-Output "REFUSE $deadbeefLabel reason=$deadbeefReason"
 
-Write-Output 'OK ffmpeg-hash-gate-parser live=pass mutants=15'
+Write-Output 'OK ffmpeg-hash-gate-parser live=pass mutants=29'
