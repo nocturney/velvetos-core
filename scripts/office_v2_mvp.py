@@ -13,6 +13,7 @@ https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6249011608
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import os
 import re
@@ -41,6 +42,20 @@ SCHEMA = "velvetos.office-v2.board.v0"
 RESEARCH_COMMENT = (
     "https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6249011608"
 )
+# #764 merge. The board cites this seal; it does not promote security admission.
+LOSTACK_MERGE = "9c2f33474ab00007093c4e1913235004a4bc025d"
+LOSTACK_DOC = (
+    "docs/implementation/office-v2/phase2/"
+    "p0-604-cp083-native-lostack-two-receipts-2026-10-18.md"
+)
+LOSTACK_URL = (
+    "https://github.com/nocturney/velvetos-core/blob/"
+    + LOSTACK_MERGE
+    + "/"
+    + LOSTACK_DOC
+)
+LOSTACK_STATUS = "PASS_TWO_NATIVE_LOCAL_RECEIPTS_SECURITY_RED"
+LOSTACK_HOSTS = ("MacMiniOffice.local", "Mac-Bedroom.local")
 AGENTS = ("cursor", "chatgpt", "claude", "gemini", "auditor")
 AGENT_LABELS = {
     "cursor": "Cursor",
@@ -482,6 +497,77 @@ def _check_all_view(payload: dict | None) -> dict | None:
     }
 
 
+def _load_lostack_gate():
+    path = ROOT / "scripts" / "vf_office_v2_604_cp083_native_lostack_receipt_gate.py"
+    spec = importlib.util.spec_from_file_location("vf_cp083_lostack_gate", path)
+    if spec is None or spec.loader is None:
+        raise ImportError("lost-ACK receipt gate missing")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def seal_row_from_result(result: dict) -> dict | None:
+    """A board row exists only for the sealed RED result. GREEN is not a row."""
+    if not isinstance(result, dict):
+        return None
+    if result.get("security_admission") != "RED":
+        return None
+    if result.get("status") != LOSTACK_STATUS:
+        return None
+    if result.get("remote_github_writes") != 0:
+        return None
+    if result.get("real_native_git_sqlite_receipts") != 2:
+        return None
+    if result.get("distinct_hosts") != 2:
+        return None
+    return {
+        "lane": "CP083 lost-ACK receipts",
+        "label": "SEALED_RED_ONLY",
+        "security_admission": "RED",
+        "url": LOSTACK_URL,
+        "pr": 764,
+        "merge": LOSTACK_MERGE,
+    }
+
+
+def cp083_lostack_seal() -> dict | None:
+    module = _load_lostack_gate()
+    evidence = json.loads(module.EVIDENCE.read_text(encoding="utf-8"))
+    try:
+        result = module.validate(evidence)
+    except (module.Refused, ValueError, TypeError, KeyError, json.JSONDecodeError):
+        return None
+    row = seal_row_from_result(result)
+    if row is None:
+        return None
+    hosts = []
+    for item in evidence.get("receipts") or []:
+        device = item.get("device") if isinstance(item, dict) else None
+        if isinstance(device, str):
+            hosts.append(device)
+    if tuple(hosts) != LOSTACK_HOSTS:
+        return None
+    row["hosts"] = hosts
+    return row
+
+
+def sealed_lab_text_ok(text: str) -> bool:
+    start = text.find("## חותמות מעבדה · Sealed labs")
+    if start < 0:
+        return False
+    rest = text[start:]
+    nxt = rest.find("\n## ", 3)
+    section = rest if nxt < 0 else rest[:nxt]
+    return (
+        "SEALED_RED_ONLY" in section
+        and "security_admission=RED" in section
+        and LOSTACK_URL in section
+        and "security_admission=GREEN" not in section
+        and "ADMITTED" not in section
+    )
+
+
 def build_board(snapshot: dict, now: datetime) -> dict:
     if now.tzinfo is None:
         now = now.replace(tzinfo=timezone.utc)
@@ -618,6 +704,7 @@ def build_board(snapshot: dict, now: datetime) -> dict:
         "queue": {"repo": QUEUE_REPO, "issue": QUEUE_ISSUE},
         "check_all_main": check_all,
         "sections": sections,
+        "sealed_labs": [row for row in (cp083_lostack_seal(),) if row],
         "next_step": {
             "framework": "plain-python",
             "reason": (
@@ -739,6 +826,26 @@ def render_markdown(board: dict) -> str:
         lines.append("")
     block("חסום · Blocked", sections["blocked"])
     block("הושלם היום · Done today", sections["done_today"])
+    lines.append("## חותמות מעבדה · Sealed labs")
+    lines.append("")
+    seal_lines = []
+    for row in board.get("sealed_labs") or []:
+        if row.get("label") != "SEALED_RED_ONLY" or row.get("security_admission") != "RED":
+            continue
+        if row.get("url") != LOSTACK_URL:
+            continue
+        hosts = ", ".join(row.get("hosts") or [])
+        seal_lines.append(
+            f"- {row.get('lane')} · SEALED_RED_ONLY · security_admission=RED · "
+            f"[evidence]({row['url']}) · "
+            f"[#764](https://github.com/nocturney/velvetos-core/pull/764) "
+            f"`9c2f3347` · {hosts}"
+        )
+    if seal_lines:
+        lines.extend(seal_lines)
+    else:
+        lines.append("_אין חותמת · none_")
+    lines.append("")
     nxt = board.get("next_step") or {}
     lines.append("## הצעד הבא · Next step")
     lines.append("")

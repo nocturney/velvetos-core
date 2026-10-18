@@ -6,6 +6,7 @@ import importlib.util
 import re
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -130,6 +131,31 @@ def main() -> int:
             fail(f"committed board contains private factory rows: {rel}")
         if not mvp.board_text_leaks_private(text + "\n" + probe):
             fail(f"mutating {rel} with a private factory URL was not detected")
+    board = mvp.build_board({}, datetime(2026, 10, 18, 12, 0, tzinfo=timezone.utc))
+    text = mvp.render_markdown(board)
+    if not mvp.sealed_lab_text_ok(text):
+        fail("board does not show CP083 lost-ACK receipts as SEALED_RED_ONLY with a link")
+    if mvp.sealed_lab_text_ok(text.replace("SEALED_RED_ONLY", "ADMITTED")):
+        fail("mutation: a promoted seal label was accepted")
+    if mvp.sealed_lab_text_ok(text.replace(mvp.LOSTACK_URL, "")):
+        fail("mutation: a seal without the evidence link was accepted")
+    if mvp.sealed_lab_text_ok(text.replace("security_admission=RED", "security_admission=GREEN")):
+        fail("mutation: GREEN admission was accepted on the board")
+    gate_result = {
+        "security_admission": "RED",
+        "status": mvp.LOSTACK_STATUS,
+        "remote_github_writes": 0,
+        "real_native_git_sqlite_receipts": 2,
+        "distinct_hosts": 2,
+    }
+    if mvp.seal_row_from_result(gate_result) is None:
+        fail("RED lost-ACK gate result did not become a board row")
+    gate_result["security_admission"] = "GREEN"
+    if mvp.seal_row_from_result(gate_result) is not None:
+        fail("mutation: a GREEN gate result became a board row")
+    sample_text = sample.read_text(encoding="utf-8")
+    if not mvp.sealed_lab_text_ok(sample_text):
+        fail("committed sample board is missing the SEALED_RED_ONLY lost-ACK link")
     proc = subprocess.run(
         [sys.executable, str(TEST)],
         cwd=ROOT,

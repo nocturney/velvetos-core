@@ -184,6 +184,23 @@ class OfficeV2MvpFixtureTest(unittest.TestCase):
         self.assertIn("head `bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb`", text)
         self.assertIn("QA please", text)
         self.assertIn("QA verdict", text)
+        self.assertIn("חותמות מעבדה · Sealed labs", text)
+        self.assertTrue(MVP.sealed_lab_text_ok(text))
+
+    def test_lostack_seal_stays_red(self) -> None:
+        row = self.board["sealed_labs"][0]
+        self.assertEqual(row["label"], "SEALED_RED_ONLY")
+        self.assertEqual(row["security_admission"], "RED")
+        self.assertEqual(row["url"], MVP.LOSTACK_URL)
+        self.assertEqual(row["hosts"], ["MacMiniOffice.local", "Mac-Bedroom.local"])
+        promoted = dict(row)
+        promoted["security_admission"] = "GREEN"
+        promoted["status"] = MVP.LOSTACK_STATUS
+        promoted["remote_github_writes"] = 0
+        promoted["real_native_git_sqlite_receipts"] = 2
+        promoted["distinct_hosts"] = 2
+        self.assertIsNone(MVP.seal_row_from_result(promoted))
+        self.assertFalse(MVP.sealed_lab_text_ok(MVP.render_markdown(self.board).replace(MVP.LOSTACK_URL, "")))
 
     def test_post_never_calls_runner(self) -> None:
         def boom(_path: str):
