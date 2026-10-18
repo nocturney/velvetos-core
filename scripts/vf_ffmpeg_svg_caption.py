@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -108,7 +109,10 @@ def visual_order(text: str) -> str:
                 rewritten.append(sequence[index])
                 index += 1
         sequence = rewritten
-    return "".join(ch for ch, _level in sequence)
+    # UAX #9 L4: mirror paired brackets that resolved to an RTL level.
+    # Reversal alone leaves "(" facing the wrong way once the run is drawn LTR.
+    mirrors = str.maketrans("()[]{}<>«»‹›", ")(][}{><»«›‹")
+    return "".join(ch.translate(mirrors) if level % 2 else ch for ch, level in sequence)
 
 
 def fail(message: str, code: int = 2) -> None:
@@ -118,6 +122,27 @@ def fail(message: str, code: int = 2) -> None:
 
 def repo_root() -> Path:
     return Path(__file__).resolve().parents[1]
+
+
+def runtime_tmp_dir(output: Path | None = None, explicit: str | None = None) -> Path:
+    """Temp directory for caption work. Never the process system temp.
+
+    Precedence is an explicit --tmp-dir, then VELVETOS_RUNTIME_ROOT/tmp,
+    then a directory beside the render output, then a gitignored repo-local
+    directory for doctor when no request exists.
+    """
+    chosen = (explicit or "").strip()
+    env = os.environ.get("VELVETOS_RUNTIME_ROOT", "").strip()
+    if chosen:
+        root = Path(chosen).expanduser()
+    elif env:
+        root = Path(env).expanduser() / "tmp"
+    elif output is not None:
+        root = Path(output).expanduser().resolve().parent / ".vf-tmp"
+    else:
+        root = repo_root() / ".local-devtools" / "vf-caption-tmp"
+    root.mkdir(parents=True, exist_ok=True)
+    return root.resolve()
 
 
 def sha256_file(path: Path) -> str:
@@ -188,6 +213,34 @@ def rubik_font() -> dict[str, Any]:
     if actual != rubik.get("sha256"):
         fail("Rubik font sha256 does not match brand-tokens.json")
     return {"path": path, "family": "Rubik", "sha256": actual}
+
+
+# Static instances of the pinned variable font. drawtext does not apply the
+# wght axis, so the headline and subhead use these files (brand roles 700 / 600).
+RUBIK_WEIGHTS = {
+    700: (
+        "packages/vfbrand/assets/fonts/rubik/Rubik-wght700.ttf",
+        "c8ccdd2d106f02d7652beb11f9c41ab3264cca727ae6e7eaa570414d14d0eb1e",
+    ),
+    600: (
+        "packages/vfbrand/assets/fonts/rubik/Rubik-wght600.ttf",
+        "d09a67cea25e5a1f03cbf26d2702b126ff1d45c49861068bd3376559b7eaede3",
+    ),
+}
+
+
+def rubik_weight_font(weight: int) -> Path:
+    spec = RUBIK_WEIGHTS.get(weight)
+    if spec is None:
+        fail(f"Rubik weight instance is not pinned: {weight}")
+    rel, digest = spec
+    path = repo_root() / rel
+    if not path.is_file():
+        fail(f"Rubik weight {weight} instance missing: {path}")
+    actual = sha256_file(path)
+    if actual != digest:
+        fail(f"Rubik weight {weight} sha256 does not match")
+    return path
 
 
 def css_block(html: str, selector: str) -> str:
@@ -452,7 +505,7 @@ def encoder_names(ffmpeg: str) -> set[str]:
     return names
 
 
-def _right_aligned_ink(text: str, ffmpeg: str, font: Path) -> tuple[int, int] | None:
+def _right_aligned_ink(text: str, ffmpeg: str, font: Path, tmp_dir: Path) -> tuple[int, int] | None:
     """Ink bounds of one right-aligned caption line, scrim and rule excluded."""
     width = 1800
     info = {
@@ -474,7 +527,7 @@ def _right_aligned_ink(text: str, ffmpeg: str, font: Path) -> tuple[int, int] | 
         "subTop": 1760.0,
         "subLineH": 50.0,
     }
-    with tempfile.TemporaryDirectory() as tmp:
+    with tempfile.TemporaryDirectory(dir=tmp_dir) as tmp:
         work = Path(tmp)
         png = work / "line.png"
         try:
@@ -505,7 +558,7 @@ def _right_aligned_ink(text: str, ffmpeg: str, font: Path) -> tuple[int, int] | 
         return min_x, max_x
 
 
-def doctor() -> int:
+def doctor(tmp_dir: Path | None = None) -> int:
     ffmpeg = tool_path("ffmpeg")
     ffprobe = tool_path("ffprobe")
     facts = {"ffmpeg": ffmpeg, "ffprobe": ffprobe}
@@ -534,8 +587,9 @@ def doctor() -> int:
     if "--enable-libfribidi" not in build_text or "--enable-libharfbuzz" not in build_text:
         print("FAIL ffmpeg build missing libfribidi or libharfbuzz", file=sys.stderr)
         return 1
-    plain = _right_aligned_ink("שלום", ffmpeg, font["path"])
-    dotted = _right_aligned_ink("שלום.", ffmpeg, font["path"])
+    probe_dir = tmp_dir or runtime_tmp_dir()
+    plain = _right_aligned_ink("שלום", ffmpeg, font["path"], probe_dir)
+    dotted = _right_aligned_ink("שלום.", ffmpeg, font["path"], probe_dir)
     if (
         plain is None
         or dotted is None
@@ -551,11 +605,11 @@ def doctor() -> int:
     return 0
 
 
-def text_ink_width(font: Path, text: str, size: float, ffmpeg: str) -> int:
+def text_ink_width(font: Path, text: str, size: float, ffmpeg: str, tmp_dir: Path) -> int:
     if not text:
         return 0
     width, height = 4096, max(int(size * 3), 32)
-    with tempfile.TemporaryDirectory() as tmp:
+    with tempfile.TemporaryDirectory(dir=tmp_dir) as tmp:
         text_path = Path(tmp) / "line.txt"
         raw_path = Path(tmp) / "line.raw"
         text_path.write_text(visual_order(text), encoding="utf-8")
@@ -584,7 +638,7 @@ def text_ink_width(font: Path, text: str, size: float, ffmpeg: str) -> int:
         return max_x + 1
 
 
-def wrap_text(font: Path, text: str, size: float, max_width: float, ffmpeg: str) -> list[str]:
+def wrap_text(font: Path, text: str, size: float, max_width: float, ffmpeg: str, tmp_dir: Path) -> list[str]:
     words = text.split()
     if not words:
         return []
@@ -592,7 +646,7 @@ def wrap_text(font: Path, text: str, size: float, max_width: float, ffmpeg: str)
     current = ""
     for word in words:
         trial = word if not current else f"{current} {word}"
-        if text_ink_width(font, trial, size, ffmpeg) <= max_width:
+        if text_ink_width(font, trial, size, ffmpeg, tmp_dir) <= max_width:
             current = trial
             continue
         if not current:
@@ -600,19 +654,20 @@ def wrap_text(font: Path, text: str, size: float, max_width: float, ffmpeg: str)
         lines.append(current)
         current = word
     if current:
-        if text_ink_width(font, current, size, ffmpeg) > max_width:
+        if text_ink_width(font, current, size, ffmpeg, tmp_dir) > max_width:
             fail("caption line does not fit the safe area")
         lines.append(current)
     return lines
 
 
-def layout_caption(info: dict[str, Any], font: Path, ffmpeg: str | None) -> dict[str, Any]:
+def layout_caption(info: dict[str, Any], font: Path, ffmpeg: str | None, tmp_dir: Path | None = None) -> dict[str, Any]:
     content_width = info["width"] - (2 * info["safeX"])
     if content_width < 120:
         fail("safe area leaves no room for the caption")
     if ffmpeg:
-        headline_lines = wrap_text(font, info["headline"], info["headlineSize"], content_width, ffmpeg)
-        subhead_lines = wrap_text(font, info["subhead"], info["subheadSize"], content_width, ffmpeg) if info["subhead"] else []
+        measure_dir = tmp_dir or runtime_tmp_dir()
+        headline_lines = wrap_text(rubik_weight_font(700), info["headline"], info["headlineSize"], content_width, ffmpeg, measure_dir)
+        subhead_lines = wrap_text(rubik_weight_font(600), info["subhead"], info["subheadSize"], content_width, ffmpeg, measure_dir) if info["subhead"] else []
     else:
         headline_lines = [info["headline"]]
         subhead_lines = [info["subhead"]] if info["subhead"] else []
@@ -830,11 +885,16 @@ def verify_output(req: dict[str, Any], probe: dict[str, Any], frames: int) -> di
 
 
 def drawtext_filters(info: dict[str, Any], layout: dict[str, Any], font: Path, work: Path) -> str:
+    # replace=1 writes alpha. Without it, drawbox on a transparent canvas keeps
+    # alpha at 0 and the scrim and copper rule disappear in the overlay.
+    del font
+    headline_font = rubik_weight_font(700)
+    subhead_font = rubik_weight_font(600)
     filters = [
-        f"drawbox=x=0:y={info['height'] - 760:.0f}:w={info['width']}:h=760:color=black@0.45:t=fill",
+        f"drawbox=x=0:y={info['height'] - 760:.0f}:w={info['width']}:h=760:color=black@0.45:t=fill:replace=1",
         (
             f"drawbox=x={layout['ruleX']:.1f}:y={layout['ruleY']:.1f}:w={info['ruleWidth']:.1f}:"
-            f"h={info['ruleHeight']:.1f}:color={COPPER}@1:t=fill"
+            f"h={info['ruleHeight']:.1f}:color={COPPER}@1:t=fill:replace=1"
         ),
     ]
     y = layout["top"]
@@ -843,7 +903,7 @@ def drawtext_filters(info: dict[str, Any], layout: dict[str, Any], font: Path, w
         path = work / f"headline-{index}.txt"
         path.write_text(visual_order(line), encoding="utf-8")
         filters.append(
-            "drawtext=fontfile=" + escape_filter_path(font)
+            "drawtext=fontfile=" + escape_filter_path(headline_font)
             + ":textfile=" + escape_filter_path(path)
             + f":text_shaping=0:expansion=none:fontcolor=white:fontsize={info['headlineSize']:.2f}"
             + f":x=w-text_w-{info['safeX']:.1f}:y={y:.1f}"
@@ -856,7 +916,7 @@ def drawtext_filters(info: dict[str, Any], layout: dict[str, Any], font: Path, w
         path = work / f"subhead-{index}.txt"
         path.write_text(visual_order(line), encoding="utf-8")
         filters.append(
-            "drawtext=fontfile=" + escape_filter_path(font)
+            "drawtext=fontfile=" + escape_filter_path(subhead_font)
             + ":textfile=" + escape_filter_path(path)
             + f":text_shaping=0:expansion=none:fontcolor=white:fontsize={info['subheadSize']:.2f}"
             + f":x=w-text_w-{info['safeX']:.1f}:y={y:.1f}"
@@ -894,7 +954,9 @@ def command_for_receipt(command: list[str]) -> list[str]:
 def render_prepared(req: dict[str, Any], receipt_override: str | None, failover: dict[str, Any] | None) -> dict[str, Any]:
     if req.get("batchFile") or req.get("batchRows"):
         fail("ffmpeg-svg-caption-composition does not render HyperFrames batches", 1)
-    if doctor() != 0:
+    explicit = req.get("tmpDir") if isinstance(req.get("tmpDir"), str) else None
+    tmp_root = runtime_tmp_dir(req["output"], explicit)
+    if doctor(tmp_root) != 0:
         raise SystemExit(1)
     ffmpeg = tool_path("ffmpeg")
     if not ffmpeg:
@@ -907,7 +969,7 @@ def render_prepared(req: dict[str, Any], receipt_override: str | None, failover:
         if duration + 0.02 < float(info["duration"]):
             fail(f"audio is shorter than the composition ({duration:.3f}s < {info['duration']}s)", 1)
     font = req["font"]
-    layout = layout_caption(info, font["path"], ffmpeg)
+    layout = layout_caption(info, font["path"], ffmpeg, tmp_root)
     svg_text = build_svg(info, layout, font)
     svg_path = req["output"].with_suffix(req["output"].suffix + ".caption.svg")
     svg_path.parent.mkdir(parents=True, exist_ok=True)
@@ -915,7 +977,7 @@ def render_prepared(req: dict[str, Any], receipt_override: str | None, failover:
     output = req["output"]
     committed = False
     try:
-        with tempfile.TemporaryDirectory(prefix="vf-svg-caption-") as tmp:
+        with tempfile.TemporaryDirectory(prefix="vf-svg-caption-", dir=tmp_root) as tmp:
             work = Path(tmp)
             png = work / "caption.png"
             caption_cmd = render_caption_png(info, layout, font["path"], png, work, ffmpeg)
@@ -967,16 +1029,21 @@ def render_prepared(req: dict[str, Any], receipt_override: str | None, failover:
 def main() -> int:
     parser = argparse.ArgumentParser(description="VelvetOS ffmpeg SVG caption composition")
     sub = parser.add_subparsers(dest="command", required=True)
-    sub.add_parser("doctor", help="check ffmpeg/ffprobe filters and the Rubik font")
+    doctor_parser = sub.add_parser("doctor", help="check ffmpeg/ffprobe filters and the Rubik font")
+    doctor_parser.add_argument("--tmp-dir", dest="tmp_dir", help="temp directory, instead of the system temp")
     plan_parser = sub.add_parser("plan", help="validate a HyperFrames-shaped request and print the ffmpeg plan")
     plan_parser.add_argument("request", type=Path)
+    plan_parser.add_argument("--tmp-dir", dest="tmp_dir", help="temp directory, instead of the system temp")
     run_parser = sub.add_parser("run", help="render and write an ffprobe/SHA-256 receipt")
     run_parser.add_argument("request", type=Path)
     run_parser.add_argument("--receipt", help="receipt path relative to projectDir")
+    run_parser.add_argument("--tmp-dir", dest="tmp_dir", help="temp directory, instead of the system temp")
     args = parser.parse_args()
     if args.command == "doctor":
-        return doctor()
+        return doctor(runtime_tmp_dir(explicit=getattr(args, "tmp_dir", None)))
     req = prepare_request(read_json(args.request))
+    if getattr(args, "tmp_dir", None):
+        req["tmpDir"] = args.tmp_dir
     if args.command == "plan":
         print(json.dumps(plan(req), ensure_ascii=False, indent=2))
         return 0
