@@ -91,7 +91,8 @@ class GhUnavailable(RuntimeError):
 
 LOUD_SKIP = (
     "LOUD SKIP_GH_UNAVAILABLE: live gh repo view was not proven (auth or network). "
-    "Offline git-on-PATH check passed. A git-missing failure is not this skip."
+    "gh availability was decided before the missing-git probe. "
+    "A git-missing failure is not this skip."
 )
 
 _AUTH_OR_NETWORK = (
@@ -126,6 +127,20 @@ def _auth_or_network(text: str) -> bool:
 
 def hosted_ci() -> bool:
     return os.environ.get("GITHUB_ACTIONS") == "true"
+
+
+def gh_without_git_probe_allowed() -> bool:
+    """The strict missing-git probe runs only after gh can authenticate.
+
+    Unauthenticated ``gh repo view`` reports ``gh auth login`` before it looks
+    for git. Hosted CI with no credentials fails closed instead of skipping.
+    """
+    present = gh_credentials_present()
+    if hosted_ci():
+        if not present:
+            raise RuntimeError("hosted CI has no gh credentials")
+        return True
+    return present
 
 
 def gh_credentials_present() -> bool:
@@ -270,11 +285,90 @@ def prove_gh_unavailable_codes() -> None:
                 raise AssertionError("git-missing was accepted")
 
         split_source = inspect.getsource(prove_split_gh_git_repo_slug)
-        if "path_suffix=()" not in split_source or "not _is_git_missing(bare_text)" not in split_source:
+        if (
+            "path_suffix=()" not in split_source
+            or "not _is_git_missing(bare_text)" not in split_source
+            or "prove_unauthenticated_gh_git(" not in split_source
+            or "gh_without_git_probe_allowed()" not in split_source
+        ):
             raise AssertionError("offline gh-without-git check is missing")
+
+        globals()["gh_credentials_present"] = lambda: False
+        os.environ.pop("GITHUB_ACTIONS", None)
+        if gh_without_git_probe_allowed():
+            raise AssertionError("unauthenticated local gh ran the git-missing probe")
+        os.environ["GITHUB_ACTIONS"] = "true"
+        try:
+            gh_without_git_probe_allowed()
+        except RuntimeError as exc:
+            if "hosted CI has no gh credentials" not in str(exc):
+                raise
+        else:
+            raise AssertionError("hosted CI skipped the gh read without credentials")
+        finally:
+            os.environ.pop("GITHUB_ACTIONS", None)
+        globals()["gh_credentials_present"] = lambda: True
+        if not gh_without_git_probe_allowed():
+            raise AssertionError("authenticated gh skipped the git-missing probe")
     finally:
         globals()["repo_slug"] = original_slug
         globals()["gh_credentials_present"] = original_creds
+
+
+def _gh_view_text(proc: subprocess.CompletedProcess) -> str:
+    return f"{proc.stderr or ''}\n{proc.stdout or ''}"
+
+
+def _run_gh_repo_view(
+    executable: str | None,
+    *,
+    path_suffix: tuple[str, ...] = (),
+    timeout: int = 60,
+) -> subprocess.CompletedProcess:
+    args = ["repo", "view", "--json", "nameWithOwner"]
+    common = dict(
+        cwd=ROOT,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        capture_output=True,
+        extra_keys=hygiene.GH_CONFIG_ENV_KEYS,
+    )
+    if executable is None:
+        return hygiene.run_pinned("gh", args, timeout=timeout, **common)
+    return hygiene.run_absolute(
+        executable,
+        args,
+        timeout=timeout,
+        path_suffix=path_suffix,
+        **common,
+    )
+
+
+def prove_unauthenticated_gh_git(copied: str) -> None:
+    """Real gh with credentials removed, once without git and once with it.
+
+    gh reports auth before a missing git, so neither case is a suite failure.
+    A successful repo view, or a with-git run that still says git is missing,
+    is a failure. Hosted CI does not use this result as a skip.
+    """
+    with _without_gh_auth():
+        if gh_credentials_present() or hosted_ci():
+            raise AssertionError("unauthenticated gh fixture still has credentials or hosted CI")
+        bare = _run_gh_repo_view(copied, path_suffix=(), timeout=20)
+        bare_text = _gh_view_text(bare)
+        if bare.returncode == 0:
+            raise AssertionError("unauthenticated gh without git succeeded")
+        if not (_is_git_missing(bare_text) or _auth_or_network(bare_text)):
+            raise AssertionError(
+                "unauthenticated no-git gh reported neither auth nor a missing git"
+            )
+        pinned = _run_gh_repo_view(None, timeout=20)
+        pinned_text = _gh_view_text(pinned)
+        if _is_git_missing(pinned_text):
+            raise AssertionError("unauthenticated gh with git on PATH reported git missing")
+        if pinned.returncode == 0 or not _auth_or_network(pinned_text):
+            raise AssertionError("unauthenticated gh with git did not report auth or network")
 
 
 def prove_split_gh_git_repo_slug() -> str:
@@ -308,19 +402,11 @@ def prove_split_gh_git_repo_slug() -> str:
                 if not hygiene.paths_match(hygiene.executable_directory(found_git), git_dir):
                     raise AssertionError("git was not the real binary")
                 copied = gh_dir / ("gh.exe" if os.name == "nt" else "gh")
-                bare = hygiene.run_absolute(
-                    str(copied),
-                    ["repo", "view", "--json", "nameWithOwner"],
-                    timeout=20,
-                    extra_keys=hygiene.GH_CONFIG_ENV_KEYS,
-                    path_suffix=(),
-                    cwd=ROOT,
-                    text=True,
-                    encoding="utf-8",
-                    errors="replace",
-                    capture_output=True,
-                )
-                bare_text = f"{bare.stderr or ''}\n{bare.stdout or ''}"
+                prove_unauthenticated_gh_git(str(copied))
+                if not gh_without_git_probe_allowed():
+                    raise GhUnavailable("SKIP_GH_UNAVAILABLE")
+                bare = _run_gh_repo_view(str(copied), path_suffix=())
+                bare_text = _gh_view_text(bare)
                 if bare.returncode == 0 or not _is_git_missing(bare_text):
                     raise AssertionError(
                         "copied gh without git on PATH did not report a missing git executable"

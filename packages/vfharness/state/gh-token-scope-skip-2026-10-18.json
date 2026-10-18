@@ -22,5 +22,5 @@
     "claim": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6255992431",
     "security_admission": "RED"
   },
-  "latest_observation": "Machine precheck fetches origin/main with masked AUTHORIZATION basic x-access-token. Local auth or network failure prints LOUD SKIP_GH_UNAVAILABLE. A missing git on gh PATH stays a hard failure, including offline."
+  "latest_observation": "Unauthenticated gh reports auth before a missing git. Availability is decided before the strict probe, so local no-auth still prints LOUD SKIP_GH_UNAVAILABLE. A missing git stays a hard failure when credentials or hosted CI are present."
 }
