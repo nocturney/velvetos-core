@@ -389,10 +389,21 @@ def flip_persist_credentials(job: str) -> str:
     return mutated
 
 
-def restore_windows_continue_on_error(job: str) -> str:
-    """Mutation: put continue-on-error back on the Windows job."""
+# Quoted keys and a space before the colon do not contain the bare text
+# "continue-on-error:". #861's duplicate-key loader is still on an open branch.
+_CONTINUE_ON_ERROR_KEY = re.compile(
+    r"""(?m)(?:^|[{,\s])(?:["']continue-on-error["']|continue-on-error)[ \t]*:"""
+)
+
+
+def windows_continues_on_error(job: str) -> bool:
+    return _CONTINUE_ON_ERROR_KEY.search(job) is not None
+
+
+def insert_windows_continue_on_error(job: str, line: str) -> str:
+    """Mutation: put a continue-on-error key back on the Windows job."""
     needle = "runs-on: windows-latest\n"
-    mutated = job.replace(needle, needle + "    continue-on-error: true\n", 1)
+    mutated = job.replace(needle, needle + "    " + line + "\n", 1)
     if mutated == job:
         raise ValueError("runs-on: windows-latest was not present to restore continue-on-error")
     return mutated
@@ -433,7 +444,7 @@ def windows_job_problems(job: str) -> list[str]:
     ):
         if needle not in job:
             problems.append(f"check-all-windows missing {needle}")
-    if "continue-on-error:" in job:
+    if windows_continues_on_error(job):
         problems.append("check-all-windows must not continue on error")
     if not ffmpeg_sha_enforced(job):
         problems.append("check-all-windows does not enforce the ffmpeg zip sha256")
@@ -595,20 +606,31 @@ def main() -> int:
     cred_problems = windows_job_problems(creds)
     if not any("persist-credentials: false" in problem for problem in cred_problems):
         fail("flipping persist-credentials to true was not caught")
-    try:
-        continued = restore_windows_continue_on_error(windows_job)
-    except ValueError as exc:
-        fail(str(exc))
-    continued_problems = windows_job_problems(continued)
-    if not any(
-        problem == "check-all-windows must not continue on error" for problem in continued_problems
-    ):
-        fail("restoring continue-on-error on the windows job was not caught")
+    continue_variants = (
+        "continue-on-error: true",
+        '"continue-on-error": true',
+        "'continue-on-error': true",
+        "continue-on-error : true",
+        '"continue-on-error" : true',
+    )
+    for line in continue_variants:
+        try:
+            continued = insert_windows_continue_on_error(windows_job, line)
+        except ValueError as exc:
+            fail(str(exc))
+        if line != "continue-on-error: true" and "continue-on-error:" in line:
+            fail("continue-on-error variant fixture still contains the bare needle")
+        continued_problems = windows_job_problems(continued)
+        if not any(
+            problem == "check-all-windows must not continue on error"
+            for problem in continued_problems
+        ):
+            fail("continue-on-error variant was not caught: " + line)
     gate_evidence = prove_ffmpeg_hash_gate()
     print(
         "OK check-all-windows ffmpeg-sha-enforce "
         "delete=caught operator_flip=caught exit_reset=caught credentials=caught "
-        f"continue_on_error=caught {gate_evidence} permissions=contents:read"
+        f"continue_on_error=caught variants=quoted,spaced {gate_evidence} permissions=contents:read"
     )
     pin_evidence = prove_workflow_action_pins(core_workflow)
     for path in sorted(list(WORKFLOWS.glob("*.yml")) + list(WORKFLOWS.glob("*.yaml"))):
