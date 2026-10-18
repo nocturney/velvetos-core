@@ -1,6 +1,6 @@
 # #604 / CP083 — native Git+SQLite lost-ACK and two fresh receipts (2026-10-18)
 
-**Scope: authored independent native-local subgate proof, not CP083 full-chain admission. SECURITY RED.** This is a separate branch stacked on Cursor Draft #755 at `e065552825d64e9151dca0a53d4b3c7a896ab479`. Guest kernel UIDs, etcd mTLS/RBAC, protected Core issuer, remote GitHub effect and independent QA are **out of scope and NOT proven**. Do not merge or deploy on this evidence alone.
+**Scope: authored independent native-local subgate proof, not CP083 full-chain admission. merged into main via #764 (9c2f3347); lab-only, SECURITY RED.** This work was a separate branch stacked on closed #755 at `e065552825d64e9151dca0a53d4b3c7a896ab479`. Guest kernel UIDs, etcd mTLS/RBAC, protected Core issuer, remote GitHub effect and independent QA are **out of scope and NOT proven**. That merge does not admit the full chain or authorize deploy.
 
 ## Exit criteria and observed proof
 
@@ -38,7 +38,7 @@ The second command creates **fresh local-only** disposable Git/SQLite fixtures, 
 2. ACK injection deliberately discards a worker's stdout at the local test boundary; it is **not a real remote network failure**. Separately, the native child _exited immediately_ before or after the ref mutation without sending any ACK. Neither proves remote GitHub write reconciliation, a protected issuer, a true CAS-vs-provider atomic operation or power-loss durability.
 3. The revocation-after-Git case is a **synthetic file-backed provider observation**, not a live etcd revoke. Local Git's `update-ref` cannot atomically commit an etcd transaction. An outsider able to write the raw ref remains out of scope.
 4. SHA256 detects changed evidence when pinned to these bytes, but is **not a signature or cryptographic attestation of machine identity**. Device provenance derives from the two authorized remote-execution endpoints; reviewer must corroborate independently. The receipt validator checks the values but is not itself a security review.
-5. No legitimate remote GitHub push/ACK loss, autonomous coding workers, production/customer effect, live guest or credential mutation, external independent security review, QA approval or CI result is asserted here. **`security_admission=RED`; PR remains Draft, no merge/deploy.**
+5. No legitimate remote GitHub push/ACK loss, autonomous coding workers, production/customer effect, live guest or credential mutation, external independent security review, QA approval or CI result is asserted here. **`security_admission=RED`; merged into main via #764 (9c2f3347); lab-only, SECURITY RED.**
 
 ## Reviewer handoff
 
