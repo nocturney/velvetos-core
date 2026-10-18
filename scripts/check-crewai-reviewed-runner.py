@@ -1749,18 +1749,6 @@ REVIEWER_GUARD = (
 )
 
 
-def _const_text(node: ast.AST | None) -> str | None:
-    if isinstance(node, ast.Constant) and isinstance(node.value, str):
-        return node.value
-    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
-        left = _const_text(node.left)
-        right = _const_text(node.right)
-        if left is None or right is None:
-            return None
-        return left + right
-    return None
-
-
 def _call_attr(node: ast.AST) -> str:
     if isinstance(node, ast.Attribute):
         return node.attr
@@ -1769,42 +1757,95 @@ def _call_attr(node: ast.AST) -> str:
     return ""
 
 
-def _keyword(call: ast.Call, name: str) -> ast.AST | None:
-    for item in call.keywords:
-        if item.arg == name:
-            return item.value
-    return None
+class _OfflineAgent:
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
 
 
-def task_descriptions_by_role(source: str) -> dict[str, str]:
-    """Decoded Task descriptions keyed by the Agent role they are assigned to."""
-    roles: dict[str, str] = {}
-    by_role: dict[str, str] = {}
-    for node in ast.walk(ast.parse(source)):
-        if not isinstance(node, ast.Assign) or len(node.targets) != 1:
-            continue
-        target = node.targets[0]
-        if not isinstance(target, ast.Name) or not isinstance(node.value, ast.Call):
-            continue
-        kind = _call_attr(node.value.func)
-        if kind == "Agent":
-            role = _const_text(_keyword(node.value, "role"))
-            if role:
-                roles[target.id] = role
-        elif kind == "Task":
-            agent = _keyword(node.value, "agent")
-            text = _const_text(_keyword(node.value, "description"))
-            if not isinstance(agent, ast.Name) or text is None:
-                raise ValueError("TASK_DESCRIPTION_UNPARSED")
-            role = roles.get(agent.id)
-            if role is None:
-                raise ValueError("TASK_ROLE_UNPARSED")
-            if role in by_role:
-                raise ValueError("TASK_ROLE_DUPLICATE")
-            by_role[role] = text
-    if "Triage" not in by_role or "Reviewer" not in by_role:
-        raise ValueError("TASK_ROLE_ABSENT")
-    return by_role
+class _OfflineTask:
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
+
+class _OfflineCrew:
+    def __init__(self, agents, tasks, **_kwargs):
+        self.agents = list(agents)
+        self.tasks = list(tasks)
+
+
+class _OfflineCrewAI:
+    Agent = _OfflineAgent
+    Task = _OfflineTask
+    Crew = _OfflineCrew
+
+
+class _OfflineLLM:
+    def __init__(self, provider):
+        self.provider = provider
+
+
+def _construction_allowed(stmt: ast.stmt) -> bool:
+    if isinstance(stmt, (ast.Assign, ast.AnnAssign)):
+        return True
+    if isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call):
+        return _call_attr(stmt.value.func) == "assert_built_crew"
+    return False
+
+
+def final_crew_tasks(source: str) -> list[tuple[str, str]]:
+    """Final Crew task order as (role, description) after later assignments."""
+    tree = ast.parse(source)
+    function = next(
+        (node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "build_crew"),
+        None,
+    )
+    if function is None:
+        raise ValueError("CREW_BUILD_ABSENT")
+    start = None
+    for index, stmt in enumerate(function.body):
+        if isinstance(stmt, ast.Assign) and isinstance(stmt.value, ast.Call):
+            if _call_attr(stmt.value.func) == "LocalOllamaLLM":
+                start = index
+                break
+    if start is None:
+        raise ValueError("CREW_BUILD_ABSENT")
+    body = []
+    for stmt in function.body[start:]:
+        if isinstance(stmt, ast.Return):
+            break
+        if not _construction_allowed(stmt):
+            raise ValueError("CREW_BUILD_UNPARSED")
+        body.append(stmt)
+    module = ast.Module(body=body, type_ignores=[])
+    ast.fix_missing_locations(module)
+    namespace = {
+        "crewai": _OfflineCrewAI,
+        "LocalOllamaLLM": _OfflineLLM,
+        "provider": object(),
+        "assert_built_crew": lambda *_args, **_kwargs: None,
+    }
+    try:
+        exec(compile(module, "<crew-build-offline>", "exec"), namespace, namespace)
+    except Exception as exc:
+        raise ValueError("CREW_BUILD_FAILED") from exc
+    crew = namespace.get("crew")
+    tasks = getattr(crew, "tasks", None)
+    if not isinstance(tasks, list) or len(tasks) != 2:
+        raise ValueError("CREW_UNBUILT")
+    rows = []
+    for task in tasks:
+        role = getattr(getattr(task, "agent", None), "role", None)
+        description = getattr(task, "description", None)
+        if not isinstance(role, str) or not isinstance(description, str):
+            raise ValueError("CREW_TASK_UNPARSED")
+        rows.append((role, description))
+    if [role for role, _description in rows] != ["Triage", "Reviewer"]:
+        raise ValueError("CREW_TASK_ORDER")
+    return rows
+
+
+def _descriptions_by_role(source: str) -> dict[str, str]:
+    return {role: description for role, description in final_crew_tasks(source)}
 
 
 def check_lab4() -> None:
@@ -1872,9 +1913,11 @@ def check_lab4() -> None:
     if "Audit each output cell independently against that exact source issue" not in source:
         fail("reviewer task text lost the case 06 independent-field instruction")
     try:
-        by_role = task_descriptions_by_role(source)
+        by_role = _descriptions_by_role(source)
     except ValueError as exc:
-        fail("case 06 task descriptions were not parsed: %s" % exc)
+        fail("case 06 crew was not built: %s" % exc)
+    if "crewai" in sys.modules:
+        fail("case 06 crew build imported crewai")
     if TRIAGE_GUARD not in by_role["Triage"]:
         fail("triage task description lost the case 06 untrusted-quote ignore sentence")
     if REVIEWER_GUARD not in by_role["Reviewer"]:
@@ -2459,11 +2502,14 @@ def check_workflows() -> None:
 
 
 def _refuse_misplaced_guard(source: str, role: str, sentence: str, label: str) -> None:
-    placed = task_descriptions_by_role(source)
-    if sentence in placed[role]:
-        fail("%s was accepted" % label)
     if sentence not in source:
         fail("%s mutant lost the sentence" % label)
+    try:
+        placed = _descriptions_by_role(source)
+    except ValueError:
+        return
+    if sentence in placed.get(role, ""):
+        fail("%s was accepted" % label)
 
 
 def check_case06_role_mutations() -> None:
@@ -2483,16 +2529,43 @@ def check_case06_role_mutations() -> None:
         REVIEWER_GUARD, REVIEWER_GUARD + " " + TRIAGE_GUARD, 1
     )
     _refuse_misplaced_guard(wrong_role, "Triage", TRIAGE_GUARD, "a guard sentence on the wrong role")
-    moved = task_descriptions_by_role(wrong_role)
+    moved = _descriptions_by_role(wrong_role)
     if TRIAGE_GUARD not in moved["Reviewer"]:
         fail("wrong-role mutant did not place the sentence on Reviewer")
+    anchor = "    assert_built_crew([triage, reviewer], crew)\n"
+    late_description = source.replace(anchor, anchor + "    review_task.description = 'replaced after build'\n", 1)
+    _refuse_misplaced_guard(late_description, "Reviewer", REVIEWER_GUARD, "a description replaced after build")
+    late_agent = source.replace(
+        anchor,
+        anchor + "    triage_task.agent = reviewer\n    review_task.agent = triage\n",
+        1,
+    )
+    try:
+        _descriptions_by_role(late_agent)
+    except ValueError as exc:
+        if str(exc) != "CREW_TASK_ORDER":
+            fail("agent swap after build refused as %s" % exc)
+    else:
+        fail("agent swap after build was accepted")
+    reversed_tasks = source.replace(
+        "tasks=[triage_task, review_task]",
+        "tasks=[review_task, triage_task]",
+        1,
+    )
+    try:
+        _descriptions_by_role(reversed_tasks)
+    except ValueError as exc:
+        if str(exc) != "CREW_TASK_ORDER":
+            fail("reversed crew order refused as %s" % exc)
+    else:
+        fail("reversed crew order was accepted")
     sentinel = "@@CASE06_SWAP@@"
     swapped_source = (
         source.replace(TRIAGE_GUARD, sentinel, 1)
         .replace(REVIEWER_GUARD, TRIAGE_GUARD, 1)
         .replace(sentinel, REVIEWER_GUARD, 1)
     )
-    swapped = task_descriptions_by_role(swapped_source)
+    swapped = _descriptions_by_role(swapped_source)
     if TRIAGE_GUARD in swapped["Triage"] or REVIEWER_GUARD in swapped["Reviewer"]:
         fail("swapped guard sentences were accepted")
     if TRIAGE_GUARD not in swapped["Reviewer"] or REVIEWER_GUARD not in swapped["Triage"]:
