@@ -3437,7 +3437,7 @@ def main() -> int:
         ("test_vf_office_v2_604_cp084_nonroot_sink_recovery.py", 5, 15),
         ("test_vf_office_v2_604_cp085_public_git_readback.py", 26, 15),
         # #762: offline-only byte-consistency negatives, NOT joined-run QA.
-        ("test_vf_office_v2_604_cp083_candidate_evidence_gate.py", 18, 20),
+        ("test_vf_office_v2_604_cp083_candidate_evidence_gate.py", 19, 20),
     ):
         candidate_test = ROOT / "scripts" / test_file
         if not candidate_test.is_file():

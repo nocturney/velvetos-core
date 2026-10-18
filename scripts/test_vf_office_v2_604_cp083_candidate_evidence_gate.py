@@ -232,6 +232,19 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         self._save_manifest()
         self.assert_refused()
 
+    def test_19_crlf_receipt_line_refused(self):
+        path = self.base / "run-1/receipt.jsonl"
+        raw = path.read_bytes()
+        self.assertTrue(raw.endswith(b"\n") and b"\r" not in raw)
+        altered = raw.replace(b"\n", b"\r\n")
+        self.assertTrue(altered.endswith(b"\r\n") and altered.count(b"\n") == 1)
+        path.write_bytes(altered)
+        self.manifest["runs"][0]["receipt_sha256"] = sha(altered)
+        self._save_manifest()
+        with self.assertRaises(gate.Refused) as caught:
+            gate.verify(self.manifest_path)
+        self.assertEqual(str(caught.exception), "RECEIPT_MUST_BE_ORIGINAL_ONE_LINE_LF")
+
 
 if __name__ == "__main__":
     unittest.main()

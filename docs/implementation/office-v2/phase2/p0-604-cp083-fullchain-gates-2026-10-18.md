@@ -38,19 +38,19 @@ This document specifies **which actual observations would close each gate**. It 
 New files:
 
 - scripts/vf_office_v2_604_cp083_candidate_evidence_gate.py
-- scripts/test_vf_office_v2_604_cp083_candidate_evidence_gate.py (18 synthetic author regression tests)
+- scripts/test_vf_office_v2_604_cp083_candidate_evidence_gate.py (19 synthetic author regression tests, including a CRLF receipt line)
 
 Run unit negatives with Python 3:
 
     python3 -B scripts/test_vf_office_v2_604_cp083_candidate_evidence_gate.py
 
-When two approved joined runs actually produce receipts, place them under an evidence directory with a manifest.json of schema **velvetos.office-v2.604.cp083.candidate-fullchain-receipts.v1**. Manifest contains candidate_commit_sha, candidate_source_sha256, security_admission=RED, production_authority=false, real_protected_core_issuer=false, independent_security_review_completed=false, remote_github_writes=0, and exactly two runs. Each run has run_id, receipt_path, receipt_sha256, guest_path and guest_sha256. Guest observation schema is **velvetos.office-v2.604.cp083.guest-preflight-observation.v1**, including kernel method, Linux ARM64, distinct UIDs, pinned etcd hashes, mountinfo checksum, no-host-home and no-ambient-credentials observations. All artifact paths are relative to the manifest, never symlinks/traversals. Preserve the original raw LF receipts.
+When two approved joined runs actually produce receipts, place them under an evidence directory with a manifest.json of schema **velvetos.office-v2.604.cp083.candidate-fullchain-receipts.v1**. Manifest contains candidate_commit_sha, candidate_source_sha256, security_admission=RED, production_authority=false, real_protected_core_issuer=false, independent_security_review_completed=false, remote_github_writes=0, and exactly two runs. Each run has run_id, receipt_path, receipt_sha256, guest_path and guest_sha256. Guest observation schema is **velvetos.office-v2.604.cp083.guest-preflight-observation.v1**, including kernel method, Linux ARM64, distinct UIDs, pinned etcd hashes, mountinfo checksum, no-host-home and no-ambient-credentials observations. All artifact paths are relative to the manifest, never symlinks/traversals. Preserve the original raw LF receipts. A receipt whose only line ends in CRLF is refused.
 
 Run offline consistency check only **after** evidence exists:
 
     python3 -B scripts/vf_office_v2_604_cp083_candidate_evidence_gate.py --manifest /approved/guest-evidence/manifest.json
 
-Absent evidence, source drift, malformed/duplicate JSON, missing cases, old #738 receipt/prefix, SHA mismatch, wrong UID fields, unpinned etcd, unsafe path and any GREEN/production/QA claim **FAIL CLOSED**. The result intentionally says **OFFLINE_BYTE_CONSISTENCY_ONLY_NOT_RUNTIME_QA** and security_admission **RED**. The 18 synthetic unit cases use invented fixtures ONLY to exercise the verifier, **never** as proof of a guest/full-chain execution.
+Absent evidence, source drift, malformed/duplicate JSON, missing cases, old #738 receipt/prefix, SHA mismatch, wrong UID fields, unpinned etcd, unsafe path and any GREEN/production/QA claim **FAIL CLOSED**. The result intentionally says **OFFLINE_BYTE_CONSISTENCY_ONLY_NOT_RUNTIME_QA** and security_admission **RED**. The 19 synthetic unit cases use invented fixtures ONLY to exercise the verifier, **never** as proof of a guest/full-chain execution.
 
 **Critical limitation:** An artifact hash stored beside its own artifact is byte consistency, not an authenticated signature; both can be rewritten. A self-declared guest observation is not runtime provenance. Independent reviewer must verify kernel, guest mounts, exact host/source/build, original stdout and complete command/provider evidence **outside the author's manifest** before closing steps 1–6.
 
