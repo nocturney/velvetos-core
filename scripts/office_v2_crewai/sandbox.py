@@ -268,11 +268,98 @@ def assert_sandbox_resolution(root: str = SANDBOX_ROOT, home: str | None = None,
         raise StorageRefusal("SANDBOX_TEMP_OUTSIDE_ROOT")
 
 
-def assert_under_velvet(root: str) -> None:
-    """A sandbox parameter must stay on D: and under D:\\Velvet."""
-    if not on_drive_d(root):
+def _strip_extended(path: str) -> str:
+    """Drop the ``\\\\?\\`` prefix GetFinalPathNameByHandle adds."""
+    if not isinstance(path, str):
+        return path
+    if path.startswith("\\\\?\\UNC\\"):
+        return "\\\\" + path[8:]
+    if path.startswith("\\\\?\\"):
+        return path[4:]
+    return path
+
+
+def _windows_final_path(path: str) -> str | None:
+    """Resolve one existing Windows path. None means the final path is unproven.
+
+    FILE_FLAG_BACKUP_SEMANTICS opens a directory. The call does not set
+    FILE_FLAG_OPEN_REPARSE_POINT, so a junction or symlink returns its target.
+    """
+    import ctypes
+    from ctypes import wintypes
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.CreateFileW.argtypes = [
+        wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD, ctypes.c_void_p,
+        wintypes.DWORD, wintypes.DWORD, wintypes.HANDLE,
+    ]
+    kernel32.CreateFileW.restype = wintypes.HANDLE
+    kernel32.GetFinalPathNameByHandleW.argtypes = [
+        wintypes.HANDLE, wintypes.LPWSTR, wintypes.DWORD, wintypes.DWORD,
+    ]
+    kernel32.GetFinalPathNameByHandleW.restype = wintypes.DWORD
+    kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+    kernel32.CloseHandle.restype = wintypes.BOOL
+    handle = kernel32.CreateFileW(
+        path, 0, 1 | 2 | 4, None, 3, 0x02000000, None,
+    )
+    # INVALID_HANDLE_VALUE is -1. ctypes may surface that as None or as the
+    # unsigned pointer width, so every spelling is a failed open.
+    invalid = wintypes.HANDLE(-1).value
+    if handle in (None, 0, -1, invalid):
+        return None
+    try:
+        buf = ctypes.create_unicode_buffer(32768)
+        length = kernel32.GetFinalPathNameByHandleW(handle, buf, len(buf), 0)
+        if length == 0 or length >= len(buf):
+            return None
+        return _strip_extended(buf.value)
+    finally:
+        kernel32.CloseHandle(handle)
+
+
+def resolve_existing_path(path: str) -> str:
+    """Final path when the candidate exists. A missing path stays lexical.
+
+    Windows uses GetFinalPathNameByHandle. POSIX uses os.path.realpath.
+    An existing path that cannot be resolved fails closed.
+    """
+    if not isinstance(path, str) or not path:
+        return path
+    if os.name == "nt":
+        if not os.path.lexists(path):
+            return path
+        final = _windows_final_path(path)
+        if not final:
+            raise StorageRefusal("SANDBOX_PATH_UNRESOLVED")
+        return final
+    if os.path.lexists(path):
+        return os.path.realpath(path)
+    return path
+
+
+def assert_under_velvet(root: str, resolve=None) -> None:
+    """Require a subdirectory of D:\\Velvet after junctions and symlinks resolve.
+
+    D:\\Velvet itself is refused. Resolution runs before the drive and prefix
+    checks, so a lexical name under D:\\Velvet cannot escape through a link.
+    """
+    if not isinstance(root, str) or not root.strip():
         raise StorageRefusal("SANDBOX_NOT_ON_D:ROOT")
-    if not under_root(root, VELVET_ROOT):
+    try:
+        final = resolve(root) if resolve is not None else resolve_existing_path(root)
+    except StorageRefusal:
+        raise
+    except OSError as exc:
+        raise StorageRefusal("SANDBOX_PATH_UNRESOLVED") from exc
+    if not isinstance(final, str) or not final.strip():
+        raise StorageRefusal("SANDBOX_PATH_UNRESOLVED")
+    final = _strip_extended(final)
+    if not on_drive_d(final):
+        raise StorageRefusal("SANDBOX_NOT_ON_D:ROOT")
+    if _same(final, VELVET_ROOT):
+        raise StorageRefusal("SANDBOX_ROOT_IS_VELVET")
+    if not under_root(final, VELVET_ROOT):
         raise StorageRefusal("SANDBOX_OUTSIDE_VELVET")
 
 
