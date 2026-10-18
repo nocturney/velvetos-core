@@ -3416,6 +3416,7 @@ def main() -> int:
         ("test_vf_office_v2_604_cp083_hardening_candidate.py", 9),
         ("test_vf_office_v2_604_cp083_socket_negative.py", 2),
         ("test_vf_office_v2_604_cp083_client_socket_negative.py", 3),
+        ("test_vf_office_v2_604_cp084_nonroot_sink_recovery.py", 5),
     ):
         candidate_test = ROOT / "scripts" / test_file
         if not candidate_test.is_file():
