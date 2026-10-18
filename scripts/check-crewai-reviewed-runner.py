@@ -95,6 +95,8 @@ from office_v2_crewai.usage_guard import (  # noqa: E402
     WINDOWS_NETSTAT,
     WINDOWS_SYSTEM_ROOT,
     UsageRefusal,
+    _open_trusted_regular,
+    _strip_nt_prefix,
     _windows_observe,
     windows_tool_env,
     count_windows_listeners,
@@ -1534,6 +1536,104 @@ def check_listeners() -> None:
         fail("the module guard ran after the listener check")
 
 
+def check_windows_listener_pins() -> None:
+    """Pins the three Windows checks a source-only scan can leave alive.
+
+    A realpath that leaves the opened file is refused while ``os.name`` is
+    ``nt``. A ``\\\\?\\`` prefix on that same file is still accepted, so
+    stripping the prefix is required. The live observer runs only
+    ``C:\\Windows\\System32\\netstat.exe``.
+    """
+    import office_v2_crewai.usage_guard as usage_mod
+
+    same = "C:\\Windows\\System32\\netstat.exe"
+    if _strip_nt_prefix("\\\\?\\" + same) != same:
+        fail("\\\\?\\ prefix was not stripped")
+    unc = _strip_nt_prefix("\\\\?\\UNC\\server\\share\\netstat.exe")
+    if unc != "\\\\server\\share\\netstat.exe":
+        fail("UNC \\\\?\\ prefix was not stripped: %s" % unc)
+    if _strip_nt_prefix(same) != same:
+        fail("a plain Windows path was rewritten")
+
+    def open_as_windows(realpath):
+        saved_name = os.name
+        saved_realpath = os.path.realpath
+        os.name = "nt"
+        os.path.realpath = realpath
+        try:
+            return _open_trusted_regular(str(binary))
+        finally:
+            os.name = saved_name
+            os.path.realpath = saved_realpath
+
+    parent = Path(tempfile.mkdtemp(prefix="crewai-nt-open-"))
+    binary = parent / "netstat.exe"
+    outside = parent / "outside.exe"
+    binary.write_bytes(b"MZ")
+    outside.write_bytes(b"MZ")
+    try:
+        try:
+            fd = open_as_windows(lambda path: "\\\\?\\" + os.path.abspath(path))
+        except OSError as exc:
+            fail("same-file \\\\?\\ realpath was refused: %s" % exc)
+        else:
+            os.close(fd)
+        try:
+            fd = open_as_windows(lambda path: str(outside))
+        except OSError:
+            fd = None
+        else:
+            os.close(fd)
+            fail("Windows realpath escape was accepted")
+    finally:
+        shutil.rmtree(parent, ignore_errors=True)
+
+    calls = []
+    saved = (
+        usage_mod.trusted_listener_binary,
+        usage_mod.run_trusted_listener,
+        usage_mod._windows_processes,
+    )
+
+    def fake_binary(tool, platform=None):
+        return "C:\\Windows\\System32\\not-netstat.exe"
+
+    class _Proc:
+        stdout = "Active Connections\n"
+        returncode = 0
+
+    def fake_run(binary, args, path_value=None):
+        calls.append(binary)
+        return _Proc()
+
+    usage_mod.trusted_listener_binary = fake_binary
+    usage_mod.run_trusted_listener = fake_run
+    usage_mod._windows_processes = lambda: [{"pid": 10, "ppid": 1}]
+    try:
+        try:
+            _windows_observe()
+        except UsageRefusal as exc:
+            if str(exc) != "PILOT_LISTENER_UNPROVEN":
+                fail("other netstat path refused as %s" % exc)
+        else:
+            fail("a path other than %s was accepted" % WINDOWS_NETSTAT)
+        if calls:
+            fail("non-System32 netstat was executed")
+        calls.clear()
+        usage_mod.trusted_listener_binary = lambda tool, platform=None: WINDOWS_NETSTAT
+        observed = _windows_observe()
+        if calls != [WINDOWS_NETSTAT]:
+            fail("exact netstat.exe was not the binary that ran: %s" % calls)
+        if observed["tcp"] or observed["udp"]:
+            fail("header-only exact netstat was not empty")
+    finally:
+        (
+            usage_mod.trusted_listener_binary,
+            usage_mod.run_trusted_listener,
+            usage_mod._windows_processes,
+        ) = saved
+
+
 def check_run_record() -> None:
     out = Path(tempfile.mkdtemp(prefix="crewai-run-"))
     recorded = Path(tempfile.mkdtemp(prefix="crewai-recorded-"))
@@ -2465,6 +2565,7 @@ def main() -> int:
     check_kill()
     check_execute()
     check_listeners()
+    check_windows_listener_pins()
     check_trusted_listener_binaries()
     check_run_record()
     check_ast()
