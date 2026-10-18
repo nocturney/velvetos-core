@@ -1,0 +1,75 @@
+{
+  "schema": "velvetos.office-v2.candidate-lifecycle.v0",
+  "status": "PHASE2_FOUNDATION",
+  "authority": "START HERE Phase 2",
+  "forward_states": [
+    "DISCOVERED",
+    "RESEARCHED",
+    "CANDIDATE",
+    "ADMITTED",
+    "LAB",
+    "SHADOW",
+    "PILOT",
+    "PRODUCTION",
+    "FALLBACK",
+    "RETIRED"
+  ],
+  "exit_verdicts": [
+    "REJECTED_WITH_REASON",
+    "BENCHMARKED_AND_LOST",
+    "SUPERSEDED",
+    "DEFERRED_WITH_REASON"
+  ],
+  "decision_verdicts": [
+    "KEEP_INCUMBENT",
+    "BENCHMARK_REQUIRED",
+    "IMPORT_EXISTING",
+    "REPAIR_REQUIRED",
+    "ADVANCE_TO_CANDIDATE",
+    "LAB_VALIDATED"
+  ],
+  "rules": [
+    "Forward promotion requires evidence for the target stage; availability never grants authority.",
+    "Exit verdicts may be recorded from any appropriate stage and must include a reason.",
+    "No researched item may remain without a meaningful decision verdict.",
+    "A failed incumbent never auto-promotes a challenger; fallback requires prior promotion.",
+    "PRODUCTION means accepted for a bounded role, not ownership of unrelated domains."
+  ],
+  "promotion_evidence": {
+    "CANDIDATE": [
+      "requirements_match",
+      "maintainer_license_security_review"
+    ],
+    "ADMITTED": [
+      "admission_record",
+      "isolation_plan",
+      "rollback_or_explicit_failure"
+    ],
+    "LAB": [
+      "versioned_definition",
+      "lab_only_credentials",
+      "health_probe"
+    ],
+    "SHADOW": [
+      "golden_fixture_receipts",
+      "no_production_authority"
+    ],
+    "PILOT": [
+      "bounded_scope",
+      "operator_visibility",
+      "rollback_proof"
+    ],
+    "PRODUCTION": [
+      "promotion_receipt",
+      "authority_map_update_if_applicable",
+      "production_readback"
+    ],
+    "FALLBACK": [
+      "prior_production_or_explicit_fallback_qualification"
+    ],
+    "RETIRED": [
+      "export_or_uninstall_receipt",
+      "authority_removed"
+    ]
+  }
+}

@@ -1,0 +1,261 @@
+{
+  "schema": "velvetos.stage8d-final-acceptance.v1",
+  "stage": "8D_FINAL_ACCEPTANCE",
+  "behavior_change": false,
+  "prepared_against_main_sha": "87f023079238b3d3d4c563cd40baca63a36883a0",
+  "captured_at": "2026-10-05T19:48:53.1028305+03:00",
+  "purpose": "Close Stage 8D and Reform v2 after isolated retirement of all five compatibility surfaces, with exact-main semantic, restoration, replay, authority and CI evidence.",
+  "semantic_audit": {
+    "path": "packages/velvetos/policy/reports/stage8d-retirement-semantic-audit.json",
+    "canonical_json_sha256": "f88325eb66a093665a181361ffd4651370bcd72e018e749babfd676648601c13",
+    "repository_assessment": "PASS",
+    "surfaces_total": 5,
+    "surfaces_preflight_clear": 5,
+    "surfaces_retired": 5,
+    "retired_surfaces": [
+      "chatgpt_core_bundle",
+      "fleet",
+      "root_desk",
+      "sample_profile",
+      "tool_status"
+    ],
+    "candidate_blockers": []
+  },
+  "deletion_receipts": {
+    "sample_profile": {
+      "path": "packages/velvetos/policy/reports/stage8d-sample-profile-deletion.json",
+      "canonical_json_sha256": "b0c53f2f2f70d48ecf1a7b8e6efad47930988b74798747914555b68a9d2c46b1",
+      "repository_assessment": "PASS",
+      "deletion_performed": true,
+      "retirement_authorized": true
+    },
+    "root_desk": {
+      "path": "packages/velvetos/policy/reports/stage8d-root-desk-deletion.json",
+      "canonical_json_sha256": "e70e124f5471262c7fd1e1812cfb66c035241b49f132e23150ee2058b138d68e",
+      "repository_assessment": "PASS",
+      "deletion_performed": true,
+      "retirement_authorized": true
+    },
+    "fleet": {
+      "path": "packages/velvetos/policy/reports/stage8d-fleet-deletion.json",
+      "canonical_json_sha256": "e07c0bf714c5c1a4a718ae2ac17845cc35c41be37dc94145efda13009dd05602",
+      "repository_assessment": "PASS",
+      "deletion_performed": true,
+      "retirement_authorized": true
+    },
+    "tool_status": {
+      "path": "packages/velvetos/policy/reports/stage8d-tool-status-deletion.json",
+      "canonical_json_sha256": "47e9c49a7ddfcd9fedf56317007f1906b3f866444cb7f28a1785944ad47be886",
+      "repository_assessment": "PASS",
+      "deletion_performed": true,
+      "retirement_authorized": true
+    },
+    "chatgpt_core_bundle": {
+      "path": "packages/velvetos/policy/reports/stage8d-chatgpt-deletion.json",
+      "canonical_json_sha256": "4e0ce3eb38fc1426bebc3fbc4e14a30c8f2bd3cb209019fe829cc4ded9add706",
+      "repository_assessment": "PASS",
+      "deletion_performed": true,
+      "retirement_authorized": true
+    }
+  },
+  "restore_anchors": {
+    "sample_profile": {
+      "source_commit_sha": "495a6c91e8dea4b65dacf415be42aa22fc471ae4",
+      "path": "packages/velvetos/samples/velvet-factory.json",
+      "git_blob_sha1": "7ffc401ef4ce87acd25c48a2d095ab82eca8f76b",
+      "sha256": "01a792c229721fa95590636a645aab8d46439d6efd523c48b6ee6b73ca366f5d",
+      "size_bytes": 5214,
+      "verified_from_git": true
+    },
+    "root_desk": {
+      "source_commit_sha": "dfd699dcee63d5175f03ae3312fbb89992ea78ca",
+      "path": ".cursor/vf-desk.json",
+      "git_blob_sha1": "30ddd380f1d556dd1b444c3ca6b153f6d6188e1f",
+      "sha256": "702695ffa72b8f0e56738cc533cc95ee2d6a6cd76c66cf58f2a84d3658a1116b",
+      "size_bytes": 34186,
+      "verified_from_git": true
+    },
+    "fleet": {
+      "source_commit_sha": "12e8ea4c0a38286eccc30972579270739411b5f2",
+      "path": "packages/vfprod/FLEET.json",
+      "git_blob_sha1": "d76126ce8ac08b5faf86b5069df18886118b8f1a",
+      "sha256": "baffa4db8f61d33339f89161155e620d0914a802fe230b241a566bdadb085f3c",
+      "size_bytes": 1364,
+      "verified_from_git": true
+    },
+    "tool_status": {
+      "source_commit_sha": "3f7bd148ebf31dae67a02e86ba2b8727dc14c171",
+      "path": "packages/velvetos/TOOL-STATUS.json",
+      "git_blob_sha1": "e5bb196c5bfd0a0bd5b6fe95df1549de9b1d2372",
+      "sha256": "0b1f082887c9e4d5367574b746bee36f62f4aced0f8cf631a08551e553030add",
+      "size_bytes": 6753,
+      "verified_from_git": true
+    },
+    "chatgpt_core_bundle": {
+      "source_commit_sha": "774d4e6164277057f91eb5681551735a1928404f",
+      "path": "packages/velvetos/chatgpt-project",
+      "git_tree_sha1": "d7961fe63ff483b0085d9689b8b3c1b4d35a35f4",
+      "file_count": 33,
+      "manifest_sha256": "9d99f8dc6f7f5dc0972cb66dcc3dbba38e5ba5e272d7a3aed4588acfb26193bb",
+      "legacy_gitattributes_sha256": "dd0fe2cd643d43a7eae46b016e4403856f6f74dc9a64b414e2a64ad9326a530f",
+      "verified_from_git": true
+    }
+  },
+  "historical_replay": {
+    "sample_profile": {
+      "stage8c_sample_profile": {
+        "commit": "eaaa6f2223199ee028184cddc6e8643213c66808",
+        "receipt": "packages/velvetos/policy/reports/stage8c-sample-profile-consumers.json",
+        "receipt_sha256": "a33fb4cb338638619c605cd3d9ea0c990544b3c096440c079e75c05d8967ee71",
+        "verified_from_git": true
+      },
+      "stage8c_closure": {
+        "commit": "9c4032e8fe08dfd7add5dd70f0b9769d8c3bcae8",
+        "receipt": "packages/velvetos/policy/reports/stage8c-closure.json",
+        "receipt_sha256": "ea4881b7fbfe9777705b86090f2a0fe72fba687064a5beb5d7b78cdcceb3ad06",
+        "verified_from_git": true
+      }
+    },
+    "root_desk": {
+      "stage8c_root_desk_readers": {
+        "commit": "4b074e9c203f678d6b2216ff52e5a46782136a3c",
+        "receipt": "packages/velvetos/policy/reports/stage8c-root-desk-readers.json",
+        "receipt_sha256": "d11621a8ebadc3872330c2903c90a1b18f51bb467ae9460fbf77346fdae03ac5",
+        "verified_from_git": true
+      },
+      "stage8c_desk_catalog_bindings": {
+        "commit": "da5388f2b8c2739461fd247f441d10ab7b61987e",
+        "receipt": "packages/velvetos/policy/reports/stage8c-desk-catalog-bindings.json",
+        "receipt_sha256": "1339784d8b16f3071b1994971b2e293977c54ab62fa108581c54d9b0fd453504",
+        "verified_from_git": true
+      }
+    },
+    "fleet": {
+      "stage8c_control_api_fleet": {
+        "commit": "df183de7f4f40ea691f7746646d5fb3ef0ba1e06",
+        "receipt": "packages/velvetos/policy/reports/stage8c-control-api-fleet.json",
+        "receipt_sha256": "28257b3773f8cb62feaa254c16258dcea63213226a5e62d3393f6eeaf964ca2f",
+        "verified_from_git": true
+      },
+      "stage8d_fleet_consumer_migration": {
+        "commit": "b68439c0c593ce2d506b93295bc7ac473c0a184d",
+        "receipt": "packages/velvetos/policy/reports/stage8d-fleet-consumer-migration.json",
+        "receipt_sha256": "fab0221c35ff2d17937b877249baa123f11857c1a363de4717a10905874d64bc",
+        "verified_from_git": true
+      },
+      "stage8d_fleet_runtime_correction": {
+        "commit": "dd528b857ac7cdb88d0043864338e87ede177402",
+        "receipt": "packages/velvetos/policy/reports/stage8d-fleet-runtime-consumer-correction.json",
+        "receipt_sha256": "c3194b2252e2d87718a65d63cda2ac20b14740e58cb86a6dff281f29bc161a00",
+        "verified_from_git": true
+      },
+      "stage8d_fleet_rollback_closure": {
+        "commit": "a2fc177cb7b39a3f647ea32c71c2ca41b4564bc5",
+        "receipt": "packages/velvetos/policy/reports/stage8d-fleet-rollback-closure.json",
+        "receipt_sha256": "b2032eadd7cbc849e62a991f00bb365f24bd012c735a0ab25d5ec30b99c23b9f",
+        "verified_from_git": true
+      }
+    },
+    "tool_status": {
+      "consumer_migration": {
+        "commit": "541de91794e07b23493304e4af7d653849be869a",
+        "receipt": "packages/velvetos/policy/reports/stage8d-tool-status-consumer-migration.json",
+        "receipt_sha256": "8824ffc78bc7ab55560763e58bfa6cd48b27b8798062d18010bc4a025839e521",
+        "verified_from_git": true
+      },
+      "semantic_correction": {
+        "commit": "e43ee067c702603ae54e4f295939a8c4a723432e",
+        "receipt": "packages/velvetos/policy/reports/stage8d-tool-status-semantic-correction.json",
+        "receipt_sha256": "57bb14e965a1193809ab65b693a7670445c461463ea865b2b277b114bb00d593",
+        "verified_from_git": true
+      },
+      "rollback_closure": {
+        "commit": "5d218b18305bb09c0b1a2f78d118c0a3acb4a329",
+        "receipt": "packages/velvetos/policy/reports/stage8d-tool-status-rollback-closure.json",
+        "receipt_sha256": "1abc2f56320052e34a050ec535ddf5dffc15534533a2780d0ee4db1d97bfc859",
+        "verified_from_git": true
+      }
+    },
+    "chatgpt_core_bundle": {
+      "consumer_migration": {
+        "commit": "5e4c32bac19fe13ee1bbcac22513dcc2f5d36921",
+        "receipt": "packages/velvetos/policy/reports/stage8d-chatgpt-core-consumer-migration.json",
+        "receipt_sha256": "66d64c264b31fcd637c1ef260854f5e3c99fda567e83ecc68de29975d082d7ef",
+        "verified_from_git": true
+      },
+      "semantic_correction": {
+        "commit": "57a84a84762de99ee6faf24af54a1247483b6bbe",
+        "receipt": "packages/velvetos/policy/reports/stage8d-chatgpt-semantic-correction.json",
+        "receipt_sha256": "dad0e864b4412c8a5caaf4231ebc260bd9fd30189e1a1990cc5504985ca133a9",
+        "verified_from_git": true
+      },
+      "rollback_closure": {
+        "commit": "8fdc942136baec2101c46b4370acff8a234543c6",
+        "receipt": "packages/velvetos/policy/reports/stage8d-chatgpt-rollback-closure.json",
+        "receipt_sha256": "1f8e5287dca1f194f82bd6c799c1fd8fb01e692536dd4efa2b525fe6328b2b14",
+        "verified_from_git": true
+      }
+    }
+  },
+  "authority": {
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false,
+    "instance_selection_remains_explicit_and_fail_closed": true
+  },
+  "canonical_state": {
+    "chatgpt_distribution_path": "instances/velvet-factory/distribution/chatgpt-project",
+    "chatgpt_file_count": 33,
+    "chatgpt_gitattributes_rule": "/instances/velvet-factory/distribution/chatgpt-project/** -whitespace",
+    "retired_legacy_paths_present": []
+  },
+  "main_full_suite": {
+    "workflow": "VelvetOS Core Sensors",
+    "workflow_run_id": 37342022333,
+    "job_id": 111871175776,
+    "run_url": "https://github.com/nocturney/velvetos-core/actions/runs/37342022333",
+    "head_sha": "87f023079238b3d3d4c563cd40baca63a36883a0",
+    "event": "push",
+    "conclusion": "SUCCESS",
+    "mode": "full",
+    "registered_sensors": 116,
+    "passed_sensors": 116,
+    "repository_files_unchanged": true,
+    "log_markers": [
+      "SENSORS 116 mode=full",
+      "OK sensor run left repository files unchanged",
+      "OK suite passed=116"
+    ]
+  },
+  "readme_system_pulse": {
+    "workflow": "README System Pulse",
+    "workflow_run_id": 37343038165,
+    "run_url": "https://github.com/nocturney/velvetos-core/actions/runs/37343038165",
+    "head_sha": "87f023079238b3d3d4c563cd40baca63a36883a0",
+    "event": "workflow_dispatch",
+    "conclusion": "SUCCESS"
+  },
+  "acceptance_criteria": {
+    "all_five_compatibility_surfaces_are_physically_absent": true,
+    "all_five_authoritative_deletion_receipts_are_pass": true,
+    "final_semantic_audit_is_5_of_5_clear_and_retired": true,
+    "no_active_or_ambiguous_legacy_runtime_consumers_remain": true,
+    "all_restore_anchors_resolve_from_git_history": true,
+    "all_historical_replay_receipts_remain_byte_anchored": true,
+    "external_effect_policy_authority_is_unchanged": true,
+    "canonical_chatgpt_distribution_remains_33_files": true,
+    "canonical_chatgpt_gitattributes_rule_remains": true,
+    "exact_main_full_sensor_suite_is_116_of_116": true,
+    "exact_main_readme_system_pulse_is_green": true
+  },
+  "repository_acceptance": "PASS",
+  "stage8d_complete": true,
+  "reform_v2_complete": true,
+  "next_action": "Treat Reform v2 as closed after this evidence-only final-acceptance change merges and the exact merge SHA passes post-merge full-suite verification.",
+  "constraints": [
+    "no runtime authority change in final acceptance",
+    "canonical Velvet Factory instance surfaces remain authoritative",
+    "explicit instance selection and fail-closed behavior remain required",
+    "historical retirement evidence remains reproducible",
+    "external-effect authority remains unchanged"
+  ]
+}

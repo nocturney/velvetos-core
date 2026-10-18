@@ -1,10 +1,11 @@
-# DeerFlow 2.0 — דפוסים מוטמעים (לא runtime)
+# DeerFlow 2.0 — קליטת דפוסים היסטורית + מועמד להשוואה מלאה
 
-מקור: [bytedance/deer-flow](https://github.com/bytedance/deer-flow) (Deep Exploration and Efficient Research **Flow** — Super Agent harness 2.0, LangGraph + Gateway).  
-נקרא: 2026-08-31.  
-חוק: **מטמיעים דפוסים על `vfe2b` + `vfharness`. לא מתקינים DeerFlow.** Cursor הוא המשרד. `LOCK.md` נשאר.
+מקור: [bytedance/deer-flow](https://github.com/bytedance/deer-flow) (Super Agent harness, LangGraph + Gateway).  
+מחקר דפוסים ראשוני: 2026-08-31. בדיקת התאמת הגרסה הנוכחית: 2026-10-08.
 
-DeerFlow ≠ BabyDeer (מוד AutoGPT ב־`LOCK.md`). DeerFlow הוא harness נפרד מבית ByteDance — אותו עיקרון נעילה: **אין runtime שני**.
+**COMPETITOR_NEUTRAL_ADMISSION_V1:** ההחלטה מאוגוסט "דפוסים בלבד" הייתה גבול שימוש שגרתי, ולא הוכחת עליונות של המימוש שלנו. אין לפסול DeerFlow בגלל חפיפה, השקעה קיימת, או `no-second-orchestrator`. הוא זכאי למבחן השוואתי הוגן כאפשרות **להחליף את ליבת הסוכנים בשלמותה**, להחליף תת־מערכות או להשתלב כהרכבה. `no-second-orchestrator` ממשיך לאסור deployment מקביל ב־production ללא קידום/authority, אך **אינו** מונע רישום או LAB מבודד אחרי admission. DeerFlow ≠ BabyDeer; אין כאן אישור להפעלת swarm בלתי מבוקר.
+
+רישום השוואה: `docs/implementation/office-v2/phase2/candidate-registry-v0.json#candidate-deerflow`; מסלול `agent-runtime` נשמר בתור `queued_challengers` עד לבחינת מקום הוגנת. נסרק/תועד, **לא** הותקן, לא הושווה ב־Golden Fixtures ולא נבחר כמנצח.
 
 ## מה DeerFlow מציע (סיכום)
 
@@ -49,7 +50,7 @@ DeerFlow ≠ BabyDeer (מוד AutoGPT ב־`LOCK.md`). DeerFlow הוא harness נ
 | משמרת | מטרה לדוגמה |
 |---|---|
 | פנייה | «Gmail reply נשלח בשרשור X» |
-| Morning Brief 09:00 | «send_message עם htmlBody תצוגה 3» |
+| Morning Brief (manual/event-driven) | «send_message עם htmlBody תצוגה 3» |
 | מחקר | «ארטיפקט ב־`vfresearch/sources/` עם מקורות, בלי גוף חסום» |
 | ₪ | **לא goal** — `decision_gate` לראש צוות |
 
@@ -75,15 +76,15 @@ DeerFlow ≠ BabyDeer (מוד AutoGPT ב־`LOCK.md`). DeerFlow הוא harness נ
 
 בלי receipt בשם — לא `worker_done` על שליחה.
 
-## מה לא מתקינים
+## מה לא מפעילים בייצור ללא שער קידום
 
 | DeerFlow | למה |
 |---|---|
-| `make setup` / Gateway / Docker stack | runtime שני · `no-second-orchestrator` |
+| `make setup` / Gateway / Docker stack | לא כ־runtime production נוסף ללא קידום. LAB מבודד אפשרי אחרי admission; אין פסילה מראש · `no-second-orchestrator` |
 | Sandbox bash / E2B | רצפת הדפסה · שליחה דרך כלים |
 | IM channels (Telegram, Slack…) | WhatsApp לקוח = אדם `050-2517000` |
 | DeerMem / mem0 / Honcho | סיכון facts מומצאים על לקוח/₪; `vfmem` ≠ user memory |
-| Scheduled cron tasks | Morning Brief 09:00 = `vfops` + Calendar + Gmail; 07:00 הוא readiness cutoff |
+| Scheduled cron tasks | Morning Brief אינו cron; `vfops` + Calendar + Gmail פועלים רק בהפעלה ידנית/אירועית, ללא readiness cutoff שעוני |
 | Agentic browser | נעול ב־`LOCK.md` (Self-operating computer) |
 | «Ultra» sub-agent swarm | אוטונומיה מלאה — `LOCK.md` |
 

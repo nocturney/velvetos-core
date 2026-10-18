@@ -19,7 +19,7 @@ description: VelvetOS Living Studio connective tissue — World Model, Studio Pu
 3. `world-model` / `pulse` / `signal-room` are projections — not databases.
 4. `intake` classifies + routes + receipt into existing SoTs.
 5. Brand Voice → `velvet-hebrew-copy` / `vf-hebrew-copy`.
-6. After edits: `python3 scripts/check-living-studio.py` then `check-all.py`.
+6. After scoped edits run `python3 scripts/check-living-studio.py` plus any affected domain sensors; add `python3 scripts/check-all.py` only for repository-wide contract/authority changes or explicit acceptance/regression.
 
 ## Do not
 

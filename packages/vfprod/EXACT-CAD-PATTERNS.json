@@ -1,0 +1,117 @@
+{
+  "schema": "velvetos.exact-cad-patterns.v1",
+  "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+  "engine_registry": "packages/vfprod/CAD-ENGINE-REGISTRY.json",
+  "engineering_contract": "docs/implementation/ai-3d-modeling-engineering-core/engineering-contract-v1.schema.json",
+  "units": "mm",
+  "coordinate_frame": {
+    "primitive_local_origin": "xy_center_z_min",
+    "translation_semantics": "translate_mm is an explicit global XYZ translation applied after primitive construction",
+    "rotation_in_geometry_ir": false,
+    "rotation_policy": "BLOCKED unless an upstream typed CAD request or Engineering Contract provides an explicit supported transform",
+    "hidden_transform_inference": false
+  },
+  "semantic_selection": {
+    "rule": "geometric_predicates_only",
+    "numeric_face_index_fallback": false,
+    "ambiguous_selection": "BLOCKED",
+    "selectors": {
+      "top_planar_face": {
+        "geom_type": "PLANE",
+        "normal_dot_positive_z_min": 0.999999,
+        "rank": "center_z_desc",
+        "require_unique_extreme_within_mm": 1e-6
+      },
+      "bottom_planar_face": {
+        "geom_type": "PLANE",
+        "normal_dot_negative_z_min": 0.999999,
+        "rank": "center_z_asc",
+        "require_unique_extreme_within_mm": 1e-6
+      },
+      "cylindrical_side": {
+        "geom_type": "CYLINDER",
+        "required_evidence": ["axis_datum", "radius_or_diameter_dimension"],
+        "require_unique_after_predicates": true
+      },
+      "planar_face_by_datum": {
+        "geom_type": "PLANE",
+        "required_evidence": ["plane_datum"],
+        "require_unique_after_predicates": true
+      }
+    }
+  },
+  "joint_patterns": {
+    "planar_mate": {
+      "required": ["plane_datum_a", "plane_datum_b", "offset_mm"],
+      "solver_behavior": "compile explicit transform; fail closed if datum or offset is unknown"
+    },
+    "concentric_axis": {
+      "required": ["axis_datum_a", "axis_datum_b"],
+      "solver_behavior": "align explicit axes; fail closed on parallelism/identity ambiguity"
+    },
+    "fixed_offset": {
+      "required": ["datum_ref", "axis", "offset_mm"],
+      "solver_behavior": "apply exact signed offset only"
+    },
+    "clearance_interface": {
+      "required": ["interface_ref", "nominal_dimension_ref", "clearance_mm"],
+      "solver_behavior": "derive only from explicit nominal plus explicit clearance"
+    }
+  },
+  "curated_primitives": {
+    "build123d": {
+      "status": "ACTIVE_PRIMARY",
+      "primitives": ["Box", "Cylinder", "extrusion"],
+      "rule": "prefer native primitive/boolean calls over copied geometry"
+    },
+    "bd_warehouse": {
+      "status": "PROVEN_BOUNDED",
+      "version": "0.3.0",
+      "license": "Apache-2.0",
+      "runtime": "vf-cad-stack:build123d-venv",
+      "primitives": [
+        {
+          "id": "fastener.socket_head_cap_screw",
+          "class": "bd_warehouse.fastener.SocketHeadCapScrew",
+          "fixture": {"size": "M4-0.7", "length_mm": 16, "standard": "iso4762", "simple": true}
+        },
+        {
+          "id": "fastener.hex_nut",
+          "class": "bd_warehouse.fastener.HexNut",
+          "fixture": {"size": "M4-0.7", "standard": "iso4032", "simple": true}
+        },
+        {
+          "id": "fastener.plain_washer",
+          "class": "bd_warehouse.fastener.PlainWasher",
+          "fixture": {"size": "M4", "standard": "iso7089"}
+        }
+      ],
+      "deferred_to_feature_packs": [
+        "HeatSetNut",
+        "ClearanceHole",
+        "TapHole",
+        "ThreadedHole",
+        "bearings",
+        "gears",
+        "threads",
+        "retaining_rings",
+        "shaft_keys",
+        "sprockets"
+      ]
+    }
+  },
+  "export_profiles": {
+    "build123d_default": ["STEP", "STL"],
+    "build123d_exact_cad_fixture": ["STEP", "STL", "3MF", "DXF", "SVG"],
+    "build123d_optional_visual": ["GLB"],
+    "dxf_semantics": "selected 2D face/profile only; current generic fixture exports semantic top face",
+    "svg_semantics": "selected 2D face/profile only; current generic fixture exports semantic top face"
+  },
+  "safety": {
+    "printer_actions_allowed": false,
+    "machine_control_allowed": false,
+    "invent_hidden_dimensions": false,
+    "invent_missing_datums": false,
+    "silent_ambiguous_selection": false
+  }
+}

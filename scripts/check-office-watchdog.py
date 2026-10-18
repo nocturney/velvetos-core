@@ -90,17 +90,11 @@ def main() -> None:
         fail("post #3+ must be REVIEW_REQUIRED")
 
     routine = (ROOT / "packages" / "vfops" / "ROUTINE.md").read_text(encoding="utf-8")
-    for needle in ("07:00", "Media Intake", "Publish Watch", "Insights", "watchdog"):
+    for needle in ("~11:30", "18:30", "19:15", "Media Intake", "Publish Watch", "Insights", "watchdog"):
         if needle not in routine and needle.lower() not in routine.lower():
-            if needle == "Media Intake" and "קליטת מדיה" not in routine:
-                fail(f"ROUTINE.md missing {needle}")
-            elif needle == "Publish Watch" and "Publish" not in routine and "פרסום" not in routine:
-                fail("ROUTINE.md missing publish watch")
-            elif needle == "watchdog" and "watchdog" not in routine.lower():
-                fail("ROUTINE.md must mention watchdog")
-            elif needle in ("07:00", "Insights"):
-                if needle not in routine:
-                    fail(f"ROUTINE.md missing {needle}")
+            fail(f"ROUTINE.md missing current capability/schedule marker {needle}")
+    if "**07:00**" in routine or "**09:00** | Velvet Morning Brief" in routine:
+        fail("ROUTINE.md must not revive the historical fixed morning cadence")
 
     tw_path = ROOT / "packages" / "vfigos" / "data" / "token-watch.json"
     if not tw_path.is_file():

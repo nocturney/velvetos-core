@@ -1,0 +1,105 @@
+{
+  "schema": "velvetos.office-v2.phase3b-shadow-readiness.v0",
+  "captured_at": "2026-10-07T04:34:40.3124788Z",
+  "status": "PRE_SHADOW_READINESS_COMPLETE_NO_PROMOTION",
+  "selected_composition": "composition-zitadel-opa-openbao",
+  "current_authority": "NONE",
+  "production_authority_change": false,
+  "production_writer_change": false,
+  "production_credentials_bound": false,
+  "production_secret_material_used": false,
+  "external_effects_allowed": false,
+  "shadow_promoted": false,
+  "pilot_promoted": false,
+  "production_promoted": false,
+  "current_project_state_must_remain": "PHASE_3A_CLOSED_GREEN__PHASE_3B_READY",
+  "integration_wiring": {
+    "status": "PASS",
+    "mode": "LAB_SIMULATION_ONLY",
+    "commit_sha": "1101b119cc9afcebfbc22b0b44c746aef6acc96d",
+    "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/integration-wiring-validation.json",
+    "evidence_sha256": "bf0948e38ebc21b93ad4a932e6a97c490620179d97f4798db94e1ad1d98b045b",
+    "exact_sha_suite": "116/116 PASS"
+  },
+  "persistence_restore": {
+    "status": "PASS",
+    "scope": "LAB_ONLY_SYNTHETIC",
+    "run_id": "20261007T042934Z-218776",
+    "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/persistence-readiness.json",
+    "evidence_sha256": "c8093f463c293d851109de73d1c60a688efc918ea719d782916bbfda2c752da7",
+    "opa": {
+      "status": "PASS",
+      "method": "policy-directory-tar-backup-restore",
+      "restored_decision_http": 200,
+      "restored_allow": true,
+      "host_port_bindings": {}
+    },
+    "openbao": {
+      "status": "PASS",
+      "storage_backend": "raft",
+      "method": "offline-storage-tar-backup-restore",
+      "fresh_storage_health_http": 501,
+      "restored_sealed_health_http": 503,
+      "restored_active_health_http": 200,
+      "restored_read_http": 200,
+      "restored_value_match": true,
+      "host_port_bindings": {}
+    },
+    "zitadel": {
+      "status": "PASS",
+      "database_backend": "postgres",
+      "method": "pg_dump-custom-format-restore-to-fresh-postgres",
+      "fresh_user_relations": 0,
+      "restored_user_relations": 142,
+      "prebackup_token_http": 200,
+      "restored_identity_token_http": 200,
+      "host_port_bindings": {
+        "zitadel": {},
+        "postgres": {}
+      }
+    }
+  },
+  "runtime_readiness": {
+    "status": "PASS_NOT_ACTIVATED",
+    "contract_ref": "docs/implementation/office-v2/phase3b/runtime-readiness-v0.json",
+    "validator": "scripts/vf_office_v2_security_shadow_doctor.py",
+    "validator_selftest_cases": 10,
+    "health_fail_closed": true,
+    "service_plan_complete": true,
+    "services_installed": false,
+    "services_enabled": false,
+    "rollback_to_incumbents_selftest": true,
+    "dpapi_cross_process_probe": "PASS",
+    "dpapi_evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/dpapi-key-material-probe.json",
+    "dpapi_evidence_sha256": "89b771f66b22ff1841ad83e84d4d2a161aa226fc01a5debdfb0fc1e2d90c9a92",
+    "production_authority_change": false,
+    "shadow_promoted": false
+  },
+  "exact_regression": {
+    "status": "PASS",
+    "suite": "116/116",
+    "mode": "full",
+    "validated_after_rebase": true,
+    "repository_files_unchanged": true,
+    "services_activated": false,
+    "production_authority_change": false,
+    "shadow_promoted": false
+  },
+  "completed_preconditions": [
+    "cross-role composition benchmark PASS",
+    "non-authoritative integration wiring PASS",
+    "integration reference selftest and exact-SHA canonical suite PASS",
+    "OPA backup/revoke/restore decision drill PASS",
+    "OpenBao persistent Raft backup/fresh-negative/restore/unseal/read drill PASS",
+    "ZITADEL PostgreSQL backup/fresh-negative/restore/token-issuance drill PASS",
+    "identity/policy/broker health-probe fail-closed contract PASS",
+    "bounded service/autostart and operator-inspection plan PASS without activation",
+    "rollback-to-incumbents contract selftest PASS",
+    "persistent LAB key-material handling contract plus DPAPI cross-process probe PASS",
+    "exact regression and negative-control suite after runtime-readiness wiring PASS 116/116"
+  ],
+  "remaining_preconditions_before_shadow_can_be_considered": [
+    "separate explicit project-state SHADOW promotion receipt"
+  ],
+  "promotion_rule": "Completing pre-SHADOW readiness does not itself promote SHADOW. CURRENT.json and all production authority remain unchanged until a separate explicit promotion receipt."
+}

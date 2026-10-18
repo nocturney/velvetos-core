@@ -39,7 +39,7 @@ HQ לא שולח DM אוטומטי. HQ לא שולח וואטסאפ ללקוח.
 ## שיבוץ
 
 רשת קבועה (`CALENDAR.md`): ריל א׳ 16:00 · ריל ג׳ 16:00 · קרוסלה ה׳ 12:00 · סטוריז א׳–ה׳ 20:30.  
-אין ריל כל יום עבודה ב־16:00. readiness cutoff 07:00 **לא** מפרסם; Morning Brief הקנוני הוא 09:00. לפני עלייה: `PREFLIGHT.md` + `EDIT-GATE.md` + `vfigos/SEND.md`.
+אין ריל כל יום עבודה ב־16:00. readiness הוא event-driven ואינו authorization; Morning Brief אינו clock. לפני עלייה: exact-final `PREFLIGHT.md` + `EDIT-GATE.md` + `policy_id: instagram.publish` + `vfigos/SEND.md`.
 
 ## בלוק לבריף (04 / 07)
 

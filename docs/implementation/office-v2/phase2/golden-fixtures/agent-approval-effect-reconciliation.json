@@ -1,0 +1,86 @@
+{
+  "schema": "velvetos.office-v2.golden-fixture.v0",
+  "fixture_id": "agent-approval-effect-reconciliation",
+  "status": "CONTRACT_V0",
+  "title": "Agent -> approval -> external effect -> reconciliation",
+  "capability_scope": [
+    "agent.plan",
+    "approval",
+    "external.effect",
+    "reconciliation"
+  ],
+  "input_contract": {
+    "required": [
+      "agent_request",
+      "approval_scope",
+      "correlation"
+    ],
+    "vendor_specific_fields_forbidden": true
+  },
+  "semantic_steps": [
+    {
+      "step_id": "plan",
+      "capability": "agent.plan",
+      "side_effect_class": "NONE",
+      "expected_evidence": [
+        "plan_receipt"
+      ]
+    },
+    {
+      "step_id": "approval",
+      "capability": "approval",
+      "side_effect_class": "READ",
+      "expected_evidence": [
+        "approval_receipt"
+      ]
+    },
+    {
+      "step_id": "effect",
+      "capability": "external.effect",
+      "side_effect_class": "IRREVERSIBLE_WRITE",
+      "expected_evidence": [
+        "effect_intent",
+        "effect_receipt"
+      ]
+    },
+    {
+      "step_id": "reconcile",
+      "capability": "reconciliation",
+      "side_effect_class": "READ",
+      "expected_evidence": [
+        "reconciliation_receipt"
+      ]
+    }
+  ],
+  "success_contract": [
+    "effect matches approved scope",
+    "unknown outcome is reconciled before retry",
+    "receipt identities remain stable"
+  ],
+  "evidence_contract": {
+    "required": [
+      "plan_receipt",
+      "approval_receipt",
+      "effect_intent",
+      "effect_receipt",
+      "reconciliation_receipt"
+    ]
+  },
+  "rollback_contract": [
+    "do not compensate blindly",
+    "use domain-authorized rollback only when supported"
+  ],
+  "resource_capture": [
+    "wall_seconds",
+    "cpu_peak_pct",
+    "ram_peak_mb",
+    "gpu_peak_pct",
+    "vram_peak_mb",
+    "storage_delta_mb",
+    "network_mb",
+    "external_cost",
+    "recurring_cost",
+    "operator_minutes"
+  ],
+  "external_effect_policy": "PROVIDER_ADAPTER_REQUIRED_NO_DIRECT_RUNNER_MUTATION"
+}

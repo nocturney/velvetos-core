@@ -1,0 +1,302 @@
+{
+  "schema": "velvetos.ai3d.phase14-printer-profiles-acceptance.v1",
+  "status": "PASS_OFFLINE_AUDIT_WITH_EXPLICIT_BLOCKERS",
+  "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+  "provider": "installed OrcaSlicer 2.4.2 via existing vf_cad.py",
+  "non_authoritative_staging": true,
+  "fixture_source_sha256": "398b88cbd3be64d5b2c26a83e1c4b444b2fe1b080ca848036d215aaec071ec68",
+  "input_geometry_mm": [
+    120,
+    80,
+    12
+  ],
+  "input_artifacts": {
+    "step": {
+      "name": "model.step",
+      "bytes": 19289,
+      "sha256": "e23b42b7599b66e51630b2ce82ab9905768fa54b8c65cf9e996ad0c9f2e6cddd"
+    },
+    "stl": {
+      "name": "model.stl",
+      "bytes": 25884,
+      "sha256": "ca0b831fa527894897665f874187e1bde49a2f024948f9b7c07d77dd7162b73d"
+    },
+    "3mf": {
+      "name": "model.3mf",
+      "bytes": 7417,
+      "sha256": "c59fb390fef808452d578c59979a67508e14ee96ad15f8ae7666a5d4a01ecda9"
+    }
+  },
+  "native_profile_hashes": {
+    "printer_matrix.json": "8bec9066937835a4ad3901582fa74bfe21ccf717b82fce7049961edc1f64991b",
+    "u1/filament.json": "23d36996bb1fbb55d679a390be4f82abe03e8c2566cd00958ea3137cff2e139d",
+    "u1/machine.json": "c3936b93ce0cc234a8a10393b30391632e29e2c6179a26e7fd94d4a91ee01b38",
+    "u1/process.json": "d3fc826d9aec4d0cce79f8a06f756a7377259f940f8bbb7f7eef98f8f15c92d3",
+    "u1/wrapper.json": "407837c2dca678e5dffb8b4f0f535225771161d170a95848c2c133c8cad340b4",
+    "ecc2/filament.json": "ef984a62a7598b3f9fdb6c55e02a13674c2e218470b2c22b42b17773209366e2",
+    "ecc2/machine.json": "596ad302aa2837f356d91b98578d8dde8ac0827e5eb18736cf58cfb745c0d0cb",
+    "ecc2/process.json": "03ab9d9d48128549bd2d3bf8831452d2f4fa0db158816b8ca541f6a4e483ffb4",
+    "ecc2/wrapper.json": "fc7dd18ef494b9861bdab9ab3e5c4eb315ff6ae56aed44bf45ea2fb06e501ae5",
+    "c5pro/filament.json": "fad15feb225bb6bf216116b2a4d5c901c5b39316610c71ab2be73bbe2eedf61c",
+    "c5pro/machine.json": "545a61aa5a56614d076bf1832e98d1baa48cf3906abf42554531002b773a81df",
+    "c5pro/process.json": "4185837608007e189c34c8629a8a9068ea66d04f2077fc6ee1bcb32ed1445710",
+    "c5pro/wrapper.json": "9e923c4c757f8bcf76d08aff0caf4356b27e9abdcf5909f039721242fde6389d",
+    "h2d/filament.json": "2a9bd1b7aa12d778e2229feff8f576e4c9b908fbfc3e0f328634c21ff58923a6",
+    "h2d/machine.json": "10c00068ae6e1d152747446d20a58c1f8df6b7419dacaab2406137025cbc9302",
+    "h2d/process.json": "ffb9a7e9bc3ff9dcb399b76d6bacc236413664924ee42975795400f9ad37c8da",
+    "h2d/wrapper.json": "4282cf38e796eec3501f75d15783960ce6fdf3a570e5bd2520a34bb436513c13"
+  },
+  "native_profiles_unchanged": true,
+  "profiles": {
+    "u1": {
+      "state": "OFFLINE_GCODE_VERIFIED_DIALECT_REVIEW",
+      "firmware_command_set_audited": false,
+      "manufacturing_qualified": false,
+      "offline_slices": {
+        "stl": {
+          "slicer_returncode": 0,
+          "canonical_bridge_returncode": 0,
+          "bounds_validation_ok": true,
+          "bounds_errors": [],
+          "warnings": [
+            "Unknown or unsupported commands were left unchanged: BED_MESH_CALIBRATE line 102, DEFECT_DETECTION_DETECT line 130, DEFECT_DETECTION_DETECT_BED line 40, DEFECT_DETECTION_START line 28, DETECT_BED_PLATE line 73, EXCLUDE_OBJECT_DEFINE line 18, EXCLUDE_OBJECT_END line 823, EXCLUDE_OBJECT_START line 140, FINELY_CLEAN_NOZZLE_STAGE_1 line 82, FINELY_CLEAN_NOZZLE_STAGE_2 line 88, G17 line 832, MOVE_TO_DISCARD_FILAMENT_POSITION line 66."
+          ],
+          "stats": {
+            "extrusion_moves": 36104,
+            "lines": 42291,
+            "movement_commands": 38503,
+            "non_comment_lines": 40341,
+            "temperature_commands": 13
+          },
+          "header": {
+            "generator": "OrcaSlicer",
+            "reported_version": "2.4.2",
+            "reported_layer_count": 60,
+            "reported_max_z_mm": 12.05,
+            "source_cad_max_z_mm": 12,
+            "max_height_delta_mm": 0.05000000000000071,
+            "artifact": {
+              "name": "u1-stl.gcode",
+              "bytes": 1202101,
+              "sha256": "8798de2e2ee82ac21632a4c1068ce428a459aa4e0b68822ac96969ecba5e273f"
+            }
+          }
+        },
+        "3mf": {
+          "slicer_returncode": 0,
+          "canonical_bridge_returncode": 0,
+          "bounds_validation_ok": true,
+          "bounds_errors": [],
+          "warnings": [
+            "Unknown or unsupported commands were left unchanged: BED_MESH_CALIBRATE line 102, DEFECT_DETECTION_DETECT line 130, DEFECT_DETECTION_DETECT_BED line 40, DEFECT_DETECTION_START line 28, DETECT_BED_PLATE line 73, EXCLUDE_OBJECT_DEFINE line 18, EXCLUDE_OBJECT_END line 822, EXCLUDE_OBJECT_START line 140, FINELY_CLEAN_NOZZLE_STAGE_1 line 82, FINELY_CLEAN_NOZZLE_STAGE_2 line 88, G17 line 831, MOVE_TO_DISCARD_FILAMENT_POSITION line 66."
+          ],
+          "stats": {
+            "extrusion_moves": 36114,
+            "lines": 42305,
+            "movement_commands": 38518,
+            "non_comment_lines": 40355,
+            "temperature_commands": 13
+          },
+          "header": {
+            "generator": "OrcaSlicer",
+            "reported_version": "2.4.2",
+            "reported_layer_count": 60,
+            "reported_max_z_mm": 12.05,
+            "source_cad_max_z_mm": 12,
+            "max_height_delta_mm": 0.05000000000000071,
+            "artifact": {
+              "name": "u1-3mf.gcode",
+              "bytes": 1202409,
+              "sha256": "62a9ca74196544834bcfe64f4f5f57db880edbd854d0d0f482f93e7bb2914015"
+            }
+          }
+        }
+      },
+      "profile_limits": {
+        "name": "Snapmaker U1",
+        "bed_xy": [
+          270.0,
+          270.0
+        ],
+        "max_z": 270.05,
+        "nozzle_temperature_declared": 220.0,
+        "filament": "PLA"
+      }
+    },
+    "ecc2": {
+      "state": "BLOCKED_MOTION_BOUNDS",
+      "firmware_command_set_audited": false,
+      "manufacturing_qualified": false,
+      "offline_slices": {
+        "stl": {
+          "slicer_returncode": 0,
+          "canonical_bridge_returncode": 1,
+          "bounds_validation_ok": false,
+          "bounds_errors": [
+            "Line 39: Y=-1.2 is outside Y motion range 0.0..256.0 mm."
+          ],
+          "warnings": [
+            "Unknown or unsupported commands were left unchanged: BED_MESH_CALIBRATE line 30, G180 line 38, M6211 line 34, SET_PRESSURE_ADVANCE line 64, SET_PRINT_STATS_INFO line 55, SET_VELOCITY_LIMIT line 78."
+          ],
+          "stats": {
+            "extrusion_moves": 14558,
+            "lines": 19673,
+            "movement_commands": 17167,
+            "non_comment_lines": 17649,
+            "temperature_commands": 8
+          },
+          "header": {
+            "generator": "OrcaSlicer",
+            "reported_version": "2.4.2",
+            "reported_layer_count": 60,
+            "reported_max_z_mm": 12.0,
+            "source_cad_max_z_mm": 12,
+            "max_height_delta_mm": 0.0,
+            "artifact": {
+              "name": "ecc2-stl.gcode",
+              "bytes": 512560,
+              "sha256": "8efdd3330acc3ee82744e41f6fbb0cf68d84df13c9413e05e8747d6de93cb333"
+            }
+          }
+        },
+        "3mf": {
+          "slicer_returncode": 0,
+          "canonical_bridge_returncode": 1,
+          "bounds_validation_ok": false,
+          "bounds_errors": [
+            "Line 39: Y=-1.2 is outside Y motion range 0.0..256.0 mm."
+          ],
+          "warnings": [
+            "Unknown or unsupported commands were left unchanged: BED_MESH_CALIBRATE line 30, G180 line 38, M6211 line 34, SET_PRESSURE_ADVANCE line 64, SET_PRINT_STATS_INFO line 55, SET_VELOCITY_LIMIT line 78."
+          ],
+          "stats": {
+            "extrusion_moves": 14562,
+            "lines": 19677,
+            "movement_commands": 17171,
+            "non_comment_lines": 17653,
+            "temperature_commands": 8
+          },
+          "header": {
+            "generator": "OrcaSlicer",
+            "reported_version": "2.4.2",
+            "reported_layer_count": 60,
+            "reported_max_z_mm": 12.0,
+            "source_cad_max_z_mm": 12,
+            "max_height_delta_mm": 0.0,
+            "artifact": {
+              "name": "ecc2-3mf.gcode",
+              "bytes": 512673,
+              "sha256": "d7d749a796113e0c6a2a40e1100e7e67167a5cb7f4ac26ac174f5ccca60fcab6"
+            }
+          }
+        }
+      },
+      "profile_limits": {
+        "name": "Elegoo Centauri Carbon 2",
+        "bed_xy": [
+          256.0,
+          256.0
+        ],
+        "max_z": 256.0,
+        "nozzle_temperature_declared": 210.0,
+        "filament": "PLA"
+      }
+    },
+    "c5pro": {
+      "state": "OFFLINE_GCODE_VERIFIED_DIALECT_REVIEW",
+      "firmware_command_set_audited": false,
+      "manufacturing_qualified": false,
+      "offline_slices": {
+        "stl": {
+          "slicer_returncode": 0,
+          "canonical_bridge_returncode": 0,
+          "bounds_validation_ok": true,
+          "bounds_errors": [],
+          "warnings": [
+            "Unknown or unsupported commands were left unchanged: G17 line 759, M191 line 25, SET_PRESSURE_ADVANCE line 43, SET_VELOCITY_LIMIT line 55."
+          ],
+          "stats": {
+            "extrusion_moves": 10207,
+            "lines": 15383,
+            "movement_commands": 12362,
+            "non_comment_lines": 13592,
+            "temperature_commands": 5
+          },
+          "header": {
+            "generator": "OrcaSlicer",
+            "reported_version": "2.4.2",
+            "reported_layer_count": 60,
+            "reported_max_z_mm": 12.05,
+            "source_cad_max_z_mm": 12,
+            "max_height_delta_mm": 0.05000000000000071,
+            "artifact": {
+              "name": "c5pro-stl.gcode",
+              "bytes": 405533,
+              "sha256": "7bdf53edb134e40de3bad9e9c302ff6d9c3e073a33f11153807c3ffb9f04662f"
+            }
+          }
+        },
+        "3mf": {
+          "slicer_returncode": 0,
+          "canonical_bridge_returncode": 0,
+          "bounds_validation_ok": true,
+          "bounds_errors": [],
+          "warnings": [
+            "Unknown or unsupported commands were left unchanged: G17 line 759, M191 line 25, SET_PRESSURE_ADVANCE line 43, SET_VELOCITY_LIMIT line 55."
+          ],
+          "stats": {
+            "extrusion_moves": 10204,
+            "lines": 15379,
+            "movement_commands": 12358,
+            "non_comment_lines": 13588,
+            "temperature_commands": 5
+          },
+          "header": {
+            "generator": "OrcaSlicer",
+            "reported_version": "2.4.2",
+            "reported_layer_count": 60,
+            "reported_max_z_mm": 12.05,
+            "source_cad_max_z_mm": 12,
+            "max_height_delta_mm": 0.05000000000000071,
+            "artifact": {
+              "name": "c5pro-3mf.gcode",
+              "bytes": 405516,
+              "sha256": "d3801b115cd528bc26d3a04c63e9603d5a8556160338a83a9d470db0db81878a"
+            }
+          }
+        }
+      },
+      "profile_limits": {
+        "name": "Flashforge Creator 5 Pro",
+        "bed_xy": [
+          256.0,
+          256.0
+        ],
+        "max_z": 256.0,
+        "nozzle_temperature_declared": 210.0,
+        "filament": "PLA"
+      }
+    }
+  },
+  "negative_controls": {
+    "direct_step_input": "BLOCKED",
+    "out_of_bed_geometry_all_three": "BLOCKED",
+    "injected_out_of_bounds_u1": "BLOCKED",
+    "injected_out_of_bounds_c5pro": "BLOCKED",
+    "ecc2_y_negative_guard": "BLOCKED",
+    "h2d_remains_blocked": "BLOCKED",
+    "native_profile_hash_unchanged": "PASS_UNCHANGED"
+  },
+  "h2d_motion": "BLOCKED_MOTION_BOUNDS",
+  "printer_actions_executed": false,
+  "production_release_authorized": false,
+  "machine_firmware_commands_verified": false,
+  "licenses_review_required": true,
+  "limitations": [
+    "Orca CLI success and generic bounds acceptance do not certify vendor command execution",
+    "U1 and C5 Pro emitted executable commands unrecognized by generic G-code validator",
+    "ECC2 native G180 service move at Y=-1.2 is outside declared 0..256 mm Y envelope",
+    "H2D native service Y=-0.5 still requires independent printer-specific envelope",
+    "No network, firmware, live material or first-print verification"
+  ]
+}

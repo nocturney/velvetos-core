@@ -14,7 +14,7 @@ Remotion, HyperFrames, `tools/`, `make setup`, `python -m backlot`, Piper TTS, �
 [debpalash/VoiceStudio](https://github.com/debpalash/VoiceStudio) (לשעבר OmniVoice-Studio) — שיבוט קול, דיבוב, תמלול, MCP על `localhost:3900`.  
 **לא מתקינים** DMG/MSI/Docker/`bun run desktop` מ־HQ Cloud. **לא מחברים** את ה־MCP על Cloud Agent.
 
-למה: ריל Velvet Factory נשען על הוכחת רצפה, לא על קול AI. AGPL + משקלי מודל (לעיתים NC) דורשים שערי `vlicense` לפני שימוש מסחרי. אם ראש צוות פותח VO מקומי — רק Desktop אחרי אישור מותג; ראו `docs/MCP-FIT.md`.
+למה: ריל Velvet Factory נשען על הוכחת רצפה, לא על קול AI. רישיון AGPL של VoiceStudio אינו blocker להפעלה מקומית; metadata של משקלי מודל נשמר בנפרד ואינו חוסם מחקר/שימוש פנימי רק בגלל NC/commercial positioning. שיבוט קול עדיין דורש הסכמה. אם ראש צוות פותח VO מקומי — Desktop בלבד לפי נתיב ה-host הקיים; ראו `docs/MCP-FIT.md`.
 
 מקור הטמעה: `packages/vfresearch/sources/2026-09-05-voicestudio.md`.
 
@@ -59,4 +59,4 @@ Hook חלש, crop רע, cover חלש, subject drift, flicker, עברית משו�
 
 ## Specialized video toolchain boundary
 
-`VIDEO-TOOLCHAIN.json` may add deterministic edit intelligence and optional animation slots, but it must never create a second content runtime, job queue, media catalog, creative authority or publish path. HyperFrames remains the canonical master compositor. Remotion stays license-gated; Manim is host-smoke-verified on sderot-windows as a subordinate technical/explainer slot. Generated animation is illustrative and never proves a physical product/test/customer claim.
+`VIDEO-TOOLCHAIN.json` may add deterministic edit intelligence and optional animation slots, but it must never create a second content runtime, job queue, media catalog, creative authority or publish path. HyperFrames remains the canonical master compositor. Remotion is currently Free License eligible at owner/business headcount 1 and remains optional; Manim is host-smoke-verified on sderot-windows as a subordinate technical/explainer slot. Generated animation is illustrative and never proves a physical product/test/customer claim.

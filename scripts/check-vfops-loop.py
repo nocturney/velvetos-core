@@ -66,7 +66,7 @@ def main() -> None:
         fail("scripts/vfcost.py missing after rebase onto main")
 
     orch = ORCHESTRA.read_text(encoding="utf-8")
-    for needle in ("vfops_loop.py", "09:00", "FOLLOWER-GROWTH", "רף סוכנות", "אין חדש במשרד", "פער", "PREFLIGHT.md", "רמה נמוכה", "נכשל-סגור"):
+    for needle in ("vfops_loop.py", "Morning Brief", "לפי צורך / אירוע", "FOLLOWER-GROWTH", "רף סוכנות", "אין חדש במשרד", "פער", "PREFLIGHT.md", "רמה נמוכה", "נכשל-סגור"):
         if needle not in orch:
             fail(f"ORCHESTRA.md must mention {needle}")
     if "VF_PUBLICATION_ROUTE_V1" not in orch:
@@ -107,13 +107,14 @@ def main() -> None:
     routine = ROUTINE.read_text(encoding="utf-8")
     if "vfops_loop.py" not in routine:
         fail("ROUTINE.md must bind the canonical vfops_loop.py brief producer")
-    if "**07:00 cutoff**" not in routine:
-        fail("ROUTINE.md must keep 07:00 as the internal research/readiness cutoff")
-    if "**09:00** | Velvet Morning Brief" not in routine:
-        fail("ROUTINE.md must keep 09:00 as the single owner-facing Morning Brief")
+    for needle in ("**~11:30** | Cognee Memory Sync", "**18:30** | VelvetOS Office Loop", "**19:15** | Runtime Receipts Refresh"):
+        if needle not in routine:
+            fail(f"ROUTINE.md missing current minimal schedule marker {needle}")
+    if "manual/event-driven" not in routine or "Velvet Morning Brief" not in routine:
+        fail("ROUTINE.md must keep Morning Brief as a manual/event-driven capability")
     brief_persist_cmd = "python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>"
-    if routine.count(brief_persist_cmd) < 2:
-        fail("ROUTINE.md must bind both Morning Brief and Delivery Guard recovery to the canonical same-day brief artifact producer")
+    if brief_persist_cmd not in routine:
+        fail("ROUTINE.md must bind the event-driven Morning Brief to the canonical same-day artifact producer")
     if "backfill artifact is not a delivery receipt" not in routine:
         fail("ROUTINE.md must keep brief artifact persistence separate from Gmail delivery proof")
     if "vfops_loop.py" not in HANDOFF.read_text(encoding="utf-8"):
@@ -313,12 +314,18 @@ def main() -> None:
     specs = {s.id: s for s in loop.consumer_registry()}
     if "sensor-suite" not in specs:
         fail("consumer registry must list sensor-suite as explicit skip")
-    if specs["sensor-suite"].auto_daily or specs["sensor-suite"].kind != "skip":
-        fail("check-all must never be an auto-daily consumer (recursion)")
-    if specs["vfcovers-compose"].auto_daily:
+    if specs["sensor-suite"].auto_run or specs["sensor-suite"].kind != "skip":
+        fail("check-all must never be an auto-run Office Loop consumer (recursion)")
+    if specs["vfcovers-compose"].auto_run:
         fail("vfcovers must not auto-run standing packs")
-    if specs["vfsales-quote"].auto_daily:
+    if specs["vfsales-quote"].auto_run:
         fail("vfsales quote is on-inquiry only")
+    research = specs.get("vfresearch-on-demand")
+    if research is None or research.auto_run or research.kind != "skip" or research.cadence != "on-demand":
+        fail("vfresearch must remain manual/event-driven and outside automatic Office Loop consumers")
+    upstream = specs.get("upstream-watch-evidence")
+    if upstream is None or not upstream.auto_run or upstream.kind != "verify" or upstream.cadence != "office-loop":
+        fail("Office Loop must verify upstream-watch evidence without turning Research into a clock")
 
     # Fixture isolation: do not pollute live consumer-runs during sensor
     import tempfile
@@ -366,7 +373,7 @@ def main() -> None:
     loop.CONSUMER_STATE = fake_state
     try:
         day = "2099-01-01"
-        first = loop.run_daily_consumers(today=day, force=False)
+        first = loop.run_consumers(today=day, force=False)
         by_id = {r["id"]: r for r in first}
         if by_id.get("velvetos-modules", {}).get("status") != "ok":
             fail(f"velvetos-modules should run once: {by_id.get('velvetos-modules')}")
@@ -374,7 +381,7 @@ def main() -> None:
             fail("vfcovers-compose must skip without content job")
         if by_id.get("sensor-suite", {}).get("status") != "skipped":
             fail("sensor-suite must skip inside run")
-        second = loop.run_daily_consumers(today=day, force=False)
+        second = loop.run_consumers(today=day, force=False)
         if second and {r["id"]: r for r in second}.get("velvetos-modules", {}).get("status") != "skipped":
             fail("second run must skip already-ok consumer (no overwrite thrash)")
         brief = loop.assemble(day)
@@ -385,7 +392,7 @@ def main() -> None:
             fail("assemble brief must label stale weekly business source instead of presenting it as current")
         if "growth-brief מיושן" not in blob:
             fail("assemble brief must label stale growth-brief source instead of presenting it as current")
-        # check path must not call run_daily_consumers — ensure state line count stable across check
+        # check path must not call run_consumers — ensure state line count stable across check
         before = fake_state.read_text(encoding="utf-8") if fake_state.is_file() else ""
         proc2 = subprocess.run(
             [sys.executable, str(CLI), "check"],

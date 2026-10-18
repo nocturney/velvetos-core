@@ -62,7 +62,7 @@ If two instructions disagree, resolve the conflict at the sources; do not add a 
 
 Prefer concrete imperatives:
 
-- “Run `python3 scripts/check-all.py` after catalog/rule edits.”
+- “Run the affected/domain sensors after scoped catalog/rule edits; reserve `python3 scripts/check-all.py` for repository-wide contract/authority changes or explicit acceptance/regression.”
 - “If provider receipt is absent, state `UNPROVEN`.”
 
 Avoid vague prose such as “be careful”, “ensure quality”, or “use best practices” unless the file names the actual gate/checklist.

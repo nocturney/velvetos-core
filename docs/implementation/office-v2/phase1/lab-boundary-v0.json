@@ -1,0 +1,86 @@
+{
+  "schema": "velvetos.office-v2.lab-boundary.v0",
+  "status": "PHASE1_CLOSED_GREEN",
+  "accepted_main_sha": "6c3865acee79fb11dbaeeace0a5bc73f9624d187",
+  "production_authority": "NONE",
+  "production_credentials_allowed": false,
+  "lab_root": "D:/Velvet/OfficeV2Lab",
+  "wsl_runtime": {
+    "source_distribution": "Ubuntu-26.04",
+    "instance_name": "OfficeV2-Lab",
+    "architecture": "WSL2",
+    "container_runtime": "Docker Engine + Compose plugin inside the dedicated WSL instance",
+    "docker_desktop_required": false,
+    "observed_distribution": "Ubuntu 26.04.1 LTS",
+    "wsl_version": "3.0.1.0",
+    "kernel_version": "6.18.40.1-1",
+    "docker_engine_version": "29.8.2",
+    "docker_compose_version": "v5.6.0",
+    "systemd": "running",
+    "status": "READY"
+  },
+  "routine_launch": {
+    "task_name": "OfficeV2 LAB Lease",
+    "user_context": "Chris / InteractiveToken",
+    "window_policy": "HEADLESS_HIDDEN",
+    "launcher": "PowerShell -WindowStyle Hidden -NonInteractive",
+    "visible_console_required": false
+  },
+  "network": {
+    "name": "officev2_lab",
+    "scope": "LAB_ONLY",
+    "host_bind_policy": "LOOPBACK_ONLY_UNLESS_LATER_ADMITTED"
+  },
+  "ports": {
+    "otel_grpc": 14317,
+    "otel_http": 14318,
+    "otel_health": 14319,
+    "candidate_db": 15432,
+    "node_health": 18780
+  },
+  "excluded_host_ports": [18080],
+  "artifact_lane": {
+    "windows": "D:/Velvet/OfficeV2Lab/artifacts",
+    "wsl": "/var/officev2/artifacts",
+    "authority_role": "GENERATED_ARTIFACT_AND_EVIDENCE_ONLY",
+    "host_drive_automount": false,
+    "full_c_drive_mounted": false,
+    "full_d_drive_mounted": false,
+    "mount_options_required": [
+      "rw", "nosuid", "nodev", "noexec", "nosymfollow", "metadata", "uid=1000", "gid=1000", "umask=077"
+    ]
+  },
+  "storage_roots": {
+    "state": "D:/Velvet/OfficeV2Lab/state",
+    "backups": "D:/Velvet/OfficeV2Lab/backups",
+    "logs": "D:/Velvet/OfficeV2Lab/logs"
+  },
+  "credential_classes_allowed": [
+    "LAB_ONLY_SECRET",
+    "PUBLIC_IDENTIFIER"
+  ],
+  "stateful_candidate_rule": "RESTORE_DRILL_REQUIRED_BEFORE_PRODUCTION_CAPABLE",
+  "untrusted_code_host_execution": "PROHIBITED",
+  "image_policy": {
+    "floating_latest_allowed": false,
+    "reviewed_reference_required": true,
+    "digest_pin_preferred": true
+  },
+  "candidate_neutrality": {
+    "postgres_universal_default": false,
+    "durable_engine_winner": null,
+    "model_gateway_winner": null,
+    "mcp_a2a_winner": null,
+    "event_bus_commitment": null,
+    "feature_flag_platform_commitment": null
+  },
+  "host_change_admission_ref": "docs/implementation/office-v2/phase1/host-change-admission-v0.md",
+  "backup_restore_ref": "docs/implementation/office-v2/phase1/backup-restore-lab-v0.md",
+  "runtime_evidence_refs": [
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/post-reboot-admission.json",
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/docker-user-verify.txt",
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/wsl-user-probe.txt",
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/otel-e2e-trace-pass.json",
+    "D:/Velvet/Artifacts/OfficeV2/phase1/evidence/2026-10-06/stateful-restore-drill-pass.json"
+  ]
+}

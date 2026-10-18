@@ -1,0 +1,271 @@
+{
+  "schema": "velvetos.office-v2.phase3c-model-gateway-fixture.v0",
+  "status": "SYNTHETIC_CONTRACT_ONLY",
+  "fixture_id": "model-gateway-isolated-13-case",
+  "candidate_agnostic": true,
+  "lab_only": true,
+  "production_credentials_used": false,
+  "real_provider_calls_performed": false,
+  "side_effects_performed": false,
+  "request_payloads": "SYNTHETIC_METADATA_ONLY",
+  "required_case_ids": [
+    "normal-route",
+    "timeout-fallback",
+    "rate-limit-fallback",
+    "policy-denied",
+    "budget-denied",
+    "credential-scope-denied",
+    "cross-tenant-denied",
+    "capability-unavailable",
+    "local-only-routing",
+    "cloud-only-routing",
+    "all-providers-retryable-failed",
+    "unknown-outcome-no-retry",
+    "metrics-and-correlation"
+  ],
+  "required_telemetry": [
+    "trace_id",
+    "policy_decision_ref",
+    "budget_decision_ref",
+    "latency_ms",
+    "token_input_count",
+    "token_output_count",
+    "cost_usd"
+  ],
+  "cases": [
+    {
+      "case_id": "normal-route",
+      "request": {
+        "tenant_ref": "synthetic-office-a",
+        "capability": "text.generate",
+        "provider_preference": "any",
+        "budget_cap_usd": 0.05
+      },
+      "synthetic_fault": "none",
+      "admission_gate": "ALLOW",
+      "expected": {
+        "terminal_state": "ROUTED",
+        "min_attempts": 1,
+        "max_attempts": 1,
+        "fallback_executed": false,
+        "chosen_provider_locality": "cloud"
+      }
+    },
+    {
+      "case_id": "timeout-fallback",
+      "request": {
+        "tenant_ref": "synthetic-office-a",
+        "capability": "text.generate",
+        "provider_preference": "any",
+        "budget_cap_usd": 0.05
+      },
+      "synthetic_fault": "first_provider_retryable_timeout",
+      "admission_gate": "ALLOW",
+      "expected": {
+        "terminal_state": "ROUTED",
+        "min_attempts": 2,
+        "max_attempts": 2,
+        "fallback_executed": true,
+        "chosen_provider_locality": "cloud"
+      }
+    },
+    {
+      "case_id": "rate-limit-fallback",
+      "request": {
+        "tenant_ref": "synthetic-office-a",
+        "capability": "text.generate",
+        "provider_preference": "any",
+        "budget_cap_usd": 0.05
+      },
+      "synthetic_fault": "first_provider_retryable_429",
+      "admission_gate": "ALLOW",
+      "expected": {
+        "terminal_state": "ROUTED",
+        "min_attempts": 2,
+        "max_attempts": 2,
+        "fallback_executed": true,
+        "chosen_provider_locality": "cloud"
+      }
+    },
+    {
+      "case_id": "policy-denied",
+      "request": {
+        "tenant_ref": "synthetic-office-a",
+        "capability": "text.generate",
+        "provider_preference": "any",
+        "budget_cap_usd": 0.05
+      },
+      "synthetic_fault": "policy_deny",
+      "admission_gate": "DENY",
+      "expected": {
+        "terminal_state": "DENIED",
+        "min_attempts": 0,
+        "max_attempts": 0,
+        "fallback_executed": false,
+        "chosen_provider_locality": null
+      }
+    },
+    {
+      "case_id": "budget-denied",
+      "request": {
+        "tenant_ref": "synthetic-office-a",
+        "capability": "text.generate",
+        "provider_preference": "any",
+        "budget_cap_usd": 0.05
+      },
+      "synthetic_fault": "budget_already_exhausted",
+      "admission_gate": "DENY",
+      "expected": {
+        "terminal_state": "DENIED",
+        "min_attempts": 0,
+        "max_attempts": 0,
+        "fallback_executed": false,
+        "chosen_provider_locality": null
+      }
+    },
+    {
+      "case_id": "credential-scope-denied",
+      "request": {
+        "tenant_ref": "synthetic-office-a",
+        "capability": "text.generate",
+        "provider_preference": "any",
+        "budget_cap_usd": 0.05
+      },
+      "synthetic_fault": "missing_scoped_credential",
+      "admission_gate": "DENY",
+      "expected": {
+        "terminal_state": "DENIED",
+        "min_attempts": 0,
+        "max_attempts": 0,
+        "fallback_executed": false,
+        "chosen_provider_locality": null
+      }
+    },
+    {
+      "case_id": "cross-tenant-denied",
+      "request": {
+        "tenant_ref": "synthetic-office-a",
+        "capability": "text.generate",
+        "provider_preference": "any",
+        "budget_cap_usd": 0.05
+      },
+      "synthetic_fault": "cross_tenant_claim",
+      "admission_gate": "DENY",
+      "expected": {
+        "terminal_state": "DENIED",
+        "min_attempts": 0,
+        "max_attempts": 0,
+        "fallback_executed": false,
+        "chosen_provider_locality": null
+      }
+    },
+    {
+      "case_id": "capability-unavailable",
+      "request": {
+        "tenant_ref": "synthetic-office-a",
+        "capability": "text.generate",
+        "provider_preference": "any",
+        "budget_cap_usd": 0.05
+      },
+      "synthetic_fault": "no_compatible_model",
+      "admission_gate": "DENY",
+      "expected": {
+        "terminal_state": "DENIED",
+        "min_attempts": 0,
+        "max_attempts": 0,
+        "fallback_executed": false,
+        "chosen_provider_locality": null
+      }
+    },
+    {
+      "case_id": "local-only-routing",
+      "request": {
+        "tenant_ref": "synthetic-office-a",
+        "capability": "text.generate",
+        "provider_preference": "local",
+        "budget_cap_usd": 0.05
+      },
+      "synthetic_fault": "none",
+      "admission_gate": "ALLOW",
+      "expected": {
+        "terminal_state": "ROUTED",
+        "min_attempts": 1,
+        "max_attempts": 1,
+        "fallback_executed": false,
+        "chosen_provider_locality": "local"
+      }
+    },
+    {
+      "case_id": "cloud-only-routing",
+      "request": {
+        "tenant_ref": "synthetic-office-a",
+        "capability": "text.generate",
+        "provider_preference": "cloud",
+        "budget_cap_usd": 0.05
+      },
+      "synthetic_fault": "none",
+      "admission_gate": "ALLOW",
+      "expected": {
+        "terminal_state": "ROUTED",
+        "min_attempts": 1,
+        "max_attempts": 1,
+        "fallback_executed": false,
+        "chosen_provider_locality": "cloud"
+      }
+    },
+    {
+      "case_id": "all-providers-retryable-failed",
+      "request": {
+        "tenant_ref": "synthetic-office-a",
+        "capability": "text.generate",
+        "provider_preference": "any",
+        "budget_cap_usd": 0.05
+      },
+      "synthetic_fault": "both_providers_retryable_failure",
+      "admission_gate": "ALLOW",
+      "expected": {
+        "terminal_state": "FAILED",
+        "min_attempts": 2,
+        "max_attempts": 2,
+        "fallback_executed": true,
+        "chosen_provider_locality": null
+      }
+    },
+    {
+      "case_id": "unknown-outcome-no-retry",
+      "request": {
+        "tenant_ref": "synthetic-office-a",
+        "capability": "text.generate",
+        "provider_preference": "any",
+        "budget_cap_usd": 0.05
+      },
+      "synthetic_fault": "unknown_provider_result",
+      "admission_gate": "ALLOW",
+      "expected": {
+        "terminal_state": "UNKNOWN",
+        "min_attempts": 1,
+        "max_attempts": 1,
+        "fallback_executed": false,
+        "chosen_provider_locality": null
+      }
+    },
+    {
+      "case_id": "metrics-and-correlation",
+      "request": {
+        "tenant_ref": "synthetic-office-a",
+        "capability": "text.generate",
+        "provider_preference": "any",
+        "budget_cap_usd": 0.05
+      },
+      "synthetic_fault": "none",
+      "admission_gate": "ALLOW",
+      "expected": {
+        "terminal_state": "ROUTED",
+        "min_attempts": 1,
+        "max_attempts": 1,
+        "fallback_executed": false,
+        "chosen_provider_locality": "cloud"
+      }
+    }
+  ]
+}

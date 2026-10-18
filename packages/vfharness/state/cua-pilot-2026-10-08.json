@@ -1,0 +1,138 @@
+{
+  "schema": "velvetos.cua-pilot-receipt.v1",
+  "captured_at": "2026-10-08T09:01:01.824856+03:00",
+  "host": "Chris",
+  "purpose": "Pinned, authority-preserving Cua Windows pilot preflight",
+  "office_gate": {
+    "required_original_commit": "7762d8cb701d10ab8532c24d185bac52d8145df0",
+    "merged_equivalent_commit": "3c11f20c194fee084633df3ad71e2b17e84489cb",
+    "stable_patch_id": "8ff3d9febf9e6c5242df88fc065a8215f248ae42",
+    "canonical_main_sha": "08fd11f83fcac7fbcc846fd3a3dac666beb27c42",
+    "canonical_main_check_all": "NOT_RECHECKED_ON_LATEST_MAIN",
+    "canonical_main_check_run": "https://github.com/nocturney/velvetos-core/actions/runs/37683846540",
+    "conflicting_office_gui_mutation_observed": false,
+    "gate": "PASS",
+    "historical_main_sha": "cebb9dabebdd383beac4ff22ad612fe37c91b167"
+  },
+  "release": {
+    "repository": "trycua/cua",
+    "tag": "cua-driver-rs-v0.34.0",
+    "version": "0.34.0",
+    "published_at": "2026-10-05T22:30:08Z",
+    "release_channel_note": "GitHub labels this monorepo product release prerelease; release notes state plain Cua Driver SemVer is stable and published on normal npm/PyPI channels.",
+    "repository_license": "MIT",
+    "windows_native_npm_license": "MIT AND MPL-2.0",
+    "excluded_optional_components": [
+      "cua-perception",
+      "OmniParser",
+      "cua-agent[omni]"
+    ],
+    "assets": [
+      {
+        "name": "cua-driver-rs-0.34.0-windows-x86_64.zip",
+        "sha256_expected": "f96cc1632bc88e6f268eab745277c1fc302bb0f7d123e04373e35afecad6439f",
+        "local_status": "PRESENT_SHA256_VERIFIED",
+        "local_path": "D:\\Velvet\\Tools\\CuaPilot\\0.34.0\\downloads\\cua-driver-rs-0.34.0-windows-x86_64.zip",
+        "sha256_observed": "f96cc1632bc88e6f268eab745277c1fc302bb0f7d123e04373e35afecad6439f",
+        "checksum": "PASS"
+      },
+      {
+        "name": "trycua-cua-driver-0.34.0.tgz",
+        "local_path": "D:\\Velvet\\Tools\\CuaPilot\\0.34.0\\npm\\trycua-cua-driver-0.34.0.tgz",
+        "sha256_expected": "4ad0e65e26e6ab273d579b998af2526165dd611b6d31206c2cf4385f54af7b18",
+        "sha256_observed": "4ad0e65e26e6ab273d579b998af2526165dd611b6d31206c2cf4385f54af7b18",
+        "checksum": "PASS"
+      },
+      {
+        "name": "trycua-cua-driver-win32-x64-msvc-0.34.0.tgz",
+        "local_path": "D:\\Velvet\\Tools\\CuaPilot\\0.34.0\\npm\\trycua-cua-driver-win32-x64-msvc-0.34.0.tgz",
+        "sha256_expected": "f7d5187979bd005176cae12d5ea3b1729b32825b6a62b6ee77b49c9e6198b218",
+        "sha256_observed": "f7d5187979bd005176cae12d5ea3b1729b32825b6a62b6ee77b49c9e6198b218",
+        "checksum": "PASS"
+      }
+    ]
+  },
+  "isolated_install": {
+    "root": "D:\\Velvet\\Tools\\CuaPilot\\0.34.0",
+    "reversible": true,
+    "system_path_modified": false,
+    "global_package_install": false,
+    "pipe_to_shell_used": false,
+    "status": "LOCAL_BOUNDED_DRIVER_VERIFIED_NO_RUNNING_PILOT",
+    "blocker": null,
+    "required_owner_action": null,
+    "binary_version": "0.34.0",
+    "binary_authenticode": "Valid",
+    "binary_sha256": "77f5cac754b42b6a8bae126414fc8f7487432ace93466967965188e24e9e53fb",
+    "current_driver_processes": 0,
+    "global_install": false,
+    "configured_autostart": false
+  },
+  "smoke": {
+    "fixture": {
+      "app": "CuaSmokeFixture.exe",
+      "test": "Compute 6 times 7",
+      "status": "PASS",
+      "readback": "Result: 42",
+      "tested_at": "2026-10-08T07:01:34+03:00"
+    },
+    "windows_calculator": {
+      "app": "Microsoft.WindowsCalculator",
+      "test": "6 x 7 = 42",
+      "status": "BLOCKED_NO_VERIFIED_42",
+      "attempts": 3,
+      "symptoms": [
+        "AX_TREE_EMPTY_AFTER_MULTIPLY",
+        "NATIVE_CLICK_ERROR_ON_MULTIPLY"
+      ],
+      "background_uia_actions_observed": [
+        "six",
+        "multiply"
+      ],
+      "post_action_readback_42": false,
+      "safe_cleanup_verified": true,
+      "manifest_sha256": "1c9ffb46419ff7e4a9be2d47754985a5ffa954663f010d3f70f07d4978393296",
+      "evidence_root": "D:\\Velvet\\Tools\\CuaPilot\\0.34.0\\logs"
+    },
+    "status": "BOUNDED_FIXTURE_PASS_CALCULATOR_BLOCKED"
+  },
+  "authority": {
+    "runtime_authority": false,
+    "allowed": [
+      "read-screen",
+      "bounded-input-on-benign-test-app"
+    ],
+    "denied": [
+      "printer-control",
+      "social-publish",
+      "customer-send",
+      "purchase",
+      "credential-entry"
+    ],
+    "credentials_used": false
+  },
+  "ufo": {
+    "state": "RESEARCH_ELIGIBLE_PENDING_ROOT_CAUSE",
+    "evaluated": false,
+    "installed": false,
+    "rationale": "The fixture baseline passed, but the requested real Windows Calculator smoke is blocked; investigate the actual UIA/native click failure before deciding whether UFO adds material coverage. No production authorization."
+  },
+  "rollback": {
+    "type": "delete-isolated-root",
+    "path": "D:\\Velvet\\Tools\\CuaPilot\\0.34.0"
+  },
+  "historical_preflight_captured_at": "2026-10-08T00:13:05.7147370+03:00",
+  "superseded_historical_blocker": "The authorized remote execution surface blocked package/binary installation and direct release-asset download. Verified npm release tarballs are staged, but no Cua runtime was installed or executed.",
+  "startup": {
+    "assessed_at": "2026-10-08T08:55:33+03:00",
+    "user_runtime_native_autostart": "not-registered",
+    "telemetry_disabled_in_chris_runtime": true,
+    "session0_gui_supported": false,
+    "native_autostart_requires_interactive_user_logon": true,
+    "recommended": "Keep disabled until separate authority and isolated worker/session gate; SYSTEM boot broker is not an interactive GUI worker",
+    "hyper_v_enabled": false,
+    "hyper_v_changed": false,
+    "reboot_performed": false
+  },
+  "runtime_authority": false
+}

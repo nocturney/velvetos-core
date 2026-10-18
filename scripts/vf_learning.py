@@ -22,8 +22,8 @@ def path_for(cid): return DIR/f'{cid}.json'
 def load(cid):
     p=path_for(cid)
     if not p.exists(): raise SystemExit(f'missing candidate: {cid}')
-    return p,json.loads(p.read_text())
-def save(p,d): p.parent.mkdir(parents=True,exist_ok=True); p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n'); print(p)
+    return p,json.loads(p.read_text(encoding='utf-8-sig'))
+def save(p,d): p.parent.mkdir(parents=True,exist_ok=True); p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8'); print(p)
 
 def create(a):
     p=path_for(a.candidate_id)
@@ -120,16 +120,42 @@ def selftest(_a):
     with tempfile.TemporaryDirectory() as td:
         a=types.SimpleNamespace(dir=td,window_days=7,now='2026-09-26T12:00:00Z',runs=None)
         ingest_ci(a,runs=runs)
-        files=sorted(Path(td).glob('*.json')); assert [f.name for f in files]==['learn-ci-velvetos-core-sensors.json'],files
-        d=json.loads(files[0].read_text()); first=files[0].read_text()
-        assert d['status']=='candidate' and d['scope']=='project' and d['confidence']==0.4,d
-        assert [e.split(':')[1] for e in d['evidence']]==['1','2'] and d['first_seen']=='2026-09-25T06:07:00Z' and d['last_seen']=='2026-09-25T09:00:00Z',d
-        ingest_ci(a,runs=runs); assert files[0].read_text()==first,'not idempotent'
-        d['status']='rejected'; files[0].write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
+        files=sorted(Path(td).glob('*.json'))
+        if [f.name for f in files]!=['learn-ci-velvetos-core-sensors.json']:
+            raise AssertionError('INCORRECT_LEARNING_CANDIDATE_FILES:'+str(files))
+        d=json.loads(files[0].read_text(encoding='utf-8')); first=files[0].read_text(encoding='utf-8')
+        if not (d['status']=='candidate' and d['scope']=='project' and d['confidence']==0.4):
+            raise AssertionError('CANDIDATE_STATUS_SCOPE_OR_CONFIDENCE_DRIFT')
+        if not ([e.split(':')[1] for e in d['evidence']]==['1','2'] and
+                d['first_seen']=='2026-09-25T06:07:00Z' and
+                d['last_seen']=='2026-09-25T09:00:00Z'):
+            raise AssertionError('RUN_EVIDENCE_OR_DERIVED_TIMESTAMPS_DRIFT')
+        ingest_ci(a,runs=runs)
+        if files[0].read_text(encoding='utf-8')!=first:
+            raise AssertionError('CI_INGEST_NOT_IDEMPOTENT')
+        d['status']='rejected'; files[0].write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
         runs.append({'databaseId':6,'workflowName':'VelvetOS Core Sensors','conclusion':'timed_out','createdAt':'2026-09-26T10:00:00Z','headBranch':'main','event':'schedule','url':'u6'})
-        ingest_ci(a,runs=runs); d=json.loads(files[0].read_text())
-        assert d['status']=='rejected' and len(d['evidence'])==3 and d['confidence']==0.5 and d['last_seen']=='2026-09-26T10:00:00Z',d
-    print('OK vf_learning selftest ingest-ci deterministic+idempotent+status-preserving')
+        ingest_ci(a,runs=runs); d=json.loads(files[0].read_text(encoding='utf-8'))
+        if not (d['status']=='rejected' and len(d['evidence'])==3 and
+                d['confidence']==0.5 and d['last_seen']=='2026-09-26T10:00:00Z'):
+            raise AssertionError('CI_INGEST_WAS_NOT_STATUS_PRESERVING')
+        # Windows default CP1252 must never corrupt an admitted UTF-8 record.
+        # Test the actual persisted raw bytes and idempotent re-ingest.
+        unicode_name='Owner ' + chr(0x2013) + ' ' + ''.join(chr(c) for c in (0x5d1,0x5d3,0x5d9,0x5e7,0x5d4))
+        special=[{'databaseId':7,'workflowName':unicode_name,'conclusion':'failure',
+                  'createdAt':'2026-09-26T11:00:00Z','headBranch':'main',
+                  'event':'schedule','url':'u7'}]
+        ingest_ci(a,runs=special)
+        encoded=Path(td)/('learn-ci-'+_slug(unicode_name)+'.json')
+        original_bytes=encoded.read_bytes()
+        if not (original_bytes.startswith(b'{') and unicode_name.encode('utf-8') in original_bytes):
+            raise AssertionError('UTF8_WRITE_CORRUPT')
+        if json.loads(original_bytes.decode('utf-8'))['workflow']!=unicode_name:
+            raise AssertionError('UTF8_ROUNDTRIP_FAILED')
+        ingest_ci(a,runs=special)
+        if encoded.read_bytes()!=original_bytes:
+            raise AssertionError('UNICODE_INGEST_NOT_IDEMPOTENT')
+    print('OK vf_learning selftest ingest-ci deterministic+idempotent+status-preserving+utf8')
     return 0
 
 def parser():

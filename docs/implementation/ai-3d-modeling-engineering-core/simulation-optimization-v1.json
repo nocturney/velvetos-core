@@ -1,0 +1,98 @@
+{
+  "schema": "velvetos.ai3d.simulation-optimization.v1",
+  "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+  "non_authoritative_staging": true,
+  "canonical_geometry_ir": "velvetos.geometry-ir.v1",
+  "fixture_path": "docs/implementation/ai-3d-modeling-engineering-core/fixtures/phase10/axial-bar-tension.json",
+  "fixture_purpose": "Synthetic, explicit, reference-only. Not a customer design, structural certification or released design.",
+  "runtime_truth": {
+    "freecad": {
+      "version": "1.1.3",
+      "executable": "C:/Program Files/FreeCAD 1.1/bin/freecadcmd.exe",
+      "status": "EXISTING"
+    },
+    "gmsh": {
+      "bundled_version": "4.15.0",
+      "bundled_executable": "C:/Program Files/FreeCAD 1.1/bin/gmsh.exe",
+      "blender_sidecar_version": "4.15.2",
+      "license": "GPL-2.0-or-later with linking exception",
+      "license_lane": "external_cli_runtime_review_required_for_bundling",
+      "status": "PROVEN_MESHER"
+    },
+    "calculix": {
+      "version": "2.22",
+      "executable": "C:/Program Files/FreeCAD 1.1/bin/ccx.exe",
+      "license": "GPL-2.0",
+      "license_lane": "external_cli_runtime_review_required_for_bundling",
+      "status": "PROVEN_SOLVER"
+    }
+  },
+  "capabilities": {
+    "simulation.mesh.gmsh_tetra10": {
+      "state": "PROVEN_BOUNDED",
+      "authority": "existing-FreeCAD-FEM/Gmsh",
+      "requires": [
+        "CAD solid",
+        "explicit meshing precision"
+      ],
+      "outputs": [
+        "tetrahedral mesh",
+        "node+element receipt"
+      ]
+    },
+    "simulation.linear_elastic_static": {
+      "state": "PROVEN_BOUNDED",
+      "authority": "existing-FreeCAD-FEM/CalculiX",
+      "requires": [
+        "material E+nu",
+        "fixed supports",
+        "explicit loads",
+        "geometry",
+        "mesh"
+      ],
+      "outputs": [
+        "inp",
+        "frd",
+        "displacements",
+        "stress evidence",
+        "analytical comparison"
+      ],
+      "acceptance": "verification only, no manufacturing approval"
+    },
+    "optimization.auto_accept": {
+      "state": "BLOCKED",
+      "reason": "No auto-promotion without material+loading+constraint provenance, multiple load cases, convergence, fatigue and independent engineering sign-off"
+    },
+    "simulation.advanced_sfepy": {
+      "state": "CANDIDATE_NOT_INSTALLED",
+      "license": "BSD-3-Clause",
+      "reason": "Evaluate only for cases not covered by proven FreeCAD/CalculiX static analysis"
+    },
+    "simulation.advanced_dolfinx": {
+      "state": "CANDIDATE_NOT_INSTALLED",
+      "license": "REVIEW_REQUIRED",
+      "reason": "Advanced PDE/cluster lane deferred pending problem-specific resources and license qualification"
+    },
+    "implicit.tpms_gyroid": {
+      "state": "RESEARCH_ONLY",
+      "algorithm": "periodic trigonometric level-set sample",
+      "output": "field sampling evidence only",
+      "no_mesh_or_strength_claim": true
+    }
+  },
+  "admissions": {
+    "precision_loads_and_material_required": true,
+    "mesh_convergence_required": true,
+    "solver_receipt_sha256_required": true,
+    "optimization_release_requires_human_review": true
+  },
+  "safety": {
+    "printer_actions_allowed": false,
+    "machine_control_allowed": false,
+    "auto_optimization_acceptance": false,
+    "assume_unknown_material": false,
+    "assume_unknown_load": false,
+    "assume_unknown_constraints": false,
+    "bundling_gpl_solver_without_review": false
+  }
+}

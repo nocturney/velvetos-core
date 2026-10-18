@@ -188,7 +188,7 @@
     {
       "id": "expert-3d-model",
       "group": "experts",
-      "summary": "Mesh analyze/make/build — print floor + 3D AI Studio after lead approval",
+      "summary": "Mesh analyze/make/build — print floor + 3D AI Studio through license/cost authority; no unconditional per-use lead approval",
       "file": "modules/expert-3d-model.md",
       "packs": [
         "vfprod",
@@ -222,7 +222,7 @@
     {
       "id": "office-learning",
       "group": "kernel",
-      "summary": "Daily retro + shared memory — living specialists, not static prompts",
+      "summary": "Scoped/event-driven retro + shared memory — only changed domains/new evidence, not static prompts",
       "file": "modules/office-learning.md",
       "packs": [
         "vfops",

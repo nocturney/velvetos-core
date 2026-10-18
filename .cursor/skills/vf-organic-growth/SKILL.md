@@ -1,6 +1,6 @@
 ---
 name: vf-organic-growth
-description: Run the VelvetOS Organic Growth Control Plane — print.done to Reel/Story drafts, 07:00 readiness pack consumed by the 09:00 Morning Brief, hashtags, community work orders, probabilistic attribution. Never auto-posts Instagram, never auto-DM, never treats WhatsApp as certain conversion. Use for צמיחה אורגנית, Decision Pack, מפעל תוכן, community poll, hashtag set, orders.json attribution, or organic growth overlay.
+description: Run the VelvetOS Organic Growth Control Plane — print.done to Reel/Story drafts, event-driven readiness packs, hashtags, community work orders, probabilistic attribution, and canonical vfigos publish handoff. Never direct/bypass auto-posts, never auto-DMs, never treats WhatsApp as certain conversion. Use for צמיחה אורגנית, Decision Pack, מפעל תוכן, community poll, hashtag set, orders.json attribution, or organic growth overlay.
 ---
 
 # Organic Growth Control Plane
@@ -19,18 +19,18 @@ Run `scripts/vf_publication_evidence.py --phase production` before production an
 
 ## Do this
 
-1. Read the constitution file. Control plane **does not publish**.
+1. Read the constitution file. Control plane **does not publish directly**; an authorized live publish is a separate `vfigos` action decided by `policy_id: instagram.publish`.
 2. Require a real `print.done` (status/operator). Do not infer from G-code.
 3. If media quality fails: write the 15-second handheld ask. Do not invent a Reel.
 4. Draft Reel for the **next CALENDAR.md 16:00 slot** (Sun/Tue only — no weekday-every-day reel).
 5. Draft Story poll for 20:30 Sun–Thu from `poll-library.json` (floor can actually run it).
-6. Put assets in `approval-queue.json` at `pending_human_approval`.
-7. 07:00 readiness Decision Pack (input to the 09:00 Morning Brief): [אישור] [עריכה] [דחייה]. Publication authorization is owned by `policy_id: instagram.publish`; an approval can satisfy the exact owner-approval branch, while `approved_for_manual_posting` remains the legacy manual-post path.
+6. Project the exact asset/package into the publication policy path; do not force `pending_human_approval` when valid standing authorization can decide it.
+7. Build a readiness Decision Pack on demand/event; it may feed the Morning Brief when one is requested. Publication authorization is owned by `policy_id: instagram.publish`: valid LOW-risk standing authorization may yield tool publish without per-asset owner approval; `pending_human_approval` / `approved_for_manual_posting` remain human/legacy paths when required.
 8. Attribution via `vfsales/data/orders.json` + `vfinsights/ATTRIBUTION.md`. Missing = «אין ספירה».
 
 ## Do not
 
-- Auto-post, auto-DM, boost, follow, tag users without opt-in
+- Direct/bypass/uncontrolled auto-post, auto-DM, boost, follow, tag users without opt-in
 - Poll → Print from HQ (`pending_ops` only)
 - Invent ₪ / Insights / heat/strength claims
 - Mark `posted_manually` from Core

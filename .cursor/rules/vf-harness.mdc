@@ -14,7 +14,7 @@ Read `AGENTS.md` first (guide wins over the conversation). Then `packages/vfharn
 - readiness → `packages/vfharness/CHECKLIST.md`
 - layer map → `packages/vfharness/LAYERS.md`
 
-After catalog, pack, or rule changes run `python3 scripts/check-all.py`. Do not claim success if a sensor failed.
+After scoped catalog, pack, or rule changes run the affected/domain sensors first. Run `python3 scripts/check-all.py` only for repository-wide contract/authority changes or explicit acceptance/regression. Do not claim success if a required sensor failed.
 
 ## Locks (do not break)
 

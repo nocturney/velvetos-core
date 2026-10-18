@@ -19,6 +19,8 @@ MAPPINGS = [
     ("phuryn/pm-skills", "packages/velvetos/PRODUCTIZATION.md", "pm-skills"),
     ("conorbronsdon/avoid-ai-writing", "packages/vfcopy/hq/AI-TELLS-GAP.md", "avoid-ai-writing"),
     ("NeoLabHQ/context-engineering-kit", "packages/vfharness/playbooks/critique-review.md", "context-engineering-kit"),
+    ("VoltAgent/awesome-agent-skills", "packages/vfharness/playbooks/skill-intake-evaluation.md", "precision"),
+    ("hesreallyhim/awesome-claude-code", "packages/vfharness/playbooks/skill-intake-evaluation.md", "Parallel workers"),
 ]
 
 # Structural wiring only. Runtime/behavior is proved separately by
@@ -97,6 +99,8 @@ def main() -> int:
             "terse-worker-output.md",
             "AGENT-SURFACE-SECURITY.md",
             "executing-plans.md",
+            "skill-intake-evaluation.md",
+            "automation-standards.md",
         ],
         "packages/vfbriefux/SKILL.md": ["UI-SYSTEM.md", "UI-AUDIT.md"],
     }

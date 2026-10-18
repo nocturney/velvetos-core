@@ -1,6 +1,6 @@
 ---
 name: vf-daily-learning
-description: Run the Velvet Factory end-of-day learning ritual — review conversations, capture meaningful learning candidates, and promote durable facts only through the evidence gate. Use at end of day, daily retro, or when the user asks for learning loop / זיכרון משותף / סוף יום.
+description: Run the Velvet Factory scoped learning/retro loop when meaningful work changed — review only participating domains, capture learning candidates, and promote durable facts through the evidence gate. Use after a meaningful correction/failure/handoff, at close of a material work session, or when the user asks for learning loop / זיכרון משותף / retro.
 ---
 
 # vf-daily-learning
@@ -9,18 +9,19 @@ Living office culture: specialists learn, improve, and feed shared memory — no
 
 ## When
 
-- End of workday (after 18:00 Asia/Jerusalem)
-- User asks: סוף יום, רטרו, למידה, זיכרון משותף, daily retro
-- **One-time catch-up** before daily routine existed: `packages/vfops/hq/INITIAL-RETRO.md`
-- Before closing a long multi-seat session
+- A meaningful owner correction, failure/failover, workflow/policy change, new material/revenue signal, or unfinished multi-step handoff creates something worth learning.
+- User asks: סוף יום, רטרו, למידה, זיכרון משותף, retro.
+- Before closing a long multi-seat session **only when** it produced new evidence/candidates.
+- **One-time catch-up** before the old routine existed: `packages/vfops/hq/INITIAL-RETRO.md`.
+- No standing 18:00/daily clock and no empty retro for untouched seats.
 
 ## Do this
 
 1. Read `packages/vfops/hq/DAILY-RETRO.md` — lead seat checklist + **לולאת פרנסה** (פניות↔דגמים↔חומרים) + load block + history log. (First time only: `INITIAL-RETRO.md`.)
-2. Skim today's conversations per seat (studio, growth, ops, production, research).
+2. Identify which seats/domains actually changed or received new evidence; review only those conversations/artifacts. Untouched seats are skipped.
 3. Fill the revenue-loop table only from real inquiries / print cards / materials — never invent demand or Insights.
 4. Fill the load section only with measured hours; missing stays `~__` / «אין ספירה» — never invent hours.
-5. Append a **log line** under the history section in `DAILY-RETRO.md` (keep prior days).
+5. When the run has a meaningful observation/candidate/handoff, append a **log line** under the history section in `DAILY-RETRO.md` (keep prior history). Do not create an empty log merely to satisfy cadence.
 6. If there is a meaningful signal, create/update the bounded learning candidate or checkpoint. Write `owner-memory.md` only after the promotion gate; if there is no durable learning, record no memory line.
 7. Open checkpoints for unfinished jobs: `packages/vfharness/state/` (set `component_state` when operational mode matters).
 8. If same mistake twice → note for `AGENTS.md` ANTI-PATTERN (next catalog edit).

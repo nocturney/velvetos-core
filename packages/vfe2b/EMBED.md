@@ -14,7 +14,7 @@
 2. קרא יומן `Asia/Jerusalem`. צור אירוע רק אם ביקשו.
 3. צלב מול `vfseason` (סימני עונה) ו-`vfbriefux` (פורמט הבריף).
 4. הוצא רשימה: דחוף / מחכה לאדם / אפשר אחר כך. בלי ₪. נקוב **עבודה אחת** למשמרת.
-5. HQ **שולח** את Morning Brief 09:00 ב־`send_message` + `htmlBody` תצוגה 3 (`vfbriefux/MAIL.html`). כלי נפל → Drive `create_file` + המשך.
+5. כאשר Morning Brief מופעל, HQ **שולח** אותו ב־`send_message` + `htmlBody` תצוגה 3 (`vfbriefux/MAIL.html`). כלי נפל → Drive `create_file` + המשך.
 
 ## 2. מחקר — `crews/research.md`
 
@@ -94,7 +94,7 @@ Lindy, Clay, Zapier Central, Gumloop, Julius, Relevance AI, Bardeen, Beam, GitHu
 
 1. ארבעה תרחישים: `morning-digest`, `inquiry-chain`, `weekly-links`, `content-live`.
 2. כל צומת = event ב-checkpoint (`vfharness/templates/checkpoint.schema.json`).
-3. `working?` = `python3 scripts/check-staleness.py` (בריף היום + LINKS לא ישנים).
+3. `working?` = `python3 scripts/check-staleness.py` (LINKS לא ישנים + checkpoints רצים שאינם תקועים; Morning Brief נבדק רק כשאירוע/הפעלה יצרו אותו, בלי clock יומי).
 4. Dedup פנייה: `vfconvert/hq/DEDUP.md`.
 5. **לא** מתקינים Huginn Rails.
 

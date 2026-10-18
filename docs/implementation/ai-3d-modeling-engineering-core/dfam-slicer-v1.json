@@ -1,0 +1,101 @@
+{
+  "schema": "velvetos.ai3d.dfam-slicer.v1",
+  "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+  "existing_slicer_authority": "scripts/vf_cad.py",
+  "non_authoritative_staging": true,
+  "source_fixture": "packages/vfharness/state/cad-engine-stack-20260927/geometry-ir-sample.json",
+  "source_ir_schema": "velvetos.geometry-ir.v1",
+  "output_artifact_profile": [
+    "STEP",
+    "STL",
+    "3MF"
+  ],
+  "slicer": {
+    "selected": "OrcaSlicer",
+    "current_version": "2.4.2",
+    "command_authority": "vf_cad.py slice --execute",
+    "actual_output_format": "plain .gcode plus text log; do not assume Orca JSON",
+    "profile_role": "existing real local native profile, read-only",
+    "verified_profiles": {
+      "c5": {
+        "state": "PROVEN_OFFLINE_ONLY",
+        "input_paths": [
+          "STL",
+          "3MF"
+        ],
+        "production_authority": "Flash Studio Desktop",
+        "print_release": false
+      },
+      "h2d": {
+        "state": "BLOCKED_MOTION_BOUNDS",
+        "reason": "generated start_gcode explicitly contains G1 X270 Y-0.5 F60000, while current G-code validator profile declares Y minimum 0.0 mm",
+        "source": "machine_start_gcode in native-full/h2d/machine.json",
+        "require_machine_motion_envelope_confirmation": true,
+        "print_release": false
+      }
+    },
+    "not_yet_qualified_profiles": [
+      "u1",
+      "ecc2",
+      "c5pro"
+    ],
+    "output_acceptance": {
+      "require_actual_generated_gcode": true,
+      "require_nonempty_extrusion": true,
+      "require_temperature_commands": true,
+      "require_bounded_motion": true,
+      "require_layer_count_header": true,
+      "maximum_model_height_delta_mm": 0.3,
+      "require_filament_profile_unchanged": true
+    },
+    "known_limits": [
+      "A passed offline slicer toolchain check is not printer firmware command certification.",
+      "Orca may emit Bambu/Flashforge manufacturer-specific G-code not modeled by the generic validator.",
+      "The upstream validator warns on unsupported dialect commands rather than interpreting or executing them.",
+      "The H2D service move cannot be approved by widening the motion envelope without independent model-specific evidence.",
+      "The existing C5 profile is a testing fixture, not approval of filament calibration for client production."
+    ]
+  },
+  "dfam": {
+    "tool": "vf_cad.py dfam",
+    "scope": "mesh geometry and coarse overhang/support estimates, not mechanical strength",
+    "source_truth": "STEP reopen plus watertight STL/3MF",
+    "mandatory_checks": [
+      "geometry_ir_units",
+      "STEP_STL_3MF_bbox_parity",
+      "watertight_single_body",
+      "bed_size_fit",
+      "orientation_not_inferred",
+      "gcode_layer_height_cross_check",
+      "gcode_temperature_report"
+    ]
+  },
+  "stages": [
+    "ir_to_exact_cad",
+    "export_step_stl_3mf",
+    "reopen_compare",
+    "dfam_measure",
+    "local_offline_slice_stl",
+    "local_offline_slice_3mf",
+    "gcode_validate",
+    "profile_immutability",
+    "negative_controls"
+  ],
+  "research_candidates": [
+    "variable_layer_optimization",
+    "multi_material_3mf",
+    "automatic_support_optimization",
+    "firmware-specific-service-motion_certification"
+  ],
+  "prohibitions": {
+    "duplicate_fabrication_router": false,
+    "native_profile_modification": false,
+    "slicer_profile_overwrite": false,
+    "network_printer_control": false,
+    "upload": false,
+    "start_print": false,
+    "auto_manufacturing_release": false,
+    "silently_relax_motion_bounds": false,
+    "emit_unverified_profile_as_print_ready": false
+  }
+}

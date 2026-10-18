@@ -1,0 +1,55 @@
+{
+  "schema": "velvetos.office-v2.phase3c-model-gateway-contract.v0",
+  "status": "CONTRACT_PREP_NO_LAB_ADMISSION",
+  "phase": "PHASE_3C",
+  "production_authority_change": false,
+  "production_writer_change": false,
+  "production_credentials_allowed": false,
+  "real_provider_invocations_allowed_by_contract_runner": false,
+  "incumbent": "incumbent-current-model-routing",
+  "active_challengers": [
+    "candidate-litellm",
+    "candidate-tensorzero"
+  ],
+  "candidate_source": "docs/implementation/office-v2/phase2/p0-shortlists-v0.json",
+  "competitor_neutrality": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+  "required_capabilities": [
+    "model.route",
+    "model.policy",
+    "model.budget",
+    "model.fallback",
+    "model.local_cloud",
+    "model.telemetry",
+    "model.cost_receipt"
+  ],
+  "hard_gates": [
+    "DENY_POLICY_NEVER_RETRIED_AS_ALLOW",
+    "BUDGET_REJECT_NO_PROVIDER_CALL",
+    "MISSING_CREDENTIAL_OR_TENANT_SCOPE_FAIL_CLOSED",
+    "UNKNOWN_OUTCOME_REQUIRES_RECONCILIATION_BEFORE_RETRY",
+    "FALLBACK_ONLY_ON_RETRYABLE_PROVIDER_FAILURE",
+    "NO_SECRET_OR_PROMPT_PAYLOAD_IN_EVIDENCE",
+    "REQUEST_CORRELATION_PRESERVED",
+    "LATENCY_TOKEN_COST_METRICS_PRESENT_OR_EXPLICIT_UNKNOWN",
+    "NO_PRODUCTION_KEYS_IN_LAB",
+    "PRODUCTION_PROMOTION_REQUIRES_SEPARATE_APPROVAL_AND_READBACK"
+  ],
+  "comparison_dimensions": [
+    "provider_coverage",
+    "failover_correctness",
+    "hard_budget",
+    "local_cloud_parity",
+    "latency",
+    "telemetry",
+    "policy_hooks",
+    "license",
+    "maintenance",
+    "recurring_cost",
+    "rollback"
+  ],
+  "normalized_adapter_receipt_schema": "velvetos.office-v2.phase3c-model-gateway-adapter-receipt.v0",
+  "synthetic_fixture_ref": "docs/implementation/office-v2/phase3c/model-gateway-fixture-v0.json",
+  "evidence_policy": "CONTRACT_RUNNER_DOES_NOT_PROVE_RUNTIME_OR_GRANT_PROMOTION",
+  "agent_layer_may_progress_in_parallel": true,
+  "requires_phase3b_product_installation_to_validate_contract": false
+}

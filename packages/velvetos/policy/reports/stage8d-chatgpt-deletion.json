@@ -1,0 +1,225 @@
+{
+  "schema": "velvetos.stage8d-chatgpt-deletion.v1",
+  "stage": "8D_CHATGPT_DELETION",
+  "behavior_change": false,
+  "prepared_against_main_sha": "d593f1b620de491fa143e562e5e0ed514fb15f0b",
+  "captured_at": "2026-10-05T18:52:27.5144471+03:00",
+  "surface_id": "chatgpt_core_bundle",
+  "gate": {
+    "receipt": "packages/velvetos/policy/reports/stage8d-chatgpt-deletion-gate.json",
+    "gate_head_sha": "42a2b634eeb296c66c99774751402b345e323254",
+    "gate_merge_sha": "b3af7b9e0dcf6c207a617c4c394228b498350c20",
+    "gate_pr": 555,
+    "repository_assessment": "PASS",
+    "delete_authorized": true,
+    "authorized_root": "packages/velvetos/chatgpt-project",
+    "authorized_legacy_gitattributes_line_count": 24
+  },
+  "post_gate_main_ci": {
+    "workflow": "VelvetOS Core Sensors",
+    "run_id": 37335910275,
+    "run_attempt": 1,
+    "sha": "d593f1b620de491fa143e562e5e0ed514fb15f0b",
+    "event": "push",
+    "conclusion": "success"
+  },
+  "prior_retirements": {
+    "sample_profile": {
+      "receipt": "packages/velvetos/policy/reports/stage8d-sample-profile-deletion.json",
+      "repository_assessment": "PASS",
+      "deletion_performed": true,
+      "retirement_authorized": true
+    },
+    "root_desk": {
+      "receipt": "packages/velvetos/policy/reports/stage8d-root-desk-deletion.json",
+      "repository_assessment": "PASS",
+      "deletion_performed": true,
+      "retirement_authorized": true
+    },
+    "fleet": {
+      "receipt": "packages/velvetos/policy/reports/stage8d-fleet-deletion.json",
+      "repository_assessment": "PASS",
+      "deletion_performed": true,
+      "retirement_authorized": true
+    },
+    "tool_status": {
+      "receipt": "packages/velvetos/policy/reports/stage8d-tool-status-deletion.json",
+      "repository_assessment": "PASS",
+      "deletion_performed": true,
+      "retirement_authorized": true
+    }
+  },
+  "deletion": {
+    "legacy_path": "packages/velvetos/chatgpt-project",
+    "canonical_path": "instances/velvet-factory/distribution/chatgpt-project",
+    "legacy_present": false,
+    "deleted_file_count": 33,
+    "deleted_paths": [
+      "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json",
+      "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.3.json",
+      "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.4.json",
+      "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.5.json",
+      "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.1.json",
+      "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.2.json",
+      "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.3.json",
+      "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json",
+      "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.json",
+      "packages/velvetos/chatgpt-project/CHAT-NATIVE-EDITOR-ROUTE.md",
+      "packages/velvetos/chatgpt-project/LATEST.json",
+      "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.3.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.4.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.5.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.1.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.2.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.3.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.4.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.3.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.4.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.5.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.1.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.10.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.11.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.12.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.2.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.3.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.4.txt",
+      "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.txt",
+      "packages/velvetos/chatgpt-project/REEL-ROUTE.md"
+    ],
+    "delete_exactly": [
+      "packages/velvetos/chatgpt-project"
+    ],
+    "legacy_gitattributes_lines_removed": [
+      "/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt -text",
+      "/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json -text",
+      "/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.4.txt -text",
+      "/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.4.json -text",
+      "/packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.4.txt -text",
+      "/packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt -text",
+      "/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.5.txt -text",
+      "/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.5.json -text",
+      "/packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.5.txt -text",
+      "/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.txt -text",
+      "/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.json -text",
+      "/packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.txt -text",
+      "/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.1.txt -text",
+      "/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.1.json -text",
+      "/packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.1.txt -text",
+      "/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.2.txt -text",
+      "/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.2.json -text",
+      "/packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.2.txt -text",
+      "/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.3.txt -text",
+      "/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.3.json -text",
+      "/packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.3.txt -text",
+      "/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.4.txt -text",
+      "/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json -text",
+      "/packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.4.txt -text"
+    ],
+    "legacy_gitattributes_line_count_removed": 24,
+    "canonical_gitattributes_rule_present": true,
+    "deletion_performed": true,
+    "other_surfaces_deleted": false
+  },
+  "current_evidence": {
+    "runtime_authority": false,
+    "active_authority": "instance:surface:chatgptProject",
+    "canonical_file_count": 33,
+    "canonical_file_set_unchanged": true,
+    "canonical_bytes_equal_retired_legacy": true,
+    "byte_mismatches": [],
+    "safe_legacy_references": [
+      "CHANGELOG.md",
+      "README.md",
+      "packages/velvetos/policy/README.md",
+      "packages/vfharness/state/vf-project-v66-reference-alignment-2026-09-20/implementation-spec.md",
+      "packages/vfharness/state/vf-publication-v64-binding-2026-09-18/task_plan.md",
+      "scripts/check-policy-architecture.py",
+      "scripts/generate-stage8a-core-instance-inventory.py",
+      "scripts/generate-stage8c-chatgpt-distribution-consumers.py",
+      "scripts/generate-stage8c-closure.py",
+      "scripts/generate-stage8d-chatgpt-core-consumer-migration.py",
+      "scripts/generate-stage8d-chatgpt-deletion-gate.py",
+      "scripts/generate-stage8d-chatgpt-deletion.py",
+      "scripts/generate-stage8d-chatgpt-semantic-correction.py",
+      "scripts/generate-stage8d-fleet-deletion.py",
+      "scripts/generate-stage8d-retirement-semantic-audit.py",
+      "scripts/generate-stage8d-root-desk-deletion.py",
+      "scripts/generate-stage8d-sample-profile-deletion.py",
+      "scripts/generate-stage8d-tool-status-deletion.py"
+    ],
+    "active_or_ambiguous_legacy_reference_count": 0,
+    "external_effect_authority_unchanged": true
+  },
+  "restore_anchor": {
+    "source_commit_sha": "774d4e6164277057f91eb5681551735a1928404f",
+    "legacy_root": "packages/velvetos/chatgpt-project",
+    "git_tree_sha1": "d7961fe63ff483b0085d9689b8b3c1b4d35a35f4",
+    "file_count": 33,
+    "manifest_sha256": "9d99f8dc6f7f5dc0972cb66dcc3dbba38e5ba5e272d7a3aed4588acfb26193bb",
+    "legacy_gitattributes_line_count": 24,
+    "legacy_gitattributes_sha256": "dd0fe2cd643d43a7eae46b016e4403856f6f74dc9a64b414e2a64ad9326a530f",
+    "restore_bundle_command": "git checkout 774d4e6164277057f91eb5681551735a1928404f -- packages/velvetos/chatgpt-project",
+    "verified_after_deletion": true
+  },
+  "historical_replay": {
+    "consumer_migration": {
+      "commit": "5e4c32bac19fe13ee1bbcac22513dcc2f5d36921",
+      "receipt": "packages/velvetos/policy/reports/stage8d-chatgpt-core-consumer-migration.json",
+      "receipt_sha256": "66d64c264b31fcd637c1ef260854f5e3c99fda567e83ecc68de29975d082d7ef",
+      "receipt_matches_creation_commit": true
+    },
+    "semantic_correction": {
+      "commit": "57a84a84762de99ee6faf24af54a1247483b6bbe",
+      "receipt": "packages/velvetos/policy/reports/stage8d-chatgpt-semantic-correction.json",
+      "receipt_sha256": "dad0e864b4412c8a5caaf4231ebc260bd9fd30189e1a1990cc5504985ca133a9",
+      "receipt_matches_creation_commit": true
+    },
+    "rollback_closure": {
+      "commit": "8fdc942136baec2101c46b4370acff8a234543c6",
+      "receipt": "packages/velvetos/policy/reports/stage8d-chatgpt-rollback-closure.json",
+      "receipt_sha256": "1f8e5287dca1f194f82bd6c799c1fd8fb01e692536dd4efa2b525fe6328b2b14",
+      "receipt_matches_creation_commit": true
+    }
+  },
+  "authority": {
+    "active_authority": "instance:surface:chatgptProject",
+    "policy_registry_sha256": "99bf24f03ea67add89ce5a479c27d5b370a528d87017957a9952a171f58537ad",
+    "external_effect_authority_changed": false,
+    "delete_authorized_surface": "chatgpt_core_bundle",
+    "retirement_authorized": true
+  },
+  "acceptance_criteria": {
+    "merged_gate_is_pass_and_exactly_authorizes_chatgpt_core_bundle": true,
+    "gate_itself_did_not_perform_deletion": true,
+    "post_gate_current_main_ci_is_success": true,
+    "four_prior_retirements_remain_authoritative": true,
+    "authorized_legacy_chatgpt_tree_is_absent": true,
+    "all_33_authorized_legacy_files_are_deleted": true,
+    "no_other_tracked_path_is_deleted": true,
+    "only_authorized_legacy_gitattributes_lines_are_removed": true,
+    "canonical_gitattributes_rule_remains": true,
+    "canonical_distribution_file_set_is_unchanged": true,
+    "canonical_distribution_bytes_match_retired_legacy": true,
+    "external_effect_authority_is_unchanged": true,
+    "exact_restore_tree_and_manifest_remain_valid": true,
+    "legacy_attribute_restore_anchor_remains_valid": true,
+    "historical_chatgpt_receipts_remain_byte_anchored": true,
+    "remaining_legacy_references_are_evidence_or_history_only": true,
+    "retirement_is_limited_to_chatgpt_core_bundle": true
+  },
+  "repository_assessment": "PASS",
+  "delete_authorized": true,
+  "deletion_performed": true,
+  "retirement_authorized": true,
+  "next_action": "Run exact-SHA selector plus an independent full suite, merge this final isolated Stage 8D compatibility deletion, verify the merge SHA and main CI, then complete the Stage 8D final acceptance.",
+  "constraints": [
+    "all five compatibility surfaces are now retirement-complete only after this deletion merges",
+    "canonical Velvet Factory ChatGPT distribution remains authoritative and untouched",
+    "historical ChatGPT receipts remain byte-anchored to creation commits",
+    "restore anchors remain available in Git history",
+    "external-effect authority remains unchanged"
+  ]
+}

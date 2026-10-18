@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/ecosystem-inventory-entry.v0",
+  "title": "Office v2 Master Ecosystem Inventory Entry v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "item_id", "name", "category", "provenance_class", "lifecycle_state",
+    "runtime_verification", "office_v2_verdict", "evidence_refs", "notes"
+  ],
+  "properties": {
+    "item_id": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "category": {
+      "enum": [
+        "TOOL", "AGENT", "SKILL", "RUNTIME", "PATTERN", "MCP", "BRIDGE",
+        "DEVICE", "SERVICE", "RESEARCH_CANDIDATE", "LINUX_ONLY_CANDIDATE"
+      ]
+    },
+    "provenance_class": {
+      "enum": ["LIVE_OBSERVED", "REPO_DECLARED", "OWNER_CONFIRMED", "PRIOR_RESEARCH", "DERIVED_FROM_EXISTING_REGISTRY"]
+    },
+    "lifecycle_state": {
+      "enum": ["ACTIVE", "INSTALLED", "PARTIAL", "RESEARCHED", "DEFERRED", "REJECTED", "BLOCKED", "UNKNOWN"]
+    },
+    "runtime_verification": {"enum": ["PASS", "WARN", "FAIL", "NOT_RUN", "NOT_APPLICABLE"]},
+    "office_v2_verdict": {"enum": ["KEEP", "IMPORT", "BENCHMARK", "DEFER", "REJECT", "REPAIR", "UNDECIDED"]},
+    "platform_constraints": {"type": "array", "items": {"type": "string"}},
+    "capability_tags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  }
+}

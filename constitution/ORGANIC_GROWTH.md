@@ -107,7 +107,7 @@ python3 scripts/vf_organic_growth.py queue
 python3 scripts/vf_organic_growth.py score
 ```
 
-Decision/readiness pack של 07:00 הוא input פנימי ל-Morning Brief הקנוני ב-09:00; הוא אינו בריף בעלים נפרד. כש־Creative Autopilot פעיל הוא לא מבקש אישור על החלטות קריאטיביות שגרתיות; הוא מציג רק `human_required` אמיתי.
+Decision/readiness pack נוצר לפי צורך/אירוע ויכול להזין את ה־Morning Brief הידני/אירועי; הוא אינו בריף בעלים נפרד ואינו תלוי בשעון 07:00/09:00. כש־Creative Autopilot פעיל הוא לא מבקש אישור על החלטות קריאטיביות שגרתיות; הוא מציג רק `human_required` אמיתי.
 
 סנסורים: `scripts/check-organic-growth.py` + `scripts/check-creative-autopilot.py`.
 

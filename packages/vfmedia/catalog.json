@@ -2,7 +2,7 @@
   "name": "vfmedia-catalog",
   "title": "VelvetOS shared media catalog",
   "oneCatalog": true,
-  "updatedAt": "2026-09-26",
+  "updatedAt": "2026-10-09",
   "vaultRootId": "1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv",
   "locks": [
     "one-catalog",
@@ -18246,6 +18246,78 @@
         "state": "done",
         "reviewedAt": "2026-09-18",
         "note": "Latest current image packaged as v13; rounded detail cards fully inside canvas."
+      }
+    },
+    {
+      "id": "media-1ehpT_R_xgRVnWAXandXsx4hi5OjeRzmy",
+      "sourceFile": {
+        "id": "1ehpT_R_xgRVnWAXandXsx4hi5OjeRzmy",
+        "url": "https://drive.google.com/file/d/1ehpT_R_xgRVnWAXandXsx4hi5OjeRzmy/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: WhatsApp Image 2026-08-28 at 15.15.03.jpeg · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-10-09",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-10-09T18:25:04Z",
+        "verifiedAt": "2026-10-09T18:25:08Z",
+        "downloadBytes": 149548,
+        "movedToSourceAt": "2026-10-09T18:25:08Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:8544e2395f3a0601dc7fd56057b6c5f6f9974c5bfbe7d3c333c48d9956703f41",
+        "headRevisionId": "0B_YIZLrmyOz4V0RETDdkS0czVVV5MDhhczczOVUweCtNalBNPQ",
+        "md5Checksum": "ca33062d36f4d35c864aae1c29dcf9fe",
+        "sha256Checksum": "8544e2395f3a0601dc7fd56057b6c5f6f9974c5bfbe7d3c333c48d9956703f41",
+        "moveStartedAt": "2026-10-09T18:25:05Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1Svj2niJLWZSkULz61biYCH1cmqjA3hSO",
+      "sourceFile": {
+        "id": "1Svj2niJLWZSkULz61biYCH1cmqjA3hSO",
+        "url": "https://drive.google.com/file/d/1Svj2niJLWZSkULz61biYCH1cmqjA3hSO/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: WhatsApp Image 2026-08-28 at 15.14.37.jpeg · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-10-09",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-10-09T18:25:08Z",
+        "verifiedAt": "2026-10-09T18:25:10Z",
+        "downloadBytes": 206893,
+        "movedToSourceAt": "2026-10-09T18:25:10Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:6521f10d7549d7cc001eb77df515c2b355d9ee7b63721d183074d213b042d9d1",
+        "headRevisionId": "0B_YIZLrmyOz4THk0V0ZLbGpoSkdNU3BlK29JNGtqUkZsQmI4PQ",
+        "md5Checksum": "f1fe5aa16d706660ae80f452773db8dc",
+        "sha256Checksum": "6521f10d7549d7cc001eb77df515c2b355d9ee7b63721d183074d213b042d9d1",
+        "moveStartedAt": "2026-10-09T18:25:08Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     }
   ]

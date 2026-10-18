@@ -19,7 +19,7 @@ Module: `expert-revenue-loop`. Closes IG → inquiry → quote → pickup → re
 1. Read `packages/vfgrowth/experts/REVENUE-LOOP.md`.
 2. Every schedulable post needs an **Offer card** (SKU, price or `X ₪`, CTA, proof).
 3. On inquiry → `TIMELINE-AUTO.md` event + pipeline card with `ig_post_ref`.
-4. Insights: `vfinsights/experts/INSIGHTS-SNAPSHOT.md` — owner paste only.
+4. Insights: `vfinsights/experts/INSIGHTS-SNAPSHOT.md` — verified Instagram MCP first; owner paste/Drive snapshot only as fallback.
 5. Weekly: `vfops/playbooks/WEEKLY-REVENUE-PULSE.md`.
 6. Attribution: `vfinsights/ATTRIBUTION.md` + `vfsales/ORDERS.md`. WhatsApp ping is not certain conversion. Missing = «אין ספירה».
 

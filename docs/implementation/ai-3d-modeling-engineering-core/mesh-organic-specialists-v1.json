@@ -1,0 +1,165 @@
+{
+  "schema": "velvetos.ai3d.mesh-organic-specialists.v1",
+  "non_authoritative_staging": true,
+  "authority": {
+    "id": "blender-capability-host",
+    "provider_registry": "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json",
+    "creative_craft_registry": "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json",
+    "station_routing": "D:\\Velvet\\State\\CreativeCraft\\blender-station-routing.json"
+  },
+  "policy": {
+    "no_second_mesh_router": true,
+    "reuse_existing_typed_operations": true,
+    "provider_proof_does_not_equal_typed_promotion": true,
+    "candidate_requires_fixture_before_promotion": true
+  },
+  "runtimes": {
+    "geometry-core-py312": {
+      "path": "D:\\Velvet\\Runtime\\BlenderMonster\\venvs\\geometry-core\\Scripts\\python.exe"
+    },
+    "scan-reconstruction-py312": {
+      "path": "D:\\Velvet\\Runtime\\BlenderMonster\\venvs\\scan-reconstruction\\Scripts\\python.exe"
+    },
+    "blender-5.2.2-main": {
+      "path": null,
+      "route": "existing Blender Capability Host only"
+    }
+  },
+  "existing_typed_capabilities_reused": [
+    "mesh.repair",
+    "mesh.analysis",
+    "mesh.remesh_repair",
+    "mesh.retopology",
+    "mesh.boolean_hardsurface",
+    "scan.pointcloud",
+    "scan.pointcloud.las_laz_io",
+    "scan.pointcloud.e57_io",
+    "scan.clean",
+    "scan.register"
+  ],
+  "specialists": {
+    "sidecar_trimesh": {
+      "status": "PROVEN_PROVIDER",
+      "runtime": "geometry-core-py312",
+      "version": "5.1.1",
+      "license": "MIT",
+      "new_bounded_capabilities": [
+        "automation.geometry",
+        "geometry.variant_batch"
+      ],
+      "reuse_only_capabilities": [
+        "mesh.remesh_repair",
+        "ai.image_to_3d.print_cleanup"
+      ]
+    },
+    "sidecar_manifold3d": {
+      "status": "PROVEN_PROVIDER",
+      "runtime": "geometry-core-py312",
+      "version": "3.5.4",
+      "license": "Apache-2.0",
+      "new_bounded_capabilities": [],
+      "reuse_only_capabilities": [
+        "mesh.boolean_hardsurface",
+        "mesh.remesh_repair",
+        "ai.image_to_3d.print_cleanup"
+      ]
+    },
+    "sidecar_pymeshlab": {
+      "status": "PROVEN_PROVIDER",
+      "runtime": "geometry-core-py312",
+      "version": "2025.7.post1",
+      "license": "GPL-3.0",
+      "new_bounded_capabilities": [
+        "ai.image_to_3d.print_cleanup"
+      ],
+      "reuse_only_capabilities": [
+        "mesh.remesh_repair",
+        "mesh.retopology"
+      ],
+      "benchmark": "best current print cleanup in existing Blender provider registry"
+    },
+    "sidecar_libigl": {
+      "status": "PROVEN_PROVIDER",
+      "runtime": "geometry-core-py312",
+      "version": "2.6.3",
+      "license": "MPL-2.0",
+      "new_bounded_capabilities": [
+        "simulation.analysis"
+      ],
+      "reuse_only_capabilities": [
+        "mesh.remesh_repair",
+        "mesh.retopology"
+      ]
+    },
+    "sidecar_open3d": {
+      "status": "PROVEN_PROVIDER",
+      "runtime": "scan-reconstruction-py312",
+      "version": "0.20.0",
+      "license": "MIT",
+      "new_bounded_capabilities": [
+        "scan.reconstruct"
+      ],
+      "reuse_only_capabilities": [
+        "scan.pointcloud",
+        "scan.register",
+        "mesh.remesh_repair"
+      ]
+    },
+    "native_sculpt": {
+      "status": "PROVEN_PROVIDER",
+      "runtime": "blender-5.2.2-main",
+      "version": "5.2.2",
+      "license": "Blender runtime terms",
+      "new_bounded_capabilities": [
+        "sculpt.organic"
+      ],
+      "typed_promotion": false
+    },
+    "native_voxel_remesh": {
+      "status": "PROVEN_PROVIDER",
+      "runtime": "blender-5.2.2-main",
+      "version": "5.2.2",
+      "license": "Blender runtime terms",
+      "new_bounded_capabilities": [],
+      "reuse_only_capabilities": [
+        "mesh.remesh_repair",
+        "sculpt.organic"
+      ]
+    },
+    "trimesh_sdf": {
+      "status": "PROVEN_BOUNDED",
+      "runtime": "geometry-core-py312",
+      "version": "trimesh 5.1.1 + rtree 1.4.1",
+      "license": "MIT",
+      "new_bounded_capabilities": [
+        "implicit.signed_distance"
+      ],
+      "constraints": [
+        "watertight mesh required for reliable sign semantics",
+        "explicit query points only",
+        "no hidden unit conversion",
+        "no automatic CAD authority"
+      ]
+    },
+    "openvdb": {
+      "status": "CANDIDATE_RUNTIME_GAP",
+      "runtime": null,
+      "version": null,
+      "license": null,
+      "new_bounded_capabilities": [
+        "implicit.openvdb"
+      ],
+      "blockers": [
+        "pyopenvdb has no matching distribution in the canonical Windows geometry runtime",
+        "openvdb has no matching distribution in the canonical Windows geometry runtime",
+        "Blender-native volume/OpenVDB path still needs a reproducible bounded fixture before admission"
+      ]
+    }
+  },
+  "safety": {
+    "printer_actions_allowed": false,
+    "machine_control_allowed": false,
+    "silent_unit_conversion": false,
+    "duplicate_typed_operation_promotion": false
+  }
+}

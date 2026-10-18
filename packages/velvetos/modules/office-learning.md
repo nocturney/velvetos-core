@@ -4,7 +4,7 @@ Module id: `office-learning`
 
 ## Provides
 
-Living office culture: every specialist reviews the day's conversations, captures meaningful observations/candidates, and promotes only evidence-gated durable facts. **Not** a second runtime, second memory store, auto-DM, or daily promotion quota.
+Living office culture: learning is scoped to seats/domains that actually changed or received new evidence. Participating specialists capture meaningful observations/candidates and promote only evidence-gated durable facts; untouched seats do not run an empty daily ritual. **Not** a second runtime, second memory store, auto-DM, or daily promotion quota.
 
 Playbooks:
 

@@ -3,6 +3,9 @@ set -euo pipefail
 
 # Pre-validate a machine-generated main commit under the same required check
 # used by protected pull requests, then push the exact checked SHA to main.
+# The risk class is derived from the rebased diff by sensor_selector.py; caller
+# input can never downgrade it. AUTHORITY_SECURITY keeps a post-push full suite.
+# Lower-risk exact-SHA commits reuse the successful required precheck.
 # No bypass token or force push is used.
 #
 # Usage:
@@ -53,8 +56,30 @@ for ((attempt=1; attempt<=max_attempts; attempt++)); do
 
   head_sha="$(git rev-parse HEAD)"
   stage_branch="machine-check/${run_id}-${run_attempt}-${attempt}"
+  selection_dir="${RUNNER_TEMP:-/tmp}"
+  selection_file="$selection_dir/velvet-machine-selection-${run_id}-${run_attempt}-${attempt}.json"
+  python3 scripts/sensor_selector.py \
+    --base "origin/$target_branch" \
+    --head "$head_sha" \
+    --output "$selection_file"
+  machine_write_class="$(
+    python3 - "$selection_file" <<'PY'
+import json
+import sys
+from pathlib import Path
+data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+print(data.get("machine_write_class") or "")
+PY
+  )"
+  case "$machine_write_class" in
+    STATE_DATA|DOMAIN_ARTIFACT|CODE_CONTRACT|AUTHORITY_SECURITY) ;;
+    *)
+      echo "::error::invalid or missing machine-write class: $machine_write_class"
+      exit 2
+      ;;
+  esac
 
-  echo "MACHINE_PRECHECK staging=$stage_branch head=$head_sha attempt=$attempt/$max_attempts"
+  echo "MACHINE_PRECHECK staging=$stage_branch head=$head_sha class=$machine_write_class attempt=$attempt/$max_attempts"
   git push origin "HEAD:refs/heads/$stage_branch"
 
   gh workflow run "$workflow_file" --repo "$repo" --ref "$stage_branch"
@@ -86,6 +111,16 @@ for ((attempt=1; attempt<=max_attempts; attempt++)); do
     exit 1
   fi
 
+  precheck_log="$(gh run view "$check_run_id" --repo "$repo" --log)"
+  if ! grep -Fq "class=$machine_write_class" <<<"$precheck_log"; then
+    echo "::error::remote selector class does not prove local class=$machine_write_class"
+    exit 1
+  fi
+  if [[ "$machine_write_class" == "AUTHORITY_SECURITY" ]] && ! grep -Fq "full_suite=true" <<<"$precheck_log"; then
+    echo "::error::AUTHORITY_SECURITY precheck must prove full_suite=true"
+    exit 1
+  fi
+
   check_count="$(
     gh api "repos/$repo/commits/$head_sha/check-runs"       --jq '[.check_runs[] | select(.name == "check-all" and .conclusion == "success" and .app.slug == "github-actions")] | length'
   )"
@@ -114,52 +149,63 @@ for ((attempt=1; attempt<=max_attempts; attempt++)); do
   if git push origin "HEAD:refs/heads/$target_branch"; then
     cleanup_stage
 
-    # Pushes authenticated by GITHUB_TOKEN do not reliably emit a new push
-    # workflow. Dispatch the canonical full suite explicitly on the now-live SHA
-    # so the Stage 3 main-branch contract remains true for machine writers.
-    gh workflow run "$workflow_file" --repo "$repo" --ref "$target_branch" -f execution=main_full
+    remote_head="$(git ls-remote origin "refs/heads/$target_branch" | awk '{print $1}')"
+    if [[ "$remote_head" != "$head_sha" ]]; then
+      echo "::error::post-push remote head mismatch: expected=$head_sha observed=$remote_head"
+      exit 1
+    fi
 
-    full_run_id=""
-    for _ in {1..30}; do
-      full_run_id="$(
-        gh run list \
-          --repo "$repo" \
-          --workflow "$workflow_file" \
-          --branch "$target_branch" \
-          --event workflow_dispatch \
-          --limit 10 \
-          --json databaseId,headSha \
-          --jq ".[] | select(.headSha == \"$head_sha\") | .databaseId" \
-          | head -n 1
-      )"
-      if [[ -n "$full_run_id" ]]; then
-        break
+    # GITHUB_TOKEN pushes do not reliably emit a push workflow. Reuse the
+    # successful exact-SHA required precheck for bounded classes. Only an
+    # AUTHORITY_SECURITY diff adds a post-push canonical full-suite proof.
+    if [[ "$machine_write_class" == "AUTHORITY_SECURITY" ]]; then
+      gh workflow run "$workflow_file" --repo "$repo" --ref "$target_branch" -f execution=main_full
+
+      full_run_id=""
+      for _ in {1..30}; do
+        full_run_id="$(
+          gh run list \
+            --repo "$repo" \
+            --workflow "$workflow_file" \
+            --branch "$target_branch" \
+            --event workflow_dispatch \
+            --limit 10 \
+            --json databaseId,headSha \
+            --jq ".[] | select(.headSha == \"$head_sha\") | .databaseId" \
+            | head -n 1
+        )"
+        if [[ -n "$full_run_id" ]]; then
+          break
+        fi
+        sleep 2
+      done
+      if [[ -z "$full_run_id" ]]; then
+        echo "::error::no post-push full-suite run appeared for $head_sha"
+        exit 1
       fi
-      sleep 2
-    done
-    if [[ -z "$full_run_id" ]]; then
-      echo "::error::no post-push full-suite run appeared for $head_sha"
-      exit 1
+
+      gh run watch "$full_run_id" --repo "$repo" --exit-status
+      full_observed="$(
+        gh run view "$full_run_id" --repo "$repo" \
+          --json headSha,headBranch,conclusion \
+          --jq '.headSha + " " + .headBranch + " " + (.conclusion // "")'
+      )"
+      if [[ "$full_observed" != "$head_sha $target_branch success" ]]; then
+        echo "::error::post-push full-suite run did not finish success on live main: $full_observed"
+        exit 1
+      fi
+
+      full_log="$(gh run view "$full_run_id" --repo "$repo" --log)"
+      if ! grep -Eq 'SENSORS [0-9]+ mode=full' <<<"$full_log" || ! grep -Eq 'OK suite passed=[0-9]+' <<<"$full_log"; then
+        echo "::error::post-push run succeeded but did not prove full-suite execution"
+        exit 1
+      fi
+
+      echo "MACHINE_PRECHECK_PUSH_OK branch=$target_branch head=$head_sha class=$machine_write_class check_run=$check_run_id full_run=$full_run_id post_push=full_suite"
+      exit 0
     fi
 
-    gh run watch "$full_run_id" --repo "$repo" --exit-status
-    full_observed="$(
-      gh run view "$full_run_id" --repo "$repo" \
-        --json headSha,headBranch,conclusion \
-        --jq '.headSha + " " + .headBranch + " " + (.conclusion // "")'
-    )"
-    if [[ "$full_observed" != "$head_sha $target_branch success" ]]; then
-      echo "::error::post-push full-suite run did not finish success on live main: $full_observed"
-      exit 1
-    fi
-
-    full_log="$(gh run view "$full_run_id" --repo "$repo" --log)"
-    if ! grep -Eq 'SENSORS [0-9]+ mode=full' <<<"$full_log" || ! grep -Eq 'OK suite passed=[0-9]+' <<<"$full_log"; then
-      echo "::error::post-push run succeeded but did not prove full-suite execution"
-      exit 1
-    fi
-
-    echo "MACHINE_PRECHECK_PUSH_OK branch=$target_branch head=$head_sha check_run=$check_run_id full_run=$full_run_id"
+    echo "MACHINE_PRECHECK_PUSH_OK branch=$target_branch head=$head_sha class=$machine_write_class check_run=$check_run_id post_push=exact_sha_precheck_reused"
     exit 0
   fi
 

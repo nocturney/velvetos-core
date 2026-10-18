@@ -105,7 +105,7 @@ def main() -> None:
     ):
         if need not in ids:
             fail(f"events.catalog.json missing {need}")
-    for hg in ("ig-autopost", "auto-dm", "user-tag-without-optin"):
+    for hg in ("ig-direct-bypass-autopost", "auto-dm", "user-tag-without-optin"):
         if hg not in (events.get("humanGates") or []):
             fail(f"events.catalog.json humanGates missing {hg}")
 
@@ -154,6 +154,7 @@ def main() -> None:
         [sys.executable, str(CLI), "policy"],
         cwd=ROOT,
         text=True,
+        encoding="utf-8",
         capture_output=True,
     )
     if proc.returncode != 0:
@@ -163,6 +164,7 @@ def main() -> None:
         [sys.executable, str(CLI), "brief", "--write"],
         cwd=ROOT,
         text=True,
+        encoding="utf-8",
         capture_output=True,
     )
     if proc_b.returncode != 0:
@@ -179,8 +181,8 @@ def main() -> None:
         fail("brief must not mark reel posted_manually")
     if reel.get("gate") not in REEL_GATES_ALLOWED:
         fail(f"brief reel gate {reel.get('gate')!r} not in {sorted(REEL_GATES_ALLOWED)}")
-    if "no-autopost" not in (brief.get("locks") or []):
-        fail("growth brief must keep the no-autopost lock")
+    if "no-direct-bypass-autopost" not in (brief.get("locks") or []):
+        fail("growth brief must keep the no-direct-bypass-autopost lock while allowing canonical policy-authorized publication")
     check_reel_candidates(reel.get("candidates") or [], organic)
     if reel.get("gate") == "candidates_ready" and not reel.get("candidates"):
         fail("candidates_ready without candidates")
@@ -196,6 +198,7 @@ def main() -> None:
         [sys.executable, str(CLI), "score"],
         cwd=ROOT,
         text=True,
+        encoding="utf-8",
         capture_output=True,
     )
     if proc_s.returncode != 0 or "אין ספירה" not in (proc_s.stdout or ""):
@@ -207,7 +210,7 @@ def main() -> None:
 
 
 def check_reel_candidates(candidates: list[dict], organic) -> None:
-    """Candidates are suggestions: active tool, human gates, no product claim, no autopost."""
+    """Candidates are suggestions: active tool, exact-final gates, no product claim, no publish bypass."""
     active = {v["tool"] for v in organic.reel_candidates.active_edit_tools().values()}
     for cand in candidates:
         cid = cand.get("id")
@@ -222,8 +225,10 @@ def check_reel_candidates(candidates: list[dict], organic) -> None:
         if not tools or not set(tools) <= active:
             fail(f"reel candidate {cid} recipe must name existing active edit tools (got {tools}, active {sorted(active)})")
         gates = " ".join(recipe.get("gates") or [])
-        if "PREFLIGHT" not in gates or "EDIT-GATE" not in gates or "אישור אדם" not in gates:
-            fail(f"reel candidate {cid} must require human approval + PREFLIGHT + EDIT-GATE")
+        if "PREFLIGHT" not in gates or "EDIT-GATE" not in gates or "instagram.publish" not in gates:
+            fail(f"reel candidate {cid} must require exact-final PREFLIGHT + EDIT-GATE + instagram.publish authorization")
+        if "אישור אדם" in gates:
+            fail(f"reel candidate {cid} must not synthesize a per-asset human approval gate")
         if not cand.get("productLink") and not str(cand.get("productClaim") or "").startswith("אין"):
             fail(f"reel candidate {cid} claims a product without catalog productLink")
         if "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם" not in blob:

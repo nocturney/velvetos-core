@@ -1,0 +1,74 @@
+{
+  "schema": "velvetos.office-v2.phase3b-runtime-pins.v0",
+  "captured_at": "2026-10-06T10:27:45.767365Z",
+  "lab_only": true,
+  "production_credentials_used": false,
+  "production_authority_change": false,
+  "artifacts": [
+    {
+      "candidate_id": "candidate-zitadel",
+      "status": "RESOLVED",
+      "tag_ref": "ghcr.io/zitadel/zitadel:v4.19.4",
+      "index_digest": null,
+      "linux_amd64_digest": "sha256:5d4ab2bb5326ceb673d2c08ae81ad4550968404904f7b0ff64b1eb638242b87d",
+      "media_type": "application/vnd.oci.image.index.v1+json"
+    },
+    {
+      "candidate_id": "candidate-keycloak",
+      "status": "RESOLVED",
+      "tag_ref": "quay.io/keycloak/keycloak:26.8.0",
+      "index_digest": null,
+      "linux_amd64_digest": "sha256:d79bc4bf1c54e802735ef91926b5c003de1fbb50b1a93382611972277219c9ad",
+      "media_type": "application/vnd.oci.image.index.v1+json"
+    },
+    {
+      "candidate_id": "candidate-authentik",
+      "status": "RESOLVED",
+      "tag_ref": "ghcr.io/goauthentik/server:2026.8.3",
+      "index_digest": null,
+      "linux_amd64_digest": "sha256:09782fe56675bc616a0324468f1698e2d9d83c978bc5e426686fb7563517a442",
+      "media_type": "application/vnd.oci.image.index.v1+json"
+    },
+    {
+      "candidate_id": "candidate-openfga",
+      "status": "RESOLVED",
+      "tag_ref": "docker.io/openfga/openfga:v1.21.0",
+      "index_digest": null,
+      "linux_amd64_digest": "sha256:51bece5c31783bfeb150eae0f1c818ae804c50d39e0a311c43ff5357fed6debd",
+      "media_type": "application/vnd.docker.distribution.manifest.list.v2+json"
+    },
+    {
+      "candidate_id": "candidate-opa",
+      "status": "RESOLVED",
+      "tag_ref": "docker.io/openpolicyagent/opa:1.21.1",
+      "index_digest": null,
+      "linux_amd64_digest": "sha256:3990b950cfd62284d7bd86a32ee1d76f18f5d3364c8e83f8b9b82f1ff19f7498",
+      "media_type": "application/vnd.oci.image.index.v1+json"
+    },
+    {
+      "candidate_id": "candidate-infisical-agent-vault",
+      "status": "RESOLVED",
+      "tag_ref": "docker.io/infisical/infisical:v0.165.16",
+      "index_digest": null,
+      "linux_amd64_digest": "sha256:2755365ad9b4745b1aae45529f4b3559c21e56957a3adc9461cfb8170b4d3fe4",
+      "media_type": "application/vnd.oci.image.index.v1+json"
+    },
+    {
+      "candidate_id": "candidate-openbao",
+      "status": "RESOLVED",
+      "tag_ref": "ghcr.io/openbao/openbao:2.7.1",
+      "index_digest": null,
+      "linux_amd64_digest": "sha256:a36ea8c27f0dcff5757664ad080425f96d3b6b2f33db3e76c4e2d3112fb17005",
+      "media_type": "application/vnd.oci.image.index.v1+json"
+    },
+    {
+      "candidate_id": "candidate-cedar",
+      "status": "RESOLVED",
+      "artifact": "crates.io:cedar-policy@4.13.0",
+      "sha256": "5e4f5e46c425491b7133eecb3030d82d27301b84bfa08533c59a6902cca7eb80",
+      "bytes": 244270
+    }
+  ],
+  "source_evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/runtime-pins.json",
+  "note": "linux/amd64 platform digests are the immutable runtime pins for NODE-A; Cedar is pinned by crates.io artifact SHA-256."
+}

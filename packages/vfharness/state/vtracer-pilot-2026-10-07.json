@@ -1,0 +1,24 @@
+{
+  "schema": "velvetos.vtracer.pilot.v1",
+  "date": "2026-10-07",
+  "source": "visioncortex/vtracer",
+  "version": "1.0.0a4",
+  "deployment": "isolated .local-devtools venv; not committed; no daemon/service",
+  "status": "PASS",
+  "test": {
+    "fixture": "synthetic 64x64 four-color raster",
+    "palette": ["#1b1b1b","#e0c088","#5a7d3c","#8fb0d0"],
+    "hierarchical": "cutout",
+    "observed_svg_colors": ["#1b1b1b","#5a7d3c","#8fb0d0","#e0c088"],
+    "observed_color_count": 4,
+    "svg_sha256": "e9aac3c27d99706f41a4afa9dcf3ebbdf198a8bce98feb842216e78da4d0a740",
+    "svg_bytes": 363,
+    "png_sha256": "7dc5d4b51b1433b5141bd143ed6f4a5a951acd8106e39e998069c95aa0e7c354",
+    "png_bytes": 347
+  },
+  "runtime_authority": false,
+  "printer_control": false,
+  "promotion": "BLOCKED_PENDING_AI3D_STABLE_CHECKPOINT_AND_REAL_DOG_FIXTURE",
+  "cost_preflight": "packages/vfharness/cost-preflight/vtracer-1.0.0a4-local.json",
+  "adapter": "scripts/vf_vtracer.py"
+}

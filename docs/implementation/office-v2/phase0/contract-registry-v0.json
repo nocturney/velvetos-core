@@ -1,0 +1,31 @@
+{
+  "schema": "velvetos.office-v2.contract-registry.v0",
+  "status": "PHASE0_DEFINITION_ONLY",
+  "authority_boundary": "Contracts define shape, semantics and proof. External-effect decisions remain exclusively in packages/velvetos/policy/policy-registry.json.",
+  "required_semantics": [
+    "success", "failure", "idempotency_scope", "cancellation", "timeout",
+    "evidence", "compatibility", "readback", "fallback"
+  ],
+  "vendor_rule": "Contract definitions must not encode a preferred vendor.",
+  "contracts": [
+    {"id": "CorrelationEnvelope", "path": "docs/implementation/office-v2/phase0/contracts/correlation-envelope.schema.json", "role": "cross-run identity"},
+    {"id": "ProvenanceEnvelope", "path": "docs/implementation/office-v2/phase0/contracts/provenance-envelope.schema.json", "role": "cross-domain lineage; native IDs are linked, not replaced"},
+    {"id": "CapabilityContract", "path": "docs/implementation/office-v2/phase0/contracts/capability-contract.schema.json", "role": "capability semantics/projection"},
+    {"id": "ProviderContract", "path": "docs/implementation/office-v2/phase0/contracts/provider-contract.schema.json", "role": "provider/node binding"},
+    {"id": "EvidenceContract", "path": "docs/implementation/office-v2/phase0/contracts/evidence-contract.schema.json", "role": "proof envelope"},
+    {"id": "ArtifactContract", "path": "docs/implementation/office-v2/phase0/contracts/artifact-contract.schema.json", "role": "artifact provenance"},
+    {"id": "NodeContract", "path": "docs/implementation/office-v2/phase0/contracts/node-contract.schema.json", "role": "node advertisement/trust/compatibility"},
+    {"id": "SideEffectContract", "path": "docs/implementation/office-v2/phase0/contracts/side-effect-contract.schema.json", "role": "effect safety definition; no authority"},
+    {"id": "EffectIntent", "path": "docs/implementation/office-v2/phase0/contracts/effect-intent.schema.json", "role": "exact intended mutation"},
+    {"id": "EffectReceipt", "path": "docs/implementation/office-v2/phase0/contracts/effect-receipt.schema.json", "role": "provider outcome/readback evidence"},
+    {"id": "ProjectStateManifest", "path": "docs/implementation/office-v2/phase0/contracts/project-state-manifest.schema.json", "role": "conversation/project continuity only"},
+    {"id": "MigrationLedgerEntry", "path": "docs/implementation/office-v2/phase0/contracts/migration-ledger-entry.schema.json", "role": "append-only migration/change audit"},
+    {"id": "EcosystemInventoryEntry", "path": "docs/implementation/office-v2/phase0/contracts/ecosystem-inventory-entry.schema.json", "role": "closed inventory input for later candidate decisions"}
+  ],
+  "existing_reform_v2_contracts_reused": [
+    "packages/velvetos/policy/schema/action-receipt.schema.json",
+    "packages/velvetos/policy/state-evidence-model.json",
+    "packages/velvetos/policy/policy-registry.json"
+  ],
+  "new_production_writer": false
+}

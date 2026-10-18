@@ -153,5 +153,13 @@
     "no_new_scheduler": true,
     "no_new_recurring_cost": true,
     "external_effect_authority_change": false
+  },
+  "current_authority_override": {
+    "effective_at": "2026-10-06T15:15:00+03:00",
+    "status": "SUPERSEDED_FOR_CURRENT_SCHEDULER_AUTHORITY",
+    "authority": "chatgpt-automations",
+    "grok_recurring_protected_count": 0,
+    "baseline": "automation/grok/current-baseline.json",
+    "note": "Stage 7C fields remain historical acceptance inputs and must not revive Grok routines."
   }
 }

@@ -1,0 +1,65 @@
+{
+  "schema": "velvetos.office-v2.phase2-scorecard.v0",
+  "candidate_id": "candidate-zitadel",
+  "fixture_id": "identity-security-destructive-20-step",
+  "run_id": "20261006T150644Z-159784",
+  "captured_at": "2026-10-06T15:36:38.253461Z",
+  "fitness": {
+    "score_0_5": 5.0,
+    "notes": [
+      "PASS on all 20 frozen steps with candidate-backed machine-identity creation, client-credentials issuance, revocation, replacement identity and dependency-outage fail-closed.",
+      "Machine/service identities are a direct product primitive and map closely to the Office v2 service/workload identity contract."
+    ]
+  },
+  "safety": {
+    "score_0_5": 5.0,
+    "notes": [
+      "Wrong secret and deleted identity were denied; replacement identity resumed cleanly; outage produced fail-closed behavior.",
+      "Internal-only LAB network, no host ports, no production credentials or authority, and no raw token/secret material in evidence.",
+      "AGPL boundary is explicitly owner-accepted for separate-service/API use; any modified core must preserve the accepted disclosure boundary."
+    ]
+  },
+  "operability": {
+    "score_0_5": 4.7,
+    "notes": [
+      "Two-component tested topology: ZITADEL plus PostgreSQL.",
+      "Observed wall/startup were 41/33 seconds; terminal snapshots were about 86 MiB for ZITADEL and 117 MiB for PostgreSQL.",
+      "Lower measured footprint than Keycloak/authentik in this LAB; operational documentation must retain the accepted AGPL boundary."
+    ]
+  },
+  "evidence_quality": {
+    "score_0_5": 4.7,
+    "notes": [
+      "Complete 20-step receipt with identity deletion, replacement identity, outage proof, immutable pin and runtime snapshots.",
+      "Resource values are terminal snapshots rather than sampled peaks; unavailable standardized resource fields remain null."
+    ]
+  },
+  "resources": {
+    "wall_seconds": 41,
+    "cpu_peak_pct": null,
+    "ram_peak_mb": null,
+    "gpu_peak_pct": null,
+    "vram_peak_mb": null,
+    "storage_delta_mb": null,
+    "network_mb": null,
+    "external_cost": 0.0,
+    "recurring_cost": 0.0,
+    "operator_minutes": 0.0
+  },
+  "rollback": {
+    "status": "PASS",
+    "notes": [
+      "Immutable ZITADEL/PostgreSQL pins and isolated LAB teardown were proven.",
+      "Future persistent promotion requires database backup/restore drill before SHADOW/PILOT."
+    ]
+  },
+  "security_findings": [
+    "No production credentials or authority used.",
+    "Deleted identity could not mint a new token; dependency outage failed closed."
+  ],
+  "operations_findings": [
+    "Evidence: D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/identity-destructive-candidate-zitadel.json",
+    "Best combined contract fit and measured operational footprint among passing identity challengers."
+  ],
+  "verdict": "ADVANCE"
+}

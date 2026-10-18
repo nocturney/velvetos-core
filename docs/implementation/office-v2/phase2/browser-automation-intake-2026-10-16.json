@@ -1,0 +1,215 @@
+{
+  "schema": "velvetos.office-v2.browser-automation-intake.v1",
+  "intake_date": "2026-10-16",
+  "status": "RESEARCH_ROUTED_NOT_EXECUTED",
+  "context": "Personal, noncommercial workflow use; existing system cost/security/effect gates remain active.",
+  "source": "Owner-provided live browser repo tabs; 21 repository tabs collapsed to 20 unique upstream URLs.",
+  "counts": {
+    "total": 20,
+    "p0_queued": 5,
+    "phase_routed": 13,
+    "reference_only": 2
+  },
+  "items": [
+    {
+      "candidate_id": "candidate-lexmount-moli",
+      "url": "https://github.com/lexmount/moli",
+      "role": "fast structured public-web acquisition, DOM and optional layout",
+      "evaluation_lane": "browser-crawl-extraction",
+      "route_kind": "PHASE_ROUTED",
+      "p0_lane": null,
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+      "test_gate": "Compare DOM/Markdown/JSON extraction and browser interoperability against Playwright Chromium on a three-site synthetic crawl."
+    },
+    {
+      "candidate_id": "candidate-browser-use-browser-use",
+      "url": "https://github.com/browser-use/browser-use",
+      "role": "adaptive multi-step browser agent with local models or optional cloud browser",
+      "evaluation_lane": "agent-runtime",
+      "route_kind": "P0_QUEUED",
+      "p0_lane": "agent-runtime",
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+      "test_gate": "Run adaptive form, navigation, download and recovery fixture versus direct Playwright and Skyvern."
+    },
+    {
+      "candidate_id": "candidate-browser-use-browser-harness",
+      "url": "https://github.com/browser-use/browser-harness",
+      "role": "MCP control of an existing logged-in Chrome session",
+      "evaluation_lane": "browser-attached-session",
+      "route_kind": "PHASE_ROUTED",
+      "p0_lane": null,
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+      "test_gate": "Use browser_list_tabs and upload/click/read on a controlled Chrome profile; verify host focus and session isolation."
+    },
+    {
+      "candidate_id": "candidate-browser-use-web-ui",
+      "url": "https://github.com/browser-use/web-ui",
+      "role": "local Gradio interface for inspecting and testing browser agents",
+      "evaluation_lane": "browser-ui-testbed",
+      "route_kind": "PHASE_ROUTED",
+      "p0_lane": null,
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+      "test_gate": "Evaluate assisted agent debugging and session replay in the isolated LAB against the existing Office visibility surface."
+    },
+    {
+      "candidate_id": "candidate-browser-use-bux",
+      "url": "https://github.com/browser-use/bux",
+      "role": "long-running remotely reachable browser agent on a personal host",
+      "evaluation_lane": "agent-runtime",
+      "route_kind": "P0_QUEUED",
+      "p0_lane": "agent-runtime",
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+      "test_gate": "Compare restart/resume, operator takeover and browser state retention against existing Grokbot/Office long-job fixtures."
+    },
+    {
+      "candidate_id": "candidate-guycrespin-browser-agent",
+      "url": "https://github.com/guycrespin/browser-agent",
+      "role": "interactive page-local research and assisted browser actions",
+      "evaluation_lane": "browser-attached-session",
+      "route_kind": "PHASE_ROUTED",
+      "p0_lane": null,
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+      "test_gate": "Evaluate selective page read, guarded form interaction and malicious-page negative controls in a disposable Chrome profile."
+    },
+    {
+      "candidate_id": "candidate-scrapeless-ai-scrapeless-agent-browser",
+      "url": "https://github.com/scrapeless-ai/scrapeless-agent-browser",
+      "role": "optional hosted browser session and element-based automation",
+      "evaluation_lane": "browser-cloud-egress",
+      "route_kind": "PHASE_ROUTED",
+      "p0_lane": null,
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+      "test_gate": "Compare a synthetic remote-browser crawl against local Browserless on reproducibility, session teardown and per-task cost."
+    },
+    {
+      "candidate_id": "candidate-pedro-scrapeless-scrapeless-playwright",
+      "url": "https://github.com/pedro-scrapeless/scrapeless-playwright",
+      "role": "sample Playwright-to-Scrapeless CDP integration",
+      "evaluation_lane": "browser-cloud-egress",
+      "route_kind": "REFERENCE_ONLY",
+      "p0_lane": null,
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+      "test_gate": "Retain as integration reference only; reopen if Scrapeless becomes an admitted remote-browser provider."
+    },
+    {
+      "candidate_id": "candidate-lightpanda-io-browser",
+      "url": "https://github.com/lightpanda-io/browser",
+      "role": "low-resource agent browser, native MCP and replayable PandaScript",
+      "evaluation_lane": "browser-crawl-extraction",
+      "route_kind": "PHASE_ROUTED",
+      "p0_lane": null,
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+      "test_gate": "Compare web-platform functionality, native MCP session isolation, capture-to-replay and memory/time against Chromium."
+    },
+    {
+      "candidate_id": "candidate-cloakhq-cloakbrowser",
+      "url": "https://github.com/CloakHQ/CloakBrowser",
+      "role": "isolated persistent browser identities and visible CDP sessions",
+      "evaluation_lane": "browser-profile-session",
+      "route_kind": "PHASE_ROUTED",
+      "p0_lane": null,
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+      "test_gate": "Compare cold-start, profile separation, restore and manual takeover against ordinary isolated Playwright profiles."
+    },
+    {
+      "candidate_id": "candidate-h4ckf0r0day-obscura",
+      "url": "https://github.com/h4ckf0r0day/obscura",
+      "role": "Rust/V8 headless engine with local CDP and extraction",
+      "evaluation_lane": "browser-crawl-extraction",
+      "route_kind": "PHASE_ROUTED",
+      "p0_lane": null,
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+      "test_gate": "Run the same structured extraction/CDP/render smoke as Moli and Lightpanda; measure throughput and crashes."
+    },
+    {
+      "candidate_id": "candidate-apify-crawlee",
+      "url": "https://github.com/apify/crawlee",
+      "role": "repeatable crawling with queues, retries and structured extraction",
+      "evaluation_lane": "web-data-crawl",
+      "route_kind": "PHASE_ROUTED",
+      "p0_lane": null,
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+      "test_gate": "Run the public vendor-product/documentation fixture with duplicate control, retries, freshness and bounded parallelism."
+    },
+    {
+      "candidate_id": "candidate-skyvern-ai-skyvern",
+      "url": "https://github.com/Skyvern-AI/skyvern",
+      "role": "AI-assisted and scripted form/process automation with local UI",
+      "evaluation_lane": "agent-runtime",
+      "route_kind": "P0_QUEUED",
+      "p0_lane": "agent-runtime",
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+      "test_gate": "Compare multi-step synthetic forms, files, interrupted workflow recovery and validator accuracy against Browser Use."
+    },
+    {
+      "candidate_id": "candidate-flaresolverr-flaresolverr",
+      "url": "https://github.com/FlareSolverr/FlareSolverr",
+      "role": "optional compatibility proxy for specifically authorized web sources",
+      "evaluation_lane": "browser-protected-targets",
+      "route_kind": "PHASE_ROUTED",
+      "p0_lane": null,
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+      "test_gate": "Keep as a bounded compatibility reference after a documented, permitted target failure; no general-purpose default route."
+    },
+    {
+      "candidate_id": "candidate-browserless-browserless",
+      "url": "https://github.com/browserless/browserless",
+      "role": "managed local browser sessions, concurrency queues and remote CDP",
+      "evaluation_lane": "worker-fleet-placement",
+      "route_kind": "P0_QUEUED",
+      "p0_lane": "worker-fleet-placement",
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+      "test_gate": "Compare isolated Docker browser pool to current Playwright contexts and Selenium Grid on queues, crash recovery and multi-session state."
+    },
+    {
+      "candidate_id": "candidate-jo-inc-camofox-browser",
+      "url": "https://github.com/jo-inc/camofox-browser",
+      "role": "agent-friendly browser REST API with accessibility snapshots and session isolation",
+      "evaluation_lane": "browser-profile-session",
+      "route_kind": "PHASE_ROUTED",
+      "p0_lane": null,
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+      "test_gate": "Compare accessibility refs, file upload/download, snapshot cost, recoverability and REST integration against Browser Harness."
+    },
+    {
+      "candidate_id": "candidate-ntegrals-openbrowser",
+      "url": "https://github.com/ntegrals/openbrowser",
+      "role": "TypeScript autonomous browser agent with replay and resource isolation",
+      "evaluation_lane": "agent-runtime",
+      "route_kind": "P0_QUEUED",
+      "p0_lane": "agent-runtime",
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+      "test_gate": "Run the same browser-agent action and crash/resume fixture against Browser Use and Skyvern."
+    },
+    {
+      "candidate_id": "candidate-berstend-puppeteer-extra",
+      "url": "https://github.com/berstend/puppeteer-extra",
+      "role": "plugin-based Puppeteer/Playwright compatibility research",
+      "evaluation_lane": "browser-compat-legacy",
+      "route_kind": "PHASE_ROUTED",
+      "p0_lane": null,
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+      "test_gate": "Check version-pinned compatibility with current Node/Playwright and any legitimately required existing plugin."
+    },
+    {
+      "candidate_id": "candidate-autoscrape-labs-pydoll",
+      "url": "https://github.com/autoscrape-labs/pydoll",
+      "role": "Python driverless CDP control of Chrome and Edge with typed extraction",
+      "evaluation_lane": "browser-attached-session",
+      "route_kind": "PHASE_ROUTED",
+      "p0_lane": null,
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/604",
+      "test_gate": "Compare Edge CDP tabs, reading, form, download and retained session with Playwright on synthetic authenticated fixture."
+    },
+    {
+      "candidate_id": "candidate-googlechrome-rendertron",
+      "url": "https://github.com/GoogleChrome/rendertron",
+      "role": "historical headless Chrome dynamic-rendering reference",
+      "evaluation_lane": "browser-compat-legacy",
+      "route_kind": "REFERENCE_ONLY",
+      "p0_lane": null,
+      "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+      "test_gate": "No runtime benchmark. Revisit only if an exact historical rendering regression requires source archaeology."
+    }
+  ]
+}

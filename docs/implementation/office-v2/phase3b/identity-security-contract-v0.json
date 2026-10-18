@@ -1,0 +1,55 @@
+{
+  "schema": "velvetos.office-v2.phase3b-identity-security-contract.v0",
+  "status": "CONTRACT_V0_FROZEN_FOR_LAB",
+  "phase": "PHASE_3B",
+  "authority_change": false,
+  "production_writer_change": false,
+  "production_credentials_allowed": false,
+  "production_secret_material_allowed": false,
+  "lab_secret_class": "EPHEMERAL_SYNTHETIC_ONLY",
+  "objective": "Prove a deny-by-default identity, authorization and credential-broker boundary suitable for later production-adjacent PILOT without creating parallel authority.",
+  "roles": {
+    "identity_provider": "Authenticates a human/service/workload principal and emits verifiable identity claims. It does not by itself authorize VelvetOS effects.",
+    "authorization_policy": "Evaluates principal + action + resource + context and emits an operator-visible ALLOW/DENY decision receipt. It does not hold provider credentials.",
+    "credential_broker": "Returns only the credential material explicitly scoped to an already authenticated and authorized request. It does not infer authorization from secret existence."
+  },
+  "composition_rule": "The three roles may be separate products. Lane winners/fallbacks must pass a shared composition fixture before any Phase 3 security-gate closure.",
+  "target_capabilities": [
+    "identity.service.authenticate",
+    "identity.service.verify",
+    "identity.service.rotate",
+    "identity.service.revoke",
+    "authorization.check",
+    "authorization.decision_receipt",
+    "credential.scope",
+    "credential.issue_or_fetch",
+    "credential.rotate",
+    "credential.revoke",
+    "security.audit.inspect",
+    "security.fail_closed"
+  ],
+  "gate": {
+    "deny_by_default": true,
+    "service_identity_required": true,
+    "scoped_credential_required": true,
+    "revocation_required": true,
+    "policy_decision_receipt_required": true,
+    "no_unrelated_secret_exposure": true,
+    "no_raw_secret_in_evidence": true,
+    "cross_scope_isolation_required": true,
+    "outage_fail_closed_required": true,
+    "operator_inspection_required": true,
+    "upgrade_backup_rollback_acceptable": true
+  },
+  "semantics": {
+    "identity": "Every non-human actor has an explicit service/workload identity. Anonymous or mismatched identity fails closed.",
+    "authorization": "Authentication never implies authorization. The canonical policy decision is explicit, correlated, and defaults to DENY.",
+    "credentials": "A broker may reveal only the exact synthetic credential scope authorized for the principal/action/resource tuple; sibling or unrelated secrets remain undiscoverable.",
+    "revocation": "Revocation is testable and observable. Revoked identities/credentials cannot continue to authorize or fetch new credential material.",
+    "receipts": "Decision/audit receipts contain identifiers, hashes and metadata only; raw secrets and bearer material are forbidden.",
+    "composition": "No component may silently assume another role's authority. Identity attests principal, policy decides, broker serves scoped material after both gates."
+  },
+  "fixture_ref": "docs/implementation/office-v2/phase3b/identity-security-destructive-v0.json",
+  "shortlist_ref": "docs/implementation/office-v2/phase3b/identity-security-shortlist-v0.json",
+  "scorecard_ref": "docs/implementation/office-v2/phase2/scorecard.schema.json"
+}

@@ -186,7 +186,7 @@ CANONICAL = {
     },
     "morning_brief": {
         "path": "packages/vfops/ROUTINE.md",
-        "markers": ["**07:00 cutoff**", "**09:00** | Velvet Morning Brief"],
+        "markers": ["Velvet Morning Brief", "manual/event-driven", "Morning Green"],
     },
     "public_cta": {
         "path": "constitution/PUBLIC_CTA.md",

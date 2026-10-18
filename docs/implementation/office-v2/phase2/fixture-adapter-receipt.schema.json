@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/phase2/fixture-adapter-receipt.v0",
+  "title": "Office v2 Golden Fixture Adapter Receipt v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "fixture_id",
+    "adapter_id",
+    "run_id",
+    "status",
+    "evidence",
+    "resources",
+    "direct_runner_mutation"
+  ],
+  "properties": {
+    "schema": {
+      "const": "velvetos.office-v2.fixture-adapter-receipt.v0"
+    },
+    "fixture_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adapter_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "UNKNOWN_OUTCOME"
+      ]
+    },
+    "evidence": {
+      "type": "object"
+    },
+    "resources": {
+      "type": "object"
+    },
+    "direct_runner_mutation": {
+      "const": false
+    },
+    "provider_native_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

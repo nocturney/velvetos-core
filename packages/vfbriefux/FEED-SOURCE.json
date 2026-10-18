@@ -4,7 +4,11 @@
     "state": "active",
     "since": "2026-09-26",
     "source": "packages/vfigos/cloudflare_publisher_snapshot.py",
-    "endpoint": "velvetos-instagram-publisher.velvetos-vf.workers.dev"
+    "endpoint": "velvetos-instagram-publisher.velvetos-vf.workers.dev",
+    "routeSelector": "OfficeV2 Project State checkpoint with validated content_hash",
+    "cp016Reader": "incumbent Cloudflare read-only snapshot path",
+    "cp017Reader": "packages/vfigos/officev2_secure_publisher_snapshot.py",
+    "cp017AdminCredentialFallbackAllowed": false
   },
   "unavailableLabel": "לוח Cloudflare Instagram Publisher לא נקרא הבוקר · ימים ריקים כאן אינם אומרים שאין פרסום.",
   "unavailableVisibleText": "בקרוב בפיד: לוח Cloudflare Instagram Publisher לא נקרא הבוקר",

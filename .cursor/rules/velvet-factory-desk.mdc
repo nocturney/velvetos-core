@@ -27,8 +27,8 @@ You are in **VelvetOS Core** (backend OS kernel). Reference studio bind remains 
 - Treg is **not relevant**. WebSearch / orchestra only.
 - Drive **creates** office docs when needed. No personal, medical, or legal folders unless the user names them.
 - No TikTok or ads without the lead seat. No secrets in git.
-- **Living office:** lead seat runs end-of-day retro (`vfops/hq/DAILY-RETRO.md`). Every specialist reviews today's conversations and captures only meaningful observations/candidates; durable promotion is evidence-gated and optional — there is no daily learning quota. Module: `office-learning`.
-- **Revenue loop:** every monetized IG post needs an Offer card (SKU, `X ₪` or verified price, CTA). Module: `expert-revenue-loop`; weekly `WEEKLY-REVENUE-PULSE.md`; Insights via owner snapshot only (`expert-insights-ingest`).
+- **Living office:** learning/retro is scoped and event-driven (`vfops/hq/DAILY-RETRO.md`). Only seats/domains that changed or have new evidence participate; untouched seats do not perform empty daily ritual. Durable promotion is evidence-gated and optional — there is no daily learning quota. Module: `office-learning`.
+- **Revenue loop:** every monetized IG post needs an Offer card (SKU, `X ₪` or verified price, CTA). Module: `expert-revenue-loop`; weekly `WEEKLY-REVENUE-PULSE.md`; Insights use verified Instagram MCP first, with owner snapshot as fallback (`expert-insights-ingest`).
 
 ## Route (pack → specialist → tool)
 
@@ -36,27 +36,27 @@ You are in **VelvetOS Core** (backend OS kernel). Reference studio bind remains 
 |---|---|---|---|
 | VelvetOS / Core / publish instance | `velvetos` | `@studio-operations` | `python3 scripts/velvetos.py core` · `instances` · `scripts/publish-instance.sh` |
 | Office map / who handles | `vfmem` | `@studio-operations` | `python3 scripts/vfmem.py who <job>` |
-| Morning brief / queue | `vfops` | `@studio-operations` | Calendar (Asia/Jerusalem), Gmail **send** the 09:00 Morning Brief |
+| Morning brief / queue | `vfops` | `@studio-operations` | Manual/event-driven Morning Brief; Calendar (Asia/Jerusalem) + Gmail **send** when requested/triggered; no standing brief clock |
 | Brief layout | `vfbriefux` | `@ux-architect` | Mobbin if available; Superdesign for packet graphics |
 | New inquiry | `vfconvert` | `@email-intelligence-engineer` then `@discovery-coach` | Gmail **read** the named thread; **reply** when the draft is ready |
 | Quote draft | `vfsales` + `vfcopy` | `@sales-engineer` `@content-creator` | After `vfcost`. One CTA. HQ **sends** Gmail via tool (no invented ₪) |
 | Cost / ledger | `vfcost` `vfbooks` | `@pricing-analyst` `@bookkeeper-controller` | Gmail label חשבונות; never invent ₪ |
 | Shared media vault / כספת מדיה | `vfmedia` | `@studio-operations` | Drive MCP (GrokBot office) + `docs/MEDIA-VAULT.md`; תפעול intake נכנס→מקור; Cursor owns `catalog.schema.json`; upload ≠ approval; approved folder ≠ proof; no share-permission changes; no invented SKUs/₪ |
 | Print floor / SKU / license | `vfprod` `vfsku` `vlicense` | `@studio-producer` `@legal-compliance-checker` | Drive search **or create** by job name; bed **recommend** `vfprod.py route` (no Print from HQ); catalog `vfsku.py scan`; 3D AI Studio mesh via `vfprod/3DAISTUDIO.md` |
-| Organic Growth Control Plane | `vfgrowth` `vfprod` `vfinsights` `vfsales` | `@instagram-curator` `@offer-lead-gen-strategist` | `ORGANIC_GROWTH.md` + `vf_organic_growth.py` — drafts + 07:00 readiness pack consumed by the 09:00 Morning Brief; no autopost / no auto-DM |
+| Organic Growth Control Plane | `vfgrowth` `vfprod` `vfinsights` `vfsales` | `@instagram-curator` `@offer-lead-gen-strategist` | `ORGANIC_GROWTH.md` + `vf_organic_growth.py` — event-driven readiness pack; canonical policy-authorized publish hands off to `vfigos`; no direct/bypass autopost and no auto-DM |
 | Marketing frameworks | `vfmskill` | `@content-creator` `@growth-hacker` | Curated Corey Haines skills. Read `.agents/product-marketing.md` first. No send. |
 | IG board | `vfigos` | `@instagram-curator` | Review, schedule, **send via tools** (`vfigos/SEND.md`) |
 | Insights | `vfinsights` | `@analytics-reporter` | Verified snapshot or «אין ספירה». Never invent. Treg not used. |
-| Season / research | `vfseason` `vfresearch` | `@trend-researcher` `@research-synthesist` | Calendar + WebSearch; weekly inspiration links: `vfresearch/WEEKLY.md` + `LINKS.json`; every ~2 days: `BEST-SKILLS.md` (LinklyAI); last-30 community: `LAST30.md` + skill `vf-last30` |
+| Season / research | `vfseason` `vfresearch` | `@trend-researcher` `@research-synthesist` | WebSearch + verified sources; `BEST-SKILLS.md`, weekly links and last-30 research are on-demand/event-driven when a concrete decision/content need requires fresh evidence; no standing research clock |
 | Social Booster / carousel reach | `vfgrowth` `vfmskill` | `@carousel-growth-engine` `@growth-hacker` | `expert-social-booster`; no boost/auto-DM |
-| 3D model analyze / make / build | `vfprod` `vfsku` `vlicense` | `@technical-artist` `@studio-producer` | `expert-3d-model`; 3D AI Studio after lead approval |
+| 3D model analyze / make / build | `vfprod` `vfsku` `vlicense` | `@technical-artist` `@studio-producer` | `expert-3d-model`; 3D AI Studio only through `vlicense` + `policy_id: cost.recurring.new`; existing paid capability with proven no incremental cost or a valid bounded cost envelope does not require a new per-use lead approval |
 | Trend explorer | `vfresearch` `vfseason` | `@trend-researcher` | `expert-trend-explorer`; WebSearch; last30 discovery via `vf-last30`; no invented trends |
 | AI image / video director | `vfom` `vfcovers` | `@visual-storyteller` `@short-video-editing-coach` | `expert-media-director`; current native/source-grounded route |
-| Daily learning / end-of-day retro | `vfops` `vfmem` `vfharness` | `@chief-of-staff` `@studio-operations` | `DAILY-RETRO.md` + `owner-memory.md`; skill `vf-daily-learning` |
+| Scoped learning / retro | `vfops` `vfmem` `vfharness` | `@chief-of-staff` `@studio-operations` | Event-driven `DAILY-RETRO.md` + `owner-memory.md`; only changed domains/new evidence participate; skill `vf-daily-learning` |
 | Revenue loop / IG → פרנסה | `vfgrowth` `vfsales` `vfinsights` | `@offer-lead-gen-strategist` `@pipeline-analyst` | `expert-revenue-loop`; skill `vf-revenue-loop`; `WEEKLY-REVENUE-PULSE.md` |
 | Close quote / deal | `vfsales` `vfconvert` | `@deal-strategist` `@sales-engineer` | Gmail send when ready; X ₪ until verified |
 | Retention after pickup | `vfsales` `vfgrowth` | `@customer-success-manager` | `TIMELINE-AUTO.md` |
-| IG Insights snapshot | `vfinsights` | `@tracking-measurement-specialist` | Owner paste only; `expert-insights-ingest` |
+| IG Insights snapshot | `vfinsights` | `@tracking-measurement-specialist` | Verified Instagram MCP first; owner paste/Drive snapshot fallback; `expert-insights-ingest` |
 | Paid boost / ads | `vfgrowth` `vfigos` | `@paid-social-strategist` | **Lead gate only** — after proven organic offer |
 | New frontend instance | `velvetos` | `@studio-operations` `@business-strategist` | `INSTANCE-ONBOARD.md` + `publish-instance.sh` |
 | IG music / reel sound | `vfresearch` | `@trend-researcher` → `@instagram-curator` | `MUSIC.md` + HeyOrca weekly / IG paste (no Treg); hand off to `vfom` / `vfigos`; no invented track names |
@@ -82,7 +82,7 @@ Also: `architecture`, `impact <pack>`, `route <stage>`, `adr`. Pack `vfmem`. Pat
 
 ## Tool modes
 
-- **Gmail:** Inbox `nocturney@gmail.com`. Read **and send** (`send_message` / `reply` / `forward`). 09:00 Morning Brief is תצוגה 3 `htmlBody` (`vfbriefux/MAIL.html`). Down → Drive doc + continue; never invent an inquiry.
+- **Gmail:** Inbox `nocturney@gmail.com`. Read **and send** (`send_message` / `reply` / `forward`). When the manual/event-driven Morning Brief is sent, use תצוגה 3 `htmlBody` (`vfbriefux/MAIL.html`). Down → Drive doc + continue; never invent an inquiry.
 - **Calendar:** `list_events` on `nocturney@gmail.com`, timezone `Asia/Jerusalem`. Create events only if asked. Down → ask pickup window / «חסר לוח» and continue.
 - **Drive:** `search_files` by job/SKU **and `create_file`** for office docs/sheets. Shared media vault: `docs/MEDIA-VAULT.md` + `packages/vfmedia` (one catalog). Do not change public share permissions. Do not delete vault files. Do not open personal, medical, or legal folders unless the user names them.
 - **Web:** Cursor `WebSearch` / `WebFetch`. Down → orchestra ChatGPT+Gemini+Perplexity. Never invent a blocked body. **Not Treg.**

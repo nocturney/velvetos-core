@@ -1,0 +1,69 @@
+{
+  "schema": "velvetos.office-v2.phase2-scorecard.v0",
+  "candidate_id": "candidate-temporal",
+  "fixture_id": "durable-execution-destructive-20-step",
+  "run_id": "01a1103e-3970-757d-8391-7f69cd9c3415",
+  "captured_at": "2026-10-06T12:15:31+03:00",
+  "fitness": {
+    "score_0_5": 5.0,
+    "notes": [
+      "PASS on the full frozen semantic contract, including worker/engine recovery, duplicate rejection, wait/resume, cancellation, retry, movement, reconciliation and history replay/inspection.",
+      "Simulated effect A and B each executed exactly once.",
+      "Recorded benchmark wall time 50.942 seconds."
+    ]
+  },
+  "safety": {
+    "score_0_5": 5.0,
+    "notes": [
+      "Internal LAB network, zero production credentials and zero production authority.",
+      "Unknown effect outcome was reconciled against provider truth before retry.",
+      "Temporal history inspection/replay provides strong operator-visible recovery evidence."
+    ]
+  },
+  "operability": {
+    "score_0_5": 3.5,
+    "notes": [
+      "Temporal is the most mature operational reference in the set but its production self-host topology is materially heavier than the LAB dev server.",
+      "Official self-host guidance requires managed persistence and safe sequential server/schema upgrades.",
+      "Operational footprint is acceptable as fallback but larger than the objective of the smallest reliable spine."
+    ]
+  },
+  "evidence_quality": {
+    "score_0_5": 4.0,
+    "notes": [
+      "Semantic receipt includes workflow history replay evidence and no-duplicate-effects proof.",
+      "CPU/RAM/network remain explicitly unavailable; storage delta and wall time were captured."
+    ]
+  },
+  "resources": {
+    "wall_seconds": 50.942,
+    "cpu_peak_pct": null,
+    "ram_peak_mb": null,
+    "gpu_peak_pct": 0.0,
+    "vram_peak_mb": 0.0,
+    "storage_delta_mb": 0.691,
+    "network_mb": null,
+    "external_cost": 0.0,
+    "recurring_cost": 0.0,
+    "operator_minutes": 0.0
+  },
+  "rollback": {
+    "status": "PASS",
+    "notes": [
+      "Official self-host guide requires safe sequential server and schema upgrades: https://docs.temporal.io/self-hosted-guide",
+      "Persistence is externalized/configurable; backup/restore must follow the selected database and visibility-store procedures.",
+      "Production rollback is operationally acceptable but requires more moving parts than Restate."
+    ]
+  },
+  "security_findings": [
+    "No production credentials or production authority were used.",
+    "Production TLS/auth/authorization settings were not exercised in the isolated dev-server benchmark and must be configured before any future production use."
+  ],
+  "operations_findings": [
+    "Canonical receipt: D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/temporal-destructive-benchmark-pass.json",
+    "Official docs explicitly distinguish the single-binary dev server from production self-hosting.",
+    "Sequential schema/server upgrade discipline is a recurring operator burden.",
+    "Unavailable CPU/RAM/network metrics remain null."
+  ],
+  "verdict": "DEFERRED_WITH_REASON"
+}

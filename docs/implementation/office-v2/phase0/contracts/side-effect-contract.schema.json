@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/side-effect-contract.v0",
+  "title": "Office v2 Side Effect Contract v0",
+  "description": "Definition-only contract. It never authorizes an effect; authority resolves from packages/velvetos/policy/policy-registry.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "effect_class", "authority", "success", "failure", "idempotency",
+    "cancellation", "timeout", "evidence", "compatibility", "readback",
+    "fallback", "blind_retry", "unknown_outcome", "compensation"
+  ],
+  "properties": {
+    "effect_class": {"type": "string", "minLength": 1},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_id", "registry_ref", "decision_required"],
+      "properties": {
+        "policy_id": {"type": "string", "minLength": 1},
+        "registry_ref": {"const": "packages/velvetos/policy/policy-registry.json#external_effect_contract.effects"},
+        "decision_required": {"const": true},
+        "action_receipt_ref": {"type": ["string", "null"]}
+      }
+    },
+    "success": {"type": "string", "minLength": 1},
+    "failure": {"type": "string", "minLength": 1},
+    "idempotency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "scope"],
+      "properties": {
+        "required": {"const": true},
+        "scope": {"enum": ["exact_action", "domain_entity", "provider_operation"]}
+      }
+    },
+    "cancellation": {"type": "string", "minLength": 1},
+    "timeout": {"type": "string", "minLength": 1},
+    "evidence": {"type": "string", "minLength": 1},
+    "compatibility": {"type": "string", "minLength": 1},
+    "fallback": {"type": "string", "minLength": 1},
+    "blind_retry": {"const": false},
+    "unknown_outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "reconcile_before_retry"],
+      "properties": {
+        "mode": {"const": "UNKNOWN_OUTCOME"},
+        "reconcile_before_retry": {"const": true},
+        "owner_review_if_unreconciled": {"type": "boolean"}
+      }
+    },
+    "readback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "success_claim_requires_readback"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "success_claim_requires_readback": {"type": "boolean"},
+        "method": {"type": ["string", "null"]}
+      }
+    },
+    "compensation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": {"enum": ["NONE", "REVIEW_ONLY", "REVERSIBLE_ACTION", "DOMAIN_SPECIFIC"]},
+        "procedure_ref": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

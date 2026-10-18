@@ -1,0 +1,52 @@
+{
+    "schema":  "velvetos.ai3d.phase13-integration-acceptance.v1",
+    "status":  "PASS_LOCAL_MERGE_AND_REGRESSION",
+    "date":  "2026-10-08",
+    "branch":  "feat/ai3d-phase13-integration-20261008",
+    "merge_commit":  "ca4037d8fbad1880df9453ca7accb439cf216748",
+    "phase12_commit":  "9d9e4be2790fbd09dbc00b58c715a6541a91a495",
+    "upstream_main_commit":  "a2d065cb3df3a1f84ddb9b6a646f3df771ce5fd7",
+    "upstream_main_ancestry_verified":  true,
+    "conflicted_files":  [
+
+                         ],
+    "merge_saved_without_rewriting_upstream":  true,
+    "phase10":  {
+                    "status":  "PASS",
+                    "fine_relative_error":  0.008175249999998286,
+                    "mesh_difference":  0.0003894008405272914,
+                    "recheck_report_sha256":  "49a31c9be8a346215cdb08513f30c21797a945fbe0d30020102fa6ea83cc16fa"
+                },
+    "phase11":  {
+                    "status":  "PASS_BOUNDED_OFFLINE",
+                    "stl_layers":  60,
+                    "three_mf_layers":  60,
+                    "h2d_state":  "BLOCKED_MOTION_BOUNDS",
+                    "native_profiles_unchanged":  true,
+                    "recheck_report_sha256":  "5be15ba119e31547740e697ea399dc18ca3fa8bb3257d395a6357e90c8a974c8"
+                },
+    "phase12":  {
+                    "status":  "PASS_BOUNDED_OFFLINE",
+                    "input_negative_controls":  15,
+                    "gcode_negative_controls":  18,
+                    "machine_control":  false,
+                    "recheck_report_sha256":  "00551f756e14bfd9bb82db06eedba2c838b69929f91bc5cd1e3fce33eeca49a1"
+                },
+    "full_suite":  {
+                       "sensors_passed":  118,
+                       "sensors_failed":  0,
+                       "repository_files_unchanged_by_sensors":  true,
+                       "file":  "evidence/check-all-phase13-integrated-main-20261008.log",
+                       "file_sha256":  "731ecfd3e74ed25bc686e2353d57c5238632f9e2b04e2fd5fd9cb36b4b21ea7d"
+                   },
+    "integration_fix":  "normalize Windows G-code report paths before comparison (canonical resolved path identity)",
+    "outstanding":  {
+                        "h2d_service_motion":  "BLOCKED",
+                        "other_printer_profiles":  "NOT_QUALIFIED",
+                        "automatic_optimizer_release":  "BLOCKED",
+                        "physical_cnc_machining":  "BLOCKED",
+                        "upstream_provider_licenses":  "REVIEW_BEFORE_BUNDLING"
+                    },
+    "production_machine_action_authorized":  false,
+    "mainline_release_at_receipt_time":  false
+}

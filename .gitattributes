@@ -1,34 +1,84 @@
-/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt -text
-/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json -text
-/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.4.txt -text
-/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.4.json -text
-/packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.4.txt -text
-/packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt -text
+# Preserve the actual Git-index LF bytes for portable trusted text on Windows,
+# even when the host Git core.autocrlf is true. Git-index survey at base main:
+# *.md 1280/1280 LF; *.py 551 LF + 1 historic CRLF + 2 empty;
+# *.json 868 LF + 5 historic CRLF + 1 mixed. Preserve exceptions below.
+*.py text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+# DCC Stage 6C exact-byte validator sources: every tracked patch (8),
+# JavaScript (7), PowerShell (44), and MJS (10) Git index blob is LF.
+*.patch text eol=lf
+*.js text eol=lf
+*.ps1 text eol=lf
+*.mjs text eol=lf
+
 scripts/vf_task_state.py text eol=lf
 scripts/check-vf-task-state.py text eol=lf
+
+# Portable exact-byte Python source on Windows (native core.autocrlf=true).
+# All tracked scripts/*.py blobs are LF in Git; do not silently checkout
+# CRLF and invalidate Office's pinned raw SHA-256/source attestations.
+/scripts/*.py text eol=lf
+/scripts/**/*.py text eol=lf
+
+# Historical Office Phase2 JSON receipts are SHA-256 pinned in Office sensors.
+# Every tracked Phase2 JSON blob is LF in Git; keep that byte identity on
+# Windows rather than silently converting all 51 receipt files to CRLF.
+/docs/implementation/office-v2/phase2/*.json text eol=lf
+/docs/implementation/office-v2/phase2/**/*.json text eol=lf
+
+# Source-pinned Phase2 Markdown witness reports are Git LF as well, not CRLF.
+/docs/implementation/office-v2/phase2/*.md text eol=lf
+/docs/implementation/office-v2/phase2/**/*.md text eol=lf
 packages/vfharness/playbooks/skillstate.md text eol=lf
 packages/vfharness/state/swc-codex-001.json text eol=lf
 packages/vfharness/state/pr228-rollout/* text eol=lf
-/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.5.txt -text
-/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.5.json -text
-/packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.5.txt -text
-/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.txt -text
-/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.json -text
-/packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.txt -text
-/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.1.txt -text
-/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.1.json -text
-/packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.1.txt -text
-/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.2.txt -text
-/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.2.json -text
-/packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.2.txt -text
-/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.3.txt -text
-/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.3.json -text
-/packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.3.txt -text
-/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.4.txt -text
-/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json -text
-/packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.4.txt -text
 # Brand assets are SHA-256 pinned in packages/vfbrand/brand-tokens.json; keep bytes exact on every checkout (SVGs are text).
 /packages/vfbrand/assets/** -text
 
 # Instance-owned ChatGPT Project distribution is a byte-for-byte compatibility snapshot; preserve legacy whitespace exactly.
 /instances/velvet-factory/distribution/chatgpt-project/** -whitespace
+
+# Byte-for-byte original Mac and Windows model outputs (quarantined LAB).
+# Disable line-ending conversion entirely: originals may use LF or CRLF.
+# Keep original trailing spaces for SHA/Worker receipt provenance.
+/docs/implementation/office-v2/phase2/quarantined-agent-sources-2026-10-10/*.py -text !eol -whitespace
+
+# Historical pre-guard Worker and Job supervisor source bytes: archived as
+# non-executable .py.txt, with byte-for-byte raw provenance on all OSes.
+/docs/implementation/office-v2/phase2/quarantined-worker-sources-2026-10-11/*.py.txt -text !eol
+
+# Office P0 hosted QA LAB sources are SHA-256 byte pinned and must not
+# acquire platform-specific CRLF from Windows checkout settings.
+/scripts/vf_office_v2_p0_hosted_synthetic_qa_lab.py text eol=lf
+/.github/workflows/office-p0-hosted-synthetic-qa.yml text eol=lf
+
+# Exact-byte host-side Docker security manifest and reusable offline probe.
+/scripts/vf_office_v2_p0_hosted_container_boundary_lab.py text eol=lf
+/.github/workflows/office-p0-hosted-docker-boundary-lab.yml text eol=lf
+
+# Historical #612 SHA-pinned offline lineage evidence must remain LF on Windows
+# even when the machine-wide Git config sets core.autocrlf=true.
+/scripts/vf_office_v2_p0_fresh_attempt_lineage.py text eol=lf
+
+# Exact-byte, read-only #604 synthetic signer/key-custody experiment.
+/scripts/vf_office_v2_604_hosted_signer_custody_lab.py text eol=lf
+/.github/workflows/office-p0-synthetic-signer-custody-lab.yml text eol=lf
+
+# Exactly two newly generated, publicly scoped Qwen source bytes remain inert
+# and byte-pinned; they are NOT imported or executed from native worktrees.
+/docs/implementation/office-v2/phase2/quarantined-new-model-sources-2026-10-11/*.py.txt -text !eol
+/.github/workflows/office-p0-hosted-new-source-qa.yml text eol=lf
+
+# CRLF and mixed-index historical Git blobs: retain EXACT original bytes.
+# These six JSON archives have i/crlf or i/mixed; NEVER rewrite them to LF.
+/docs/implementation/office-v2/phase0/authority-map-v0.1.json -text !eol
+/docs/implementation/office-v2/phase0/credential-trust-classes-v0.json -text !eol
+/docs/implementation/office-v2/phase3b/production-promotion-v0.json -text !eol
+/packages/vfharness/devtools/creative-craft/evals/fixtures/manifest.json -text !eol
+/packages/vfharness/devtools/creative-craft/skill/evals/fixtures/manifest.json -text !eol
+/packages/velvetos/policy/sensor-registry.json -text !eol
+
+# Pretrusted default-branch workflow_run policy YAML must be LF on Windows;
+# otherwise physical-host SHA verification of the trusted policy is ambiguous.
+/.github/workflows/office-p0-protected-base-c1-qa.yml text eol=lf

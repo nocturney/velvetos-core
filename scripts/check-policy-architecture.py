@@ -21,6 +21,8 @@ ARTIFACTS = POLICY_DIR / "artifact-retention.json"
 STATE_EVIDENCE_MODEL = POLICY_DIR / "state-evidence-model.json"
 SCHEMAS = POLICY_DIR / "schema"
 REPORTS = POLICY_DIR / "reports"
+HISTORICAL_POLICY_MANIFEST = POLICY_DIR / "historical-policy-manifest.json"
+HISTORICAL_POLICY_MANIFEST_GENERATOR = ROOT / "scripts" / "generate-policy-history-manifest.py"
 ACTION_RECEIPT_SCHEMA = SCHEMAS / "action-receipt.schema.json"
 ACTION_RECEIPT_VECTORS = POLICY_DIR / "action-receipt-test-vectors.json"
 ACTION_RECEIPT_VALIDATOR = ROOT / "scripts" / "vf_action_receipt.py"
@@ -114,6 +116,10 @@ STAGE8D_CHATGPT_ROLLBACK_CLOSURE = REPORTS / "stage8d-chatgpt-rollback-closure.j
 STAGE8D_CHATGPT_ROLLBACK_CLOSURE_GENERATOR = ROOT / "scripts" / "generate-stage8d-chatgpt-rollback-closure.py"
 STAGE8D_CHATGPT_DELETION_GATE = REPORTS / "stage8d-chatgpt-deletion-gate.json"
 STAGE8D_CHATGPT_DELETION_GATE_GENERATOR = ROOT / "scripts" / "generate-stage8d-chatgpt-deletion-gate.py"
+STAGE8D_CHATGPT_DELETION = REPORTS / "stage8d-chatgpt-deletion.json"
+STAGE8D_CHATGPT_DELETION_GENERATOR = ROOT / "scripts" / "generate-stage8d-chatgpt-deletion.py"
+STAGE8D_FINAL_ACCEPTANCE = REPORTS / "stage8d-final-acceptance.json"
+STAGE8D_FINAL_ACCEPTANCE_GENERATOR = ROOT / "scripts" / "generate-stage8d-final-acceptance.py"
 EXPECTED_REPORTS = {
     "authority-graph.json",
     "sensor-coverage-graph.json",
@@ -172,9 +178,12 @@ EXPECTED_REPORTS = {
     "stage8d-chatgpt-semantic-correction.json",
     "stage8d-chatgpt-rollback-closure.json",
     "stage8d-chatgpt-deletion-gate.json",
+    "stage8d-chatgpt-deletion.json",
+    "stage8d-final-acceptance.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
+LIFECYCLE = {"CORE", "DOMAIN", "EVENT_ACCEPTANCE", "RETIRED_RECEIPT"}
 STATUS = {"active", "conflicted", "deprecated", "temporary_hotfix"}
 FALLBACK = {"FULL_SUITE", "FULL_DOMAIN", "ALWAYS_ON"}
 MAPPING = {"broad_legacy_baseline", "mapped", "legacy", "deprecated"}
@@ -215,12 +224,114 @@ def require(condition: bool, message: str, problems: list[str]) -> None:
         problems.append(message)
 
 
-def validate_registries() -> tuple[list[str], set[str]]:
+_REAL_SUBPROCESS_RUN = subprocess.run
+HISTORICAL_REPLAY_ACTIVE = False
+
+
+def policy_subprocess_run(*popenargs, **kwargs):
+    """Use hash-locked historical receipts during routine CORE checks.
+
+    Explicit --historical-replay executes the original Stage 4-8 generators.
+    All non-historical subprocesses always execute normally.
+    """
+    command = popenargs[0] if popenargs else kwargs.get("args")
+    if not HISTORICAL_REPLAY_ACTIVE and isinstance(command, (list, tuple)):
+        rendered = [str(value) for value in command]
+        generator = next(
+            (
+                Path(value).name
+                for value in rendered
+                if re.fullmatch(r"generate-stage[4-8].*\.py", Path(value).name)
+            ),
+            None,
+        )
+        if generator and "--output" in rendered:
+            output_index = rendered.index("--output") + 1
+            if output_index < len(rendered):
+                target = Path(rendered[output_index])
+                committed = REPORTS / target.name
+                if committed.is_file():
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_bytes(committed.read_bytes())
+                    return subprocess.CompletedProcess(
+                        command,
+                        0,
+                        stdout=f"HISTORICAL_HASH_LOCK_REUSED {committed.name}\n",
+                        stderr="",
+                    )
+                return subprocess.CompletedProcess(
+                    command,
+                    1,
+                    stdout="",
+                    stderr=f"historical replay fast-path has no committed receipt for {target.name}",
+                )
+    return _REAL_SUBPROCESS_RUN(*popenargs, **kwargs)
+
+
+def validate_historical_policy_manifest(problems: list[str]) -> None:
+    require(HISTORICAL_POLICY_MANIFEST.is_file(), "historical policy manifest missing", problems)
+    require(HISTORICAL_POLICY_MANIFEST_GENERATOR.is_file(), "historical policy manifest generator missing", problems)
+    if not HISTORICAL_POLICY_MANIFEST.is_file():
+        return
+
+    manifest = load(HISTORICAL_POLICY_MANIFEST)
+    require(
+        manifest.get("schema") == "velvetos.policy-history-manifest.v1",
+        "historical policy manifest schema mismatch",
+        problems,
+    )
+    require(
+        manifest.get("routine_execution") == "HASH_ONLY"
+        and manifest.get("explicit_replay") == "scripts/check-policy-history-replay.py",
+        "historical policy manifest execution contract drift",
+        problems,
+    )
+    entries = manifest.get("entries") or []
+    require(
+        isinstance(entries, list) and manifest.get("entry_count") == len(entries),
+        "historical policy manifest entry count drift",
+        problems,
+    )
+    paths = [row.get("path") for row in entries if isinstance(row, dict)]
+    require(paths == sorted(paths) and len(paths) == len(set(paths)), "historical policy manifest paths must be unique and sorted", problems)
+    for row in entries:
+        if not isinstance(row, dict):
+            problems.append("historical policy manifest entry must be object")
+            continue
+        rel = row.get("path")
+        path = ROOT / rel if isinstance(rel, str) else None
+        require(path is not None and path.is_file(), f"historical policy manifest path missing: {rel}", problems)
+        if path is not None and path.is_file():
+            require(
+                row.get("sha256") == hashlib.sha256(path.read_bytes()).hexdigest(),
+                f"historical policy manifest hash drift: {rel}",
+                problems,
+            )
+
+    if HISTORICAL_POLICY_MANIFEST_GENERATOR.is_file():
+        proc = policy_subprocess_run(
+            [sys.executable, str(HISTORICAL_POLICY_MANIFEST_GENERATOR), "--check"],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=30,
+        )
+        require(
+            proc.returncode == 0,
+            "historical policy manifest regeneration check failed: " + (proc.stderr.strip() or proc.stdout.strip())[:500],
+            problems,
+        )
+
+
+def validate_registries(historical_replay: bool = False) -> tuple[list[str], set[str]]:
     problems: list[str] = []
     policies = load(POLICIES)
     sensors = load(SENSORS)
     selection = load(SELECTION)
     artifacts = load(ARTIFACTS)
+    validate_historical_policy_manifest(problems)
 
     require(policies.get("schema_version") == 1, "policy registry schema_version", problems)
     require(
@@ -352,7 +463,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         vectors = load(ACTION_RECEIPT_VECTORS)
         require(vectors.get("status") == "ACTIVE_STAGE4C_CONTRACT", "action receipt vectors not active Stage 4C contract", problems)
     if ACTION_RECEIPT_VALIDATOR.is_file():
-        proc = subprocess.run(
+        proc = policy_subprocess_run(
             [sys.executable, str(ACTION_RECEIPT_VALIDATOR), "--self-test"],
             cwd=ROOT,
             text=True,
@@ -402,7 +513,10 @@ def validate_registries() -> tuple[list[str], set[str]]:
         require(isinstance(row.get("enforces"), list), f"{sid}: enforces must be list", problems)
         for policy_id in row.get("enforces") or []:
             require(policy_id in known_policies, f"{sid}: unknown enforced policy {policy_id}", problems)
+        require(row.get("lifecycle") in LIFECYCLE, f"{sid}: invalid lifecycle", problems)
         require(row.get("risk") in RISK, f"{sid}: invalid risk", problems)
+        effect = row.get("failure_effect") or {}
+        require(effect.get("merge") == "BLOCK", f"{sid}: sensor failures must remain merge-blocking", problems)
         timeout = row.get("timeout_seconds")
         require(type(timeout) is int and 1 <= timeout <= 1800, f"{sid}: invalid timeout", problems)
         require(row.get("fallback_scope") in FALLBACK, f"{sid}: invalid fallback_scope", problems)
@@ -414,6 +528,11 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if row.get("mapping_state") == "mapped" and row.get("fallback_scope") != "ALWAYS_ON":
             require(row.get("triggered_by") != ["**"], f"{sid}: mapped sensor cannot keep wildcard-only trigger", problems)
             require(row.get("owns") != ["**"], f"{sid}: mapped sensor cannot keep wildcard-only ownership", problems)
+            require(path in (row.get("owns") or []), f"{sid}: mapped domain sensor must own its own check path", problems)
+            for dep in row.get("depends_on") or []:
+                if dep not in sensor_id_set:
+                    require(dep in (row.get("owns") or []),
+                            f"{sid}: file dependency must also be covered by owns: {dep}", problems)
 
     always_on = [row for row in sensor_rows if isinstance(row, dict) and row.get("fallback_scope") == "ALWAYS_ON"]
     always_on_ids = {row.get("id") for row in always_on}
@@ -427,9 +546,96 @@ def validate_registries() -> tuple[list[str], set[str]]:
     require(len(always_on) <= 6, "critical ALWAYS_ON set must remain small", problems)
     for row in always_on:
         sid = row.get("id")
+        require(row.get("lifecycle") == "CORE", f"{sid}: ALWAYS_ON sensor must be CORE", problems)
         require(row.get("risk") == "critical", f"{sid}: ALWAYS_ON sensor must be critical", problems)
         require(row.get("mapping_state") == "mapped", f"{sid}: ALWAYS_ON sensor must be mapped", problems)
         require(type(row.get("timeout_seconds")) is int and row.get("timeout_seconds") <= 180, f"{sid}: ALWAYS_ON timeout must stay fast", problems)
+
+    lifecycle_ids = {
+        lifecycle: {
+            row.get("id") for row in sensor_rows
+            if isinstance(row, dict) and row.get("lifecycle") == lifecycle
+        }
+        for lifecycle in LIFECYCLE
+    }
+    expected_events = {
+        "check-office-v2-phase0",
+        "check-office-v2-phase1",
+        "check-office-v2-phase2",
+        "check-office-v2-phase3a",
+        "check-office-v2-phase3b",
+        "check-policy-history-replay",
+    }
+    expected_retired = {
+        "check-ecosystem-radar-phase9",
+        "check-zero-cost-final-acceptance",
+    }
+    require(lifecycle_ids["CORE"] == expected_always_on,
+            f"CORE lifecycle set drifted: {sorted(lifecycle_ids['CORE'])}", problems)
+    require(lifecycle_ids["EVENT_ACCEPTANCE"] == expected_events,
+            f"EVENT_ACCEPTANCE lifecycle set drifted: {sorted(lifecycle_ids['EVENT_ACCEPTANCE'])}", problems)
+    require(lifecycle_ids["RETIRED_RECEIPT"] == expected_retired,
+            f"RETIRED_RECEIPT lifecycle set drifted: {sorted(lifecycle_ids['RETIRED_RECEIPT'])}", problems)
+    require(len(lifecycle_ids["DOMAIN"]) == len(sensor_rows) - 12,
+            "DOMAIN lifecycle count must cover every non-core/non-event/non-retired sensor", problems)
+    critical_ids = {
+        row.get("id") for row in sensor_rows
+        if isinstance(row, dict) and row.get("risk") == "critical"
+    }
+    require(critical_ids == expected_always_on,
+            f"critical risk must remain exactly the CORE set: {sorted(critical_ids)}", problems)
+    for row in sensor_rows:
+        if not isinstance(row, dict):
+            continue
+        if row.get("lifecycle") in {"EVENT_ACCEPTANCE", "RETIRED_RECEIPT"} and row.get("id") != "check-policy-history-replay":
+            require(row.get("risk") == "low", f"{row.get('id')}: historical/event checkpoint should be low risk metadata", problems)
+    require(
+        next((row for row in sensor_rows if row.get("id") == "check-policy-history-replay"), {}).get("risk") == "high",
+        "check-policy-history-replay must remain high risk because it verifies authority history",
+        problems,
+    )
+
+    # Routing rationalization: generic observer globs may exist only where the
+    # sensor truly observes the whole surface. Ownership stays canonical so an
+    # observer match can never turn an unknown path into mapped coverage.
+    broad_trigger_allow = {
+        "scripts/**": set(),
+        ".github/**": {"check-machine-writers", "check-sensor-locks"},
+        ".cursor/**": {"check-agent-surface-security"},
+        "office/**": set(),
+        "docs/**": set(),
+        "packages/**": set(),
+        "packages/vfharness/**": {"check-vfharness"},
+        "packages/vfresearch/**": {"check-vfresearch"},
+        "packages/vfmedia/**": {"check-vfmedia"},
+        "packages/velvetos/**": {"check-policy-architecture", "check-velvetos"},
+    }
+    broad_owns_allow = {
+        ".github/**": set(),
+        ".cursor/**": set(),
+        "packages/vfharness/**": {"check-vfharness"},
+        "packages/vfresearch/**": {"check-vfresearch"},
+        "packages/vfmedia/**": {"check-vfmedia"},
+        "packages/velvetos/**": {"check-velvetos"},
+    }
+    for pattern, allowed in broad_trigger_allow.items():
+        holders = {
+            row.get("id") for row in sensor_rows
+            if isinstance(row, dict) and pattern in (row.get("triggered_by") or [])
+        }
+        require(holders <= allowed, f"routing trigger umbrella {pattern} expanded to {sorted(holders - allowed)}", problems)
+    for pattern in ("scripts/**", "office/**", "docs/**", "packages/**"):
+        holders = {
+            row.get("id") for row in sensor_rows
+            if isinstance(row, dict) and pattern in (row.get("owns") or [])
+        }
+        require(not holders, f"routing ownership umbrella {pattern} must be eliminated: {sorted(holders)}", problems)
+    for pattern, allowed in broad_owns_allow.items():
+        holders = {
+            row.get("id") for row in sensor_rows
+            if isinstance(row, dict) and pattern in (row.get("owns") or [])
+        }
+        require(holders <= allowed, f"routing ownership umbrella {pattern} expanded to {sorted(holders - allowed)}", problems)
 
     require(selection.get("schema_version") == 1, "sensor selection schema_version", problems)
     selector_mode = selection.get("mode")
@@ -440,17 +646,48 @@ def validate_registries() -> tuple[list[str], set[str]]:
     broad_patterns = selection.get("broad_change_patterns")
     require(isinstance(broad_patterns, list) and bool(broad_patterns), "selector broad_change_patterns required", problems)
     required_broad = {
+        "AGENTS.md",
+        ".cursor/rules/**",
         ".github/workflows/check-all.yml",
+        "constitution/**",
+        "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
+        "packages/velvetos/policy/policy-registry.json",
         "packages/velvetos/policy/sensor-registry.json",
         "packages/velvetos/policy/sensor-selection.json",
         "packages/velvetos/policy/schema/**",
         "scripts/check-all.py",
+        "scripts/check-machine-writers.py",
         "scripts/check-policy-architecture.py",
+        "scripts/push-main-with-check-all.sh",
         "scripts/sensor_selector.py",
         "scripts/compare-sensor-shadow.py",
         "scripts/stage3_preflight.py",
     }
     require(required_broad <= set(broad_patterns or []), "selector broad-change safety set incomplete", problems)
+    neutral_patterns = selection.get("neutral_change_patterns")
+    require(isinstance(neutral_patterns, list) and "CHANGELOG.md" in neutral_patterns,
+            "selector neutral path contract must explicitly include CHANGELOG.md", problems)
+    machine_routing = selection.get("machine_write_routing") or {}
+    state_patterns = set(machine_routing.get("state_data_patterns") or [])
+    artifact_patterns = set(machine_routing.get("domain_artifact_patterns") or [])
+    require(bool(state_patterns), "machine-write STATE_DATA patterns required", problems)
+    require(bool(artifact_patterns), "machine-write DOMAIN_ARTIFACT patterns required", problems)
+    require(not (state_patterns & artifact_patterns), "machine-write state/artifact patterns must not overlap literally", problems)
+    require(set(machine_routing.get("post_push_full_suite_classes") or []) == {"AUTHORITY_SECURITY"},
+            "only AUTHORITY_SECURITY may require machine-writer post-push full suite", problems)
+    for required_state in (
+        "office/ledger/live/sync-receipt.json",
+        "office/learning/failure-museum/entries.jsonl",
+        "packages/vfharness/state/learning-candidates/**",
+    ):
+        require(required_state in state_patterns, f"machine-write STATE_DATA missing {required_state}", problems)
+    for required_artifact in (
+        "README.md",
+        "docs/weekly-deck/**",
+        "packages/vfbriefux/hq/weekly-deck.bento-doc.json",
+        "packages/vfmedia/catalog.json",
+    ):
+        require(required_artifact in artifact_patterns, f"machine-write DOMAIN_ARTIFACT missing {required_artifact}", problems)
     shadow_exit = selection.get("shadow_exit") or {}
     require(type(shadow_exit.get("minimum_pull_requests")) is int and shadow_exit.get("minimum_pull_requests") >= 1, "shadow minimum_pull_requests invalid", problems)
     require(type(shadow_exit.get("minimum_observation_days")) is int and shadow_exit.get("minimum_observation_days") >= 1, "shadow minimum_observation_days invalid", problems)
@@ -460,7 +697,11 @@ def validate_registries() -> tuple[list[str], set[str]]:
     stage3 = selection.get("stage3_preparation") or {}
     require(stage3.get("activation_requires_shadow_exit_eligible") is True, "Stage 3 activation must require eligible shadow exit", problems)
     require(stage3.get("pull_request_execution") == "SELECTED_SUITE", "Stage 3 PR target must be SELECTED_SUITE", problems)
-    require(stage3.get("main_push_execution") == "FULL_SUITE", "Stage 3 main push target must remain FULL_SUITE", problems)
+    require(stage3.get("main_push_execution") == "FULL_SUITE", "Stage 3 ordinary main push target must remain FULL_SUITE", problems)
+    require(stage3.get("machine_writer_precheck_execution") == "SELECTED_OR_FULL_BY_RISK",
+            "Stage 3 machine-writer precheck must remain risk-routed", problems)
+    require(stage3.get("machine_writer_post_push_execution") == "REUSE_EXACT_SHA_PRECHECK_EXCEPT_AUTHORITY_SECURITY",
+            "Stage 3 machine-writer post-push reuse contract drift", problems)
     require(stage3.get("selected_suite_runner") == "scripts/check-all.py --selection sensor-selection.json", "Stage 3 selected suite runner drift", problems)
     require(stage3.get("critical_always_on_preserved") is True, "Stage 3 must preserve critical ALWAYS_ON sensors", problems)
     require(stage3.get("unknown_or_broad_change_behavior") == "FULL_SUITE", "Stage 3 must fail broad on unknown/broad changes", problems)
@@ -517,7 +758,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
     for shadow_rel in ("scripts/sensor_selector.py", "scripts/compare-sensor-shadow.py", "scripts/collect-sensor-shadow-observations.py"):
         shadow_harness = ROOT / shadow_rel
         if shadow_harness.is_file():
-            proc = subprocess.run(
+            proc = policy_subprocess_run(
                 [sys.executable, str(shadow_harness), "--self-test"],
                 cwd=ROOT,
                 text=True,
@@ -531,7 +772,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
     for prep_rel in ("scripts/check-all.py", "scripts/stage3_preflight.py"):
         prep_harness = ROOT / prep_rel
         if prep_harness.is_file():
-            proc = subprocess.run(
+            proc = policy_subprocess_run(
                 [sys.executable, str(prep_harness), "--self-test"],
                 cwd=ROOT,
                 text=True,
@@ -676,13 +917,13 @@ def validate_registries() -> tuple[list[str], set[str]]:
         ]
         for test in node_tests:
             if test.is_file():
-                proc = subprocess.run(["node", str(test)], cwd=ROOT, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=30)
+                proc = policy_subprocess_run(["node", str(test)], cwd=ROOT, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=30)
                 require(proc.returncode == 0, f"Node policy test failed {test.relative_to(ROOT)}: " + (proc.stderr or proc.stdout).strip()[:500], problems)
         for content_test, label in ((ROOT / "scripts" / "vf_content_ready.py", "CONTENT_READY"), (ROOT / "packages" / "vfigos" / "routine_publish.py", "routine Instagram happy path")):
             if content_test.is_file():
                 env = dict(os.environ)
                 env["PYTHONPATH"] = str(ROOT / "packages") + os.pathsep + str(ROOT / "scripts")
-                proc = subprocess.run([sys.executable, str(content_test), "--self-test"], cwd=ROOT, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=30, env=env)
+                proc = policy_subprocess_run([sys.executable, str(content_test), "--self-test"], cwd=ROOT, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=30, env=env)
                 require(proc.returncode == 0, f"{label} self-test failed: " + (proc.stderr or proc.stdout).strip()[:500], problems)
         policy_gate_path = ROOT / "packages" / "vfigos" / "cloudflare-publisher" / "src" / "policy_gate.js"
         if policy_gate_path.is_file():
@@ -846,7 +1087,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE4_ACCEPTANCE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated = Path(td) / "stage4-acceptance.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE4_ACCEPTANCE_GENERATOR),
@@ -944,7 +1185,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE5_ACCEPTANCE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated5 = Path(td) / "stage5-acceptance.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE5_ACCEPTANCE_GENERATOR),
@@ -1055,7 +1296,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE6_ACCEPTANCE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated6 = Path(td) / "stage6-acceptance.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE6_ACCEPTANCE_GENERATOR),
@@ -1228,7 +1469,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE7A_ACCEPTANCE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated7a = Path(td) / "stage7a-state-evidence-model.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE7A_ACCEPTANCE_GENERATOR),
@@ -1299,7 +1540,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE7D_ACCEPTANCE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated7d = Path(td) / "stage7d-artifact-retention.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE7D_ACCEPTANCE_GENERATOR),
@@ -1401,7 +1642,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE7_ACCEPTANCE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated7 = Path(td) / "stage7-acceptance.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE7_ACCEPTANCE_GENERATOR),
@@ -1506,7 +1747,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8A_INVENTORY_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8a = Path(td) / "stage8a-core-instance-inventory.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8A_INVENTORY_GENERATOR),
@@ -1589,7 +1830,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8B_RESOLVER_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8b = Path(td) / "stage8b-instance-resolver-foundation.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8B_RESOLVER_GENERATOR),
@@ -1679,7 +1920,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8B_CONFIG_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8bc = Path(td) / "stage8b-canonical-instance-config.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8B_CONFIG_GENERATOR),
@@ -1766,7 +2007,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8C_SAMPLE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8cs = Path(td) / "stage8c-sample-profile-consumers.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8C_SAMPLE_GENERATOR),
@@ -1843,7 +2084,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8C_ROOT_DESK_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8cd = Path(td) / "stage8c-root-desk-readers.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8C_ROOT_DESK_GENERATOR),
@@ -1911,7 +2152,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8C_DESK_CATALOG_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8cc = Path(td) / "stage8c-desk-catalog-bindings.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8C_DESK_CATALOG_GENERATOR),
@@ -1987,7 +2228,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8C_LIVING_RULES_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8cl = Path(td) / "stage8c-living-studio-rules.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8C_LIVING_RULES_GENERATOR),
@@ -2057,7 +2298,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8C_CONTROL_API_FLEET_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8ccf = Path(td) / "stage8c-control-api-fleet.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8C_CONTROL_API_FLEET_GENERATOR),
@@ -2125,7 +2366,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8C_EXPERT_MODULES_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8ce = Path(td) / "stage8c-expert-modules.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8C_EXPERT_MODULES_GENERATOR),
@@ -2198,7 +2439,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8C_CHATGPT_DISTRIBUTION_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8cg = Path(td) / "stage8c-chatgpt-distribution-consumers.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8C_CHATGPT_DISTRIBUTION_GENERATOR),
@@ -2272,7 +2513,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8C_WINDOWS_HOST_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8cw = Path(td) / "stage8c-windows-host-binding.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8C_WINDOWS_HOST_GENERATOR),
@@ -2391,7 +2632,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8C_CLOSURE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8cc = Path(td) / "stage8c-closure.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8C_CLOSURE_GENERATOR),
@@ -2500,7 +2741,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_READINESS_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8d = Path(td) / "stage8d-retirement-readiness.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_READINESS_GENERATOR),
@@ -2580,7 +2821,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_FLEET_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8df = Path(td) / "stage8d-fleet-consumer-migration.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_FLEET_GENERATOR),
@@ -2665,7 +2906,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_ROOT_DESK_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8dr = Path(td) / "stage8d-root-desk-consumer-migration.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_ROOT_DESK_GENERATOR),
@@ -2767,7 +3008,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_TOOL_STATUS_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8dt = Path(td) / "stage8d-tool-status-consumer-migration.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_TOOL_STATUS_GENERATOR),
@@ -2869,7 +3110,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_CHATGPT_CORE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8dc = Path(td) / "stage8d-chatgpt-core-consumer-migration.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_CHATGPT_CORE_GENERATOR),
@@ -2985,7 +3226,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_POST_MIGRATION_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8dp = Path(td) / "stage8d-post-migration-readiness.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_POST_MIGRATION_GENERATOR),
@@ -3121,7 +3362,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_SAMPLE_ROLLBACK_CLOSURE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8ds = Path(td) / "stage8d-sample-profile-rollback-closure.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_SAMPLE_ROLLBACK_CLOSURE_GENERATOR),
@@ -3237,7 +3478,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_SAMPLE_CONSUMER_CORRECTION_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated_fix8ds = Path(td) / "stage8d-sample-profile-consumer-correction.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_SAMPLE_CONSUMER_CORRECTION_GENERATOR),
@@ -3349,7 +3590,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_SAMPLE_ROLLBACK_RECLOSURE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated_reclose8ds = Path(td) / "stage8d-sample-profile-rollback-reclosure.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_SAMPLE_ROLLBACK_RECLOSURE_GENERATOR),
@@ -3487,7 +3728,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_SAMPLE_DELETION_GATE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated_gate8ds = Path(td) / "stage8d-sample-profile-deletion-gate.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_SAMPLE_DELETION_GATE_GENERATOR),
@@ -3640,7 +3881,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_SAMPLE_DELETION_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated_delete8ds = Path(td) / "stage8d-sample-profile-deletion.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_SAMPLE_DELETION_GENERATOR),
@@ -3745,7 +3986,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_ROOT_DESK_RUNTIME_CORRECTION_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated_fix8dr = Path(td) / "stage8d-root-desk-runtime-consumer-correction.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_ROOT_DESK_RUNTIME_CORRECTION_GENERATOR),
@@ -3877,7 +4118,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_ROOT_DESK_ROLLBACK_CLOSURE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated_close8dr = Path(td) / "stage8d-root-desk-rollback-closure.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_ROOT_DESK_ROLLBACK_CLOSURE_GENERATOR),
@@ -4040,7 +4281,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_ROOT_DESK_DELETION_GATE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8dr = Path(td) / "stage8d-root-desk-deletion-gate.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_ROOT_DESK_DELETION_GATE_GENERATOR),
@@ -4209,7 +4450,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_ROOT_DESK_DELETION_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated_delete8dr = Path(td) / "stage8d-root-desk-deletion.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_ROOT_DESK_DELETION_GENERATOR),
@@ -4299,7 +4540,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_FLEET_RUNTIME_CORRECTION_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated_fix8df = Path(td) / "stage8d-fleet-runtime-consumer-correction.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_FLEET_RUNTIME_CORRECTION_GENERATOR),
@@ -4422,7 +4663,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_FLEET_ROLLBACK_CLOSURE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated_close8df = Path(td) / "stage8d-fleet-rollback-closure.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_FLEET_ROLLBACK_CLOSURE_GENERATOR),
@@ -4584,7 +4825,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_FLEET_DELETION_GATE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8df = Path(td) / "stage8d-fleet-deletion-gate.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_FLEET_DELETION_GATE_GENERATOR),
@@ -4669,7 +4910,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated_fix8dt = Path(td) / "stage8d-tool-status-semantic-correction.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_TOOL_STATUS_SEMANTIC_CORRECTION_GENERATOR),
@@ -4786,7 +5027,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_TOOL_STATUS_ROLLBACK_CLOSURE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated_close8dt = Path(td) / "stage8d-tool-status-rollback-closure.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_TOOL_STATUS_ROLLBACK_CLOSURE_GENERATOR),
@@ -4948,7 +5189,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_TOOL_STATUS_DELETION_GATE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated_gate8dt = Path(td) / "stage8d-tool-status-deletion-gate.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_TOOL_STATUS_DELETION_GATE_GENERATOR),
@@ -5125,7 +5366,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_TOOL_STATUS_DELETION_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated_delete8dt = Path(td) / "stage8d-tool-status-deletion.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_TOOL_STATUS_DELETION_GENERATOR),
@@ -5220,7 +5461,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_CHATGPT_SEMANTIC_CORRECTION_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated_fix8dc = Path(td) / "stage8d-chatgpt-semantic-correction.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_CHATGPT_SEMANTIC_CORRECTION_GENERATOR),
@@ -5341,7 +5582,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_CHATGPT_ROLLBACK_CLOSURE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated_close8dc = Path(td) / "stage8d-chatgpt-rollback-closure.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_CHATGPT_ROLLBACK_CLOSURE_GENERATOR),
@@ -5507,7 +5748,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_CHATGPT_DELETION_GATE_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated8dc = Path(td) / "stage8d-chatgpt-deletion-gate.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_CHATGPT_DELETION_GATE_GENERATOR),
@@ -5532,6 +5773,178 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated8dc.read_bytes() == STAGE8D_CHATGPT_DELETION_GATE.read_bytes(),
                         "Stage 8D ChatGPT deletion gate receipt is not reproducible",
+                        problems,
+                    )
+
+    if STAGE8D_CHATGPT_DELETION.is_file():
+        delete8dc = load(STAGE8D_CHATGPT_DELETION)
+        require(
+            delete8dc.get("schema") == "velvetos.stage8d-chatgpt-deletion.v1"
+            and delete8dc.get("stage") == "8D_CHATGPT_DELETION"
+            and delete8dc.get("behavior_change") is False
+            and delete8dc.get("surface_id") == "chatgpt_core_bundle"
+            and delete8dc.get("prepared_against_main_sha") == "d593f1b620de491fa143e562e5e0ed514fb15f0b"
+            and delete8dc.get("repository_assessment") == "PASS",
+            "Stage 8D ChatGPT deletion metadata drift",
+            problems,
+        )
+        gate_delete8dc = delete8dc.get("gate") or {}
+        require(
+            gate_delete8dc.get("receipt")
+            == "packages/velvetos/policy/reports/stage8d-chatgpt-deletion-gate.json"
+            and gate_delete8dc.get("gate_head_sha") == "42a2b634eeb296c66c99774751402b345e323254"
+            and gate_delete8dc.get("gate_merge_sha") == "b3af7b9e0dcf6c207a617c4c394228b498350c20"
+            and gate_delete8dc.get("gate_pr") == 555
+            and gate_delete8dc.get("repository_assessment") == "PASS"
+            and gate_delete8dc.get("delete_authorized") is True
+            and gate_delete8dc.get("authorized_root") == "packages/velvetos/chatgpt-project"
+            and gate_delete8dc.get("authorized_legacy_gitattributes_line_count") == 24,
+            "Stage 8D ChatGPT deletion gate binding drift",
+            problems,
+        )
+        ci_delete8dc = delete8dc.get("post_gate_main_ci") or {}
+        require(
+            ci_delete8dc.get("workflow") == "VelvetOS Core Sensors"
+            and ci_delete8dc.get("run_id") == 37335910275
+            and ci_delete8dc.get("run_attempt") == 1
+            and ci_delete8dc.get("sha") == "d593f1b620de491fa143e562e5e0ed514fb15f0b"
+            and ci_delete8dc.get("event") == "push"
+            and ci_delete8dc.get("conclusion") == "success",
+            "Stage 8D ChatGPT deletion post-gate CI drift",
+            problems,
+        )
+        prior_delete8dc = delete8dc.get("prior_retirements") or {}
+        expected_prior_delete8dc = {
+            "sample_profile": "packages/velvetos/policy/reports/stage8d-sample-profile-deletion.json",
+            "root_desk": "packages/velvetos/policy/reports/stage8d-root-desk-deletion.json",
+            "fleet": "packages/velvetos/policy/reports/stage8d-fleet-deletion.json",
+            "tool_status": "packages/velvetos/policy/reports/stage8d-tool-status-deletion.json",
+        }
+        require(
+            set(prior_delete8dc) == set(expected_prior_delete8dc)
+            and all(
+                (prior_delete8dc.get(surface_id) or {}).get("receipt") == receipt
+                and (prior_delete8dc.get(surface_id) or {}).get("repository_assessment") == "PASS"
+                and (prior_delete8dc.get(surface_id) or {}).get("deletion_performed") is True
+                and (prior_delete8dc.get(surface_id) or {}).get("retirement_authorized") is True
+                for surface_id, receipt in expected_prior_delete8dc.items()
+            ),
+            "Stage 8D ChatGPT deletion prior-retirement drift",
+            problems,
+        )
+        deletion_delete8dc = delete8dc.get("deletion") or {}
+        require(
+            deletion_delete8dc.get("legacy_path") == "packages/velvetos/chatgpt-project"
+            and deletion_delete8dc.get("canonical_path")
+            == "instances/velvet-factory/distribution/chatgpt-project"
+            and deletion_delete8dc.get("legacy_present") is False
+            and deletion_delete8dc.get("deleted_file_count") == 33
+            and len(deletion_delete8dc.get("deleted_paths") or []) == 33
+            and all(
+                str(path).startswith("packages/velvetos/chatgpt-project/")
+                for path in (deletion_delete8dc.get("deleted_paths") or [])
+            )
+            and deletion_delete8dc.get("delete_exactly") == ["packages/velvetos/chatgpt-project"]
+            and len(deletion_delete8dc.get("legacy_gitattributes_lines_removed") or []) == 24
+            and deletion_delete8dc.get("legacy_gitattributes_line_count_removed") == 24
+            and deletion_delete8dc.get("canonical_gitattributes_rule_present") is True
+            and deletion_delete8dc.get("deletion_performed") is True
+            and deletion_delete8dc.get("other_surfaces_deleted") is False,
+            "Stage 8D ChatGPT deletion scope drift",
+            problems,
+        )
+        evidence_delete8dc = delete8dc.get("current_evidence") or {}
+        require(
+            evidence_delete8dc.get("runtime_authority") is False
+            and evidence_delete8dc.get("active_authority") == "instance:surface:chatgptProject"
+            and evidence_delete8dc.get("canonical_file_count") == 33
+            and evidence_delete8dc.get("canonical_file_set_unchanged") is True
+            and evidence_delete8dc.get("canonical_bytes_equal_retired_legacy") is True
+            and evidence_delete8dc.get("byte_mismatches") == []
+            and evidence_delete8dc.get("active_or_ambiguous_legacy_reference_count") == 0
+            and bool(evidence_delete8dc.get("safe_legacy_references"))
+            and evidence_delete8dc.get("external_effect_authority_unchanged") is True,
+            "Stage 8D ChatGPT deletion current evidence drift",
+            problems,
+        )
+        restore_delete8dc = delete8dc.get("restore_anchor") or {}
+        require(
+            restore_delete8dc.get("source_commit_sha") == "774d4e6164277057f91eb5681551735a1928404f"
+            and restore_delete8dc.get("legacy_root") == "packages/velvetos/chatgpt-project"
+            and restore_delete8dc.get("git_tree_sha1") == "d7961fe63ff483b0085d9689b8b3c1b4d35a35f4"
+            and restore_delete8dc.get("file_count") == 33
+            and restore_delete8dc.get("manifest_sha256")
+            == "9d99f8dc6f7f5dc0972cb66dcc3dbba38e5ba5e272d7a3aed4588acfb26193bb"
+            and restore_delete8dc.get("legacy_gitattributes_line_count") == 24
+            and restore_delete8dc.get("legacy_gitattributes_sha256")
+            == "dd0fe2cd643d43a7eae46b016e4403856f6f74dc9a64b414e2a64ad9326a530f"
+            and restore_delete8dc.get("verified_after_deletion") is True,
+            "Stage 8D ChatGPT deletion restore anchor drift",
+            problems,
+        )
+        replay_delete8dc = delete8dc.get("historical_replay") or {}
+        expected_replay_delete8dc = {
+            "consumer_migration": "5e4c32bac19fe13ee1bbcac22513dcc2f5d36921",
+            "semantic_correction": "57a84a84762de99ee6faf24af54a1247483b6bbe",
+            "rollback_closure": "8fdc942136baec2101c46b4370acff8a234543c6",
+        }
+        require(
+            set(replay_delete8dc) == set(expected_replay_delete8dc)
+            and all(
+                (replay_delete8dc.get(name) or {}).get("commit") == commit
+                and (replay_delete8dc.get(name) or {}).get("receipt_matches_creation_commit") is True
+                and bool((replay_delete8dc.get(name) or {}).get("receipt_sha256"))
+                for name, commit in expected_replay_delete8dc.items()
+            ),
+            "Stage 8D ChatGPT deletion historical replay drift",
+            problems,
+        )
+        authority_delete8dc = delete8dc.get("authority") or {}
+        require(
+            authority_delete8dc.get("active_authority") == "instance:surface:chatgptProject"
+            and authority_delete8dc.get("external_effect_authority_changed") is False
+            and authority_delete8dc.get("delete_authorized_surface") == "chatgpt_core_bundle"
+            and authority_delete8dc.get("retirement_authorized") is True
+            and delete8dc.get("delete_authorized") is True
+            and delete8dc.get("deletion_performed") is True
+            and delete8dc.get("retirement_authorized") is True,
+            "Stage 8D ChatGPT deletion authority drift",
+            problems,
+        )
+        criteria_delete8dc = delete8dc.get("acceptance_criteria") or {}
+        require(
+            len(criteria_delete8dc) == 17 and all(value is True for value in criteria_delete8dc.values()),
+            "Stage 8D ChatGPT deletion criteria drift or fail",
+            problems,
+        )
+        if STAGE8D_CHATGPT_DELETION_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated_delete8dc = Path(td) / "stage8d-chatgpt-deletion.json"
+                proc = policy_subprocess_run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_CHATGPT_DELETION_GENERATOR),
+                        "--prepared-against", delete8dc["prepared_against_main_sha"],
+                        "--captured-at", delete8dc["captured_at"],
+                        "--output", str(regenerated_delete8dc),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=180,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D ChatGPT deletion regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated_delete8dc.is_file():
+                    require(
+                        regenerated_delete8dc.read_bytes() == STAGE8D_CHATGPT_DELETION.read_bytes(),
+                        "Stage 8D ChatGPT deletion receipt is not reproducible",
                         problems,
                     )
 
@@ -5561,12 +5974,16 @@ def validate_registries() -> tuple[list[str], set[str]]:
         require(set(surfaces8d) == expected_surface_ids8d, "Stage 8D semantic audit surface set drift", problems)
         require(
             all(
-                row.get("present") is True
+                row.get("present") is False
+                and row.get("retired") is True
                 and row.get("rollback_window_closed_by_this_audit") is False
                 and row.get("delete_authorized") is False
+                and (row.get("retirement_evidence") or {}).get("repository_assessment") == "PASS"
+                and (row.get("retirement_evidence") or {}).get("deletion_performed") is True
+                and (row.get("retirement_evidence") or {}).get("retirement_authorized") is True
                 for row in surfaces8d.values()
             ),
-            "Stage 8D semantic audit changed retirement/delete state",
+            "Stage 8D semantic audit final retirement state drift",
             problems,
         )
         sample_audit8d = surfaces8d.get("sample_profile") or {}
@@ -5610,6 +6027,8 @@ def validate_registries() -> tuple[list[str], set[str]]:
             and set(assessment8d.get("surfaces_with_candidate_blockers") or []) == blocked_ids8d
             and assessment8d.get("rollback_windows_closed_by_audit") == 0
             and assessment8d.get("deletion_authorized") is False
+            and assessment8d.get("surfaces_retired") == 5
+            and set(assessment8d.get("retired_surfaces") or []) == expected_surface_ids8d
             and audit8d.get("retirement_authorized") is False
             and audit8d.get("deletion_authorized") is False,
             "Stage 8D semantic audit assessment drift",
@@ -5618,7 +6037,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if STAGE8D_RETIREMENT_SEMANTIC_AUDIT_GENERATOR.is_file():
             with tempfile.TemporaryDirectory() as td:
                 regenerated_audit8d = Path(td) / "stage8d-retirement-semantic-audit.json"
-                proc = subprocess.run(
+                proc = policy_subprocess_run(
                     [
                         sys.executable,
                         str(STAGE8D_RETIREMENT_SEMANTIC_AUDIT_GENERATOR),
@@ -5643,6 +6062,179 @@ def validate_registries() -> tuple[list[str], set[str]]:
                     require(
                         regenerated_audit8d.read_bytes() == STAGE8D_RETIREMENT_SEMANTIC_AUDIT.read_bytes(),
                         "Stage 8D semantic audit receipt is not reproducible",
+                        problems,
+                    )
+
+    if STAGE8D_FINAL_ACCEPTANCE.is_file():
+        final8d = load(STAGE8D_FINAL_ACCEPTANCE)
+        require(
+            final8d.get("schema") == "velvetos.stage8d-final-acceptance.v1"
+            and final8d.get("stage") == "8D_FINAL_ACCEPTANCE"
+            and final8d.get("behavior_change") is False
+            and final8d.get("repository_acceptance") == "PASS"
+            and final8d.get("stage8d_complete") is True
+            and final8d.get("reform_v2_complete") is True,
+            "Stage 8D final acceptance metadata drift",
+            problems,
+        )
+        criteria8df = final8d.get("acceptance_criteria") or {}
+        expected8df = {
+            "all_five_compatibility_surfaces_are_physically_absent",
+            "all_five_authoritative_deletion_receipts_are_pass",
+            "final_semantic_audit_is_5_of_5_clear_and_retired",
+            "no_active_or_ambiguous_legacy_runtime_consumers_remain",
+            "all_restore_anchors_resolve_from_git_history",
+            "all_historical_replay_receipts_remain_byte_anchored",
+            "external_effect_policy_authority_is_unchanged",
+            "canonical_chatgpt_distribution_remains_33_files",
+            "canonical_chatgpt_gitattributes_rule_remains",
+            "exact_main_full_sensor_suite_is_116_of_116",
+            "exact_main_readme_system_pulse_is_green",
+        }
+        require(
+            set(criteria8df) == expected8df
+            and all(criteria8df.get(key) is True for key in expected8df),
+            "Stage 8D final acceptance criteria drift or fail",
+            problems,
+        )
+
+        semantic8df = final8d.get("semantic_audit") or {}
+        audit_now8df = load(STAGE8D_RETIREMENT_SEMANTIC_AUDIT)
+        audit_hash8df = hashlib.sha256(
+            json.dumps(audit_now8df, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        require(
+            semantic8df.get("canonical_json_sha256") == audit_hash8df
+            and semantic8df.get("repository_assessment") == "PASS"
+            and semantic8df.get("surfaces_total") == 5
+            and semantic8df.get("surfaces_preflight_clear") == 5
+            and semantic8df.get("surfaces_retired") == 5
+            and semantic8df.get("candidate_blockers") == [],
+            "Stage 8D final semantic binding drift",
+            problems,
+        )
+
+        receipts8df = final8d.get("deletion_receipts") or {}
+        expected_receipts8df = {
+            "sample_profile",
+            "root_desk",
+            "fleet",
+            "tool_status",
+            "chatgpt_core_bundle",
+        }
+        require(set(receipts8df) == expected_receipts8df,
+                "Stage 8D final deletion receipt set drift", problems)
+        for sid8df, meta8df in receipts8df.items():
+            path8df = ROOT / str((meta8df or {}).get("path") or "")
+            require(path8df.is_file(), f"Stage 8D final source receipt missing: {sid8df}", problems)
+            if path8df.is_file():
+                obj8df = load(path8df)
+                canonical_hash8df = hashlib.sha256(
+                    json.dumps(obj8df, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+                ).hexdigest()
+                require(
+                    canonical_hash8df == (meta8df or {}).get("canonical_json_sha256")
+                    and obj8df.get("repository_assessment") == "PASS"
+                    and obj8df.get("deletion_performed") is True
+                    and obj8df.get("retirement_authorized") is True,
+                    f"Stage 8D final deletion receipt drift: {sid8df}",
+                    problems,
+                )
+
+        restore8df = final8d.get("restore_anchors") or {}
+        require(
+            set(restore8df) == expected_receipts8df
+            and all((restore8df.get(sid) or {}).get("verified_from_git") is True for sid in expected_receipts8df),
+            "Stage 8D final restore-anchor verification drift",
+            problems,
+        )
+        replay8df = final8d.get("historical_replay") or {}
+        require(
+            set(replay8df) == expected_receipts8df
+            and all(
+                bool(replay8df.get(sid))
+                and all((meta or {}).get("verified_from_git") is True for meta in (replay8df.get(sid) or {}).values())
+                for sid in expected_receipts8df
+            ),
+            "Stage 8D final historical replay verification drift",
+            problems,
+        )
+
+        authority8df = final8d.get("authority") or {}
+        require(
+            authority8df.get("external_effect_authority_changed") is False
+            and authority8df.get("instance_selection_remains_explicit_and_fail_closed") is True,
+            "Stage 8D final authority drift",
+            problems,
+        )
+        canonical8df = final8d.get("canonical_state") or {}
+        require(
+            canonical8df.get("chatgpt_file_count") == 33
+            and canonical8df.get("retired_legacy_paths_present") == [],
+            "Stage 8D final canonical state drift",
+            problems,
+        )
+
+        main8df = final8d.get("main_full_suite") or {}
+        require(
+            main8df.get("head_sha") == final8d.get("prepared_against_main_sha")
+            and main8df.get("event") == "push"
+            and main8df.get("conclusion") == "SUCCESS"
+            and main8df.get("mode") == "full"
+            and main8df.get("registered_sensors") == 116
+            and main8df.get("passed_sensors") == 116
+            and main8df.get("repository_files_unchanged") is True
+            and main8df.get("log_markers") == [
+                "SENSORS 116 mode=full",
+                "OK sensor run left repository files unchanged",
+                "OK suite passed=116",
+            ],
+            "Stage 8D final exact-main full-suite evidence drift",
+            problems,
+        )
+        readme8df = final8d.get("readme_system_pulse") or {}
+        require(
+            readme8df.get("head_sha") == final8d.get("prepared_against_main_sha")
+            and readme8df.get("event") in {"push", "workflow_dispatch", "schedule"}
+            and readme8df.get("conclusion") == "SUCCESS",
+            "Stage 8D final README System Pulse evidence drift",
+            problems,
+        )
+
+        if STAGE8D_FINAL_ACCEPTANCE_GENERATOR.is_file():
+            with tempfile.TemporaryDirectory() as td:
+                regenerated8df = Path(td) / "stage8d-final-acceptance.json"
+                proc = policy_subprocess_run(
+                    [
+                        sys.executable,
+                        str(STAGE8D_FINAL_ACCEPTANCE_GENERATOR),
+                        "--prepared-against", final8d["prepared_against_main_sha"],
+                        "--captured-at", final8d["captured_at"],
+                        "--main-run-id", str(main8df["workflow_run_id"]),
+                        "--main-job-id", str(main8df["job_id"]),
+                        "--main-run-url", main8df["run_url"],
+                        "--readme-run-id", str(readme8df["workflow_run_id"]),
+                        "--readme-run-url", readme8df["run_url"],
+                        "--readme-event", readme8df["event"],
+                        "--output", str(regenerated8df),
+                    ],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=120,
+                )
+                require(
+                    proc.returncode == 0,
+                    "Stage 8D final acceptance regeneration failed: "
+                    + (proc.stderr.strip() or proc.stdout.strip()),
+                    problems,
+                )
+                if proc.returncode == 0 and regenerated8df.is_file():
+                    require(
+                        regenerated8df.read_bytes() == STAGE8D_FINAL_ACCEPTANCE.read_bytes(),
+                        "Stage 8D final acceptance receipt is not reproducible",
                         problems,
                     )
 
@@ -5673,7 +6265,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         generator = ROOT / "scripts" / "generate-policy-reports.py"
         require(generator.is_file(), "policy report generator missing", problems)
         if generator.is_file():
-            proc = subprocess.run(
+            proc = policy_subprocess_run(
                 [sys.executable, str(generator), "--check"],
                 cwd=ROOT,
                 text=True,
@@ -5705,7 +6297,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         audit_generator = ROOT / "scripts" / "generate-sensor-registry-audit.py"
         require(audit_generator.is_file(), "Stage 2A sensor audit generator missing", problems)
         if audit_generator.is_file():
-            proc = subprocess.run(
+            proc = policy_subprocess_run(
                 [sys.executable, str(audit_generator), "--check"],
                 cwd=ROOT,
                 text=True,
@@ -5720,7 +6312,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
 
 
 def diff_added_markdown(base: str, head: str) -> dict[str, list[str]]:
-    proc = subprocess.run(
+    proc = policy_subprocess_run(
         ["git", "diff", "--unified=0", "--no-color", base, head, "--", "*.md", "*.mdc"],
         cwd=ROOT,
         text=True,
@@ -5772,7 +6364,7 @@ def freeze_check(base: str, head: str, known_policies: set[str]) -> list[str]:
         if not normative:
             continue
         try:
-            proc = subprocess.run(
+            proc = policy_subprocess_run(
                 ["git", "show", f"{head}:{path}"],
                 cwd=ROOT,
                 text=True,
@@ -5797,15 +6389,18 @@ def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--base")
     p.add_argument("--head")
+    p.add_argument("--historical-replay", action="store_true", help="re-execute Stage 4-8 receipt generators instead of using hash-locked committed receipts")
     return p
 
 
 def main() -> int:
+    global HISTORICAL_REPLAY_ACTIVE
     args = parser().parse_args()
+    HISTORICAL_REPLAY_ACTIVE = args.historical_replay
     if bool(args.base) != bool(args.head):
         print("FAIL --base and --head must be supplied together", file=sys.stderr)
         return 2
-    problems, known_policies = validate_registries()
+    problems, known_policies = validate_registries(historical_replay=args.historical_replay)
     problems.extend(freeze_selftest())
     if args.base and args.head:
         problems.extend(freeze_check(args.base, args.head, known_policies))
@@ -5814,6 +6409,8 @@ def main() -> int:
             print(f"FAIL {problem}", file=sys.stderr)
         return 1
     mode = " + policy-creation-freeze" if args.base else ""
+    if args.historical_replay:
+        mode += " + historical-replay"
     print(
         f"OK policy-architecture policies={len(known_policies)} "
         f"sensors={len(load(SENSORS)['sensors'])} "

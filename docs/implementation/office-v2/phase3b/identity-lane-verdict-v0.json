@@ -1,0 +1,49 @@
+{
+  "schema": "velvetos.office-v2.phase3b-identity-lane-verdict.v0",
+  "captured_at": "2026-10-06T15:36:38.253461Z",
+  "status": "LANE_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY",
+  "lane_id": "phase3b-identity-provider",
+  "fixture_id": "identity-security-destructive-20-step",
+  "winner": "candidate-zitadel",
+  "fallback": "candidate-keycloak",
+  "specialized_reserve": "candidate-authentik",
+  "incumbent": "incumbent-current-service-identity",
+  "production_authority_change": false,
+  "production_writer_change": false,
+  "shadow_or_pilot_promotion": false,
+  "selection_basis": [
+    "ZITADEL, Keycloak and authentik all passed the same frozen 20-step identity Stage A fixture; the incumbent failed 9 mandatory central identity-provider steps while its existing production guards still passed.",
+    "ZITADEL is selected for composition because machine identities are a direct primitive and it had the smallest measured two-component footprint and fastest complete destructive run among the service candidates; the owner-accepted AGPL service/API boundary remains explicit.",
+    "Keycloak is the fallback: equally clean service-account/OIDC semantics and Apache-2.0 licensing, with materially higher measured memory/startup cost in this LAB.",
+    "authentik is retained as a specialized reserve: core-only M2M semantics passed cleanly, but server+worker+PostgreSQL produced the broadest tested runtime surface and slowest startup."
+  ],
+  "scorecards": {
+    "candidate-zitadel": "docs/implementation/office-v2/phase3b/scorecards/identity-candidate-zitadel.json",
+    "candidate-keycloak": "docs/implementation/office-v2/phase3b/scorecards/identity-candidate-keycloak.json",
+    "candidate-authentik": "docs/implementation/office-v2/phase3b/scorecards/identity-candidate-authentik.json",
+    "incumbent-current-service-identity": "docs/implementation/office-v2/phase3b/scorecards/identity-incumbent-current-service-identity.json"
+  },
+  "evidence": {
+    "candidate-zitadel": {
+      "path": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/identity-destructive-candidate-zitadel.json",
+      "sha256": "5576608c79117662c89bbfc29fad961b27d369b89dab2b7cd2f21bad660513a8",
+      "status": "PASS"
+    },
+    "candidate-keycloak": {
+      "path": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/identity-destructive-candidate-keycloak.json",
+      "sha256": "9a4416a17199e0d9e19da4af1b9af4c4917ed6e9d3cc1dadec86200b7740194b",
+      "status": "PASS"
+    },
+    "candidate-authentik": {
+      "path": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/identity-destructive-candidate-authentik.json",
+      "sha256": "30f88f51788815d39cdde369f57660f8b0aa15a92ed61145c2b43f5456f8df51",
+      "status": "PASS"
+    },
+    "incumbent-current-service-identity": {
+      "path": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/identity-destructive-incumbent-current-service-identity.json",
+      "sha256": "0b1f469ba52a3c75e87fdb2b887299fc74b2862d976dad684673f1e1fabc1900",
+      "status": "FAIL"
+    }
+  },
+  "next_gate": "Run credential-broker destructive benchmark and scorecards, then execute cross-role composition with identity winner/fallback plus authorization and credential selections. No production authority before composition PASS and later promotion gate."
+}

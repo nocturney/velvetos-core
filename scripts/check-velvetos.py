@@ -672,7 +672,7 @@ def main() -> None:
         "customer-whatsapp-send",
         "boost",
         "print-from-hq",
-        "ig-autopost",
+        "ig-direct-bypass-autopost",
         "auto-dm",
         "user-tag-without-optin",
     ):

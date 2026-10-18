@@ -1,81 +1,32 @@
 # Grok Bot automation contract
 
-Status: production scheduler as of 2026-09-19.
+Status: **recurring Grok scheduler retired by owner on 2026-10-06**.
 
-## Authority
+## Current authority
 
-- Repository/runtime authority wins over embedded routine prose.
-- The live protected Grok Bot routine inventory is the clock authority for owner-facing scheduled office work.
-- GitHub Actions remains the deterministic execution/verifier layer for machine workflows and canonical Gmail delivery; its cron entries do not override the owner-facing Grok clock authority.
-- Provider readback is state evidence (inventory/enabled/clock/timezone), not policy authority and not prompt-body parity unless that body was explicitly read.
-- ChatGPT scheduler copies and Antigravity shadow sidecars are retired/disabled after cutover; they are not fallback schedulers. Stage 7C fallbacks are explicit manual/conditional recovery paths, never active duplicate recurring clocks.
-- Never revive legacy recurring routines or create a second scheduler without Christian's explicit instruction.
+- Owner-facing recurring scheduler authority is `chatgpt-automations`.
+- Grok Bot has **zero enabled recurring routines** from the VelvetOS set.
+- Grok Bot remains available on demand as a tool/agent, not as scheduler, routine manager, integrity guard, or retry daemon.
+- `automation/grok/current-baseline.json` is the current scheduler policy. Historical Stage 7C/Grok readbacks are provenance only.
+- Never fabricate a ChatGPT provider receipt. The repository records declarative authority; live execution is verified when a real run/effect requires it.
+- Unknown/unlisted provider routines are never deletion-authorized merely because they are not in the current set.
 
-## Protected routine set
+## Current ChatGPT schedules
 
-- VelvetOS Integrity Guard — 01:45 daily
-- Velvet Research Seat — 02:00 daily; tool-update decisions use the dedicated owner email path and are excluded from the Morning Brief
-- Cognee Memory Sync — 06:30 daily
-- Runtime Receipts Refresh — 07:15 and 19:15 daily (`runtime-receipts-refresh`, `CRON_TZ=Asia/Jerusalem 15 7,19 * * *`); protected since 2026-09-29
-- Velvet Morning Brief — 09:00 daily
-- Morning Delivery Guard — 10:00 daily
-- Cognee Stable Updates — Monday 10:00
-- VelvetOS Office Loop — 10:30 and 18:30 daily
-- Weekly Research Accountability — Friday 12:00
+- `VelvetOS Office Loop` — daily 18:30 Asia/Jerusalem.
+- `Cognee Memory Sync` — once daily, flexible around 11:30 Asia/Jerusalem.
+- `Runtime Receipts Refresh` — daily 19:15 Asia/Jerusalem.
 
-Timezone: Asia/Jerusalem. Current protected count: **nine**.
+`Velvet Morning Brief` and `Velvet Research Seat` are manual/event-driven capabilities, not standing clocks.
 
-## Cognee scheduler cutover — live verified
+## Retired Grok clocks
 
-On 2026-09-23, Christian moved `Cognee Memory Sync` (daily 06:30) and `Cognee Stable Updates` (Monday 10:00) from ChatGPT scheduling to Grok Bot. Provider readback verified both Grok routines live, enabled, in `Asia/Jerusalem`, with the canonical schedules and instruction intent locked in `automation/grok/cognee-routines.json`. Only after that readback were the two matching ChatGPT automation copies disabled.
+Morning Brief, Morning Delivery Guard, Research Seat, Weekly Research Accountability, Cognee Stable Updates, Cognee Memory Sync, Office Loop, Runtime Receipts Refresh, Integrity Guard and PC Offline Retry are disabled in Grok. OpenPost Release Watch remains absent/deleted.
 
-The live provider IDs are `cognee-memory-sync` and `cognee-stable-updates`. `VelvetOS Integrity Guard` was then updated in place and read back as enabled at daily 01:45 with a eight-routine protected inventory. Git/manifest state alone is never provider proof; the verified readback is recorded in `automation/grok/cognee-routines.json`.
+Provider retirement evidence: `automation/grok/provider-readback-2026-10-06-retired.json`.
 
-### Integrity Guard execution semantics
+## Execution semantics
 
-The 01:45 Integrity Guard is a **finite single-pass audit**, not a continuous monitor. Each run must inspect the current inventory once, perform any immediate authorized repair, verify the resulting state once, notify only when required, and then terminate. It must not loop, poll, sleep, wait for future drift, or intentionally remain active after the pass is complete.
+Retry/backoff/reconciliation belong to durable workflow execution. Runtime evidence is dependency-scoped and created from real observations only. A health check that cannot affect production or a pending owner decision does not justify an owner notification.
 
-The protected set is **positive protection**, not deletion authority. The Guard may repair enabled-state, schedule, or prompt drift on the nine protected routines (eight until 2026-09-29). Known legacy/deleted routines stay disabled, but an unknown or newly added routine that is outside the protected set must not be deleted, disabled, paused, or rewritten merely for being unlisted. Leave it untouched and surface the conflict unless Christian has explicitly authorized its removal or retirement. Any provider-side routine deletion is governed by `policy_id: external.irreversible.delete`.
-
-## Owner email
-
-The 09:00 owner brief must use Morning Green v3.1, the current canonical RTL/Desktop-first responsive owner-email design. V10.3 remains available only for legacy/recovery surfaces that explicitly require it. Owner-visible prose still passes the exact Visible Text gate where required, and delivery uses only the canonical production path:
-
-`packages/vfops/out/gmail-send-request.json`
-→ `.github/workflows/gmail-brief-send.yml`
-→ `packages/vfops/gmail_brief_request.py`
-
-Interactive/connected Gmail is not a normal or fallback owner-delivery path. Require real sender success/message ID and safe request reset semantics.
-
-## Migration evidence
-
-Before the scheduler cutover, Grok Bot completed a read-only shadow verification for all seven routines and reported 7/7 SHADOW_PASS against current repository authority, web research, live business-source reads, Instagram read evidence, the then-current V10.3 assets, and the canonical Gmail/GitHub path. The routines were then updated in place to production mode without manual execution, preserving identity, schedule, timezone, and enabled state.
-
-On 2026-09-23, owner-email authority moved from V10.3 to Morning Green v3.1 after OpenPost schedule read, thumbnail materialization, renderer/sensor checks, Apps Script bridge v5 health, canonical GitHub/Gmail send success, Gmail message ID, and Gmail readback with six CID images all passed. At that point the schedule, routine identity, timezone and eight-routine protected set did not change.
-
-Later on 2026-09-23, live Grok readback verified `Cognee Memory Sync` (`cognee-memory-sync`, daily 06:30) and `Cognee Stable Updates` (`cognee-stable-updates`, Monday 10:00) as enabled in `Asia/Jerusalem`; only then were the corresponding ChatGPT copies disabled. A second provider readback verified `VelvetOS Integrity Guard` (`velvetos-integrity-guard`) still enabled at daily 01:45 and protecting the eight-routine set without changing any other routine.
-
-
-## OpenPost frozen state — updated 2026-09-27
-
-OpenPost is frozen and has no release/update watcher in scheduler authority. On 2026-09-27 the paused live `OpenPost Release Watch` routine was deleted in the Grok Bot provider UI. A provider read-back immediately after deletion returned exactly the eight protected routines and no OpenPost watcher. Machine-readable evidence is `automation/grok/openpost-release-watch-removal.json`.
-
-The 09:00 Morning Brief must read scheduled Instagram state from the Cloudflare Instagram Publisher, not OpenPost.
-
-## Live provider re-read — 2026-09-27
-
-A fresh read-only inventory observation was taken from the already signed-in Grok Bot 0.59.1 renderer through its existing loopback DevTools surface, without sending a model prompt. The provider exposed the exact eight protected routine IDs, all eight enabled, with effective schedule displays matching this contract in an `Asia/Jerusalem` renderer.
-
-The same live readback found the retired `OpenPost Release Watch` still enabled at 07:15 despite the 2026-09-26 retirement directive. That already-authorized drift was repaired in place by disabling only that routine. The provider write completed, and the post-write provider state read back `aria-checked=false` / `Resume OpenPost Release Watch`; all eight protected routines remained enabled and unchanged. Evidence is recorded in `automation/grok/provider-readback-2026-09-27.json`.
-
-This readback proves current provider inventory, enabled state, effective schedule display and renderer timezone. It does **not** claim that every routine prompt body was re-read or byte-compared on 2026-09-27.
-
-## Live provider re-read — 2026-09-28
-
-At 2026-09-28T10:15:53Z (13:15:53 Asia/Jerusalem) the owning Grok Bot automations-manager agent read the live provider routine registry (inventory, enabled state, effective cron and last-run status) directly from the agent runtime, without UI scraping, without sending a model prompt and without any provider write. The provider exposed exactly the eight protected routine IDs, all enabled, each with an effective `CRON_TZ=Asia/Jerusalem` schedule matching this contract. `OpenPost Release Watch` was absent from the live registry (deleted; not present). The provider app version is not exposed to the agent runtime and is recorded as `null` rather than guessed. Evidence is `automation/grok/provider-readback-2026-09-28.json`; `latestProviderReadback` in `manifest.json` points to it. Prompt-body parity is **not** claimed. The 2026-09-27 artifact is retained as history.
-
-## Protected set grows to nine — 2026-09-29
-
-On 2026-09-29 at 14:01 Asia/Jerusalem, Christian approved adding `Runtime Receipts Refresh` (provider routine id `runtime-receipts-refresh`, `CRON_TZ=Asia/Jerusalem 15 7,19 * * *`, i.e. daily 07:15 and 19:15, enabled) as the 9th protected routine. Its purpose: keep the four 24h runtime receipts in `packages/vfharness/state/runtime/` (`github`, `google-drive`, `grok-production-scheduler`, `sderot-windows`) fresh from live observations only, open one PR per refresh, and merge only on green. It never fabricates an observation.
-
-Transition rule: the manifest entry carries `protectedFrom: 2026-09-29T14:01:00+03:00`. A provider readback is checked against exactly the routines protected at its `observedAt` (entries without `protectedFrom`, or whose `protectedFrom` is at or before `observedAt`). The latest real readback (`provider-readback-2026-09-29.json`, observed 07:22 Asia/Jerusalem) therefore still validly lists eight routines, and `runtime-receipts-refresh` is reported as `pending-first-readback`. No readback listing nine routines has been back-filled. Any readback observed after the approval time must list all nine, including `runtime-receipts-refresh` with cadence `daily 07:15 and 19:15`, enabled, `matchesCanonicalClock: true`, and `protectedRoutineCount: 9`. Historical dated artifacts (earlier readbacks, the OpenPost removal evidence, the 2026-09-23 Cognee/Integrity Guard readback) keep their recorded eight.
+The dedicated Grok automation-manager chat may remain dormant for historical audit context only. It has no recurring governance or notification duty.

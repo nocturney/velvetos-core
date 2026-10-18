@@ -1,0 +1,103 @@
+{
+    "schema":  "velvetos.ai3d.phase0-readiness-baseline.v1",
+    "captured_at":  "2026-10-07T12:40:03.6659061Z",
+    "initiative":  "AI 3D Modeling \u0026 Engineering Core",
+    "source_doc_id":  "1XVpc4kCi4FAZIpNfdSGYvNvX5lONzWJS3DfGz8ODeuk",
+    "origin_main":  "47f74c7f39d6f4868e8be930992e744734f561fd",
+    "worktree":  {
+                     "path":  "D:\\Velvet\\Worktrees\\ai-3d-modeling-engineering-core-20261007",
+                     "branch":  "feat/ai-3d-modeling-engineering-core-20261007",
+                     "head":  "47f74c7f39d6f4868e8be930992e744734f561fd",
+                     "initial_dirty_lines":  0,
+                     "capture_note":  "Worktree status was clean immediately after creation; evidence files were added afterward."
+                 },
+    "gates":  {
+                  "G1":  {
+                             "status":  "GREEN",
+                             "reason":  "Office 2.0 Phase 3B is PILOT_ACTIVE/GREEN after bounded outage/recovery, rollback, full regression and explicit PILOT promotion.",
+                             "checkpoint":  "office-v2-phase3b-v0-cp016-pilot-active",
+                             "phase":  "PHASE_3B_PILOT_ACTIVE",
+                             "code_commit":  "47f74c7f39d6f4868e8be930992e744734f561fd"
+                         },
+                  "G2":  {
+                             "status":  "GREEN",
+                             "reason":  "cam.toolpath Candidate A is promoted/proven; Candidate B remains non-authoritative.",
+                             "creative_craft_registry_version":  "0.5.12",
+                             "cam_report_status":  "PASS",
+                             "station_agent_version":  "0.20.0",
+                             "promoted_capability_count":  20
+                         },
+                  "G3":  {
+                             "status":  "GREEN",
+                             "reason":  "Fresh isolated worktree created from current origin/main; dirty legacy Creative Craft worktree untouched.",
+                             "worktree":  "D:\\Velvet\\Worktrees\\ai-3d-modeling-engineering-core-20261007",
+                             "branch":  "feat/ai-3d-modeling-engineering-core-20261007",
+                             "head":  "47f74c7f39d6f4868e8be930992e744734f561fd"
+                         },
+                  "G4":  {
+                             "status":  "GREEN",
+                             "reason":  "Authority/tool snapshots captured and targeted checks PASS before Phase 1 inventory changes.",
+                             "targeted_checks":  [
+                                                     "check-vf-fabrication-router: PASS",
+                                                     "check-vf-3d-router: PASS",
+                                                     "check-tool-authority: PASS",
+                                                     "check-creative-system: PASS"
+                                                 ],
+                             "blender_provider_count":  271
+                         }
+              },
+    "snapshots":  {
+                      "repository_files":  {
+                                               "packages\\vfprod\\FABRICATION-ROUTER.md":  {
+                                                                                               "sha256":  "6928B0F2A7C308C4D163B62CD936B1AE0CAC0C7F5050C018AEA97F113D2B1F1D",
+                                                                                               "bytes":  6998
+                                                                                           },
+                                               "packages\\vfprod\\FABRICATION-ROUTER.json":  {
+                                                                                                 "sha256":  "99BF41CE879CA144704E2202298DBAB472361E969F936185F2933F20EC20B133",
+                                                                                                 "bytes":  7383
+                                                                                             },
+                                               ".cursor\\skills\\vf-3d-router\\SKILL.md":  {
+                                                                                               "sha256":  "B1B87F09491182A832D6987C6DA965F7A6828049BEF7F14630FED0B02079274A",
+                                                                                               "bytes":  6197
+                                                                                           },
+                                               "scripts\\vf_fabrication_router.py":  {
+                                                                                         "sha256":  "D0A1A5C367886394D0A623E0E6B8AC4B709852C37E08591A26E03CEC4292B3C6",
+                                                                                         "bytes":  18514
+                                                                                     },
+                                               "scripts\\vf_cad.py":  {
+                                                                          "sha256":  "64F2263AFD01D1861AC74179C093554B76080971592C7BDF52049BCC20C8CB0C",
+                                                                          "bytes":  14161
+                                                                      },
+                                               "scripts\\vf_cad_stack.py":  {
+                                                                                "sha256":  "077A2C8AE08130D2FCAC55614108014600CD17403C39B070F4E5FDAB7CEA5470",
+                                                                                "bytes":  15491
+                                                                            },
+                                               "scripts\\vf_3d.py":  {
+                                                                         "sha256":  "853DFEDCAB7C80DA5030850C1E1936A540C89F95BB9ECF3AFCFD801C994049CC",
+                                                                         "bytes":  26627
+                                                                     },
+                                               "instances\\velvet-factory\\instance\\tool-status.json":  {
+                                                                                                             "sha256":  "3562E49BF19BB3FFB591D105EAB3EA0BD875F9DF3A24FC2C37751F5F52D9EEFF",
+                                                                                                             "bytes":  5633
+                                                                                                         }
+                                           },
+                      "blender_provider_registry":  {
+                                                        "path":  "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json",
+                                                        "sha256":  "1E26CC978A7A273BDC2086CB0F9F4329BA82F1D16E70544797999A74EE11FBAF",
+                                                        "provider_count":  271
+                                                    },
+                      "creative_craft_registry":  {
+                                                      "path":  "D:\\Velvet\\Runtime\\CreativeCraft\\creative-craft-registry.json",
+                                                      "sha256":  "91A6239AE58AD8535D7314CE374A95560F0F4A9D0558845E16B211C0C76CFCE1",
+                                                      "version":  "0.5.12"
+                                                  },
+                      "current_tool_status_note":  "Historical packages/velvetos/TOOL-STATUS.json is absent on current main; current instance-level source is instances/velvet-factory/instance/tool-status.json."
+                  },
+    "evidence_logs":  [
+                          "evidence/check-vf-fabrication-router-20261007.log",
+                          "evidence/check-vf-3d-router-20261007.log",
+                          "evidence/check-tool-authority-20261007.log",
+                          "evidence/check-creative-system-20261007.log"
+                      ],
+    "authority_invariant":  "No duplicate Fabrication Router, vf-3d-router, slicer authority, Blender capability host, or production authority is introduced by this initiative."
+}

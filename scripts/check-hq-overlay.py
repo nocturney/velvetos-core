@@ -96,6 +96,60 @@ def main() -> None:
     if proc.returncode != 0:
         fail(f"render_mail.py --check: {proc.stderr or proc.stdout}")
 
+    # Weekly Deck is a machine-written domain artifact. Validate it offline here
+    # so exact-SHA machine prechecks can stay bounded without accepting unchecked output.
+    weekly_json = ROOT / "packages/vfbriefux/hq/weekly-deck.bento-doc.json"
+    if not weekly_json.is_file():
+        fail("missing packages/vfbriefux/hq/weekly-deck.bento-doc.json")
+    try:
+        weekly = json.loads(weekly_json.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        fail(f"weekly-deck.bento-doc.json invalid: {exc}")
+    if weekly.get("format") != "bento/slides" or weekly.get("version") != 1:
+        fail("weekly-deck.bento-doc.json format/version drift")
+    slides = weekly.get("slides")
+    if not isinstance(slides, list) or not slides:
+        fail("weekly-deck.bento-doc.json must contain slides")
+    slide_ids = [str(slide.get("id") or "") for slide in slides if isinstance(slide, dict)]
+    if len(slide_ids) != len(slides) or any(not sid for sid in slide_ids) or len(slide_ids) != len(set(slide_ids)):
+        fail("weekly-deck slide ids must be present and unique")
+    for slide in slides:
+        if not isinstance(slide.get("elements"), list) or not slide["elements"]:
+            fail(f"weekly-deck slide {slide.get('id')!r} must contain elements")
+
+    weekly_workflow = ROOT / ".github" / "workflows" / "velvetos-weekly-deck.yml"
+    if not weekly_workflow.is_file():
+        fail("missing .github/workflows/velvetos-weekly-deck.yml")
+    weekly_workflow_text = weekly_workflow.read_text(encoding="utf-8")
+    for marker in (
+        "python3 scripts/vf_weekly_deck.py",
+        "git add docs/weekly-deck packages/vfbriefux/hq/weekly-deck.bento-doc.json",
+        "bash scripts/push-main-with-check-all.sh main",
+        "# VELVET_MACHINE_WRITER_ALLOW: docs/weekly-deck packages/vfbriefux/hq/weekly-deck.bento-doc.json",
+    ):
+        if marker not in weekly_workflow_text:
+            fail(f"weekly-deck workflow missing {marker}")
+
+    docs_weekly = ROOT / "docs" / "weekly-deck"
+    bento_block = re.compile(
+        r'<script type="application/bento\+json" id="bento-doc">(.*?)</script>',
+        re.DOTALL,
+    )
+    if docs_weekly.is_dir():
+        for html_path in sorted(docs_weekly.glob("*.html")):
+            html_text = html_path.read_text(encoding="utf-8")
+            match = bento_block.search(html_text)
+            if not match:
+                fail(f"{html_path.relative_to(ROOT)} missing #bento-doc payload")
+            try:
+                embedded = json.loads(match.group(1))
+            except json.JSONDecodeError as exc:
+                fail(f"{html_path.relative_to(ROOT)} has invalid #bento-doc JSON: {exc}")
+            if embedded.get("format") != "bento/slides" or embedded.get("version") != 1:
+                fail(f"{html_path.relative_to(ROOT)} bento payload format/version drift")
+            if html_path.name == "index.html" and embedded != weekly:
+                fail("docs/weekly-deck/index.html payload must equal canonical weekly-deck.bento-doc.json")
+
     if not (ROOT / "constitution/CONSTITUTION.md").is_file():
         fail("missing constitution")
     tags_path = ROOT / "constitution/tags.md"

@@ -1,0 +1,64 @@
+{
+  "schema": "velvetos.office-v2.phase2-scorecard.v0",
+  "candidate_id": "candidate-keycloak",
+  "fixture_id": "identity-security-destructive-20-step",
+  "run_id": "20261006T150216Z-156018",
+  "captured_at": "2026-10-06T15:36:38.253461Z",
+  "fitness": {
+    "score_0_5": 5.0,
+    "notes": [
+      "PASS on all 20 frozen steps with service-account client credentials, deletion/revocation, replacement identity and outage fail-closed.",
+      "OIDC service-account semantics are a direct fit for the identity-provider role."
+    ]
+  },
+  "safety": {
+    "score_0_5": 5.0,
+    "notes": [
+      "Anonymous and wrong-secret requests denied; deleted client denied; replacement identity succeeded; outage failed closed.",
+      "Internal-only LAB network, no host ports, no production credentials or raw secret material."
+    ]
+  },
+  "operability": {
+    "score_0_5": 4.2,
+    "notes": [
+      "Two-component tested topology: Keycloak plus PostgreSQL, with mature standard OIDC semantics.",
+      "Observed wall/startup were 57/49 seconds; terminal snapshots were about 1.017 GiB for Keycloak and 81 MiB for PostgreSQL.",
+      "Apache-2.0 licensing is operationally simple, but the measured JVM footprint is materially higher than ZITADEL in this LAB."
+    ]
+  },
+  "evidence_quality": {
+    "score_0_5": 4.7,
+    "notes": [
+      "Complete 20-step receipt with token claims, delete/replacement/outage evidence and immutable image pin.",
+      "Resource fields use terminal snapshots rather than sampled peaks."
+    ]
+  },
+  "resources": {
+    "wall_seconds": 57,
+    "cpu_peak_pct": null,
+    "ram_peak_mb": null,
+    "gpu_peak_pct": null,
+    "vram_peak_mb": null,
+    "storage_delta_mb": null,
+    "network_mb": null,
+    "external_cost": 0.0,
+    "recurring_cost": 0.0,
+    "operator_minutes": 0.0
+  },
+  "rollback": {
+    "status": "PASS",
+    "notes": [
+      "Immutable Keycloak/PostgreSQL pins and isolated teardown were proven.",
+      "Persistent promotion still requires realm/database export and restore drill."
+    ]
+  },
+  "security_findings": [
+    "No production credentials or authority used.",
+    "Deleted client denied and outage failed closed."
+  ],
+  "operations_findings": [
+    "Evidence: D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/identity-destructive-candidate-keycloak.json",
+    "Retained as fallback because semantics are clean and standards-aligned despite higher measured footprint."
+  ],
+  "verdict": "HOLD"
+}

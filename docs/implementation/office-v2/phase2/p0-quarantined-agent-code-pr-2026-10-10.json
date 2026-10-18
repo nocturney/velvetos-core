@@ -1,0 +1,74 @@
+{
+  "schema": "velvetos.office-v2.p0-quarantined-agent-code-protected-pr.v0",
+  "status": "QUARANTINED_ONLY_ONE_EXPANDED_QA_CONTRACT_GAP",
+  "issue": "https://github.com/nocturney/velvetos-core/issues/612",
+  "observed_date_utc": "2026-10-10",
+  "source_host": "MacMiniOffice.local",
+  "model_digest": "7f3251fa6878a78a606bcb3c074283306e5ad2ea411a7774a9dd98a4bc7f2d13",
+  "source_code_never_rewritten": true,
+  "source_origin": "Exact source files byte-copied from original independent QA-green Mac local Qwen3.5:4B/Aider Task Envelopes; hash-reverified on Chris Windows before running this gate.",
+  "artifacts": {
+    "canonical_tag": {
+      "task_id": "p0-diverse-run-mac-tag-state-v2-20261010-c",
+      "git_seed_base_sha": "b078080a31fca74f622ed93bd2c58a7421a51536",
+      "model": "qwen3.5:4b",
+      "model_source_sha256": "b2ec92fed514a5e0e37aeca31155fe0d04cdfde70a3d46fafeeb9a09b0ef1ccb",
+      "original_mac_receipt_raw_sha256": "c2f81cec7419219f942ec74524864a2159ca233759ba643e193cead7ed5087d5",
+      "original_worker_receipt_selfhash": "2bdb477dc94308e8a8c8d1dff63e5a68843a4d783946d0aaaf93b13c24629e9d",
+      "original_3_visible_and_12_hidden_qa": "PASS",
+      "quarantine_only": true,
+      "model_authored_git_change_auto_pushed": false
+    },
+    "windows_merge": {
+      "task_id": "p0-diverse-run-mac-merge-guided-20261010-a",
+      "git_seed_base_sha": "d081112707ad55ff9e848a380227223bc75dff63",
+      "model": "qwen3.5:4b",
+      "model_source_sha256": "999f8ae84cbca062a41297b6fadf6703ee69fa8a61e427a8441cd1a169c3b0a0",
+      "original_mac_receipt_raw_sha256": "f6dac1286bb1fad2ddb525ecf51d3fd86a9149d2a5cc8464f05c5569350cedda",
+      "original_worker_receipt_selfhash": "431c9d94ac939c794da794e84175964508e77125397e1fcc36a5a7fdc8862524",
+      "original_3_visible_and_12_hidden_qa": "PASS",
+      "quarantine_only": true,
+      "model_authored_git_change_auto_pushed": false
+    }
+  },
+  "expanded_oracle": {
+    "canonical_tag": {
+      "all_public_oracle_cases_pass": true,
+      "counterexamples": [],
+      "samples": 528,
+      "source": "canonical_tag"
+    },
+    "windows_merge": {
+      "int_subclass_actual_if_accepted": "[(1, 2)]",
+      "int_subclass_contract_expected": "ValueError",
+      "int_subclass_rejected": false,
+      "invalid_cases": 9,
+      "invalid_rejected": 9,
+      "source": "windows_merge",
+      "standard_oracle_passed": 256,
+      "standard_samples": 256
+    }
+  },
+  "method": {
+    "model_calls_by_gate": 0,
+    "original_hidden_qa_copied_to_repo": false,
+    "qa_kind": "Deterministic seeded independent public-oracle checks in disposable subprocess with narrowly restricted Python builtins; not an OS isolation/sandbox proof",
+    "model_source_bytes_exact": true,
+    "model_generated_source_in_active_packages": false,
+    "git_pr_authority": "Manual code review and protected PR by Office #612 LAB operator only, not a model-generated Git write or autonomous scheduling",
+    "windows_int_subclass_counterexample": "class IntSubclass(int): pass; merge_windows([(IntSubclass(1),2)]) returns [(1,2)] instead of ValueError; strict type(int) requirement violated."
+  },
+  "limits": {
+    "production_code_promoted": false,
+    "model_pr_created_autonomously": false,
+    "fleet_lease_proven": false,
+    "stale_fenced_git_effect_proven": false,
+    "distributed_recovery_proven": false,
+    "original_qa_results_overwritten": false,
+    "model_reexecuted_for_this_pr": false,
+    "paid_model_calls_for_this_pr": false,
+    "both_artifacts_expanded_qa_green": false,
+    "runtime_sandbox_proven": false,
+    "manual_protected_pr_with_pinned_code_only": true
+  }
+}

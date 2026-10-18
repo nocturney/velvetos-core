@@ -1,0 +1,98 @@
+{
+  "schema": "velvetos.office-v2.phase3b-shadow-active.v0",
+  "captured_at": "2026-10-07T05:24:49.233410Z",
+  "status": "SHADOW_ACTIVE_OBSERVER_ONLY",
+  "promotion_baseline_sha": "5799dd5553b10b8dac4e5119e9b71a0fb343bac7",
+  "selected_composition": "composition-zitadel-opa-openbao",
+  "mode": "SHADOW_OBSERVER_ONLY",
+  "project_state": {
+    "phase": "PHASE_3B_SHADOW_ACTIVE",
+    "checkpoint_id": "office-v2-phase3b-v0-cp014-shadow-active",
+    "checkpoint_content_hash": "648350ed02620881dcea831db6985c4737ffbe9c5ea4a8a18bb12c958225f5b8",
+    "checkpoint_file_sha256": "80e046a9d08a48f7d051db45869cf3ffb9ce1699b92a4c5596b216ce308e8c68",
+    "promotion_receipt_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/shadow-active-project-state.json",
+    "promotion_receipt_sha256": "fe18f448ced93639398f98e690e0efef7f93af42eda0d1d1b9d7e63a978ccc15"
+  },
+  "runtime": {
+    "systemd_target": "officev2-phase3b-shadow.target",
+    "target_active": true,
+    "target_enabled": false,
+    "lease_managed": true,
+    "permanent_windows_task": "OfficeV2 LAB Lease",
+    "new_permanent_windows_tasks": 0,
+    "candidate_host_port_bindings_empty": true,
+    "production_endpoint_bindings": false
+  },
+  "health": {
+    "status": "READY",
+    "identity_ready": true,
+    "identity_issue_and_readback": true,
+    "authorization_health": true,
+    "authorization_allow_control": true,
+    "authorization_deny_control": true,
+    "credential_broker_health": true,
+    "credential_exact_scope_read": true,
+    "credential_unrelated_scope_denied": true,
+    "credential_value_hash_match": true,
+    "automatic_fallback_to_seek_allow": false,
+    "shadow_result": "SHADOW_OBSERVE_ONLY"
+  },
+  "fail_closed_outage_drill": {
+    "status": "PASS",
+    "cases": 3,
+    "authorization_outage": "DENY_THEN_READY",
+    "identity_outage": "DENY_THEN_READY",
+    "credential_broker_outage": "DENY_THEN_READY",
+    "final_status": "READY",
+    "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/shadow-outage-drill.txt",
+    "evidence_sha256": "ca005a05a7c89f0de785854518a40909b1b9178b1d4072d6c19f78269f790a6a"
+  },
+  "restart_restore": {
+    "status": "PASS",
+    "wsl_terminate": true,
+    "lab_lease_restart": true,
+    "docker_after_restart": "29.8.2",
+    "otel_health_after_restart": true,
+    "dpapi_bundle_unchanged": true,
+    "marker_unchanged": true,
+    "health_after_restore": "READY",
+    "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/shadow-restart-restore.json",
+    "evidence_sha256": "fec7f885068217df7445caee071bd2091725c36baa2f303e41e9d5eeb8f1ce97"
+  },
+  "key_material": {
+    "status": "PASS",
+    "credential_class": "LAB_ONLY_SECRET",
+    "protection": "Windows DPAPI CurrentUser",
+    "acl_protected": true,
+    "runtime_plaintext_only": true,
+    "openbao_root_token_persisted": false,
+    "raw_secret_recorded_in_evidence": false,
+    "production_credentials_used": false,
+    "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/shadow-key-material.json",
+    "evidence_sha256": "54add73787d1b40814e306277193b21f7072ac78fe38c71454c7368d38f71795"
+  },
+  "temporary_task_cleanup": {
+    "status": "PASS",
+    "removed_count": 14,
+    "remaining_officev2_tasks": [
+      "OfficeV2 LAB Lease"
+    ],
+    "lab_lease_running": true,
+    "evidence_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-07/shadow-temp-task-cleanup.json",
+    "evidence_sha256": "23bbc0e8225333842c19724eea0e535f8714a509773502fcaecb207e950cc407"
+  },
+  "authority": {
+    "candidate_authority": "NONE",
+    "production_path": "INCUMBENTS_CANONICAL",
+    "production_authority_change": false,
+    "production_writer_change": false,
+    "production_credentials_bound": false,
+    "production_secret_material_used": false,
+    "external_effects_allowed": false,
+    "canonical_business_truth_change": false
+  },
+  "pilot_gate": {
+    "status": "BLOCKED",
+    "reason": "SHADOW activation is not PILOT promotion. A bounded production-adjacent scope, explicit credential-class re-binding, revocation/rotation evidence, correlated effect evidence, service recovery/upgrade rollback and a separate promotion receipt are still required."
+  }
+}

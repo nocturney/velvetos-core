@@ -73,6 +73,10 @@ RETIREMENT_RECEIPTS = {
         "receipt": "packages/velvetos/policy/reports/stage8d-tool-status-deletion.json",
         "schema": "velvetos.stage8d-tool-status-deletion.v1",
     },
+    "chatgpt_core_bundle": {
+        "receipt": "packages/velvetos/policy/reports/stage8d-chatgpt-deletion.json",
+        "schema": "velvetos.stage8d-chatgpt-deletion.v1",
+    },
 }
 REVIEWED_SAFE_REFERENCES = {
     "fleet": {
@@ -526,10 +530,16 @@ def main() -> int:
         report["audit_model"]["missing_surface_requires_authoritative_retirement_receipt"] = True
         report["assessment"]["surfaces_retired"] = len(retired_surfaces)
         report["assessment"]["retired_surfaces"] = retired_surfaces
-        report["next_action"] = (
-            "Continue retirement surface-by-surface. Revalidate every retained target before its deletion gate; "
-            "never treat physical absence alone as retirement evidence."
-        )
+        if len(retired_surfaces) == len(SURFACES):
+            report["next_action"] = (
+                "All five Stage 8D compatibility surfaces are authoritatively retired. "
+                "Do not reopen deletion work; proceed to integrated Stage 8D final acceptance."
+            )
+        else:
+            report["next_action"] = (
+                "Continue retirement surface-by-surface. Revalidate every retained target before its deletion gate; "
+                "never treat physical absence alone as retirement evidence."
+            )
 
     out = args.output if args.output.is_absolute() else ROOT / args.output
     out.parent.mkdir(parents=True, exist_ok=True)

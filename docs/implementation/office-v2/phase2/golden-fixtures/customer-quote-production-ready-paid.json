@@ -1,0 +1,94 @@
+{
+  "schema": "velvetos.office-v2.golden-fixture.v0",
+  "fixture_id": "customer-quote-production-ready-paid",
+  "status": "CONTRACT_V0",
+  "title": "Customer -> quote -> production -> ready/paid",
+  "capability_scope": [
+    "customer.intake",
+    "quote",
+    "production.job",
+    "ready",
+    "payment.status"
+  ],
+  "input_contract": {
+    "required": [
+      "customer_ref",
+      "job_request",
+      "correlation"
+    ],
+    "vendor_specific_fields_forbidden": true
+  },
+  "semantic_steps": [
+    {
+      "step_id": "intake",
+      "capability": "customer.intake",
+      "side_effect_class": "NONE",
+      "expected_evidence": [
+        "normalized_customer_request"
+      ]
+    },
+    {
+      "step_id": "quote",
+      "capability": "quote.create",
+      "side_effect_class": "REVERSIBLE_WRITE",
+      "expected_evidence": [
+        "quote_receipt"
+      ]
+    },
+    {
+      "step_id": "production",
+      "capability": "production.job.transition",
+      "side_effect_class": "REVERSIBLE_WRITE",
+      "expected_evidence": [
+        "job_transition_receipt"
+      ]
+    },
+    {
+      "step_id": "ready",
+      "capability": "production.ready",
+      "side_effect_class": "REVERSIBLE_WRITE",
+      "expected_evidence": [
+        "ready_receipt"
+      ]
+    },
+    {
+      "step_id": "paid",
+      "capability": "payment.status",
+      "side_effect_class": "REVERSIBLE_WRITE",
+      "expected_evidence": [
+        "payment_status_receipt"
+      ]
+    }
+  ],
+  "success_contract": [
+    "one canonical job identity survives the lifecycle",
+    "state transitions are read back",
+    "payment state is not inferred"
+  ],
+  "evidence_contract": {
+    "required": [
+      "normalized_customer_request",
+      "quote_receipt",
+      "job_transition_receipt",
+      "ready_receipt",
+      "payment_status_receipt"
+    ]
+  },
+  "rollback_contract": [
+    "restore prior reversible state only through canonical authority",
+    "never invent payment/collection state"
+  ],
+  "resource_capture": [
+    "wall_seconds",
+    "cpu_peak_pct",
+    "ram_peak_mb",
+    "gpu_peak_pct",
+    "vram_peak_mb",
+    "storage_delta_mb",
+    "network_mb",
+    "external_cost",
+    "recurring_cost",
+    "operator_minutes"
+  ],
+  "external_effect_policy": "PROVIDER_ADAPTER_REQUIRED_NO_DIRECT_RUNNER_MUTATION"
+}

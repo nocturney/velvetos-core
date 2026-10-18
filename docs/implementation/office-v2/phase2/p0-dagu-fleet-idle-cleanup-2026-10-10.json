@@ -1,0 +1,111 @@
+{
+  "schema": "velvetos.office-v2.fleet.dagu-idle-lab-cleanup.v0",
+  "status": "SCOPED_IDLE_DAGU_604_PILOT_STOPPED_EVIDENCE_PRESERVED_NOT_PRODUCTION",
+  "date_utc": "2026-10-10",
+  "scope": {
+    "lab_name": "fleet-placement-20261008-1423z",
+    "version": "Dagu 2.18.2",
+    "issue": "https://github.com/nocturney/velvetos-core/issues/604",
+    "other_fleet_services_touched": false,
+    "remote_desktop_bridge_touched": false,
+    "source_files_deleted": false,
+    "existing_worker_sched_authority_promoted": false
+  },
+  "preflight": {
+    "coordinator_host": "MacMiniOffice.local",
+    "model_or_business_jobs": 0,
+    "active_dagu_process_store": [],
+    "history_total": 14,
+    "history_terminal_succeeded": 14,
+    "history_nonterminal": 0,
+    "queue_nonlock_items": 0,
+    "distributed_active_nonlock_items": 0,
+    "exclusive_synthetic_dags_only": true,
+    "last_history_is_not_provider_lease": true
+  },
+  "stopped": [
+    {
+      "host": "Chris Windows",
+      "pid": 49084,
+      "birth_local": "2026-10-08T17:26:51.1806870+03:00",
+      "role": "vf604-win-1423z",
+      "path_scope": "fleet-placement-20261008-1423z/win-worker-home",
+      "method": "Stop-Process after exact PID/birth/executable/task-child preflight",
+      "readback_absent": true
+    },
+    {
+      "host": "MacMiniOffice.local",
+      "pid": 14840,
+      "birth_local": "2026-10-08T17:27:10+03:00",
+      "role": "vf604-mac-1423z",
+      "path_scope": "fleet-placement-20261008-1423z/mac-worker-home",
+      "method": "SIGTERM after exact PID/birth/cmd and zero active task preflight",
+      "readback_absent": true
+    },
+    {
+      "host": "MacMiniOffice.local",
+      "pid": 15073,
+      "birth_local": "2026-10-08T17:29:25+03:00",
+      "role": "vf604-fair-1423z",
+      "path_scope": "fleet-placement-20261008-1423z/fair-worker-home",
+      "method": "SIGTERM after exact PID/birth/cmd and zero active task preflight",
+      "readback_absent": true
+    },
+    {
+      "host": "MacMiniOffice.local",
+      "pid": 15248,
+      "birth_local": "2026-10-08T17:30:53+03:00",
+      "role": "vf604-loss-1423z",
+      "path_scope": "fleet-placement-20261008-1423z/loss-worker-home",
+      "method": "SIGTERM after exact PID/birth/cmd and zero active task preflight",
+      "readback_absent": true
+    },
+    {
+      "host": "MacMiniOffice.local",
+      "pid": 14782,
+      "birth_local": "2026-10-08T17:26:33+03:00",
+      "role": "vf604-synthetic-coordinator",
+      "path_scope": "fleet-placement-20261008-1423z/server-home",
+      "method": "SIGTERM after exact PID/birth/cmd and all synthetic workers absent",
+      "readback_absent": true
+    }
+  ],
+  "postcondition": {
+    "mac_utc": "2026-10-10T11:22:59Z",
+    "windows_utc": "2026-10-10T11:23:00.8362156Z",
+    "windows_cross_host_port_check_utc": "2026-10-10T11:23:33.8920347Z",
+    "mac_all_exact_pids_absent": true,
+    "windows_exact_worker_pid_absent": true,
+    "windows_lab_worker_process_count": 0,
+    "mac_local_port_31810_listeners": 0,
+    "mac_coordinator_port_31557_listeners": 0,
+    "windows_tcp_to_mac_31557_connected": false,
+    "original_mac_lab_audit_source_sha256_unchanged": {
+      "manifest.json": "662ccfb7289f9481cc7e332c42886ba078d1575c89c866788efbd861e220c61b",
+      "groups-progress.json": "c4fac834e961ca44ed9c2ac2831989b99e75004eec6e64eb2631c82d3d1c58ec",
+      "fairness.json": "26dd1ec4c18caae6478db2bd939014fa736c70f96ac7ca096d901cb3fddd410b",
+      "independent-audit.json": "650e344a287d127caa9f974a360391b0ad6da0e45bca6a35fd807922aa65e9e6"
+    },
+    "untouched_active_windows_pid_checks": {
+      "Ollama_43272": true,
+      "Maya_24392": true
+    },
+    "accidental_dagu_readonly_cli_bootstrap_examples_removed_after_exact_creation_time_six_file_allowlist": [
+      "C:\\Users\\Chris\\dags",
+      "D:\\Velvet\\Tools\\ComputerUseFleet\\DaguPilot\\v2.18.2\\fleet-placement-20261008-1423z\\win-worker-home\\dags"
+    ],
+    "current_production_fleet_state_not_claimed": true
+  },
+  "nonclaims": {
+    "canonical_provider_lease": false,
+    "provider_atomic_monotonic_fencing": false,
+    "full_worker_loss_recovery": false,
+    "automatic_retry_approved": false,
+    "worker_pid_reuse_impossible": false,
+    "production_authority": false,
+    "customer_print_social_effects": false,
+    "host_reboot_or_global_service_mutation": false,
+    "new_scheduler_or_daemon_started": false,
+    "subsequent_new_lab_run": false
+  }
+}

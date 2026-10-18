@@ -89,15 +89,15 @@ def main() -> int:
         fail("Jobs receipt must prove canonical_changed=true via sheets_values_get")
 
     best = json.loads(BEST.read_text(encoding="utf-8"))
-    if best.get("schedulerAuthority") != "Velvet Research Seat":
-        fail("Best Skills schedulerAuthority must be Velvet Research Seat")
+    if best.get("schedulerAuthority") != "manual-or-event-driven-research":
+        fail("Best Skills schedulerAuthority must be manual/event-driven research")
     freshness = best.get("freshnessContract") or {}
-    if freshness.get("targetHours") != 44 or freshness.get("graceHours") != 8:
-        fail("Best Skills freshness contract must be 44h due + 8h grace (stale >52h)")
-    if "subscribe_timer" in str(best.get("standingNote") or ""):
-        fail("Best Skills still depends on external subscribe_timer renewal")
+    if freshness.get("mode") != "on-demand" or freshness.get("targetHours") is not None or freshness.get("graceHours") is not None:
+        fail("Best Skills must not retain a time-based freshness trigger")
+    if best.get("standingForever") is not False or best.get("cadence") != "on-demand":
+        fail("Best Skills standing cadence must remain retired")
 
-    print("OK runtime-corners partial=0 jobs=live_proven living=activated best-skills=research-seat")
+    print("OK runtime-corners partial=0 jobs=live_proven living=activated best-skills=on-demand")
     return 0
 
 

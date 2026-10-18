@@ -4,7 +4,7 @@
 חריצי המייל נשארים 01–07 (`MAIL.html`). זה **מסך פעולה** לחריץ 01/07 — לא דוח ארוך ולא Publish.
 
 ```
-VELVET ORGANIC GROWTH READINESS PACK — cutoff 07:00 → Morning Brief 09:00
+VELVET ORGANIC GROWTH READINESS PACK — event-driven → next relevant Morning Brief
 
 יעד היום:
 {goal}
@@ -16,14 +16,14 @@ Hook: {hook_or_חסר}
 CTA: לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם
 גיאוטג: {geotag_or_חסר}
 סט האשטגים: {hashtag_set_id}
-פעולה: [אישור] [עריכה] [דחייה]
+פעולה: [המשך לפי policy] [עריכה] [דחייה]
 {no_media_line}
 {candidate_lines_או_ריק}
 
 2. STORY מוכן ל־20:30 (א׳–ה׳)
 סקר: {poll_question}
 אפשרויות: {options}
-פעולה: [אישור] [עריכה] [דחייה]
+פעולה: [המשך לפי policy] [עריכה] [דחייה]
 
 3. תוצאת אתמול
 Insights: {imported_or_אין_ספירה}
@@ -34,6 +34,6 @@ WhatsApp: {orders_or_אין_ספירה}
 {studio_tasks}
 ```
 
-הפעולה האנושית כאן היא קלט ל־`policy_id: instagram.publish`; היא אינה בעצמה טענת פרסום. רק evaluator `ALLOW` יכול להוביל ל־tool publish, ו־`approved_for_manual_posting` נשאר מסלול legacy ידני.
+ה־readiness כאן אינו authorization. ה־exact package עובר ל־`policy_id: instagram.publish`; `ALLOW` עם standing authorization יכול להוביל ל־tool publish, ו־`REQUIRE_OWNER_APPROVAL` בלבד יוצר פעולה אנושית נקודתית. `approved_for_manual_posting` נשאר מסלול legacy ידני.
 אין מספר Reach/Saves בלי סנאפשוט מיובא.
 כש־`reel.gate=candidates_ready`, `{no_media_line}` הוא שורת «מועמדי Reel מהקטלוג» ו־`reel.candidate_lines` מפרט 2–3 מועמדים (קובץ · סוג · תאריך · מזהה, למה, מתכון). מועמד ≠ ריל ≠ אישור ≠ פרסום.

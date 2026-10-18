@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos.ai3d.artifact-report.v1",
+  "title": "AI3D Common Artifact Report v1",
+  "description": "Common hashed execution/report envelope for CAD, BREP, intent, mesh, manufacturing, slice and export evidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "report_id",
+    "report_type",
+    "contract_id",
+    "contract_sha256",
+    "capability_record_id",
+    "operation",
+    "status",
+    "started_at",
+    "finished_at",
+    "engine",
+    "inputs",
+    "outputs",
+    "validators",
+    "parent_report_ids",
+    "metrics",
+    "notes"
+  ],
+  "properties": {
+    "schema": {
+      "const": "velvetos.ai3d.artifact-report.v1"
+    },
+    "report_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._-]+$"
+    },
+    "report_type": {
+      "enum": [
+        "execution",
+        "brep",
+        "intent",
+        "mesh",
+        "manufacturing",
+        "slice",
+        "export"
+      ]
+    },
+    "contract_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "contract_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "capability_record_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "operation": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": ["PASS", "WARN", "FAIL", "BLOCKED"]
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "engine": {
+      "$ref": "#/$defs/engineExecution"
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/artifactRef"
+      },
+      "minItems": 1
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/artifactRef"
+      }
+    },
+    "validators": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/validator"
+      },
+      "minItems": 1
+    },
+    "parent_report_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": {
+        "type": ["number", "string", "boolean", "null"]
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "PASS"
+          }
+        },
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "outputs": {
+            "minItems": 1
+          },
+          "validators": {
+            "contains": {
+              "type": "object",
+              "properties": {
+                "outcome": {
+                  "const": "PASS"
+                }
+              },
+              "required": ["outcome"]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "role",
+        "uri_or_path",
+        "sha256",
+        "bytes",
+        "media_type"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "enum": [
+            "input",
+            "source",
+            "normalized",
+            "intermediate",
+            "output",
+            "preview",
+            "receipt"
+          ]
+        },
+        "uri_or_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "engineExecution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "adapter_id",
+        "adapter_version",
+        "runtime",
+        "host",
+        "profile_refs"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runtime": {
+          "type": "string",
+          "minLength": 1
+        },
+        "host": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "validator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "validator_id",
+        "outcome",
+        "evidence_refs"
+      ],
+      "properties": {
+        "validator_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "outcome": {
+          "enum": ["PASS", "WARN", "FAIL", "BLOCKED"]
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      }
+    }
+  }
+}

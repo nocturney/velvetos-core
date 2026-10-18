@@ -4,9 +4,9 @@
 המכונה: `LOOP.json` + `python3 scripts/vfops_loop.py`.  
 הקטלוג לבד = כישלון. הבריף והמסירה חייבים **למשוך** שורות מהפקים.
 
-## כל בוקר 06:15–07:00 (Asia/Jerusalem)
+## כאשר מפעילים Office Loop / Morning Brief (Asia/Jerusalem)
 
-הפרדה קשיחה: **run** (משימות) → **brief** (הרכבה) → **check**/CI (תקינות).  
+אין standing 06:15/07:00 Morning Brief clock. `run` הוא מעבר צרכנים מפורש (ויכול להיצרך ב־Office Loop המורשה); `brief` הוא הרכבה ידנית/אירועית; `check`/CI הוא תקינות. ההפרדה קשיחה: **run** → **brief** → **check**.
 
 ```
 python3 scripts/vfops_loop.py run
@@ -18,7 +18,7 @@ python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.jso
 שליחת המייל: `constitution/SEND.md` — תצוגה 3 אל `nocturney@gmail.com` דרך `python -m vfops.gmail_brief_send` או 3־צעדי MCP (`docs/SEND-BRIEF-MCP.md`). לא `LOAD_FROM_FILE`.  
 המשימה הזו **לא** שולחת (בריף 6.9 כבר יצא).
 
-## מה נמשך אוטומטית
+## מה נמשך בעת הרכבת Brief
 
 | חריץ | מקור |
 |---|---|
@@ -26,7 +26,7 @@ python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.jso
 | 02 | `vfcost.py brief` + `vfbooks.py brief` — עלות חומר + חוב/חשבונית חסרה פנימי (בלי ₪ מכירה, בלי מייל גבייה) + `vfbooks/data/orders.json` / Invoice4U snapshot |
 | 03 | `vfsku.py brief` + `vfsku.py scan` + `vfsku/week.md` + `vfprod.py brief` + `vfprod.py print-done` |
 | 04 | `vfgrowth/hq/FOLLOWER-GROWTH.md` + `PROFILE-TO-WHATSAPP` + `vf_organic_growth.py brief` + `vfbiz/out/week.md` |
-| 05 | CLI אמיתי מ-24ש (`cli-runs.jsonl`) + סיכום `consumer-runs` מ־`run`, או «אין חדש במשרד» + שורות **פער** לפק יומי שלא הורץ. `on-content`/`on-inquiry` לא נחשבים פער בוקר. לא קטלוג מ-`research.md` · כספת מדיה `vfmedia.py validate` (תפעול קולט; GrokBot Drive MCP; Cursor סכמה) |
+| 05 | CLI אמיתי מ-24ש (`cli-runs.jsonl`) + סיכום `consumer-runs` מ־`run`, או «אין חדש במשרד» + שורות **פער** רק ל־`on-brief` שהיה אמור להיצרך ולא הורץ. `on-content`/`on-inquiry`/`on-demand` אינם פער. לא קטלוג מ-`research.md` · כספת מדיה `vfmedia.py validate` (תפעול קולט; GrokBot Drive MCP; Cursor סכמה) |
 | 06 | `vfinsights` loop → `LEARNINGS.md` כשיש CSV; אחרת «אין ספירה». מדדים חלשים = לוג פנימי, לא אשמת בעלים |
 | 07 | כיתובי `vfcopy` + `G004-STORIES-FIX.md` + `vfgrowth/HANDOFF-he.md` + נתיב `PREFLIGHT.md`. פער סוכנות = שורת פער למשרד |
 
@@ -73,5 +73,5 @@ python3 scripts/vfops_loop.py weekly
 
 ## נעול
 
-אין ₪ מומצא. אין Insights מומצאים. אין Publish IG מכאן. סטוריז = instagram.com.  
+אין ₪ מומצא. אין Insights מומצאים. אין direct IG Publish מלולאת ה־brief; publication הוא action נפרד דרך `vfigos` + policy. סטוריז אינם מקבלים bypass דרך ה־loop.
 `vfcost` CLI חי מ־main — `python3 scripts/vfcost.py brief` בחריץ 02. לא ממציאים ₪ מכירה.

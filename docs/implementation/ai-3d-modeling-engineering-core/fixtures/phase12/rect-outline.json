@@ -1,0 +1,56 @@
+{
+  "schema": "velvetos.ai3d.cam.fixture.v1",
+  "fixture_id": "rect-outline-40x30-two-depths",
+  "purpose": "synthetic-offline-reference-only",
+  "units": {
+    "length": "mm",
+    "feed": "mm/min",
+    "spindle": "rpm"
+  },
+  "geometry": {
+    "type": "rectangle",
+    "width_mm": 40,
+    "height_mm": 30,
+    "source": "explicit-synthetic-test-dimensions",
+    "origin_xy_mm": [
+      0,
+      0
+    ],
+    "stock_top_z_mm": 0
+  },
+  "tool": {
+    "kind": "flat_end_mill",
+    "diameter_mm": 3,
+    "source": "explicit-synthetic-tool-reference"
+  },
+  "process": {
+    "kind": "external_contour",
+    "depth_mm": 2,
+    "stepdown_mm": 1,
+    "feed_mm_min": 10,
+    "plunge_mm_min": 5,
+    "rapid_clearance_mm": 5,
+    "spindle_rpm": 12000,
+    "source": "synthetic-fixture-only-not-calibrated"
+  },
+  "material": {
+    "designation": "SYNTHETIC_UNQUALIFIED",
+    "source": "explicit-synthetic-reference",
+    "machining_parameters_qualified": false
+  },
+  "machine": {
+    "name": "NON_CONNECTED_SYNTHETIC_GRBL",
+    "control": false,
+    "verified_motion_envelope": false
+  },
+  "postprocessor": "FreeCAD.CAM.GRBL",
+  "profile": "rect_cutout_grbl_v1",
+  "safety": {
+    "write_gcode_file_only": true,
+    "external_execution_allowed": false,
+    "printer_actions_allowed": false,
+    "machine_control_allowed": false,
+    "laser_activation_allowed": false,
+    "source_toolpath_not_certified": true
+  }
+}

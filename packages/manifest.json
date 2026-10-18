@@ -12,8 +12,8 @@
     "2026-09-08: Shared media vault locked by Christian — packages/vfmedia one catalog + docs/MEDIA-VAULT.md. Drive root 1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv. תפעול intake. No parallel catalogs. No invented SKUs/₪. No Drive share-permission changes. Sensor: scripts/check-vfmedia.py.",
     "2026-09-07 evening catalog: GitHub nocturney/velvetos-core. Folded merged #118 print-demand/print.done/revenue retro, #117 three-layer SoC, #116 core stability, #115/#105 SWC board, #109–#114 quality+loop+templates, #107/#106 research seat, #104/#103/#102 agency gate + G004 stories, #101 brief HTML, #100 vfbiz week. Origin not vendored (CLI not logged in). No open PRs at refresh.",
     "2026-09-03 evening catalog: GitHub nocturney/velvetos-core. Included merged #71 buildwithclaude, #59 office MCPs in Core, #72 best-skills. Origin not vendored (CLI not logged in). Open branches still on GitHub: #70 cursor/daily-research-2026-09-03-b067, #68 cursor/integrate-ig-mcp-abe1, #66 cursor/close-access-gaps-5b1b, #58 cursor/icloud-drive-dual-path-c95c.",
-    "2026-09-03: Standing forever bi-daily LinklyAI/best-skills pulse — BEST-SKILLS.md + TIMER.md + standingForever. Renew subscribe_timer every pass. Sensor: scripts/check-vfresearch.py.",
-    "2026-09-03: Bi-daily LinklyAI/best-skills ranking scan on vfresearch — BEST-SKILLS.md + BEST-SKILLS.json + skill vf-best-skills. Embed patterns in place; no npx on Cloud. Sensor: scripts/check-vfresearch.py.",
+    "2026-09-03: Historical best-skills bi-daily pulse contract. RETIRED by owner override 2026-10-06: BEST-SKILLS is now manual/event-driven; no standingForever and no timer renewal. Sensor: scripts/check-vfresearch.py.",
+    "2026-09-03: Historical LinklyAI/best-skills ranking scan provenance. Current authority is on-demand/manual-event-driven via BEST-SKILLS.md + BEST-SKILLS.json + skill vf-best-skills; no npx on Cloud. Sensor: scripts/check-vfresearch.py.",
     "2026-09-02 evening catalog: GitHub nocturney/velvetos-core (renamed from velvet-factory-headquarters-os). Folded PR #69 vfsku SHELF.json + FIRST-PRINT.md. Origin not vendored (CLI not logged in). Left open: #68 ig-mcp, #66 access gaps, #59 MCP bridge, #58 iCloud.",
     "2026-09-01: Eleven packs (vfops…vfbriefux) reclassified hq-native — tree lives in Core; bcId is lineage only. Origin vendor for six tmp-* packs still needs origin auth login. See docs/OWNER-ACTIONS-he.md.",
     "2026-08-31: This repo is VelvetOS Core (backend). Frontend scaffold for Velvet Factory: instances/velvet-factory/ → publish nocturney/velvetos-velvet-factory. See packages/velvetos/REPOS.md.",
@@ -160,7 +160,7 @@
     },
     {
       "name": "vfresearch",
-      "summary": "Research pack — weekly links, bi-daily best-skills, last30 community research, and weekly print-demand pulse (hq/PRINT-DEMAND.md). No invented trends.",
+      "summary": "Research pack — manual/event-driven research, on-demand best-skills and last30 community research, plus separately scoped weekly review surfaces where still authorized. No invented trends.",
       "bcId": "bc-01278e9b",
       "agentUrl": "https://cursor.com/agents/bc-01278e9b",
       "vendorStatus": "hq-native"

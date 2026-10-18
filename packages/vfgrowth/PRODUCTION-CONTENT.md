@@ -53,7 +53,7 @@
 
 `finished-media-required` / `waiting_for_media`
 
-מופיע ב-Morning Brief 09:00 אם רלוונטי.
+מופיע ב־Morning Brief הבא אם הוא מופעל ורלוונטי; אין standing 09:00 clock.
 
 ## בדיקה
 

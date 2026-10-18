@@ -1,0 +1,68 @@
+{
+  "schema": "velvetos.office-v2.phase2-scorecard.v0",
+  "candidate_id": "candidate-restate",
+  "fixture_id": "durable-execution-destructive-20-step",
+  "run_id": "inv_16MojuZfFawu0q5YR3f7mBXcpu2naoU7fs",
+  "captured_at": "2026-10-06T12:15:31+03:00",
+  "fitness": {
+    "score_0_5": 5.0,
+    "notes": [
+      "PASS on worker recovery, engine recovery, dedupe, durable wait/resume, cancellation, retry, movement, UNKNOWN_RECONCILE, reconciliation and replay.",
+      "Simulated effect A and B each executed exactly once.",
+      "Recorded benchmark wall time 16.574 seconds."
+    ]
+  },
+  "safety": {
+    "score_0_5": 5.0,
+    "notes": [
+      "Internal LAB network, no host port publication, zero production credentials and zero production authority.",
+      "Unknown outcome was reconciled against provider truth before retry decision.",
+      "Official Restate workflows provide once-per-ID execution semantics; benchmark independently proved no duplicate external effects."
+    ]
+  },
+  "operability": {
+    "score_0_5": 4.5,
+    "notes": [
+      "Basic self-host shape is a single Restate runtime without an external database dependency.",
+      "Official docs expose dedicated Snapshots & Backups and Upgrading Restate/rollback guidance.",
+      "One admission node-incarnation observation remains documented but did not block destructive recovery."
+    ]
+  },
+  "evidence_quality": {
+    "score_0_5": 4.0,
+    "notes": [
+      "Full semantic receipt and correlated workflow output are present.",
+      "CPU/RAM/network/storage metrics were not captured in the original run and remain null/unavailable rather than zero."
+    ]
+  },
+  "resources": {
+    "wall_seconds": 16.574,
+    "cpu_peak_pct": null,
+    "ram_peak_mb": null,
+    "gpu_peak_pct": 0.0,
+    "vram_peak_mb": 0.0,
+    "storage_delta_mb": null,
+    "network_mb": null,
+    "external_cost": 0.0,
+    "recurring_cost": 0.0,
+    "operator_minutes": 0.0
+  },
+  "rollback": {
+    "status": "PASS",
+    "notes": [
+      "Official operations documentation includes snapshots/backups and an upgrade page with rollback strategy: https://docs.restate.dev/server/snapshots and https://docs.restate.dev/server/upgrading",
+      "Before production authority, configure the chosen snapshot/backup destination and perform a restore drill; Phase 3A only selects the runtime spine."
+    ]
+  },
+  "security_findings": [
+    "No production credentials or production authority were used.",
+    "Candidate ran on an isolated internal network.",
+    "License is BSL-1.1 with the recorded internal/own-production-use grant; this is acceptable for the current internal use case but remains a maintenance/legal tracking item."
+  ],
+  "operations_findings": [
+    "Canonical receipt: D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/restate-destructive-benchmark-pass.json",
+    "Official self-host docs list cluster, backup/snapshot, monitoring and upgrade surfaces.",
+    "Resource telemetry other than wall time/cost is unavailable for this run and is not scored as zero."
+  ],
+  "verdict": "ADVANCE"
+}

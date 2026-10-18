@@ -1,0 +1,28 @@
+{
+  "schema": "velvetos.office-v2.phase3a-shortlist-reopen.v0",
+  "captured_at": "2026-10-06T10:03:12+03:00",
+  "lane_id": "durable-execution",
+  "trigger": "SHORTLISTED_CANDIDATE_ADMISSION_FAILURE",
+  "failed_candidate": "candidate-hatchet",
+  "failure": "Pinned Hatchet SDK 1.41.1 requires hatchet-embedded v0.107.2 sidecar, but the SDK-declared release checksums URL returned HTTP 404 during LAB admission.",
+  "evidence_refs": [
+    "D:/Velvet/Artifacts/OfficeV2/phase3/evidence/2026-10-06/resolve-pins-task.txt",
+    "D:/Velvet/OfficeV2Lab/artifacts/phase3a-durable/pins/hatchet-wheel-embedded-code.txt"
+  ],
+  "replacement_candidate": "candidate-dbos",
+  "replacement_basis": "DBOS was the recorded credible reserve; stable 3.1.0 wheel resolved to an immutable SHA256 and the reserve reopen condition explicitly included shortlisted-candidate admission failure.",
+  "active_challengers": [
+    "candidate-restate",
+    "candidate-hatchet",
+    "candidate-temporal"
+  ],
+  "winner": null,
+  "production_authority_change": false,
+  "status": "SUPERSEDED_AFTER_CORRECTED_HATCHET_OCI_ADMISSION",
+  "failure_scope": "hatchet-embedded sidecar v0.107.2 artifact shape only",
+  "temporary_replacement_candidate": "candidate-dbos",
+  "superseded_at": "2026-10-06T10:44:17+03:00",
+  "correction_trigger": "CREDIBLE_OFFICIAL_ALTERNATIVE_ARTIFACT_EVIDENCE",
+  "correction_ref": "docs/implementation/office-v2/phase3/durable-execution-shortlist-correction-v0.json",
+  "restored_candidate": "candidate-hatchet"
+}

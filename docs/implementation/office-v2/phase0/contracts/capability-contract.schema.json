@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/capability-contract.v0",
+  "title": "Office v2 Capability Contract v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "capability_id", "critical", "status", "authority_ref", "provider_id",
+    "fallback", "evidence_refs", "observed_at", "freshness", "side_effect",
+    "semantics"
+  ],
+  "properties": {
+    "capability_id": {"type": "string", "minLength": 1},
+    "critical": {"type": "boolean"},
+    "status": {"enum": ["AVAILABLE", "DEGRADED", "BLOCKED", "PROHIBITED", "UNVERIFIED", "N_A"]},
+    "authority_ref": {"type": "string", "minLength": 1},
+    "provider_id": {"type": ["string", "null"]},
+    "fallback": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ttl_seconds", "state"],
+      "properties": {
+        "ttl_seconds": {"type": "integer", "minimum": 0},
+        "state": {"enum": ["FRESH", "STALE_ALLOWED_READ_ONLY", "STALE_BLOCKS_EFFECT", "STATIC_DEFINITION"]}
+      }
+    },
+    "side_effect": {"type": "boolean"},
+    "effect_class": {"type": ["string", "null"]},
+    "safe_mode": {"type": "string"},
+    "prohibited_actions": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "notes": {"type": "array", "items": {"type": "string"}},
+    "semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "success", "failure", "idempotency_scope", "cancellation",
+        "timeout", "evidence", "compatibility", "readback", "fallback"
+      ],
+      "properties": {
+        "success": {"type": "string", "minLength": 1},
+        "failure": {"type": "string", "minLength": 1},
+        "idempotency_scope": {"type": "string", "minLength": 1},
+        "cancellation": {"type": "string", "minLength": 1},
+        "timeout": {"type": "string", "minLength": 1},
+        "evidence": {"type": "string", "minLength": 1},
+        "compatibility": {"type": "string", "minLength": 1},
+        "readback": {"type": "string", "minLength": 1},
+        "fallback": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

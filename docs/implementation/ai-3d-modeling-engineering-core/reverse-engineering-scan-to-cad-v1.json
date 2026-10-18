@@ -1,0 +1,118 @@
+{
+  "schema": "velvetos.ai3d.reverse-engineering-scan-to-cad.v1",
+  "non_authoritative_staging": true,
+  "existing_composite_provider": "pipeline_scan_to_cad",
+  "authorities": {
+    "scan_mesh": "blender-capability-host",
+    "exact_cad": "packages/vfprod/FABRICATION-ROUTER.md",
+    "geometry_ir": "velvetos.geometry-ir.v1"
+  },
+  "epistemic_policy": {
+    "scan_is_evidence_not_manufacturing_truth": true,
+    "generated_hidden_geometry_is_ground_truth": false,
+    "automatic_semantic_feature_recognition_claimed": false,
+    "primitive_family_must_be_explicit_for_bounded_fit": true,
+    "segment_ref_must_be_explicit_for_bounded_fit": true,
+    "known_dimensions_override_visual_inference": true,
+    "hidden_dimensions_may_be_invented": false
+  },
+  "stages": [
+    {
+      "id": "pointcloud.normalize",
+      "status": "REUSE_PROVEN_TYPED",
+      "capabilities": ["scan.pointcloud", "scan.clean"],
+      "providers": ["sidecar_pdal", "sidecar_open3d", "sidecar_cloudcompare", "sidecar_pymeshlab"]
+    },
+    {
+      "id": "pointcloud.register",
+      "status": "REUSE_PROVEN_TYPED",
+      "capabilities": ["scan.register"],
+      "providers": ["sidecar_open3d", "sidecar_cloudcompare", "sidecar_colmap"]
+    },
+    {
+      "id": "reconstruction",
+      "status": "PROVEN_PROVIDER_COMPONENTS",
+      "capabilities": ["scan.reconstruct", "photogrammetry.sfm", "photogrammetry.mvs", "photogrammetry.object_reconstruct"],
+      "providers": ["sidecar_colmap", "sidecar_meshroom", "sidecar_open3d"]
+    },
+    {
+      "id": "segmentation",
+      "status": "PROVEN_BOUNDED_EXPLICIT",
+      "contract": "segment_ref selects an upstream/user-provided segment; no automatic semantic identity is inferred"
+    },
+    {
+      "id": "primitive_fit",
+      "status": "PROVEN_BOUNDED",
+      "adapter": "scripts/ai3d_reverse_engineering.py",
+      "families": ["box_axis_aligned", "cylinder_z"],
+      "constraints": [
+        "units must be mm",
+        "primitive family explicit",
+        "segment_ref explicit",
+        "known-dimension anchors checked when supplied",
+        "fit never grants manufacturing authority"
+      ]
+    },
+    {
+      "id": "nurbs_fit",
+      "status": "PROVEN_BOUNDED_RESEARCH_SURFACE",
+      "adapter": "scripts/ai3d_reverse_engineering.py",
+      "provider": "geomdl",
+      "version": "5.4.0",
+      "license": "MIT",
+      "runtime": "geometry-core-py312",
+      "algorithm": "least-squares surface approximation",
+      "constraints": [
+        "structured point grid required",
+        "explicit fit-error threshold required",
+        "surface output is reconstruction evidence only",
+        "CAD conversion requires a separate exact-CAD contract"
+      ]
+    },
+    {
+      "id": "cad_reconstruction",
+      "status": "REUSE_EXISTING_AUTHORITY",
+      "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+      "providers": ["build123d", "cadquery", "sidecar_freecad"],
+      "requirements": [
+        "Geometry IR or equivalent explicit parametric contract",
+        "dimensions/tolerances remain explicit",
+        "STEP roundtrip when exported"
+      ]
+    }
+  ],
+  "photogrammetry": {
+    "colmap": {
+      "provider_id": "sidecar_colmap",
+      "expected_version": "4.2.1",
+      "reuse": true
+    },
+    "meshroom": {
+      "provider_id": "sidecar_meshroom",
+      "expected_version": "2025.1.0",
+      "reuse": true
+    }
+  },
+  "research_candidates": {
+    "nurbsfit_2026": {
+      "status": "CANDIDATE_RESEARCH",
+      "source": "https://github.com/lizOnly/nurbsfit",
+      "license": "MIT",
+      "blockers": [
+        "requires GoCoPP C++ preprocessing/runtime qualification",
+        "requires NURBSDiff compatibility patch according to upstream instructions",
+        "requires PyTorch3D/CUDA build qualification",
+        "no reproducible VelvetOS point-cloud-to-NURBS fixture yet",
+        "must not replace geomdl bounded lane or exact-CAD authority before benchmark"
+      ]
+    }
+  },
+  "safety": {
+    "printer_actions_allowed": false,
+    "machine_control_allowed": false,
+    "duplicate_scan_router": false,
+    "duplicate_cad_router": false,
+    "silent_unit_conversion": false,
+    "automatic_semantic_feature_inference": false
+  }
+}

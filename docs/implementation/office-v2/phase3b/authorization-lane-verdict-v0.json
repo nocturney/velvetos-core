@@ -1,0 +1,49 @@
+{
+  "schema": "velvetos.office-v2.phase3b-authorization-lane-verdict.v0",
+  "captured_at": "2026-10-06T14:59:03.486553Z",
+  "status": "LANE_WINNER_SELECTED_FOR_COMPOSITION_NO_PRODUCTION_AUTHORITY",
+  "lane_id": "phase3b-authorization-policy",
+  "fixture_id": "identity-security-destructive-20-step",
+  "winner": "candidate-opa",
+  "fallback": "candidate-cedar",
+  "specialized_reserve": "candidate-openfga",
+  "incumbent": "incumbent-current-authorization",
+  "production_authority_change": false,
+  "production_writer_change": false,
+  "shadow_or_pilot_promotion": false,
+  "selection_basis": [
+    "OPA, Cedar and OpenFGA all passed the frozen 20-step hard gate; the incumbent failed 8 mandatory authorization steps.",
+    "OPA is the closest direct fit to the contract's generic principal+action+resource+context decision surface and operator-visible decision-receipt requirement, with a simple stateless core topology.",
+    "Cedar is retained as fallback because it passed cleanly with the smallest runtime footprint, but Office v2 must own more service/correlation/audit adapter logic around the embedded engine.",
+    "OpenFGA passed the semantics and is retained as a specialized reserve for ReBAC-heavy future needs; its relationship-model abstraction and persistent-store path add concepts that are not required by this generic lane."
+  ],
+  "scorecards": {
+    "candidate-opa": "docs/implementation/office-v2/phase3b/scorecards/authorization-candidate-opa.json",
+    "candidate-cedar": "docs/implementation/office-v2/phase3b/scorecards/authorization-candidate-cedar.json",
+    "candidate-openfga": "docs/implementation/office-v2/phase3b/scorecards/authorization-candidate-openfga.json",
+    "incumbent-current-authorization": "docs/implementation/office-v2/phase3b/scorecards/authorization-incumbent-current-authorization.json"
+  },
+  "evidence": {
+    "candidate-opa": {
+      "path": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-destructive-candidate-opa.json",
+      "sha256": "17ead82fca751e879b0209a2801c5f0457babe27b6d13c6fc66e6f02e1c00bc2",
+      "status": "PASS"
+    },
+    "candidate-openfga": {
+      "path": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-destructive-candidate-openfga.json",
+      "sha256": "c497f47a68928e51eabe89920d82dfcd823c412fc600fc733f52234ae1c1b4c7",
+      "status": "PASS"
+    },
+    "candidate-cedar": {
+      "path": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-destructive-candidate-cedar.json",
+      "sha256": "c24abafd6e61c14aa0b3ee22cf978a8a8629199bb0076d2818b60ae072e01073",
+      "status": "PASS"
+    },
+    "incumbent-current-authorization": {
+      "path": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-destructive-incumbent-current-authorization.json",
+      "sha256": "b35c94ff53935026640a4a8d4f6f7aab995fe85eeea54d62aad04a626836766c",
+      "status": "FAIL"
+    }
+  },
+  "next_gate": "Run identity-provider and credential-broker destructive scorecards, then execute cross-role composition using lane winners/fallbacks. No production authority before composition PASS and later promotion gate."
+}

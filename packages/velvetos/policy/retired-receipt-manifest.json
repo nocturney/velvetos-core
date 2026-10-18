@@ -1,0 +1,34 @@
+{
+  "schema": "velvetos.retired-receipts.v1",
+  "purpose": "immutable_integrity_for_retired_sensor_receipts",
+  "entries": [
+    {
+      "path": "packages/vfharness/state/ecosystem-radar-phase9-2026-09-27.json",
+      "sha256": "b672a79da0efe8f18abd083dde0163f3640ac69049f113b332b24a672ab1f89e"
+    },
+    {
+      "path": "packages/vfharness/state/zero-cost-agent-stack-2026-09-27.json",
+      "sha256": "98a199d67edec412c4111b2ee6cafa3721fc66c92fa790c1a3ffec20582caf3a"
+    },
+    {
+      "path": "packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json",
+      "sha256": "99a00fe5a75937852972a247c49120fcd785077c940e2603c1e783a6a007e827"
+    },
+    {
+      "path": "scripts/check-ecosystem-radar-phase9.py",
+      "sha256": "f591aac45843f2b6850e19d000d92530c0ad9e77b345656c78f2a1917c5683a6"
+    },
+    {
+      "path": "scripts/check-zero-cost-final-acceptance.py",
+      "sha256": "357b71ff487b73ef72599256cd46d1395376fdf3ad1e28fa592e22e5eb55de5c"
+    },
+    {
+      "path": "scripts/check-retired-receipt-integrity.py",
+      "sha256": "4a8b3a2d0ad6ba560c542e9ce13e70e8bae5a93f5bc190180881294c69b9a5cd"
+    },
+    {
+      "path": "scripts/generate-retired-receipt-manifest.py",
+      "sha256": "894dbb0ee07b7f73b6312d4aa8236dde94c2d1f771938a0cd3f04e20d5d96924"
+    }
+  ]
+}

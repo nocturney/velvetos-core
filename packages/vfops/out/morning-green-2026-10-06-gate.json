@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "tier_contract_version": 1,
+  "tier": "FINAL_INTERNAL",
+  "surface": "owner-brief",
+  "language": "he",
+  "text_sha256": "5419cb1f02e05eb4fd8cd8d5d6b660fff927fb2cb21ffcf8848890f0ef85ec63",
+  "lint": {
+    "status": "pass",
+    "problems": [],
+    "raw_status": "fail_style",
+    "blocking_for_tier": false
+  },
+  "anti_slop": {
+    "checked": true,
+    "findings": [],
+    "blocking_for_tier": true,
+    "authorship": "NOT_INFERRED — named writing patterns only"
+  },
+  "stages": {
+    "truth_checked": true,
+    "reader_first": true,
+    "copy_authority": true,
+    "humanizer_ai_tells": true,
+    "domain_tools_recorded": true,
+    "surface_qa": true,
+    "exact_body_bound": false
+  },
+  "required_evidence": [
+    "truth_checked",
+    "surface_qa",
+    "reader_first",
+    "copy_authority",
+    "humanizer_ai_tells"
+  ],
+  "heavy_tools_required": true,
+  "domain_tools": [
+    "vfops"
+  ],
+  "marketing_aids": null,
+  "no_text_compared": null,
+  "approved_static_copy": {
+    "requested": false,
+    "expected_sha256": null,
+    "exact_match": false,
+    "reuse_allowed": false
+  },
+  "missing_evidence": [],
+  "failure_reason": null,
+  "visible_text_gate": "PASS",
+  "rule": "Tiered Visible Text Gate: internal drafts pay truth/basic-safety only; internal finals add clarity/facts with heavy ceremony only for sensitivity/length; external commitments require facts + reader/surface QA + exact-body binding; public publish keeps the full public-copy chain. Exact approved static copy may reuse prior copy work only while its hash is unchanged and facts are rechecked."
+}

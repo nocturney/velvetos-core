@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/effect-intent.v0",
+  "title": "Office v2 EffectIntent v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["intent_id", "effect_class", "action_type", "target_ref", "payload_sha256", "idempotency_key", "idempotency_scope", "policy_id", "correlation", "created_at"],
+  "properties": {
+    "intent_id": {"type": "string", "minLength": 1},
+    "effect_class": {"type": "string", "minLength": 1},
+    "action_type": {"type": "string", "minLength": 1},
+    "target_ref": {"type": "string", "minLength": 1},
+    "payload_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "idempotency_key": {"type": "string", "minLength": 8},
+    "idempotency_scope": {"enum": ["exact_action", "domain_entity", "provider_operation"]},
+    "policy_id": {"type": "string", "minLength": 1},
+    "policy_decision_id": {"type": ["string", "null"]},
+    "correlation": {"$ref": "correlation-envelope.schema.json"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": ["string", "null"], "format": "date-time"},
+    "expected_postcondition": {"type": ["string", "null"]}
+  }
+}

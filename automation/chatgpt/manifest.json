@@ -1,0 +1,80 @@
+{
+  "schema": "velvetos.chatgpt.scheduler.v1",
+  "status": "ACTIVE",
+  "authority": "owner-facing-scheduler",
+  "provider": "chatgpt-automations",
+  "timezone": "Asia/Jerusalem",
+  "cutoverDate": "2026-10-06",
+  "principle": "schedule only work that still has a concrete recurring need; health, retry and evidence are runtime behavior rather than standalone bureaucracy",
+  "scheduledRoutines": [
+    {
+      "logicalId": "cognee-memory-sync",
+      "title": "Cognee Memory Sync",
+      "cadence": "daily around 11:30",
+      "timingMode": "flexible",
+      "enabled": true,
+      "role": "temporary derived-memory maintenance while Office v2 memory selection remains open"
+    },
+    {
+      "logicalId": "velvetos-office-loop",
+      "title": "VelvetOS Office Loop",
+      "cadence": "daily 18:30",
+      "timingMode": "exact",
+      "enabled": true,
+      "role": "one evening operational sweep; owner notification only for a real action, decision or blocker"
+    },
+    {
+      "logicalId": "runtime-receipts-refresh",
+      "title": "Runtime Receipts Refresh",
+      "cadence": "daily 19:15",
+      "timingMode": "exact",
+      "enabled": true,
+      "role": "dependency-scoped live evidence refresh; never fabricate observations"
+    }
+  ],
+  "eventDrivenCapabilities": [
+    {
+      "logicalId": "velvet-morning-brief",
+      "title": "Velvet Morning Brief",
+      "scheduled": false,
+      "mode": "manual-or-event-driven"
+    }
+  ],
+  "retiredScheduledRoutines": [
+    "morning-delivery-guard",
+    "velvet-research-seat",
+    "weekly-research-accountability",
+    "cognee-stable-updates",
+    "velvetos-integrity-guard",
+    "pc-offline-retry"
+  ],
+  "grokbot": {
+    "schedulerAuthority": false,
+    "routineManagerAuthority": false,
+    "knownRoutineEnabledCount": 0,
+    "state": "dormant-on-demand",
+    "retainedFor": "historical evidence and optional on-demand tool use only"
+  },
+  "runtimeProof": {
+    "grokProductionSchedulerRequired": false,
+    "chatgptSchedulerReceiptRequired": false,
+    "rule": "do not invent provider receipts; runtime evidence remains dependency-scoped"
+  },
+  "approvedBy": "Christian Velvet",
+  "ownerEmailAuthority": {
+    "design": "Morning Green v3.1 editorial RTL Desktop-first responsive Outlook-safe",
+    "visibleText": "constitution/VISIBLE_TEXT.md",
+    "request": "packages/vfops/out/gmail-send-request.json",
+    "workflow": ".github/workflows/gmail-brief-send.yml",
+    "sender": "packages/vfops/gmail_brief_request.py",
+    "interactiveGmailFallback": false,
+    "deliveryEvidenceRequired": true
+  },
+  "morningBrief": {
+    "logicalId": "velvet-morning-brief",
+    "scheduled": false,
+    "mode": "manual-or-event-driven",
+    "design": "Morning Green v3.1",
+    "deliveryGuard": "workflow-native-no-separate-clock"
+  }
+}

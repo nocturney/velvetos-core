@@ -13,6 +13,8 @@ ROOT = Path(__file__).resolve().parents[1]
 LAYERS = ROOT / "packages" / "vfharness" / "layers.json"
 MANIFEST = ROOT / "packages" / "manifest.json"
 AGENTS = ROOT / "packages" / "vfharness" / "AGENTS.md"
+CONSTITUTION = ROOT / "constitution" / "CONSTITUTION.md"
+PERMISSIONS = ROOT / "packages" / "vfharness" / "PERMISSIONS.md"
 STAGE5B_REPORT = ROOT / "packages" / "velvetos" / "policy" / "reports" / "stage5b-harness-consolidation.json"
 STAGE5B_GENERATOR = ROOT / "scripts" / "generate-stage5b-harness-consolidation-report.py"
 STAGE6C_REPORT = ROOT / "packages" / "velvetos" / "policy" / "reports" / "stage6c-dcc-capability-gating.json"
@@ -70,14 +72,37 @@ def main() -> None:
         fail(f"missing {MANIFEST.relative_to(ROOT)}")
     if not AGENTS.is_file():
         fail("missing AGENTS.md (layer 1 guide)")
+    if not CONSTITUTION.is_file() or not PERMISSIONS.is_file():
+        fail("missing canonical constitution/permissions surface")
     for path in (STAGE5B_REPORT, STAGE5B_GENERATOR, STAGE6C_REPORT, STAGE6C_GENERATOR, DCC_ADOBE_VALIDATOR):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
-    spec = json.loads(LAYERS.read_text())
-    manifest = json.loads(MANIFEST.read_text())
+    spec = json.loads(LAYERS.read_text(encoding="utf-8"))
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     pack_names = {p["name"] for p in manifest.get("packs", [])}
-    agents_text = AGENTS.read_text()
+    agents_text = AGENTS.read_text(encoding="utf-8")
+    constitution_text = CONSTITUTION.read_text(encoding="utf-8")
+    permissions_text = PERMISSIONS.read_text(encoding="utf-8")
+
+    for needle in (
+        "Standing implementation authorization — Git delivery",
+        "אין לבקש מהבעלים אישור נוסף רק עבור push או merge",
+        "force-push",
+        "branch protection",
+    ):
+        if needle not in constitution_text:
+            fail(f"constitution missing Git delivery authority marker {needle!r}")
+    for needle in (
+        "ALLOW git delivery",
+        "owner already approved the implementation scope",
+        "Push / PR / Merge",
+        "ללא force-push",
+    ):
+        if needle not in permissions_text:
+            fail(f"PERMISSIONS.md missing Git delivery authority marker {needle!r}")
+    if "ASK before: git push" in permissions_text:
+        fail("PERMISSIONS.md reintroduced redundant owner approval for git push")
 
     if spec.get("name") != "vfharness":
         fail("layers.json name must be vfharness")
@@ -157,6 +182,47 @@ def main() -> None:
     for needle in ("Canonical execution contract", "retry(step, budget=2)", "fallback(step)", "downgrade_scope(step)", "safe ruling", "skillstate.md", "office/control/HANDOFF.json", "packages/vfmem/HANDOFF.md"):
         if needle not in canonical_text:
             fail(f"canonical LOOP.md missing {needle!r}")
+    # Ladder mirror: layers.json "ladder" must equal the escalation ladder in LOOP.md.
+    # Pure text parsing, no clock or network, so the result is deterministic.
+    ladder = spec.get("ladder")
+    if not isinstance(ladder, dict):
+        fail("layers.json missing ladder mirror")
+    if ladder.get("canonical") != "packages/vfharness/LOOP.md":
+        fail("ladder.canonical must be packages/vfharness/LOOP.md")
+    for key in ("maxRetries", "escalateAfter", "sameSensorFailTrip", "stoppingCondition"):
+        if key not in loop:
+            fail(f"loop.{key} must be preserved (additive schema only)")
+    code_block = re.search(r"```text\n(plan = steps.*?)```", canonical_text, re.S)
+    if not code_block:
+        fail("LOOP.md execution code block missing")
+    ladder_steps = re.findall(
+        r"retry\(step, budget=(\d+)\)|(fallback)\(step\)|(downgrade_scope)\(step\)|(ruling)\(step\)|(escalate)\(step\)",
+        code_block.group(1),
+    )
+    parsed_order = []
+    parsed_budget = None
+    for budget, fb, dg, rl, esc in ladder_steps:
+        if budget:
+            parsed_order.append("retry")
+            parsed_budget = int(budget)
+        elif fb:
+            parsed_order.append("fallback")
+        elif dg:
+            parsed_order.append("downgrade_scope")
+        elif rl:
+            parsed_order.append("safe_ruling")
+        elif esc:
+            parsed_order.append("escalate")
+    if parsed_order != ladder.get("order"):
+        fail(f"ladder.order {ladder.get('order')} drifts from LOOP.md {parsed_order}")
+    if parsed_budget != ladder.get("retryBudget"):
+        fail(f"ladder.retryBudget {ladder.get('retryBudget')} drifts from LOOP.md budget={parsed_budget}")
+    if "| fallback | פעם אחת" not in canonical_text or ladder.get("fallbackAttempts") != 1:
+        fail("ladder.fallbackAttempts drifts from LOOP.md (fallback once)")
+    if "`safe_to_rule=False`" not in canonical_text or ladder.get("safeRulingDefault") is not False:
+        fail("ladder.safeRulingDefault drifts from LOOP.md (safe ruling is opt-in)")
+    if "לא ניתן לעקיפה ב־ruling" not in canonical_text or ladder.get("requiredSensorRedOverridable") is not False:
+        fail("ladder.requiredSensorRedOverridable drifts from LOOP.md")
     secondary = execution.get("secondarySurfaces") or []
     if len(secondary) != 5 or len(secondary) != len(set(secondary)):
         fail("executionContract secondary surfaces must contain five unique active pointers")
@@ -322,7 +388,7 @@ def main() -> None:
             fail("Stage 6C report is not reproducible")
 
     schema_path = ROOT / "packages/vfharness/templates/checkpoint.schema.json"
-    schema = json.loads(schema_path.read_text())
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
     required = set(schema.get("required") or [])
     if not CHECKPOINT_REQUIRED <= required:
         fail(f"checkpoint schema missing {sorted(CHECKPOINT_REQUIRED - required)}")
@@ -330,7 +396,7 @@ def main() -> None:
     example_path = ROOT / "packages/vfharness/templates/checkpoint.example.json"
     if not example_path.is_file():
         fail("missing checkpoint example")
-    example = json.loads(example_path.read_text())
+    example = json.loads(example_path.read_text(encoding="utf-8"))
     missing_ex = CHECKPOINT_REQUIRED - set(example)
     if missing_ex:
         fail(f"checkpoint example missing {sorted(missing_ex)}")
@@ -340,7 +406,7 @@ def main() -> None:
     run_example_path = ROOT / "packages/vfharness/templates/checkpoint.example-run.json"
     if not run_example_path.is_file():
         fail("missing checkpoint example-run")
-    run_example = json.loads(run_example_path.read_text())
+    run_example = json.loads(run_example_path.read_text(encoding="utf-8"))
     missing_run = CHECKPOINT_REQUIRED - set(run_example)
     if missing_run:
         fail(f"checkpoint example-run missing {sorted(missing_run)}")
@@ -356,7 +422,7 @@ def main() -> None:
     skillstate = ROOT / "packages/vfharness/playbooks/skillstate.md"
     if not skillstate.is_file():
         fail("missing packages/vfharness/playbooks/skillstate.md")
-    skillstate_text = skillstate.read_text()
+    skillstate_text = skillstate.read_text(encoding="utf-8")
     for needle in (
         "2608.26263",
         "execution_state",
@@ -366,21 +432,21 @@ def main() -> None:
     ):
         if needle not in skillstate_text:
             fail(f"skillstate.md missing {needle!r}")
-    schema_text = schema_path.read_text()
+    schema_text = schema_path.read_text(encoding="utf-8")
     for needle in ("execution_state", "latest_observation", "SKILLSTATE", "component_state", "Degraded"):
         if needle not in schema_text:
             fail(f"checkpoint.schema.json missing SKILLSTATE field {needle!r}")
-    if "skillstate.md" not in (ROOT / "packages/vfharness/EMBED.md").read_text():
+    if "skillstate.md" not in (ROOT / "packages/vfharness/EMBED.md").read_text(encoding="utf-8"):
         fail("EMBED.md must reference skillstate.md")
 
     degraded = ROOT / "packages/vfharness/playbooks/degraded-mode.md"
     if not degraded.is_file():
         fail("missing packages/vfharness/playbooks/degraded-mode.md")
-    degraded_text = degraded.read_text()
+    degraded_text = degraded.read_text(encoding="utf-8")
     for needle in ("Degraded", "component_state", "ORCHESTRA", "failover", "broker"):
         if needle not in degraded_text:
             fail(f"degraded-mode.md missing {needle!r}")
-    orch = (ROOT / "constitution" / "ORCHESTRA.md").read_text()
+    orch = (ROOT / "constitution" / "ORCHESTRA.md").read_text(encoding="utf-8")
     if "Degraded Mode" not in orch:
         fail("ORCHESTRA.md must name Degraded Mode")
     if example.get("component_state") not in {
@@ -396,7 +462,7 @@ def main() -> None:
         fail("checkpoint example should demonstrate component_state Idle")
     if run_example.get("component_state") != "Blocked":
         fail("checkpoint example-run should demonstrate component_state Blocked")
-    skillstate_text = skillstate.read_text()
+    skillstate_text = skillstate.read_text(encoding="utf-8")
     for needle in ("component_state", "degraded-mode", "events.catalog"):
         if needle not in skillstate_text:
             fail(f"skillstate.md missing three-layer needle {needle!r}")
@@ -404,7 +470,7 @@ def main() -> None:
     thrift = ROOT / "packages/vfharness/playbooks/context-thrift.md"
     if not thrift.is_file():
         fail("missing packages/vfharness/playbooks/context-thrift.md")
-    thrift_text = thrift.read_text()
+    thrift_text = thrift.read_text(encoding="utf-8")
     for needle in (
         "phase-boundary",
         "באמצע ביצוע",
@@ -414,10 +480,10 @@ def main() -> None:
     ):
         if needle not in thrift_text:
             fail(f"context-thrift.md missing phase-boundary needle {needle!r}")
-    embed_text = (ROOT / "packages/vfharness/EMBED.md").read_text()
+    embed_text = (ROOT / "packages/vfharness/EMBED.md").read_text(encoding="utf-8")
     if "phase-boundary" not in embed_text:
         fail("EMBED.md must reference phase-boundary compaction")
-    if "skillstate.md" not in (ROOT / "packages/vfharness/LOOP.md").read_text():
+    if "skillstate.md" not in (ROOT / "packages/vfharness/LOOP.md").read_text(encoding="utf-8"):
         fail("LOOP.md must reference skillstate.md")
     if "SKILLSTATE" not in agents_text and "skillstate" not in agents_text:
         fail("AGENTS.md MEMORY must mention SKILLSTATE / skillstate")
@@ -432,7 +498,7 @@ def main() -> None:
     tools_map = ROOT / "packages/vfharness/playbooks/grok-outage-tools.md"
     if not tools_map.is_file():
         fail("missing packages/vfharness/playbooks/grok-outage-tools.md")
-    tools_text = tools_map.read_text()
+    tools_text = tools_map.read_text(encoding="utf-8")
     for needle in ("create_draft", "Cloudflare Instagram Publisher", "Meta Instagram Graph", "אין MCP", "send_message"):
         if needle not in tools_text:
             fail(f"grok-outage-tools.md missing {needle!r}")
@@ -453,7 +519,7 @@ def main() -> None:
     ):
         if needle not in axes:
             fail(f"core-stability-four-axes.md must mention {needle}")
-    failover_text = failover.read_text()
+    failover_text = failover.read_text(encoding="utf-8")
     for needle in (
         "מוכן-ל-Grok",
         "פרסום-חי-דחוף",
@@ -472,7 +538,7 @@ def main() -> None:
     for path in (queue, live, docs_fo, docs_office_fo):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
-    office_fo_text = docs_office_fo.read_text()
+    office_fo_text = docs_office_fo.read_text(encoding="utf-8")
     for needle in (
         "דוח השתלטות",
         "ChatGPT",
@@ -489,11 +555,11 @@ def main() -> None:
             fail(f"docs/FAILOVER.md missing {needle!r}")
     if "docs/FAILOVER.md" not in agents_text and "Office-manager failover" not in agents_text:
         fail("AGENTS.md must mention office-manager failover / docs/FAILOVER.md")
-    queue_text = queue.read_text()
+    queue_text = queue.read_text(encoding="utf-8")
     for needle in ("#מוכן-ל-Grok", "#פרסום-חי-דחוף", "#נשלח-מ-HQ", "#ממתין-ל-כלי-IG"):
         if needle not in queue_text:
             fail(f"vfigos/QUEUE.md missing {needle!r}")
-    live_text = live.read_text()
+    live_text = live.read_text(encoding="utf-8")
     for needle in ("אדם", "מעלה", "050-2517000", "אין Publish מ־HQ"):
         if needle not in live_text:
             fail(f"LIVE-PACKET.md missing {needle!r}")
@@ -505,7 +571,7 @@ def main() -> None:
     full_output = ROOT / "packages/vfharness/playbooks/full-output-enforcement.md"
     if not full_output.is_file():
         fail("missing packages/vfharness/playbooks/full-output-enforcement.md")
-    fo_text = full_output.read_text()
+    fo_text = full_output.read_text(encoding="utf-8")
     for needle in ("[PAUSED", "taste-skill", "Scope", "checkpoint"):
         if needle not in fo_text:
             fail(f"full-output-enforcement.md missing {needle!r}")
@@ -525,7 +591,7 @@ def main() -> None:
     for path in (ROOT / "packages/vfharness").rglob("*"):
         if path.suffix not in {".md", ".json"}:
             continue
-        text = path.read_text()
+        text = path.read_text(encoding="utf-8")
         for m in ils.finditer(text):
             snippet = text[max(0, m.start() - 20) : m.end() + 8]
             if "X ₪" in snippet:

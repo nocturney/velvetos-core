@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/project-state-manifest.v0",
+  "title": "Office v2 Project State Manifest v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "project_id", "checkpoint_id", "parent_checkpoint_id",
+    "current_goal", "scope_and_constraints", "completed_work", "decisions",
+    "unresolved_questions", "active_tasks", "blockers", "artifact_document_refs",
+    "important_links", "receipt_refs", "production_snapshot_refs", "migration_phase",
+    "gate_status", "active_experiments", "rollback_point", "prohibited_actions",
+    "runtime_refs", "business_entity_refs", "assumptions", "risks",
+    "resume_instructions", "content_hash", "authority_refs", "active_external_effects",
+    "code_baseline", "context", "verifier", "updated_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "velvetos.office-v2.project-state.v0"},
+    "project_id": {"type": "string", "minLength": 1},
+    "checkpoint_id": {"type": "string", "minLength": 1},
+    "parent_checkpoint_id": {"type": ["string", "null"]},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "current_goal": {"type": "string", "minLength": 1},
+    "scope_and_constraints": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "completed_work": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["item", "evidence_refs"],
+        "properties": {
+          "item": {"type": "string", "minLength": 1},
+          "evidence_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+        }
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["decision_id", "decision", "status", "rationale"],
+        "properties": {
+          "decision_id": {"type": "string", "minLength": 1},
+          "decision": {"type": "string", "minLength": 1},
+          "status": {"enum": ["FROZEN", "ACTIVE", "PROVISIONAL", "SUPERSEDED"]},
+          "rationale": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "unresolved_questions": {"type": "array", "items": {"type": "string"}},
+    "active_tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["task_id", "owner", "status", "next_action"],
+        "properties": {
+          "task_id": {"type": "string", "minLength": 1},
+          "owner": {"type": "string", "minLength": 1},
+          "status": {"enum": ["PLANNED", "IN_PROGRESS", "BLOCKED", "VERIFYING"]},
+          "next_action": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "blockers": {"type": "array", "items": {"type": "string"}},
+    "artifact_document_refs": {"type": "array", "items": {"type": "string"}},
+    "important_links": {"type": "array", "items": {"type": "string"}},
+    "receipt_refs": {"type": "array", "items": {"type": "string"}},
+    "production_snapshot_refs": {"type": "array", "items": {"type": "string"}},
+    "migration_phase": {"type": "string", "minLength": 1},
+    "gate_status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["phase", "verdict", "reasons"],
+      "properties": {
+        "phase": {"type": "string", "minLength": 1},
+        "verdict": {"enum": ["GREEN", "PARTIAL", "BLOCKED", "NOT_EVALUATED"]},
+        "reasons": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "active_experiments": {"type": "array", "items": {"type": "string"}},
+    "rollback_point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["available", "reference", "instructions"],
+      "properties": {
+        "available": {"type": "boolean"},
+        "reference": {"type": "string", "minLength": 1},
+        "instructions": {"type": "string", "minLength": 1}
+      }
+    },
+    "prohibited_actions": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "runtime_refs": {"type": "array", "items": {"type": "string"}},
+    "business_entity_refs": {"type": "array", "items": {"type": "string"}},
+    "assumptions": {"type": "array", "items": {"type": "string"}},
+    "risks": {"type": "array", "items": {"type": "string"}},
+    "resume_instructions": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "content_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "authority_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+    "active_external_effects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["intent_id", "effect_class", "status"],
+        "properties": {
+          "intent_id": {"type": "string", "minLength": 1},
+          "effect_class": {"type": "string", "minLength": 1},
+          "status": {"enum": ["PENDING", "UNKNOWN_OUTCOME", "RECONCILING"]},
+          "receipt_ref": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "code_baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repo", "base_sha", "branch", "worktree_path"],
+      "properties": {
+        "repo": {"type": "string", "minLength": 1},
+        "base_sha": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+        "branch": {"type": "string", "minLength": 1},
+        "worktree_path": {"type": "string", "minLength": 1}
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary", "working_set", "recent_observations", "pressure_score",
+        "pressure_basis", "pressure_signals", "compaction_generation"
+      ],
+      "properties": {
+        "summary": {"type": "string", "minLength": 1},
+        "working_set": {"type": "array", "items": {"type": "string"}},
+        "recent_observations": {"type": "array", "items": {"type": "string"}},
+        "pressure_score": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "pressure_basis": {"enum": ["PLATFORM_METRIC", "HEURISTIC", "MANUAL_TRIGGER", "UNKNOWN"]},
+        "pressure_signals": {"type": "object"},
+        "compaction_generation": {"type": "integer", "minimum": 0}
+      }
+    },
+    "verifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["last_status", "verified_at", "receipt_ref"],
+      "properties": {
+        "last_status": {"enum": ["NOT_RUN", "PASS", "PASS_WITH_WARNINGS", "FAIL_CLOSED"]},
+        "verified_at": {"type": ["string", "null"], "format": "date-time"},
+        "receipt_ref": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

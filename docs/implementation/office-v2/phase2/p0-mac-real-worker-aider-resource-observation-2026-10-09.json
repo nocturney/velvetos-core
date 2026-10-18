@@ -1,0 +1,356 @@
+{
+  "schema": "velvetos.office-v2.p0-live-mac-worker-aider-cpu-rss-evidence.v0",
+  "status": "PASS_REAL_LOCAL_MODEL_WORKER_AND_AIDER_OS_PINNED_METRICS_LAB",
+  "issue": "https://github.com/nocturney/velvetos-core/issues/612",
+  "observed_date_utc": "2026-10-09",
+  "scope": "One fresh explicitly approved local Mac Aider/Qwen3.5:4B synthetic slug.py coding task. Separate passive sampler observed exactly Worker and Aider PIDs, not Ollama server or total model compute.",
+  "source": {
+    "repo": "nocturney/velvetos-core",
+    "executed_head": "5d8b6613c18b3973344efe193fac139ec9bc458d",
+    "original_model_worker_source_sha256": "7b4cb176c9c66351f9658c08589f45ec94d50c2a8b6450fe8e5cb1d8f09d86f7",
+    "observer_source_sha256": "ad52d5ce56f504ac1e6105b4e4cc32801fea6f21cb3104512a2b3a01cd2fcaf7",
+    "model": "qwen3.5:4b",
+    "model_digest": "7f3251fa6878a78a606bcb3c074283306e5ad2ea411a7774a9dd98a4bc7f2d13",
+    "host": "MacMiniOffice.local",
+    "provider": "local Ollama localhost:11556"
+  },
+  "raw_artifact_hashes": {
+    "envelope": "b45932d4feae257f0de11329d3f84288ac3e45745301e08ecd91cec012ef0767",
+    "receipt": "0ec632d2fecd772756ddbaf5a0eff5aaf4ef49220fa3bc2ece7475e3e19fdefe",
+    "pin": "8c5bc727bea0ee9a4d2c3893370693b437c82f9cc167d61f91ea5f07843ee319",
+    "observer": "6d764e33f210fe207d399919daa073a8e0a4816fdc3e2919859ff50053d4ce28"
+  },
+  "task": {
+    "task_id": "p0-observed-worker-mac-20261009-01",
+    "base_sha": "17e304738bd05f526b6c29174dd3f6b6cc9b8d9e",
+    "branch": "lab-p0-agent-p0-observed-worker-mac-20261009-01",
+    "worktree_isolated_from_office": true,
+    "worker_model_receipt": {
+      "task_id": "p0-observed-worker-mac-20261009-01",
+      "state": "SUCCEEDED",
+      "model": "qwen3.5:4b",
+      "model_digest": "7f3251fa6878a78a606bcb3c074283306e5ad2ea411a7774a9dd98a4bc7f2d13",
+      "elapsed_seconds": 49.241,
+      "receipt_selfhash": "9de9ff084b1bfd8e5258f7732ad8e2a449681b131143522308e9a4d3b185f1ba",
+      "model_invocations_min": 1,
+      "exact_model_calls": null,
+      "local_model_usage_tokens": null,
+      "additional_api_spend_usd": 0,
+      "artifact_sha256": "456f89bec0af23e6287e88956b8b85e992d4926b89e9613238bee7f77302ab45",
+      "kernel_pin_sha256": "601a4f30a58636fae36be850ff8d77598cc671714578acb920ca53860a50c509",
+      "kernel_pin_file_sha256": "8c5bc727bea0ee9a4d2c3893370693b437c82f9cc167d61f91ea5f07843ee319",
+      "checkpoint_after_sha256": "9c48cec8ec8249f209ca37359d719001f6867a2d8bc1adbbb9019b91b5a0f94d",
+      "independent_qa": {
+        "hidden_12_verified": true,
+        "hidden_exit": 0,
+        "hidden_stdout_sha256": "34e6e7475be141677e1c66bf359a1e9b52b84143382e440500c4e74c94564f56",
+        "pass": true,
+        "replay_changed_paths": [
+          "slug.py"
+        ],
+        "replay_source_sha256": "456f89bec0af23e6287e88956b8b85e992d4926b89e9613238bee7f77302ab45",
+        "unit_3_verified": true,
+        "unit_exit": 0
+      }
+    },
+    "separate_original_worker_verify": "PASS",
+    "original_worker_verify_confirmed_no_model_rerun": true
+  },
+  "process_pin": {
+    "schema": "velvetos.office-v2.p0-kernel-process-pin.v1",
+    "pin_sha256": "601a4f30a58636fae36be850ff8d77598cc671714578acb920ca53860a50c509",
+    "task_id": "p0-observed-worker-mac-20261009-01",
+    "worker": {
+      "birth_us": 1791577451716699,
+      "pgid": 1198,
+      "pid": 65845,
+      "ppid": 1242,
+      "source": "PSUTIL_OS_CREATE_TIME"
+    },
+    "aider": {
+      "birth_us": 1791577452369394,
+      "pgid": 65860,
+      "pid": 65860,
+      "ppid": 65845,
+      "source": "PSUTIL_OS_CREATE_TIME"
+    },
+    "authority": "READ_ONLY_PROCESS_IDENTITY_NO_RECOVERY",
+    "retry_permitted": false,
+    "all_orphans_excluded": false
+  },
+  "observer": {
+    "report": {
+      "aider_birth": {
+        "birth_us": 1791577452369394,
+        "pgid": 65860,
+        "pid": 65860,
+        "ppid": 65845,
+        "source": "PSUTIL_OS_CREATE_TIME"
+      },
+      "all_orphans_excluded": false,
+      "automatic_retries_authorized": false,
+      "autonomous_recovery_proven": false,
+      "canonical_fleet_lease": false,
+      "cross_host_fencing_verified": false,
+      "envelope_sha256": "af5cb9b511fc3336ae36a366b3e26da65d8aca4d87a933b5f1e8f11402545fca",
+      "full_process_family_attributed": false,
+      "gpu_vram_measured": false,
+      "host": "MacMiniOffice.local",
+      "independent_worker_pin_validated_against_running_journal": true,
+      "issue": "https://github.com/nocturney/velvetos-core/issues/612",
+      "kernel_pin_sha256": "601a4f30a58636fae36be850ff8d77598cc671714578acb920ca53860a50c509",
+      "model": "qwen3.5:4b",
+      "model_calls_by_observer": 0,
+      "model_digest": "7f3251fa6878a78a606bcb3c074283306e5ad2ea411a7774a9dd98a4bc7f2d13",
+      "model_inference_server_measured": false,
+      "model_started_by_observer": false,
+      "observation_sha256": "06c68d07487b120389601a503089cfd7b050d2a4aa13ec6eab59aff53a5623cb",
+      "observed_aider_cpu_delta_ms": 4949,
+      "observed_at_utc": "2026-10-09T20:24:21.397010+00:00",
+      "observed_peak_aider_rss_bytes": 172425216,
+      "observed_peak_pair_rss_bytes": 207339520,
+      "observed_peak_worker_rss_bytes": 34930688,
+      "observed_worker_cpu_delta_ms": 0,
+      "only_pinned_worker_and_aider_pids_sampled": true,
+      "os_birth_matched_before_after_every_metric_sample": true,
+      "paid_api_spend_usd": 0,
+      "production_writer": false,
+      "read_only_no_model_worker_control": true,
+      "running_journal_raw_sha256": "12ba75488d8c3425aa6afb975d8ab3c29a7433d1519ac741eb7d6735066f06b0",
+      "sample_count": 12,
+      "samples": [
+        {
+          "aider": {
+            "birth_us": 1791577452369394,
+            "cpu_time_ms": 225,
+            "pid": 65860,
+            "rss_bytes": 27951104
+          },
+          "index": 1,
+          "monotonic_offset_ms": 13385,
+          "utc": "2026-10-09T20:24:12.651312+00:00",
+          "worker": {
+            "birth_us": 1791577451716699,
+            "cpu_time_ms": 268,
+            "pid": 65845,
+            "rss_bytes": 34930688
+          }
+        },
+        {
+          "aider": {
+            "birth_us": 1791577452369394,
+            "cpu_time_ms": 863,
+            "pid": 65860,
+            "rss_bytes": 52445184
+          },
+          "index": 2,
+          "monotonic_offset_ms": 14225,
+          "utc": "2026-10-09T20:24:13.491474+00:00",
+          "worker": {
+            "birth_us": 1791577451716699,
+            "cpu_time_ms": 268,
+            "pid": 65845,
+            "rss_bytes": 34930688
+          }
+        },
+        {
+          "aider": {
+            "birth_us": 1791577452369394,
+            "cpu_time_ms": 1593,
+            "pid": 65860,
+            "rss_bytes": 72335360
+          },
+          "index": 3,
+          "monotonic_offset_ms": 15069,
+          "utc": "2026-10-09T20:24:14.335289+00:00",
+          "worker": {
+            "birth_us": 1791577451716699,
+            "cpu_time_ms": 268,
+            "pid": 65845,
+            "rss_bytes": 34930688
+          }
+        },
+        {
+          "aider": {
+            "birth_us": 1791577452369394,
+            "cpu_time_ms": 2094,
+            "pid": 65860,
+            "rss_bytes": 86720512
+          },
+          "index": 4,
+          "monotonic_offset_ms": 15880,
+          "utc": "2026-10-09T20:24:15.146895+00:00",
+          "worker": {
+            "birth_us": 1791577451716699,
+            "cpu_time_ms": 268,
+            "pid": 65845,
+            "rss_bytes": 34930688
+          }
+        },
+        {
+          "aider": {
+            "birth_us": 1791577452369394,
+            "cpu_time_ms": 2102,
+            "pid": 65860,
+            "rss_bytes": 87293952
+          },
+          "index": 5,
+          "monotonic_offset_ms": 16674,
+          "utc": "2026-10-09T20:24:15.940847+00:00",
+          "worker": {
+            "birth_us": 1791577451716699,
+            "cpu_time_ms": 268,
+            "pid": 65845,
+            "rss_bytes": 34930688
+          }
+        },
+        {
+          "aider": {
+            "birth_us": 1791577452369394,
+            "cpu_time_ms": 2102,
+            "pid": 65860,
+            "rss_bytes": 87293952
+          },
+          "index": 6,
+          "monotonic_offset_ms": 17330,
+          "utc": "2026-10-09T20:24:16.596770+00:00",
+          "worker": {
+            "birth_us": 1791577451716699,
+            "cpu_time_ms": 268,
+            "pid": 65845,
+            "rss_bytes": 34930688
+          }
+        },
+        {
+          "aider": {
+            "birth_us": 1791577452369394,
+            "cpu_time_ms": 2108,
+            "pid": 65860,
+            "rss_bytes": 87834624
+          },
+          "index": 7,
+          "monotonic_offset_ms": 18164,
+          "utc": "2026-10-09T20:24:17.430629+00:00",
+          "worker": {
+            "birth_us": 1791577451716699,
+            "cpu_time_ms": 268,
+            "pid": 65845,
+            "rss_bytes": 34930688
+          }
+        },
+        {
+          "aider": {
+            "birth_us": 1791577452369394,
+            "cpu_time_ms": 2455,
+            "pid": 65860,
+            "rss_bytes": 103694336
+          },
+          "index": 8,
+          "monotonic_offset_ms": 19016,
+          "utc": "2026-10-09T20:24:18.282874+00:00",
+          "worker": {
+            "birth_us": 1791577451716699,
+            "cpu_time_ms": 268,
+            "pid": 65845,
+            "rss_bytes": 34914304
+          }
+        },
+        {
+          "aider": {
+            "birth_us": 1791577452369394,
+            "cpu_time_ms": 3184,
+            "pid": 65860,
+            "rss_bytes": 110854144
+          },
+          "index": 9,
+          "monotonic_offset_ms": 19841,
+          "utc": "2026-10-09T20:24:19.107773+00:00",
+          "worker": {
+            "birth_us": 1791577451716699,
+            "cpu_time_ms": 268,
+            "pid": 65845,
+            "rss_bytes": 34914304
+          }
+        },
+        {
+          "aider": {
+            "birth_us": 1791577452369394,
+            "cpu_time_ms": 3878,
+            "pid": 65860,
+            "rss_bytes": 133758976
+          },
+          "index": 10,
+          "monotonic_offset_ms": 20683,
+          "utc": "2026-10-09T20:24:19.949962+00:00",
+          "worker": {
+            "birth_us": 1791577451716699,
+            "cpu_time_ms": 268,
+            "pid": 65845,
+            "rss_bytes": 34914304
+          }
+        },
+        {
+          "aider": {
+            "birth_us": 1791577452369394,
+            "cpu_time_ms": 4461,
+            "pid": 65860,
+            "rss_bytes": 159973376
+          },
+          "index": 11,
+          "monotonic_offset_ms": 21336,
+          "utc": "2026-10-09T20:24:20.602124+00:00",
+          "worker": {
+            "birth_us": 1791577451716699,
+            "cpu_time_ms": 268,
+            "pid": 65845,
+            "rss_bytes": 34914304
+          }
+        },
+        {
+          "aider": {
+            "birth_us": 1791577452369394,
+            "cpu_time_ms": 5174,
+            "pid": 65860,
+            "rss_bytes": 172425216
+          },
+          "index": 12,
+          "monotonic_offset_ms": 22130,
+          "utc": "2026-10-09T20:24:21.396949+00:00",
+          "worker": {
+            "birth_us": 1791577451716699,
+            "cpu_time_ms": 268,
+            "pid": 65845,
+            "rss_bytes": 34914304
+          }
+        }
+      ],
+      "schema": "velvetos.office-v2.p0-owned-worker-aider-cpu-rss-observation.v0",
+      "scope": "ONE_FRESH_SYNTHETIC_WORKER_AIDER_PAIR_ONLY",
+      "task_id": "p0-observed-worker-mac-20261009-01",
+      "worker_birth": {
+        "birth_us": 1791577451716699,
+        "pgid": 1198,
+        "pid": 65845,
+        "ppid": 1242,
+        "source": "PSUTIL_OS_CREATE_TIME"
+      }
+    },
+    "separate_offline_verify": "PASS"
+  },
+  "limits": {
+    "separate_sampling_process_spawned_model": false,
+    "actual_worker_and_aider_pair_cpu_rss_measured": true,
+    "model_inference_server_measured": false,
+    "gpu_vram_measured": false,
+    "entire_process_family_measured": false,
+    "production_authority": false,
+    "canonical_fleet_lease": false,
+    "distributed_fencing_verified": false,
+    "automated_unknown_recovery_proven": false,
+    "model_calls_by_observer": 0,
+    "additional_paid_api_spend_usd": 0,
+    "statistically_reliable_peak_or_p95_proven": false,
+    "complete_os_orphan_exclusion": false
+  },
+  "raw_originals_location": "MacMiniOffice.local synthetic AgentEnvelopeLab/p0-observed-worker-mac-20261009 task-01 and p0-real-observer-mac-20261009-02; source raw receipts and logs remain on Mac, not duplicated in Git."
+}

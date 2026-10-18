@@ -1,0 +1,37 @@
+{
+  "schema": "velvetos.ai3d.phase7-runtime-install.v1",
+  "status": "PASS",
+  "runtime": "D:\\Velvet\\Runtime\\BlenderMonster\\venvs\\geometry-core",
+  "install": {
+    "package": "geomdl",
+    "version": "5.4.0",
+    "mode": "pip install --no-deps",
+    "license": "MIT",
+    "wheel_sha256": "026464f3caa87465928205aa014113f5134846d1f23d501127829cdba36f110f",
+    "purpose": "bounded NURBS/B-spline surface fitting for reverse-engineering evidence"
+  },
+  "dependency_guard": {
+    "dry_run": "Would install geomdl-5.4.0 only",
+    "pre_freeze_sha256": "b8a9438b704d99bbf773c65ea916ba31c545ea29e4b564307ebfe50424c9f9cd",
+    "post_freeze_sha256": "8ce71cb4923fb36940684371a8c3c2c71224a13cbdffe6e330868f9c6eb5f98f",
+    "added": ["geomdl==5.4.0"],
+    "removed": [],
+    "trimesh_after": "5.1.1",
+    "manifold3d_after": "3.5.4",
+    "pymeshlab_after": "2025.7.post1",
+    "libigl_after": "2.6.3",
+    "rtree_after": "1.4.1",
+    "numpy_after": "2.5.3",
+    "scipy_after": "1.18.1"
+  },
+  "provenance": {
+    "pypi": "https://pypi.org/project/geomdl/",
+    "fitting_docs": "https://nurbs-python.readthedocs.io/en/5.x/module_fitting.html",
+    "dry_run_report": "D:\\Velvet\\Artifacts\\AI3D\\2026-10-07\\geomdl-dry-run.json"
+  },
+  "safety": {
+    "recurring_cost_added": false,
+    "printer_actions_allowed": false,
+    "machine_control_allowed": false
+  }
+}

@@ -19,8 +19,36 @@ Bind ייחוס (תאימות): Velvet Factory — שדרות · איסוף · �
 
 **NO_NEW_RECURRING_COST:** יעד ברירת המחדל הוא אפס עלות חדשה חוזרת. לפני התקנה, חיבור, credentials, קריאה ראשונה שעלולה להיות מחויבת או production, מפעילים cost preflight ונכשלים-סגור כשהעלות בתשלום או לא ידועה. סמכות קנונית: [`NO_NEW_RECURRING_COST.md`](NO_NEW_RECURRING_COST.md).
 
-מפעל צמיחה אורגני: [`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md) — טיוטות + readiness pack עד cutoff 07:00 לצריכת Morning Brief 09:00. לא בוט פרסום. לא אוטו־DM.
+מפעל צמיחה אורגני: [`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md) — טיוטות + readiness pack לפי צורך/אירוע לצריכת Morning Brief ידני/אירועי. ה־Control Plane אינו Publish API ישיר; פרסום מורשה עובר רק דרך `vfigos` + `policy_id: instagram.publish`. לא אוטו־DM.
 
 מאגר מדיה משותף: [`docs/MEDIA-VAULT.md`](../docs/MEDIA-VAULT.md) · קטלוג אחד `packages/vfmedia/catalog.json`. תפעול קולט נכנס→מקור; העלאה ומיקום בתיקייה אינם אישור לפרסום.
 
 בקרת משרד (איחוד מקורות אמת, לא מערכת שנייה): [`office/control-plane.json`](../office/control-plane.json) · `office/control/` · `python3 scripts/vf_control_plane.py` · מדיניות Don't Bother Christian ב־`office/control/POLICY.md`.
+
+## CAPABILITY_NOT_AUTHORITY_V1 — יכולת טכנית אינה הרשאת ביצוע
+
+**הבהרת בעלים — 2026-10-08:** מותר לחקור, לפתח, להכין, לשלב ולבדוק בבידוד יכולות לפעולות רגישות, לרבות שליטה במדפסות, פרסום, רכישות/תשלום, שליחת הודעות ללקוחות ותהליכי הזדהות. אין איסור עקרוני על *בניית היכולת*; האיסור הנוכחי הוא על **ביצוע פעולה בעולם האמיתי באופן אוטונומי ללא הנחיית בעלים או אישור מפורש**.
+
+**חובת הרשאה לביצוע:** כאשר Computer Use (לרבות Cua, UFO או GUI adapter עתידי) מבקש לבצע פעולה פיזית, כספית, חיצונית או הכרוכה בפרטי גישה, נדרשים לפני הביצוע (1) הנחיית בעלים מפורשת למשימה או אישור בעלים מפורש ותחום לפעולה, (2) שער המדיניות הקנוני של *סוג הפעולה* עם כל אישורי exact target/content/cost/identity והבדיקות שהוא מחייב, ו־(3) יכולת מבצע מאומתת, הרשאות מצומצמות ו־readback אחרי הפעולה. הנחיה לפתח יכולת, התקנה מוצלחת, בדיקת smoke, גישה לקובץ או סשן מחובר **אינם** אישור לביצוע עסקי. אישור למשימה אחת אינו מועבר אוטומטית למשימה אחרת, למערכת אחרת או ל־standing autonomy כללי.
+
+**גבולות קיימים:** אין עקיפת policy_id: instagram.publish, policy_id: gmail.send, policy_id: customer.whatsapp.send, שערי עלות/רכישה, סמכות רצפת הייצור או גבולות credentials/security. פעולות סודיות יסתמכו רק על מנגנוני הסודות המאושרים; אישור אינו היתר לחשיפת סיסמה או לעקיפת אבטחה. אין ירושת סמכות ממנגנון פרסום/שליחה מאושר אל Computer Use דרך GUI. נתיבים שכבר קיבלו אישור תחום ונפרד אינם משתנים רק בגלל הבהרה זו.
+
+**מצב הפיילוט:** runtimeAuthority=false, activationAllowed=false וכללי MutationViaGenericGui=false מתארים חסימת **ביצוע נוכחי**; הם אינם החלטה שלעולם אסור לפתח את היכולות האלה. מעבר ליכולת חיה, הרצה עצמאית, שינוי allowlist או Autostart מחייבים החלטת קידום וסמכות נפרדת עם בדיקות, תנאי עצירה ו־rollback. כשאין הנחיה/אישור מתאים — מכינים בלבד ומחזירים REQUIRE_OWNER_APPROVAL או DENY לפי המדיניות; אין פעולה חיצונית.
+
+## COMPETITOR_NEUTRAL_ADMISSION_V1 — הגנה גלובלית מפני פסילת חלופות
+
+**מבחן התאמה לפני נאמנות למימוש קיים:** חפיפה ל־VelvetOS, לכלי שכבר מותקן, לספק נבחר, ל־Core, ל־Office או ל־Tenant אינה סיבה לפסול טכנולוגיה. גם השקעה קודמת, יתרון זמני למימוש קיים, או הכותרת "runtime שני"/"משרד שני" אינם ראיית פסילה. כל מועמד רציני יכול להחליף רכיב, תת־מערכת או את בסיס המערכת כולו, או להשתלב בארכיטקטורה משולבת — אם השוואה חוזרת ומוכחת מצביעה על עדיפות.
+
+**רישום בלי לאבד אופציות:** לכל ריפו/כלי/פתרון חדש בעל התאמה אפשרית יש לרשום מקור, יכולת, השוואה אפשרית למימוש הקיים, חסמים אמיתיים, evidence, מצב ומעשה הבא בתוך Candidate Registry הקנוני של Office v2 (לא קטלוג מקביל). מועמד שלא נכנס ל־2–3 מתחרים בבנצ'מרק הנוכחי נשמר ב־`queued_challengers` ברשימת הנתיב שלו; מגבלת קיבולת אינה `REJECTED`. מועמד לא נעלם בשל "כבר בדקנו משהו דומה".
+
+**סיבות החלטה ראייתיות:** `REJECTED_WITH_REASON`, `DEFERRED_WITH_REASON` או `BENCHMARKED_AND_LOST` מחייבים סיבה קונקרטית וראיות לגבי בטיחות, רישוי, יכולת, תחזוקה, חומרה, עלות או Golden Fixture; לא סיבה שמבוססת רק על חפיפה, פחד ממיגרציה, "שני orchestrators" או sunk cost. החלטות שננעלו נפתחות מחדש כאשר מגיע מתחרה אמין או ראיה מהותית חדשה לאותו חוזה.
+
+**הפרדה הכרחית:** אין פסילה של *השוואה* בגלל איסור על שני רכיבי production מקבילים. סקירת קוד ומחקר מותרים; התקנה/הרצה ב־LAB כפופות ל־admission, sandbox, הרשאות ועלות. מעבר ל־SHADOW/PILOT/PRODUCTION מחייב את שערי הבטיחות, מדידות, rollback, authority ו־readback הרגילים. רישום או Benchmark אינם הרשאת הוצאה, קרדנצ'לים, כתיבה ללקוח, פרסום או החלפת מערכת חיה.
+
+סמכות תהליך/אימות: [Office v2 Phase 2](../docs/implementation/office-v2/phase2/README.md) · [Admission](../docs/implementation/office-v2/phase2/admission-policy-v0.md) · `scripts/check-office-v2-phase2.py`. מסמכי Legacy ובהם `packages/vfe2b/LOCK.md` משמשים גבול שימוש **שגרתי/ייצורי**, ואינם יכולים לבטל את הזכות לרשום, להשוות ולבחון מתחרים.
+
+## Standing implementation authorization — Git delivery
+
+כאשר הבעלים מאשר במפורש עבודה/פעילות ל־**יישום / הטמעה / ביצוע**, האישור כולל מראש גם את פעולות ה־Git הנדרשות כדי להביא את אותה עבודה לסיום: יצירת branch/worktree, commit, `git push`, פתיחה/עדכון של PR, פתרון conflicts שאינו מרחיב את ה־scope, וה־merge לאחר שכל CI, required checks, reviews ו־branch protections החלים עברו. **אין לבקש מהבעלים אישור נוסף רק עבור push או merge בתוך ה־scope שכבר אושר.**
+
+האישור אינו מתיר להרחיב scope, לעקוף CI/rulesets/branch protection, לבצע force-push או history rewrite, לצרף שינויים לא קשורים, או לעקוף שערים נפרדים של עלות/כסף, credentials/security, מחיקה/פעולה הרסנית או external business authority. אם אחד מאלה נדרש — חל השער הספציפי שלו. אם GitHub דורש reviewer/approval בלתי תלוי ברמת הפלטפורמה, מכבדים אותו ולא עוקפים אותו.

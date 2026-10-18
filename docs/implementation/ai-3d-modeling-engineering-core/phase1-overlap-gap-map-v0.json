@@ -1,0 +1,230 @@
+{
+    "schema":  "velvetos.ai3d.phase1-overlap-gap-map.v0",
+    "captured_at":  "2026-10-07T12:41:50.6800644Z",
+    "inventory_ref":  "phase1-capability-inventory-v0.json",
+    "closed_baselines":  [
+                             {
+                                 "id":  "fabrication-router",
+                                 "status":  "ACTIVE_CANONICAL",
+                                 "note":  "Do not replace."
+                             },
+                             {
+                                 "id":  "vf-3d-router",
+                                 "status":  "ACTIVE_CANONICAL",
+                                 "note":  "Do not replace."
+                             },
+                             {
+                                 "id":  "blender-cross-station",
+                                 "status":  "20_PROVEN_TYPED_CAPABILITIES",
+                                 "capabilities":  [
+                                                      "print.slice",
+                                                      "cad.validate_step",
+                                                      "scan.pointcloud",
+                                                      "electronics.pcb_import",
+                                                      "mesh.repair",
+                                                      "mesh.analysis",
+                                                      "print.support_generation.support_fins",
+                                                      "interchange.3mf",
+                                                      "mesh.remesh_repair",
+                                                      "mesh.retopology",
+                                                      "scan.pointcloud.las_laz_io",
+                                                      "scan.pointcloud.e57_io",
+                                                      "scan.clean",
+                                                      "print.slice.blender_integrated",
+                                                      "cad.export_step",
+                                                      "print.format.3mf",
+                                                      "agent.blender.control",
+                                                      "mesh.boolean_hardsurface",
+                                                      "scan.register",
+                                                      "cam.toolpath"
+                                                  ]
+                             },
+                             {
+                                 "id":  "cad-engine-stack",
+                                 "status":  "ACTIVE",
+                                 "note":  "build123d primary; CadQuery/JSCAD secondary; pilots remain pilots."
+                             }
+                         ],
+    "saturation_signals":  [
+                               {
+                                   "capability":  "mesh.boolean_hardsurface",
+                                   "providers":  75,
+                                   "interpretation":  "high overlap; route by evidence, do not add another generic boolean authority"
+                               },
+                               {
+                                   "capability":  "cad.precision",
+                                   "providers":  49,
+                                   "interpretation":  "high overlap; exact CAD authority remains Fabrication Router/CAD stack"
+                               },
+                               {
+                                   "capability":  "uv.texture.material",
+                                   "providers":  49,
+                                   "interpretation":  "provider-rich; not a P0 engine-install gap"
+                               },
+                               {
+                                   "capability":  "sculpt.organic",
+                                   "providers":  30,
+                                   "interpretation":  "many providers but no promoted typed cross-station refinement surface"
+                               },
+                               {
+                                   "capability":  "scan.reconstruct",
+                                   "providers":  4,
+                                   "interpretation":  "functional engines exist; typed promotion/benchmarking is the gap"
+                               }
+                           ],
+    "research_candidate_presence_in_blender_registry":  [
+                                                            {
+                                                                "term":  "spar3d",
+                                                                "matches":  [
+
+                                                                            ]
+                                                            },
+                                                            {
+                                                                "term":  "vggt",
+                                                                "matches":  [
+
+                                                                            ]
+                                                            },
+                                                            {
+                                                                "term":  "moge",
+                                                                "matches":  [
+
+                                                                            ]
+                                                            },
+                                                            {
+                                                                "term":  "pixal3d",
+                                                                "matches":  [
+
+                                                                            ]
+                                                            },
+                                                            {
+                                                                "term":  "trellis",
+                                                                "matches":  [
+
+                                                                            ]
+                                                            },
+                                                            {
+                                                                "term":  "step1x",
+                                                                "matches":  [
+
+                                                                            ]
+                                                            },
+                                                            {
+                                                                "term":  "anigen",
+                                                                "matches":  [
+
+                                                                            ]
+                                                            },
+                                                            {
+                                                                "term":  "realityscan",
+                                                                "matches":  [
+
+                                                                            ]
+                                                            },
+                                                            {
+                                                                "term":  "animalavatar",
+                                                                "matches":  [
+
+                                                                            ]
+                                                            },
+                                                            {
+                                                                "term":  "3danimals",
+                                                                "matches":  [
+
+                                                                            ]
+                                                            }
+                                                        ],
+    "provider_state_summary":  {
+                                   "pending_functional_probes":  186,
+                                   "license_required":  14,
+                                   "experimental":  6,
+                                   "quarantined":  3
+                               },
+    "gaps":  [
+                 {
+                     "id":  "control-plane.task-spec-evidence-graph",
+                     "priority":  "P0",
+                     "status":  "MISSING_AUTHORITATIVE_CONTRACT",
+                     "capability":  "control-plane.provenance",
+                     "reason":  "Current registries route tools/providers but do not define the initiative-level TaskSpec + EvidenceGraph + DeliveryManifest contract required by the research baseline."
+                 },
+                 {
+                     "id":  "control-plane.license-manifest",
+                     "priority":  "P0",
+                     "status":  "INCOMPLETE",
+                     "capability":  "control-plane.license",
+                     "reason":  "Licenses exist on some provider records, but no uniform code+weights+dependencies+dataset+output-rights manifest is authoritative across all AI3D providers."
+                 },
+                 {
+                     "id":  "benchmark.golden-ai3d",
+                     "priority":  "P0",
+                     "status":  "MISSING",
+                     "capability":  "benchmark.ai3d",
+                     "reason":  "Existing provider fixtures are heterogeneous; no single golden suite compares generator fidelity, dimensional anchors, topology, printability and render-back discrepancy across candidates."
+                 },
+                 {
+                     "id":  "reconstruction.geometry-evidence",
+                     "priority":  "P0",
+                     "status":  "MISSING_TYPED_BASELINE",
+                     "capability":  "reconstruction.evidence",
+                     "reason":  "No promoted typed MoGe/VGGT-style depth/camera/evidence operation exists in the 20-capability cross-station baseline."
+                 },
+                 {
+                     "id":  "reconstruction.render-back-scorer",
+                     "priority":  "P0",
+                     "status":  "MISSING",
+                     "capability":  "reconstruction.score",
+                     "reason":  "No independent render-back discrepancy scorer is exposed as a typed capability."
+                 },
+                 {
+                     "id":  "generation.local-ensemble",
+                     "priority":  "P0",
+                     "status":  "PARTIAL",
+                     "capability":  "ai.image_to_3d",
+                     "reason":  "TripoSR is functionally passed locally; newer benchmark candidates from research are not yet qualified as local providers. Hunyuan is currently represented by remote 3D AI Studio connector(s), not the planned local Hunyuan3D 2.1 shape baseline."
+                 },
+                 {
+                     "id":  "organic.typed-refinement",
+                     "priority":  "P0",
+                     "status":  "PARTIAL",
+                     "capability":  "sculpt.organic",
+                     "reason":  "Native Blender sculpt/remesh providers exist, but sculpt.organic is not among the 20 promoted cross-station typed capabilities."
+                 },
+                 {
+                     "id":  "photogrammetry.typed-promotion",
+                     "priority":  "P1",
+                     "status":  "FUNCTIONAL_PROVIDER_NO_TYPED_PROMOTION",
+                     "capability":  "photogrammetry.sfm+mvs",
+                     "reason":  "COLMAP and Meshroom have functional evidence, but photogrammetry is not in the cross-station typed allowlist."
+                 },
+                 {
+                     "id":  "reverse-engineering.typed-contract",
+                     "priority":  "P0",
+                     "status":  "COMPONENT_PIPELINE_ONLY",
+                     "capability":  "cad.reverse_engineer",
+                     "reason":  "pipeline_scan_to_cad reports component probes, but no promoted narrow reverse-engineering contract exists."
+                 },
+                 {
+                     "id":  "domain.pet-face-priors",
+                     "priority":  "P1",
+                     "status":  "RESEARCH_ONLY_NOT_REGISTERED",
+                     "capability":  "identity-aware-reconstruction",
+                     "reason":  "Pet/face priors identified by research are not current production providers; keep them separate until license and fixture qualification."
+                 },
+                 {
+                     "id":  "cad.engine-contract-metadata",
+                     "priority":  "P0",
+                     "status":  "INCOMPLETE_METADATA",
+                     "capability":  "cad.engine-registry",
+                     "reason":  "CAD engine registry captures role/mode/formats but not uniform per-operation input schema, validator, evidence receipt and license lane."
+                 },
+                 {
+                     "id":  "status.instance-staleness",
+                     "priority":  "P1",
+                     "status":  "STALE_METADATA_RISK",
+                     "capability":  "inventory.truth",
+                     "reason":  "Current instance tool-status file is dated 2026-09-27 while runtime CreativeCraft/Blender evidence advanced through 2026-10-07; runtime evidence must override stale metadata."
+                 }
+             ],
+    "decision":  "P0 should add proof/control-plane contracts and qualify missing evidence/generator capabilities; it should not add another general CAD/mesh/slicer router."
+}

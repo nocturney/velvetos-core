@@ -1,14 +1,13 @@
-# מחקר יומי · Velvet Research Seat
+# מחקר לפי צורך · Velvet Research
 
-מושב: **צמיחה** + ראש צוות קורא בבריף.  
-בעל ריצה קבוע: **Velvet Research Seat** ב־02:00 Asia/Jerusalem.  
-יעד סיום: עד **07:00** כ־`ready_for_brief`, `no_meaningful_findings` או blocker מפורש. בריף הבוקר קורא את התוצר ב־09:00.  
-ה־Research Seat משתמש ב־WebSearch/מקורות ציבוריים וחיבורים מאומתים; מק ייעודי יכול להשלים מקורות מנוי, אבל אין תלות בו כדי שהמחקר היומי ירוץ.  
+מושב: **צמיחה** + ראש צוות קורא בתוצר כשיש תוצר.
+**Owner override 2026-10-06:** אין Research Seat יומי, אין 02:00 trigger ואין 07:00 cutoff מחייב. מחקר מופעל רק לשאלה/החלטה קונקרטית, צורך תוכן אמיתי או freeze gate פתוח ב־Office v2. Morning Brief הוא event-driven ויכול לצרוך תוצר מחקר קיים כשהוא רלוונטי.
+ה־Research Seat משתמש ב־WebSearch/מקורות ציבוריים וחיבורים מאומתים; מק ייעודי יכול להשלים מקורות מנוי, אבל אין תלות בו כדי שהמחקר היומי ירוץ.
 Cloud לא גולש ל־chatgpt.com / gemini.google.com / perplexity.ai. לא שומרים עוגיות ולא מתחזים להפעלת גוף שלא רץ.
 
 כל artifact חדש/מרוענן עומד ב־`packages/vfresearch/ARTIFACT-CONTRACT.md`: `as_of`, `provenance`, `uncertainty`, `refresh_target`. זהו metadata של ראיות, לא authority לפעולה.
 
-## 02:00 — גוף מחקר אמיתי
+## גוף מחקר אמיתי — בהפעלה מפורשת/אירועית
 
 1. לקרוא את הבריף הקודם, לוח `vfgrowth`, מצב `vfsku`/ייצור, והקשר משרד/הזמנות החי כשזמין.
 2. להריץ מחקר Web אמיתי על אותות רלוונטיים לסטודיו: מוצרים חוזרים קלים להדפסה/מכירה, המרה מפנייה להזמנה, יעילות ייצור/משרד, תוכן מהעבודה עצמה, ומגמות maker/3D-print שימושיות.
@@ -16,16 +15,16 @@ Cloud לא גולש ל־chatgpt.com / gemini.google.com / perplexity.ai. לא ש
 4. להריץ `python3 scripts/vfresearch_cadence.py review-routing`. Deep review נעשה **רק** לשורות עם `deepReviewRequired:true`: HEAD/release נוכחי שאין לו review קשור בדיוק, או repo שנשלח כ־`--explicit-repo` במשימת review מפורשת. Pending ישן עם `reviewedRemoteHead` + `reviewedRelease` שתואמים למצב הנוכחי משתמש מחדש ב־review הקיים ולא משלם deep review יומי נוסף. כשנדרש review, לבדוק release notes / diff רלוונטי, השפעה על ה־integration וראיות compatibility; לכתוב `update` / `wait` / `review` / `ignore` עם נימוק, evidence וה־binding המדויק. מייל אינו יכול להיחמש עד שכל ה־pending מחזיקים review נוכחי. כאשר review חסר/ישן הופך ל־current, `notifyOwner:true` יכול להישלח פעם אחת; אחרי הכנת request הדגל מתאפס.
 5. להעדיף מקור ראשוני/עדכני; לשמור URL + תאריך מקור. לא להעתיק buzz ולא להציג אות כללי כאילו הוא Insight של `@velvets_cloud`.
 6. להטמיע רק מה ששימושי בפק קיים (`constitution/ORCHESTRA.md`). בלי פק חדש רק כי נמצא רעיון.
-7. לכתוב את התמצית הצרכנית ל־`packages/vfops/data/research.md` עבור בריף 09:00. **אין להכניס לתמצית הזו רשימת עדכוני כלים, מספר pending updates או החלטות update/wait/review/ignore.** כאשר המצב הוא `ready_for_brief`, גוף התמצית חייב להשתמש בכותרת הקנונית **`## מה נבנה / יועל`** לפני הממצאים. אם אין משהו מוצק: **«אין חדש במשרד»** בדיוק.
+7. לכתוב את התמצית הצרכנית ל־`packages/vfops/data/research.md` עבור ה־Morning Brief הבא אם התוצר רלוונטי. **אין להכניס לתמצית הזו רשימת עדכוני כלים, מספר pending updates או החלטות update/wait/review/ignore.** כאשר המצב הוא `ready_for_brief`, גוף התמצית חייב להשתמש בכותרת הקנונית **`## מה נבנה / יועל`** לפני הממצאים. אם אין משהו מוצק: **«אין חדש במשרד»** בדיוק.
 8. לשמור גוף מלא ב־`sources/YYYY-MM-DD-orchestra.md` עם מקורות, ממצאים, מגבלות, מה עושים עם זה, ומה דולג.
 
 ## חוזה freshness
 
-מחקר יומי הוא GREEN רק אם קיים `sources/YYYY-MM-DD-orchestra.md` לאותו יום ובו הוכחה לגוף מחקר: לפחות URL חיצוני אמיתי + ממצאים, או `אין חדש במשרד` יחד עם תיעוד החיפוש שבוצע. אינדקס סמנטי, `check-all`, או workflow ירוק **אינם** הוכחה שהמחקר היומי עצמו רץ.
+כאשר מחקר מופעל, הוא GREEN רק אם קיים artifact לאותה ריצה ובו הוכחה לגוף מחקר: לפחות URL חיצוני אמיתי + ממצאים, או `אין חדש במשרד` יחד עם תיעוד החיפוש שבוצע. ללא trigger מחקרי אין חובת freshness. אינדקס סמנטי, `check-all`, או workflow ירוק אינם הוכחה שמחקר בוצע.
 
 בדיקה: `python3 scripts/vfresearch_cadence.py freshness`.
 
-`VelvetOS Research Cadence` ב־GitHub רץ אחרי ה־Research Seat כדי לאמת freshness, לבנות אינדקס ולהריץ sensors. הוא לא ממציא/מחליף גוף Web research.
+`VelvetOS Research Cadence` ב־GitHub הוא verifier/index machine workflow בלבד. הוא לא יוצר גוף Web research ולא הופך ל־owner-facing clock.
 
 בלי ₪. בלי Insights מומצאים. בלי שמות לקוח מיותרים. בלי אוטו־DM. בלי Meta Business Suite. בלי משלוח ארצי.
 
@@ -91,6 +90,6 @@ Velvet Factory — סטודיו קטן להדפסות תלת־ממד בשדרו�
 
 1. לתרגם את התיאור לעברית קצרה (`vfcopy`).
 2. לחפש דגם במאגר פתוח. **נעילת בעלים למחקר:** מגבלת רישיון של יוצר זר אינה קריטריון פסילה/דירוג ב־Research Seat; יוצר/מותג ישראלי → `vlicense` / stop לפני שימוש בקובץ. זהו כלל triage מחקרי, לא קביעה משפטית לגבי שימוש בפועל.
-3. אם אין דגם: הדמיה דו־ממדית לאישור. מידול או 3D AI Studio / Meshy/Tripo — רק אחרי אישור ראש צוות (`vfprod/3DAISTUDIO.md`).
+3. אם אין דגם: הדמיה דו־ממדית כשצריך. מידול מקומי או 3D AI Studio / Meshy/Tripo עוברים דרך Fabrication/3D routing, `vlicense` ו־cost authority (`vfprod/3DAISTUDIO.md`); אין per-use lead approval רק בגלל בחירת engine.
 4. מודל שנוצר ב־AI עדיין עובר סלייס; אם הוא מבוסס על יוצר/מותג ישראלי → `vlicense` / stop. לא נכנס לקטלוג לבד (`vfsku`).
 5. סגירה מסחרית נשארת במסלול האנושי/המורשה; אין auto-DM.

@@ -1,0 +1,32 @@
+name: Instagram read-source observer checks
+
+on:
+  pull_request:
+    paths:
+      - "packages/vfigos/schedule_observer/**"
+      - ".github/workflows/instagram-read-source-observer.yml"
+  push:
+    branches: [main]
+    paths:
+      - "packages/vfigos/schedule_observer/**"
+      - ".github/workflows/instagram-read-source-observer.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  offline-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Source observer contracts (offline, no credentials)
+        run: python packages/vfigos/schedule_observer/test-source-reconciler.py
+      - name: Meta reader syntax
+        run: node --check packages/vfigos/schedule_observer/reader-v3.cjs

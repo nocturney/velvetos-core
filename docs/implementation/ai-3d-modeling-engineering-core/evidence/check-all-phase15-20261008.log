@@ -1,0 +1,143 @@
+SENSORS 118 mode=full
+PASS check-agent-security-conformance.py  OK agent-security-conformance surfaces=9 pass=7 partial=2
+PASS check-agent-surface-security.py  OK agent-surface-security files=462 mcp=.cursor\mcp.json
+PASS check-behavioral-evals.py  OK behavioral-evals cases=17 required=10 negative_controls=2
+PASS check-brand-asset-cta-lock.py  OK brand-asset-cta-lock surfaces=13 generated_logo=forbidden public_phone=forbidden
+PASS check-brand-tokens.py  OK brand-tokens: tokens complete, fonts/logo explicit, layout limits match VISUAL-DNA, 2026-09-28 amendment active with history kept
+PASS check-chat-cold-start-preflight.py  OK chat-local cold-start preflight + two-image source set + source-role separation + creative-only scope
+PASS check-chat-runtime-bundle.py  OK chat runtime dependency-closed files=5 isolated_imports=PASS
+PASS check-cli-anything-pilot.py  OK cli-anything offline scope=FREECAD_HEADLESS 3MF=BLOCKED cost=0
+PASS check-cloudflare-publish-fingerprint.py  OK cloudflare-publish-fingerprint incident=2026-09-13 repeats_blocked=5 extra_publishes=0 window=72h python_definition_match=YES
+PASS check-cognee-integration.py  OK cognee pin=1.6.2 role=derived fallback=vfmem sources=66
+PASS check-commission-isolation.py  OK check-commission-isolation ΓÇö production SoTs unchanged
+commission_exit=0 sots=16
+PASS check-control-api.py  OK control-api schema+auth+actions+operational-honesty+tests
+PASS check-creative-autopilot.py  OK visual foundry finishing-product-truth exception-only progressive-autonomy
+PASS check-creative-master-bridge.py  OK creative-master bridge exact-byte materialization + tamper detection
+PASS check-creative-system.py  OK creative-system manifest specialists motion-genomes audio-gate visual-copy-gate + Resolve runtime-truth bound
+PASS check-creative-transformation-lock.py  OK creative-transformation-lock surfaces=13 raw_passthrough=forbidden source_edit=required
+PASS check-critical-syntax.py  OK critical-syntax tracked_python=482
+PASS check-delivery-approval.py  OK delivery-approval mutation_tools=9 ephemeral_sign_verify=PASS serial_replay=PASS concurrent_replay=PASS spend_unavailable=PASS issuer_iam=PASS mutation_private_key=NO guard_order=PASS payload_binding=PASS media_bytes=PASS prefetch_order=PASS claim_before_fetch=PASS body_cap=PASS
+PASS check-demand-signals-dormant.py  OK demand-signals-dormant header=DORMANT docs=4 readme=DORMANT wiring=0 runnable=self-test-pass negative_controls=4
+PASS check-engineering-quality.py  OK engineering-quality mode=offline ponytail=EMBEDDED gstack=SAFE_SUBSET impeccable=WEB_UI_ONLY diagram=DOCS_ONLY cost=0
+PASS check-gmail-brief-send.py  OK Gmail brief sender: Apps Script advanced Gmail + owner lock + UTF-8 MIME + remote-image CID rewrite
+PASS check-grok-boot-hardening.py  PASS legacy OpenPost boot failover is disabled by contract
+PASS check-grok-provider-readback.py  RUNTIME_PROOF scope=code status=CODE_VALID runtime_health_required=false required_components=none
+GROK PROVIDER READBACK PASS protected=0 readback-verified=0 pending-first-readback=none openpost=disabled timezone=Asia/Jerusalem current-scheduler=chatgpt-automations proof=CODE_VALID runtime_health=NOT_REQUIRED prompt-body-parity=not-claimed
+PASS check-hq-overlay.py  OK hq overlay + Brief V10.3 Ink & Candy image-first contract
+PASS check-hyperframes-backend.py  OK hyperframes backend policy=latest-compatible minimum=0.8.34 recovery=0.8.34 hosts=mac:host_smoke_verified,windows:host_smoke_verified route=first-healthy verified-only smoke-receipt+qa-boundary+wired
+PASS check-instagram-content-decision.py  OK instagram content decision pipeline enforced
+PASS check-laya-shadow.py  OK laya-shadow cases=78 hebrew=72 state=SHADOW_NOT_PROMOTED repeatability=734e638ed1d0 cost=0 authority=false
+PASS check-learning-lifecycle.py  OK learning candidates=4 lifecycle=5 roles=8 no_daily_quota=true promotion=accepted+evidence+one-target selftest=ingest-ci wired=office-control-plane actions_permission=explicit
+PASS check-living-docs.py  OK living-doc canonical roles present; Stage 6D documentation authority PASS
+PASS check-living-studio.py  OK living-studio registry+projection+skills+selftest
+PASS check-machine-writers.py  OK machine-writers=6 allowlisted force_push=0 unrestricted_stage=0 default_main=prechecked_exact_sha
+- .github/workflows/jobs-write-through.yml
+- .github/workflows/office-control-plane.yml
+- .github/workflows/publish-bridge-cleanup.yml
+- .github/workflows/readme-system-pulse.yml
+- .github/workflows/velvetos-weekly-deck.yml
+- .github/workflows/vfmedia-intake.yml
+PASS check-memory-rationalization.py  OK memory-rationalization cases=22 provenance=1 repeatability=1 cost=0 authority=vfmem
+PASS check-morning-green.py  OK Morning Green v3.1 editorial email + truth semantics + CID transport contract
+PASS check-no-new-recurring-cost.py  OK NO_NEW_RECURRING_COST canonical + fail-closed cost preflight
+PASS check-observability.py  OK observability spans=9 traces=1 strict_install=NOT_REQUIRED local_only=YES authority=NO
+PASS check-office-control-plane.py  OK office control plane
+PASS check-office-v2-contracts.py  OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED candidates=90 phase3_effects=LAB_LOCAL_ONLY
+PASS check-office-v2-phase3b-production.py  OK office-v2-phase3b-production contract=READY scope=instagram-publisher-snapshot-read reader_route=GATED writer_change=FALSE mutation=FALSE promotion=EXPLICIT_ONLY
+PASS check-office-watchdog.py  OK office-watchdog
+PASS check-openpost-status.py  OK openpost-status state=paused live=unknown_not_verified staging=v6.2.0 integrationMode=paused negative_controls=7
+PASS check-organic-growth.py  OK organic growth control plane
+PASS check-origin-slugs.py  OK origin-slugs playbook packs=31 hq-native-embed=11 still-unknown=0
+PASS check-policy-architecture.py  OK policy-architecture policies=12 sensors=126 artifact_classes=9
+PASS check-production-content.py  OK production-content continuity (control-plane match)
+PASS check-project-bundle.py  OK project-bundle executable=6.6.4 creative=6.6.9 extensions=6.6.11,6.6.12 consumers=2 negative_cases=7
+PASS check-project-request-gate.py  OK project-request-gate domains=10 authority_paths=50 creative_without_evidence=BLOCKED creative_tool_authorization=fail_closed stage4b_fast_path=PASS
+PASS check-project669-publication.py
+PASS check-public-cta.py  OK public-cta Instagram-DM + business-contact preserved
+PASS check-publication-evidence.py
+PASS check-publication-prep-execution.py  OK publication-prep structural wiring verified surfaces=15
+PASS check-publication-states.py  OK publication-states scheduledΓëálive uploadΓëálive verify-required pending-verification
+PASS check-publish-bridge.py  OK publish bridge active ┬╖ handoff/recovery ┬╖ story FINISHED wait ┬╖ baseline JPEG ┬╖ archive-preserving
+PASS check-publish-fingerprint.py  OK publish-fingerprint repeated_identical_publish=BLOCKED(5/5 before spend) graph_calls=1 window_default=259200s ambiguous=BLOCK not_sent=ALLOW store_down=BLOCK
+PASS check-publish-handoff.py
+PASS check-readme-contract.py  OK readme-contract selftest cases=35 exemptions=13
+PASS check-reef-phase8-lab.py  OK reef-phase8 lab-only windows-partial cost=0 authority=none wsl=defer
+PASS check-reel-route-sync.py  OK reel-route-sync revision=6.6.11 status=implemented templates=5 presets=8 adobe=PASS
+PASS check-reel-templates.py  OK reel templates templates=5 presets=8 samples=4 rtl=PASS root_assets=PASS adobe=PASS vf_r006=needs_input turntable=PASS
+PASS check-reliability-pilots.py  OK reliability-pilots healthchecks=PILOT/missed-heartbeat-PASS changedetection=PILOT/change-PASS glitchtip=BLOCKED-local-stack cost=0
+PASS check-repo-intake.py  OK repo-intake sources=17 authority=none vtracer=PASS cua=BOUNDED_SMOKE_PASS ufo=RESEARCH_PENDING dashy=READ_ONLY_SMOKE_PASS
+PASS check-retired-receipt-integrity.py  OK retired-receipt-integrity entries=7 immutable=PASS
+PASS check-review-convergence.py  OK review receipts=1
+PASS check-risk-policy.py  OK risk-policy + dead-letter (POLICY.md canonical)
+PASS check-runtime-activation.py  OK runtime-activation-truth registered=38 partial=0 jobs=read_write_live_proven vfmedia=live_proven gmail_gha=configured_not_requested creative=policy_wired states={'EXISTING_COMPLETE': 31, 'EXISTING_EQUIVALENT': 7}
+PASS check-runtime-corners.py  OK runtime-corners partial=0 jobs=live_proven living=activated best-skills=on-demand
+PASS check-runtime-doctor.py  RUNTIME_PROOF scope=code status=CODE_VALID runtime_health_required=false required_components=none
+OK runtime proof status=CODE_VALID schema=v2 components=4 runtime_health=NOT_REQUIRED
+PASS check-runtime-receipt-age-policy.py  OK runtime-receipt-scope default=CODE_VALID github_events=non_authoritative deployment=component_scoped runtime=component_scoped external_action=component_scoped acceptance=component_scoped required-evidence=fail_closed legacy_strict=all_components
+PASS check-scenario-capability-graft.py  check-scenario-capability-graft: PASS
+PASS check-sensor-locks.py  OK sensor-locks py311=15 py312=15 pins hashed, match requirements-sensors.txt; workflows=3 install --require-hashes; negative_controls=6
+PASS check-skill-health.py  OK skills=96 structural_errors=0 active_warnings=0 reference_warnings=5
+INFO reference no verification language: .agents\skills\cad-viewer\SKILL.md
+INFO reference no verification language: .agents\skills\engineering-drawing\SKILL.md
+INFO reference no verification language: .agents\skills\gcode\SKILL.md
+INFO reference missing description frontmatter: packages\vfmskill\vendor\image\SKILL.md
+INFO reference concept marker: packages\vfmskill\vendor\marketing-plan\SKILL.md
+PASS check-skill-pattern-embeds.py  OK skill-pattern-embeds mapped=14 superpowers_v63_files=7
+PASS check-social-intelligence.py  OK social-intelligence integration
+PASS check-soft-tools-pipeline.py  SOFT TOOLS PIPELINE: PASS
+- reader-first -> voice -> marketing aids -> templates -> velvet-hebrew-copy -> humanizer/lint -> fact gate
+- vfcopy, Cursor rule, content sprint, edit gate, preflight/template and publish gate all reference the mandatory contract
+- copy-version invalidation is fail-closed
+PASS check-source-ingest.py  OK chat attachment source ingest exact-byte + bounds + tamper
+PASS check-speech-layer.py  OK speech layer hosts=sderot-mac>sderot-windows voicestudio_policy=latest-compatible minimum=0.5.2 recovery=0.5.2 windows_tts=omnivoice qa=fail-closed
+PASS check-staleness.py  OK staleness links=109 brief=event-driven-not-triggered daily_clock=none running_checkpoints=0 stale
+PASS check-tool-authority.py  TOOL AUTHORITY PASS
+PASS check-upstream-email.py  UPSTREAM EMAIL PASS separate-email no-brief decision-labels no-repeat sender=reused-apps-script
+PASS check-upstream-watch.py  UPSTREAM WATCH PASS sources=99 provenance=75 excluded=2
+PASS check-velvet-health.py  {"checks": {"agent_surface": {"detail": "OK agent-surface-security files=462 mcp=.cursor\\mcp.json", "state": "pass"}, "handoff_freeze": {"detail": "OK legacy handoff CLI frozen (header, writers refuse, 0 references outside script+CHANGELOG)", "state": "pass"}, "harness": {"detail": "OK harness layers=6 sensors=24 embeds=19 locks=9 packs=31", "state": "pass"}, "learning": {"detail": "OK learning candidates=4 lifecycle=5 roles=8 no_daily_quota=true promotion=accepted+evidence+one-target selftest=ingest-ci wired=office-control-plane actions_permission=explicit", "state": "pass"}, "living_docs": {"detail": "OK living-doc canonical roles present; Stage 6D documentation authority PASS", "state": "pass"}, "review_convergence": {"detail": "OK review receipts=1", "state": "pass"}, "runtime_contract": {"detail": "OK runtime proof status=CODE_VALID schema=v2 components=4 runtime_health=NOT_REQUIRED", "state": "pass"}, "skill_health": {"detail": "INFO reference concept marker: packages\\vfmskill\\vendor\\marketing-plan\\SKILL.md", "state": "pass"}}, "failed": [], "schema": "vf.health.v1", "state": "healthy"}
+PASS check-velvetos.py  OK velvetos-core modules=24 presets=3 frontend_scaffold=velvet-factory events=38
+PASS check-vf-3d-router.py  check-vf-3d-router: PASS
+PASS check-vf-autonomy.py  OK vf-autonomy composition + contracts + business locks
+PASS check-vf-cad-integration.py  check-vf-cad-integration: PASS
+PASS check-vf-cad-stack.py  check-vf-cad-stack: PASS
+PASS check-vf-desk.py  OK desk=38 seats=6 agency=273 packs=31
+PASS check-vf-fabrication-router.py  check-vf-fabrication-router: PASS skills=12 printer-send=disabled costs=PASS
+PASS check-vf-handoff.py  OK legacy handoff CLI frozen (header, writers refuse, 0 references outside script+CHANGELOG)
+PASS check-vf-offering.py  OK vf-offering active_files=28 two-track quantity-is-job-attribute live-profile-gated
+PASS check-vf-office.py  OK vf-office ledger+whatsapp-draft+stl-preflight+jobs-adapter
+PASS check-vf-task-state.py  OK task-state behavioral tests=19; owned checkpoint valid; historical audit is separate (vf_task_state.py)
+PASS check-vfagents.py  OK vfagents embed=13 already=6 later=4 skip=13 packs=31
+PASS check-vfcopy.py  OK hebrew-copy evals 42/42
+OK vfcopy captions+stories+hebrew-copy (behavioral=8)
+PASS check-vfcost.py  OK vfcost material-cli example=5.07 grams-refuse=1 brief-hook=02
+PASS check-vfdsh.py  OK picks=36 embed=20 crews=5 packs=31 listed=2710
+PASS check-vfe2b.py  OK picks=47 embed=21 crews=6 scenarios=4 packs=31 listed=209 run_cards=7 orch=30/23
+PASS check-vffcc.py  OK providers=10 local=4 skip=3 playbooks=3 locks=11 packs=31
+PASS check-vfgraft.py  OK nodes=12 links=49 sources=42 packs=31
+PASS check-vfgrowth.py  OK standing calendar + G003 lock + G004 + VOICE + follower-growth
+PASS check-vfharness.py  OK harness layers=6 sensors=24 embeds=19 locks=9 packs=31
+PASS check-vfharness-execution-discipline.py  OK vfharness-execution-discipline safe-ruling behavior=3
+PASS check-vfmakers.py  OK picks=20 embed=7 crews=5 packs=31 listed=20
+PASS check-vfmcp.py  OK vfmcp gap+sheets+desk web/image+3daistudio+office-mcp+gemini-api+chatgpt-api+instagram-mcp+icloud+send-preflight+ig-read-smoke
+PASS check-vfmedia.py  OK vfmedia catalog items=482 oneCatalog=true (validateΓëámonitor)
+OK intake provider=fixture processed=1 actions={'verified': 1} phases={'registered_in_catalog': 483, 'registered_only': 2, 'verified_and_intaken': 481, 'visually_reviewed': 4, 'inbox_status': 0, 'source_status': 479, 'total': 483} pending_moves=0 activation=True
+OK intake provider=fixture processed=1 actions={'duplicate': 1} phases={'registered_in_catalog': 483, 'registered_only': 2, 'verified_and_intaken': 481, 'visually_reviewed': 4, 'inbox_status': 0, 'source_status': 479, 'total': 483} pending_moves=0 activation=True
+OK intake selftest verified=media-FIXTURE_NEW_INTAKE_FILE_001 phases={'registered_in_catalog': 483, 'registered_only': 2, 'verified_and_intaken': 481, 'visually_reviewed': 4, 'inbox_status': 0, 'source_status': 479, 'total': 483} events=3
+OK vfmedia vault+catalog+intake locked (validateΓëámonitor; one catalog)
+PASS check-vfmem.py  OK vfmem embed=9 packs=31 nodes=419 edges=340 desk=38
+PASS check-vfmskill.py  OK picks=50 embed=15 later=14 skip=21 vendor=15 listed=50 pin=e55de88
+PASS check-vfom.py  OK vfom embed=8 already=5 later=4 skip=7 crews=5 packs=31 pipelines=12
+PASS check-vfops-loop.py  OK vfops-loop wired into orchestra+brief+handoff + consumers
+PASS check-vfprod.py  OK vfprod fleet=4 hq_prints=false remaining-empty=1 maintain-empty=1
+PASS check-vfresearch.py  OK vfresearch weekly-links links=109 best-skills=1 last30=1 print-demand=1 demand-signals=1 music=1 sources=4 failover=1
+PASS check-vfsku.py  OK vfsku shelf=5 first-print=1 brief-hook=03 shop-close=1
+PASS check-video-normalization.py
+PASS check-video-toolchain.py  OK video toolchain adapters edit=implemented remotion=free-license-eligible manim=host-smoke-verified hyperframes=canonical
+PASS check-visible-text-gate.py  OK visible-text-gate routes + surface-aware executable + anti-slop behavioral gate bound
+PASS check-visual-reject-identity.py  OK visual-reject-identity: SHA identity + rejected G004 design pinned; instance template bootstrap passes against Core
+PASS check-visual-standard-bootstrap.py  OK owner-approved visual standard cold-start bootstrap is fail-closed and propagated
+PASS check-visual-surface-enforcement.py  OK visual-standard enforced surfaces=20 fail_closed generic_fallback=forbidden
+PASS check-windows-path-contract.py  OK windows-path-contract vars=5 instance-binding=yes concrete-core=0 workspaces+datalanes+services default-path-section=yes legacy-fallback=closed windows-ps1=4 nt-sim=3 cursor-rule=yes
+OK sensor run left repository files unchanged
+OK suite passed=118

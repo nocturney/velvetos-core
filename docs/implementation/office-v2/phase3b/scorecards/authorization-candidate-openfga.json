@@ -1,0 +1,65 @@
+{
+  "schema": "velvetos.office-v2.phase2-scorecard.v0",
+  "candidate_id": "candidate-openfga",
+  "fixture_id": "identity-security-destructive-20-step",
+  "run_id": "20261006T140633Z-155525",
+  "captured_at": "2026-10-06T14:59:03.486553Z",
+  "fitness": {
+    "score_0_5": 4.7,
+    "notes": [
+      "PASS on all 20 frozen steps, including policy tuple revocation and fail-closed outage.",
+      "Relationship-based authorization maps the fixture successfully but is less direct for the generic principal/action/resource/context contract.",
+      "Office v2 must provide the correlated decision-receipt wrapper."
+    ]
+  },
+  "safety": {
+    "score_0_5": 5.0,
+    "notes": [
+      "Wrong principal/action/scope checks denied, policy tuple deletion took effect, and dependency outage failed closed.",
+      "Internal-only LAB network, no host ports, no production credential material or authority."
+    ]
+  },
+  "operability": {
+    "score_0_5": 4.2,
+    "notes": [
+      "Single pinned service used memory storage in the benchmark; persistent production use would add datastore backup/restore duties.",
+      "Observed fixture wall time was 5.288 seconds and terminal sample showed about 20.22 MiB container memory.",
+      "Model/tuple lifecycle adds operational concepts that are useful for ReBAC but broader than this lane's minimal generic decision need."
+    ]
+  },
+  "evidence_quality": {
+    "score_0_5": 4.6,
+    "notes": [
+      "Complete 20-step receipt plus model/store hashes, deny proofs and terminal Docker stats are retained.",
+      "Peak resource series and persistent-store rollback were not exercised in this benchmark."
+    ]
+  },
+  "resources": {
+    "wall_seconds": 5.288,
+    "cpu_peak_pct": null,
+    "ram_peak_mb": null,
+    "gpu_peak_pct": null,
+    "vram_peak_mb": null,
+    "storage_delta_mb": null,
+    "network_mb": null,
+    "external_cost": 0.0,
+    "recurring_cost": 0.0,
+    "operator_minutes": 0.0
+  },
+  "rollback": {
+    "status": "PASS",
+    "notes": [
+      "Authorization model/tuple export plus previous immutable image is an acceptable LAB rollback plan.",
+      "Persistent datastore backup/restore remains required before any production-adjacent promotion."
+    ]
+  },
+  "security_findings": [
+    "No production credentials or authority used.",
+    "No host ports; synthetic-only LAB data."
+  ],
+  "operations_findings": [
+    "Evidence: D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-destructive-candidate-openfga.json",
+    "Semantically sound, but not selected because the frozen lane asks for a general decision surface rather than primarily a relationship graph."
+  ],
+  "verdict": "HOLD"
+}

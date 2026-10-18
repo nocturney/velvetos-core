@@ -34,7 +34,7 @@ Block `02`: `vfbooks.py brief` — missing invoice is internal only. No collecti
 ## Verify (`working?`)
 
 - `אימות`: Gmail subjects + Calendar blocks actually read.
-- Sensor: `check-staleness.py` — today's `BRIEF-*.md` or `hq/brief-*.json` exists.
+- Sensor: `check-staleness.py` — אין דרישת artifact יומית לפי שעה; הוא בודק LINKS/checkpoints, וכאשר התרחיש הופעל ה-brief נדרש דרך outcome/checkpoint של אותה הרצה.
 
 ## Outcomes
 

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/artifact-contract.v0",
+  "title": "Office v2 Artifact Contract v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["artifact_id", "artifact_class", "location", "sha256", "produced_at", "producer", "retention_class", "authority_role"],
+  "properties": {
+    "artifact_id": {"type": "string", "minLength": 1},
+    "artifact_class": {"enum": ["generated_output", "evidence", "versioned_definition", "export", "report", "checkpoint"]},
+    "media_type": {"type": ["string", "null"]},
+    "location": {"type": "string", "minLength": 1},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "produced_at": {"type": "string", "format": "date-time"},
+    "producer": {"type": "string", "minLength": 1},
+    "retention_class": {"type": "string", "minLength": 1},
+    "authority_role": {"enum": ["NONE", "VERSIONED_DEFINITION", "EVIDENCE_ONLY", "PROJECTION_ONLY"]},
+    "correlation_ids": {"type": "object"},
+    "source_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  }
+}

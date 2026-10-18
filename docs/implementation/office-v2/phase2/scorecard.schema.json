@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/phase2/scorecard.v0",
+  "title": "Office v2 Standard Candidate Scorecard v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "candidate_id",
+    "fixture_id",
+    "run_id",
+    "captured_at",
+    "fitness",
+    "safety",
+    "operability",
+    "evidence_quality",
+    "resources",
+    "rollback",
+    "security_findings",
+    "operations_findings",
+    "verdict"
+  ],
+  "properties": {
+    "schema": {
+      "const": "velvetos.office-v2.phase2-scorecard.v0"
+    },
+    "candidate_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fixture_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "captured_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "fitness": {
+      "type": "object",
+      "required": [
+        "score_0_5",
+        "notes"
+      ],
+      "properties": {
+        "score_0_5": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "required": [
+        "score_0_5",
+        "notes"
+      ],
+      "properties": {
+        "score_0_5": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "operability": {
+      "type": "object",
+      "required": [
+        "score_0_5",
+        "notes"
+      ],
+      "properties": {
+        "score_0_5": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "evidence_quality": {
+      "type": "object",
+      "required": [
+        "score_0_5",
+        "notes"
+      ],
+      "properties": {
+        "score_0_5": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "required": [
+        "wall_seconds",
+        "cpu_peak_pct",
+        "ram_peak_mb",
+        "gpu_peak_pct",
+        "vram_peak_mb",
+        "storage_delta_mb",
+        "network_mb",
+        "external_cost",
+        "recurring_cost",
+        "operator_minutes"
+      ],
+      "properties": {
+        "wall_seconds": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "cpu_peak_pct": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "ram_peak_mb": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "gpu_peak_pct": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "vram_peak_mb": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "storage_delta_mb": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "network_mb": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "external_cost": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "recurring_cost": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "operator_minutes": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "required": [
+        "status",
+        "notes"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "security_findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "operations_findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "verdict": {
+      "enum": [
+        "ADVANCE",
+        "HOLD",
+        "REJECTED_WITH_REASON",
+        "BENCHMARKED_AND_LOST",
+        "SUPERSEDED",
+        "DEFERRED_WITH_REASON"
+      ]
+    }
+  }
+}

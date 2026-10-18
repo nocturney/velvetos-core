@@ -1,0 +1,83 @@
+{
+  "schema": "velvetos.ai3d.printer-profile-audit.v1",
+  "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+  "existing_slicer_authority": "scripts/vf_cad.py",
+  "non_authoritative_staging": true,
+  "scope": {
+    "printers": [
+      "u1",
+      "ecc2",
+      "c5pro"
+    ],
+    "inputs": [
+      "stl",
+      "3mf"
+    ],
+    "source": "packages/vfharness/state/cad-engine-stack-20260927/geometry-ir-sample.json",
+    "machine_connected": false,
+    "synthetic_geometry": true
+  },
+  "output_policy": {
+    "validated_offline_slice_does_not_equal_firmware_dialect_approval": true,
+    "unknown_commands_must_not_be_silently_ignored": true,
+    "no_auto_production_promotion": true
+  },
+  "expected": {
+    "runtime": "OrcaSlicer 2.4.2",
+    "model_bounds_mm": [
+      120,
+      80,
+      12
+    ],
+    "expected_layer_count": 60,
+    "max_height_delta_mm": 0.25,
+    "u1": {
+      "state": "OFFLINE_GCODE_VERIFIED_DIALECT_REVIEW",
+      "reason": "vendor-specific executable commands not audited to firmware"
+    },
+    "c5pro": {
+      "state": "OFFLINE_GCODE_VERIFIED_DIALECT_REVIEW",
+      "reason": "nonstandard executable commands not audited to firmware"
+    },
+    "ecc2": {
+      "state": "BLOCKED_MOTION_BOUNDS",
+      "violation": "Y=-1.2",
+      "reason": "native G180 S7 service move outside generic 0..256 Y envelope"
+    },
+    "h2d": {
+      "state": "BLOCKED_MOTION_BOUNDS",
+      "violation": "Y=-0.5",
+      "source": "phase11-dfam-slicer-acceptance-20261008.json"
+    }
+  },
+  "qualification": {
+    "firmware_command_audit": false,
+    "machine_motion_envelope_independent": false,
+    "filament_calibration": false,
+    "first_print_confirmation": false,
+    "production_release": false,
+    "network_control": false,
+    "spindle_or_laser_control": false
+  },
+  "prohibitions": {
+    "printer_network_control": false,
+    "printer_upload": false,
+    "printer_start": false,
+    "heating": false,
+    "physical_motion": false,
+    "automatic_manufacturing_release": false,
+    "production_machine_firmware_approval": false,
+    "modify_native_profiles": false,
+    "relax_motion_bounds": false,
+    "install_second_slicer_router": false
+  },
+  "required_negative_controls": [
+    "direct_step_input",
+    "out_of_bed_geometry_all_three",
+    "injected_out_of_bounds_u1",
+    "injected_out_of_bounds_c5pro",
+    "ecc2_y_negative_guard",
+    "h2d_remains_blocked",
+    "native_profile_hash_unchanged"
+  ]
+}

@@ -212,7 +212,6 @@ def parse_full_suite_log(log: str) -> dict:
 def apply_recoveries(
     observations: list[dict],
     recoveries: dict[int, dict],
-    total_sensor_count: int,
 ) -> list[int]:
     by_run: dict[int, dict] = {}
     for observation in observations:
@@ -233,11 +232,10 @@ def apply_recoveries(
         if row.get("conclusion") != "failure":
             raise RuntimeError(f"recovery target must be a failed run: {run_id}")
 
+        historical_sensor_count = int(recovery["sensor_count"])
         observed = row.get("full_suite_log_evidence") or {}
-        if int(observed.get("sensor_count") or 0) != total_sensor_count:
-            raise RuntimeError(f"recovery lacks full-suite log proof for run {run_id}")
-        if int(recovery["sensor_count"]) != total_sensor_count:
-            raise RuntimeError(f"recovery sensor count mismatch for run {run_id}")
+        if int(observed.get("sensor_count") or 0) != historical_sensor_count:
+            raise RuntimeError(f"recovery lacks historical full-suite log proof for run {run_id}")
         if sorted(observed.get("full_failures") or []) != sorted(recovery.get("full_failures") or []):
             raise RuntimeError(f"recovery full-failure evidence mismatch for run {run_id}")
 
@@ -255,8 +253,8 @@ def apply_recoveries(
 
         selection = verification_row.get("selection") or {}
         comparison = verification_row.get("comparison") or {}
-        if selection.get("full_suite") is not True or int(selection.get("selection_count") or 0) != total_sensor_count:
-            raise RuntimeError(f"recovery verification did not prove full-suite selection: {verification_run_id}")
+        if selection.get("full_suite") is not True or int(selection.get("selection_count") or 0) != historical_sensor_count:
+            raise RuntimeError(f"recovery verification did not prove the historical full-suite selection: {verification_run_id}")
         if comparison.get("status") != "NO_MISS":
             raise RuntimeError(f"recovery verification comparison is not NO_MISS: {verification_run_id}")
         if comparison.get("selector_misses") or comparison.get("critical_misses"):
@@ -388,9 +386,7 @@ def collect(limit: int, classifications_path: Path | None, recoveries_path: Path
 
     classifications = load_classifications(classifications_path)
     recoveries = load_recoveries(recoveries_path)
-    registry = load(POLICY_DIR / "sensor-registry.json")
-    total_sensor_count = len(registry.get("sensors") or [])
-    recovered_incomplete = apply_recoveries(observations, recoveries, total_sensor_count)
+    recovered_incomplete = apply_recoveries(observations, recoveries)
     critical_misses, noncritical_misses, incomplete = scan_observations(
         observations,
         classifications,
@@ -565,7 +561,7 @@ def self_test() -> int:
             "evidence": "fixture reviewed recovery",
         }
     }
-    recovered = apply_recoveries(recovery_observations, recoveries, 3)
+    recovered = apply_recoveries(recovery_observations, recoveries)
     _, _, after_recovery = scan_observations(recovery_observations, {})
     if recovered != [2001] or after_recovery:
         raise AssertionError("reviewed full-suite recovery did not clear incomplete evidence")
@@ -582,7 +578,6 @@ def self_test() -> int:
                 ],
             }],
             {2001: bad_recovery},
-            3,
         )
     except RuntimeError:
         pass

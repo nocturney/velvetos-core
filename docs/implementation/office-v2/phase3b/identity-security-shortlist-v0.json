@@ -1,0 +1,101 @@
+{
+  "schema": "velvetos.office-v2.phase3b-identity-security-shortlist.v0",
+  "status": "COMPOSITION_GATE_PASS_PRIMARY_SELECTED_NO_PRODUCTION_AUTHORITY",
+  "captured_at": "2026-10-06T18:49:24.642017Z",
+  "winner": "composition-zitadel-opa-openbao",
+  "production_authority_granted": false,
+  "lanes": [
+    {
+      "lane_id": "phase3b-identity-provider",
+      "role": "identity_provider",
+      "incumbent": "incumbent-current-service-identity",
+      "challengers": [
+        "candidate-zitadel",
+        "candidate-keycloak",
+        "candidate-authentik"
+      ],
+      "winner": "candidate-zitadel",
+      "fallback": "candidate-keycloak",
+      "specialized_reserve": "candidate-authentik",
+      "admission_status": "DESTRUCTIVE_COMPLETE_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY",
+      "candidate_admission": {
+        "candidate-zitadel": "LAB",
+        "candidate-keycloak": "LAB",
+        "candidate-authentik": "LAB"
+      },
+      "lab_smoke_refs": {
+        "candidate-zitadel": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/zitadel-lab-smoke-pass.json",
+        "candidate-keycloak": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/keycloak-lab-smoke-pass.json",
+        "candidate-authentik": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authentik-lab-smoke-pass.json"
+      },
+      "lane_verdict_ref": "docs/implementation/office-v2/phase3b/identity-lane-verdict-v0.json"
+    },
+    {
+      "lane_id": "phase3b-authorization-policy",
+      "role": "authorization_policy",
+      "incumbent": "incumbent-current-authorization",
+      "challengers": [
+        "candidate-openfga",
+        "candidate-opa",
+        "candidate-cedar"
+      ],
+      "winner": "candidate-opa",
+      "fallback": "candidate-cedar",
+      "admission_status": "DESTRUCTIVE_COMPLETE_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY",
+      "candidate_admission": {
+        "candidate-openfga": "LAB",
+        "candidate-opa": "LAB",
+        "candidate-cedar": "LAB"
+      },
+      "lab_smoke_ref": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-lab-smoke-pass.json",
+      "lane_verdict_ref": "docs/implementation/office-v2/phase3b/authorization-lane-verdict-v0.json"
+    },
+    {
+      "lane_id": "phase3b-credential-broker",
+      "role": "credential_broker",
+      "incumbent": "incumbent-current-credential-management",
+      "challengers": [
+        "candidate-infisical-agent-vault",
+        "candidate-openbao"
+      ],
+      "winner": "candidate-openbao",
+      "fallback": "candidate-infisical-agent-vault",
+      "admission_status": "DESTRUCTIVE_COMPLETE_COMPOSITION_VALIDATED_NO_PRODUCTION_AUTHORITY",
+      "candidate_admission": {
+        "candidate-infisical-agent-vault": "LAB",
+        "candidate-openbao": "LAB"
+      },
+      "lab_smoke_refs": {
+        "candidate-infisical-agent-vault": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/infisical-lab-smoke-pass.json",
+        "candidate-openbao": "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/openbao-lab-smoke-pass.json"
+      },
+      "lane_verdict_ref": "docs/implementation/office-v2/phase3b/credential-lane-verdict-v0.json"
+    }
+  ],
+  "composition_gate": {
+    "winner_selection_per_lane_allowed_only_after_fixture": true,
+    "phase3b_closure_requires_cross_role_composition_pass": true,
+    "no_lane_winner_grants_production_authority": true,
+    "status": "PASS",
+    "fixture_id": "identity-security-destructive-20-step",
+    "winner": "composition-zitadel-opa-openbao",
+    "primary": {
+      "identity_provider": "candidate-zitadel",
+      "authorization_policy": "candidate-opa",
+      "credential_broker": "candidate-openbao"
+    },
+    "validated_fallback_swaps": {
+      "identity_provider": "candidate-keycloak",
+      "authorization_policy": "candidate-cedar",
+      "credential_broker": "candidate-infisical-agent-vault"
+    },
+    "cartesian_exhaustion_required": false,
+    "verdict_ref": "docs/implementation/office-v2/phase3b/composition-gate-verdict-v0.json",
+    "evidence_refs": [
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-winners-zitadel-opa-openbao.json",
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-fallback-keycloak-opa-openbao.json",
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-fallback-zitadel-cedar-openbao.json",
+      "D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/composition-fallback-zitadel-opa-infisical.json"
+    ]
+  }
+}

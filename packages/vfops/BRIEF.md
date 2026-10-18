@@ -2,18 +2,18 @@
 
 מושב: **תפעול**. פורמט: `vfbriefux`. כריכות: `vfcovers` בגוף המייל.
 
-לא Morning Brief 09:00 אם זה תצוגה / ריצת ניסיון — לסמן בכותרת.
+לא Morning Brief פעיל אם זה תצוגה / ריצת ניסיון — לסמן בכותרת.
 
 טון: **סוכנות** (`constitution/STUDIO.md` רף). הבעלים קורא ויושב רגוע — לא רשימת מטלות חצי-גמורה. בלי רעש, בלי ₪ מומצא, בלי «תגיד מתי לפרסם».
 
-**מקורות (2026-08-31):** לוח שנה + vfops (לוח צינור, `data/research.md`, תזמורת 06:15). **לא** קריאת תיבת דואר נכנס — `search_threads` נשאר לפקים אחרים (`vfconvert`, `vfbooks`), לא למילוי הבריף.
+**מקורות:** לוח שנה + vfops (לוח צינור, `data/research.md`, מחקר/תזמורת לפי צורך כשיש artifact רלוונטי). **לא** קריאת תיבת דואר נכנס — `search_threads` נשאר לפקים אחרים (`vfconvert`, `vfbooks`), לא למילוי הבריף.
 
 ## שבעה בלוקים
 
 | # | כותרת | מה נכנס | לא נכנס |
 |---|---|---|---|
 | 01 | קודם החלטה | כן/לא/דחה + מועד + **שערי לחיצה** מ־`hq/GATES.json` (`vfops_loop.py gate`) | לחץ מזויף, וואטסאפ לקוח, Print מ־HQ |
-| 02 | כסף בעבודה | הזמנות וחוב שכבר במערכת + **ספר:** `python3 scripts/vfbooks.py brief` + `orders.json` / Invoice4U snapshot (דיסק, לא inbox) + **עלות חומר:** `python3 scripts/vfcost.py brief` דרך `vfops_loop.py` | ₪ מומצא, מייל ללקוח, מחיר מכירה בלי ראש צוות, גריפת תיבה ל-Morning Brief 09:00 |
+| 02 | כסף בעבודה | הזמנות וחוב שכבר במערכת + **ספר:** `python3 scripts/vfbooks.py brief` + `orders.json` / Invoice4U snapshot (דיסק, לא inbox) + **עלות חומר:** `python3 scripts/vfcost.py brief` דרך `vfops_loop.py` | ₪ מומצא, מייל ללקוח, מחיר מכירה בלי ראש צוות, גריפת תיבה ל־Morning Brief |
 | 03 | מה להדפיס ולפרסם | באצ׳ אחרי סלייס, רילס בלי מק״ט, **מדף:** `vfsku.py brief` + `vfsku.py scan` + `vfsku/week.md` + **צי:** `vfprod.py brief` + `vfprod.py print-done` דרך `vfops_loop.py brief` | מחיר בלי סכום מראש צוות, Print מ־HQ, שם MakerWorld מהאוויר |
 | 04 | איך הסטודיו מרוויח | `FOLLOWER-GROWTH` + `vfbiz/out/week.md` היילייטס + PUBLIC_CURRENT_CTA (הודעת Instagram), איסוף שדרות, מבנה הצעה דו־מסלולי | אוטו־DM, מודעות, טיקטוק |
 | 05 | משרד | **מה נבנה / יועל** = CLI מ-24ש או «אין חדש במשרד» + פערים. לא קטלוג מ-`research.md` | פעילות מזויפת, כפילות פק |
@@ -43,7 +43,7 @@ htmlBody שנשלח: `packages/vfops/out/BRIEF-YYYY-MM-DD.html` (ארכיון ב
 אין חדש במשרד
 ```
 
-שליחת Morning Brief 09:00 לג׳ימייל: HQ דרך המסלול הקנוני `send_message` עם `htmlBody` תצוגה 3; Grok הוא גיבוי אופציונלי (`vfbriefux/MAIL.html`), לא טקסט. אין שליחה ללקוח מתוך מסלול הבריף.
+שליחת Morning Brief לג׳ימייל, כאשר הופעל: HQ דרך המסלול הקנוני `send_message` עם `htmlBody` תצוגה 3; Grok הוא גיבוי אופציונלי (`vfbriefux/MAIL.html`), לא טקסט. אין standing send clock ואין שליחה ללקוח מתוך מסלול הבריף.
 
 ChatGPT 30.8 הציע שבעה בלוקים אחרים (הזמנות / איסופים / תקלות / מלאי / עומס / צילום / משימת הכנסה).  
 **דולג.** לא משנים את סדר הטלפון למעלה. משימת הכנסה אחת — רק אם כבר יושבת ב־`01` או `02`.

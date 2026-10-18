@@ -661,11 +661,13 @@ def main() -> None:
         "contents: read",
         "smoke_public.py --skip-if-missing",
         "secrets.VELVET_INSTAGRAM_MCP_BEARER_TOKEN",
-        "unittest -v test_http_path",
-        "unittest -v test_insights_v21",
+        "Offline unit tests are owned by check-vfmcp.py",
     ):
         if need not in ig_wf_text:
             fail(f"instagram-read-smoke.yml missing {need!r}")
+    for duplicate in ("unittest -v test_http_path", "unittest -v test_insights_v21"):
+        if duplicate in ig_wf_text:
+            fail(f"instagram-read-smoke.yml duplicates offline proof already owned by check-vfmcp.py: {duplicate}")
     if "contents: write" in ig_wf_text or "git push" in ig_wf_text:
         fail("instagram-read-smoke.yml must stay read-only (no write/push)")
 

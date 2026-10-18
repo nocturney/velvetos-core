@@ -59,7 +59,7 @@ def check_scenarios() -> int:
         fail(f"missing {SCENARIOS_JSON}")
     if not SCENARIOS_DIR.is_dir():
         fail(f"missing {SCENARIOS_DIR}")
-    data = json.loads(SCENARIOS_JSON.read_text())
+    data = json.loads(SCENARIOS_JSON.read_text(encoding="utf-8"))
     if data.get("name") != "vfe2b-scenarios":
         fail("scenarios.json name must be vfe2b-scenarios")
     if "Huginn" not in (data.get("source") or {}).get("pattern", "") and "huginn" not in (
@@ -90,7 +90,7 @@ def check_scenarios() -> int:
     readme = SCENARIOS_DIR / "README.md"
     if not readme.is_file():
         fail("missing scenarios/README.md")
-    if "huginn" not in readme.read_text().lower():
+    if "huginn" not in readme.read_text(encoding="utf-8").lower():
         fail("scenarios/README.md must cite Huginn pattern")
     dedup = ROOT / "packages" / "vfconvert" / "hq" / "DEDUP.md"
     if not dedup.is_file():
@@ -101,7 +101,7 @@ def check_scenarios() -> int:
 def check_run_card_fixtures() -> int:
     if not RUN_CARDS.is_file():
         fail(f"missing {RUN_CARDS}")
-    fixtures = json.loads(RUN_CARDS.read_text())
+    fixtures = json.loads(RUN_CARDS.read_text(encoding="utf-8"))
     ok_rows = fixtures.get("ok") or []
     fail_rows = fixtures.get("fail") or []
     if len(ok_rows) < 3 or len(fail_rows) < 2:
@@ -134,7 +134,7 @@ def check_orchestrators(pack_names: set[str]) -> tuple[int, int]:
         fail(f"missing {ORCH_MD}")
     if not ORCH_DOC.is_file():
         fail(f"missing {ORCH_DOC}")
-    data = json.loads(ORCH.read_text())
+    data = json.loads(ORCH.read_text(encoding="utf-8"))
     if data.get("name") != "vfe2b-orchestrators":
         fail("orchestrators.json name must be vfe2b-orchestrators")
     if data.get("parent") != "vfe2b":
@@ -144,7 +144,7 @@ def check_orchestrators(pack_names: set[str]) -> tuple[int, int]:
         fail("orchestrators source url mismatch")
     if src.get("listedCount") != 194:
         fail(f"orchestrators listedCount expected 194, got {src.get('listedCount')}")
-    if "existing" not in (data.get("rule") or "") and "existing" not in ORCH_MD.read_text():
+    if "existing" not in (data.get("rule") or "") and "existing" not in ORCH_MD.read_text(encoding="utf-8"):
         fail("orchestrator overlay must say embed onto existing crews")
     locks = set(data.get("locks") or [])
     for need in (
@@ -185,7 +185,7 @@ def check_orchestrators(pack_names: set[str]) -> tuple[int, int]:
         fail("orchestrators must reference crews/run.md")
     if "crews/morning-brief.md" not in crew_refs:
         fail("orchestrators must reference crews/morning-brief.md")
-    run_text = (CREWS / "run.md").read_text()
+    run_text = (CREWS / "run.md").read_text(encoding="utf-8")
     for token in (
         "דופק",
         "אימות",
@@ -202,11 +202,11 @@ def check_orchestrators(pack_names: set[str]) -> tuple[int, int]:
             fail(f"crews/run.md missing orchestrator token {token!r}")
     if not DEER_FLOW.is_file():
         fail(f"missing {DEER_FLOW}")
-    deer_text = DEER_FLOW.read_text()
+    deer_text = DEER_FLOW.read_text(encoding="utf-8")
     for token in ("bytedance/deer-flow", "no-second-orchestrator", "מטרה", "receipt"):
         if token not in deer_text:
             fail(f"DEER-FLOW-PATTERNS.md missing token {token!r}")
-    lock_text = (ROOT / "packages" / "vfe2b" / "LOCK.md").read_text()
+    lock_text = (ROOT / "packages" / "vfe2b" / "LOCK.md").read_text(encoding="utf-8")
     if "no-second-orchestrator" not in lock_text and "תזמורת שנייה" not in lock_text:
         fail("LOCK.md must skip a second orchestrator runtime")
     return len(picks), embed_count
@@ -218,8 +218,8 @@ def main() -> None:
     if not CATALOG.is_file():
         fail(f"missing {CATALOG}")
 
-    manifest = json.loads(MANIFEST.read_text())
-    catalog = json.loads(CATALOG.read_text())
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
     pack_names = {p["name"] for p in manifest["packs"]}
 
     if catalog.get("name") != "vfe2b":
@@ -281,7 +281,7 @@ def main() -> None:
         if need not in locks:
             fail(f"missing lock {need}")
 
-    run_text = (CREWS / "run.md").read_text()
+    run_text = (CREWS / "run.md").read_text(encoding="utf-8")
     for token in RUN_OUTCOMES:
         if token not in run_text:
             fail(f"crews/run.md missing outcome {token}")
@@ -290,14 +290,14 @@ def main() -> None:
     if "MakerWorld" not in run_text or "print.done" not in run_text:
         fail("crews/run.md must map MakerWorld scan and print.done onto existing crews")
 
-    research_crew = (CREWS / "research.md").read_text()
+    research_crew = (CREWS / "research.md").read_text(encoding="utf-8")
     if "MAKERWORLD-SCAN.md" not in research_crew:
         fail("crews/research.md must embed MAKERWORLD-SCAN.md")
-    content_crew = (CREWS / "content.md").read_text()
+    content_crew = (CREWS / "content.md").read_text(encoding="utf-8")
     for needle in ("PRINT-DONE.md", "PREFLIGHT", "PROFILE-TO-WHATSAPP.md"):
         if needle not in content_crew:
             fail(f"crews/content.md must mention {needle}")
-    books_crew = (CREWS / "books-data.md").read_text()
+    books_crew = (CREWS / "books-data.md").read_text(encoding="utf-8")
     if "INTEGRITY.md" not in books_crew or "vfbooks.py brief" not in books_crew:
         fail("crews/books-data.md must embed INTEGRITY.md + vfbooks.py brief")
 
@@ -314,7 +314,7 @@ def main() -> None:
 
     if not RUN_SKILL.is_file():
         fail(f"missing {RUN_SKILL}")
-    skill_text = RUN_SKILL.read_text()
+    skill_text = RUN_SKILL.read_text(encoding="utf-8")
     for token in RUN_OUTCOMES:
         if token not in skill_text:
             fail(f"vf-run skill missing outcome {token}")

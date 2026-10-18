@@ -1,0 +1,115 @@
+{
+  "schema": "velvetos.ai3d.engineering-contract.v1",
+  "contract_id": "ai3d-phase3-synthetic-box-v1",
+  "task_ref": "fixture://ai3d/phase3/synthetic-box",
+  "capability_record_ids": [
+    "cad.solid.parametric--build123d"
+  ],
+  "geometry_ir_schema": "velvetos.geometry-ir.v1",
+  "units": {
+    "source_length": "mm",
+    "normalized_length": "mm",
+    "angle": "deg"
+  },
+  "coordinate_system": {
+    "handedness": "right",
+    "up_axis": "Z",
+    "forward_axis": "Y",
+    "origin_description": "Synthetic fixture box lower-left-bottom corner"
+  },
+  "datums": [
+    {
+      "datum_id": "D_BASE",
+      "kind": "plane",
+      "definition": "Synthetic XY base plane at Z=0",
+      "evidence_refs": [
+        "synthetic-source.json#source_dimensions_mm"
+      ]
+    }
+  ],
+  "expected_bodies": [
+    {
+      "body_id": "BODY_BOX",
+      "role": "synthetic validation solid",
+      "quantity": 1,
+      "representation": "solid_brep",
+      "watertight_required": true
+    }
+  ],
+  "dimensions": [
+    {
+      "dimension_id": "DIM_X",
+      "target_ref": "BODY_BOX.x",
+      "nominal": 10.0,
+      "unit": "mm",
+      "tolerance_minus": 0.1,
+      "tolerance_plus": 0.1,
+      "critical": true,
+      "source_type": "user_provided",
+      "evidence_refs": [
+        "synthetic-source.json#source_dimensions_mm.x"
+      ],
+      "confidence": 1.0
+    },
+    {
+      "dimension_id": "DIM_Y",
+      "target_ref": "BODY_BOX.y",
+      "nominal": 20.0,
+      "unit": "mm",
+      "tolerance_minus": 0.1,
+      "tolerance_plus": 0.1,
+      "critical": true,
+      "source_type": "user_provided",
+      "evidence_refs": [
+        "synthetic-source.json#source_dimensions_mm.y"
+      ],
+      "confidence": 1.0
+    },
+    {
+      "dimension_id": "DIM_Z",
+      "target_ref": "BODY_BOX.z",
+      "nominal": 30.0,
+      "unit": "mm",
+      "tolerance_minus": 0.1,
+      "tolerance_plus": 0.1,
+      "critical": true,
+      "source_type": "user_provided",
+      "evidence_refs": [
+        "synthetic-source.json#source_dimensions_mm.z"
+      ],
+      "confidence": 1.0
+    }
+  ],
+  "functional_interfaces": [],
+  "materials_process": {
+    "material": {
+      "value": null,
+      "state": "unknown",
+      "evidence_refs": []
+    },
+    "process": {
+      "value": "schema-validation-only",
+      "state": "known",
+      "evidence_refs": [
+        "synthetic-source.json#purpose"
+      ]
+    },
+    "assumptions": []
+  },
+  "required_outputs": [
+    {
+      "output_id": "RESULT_REPORT",
+      "artifact_type": "report",
+      "format": "json",
+      "validators": [
+        "ai3d_protocol.report-validate"
+      ]
+    }
+  ],
+  "unknowns": [],
+  "safety": {
+    "hidden_dimensions_may_be_invented": false,
+    "printer_network_control": false,
+    "machine_control": false
+  }
+}

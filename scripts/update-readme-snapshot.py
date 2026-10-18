@@ -24,7 +24,6 @@ IG_CAPS = ROOT / "packages" / "vfigos" / "CAPABILITIES.json"
 MEDIA_RUNNER = ROOT / "packages" / "vfmedia" / "state" / "intake-runner.json"
 BINDINGS = ROOT / "office" / "ledger" / "bindings.json"
 JOBS_SYNC_RECEIPT = ROOT / "office" / "ledger" / "live" / "sync-receipt.json"
-CHANGELOG = ROOT / "CHANGELOG.md"
 
 START = "<!-- OPERATIONAL-SNAPSHOT:START -->"
 END = "<!-- OPERATIONAL-SNAPSHOT:END -->"
@@ -47,29 +46,6 @@ def esc(value: object) -> str:
         .replace("<", "&lt;")
         .replace(">", "&gt;")
     )
-
-
-def latest_change() -> str:
-    if not CHANGELOG.is_file():
-        return "No changelog evidence"
-    in_unreleased = False
-    items: list[tuple[str, str]] = []
-    for raw in CHANGELOG.read_text(encoding="utf-8").splitlines():
-        line = raw.strip()
-        if line == "## [Unreleased]":
-            in_unreleased = True
-            continue
-        if in_unreleased and line.startswith("## "):
-            break
-        if in_unreleased and line.startswith("- "):
-            item = line[2:].strip()
-            match = re.match(r"(\d{4}-\d{2}-\d{2})\b", item)
-            items.append((match.group(1) if match else "", item))
-    if not items:
-        return "No unreleased change recorded"
-    dated = [entry for entry in items if entry[0]]
-    item = max(dated, key=lambda entry: entry[0])[1] if dated else items[0][1]
-    return item[:210] + ("…" if len(item) > 210 else "")
 
 
 def parse_dt(value: object) -> datetime | None:
@@ -191,9 +167,6 @@ def render() -> str:
 
 <div dir="rtl"><strong>מה השתנה:</strong> {esc(recent_ops)}</div>
 <div dir="ltr"><strong>What changed:</strong> {esc(recent_ops)}</div>
-
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> {esc(latest_change())}</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> {esc(latest_change())}</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>

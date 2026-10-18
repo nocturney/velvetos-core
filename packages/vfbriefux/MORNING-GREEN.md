@@ -1,6 +1,6 @@
 # Morning Green v3.1
 
-המסלול הקנוני לבריף 09:00 של Velvet Factory. זהו מייל owner-only, RTL, Desktop-first ורספונסיבי, בעיצוב מגזיני ירוק/שמנת/זהב. החל מ־2026-09-23 הסטטוס הוא `LIVE / VERIFIED` עבור בריף הבוקר.
+המסלול הקנוני לעיצוב Morning Brief של Velvet Factory כאשר בריף מופעל. זהו מייל owner-only, RTL, Desktop-first ורספונסיבי, בעיצוב מגזיני ירוק/שמנת/זהב. החל מ־2026-09-23 הסטטוס הוא `LIVE / VERIFIED` עבור surface הבריף; אין מכאן standing 09:00 clock.
 
 `MAIL.html` / `render_mail.py` נשארים זמינים ל־legacy/recovery owner surfaces בלבד; Morning Green הוא ברירת המחדל של בריף הבוקר.
 
@@ -33,7 +33,7 @@
 
 - נכסי אווירה קבועים מגיעים כ־CID מתוך `assets/morning-green/`: `morning-top.jpg`, `morning-story.jpg`, `morning-radar.jpg`, `morning-footer.jpg`.
 - thumbnail של פוסט עתידי נלקח רק מה־media URL הציבורי של אותו job ב־Cloudflare Publisher או מ־CID חומר מאומת.
-- מסלול production: `packages/vfigos/cloudflare_publisher_snapshot.py --output ...` קורא read-only את `/v1/runtime`, `/v1/meta-health`, `/v1/jobs` + job detail. הוא מעדיף `VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN`; ב־Windows owner runtime הוא רשאי לפענח את `%APPDATA%/VelvetOS/cloudflare-publisher-control.dpapi` כ־fallback מקומי בלבד. snapshot נכשל אם heartbeat ה־Cron ישן מ־180 שניות או Meta health אינו PASS. אין קריאת OpenPost ואין credential בתוך הריפו.
+- מסלול קריאה קנוני: `packages/vfigos/cloudflare_publisher_snapshot.py --output ...` בוחר מקור לפי Project State חתום ב־content_hash. ב־`cp016` (PILOT) נשאר קורא ה־Cloudflare הוותיק: `VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN` או DPAPI מקומי, עם GET בלבד. רק לאחר `cp017` (PRODUCTION_READ_ACTIVE), אותה נקודת כניסה מפנה אל `officev2_secure_publisher_snapshot.py` באמצעות ZITADEL → OPA → OpenBao ו־`PRODUCTION_READ` ייעודי; אין fallback ל־CONTROL_TOKEN/Meta token כאשר הנתיב החדש נכשל. בכל מצב בודקים heartbeat עד 180 שניות ו־Meta health תקין. אין קריאת OpenPost, אין כתיבה ואין credential בריפו.
 - HTTPS ציבורי אמיתי עדיין מותר, אבל production renderer דוחה HTTP, נתיב מקומי או reference שאינו `cid:`/HTTPS.
 - local preview מותר רק עם `--allow-local-images`.
 
@@ -92,7 +92,7 @@ Self-check: `python packages/vfbriefux/render_morning_green.py --check`
 5. Gmail readback מאמת את ההודעה;
 6. Apps Script bridge health תקין וה־one-shot חוזר ל־disabled.
 
-כל ששת השערים עברו ב־2026-09-23. Apps Script deployment הקנוני עודכן לגרסה 5 והחזיר HTTP 200; QA production-path החזיר Gmail message ID `1a0ca4521ef56af0`; readback אימת 6 CID images, את התזמונים 09:00 ו־12:00 ואת היעדרם של template tokens פתוחים. לכן בריף 09:00 רשאי להשתמש ב־Morning Green כברירת המחדל.
+כל ששת השערים עברו ב־2026-09-23. Apps Script deployment הקנוני עודכן לגרסה 5 והחזיר HTTP 200; QA production-path החזיר Gmail message ID `1a0ca4521ef56af0`; readback היסטורי אימת 6 CID images ואת התזמונים שהיו פעילים אז, 09:00 ו־12:00, ואת היעדרם של template tokens פתוחים. לכן Morning Green רשאי לשמש כברירת המחדל בכל הפעלה נוכחית של הבריף; הראיה ההיסטורית אינה מחזירה schedule.
 
 ## Publisher cutover — 2026-09-26
 

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/evidence-contract.v0",
+  "title": "Office v2 Evidence Contract v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["evidence_id", "evidence_type", "subject_ref", "producer", "observed_at", "status", "location", "immutable"],
+  "properties": {
+    "evidence_id": {"type": "string", "minLength": 1},
+    "evidence_type": {"enum": ["sensor", "provider_readback", "runtime_health", "action_receipt", "artifact_digest", "live_state_snapshot", "review", "reconciliation"]},
+    "subject_ref": {"type": "string", "minLength": 1},
+    "producer": {"type": "string", "minLength": 1},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "status": {"enum": ["PASS", "WARN", "FAIL", "UNKNOWN"]},
+    "location": {"type": "string", "minLength": 1},
+    "sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+    "immutable": {"type": "boolean"},
+    "correlation_ref": {"type": ["string", "null"]},
+    "expires_at": {"type": ["string", "null"], "format": "date-time"},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  }
+}

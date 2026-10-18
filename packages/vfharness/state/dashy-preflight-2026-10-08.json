@@ -1,0 +1,71 @@
+{
+  "schema": "velvetos.dashy-preflight.v1",
+  "captured_at": "2026-10-08T09:01:01.824856+03:00",
+  "host": "Chris",
+  "role": "READ_ONLY_LAUNCHPAD_NOT_CONTROL_PLANE",
+  "runtime_authority": false,
+  "canonical": {
+    "control_api": {
+      "service": "velvetos-control-api",
+      "url": "https://velvetos-control-api-3sz7smh74a-zf.a.run.app",
+      "latest_ready_revision": null,
+      "probe": "GET /health",
+      "http_status": 200,
+      "schema": "velvetos.control.v1",
+      "service_state": "ready",
+      "revision_not_rechecked": true
+    },
+    "control_center": {
+      "service": "velvetos-control-center-staging",
+      "url": "https://velvetos-control-center-staging-3sz7smh74a-zf.a.run.app",
+      "latest_ready_revision": null,
+      "iap_enabled": true,
+      "unauthenticated_probe_status": 302,
+      "unauthenticated_probe_result": "IAP sign-in redirect",
+      "revision_not_rechecked": true
+    }
+  },
+  "host_runtime": {
+    "docker": false,
+    "podman": false,
+    "node": "v24.19.0",
+    "npm": "11.17.0",
+    "yarn": false,
+    "pnpm": false
+  },
+  "candidate_ports": {
+    "4000": "IN_USE_BY_DASHY_NODE_LOOPBACK_ONLY"
+  },
+  "prerequisites": {
+    "canonical_urls_resolved": true,
+    "canonical_services_live": true,
+    "conflict_free_candidate_port": true,
+    "local_javascript_runtime_available": true
+  },
+  "deployment": {
+    "state": "PILOT_DEPLOYED_READ_ONLY",
+    "host": "Chris",
+    "listen_address": "127.0.0.1",
+    "port": 4000,
+    "url": "http://127.0.0.1:4000",
+    "server": "node.exe D:\\Velvet\\Tools\\DashyLaunchpad\\4.7.0\\serve-readonly.js",
+    "trigger": "at logon for CHRIS\\Chris",
+    "http_get_index": 200,
+    "http_get_config": 200,
+    "http_get_api_config": 404,
+    "http_post_config": 405,
+    "runtime_authority": false,
+    "management_api": false,
+    "control_plane": false,
+    "no_remote_binding": true
+  },
+  "authority": {
+    "source_of_truth": false,
+    "control_plane": false,
+    "owns_actions": false,
+    "owns_approvals": false,
+    "write_widgets_allowed": false
+  },
+  "historical_preflight_captured_at": "2026-10-08T00:13:05.7147370+03:00",
+  "history_note": "Earlier runtime/package blocker was a preflight snapshot. The static loopback deployment now exists; no container, second control plane or write API installed."
+}

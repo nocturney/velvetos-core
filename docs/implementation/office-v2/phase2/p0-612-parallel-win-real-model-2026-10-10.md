@@ -1,0 +1,20 @@
+# #612: Windows Qwen 9B model-generated code during real two-host parallel trial (2026-10-10)
+
+**Observed:** SUCCEEDED on real physical Chris Windows host. Code quarantined; neither Qwen nor Aider received GitHub writer credentials or permission to open PRs.
+
+- Host: Chris, local Ollama qwen3.5:9b, digest 56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90. Already installed Aider 0.86.2, zero additional paid API use, no Codex CLI.
+- Separate prepared-only fixture p0-diverse-speed-win-merge-20261010-c / base bed6f4eb5bcb7ef9c2b882e07c2a8ac81e0f4e8b was independently verified before admitting a NEW local one-attempt Worker.
+- Task p0-diverse-run-win-speed-merge-20261010-c, public exact-int-v3 reminder; edited ONLY windows_merge.py. External wrapper start 2026-10-10T17:16:08.296Z, finish 17:17:03.983Z. Worker start 17:16:08.593560Z, elapsed 54.985 s. Real model_invocations_min=1; exact token use UNKNOWN.
+- Worker result SUCCEEDED exit0, source SHA256 e625ea816531000df82d15144f3155ebd59a868a2dd89c81c1f254115bafb2b9, separate fresh-clone QA 3/3 visible + 12/12 hidden PASS. A DIFFERENT subsequent process invoked the original Worker verify on the unchanged envelope+receipt and got PASS.
+- Quarantined source: docs/implementation/office-v2/phase2/quarantined-agent-sources-2026-10-10/parallel-win-merge-20261010.py, exact byte copy; NOT a production runtime change.
+- Worker receipt selfhash 80f8de498ad76fff8d48cc5c30b4cdb660f3899d0ce12a26f5ed588e9395fb9d, original raw file SHA256 617bff975e1937a85c9e176045d1c9490aeb7746c276ea7d6c62b4db0d1e3ee8. Original raw hashes/logs/OS PID pins/checkpoints remain on host. Selfhash is not an external digital signature.
+
+**Preserved failures:** A prior Windows canonical-tag attempt p0-diverse-run-win-speed-tag-20261010-a FAILED real independent QA from non-ASCII str.isalnum use. Original RUNNING journal remained; independent failed QA audit selfhash 6c1db5ac3b0560efafe525cfa2976d0687f9ba3db9d824ca9b1fa2d591ba3a12 was independently verified, no blind retry. A second new Windows canonical-tag envelope -b with public state reminder also FAILED independent QA and retained its own UNKNOWN journal. Neither was rewritten as success or retried.
+
+**Actual different-host concurrent pairing:** MacMiniOffice.local separately generated canonical_tag.py via Qwen3.5:4b Task p0-diverse-run-mac-speed-tag-20261010-c from 17:16:17Z to 17:17:18Z, independent QA 3+12 PASS; source SHA256 b2ec92fed514a5e0e37aeca31155fe0d04cdfde70a3d46fafeeb9a09b0ef1ccb. Two distinct code families ran on two physical machines simultaneously for about 46.98 s. Total externally recorded pair wall time ~69.70 s; sum of worker elapsed times 114.172 s. ONE non-randomized pair does not prove general p50/p95 speedup, autonomous fleet scheduling or crash recovery.
+
+**Transparent cross-host QA correction:** First Mac review of this PR rightly FAILED because the text transport normalized the original Windows Aider file's 50 CRLF line endings to LF: raw Windows 1887 bytes SHA256 e625ea... versus transferred 1837 bytes SHA256 985b584ba55d11be0d28721b55eb2ffacc2bf66e8744fde4d7284b068c98e85b. We did NOT reexecute, alter or reclassify the model task. We restored all 50 original CRLF line endings in the quarantine copy to preserve exact original model-output bytes and require a NEW protected SHA, Mac independent QA, Windows QA and CI. No original Worker receipt was modified.
+
+Independent protected-PR QA sensor scripts/vf_office_v2_p0_parallel_win_model_gate.py reruns pinned model code against 3 public + 12 hidden fixture checks from the canonical catalog in a disposable tempdir, and verifies the deliberately broken seed still fails. CI performs no model invocation and no native GitHub effect.
+
+**Nonclaims:** no autonomous Git writer, no production authority, no canonical #604 lease/epoch admission, no provider-Git atomicity, no two-host automatic failover or blind replay, no model token count proof. This is assisted PR integration of independently verified QUARANTINED model code, not model-owned GitHub privileges. #612 P0 PARTIAL; #604 remains OPEN.

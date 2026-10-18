@@ -1,0 +1,63 @@
+{
+  "schema": "velvetos.office-v2.phase2-scorecard.v0",
+  "candidate_id": "incumbent-current-authorization",
+  "fixture_id": "identity-security-destructive-20-step",
+  "run_id": "incumbent-authorization-inspection-20261006",
+  "captured_at": "2026-10-06T14:59:03.486553Z",
+  "fitness": {
+    "score_0_5": 1.5,
+    "notes": [
+      "Failed 8 mandatory authorization-lane steps despite existing architecture guards passing.",
+      "No single principal/action/resource decision API, canonical decision id, generic cross-scope check, policy revision surface, or isolated authorization dependency exists.",
+      "The incumbent remains valid as today's distributed production composition but does not satisfy the frozen replacement-lane contract."
+    ]
+  },
+  "safety": {
+    "score_0_5": 3.5,
+    "notes": [
+      "Existing domain-native guards are fail-closed in their own surfaces and architecture guards passed.",
+      "However, the benchmark could not prove the new lane's required centralized authorization semantics without altering production architecture, which was forbidden."
+    ]
+  },
+  "operability": {
+    "score_0_5": 3.5,
+    "notes": [
+      "No new service to operate, but authorization reasoning is distributed across registry, sensors and domain-native evaluators.",
+      "That distribution is precisely why the frozen lane contract's unified decision/correlation/outage semantics cannot be met."
+    ]
+  },
+  "evidence_quality": {
+    "score_0_5": 4.8,
+    "notes": [
+      "Inspection receipt names every failed mandatory step and cross-checks policy-architecture and project-request-gate guards.",
+      "No production mutation was performed to manufacture benchmark semantics."
+    ]
+  },
+  "resources": {
+    "wall_seconds": 94.215,
+    "cpu_peak_pct": null,
+    "ram_peak_mb": null,
+    "gpu_peak_pct": null,
+    "vram_peak_mb": null,
+    "storage_delta_mb": null,
+    "network_mb": null,
+    "external_cost": 0.0,
+    "recurring_cost": 0.0,
+    "operator_minutes": 0.0
+  },
+  "rollback": {
+    "status": "NOT_APPLICABLE",
+    "notes": [
+      "Inspection-only benchmark made no runtime or production-authority change."
+    ]
+  },
+  "security_findings": [
+    "Production incumbent remains authoritative until later explicit promotion.",
+    "Failure is contract-fit, not evidence of an existing production bypass."
+  ],
+  "operations_findings": [
+    "Evidence: D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-destructive-incumbent-current-authorization.json",
+    "Mandatory failures: authorized-check, decision-correlation, anonymous-deny, wrong-principal-deny, wrong-action-deny, cross-scope-deny, policy-revoke, dependency-outage."
+  ],
+  "verdict": "REJECTED_WITH_REASON"
+}

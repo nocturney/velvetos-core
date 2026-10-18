@@ -1,0 +1,50 @@
+name: Office P0 Hosted Docker Boundary LAB
+
+# P0 #612 negative security experiments; NO model, GitHub write token,
+# customer data, production credentials, scheduled activation or local worker.
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/office-p0-hosted-docker-boundary-lab.yml"
+      - "scripts/vf_office_v2_p0_hosted_container_boundary_lab.py"
+      - ".gitattributes"
+
+permissions: {}
+
+jobs:
+  no-credential-container-boundary:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: No persistent checkout credentials
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Check no GitHub write or persistent Git auth
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${RUNNER_ENVIRONMENT:-}" = "github-hosted"
+          test "${RUNNER_OS:-}" = "Linux"
+          test "${GITHUB_REPOSITORY:-}" = "nocturney/velvetos-core"
+          test -z "${GH_TOKEN:-}"
+          test -z "${GITHUB_TOKEN:-}"
+          if git config --local --get-regexp '^http[.].*[.]extraheader$' >/dev/null 2>&1; then
+            echo "::error::Unexpected persisted Git auth header"
+            exit 1
+          fi
+
+      - name: 23 no-model pure static safety checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B scripts/vf_office_v2_p0_hosted_container_boundary_lab.py selftest
+
+      - name: Real Docker no-network, non-root and fixture negative probes
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker version
+          python3 -B scripts/vf_office_v2_p0_hosted_container_boundary_lab.py run

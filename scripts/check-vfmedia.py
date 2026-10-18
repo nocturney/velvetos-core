@@ -356,12 +356,19 @@ def main() -> None:
         fail("vfmedia-intake.yml must not swallow git push failures with || echo")
     if "credentials" not in workflow.lower() and "AUTH" not in workflow:
         fail("workflow must treat Drive credentials as required")
-    if "intake run" not in workflow and "intake selftest" not in workflow:
+    if "intake run" not in workflow:
         fail("vfmedia-intake.yml must run intake")
-    if "test_intake_hardening" not in workflow:
-        fail("vfmedia-intake.yml must run hardening unit tests")
-    if "NOT this job" not in workflow and "schema-only" not in workflow:
-        fail("workflow must clarify validate is not intake monitoring")
+    if "python3 scripts/check-vfmedia.py" not in workflow:
+        fail("vfmedia-intake.yml must run the canonical media sensor")
+    for duplicate in (
+        "python3 packages/vfmedia/tests/test_intake_hardening.py",
+        "python3 scripts/vfmedia.py intake selftest",
+        "python3 scripts/vfmedia.py validate",
+    ):
+        if duplicate in workflow:
+            fail(f"vfmedia-intake.yml duplicates offline proof already owned by check-vfmedia.py: {duplicate}")
+    if "owned once by check-vfmedia.py" not in workflow:
+        fail("workflow must document check-vfmedia.py as the offline validation owner")
 
     hardening = PACK / "tests" / "test_intake_hardening.py"
     if not hardening.is_file():

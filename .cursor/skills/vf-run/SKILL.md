@@ -21,7 +21,7 @@ Read `packages/vfe2b/crews/run.md` and follow it. This is not a sixth product pa
 3. Emit the outcome card from `run.md`. Exactly one of: `worker_done`, `escalation`, `decision_gate`. Include `מטרה` + `דופק` + `אימות` + `ארטיפקט`.
 4. Stop.
 
-Orchestrator overlay (pattern only): `packages/vfe2b/ORCHESTRATORS.md`. DeerFlow patterns: `packages/vfe2b/DEER-FLOW-PATTERNS.md`. Do not install a second orchestrator or DeerFlow Gateway.
+Orchestrator overlay (historical routine pattern): `packages/vfe2b/ORCHESTRATORS.md`. DeerFlow patterns: `packages/vfe2b/DEER-FLOW-PATTERNS.md`. Do not install a second production orchestrator or DeerFlow Gateway **for a routine crew task**. **COMPETITOR_NEUTRAL_ADMISSION_V1**: this is not a blanket research/LAB rejection. Register credible challengers and compare replacement or hybrid designs through Office v2 before deciding; production promotion remains gated.
 
 ## Laws
 

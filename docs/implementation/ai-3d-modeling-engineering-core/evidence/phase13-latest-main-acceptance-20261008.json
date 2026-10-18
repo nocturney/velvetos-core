@@ -1,0 +1,47 @@
+{
+    "schema":  "velvetos.ai3d.phase13-latest-main-integration.v1",
+    "status":  "PASS_118_118_LOCAL",
+    "date":  "2026-10-08",
+    "feature_branch":  "feat/ai3d-phase13-integration-20261008",
+    "integration_commit":  "755301dc2146bbbe70eb245952673dcb4a2de470",
+    "upstream_main":  "08fd11f83fcac7fbcc846fd3a3dac666beb27c42",
+    "merge_parents":  "c5f4839890ae2614bea963544d7129c81861891e 08fd11f83fcac7fbcc846fd3a3dac666beb27c42",
+    "conflicts":  [
+
+                  ],
+    "all_sources_from_main_preserved":  true,
+    "main_ancestor_of_branch":  true,
+    "full_suite":  {
+                       "passed":  118,
+                       "failed":  0,
+                       "sensor_side_effects":  false,
+                       "log":  "evidence/check-all-phase13-latest-main-20261008.log",
+                       "sha256":  "d2f7e992897fe6b94fffd400bc81cac2feb62721d44f1b3b093b0a25ec5673ce"
+                   },
+    "targeted":  {
+                     "office_phase2":  "PASS",
+                     "fabrication_router":  "PASS",
+                     "capability_registry":  "PASS",
+                     "phase10_fem":  "PASS_ON_PREVIOUS_MAIN",
+                     "phase11_slicer":  "PASS_ON_PREVIOUS_MAIN",
+                     "phase12_cam":  "PASS_ON_PREVIOUS_MAIN"
+                 },
+    "capabilities":  {
+                         "total":  84,
+                         "proven":  61,
+                         "candidate":  18,
+                         "blocked":  3,
+                         "research_only":  1,
+                         "active_authority":  1,
+                         "proven_typed":  20
+                     },
+    "safety":  {
+                   "h2d_motion_bounds":  "BLOCKED",
+                   "other_printers":  "NOT_YET_QUALIFIED",
+                   "cnc_machine_execution":  false,
+                   "printer_start_or_upload":  false,
+                   "automatic_optimization_approval":  false
+               },
+    "remote_branch_published_at_receipt_time":  false,
+    "remote_main_updated_at_receipt_time":  false
+}

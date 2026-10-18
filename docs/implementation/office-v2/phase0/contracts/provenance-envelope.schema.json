@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://office-v2/provenance-envelope.v0",
+  "title": "Office v2 Cross-domain Provenance Envelope v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["provenance_id", "correlation", "producer", "observed_at", "source_refs", "native_ids", "claim_scope"],
+  "properties": {
+    "provenance_id": {"type": "string", "minLength": 1},
+    "correlation": {"$ref": "correlation-envelope.schema.json"},
+    "producer": {"type": "string", "minLength": 1},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "source_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "native_ids": {
+      "type": "object",
+      "description": "External/domain-native IDs remain intact; VelvetOS correlation IDs link rather than replace them."
+    },
+    "claim_scope": {"type": "string", "minLength": 1},
+    "artifact_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+    "parent_provenance_refs": {"type": "array", "items": {"type": "string"}},
+    "freshness": {
+      "type": "object",
+      "required": ["state"],
+      "properties": {
+        "state": {"enum": ["FRESH", "STALE_ALLOWED_READ_ONLY", "STALE_BLOCKS_EFFECT", "STATIC_DEFINITION"]},
+        "expires_at": {"type": ["string", "null"], "format": "date-time"}
+      }
+    }
+  }
+}

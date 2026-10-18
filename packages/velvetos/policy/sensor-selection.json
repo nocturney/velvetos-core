@@ -6,13 +6,20 @@
   "broad_change_behavior": "FULL_SUITE",
   "always_on_source": "sensor_registry_fallback_scope",
   "broad_change_patterns": [
+    "AGENTS.md",
+    ".cursor/rules/**",
     ".github/workflows/check-all.yml",
+    "constitution/**",
+    "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
+    "packages/velvetos/policy/policy-registry.json",
     "packages/velvetos/policy/sensor-registry.json",
     "packages/velvetos/policy/sensor-selection.json",
     "packages/velvetos/policy/schema/**",
     "packages/velvetos/policy/*evaluator*.mjs",
     "scripts/check-all.py",
+    "scripts/check-machine-writers.py",
     "scripts/check-policy-architecture.py",
+    "scripts/push-main-with-check-all.sh",
     "scripts/sensor_selector.py",
     "scripts/compare-sensor-shadow.py",
     "scripts/stage3_preflight.py",
@@ -20,6 +27,32 @@
     "requirements-sensors.py311.lock",
     "requirements-sensors.py312.lock"
   ],
+  "neutral_change_patterns": [
+    "CHANGELOG.md"
+  ],
+  "machine_write_routing": {
+    "state_data_patterns": [
+      "office/ledger/live/sync-receipt.json",
+      "office/learning/failure-museum/entries.jsonl",
+      "packages/velvetos/living-studio/data/activation-latest.json",
+      "packages/velvetos/living-studio/data/activation-history.jsonl",
+      "packages/velvetos/living-studio/data/signal-room.jsonl",
+      "packages/velvetos/living-studio/data/receipts.jsonl",
+      "packages/vfharness/state/learning-candidates/**"
+    ],
+    "domain_artifact_patterns": [
+      "README.md",
+      "docs/weekly-deck/**",
+      "packages/vfbriefux/hq/weekly-deck.bento-doc.json",
+      "packages/vfmedia/catalog.json",
+      "packages/vfmedia/state/**",
+      "packages/vfmedia/data/**",
+      "office/control/inbox.json"
+    ],
+    "post_push_full_suite_classes": [
+      "AUTHORITY_SECURITY"
+    ]
+  },
   "shadow_exit": {
     "minimum_pull_requests": 20,
     "minimum_observation_days": 7,
@@ -40,6 +73,8 @@
     "activation_receipt": "packages/velvetos/policy/reports/stage3-activation-receipt.json",
     "pull_request_execution": "SELECTED_SUITE",
     "main_push_execution": "FULL_SUITE",
+    "machine_writer_precheck_execution": "SELECTED_OR_FULL_BY_RISK",
+    "machine_writer_post_push_execution": "REUSE_EXACT_SHA_PRECHECK_EXCEPT_AUTHORITY_SECURITY",
     "selected_suite_runner": "scripts/check-all.py --selection sensor-selection.json",
     "critical_always_on_preserved": true,
     "unknown_or_broad_change_behavior": "FULL_SUITE",

@@ -1,5 +1,8 @@
 # vfe2b — שכבת תזמורת (orchestrators)
 
+> **COMPETITOR_NEUTRAL_ADMISSION_V1:** הוראות "דפוסים בלבד / לא מתקינים" של משמרת 2026-08-31 אינן איסור על מתחרים בבדיקת Office v2. מחקר והשוואת מימוש חלופי (כולל החלפת orchestrator קיים) מותרות; LAB מחייב admission ובידוד ו־production מחייב promotion נפרד. מקורות: `constitution/CONSTITUTION.md` · `docs/implementation/office-v2/phase2/admission-policy-v0.md`. אין runtime ייצור מקביל בלי שער.
+
+
 לא פק חדש. לא ADE שני. מקור: [andyrewlee/awesome-agent-orchestrators](https://github.com/andyrewlee/awesome-agent-orchestrators) — **194** רשומות (נקרא 31.8.2026).
 
 הרשימה מחליטה *על מה* סוכן עובד, *מתי*, *איפה*, ו*מה קורה לתוצר*. אצלנו זה כבר `crews/run.md` + `vfharness`. מטמיעים דפוסים. לא מתקינים את הכלים.
@@ -26,7 +29,7 @@
 | Connector priority + seat scope | LobeHub ToolsEngine | `vfmcp/GAP.md` — מושב → namespace → failover |
 | White-box memory (לא צ'אט גלובלי) | LobeHub Personal Memory | `vfharness/state/` + checkpoint schema |
 | Agent Groups / Project משותף | LobeHub Pages | fan-out max 3 על `vfcopy`/`vfcovers` בלבד |
-| Schedule registry (לא cron אוטונומי) | LobeHub Operator | `vfops/ROUTINE.md` + Morning Brief 09:00 + `decision_gate` |
+| Schedule registry (לא cron אוטונומי) | LobeHub Operator | `vfops/ROUTINE.md` + manual/event-driven Morning Brief + `decision_gate` |
 | setup / teardown / run ל-workspace | [Superset](https://github.com/superset-sh/superset) lifecycle scripts | Cloud Agent `environment.json` — לא IDE שני |
 | Session goal | DeerFlow `/goal` | שדה `מטרה` בכרטיס · checkpoint `goal` |
 | Sub-agent bounds | DeerFlow task | fan-out ≤3 · לא על ₪/שליחה |
@@ -49,7 +52,7 @@ Cursor הוא המשרד. `LOCK.md` + `skipFamilies` ב־`orchestrators.json`.
 
 1. `@vfe2b run <עבודה>` — תיק אחד, צוות קיים אחד.
 2. ממלאים כרטיס עם `מצב` + `דופק` + `אימות` + `ארטיפקט`.
-3. Morning Brief 09:00: אחרי המיון — HQ שולח ג׳ימייל (`send_message`).
+3. Morning Brief: אחרי המיון, ורק כשהוא מופעל — HQ שולח ג׳ימייל (`send_message`).
 4. פנייה בשרשור נקוב: HQ `reply` כשהטיוטה מוכנה. וואטסאפ לקוח נשאר אדם.
 6. `decision_gate` = ₪ לראש צוות בלבד. לא «מחכים לגרוק שישלח».
 

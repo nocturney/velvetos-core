@@ -1,0 +1,32 @@
+{
+  "schema": "velvetos.office-v2.owner-local-inference-intake.v1",
+  "status": "RESEARCH_ROUTED_NOT_EXECUTED",
+  "date": "2026-10-14",
+  "source": "Owner-provided GitHub: mozilla-ai/llamafile",
+  "candidate_id": "candidate-mozilla-ai-llamafile",
+  "canonical_registry": "docs/implementation/office-v2/phase2/candidate-registry-v0.json",
+  "research_note": "docs/implementation/office-v2/phase2/owner-local-inference-llamafile-intake-2026-10-14.md",
+  "route_document": "docs/implementation/office-v2/phase3c/README.md",
+  "url": "https://github.com/mozilla-ai/llamafile",
+  "upstream_pin": "a3ccf098ed9c7c77687f5430b0143156d3bcc45a",
+  "pinned_source": "https://github.com/mozilla-ai/llamafile/tree/a3ccf098ed9c7c77687f5430b0143156d3bcc45a",
+  "release_observed": {
+    "tag": "0.10.6",
+    "published_at_utc": "2026-09-15T16:02:33Z",
+    "url": "https://github.com/mozilla-ai/llamafile/releases/tag/0.10.6"
+  },
+  "license_review": "Apache-2.0 source; dependent libraries and model-weight redistribution separately gated",
+  "route_kind": "PHASE_ROUTED",
+  "lane": "local-model-inference",
+  "workstream": "local-model-inference",
+  "owner_issue": "https://github.com/nocturney/velvetos-core/issues/612",
+  "route_status": "WAITING_GATE",
+  "next_gate": "After the independently verified #612 OpenCode/Ollama source-to-PR/QA/recovery reference and Phase 3C incumbent baseline, benchmark pinned llamafile vs the existing Ollama local runtime using the same licensed GGUF/model/quantization and synthetic tasks; record tool/API correctness, cold/warm latency, tokens/sec, RAM/VRAM/GPU/CPU, restart/rollback, and zero-incremental-cost evidence.",
+  "unlock_condition": "An independently verified #612 source-to-PR/QA/recovery baseline, bounded Phase 3C semantic/provider fixtures, a genuinely free isolated host/VRAM lease, and scoped license/model rights, binary/security, loopback/network, cost and rollback admission checks. No in-flight worker interruption, installation, download or API call.",
+  "comparison": "Ollama current local inference runtime vs pinned llamafile using same licensed GGUF tasks and hardware, NOT replacement of LiteLLM/TensorZero model gateway.",
+  "p0_shortlist_changed": false,
+  "runtime_executed": false,
+  "model_download_authorized": false,
+  "paid_inference_authorized": false,
+  "production_authority_changed": false
+}

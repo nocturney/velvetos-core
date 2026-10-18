@@ -26,7 +26,7 @@
       ],
       "gate": "none",
       "path": "packages/vfops/data/owner-memory.md",
-      "notes": "Morning brief 05a + all seats. Updated by daily retro."
+      "notes": "Morning Brief 05a + participating seats. Updated only by scoped/event-driven retro when evidence changes."
     },
     {
       "id": "memory.artifacts",
@@ -129,7 +129,7 @@
       ],
       "gate": "none",
       "path": "packages/vfops/LOOP.json",
-      "notes": "09:00 Morning Brief. Research/readiness cutoff 07:00. Agency-grade brief. No invented ₪/Insights. No live IG publish. vfcost.py brief is live in slot 02. Slot 01 gates are human click (GATES.json). Slot 03 includes vfprod.py brief."
+      "notes": "Manual/event-driven Morning Brief; no standing 07:00/09:00 clock. Agency-grade brief. No invented ₪/Insights. Brief assembly itself does not publish IG; authorized publication is a separate vfigos/policy action. vfcost.py brief is live in slot 02. Slot 01 gates are human click (GATES.json). Slot 03 includes vfprod.py brief."
     },
     {
       "id": "studio.edit-gate",
@@ -286,7 +286,7 @@
       ],
       "gate": "none",
       "path": "packages/vfgrowth/CALENDAR.md",
-      "notes": "Standing Sun/Tue 16:00 reels, Thu 12:00 carousel, Stories 20:30. Schedule on instagram.com. No Meta Suite. No publish from Cursor."
+      "notes": "Standing content grid only; actual publication is authorized separately through vfigos + policy/receipts. No Meta Suite and no direct/bypass publish from arbitrary tools."
     },
     {
       "id": "boost.request",
@@ -365,13 +365,13 @@
     },
     {
       "id": "insights.snapshot",
-      "label": "הדבקת Insights מאומת",
-      "tool": "vfinsights/templates/snapshot-ingest.md",
+      "label": "Insights מאומת",
+      "tool": "vfinsights/experts/INSIGHTS-SNAPSHOT.md",
       "packs": [
         "vfinsights"
       ],
       "gate": "none",
-      "notes": "Owner paste only. No invented metrics."
+      "notes": "Verified Instagram MCP first; owner paste/Drive snapshot fallback. No invented metrics."
     },
     {
       "id": "revenue.weekly",

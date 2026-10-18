@@ -1,0 +1,77 @@
+{
+  "schema": "velvetos.ai3d.simulation.case.v1",
+  "fixture_id": "axial-bar-tension-explicit-v1",
+  "purpose": "internal-validation-only",
+  "model_source": "synthetic-mechanical-reference-fixture",
+  "geometry": {
+    "kind": "rectangular_bar",
+    "length_mm": 40,
+    "width_mm": 10,
+    "height_mm": 10,
+    "source": "explicit-fixture-geometry"
+  },
+  "units": {
+    "length": "mm",
+    "force": "N",
+    "stress": "MPa",
+    "density": "kg/m^3"
+  },
+  "material": {
+    "name": "Steel-Synthetic-Fixture",
+    "youngs_modulus_mpa": 210000,
+    "poisson_ratio": 0.3,
+    "density_kg_m3": 7850,
+    "source": "explicit-synthetic-material-reference"
+  },
+  "supports": [
+    {
+      "face": "x_min",
+      "condition": "all_translations_fixed",
+      "source": "explicit-fixture-boundary"
+    }
+  ],
+  "loads": [
+    {
+      "face": "x_max",
+      "type": "surface_pressure",
+      "pressure_mpa": 10,
+      "direction": "outward",
+      "source": "explicit-fixture-load"
+    }
+  ],
+  "solver": {
+    "engine": "FreeCAD.FEM+CalculiX.ccx",
+    "analysis": "static_linear",
+    "geometrical_nonlinearity": false,
+    "maximum_seconds": 120
+  },
+  "mesh": {
+    "engine": "FreeCAD.Gmsh",
+    "element_order": 2,
+    "element_sizes_mm": [
+      5,
+      3
+    ],
+    "max_nodes": 6000,
+    "max_elements": 4000
+  },
+  "verification": {
+    "analytical_formula": "delta_x_mm=pressure_mpa*length_mm/youngs_modulus_mpa",
+    "max_relative_error": 0.03,
+    "max_intermesh_relative_difference": 0.02,
+    "require_positive_displacement": true,
+    "require_solver_zero_exit": true
+  },
+  "optimization": {
+    "automatic_acceptance": false,
+    "requires_independent_validation": true,
+    "candidate_only": true
+  },
+  "safety": {
+    "printer_actions_allowed": false,
+    "machine_control_allowed": false,
+    "invent_hidden_loads": false,
+    "invent_material_properties": false,
+    "invent_constraints": false
+  }
+}

@@ -1,8 +1,8 @@
-# מחקר יומי מובנה — 06:15
+# מחקר מובנה — לפי צורך / אירוע
 
 מקור: `agents/01-web-research-agent` + Agno Research.  
 חבילות: `vfresearch`.  
-Treg / GPT / Gemini — לא Tavily חדש. התוצר נסגר עד cutoff 07:00 ונצרך ב-Morning Brief 09:00.
+Treg / GPT / Gemini — לא Tavily חדש. אין cutoff שעוני. התוצר נוצר רק כשיש שאלה/החלטה קונקרטית, ויכול להיצרך ב־Morning Brief הבא אם הוא מופעל ורלוונטי.
 
 ## שאילתה
 

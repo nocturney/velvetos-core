@@ -1,0 +1,9 @@
+{
+  "fixture": "AI3D_PHASE3_SCHEMA_TEST",
+  "purpose": "schema-and-hash-validation-only",
+  "source_dimensions_mm": {
+    "x": 10.0,
+    "y": 20.0,
+    "z": 30.0
+  }
+}

@@ -1,18 +1,18 @@
 {
   "name": "vfresearch-best-skills",
-  "title": "LinklyAI/best-skills — דירוג סקילים כל יומיים",
+  "title": "LinklyAI/best-skills — דירוג סקילים לפי צורך",
   "source": "https://github.com/LinklyAI/best-skills",
   "homepage": "https://linkly.ai/skills",
   "playbook": "packages/vfresearch/BEST-SKILLS.md",
   "skill": ".cursor/skills/vf-best-skills/SKILL.md",
-  "cadence": "every-2-days",
+  "cadence": "on-demand",
   "timezone": "Asia/Jerusalem",
-  "intervalHintHours": 48,
-  "timerName": "research-seat:best-skills-48h",
+  "intervalHintHours": null,
+  "timerName": null,
   "timerPlaybook": "packages/vfresearch/TIMER.md",
-  "standingForever": true,
+  "standingForever": false,
   "standingSince": "2026-09-03",
-  "standingNote": "Owner standing order remains active. Research Seat is the canonical scheduler authority: run a Best Skills pass when lastPass is at least 44h old (daily seat gives a ~48h cadence without slipping to 72h); no external timer renewal is required.",
+  "standingNote": "Owner-approved scheduler simplification on 2026-10-06 retired the standing ~48h scan. Run only for an explicit question, content need, adoption decision, or unresolved Office v2 gate.",
   "artifactPattern": "packages/vfresearch/sources/YYYY-MM-DD-best-skills.md",
   "briefBlock": "05-משרד",
   "mention": [
@@ -20,7 +20,7 @@
     "@trend-researcher"
   ],
   "seat": "ייצור",
-  "rule": "Re-read LinklyAI/best-skills rankings every ~48h. Embed useful patterns into existing packs only. Do not invent rankings, ₪, or Insights. Do not npx-install skills on Cloud Agent.",
+  "rule": "Re-read LinklyAI/best-skills rankings only for an explicit research/adoption/content need or unresolved Office v2 gate. Embed useful patterns into existing packs only. Do not invent rankings, ₪, or Insights. Do not npx-install skills on Cloud Agent.",
   "locks": [
     "hq-send-via-tools",
     "no-auto-dm",
@@ -35,7 +35,7 @@
   ],
   "opened": [
     "constitution-may-update-when-durable-pattern-found",
-    "bi-daily-public-skill-leaderboard-scan",
+    "retired-bi-daily-public-skill-leaderboard-scan",
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
@@ -43,7 +43,7 @@
   "dataDate": "2026-10-01",
   "lastArtifact": "packages/vfresearch/sources/2026-10-02-best-skills.md",
   "lastResult": "no-embed-existing-coverage",
-  "lastTimerStatus": "PROVEN_BY_RESEARCH_SEAT: due/stale pulse (~120h since 2026-09-27) executed inside 2026-10-02 Research Seat; ranking snapshot dataDate 2026-10-01; no separate automation created",
+  "lastTimerStatus": "HISTORICAL_PROVENANCE_ONLY: 2026-10-02 Research Seat executed the then-due pulse; scheduler authority was retired on 2026-10-06 and age no longer creates a due state",
   "embedded": [
     {
       "id": "grill-me",
@@ -305,16 +305,18 @@
       "why": "Vendor CLI scaffold/deploy outside VF Cloud mandate"
     }
   ],
-  "schedulerAuthority": "Velvet Research Seat",
+  "schedulerAuthority": "manual-or-event-driven-research",
   "freshnessContract": {
-    "targetHours": 44,
-    "graceHours": 8,
-    "dueRule": "Research Seat runs the pass when lastPass is >=44h old; stale above 52h (44h + 8h grace). Cadence stays every-2-days (~48h).",
+    "mode": "on-demand",
+    "targetHours": null,
+    "graceHours": null,
+    "dueRule": "No time-based due state; run only for an explicit research need or unresolved decision/gate.",
     "evidence": [
       "lastPass",
       "lastArtifact",
       "lastResult"
     ],
-    "onStale": "Research Seat executes the pass; do not create a second recurring automation"
-  }
+    "onStale": "No automatic run is created from age alone."
+  },
+  "stoppedAt": "2026-10-06"
 }

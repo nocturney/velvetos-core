@@ -1,0 +1,67 @@
+{
+  "schema": "velvetos.ai3d.phase15-dialect-audit-contract.v1",
+  "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+  "non_authoritative_staging": true,
+  "source_of_truth": "scripts/vf_cad.py",
+  "proof_dependency": "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase14-printer-profiles-acceptance-20261008.json",
+  "fixture_profiles": [
+    "u1",
+    "ecc2",
+    "c5pro"
+  ],
+  "fixture_formats": [
+    "stl",
+    "3mf"
+  ],
+  "purpose": "read-only-unknown-command-inventory",
+  "independent_current_firmware_identity_available": false,
+  "provenance": {
+    "u1": {
+      "url": "https://wiki.snapmaker.com/en/FAQ/u1",
+      "type": "manufacturer-open-source-firmware-context",
+      "claim": "Snapmaker U1 Klipper-based firmware sources are public; local firmware version and macro map unverified"
+    },
+    "ecc2": {
+      "url": "https://github.com/OrcaSlicer/OrcaSlicer/blob/main/resources/profiles/Elegoo/machine/ECC2/Elegoo%20Centauri%20Carbon%202%200.4%20nozzle.json",
+      "type": "official-slicer-upstream-machine-profile",
+      "claim": "G180 S7 and Y=-1.2 appear in upstream slicer start sequence; hardware motion envelope not independently qualified"
+    },
+    "c5pro": {
+      "url": "https://wiki.flashforge.com/en/creator-series/creator-5-series",
+      "type": "manufacturer-series-documentation",
+      "claim": "Creator 5 Pro product documented; unknown G-code command semantics not independently qualified"
+    }
+  },
+  "admission": {
+    "mode": "OFFLINE_STATIC_SOURCE_INVENTORY",
+    "promotion_allowed": false,
+    "printer_qualification_allowed": false,
+    "relative_motion_bounds_certified": false,
+    "unknown_commands_require_review": true,
+    "vendor_macro_source_not_hardware_attestation": true
+  },
+  "prohibitions": {
+    "upload": false,
+    "start_print": false,
+    "heat": false,
+    "physical_motion": false,
+    "firmware_flashing": false,
+    "profile_mutation": false,
+    "machine_envelope_relaxation": false,
+    "automatic_manufacturing_release": false,
+    "override_existing_blockers": false,
+    "license_bundle": false
+  },
+  "required_negative_controls": [
+    "unrecognized_command_exposed",
+    "malformed_line_exposed",
+    "source_receipt_hash_checked",
+    "native_profile_hashes_unchanged"
+  ],
+  "status_expectation": {
+    "u1": "CANDIDATE",
+    "ecc2": "BLOCKED_MOTION_BOUNDS",
+    "c5pro": "CANDIDATE",
+    "h2d": "BLOCKED_MOTION_BOUNDS"
+  }
+}

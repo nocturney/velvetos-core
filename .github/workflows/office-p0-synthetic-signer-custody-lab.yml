@@ -1,0 +1,49 @@
+name: Office P0 Synthetic Signer Custody LAB
+
+# #604 same-UID separate mount-namespace negative proof only.
+# No real signer credential, GitHub writer, model, production tenant, schedule.
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/office-p0-synthetic-signer-custody-lab.yml"
+      - "scripts/vf_office_v2_604_hosted_signer_custody_lab.py"
+      - ".gitattributes"
+
+permissions: {}
+
+jobs:
+  same-uid-uncredentialed-two-container-negative:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 9
+    steps:
+      - name: Checkout with no persisted credential
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify hosted VM and zero write-token exposure
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${RUNNER_ENVIRONMENT:-}" = "github-hosted"
+          test "${RUNNER_OS:-}" = "Linux"
+          test "${GITHUB_REPOSITORY:-}" = "nocturney/velvetos-core"
+          test -z "${GITHUB_TOKEN:-}"
+          test -z "${GH_TOKEN:-}"
+          if git config --local --get-regexp '^http[.].*[.]extraheader$' >/dev/null 2>&1; then
+            echo "::error::Unexpected checkout auth header"
+            exit 1
+          fi
+
+      - name: Static denial suite with no Docker/process effects
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B scripts/vf_office_v2_604_hosted_signer_custody_lab.py selftest
+
+      - name: Same UID, exclusive ephemeral signer tmpfs, real worker theft denials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B scripts/vf_office_v2_604_hosted_signer_custody_lab.py run

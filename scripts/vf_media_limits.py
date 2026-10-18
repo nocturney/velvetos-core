@@ -21,7 +21,11 @@ def _apply_limits(memory_bytes: int, timeout: int) -> None:
         raise ValueError("Invalid media resource limits")
     if os.name == 'posix':
         import resource
-        resource.setrlimit(resource.RLIMIT_AS, (memory_bytes, memory_bytes))
+        # macOS frameworks reserve very large virtual ranges, so RLIMIT_AS/RLIMIT_DATA
+        # reject healthy Python/FFmpeg processes. Darwin is memory-bounded in _worker
+        # with a live RSS watchdog plus a post-exit max-RSS check. Linux keeps RLIMIT_AS.
+        if sys.platform != 'darwin':
+            resource.setrlimit(resource.RLIMIT_AS, (memory_bytes, memory_bytes))
         resource.setrlimit(resource.RLIMIT_CPU, (timeout, timeout))
         resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
         return
@@ -71,31 +75,96 @@ def _apply_limits(memory_bytes: int, timeout: int) -> None:
 def _worker(args: list[str], timeout: int, memory_bytes: int, capture: bool) -> int:
     _apply_limits(memory_bytes, timeout)
     expired = threading.Event()
+    # A Darwin decoder gets its own process group so the RSS watchdog sees
+    # ordinary forked helpers too and can kill the entire group on denial.
+    # This is a process-group boundary, not a sandbox against setsid() escapes.
     with subprocess.Popen(args, stdin=subprocess.DEVNULL,
                           stdout=subprocess.PIPE if capture else subprocess.DEVNULL,
-                          stderr=subprocess.DEVNULL) as process:
+                          stderr=subprocess.DEVNULL,
+                          start_new_session=sys.platform == 'darwin') as process:
+        def kill_decoder_group() -> None:
+            try:
+                if sys.platform == 'darwin':
+                    os.killpg(process.pid, signal.SIGKILL)
+                else:
+                    process.kill()
+            except ProcessLookupError:
+                pass
+
         def stop() -> None:
             expired.set()
-            try:
-                process.kill()
-            except OSError:
-                pass
+            kill_decoder_group()
         timer = threading.Timer(timeout, stop)
         timer.daemon = True
         timer.start()
+        memory_exceeded = threading.Event()
+        monitor_stop = threading.Event()
+
+        def monitor_darwin_rss() -> None:
+            if sys.platform != 'darwin':
+                return
+            while not monitor_stop.wait(0.01):
+                if process.poll() is not None:
+                    return
+                try:
+                    observed = subprocess.run(
+                        ['/bin/ps', '-o', 'pid=,pgid=,rss=', '-g', str(process.pid)],
+                        stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+                        stderr=subprocess.DEVNULL, text=True, timeout=1, check=False,
+                    )
+                    sample = observed.stdout.strip()
+                    if observed.returncode != 0 or not sample:
+                        raise ValueError("macOS process group sampler returned no usable RSS")
+                    total_kib = 0
+                    seen_pids = set()
+                    for line in sample.splitlines():
+                        fields = line.split()
+                        if (len(fields) != 3 or not all(v.isdecimal() for v in fields) or
+                                int(fields[1]) != process.pid or
+                                int(fields[0]) in seen_pids):
+                            raise ValueError("macOS process group RSS was malformed")
+                        seen_pids.add(int(fields[0]))
+                        total_kib += int(fields[2])
+                    if total_kib * 1024 > memory_bytes:
+                        memory_exceeded.set()
+                        stop()
+                        return
+                except (OSError, ValueError, subprocess.SubprocessError):
+                    # No trusted RSS observation means no memory guarantee. Deny
+                    # the running child rather than silently dropping enforcement.
+                    if process.poll() is None:
+                        memory_exceeded.set()
+                        stop()
+                    return
+
+        monitor = threading.Thread(target=monitor_darwin_rss, daemon=True)
+        monitor.start()
         try:
             data = process.stdout.read(OUTPUT_BYTES + 1) if capture else b''
             if len(data) > OUTPUT_BYTES:
                 stop()
             code = process.wait(timeout=timeout + 1)
-            if expired.is_set() or code != 0:
+            monitor_stop.set()
+            monitor.join(timeout=1)
+            if sys.platform == 'darwin':
+                import resource
+                # Darwin reports ru_maxrss in bytes. The worker is fresh per invocation,
+                # so RUSAGE_CHILDREN covers this decoder plus tiny ps watchdog samples.
+                if resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss > memory_bytes:
+                    memory_exceeded.set()
+            if expired.is_set() or memory_exceeded.is_set() or code != 0:
                 return 2
             if capture:
                 sys.stdout.buffer.write(data)
                 sys.stdout.buffer.flush()
             return 0
         finally:
+            monitor_stop.set()
             timer.cancel()
+            # A direct parent may exit while its children are still alive.
+            # Never let an ordinary, same-group orphan survive a completed job.
+            if sys.platform == 'darwin':
+                kill_decoder_group()
 
 
 def run_bounded(args: list[str], *, timeout: int = 90, capture: bool = False,

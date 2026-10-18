@@ -1,0 +1,97 @@
+{
+  "schema": "velvetos.repo-intake.dashy-static-launchpad.v1",
+  "receiptId": "repo-intake-dashy-read-only-2026-10-08",
+  "host": "Chris",
+  "status": "PILOT_DEPLOYED_READ_ONLY",
+  "role": "READ_ONLY_LAUNCHPAD_NOT_CONTROL_PLANE",
+  "source": {
+    "repository": "Lissy93/dashy",
+    "tag": "4.7.0",
+    "releasePublishedAt": "2026-09-17T16:14:41Z",
+    "license": "MIT",
+    "asset": "dashy-4.7.0.tar.gz",
+    "sizeBytes": 4961558,
+    "expectedSha256": "e7b288c5f49ecc7f19a945b6c62fe235c857b5b325da7cfd25cfefa8061ee248",
+    "observedSha256": "e7b288c5f49ecc7f19a945b6c62fe235c857b5b325da7cfd25cfefa8061ee248",
+    "verified": true
+  },
+  "deployment": {
+    "root": "D:\\Velvet\\Tools\\DashyLaunchpad\\4.7.0",
+    "vendorBuild": "prebuilt-dist-static-assets",
+    "prerequisites": "Node.js v24.19.0; no Docker/Yarn needed for static hosting",
+    "host": "127.0.0.1",
+    "port": 4000,
+    "url": "http://127.0.0.1:4000",
+    "servingUser": "CHRIS\\Chris",
+    "windowsSession": 1,
+    "windowsTask": "Velvet-Dashy-ReadOnly-Launchpad",
+    "taskTrigger": "interactive-logon-for-CHRIS\\Chris",
+    "noRemoteBinding": true,
+    "staticServerSha256": "bb5322f1c86c58dd1656aa900a082e8a15f5c721b379081adbe37c80328e8142",
+    "configSha256": "44988976de935443c65fefa34044590eab66b1b6d5c9ddfd9a12a39e897f421f",
+    "disableConfiguration": true,
+    "preventWriteToDisk": true,
+    "preventLocalSave": true,
+    "serverMethods": [
+      "GET",
+      "HEAD"
+    ],
+    "managementApi": false,
+    "backendProxy": false,
+    "controlPlane": false,
+    "businessStateAuthority": false,
+    "recurringCostNewILS": 0
+  },
+  "canonical": {
+    "controlApi": {
+      "url": "https://velvetos-control-api-3sz7smh74a-zf.a.run.app",
+      "healthStatus": 200,
+      "healthSchema": "velvetos.control.v1",
+      "velvetosDownstreamHealth": "unknown"
+    },
+    "controlCenter": {
+      "url": "https://velvetos-control-center-staging-3sz7smh74a-zf.a.run.app",
+      "unauthenticatedStatus": 302,
+      "iapProtected": true
+    },
+    "repo": "https://github.com/nocturney/velvetos-core"
+  },
+  "smoke": {
+    "listenerBind": "127.0.0.1:4000",
+    "getIndex": 200,
+    "getConfig": 200,
+    "configLinks": 3,
+    "getApiConfig": 404,
+    "postConfig": 405,
+    "edgeHeadlessExit": 0,
+    "domBytes": 459414,
+    "renderedVelvetOffice": true,
+    "renderedControlCenterLink": true,
+    "renderedApiHealthLink": true,
+    "catastrophicErrorDetected": false,
+    "status": "PASS",
+    "evidence": [
+      "D:\\Velvet\\Tools\\DashyLaunchpad\\4.7.0\\smoke\\browser-smoke.json",
+      "D:\\Velvet\\Tools\\DashyLaunchpad\\4.7.0\\smoke\\rendered-dom.html"
+    ]
+  },
+  "allowedActions": "navigation-only",
+  "ownsApprovals": false,
+  "writesCanonicalState": false,
+  "sourceOfTruth": false,
+  "runtimeAuthority": false,
+  "rollback": "Stop and remove exact scheduled task Velvet-Dashy-ReadOnly-Launchpad, stop matching Node process for serve-readonly.js, then remove D:\\Velvet\\Tools\\DashyLaunchpad\\4.7.0.",
+  "revalidatedAt": "2026-10-08T09:01:01.824856+03:00",
+  "revalidation": {
+    "listener": "127.0.0.1:4000",
+    "nodeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+    "serverScript": "D:\\Velvet\\Tools\\DashyLaunchpad\\4.7.0\\serve-readonly.js",
+    "getIndex": 200,
+    "getConfig": 200,
+    "getApiConfig": 404,
+    "postConfig": 405,
+    "controlApiHealth": 200,
+    "controlCenterIapRedirect": 302,
+    "runtimeAuthority": false
+  }
+}

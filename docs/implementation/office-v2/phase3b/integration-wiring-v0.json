@@ -1,0 +1,118 @@
+{
+  "schema": "velvetos.office-v2.phase3b-integration-wiring.v0",
+  "status": "LAB_WIRING_DEFINED_NO_PRODUCTION_AUTHORITY",
+  "mode": "LAB_SIMULATION_ONLY",
+  "selected_composition": "composition-zitadel-opa-openbao",
+  "production_authority_change": false,
+  "production_writer_change": false,
+  "production_credentials_allowed": false,
+  "production_secret_material_allowed": false,
+  "external_effects_allowed": false,
+  "network_calls_allowed_by_reference_implementation": false,
+  "credential_trust_class": "LAB_ONLY_SECRET",
+  "authority_contract_ref": "docs/implementation/office-v2/phase0/authority-map-v0.1.json",
+  "credential_trust_contract_ref": "docs/implementation/office-v2/phase0/credential-trust-classes-v0.json",
+  "composition_verdict_ref": "docs/implementation/office-v2/phase3b/composition-gate-verdict-v0.json",
+  "roles": {
+    "identity_provider": {
+      "primary": "candidate-zitadel",
+      "fallback": "candidate-keycloak",
+      "normalized_interface": "verify_principal",
+      "output": ["principal_id_hash", "claims", "verification_status"]
+    },
+    "authorization_policy": {
+      "primary": "candidate-opa",
+      "fallback": "candidate-cedar",
+      "normalized_interface": "decide",
+      "input_requires": ["verified_principal", "action", "resource", "requested_scope", "correlation_id"],
+      "output": ["decision", "decision_id", "reason_codes"]
+    },
+    "credential_broker": {
+      "primary": "candidate-openbao",
+      "fallback": "candidate-infisical-agent-vault",
+      "normalized_interface": "resolve_exact_scope",
+      "input_requires": ["verified_principal", "allow_decision", "requested_scope", "correlation_id"],
+      "output": ["scope_match", "credential_resolution_eligible", "broker_receipt_id"]
+    }
+  },
+  "fallback_policy": {
+    "automatic_failover_enabled": false,
+    "mode": "EXPLICIT_REWIRE_ONLY",
+    "requirements": [
+      "Preserve the same normalized interface and deny-by-default semantics.",
+      "Never change external-effect authority or canonical business truth.",
+      "Record the selected fallback and reason in sanitized evidence.",
+      "Do not fall back from DENY to another engine merely to seek ALLOW."
+    ]
+  },
+  "pipeline": [
+    {"n": 1, "id": "request_intake", "fail_closed": true},
+    {"n": 2, "id": "identity_verify", "fail_closed": true},
+    {"n": 3, "id": "claim_normalize", "fail_closed": true},
+    {"n": 4, "id": "authorize", "fail_closed": true},
+    {"n": 5, "id": "credential_scope_check", "fail_closed": true},
+    {"n": 6, "id": "credential_resolution_decision", "fail_closed": true},
+    {"n": 7, "id": "effect_gate", "fail_closed": true},
+    {"n": 8, "id": "evidence_finalize", "fail_closed": true}
+  ],
+  "fail_closed_rules": {
+    "identity_unverified_or_unavailable": "DENY",
+    "policy_deny": "DENY",
+    "policy_unavailable_or_invalid": "DENY",
+    "scope_mismatch": "DENY",
+    "broker_unavailable_or_invalid": "DENY",
+    "missing_required_input": "DENY",
+    "unknown_authority": "DENY",
+    "production_effect_request_in_lab_mode": "DENY"
+  },
+  "evidence_contract": {
+    "allowed_fields": [
+      "schema",
+      "mode",
+      "correlation_id",
+      "principal_id_hash",
+      "action",
+      "resource",
+      "requested_scope",
+      "identity_status",
+      "policy_decision",
+      "scope_match",
+      "credential_resolution_eligible",
+      "external_effect_allowed",
+      "outcome",
+      "reason_codes",
+      "component_selection"
+    ],
+    "forbidden_fields": [
+      "access_token",
+      "refresh_token",
+      "id_token",
+      "bearer_token",
+      "authorization_header",
+      "client_secret",
+      "secret",
+      "secret_value",
+      "password",
+      "private_key",
+      "credential_material"
+    ],
+    "raw_secret_material_allowed": false,
+    "raw_bearer_material_allowed": false,
+    "principal_identifier_storage": "SHA256_HASH_ONLY"
+  },
+  "reference_implementation": {
+    "path": "scripts/vf_office_v2_security_wiring.py",
+    "commands": ["validate", "simulate", "selftest"],
+    "network": "DISABLED",
+    "provider_sdk_imports": "FORBIDDEN",
+    "external_effects": "FORBIDDEN"
+  },
+  "promotion_boundary": {
+    "current_stage": "INTEGRATION_WIRING_ONLY",
+    "shadow_promoted": false,
+    "pilot_promoted": false,
+    "production_promoted": false,
+    "promotion_gate_ref": "docs/implementation/office-v2/phase3b/promotion-gates-v0.json",
+    "rule": "No runtime promotion is implied by a wiring PASS; SHADOW, PILOT and production each require a separate explicit promotion receipt."
+  }
+}

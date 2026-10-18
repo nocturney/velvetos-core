@@ -1,0 +1,72 @@
+{
+    "schema":  "velvetos.ai3d.artifact-report.v1",
+    "report_id":  "ai3d-phase3-synthetic-intent-report-v1",
+    "report_type":  "intent",
+    "contract_id":  "ai3d-phase3-synthetic-box-v1",
+    "contract_sha256":  "d87dd09bdb59457dcc8c9379138028d7dc88eff86f973c97704e812eba75089a",
+    "capability_record_id":  "cad.solid.parametric--build123d",
+    "operation":  "engineering-contract-validation-fixture",
+    "status":  "PASS",
+    "started_at":  "2026-10-07T12:52:11.7625313Z",
+    "finished_at":  "2026-10-07T12:52:11.7625313Z",
+    "engine":  {
+                   "id":  "ai3d_protocol",
+                   "version":  "1.0",
+                   "adapter_id":  "ai3d_protocol",
+                   "adapter_version":  "1.0",
+                   "runtime":  "python-3.11",
+                   "host":  "windows-primary",
+                   "profile_refs":  [
+                                        "velvetos.ai3d.engineering-contract.v1"
+                                    ]
+               },
+    "inputs":  [
+                   {
+                       "artifact_id":  "synthetic-source",
+                       "role":  "source",
+                       "uri_or_path":  "synthetic-source.json",
+                       "sha256":  "6101d4429dc64b4723bf8bcfde03a56de1a86bae83450cff1983673497e48216",
+                       "bytes":  168,
+                       "media_type":  "application/json"
+                   }
+               ],
+    "outputs":  [
+                    {
+                        "artifact_id":  "synthetic-result",
+                        "role":  "output",
+                        "uri_or_path":  "synthetic-result.json",
+                        "sha256":  "aff726b6dfac0aa0243de2fc86ed265c41b7f9002f01fe7aba41ecedd6d8a017",
+                        "bytes":  139,
+                        "media_type":  "application/json"
+                    }
+                ],
+    "validators":  [
+                       {
+                           "validator_id":  "jsonschema+ai3d_protocol.contract_semantics",
+                           "outcome":  "PASS",
+                           "evidence_refs":  [
+                                                 "engineering-contract.synthetic-box.json"
+                                             ]
+                       },
+                       {
+                           "validator_id":  "sha256-file-verification",
+                           "outcome":  "PASS",
+                           "evidence_refs":  [
+                                                 "synthetic-source.json",
+                                                 "synthetic-result.json"
+                                             ]
+                       }
+                   ],
+    "parent_report_ids":  [
+
+                          ],
+    "metrics":  {
+                    "critical_dimensions":  3,
+                    "blocking_unknowns":  0,
+                    "hashed_inputs":  1,
+                    "hashed_outputs":  1
+                },
+    "notes":  [
+                  "Synthetic protocol fixture only; not a manufacturing artifact."
+              ]
+}

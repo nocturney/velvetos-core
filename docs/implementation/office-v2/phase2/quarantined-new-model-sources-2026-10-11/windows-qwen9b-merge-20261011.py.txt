@@ -1,0 +1,35 @@
+def merge_windows(windows: list[tuple[int,int]]) -> list[tuple[int,int]]:
+    if not isinstance(windows, list):
+        raise ValueError("Input must be a list")
+    
+    merged = []
+    for w in windows:
+        if not isinstance(w, tuple) or len(w) != 2:
+            raise ValueError("Each element must be a tuple of length 2")
+        start, end = w
+        if type(start) is not int or type(end) is not int:
+            raise ValueError("Endpoints must be integers (not bool, float, or subclasses)")
+        if isinstance(start, bool) or isinstance(end, bool):
+            raise ValueError("Endpoints must be integers (not bool)")
+        if start > end:
+            raise ValueError("Start must be less than or equal to end")
+    
+    if not windows:
+        return []
+    
+    sorted_windows = sorted(windows, key=lambda x: x[0])
+    
+    current_start, current_end = sorted_windows[0]
+    
+    for i in range(1, len(sorted_windows)):
+        next_start, next_end = sorted_windows[i]
+        
+        if next_start <= current_end + 1:
+            current_end = max(current_end, next_end)
+        else:
+            merged.append((current_start, current_end))
+            current_start, current_end = next_start, next_end
+    
+    merged.append((current_start, current_end))
+    
+    return merged

@@ -1,0 +1,52 @@
+{
+  "schema": "velvetos.repo-intake.v1",
+  "date": "2026-10-07",
+  "role": "REVIEWED_EXTERNAL_SOURCES_NOT_AUTHORITY",
+  "principles": [
+    "existing-pack-first",
+    "no-second-orchestrator",
+    "no-second-control-plane",
+    "runtime-pilots-isolated-and-pinned",
+    "no-new-runtime-authority-by-adoption",
+    "no-printer-write-from-hq",
+    "no-social-write-from-generic-computer-use",
+    "license-review-before-runtime-adoption",
+    "evidence-before-promotion"
+  ],
+  "activeWorkGates": {
+    "office_phase3b": "Do not mutate active Office 2.0 Phase 3B worktrees or production surfaces from this intake branch.",
+    "ai3d_core": "Do not edit the active AI 3D/CAD Core worktree; provider experiments must remain isolated until a stable checkpoint or merge.",
+    "creative_host": "Do not replace the current CreativeCraft/Blender authority; experiments are providers only."
+  },
+  "sources": [
+    {"repo":"trycua/cua","priority":"P0","mode":"ISOLATED_RUNTIME_PILOT","target":"packages/vfharness/devtools/execution-providers.json","runtimeAuthority":false,"gate":"GUI_IDLE_AFTER_OFFICE_CHECKPOINT"},
+    {"repo":"trycua/acu","priority":"P2","mode":"REFERENCE_INDEX","target":"vfresearch","runtimeAuthority":false},
+    {"repo":"enescingoz/awesome-n8n-templates","priority":"P0","mode":"PATTERN_EMBED_ONLY","target":"packages/vfharness/playbooks/automation-standards.md","runtimeAuthority":false},
+    {"repo":"Lissy93/dashy","priority":"P1","mode":"STAGED_LAUNCHPAD_PILOT","target":"Velvet Office Launchpad","runtimeAuthority":false,"gate":"OFFICE_STABLE_AND_PORT_CHECK"},
+    {"repo":"agarrharr/awesome-cli-apps","priority":"P0","mode":"REGISTRY_SOURCE","target":"packages/vfharness/devtools/approved-cli.json","runtimeAuthority":false},
+    {"repo":"alebcay/awesome-shell","priority":"P0","mode":"REGISTRY_SOURCE","target":"packages/vfharness/devtools/approved-cli.json","runtimeAuthority":false},
+    {"repo":"e2b-dev/awesome-ai-agents","priority":"P1","mode":"TARGETED_PATTERN_AUDIT","target":"packages/vfe2b/catalog.json","runtimeAuthority":false},
+    {"repo":"VoltAgent/awesome-agent-skills","priority":"P0","mode":"PATTERN_EMBED_ONLY","target":"packages/vfharness/playbooks/skill-intake-evaluation.md","runtimeAuthority":false},
+    {"repo":"VoltAgent/awesome-openclaw-skills","priority":"P1","mode":"TARGETED_SKILL_AUDIT","target":"candidateAudits","runtimeAuthority":false},
+    {"repo":"hesreallyhim/awesome-claude-code","priority":"P0","mode":"PATTERN_EMBED_ONLY","target":"packages/vfharness/playbooks/skill-intake-evaluation.md","runtimeAuthority":false},
+    {"repo":"aishwaryanr/awesome-generative-ai-guide","priority":"P2","mode":"REFERENCE_INDEX","target":"vfresearch","runtimeAuthority":false},
+    {"repo":"vinta/awesome-python","priority":"P2","mode":"REFERENCE_INDEX","target":"vfresearch","runtimeAuthority":false},
+    {"repo":"fffaraz/awesome-cpp","priority":"P1","mode":"CAD_NATIVE_RESEARCH_MATRIX","target":"packages/vfresearch/sources/2026-10-07-cad-native-matrix.md","runtimeAuthority":false},
+    {"repo":"akullpp/awesome-java","priority":"P2","mode":"REFERENCE_INDEX","target":"vfresearch","runtimeAuthority":false},
+    {"repo":"DovAmir/awesome-design-patterns","priority":"P2","mode":"REFERENCE_INDEX","target":"vfresearch","runtimeAuthority":false},
+    {"repo":"goabstract/Awesome-Design-Tools","priority":"P3","mode":"REFERENCE_ONLY","target":"vfresearch","runtimeAuthority":false},
+    {"repo":"ellisonleao/magictools","priority":"P0","mode":"VTRACER_RUNTIME_PILOT_PLUS_REFERENCE","target":"scripts/vf_vtracer.py","runtimeAuthority":false}
+  ],
+  "candidateAudits": [
+    {"id":"cua","source":"trycua/cua","decision":"PILOT_AFTER_GUI_IDLE","allowed":["read-screen","bounded-input-on-benign-test-app"],"denied":["printer-control","social-publish","customer-send","credential-entry-without-explicit-gate"]},
+    {"id":"vtracer","source":"visioncortex/vtracer","decision":"PILOT_NOW_ISOLATED","allowed":["raster-to-svg","fixed-palette","cutout"],"denied":["production-promotion-without-palette-validation"]},
+    {"id":"ufo","source":"microsoft/UFO","decision":"COMPARE_AFTER_CUA","allowed":["isolated-windows-evaluation"],"denied":["unattended-authority"]},
+    {"id":"gpt-researcher","source":"assafelovic/gpt-researcher","decision":"EXISTING_PATTERN_SUFFICIENT","allowed":["planner-gatherer-pattern"],"denied":["duplicate-research-authority"]},
+    {"id":"bambu-cli","source":"tobiasbischoff/bambu-cli","decision":"READ_ONLY_ADAPTER_AUDIT","allowed":["status","telemetry"],"denied":["print-start","upload","heating","motion"]},
+    {"id":"cad-agent","source":"clawd-maf/cad-agent","decision":"ISOLATED_RENDER_LOOP_AUDIT","allowed":["render-feedback-pattern"],"denied":["second-cad-authority","printer-control"]},
+    {"id":"adobe-automator","source":"abdul-karim-mia/adobe-automator","decision":"PATTERN_COMPARE_ONLY","allowed":["compare-extendscript-coverage"],"denied":["raw-arbitrary-jsx-runtime","filesystem-wide-script-authority"]},
+    {"id":"agent-passport","source":"agentpassportai/agent-passport","decision":"PATTERN_ONLY_PENDING_LICENSE_REVIEW","allowed":["ttl-pattern","allowlist-pattern","rate-limit-pattern","kill-switch-pattern"],"denied":["runtime-adoption-without-license-clearance"]},
+    {"id":"mixpost-postiz","source":"VoltAgent/awesome-openclaw-skills","decision":"BENCHMARK_ONLY","allowed":["feature-benchmark"],"denied":["parallel-publish-authority"]},
+    {"id":"dashy","source":"Lissy93/dashy","decision":"LAUNCHPAD_ONLY","allowed":["links","health-indicators","read-only-widgets"],"denied":["control-center-authority","source-of-truth"]}
+  ]
+}

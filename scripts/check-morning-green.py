@@ -28,7 +28,8 @@ def main() -> None:
         ASSETS / "morning-radar.jpg",
         ASSETS / "morning-footer.jpg",
         ROOT / "packages" / "vfigos" / "cloudflare_publisher_snapshot.py",
-        ROOT / "automation" / "grok" / "CONTRACT.md",
+        ROOT / "automation" / "chatgpt" / "CONTRACT.md",
+        ROOT / "automation" / "chatgpt" / "manifest.json",
         ROOT / "automation" / "grok" / "manifest.json",
         ROOT / "packages" / "vfops" / "ROUTINE.md",
     ]
@@ -79,23 +80,29 @@ def main() -> None:
         if token not in sender:
             fail(f"Gmail sender missing CID capability {token!r}")
 
-    grok_contract = (ROOT / "automation" / "grok" / "CONTRACT.md").read_text(encoding="utf-8")
-    for token in ("09:00 owner brief must use Morning Green v3.1", "V10.3 remains available only for legacy/recovery", "Apps Script bridge v5 health"):
-        if token not in grok_contract:
-            fail(f"Grok owner-email authority missing Morning Green cutover token {token!r}")
-    grok_manifest = json.loads((ROOT / "automation" / "grok" / "manifest.json").read_text(encoding="utf-8"))
-    if int(grok_manifest.get("version", 0)) < 2 or grok_manifest.get("morningGreenCutoverDate") != "2026-09-23":
-        fail("Grok manifest missing Morning Green production cutover version/date")
-    authority = grok_manifest.get("ownerEmailAuthority") or {}
+    chatgpt_contract = (ROOT / "automation" / "chatgpt" / "CONTRACT.md").read_text(encoding="utf-8")
+    if "Current owner-facing scheduling authority is ChatGPT automations" not in chatgpt_contract:
+        fail("ChatGPT scheduler contract missing current authority")
+    chatgpt_manifest = json.loads((ROOT / "automation" / "chatgpt" / "manifest.json").read_text(encoding="utf-8"))
+    if chatgpt_manifest.get("provider") != "chatgpt-automations" or chatgpt_manifest.get("status") != "ACTIVE":
+        fail("ChatGPT scheduler manifest is not active")
+    authority = chatgpt_manifest.get("ownerEmailAuthority") or {}
     if not str(authority.get("design") or "").startswith("Morning Green v3.1"):
-        fail("Grok ownerEmailAuthority is not Morning Green v3.1")
-    morning = next((x for x in grok_manifest.get("routines", []) if x.get("id") == "velvet-morning-brief"), None)
-    if not morning or "Morning Green v3.1" not in str(morning.get("responsibility") or ""):
-        fail("protected 09:00 routine is not bound to Morning Green v3.1")
+        fail("ChatGPT ownerEmailAuthority is not Morning Green v3.1")
+    if authority.get("deliveryEvidenceRequired") is not True:
+        fail("Morning Green delivery must remain evidence-gated")
+    morning = chatgpt_manifest.get("morningBrief") or {}
+    if morning.get("scheduled") is not False or morning.get("mode") != "manual-or-event-driven":
+        fail("Morning Brief must remain manual/event-driven")
+    if morning.get("design") != "Morning Green v3.1":
+        fail("event-driven Morning Brief is not bound to Morning Green v3.1")
+    grok_manifest = json.loads((ROOT / "automation" / "grok" / "manifest.json").read_text(encoding="utf-8"))
+    if grok_manifest.get("productionScheduler") != "chatgpt-automations" or (grok_manifest.get("protectedSet") or {}).get("count") != 0:
+        fail("Grok retirement mirror disagrees with ChatGPT scheduler authority")
     routine = (ROOT / "packages" / "vfops" / "ROUTINE.md").read_text(encoding="utf-8")
-    for token in ("09:00** | Velvet Morning Brief | Owner-facing Morning Green v3.1", "10:00** | Morning Delivery Guard | Verify TODAY'S 09:00 Morning Green delivery", "must not silently downgrade to V10.3"):
+    for token in ("Velvet Morning Brief", "manual/event-driven", "Morning Green", "delivery requires real Gmail/provider evidence"):
         if token not in routine:
-            fail(f"vfops ROUTINE missing Morning Green production rule {token!r}")
+            fail(f"vfops ROUTINE missing event-driven Morning Green rule {token!r}")
 
     builder = (PACK / "build_morning_green.py").read_text(encoding="utf-8")
     preparer = (PACK / "prepare_morning_green.py").read_text(encoding="utf-8")

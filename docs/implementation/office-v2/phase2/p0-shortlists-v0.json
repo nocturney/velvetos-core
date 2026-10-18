@@ -1,0 +1,133 @@
+{
+  "schema": "velvetos.office-v2.phase2-p0-shortlists.v0",
+  "status": "DURABLE_EXECUTION_WINNER_RECORDED_OTHER_LANES_OPEN",
+  "default_rule": "incumbent plus 2–3 serious challengers",
+  "lanes": [
+    {
+      "lane_id": "durable-execution",
+      "contract_scope": "long job, crash, resume, idempotency, cancellation, timeout and evidence",
+      "incumbent": "incumbent-current-durable-execution",
+      "challengers": [
+        "candidate-restate",
+        "candidate-hatchet",
+        "candidate-temporal"
+      ],
+      "winner": "candidate-restate",
+      "freeze_state": "FROZEN_AFTER_PHASE3A_BAKEOFF",
+      "correction_receipt": "docs/implementation/office-v2/phase3/durable-execution-shortlist-correction-v0.json",
+      "fallback": "candidate-temporal",
+      "verdict_receipt": "docs/implementation/office-v2/phase3/durable-execution-verdict-v0.json"
+    },
+    {
+      "lane_id": "model-routing",
+      "contract_scope": "typed model routing, policy, observability, fallback and cost evidence",
+      "incumbent": "incumbent-current-model-routing",
+      "challengers": [
+        "candidate-litellm",
+        "candidate-tensorzero"
+      ],
+      "winner": null,
+      "freeze_state": "OPEN_UNTIL_FIXTURES_AND_SCORECARDS"
+    },
+    {
+      "lane_id": "tool-gateway-interoperability",
+      "contract_scope": "typed tool discovery, trust, policy, MCP/A2A interoperability and audit",
+      "incumbent": "incumbent-current-tool-gateway",
+      "challengers": [
+        "candidate-toolhive",
+        "candidate-agentgateway"
+      ],
+      "winner": null,
+      "freeze_state": "OPEN_UNTIL_FIXTURES_AND_SCORECARDS",
+      "queued_challengers": [
+        "candidate-bindu",
+        "candidate-copilotkit-openbot"
+      ],
+      "queue_policy": "Competitor-neutral overflow, preserving all credible contenders for contract-matched evaluation. Queue membership grants no runtime or production authority; current 2-3 benchmark shortlist unchanged."
+    },
+    {
+      "lane_id": "memory-context",
+      "contract_scope": "derived recall, provenance, deletion, freshness and canonical-authority separation",
+      "incumbent": "incumbent-current-memory",
+      "challengers": [
+        "candidate-hindsight",
+        "candidate-supermemory",
+        "candidate-graphiti"
+      ],
+      "winner": null,
+      "freeze_state": "OPEN_UNTIL_FIXTURES_AND_SCORECARDS",
+      "queued_challengers": [
+        "candidate-deerflow",
+        "candidate-context-mode",
+        "candidate-letta"
+      ],
+      "queue_policy": "Competitor-neutral overflow: preserve for fair shortlist triage or lane reopen; queued is neither rejected nor LAB admission."
+    },
+    {
+      "lane_id": "agent-runtime",
+      "contract_scope": "typed agent execution, tool use, approvals, evidence, cancellation and isolation",
+      "incumbent": "live-grokbot",
+      "challengers": [
+        "candidate-herdr",
+        "candidate-pydantic-ai",
+        "candidate-mastra"
+      ],
+      "winner": null,
+      "freeze_state": "OPEN_UNTIL_FIXTURES_AND_SCORECARDS",
+      "queued_challengers": [
+        "candidate-deerflow",
+        "deferred-openclaw",
+        "deferred-crewai",
+        "deferred-langgraph",
+        "deferred-ruflo",
+        "candidate-microsoft-agent-framework",
+        "candidate-lobehub",
+        "candidate-opencode-cli",
+        "candidate-goose-cli",
+        "candidate-octop-agent-team",
+        "candidate-rakazo",
+        "candidate-hermes-agent",
+        "candidate-agent-zero",
+        "candidate-copilotkit-openbot",
+        "candidate-copilotkit-openmuse",
+        "candidate-copilotkit-opendots",
+        "candidate-anil-open-dots",
+        "candidate-diggerhq-opendots",
+        "candidate-esengine-deepseek-reasonix",
+        "candidate-mpfaffenberger-code-puppy",
+        "candidate-qwenlm-qwen-code",
+        "candidate-kilo-org-kilocode",
+        "candidate-mvschwarz-openrig",
+        "candidate-yaoapp-yao",
+        "candidate-anus-dev-anus",
+        "candidate-q00-ouroboros",
+        "candidate-mikedev115-aetox-harness",
+        "candidate-browser-use-browser-use",
+        "candidate-browser-use-bux",
+        "candidate-skyvern-ai-skyvern",
+        "candidate-ntegrals-openbrowser"
+      ],
+      "queue_policy": "Competitor-neutral overflow, preserving all credible contenders for contract-matched evaluation. Queue membership grants no runtime or production authority; current 2-3 benchmark shortlist unchanged."
+    },
+    {
+      "lane_id": "worker-fleet-placement",
+      "contract_scope": "Capability-based dispatch across existing Windows/Mac, later five host fleet; measured readback, per-host capacity, Windows GUI session, retry and node loss.",
+      "incumbent": "live-desktop-commander",
+      "challengers": [
+        "candidate-restate",
+        "candidate-nomad-worker-placement",
+        "candidate-dagu-worker-fleet"
+      ],
+      "queued_challengers": [
+        "candidate-kestra-worker-fleet",
+        "candidate-ray-worker-fleet",
+        "candidate-selenium-grid-browser-pool",
+        "candidate-windmill-worker-fleet",
+        "candidate-browserless-browserless"
+      ],
+      "winner": null,
+      "freeze_state": "OPEN_UNTIL_MULTI_HOST_FLEET_FIXTURE",
+      "queue_policy": "Dagu promoted into active research shortlist after measured two-host LAB outcome; Windmill remains queued due currently unapproved paid Windows-worker fit, not rejected. Restate is durable-execution winner, not yet a fleet placement winner."
+    }
+  ]
+}

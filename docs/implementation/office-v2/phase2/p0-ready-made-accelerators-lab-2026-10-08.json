@@ -1,0 +1,74 @@
+{
+  "schema": "velvetos.office-v2.p0-recent-repo-accelerators-lab.v0",
+  "date": "2026-10-08",
+  "scope": "LAB_LOCAL_ONLY",
+  "canonical_issue": "https://github.com/nocturney/velvetos-core/issues/612",
+  "worktrunk": {
+    "version": "0.80.0",
+    "verdict": "PASS_SCOPED_LAB_NOT_PRODUCTION",
+    "windows": {
+      "archive_sha256": "8cf52cbef86431403f558c483eaf23872dd1f8359356d8356bbc19d28cbbbb6e",
+      "fixture_repo": "D:\\Velvet\\Artifacts\\OfficeAccelerator\\WorktrunkPilot\\win-20261008\\repo",
+      "checks": {
+        "create_worktree": true,
+        "list_worktrees": true,
+        "dirty_remove_blocked": true,
+        "clean_remove": true,
+        "branch_preserved": true
+      }
+    },
+    "mac": {
+      "archive_sha256": "8a2bb053c4bc80dea7d9ce6c221ff038d10a3d2dca2dc8f60d1b1a094fa783a9",
+      "fixture_repo": "/Users/chris/Velvet/Pilots/OfficeAccelerator/WorktrunkPilot/lab-20261008/repo",
+      "checks": {
+        "create_worktree": true,
+        "list_worktrees": true,
+        "dirty_remove_blocked": true,
+        "clean_remove": true,
+        "branch_preserved": true
+      }
+    },
+    "unproven": [
+      "integration with the canonical Task Envelope",
+      "two real code-writing agent PRs",
+      "auto recovery",
+      "same workload performance"
+    ]
+  },
+  "context_mode": {
+    "version": "1.0.169",
+    "package_integrity": "sha512-94JIaFuLjF9SO2BsGTrbGtyT44K95+9OC8BdbaL/UT76xOkanJLfUR5CzmNw+GELXZQqH4nBrKg9wjBnSFkVnQ==",
+    "verdict": "PASS_CLI_INDEX_SEARCH_ONLY",
+    "windows": {
+      "fixture_index": true,
+      "fixture_retrieval": true,
+      "global_plugin_registration": false
+    },
+    "mac": {
+      "fixture_index": true,
+      "fixture_retrieval": true,
+      "global_plugin_registration": false
+    },
+    "unproven": [
+      "OpenCode plugin integration",
+      "actual token savings",
+      "tool permissions and bypass resistance",
+      "project-state recovery compatibility"
+    ]
+  },
+  "octop": {
+    "verdict": "RESEARCH_ONLY",
+    "installed": false,
+    "agentteams_benchmark": "NOT_RUN"
+  },
+  "openshell": {
+    "verdict": "RESEARCH_ONLY",
+    "installed": false,
+    "sandbox_drill": "NOT_RUN"
+  },
+  "external_effects": "NONE",
+  "paid_model_calls": 0,
+  "codex_cli_runs": 0,
+  "original_source_inventory_count": 68,
+  "new_candidate_total": 98
+}

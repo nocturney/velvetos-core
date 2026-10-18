@@ -12,7 +12,7 @@
 
 1. קרא `AGENTS.md` (המדריך מנצח את השיחה).
 2. תכנן צעדים קצרים על **פק קיים** וקשר ל־Spec/אישור קנוני כשיש שינוי מהותי.
-3. בצע. אחרי כל שינוי קטלוג/כלל — `python3 scripts/check-all.py`.
+3. בצע. אחרי שינוי קטלוג/כלל תחום הרץ את הסנסורים המושפעים; `python3 scripts/check-all.py` שמור לשינוי רוחבי בחוזה/סמכות או acceptance/regression מפורש.
 4. חוזה הביצוע הגלובלי נמצא רק ב־`LOOP.md`; אין לשכפל או לשנות כאן את semantics של retry/fallback/ruling/escalation. במקרה כשל מנתבים ל־playbook המתאים ושומרים required sensors/receipts/human/constitutional gates ללא עקיפה.
 5. מצב משימה ארוכה מנוהל לפי `PLANNING-FILES.md` + `playbooks/skillstate.md`; הקובץ הזה רק מנתב אליהם ולא מגדיר runtime/state contract נוסף.
 6. **Human-visible output:** אם המשימה מייצרת prose/microcopy שנכתב או שוכתב ב־AI ושכריסטיאן/לקוח/קהל/שותף יקראו, `constitution/VISIBLE_TEXT.md` הוא gate חובה לפני `final`/send/publish/render. Route דרך `vfcopy`, surface נכון, reader-first, כלי הדומיין/כתיבה הרלוונטיים, Humanizer/AI-tells, fact/surface QA. אם אין הוכחת ביצוע על התוצר המדויק — `UNPROVEN`; completion אינו `worker_done` כ־final human output. Literal source IDs/hashes/logs/code אינם משוכתבים.
@@ -37,6 +37,8 @@
 23. שינוי קוד/אוטומציה/מדיניות/אינטגרציה מהותי → `playbooks/engineering-delivery-chain.md`: החלטה → spec → tickets אנכיים → branch → implementation+proof → review איכות **וגם** התאמה ל-spec → PR/CI → runtime verification. לא Issue tracker שני.
 24. יצירה/עריכה מהותית של `AGENTS.md` / `SKILL.md` / rules / prompts → `playbooks/agent-instruction-qa.md` + `python3 scripts/check-skill-health.py`; פחות הוראות, סמכות אחת, trigger/action/evidence מפורשים.
 25. שלב שבאמת רק אדם יכול לבצע → `playbooks/human-step-wizard.md`: השלם קודם כל מה שאפשר אוטונומית, בקש פעולה אנושית מינימלית אחת, ואז אמת והמשך בעצמך.
+26. קליטת Skill/agent/tool חיצוני → `playbooks/skill-intake-evaluation.md`: discover → audit → sandbox → evaluate → approve → pin → monitor; מקור חיצוני אינו מרחיב authority.
+27. אוטומציה עמידה / n8n / webhook / retry → `playbooks/automation-standards.md`: canonical source → orchestration → provider → readback → evidence; אין source-of-truth שני ואין silent failure.
 
 צינור יחיד נשאר: פנייה · שיחה · הצעה · הדפסה · איסוף.
 

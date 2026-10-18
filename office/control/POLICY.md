@@ -48,6 +48,10 @@
 - קריאת API בתשלום, workload usage-based או billing-capable resource בלי cost preflight ואישור נדרש; envelope תקף נחשב אישור קודם רק בתוך provider/plan/billing/usage/scope/cap/expiry/overage המדויקים שלו
 - `COST_UNKNOWN` — כשהעלות, overage או incremental cost לא הוכחו
 
+## Computer Use — יכולת אינה אוטונומיה
+
+לפי CAPABILITY_NOT_AUTHORITY_V1 ב־constitution/CONSTITUTION.md: מותר לפתח ולבדוק בסביבה מבודדת יכולות גם למדפסות, פרסום, רכישה, תקשורת עם לקוחות והזדהות. **ביצוע רגיש באמצעות Computer Use אינו עובר למסלול ירוק/צהוב** רק משום שהכלי עובד או שהסשן זמין. לפני פעולה אמיתית נדרשת הנחיית בעלים למשימה או אישור בעלים מפורש ותחום, בנוסף לשער הפעולה הקנוני. בלעדיהם — מכינים בלבד; אין שינוי אוטומטי בהרשאות Cua או בהפעלה אוטומטית. אישורים קיימים לנתיבי API ייעודיים אינם מתרחבים מעצמם למסלול GUI.
+
 ## משטח בעלים (read model)
 
 תור האישורים הקנוני נשאר `packages/vfgrowth/data/approval-queue.json`.  

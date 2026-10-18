@@ -12,7 +12,7 @@ Invoice4U נשאר מערכת הסגירה אחרי סכום מראש צוות. 
 | `data/invoice4u-snapshot.json` | חוב / שולם שהבעלים הדביק | אין ספירה |
 | `office/ledger/live/jobs.csv` | יומן עבודות (`vf_office.py jobs`) | אין ספירה |
 
-Morning Brief 09:00 **לא** קורא `in:inbox`. תווית «חשבונות» נשארת ל־`vfbooks` בשרשור נקוב — לא למילוי אוטומטי של הבריף.
+Morning Brief **לא** קורא `in:inbox`. תווית «חשבונות» נשארת ל־`vfbooks` בשרשור נקוב — לא למילוי אוטומטי של הבריף.
 
 ## כתיבה
 

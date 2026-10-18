@@ -23,8 +23,8 @@ def main() -> None:
     # Phase 9 snapshot stays on the 2026-09-27 close. Live Best Skills cadence advances after that.
     assert research.get("lastPass") == "2026-09-27"
     assert research.get("observedDataDate") == "2026-09-26"
-    assert best.get("schedulerAuthority") == "Velvet Research Seat"
-    assert best.get("standingForever") is True
+    assert best.get("schedulerAuthority") == "manual-or-event-driven-research"
+    assert best.get("standingForever") is False
     assert best.get("lastPass")
     assert best.get("dataDate")
     assert research.get("newSchedulerCreated") is False
@@ -49,7 +49,7 @@ def main() -> None:
     assert verdicts.get("twitter-automation") == "SKIP_POLICY_LOCK"
     assert verdicts.get("ui-taste") == "NO_LAB_EXISTING_COVERAGE"
     assert verdicts.get("gh-cli-readonly-agent") == "WATCH_EXISTING_GITHUB_PATH"
-    print("OK ecosystem-radar phase9 no-new-lab cost=0 authority=none research-seat=fresh")
+    print("OK ecosystem-radar phase9 no-new-lab cost=0 authority=none research=on-demand")
 
 
 if __name__ == "__main__":

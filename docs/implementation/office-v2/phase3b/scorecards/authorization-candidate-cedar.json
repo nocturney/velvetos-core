@@ -1,0 +1,65 @@
+{
+  "schema": "velvetos.office-v2.phase2-scorecard.v0",
+  "candidate_id": "candidate-cedar",
+  "fixture_id": "identity-security-destructive-20-step",
+  "run_id": "20261006T140911Z-155852",
+  "captured_at": "2026-10-06T14:59:03.486553Z",
+  "fitness": {
+    "score_0_5": 5.0,
+    "notes": [
+      "PASS on all 20 frozen steps with deterministic default-deny behavior.",
+      "Embedded authorization semantics fit principal/action/resource checks well.",
+      "Office v2 must provide the service boundary, correlation identifier and audit/decision receipt wrapper around the embedded engine."
+    ]
+  },
+  "safety": {
+    "score_0_5": 5.0,
+    "notes": [
+      "Wrong principal, wrong action, cross-scope access, policy revocation and candidate outage all failed closed.",
+      "No network service was required by the candidate engine in the benchmark and no production credential/authority was used."
+    ]
+  },
+  "operability": {
+    "score_0_5": 4.6,
+    "notes": [
+      "Smallest observed runtime shape: local verified Cedar CLI asset with no daemon or database.",
+      "Observed fixture wall time was 0.135 seconds, but this excludes the future Office v2 service/receipt adapter that production composition would require.",
+      "Rollback is a pinned adapter image/binary plus policy bundle version."
+    ]
+  },
+  "evidence_quality": {
+    "score_0_5": 4.2,
+    "notes": [
+      "Complete semantic receipt and policy revision hashes are retained.",
+      "No daemon-level runtime telemetry exists for the CLI benchmark; CPU/RAM/network/storage values are unavailable rather than zero."
+    ]
+  },
+  "resources": {
+    "wall_seconds": 0.135,
+    "cpu_peak_pct": null,
+    "ram_peak_mb": null,
+    "gpu_peak_pct": null,
+    "vram_peak_mb": null,
+    "storage_delta_mb": null,
+    "network_mb": null,
+    "external_cost": 0.0,
+    "recurring_cost": 0.0,
+    "operator_minutes": 0.0
+  },
+  "rollback": {
+    "status": "PASS",
+    "notes": [
+      "Pinned Cedar artifact plus versioned policy/adapter provides a straightforward rollback boundary.",
+      "Future adapter rollback must be exercised during composition testing."
+    ]
+  },
+  "security_findings": [
+    "No production credentials or authority used.",
+    "No network daemon was required for the tested engine."
+  ],
+  "operations_findings": [
+    "Evidence: D:/Velvet/Artifacts/OfficeV2/phase3b/evidence/2026-10-06/authorization-destructive-candidate-cedar.json",
+    "Retained as fallback because of minimal footprint and clean semantics; requires more Office v2 adapter responsibility than OPA."
+  ],
+  "verdict": "HOLD"
+}
