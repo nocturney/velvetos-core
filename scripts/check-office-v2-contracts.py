@@ -3409,6 +3409,28 @@ def main() -> int:
         ):
             fail("#604 CP083 attempted to promote lab to trusted security admission")
 
+    # New CP083 hardening candidate gates: LOCAL-only. Do not change the
+    # historical sealed CP083 receipts or imply protected security admission.
+    # Linux CI must actually execute the kernel socket negatives, not skip them.
+    for test_file, count in (
+        ("test_vf_office_v2_604_cp083_hardening_candidate.py", 8),
+        ("test_vf_office_v2_604_cp083_socket_negative.py", 2),
+    ):
+        candidate_test = ROOT / "scripts" / test_file
+        if not candidate_test.is_file():
+            fail("#604 CP083 candidate negative test missing: " + test_file)
+        try:
+            test_run = subprocess.run(
+                [sys.executable, "-B", str(candidate_test)],
+                cwd=ROOT, capture_output=True, text=True, timeout=15,
+            )
+        except subprocess.TimeoutExpired:
+            fail("#604 CP083 candidate negative test timed out: " + test_file)
+        if (test_run.returncode != 0
+                or f"Ran {count} tests" not in test_run.stderr
+                or (sys.platform == "linux" and "skipped" in test_run.stderr)):
+            fail("#604 CP083 candidate negative tests failed: " + test_file)
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
         f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY cp080=SEALED_RED_ONLY cp081=SEALED_RED_ONLY cp082=SEALED_RED_ONLY cp083=SEALED_RED_ONLY option_a=OWNER_APPROVED_SECURITY_RED"
