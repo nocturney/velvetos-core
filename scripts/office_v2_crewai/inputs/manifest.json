@@ -1,0 +1,17 @@
+{
+  "files": [
+    {
+      "name": "adversarial.json",
+      "sha256": "ddd444af9f7dbaede5f2ba98f36cb39de5f847094d5b06cebab8d45e04b70497"
+    },
+    {
+      "name": "answer-sheet.json",
+      "sha256": "d249333fc1c15e65c6fc77dd11a2c989f87e1a5ca98ecf473edaf8d938c1957c"
+    },
+    {
+      "name": "issues.json",
+      "sha256": "0e1cea60072b3184d852b48e13a8ac23d6c509bccdf05e47fdeac9ad328743ad"
+    }
+  ],
+  "schema": "velvetos.office-v2.crewai-input-manifest.v1"
+}
