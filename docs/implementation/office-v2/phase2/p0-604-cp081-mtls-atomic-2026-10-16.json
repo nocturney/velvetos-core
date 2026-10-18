@@ -1,0 +1,71 @@
+{
+  "schema": "velvetos.office-v2.604.cp081.live-mtls-atomic-receipts.v1",
+  "date": "2026-10-16",
+  "status": "PASS_REAL_MTLS_RBAC_ATOMIC_PROVIDER_LAB_ONLY",
+  "security_admission": "RED",
+  "test_script": "scripts/vf_office_v2_604_cp081_mtls_atomic_admission_lab.py",
+  "test_script_sha256": "eaab28424989b4b3a7a5de58f5571d9938b21c8c17c3dfb4c5d2eaa1d73670e2",
+  "identity_helper_sha256": "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c",
+  "etcd_binary_sha256": "117cc09981c0f1eb378e7520be6969756c2d6a762f376944e53f7bc9800c0c59",
+  "etcdctl_binary_sha256": "de07257495499384f91f028dbc0c8e0394e0bd572b728ac486bbadbfa1cdf275",
+  "environment": {
+    "host": "MacMiniOffice2.local",
+    "guest": "existing colima-velvet-qa nonroot Linux aarch64",
+    "test_namespace": "disposable localhost single-member etcd 3.6.15",
+    "tls": "fresh temporary CA and authenticated certificate CN clients",
+    "rbac": "admin issuer synthetic; sink read owner/gen/ref and readwrite intent; worker owner read-only; outsider denied",
+    "no_ambient_github_credentials": true
+  },
+  "totals": {
+    "independent_fresh_provider_runs": 2,
+    "passed_bounded_scenarios": 38,
+    "real_etcd_atomic_race_rounds": 8,
+    "admit_first": 3,
+    "revoke_first": 5,
+    "distinct_disposable_fixture_id_hashes": 2,
+    "github_writes": 0,
+    "production_security_admission_gates_passed": 0
+  },
+  "proven": {
+    "ephemeral_real_mtls_rbac": true,
+    "atomic_admit_vs_revoke": true,
+    "same_value_mod_revision_aba_denied": true,
+    "ttl_expiry_preserves_unleased_intent": true,
+    "fresh_provider_fixtures_distinct": true
+  },
+  "not_proven": {
+    "real_protected_core_issuer": true,
+    "separate_os_uid_sink_in_same_experiment": true,
+    "credentialed_remote_github_writer": true,
+    "cross_store_atomicity": true,
+    "ack_loss_remote_reconciliation": true,
+    "two_physical_host_worker_coding": true,
+    "owner_option_a_b_approved": true,
+    "production_authority": true
+  },
+  "raw_receipts": [
+    {
+      "run_index": 3,
+      "raw_sha256": "4722a09c2f13a96d7b0cc805a55c586e720be8add75044696c76bd348e5eb6b2",
+      "raw_json_with_final_lf": "{\"actual_core_issuer_proven\": false, \"case_count\": 19, \"cases\": [\"live-synthetic-owner-with-genuine-etcd-lease\", \"separate-mtls-roles-deny-worker-sink-and-outsider-writes\", \"atomic-admission-wins-before-revoke\", \"single-atomic-grant-blocks-duplicate\", \"sink-only-observes-durable-unleased-intent\", \"admitted-revoke-starts-drain-not-immediate-release\", \"revoke-first-committed-by-authenticated-issuer\", \"late-admission-after-revoke-is-refused\", \"same-value-different-modrevision-aba-is-denied\", \"real-raft-exclusive-atomic-admit-or-revoke-0\", \"race-loser-never-commits-conflicting-intent-0\", \"real-raft-exclusive-atomic-admit-or-revoke-1\", \"race-loser-never-commits-conflicting-intent-1\", \"real-raft-exclusive-atomic-admit-or-revoke-2\", \"race-loser-never-commits-conflicting-intent-2\", \"real-raft-exclusive-atomic-admit-or-revoke-3\", \"race-loser-never-commits-conflicting-intent-3\", \"real-lease-pending-admission\", \"ttl-expiry-retains-unleased-intent-and-reservation\"], \"cp058_worker_application_source_executed\": false, \"disposable_fixture_id_sha256\": \"a640c9bd80a4b7e59c7bdd1039c4984abe88268209911edfd3a99fad9aff5629\", \"disposable_guest_rootless\": true, \"ephemeral_test_ca_destroyed\": true, \"git_or_github_writes\": 0, \"os_separate_sink_proven\": false, \"production_authority\": false, \"race_winners\": {\"admit\": 2, \"revoke\": 2}, \"real_etcd_atomic_issuer_transactions\": true, \"real_etcd_mtls_rbac\": true, \"real_provider_race_rounds\": 4, \"remote_github_effect_proven\": false, \"same_value_aba_denied\": true, \"schema\": \"velvetos.office-v2.604.cp081.real-mtls-atomic-admission.lab.v1\", \"security_admission\": \"RED\", \"status\": \"PASS_REAL_MTLS_RBAC_ATOMIC_PROVIDER_LAB_ONLY\", \"unleased_intent_survives_ttl\": true}\n",
+      "fixture_id_sha256": "a640c9bd80a4b7e59c7bdd1039c4984abe88268209911edfd3a99fad9aff5629",
+      "case_count": 19,
+      "race_winners": {
+        "admit": 2,
+        "revoke": 2
+      }
+    },
+    {
+      "run_index": 4,
+      "raw_sha256": "18ef8885a82e290675933b275d7a6e609020050363a04a21c3eacbd9c1f517f6",
+      "raw_json_with_final_lf": "{\"actual_core_issuer_proven\": false, \"case_count\": 19, \"cases\": [\"live-synthetic-owner-with-genuine-etcd-lease\", \"separate-mtls-roles-deny-worker-sink-and-outsider-writes\", \"atomic-admission-wins-before-revoke\", \"single-atomic-grant-blocks-duplicate\", \"sink-only-observes-durable-unleased-intent\", \"admitted-revoke-starts-drain-not-immediate-release\", \"revoke-first-committed-by-authenticated-issuer\", \"late-admission-after-revoke-is-refused\", \"same-value-different-modrevision-aba-is-denied\", \"real-raft-exclusive-atomic-admit-or-revoke-0\", \"race-loser-never-commits-conflicting-intent-0\", \"real-raft-exclusive-atomic-admit-or-revoke-1\", \"race-loser-never-commits-conflicting-intent-1\", \"real-raft-exclusive-atomic-admit-or-revoke-2\", \"race-loser-never-commits-conflicting-intent-2\", \"real-raft-exclusive-atomic-admit-or-revoke-3\", \"race-loser-never-commits-conflicting-intent-3\", \"real-lease-pending-admission\", \"ttl-expiry-retains-unleased-intent-and-reservation\"], \"cp058_worker_application_source_executed\": false, \"disposable_fixture_id_sha256\": \"c7734c8815acc1c27fc5691561082ab5b4da3f4de87e618b17660162ab160969\", \"disposable_guest_rootless\": true, \"ephemeral_test_ca_destroyed\": true, \"git_or_github_writes\": 0, \"os_separate_sink_proven\": false, \"production_authority\": false, \"race_winners\": {\"admit\": 1, \"revoke\": 3}, \"real_etcd_atomic_issuer_transactions\": true, \"real_etcd_mtls_rbac\": true, \"real_provider_race_rounds\": 4, \"remote_github_effect_proven\": false, \"same_value_aba_denied\": true, \"schema\": \"velvetos.office-v2.604.cp081.real-mtls-atomic-admission.lab.v1\", \"security_admission\": \"RED\", \"status\": \"PASS_REAL_MTLS_RBAC_ATOMIC_PROVIDER_LAB_ONLY\", \"unleased_intent_survives_ttl\": true}\n",
+      "fixture_id_sha256": "c7734c8815acc1c27fc5691561082ab5b4da3f4de87e618b17660162ab160969",
+      "case_count": 19,
+      "race_winners": {
+        "admit": 1,
+        "revoke": 3
+      }
+    }
+  ],
+  "note": "These are live lab receipts, not privilege/security admission. Earlier initial exploratory provider run is excluded from the two sealed and independently distinct recorded runs."
+}

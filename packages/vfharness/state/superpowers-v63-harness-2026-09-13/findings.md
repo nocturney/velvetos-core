@@ -15,7 +15,7 @@
 3. No harness-level test-first rule for executable behavior and bug fixes.
 4. No lightweight fresh-context reviewer path for ordinary material changes.
 5. Parallel fan-out/fan-in exists conceptually in agent rules but is not part of canonical plan execution.
-6. `SKILL.md`, `LOOP.md` and `EMBED.md` still contain binary-escalation wording that should be reconciled.
+6. ~~`SKILL.md`, `LOOP.md` and `EMBED.md` still contain binary-escalation wording that should be reconciled.~~ **Closed (verified 2026-10-18, #205):** `LOOP.md` holds the canonical plan → execute → verify → retry/fallback/downgrade → safe ruling or escalate cycle; `SKILL.md` and `EMBED.md` only point to it.
 
 ## Guardrails
 

@@ -1,0 +1,672 @@
+{
+  "schema": "velvetos.perplexity-office-scan-verification.v1",
+  "issue": "nocturney/velvetos-core#595",
+  "source_comment": "https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6249011608",
+  "claim_comment": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6249230356",
+  "auditor_checked_at_note": "2026-10-18 around 13:55 IDT",
+  "github_api_checked_at": "2026-10-18T11:16:07Z",
+  "ufo_advisories_checked_at": "2026-10-18T11:18:22Z",
+  "registry_edited": false,
+  "license_policy": "632: a license does not block selling. Record the license accurately. These rows are software, not 3D-print models.",
+  "auditor_totals": {
+    "VERIFIED": 87,
+    "WRONG": 6,
+    "UNVERIFIABLE": 2,
+    "recounted_here": false
+  },
+  "tools": [
+    {
+      "n": 1,
+      "tool": "CrewAI",
+      "repo": "crewAIInc/crewAI",
+      "auditor_status": "VERIFIED",
+      "license_recorded": "MIT",
+      "license_github_spdx": "MIT",
+      "license_file_checked": "auditor recorded LICENSE = MIT; SPDX MIT at this check",
+      "archived_github": false,
+      "maintenance_status": "GitHub archived false. Auditor recorded release 1.15.28 (2026-10-14) and commit 40bb2d3 on 2026-10-16.",
+      "default_branch": "main",
+      "pushed_at": "2026-10-18T06:35:12Z",
+      "head_sha_at_this_check": "UNVERIFIABLE",
+      "windows_without_docker": "yes",
+      "windows_note": "Official PowerShell uv install. Auditor citation: https://docs.crewai.com/en/installation. This pass did not re-fetch that page.",
+      "cves": [
+        {
+          "id": "CVE-2026-2275",
+          "severity": "critical",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-2286",
+          "severity": "critical",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-37008",
+          "severity": "high",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-37009",
+          "severity": "medium",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-62240",
+          "severity": "high",
+          "fixed_version": "crewai-tools 1.15.1"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "tool": "AutoGen",
+      "repo": "microsoft/autogen",
+      "auditor_status": "WRONG",
+      "auditor_wrong": "activity status",
+      "license_recorded": "LICENSE = CC-BY-4.0 (docs); LICENSE-CODE = MIT (code)",
+      "license_github_spdx": "CC-BY-4.0",
+      "license_file_checked": "LICENSE text starts Attribution 4.0 International. LICENSE-CODE text is MIT License, Copyright (c) Microsoft Corporation.",
+      "archived_github": false,
+      "maintenance_status": "README says the project is archived and no longer maintained by Microsoft and points new users to microsoft/agent-framework. GitHub archived is false.",
+      "successor": "https://github.com/microsoft/agent-framework",
+      "default_branch": "main",
+      "pushed_at": "2026-10-16T16:14:37Z",
+      "auditor_release": "python-v0.7.5 (2025-09-30)",
+      "auditor_commit": "004749e 2026-10-16",
+      "windows_without_docker": "yes",
+      "windows_note": "venv instructions for Windows. Docker is optional, for the code executor only.",
+      "cves": [],
+      "cve_note": "Auditor: none in GHSA for pip autogen-*/autogenstudio/pyautogen, and none in repo advisories."
+    },
+    {
+      "n": 3,
+      "tool": "LangGraph",
+      "repo": "langchain-ai/langgraph",
+      "auditor_status": "WRONG",
+      "auditor_wrong": "one CVE detail",
+      "license_recorded": "MIT",
+      "license_github_spdx": "MIT",
+      "archived_github": false,
+      "maintenance_status": "GitHub archived false. Auditor: 1.2.16 (2026-10-16 22:11Z), commit 0870f5e 2026-10-18.",
+      "default_branch": "main",
+      "pushed_at": "2026-10-18T01:27:12Z",
+      "windows_without_docker": "yes",
+      "windows_note": "Pure-Python wheel (py3-none-any) on PyPI.",
+      "cves": [
+        {
+          "id": "CVE-2025-64104",
+          "fixed_version": "UNVERIFIABLE",
+          "fixed_version_note": "Auditor says all 6 checkpoint/SDK CVEs have a fixed version. This ID's version number is not in the source comment."
+        },
+        {
+          "id": "CVE-2025-64439",
+          "fixed_version": "UNVERIFIABLE",
+          "fixed_version_note": "Auditor says all 6 checkpoint/SDK CVEs have a fixed version. This ID's version number is not in the source comment."
+        },
+        {
+          "id": "CVE-2026-48776",
+          "fixed_version": "sdk 0.3.15"
+        },
+        {
+          "id": "CVE-2026-48775",
+          "fixed_version": "checkpoint 4.1.1"
+        },
+        {
+          "id": "CVE-2026-104873",
+          "fixed_version": "sdk 0.4.4"
+        },
+        {
+          "id": "CVE-2026-28277",
+          "fixed_version": "langgraph 1.0.10",
+          "ghsa_id": "GHSA-g48c-2wqr-h844",
+          "perplexity_claim": "no public fix",
+          "auditor": "patched in 1.0.10"
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "tool": "Archon",
+      "repo": "coleam00/Archon",
+      "auditor_status": "WRONG",
+      "auditor_wrong": "CVEs",
+      "license_recorded": "MIT",
+      "license_github_spdx": "MIT",
+      "archived_github": false,
+      "maintenance_status": "GitHub archived false. Auditor: v0.12.1 (2026-10-17); commit c7b358f at 2026-10-18 10:34Z; newer commit 7ab8a9b already noted by the auditor.",
+      "default_branch": "dev",
+      "pushed_at": "2026-10-18T11:11:04Z",
+      "head_sha_at_this_check": "UNVERIFIABLE",
+      "windows_without_docker": "yes",
+      "windows_note": "install.ps1 in the README.",
+      "cves": [
+        {
+          "id": "CVE-2025-69443",
+          "ghsa_id": "GHSA-9w6r-hr5j-2g2p",
+          "severity": "medium",
+          "affected": "Archon 0.1.0 RCE via crafted page",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-111322",
+          "ghsa_id": "GHSA-3q7p-hhhj-qh4p",
+          "severity": "critical",
+          "cvss_score": 9.3,
+          "affected": "0.2.13-0.11.1",
+          "detail": "unauthenticated /api/* bound to 0.0.0.0",
+          "published": "2026-10-15",
+          "fixed_version": "UNVERIFIABLE",
+          "fixed_version_note": "Auditor records current v0.12.1 is outside the stated affected range. A patch version number is not named."
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "tool": "UFO",
+      "repo": "microsoft/UFO",
+      "auditor_status": "WRONG",
+      "auditor_wrong": "CVE completeness",
+      "license_recorded": "MIT",
+      "license_github_spdx": "MIT",
+      "archived_github": false,
+      "maintenance_status": "GitHub archived false. Auditor: v3.0.10 (2026-09-22), commit eae3c0a 2026-10-14.",
+      "default_branch": "main",
+      "pushed_at": "2026-10-17T13:15:14Z",
+      "windows_without_docker": "yes",
+      "windows_note": "Windows is the target. pip install -r requirements.txt, Python >= 3.10.",
+      "advisory_api_checked_at": "2026-10-18T11:18:22Z",
+      "published_advisory_count": 18,
+      "cves": [
+        {
+          "cve_id": "CVE-2026-105788",
+          "ghsa_id": "GHSA-6ppj-5886-4f26",
+          "severity": "high",
+          "cvss_score": 8.8,
+          "vulnerable_version_range": "<= be75a7d",
+          "patched_versions": "",
+          "fixed_version": "no patched version listed"
+        },
+        {
+          "cve_id": "CVE-2026-105789",
+          "ghsa_id": "GHSA-85w2-wggf-rw49",
+          "severity": "medium",
+          "cvss_score": 5.4,
+          "vulnerable_version_range": "<= 3.0.8",
+          "patched_versions": null,
+          "fixed_version": "no patched version listed"
+        },
+        {
+          "cve_id": "CVE-2026-105790",
+          "ghsa_id": "GHSA-3pgm-xw75-hq27",
+          "severity": "medium",
+          "cvss_score": 6.4,
+          "vulnerable_version_range": "Current `main` at commit `364eb7969d392e857299ceaf14bd6057e5b00078`",
+          "patched_versions": "",
+          "fixed_version": "no patched version listed"
+        },
+        {
+          "cve_id": "CVE-2026-105791",
+          "ghsa_id": "GHSA-cmq9-vqjf-4q2q",
+          "severity": "high",
+          "cvss_score": 7.5,
+          "vulnerable_version_range": "<= 3.0.8",
+          "patched_versions": null,
+          "fixed_version": "no patched version listed"
+        },
+        {
+          "cve_id": "CVE-2026-105792",
+          "ghsa_id": "GHSA-3hwr-qx8m-9xxx",
+          "severity": "medium",
+          "cvss_score": 6.5,
+          "vulnerable_version_range": "Current `main` at commit `364eb7969d392e857299ceaf14bd6057e5b00078`",
+          "patched_versions": "",
+          "fixed_version": "no patched version listed"
+        },
+        {
+          "cve_id": "CVE-2026-105793",
+          "ghsa_id": "GHSA-5cjx-4375-4877",
+          "severity": "critical",
+          "cvss_score": 9.1,
+          "vulnerable_version_range": "Current `main` at commit `364eb7969d392e857299ceaf14bd6057e5b00078`",
+          "patched_versions": "",
+          "fixed_version": "no patched version listed"
+        },
+        {
+          "cve_id": "CVE-2026-45322",
+          "ghsa_id": "GHSA-wj72-7w8h-695f",
+          "severity": "high",
+          "cvss_score": 7.8,
+          "vulnerable_version_range": "<= v3.0.0",
+          "patched_versions": "",
+          "fixed_version": "no patched version listed"
+        },
+        {
+          "cve_id": "CVE-2026-46402",
+          "ghsa_id": "GHSA-whcg-fgpx-76f2",
+          "severity": "high",
+          "cvss_score": 8.1,
+          "vulnerable_version_range": "v3.0.1-4-ge2626659",
+          "patched_versions": "",
+          "fixed_version": "no patched version listed"
+        },
+        {
+          "cve_id": "CVE-2026-46414",
+          "ghsa_id": "GHSA-qgx6-cvhg-jw7p",
+          "severity": "high",
+          "cvss_score": 8.8,
+          "vulnerable_version_range": "v3.0.1-4-ge2626659",
+          "patched_versions": "",
+          "fixed_version": "no patched version listed"
+        },
+        {
+          "cve_id": "CVE-2026-46416",
+          "ghsa_id": "GHSA-cwwh-p9rv-4pj4",
+          "severity": "medium",
+          "cvss_score": 6.3,
+          "vulnerable_version_range": "v3.0.1-4-ge2626659",
+          "patched_versions": "",
+          "fixed_version": "no patched version listed"
+        },
+        {
+          "cve_id": "CVE-2026-46538",
+          "ghsa_id": "GHSA-wmq2-74rj-7pjc",
+          "severity": "medium",
+          "cvss_score": 5.9,
+          "vulnerable_version_range": "v3.0.1-4-ge2626659",
+          "patched_versions": "",
+          "fixed_version": "no patched version listed"
+        },
+        {
+          "cve_id": "CVE-2026-46544",
+          "ghsa_id": "GHSA-29gc-vqjp-7fqf",
+          "severity": "medium",
+          "cvss_score": 5.3,
+          "vulnerable_version_range": "v3.0.1-4-ge2626659",
+          "patched_versions": "",
+          "fixed_version": "no patched version listed"
+        },
+        {
+          "cve_id": "CVE-2026-54568",
+          "ghsa_id": "GHSA-hc27-j4p9-qm2x",
+          "severity": "medium",
+          "cvss_score": 4.3,
+          "vulnerable_version_range": ">= 3.0.0",
+          "patched_versions": "",
+          "fixed_version": "no patched version listed"
+        },
+        {
+          "cve_id": "CVE-2026-55440",
+          "ghsa_id": "GHSA-hxjv-fmjf-wmjf",
+          "severity": "medium",
+          "cvss_score": 6.5,
+          "vulnerable_version_range": "<= 3.0.1",
+          "patched_versions": "",
+          "fixed_version": "no patched version listed"
+        },
+        {
+          "cve_id": "CVE-2026-62316",
+          "ghsa_id": "GHSA-vf4c-mf32-gf2h",
+          "severity": "high",
+          "cvss_score": 8.8,
+          "vulnerable_version_range": "<=3.0.7",
+          "patched_versions": "",
+          "fixed_version": "no patched version listed"
+        },
+        {
+          "cve_id": "CVE-2026-73296",
+          "ghsa_id": "GHSA-24fq-m9rr-g3mm",
+          "severity": "critical",
+          "cvss_score": 9.4,
+          "vulnerable_version_range": "<= v3.0.7",
+          "patched_versions": "",
+          "fixed_version": "no patched version listed"
+        },
+        {
+          "cve_id": "CVE-2026-73297",
+          "ghsa_id": "GHSA-7hrg-r8xr-p8gr",
+          "severity": "high",
+          "cvss_score": "UNVERIFIABLE",
+          "vulnerable_version_range": "<= v3.0.7",
+          "patched_versions": "",
+          "fixed_version": "no patched version listed"
+        },
+        {
+          "cve_id": null,
+          "cve_id_note": "GitHub advisory has no cve_id",
+          "ghsa_id": "GHSA-2jff-h3r3-59qm",
+          "severity": "medium",
+          "cvss_score": "UNVERIFIABLE",
+          "vulnerable_version_range": "<= v3.0.0",
+          "patched_versions": "",
+          "fixed_version": "no patched version listed"
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "tool": "OpenHands",
+      "repo": "OpenHands/OpenHands",
+      "auditor_status": "WRONG",
+      "auditor_wrong": "Windows detail",
+      "license_recorded": "MIT (root LICENSE)",
+      "license_github_spdx": "MIT",
+      "enterprise_licence_note": "UNVERIFIABLE",
+      "enterprise_licence_note_evidence": "contents API repo root listing has no enterprise/ directory",
+      "archived_github": false,
+      "maintenance_status": "GitHub archived false. Auditor: v1.27.1 (2026-10-12), commit 852132d 2026-10-17.",
+      "default_branch": "main",
+      "pushed_at": "2026-10-17T22:11:14Z",
+      "windows_without_docker": "partial",
+      "windows_note": "README.windows.md documents native PowerShell with Docker Desktop. WSL 2 is required only for the multi-sandbox option.",
+      "cves": [
+        {
+          "id": "CVE-2026-33718",
+          "severity": "high",
+          "fixed_version": "1.5.0"
+        },
+        {
+          "id": "CVE-2026-19022",
+          "severity": "medium",
+          "fixed_version": "path removed in 1.7.0 per NVD"
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "tool": "n8n",
+      "repo": "n8n-io/n8n",
+      "auditor_status": "VERIFIED",
+      "license_recorded": "Sustainable Use License 1.0. .ee. files need an n8n Enterprise licence. Source-available. Internal business, non-commercial, or personal use.",
+      "license_github_spdx": "NOASSERTION",
+      "license_file_checked": "LICENSE.md on default branch master, read in this pass.",
+      "archived_github": false,
+      "maintenance_status": "GitHub archived false. Auditor: n8n@2.43.7 (2026-10-16), commit d2dc2f9 2026-10-18.",
+      "default_branch": "master",
+      "pushed_at": "2026-10-18T10:07:12Z",
+      "windows_without_docker": "partial",
+      "windows_note": "From 3.0, distributed only via Docker. On Windows the docs say WSL plus Docker Desktop. Auditor citation: https://docs.n8n.io/deploy/host-n8n/install-options/one-line-setup. This pass did not re-fetch that page.",
+      "v3_docker_only": true,
+      "cves": [
+        {
+          "id": "CVE-2025-52478",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2025-62726",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2025-65964",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2025-68613",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2025-68668",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2025-68697",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-21858",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-65597",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-72749",
+          "fixed_version": "UNVERIFIABLE"
+        }
+      ],
+      "cve_note": "Auditor: all exist, 4 critical. Which 4 are critical is UNVERIFIABLE in this record."
+    },
+    {
+      "n": 8,
+      "tool": "Activepieces",
+      "repo": "activepieces/activepieces",
+      "auditor_status": "VERIFIED",
+      "license_recorded": "MIT Expat except packages/ee/ and packages/server/api/src/app/ee, which use the Activepieces Enterprise licence in packages/ee/LICENSE.",
+      "license_github_spdx": "NOASSERTION",
+      "license_file_checked": "Root LICENSE and packages/ee/LICENSE read in this pass.",
+      "archived_github": false,
+      "maintenance_status": "GitHub archived false. Auditor: 0.92.3 (2026-10-12), commit ec79605 2026-10-18.",
+      "default_branch": "main",
+      "pushed_at": "2026-10-18T11:14:28Z",
+      "windows_without_docker": "partial",
+      "windows_note": "Recommended self-host is Docker Compose plus Postgres and Redis. No documented native Windows path.",
+      "cves": [
+        {
+          "id": "CVE-2026-12813",
+          "severity": "low",
+          "ghsa_id": "UNVERIFIABLE",
+          "fixed_version": "UNVERIFIABLE",
+          "note": "Auditor says GHSA, low. The GHSA id is not in the source comment."
+        },
+        {
+          "id": "CVE-2026-48499",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-53535",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-53536",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-73081",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-73082",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-73083",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-73084",
+          "fixed_version": "UNVERIFIABLE"
+        }
+      ]
+    },
+    {
+      "n": 9,
+      "tool": "Windmill",
+      "repo": "windmill-labs/windmill",
+      "auditor_status": "VERIFIED",
+      "license_recorded": "AGPLv3 by default. Apache-2.0 for python-client, deno-client, go-client, powershell-client, and OpenAPI. Proprietary for enterprise snippets. Community Edition binaries and ghcr images: free use, no sell, resell, managed service, modify, or wrap.",
+      "license_github_spdx": "NOASSERTION",
+      "license_file_checked": "LICENSE read in this pass.",
+      "archived_github": false,
+      "maintenance_status": "GitHub archived false. Auditor: v1.840.0 (2026-10-17), commit 19ec5d3 2026-10-18.",
+      "default_branch": "main",
+      "pushed_at": "2026-10-18T10:33:02Z",
+      "windows_without_docker": "partial",
+      "windows_note": "Native Windows workers need no Docker or WSL and are a Self-Hosted Enterprise feature. Auditor citation: https://www.windmill.dev/docs/misc/windows_workers. This pass did not re-fetch that page.",
+      "cves": [
+        {
+          "id": "CVE-2026-23696",
+          "severity": "critical",
+          "detail": "SQLi to admin token to RCE",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-22683",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-29059",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-33881",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-47107",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-54136",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-26964",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-72539",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-72541",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-72542",
+          "fixed_version": "UNVERIFIABLE"
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "tool": "Temporal",
+      "repo": "temporalio/temporal",
+      "auditor_status": "WRONG",
+      "auditor_wrong": "release date",
+      "license_recorded": "MIT",
+      "license_github_spdx": "MIT",
+      "archived_github": false,
+      "maintenance_status": "GitHub archived false. Auditor: GitHub latest v1.32.1 (2026-10-08). v1.31.4 and v1.30.8 published 2026-10-12. Commit d934169 2026-10-18.",
+      "default_branch": "main",
+      "pushed_at": "2026-10-18T06:46:32Z",
+      "windows_without_docker": "yes",
+      "windows_note": "Temporal CLI Windows binary. temporal server start-dev runs as a single process with SQLite.",
+      "upgrade_guidance": "UNVERIFIABLE",
+      "upgrade_guidance_note": "Perplexity said upgrade to >=1.32.1/1.31.4/1.30.8. Auditor: v1.31.4 notes only say Bump dependencies to address CVEs.",
+      "cves": [
+        {
+          "id": "CVE-2025-8396",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2025-14986",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2025-14987",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-5199",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-5724",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-65655",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-87858",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-89139",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-89140",
+          "fixed_version": "UNVERIFIABLE"
+        },
+        {
+          "id": "CVE-2026-104355",
+          "fixed_version": "UNVERIFIABLE"
+        }
+      ],
+      "cve_note": "Auditor: all exist in GHSA."
+    }
+  ],
+  "corrections": [
+    {
+      "n": 1,
+      "tool": "AutoGen",
+      "perplexity": "active in maintenance mode",
+      "verified": "README says archived and no longer maintained, and points to Microsoft Agent Framework. GitHub archived is false."
+    },
+    {
+      "n": 2,
+      "tool": "Archon",
+      "perplexity": "no CVE found",
+      "verified": "CVE-2025-69443 and CVE-2026-111322. v0.12.1 is outside the stated affected range of the second."
+    },
+    {
+      "n": 3,
+      "tool": "UFO",
+      "perplexity": "one CVE",
+      "verified": "18 published advisories. Both critical IDs CVE-2026-73296 and CVE-2026-105793 were missing from the Perplexity list. No patched version listed on any of the 18."
+    },
+    {
+      "n": 4,
+      "tool": "LangGraph",
+      "perplexity": "CVE-2026-28277 no public fix",
+      "verified": "GHSA-g48c-2wqr-h844 lists langgraph patched in 1.0.10."
+    },
+    {
+      "n": 5,
+      "tool": "OpenHands",
+      "perplexity": "Windows officially via WSL",
+      "verified": "Native PowerShell plus Docker Desktop. WSL 2 only for the multi-sandbox option. Partial rating stands. Enterprise-licence note is UNVERIFIABLE."
+    },
+    {
+      "n": 6,
+      "tool": "Temporal",
+      "perplexity": "v1.31.4, 09.10.2026",
+      "verified": "v1.31.4 published 2026-10-12. GitHub latest is v1.32.1 (2026-10-08). Upgrade guidance is UNVERIFIABLE."
+    }
+  ],
+  "n8n_v3_docker_only": {
+    "auditor_status": "VERIFIED",
+    "windows_without_docker": "partial",
+    "note": "From 3.0, n8n is distributed only via Docker. Windows docs say WSL plus Docker Desktop."
+  },
+  "verified_top3": [
+    {
+      "rank": 1,
+      "tool": "CrewAI",
+      "support": "supported",
+      "caveat": "5 CVEs, 2 critical. Pin a current version. Do not run CodeInterpreter or untrusted-input tools unsandboxed."
+    },
+    {
+      "rank": 2,
+      "tool": "LangGraph",
+      "support": "supported as the pure-OSS no-Docker option in place of n8n",
+      "caveat": "6 checkpoint/SDK CVEs. Auditor says each has a fixed version. Two version numbers are UNVERIFIABLE here."
+    },
+    {
+      "rank": 3,
+      "tool": "UFO",
+      "support": "supported for fit, localhost-only",
+      "caveat": "18 advisories, 2 critical, no patched version listed. Single-user loopback only. No Galaxy, MCP, or WebSocket servers exposed."
+    }
+  ],
+  "perplexity_top3_not_adopted": "n8n is active and the licence does not block selling under #632, but v3 is Docker-only and the row has 9 CVEs, 4 critical.",
+  "unverifiable": [
+    "OpenHands enterprise-licence note (no enterprise/ directory in the repo root listing)",
+    "Temporal upgrade guidance to >=1.32.1/1.31.4/1.30.8",
+    "Fixed-version strings absent from the source comment and not looked up in this pass",
+    "Default-branch HEAD SHAs at 2026-10-18T11:16:07Z"
+  ]
+}

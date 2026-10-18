@@ -1,0 +1,37 @@
+{
+  "task_id": "cp057-both-receipts-2026-10-18",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfharness",
+  "goal": "Cite CP057 attempts 8 and 9 in PIN acceptance without runtime authority or activation.",
+  "completed_steps": [
+    "Kept acceptance ACCEPTED",
+    "Cited receipt 0e0ae55b and receipt 663db01c",
+    "Sensor fails if either receipt sha is missing or wrong, or if authority flags flip"
+  ],
+  "next_step": "Independent QA on the PR. Do not merge it from this task.",
+  "artifacts": [
+    "packages/vfharness/devtools/pilots/cua/cp057/PIN.json",
+    "scripts/vf_cp057_calc_strictmode.py"
+  ],
+  "unresolved": [
+    "QA notes: no timestamp field, thread fields are template defaults, cleanup evidence lives only in the comment",
+    "runtimeAuthority and activationAllowed stay false"
+  ],
+  "last_updated": "2026-10-18",
+  "execution_state": {
+    "attempt8": "36abe219c4cf4995b8ce95078e568ee3",
+    "receipt8_sha256": "0e0ae55b1ec00ee26a116be172eda17e3c7a917ffba4f3102c73bdbe4da6bb5c",
+    "qa8": "https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6250839975",
+    "attempt9": "0ffe7808fd864ba68eeebf7c3310e51b",
+    "receipt9_sha256": "663db01cd7d7423a26d6cf36a15d06080de06a53c9565a5ed3e5263b1500e75e",
+    "receipt9": "https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6250908821",
+    "qa9": "https://github.com/nocturney/velvetos-core/issues/602#issuecomment-6250936010",
+    "acceptance": "ACCEPTED",
+    "runtimeAuthority": false,
+    "activationAllowed": false,
+    "sha256": "2f70a3c26fe3cd8b75f06e60a6d1c220a41a979aeaffa97f6547177256e18eed",
+    "windows_execution": false
+  },
+  "latest_observation": "Both receipts are PASS_NATIVE_UIA_CALCULATOR_42_ONLY and differ only in attempt_id and idle_seconds. calc.ps1 bytes are unchanged."
+}

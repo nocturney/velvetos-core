@@ -19,6 +19,7 @@ packages/vfharness/evals/latest-results.json
 *.p12
 tmp-clone/
 __pycache__/
+.vf-tmp/
 *.pyc
 packages/vfops/data/cli-runs.jsonl
 packages/vfops/out/report-*.md
@@ -27,6 +28,11 @@ packages/vfops/out/report-*.json
 office/ledger/live/*.csv
 packages/vfmem/semantic_index.pkl
 packages/vfops/data/consumer-runs.jsonl
+
+# Live Office 2.0 board. A local run may include the private factory repo.
+# Do not commit it. The public sample is docs/office-v2/board/SAMPLE.md.
+docs/office-v2/board/latest.md
+docs/office-v2/board/latest.json
 
 # Stage 7D: Morning Green keeps one rolling transport bundle in Git.
 # Historical dated renders/images are compact-audit refs or external archive, not new tracked copies.

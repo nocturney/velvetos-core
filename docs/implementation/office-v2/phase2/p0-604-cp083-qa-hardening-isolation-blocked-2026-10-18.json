@@ -1,0 +1,79 @@
+{
+  "schema": "velvetos.office-v2.604.cp083.qa-hardening-isolation-blocked.v1",
+  "date_utc": "2026-10-18",
+  "agent": {
+    "bcId": "bc-01a14e53-a3c8-7034-b1d2-15f8b919e518",
+    "title": "בידוד סביבת Worker",
+    "role": "isolation_executor_not_749_security_reviewer"
+  },
+  "base_sha": "85de7e7e42c8e427204a0f32143193d3377597fb",
+  "base_pr": 749,
+  "security_admission": "RED",
+  "production_authority": false,
+  "worker_isolation": {
+    "status": "BLOCKED",
+    "desktop_commander_devices_online": 6,
+    "devices": [
+      "Chris-3DPC",
+      "MacMiniOffice2.local",
+      "Chris-Mini-PC",
+      "MacMiniOffice.local",
+      "Mac-Bedroom.local",
+      "Chris"
+    ],
+    "cursor_self_hosted_workers_connected": 1,
+    "self_hosted_worker": {
+      "machineDisplayName": "Chris",
+      "os": "windows",
+      "identity": "Chris user profile / host credentials",
+      "repos": ["nocturney/velvetos-velvet-factory"],
+      "start_allowed_for_least_privilege_worker": false,
+      "reason": "Do not start Cursor My Machines worker on host credentials"
+    },
+    "cloud_agent_probe": {
+      "uid": 1000,
+      "user": "ubuntu",
+      "groups_include_sudo": true,
+      "useradd_dedicated_uid": "Permission denied / cannot lock /etc/passwd",
+      "unshare_user_namespace": "exit 0 maps to uid 0 inside ns but HOME and CLOUD_AGENT secrets still visible",
+      "secrets_visible_inside_user_ns": true,
+      "os_enforced_least_privilege_worker_identity": false
+    },
+    "quarantine_guest_from_604_comment": {
+      "name": "vf-cp083-quarantine",
+      "state": "STOPPED",
+      "blocker": "unprivileged guest user namespace Operation not permitted; guest-root provisioning blocked by safety control"
+    },
+    "pilot_worker_started": false,
+    "security_bypass_attempted": false
+  },
+  "fallback_code_task": {
+    "status": "EXECUTED",
+    "title": "CP083 client QA hardening + reconcile negatives (stacked on Draft #749)",
+    "implements_qa_fix_requests_from": "https://github.com/nocturney/velvetos-core/pull/749#issuecomment-6248185263",
+    "option_a_contract_unchanged": true,
+    "changes": [
+      "platform SO_PEERCRED guard before connect",
+      "reply allowlist status/head/record/frozen",
+      "client negatives 3→10 including positive control and slow-ACK lower bound",
+      "new static reconcile negatives (5) for UNKNOWN/no-blind-retry/Option A labels"
+    ],
+    "local_results": {
+      "hardening_static": "10/10 PASS",
+      "server_socket": "2/2 PASS",
+      "client_socket": "10/10 PASS",
+      "reconcile_static": "5/5 PASS",
+      "check_office_v2_contracts": "PASS cp083=SEALED_RED_ONLY",
+      "local_check_all": "FAIL 8/118 missing PIL/starlette on Cloud image — unrelated to CP083 delta; hosted Core Sensors is authoritative"
+    },
+    "source_sha256": {
+      "vf_office_v2_604_cp083_hardened_candidate.py": "39b0c918f906980f1ba87c49a03cc6cbf10b4d144b157b3221605a14ad3626b6",
+      "test_vf_office_v2_604_cp083_client_socket_negative.py": "994b5c13072fa8b8ff9752fab36e3d1d955a2693690c7c7f190b1c7349eaee78",
+      "test_vf_office_v2_604_cp083_reconcile_negative.py": "e7f2a15c61e093838658a44c5f47a297a75507419dd74ed210079c9abca12b9b",
+      "test_vf_office_v2_604_cp083_hardening_candidate.py": "ab2cb340a988b593ab257a90eb43470d8f7ca87d67611593c16a7476f6b51646"
+    }
+  },
+  "full_chain_cp083_executor_gate": "OPEN",
+  "two_autonomous_workers_proven": false,
+  "merge_deploy_permission": false
+}

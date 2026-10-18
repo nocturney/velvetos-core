@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -3083,9 +3084,399 @@ def main() -> int:
     ):
         fail("#612 new same-PR workflow falsely claimed pretrusted policy")
 
+    # CP080 is a historical, potentially untrusted candidate: verify its
+    # exact bytes and fixture receipts as DATA, never import or run its source.
+    cp080_path = ROOT / "scripts" / "vf_office_v2_604_real_etcd_revoke_admit_lab_cp080.py"
+    cp080_expected_sha = "02c90170b3b741d4ba2d1fd985b1189b83ff4b5dcc515a6936ca50ca8068ddae"
+    if hashlib.sha256(cp080_path.read_bytes()).hexdigest() != cp080_expected_sha:
+        fail("#604 CP080 isolated lab source bytes changed without independent review")
+    cp080 = load(P2 / "p0-604-real-etcd-transaction-cp080-2026-10-15.json")
+    cp080_exec = cp080.get("execution") or {}
+    cp080_totals = cp080_exec.get("totals") or {}
+    cp080_environment = cp080.get("environment") or {}
+    cp080_denials = cp080.get("disclaimers") or {}
+    cp080_runs = cp080_exec.get("runs") or []
+    cp080_raw = cp080_exec.get("raw_receipts") or []
+    if (
+        cp080.get("source_sha256") != cp080_expected_sha
+        or cp080.get("schema") != "velvetos.office-v2.604.cp080.real-etcd-integration-evidence.v1"
+        or cp080.get("security_admission") != "RED"
+        or cp080.get("status") != "PASS_REAL_ETCD_QUORUM_TXN_LOCAL_GIT_LAB_ONLY"
+        or cp080_environment.get("mtls") is not False
+        or cp080_environment.get("rbac") is not False
+        or cp080_denials.get("no_github_credentials") is not True
+        or cp080_denials.get("no_remote_github_effect") is not True
+        or cp080_denials.get("no_independent_security_review") is not True
+        or cp080_denials.get("owner_option_a_vs_b_approved") is not False
+        or cp080_totals.get("critical_production_security_gates_passed") != 0
+        or cp080_totals.get("runs") != 4
+        or len(cp080_runs) != 4
+        or len(cp080_raw) != 3
+        or cp080_totals.get("passed_named_scenarios") != 68
+        or cp080_totals.get("real_etcd_admit_vs_revoke_races") != 48
+        or cp080_totals.get("admission_first", 0) + cp080_totals.get("revoke_first", 0) != 48
+        or cp080_exec.get("observed_unsafe_unfenced_git_after_effective") is not True
+        or "known-unsafe-cp077-unfenced-local-git-witness" not in
+            cp080_exec.get("case_names_in_every_run", [])
+    ):
+        fail("#604 CP080 lab receipt improperly promoted or evidence drifted")
+    cp080_seen_indices = set()
+    for raw in cp080_raw:
+        original = raw.get("original_raw_json_with_final_LF")
+        digest = raw.get("sha256_of_original_raw_file")
+        idx = raw.get("run_index")
+        if not isinstance(original, str) or not isinstance(digest, str):
+            fail("#604 CP080 missing exact raw receipt bytes/hash")
+        if not isinstance(idx, int) or idx not in (2, 3, 4) or idx in cp080_seen_indices:
+            fail("#604 CP080 duplicate or invalid historical raw receipt index")
+        cp080_seen_indices.add(idx)
+        if hashlib.sha256(original.encode("utf-8")).hexdigest() != digest:
+            fail("#604 CP080 raw receipt SHA256 mismatch")
+        if cp080_runs[idx - 1].get("receipt_sha256") != digest:
+            fail("#604 CP080 run/readback SHA256 mismatch")
+        try:
+            sealed = json.loads(original)
+        except json.JSONDecodeError:
+            fail("#604 CP080 raw receipt is not JSON")
+        if (
+            sealed.get("security_admission") != "RED"
+            or sealed.get("production_authority") is not False
+            or sealed.get("known_unfenced_local_git_after_effective") is not True
+            or sealed.get("real_github_remote_effect") is not False
+            or sealed.get("model_cp058_source_executed") is not False
+        ):
+            fail("#604 CP080 raw receipt claims unproven production authority")
+    if cp080_seen_indices != {2, 3, 4}:
+        fail("#604 CP080 missing one or more of the three sealed original receipts")
+    if (
+        sum(row.get("case_assertions_passed", 0) for row in cp080_runs) != 68
+        or sum(row.get("concurrent_provider_txns_passed", 0) for row in cp080_runs) != 48
+    ):
+        fail("#604 CP080 run totals disagree with the sealed summary")
+
+    # CP081 combines real etcd mTLS/RBAC with atomic issuer-only admission
+    # in a rootless guest. These historical observations remain LAB/RED only.
+    cp081_source = ROOT / "scripts" / "vf_office_v2_604_cp081_mtls_atomic_admission_lab.py"
+    cp081_sha = "eaab28424989b4b3a7a5de58f5571d9938b21c8c17c3dfb4c5d2eaa1d73670e2"
+    if hashlib.sha256(cp081_source.read_bytes()).hexdigest() != cp081_sha:
+        fail("#604 CP081 new provider lab source SHA pin changed")
+    cp081 = load(P2 / "p0-604-cp081-mtls-atomic-2026-10-16.json")
+    cp081_totals = cp081.get("totals") or {}
+    cp081_receipts = cp081.get("raw_receipts") or []
+    cp081_unproven = cp081.get("not_proven") or {}
+    if (
+        cp081.get("schema") != "velvetos.office-v2.604.cp081.live-mtls-atomic-receipts.v1"
+        or cp081.get("status") != "PASS_REAL_MTLS_RBAC_ATOMIC_PROVIDER_LAB_ONLY"
+        or cp081.get("security_admission") != "RED"
+        or cp081.get("test_script_sha256") != cp081_sha
+        or cp081.get("identity_helper_sha256") !=
+            "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c"
+        or cp081_totals.get("independent_fresh_provider_runs") != 2
+        or cp081_totals.get("passed_bounded_scenarios") != 38
+        or cp081_totals.get("real_etcd_atomic_race_rounds") != 8
+        or cp081_totals.get("admit_first", 0) + cp081_totals.get("revoke_first", 0) != 8
+        or cp081_totals.get("github_writes") != 0
+        or cp081_totals.get("production_security_admission_gates_passed") != 0
+        or len(cp081_receipts) != 2
+        or any(value is not True for value in cp081_unproven.values())
+        or len(cp081_unproven) != 8
+    ):
+        fail("#604 CP081 authenticated provider evidence promoted without security proof")
+    distinct = set()
+    cases = 0
+    races = 0
+    wins = {"admit": 0, "revoke": 0}
+    for expected_index, item in zip((3, 4), cp081_receipts):
+        raw = item.get("raw_json_with_final_lf")
+        digest = item.get("raw_sha256")
+        if (item.get("run_index") != expected_index or
+                not isinstance(raw, str) or not raw.endswith("\n") or
+                not isinstance(digest, str) or
+                hashlib.sha256(raw.encode("utf8")).hexdigest() != digest):
+            fail("#604 CP081 sealed independent raw receipt changed")
+        try:
+            observed = json.loads(raw)
+        except json.JSONDecodeError:
+            fail("#604 CP081 raw receipt is not JSON")
+        nonce = observed.get("disposable_fixture_id_sha256")
+        if (not isinstance(nonce, str) or len(nonce) != 64 or
+                nonce in distinct or item.get("fixture_id_sha256") != nonce or
+                observed.get("schema") !=
+                    "velvetos.office-v2.604.cp081.real-mtls-atomic-admission.lab.v1" or
+                observed.get("status") != "PASS_REAL_MTLS_RBAC_ATOMIC_PROVIDER_LAB_ONLY" or
+                observed.get("security_admission") != "RED" or
+                observed.get("real_etcd_mtls_rbac") is not True or
+                observed.get("real_etcd_atomic_issuer_transactions") is not True or
+                observed.get("cp058_worker_application_source_executed") is not False or
+                observed.get("actual_core_issuer_proven") is not False or
+                observed.get("os_separate_sink_proven") is not False or
+                observed.get("remote_github_effect_proven") is not False or
+                observed.get("production_authority") is not False or
+                observed.get("git_or_github_writes") != 0 or
+                observed.get("case_count") != 19 or
+                len(observed.get("cases") or []) != 19 or
+                len(set(observed.get("cases") or [])) != 19 or
+                observed.get("real_provider_race_rounds") != 4 or
+                sum((observed.get("race_winners") or {}).values()) != 4):
+            fail("#604 CP081 lab claimed unsupported provider or GitHub admission")
+        distinct.add(nonce)
+        cases += observed["case_count"]
+        races += observed["real_provider_race_rounds"]
+        for name in wins:
+            wins[name] += observed["race_winners"][name]
+    if (len(distinct) != 2 or cases != 38 or races != 8 or
+            wins["admit"] != cp081_totals.get("admit_first") or
+            wins["revoke"] != cp081_totals.get("revoke_first")):
+        fail("#604 CP081 independently distinct provider run totals drifted")
+    cp081_offline = subprocess.run(
+        [sys.executable, "-B", str(cp081_source), "--selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=15,
+    )
+    if cp081_offline.returncode != 0:
+        fail("#604 CP081 offline selftest failed (live provider not permitted)")
+    try:
+        cp081_report = json.loads(cp081_offline.stdout)
+    except json.JSONDecodeError:
+        fail("#604 CP081 offline selftest is not JSON")
+    if (cp081_report.get("status") != "OFFLINE_STATIC_ONLY" or
+            cp081_report.get("security_admission") != "RED" or
+            cp081_report.get("real_provider_started") is not False or
+            cp081_report.get("git_or_github_writes") != 0 or
+            cp081_report.get("production_authority") is not False):
+        fail("#604 CP081 offline verifier created or overstated provider authority")
+
+    # CP082 joins REAL mTLS/RBAC/etcd admission with native LOCAL Git/SQLite
+    # UNKNOWN recovery. Never import the provider script or start a live server
+    # in the canonical sensor. The evidence always remains LAB/SECURITY RED.
+    cp082_source = ROOT / "scripts" / "vf_office_v2_604_cp082_tls_native_git_reconcile_lab.py"
+    cp082_sha = "fa108cfd9bea1aec38a9e7e4c1a3e369e6ba4be94eef413ea0ec0304bb1a8eee"
+    if hashlib.sha256(cp082_source.read_bytes()).hexdigest() != cp082_sha:
+        fail("#604 CP082 integrated provider/local Git source hash changed")
+    cp082 = load(P2 / "p0-604-cp082-tls-localgit-unknown-2026-10-16.json")
+    cp082_totals = cp082.get("totals") or {}
+    cp082_receipts = cp082.get("raw_receipts") or []
+    cp082_unproven = cp082.get("not_proven") or {}
+    cp082_proven = cp082.get("proven") or {}
+    cp082_dep = cp082.get("preexisting_dependencies") or {}
+    if (
+        cp082.get("schema") != "velvetos.office-v2.604.cp082.sealed-native-integration-receipts.v1"
+        or cp082.get("status") !=
+            "PASS_REAL_ETCD_TLS_RBAC_LOCAL_GIT_SQLITE_UNKNOWN_LAB_ONLY"
+        or cp082.get("security_admission") != "RED"
+        or cp082.get("test_script_sha256") != cp082_sha
+        or cp082_dep.get("cp081_source_sha256") != cp081_sha
+        or cp082_dep.get("tls_rbac_identity_source_sha256") !=
+            "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c"
+        or cp082_dep.get("native_local_git_sqlite_source_sha256") !=
+            "2bbd81c9c7f59c1b28937286d1c365ca46c0ceb9db96157859f7225e0dd6d632"
+        or cp082_totals.get("independent_fresh_provider_runs") != 2
+        or cp082_totals.get("real_etcd_mtls_localgit_unknown_assertions_passed") != 52
+        or cp082_totals.get("assertions_per_run") != 26
+        or cp082_totals.get("distinct_provider_namespace_hashes") != 2
+        or cp082_totals.get("remote_github_writes") != 0
+        or cp082_totals.get("production_security_admission_gates_passed") != 0
+        or len(cp082_receipts) != 2
+        or len(cp082_unproven) != 9
+        or any(value is not True for value in cp082_unproven.values())
+        or len(cp082_proven) != 6
+        or any(value is not True for value in cp082_proven.values())
+    ):
+        fail("#604 CP082 evidence wrongly promoted or integrated totals drifted")
+    distinct_cp082 = set()
+    cp082_cases = None
+    for expected_index, item in zip((1, 2), cp082_receipts):
+        raw = item.get("raw_json_with_final_lf")
+        digest = item.get("raw_sha256")
+        if (item.get("run_index") != expected_index
+                or not isinstance(raw, str) or not raw.endswith("\n")
+                or not isinstance(digest, str)
+                or hashlib.sha256(raw.encode("utf8")).hexdigest() != digest):
+            fail("#604 CP082 sealed raw native provider+Git receipt changed")
+        try:
+            observed = json.loads(raw)
+        except json.JSONDecodeError:
+            fail("#604 CP082 raw provider/local Git receipt not valid JSON")
+        nonce = observed.get("disposable_prefix_sha256")
+        cases = observed.get("scenarios")
+        if (
+            observed.get("schema") !=
+                "velvetos.office-v2.604.cp082.authenticated-local-git-unknown-lab.v1"
+            or observed.get("status") !=
+                "PASS_REAL_ETCD_TLS_RBAC_LOCAL_GIT_SQLITE_UNKNOWN_LAB_ONLY"
+            or observed.get("security_admission") != "RED"
+            or not isinstance(nonce, str) or len(nonce) != 64
+            or nonce in distinct_cp082 or item.get("disposable_prefix_sha256") != nonce
+            or observed.get("scenario_count") != 26
+            or item.get("scenario_count") != 26
+            or not isinstance(cases, list) or len(cases) != 26
+            or len(set(cases)) != 26 or not all(isinstance(x, str) for x in cases)
+            or observed.get("real_etcd_tls_rbac") is not True
+            or observed.get("native_local_git_cas") is not True
+            or observed.get("durable_sqlite_unknown_reconciliation") is not True
+            or observed.get("mid_effect_revoke_reported_unknown") is not True
+            or observed.get("remote_github_writes") != 0
+            or observed.get("remote_github_credentials_used") is not False
+            or observed.get("worker_generated_source_executed") is not False
+            or observed.get("os_separate_sink_proven") is not False
+            or observed.get("real_protected_core_issuer_proven") is not False
+            or observed.get("cross_store_atomicity_proven") is not False
+            or observed.get("production_authority") is not False
+        ):
+            fail("#604 CP082 record claims unsupported production/remote effects")
+        if cp082_cases is not None and cases != cp082_cases:
+            fail("#604 CP082 independent provider runs disagree on named coverage")
+        cp082_cases = cases
+        distinct_cp082.add(nonce)
+    if len(distinct_cp082) != 2:
+        fail("#604 CP082 provider fixtures not independently distinct")
+    cp082_static = subprocess.run(
+        [sys.executable, "-B", str(cp082_source), "--selftest"],
+        cwd=ROOT, text=True, capture_output=True, timeout=15,
+    )
+    if cp082_static.returncode != 0:
+        fail("#604 CP082 offline-only selftest failed")
+    try:
+        cp082_static_report = json.loads(cp082_static.stdout)
+    except json.JSONDecodeError:
+        fail("#604 CP082 offline-only selftest returned non-JSON")
+    if (cp082_static_report.get("status") != "OFFLINE_STATIC_ONLY"
+            or cp082_static_report.get("security_admission") != "RED"
+            or cp082_static_report.get("provider_started") is not False
+            or cp082_static_report.get("remote_github_writes") != 0
+            or cp082_static_report.get("production_authority") is not False):
+        fail("#604 CP082 offline sensor unexpectedly started provider/effects")
+
+    # Owner approved revocation semantics OPTION A on 2026-10-16:
+    # no new admission after revoke; already admitted effects DRAIN and keep
+    # durable UNKNOWN/freeze on missing or conflicting independent readback.
+    # This is NOT authorization to execute model source or write to GitHub.
+    owner_a_policy = P2 / "p0-604-owner-option-a-revocation-2026-10-16.json"
+    owner_a_script = ROOT / "scripts" / "vf_office_v2_604_owner_option_a_policy_gate.py"
+    owner_a_policy_sha = "15a1c513f2dbc2da438d977e41f3c5c14a6929e7ec4499199116ed714c250271"
+    owner_a_script_sha = "33f42ccb00bb7d5ad407a24f1c315fc5b060cf9ce8188e55edd08d4d41309162"
+    if (hashlib.sha256(owner_a_policy.read_bytes()).hexdigest() != owner_a_policy_sha
+            or hashlib.sha256(owner_a_script.read_bytes()).hexdigest() != owner_a_script_sha):
+        fail("#604 owner Option A chat-recorded decision/policy SHA pin changed")
+    for owner_mode in ("--check", "--selftest"):
+        owner_gate = subprocess.run(
+            [sys.executable, "-B", str(owner_a_script), owner_mode],
+            cwd=ROOT, capture_output=True, text=True, timeout=15,
+        )
+        if owner_gate.returncode != 0:
+            fail("#604 owner Option A semantic gate failed closed: " + owner_mode)
+        try:
+            owner_result = json.loads(owner_gate.stdout)
+        except json.JSONDecodeError:
+            fail("#604 owner Option A semantic gate returned non-JSON")
+        if (
+            owner_result.get("schema") !=
+                "velvetos.office-v2.604.owner-option-a-revocation.v1"
+            or owner_result.get("owner_option") != "A"
+            or owner_result.get("owner_semantics_approved") is not True
+            or owner_result.get("security_admission") != "RED"
+            or owner_result.get("production_authority") is not False
+            or owner_result.get("authenticated_remote_github_proven") is not False
+            or owner_result.get("checked_original_provider_runs") != 2
+            or owner_result.get("checked_lab_cases") != 52
+            or owner_result.get("option_b_guarantee_rejected") is not True
+            or (owner_mode == "--selftest" and owner_result.get("selftest_cases") != 7)
+        ):
+            fail("#604 owner approved Option A misrepresented as production approval")
+
+    # CP083 is a SEALED local OS-UID / real mTLS / native Git LAB only.
+    # Canonical CI validates raw receipts and negative mutants OFFLINE;
+    # it never starts etcd, executes generated worker source or writes GitHub.
+    cp083_gate = ROOT / "scripts" / "vf_office_v2_604_cp083_osuid_evidence_gate.py"
+    for cp083_mode in ("--check", "--selftest"):
+        cp083 = subprocess.run(
+            [sys.executable, "-B", str(cp083_gate), cp083_mode],
+            cwd=ROOT, capture_output=True, text=True, timeout=15,
+        )
+        if cp083.returncode:
+            fail("#604 CP083 separate-UID raw evidence gate failed closed: " + cp083_mode)
+        try:
+            cp083_result = json.loads(cp083.stdout)
+        except json.JSONDecodeError:
+            fail("#604 CP083 evidence gate returned non-JSON")
+        expected_inert = (
+            "SKIP_NON_POSIX" if os.name != "posix" else "OFFLINE_STATIC_ONLY"
+        )
+        if (
+            cp083_result.get("status") != "CP083_SEALED_TEST_ONLY"
+            or cp083_result.get("checked_real_provider_runs") != 2
+            or cp083_result.get("checked_named_assertions") != 118
+            or cp083_result.get("security_admission") != "RED"
+            or cp083_result.get("production_authority") is not False
+            or cp083_result.get("authenticated_remote_github_proven") is not False
+            or cp083_result.get("inert_selftest") != expected_inert
+            or (cp083_mode == "--selftest" and
+                cp083_result.get("negative_mutations_rejected") != 8)
+        ):
+            fail("#604 CP083 attempted to promote lab to trusted security admission")
+
+    # New CP083 hardening candidate gates: LOCAL-only. Do not change the
+    # historical sealed CP083 receipts or imply protected security admission.
+    # Linux CI must actually execute the kernel socket negatives, not skip them.
+    # Client suite includes two ~3s deadline probes; allow headroom.
+    # Union of the stack loop and main's CP084/CP085 rows. Counts match the
+    # merged files. security_admission stays RED.
+    for test_file, count, timeout_s in (
+        ("test_vf_office_v2_604_cp083_hardening_candidate.py", 10, 15),
+        ("test_vf_office_v2_604_cp083_socket_negative.py", 2, 15),
+        ("test_vf_office_v2_604_cp083_client_socket_negative.py", 10, 45),
+        ("test_vf_office_v2_604_cp083_reconcile_negative.py", 5, 15),
+        ("test_vf_office_v2_604_cp084_nonroot_sink_recovery.py", 5, 15),
+        ("test_vf_office_v2_604_cp085_public_git_readback.py", 26, 15),
+    ):
+        candidate_test = ROOT / "scripts" / test_file
+        if not candidate_test.is_file():
+            fail("#604 CP083 candidate negative test missing: " + test_file)
+        try:
+            test_run = subprocess.run(
+                [sys.executable, "-B", str(candidate_test)],
+                cwd=ROOT, capture_output=True, text=True, timeout=timeout_s,
+            )
+        except subprocess.TimeoutExpired:
+            fail("#604 CP083 candidate negative test timed out: " + test_file)
+        if (test_run.returncode != 0
+                or f"Ran {count} tests" not in test_run.stderr
+                or (sys.platform == "linux"
+                    and test_file != "test_vf_office_v2_604_cp083_reconcile_negative.py"
+                    and "skipped" in test_run.stderr)):
+            fail("#604 CP083 candidate negative tests failed: " + test_file)
+
+    # #764: offline two-host native Git/SQLite lost-ACK receipts. SECURITY RED.
+    # Not joined-run QA, not admission, not a remote GitHub effect.
+    receipt_gate = ROOT / "scripts" / "vf_office_v2_604_cp083_native_lostack_receipt_gate.py"
+    if not receipt_gate.is_file():
+        fail("#604 CP083 native lost-ACK receipt gate missing")
+    try:
+        receipt_run = subprocess.run(
+            [sys.executable, "-B", str(receipt_gate), "--selftest"],
+            cwd=ROOT, capture_output=True, text=True, timeout=20,
+        )
+    except subprocess.TimeoutExpired:
+        fail("#604 CP083 native lost-ACK receipt gate timed out")
+    if receipt_run.returncode != 0:
+        fail("#604 CP083 native lost-ACK receipt gate failed closed")
+    try:
+        receipt_result = json.loads(receipt_run.stdout)
+    except json.JSONDecodeError:
+        fail("#604 CP083 native lost-ACK receipt gate returned non-JSON")
+    if (
+        receipt_result.get("status") != "PASS_TWO_NATIVE_LOCAL_RECEIPTS_SECURITY_RED"
+        or receipt_result.get("security_admission") != "RED"
+        or receipt_result.get("remote_github_writes") != 0
+        or receipt_result.get("mutations_rejected") != 12
+        or receipt_result.get("real_native_git_sqlite_receipts") != 2
+        or receipt_result.get("named_assertions") != 116
+        or receipt_result.get("distinct_hosts") != 2
+    ):
+        fail("#604 CP083 native lost-ACK receipt gate must stay SECURITY RED")
+
     print(
         "OK office-v2-contracts authority=single writer_change=NO credentials=LAB_DENIED "
-        f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY"
+        f"candidates={len(items)} phase3_effects=LAB_LOCAL_ONLY cp080=SEALED_RED_ONLY cp081=SEALED_RED_ONLY cp082=SEALED_RED_ONLY cp083=SEALED_RED_ONLY option_a=OWNER_APPROVED_SECURITY_RED"
     )
     return 0
 

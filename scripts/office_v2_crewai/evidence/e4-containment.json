@@ -1,0 +1,17 @@
+{
+  "appdirs_version": "1.4.4",
+  "comment": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250312836",
+  "control_run": "e4/control-run.json",
+  "crewai_version": "1.15.28",
+  "hkcu_after": "e4/hkcu-after.reg",
+  "hkcu_before": "e4/hkcu-before.reg",
+  "hkcu_diff": "e4/hkcu-diff.json",
+  "localappdata_redirect_sufficient": false,
+  "manifest_after": "e4/manifest-after.json",
+  "manifest_before": "e4/manifest-before.json",
+  "positive_control": "e4/positive-control.json",
+  "profile_root_source": "SHGetFolderPathW",
+  "sandbox_root": "D:\\Velvet\\Pilots\\crewai-e4\\sandbox-home",
+  "schema": "velvetos.office-v2.crewai-e4-containment.v1",
+  "status": "NOT_OBSERVED"
+}
