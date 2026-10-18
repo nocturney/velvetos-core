@@ -1,0 +1,35 @@
+{
+  "advisories": [
+    "PYSEC-2026-311",
+    "PYSEC-2026-3813",
+    "PYSEC-2026-3814",
+    "PYSEC-2026-3815",
+    "CVE-2026-59951"
+  ],
+  "conditions": {
+    "chroma_cli": false,
+    "crewai_tools": false,
+    "forbid_loaded_modules": [
+      "chromadb.server",
+      "fastapi",
+      "uvicorn",
+      "mcp"
+    ],
+    "knowledge": false,
+    "mcp_servers": false,
+    "memory": false,
+    "pilot_listening_ports": 0,
+    "rag": false,
+    "tools_empty": true
+  },
+  "decided_at": "2026-10-18T16:02:00+03:00",
+  "decided_by": "Christian",
+  "decision": "ACCEPTED_RISK",
+  "decision_label": "ACCEPT_RISK_WITH_CONDITIONS",
+  "evidence": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250224612",
+  "lock_filename": "requirements-locked.txt",
+  "lock_sha256": "121c1bd04eee730b51eb71e49da503b0d0236cdd06d8687a5df792234f78a669",
+  "record": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250234075",
+  "schema": "velvetos.office-v2.crewai-e3-security-decision.v1",
+  "wheel_count": 154
+}
