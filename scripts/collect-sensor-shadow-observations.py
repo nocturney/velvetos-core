@@ -10,10 +10,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
 import sys
+
+import vf_subprocess_hygiene as hygiene
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -37,17 +40,22 @@ def load(path: Path) -> dict:
 
 
 def gh(args: list[str], timeout: int = 60) -> str:
-    if not shutil.which("gh"):
-        raise RuntimeError("gh CLI is required")
-    proc = subprocess.run(
-        ["gh", *args],
-        cwd=ROOT,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        capture_output=True,
-        timeout=timeout,
-    )
+    if not args or not isinstance(args[0], str) or args[0][:1] == "-":
+        raise RuntimeError("gh command was refused")
+    try:
+        proc = hygiene.run_pinned(
+            "gh",
+            args,
+            cwd=ROOT,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            capture_output=True,
+            timeout=timeout,
+            extra_keys=hygiene.GH_CONFIG_ENV_KEYS,
+        )
+    except hygiene.HygieneError as exc:
+        raise RuntimeError("gh CLI is required") from exc
     if proc.returncode != 0:
         raise RuntimeError((proc.stderr or proc.stdout or "gh command failed").strip())
     return proc.stdout
@@ -55,6 +63,67 @@ def gh(args: list[str], timeout: int = 60) -> str:
 
 def parse_time(value: str) -> datetime:
     return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone(timezone.utc)
+
+
+def _expose_gh_apart_from_git(source: str, directory: Path) -> None:
+    """Copy gh into an empty directory. Leave git in its real directory.
+
+    Symlinking git out of `Git\\cmd` breaks the Windows launcher that finds
+    mingw64 beside its own file, and creating a symlink needs a privilege the
+    hosted runner often does not have. gh is one file, so a copy still runs.
+    """
+    name = "gh.exe" if os.name == "nt" else "gh"
+    dest = directory / name
+    shutil.copy2(source, dest)
+    dest.chmod(dest.stat().st_mode | 0o755)
+
+
+def prove_split_gh_git_repo_slug() -> str:
+    """Real gh and real git, in different directories, still resolve the slug.
+
+    The allowlisted PATH used to be only gh's directory. `gh repo view` then
+    cannot find git when the two binaries do not share a directory.
+    """
+    import tempfile
+
+    gh_bin = hygiene.pin_which("gh")
+    git_bin = hygiene.pin_which("git")
+    git_dir = hygiene.executable_directory(git_bin)
+    # The workspace filesystem is executable. A noexec temp mount would refuse
+    # the copied gh, and Path.resolve() would expand Windows 8.3 names.
+    with tempfile.TemporaryDirectory(prefix="vf-gh-git-", dir=ROOT) as tmp:
+        gh_dir = Path(tmp) / "gh-bin"
+        gh_dir.mkdir()
+        try:
+            _expose_gh_apart_from_git(gh_bin, gh_dir)
+            previous = os.environ.get("PATH")
+            os.environ["PATH"] = os.pathsep.join((str(gh_dir), git_dir))
+            try:
+                found_gh = hygiene.pin_which("gh")
+                found_git = hygiene.pin_which("git")
+                if hygiene.paths_match(
+                    hygiene.executable_directory(found_gh),
+                    hygiene.executable_directory(found_git),
+                ):
+                    raise AssertionError("gh and git were not placed in separate directories")
+                if not hygiene.paths_match(hygiene.executable_directory(found_git), git_dir):
+                    raise AssertionError("git was not the real binary")
+                slug = repo_slug()
+            finally:
+                if previous is None:
+                    os.environ.pop("PATH", None)
+                else:
+                    os.environ["PATH"] = previous
+        except SystemExit:
+            raise
+        except Exception as exc:
+            detail = " ".join(str(exc).split())[:240]
+            sys.stderr.write(f"SPLIT_GH_GIT_FAIL {type(exc).__name__}: {detail}\n")
+            raise SystemExit(1) from None
+    if slug != "nocturney/velvetos-core":
+        sys.stderr.write(f"SPLIT_GH_GIT_FAIL slug {slug!r}\n")
+        raise SystemExit(1)
+    return slug
 
 
 def repo_slug() -> str:
@@ -584,7 +653,23 @@ def self_test() -> int:
     else:
         raise AssertionError("mismatched recovery evidence must fail closed")
 
-    print("OK sensor-shadow-observation selftest historical_miss_retention=PASS pr_dedupe=PASS incomplete_recovery=PASS")
+    with hygiene.record_pinned_spawn("gh") as (calls, short):
+        gh(["repo", "view", "--json", "nameWithOwner"])
+    hygiene.expect_pinned(calls, short, timeout=60, keep_gh_token=True)
+    slug = prove_split_gh_git_repo_slug()
+    try:
+        gh(["-c", "true"])
+    except RuntimeError as exc:
+        if "refused" not in str(exc):
+            raise
+    else:
+        raise AssertionError("gh flag command was accepted")
+
+    print(
+        "OK sensor-shadow-observation selftest "
+        "historical_miss_retention=PASS pr_dedupe=PASS incomplete_recovery=PASS "
+        f"repo_slug={slug}"
+    )
     return 0
 
 
