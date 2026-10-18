@@ -44,38 +44,52 @@ DARWIN_NETSTAT = "/usr/bin/netstat"
 WINDOWS_NETSTAT = "C:\\Windows\\System32\\netstat.exe"
 WINDOWS_POWERSHELL = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
 WINDOWS_LISTENER_PATH = "C:\\Windows\\System32;C:\\Windows\\System32\\WindowsPowerShell\\v1.0"
-_PS_OBSERVE = (
-    "$ErrorActionPreference = 'Stop'\n"
-    "$processes = New-Object System.Collections.Generic.List[object]\n"
-    "foreach ($row in @(Get-CimInstance -ClassName Win32_Process -ErrorAction Stop)) {\n"
-    "  $processes.Add(@{ pid = [int]$row.ProcessId; ppid = [int]$row.ParentProcessId })\n"
-    "}\n"
-    "$tcp = New-Object System.Collections.Generic.List[object]\n"
-    "$udp = New-Object System.Collections.Generic.List[object]\n"
-    "$source = 'Get-Net'\n"
-    "try {\n"
-    "  foreach ($connection in @(Get-NetTCPConnection -ErrorAction Stop)) {\n"
-    "    $tcp.Add(@{ pid = [int]$connection.OwningProcess; state = [string]$connection.State })\n"
-    "  }\n"
-    "  foreach ($endpoint in @(Get-NetUDPEndpoint -ErrorAction Stop)) {\n"
-    "    $udp.Add(@{ pid = [int]$endpoint.OwningProcess })\n"
-    "  }\n"
-    "} catch {\n"
-    "  $source = 'netstat'\n"
-    "  $netstat = '%s'\n"
-    "  if (-not (Test-Path -LiteralPath $netstat)) { throw 'NETSTAT_FAILED' }\n"
-    "  $raw = & $netstat -ano | Out-String\n"
-    "  if ($LASTEXITCODE -ne 0 -or -not $raw) { throw 'NETSTAT_FAILED' }\n"
-    "  @{ processes = $processes.ToArray(); netstat = $raw; source = $source } | ConvertTo-Json -Depth 6 -Compress\n"
-    "  exit 0\n"
-    "}\n"
-    "@{ processes = $processes.ToArray(); tcp = $tcp.ToArray(); udp = $udp.ToArray(); source = $source } | "
-    "ConvertTo-Json -Depth 6 -Compress\n"
-) % WINDOWS_NETSTAT
+WINDOWS_SYSTEM_ROOT = "C:\\Windows"
 
 
 class UsageRefusal(RuntimeError):
     """A pilot usage condition failed closed. No PASS is recorded."""
+
+    def __init__(self, message: str, detail: str | None = None) -> None:
+        super().__init__(message)
+        self.detail = detail
+
+
+def _unproven(detail: str) -> UsageRefusal:
+    """Same refusal code, with a stable detail for the receipt."""
+    return UsageRefusal("PILOT_LISTENER_UNPROVEN", detail)
+
+
+def listener_reason(probe: str, kind: str, rc: object = None, stdout: object = None) -> str:
+    """One ASCII refusal line. Output text and environment values stay out.
+
+    ``kind`` is ``missing``, ``open``, ``empty``, ``parse``, ``pid-absent``,
+    ``child``, or ``status``. ``status`` records only the exit code and
+    whether stdout was empty.
+    """
+    if probe not in ("netstat", "toolhelp"):
+        probe = "listener"
+    if kind == "missing":
+        return "probe=%s missing" % probe
+    if kind == "open":
+        return "probe=%s open" % probe
+    if kind == "empty":
+        return "probe=%s empty" % probe
+    if kind == "parse":
+        return "probe=%s parse" % probe
+    if kind == "pid-absent":
+        return "probe=%s pid-absent" % probe
+    if kind == "child":
+        name = rc if isinstance(rc, str) and rc.isalpha() else "error"
+        return "probe=%s child=%s" % (probe, name)
+    if kind == "status":
+        if isinstance(rc, bool) or not isinstance(rc, int) or rc < 0 or rc > 255:
+            code = "bad"
+        else:
+            code = str(rc)
+        empty = "empty" if not isinstance(stdout, str) or not stdout.strip() else "present"
+        return "probe=%s rc=%s stdout=%s" % (probe, code, empty)
+    return "probe=%s unknown" % probe
 
 
 def module_is_forbidden(name: str) -> bool:
@@ -337,11 +351,14 @@ def guard_post_run(modules: dict, observe, commands: list | None = None, receipt
     assert_loaded_modules(modules)
     try:
         ports = observe()
-    except UsageRefusal:
+    except UsageRefusal as exc:
         if receipt is not None:
             teardown = receipt.setdefault("teardown", {})
             teardown["listener_count"] = None
             teardown["listener_source"] = "UNPROVEN"
+            detail = getattr(exc, "detail", None)
+            if isinstance(detail, str) and detail:
+                teardown["listener_detail"] = detail
         raise
     if receipt is not None:
         teardown = receipt.setdefault("teardown", {})
@@ -539,7 +556,7 @@ def process_tree(processes: list, root_pid: int) -> set[int]:
         seen.add(pid)
         by_parent.setdefault(ppid, []).append(pid)
     if root_pid not in seen:
-        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+        raise _unproven(listener_reason("toolhelp", "pid-absent"))
     selected = {root_pid}
     changed = True
     while changed:
@@ -633,8 +650,13 @@ def _open_trusted_regular(path: str) -> int:
     flags = os.O_RDONLY
     if hasattr(os, "O_CLOEXEC"):
         flags |= os.O_CLOEXEC
-    if hasattr(os, "O_NOFOLLOW"):
+    # Windows CRT does not implement O_NOFOLLOW. Passing the flag, when a
+    # later Python defines it, makes os.open of netstat.exe fail and every
+    # live proof becomes PILOT_LISTENER_UNPROVEN. Symlinks are refused below.
+    if hasattr(os, "O_NOFOLLOW") and os.name != "nt":
         flags |= os.O_NOFOLLOW
+    if os.name == "nt" and hasattr(os, "O_BINARY"):
+        flags |= os.O_BINARY
     try:
         fd = os.open(path, flags)
     except OSError as exc:
@@ -649,6 +671,11 @@ def _open_trusted_regular(path: str) -> int:
         current = os.stat(path)
         if (info.st_dev, info.st_ino) != (current.st_dev, current.st_ino):
             raise OSError("trusted listener binary missing")
+        if os.name == "nt":
+            final = os.path.normcase(_strip_nt_prefix(os.path.realpath(path)))
+            expected = os.path.normcase(_strip_nt_prefix(os.path.abspath(path)))
+            if final != expected:
+                raise OSError("trusted listener binary missing")
     except OSError:
         os.close(fd)
         raise
@@ -690,12 +717,41 @@ def trusted_listener_binary(tool: str, platform: str | None = None) -> str | Non
     return candidate
 
 
+def _strip_nt_prefix(path: str) -> str:
+    """Drop the ``\\\\?\\`` prefix GetFinalPathNameByHandle can leave on."""
+    if not isinstance(path, str):
+        return path
+    if path.startswith("\\\\?\\UNC\\"):
+        return "\\\\" + path[8:]
+    if path.startswith("\\\\?\\"):
+        return path[4:]
+    return path
+
+
+def windows_tool_env(base: dict) -> dict:
+    """Environment for a System32 listener tool.
+
+    The kickoff sensor clears ``os.environ`` down to the sandbox map, which
+    drops ``SystemRoot``. ``netstat.exe`` then cannot start, and the proof
+    stays unproven. The child always receives ``C:\\Windows`` for
+    ``SystemRoot`` and ``windir``. A sandbox value cannot redirect it.
+    """
+    if not isinstance(base, dict):
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN", "TOOL_ENV")
+    env = dict(base)
+    env["SystemRoot"] = WINDOWS_SYSTEM_ROOT
+    env["SYSTEMROOT"] = WINDOWS_SYSTEM_ROOT
+    env["windir"] = WINDOWS_SYSTEM_ROOT
+    return env
+
+
 def run_trusted_listener(binary: str, args: list[str], path_value: str | None = None):
     """Run an absolute listener tool. PATH is only that binary's directory.
 
     The process image is the inode opened above. A later replacement of the
     path does not change which file runs, except on Windows (see
-    ``_open_trusted_regular``).
+    ``_open_trusted_regular``). On Windows the child ``SystemRoot`` is
+    ``C:\\Windows``.
     """
     import subprocess
 
@@ -704,6 +760,8 @@ def run_trusted_listener(binary: str, args: list[str], path_value: str | None = 
     fd = _open_trusted_regular(binary)
     env = os.environ.copy()
     env["PATH"] = str(Path(binary).parent) if path_value is None else path_value
+    if os.name == "nt":
+        env = windows_tool_env(env)
     executable = _fd_executable(fd)
     kwargs = {
         "capture_output": True,
@@ -721,28 +779,132 @@ def run_trusted_listener(binary: str, args: list[str], path_value: str | None = 
         os.close(fd)
 
 
-def _windows_observe() -> dict:
-    """Get-NetTCPConnection and Get-NetUDPEndpoint, or netstat -ano. Never guess zero."""
+def parse_process_lines(text: str) -> list:
+    """Parse ``pid ppid`` lines. Empty or non-integer text is unproven."""
+    if not isinstance(text, str) or not text.strip():
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+    rows = []
+    for line in text.splitlines():
+        if not line.strip():
+            continue
+        parts = line.split()
+        if len(parts) != 2:
+            raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+        try:
+            pid = int(parts[0])
+            ppid = int(parts[1])
+        except ValueError as exc:
+            raise UsageRefusal("PILOT_LISTENER_UNPROVEN") from exc
+        rows.append({"pid": pid, "ppid": ppid})
+    if not rows:
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+    return rows
+
+
+def _windows_processes() -> list:
+    """Pid and parent pid from Toolhelp. No PowerShell and no code page.
+
+    ``ULONG_PTR`` is pointer-sized, so the heap field is ``c_size_t``. A
+    wrong layout would hide the pilot pid and stay unproven.
+    """
+    import ctypes
+    from ctypes import wintypes
+
+    class PROCESSENTRY32W(ctypes.Structure):
+        _fields_ = [
+            ("dwSize", wintypes.DWORD),
+            ("cntUsage", wintypes.DWORD),
+            ("th32ProcessID", wintypes.DWORD),
+            ("th32DefaultHeapID", ctypes.c_size_t),
+            ("th32ModuleID", wintypes.DWORD),
+            ("cntThreads", wintypes.DWORD),
+            ("th32ParentProcessID", wintypes.DWORD),
+            ("pcPriClassBase", ctypes.c_long),
+            ("dwFlags", wintypes.DWORD),
+            ("szExeFile", wintypes.WCHAR * 260),
+        ]
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.CreateToolhelp32Snapshot.argtypes = [wintypes.DWORD, wintypes.DWORD]
+    kernel32.CreateToolhelp32Snapshot.restype = wintypes.HANDLE
+    kernel32.Process32FirstW.argtypes = [wintypes.HANDLE, ctypes.POINTER(PROCESSENTRY32W)]
+    kernel32.Process32FirstW.restype = wintypes.BOOL
+    kernel32.Process32NextW.argtypes = [wintypes.HANDLE, ctypes.POINTER(PROCESSENTRY32W)]
+    kernel32.Process32NextW.restype = wintypes.BOOL
+    kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+    kernel32.CloseHandle.restype = wintypes.BOOL
+    snap = kernel32.CreateToolhelp32Snapshot(0x00000002, 0)
+    invalid = wintypes.HANDLE(-1).value
+    if snap in (None, 0, -1, invalid):
+        raise _unproven(listener_reason("toolhelp", "open"))
+    try:
+        entry = PROCESSENTRY32W()
+        entry.dwSize = ctypes.sizeof(PROCESSENTRY32W)
+        if not kernel32.Process32FirstW(snap, ctypes.byref(entry)):
+            raise _unproven(listener_reason("toolhelp", "empty"))
+        rows = []
+        while True:
+            rows.append({
+                "pid": int(entry.th32ProcessID),
+                "ppid": int(entry.th32ParentProcessID),
+            })
+            if not kernel32.Process32NextW(snap, ctypes.byref(entry)):
+                break
+        if not rows:
+            raise _unproven(listener_reason("toolhelp", "empty"))
+        return rows
+    finally:
+        kernel32.CloseHandle(snap)
+
+
+def _windows_observe(spawn=None) -> dict:
+    """Prove listeners with absolute ``netstat.exe -ano``. Never guess zero.
+
+    Socket rows come from ``C:\\Windows\\System32\\netstat.exe``. The pilot
+    tree comes from Toolhelp, not a PowerShell census. A missing binary, a
+    nonzero status, or text without the English ``Active Connections`` header
+    stays unproven. A localized Windows UI, including Hebrew on Chris, does
+    not print that header.
+    """
     import subprocess
 
-    binary = trusted_listener_binary("powershell", "win32")
-    if binary is None:
-        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+    if spawn is None:
+        netstat = trusted_listener_binary("netstat", "win32")
+        if netstat != WINDOWS_NETSTAT:
+            raise _unproven(listener_reason("netstat", "missing"))
+        try:
+            net = run_trusted_listener(
+                netstat, [netstat, "-ano"], path_value=str(Path(netstat).parent),
+            )
+            processes = _windows_processes()
+        except UsageRefusal:
+            raise
+        except (OSError, subprocess.SubprocessError, UnicodeError) as exc:
+            raise _unproven(listener_reason("netstat", "child", rc=type(exc).__name__)) from exc
+        net_out, net_rc = net.stdout or "", net.returncode
+        if isinstance(net_rc, bool) or not isinstance(net_rc, int) or net_rc != 0:
+            raise _unproven(listener_reason("netstat", "status", rc=net_rc, stdout=net_out))
+        if not isinstance(net_out, str) or "Active Connections" not in net_out:
+            raise _unproven(listener_reason("netstat", "parse"))
+        try:
+            parsed = parse_netstat(net_out)
+        except UsageRefusal as exc:
+            raise _unproven(listener_reason("netstat", "parse")) from exc
+        return {"processes": processes, "tcp": parsed["tcp"], "udp": parsed["udp"]}
+    net_out, net_rc, proc_out, proc_rc = spawn(WINDOWS_NETSTAT)
+    if isinstance(net_rc, bool) or not isinstance(net_rc, int) or net_rc != 0:
+        raise _unproven(listener_reason("netstat", "status", rc=net_rc, stdout=net_out))
+    if isinstance(proc_rc, bool) or not isinstance(proc_rc, int) or proc_rc != 0:
+        raise _unproven(listener_reason("toolhelp", "empty"))
     try:
-        proc = run_trusted_listener(
-            binary,
-            [binary, "-NoProfile", "-NonInteractive", "-Command", _PS_OBSERVE],
-            path_value=WINDOWS_LISTENER_PATH,
-        )
-    except (OSError, subprocess.SubprocessError) as exc:
-        raise UsageRefusal("PILOT_LISTENER_UNPROVEN") from exc
-    if proc.returncode != 0 or not proc.stdout.strip():
-        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
-    try:
-        payload = json.loads(proc.stdout)
-    except json.JSONDecodeError as exc:
-        raise UsageRefusal("PILOT_LISTENER_UNPROVEN") from exc
-    return _normalize_windows(payload)
+        parsed = parse_netstat(net_out)
+    except UsageRefusal as exc:
+        raise _unproven(listener_reason("netstat", "parse")) from exc
+    return {
+        "processes": parse_process_lines(proc_out),
+        "tcp": parsed["tcp"],
+        "udp": parsed["udp"],
+    }
 
 
 def parse_lsof_listen(text: str, pid: int) -> int:
