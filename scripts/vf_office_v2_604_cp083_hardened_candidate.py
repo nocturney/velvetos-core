@@ -39,11 +39,17 @@ SINK_UID, WORKER_UID, ATTACKER_UID = 62001, 62002, 62004
 CASES = ("normal", "revoke-first", "drain-before", "mid",
          "ack-before", "ack-after", "crash-after")
 MAX_MESSAGE = 2048
-SAFE_ENV = {k: v for k, v in os.environ.items()
-            if k not in ("GH_TOKEN", "GITHUB_TOKEN", "GIT_ASKPASS",
-                         "SSH_AUTH_SOCK", "AWS_ACCESS_KEY_ID",
-                         "GOOGLE_APPLICATION_CREDENTIALS")}
-SAFE_ENV["GIT_TERMINAL_PROMPT"] = "0"
+# Only explicit, fixed values cross from the fixture controller to other UIDs.
+# No inherited Python path, cloud credentials, sockets, Git config, or home.
+SAFE_ENV = {
+    "PATH": "/usr/bin:/bin",
+    "LANG": "C",
+    "LC_ALL": "C",
+    "HOME": "/nonexistent",
+    "GIT_TERMINAL_PROMPT": "0",
+    "GIT_CONFIG_NOSYSTEM": "1",
+    "GIT_CONFIG_GLOBAL": "/dev/null",
+}
 
 
 class Refuse(RuntimeError):
@@ -200,10 +206,17 @@ def serve(root, case):
                     except OSError:
                         pass
                     continue
-                # Authorized peers are still bounded: no stalled socket forever.
+                # A per-recv timeout alone permits a slow-drip peer to hold
+                # this single-threaded sink for up to MAX_MESSAGE frames.
+                # Bound the *whole frame* with one monotonic deadline.
                 c.settimeout(2.0)
+                deadline = time.monotonic() + 2.0
                 incoming = bytearray()
                 while b"\n" not in incoming and len(incoming) <= MAX_MESSAGE:
+                    remaining = deadline - time.monotonic()
+                    if remaining <= 0:
+                        break
+                    c.settimeout(remaining)
                     try:
                         bit = c.recv(512)
                     except socket.timeout:

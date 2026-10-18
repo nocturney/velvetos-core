@@ -2,8 +2,13 @@
 """Unprivileged static checks only; NOT a substitute for fresh native CP083 receipts."""
 import ast
 import hashlib
+import json
+import os
 from pathlib import Path
+import subprocess
+import sys
 import unittest
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 HISTORICAL = ROOT / "scripts/vf_office_v2_604_cp083_osuid_tls_localgit_lab.py"
@@ -42,6 +47,18 @@ class HardeningCandidateStaticTests(unittest.TestCase):
         self.assertIn("except socket.timeout:", serve)
         self.assertLess(serve.index("c.settimeout(2.0)"), serve.index("c.recv(512)"))
 
+    def test_slow_drip_peer_cannot_reset_frame_timeout(self):
+        serve = self.source.split("def serve(root, case):", 1)[1].split("\n" + "def probe(", 1)[0]
+        deadline = "deadline = time.monotonic() + 2.0"
+        remaining = "remaining = deadline - time.monotonic()"
+        frame_loop = 'while b"\\n" not in incoming'
+        self.assertEqual(serve.count(deadline), 1)
+        self.assertLess(serve.index(deadline), serve.index(frame_loop))
+        self.assertLess(serve.index(frame_loop), serve.index(remaining))
+        self.assertLess(serve.index(remaining), serve.index("c.settimeout(remaining)"))
+        self.assertLess(serve.index("c.settimeout(remaining)"), serve.index("c.recv(512)"))
+        self.assertIn("if remaining <= 0:", serve)
+
     def test_normal_committed_head_matches_journal(self):
         normal = self.source.split('if case == "normal":', 1)[-1]
         self.assertIn('snap["head"] == record["candidate"]', normal)
@@ -51,6 +68,41 @@ class HardeningCandidateStaticTests(unittest.TestCase):
         self.assertIn('"production_authority": False', self.source)
         self.assertIn('"real_protected_core_issuer": False', self.source)
         self.assertIn('"remote_github_sink_proven": False', self.source)
+
+    def test_worker_subprocess_environment_is_allowlisted(self):
+        # No real credentials: simulate an unexpectedly named controller secret.
+        tree = ast.parse(self.source, filename=str(CANDIDATE))
+        defs = [node for node in tree.body
+                if isinstance(node, ast.Assign) and any(
+                    isinstance(target, ast.Name) and target.id == "SAFE_ENV"
+                    for target in node.targets)]
+        self.assertEqual(len(defs), 1)
+        isolated = {}
+        synthetic = {
+            "VF_FAKE_SECRET_CANARY": "not-a-real-secret",
+            "GITHUB_TOKEN": "synthetic",
+            "PYTHONPATH": "/tmp/untrusted-python",
+            "HOME": "/tmp/controller-home",
+        }
+        with mock.patch.dict(os.environ, synthetic, clear=True):
+            exec(compile(ast.Module(body=defs, type_ignores=[]),
+                         "<safe-env-assignment>", "exec"), {"os": os}, isolated)
+        env = isolated["SAFE_ENV"]
+        expected = {"PATH", "LANG", "LC_ALL", "HOME", "GIT_TERMINAL_PROMPT",
+                    "GIT_CONFIG_NOSYSTEM", "GIT_CONFIG_GLOBAL"}
+        self.assertEqual(set(env), expected)
+        child = subprocess.run(
+            [sys.executable, "-c", "import json, os; print(json.dumps(sorted(os.environ)))"],
+            env=env, capture_output=True, text=True, timeout=5, check=True)
+        child_keys = set(json.loads(child.stdout))
+        # macOS may inject its CoreFoundation encoding marker at spawn time.
+        extras = {"__CF_USER_TEXT_ENCODING"} if sys.platform == "darwin" else set()
+        self.assertLessEqual(child_keys - expected, extras)
+        for forbidden in ("VF_FAKE_SECRET_CANARY", "GITHUB_TOKEN", "PYTHONPATH"):
+            self.assertNotIn(forbidden, child_keys)
+        self.assertNotEqual(env["HOME"], synthetic["HOME"])
+        self.assertEqual(env["HOME"], "/nonexistent")
+        self.assertEqual(env["GIT_CONFIG_GLOBAL"], "/dev/null")
 
 
 if __name__ == "__main__":
