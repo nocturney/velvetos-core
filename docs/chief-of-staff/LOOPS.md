@@ -28,7 +28,7 @@ Deck: `.github/workflows/velvetos-weekly-deck.yml` נשאר workflow מכונה 
 | `office-control-plane.yml` | activation sweep + watchdog + hygiene + gaps + handoff | `0 2,8,14,20 * * *` UTC = 05:00/11:00/17:00/23:00 IDT (לא מתנגש ב־Office Loop 10:30/18:30 גם עם עיכוב GitHub של ~40 דק׳) |
 | `jobs-write-through.yml` | Sheet jobs WIF pull/push/read-back | `:07,:22,:37,:52` כל שעה |
 | `velvetos-research.yml` | verifier/index/sensors למחקר שכבר הופק | workflow_dispatch בלבד; אין cron |
-| `readme-system-pulse.yml` | רענון README pulse | שעתי + שינוי קבצי ראיה |
+| `readme-system-pulse.yml` | רענון README pulse | event-driven בלי cron: push של קבצי ראיה ל־main + `workflow_run` אחרי Office Control Plane / VF Media Auto Intake / Jobs Sheet Write-Through |
 | `gmail-brief-send.yml` | שליחת בריף כש־`gmail-send-request.json` enabled | workflow_dispatch / push לקובץ |
 | `velvetos-weekly-deck.yml` | דק שבועי מנתוני ריפו | שישי |
 | `publish-bridge-cleanup.yml` | ארכיון transport | יומי |
