@@ -47,11 +47,23 @@ def fixture() -> dict:
     }
 
 
+def append_child(data: dict, pid: int, parent_pid: int) -> None:
+    data["snapshots"]["during"][0]["process_tree"].append({
+        "pid": pid, "parent_pid": parent_pid,
+        "created_at_utc": "2026-10-18T12:00:01Z",
+    })
+
+
 def main() -> int:
     base = fixture()
     errors = []
     if evaluate(base):
         errors.append("valid baseline refused: %s" % evaluate(base))
+    nested = copy.deepcopy(base)
+    append_child(nested, 4243, 4242)
+    append_child(nested, 4244, 4243)
+    if evaluate(nested):
+        errors.append("valid three-generation process tree refused: %s" % evaluate(nested))
     cases = {
         "tcp-listening": (lambda d: d["snapshots"]["during"][0]["tcp"][0].update(state="Listen"),
                           "TCP_LISTENER_DETECTED"),
@@ -74,6 +86,13 @@ def main() -> int:
         "null-exit-code": (lambda d: d.update(exit_code=None), "PILOT_EXIT_NOT_ZERO"),
         "missing-exit-code": (lambda d: d.pop("exit_code"), "PILOT_EXIT_NOT_ZERO"),
         "non-scalar-root-pid": (lambda d: d.update(root_pid=[4242]), "INVALID_ROOT_PID"),
+        "root-pid-object": (lambda d: d.update(root_pid={"pid": 4242}), "INVALID_ROOT_PID"),
+        "root-pid-bool": (lambda d: d.update(root_pid=True), "INVALID_ROOT_PID"),
+        "orphan-tree-member": (lambda d: append_child(d, 4243, 9999), "INVALID_TREE_ANCESTRY"),
+        "foreign-parent": (lambda d: append_child(d, 4243, 100), "INVALID_TREE_ANCESTRY"),
+        "self-parent-cycle": (lambda d: append_child(d, 4243, 4243), "INVALID_TREE_ANCESTRY"),
+        "two-node-cycle": (lambda d: (append_child(d, 4243, 4244), append_child(d, 4244, 4243)),
+                           "INVALID_TREE_ANCESTRY"),
         "false-interval": (lambda d: d.update(sample_interval_ms=5000), "INVALID_SAMPLE_INTERVAL"),
     }
     for name, (mutate, expected) in cases.items():
@@ -118,6 +137,16 @@ def main() -> int:
         if (invalid_root.returncode == 0 or "INVALID_ROOT_PID" not in invalid_receipt["reason_codes"]
                 or "Traceback" in invalid_root.stderr):
             errors.append("CLI non-scalar root_pid failed to issue a clean FAIL receipt")
+        bad_tree = copy.deepcopy(base)
+        append_child(bad_tree, 4243, 9999)
+        src.write_bytes(json.dumps(bad_tree).encode("ascii"))
+        invalid_tree = subprocess.run([sys.executable, str(validator), "--evidence", str(src), "--receipt", str(dest)],
+                                      text=True, capture_output=True, timeout=10)
+        tree_receipt = json.loads(dest.read_text())
+        if (invalid_tree.returncode != 1 or tree_receipt["status"] != "FAIL"
+                or "INVALID_TREE_ANCESTRY" not in tree_receipt["reason_codes"]
+                or "Traceback" in invalid_tree.stderr):
+            errors.append("CLI orphan process-tree failed to emit fail-closed receipt")
         src.write_text("{broken", encoding="ascii")
         malformed = subprocess.run([sys.executable, str(validator), "--evidence", str(src), "--receipt", str(dest)],
                                    text=True, capture_output=True, timeout=10)
