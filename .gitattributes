@@ -5,6 +5,11 @@
 *.py text eol=lf
 *.json text eol=lf
 *.md text eol=lf
+# Fallback only. New PRs add changelog.d/<slug>.md and leave CHANGELOG.md alone.
+# Git's built-in union driver keeps added lines from both parents. It also
+# keeps a line one side deleted or edited when the other side still has it.
+# See docs/CHANGELOG-FRAGMENTS.md.
+CHANGELOG.md merge=union
 # DCC Stage 6C exact-byte validator sources: every tracked patch (8),
 # JavaScript (7), PowerShell (44), and MJS (10) Git index blob is LF.
 *.patch text eol=lf

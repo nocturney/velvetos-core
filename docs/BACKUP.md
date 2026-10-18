@@ -29,7 +29,7 @@ HQ sends Instagram via tools (`constitution/SEND.md`). Grok Bot is optional back
 
 1. Add or update `packages/<name>/ORIGIN.md` and `packages/manifest.json`.
 2. Vendor the Origin tree into `packages/<name>/` if Origin is reachable (`origin auth login` or `CURSOR_API_KEY`, then `scripts/vendor-origin-packs.sh`).
-3. Append `CHANGELOG.md` **Unreleased** with the date and one Hebrew+English line.
+3. Add `changelog.d/<slug>.md` with the date and one Hebrew+English bullet. Do not edit `CHANGELOG.md` in that same change.
 4. Push to `main` (or the open PR branch).
 
 If Origin will not clone, still update the catalog and CHANGELOG so GitHub stays current as a **map**.

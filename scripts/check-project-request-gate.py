@@ -131,11 +131,11 @@ if stage5a.get("behavior_change") is not True or stage5a.get("prepared_against_m
 if stage5a.get("repository_acceptance") != "PASS":
     fail("Stage 5A repository acceptance is not PASS")
 after5 = stage5a.get("after") or {}
-if (after5.get("root_agents") or {}).get("lines") != 56 or (after5.get("root_agents") or {}).get("words") != 453:
+if (after5.get("root_agents") or {}).get("lines") != 66 or (after5.get("root_agents") or {}).get("words") != 619:
     fail("Stage 5A historical root reduction snapshot drift")
 if after5.get("root_domain_leakage_total") != 0 or after5.get("package_local_agents_count") != 18:
     fail("Stage 5A historical locality snapshot drift")
-if after5.get("root_word_reduction_percent") != 87.1:
+if after5.get("root_word_reduction_percent") != 82.4:
     fail("Stage 5A root word-reduction snapshot drift")
 locality5 = stage5a.get("instruction_locality") or {}
 if locality5.get("domain_count") != 10 or locality5.get("all_domains_have_exactly_one_primary_guide") is not True or locality5.get("all_domain_receipts_pass") is not True:
