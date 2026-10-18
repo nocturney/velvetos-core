@@ -36,6 +36,13 @@ LEFTOVER_RELS = (
 )
 
 _LISTEN_STATES = {"listen", "listening"}
+# Absolute OS paths only. A name on PATH is not proof: an earlier fake can
+# report zero listeners. Missing files stay unproven.
+DARWIN_LSOF = "/usr/sbin/lsof"
+DARWIN_NETSTAT = "/usr/bin/netstat"
+WINDOWS_NETSTAT = "C:\\Windows\\System32\\netstat.exe"
+WINDOWS_POWERSHELL = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+WINDOWS_LISTENER_PATH = "C:\\Windows\\System32;C:\\Windows\\System32\\WindowsPowerShell\\v1.0"
 _PS_OBSERVE = (
     "$ErrorActionPreference = 'Stop'\n"
     "$processes = New-Object System.Collections.Generic.List[object]\n"
@@ -54,14 +61,16 @@ _PS_OBSERVE = (
     "  }\n"
     "} catch {\n"
     "  $source = 'netstat'\n"
-    "  $raw = & netstat.exe -ano | Out-String\n"
+    "  $netstat = '%s'\n"
+    "  if (-not (Test-Path -LiteralPath $netstat)) { throw 'NETSTAT_FAILED' }\n"
+    "  $raw = & $netstat -ano | Out-String\n"
     "  if ($LASTEXITCODE -ne 0 -or -not $raw) { throw 'NETSTAT_FAILED' }\n"
     "  @{ processes = $processes.ToArray(); netstat = $raw; source = $source } | ConvertTo-Json -Depth 6 -Compress\n"
     "  exit 0\n"
     "}\n"
     "@{ processes = $processes.ToArray(); tcp = $tcp.ToArray(); udp = $udp.ToArray(); source = $source } | "
     "ConvertTo-Json -Depth 6 -Compress\n"
-)
+) % WINDOWS_NETSTAT
 
 
 class UsageRefusal(RuntimeError):
@@ -607,17 +616,63 @@ def count_windows_listeners(pid: int, observation: dict) -> int:
     return owned
 
 
+def trusted_listener_binary(tool: str, platform: str | None = None) -> str | None:
+    """Return one absolute OS binary, or None when that file is not present.
+
+    Never searches PATH.
+    """
+    plat = sys.platform if platform is None else platform
+    if tool == "lsof" and plat == "darwin":
+        candidate = DARWIN_LSOF
+    elif tool == "netstat" and plat == "darwin":
+        candidate = DARWIN_NETSTAT
+    elif tool == "netstat" and plat == "win32":
+        candidate = WINDOWS_NETSTAT
+    elif tool == "powershell" and plat == "win32":
+        candidate = WINDOWS_POWERSHELL
+    else:
+        return None
+    if not isinstance(candidate, str) or not os.path.isabs(candidate) or not os.path.isfile(candidate):
+        return None
+    return candidate
+
+
+def run_trusted_listener(binary: str, args: list[str], path_value: str | None = None):
+    """Run an absolute listener tool. PATH is only that binary's directory."""
+    import subprocess
+
+    if (
+        not isinstance(binary, str)
+        or not os.path.isabs(binary)
+        or not os.path.isfile(binary)
+        or not args
+        or args[0] != binary
+    ):
+        raise OSError("trusted listener binary missing")
+    env = os.environ.copy()
+    env["PATH"] = str(Path(binary).parent) if path_value is None else path_value
+    return subprocess.run(
+        args,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+        env=env,
+    )
+
+
 def _windows_observe() -> dict:
     """Get-NetTCPConnection and Get-NetUDPEndpoint, or netstat -ano. Never guess zero."""
     import subprocess
 
+    binary = trusted_listener_binary("powershell", "win32")
+    if binary is None:
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
     try:
-        proc = subprocess.run(
-            ["powershell.exe", "-NoProfile", "-NonInteractive", "-Command", _PS_OBSERVE],
-            capture_output=True,
-            text=True,
-            timeout=30,
-            check=False,
+        proc = run_trusted_listener(
+            binary,
+            [binary, "-NoProfile", "-NonInteractive", "-Command", _PS_OBSERVE],
+            path_value=WINDOWS_LISTENER_PATH,
         )
     except (OSError, subprocess.SubprocessError) as exc:
         raise UsageRefusal("PILOT_LISTENER_UNPROVEN") from exc
@@ -679,16 +734,16 @@ def interpret_lsof(pid: int, returncode: int, stdout: str, stderr: str) -> int:
 
 
 def _darwin_observe(pid: int) -> int:
-    """lsof for this pid only. A missing binary or a bad status fails closed."""
+    """lsof for this pid only. A missing trusted binary or a bad status fails closed."""
     import subprocess
 
+    binary = trusted_listener_binary("lsof", "darwin")
+    if binary is None:
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
     try:
-        proc = subprocess.run(
-            ["lsof", "-nP", "-a", "-p", str(pid), "-iTCP", "-sTCP:LISTEN"],
-            capture_output=True,
-            text=True,
-            timeout=30,
-            check=False,
+        proc = run_trusted_listener(
+            binary,
+            [binary, "-nP", "-a", "-p", str(pid), "-iTCP", "-sTCP:LISTEN"],
         )
     except (OSError, subprocess.SubprocessError) as exc:
         raise UsageRefusal("PILOT_LISTENER_UNPROVEN") from exc

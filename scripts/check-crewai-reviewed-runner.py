@@ -55,6 +55,9 @@ from office_v2_crewai.provider import (  # noqa: E402
     collect_ollama_binds,
     digest_from_tags,
     effective_endpoint,
+    open_loopback,
+    _lsof_binds,
+    _netstat_binds,
 )
 from office_v2_crewai.sandbox import (  # noqa: E402
     FORBIDDEN_ENV,
@@ -85,8 +88,10 @@ from office_v2_crewai.runner import (  # noqa: E402
     record_exception,
 )
 from office_v2_crewai.usage_guard import (  # noqa: E402
+    DARWIN_LSOF,
     DRIFT_FORBIDDEN_MODULES,
     LEFTOVER_RELS,
+    WINDOWS_NETSTAT,
     UsageRefusal,
     _PS_OBSERVE,
     assert_built_crew,
@@ -565,6 +570,101 @@ def check_provider() -> None:
             fail("wrong OLLAMA_HOST reached the network: %s" % exc)
     else:
         fail("wrong OLLAMA_HOST was accepted")
+    check_model_redirect(provider)
+
+
+def check_model_redirect(provider: LocalOllamaProvider) -> None:
+    """A 307 from loopback to a non-loopback URL is refused with no second request."""
+    import socket
+    import threading
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+    import urllib.request as urlrequest
+    import office_v2_crewai.provider as provider_mod
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.server.hits += 1
+            if self.path.startswith("/ok"):
+                body = b'{"ok": true}'
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+                return
+            self.send_response(307)
+            self.send_header("Location", "http://203.0.113.5/not-loopback")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+
+        def do_POST(self):
+            self.do_GET()
+
+        def log_message(self, _fmt, *_args):
+            return
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    server.hits = 0
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    allowed = server.server_address
+    foreign = []
+    real_connect = socket.create_connection
+
+    def guarded(address, *args, **kwargs):
+        host = address[0]
+        port = address[1] if len(address) > 1 else None
+        if (host, port) != (allowed[0], allowed[1]):
+            foreign.append(address)
+            raise OSError("second hop refused")
+        return real_connect(address, *args, **kwargs)
+
+    socket.create_connection = guarded
+    try:
+        ok_url = "http://%s:%d/ok" % (allowed[0], allowed[1])
+        opened = open_loopback(urlrequest.Request(ok_url, method="GET"), timeout=5)
+        try:
+            if opened.read() != b'{"ok": true}':
+                fail("loopback opener did not return the local body")
+        finally:
+            opened.close()
+        before = server.hits
+        target = "http://%s:%d/api/tags" % (allowed[0], allowed[1])
+        try:
+            open_loopback(urlrequest.Request(target, method="GET"), timeout=5)
+        except ProviderRefusal as exc:
+            if str(exc) != "MODEL_REDIRECT_REFUSED":
+                fail("redirect refused as %s" % exc)
+        else:
+            fail("307 to a non-loopback URL was followed")
+        if server.hits != before + 1 or foreign:
+            fail("redirect made another request: hits=%s foreign=%s" % (server.hits, foreign))
+    finally:
+        socket.create_connection = real_connect
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=5)
+    seen = []
+
+    def boom(request, timeout=30):
+        seen.append(getattr(request, "full_url", ""))
+        raise ProviderRefusal("MODEL_REDIRECT_REFUSED")
+
+    original = provider_mod.open_loopback
+    provider_mod.open_loopback = boom
+    try:
+        provider.complete(
+            "hello",
+            env=model_env(),
+            binds=[{"address": "127.0.0.1", "port": 11435}],
+        )
+    except ProviderRefusal as exc:
+        if str(exc) != "MODEL_REDIRECT_REFUSED" or len(seen) != 1 or not str(seen[0]).endswith("/api/tags"):
+            fail("complete did not use the redirect-refusing opener: %s %s" % (exc, seen))
+    else:
+        fail("complete ignored the redirect refusal")
+    finally:
+        provider_mod.open_loopback = original
 
 
 def check_kill() -> None:
@@ -1261,6 +1361,8 @@ def check_listeners() -> None:
     _expect_usage(lambda: count_listening_sockets(10, platform="freebsd"), "PILOT_LISTENER_UNPROVEN")
     if ".ToArray()" not in _PS_OBSERVE:
         fail("PowerShell listener script does not call ToArray")
+    if WINDOWS_NETSTAT not in _PS_OBSERVE or "& netstat.exe" in _PS_OBSERVE:
+        fail("PowerShell listener script still resolves netstat from PATH")
     for wrapped in ("@($processes)", "@($tcp)", "@($udp)"):
         if wrapped in _PS_OBSERVE:
             fail("PowerShell listener script still wraps %s" % wrapped)
@@ -1781,7 +1883,6 @@ def check_review_mutations() -> None:
 
         import office_v2_crewai.crew_build as crew_mod
         import office_v2_crewai.provider as provider_mod
-        import urllib.request as urlrequest
 
         def fake_build(provider, env, sandbox_root=SANDBOX_ROOT, harness=None, started=None, binds=None):
             class _Crew:
@@ -1792,7 +1893,7 @@ def check_review_mutations() -> None:
 
         original_build = crew_mod.build_crew
         original_collect = provider_mod.collect_ollama_binds
-        original_open = urlrequest.urlopen
+        original_open = provider_mod.open_loopback
         crew_mod.build_crew = fake_build
 
         def observe_default():
@@ -1800,7 +1901,7 @@ def check_review_mutations() -> None:
 
         provider_mod.collect_ollama_binds = observe_default
         saved_env = dict(os.environ)
-        urlrequest.urlopen = stub_open
+        provider_mod.open_loopback = stub_open
         os.environ.clear()
         ready = passing_env()
         ready["OLLAMA_NO_CLOUD"] = "1"
@@ -1815,7 +1916,7 @@ def check_review_mutations() -> None:
         finally:
             crew_mod.build_crew = original_build
             provider_mod.collect_ollama_binds = original_collect
-            urlrequest.urlopen = original_open
+            provider_mod.open_loopback = original_open
             os.environ.clear()
             os.environ.update(saved_env)
         receipt = json.loads((out / "attempt-receipt.json").read_text(encoding="utf-8"))
@@ -1854,7 +1955,6 @@ def check_exit_contract() -> None:
         import office_v2_crewai.provider as provider_mod
         import office_v2_crewai.runner as runner_mod
         import office_v2_crewai.usage_guard as usage_mod
-        import urllib.request as urlrequest
 
         def observe():
             return [{"address": "127.0.0.1", "port": 11435}]
@@ -1894,28 +1994,30 @@ def check_exit_contract() -> None:
         original = (
             crew_mod.build_crew,
             provider_mod.collect_ollama_binds,
-            urlrequest.urlopen,
+            provider_mod.open_loopback,
             runner_mod.save_kickoff_output,
             usage_mod.assert_trace_consent,
         )
         saved_env = dict(os.environ)
         saved_platform = sys.platform
+        saved_lsof = usage_mod.DARWIN_LSOF
         try:
             synthetic_passing_bundle(parent)
             crew_mod.build_crew = fake_build
             provider_mod.collect_ollama_binds = observe
-            urlrequest.urlopen = stub_open
+            provider_mod.open_loopback = stub_open
             runner_mod.save_kickoff_output = fake_save
             usage_mod.assert_trace_consent = consent
             os.environ.clear()
             ready = passing_env()
             ready["OLLAMA_NO_CLOUD"] = "1"
-            # passing_env has no PATH. macOS lsof is in /usr/sbin, and a missing
-            # PATH makes subprocess use os.defpath (/bin:/usr/bin).
+            # Listener proof uses /usr/sbin/lsof, not PATH. The positive fixture
+            # still sets a normal PATH for the rest of the process.
             ready["PATH"] = "/usr/sbin:/usr/bin:/bin" if path is None else path
             os.environ.update(ready)
             out = parent / "out"
             if force_darwin:
+                usage_mod.DARWIN_LSOF = str(Path(path) / "trusted-lsof-absent")
                 sys.platform = "darwin"
                 try:
                     count_listening_sockets(os.getpid(), platform="darwin")
@@ -1937,10 +2039,11 @@ def check_exit_contract() -> None:
             (
                 crew_mod.build_crew,
                 provider_mod.collect_ollama_binds,
-                urlrequest.urlopen,
+                provider_mod.open_loopback,
                 runner_mod.save_kickoff_output,
                 usage_mod.assert_trace_consent,
             ) = original
+            usage_mod.DARWIN_LSOF = saved_lsof
             sys.platform = saved_platform
             os.environ.clear()
             os.environ.update(saved_env)
@@ -1985,12 +2088,114 @@ def check_exit_contract() -> None:
     finally:
         shutil.rmtree(blocked, ignore_errors=True)
     barren = Path(tempfile.mkdtemp(prefix="crewai-nolsof-"))
+    marker = barren / "fake-lsof-ran"
+    fake = barren / "lsof"
+    fake.write_text(
+        "#!/usr/bin/env python3\n"
+        "from pathlib import Path\n"
+        "Path(%r).write_text('ran', encoding='ascii')\n"
+        "raise SystemExit(1)\n" % str(marker),
+        encoding="ascii",
+        newline="\n",
+    )
+    fake.chmod(0o755)
+    (barren / "lsof.cmd").write_text(
+        "@echo off\nbreak>\"%s\"\nexit /b 1\n" % marker,
+        encoding="ascii",
+        newline="\n",
+    )
     try:
         missing, missing_receipt, _post = run(cited, True, path=str(barren), force_darwin=True)
+        fake_ran = marker.exists()
     finally:
         shutil.rmtree(barren, ignore_errors=True)
+    if fake_ran:
+        fail("fake lsof on PATH was executed during the exit-contract refusal")
     if missing == 0 or missing_receipt["identity"].get("reason") != "PILOT_LISTENER_UNPROVEN":
         fail("missing lsof returned %s (%s)" % (missing, missing_receipt["identity"].get("reason")))
+
+
+def check_trusted_listener_binaries() -> None:
+    """A fake lsof or netstat earlier on PATH must not be treated as proof."""
+    import office_v2_crewai.usage_guard as usage_mod
+
+    directory = Path(tempfile.mkdtemp(prefix="crewai-fake-listener-"))
+    lsof_marker = directory / "lsof-ran"
+    netstat_marker = directory / "netstat-ran"
+    lsof_body = (
+        "#!/usr/bin/env python3\n"
+        "from pathlib import Path\n"
+        "Path(%r).write_text('ran', encoding='ascii')\n"
+        "raise SystemExit(1)\n" % str(lsof_marker)
+    )
+    netstat_text = (
+        "Active Connections\n\n"
+        "  Proto  Local Address          Foreign Address        State           PID\n"
+        "  TCP    127.0.0.1:11435        0.0.0.0:0              LISTENING       1\n"
+    )
+    netstat_body = (
+        "#!/usr/bin/env python3\n"
+        "from pathlib import Path\n"
+        "import sys\n"
+        "Path(%r).write_text('ran', encoding='ascii')\n"
+        "sys.stdout.write(%r)\n" % (str(netstat_marker), netstat_text)
+    )
+    (directory / "lsof").write_text(lsof_body, encoding="ascii", newline="\n")
+    (directory / "netstat").write_text(netstat_body, encoding="ascii", newline="\n")
+    (directory / "lsof").chmod(0o755)
+    (directory / "netstat").chmod(0o755)
+    (directory / "lsof.cmd").write_text(
+        "@echo off\nbreak>\"%s\"\nexit /b 1\n" % lsof_marker,
+        encoding="ascii",
+        newline="\n",
+    )
+    (directory / "netstat.cmd").write_text(
+        "@echo off\nbreak>\"%s\"\n" % netstat_marker
+        + "echo Active Connections\n"
+        + "echo   TCP    127.0.0.1:11435        0.0.0.0:0              LISTENING       1\n"
+        + "exit /b 0\n",
+        encoding="ascii",
+        newline="\n",
+    )
+    saved_path = os.environ.get("PATH")
+    os.environ["PATH"] = str(directory) + os.pathsep + (saved_path or "")
+    try:
+        try:
+            observed = count_listening_sockets(os.getpid(), platform="darwin")
+        except UsageRefusal as exc:
+            if str(exc) != "PILOT_LISTENER_UNPROVEN":
+                fail("fake lsof refused as %s" % exc)
+            observed = None
+        if lsof_marker.exists():
+            fail("fake lsof earlier on PATH was executed")
+        if observed == 0 and not os.path.isfile(DARWIN_LSOF):
+            fail("a fake lsof that prints nothing was trusted as zero listeners")
+        try:
+            lsof_rows = _lsof_binds(11435)
+        except ProviderRefusal as exc:
+            if str(exc) != "OLLAMA_BIND_UNPROVEN":
+                fail("provider lsof refused as %s" % exc)
+            lsof_rows = None
+        if lsof_marker.exists():
+            fail("provider trusted a fake lsof on PATH")
+        if lsof_rows == [] and not os.path.isfile(usage_mod.DARWIN_LSOF):
+            fail("provider treated a missing trusted lsof as an empty bind set")
+        try:
+            netstat_rows = _netstat_binds(11435)
+        except ProviderRefusal as exc:
+            if str(exc) != "OLLAMA_BIND_UNPROVEN":
+                fail("provider netstat refused as %s" % exc)
+            netstat_rows = None
+        if netstat_marker.exists():
+            fail("fake netstat earlier on PATH was executed")
+        if netstat_rows == [{"address": "127.0.0.1", "port": 11435}] and not os.path.isfile(WINDOWS_NETSTAT):
+            fail("fake netstat output was trusted as a loopback bind")
+    finally:
+        if saved_path is None:
+            os.environ.pop("PATH", None)
+        else:
+            os.environ["PATH"] = saved_path
+        shutil.rmtree(directory, ignore_errors=True)
 
 
 def check_evidence_eol() -> None:
@@ -2042,6 +2247,7 @@ def main() -> int:
     check_kill()
     check_execute()
     check_listeners()
+    check_trusted_listener_binaries()
     check_run_record()
     check_ast()
     check_hardening()

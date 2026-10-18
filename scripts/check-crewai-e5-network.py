@@ -216,7 +216,13 @@ def main() -> int:
         "C:\\Velvet\\Pilots\\OfficeV2-VerifiedTrio",
         "OfficeV2-VerifiedTrio",
         "",
+        " " + root,
+        root + " ",
+        "\t" + root,
+        root + "\n",
     )
+    if normalize_pilot_path(" " + root) is not None or normalize_pilot_path(root + " ") is not None:
+        errors.append("padded pilot path was admitted by strip")
     if any(not pilot_path_admitted(path) for path in admitted):
         errors.append("exact pilot root or a child directory was rejected")
     if any(pilot_path_admitted(path) for path in rejected):

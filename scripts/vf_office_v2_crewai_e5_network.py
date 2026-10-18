@@ -23,10 +23,16 @@ PILOT_STAGE_ROOT = "D:\\Velvet\\Pilots\\OfficeV2-VerifiedTrio"
 
 
 def normalize_pilot_path(path: str) -> str | None:
-    """Lexical D: full path. Resolves '.' and '..'. Does not touch the filesystem."""
+    """Lexical D: full path. Resolves '.' and '..'. Does not touch the filesystem.
+
+    Surrounding whitespace is not a rooted path. Stripping it would admit a
+    padded string that is not the pilot root.
+    """
     if not isinstance(path, str):
         return None
-    text = path.replace("/", "\\").strip()
+    text = path.replace("/", "\\")
+    if text != text.strip():
+        return None
     if len(text) < 3 or text[1] != ":" or text[0] not in "Dd" or text[2] != "\\":
         return None
     parts: list[str] = []

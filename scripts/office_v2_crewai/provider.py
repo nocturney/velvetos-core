@@ -342,13 +342,15 @@ def _platform_ollama_binds(port: int) -> list:
 def _lsof_binds(port: int) -> list:
     import subprocess
 
+    from office_v2_crewai.usage_guard import run_trusted_listener, trusted_listener_binary
+
+    binary = trusted_listener_binary("lsof", "darwin")
+    if binary is None:
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
     try:
-        proc = subprocess.run(
-            ["lsof", "-nP", "-iTCP:%s" % port, "-sTCP:LISTEN"],
-            capture_output=True,
-            text=True,
-            timeout=30,
-            check=False,
+        proc = run_trusted_listener(
+            binary,
+            [binary, "-nP", "-iTCP:%s" % port, "-sTCP:LISTEN"],
         )
     except (OSError, subprocess.SubprocessError) as exc:
         raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
@@ -362,14 +364,13 @@ def _lsof_binds(port: int) -> list:
 def _netstat_binds(port: int) -> list:
     import subprocess
 
+    from office_v2_crewai.usage_guard import run_trusted_listener, trusted_listener_binary
+
+    binary = trusted_listener_binary("netstat", "win32")
+    if binary is None:
+        raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
     try:
-        proc = subprocess.run(
-            ["netstat", "-ano"],
-            capture_output=True,
-            text=True,
-            timeout=30,
-            check=False,
-        )
+        proc = run_trusted_listener(binary, [binary, "-ano"])
     except (OSError, subprocess.SubprocessError) as exc:
         raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
     if proc.returncode != 0 or "Active Connections" not in (proc.stdout or ""):
@@ -489,8 +490,7 @@ class LocalOllamaProvider:
         assert_ollama_bind(binds)
         base_url = assert_loopback_url(self.config.get("base_url"))
         if urlopen is None:
-            from urllib import request as urlrequest
-            urlopen = urlrequest.urlopen
+            urlopen = open_loopback
         listed = _open_json(urlopen, base_url + "/api/tags", None, timeout)
         if digest_from_tags(listed) != APPROVED_MODEL_DIGEST:
             raise ProviderRefusal("MODEL_DIGEST_MISMATCH")
@@ -551,6 +551,24 @@ def _attempt_timeout(harness, started: float | None, now: float | None) -> float
     from office_v2_crewai.kill_harness import KillHarness
     clock = harness if harness is not None else KillHarness()
     return clock.socket_timeout(started, now)
+
+
+def open_loopback(request, timeout: float = 30):
+    """Open one loopback URL. Redirects are refused, including 301/302/307/308."""
+    from urllib import request as urlrequest
+
+    class _RefuseRedirects(urlrequest.HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg, headers, newurl):
+            raise ProviderRefusal("MODEL_REDIRECT_REFUSED")
+
+    opener = urlrequest.build_opener(_RefuseRedirects, urlrequest.ProxyHandler({}))
+    response = opener.open(request, timeout=timeout)
+    requested = getattr(request, "full_url", None)
+    final = response.geturl()
+    if not isinstance(requested, str) or not requested or final != requested:
+        response.close()
+        raise ProviderRefusal("MODEL_REDIRECT_REFUSED")
+    return response
 
 
 def _open_json(urlopen, target: str, payload: dict | None, timeout: float) -> dict:

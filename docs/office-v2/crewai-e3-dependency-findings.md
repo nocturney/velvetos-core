@@ -169,7 +169,7 @@ outside the interpreter prefix, is refused.
 ## Listener portability
 
 Issue 612 comment 6251194655. On macOS the listener check uses
-`lsof -nP -a -p <pid> -iTCP -sTCP:LISTEN`. A header with no rows, or lsof
+`/usr/sbin/lsof -nP -a -p <pid> -iTCP -sTCP:LISTEN`. A header with no rows, or lsof
 exit 1 with empty stdout and stderr, is a proven zero. A missing `lsof`,
 stderr, or any other status is unproven. Linux still reads `/proc/net/tcp`.
 Anything that is neither Windows, macOS, nor Linux fails closed.
@@ -211,6 +211,20 @@ The E5 collector admits a working directory equal to
 `OfficeV2-VerifiedTrioX` and a `..` path that normalizes outside that
 root stay `OUT_OF_PILOT_ROOT_PATH`. `SANDBOX_ROOT` stays
 `D:\Velvet\Pilots\crewai-e4\sandbox-home`.
+
+## Trusted listener binaries and redirects
+
+Issue 612 / #799 comment 6252628498. Darwin listener proof and the Ollama
+bind check execute `/usr/sbin/lsof`. Windows netstat is
+`C:\Windows\System32\netstat.exe`. `PATH` for that subprocess is only the
+binary's directory. A fake `lsof` earlier on `PATH` is not executed, and a
+missing trusted file is `PILOT_LISTENER_UNPROVEN` (the bind check reports
+`OLLAMA_BIND_UNPROVEN`). Exit 1 with empty output is a proven zero only
+when that output came from the trusted binary.
+
+`open_loopback` refuses every HTTP redirect. A 307 from `127.0.0.1` to a
+non-loopback URL is `MODEL_REDIRECT_REFUSED` and does not open a second
+connection. `normalize_pilot_path` does not strip surrounding whitespace.
 
 ## Lock identity
 
