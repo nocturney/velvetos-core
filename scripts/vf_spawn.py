@@ -182,7 +182,8 @@ def git_revision(token: str) -> str:
     """A revision git must see before ``--``.
 
     Git reads tokens after ``--`` as paths, not revisions. A leading dash is
-    an option, so it is refused before git runs.
+    an option, and a newline, CR, or NUL is an argument break, so both are
+    refused before git runs.
     """
     if (
         not isinstance(token, str)
@@ -208,7 +209,8 @@ def run_git(
 
     ``user_args`` (urls, refspecs, paths) are placed after ``--`` so git does
     not parse them as options. ``revisions`` stay before ``--`` because git
-    would otherwise treat them as paths; ``git_revision`` refuses a leading dash.
+    would otherwise treat them as paths; ``git_revision`` refuses a leading
+    dash and a newline, CR, or NUL.
     """
     if any(not isinstance(arg, str) or arg == "" for arg in args):
         raise SpawnRefusal("GIT_ARGV_REFUSED")
