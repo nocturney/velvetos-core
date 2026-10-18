@@ -1,0 +1,11 @@
+{
+  "task_id": "office604-isolation-cp083-qa-2026-10-18",
+  "component_state": "Blocked",
+  "blocked_on": "OS-enforced least-privilege Worker identity (My Machines / dedicated UID)",
+  "fallback_status": "done",
+  "pr": 755,
+  "head": "f15f00ad208fed3283664bdae731ba98b03354fc",
+  "security_admission": "RED",
+  "worker_pilot_started": false,
+  "updated_utc": "2026-10-18T09:40:00Z"
+}

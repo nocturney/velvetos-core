@@ -98,15 +98,27 @@ def drop(uid):
     return cb
 
 
+def _allowlisted_reply(reply):
+    """Keep only status / snapshot keys; drop unsolicited fields from a verified sink."""
+    if type(reply) is not dict or type(reply.get("status")) is not str:
+        return {"status": "NO_ACK_UNKNOWN"}
+    out = {"status": reply["status"]}
+    for key in ("head", "record", "frozen"):
+        if key in reply:
+            out[key] = reply[key]
+    return out
+
+
 def socket_exchange(root, payload):
     """One bounded response from the verified sink principal; never blind-retry."""
+    # Platform capability gate before connect: non-Linux must not open the socket.
+    if sys.platform != "linux" or not hasattr(socket, "SO_PEERCRED"):
+        return {"status": "NO_ACK_UNKNOWN"}
     sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     sock.settimeout(3.5)
     try:
         sock.connect(str(Path(root) / "endpoint" / "sink.sock"))
         # Verify the server's *kernel* identity, not a user-supplied JSON claim.
-        if sys.platform != "linux" or not hasattr(socket, "SO_PEERCRED"):
-            return {"status": "NO_ACK_UNKNOWN"}
         peer_uid = struct.unpack("3i", sock.getsockopt(
             socket.SOL_SOCKET, socket.SO_PEERCRED, 12))[1]
         if peer_uid != SINK_UID:
@@ -126,9 +138,7 @@ def socket_exchange(root, payload):
         if not buffer or len(buffer) > MAX_MESSAGE or b"\n" not in buffer:
             return {"status": "NO_ACK_UNKNOWN"}
         reply = json.loads(bytes(buffer.split(b"\n", 1)[0]))
-        if type(reply) is not dict or type(reply.get("status")) is not str:
-            return {"status": "NO_ACK_UNKNOWN"}
-        return reply
+        return _allowlisted_reply(reply)
     except (OSError, ValueError, TypeError, struct.error):
         return {"status": "NO_ACK_UNKNOWN"}
     finally:
