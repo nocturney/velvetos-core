@@ -116,6 +116,22 @@ class FakeFfmpeg:
         return self.log.read_text(encoding="utf-8")
 
 
+@contextlib.contextmanager
+def github_actions(value: str | None):
+    old = os.environ.get("GITHUB_ACTIONS")
+    if value is None:
+        os.environ.pop("GITHUB_ACTIONS", None)
+    else:
+        os.environ["GITHUB_ACTIONS"] = value
+    try:
+        yield
+    finally:
+        if old is None:
+            os.environ.pop("GITHUB_ACTIONS", None)
+        else:
+            os.environ["GITHUB_ACTIONS"] = old
+
+
 class EmptyPath:
     def __enter__(self) -> Path:
         self._old = os.environ.get("PATH", "")
@@ -228,7 +244,7 @@ class FfmpegCapabilityTests(unittest.TestCase):
 
     def test_video_sensor_skips_when_ffmpeg_is_missing(self) -> None:
         module = _load("check-video-normalization.py")
-        with EmptyPath():
+        with github_actions(None), EmptyPath():
             stdout = io.StringIO()
             with contextlib.redirect_stdout(stdout):
                 with self.assertRaises(unittest.SkipTest) as caught:
@@ -241,13 +257,33 @@ class FfmpegCapabilityTests(unittest.TestCase):
         case = module.EvidenceTests("test_public_mp4_requires_hash_bound_normalization")
         case.setUp()
         try:
-            with EmptyPath():
+            with github_actions(None), EmptyPath():
                 stdout = io.StringIO()
                 with contextlib.redirect_stdout(stdout):
                     with self.assertRaises(unittest.SkipTest) as caught:
                         case.test_public_mp4_requires_hash_bound_normalization()
             self.assertIn("SKIP_ENV_MISSING_FFMPEG", str(caught.exception))
             self.assertIn("SKIP_ENV_MISSING_FFMPEG", stdout.getvalue())
+        finally:
+            case.doCleanups()
+
+    def test_github_actions_fails_video_privacy_skip(self) -> None:
+        module = _load("check-video-normalization.py")
+        with github_actions("true"), EmptyPath():
+            with self.assertRaises(RuntimeError) as caught:
+                module.VideoNormalizationTests.setUpClass()
+        self.assertIn("SKIP_ENV_MISSING_FFMPEG", str(caught.exception))
+        self.assertNotIsInstance(caught.exception, unittest.SkipTest)
+
+    def test_github_actions_fails_public_video_skip(self) -> None:
+        module = _load("check-publication-evidence.py")
+        case = module.EvidenceTests("test_public_mp4_requires_hash_bound_normalization")
+        case.setUp()
+        try:
+            with github_actions("true"), EmptyPath():
+                with self.assertRaises(AssertionError) as caught:
+                    case.test_public_mp4_requires_hash_bound_normalization()
+            self.assertIn("SKIP_ENV_MISSING_FFMPEG", str(caught.exception))
         finally:
             case.doCleanups()
 

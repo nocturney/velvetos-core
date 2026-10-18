@@ -8,7 +8,8 @@
     "CLAIM on #612 comment 6252092330",
     "Local probe uses ffmpeg -filters, -buildconf, and -encoders",
     "Missing fribidi, libass, drawtext, sidedata, or the ffmpeg binary skips",
-    "A fake ffmpeg that advertises every capability and then refuses the render still fails the bidi self-test"
+    "A fake ffmpeg that advertises every capability and then refuses the render still fails the bidi self-test",
+    "GITHUB_ACTIONS=true turns a video-privacy or public-video SKIP_ENV_MISSING into a failure"
   ],
   "next_step": "Independent QA after hosted check-all is green.",
   "artifacts": [

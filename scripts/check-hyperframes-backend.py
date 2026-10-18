@@ -232,9 +232,21 @@ def main() -> None:
         "-buildconf",
         "FRIBIDI",
         "LIBASS",
+        "GITHUB_ACTIONS",
+        "ci_skip_failure",
     )
-    contains(ROOT / "scripts" / "check-video-normalization.py", "normalization_gap", "SkipTest")
-    contains(ROOT / "scripts" / "check-publication-evidence.py", "publication_gap", "skipTest")
+    contains(
+        ROOT / "scripts" / "check-video-normalization.py",
+        "normalization_gap",
+        "ci_skip_failure",
+        "SkipTest",
+    )
+    contains(
+        ROOT / "scripts" / "check-publication-evidence.py",
+        "publication_gap",
+        "ci_skip_failure",
+        "skipTest",
+    )
     if "version mismatch: required" in bridge or re.search(r"(?m)^HYPERFRAMES_VERSION\s*=", bridge):
         fail("bridge must not exact-pin normal HyperFrames execution")
     if "npx" in bridge or "shell=True" in bridge:

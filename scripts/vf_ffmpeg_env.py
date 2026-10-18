@@ -8,6 +8,7 @@ capability and then produces the wrong pixels is not a skip.
 """
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 from dataclasses import dataclass
@@ -33,6 +34,17 @@ class _ProbeError(Exception):
 
 def _gap(cap: str, reason: str) -> EnvGap:
     return EnvGap(f"SKIP_ENV_MISSING_{cap}", reason)
+
+
+def ci_skip_failure(gap: EnvGap | None) -> str | None:
+    """GitHub Actions must run the video-privacy and public-video tests.
+
+    A local host may skip. When GITHUB_ACTIONS=true the same gap is a failure
+    line, so a missing ffmpeg cannot pass those sensors silently.
+    """
+    if gap is not None and os.environ.get("GITHUB_ACTIONS") == "true":
+        return gap.line
+    return None
 
 
 def _run(binary: str, flag: str) -> str:

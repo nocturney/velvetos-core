@@ -397,6 +397,9 @@ class EvidenceTests(unittest.TestCase):
         import subprocess
         import vf_ffmpeg_env
         gap = vf_ffmpeg_env.publication_gap()
+        blocked = vf_ffmpeg_env.ci_skip_failure(gap)
+        if blocked:
+            self.fail(blocked)
         if gap is not None:
             print(gap.line, flush=True)
             self.skipTest(gap.line)
@@ -413,6 +416,9 @@ class EvidenceTests(unittest.TestCase):
         import vf_ffmpeg_env
         import vf_publish_bridge as bridge
         gap = vf_ffmpeg_env.publication_gap()
+        blocked = vf_ffmpeg_env.ci_skip_failure(gap)
+        if blocked:
+            self.fail(blocked)
         if gap is not None:
             print(gap.line, flush=True)
             self.skipTest(gap.line)

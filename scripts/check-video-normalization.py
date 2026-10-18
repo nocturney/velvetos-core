@@ -35,6 +35,9 @@ class VideoNormalizationTests(unittest.TestCase):
         import vf_ffmpeg_env
 
         gap = vf_ffmpeg_env.normalization_gap()
+        blocked = vf_ffmpeg_env.ci_skip_failure(gap)
+        if blocked:
+            raise RuntimeError(blocked)
         if gap is not None:
             print(gap.line, flush=True)
             raise unittest.SkipTest(gap.line)

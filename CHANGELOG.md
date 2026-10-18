@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- 2026-10-18 - **ffmpeg capability skip:** hyperframes, video normalization, and publication evidence report `SKIP_ENV_MISSING_<CAP>` when local `ffmpeg -filters` or `ffmpeg -buildconf` lacks a required filter or library. The probe stays on the binary already on PATH. A render whose pixels do not match still fails.
+- 2026-10-18 - **ffmpeg capability skip:** hyperframes, video normalization, and publication evidence report `SKIP_ENV_MISSING_<CAP>` when local `ffmpeg -filters` or `ffmpeg -buildconf` lacks a required filter or library. The probe stays on the binary already on PATH. A render whose pixels do not match still fails. On GitHub Actions, that skip in the video-privacy and public-video normalization tests fails the run.
 
 - 2026-10-18 - **CP057 exact receipt boundary:** a receipt sha followed by a letter or digit is not an exact citation. A prefix impostor reports `ACCEPTED_RECEIPT_SHA_MISMATCH` even when another sha is unknown. `DRAFT_DIGEST_SHA256` and `ATTEMPT6_SOURCE_SHA256` name the two PIN-note shas that were previously bare literals; a note edit that does not update that list fails by naming the sha. `runtimeAuthority` and `activationAllowed` stay false.
 
