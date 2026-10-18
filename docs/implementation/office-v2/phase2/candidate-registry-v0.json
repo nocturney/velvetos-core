@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-16T10:30:00+03:00",
+  "updated_at": "2026-10-18T09:16:56+03:00",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 152,
+  "candidate_count": 213,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -6750,6 +6750,3361 @@
         "evidence_refs": [
           "https://github.com/GoogleChrome/rendertron",
           "docs/implementation/office-v2/phase2/browser-automation-intake-2026-10-16.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-agent-substrate-substrate",
+      "source_item_id": null,
+      "name": "agent-substrate/substrate",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/agent-substrate/substrate",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6058474027"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/agent-substrate/substrate",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-astro-han-karpathy-llm-wiki",
+      "source_item_id": null,
+      "name": "astro-han/karpathy-llm-wiki",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/astro-han/karpathy-llm-wiki",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6087353611"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/astro-han/karpathy-llm-wiki",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-backnotprop-pstack",
+      "source_item_id": null,
+      "name": "backnotprop/pstack",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/backnotprop/pstack",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6087353611"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/backnotprop/pstack",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-badlogic-pi-mono",
+      "source_item_id": null,
+      "name": "badlogic/pi-mono",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/badlogic/pi-mono",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6059021722"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/badlogic/pi-mono",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-bbuf-ai-infra-auto-driven-skills",
+      "source_item_id": null,
+      "name": "bbuf/ai-infra-auto-driven-skills",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/bbuf/ai-infra-auto-driven-skills",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6087353611"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/bbuf/ai-infra-auto-driven-skills",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-berriai-litellm",
+      "source_item_id": null,
+      "name": "berriai/litellm",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/berriai/litellm",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6087353611"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/berriai/litellm",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-cactus-compute-cactus",
+      "source_item_id": null,
+      "name": "cactus-compute/cactus",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/cactus-compute/cactus",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6170725513"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/cactus-compute/cactus",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-cactus-compute-needle",
+      "source_item_id": null,
+      "name": "cactus-compute/needle",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/cactus-compute/needle",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6170725513"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/cactus-compute/needle",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-cbrock84-headcount",
+      "source_item_id": null,
+      "name": "cbrock84/headcount",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/cbrock84/headcount",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6079970652"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/cbrock84/headcount",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-charlie947-social-media-skills",
+      "source_item_id": null,
+      "name": "charlie947/social-media-skills",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/charlie947/social-media-skills",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6079970652"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/charlie947/social-media-skills",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-collabs-inc-collab-public",
+      "source_item_id": null,
+      "name": "collabs-inc/collab-public",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/collabs-inc/collab-public",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6079970652"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/collabs-inc/collab-public",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-ctate-3d-model-generator",
+      "source_item_id": null,
+      "name": "ctate/3d-model-generator",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/ctate/3d-model-generator",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6087353611"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/ctate/3d-model-generator",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-dagger-container-use",
+      "source_item_id": null,
+      "name": "dagger/container-use",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/dagger/container-use",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6059021722"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/dagger/container-use",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-danielhanchen-llama-cpp",
+      "source_item_id": null,
+      "name": "danielhanchen/llama.cpp",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/danielhanchen/llama.cpp",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6087353611"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/danielhanchen/llama.cpp",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-dbos-inc-dbos-transact-py",
+      "source_item_id": null,
+      "name": "dbos-inc/dbos-transact-py",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/dbos-inc/dbos-transact-py",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: docs/implementation/office-v2/phase3/durable-execution-admission-v0.json"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/dbos-inc/dbos-transact-py",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-debpalash-voicestudio",
+      "source_item_id": null,
+      "name": "debpalash/voicestudio",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/debpalash/voicestudio",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6079970652"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/debpalash/voicestudio",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-deusdata-codebase-memory-mcp",
+      "source_item_id": null,
+      "name": "deusdata/codebase-memory-mcp",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/deusdata/codebase-memory-mcp",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6087353611"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/deusdata/codebase-memory-mcp",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-edge0-ai-audio8-tts",
+      "source_item_id": null,
+      "name": "edge0-ai/audio8_tts",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/edge0-ai/audio8_tts",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6200705502"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/edge0-ai/audio8_tts",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-emdgroup-maestro",
+      "source_item_id": null,
+      "name": "emdgroup/maestro",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/emdgroup/maestro",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6059021722"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/emdgroup/maestro",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-emilk-egui",
+      "source_item_id": null,
+      "name": "emilk/egui",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/emilk/egui",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6087353611"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/emilk/egui",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-etcd-io-etcd",
+      "source_item_id": null,
+      "name": "etcd-io/etcd",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/etcd-io/etcd",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6197554566"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/etcd-io/etcd",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-fishaudio-fish-speech",
+      "source_item_id": null,
+      "name": "fishaudio/fish-speech",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/fishaudio/fish-speech",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6200573891"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/fishaudio/fish-speech",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-flowiseai-flowise",
+      "source_item_id": null,
+      "name": "flowiseai/flowise",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/flowiseai/flowise",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: docs/implementation/office-v2/phase2/competitor-neutral-backfill-2026-10-08.md"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/flowiseai/flowise",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-gastownhall-gastown",
+      "source_item_id": null,
+      "name": "gastownhall/gastown",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/gastownhall/gastown",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6059021722"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/gastownhall/gastown",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-generalaction-emdash",
+      "source_item_id": null,
+      "name": "generalaction/emdash",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/generalaction/emdash",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6059021722"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/generalaction/emdash",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-getpaseo-paseo",
+      "source_item_id": null,
+      "name": "getpaseo/paseo",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/getpaseo/paseo",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6087353611"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/getpaseo/paseo",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-ggml-org-llama-cpp",
+      "source_item_id": null,
+      "name": "ggml-org/llama.cpp",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/ggml-org/llama.cpp",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6087353611"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/ggml-org/llama.cpp",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-gmh5225-awesome-skills",
+      "source_item_id": null,
+      "name": "gmh5225/awesome-skills",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/gmh5225/awesome-skills",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6079970652"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/gmh5225/awesome-skills",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-hikhakk-higgsfield-mcp-unified",
+      "source_item_id": null,
+      "name": "hikhakk/higgsfield-mcp-unified",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/hikhakk/higgsfield-mcp-unified",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6079970652"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/hikhakk/higgsfield-mcp-unified",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-huginn-huginn",
+      "source_item_id": null,
+      "name": "huginn/huginn",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/huginn/huginn",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: docs/implementation/office-v2/phase2/competitor-neutral-backfill-2026-10-08.md"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/huginn/huginn",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-jayminwest-overstory",
+      "source_item_id": null,
+      "name": "jayminwest/overstory",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/jayminwest/overstory",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6059021722"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/jayminwest/overstory",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-jayminwest-warren",
+      "source_item_id": null,
+      "name": "jayminwest/warren",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/jayminwest/warren",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6059021722"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/jayminwest/warren",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-juspay-neurolink",
+      "source_item_id": null,
+      "name": "juspay/neurolink",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/juspay/neurolink",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6097347101"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/juspay/neurolink",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-justvugg-colibri",
+      "source_item_id": null,
+      "name": "justvugg/colibri",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/justvugg/colibri",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6058474027"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/justvugg/colibri",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-koala73-worldmonitor",
+      "source_item_id": null,
+      "name": "koala73/worldmonitor",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/koala73/worldmonitor",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6087353611"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/koala73/worldmonitor",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-lyogavin-airllm",
+      "source_item_id": null,
+      "name": "lyogavin/airllm",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/lyogavin/airllm",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6147598958"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/lyogavin/airllm",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-mattpocock-skills",
+      "source_item_id": null,
+      "name": "mattpocock/skills",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/mattpocock/skills",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6079970652"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/mattpocock/skills",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-microsoft-conductor",
+      "source_item_id": null,
+      "name": "microsoft/conductor",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/microsoft/conductor",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6059021722"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/microsoft/conductor",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-microsoft-ufo",
+      "source_item_id": null,
+      "name": "microsoft/ufo",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/microsoft/ufo",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: docs/implementation/office-v2/phase2/competitor-neutral-backfill-2026-10-08.md"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/microsoft/ufo",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-mohit67890-imajev",
+      "source_item_id": null,
+      "name": "mohit67890/imajev",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/mohit67890/imajev",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6194091612"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/mohit67890/imajev",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-momo5502-sogen",
+      "source_item_id": null,
+      "name": "momo5502/sogen",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/momo5502/sogen",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6087353611"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/momo5502/sogen",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-multica-ai-andrej-karpathy-skills",
+      "source_item_id": null,
+      "name": "multica-ai/andrej-karpathy-skills",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/multica-ai/andrej-karpathy-skills",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6079970652"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/multica-ai/andrej-karpathy-skills",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-odysseus-dev-odysseus",
+      "source_item_id": null,
+      "name": "odysseus-dev/odysseus",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/odysseus-dev/odysseus",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6064551217"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/odysseus-dev/odysseus",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-omercnet-awesome-paseo-plugins",
+      "source_item_id": null,
+      "name": "omercnet/awesome-paseo-plugins",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/omercnet/awesome-paseo-plugins",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6087353611"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/omercnet/awesome-paseo-plugins",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-openai-symphony",
+      "source_item_id": null,
+      "name": "openai/symphony",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/openai/symphony",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6059021722"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/openai/symphony",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-openinterpreter-open-interpreter",
+      "source_item_id": null,
+      "name": "openinterpreter/open-interpreter",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/openinterpreter/open-interpreter",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: docs/implementation/office-v2/phase2/competitor-neutral-backfill-2026-10-08.md"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/openinterpreter/open-interpreter",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-raine-workmux",
+      "source_item_id": null,
+      "name": "raine/workmux",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/raine/workmux",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6059021722"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/raine/workmux",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-restatedev-restate",
+      "source_item_id": null,
+      "name": "restatedev/restate",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/restatedev/restate",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: docs/implementation/office-v2/phase2/ready-made-fleet-placement-2026-10-08.md"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/restatedev/restate",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-saladday-cc-switch-cli",
+      "source_item_id": null,
+      "name": "saladday/cc-switch-cli",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/saladday/cc-switch-cli",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6087353611"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/saladday/cc-switch-cli",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-superset-sh-superset",
+      "source_item_id": null,
+      "name": "superset-sh/superset",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/superset-sh/superset",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: docs/implementation/office-v2/phase2/competitor-neutral-backfill-2026-10-08.md"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/superset-sh/superset",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-tashfeenahmed-freellmapi",
+      "source_item_id": null,
+      "name": "tashfeenahmed/freellmapi",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/tashfeenahmed/freellmapi",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6058474027"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/tashfeenahmed/freellmapi",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-tejashmakwana-motionmaxxing",
+      "source_item_id": null,
+      "name": "tejashmakwana/motionmaxxing",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/tejashmakwana/motionmaxxing",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6193915709"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/tejashmakwana/motionmaxxing",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-temporalio-cli",
+      "source_item_id": null,
+      "name": "temporalio/cli",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/temporalio/cli",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: docs/implementation/office-v2/phase3/durable-execution-admission-v0.json"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/temporalio/cli",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-temporalio-temporal",
+      "source_item_id": null,
+      "name": "temporalio/temporal",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/temporalio/temporal",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: docs/implementation/office-v2/phase3/durable-execution-admission-v0.json"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/temporalio/temporal",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-tencentcloud-octop-memory",
+      "source_item_id": null,
+      "name": "tencentcloud/octop-memory",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/tencentcloud/octop-memory",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6058355944"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/tencentcloud/octop-memory",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-tester-army-e2e",
+      "source_item_id": null,
+      "name": "tester-army/e2e",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/tester-army/e2e",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6058474027"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/tester-army/e2e",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-tigerless-labs-autoharness",
+      "source_item_id": null,
+      "name": "tigerless-labs/autoharness",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/tigerless-labs/autoharness",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6079970652"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/tigerless-labs/autoharness",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-tinhtran24-maestro",
+      "source_item_id": null,
+      "name": "tinhtran24/maestro",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/tinhtran24/maestro",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6059021722"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/tinhtran24/maestro",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-tmchow-illo-skill",
+      "source_item_id": null,
+      "name": "tmchow/illo-skill",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/tmchow/illo-skill",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6087353611"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/tmchow/illo-skill",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-wheresryan22-anatomy",
+      "source_item_id": null,
+      "name": "wheresryan22/anatomy",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/wheresryan22/anatomy",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6153577886"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/wheresryan22/anatomy",
+          "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-yetone-magpie",
+      "source_item_id": null,
+      "name": "yetone/magpie",
+      "category": "UNTRIAGED_REPO_INTAKE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "DISCOVERED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Recorded by durable link intake; not yet source-reviewed. No capability, rights or runtime claim is made.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "untriaged"
+      ],
+      "platform_constraints": [
+        "Do not install, run or grant credentials until source review and admission gates pass."
+      ],
+      "shortlist_lanes": [
+        "repo-link-intake-triage"
+      ],
+      "evidence_refs": [
+        "https://github.com/yetone/magpie",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "historical-sweep #595 AC1; source: https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6087353611"
+      ],
+      "notes": [
+        "Intake into the existing registry only; no installation, credential grant, scheduler, network exposure or production effect."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "rationale": "Incoming link preserved for competitor-neutral comparison; replacement scope is undetermined until source review.",
+        "decision_evidence_refs": []
+      },
+      "evaluation_route": {
+        "workstream": "repo-link-intake-triage",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source and capability evaluation",
+        "status": "NEEDS_SOURCE_REVIEW",
+        "next_gate": "Source review: read upstream README/license/release state, map to an existing Phase 2 lane or record an evidence-backed defer/reject; no install or runtime.",
+        "unlock_condition": "Source review recorded with evidence, lane assigned or evidence-backed exit verdict; admission gates unchanged.",
+        "evidence_refs": [
+          "https://github.com/yetone/magpie",
+          "https://github.com/nocturney/velvetos-core/issues/595"
         ]
       }
     }
