@@ -44,34 +44,17 @@ DARWIN_NETSTAT = "/usr/bin/netstat"
 WINDOWS_NETSTAT = "C:\\Windows\\System32\\netstat.exe"
 WINDOWS_POWERSHELL = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
 WINDOWS_LISTENER_PATH = "C:\\Windows\\System32;C:\\Windows\\System32\\WindowsPowerShell\\v1.0"
-_PS_OBSERVE = (
+# Pid and parent pid only. Digits stay ASCII, so the console code page cannot
+# turn the process list into unparseable JSON.
+_PS_PROCESSES = (
     "$ErrorActionPreference = 'Stop'\n"
-    "$processes = New-Object System.Collections.Generic.List[object]\n"
-    "foreach ($row in @(Get-CimInstance -ClassName Win32_Process -ErrorAction Stop)) {\n"
-    "  $processes.Add(@{ pid = [int]$row.ProcessId; ppid = [int]$row.ParentProcessId })\n"
+    # PowerShell 5.1 writes UTF-16 to a pipe unless OutputEncoding is set.
+    # UTF-16 in a text capture is not a pid list, so the proof would stay unproven.
+    "$OutputEncoding = [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding $false\n"
+    "Get-CimInstance -ClassName Win32_Process -Property ProcessId,ParentProcessId | ForEach-Object {\n"
+    "  '{0} {1}' -f [int]$_.ProcessId, [int]$_.ParentProcessId\n"
     "}\n"
-    "$tcp = New-Object System.Collections.Generic.List[object]\n"
-    "$udp = New-Object System.Collections.Generic.List[object]\n"
-    "$source = 'Get-Net'\n"
-    "try {\n"
-    "  foreach ($connection in @(Get-NetTCPConnection -ErrorAction Stop)) {\n"
-    "    $tcp.Add(@{ pid = [int]$connection.OwningProcess; state = [string]$connection.State })\n"
-    "  }\n"
-    "  foreach ($endpoint in @(Get-NetUDPEndpoint -ErrorAction Stop)) {\n"
-    "    $udp.Add(@{ pid = [int]$endpoint.OwningProcess })\n"
-    "  }\n"
-    "} catch {\n"
-    "  $source = 'netstat'\n"
-    "  $netstat = '%s'\n"
-    "  if (-not (Test-Path -LiteralPath $netstat)) { throw 'NETSTAT_FAILED' }\n"
-    "  $raw = & $netstat -ano | Out-String\n"
-    "  if ($LASTEXITCODE -ne 0 -or -not $raw) { throw 'NETSTAT_FAILED' }\n"
-    "  @{ processes = $processes.ToArray(); netstat = $raw; source = $source } | ConvertTo-Json -Depth 6 -Compress\n"
-    "  exit 0\n"
-    "}\n"
-    "@{ processes = $processes.ToArray(); tcp = $tcp.ToArray(); udp = $udp.ToArray(); source = $source } | "
-    "ConvertTo-Json -Depth 6 -Compress\n"
-) % WINDOWS_NETSTAT
+)
 
 
 class UsageRefusal(RuntimeError):
@@ -633,8 +616,13 @@ def _open_trusted_regular(path: str) -> int:
     flags = os.O_RDONLY
     if hasattr(os, "O_CLOEXEC"):
         flags |= os.O_CLOEXEC
-    if hasattr(os, "O_NOFOLLOW"):
+    # Windows CRT does not implement O_NOFOLLOW. Passing the flag, when a
+    # later Python defines it, makes os.open of netstat.exe fail and every
+    # live proof becomes PILOT_LISTENER_UNPROVEN. Symlinks are refused below.
+    if hasattr(os, "O_NOFOLLOW") and os.name != "nt":
         flags |= os.O_NOFOLLOW
+    if os.name == "nt" and hasattr(os, "O_BINARY"):
+        flags |= os.O_BINARY
     try:
         fd = os.open(path, flags)
     except OSError as exc:
@@ -649,6 +637,11 @@ def _open_trusted_regular(path: str) -> int:
         current = os.stat(path)
         if (info.st_dev, info.st_ino) != (current.st_dev, current.st_ino):
             raise OSError("trusted listener binary missing")
+        if os.name == "nt":
+            final = os.path.normcase(os.path.realpath(path))
+            expected = os.path.normcase(os.path.abspath(path))
+            if final != expected:
+                raise OSError("trusted listener binary missing")
     except OSError:
         os.close(fd)
         raise
@@ -721,28 +714,71 @@ def run_trusted_listener(binary: str, args: list[str], path_value: str | None = 
         os.close(fd)
 
 
-def _windows_observe() -> dict:
-    """Get-NetTCPConnection and Get-NetUDPEndpoint, or netstat -ano. Never guess zero."""
+def parse_process_lines(text: str) -> list:
+    """Parse ``pid ppid`` lines. Empty or non-integer text is unproven."""
+    if not isinstance(text, str) or not text.strip():
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+    rows = []
+    for line in text.splitlines():
+        if not line.strip():
+            continue
+        parts = line.split()
+        if len(parts) != 2:
+            raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+        try:
+            pid = int(parts[0])
+            ppid = int(parts[1])
+        except ValueError as exc:
+            raise UsageRefusal("PILOT_LISTENER_UNPROVEN") from exc
+        rows.append({"pid": pid, "ppid": ppid})
+    if not rows:
+        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+    return rows
+
+
+def _windows_observe(spawn=None) -> dict:
+    """Prove listeners with absolute ``netstat.exe -ano``. Never guess zero.
+
+    The previous observer asked one PowerShell process for every TCP
+    connection and every UDP endpoint. On the GitHub Windows runner that
+    exceeds the 30s subprocess timeout, and TimeoutExpired is
+    PILOT_LISTENER_UNPROVEN. Socket rows come from
+    ``C:\\Windows\\System32\\netstat.exe``. A short process-id list supplies
+    the pilot tree. A missing binary, a nonzero status, or text without the
+    English netstat header stays unproven.
+    """
     import subprocess
 
-    binary = trusted_listener_binary("powershell", "win32")
-    if binary is None:
+    if spawn is None:
+        netstat = trusted_listener_binary("netstat", "win32")
+        powershell = trusted_listener_binary("powershell", "win32")
+        if netstat != WINDOWS_NETSTAT or powershell != WINDOWS_POWERSHELL:
+            raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
+        try:
+            net = run_trusted_listener(
+                netstat, [netstat, "-ano"], path_value=str(Path(netstat).parent),
+            )
+            proc = run_trusted_listener(
+                powershell,
+                [powershell, "-NoProfile", "-NonInteractive", "-Command", _PS_PROCESSES],
+                path_value=WINDOWS_LISTENER_PATH,
+            )
+        except (OSError, subprocess.SubprocessError, UnicodeError) as exc:
+            raise UsageRefusal("PILOT_LISTENER_UNPROVEN") from exc
+        net_out, net_rc = net.stdout or "", net.returncode
+        proc_out, proc_rc = proc.stdout or "", proc.returncode
+    else:
+        net_out, net_rc, proc_out, proc_rc = spawn(WINDOWS_NETSTAT, WINDOWS_POWERSHELL)
+    if isinstance(net_rc, bool) or not isinstance(net_rc, int) or net_rc != 0:
         raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
-    try:
-        proc = run_trusted_listener(
-            binary,
-            [binary, "-NoProfile", "-NonInteractive", "-Command", _PS_OBSERVE],
-            path_value=WINDOWS_LISTENER_PATH,
-        )
-    except (OSError, subprocess.SubprocessError) as exc:
-        raise UsageRefusal("PILOT_LISTENER_UNPROVEN") from exc
-    if proc.returncode != 0 or not proc.stdout.strip():
+    if isinstance(proc_rc, bool) or not isinstance(proc_rc, int) or proc_rc != 0:
         raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
-    try:
-        payload = json.loads(proc.stdout)
-    except json.JSONDecodeError as exc:
-        raise UsageRefusal("PILOT_LISTENER_UNPROVEN") from exc
-    return _normalize_windows(payload)
+    parsed = parse_netstat(net_out)
+    return {
+        "processes": parse_process_lines(proc_out),
+        "tcp": parsed["tcp"],
+        "udp": parsed["udp"],
+    }
 
 
 def parse_lsof_listen(text: str, pid: int) -> int:

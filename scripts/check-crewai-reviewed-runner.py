@@ -93,8 +93,11 @@ from office_v2_crewai.usage_guard import (  # noqa: E402
     DRIFT_FORBIDDEN_MODULES,
     LEFTOVER_RELS,
     WINDOWS_NETSTAT,
+    WINDOWS_POWERSHELL,
+    _PS_PROCESSES,
     UsageRefusal,
-    _PS_OBSERVE,
+    _windows_observe,
+    count_windows_listeners,
     assert_built_crew,
     assert_crew_spec,
     assert_dependency_drift,
@@ -1458,13 +1461,57 @@ def check_listeners() -> None:
         "PILOT_LISTENER_UNPROVEN",
     )
     _expect_usage(lambda: count_listening_sockets(10, platform="freebsd"), "PILOT_LISTENER_UNPROVEN")
-    if ".ToArray()" not in _PS_OBSERVE:
-        fail("PowerShell listener script does not call ToArray")
-    if WINDOWS_NETSTAT not in _PS_OBSERVE or "& netstat.exe" in _PS_OBSERVE:
-        fail("PowerShell listener script still resolves netstat from PATH")
-    for wrapped in ("@($processes)", "@($tcp)", "@($udp)"):
-        if wrapped in _PS_OBSERVE:
-            fail("PowerShell listener script still wraps %s" % wrapped)
+    header = "Active Connections\n\n  Proto  Local Address  Foreign Address  State  PID\n"
+    asked = {}
+
+    def spawn(netstat, powershell):
+        asked["netstat"] = netstat
+        asked["powershell"] = powershell
+        return header, 0, "10 4\n", 0
+
+    observed = _windows_observe(spawn=spawn)
+    if asked.get("netstat") != WINDOWS_NETSTAT or asked.get("powershell") != WINDOWS_POWERSHELL:
+        fail("observer did not use the absolute netstat and powershell paths")
+    if count_windows_listeners(10, observed) != 0:
+        fail("header-only absolute netstat was not a proven zero")
+    listening = header + "  TCP    127.0.0.1:9    0.0.0.0:0    LISTENING    10\n"
+
+    def spawn_listen(netstat, powershell):
+        return listening, 0, "10 4\n1 0\n", 0
+
+    if count_windows_listeners(10, _windows_observe(spawn=spawn_listen)) != 1:
+        fail("absolute netstat LISTENING row was not counted")
+    udp = header + "  UDP    0.0.0.0:500    *:*    10\n"
+
+    def spawn_udp(netstat, powershell):
+        return udp, 0, "10 1\n", 0
+
+    if count_windows_listeners(10, _windows_observe(spawn=spawn_udp)) != 1:
+        fail("absolute netstat UDP row was not counted")
+
+    def spawn_bad(netstat, powershell):
+        return "not a table", 0, "10 4\n", 0
+
+    _expect_usage(lambda: _windows_observe(spawn=spawn_bad), "PILOT_LISTENER_UNPROVEN")
+
+    def spawn_rc(netstat, powershell):
+        return header, 1, "10 4\n", 0
+
+    _expect_usage(lambda: _windows_observe(spawn=spawn_rc), "PILOT_LISTENER_UNPROVEN")
+    source = (PACKAGE / "usage_guard.py").read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    fn = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "_windows_observe")
+    body = ast.get_source_segment(source, fn) or ""
+    if "Get-NetTCPConnection" in body or "Get-NetUDPEndpoint" in body:
+        fail("windows observer still calls Get-Net")
+    if "WINDOWS_NETSTAT" not in body or '"-ano"' not in body:
+        fail("windows observer does not run absolute netstat -ano")
+    if "UTF8Encoding" not in _PS_PROCESSES:
+        fail("process list does not force UTF-8 on the PowerShell pipe")
+    opener = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "_open_trusted_regular")
+    opened = ast.get_source_segment(source, opener) or ""
+    if 'os.name != "nt"' not in opened:
+        fail("O_NOFOLLOW is still applied on Windows opens")
     probed = []
 
     def listener_boom():
