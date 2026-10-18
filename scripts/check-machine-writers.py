@@ -69,10 +69,14 @@ EXIT_RESET = re.compile(r"\$LASTEXITCODE\s*=\s*0\b")
 # Tag and branch refs are refused. This set is the only exception, and it starts empty.
 ACTION_REF_ALLOWLIST: frozenset[str] = frozenset()
 USE_LINE = re.compile(r"^(?P<prefix>\s*(?:-\s+)?)uses:\s+(?P<spec>\S+)\s*(?:#.*)?$")
+_FLOW_USES = re.compile(
+    r"""['\"]?uses['\"]?\s*:\s*(?P<spec>\"[^\"]+\"|'[^']+'|[^,}\s]+)"""
+)
 VERSION_COMMENT = re.compile(
     r"^\s*#\s+(?P<action>\S+/\S+)\s+v(?P<version>\d+\.\d+\.\d+)\s*$"
 )
 SHA_REF = re.compile(r"^[0-9a-f]{40}$")
+DOCKER_DIGEST = re.compile(r"^docker://[^@\s]+@sha256:[0-9a-f]{64}$")
 
 
 def previous_nonempty(lines: list[str], index: int) -> str:
@@ -83,40 +87,102 @@ def previous_nonempty(lines: list[str], index: int) -> str:
     return lines[cursor] if cursor >= 0 else ""
 
 
+def _yaml_code(line: str) -> str:
+    """Drop a trailing comment and ``${{ }}``. A quoted ``#`` stays."""
+    masked = re.sub(r"\$\{\{.*?\}\}", "", line)
+    out: list[str] = []
+    quote = ""
+    for ch in masked:
+        if quote:
+            if ch == quote:
+                quote = ""
+            out.append(ch)
+            continue
+        if ch in "'\"":
+            quote = ch
+            out.append(ch)
+            continue
+        if ch == "#":
+            break
+        out.append(ch)
+    return "".join(out)
+
+
+def _flow_uses_specs(line: str) -> list[str]:
+    """``uses:`` values inside a one-line flow mapping. Block lines are separate."""
+    code = _yaml_code(line)
+    if "{" not in code:
+        return []
+    specs: list[str] = []
+    for match in _FLOW_USES.finditer(code):
+        spec = match.group("spec").strip().strip("'\"")
+        if spec:
+            specs.append(spec)
+    return specs
+
+
+def _uses_problems(
+    spec: str,
+    number: int,
+    lines: list[str],
+    path: str,
+    allowed: frozenset[str],
+    *,
+    scan_docker: bool,
+) -> list[str]:
+    if spec.startswith("./"):
+        return []
+    if spec.startswith("docker://"):
+        if not scan_docker or DOCKER_DIGEST.fullmatch(spec):
+            return []
+        return [f"{path}:{number}: docker ref is not digest-pinned: {spec}"]
+    if "@" not in spec:
+        return [f"{path}:{number}: action ref has no pin: {spec}"]
+    action, ref = spec.rsplit("@", 1)
+    if spec in allowed:
+        return []
+    if not SHA_REF.fullmatch(ref):
+        return [f"{path}:{number}: tag or branch ref is not allowlisted: {spec}"]
+    comment = VERSION_COMMENT.match(previous_nonempty(lines, number - 1))
+    if comment is None:
+        return [f"{path}:{number}: SHA pin missing version comment: {spec}"]
+    commented = comment.group("action")
+    if action != commented and not action.startswith(commented + "/"):
+        return [f"{path}:{number}: version comment {commented} does not match {action}"]
+    return []
+
+
 def action_pin_problems(
     text: str,
     *,
     path: str = "<fixture>",
     allowlist: frozenset[str] | None = None,
+    scan_flow: bool = True,
+    scan_docker: bool = True,
 ) -> list[str]:
-    """Every remote uses: is a 40-hex SHA plus a version comment, unless allowlisted."""
+    """Every remote uses: is a 40-hex SHA plus a version comment, unless allowlisted.
+
+    A one-line flow mapping is scanned too. ``docker://`` must be
+    ``docker://name@sha256:<64 hex>``. ``./`` local actions stay unpinned.
+    ``scan_flow=False`` and ``scan_docker=False`` exist so the mutation log
+    can show those checks are load-bearing.
+    """
     allowed = ACTION_REF_ALLOWLIST if allowlist is None else allowlist
     problems: list[str] = []
     lines = text.splitlines()
     for number, line in enumerate(lines, start=1):
         match = USE_LINE.match(line)
-        if not match:
+        if match:
+            specs = [match.group("spec").strip("'\"")]
+        elif scan_flow and not line.lstrip().startswith("#"):
+            specs = _flow_uses_specs(line)
+        else:
             continue
-        spec = match.group("spec").strip("'\"")
-        if spec.startswith("./") or spec.startswith("docker://"):
-            continue
-        if "@" not in spec:
-            problems.append(f"{path}:{number}: action ref has no pin: {spec}")
-            continue
-        action, ref = spec.rsplit("@", 1)
-        if spec in allowed:
-            continue
-        if not SHA_REF.fullmatch(ref):
-            problems.append(f"{path}:{number}: tag or branch ref is not allowlisted: {spec}")
-            continue
-        comment = VERSION_COMMENT.match(previous_nonempty(lines, number - 1))
-        if comment is None:
-            problems.append(f"{path}:{number}: SHA pin missing version comment: {spec}")
-            continue
-        commented = comment.group("action")
-        if action != commented and not action.startswith(commented + "/"):
-            problems.append(
-                f"{path}:{number}: version comment {commented} does not match {action}"
+        for spec in specs:
+            problems.extend(
+                _uses_problems(
+                    spec, number, lines, path, allowed, scan_docker=scan_docker
+                )
             )
     return problems
 
@@ -166,9 +232,63 @@ def prove_workflow_action_pins(core_workflow: str) -> str:
         for problem in action_pin_problems(windows_unpinned, path="check-all-windows")
     ):
         fail("reverting the Windows checkout to @v7 was not caught")
+    flow_tag = "steps:\n  - { name: Sneaky, uses: actions/checkout@v7 }\n"
+    if not any("not allowlisted" in problem for problem in action_pin_problems(flow_tag)):
+        fail("flow-mapping @v7 was not refused")
+    if action_pin_problems(flow_tag, scan_flow=False):
+        fail("turning off the flow scan still caught @v7")
+    flow_quoted = 'steps:\n  - { "uses": "actions/checkout@v7" }\n'
+    if not any("not allowlisted" in problem for problem in action_pin_problems(flow_quoted)):
+        fail("quoted flow-mapping @v7 was not refused")
+    flow_sha = (
+        "steps:\n"
+        "  # actions/checkout v7.0.1\n"
+        "  - { uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 }\n"
+    )
+    flow_sha_problems = action_pin_problems(flow_sha)
+    if flow_sha_problems:
+        fail("digest-pinned flow step was refused: " + "; ".join(flow_sha_problems))
+    flow_local = "steps:\n  - { uses: ./.github/actions/local }\n"
+    if action_pin_problems(flow_local):
+        fail("local flow action was refused")
+    smoke_path = WORKFLOWS / "instagram-read-smoke.yml"
+    smoke = smoke_path.read_text(encoding="utf-8")
+    if action_pin_problems(smoke, path=smoke_path.as_posix()):
+        fail("live instagram-read-smoke.yml was refused")
+    smoke_flow = smoke + "\n      - { name: Sneaky, uses: actions/checkout@v7 }\n"
+    if not any(
+        "not allowlisted" in problem
+        for problem in action_pin_problems(smoke_flow, path=smoke_path.as_posix())
+    ):
+        fail("flow-mapping @v7 appended to a real workflow was not caught")
+    docker_tag = "steps:\n  - uses: docker://alpine:latest\n"
+    if not any("not digest-pinned" in problem for problem in action_pin_problems(docker_tag)):
+        fail("docker://alpine:latest was not refused")
+    if action_pin_problems(docker_tag, scan_docker=False):
+        fail("turning off the docker scan still caught alpine:latest")
+    docker_digest = (
+        "steps:\n"
+        "  - uses: docker://alpine@sha256:"
+        + ("a" * 64)
+        + "\n"
+    )
+    docker_problems = action_pin_problems(docker_digest)
+    if docker_problems:
+        fail("digest-pinned docker ref was refused: " + "; ".join(docker_problems))
+    docker_bare = "steps:\n  - uses: docker://alpine\n"
+    if not any("not digest-pinned" in problem for problem in action_pin_problems(docker_bare)):
+        fail("docker://alpine without a digest was not refused")
+    smoke_docker = smoke + "\n      - uses: docker://alpine:latest\n"
+    if not any(
+        "not digest-pinned" in problem
+        for problem in action_pin_problems(smoke_docker, path=smoke_path.as_posix())
+    ):
+        fail("docker://alpine:latest appended to a real workflow was not caught")
     return (
         "tag_fixture=caught sha_fixture=pass bare_sha=caught "
-        "linux_revert=caught windows_revert=caught allowlist=empty"
+        "linux_revert=caught windows_revert=caught allowlist=empty "
+        "flow_v7=caught flow_sha=pass flow_off=escaped "
+        "docker_tag=caught docker_digest=pass docker_off=escaped"
     )
 
 
