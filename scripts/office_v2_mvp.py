@@ -32,6 +32,8 @@ ROOT = Path(__file__).resolve().parents[1]
 BOARD_DIR = ROOT / "docs" / "office-v2" / "board"
 JERUSALEM = ZoneInfo("Asia/Jerusalem")
 REPOS = ("nocturney/velvetos-core", "nocturney/velvetos-velvet-factory")
+# The factory repo is private. Its rows may exist only in a gitignored local board.
+PRIVATE_REPO_MARK = "velvetos-velvet-factory"
 QUEUE_REPO = "nocturney/velvetos-core"
 QUEUE_ISSUE = 612
 CHECK_ALL_REPO = "nocturney/velvetos-core"
@@ -164,6 +166,38 @@ def issue_refs(body: str) -> list[tuple[str, int]]:
     for match in BARE_ISSUE_RE.finditer(stripped):
         add(QUEUE_REPO, int(match.group(1)))
     return found
+
+
+def board_text_leaks_private(text: str) -> bool:
+    """True when board text contains the private factory repo, one of its URLs, or a row."""
+    return PRIVATE_REPO_MARK in (text or "").casefold()
+
+
+def active_issue_refs(comments: list[dict]) -> list[tuple[str, int]]:
+    """Issue refs on the latest non-DONE claim only.
+
+    Older comments and finished claims are not fetched. That keeps the #612
+    read to the live queue instead of every historical issue number.
+    """
+    grouped: dict[str, list[dict]] = defaultdict(list)
+    for comment in comments:
+        body = comment.get("body") or ""
+        if queue_marker(body) is None:
+            continue
+        grouped[claim_key(body)].append(comment)
+    wanted: list[tuple[str, int]] = []
+    seen: set[tuple[str, int]] = set()
+    for group in grouped.values():
+        group.sort(key=lambda comment: comment.get("created_at") or "")
+        body = group[-1].get("body") or ""
+        marker = queue_marker(body) or ""
+        if marker in {"DONE", "STATUS"}:
+            continue
+        for ref in issue_refs(body):
+            if ref not in seen:
+                seen.add(ref)
+                wanted.append(ref)
+    return wanted
 
 
 def claim_key(body: str) -> str:
@@ -417,6 +451,20 @@ def _pr_item(repo: str, pull: dict, comments: list[dict], *, comments_unavailabl
 def _check_all_view(payload: dict | None) -> dict | None:
     if not isinstance(payload, dict):
         return None
+    if payload.get("denied"):
+        return {
+            "repo": CHECK_ALL_REPO,
+            "name": "check-all",
+            "denied": True,
+            "status": "denied",
+            "conclusion": "",
+            "http_status": payload.get("status"),
+            "event": "",
+            "head_sha": "",
+            "url": "",
+            "created_at": "",
+            "created_at_jerusalem": "",
+        }
     runs = payload.get("workflow_runs") or []
     if not runs:
         return None
@@ -634,7 +682,12 @@ def render_markdown(board: dict) -> str:
         f"- תור · queue: [{QUEUE_REPO}#{QUEUE_ISSUE}](https://github.com/{QUEUE_REPO}/issues/{QUEUE_ISSUE})",
     ]
     check_all = board.get("check_all_main")
-    if check_all:
+    if check_all and check_all.get("denied"):
+        lines.append(
+            "- check-all על main · check-all on main: "
+            f"denied (HTTP {check_all.get('http_status') or '?'}). No run invented."
+        )
+    elif check_all:
         lines.append(
             "- check-all על main · check-all on main: "
             f"{check_all.get('conclusion') or check_all.get('status')} · "
@@ -643,8 +696,13 @@ def render_markdown(board: dict) -> str:
         )
     else:
         lines.append("- check-all על main · check-all on main: אין ריצה · no run")
+    if board.get("private_rows_omitted"):
+        lines.append(
+            "- Private repository rows are omitted from this copy. No private titles, SHAs, or URLs."
+        )
     access = board.get("repo_access") or {}
-    for repo in REPOS:
+    shown = board.get("repos") if board.get("private_rows_omitted") else REPOS
+    for repo in shown:
         row = access.get(repo) or {"ok": True}
         if row.get("ok") is False:
             lines.append(
@@ -702,13 +760,87 @@ def render_json(board: dict) -> str:
     return text
 
 
-def write_board(board: dict, root: Path = ROOT) -> tuple[Path, Path]:
-    dest = root / "docs" / "office-v2" / "board"
-    dest.mkdir(parents=True, exist_ok=True)
-    md_path = dest / "latest.md"
-    json_path = dest / "latest.json"
-    md_path.write_text(render_markdown(board), encoding="utf-8")
-    json_path.write_text(render_json(board), encoding="utf-8")
+def _git(args: list[str], root: Path) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["git", *args],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+
+def private_rows_allowed(paths: list[Path], root: Path) -> bool:
+    """Private rows may be written only to a gitignored, untracked path inside this repo."""
+    root = root.resolve()
+    for path in paths:
+        try:
+            rel = path.resolve().relative_to(root).as_posix()
+        except ValueError:
+            return False
+        if _git(["ls-files", "--error-unmatch", "--", rel], root).returncode == 0:
+            return False
+        if _git(["check-ignore", "--no-index", "-q", "--", rel], root).returncode != 0:
+            return False
+    return True
+
+
+def omit_private_rows(board: dict) -> dict:
+    """Drop private-repo rows, URLs, and titles before a tracked or public write."""
+    board = json.loads(json.dumps(board))
+
+    def keep(row: dict) -> bool:
+        blob = "\n".join(
+            str(row.get(key) or "") for key in ("repo", "url", "title", "html_url")
+        )
+        return not board_text_leaks_private(blob)
+
+    def scrub(row: dict) -> dict:
+        row["open_issues"] = [issue for issue in row.get("open_issues") or [] if keep(issue)]
+        return row
+
+    sections = board.get("sections") or {}
+    for name, rows in list(sections.items()):
+        if name == "in_progress" and isinstance(rows, dict):
+            for agent, items in list(rows.items()):
+                rows[agent] = [scrub(row) for row in items if keep(row)]
+        elif isinstance(rows, list):
+            sections[name] = [scrub(row) for row in rows if keep(row)]
+    board["repos"] = [
+        repo for repo in board.get("repos") or [] if not board_text_leaks_private(str(repo))
+    ]
+    access = board.get("repo_access") or {}
+    for repo in list(access):
+        if board_text_leaks_private(str(repo)):
+            del access[repo]
+    board["repo_access"] = access
+    board["private_rows_omitted"] = True
+    return board
+
+
+def write_board(
+    board: dict,
+    root: Path = ROOT,
+    dest: Path | None = None,
+    omit_private: bool = False,
+) -> tuple[Path, Path]:
+    folder = dest if dest is not None else (root / "docs" / "office-v2" / "board")
+    folder.mkdir(parents=True, exist_ok=True)
+    md_path = folder / "latest.md"
+    json_path = folder / "latest.json"
+    public_copy = omit_private or not private_rows_allowed([md_path, json_path], root)
+    if public_copy:
+        board = omit_private_rows(board)
+    markdown = render_markdown(board)
+    payload = render_json(board)
+    if public_copy and (
+        board_text_leaks_private(markdown) or board_text_leaks_private(payload)
+    ):
+        raise ReadOnlyViolation(
+            "refusing to write private repository rows into a tracked or public board path"
+        )
+    md_path.write_text(markdown, encoding="utf-8")
+    json_path.write_text(payload, encoding="utf-8")
     return md_path, json_path
 
 
@@ -783,14 +915,7 @@ def fetch_snapshot() -> dict:
         if not isinstance(data, list):
             raise GitHubReadError("issue 612 comments were not a list")
         snapshot["queue_comments"] = data
-        wanted: list[tuple[str, int]] = []
-        seen: set[tuple[str, int]] = set()
-        for comment in data:
-            for ref in issue_refs(comment.get("body") or ""):
-                if ref not in seen:
-                    seen.add(ref)
-                    wanted.append(ref)
-        for repo, number in wanted:
+        for repo, number in active_issue_refs(data):
             issue = github_request("GET", f"/repos/{repo}/issues/{number}")
             if not issue.get("ok"):
                 continue
@@ -802,16 +927,39 @@ def fetch_snapshot() -> dict:
         "GET",
         f"/repos/{CHECK_ALL_REPO}/actions/workflows/check-all.yml/runs?branch=main&per_page=1",
     )
-    data = _require_data(runs, "check-all runs")
-    if isinstance(data, dict):
-        snapshot["check_all_runs"][CHECK_ALL_REPO] = data
+    if not runs.get("ok"):
+        if runs.get("status") in {401, 403, 404}:
+            snapshot["check_all_runs"][CHECK_ALL_REPO] = {
+                "denied": True,
+                "status": runs.get("status"),
+            }
+        else:
+            raise GitHubReadError(
+                f"check-all runs failed ({runs.get('status')}): {runs.get('error') or 'read error'}"
+            )
+    elif isinstance(runs.get("data"), dict):
+        snapshot["check_all_runs"][CHECK_ALL_REPO] = runs["data"]
     return snapshot
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Read-only Office 2.0 board")
     parser.add_argument("--fixture", type=Path, help="recorded API JSON, offline")
-    parser.add_argument("--write", action="store_true", help="write docs/office-v2/board/latest.*")
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help="write latest.md and latest.json (gitignored by default; never a committed live snapshot)",
+    )
+    parser.add_argument(
+        "--out",
+        type=Path,
+        help="directory for latest.md and latest.json (default: docs/office-v2/board)",
+    )
+    parser.add_argument(
+        "--omit-private",
+        action="store_true",
+        help="drop private repository rows, URLs, and titles before writing",
+    )
     parser.add_argument("--now", help="override clock as ISO-8601 (tests)")
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args(argv)
@@ -828,8 +976,17 @@ def main(argv: list[str] | None = None) -> int:
         snapshot = fetch_snapshot()
     board = build_board(snapshot, now)
     if args.write:
-        md_path, json_path = write_board(board, args.root)
-        print(f"OK office-v2-mvp wrote {md_path.relative_to(args.root)} {json_path.relative_to(args.root)}")
+        md_path, json_path = write_board(
+            board, args.root, dest=args.out, omit_private=args.omit_private
+        )
+
+        def _shown(path: Path) -> str:
+            try:
+                return str(path.resolve().relative_to(args.root.resolve()))
+            except ValueError:
+                return str(path)
+
+        print(f"OK office-v2-mvp wrote {_shown(md_path)} {_shown(json_path)}")
     else:
         sys.stdout.write(render_markdown(board))
     return 0

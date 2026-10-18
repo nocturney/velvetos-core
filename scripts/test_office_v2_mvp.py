@@ -2,9 +2,10 @@
 """Offline fixture tests for the Office 2.0 desk. No network."""
 from __future__ import annotations
 
-import copy
 import importlib.util
 import json
+import shutil
+import tempfile
 import unittest
 from datetime import datetime, timezone
 from pathlib import Path
@@ -192,6 +193,89 @@ class OfficeV2MvpFixtureTest(unittest.TestCase):
             MVP.github_request("POST", "/repos/nocturney/velvetos-core/issues/1/comments", runner=boom)
         with self.assertRaises(MVP.ReadOnlyViolation):
             MVP.github_request("GET", "/repos/nocturney/velvetos-core/pulls/1/merge", runner=boom)
+
+    def test_denied_check_all_is_not_no_run(self) -> None:
+        snap = load_fixture()
+        snap["check_all_runs"]["nocturney/velvetos-core"] = {"denied": True, "status": 403}
+        board = MVP.build_board(snap, NOW)
+        text = MVP.render_markdown(board)
+        self.assertIn("check-all on main: denied (HTTP 403)", text)
+        self.assertNotIn("no run", text)
+
+    def test_active_issue_refs_skip_done_and_older_comments(self) -> None:
+        comments = [
+            {
+                "body": "Cursor: CLAIM old work\n#111",
+                "created_at": "2026-10-17T00:00:00Z",
+            },
+            {
+                "body": "Cursor: CLAIM CLQ-9\n#222",
+                "created_at": "2026-10-18T00:00:00Z",
+            },
+            {
+                "body": "Cursor: DONE CLQ-9\n#333",
+                "created_at": "2026-10-18T01:00:00Z",
+            },
+            {
+                "body": "Claude: CLAIM CLQ-2\nsee #595",
+                "created_at": "2026-10-18T02:00:00Z",
+            },
+        ]
+        self.assertEqual(
+            MVP.active_issue_refs(comments),
+            [
+                ("nocturney/velvetos-core", 111),
+                ("nocturney/velvetos-core", 595),
+            ],
+        )
+
+    def test_private_board_leak_mutation(self) -> None:
+        clean = "core#10 synthetic desk row"
+        self.assertFalse(MVP.board_text_leaks_private(clean))
+        mutated = (
+            clean
+            + "\nhttps://github.com/nocturney/velvetos-velvet-factory/pull/1"
+            + " — synthetic private title\n"
+        )
+        self.assertTrue(MVP.board_text_leaks_private(mutated))
+        self.assertTrue(
+            MVP.board_text_leaks_private(
+                "- velvetos-velvet-factory#1 · draft — synthetic private title\n"
+            )
+        )
+        sample = ROOT / "docs" / "office-v2" / "board" / "SAMPLE.md"
+        committed = sample.read_text(encoding="utf-8")
+        self.assertFalse(MVP.board_text_leaks_private(committed))
+        self.assertTrue(MVP.board_text_leaks_private(committed + "\n" + mutated))
+
+    def test_tracked_or_public_write_drops_factory_rows(self) -> None:
+        self.assertIn("velvetos-velvet-factory", json.dumps(self.board))
+        public = MVP.omit_private_rows(self.board)
+        rendered = MVP.render_markdown(public) + MVP.render_json(public)
+        self.assertFalse(MVP.board_text_leaks_private(rendered))
+        self.assertIn("Private repository rows are omitted", rendered)
+        self.assertIn("velvetos-core", rendered)
+        outside = Path(tempfile.mkdtemp())
+        try:
+            md_path, json_path = MVP.write_board(self.board, ROOT, dest=outside, omit_private=True)
+            blob = md_path.read_text(encoding="utf-8") + json_path.read_text(encoding="utf-8")
+            self.assertFalse(MVP.board_text_leaks_private(blob))
+        finally:
+            shutil.rmtree(outside)
+        self.assertFalse(MVP.private_rows_allowed([ROOT / "README.md"], ROOT))
+
+    def test_gitignored_local_board_can_keep_factory_rows(self) -> None:
+        latest_md = ROOT / "docs" / "office-v2" / "board" / "latest.md"
+        latest_json = ROOT / "docs" / "office-v2" / "board" / "latest.json"
+        self.assertTrue(MVP.private_rows_allowed([latest_md, latest_json], ROOT))
+        try:
+            md_path, json_path = MVP.write_board(self.board, ROOT)
+            blob = md_path.read_text(encoding="utf-8") + json_path.read_text(encoding="utf-8")
+            self.assertTrue(MVP.board_text_leaks_private(blob))
+            self.assertIn("portal draft", blob)
+        finally:
+            latest_md.unlink(missing_ok=True)
+            latest_json.unlink(missing_ok=True)
 
     def test_source_is_read_only_and_lockfile_plain(self) -> None:
         source = (ROOT / "scripts" / "office_v2_mvp.py").read_text(encoding="utf-8")

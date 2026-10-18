@@ -28,7 +28,9 @@ jobs:
       - name: Build the office board
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python3 scripts/office_v2_mvp.py --write
+        # Artifact only. --omit-private keeps a private repo out of this public upload.
+        # latest.md and latest.json are gitignored, so this job does not commit them.
+        run: python3 scripts/office_v2_mvp.py --write --omit-private
 
       - name: Upload the office board
         uses: actions/upload-artifact@v7

@@ -1,6 +1,8 @@
 # Office 2.0 desk — next step
 
-The working desk is plain Python: `scripts/office_v2_mvp.py`. It only GETs GitHub and writes `docs/office-v2/board/latest.md` plus `latest.json`.
+The working desk is plain Python: `scripts/office_v2_mvp.py`. It only GETs GitHub. A local `--write` lands in gitignored `docs/office-v2/board/latest.md` and `latest.json`. Those files are not committed. The committed sample is `docs/office-v2/board/SAMPLE.md` (and `SAMPLE.json`), built from the offline fixture with private rows removed.
+
+`nocturney/velvetos-core` is public. `nocturney/velvetos-velvet-factory` is private. The generator will not write private-repo rows, URLs, or titles into a tracked path or any path outside this repo. `.github/workflows/office-v2-board.yml` is manual dispatch only, passes `--omit-private`, and uploads the board as an artifact. It does not commit the board. On GitHub Actions, `github.token` cannot read the private factory repo, so that artifact shows the factory repo as denied and invents no rows.
 
 CrewAI and LangGraph are **not** in `requirements-sensors.txt` or the hashed lockfiles (`requirements-sensors.py311.lock`, `requirements-sensors.py312.lock`). They are not imported. A protected admission has to add them to the lockfile before this desk may call either framework.
 
