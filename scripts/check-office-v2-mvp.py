@@ -6,6 +6,8 @@ import importlib.util
 import re
 import subprocess
 import sys
+import tempfile
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -130,6 +132,92 @@ def main() -> int:
             fail(f"committed board contains private factory rows: {rel}")
         if not mvp.board_text_leaks_private(text + "\n" + probe):
             fail(f"mutating {rel} with a private factory URL was not detected")
+    board = mvp.build_board({}, datetime(2026, 10, 18, 12, 0, tzinfo=timezone.utc))
+    text = mvp.render_markdown(board)
+    if not mvp.sealed_lab_text_ok(text):
+        fail("board does not show CP083 lost-ACK receipts as SEALED_RED_ONLY with a link")
+    if mvp.sealed_lab_text_ok(text.replace("SEALED_RED_ONLY", "ADMITTED")):
+        fail("mutation: a promoted seal label was accepted")
+    if mvp.sealed_lab_text_ok(text.replace(mvp.LOSTACK_URL, "")):
+        fail("mutation: a seal without the evidence link was accepted")
+    if mvp.sealed_lab_text_ok(text.replace("security_admission=RED", "security_admission=GREEN")):
+        fail("mutation: GREEN admission was accepted on the board")
+    gate_result = {
+        "security_admission": "RED",
+        "status": mvp.LOSTACK_STATUS,
+        "remote_github_writes": 0,
+        "real_native_git_sqlite_receipts": 2,
+        "distinct_hosts": 2,
+    }
+    if mvp.seal_row_from_result(gate_result) is None:
+        fail("RED lost-ACK gate result did not become a board row")
+    false_writes = dict(gate_result)
+    false_writes["remote_github_writes"] = False
+    if mvp.seal_row_from_result(false_writes) is not None:
+        fail("mutation: bool False counted as zero remote_github_writes")
+    one_write = dict(gate_result)
+    one_write["remote_github_writes"] = 1
+    if mvp.seal_row_from_result(one_write) is not None:
+        fail("mutation: remote_github_writes 1 became a board row")
+    gate_result["security_admission"] = "GREEN"
+    if mvp.seal_row_from_result(gate_result) is not None:
+        fail("mutation: a GREEN gate result became a board row")
+    missing = ROOT / "docs" / "implementation" / "office-v2" / "phase2" / "missing-lostack-evidence.json"
+    missing_view = mvp.cp083_lostack_view(evidence_path=missing)
+    if missing_view.get("status") != "EVIDENCE_MISSING" or missing_view.get("row"):
+        fail("mutation: missing evidence did not drop the row as EVIDENCE_MISSING")
+    with tempfile.TemporaryDirectory() as tmp:
+        bad = Path(tmp) / "corrupt.json"
+        bad.write_text("{", encoding="utf-8")
+        corrupt_view = mvp.cp083_lostack_view(evidence_path=bad)
+    if corrupt_view.get("status") != "EVIDENCE_MISSING" or corrupt_view.get("row"):
+        fail("mutation: corrupt evidence did not drop the row as EVIDENCE_MISSING")
+    original_view = mvp.cp083_lostack_view
+
+    def _missing_view(evidence_path=None):
+        return {"status": "EVIDENCE_MISSING"}
+
+    mvp.cp083_lostack_view = _missing_view
+    try:
+        broken = mvp.build_board({}, datetime(2026, 10, 18, 12, 0, tzinfo=timezone.utc))
+        broken_text = mvp.render_markdown(broken)
+    finally:
+        mvp.cp083_lostack_view = original_view
+    if "EVIDENCE_MISSING" not in broken_text or "SEALED_RED_ONLY" in broken_text:
+        fail("mutation: missing evidence crashed the board or kept a sealed row")
+    if "מחכה לכריסטיאן" not in broken_text:
+        fail("mutation: missing evidence dropped sections other than the seal row")
+    evidence = mvp._load_lostack_gate().EVIDENCE
+    evidence_before = evidence.read_bytes()
+    original_loader = mvp._load_lostack_gate
+
+    def _gate_import_failed():
+        raise ImportError("lost-ACK receipt gate missing")
+
+    mvp._load_lostack_gate = _gate_import_failed
+    try:
+        failed = mvp.cp083_lostack_view()
+        failed_board = mvp.build_board({}, datetime(2026, 10, 18, 12, 0, tzinfo=timezone.utc))
+        failed_text = mvp.render_markdown(failed_board)
+    finally:
+        mvp._load_lostack_gate = original_loader
+    if evidence.read_bytes() != evidence_before:
+        fail("gate import mutation touched the CP083 evidence file")
+    if failed.get("status") != "GATE_IMPORT_FAILED" or failed.get("row"):
+        fail("mutation: gate import failure was not GATE_IMPORT_FAILED")
+    if failed.get("status") == "EVIDENCE_MISSING":
+        fail("mutation: gate import failure was labeled EVIDENCE_MISSING")
+    if "GATE_IMPORT_FAILED" not in failed_text or "SEALED_RED_ONLY" in failed_text:
+        fail("mutation: gate import failure kept a sealed row")
+    if "EVIDENCE_MISSING" in failed_text:
+        fail("mutation: gate import failure was rendered as EVIDENCE_MISSING")
+    if "מחכה לכריסטיאן" not in failed_text:
+        fail("mutation: gate import failure dropped sections other than the seal row")
+    sample_text = sample.read_text(encoding="utf-8")
+    if not mvp.sealed_lab_text_ok(sample_text):
+        fail("committed sample board is missing the SEALED_RED_ONLY lost-ACK link")
+    evidence_for_test = mvp._load_lostack_gate().EVIDENCE
+    evidence_bytes = evidence_for_test.read_bytes()
     proc = subprocess.run(
         [sys.executable, str(TEST)],
         cwd=ROOT,
@@ -138,6 +226,8 @@ def main() -> int:
         capture_output=True,
         timeout=60,
     )
+    if evidence_for_test.read_bytes() != evidence_bytes:
+        fail("fixture unit test mutated the CP083 evidence file")
     if proc.returncode != 0:
         detail = (proc.stdout + "\n" + proc.stderr).strip()
         fail("fixture unit test failed\n" + detail[-2000:])

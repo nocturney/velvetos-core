@@ -184,6 +184,110 @@ class OfficeV2MvpFixtureTest(unittest.TestCase):
         self.assertIn("head `bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb`", text)
         self.assertIn("QA please", text)
         self.assertIn("QA verdict", text)
+        self.assertIn("חותמות מעבדה · Sealed labs", text)
+        self.assertTrue(MVP.sealed_lab_text_ok(text))
+
+    def test_lostack_seal_stays_red(self) -> None:
+        row = self.board["sealed_labs"][0]
+        self.assertEqual(row["label"], "SEALED_RED_ONLY")
+        self.assertEqual(row["security_admission"], "RED")
+        self.assertEqual(row["url"], MVP.LOSTACK_URL)
+        self.assertEqual(row["hosts"], ["MacMiniOffice.local", "Mac-Bedroom.local"])
+        promoted = dict(row)
+        promoted["security_admission"] = "GREEN"
+        promoted["status"] = MVP.LOSTACK_STATUS
+        promoted["remote_github_writes"] = 0
+        promoted["real_native_git_sqlite_receipts"] = 2
+        promoted["distinct_hosts"] = 2
+        self.assertIsNone(MVP.seal_row_from_result(promoted))
+        self.assertFalse(MVP.sealed_lab_text_ok(MVP.render_markdown(self.board).replace(MVP.LOSTACK_URL, "")))
+        counted = {
+            "security_admission": "RED",
+            "status": MVP.LOSTACK_STATUS,
+            "remote_github_writes": 0,
+            "real_native_git_sqlite_receipts": 2,
+            "distinct_hosts": 2,
+        }
+        self.assertIsNotNone(MVP.seal_row_from_result(counted))
+        false_writes = dict(counted)
+        false_writes["remote_github_writes"] = False
+        self.assertIsNone(MVP.seal_row_from_result(false_writes))
+        one_write = dict(counted)
+        one_write["remote_github_writes"] = 1
+        self.assertIsNone(MVP.seal_row_from_result(one_write))
+
+    def _board_with_evidence(self, path: Path) -> tuple[dict, str]:
+        real_loader = MVP._load_lostack_gate
+
+        def loader():
+            module = real_loader()
+            module.EVIDENCE = path
+            return module
+
+        MVP._load_lostack_gate = loader
+        try:
+            board = MVP.build_board({}, NOW)
+            return board, MVP.render_markdown(board)
+        finally:
+            MVP._load_lostack_gate = real_loader
+
+    def test_missing_evidence_drops_only_the_seal_row(self) -> None:
+        missing = ROOT / "docs" / "does-not-exist-lostack.json"
+        view = MVP.cp083_lostack_view(evidence_path=missing)
+        self.assertEqual(view["status"], "EVIDENCE_MISSING")
+        self.assertIsNone(view.get("row"))
+        real_path = MVP._load_lostack_gate().EVIDENCE
+        before = real_path.read_bytes()
+        with tempfile.TemporaryDirectory() as tmp:
+            bad = Path(tmp) / "bad.json"
+            bad.write_text("{", encoding="utf-8")
+            corrupt = MVP.cp083_lostack_view(evidence_path=bad)
+            self.assertEqual(corrupt["status"], "EVIDENCE_MISSING")
+            self.assertIsNone(corrupt.get("row"))
+            absent = Path(tmp) / "absent.json"
+            board, text = self._board_with_evidence(absent)
+            self.assertEqual(board["lostack_evidence_status"], "EVIDENCE_MISSING")
+            self.assertEqual(board["sealed_labs"], [])
+            self.assertIn("מחכה לכריסטיאן · Waiting on Christian", text)
+            self.assertIn("- CP083 lost-ACK receipts · EVIDENCE_MISSING", text)
+            self.assertNotIn("SEALED_RED_ONLY", text)
+            board, text = self._board_with_evidence(bad)
+            self.assertEqual(board["lostack_evidence_status"], "EVIDENCE_MISSING")
+            self.assertNotIn("SEALED_RED_ONLY", text)
+            green = json.loads(before)
+            green["security_admission"] = "GREEN"
+            green_path = Path(tmp) / "green.json"
+            green_path.write_text(json.dumps(green), encoding="utf-8")
+            omitted = MVP.cp083_lostack_view(evidence_path=green_path)
+        self.assertEqual(real_path.read_bytes(), before)
+        self.assertEqual(omitted["status"], "OMITTED")
+        self.assertIsNone(omitted.get("row"))
+
+    def test_gate_import_failure_is_fail_closed(self) -> None:
+        real_loader = MVP._load_lostack_gate
+        real_path = real_loader().EVIDENCE
+        before = real_path.read_bytes()
+
+        def boom():
+            raise ImportError("lost-ACK receipt gate missing")
+
+        MVP._load_lostack_gate = boom
+        try:
+            view = MVP.cp083_lostack_view()
+            board = MVP.build_board({}, NOW)
+            text = MVP.render_markdown(board)
+        finally:
+            MVP._load_lostack_gate = real_loader
+        self.assertEqual(view["status"], "GATE_IMPORT_FAILED")
+        self.assertNotEqual(view["status"], "EVIDENCE_MISSING")
+        self.assertIsNone(view.get("row"))
+        self.assertEqual(board["lostack_evidence_status"], "GATE_IMPORT_FAILED")
+        self.assertEqual(board["sealed_labs"], [])
+        self.assertIn("- CP083 lost-ACK receipts · GATE_IMPORT_FAILED", text)
+        self.assertNotIn("EVIDENCE_MISSING", text)
+        self.assertNotIn("SEALED_RED_ONLY", text)
+        self.assertIn("מחכה לכריסטיאן · Waiting on Christian", text)
+        self.assertEqual(real_path.read_bytes(), before)
 
     def test_post_never_calls_runner(self) -> None:
         def boom(_path: str):
