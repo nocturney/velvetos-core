@@ -74,7 +74,11 @@ def executable_directory(executable: str) -> str:
     return directory
 
 
-def allowlisted_env(executable: str, extra_keys: tuple[str, ...] = ()) -> dict[str, str]:
+def allowlisted_env(
+    executable: str,
+    extra_keys: tuple[str, ...] = (),
+    path_suffix: tuple[str, ...] = (),
+) -> dict[str, str]:
     env: dict[str, str] = {}
     for key in (*_BASE_ENV_KEYS, *extra_keys):
         if key.startswith("GIT_"):
@@ -82,7 +86,11 @@ def allowlisted_env(executable: str, extra_keys: tuple[str, ...] = ()) -> dict[s
         value = os.environ.get(key)
         if value:
             env[key] = value
-    env["PATH"] = executable_directory(executable)
+    parts = [executable_directory(executable)]
+    for extra in path_suffix:
+        if extra and extra not in parts:
+            parts.append(extra)
+    env["PATH"] = os.pathsep.join(parts)
     return env
 
 
@@ -99,6 +107,7 @@ def run_absolute(
     *,
     timeout: float,
     extra_keys: tuple[str, ...] = (),
+    path_suffix: tuple[str, ...] = (),
     **kwargs,
 ) -> subprocess.CompletedProcess:
     if timeout is None or timeout <= 0:
@@ -110,7 +119,7 @@ def run_absolute(
     return _spawn(
         [os.path.normpath(executable), *args],
         timeout=timeout,
-        env=allowlisted_env(executable, extra_keys),
+        env=allowlisted_env(executable, extra_keys, path_suffix),
         shell=False,
         **kwargs,
     )
@@ -122,9 +131,17 @@ def run_pinned(
     *,
     timeout: float,
     extra_keys: tuple[str, ...] = (),
+    path_suffix: tuple[str, ...] = (),
     **kwargs,
 ) -> subprocess.CompletedProcess:
-    return run_absolute(pin_which(name), args, timeout=timeout, extra_keys=extra_keys, **kwargs)
+    return run_absolute(
+        pin_which(name),
+        args,
+        timeout=timeout,
+        extra_keys=extra_keys,
+        path_suffix=path_suffix,
+        **kwargs,
+    )
 
 
 @contextlib.contextmanager
@@ -218,9 +235,10 @@ def expect_pinned(
     if "VF_SUBPROCESS_HYGIENE_SENTINEL" in env or any(key.startswith("GIT_") for key in env):
         raise AssertionError("environment was not allowlisted: " + ",".join(sorted(env)))
     path = env.get("PATH", "")
-    if "runneradmin" in path or "RUNNER~1" not in path:
+    first = path.split(os.pathsep)[0]
+    if "runneradmin" in first or "RUNNER~1" not in first:
         raise AssertionError(f"PATH expanded a short name: {path}")
-    if not paths_match(path, executable_directory(argv[0])):
+    if not paths_match(first, executable_directory(argv[0])):
         raise AssertionError(f"PATH {path} != {executable_directory(argv[0])}")
     if keep_gh_token and env.get("GH_TOKEN") != "fixture-gh-token":
         raise AssertionError("GH_TOKEN was dropped")

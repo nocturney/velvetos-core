@@ -10,9 +10,14 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 from dataclasses import dataclass
 
 import vf_subprocess_hygiene as hygiene
+
+# The capability suite's fake ffmpeg is #!/usr/bin/env python3 and reads these.
+# They are not a parent PATH. A real ffmpeg binary ignores them.
+_PROBE_ENV = ("VF_FAKE_FFMPEG", "VF_FAKE_LOG")
 
 PROBE_TIMEOUT = 20
 
@@ -56,6 +61,8 @@ def _run(binary: str, flag: str) -> str:
             binary,
             ["-hide_banner", "-nostdin", flag],
             timeout=PROBE_TIMEOUT,
+            extra_keys=_PROBE_ENV,
+            path_suffix=(os.path.dirname(sys.executable),),
             text=True,
             capture_output=True,
         )
@@ -105,7 +112,14 @@ def _tools() -> tuple[str | None, EnvGap | None]:
 def run_pinned(name: str, args: list[str], **kwargs) -> subprocess.CompletedProcess:
     """Absolute ffmpeg/ffprobe with the probe timeout unless the caller sets one."""
     timeout = kwargs.pop("timeout", PROBE_TIMEOUT)
-    return hygiene.run_pinned(name, args, timeout=timeout, **kwargs)
+    return hygiene.run_pinned(
+        name,
+        args,
+        timeout=timeout,
+        extra_keys=_PROBE_ENV,
+        path_suffix=(os.path.dirname(sys.executable),),
+        **kwargs,
+    )
 
 
 @dataclass(frozen=True)
