@@ -1,0 +1,35 @@
+{
+  "task_id": "ffmpeg-env-skip-2026-10-18",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfharness",
+  "goal": "Report SKIP_ENV_MISSING_<CAP> when the local ffmpeg lacks a required filter or build flag, and still fail a real render mismatch.",
+  "completed_steps": [
+    "CLAIM on #612 comment 6252092330",
+    "Local probe uses ffmpeg -filters, -buildconf, and -encoders",
+    "Missing fribidi, libass, drawtext, sidedata, or the ffmpeg binary skips",
+    "A fake ffmpeg that advertises every capability and then refuses the render still fails the bidi self-test",
+    "GITHUB_ACTIONS=true turns a video-privacy or public-video SKIP_ENV_MISSING into a failure"
+  ],
+  "next_step": "Independent QA after hosted check-all is green.",
+  "artifacts": [
+    "scripts/vf_ffmpeg_env.py",
+    "scripts/test_vf_ffmpeg_env.py",
+    "scripts/vf_ffmpeg_svg_caption.py",
+    "scripts/check-hyperframes-backend.py",
+    "scripts/check-video-normalization.py",
+    "scripts/check-publication-evidence.py"
+  ],
+  "unresolved": [
+    "RENDER-HOSTS.json and Fleet stay unchanged",
+    "security_admission stays unchanged"
+  ],
+  "last_updated": "2026-10-18",
+  "execution_state": {
+    "claim": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6252092330",
+    "mac_report": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6251665213",
+    "windows_report": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6251561284",
+    "windows_execution": false
+  },
+  "latest_observation": "A missing required ffmpeg capability skips the sensor. A render mismatch still fails."
+}

@@ -394,9 +394,15 @@ class EvidenceTests(unittest.TestCase):
         self.assertFalse(self.result('production')['ok'])
 
     def test_valid_mp4_delivery_decodes(self):
-        import shutil, subprocess
-        if not shutil.which('ffmpeg') or not shutil.which('ffprobe'):
-            self.skipTest('real video smoke needs ffmpeg/ffprobe; runtime blocks without them')
+        import subprocess
+        import vf_ffmpeg_env
+        gap = vf_ffmpeg_env.publication_gap()
+        blocked = vf_ffmpeg_env.ci_skip_failure(gap)
+        if blocked:
+            self.fail(blocked)
+        if gap is not None:
+            print(gap.line, flush=True)
+            self.skipTest(gap.line)
         video = self.root/'smoke.mp4'
         subprocess.run(['ffmpeg', '-v', 'error', '-f', 'lavfi', '-i',
                         'color=s=120x150:d=0.1:r=10', '-c:v', 'mpeg4',
@@ -406,10 +412,16 @@ class EvidenceTests(unittest.TestCase):
         self.assertTrue(self.result()['ok'])
 
     def test_public_mp4_requires_hash_bound_normalization(self):
-        import shutil, subprocess, struct
+        import subprocess, struct
+        import vf_ffmpeg_env
         import vf_publish_bridge as bridge
-        if not shutil.which('ffmpeg') or not shutil.which('ffprobe'):
-            self.fail('Public video proof requires real ffmpeg and ffprobe')
+        gap = vf_ffmpeg_env.publication_gap()
+        blocked = vf_ffmpeg_env.ci_skip_failure(gap)
+        if blocked:
+            self.fail(blocked)
+        if gap is not None:
+            print(gap.line, flush=True)
+            self.skipTest(gap.line)
         master = self.root/'edited-master.mp4'
         subprocess.run(['ffmpeg', '-v', 'error', '-f', 'lavfi', '-i',
                         'color=s=120x150:d=0.1:r=10', '-c:v', 'mpeg4',

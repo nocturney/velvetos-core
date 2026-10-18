@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Validate HyperFrames + canonical Mac/Windows Edge render-host failover.
 
-Executes the local ffmpeg-svg caption tests (a real small render when ffmpeg
-is on PATH). No network and no send.
+Executes the local ffmpeg-svg caption tests when ffmpeg -filters and
+ffmpeg -buildconf advertise the required filters and libraries. A missing
+capability is SKIP_ENV_MISSING_<CAP>. A render whose pixels do not match
+still fails. No network and no send.
 """
 from __future__ import annotations
 import json, re, shutil, subprocess, sys
@@ -221,6 +223,29 @@ def main() -> None:
         '"--tmp-dir"',
         "headlineFontSha256",
         "def release_derived_tmp",
+        "caption_gap",
+    )
+    contains(
+        ROOT / "scripts" / "vf_ffmpeg_env.py",
+        "SKIP_ENV_MISSING_",
+        "-filters",
+        "-buildconf",
+        "FRIBIDI",
+        "LIBASS",
+        "GITHUB_ACTIONS",
+        "ci_skip_failure",
+    )
+    contains(
+        ROOT / "scripts" / "check-video-normalization.py",
+        "normalization_gap",
+        "ci_skip_failure",
+        "SkipTest",
+    )
+    contains(
+        ROOT / "scripts" / "check-publication-evidence.py",
+        "publication_gap",
+        "ci_skip_failure",
+        "skipTest",
     )
     if "version mismatch: required" in bridge or re.search(r"(?m)^HYPERFRAMES_VERSION\s*=", bridge):
         fail("bridge must not exact-pin normal HyperFrames execution")
@@ -286,6 +311,16 @@ def main() -> None:
     if "Installing pinned HyperFrames" in windows_bootstrap or '$HyperFramesVersion = "' in windows_bootstrap:
         fail("Windows bootstrap must not exact-pin normal HyperFrames execution")
 
+    env_tests = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "test_vf_ffmpeg_env.py")],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if env_tests.returncode != 0:
+        detail = ((env_tests.stdout or "") + "\n" + (env_tests.stderr or "")).strip()
+        fail("ffmpeg capability tests failed:\n" + detail[-4000:])
+
     caption_tests = subprocess.run(
         [sys.executable, str(ROOT / "scripts" / "test_vf_ffmpeg_svg_caption.py")],
         cwd=ROOT,
@@ -295,6 +330,15 @@ def main() -> None:
     if caption_tests.returncode != 0:
         detail = (caption_tests.stderr or caption_tests.stdout or "").strip()
         fail("ffmpeg-svg-caption tests failed:\n" + detail[-4000:])
+
+    scripts = str(ROOT / "scripts")
+    if scripts not in sys.path:
+        sys.path.insert(0, scripts)
+    from vf_ffmpeg_env import caption_gap
+
+    gap = caption_gap()
+    if gap is not None:
+        print(gap.line)
 
     print(
         f"OK hyperframes backend policy=latest-compatible minimum={minimum} recovery={recovery} "
