@@ -1,0 +1,1 @@
+- 2026-10-18 - **Changelog fragment gate negatives:** the self-test now rejects a non-bullet line, an empty fragment, a git conflict marker, a bad fragment filename, and a fold that treats the next release section as Unreleased. Removing any of those checks fails the self-test. No model call.

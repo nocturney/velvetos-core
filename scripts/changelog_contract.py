@@ -205,49 +205,201 @@ def live_gate(repo: Path = ROOT, base: str = "origin/main", head: str = "HEAD") 
 
 def selftest() -> int:
     bad: list[str] = []
+    counted = [0]
     with contextlib.redirect_stdout(io.StringIO()):
-        rc = _selftest(bad)
+        rc = _selftest(bad, counted)
     if rc == 0:
-        print("OK changelog-contract selftest cases=10")
+        print(f"OK changelog-contract selftest cases={counted[0]}")
     return rc
 
 
-def _selftest(bad: list[str]) -> int:
-    if gate(["scripts/tool.py", "changelog.d/example-pr.md"]) != 0:
-        bad.append("fragment-only capability PR must pass")
-    if gate(["scripts/tool.py"]) != 1:
-        bad.append("capability PR with neither must fail")
-    if gate(["scripts/tool.py", "CHANGELOG.md"]) != 0:
-        bad.append("CHANGELOG.md edit must still pass")
-    if gate(["docs/NOTE.md"]) != 0:
-        bad.append("docs-only PR must pass without a fragment")
-    if gate(["changelog.d/example-pr.md"]) != 0:
-        bad.append("fragment file alone must pass")
+def _expect_bullet_error(text: str, needle: str, bad: list[str], what: str) -> None:
+    try:
+        bullets_in(text, what)
+    except ValueError as exc:
+        if needle not in str(exc):
+            bad.append(f"{what} raised the wrong error: {exc}")
+    else:
+        bad.append(f"{what} was accepted")
+
+
+def _capture_call(fn) -> tuple[int, str]:
+    out, err = io.StringIO(), io.StringIO()
+    with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+        rc = fn()
+    return rc, out.getvalue() + err.getvalue()
+
+
+def _negative_checks(bad: list[str]) -> int:
+    """Each check has a probe that passes only while that check is present."""
+    sample = "- 2026-10-18 - **Example:** one line.\n"
+    _expect_bullet_error(sample[:-1], "must end with LF", bad, "missing final LF")
+    _expect_bullet_error(sample.replace("\n", "\r\n"), "contains CR", bad, "CR")
+    _expect_bullet_error("not a bullet\n", "not a bullet", bad, "non-bullet line")
+    _expect_bullet_error("\n", "has no bullets", bad, "empty fragment")
+    _expect_bullet_error("<<<<<<< HEAD\n", "conflict marker", bad, "conflict start")
+    _expect_bullet_error(">>>>>>> other\n", "conflict marker", bad, "conflict end")
+    _expect_bullet_error("=======\n", "conflict marker", bad, "conflict middle")
+    try:
+        kept = bullets_in("- a\n\n- b\n", "blank lines")
+    except ValueError as exc:
+        bad.append(f"blank lines rejected: {exc}")
+        kept = []
+    if kept != ["- a", "- b"]:
+        bad.append(f"blank lines were not skipped: {kept}")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        try:
+            rc, text = _capture_call(lambda: validate_committed(root))
+        except Exception as exc:
+            bad.append(f"missing changelog.d raised {type(exc).__name__}: {exc}")
+        else:
+            if rc != 0 or "none committed" not in text:
+                bad.append("missing changelog.d must pass as none committed")
+        folder = root / "changelog.d"
+        folder.mkdir()
+        (folder / "nested").mkdir()
+        try:
+            rc, text = _capture_call(lambda: validate_committed(root))
+        except Exception as exc:
+            bad.append(f"a directory in changelog.d raised {type(exc).__name__}: {exc}")
+        else:
+            if rc != 1 or "is not a file" not in text:
+                bad.append("a directory in changelog.d must fail")
+        (folder / "nested").rmdir()
+        (folder / "Not-A-Slug.md").write_text(sample, encoding="utf-8")
+        rc, text = _capture_call(lambda: validate_committed(root))
+        if rc != 1 or "slug" not in text:
+            bad.append("invalid fragment filename must fail")
+        (folder / "Not-A-Slug.md").unlink()
+        (folder / "example-pr.md").write_text("not a bullet\n", encoding="utf-8")
+        rc, text = _capture_call(lambda: validate_committed(root))
+        if rc != 1 or "not a bullet" not in text:
+            bad.append("validate_committed accepted a non-bullet fragment")
+        (folder / "example-pr.md").write_text(sample, encoding="utf-8")
+        rc, text = _capture_call(lambda: validate_committed(root))
+        if rc != 0:
+            bad.append(f"valid fragment must pass: {text}")
+
+        changelog = root / "CHANGELOG.md"
+        try:
+            rc, text = _capture_call(lambda: compile_tree(root))
+        except Exception as exc:
+            bad.append(f"compile without CHANGELOG.md raised {type(exc).__name__}: {exc}")
+        else:
+            if rc != 1 or "CHANGELOG.md is missing" not in text:
+                bad.append("compile without CHANGELOG.md must fail")
+        changelog.write_text("## [Unreleased]\n\n", encoding="utf-8")
+        (folder / "example-pr.md").unlink()
+        (folder / "Not-A-Slug.md").write_text(sample, encoding="utf-8")
+        try:
+            rc, text = _capture_call(lambda: compile_tree(root))
+        except Exception as exc:
+            bad.append(f"compile slug check raised {type(exc).__name__}: {exc}")
+        else:
+            if rc != 1 or "slug" not in text:
+                bad.append("compile must refuse an invalid fragment filename")
+        slug_path = folder / "Not-A-Slug.md"
+        if slug_path.exists():
+            slug_path.unlink()
+        (folder / "example-pr.md").write_text("<<<<<<< HEAD\n", encoding="utf-8")
+        try:
+            rc, text = _capture_call(lambda: compile_tree(root))
+        except Exception as exc:
+            bad.append(f"compile conflict check raised {type(exc).__name__}: {exc}")
+        else:
+            if rc != 1 or "conflict marker" not in text:
+                bad.append("compile must refuse a conflict marker")
+
+    released = "- 2026-10-18 - **Released:** stays in 1.0.0."
+    history = (
+        "intro\n\n## [Unreleased]\n\n- 2026-10-01 - **Kept:** stays.\n\n"
+        "## [1.0.0]\n\n" + released + "\n"
+    )
+    folded = fold(history, [released])
+    if folded.count(released) != 2:
+        bad.append("fold treated a released bullet as already in Unreleased")
+    if not folded.split("## [1.0.0]", 1)[0].count(released):
+        bad.append("fold did not copy a released bullet under Unreleased")
+    if history.split("## [1.0.0]\n", 1)[1] != folded.split("## [1.0.0]\n", 1)[1]:
+        bad.append("fold rewrote the released section while copying a bullet")
+    repeated = "- 2026-10-18 - **Twice:** one line."
+    if fold(history, [repeated, repeated]).count(repeated) != 1:
+        bad.append("fold duplicated one bullet inside a single call")
+    try:
+        fold("no header\n", [repeated])
+        bad.append("fold without Unreleased was accepted")
+    except ValueError as exc:
+        if "Unreleased" not in str(exc):
+            bad.append(f"missing Unreleased raised the wrong error: {exc}")
+    crlf = history.replace("\n", "\r\n")
+    crlf_folded = fold(crlf, [repeated])
+    if "\r\n" + repeated + "\r\n" not in crlf_folded:
+        bad.append("fold dropped CRLF on a CRLF changelog")
+
+    out = io.StringIO()
+    with contextlib.redirect_stdout(out):
+        rc = live_gate(base="refs/no-such-changelog-base-6919")
+    if rc != 0 or "SKIP" not in out.getvalue():
+        bad.append("a missing git base must skip the live gate")
+    previous = os.environ.get("GITHUB_ACTIONS")
+    os.environ["GITHUB_ACTIONS"] = "true"
+    try:
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            rc = live_gate()
+        if rc != 0 or "SKIP" not in out.getvalue():
+            bad.append("GITHUB_ACTIONS must skip the live gate")
+    finally:
+        if previous is None:
+            os.environ.pop("GITHUB_ACTIONS", None)
+        else:
+            os.environ["GITHUB_ACTIONS"] = previous
+    try:
+        changed_files("refs/no-such-changelog-base-6919", "HEAD")
+        bad.append("a bad git diff must fail closed")
+    except SystemExit:
+        pass
+    if gate(["scripts\\tool.py", "changelog.d\\example-pr.md"]) != 0:
+        bad.append("backslash fragment paths must pass")
+    return 26
+
+
+def _selftest(bad: list[str], counted: list[int]) -> int:
+    probes = [
+        (gate(["scripts/tool.py", "changelog.d/example-pr.md"]) == 0, "fragment-only capability PR must pass"),
+        (gate(["scripts/tool.py"]) == 1, "capability PR with neither must fail"),
+        (gate(["scripts/tool.py", "CHANGELOG.md"]) == 0, "CHANGELOG.md edit must still pass"),
+        (gate(["docs/NOTE.md"]) == 0, "docs-only PR must pass without a fragment"),
+        (gate(["changelog.d/example-pr.md"]) == 0, "fragment file alone must pass"),
+    ]
     sample = "- 2026-10-18 - **Example:** one line.\n"
     try:
         bullets_in(sample, "sample")
+        probes.append((True, "valid bullet"))
     except ValueError as exc:
-        bad.append(f"valid bullet rejected: {exc}")
-    try:
-        bullets_in(sample.replace("\n", "\r\n"), "crlf")
-        bad.append("CRLF fragment must fail")
-    except ValueError:
-        pass
+        probes.append((False, f"valid bullet rejected: {exc}"))
     history = (
         "intro\n\n## [Unreleased]\n\n- 2026-10-01 - **Kept:** stays.\n\n"
         "## [1.0.0]\n\n- released line must stay byte for byte.\n"
     )
     once = fold(history, ["- 2026-10-18 - **Example:** one line."])
     twice = fold(once, ["- 2026-10-18 - **Example:** one line."])
-    if once != twice:
-        bad.append("fold is not idempotent")
-    if history.split("## [1.0.0]\n", 1)[1] != once.split("## [1.0.0]\n", 1)[1]:
-        bad.append("fold rewrote released history")
-    if once.count("- 2026-10-18 - **Example:** one line.") != 1:
-        bad.append("fold duplicated a bullet")
-    if "- 2026-10-01 - **Kept:** stays." not in once:
-        bad.append("fold dropped an existing Unreleased bullet")
-    bad.extend(git_fixture())
+    probes.extend([
+        (once == twice, "fold is not idempotent"),
+        (history.split("## [1.0.0]\n", 1)[1] == once.split("## [1.0.0]\n", 1)[1], "fold rewrote released history"),
+        (once.count("- 2026-10-18 - **Example:** one line.") == 1, "fold duplicated a bullet"),
+        ("- 2026-10-01 - **Kept:** stays." in once, "fold dropped an existing Unreleased bullet"),
+    ])
+    negative_cases = _negative_checks(bad)
+    git_errors = git_fixture()
+    probes.append((not git_errors, "git fixture"))
+    bad.extend(git_errors)
+    counted[0] = len(probes) + negative_cases
+    for ok, message in probes:
+        if not ok and message not in bad:
+            bad.append(message)
     if bad:
         for item in bad:
             print(f"FAIL changelog-contract selftest: {item}", file=sys.stderr)
