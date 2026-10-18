@@ -74,6 +74,15 @@ jobs:
           --base "${{ github.event.pull_request.base.sha }}"
           --head "${{ github.event.pull_request.head.sha }}"
 
+      # Fragment gate: a capability diff needs changelog.d/<slug>.md or CHANGELOG.md.
+      # Compile stays manual. This step does not run changelog-compile.py.
+      - name: Changelog fragment contract
+        if: github.event_name == 'pull_request'
+        run: >-
+          python3 scripts/changelog_contract.py
+          --base "${{ github.event.pull_request.base.sha }}"
+          --head "${{ github.event.pull_request.head.sha }}"
+
       - name: README System Pulse is current
         if: ${{ !cancelled() && github.event_name == 'pull_request' }}
         run: python3 scripts/update-readme-snapshot.py --check

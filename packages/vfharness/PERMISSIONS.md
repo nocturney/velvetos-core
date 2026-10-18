@@ -40,7 +40,7 @@ DENY: invented ₪, invented Insights
 - **Scope:** חשבון `nocturney@gmail.com` לקריאה ולשליחה; דרייב לפי שם עבודה + יצירת מסמך משרד; בלי תיקיות רפואיות/משפטיות אלא אם נקב המשתמש.
 - **Rate:** שליחה משרדית / שרשור פנייה. בלי דיוור המוני. Treg — לא בשימוש.
 - **Reversibility:** בוסט / מחיקה / אוטו־DM דורשים אדם. שליחת כלי HQ היא ברירת המחדל.
-- **Visibility:** שינוי משרד → שורת CHANGELOG. הסלמה → תבנית.
+- **Visibility:** שינוי משרד → קובץ `changelog.d/<slug>.md` (לא עריכת `CHANGELOG.md` בכל PR). הסלמה → תבנית.
 
 ## Least privilege
 

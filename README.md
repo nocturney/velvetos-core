@@ -249,7 +249,7 @@ Hidden names are classified too. A hidden symlink is `SYMLINK_REFUSED` and is no
 </tr>
 <tr>
 <td align="center"><strong>23</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>132</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>133</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>19</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -435,7 +435,7 @@ python3 scripts/update-readme-snapshot.py
 python3 scripts/update-readme-snapshot.py --check
 ```
 
-**Definition of Done:** implementation + evidence/sensor + changelog + README capability/status update.
+**Definition of Done:** implementation + evidence/sensor + changelog fragment (`changelog.d/<slug>.md`) + README capability/status update.
 
 ---
 
@@ -560,7 +560,7 @@ A workflow file proves automation exists; provider-dependent behavior is **LIVE*
 | Constitution | `constitution/` |
 | Sensors | `scripts/check-*.py` · CI runtime: hashed locks `requirements-sensors.py311.lock` / `.py312.lock` (from `requirements-sensors.txt`) |
 | Workflows | `.github/workflows/` |
-| Change history | [`CHANGELOG.md`](CHANGELOG.md) |
+| Change history | [`changelog.d/`](changelog.d/) fragments, folded by `scripts/changelog-compile.py` into [`CHANGELOG.md`](CHANGELOG.md) |
 | Agent guidance | [`AGENTS.md`](AGENTS.md) |
 
 ## README + System Pulse contract
@@ -576,7 +576,9 @@ python3 scripts/update-readme-snapshot.py
 python3 scripts/update-readme-snapshot.py --check
 ```
 
-**Definition of Done:** implementation + evidence/sensor + changelog + README capability/status update.
+Capability changes record history as `changelog.d/<slug>.md` instead of editing `CHANGELOG.md` in the same PR. `python3 scripts/changelog-compile.py` folds fragments under Unreleased when someone runs it. That command is manual and is not a scheduled workflow. A direct `CHANGELOG.md` edit still satisfies the gate. `merge=union` on `CHANGELOG.md` is only a fallback for those direct edits: added lines from both sides survive, and a line one side deleted survives too when the other side still has it. Details: [`docs/CHANGELOG-FRAGMENTS.md`](docs/CHANGELOG-FRAGMENTS.md).
+
+**Definition of Done:** implementation + evidence/sensor + changelog fragment (`changelog.d/<slug>.md`) + README capability/status update.
 
 ---
 
