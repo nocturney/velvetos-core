@@ -13,6 +13,7 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -129,7 +130,82 @@ def select_checks(
     return [all_checks[sensor_id] for sensor_id in normalized], "selected"
 
 
+README_CONTRACT = SCRIPTS / "readme_contract.py"
+README_BASE = "origin/main"
+
+
+def local_readme_gate(repo: Path = ROOT, base: str = README_BASE, head: str = "HEAD") -> tuple[str, int]:
+    """Run the Living README contract locally, the same gate the hosted PR workflow runs.
+
+    Returns (message, returncode). Skips with a clear line when there is no git base
+    (not a git repo, or origin/main missing) and when running under GitHub Actions,
+    where the workflow runs readme_contract.py as its own step.
+    """
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        return "SKIP readme-contract (hosted workflow runs the README gate as its own step)", 0
+    probe = subprocess.run(
+        ["git", "rev-parse", "--verify", "-q", f"{base}^{{commit}}"],
+        cwd=repo, text=True, capture_output=True,
+    )
+    if probe.returncode != 0:
+        return f"SKIP readme-contract (no git base {base} in {repo})", 0
+    proc = subprocess.run(
+        [sys.executable, str(README_CONTRACT), "--repo", str(repo), "--base", base, "--head", head],
+        cwd=ROOT, text=True, capture_output=True, encoding="utf-8",
+    )
+    text = "\n".join(part for part in (proc.stdout.strip(), proc.stderr.strip()) if part)
+    return text, proc.returncode
+
+
+def readme_gate_fixture() -> list[str]:
+    """Prove the local gate fails on a capability change without README and passes with it."""
+    errors: list[str] = []
+
+    def git(repo: Path, *args: str) -> None:
+        subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True, text=True)
+
+    with tempfile.TemporaryDirectory() as tmp:
+        repo = Path(tmp)
+        git(repo, "init", "-q", "-b", "main")
+        git(repo, "config", "user.email", "fixture@example.invalid")
+        git(repo, "config", "user.name", "readme-gate-fixture")
+        git(repo, "config", "commit.gpgsign", "false")
+        (repo / "scripts").mkdir()
+        (repo / "scripts" / "tool.py").write_text("print(1)\n", encoding="utf-8")
+        (repo / "README.md").write_text("base\n", encoding="utf-8")
+        git(repo, "add", "-A")
+        git(repo, "commit", "-qm", "base")
+        git(repo, "update-ref", "refs/remotes/origin/main", "HEAD")
+
+        (repo / "scripts" / "tool.py").write_text("print(2)\n", encoding="utf-8")
+        git(repo, "commit", "-qam", "capability change without README")
+        _, rc = local_readme_gate(repo, base="origin/main", head="HEAD")
+        if rc != 1:
+            errors.append(f"capability change without README must fail locally, got rc={rc}")
+
+        (repo / "README.md").write_text("base\nupdated\n", encoding="utf-8")
+        git(repo, "commit", "-qam", "README update")
+        _, rc = local_readme_gate(repo, base="origin/main", head="HEAD")
+        if rc != 0:
+            errors.append(f"capability change with README must pass locally, got rc={rc}")
+
+        msg, rc = local_readme_gate(repo, base="origin/does-not-exist", head="HEAD")
+        if rc != 0 or not msg.startswith("SKIP readme-contract"):
+            errors.append(f"missing base must skip with rc=0, got rc={rc} msg={msg!r}")
+
+    with tempfile.TemporaryDirectory() as plain:
+        msg, rc = local_readme_gate(Path(plain), base="origin/main", head="HEAD")
+        if rc != 0 or not msg.startswith("SKIP readme-contract"):
+            errors.append(f"non-git directory must skip with rc=0, got rc={rc} msg={msg!r}")
+    return errors
+
+
 def selftest() -> int:
+    fixture_errors = readme_gate_fixture()
+    if fixture_errors:
+        for error in fixture_errors:
+            print(f"FAIL check-all readme gate: {error}", file=sys.stderr)
+        return 1
     fixture = {
         "check-a": Path("scripts/check-a.py"),
         "check-b": Path("scripts/check-b.py"),
@@ -189,7 +265,8 @@ def selftest() -> int:
         return 1
     print(
         "OK check-all selftest default=ACTIVE_FULL selected_input=EXACT "
-        "always_on=REQUIRED retired=EXPLICIT_ONLY all_lifecycle=AVAILABLE fail_closed=PASS"
+        "always_on=REQUIRED retired=EXPLICIT_ONLY all_lifecycle=AVAILABLE fail_closed=PASS "
+        "readme_gate=LOCAL_PARITY"
     )
     return 0
 
@@ -279,6 +356,13 @@ def main() -> int:
     # so a routine never commits sensor side effects by accident.
     dirty_after = git_dirty_state()
     drift: list[str] = []
+    readme_msg, readme_rc = local_readme_gate()
+    if readme_rc != 0:
+        failed.append("readme-contract")
+        print(f"FAIL readme-contract\n{readme_msg}", file=sys.stderr)
+    else:
+        print(readme_msg)
+
     if dirty_before is not None and dirty_after is not None:
         drift = sorted(
             rel for rel, data in dirty_after.items()
