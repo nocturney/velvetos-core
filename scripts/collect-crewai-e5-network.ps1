@@ -71,10 +71,14 @@ function Take-Snapshot {
         if ($byId.ContainsKey($rootId)) {
             $observedBirth = [DateTime]$byId[$rootId].CreationDate
             $expectedBirth = $script:Child.StartTime
-            if ([Math]::Abs(($observedBirth.ToUniversalTime() - $expectedBirth.ToUniversalTime()).TotalSeconds) -gt 2) {
+            # The .NET handle and CIM must refer to the same OS creation instant.
+            # A multi-second tolerance could accept a rapidly recycled root PID.
+            if ([Math]::Abs(($observedBirth.ToUniversalTime() - $expectedBirth.ToUniversalTime()).TotalSeconds) -gt 0.01) {
                 throw 'ROOT_PID_BIRTH_MISMATCH'
             }
             $selected[$rootId] = $true
+            # The launched handle identifies this PID even if a later child fails validation.
+            $script:Known[$rootId] = UtcBirth $byId[$rootId]
         }
     }
     foreach ($entry in $script:Known.GetEnumerator()) {
@@ -102,10 +106,35 @@ function Take-Snapshot {
             if ($script:Known.ContainsKey([int]$processId) -and $script:Known[[int]$processId] -ne $birth) {
                 throw 'TRACKED_PID_REUSED'
             }
-            $script:Known[[int]$processId] = $birth
             @{ pid = [int]$processId; parent_pid = [int]$row.ParentProcessId; created_at_utc = $birth }
         }
     )
+    # Validate every CIM member's parent chain, not just PID membership.
+    # A reused parent PID, orphan, or cycle must fail before reading sockets.
+    if ($tree.Count -gt 4096) { throw 'PROCESS_TREE_TOO_LARGE' }
+    if ($tree.Count -gt 0) {
+        $nodes = @{}
+        foreach ($node in $tree) { $nodes[[int]$node.pid] = $node }
+        if ($null -eq $script:Child) { throw 'TREE_ROOT_MISSING' }
+        $rootId = [int]$script:Child.Id
+        if (-not $nodes.ContainsKey($rootId)) { throw 'TREE_ROOT_MISSING' }
+        if ($nodes.ContainsKey([int]$nodes[$rootId].parent_pid)) { throw 'PROCESS_TREE_CYCLE' }
+        foreach ($node in $tree) {
+            $cursor = [int]$node.pid
+            $visited = @{}
+            while ($cursor -ne $rootId) {
+                if ($visited.ContainsKey($cursor)) { throw 'PROCESS_TREE_CYCLE' }
+                $visited[$cursor] = $true
+                if (-not $nodes.ContainsKey($cursor)) { throw 'PROCESS_TREE_ORPHAN' }
+                $parentId = [int]$nodes[$cursor].parent_pid
+                if (-not $nodes.ContainsKey($parentId)) { throw 'PROCESS_TREE_ORPHAN' }
+                $childBirth = ([DateTime]$byId[$cursor].CreationDate).ToUniversalTime()
+                $parentBirth = ([DateTime]$byId[$parentId].CreationDate).ToUniversalTime()
+                if ($childBirth -lt $parentBirth) { throw 'CHILD_CREATED_BEFORE_PARENT' }
+                $cursor = $parentId
+            }
+        }
+    }
     $tcp = @(
         foreach ($connection in @(Get-NetTCPConnection -ErrorAction Stop)) {
             $ownerId = [int]$connection.OwningProcess
@@ -125,6 +154,21 @@ function Take-Snapshot {
             }
         }
     )
+    # Socket ownership can race PID reuse between CIM and Get-Net* calls.
+    # Recheck that every sampled identity survived with the same CreationDate.
+    $afterById = @{}
+    foreach ($row in @(Get-CimInstance -ClassName Win32_Process -ErrorAction Stop)) {
+        $afterById[[int]$row.ProcessId] = $row
+    }
+    foreach ($member in $tree) {
+        $id = [int]$member.pid
+        if (-not $afterById.ContainsKey($id) -or
+            (UtcBirth $afterById[$id]) -cne $member.created_at_utc) {
+            throw 'PROCESS_IDENTITY_CHANGED_DURING_SAMPLE'
+        }
+    }
+    # Only validated descendants enter the stop-list; never stop an unverified PID.
+    foreach ($member in $tree) { $script:Known[[int]$member.pid] = $member.created_at_utc }
     return @{ captured_at_utc = UtcNow; process_tree = $tree; tcp = $tcp; udp = $udp }
 }
 

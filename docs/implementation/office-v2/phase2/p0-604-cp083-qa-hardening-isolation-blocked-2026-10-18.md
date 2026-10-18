@@ -1,6 +1,6 @@
 # CP083 QA hardening + Worker isolation BLOCKED (2026-10-18)
 
-**SECURITY RED · Draft only · no merge/deploy**
+**merged into main via #764 (9c2f3347); lab-only, SECURITY RED**
 
 ## CLAIM
 
