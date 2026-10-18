@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 from __future__ import annotations
+import importlib.util
 import json
 import subprocess
 import sys
 from pathlib import Path
+
+import vf_subprocess_hygiene as hygiene
 
 ROOT = Path(__file__).resolve().parents[1]
 P0 = ROOT / "docs" / "implementation" / "office-v2" / "phase0"
@@ -291,7 +294,24 @@ def main() -> None:
     suite = subprocess.run([sys.executable, str(ROOT / "scripts" / "office-v2-phase3b-reader-route-test.py")], cwd=ROOT, text=True, capture_output=True, timeout=30)
     require(suite.returncode == 0 and "admin-fallback=FORBIDDEN" in suite.stdout and "main_descendant_scope=GUARDED" in suite.stdout, "production reader negative cases failed: " + (suite.stdout + suite.stderr)[-1200:])
 
+    prove_promote_spawns()
     print("OK office-v2-phase3b-production contract=READY scope=instagram-publisher-snapshot-read reader_route=GATED writer_change=FALSE mutation=FALSE promotion=EXPLICIT_ONLY")
+
+
+def prove_promote_spawns() -> None:
+    path = ROOT / "scripts" / "office-v2-phase3b-production-promote.py"
+    spec = importlib.util.spec_from_file_location("phase3b_promote_hygiene", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    with hygiene.record_pinned_spawn("gh") as (calls, short):
+        module.exact_ci("abc", "99")
+    hygiene.expect_pinned(calls, short, timeout=35, keep_gh_token=True)
+    with hygiene.record_pinned_spawn("whoami") as (calls, short):
+        module.windows_identity()
+    hygiene.expect_pinned(calls, short, timeout=10, keep_gh_token=False)
+    with hygiene.record_pinned_spawn("git") as (calls, short):
+        module.git("status")
+    hygiene.expect_pinned(calls, short, timeout=30, keep_gh_token=False)
 
 if __name__ == "__main__":
     main()

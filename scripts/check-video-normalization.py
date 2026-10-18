@@ -10,6 +10,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+import vf_ffmpeg_env
+import vf_subprocess_hygiene as hygiene
 import vf_video_normalization as video
 
 MARKER = b'PRIVATE_TEST_METADATA_4f219'
@@ -20,13 +22,26 @@ def sha(path):
 
 
 def ffmpeg(*args):
-    subprocess.run(['ffmpeg', '-v', 'error', '-nostdin', '-y', *map(str, args)],
-                   check=True, timeout=20, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+    vf_ffmpeg_env.run_pinned(
+        'ffmpeg',
+        ['-v', 'error', '-nostdin', '-y', *map(str, args)],
+        check=True,
+        timeout=20,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+    )
 
 
 def probe(path):
-    return json.loads(subprocess.check_output(['ffprobe', '-v', 'error', '-show_format',
-                        '-show_streams', '-show_chapters', '-of', 'json', str(path)], timeout=20))
+    proc = vf_ffmpeg_env.run_pinned(
+        'ffprobe',
+        ['-v', 'error', '-show_format', '-show_streams', '-show_chapters', '-of', 'json', str(path)],
+        check=True,
+        timeout=20,
+        text=True,
+        capture_output=True,
+    )
+    return json.loads(proc.stdout)
 
 
 class VideoNormalizationTests(unittest.TestCase):
@@ -151,6 +166,32 @@ class VideoNormalizationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'output byte budget exceeded'):
             video.normalize_video(self.master, self.output, max_bytes=1024)
         self.assertFalse(self.output.exists())
+
+
+class FfmpegSpawnHygieneTests(unittest.TestCase):
+    def test_env_probe_is_absolute_timed_and_allowlisted(self):
+        with hygiene.record_pinned_spawn('ffmpeg') as (calls, short):
+            vf_ffmpeg_env._run(hygiene.pin_which('ffmpeg'), '-filters')
+        hygiene.expect_pinned(calls, short, timeout=vf_ffmpeg_env.PROBE_TIMEOUT, keep_gh_token=False)
+
+    def test_relative_ffmpeg_is_not_a_tool(self):
+        original = hygiene.shutil.which
+        hygiene.shutil.which = lambda name, *args, **kwargs: name
+        try:
+            found, gap = vf_ffmpeg_env._tools()
+        finally:
+            hygiene.shutil.which = original
+        self.assertIsNone(found)
+        self.assertIsNotNone(gap)
+        self.assertIn('SKIP_ENV_MISSING_FFMPEG', gap.line)
+
+    def test_normalization_helpers_pin_ffmpeg_and_ffprobe(self):
+        with hygiene.record_pinned_spawn('ffmpeg') as (calls, short):
+            ffmpeg('-f', 'lavfi', '-i', 'color=black:s=16x16:d=0.1', 'out.mp4')
+        hygiene.expect_pinned(calls, short, timeout=20, keep_gh_token=False)
+        with hygiene.record_pinned_spawn('ffprobe') as (calls, short):
+            self.assertEqual(probe('out.mp4'), {})
+        hygiene.expect_pinned(calls, short, timeout=20, keep_gh_token=False)
 
 
 if __name__ == '__main__':

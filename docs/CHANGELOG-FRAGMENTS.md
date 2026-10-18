@@ -14,6 +14,8 @@ changelog.d/<slug>.md
 
 A change under `packages/`, `office/`, `scripts/`, `.github/workflows/` or `constitution/` must include that fragment or a direct `CHANGELOG.md` edit. `scripts/check-changelog-fragments.py` accepts the fragment and rejects a capability diff that has neither. A docs-only diff outside those roots is not gated.
 
+Only an added or modified fragment with a valid non-empty bullet counts. Deleting a fragment (status `D`) or emptying it does not. Deleting a fragment that already exists is refused unless the pull request is the compile step: the diff is only `CHANGELOG.md` plus those deletions, and each deleted bullet is already in `CHANGELOG.md`.
+
 ## Compile
 
 Fold the fragments into `## [Unreleased]` when a person wants one changelog file:

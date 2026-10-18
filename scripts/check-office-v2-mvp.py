@@ -6,6 +6,8 @@ import importlib.util
 import re
 import subprocess
 import sys
+
+import vf_subprocess_hygiene as hygiene
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -60,6 +62,24 @@ def publishable_board_files() -> list[Path]:
         if tracked or not ignored:
             found.append(path)
     return found
+
+
+def prove_spawn_hygiene(mvp) -> None:
+    with hygiene.record_pinned_spawn("gh") as (calls, short):
+        row = mvp._gh_get("/repos/nocturney/velvetos-core")
+    hygiene.expect_pinned(calls, short, timeout=90, keep_gh_token=True)
+    if not row.get("ok"):
+        fail("pinned gh read did not parse")
+    try:
+        mvp._gh_get("-evil")
+    except mvp.GitHubReadError as exc:
+        if "dash" not in str(exc):
+            fail("dash path refusal changed: " + str(exc))
+    else:
+        fail("a GitHub path that starts with a dash was accepted")
+    with hygiene.record_pinned_spawn("git") as (calls, short):
+        mvp._git(["status"], ROOT)
+    hygiene.expect_pinned(calls, short, timeout=30, keep_gh_token=False)
 
 
 def main() -> int:
@@ -231,6 +251,7 @@ def main() -> int:
     if proc.returncode != 0:
         detail = (proc.stdout + "\n" + proc.stderr).strip()
         fail("fixture unit test failed\n" + detail[-2000:])
+    prove_spawn_hygiene(mvp)
     print("OK office-v2-mvp offline fixture read_only=GET schedule=none")
     return 0
 

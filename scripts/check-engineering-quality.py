@@ -3,10 +3,19 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
-import subprocess
+import os
 import sys
 from pathlib import Path
+
+from vf_spawn import (
+    GIT_TIMEOUT_SECONDS,
+    SpawnRefusal,
+    allowlisted_git_errors,
+    revision_form_errors,
+    run_git,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "packages" / "vfharness" / "devtools" / "components.json"
@@ -26,16 +35,80 @@ def read(rel: str) -> str:
 
 
 def git_head(path: Path) -> str:
-    proc = subprocess.run(["git", "rev-parse", "HEAD"], cwd=path, text=True, capture_output=True)
+    try:
+        proc = run_git(
+            ["rev-parse", "--verify", "-q"],
+            revisions=["HEAD"],
+            cwd=path,
+            check=False,
+            timeout=GIT_TIMEOUT_SECONDS,
+        )
+    except SpawnRefusal as exc:
+        fail(f"cannot read git head for {path}: {exc}")
     if proc.returncode:
         fail(f"cannot read git head for {path}")
     return proc.stdout.strip()
+
+
+def prove_setup_git() -> None:
+    path = ROOT / "scripts" / "setup-engineering-quality.py"
+    spec = importlib.util.spec_from_file_location("setup_engineering_quality_hygiene", path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec and spec.loader
+    spec.loader.exec_module(module)
+    errors = module.prove_git_hygiene()
+    errors.extend(module.prove_git_real())
+    errors.extend(module.prove_ensure_clone())
+    if errors:
+        fail("setup git spawn: " + "; ".join(errors))
+
+
+def prove_git_head() -> None:
+    import vf_spawn
+
+    os_environ_sentinel = "VF_SPAWN_SENTINEL"
+    previous = {
+        os_environ_sentinel: os.environ.get(os_environ_sentinel),
+        "GIT_CONFIG_COUNT": os.environ.get("GIT_CONFIG_COUNT"),
+    }
+    os.environ[os_environ_sentinel] = "nope"
+    os.environ["GIT_CONFIG_COUNT"] = "1"
+    captured: list[tuple[list[str], dict]] = []
+    original = vf_spawn.subprocess.run
+
+    def fake_run(argv, **kwargs):
+        captured.append((list(argv), kwargs))
+        return vf_spawn.subprocess.CompletedProcess(argv, 0, stdout="abc\n", stderr="")
+
+    vf_spawn.subprocess.run = fake_run
+    try:
+        value = git_head(ROOT)
+    except SpawnRefusal as exc:
+        fail(f"git head spawn refused: {exc}")
+    finally:
+        vf_spawn.subprocess.run = original
+        for key, old in previous.items():
+            if old is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = old
+    if value != "abc" or len(captured) != 1:
+        fail("git head spawn did not run")
+    errors = allowlisted_git_errors(captured[0][0], captured[0][1], timeout=GIT_TIMEOUT_SECONDS)
+    errors.extend(revision_form_errors(captured[0][0], ["HEAD"]))
+    if errors:
+        fail("git head spawn: " + "; ".join(errors))
+    real = git_head(ROOT)
+    if len(real) < 4 or any(char not in "0123456789abcdefABCDEF" for char in real):
+        fail(f"real git head was not a commit: {real!r}")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args()
+    prove_setup_git()
+    prove_git_head()
 
     data = json.loads(read("packages/vfharness/devtools/components.json"))
     rows = {row["id"]: row for row in data.get("components", [])}
