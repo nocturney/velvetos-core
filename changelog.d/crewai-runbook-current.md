@@ -1,0 +1,1 @@
+- 2026-10-18 - **CrewAI attended runbook:** the operator checklist matches the merged runner. A post-guarded kickoff returns exit 0 and stays NOT_VERIFIED. E5 admits the stage root itself. Windows bind proof is `C:\Windows\System32\netstat.exe` on port 11434. Deny-by-default network, C: write denial, the 600-second watchdog, and retries=0 stay open owner decisions. Docs only.
