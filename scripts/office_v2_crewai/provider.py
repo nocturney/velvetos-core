@@ -21,6 +21,7 @@ from office_v2_crewai.contract import (
     APPROVED_OLLAMA_HOST,
     APPROVED_OPENAI_BASE,
     REASONING_EFFORT,
+    APPROVED_AT,
     APPROVED_PORT,
     EVIDENCE_COMMENT,
     PAID_ENV_NAMES,
@@ -88,13 +89,17 @@ def assert_loopback_url(url: object) -> str:
 
 
 def normalize_ollama_base_url(base_url: str) -> str:
-    """Match crewai's ollama normalizer. A bare host gets port 11434, which is refused."""
+    """Match crewai's ollama normalizer. A missing port becomes 11434.
+
+    That default is the approved pilot port only for host 127.0.0.1.
+    localhost and port 11435 stay refused.
+    """
     if "://" not in base_url:
         base_url = "http://" + base_url
     parts = urlsplit(base_url)
     netloc = parts.netloc
     if parts.scheme == "http" and parts.port is None:
-        netloc = netloc + ":11434"
+        netloc = netloc + ":%s" % APPROVED_PORT
     path = parts.path.rstrip("/")
     if not path.endswith("/v1"):
         path = path + "/v1"
@@ -120,7 +125,7 @@ def effective_endpoint(value: object) -> str:
 
 
 def assert_llm_route(spec: object) -> None:
-    """Refuse litellm, the default 11434 client, and any non-approved endpoint."""
+    """Refuse litellm and any endpoint other than 127.0.0.1:11434."""
     if not isinstance(spec, dict):
         raise ProviderRefusal("LLM_ENDPOINT_MISMATCH")
     if spec.get("is_litellm") is not False:
@@ -147,7 +152,7 @@ def validate_config_document(document: object) -> dict:
     data = _as_mapping(document)
     if data.get("schema") != "velvetos.office-v2.crewai-local-model.v1":
         raise ProviderRefusal("MODEL_CONFIG_SCHEMA")
-    if data.get("approved_by") != APPROVED_BY or data.get("approved_at") != "2026-10-18T15:28:00+03:00":
+    if data.get("approved_by") != APPROVED_BY or data.get("approved_at") != APPROVED_AT:
         raise ProviderRefusal("MODEL_APPROVAL_MISMATCH")
     if data.get("evidence") != EVIDENCE_COMMENT:
         raise ProviderRefusal("MODEL_EVIDENCE_MISMATCH")

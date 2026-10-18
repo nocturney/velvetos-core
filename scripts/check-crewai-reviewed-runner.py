@@ -23,6 +23,7 @@ from office_v2_crewai.contract import (  # noqa: E402
     APPROVED_MODEL_DIGEST,
     APPROVED_OLLAMA_HOST,
     APPROVED_OPENAI_BASE,
+    APPROVED_PORT,
     CREWAI_TOOLS_NA,
     MCP_NOT_AFFECTED,
     PRIVATE_REPO_NEEDLE,
@@ -382,11 +383,11 @@ def check_provider() -> None:
     refused = {
         "http://example.com": "MODEL_URL_NOT_LOOPBACK",
         "http://10.0.0.1": "MODEL_URL_NOT_LOOPBACK",
-        "http://192.168.1.1:11435": "MODEL_URL_NOT_LOOPBACK",
+        "http://192.168.1.1:11434": "MODEL_URL_NOT_LOOPBACK",
         "https://api.openai.com": "MODEL_URL_SCHEME_REFUSED",
-        "http://localhost:11435": "MODEL_URL_NOT_EXACT_APPROVAL",
-        "http://127.0.0.1:11434": "MODEL_URL_NOT_EXACT_APPROVAL",
-        "https://127.0.0.1:11435": "MODEL_URL_SCHEME_REFUSED",
+        "http://localhost:11434": "MODEL_URL_NOT_EXACT_APPROVAL",
+        "http://127.0.0.1:11435": "MODEL_URL_NOT_EXACT_APPROVAL",
+        "https://127.0.0.1:11434": "MODEL_URL_SCHEME_REFUSED",
     }
     for url, code in refused.items():
         try:
@@ -396,6 +397,10 @@ def check_provider() -> None:
                 fail("%s refused as %s" % (url, exc))
         else:
             fail("%s was accepted" % url)
+    if APPROVED_PORT != 11434 or APPROVED_BASE_URL != "http://127.0.0.1:11434":
+        fail("approved endpoint is not 127.0.0.1:11434")
+    if assert_loopback_url("http://127.0.0.1:11434") != "http://127.0.0.1:11434":
+        fail("11434 was refused")
     if assert_loopback_url(APPROVED_BASE_URL) != APPROVED_BASE_URL:
         fail("approved loopback was not accepted")
     provider = LocalOllamaProvider(MODEL)
@@ -432,7 +437,7 @@ def check_provider() -> None:
     else:
         fail("missing OLLAMA_NO_CLOUD was accepted")
     seen = []
-    loopback = [{"address": "127.0.0.1", "port": 11435}]
+    loopback = [{"address": "127.0.0.1", "port": 11434}]
 
     def tags_mismatch(request, timeout=30):
         seen.append(request.full_url)
@@ -511,7 +516,7 @@ def check_provider() -> None:
             "hello",
             urlopen=expired_open,
             env=model_env(),
-            binds=[{"address": "0.0.0.0", "port": 11435}],
+            binds=[{"address": "0.0.0.0", "port": 11434}],
             harness=KillHarness(),
             started=0,
             now=600,
@@ -528,14 +533,15 @@ def check_provider() -> None:
         raise AssertionError("urlopen")
 
     try:
-        provider.complete("hello", urlopen=wildcard_open, env=model_env(), binds=[{"address": "0.0.0.0", "port": 11435}])
+        provider.complete("hello", urlopen=wildcard_open, env=model_env(), binds=[{"address": "0.0.0.0", "port": 11434}])
     except ProviderRefusal as exc:
         if str(exc) != "OLLAMA_BIND_WILDCARD" or wildcard:
             fail("wildcard bind reached the network: %s" % exc)
     else:
         fail("Ollama bound to 0.0.0.0 was accepted")
-    _expect_provider(lambda: assert_ollama_bind([{"address": "127.0.0.1", "port": 11434}]), "OLLAMA_BIND_UNPROVEN")
-    assert_ollama_bind([{"address": "::1", "port": 11435}])
+    assert_ollama_bind([{"address": "127.0.0.1", "port": 11434}])
+    assert_ollama_bind([{"address": "::1", "port": 11434}])
+    _expect_provider(lambda: assert_ollama_bind([{"address": "127.0.0.1", "port": 11435}]), "OLLAMA_BIND_UNPROVEN")
     effort = json.loads(MODEL.read_text(encoding="ascii"))
     if effort.get("reasoning_effort") != "none":
         fail("frozen model input does not record reasoning_effort none")
@@ -562,7 +568,7 @@ def check_provider() -> None:
     if APPROVED_MODEL.encode("ascii") not in chat[1][1]:
         fail("chat payload did not use the approved model")
     wrong_host = model_env()
-    wrong_host["OLLAMA_HOST"] = "127.0.0.1:11434"
+    wrong_host["OLLAMA_HOST"] = "127.0.0.1:11435"
     try:
         provider.complete("hello", urlopen=boom, env=wrong_host)
     except ProviderRefusal as exc:
@@ -656,7 +662,7 @@ def check_model_redirect(provider: LocalOllamaProvider) -> None:
         provider.complete(
             "hello",
             env=model_env(),
-            binds=[{"address": "127.0.0.1", "port": 11435}],
+            binds=[{"address": "127.0.0.1", "port": 11434}],
         )
     except ProviderRefusal as exc:
         if str(exc) != "MODEL_REDIRECT_REFUSED" or len(seen) != 1 or not str(seen[0]).endswith("/api/tags"):
@@ -756,8 +762,8 @@ def check_ast() -> None:
         fail("crew source does not pin the OpenAI-compatible base URL")
     if "reasoning_effort=REASONING_EFFORT" not in source:
         fail("crew source does not pass reasoning_effort none")
-    if APPROVED_OPENAI_BASE != "http://127.0.0.1:11435/v1":
-        fail("approved OpenAI base is not the 11435 /v1 endpoint")
+    if APPROVED_OPENAI_BASE != "http://127.0.0.1:11434/v1":
+        fail("approved OpenAI base is not the 11434 /v1 endpoint")
     saw_bind = False
     saw_cwd = False
     saw_route = False
@@ -835,11 +841,13 @@ def _good_route() -> dict:
 def check_endpoint_mutations() -> None:
     assert_llm_route(_good_route())
     if effective_endpoint(APPROVED_OPENAI_BASE) != APPROVED_ENDPOINT:
-        fail("approved base did not resolve to 11435")
+        fail("approved base did not resolve to 11434")
     if effective_endpoint(APPROVED_OLLAMA_HOST) != APPROVED_ENDPOINT:
-        fail("approved OLLAMA_HOST did not resolve to 11435")
-    if effective_endpoint("http://127.0.0.1:11435") != APPROVED_ENDPOINT:
-        fail("a 11435 URL without /v1 did not normalize to the approved endpoint")
+        fail("approved OLLAMA_HOST did not resolve to 11434")
+    if effective_endpoint("http://127.0.0.1:11434") != "127.0.0.1:11434":
+        fail("a 11434 URL without /v1 did not normalize to the approved endpoint")
+    _expect_provider(lambda: effective_endpoint("http://127.0.0.1:11435"), "LLM_ENDPOINT_MISMATCH")
+    _expect_provider(lambda: effective_endpoint("http://127.0.0.1:11435/v1"), "LLM_ENDPOINT_MISMATCH")
     _expect_provider(lambda: assert_llm_route({**_good_route(), "is_litellm": True}), "LITELLM_ROUTE_REFUSED")
     _expect_provider(lambda: assert_llm_route({**_good_route(), "is_litellm": None}), "LITELLM_ROUTE_REFUSED")
     _expect_provider(
@@ -847,7 +855,7 @@ def check_endpoint_mutations() -> None:
         "LLM_BASE_URL_REFUSED",
     )
     _expect_provider(
-        lambda: assert_llm_route({**_good_route(), "base_url": "http://127.0.0.1:11434/v1"}),
+        lambda: assert_llm_route({**_good_route(), "base_url": "http://127.0.0.1:11435/v1"}),
         "LLM_BASE_URL_REFUSED",
     )
     _expect_provider(
@@ -855,7 +863,7 @@ def check_endpoint_mutations() -> None:
         "LLM_BASE_URL_REFUSED",
     )
     _expect_provider(
-        lambda: assert_llm_route({**_good_route(), "ollama_host": "127.0.0.1:11434"}),
+        lambda: assert_llm_route({**_good_route(), "ollama_host": "127.0.0.1:11435"}),
         "OLLAMA_HOST_REFUSED",
     )
     _expect_provider(
@@ -864,10 +872,10 @@ def check_endpoint_mutations() -> None:
     )
     for bad in (
         "http://localhost:11434/v1",
-        "http://127.0.0.1:11434/v1",
+        "http://127.0.0.1:11435/v1",
         "http://0.0.0.0:11434/v1",
-        "127.0.0.1",
-        "127.0.0.1:11434",
+        "127.0.0.1:11435",
+        "http://127.0.0.1:11435",
     ):
         _expect_provider(lambda bad=bad: effective_endpoint(bad), "LLM_ENDPOINT_MISMATCH")
 
@@ -930,7 +938,10 @@ def check_sandbox_mutations() -> None:
     _expect_storage(lambda: assert_cwd("D:\\Velvet"), "SANDBOX_CWD_OUTSIDE_ROOT")
     _expect_storage(lambda: enter_sandbox(SANDBOX_ROOT + "\\tmp"), "SANDBOX_CWD_OUTSIDE_ROOT")
     _expect_storage(lambda: enter_sandbox(SANDBOX_ROOT), "SANDBOX_CWD_ABSENT")
-    _expect_storage(lambda: enter_sandbox(os.getcwd()), "SANDBOX_CWD_NOT_ON_D")
+    # A D:\Velvet checkout is on D: and outside the sandbox root, so the live
+    # cwd is not a stable NOT_ON_D case. These paths are.
+    _expect_storage(lambda: enter_sandbox("C:\\Users\\Public"), "SANDBOX_CWD_NOT_ON_D")
+    _expect_storage(lambda: enter_sandbox("D:\\Velvet\\checkout"), "SANDBOX_CWD_OUTSIDE_ROOT")
     dotted = Path(tempfile.mkdtemp(prefix="crewai-dotenv-"))
     clean = Path(tempfile.mkdtemp(prefix="crewai-clean-"))
     try:
@@ -1186,12 +1197,12 @@ def check_proxy_gate() -> None:
         if missed["gates"]["E5"]["reason"] != "E5_PROXY_MISMATCH:NO_PROXY":
             fail("broad NO_PROXY was accepted: %s" % missed["gates"]["E5"])
         env = passing_env()
-        env["OLLAMA_HOST"] = "127.0.0.1:11434"
+        env["OLLAMA_HOST"] = "127.0.0.1:11435"
         missed = evaluate(base / "inputs", base / "evidence", env, None)
         if missed["ok"] or missed["model_calls"] != 0:
-            fail("11434 host was accepted")
+            fail("11435 host was accepted")
         if missed["gates"]["E5"]["reason"] != "OLLAMA_HOST_REFUSED" and missed["gates"]["E4"]["reason"] != "SANDBOX_VALUE_MISMATCH:OLLAMA_HOST":
-            fail("11434 host reason was %s / %s" % (missed["gates"]["E4"], missed["gates"]["E5"]))
+            fail("11435 host reason was %s / %s" % (missed["gates"]["E4"], missed["gates"]["E5"]))
     finally:
         shutil.rmtree(base, ignore_errors=True)
 
@@ -1327,7 +1338,7 @@ def check_listeners() -> None:
     lsof_header = "COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME\n"
     if count_listening_sockets(10, platform="darwin", observation=lsof_header) != 0:
         fail("an empty lsof table was not a proven zero")
-    listening = lsof_header + "Python 10 user 5u IPv4 0x1 0t0 TCP 127.0.0.1:11435 (LISTEN)\n"
+    listening = lsof_header + "Python 10 user 5u IPv4 0x1 0t0 TCP 127.0.0.1:11434 (LISTEN)\n"
     if count_listening_sockets(10, platform="darwin", observation=listening) != 1:
         fail("a darwin TCP listener was not counted")
     other = lsof_header + "Python 99 user 5u IPv4 0x1 0t0 TCP *:80 (LISTEN)\n"
@@ -1647,7 +1658,7 @@ def check_lab4() -> None:
     if filled.get("OLLAMA_HOST") != APPROVED_OLLAMA_HOST or filled.get("HTTP_PROXY") != "http://127.0.0.1:9":
         fail("an absent host or proxy was not filled with the approved value")
     bad_host = passing_env()
-    bad_host["OLLAMA_HOST"] = "0.0.0.0:11435"
+    bad_host["OLLAMA_HOST"] = "127.0.0.1:11435"
     _expect_storage(lambda: apply_telemetry(bad_host), "OLLAMA_HOST_REFUSED")
     bad_proxy = passing_env()
     bad_proxy["ALL_PROXY"] = "http://10.0.0.1:8080"
@@ -1754,7 +1765,7 @@ def check_review_mutations() -> None:
     _expect_usage(lambda: assert_no_pythonpath({}, pth_files=["D:/evil/hook.pth"]), "PTH_REFUSED")
     assert_no_pythonpath({}, {}, pth_files=[sys.prefix + "/lib/site-packages/stdlib.pth"])
     _expect_storage(lambda: apply_telemetry({"Https_Proxy": "http://10.0.0.1:8080"}), "E5_PROXY_MISMATCH:Https_Proxy")
-    _expect_storage(lambda: refuse_operator_env({"ollama_host": "127.0.0.1:11434"}), "OLLAMA_HOST_REFUSED")
+    _expect_storage(lambda: refuse_operator_env({"ollama_host": "127.0.0.1:11435"}), "OLLAMA_HOST_REFUSED")
     folded = apply_telemetry({"Https_Proxy": "http://127.0.0.1:9"})
     if "Https_Proxy" in folded or folded.get("HTTPS_PROXY") != "http://127.0.0.1:9":
         fail("mixed-case proxy was not folded to HTTPS_PROXY")
@@ -1776,25 +1787,25 @@ def check_review_mutations() -> None:
     )
     proc = (
         "  sl  local_address rem_address   st\n"
-        "   0: 0100007F:2CAB 00000000:0000 0A\n"
-        "   1: 00000000:2CAB 00000000:0000 0A\n"
+        "   0: 0100007F:2CAA 00000000:0000 0A\n"
+        "   1: 00000000:2CAA 00000000:0000 0A\n"
     )
-    parsed = binds_from_proc(proc, 11435)
+    parsed = binds_from_proc(proc, 11434)
     if parsed != [
-        {"address": "127.0.0.1", "port": 11435},
-        {"address": "0.0.0.0", "port": 11435},
+        {"address": "127.0.0.1", "port": 11434},
+        {"address": "0.0.0.0", "port": 11434},
     ]:
         fail("proc listener rows were %s" % parsed)
     _expect_provider(lambda: assert_ollama_bind(parsed), "OLLAMA_BIND_WILDCARD")
     netstat = (
         "Active Connections\n\n"
         "  Proto  Local Address          Foreign Address        State           PID\n"
-        "  TCP    127.0.0.1:11435        0.0.0.0:0              LISTENING       4\n"
+        "  TCP    127.0.0.1:11434        0.0.0.0:0              LISTENING       4\n"
     )
-    if binds_from_netstat(netstat, 11435) != [{"address": "127.0.0.1", "port": 11435}]:
+    if binds_from_netstat(netstat, 11434) != [{"address": "127.0.0.1", "port": 11434}]:
         fail("netstat listener row was not loopback")
-    lsof = "COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME\nPython 4 user 5u IPv4 0x1 0t0 TCP 127.0.0.1:11435 (LISTEN)\n"
-    if binds_from_lsof(lsof, 11435) != [{"address": "127.0.0.1", "port": 11435}]:
+    lsof = "COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME\nPython 4 user 5u IPv4 0x1 0t0 TCP 127.0.0.1:11434 (LISTEN)\n"
+    if binds_from_lsof(lsof, 11434) != [{"address": "127.0.0.1", "port": 11434}]:
         fail("lsof listener row was not loopback")
     if isolated_argv([sys.executable, "-c", "print(1)"])[1] != "-I":
         fail("python child argv did not insert -I")
@@ -1873,7 +1884,7 @@ def check_review_mutations() -> None:
 
         def observe():
             collected.append("binds")
-            return [{"address": "127.0.0.1", "port": 11435}]
+            return [{"address": "127.0.0.1", "port": 11434}]
 
         def stub_open(request, timeout=30):
             opened.append(getattr(request, "full_url", ""))
@@ -1957,7 +1968,7 @@ def check_exit_contract() -> None:
         import office_v2_crewai.usage_guard as usage_mod
 
         def observe():
-            return [{"address": "127.0.0.1", "port": 11435}]
+            return [{"address": "127.0.0.1", "port": 11434}]
 
         def stub_open(request, timeout=30):
             target = str(getattr(request, "full_url", ""))
@@ -2140,7 +2151,7 @@ def check_trusted_listener_binaries() -> None:
         "Active Connections\n"
         "\n"
         "  Proto  Local Address          Foreign Address        State           PID\n"
-        "  TCP    127.0.0.1:11435        0.0.0.0:0              LISTENING       1\n"
+        "  TCP    127.0.0.1:11434        0.0.0.0:0              LISTENING       1\n"
         "EOF\n"
         "exit 0\n" % _sh_quote(netstat_marker)
     )
@@ -2156,7 +2167,7 @@ def check_trusted_listener_binaries() -> None:
     (directory / "netstat.cmd").write_text(
         "@echo off\nbreak>\"%s\"\n" % netstat_marker
         + "echo Active Connections\n"
-        + "echo   TCP    127.0.0.1:11435        0.0.0.0:0              LISTENING       1\n"
+        + "echo   TCP    127.0.0.1:11434        0.0.0.0:0              LISTENING       1\n"
         + "exit /b 0\n",
         encoding="ascii",
         newline="\n",
@@ -2175,7 +2186,7 @@ def check_trusted_listener_binaries() -> None:
         if observed == 0 and not os.path.isfile(DARWIN_LSOF):
             fail("a fake lsof that prints nothing was trusted as zero listeners")
         try:
-            lsof_rows = _lsof_binds(11435)
+            lsof_rows = _lsof_binds(11434)
         except ProviderRefusal as exc:
             if str(exc) != "OLLAMA_BIND_UNPROVEN":
                 fail("provider lsof refused as %s" % exc)
@@ -2185,14 +2196,14 @@ def check_trusted_listener_binaries() -> None:
         if lsof_rows == [] and not os.path.isfile(usage_mod.DARWIN_LSOF):
             fail("provider treated a missing trusted lsof as an empty bind set")
         try:
-            netstat_rows = _netstat_binds(11435)
+            netstat_rows = _netstat_binds(11434)
         except ProviderRefusal as exc:
             if str(exc) != "OLLAMA_BIND_UNPROVEN":
                 fail("provider netstat refused as %s" % exc)
             netstat_rows = None
         if netstat_marker.exists():
             fail("fake netstat earlier on PATH was executed")
-        if netstat_rows == [{"address": "127.0.0.1", "port": 11435}] and not os.path.isfile(WINDOWS_NETSTAT):
+        if netstat_rows == [{"address": "127.0.0.1", "port": 11434}] and not os.path.isfile(WINDOWS_NETSTAT):
             fail("fake netstat output was trusted as a loopback bind")
         link = directory / "lsof-symlink"
         link.symlink_to(directory / "lsof")

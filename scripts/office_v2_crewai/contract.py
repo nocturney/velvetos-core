@@ -4,13 +4,15 @@ ASCII only. No network. No model import.
 """
 from __future__ import annotations
 
-APPROVED_BASE_URL = "http://127.0.0.1:11435"
-APPROVED_OPENAI_BASE = "http://127.0.0.1:11435/v1"
-APPROVED_OLLAMA_HOST = "127.0.0.1:11435"
-APPROVED_ENDPOINT = "127.0.0.1:11435"
+# Owner decision 2026-10-18 20:41 IDT: the only pilot endpoint is the existing
+# D: boot server. Port 11435 is refused.
+APPROVED_BASE_URL = "http://127.0.0.1:11434"
+APPROVED_OPENAI_BASE = "http://127.0.0.1:11434/v1"
+APPROVED_OLLAMA_HOST = "127.0.0.1:11434"
+APPROVED_ENDPOINT = "127.0.0.1:11434"
 APPROVED_HOST = "127.0.0.1"
-APPROVED_PORT = 11435
-APPROVED_AT = "2026-10-18T15:28:00+03:00"
+APPROVED_PORT = 11434
+APPROVED_AT = "2026-10-18T20:41:00+03:00"
 APPROVED_BY = "Christian"
 APPROVED_MODEL = "qwen3.5:9b"
 REASONING_EFFORT = "none"

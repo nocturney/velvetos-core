@@ -188,7 +188,8 @@ function Take-Snapshot {
 function Assert-Network-Safe($snapshot) {
     foreach ($row in $snapshot.tcp) {
         if ($row.state -eq 'Listen') { throw 'TCP_LISTENER_DETECTED' }
-        if ($row.remote_address -cne '127.0.0.1' -or $row.remote_port -ne 11435) {
+        # Owner decision 2026-10-18 20:41 IDT. 127.0.0.1:11434 only. 11435 is refused.
+        if ($row.remote_address -cne '127.0.0.1' -or $row.remote_port -ne 11434) {
             throw 'UNAPPROVED_TCP_REMOTE'
         }
     }

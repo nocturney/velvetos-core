@@ -14,7 +14,7 @@ Preflight passes E3 only when that file is present and every condition below
 is enforced. E1, E2, E5, E6 and E7 still refuse this tree, and E4 is
 NOT_OBSERVED, so this tree does not start a pilot.
 
-## E4 sandbox and the 11435 client
+## E4 sandbox and the 11434 client
 
 Comment 6250312836 (CLQ-16) verified that `import crewai` creates
 `<LocalAppData>\\CrewAI\\<name>` through appdirs 1.4.4 `SHGetFolderPathW`.
@@ -36,9 +36,11 @@ The committed before/after manifest, HKCU export diff, no-pilot control
 run, and positive db/lock check are NOT_OBSERVED. Nothing was run on Chris.
 
 Comment 6250397852 (CLQ-17) verified that an `ollama/` model uses CrewAI's
-native OpenAI-compatible client, whose default is `localhost:11434`. That
-port on Chris is the wrong Ollama. The runner passes
-`base_url=http://127.0.0.1:11435/v1`, sets `OLLAMA_HOST=127.0.0.1:11435`,
+native OpenAI-compatible client, whose default is `localhost:11434`.
+Christian's decision at 2026-10-18 20:41 IDT makes that existing D: boot
+server the only pilot endpoint: `127.0.0.1:11434`. Port 11435 is refused.
+`localhost` stays refused. The runner passes
+`base_url=http://127.0.0.1:11434/v1`, sets `OLLAMA_HOST=127.0.0.1:11434`,
 and refuses `is_litellm=True` or any other effective endpoint. It also
 sets `Crew(tracing=False)`, keeps the litellm local-cost and telemetry
 flags, and does not set `CHROMA_ANONYMIZED_TELEMETRY` or
@@ -48,11 +50,13 @@ flags, and does not set `CHROMA_ANONYMIZED_TELEMETRY` or
 
 ## Approved local model
 
-Owner approval at 2026-10-18 15:28 IDT, recorded in issue 612 comment
-6250120048. The approved endpoint is `http://127.0.0.1:11435` with model
-`qwen3.5:9b`, digest
+The model digest was approved at 2026-10-18 15:28 IDT, recorded in issue
+612 comment 6250120048. Model `qwen3.5:9b`, digest
 `56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90`.
-Port 11434 is not the pilot listener. The provider sends `think: false`.
+Christian's later decision at 2026-10-18 20:41 IDT sets the only endpoint
+to `http://127.0.0.1:11434`, the existing D: boot server on Chris. Port
+11435 is refused. A wildcard bind on 11434 stays refused. The provider
+sends `think: false`.
 LAB-2 showed that Ollama's `/v1` endpoint ignores `think: false` and that
 `reasoning_effort: "none"` disables qwen3.5 reasoning there. The frozen
 model input records `reasoning_effort: "none"`, and the crew LLM passes
@@ -141,7 +145,8 @@ listener failure cannot hide `chromadb.server`, `fastapi`, `uvicorn`, or
 
 `apply_telemetry` checks `OLLAMA_HOST` and the proxy before it fills absent
 values. A wrong value is refused. The provider also refuses an Ollama
-listener on `0.0.0.0` or `::` for port 11435. A missing bind observation is
+listener on `0.0.0.0` or `::` for port 11434. A listener only on port
+11435 is unproven for the approved port. A missing bind observation is
 unproven. The check does not open a socket.
 
 `crewai` 1.15.28 `crewai_core.lock_store.lock` writes

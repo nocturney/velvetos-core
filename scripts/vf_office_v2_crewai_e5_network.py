@@ -16,7 +16,8 @@ from pathlib import Path
 SCHEMA = "velvetos.office-v2.crewai-e5-snapshots.v1"
 RECEIPT_SCHEMA = "velvetos.office-v2.crewai-e5-receipt.v1"
 ALLOWED_ADDRESS = "127.0.0.1"
-ALLOWED_PORT = 11435
+# Owner decision 2026-10-18 20:41 IDT. Must match contract.APPROVED_PORT.
+ALLOWED_PORT = 11434
 MAX_SNAPSHOTS = 6000
 # E5 stage root. Distinct from the E4 sandbox at crewai-e4\sandbox-home.
 PILOT_STAGE_ROOT = "D:\\Velvet\\Pilots\\OfficeV2-VerifiedTrio"

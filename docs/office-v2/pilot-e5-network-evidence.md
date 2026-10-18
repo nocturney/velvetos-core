@@ -12,7 +12,7 @@ adds a bounded observer, NOT a firewall, network sandbox, GO, or model run.
 
 ## Endpoint policy (exact and conservative)
 
-Use `Get-CimInstance Win32_Process` (`ProcessId`, `ParentProcessId`, `CreationDate`) to select the newly launched pilot PID and observed descendants, recording `pid`, `parent_pid` and UTC `created_at_utc` for each member. At each phase sample **both** unfiltered Windows network tables, `Get-NetTCPConnection` and `Get-NetUDPEndpoint`, then keep only endpoints whose `OwningProcess` belongs to the validated pilot tree. This excludes the **separate** Ollama server listener, even if it resides on `127.0.0.1:11435`.
+Use `Get-CimInstance Win32_Process` (`ProcessId`, `ParentProcessId`, `CreationDate`) to select the newly launched pilot PID and observed descendants, recording `pid`, `parent_pid` and UTC `created_at_utc` for each member. At each phase sample **both** unfiltered Windows network tables, `Get-NetTCPConnection` and `Get-NetUDPEndpoint`, then keep only endpoints whose `OwningProcess` belongs to the validated pilot tree. This excludes the **separate** Ollama server listener, even if it resides on `127.0.0.1:11434`.
 
 **Process ancestry is an independent E5 gate.** The Windows collector validates the CIM chain before it reads sockets. A tree larger than 4096 members fails `PROCESS_TREE_TOO_LARGE`. A nonempty sample whose root is absent fails `TREE_ROOT_MISSING`. A root whose parent is inside the tree, or any visited cycle, fails `PROCESS_TREE_CYCLE`. A missing parent fails `PROCESS_TREE_ORPHAN`. A child CIM birth earlier than its parent fails `CHILD_CREATED_BEFORE_PARENT`. The root's CIM `CreationDate` must match the process-handle `StartTime` within 0.01 seconds or the sample fails `ROOT_PID_BIRTH_MISMATCH`. That tolerance assumes the two clocks share FILETIME precision; a mismatch fails closed. After the TCP/UDP queries the collector re-queries CIM and fails `PROCESS_IDENTITY_CHANGED_DURING_SAMPLE` if a member's UTC birth changed or the PID disappeared. Only then are validated members added to the stop-list. A descendant whose parent has already exited is an orphan and fails closed.
 
@@ -21,7 +21,7 @@ The offline evaluator is the single one in `scripts/vf_office_v2_crewai_e5_netwo
 | Observation in pilot process tree | Verdict |
 | --- | --- |
 | Any TCP state `Listen`, including `127.0.0.1` | **FAIL** |
-| Any TCP remote other than literal `127.0.0.1:11435`, including LAN, public IP, IPv6, `127.0.0.1:11434`, unconnected/unknown remote `0.0.0.0:0` | **FAIL** |
+| Any TCP remote other than literal `127.0.0.1:11434`, including LAN, public IP, IPv6, `127.0.0.1:11435`, unconnected/unknown remote `0.0.0.0:0` | **FAIL** |
 | Any bound UDP endpoint, including loopback | **FAIL** (UDP has no `Listen` TCP state, but can receive datagrams) |
 | Missing `before`, `during`, `after`, missing root observation during, failed network/CIM query, unverified PID reuse, timeout, nonzero exit, lingering child, malformed timestamps/evidence | **FAIL** |
 | Complete bounded sample sequence with none of the above | `PASS_SAMPLED_NOT_ENFORCEMENT` **only**; never pilot GO |
