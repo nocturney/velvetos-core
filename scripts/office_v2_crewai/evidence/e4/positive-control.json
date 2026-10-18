@@ -1,0 +1,9 @@
+{
+  "db_exists": false,
+  "db_path": null,
+  "exit_code": null,
+  "lock_exists": false,
+  "lock_path": null,
+  "schema": "velvetos.office-v2.crewai-e4-positive-control.v1",
+  "status": "NOT_OBSERVED"
+}
