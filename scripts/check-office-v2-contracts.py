@@ -3413,11 +3413,15 @@ def main() -> int:
     # historical sealed CP083 receipts or imply protected security admission.
     # Linux CI must actually execute the kernel socket negatives, not skip them.
     # Client suite includes two ~3s deadline probes; allow headroom.
+    # Union of the stack loop and main's CP084/CP085 rows. Counts match the
+    # merged files. security_admission stays RED.
     for test_file, count, timeout_s in (
         ("test_vf_office_v2_604_cp083_hardening_candidate.py", 10, 15),
         ("test_vf_office_v2_604_cp083_socket_negative.py", 2, 15),
         ("test_vf_office_v2_604_cp083_client_socket_negative.py", 10, 45),
         ("test_vf_office_v2_604_cp083_reconcile_negative.py", 5, 15),
+        ("test_vf_office_v2_604_cp084_nonroot_sink_recovery.py", 5, 15),
+        ("test_vf_office_v2_604_cp085_public_git_readback.py", 26, 15),
         # #762: offline-only byte-consistency negatives, NOT joined-run QA.
         ("test_vf_office_v2_604_cp083_candidate_evidence_gate.py", 18, 20),
     ):
