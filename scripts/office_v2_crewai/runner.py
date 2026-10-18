@@ -32,6 +32,7 @@ RUNNER_FILES = (
     PACKAGE / "kill_harness.py",
     PACKAGE / "receipt.py",
     PACKAGE / "crew_build.py",
+    PACKAGE / "usage_guard.py",
     PACKAGE / "runner.py",
 )
 
@@ -64,6 +65,8 @@ def execute(input_dir: Path, output_dir: Path, evidence_dir: Path, model_config:
         crew = build_crew(provider, observed)
         issue_rows = (Path(input_dir) / "issues.json").read_text(encoding="utf-8")
         crew.kickoff(inputs={"issue_rows": issue_rows})
+        from office_v2_crewai.usage_guard import assert_post_run, count_listening_sockets
+        assert_post_run(sys.modules, count_listening_sockets(os.getpid()), [])
     except (ProviderRefusal, ImportError, ModuleNotFoundError, OSError, RuntimeError) as exc:
         receipt["identity"]["reason"] = type(exc).__name__
         receipt["identity"]["task_status"] = "NOT_VERIFIED"

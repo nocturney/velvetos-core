@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from office_v2_crewai.contract import APPROVED_MODEL, APPROVED_MODEL_DIGEST, CREWAI_VERSION, TELEMETRY_FLAGS
 from office_v2_crewai.provider import LocalOllamaProvider, ProviderRefusal, no_cloud_enabled
+from office_v2_crewai.usage_guard import UsageRefusal, assert_crew_spec
 
 
 def flags_ready(env: dict) -> bool:
@@ -25,6 +26,14 @@ def build_crew(provider: LocalOllamaProvider, env: dict):
         raise ProviderRefusal("MODEL_DIGEST_MISMATCH")
     if not provider.authorized:
         raise ProviderRefusal("MODEL_CALL_BEFORE_PREFLIGHT")
+    assert_crew_spec({
+        "memory": False,
+        "knowledge": None,
+        "rag": None,
+        "tools": [],
+        "mcps": None,
+        "crewai_tools": False,
+    })
     import crewai
 
     if getattr(crewai, "__version__", None) != CREWAI_VERSION:

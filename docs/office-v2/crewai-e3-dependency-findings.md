@@ -1,10 +1,18 @@
 # CrewAI pilot dependency findings (2026-10-18)
 
-Status of the reviewed runner in `scripts/office_v2_crewai/`: preflight refuses.
-No package was installed from this change. No model call was made. E3 stays
-`BLOCKED_SECURITY` until a recorded security decision exists for this lock.
-E6 stays `NOT_VERIFIED` because the public repo has 12 open issues, and the
-runbook minimum is 20.
+Status of the reviewed runner in `scripts/office_v2_crewai/`: the committed
+tree still refuses before any model call. No package was installed from this
+change. No model call was made. E6 stays `NOT_VERIFIED` because the public
+repo has 12 open issues, and the runbook minimum is 20.
+
+E3 is no longer an unconditional fail. Christian accepted the RED lock at
+2026-10-18 16:02 Asia/Jerusalem (issue 612 comment 6250234075), on the basis
+of comment 6250224612. The decision is
+`scripts/office_v2_crewai/evidence/e3-security-decision.json` and it matches
+lock sha256 `121c1bd04eee730b51eb71e49da503b0d0236cdd06d8687a5df792234f78a669`.
+Preflight passes E3 only when that file is present and every condition below
+is enforced. E1, E2, E4, E5, E6 and E7 are unchanged, so this tree does not
+start a pilot.
 
 ## Approved local model
 
@@ -32,22 +40,26 @@ not override it and does not install with `--no-deps`.
 
 `chromadb~=1.5.9` is not an extra. The tools extra is `crewai-tools`, and
 excluding that extra does not remove chromadb. `memory=False` also does not
-remove it: `import crewai` loads `crewai.crew`, which imports
-`crewai.knowledge.knowledge`, which imports `KnowledgeStorage`, which imports
-`crewai.rag.chromadb.config`, which executes `from chromadb.config import Settings`
-at module level. Omitting the chromadb wheel breaks `import crewai`. chromadb
-1.5.9 carries PYSEC-2026-311, PYSEC-2026-3813, PYSEC-2026-3814 and
-PYSEC-2026-3815, and no fix is recorded.
+remove it. Comment 6250224612 verified the eager chain: `crewai/__init__.py`
+imports `memory/unified_memory.py`, which imports
+`rag/embeddings/providers/openai/openai_provider.py`, which imports chromadb.
+Omitting the chromadb wheel breaks `import crewai`. chromadb 1.5.9 carries
+PYSEC-2026-311, PYSEC-2026-3813, PYSEC-2026-3814 and PYSEC-2026-3815, and no
+fix is recorded. Those four advisories are server-side. The post-run check
+therefore fails closed on `chromadb.server`, `fastapi`, `uvicorn` and `mcp`
+in `sys.modules`. It does not treat the `chromadb` package itself as a
+violation, because `import crewai` loads that package. The runner also
+refuses the `chroma` CLI and any pilot listening port.
 
 ## Lock identity
 
 The Chris lock file is `requirements-locked.txt`, sha256
 `121c1bd04eee730b51eb71e49da503b0d0236cdd06d8687a5df792234f78a669`, with 154
-hash-pinned wheels. The recorded scan is RED. The committed evidence file is
-`scripts/office_v2_crewai/evidence/e3-supply-chain.json` and it sets
-`security_decision_present` to false. No `e3-security-decision.json` is
-committed. Preflight treats E3 as failing until a decision file names
-`ACCEPTED_RISK`, the same lock sha256, and all five advisory ids.
+hash-pinned wheels. The recorded scan is still RED. The owner decision accepts
+that residual risk only with the conditions above. The committed files are
+`scripts/office_v2_crewai/evidence/e3-supply-chain.json` and
+`e3-security-decision.json`. A different lock sha, a missing condition, or a
+guard that accepts a violation keeps E3 at `BLOCKED_SECURITY`.
 
 ## Open-issue fixture
 

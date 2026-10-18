@@ -25,6 +25,6 @@
   "lock_sha256": "121c1bd04eee730b51eb71e49da503b0d0236cdd06d8687a5df792234f78a669",
   "scan_status": "RED",
   "schema": "velvetos.office-v2.crewai-e3-lock-record.v1",
-  "security_decision_present": false,
+  "security_decision_present": true,
   "wheel_count": 154
 }

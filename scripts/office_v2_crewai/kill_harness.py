@@ -7,6 +7,7 @@ import subprocess
 import time
 
 from office_v2_crewai.contract import ATTEMPT_TIMEOUT_SECONDS, COST_CEILING
+from office_v2_crewai.usage_guard import UsageRefusal, assert_not_chroma_cli
 
 
 class KillRefusal(RuntimeError):
@@ -27,6 +28,10 @@ class KillHarness:
     def spawn(self, argv: list[str]) -> subprocess.Popen:
         if not argv or not isinstance(argv[0], str):
             raise KillRefusal("SPAWN_ARGV_REFUSED")
+        try:
+            assert_not_chroma_cli(argv)
+        except UsageRefusal as exc:
+            raise KillRefusal(str(exc)) from exc
         kwargs = {"stdout": subprocess.DEVNULL, "stderr": subprocess.DEVNULL}
         if os.name == "nt":
             kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP

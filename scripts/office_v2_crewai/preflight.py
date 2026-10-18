@@ -6,6 +6,13 @@ import json
 from pathlib import Path
 
 from office_v2_crewai.contract import (
+    E3_BASIS,
+    E3_CONDITIONS,
+    E3_DECIDED_AT,
+    E3_DECIDED_BY,
+    E3_DECISION,
+    E3_DECISION_LABEL,
+    E3_RECORD,
     GATE_FAIL_STATUS,
     GATES,
     LOCK_SHA256,
@@ -18,6 +25,7 @@ from office_v2_crewai.contract import (
     TELEMETRY_FLAGS,
 )
 from office_v2_crewai.provider import ProviderRefusal, inherited_paid_credentials, validate_config_document
+from office_v2_crewai.usage_guard import enforcement_holds
 
 
 def sha256_file(path: Path) -> str:
@@ -73,6 +81,33 @@ def check_e2(evidence_dir: Path) -> dict:
     return _pass("E2")
 
 
+def approved_decision_document() -> dict:
+    """The owner decision recorded on #612 at 2026-10-18 16:02 IDT."""
+    return {
+        "schema": "velvetos.office-v2.crewai-e3-security-decision.v1",
+        "decision": E3_DECISION,
+        "decision_label": E3_DECISION_LABEL,
+        "lock_sha256": LOCK_SHA256,
+        "lock_filename": "requirements-locked.txt",
+        "wheel_count": LOCK_WHEEL_COUNT,
+        "advisories": list(RED_ADVISORIES),
+        "decided_by": E3_DECIDED_BY,
+        "decided_at": E3_DECIDED_AT,
+        "evidence": E3_BASIS,
+        "record": E3_RECORD,
+        "conditions": {key: (list(value) if isinstance(value, list) else value) for key, value in E3_CONDITIONS.items()},
+    }
+
+
+def _condition_mismatch(conditions: object) -> str | None:
+    if not isinstance(conditions, dict) or set(conditions) != set(E3_CONDITIONS):
+        return "SECURITY_DECISION_CONDITIONS_ABSENT"
+    for key, expected in E3_CONDITIONS.items():
+        if conditions.get(key) != expected:
+            return "SECURITY_DECISION_CONDITION_" + key.upper()
+    return None
+
+
 def check_e3(evidence_dir: Path) -> dict:
     lock = _load_json(evidence_dir / "e3-supply-chain.json")
     if lock is None:
@@ -84,15 +119,22 @@ def check_e3(evidence_dir: Path) -> dict:
     decision = _load_json(evidence_dir / "e3-security-decision.json")
     if decision is None:
         return _fail("E3", "SECURITY_DECISION_ABSENT")
-    if decision.get("decision") != "ACCEPTED_RISK":
+    if decision.get("decision") != E3_DECISION or decision.get("decision_label") != E3_DECISION_LABEL:
         return _fail("E3", "SECURITY_DECISION_NOT_ACCEPTED")
     if decision.get("lock_sha256") != LOCK_SHA256:
         return _fail("E3", "SECURITY_DECISION_LOCK_MISMATCH")
     covered = decision.get("advisories")
     if not isinstance(covered, list) or set(covered) != set(RED_ADVISORIES):
         return _fail("E3", "SECURITY_DECISION_ADVISORIES_INCOMPLETE")
-    if not _nonempty(decision, "decided_by") or not _nonempty(decision, "decided_at"):
+    if decision.get("decided_by") != E3_DECIDED_BY or decision.get("decided_at") != E3_DECIDED_AT:
         return _fail("E3", "SECURITY_DECISION_IDENTITY_ABSENT")
+    if decision.get("evidence") != E3_BASIS or decision.get("record") != E3_RECORD:
+        return _fail("E3", "SECURITY_DECISION_BASIS_MISMATCH")
+    mismatch = _condition_mismatch(decision.get("conditions"))
+    if mismatch:
+        return _fail("E3", mismatch)
+    if not enforcement_holds():
+        return _fail("E3", "CONDITIONS_NOT_ENFORCED")
     return _pass("E3")
 
 
@@ -113,6 +155,8 @@ def check_e5(evidence_dir: Path, env: dict) -> dict:
     flags = ("deny_by_default", "zero_unauthorized_listeners", "no_inherited_credentials", "empty_tool_registry")
     if any(data.get(flag) is not True for flag in flags):
         return _fail("E5", "NETWORK_FLAG_ABSENT")
+    if data.get("pilot_listening_ports") != 0:
+        return _fail("E5", "PILOT_LISTENER_PRESENT")
     paid = inherited_paid_credentials(env)
     if paid:
         return _fail("E5", "PAID_CREDENTIAL_INHERITED")
@@ -257,13 +301,7 @@ def synthetic_passing_bundle(root: Path) -> None:
         "hash_pinned": True,
         "scan_status": "RED",
     })
-    _write(evidence / "e3-security-decision.json", {
-        "decision": "ACCEPTED_RISK",
-        "lock_sha256": LOCK_SHA256,
-        "advisories": list(RED_ADVISORIES),
-        "decided_by": "synthetic-decision",
-        "decided_at": "synthetic-time",
-    })
+    _write(evidence / "e3-security-decision.json", approved_decision_document())
     _write(evidence / "e4-containment.json", {
         "roots_under_approved_d": True,
         "negative_write_denial": True,
@@ -275,6 +313,7 @@ def synthetic_passing_bundle(root: Path) -> None:
         "zero_unauthorized_listeners": True,
         "no_inherited_credentials": True,
         "empty_tool_registry": True,
+        "pilot_listening_ports": 0,
     })
     _write(evidence / "e7-guardrails.json", {
         "timeout_seconds": 600,

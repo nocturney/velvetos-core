@@ -12,6 +12,23 @@ APPROVED_BY = "Christian"
 APPROVED_MODEL = "qwen3.5:9b"
 APPROVED_MODEL_DIGEST = "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90"
 EVIDENCE_COMMENT = "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250120048"
+E3_DECISION = "ACCEPTED_RISK"
+E3_DECISION_LABEL = "ACCEPT_RISK_WITH_CONDITIONS"
+E3_DECIDED_BY = "Christian"
+E3_DECIDED_AT = "2026-10-18T16:02:00+03:00"
+E3_BASIS = "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250224612"
+E3_RECORD = "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250234075"
+E3_CONDITIONS = {
+    "memory": False,
+    "knowledge": False,
+    "rag": False,
+    "tools_empty": True,
+    "mcp_servers": False,
+    "crewai_tools": False,
+    "chroma_cli": False,
+    "pilot_listening_ports": 0,
+    "forbid_loaded_modules": ["chromadb.server", "fastapi", "uvicorn", "mcp"],
+}
 
 LOCK_SHA256 = "121c1bd04eee730b51eb71e49da503b0d0236cdd06d8687a5df792234f78a669"
 LOCK_WHEEL_COUNT = 154

@@ -30,6 +30,13 @@ from office_v2_crewai.provider import (  # noqa: E402
     assert_loopback_url,
 )
 from office_v2_crewai.runner import execute  # noqa: E402
+from office_v2_crewai.usage_guard import (  # noqa: E402
+    UsageRefusal,
+    assert_crew_spec,
+    assert_not_chroma_cli,
+    assert_post_run,
+    module_is_forbidden,
+)
 
 PACKAGE = SCRIPTS / "office_v2_crewai"
 INPUTS = PACKAGE / "inputs"
@@ -79,16 +86,16 @@ def check_committed_gates() -> None:
         fail("approved config was not accepted: %s" % report["model_status"])
     e3 = report["gates"]["E3"]
     e6 = report["gates"]["E6"]
-    if e3["status"] != "BLOCKED_SECURITY" or e3["reason"] != "SECURITY_DECISION_ABSENT":
-        fail("E3 did not stay blocked: %s" % e3)
+    if e3["status"] != "PASS":
+        fail("recorded E3 decision did not pass: %s" % e3)
     if e6["status"] != "NOT_VERIFIED" or e6["reason"] != "INSUFFICIENT_OPEN_ISSUES":
         fail("E6 did not stay unverified: %s" % e6)
     issues = json.loads((INPUTS / "issues.json").read_text(encoding="ascii"))
     numbers = [row["number"] for row in issues["issues"]]
     if issues["open_issue_count"] != 12 or 612 not in numbers or 595 not in numbers:
         fail("frozen issue set is not the 12 open public issues")
-    if (EVIDENCE / "e3-security-decision.json").exists():
-        fail("an accepted-risk decision must not be committed")
+    if not (EVIDENCE / "e3-security-decision.json").is_file():
+        fail("recorded E3 decision file is missing")
 
 
 def check_gate_mutations() -> None:
@@ -121,6 +128,91 @@ def check_gate_mutations() -> None:
                 shutil.rmtree(trial, ignore_errors=True)
     finally:
         shutil.rmtree(base, ignore_errors=True)
+
+
+def _expect_usage(call, code: str) -> None:
+    try:
+        call()
+    except UsageRefusal as exc:
+        if str(exc) != code:
+            fail("usage refusal %s != %s" % (exc, code))
+        return
+    fail("condition %s was accepted" % code)
+
+
+def check_condition_mutations() -> None:
+    base = Path(tempfile.mkdtemp(prefix="crewai-e3-"))
+    try:
+        synthetic_passing_bundle(base)
+        flips = {
+            "memory": True,
+            "knowledge": True,
+            "rag": True,
+            "tools_empty": False,
+            "mcp_servers": True,
+            "crewai_tools": True,
+            "chroma_cli": True,
+            "pilot_listening_ports": 1,
+            "forbid_loaded_modules": ["chromadb"],
+        }
+        for key, bad in flips.items():
+            trial = Path(tempfile.mkdtemp(prefix="crewai-cond-"))
+            try:
+                shutil.copytree(base / "evidence", trial / "evidence")
+                shutil.copytree(base / "inputs", trial / "inputs")
+                path = trial / "evidence" / "e3-security-decision.json"
+                document = json.loads(path.read_text(encoding="utf-8"))
+                document["conditions"][key] = bad
+                path.write_text(json.dumps(document), encoding="utf-8")
+                missed = evaluate(trial / "inputs", trial / "evidence", telemetry(), None)
+                reason = missed["gates"]["E3"]["reason"]
+                if missed["ok"] or missed["gates"]["E3"]["status"] == "PASS" or missed["model_calls"] != 0:
+                    fail("condition %s did not refuse" % key)
+                if reason != "SECURITY_DECISION_CONDITION_" + key.upper():
+                    fail("condition %s reason %s" % (key, reason))
+            finally:
+                shutil.rmtree(trial, ignore_errors=True)
+        trial = Path(tempfile.mkdtemp(prefix="crewai-e5-"))
+        try:
+            shutil.copytree(base / "evidence", trial / "evidence")
+            shutil.copytree(base / "inputs", trial / "inputs")
+            path = trial / "evidence" / "e5-network.json"
+            document = json.loads(path.read_text(encoding="utf-8"))
+            document["pilot_listening_ports"] = 1
+            path.write_text(json.dumps(document), encoding="utf-8")
+            missed = evaluate(trial / "inputs", trial / "evidence", telemetry(), None)
+            if missed["gates"]["E5"]["status"] == "PASS" or missed["gates"]["E5"]["reason"] != "PILOT_LISTENER_PRESENT":
+                fail("listening port mutation did not refuse: %s" % missed["gates"]["E5"])
+            if missed["model_calls"] != 0:
+                fail("listening port mutation called a model")
+        finally:
+            shutil.rmtree(trial, ignore_errors=True)
+    finally:
+        shutil.rmtree(base, ignore_errors=True)
+    spec = {"memory": False, "knowledge": None, "rag": None, "tools": [], "mcps": None, "crewai_tools": False}
+    assert_crew_spec(spec)
+    _expect_usage(lambda: assert_crew_spec({**spec, "memory": True}), "MEMORY_NOT_DISABLED")
+    _expect_usage(lambda: assert_crew_spec({**spec, "knowledge": ["doc"]}), "KNOWLEDGE_OR_RAG_REFUSED")
+    _expect_usage(lambda: assert_crew_spec({**spec, "rag": True}), "KNOWLEDGE_OR_RAG_REFUSED")
+    _expect_usage(lambda: assert_crew_spec({**spec, "tools": ["search"]}), "TOOLS_NOT_EMPTY")
+    _expect_usage(lambda: assert_crew_spec({**spec, "mcps": ["srv"]}), "MCP_SERVERS_REFUSED")
+    _expect_usage(lambda: assert_crew_spec({**spec, "crewai_tools": True}), "CREWAI_TOOLS_REFUSED")
+    if module_is_forbidden("chromadb") or module_is_forbidden("chromadb.utils.embedding_functions"):
+        fail("chromadb itself was treated as the server")
+    benign = {"chromadb": object(), "chromadb.utils.embedding_functions.openai_embedding_function": object()}
+    assert_post_run(benign, 0, [["python3", "-c", "print(1)"]])
+    for name in ("chromadb.server", "chromadb.server.app", "fastapi", "uvicorn", "mcp", "mcp.server"):
+        _expect_usage(lambda name=name: assert_post_run({name: object(), "chromadb": object()}, 0, []), "FORBIDDEN_MODULE_LOADED")
+    _expect_usage(lambda: assert_post_run(benign, 2, []), "PILOT_LISTENER_PRESENT")
+    _expect_usage(lambda: assert_not_chroma_cli(["chroma", "run"]), "CHROMA_CLI_REFUSED")
+    _expect_usage(lambda: assert_not_chroma_cli(["python3", "-m", "chromadb.server"]), "CHROMA_CLI_REFUSED")
+    try:
+        KillHarness().spawn(["chroma", "run"])
+    except KillRefusal as exc:
+        if str(exc) != "CHROMA_CLI_REFUSED":
+            fail("chroma spawn reason %s" % exc)
+    else:
+        fail("chroma CLI spawn was accepted")
 
 
 def check_manifest_mutation() -> None:
@@ -324,9 +416,21 @@ def check_ast() -> None:
     memory = next(kw.value for kw in crews[0].keywords if kw.arg == "memory")
     if not isinstance(memory, ast.Constant) or memory.value is not False:
         fail("memory is not False")
-    for forbidden in ("allow_code_execution", "CodeInterpreter", "crewai_tools", "crewai-tools"):
+    for forbidden in ("allow_code_execution", "CodeInterpreter", "crewai-tools"):
         if forbidden in source:
             fail("crew source contains %s" % forbidden)
+    for node in ast.walk(tree):
+        names = []
+        if isinstance(node, ast.Import):
+            names = [alias.name for alias in node.names]
+        elif isinstance(node, ast.ImportFrom):
+            names = [node.module or ""]
+        if any("crewai_tools" in name or "crewai-tools" in name for name in names):
+            fail("crew source imports crewai-tools")
+    for node in agents + crews:
+        for keyword in node.keywords:
+            if keyword.arg in {"knowledge", "knowledge_sources", "rag", "mcps", "mcp_servers", "embedder"}:
+                fail("crew passes %s" % keyword.arg)
 
 
 def check_workflows() -> None:
@@ -345,6 +449,7 @@ def main() -> int:
     check_manifest()
     check_committed_gates()
     check_gate_mutations()
+    check_condition_mutations()
     check_manifest_mutation()
     check_provider()
     check_kill()
