@@ -121,11 +121,20 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         entry[shkey] = sha(new)
         self._save_manifest()
 
+    def _skip_if_directory_open_unavailable(self):
+        """File opens need a real POSIX directory flag. Decoder cases do not."""
+        flag = getattr(os, "O_DIRECTORY", 0)
+        if os.name != "posix" or type(flag) is not int or flag == 0:
+            print("SKIP_NON_POSIX", flush=True)
+            self.skipTest("SKIP_NON_POSIX")
+
     def assert_refused(self):
+        self._skip_if_directory_open_unavailable()
         with self.assertRaises(gate.Refused):
             gate.verify(self.manifest_path)
 
     def test_01_synthetic_positive_format_only_never_security_pass(self):
+        self._skip_if_directory_open_unavailable()
         result = gate.verify(self.manifest_path)
         self.assertEqual(result["status"],
                          "OFFLINE_BYTE_CONSISTENCY_ONLY_NOT_RUNTIME_QA")
@@ -135,6 +144,7 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         self.assertFalse(result["production_authority"])
 
     def test_02_missing_manifest_is_refused(self):
+        self._skip_if_directory_open_unavailable()
         self.manifest_path.unlink()
         with self.assertRaises(OSError):
             gate.verify(self.manifest_path)
@@ -235,6 +245,7 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         self.assert_refused()
 
     def test_19_crlf_receipt_line_refused(self):
+        self._skip_if_directory_open_unavailable()
         path = self.base / "run-1/receipt.jsonl"
         raw = path.read_bytes()
         self.assertTrue(raw.endswith(b"\n") and b"\r" not in raw)
@@ -248,6 +259,7 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         self.assertEqual(str(caught.exception), "RECEIPT_MUST_BE_ORIGINAL_ONE_LINE_LF")
 
     def test_20_cr_inside_json_refused(self):
+        self._skip_if_directory_open_unavailable()
         path = self.base / "run-1/receipt.jsonl"
         raw = path.read_bytes()
         self.assertTrue(raw.startswith(b"{") and raw.endswith(b"\n") and b"\r" not in raw)
@@ -264,6 +276,7 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         self.assertEqual(str(caught.exception), "RECEIPT_MUST_BE_ORIGINAL_ONE_LINE_LF")
 
     def test_21_hardlinked_receipt_alias_rejected(self):
+        self._skip_if_directory_open_unavailable()
         # GAP_4 on an unfixed gate: nlink is unchecked, so a same-bytes alias verifies.
         receipt = self.base / "run-1" / "receipt.jsonl"
         alias = self.base / "run-1" / "receipt-alias.jsonl"
@@ -275,6 +288,7 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         self.assertEqual(str(caught.exception), "HARDLINK_ALIAS_REFUSED")
 
     def test_22_evidence_parent_swap_race_cannot_escape_root(self):
+        self._skip_if_directory_open_unavailable()
         # GAP_3 on an unfixed gate: a parent swap between the path check and
         # open still feeds the outside inode when the bytes match.
         receipt = self.base / "run-1" / "receipt.jsonl"
@@ -322,6 +336,7 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         self.assertIn(original_ino, opened["inos"])
 
     def test_23_guest_manifest_cr_canonical_policy(self):
+        self._skip_if_directory_open_unavailable()
         # CR is refused in guest and manifest JSON, same canonical rule as receipts.
         guest = self.base / "run-1" / "guest.json"
         raw = guest.read_bytes()
@@ -343,6 +358,7 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         self.assertEqual(str(caught.exception), "CR_IN_CANONICAL_JSON")
 
     def test_24_self_issued_two_receipts_not_accepted_as_host_attestation(self):
+        self._skip_if_directory_open_unavailable()
         result = gate.verify(self.manifest_path)
         self.assertEqual(result["status"],
                          "OFFLINE_BYTE_CONSISTENCY_ONLY_NOT_RUNTIME_QA")
@@ -357,6 +373,201 @@ class CandidateEvidenceNegativeTests(unittest.TestCase):
         with self.assertRaises(gate.Refused) as caught:
             gate.refuse_host_attestation(forged)
         self.assertEqual(str(caught.exception), "NOT_HOST_ATTESTATION")
+
+    def test_guest_and_manifest_cr_or_duplicate_keys_refused(self):
+        # Same decoder as wire frames. Python's json.loads would accept these.
+        samples = (
+            (b'{"a":{"b":1,"b":2}}', "DUPLICATE_JSON_KEY"),
+            (b'{"a":[{"b":1,"b":2}]}', "DUPLICATE_JSON_KEY"),
+            (b'{"a":NaN}', "NON_FINITE_JSON"),
+            (b'{"a":Infinity}', "NON_FINITE_JSON"),
+            (b'{"a":-Infinity}', "NON_FINITE_JSON"),
+            (b'{"a":1}{"b":2}', "INVALID_UTF8_OR_JSON"),
+            (b"[1]", "JSON_OBJECT_REQUIRED"),
+            (b'{"a":"\xff"}', "INVALID_UTF8_OR_JSON"),
+            (b'{"a":1}\r\n', "CR_IN_CANONICAL_JSON"),
+        )
+        for raw, reason in samples:
+            with self.subTest(reason=reason, raw=raw):
+                with self.assertRaises(gate.Refused) as caught:
+                    gate.decode(raw)
+                self.assertEqual(str(caught.exception), reason)
+
+    def test_guest_and_manifest_file_bytes_refused(self):
+        self._skip_if_directory_open_unavailable()
+        guest = self.base / "run-1" / "guest.json"
+        original = json.loads(guest.read_bytes())
+        pretty = json.dumps(original, indent=2).encode()
+        self.assertIn(b"\n", pretty)
+        self.assertNotIn(b"\r", pretty)
+        guest.write_bytes(pretty)
+        self.manifest["runs"][0]["guest_sha256"] = sha(pretty)
+        self._save_manifest()
+        result = gate.verify(self.manifest_path)
+        self.assertEqual(result["status"],
+                         "OFFLINE_BYTE_CONSISTENCY_ONLY_NOT_RUNTIME_QA")
+        self.assertEqual(result["security_admission"], "RED")
+        self.assertEqual(result["host_attestation"],
+                         "REFUSED_UNSIGNED_SELF_ISSUED")
+
+        def plant(path, mutated):
+            path.write_bytes(mutated)
+            return mutated
+
+        guest_raw = guest.read_bytes()
+        duplicated_guest = guest_raw[:-1] + b',"run_id":"run-1"}'
+        self.assertEqual(
+            json.loads(duplicated_guest.decode())["run_id"], "run-1")
+        plant(guest, duplicated_guest)
+        self.manifest["runs"][0]["guest_sha256"] = sha(duplicated_guest)
+        self._save_manifest()
+        with self.assertRaises(gate.Refused) as caught:
+            gate.verify(self.manifest_path)
+        self.assertEqual(str(caught.exception), "DUPLICATE_JSON_KEY")
+
+        guest.write_bytes(guest_raw)
+        self.manifest["runs"][0]["guest_sha256"] = sha(guest_raw)
+        self._save_manifest()
+        cr_guest = guest_raw.replace(b"{", b"{\r", 1)
+        self.assertEqual(json.loads(cr_guest.decode()), json.loads(guest_raw.decode()))
+        plant(guest, cr_guest)
+        self.manifest["runs"][0]["guest_sha256"] = sha(cr_guest)
+        self._save_manifest()
+        with self.assertRaises(gate.Refused) as caught:
+            gate.verify(self.manifest_path)
+        self.assertEqual(str(caught.exception), "CR_IN_CANONICAL_JSON")
+
+        manifest_raw = self.manifest_path.read_bytes()
+        duplicated = manifest_raw[:-1] + b',"security_admission":"RED"}'
+        self.assertEqual(json.loads(duplicated.decode())["security_admission"], "RED")
+        self.manifest_path.write_bytes(duplicated)
+        with self.assertRaises(gate.Refused) as caught:
+            gate.verify(self.manifest_path)
+        self.assertEqual(str(caught.exception), "DUPLICATE_JSON_KEY")
+        self.manifest_path.write_bytes(manifest_raw.replace(b"{", b"{\r", 1))
+        with self.assertRaises(gate.Refused) as caught:
+            gate.verify(self.manifest_path)
+        self.assertEqual(str(caught.exception), "CR_IN_CANONICAL_JSON")
+
+    def test_25_posix_directory_flag_and_inode_mutation(self):
+        """POSIX still requires O_DIRECTORY and still refuses alias inodes.
+
+        Zero is not a directory flag. A copy that ORs getattr(..., 0) would
+        open without that requirement. Dropping the nlink check would accept
+        a hardlinked receipt. The real functions still refuse both.
+        """
+        source = Path(gate.__file__).read_text(encoding="utf-8")
+        self.assertNotIn("os.O_DIRECTORY", source)
+        self._skip_if_directory_open_unavailable()
+        flags = gate.directory_open_flags()
+        self.assertNotEqual(os.O_DIRECTORY, 0)
+        self.assertEqual(flags & os.O_DIRECTORY, os.O_DIRECTORY)
+        with mock.patch.object(gate.os, "O_DIRECTORY", 0, create=True):
+            weakened = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
+            self.assertEqual(weakened & getattr(os, "O_DIRECTORY", 0), 0)
+            with self.assertRaises(gate.Refused) as caught:
+                gate.directory_open_flags()
+            self.assertEqual(str(caught.exception), "SKIP_NON_POSIX")
+        with mock.patch.object(gate.os, "name", "nt"):
+            with self.assertRaises(gate.Refused) as caught:
+                gate.directory_open_flags()
+            self.assertEqual(str(caught.exception), "SKIP_NON_POSIX")
+
+        fifo = self.base / "run-1" / "not-regular"
+        os.mkfifo(fifo)
+        with self.assertRaises(gate.Refused) as caught:
+            gate.read_anchored(self.base, "run-1/not-regular", 1024)
+        self.assertEqual(str(caught.exception), "NONREGULAR_FILE")
+
+        link = self.base / "run-1" / "linked.jsonl"
+        link.symlink_to(self.base / "run-1" / "receipt.jsonl")
+        with self.assertRaises(gate.Refused) as caught:
+            gate.read_anchored(self.base, "run-1/linked.jsonl", 16 * 1024)
+        self.assertEqual(str(caught.exception), "SYMLINK_FILE_REFUSED")
+
+        receipt = self.base / "run-1" / "receipt.jsonl"
+        alias = self.base / "run-1" / "receipt-alias.jsonl"
+        os.link(receipt, alias)
+        self.assertEqual(receipt.stat().st_ino, alias.stat().st_ino)
+        self.assertGreater(receipt.stat().st_nlink, 1)
+
+        def drop_nlink(info, limit):
+            gate.require(stat.S_ISREG(info.st_mode), "NONREGULAR_FILE")
+            gate.require(info.st_size <= limit, "OVERSIZED_FILE")
+
+        with mock.patch.object(gate, "require_evidence_inode", drop_nlink):
+            mutated = gate.verify(self.manifest_path)
+        self.assertEqual(mutated["security_admission"], "RED")
+        self.assertIs(mutated["production_authority"], False)
+        with self.assertRaises(gate.Refused) as caught:
+            gate.require_evidence_inode(receipt.stat(), 16 * 1024)
+        self.assertEqual(str(caught.exception), "HARDLINK_ALIAS_REFUSED")
+        with self.assertRaises(gate.Refused) as caught:
+            gate.verify(self.manifest_path)
+        self.assertEqual(str(caught.exception), "HARDLINK_ALIAS_REFUSED")
+
+    def test_overflow_float_refused_in_guest_and_manifest(self):
+        for raw in (b'{"a":1e999}', b'{"a":-1e999}'):
+            with self.subTest(raw=raw):
+                loaded = json.loads(raw.decode())
+                self.assertTrue(loaded["a"] == float("inf") or loaded["a"] == float("-inf"))
+                with self.assertRaises(gate.Refused) as caught:
+                    gate.decode(raw)
+                self.assertEqual(str(caught.exception), "NON_FINITE_JSON")
+
+    def test_overflow_float_in_guest_and_manifest_files(self):
+        self._skip_if_directory_open_unavailable()
+        guest = self.base / "run-1" / "guest.json"
+        guest_raw = guest.read_bytes()
+        overflow_guest = guest_raw[:-1] + b',"n":1e999}'
+        self.assertEqual(json.loads(overflow_guest.decode())["n"], float("inf"))
+        guest.write_bytes(overflow_guest)
+        self.manifest["runs"][0]["guest_sha256"] = sha(overflow_guest)
+        self._save_manifest()
+        with self.assertRaises(gate.Refused) as caught:
+            gate.verify(self.manifest_path)
+        self.assertEqual(str(caught.exception), "NON_FINITE_JSON")
+        guest.write_bytes(guest_raw)
+        self.manifest["runs"][0]["guest_sha256"] = sha(guest_raw)
+        self._save_manifest()
+        manifest_raw = self.manifest_path.read_bytes()
+        overflow_manifest = manifest_raw[:-1] + b',"n":-1e999}'
+        self.assertEqual(json.loads(overflow_manifest.decode())["n"], float("-inf"))
+        self.manifest_path.write_bytes(overflow_manifest)
+        with self.assertRaises(gate.Refused) as caught:
+            gate.verify(self.manifest_path)
+        self.assertEqual(str(caught.exception), "NON_FINITE_JSON")
+
+
+    def test_read_anchored_calls_directory_open_flags(self):
+        def boom():
+            raise gate.Refused("DIRECTORY_OPEN_FLAGS_NOT_USED")
+
+        with mock.patch.object(gate, "directory_open_flags", boom):
+            with self.assertRaises(gate.Refused) as caught:
+                gate.read_anchored(self.base, "run-1/receipt.jsonl", 4096)
+            self.assertEqual(str(caught.exception), "DIRECTORY_OPEN_FLAGS_NOT_USED")
+
+    def test_read_anchored_refuses_zero_directory_flag(self):
+        with mock.patch.object(gate.os, "O_DIRECTORY", 0, create=True):
+            with self.assertRaises(gate.Refused) as caught:
+                gate.read_anchored(self.base, "run-1/receipt.jsonl", 4096)
+            self.assertEqual(str(caught.exception), "SKIP_NON_POSIX")
+
+    def test_symlink_directory_anchor_requires_nofollow(self):
+        self._skip_if_directory_open_unavailable()
+        outside = self.base / "outside-anchor"
+        outside.mkdir()
+        secret = b'{"outside":true}\n'
+        (outside / "receipt.jsonl").write_bytes(secret)
+        link = self.base / "linked-run"
+        link.symlink_to(outside, target_is_directory=True)
+        try:
+            got = gate.read_anchored(self.base, "linked-run/receipt.jsonl", 4096)
+        except gate.Refused as exc:
+            self.assertEqual(str(exc), "ARTIFACT_PARENT_NOT_REAL_DIRECTORY")
+        else:
+            self.fail("symlink directory anchor was followed: " + repr(got))
 
 
 if __name__ == "__main__":

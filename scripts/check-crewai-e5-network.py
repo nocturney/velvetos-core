@@ -12,8 +12,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
+from office_v2_crewai.contract import APPROVED_PORT, SANDBOX_ROOT  # noqa: E402
 from vf_office_v2_crewai_e5_network import (  # noqa: E402
-    SCHEMA, canonical_bytes, create_receipt, evaluate,
+    ALLOWED_PORT, PILOT_STAGE_ROOT, SCHEMA, canonical_bytes, create_receipt,
+    evaluate, normalize_pilot_path, pilot_path_admitted,
 )
 
 
@@ -24,7 +26,7 @@ def fixture() -> dict:
             "process_tree": ([{"pid": 4242, "parent_pid": 100,
                               "created_at_utc": "2026-10-18T12:00:01Z"}] if running else []),
             "tcp": ([{"pid": 4242, "state": "Established", "local_address": "127.0.0.1",
-                      "local_port": 50123, "remote_address": "127.0.0.1", "remote_port": 11435}]
+                      "local_port": 50123, "remote_address": "127.0.0.1", "remote_port": 11434}]
                     if running else []),
             "udp": [],
         }
@@ -64,6 +66,8 @@ def mutate_pid_reuse(data: dict) -> None:
 def main() -> int:
     base = fixture()
     errors = []
+    if ALLOWED_PORT != 11434 or APPROVED_PORT != 11434 or ALLOWED_PORT != APPROVED_PORT:
+        errors.append("E5 allowed port is not the single approved port 11434")
     if evaluate(base):
         errors.append("valid baseline refused: %s" % evaluate(base))
     nested = copy.deepcopy(base)
@@ -76,7 +80,7 @@ def main() -> int:
                           "TCP_LISTENER_DETECTED"),
         "non-loopback-remote": (lambda d: d["snapshots"]["during"][0]["tcp"][0].update(remote_address="10.0.0.10"),
                                 "UNAPPROVED_REMOTE_ENDPOINT"),
-        "wrong-ollama-port": (lambda d: d["snapshots"]["during"][0]["tcp"][0].update(remote_port=11434),
+        "wrong-ollama-port": (lambda d: d["snapshots"]["during"][0]["tcp"][0].update(remote_port=11435),
                               "WRONG_OLLAMA_PORT"),
         "missing-after": (lambda d: d["snapshots"].pop("after"), "MISSING_SNAPSHOT"),
         "missing-before": (lambda d: d["snapshots"].pop("before"), "MISSING_SNAPSHOT"),
@@ -179,7 +183,7 @@ def main() -> int:
         raw = ps.read_bytes()
         required = (b"Get-NetTCPConnection", b"Get-NetUDPEndpoint", b"Get-CimInstance",
                     b"Start-Process", b"captured_at_utc", b"collector_errors", b"127.0.0.1",
-                    b"11435", b"--evidence", b"--receipt")
+                    b"remote_port -ne 11434", b"--evidence", b"--receipt")
         if (raw.startswith(b"\xef\xbb\xbf") or b"\r" in raw or any(b > 127 for b in raw)
                 or not raw.endswith(b"\n")):
             errors.append("collector must be ASCII/LF without BOM")
@@ -194,6 +198,46 @@ def main() -> int:
         if (b"$null = $script:Child.Handle" not in raw or b"$null -ne $observedExitCode" not in raw
                 or b"[int]$script:Child.ExitCode" in raw):
             errors.append("collector ExitCode must fail closed on null, with primed process handle")
+        if (b"Test-PilotPathAdmitted" not in raw or b"TrimEnd('\\')" not in raw
+                or b"$full.StartsWith($Root" in raw):
+            errors.append("collector must admit the exact pilot root and still reject a sibling prefix")
+    root = PILOT_STAGE_ROOT
+    admitted = (
+        root,
+        root + "\\",
+        root + "\\crew",
+        root + "\\crew\\..",
+        "d:/velvet/pilots/officev2-verifiedtrio",
+    )
+    rejected = (
+        root + "X",
+        root + "X\\crew",
+        root + "\\..",
+        root + "\\..\\OfficeV2-VerifiedTrioX",
+        "D:\\Velvet\\Pilots",
+        "C:\\Velvet\\Pilots\\OfficeV2-VerifiedTrio",
+        "OfficeV2-VerifiedTrio",
+        "",
+        " " + root,
+        root + " ",
+        "\t" + root,
+        root + "\n",
+    )
+    if normalize_pilot_path(" " + root) is not None or normalize_pilot_path(root + " ") is not None:
+        errors.append("padded pilot path was admitted by strip")
+    if any(not pilot_path_admitted(path) for path in admitted):
+        errors.append("exact pilot root or a child directory was rejected")
+    if any(pilot_path_admitted(path) for path in rejected):
+        errors.append("dotdot or sibling prefix was admitted: %s" % [
+            path for path in rejected if pilot_path_admitted(path)
+        ])
+    if normalize_pilot_path(root + "\\..\\OfficeV2-VerifiedTrioX") != "D:\\Velvet\\Pilots\\OfficeV2-VerifiedTrioX":
+        errors.append("dotdot sibling was not normalized outside the pilot root")
+    if SANDBOX_ROOT != "D:\\Velvet\\Pilots\\crewai-e4\\sandbox-home" or pilot_path_admitted(SANDBOX_ROOT):
+        errors.append("E4 sandbox root moved under the E5 stage")
+    validator_source = (ROOT / "scripts" / "vf_office_v2_crewai_e5_network.py").read_text(encoding="utf-8")
+    if 'data.get("exit_code") != 0' not in validator_source or "PILOT_EXIT_NOT_ZERO" not in validator_source:
+        errors.append("E5 exit_code==0 contract was weakened")
     if errors:
         for error in errors:
             print("FAIL check-crewai-e5-network: %s" % error, file=sys.stderr)

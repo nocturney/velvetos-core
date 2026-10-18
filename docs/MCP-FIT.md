@@ -191,7 +191,7 @@ HTTP no-secret servers go in Core `.cursor/mcp.json` (and Team MCP for Cloud). S
 1. Christian names the account (WhatsApp number, Sheet ID, Ads account) if the server needs one.
 2. Add **one** server to the Core catalog (`core-mcp.json`) + CONNECT playbook.
 3. Keep secrets out of git.
-4. Same-day: one line in `CHANGELOG.md` Unreleased + a note here if the choice changes.
+4. Same-day: one bullet in `changelog.d/<slug>.md` + a note here if the choice changes. Do not edit `CHANGELOG.md` in that same change.
 5. Pack agents may *use* the new tools. They still do not invent prices or send Instagram. VF WhatsApp send stays human.
 
 ## Suggested order

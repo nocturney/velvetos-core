@@ -12,7 +12,7 @@ Source: ChatGPT-066 result on [#612 comment 6252298649](https://github.com/noctu
 python3 scripts/office_v2_crewai/kickoff_eval.py --outputs <dir>
 ```
 
-`<dir>` holds one `case-01` … `case-10` file (`.md` or `.txt`) and nothing else. A missing file, an unexpected file, and a symlink are each a failure. Symlinked files are not read. Exit 0 only when every case passes all four checks. The check-all sensor runs the committed good and bad samples:
+`<dir>` holds one `case-01` … `case-10` file (`.md` or `.txt`) and nothing else. A missing file, an unexpected file, a symlink, and any other non-regular entry are each a failure. That includes hidden names. Symlinks are not read. Exit 0 only when every case passes all four checks. Refusal lines use `SYMLINK_REFUSED` and `NONREGULAR_REFUSED`. The check-all sensor runs the committed good and bad samples:
 
 ```sh
 python3 scripts/check-crewai-kickoff-eval.py
@@ -43,13 +43,13 @@ Ported from the javascript assertions in the ChatGPT-066 comment:
 
 1. Every fixture issue URL appears, and every `nocturney/velvetos-core` issue URL in the output is one of those URLs.
 2. The table is not empty, not an all-`N/A` / `UNKNOWN` / `none` / `-` detail table, and does not say that no rows were provided.
-3. No shekel sign, `ILS`, `NIS`, or a shekel abbreviation bounded by Hebrew letters (`שח`, `ש"ח`, `ש״ח`, `שקלים`). Ordinary words such as `שחור`, `משחק`, and `לשחרר` do not count. No named or identified customer. The customer matcher is the narrowed one: generic `לקוחות` in an explanation does not count, and `client-side` does not count. `Dana`, `דנה`, `customer`, `client`, `לקוח`, and `לקוחה` still count.
-4. The output contains `## סיכום`, `## חסמים וצעדים הבאים`, and `| Issue URL | חסם | בעלים | צעד הבא |`. Each data row has at least four cells, and the number of data rows equals the number of fixture issues. A repeated row fails even when every fixture URL is present.
+3. No shekel sign, `ILS`, `NIS`, or a shekel abbreviation bounded by Hebrew letters (`שח`, `ש"ח`, `ש״ח`, `שקלים`). Ordinary words such as `שחור`, `משחק`, `לשחרר`, and `שחסר` do not count. No named or identified customer. The customer matcher is the narrowed one: generic `לקוחות` in an explanation does not count, and `client-side` does not count in any English case. `Dana`, `דנה`, `customer`, `Customer`, `client`, `Client`, `לקוח`, and `לקוחה` still count. `dana` does not.
+4. The output contains `## סיכום`, `## חסמים וצעדים הבאים`, and `| Issue URL | חסם | בעלים | צעד הבא |`. Each data row has at least four cells and exactly one issue URL. The number of data rows equals the number of fixture issues. A merged row and a repeated row both fail.
 
 ## Live third-party eval tools need OS egress denial
 
 Any live run of a third-party eval tool such as promptfoo must run under **OS-level egress denial**.
 
-ChatGPT-066 disabled promptfoo telemetry, updates, and sharing, then still observed an unconfined promptfoo process open outbound IPv6 HTTPS to `[2606:4700:10::6814:2369]:443`. That attempt was aborted. The three scored rounds were contained only after macOS Seatbelt denied outbound traffic except `localhost:11435`. Telemetry flags are not an air gap. Do not treat a promptfoo configuration as zero-egress unless the operating system enforces it.
+ChatGPT-066 disabled promptfoo telemetry, updates, and sharing, then still observed an unconfined promptfoo process open outbound IPv6 HTTPS to `[2606:4700:10::6814:2369]:443`. That attempt was aborted. The three scored rounds were contained only after macOS Seatbelt denied outbound traffic except `localhost:11435`. That observation is historical. The current pilot endpoint is `127.0.0.1:11434`; port 11435 is refused. Telemetry flags are not an air gap. Do not treat a promptfoo configuration as zero-egress unless the operating system enforces it.
 
 This repository harness does not launch that tool.

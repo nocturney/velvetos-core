@@ -16,8 +16,51 @@ from pathlib import Path
 SCHEMA = "velvetos.office-v2.crewai-e5-snapshots.v1"
 RECEIPT_SCHEMA = "velvetos.office-v2.crewai-e5-receipt.v1"
 ALLOWED_ADDRESS = "127.0.0.1"
-ALLOWED_PORT = 11435
+# Owner decision 2026-10-18 20:41 IDT. Must match contract.APPROVED_PORT.
+ALLOWED_PORT = 11434
 MAX_SNAPSHOTS = 6000
+# E5 stage root. Distinct from the E4 sandbox at crewai-e4\sandbox-home.
+PILOT_STAGE_ROOT = "D:\\Velvet\\Pilots\\OfficeV2-VerifiedTrio"
+
+
+def normalize_pilot_path(path: str) -> str | None:
+    """Lexical D: full path. Resolves '.' and '..'. Does not touch the filesystem.
+
+    Surrounding whitespace is not a rooted path. Stripping it would admit a
+    padded string that is not the pilot root.
+    """
+    if not isinstance(path, str):
+        return None
+    text = path.replace("/", "\\")
+    if text != text.strip():
+        return None
+    if len(text) < 3 or text[1] != ":" or text[0] not in "Dd" or text[2] != "\\":
+        return None
+    parts: list[str] = []
+    for segment in text[3:].split("\\"):
+        if segment in {"", "."}:
+            continue
+        if segment == "..":
+            if not parts:
+                return None
+            parts.pop()
+            continue
+        parts.append(segment)
+    if not parts:
+        return "D:\\"
+    return "D:\\" + "\\".join(parts)
+
+
+def pilot_path_admitted(path: str, root: str = PILOT_STAGE_ROOT) -> bool:
+    """Admit the stage root itself and its descendants. Reject sibling prefixes."""
+    full = normalize_pilot_path(path)
+    base = normalize_pilot_path(root)
+    if full is None or base is None or base == "D:\\":
+        return False
+    if full.casefold() == base.casefold():
+        return True
+    prefix = base.rstrip("\\") + "\\"
+    return full.casefold().startswith(prefix.casefold())
 
 
 def utc_time(value: object) -> datetime | None:
