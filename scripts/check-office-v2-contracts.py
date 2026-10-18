@@ -3412,10 +3412,12 @@ def main() -> int:
     # New CP083 hardening candidate gates: LOCAL-only. Do not change the
     # historical sealed CP083 receipts or imply protected security admission.
     # Linux CI must actually execute the kernel socket negatives, not skip them.
-    for test_file, count in (
-        ("test_vf_office_v2_604_cp083_hardening_candidate.py", 9),
-        ("test_vf_office_v2_604_cp083_socket_negative.py", 2),
-        ("test_vf_office_v2_604_cp083_client_socket_negative.py", 3),
+    # Client suite includes two ~3s deadline probes; allow headroom.
+    for test_file, count, timeout_s in (
+        ("test_vf_office_v2_604_cp083_hardening_candidate.py", 10, 15),
+        ("test_vf_office_v2_604_cp083_socket_negative.py", 2, 15),
+        ("test_vf_office_v2_604_cp083_client_socket_negative.py", 10, 45),
+        ("test_vf_office_v2_604_cp083_reconcile_negative.py", 5, 15),
     ):
         candidate_test = ROOT / "scripts" / test_file
         if not candidate_test.is_file():
@@ -3423,13 +3425,15 @@ def main() -> int:
         try:
             test_run = subprocess.run(
                 [sys.executable, "-B", str(candidate_test)],
-                cwd=ROOT, capture_output=True, text=True, timeout=15,
+                cwd=ROOT, capture_output=True, text=True, timeout=timeout_s,
             )
         except subprocess.TimeoutExpired:
             fail("#604 CP083 candidate negative test timed out: " + test_file)
         if (test_run.returncode != 0
                 or f"Ran {count} tests" not in test_run.stderr
-                or (sys.platform == "linux" and "skipped" in test_run.stderr)):
+                or (sys.platform == "linux"
+                    and test_file != "test_vf_office_v2_604_cp083_reconcile_negative.py"
+                    and "skipped" in test_run.stderr)):
             fail("#604 CP083 candidate negative tests failed: " + test_file)
 
     print(
