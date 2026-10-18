@@ -187,9 +187,37 @@ def main() -> int:
         fail("mutation: missing evidence crashed the board or kept a sealed row")
     if "מחכה לכריסטיאן" not in broken_text:
         fail("mutation: missing evidence dropped sections other than the seal row")
+    evidence = mvp._load_lostack_gate().EVIDENCE
+    evidence_before = evidence.read_bytes()
+    original_loader = mvp._load_lostack_gate
+
+    def _gate_import_failed():
+        raise ImportError("lost-ACK receipt gate missing")
+
+    mvp._load_lostack_gate = _gate_import_failed
+    try:
+        failed = mvp.cp083_lostack_view()
+        failed_board = mvp.build_board({}, datetime(2026, 10, 18, 12, 0, tzinfo=timezone.utc))
+        failed_text = mvp.render_markdown(failed_board)
+    finally:
+        mvp._load_lostack_gate = original_loader
+    if evidence.read_bytes() != evidence_before:
+        fail("gate import mutation touched the CP083 evidence file")
+    if failed.get("status") != "GATE_IMPORT_FAILED" or failed.get("row"):
+        fail("mutation: gate import failure was not GATE_IMPORT_FAILED")
+    if failed.get("status") == "EVIDENCE_MISSING":
+        fail("mutation: gate import failure was labeled EVIDENCE_MISSING")
+    if "GATE_IMPORT_FAILED" not in failed_text or "SEALED_RED_ONLY" in failed_text:
+        fail("mutation: gate import failure kept a sealed row")
+    if "EVIDENCE_MISSING" in failed_text:
+        fail("mutation: gate import failure was rendered as EVIDENCE_MISSING")
+    if "מחכה לכריסטיאן" not in failed_text:
+        fail("mutation: gate import failure dropped sections other than the seal row")
     sample_text = sample.read_text(encoding="utf-8")
     if not mvp.sealed_lab_text_ok(sample_text):
         fail("committed sample board is missing the SEALED_RED_ONLY lost-ACK link")
+    evidence_for_test = mvp._load_lostack_gate().EVIDENCE
+    evidence_bytes = evidence_for_test.read_bytes()
     proc = subprocess.run(
         [sys.executable, str(TEST)],
         cwd=ROOT,
@@ -198,6 +226,8 @@ def main() -> int:
         capture_output=True,
         timeout=60,
     )
+    if evidence_for_test.read_bytes() != evidence_bytes:
+        fail("fixture unit test mutated the CP083 evidence file")
     if proc.returncode != 0:
         detail = (proc.stdout + "\n" + proc.stderr).strip()
         fail("fixture unit test failed\n" + detail[-2000:])
