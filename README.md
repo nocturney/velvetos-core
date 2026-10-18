@@ -293,6 +293,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 
 ## ‏מפת היכולות
 
+‏**Office 2.0 · חוקת העבודה (DOCUMENTED / NO RUNTIME AUTHORITY):** [חוקת המשרד](docs/office-v2/OFFICE.md) מגדירה אחריות Christian/ChatGPT/Cursor/Claude/Gemini/auditor, מסלול #612 → CLAIM → PR → QA על SHA מדויק → verdict → merge commit, ושערי אישור Christian. [לוח Office 2.0](docs/office-v2/board/latest.md) הוא snapshot לקריאה בלבד אם נוצר וזמין; היעדרו או פער מול GitHub אינם הוכחת מצב. אין כאן הפעלת סוכן, scheduler, שינוי הרשאות או production.
+
 <table>
 <tr><td><strong>Office Control Plane</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">סטטוס משרד, watchdog, gaps, follow-ups, dead-letter, handoff, review, memory hygiene ו־WIP→finished. <code>office/control/HANDOFF.json</code> הוא משטח ה־handoff היחיד.</td></tr>
 <tr><td><strong>VelvetOS Control API v1</strong></td><td><strong>CLOUD RUN LIVE / SITE ROUNDTRIP VERIFIED</strong></td><td dir="rtl" align="right"><code>packages/velvetos_control_api/</code> — שער HTTP לקריאה ראשונה (<code>velvetos.control.v1</code>) ל־Control Center: <code>/health</code>, <code>/v1/snapshot</code>, <code>/v1/search</code>, <code>/v1/capabilities</code>, <code>/v1/actions</code>. לא SoT / runtime / queue / Control Plane חדש. הדומיינים החיים המאומתים כרגע הם Control Plane/system, capabilities, attention/activity, jobs adapter ו־<code>integrations</code>. ענף ההרחבה מוסיף הקרנות קנוניות ל־production/content/files/agents/models עם שמירת unknown/missing ו־provenance; ההרחבה הזו אינה נחשבת LIVE עד merge + redeploy + staging roundtrip. Actions fail-closed בלי ביצוע כתיבה. Cloud Run הנוכחי הוא revision <code>velvetos-control-api-00004-dmq</code>; <code>/health</code> מחזיר 200, <code>/v1/snapshot</code> ללא app token נחסם ב־401, ו־snapshot/search דרך ה־staging הפרטי אומתו ב־200.</td></tr>
@@ -450,6 +452,8 @@ vfharness escalation ladder: `packages/vfharness/layers.json` → `ladder` mirro
 > **Principle:** one source of truth, many projections and automations. New ideas extend existing SoTs instead of creating parallel systems.
 
 ## Capability map
+
+**Office 2.0 delivery charter (DOCUMENTED / NO RUNTIME AUTHORITY):** [OFFICE.md](docs/office-v2/OFFICE.md) defines Christian/ChatGPT/Cursor/Claude/Gemini/auditor roles, the #612 → CLAIM → PR → exact-SHA QA request → independent verdict → merge-commit handoff, and owner approval gates. The [Office 2.0 board](docs/office-v2/board/latest.md) is an optional read-only snapshot, never an authorization or source of live status when missing/stale. No agent activation, scheduler, credential or production change is included.
 
 <table>
 <tr><td><strong>Office Control Plane</strong></td><td><strong>IMPLEMENTED</strong></td><td>Status, watchdog, gaps, follow-ups, dead-letter, handoff, review, memory hygiene and WIP→finished. <code>office/control/HANDOFF.json</code> is the single handoff surface.</td></tr>
