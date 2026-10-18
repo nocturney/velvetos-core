@@ -43,6 +43,9 @@ FRAME = "d851448d96791b1d5ec84575b8b923777217630b1dd8ee43a695ccc621425727"
 CONTENT = "18bb936d340441fb3a3434afef6792ea65074dc02e38879dd6f6143cf323fe75"
 ASCII_FRAME = "cf091c81a971c85bb3c1709dc1e5a91da3dcc33cf04f99a3753e8bf1dc870d00"
 ATTEMPT7 = "ee6c41e0635256d662cbc74cb9bb126b9fa7d18681810cfff679810359947144"
+ATTEMPT8 = "36abe219c4cf4995b8ce95078e568ee3"
+RECEIPT8 = "0e0ae55b1ec00ee26a116be172eda17e3c7a917ffba4f3102c73bdbe4da6bb5c"
+ACCEPTED = "ACCEPTED"
 IDLE_GATE_SECONDS = 120
 UIA_WAIT_MS = 10000
 UIA_POLL_MS = 250
@@ -1090,6 +1093,44 @@ def safety_findings(text: str) -> list[str]:
     return problems
 
 
+def acceptance_findings(pin: dict) -> list[str]:
+    """ACCEPTED is allowed only when the note cites attempt 8 and its receipt."""
+    problems: list[str] = []
+    if pin.get("runtimeAuthority") is not False or pin.get("activationAllowed") is not False:
+        problems.append("PIN must keep runtimeAuthority and activationAllowed false")
+    acceptance = pin.get("acceptance")
+    note = str(pin.get("note") or "").lower()
+    if acceptance == ACCEPTED:
+        if RECEIPT8 not in note:
+            problems.append("accepted PIN note must cite receipt sha 0e0ae55b")
+        if ATTEMPT8 not in note:
+            problems.append("accepted PIN note must cite attempt id 36abe219")
+    elif acceptance != "RED_UNVERIFIED":
+        problems.append("PIN must not claim Calculator acceptance")
+    return problems
+
+
+def acceptance_mutation_findings(pin: dict) -> list[str]:
+    """False acceptance and authority flags must fail closed."""
+    if acceptance_findings(pin):
+        return ["acceptance baseline failed before mutations"]
+    note = str(pin.get("note") or "")
+    wrong_sha = "0e0ae55b" + ("f" * 56)
+    cases = {
+        "accepted-without-receipt-sha": {"note": note.replace(RECEIPT8, "")},
+        "wrong-receipt-sha": {"note": note.replace(RECEIPT8, wrong_sha)},
+        "runtime-authority": {"runtimeAuthority": True},
+        "activation-allowed": {"activationAllowed": True},
+    }
+    problems: list[str] = []
+    for name, changes in cases.items():
+        mutated = dict(pin)
+        mutated.update(changes)
+        if not acceptance_findings(mutated):
+            problems.append(f"acceptance mutation {name} was not detected")
+    return problems
+
+
 def pin_findings(text: str) -> list[str]:
     if not PIN.is_file():
         return ["missing PIN.json"]
@@ -1116,10 +1157,8 @@ def pin_findings(text: str) -> list[str]:
         problems.append("PIN lost the frame-bind hash")
     if ASCII_FRAME not in pin_text:
         problems.append("PIN lost the ASCII frame-select hash")
-    if pin.get("runtimeAuthority") is not False or pin.get("activationAllowed") is not False:
-        problems.append("PIN must keep runtimeAuthority and activationAllowed false")
-    if pin.get("acceptance") != "RED_UNVERIFIED":
-        problems.append("PIN must not claim Calculator acceptance")
+    problems.extend(acceptance_findings(pin))
+    problems.extend(acceptance_mutation_findings(pin))
     if pin.get("line_ending") != "lf":
         problems.append("PIN line_ending must stay lf")
     root_readme = README.read_text(encoding="utf-8")
