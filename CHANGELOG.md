@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- 2026-10-18 - **CrewAI E4 evidence LF bytes (issue 612 comment 6252562047):** `e4_evidence.py` writes JSON with `(json.dumps(..., sort_keys=True, indent=2) + "\n").encode("ascii")` via `write_bytes`, and writes `.reg` and `NOT_OBSERVED` the same way. The strict byte comparison against the committed E4 files stays. `.gitattributes` pins `eol=lf` for `scripts/office_v2_crewai/evidence/e4/*.json`, `*.reg`, and `e4-containment.json`. The sensor simulates Windows text-mode newline translation and fails if those writes revert to `write_text`. Evidence content and security semantics are unchanged. No model call.
+- 2026-10-18 - **CrewAI E4 evidence LF bytes (issue 612 comment 6252562047):** `e4_evidence.py` writes JSON with `(json.dumps(..., sort_keys=True, indent=2) + "\n").encode("ascii")` via `write_bytes`, and writes `.reg` and `NOT_OBSERVED` the same way. The strict byte comparison against the committed E4 files stays. `.gitattributes` pins `eol=lf` for `scripts/office_v2_crewai/evidence/e4/*.json`, `*.reg`, and `e4-containment.json`. The sensor simulates Windows text-mode newline translation and fails when the emitted bytes contain CR. An LF `write_text(..., newline="\n")` still passes. Plain `write_text` does not. Evidence content and security semantics are unchanged. No model call.
 
 - 2026-10-18 - **CP083 evidence inode:** an evidence file with `st_nlink>1` fails closed as `HARDLINK_ALIAS_REFUSED`. A FIFO or other non-regular evidence file fails closed as `NONREGULAR_FILE`. The lost-ACK gate `main()` uses that read and refuses a hardlinked evidence JSON. The sealed native Git/SQLite source is unchanged. `security_admission` stays RED.
 

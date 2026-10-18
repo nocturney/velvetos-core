@@ -958,8 +958,6 @@ _E4_EOL_RULES = (
     "/scripts/office_v2_crewai/evidence/e4/*.reg text eol=lf",
     "/scripts/office_v2_crewai/evidence/e4-containment.json text eol=lf",
 )
-_E4_WRITE_BYTES = 'path.write_bytes((json.dumps(payload, sort_keys=True, indent=2) + "\\n").encode("ascii"))'
-_E4_WRITE_TEXT = 'path.write_text(json.dumps(payload, sort_keys=True, indent=2) + "\\n", encoding="ascii")'
 
 
 class _WindowsTextMode:
@@ -1009,64 +1007,38 @@ def _assert_e4_lf(root: Path, *, match_committed: bool) -> None:
                 fail("committed E4 evidence drifted: %s" % path.relative_to(root))
 
 
-def _write_text_e4_source() -> str:
-    source = (PACKAGE / "e4_evidence.py").read_text(encoding="ascii")
-    if source.count(_E4_WRITE_BYTES) != 1:
-        fail("E4 JSON writer is not the pinned write_bytes form")
-    mutated = source.replace(_E4_WRITE_BYTES, _E4_WRITE_TEXT, 1)
-    reg_from = '.write_bytes(reg.encode("ascii"))'
-    reg_to = '.write_text(reg, encoding="ascii")'
-    marker_from = '.write_bytes(b"NOT_OBSERVED\\n")'
-    marker_to = '.write_text("NOT_OBSERVED\\n", encoding="ascii")'
-    if mutated.count(reg_from) != 2 or mutated.count(marker_from) != 2:
-        fail("E4 .reg writer is not the pinned write_bytes form")
-    mutated = mutated.replace(reg_from, reg_to).replace(marker_from, marker_to)
-    if "write_bytes" in mutated.split("def _load", 1)[0]:
-        fail("write_text mutation left a writer on write_bytes")
-    return mutated
-
-
-def _load_write_text_e4():
-    import types
-
-    name = "office_v2_crewai._e4_write_text_mutation"
-    module = types.ModuleType(name)
-    module.__file__ = str(PACKAGE / "e4_evidence.py")
-    module.__package__ = "office_v2_crewai"
-    sys.modules[name] = module
-    exec(compile(_write_text_e4_source(), module.__file__, "exec"), module.__dict__)
-    return module
-
-
 def check_e4_newline_mutation() -> None:
+    """LF is a property of the emitted bytes, not of one writer spelling.
+
+    ``write_bytes`` and ``write_text(..., newline="\\n")`` both stay LF under
+    the Windows text-mode simulation. Plain ``write_text`` (newline unset)
+    must come out as CRLF, or the simulation itself was removed.
+    """
     attributes = (ROOT / ".gitattributes").read_text(encoding="utf-8")
     for rule in _E4_EOL_RULES:
         if rule not in attributes:
             fail("E4 evidence eol pin missing: %s" % rule)
     fresh = Path(tempfile.mkdtemp(prefix="crewai-e4-lf-"))
     observed = Path(tempfile.mkdtemp(prefix="crewai-e4-lf-observed-"))
-    mutated_root = Path(tempfile.mkdtemp(prefix="crewai-e4-write-text-"))
-    module_name = "office_v2_crewai._e4_write_text_mutation"
+    probe = Path(tempfile.mkdtemp(prefix="crewai-e4-newline-probe-"))
     try:
-        mutated = _load_write_text_e4()
         with _WindowsTextMode():
             emit_not_observed(fresh)
             write_observed_e4(observed)
-            mutated.emit_not_observed(mutated_root)
+            (probe / "plain.txt").write_text("NOT_OBSERVED\n", encoding="ascii")
+            (probe / "explicit.txt").write_text("NOT_OBSERVED\n", encoding="ascii", newline="\n")
         _assert_e4_lf(fresh, match_committed=True)
         _assert_e4_lf(observed, match_committed=False)
-        mutated_blobs = _e4_blobs(mutated_root)
-        if not mutated_blobs:
-            fail("write_text mutation wrote no files")
-        for path, blob in mutated_blobs:
-            committed = EVIDENCE / path.relative_to(mutated_root)
-            if b"\r" not in blob or not committed.is_file() or committed.read_bytes() == blob:
-                fail("write_text mutation was not caught: %s" % path.relative_to(mutated_root))
+        plain = (probe / "plain.txt").read_bytes()
+        if b"\r\n" not in plain or plain == b"NOT_OBSERVED\n":
+            fail("plain write_text was not caught under Windows newline translation")
+        explicit = (probe / "explicit.txt").read_bytes()
+        if b"\r" in explicit or explicit != b"NOT_OBSERVED\n":
+            fail("newline=LF write_text was translated")
     finally:
-        sys.modules.pop(module_name, None)
         shutil.rmtree(fresh, ignore_errors=True)
         shutil.rmtree(observed, ignore_errors=True)
-        shutil.rmtree(mutated_root, ignore_errors=True)
+        shutil.rmtree(probe, ignore_errors=True)
 
 
 def _pilot_tree() -> dict:
