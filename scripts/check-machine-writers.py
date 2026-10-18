@@ -58,9 +58,11 @@ def has_write_permission(text: str) -> bool:
 
 FFMPEG_ZIP_SHA256 = "d760e1b3574402ed18b4865851f87d87e73965a982e6453212df8621fed1c508"
 UPLOAD_ARTIFACT = "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9"
+CHECKOUT = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+SETUP_PYTHON = "actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97"
 WINDOWS_ACTIONS = {
-    "actions/checkout@v7",
-    "actions/setup-python@v7",
+    CHECKOUT,
+    SETUP_PYTHON,
     UPLOAD_ARTIFACT,
 }
 
@@ -139,8 +141,10 @@ def windows_job_problems(job: str) -> list[str]:
         FFMPEG_ZIP_SHA256,
         "ffmpeg-7.1.1-full_build.zip",
         "core.autocrlf false",
-        "actions/checkout@v7",
-        "actions/setup-python@v7",
+        CHECKOUT,
+        "# actions/checkout v7.0.1",
+        SETUP_PYTHON,
+        "# actions/setup-python v7.0.0",
         UPLOAD_ARTIFACT,
         "# actions/upload-artifact v7.0.2",
         "name: check-all-windows",
