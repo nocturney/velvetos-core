@@ -3438,12 +3438,12 @@ def main() -> int:
         ("test_vf_office_v2_604_cp084_nonroot_sink_recovery.py", 5, 15),
         ("test_vf_office_v2_604_cp085_public_git_readback.py", 27, 15),
         # #762: offline-only byte-consistency negatives, NOT joined-run QA.
-        ("test_vf_office_v2_604_cp083_candidate_evidence_gate.py", 25, 30),
+        ("test_vf_office_v2_604_cp083_candidate_evidence_gate.py", 26, 30),
         # ChatGPT-069: GAP_4 and GAP_9 are passing refusals. GAP_6 stays an
         # expected failure. This file does not import the candidate.
         ("test_vf_office_v2_604_cp083_chatgpt069_negatives.py", 4, 30),
         # GAP_9 socket frames. Imports the candidate, so non-POSIX skips it.
-        ("test_vf_office_v2_604_cp083_wire_json.py", 4, 30),
+        ("test_vf_office_v2_604_cp083_wire_json.py", 7, 30),
     ):
         candidate_test = ROOT / "scripts" / test_file
         if not candidate_test.is_file():
