@@ -14,6 +14,8 @@ $AllowedUser='CHRIS\Chris'
 $Schema='velvetos.office2.cp057.native-calculator-uia-one-shot.v1'
 $TaskExe='C:\Windows\System32\schtasks.exe'
 $PSExe='C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
+$UiaReadyWaitMs=10000
+$UiaReadyPollMs=250
 function Refuse([string]$reason){throw ('REFUSED_'+$reason)}
 function Identity {
  $id=[Security.Principal.WindowsIdentity]::GetCurrent()
@@ -40,24 +42,102 @@ public static class IdleNativeCP057 {
  $now=[uint64][IdleNativeCP057]::GetTickCount()
  return [math]::Round((($now+4294967296-[uint64]$li.dwTime)%4294967296)/1000,2)
 }
+function Get-CalculatorHostKind($window) {
+ if($null -eq $window){return 'absent'}
+ $hostPid=0
+ $title=''
+ try {
+  $hostPid=[int]$window.Current.ProcessId
+  $title=[string]$window.Current.Name
+ } catch { return 'pending' }
+ if($title -ne 'Calculator'){return 'foreign'}
+ $proc=Get-Process -Id $hostPid -ErrorAction SilentlyContinue
+ if($null -eq $proc){return 'pending'}
+ $name=[string]$proc.ProcessName
+ if($name -eq 'ApplicationFrameHost'){return 'ready'}
+ if(@('CalculatorApp','Calculator','calc') -contains $name){return 'ready'}
+ return 'foreign'
+}
+function Get-CalculatorHostName($window) {
+ if((Get-CalculatorHostKind $window) -ne 'ready'){Refuse 'CALCULATOR_WINDOW_HOST_MISMATCH'}
+ $name=[string](Get-Process -Id ([int]$window.Current.ProcessId) -ErrorAction Stop).ProcessName
+ if(@('ApplicationFrameHost','CalculatorApp','Calculator','calc') -notcontains $name){
+  Refuse 'CALCULATOR_WINDOW_HOST_MISMATCH'
+ }
+ return $name
+}
 function FindWindow {
  $root=[System.Windows.Automation.AutomationElement]::RootElement
  $cond=[System.Windows.Automation.PropertyCondition]::new(
    [System.Windows.Automation.AutomationElement]::NameProperty,'Calculator')
- return $root.FindFirst([System.Windows.Automation.TreeScope]::Children,$cond)
+ $window=$root.FindFirst([System.Windows.Automation.TreeScope]::Children,$cond)
+ if($null -eq $window){return $null}
+ $kind=Get-CalculatorHostKind $window
+ if($kind -eq 'ready'){return $window}
+ if($kind -eq 'foreign'){Refuse 'CALCULATOR_WINDOW_HOST_MISMATCH'}
+ return $null
 }
-function FindElement($window,[string]$id) {
- if($null -eq $window){Refuse 'EXPECTED_CALCULATOR_WINDOW_ABSENT'}
+function FindElementOnce($window,[string]$id) {
+ if($null -eq $window){return $null}
  $c=[System.Windows.Automation.PropertyCondition]::new(
    [System.Windows.Automation.AutomationElement]::AutomationIdProperty,$id)
- $el=$window.FindFirst([System.Windows.Automation.TreeScope]::Descendants,$c)
- if($null -eq $el){Refuse ('CALCULATOR_ELEMENT_UNAVAILABLE_'+$id)}
- return $el
+ try { return $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants,$c) } catch { return $null }
+}
+function FindElement($window,[string]$id) {
+ $deadline=[DateTime]::UtcNow.AddMilliseconds($UiaReadyWaitMs)
+ while($true){
+  if((IdleSeconds) -lt 600){Refuse 'USER_BECAME_ACTIVE'}
+  if($null -eq $window){$window=FindWindow}
+  if($null -eq $window){
+   if([DateTime]::UtcNow -ge $deadline){Refuse 'EXPECTED_CALCULATOR_WINDOW_ABSENT'}
+  } else {
+   $el=FindElementOnce $window $id
+   if($null -ne $el){return $el}
+   if([DateTime]::UtcNow -ge $deadline){Refuse ('CALCULATOR_ELEMENT_UNAVAILABLE_'+$id)}
+  }
+  Start-Sleep -Milliseconds $UiaReadyPollMs
+  $window=FindWindow
+ }
+}
+function Wait-CalculatorTree {
+ $ids=@('CalculatorResults','num6Button','multiplyButton','num7Button','equalButton')
+ $deadline=[DateTime]::UtcNow.AddMilliseconds($UiaReadyWaitMs)
+ while($true){
+  if((IdleSeconds) -lt 600){Refuse 'USER_BECAME_ACTIVE'}
+  $window=FindWindow
+  $missing=$null
+  if($null -ne $window){
+   foreach($id in $ids){
+    if($null -eq (FindElementOnce $window $id)){$missing=$id;break}
+   }
+   if($null -eq $missing){return $window}
+  }
+  if([DateTime]::UtcNow -ge $deadline){
+   if($null -eq $window){Refuse 'CALCULATOR_WINDOW_NOT_FOUND'}
+   if($null -eq $missing){$missing='CalculatorResults'}
+   Refuse ('CALCULATOR_ELEMENT_UNAVAILABLE_'+$missing)
+  }
+  Start-Sleep -Milliseconds $UiaReadyPollMs
+ }
 }
 function Display {
  $window=FindWindow
  $display=FindElement $window 'CalculatorResults'
  return [string]$display.Current.Name
+}
+function Format-RefusalMessage([string]$raw) {
+ if([string]::IsNullOrEmpty($raw)){return ''}
+ $text=(($raw -replace '[\r\n\t]+',' ').Trim())
+ if($text -cmatch '^(REFUSED_[A-Za-z0-9_]+)$'){return $Matches[1]}
+ $code=''
+ if($text -cmatch '(REFUSED_[A-Za-z0-9_]+)'){$code=$Matches[1]}
+ $text=$text -replace '(?i)[A-Za-z]:\\[^\s''";]+','<path>'
+ $text=$text -replace '(?i)\\\\[^\s''";]+','<path>'
+ $text=$text -replace '(?i)CHRIS\\Chris','<user>'
+ $limited=$text
+ if($text.Length -gt 160){$limited=$text.Substring(0,160)}
+ if($code -ne ''){return $code}
+ return $limited.Trim()
 }
 function Press([string]$id) {
  if((IdleSeconds) -lt 600){Refuse 'USER_BECAME_ACTIVE'}
@@ -82,7 +162,8 @@ if($Mode -eq 'Child'){
   customer_or_production_effect=$false;gui_scope='CALCULATOR_ONLY'
   calc_created=$false;calc_closed=$false;step_results=@()
   core_signed_lease=$false;private_desktop_capture=$false
-  first_result='';last_result='';failure_class=''
+  first_result='';last_result='';failure_class='';failure_message='';refusal_code='';failure_stage=''
+  calculator_window_host=''
  }
  $opened=$false
  $calcWindow=$null
@@ -111,6 +192,10 @@ if($Mode -eq 'Child'){
   $owned=@( @(Calcs) | Select-Object -ExpandProperty Id )
   if($owned.Count -eq 0){Refuse 'OWNED_CALCULATOR_PROCESS_NOT_FOUND'}
   $rec.calculator_window_pid=[int]$calcWindow.Current.ProcessId
+  $rec.calculator_window_host=Get-CalculatorHostName $calcWindow
+  $calcWindow=Wait-CalculatorTree
+  $rec.calculator_window_pid=[int]$calcWindow.Current.ProcessId
+  $rec.calculator_window_host=Get-CalculatorHostName $calcWindow
   $rec.first_result=Display
   if($rec.first_result -notmatch '0'){Refuse 'WRONG_CALCULATOR_INITIAL_STATE'}
   foreach($step in @(
@@ -135,6 +220,12 @@ if($Mode -eq 'Child'){
   if($rec.status -ne 'DENIED_USER_ACTIVE'){$rec.status='FAIL_CLOSED_REAL_APP'}
   $rec.failure_class=$_.Exception.GetType().Name
   $rec.failure_stage=[string]$_.CategoryInfo.Category
+  $rec.failure_message=Format-RefusalMessage ([string]$_.Exception.Message)
+  if($rec.failure_message -cmatch '^REFUSED_([A-Za-z0-9_]+)$'){
+   $rec.refusal_code=$Matches[1]
+  } else {
+   $rec.refusal_code=''
+  }
  } finally {
   if($opened){
    try {
@@ -197,6 +288,7 @@ try {
  Write-Output ('CHILD_STATUS='+$data.status+' IDLE_SECONDS='+$data.idle_seconds+' STEP_COUNT='+@($data.step_results).Count)
  Write-Output ('FIRST_RESULT='+$data.first_result+' LAST_RESULT='+$data.last_result)
  if($data.failure_class){Write-Output ('FAILURE_CLASS='+$data.failure_class)}
+ if($data.refusal_code){Write-Output ('REFUSAL_CODE='+$data.refusal_code)}
  Get-FileHash -LiteralPath $receipt -Algorithm SHA256 | ForEach-Object{Write-Output ('RECEIPT_SHA256='+$_.Hash)}
  $ok=($data.status -eq 'PASS_NATIVE_UIA_CALCULATOR_42_ONLY')
 } finally {
