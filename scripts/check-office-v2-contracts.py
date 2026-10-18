@@ -28,6 +28,48 @@ def fail(message: str) -> None:
     raise SystemExit(1)
 
 
+def format_child_skips(test_file: str, stdout: str, stderr: str) -> list[str]:
+    """Named skip codes for the suite log. The child's pass/fail is unchanged."""
+    text = f"{stdout or ''}\n{stderr or ''}"
+    lines: list[str] = []
+    if "SKIP_NON_POSIX" in text:
+        lines.append(f"SKIP_NON_POSIX {test_file}")
+    if "Windows symlink creation not permitted by OS" in text:
+        lines.append(f"SKIP_WIN_SYMLINK {test_file}")
+    return lines
+
+
+def format_inert_selftest_skip(status: object) -> str | None:
+    if status == "SKIP_NON_POSIX":
+        return "SKIP_NON_POSIX cp083-inert-selftest"
+    return None
+
+
+def prove_windows_skip_codes() -> None:
+    child = format_child_skips(
+        "example.py",
+        "SKIP_NON_POSIX\n",
+        "skipped 'Windows symlink creation not permitted by OS'\n",
+    )
+    if child != [
+        "SKIP_NON_POSIX example.py",
+        "SKIP_WIN_SYMLINK example.py",
+    ]:
+        fail("child skip codes drifted: " + repr(child))
+    if format_child_skips("example.py", "OK\n", "Ran 1 test\n") != []:
+        fail("a passing child must not invent a skip code")
+    inert = format_inert_selftest_skip("SKIP_NON_POSIX")
+    if inert != "SKIP_NON_POSIX cp083-inert-selftest":
+        fail("inert selftest skip code drifted")
+    if format_inert_selftest_skip("OFFLINE_STATIC_ONLY") is not None:
+        fail("POSIX inert selftest must not print a skip")
+    source = Path(__file__).read_text(encoding="utf-8")
+    prints_child = "for line in format_" + "child_skips("
+    prints_inert = "print(" + "inert_line)"
+    if prints_child not in source or prints_inert not in source:
+        fail("Windows skip codes must be printed on the suite log")
+
+
 def load(path: Path) -> dict:
     if not path.is_file():
         fail(f"missing {path.relative_to(ROOT)}")
@@ -41,6 +83,7 @@ def load(path: Path) -> dict:
 
 
 def main() -> int:
+    prove_windows_skip_codes()
     authority = load(P0 / "authority-map-v0.1.json")
     if authority.get("single_external_effect_authority") is not True:
         fail("Phase 0 must preserve single external-effect authority")
@@ -3413,6 +3456,10 @@ def main() -> int:
                 cp083_result.get("negative_mutations_rejected") != 8)
         ):
             fail("#604 CP083 attempted to promote lab to trusted security admission")
+        if cp083_mode == "--selftest":
+            inert_line = format_inert_selftest_skip(cp083_result.get("inert_selftest"))
+            if inert_line:
+                print(inert_line)
 
     # New CP083 hardening candidate gates: LOCAL-only. Do not change the
     # historical sealed CP083 receipts or imply protected security admission.
@@ -3478,6 +3525,8 @@ def main() -> int:
             tail = " | ".join(line.strip() for line in captured if line.strip())[-400:]
             extra = (" :: " + tail) if tail else ""
             fail("#604 CP083 candidate negative tests failed: " + test_file + extra)
+        for line in format_child_skips(test_file, test_run.stdout, test_run.stderr):
+            print(line)
     if os.name != "posix":
         if set(skipped_candidate_imports) != candidate_import_skip:
             fail("#604 CP083 candidate-import tests must SKIP_NON_POSIX")

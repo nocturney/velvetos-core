@@ -142,8 +142,29 @@ def expect_windows_block(label: str, call: Any) -> None:
     fail(f"{label} falls back to {value} on Windows without VELVETOS_RUNTIME_ROOT")
 
 
+HOST_DEFAULT_SKIP = (
+    "SKIP_HOST_IS_WINDOWS non-Windows Cognee default path was not executed"
+)
+
+
+def host_default_path_skip(os_name: str) -> str | None:
+    if os_name == "nt":
+        return HOST_DEFAULT_SKIP
+    return None
+
+
+def prove_host_default_path_skip() -> None:
+    if host_default_path_skip("nt") != HOST_DEFAULT_SKIP:
+        fail("Windows must print SKIP_HOST_IS_WINDOWS for the non-Windows Cognee default path")
+    if host_default_path_skip("posix") is not None:
+        fail("POSIX must still run the non-Windows Cognee default path")
+    if "print(" + "skip)" not in Path(__file__).read_text(encoding="utf-8"):
+        fail("SKIP_HOST_IS_WINDOWS must be printed")
+
+
 def check_python_windows_fail_closed() -> None:
     """Simulate os.name == 'nt' against the real Cognee/vfmem path helpers."""
+    prove_host_default_path_skip()
     cognee = load_module("packages/vfmem/scripts/vf_cognee.py", "_wpc_vf_cognee")
     runtime = load_module("packages/vfmem/scripts/vf_cognee_runtime.py", "_wpc_vf_cognee_runtime")
     vfmem = load_module("scripts/vfmem.py", "_wpc_vfmem")
@@ -180,7 +201,10 @@ def check_python_windows_fail_closed() -> None:
         finally:
             for module in (cognee, runtime, vfmem):
                 module.os = real_os
-        if os.name != "nt":
+        skip = host_default_path_skip(os.name)
+        if skip:
+            print(skip)
+        else:
             # Non-Windows (Mac) hosts keep the ~/.velvetos default unchanged.
             with scoped_env(HOME=str(home)):
                 if cognee.runtime_root(cfg) != Path(cfg["runtimeRoot"]).expanduser():
