@@ -4,14 +4,80 @@ from __future__ import annotations
 import os
 import signal
 import subprocess
+import sys
 import time
+from pathlib import Path
 
 from office_v2_crewai.contract import ATTEMPT_TIMEOUT_SECONDS, COST_CEILING
 from office_v2_crewai.usage_guard import UsageRefusal, assert_not_chroma_cli
 
+TASKKILL_TIMEOUT_SECONDS = 8
+_SPAWN_ENV_KEYS = (
+    "SYSTEMROOT",
+    "SystemRoot",
+    "WINDIR",
+    "COMSPEC",
+    "PATHEXT",
+    "TEMP",
+    "TMP",
+    "TMPDIR",
+    "HOME",
+    "USERPROFILE",
+    "HOMEDRIVE",
+    "HOMEPATH",
+    "LANG",
+    "LC_ALL",
+    "LC_CTYPE",
+)
+
 
 class KillRefusal(RuntimeError):
     pass
+
+
+def executable_is_absolute(path: str) -> bool:
+    if os.path.isabs(path):
+        return True
+    return len(path) >= 3 and path[0].isalpha() and path[1] == ":" and path[2] in "\\/"
+
+
+def _python_argv0(argv0: str) -> bool:
+    base = argv0.replace("\\", "/").rsplit("/", 1)[-1].lower()
+    if base.endswith(".exe"):
+        base = base[:-4]
+    return base == "python" or base.startswith("python")
+
+
+def pin_spawn_executable(argv: list[str]) -> list[str]:
+    """Python children use this interpreter. Any other child must already be absolute."""
+    if not argv or not isinstance(argv[0], str):
+        raise KillRefusal("SPAWN_ARGV_REFUSED")
+    if _python_argv0(argv[0]):
+        return [sys.executable, *argv[1:]]
+    if executable_is_absolute(argv[0]):
+        return list(argv)
+    raise KillRefusal("SPAWN_PATH_LOOKUP_REFUSED")
+
+
+def spawn_environment(executable: str) -> dict[str, str]:
+    env: dict[str, str] = {}
+    for key in _SPAWN_ENV_KEYS:
+        value = os.environ.get(key)
+        if value:
+            env[key] = value
+    env["PATH"] = str(Path(executable).resolve().parent)
+    return env
+
+
+def taskkill_argv(pid: int) -> list[str]:
+    if type(pid) is not int or pid <= 1:
+        raise KillRefusal("TASKKILL_PID_REFUSED")
+    root = os.environ.get("SystemRoot") or os.environ.get("SYSTEMROOT") or r"C:\Windows"
+    root = root.rstrip("\\/")
+    exe = root + "\\System32\\taskkill.exe"
+    if not executable_is_absolute(exe):
+        raise KillRefusal("TASKKILL_PATH_REFUSED")
+    return [exe, "/PID", str(pid), "/T", "/F"]
 
 
 def isolated_argv(argv: list[str]) -> list[str]:
@@ -43,7 +109,12 @@ class KillHarness:
             assert_not_chroma_cli(argv)
         except UsageRefusal as exc:
             raise KillRefusal(str(exc)) from exc
-        kwargs = {"stdout": subprocess.DEVNULL, "stderr": subprocess.DEVNULL}
+        argv = pin_spawn_executable(argv)
+        kwargs = {
+            "stdout": subprocess.DEVNULL,
+            "stderr": subprocess.DEVNULL,
+            "env": spawn_environment(argv[0]),
+        }
         if os.name == "nt":
             kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
         else:
@@ -83,10 +154,11 @@ class KillHarness:
     def _terminate(self, pid: int) -> None:
         if os.name == "nt":
             subprocess.run(
-                ["taskkill", "/PID", str(pid), "/T", "/F"],
+                taskkill_argv(pid),
                 check=False,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
+                timeout=TASKKILL_TIMEOUT_SECONDS,
             )
             return
         try:
