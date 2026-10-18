@@ -125,7 +125,7 @@ def main() -> int:
     assert "'No control APIs'" in server_source and "'Read-only launchpad'" in server_source
     config=(pilot_root/'dashy'/'conf.yml').read_text(encoding='utf-8')
     assert all(flag in config for flag in ('disableConfiguration: true','preventWriteToDisk: true','preventLocalSave: true'))
-    print('OK repo-intake sources=17 authority=none vtracer=PASS cua=BOUNDED_SMOKE_PASS cp057=EMPTY_COUNT_UIA_WAIT_AND_CONTENT_BIND_GUARDED ufo=RESEARCH_PENDING dashy=READ_ONLY_SMOKE_PASS')
+    print('OK repo-intake sources=17 authority=none vtracer=PASS cua=BOUNDED_SMOKE_PASS cp057=EMPTY_COUNT_UIA_WAIT_CONTENT_AND_FRAME_GUARDED ufo=RESEARCH_PENDING dashy=READ_ONLY_SMOKE_PASS')
     return 0
 
 if __name__=='__main__':
