@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-10-18 - **CP057 exact receipt boundary:** a receipt sha followed by a letter or digit is not an exact citation. A prefix impostor reports `ACCEPTED_RECEIPT_SHA_MISMATCH` even when another sha is unknown. `DRAFT_DIGEST_SHA256` and `ATTEMPT6_SOURCE_SHA256` name the two PIN-note shas that were previously bare literals; a note edit that does not update that list fails by naming the sha. `runtimeAuthority` and `activationAllowed` stay false.
+
 - 2026-10-18 - **CP057 receipt hash boundary:** acceptance cites a receipt only when a maximal hex run equals that sha256. Extra hex appended to a known receipt fails. A note that cites neither receipt fails with `ACCEPTED_NOTE_MISSING_RECEIPT`. Any other sha256 that is not one of the two receipts fails with `RECEIPT_SHA_UNKNOWN`. `runtimeAuthority` and `activationAllowed` stay false.
 
 - 2026-10-18 - **Office board lost-ACK seal:** a missing or corrupt CP083 evidence file drops only that row and the board shows EVIDENCE_MISSING. `remote_github_writes` must be the integer 0; bool False does not count. `security_admission` stays RED.
