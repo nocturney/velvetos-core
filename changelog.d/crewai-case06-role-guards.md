@@ -1,0 +1,1 @@
+- 2026-10-18 - **CrewAI case 06 role guards:** the reviewed-runner sensor parses `crew_build.py` and requires the `UNTRUSTED QUOTE` ignore sentence in the Triage task description and the money and customer rejection sentence in the Reviewer task description. A comment copy or a role swap fails. No model call.
