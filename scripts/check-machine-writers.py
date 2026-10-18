@@ -579,6 +579,38 @@ def prove_workflow_action_pins(core_workflow: str) -> str:
         for problem in action_pin_problems(windows_unpinned, path="check-all-windows")
     ):
         fail("reverting the Windows checkout to @v7 was not caught")
+    flow_quoted = 'steps:\n  - { "uses": "actions/checkout@v7" }\n'
+    _require(action_pin_problems(flow_quoted), "not allowlisted", "quoted flow-style uses")
+    flow_local = "steps:\n  - { uses: ./.github/actions/local }\n"
+    _require_clean(action_pin_problems(flow_local), "local flow action")
+    smoke_path = WORKFLOWS / "instagram-read-smoke.yml"
+    smoke = smoke_path.read_text(encoding="utf-8")
+    _require_clean(action_pin_problems(smoke, path=smoke_path.as_posix()), "instagram-read-smoke.yml")
+    smoke_flow = smoke.replace(
+        "      - uses: " + CHECKOUT,
+        "      - { name: Sneaky, uses: actions/checkout@v7 }\n      - uses: " + CHECKOUT,
+        1,
+    )
+    _require(
+        action_pin_problems(smoke_flow, path=smoke_path.as_posix()),
+        "not allowlisted",
+        "flow-style uses injected into instagram-read-smoke.yml",
+    )
+    _require(
+        action_pin_problems("steps:\n  - uses: docker://alpine\n"),
+        "sha256 digest",
+        "docker://alpine",
+    )
+    smoke_docker = smoke.replace(
+        "      - uses: " + CHECKOUT,
+        "      - uses: docker://alpine:latest\n      - uses: " + CHECKOUT,
+        1,
+    )
+    _require(
+        action_pin_problems(smoke_docker, path=smoke_path.as_posix()),
+        "sha256 digest",
+        "docker://alpine:latest injected into instagram-read-smoke.yml",
+    )
     return (
         "tag_fixture=caught sha_fixture=pass bare_sha=caught "
         "linux_revert=caught windows_revert=caught allowlist=empty "
