@@ -20,16 +20,18 @@ on:
 
 permissions:
   contents: read
-  statuses: write
 
 jobs:
   check-all:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       # actions/checkout v7.0.1
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Python
         # actions/setup-python v7.0.0
@@ -47,13 +49,18 @@ jobs:
       - name: Sensor selector
         if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.execution != 'main_full') }}
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.event_name == 'workflow_dispatch' && github.token || '' }}
         run: |
           set -euo pipefail
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             base="${{ github.event.pull_request.base.sha }}"
             head="${{ github.event.pull_request.head.sha }}"
           else
-            git fetch origin main
+            # GitHub git-over-HTTPS accepts basic x-access-token. A bearer scheme is rejected.
+            basic="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+            echo "::add-mask::$basic"
+            git -c "http.extraheader=AUTHORIZATION: basic ${basic}" fetch origin main
             base="$(git rev-parse origin/main)"
             head="$GITHUB_SHA"
           fi
@@ -93,25 +100,14 @@ jobs:
         if: ${{ !cancelled() && github.event_name == 'pull_request' }}
         run: python3 scripts/fix-readme-bidi.py --check
 
+      # check-all.py forwards this read-only token only to the gh sensor.
       - name: Run selected VelvetOS sensors on pull request or machine precheck
         if: ${{ !cancelled() && (github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.execution != 'main_full')) }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: python3 scripts/check-all.py --selection sensor-selection.json --json-out sensor-selected-results.json
 
-      - name: Publish verified check-all commit status for machine precheck
-        if: ${{ success() && github.event_name == 'workflow_dispatch' && inputs.execution != 'main_full' }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA" \
-            -f state=success \
-            -f context=check-all \
-            -f description='VelvetOS exact-SHA precheck passed' \
-            -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-
+      # check-all.py forwards this read-only token only to the gh sensor.
       - name: Run full VelvetOS sensor suite on main
         if: ${{ !cancelled() && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.execution == 'main_full')) }}
         env:
@@ -129,6 +125,28 @@ jobs:
       - name: Fail build on sensor error
         if: failure()
         run: echo "::error::One or more VelvetOS contract checks failed. See log above." && exit 1
+
+  publish-check-all-status:
+    # statuses: write stays off the sensor job. This token only posts the
+    # machine-precheck commit status after that job has already passed.
+    needs: check-all
+    if: ${{ success() && github.event_name == 'workflow_dispatch' && inputs.execution != 'main_full' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      statuses: write
+    steps:
+      - name: Publish verified check-all commit status for machine precheck
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA" \
+            -f state=success \
+            -f context=check-all \
+            -f description='VelvetOS exact-SHA precheck passed' \
+            -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
 
   # Windows suite. A failing check-all fails this job and the workflow.
   # Ruleset 23284099 still requires only the Linux job's check-all status.
@@ -185,6 +203,7 @@ jobs:
           if (-not $bin) { throw "ffmpeg.exe missing from the pinned zip" }
           Add-Content -Path $env:GITHUB_PATH -Value $bin.DirectoryName
 
+      # check-all.py forwards this read-only token only to the gh sensor.
       - name: Run check-all
         shell: pwsh
         env:
