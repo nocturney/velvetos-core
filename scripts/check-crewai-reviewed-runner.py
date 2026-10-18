@@ -2984,22 +2984,35 @@ def check_refusal_gaps() -> None:
     saved_home = sandbox_mod.Path.home
     saved_temp = sandbox_mod.tempfile.gettempdir
     saved_prepare = crew_mod.prepare_sandbox_temp
+    saved_enter = crew_mod.enter_sandbox
+    saved_seed = crew_mod.seed_trace_consent
     try:
-        os.chdir(work)
-        Path(SANDBOX_ROOT).mkdir()
         sandbox_mod.Path.home = staticmethod(lambda: SANDBOX_ROOT)
         sandbox_mod.tempfile.gettempdir = lambda: SANDBOX_ROOT + "\\tmp"
 
-        def prepare_on_linux(root, mkdir=None, exists=None):
-            # Non-Windows prepare_sandbox_temp refuses before the version line.
-            # The stub only creates the temp dirs. The version refusal stays real.
-            return saved_prepare(
-                root,
-                mkdir=lambda path: Path(path).mkdir(parents=True, exist_ok=True),
-                exists=lambda path: True,
-            )
+        def prepare_without_host_drive(root, mkdir=None, exists=None):
+            # prepare_sandbox_temp refuses to create dirs when os.name != "nt",
+            # and a Windows host here has no D:\\Velvet tree. The stub only
+            # satisfies those directory steps. The version refusal stays real.
+            def mkdir_temp(path):
+                if os.name == "nt":
+                    return None
+                Path(path).mkdir(parents=True, exist_ok=True)
 
-        crew_mod.prepare_sandbox_temp = prepare_on_linux
+            return saved_prepare(root, mkdir=mkdir_temp, exists=lambda path: True)
+
+        def enter_without_host_drive(cwd_path, root=SANDBOX_ROOT):
+            sandbox_mod.assert_cwd(cwd_path, root)
+            if not sandbox_mod._same(cwd_path, root):
+                raise sandbox_mod.StorageRefusal("SANDBOX_CWD_OUTSIDE_ROOT")
+
+        crew_mod.prepare_sandbox_temp = prepare_without_host_drive
+        if os.name == "nt":
+            crew_mod.enter_sandbox = enter_without_host_drive
+            crew_mod.seed_trace_consent = lambda storage_dir: saved_seed(work / "trace-storage")
+        else:
+            os.chdir(work)
+            Path(SANDBOX_ROOT).mkdir()
         mismatch = types.ModuleType("crewai")
         mismatch.__version__ = "0.0.0"
         sys.modules["crewai"] = mismatch
@@ -3016,6 +3029,8 @@ def check_refusal_gaps() -> None:
         sandbox_mod.Path.home = saved_home
         sandbox_mod.tempfile.gettempdir = saved_temp
         crew_mod.prepare_sandbox_temp = saved_prepare
+        crew_mod.enter_sandbox = saved_enter
+        crew_mod.seed_trace_consent = saved_seed
         sys.modules.pop("crewai", None)
         shutil.rmtree(work, ignore_errors=True)
 
