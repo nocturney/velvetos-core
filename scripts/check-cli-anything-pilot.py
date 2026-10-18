@@ -177,6 +177,11 @@ def prove_setup_git() -> None:
     errors.extend(module.prove_ensure_clone())
     if errors:
         fail("setup git spawn: " + "; ".join(errors))
+    import vf_cli_anything
+    adapter_errors = vf_cli_anything.prove_git_hygiene()
+    adapter_errors.extend(vf_cli_anything.prove_git_real())
+    if adapter_errors:
+        fail("adapter git spawn: " + "; ".join(adapter_errors))
 
 
 def main() -> None:
