@@ -7,6 +7,7 @@ import importlib.util
 import io
 import os
 import stat
+import subprocess
 import sys
 import tempfile
 import textwrap
@@ -233,16 +234,64 @@ class FfmpegCapabilityTests(unittest.TestCase):
                     require_no_caption_gap(self)
                 self.assertIn("SKIP_ENV_MISSING_ZOOMPAN", str(caught.exception))
             with FakeFfmpeg(Path(tmp), "missing-zoompan"), github_actions("true"):
-                with self.assertRaises(RuntimeError) as caught_fail:
+                ci_gap = vf_ffmpeg_env.caption_gap()
+                self.assertIsNotNone(ci_gap)
+                assert ci_gap is not None
+                self.assertEqual(vf_ffmpeg_env.ci_skip_failure(ci_gap), ci_gap.line)
+                try:
                     require_no_caption_gap(self)
-                self.assertIn("SKIP_ENV_MISSING_ZOOMPAN", str(caught_fail.exception))
-                self.assertNotIsInstance(caught_fail.exception, unittest.SkipTest)
+                except unittest.SkipTest as skipped:
+                    self.fail("zoompan gap skipped on CI: %s" % skipped)
+                except RuntimeError as exc:
+                    self.assertIn("SKIP_ENV_MISSING_ZOOMPAN", str(exc))
+                else:
+                    self.fail("zoompan gap did not fail on CI")
         sensor = _load("check-hyperframes-backend.py")
         self.assertEqual(sensor.zoompan_suite_action(gap, None), "skip")
         self.assertEqual(sensor.zoompan_suite_action(gap, gap.line), "fail")
         self.assertEqual(sensor.zoompan_suite_action(None, None), "run")
         other = vf_ffmpeg_env.EnvGap("SKIP_ENV_MISSING_DRAWTEXT", "drawtext")
         self.assertEqual(sensor.zoompan_suite_action(other, None), "run")
+        sensor_text = (SCRIPTS / "check-hyperframes-backend.py").read_text(encoding="utf-8")
+        main_body = sensor_text.split("def main", 1)[1]
+        self.assertIn('if action == "fail":\n        fail(gap.line)', main_body)
+        self.assertIn("prove_zoompan_ci_branches()", main_body)
+        launch = main_body.rindex("test_vf_ffmpeg_env.py")
+        self.assertLess(launch, main_body.index('if action == "skip":'))
+
+    def test_hyperframes_zoompan_fails_on_ci_and_keeps_fake_tests(self) -> None:
+        """GITHUB_ACTIONS fails the sensor. A local miss still runs the fake suite."""
+        if os.environ.get("VF_HYPERFRAMES_CAPABILITY_CHILD") == "1":
+            return
+        script = SCRIPTS / "check-hyperframes-backend.py"
+        with tempfile.TemporaryDirectory() as tmp:
+            with FakeFfmpeg(Path(tmp), "missing-zoompan"), github_actions("true"):
+                proc = subprocess.run(
+                    [sys.executable, str(script)],
+                    cwd=ROOT,
+                    env=os.environ.copy(),
+                    text=True,
+                    capture_output=True,
+                )
+                combined = proc.stdout + proc.stderr
+                self.assertNotEqual(proc.returncode, 0, combined)
+                self.assertIn("FAIL SKIP_ENV_MISSING_ZOOMPAN", proc.stderr)
+                self.assertNotIn("OK hyperframes", proc.stdout)
+                self.assertNotIn("OK ffmpeg capability tests", proc.stdout)
+            with FakeFfmpeg(Path(tmp), "missing-zoompan"), github_actions(None):
+                proc = subprocess.run(
+                    [sys.executable, str(script)],
+                    cwd=ROOT,
+                    env=os.environ.copy(),
+                    text=True,
+                    capture_output=True,
+                )
+                combined = proc.stdout + proc.stderr
+                self.assertEqual(proc.returncode, 0, combined)
+                self.assertIn("OK ffmpeg capability tests", proc.stdout)
+                self.assertIn("SKIP_ENV_MISSING_ZOOMPAN", proc.stdout)
+                self.assertIn("OK hyperframes", proc.stdout)
+                self.assertNotIn("FAIL SKIP_ENV_MISSING_ZOOMPAN", proc.stderr)
 
     def test_missing_sidedata_skips_normalization_only(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- 2026-10-18 - **ffmpeg zoompan skip:** when `ffmpeg -filters` has no zoompan filter, the hyperframes capability tests record `SKIP_ENV_MISSING_ZOOMPAN` and skip on a local host. `ci_skip_failure` turns that gap into a failure when `GITHUB_ACTIONS=true`. CI detection in `vf_ffmpeg_env.py` is unchanged.
+- 2026-10-18 - **ffmpeg zoompan skip:** when `ffmpeg -filters` has no zoompan filter, the caption suite records `SKIP_ENV_MISSING_ZOOMPAN` and skips on a local host. The fake-ffmpeg capability tests still run. `ci_skip_failure` turns that gap into a failure when `GITHUB_ACTIONS=true`, in both the env helper and the hyperframes sensor. CI detection in `vf_ffmpeg_env.py` is unchanged.
 
 - 2026-10-18 - **CP083 wire JSON notes:** `1e999` and `-1e999` are refused in request, ACK, guest, and manifest JSON. A byte that arrives after the first frame, and a non-string `action` or `case`, fail closed in behaviour tests. The non-POSIX candidate-import skip count is four. GAP_6 stays an expected failure. `security_admission` stays RED.
 
