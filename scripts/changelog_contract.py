@@ -363,7 +363,20 @@ def _negative_checks(bad: list[str]) -> int:
         pass
     if gate(["scripts\\tool.py", "changelog.d\\example-pr.md"]) != 0:
         bad.append("backslash fragment paths must pass")
-    return 26
+    slash_only = fragment_name
+    def fragment_without_backslash_fold(path: str) -> bool:
+        return FRAGMENT_RE.match(path) is not None
+    globals()["fragment_name"] = fragment_without_backslash_fold
+    try:
+        if covered(["changelog.d\\foo.md"]) is not True:
+            bad.append("windows fragment path must count as a fragment")
+    finally:
+        globals()["fragment_name"] = slash_only
+    if gate(["scripts\\tool.py", "changelog.d\\foo.md"]) != 0:
+        bad.append("windows fragment must cover a windows capability path")
+    if gate(["scripts\\tool.py"]) != 1:
+        bad.append("windows capability path without a fragment must fail")
+    return 29
 
 
 def _selftest(bad: list[str], counted: list[int]) -> int:
