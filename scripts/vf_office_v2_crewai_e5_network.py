@@ -107,7 +107,7 @@ def evaluate(data: object) -> list[str]:
             if pid in birth_by_pid and birth_by_pid[pid] != birth:
                 bad("PID_REUSED_OR_IDENTITY_CHANGED")
             birth_by_pid[pid] = birth
-        if phase == "during" and root_pid in pids:
+        if phase == "during" and type(root_pid) is int and root_pid in pids:
             seen_root = True
         if phase == "before" and (tree or tcp or udp):
             bad("PILOT_TREE_PRESENT_BEFORE_LAUNCH")

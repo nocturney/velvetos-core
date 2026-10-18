@@ -168,6 +168,9 @@ try {
     # Equivalent to a restricted Start-Process -PassThru with no shell/profile.
     $script:Child = Start-Process -FilePath $exe -ArgumentList $PilotArguments `
         -WorkingDirectory $cwd -PassThru -NoNewWindow -ErrorAction Stop
+    # Prime the native Process handle now: Windows PowerShell may otherwise
+    # return a null ExitCode from a Start-Process -PassThru object.
+    $null = $script:Child.Handle
     $script:Started = UtcNow
     $timer = [Diagnostics.Stopwatch]::StartNew()
     while ($true) {
@@ -196,7 +199,22 @@ try {
 }
 
 $exitCode = $null
-if ($null -ne $script:Child -and $script:Child.HasExited) { $exitCode = [int]$script:Child.ExitCode }
+if ($null -ne $script:Child) {
+    try {
+        if ($script:Child.HasExited) {
+            $observedExitCode = $script:Child.ExitCode
+            if ($null -ne $observedExitCode) {
+                $exitCode = [int]$observedExitCode
+            } else {
+                $script:CollectorErrors.Add('PILOT_EXIT_CODE_UNKNOWN')
+            }
+        } else {
+            $script:CollectorErrors.Add('PILOT_EXIT_NOT_OBSERVED')
+        }
+    } catch {
+        $script:CollectorErrors.Add('PILOT_EXIT_CODE_UNAVAILABLE')
+    }
+}
 $raw = @{
     schema = 'velvetos.office-v2.crewai-e5-snapshots.v1'
     host = 'Chris'
