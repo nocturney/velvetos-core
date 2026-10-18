@@ -235,6 +235,22 @@ def prove_git_hygiene() -> list[str]:
                 errors.append(f"dash revision refused as {exc}")
         else:
             errors.append("leading-dash revision was accepted")
+        before = len(captured)
+        for label, token in (
+            ("newline and nul", "rev\n\x00"),
+            ("newline", "rev\nmore"),
+            ("nul", "rev\x00more"),
+            ("cr", "rev\rmore"),
+        ):
+            try:
+                changed_files(token, "b", ROOT)
+            except SpawnRefusal as exc:
+                if str(exc) != "GIT_REV_REFUSED":
+                    errors.append(f"{label} revision refused as {exc}")
+            else:
+                errors.append(f"{label} revision was accepted")
+        if len(captured) != before:
+            errors.append("control-byte revision spawned git")
     except (SpawnRefusal, SystemExit) as exc:
         errors.append(f"git spawn refused: {exc}")
     finally:
