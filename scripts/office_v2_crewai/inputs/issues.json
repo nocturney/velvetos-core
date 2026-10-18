@@ -1,0 +1,119 @@
+{
+  "count_meets_runbook_minimum": false,
+  "issues": [
+    {
+      "excerpt": "## Goal Promote the merged HyperFrames backend from `IMPLEMENTED / HOST-GATED` to live-verified render capability on the authorized Edge/Office host. ## Preconditions - merged implementation: PR #179 / main commit `994143ee631682a88c20b7025b79009a1aab6a40` - Node.js >=22 - FFmpeg + ffprobe - public HyperFrames CLI pin:",
+      "labels": [],
+      "number": 180,
+      "state": "open",
+      "title": "Activate HyperFrames on Edge/Office host and verify live smoke render",
+      "updated_at": "2026-10-18T11:59:09Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/180"
+    },
+    {
+      "excerpt": "## Objective Recover potentially lost challenger options from older \"skip / later / pattern-only / no second orchestrator\" decisions and ensure *future* user-supplied repo links reach the canonical Office v2 Candidate Registry instead of being silently lost between conversations. **Governing change already merged:** #5",
+      "labels": [],
+      "number": 595,
+      "state": "open",
+      "title": "Recover overlooked competitors and make repo-link intake durable",
+      "updated_at": "2026-10-18T10:58:08Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/595"
+    },
+    {
+      "excerpt": "## Decision required Determine whether upstream DeerFlow is a better **complete agent-runtime core**, a better **selective harness**, or a worse fit than current VelvetOS/Restate composition. No preference for incumbent or adopter. Related #593 competition-neutral authority, #595 historical intake, #598 first-pass audi",
+      "labels": [],
+      "number": 600,
+      "state": "open",
+      "title": "DeerFlow 2.x: isolated LAB bake-off vs VelvetOS and hybrid",
+      "updated_at": "2026-10-08T09:07:32Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/600"
+    },
+    {
+      "excerpt": "## Evidence (2026-10-08, Chris Windows Session 1) Merged baseline: #597, merge commit `c4739d7ca30d8906312a290d8bd7b9420eeecdbf`. Cua Driver Rust `0.34.0` was pinned, license/checksum/Authenticode verified and deployed only into an isolated reversible directory. User-session telemetry disabled; bounded manifest restric",
+      "labels": [],
+      "number": 602,
+      "state": "open",
+      "title": "Cua Windows: classify Calculator UIA tree-loss before production acceptance",
+      "updated_at": "2026-10-18T12:27:01Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/602"
+    },
+    {
+      "excerpt": "## Function-first design and evaluation directive (owner correction, 2026-10-08) **Primary objective: the most capable, robust, versatile computer-use system for VelvetOS**, not maximum isolation. Search the complete solution space *before* narrowing: native application scripting/CLI/COM/API; accessibility automation; ",
+      "labels": [],
+      "number": 604,
+      "state": "open",
+      "title": "Cross-platform Computer Use worker fleet: ready-made alternatives and benchmarks",
+      "updated_at": "2026-10-18T12:35:43Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/604"
+    },
+    {
+      "excerpt": "## Objective Evaluate REA 5.0.0 as an optional, **read-only** tool for real desktop application integration blockers (Office 2.0 / VelvetOS). Do not treat tool availability as production acceptance, do not replace existing Cua/Windows UIA investigations, and do not activate new agents automatically. ## Verified pilot e",
+      "labels": [],
+      "number": 606,
+      "state": "open",
+      "title": "P1 parked - REA isolated pilot for shipped desktop app investigations",
+      "updated_at": "2026-10-08T09:11:57Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/606"
+    },
+    {
+      "excerpt": "### MOLI_HOURLY_INTAKE_READ_AND_TRIAGE_20261008 - subordinate one-time next-hourly intake (owner-requested 2026-10-08) In the **NEXT eligible invocation** of the EXISTING enabled hourly Office Infrastructure Accelerator, **read and triage** owner-submitted `https://github.com/lexmount/moli` using the durable evidence/i",
+      "labels": [],
+      "number": 612,
+      "state": "open",
+      "title": "Office 2.0 P0 - integration acceleration: continuous agents + parallel PRs + quality/memory",
+      "updated_at": "2026-10-18T12:50:15Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/612"
+    },
+    {
+      "excerpt": "## Purpose / decision **Deferred continuation / closure handoff for the existing AI3D Engineering Core**, not a new active implementation lane or an additional scheduler. Owner reprioritization: Infrastructure Acceleration [#612](https://github.com/nocturney/velvetos-core/issues/612) is P0; distributed Fleet [#604](htt",
+      "labels": [],
+      "number": 613,
+      "state": "open",
+      "title": "AI3D deferred continuation - firmware dialect and service-motion qualification after P0",
+      "updated_at": "2026-10-08T18:57:24Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/613"
+    },
+    {
+      "excerpt": "## Decision / scheduling **State: P2 PARKED / deferred late-stage experiment (owner direction, 2026-10-08).** Do not execute now. This issue is only a discovery/evaluation backlog entry, not a runnable work order, recurring automation, scheduler, or authorization to install. **Candidate:** [Ebony-Vinyl/dsh-our-free-mod",
+      "labels": [],
+      "number": 619,
+      "state": "open",
+      "title": "P2 PARKED - Our Free Model (OFM) late-stage model fallback experiment",
+      "updated_at": "2026-10-08T16:32:47Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/619"
+    },
+    {
+      "excerpt": "# Office v2 / VelvetOS - Creative Compute via ComfyUI (zero-added-spend, heterogeneous fleet) **Decision status:** `PLANNED / RESEARCH_ALLOWED / GPU_LAB_DEFERRED_PENDING_RESOURCE_GATE`. **Priority:** first image/product pilot after currently binding #612 P0 resource/ownership gates; 3D and video downstream. This is a *",
+      "labels": [],
+      "number": 627,
+      "state": "open",
+      "title": "Office v2 - ComfyUI Creative Compute: zero-spend multi-node capability roadmap (deferred)",
+      "updated_at": "2026-10-09T11:47:08Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/627"
+    },
+    {
+      "excerpt": "# Office v2 - Instagram v2 / Autonomous Content Engine (ViralWave-inspired patterns, native VelvetOS) **Decision / scheduling:** `PLANNED | MKT-0 RESEARCH/CONTRACT PREP ALLOWED | MKT-1+ GATED`. This is **one domain implementation backlog** for Office Master v3 **Phase 8 Instagram v2**, not a new agent-runtime, schedule",
+      "labels": [],
+      "number": 628,
+      "state": "open",
+      "title": "Office v2 - Instagram v2 autonomous content and publishing loop (ViralWave-inspired)",
+      "updated_at": "2026-10-09T11:48:10Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/628"
+    },
+    {
+      "excerpt": "## Decision (2026-10-14) Intake `gongnyang/awesome-ai-motion` into the existing Creative Craft 2.0 / Creative Media Orchestration -> Velvet Factory Instagram Reels path. **Research/evaluation approved; no live installation or deployment authorized by this issue.** Avoid parallel pipeline and avoid Codex CLI. Upstream: ",
+      "labels": [],
+      "number": 716,
+      "state": "open",
+      "title": "Creative Craft P2: evaluate awesome-ai-motion + motionmaxxing for Velvet Factory Reels",
+      "updated_at": "2026-10-18T10:08:54Z",
+      "url": "https://github.com/nocturney/velvetos-core/issues/716"
+    }
+  ],
+  "live_fetch_at_runtime": false,
+  "open_issue_count": 12,
+  "runbook_minimum": 20,
+  "schema": "velvetos.office-v2.crewai-issue-export.v1",
+  "snapshot_date": "2026-10-18",
+  "source_repo": "nocturney/velvetos-core"
+}

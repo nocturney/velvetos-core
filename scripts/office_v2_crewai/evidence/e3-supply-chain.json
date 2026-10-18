@@ -1,0 +1,30 @@
+{
+  "advisories": [
+    {
+      "fix": null,
+      "ids": [
+        "PYSEC-2026-311",
+        "PYSEC-2026-3813",
+        "PYSEC-2026-3814",
+        "PYSEC-2026-3815"
+      ],
+      "package": "chromadb",
+      "version": "1.5.9"
+    },
+    {
+      "fix": "1.30.0",
+      "ids": [
+        "CVE-2026-59951"
+      ],
+      "package": "mcp",
+      "version": "1.28.1"
+    }
+  ],
+  "hash_pinned": true,
+  "lock_filename": "requirements-locked.txt",
+  "lock_sha256": "121c1bd04eee730b51eb71e49da503b0d0236cdd06d8687a5df792234f78a669",
+  "scan_status": "RED",
+  "schema": "velvetos.office-v2.crewai-e3-lock-record.v1",
+  "security_decision_present": false,
+  "wheel_count": 154
+}

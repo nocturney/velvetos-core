@@ -1,0 +1,86 @@
+"""Shared constants for the reviewed CrewAI pilot runner.
+
+ASCII only. No network. No model import.
+"""
+from __future__ import annotations
+
+APPROVED_BASE_URL = "http://127.0.0.1:11435"
+APPROVED_HOST = "127.0.0.1"
+APPROVED_PORT = 11435
+APPROVED_AT = "2026-10-18T15:28:00+03:00"
+APPROVED_BY = "Christian"
+APPROVED_MODEL = "qwen3.5:9b"
+APPROVED_MODEL_DIGEST = "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90"
+EVIDENCE_COMMENT = "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6250120048"
+
+LOCK_SHA256 = "121c1bd04eee730b51eb71e49da503b0d0236cdd06d8687a5df792234f78a669"
+LOCK_WHEEL_COUNT = 154
+CREWAI_VERSION = "1.15.28"
+DIRECT_PINS = (
+    "crewai==1.15.28",
+    "langgraph==1.2.16",
+    "langgraph-checkpoint==4.3.0",
+    "langgraph-checkpoint-sqlite==3.1.2",
+    "langgraph-sdk==0.4.8",
+    "langsmith==0.14.11",
+)
+
+CHROMADB_ADVISORIES = (
+    "PYSEC-2026-311",
+    "PYSEC-2026-3813",
+    "PYSEC-2026-3814",
+    "PYSEC-2026-3815",
+)
+MCP_ADVISORY = "CVE-2026-59951"
+MCP_INSTALLED = "1.28.1"
+MCP_FIX_VERSION = "1.30.0"
+CHROMADB_INSTALLED = "1.5.9"
+RED_ADVISORIES = CHROMADB_ADVISORIES + (MCP_ADVISORY,)
+
+PRIVATE_REPO_NEEDLE = "velvetos-velvet-factory"
+PUBLIC_REPO = "nocturney/velvetos-core"
+PUBLIC_ISSUE_PREFIX = "https://github.com/nocturney/velvetos-core/issues/"
+RUNBOOK_MINIMUM_ISSUES = 20
+REQUIRED_ISSUE_NUMBERS = (612, 595)
+
+TELEMETRY_FLAGS = {
+    "CREWAI_DISABLE_TELEMETRY": "true",
+    "OTEL_SDK_DISABLED": "true",
+    "CREWAI_TRACING_ENABLED": "false",
+    "LANGSMITH_TRACING": "false",
+}
+
+ATTEMPT_TIMEOUT_SECONDS = 600
+COST_CEILING = 0
+ROLES = ("Triage", "Reviewer")
+
+GATES = ("E1", "E2", "E3", "E4", "E5", "E6", "E7")
+GATE_FAIL_STATUS = {
+    "E1": "NOT_AUTHORIZED",
+    "E2": "PARKED_CAPACITY",
+    "E3": "BLOCKED_SECURITY",
+    "E4": "BLOCKED_STORAGE",
+    "E5": "BLOCKED_SECURITY",
+    "E6": "NOT_VERIFIED",
+    "E7": "NO_GO",
+}
+
+PAID_ENV_NAMES = (
+    "OPENAI_API_KEY",
+    "ANTHROPIC_API_KEY",
+    "GEMINI_API_KEY",
+    "OPENROUTER_API_KEY",
+    "GROQ_API_KEY",
+    "AZURE_OPENAI_API_KEY",
+    "COHERE_API_KEY",
+)
+
+RESULT_STATUSES = (
+    "PASS_TASK_ONLY",
+    "FAIL",
+    "BLOCKED_SECURITY",
+    "BLOCKED_STORAGE",
+    "PARKED_CAPACITY",
+    "NOT_RUN",
+    "NOT_VERIFIED",
+)
