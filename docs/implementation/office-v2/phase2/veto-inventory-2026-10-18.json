@@ -12,8 +12,20 @@
   "blocker": "security|secret|credential|licen[cs]e|copyright|rights|archiv|deprecat|unmaintain|maintenance|cost|paid|subscription|GPU|hardware|Windows-only|macOS-only|privacy|PII|non-commercial|\\bNC\\b|terms of service|ToS|curl\\s*\\|\\s*bash",
   "citation": "https?://|\\b20\\d\\d-\\d\\d-\\d\\d\\b|archived upstream|per #\\d+|#\\d{2,4}\\b"
  },
- "method": "line-level regex over packages/vfe2b/catalog.json, packages/vfe2b/orchestrators.json, packages/vfe2b/ORCHESTRATORS.md, packages/vfe2b/LOCK.md, packages/vfe2b/DEER-FLOW-PATTERNS.md and packages/vfresearch/LINKS.json. Matches inside title/pattern/id/rule/item/kind/url values are skipped (descriptions, not dispositions): 7 lines. The two vocabulary tokens that only name the allowed value skip inside the verdicts arrays (packages/vfe2b/catalog.json:34 and packages/vfe2b/orchestrators.json:39) are excluded because they are not a disposition of an item. Per-item \"verdict\": \"skip\" lines are included. Item = same-line name/id/title, else nearest preceding one. Candidate IDs from the alias map (URL or exact label match only).",
+ "method": "bare skip verdict lines (no reason on the line) are included as EVIDENCE_FREE_VETO. line-level regex over the listed files. Matches inside title/pattern/id/rule/item/kind/url values are skipped (descriptions, not dispositions). Item = same-line name/id/title, else nearest preceding one. Candidate IDs from the alias map (URL or exact label match only).",
  "rows": [
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 34,
+   "item": "e2b-dev/awesome-ai-agents",
+   "quote": "\"skip\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [
+    "deferred-crewai"
+   ],
+   "blocker_term_without_citation": false
+  },
   {
    "file": "packages/vfe2b/catalog.json",
    "line": 47,
@@ -221,6 +233,18 @@
    "class": "EVIDENCE_FREE_VETO",
    "basis": null,
    "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/orchestrators.json",
+   "line": 39,
+   "item": "andyrewlee/awesome-agent-orchestrators",
+   "quote": "\"skip\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [
+    "deferred-orca"
+   ],
    "blocker_term_without_citation": false
   },
   {
@@ -795,14 +819,5 @@
    "canonical_candidate_ids": [],
    "blocker_term_without_citation": false
   }
- ],
- "summary": {
-  "regex_lines_after_description_skip": 77,
-  "excluded_vocabulary_lines": 2,
-  "rows": 75,
-  "EVIDENCE_BACKED_BLOCKER": 1,
-  "EVIDENCE_FREE_VETO": 74,
-  "blocker_term_without_citation": 5,
-  "rows_with_canonical_candidate_id": 15
- }
+ ]
 }
