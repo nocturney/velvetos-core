@@ -1,0 +1,94 @@
+# Veto inventory (read-only), 2026-10-18
+
+Issue: `nocturney/velvetos-core#595`, CLQ-3 (acceptance criterion 4). Report only: no disposition changes, no registry edits. Machine-readable data: `veto-inventory-2026-10-18.json`.
+
+## Method
+
+- Line-level scan over `packages/vfe2b/catalog.json`, `orchestrators.json`, `LOCK.md`, `DEER-FLOW-PATTERNS.md`, `ORCHESTRATORS.md`, and `packages/vfresearch/LINKS.json`.
+- `EVIDENCE_BACKED_BLOCKER`: the veto line has a blocker term **and** a citation on the same line (URL, date, `#issue`, or 'archived upstream'). None were found.
+- `EVIDENCE_FREE_VETO`: veto language with no citation on its line. It needs a fair comparison before it stands. Several of these name a real blocker in words (for example 'Do not curl|bash'), so they are flagged `blocker_term_without_citation` for the owner or the author to cite or drop.
+- Bare `"verdict": "skip"` lines are excluded here. They carry no reason, so they are not a veto with an argument.
+
+## Counts
+
+Total: 70. EVIDENCE_BACKED_BLOCKER: 0. EVIDENCE_FREE_VETO: 70. Blocker words without citation: 26. Lines with a canonical candidate ID: 17.
+
+## Rows
+
+| # | File:line | Item | Class | Candidate IDs | Quote |
+|---|---|---|---|---|---|
+| 1 | `packages/vfe2b/catalog.json:47` | CrewAI | EVIDENCE_FREE_VETO | candidate-microsoft-agent-framework, deferred-autogen | "note": "Pattern only. Do not add a CrewAI runtime." |
+| 2 | `packages/vfe2b/catalog.json:82` | UFO | EVIDENCE_FREE_VETO | candidate-intake-microsoft-ufo | "note": "Reclassified 2026-10-07 from blanket unattended-UI skip to bounded provider research. No unattended authority; no printer/social/customer-send authority; compare only after Cua pilot." |
+| 3 | `packages/vfe2b/catalog.json:88` | Aomni | EVIDENCE_FREE_VETO | - | "pattern": "plan then extract from sources; do not generate content", |
+| 4 | `packages/vfe2b/catalog.json:94` | Aomni | EVIDENCE_FREE_VETO | - | "note": "Matches VF: extract, do not invent." |
+| 5 | `packages/vfe2b/catalog.json:129` | Heymoon.ai | EVIDENCE_FREE_VETO | - | "note": "Same job as Cal.ai. Do not buy from HQ." |
+| 6 | `packages/vfe2b/catalog.json:153` | Claygent | EVIDENCE_FREE_VETO | - | "note": "Do not invent a customer. Clay SaaS is later." |
+| 7 | `packages/vfe2b/catalog.json:188` | AskToSell | EVIDENCE_FREE_VETO | - | "note": "Closer is locked. Questions-only pattern already covered by Docket." |
+| 8 | `packages/vfe2b/catalog.json:316` | MemGPT | EVIDENCE_FREE_VETO | - | "note": "HQ catalog + CHANGELOG are the memory. Do not stand up MemGPT." |
+| 9 | `packages/vfe2b/catalog.json:360` | Zapier Central | EVIDENCE_FREE_VETO | - | "note": "Do not connect live send. Pattern = node list in ops." |
+| 10 | `packages/vfe2b/catalog.json:442` | Beam | EVIDENCE_FREE_VETO | - | "note": "SaaS. Do not buy from HQ." |
+| 11 | `packages/vfe2b/catalog.json:464` | Taskade | EVIDENCE_FREE_VETO | - | "note": "Desk already has packs. No second task app from HQ." |
+| 12 | `packages/vfe2b/catalog.json:491` | Cursor | EVIDENCE_FREE_VETO (blocker word, no cite) | deferred-orca | "note": "Already the HQ. Do not install a second coding agent." |
+| 13 | `packages/vfe2b/catalog.json:509` | Orca | EVIDENCE_FREE_VETO (blocker word, no cite) | deferred-orca | "note": "Pattern only. Do not brew-install orca or stand up an ADE. Cursor is the office." |
+| 14 | `packages/vfe2b/catalog.json:520` | Superagent | EVIDENCE_FREE_VETO | - | "note": "Cursor cloud already has a sandbox. No second runtime." |
+| 15 | `packages/vfe2b/catalog.json:553` | AutoGPT | EVIDENCE_FREE_VETO | - | "note": "Unattended autonomy is locked." |
+| 16 | `packages/vfe2b/orchestrators.json:5` | Awesome-agent-orchestrators overlay | EVIDENCE_FREE_VETO (blocker word, no cite) | - | "rule": "Embed orchestrator patterns onto existing vfe2b crews and vfharness. Do not install a second orchestrator.", |
+| 17 | `packages/vfe2b/orchestrators.json:50` | Orca | EVIDENCE_FREE_VETO (blocker word, no cite) | deferred-orca | "note": "Already the משמרת overlay. Pattern only. Do not brew-install orca." |
+| 18 | `packages/vfe2b/orchestrators.json:57` | herdr | EVIDENCE_FREE_VETO | candidate-herdr | "pattern": "pulse: working / blocked / idle on one job", |
+| 19 | `packages/vfe2b/orchestrators.json:60` | herdr | EVIDENCE_FREE_VETO (blocker word, no cite) | candidate-herdr | "note": "Card field דופק only. Do not install a tmux multiplexer." |
+| 20 | `packages/vfe2b/orchestrators.json:157` | ralphex | EVIDENCE_FREE_VETO | - | "pattern": "fresh context per retry; do not keep guessing", |
+| 21 | `packages/vfe2b/orchestrators.json:190` | Crewplane | EVIDENCE_FREE_VETO (blocker word, no cite) | - | "note": "Guides + checkpoint. Do not install their CLI." |
+| 22 | `packages/vfe2b/orchestrators.json:230` | humanlayer | EVIDENCE_FREE_VETO (blocker word, no cite) | - | "note": "₪ and customer WhatsApp stay human. Repo itself is largely deprecated — keep the gate, skip the install." |
+| 23 | `packages/vfe2b/orchestrators.json:340` | Archon | EVIDENCE_FREE_VETO (blocker word, no cite) | - | "note": "Patterns only (gates → אימות/decision_gate; one job folder). Do not curl\|bash, Docker, or install Archon CLI. mcpmarket listing may describe old v1 agenteer — GitHub is current harness builder. Reviewed 2026-09-05." |
+| 24 | `packages/vfe2b/ORCHESTRATORS.md:17` | - | EVIDENCE_FREE_VETO | - | \| דופק working / blocked / idle \| herdr \| שדה `דופק` בכרטיס \| |
+| 25 | `packages/vfresearch/LINKS.json:4` | קישורי השראה והטמעה — רישום שבועי | EVIDENCE_FREE_VETO | - | "rule": "Re-read registered links weekly. Embed updates into existing packs only. Do not invent bodies, ₪, or Insights. Do not create a new pack per idea.", |
+| 26 | `packages/vfresearch/LINKS.json:24` | קישורי השראה והטמעה — רישום שבועי | EVIDENCE_FREE_VETO | - | "no-invented-blocked-body", |
+| 27 | `packages/vfresearch/LINKS.json:157` | codebase-memory-mcp | EVIDENCE_FREE_VETO (blocker word, no cite) | candidate-intake-deusdata-codebase-memory-mcp | "note": "Pattern only. Do not install their C binary from this repo." |
+| 28 | `packages/vfresearch/LINKS.json:256` | awesome-ai-agents | EVIDENCE_FREE_VETO | - | "note": "Crew overlay only. No second runtime." |
+| 29 | `packages/vfresearch/LINKS.json:272` | awesome-agent-orchestrators | EVIDENCE_FREE_VETO | - | "note": "Overlay on existing vfe2b crews. Pulse/verify/artifact. No second orchestrator runtime." |
+| 30 | `packages/vfresearch/LINKS.json:334` | write-better — agent skill for clear prose | EVIDENCE_FREE_VETO | - | "note": "Embedded write-better patterns only (not asd-ste100, not npx plugin). Hebrew lint: packages/vfcopy/hq/ai-tells-he.md" |
+| 31 | `packages/vfresearch/LINKS.json:395` | oh-my-claudecode — Claude Code team orchestration | EVIDENCE_FREE_VETO (blocker word, no cite) | deferred-ruflo | "note": "Pattern only (plan→exec→verify). Already in crews/run.md + orchestrators overlay. Do not install OMC." |
+| 32 | `packages/vfresearch/LINKS.json:409` | ruflo — agent meta-harness / swarms | EVIDENCE_FREE_VETO (blocker word, no cite) | - | "note": "Skipped install — unattended swarms in orchestrators.json skip list. vfmem/vfgraft for memory pattern only." |
+| 33 | `packages/vfresearch/LINKS.json:455` | Bindu — identity, A2A, x402 for agent internet | EVIDENCE_FREE_VETO | candidate-lobehub | "note": "Patterns only (3-layer verify, agent cards, human gate). No bindufy, no Gateway, no x402, no second runtime. POC off-repo only." |
+| 34 | `packages/vfresearch/LINKS.json:461` | lobehub-operator | EVIDENCE_FREE_VETO | candidate-lobehub | "title": "LobeHub — Chief Agent Operator (patterns only)", |
+| 35 | `packages/vfresearch/LINKS.json:471` | LobeHub — Chief Agent Operator (patterns only) | EVIDENCE_FREE_VETO (blocker word, no cite) | candidate-intake-huginn-huginn | "note": "Connector priority + schedule/report patterns on existing packs. No Docker install, no second runtime, no IM gateway." |
+| 36 | `packages/vfresearch/LINKS.json:477` | huginn | EVIDENCE_FREE_VETO | candidate-intake-huginn-huginn | "title": "Huginn — event-driven agents (pattern only)", |
+| 37 | `packages/vfresearch/LINKS.json:507` | Superset — parallel coding agent IDE (worktrees) | EVIDENCE_FREE_VETO | candidate-twenty | "note": "Patterns only (lifecycle scripts, bounded fan-out). Skip as second desk. Optional Mac offload after lead seat — see vffcc/local-offload.md." |
+| 38 | `packages/vfresearch/LINKS.json:525` | Twenty — open-source CRM (AI / objects / MCP) | EVIDENCE_FREE_VETO (blocker word, no cite) | candidate-erpnext | "note": "Patterns only: command palette, objects/views, pipeline. No Twenty install." |
+| 39 | `packages/vfresearch/LINKS.json:798` | Build with Claude — plugin/skill/MCP discovery (davepoon) | EVIDENCE_FREE_VETO (blocker word, no cite) | - | "note": "Patterns only. 2026-09-03: memory + architecture-audit + MCP index. 2026-09-05: proposal-drafter no-fabricate → vfsales. No Claude Code marketplace install on Cloud Agent. Repo: https://github.com/davepoon/buildwithclaude" |
+| 40 | `packages/vfresearch/LINKS.json:819` | LinklyAI/best-skills — daily Top 100 agent skills rankings | EVIDENCE_FREE_VETO | - | "note": "Bi-daily ranking scan. Patterns only — no npx skills on Cloud. State in BEST-SKILLS.json. Skill vf-best-skills. Constitution may open when durable." |
+| 41 | `packages/vfresearch/LINKS.json:870` | Diagram Maker Visualizer (openclaw/diagram-maker) | EVIDENCE_FREE_VETO (blocker word, no cite) | - | "note": "Patterns only into vfbriefux. Companion SVG via render_mail.py --diagram. No npx/OpenClaw install. Live mail stays MAIL.html tables." |
+| 42 | `packages/vfresearch/LINKS.json:888` | Blender MCP (ahujasid) — local Blender control | EVIDENCE_FREE_VETO | - | "note": "mcpmarket Cloudflare — body from GitHub. Cloud Agent skip. Desktop optional after lead. Concept/STL stays 3DAI. 2026-10-04: GitHub canonical repo name is now ahujasid/mcp-for-blender; existing Blender-MCP family mapping is unchange |
+| 43 | `packages/vfresearch/LINKS.json:905` | Archon — AI coding harness / workflow builder | EVIDENCE_FREE_VETO (blocker word, no cite) | - | "note": "mcpmarket page may describe old v1 agenteer; GitHub is harness builder. Patterns only — no second orchestrator install." |
+| 44 | `packages/vfresearch/LINKS.json:922` | Jeffallan fullstack-dev-skills — Claude Code plugin (~67 skills) | EVIDENCE_FREE_VETO (blocker word, no cite) | - | "note": "Patterns only (Common Ground tiers). No /plugin install or npx skills on Cloud. Language specialists stay warehouse off-desk." |
+| 45 | `packages/vfresearch/LINKS.json:954` | Blender Open MCP (Ollama) | EVIDENCE_FREE_VETO (blocker word, no cite) | - | "note": "Sibling of ahujasid Blender MCP + local Ollama. Cloud skip; do not stack Desktop install without lead." |
+| 46 | `packages/vfresearch/LINKS.json:970` | Blender AI MCP (market listing) | EVIDENCE_FREE_VETO | - | "note": "Listing body blocked. Treated as Blender-MCP family sibling — Cloud skip; Desktop → BLENDER-MCP canonical. 2026-10-04: GitHub canonical repo name is now ahujasid/mcp-for-blender; existing Blender-MCP family mapping is unchanged." |
+| 47 | `packages/vfresearch/LINKS.json:1002` | multiCAD MCP — AutoCAD/ZWCAD/GstarCAD/BricsCAD | EVIDENCE_FREE_VETO | - | "note": "Windows COM CAD — skip for VF print floor unless that DCC exists on Mac." |
+| 48 | `packages/vfresearch/LINKS.json:1020` | OpenSCAD MCP family — parametric validate/render/STL | EVIDENCE_FREE_VETO (blocker word, no cite) | - | "note": "Listing body blocked; open family via GitHub CLI MCPs. Cloud skip; Desktop optional after lead + local OpenSCAD. Still vlicense + slice." |
+| 49 | `packages/vfresearch/LINKS.json:1035` | Blender VXAI MCP (market listing) | EVIDENCE_FREE_VETO (blocker word, no cite) | - | "note": "Category blurb only — GitHub not verified. Skip install until repo identified. Same Cloud skip as Blender family." |
+| 50 | `packages/vfresearch/LINKS.json:1051` | SketchUp MCP | EVIDENCE_FREE_VETO | - | "note": "Requires SketchUp + Ruby plugin. Skip unless Mac already runs SketchUp." |
+| 51 | `packages/vfresearch/LINKS.json:1068` | FreeCAD MCP | EVIDENCE_FREE_VETO | - | "note": "Cloud skip. Desktop optional if FreeCAD on Mac. Does not replace 3DAI for fast concept." |
+| 52 | `packages/vfresearch/LINKS.json:1102` | Market Research Intelligence — decision-oriented research gates (MCP Market) | EVIDENCE_FREE_VETO (blocker word, no cite) | - | "note": "Patterns only (source age, contrarian evidence, decision structure, dual-method sizing). Full SKILL.md body blocked (אין גוף). No npx install / investor-dossier default." |
+| 53 | `packages/vfresearch/LINKS.json:1132` | ai-copywriter — reader-first copy + Humanizer (33 AI tells) | EVIDENCE_FREE_VETO | - | "note": "Embed COPYWRITING MODE into vfcopy/hq/reader-first-he.md; strengthen ai-tells-he.md. No npx skills add. Skip LinkedIn/strategic-blog (public site locked). Complements plannotator-write-better." |
+| 54 | `packages/vfresearch/LINKS.json:1160` | humanizer — AI-tell detect + rewrite (MIT) | EVIDENCE_FREE_VETO | candidate-intake-debpalash-voicestudio | "note": "Patterns only in lint_he.py + ai-tells-he.md. No Rust binary. Complements write-better + ai-copywriter embeds." |
+| 55 | `packages/vfresearch/LINKS.json:1171` | VoiceStudio — local ElevenLabs alternative (TTS/ASR/dub/MCP) | EVIDENCE_FREE_VETO (blocker word, no cite) | candidate-intake-debpalash-voicestudio | "verdict": "skip-install", |
+| 56 | `packages/vfresearch/LINKS.json:1178` | VoiceStudio — local ElevenLabs alternative (TTS/ASR/dub/MCP) | EVIDENCE_FREE_VETO (blocker word, no cite) | - | "note": "Patterns only. No DMG/Docker/MCP on Cloud. Floor proof > AI voice for reels. Desktop VO optional after lead + model license gate. AGPL app; upstream weights may be NC." |
+| 57 | `packages/vfresearch/LINKS.json:1196` | DeepTutor — lifelong personalized tutoring (agent-native learning) | EVIDENCE_FREE_VETO (blocker word, no cite) | - | "note": "Patterns only: mastery gate, L1/L2/L3 memory, question-bank from failures, recoverable sessions. No DeepTutor Docker / EduHub install / second runtime." |
+| 58 | `packages/vfresearch/LINKS.json:1227` | lieflat-charts — agent skill for polished HTML data charts | EVIDENCE_FREE_VETO | - | "note": "Patterns only: Glance default for brief slot 06, one chart = one conclusion, verified numbers only. Complements DIAGRAM-MAKER (flows). No npx skills / gallery import / MAIL.html replace." |
+| 59 | `packages/vfresearch/LINKS.json:1243` | academic-research-skills — research → write → review → revise → finalize | EVIDENCE_FREE_VETO | - | "note": "CC BY-NC patterns only (human-in-the-loop, fact-check gates, integrity before claim). No Claude plugin / AI Scientist runtime / new vfacademic pack." |
+| 60 | `packages/vfresearch/LINKS.json:1259` | last30days-skill — people-scored multi-source research (last ~30 days) | EVIDENCE_FREE_VETO | - | "note": "Deep embed 2026-09-05: playbook + Cursor skill for @research-synthesist / @trend-researcher. Patterns only — no npx/CLI, no X/TikTok keys on Cloud." |
+| 61 | `packages/vfresearch/LINKS.json:1277` | Social Media Publisher (SocialClaw-style) — validate→apply→verify publish skill | EVIDENCE_FREE_VETO | - | "note": "mcpmarket body Cloudflare-blocked («אין גוף»). Pattern from SocialClaw skill SKILL.md: validate→apply→verify/reconcile. Embed into vfigos/SEND only. No npm socialclaw, no multi-platform blast, no API key in git." |
+| 62 | `packages/vfresearch/LINKS.json:1328` | social-media-skills — content/research/analytics skill patterns | EVIDENCE_FREE_VETO | - | "note": "Patterns only: content matrix, measured scoring, reference-Reel mechanics, date-verified niche research. No second writer/runtime." |
+| 63 | `packages/vfresearch/LINKS.json:1343` | automate-for-growth — batching and feedback-loop patterns | EVIDENCE_FREE_VETO | - | "note": "Method patterns only. No ViralWave dependency, generic virality score, mass publishing, or second scheduler." |
+| 64 | `packages/vfresearch/LINKS.json:1428` | no-ai-slop — named anti-slop editing patterns (MIT) | EVIDENCE_FREE_VETO (blocker word, no cite) | - | "note": "Selective pattern embed only: named detector + evals + Visible Text Gate binding. No plugin install, no authorship score, no second writer." |
+| 65 | `packages/vfresearch/LINKS.json:1443` | cc-blender-skill — Blender craft/workflow patterns | EVIDENCE_FREE_VETO (blocker word, no cite) | - | "note": "MIT workflow/craft patterns only. Do not install its orchestration/runtime beside vf-3d-router." |
+| 66 | `packages/vfresearch/LINKS.json:1458` | blender-skills — broad Blender craft reference library | EVIDENCE_FREE_VETO | - | "note": "MIT reference patterns only; too broad to become a parallel production runtime." |
+| 67 | `packages/vfresearch/LINKS.json:1473` | ffmpeg-skill — probe/edit/check/visual-verify patterns | EVIDENCE_FREE_VETO | - | "note": "MIT verification-loop patterns merged conceptually into vf-post-production-craft; no second media runtime." |
+| 68 | `packages/vfresearch/LINKS.json:1488` | davinci-resolve-mcp — post-production domain kernels | EVIDENCE_FREE_VETO | - | "note": "MIT edit/color/conform/delivery/Fusion/audio domain patterns only; execution remains on accepted VelvetOS integrations." |
+| 69 | `packages/vfresearch/LINKS.json:1503` | adobe-agent-skills — After Effects craft patterns | EVIDENCE_FREE_VETO | - | "note": "Apache-2.0 craft patterns only. Its macOS-specific execution path is not adopted on the active Windows host." |
+| 70 | `packages/vfresearch/LINKS.json:1534` | awesome-java | EVIDENCE_FREE_VETO | - | {"id":"awesome-design-patterns","kind":"repo","url":"https://github.com/DovAmir/awesome-design-patterns","title":"awesome-design-patterns","firstEmbedded":"2026-10-07","lastReviewed":"2026-10-17","sourceNote":"packages/vfresearch/sources/20 |
+
+## Next steps (not done here)
+
+1. Owner or author cites each blocker-word veto (or drops the blocker word) so it can move to EVIDENCE_BACKED_BLOCKER.
+2. Each EVIDENCE_FREE_VETO needs a fair comparison before its disposition stands (AC4). Gemini's #595 triage covers the 61 DISCOVERED candidates.
