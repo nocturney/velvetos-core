@@ -87,3 +87,9 @@ packages/vfharness/state/pr228-rollout/* text eol=lf
 # Pretrusted default-branch workflow_run policy YAML must be LF on Windows;
 # otherwise physical-host SHA verification of the trusted policy is ambiguous.
 /.github/workflows/office-p0-protected-base-c1-qa.yml text eol=lf
+
+# Committed CrewAI E4 evidence is byte-compared. Without these pins,
+# core.autocrlf=true checks the .reg files out as CRLF and the sensor fails.
+/scripts/office_v2_crewai/evidence/e4/*.json text eol=lf
+/scripts/office_v2_crewai/evidence/e4/*.reg text eol=lf
+/scripts/office_v2_crewai/evidence/e4-containment.json text eol=lf

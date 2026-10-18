@@ -61,14 +61,9 @@ def _sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def _write_lf(path: Path, text: str) -> None:
-    """Write LF even when the host text mode is CRLF. Committed E4 bytes are LF."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text, encoding="ascii", newline="\n")
-
-
 def _dump(path: Path, payload: dict) -> None:
-    _write_lf(path, json.dumps(payload, indent=2, sort_keys=True) + "\n")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes((json.dumps(payload, sort_keys=True, indent=2) + "\n").encode("ascii"))
 
 
 def _load(path: Path) -> dict | None:
@@ -478,8 +473,8 @@ def write_observed_e4(evidence_dir: Path) -> None:
     folder.mkdir(parents=True, exist_ok=True)
     _dump(folder / "manifest-before.json", before)
     _dump(folder / "manifest-after.json", after)
-    _write_lf(folder / "hkcu-before.reg", reg)
-    _write_lf(folder / "hkcu-after.reg", reg)
+    (folder / "hkcu-before.reg").write_bytes(reg.encode("ascii"))
+    (folder / "hkcu-after.reg").write_bytes(reg.encode("ascii"))
     diff = hkcu_diff(reg, reg)
     _dump(folder / "hkcu-diff.json", {
         "added": diff["added"],
@@ -513,8 +508,8 @@ def emit_not_observed(evidence_dir: Path) -> None:
     folder.mkdir(parents=True, exist_ok=True)
     _dump(folder / "manifest-before.json", before)
     _dump(folder / "manifest-after.json", after)
-    _write_lf(folder / "hkcu-before.reg", "NOT_OBSERVED\n")
-    _write_lf(folder / "hkcu-after.reg", "NOT_OBSERVED\n")
+    (folder / "hkcu-before.reg").write_bytes(b"NOT_OBSERVED\n")
+    (folder / "hkcu-after.reg").write_bytes(b"NOT_OBSERVED\n")
     _dump(folder / "hkcu-diff.json", {
         "added": [],
         "after_sha256": None,

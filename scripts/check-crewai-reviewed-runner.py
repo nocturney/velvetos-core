@@ -1273,6 +1273,94 @@ def check_committed_e4_shape() -> None:
         fail("committed containment claims an observation")
 
 
+_E4_EOL_RULES = (
+    "/scripts/office_v2_crewai/evidence/e4/*.json text eol=lf",
+    "/scripts/office_v2_crewai/evidence/e4/*.reg text eol=lf",
+    "/scripts/office_v2_crewai/evidence/e4-containment.json text eol=lf",
+)
+
+
+class _WindowsTextMode:
+    """Translate text-mode ``\\n`` to CRLF the way Windows ``newline=None`` does.
+
+    CPython's TextIOWrapper does not re-read ``os.linesep`` on this host, so
+    the patch sets ``os.linesep`` and passes that value as ``open``'s newline
+    when the caller left newline unset. ``write_bytes`` never enters this path.
+    An explicit ``newline="\\n"`` stays LF.
+    """
+
+    def __enter__(self):
+        self._linesep = os.linesep
+        self._open = Path.open
+        os.linesep = "\r\n"
+        original = self._open
+
+        def windows_text(opened, mode="r", buffering=-1, encoding=None, errors=None, newline=None):
+            text_write = isinstance(mode, str) and "b" not in mode and any(flag in mode for flag in ("w", "a", "x"))
+            if text_write and newline is None:
+                newline = os.linesep
+            return original(opened, mode, buffering, encoding, errors, newline)
+
+        Path.open = windows_text
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        os.linesep = self._linesep
+        Path.open = self._open
+        return False
+
+
+def _e4_blobs(root: Path) -> list[tuple[Path, bytes]]:
+    return [(path, path.read_bytes()) for path in sorted(p for p in root.rglob("*") if p.is_file())]
+
+
+def _assert_e4_lf(root: Path, *, match_committed: bool) -> None:
+    blobs = _e4_blobs(root)
+    if not blobs:
+        fail("E4 emit wrote no files")
+    for path, blob in blobs:
+        if b"\r" in blob:
+            fail("E4 emit wrote CRLF: %s" % path.relative_to(root))
+        if match_committed:
+            committed = EVIDENCE / path.relative_to(root)
+            if not committed.is_file() or committed.read_bytes() != blob:
+                fail("committed E4 evidence drifted: %s" % path.relative_to(root))
+
+
+def check_e4_newline_mutation() -> None:
+    """LF is a property of the emitted bytes, not of one writer spelling.
+
+    ``write_bytes`` and ``write_text(..., newline="\\n")`` both stay LF under
+    the Windows text-mode simulation. Plain ``write_text`` (newline unset)
+    must come out as CRLF, or the simulation itself was removed.
+    """
+    attributes = (ROOT / ".gitattributes").read_text(encoding="utf-8")
+    for rule in _E4_EOL_RULES:
+        if rule not in attributes:
+            fail("E4 evidence eol pin missing: %s" % rule)
+    fresh = Path(tempfile.mkdtemp(prefix="crewai-e4-lf-"))
+    observed = Path(tempfile.mkdtemp(prefix="crewai-e4-lf-observed-"))
+    probe = Path(tempfile.mkdtemp(prefix="crewai-e4-newline-probe-"))
+    try:
+        with _WindowsTextMode():
+            emit_not_observed(fresh)
+            write_observed_e4(observed)
+            (probe / "plain.txt").write_text("NOT_OBSERVED\n", encoding="ascii")
+            (probe / "explicit.txt").write_text("NOT_OBSERVED\n", encoding="ascii", newline="\n")
+        _assert_e4_lf(fresh, match_committed=True)
+        _assert_e4_lf(observed, match_committed=False)
+        plain = (probe / "plain.txt").read_bytes()
+        if b"\r\n" not in plain or plain == b"NOT_OBSERVED\n":
+            fail("plain write_text was not caught under Windows newline translation")
+        explicit = (probe / "explicit.txt").read_bytes()
+        if b"\r" in explicit or explicit != b"NOT_OBSERVED\n":
+            fail("newline=LF write_text was translated")
+    finally:
+        shutil.rmtree(fresh, ignore_errors=True)
+        shutil.rmtree(observed, ignore_errors=True)
+        shutil.rmtree(probe, ignore_errors=True)
+
+
 def _pilot_tree() -> dict:
     return {
         "processes": [
@@ -2293,6 +2381,7 @@ def main() -> int:
     check_manifest()
     check_committed_gates()
     check_committed_e4_shape()
+    check_e4_newline_mutation()
     check_gate_mutations()
     check_condition_mutations()
     check_e4_mutations()
