@@ -23,7 +23,8 @@ NATIVE = ROOT / "scripts/vf_office_v2_604_native_git_crash_reconcile_offline.py"
 CANDIDATE = ROOT / "scripts/vf_office_v2_604_cp083_hardened_candidate.py"
 DRIVER_SHA = "0d38f4e45f1d94a64167b72e0f57ca44efa73a758fc72fe368705294de737251"
 NATIVE_SHA = "2bbd81c9c7f59c1b28937286d1c365ca46c0ceb9db96157859f7225e0dd6d632"
-CANDIDATE_SHA = "39b0c918f906980f1ba87c49a03cc6cbf10b4d144b157b3221605a14ad3626b6"
+CANDIDATE_PARENT_SHA = "39b0c918f906980f1ba87c49a03cc6cbf10b4d144b157b3221605a14ad3626b6"
+CANDIDATE_LIVE_SHA = "83260c77846b34c4f459eaa812f477e51764fa1eee261af1d542a39dd561cd2c"
 EXPECTED = {
     "MacMiniOffice.local": "c3dab4f9582f7aa25cdff4ce4e5a85db15e9c9918569011333a7e9e8a71538f0",
     "Mac-Bedroom.local": "5dbc39e1824b910718bc45344bcffad7845db486bfc534664b7a8b4715035947",
@@ -98,7 +99,7 @@ def validate(evidence, check_local_sources=True):
     for name, exact in (
         ("driver_source_sha256", DRIVER_SHA),
         ("native_implementation_sha256", NATIVE_SHA),
-        ("hardened_candidate_source_sha256_at_parent", CANDIDATE_SHA),
+        ("hardened_candidate_source_sha256_at_parent", CANDIDATE_PARENT_SHA),
     ):
         need(evidence.get(name) == exact, name + "_DRIFT")
     need(evidence.get("source_used_by_hardened_candidate") ==
@@ -121,7 +122,7 @@ def validate(evidence, check_local_sources=True):
         need(evidence.get(no_claim) is False, "FALSE_CLAIM_" + no_claim)
     if check_local_sources:
         for p, digest in ((DRIVER, DRIVER_SHA), (NATIVE, NATIVE_SHA),
-                          (CANDIDATE, CANDIDATE_SHA)):
+                          (CANDIDATE, CANDIDATE_LIVE_SHA)):
             need(p.is_file() and sha(p.read_bytes()) == digest,
                  "SOURCE_BYTES_CHANGED:" + p.name)
         need("import vf_office_v2_604_native_git_crash_reconcile_offline as offline"

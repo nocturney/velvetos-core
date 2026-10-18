@@ -2,9 +2,9 @@
 """ChatGPT-069 gaps. No guest, no remote GitHub.
 
 GAP_4 is a passing gate refusal: a hardlinked SQLite journal and a non-regular
-evidence file fail closed. The sealed native engine is not edited. GAP_9 and
-GAP_6 stay expected failures. The hardened candidate and the pinned identity
-helper are not edited here. Benign fake variables only.
+evidence file fail closed. GAP_9 is a passing wire/evidence refusal. The sealed
+native engine is not edited. GAP_6 stays an expected failure. The pinned
+identity helper is not edited here. Benign fake variables only.
 """
 from __future__ import annotations
 
@@ -21,14 +21,8 @@ SCRIPTS = ROOT / "scripts"
 
 
 class ChatGPT069ExpectedGaps(unittest.TestCase):
-    @unittest.expectedFailure
     def test_crlf_and_duplicate_wire_fields_rejected(self):
-        """GAP_9: request and ACK frames still use json.loads.
-
-        A CRLF frame and a duplicate action/status key are therefore not
-        refused. This stays expected-fail until the pinned candidate grows
-        an unambiguous fail-closed wire policy.
-        """
+        """GAP_9: the socket parsers no longer take the first LF split via json.loads."""
         source = (SCRIPTS / (
             "vf_office_v2_604_cp083_hardened_candidate.py")).read_text(
                 encoding="utf-8")
@@ -42,6 +36,7 @@ class ChatGPT069ExpectedGaps(unittest.TestCase):
             source,
             "GAP_9",
         )
+        self.assertIn("read_json_frame(", source)
 
     @unittest.expectedFailure
     def test_controller_env_import_and_helper_spawn_canaries_refused(self):
