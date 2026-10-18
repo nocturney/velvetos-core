@@ -63,7 +63,7 @@ def _sha(data: bytes) -> str:
 
 def _dump(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="ascii")
+    path.write_bytes((json.dumps(payload, sort_keys=True, indent=2) + "\n").encode("ascii"))
 
 
 def _load(path: Path) -> dict | None:
@@ -473,8 +473,8 @@ def write_observed_e4(evidence_dir: Path) -> None:
     folder.mkdir(parents=True, exist_ok=True)
     _dump(folder / "manifest-before.json", before)
     _dump(folder / "manifest-after.json", after)
-    (folder / "hkcu-before.reg").write_text(reg, encoding="ascii")
-    (folder / "hkcu-after.reg").write_text(reg, encoding="ascii")
+    (folder / "hkcu-before.reg").write_bytes(reg.encode("ascii"))
+    (folder / "hkcu-after.reg").write_bytes(reg.encode("ascii"))
     diff = hkcu_diff(reg, reg)
     _dump(folder / "hkcu-diff.json", {
         "added": diff["added"],
@@ -508,8 +508,8 @@ def emit_not_observed(evidence_dir: Path) -> None:
     folder.mkdir(parents=True, exist_ok=True)
     _dump(folder / "manifest-before.json", before)
     _dump(folder / "manifest-after.json", after)
-    (folder / "hkcu-before.reg").write_text("NOT_OBSERVED\n", encoding="ascii")
-    (folder / "hkcu-after.reg").write_text("NOT_OBSERVED\n", encoding="ascii")
+    (folder / "hkcu-before.reg").write_bytes(b"NOT_OBSERVED\n")
+    (folder / "hkcu-after.reg").write_bytes(b"NOT_OBSERVED\n")
     _dump(folder / "hkcu-diff.json", {
         "added": [],
         "after_sha256": None,
