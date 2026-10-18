@@ -200,7 +200,7 @@ def run(label):
         base = Path(t)
         for case in CASES:
             observed[case[0]] = case_run(base, *case, checks)
-    require(len(checks) == 53, "exact_53_named_assertions", checks)
+    require(len(checks) == 57, "exact_57_case_assertions", checks)
     return {
         "schema": SCHEMA,
         "run_id": uuid.uuid4().hex,
