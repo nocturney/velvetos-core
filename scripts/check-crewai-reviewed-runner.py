@@ -2458,14 +2458,34 @@ def check_workflows() -> None:
             fail("workflow mentions the runner: %s" % path.name)
 
 
+def _refuse_misplaced_guard(source: str, role: str, sentence: str, label: str) -> None:
+    placed = task_descriptions_by_role(source)
+    if sentence in placed[role]:
+        fail("%s was accepted" % label)
+    if sentence not in source:
+        fail("%s mutant lost the sentence" % label)
+
+
 def check_case06_role_mutations() -> None:
-    """A comment copy and a role swap must not satisfy the task-description guards."""
+    """Misplaced guard sentences must not satisfy the task-description checks."""
     source = (PACKAGE / "crew_build.py").read_text(encoding="utf-8")
     comment = source.replace(TRIAGE_GUARD, "", 1).replace(REVIEWER_GUARD, "", 1)
     comment += "\n# " + TRIAGE_GUARD + "\n# " + REVIEWER_GUARD + "\n"
-    commented = task_descriptions_by_role(comment)
-    if TRIAGE_GUARD in commented["Triage"] or REVIEWER_GUARD in commented["Reviewer"]:
-        fail("comment-only guard sentences were accepted")
+    _refuse_misplaced_guard(comment, "Triage", TRIAGE_GUARD, "comment-only guard sentences")
+    _refuse_misplaced_guard(comment, "Reviewer", REVIEWER_GUARD, "comment-only guard sentences")
+    dead = source.replace(TRIAGE_GUARD, "", 1)
+    dead += '\n_CASE06_DEAD = """%s"""\n' % TRIAGE_GUARD
+    _refuse_misplaced_guard(dead, "Triage", TRIAGE_GUARD, "a guard sentence in a dead string")
+    documented = source.replace(REVIEWER_GUARD, "", 1)
+    documented += '\n\ndef _case06_unused():\n    """%s"""\n    return None\n' % REVIEWER_GUARD
+    _refuse_misplaced_guard(documented, "Reviewer", REVIEWER_GUARD, "a guard sentence in a docstring")
+    wrong_role = source.replace(TRIAGE_GUARD, "", 1).replace(
+        REVIEWER_GUARD, REVIEWER_GUARD + " " + TRIAGE_GUARD, 1
+    )
+    _refuse_misplaced_guard(wrong_role, "Triage", TRIAGE_GUARD, "a guard sentence on the wrong role")
+    moved = task_descriptions_by_role(wrong_role)
+    if TRIAGE_GUARD not in moved["Reviewer"]:
+        fail("wrong-role mutant did not place the sentence on Reviewer")
     sentinel = "@@CASE06_SWAP@@"
     swapped_source = (
         source.replace(TRIAGE_GUARD, sentinel, 1)
