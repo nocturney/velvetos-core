@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-10-18 - **CrewAI E4 emit line endings (issue 612 comment 6251561284):** `emit_not_observed` writes JSON and `.reg` with `newline="\n"`. Windows text mode was emitting CRLF, so `e4/control-run.json` drifted from the committed LF bytes even when the checkout was LF. The evidence `text eol=lf` rules stay. No model call.
+
 - 2026-10-18 - **CrewAI listener portability (issue 612 comment 6251194655):** macOS no longer falls through to `/proc/net/tcp`. Darwin uses `lsof -nP -a -p <pid> -iTCP -sTCP:LISTEN` and fails closed unless that output proves the listener count. `.gitattributes` pins every `scripts/office_v2_crewai/evidence` suffix, including `*.reg`, to LF so Windows `autocrlf` cannot rewrite `hkcu-after.reg`. No model call.
 
 - 2026-10-18 - **CrewAI LAB-4 runner fixes (issue 612 comment 6251061341):** The model digest is read from Ollama `/api/tags` by name. The Windows listener script calls `.ToArray()`, and forbidden modules are checked before that observation. A present wrong `OLLAMA_HOST` or proxy is refused instead of replaced, and an Ollama bind on `0.0.0.0` is refused. `crewai:{md5}.lock` is an NTFS alternate-data-stream name, so a missing sandbox temp can create a 0-byte `C:\Windows\Temp\crewai`; the runner creates the sandbox temp first and refuses that file. Task text includes `{issue_rows}`, and an empty N/A kickoff table fails. Receipts keep the model-config reason, the kickoff.md sha256 after a later FAIL, and the listener result. The 600s timeout is enforced, `/api/chat` sends temperature 0.0, and `PYTHONPATH` / a non-stdlib `sitecustomize` is refused. `--sandbox` must stay under `D:\Velvet`. No model call.

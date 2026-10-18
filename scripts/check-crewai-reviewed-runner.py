@@ -1071,16 +1071,61 @@ def check_proxy_gate() -> None:
         shutil.rmtree(base, ignore_errors=True)
 
 
+def _emit_matches_committed(fresh: Path) -> None:
+    for path in sorted(p for p in fresh.rglob("*") if p.is_file()):
+        blob = path.read_bytes()
+        if b"\r" in blob:
+            fail("E4 emit wrote CRLF: %s" % path.relative_to(fresh))
+        committed = EVIDENCE / path.relative_to(fresh)
+        if not committed.is_file() or committed.read_bytes() != blob:
+            fail("committed E4 evidence drifted: %s" % path.relative_to(fresh))
+
+
 def check_committed_e4_shape() -> None:
     fresh = Path(tempfile.mkdtemp(prefix="crewai-e4-emit-"))
     try:
         emit_not_observed(fresh)
-        for path in sorted(p for p in fresh.rglob("*") if p.is_file()):
-            committed = EVIDENCE / path.relative_to(fresh)
-            if not committed.is_file() or committed.read_bytes() != path.read_bytes():
-                fail("committed E4 evidence drifted: %s" % path.relative_to(fresh))
+        _emit_matches_committed(fresh)
     finally:
         shutil.rmtree(fresh, ignore_errors=True)
+    windows = Path(tempfile.mkdtemp(prefix="crewai-e4-crlf-"))
+    original = Path.open
+
+    def windows_text(self, mode="r", buffering=-1, encoding=None, errors=None, newline=None):
+        writing = any(flag in mode for flag in ("w", "a", "x")) and "b" not in mode
+        if not writing or newline is not None:
+            return original(self, mode, buffering, encoding, errors, newline)
+        stream = original(self, mode, buffering, encoding, errors, newline="")
+
+        class _CRLF:
+            def write(self, data):
+                if isinstance(data, str):
+                    data = data.replace("\n", "\r\n")
+                return stream.write(data)
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, tb):
+                return stream.__exit__(exc_type, exc, tb)
+
+        return _CRLF()
+
+    observed = Path(tempfile.mkdtemp(prefix="crewai-e4-observed-"))
+    try:
+        try:
+            Path.open = windows_text
+            emit_not_observed(windows)
+            write_observed_e4(observed)
+        finally:
+            Path.open = original
+        _emit_matches_committed(windows)
+        for path in sorted(p for p in observed.rglob("*") if p.is_file()):
+            if b"\r" in path.read_bytes():
+                fail("observed E4 emit wrote CRLF: %s" % path.relative_to(observed))
+    finally:
+        shutil.rmtree(windows, ignore_errors=True)
+        shutil.rmtree(observed, ignore_errors=True)
     before = json.loads((EVIDENCE / "e4" / "manifest-before.json").read_text(encoding="ascii"))
     rels = [row["rel"] for row in before["entries"]]
     if rels != list(REQUIRED_RELS):

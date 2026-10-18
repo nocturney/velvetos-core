@@ -177,7 +177,13 @@ Anything that is neither Windows, macOS, nor Linux fails closed.
 `scripts/office_v2_crewai/evidence/**/*.reg` and `**/*.json` are
 `text eol=lf`. The sensor requires that rule for every suffix in the
 evidence directory, so a Windows checkout with `core.autocrlf=true` does
-not turn `hkcu-after.reg` into CRLF.
+not turn `hkcu-after.reg` into CRLF. That checkout rule is still required.
+
+Issue 612 comment 6251561284. `emit_not_observed` writes every E4 JSON and
+`.reg` file with `newline="\n"`. Windows text mode otherwise turns `\n`
+into CRLF, so a fresh emit differs from the committed LF bytes of
+`e4/control-run.json` even when the checkout itself is LF. The sensor
+replays that text mode and still requires a byte match.
 
 ## Lock identity
 
