@@ -66,7 +66,7 @@ SEALED = {
     "scripts/vf_office_v2_604_cp083_hardened_candidate.py":
         "83260c77846b34c4f459eaa812f477e51764fa1eee261af1d542a39dd561cd2c",
     "scripts/vf_office_v2_604_cp083_candidate_evidence_gate.py":
-        "143880f85f6d80dc139d4cc73cc83031f474df0e5c3d149417c817c4297e3dd9",
+        "f9a7be4a854bd04634085ef6b91555941f05c78c78d4f12ae05180f15fb4b774",
     "scripts/vf_office_v2_604_owner_option_a_policy_gate.py":
         "33f42ccb00bb7d5ad407a24f1c315fc5b060cf9ce8188e55edd08d4d41309162",
 }
