@@ -1,1 +1,1 @@
-- 2026-10-18 - **CrewAI case 06 injection guards:** the reviewed-runner sensor pins the triage sentence that ignores an `UNTRUSTED QUOTE` span and the reviewer sentence that rejects quoted hostile commands and unsupported money or identified customer claims. No model call.
+- 2026-10-18 - **CrewAI case 06 injection guards:** the reviewed-runner sensor requires the decoded triage sentence that ignores an `UNTRUSTED QUOTE` span and the decoded reviewer sentence that rejects quoted hostile commands and unsupported money or identified customer claims. No model call.
