@@ -4432,6 +4432,32 @@
       },
       "fallback_scope": "FULL_SUITE",
       "mapping_state": "mapped"
+    },
+    {
+      "id": "check-crewai-e5-network",
+      "path": "scripts/check-crewai-e5-network.py",
+      "owns": [
+        "scripts/check-crewai-e5-network.py",
+        "scripts/collect-crewai-e5-network.ps1",
+        "docs/office-v2/pilot-e5-network-evidence.md"
+      ],
+      "triggered_by": [
+        "scripts/check-crewai-e5-network.py",
+        "scripts/collect-crewai-e5-network.ps1",
+        "docs/office-v2/pilot-e5-network-evidence.md"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "lifecycle": "DOMAIN",
+      "risk": "high",
+      "timeout_seconds": 120,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
     }
   ]
 }
