@@ -1,0 +1,807 @@
+{
+ "schema": "velvetos.veto-inventory.v1",
+ "issue": "nocturney/velvetos-core#595",
+ "clq": "CLQ-3",
+ "scope": "report only; no disposition changes; no registry edits",
+ "classes": {
+  "EVIDENCE_BACKED_BLOCKER": "veto term AND a blocker term AND a citation on the same line",
+  "EVIDENCE_FREE_VETO": "veto term without (blocker term AND citation) on its line; needs a fair comparison before it stands"
+ },
+ "regexes": {
+  "veto": "pattern only|patterns only|do not install|do not add|do not buy|do not brew|do not curl|do not stand up|skip the install|do not connect|do not generate|do not invent|already the|already covered|no second|do not keep|do not stand|locked|not install|no runtime|\\bskip\\b",
+  "blocker": "security|secret|credential|licen[cs]e|copyright|rights|archiv|deprecat|unmaintain|maintenance|cost|paid|subscription|GPU|hardware|Windows-only|macOS-only|privacy|PII|non-commercial|\\bNC\\b|terms of service|ToS|curl\\s*\\|\\s*bash",
+  "citation": "https?://|\\b20\\d\\d-\\d\\d-\\d\\d\\b|archived upstream|per #\\d+|#\\d{2,4}\\b"
+ },
+ "method": "line-level regex over packages/vfe2b/catalog.json, packages/vfe2b/orchestrators.json, packages/vfe2b/ORCHESTRATORS.md, packages/vfe2b/LOCK.md, packages/vfe2b/DEER-FLOW-PATTERNS.md and packages/vfresearch/LINKS.json. Matches inside title/pattern/id/rule/item/kind/url values are skipped (descriptions, not dispositions): 7 lines. The two vocabulary tokens that only name the allowed value skip inside the verdicts arrays (packages/vfe2b/catalog.json:34 and packages/vfe2b/orchestrators.json:39) are excluded because they are not a disposition of an item. Per-item \"verdict\": \"skip\" lines are included. Item = same-line name/id/title, else nearest preceding one. Candidate IDs are the alias-map match for this row's own URL (same-line url, else the nearest preceding one; never the following item). Statuses MATCHED_STRONG, MATCHED_BY_URL, AMBIGUOUS_STRONG and AMBIGUOUS_URL contribute url_matches, otherwise strong. Weak-only, not-found and non-GitHub rows contribute nothing. If the line has no URL, an exact alias-map label equal to the item is used under the same status rule. Mechanical check: python3 docs/implementation/office-v2/phase2/check-veto-inventory.py.",
+ "rows": [
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 47,
+   "item": "CrewAI",
+   "quote": "\"note\": \"Pattern only. Do not add a CrewAI runtime.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [
+    "deferred-crewai"
+   ],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 82,
+   "item": "UFO",
+   "quote": "\"note\": \"Reclassified 2026-10-07 from blanket unattended-UI skip to bounded provider research. No unattended authority; no printer/social/customer-send authority; compare only after Cua pilot.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [
+    "candidate-intake-microsoft-ufo"
+   ],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 94,
+   "item": "Aomni",
+   "quote": "\"note\": \"Matches VF: extract, do not invent.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 129,
+   "item": "Heymoon.ai",
+   "quote": "\"note\": \"Same job as Cal.ai. Do not buy from HQ.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 153,
+   "item": "Claygent",
+   "quote": "\"note\": \"Do not invent a customer. Clay SaaS is later.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 182,
+   "item": "AskToSell",
+   "quote": "\"verdict\": \"skip\",",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 188,
+   "item": "AskToSell",
+   "quote": "\"note\": \"Closer is locked. Questions-only pattern already covered by Docket.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 316,
+   "item": "MemGPT",
+   "quote": "\"note\": \"HQ catalog + CHANGELOG are the memory. Do not stand up MemGPT.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 360,
+   "item": "Zapier Central",
+   "quote": "\"note\": \"Do not connect live send. Pattern = node list in ops.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 442,
+   "item": "Beam",
+   "quote": "\"note\": \"SaaS. Do not buy from HQ.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 464,
+   "item": "Taskade",
+   "quote": "\"note\": \"Desk already has packs. No second task app from HQ.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 491,
+   "item": "Cursor",
+   "quote": "\"note\": \"Already the HQ. Do not install a second coding agent.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 509,
+   "item": "Orca",
+   "quote": "\"note\": \"Pattern only. Do not brew-install orca or stand up an ADE. Cursor is the office.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [
+    "deferred-orca"
+   ],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 514,
+   "item": "Superagent",
+   "quote": "\"verdict\": \"skip\",",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 520,
+   "item": "Superagent",
+   "quote": "\"note\": \"Cursor cloud already has a sandbox. No second runtime.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 525,
+   "item": "Open Interpreter",
+   "quote": "\"verdict\": \"skip\",",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 536,
+   "item": "Flowise",
+   "quote": "\"verdict\": \"skip\",",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 547,
+   "item": "AutoGPT",
+   "quote": "\"verdict\": \"skip\",",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 553,
+   "item": "AutoGPT",
+   "quote": "\"note\": \"Unattended autonomy is locked.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/catalog.json",
+   "line": 558,
+   "item": "ChatHelp",
+   "quote": "\"verdict\": \"skip\",",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/orchestrators.json",
+   "line": 50,
+   "item": "Orca",
+   "quote": "\"note\": \"Already the משמרת overlay. Pattern only. Do not brew-install orca.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [
+    "deferred-orca"
+   ],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/orchestrators.json",
+   "line": 60,
+   "item": "herdr",
+   "quote": "\"note\": \"Card field דופק only. Do not install a tmux multiplexer.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [
+    "candidate-herdr"
+   ],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/orchestrators.json",
+   "line": 190,
+   "item": "Crewplane",
+   "quote": "\"note\": \"Guides + checkpoint. Do not install their CLI.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/orchestrators.json",
+   "line": 230,
+   "item": "humanlayer",
+   "quote": "\"note\": \"₪ and customer WhatsApp stay human. Repo itself is largely deprecated — keep the gate, skip the install.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": true
+  },
+  {
+   "file": "packages/vfe2b/orchestrators.json",
+   "line": 266,
+   "item": "amux",
+   "quote": "\"verdict\": \"skip\",",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/orchestrators.json",
+   "line": 276,
+   "item": "OpenClaw",
+   "quote": "\"verdict\": \"skip\",",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [
+    "deferred-openclaw"
+   ],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/orchestrators.json",
+   "line": 286,
+   "item": "loki-mode",
+   "quote": "\"verdict\": \"skip\",",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/orchestrators.json",
+   "line": 296,
+   "item": "bernstein",
+   "quote": "\"verdict\": \"skip\",",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/orchestrators.json",
+   "line": 306,
+   "item": "takopi",
+   "quote": "\"verdict\": \"skip\",",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/orchestrators.json",
+   "line": 326,
+   "item": "denchclaw",
+   "quote": "\"verdict\": \"skip\",",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/orchestrators.json",
+   "line": 340,
+   "item": "Archon",
+   "quote": "\"note\": \"Patterns only (gates → אימות/decision_gate; one job folder). Do not curl|bash, Docker, or install Archon CLI. mcpmarket listing may describe old v1 agenteer — GitHub is current harness builder. Reviewed 2026-09-05.\"",
+   "class": "EVIDENCE_BACKED_BLOCKER",
+   "basis": "curl|bash",
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfe2b/ORCHESTRATORS.md",
+   "line": 17,
+   "item": null,
+   "quote": "| דופק working / blocked / idle | herdr | שדה `דופק` בכרטיס |",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 24,
+   "item": "קישורי השראה והטמעה — רישום שבועי",
+   "quote": "\"no-invented-blocked-body\",",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 157,
+   "item": "codebase-memory-mcp",
+   "quote": "\"note\": \"Pattern only. Do not install their C binary from this repo.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [
+    "candidate-intake-deusdata-codebase-memory-mcp"
+   ],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 256,
+   "item": "awesome-ai-agents",
+   "quote": "\"note\": \"Crew overlay only. No second runtime.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 272,
+   "item": "awesome-agent-orchestrators",
+   "quote": "\"note\": \"Overlay on existing vfe2b crews. Pulse/verify/artifact. No second orchestrator runtime.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 334,
+   "item": "write-better — agent skill for clear prose",
+   "quote": "\"note\": \"Embedded write-better patterns only (not asd-ste100, not npx plugin). Hebrew lint: packages/vfcopy/hq/ai-tells-he.md\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 395,
+   "item": "oh-my-claudecode — Claude Code team orchestration",
+   "quote": "\"note\": \"Pattern only (plan→exec→verify). Already in crews/run.md + orchestrators overlay. Do not install OMC.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 409,
+   "item": "ruflo — agent meta-harness / swarms",
+   "quote": "\"note\": \"Skipped install — unattended swarms in orchestrators.json skip list. vfmem/vfgraft for memory pattern only.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [
+    "deferred-ruflo"
+   ],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 455,
+   "item": "Bindu — identity, A2A, x402 for agent internet",
+   "quote": "\"note\": \"Patterns only (3-layer verify, agent cards, human gate). No bindufy, no Gateway, no x402, no second runtime. POC off-repo only.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [
+    "candidate-bindu"
+   ],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 471,
+   "item": "LobeHub — Chief Agent Operator (patterns only)",
+   "quote": "\"note\": \"Connector priority + schedule/report patterns on existing packs. No Docker install, no second runtime, no IM gateway.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [
+    "candidate-lobehub"
+   ],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 507,
+   "item": "Superset — parallel coding agent IDE (worktrees)",
+   "quote": "\"note\": \"Patterns only (lifecycle scripts, bounded fan-out). Skip as second desk. Optional Mac offload after lead seat — see vffcc/local-offload.md.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [
+    "candidate-intake-superset-sh-superset"
+   ],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 525,
+   "item": "Twenty — open-source CRM (AI / objects / MCP)",
+   "quote": "\"note\": \"Patterns only: command palette, objects/views, pipeline. No Twenty install.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [
+    "candidate-twenty"
+   ],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 798,
+   "item": "Build with Claude — plugin/skill/MCP discovery (davepoon)",
+   "quote": "\"note\": \"Patterns only. 2026-09-03: memory + architecture-audit + MCP index. 2026-09-05: proposal-drafter no-fabricate → vfsales. No Claude Code marketplace install on Cloud Agent. Repo: https://github.com/davepoon/buildwithclaude\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 819,
+   "item": "LinklyAI/best-skills — daily Top 100 agent skills rankings",
+   "quote": "\"note\": \"Bi-daily ranking scan. Patterns only — no npx skills on Cloud. State in BEST-SKILLS.json. Skill vf-best-skills. Constitution may open when durable.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 870,
+   "item": "Diagram Maker Visualizer (openclaw/diagram-maker)",
+   "quote": "\"note\": \"Patterns only into vfbriefux. Companion SVG via render_mail.py --diagram. No npx/OpenClaw install. Live mail stays MAIL.html tables.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 888,
+   "item": "Blender MCP (ahujasid) — local Blender control",
+   "quote": "\"note\": \"mcpmarket Cloudflare — body from GitHub. Cloud Agent skip. Desktop optional after lead. Concept/STL stays 3DAI. 2026-10-04: GitHub canonical repo name is now ahujasid/mcp-for-blender; existing Blender-MCP family mapping is unchange",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 905,
+   "item": "Archon — AI coding harness / workflow builder",
+   "quote": "\"note\": \"mcpmarket page may describe old v1 agenteer; GitHub is harness builder. Patterns only — no second orchestrator install.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 922,
+   "item": "Jeffallan fullstack-dev-skills — Claude Code plugin (~67 skills)",
+   "quote": "\"note\": \"Patterns only (Common Ground tiers). No /plugin install or npx skills on Cloud. Language specialists stay warehouse off-desk.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 954,
+   "item": "Blender Open MCP (Ollama)",
+   "quote": "\"note\": \"Sibling of ahujasid Blender MCP + local Ollama. Cloud skip; do not stack Desktop install without lead.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 970,
+   "item": "Blender AI MCP (market listing)",
+   "quote": "\"note\": \"Listing body blocked. Treated as Blender-MCP family sibling — Cloud skip; Desktop → BLENDER-MCP canonical. 2026-10-04: GitHub canonical repo name is now ahujasid/mcp-for-blender; existing Blender-MCP family mapping is unchanged.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1002,
+   "item": "multiCAD MCP — AutoCAD/ZWCAD/GstarCAD/BricsCAD",
+   "quote": "\"note\": \"Windows COM CAD — skip for VF print floor unless that DCC exists on Mac.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1020,
+   "item": "OpenSCAD MCP family — parametric validate/render/STL",
+   "quote": "\"note\": \"Listing body blocked; open family via GitHub CLI MCPs. Cloud skip; Desktop optional after lead + local OpenSCAD. Still vlicense + slice.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": true
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1035,
+   "item": "Blender VXAI MCP (market listing)",
+   "quote": "\"note\": \"Category blurb only — GitHub not verified. Skip install until repo identified. Same Cloud skip as Blender family.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1051,
+   "item": "SketchUp MCP",
+   "quote": "\"note\": \"Requires SketchUp + Ruby plugin. Skip unless Mac already runs SketchUp.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1068,
+   "item": "FreeCAD MCP",
+   "quote": "\"note\": \"Cloud skip. Desktop optional if FreeCAD on Mac. Does not replace 3DAI for fast concept.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1102,
+   "item": "Market Research Intelligence — decision-oriented research gates (MCP Market)",
+   "quote": "\"note\": \"Patterns only (source age, contrarian evidence, decision structure, dual-method sizing). Full SKILL.md body blocked (אין גוף). No npx install / investor-dossier default.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1132,
+   "item": "ai-copywriter — reader-first copy + Humanizer (33 AI tells)",
+   "quote": "\"note\": \"Embed COPYWRITING MODE into vfcopy/hq/reader-first-he.md; strengthen ai-tells-he.md. No npx skills add. Skip LinkedIn/strategic-blog (public site locked). Complements plannotator-write-better.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1160,
+   "item": "humanizer — AI-tell detect + rewrite (MIT)",
+   "quote": "\"note\": \"Patterns only in lint_he.py + ai-tells-he.md. No Rust binary. Complements write-better + ai-copywriter embeds.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1171,
+   "item": "VoiceStudio — local ElevenLabs alternative (TTS/ASR/dub/MCP)",
+   "quote": "\"verdict\": \"skip-install\",",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [
+    "candidate-intake-debpalash-voicestudio"
+   ],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1178,
+   "item": "VoiceStudio — local ElevenLabs alternative (TTS/ASR/dub/MCP)",
+   "quote": "\"note\": \"Patterns only. No DMG/Docker/MCP on Cloud. Floor proof > AI voice for reels. Desktop VO optional after lead + model license gate. AGPL app; upstream weights may be NC.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [
+    "candidate-intake-debpalash-voicestudio"
+   ],
+   "blocker_term_without_citation": true
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1196,
+   "item": "DeepTutor — lifelong personalized tutoring (agent-native learning)",
+   "quote": "\"note\": \"Patterns only: mastery gate, L1/L2/L3 memory, question-bank from failures, recoverable sessions. No DeepTutor Docker / EduHub install / second runtime.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1227,
+   "item": "lieflat-charts — agent skill for polished HTML data charts",
+   "quote": "\"note\": \"Patterns only: Glance default for brief slot 06, one chart = one conclusion, verified numbers only. Complements DIAGRAM-MAKER (flows). No npx skills / gallery import / MAIL.html replace.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1243,
+   "item": "academic-research-skills — research → write → review → revise → finalize",
+   "quote": "\"note\": \"CC BY-NC patterns only (human-in-the-loop, fact-check gates, integrity before claim). No Claude plugin / AI Scientist runtime / new vfacademic pack.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": true
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1259,
+   "item": "last30days-skill — people-scored multi-source research (last ~30 days)",
+   "quote": "\"note\": \"Deep embed 2026-09-05: playbook + Cursor skill for @research-synthesist / @trend-researcher. Patterns only — no npx/CLI, no X/TikTok keys on Cloud.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1277,
+   "item": "Social Media Publisher (SocialClaw-style) — validate→apply→verify publish skill",
+   "quote": "\"note\": \"mcpmarket body Cloudflare-blocked («אין גוף»). Pattern from SocialClaw skill SKILL.md: validate→apply→verify/reconcile. Embed into vfigos/SEND only. No npm socialclaw, no multi-platform blast, no API key in git.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1328,
+   "item": "social-media-skills — content/research/analytics skill patterns",
+   "quote": "\"note\": \"Patterns only: content matrix, measured scoring, reference-Reel mechanics, date-verified niche research. No second writer/runtime.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [
+    "candidate-intake-charlie947-social-media-skills"
+   ],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1343,
+   "item": "automate-for-growth — batching and feedback-loop patterns",
+   "quote": "\"note\": \"Method patterns only. No ViralWave dependency, generic virality score, mass publishing, or second scheduler.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1428,
+   "item": "no-ai-slop — named anti-slop editing patterns (MIT)",
+   "quote": "\"note\": \"Selective pattern embed only: named detector + evals + Visible Text Gate binding. No plugin install, no authorship score, no second writer.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1443,
+   "item": "cc-blender-skill — Blender craft/workflow patterns",
+   "quote": "\"note\": \"MIT workflow/craft patterns only. Do not install its orchestration/runtime beside vf-3d-router.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1458,
+   "item": "blender-skills — broad Blender craft reference library",
+   "quote": "\"note\": \"MIT reference patterns only; too broad to become a parallel production runtime.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1473,
+   "item": "ffmpeg-skill — probe/edit/check/visual-verify patterns",
+   "quote": "\"note\": \"MIT verification-loop patterns merged conceptually into vf-post-production-craft; no second media runtime.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1488,
+   "item": "davinci-resolve-mcp — post-production domain kernels",
+   "quote": "\"note\": \"MIT edit/color/conform/delivery/Fusion/audio domain patterns only; execution remains on accepted VelvetOS integrations.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": true
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1503,
+   "item": "adobe-agent-skills — After Effects craft patterns",
+   "quote": "\"note\": \"Apache-2.0 craft patterns only. Its macOS-specific execution path is not adopted on the active Windows host.\"",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  },
+  {
+   "file": "packages/vfresearch/LINKS.json",
+   "line": 1534,
+   "item": "awesome-design-patterns",
+   "quote": "{\"id\":\"awesome-design-patterns\",\"kind\":\"repo\",\"url\":\"https://github.com/DovAmir/awesome-design-patterns\",\"title\":\"awesome-design-patterns\",\"firstEmbedded\":\"2026-10-07\",\"lastReviewed\":\"2026-10-17\",\"sourceNote\":\"packages/vfresearch/sources/20",
+   "class": "EVIDENCE_FREE_VETO",
+   "basis": null,
+   "canonical_candidate_ids": [],
+   "blocker_term_without_citation": false
+  }
+ ],
+ "summary": {
+  "regex_lines_after_description_skip": 77,
+  "excluded_vocabulary_lines": 2,
+  "rows": 75,
+  "EVIDENCE_BACKED_BLOCKER": 1,
+  "EVIDENCE_FREE_VETO": 74,
+  "blocker_term_without_citation": 5,
+  "rows_with_canonical_candidate_id": 15
+ }
+}
