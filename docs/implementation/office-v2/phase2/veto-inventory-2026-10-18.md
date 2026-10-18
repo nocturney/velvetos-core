@@ -91,4 +91,4 @@ Total: 70. EVIDENCE_BACKED_BLOCKER: 0. EVIDENCE_FREE_VETO: 70. Blocker words wit
 ## Next steps (not done here)
 
 1. Owner or author cites each blocker-word veto (or drops the blocker word) so it can move to EVIDENCE_BACKED_BLOCKER.
-2. Each EVIDENCE_FREE_VETO needs a fair comparison before its disposition stands (AC4). Gemini's #595 triage covers the 61 DISCOVERED candidates.
+2. Each EVIDENCE_FREE_VETO needs a fair comparison before its disposition stands (AC4). The #595 triage of `DISCOVERED` candidates (Gemini) is the place to resolve these; this report does not change any disposition.
