@@ -379,6 +379,27 @@ def apt_ffmpeg_problems(text: str, *, path: str) -> list[str]:
     return problems
 
 
+DPKG_INSTALL = re.compile(r"\bdpkg\s+(?:-i|--install)\b")
+APT_PLAIN_INSTALL = re.compile(r"\bapt\s+install\b")
+
+
+def ffmpeg_side_install_problems(text: str, *, path: str) -> list[str]:
+    """Refuse a dpkg -i or apt install of ffmpeg beside the hashed apt-get step."""
+    problems: list[str] = []
+    blocks = job_blocks(text) or [("workflow", text)]
+    for job, block in blocks:
+        for script in run_scripts(block):
+            for command in script_commands(script):
+                if command in APT_ALLOWED_INSTALLS:
+                    continue
+                names_ffmpeg = "ffmpeg" in command or "$deb" in command
+                if DPKG_INSTALL.search(command) and names_ffmpeg:
+                    problems.append(f"{path} job {job} unexpected dpkg -i: {command}")
+                if APT_PLAIN_INSTALL.search(command) and "ffmpeg" in command:
+                    problems.append(f"{path} job {job} unexpected apt install: {command}")
+    return problems
+
+
 def float_google_install(text: str) -> str:
     """Mutation: put the pre-pin bare names back on the Google client install."""
     lines = text.splitlines(keepends=True)
@@ -412,6 +433,7 @@ def main() -> int:
         if "apt-get install" in text or "apt-get download" in text:
             apt_workflows += 1
         problems.extend(apt)
+        problems.extend(ffmpeg_side_install_problems(text, path=rel))
     if problems:
         for item in problems:
             print(f"FAIL {NAME}: {item}", file=sys.stderr)
@@ -468,6 +490,10 @@ def main() -> int:
         fail(f"pinned check-all apt step was refused: {apt_ffmpeg_problems(check_all, path='check-all.yml')}")
     if apt_ffmpeg_problems(research, path="velvetos-research.yml"):
         fail("pinned velvetos-research apt step was refused")
+    if ffmpeg_side_install_problems(check_all, path="check-all.yml"):
+        fail("pinned check-all ffmpeg install has a side path")
+    if ffmpeg_side_install_problems(research, path="velvetos-research.yml"):
+        fail("pinned velvetos-research ffmpeg install has a side path")
 
     def require_apt(label: str, mutated: str, needle: str) -> None:
         found = apt_ffmpeg_problems(mutated, path="check-all.yml")
@@ -514,6 +540,31 @@ def main() -> int:
         fail(f"floating apt ffmpeg was not caught: {floating_found}")
     if not any(APT_RUNS_ON in item for item in floating_found):
         fail(f"floating apt runner was not caught: {floating_found}")
+    dpkg_side = check_all.replace(
+        'sudo apt-get install -y "$deb"\n',
+        'sudo apt-get install -y "$deb"\n          sudo dpkg -i "$deb"\n',
+        1,
+    )
+    dpkg_found = ffmpeg_side_install_problems(dpkg_side, path="check-all.yml")
+    if not any("unexpected dpkg -i" in item for item in dpkg_found):
+        fail(f"dpkg -i ffmpeg side path was not caught: {dpkg_found}")
+    apt_side = (
+        "jobs:\n"
+        "  sample:\n"
+        "    runs-on: ubuntu-24.04\n"
+        "    steps:\n"
+        "      - name: apt side path\n"
+        "        run: sudo apt install -y ffmpeg\n"
+        "      - name: dpkg side path\n"
+        "        run: sudo dpkg -i ffmpeg_7%3a6.1.1-3ubuntu5_amd64.deb\n"
+    )
+    apt_found = ffmpeg_side_install_problems(apt_side, path="fixture.yml")
+    if not any("unexpected apt install" in item for item in apt_found):
+        fail(f"apt install ffmpeg was not caught: {apt_found}")
+    if not any("unexpected dpkg -i" in item for item in apt_found):
+        fail(f"standalone dpkg -i ffmpeg was not caught: {apt_found}")
+    if apt_ffmpeg_problems(apt_side, path="fixture.yml"):
+        fail("dpkg -i was misread as an apt-get step")
     if apt_workflows != 2:
         fail(f"expected 2 apt ffmpeg workflows, found {apt_workflows}")
 
@@ -522,7 +573,8 @@ def main() -> int:
         "bare=caught exact=pass mixed=caught npm_float=caught npm_exact=pass "
         "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught "
         f"apt_ffmpeg={apt_workflows} apt_sequence=pinned extra=caught "
-        "comment=caught digest=caught runner=caught pool=caught"
+        "comment=caught digest=caught runner=caught pool=caught "
+        "dpkg=caught apt_install=caught"
     )
     return 0
 
