@@ -154,7 +154,8 @@ class Gap6PinSplitTests(unittest.TestCase):
             "sys.stdout.write(json.dumps(dict(os.environ), sort_keys=True))\n"
         )
         source = Path(native.__file__).read_text(encoding="utf-8")
-        self.assertEqual(source.count("env=require_git_env(ENV)"), 3)
+        self.assertEqual(source.count("env=require_git_env(bound_env())"), 3)
+        self.assertNotIn("\nENV = git_subprocess_env()\n", source)
         self.assertNotIn("os.environ", source)
         poison = {
             "VF_CANARY_SECRET": "not-a-real-secret",
@@ -328,6 +329,12 @@ class Gap6PinSplitTests(unittest.TestCase):
                 "    'nosystem': env['GIT_CONFIG_NOSYSTEM'],\n"
                 "    'count': env['GIT_CONFIG_COUNT'],\n"
                 "    'exec': env['GIT_EXEC_PATH'],\n"
+                "    'home_dir': Path(env['HOME']).is_dir(),\n"
+                "    'home_gitconfig': (Path(env['HOME']) / '.gitconfig').exists(),\n"
+                "    'xdg_dir': Path(env['XDG_CONFIG_HOME']).is_dir(),\n"
+                "    'xdg_git_config': (Path(env['XDG_CONFIG_HOME']) / 'git' / 'config').exists(),\n"
+                "    'global_empty': Path(env['GIT_CONFIG_GLOBAL']).read_bytes() == b'',\n"
+                "    'exec_dir': Path(env['GIT_EXEC_PATH']).is_dir(),\n"
                 "    'rc': status.returncode,\n"
                 "    'marker': marker.is_file(),\n"
                 "    'out': out,\n"
@@ -362,17 +369,18 @@ class Gap6PinSplitTests(unittest.TestCase):
         self.assertEqual(payload["keys"], sorted(native.GIT_ENV_REQUIRED))
         self.assertNotEqual(payload["home"], str(home))
         self.assertIn("vf604-git-home-", payload["home"])
-        self.assertTrue(Path(payload["home"]).is_dir())
-        self.assertFalse((Path(payload["home"]) / ".gitconfig").exists())
+        self.assertTrue(payload["home_dir"])
+        self.assertFalse(payload["home_gitconfig"])
+        self.assertFalse(Path(payload["home"]).exists())
         self.assertNotEqual(payload["xdg"], str(xdg))
-        self.assertTrue(Path(payload["xdg"]).is_dir())
-        self.assertFalse((Path(payload["xdg"]) / "git" / "config").exists())
+        self.assertTrue(payload["xdg_dir"])
+        self.assertFalse(payload["xdg_git_config"])
         self.assertEqual(payload["nosystem"], "1")
         self.assertEqual(payload["count"], "0")
-        self.assertEqual(Path(payload["global"]).read_bytes(), b"")
+        self.assertTrue(payload["global_empty"])
         self.assertNotEqual(payload["global"], str(home / ".gitconfig"))
         self.assertNotEqual(payload["exec"], str(fake_exec))
-        self.assertTrue(Path(payload["exec"]).is_dir())
+        self.assertTrue(payload["exec_dir"])
         self.assertFalse(payload["marker"])
         self.assertNotIn("MALICIOUS_HOME_RAN", payload["out"])
         self.assertEqual(payload["rc"], 0)
