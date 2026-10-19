@@ -1,0 +1,1 @@
+- 2026-10-19 - **Package install shell indirection:** refuse ANSI-C quoted package executables, indirect executable variables, and constructed Python shell installs in workflows; prove nested shell-script word scanning is load-bearing.

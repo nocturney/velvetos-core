@@ -660,6 +660,24 @@ def _nested_scripts(words: list[str]) -> list[str]:
     return scripts
 
 
+def _opaque_nested_shell_indexes(words: list[str]) -> set[int]:
+    """Recursive shell payloads must not appear twice in the outer argv."""
+    hidden: set[int] = set()
+    for index, token in enumerate(words):
+        base = _base(_normalize_token(token))
+        if base == "eval" and index + 1 < len(words) and any(
+            char.isspace() for char in words[index + 1]
+        ):
+            hidden.add(index + 1)
+        if base in SHELLS:
+            nxt = index + 1
+            while nxt < len(words) and words[nxt].startswith("-") and not _shell_c_flag(words[nxt]):
+                nxt += 1
+            if nxt + 1 < len(words) and _shell_c_flag(words[nxt]):
+                hidden.add(nxt + 1)
+    return hidden
+
+
 def word_lists(text: str, seen: set[str] | None = None) -> list[list[str]] | None:
     """shlex words for one script and every nested -c or eval string."""
     seen = set() if seen is None else set(seen)
@@ -671,7 +689,8 @@ def word_lists(text: str, seen: set[str] | None = None) -> list[list[str]] | Non
         words = shlex.split(cleaned, posix=True)
     except ValueError:
         return None
-    lists = [_expand_words(words)]
+    hidden = _opaque_nested_shell_indexes(words)
+    lists = [_expand_words([word if index not in hidden else "" for index, word in enumerate(words)])]
     for word in words:
         for script in _substitution_scripts(word):
             nested = word_lists(script, seen)
@@ -1035,6 +1054,28 @@ def command_problems(
     return classify_pip_tail(tail, path=path, allowlist=allowlist, forms=rules.pip_forms)
 
 
+def dynamic_shell_install_problems(command: str, *, path: str) -> list[str]:
+    """Refuse package-manager executable synthesis without executing scripts."""
+    text = command.strip()
+    if not text:
+        return []
+    if "$'" in text and re.search(r"\b(?:install|add|reinstall|ci|build-dep)\b", text):
+        return [f"{path} dynamic shell package executable refused"]
+    argv = raw_argv(text)
+    if argv:
+        peeled = _peel_wrappers(argv)
+        if peeled and "$" in peeled[0] and any(
+            word.lower() in {"install", "i", "add", "reinstall", "satisfy", "ci", "build-dep"}
+            for word in peeled[1:]
+        ):
+            return [f"{path} indirect shell package executable refused"]
+    if re.search(r"\b(?:os\.system|subprocess\.(?:run|Popen|call|check_call|check_output))\s*\(", text):
+        if re.search(r"\b(?:install|pip|apt|dpkg|uv|npm|pnpm|yarn|bun)\b", text, flags=re.I):
+            if re.search(r"\s\+\s|\.join\s*\(|\.format\s*\(|f['\"]", text):
+                return [f"{path} constructed interpreter package install refused"]
+    return []
+
+
 def install_spec_problems(
     text: str,
     *,
@@ -1051,6 +1092,10 @@ def install_spec_problems(
         for command in split_commands(join_continuations(script)):
             command = strip_comment(command)
             if not command:
+                continue
+            dynamic = dynamic_shell_install_problems(command, path=path)
+            if dynamic:
+                problems.extend(dynamic)
                 continue
             installish = looks_like_install(command, active)
             classified = False
@@ -1769,6 +1814,10 @@ def ffmpeg_side_install_problems(text: str, *, path: str) -> list[str]:
                 # apt and are independently pinned by apt_ffmpeg_problems.
                 if command in {APT_FFMPEG_COMMANDS[5], APT_FFMPEG_COMMANDS[10]}:
                     continue
+                dynamic = dynamic_shell_install_problems(command, path=f"{path} job {job}")
+                if dynamic:
+                    problems.extend(dynamic)
+                    continue
                 lists = word_lists(command)
                 if lists is None:
                     if re.search(r"\b(?:apt-get|aptitude|apt|dpkg-deb|dpkg)\b", command):
@@ -2426,6 +2475,36 @@ def main() -> int:
         fail("npm install left-pad was not caught")
     if controls["allow_one"]:
         fail("allowlist override did not accept left-pad")
+
+    for label, command in (
+        ("ansi-c executable", "p$'i'p install left-pad"),
+        ("variable executable", "CMD=pip; $CMD install left-pad"),
+        ("braced variable executable", "$" + "{CMD} install left-pad"),
+        ("python dynamic exec", """python3 -c "import os; os.system('p' + 'ip install left-pad')" """),
+        ("nested ansi-c executable", """bash -c "p$'i'p install left-pad" """),
+    ):
+        sample = "jobs:\n  test:\n    runs-on: ubuntu-24.04\n    steps:\n      - run: " + command + "\n"
+        found = install_spec_problems(sample, path="fixture.yml")
+        if not any("refused" in item for item in found):
+            fail(f"{label} shell indirection was not caught: {found}")
+
+    # Without recursion the payload is opaque, so this mutant escapes.
+    nested = "bash -c 'pip install unpinned-package'"
+    nested_found = token_backstop(
+        nested, path="fixture.yml", allowlist=INSTALL_SPEC_ALLOWLIST, rules=InstallRules()
+    )
+    if not nested_found:
+        fail("nested bash payload was not caught")
+    saved_nested = _nested_scripts
+    globals()["_nested_scripts"] = lambda _words: []
+    try:
+        escaped = token_backstop(
+            nested, path="fixture.yml", allowlist=INSTALL_SPEC_ALLOWLIST, rules=InstallRules()
+        )
+    finally:
+        globals()["_nested_scripts"] = saved_nested
+    if escaped:
+        fail(f"nested shell recursion mutant was not load-bearing: {escaped}")
 
     jobs = ROOT / ".github" / "workflows" / "jobs-write-through.yml"
     mutated = float_google_install(jobs.read_text(encoding="utf-8"))
