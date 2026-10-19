@@ -238,6 +238,108 @@ def tool_env(root: Path, matrix: dict) -> dict:
     return env
 
 
+def _rev_parse_operand_errors(argv: list[str]) -> list[str]:
+    """``HEAD`` is the rev-parse operand. ``--`` would be printed back."""
+    if "rev-parse" not in argv:
+        return [f"rev-parse missing: {argv}"]
+    idx = argv.index("rev-parse")
+    if argv[idx + 1:idx + 2] != ["HEAD"]:
+        return [f"HEAD was not the rev-parse revision: {argv}"]
+    if "--" in argv:
+        return [f"rev-parse must not be given --: {argv}"]
+    return []
+
+
+def upstream_commit(repo: Path) -> str:
+    """Absolute git, a timeout, and no inherited GIT_*.
+
+    ``HEAD`` is the revision operand. ``--`` is omitted because
+    ``git rev-parse`` prints that separator.
+    """
+    from vf_spawn import SpawnRefusal, run_git
+
+    try:
+        proc = run_git(["rev-parse", "HEAD"], cwd=repo)
+    except subprocess.TimeoutExpired:
+        raise SystemExit("GIT_TIMEOUT")
+    except SpawnRefusal:
+        return ""
+    if proc.returncode != 0:
+        return ""
+    return proc.stdout.strip()
+
+
+def prove_upstream_git() -> list[str]:
+    """The text-to-cad rev-parse is ``HEAD`` with no echoed ``--``."""
+    import tempfile
+
+    import vf_spawn
+    from vf_spawn import GIT_TIMEOUT_SECONDS, SpawnRefusal, allowlisted_git_errors, run_git
+
+    errors: list[str] = []
+    previous = os.environ.get("GIT_EXEC_PATH")
+    os.environ["GIT_EXEC_PATH"] = "/evil/git-core"
+    captured: list[tuple[list[str], dict]] = []
+    original = vf_spawn.subprocess.run
+
+    def fake_run(argv, **kwargs):
+        captured.append((list(argv), kwargs))
+        return vf_spawn.subprocess.CompletedProcess(argv, 0, stdout=("a" * 40) + "\n", stderr="")
+
+    vf_spawn.subprocess.run = fake_run
+    try:
+        shown = upstream_commit(Path("/tmp/text-to-cad"))
+    finally:
+        vf_spawn.subprocess.run = original
+    if shown != "a" * 40:
+        errors.append(f"upstream commit was not returned: {shown!r}")
+    if len(captured) != 1:
+        errors.append("vf_cad rev-parse did not spawn through the pinned runner")
+    else:
+        argv, kwargs = captured[0]
+        errors.extend(allowlisted_git_errors(argv, kwargs, timeout=GIT_TIMEOUT_SECONDS))
+        errors.extend(_rev_parse_operand_errors(argv))
+        if "/evil/git-core" in str(kwargs.get("env")):
+            errors.append("GIT_EXEC_PATH reached the vf_cad child")
+    sha = ""
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            run_git(["init", "-q", "-b", "main"], cwd=repo)
+            run_git(["config", "user.email", "fixture@example.invalid"], cwd=repo)
+            run_git(["config", "user.name", "fixture"], cwd=repo)
+            (repo / "f").write_text("hi\n", encoding="utf-8")
+            run_git(["add"], user_args=["f"], cwd=repo)
+            run_git(["commit", "-qm", "c"], cwd=repo)
+            sha = upstream_commit(repo)
+    except (OSError, SpawnRefusal) as exc:
+        errors.append(f"real vf_cad rev-parse failed: {exc}")
+    finally:
+        if previous is None:
+            os.environ.pop("GIT_EXEC_PATH", None)
+        else:
+            os.environ["GIT_EXEC_PATH"] = previous
+    if len(sha) != 40:
+        errors.append(f"real vf_cad rev-parse under a poisoned GIT_EXEC_PATH was {sha!r}")
+
+    def expire(argv, **kwargs):
+        raise subprocess.TimeoutExpired(argv, timeout=kwargs.get("timeout") or 30)
+
+    vf_spawn.subprocess.run = expire
+    try:
+        upstream_commit(Path("/tmp/text-to-cad"))
+    except SystemExit as exc:
+        if str(exc) != "GIT_TIMEOUT":
+            errors.append(f"vf_cad git timeout was {exc}")
+    except subprocess.TimeoutExpired:
+        errors.append("vf_cad git timeout was not caught")
+    else:
+        errors.append("vf_cad git timeout was accepted")
+    finally:
+        vf_spawn.subprocess.run = original
+    return errors
+
+
 def doctor(_: argparse.Namespace) -> int:
     root = printlab_root()
     repo = text2cad_root(root)
@@ -261,7 +363,7 @@ def doctor(_: argparse.Namespace) -> int:
         "status": "PASS" if ok else "BLOCKED",
         "text_to_cad_root": str(repo),
         "python": str(py),
-        "upstream_commit": run(["git", "rev-parse", "HEAD"], cwd=repo).stdout.strip(),
+        "upstream_commit": upstream_commit(repo),
         "cadgen_doctor": {"returncode": cad.returncode, "stdout": cad.stdout.strip(), "stderr": cad.stderr.strip()},
         "gcode_discover": {"returncode": gcode.returncode, "stdout": gcode.stdout.strip(), "stderr": gcode.stderr.strip()},
         "slicer": slicer,

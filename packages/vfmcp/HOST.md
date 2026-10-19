@@ -101,7 +101,7 @@ export PATH="$HOME/.local/bin:$PATH"
 agy
 ```
 
-אומת 5.9.2026 (צילום): `agy` 1.1.27 ב־`/Users/chris/.local/bin/agy` = `nocturney@gmail.com (Google AI Plus)` · `Gemini 3.8 Flash (High)`. הפרומפט `>` מוכן. `ERROR: logging before google.Init` בהתקנה = רעש, לא כשל. Gemini CLI ליחידים מת. אל תעתיקו `ANTIGRAVITY_TOKEN`.
+אומת 5.9.2026 (צילום): `agy` 1.1.27 ב־`$HOME/.local/bin/agy` = `nocturney@gmail.com (Google AI Plus)` · `Gemini 3.8 Flash (High)`. הפרומפט `>` מוכן. `ERROR: logging before google.Init` בהתקנה = רעש, לא כשל. Gemini CLI ליחידים מת. אל תעתיקו `ANTIGRAVITY_TOKEN`.
 
 Codex — Sign in with ChatGPT (Plus), לא מפתח API. טרמינל שני; worker נשאר למעלה. אם `agy` פתוח: `/quit`.
 

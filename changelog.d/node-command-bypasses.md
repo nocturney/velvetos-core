@@ -1,0 +1,1 @@
+- 2026-10-19 - **Node command bypasses:** check-install-pins counts `/usr/bin/node`, `env node`, `bash -c 'node …'`, and a `- run: node` step as node. `if: false` and `continue-on-error: true` on the setup-node step or its checksum step fail the sensor. No model call.

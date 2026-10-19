@@ -33,9 +33,9 @@
     "packages/velvetos/modules/expert-3d-model.md",
     ".cursor/skills/vf-3d-router/SKILL.md",
     "packages/vfharness/state/3d-router-windows-acceptance-2026-09-27.json",
-    "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\smoke.blend",
-    "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\gate-report-dynamic.json",
-    "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\coverage-audit.json"
+    "%USERPROFILE%\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\smoke.blend",
+    "%USERPROFILE%\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\gate-report-dynamic.json",
+    "%USERPROFILE%\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\coverage-audit.json"
   ],
   "unresolved": [
     "No unresolved defect remains inside the declared digital 3D acceptance scope. Physical manufacture remains unproven/unauthorized, and the historical full check-all run was not rerun even though both of its prior failures now pass individually."

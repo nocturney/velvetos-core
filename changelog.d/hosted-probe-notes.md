@@ -1,0 +1,1 @@
+- 2026-10-18 - **Hosted gh probe:** An ambient `VF_GH_HOSTED_PROBE=1` cannot skip the hosted subprocess proof. The restore mutant is written in a temporary directory, outside `scripts/`. `GH_TOKEN` stays on the exact collector self-test command only. `security_admission` stays RED.

@@ -161,10 +161,65 @@ def compile_step(paths: list, repo: Path | None = None, base: str | None = None,
             bullets = bullets_in(text, _entry(item)[1])
         except ValueError:
             return False
-        folded = set(changelog.splitlines())
+        folded = unreleased_lines(changelog)
         if any(bullet not in folded for bullet in bullets):
             return False
     return True
+
+
+def _line_text(line: str) -> str:
+    return line.strip("\r\n")
+
+
+def _fence_marker(line: str) -> bool:
+    text = _line_text(line).lstrip()
+    return text.startswith("```") or text.startswith("~~~")
+
+
+def _section_heading(line: str) -> bool:
+    """A level-2 heading. ``###`` stays inside the Unreleased section."""
+    text = _line_text(line)
+    return text == "##" or text.startswith("## ") or text.startswith("##\t")
+
+
+def _unreleased_region(lines: list[str]) -> tuple[int, int, set[str]] | None:
+    """Header index, next heading index, and lines that count as folded.
+
+    The section ends at the next ``##`` heading outside a fence. A missing
+    Unreleased heading yields None. Bullets inside a fence are omitted.
+    """
+    texts = [_line_text(line) for line in lines]
+    try:
+        header = texts.index(UNRELEASED)
+    except ValueError:
+        return None
+    present: set[str] = set()
+    fenced = False
+    end = len(lines)
+    for index in range(header + 1, len(lines)):
+        if _fence_marker(lines[index]):
+            fenced = not fenced
+            continue
+        if fenced:
+            continue
+        if _section_heading(lines[index]):
+            end = index
+            break
+        present.add(texts[index])
+    return header, end, present
+
+
+def unreleased_lines(changelog: str) -> set[str]:
+    """Whole lines between ``## [Unreleased]`` and the next ``##`` heading.
+
+    A bullet inside a fenced code block is not folded. ``splitlines`` drops a
+    trailing CR, so a CRLF changelog still matches an LF bullet. No Unreleased
+    heading yields an empty set.
+    """
+    found = _unreleased_region(changelog.splitlines())
+    if found is None:
+        return set()
+    return found[2]
 
 
 def covered(paths: list, repo: Path | None = None, base: str | None = None, head: str | None = None) -> bool:
@@ -216,6 +271,13 @@ def gate(paths: list, repo: Path | None = None, base: str | None = None, head: s
     return 1
 
 
+def _rename_new_status(status: str, new_normal: str) -> str:
+    """A rename into a fragment or into CHANGELOG.md is an add."""
+    if new_normal == "CHANGELOG.md" or fragment_name(new_normal):
+        return "A"
+    return status[:1]
+
+
 def changed_files(base: str, head: str, repo: Path = ROOT) -> list[tuple[str, str]]:
     """Name and status. A rename of CHANGELOG.md away is a delete of that file."""
     spec = f"{git_revision(base)}...{git_revision(head)}"
@@ -238,8 +300,7 @@ def changed_files(base: str, head: str, repo: Path = ROOT) -> list[tuple[str, st
                 entries.append(("D", old))
             if status[:1] == "R" and fragment_name(old_normal) and old_normal != new_normal:
                 entries.append(("D", old))
-            added = new_normal == "CHANGELOG.md" or fragment_name(new_normal)
-            entries.append(("A" if added else status[:1], new))
+            entries.append((_rename_new_status(status, new_normal), new))
             continue
         entries.append((status, parts[-1]))
     return entries
@@ -294,16 +355,12 @@ def validate_committed(root: Path = ROOT) -> int:
 
 def fold(changelog: str, bullets: list[str]) -> str:
     """Insert missing bullets under Unreleased. Leave every other byte in place."""
-    if UNRELEASED not in changelog.splitlines():
-        raise ValueError("CHANGELOG.md is missing ## [Unreleased]")
     lines = changelog.splitlines(keepends=True)
-    header = next(i for i, line in enumerate(lines) if line.strip("\r\n") == UNRELEASED)
-    nxt = next(
-        (i for i in range(header + 1, len(lines)) if lines[i].startswith("## [")),
-        len(lines),
-    )
+    found = _unreleased_region(lines)
+    if found is None:
+        raise ValueError("CHANGELOG.md is missing ## [Unreleased]")
+    header, nxt, present = found
     section = lines[header + 1:nxt]
-    present = {line.strip("\r\n") for line in section}
     fresh = []
     for bullet in bullets:
         if bullet in present or bullet in fresh:
@@ -425,16 +482,42 @@ def prove_git_hygiene() -> list[str]:
             ("newline", "rev\nmore"),
             ("nul", "rev\x00more"),
             ("cr", "rev\rmore"),
+            ("leading newline", "\nrev"),
+            ("leading nul", "\x00rev"),
+            ("leading cr", "\rrev"),
+            ("bare newline", "\n"),
+            ("bare cr", "\r"),
+            ("bare nul", "\x00"),
         ):
-            try:
-                changed_files(token, "b", ROOT)
-            except SpawnRefusal as exc:
-                if str(exc) != "GIT_REV_REFUSED":
-                    errors.append(f"{label} revision refused as {exc}")
-            else:
-                errors.append(f"{label} revision was accepted")
+            for slot, caller in (
+                ("base", lambda token=token: changed_files(token, "b", ROOT)),
+                ("head", lambda token=token: changed_files("b", token, ROOT)),
+            ):
+                try:
+                    caller()
+                except SpawnRefusal as exc:
+                    if str(exc) != "GIT_REV_REFUSED":
+                        errors.append(f"{label} {slot} revision refused as {exc}")
+                else:
+                    errors.append(f"{label} {slot} revision was accepted")
         if len(captured) != before:
             errors.append("control-byte revision spawned git")
+        held = len(captured)
+        for label, caller, code in (
+            ("empty argv", lambda: run_git([""]), "GIT_ARGV_REFUSED"),
+            ("non-string argv", lambda: run_git(["status", None]), "GIT_ARGV_REFUSED"),
+            ("empty user arg", lambda: run_git(["status"], user_args=[""]), "GIT_USER_ARG_REFUSED"),
+            ("non-string user arg", lambda: run_git(["status"], user_args=[None]), "GIT_USER_ARG_REFUSED"),
+        ):
+            try:
+                caller()
+            except SpawnRefusal as exc:
+                if str(exc) != code:
+                    errors.append(f"{label} refused as {exc}")
+            else:
+                errors.append(f"{label} was accepted")
+        if len(captured) != held:
+            errors.append("refused git argv spawned git")
     except (SpawnRefusal, SystemExit) as exc:
         errors.append(f"git spawn refused: {exc}")
     finally:
@@ -737,6 +820,8 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
         (gate([("M", "CHANGELOG.md", "## [Unreleased]\n\n- 2026-10-18 - **Theirs:** stays.\n"), ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Theirs:** stays.\n")]) == 0, "the compile step may delete a fragment whose bullet is in CHANGELOG.md"),
         (gate([("M", "CHANGELOG.md", "## [Unreleased]\n\n- 2026-10-18 - **Unrelated:** other.\n"), ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Theirs:** stays.\n")]) == 1, "the compile step refuses a deleted bullet that was not folded"),
         (gate([("M", "CHANGELOG.md", "## [Unreleased]\n\n- 2026-10-18 - **Theirs:** stays. extra words.\n"), ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Theirs:** stays.\n")]) == 1, "a longer changelog line is not a folded bullet"),
+        (gate([("M", "CHANGELOG.md", "## [Unreleased]\n\n- 2026-10-18 - **Other:** stays.\n\n## [1.0.0]\n\n- 2026-10-18 - **Theirs:** stays.\n"), ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Theirs:** stays.\n")]) == 1, "a bullet only in a released section is not folded"),
+        (gate([("M", "CHANGELOG.md", "## [Unreleased]\r\n\r\n- 2026-10-18 - **Theirs:** stays.\r\n\r\n## [1.0.0]\r\n\r\n"), ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Theirs:** stays.\n")]) == 0, "a CRLF Unreleased line still matches the folded bullet"),
         (gate([("M", "changelog.d/someone-else.md", "- 2026-10-18 - **Replacement:** erases theirs.\n"), ("M", "scripts/check-all.py")]) == 1, "overwriting an existing fragment must not cover a capability PR"),
         (gate([("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Theirs:** stays.\n")]) == 1, "deleting a fragment without folding it into CHANGELOG.md must fail"),
         (gate([("M", "CHANGELOG.md", "## [Unreleased]\n\n- 2026-10-18 - **Theirs:** stays.\n"), ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Theirs:** stays.\n"), ("M", "docs/NOTE.md")]) == 1, "a docs edit beside a fragment deletion is not the compile step"),
@@ -761,6 +846,106 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
         (once.count("- 2026-10-18 - **Example:** one line.") == 1, "fold duplicated a bullet"),
         ("- 2026-10-01 - **Kept:** stays." in once, "fold dropped an existing Unreleased bullet"),
     ])
+    notes_log = (
+        "## [Unreleased]\n\n- 2026-10-01 - **Kept:** stays.\n\n"
+        "## Notes\n\n- 2026-10-18 - **Theirs:** stays.\n\n"
+        "## [1.0.0]\n\n- released line must stay byte for byte.\n"
+    )
+    folded_notes = fold(notes_log, ["- 2026-10-18 - **Theirs:** stays."])
+    fenced_log = (
+        "## [Unreleased]\n\n```\n- 2026-10-18 - **Theirs:** stays.\n```\n\n"
+        "## [1.0.0]\n\n- released line must stay byte for byte.\n"
+    )
+    folded_fence = fold(fenced_log, ["- 2026-10-18 - **Theirs:** stays."])
+    probes.extend([
+        (notes_log.split("## Notes\n", 1)[1] == folded_notes.split("## Notes\n", 1)[1], "fold rewrote the section after a plain heading"),
+        ("- 2026-10-18 - **Theirs:** stays." in folded_notes.split("## Notes\n", 1)[0], "fold treated a later heading's bullet as already present"),
+        (fenced_log.split("```\n", 1)[1] == folded_fence.split("```\n", 1)[1], "fold rewrote a fenced bullet"),
+        (folded_fence.split("```\n", 1)[0].count("- 2026-10-18 - **Theirs:** stays.") == 1, "fold treated a fenced bullet as already present"),
+    ])
+    bullet = "- 2026-10-18 - **Theirs:** stays.\n"
+    deleted = ("D", "changelog.d/someone-else.md", bullet)
+    no_heading = [("M", "CHANGELOG.md", "intro\n\n" + bullet), deleted]
+    plain_heading = [("M", "CHANGELOG.md", "## [Unreleased]\n\n- 2026-10-18 - **Other:** stays.\n\n## Notes\n\n" + bullet), deleted]
+    fenced_bullet = [("M", "CHANGELOG.md", "## [Unreleased]\n\n```\n" + bullet + "```\n\n- 2026-10-18 - **Other:** stays.\n"), deleted]
+    after_fence = [
+        ("M", "CHANGELOG.md", "## [Unreleased]\n\n```\n## Notes\n" + bullet + "```\n\n- 2026-10-18 - **Other:** stays.\n"),
+        ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Other:** stays.\n"),
+    ]
+    subsection = [("M", "CHANGELOG.md", "## [Unreleased]\n\n### Notes\n\n" + bullet), deleted]
+    probes.extend([
+        (gate(no_heading) == 1, "a changelog with no Unreleased heading must refuse"),
+        (unreleased_lines("intro\n\n" + bullet) == set(), "missing Unreleased did not yield an empty fold"),
+        (gate(plain_heading) == 1, "a bullet under a later heading is not folded"),
+        (gate(fenced_bullet) == 1, "a bullet inside a code fence is not folded"),
+        (gate(after_fence) == 0, "a heading inside a code fence ended the fold"),
+        (gate(subsection) == 0, "a level-3 heading ended the fold"),
+    ])
+    released_only = [
+        ("M", "CHANGELOG.md", "## [Unreleased]\n\n- 2026-10-18 - **Other:** stays.\n\n## [1.0.0]\n\n- 2026-10-18 - **Theirs:** stays.\n"),
+        ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Theirs:** stays.\n"),
+    ]
+    saved_lines = unreleased_lines
+    globals()["unreleased_lines"] = lambda changelog: set(changelog.splitlines())
+    try:
+        probes.append((
+            gate(released_only) == 0,
+            "whole-file membership still refused a released bullet",
+        ))
+    finally:
+        globals()["unreleased_lines"] = saved_lines
+
+    def _texts(rows: list[str]) -> list[str]:
+        return [line.strip("\r\n") for line in rows]
+
+    def _region_missing_is_whole_file(rows: list[str]) -> tuple[int, int, set[str]] | None:
+        texts = _texts(rows)
+        if UNRELEASED not in texts:
+            return 0, len(rows), set(texts)
+        return saved_region(rows)
+
+    def _region_bracket_only(rows: list[str]) -> tuple[int, int, set[str]] | None:
+        texts = _texts(rows)
+        try:
+            header = texts.index(UNRELEASED)
+        except ValueError:
+            return None
+        present: set[str] = set()
+        end = len(rows)
+        for index in range(header + 1, len(rows)):
+            if texts[index].startswith("## ["):
+                end = index
+                break
+            present.add(texts[index])
+        return header, end, present
+
+    def _region_keep_fences(rows: list[str]) -> tuple[int, int, set[str]] | None:
+        texts = _texts(rows)
+        try:
+            header = texts.index(UNRELEASED)
+        except ValueError:
+            return None
+        present: set[str] = set()
+        end = len(rows)
+        for index in range(header + 1, len(rows)):
+            if texts[index] == "##" or texts[index].startswith("## ") or texts[index].startswith("##\t"):
+                end = index
+                break
+            present.add(texts[index])
+        return header, end, present
+
+    saved_region = _unreleased_region
+    mutants = (
+        (_region_missing_is_whole_file, no_heading, "missing Unreleased still refused the folded bullet"),
+        (_region_bracket_only, plain_heading, "a plain heading still ended the fold"),
+        (_region_keep_fences, fenced_bullet, "a fenced bullet was still ignored"),
+    )
+    for mutant, sample_paths, message in mutants:
+        globals()["_unreleased_region"] = mutant
+        try:
+            probes.append((gate(sample_paths) == 0, message))
+        finally:
+            globals()["_unreleased_region"] = saved_region
     negative_cases = _negative_checks(bad)
     git_errors = git_fixture()
     probes.append((not git_errors, "git fixture"))
@@ -906,8 +1091,51 @@ def git_fixture() -> list[str]:
         normalized = [(status, path.replace("\\", "/")) for status, path in renamed]
         if ("D", "changelog.d/someone-else.md") not in normalized:
             errors.append(f"renaming a fragment must be a deletion: {renamed}")
+        if ("A", "changelog.d/mine.md") not in normalized:
+            errors.append(f"the new side of a fragment rename must be an add: {renamed}")
+        if any(status[:1] == "R" and path.replace("\\", "/") == "changelog.d/mine.md" for status, path in renamed):
+            errors.append(f"the new side of a fragment rename kept status R: {renamed}")
         if gate(renamed, repo, parent, head) != 1:
             errors.append("renaming a fragment must not cover a capability PR")
+        rename_parent, rename_head = parent, head
+        saved_status = _rename_new_status
+        globals()["_rename_new_status"] = lambda status, _new: status[:1]
+        try:
+            mutated = [
+                (status, path.replace("\\", "/"))
+                for status, path in changed_files(rename_parent, rename_head, repo)
+            ]
+            if ("R", "changelog.d/mine.md") not in mutated or ("A", "changelog.d/mine.md") in mutated:
+                errors.append(
+                    f"keeping rename status did not leave the new fragment path as R: {mutated}"
+                )
+        finally:
+            globals()["_rename_new_status"] = saved_status
+
+        git(repo, "reset", "--hard", parent)
+        (repo / "docs").mkdir(exist_ok=True)
+        (repo / "docs" / "plain.md").write_text("not a bullet\n", encoding="utf-8")
+        doc_parent = commit_from_parent("add a plain doc")
+        git(repo, "mv", "docs/plain.md", "changelog.d/from-doc.md")
+        (repo / "scripts" / "tool.py").write_text("print(10)\n", encoding="utf-8")
+        head = commit_from_parent("rename a doc into a fragment")
+        raw = run_git(
+            ["diff", "--name-status", "--find-renames"],
+            revisions=[f"{doc_parent}...{head}"],
+            cwd=repo,
+            check=True,
+        )
+        if not any(
+            line.split("\t")[0][:1] == "R" and "docs/plain.md" in line
+            for line in raw.stdout.splitlines()
+        ):
+            errors.append(f"fixture did not produce a doc-to-fragment rename: {raw.stdout!r}")
+        moved = [
+            (status, path.replace("\\", "/"))
+            for status, path in changed_files(doc_parent, head, repo)
+        ]
+        if ("A", "changelog.d/from-doc.md") not in moved:
+            errors.append(f"renaming a non-fragment into a fragment must be an add: {moved}")
 
         git(repo, "reset", "--hard", parent)
         (repo / "scripts" / "tool.py").write_text("print(9)\n", encoding="utf-8")

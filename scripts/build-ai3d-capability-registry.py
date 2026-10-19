@@ -1657,7 +1657,7 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
             entry["license_lane"] = "review-required"
             entry["license"]["code_license"] = "AGPL-3.0"
             entry["license"]["license_source"] = (
-                "runtime:C:/Users/Chris/Documents/VelvetPrintLab/tools/"
+                "runtime:%USERPROFILE%/Documents/VelvetPrintLab/tools/"
                 "OrcaSlicer-2.4.2/LICENSE.txt"
             )
             entry["license"]["bundle_policy"] = (
@@ -1737,7 +1737,7 @@ def build(repo_root: Path, creative_path: Path, blender_path: Path, station_path
         entry["license_lane"] = "review-required"
         entry["license"]["code_license"] = "AGPL-3.0"
         entry["license"]["license_source"] = (
-            "runtime:C:/Users/Chris/Documents/VelvetPrintLab/"
+            "runtime:%USERPROFILE%/Documents/VelvetPrintLab/"
             "tools/OrcaSlicer-2.4.2/LICENSE.txt"
         )
         entry["license"]["bundle_policy"] = (

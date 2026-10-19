@@ -9,12 +9,17 @@ predeclared Stage 2 shadow exit criteria.
 from __future__ import annotations
 
 import argparse
+import contextlib
+import inspect
 import json
 import os
 import re
+import secrets
 import shutil
 import subprocess
 import sys
+import tempfile
+import time
 
 import vf_subprocess_hygiene as hygiene
 from datetime import datetime, timezone
@@ -78,20 +83,374 @@ def _expose_gh_apart_from_git(source: str, directory: Path) -> None:
     dest.chmod(dest.stat().st_mode | 0o755)
 
 
+def _delete_tree(path: Path) -> None:
+    """Remove a tree. Windows can keep a just-run ``gh.exe`` locked for a moment."""
+    for attempt in range(8):
+        try:
+            shutil.rmtree(path)
+            return
+        except PermissionError:
+            if attempt == 7 or not path.exists():
+                raise
+            time.sleep(0.5)
+
+
+def prove_delete_tree_retries_locked_copy() -> None:
+    """A locked first delete must be retried. The tree must not stay in the repo."""
+    target = Path(tempfile.mkdtemp(prefix="vf-gh-git-retry-", dir=ROOT))
+    (target / "gh.exe").write_bytes(b"not-a-real-binary")
+    locked = {"left": 2}
+    real_rmtree = shutil.rmtree
+
+    def flaky(path, **kwargs):
+        if locked["left"] and Path(path) == target:
+            locked["left"] -= 1
+            raise PermissionError("locked")
+        return real_rmtree(path, **kwargs)
+
+    shutil.rmtree = flaky
+    try:
+        _delete_tree(target)
+    finally:
+        shutil.rmtree = real_rmtree
+        if target.exists():
+            real_rmtree(target)
+    if locked["left"] != 0:
+        raise AssertionError("delete did not retry a locked gh.exe copy")
+    if target.exists():
+        raise AssertionError("locked tree was not removed")
+
+
+class GhUnavailable(RuntimeError):
+    """Local gh cannot authenticate or reach GitHub. A missing git is not this skip."""
+
+    def __init__(self, code: str = "SKIP_GH_UNAVAILABLE") -> None:
+        super().__init__(code)
+        self.code = code
+
+
+LOUD_SKIP = (
+    "LOUD SKIP_GH_UNAVAILABLE: live gh repo view was not proven (auth or network). "
+    "gh availability was decided before the missing-git probe. "
+    "A git-missing failure is not this skip."
+)
+
+_AUTH_OR_NETWORK = (
+    "gh auth login",
+    "authentication",
+    "unauthorized",
+    "bad credentials",
+    "invalid token",
+    "could not resolve",
+    "connection refused",
+    "error connecting",
+    "network",
+    "timed out",
+    "timeout",
+    "tls",
+    "temporary failure",
+    "no such host",
+    "dial tcp",
+)
+
+
+def _is_git_missing(text: str) -> bool:
+    return "unable to find git executable" in text.lower()
+
+
+def _auth_or_network(text: str) -> bool:
+    if _is_git_missing(text):
+        return False
+    lowered = text.lower()
+    return any(signature in lowered for signature in _AUTH_OR_NETWORK)
+
+
+def hosted_ci() -> bool:
+    return os.environ.get("GITHUB_ACTIONS") == "true"
+
+
+def gh_without_git_probe_allowed() -> bool:
+    """The strict missing-git probe runs only after gh can authenticate.
+
+    Unauthenticated ``gh repo view`` reports ``gh auth login`` before it looks
+    for git. Hosted CI with no credentials fails closed instead of skipping.
+    """
+    present = gh_credentials_present()
+    if hosted_ci():
+        if not present:
+            raise RuntimeError("hosted CI has no gh credentials")
+        return True
+    return present
+
+
+def gh_credentials_present() -> bool:
+    if (os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN") or "").strip():
+        return True
+    try:
+        proc = hygiene.run_pinned(
+            "gh",
+            ["auth", "status"],
+            cwd=ROOT,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            capture_output=True,
+            timeout=10,
+            extra_keys=hygiene.GH_CONFIG_ENV_KEYS,
+        )
+    except (hygiene.HygieneError, subprocess.TimeoutExpired, OSError):
+        return False
+    return proc.returncode == 0
+
+
+def resolve_repo_slug() -> str:
+    """Live gh repo view.
+
+    A local machine with no gh auth, or a gh call that cannot reach GitHub,
+    raises GhUnavailable. A missing git executable is never that skip.
+    Hosted CI never skips: the same failure stays red.
+    """
+    if not hosted_ci() and not gh_credentials_present():
+        raise GhUnavailable("SKIP_GH_UNAVAILABLE")
+    try:
+        return repo_slug()
+    except (RuntimeError, subprocess.TimeoutExpired, hygiene.HygieneError, OSError) as exc:
+        detail = str(exc)
+        if hosted_ci() or not _auth_or_network(detail):
+            raise
+        raise GhUnavailable("SKIP_GH_UNAVAILABLE") from exc
+
+
+@contextlib.contextmanager
+def _without_gh_auth():
+    keys = (
+        "GH_TOKEN",
+        "GITHUB_TOKEN",
+        "GH_CONFIG_DIR",
+        "XDG_CONFIG_HOME",
+        "HOME",
+        "USERPROFILE",
+        "AppData",
+        "APPDATA",
+        "LOCALAPPDATA",
+        "GITHUB_ACTIONS",
+    )
+    previous = {key: os.environ.get(key) for key in keys}
+    empty = tempfile.mkdtemp(prefix="vf-gh-unauth-")
+    try:
+        os.environ.pop("GH_TOKEN", None)
+        os.environ.pop("GITHUB_TOKEN", None)
+        os.environ.pop("GITHUB_ACTIONS", None)
+        for key in (
+            "GH_CONFIG_DIR",
+            "XDG_CONFIG_HOME",
+            "HOME",
+            "USERPROFILE",
+            "AppData",
+            "APPDATA",
+            "LOCALAPPDATA",
+        ):
+            os.environ[key] = empty
+        yield
+    finally:
+        for key, value in previous.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+        shutil.rmtree(empty, ignore_errors=True)
+
+
+def _restore_scoped_env(previous: dict[str, str | None]) -> None:
+    for key, value in previous.items():
+        if value is None:
+            os.environ.pop(key, None)
+        else:
+            os.environ[key] = value
+
+
+@contextlib.contextmanager
+def _scoped_env(updates: dict[str, str | None]):
+    """Apply env updates for one assertion and put every key back."""
+    previous = {key: os.environ.get(key) for key in updates}
+    try:
+        for key, value in updates.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+        yield
+    finally:
+        _restore_scoped_env(previous)
+
+
+def prove_gh_unavailable_codes() -> None:
+    """Local unauthenticated or offline gh skips. Hosted CI with the same failure stays red."""
+    hosted_before = os.environ.get("GITHUB_ACTIONS")
+    original_slug = repo_slug
+    original_creds = gh_credentials_present
+
+    def refuse_slug() -> str:
+        raise AssertionError("repo_slug called without credentials")
+
+    def offline_slug() -> str:
+        raise RuntimeError("connection refused")
+
+    try:
+        globals()["repo_slug"] = refuse_slug
+        globals()["gh_credentials_present"] = lambda: False
+        with _without_gh_auth():
+            try:
+                resolve_repo_slug()
+            except GhUnavailable as exc:
+                if exc.code != "SKIP_GH_UNAVAILABLE":
+                    raise AssertionError(f"local skip code {exc.code}")
+            else:
+                raise AssertionError("unauthenticated local gh must skip")
+
+        globals()["repo_slug"] = offline_slug
+        globals()["gh_credentials_present"] = lambda: True
+        with _without_gh_auth():
+            try:
+                resolve_repo_slug()
+            except GhUnavailable as exc:
+                if exc.code != "SKIP_GH_UNAVAILABLE":
+                    raise AssertionError(f"offline skip code {exc.code}")
+            else:
+                raise AssertionError("offline local gh must skip")
+            os.environ["GITHUB_ACTIONS"] = "true"
+            try:
+                resolve_repo_slug()
+            except GhUnavailable:
+                raise AssertionError("hosted CI must not skip an unavailable gh read")
+            except RuntimeError as exc:
+                if "connection refused" not in str(exc):
+                    raise
+            else:
+                raise AssertionError("hosted CI accepted an unavailable gh read")
+
+        def missing_git() -> str:
+            raise RuntimeError(
+                "unable to find git executable in PATH; authentication failed"
+            )
+
+        globals()["repo_slug"] = missing_git
+        globals()["gh_credentials_present"] = lambda: True
+        with _without_gh_auth():
+            try:
+                resolve_repo_slug()
+            except GhUnavailable:
+                raise AssertionError("git-missing must not be SKIP_GH_UNAVAILABLE")
+            except RuntimeError as exc:
+                if not _is_git_missing(str(exc)):
+                    raise
+            else:
+                raise AssertionError("git-missing was accepted")
+
+        split_source = inspect.getsource(prove_split_gh_git_repo_slug)
+        if (
+            "path_suffix=()" not in split_source
+            or "not _is_git_missing(bare_text)" not in split_source
+            or "prove_unauthenticated_gh_git(" not in split_source
+            or "gh_without_git_probe_allowed()" not in split_source
+        ):
+            raise AssertionError("offline gh-without-git check is missing")
+
+        globals()["gh_credentials_present"] = lambda: False
+        with _scoped_env({"GITHUB_ACTIONS": None}):
+            if gh_without_git_probe_allowed():
+                raise AssertionError("unauthenticated local gh ran the git-missing probe")
+        with _scoped_env({"GITHUB_ACTIONS": "true"}):
+            try:
+                gh_without_git_probe_allowed()
+            except RuntimeError as exc:
+                if "hosted CI has no gh credentials" not in str(exc):
+                    raise
+            else:
+                raise AssertionError("hosted CI skipped the gh read without credentials")
+        globals()["gh_credentials_present"] = lambda: True
+        with _scoped_env({"GITHUB_ACTIONS": None}):
+            if not gh_without_git_probe_allowed():
+                raise AssertionError("authenticated gh skipped the git-missing probe")
+    finally:
+        globals()["repo_slug"] = original_slug
+        globals()["gh_credentials_present"] = original_creds
+        if os.environ.get("GITHUB_ACTIONS") != hosted_before:
+            raise AssertionError("GITHUB_ACTIONS leaked from the gh self-test")
+
+
+def _gh_view_text(proc: subprocess.CompletedProcess) -> str:
+    return f"{proc.stderr or ''}\n{proc.stdout or ''}"
+
+
+def _run_gh_repo_view(
+    executable: str | None,
+    *,
+    path_suffix: tuple[str, ...] = (),
+    timeout: int = 60,
+) -> subprocess.CompletedProcess:
+    args = ["repo", "view", "--json", "nameWithOwner"]
+    common = dict(
+        cwd=ROOT,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        capture_output=True,
+        extra_keys=hygiene.GH_CONFIG_ENV_KEYS,
+    )
+    if executable is None:
+        return hygiene.run_pinned("gh", args, timeout=timeout, **common)
+    return hygiene.run_absolute(
+        executable,
+        args,
+        timeout=timeout,
+        path_suffix=path_suffix,
+        **common,
+    )
+
+
+def prove_unauthenticated_gh_git(copied: str) -> None:
+    """Real gh with credentials removed, once without git and once with it.
+
+    gh reports auth before a missing git, so neither case is a suite failure.
+    A successful repo view, or a with-git run that still says git is missing,
+    is a failure. Hosted CI does not use this result as a skip.
+    """
+    with _without_gh_auth():
+        if gh_credentials_present() or hosted_ci():
+            raise AssertionError("unauthenticated gh fixture still has credentials or hosted CI")
+        bare = _run_gh_repo_view(copied, path_suffix=(), timeout=20)
+        bare_text = _gh_view_text(bare)
+        if bare.returncode == 0:
+            raise AssertionError("unauthenticated gh without git succeeded")
+        if not (_is_git_missing(bare_text) or _auth_or_network(bare_text)):
+            raise AssertionError(
+                "unauthenticated no-git gh reported neither auth nor a missing git"
+            )
+        pinned = _run_gh_repo_view(None, timeout=20)
+        pinned_text = _gh_view_text(pinned)
+        if _is_git_missing(pinned_text):
+            raise AssertionError("unauthenticated gh with git on PATH reported git missing")
+        if pinned.returncode == 0 or not _auth_or_network(pinned_text):
+            raise AssertionError("unauthenticated gh with git did not report auth or network")
+
+
 def prove_split_gh_git_repo_slug() -> str:
     """Real gh and real git, in different directories, still resolve the slug.
 
     The allowlisted PATH used to be only gh's directory. `gh repo view` then
     cannot find git when the two binaries do not share a directory.
+    The copy lives in the workspace because a noexec temp mount would refuse
+    it, and Path.resolve() would expand Windows 8.3 names. Cleanup retries:
+    Windows denies unlink while that ``gh.exe`` is still locked.
     """
-    import tempfile
-
     gh_bin = hygiene.pin_which("gh")
     git_bin = hygiene.pin_which("git")
     git_dir = hygiene.executable_directory(git_bin)
     # The workspace filesystem is executable. A noexec temp mount would refuse
     # the copied gh, and Path.resolve() would expand Windows 8.3 names.
-    with tempfile.TemporaryDirectory(prefix="vf-gh-git-", dir=ROOT) as tmp:
+    tmp = tempfile.mkdtemp(prefix="vf-gh-git-", dir=ROOT)
+    try:
         gh_dir = Path(tmp) / "gh-bin"
         gh_dir.mkdir()
         try:
@@ -108,18 +467,59 @@ def prove_split_gh_git_repo_slug() -> str:
                     raise AssertionError("gh and git were not placed in separate directories")
                 if not hygiene.paths_match(hygiene.executable_directory(found_git), git_dir):
                     raise AssertionError("git was not the real binary")
-                slug = repo_slug()
+                copied = gh_dir / ("gh.exe" if os.name == "nt" else "gh")
+                prove_unauthenticated_gh_git(str(copied))
+                if not gh_without_git_probe_allowed():
+                    raise GhUnavailable("SKIP_GH_UNAVAILABLE")
+                bare = _run_gh_repo_view(str(copied), path_suffix=())
+                bare_text = _gh_view_text(bare)
+                if bare.returncode == 0 or not _is_git_missing(bare_text):
+                    raise AssertionError(
+                        "copied gh without git on PATH did not report a missing git executable"
+                    )
+                try:
+                    proc = hygiene.run_pinned(
+                        "gh",
+                        ["repo", "view", "--json", "nameWithOwner"],
+                        timeout=60,
+                        extra_keys=hygiene.GH_CONFIG_ENV_KEYS,
+                        cwd=ROOT,
+                        text=True,
+                        encoding="utf-8",
+                        errors="replace",
+                        capture_output=True,
+                    )
+                except (RuntimeError, subprocess.TimeoutExpired, hygiene.HygieneError, OSError) as exc:
+                    if _is_git_missing(str(exc)):
+                        raise AssertionError("run_pinned hid git from gh") from exc
+                    if hosted_ci() or not _auth_or_network(str(exc)):
+                        raise
+                    raise GhUnavailable("SKIP_GH_UNAVAILABLE") from exc
+                pinned_text = f"{proc.stderr or ''}\n{proc.stdout or ''}"
+                if _is_git_missing(pinned_text):
+                    raise AssertionError("run_pinned hid git from gh")
+                if proc.returncode != 0:
+                    if hosted_ci() or not _auth_or_network(pinned_text):
+                        detail = pinned_text.strip() or f"gh repo view rc={proc.returncode}"
+                        raise RuntimeError(detail)
+                    raise GhUnavailable("SKIP_GH_UNAVAILABLE")
+                data = json.loads(proc.stdout)
+                slug = str(data.get("nameWithOwner") or "").strip()
             finally:
                 if previous is None:
                     os.environ.pop("PATH", None)
                 else:
                     os.environ["PATH"] = previous
+        except GhUnavailable:
+            raise
         except SystemExit:
             raise
         except Exception as exc:
             detail = " ".join(str(exc).split())[:240]
             sys.stderr.write(f"SPLIT_GH_GIT_FAIL {type(exc).__name__}: {detail}\n")
             raise SystemExit(1) from None
+    finally:
+        _delete_tree(Path(tmp))
     if slug != "nocturney/velvetos-core":
         sys.stderr.write(f"SPLIT_GH_GIT_FAIL slug {slug!r}\n")
         raise SystemExit(1)
@@ -539,7 +939,226 @@ def collect(limit: int, classifications_path: Path | None, recoveries_path: Path
     }
 
 
+def _child_hosted_probe(argv: list[str] | None = None) -> bool:
+    """True only when this process was spawned with a one-time probe sentinel.
+
+    The literal ``VF_GH_HOSTED_PROBE=1`` is not that sentinel. An ambient
+    setting of it must not skip the hosted subprocess proof.
+    """
+    argv = sys.argv if argv is None else argv
+    flag = "--hosted-probe-sentinel"
+    if flag not in argv:
+        return False
+    index = argv.index(flag) + 1
+    if index >= len(argv):
+        return False
+    sentinel = argv[index]
+    if len(sentinel) < 32 or sentinel == "1":
+        return False
+    return os.environ.get("VF_GH_HOSTED_PROBE") == sentinel
+
+
+def _refuse_ambient_hosted_probe() -> int | None:
+    if os.environ.get("VF_GH_HOSTED_PROBE") and not _child_hosted_probe():
+        sys.stderr.write("SPLIT_GH_GIT_FAIL ambient VF_GH_HOSTED_PROBE\n")
+        return 1
+    return None
+
+
+def _hosted_probe_env(empty: str, *, token: str | None, sentinel: str) -> dict[str, str]:
+    """Child env for a hosted fail-closed proof. The parent os.environ stays put."""
+    env = os.environ.copy()
+    env["GITHUB_ACTIONS"] = "true"
+    env["VF_GH_HOSTED_PROBE"] = sentinel
+    env.pop("GH_TOKEN", None)
+    env.pop("GITHUB_TOKEN", None)
+    for key in (
+        "GH_CONFIG_DIR",
+        "XDG_CONFIG_HOME",
+        "HOME",
+        "USERPROFILE",
+        "AppData",
+        "APPDATA",
+        "LOCALAPPDATA",
+    ):
+        env[key] = empty
+    if token is not None:
+        env["GH_TOKEN"] = token
+    return env
+
+
+def _hosted_fail_closed(proc: subprocess.CompletedProcess) -> bool:
+    text = f"{proc.stdout or ''}\n{proc.stderr or ''}"
+    if "gh_live=SKIP_GH_UNAVAILABLE" in text:
+        return False
+    return proc.returncode == 1 and "SPLIT_GH_GIT_FAIL" in text
+
+
+def _require_hosted_fail_closed(proc: subprocess.CompletedProcess, label: str) -> None:
+    if _hosted_fail_closed(proc):
+        return
+    tail = f"{proc.stdout or ''}\n{proc.stderr or ''}"[-400:]
+    raise AssertionError(f"{label} did not fail closed rc={proc.returncode} {tail}")
+
+
+def _run_hosted_self_test(
+    env: dict[str, str],
+    script: Path,
+    sentinel: str | None,
+    timeout: int = 45,
+) -> subprocess.CompletedProcess:
+    command = [sys.executable, str(script), "--self-test"]
+    if sentinel is not None:
+        command.extend(["--hosted-probe-sentinel", sentinel])
+    child_env = dict(env)
+    scripts = str(ROOT / "scripts")
+    prior = child_env.get("PYTHONPATH")
+    child_env["PYTHONPATH"] = scripts if not prior else scripts + os.pathsep + prior
+    return subprocess.run(
+        command,
+        cwd=ROOT,
+        env=child_env,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        capture_output=True,
+        timeout=timeout,
+    )
+
+
+def _restore_mutant_location(script: Path) -> tuple[str, Path]:
+    """Directory and path for the restore mutant. Never beside the running script."""
+    mutant_dir = tempfile.mkdtemp(prefix="vf-gh-restore-mutant-")
+    mutant_path = Path(mutant_dir) / "_vf_gh_restore_mutant.py"
+    if mutant_path.resolve().parent == script.resolve().parent:
+        shutil.rmtree(mutant_dir, ignore_errors=True)
+        raise AssertionError("mutant file must not live in scripts/")
+    return mutant_dir, mutant_path
+
+
+def prove_hosted_gh_fail_closed() -> None:
+    """After the in-process self-test, hosted CI with no or bad credentials exits 1.
+
+    A child that only loses ``GITHUB_ACTIONS`` prints ``SKIP_GH_UNAVAILABLE`` and
+    exits 0. That is not fail-closed. Dropping ``_restore_scoped_env`` must fail
+    this same check. Ambient ``VF_GH_HOSTED_PROBE=1`` must not skip it, and the
+    restore mutant is written outside ``scripts/``.
+    """
+    script = Path(__file__).resolve()
+    sentinel = secrets.token_hex(32)
+    empty = tempfile.mkdtemp(prefix="vf-gh-hosted-probe-")
+    mutant_dir, mutant_path = _restore_mutant_location(script)
+    try:
+        ambient_env = os.environ.copy()
+        ambient_env["VF_GH_HOSTED_PROBE"] = "1"
+        ambient = _run_hosted_self_test(ambient_env, script, None, timeout=30)
+        ambient_text = f"{ambient.stdout or ''}\n{ambient.stderr or ''}"
+        if ambient.returncode != 1 or "ambient VF_GH_HOSTED_PROBE" not in ambient_text:
+            raise AssertionError(
+                f"ambient VF_GH_HOSTED_PROBE=1 skipped the proof rc={ambient.returncode} "
+                f"{ambient_text[-400:]}"
+            )
+        no_cred = _run_hosted_self_test(
+            _hosted_probe_env(empty, token=None, sentinel=sentinel),
+            script,
+            sentinel,
+        )
+        _require_hosted_fail_closed(no_cred, "hosted CI with no credentials")
+        bad = _run_hosted_self_test(
+            _hosted_probe_env(empty, token="ghs_invalid_example", sentinel=sentinel),
+            script,
+            sentinel,
+        )
+        _require_hosted_fail_closed(bad, "hosted CI with a bad GH_TOKEN")
+
+        source = script.read_text(encoding="utf-8")
+        needle = "        " + "_restore_scoped_env(" + "previous)\n"
+        if source.count(needle) != 1:
+            raise AssertionError("scoped env restore call is not unique")
+        mutant_path.write_text(source.replace(needle, "        pass\n", 1), encoding="utf-8")
+        mutant = _run_hosted_self_test(
+            _hosted_probe_env(empty, token=None, sentinel=sentinel),
+            mutant_path,
+            sentinel,
+        )
+        try:
+            _require_hosted_fail_closed(mutant, "restore mutant")
+        except AssertionError:
+            pass
+        else:
+            raise AssertionError("dropping the scoped env restore still fail-closed")
+
+        ambient_needle = (
+            "def _refuse_ambient_hosted_probe() -> int | None:\n"
+            "    if os.environ.get(\"VF_GH_HOSTED_PROBE\") and not _child_hosted_probe():\n"
+            "        sys.stderr.write(\"SPLIT_GH_GIT_FAIL ambient VF_GH_HOSTED_PROBE\\n\")\n"
+            "        return 1\n"
+            "    return None\n"
+        )
+        ambient_skip = (
+            "def _refuse_ambient_hosted_probe() -> int | None:\n"
+            "    if os.environ.get(\"VF_GH_HOSTED_PROBE\") == \"1\":\n"
+            "        return 0\n"
+            "    return None\n"
+        )
+        if source.count(ambient_needle) != 1:
+            raise AssertionError("ambient probe guard is not unique")
+        ambient_mutant_path = Path(mutant_dir) / "_vf_gh_ambient_mutant.py"
+        ambient_mutant_path.write_text(
+            source.replace(ambient_needle, ambient_skip, 1),
+            encoding="utf-8",
+        )
+        skipped = _run_hosted_self_test(ambient_env, ambient_mutant_path, None, timeout=30)
+        if skipped.returncode != 0:
+            raise AssertionError(
+                "ambient skip mutant still failed closed "
+                f"rc={skipped.returncode} {(skipped.stderr or '')[-300:]}"
+            )
+
+        path_needle = "    mutant_path = Path(mutant_dir) / \"_vf_gh_restore_mutant.py\"\n"
+        path_scripts = "    mutant_path = script.parent / \"_vf_gh_restore_mutant.py\"\n"
+        if source.count(path_needle) != 1:
+            raise AssertionError("restore mutant path is not unique")
+        path_mutant_path = Path(mutant_dir) / "_vf_gh_path_mutant.py"
+        path_mutant_path.write_text(source.replace(path_needle, path_scripts, 1), encoding="utf-8")
+        path_mutant = _run_hosted_self_test(
+            os.environ.copy(),
+            path_mutant_path,
+            None,
+            timeout=30,
+        )
+        path_text = f"{path_mutant.stdout or ''}\n{path_mutant.stderr or ''}"
+        if path_mutant.returncode == 0 or "mutant file must not live in scripts/" not in path_text:
+            raise AssertionError(
+                "scripts path mutant was not refused "
+                f"rc={path_mutant.returncode} {path_text[-400:]}"
+            )
+        if (script.parent / "_vf_gh_restore_mutant.py").exists():
+            raise AssertionError("mutant file must not live in scripts/")
+    finally:
+        shutil.rmtree(empty, ignore_errors=True)
+        shutil.rmtree(mutant_dir, ignore_errors=True)
+        leftover = script.parent / "_vf_gh_restore_mutant.py"
+        if leftover.is_file():
+            leftover.unlink()
+
+
+def _finish_self_test(rc: int) -> int:
+    refused = _refuse_ambient_hosted_probe()
+    if refused is not None:
+        return refused
+    if rc != 0 or _child_hosted_probe():
+        return rc
+    prove_hosted_gh_fail_closed()
+    return 0
+
+
 def self_test() -> int:
+    refused = _refuse_ambient_hosted_probe()
+    if refused is not None:
+        return refused
+    scratch_dir, _scratch = _restore_mutant_location(Path(__file__).resolve())
+    shutil.rmtree(scratch_dir, ignore_errors=True)
     early = {
         "pull_request": 407,
         "run_id": 1001,
@@ -653,10 +1272,11 @@ def self_test() -> int:
     else:
         raise AssertionError("mismatched recovery evidence must fail closed")
 
+    prove_delete_tree_retries_locked_copy()
+    prove_gh_unavailable_codes()
     with hygiene.record_pinned_spawn("gh") as (calls, short):
         gh(["repo", "view", "--json", "nameWithOwner"])
     hygiene.expect_pinned(calls, short, timeout=60, keep_gh_token=True)
-    slug = prove_split_gh_git_repo_slug()
     try:
         gh(["-c", "true"])
     except RuntimeError as exc:
@@ -664,13 +1284,27 @@ def self_test() -> int:
             raise
     else:
         raise AssertionError("gh flag command was accepted")
+    try:
+        slug = prove_split_gh_git_repo_slug()
+    except GhUnavailable as exc:
+        if hosted_ci():
+            sys.stderr.write("SPLIT_GH_GIT_FAIL hosted CI must prove gh\n")
+            return 1
+        print(
+            "OK sensor-shadow-observation selftest "
+            "historical_miss_retention=PASS pr_dedupe=PASS incomplete_recovery=PASS "
+            f"gh_live={exc.code}"
+        )
+        print(LOUD_SKIP)
+        sys.stderr.write(LOUD_SKIP + "\n")
+        return _finish_self_test(0)
 
     print(
         "OK sensor-shadow-observation selftest "
         "historical_miss_retention=PASS pr_dedupe=PASS incomplete_recovery=PASS "
         f"repo_slug={slug}"
     )
-    return 0
+    return _finish_self_test(0)
 
 
 def main() -> int:
@@ -680,6 +1314,7 @@ def main() -> int:
     ap.add_argument("--recoveries", type=Path, default=DEFAULT_RECOVERIES)
     ap.add_argument("--output", type=Path)
     ap.add_argument("--self-test", action="store_true")
+    ap.add_argument("--hosted-probe-sentinel", default="")
     args = ap.parse_args()
     if args.self_test:
         return self_test()

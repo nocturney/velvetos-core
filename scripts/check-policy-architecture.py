@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -235,8 +236,8 @@ def policy_subprocess_run(*popenargs, **kwargs):
     All non-historical subprocesses always execute normally.
     """
     command = popenargs[0] if popenargs else kwargs.get("args")
+    rendered = [str(value) for value in command] if isinstance(command, (list, tuple)) else []
     if not HISTORICAL_REPLAY_ACTIVE and isinstance(command, (list, tuple)):
-        rendered = [str(value) for value in command]
         generator = next(
             (
                 Path(value).name
@@ -265,7 +266,100 @@ def policy_subprocess_run(*popenargs, **kwargs):
                     stdout="",
                     stderr=f"historical replay fast-path has no committed receipt for {target.name}",
                 )
+    keep_token = command_keeps_github_token(rendered)
+    supplied = kwargs.get("env")
+    env = dict(supplied) if isinstance(supplied, dict) else os.environ.copy()
+    if not keep_token:
+        env.pop("GH_TOKEN", None)
+        env.pop("GITHUB_TOKEN", None)
+    kwargs["env"] = env
     return _REAL_SUBPROCESS_RUN(*popenargs, **kwargs)
+
+
+def command_keeps_github_token(rendered: list[str]) -> bool:
+    """Keep GH_TOKEN only for the repo collector self-test argv."""
+    if len(rendered) != 3 or rendered[2] != "--self-test":
+        return False
+    try:
+        script = Path(rendered[1]).resolve()
+    except OSError:
+        return False
+    return script == (ROOT / "scripts" / "collect-sensor-shadow-observations.py").resolve()
+
+
+def prove_github_token_allowlist(problems: list[str]) -> None:
+    """A trailing or lookalike collector path must not keep GH_TOKEN.
+
+    Replacing the exact path check with ``endswith`` keeps the token for that
+    bait. The proof fails if that mutant starts stripping it.
+    """
+    code = (
+        "import os,sys; sys.exit(0 if os.environ.get('GH_TOKEN')=='job' "
+        "and os.environ.get('GITHUB_TOKEN')=='job' else 3)"
+    )
+    env = os.environ.copy()
+    env["GH_TOKEN"] = "job"
+    env["GITHUB_TOKEN"] = "job"
+    collector = str((ROOT / "scripts" / "collect-sensor-shadow-observations.py").resolve())
+    exact = [sys.executable, collector, "--self-test"]
+    bait = [sys.executable, "-c", code, collector]
+    if not command_keeps_github_token(exact):
+        problems.append("exact collector self-test is not on the GH_TOKEN allowlist")
+    if command_keeps_github_token(bait):
+        problems.append("a trailing collector path is on the GH_TOKEN allowlist")
+    denied = policy_subprocess_run(bait, env=env, capture_output=True, text=True)
+    if denied.returncode != 3:
+        problems.append(
+            f"policy subprocess kept GH_TOKEN for a trailing script path, rc={denied.returncode}"
+        )
+    source_path = ROOT / "scripts" / "check-policy-architecture.py"
+    source = source_path.read_text(encoding="utf-8")
+    needle = (
+        "    if len(rendered) != 3 or rendered[2] != \"--self-test\":\n"
+        "        return False\n"
+        "    try:\n"
+        "        script = Path(rendered[1]).resolve()\n"
+        "    except OSError:\n"
+        "        return False\n"
+        "    return script == (ROOT / \"scripts\" / "
+        "\"collect-sensor-shadow-observations.py\").resolve()\n"
+    )
+    replacement = (
+        "    return any(part.endswith(\"collect-sensor-shadow-observations.py\") "
+        "for part in rendered)\n"
+    )
+    if source.count(needle) != 1:
+        problems.append("GH_TOKEN allowlist return is not unique")
+        return
+    with tempfile.TemporaryDirectory(prefix="vf-gh-token-mutant-") as tmp:
+        outside = Path(tmp) / "collect-sensor-shadow-observations.py"
+        outside.write_text(code + "\n", encoding="utf-8")
+        outside_cmd = [sys.executable, str(outside), "--self-test"]
+        if command_keeps_github_token(outside_cmd):
+            problems.append("a same-named script outside the repo is on the GH_TOKEN allowlist")
+        outside_run = policy_subprocess_run(
+            outside_cmd, env=env, capture_output=True, text=True
+        )
+        if outside_run.returncode != 3:
+            problems.append(
+                "policy subprocess kept GH_TOKEN for an outside collector path, "
+                f"rc={outside_run.returncode}"
+            )
+        mutant_path = Path(tmp) / "check-policy-architecture.py"
+        mutant_path.write_text(source.replace(needle, replacement, 1), encoding="utf-8")
+        spec = importlib.util.spec_from_file_location(
+            "policy_token_endswith_mutant", mutant_path
+        )
+        if spec is None or spec.loader is None:
+            problems.append("GH_TOKEN endswith mutant could not be loaded")
+            return
+        mutant = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mutant)
+        kept = mutant.policy_subprocess_run(bait, env=env, capture_output=True, text=True)
+        if kept.returncode != 0:
+            problems.append(
+                f"endswith GH_TOKEN mutant no longer keeps the token, rc={kept.returncode}"
+            )
 
 
 def validate_historical_policy_manifest(problems: list[str]) -> None:
@@ -327,6 +421,7 @@ def validate_historical_policy_manifest(problems: list[str]) -> None:
 
 def validate_registries(historical_replay: bool = False) -> tuple[list[str], set[str]]:
     problems: list[str] = []
+    prove_github_token_allowlist(problems)
     policies = load(POLICIES)
     sensors = load(SENSORS)
     selection = load(SELECTION)
@@ -765,9 +860,19 @@ def validate_registries(historical_replay: bool = False) -> tuple[list[str], set
                 encoding="utf-8",
                 errors="replace",
                 capture_output=True,
-                timeout=30,
+                timeout=60,
             )
-            require(proc.returncode == 0, "sensor shadow selftest failed " + shadow_rel + ": " + (proc.stderr or proc.stdout).strip()[:500], problems)
+            detail = (proc.stderr or proc.stdout or "").strip()[:500]
+            require(proc.returncode == 0, "sensor shadow selftest failed " + shadow_rel + ": " + detail, problems)
+            if (
+                proc.returncode == 0
+                and shadow_rel.endswith("collect-sensor-shadow-observations.py")
+                and "SKIP_GH_UNAVAILABLE" in (proc.stdout or "")
+            ):
+                if os.environ.get("GITHUB_ACTIONS") == "true":
+                    require(False, "hosted CI must prove the gh read; saw SKIP_GH_UNAVAILABLE", problems)
+                else:
+                    print("SKIP_GH_UNAVAILABLE collect-sensor-shadow-observations")
 
     for prep_rel in ("scripts/check-all.py", "scripts/stage3_preflight.py"):
         prep_harness = ROOT / prep_rel

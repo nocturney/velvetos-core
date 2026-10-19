@@ -74,6 +74,8 @@ from office_v2_crewai.sandbox import (  # noqa: E402
     approved_environment,
     assert_cwd,
     assert_no_dotenv,
+    assert_under_velvet,
+    resolve_existing_path,
     assert_no_system_temp_crewai,
     assert_proxy_env,
     assert_sandbox_env,
@@ -1060,12 +1062,234 @@ def check_sandbox_mutations() -> None:
         if kickoff_output_path("D:\\Velvet\\lab\\sandbox") != "D:\\Velvet\\lab\\sandbox\\crewai-output\\kickoff.md":
             fail("kickoff path did not follow the sandbox parameter")
         _expect_storage(lambda: kickoff_output_path("D:\\NotVelvet\\sandbox"), "OUTPUT_NOT_ON_D")
+        _expect_storage(lambda: bind_process_sandbox(root="D:\\Velvet"), "SANDBOX_ROOT_IS_VELVET")
     finally:
         for key, value in snapshot.items():
             if value is None:
                 os.environ.pop(key, None)
             else:
                 os.environ[key] = value
+
+
+def check_sandbox_root() -> None:
+    """D:\\Velvet itself is refused. A link is resolved before that check.
+
+    The cwd cases stay on explicit paths. enter_sandbox(os.getcwd()) from a
+    D: checkout is SANDBOX_CWD_OUTSIDE_ROOT, not SANDBOX_CWD_NOT_ON_D.
+    """
+    _expect_storage(lambda: assert_under_velvet("D:\\Velvet"), "SANDBOX_ROOT_IS_VELVET")
+    _expect_storage(lambda: assert_under_velvet("D:\\Velvet\\"), "SANDBOX_ROOT_IS_VELVET")
+    assert_under_velvet("D:\\Velvet\\Pilots\\crewai-e4\\sandbox-home")
+    _expect_storage(lambda: assert_under_velvet("C:\\Velvet\\pilot"), "SANDBOX_NOT_ON_D:ROOT")
+
+    def resolve(path: str) -> str:
+        table = {
+            "D:\\Velvet": "D:\\Velvet",
+            "D:\\Velvet\\pilot": "D:\\Velvet\\pilot",
+            "D:\\Velvet\\hop": "C:\\Windows",
+            "D:\\Velvet\\loop": "\\\\?\\D:\\Velvet",
+        }
+        if path not in table:
+            fail("resolver was not asked for %s" % path)
+        return table[path]
+
+    assert_under_velvet("D:\\Velvet\\pilot", resolve=resolve)
+    _expect_storage(
+        lambda: assert_under_velvet("D:\\Velvet", resolve=resolve),
+        "SANDBOX_ROOT_IS_VELVET",
+    )
+    _expect_storage(
+        lambda: assert_under_velvet("D:\\Velvet\\hop", resolve=resolve),
+        "SANDBOX_NOT_ON_D:ROOT",
+    )
+    _expect_storage(
+        lambda: assert_under_velvet("D:\\Velvet\\loop", resolve=resolve),
+        "SANDBOX_ROOT_IS_VELVET",
+    )
+
+    present = {
+        "D:\\Velvet",
+        "D:\\Velvet\\hop",
+        "D:\\Velvet\\out",
+        "D:\\Velvet\\alias",
+    }
+    finals = {
+        "D:\\Velvet": "D:\\Velvet",
+        "D:\\Velvet\\hop": "C:\\Windows",
+        "D:\\Velvet\\out": "D:\\Other",
+        "D:\\Velvet\\alias": "D:\\Velvet\\pilot",
+    }
+
+    def exists_ancestor(path: str) -> bool:
+        return path in present
+
+    def final_ancestor(path: str) -> str:
+        if path not in finals:
+            fail("resolver was not asked for %s" % path)
+        return finals[path]
+
+    hop_new = resolve_existing_path(
+        "D:\\Velvet\\hop\\new", exists=exists_ancestor, final_path=final_ancestor,
+    )
+    if hop_new != "C:\\Windows\\new":
+        fail("junction tail was %s" % hop_new)
+    _expect_storage(
+        lambda: assert_under_velvet(
+            "D:\\Velvet\\hop\\new", exists=exists_ancestor, final_path=final_ancestor,
+        ),
+        "SANDBOX_NOT_ON_D:ROOT",
+    )
+    hop_dot = resolve_existing_path(
+        "D:\\Velvet\\hop\\..\\new", exists=exists_ancestor, final_path=final_ancestor,
+    )
+    if hop_dot != "C:\\Windows\\..\\new":
+        fail("junction dotdot tail was %s" % hop_dot)
+    _expect_storage(
+        lambda: assert_under_velvet(
+            "D:\\Velvet\\hop\\..\\new", exists=exists_ancestor, final_path=final_ancestor,
+        ),
+        "SANDBOX_NOT_ON_D:ROOT",
+    )
+    outside_child = resolve_existing_path(
+        "D:\\Velvet\\out\\child", exists=exists_ancestor, final_path=final_ancestor,
+    )
+    if outside_child != "D:\\Other\\child":
+        fail("same-drive link tail was %s" % outside_child)
+    _expect_storage(
+        lambda: assert_under_velvet(
+            "D:\\Velvet\\out\\child", exists=exists_ancestor, final_path=final_ancestor,
+        ),
+        "SANDBOX_OUTSIDE_VELVET",
+    )
+    stayed_child = resolve_existing_path(
+        "D:\\Velvet\\alias\\deeper", exists=exists_ancestor, final_path=final_ancestor,
+    )
+    if stayed_child != "D:\\Velvet\\pilot\\deeper":
+        fail("in-velvet link tail was %s" % stayed_child)
+    assert_under_velvet(
+        "D:\\Velvet\\alias\\deeper", exists=exists_ancestor, final_path=final_ancestor,
+    )
+
+    def never_resolve(path: str) -> str:
+        fail("resolver was asked for a missing tree %s" % path)
+        return path
+
+    lexical = resolve_existing_path(
+        "D:\\Velvet\\missing\\child",
+        exists=lambda path: path in {"D:", "D:\\"},
+        final_path=never_resolve,
+    )
+    if lexical != "D:\\Velvet\\missing\\child":
+        fail("missing tree was rewritten: %s" % lexical)
+    _expect_storage(
+        lambda: resolve_existing_path(
+            "D:\\Velvet\\pilot",
+            exists=lambda path: path == "D:\\Velvet\\pilot",
+            final_path=lambda path: None,
+        ),
+        "SANDBOX_PATH_UNRESOLVED",
+    )
+
+    def raise_os(path: str) -> str:
+        raise OSError("final path failed")
+
+    _expect_storage(
+        lambda: resolve_existing_path(
+            "D:\\Velvet\\pilot",
+            exists=lambda path: path == "D:\\Velvet\\pilot",
+            final_path=raise_os,
+        ),
+        "SANDBOX_PATH_UNRESOLVED",
+    )
+    _expect_storage(
+        lambda: assert_under_velvet("D:\\Velvet\\pilot", resolve=raise_os),
+        "SANDBOX_PATH_UNRESOLVED",
+    )
+    made_early = []
+
+    def mkdir_early(path: str) -> None:
+        made_early.append(path)
+
+    def resolve_before(path: str) -> str:
+        if path == sandbox_temp_dir("D:\\Velvet\\lab\\sandbox"):
+            return "C:\\Windows\\Temp"
+        return path
+
+    _expect_storage(
+        lambda: prepare_sandbox_temp(
+            "D:\\Velvet\\lab\\sandbox",
+            mkdir=mkdir_early,
+            exists=lambda path: True,
+            resolve=resolve_before,
+        ),
+        "SANDBOX_NOT_ON_D:ROOT",
+    )
+    if made_early:
+        fail("mkdir ran through an ancestor that resolves off D:")
+    phase = {"after": False}
+
+    def mkdir_after(path: str) -> None:
+        phase["after"] = True
+
+    def resolve_after(path: str) -> str:
+        if phase["after"] and path == sandbox_temp_dir("D:\\Velvet\\lab\\sandbox"):
+            return "C:\\Windows\\Temp"
+        return path
+
+    _expect_storage(
+        lambda: prepare_sandbox_temp(
+            "D:\\Velvet\\lab\\sandbox",
+            mkdir=mkdir_after,
+            exists=lambda path: True,
+            resolve=resolve_after,
+        ),
+        "SANDBOX_NOT_ON_D:ROOT",
+    )
+    parent = Path(tempfile.mkdtemp(prefix="crewai-velvet-link-"))
+    try:
+        velvet = parent / "Velvet"
+        pilot = velvet / "pilot"
+        outside = parent / "outside"
+        pilot.mkdir(parents=True)
+        outside.mkdir()
+        link = velvet / "hop"
+        try:
+            link.symlink_to(outside, target_is_directory=True)
+        except OSError as exc:
+            if os.name != "posix":
+                link = None
+            else:
+                fail("posix symlink could not be created: %s" % exc)
+        if link is not None:
+            resolved = resolve_existing_path(str(link))
+            outside_real = os.path.realpath(outside)
+            if os.path.normpath(resolved) != outside_real:
+                fail("posix symlink was not resolved: %s" % resolved)
+            if os.path.islink(resolved):
+                fail("resolver returned the symlink itself")
+            velvet_real = os.path.realpath(velvet)
+            if os.path.commonpath([os.path.normpath(resolved), velvet_real]) == velvet_real:
+                fail("resolved symlink stayed inside the velvet stand-in")
+            stayed = resolve_existing_path(str(pilot))
+            if os.path.normpath(stayed) != os.path.realpath(pilot):
+                fail("posix subdirectory was not kept")
+            missing = link / "new-leaf"
+            resolved_missing = resolve_existing_path(str(missing))
+            expect = str(Path(outside_real).joinpath("new-leaf"))
+            if os.path.normpath(resolved_missing) != os.path.normpath(expect):
+                fail("missing leaf under a symlink was %s" % resolved_missing)
+    finally:
+        shutil.rmtree(parent, ignore_errors=True)
+    source = (PACKAGE / "sandbox.py").read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    fn = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "assert_under_velvet")
+    body = ast.get_source_segment(source, fn) or ""
+    resolve_at = body.find("resolve_existing_path")
+    under_at = body.find("under_root")
+    if resolve_at < 0 or under_at < 0 or resolve_at > under_at:
+        fail("velvet check does not resolve the path before the prefix test")
+    if "GetFinalPathNameByHandleW" not in source or "os.path.realpath" not in source:
+        fail("final-path resolution is missing GetFinalPathNameByHandle or realpath")
 
 
 def check_e4_mutations() -> None:
@@ -2986,7 +3210,17 @@ def check_refusal_gaps() -> None:
     saved_prepare = crew_mod.prepare_sandbox_temp
     saved_enter = crew_mod.enter_sandbox
     saved_seed = crew_mod.seed_trace_consent
+    saved_root_check = crew_mod.assert_under_velvet
+    saved_sandbox_root_check = sandbox_mod.assert_under_velvet
     try:
+        # The version-drift fixture creates a synthetic D: sandbox under its
+        # throwaway cwd on POSIX; #842 resolves real filesystem ancestors.
+        # Keep the real root predicate while providing its simulated final path.
+        resolved_fixture_root = lambda root: saved_root_check(
+            root, resolve=lambda target: target
+        )
+        crew_mod.assert_under_velvet = resolved_fixture_root
+        sandbox_mod.assert_under_velvet = resolved_fixture_root
         sandbox_mod.Path.home = staticmethod(lambda: SANDBOX_ROOT)
         sandbox_mod.tempfile.gettempdir = lambda: SANDBOX_ROOT + "\\tmp"
 
@@ -3031,6 +3265,8 @@ def check_refusal_gaps() -> None:
         crew_mod.prepare_sandbox_temp = saved_prepare
         crew_mod.enter_sandbox = saved_enter
         crew_mod.seed_trace_consent = saved_seed
+        crew_mod.assert_under_velvet = saved_root_check
+        sandbox_mod.assert_under_velvet = saved_sandbox_root_check
         sys.modules.pop("crewai", None)
         shutil.rmtree(work, ignore_errors=True)
 
@@ -3050,6 +3286,7 @@ def main() -> int:
     check_condition_mutations()
     check_e4_mutations()
     check_sandbox_mutations()
+    check_sandbox_root()
     check_endpoint_mutations()
     check_proxy_gate()
     check_manifest_mutation()

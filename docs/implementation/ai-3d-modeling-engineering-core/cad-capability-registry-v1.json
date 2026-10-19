@@ -498,7 +498,7 @@
         "provenance": [
           "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase8-assembly-ecad-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "verification": {
@@ -633,7 +633,7 @@
         "provenance": [
           "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase8-assembly-ecad-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "verification": {
@@ -698,7 +698,7 @@
         "provenance": [
           "docs/implementation/ai-3d-modeling-engineering-core/assembly-motion-ecad-v1.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase8-assembly-ecad-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "verification": {
@@ -897,7 +897,7 @@
         "provenance": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "verification": {
@@ -908,7 +908,7 @@
         "evidence_refs": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "fallback": [],
@@ -961,7 +961,7 @@
         "provenance": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "verification": {
@@ -972,7 +972,7 @@
         "evidence_refs": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "fallback": [],
@@ -1025,7 +1025,7 @@
         "provenance": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "verification": {
@@ -1036,7 +1036,7 @@
         "evidence_refs": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "fallback": [],
@@ -1153,7 +1153,7 @@
         "provenance": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "verification": {
@@ -1164,7 +1164,7 @@
         "evidence_refs": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "fallback": [],
@@ -1217,7 +1217,7 @@
         "provenance": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "verification": {
@@ -1228,7 +1228,7 @@
         "evidence_refs": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "fallback": [],
@@ -1281,7 +1281,7 @@
         "provenance": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "verification": {
@@ -1292,7 +1292,7 @@
         "evidence_refs": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "fallback": [],
@@ -1345,7 +1345,7 @@
         "provenance": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "verification": {
@@ -1356,7 +1356,7 @@
         "evidence_refs": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "fallback": [],
@@ -1473,7 +1473,7 @@
         "provenance": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "verification": {
@@ -1484,7 +1484,7 @@
         "evidence_refs": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "fallback": [],
@@ -1537,7 +1537,7 @@
         "provenance": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "verification": {
@@ -1548,7 +1548,7 @@
         "evidence_refs": [
           "packages/vfprod/MECHANICAL-FEATURE-PACKS.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase5-mechanical-feature-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "fallback": [],
@@ -1601,7 +1601,7 @@
         "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
         "provenance": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase4-bd-warehouse-runtime-install-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "verification": {
@@ -1612,7 +1612,7 @@
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase4-exact-cad-acceptance-20261007.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase4-bd-warehouse-runtime-install-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "fallback": [
@@ -1736,7 +1736,7 @@
       "headless": true,
       "license_lane": "commercial-clean",
       "license": {
-        "license_source": "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
+        "license_source": "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
         "code_license": "Apache-2.0",
         "data_license": null,
         "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
@@ -1744,7 +1744,7 @@
         "redistribution": "not authorized by this registry beyond the recorded upstream terms",
         "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
         "provenance": [
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
           "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_build123d"
         ]
       },
@@ -1758,7 +1758,7 @@
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
           "D:\\Velvet\\Worktrees\\ai3d-phase14-printer-validation-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
           "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_build123d"
         ]
       },
@@ -1865,7 +1865,7 @@
       "headless": true,
       "license_lane": "commercial-clean",
       "license": {
-        "license_source": "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\cadquery\\.venv\\Scripts\\python.exe",
+        "license_source": "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\cad-stack\\cadquery\\.venv\\Scripts\\python.exe",
         "code_license": "Apache Public License 2.0",
         "data_license": null,
         "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
@@ -1873,7 +1873,7 @@
         "redistribution": "not authorized by this registry beyond the recorded upstream terms",
         "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
         "provenance": [
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\cadquery\\.venv\\Scripts\\python.exe",
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\cad-stack\\cadquery\\.venv\\Scripts\\python.exe",
           "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_cadquery"
         ]
       },
@@ -1887,7 +1887,7 @@
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
           "D:\\Velvet\\Worktrees\\ai3d-phase14-printer-validation-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\cadquery\\.venv\\Scripts\\python.exe",
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\cad-stack\\cadquery\\.venv\\Scripts\\python.exe",
           "D:\\Velvet\\State\\CreativeCraft\\blender-provider-registry.json#provider:sidecar_cadquery"
         ]
       },
@@ -1994,7 +1994,7 @@
       "headless": true,
       "license_lane": "commercial-clean",
       "license": {
-        "license_source": "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\jscad",
+        "license_source": "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\cad-stack\\jscad",
         "code_license": "MIT",
         "data_license": null,
         "allowed_use": "commercial use subject to recorded license obligations and existing authority boundaries",
@@ -2002,7 +2002,7 @@
         "redistribution": "not authorized by this registry beyond the recorded upstream terms",
         "bundle_policy": "prefer separate environment/runtime; review before bundling into reusable deliverables",
         "provenance": [
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\jscad"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\cad-stack\\jscad"
         ]
       },
       "verification": {
@@ -2015,7 +2015,7 @@
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/check-vf-fabrication-router-20261007.log",
           "D:\\Velvet\\Worktrees\\ai3d-phase14-printer-validation-20261008\\packages\\vfharness\\state\\cad-engine-stack-host-acceptance-2026-09-27.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\jscad"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\cad-stack\\jscad"
         ]
       },
       "fallback": [],
@@ -4046,7 +4046,7 @@
       "headless": true,
       "license_lane": "review-required",
       "license": {
-        "license_source": "runtime:C:/Users/Chris/Documents/VelvetPrintLab/tools/OrcaSlicer-2.4.2/LICENSE.txt",
+        "license_source": "runtime:%USERPROFILE%/Documents/VelvetPrintLab/tools/OrcaSlicer-2.4.2/LICENSE.txt",
         "code_license": "AGPL-3.0",
         "data_license": null,
         "allowed_use": "synthetic offline G-code validation only; machine firmware audit missing",
@@ -4119,7 +4119,7 @@
       "headless": true,
       "license_lane": "review-required",
       "license": {
-        "license_source": "runtime:C:/Users/Chris/Documents/VelvetPrintLab/tools/OrcaSlicer-2.4.2/LICENSE.txt",
+        "license_source": "runtime:%USERPROFILE%/Documents/VelvetPrintLab/tools/OrcaSlicer-2.4.2/LICENSE.txt",
         "code_license": "AGPL-3.0",
         "data_license": null,
         "allowed_use": "synthetic offline G-code validation only; machine firmware audit missing",
@@ -4190,7 +4190,7 @@
       "headless": true,
       "license_lane": "review-required",
       "license": {
-        "license_source": "runtime:C:/Users/Chris/Documents/VelvetPrintLab/tools/OrcaSlicer-2.4.2/LICENSE.txt",
+        "license_source": "runtime:%USERPROFILE%/Documents/VelvetPrintLab/tools/OrcaSlicer-2.4.2/LICENSE.txt",
         "code_license": "AGPL-3.0",
         "data_license": null,
         "allowed_use": "bounded offline generation/verification only; no printer control",
@@ -4261,7 +4261,7 @@
       "headless": true,
       "license_lane": "review-required",
       "license": {
-        "license_source": "runtime:C:/Users/Chris/Documents/VelvetPrintLab/tools/OrcaSlicer-2.4.2/LICENSE.txt",
+        "license_source": "runtime:%USERPROFILE%/Documents/VelvetPrintLab/tools/OrcaSlicer-2.4.2/LICENSE.txt",
         "code_license": "AGPL-3.0",
         "data_license": null,
         "allowed_use": "bounded offline generation/verification only; no printer control",
@@ -4333,7 +4333,7 @@
       "headless": true,
       "license_lane": "review-required",
       "license": {
-        "license_source": "runtime:C:/Users/Chris/Documents/VelvetPrintLab/tools/OrcaSlicer-2.4.2/LICENSE.txt",
+        "license_source": "runtime:%USERPROFILE%/Documents/VelvetPrintLab/tools/OrcaSlicer-2.4.2/LICENSE.txt",
         "code_license": "AGPL-3.0",
         "data_license": null,
         "allowed_use": "synthetic offline G-code validation only; machine firmware audit missing",
@@ -5854,7 +5854,7 @@
         "provenance": [
           "docs/implementation/ai-3d-modeling-engineering-core/drawings-vectors-sheetmetal-v1.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase9-drawings-vectors-sheetmetal-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "verification": {
@@ -5865,7 +5865,7 @@
         "evidence_refs": [
           "docs/implementation/ai-3d-modeling-engineering-core/drawings-vectors-sheetmetal-v1.json",
           "docs/implementation/ai-3d-modeling-engineering-core/evidence/phase9-drawings-vectors-sheetmetal-acceptance-20261007.json",
-          "runtime:C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
+          "runtime:%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe"
         ]
       },
       "fallback": [],

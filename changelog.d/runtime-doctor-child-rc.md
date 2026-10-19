@@ -1,0 +1,1 @@
+- 2026-10-19 - **Runtime doctor child exit:** a nonzero `--selftest` child exit fails the no-arg parent. `check-runtime-doctor.py` catches a mutant that returns 0 instead of that exit. No model call.
