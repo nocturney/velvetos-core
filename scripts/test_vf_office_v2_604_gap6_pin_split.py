@@ -309,16 +309,19 @@ class Gap6PinSplitTests(unittest.TestCase):
                 self.assertTrue(marker.is_file(), "fsmonitor fixture did not run")
                 marker.unlink()
             probe = (
-                "import json, subprocess, sys, tempfile\n"
+                "import json, shutil, subprocess, sys, tempfile\n"
                 "from pathlib import Path\n"
                 "sys.path.insert(0, sys.argv[1])\n"
                 "import vf_office_v2_604_native_git_crash_reconcile_offline as native\n"
                 "env = native.require_git_env(native.ENV)\n"
                 "repo = Path(tempfile.mkdtemp(prefix='vf604-home-repo-'))\n"
-                "init = subprocess.run([native.GIT_EXECUTABLE, 'init', '-q', str(repo)],\n"
-                "    env=env, capture_output=True, text=True, timeout=10)\n"
-                "status = subprocess.run([native.GIT_EXECUTABLE, '-C', str(repo), 'status', '--porcelain'],\n"
-                "    env=env, capture_output=True, text=True, timeout=10)\n"
+                "try:\n"
+                "    init = subprocess.run([native.GIT_EXECUTABLE, 'init', '-q', str(repo)],\n"
+                "        env=env, capture_output=True, text=True, timeout=10)\n"
+                "    status = subprocess.run([native.GIT_EXECUTABLE, '-C', str(repo), 'status', '--porcelain'],\n"
+                "        env=env, capture_output=True, text=True, timeout=10)\n"
+                "finally:\n"
+                "    shutil.rmtree(repo, ignore_errors=True)\n"
                 "marker = Path(sys.argv[2])\n"
                 "out = (init.stdout or '') + (init.stderr or '') + (status.stdout or '') + (status.stderr or '')\n"
                 "sys.stdout.write(json.dumps({\n"
@@ -338,6 +341,7 @@ class Gap6PinSplitTests(unittest.TestCase):
                 "    'rc': status.returncode,\n"
                 "    'marker': marker.is_file(),\n"
                 "    'out': out,\n"
+                "    'repo_removed': not repo.exists(),\n"
                 "}))\n"
             )
             probe_path = root / "probe.py"
@@ -384,6 +388,7 @@ class Gap6PinSplitTests(unittest.TestCase):
         self.assertFalse(payload["marker"])
         self.assertNotIn("MALICIOUS_HOME_RAN", payload["out"])
         self.assertEqual(payload["rc"], 0)
+        self.assertTrue(payload["repo_removed"])
         for leaked in (
             "USERPROFILE", "GIT_CONFIG_SYSTEM", "GIT_CONFIG_KEY_0",
             "GIT_CONFIG_VALUE_0", "GIT_CONFIG_PARAMETERS", "GIT_SSH_COMMAND",
