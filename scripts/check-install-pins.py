@@ -14,18 +14,19 @@ subcommand (`pip -q install`, `python -m pip -q`, `python -mpip`,
 be a pinned or lock install, or it is refused as unclassified.
 
 The backstop is the words, not a wrapper list. Every `run:` block is
-split with `shlex`, including nested `-c` and `eval` strings. Each word
-is split again on `;`, `&`, `|`, `(`, `)`, `` ` ``, `<`, and `>`, and a
-`$(...)` or backtick body is scanned even inside double quotes. A word
-whose basename is pip, pip3*, uv, uvx, pipx, npm, npx, pnpm, yarn, or
-bun, or a `python*` followed by `-m pip` / `-mpip`, must belong to a
-pinned or lock install. Otherwise the step is unclassified. A `shlex`
-failure refuses the step too.
+split with `shlex`, including nested `-c` and `eval` strings. A step whose
+first key is `- run:` is the same block. Each word is split again on `;`,
+`&`, `|`, `(`, `)`, `` ` ``, `<`, and `>`, and a `$(...)` or backtick body
+is scanned even inside double quotes. A word whose basename is pip, pip3*,
+uv, uvx, pipx, npm, npx, pnpm, yarn, or bun, or a `python*` followed by
+`-m pip` / `-mpip`, must belong to a pinned or lock install. Otherwise the
+step is unclassified. A `shlex` failure refuses the step too.
 
 `requirements-google-clients.py311.lock` must keep the direct pins from
 `requirements-google-clients.txt`, and every lock pin must have a sha256
 hash. INSTALL_SPEC_ALLOWLIST starts empty; a non-empty committed set fails
-this sensor. Stdlib only.
+this sensor. An apt ffmpeg install must be one exact command sequence on
+ubuntu-24.04. Stdlib only.
 """
 from __future__ import annotations
 
@@ -117,6 +118,35 @@ class InstallRules:
     tokens: bool = True
     lock_versions: bool = True
     lock_hashes: bool = True
+
+
+APT_FFMPEG_VERSION = "ffmpeg=7:6.1.1-3ubuntu5"
+APT_FFMPEG_SHA256 = "1a23baace5f2688a47e28119aedae6993cd638e6279a7227dfc52d9a337a1c17"
+APT_RUNS_ON = "ubuntu-24.04"
+APT_POOL_DEB = "ffmpeg_6.1.1-3ubuntu5_amd64.deb"
+# Contiguous comment-stripped lines. The cache basename keeps the epoch as %3a.
+APT_FFMPEG_COMMANDS = (
+    "sudo apt-get update -qq",
+    f"sudo apt-get install -y -d '{APT_FFMPEG_VERSION}'",
+    "shopt -s nullglob",
+    "matches=(/var/cache/apt/archives/ffmpeg_*6.1.1-3ubuntu5_amd64.deb)",
+    'if [ "${#matches[@]}" -ne 1 ]; then',
+    "printf 'FAIL apt ffmpeg deb count=%s\\n' \"${#matches[@]}\" >&2",
+    "exit 1",
+    "fi",
+    'deb="${matches[0]}"',
+    "if [ \"$(basename \"$deb\")\" != 'ffmpeg_7%3a6.1.1-3ubuntu5_amd64.deb' ]; then",
+    "printf 'FAIL apt ffmpeg cache name=%s\\n' \"$(basename \"$deb\")\" >&2",
+    "exit 1",
+    "fi",
+    'python3 scripts/verify_ffmpeg_zip_sha256.py --path "$deb" --expected '
+    f'"{APT_FFMPEG_SHA256}" --kind deb',
+    'sudo apt-get install -y "$deb"',
+)
+APT_ALLOWED_INSTALLS = frozenset({
+    APT_FFMPEG_COMMANDS[1],
+    APT_FFMPEG_COMMANDS[-1],
+})
 
 
 def fail(msg: str) -> None:
@@ -235,7 +265,7 @@ def run_scripts(text: str) -> list[str]:
     scripts: list[str] = []
     index = 0
     while index < len(lines):
-        match = re.match(r"^(\s*)run:\s*([|>][-+]?)?\s*(.*)$", lines[index])
+        match = re.match(r"^(\s*)(?:-\s+)?run:\s*([|>][-+]?)?\s*(.*)$", lines[index])
         if not match:
             index += 1
             continue
@@ -1088,6 +1118,100 @@ def google_lock_problems(
     return problems
 
 
+def job_blocks(text: str) -> list[tuple[str, str]]:
+    """Split top-level `jobs:` entries. Indent is the structure; this is not a YAML loader."""
+    lines = text.splitlines()
+    start = None
+    for index, line in enumerate(lines):
+        if re.match(r"^jobs:\s*$", line):
+            start = index + 1
+            break
+    if start is None:
+        return []
+    blocks: list[tuple[str, str]] = []
+    name: str | None = None
+    body: list[str] = []
+    for line in lines[start:]:
+        if line and not line.startswith(" ") and not line.startswith("#"):
+            break
+        match = re.match(r"^  ([A-Za-z0-9][A-Za-z0-9_-]*):\s*(?:#.*)?$", line)
+        if match:
+            if name is not None:
+                blocks.append((name, "\n".join(body)))
+            name = match.group(1)
+            body = [line]
+            continue
+        if name is not None:
+            body.append(line)
+    if name is not None:
+        blocks.append((name, "\n".join(body)))
+    return blocks
+
+
+def job_runs_on(block: str) -> str | None:
+    for line in block.splitlines():
+        match = re.match(r"^    runs-on:\s*(.*?)\s*$", line)
+        if not match:
+            continue
+        raw = strip_comment(match.group(1))
+        if len(raw) >= 2 and raw[0] == raw[-1] and raw[0] in {"'", '"'}:
+            raw = raw[1:-1]
+        return raw
+    return None
+
+
+def script_commands(script: str) -> list[str]:
+    commands: list[str] = []
+    for line in join_continuations(script).splitlines():
+        command = strip_comment(line)
+        if command:
+            commands.append(command)
+    return commands
+
+
+def count_sequence(lines: list[str], seq: tuple[str, ...]) -> int:
+    width = len(seq)
+    if width == 0 or len(lines) < width:
+        return 0
+    return sum(tuple(lines[index:index + width]) == seq for index in range(len(lines) - width + 1))
+
+
+def apt_ffmpeg_problems(text: str, *, path: str) -> list[str]:
+    """The noble ffmpeg step is one exact command slice on ubuntu-24.04."""
+    problems: list[str] = []
+    blocks = job_blocks(text)
+    apt_re = re.compile(r"\bapt-get\s+(install|download)\b")
+    if not blocks and apt_re.search(text):
+        problems.append(f"{path} apt command is outside a parsed job")
+        return problems
+    for job, block in blocks:
+        raw_hits = [
+            strip_comment(line)
+            for line in block.splitlines()
+            if apt_re.search(strip_comment(line))
+        ]
+        if not raw_hits:
+            continue
+        commands = []
+        for script in run_scripts(block):
+            commands.extend(script_commands(script))
+        if any(hit not in commands for hit in raw_hits):
+            problems.append(f"{path} job {job} apt command was not parsed from a run step")
+        runs_on = job_runs_on(block)
+        if runs_on != APT_RUNS_ON:
+            problems.append(f"{path} job {job} runs-on {runs_on!r} is not {APT_RUNS_ON}")
+        if count_sequence(commands, APT_FFMPEG_COMMANDS) != 1:
+            problems.append(f"{path} job {job} apt ffmpeg command sequence mismatch")
+        for command in commands:
+            if apt_re.search(command) and command not in APT_ALLOWED_INSTALLS:
+                problems.append(f"{path} job {job} unexpected apt-get install: {command}")
+            if APT_POOL_DEB in command:
+                problems.append(f"{path} job {job} apt ffmpeg uses the pool filename")
+            if re.search(r"\btest\s+-f\b", command) and "ffmpeg" in command:
+                problems.append(f"{path} job {job} apt ffmpeg uses test -f")
+    return problems
+
+
 def float_google_install(text: str) -> str:
     """Mutation: put the pre-pin bare names back on the Google client install."""
     lines = text.splitlines(keepends=True)
@@ -1173,6 +1297,8 @@ def prove_bypasses() -> str:
         "dquote_subst": 'run: echo "$(pip -q install x)"\n',
         "backtick": "run: x=`pip -q install x`\n",
         "amp_pip": "run: true&pip -q install x\n",
+        "dash_run": "      - run: pip install x\n",
+        "dash_block": "      - run: |\n          pip install x\n",
     }
     exact = {
         "sudo": "run: sudo -H pip install x==1.2.3\n",
@@ -1233,6 +1359,8 @@ def prove_bypasses() -> str:
         "dquote_subst": 'run: echo "$(pip -q install x==1.2.3)"\n',
         "backtick": "run: x=`pip -q install x==1.2.3`\n",
         "amp_pip": "run: true&pip -q install x==1.2.3\n",
+        "dash_run": "      - run: pip install x==1.2.3\n",
+        "dash_block": "      - run: |\n          pip install x==1.2.3\n",
     }
     needles = {
         "sudo": "floating pip spec x",
@@ -1293,6 +1421,8 @@ def prove_bypasses() -> str:
         "dquote_subst": "floating pip spec x",
         "backtick": "floating pip spec x",
         "amp_pip": "floating pip spec x",
+        "dash_run": "floating pip spec x",
+        "dash_block": "floating pip spec x",
     }
     groups = {
         "wrappers": [],
@@ -1400,9 +1530,15 @@ def main() -> int:
         fail("INSTALL_SPEC_ALLOWLIST must stay empty")
     problems: list[str] = []
     workflows = sorted(WORKFLOWS.glob("*.y*ml"))
+    apt_workflows = 0
     for path in workflows:
         rel = path.relative_to(ROOT).as_posix()
-        problems.extend(install_spec_problems(path.read_text(encoding="utf-8"), path=rel))
+        text = path.read_text(encoding="utf-8")
+        problems.extend(install_spec_problems(text, path=rel))
+        apt = apt_ffmpeg_problems(text, path=rel)
+        if "apt-get install" in text or "apt-get download" in text:
+            apt_workflows += 1
+        problems.extend(apt)
     req_text = (ROOT / REQ_NAME).read_text(encoding="utf-8")
     lock_text = (ROOT / LOCK_NAME).read_text(encoding="utf-8")
     problems.extend(google_lock_problems(req_text, lock_text))
@@ -1458,11 +1594,68 @@ def main() -> int:
 
     bypass_evidence = prove_bypasses()
     lock_evidence = prove_google_lock(req_text, lock_text)
+    check_all = (WORKFLOWS / "check-all.yml").read_text(encoding="utf-8")
+    research = (WORKFLOWS / "velvetos-research.yml").read_text(encoding="utf-8")
+    if apt_ffmpeg_problems(check_all, path="check-all.yml"):
+        fail(f"pinned check-all apt step was refused: {apt_ffmpeg_problems(check_all, path='check-all.yml')}")
+    if apt_ffmpeg_problems(research, path="velvetos-research.yml"):
+        fail("pinned velvetos-research apt step was refused")
+
+    def require_apt(label: str, mutated: str, needle: str) -> None:
+        found = apt_ffmpeg_problems(mutated, path="check-all.yml")
+        if not any(needle in item for item in found):
+            fail(f"{label} was not caught: {found}")
+
+    extra = check_all.replace(
+        'sudo apt-get install -y "$deb"\n',
+        'sudo apt-get install -y "$deb"\n          sudo apt-get install -y ffmpeg\n',
+        1,
+    )
+    require_apt("extra apt install", extra, "unexpected apt-get install")
+    replaced = check_all.replace(
+        'sudo apt-get install -y "$deb"',
+        "sudo apt-get install -y ffmpeg",
+        1,
+    )
+    require_apt("replaced final install", replaced, "command sequence mismatch")
+    commented = check_all.replace(
+        "python3 scripts/verify_ffmpeg_zip_sha256.py",
+        "# python3 scripts/verify_ffmpeg_zip_sha256.py",
+        1,
+    )
+    require_apt("commented verifier", commented, "command sequence mismatch")
+    dropped_sha = check_all.replace(APT_FFMPEG_SHA256, "0" * 64, 1)
+    require_apt("digest swap", dropped_sha, "command sequence mismatch")
+    latest = check_all.replace("    runs-on: ubuntu-24.04\n", "    runs-on: ubuntu-latest\n", 1)
+    require_apt("ubuntu-latest runner", latest, APT_RUNS_ON)
+    pool = check_all.replace(
+        "matches=(/var/cache/apt/archives/ffmpeg_*6.1.1-3ubuntu5_amd64.deb)",
+        "deb=/var/cache/apt/archives/ffmpeg_6.1.1-3ubuntu5_amd64.deb\n          test -f \"$deb\"",
+        1,
+    )
+    require_apt("pool filename", pool, "pool filename")
+    floating_apt = (
+        "jobs:\n"
+        "  sample:\n"
+        "    runs-on: ubuntu-latest\n"
+        "    steps:\n"
+        "      - run: sudo apt-get install -y ffmpeg\n"
+    )
+    floating_found = apt_ffmpeg_problems(floating_apt, path="fixture.yml")
+    if not any("command sequence mismatch" in item for item in floating_found):
+        fail(f"floating apt ffmpeg was not caught: {floating_found}")
+    if not any(APT_RUNS_ON in item for item in floating_found):
+        fail(f"floating apt runner was not caught: {floating_found}")
+    if apt_workflows != 2:
+        fail(f"expected 2 apt ffmpeg workflows, found {apt_workflows}")
+
     print(
         f"OK {NAME} workflows={len(workflows)} floating=0 allowlist=empty "
         "bare=caught exact=pass mixed=caught npm_float=caught npm_exact=pass "
         "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught "
-        f"{bypass_evidence} {lock_evidence}"
+        f"{bypass_evidence} {lock_evidence} "
+        f"apt_ffmpeg={apt_workflows} apt_sequence=pinned extra=caught "
+        "comment=caught digest=caught runner=caught pool=caught"
     )
     return 0
 

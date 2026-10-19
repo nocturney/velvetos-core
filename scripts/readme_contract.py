@@ -27,6 +27,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+_SCRIPTS = Path(__file__).resolve().parent
+if str(_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS))
 from vf_spawn import SpawnRefusal, git_revision, run_git
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -225,8 +228,24 @@ SELFTEST = {
 }
 
 
+def prove_script_local_import() -> list[str]:
+    """This file finds vf_spawn from its own directory. The caller need not put scripts/ on sys.path."""
+    proc = subprocess.run(
+        [sys.executable, "-P", str(Path(__file__).resolve()), "--files", "README.md"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        timeout=30,
+    )
+    err = (proc.stderr or "") + (proc.stdout or "")
+    if proc.returncode != 0 or "Traceback" in err or "ModuleNotFoundError" in err:
+        return [f"readme contract import required the caller path: {err.strip()}"]
+    return []
+
+
 def selftest() -> int:
     bad = prove_git_diff()
+    bad.extend(prove_script_local_import())
     for path, requires in SELFTEST.items():
         need, _ = classify([path])
         if bool(need) != requires:
@@ -242,7 +261,7 @@ def selftest() -> int:
         for b in bad:
             print(f"FAIL readme-contract selftest: {b}", file=sys.stderr)
         return 1
-    print(f"OK readme-contract selftest cases={len(SELFTEST) + 3} exemptions={len(ROUTINE_OUTPUT)}")
+    print(f"OK readme-contract selftest cases={len(SELFTEST) + 4} exemptions={len(ROUTINE_OUTPUT)}")
     return 0
 
 

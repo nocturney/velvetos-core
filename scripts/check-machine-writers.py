@@ -1,12 +1,19 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import collections.abc
 import hashlib
 import re
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
+
+import yaml
+from yaml.composer import Composer, ComposerError
+from yaml.constructor import ConstructorError
+from yaml.events import AliasEvent
+from yaml.nodes import MappingNode, ScalarNode, SequenceNode
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOWS = ROOT / ".github" / "workflows"
@@ -68,15 +75,13 @@ WINDOWS_ACTIONS = {
 EXIT_RESET = re.compile(r"\$LASTEXITCODE\s*=\s*0\b")
 # Tag and branch refs are refused. This set is the only exception, and it starts empty.
 ACTION_REF_ALLOWLIST: frozenset[str] = frozenset()
-USE_LINE = re.compile(r"^(?P<prefix>\s*(?:-\s+)?)uses:\s+(?P<spec>\S+)\s*(?:#.*)?$")
-_FLOW_USES = re.compile(
-    r"""['\"]?uses['\"]?\s*:\s*(?P<spec>\"[^\"]+\"|'[^']+'|[^,}\s]+)"""
-)
 VERSION_COMMENT = re.compile(
     r"^\s*#\s+(?P<action>\S+/\S+)\s+v(?P<version>\d+\.\d+\.\d+)\s*$"
 )
 SHA_REF = re.compile(r"^[0-9a-f]{40}$")
-DOCKER_DIGEST = re.compile(r"^docker://[^@\s]+@sha256:[0-9a-f]{64}$")
+DOCKER_DIGEST = re.compile(r"^docker://.+@sha256:[0-9a-f]{64}$")
+MERGE_TAG = "tag:yaml.org,2002:merge"
+DOCKER_DIGEST_REF = "docker://alpine@sha256:" + ("ab" * 32)
 
 
 def previous_nonempty(lines: list[str], index: int) -> str:
@@ -87,69 +92,249 @@ def previous_nonempty(lines: list[str], index: int) -> str:
     return lines[cursor] if cursor >= 0 else ""
 
 
-def _yaml_code(line: str) -> str:
-    """Drop a trailing comment and ``${{ }}``. A quoted ``#`` stays."""
-    masked = re.sub(r"\$\{\{.*?\}\}", "", line)
-    out: list[str] = []
-    quote = ""
-    for ch in masked:
-        if quote:
-            if ch == quote:
-                quote = ""
-            out.append(ch)
-            continue
-        if ch in "'\"":
-            quote = ch
-            out.append(ch)
-            continue
-        if ch == "#":
-            break
-        out.append(ch)
-    return "".join(out)
+class DuplicateKeyRejectingSafeLoader(yaml.SafeLoader):
+    """Safe loader that rejects duplicate keys and step/job anchors, aliases, and merges."""
+
+    def __init__(self, stream):
+        super().__init__(stream)
+        self._stack: list[str] = []
+
+    def _top(self) -> str:
+        return self._stack[-1] if self._stack else ""
+
+    def compose_node(self, parent, index):
+        if self.check_event(AliasEvent) and self._top() in {"step", "job"}:
+            event = self.peek_event()
+            raise ComposerError(None, None, "alias refused on a step", event.start_mark)
+        # AliasEvent.anchor is the alias name, not a definition. Only node-start anchors are refused here.
+        if self._top() in {"step", "job"} and not self.check_event(AliasEvent):
+            event = self.peek_event()
+            if getattr(event, "anchor", None):
+                raise ComposerError(None, None, "anchor refused on a step", event.start_mark)
+        return Composer.compose_node(self, parent, index)
+
+    def compose_sequence_node(self, anchor):
+        start_event = self.get_event()
+        tag = start_event.tag
+        if tag is None or tag == "!":
+            tag = self.resolve(SequenceNode, None, start_event.implicit)
+        node = SequenceNode(
+            tag, [], start_event.start_mark, None, flow_style=start_event.flow_style
+        )
+        if anchor is not None:
+            self.anchors[anchor] = node
+        index = 0
+        under_steps = self._top() == "steps"
+        while not self.check_event(yaml.events.SequenceEndEvent):
+            if under_steps:
+                self._stack.append("step")
+            try:
+                node.value.append(self.compose_node(node, index))
+            finally:
+                if under_steps:
+                    self._stack.pop()
+            index += 1
+        end_event = self.get_event()
+        node.end_mark = end_event.end_mark
+        return node
+
+    def compose_mapping_node(self, anchor):
+        start_event = self.get_event()
+        tag = start_event.tag
+        if tag is None or tag == "!":
+            tag = self.resolve(MappingNode, None, start_event.implicit)
+        node = MappingNode(
+            tag, [], start_event.start_mark, None, flow_style=start_event.flow_style
+        )
+        if anchor is not None:
+            self.anchors[anchor] = node
+        while not self.check_event(yaml.events.MappingEndEvent):
+            item_key = self.compose_node(node, None)
+            key_name = item_key.value if isinstance(item_key, ScalarNode) else None
+            if self._top() in {"step", "job"} and (
+                key_name == "<<" or getattr(item_key, "tag", "") == MERGE_TAG
+            ):
+                raise ComposerError(None, None, "merge key refused on a step", item_key.start_mark)
+            pushed = None
+            if self._top() == "jobs":
+                pushed = "job"
+            elif key_name == "steps":
+                pushed = "steps"
+            elif key_name == "jobs":
+                pushed = "jobs"
+            if pushed:
+                self._stack.append(pushed)
+            try:
+                item_value = self.compose_node(node, item_key)
+            finally:
+                if pushed:
+                    self._stack.pop()
+            node.value.append((item_key, item_value))
+        end_event = self.get_event()
+        node.end_mark = end_event.end_mark
+        return node
+
+    def construct_mapping(self, node, deep=False):
+        if isinstance(node, MappingNode):
+            self.flatten_mapping(node)
+        if not isinstance(node, MappingNode):
+            raise ConstructorError(
+                None, None, "expected a mapping node, but found %s" % node.id, node.start_mark
+            )
+        mapping = {}
+        for key_node, value_node in node.value:
+            key = self.construct_object(key_node, deep=deep)
+            if not isinstance(key, collections.abc.Hashable):
+                raise ConstructorError(
+                    "while constructing a mapping",
+                    node.start_mark,
+                    "found unhashable key",
+                    key_node.start_mark,
+                )
+            if key in mapping:
+                raise ConstructorError(
+                    "while constructing a mapping",
+                    node.start_mark,
+                    "found duplicate key %r" % (key,),
+                    key_node.start_mark,
+                )
+            mapping[key] = self.construct_object(value_node, deep=deep)
+        return mapping
 
 
-def _flow_uses_specs(line: str) -> list[str]:
-    """``uses:`` values inside a one-line flow mapping. Block lines are separate."""
-    code = _yaml_code(line)
-    if "{" not in code:
-        return []
-    specs: list[str] = []
-    for match in _FLOW_USES.finditer(code):
-        spec = match.group("spec").strip().strip("'\"")
-        if spec:
-            specs.append(spec)
-    return specs
+def _pairs(node):
+    if not isinstance(node, MappingNode):
+        return None
+    pairs = []
+    for key_node, value_node in node.value:
+        if not isinstance(key_node, ScalarNode):
+            return "complex-key"
+        pairs.append((key_node.value, value_node))
+    return pairs
 
 
-def _uses_problems(
-    spec: str,
-    number: int,
-    lines: list[str],
-    path: str,
-    allowed: frozenset[str],
-    *,
-    scan_docker: bool,
-) -> list[str]:
+def _docker_digest_ok(spec: str) -> bool:
+    return DOCKER_DIGEST.fullmatch(spec) is not None
+
+
+def _classify_uses(spec, line_no, lines, path, problems, allowed) -> None:
     if spec.startswith("./"):
-        return []
+        return
     if spec.startswith("docker://"):
-        if not scan_docker or DOCKER_DIGEST.fullmatch(spec):
-            return []
-        return [f"{path}:{number}: docker ref is not digest-pinned: {spec}"]
+        if _docker_digest_ok(spec):
+            return
+        problems.append(f"{path}:{line_no}: docker ref is not a sha256 digest: {spec}")
+        return
     if "@" not in spec:
-        return [f"{path}:{number}: action ref has no pin: {spec}"]
+        problems.append(f"{path}:{line_no}: action ref has no pin: {spec}")
+        return
     action, ref = spec.rsplit("@", 1)
     if spec in allowed:
-        return []
+        return
     if not SHA_REF.fullmatch(ref):
-        return [f"{path}:{number}: tag or branch ref is not allowlisted: {spec}"]
-    comment = VERSION_COMMENT.match(previous_nonempty(lines, number - 1))
+        problems.append(f"{path}:{line_no}: tag or branch ref is not allowlisted: {spec}")
+        return
+    comment = VERSION_COMMENT.match(previous_nonempty(lines, line_no - 1))
     if comment is None:
-        return [f"{path}:{number}: SHA pin missing version comment: {spec}"]
+        problems.append(f"{path}:{line_no}: SHA pin missing version comment: {spec}")
+        return
     commented = comment.group("action")
     if action != commented and not action.startswith(commented + "/"):
-        return [f"{path}:{number}: version comment {commented} does not match {action}"]
-    return []
+        problems.append(f"{path}:{line_no}: version comment {commented} does not match {action}")
+
+
+def _append_uses(value_node, lines, path, problems, allowed) -> None:
+    line_no = value_node.start_mark.line + 1 if value_node.start_mark else 0
+    if not isinstance(value_node, ScalarNode) or value_node.tag == "tag:yaml.org,2002:null":
+        problems.append(f"{path}:{line_no}: uses must be a string")
+        return
+    _classify_uses(value_node.value.strip(), line_no, lines, path, problems, allowed)
+
+
+def _walk_steps(node, lines, path, problems, allowed) -> None:
+    if not isinstance(node, SequenceNode):
+        problems.append(f"{path}: steps must be a sequence")
+        return
+    for step in node.value:
+        if not isinstance(step, MappingNode):
+            line_no = step.start_mark.line + 1 if step.start_mark else 0
+            problems.append(f"{path}:{line_no}: step must be a mapping")
+            continue
+        pairs = _pairs(step)
+        if pairs == "complex-key":
+            problems.append(f"{path}: complex mapping key refused")
+            continue
+        for key, value in pairs:
+            if key == "uses":
+                _append_uses(value, lines, path, problems, allowed)
+
+
+def _walk_job(node, lines, path, problems, allowed) -> None:
+    if not isinstance(node, MappingNode):
+        problems.append(f"{path}: job must be a mapping")
+        return
+    pairs = _pairs(node)
+    if pairs == "complex-key":
+        problems.append(f"{path}: complex mapping key refused")
+        return
+    for key, value in pairs:
+        if key == "uses":
+            _append_uses(value, lines, path, problems, allowed)
+        elif key == "steps":
+            _walk_steps(value, lines, path, problems, allowed)
+
+
+def _walk_jobs(node, lines, path, problems, allowed) -> None:
+    if not isinstance(node, MappingNode):
+        problems.append(f"{path}: jobs must be a mapping")
+        return
+    pairs = _pairs(node)
+    if pairs == "complex-key":
+        problems.append(f"{path}: complex mapping key refused")
+        return
+    for _job_id, job in pairs:
+        _walk_job(job, lines, path, problems, allowed)
+
+
+def _walk_runs(node, lines, path, problems, allowed) -> None:
+    if not isinstance(node, MappingNode):
+        return
+    pairs = _pairs(node)
+    if not isinstance(pairs, list):
+        return
+    for key, value in pairs:
+        if key == "steps":
+            _walk_steps(value, lines, path, problems, allowed)
+
+
+def _walk_document(node, lines, path, problems, allowed) -> None:
+    if not isinstance(node, MappingNode):
+        problems.append(f"{path}: workflow document must be a mapping")
+        return
+    pairs = _pairs(node)
+    if pairs == "complex-key":
+        problems.append(f"{path}: complex mapping key refused")
+        return
+    for key, value in pairs:
+        if key == "jobs":
+            _walk_jobs(value, lines, path, problems, allowed)
+        elif key == "steps":
+            _walk_steps(value, lines, path, problems, allowed)
+        elif key == "runs":
+            _walk_runs(value, lines, path, problems, allowed)
+
+
+def _load_pin_document(text: str):
+    loader = DuplicateKeyRejectingSafeLoader(text)
+    try:
+        node = loader.get_single_node()
+        if node is not None:
+            loader.construct_document(node)
+        return node, None
+    except yaml.YAMLError as exc:
+        return None, exc
+    finally:
+        loader.dispose()
 
 
 def action_pin_problems(
@@ -157,34 +342,55 @@ def action_pin_problems(
     *,
     path: str = "<fixture>",
     allowlist: frozenset[str] | None = None,
-    scan_flow: bool = True,
-    scan_docker: bool = True,
 ) -> list[str]:
-    """Every remote uses: is a 40-hex SHA plus a version comment, unless allowlisted.
+    """Every remote uses is a 40-hex SHA plus a version comment, unless allowlisted.
 
-    A one-line flow mapping is scanned too. ``docker://`` must be
-    ``docker://name@sha256:<64 hex>``. ``./`` local actions stay unpinned.
-    ``scan_flow=False`` and ``scan_docker=False`` exist so the mutation log
-    can show those checks are load-bearing.
+    docker:// refs must be docker://...@sha256: and 64 lowercase hex. Local ./ refs
+    stay local. The document is a PyYAML safe load: duplicate keys are refused, and
+    anchors, aliases, and merge keys on steps and jobs are refused.
     """
     allowed = ACTION_REF_ALLOWLIST if allowlist is None else allowlist
+    node, error = _load_pin_document(text)
+    if error is not None:
+        return [f"{path}: YAML refused: {error}"]
+    if node is None:
+        return []
     problems: list[str] = []
-    lines = text.splitlines()
-    for number, line in enumerate(lines, start=1):
-        match = USE_LINE.match(line)
-        if match:
-            specs = [match.group("spec").strip("'\"")]
-        elif scan_flow and not line.lstrip().startswith("#"):
-            specs = _flow_uses_specs(line)
-        else:
-            continue
-        for spec in specs:
-            problems.extend(
-                _uses_problems(
-                    spec, number, lines, path, allowed, scan_docker=scan_docker
-                )
-            )
+    _walk_document(node, text.splitlines(), path, problems, allowed)
     return problems
+
+
+def discover_pin_paths(root: Path) -> list[Path]:
+    """Workflow files plus in-repo composite action.yml files under .github/."""
+    paths: list[Path] = []
+    workflows = root / ".github" / "workflows"
+    if workflows.is_dir():
+        paths.extend(workflows.glob("*.yml"))
+        paths.extend(workflows.glob("*.yaml"))
+    github = root / ".github"
+    if github.is_dir():
+        paths.extend(github.rglob("action.yml"))
+        paths.extend(github.rglob("action.yaml"))
+    return sorted(set(paths))
+
+
+def scan_pin_paths(paths: list[Path]) -> list[str]:
+    problems: list[str] = []
+    for path in paths:
+        problems.extend(
+            action_pin_problems(path.read_text(encoding="utf-8"), path=path.as_posix())
+        )
+    return problems
+
+
+def _require(problems: list[str], needle: str, label: str) -> None:
+    if not any(needle in problem for problem in problems):
+        fail(label + " was not refused: " + "; ".join(problems))
+
+
+def _require_clean(problems: list[str], label: str) -> None:
+    if problems:
+        fail(label + " was refused: " + "; ".join(problems))
 
 
 def prove_workflow_action_pins(core_workflow: str) -> str:
@@ -192,27 +398,168 @@ def prove_workflow_action_pins(core_workflow: str) -> str:
     if ACTION_REF_ALLOWLIST:
         fail("workflow action ref allowlist must start empty")
     tag_fixture = "steps:\n  - uses: actions/checkout@v7\n"
-    if not any("not allowlisted" in problem for problem in action_pin_problems(tag_fixture)):
-        fail("@v7 fixture was not refused")
+    _require(action_pin_problems(tag_fixture), "not allowlisted", "@v7 fixture")
     branch_fixture = "steps:\n  - uses: actions/checkout@main\n"
-    if not any("not allowlisted" in problem for problem in action_pin_problems(branch_fixture)):
-        fail("branch ref fixture was not refused")
+    _require(action_pin_problems(branch_fixture), "not allowlisted", "branch ref fixture")
     pinned_fixture = (
         "steps:\n"
         "  # actions/checkout v7.0.1\n"
-        "  - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1\n"
+        "  - uses: " + CHECKOUT + "\n"
     )
-    pinned_problems = action_pin_problems(pinned_fixture)
-    if pinned_problems:
-        fail("pinned SHA fixture was refused: " + "; ".join(pinned_problems))
-    bare_sha = (
-        "steps:\n"
-        "  - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1\n"
-    )
-    if not any("missing version comment" in problem for problem in action_pin_problems(bare_sha)):
-        fail("SHA without a version comment was accepted")
+    _require_clean(action_pin_problems(pinned_fixture), "pinned SHA fixture")
+    bare_sha = "steps:\n  - uses: " + CHECKOUT + "\n"
+    _require(action_pin_problems(bare_sha), "missing version comment", "bare SHA")
     if action_pin_problems(tag_fixture, allowlist=frozenset({"actions/checkout@v7"})):
         fail("explicit allowlist did not accept actions/checkout@v7")
+    flow_bad = "steps:\n  - { name: Sneaky, uses: actions/checkout@v7 }\n"
+    _require(action_pin_problems(flow_bad), "not allowlisted", "flow-style uses")
+    flow_ok = (
+        "steps:\n"
+        "  # actions/checkout v7.0.1\n"
+        "  - { name: Sneaky, uses: " + CHECKOUT + " }\n"
+    )
+    _require_clean(action_pin_problems(flow_ok), "flow-style SHA pin")
+    docker_latest = "steps:\n  - uses: docker://alpine:latest\n"
+    _require(action_pin_problems(docker_latest), "sha256 digest", "docker://alpine:latest")
+    if not action_pin_problems(docker_latest, allowlist=frozenset({"docker://alpine:latest"})):
+        fail("allowlist accepted docker://alpine:latest")
+    _require_clean(
+        action_pin_problems("steps:\n  - uses: " + DOCKER_DIGEST_REF + "\n"),
+        "docker digest",
+    )
+    tagged_digest = "docker://alpine:3.20@sha256:" + ("cd" * 32)
+    _require_clean(
+        action_pin_problems("steps:\n  - uses: " + tagged_digest + "\n"),
+        "docker tag-and-digest",
+    )
+    _require(
+        action_pin_problems("steps:\n  - uses: docker://alpine@sha256:abcd\n"),
+        "sha256 digest",
+        "short docker digest",
+    )
+    _require(
+        action_pin_problems("steps:\n  - uses: docker://alpine@sha256:" + ("AB" * 32) + "\n"),
+        "sha256 digest",
+        "uppercase docker digest",
+    )
+    _require_clean(
+        action_pin_problems("steps:\n  - uses: ./.github/actions/local\n"),
+        "local action",
+    )
+    duplicate = (
+        "steps:\n"
+        "  - name: one\n"
+        "    name: two\n"
+        "    # actions/checkout v7.0.1\n"
+        "    uses: " + CHECKOUT + "\n"
+    )
+    _require(action_pin_problems(duplicate), "duplicate key", "duplicate key")
+    hidden_tag = (
+        "steps:\n"
+        "  # actions/checkout v7.0.1\n"
+        "  - uses: actions/checkout@v7\n"
+        "    # actions/checkout v7.0.1\n"
+        "    uses: " + CHECKOUT + "\n"
+    )
+    _require(action_pin_problems(hidden_tag), "duplicate key", "duplicate uses")
+    anchored = (
+        "steps:\n"
+        "  - &sneaky\n"
+        "    # actions/checkout v7.0.1\n"
+        "    uses: " + CHECKOUT + "\n"
+    )
+    _require(action_pin_problems(anchored), "anchor refused", "step anchor")
+    aliased = (
+        "x-base: &base\n"
+        "  # actions/checkout v7.0.1\n"
+        "  uses: " + CHECKOUT + "\n"
+        "steps:\n"
+        "  - *base\n"
+    )
+    _require(action_pin_problems(aliased), "alias refused", "step alias")
+    merged = (
+        "steps:\n"
+        "  - <<:\n"
+        "      # actions/checkout v7.0.1\n"
+        "      uses: " + CHECKOUT + "\n"
+        "    name: kept\n"
+    )
+    _require(action_pin_problems(merged), "merge key refused", "step merge key")
+    reusable = (
+        "jobs:\n"
+        "  call:\n"
+        "    uses: org/repo/.github/workflows/ci.yml@v1\n"
+    )
+    _require(action_pin_problems(reusable), "not allowlisted", "reusable workflow uses")
+    reusable_ok = (
+        "jobs:\n"
+        "  call:\n"
+        "    # org/repo v1.2.3\n"
+        "    uses: org/repo/.github/workflows/ci.yml@" + ("a" * 40) + "\n"
+    )
+    _require_clean(action_pin_problems(reusable_ok), "pinned reusable workflow")
+    job_alias = (
+        "x-base: &job\n"
+        "  # org/repo v1.2.3\n"
+        "  uses: org/repo/.github/workflows/ci.yml@" + ("b" * 40) + "\n"
+        "jobs:\n"
+        "  call: *job\n"
+    )
+    _require(action_pin_problems(job_alias), "alias refused", "job alias")
+    composite = (
+        "name: sneaky\n"
+        "runs:\n"
+        "  using: composite\n"
+        "  steps:\n"
+        "    - uses: actions/checkout@v7\n"
+    )
+    _require(action_pin_problems(composite), "not allowlisted", "composite action uses")
+    composite_ok = (
+        "name: local\n"
+        "runs:\n"
+        "  using: composite\n"
+        "  steps:\n"
+        "    # actions/checkout v7.0.1\n"
+        "    - uses: " + CHECKOUT + "\n"
+    )
+    _require_clean(action_pin_problems(composite_ok), "pinned composite action")
+    unknown_tag = "steps:\n  - uses: !localtag actions/checkout@v7\n"
+    _require(action_pin_problems(unknown_tag), "YAML refused", "unknown YAML tag")
+    injected = core_workflow.replace(
+        "      - uses: " + CHECKOUT,
+        "      - { name: Sneaky, uses: actions/checkout@v7 }\n      - uses: " + CHECKOUT,
+        1,
+    )
+    _require(
+        action_pin_problems(injected, path=".github/workflows/check-all.yml"),
+        "not allowlisted",
+        "flow-style uses injected into check-all.yml",
+    )
+    docker_injected = core_workflow.replace(
+        "      - uses: " + CHECKOUT,
+        "      - uses: docker://alpine:latest\n      - uses: " + CHECKOUT,
+        1,
+    )
+    _require(
+        action_pin_problems(docker_injected, path=".github/workflows/check-all.yml"),
+        "sha256 digest",
+        "docker://alpine:latest injected into check-all.yml",
+    )
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        workflow = root / ".github" / "workflows"
+        action = root / ".github" / "actions" / "sneaky"
+        workflow.mkdir(parents=True)
+        action.mkdir(parents=True)
+        (workflow / "flow.yml").write_text(flow_bad, encoding="utf-8")
+        (action / "action.yml").write_text(composite, encoding="utf-8")
+        discovered = discover_pin_paths(root)
+        if workflow / "flow.yml" not in discovered or action / "action.yml" not in discovered:
+            fail("pin discovery missed a workflow or composite action")
+        discovered_problems = scan_pin_paths(discovered)
+        _require(discovered_problems, "not allowlisted", "discovered flow or composite uses")
+        if sum("not allowlisted" in problem for problem in discovered_problems) < 2:
+            fail("discovery scan did not refuse both the flow workflow and the composite action")
     linux_reverted = core_workflow.replace(CHECKOUT, "actions/checkout@v7", 1)
     if "  check-all-windows:" not in linux_reverted:
         fail("linux pin mutation lost the windows job")
@@ -232,63 +579,55 @@ def prove_workflow_action_pins(core_workflow: str) -> str:
         for problem in action_pin_problems(windows_unpinned, path="check-all-windows")
     ):
         fail("reverting the Windows checkout to @v7 was not caught")
-    flow_tag = "steps:\n  - { name: Sneaky, uses: actions/checkout@v7 }\n"
-    if not any("not allowlisted" in problem for problem in action_pin_problems(flow_tag)):
-        fail("flow-mapping @v7 was not refused")
-    if action_pin_problems(flow_tag, scan_flow=False):
-        fail("turning off the flow scan still caught @v7")
     flow_quoted = 'steps:\n  - { "uses": "actions/checkout@v7" }\n'
-    if not any("not allowlisted" in problem for problem in action_pin_problems(flow_quoted)):
-        fail("quoted flow-mapping @v7 was not refused")
-    flow_sha = (
+    _require(action_pin_problems(flow_quoted), "not allowlisted", "quoted flow-style uses")
+    quoted_block = 'steps:\n  - "uses": actions/checkout@v7\n'
+    _require(action_pin_problems(quoted_block), "not allowlisted", "quoted uses key")
+    spaced_colon = "steps:\n  - uses : actions/checkout@v7\n"
+    _require(action_pin_problems(spaced_colon), "not allowlisted", "space before uses colon")
+    multiline_flow = (
         "steps:\n"
-        "  # actions/checkout v7.0.1\n"
-        "  - { uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 }\n"
+        "  - {\n"
+        "    name: x,\n"
+        "    uses: actions/checkout@v7 }\n"
     )
-    flow_sha_problems = action_pin_problems(flow_sha)
-    if flow_sha_problems:
-        fail("digest-pinned flow step was refused: " + "; ".join(flow_sha_problems))
+    _require(action_pin_problems(multiline_flow), "not allowlisted", "multi-line flow uses")
     flow_local = "steps:\n  - { uses: ./.github/actions/local }\n"
-    if action_pin_problems(flow_local):
-        fail("local flow action was refused")
+    _require_clean(action_pin_problems(flow_local), "local flow action")
     smoke_path = WORKFLOWS / "instagram-read-smoke.yml"
     smoke = smoke_path.read_text(encoding="utf-8")
-    if action_pin_problems(smoke, path=smoke_path.as_posix()):
-        fail("live instagram-read-smoke.yml was refused")
-    smoke_flow = smoke + "\n      - { name: Sneaky, uses: actions/checkout@v7 }\n"
-    if not any(
-        "not allowlisted" in problem
-        for problem in action_pin_problems(smoke_flow, path=smoke_path.as_posix())
-    ):
-        fail("flow-mapping @v7 appended to a real workflow was not caught")
-    docker_tag = "steps:\n  - uses: docker://alpine:latest\n"
-    if not any("not digest-pinned" in problem for problem in action_pin_problems(docker_tag)):
-        fail("docker://alpine:latest was not refused")
-    if action_pin_problems(docker_tag, scan_docker=False):
-        fail("turning off the docker scan still caught alpine:latest")
-    docker_digest = (
-        "steps:\n"
-        "  - uses: docker://alpine@sha256:"
-        + ("a" * 64)
-        + "\n"
+    _require_clean(action_pin_problems(smoke, path=smoke_path.as_posix()), "instagram-read-smoke.yml")
+    smoke_flow = smoke.replace(
+        "      - uses: " + CHECKOUT,
+        "      - { name: Sneaky, uses: actions/checkout@v7 }\n      - uses: " + CHECKOUT,
+        1,
     )
-    docker_problems = action_pin_problems(docker_digest)
-    if docker_problems:
-        fail("digest-pinned docker ref was refused: " + "; ".join(docker_problems))
-    docker_bare = "steps:\n  - uses: docker://alpine\n"
-    if not any("not digest-pinned" in problem for problem in action_pin_problems(docker_bare)):
-        fail("docker://alpine without a digest was not refused")
-    smoke_docker = smoke + "\n      - uses: docker://alpine:latest\n"
-    if not any(
-        "not digest-pinned" in problem
-        for problem in action_pin_problems(smoke_docker, path=smoke_path.as_posix())
-    ):
-        fail("docker://alpine:latest appended to a real workflow was not caught")
+    _require(
+        action_pin_problems(smoke_flow, path=smoke_path.as_posix()),
+        "not allowlisted",
+        "flow-style uses injected into instagram-read-smoke.yml",
+    )
+    _require(
+        action_pin_problems("steps:\n  - uses: docker://alpine\n"),
+        "sha256 digest",
+        "docker://alpine",
+    )
+    smoke_docker = smoke.replace(
+        "      - uses: " + CHECKOUT,
+        "      - uses: docker://alpine:latest\n      - uses: " + CHECKOUT,
+        1,
+    )
+    _require(
+        action_pin_problems(smoke_docker, path=smoke_path.as_posix()),
+        "sha256 digest",
+        "docker://alpine:latest injected into instagram-read-smoke.yml",
+    )
     return (
         "tag_fixture=caught sha_fixture=pass bare_sha=caught "
         "linux_revert=caught windows_revert=caught allowlist=empty "
-        "flow_v7=caught flow_sha=pass flow_off=escaped "
-        "docker_tag=caught docker_digest=pass docker_off=escaped"
+        "flow=caught docker_tag=caught docker_digest=pass duplicate=caught "
+        "anchor=caught alias=caught merge=caught reusable=caught composite=caught "
+        "quoted_key=caught spaced_colon=caught multiline_flow=caught"
     )
 
 
@@ -1041,10 +1380,8 @@ def main() -> int:
         f"{gate_evidence} permissions=contents:read"
     )
     pin_evidence = prove_workflow_action_pins(core_workflow)
-    for path in sorted(list(WORKFLOWS.glob("*.yml")) + list(WORKFLOWS.glob("*.yaml"))):
-        rel = path.relative_to(ROOT).as_posix()
-        for problem in action_pin_problems(path.read_text(encoding="utf-8"), path=rel):
-            fail(problem)
+    for problem in scan_pin_paths(discover_pin_paths(ROOT)):
+        fail(problem)
     print(f"OK workflow-action-pins {pin_evidence}")
     if core_workflow.count("context=check-all") != 1:
         fail("check-all status context must stay the single required Linux context")

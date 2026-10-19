@@ -2,6 +2,7 @@
 # INPUT file: CI installs the hashed locks requirements-sensors.py311.lock / .py312.lock
 # (pip --require-hashes). After editing, run scripts/regen-sensor-locks.sh and commit all three.
 # Direct dependencies (imported by sensors / the scripts they exercise):
+PyYAML==6.0.3           # workflow uses pins (check-machine-writers safe loader)
 Pillow==12.3.0          # PIL: publication/creative/cold-start/source-ingest sensors
 cryptography==50.0.1    # vfigos delivery-approval signing (check-delivery-approval)
 starlette==1.7.0        # vfigos approval issuer HTTP app (check-delivery-approval)
