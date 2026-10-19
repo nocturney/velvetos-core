@@ -1,0 +1,1 @@
+- 2026-10-19 - **Unreleased fold:** A changelog with no `## [Unreleased]` heading refuses the compile step. The fold ends at the next `##` heading, and a bullet inside a fenced code block does not count. `security_admission` stays RED.
