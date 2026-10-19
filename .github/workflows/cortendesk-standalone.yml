@@ -9,6 +9,7 @@ on:
       - "docs/implementation/remote-management/cortendesk-*"
       - ".github/workflows/cortendesk-standalone.yml"
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read

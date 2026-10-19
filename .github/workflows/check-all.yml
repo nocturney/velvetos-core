@@ -114,3 +114,11 @@ jobs:
       - name: Fail build on sensor error
         if: failure()
         run: echo "::error::One or more VelvetOS contract checks failed. See log above." && exit 1
+
+  # Manual, branch-scoped source-only research gates. The main check-all job
+  # remains unchanged; no runtime, credentials, production machines or service.
+  cortendesk-offline:
+    if: ${{ github.event_name == 'workflow_dispatch' && startsWith(github.ref, 'refs/heads/research/rustdesk-') }}
+    uses: ./.github/workflows/cortendesk-standalone.yml
+    permissions:
+      contents: read
