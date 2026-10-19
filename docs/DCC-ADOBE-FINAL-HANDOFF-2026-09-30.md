@@ -4,7 +4,7 @@ Date: 2026-09-30
 
 Machine: Chris — Intel Core i9-14900K + NVIDIA GeForce RTX 4080 SUPER
 
-Remote Commander device ID: `516b9b39-92b7-4a73-8d4b-901cc1a70a98`
+Remote Commander device ID: `<chris-machine-id>`
 
 ## Read this before changing anything
 

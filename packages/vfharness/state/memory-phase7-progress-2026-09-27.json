@@ -42,7 +42,7 @@
   "dejaVu": {
     "version": "0.21.2",
     "role": "session-history adjunct only",
-    "preExistingInstall": "C:\\Users\\Chris\\.local\\bin\\deja.exe",
+    "preExistingInstall": "%USERPROFILE%\\.local\\bin\\deja.exe",
     "preExistingIndexSessions": 387,
     "indexBytes": 7827665,
     "preExistingWiringDetected": true,

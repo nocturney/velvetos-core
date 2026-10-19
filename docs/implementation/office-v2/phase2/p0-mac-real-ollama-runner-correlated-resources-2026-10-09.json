@@ -25,7 +25,7 @@
     "host": "MacMiniOffice.local",
     "base_sha": "ecabd70a292bc11ae4d8009a44502cb42ca1c0c9",
     "branch": "lab-p0-agent-p0-ollama-observed-mac-20261009-02",
-    "checkpoint": "/Users/chris/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-ollama-observed-mac-20261009/p0-ollama-observed-mac-20261009-02/checkpoint.json",
+    "checkpoint": "$HOME/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-ollama-observed-mac-20261009/p0-ollama-observed-mac-20261009-02/checkpoint.json",
     "executor_kind": "LOCAL_AIDER_OLLAMA_SYNTHETIC_V1",
     "model": "qwen3.5:4b",
     "model_digest": "7f3251fa6878a78a606bcb3c074283306e5ad2ea411a7774a9dd98a4bc7f2d13",

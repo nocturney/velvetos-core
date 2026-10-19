@@ -59,6 +59,6 @@ Investigate the existing living-studio selftest KeyboardInterrupt before claimin
 ## Rollback
 
 All Core changes are isolated on this branch. Heavy local runtimes live under:
-C:\Users\Chris\Documents\VelvetPrintLab\tools\cad-stack
+%USERPROFILE%\Documents\VelvetPrintLab\tools\cad-stack
 
 Revert the local branch commit to remove Core wiring. Removing local tool directories is optional and independent from Core rollback.
