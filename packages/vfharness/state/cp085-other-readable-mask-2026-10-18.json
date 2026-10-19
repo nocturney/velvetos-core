@@ -1,0 +1,31 @@
+{
+  "task_id": "cp085-other-readable-mask-2026-10-18",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfharness",
+  "goal": "Refuse other-readable CP085 receipt directories 0o705, 0o704, and 0o701, and catch mask mutations 0o007, 0o070, and a removed check by behaviour.",
+  "completed_steps": [
+    "CLAIM on #612 comment 6252763802",
+    "Waited for #825; it was still open, so this branch is from main 57c3804a",
+    "POSIX tests refuse 0o705, 0o704, and 0o701",
+    "Behaviour mutations catch 0o007, 0o070, and a removed directory check"
+  ],
+  "next_step": "Independent QA. security_admission stays RED.",
+  "artifacts": [
+    "scripts/test_vf_office_v2_604_cp085_public_git_readback.py",
+    "scripts/check-office-v2-contracts.py"
+  ],
+  "unresolved": [
+    "security_admission stays RED",
+    "write_private_receipt is unchanged",
+    "#825 was not merged when this branch was cut"
+  ],
+  "last_updated": "2026-10-18",
+  "execution_state": {
+    "claim": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6252763802",
+    "security_admission": "RED",
+    "posix_mode_check": "st_mode & 0o077",
+    "branched_before_825_merge": true
+  },
+  "latest_observation": "On POSIX, receipt directories 0o705, 0o704, and 0o701 raise RECEIPT_DIR_MUST_BE_PRIVATE. A copied 0o070 mask accepts them. Removing the check accepts a group-readable directory and an other-readable directory. The 0o007 case stays in test_29. The symlink parent stays test_30. The suite is 32 tests."
+}
