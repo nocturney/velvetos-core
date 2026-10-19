@@ -638,7 +638,7 @@ Pinned runtime: the three Cloud Run Dockerfiles (`vfigos/remote`, `vfigos/approv
 
 סביבת ריצה נעולה: שלושת ה־Dockerfiles נעולים ל־digest ולגרסאות מדויקות; ה־Actions ב־workflow נעולים ל־commit SHA עם הערת גרסה, כולל צעד flow. `docker://` בלי digest נדחה.
 
-**PR-time private-host redaction (2026-10-19):** The private-host detector is ALWAYS_ON in affected-sensor selection, including doc-only PRs. It scans RFC1918 10/8, 172.16/12 and 192.168/16 plus Chris home prefixes, reads BOM-marked UTF-16 and non-UTF-8 text, and SHA-256 pins pre-existing synthetic examples. A new private host string in an ordinary tracked text file is a blocking failure.
+**PR-time private-host redaction (2026-10-19):** The private-host detector is a fifth CORE/critical ALWAYS_ON check in affected-sensor selection, including doc-only PRs. It scans RFC1918 10/8, 172.16/12 and 192.168/16 plus Chris home prefixes, reads BOM-marked UTF-16 and non-UTF-8 text, and SHA-256 pins pre-existing synthetic examples. The sensor registry audit is regenerated to record the fifth critical observer. A new private host string in an ordinary tracked text file is a blocking failure.
 
 **סריקת כתובות פרטיות בכל PR (2026-10-19):** גם שינוי תיעוד מפעיל בדיקת כתובות RFC1918, קידודים נוספים ונתיבי בית מקומיים; דוגמאות היסטוריות נעולות בגיבוב.
 

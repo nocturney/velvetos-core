@@ -631,11 +631,14 @@ def validate_registries(historical_replay: bool = False) -> tuple[list[str], set
 
     always_on = [row for row in sensor_rows if isinstance(row, dict) and row.get("fallback_scope") == "ALWAYS_ON"]
     always_on_ids = {row.get("id") for row in always_on}
+    # This is an explicit fifth CORE/critical PR-time guard.
+    # The generated Stage 2A live-registry audit must reflect this set.
     expected_always_on = {
         "check-agent-surface-security",
         "check-critical-syntax",
         "check-machine-writers",
         "check-policy-architecture",
+        "check-public-path-redaction",
     }
     require(always_on_ids == expected_always_on, f"critical ALWAYS_ON set drifted: {sorted(always_on_ids)}", problems)
     require(len(always_on) <= 6, "critical ALWAYS_ON set must remain small", problems)
@@ -671,7 +674,7 @@ def validate_registries(historical_replay: bool = False) -> tuple[list[str], set
             f"EVENT_ACCEPTANCE lifecycle set drifted: {sorted(lifecycle_ids['EVENT_ACCEPTANCE'])}", problems)
     require(lifecycle_ids["RETIRED_RECEIPT"] == expected_retired,
             f"RETIRED_RECEIPT lifecycle set drifted: {sorted(lifecycle_ids['RETIRED_RECEIPT'])}", problems)
-    require(len(lifecycle_ids["DOMAIN"]) == len(sensor_rows) - 12,
+    require(len(lifecycle_ids["DOMAIN"]) == len(sensor_rows) - 13,
             "DOMAIN lifecycle count must cover every non-core/non-event/non-retired sensor", problems)
     critical_ids = {
         row.get("id") for row in sensor_rows

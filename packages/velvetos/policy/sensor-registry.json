@@ -2166,8 +2166,8 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "lifecycle": "DOMAIN",
-      "risk": "high",
+      "lifecycle": "CORE",
+      "risk": "critical",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
