@@ -1,0 +1,65 @@
+name: CortenDesk Standalone Research Gates
+
+# Standalone research only. Never runs Docker, Colima, hbbs, hbbr, or real peers.
+# No production deployment, credentials, elevated permissions or remote-control.
+on:
+  pull_request:
+    paths:
+      - "tools/rustdesk-pilot/**"
+      - "docs/implementation/remote-management/cortendesk-*"
+      - ".github/workflows/cortendesk-standalone.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-only:
+    name: Pinned source and offline contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout research code
+        uses: actions/checkout@v7
+
+      - name: Python for offline contracts
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Offline RustDesk pilot regression suite
+        run: python3 -m unittest discover -s tools/rustdesk-pilot/tests -q
+
+      - name: Local viewer synthetic DOM contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/rustdesk-pilot/render_preview.py \
+            --fixture tools/rustdesk-pilot/fixtures/devices-page1.json \
+            --output "$RUNNER_TEMP/cortendesk-fixture.html"
+          node tools/rustdesk-pilot/tests/native_launch_dom_check.js \
+            "$RUNNER_TEMP/cortendesk-fixture.html"
+
+      - name: Staging launch still explicitly forbidden
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/rustdesk-pilot/cortendesk_staging_gate.py \
+            --plan tools/rustdesk-pilot/fixtures/cortendesk-staging-plan.json \
+            > "$RUNNER_TEMP/staging-design.json"
+          python3 -c 'import json,sys; r=json.load(open(sys.argv[1],encoding="utf-8")); assert r["state"]=="STAGING_DESIGN_VALID_RUNTIME_BLOCKED" and r["may_execute"] is False' \
+            "$RUNNER_TEMP/staging-design.json"
+
+      - name: Read-only pinned v1.14.0 mobile browser source audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet --depth 1 --single-branch --branch v1.14.0 \
+            https://github.com/marcpope/cortendesk.git \
+            "$RUNNER_TEMP/cortendesk-upstream-source"
+          python3 tools/rustdesk-pilot/cortendesk_mobile_source_gate.py \
+            --source-root "$RUNNER_TEMP/cortendesk-upstream-source" \
+            > "$RUNNER_TEMP/mobile-source-report.json"
+          python3 -c 'import json,sys; r=json.load(open(sys.argv[1],encoding="utf-8")); assert r["state"]=="PINNED_SOURCE_SIGNALS_PRESENT_NOT_RUNTIME" and r["source_exactly_pinned"] is True and r["mobile_safari_verified"] is False and r["may_launch_container"] is False' \
+            "$RUNNER_TEMP/mobile-source-report.json"
+          echo "Pinned upstream source and static mobile signals verified; no live session attempted."

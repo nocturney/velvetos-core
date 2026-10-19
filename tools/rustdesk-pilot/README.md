@@ -49,6 +49,11 @@ explicitly false, including `mobile_safari_verified` and
 one platform-specific skip. Details:
 `docs/implementation/remote-management/cortendesk-mobile-source-audit-2026-10-19.md`.
 
+The independent `.github/workflows/cortendesk-standalone.yml` runs this
+offline suite, synthetic HTML/DOM checks, the must-remain-blocked stage plan,
+and the exact upstream source gate without Docker or production services.
+It is intentionally separate from Core-wide stale-link and unrelated sensors.
+
 ## CortenDesk-first staging decision
 
 **The intended full remote-management solution is CortenDesk with its bundled
