@@ -514,46 +514,99 @@ def _windows_read_acl(path: str) -> tuple[bool, list[tuple[int, bool, int]]]:
             kernel32.LocalFree(security)
 
 
+def _windows_enable_privilege(privilege: str) -> None:
+    """Best-effort enable so an elevated token can assign ownership to its user SID."""
+    import ctypes
+    from ctypes import wintypes
+
+    class _Luid(ctypes.Structure):
+        _fields_ = (("LowPart", wintypes.DWORD), ("HighPart", wintypes.LONG))
+
+    class _LuidAndAttributes(ctypes.Structure):
+        _fields_ = (("Luid", _Luid), ("Attributes", wintypes.DWORD))
+
+    class _TokenPrivileges(ctypes.Structure):
+        _fields_ = (("PrivilegeCount", wintypes.DWORD), ("Privileges", _LuidAndAttributes))
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    advapi32 = ctypes.WinDLL("advapi32", use_last_error=True)
+    kernel32.GetCurrentProcess.restype = wintypes.HANDLE
+    kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+    kernel32.CloseHandle.restype = wintypes.BOOL
+    advapi32.OpenProcessToken.argtypes = [wintypes.HANDLE, wintypes.DWORD, ctypes.POINTER(wintypes.HANDLE)]
+    advapi32.OpenProcessToken.restype = wintypes.BOOL
+    advapi32.LookupPrivilegeValueW.argtypes = [wintypes.LPCWSTR, wintypes.LPCWSTR, ctypes.POINTER(_Luid)]
+    advapi32.LookupPrivilegeValueW.restype = wintypes.BOOL
+    advapi32.AdjustTokenPrivileges.argtypes = [
+        wintypes.HANDLE, wintypes.BOOL, ctypes.POINTER(_TokenPrivileges),
+        wintypes.DWORD, ctypes.c_void_p, ctypes.c_void_p,
+    ]
+    advapi32.AdjustTokenPrivileges.restype = wintypes.BOOL
+    token = wintypes.HANDLE()
+    if not advapi32.OpenProcessToken(kernel32.GetCurrentProcess(), 0x0020 | 0x0008, ctypes.byref(token)):
+        return
+    try:
+        luid = _Luid()
+        if not advapi32.LookupPrivilegeValueW(None, privilege, ctypes.byref(luid)):
+            return
+        state = _TokenPrivileges()
+        state.PrivilegeCount = 1
+        state.Privileges.Luid = luid
+        state.Privileges.Attributes = 0x00000002
+        advapi32.AdjustTokenPrivileges(token, False, ctypes.byref(state), 0, None, None)
+    finally:
+        kernel32.CloseHandle(token)
+
+
 def _windows_lock_owner_only(path: str) -> None:
-    """Replace the DACL with one allow ACE for the current user. Do not follow a junction."""
+    """Owner is the current user SID. DACL is that SID only, and inheritance is blocked."""
     import ctypes
     from ctypes import wintypes
 
     if _path_is_reparse(path):
         raise SpawnRefusal("SPAWN_HOME_REPARSE_REFUSED")
+    for privilege in ("SeTakeOwnershipPrivilege", "SeRestorePrivilege"):
+        _windows_enable_privilege(privilege)
     advapi32 = ctypes.WinDLL("advapi32", use_last_error=True)
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
     sid = _windows_current_sid()
-    sid_buf = ctypes.create_string_buffer(sid)
+    owner_sid = ctypes.create_string_buffer(sid)
     acl_size = 8 + 8 + len(sid) + 64
     acl = ctypes.create_string_buffer(acl_size)
+    kernel32.CreateFileW.argtypes = [
+        wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD, ctypes.c_void_p,
+        wintypes.DWORD, wintypes.DWORD, wintypes.HANDLE,
+    ]
+    kernel32.CreateFileW.restype = wintypes.HANDLE
+    kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+    kernel32.CloseHandle.restype = wintypes.BOOL
     advapi32.InitializeAcl.argtypes = [ctypes.c_void_p, wintypes.DWORD, wintypes.DWORD]
     advapi32.InitializeAcl.restype = wintypes.BOOL
     advapi32.AddAccessAllowedAce.argtypes = [ctypes.c_void_p, wintypes.DWORD, wintypes.DWORD, ctypes.c_void_p]
     advapi32.AddAccessAllowedAce.restype = wintypes.BOOL
-    advapi32.SetNamedSecurityInfoW.argtypes = [
-        wintypes.LPWSTR,
-        wintypes.DWORD,
-        wintypes.DWORD,
-        ctypes.c_void_p,
-        ctypes.c_void_p,
-        ctypes.c_void_p,
-        ctypes.c_void_p,
+    advapi32.SetSecurityInfo.argtypes = [
+        wintypes.HANDLE, wintypes.DWORD, wintypes.DWORD,
+        ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p,
     ]
-    advapi32.SetNamedSecurityInfoW.restype = wintypes.DWORD
+    advapi32.SetSecurityInfo.restype = wintypes.DWORD
     if not advapi32.InitializeAcl(acl, acl_size, 2):
         raise SpawnRefusal("SPAWN_HOME_ACL_REFUSED") from ctypes.WinError(ctypes.get_last_error())
-    file_all = 0x1F01FF
-    if not advapi32.AddAccessAllowedAce(acl, 2, file_all, sid_buf):
+    if not advapi32.AddAccessAllowedAce(acl, 2, 0x1F01FF, owner_sid):
         raise SpawnRefusal("SPAWN_HOME_ACL_REFUSED") from ctypes.WinError(ctypes.get_last_error())
-    status = advapi32.SetNamedSecurityInfoW(
-        path,
-        1,
-        0x4 | 0x80000000,
-        None,
-        None,
-        acl,
-        None,
+    # WRITE_OWNER | WRITE_DAC | READ_CONTROL, opened without following a junction.
+    handle = kernel32.CreateFileW(
+        path, 0x000E0000, 0x7, None, 3, 0x02000000 | 0x00200000, None,
     )
+    invalid = ctypes.c_void_p(-1).value
+    if not handle or handle == invalid:
+        raise SpawnRefusal("SPAWN_HOME_ACL_REFUSED") from ctypes.WinError(ctypes.get_last_error())
+    try:
+        # OWNER_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION | PROTECTED_DACL_SECURITY_INFORMATION
+        status = advapi32.SetSecurityInfo(
+            handle, 1, 0x1 | 0x4 | 0x80000000, owner_sid, None, acl, None,
+        )
+    finally:
+        kernel32.CloseHandle(handle)
     if status != 0:
         raise SpawnRefusal("SPAWN_HOME_ACL_REFUSED") from ctypes.WinError(status)
 
@@ -1218,6 +1271,11 @@ def prove_spawn_home_policy() -> list[str]:
         errors.append("private dir no longer uses the mode and owner verdict")
     if "windows_acl_verdict(" not in inspect.getsource(_windows_acl_is_owner_only):
         errors.append("windows acl check no longer uses the owner-only verdict")
+    if "/work" + "space" in inspect.getsource(prove_spawn_home_policy):
+        errors.append("outside-root proof hardcodes a host-specific parent")
+    lock_src = inspect.getsource(_windows_lock_owner_only)
+    if "owner_sid, None, acl, None" not in lock_src or "0x1 | 0x4 | 0x80000000" not in lock_src:
+        errors.append("windows lock does not assign the current user as owner")
     if "_register_spawn_cleanup(" not in inspect.getsource(_private_dir):
         errors.append("spawn home is not registered for exit cleanup")
     if "atexit.register" not in inspect.getsource(_register_spawn_cleanup):
@@ -1359,15 +1417,24 @@ def prove_spawn_home_policy() -> list[str]:
                 errors.append("live symlinked base was trusted")
             if _classify_posix_base(Path("/tmp")) != "ok" and _classify_posix_base(Path("/var/tmp")) != "ok":
                 errors.append("no root-owned sticky temp directory")
-            outside = Path("/workspace") / f"vf-spawn-outside-{secrets.token_hex(4)}"
-            outside.mkdir()
+            outside_parent = Path(tempfile.mkdtemp(prefix="vf-spawn-outside-parent-"))
+            outside = outside_parent / "home"
             try:
+                outside.mkdir()
                 os.chmod(outside, 0o500)
                 if _home_is_clean(str(outside)):
                     errors.append("home outside the fixed root was clean")
             finally:
-                os.chmod(outside, 0o700)
-                outside.rmdir()
+                try:
+                    os.chmod(outside, 0o700)
+                except OSError:
+                    pass
+                if (
+                    outside_parent.is_dir()
+                    and outside_parent.parent == Path(tempfile.gettempdir())
+                    and outside_parent.name.startswith("vf-spawn-outside-parent-")
+                ):
+                    shutil.rmtree(outside_parent, ignore_errors=True)
         finally:
             if link.is_symlink():
                 link.unlink()
@@ -1486,6 +1553,35 @@ def prove_spawn_home_cleanup() -> list[str]:
     return errors
 
 
+def prove_windows_mkdir_acl() -> list[str]:
+    """A directory this process creates on Windows must pass the same owner-only check."""
+    if os.name != "nt":
+        return []
+    parent = Path(tempfile.mkdtemp(prefix="vf-spawn-win-acl-"))
+    path = str(parent / "owned")
+    errors: list[str] = []
+    try:
+        _windows_mkdir(path)
+        if not _windows_acl_is_owner_only(path):
+            owner_ok, aces = _windows_read_acl(path)
+            errors.append(
+                "windows mkdir left a directory that is not owner-only: "
+                f"owner_ok={owner_ok} aces={aces!r}"
+            )
+        raw = os.environ.get("VELVETOS_RUNTIME_ROOT")
+        if raw:
+            base = _windows_spawn_base()
+            if not _windows_acl_is_owner_only(base):
+                errors.append("windows spawn base is not owner-only")
+    except SpawnRefusal as exc:
+        cause = f" ({exc.__cause__})" if exc.__cause__ else ""
+        errors.append(f"windows mkdir acl proof refused: {exc}{cause}")
+    finally:
+        if parent.is_dir() and parent.parent == Path(tempfile.gettempdir()):
+            shutil.rmtree(parent, ignore_errors=True)
+    return errors
+
+
 def prove_controlled_home() -> list[str]:
     """A poisoned home, temp, or COMSPEC does not reach the child or git config."""
     import json
@@ -1493,6 +1589,7 @@ def prove_controlled_home() -> list[str]:
 
     errors: list[str] = []
     errors.extend(prove_spawn_home_policy())
+    errors.extend(prove_windows_mkdir_acl())
     errors.extend(prove_spawn_home_cleanup())
     errors.extend(_prove_home_anchor())
     keys = (
