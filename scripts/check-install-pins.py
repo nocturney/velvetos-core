@@ -27,7 +27,8 @@ step is unclassified. A `shlex` failure refuses the step too.
 hash. INSTALL_SPEC_ALLOWLIST starts empty; a non-empty committed set fails
 this sensor. An apt ffmpeg install must be one exact command sequence on
 ubuntu-24.04. Other dpkg and apt ffmpeg installs are refused through the
-same split_commands and word_lists path as pip. Stdlib only.
+same split_commands and word_lists path as pip. A node command must follow
+the pinned setup-node step and its checksum command. Stdlib only.
 """
 from __future__ import annotations
 
@@ -1662,12 +1663,162 @@ def prove_google_lock(req_text: str, lock_text: str) -> str:
     return "lock=match load_bearing=off_lock_versions=escaped,off_lock_hashes=escaped"
 
 
+NODE_PINS = {
+    "24.21.0": (
+        "python3 scripts/verify_actions_node_sha256.py --version 24.21.0 "
+        "--filename node-24.21.0-linux-x64.tar.gz "
+        "--expected ab971d19412a3b70ab4ef310656f5da973df476ccacd5cb4f49d447be2773227 "
+        "--checksum-url https://github.com/actions/node-versions/releases/download/"
+        "24.21.0-34304089047/hashes.sha256"
+    ),
+    "22.23.3": (
+        "python3 scripts/verify_actions_node_sha256.py --version 22.23.3 "
+        "--filename node-22.23.3-linux-x64.tar.gz "
+        "--expected cf9cfe18f485ac615fbc237e269549f4014fd843395568cf81698ce1903e9bcf "
+        "--checksum-url https://github.com/actions/node-versions/releases/download/"
+        "22.23.3-35947643734/hashes.sha256"
+    ),
+}
+NODE_SETUP = "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020"
+EXPECTED_NODE_SETUPS = 2
+NODE_SHELLS = {"bash", "sh", "dash", "zsh"}
+NODE_SKIP = re.compile(
+    r"""(?m)^[ \t]*(?:-[ \t]*)?(?:"""
+    r"""if:[ \t]*(?:false|['"]false['"]|\$\{\{\s*false\s*\}\})"""
+    r"""|continue-on-error:[ \t]*(?:true|['"]true['"])"""
+    r""")[ \t]*(?:#.*)?$"""
+)
+
+
+def node_steps(job: str) -> list[str]:
+    lines = job.splitlines()
+    start = None
+    indent = 0
+    for index, line in enumerate(lines):
+        match = re.match(r"^(\s*)steps:\s*$", line)
+        if match:
+            indent = len(match.group(1))
+            start = index + 1
+            break
+    if start is None:
+        return []
+    dash = indent + 2
+    steps: list[list[str]] = []
+    for line in lines[start:]:
+        if line.strip() == "":
+            if steps:
+                steps[-1].append(line)
+            continue
+        lead = len(line) - len(line.lstrip(" "))
+        if lead <= indent:
+            break
+        if lead == dash and line.lstrip().startswith("- "):
+            steps.append([line])
+            continue
+        if steps:
+            steps[-1].append(line)
+    return ["\n".join(step) for step in steps]
+
+
+def step_commands(step: str) -> list[str]:
+    """Read run bodies, including a step written as `- run:`."""
+    normalized = "\n".join(
+        re.sub(r"^(\s*)-\s+run:", r"\1run:", line) for line in step.splitlines()
+    )
+    commands: list[str] = []
+    for script in run_scripts(normalized):
+        commands.extend(script_commands(script))
+    return commands
+
+
+def step_node_version(step: str) -> str | None:
+    for line in step.splitlines():
+        match = re.match(r"""^\s*node-version:\s*['"]?([^'"#\s]+)""", line)
+        if match:
+            return match.group(1)
+    return None
+
+
+def node_executable(token: str) -> bool:
+    base = token.replace("\\", "/").rsplit("/", 1)[-1].lower()
+    if base.endswith(".exe"):
+        base = base[:-4]
+    return base == "node"
+
+
+def is_node_command(command: str) -> bool:
+    try:
+        argv = shlex.split(command, posix=True)
+    except ValueError:
+        return False
+    while argv and "=" in argv[0] and not argv[0].startswith("-"):
+        argv = argv[1:]
+    if argv and argv[0] == "sudo":
+        argv = argv[1:]
+    if not argv:
+        return False
+    if argv[0] == "env" or argv[0].endswith("/env"):
+        rest = argv[1:]
+        while rest and (rest[0].startswith("-") or "=" in rest[0]):
+            rest = rest[1:]
+        return bool(rest) and node_executable(rest[0])
+    if node_executable(argv[0]):
+        return True
+    shell = argv[0].replace("\\", "/").rsplit("/", 1)[-1]
+    if shell in NODE_SHELLS and "-c" in argv:
+        idx = argv.index("-c")
+        if idx + 1 < len(argv):
+            return is_node_command(argv[idx + 1])
+    return False
+
+
+def node_toolchain_problems(text: str, *, path: str) -> list[str]:
+    """A node command must follow an exact setup-node step and its checksum command."""
+    problems: list[str] = []
+    blocks = job_blocks(text)
+    if not blocks and ("actions/setup-node@" in text or re.search(r"(?m)^\s*node ", text)):
+        problems.append(f"{path} node command is outside a parsed job")
+        return problems
+    for job, block in blocks:
+        steps = node_steps(block)
+        pinned_until = -1
+        for index, step in enumerate(steps):
+            if "actions/setup-node@" not in step:
+                continue
+            if NODE_SETUP not in step:
+                problems.append(f"{path} job {job} setup-node is not the pinned action")
+            version = step_node_version(step)
+            command = NODE_PINS.get(version or "")
+            if command is None:
+                problems.append(
+                    f"{path} job {job} node-version {version!r} is not an exact toolchain pin"
+                )
+                continue
+            if index + 1 >= len(steps) or step_commands(steps[index + 1]) != [command]:
+                problems.append(f"{path} job {job} node toolchain command mismatch")
+                continue
+            disabled = NODE_SKIP.search(step) or NODE_SKIP.search(steps[index + 1])
+            if disabled:
+                problems.append(f"{path} job {job} node pin step is disabled")
+                continue
+            pinned_until = index + 1
+        for index, step in enumerate(steps):
+            for command in step_commands(step):
+                if not is_node_command(command):
+                    continue
+                if index <= pinned_until:
+                    problems.append(f"{path} job {job} node command before the toolchain pin")
+                elif pinned_until < 0:
+                    problems.append(f"{path} job {job} node command without a pinned toolchain")
+    return problems
+
 def main() -> int:
     if INSTALL_SPEC_ALLOWLIST:
         fail("INSTALL_SPEC_ALLOWLIST must stay empty")
     problems: list[str] = []
     workflows = sorted(WORKFLOWS.glob("*.y*ml"))
     apt_workflows = 0
+    node_setups = 0
     for path in workflows:
         rel = path.relative_to(ROOT).as_posix()
         text = path.read_text(encoding="utf-8")
@@ -1677,6 +1828,8 @@ def main() -> int:
             apt_workflows += 1
         problems.extend(apt)
         problems.extend(ffmpeg_side_install_problems(text, path=rel))
+        problems.extend(node_toolchain_problems(text, path=rel))
+        node_setups += text.count("actions/setup-node@")
     req_text = (ROOT / REQ_NAME).read_text(encoding="utf-8")
     lock_text = (ROOT / LOCK_NAME).read_text(encoding="utf-8")
     problems.extend(google_lock_problems(req_text, lock_text))
@@ -1853,6 +2006,111 @@ def main() -> int:
     if apt_ffmpeg_problems(plain_apt, path="fixture.yml"):
         fail("apt -y install was misread as the hashed apt-get step")
 
+    observer = (WORKFLOWS / "instagram-read-source-observer.yml").read_text(encoding="utf-8")
+    if node_toolchain_problems(check_all, path="check-all.yml"):
+        fail(f"pinned check-all node was refused: {node_toolchain_problems(check_all, path='check-all.yml')}")
+    if node_toolchain_problems(observer, path="instagram-read-source-observer.yml"):
+        fail("pinned observer node was refused")
+
+    def require_node(label: str, mutated: str, needle: str) -> None:
+        found = node_toolchain_problems(mutated, path="check-all.yml")
+        if not any(needle in item for item in found):
+            fail(f"{label} was not caught: {found}")
+
+    require_node(
+        "floating node 24",
+        observer.replace('node-version: "24.21.0"', 'node-version: "24"', 1),
+        "not an exact toolchain pin",
+    )
+    require_node(
+        "node digest swap",
+        check_all.replace(
+            "cf9cfe18f485ac615fbc237e269549f4014fd843395568cf81698ce1903e9bcf",
+            "0" * 64,
+            1,
+        ),
+        "command mismatch",
+    )
+    require_node(
+        "commented node verifier",
+        check_all.replace(
+            "run: python3 scripts/verify_actions_node_sha256.py",
+            "run: # python3 scripts/verify_actions_node_sha256.py",
+            1,
+        ),
+        "command mismatch",
+    )
+    bare_node = check_all.replace(
+        """      - name: Set up Node
+        # Image ubuntu-24.04 on 2026-10-19 had Node 22.23.3.
+        # actions/setup-node v4.4.0
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "22.23.3"
+
+      - name: Verify Node toolchain checksum
+        run: python3 scripts/verify_actions_node_sha256.py --version 22.23.3 --filename node-22.23.3-linux-x64.tar.gz --expected cf9cfe18f485ac615fbc237e269549f4014fd843395568cf81698ce1903e9bcf --checksum-url https://github.com/actions/node-versions/releases/download/22.23.3-35947643734/hashes.sha256
+
+""",
+        "",
+        1,
+    )
+    require_node("runner node", bare_node, "without a pinned toolchain")
+
+    def require_unpinned(label: str, command: str) -> None:
+        sample = (
+            "jobs:\n"
+            "  sample:\n"
+            "    runs-on: ubuntu-24.04\n"
+            "    steps:\n"
+            f"      - run: {command}\n"
+        )
+        found = node_toolchain_problems(sample, path="fixture.yml")
+        if not any("without a pinned toolchain" in item for item in found):
+            fail(f"{label} was not caught: {found}")
+
+    require_unpinned("path node", "/usr/bin/node --version")
+    require_unpinned("env node", "env node --version")
+    require_unpinned("bash node", "bash -c 'node --version'")
+    require_unpinned("dash run node", "node --version")
+    require_node(
+        "verify if false",
+        check_all.replace(
+            "      - name: Verify Node toolchain checksum\n        run:",
+            "      - name: Verify Node toolchain checksum\n        if: false\n        run:",
+            1,
+        ),
+        "node pin step is disabled",
+    )
+    require_node(
+        "setup if expression false",
+        check_all.replace(
+            "      - name: Set up Node\n",
+            "      - name: Set up Node\n        if: ${{ false }}\n",
+            1,
+        ),
+        "node pin step is disabled",
+    )
+    require_node(
+        "verify continue-on-error",
+        check_all.replace(
+            "      - name: Verify Node toolchain checksum\n        run:",
+            "      - name: Verify Node toolchain checksum\n"
+            "        continue-on-error: true\n        run:",
+            1,
+        ),
+        "node pin step is disabled",
+    )
+    if node_setups != EXPECTED_NODE_SETUPS:
+        fail(f"expected {EXPECTED_NODE_SETUPS} setup-node steps, found {node_setups}")
+    probe = __import__("subprocess").run(
+        [sys.executable, str(ROOT / "scripts" / "verify_actions_node_sha256.py"), "--self-test"],
+        cwd=ROOT, text=True, capture_output=True,
+    )
+    if probe.returncode != 0:
+        fail(probe.stderr.strip() or probe.stdout.strip() or "node toolchain self-test failed")
+
+
     print(
         f"OK {NAME} workflows={len(workflows)} floating=0 allowlist=empty "
         "bare=caught exact=pass mixed=caught npm_float=caught npm_exact=pass "
@@ -1864,7 +2122,10 @@ def main() -> int:
         "dpkg_force=caught dpkg_R=caught dpkg_iE=caught dpkg_glob=caught "
         "dpkg_var=caught dash_run=caught "
         "chain=caught wrap=caught nested=caught deb_path=caught "
-        "var_pkg=caught arch=caught satisfy=caught unpack=caught"
+        "var_pkg=caught arch=caught satisfy=caught unpack=caught " 
+        f"node_setups={node_setups} node_float=caught node_sha=caught "
+        "node_comment=caught node_bare=caught node_path=caught node_env=caught "
+        "node_bash=caught node_dash=caught node_if=caught node_continue=caught"
     )
     return 0
 
