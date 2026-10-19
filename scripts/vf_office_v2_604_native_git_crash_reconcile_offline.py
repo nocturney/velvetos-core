@@ -27,15 +27,124 @@ REF = "refs/heads/vf604-offline-local-only"
 ZERO = "0" * 40
 BLOCKING = ("EFFECT_IN_FLIGHT", "UNKNOWN_EFFECT_RECONCILE")
 MARKER = ".vf604-offline-no-network"
-ENV = dict(os.environ)
-ENV.update({
-    "GIT_TERMINAL_PROMPT": "0",
-    "GIT_CONFIG_NOSYSTEM": "1",
-    "GIT_AUTHOR_NAME": "VF604 isolated local Git LAB",
-    "GIT_AUTHOR_EMAIL": "vf604@example.invalid",
-    "GIT_COMMITTER_NAME": "VF604 isolated local Git LAB",
-    "GIT_COMMITTER_EMAIL": "vf604@example.invalid",
-})
+# Constructed git/worker env. The parent environment is not copied.
+# PATH is the fixed literal /usr/bin:/bin. The git binary is the first
+# executable file in a fixed directory list. Ambient PATH is not consulted.
+# HOME and XDG_CONFIG_HOME are an empty directory this process creates.
+# GIT_CONFIG_GLOBAL is an empty file in that directory. GIT_CONFIG_NOSYSTEM
+# is 1. GIT_CONFIG_COUNT is 0. GIT_EXEC_PATH is the absolute exec path of
+# that git binary. No other GIT_* name is passed through.
+# LANG is not required; LC_ALL=C is the stable locale.
+FIXED_GIT_PATH = "/usr/bin:/bin"
+_ISOLATED_GIT_HOME = None
+_GIT_EXEC_PATH = None
+if os.name == "nt":
+    _GIT_CANDIDATES = (
+        Path(r"C:\Program Files\Git\cmd\git.exe"),
+        Path(r"C:\Program Files\Git\bin\git.exe"),
+    )
+else:
+    _GIT_CANDIDATES = (Path("/usr/bin/git"), Path("/bin/git"))
+GIT_ENV_REQUIRED = (
+    "GIT_AUTHOR_EMAIL",
+    "GIT_AUTHOR_NAME",
+    "GIT_COMMITTER_EMAIL",
+    "GIT_COMMITTER_NAME",
+    "GIT_CONFIG_COUNT",
+    "GIT_CONFIG_GLOBAL",
+    "GIT_CONFIG_NOSYSTEM",
+    "GIT_EXEC_PATH",
+    "GIT_TERMINAL_PROMPT",
+    "HOME",
+    "LC_ALL",
+    "PATH",
+    "XDG_CONFIG_HOME",
+)
+
+
+def require_git_env(env):
+    if type(env) is not dict:
+        raise RuntimeError("REQUIRED_ENV_MISSING")
+    missing = [
+        key for key in GIT_ENV_REQUIRED
+        if type(env.get(key)) is not str or env[key] == ""
+    ]
+    if missing or set(env) != set(GIT_ENV_REQUIRED):
+        raise RuntimeError("REQUIRED_ENV_MISSING")
+    return {key: env[key] for key in GIT_ENV_REQUIRED}
+
+
+def git_executable():
+    for candidate in _GIT_CANDIDATES:
+        if candidate.is_file() and os.access(candidate, os.X_OK):
+            return str(candidate)
+    raise RuntimeError("REQUIRED_ENV_MISSING")
+
+
+def isolated_git_home():
+    global _ISOLATED_GIT_HOME
+    if _ISOLATED_GIT_HOME is None:
+        root = Path(tempfile.mkdtemp(prefix="vf604-git-home-"))
+        os.chmod(root, 0o700)
+        xdg = root / "xdg"
+        xdg.mkdir(mode=0o700)
+        config = root / "gitconfig"
+        config.write_bytes(b"")
+        os.chmod(config, 0o600)
+        _ISOLATED_GIT_HOME = (root, xdg, config)
+    return _ISOLATED_GIT_HOME
+
+
+def git_exec_path():
+    global _GIT_EXEC_PATH
+    if _GIT_EXEC_PATH is None:
+        git = git_executable()
+        home, xdg, config = isolated_git_home()
+        probe = {
+            "PATH": FIXED_GIT_PATH,
+            "HOME": str(home),
+            "XDG_CONFIG_HOME": str(xdg),
+            "LC_ALL": "C",
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_CONFIG_GLOBAL": str(config),
+            "GIT_CONFIG_COUNT": "0",
+            "GIT_TERMINAL_PROMPT": "0",
+        }
+        proc = subprocess.run(
+            [git, "--exec-path"],
+            capture_output=True, text=True, env=probe, timeout=10,
+        )
+        found = proc.stdout.strip()
+        if proc.returncode != 0 or not found or not Path(found).is_dir():
+            raise RuntimeError("REQUIRED_ENV_MISSING")
+        _GIT_EXEC_PATH = found
+    return _GIT_EXEC_PATH
+
+
+def git_subprocess_env():
+    home, xdg, config = isolated_git_home()
+    return require_git_env({
+        "PATH": FIXED_GIT_PATH,
+        "LC_ALL": "C",
+        "HOME": str(home),
+        "XDG_CONFIG_HOME": str(xdg),
+        "GIT_TERMINAL_PROMPT": "0",
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "GIT_CONFIG_GLOBAL": str(config),
+        "GIT_CONFIG_COUNT": "0",
+        "GIT_EXEC_PATH": git_exec_path(),
+        "GIT_AUTHOR_NAME": "VF604 isolated local Git LAB",
+        "GIT_AUTHOR_EMAIL": "vf604@example.invalid",
+        "GIT_COMMITTER_NAME": "VF604 isolated local Git LAB",
+        "GIT_COMMITTER_EMAIL": "vf604@example.invalid",
+    })
+
+
+# Callers that already bind this name, including the sealed lost-ACK driver
+# and the CP084 fixture, receive the constructed map. The parent environment
+# is not copied.
+GIT_EXECUTABLE = git_executable()
+ENV = git_subprocess_env()
 
 
 def sha(value):
@@ -43,8 +152,9 @@ def sha(value):
 
 
 def git_raw(args, *, stdin=None):
-    return subprocess.run(["git"] + list(args), input=stdin, capture_output=True,
-                          text=True, env=ENV, timeout=15)
+    return subprocess.run([GIT_EXECUTABLE] + list(args), input=stdin, capture_output=True,
+                          text=True, env=require_git_env(ENV),
+                          timeout=15)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -393,7 +503,7 @@ class DurableGitOfflineTests(unittest.TestCase):
         if barrier:
             args.append("barrier")
         return subprocess.run(args, text=True, capture_output=True,
-                              timeout=12)
+                              timeout=12, env=require_git_env(ENV))
 
     def test_01_local_native_git_exact_cas_with_readback(self):
         it = self.request()
@@ -486,7 +596,8 @@ class DurableGitOfflineTests(unittest.TestCase):
         args = [sys.executable, str(Path(__file__).resolve()), "worker",
                 str(self.lab.root), "t1", "none", "barrier"]
         first = subprocess.Popen(args, stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE, text=True)
+                                 stderr=subprocess.PIPE, text=True,
+                                 env=require_git_env(ENV))
         try:
             deadline = time.monotonic() + 6
             while not (self.lab.root / "holding.ready").exists():
