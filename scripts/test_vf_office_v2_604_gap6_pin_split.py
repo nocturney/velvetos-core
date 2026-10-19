@@ -50,11 +50,11 @@ SEALED = {
     "docs/implementation/office-v2/phase2/p0-604-cp083-native-lostack-two-receipts-2026-10-18.md":
         "15b9d3e96bb0dbd8f30b4ca69465b0ab7b7fb5dd11cddf0c1c2e82cc8f554f98",
     "docs/implementation/office-v2/phase2/p0-native-git-crash-durable-unknown-reconcile-2026-10-10.md":
-        "f8c600fd41a1f45c611a941507289db9b0007c5c2adfb840d21b9e01356745b5",
+        "a13b543057ef2945feb3344b114635365cb48ccfb9e244d75835d7edf74b7040",
     "docs/implementation/office-v2/phase2/p0-real-etcd-mtls-rbac-identity-denial-2026-10-10.md":
-        "f10a9c15baee347d8010f061734bf83056bee903d0400c7172d631e22beff56d",
+        "d7a6dc94678964dabc2029afbd185f3e127658e2b4580f3ebfbd8ed9eaa05e58",
     "docs/implementation/office-v2/phase2/p0-sameuid-sink-key-disposable-bypass-real-2026-10-10.md":
-        "48a0e198b5ac2f7eaccb9e1c92861e5a23ec2d8626375677957b4bb267fe5b1e",
+        "cfac0044b16eac8e7ee47b97ae4ebf0f5d64d256620be379fe02c75665de3256",
     "docs/implementation/office-v2/phase2/p0-604-owner-option-a-revocation-2026-10-16.json":
         "15a1c513f2dbc2da438d977e41f3c5c14a6929e7ec4499199116ed714c250271",
     "scripts/vf_office_v2_604_cp083_osuid_tls_localgit_lab.py":
