@@ -43,7 +43,7 @@
       "synthetic_lab_only": true,
       "local_commit_never_in_main": true,
       "scratch_change": "docs/implementation/office-v2/phase2/cas-only/mac-owned.txt",
-      "worktree_ref": "/Users/chris/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-git-cas-race-mac-20261010-01/repo",
+      "worktree_ref": "$HOME/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-git-cas-race-mac-20261010-01/repo",
       "write_attempted": false
     }
   },
