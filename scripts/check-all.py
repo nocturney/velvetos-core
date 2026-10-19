@@ -142,7 +142,7 @@ def prove_token_scope() -> list[str]:
 
 
 def prove_policy_forwards_token_only_to_collector() -> list[str]:
-    """The policy sensor keeps GH_TOKEN only for the collector self-test."""
+    """The policy sensor keeps GH_TOKEN only for the exact collector self-test."""
     spec = importlib.util.spec_from_file_location(
         "policy_token_scope",
         ROOT / "scripts" / "check-policy-architecture.py",
@@ -151,27 +151,8 @@ def prove_policy_forwards_token_only_to_collector() -> list[str]:
         return ["policy sensor could not be loaded"]
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    code = "import os,sys; sys.exit(0 if os.environ.get('GH_TOKEN')=='job' and os.environ.get('GITHUB_TOKEN')=='job' else 3)"
-    env = os.environ.copy()
-    env["GH_TOKEN"] = "job"
-    env["GITHUB_TOKEN"] = "job"
-    denied = module.policy_subprocess_run(
-        [sys.executable, "-c", code],
-        env=env,
-        capture_output=True,
-        text=True,
-    )
-    allowed = module.policy_subprocess_run(
-        [sys.executable, "-c", code, str(ROOT / "scripts" / "collect-sensor-shadow-observations.py")],
-        env=env,
-        capture_output=True,
-        text=True,
-    )
     errors: list[str] = []
-    if denied.returncode != 3:
-        errors.append(f"policy subprocess kept GH_TOKEN, rc={denied.returncode}")
-    if allowed.returncode != 0:
-        errors.append(f"collector child lost GH_TOKEN, rc={allowed.returncode} {allowed.stderr}")
+    module.prove_github_token_allowlist(errors)
     return errors
 
 

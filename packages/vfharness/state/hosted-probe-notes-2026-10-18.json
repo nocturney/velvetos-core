@@ -1,0 +1,26 @@
+{
+  "task_id": "hosted-probe-notes-2026-10-18",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfharness",
+  "goal": "Close the three QA notes on the hosted gh probe: ambient VF_GH_HOSTED_PROBE, mutant path, and the GH_TOKEN command allowlist.",
+  "completed_steps": [
+    "CLAIM on #612 comment 6256730257"
+  ],
+  "next_step": "Independent QA. security_admission stays RED.",
+  "artifacts": [
+    "scripts/collect-sensor-shadow-observations.py",
+    "scripts/check-policy-architecture.py",
+    "scripts/check-all.py",
+    "changelog.d/hosted-probe-notes.md"
+  ],
+  "unresolved": [
+    "security_admission stays RED"
+  ],
+  "last_updated": "2026-10-18",
+  "execution_state": {
+    "claim": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6256730257",
+    "security_admission": "RED"
+  },
+  "latest_observation": "Ambient VF_GH_HOSTED_PROBE=1 exits 1. A mutant that treats that value as a skip exits 0 and fails the proof. The restore mutant is written under a temp directory, and a mutant that writes beside the script is refused. GH_TOKEN is kept only when argv is the repo collector plus --self-test. An endswith mutant keeps the token for a trailing path and fails the proof."
+}
