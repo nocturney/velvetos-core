@@ -12,6 +12,7 @@ import secrets
 import shutil
 import stat
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
@@ -85,6 +86,50 @@ def same_pinned_directory(
     return left == right
 
 
+def _lookup_git() -> str:
+    """The git executable visible when this process started."""
+    found = shutil.which("git")
+    if not found or not executable_is_absolute(found):
+        return ""
+    try:
+        resolved = os.path.realpath(found)
+    except OSError:
+        return ""
+    if not executable_is_absolute(resolved):
+        return ""
+    return resolved
+
+
+PINNED_GIT = _lookup_git()
+_GIT_BASENAMES = {"git", "git.exe"}
+
+
+def names_git_tool(token: str) -> bool:
+    """True for ``git``, ``git.exe``, and any absolute path with that basename."""
+    if not isinstance(token, str) or not token.strip() or token.startswith("-"):
+        return False
+    return Path(token).name.casefold() in _GIT_BASENAMES
+
+
+def git_pin_matches(resolved: str) -> bool:
+    """True when ``resolved`` is the process-start git, not a later PATH entry."""
+    if not PINNED_GIT or not isinstance(resolved, str) or not resolved:
+        return False
+    return same_pinned_directory(resolved, PINNED_GIT)
+
+
+def require_pinned_git(token: str) -> None:
+    """Refuse an absolute git path that is not the process-start executable."""
+    if not executable_is_absolute(token):
+        raise SpawnRefusal("GIT_PIN_REFUSED")
+    try:
+        resolved = os.path.realpath(token)
+    except OSError as exc:
+        raise SpawnRefusal("GIT_PIN_REFUSED") from exc
+    if not git_pin_matches(resolved):
+        raise SpawnRefusal("GIT_PIN_REFUSED")
+
+
 def join_tool_path(dirs: list[str]) -> str:
     """Join absolute tool directories. A copied search PATH is refused."""
     cleaned: list[str] = []
@@ -104,8 +149,8 @@ def join_tool_path(dirs: list[str]) -> str:
 def resolve_executable(name_or_path: str) -> str:
     """Return one absolute executable.
 
-    A bare name is looked up once on the ambient PATH, then pinned.
-    Later spawns do not search that PATH again.
+    ``git`` must be the executable recorded at process start. A later PATH
+    entry, or an absolute path to a different file, is refused.
     """
     if not isinstance(name_or_path, str) or not name_or_path.strip():
         raise SpawnRefusal("SPAWN_ARGV_REFUSED")
@@ -120,6 +165,9 @@ def resolve_executable(name_or_path: str) -> str:
     resolved = str(Path(candidate).resolve())
     if not executable_is_absolute(resolved):
         raise SpawnRefusal("SPAWN_PATH_LOOKUP_REFUSED")
+    if names_git_tool(name_or_path) or names_git_tool(resolved):
+        if not git_pin_matches(resolved):
+            raise SpawnRefusal("GIT_PIN_REFUSED")
     return resolved
 
 
@@ -446,10 +494,16 @@ def revision_form_errors(argv: list[str], revisions: list[str]) -> list[str]:
 
 
 def allowlisted_git_errors(argv: list[str], kwargs: dict, *, timeout: float) -> list[str]:
-    """Errors when one captured git spawn is not absolute, timed, and allowlisted."""
+    """Errors when one captured git spawn is not the pinned git, timed, and allowlisted."""
     errors: list[str] = []
     if not argv or not executable_is_absolute(argv[0]):
         return [f"git was not absolute: {argv}"]
+    try:
+        resolved_git = os.path.realpath(argv[0])
+    except OSError:
+        return [f"git was not the pinned executable: {argv}"]
+    if not git_pin_matches(resolved_git):
+        return [f"git was not the pinned executable: {argv}"]
     if kwargs.get("timeout") != timeout:
         errors.append("git timeout missing")
     env = kwargs.get("env")
@@ -483,6 +537,167 @@ def allowlisted_git_errors(argv: list[str], kwargs: dict, *, timeout: float) -> 
         resolved = Path(entry).resolve()
         if resolved != root and root not in resolved.parents:
             errors.append(f"git PATH escaped the install: {entry}")
+    return errors
+
+
+def _decoy_git_path(directory: Path) -> Path:
+    name = "git.exe" if os.name == "nt" else "git"
+    path = directory / name
+    path.write_text("#!/bin/sh\necho decoy\n", encoding="utf-8")
+    path.chmod(0o755)
+    return path
+
+
+def prove_decoy_git() -> list[str]:
+    """A git placed earlier on PATH, or an absolute path to it, is refused."""
+    errors: list[str] = []
+    if not PINNED_GIT:
+        return ["pinned git is missing"]
+    with tempfile.TemporaryDirectory(prefix="vf-decoy-git-") as tmp:
+        decoy = _decoy_git_path(Path(tmp))
+        previous = os.environ.get("PATH")
+        os.environ["PATH"] = str(tmp) + os.pathsep + (previous or "")
+        try:
+            try:
+                found = resolve_executable("git")
+            except SpawnRefusal as exc:
+                if "GIT_PIN_REFUSED" not in str(exc):
+                    errors.append(f"decoy git refused as {exc}")
+            else:
+                errors.append(f"decoy git was accepted: {found}")
+            try:
+                found = resolve_executable(str(decoy))
+            except SpawnRefusal as exc:
+                if "GIT_PIN_REFUSED" not in str(exc):
+                    errors.append(f"absolute decoy refused as {exc}")
+            else:
+                errors.append(f"absolute decoy git was accepted: {found}")
+        finally:
+            if previous is None:
+                os.environ.pop("PATH", None)
+            else:
+                os.environ["PATH"] = previous
+    return errors
+
+
+def _git_pin_matches_any(resolved: str) -> bool:
+    """Mutant: any absolute path counts as the pinned git."""
+    del resolved
+    return True
+
+
+def prove_git_identity() -> list[str]:
+    """The live pin refuses a decoy, and a mutant that accepts every path is caught."""
+    errors = prove_decoy_git()
+    original = git_pin_matches
+    globals()["git_pin_matches"] = _git_pin_matches_any
+    try:
+        found = prove_decoy_git()
+    finally:
+        globals()["git_pin_matches"] = original
+    if not any("decoy git was accepted" in item or "absolute decoy git was accepted" in item for item in found):
+        errors.append("decoy git mutant was not caught")
+    return errors
+
+
+def _left_hardened_path(argv: list[str], kwargs: dict) -> bool:
+    """True when a recorded spawn is the caller's raw ``subprocess.run``."""
+    if kwargs.get("timeout") != GIT_TIMEOUT_SECONDS:
+        return True
+    if not argv or not executable_is_absolute(argv[0]):
+        return True
+    try:
+        resolved = os.path.realpath(argv[0])
+    except OSError:
+        return True
+    return not git_pin_matches(resolved)
+
+
+def prove_git_tool_spelling(invoke) -> list[str]:
+    """``git``, ``git.exe``, ``GIT``, and the pinned path stay on the hardened runner.
+
+    The adapter and ``subprocess`` share one module object, so the raw
+    fallthrough is the recorded call that has no git timeout.
+    """
+    errors: list[str] = []
+    if not PINNED_GIT:
+        return ["pinned git is missing"]
+    captured: list[tuple[list[str], dict]] = []
+    original_spawn = subprocess.run
+
+    def fake_spawn(argv, **kwargs):
+        captured.append((list(argv), kwargs))
+        return subprocess.CompletedProcess(argv, 0, stdout="abc\n", stderr="")
+
+    def exercise(active_errors: list[str]) -> None:
+        for token in (PINNED_GIT, "git.exe", "GIT"):
+            before = len(captured)
+            try:
+                invoke([token, "rev-parse", "--help"], None)
+            except SystemExit as exc:
+                active_errors.append(f"{token} git spelling refused: {exc}")
+                continue
+            if len(captured) != before + 1:
+                active_errors.append(f"{token} did not spawn pinned git")
+                continue
+            argv, kwargs = captured[-1]
+            if _left_hardened_path(argv, kwargs):
+                active_errors.append(f"{token} left the hardened path")
+                continue
+            active_errors.extend(
+                allowlisted_git_errors(argv, kwargs, timeout=GIT_TIMEOUT_SECONDS)
+            )
+        before = len(captured)
+        try:
+            invoke(
+                [PINNED_GIT, "status"],
+                {"GIT_EXEC_PATH": "/evil/injected", "VF_SPAWN_SENTINEL": "leaked"},
+            )
+        except SystemExit as exc:
+            if "refuses a caller environment" not in str(exc):
+                active_errors.append(f"absolute git caller env refused as {exc}")
+        else:
+            active_errors.append("absolute git accepted a caller environment")
+        if len(captured) != before:
+            active_errors.append("absolute git caller env spawned")
+        with tempfile.TemporaryDirectory(prefix="vf-decoy-spell-") as tmp:
+            decoy = str(_decoy_git_path(Path(tmp)))
+            before = len(captured)
+            try:
+                invoke([decoy, "status"], None)
+            except SystemExit as exc:
+                if "GIT_PIN_REFUSED" not in str(exc):
+                    active_errors.append(f"absolute decoy spelling refused as {exc}")
+            else:
+                active_errors.append("absolute decoy spelling was accepted")
+            if len(captured) != before:
+                active_errors.append("absolute decoy left the hardened path")
+
+    subprocess.run = fake_spawn
+    try:
+        exercise(errors)
+        if not errors:
+            def exact_git(token: str) -> bool:
+                return token == "git"
+
+            original_name = names_git_tool
+            globals()["names_git_tool"] = exact_git
+            try:
+                before = len(captured)
+                try:
+                    invoke([PINNED_GIT, "rev-parse", "--help"], None)
+                except SystemExit:
+                    pass
+                fell_through = any(
+                    call[0] and call[0][0] == PINNED_GIT and call[1].get("timeout") is None
+                    for call in captured[before:]
+                )
+            finally:
+                globals()["names_git_tool"] = original_name
+            if not fell_through:
+                errors.append("spelling mutant was not caught")
+    finally:
+        subprocess.run = original_spawn
     return errors
 
 
