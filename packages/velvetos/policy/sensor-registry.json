@@ -2156,6 +2156,28 @@
       "mapping_state": "mapped"
     },
     {
+      "id": "check-public-path-redaction",
+      "path": "scripts/check-public-path-redaction.py",
+      "owns": [
+        "scripts/check-public-path-redaction.py"
+      ],
+      "triggered_by": [
+        "scripts/check-public-path-redaction.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "lifecycle": "DOMAIN",
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
       "id": "check-publication-evidence",
       "path": "scripts/check-publication-evidence.py",
       "owns": [

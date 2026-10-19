@@ -210,7 +210,7 @@
         ]
       }
     },
-    "runtime": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
+    "runtime": "%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
     "version": "0.11.1"
   },
   "cadquery": {
@@ -250,7 +250,7 @@
         ]
       }
     },
-    "runtime": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack\\cadquery\\.venv\\Scripts\\python.exe"
+    "runtime": "%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\cad-stack\\cadquery\\.venv\\Scripts\\python.exe"
   },
   "coordinate_frame": "xy_center_z_min",
   "jscad": {

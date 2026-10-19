@@ -6,7 +6,7 @@
 
 - Code: `scripts/vf_office_v2_604_macos_sandbox_hardlink_alias_lab.py`
 - Exact original Mac source SHA256: `f7d583fbaab683b69f96bfebae9cdb91c2a88609530beaae1153cf28f0a92add`
-- Mac machine: MacMiniOffice.local, `chris` UID 501. New isolated mode-0700 directory `/Users/chris/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-604-kernel-sandbox-hardlink-alias-20261010`.
+- Mac machine: MacMiniOffice.local, `chris` UID 501. New isolated mode-0700 directory `$HOME/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-604-kernel-sandbox-hardlink-alias-20261010`.
 - Mac native `/usr/bin/sandbox-exec` exists and operated in this trial. It is a deprecated interface; no persistent profile or system-wide sandbox setting was installed.
 - Each run creates a fresh mode-0700 disposable directory containing **fake nonsecret marker bytes**, a mode-0600 file in a fake Sink-secrets directory, a symlink to that same file, and a preexisting hard link in the same filesystem **outside** the secrets directory. There are **no certificates, passwords, tokens, Keychain items, real Git helper files or production files**. The marker bytes never appear in the JSON report.
 - Direct command-line `sandbox-exec -f <temporary-profile> /bin/cat <fake-path>` and direct Python file-open were tested. No daemon, real service, Git network write, global ACL/trust/firewall modification, account creation, VM, Codex CLI, paid API, customer/Instagram/Grokbot/printer/CAD effect or autostart change.
@@ -50,7 +50,7 @@ Portable:
 `python scripts/vf_office_v2_604_macos_sandbox_hardlink_alias_lab.py verify`
 
 Explicit Mac ephemeral lab only:
-`python3 scripts/vf_office_v2_604_macos_sandbox_hardlink_alias_lab.py integration /Users/chris/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-604-kernel-sandbox-hardlink-alias-20261010`
+`python3 scripts/vf_office_v2_604_macos_sandbox_hardlink_alias_lab.py integration $HOME/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-604-kernel-sandbox-hardlink-alias-20261010`
 
 `integration` refuses non-Darwin hosts, absent `sandbox-exec`, wrong root name, symlink root, wrong owner, weak mode and injection into the restrictive policy. Never point it at existing real credentials; it owns and deletes its own fake bytes.
 
