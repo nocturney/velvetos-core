@@ -1229,6 +1229,7 @@ def _names_ffmpeg(token: str) -> bool:
     name = name.split("=", 1)[0]
     if ":" in name:
         name = name.split(":", 1)[0]
+    name = re.sub(r"[*?\[\]]", "", name)
     if name.lower().endswith(".deb"):
         name = name[:-4]
     folded = name.lower()
@@ -1297,7 +1298,10 @@ def _apt_installs_ffmpeg(argv: list[str]) -> bool:
             continue
         packages.append(token)
         index += 1
-    return action in APT_SIDE_ACTIONS and any(_side_package(token) for token in packages)
+    if action not in APT_SIDE_ACTIONS:
+        return False
+    # No package operand means the names arrive from xargs or a pipe.
+    return not packages or any(_side_package(token) for token in packages)
 
 
 def _ffmpeg_slices(words: list[str]) -> list[list[str]]:
@@ -1814,6 +1818,10 @@ def main() -> int:
     require_side("dpkg glob", "sudo dpkg -i *.deb")
     require_side("dpkg other variable", 'sudo dpkg -i "$pkg"')
     require_side("dash run dpkg", "sudo dpkg -i ffmpeg.deb", dash=True)
+    require_side(
+        "update and install",
+        "sudo apt-get update && sudo apt install -y ffmpeg",
+    )
     require_side("and chain", "true && sudo apt install ffmpeg")
     require_side("semicolon chain", "true; sudo apt install ffmpeg")
     require_side("or chain", "false || sudo apt install ffmpeg")
@@ -1822,7 +1830,7 @@ def main() -> int:
     require_side("env wrapper", "env DEBIAN_FRONTEND=noninteractive apt install ffmpeg")
     require_side("timeout wrapper", "timeout 5 apt install ffmpeg")
     require_side("command wrapper", "command apt install ffmpeg")
-    require_side("xargs wrapper", "xargs apt install ffmpeg")
+    require_side("xargs wrapper", "xargs apt install")
     require_side("nice wrapper", "nice apt install ffmpeg")
     require_side("bash -c", "bash -c 'apt install ffmpeg'")
     require_side("sh -lc", "sh -lc 'apt install ffmpeg'")
@@ -1831,6 +1839,7 @@ def main() -> int:
     require_side("local deb", "apt install ./x.deb")
     require_side("apt variable", 'apt install "$pkg"')
     require_side("arch qualifier", "apt install ffmpeg:amd64")
+    require_side("glob name", "apt install 'ffmpeg*'")
     require_side("apt satisfy", "apt satisfy ffmpeg")
     require_side("dpkg unpack", "dpkg --unpack ffmpeg.deb")
     plain_apt = (
