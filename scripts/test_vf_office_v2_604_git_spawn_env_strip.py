@@ -52,8 +52,7 @@ def _mutant_source(name):
     )
 
 
-def _load_mutant(name, source):
-    root = Path(tempfile.mkdtemp(prefix="vf604-git-strip-"))
+def _load_mutant(name, source, root):
     path = root / ("mutant_" + name + ".py")
     path.write_text(source, encoding="utf-8")
     module_name = "vf604_git_strip_mutant_" + name
@@ -71,6 +70,24 @@ def _load_mutant(name, source):
 
 
 class GitSpawnEnvStripTests(unittest.TestCase):
+    @staticmethod
+    def _git_strip_dirs():
+        root = Path(tempfile.gettempdir())
+        return {path for path in root.glob("vf604-git-strip-*") if path.is_dir()}
+
+    @classmethod
+    def setUpClass(cls):
+        cls._pre_git_strip_dirs = cls._git_strip_dirs()
+
+    @classmethod
+    def tearDownClass(cls):
+        leaked = cls._git_strip_dirs() - cls._pre_git_strip_dirs
+        if leaked:
+            raise AssertionError(
+                "leaked vf604-git-strip-* dirs: "
+                + ", ".join(sorted(str(path) for path in leaked))
+            )
+
     def _pin(self, name):
         self.assertNotIn(name, native.GIT_ENV_REQUIRED)
         canary = "vf604-strip-" + name
@@ -91,7 +108,9 @@ class GitSpawnEnvStripTests(unittest.TestCase):
             child = json.loads(proc.stdout)
             self.assertNotIn(name, child)
             self.assertEqual(set(child), set(native.GIT_ENV_REQUIRED))
-            mutant = _load_mutant(name, _mutant_source(name))
+            mutant_dir = tempfile.TemporaryDirectory(prefix="vf604-git-strip-")
+            self.addCleanup(mutant_dir.cleanup)
+            mutant = _load_mutant(name, _mutant_source(name), Path(mutant_dir.name))
             try:
                 leaked = mutant.git_subprocess_env()
             finally:
