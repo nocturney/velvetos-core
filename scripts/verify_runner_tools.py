@@ -2,7 +2,7 @@
 """Check runner image tools against the versions already in use.
 
 Linux versions are ubuntu-24.04 image ubuntu24/20261012.334.
-Windows versions are windows-2025-vs2026 image win25-vs2026/20261007.264.
+Windows git is 2.56.0.windows.2, the version windows-latest reported on 2026-10-19.
 Official checksum files are fetched and the artifact bytes are hashed.
 Docker static archives have no published checksum; those two hashes are TOFU.
 The installed binaries are not replaced. Stdlib only.
@@ -40,11 +40,11 @@ LINUX_DOCKER_SHA = "6b130fa5fb13516620d5ece0b63f63a495cede428bb2f9e24449022e9d72
 LINUX_DOCKER_URL = "https://download.docker.com/linux/static/stable/x86_64/docker-28.0.4.tgz"
 LINUX_DOCKER_CHECKSUM = "TOFU"
 
-WINDOWS_GIT_VERSION = "git version 2.56.0.windows.1"
-WINDOWS_GIT_SHA = "bfe94e7b419b16eee9fecbd1253a98e3d4f49ba8f029630549052278ffe286a6"
-WINDOWS_GIT_NAME = "Git-2.56.0-64-bit.exe"
-WINDOWS_GIT_SUMS = "https://api.github.com/repos/git-for-windows/git/releases/tags/v2.56.0.windows.1"
-WINDOWS_GIT_URL = "https://github.com/git-for-windows/git/releases/download/v2.56.0.windows.1/Git-2.56.0-64-bit.exe"
+WINDOWS_GIT_VERSION = "git version 2.56.0.windows.2"
+WINDOWS_GIT_SHA = "52188f917b378f00c70ec136bcf090005f30d44fbc4eba0bce759cc6592d60f6"
+WINDOWS_GIT_NAME = "Git-2.56.0.2-64-bit.exe"
+WINDOWS_GIT_SUMS = "https://api.github.com/repos/git-for-windows/git/releases/tags/v2.56.0.windows.2"
+WINDOWS_GIT_URL = "https://github.com/git-for-windows/git/releases/download/v2.56.0.windows.2/Git-2.56.0.2-64-bit.exe"
 
 WINDOWS_GH_VERSION = "gh version 2.102.0"
 WINDOWS_GH_SHA = "ae64e556ecc240b200f7eba60d550e4bb60d78e860e69dd88c449405b86067f4"

@@ -1,0 +1,1 @@
+- 2026-10-19 - **Runner Windows git pin:** Windows check-all keeps git 2.56.0.windows.2, the version the hosted image reported, checked against the v2.56.0.windows.2 release notes. No model call.
