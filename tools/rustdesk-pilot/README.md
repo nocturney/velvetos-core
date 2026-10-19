@@ -29,6 +29,26 @@ denial** (`may_execute=false`). No new image was pulled, no container was
 started, no server or client was reconfigured and no fleet-console code was
 changed. See `docs/implementation/remote-management/cortendesk-release-refresh-2026-10-19.md`.
 
+## 2026-10-19 verified mobile-browser source audit (no deployment)
+
+A new read-only pinned-source checker tests the exact CortenDesk v1.14.0
+upstream Git commit against **10 hard-pinned Git blob IDs** and **10 static
+browser/security feature signals**, including authenticated routes, WebSocket
+proxies, touch gestures, H.264 fallback, iPhone viewport and file picker.
+
+With a *separate, public v1.14.0 source checkout* on Windows Chris:
+
+    python cortendesk_mobile_source_gate.py --source-root D:\Velvet\Pilots\CortenDeskSourceAudit-20261019
+
+Verified report: `PINNED_SOURCE_SIGNALS_PRESENT_NOT_RUNTIME`. This does
+**not** start CortenDesk, prove source/image equivalence, authorize the
+previously denied container launch, establish signed-in client compatibility,
+or verify Safari playback/control/transfer. It records these fields as
+explicitly false, including `mobile_safari_verified` and
+`may_launch_container`. The local regression suite now has 160 tests,
+one platform-specific skip. Details:
+`docs/implementation/remote-management/cortendesk-mobile-source-audit-2026-10-19.md`.
+
 ## CortenDesk-first staging decision
 
 **The intended full remote-management solution is CortenDesk with its bundled
