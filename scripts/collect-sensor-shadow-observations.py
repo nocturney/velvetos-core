@@ -18,6 +18,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 
 import vf_subprocess_hygiene as hygiene
 from datetime import datetime, timezone
@@ -79,6 +80,44 @@ def _expose_gh_apart_from_git(source: str, directory: Path) -> None:
     dest = directory / name
     shutil.copy2(source, dest)
     dest.chmod(dest.stat().st_mode | 0o755)
+
+
+def _delete_tree(path: Path) -> None:
+    """Remove a tree. Windows can keep a just-run ``gh.exe`` locked for a moment."""
+    for attempt in range(8):
+        try:
+            shutil.rmtree(path)
+            return
+        except PermissionError:
+            if attempt == 7 or not path.exists():
+                raise
+            time.sleep(0.5)
+
+
+def prove_delete_tree_retries_locked_copy() -> None:
+    """A locked first delete must be retried. The tree must not stay in the repo."""
+    target = Path(tempfile.mkdtemp(prefix="vf-gh-git-retry-", dir=ROOT))
+    (target / "gh.exe").write_bytes(b"not-a-real-binary")
+    locked = {"left": 2}
+    real_rmtree = shutil.rmtree
+
+    def flaky(path, **kwargs):
+        if locked["left"] and Path(path) == target:
+            locked["left"] -= 1
+            raise PermissionError("locked")
+        return real_rmtree(path, **kwargs)
+
+    shutil.rmtree = flaky
+    try:
+        _delete_tree(target)
+    finally:
+        shutil.rmtree = real_rmtree
+        if target.exists():
+            real_rmtree(target)
+    if locked["left"] != 0:
+        raise AssertionError("delete did not retry a locked gh.exe copy")
+    if target.exists():
+        raise AssertionError("locked tree was not removed")
 
 
 class GhUnavailable(RuntimeError):
@@ -400,15 +439,17 @@ def prove_split_gh_git_repo_slug() -> str:
 
     The allowlisted PATH used to be only gh's directory. `gh repo view` then
     cannot find git when the two binaries do not share a directory.
+    The copy lives in the workspace because a noexec temp mount would refuse
+    it, and Path.resolve() would expand Windows 8.3 names. Cleanup retries:
+    Windows denies unlink while that ``gh.exe`` is still locked.
     """
-    import tempfile
-
     gh_bin = hygiene.pin_which("gh")
     git_bin = hygiene.pin_which("git")
     git_dir = hygiene.executable_directory(git_bin)
     # The workspace filesystem is executable. A noexec temp mount would refuse
     # the copied gh, and Path.resolve() would expand Windows 8.3 names.
-    with tempfile.TemporaryDirectory(prefix="vf-gh-git-", dir=ROOT) as tmp:
+    tmp = tempfile.mkdtemp(prefix="vf-gh-git-", dir=ROOT)
+    try:
         gh_dir = Path(tmp) / "gh-bin"
         gh_dir.mkdir()
         try:
@@ -476,6 +517,8 @@ def prove_split_gh_git_repo_slug() -> str:
             detail = " ".join(str(exc).split())[:240]
             sys.stderr.write(f"SPLIT_GH_GIT_FAIL {type(exc).__name__}: {detail}\n")
             raise SystemExit(1) from None
+    finally:
+        _delete_tree(Path(tmp))
     if slug != "nocturney/velvetos-core":
         sys.stderr.write(f"SPLIT_GH_GIT_FAIL slug {slug!r}\n")
         raise SystemExit(1)
@@ -1100,6 +1143,7 @@ def self_test() -> int:
     else:
         raise AssertionError("mismatched recovery evidence must fail closed")
 
+    prove_delete_tree_retries_locked_copy()
     prove_gh_unavailable_codes()
     with hygiene.record_pinned_spawn("gh") as (calls, short):
         gh(["repo", "view", "--json", "nameWithOwner"])
