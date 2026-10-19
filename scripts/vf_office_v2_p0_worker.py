@@ -414,7 +414,9 @@ def demo_selftest():
         script.write_text("from pathlib import Path\nPath('result.txt').write_text('safe output\\n', encoding='utf-8')\n", encoding="utf-8")
         dashed = worktree / "--dashed.py"
         dashed.write_text("print(1)\n", encoding="utf-8")
-        git_raw("-C", str(worktree), "add", user_args=["job.py", "--dashed.py"])
+        short = worktree / "-x.py"
+        short.write_text("print(1)\n", encoding="utf-8")
+        git_raw("-C", str(worktree), "add", user_args=["job.py", "--dashed.py", "-x.py"])
         git_raw("-C", str(worktree), "-c", "user.name=Fixture",
                 "-c", "user.email=fixture@example.invalid", "commit", "-qm", "fixture")
         sha = git(worktree, "rev-parse", "HEAD")
@@ -435,6 +437,36 @@ def demo_selftest():
                          "sha256": file_hash(script), "args": []},
             "allowed_outputs": ["result.txt"], "context_checkpoint": str(checkpoint),
         }
+        short_env = copy.deepcopy(env)
+        short_env["executor"] = {
+            "kind": "PINNED_PYTHON_FIXTURE",
+            "script": "-x.py",
+            "sha256": file_hash(short),
+            "args": [],
+        }
+        import vf_spawn
+        recorded = []
+        original_run = vf_spawn.subprocess.run
+
+        def spy_run(argv, **kwargs):
+            recorded.append(list(argv))
+            return original_run(argv, **kwargs)
+
+        vf_spawn.subprocess.run = spy_run
+        try:
+            validate(short_env)
+        except Rejected as exc:
+            raise Rejected("SHORT_OPTION_EXECUTOR_PATH_REFUSED:" + str(exc))
+        finally:
+            vf_spawn.subprocess.run = original_run
+        listings = [argv for argv in recorded if "ls-files" in argv]
+        if (
+            len(listings) != 1
+            or "--" not in listings[0]
+            or listings[0][listings[0].index("--") + 1:] != ["-x.py"]
+        ):
+            raise Rejected("SHORT_OPTION_LS_FILES_ARGV:" + repr(listings))
+        tests.append("short_option_executor_behind_double_dash")
         dashed_env = copy.deepcopy(env)
         dashed_env["executor"] = {
             "kind": "PINNED_PYTHON_FIXTURE",

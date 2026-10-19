@@ -84,6 +84,12 @@ def prove_git_hygiene() -> list[str]:
             ("newline", "rev\nmore"),
             ("nul", "rev\x00more"),
             ("cr", "rev\rmore"),
+            ("leading newline", "\nrev"),
+            ("leading nul", "\x00rev"),
+            ("leading cr", "\rrev"),
+            ("bare newline", "\n"),
+            ("bare cr", "\r"),
+            ("bare nul", "\x00"),
         ):
             try:
                 run("git", "rev-parse", "--verify", "-q", revisions=[token], cwd=ROOT)
@@ -94,6 +100,26 @@ def prove_git_hygiene() -> list[str]:
                 errors.append(f"{label} revision was accepted")
         if len(captured) != before:
             errors.append("control-byte revision spawned git")
+        held = len(captured)
+        for label, caller, code in (
+            ("empty argv", lambda: run("git", "", cwd=ROOT), "GIT_ARGV_REFUSED"),
+            ("non-string argv", lambda: run("git", None, cwd=ROOT), "GIT_ARGV_REFUSED"),
+            ("empty user arg", lambda: run("git", "status", user_args=[""], cwd=ROOT), "GIT_USER_ARG_REFUSED"),
+            (
+                "non-string user arg",
+                lambda: run("git", "status", user_args=[None], cwd=ROOT),
+                "GIT_USER_ARG_REFUSED",
+            ),
+        ):
+            try:
+                caller()
+            except SystemExit as exc:
+                if code not in str(exc):
+                    errors.append(f"{label} refused as {exc}")
+            else:
+                errors.append(f"{label} was accepted")
+        if len(captured) != held:
+            errors.append("refused git argv spawned git")
     except (SpawnRefusal, SystemExit) as exc:
         errors.append(f"git spawn refused: {exc}")
         status = fetched = ""
