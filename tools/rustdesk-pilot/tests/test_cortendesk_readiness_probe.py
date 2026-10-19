@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import cortendesk_readiness_probe as probe
 
 PLAN = Path(__file__).resolve().parents[1] / 'fixtures' / 'cortendesk-staging-plan.json'
-EXPECTED_SHA = 'sha256:3f91c02180d6ed59bfa3d4a938b0a52cf01e8fd1e953799be05435234c062373'
+EXPECTED_SHA = 'sha256:3305ea4bca8814e71f6c0dcf49df449cf44f82be4023a0c98e15fdc2ef919545'
 
 
 class TestHostReadiness(unittest.TestCase):
@@ -52,7 +52,7 @@ class TestHostReadiness(unittest.TestCase):
             if argv[-1] == probe.IMAGE_COMMAND:
                 if not self.available_image:
                     return 0, ''
-                return 0, ('ghcr.io/marcpope/cortendesk 1.13.2 ' +
+                return 0, ('ghcr.io/marcpope/cortendesk 1.14.0 ' +
                            EXPECTED_SHA + '\n')
             if argv[-1] == probe.NAMESPACE_COMMAND:
                 text = 'NAME CONTAINERS IMAGES\ndefault 0 1\nvf-rustdesk-pilot 0 1\n'
@@ -183,11 +183,17 @@ class TestHostReadiness(unittest.TestCase):
 
     def test_image_check_requires_correct_image_row(self):
         self.assertTrue(probe._image_cached(
-            'ghcr.io/marcpope/cortendesk 1.13.2 ' + EXPECTED_SHA, EXPECTED_SHA))
+            'ghcr.io/marcpope/cortendesk 1.14.0 ' + EXPECTED_SHA,
+            EXPECTED_SHA, 'v1.14.0'))
         self.assertFalse(probe._image_cached(
-            'other/repo 1.13.2 ' + EXPECTED_SHA, EXPECTED_SHA))
+            'other/repo 1.14.0 ' + EXPECTED_SHA,
+            EXPECTED_SHA, 'v1.14.0'))
         self.assertFalse(probe._image_cached(
-            'ghcr.io/marcpope/cortendesk latest ' + EXPECTED_SHA, EXPECTED_SHA))
+            'ghcr.io/marcpope/cortendesk latest ' + EXPECTED_SHA,
+            EXPECTED_SHA, 'v1.14.0'))
+        self.assertFalse(probe._image_cached(
+            'ghcr.io/marcpope/cortendesk 1.13.2 sha256:3f91c02180d6ed59bfa3d4a938b0a52cf01e8fd1e953799be05435234c062373',
+            EXPECTED_SHA, 'v1.14.0'))
 
     def test_profile_name_must_match_exactly(self):
         rows = 'velvet-qa-backup Running aarch64\nvelvet-qa Running aarch64\n'

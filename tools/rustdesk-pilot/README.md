@@ -4,6 +4,31 @@ Status: CORTENDESK-FIRST RESEARCH / 146 OFFLINE+LOCALHOST+DOM TESTS / MOBILE BRO
 
 This folder supports three constrained inventory sources: an explicitly opted-in read-only CortenDesk API adapter, an offline read-only RustDesk OSS SQLite snapshot reader, and an expressly authorized one-shot local RustDesk OSS registry read. Its HTML preview renders only synthetic, offline-snapshot or locally read registration IDs, with explicit source labels and no false online inference. This research does not run a second production control plane or provide installation, background services, credential harvesting, remote-control commands, device mutations or auto-start.
 
+## 2026-10-19 release refresh — v1.14.0 (NOT deployed)
+
+The proposed isolated stage now pins **CortenDesk v1.14.0** (upstream source
+commit `2070d598d30cbaec207060a0fbef539ccf5d5d52`) and the verified GHCR
+OCI multi-platform index `sha256:3305ea4bca8814e71f6c0dcf49df449cf44f82be4023a0c98e15fdc2ef919545`.
+The index's Linux/ARM64 child is `sha256:e26c1f5d2d2b14ffd97b46c04c5c8ef1a3dd6da3fa5e21baa7eb379fabcfea39`.
+These digests were obtained by **anonymous public-registry metadata GET**,
+not by pulling or starting an image. The previously cached v1.13.2 image is
+**not** proof that v1.14.0 is cached.
+
+Upstream v1.14.0 fixes the #102 client-login SSO bypass and #105 legacy
+native RustDesk deep links and adds client TOTP/email-code support.
+The review-only v1.13.2 link patch below is **obsolete for this target**:
+do not apply it to v1.14.0. The source's `routes/api.php` retains the
+read-only scoped `GET /api/v1/devices` route, while `routes/web.php`
+protects `/devices` and `/webclient` with web authentication.
+Those source facts do **not** establish runtime safety, mobile Safari
+compatibility, signed-in client signalling or deployment readiness.
+
+The new plan preserves localhost-only host ports, independent stage
+namespace/data/keys, disposable clients and the **existing remote execution
+denial** (`may_execute=false`). No new image was pulled, no container was
+started, no server or client was reconfigured and no fleet-console code was
+changed. See `docs/implementation/remote-management/cortendesk-release-refresh-2026-10-19.md`.
+
 ## CortenDesk-first staging decision
 
 **The intended full remote-management solution is CortenDesk with its bundled

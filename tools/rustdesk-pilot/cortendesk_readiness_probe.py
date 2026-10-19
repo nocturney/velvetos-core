@@ -110,14 +110,14 @@ def _has_namespace(stdout: str, name: str) -> bool:
                for line in stdout.splitlines())
 
 
-def _image_cached(stdout: str, digest: str) -> bool:
+def _image_cached(stdout: str, digest: str, release: str) -> bool:
     # The immutable digest and the tagged upstream repository must match on
     # ONE row; substring-only SHA matches would create false confidence.
     for line in stdout.splitlines():
         parts = line.split()
         if (len(parts) >= 3 and
                 parts[0] == 'ghcr.io/marcpope/cortendesk' and
-                parts[1] == '1.13.2' and parts[2] == digest):
+                parts[1] == release[1:] and parts[2] == digest):
             return True
     return False
 
@@ -164,7 +164,8 @@ def inspect(
         guest_observations = _guest_sockets(stdout, code, ports)
         code, stdout = runner(prefix + [IMAGE_COMMAND])
         if code == 0:
-            image_cached = _image_cached(stdout, plan['image'].split('@', 1)[1])
+            image_cached = _image_cached(
+                stdout, plan['image'].split('@', 1)[1], plan['source_release'])
         code, stdout = runner(prefix + [NAMESPACE_COMMAND])
         if code == 0:
             staging_namespace_exists = _has_namespace(stdout, STAGING_NS)

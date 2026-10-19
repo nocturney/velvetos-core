@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.cortendesk.staging_plan.v1",
-  "source_release": "v1.13.2",
-  "image": "ghcr.io/marcpope/cortendesk@sha256:3f91c02180d6ed59bfa3d4a938b0a52cf01e8fd1e953799be05435234c062373",
+  "source_release": "v1.14.0",
+  "image": "ghcr.io/marcpope/cortendesk@sha256:3305ea4bca8814e71f6c0dcf49df449cf44f82be4023a0c98e15fdc2ef919545",
   "colima_profile": "velvet-qa",
   "containerd_namespace": "vf-cortendesk-staging",
   "embedded_server": true,

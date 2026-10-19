@@ -36,6 +36,12 @@ class StagingPlanTests(unittest.TestCase):
                               'image_not_immutable')
         self.expect_rejection({'image': 'ghcr.io/marcpope/cortendesk:1.13.2'},
                               'image_not_immutable')
+        self.expect_rejection({'image': 'ghcr.io/marcpope/cortendesk:1.14.0'},
+                              'image_not_immutable')
+        self.expect_rejection({'source_release': 'v1.13.2'},
+                              'image_not_immutable')
+        self.expect_rejection({'image': 'ghcr.io/marcpope/cortendesk@sha256:3f91c02180d6ed59bfa3d4a938b0a52cf01e8fd1e953799be05435234c062373'},
+                              'image_not_immutable')
 
     def test_cannot_take_over_production_colima_or_server(self):
         self.expect_rejection({'colima_profile': 'rustdesk'}, 'isolated_runtime')

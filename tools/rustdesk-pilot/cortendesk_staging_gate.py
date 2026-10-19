@@ -13,7 +13,7 @@ from typing import Any
 SCHEMA = 'velvetos.cortendesk.staging_plan.v1'
 RELEASE_IMAGE = (
     'ghcr.io/marcpope/cortendesk@'
-    'sha256:3f91c02180d6ed59bfa3d4a938b0a52cf01e8fd1e953799be05435234c062373'
+    'sha256:3305ea4bca8814e71f6c0dcf49df449cf44f82be4023a0c98e15fdc2ef919545'
 )
 REQUIRED_FIELDS = frozenset({
     'schema', 'source_release', 'image', 'colima_profile', 'containerd_namespace',
@@ -35,7 +35,7 @@ def validate_plan(plan: Any) -> dict[str, Any]:
         raise StagingPlanError('plan_schema_fields_invalid')
     if plan['schema'] != SCHEMA:
         raise StagingPlanError('plan_schema_version_invalid')
-    if plan['source_release'] != 'v1.13.2' or plan['image'] != RELEASE_IMAGE:
+    if plan['source_release'] != 'v1.14.0' or plan['image'] != RELEASE_IMAGE:
         raise StagingPlanError('image_not_immutable_verified_release')
     if (plan['colima_profile'] != 'velvet-qa' or
             plan['containerd_namespace'] != 'vf-cortendesk-staging'):
