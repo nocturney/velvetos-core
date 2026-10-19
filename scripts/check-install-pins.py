@@ -30,8 +30,14 @@ ubuntu-24.04. In workflows and composite actions, apt/apt-get/aptitude
 install, reinstall, and satisfy, and dpkg/dpkg-deb install, unpack, and
 extract, are refused unless the simple command is an exact allowlisted
 line. The allowlist is the hashed ffmpeg download and the verified deb
-install. A node command must follow the pinned setup-node step and its
-checksum command. Stdlib only.
+install. A value-taking option (aptitude `-F`/`--display-format`,
+`-w`/`--width`, `-O`/`--sort`, `-o`, `-c`, `-t`, `--target-release`,
+`--with-source`) consumes its value, so the value is never misread as the
+subcommand. An option that is neither a known no-value flag nor a known
+value-taking flag, seen before the first non-flag word, fails closed as an
+install, and so does install/reinstall/satisfy appearing anywhere after the
+tool, not only in the first subcommand position. A node command must follow
+the pinned setup-node step and its checksum command. Stdlib only.
 """
 from __future__ import annotations
 
@@ -1537,8 +1543,24 @@ DPKG_ACTION_SHORT = set("iRxX")
 # Documented dpkg / dpkg-deb short letters. A cluster counts only when every
 # letter is one of these, so a PowerShell -Recurse or -Filter is not a dpkg flag.
 DPKG_SHORT_LETTERS = set("irPAlsLScfxXezZREGBODWbpVa")
-APT_SIDE_VALUE_FLAGS = {
+APT_VALUE_FLAGS = {
     "-o", "--option", "-c", "--config-file", "-t", "--target-release", "--with-source",
+    # aptitude-only value flags. apt-get rejects these combined with install,
+    # but aptitude accepts them, and the value must not be misread as the
+    # action word (that was the aptitude -F/-w/--sort/-O bypass).
+    "-F", "--display-format", "-w", "--width", "-O", "--sort",
+}
+# Known boolean apt/apt-get/aptitude flags that take no separate value. Any
+# other option before the first non-flag word is unknown and fails closed
+# (treated as an install) rather than trusted to not hide the action word.
+APT_NO_VALUE_FLAGS = {
+    "-y", "--yes", "--assume-yes", "--assume-no",
+    "-q", "--quiet", "-s", "--simulate", "--just-print", "--dry-run", "--no-act",
+    "-f", "--fix-broken", "-d", "--download-only", "-u", "--show-upgraded",
+    "-V", "--verbose-versions", "-v", "--verbose", "-h", "--help",
+    "--purge", "--allow-unauthenticated", "--allow-downgrades",
+    "--allow-change-held-packages", "--allow-remove-essential",
+    "--no-install-recommends", "--install-recommends", "--install-suggests",
 }
 DPKG_VALUE_FLAGS = {
     "--admindir", "--root", "--instdir", "--log",
@@ -1607,24 +1629,41 @@ def _indirect_command(token: str) -> bool:
 
 
 def _apt_action_installs(argv: list[str]) -> bool:
-    """True for install, reinstall, or satisfy, whatever the package operand is."""
+    """True for install, reinstall, or satisfy, whatever the package operand is.
+
+    Fails closed two ways: an option that is neither a known no-value flag
+    nor a known value-taking flag, seen before the first non-flag word, is
+    trusted least, so it is treated as an install outright. And the scan
+    never stops at the first non-flag word (that word might be a value we
+    misread, not the actual subcommand) -- it keeps looking for install,
+    reinstall, or satisfy anywhere in the rest of the command.
+    """
     rest = argv[1:]
     index = 0
+    seen_word = False
     while index < len(rest):
         token = rest[index]
         if token == "--":
             index += 1
             continue
-        if _indirect_command(token):
+        if not seen_word and _indirect_command(token):
             return True
         if token.startswith("-"):
             flag = token.split("=", 1)[0]
-            if "=" not in token and flag in APT_SIDE_VALUE_FLAGS and index + 1 < len(rest):
+            if "=" in token:
+                index += 1
+                continue
+            if flag in APT_VALUE_FLAGS:
                 index += 2
                 continue
+            if not seen_word and flag not in APT_NO_VALUE_FLAGS:
+                return True
             index += 1
             continue
-        return token.lower() in APT_SIDE_ACTIONS
+        if token.lower() in APT_SIDE_ACTIONS:
+            return True
+        seen_word = True
+        index += 1
     return False
 
 
@@ -2346,6 +2385,16 @@ def main() -> int:
     require_side("apt mixed-case package", "sudo apt install -y FFmpeg")
     require_side("apt reinstall", "sudo apt reinstall ffmpeg")
     require_side("aptitude install", "sudo aptitude install ffmpeg")
+    require_side("aptitude short display format", "sudo aptitude -y -F %p install ffmpeg")
+    require_side("aptitude short width", "sudo aptitude -y -w 80 install ffmpeg")
+    require_side("aptitude long sort", "sudo aptitude -y --sort ~n install ffmpeg")
+    require_side("aptitude short sort", "sudo aptitude -y -O ~n install ffmpeg")
+    require_side("aptitude long display format", "sudo aptitude -y --display-format %p install ffmpeg")
+    require_side("aptitude long width", "sudo aptitude -y --width 80 install ffmpeg")
+    require_side("apt-get option equals", "sudo apt-get -o Foo=bar install ffmpeg")
+    require_side("apt-get target release", "sudo apt-get -t noble install ffmpeg")
+    require_side("apt-get config file", "sudo apt-get -c cfg install ffmpeg")
+    require_side("aptitude unknown option", "aptitude --frobnicate xyz install ffmpeg")
     require_side("dpkg force before -i", "sudo dpkg --force-all -i ffmpeg.deb")
     require_side("dpkg recursive install", "sudo dpkg -R -i ./debs")
     require_side("dpkg bundled short flags", "sudo dpkg -iE ffmpeg.deb")
