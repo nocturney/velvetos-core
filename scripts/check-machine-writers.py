@@ -4,6 +4,7 @@ from __future__ import annotations
 import collections.abc
 import hashlib
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -1245,10 +1246,53 @@ def precheck_permission_problems(text: str) -> list[str]:
     return problems
 
 
+def posix_bash(
+    platform: str,
+    found: str | None,
+    *,
+    system32: bool,
+    git_bash: str | None,
+) -> str | None:
+    """Return a POSIX bash. System32 bash.exe is the WSL launcher, not a shell."""
+    if platform == "win32" and system32:
+        return git_bash
+    return found
+
+
+def resolve_posix_bash() -> str:
+    found = shutil.which("bash")
+    system32 = False
+    git_bash = None
+    if sys.platform == "win32" and found:
+        bash_path = Path(found).resolve()
+        system32 = (
+            bash_path.name.lower() == "bash.exe"
+            and bash_path.parent.name.lower() == "system32"
+        )
+        if system32:
+            git = shutil.which("git")
+            candidate = (Path(git).resolve().parents[1] / "bin" / "bash.exe") if git else None
+            if candidate and candidate.is_file():
+                git_bash = str(candidate)
+    bash = posix_bash(sys.platform, found, system32=system32, git_bash=git_bash)
+    if not bash:
+        fail("POSIX bash is required for the gh api label selftest")
+    return bash
+
+
 def prove_gh_api_labels(helper: Path) -> str:
     """A 403 from either gh api call is named, and deleting the name fails."""
+    git_bash = r"C:\Program Files\Git\bin\bash.exe"
+    system32_bash = r"C:\Windows\System32\bash.exe"
+    if posix_bash("win32", system32_bash, system32=True, git_bash=git_bash) != git_bash:
+        fail("Windows System32 bash must not run the gh api label selftest")
+    if posix_bash("win32", system32_bash, system32=True, git_bash=None) is not None:
+        fail("Windows without Git Bash must not fall through to the WSL launcher")
+    if posix_bash("linux", "/bin/bash", system32=False, git_bash=None) != "/bin/bash":
+        fail("Linux bash must still run the gh api label selftest")
+    bash = resolve_posix_bash()
     live = subprocess.run(
-        ["bash", str(helper), "--selftest"],
+        [bash, str(helper), "--selftest"],
         text=True,
         capture_output=True,
         timeout=30,
@@ -1267,7 +1311,7 @@ def prove_gh_api_labels(helper: Path) -> str:
         mutant = Path(tmp) / "push-main-with-check-all.sh"
         mutant.write_text(muted, encoding="utf-8")
         hidden = subprocess.run(
-            ["bash", str(mutant), "--selftest"],
+            [bash, str(mutant), "--selftest"],
             text=True,
             capture_output=True,
             timeout=30,
