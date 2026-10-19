@@ -70,6 +70,48 @@ def zoompan_suite_action(gap, blocked: str | None) -> str:
     return "skip"
 
 
+def bash_syntax_target(
+    platform: str,
+    found: str | None,
+    *,
+    system32: bool,
+    git_bash: str | None,
+) -> tuple[str | None, str | None]:
+    """Return (bash to run, skip line). A skip does not fail the sensor."""
+    bash = found
+    if platform == "win32" and bash and system32:
+        bash = git_bash if git_bash else None
+    if bash:
+        return bash, None
+    if platform == "win32":
+        return None, "SKIP_ENV_MISSING_BASH Mac bootstrap bash -n was not run"
+    return None, None
+
+
+def prove_bash_syntax_target() -> None:
+    path, skip = bash_syntax_target(
+        "win32", r"C:\Windows\System32\bash.exe", system32=True, git_bash=None
+    )
+    if path is not None or skip != "SKIP_ENV_MISSING_BASH Mac bootstrap bash -n was not run":
+        fail("System32 bash without Git Bash must print SKIP_ENV_MISSING_BASH")
+    path, skip = bash_syntax_target(
+        "win32",
+        r"C:\Windows\System32\bash.exe",
+        system32=True,
+        git_bash=r"C:\Program Files\Git\bin\bash.exe",
+    )
+    if path != r"C:\Program Files\Git\bin\bash.exe" or skip is not None:
+        fail("Git Bash must still run bash -n")
+    path, skip = bash_syntax_target("linux", "/bin/bash", system32=False, git_bash=None)
+    if path != "/bin/bash" or skip is not None:
+        fail("Linux bash must still run bash -n")
+    path, skip = bash_syntax_target("linux", None, system32=False, git_bash=None)
+    if path is not None or skip is not None:
+        fail("a missing Linux bash must stay unchanged")
+    if "print(" + "bash_skip)" not in Path(__file__).read_text(encoding="utf-8"):
+        fail("SKIP_ENV_MISSING_BASH must be printed")
+
+
 def prove_zoompan_ci_branches() -> None:
     """Fail the zoompan gap on CI. A local miss still runs the fake-ffmpeg tests.
 
@@ -470,17 +512,27 @@ def main() -> None:
         fail("RTL must not be set on html root in HyperFrames smoke render")
     if "ngrok" in mac_bootstrap or "--share-desktop" in mac_bootstrap:
         fail("Mac render bootstrap must not create an extra remote route")
-    bash = shutil.which("bash")
-    if sys.platform == "win32" and bash:
-        bash_path = Path(bash).resolve()
+    prove_bash_syntax_target()
+    found = shutil.which("bash")
+    system32 = False
+    git_bash = None
+    if sys.platform == "win32" and found:
+        bash_path = Path(found).resolve()
         # Windows System32\\bash.exe is the WSL launcher, not a POSIX bash that
         # accepts a Windows path argument. Prefer Git Bash when available so
         # this remains a real shell syntax check instead of a false WSL-path failure.
-        if bash_path.name.lower() == "bash.exe" and bash_path.parent.name.lower() == "system32":
+        system32 = bash_path.name.lower() == "bash.exe" and bash_path.parent.name.lower() == "system32"
+        if system32:
             git = shutil.which("git")
-            git_bash = (Path(git).resolve().parents[1] / "bin" / "bash.exe") if git else None
-            bash = str(git_bash) if git_bash and git_bash.is_file() else None
-    if bash:
+            candidate = (Path(git).resolve().parents[1] / "bin" / "bash.exe") if git else None
+            if candidate and candidate.is_file():
+                git_bash = str(candidate)
+    bash, bash_skip = bash_syntax_target(
+        sys.platform, found, system32=system32, git_bash=git_bash
+    )
+    if bash_skip:
+        print(bash_skip)
+    elif bash:
         shell_check = subprocess.run([bash, "-n", str(MAC_BOOTSTRAP)], text=True, capture_output=True)
         if shell_check.returncode != 0:
             fail(f"Mac render host bootstrap shell syntax invalid: {shell_check.stderr.strip()}")
