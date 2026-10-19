@@ -16,6 +16,7 @@ import tempfile
 import urllib.request
 from pathlib import Path
 
+import vf_spawn
 from vf_spawn import (
     GIT_TIMEOUT_SECONDS,
     SpawnRefusal,
@@ -47,9 +48,14 @@ GIT_FETCH_TIMEOUT_SECONDS = 120
 def run(args: list[str], *, cwd: Path | None = None, check: bool = True,
         env: dict[str, str] | None = None, user_args: list[str] | None = None,
         revisions: list[str] | None = None) -> subprocess.CompletedProcess:
-    if args and args[0] == "git":
+    if args and vf_spawn.names_git_tool(args[0]):
         if env is not None:
             raise SystemExit("FAIL git spawn refuses a caller environment")
+        if vf_spawn.executable_is_absolute(args[0]):
+            try:
+                vf_spawn.require_pinned_git(args[0])
+            except SpawnRefusal as exc:
+                raise SystemExit(f"FAIL git spawn: {exc}") from exc
         timeout = GIT_FETCH_TIMEOUT_SECONDS if "fetch" in args else GIT_TIMEOUT_SECONDS
         try:
             proc = run_git(
@@ -305,6 +311,12 @@ def prove_git_hygiene() -> list[str]:
     if other_kwargs.get("timeout") is not None or other_kwargs.get("env") is not None:
         errors.append("non-git command was forced through the git allowlist")
     errors.extend(windows_pin_case_errors())
+    errors.extend(vf_spawn.prove_git_identity())
+    errors.extend(
+        vf_spawn.prove_git_tool_spelling(
+            lambda args, env=None: run(args, env=env, check=False),
+        )
+    )
     return errors
 
 

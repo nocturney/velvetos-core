@@ -41,8 +41,8 @@
     "authority_sha256": "590c97c0fb7e7b7669ac6fd30c91a62b324400f08b769bc715498cd4837ff6e1",
     "owner_authorization": "Owner explicitly approved checkpoint, review, main merge, verification and Project cold-start preparation; no publishing",
     "branch": "fix/publication-evidence-sync-20260915",
-    "worktree": "C:/Users/Chris/vf-publication-evidence-sync",
-    "previous_worktree": "C:/Users/Chris/vf-project-contract-v6",
+    "worktree": "%USERPROFILE%/vf-publication-evidence-sync",
+    "previous_worktree": "%USERPROFILE%/vf-project-contract-v6",
     "preserve_untouched": [
       "constitution/TAGS.md",
       "other worktrees",
