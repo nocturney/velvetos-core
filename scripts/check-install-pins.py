@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Refuse a floating pip or npm spec in a workflow command.
+"""Refuse a floating pip, npm, or apt ffmpeg spec in a workflow command.
 
 Every package token on a workflow `pip install` / `npm install` / `npm i`
 line must be an exact pin (`name==1.2.3` or `name@1.2.3`). `npm ci` with no
 package arguments is allowed. Arguments of `-r` / `--requirement` are lockfile
 names, not package specs. INSTALL_SPEC_ALLOWLIST starts empty; a non-empty
-committed set fails this sensor. Stdlib only.
+committed set fails this sensor. An apt ffmpeg install must be one exact
+command sequence on ubuntu-24.04. Stdlib only.
 """
 from __future__ import annotations
 
@@ -55,6 +56,31 @@ FLOATING_GOOGLE = "pip install --quiet google-api-python-client google-auth"
 LOCK_NAME = "requirements-google-clients.py311.lock"
 APT_FFMPEG_VERSION = "ffmpeg=7:6.1.1-3ubuntu5"
 APT_FFMPEG_SHA256 = "1a23baace5f2688a47e28119aedae6993cd638e6279a7227dfc52d9a337a1c17"
+APT_RUNS_ON = "ubuntu-24.04"
+APT_POOL_DEB = "ffmpeg_6.1.1-3ubuntu5_amd64.deb"
+# Contiguous comment-stripped lines. The cache basename keeps the epoch as %3a.
+APT_FFMPEG_COMMANDS = (
+    "sudo apt-get update -qq",
+    f"sudo apt-get install -y -d '{APT_FFMPEG_VERSION}'",
+    "shopt -s nullglob",
+    "matches=(/var/cache/apt/archives/ffmpeg_*6.1.1-3ubuntu5_amd64.deb)",
+    'if [ "${#matches[@]}" -ne 1 ]; then',
+    "printf 'FAIL apt ffmpeg deb count=%s\\n' \"${#matches[@]}\" >&2",
+    "exit 1",
+    "fi",
+    'deb="${matches[0]}"',
+    "if [ \"$(basename \"$deb\")\" != 'ffmpeg_7%3a6.1.1-3ubuntu5_amd64.deb' ]; then",
+    "printf 'FAIL apt ffmpeg cache name=%s\\n' \"$(basename \"$deb\")\" >&2",
+    "exit 1",
+    "fi",
+    'python3 scripts/verify_ffmpeg_zip_sha256.py --path "$deb" --expected '
+    f'"{APT_FFMPEG_SHA256}" --kind deb',
+    'sudo apt-get install -y "$deb"',
+)
+APT_ALLOWED_INSTALLS = frozenset({
+    APT_FFMPEG_COMMANDS[1],
+    APT_FFMPEG_COMMANDS[-1],
+})
 
 
 def fail(msg: str) -> None:
@@ -259,17 +285,97 @@ def install_spec_problems(
     return problems
 
 
-def apt_ffmpeg_problems(text: str, *, path: str) -> list[str]:
-    """An apt ffmpeg install must name the noble deb and check its sha256 first."""
-    if "apt-get install" not in text and "apt-get download" not in text:
+def job_blocks(text: str) -> list[tuple[str, str]]:
+    """Split top-level `jobs:` entries. Indent is the structure; this is not a YAML loader."""
+    lines = text.splitlines()
+    start = None
+    for index, line in enumerate(lines):
+        if re.match(r"^jobs:\s*$", line):
+            start = index + 1
+            break
+    if start is None:
         return []
+    blocks: list[tuple[str, str]] = []
+    name: str | None = None
+    body: list[str] = []
+    for line in lines[start:]:
+        if line and not line.startswith(" ") and not line.startswith("#"):
+            break
+        match = re.match(r"^  ([A-Za-z0-9][A-Za-z0-9_-]*):\s*(?:#.*)?$", line)
+        if match:
+            if name is not None:
+                blocks.append((name, "\n".join(body)))
+            name = match.group(1)
+            body = [line]
+            continue
+        if name is not None:
+            body.append(line)
+    if name is not None:
+        blocks.append((name, "\n".join(body)))
+    return blocks
+
+
+def job_runs_on(block: str) -> str | None:
+    for line in block.splitlines():
+        match = re.match(r"^    runs-on:\s*(.*?)\s*$", line)
+        if not match:
+            continue
+        raw = strip_comment(match.group(1))
+        if len(raw) >= 2 and raw[0] == raw[-1] and raw[0] in {"'", '"'}:
+            raw = raw[1:-1]
+        return raw
+    return None
+
+
+def script_commands(script: str) -> list[str]:
+    commands: list[str] = []
+    for line in join_continuations(script).splitlines():
+        command = strip_comment(line)
+        if command:
+            commands.append(command)
+    return commands
+
+
+def count_sequence(lines: list[str], seq: tuple[str, ...]) -> int:
+    width = len(seq)
+    if width == 0 or len(lines) < width:
+        return 0
+    return sum(tuple(lines[index:index + width]) == seq for index in range(len(lines) - width + 1))
+
+
+def apt_ffmpeg_problems(text: str, *, path: str) -> list[str]:
+    """The noble ffmpeg step is one exact command slice on ubuntu-24.04."""
     problems: list[str] = []
-    if APT_FFMPEG_VERSION not in text:
-        problems.append(f"{path} apt ffmpeg is not version-pinned")
-    if APT_FFMPEG_SHA256 not in text:
-        problems.append(f"{path} apt ffmpeg deb sha256 is not checked")
-    if "verify_ffmpeg_zip_sha256.py" not in text:
-        problems.append(f"{path} apt ffmpeg deb is not passed to the sha256 verifier")
+    blocks = job_blocks(text)
+    apt_re = re.compile(r"\bapt-get\s+(install|download)\b")
+    if not blocks and apt_re.search(text):
+        problems.append(f"{path} apt command is outside a parsed job")
+        return problems
+    for job, block in blocks:
+        raw_hits = [
+            strip_comment(line)
+            for line in block.splitlines()
+            if apt_re.search(strip_comment(line))
+        ]
+        if not raw_hits:
+            continue
+        commands = []
+        for script in run_scripts(block):
+            commands.extend(script_commands(script))
+        if any(hit not in commands for hit in raw_hits):
+            problems.append(f"{path} job {job} apt command was not parsed from a run step")
+        runs_on = job_runs_on(block)
+        if runs_on != APT_RUNS_ON:
+            problems.append(f"{path} job {job} runs-on {runs_on!r} is not {APT_RUNS_ON}")
+        if count_sequence(commands, APT_FFMPEG_COMMANDS) != 1:
+            problems.append(f"{path} job {job} apt ffmpeg command sequence mismatch")
+        for command in commands:
+            if apt_re.search(command) and command not in APT_ALLOWED_INSTALLS:
+                problems.append(f"{path} job {job} unexpected apt-get install: {command}")
+            if APT_POOL_DEB in command:
+                problems.append(f"{path} job {job} apt ffmpeg uses the pool filename")
+            if re.search(r"\btest\s+-f\b", command) and "ffmpeg" in command:
+                problems.append(f"{path} job {job} apt ffmpeg uses test -f")
     return problems
 
 
@@ -356,23 +462,58 @@ def main() -> int:
     if install_spec_problems(jobs.read_text(encoding="utf-8"), path="jobs-write-through.yml"):
         fail("pinned jobs-write-through install was refused")
 
-    floating_apt = "run: sudo apt-get install -y ffmpeg\n"
-    pinned_apt = (
-        "run: sudo apt-get install -y -d ffmpeg=7:6.1.1-3ubuntu5\n"
-        "python3 scripts/verify_ffmpeg_zip_sha256.py --path \"$deb\" "
-        f"--expected \"{APT_FFMPEG_SHA256}\" --kind deb\n"
-    )
-    if not any("not version-pinned" in item for item in apt_ffmpeg_problems(floating_apt, path="fixture.yml")):
-        fail("floating apt ffmpeg was not caught")
-    if apt_ffmpeg_problems(pinned_apt, path="fixture.yml"):
-        fail("version-pinned apt ffmpeg was refused")
-    dropped_sha = pinned_apt.replace(APT_FFMPEG_SHA256, "0" * 64)
-    if not any("sha256 is not checked" in item for item in apt_ffmpeg_problems(dropped_sha, path="fixture.yml")):
-        fail("apt ffmpeg sha256 swap was not caught")
     check_all = (WORKFLOWS / "check-all.yml").read_text(encoding="utf-8")
-    unpinned = check_all.replace(APT_FFMPEG_VERSION, "ffmpeg", 1)
-    if not any("not version-pinned" in item for item in apt_ffmpeg_problems(unpinned, path="check-all.yml")):
-        fail("dropping the apt ffmpeg version in check-all was not caught")
+    research = (WORKFLOWS / "velvetos-research.yml").read_text(encoding="utf-8")
+    if apt_ffmpeg_problems(check_all, path="check-all.yml"):
+        fail(f"pinned check-all apt step was refused: {apt_ffmpeg_problems(check_all, path='check-all.yml')}")
+    if apt_ffmpeg_problems(research, path="velvetos-research.yml"):
+        fail("pinned velvetos-research apt step was refused")
+
+    def require_apt(label: str, mutated: str, needle: str) -> None:
+        found = apt_ffmpeg_problems(mutated, path="check-all.yml")
+        if not any(needle in item for item in found):
+            fail(f"{label} was not caught: {found}")
+
+    extra = check_all.replace(
+        'sudo apt-get install -y "$deb"\n',
+        'sudo apt-get install -y "$deb"\n          sudo apt-get install -y ffmpeg\n',
+        1,
+    )
+    require_apt("extra apt install", extra, "unexpected apt-get install")
+    replaced = check_all.replace(
+        'sudo apt-get install -y "$deb"',
+        "sudo apt-get install -y ffmpeg",
+        1,
+    )
+    require_apt("replaced final install", replaced, "command sequence mismatch")
+    commented = check_all.replace(
+        "python3 scripts/verify_ffmpeg_zip_sha256.py",
+        "# python3 scripts/verify_ffmpeg_zip_sha256.py",
+        1,
+    )
+    require_apt("commented verifier", commented, "command sequence mismatch")
+    dropped_sha = check_all.replace(APT_FFMPEG_SHA256, "0" * 64, 1)
+    require_apt("digest swap", dropped_sha, "command sequence mismatch")
+    latest = check_all.replace("    runs-on: ubuntu-24.04\n", "    runs-on: ubuntu-latest\n", 1)
+    require_apt("ubuntu-latest runner", latest, APT_RUNS_ON)
+    pool = check_all.replace(
+        "matches=(/var/cache/apt/archives/ffmpeg_*6.1.1-3ubuntu5_amd64.deb)",
+        "deb=/var/cache/apt/archives/ffmpeg_6.1.1-3ubuntu5_amd64.deb\n          test -f \"$deb\"",
+        1,
+    )
+    require_apt("pool filename", pool, "pool filename")
+    floating_apt = (
+        "jobs:\n"
+        "  sample:\n"
+        "    runs-on: ubuntu-latest\n"
+        "    steps:\n"
+        "      - run: sudo apt-get install -y ffmpeg\n"
+    )
+    floating_found = apt_ffmpeg_problems(floating_apt, path="fixture.yml")
+    if not any("command sequence mismatch" in item for item in floating_found):
+        fail(f"floating apt ffmpeg was not caught: {floating_found}")
+    if not any(APT_RUNS_ON in item for item in floating_found):
+        fail(f"floating apt runner was not caught: {floating_found}")
     if apt_workflows != 2:
         fail(f"expected 2 apt ffmpeg workflows, found {apt_workflows}")
 
@@ -380,7 +521,8 @@ def main() -> int:
         f"OK {NAME} workflows={len(workflows)} floating=0 allowlist=empty "
         "bare=caught exact=pass mixed=caught npm_float=caught npm_exact=pass "
         "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught "
-        f"apt_ffmpeg={apt_workflows} apt_float=caught apt_sha=caught"
+        f"apt_ffmpeg={apt_workflows} apt_sequence=pinned extra=caught "
+        "comment=caught digest=caught runner=caught pool=caught"
     )
     return 0
 

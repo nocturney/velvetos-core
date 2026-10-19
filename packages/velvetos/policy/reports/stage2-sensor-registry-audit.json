@@ -68,14 +68,14 @@
     },
     {
       "workflow": ".github/workflows/velvetos-research.yml",
-      "line": 60,
+      "line": 70,
       "sensor_path": "scripts/check-vfresearch.py",
       "suite_runner_present": false,
       "potential_duplicate_with_suite_runner": false
     },
     {
       "workflow": ".github/workflows/velvetos-research.yml",
-      "line": 61,
+      "line": 71,
       "sensor_path": "scripts/check-vfmem.py",
       "suite_runner_present": false,
       "potential_duplicate_with_suite_runner": false

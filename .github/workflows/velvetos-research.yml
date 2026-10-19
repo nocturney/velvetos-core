@@ -9,7 +9,8 @@ on:
 
 jobs:
   research-verification:
-    runs-on: ubuntu-latest
+    # noble ffmpeg=7:6.1.1-3ubuntu5 is not in Ubuntu 26. ubuntu-latest moves there.
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         # actions/checkout v7.0.1
@@ -25,9 +26,18 @@ jobs:
         run: |
           python3 -m pip install --disable-pip-version-check --require-hashes -r requirements-sensors.py312.lock
           sudo apt-get update -qq
-          sudo apt-get install -y -d ffmpeg=7:6.1.1-3ubuntu5
-          deb=/var/cache/apt/archives/ffmpeg_6.1.1-3ubuntu5_amd64.deb
-          test -f "$deb"
+          sudo apt-get install -y -d 'ffmpeg=7:6.1.1-3ubuntu5'
+          shopt -s nullglob
+          matches=(/var/cache/apt/archives/ffmpeg_*6.1.1-3ubuntu5_amd64.deb)
+          if [ "${#matches[@]}" -ne 1 ]; then
+            printf 'FAIL apt ffmpeg deb count=%s\n' "${#matches[@]}" >&2
+            exit 1
+          fi
+          deb="${matches[0]}"
+          if [ "$(basename "$deb")" != 'ffmpeg_7%3a6.1.1-3ubuntu5_amd64.deb' ]; then
+            printf 'FAIL apt ffmpeg cache name=%s\n' "$(basename "$deb")" >&2
+            exit 1
+          fi
           python3 scripts/verify_ffmpeg_zip_sha256.py --path "$deb" --expected "1a23baace5f2688a47e28119aedae6993cd638e6279a7227dfc52d9a337a1c17" --kind deb
           sudo apt-get install -y "$deb"
 
