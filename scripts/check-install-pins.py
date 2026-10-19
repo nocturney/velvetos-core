@@ -1,18 +1,22 @@
 #!/usr/bin/env python3
 """Refuse a floating pip, npm, or apt ffmpeg spec in a workflow command.
 
-Every package token on a workflow `pip install` / `npm install` / `npm i`
-line must be an exact pin (`name==1.2.3` or `name@1.2.3`). `npm ci` with no
-package arguments is allowed. Arguments of `-r` / `--requirement` are lockfile
-names, not package specs. INSTALL_SPEC_ALLOWLIST starts empty; a non-empty
-committed set fails this sensor. An apt ffmpeg install must be one exact
-command sequence on ubuntu-24.04. Stdlib only.
+Every package token on a workflow or composite-action `pip install` /
+`npm install` / `npm i` line must be an exact pin (`name==1.2.3` or
+`name@1.2.3`). The installer name is the basename, lowercased, with one
+`.exe` or `.cmd` suffix removed. Pip then matches `pip`, `pip3`, or
+`pip3.<digits>`. npm matches `npm`, `npm.cmd`, or `npm.exe`.
+`npm ci` with no package arguments is allowed. Arguments of `-r` /
+`--requirement` are lockfile names, not package specs. INSTALL_SPEC_ALLOWLIST
+starts empty; a non-empty committed set fails this sensor. An apt ffmpeg
+install must be one exact command sequence on ubuntu-24.04. Stdlib only.
 """
 from __future__ import annotations
 
 import re
 import shlex
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -126,11 +130,16 @@ def join_continuations(script: str) -> str:
     return "\n".join(joined)
 
 
+# Path and version suffixes stay visible here. Classification uses command_name.
+_INSTALL_LOOK = re.compile(
+    r"(?:(?:^|\s)(?:python\S*|py)\s+-m\s+pip|pip3?(?:\.\d+)?(?:\.exe|\.cmd)?)\s+install\b"
+    r"|\bnpm(?:\.cmd|\.exe)?\s+(?:install|i|ci)\b",
+    re.IGNORECASE,
+)
+
+
 def looks_like_install(command: str) -> bool:
-    return bool(re.search(
-        r"(?:(?:^|\s)(?:python\S*|py)\s+-m\s+pip|pip3?)\s+install\b|\bnpm\s+(?:install|i|ci)\b",
-        command,
-    ))
+    return _INSTALL_LOOK.search(command) is not None
 
 
 def split_commands(script: str) -> list[str]:
@@ -172,7 +181,7 @@ def run_scripts(text: str) -> list[str]:
     scripts: list[str] = []
     index = 0
     while index < len(lines):
-        match = re.match(r"^(\s*)run:\s*([|>][-+]?)?\s*(.*)$", lines[index])
+        match = re.match(r"^(\s*)(?:-\s+)?run:\s*([|>][-+]?)?\s*(.*)$", lines[index])
         if not match:
             index += 1
             continue
@@ -199,7 +208,8 @@ def run_scripts(text: str) -> list[str]:
 
 def argv_of(command: str) -> list[str] | None:
     try:
-        argv = shlex.split(command, posix=True)
+        # POSIX shlex eats `\`, so a Windows tool path would lose its basename.
+        argv = shlex.split(command.replace("\\", "/"), posix=True)
     except ValueError:
         return None
     while argv and "=" in argv[0] and not argv[0].startswith("-"):
@@ -209,9 +219,31 @@ def argv_of(command: str) -> list[str] | None:
     return argv
 
 
+PIP_BIN = re.compile(r"^pip3?(?:\.\d+)?$")
+NPM_BIN = re.compile(r"^npm(?:\.cmd|\.exe)?$")
+
+
+def command_name(token: str) -> str:
+    """Basename, lowercase, then one `.exe` or `.cmd` suffix removed."""
+    base = token.replace("\\", "/").rsplit("/", 1)[-1].lower()
+    if base.endswith(".exe") or base.endswith(".cmd"):
+        base = base[:-4]
+    return base
+
+
 def is_python(token: str) -> bool:
-    base = token.rsplit("/", 1)[-1].lower()
+    base = command_name(token)
     return base == "py" or base.startswith("python")
+
+
+def is_pip_command(token: str) -> bool:
+    return PIP_BIN.fullmatch(command_name(token)) is not None
+
+
+def is_npm_command(token: str) -> bool:
+    """Match npm, npm.cmd, or npm.exe on the basename and on the stripped name."""
+    base = token.replace("\\", "/").rsplit("/", 1)[-1].lower()
+    return NPM_BIN.fullmatch(base) is not None or NPM_BIN.fullmatch(command_name(token)) is not None
 
 
 def package_tokens(args: list[str], value_flags: set[str]) -> list[str]:
@@ -236,7 +268,7 @@ def command_problems(argv: list[str], *, path: str, allowlist: frozenset[str]) -
     if not argv:
         return problems
     pip_args: list[str] | None = None
-    if argv[0] in {"pip", "pip3"}:
+    if is_pip_command(argv[0]):
         pip_args = argv[1:]
     elif len(argv) >= 3 and is_python(argv[0]) and argv[1] == "-m" and argv[2] == "pip":
         pip_args = argv[3:]
@@ -248,7 +280,7 @@ def command_problems(argv: list[str], *, path: str, allowlist: frozenset[str]) -
                 continue
             problems.append(f"{path} floating pip spec {token}")
         return problems
-    if argv[0] != "npm" or len(argv) < 2 or argv[1] not in {"install", "i", "ci"}:
+    if not is_npm_command(argv[0]) or len(argv) < 2 or argv[1] not in {"install", "i", "ci"}:
         return problems
     kind = argv[1]
     tokens = package_tokens(argv[2:], NPM_VALUE_FLAGS)
@@ -398,11 +430,26 @@ def float_google_install(text: str) -> str:
     return "".join(out)
 
 
+def workflow_files(root: Path) -> list[Path]:
+    folder = root / ".github" / "workflows"
+    if not folder.is_dir():
+        return []
+    return sorted(path for path in folder.glob("*.y*ml") if path.is_file())
+
+
+def action_files(root: Path) -> list[Path]:
+    folder = root / ".github" / "actions"
+    if not folder.is_dir():
+        return []
+    return sorted(path for path in folder.glob("**/action.y*ml") if path.is_file())
+
+
 def main() -> int:
     if INSTALL_SPEC_ALLOWLIST:
         fail("INSTALL_SPEC_ALLOWLIST must stay empty")
     problems: list[str] = []
-    workflows = sorted(WORKFLOWS.glob("*.y*ml"))
+    workflows = workflow_files(ROOT)
+    actions = action_files(ROOT)
     apt_workflows = 0
     for path in workflows:
         rel = path.relative_to(ROOT).as_posix()
@@ -412,6 +459,9 @@ def main() -> int:
         if "apt-get install" in text or "apt-get download" in text:
             apt_workflows += 1
         problems.extend(apt)
+    for path in actions:
+        rel = path.relative_to(ROOT).as_posix()
+        problems.extend(install_spec_problems(path.read_text(encoding="utf-8"), path=rel))
     if problems:
         for item in problems:
             print(f"FAIL {NAME}: {item}", file=sys.stderr)
@@ -452,6 +502,86 @@ def main() -> int:
     if controls["allow_one"]:
         fail("allowlist override did not accept left-pad")
 
+    def require_spec(label: str, text: str, needle: str) -> None:
+        found = install_spec_problems(text, path="fixture.yml")
+        if not any(needle in item for item in found):
+            fail(f"{label} was not caught: {found}")
+
+    def allow_spec(label: str, text: str) -> None:
+        found = install_spec_problems(text, path="fixture.yml")
+        if found:
+            fail(f"{label} was refused: {found}")
+
+    require_spec(
+        "abs pip",
+        "run: /usr/bin/pip install google-api-python-client\n",
+        "floating pip spec google-api-python-client",
+    )
+    require_spec(
+        "abs pip3",
+        "run: /usr/local/bin/pip3 install google-api-python-client\n",
+        "floating pip spec google-api-python-client",
+    )
+    require_spec(
+        "dot pip",
+        "run: ./pip install google-api-python-client\n",
+        "floating pip spec google-api-python-client",
+    )
+    require_spec(
+        "pip.exe",
+        "run: pip.exe install google-api-python-client\n",
+        "floating pip spec google-api-python-client",
+    )
+    require_spec(
+        "PIP.EXE",
+        "run: PIP.EXE install google-api-python-client\n",
+        "floating pip spec google-api-python-client",
+    )
+    require_spec(
+        "pip3.11",
+        "run: pip3.11 install google-api-python-client\n",
+        "floating pip spec google-api-python-client",
+    )
+    require_spec(
+        "pip3.12",
+        "run: pip3.12 install google-api-python-client\n",
+        "floating pip spec google-api-python-client",
+    )
+    require_spec(
+        "windows pip.exe",
+        "run: C:\\Python\\Scripts\\pip.exe install google-api-python-client\n",
+        "floating pip spec google-api-python-client",
+    )
+    require_spec(
+        "abs npm",
+        "run: /usr/bin/npm install left-pad\n",
+        "floating npm spec left-pad",
+    )
+    require_spec(
+        "npm.cmd",
+        "run: npm.cmd install left-pad\n",
+        "floating npm spec left-pad",
+    )
+    require_spec(
+        "npm.exe",
+        "run: npm.exe install left-pad\n",
+        "floating npm spec left-pad",
+    )
+    require_spec(
+        "compact run",
+        "- run: /usr/bin/pip install some-malicious-pkg\n",
+        "floating pip spec some-malicious-pkg",
+    )
+    if not looks_like_install("pip3.11 install google-api-python-client"):
+        fail("pip3.11 was invisible to the install scan")
+    if not looks_like_install("pip3.12 install google-api-python-client"):
+        fail("pip3.12 was invisible to the install scan")
+    allow_spec("abs exact pip", "run: /usr/bin/pip install google-api-python-client==2.201.0\n")
+    allow_spec("pip3.11 exact", "run: pip3.11 install google-auth==2.62.0\n")
+    allow_spec("pip.exe exact", "run: pip.exe install google-api-python-client==2.201.0\n")
+    allow_spec("abs npm exact", "run: /usr/bin/npm install left-pad@1.2.3\n")
+    allow_spec("abs npm ci", "run: /usr/bin/npm ci --ignore-scripts\n")
+
     jobs = ROOT / ".github" / "workflows" / "jobs-write-through.yml"
     mutated = float_google_install(jobs.read_text(encoding="utf-8"))
     caught = install_spec_problems(mutated, path="jobs-write-through.yml")
@@ -459,8 +589,27 @@ def main() -> int:
         fail("reverted Google client install was not caught")
     if not any("floating pip spec google-auth" in item for item in caught):
         fail("reverted google-auth spec was not caught")
-    if install_spec_problems(jobs.read_text(encoding="utf-8"), path="jobs-write-through.yml"):
+    jobs_text = jobs.read_text(encoding="utf-8")
+    if install_spec_problems(jobs_text, path="jobs-write-through.yml"):
         fail("pinned jobs-write-through install was refused")
+    sneak_line = (
+        "run: python3 -m pip install --disable-pip-version-check "
+        "--require-hashes -r requirements-google-clients.py311.lock\n"
+    )
+    sneak = jobs_text.replace(
+        sneak_line,
+        sneak_line
+        + "      - name: Sneak in an unpinned backdoor dependency\n"
+        + "        run: /usr/bin/pip install some-malicious-pkg\n",
+        1,
+    )
+    if sneak == jobs_text:
+        fail("could not plant the path-qualified pip mutant")
+    sneak_found = install_spec_problems(sneak, path="jobs-write-through.yml")
+    if not any("floating pip spec some-malicious-pkg" in item for item in sneak_found):
+        fail(f"path-qualified pip install in jobs-write-through was not caught: {sneak_found}")
+    if any("requirements-google-clients" in item for item in sneak_found):
+        fail("pinned lock install was flagged beside the path mutant")
 
     check_all = (WORKFLOWS / "check-all.yml").read_text(encoding="utf-8")
     research = (WORKFLOWS / "velvetos-research.yml").read_text(encoding="utf-8")
@@ -517,12 +666,49 @@ def main() -> int:
     if apt_workflows != 2:
         fail(f"expected 2 apt ffmpeg workflows, found {apt_workflows}")
 
+    with tempfile.TemporaryDirectory() as tmp:
+        probe = Path(tmp)
+        floating_action = probe / ".github" / "actions" / "sneak" / "action.yml"
+        pinned_action = probe / ".github" / "actions" / "ok" / "action.yaml"
+        decoy = probe / ".github" / "actions" / "sneak" / "steps.yml"
+        floating_action.parent.mkdir(parents=True)
+        pinned_action.parent.mkdir(parents=True)
+        floating_action.write_text(
+            "runs:\n  using: composite\n  steps:\n"
+            "    - name: Sneak\n"
+            "      run: /usr/bin/pip install some-malicious-pkg\n",
+            encoding="utf-8",
+        )
+        pinned_action.write_text(
+            "runs:\n  using: composite\n  steps:\n"
+            "    - run: pip3.12 install google-auth==2.62.0\n",
+            encoding="utf-8",
+        )
+        decoy.write_text("run: pip install some-malicious-pkg\n", encoding="utf-8")
+        scanned = {path.resolve() for path in action_files(probe)}
+        if floating_action.resolve() not in scanned or pinned_action.resolve() not in scanned:
+            fail(f"composite action.yml was not scanned: {sorted(scanned)}")
+        if decoy.resolve() in scanned:
+            fail("non-action yaml under .github/actions was scanned")
+        action_found = install_spec_problems(
+            floating_action.read_text(encoding="utf-8"),
+            path=".github/actions/sneak/action.yml",
+        )
+        if not any("floating pip spec some-malicious-pkg" in item for item in action_found):
+            fail(f"composite action floating pip was not caught: {action_found}")
+        if install_spec_problems(
+            pinned_action.read_text(encoding="utf-8"),
+            path=".github/actions/ok/action.yaml",
+        ):
+            fail("pinned composite action install was refused")
+
     print(
-        f"OK {NAME} workflows={len(workflows)} floating=0 allowlist=empty "
+        f"OK {NAME} workflows={len(workflows)} actions={len(actions)} floating=0 allowlist=empty "
         "bare=caught exact=pass mixed=caught npm_float=caught npm_exact=pass "
         "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught "
         f"apt_ffmpeg={apt_workflows} apt_sequence=pinned extra=caught "
-        "comment=caught digest=caught runner=caught pool=caught"
+        "comment=caught digest=caught runner=caught pool=caught "
+        "path=caught versioned=caught action=caught"
     )
     return 0
 
