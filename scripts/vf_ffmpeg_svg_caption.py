@@ -149,15 +149,21 @@ def runtime_tmp_dir(output: Path | None = None, explicit: str | None = None) -> 
 def release_derived_tmp(tmp_root: Path, output: Path, explicit: str | None) -> None:
     """Remove an empty derived .vf-tmp directory after a successful render.
 
-    An explicit --tmp-dir or VELVETOS_RUNTIME_ROOT is the operator's directory
-    and is left in place. A non-empty directory is left in place. Failure to
+    An explicit --tmp-dir, and the tmp directory under VELVETOS_RUNTIME_ROOT,
+    are the operator's directories and are left in place. An empty .vf-tmp
+    beside the output is still removed when that runtime root is set for
+    another reason. A non-empty directory is left in place. Failure to
     remove the directory does not discard the render.
     """
-    if (explicit or "").strip() or os.environ.get("VELVETOS_RUNTIME_ROOT", "").strip():
+    if (explicit or "").strip():
         return
     derived = Path(output).expanduser().resolve().parent / ".vf-tmp"
+    env = os.environ.get("VELVETOS_RUNTIME_ROOT", "").strip()
     try:
-        if tmp_root.resolve() != derived.resolve() or not derived.is_dir():
+        resolved = tmp_root.resolve()
+        if env and resolved == (Path(env).expanduser() / "tmp").resolve():
+            return
+        if resolved != derived.resolve() or not derived.is_dir():
             return
         if any(derived.iterdir()):
             return

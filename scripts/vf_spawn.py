@@ -778,6 +778,40 @@ def controlled_temp() -> str:
     return _temp_dir
 
 
+def _set_nofollow_mtime(path: Path, when: float) -> None:
+    """Set one path's mtime. A symlink is stamped on the link, not its target."""
+    if os.name != "nt":
+        os.utime(path, (when, when), follow_symlinks=False)
+        return
+    import ctypes
+    from ctypes import wintypes
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.CreateFileW.argtypes = [
+        wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD, ctypes.c_void_p,
+        wintypes.DWORD, wintypes.DWORD, wintypes.HANDLE,
+    ]
+    kernel32.CreateFileW.restype = wintypes.HANDLE
+    kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+    kernel32.CloseHandle.restype = wintypes.BOOL
+    kernel32.SetFileTime.argtypes = [
+        wintypes.HANDLE, ctypes.c_void_p, ctypes.POINTER(wintypes.FILETIME), ctypes.POINTER(wintypes.FILETIME),
+    ]
+    kernel32.SetFileTime.restype = wintypes.BOOL
+    ticks = int((when + 11644473600) * 10_000_000)
+    stamp = wintypes.FILETIME(ticks & 0xFFFFFFFF, (ticks >> 32) & 0xFFFFFFFF)
+    # FILE_WRITE_ATTRIBUTES, opened on the reparse point itself.
+    handle = kernel32.CreateFileW(os.fspath(path), 0x0100, 0x7, None, 3, 0x02000000 | 0x00200000, None)
+    invalid = ctypes.c_void_p(-1).value
+    if not handle or handle == invalid:
+        raise OSError(ctypes.get_last_error(), "could not open the path without following it")
+    try:
+        if not kernel32.SetFileTime(handle, None, ctypes.byref(stamp), ctypes.byref(stamp)):
+            raise OSError(ctypes.get_last_error(), "could not set the path mtime")
+    finally:
+        kernel32.CloseHandle(handle)
+
+
 def remove_spawn_tree(path: Path) -> None:
     """Remove a spawn directory. A symlink or reparse point is unlinked and not followed."""
     try:
@@ -1508,7 +1542,10 @@ def prove_spawn_home_cleanup() -> list[str]:
             if os.name != "nt":
                 errors.append(f"posix symlink for prune was refused: {exc}")
         else:
-            os.utime(link, (old, old), follow_symlinks=False)
+            try:
+                _set_nofollow_mtime(link, old)
+            except OSError as exc:
+                errors.append(f"could not age the spawn symlink without following it: {exc}")
         stale = root / "vf-spawn-home-olddir"
         stale.mkdir()
         (stale / "gone.txt").write_text("x", encoding="utf-8")
