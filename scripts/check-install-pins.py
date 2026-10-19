@@ -26,9 +26,12 @@ step is unclassified. A `shlex` failure refuses the step too.
 `requirements-google-clients.txt`, and every lock pin must have a sha256
 hash. INSTALL_SPEC_ALLOWLIST starts empty; a non-empty committed set fails
 this sensor. An apt ffmpeg install must be one exact command sequence on
-ubuntu-24.04. Other dpkg and apt ffmpeg installs are refused through the
-same split_commands and word_lists path as pip. A node command must follow
-the pinned setup-node step and its checksum command. Stdlib only.
+ubuntu-24.04. In workflows and composite actions, apt/apt-get/aptitude
+install, reinstall, and satisfy, and dpkg/dpkg-deb install, unpack, and
+extract, are refused unless the simple command is an exact allowlisted
+line. The allowlist is the hashed ffmpeg download and the verified deb
+install. A node command must follow the pinned setup-node step and its
+checksum command. Stdlib only.
 """
 from __future__ import annotations
 
@@ -1506,8 +1509,34 @@ def bento_workflow_problems(text: str) -> list[str]:
     return problems
 
 
+# Exact simple-command allowlist. Each reason is reviewed text, not a matcher.
+# There are no other apt/dpkg installs in workflows or composite actions.
+# 1. Hashed noble download. `apt-get install -d` only fills the apt cache with
+#    ffmpeg=7:6.1.1-3ubuntu5. It is APT_FFMPEG_COMMANDS[1].
+# 2. Installs that one cache deb after verify_ffmpeg_zip_sha256.py. "$deb" is
+#    the checked path from the same run block, not a package name.
+APPROVED_PACKAGE_INSTALLS: tuple[tuple[str, str], ...] = (
+    (
+        APT_FFMPEG_COMMANDS[1],
+        "hashed noble ffmpeg download; the only apt-get install -d line",
+    ),
+    (
+        APT_FFMPEG_COMMANDS[-1],
+        "installs the deb whose sha256 was just checked",
+    ),
+)
 APT_SIDE_TOOLS = {"apt", "apt-get", "aptitude"}
 APT_SIDE_ACTIONS = {"install", "reinstall", "satisfy"}
+DPKG_TOOLS = {"dpkg", "dpkg-deb"}
+DPKG_ACTION_LONG = {
+    "--install", "--unpack", "--extract", "--recursive",
+    "--vextract", "--raw-extract", "--fsys-tarfile",
+}
+# i install, R recursive install, x extract, X vextract.
+DPKG_ACTION_SHORT = set("iRxX")
+# Documented dpkg / dpkg-deb short letters. A cluster counts only when every
+# letter is one of these, so a PowerShell -Recurse or -Filter is not a dpkg flag.
+DPKG_SHORT_LETTERS = set("irPAlsLScfxXezZREGBODWbpVa")
 APT_SIDE_VALUE_FLAGS = {
     "-o", "--option", "-c", "--config-file", "-t", "--target-release", "--with-source",
 }
@@ -1515,69 +1544,79 @@ DPKG_VALUE_FLAGS = {
     "--admindir", "--root", "--instdir", "--log",
     "--path-exclude", "--path-include", "--status-fd",
 }
+_PACKAGE_WRAPPERS = {"sudo", "env", "timeout", "nice", "xargs", "command", "nohup", "stdbuf", "time"}
+_TIMEOUT_VALUE_FLAGS = {"-k", "--kill-after", "-s", "--signal"}
+_NICE_VALUE_FLAGS = {"-n", "--adjustment"}
+_XARGS_VALUE_FLAGS = {
+    "-I", "--replace", "-a", "--arg-file", "-E", "-e", "-d", "--delimiter",
+    "-L", "--max-lines", "-n", "--max-args", "-P", "--max-procs", "-s", "--max-chars",
+}
+_STDBUF_VALUE_FLAGS = {"-i", "--input", "-o", "--output", "-e", "--error"}
 
 
-def _names_ffmpeg(token: str) -> bool:
-    name = token.replace("\\", "/").rsplit("/", 1)[-1]
-    name = name.split("=", 1)[0]
-    if ":" in name:
-        name = name.split(":", 1)[0]
-    name = re.sub(r"[*?\[\]]", "", name)
-    if name.lower().endswith(".deb"):
-        name = name[:-4]
-    folded = name.lower()
-    return folded == "ffmpeg" or folded.startswith(("ffmpeg_", "ffmpeg-"))
+def _approved_commands() -> frozenset[str]:
+    return frozenset(command for command, _reason in APPROVED_PACKAGE_INSTALLS)
 
 
-def _side_package(token: str) -> bool:
-    """ffmpeg, an architecture qualifier, a local deb, or an unexpanded variable."""
-    if token.startswith("$"):
-        return True
-    name = token.replace("\\", "/").rsplit("/", 1)[-1]
-    if name.lower().endswith(".deb"):
-        return True
-    return _names_ffmpeg(token)
+def _skip_flag_words(argv: list[str], value_flags: set[str]) -> list[str]:
+    while argv and argv[0].startswith("-"):
+        if argv[0] == "--":
+            return argv[1:]
+        argv = _consume_flag(argv, value_flags)
+    return argv
 
 
-def _dpkg_install_action(argv: list[str]) -> bool:
-    """True when dpkg is asked to install or unpack, including -iE and -R."""
-    rest = argv[1:]
-    index = 0
-    while index < len(rest):
-        token = rest[index]
-        if token == "--":
-            return False
-        if token.startswith("--"):
-            flag = token.split("=", 1)[0]
-            if flag in {"--install", "--recursive", "--unpack"} or token.startswith(
-                ("--install=", "--unpack=")
-            ):
-                return True
-            if "=" not in token and flag in DPKG_VALUE_FLAGS and index + 1 < len(rest):
-                index += 2
-                continue
-            index += 1
+def _peel_wrappers(argv: list[str]) -> list[str]:
+    """Drop leading assignments and install wrappers. The next word is the command."""
+    argv = [token for token in argv if token]
+    while argv:
+        head = argv[0]
+        if (
+            "=" in head
+            and not head.startswith("-")
+            and not head.startswith("$")
+            and not head.startswith("`")
+        ):
+            argv = argv[1:]
             continue
-        if token.startswith("-") and token != "-":
-            if "i" in token[1:] or "R" in token[1:]:
-                return True
-            index += 1
-            continue
-        index += 1
-    return False
-
-
-def _apt_installs_ffmpeg(argv: list[str]) -> bool:
-    """True when install, reinstall, or satisfy names a side-path package."""
-    rest = argv[1:]
-    action = None
-    packages: list[str] = []
-    index = 0
-    while index < len(rest):
-        token = rest[index]
-        if token == "--":
-            packages.extend(rest[index + 1:])
+        base = _base(_normalize_token(head))
+        if base not in _PACKAGE_WRAPPERS:
             break
+        argv = argv[1:]
+        if base == "sudo":
+            argv = _skip_flag_words(argv, SUDO_VALUE_FLAGS)
+        elif base == "env":
+            argv = _skip_env(argv)
+        elif base == "timeout":
+            argv = _skip_flag_words(argv, _TIMEOUT_VALUE_FLAGS)
+            if argv and re.fullmatch(r"[0-9][0-9.smhd]*", argv[0]):
+                argv = argv[1:]
+        elif base == "nice":
+            argv = _skip_flag_words(argv, _NICE_VALUE_FLAGS)
+        elif base == "xargs":
+            argv = _skip_flag_words(argv, _XARGS_VALUE_FLAGS)
+        elif base == "stdbuf":
+            argv = _skip_flag_words(argv, _STDBUF_VALUE_FLAGS)
+        else:
+            argv = _skip_flag_words(argv, set())
+    return argv
+
+
+def _indirect_command(token: str) -> bool:
+    return token.startswith("$") or token.startswith("`") or "$(" in token or "`" in token
+
+
+def _apt_action_installs(argv: list[str]) -> bool:
+    """True for install, reinstall, or satisfy, whatever the package operand is."""
+    rest = argv[1:]
+    index = 0
+    while index < len(rest):
+        token = rest[index]
+        if token == "--":
+            index += 1
+            continue
+        if _indirect_command(token):
+            return True
         if token.startswith("-"):
             flag = token.split("=", 1)[0]
             if "=" not in token and flag in APT_SIDE_VALUE_FLAGS and index + 1 < len(rest):
@@ -1585,60 +1624,100 @@ def _apt_installs_ffmpeg(argv: list[str]) -> bool:
                 continue
             index += 1
             continue
-        if action is None:
-            action = token.lower()
-            index += 1
+        return token.lower() in APT_SIDE_ACTIONS
+    return False
+
+
+def _dpkg_action(argv: list[str]) -> bool:
+    """True when dpkg or dpkg-deb is asked to install, unpack, or extract."""
+    for token in argv[1:]:
+        if token == "--":
             continue
-        packages.append(token)
-        index += 1
-    if action not in APT_SIDE_ACTIONS:
-        return False
-    # No package operand means the names arrive from xargs or a pipe.
-    return not packages or any(_side_package(token) for token in packages)
+        if token.startswith("--"):
+            if token.split("=", 1)[0] in DPKG_ACTION_LONG:
+                return True
+            continue
+        if re.fullmatch(r"-[A-Za-z]+", token) and set(token[1:]) <= DPKG_SHORT_LETTERS:
+            if any(letter in DPKG_ACTION_SHORT for letter in token[1:]):
+                return True
+    return False
 
 
-def _ffmpeg_slices(words: list[str]) -> list[list[str]]:
-    found: list[list[str]] = []
+def _install_position(rest: list[str]) -> bool:
+    """True when the words after an indirect command are an install, unpack, or extract."""
+    if _dpkg_action([""] + rest):
+        return True
+    for token in rest:
+        if token == "--" or token.startswith("-") or _indirect_command(token):
+            continue
+        if token.lower() in APT_SIDE_ACTIONS:
+            return True
+    return False
+
+
+def _direct_tool_problem(chunk: list[str]) -> str | None:
+    if not chunk:
+        return None
+    shown = " ".join(chunk)
+    base = _base(_normalize_token(chunk[0]))
+    if base in APT_SIDE_TOOLS and _apt_action_installs(chunk):
+        return f"unexpected apt install: {shown}"
+    if base in DPKG_TOOLS and (
+        _dpkg_action(chunk) or any(_indirect_command(token) for token in chunk[1:])
+    ):
+        return f"unexpected dpkg install: {shown}"
+    return None
+
+
+def _package_word_problems(words: list[str]) -> list[str]:
+    found: list[str] = []
+    peeled = _peel_wrappers(words)
+    if peeled and _indirect_command(peeled[0]) and _install_position(peeled[1:]):
+        found.append(f"indirect package command: {' '.join(peeled)}")
     for index, token in enumerate(words):
         base = _base(_normalize_token(token))
-        if base in APT_SIDE_TOOLS or base == "dpkg":
-            found.append(command_slice(words, index))
+        if base not in APT_SIDE_TOOLS and base not in DPKG_TOOLS:
+            continue
+        problem = _direct_tool_problem(command_slice(words, index))
+        if problem:
+            found.append(problem)
     return found
 
 
-def _slice_problems(chunk: list[str], *, path: str, job: str) -> list[str]:
-    if not chunk:
-        return []
-    shown = " ".join(chunk)
-    tool = _base(chunk[0])
-    problems: list[str] = []
-    if tool == "dpkg" and _dpkg_install_action(chunk):
-        problems.append(f"{path} job {job} unexpected dpkg install: {shown}")
-    if tool in APT_SIDE_TOOLS and _apt_installs_ffmpeg(chunk):
-        problems.append(f"{path} job {job} unexpected apt install: {shown}")
-    return problems
+def composite_action_files() -> list[Path]:
+    """In-repo composite actions. Workflows are scanned separately."""
+    found: list[Path] = []
+    for path in sorted(ROOT.rglob("action.y*ml")):
+        if ".git" in path.parts:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        if re.search(r"(?m)^[ \t]*using:[ \t]*['\"]?composite['\"]?[ \t]*$", text):
+            found.append(path)
+    return found
 
 
 def ffmpeg_side_install_problems(text: str, *, path: str) -> list[str]:
-    """Refuse dpkg and apt ffmpeg installs through split_commands and word_lists."""
+    """Allow only the exact hashed ffmpeg commands. Every other install is refused."""
     problems: list[str] = []
     blocks = job_blocks(text) or [("workflow", text)]
+    approved = _approved_commands()
     for job, block in blocks:
         for script in run_scripts(block):
             for command in split_commands(join_continuations(script)):
                 command = strip_comment(command)
-                if not command or command in APT_ALLOWED_INSTALLS:
+                if not command or command in approved:
                     continue
                 lists = word_lists(command)
                 if lists is None:
-                    if re.search(r"\b(?:apt-get|aptitude|apt|dpkg)\b", command):
-                        problems.append(
-                            f"{path} job {job} unparsable ffmpeg install: {command}"
-                        )
+                    if re.search(r"\b(?:apt-get|aptitude|apt|dpkg-deb|dpkg)\b", command):
+                        problems.append(f"{path} job {job} unparsable package install: {command}")
                     continue
                 for words in lists:
-                    for chunk in _ffmpeg_slices(words):
-                        problems.extend(_slice_problems(chunk, path=path, job=job))
+                    for found in _package_word_problems(words):
+                        problems.append(f"{path} job {job} {found}")
     return problems
 
 
@@ -2107,6 +2186,11 @@ def node_toolchain_problems(text: str, *, path: str) -> list[str]:
 def main() -> int:
     if INSTALL_SPEC_ALLOWLIST:
         fail("INSTALL_SPEC_ALLOWLIST must stay empty")
+    approved_commands = _approved_commands()
+    if approved_commands != APT_ALLOWED_INSTALLS:
+        fail("package install allowlist drifted from the hashed ffmpeg lines")
+    if any(not reason.strip() for _command, reason in APPROVED_PACKAGE_INSTALLS):
+        fail("package install allowlist entry is missing its reason")
     problems: list[str] = []
     workflows = sorted(WORKFLOWS.glob("*.y*ml"))
     apt_workflows = 0
@@ -2122,6 +2206,11 @@ def main() -> int:
         problems.extend(ffmpeg_side_install_problems(text, path=rel))
         problems.extend(node_toolchain_problems(text, path=rel))
         node_setups += text.count("actions/setup-node@")
+    for path in composite_action_files():
+        rel = path.relative_to(ROOT).as_posix()
+        problems.extend(
+            ffmpeg_side_install_problems(path.read_text(encoding="utf-8"), path=rel)
+        )
     req_text = (ROOT / REQ_NAME).read_text(encoding="utf-8")
     lock_text = (ROOT / LOCK_NAME).read_text(encoding="utf-8")
     problems.extend(google_lock_problems(req_text, lock_text))
@@ -2287,6 +2376,42 @@ def main() -> int:
     require_side("glob name", "apt install 'ffmpeg*'")
     require_side("apt satisfy", "apt satisfy ffmpeg")
     require_side("dpkg unpack", "dpkg --unpack ffmpeg.deb")
+    require_side("release suffix", "sudo apt-get install -y ffmpeg/noble")
+    require_side("release pocket", "sudo apt-get install -y ffmpeg/noble-updates")
+    require_side("explicit plus", "sudo apt-get install -y ffmpeg+")
+    require_side("glob question", "apt install 'ffmpe?'")
+    require_side("glob star short", "apt install 'ff*'")
+    require_side("apt name pattern", "apt install '?name(^ffmpeg$)'")
+    require_side("apt n pattern", "apt install '~nffmpeg'")
+    require_side("dpkg extract short", "dpkg -x ffmpeg.deb /")
+    require_side("dpkg extract long", "dpkg --extract ffmpeg.deb /")
+    require_side("dpkg-deb extract", "dpkg-deb -x ffmpeg.deb /")
+    require_side("variable command", "$A install ffmpeg")
+    require_side("substitution command", "$(echo apt-get) install ffmpeg")
+    require_side("backtick command", "`echo dpkg` -x ffmpeg.deb /")
+    require_side("other package", "sudo apt-get install -y python3")
+    require_side("apt end of options", "sudo apt-get -- install -y ffmpeg")
+    require_side("dpkg long short cluster", "sudo dpkg -iERf ffmpeg.deb")
+    require_side("apt variable action", "apt-get $A ffmpeg")
+    require_side("dpkg variable action", 'dpkg "$A" ffmpeg.deb')
+    if ffmpeg_side_install_problems(
+        "runs:\n  using: composite\n  steps:\n    - run: apt install ffmpeg/noble\n",
+        path="action.yml",
+    ) == []:
+        fail("composite action install was not caught")
+    if ffmpeg_side_install_problems(
+        "jobs:\n  sample:\n    runs-on: ubuntu-24.04\n    steps:\n"
+        "      - run: sudo apt-get update -qq\n",
+        path="fixture.yml",
+    ):
+        fail("apt-get update was refused")
+    if ffmpeg_side_install_problems(
+        "jobs:\n  sample:\n    runs-on: ubuntu-24.04\n    steps:\n"
+        f"      - run: {APT_FFMPEG_COMMANDS[1]}\n"
+        f"      - run: {APT_FFMPEG_COMMANDS[-1]}\n",
+        path="fixture.yml",
+    ):
+        fail("hashed ffmpeg lines were refused")
     plain_apt = (
         "jobs:\n"
         "  sample:\n"
@@ -2528,7 +2653,9 @@ def main() -> int:
         "dpkg_force=caught dpkg_R=caught dpkg_iE=caught dpkg_glob=caught "
         "dpkg_var=caught dash_run=caught "
         "chain=caught wrap=caught nested=caught deb_path=caught "
-        "var_pkg=caught arch=caught satisfy=caught unpack=caught " 
+        "var_pkg=caught arch=caught satisfy=caught unpack=caught "
+        "noble=caught plus=caught glob=caught pattern=caught extract=caught "
+        "indirect=caught dashdash=caught " 
         f"node_setups={node_setups} node_float=caught node_sha=caught "
         "node_comment=caught node_bare=caught node_path=caught node_env=caught "
         "node_bash=caught node_dash=caught node_if=caught node_continue=caught"
