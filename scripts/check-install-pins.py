@@ -262,10 +262,13 @@ BENTO_SHA256 = "c7da70eaa8d3f457b2458f1685769bf2c488724ac075954f216c70c60f310af0
 BENTO_VERSION = "1.2.9"
 BENTO_SHELL_URL = "https://bento.page/releases/slides/Bento_Slides.bento.html"
 BENTO_MANIFEST_URL = "https://bento.page/releases/slides/manifest.json"
+VERIFY_STEP = """      - name: Verify Bento shell checksum
+        run: python3 scripts/verify_bento_shell.py
+"""
 DECK_STEP = """      - name: Build weekly deck (JSON + HTML)
         run: python3 scripts/vf_weekly_deck.py
 """
-NETWORK_WARN = "WARN BENTO_SHELL_NETWORK"
+NETWORK_FAIL = "FAIL BENTO_SHELL_NETWORK"
 
 
 def _module_strings(tree: ast.AST) -> dict[str, str]:
@@ -404,34 +407,17 @@ def _mentions(node: ast.AST, name: str) -> bool:
     return False
 
 
-def _writes_before_call(func: ast.FunctionDef | None, attr: str, call_name: str) -> bool:
-    if func is None:
-        return False
-    seen = False
-    for stmt in func.body:
-        for node in ast.walk(stmt):
-            called = getattr(node, "func", None)
-            if isinstance(node, ast.Call) and isinstance(called, ast.Attribute) and called.attr == attr:
-                seen = True
-        if _calls_name(stmt, call_name):
-            return seen
-    return False
-
-
 def bento_deck_problems(text: str) -> list[str]:
-    """JSON is written first. A mismatch fails. A network error skips HTML."""
+    """A network error and a checksum mismatch both fail the job."""
     problems: list[str] = []
     try:
         tree = ast.parse(text)
     except SyntaxError as exc:
         return [f"weekly deck did not parse: {exc}"]
-    if _module_strings(tree).get("NETWORK_WARN") != NETWORK_WARN:
-        problems.append("network warning name is missing")
-    ship = _function(tree, "ship")
+    if _module_strings(tree).get("NETWORK_FAIL") != NETWORK_FAIL:
+        problems.append("network failure name is missing")
     build = _function(tree, "build_html")
     entry = _function(tree, "main")
-    if not _writes_before_call(ship, "write_text", "build_html"):
-        problems.append("JSON deck is not written before the shell fetch")
     if (
         build is None
         or not _calls_name(build, "load_shell")
@@ -441,7 +427,7 @@ def bento_deck_problems(text: str) -> list[str]:
     if entry is None or not _raises_system_exit(entry.body):
         problems.append("tampered bytes do not fail the job")
     pin_fail = False
-    network_skip = False
+    network_closed = False
     for node in ast.walk(build):
         if not isinstance(node, ast.ExceptHandler):
             continue
@@ -454,28 +440,35 @@ def bento_deck_problems(text: str) -> list[str]:
                 problems.append("tampered bytes do not fail the job")
         if "URLError" not in names:
             continue
-        reaches_shell = _calls_in(node.body, "inject_shell") or not _returns_const(node.body, 0)
-        if reaches_shell:
+        if _returns_const(node.body, 0):
+            problems.append("network failure ships the JSON deck")
+        elif _calls_in(node.body, "inject_shell") or not (
+            _returns_const(node.body, 1) or _raises_system_exit(node.body)
+        ):
             problems.append("network-error path reaches the shell build")
-        elif not _mentions(node, "NETWORK_WARN"):
-            problems.append("network warning is missing")
+        elif not _mentions(node, "NETWORK_FAIL"):
+            problems.append("network failure name is missing")
         else:
-            network_skip = True
-        if _returns_const(node.body, 1) or _raises_system_exit(node.body):
-            problems.append("network failure blocks the JSON deck")
+            network_closed = True
     if not pin_fail:
         problems.append("tampered bytes do not fail the job")
-    if not network_skip and not any("network-error path" in item for item in problems):
-        problems.append("weekly deck treats a network failure as fatal")
+    if not network_closed and not any(
+        "network failure ships" in item or "network-error path" in item for item in problems
+    ):
+        problems.append("network failure does not fail the job")
     return problems
 
 
 def bento_workflow_problems(text: str) -> list[str]:
     problems: list[str] = []
+    if VERIFY_STEP not in text:
+        problems.append("weekly deck workflow is missing the shell checksum step")
     if DECK_STEP not in text:
         problems.append("weekly deck workflow is missing the JSON deck step")
-    if "scripts/verify_bento_shell.py" in text:
-        problems.append("weekly deck workflow can block the JSON deck on a network error")
+    verify_at = text.find("run: python3 scripts/verify_bento_shell.py")
+    deck_at = text.find("run: python3 scripts/vf_weekly_deck.py")
+    if verify_at < 0 or deck_at < 0 or verify_at > deck_at:
+        problems.append("shell checksum step does not run before the JSON deck")
     return problems
 
 
@@ -598,31 +591,28 @@ def main() -> int:
     require_bento(
         "bento offline",
         bento_deck_problems(deck.replace(
-            f'        print(f"{{NETWORK_WARN}} HTML build skipped: {{exc}}")\n        return 0\n',
-            f'        print(f"{{NETWORK_WARN}} HTML build skipped: {{exc}}")\n        return 1\n',
+            f'        print(f"{{NETWORK_FAIL}} HTML build skipped: {{exc}}", file=sys.stderr)\n'
+            "        return 1\n",
+            f'        print(f"{{NETWORK_FAIL}} HTML build skipped: {{exc}}", file=sys.stderr)\n'
+            "        return 0\n",
             1,
         )),
-        "network failure blocks the JSON deck",
+        "network failure ships the JSON deck",
     )
     require_bento(
         "bento network path",
         bento_deck_problems(deck.replace(
-            f'        print(f"{{NETWORK_WARN}} HTML build skipped: {{exc}}")\n        return 0\n',
-            f'        print(f"{{NETWORK_WARN}} HTML build skipped: {{exc}}")\n',
+            f'        print(f"{{NETWORK_FAIL}} HTML build skipped: {{exc}}", file=sys.stderr)\n'
+            "        return 1\n",
+            f'        print(f"{{NETWORK_FAIL}} HTML build skipped: {{exc}}", file=sys.stderr)\n',
             1,
         )),
         "network-error path reaches the shell build",
     )
     require_bento(
         "bento network gate",
-        bento_workflow_problems(weekly.replace(
-            "      - name: Build weekly deck (JSON + HTML)\n",
-            "      - name: Verify Bento shell checksum\n"
-            "        run: python3 scripts/verify_bento_shell.py\n\n"
-            "      - name: Build weekly deck (JSON + HTML)\n",
-            1,
-        )),
-        "can block the JSON deck",
+        bento_workflow_problems(weekly.replace(VERIFY_STEP, "", 1)),
+        "missing the shell checksum step",
     )
     for script, label in (
         ("verify_bento_shell.py", "bento shell self-test failed"),

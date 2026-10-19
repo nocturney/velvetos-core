@@ -133,7 +133,7 @@ def build() -> dict:
 
 
 DOCS_DIR = ROOT / "docs" / "weekly-deck"
-NETWORK_WARN = "WARN BENTO_SHELL_NETWORK"
+NETWORK_FAIL = "FAIL BENTO_SHELL_NETWORK"
 
 
 def main() -> None:
@@ -180,7 +180,7 @@ def inject_shell(doc: dict, shell: str, out_html: Path) -> int:
 
 
 def build_html(doc: dict, out_html: Path) -> int:
-    """Fetch the pinned shell. A network error skips HTML. A mismatch fails."""
+    """Fetch the pinned shell. A network error or a mismatch fails the job."""
     import urllib.error
 
     from verify_bento_shell import ShellPinError, load_shell
@@ -191,8 +191,8 @@ def build_html(doc: dict, out_html: Path) -> int:
         print(f"FAIL bento shell: {exc}", file=sys.stderr)
         return 1
     except (urllib.error.URLError, TimeoutError, OSError) as exc:
-        print(f"{NETWORK_WARN} HTML build skipped: {exc}")
-        return 0
+        print(f"{NETWORK_FAIL} HTML build skipped: {exc}", file=sys.stderr)
+        return 1
     return inject_shell(doc, shell, out_html)
 
 
@@ -215,17 +215,14 @@ def self_test() -> int:
         with tempfile.TemporaryDirectory() as tmp:
             out_json = Path(tmp) / "deck.json"
             out_html = Path(tmp) / "deck.html"
-            buf = io.StringIO()
-            with contextlib.redirect_stdout(buf):
+            err = io.StringIO()
+            with contextlib.redirect_stderr(err):
                 rc = ship(doc, out_json, out_html)
-            if rc != 0 or not out_json.is_file() or out_html.exists():
-                print("FAIL weekly deck: offline did not ship the JSON deck", file=sys.stderr)
+            if rc == 0 or out_html.exists():
+                print("FAIL weekly deck: offline network did not fail the job", file=sys.stderr)
                 return 1
-            if NETWORK_WARN not in buf.getvalue():
-                print("FAIL weekly deck: offline did not print the network warning", file=sys.stderr)
-                return 1
-            if json.loads(out_json.read_text(encoding="utf-8")).get("format") != "bento/slides":
-                print("FAIL weekly deck: offline JSON deck is not bento/slides", file=sys.stderr)
+            if NETWORK_FAIL not in err.getvalue():
+                print("FAIL weekly deck: offline network failure was not named", file=sys.stderr)
                 return 1
 
         def tampered() -> bytes:

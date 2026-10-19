@@ -4,8 +4,8 @@
 The checksum file is https://bento.page/releases/slides/manifest.json.
 The signature covers the payload string. The payload names the shell sha256.
 Stdlib plus openssl. A signature or sha256 mismatch raises ShellPinError.
-The weekly deck catches a network error, skips HTML, and still writes JSON.
-This command leaves a network error uncaught so a manual check stays visible.
+A network error propagates. The weekly job runs this command first, so a
+network failure fails the job and the JSON deck is not committed.
 """
 from __future__ import annotations
 

@@ -1,1 +1,1 @@
-- 2026-10-19 - **Bento shell pin:** the weekly deck shell stays Bento Slides 1.2.9. The signed checksum file is https://bento.page/releases/slides/manifest.json. A mismatch fails the job. A network failure still ships the JSON deck. No model call.
+- 2026-10-19 - **Bento shell pin:** the weekly deck shell stays Bento Slides 1.2.9. The signed checksum file is https://bento.page/releases/slides/manifest.json. A signature or sha256 mismatch fails the job. A network failure also fails the job, and the JSON deck is not committed. No model call.
