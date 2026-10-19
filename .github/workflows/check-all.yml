@@ -209,6 +209,18 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          # Spawn homes must live on D: under VELVETOS_RUNTIME_ROOT. The library
+          # refuses an unset root and refuses the system drive. This job maps D:
+          # for the suite only; it does not teach the library a system-temp fallback.
+          if (-not (Test-Path 'D:\')) {
+            $mount = Join-Path $env:RUNNER_TEMP 'velvet-runtime-drive'
+            New-Item -ItemType Directory -Force -Path $mount | Out-Null
+            subst D: $mount
+            if (-not (Test-Path 'D:\')) { throw 'subst D: failed' }
+          }
+          $runtime = 'D:\Velvet\Runtime\VelvetOS'
+          New-Item -ItemType Directory -Force -Path $runtime | Out-Null
+          $env:VELVETOS_RUNTIME_ROOT = $runtime
           $log = Join-Path $env:RUNNER_TEMP "check-all-windows.log"
           python scripts/check-all.py *> "$log"
           $code = $LASTEXITCODE

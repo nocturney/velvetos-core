@@ -1075,6 +1075,15 @@ class CaptionDefectTests(unittest.TestCase):
         derived.mkdir(parents=True)
         caption.release_derived_tmp(derived, output, None)
         self.assertFalse(derived.exists())
+        env_root = root / "runtime-root"
+        runtime_tmp = env_root / "tmp"
+        runtime_tmp.mkdir(parents=True)
+        derived.mkdir()
+        with mock.patch.dict(os.environ, {"VELVETOS_RUNTIME_ROOT": str(env_root)}):
+            caption.release_derived_tmp(derived, output, None)
+            self.assertFalse(derived.exists())
+            caption.release_derived_tmp(runtime_tmp, output, None)
+            self.assertTrue(runtime_tmp.is_dir())
         derived.mkdir()
         (derived / "keep.txt").write_text("x", encoding="utf-8")
         caption.release_derived_tmp(derived, output, None)
