@@ -414,7 +414,7 @@ Hidden names are classified too. A hidden symlink is `SYMLINK_REFUSED` and is no
 - ‏Office Control Plane loop (כולל רישום מועמדי למידה מכשלי CI ב־main דרך `vf_learning.py ingest-ci`)
 - publish-bridge cleanup
 - ‏VelvetOS research (מתקין את אותו runtime של חיישנים כמו full sensor suite לפני הרצת check-all)
-- weekly deck generation
+- weekly deck generation. The Bento Slides shell stays 1.2.9. The signed checksum file is https://bento.page/releases/slides/manifest.json (sha256 `c7da70eaa8d3f457b2458f1685769bf2c488724ac075954f216c70c60f310af0`). A signature or sha256 mismatch fails the job, and so does a manifest whose app, version, url, or published checksum is not the pin. A network failure also fails the job, and the JSON deck is not committed. A missing openssl fails the job as its own error.
 - vfmedia intake
 
 External scheduled office clock: **ChatGPT automations** per `automation/chatgpt/manifest.json`; `automation/grok/manifest.json` is a zero-routine retirement mirror and Grok is on-demand only. GitHub workflows above remain the deterministic machine execution layer.
