@@ -22,6 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import vf_office_v2_continuity as continuity
+import vf_spawn
 from vf_spawn import SpawnRefusal, allowlisted_git_errors, run_git
 
 TASK_SCHEMA = "velvetos.office-v2.p0-task-envelope.v0"
@@ -358,9 +359,10 @@ def prove_unresolved_git() -> None:
 
 
 def prove_git_spawn() -> None:
-    """Absolute git, timeout, allowlisted env, and the porcelain leading space."""
-    import vf_spawn
-
+    """Pinned git, timeout, allowlisted env, and the porcelain leading space."""
+    identity = vf_spawn.prove_git_identity()
+    if identity:
+        raise Rejected("GIT_PIN:" + ";".join(identity))
     sentinel = "VF_SPAWN_SENTINEL"
     previous = {
         sentinel: os.environ.get(sentinel),

@@ -24,6 +24,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+import vf_subprocess_hygiene as hygiene
+
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 if hasattr(sys.stderr, "reconfigure"):
@@ -253,21 +255,25 @@ def _collection(path: str) -> bool:
 
 
 def _gh_get(path: str) -> dict:
-    cmd = ["gh", "api", "--method", "GET", "--hostname", "github.com"]
+    api_path = path[1:] if path.startswith("/") else path
+    if not api_path or api_path[:1] == "-":
+        raise GitHubReadError("refusing a GitHub path that starts with a dash")
+    cmd = ["api", "--method", "GET", "--hostname", "github.com"]
     if _collection(path):
         cmd.append("--paginate")
-    cmd.append(path[1:] if path.startswith("/") else path)
+    cmd.append(api_path)
     try:
-        proc = subprocess.run(
+        proc = hygiene.run_pinned(
+            "gh",
             cmd,
             capture_output=True,
             text=True,
             encoding="utf-8",
             errors="replace",
             timeout=90,
-            env=os.environ.copy(),
+            extra_keys=hygiene.GH_CONFIG_ENV_KEYS,
         )
-    except FileNotFoundError as exc:
+    except (FileNotFoundError, hygiene.HygieneError) as exc:
         raise GitHubReadError("gh CLI is not installed") from exc
     except subprocess.TimeoutExpired as exc:
         raise GitHubReadError(f"GitHub read timed out for {path.split('?', 1)[0]}") from exc
@@ -896,12 +902,14 @@ def render_json(board: dict) -> str:
 
 
 def _git(args: list[str], root: Path) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        ["git", *args],
+    return hygiene.run_pinned(
+        "git",
+        args,
         cwd=root,
         capture_output=True,
         text=True,
         check=False,
+        timeout=30,
     )
 
 

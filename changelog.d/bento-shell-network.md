@@ -1,0 +1,1 @@
+- 2026-10-19 - **Bento shell network:** a network error while fetching the Bento shell or its manifest fails the weekly job before the JSON deck is written. The JSON deck is not committed. A signature or sha256 mismatch also fails the job. No model call.

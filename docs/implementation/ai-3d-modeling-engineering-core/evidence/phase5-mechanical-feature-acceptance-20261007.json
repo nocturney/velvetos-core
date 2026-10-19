@@ -414,7 +414,7 @@
       "status": "PASS"
     }
   },
-  "runtime": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
+  "runtime": "%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
   "safety": {
     "invent_fit_clearance": false,
     "invent_material_properties": false,

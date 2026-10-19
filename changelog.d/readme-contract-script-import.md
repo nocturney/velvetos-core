@@ -1,0 +1,1 @@
+- 2026-10-19 - **README gate import:** `readme_contract.py` puts its own `scripts/` directory on `sys.path` before importing `vf_spawn`. A caller that did not add that directory, including `python -P`, still loads the gate. No model call.
