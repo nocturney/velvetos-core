@@ -14,7 +14,9 @@ subcommand (`pip -q install`, `python -m pip -q`, `python -mpip`,
 be a pinned or lock install, or it is refused as unclassified.
 
 The backstop is the words, not a wrapper list. Every `run:` block is
-split with `shlex`, including nested `-c` and `eval` strings. A word
+split with `shlex`, including nested `-c` and `eval` strings. Each word
+is split again on `;`, `&`, `|`, `(`, `)`, `` ` ``, `<`, and `>`, and a
+`$(...)` or backtick body is scanned even inside double quotes. A word
 whose basename is pip, pip3*, uv, uvx, pipx, npm, npx, pnpm, yarn, or
 bun, or a `python*` followed by `-m pip` / `-mpip`, must belong to a
 pinned or lock install. Otherwise the step is unclassified. A `shlex`
@@ -539,11 +541,53 @@ def _shell_c_flag(token: str) -> bool:
     return bool(body) and body.isalpha() and "c" in body
 
 
+_SLICE_STOP = SHELL_END | {"&&", "||", "|", ";;", "*"}
+_META_SPLIT = re.compile(r"[;&|()<>`]+")
+
+
+def _expand_word(token: str) -> list[str]:
+    """Split one shlex word on shell metacharacters and the spaces they expose."""
+    pieces: list[str] = []
+    for part in _META_SPLIT.split(token):
+        part = part.strip()
+        if part:
+            pieces.extend(part.split())
+    return pieces
+
+
+def _expand_words(words: list[str]) -> list[str]:
+    expanded: list[str] = []
+    for token in words:
+        expanded.extend(_expand_word(token))
+    return expanded
+
+
+def _substitution_scripts(token: str) -> list[str]:
+    """Bodies of `$(...)` and backtick pairs that shlex kept inside one word."""
+    scripts: list[str] = []
+    index = 0
+    while index < len(token):
+        if token.startswith("$(", index):
+            inner, nxt = matching_paren(token, index + 1)
+            if inner and inner.strip():
+                scripts.append(inner)
+            index = max(nxt, index + 2)
+            continue
+        if token[index] == "`":
+            end = token.find("`", index + 1)
+            if end > index + 1:
+                scripts.append(token[index + 1:end])
+                index = end + 1
+                continue
+        index += 1
+    return scripts
+
+
 def command_slice(words: list[str], start: int) -> list[str]:
     chunk: list[str] = []
     for token in words[start:]:
         bare = _normalize_token(token)
-        if not bare or bare in SHELL_END or bare in {"&&", "||", "|"}:
+        if not bare or bare in _SLICE_STOP or bare.startswith("*"):
             break
         chunk.append(bare)
     return chunk
@@ -579,7 +623,13 @@ def word_lists(text: str, seen: set[str] | None = None) -> list[list[str]] | Non
         words = shlex.split(cleaned, posix=True)
     except ValueError:
         return None
-    lists = [words]
+    lists = [_expand_words(words)]
+    for word in words:
+        for script in _substitution_scripts(word):
+            nested = word_lists(script, seen)
+            if nested is None:
+                return None
+            lists.extend(nested)
     for script in _nested_scripts(words):
         nested = word_lists(script, seen)
         if nested is None:
@@ -1115,6 +1165,14 @@ def prove_bypasses() -> str:
         "time_uvx": "run: time uvx x\n",
         "command_pip": "run: command pip -q install x\n",
         "exec_npm": "run: exec npm add x\n",
+        "case_glued": "run: case a in a)pip -q install x;; esac\n",
+        "case_pattern": 'run: case "$X" in linux)pip -q install x;; *) echo no;; esac\n',
+        "case_uvx": "run: case a in a)uvx x;; esac\n",
+        "case_mpip": "run: case a in a)python3 -mpip install x;; esac\n",
+        "case_multi": "run: |\n  case a in\n    a)pip -q install x\n    ;;\n  esac\n",
+        "dquote_subst": 'run: echo "$(pip -q install x)"\n',
+        "backtick": "run: x=`pip -q install x`\n",
+        "amp_pip": "run: true&pip -q install x\n",
     }
     exact = {
         "sudo": "run: sudo -H pip install x==1.2.3\n",
@@ -1167,6 +1225,14 @@ def prove_bypasses() -> str:
         "time_uvx": "run: time uvx x==1.2.3\n",
         "command_pip": "run: command pip -q install x==1.2.3\n",
         "exec_npm": "run: exec npm add x@1.2.3\n",
+        "case_glued": "run: case a in a)pip -q install x==1.2.3;; esac\n",
+        "case_pattern": 'run: case "$X" in linux)pip -q install x==1.2.3;; *) echo no;; esac\n',
+        "case_uvx": "run: case a in a)uvx x==1.2.3;; esac\n",
+        "case_mpip": "run: case a in a)python3 -mpip install x==1.2.3;; esac\n",
+        "case_multi": "run: |\n  case a in\n    a)pip -q install x==1.2.3\n    ;;\n  esac\n",
+        "dquote_subst": 'run: echo "$(pip -q install x==1.2.3)"\n',
+        "backtick": "run: x=`pip -q install x==1.2.3`\n",
+        "amp_pip": "run: true&pip -q install x==1.2.3\n",
     }
     needles = {
         "sudo": "floating pip spec x",
@@ -1219,10 +1285,18 @@ def prove_bypasses() -> str:
         "time_uvx": "floating pip spec x",
         "command_pip": "floating pip spec x",
         "exec_npm": "floating npm spec x",
+        "case_glued": "floating pip spec x",
+        "case_pattern": "floating pip spec x",
+        "case_uvx": "floating pip spec x",
+        "case_mpip": "floating pip spec x",
+        "case_multi": "floating pip spec x",
+        "dquote_subst": "floating pip spec x",
+        "backtick": "floating pip spec x",
+        "amp_pip": "floating pip spec x",
     }
     groups = {
         "wrappers": [],
-        "uv": ["uv_add", "uv_tool", "uvx", "uv_with", "for_do", "time_uvx"],
+        "uv": ["uv_add", "uv_tool", "uvx", "uv_with", "for_do", "time_uvx", "case_uvx"],
         "pipx": ["pipx", "pipx_run"],
         "yarn": ["yarn", "yarn_global", "yarn_dlx"],
         "pnpm": ["pnpm", "pnpm_i", "pnpm_dlx", "timeout_pnpm", "stdbuf_pnpm"],
@@ -1231,6 +1305,8 @@ def prove_bypasses() -> str:
             "pip_q", "pip_isolated", "pip_py_q", "pip_mpip", "pip311",
             "if_then", "brace", "bang", "timeout", "nohup", "eval", "eval_quote",
             "xargs", "bash_lc", "while_pip", "else_pip", "case_pip", "command_pip",
+            "case_glued", "case_pattern", "case_mpip", "case_multi",
+            "dquote_subst", "backtick", "amp_pip",
         ],
         "npm_aliases": ["npm_add", "npm_exec", "if_npm", "timeout_npm", "exec_npm"],
         "bun": ["bun_add", "nice_bun"],
@@ -1239,6 +1315,8 @@ def prove_bypasses() -> str:
             "xargs", "bash_lc", "if_npm", "while_pip", "else_pip", "case_pip",
             "timeout_npm", "timeout_pnpm", "nice_bun", "stdbuf_pnpm", "time_uvx",
             "command_pip", "exec_npm",
+            "case_glued", "case_pattern", "case_uvx", "case_mpip", "case_multi",
+            "dquote_subst", "backtick", "amp_pip",
         ],
     }
     for name, text in fixtures.items():
