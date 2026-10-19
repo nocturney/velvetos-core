@@ -24,6 +24,7 @@ permissions:
 jobs:
   check-all:
     # noble ffmpeg=7:6.1.1-3ubuntu5 is not in Ubuntu 26. ubuntu-latest moves there.
+    # Recorded image tool versions are from ubuntu24/20261012.334.
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -33,6 +34,9 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Record runner image tool versions
+        run: python3 scripts/verify_runner_tools.py --platform linux
 
       - name: Set up Python
         # actions/setup-python v7.0.0
@@ -211,6 +215,10 @@ jobs:
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: "3.11"
+
+      - name: Record runner image tool versions
+        shell: pwsh
+        run: python scripts/verify_runner_tools.py --platform windows
 
       - name: Install hashed sensor lock and pinned ffmpeg
         shell: pwsh

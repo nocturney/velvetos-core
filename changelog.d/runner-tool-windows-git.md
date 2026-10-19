@@ -1,0 +1,1 @@
+- 2026-10-19 - **Runner Windows git:** the last recorded windows-latest git is 2.56.0.windows.2. A newer image version is a warn-only drift line with the observed version. No model call.
