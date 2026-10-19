@@ -1,0 +1,1 @@
+- 2026-10-19 - **Office 2.0 standalone depth scenarios:** recorded offline LangGraph, DBOS, Temporal, Pydantic AI, and LiteLLM runs past the import smoke, left UFO and PentAGI unrun, and kept security_admission RED.

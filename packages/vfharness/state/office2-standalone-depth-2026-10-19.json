@@ -1,0 +1,32 @@
+{
+  "task_id": "office2-standalone-depth-2026-10-19",
+  "status": "processing",
+  "component_state": "Processing",
+  "pack": "vfharness",
+  "goal": "One offline scenario past the PASS Office 2.0 candidates, still standalone.",
+  "completed_steps": [
+    "langgraph sqlite interrupt and resume",
+    "dbos kill -9 recovery",
+    "temporal worker kill -9 inside netns",
+    "pydantic-ai TestModel structured output",
+    "litellm mock fallback from 127.0.0.1:9"
+  ],
+  "next_step": "Hosted check-all and check-all-windows green, mark the PR ready, then QA please at the full SHA.",
+  "artifacts": [
+    "docs/office2/standalone-candidate-depth-2026-10-19.md",
+    "scripts/office2/run_standalone_depth.py",
+    "changelog.d/office2-standalone-depth.md"
+  ],
+  "unresolved": [
+    "security_admission stays RED",
+    "UFO and PentAGI not run",
+    "Hosted Linux and Windows CI not yet green"
+  ],
+  "last_updated": "2026-10-19",
+  "execution_state": {
+    "security_admission": "RED",
+    "depth": "PASS",
+    "codes": [0, 0, 0, 0, 0]
+  },
+  "latest_observation": "DEPTH PASS [0, 0, 0, 0, 0] inside unshare --net. Host listeners unchanged. No console wiring."
+}
