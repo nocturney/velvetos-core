@@ -2264,9 +2264,9 @@ def main() -> int:
     require_runner(
         "runner drift hard",
         runner_source_problems(verifier.replace(
-            'f"WARN runner tool drift name={name} observed={observed!r} recorded={recorded!r}",\n'
+            'f"WARN runner tool drift name={name} observed={shown!r} recorded={recorded!r}",\n'
             "        False,",
-            'f"WARN runner tool drift name={name} observed={observed!r} recorded={recorded!r}",\n'
+            'f"WARN runner tool drift name={name} observed={shown!r} recorded={recorded!r}",\n'
             "        True,",
             1,
         )),

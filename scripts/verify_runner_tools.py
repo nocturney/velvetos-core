@@ -32,14 +32,12 @@ def versions_match(observed: str, recorded: str) -> bool:
 
 
 def drift_line(name: str, observed: str, recorded: str) -> tuple[str, bool]:
-    """Return (report, hard_fail). A newer image version is only a warning."""
-    if not observed:
-        return f"runner tool {name} was not observed", True
-    report = f"runner tool name={name} observed={observed!r} recorded={recorded!r}"
-    if versions_match(observed, recorded):
-        return report, False
+    """Return (report, hard_fail). Image version drift, including absence, only warns."""
+    if observed and versions_match(observed, recorded):
+        return f"runner tool name={name} observed={observed!r} recorded={recorded!r}", False
+    shown = observed or "not observed"
     return (
-        f"WARN runner tool drift name={name} observed={observed!r} recorded={recorded!r}",
+        f"WARN runner tool drift name={name} observed={shown!r} recorded={recorded!r}",
         False,
     )
 
@@ -56,9 +54,13 @@ def finish(problems: list[str], notes: list[str]) -> int:
 
 
 def command_text(args: list[str]) -> str:
-    proc = subprocess.run(args, text=True, capture_output=True, timeout=30)
+    try:
+        proc = subprocess.run(args, text=True, capture_output=True, timeout=30)
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return f"not observed: {exc}"
     if proc.returncode != 0:
-        return ""
+        detail = (proc.stderr or proc.stdout or f"exit {proc.returncode}").strip()
+        return f"not observed: {detail}" if detail else "not observed"
     return (proc.stdout or "").strip()
 
 
@@ -67,20 +69,26 @@ def first_line(text: str) -> str:
 
 
 def docker_versions() -> tuple[str, str]:
-    proc = subprocess.run(
-        ["docker", "version", "--format", "{{json .}}"],
-        text=True,
-        capture_output=True,
-        timeout=30,
-    )
+    try:
+        proc = subprocess.run(
+            ["docker", "version", "--format", "{{json .}}"],
+            text=True,
+            capture_output=True,
+            timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        detail = f"not observed: {exc}"
+        return detail, detail
     if proc.returncode != 0:
-        return "", ""
+        detail = (proc.stderr or proc.stdout or f"exit {proc.returncode}").strip()
+        detail = f"not observed: {detail}" if detail else "not observed"
+        return detail, detail
     try:
         data = json.loads(proc.stdout)
     except json.JSONDecodeError:
-        return "", ""
-    client = str((data.get("Client") or {}).get("Version") or "")
-    server = str((data.get("Server") or {}).get("Version") or "")
+        return "not observed: docker version was not json", "not observed: docker version was not json"
+    client = str((data.get("Client") or {}).get("Version") or "") or "not observed"
+    server = str((data.get("Server") or {}).get("Version") or "") or "not observed"
     return client, server
 
 
@@ -136,9 +144,15 @@ def self_test() -> int:
     if prefixed_hard or prefixed.startswith("WARN "):
         print("FAIL runner tools: version suffix was a warning", file=sys.stderr)
         return 1
-    missing, missing_hard = drift_line("windows-git", "", recorded)
-    if not missing_hard or finish([missing], []) == 0:
-        print("FAIL runner tools: a missing tool was not a failure", file=sys.stderr)
+    missing, missing_hard = drift_line("windows-docker-client", "", RECORDED["windows-docker-client"])
+    if missing_hard or "not observed" not in missing or not missing.startswith("WARN "):
+        print("FAIL runner tools: a missing image tool was a hard failure", file=sys.stderr)
+        return 1
+    if finish([], [missing]) != 0:
+        print("FAIL runner tools: a missing image tool failed the job", file=sys.stderr)
+        return 1
+    if finish(["runner tool windows-git was not observed"], []) == 0:
+        print("FAIL runner tools: a hard problem did not fail", file=sys.stderr)
         return 1
     print("OK runner tools self-test")
     return 0

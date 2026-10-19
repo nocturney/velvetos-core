@@ -1,1 +1,1 @@
-- 2026-10-19 - **Runner image tool drift:** tools the runner image preinstalls, including Windows git, are a warn-only version report. Hard pins stay on the ffmpeg and Node downloads. No model call.
+- 2026-10-19 - **Runner image tool drift:** tools the runner image preinstalls, including Windows git and Docker, are a warn-only version report. A missing image tool warns with the observed result and does not fail the job. Hard pins stay on the ffmpeg and Node downloads. No model call.
