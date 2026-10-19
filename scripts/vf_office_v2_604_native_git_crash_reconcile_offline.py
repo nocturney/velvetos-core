@@ -8,6 +8,7 @@ A fixture-only provider JSON file is NOT an authenticated live lease. Real
 native local-Git ref CAS and durable SQLite intent commits exercise gaps that
 the preceding #671 in-memory model could not demonstrate.
 """
+import atexit
 import contextlib
 import dataclasses
 import json
@@ -81,6 +82,27 @@ def git_executable():
     raise RuntimeError("REQUIRED_ENV_MISSING")
 
 
+def _remove_tree(path):
+    if path.is_symlink() or not path.is_dir():
+        path.unlink(missing_ok=True)
+        return
+    for child in list(path.iterdir()):
+        _remove_tree(child)
+    path.rmdir()
+
+
+def _remove_isolated_home():
+    global _ISOLATED_GIT_HOME
+    home = _ISOLATED_GIT_HOME
+    if home is None:
+        return
+    try:
+        _remove_tree(home[0])
+    except OSError:
+        pass
+    _ISOLATED_GIT_HOME = None
+
+
 def isolated_git_home():
     global _ISOLATED_GIT_HOME
     if _ISOLATED_GIT_HOME is None:
@@ -92,6 +114,7 @@ def isolated_git_home():
         config.write_bytes(b"")
         os.chmod(config, 0o600)
         _ISOLATED_GIT_HOME = (root, xdg, config)
+        atexit.register(_remove_isolated_home)
     return _ISOLATED_GIT_HOME
 
 
@@ -140,11 +163,22 @@ def git_subprocess_env():
     })
 
 
-# Callers that already bind this name, including the sealed lost-ACK driver
-# and the CP084 fixture, receive the constructed map. The parent environment
-# is not copied.
+# The closed map is built on first use. Import does not create a home directory.
+# Callers that bind ENV, including the sealed lost-ACK driver and the CP084
+# fixture, receive that map. The parent environment is not copied.
 GIT_EXECUTABLE = git_executable()
-ENV = git_subprocess_env()
+
+
+def bound_env():
+    if "ENV" not in globals():
+        globals()["ENV"] = git_subprocess_env()
+    return globals()["ENV"]
+
+
+def __getattr__(name):
+    if name == "ENV":
+        return bound_env()
+    raise AttributeError(name)
 
 
 def sha(value):
@@ -153,7 +187,7 @@ def sha(value):
 
 def git_raw(args, *, stdin=None):
     return subprocess.run([GIT_EXECUTABLE] + list(args), input=stdin, capture_output=True,
-                          text=True, env=require_git_env(ENV),
+                          text=True, env=require_git_env(bound_env()),
                           timeout=15)
 
 
@@ -503,7 +537,7 @@ class DurableGitOfflineTests(unittest.TestCase):
         if barrier:
             args.append("barrier")
         return subprocess.run(args, text=True, capture_output=True,
-                              timeout=12, env=require_git_env(ENV))
+                              timeout=12, env=require_git_env(bound_env()))
 
     def test_01_local_native_git_exact_cas_with_readback(self):
         it = self.request()
@@ -597,7 +631,7 @@ class DurableGitOfflineTests(unittest.TestCase):
                 str(self.lab.root), "t1", "none", "barrier"]
         first = subprocess.Popen(args, stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE, text=True,
-                                 env=require_git_env(ENV))
+                                 env=require_git_env(bound_env()))
         try:
             deadline = time.monotonic() + 6
             while not (self.lab.root / "holding.ready").exists():
