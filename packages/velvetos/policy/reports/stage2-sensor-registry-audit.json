@@ -40,49 +40,49 @@
   "workflow_direct_sensor_invocations": [
     {
       "workflow": ".github/workflows/jobs-write-through.yml",
-      "line": 116,
+      "line": 120,
       "sensor_path": "scripts/check-vf-office.py",
       "suite_runner_present": false,
       "potential_duplicate_with_suite_runner": false
     },
     {
       "workflow": ".github/workflows/office-control-plane.yml",
-      "line": 42,
+      "line": 46,
       "sensor_path": "scripts/check-office-control-plane.py",
       "suite_runner_present": false,
       "potential_duplicate_with_suite_runner": false
     },
     {
       "workflow": ".github/workflows/office-control-plane.yml",
-      "line": 43,
+      "line": 47,
       "sensor_path": "scripts/check-runtime-corners.py",
       "suite_runner_present": false,
       "potential_duplicate_with_suite_runner": false
     },
     {
       "workflow": ".github/workflows/office-control-plane.yml",
-      "line": 56,
+      "line": 60,
       "sensor_path": "scripts/check-learning-lifecycle.py",
       "suite_runner_present": false,
       "potential_duplicate_with_suite_runner": false
     },
     {
       "workflow": ".github/workflows/velvetos-research.yml",
-      "line": 56,
+      "line": 60,
       "sensor_path": "scripts/check-vfresearch.py",
       "suite_runner_present": false,
       "potential_duplicate_with_suite_runner": false
     },
     {
       "workflow": ".github/workflows/velvetos-research.yml",
-      "line": 57,
+      "line": 61,
       "sensor_path": "scripts/check-vfmem.py",
       "suite_runner_present": false,
       "potential_duplicate_with_suite_runner": false
     },
     {
       "workflow": ".github/workflows/vfmedia-intake.yml",
-      "line": 63,
+      "line": 67,
       "sensor_path": "scripts/check-vfmedia.py",
       "suite_runner_present": false,
       "potential_duplicate_with_suite_runner": false

@@ -257,6 +257,165 @@ def install_spec_problems(
     return problems
 
 
+PYTHON_PINS = {
+    "3.11.17": {
+        "runs_on": "ubuntu-24.04",
+        "command": (
+            "python3 scripts/verify_actions_python_sha256.py --version 3.11.17 "
+            "--filename python-3.11.17-linux-24.04-x64.tar.gz "
+            "--expected ae713815fe406a06f1691856f697a0b1e58b3e986f44e62f0cd0bca2424f1aac "
+            "--checksum-url https://github.com/actions/python-versions/releases/download/"
+            "3.11.17-36876195594/hashes.sha256"
+        ),
+    },
+    "3.12.15": {
+        "runs_on": "ubuntu-24.04",
+        "command": (
+            "python3 scripts/verify_actions_python_sha256.py --version 3.12.15 "
+            "--filename python-3.12.15-linux-24.04-x64.tar.gz "
+            "--expected fcb672b0437c2d8df5565b7cc250b2b0d7455e2b8d6a4a107cfa6f2efe4f7ed8 "
+            "--checksum-url https://github.com/actions/python-versions/releases/download/"
+            "3.12.15-36805895057/hashes.sha256"
+        ),
+    },
+    "3.11.9": {
+        "runs_on": "windows-latest",
+        "command": (
+            "python scripts/verify_actions_python_sha256.py --version 3.11.9 "
+            "--filename python-3.11.9-win32-x64.zip "
+            "--expected c92a530d9ac9539feea075bb033e7e03580412999d2e2833b7b62d948da60d03 "
+            "--checksum-url https://github.com/actions/python-versions/releases/download/"
+            "3.11.9-9947079978/hashes.sha256"
+        ),
+    },
+}
+EXPECTED_PYTHON_SETUPS = 13
+
+
+def job_blocks(text: str) -> list[tuple[str, str]]:
+    """Split top-level jobs by indent. This is not a YAML loader."""
+    lines = text.splitlines()
+    start = None
+    for index, line in enumerate(lines):
+        if re.match(r"^jobs:\s*$", line):
+            start = index + 1
+            break
+    if start is None:
+        return []
+    blocks: list[tuple[str, str]] = []
+    name: str | None = None
+    body: list[str] = []
+    for line in lines[start:]:
+        if line and not line.startswith(" ") and not line.startswith("#"):
+            break
+        match = re.match(r"^  ([A-Za-z0-9][A-Za-z0-9_-]*):\s*(?:#.*)?$", line)
+        if match:
+            if name is not None:
+                blocks.append((name, "\n".join(body)))
+            name = match.group(1)
+            body = [line]
+            continue
+        if name is not None:
+            body.append(line)
+    if name is not None:
+        blocks.append((name, "\n".join(body)))
+    return blocks
+
+
+def job_runs_on(block: str) -> str | None:
+    for line in block.splitlines():
+        match = re.match(r"^    runs-on:\s*(.*?)\s*$", line)
+        if not match:
+            continue
+        raw = strip_comment(match.group(1))
+        if len(raw) >= 2 and raw[0] == raw[-1] and raw[0] in {"'", '"'}:
+            raw = raw[1:-1]
+        return raw
+    return None
+
+
+def workflow_steps(job: str) -> list[str]:
+    lines = job.splitlines()
+    start = None
+    indent = 0
+    for index, line in enumerate(lines):
+        match = re.match(r"^(\s*)steps:\s*$", line)
+        if match:
+            indent = len(match.group(1))
+            start = index + 1
+            break
+    if start is None:
+        return []
+    dash = indent + 2
+    steps: list[list[str]] = []
+    for line in lines[start:]:
+        if line.strip() == "":
+            if steps:
+                steps[-1].append(line)
+            continue
+        lead = len(line) - len(line.lstrip(" "))
+        if lead <= indent:
+            break
+        if lead == dash and line.lstrip().startswith("- "):
+            steps.append([line])
+            continue
+        if steps:
+            steps[-1].append(line)
+    return ["\n".join(step) for step in steps]
+
+
+def script_commands(script: str) -> list[str]:
+    commands: list[str] = []
+    for line in join_continuations(script).splitlines():
+        command = strip_comment(line)
+        if command:
+            commands.append(command)
+    return commands
+
+
+def step_python_version(step: str) -> str | None:
+    for line in step.splitlines():
+        match = re.match(r"""^\s*python-version:\s*['"]?([^'"#\s]+)""", line)
+        if match:
+            return match.group(1)
+    return None
+
+
+def python_toolchain_problems(text: str, *, path: str) -> list[str]:
+    """Each setup-python step is an exact patch plus the next checksum command."""
+    problems: list[str] = []
+    blocks = job_blocks(text)
+    if not blocks and "actions/setup-python@" in text:
+        problems.append(f"{path} setup-python is outside a parsed job")
+        return problems
+    for job, block in blocks:
+        steps = workflow_steps(block)
+        for index, step in enumerate(steps):
+            if "actions/setup-python@" not in step:
+                continue
+            version = step_python_version(step)
+            pin = PYTHON_PINS.get(version or "")
+            if pin is None:
+                problems.append(
+                    f"{path} job {job} python-version {version!r} is not an exact toolchain pin"
+                )
+                continue
+            runs_on = job_runs_on(block)
+            if runs_on != pin["runs_on"]:
+                problems.append(
+                    f"{path} job {job} runs-on {runs_on!r} is not {pin['runs_on']}"
+                )
+            if index + 1 >= len(steps):
+                problems.append(f"{path} job {job} python toolchain checksum step is missing")
+                continue
+            commands: list[str] = []
+            for script in run_scripts(steps[index + 1]):
+                commands.extend(script_commands(script))
+            if commands != [pin["command"]]:
+                problems.append(f"{path} job {job} python toolchain command mismatch")
+    return problems
+
+
 def float_google_install(text: str) -> str:
     """Mutation: put the pre-pin bare names back on the Google client install."""
     lines = text.splitlines(keepends=True)
@@ -281,9 +440,13 @@ def main() -> int:
         fail("INSTALL_SPEC_ALLOWLIST must stay empty")
     problems: list[str] = []
     workflows = sorted(WORKFLOWS.glob("*.y*ml"))
+    python_setups = 0
     for path in workflows:
         rel = path.relative_to(ROOT).as_posix()
-        problems.extend(install_spec_problems(path.read_text(encoding="utf-8"), path=rel))
+        text = path.read_text(encoding="utf-8")
+        problems.extend(install_spec_problems(text, path=rel))
+        problems.extend(python_toolchain_problems(text, path=rel))
+        python_setups += text.count("actions/setup-python@")
     if problems:
         for item in problems:
             print(f"FAIL {NAME}: {item}", file=sys.stderr)
@@ -334,10 +497,67 @@ def main() -> int:
     if install_spec_problems(jobs.read_text(encoding="utf-8"), path="jobs-write-through.yml"):
         fail("pinned jobs-write-through install was refused")
 
+    check_all = (WORKFLOWS / "check-all.yml").read_text(encoding="utf-8")
+    research = (WORKFLOWS / "velvetos-research.yml").read_text(encoding="utf-8")
+    if python_toolchain_problems(check_all, path="check-all.yml"):
+        fail(f"pinned check-all python was refused: {python_toolchain_problems(check_all, path='check-all.yml')}")
+    if python_toolchain_problems(research, path="velvetos-research.yml"):
+        fail("pinned velvetos-research python was refused")
+
+    def require_python(label: str, mutated: str, needle: str) -> None:
+        found = python_toolchain_problems(mutated, path="check-all.yml")
+        if not any(needle in item for item in found):
+            fail(f"{label} was not caught: {found}")
+
+    require_python(
+        "floating 3.11",
+        check_all.replace('python-version: "3.11.17"', 'python-version: "3.11"', 1),
+        "not an exact toolchain pin",
+    )
+    require_python(
+        "digest swap",
+        check_all.replace(
+            "ae713815fe406a06f1691856f697a0b1e58b3e986f44e62f0cd0bca2424f1aac",
+            "0" * 64,
+            1,
+        ),
+        "command mismatch",
+    )
+    require_python(
+        "commented verifier",
+        check_all.replace(
+            "run: python3 scripts/verify_actions_python_sha256.py",
+            "run: # python3 scripts/verify_actions_python_sha256.py",
+            1,
+        ),
+        "command mismatch",
+    )
+    require_python(
+        "ubuntu-latest runner",
+        check_all.replace("    runs-on: ubuntu-24.04\n", "    runs-on: ubuntu-latest\n", 1),
+        "ubuntu-24.04",
+    )
+    require_python(
+        "windows patch upgrade",
+        check_all.replace('python-version: "3.11.9"', 'python-version: "3.11.17"', 1),
+        "command mismatch",
+    )
+    if python_setups != EXPECTED_PYTHON_SETUPS:
+        fail(f"expected {EXPECTED_PYTHON_SETUPS} setup-python steps, found {python_setups}")
+    verifier = ROOT / "scripts" / "verify_actions_python_sha256.py"
+    probe = __import__("subprocess").run(
+        [sys.executable, str(verifier), "--self-test"],
+        cwd=ROOT, text=True, capture_output=True,
+    )
+    if probe.returncode != 0:
+        fail(probe.stderr.strip() or probe.stdout.strip() or "python toolchain self-test failed")
+
     print(
         f"OK {NAME} workflows={len(workflows)} floating=0 allowlist=empty "
         "bare=caught exact=pass mixed=caught npm_float=caught npm_exact=pass "
-        "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught"
+        "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught "
+        f"python_setups={python_setups} python_float=caught python_sha=caught "
+        "python_comment=caught python_runner=caught"
     )
     return 0
 

@@ -9,7 +9,8 @@ on:
 
 jobs:
   research-verification:
-    runs-on: ubuntu-latest
+    # The pinned actions/python-versions asset is the linux-24.04 build. ubuntu-latest moves to Ubuntu 26.
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         # actions/checkout v7.0.1
@@ -19,7 +20,10 @@ jobs:
         # actions/setup-python v7.0.0
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
-          python-version: '3.12'
+          python-version: "3.12.15"
+
+      - name: Verify Python toolchain checksum
+        run: python3 scripts/verify_actions_python_sha256.py --version 3.12.15 --filename python-3.12.15-linux-24.04-x64.tar.gz --expected fcb672b0437c2d8df5565b7cc250b2b0d7455e2b8d6a4a107cfa6f2efe4f7ed8 --checksum-url https://github.com/actions/python-versions/releases/download/3.12.15-36805895057/hashes.sha256
 
       - name: Install sensor runtime dependencies
         run: |
