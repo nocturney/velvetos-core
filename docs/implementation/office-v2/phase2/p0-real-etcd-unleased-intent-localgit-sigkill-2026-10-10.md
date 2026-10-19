@@ -6,7 +6,7 @@
 
 - Source: `scripts/vf_office_v2_604_etcd_pending_intent_native_localgit_lab.py`.
 - Source SHA256, Mac original lab: `cc2604fa439488970615cb564512d5fe8a58884c4c6244637f74e604812a82fb`.
-- Mac workspace created fresh: `/Users/chris/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-604-etcd-intent-crash-localgit-20261010`.
+- Mac workspace created fresh: `$HOME/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-604-etcd-intent-crash-localgit-20261010`.
 - Reused only the executable bytes of locally staged pinned **etcd 3.6.15 darwin/arm64**, SHA256 `dd2596ab902c23252da55e770cb7f7216522ae5599f84d2a20e0e7272d52fe82`; **did not open, change or reuse any prior etcd data-dir, token, historical #670 receipt or system configuration**.
 - Each integration run creates its own `TemporaryDirectory` under the new workspace, randomly selects new **loopback-only** ports for client and peer, starts an **ephemeral unauthenticated** etcd process, runs tests, terminates it and deletes its disposable data-dir. No autostart, firewall change, trust store, RBAC/user credential, actual GitHub write, second scheduler, new permanent storage, system security change or paid API.
 - Native Git is a **bare temporary local repository with no remote**, locked to a single `refs/heads/vf604-provider-intent-offline`, original commit-tree markers and native `git update-ref new expected`. Not a substitute for GitHub ref protection.

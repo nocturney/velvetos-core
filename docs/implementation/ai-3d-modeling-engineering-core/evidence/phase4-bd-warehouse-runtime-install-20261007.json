@@ -2,7 +2,7 @@
     "schema":  "velvetos.ai3d.phase4-runtime-install.v1",
     "status":  "PASS",
     "captured_at":  "2026-10-07T14:02:44.4441174Z",
-    "runtime":  "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv",
+    "runtime":  "%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv",
     "install":  {
                     "package":  "bd_warehouse",
                     "version":  "0.3.0",
