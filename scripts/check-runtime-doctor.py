@@ -12,15 +12,20 @@ Examples:
   python scripts/check-runtime-doctor.py --scope runtime --require-component edge-execution
   python scripts/check-runtime-doctor.py --scope external_action --require-component google-drive
   python scripts/check-runtime-doctor.py --strict   # legacy repository-wide live proof
+  python scripts/check-runtime-doctor.py --selftest  # git pin proof; not part of validate()
 """
 
 from __future__ import annotations
 
 import argparse
+import ast
+import io
 import json
 import os
+import secrets
 import subprocess
 import sys
+from collections.abc import Mapping
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -37,6 +42,8 @@ from vf_runtime_receipt_policy import (  # noqa: E402
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages/vfharness/runtime/expected-components.json"
 RECEIPTS = ROOT / "packages/vfharness/state/runtime"
+SELFTEST_ENV = "VF_RUNTIME_DOCTOR_INSIDE_SELFTEST"
+SELFTEST_TIMEOUT_SECONDS = 90
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -86,16 +93,94 @@ def inspect_receipt(receipt_id: str, max_age_hours: float) -> tuple[bool, str]:
     return True, f"{receipt_id}: healthy age={age_hours:.1f}h"
 
 
+def _rev_parse_operand_errors(argv: list[str]) -> list[str]:
+    """``HEAD`` is the rev-parse operand. ``--`` would be printed back."""
+    if "rev-parse" not in argv:
+        return [f"rev-parse missing: {argv}"]
+    idx = argv.index("rev-parse")
+    if argv[idx + 1:idx + 2] != ["HEAD"]:
+        return [f"HEAD was not the rev-parse revision: {argv}"]
+    if "--" in argv:
+        return [f"rev-parse must not be given --: {argv}"]
+    return []
+
+
+def prove_repo_git() -> list[str]:
+    """repo-main rev-parse is absolute, timed, and does not inherit GIT_*."""
+    prove_repo_git.calls = getattr(prove_repo_git, "calls", 0) + 1
+    import vf_spawn
+    from vf_spawn import GIT_TIMEOUT_SECONDS, allowlisted_git_errors
+
+    errors: list[str] = []
+    previous = os.environ.get("GIT_EXEC_PATH")
+    os.environ["GIT_EXEC_PATH"] = "/evil/git-core"
+    captured: list[tuple[list[str], dict]] = []
+    original = vf_spawn.subprocess.run
+
+    def fake_run(argv, **kwargs):
+        captured.append((list(argv), kwargs))
+        return vf_spawn.subprocess.CompletedProcess(argv, 0, stdout=("b" * 40) + "\n", stderr="")
+
+    component = {"id": "repo-main", "kind": "git"}
+    vf_spawn.subprocess.run = fake_run
+    try:
+        ok, detail = _builtin_proof(component)
+    finally:
+        vf_spawn.subprocess.run = original
+    if not ok or "git HEAD valid" not in detail:
+        errors.append(f"pinned repo-main proof failed: {detail}")
+    if len(captured) != 1:
+        errors.append("runtime doctor rev-parse did not spawn through the pinned runner")
+    else:
+        argv, kwargs = captured[0]
+        errors.extend(allowlisted_git_errors(argv, kwargs, timeout=GIT_TIMEOUT_SECONDS))
+        errors.extend(_rev_parse_operand_errors(argv))
+        if f"safe.directory={ROOT.as_posix()}" not in argv:
+            errors.append(f"safe.directory was dropped: {argv}")
+        if "/evil/git-core" in str(kwargs.get("env")):
+            errors.append("GIT_EXEC_PATH reached the runtime doctor child")
+    try:
+        ok, detail = _builtin_proof(component)
+    finally:
+        if previous is None:
+            os.environ.pop("GIT_EXEC_PATH", None)
+        else:
+            os.environ["GIT_EXEC_PATH"] = previous
+    if not ok:
+        errors.append(f"real repo-main proof under a poisoned GIT_EXEC_PATH failed: {detail}")
+
+    def expire(argv, **kwargs):
+        raise subprocess.TimeoutExpired(argv, timeout=kwargs.get("timeout") or 30)
+
+    vf_spawn.subprocess.run = expire
+    try:
+        try:
+            ok, detail = _builtin_proof(component)
+        except subprocess.TimeoutExpired:
+            errors.append("runtime doctor git timeout was not caught")
+            ok, detail = False, ""
+    finally:
+        vf_spawn.subprocess.run = original
+    if ok or "GIT_TIMEOUT" not in str(detail) or "Traceback" in str(detail):
+        errors.append(f"runtime doctor git timeout was not GIT_TIMEOUT: {detail!r}")
+    return errors
+
+
 def _builtin_proof(component: dict[str, Any]) -> tuple[bool, str]:
     cid = component.get("id")
     kind = component.get("kind")
     if kind == "git" and cid == "repo-main":
-        probe = subprocess.run(
-            ["git", "-c", f"safe.directory={ROOT.as_posix()}", "rev-parse", "HEAD"],
-            cwd=ROOT,
-            text=True,
-            capture_output=True,
-        )
+        from vf_spawn import SpawnRefusal, run_git
+
+        try:
+            probe = run_git(
+                ["-c", f"safe.directory={ROOT.as_posix()}", "rev-parse", "HEAD"],
+                cwd=ROOT,
+            )
+        except subprocess.TimeoutExpired:
+            return False, "repo-main: GIT_TIMEOUT"
+        except SpawnRefusal as exc:
+            return False, f"repo-main: git HEAD proof failed: {exc}"
         if probe.returncode == 0 and len(probe.stdout.strip()) == 40:
             return True, f"{cid}: git HEAD valid"
         return False, "repo-main: git HEAD proof failed"
@@ -183,7 +268,8 @@ def validate(request: RuntimeProofRequest) -> tuple[int, list[str]]:
             errors.append(f"{cid}: invalid anyOf")
 
     # CODE_VALID proves repository/runtime contract structure but intentionally
-    # does not consume current provider/connector/host receipts.
+    # does not consume current provider/connector/host receipts. The git
+    # self-test that monkeypatches subprocess lives on --selftest only.
     repo_main = component_by_id.get("repo-main")
     if repo_main and repo_main.get("proofMode") == "builtin":
         ok, detail = _builtin_proof(repo_main)
@@ -268,9 +354,246 @@ def validate(request: RuntimeProofRequest) -> tuple[int, list[str]]:
     return 0, lines
 
 
-def main(argv: list[str] | None = None, *, request: RuntimeProofRequest | None = None) -> int:
+def prove_validate_is_pure() -> list[str]:
+    """validate() does not monkeypatch subprocess.run or GIT_EXEC_PATH."""
+    import vf_spawn
+
+    errors: list[str] = []
+    tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
+    fn = next((node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "validate"), None)
+    if fn is None:
+        return ["validate() is missing"]
+    dumped = ast.dump(fn)
+    if "prove_repo_git" in dumped:
+        errors.append("validate() calls prove_repo_git")
+    if "GIT_EXEC_PATH" in dumped:
+        errors.append("validate() touches GIT_EXEC_PATH")
+    if "subprocess" in dumped:
+        errors.append("validate() touches subprocess")
+    before = getattr(prove_repo_git, "calls", 0)
+    env_before = os.environ.get("GIT_EXEC_PATH")
+    run_before = vf_spawn.subprocess.run
+    code, lines = validate(_request_from_cli([]))
+    if getattr(prove_repo_git, "calls", 0) != before:
+        errors.append("validate() ran prove_repo_git")
+    if vf_spawn.subprocess.run is not run_before:
+        errors.append("validate() left subprocess.run patched")
+    if os.environ.get("GIT_EXEC_PATH") != env_before:
+        errors.append("validate() left GIT_EXEC_PATH changed")
+    if code != 0:
+        errors.append("validate() failed during the purity check: " + " | ".join(lines))
+    return errors
+
+
+class SelftestSentinelError(RuntimeError):
+    """The selftest marker was already present outside the child we just spawned."""
+
+
+def child_selftest_env(base: Mapping[str, str]) -> dict[str, str]:
+    """Copy base and add a fresh token. An ambient marker is a refusal, not a skip."""
+    if SELFTEST_ENV in base:
+        raise SelftestSentinelError(
+            "VF_RUNTIME_DOCTOR_INSIDE_SELFTEST was set outside the selftest child"
+        )
+    child = dict(base)
+    child[SELFTEST_ENV] = secrets.token_hex(16)
+    return child
+
+
+def run_selftest_child() -> int:
     try:
-        resolved = request or _request_from_cli(argv)
+        child_env = child_selftest_env(os.environ)
+    except SelftestSentinelError as exc:
+        print(f"FAIL runtime doctor selftest: {exc}", file=sys.stderr)
+        return 1
+    try:
+        child = subprocess.run(
+            [sys.executable, str(Path(__file__).resolve()), "--selftest"],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            env=child_env,
+            timeout=SELFTEST_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        print("FAIL runtime doctor selftest: SELFTEST_TIMEOUT", file=sys.stderr)
+        return 1
+    if child.returncode != 0:
+        sys.stderr.write(child.stdout or "")
+        sys.stderr.write(child.stderr or "")
+        return child.returncode or 1
+    if child.stdout and child.stdout.strip():
+        print(child.stdout.strip())
+    return 0
+
+
+def _function_source(name: str) -> tuple[ast.FunctionDef, str] | None:
+    text = Path(__file__).read_text(encoding="utf-8")
+    tree = ast.parse(text)
+    fn = next((node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == name), None)
+    if fn is None:
+        return None
+    segment = ast.get_source_segment(text, fn) or ""
+    return fn, segment
+
+
+def prove_selftest_sentinel() -> list[str]:
+    """Ambient VF_RUNTIME_DOCTOR_INSIDE_SELFTEST=1 must not skip the child."""
+    errors: list[str] = []
+    try:
+        child_selftest_env({SELFTEST_ENV: "1"})
+    except SelftestSentinelError:
+        pass
+    else:
+        errors.append("ambient selftest sentinel was accepted")
+    try:
+        child_selftest_env({SELFTEST_ENV: "deadbeef"})
+    except SelftestSentinelError:
+        pass
+    else:
+        errors.append("forged selftest token was accepted")
+    first = child_selftest_env({"PATH": "a"})
+    second = child_selftest_env({"PATH": "a"})
+    token = first.get(SELFTEST_ENV, "")
+    if (
+        token == "1"
+        or token == second.get(SELFTEST_ENV)
+        or len(token) != 32
+        or any(ch not in "0123456789abcdef" for ch in token)
+    ):
+        errors.append("selftest token was not a per-run secret")
+    found = _function_source("main")
+    if found is None:
+        errors.append("main() is missing")
+    else:
+        fn, source = found
+        dumped = ast.dump(fn)
+        if "run_selftest_child" not in dumped:
+            errors.append("main() does not run the selftest child")
+        if '!= "1"' in source or "!= '1'" in source:
+            errors.append("main() still skips when the selftest sentinel is 1")
+    if errors:
+        return errors
+    saved = os.environ.get(SELFTEST_ENV)
+    os.environ[SELFTEST_ENV] = "1"
+    stdout, stderr = io.StringIO(), io.StringIO()
+    old_out, old_err = sys.stdout, sys.stderr
+    sys.stdout, sys.stderr = stdout, stderr
+    try:
+        code = main([])
+    finally:
+        sys.stdout, sys.stderr = old_out, old_err
+        if saved is None:
+            os.environ.pop(SELFTEST_ENV, None)
+        else:
+            os.environ[SELFTEST_ENV] = saved
+    if code == 0 or "CODE_VALID" in stdout.getvalue() or "was set outside" not in stderr.getvalue():
+        errors.append("ambient selftest sentinel was accepted")
+    return errors
+
+
+def prove_selftest_timeout() -> list[str]:
+    """The selftest child has a timeout and TimeoutExpired fails closed."""
+    errors: list[str] = []
+    if type(SELFTEST_TIMEOUT_SECONDS) is not int or SELFTEST_TIMEOUT_SECONDS <= 0:
+        errors.append("selftest child timeout was not set")
+    found = _function_source("run_selftest_child")
+    if found is None:
+        errors.append("run_selftest_child() is missing")
+        return errors
+    fn, _source = found
+    timed = False
+    for node in ast.walk(fn):
+        if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Attribute):
+            continue
+        if node.func.attr != "run":
+            continue
+        for keyword in node.keywords:
+            if keyword.arg == "timeout" and isinstance(keyword.value, ast.Name):
+                if keyword.value.id == "SELFTEST_TIMEOUT_SECONDS":
+                    timed = True
+    if not timed:
+        errors.append("selftest child timeout was not set")
+    saved = os.environ.pop(SELFTEST_ENV, None)
+    original = subprocess.run
+
+    def expire(argv, **kwargs):
+        raise subprocess.TimeoutExpired(argv, timeout=kwargs.get("timeout") or SELFTEST_TIMEOUT_SECONDS)
+
+    subprocess.run = expire
+    stderr = io.StringIO()
+    old_err = sys.stderr
+    sys.stderr = stderr
+    code: int | None = None
+    try:
+        try:
+            code = run_selftest_child()
+        except subprocess.TimeoutExpired:
+            errors.append("selftest child timeout was not caught")
+    finally:
+        subprocess.run = original
+        sys.stderr = old_err
+        if saved is None:
+            os.environ.pop(SELFTEST_ENV, None)
+        else:
+            os.environ[SELFTEST_ENV] = saved
+    if code != 1 or "SELFTEST_TIMEOUT" not in stderr.getvalue():
+        if "selftest child timeout was not caught" not in errors:
+            errors.append("selftest child timeout was not caught")
+    return errors
+
+
+def prove_selftest_child_status() -> list[str]:
+    """A nonzero selftest child exit must fail the no-arg parent."""
+    errors: list[str] = []
+    saved = os.environ.pop(SELFTEST_ENV, None)
+    original = subprocess.run
+
+    def failed(argv, **kwargs):
+        return subprocess.CompletedProcess(argv, 3, stdout="", stderr="child-failed")
+
+    subprocess.run = failed
+    stdout, stderr = io.StringIO(), io.StringIO()
+    old_out, old_err = sys.stdout, sys.stderr
+    sys.stdout, sys.stderr = stdout, stderr
+    code: int | None = None
+    try:
+        code = main([])
+    finally:
+        subprocess.run = original
+        sys.stdout, sys.stderr = old_out, old_err
+        if saved is None:
+            os.environ.pop(SELFTEST_ENV, None)
+        else:
+            os.environ[SELFTEST_ENV] = saved
+    if code != 3 or "CODE_VALID" in stdout.getvalue():
+        errors.append("selftest child failure was swallowed")
+    return errors
+
+
+def run_selftest() -> int:
+    errors = prove_repo_git()
+    errors.extend(prove_validate_is_pure())
+    errors.extend(prove_selftest_sentinel())
+    errors.extend(prove_selftest_timeout())
+    errors.extend(prove_selftest_child_status())
+    if errors:
+        print("FAIL runtime doctor selftest: " + "; ".join(errors), file=sys.stderr)
+        return 1
+    print("OK runtime doctor selftest")
+    return 0
+
+
+def main(argv: list[str] | None = None, *, request: RuntimeProofRequest | None = None) -> int:
+    supplied = list(sys.argv[1:] if argv is None else argv)
+    if supplied == ["--selftest"]:
+        return run_selftest()
+    if supplied == [] and request is None:
+        child_code = run_selftest_child()
+        if child_code != 0:
+            return child_code
+    try:
+        resolved = request or _request_from_cli(None if argv is None else supplied)
     except ValueError as exc:
         print(f"FAIL runtime proof request: {exc}", file=sys.stderr)
         return 1

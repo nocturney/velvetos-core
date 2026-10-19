@@ -1,0 +1,30 @@
+{
+  "task_id": "spawn-home-872-notes-2026-10-19",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfharness",
+  "goal": "Close the four QA notes on #872 (comment 6255812062) with a live test and a mutant each.",
+  "completed_steps": [
+    "#889 fold notes already on PR #891 at 7f427f74dedd2115e19f1745af73532e6a86d1b0",
+    "prove_controlled_home returned no errors",
+    "python3 scripts/check-all.py passed 126/126 and left the tree unchanged"
+  ],
+  "next_step": "Hosted Linux check-all and Windows check-all-windows, then QA please on the full sha.",
+  "artifacts": [
+    "scripts/vf_spawn.py",
+    "changelog.d/spawn-home-872-notes.md",
+    "README.md"
+  ],
+  "unresolved": [
+    "security_admission stays RED",
+    "Hosted Linux and Windows CI not yet green",
+    "security_admission stays RED"
+  ],
+  "last_updated": "2026-10-19",
+  "execution_state": {
+    "security_admission": "RED",
+    "pr_872": "merged 9b08ce703e1e65cc147bf3a8f606573821a864bb",
+    "qa_comment": "https://github.com/nocturney/velvetos-core/pull/872#issuecomment-6255812062"
+  },
+  "latest_observation": "Local check-all passed 126/126. Notes 1 and 2 already held on main after #883; this change pins mutants for all four notes, adds exit cleanup, and runs an OS-native fsmonitor command."
+}

@@ -28,6 +28,60 @@ def fail(message: str) -> None:
     raise SystemExit(1)
 
 
+def format_child_skips(test_file: str, stdout: str, stderr: str) -> list[str]:
+    """Named skip codes for the suite log. The child's pass/fail is unchanged."""
+    text = f"{stdout or ''}\n{stderr or ''}"
+    lines: list[str] = []
+    if "SKIP_NON_POSIX" in text:
+        lines.append(f"SKIP_NON_POSIX {test_file}")
+    if "Windows symlink creation not permitted by OS" in text:
+        lines.append(f"SKIP_WIN_SYMLINK {test_file}")
+    return lines
+
+
+def format_inert_selftest_skip(status: object) -> str | None:
+    if status == "SKIP_NON_POSIX":
+        return "SKIP_NON_POSIX cp083-inert-selftest"
+    return None
+
+
+def prove_windows_skip_codes() -> None:
+    child = format_child_skips(
+        "example.py",
+        "SKIP_NON_POSIX\n",
+        "skipped 'Windows symlink creation not permitted by OS'\n",
+    )
+    if child != [
+        "SKIP_NON_POSIX example.py",
+        "SKIP_WIN_SYMLINK example.py",
+    ]:
+        fail("child skip codes drifted: " + repr(child))
+    if format_child_skips("example.py", "OK\n", "Ran 1 test\n") != []:
+        fail("a passing child must not invent a skip code")
+    inert = format_inert_selftest_skip("SKIP_NON_POSIX")
+    if inert != "SKIP_NON_POSIX cp083-inert-selftest":
+        fail("inert selftest skip code drifted")
+    if format_inert_selftest_skip("OFFLINE_STATIC_ONLY") is not None:
+        fail("POSIX inert selftest must not print a skip")
+    source = Path(__file__).read_text(encoding="utf-8")
+    loop = "for line in format_" + "child_skips("
+    parts = source.split(loop)
+    printed = "print(" + "line)"
+    if len(parts) != 2 or printed not in parts[1][:180]:
+        fail("child skip codes must be printed")
+    if "print(" + "inert_line)" not in source:
+        fail("Windows skip codes must be printed on the suite log")
+    # main() runs to EOF, so stop before the module entrypoint. That entrypoint
+    # also calls the proof, and must not count as the call inside main().
+    main_tail = source.split("def main() -> int:", 1)
+    entry = "\nif __" + "name__"
+    if len(main_tail) != 2 or entry not in main_tail[1]:
+        fail("main must call prove_windows_skip_codes")
+    main_body = main_tail[1].split(entry, 1)[0]
+    if "prove_" + "windows_skip_codes()" not in main_body:
+        fail("main must call prove_windows_skip_codes")
+
+
 def load(path: Path) -> dict:
     if not path.is_file():
         fail(f"missing {path.relative_to(ROOT)}")
@@ -41,6 +95,7 @@ def load(path: Path) -> dict:
 
 
 def main() -> int:
+    prove_windows_skip_codes()
     authority = load(P0 / "authority-map-v0.1.json")
     if authority.get("single_external_effect_authority") is not True:
         fail("Phase 0 must preserve single external-effect authority")
@@ -3420,6 +3475,10 @@ def main() -> int:
                 cp083_result.get("negative_mutations_rejected") != 8)
         ):
             fail("#604 CP083 attempted to promote lab to trusted security admission")
+        if cp083_mode == "--selftest":
+            inert_line = format_inert_selftest_skip(cp083_result.get("inert_selftest"))
+            if inert_line:
+                print(inert_line)
 
     # New CP083 hardening candidate gates: LOCAL-only. Do not change the
     # historical sealed CP083 receipts or imply protected security admission.
@@ -3445,7 +3504,7 @@ def main() -> int:
         ("test_vf_office_v2_604_cp083_client_socket_negative.py", 10, 45),
         ("test_vf_office_v2_604_cp083_reconcile_negative.py", 5, 15),
         ("test_vf_office_v2_604_cp084_nonroot_sink_recovery.py", 5, 15),
-        ("test_vf_office_v2_604_cp085_public_git_readback.py", 30, 15),
+        ("test_vf_office_v2_604_cp085_public_git_readback.py", 32, 15),
         # #762: offline-only byte-consistency negatives, NOT joined-run QA.
         ("test_vf_office_v2_604_cp083_candidate_evidence_gate.py", 35, 30),
         # ChatGPT-069: GAP_4 and GAP_9 are passing refusals. GAP_6 stays an
@@ -3486,6 +3545,8 @@ def main() -> int:
             tail = " | ".join(line.strip() for line in captured if line.strip())[-400:]
             extra = (" :: " + tail) if tail else ""
             fail("#604 CP083 candidate negative tests failed: " + test_file + extra)
+        for line in format_child_skips(test_file, test_run.stdout, test_run.stderr):
+            print(line)
     if os.name != "posix":
         if set(skipped_candidate_imports) != candidate_import_skip:
             fail("#604 CP083 candidate-import tests must SKIP_NON_POSIX")
@@ -3532,4 +3593,6 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    # Runs even if the call inside main() is removed, so that mutant still fails.
+    prove_windows_skip_codes()
     raise SystemExit(main())
