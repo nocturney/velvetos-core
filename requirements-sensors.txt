@@ -2,6 +2,7 @@
 # INPUT file: CI installs the hashed locks requirements-sensors.py311.lock / .py312.lock
 # (pip --require-hashes). After editing, run scripts/regen-sensor-locks.sh and commit all three.
 # Direct dependencies (imported by sensors / the scripts they exercise):
+PyYAML==6.0.3           # unique_yaml.SafeLoader: workflow key refusal and action pins
 Pillow==12.3.0          # PIL: publication/creative/cold-start/source-ingest sensors
 cryptography==50.0.1    # vfigos delivery-approval signing (check-delivery-approval)
 starlette==1.7.0        # vfigos approval issuer HTTP app (check-delivery-approval)
@@ -11,7 +12,6 @@ scikit-learn==1.9.1     # vfmem semantic index (vfresearch_cadence.py build-inde
 # and check-sensor-locks accepts only python_version markers, so a win32 marker
 # never reaches the hashed lock a Windows checkout installs.
 tzdata==2026.5
-PyYAML==6.0.3           # unique_yaml.SafeLoader: workflow key refusal
 # Transitive pins (resolved together with the above on 2026-09-26):
 anyio==4.15.1
 cffi==2.1.1

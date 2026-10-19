@@ -123,15 +123,15 @@ class UniqueLoader(Reader, Scanner, _Parser, _Composer, _Constructor, Resolver):
         Resolver.__init__(self)
 
 
-def load_yaml(text: str):
-    """Load one YAML document.
-
-    Raises ``UniqueYamlError`` with ``kind`` of ``duplicate``, ``anchor``,
-    ``alias``, ``merge``, ``complex``, or ``syntax``.
-    """
+def _load(text: str, *, node: bool):
     loader = UniqueLoader(text)
     try:
         try:
+            if node:
+                parsed = loader.get_single_node()
+                if parsed is not None:
+                    loader.construct_document(parsed)
+                return parsed
             return loader.get_single_data()
         except UniqueYamlError:
             raise
@@ -139,3 +139,22 @@ def load_yaml(text: str):
             raise UniqueYamlError("syntax", str(exc)) from exc
     finally:
         loader.dispose()
+
+
+def load_yaml(text: str):
+    """Load one YAML document.
+
+    Raises ``UniqueYamlError`` with ``kind`` of ``duplicate``, ``anchor``,
+    ``alias``, ``merge``, ``complex``, or ``syntax``.
+    """
+    return _load(text, node=False)
+
+
+def load_yaml_node(text: str):
+    """Return the composed node after the same refusals as ``load_yaml``.
+
+    Start marks stay on the node so a caller can name the source line.
+    An anchor, alias, merge, duplicate key, or explicit ``?`` key is refused
+    anywhere in the document, not only on a step or a job.
+    """
+    return _load(text, node=True)
