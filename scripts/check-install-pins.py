@@ -1533,6 +1533,7 @@ APPROVED_PACKAGE_INSTALLS: tuple[tuple[str, str], ...] = (
 )
 APT_SIDE_TOOLS = {"apt", "apt-get", "aptitude"}
 APT_SIDE_ACTIONS = {"install", "reinstall", "satisfy"}
+APT_SAFE_ACTIONS = {"update", "remove", "purge"}
 DPKG_TOOLS = {"dpkg", "dpkg-deb"}
 DPKG_ACTION_LONG = {
     "--install", "--unpack", "--extract", "--recursive",
@@ -1629,42 +1630,56 @@ def _indirect_command(token: str) -> bool:
 
 
 def _apt_action_installs(argv: list[str]) -> bool:
-    """True for install, reinstall, or satisfy, whatever the package operand is.
+    """Fail closed unless an apt action is update, remove, or purge.
 
-    Fails closed two ways: an option that is neither a known no-value flag
-    nor a known value-taking flag, seen before the first non-flag word, is
-    trusted least, so it is treated as an install outright. And the scan
-    never stops at the first non-flag word (that word might be a value we
-    misread, not the actual subcommand) -- it keeps looking for install,
-    reinstall, or satisfy anywhere in the rest of the command.
+    A trailing plus on a remove/purge package operand requests INSTALL in
+    apt/apt-get/aptitude, even though the action itself sounds destructive.
+    Unknown actions (including build-dep, source, upgrades, markauto) and
+    unexpected options are never assumed read-only.
     """
     rest = argv[1:]
     index = 0
-    seen_word = False
+    action: str | None = None
     while index < len(rest):
         token = rest[index]
         if token == "--":
             index += 1
             continue
-        if not seen_word and _indirect_command(token):
+        if _indirect_command(token):
             return True
         if token.startswith("-"):
-            flag = token.split("=", 1)[0]
-            if "=" in token:
-                index += 1
-                continue
+            flag, sep, value = token.partition("=")
             if flag in APT_VALUE_FLAGS:
+                if sep:
+                    if _indirect_command(value):
+                        return True
+                    index += 1
+                    continue
+                if index + 1 >= len(rest) or _indirect_command(rest[index + 1]):
+                    return True
                 index += 2
                 continue
-            if not seen_word and flag not in APT_NO_VALUE_FLAGS:
-                return True
-            index += 1
-            continue
-        if token.lower() in APT_SIDE_ACTIONS:
+            # Apt -qq is used by an existing update-only workflow.
+            if token in APT_NO_VALUE_FLAGS or (
+                action == "update" and re.fullmatch(r"-q{2,}", token)
+            ):
+                index += 1
+                continue
             return True
-        seen_word = True
+        if action is None:
+            action = token.lower()
+            if action not in APT_SAFE_ACTIONS:
+                return True
+        else:
+            # A later install/reinstall/satisfy word cannot hide behind a
+            # safe-looking first action or an option-value parsing mistake.
+            if token.lower() in APT_SIDE_ACTIONS:
+                return True
+            if action in {"remove", "purge"} and token.endswith("+"):
+                return True
         index += 1
-    return False
+    # No recognised action is not proof of a safe package-manager command.
+    return action is None
 
 
 def _dpkg_action(argv: list[str]) -> bool:
@@ -1748,6 +1763,11 @@ def ffmpeg_side_install_problems(text: str, *, path: str) -> list[str]:
             for command in split_commands(join_continuations(script)):
                 command = strip_comment(command)
                 if not command or command in approved:
+                    continue
+                # Exact diagnostics from the hashed-ffmpeg gate use the word
+                # "apt" inside a printf format string. They cannot execute
+                # apt and are independently pinned by apt_ffmpeg_problems.
+                if command in {APT_FFMPEG_COMMANDS[5], APT_FFMPEG_COMMANDS[10]}:
                     continue
                 lists = word_lists(command)
                 if lists is None:
@@ -2564,6 +2584,37 @@ def main() -> int:
         if not found:
             fail(f"{label} was not caught: {found}")
 
+    for label, command in (
+        ("apt remove plus installs", "apt-get -y remove nano+"),
+        ("apt purge plus installs", "apt-get purge ffmpeg+"),
+        ("aptitude remove plus installs", "aptitude remove ffmpeg+"),
+        ("apt build-dep installs", "apt-get build-dep ffmpeg"),
+        ("aptitude build-dep installs", "aptitude build-dep ffmpeg"),
+        ("apt source compile installs", "apt-get source --compile ffmpeg"),
+        ("apt dist-upgrade installs", "apt-get dist-upgrade"),
+        ("apt full-upgrade installs", "apt full-upgrade"),
+        ("apt dselect-upgrade installs", "apt-get dselect-upgrade"),
+        ("aptitude safe-upgrade installs", "aptitude safe-upgrade"),
+        ("aptitude markauto installs", "aptitude markauto"),
+        ("apt fake safe action", "apt-get foo nano"),
+    ):
+        require_side(label, command)
+    for safe in (
+        "apt-get update",
+        "sudo apt-get update -qq",
+        "aptitude update",
+        "apt-get remove nano",
+        "apt-get purge ffmpeg",
+        "aptitude -y remove nano",
+        "apt-get remove -- ffmpeg",
+    ):
+        fixture = (
+            "jobs:\n  test:\n    runs-on: ubuntu-24.04\n"
+            "    steps:\n"
+            f"      - run: {safe}\n"
+        )
+        if ffmpeg_side_install_problems(fixture, path="safe.yml"):
+            fail(f"safe apt action refused: {safe}")
     require_side("apt option before install", "sudo apt -y install ffmpeg")
     require_side("apt mixed-case package", "sudo apt install -y FFmpeg")
     require_side("apt reinstall", "sudo apt reinstall ffmpeg")
