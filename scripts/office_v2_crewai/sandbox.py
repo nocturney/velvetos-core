@@ -318,36 +318,107 @@ def _windows_final_path(path: str) -> str | None:
         kernel32.CloseHandle(handle)
 
 
-def resolve_existing_path(path: str) -> str:
-    """Final path when the candidate exists. A missing path stays lexical.
+def _drive_components(path: str) -> tuple[str, list[str]] | None:
+    """Split ``D:\\a\\b`` into ``('D:', ['a', 'b'])``. UNC is not a drive path."""
+    if not isinstance(path, str):
+        return None
+    text = path.replace("/", "\\")
+    if text.startswith("\\\\") or len(text) < 2 or text[1] != ":":
+        return None
+    if not text[0].isalpha() or ":" in text[2:]:
+        return None
+    rest = text[2:]
+    if rest.startswith("\\"):
+        rest = rest[1:]
+    comps = [part for part in rest.split("\\") if part not in ("", ".")]
+    return text[0].upper() + ":", comps
+
+
+def _posix_components(path: str) -> tuple[str, list[str]] | None:
+    if os.name == "nt" or not isinstance(path, str) or not path.startswith("/"):
+        return None
+    comps = [part for part in path.split("/") if part not in ("", ".")]
+    return "/", comps
+
+
+def _deepest_existing(path: str, probe) -> tuple[str | None, list[str]]:
+    """Deepest existing ancestor and the missing tail.
+
+    The bare Windows drive is not an ancestor. ``..`` stays in the tail so a
+    junction below it is still opened.
+    """
+    parsed = _drive_components(path)
+    anchor_sep = "\\"
+    if parsed is None:
+        parsed = _posix_components(path)
+        anchor_sep = "/"
+    if parsed is None:
+        if probe(path):
+            return path, []
+        return None, []
+    anchor, comps = parsed
+    for index in range(len(comps), 0, -1):
+        head = comps[:index]
+        if anchor == "/":
+            candidate = "/" + "/".join(head)
+        else:
+            candidate = anchor + anchor_sep + anchor_sep.join(head)
+        if probe(candidate):
+            return candidate, comps[index:]
+    return None, comps
+
+
+def _join_tail(final: str, tail: list[str]) -> str:
+    """Append unresolved components. A drive path keeps backslashes on any OS."""
+    stripped = _strip_extended(final)
+    if isinstance(stripped, str) and len(stripped) >= 2 and stripped[1] == ":":
+        return stripped.rstrip("\\/") + "\\" + "\\".join(tail)
+    joined = Path(stripped)
+    for part in tail:
+        joined = joined.joinpath(part)
+    return str(joined)
+
+
+def resolve_existing_path(path: str, exists=None, final_path=None) -> str:
+    """Resolve the deepest existing ancestor and append any missing tail.
 
     Windows uses GetFinalPathNameByHandle. POSIX uses os.path.realpath.
-    An existing path that cannot be resolved fails closed.
+    The bare drive is not opened, so a missing ``D:\\Velvet\\...`` tree stays
+    lexical. An ancestor that exists but cannot be resolved fails closed.
     """
     if not isinstance(path, str) or not path:
         return path
-    if os.name == "nt":
-        if not os.path.lexists(path):
-            return path
-        final = _windows_final_path(path)
-        if not final:
-            raise StorageRefusal("SANDBOX_PATH_UNRESOLVED")
+    probe = os.path.lexists if exists is None else exists
+    if final_path is None:
+        final_path = _windows_final_path if os.name == "nt" else os.path.realpath
+    ancestor, tail = _deepest_existing(path, probe)
+    if ancestor is None:
+        return path
+    try:
+        final = final_path(ancestor)
+    except OSError as exc:
+        raise StorageRefusal("SANDBOX_PATH_UNRESOLVED") from exc
+    if not isinstance(final, str) or not final:
+        raise StorageRefusal("SANDBOX_PATH_UNRESOLVED")
+    if not tail:
         return final
-    if os.path.lexists(path):
-        return os.path.realpath(path)
-    return path
+    return _join_tail(final, tail)
 
 
-def assert_under_velvet(root: str, resolve=None) -> None:
+def assert_under_velvet(root: str, resolve=None, exists=None, final_path=None) -> None:
     """Require a subdirectory of D:\\Velvet after junctions and symlinks resolve.
 
-    D:\\Velvet itself is refused. Resolution runs before the drive and prefix
-    checks, so a lexical name under D:\\Velvet cannot escape through a link.
+    D:\\Velvet itself is refused. The deepest existing ancestor is resolved
+    before the drive and prefix checks, so a new directory cannot escape
+    through a link that already exists under D:\\Velvet.
     """
     if not isinstance(root, str) or not root.strip():
         raise StorageRefusal("SANDBOX_NOT_ON_D:ROOT")
     try:
-        final = resolve(root) if resolve is not None else resolve_existing_path(root)
+        if resolve is not None:
+            final = resolve(root)
+        else:
+            final = resolve_existing_path(root, exists=exists, final_path=final_path)
     except StorageRefusal:
         raise
     except OSError as exc:
@@ -377,17 +448,22 @@ def assert_temp_will_not_fall_through(root: str, exists) -> None:
         raise StorageRefusal("SANDBOX_TEMP_ABSENT")
 
 
-def prepare_sandbox_temp(root: str, mkdir=None, exists=None) -> None:
+def prepare_sandbox_temp(root: str, mkdir=None, exists=None, resolve=None) -> None:
     """Create the sandbox temp dirs before import crewai.
 
     crewai_core.lock_store names its file lock ``crewai:{md5}.lock``. On
     Windows the colon is an NTFS alternate-data-stream separator, so
     portalocker creates a 0-byte file whose name is ``crewai``. If the
     sandbox temp directory does not exist, gettempdir() skips TEMP/TMP and
-    a SYSTEM process lands on C:\\Windows\\Temp.
+    a SYSTEM process lands on C:\\Windows\\Temp. Each temp path is resolved
+    before mkdir and again after, so a junction ancestor cannot create it
+    off D:\\Velvet.
     """
-    assert_under_velvet(root)
+    assert_under_velvet(root, resolve=resolve)
     targets = [sandbox_temp_dir(root), profile_temp_dir(root)]
+    # Refuse a junction before mkdir creates through it.
+    for path in targets:
+        assert_under_velvet(path, resolve=resolve)
     if mkdir is None:
         if os.name != "nt":
             raise StorageRefusal("SANDBOX_TEMP_ABSENT")
@@ -397,6 +473,9 @@ def prepare_sandbox_temp(root: str, mkdir=None, exists=None) -> None:
 
     for path in targets:
         mkdir(path)
+    # The created directory can resolve somewhere else than the lexical name.
+    for path in targets:
+        assert_under_velvet(path, resolve=resolve)
     if exists is None:
         if os.name != "nt":
             raise StorageRefusal("SANDBOX_TEMP_ABSENT")
