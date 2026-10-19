@@ -33,6 +33,8 @@ permissions:
   contents: write
   actions: write
   checks: read
+  # Read the check-all commit status. Write stays on the Core Sensors publisher.
+  statuses: read
 
 concurrency:
   group: readme-system-pulse

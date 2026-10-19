@@ -46,6 +46,8 @@ jobs:
       contents: write
       actions: write
       checks: read
+      # Read the check-all commit status. Write stays on the Core Sensors publisher.
+      statuses: read
       id-token: write
     steps:
       # actions/checkout v7.0.1

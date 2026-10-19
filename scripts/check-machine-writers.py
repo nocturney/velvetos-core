@@ -1231,6 +1231,67 @@ def prove_ffmpeg_hash_gate() -> str:
     return f"wrong_digest_exit={mismatch} match_exit={match} inverted_operator_exit={inverted_exit}"
 
 
+def precheck_permission_problems(text: str) -> list[str]:
+    """Writers that call the precheck helper must read the commit status, not forge it."""
+    if PRECHECK_HELPER not in text:
+        return []
+    problems: list[str] = []
+    if not re.search(r"(?m)^\s*actions:\s*write\s*(?:#.*)?$", text):
+        problems.append("lacks explicit actions: write permission")
+    if not re.search(r"(?m)^\s*statuses:\s*read\s*(?:#.*)?$", text):
+        problems.append("lacks explicit statuses: read permission")
+    if re.search(r"(?m)^\s*statuses:\s*write\s*(?:#.*)?$", text):
+        problems.append("must not grant statuses: write")
+    return problems
+
+
+def prove_gh_api_labels(helper: Path) -> str:
+    """A 403 from either gh api call is named, and deleting the name fails."""
+    live = subprocess.run(
+        ["bash", str(helper), "--selftest"],
+        text=True,
+        capture_output=True,
+        timeout=30,
+        check=False,
+    )
+    if live.returncode != 0 or "status_403=named" not in live.stdout or "checks_403=named" not in live.stdout:
+        fail(
+            "gh api label selftest failed: "
+            f"rc={live.returncode} stdout={live.stdout!r} stderr={live.stderr!r}"
+        )
+    source = helper.read_text(encoding="utf-8")
+    muted = source.replace('echo "::error::gh api ${label} failed" >&2\n', "", 1)
+    if muted == source:
+        fail("gh api label echo was not present to delete")
+    with tempfile.TemporaryDirectory() as tmp:
+        mutant = Path(tmp) / "push-main-with-check-all.sh"
+        mutant.write_text(muted, encoding="utf-8")
+        hidden = subprocess.run(
+            ["bash", str(mutant), "--selftest"],
+            text=True,
+            capture_output=True,
+            timeout=30,
+            check=False,
+        )
+    if hidden.returncode == 0:
+        fail("dropping the gh api label still passed selftest")
+    intake = (WORKFLOWS / "vfmedia-intake.yml").read_text(encoding="utf-8")
+    stripped = re.sub(r"(?m)^\s*statuses:\s*read\s*(?:#.*)?\n", "", intake, count=1)
+    if stripped == intake:
+        fail("vfmedia-intake statuses: read line was not present to delete")
+    if not any("statuses: read" in problem for problem in precheck_permission_problems(stripped)):
+        fail("removing statuses: read was not caught")
+    widened = intake.replace("statuses: read", "statuses: write", 1)
+    if widened == intake or not any(
+        "statuses: write" in problem for problem in precheck_permission_problems(widened)
+    ):
+        fail("statuses: write on a machine writer was not caught")
+    jobs = (WORKFLOWS / "jobs-write-through.yml").read_text(encoding="utf-8")
+    if precheck_permission_problems(jobs):
+        fail("jobs-write-through " + "; ".join(precheck_permission_problems(jobs)))
+    return "gh_api_label=caught status_read_removed=caught status_write=caught"
+
+
 def main() -> int:
     helper = ROOT / PRECHECK_HELPER
     if not helper.is_file():
@@ -1253,6 +1314,9 @@ def main() -> int:
         'commits/$head_sha/status',
         '.context == "check-all"',
         '.state == "success"',
+        'gh_api commit-check-runs',
+        'gh_api commit-status',
+        '::error::gh api ${label} failed',
         'git merge-base --is-ancestor "origin/$target_branch" "$head_sha"',
         'git push origin "HEAD:refs/heads/$target_branch"',
         'git ls-remote origin "refs/heads/$target_branch"',
@@ -1266,6 +1330,15 @@ def main() -> int:
             fail(f"machine-writer precheck helper missing invariant: {needle}")
     if re.search(r"git\s+push\s+(?:--force|-f)\b", helper_text):
         fail("machine-writer precheck helper must never force-push")
+    raw_api = [
+        line.strip()
+        for line in helper_text.splitlines()
+        if re.search(r"""gh api\s+["']""", line.split("#", 1)[0])
+        and 'gh api "$@"' not in line
+    ]
+    if raw_api:
+        fail("unlabeled gh api call: " + raw_api[0])
+    label_evidence = prove_gh_api_labels(helper)
 
     core_workflow = (WORKFLOWS / "check-all.yml").read_text(encoding="utf-8")
     for needle in (
@@ -1402,8 +1475,8 @@ def main() -> int:
             fail(f"machine writer {rel} lacks explicit contents: write permission")
         if has_unprotected_default_push(text):
             fail(f"machine writer {rel} can push the default branch without {PRECHECK_HELPER}")
-        if PRECHECK_HELPER in text and not re.search(r"(?m)^\s*actions:\s*write\s*(?:#.*)?$", text):
-            fail(f"prechecked machine writer {rel} lacks explicit actions: write permission")
+        for problem in precheck_permission_problems(text):
+            fail(f"prechecked machine writer {rel} {problem}")
         for line in text.splitlines():
             cmd = line.strip()
             if re.fullmatch(r"git add (?:-A|--all|\.)", cmd):
@@ -1417,7 +1490,11 @@ def main() -> int:
             fail(f"machine writer {rel} has dynamic staging without bounded paths array")
     if not writers:
         fail("no production machine writers discovered; sensor query likely broken")
-    print(f"OK machine-writers={len(writers)} allowlisted force_push=0 unrestricted_stage=0 default_main=prechecked_exact_sha")
+    print(
+        "OK machine-writers="
+        f"{len(writers)} allowlisted force_push=0 unrestricted_stage=0 "
+        f"default_main=prechecked_exact_sha {label_evidence} statuses_read=required"
+    )
     for writer in writers:
         print("- " + writer)
     return 0

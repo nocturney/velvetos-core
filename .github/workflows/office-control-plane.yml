@@ -13,6 +13,8 @@ permissions:
   contents: write
   actions: write  # read CI history + dispatch exact-SHA machine-writer precheck
   checks: read
+  # Read the check-all commit status. Write stays on the Core Sensors publisher.
+  statuses: read
 
 jobs:
   control-plane:
