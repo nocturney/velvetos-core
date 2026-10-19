@@ -1,0 +1,1 @@
+- 2026-10-19 - **Office 2.0 standalone candidate smokes:** recorded isolated venv and CLI results for the #595 tool shortlist, left GUI, Docker, and Ollama runs as spare-machine steps, and kept security_admission RED.
