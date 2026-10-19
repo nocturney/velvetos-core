@@ -53,6 +53,8 @@ PIP_VALUE_FLAGS = {
 NPM_VALUE_FLAGS = {"--prefix", "--registry", "--userconfig", "--cache", "--globalconfig"}
 FLOATING_GOOGLE = "pip install --quiet google-api-python-client google-auth"
 LOCK_NAME = "requirements-google-clients.py311.lock"
+APT_FFMPEG_VERSION = "ffmpeg=7:6.1.1-3ubuntu5"
+APT_FFMPEG_SHA256 = "1a23baace5f2688a47e28119aedae6993cd638e6279a7227dfc52d9a337a1c17"
 
 
 def fail(msg: str) -> None:
@@ -257,6 +259,20 @@ def install_spec_problems(
     return problems
 
 
+def apt_ffmpeg_problems(text: str, *, path: str) -> list[str]:
+    """An apt ffmpeg install must name the noble deb and check its sha256 first."""
+    if "apt-get install" not in text and "apt-get download" not in text:
+        return []
+    problems: list[str] = []
+    if APT_FFMPEG_VERSION not in text:
+        problems.append(f"{path} apt ffmpeg is not version-pinned")
+    if APT_FFMPEG_SHA256 not in text:
+        problems.append(f"{path} apt ffmpeg deb sha256 is not checked")
+    if "verify_ffmpeg_zip_sha256.py" not in text:
+        problems.append(f"{path} apt ffmpeg deb is not passed to the sha256 verifier")
+    return problems
+
+
 def float_google_install(text: str) -> str:
     """Mutation: put the pre-pin bare names back on the Google client install."""
     lines = text.splitlines(keepends=True)
@@ -281,9 +297,15 @@ def main() -> int:
         fail("INSTALL_SPEC_ALLOWLIST must stay empty")
     problems: list[str] = []
     workflows = sorted(WORKFLOWS.glob("*.y*ml"))
+    apt_workflows = 0
     for path in workflows:
         rel = path.relative_to(ROOT).as_posix()
-        problems.extend(install_spec_problems(path.read_text(encoding="utf-8"), path=rel))
+        text = path.read_text(encoding="utf-8")
+        problems.extend(install_spec_problems(text, path=rel))
+        apt = apt_ffmpeg_problems(text, path=rel)
+        if "apt-get install" in text or "apt-get download" in text:
+            apt_workflows += 1
+        problems.extend(apt)
     if problems:
         for item in problems:
             print(f"FAIL {NAME}: {item}", file=sys.stderr)
@@ -334,10 +356,31 @@ def main() -> int:
     if install_spec_problems(jobs.read_text(encoding="utf-8"), path="jobs-write-through.yml"):
         fail("pinned jobs-write-through install was refused")
 
+    floating_apt = "run: sudo apt-get install -y ffmpeg\n"
+    pinned_apt = (
+        "run: sudo apt-get install -y -d ffmpeg=7:6.1.1-3ubuntu5\n"
+        "python3 scripts/verify_ffmpeg_zip_sha256.py --path \"$deb\" "
+        f"--expected \"{APT_FFMPEG_SHA256}\" --kind deb\n"
+    )
+    if not any("not version-pinned" in item for item in apt_ffmpeg_problems(floating_apt, path="fixture.yml")):
+        fail("floating apt ffmpeg was not caught")
+    if apt_ffmpeg_problems(pinned_apt, path="fixture.yml"):
+        fail("version-pinned apt ffmpeg was refused")
+    dropped_sha = pinned_apt.replace(APT_FFMPEG_SHA256, "0" * 64)
+    if not any("sha256 is not checked" in item for item in apt_ffmpeg_problems(dropped_sha, path="fixture.yml")):
+        fail("apt ffmpeg sha256 swap was not caught")
+    check_all = (WORKFLOWS / "check-all.yml").read_text(encoding="utf-8")
+    unpinned = check_all.replace(APT_FFMPEG_VERSION, "ffmpeg", 1)
+    if not any("not version-pinned" in item for item in apt_ffmpeg_problems(unpinned, path="check-all.yml")):
+        fail("dropping the apt ffmpeg version in check-all was not caught")
+    if apt_workflows != 2:
+        fail(f"expected 2 apt ffmpeg workflows, found {apt_workflows}")
+
     print(
         f"OK {NAME} workflows={len(workflows)} floating=0 allowlist=empty "
         "bare=caught exact=pass mixed=caught npm_float=caught npm_exact=pass "
-        "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught"
+        "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught "
+        f"apt_ffmpeg={apt_workflows} apt_float=caught apt_sha=caught"
     )
     return 0
 

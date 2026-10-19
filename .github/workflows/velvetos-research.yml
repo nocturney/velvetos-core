@@ -25,7 +25,11 @@ jobs:
         run: |
           python3 -m pip install --disable-pip-version-check --require-hashes -r requirements-sensors.py312.lock
           sudo apt-get update -qq
-          sudo apt-get install -y ffmpeg
+          sudo apt-get install -y -d ffmpeg=7:6.1.1-3ubuntu5
+          deb=/var/cache/apt/archives/ffmpeg_6.1.1-3ubuntu5_amd64.deb
+          test -f "$deb"
+          python3 scripts/verify_ffmpeg_zip_sha256.py --path "$deb" --expected "1a23baace5f2688a47e28119aedae6993cd638e6279a7227dfc52d9a337a1c17" --kind deb
+          sudo apt-get install -y "$deb"
 
       - name: Research routing map
         run: python3 scripts/vfresearch_cadence.py map
