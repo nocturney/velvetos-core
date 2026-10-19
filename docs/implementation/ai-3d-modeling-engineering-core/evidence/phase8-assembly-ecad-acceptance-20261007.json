@@ -86,7 +86,7 @@
     ],
     "board_solids": 1,
     "board_source": "C:\\Program Files\\KiCad\\10.0\\share\\kicad\\template\\Arduino_Nano\\Arduino_Nano.kicad_pcb",
-    "build123d_runtime": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
+    "build123d_runtime": "%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
     "component_complete_attempt": {
       "missing_model_messages": [
         "Could not add 3D model for J1.",
@@ -186,7 +186,7 @@
       "blocked": true,
       "error": "angle (181) must in range of (0, 180)"
     },
-    "runtime": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
+    "runtime": "%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad\\.venv\\Scripts\\python.exe",
     "samples": [
       {
         "angle_deg": 0,

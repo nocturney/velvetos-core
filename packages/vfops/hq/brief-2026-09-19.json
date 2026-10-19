@@ -95,7 +95,7 @@
     {
       "kicker": "05 · משרד",
       "title": "מה נבנה / יועל",
-      "prose": "05 · משרד\nמה נבנה / יועל:\nCLI 10:43 · C:\\Python314\\python.exe C:\\Users\\Chris\\vf-ci-brief-0919\\scripts\\vf_control_plane.py brief-summary\nצרכנים: אין הרצה היום\nפערים (לא הורץ הבוקר)\nפער: vfbriefux לא הורץ · python3 packages/vfbriefux/render_mail.py --check\nפער: vfigos לא הורץ · packages/vfigos/CONNECT-IG.md · חיבור לפי desk/CAPABILITIES · publish_story מוצהר · פרסום חי לא נבדק · Team scope לא מאומת\nפער: vfresearch לא הורץ · packages/vfresearch/DAILY.md\nפער: vfseason לא הורץ · packages/vfseason/hq/PLAYBOOK.md · אין חלון עונה בלי תאריך סטודיו"
+      "prose": "05 · משרד\nמה נבנה / יועל:\nCLI 10:43 · C:\\Python314\\python.exe %USERPROFILE%\\vf-ci-brief-0919\\scripts\\vf_control_plane.py brief-summary\nצרכנים: אין הרצה היום\nפערים (לא הורץ הבוקר)\nפער: vfbriefux לא הורץ · python3 packages/vfbriefux/render_mail.py --check\nפער: vfigos לא הורץ · packages/vfigos/CONNECT-IG.md · חיבור לפי desk/CAPABILITIES · publish_story מוצהר · פרסום חי לא נבדק · Team scope לא מאומת\nפער: vfresearch לא הורץ · packages/vfresearch/DAILY.md\nפער: vfseason לא הורץ · packages/vfseason/hq/PLAYBOOK.md · אין חלון עונה בלי תאריך סטודיו"
     },
     {
       "kicker": "06",

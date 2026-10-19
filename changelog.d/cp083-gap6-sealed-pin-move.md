@@ -1,0 +1,1 @@
+- 2026-10-18 - **CP083 GAP_6 pin split:** the etcd server spawn and native-git workers use a constructed allowlist. Live source pins are separate from historical receipt pins. Sealed receipt bytes are unchanged. `security_admission` stays RED.

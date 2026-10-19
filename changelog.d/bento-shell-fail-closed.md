@@ -1,0 +1,1 @@
+- 2026-10-19 - **Bento shell fail-closed:** the weekly job checks the signed Bento shell before it writes the JSON deck. A network error fails the job, and so does a signature or sha256 mismatch. The JSON deck is not committed. No model call.

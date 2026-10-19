@@ -20,16 +20,23 @@ on:
 
 permissions:
   contents: read
-  statuses: write
 
 jobs:
   check-all:
-    runs-on: ubuntu-latest
+    # noble ffmpeg=7:6.1.1-3ubuntu5 is not in Ubuntu 26. ubuntu-latest moves there.
+    # Recorded image tool versions are from ubuntu24/20261012.334.
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     steps:
       # actions/checkout v7.0.1
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
+          persist-credentials: false
+
+      - name: Record runner image tool versions
+        run: python3 scripts/verify_runner_tools.py --platform linux
 
       - name: Set up Python
         # actions/setup-python v7.0.0
@@ -42,18 +49,36 @@ jobs:
           # Hashed full lock (direct + indirect); regenerate with scripts/regen-sensor-locks.sh
           python3 -m pip install --disable-pip-version-check --require-hashes -r requirements-sensors.py311.lock
           sudo apt-get update -qq
-          sudo apt-get install -y ffmpeg
+          sudo apt-get install -y -d 'ffmpeg=7:6.1.1-3ubuntu5'
+          shopt -s nullglob
+          matches=(/var/cache/apt/archives/ffmpeg_*6.1.1-3ubuntu5_amd64.deb)
+          if [ "${#matches[@]}" -ne 1 ]; then
+            printf 'FAIL apt ffmpeg deb count=%s\n' "${#matches[@]}" >&2
+            exit 1
+          fi
+          deb="${matches[0]}"
+          if [ "$(basename "$deb")" != 'ffmpeg_7%3a6.1.1-3ubuntu5_amd64.deb' ]; then
+            printf 'FAIL apt ffmpeg cache name=%s\n' "$(basename "$deb")" >&2
+            exit 1
+          fi
+          python3 scripts/verify_ffmpeg_zip_sha256.py --path "$deb" --expected "1a23baace5f2688a47e28119aedae6993cd638e6279a7227dfc52d9a337a1c17" --kind deb
+          sudo apt-get install -y "$deb"
 
       - name: Sensor selector
         if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.execution != 'main_full') }}
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.event_name == 'workflow_dispatch' && github.token || '' }}
         run: |
           set -euo pipefail
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             base="${{ github.event.pull_request.base.sha }}"
             head="${{ github.event.pull_request.head.sha }}"
           else
-            git fetch origin main
+            # GitHub git-over-HTTPS accepts basic x-access-token. A bearer scheme is rejected.
+            basic="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+            echo "::add-mask::$basic"
+            git -c "http.extraheader=AUTHORIZATION: basic ${basic}" fetch origin main
             base="$(git rev-parse origin/main)"
             head="$GITHUB_SHA"
           fi
@@ -62,6 +87,16 @@ jobs:
             --head "$head" \
             --output sensor-selection.json \
             --summary "$GITHUB_STEP_SUMMARY"
+
+      - name: Set up Node
+        # Image ubuntu-24.04 on 2026-10-19 had Node 22.23.3.
+        # actions/setup-node v4.4.0
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "22.23.3"
+
+      - name: Verify Node toolchain checksum
+        run: python3 scripts/verify_actions_node_sha256.py --version 22.23.3 --filename node-22.23.3-linux-x64.tar.gz --expected cf9cfe18f485ac615fbc237e269549f4014fd843395568cf81698ce1903e9bcf --checksum-url https://github.com/actions/node-versions/releases/download/22.23.3-35947643734/hashes.sha256
 
       - name: Instagram publish policy test vectors
         run: node packages/velvetos/policy/test-instagram-publish-policy.mjs
@@ -93,25 +128,14 @@ jobs:
         if: ${{ !cancelled() && github.event_name == 'pull_request' }}
         run: python3 scripts/fix-readme-bidi.py --check
 
+      # check-all.py forwards this read-only token only to the gh sensor.
       - name: Run selected VelvetOS sensors on pull request or machine precheck
         if: ${{ !cancelled() && (github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.execution != 'main_full')) }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: python3 scripts/check-all.py --selection sensor-selection.json --json-out sensor-selected-results.json
 
-      - name: Publish verified check-all commit status for machine precheck
-        if: ${{ success() && github.event_name == 'workflow_dispatch' && inputs.execution != 'main_full' }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA" \
-            -f state=success \
-            -f context=check-all \
-            -f description='VelvetOS exact-SHA precheck passed' \
-            -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-
+      # check-all.py forwards this read-only token only to the gh sensor.
       - name: Run full VelvetOS sensor suite on main
         if: ${{ !cancelled() && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.execution == 'main_full')) }}
         env:
@@ -129,6 +153,28 @@ jobs:
       - name: Fail build on sensor error
         if: failure()
         run: echo "::error::One or more VelvetOS contract checks failed. See log above." && exit 1
+
+  publish-check-all-status:
+    # statuses: write stays off the sensor job. This token only posts the
+    # machine-precheck commit status after that job has already passed.
+    needs: check-all
+    if: ${{ success() && github.event_name == 'workflow_dispatch' && inputs.execution != 'main_full' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      statuses: write
+    steps:
+      - name: Publish verified check-all commit status for machine precheck
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA" \
+            -f state=success \
+            -f context=check-all \
+            -f description='VelvetOS exact-SHA precheck passed' \
+            -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
 
   # Windows suite. A failing check-all fails this job and the workflow.
   # Ruleset 23284099 still requires only the Linux job's check-all status.
@@ -159,11 +205,20 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      # Positive allowlist: Parser::ParseInput on the ffmpeg step body.
+      - name: ffmpeg hash-gate allowlist
+        shell: pwsh
+        run: pwsh -NoProfile -NonInteractive -File scripts/check-ffmpeg-hash-gate.ps1
+
       - name: Set up Python
         # actions/setup-python v7.0.0
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: "3.11"
+
+      - name: Record runner image tool versions
+        shell: pwsh
+        run: python scripts/verify_runner_tools.py --platform windows
 
       - name: Install hashed sensor lock and pinned ffmpeg
         shell: pwsh
@@ -180,6 +235,7 @@ jobs:
           if (-not $bin) { throw "ffmpeg.exe missing from the pinned zip" }
           Add-Content -Path $env:GITHUB_PATH -Value $bin.DirectoryName
 
+      # check-all.py forwards this read-only token only to the gh sensor.
       - name: Run check-all
         shell: pwsh
         env:
