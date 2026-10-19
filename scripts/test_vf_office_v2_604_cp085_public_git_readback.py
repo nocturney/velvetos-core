@@ -49,6 +49,21 @@ class ReadbackTests(unittest.TestCase):
             return str(exc)
         return "ACCEPTED"
 
+    def _load_receipt_mutant(self, root: Path, name: str, source: str):
+        path = root / f"{name}.py"
+        path.write_text(source, encoding="utf-8")
+        spec = importlib.util.spec_from_file_location(name, path)
+        if spec is None or spec.loader is None:
+            self.fail("cannot load " + name)
+        mutant = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = mutant
+        try:
+            spec.loader.exec_module(mutant)
+        except Exception:
+            sys.modules.pop(spec.name, None)
+            raise
+        return mutant
+
     def test_01_candidate_seen_means_review_not_release(self):
         v = r.classify(self.intent, CANDIDATE)
         self.assertEqual(v["classification"], "REMOTE_ADVANCED_REVIEW_REQUIRED")
@@ -394,6 +409,60 @@ class ReadbackTests(unittest.TestCase):
                 self.assertTrue((real / "mutant-proof.json").is_file())
             finally:
                 sys.modules.pop(spec.name, None)
+
+
+
+    def test_31_other_readable_receipt_directory_denied(self):
+        """0705, 0704, and 0701 let other users in. A group-only mask must still refuse them."""
+        self.require_posix_permissions()
+        value = r.classify(self.intent, CANDIDATE)
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            for mode in (0o705, 0o704, 0o701):
+                with self.subTest(mode=oct(mode)):
+                    directory = self._mode_dir(root, f"other-{mode:o}", mode)
+                    self.assertEqual(
+                        self._receipt_dir_result(r, directory, value),
+                        "RECEIPT_DIR_MUST_BE_PRIVATE",
+                    )
+
+    def test_32_receipt_dir_mask_mutations_are_caught_by_behaviour(self):
+        """0o070 and a removed check are caught by behaviour. 0o007 stays in test_29."""
+        self.require_posix_permissions()
+        source = Path(r.__file__).resolve().read_text(encoding="utf-8")
+        gate = (
+            "    if path.parent.stat().st_mode & 0o077:\n"
+            "        raise Refuse(\"RECEIPT_DIR_MUST_BE_PRIVATE\")\n"
+        )
+        self.assertEqual(source.count(gate), 1)
+        value = r.classify(self.intent, CANDIDATE)
+        cases = (
+            ("mask070", source.replace("st_mode & 0o077", "st_mode & 0o070", 1), (0o705, 0o704, 0o701)),
+            ("nocheck", source.replace(gate, "", 1), (0o705, 0o750)),
+        )
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            loaded = []
+            try:
+                for name, mutated, modes in cases:
+                    self.assertNotIn(gate, mutated)
+                    mutant = self._load_receipt_mutant(root, "cp085_" + name, mutated)
+                    loaded.append(mutant)
+                    for mode in modes:
+                        with self.subTest(mutation=name, mode=oct(mode)):
+                            opened = self._mode_dir(root, f"{name}-{mode:o}", mode)
+                            self.assertEqual(
+                                self._receipt_dir_result(mutant, opened, value),
+                                "ACCEPTED",
+                            )
+                            live = self._mode_dir(root, f"live-{name}-{mode:o}", mode)
+                            self.assertEqual(
+                                self._receipt_dir_result(r, live, value),
+                                "RECEIPT_DIR_MUST_BE_PRIVATE",
+                            )
+            finally:
+                for mutant in loaded:
+                    sys.modules.pop(getattr(mutant, "__name__", ""), None)
 
 
 if __name__ == "__main__":
