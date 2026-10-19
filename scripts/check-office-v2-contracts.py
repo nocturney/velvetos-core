@@ -2397,7 +2397,7 @@ def main() -> int:
         ROOT / "scripts" / "vf_office_v2_604_native_git_crash_reconcile_offline.py"
     )
     native_live_sha = (
-        "e0bef7806f7de87e1c39a912640a1811a00a8b6d9291cc4d1c1b4549d9ab7163"
+        "03c2fd244eac2adf4eb7c288de43f1e28d935e9f2d8f4fe772bfb962390b9a2c"
     )
     native_receipt_sha = (
         "2bbd81c9c7f59c1b28937286d1c365ca46c0ceb9db96157859f7225e0dd6d632"
@@ -3499,7 +3499,7 @@ def main() -> int:
     for test_file, count, timeout_s in (
         ("test_vf_office_v2_604_identity_subprocess_env.py", 2, 15),
         ("test_vf_office_v2_604_gap6_pin_split.py", 20, 45),
-        ("test_vf_office_v2_604_git_spawn_env_strip.py", 9, 60),
+        ("test_vf_office_v2_604_git_spawn_env_strip.py", 11, 60),
         ("test_vf_office_v2_604_cp083_hardening_candidate.py", 10, 15),
         ("test_vf_office_v2_604_cp083_socket_negative.py", 2, 15),
         ("test_vf_office_v2_604_cp083_client_socket_negative.py", 10, 45),

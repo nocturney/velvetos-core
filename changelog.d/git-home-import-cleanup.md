@@ -1,0 +1,1 @@
+- 2026-10-19 - **Git home cleanup:** importing `scripts/vf_office_v2_604_native_git_crash_reconcile_offline.py` does not create a `vf604-git-home-*` directory. The empty home is built on first use and removed when the process exits. `security_admission` stays RED.

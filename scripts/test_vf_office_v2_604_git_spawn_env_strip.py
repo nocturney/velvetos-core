@@ -126,6 +126,42 @@ class GitSpawnEnvStripTests(unittest.TestCase):
     def test_dyld_insert_libraries_stripped(self):
         self._pin("DYLD_INSERT_LIBRARIES")
 
+    def _homes(self):
+        root = Path(tempfile.gettempdir())
+        return {path for path in root.glob("vf604-git-home-*") if path.is_dir()}
+
+    def _child(self, script):
+        env = dict(os.environ)
+        env["PYTHONPATH"] = str(Path(native.__file__).resolve().parent)
+        env["PYTHONDONTWRITEBYTECODE"] = "1"
+        return subprocess.run(
+            [sys.executable, "-c", script],
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=20,
+        )
+
+    def test_import_leaves_no_git_home(self):
+        source = Path(native.__file__).read_text(encoding="utf-8")
+        self.assertNotIn("\nENV = git_subprocess_env()\n", source)
+        before = self._homes()
+        proc = self._child(
+            "import vf_office_v2_604_native_git_crash_reconcile_offline\n"
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertEqual(self._homes(), before)
+
+    def test_git_home_removed_at_exit(self):
+        proc = self._child(
+            "import vf_office_v2_604_native_git_crash_reconcile_offline as native\n"
+            "print(native.git_subprocess_env()['HOME'])\n"
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        home = Path(proc.stdout.strip())
+        self.assertTrue(home.name.startswith("vf604-git-home-"))
+        self.assertFalse(home.exists())
+
 
 if __name__ == "__main__":
     unittest.main()
