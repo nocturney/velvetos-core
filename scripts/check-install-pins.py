@@ -262,12 +262,10 @@ BENTO_SHA256 = "c7da70eaa8d3f457b2458f1685769bf2c488724ac075954f216c70c60f310af0
 BENTO_VERSION = "1.2.9"
 BENTO_SHELL_URL = "https://bento.page/releases/slides/Bento_Slides.bento.html"
 BENTO_MANIFEST_URL = "https://bento.page/releases/slides/manifest.json"
-BENTO_STEP = """      - name: Verify Bento shell checksum
-        run: python3 scripts/verify_bento_shell.py
-
-      - name: Build weekly deck (JSON + HTML)
+DECK_STEP = """      - name: Build weekly deck (JSON + HTML)
         run: python3 scripts/vf_weekly_deck.py
 """
+NETWORK_WARN = "WARN BENTO_SHELL_NETWORK"
 
 
 def _module_strings(tree: ast.AST) -> dict[str, str]:
@@ -376,55 +374,109 @@ def _handler_names(handler: ast.ExceptHandler) -> list[str]:
 
 def _raises_system_exit(nodes: list[ast.stmt]) -> bool:
     for node in nodes:
-        if isinstance(node, ast.Raise) and isinstance(node.exc, ast.Call):
-            if isinstance(node.exc.func, ast.Name) and node.exc.func.id == "SystemExit":
+        for child in ast.walk(node):
+            if isinstance(child, ast.Raise) and isinstance(child.exc, ast.Call):
+                func = child.exc.func
+                if isinstance(func, ast.Name) and func.id == "SystemExit":
+                    return True
+    return False
+
+
+def _returns_const(nodes: list[ast.stmt], value: object) -> bool:
+    for node in nodes:
+        if isinstance(node, ast.Return) and isinstance(node.value, ast.Constant):
+            if node.value.value == value:
                 return True
     return False
 
 
-def _returns_false(nodes: list[ast.stmt]) -> bool:
+def _calls_in(nodes: list[ast.stmt], name: str) -> bool:
     for node in nodes:
-        if isinstance(node, ast.Return) and isinstance(node.value, ast.Constant):
-            if node.value.value is False:
-                return True
+        if _calls_name(node, name):
+            return True
+    return False
+
+
+def _mentions(node: ast.AST, name: str) -> bool:
+    for child in ast.walk(node):
+        if isinstance(child, ast.Name) and child.id == name:
+            return True
+    return False
+
+
+def _writes_before_call(func: ast.FunctionDef | None, attr: str, call_name: str) -> bool:
+    if func is None:
+        return False
+    seen = False
+    for stmt in func.body:
+        for node in ast.walk(stmt):
+            called = getattr(node, "func", None)
+            if isinstance(node, ast.Call) and isinstance(called, ast.Attribute) and called.attr == attr:
+                seen = True
+        if _calls_name(stmt, call_name):
+            return seen
     return False
 
 
 def bento_deck_problems(text: str) -> list[str]:
-    """A pin failure exits. A network failure still returns False."""
+    """JSON is written first. A mismatch fails. A network error skips HTML."""
     problems: list[str] = []
     try:
         tree = ast.parse(text)
     except SyntaxError as exc:
         return [f"weekly deck did not parse: {exc}"]
+    if _module_strings(tree).get("NETWORK_WARN") != NETWORK_WARN:
+        problems.append("network warning name is missing")
+    ship = _function(tree, "ship")
     build = _function(tree, "build_html")
-    if build is None or not _calls_name(build, "load_shell"):
-        return ["weekly deck does not load the pinned shell"]
-    pin_exit = False
+    entry = _function(tree, "main")
+    if not _writes_before_call(ship, "write_text", "build_html"):
+        problems.append("JSON deck is not written before the shell fetch")
+    if (
+        build is None
+        or not _calls_name(build, "load_shell")
+        or not _calls_name(build, "inject_shell")
+    ):
+        return problems + ["weekly deck does not load the pinned shell"]
+    if entry is None or not _raises_system_exit(entry.body):
+        problems.append("tampered bytes do not fail the job")
+    pin_fail = False
     network_skip = False
     for node in ast.walk(build):
         if not isinstance(node, ast.ExceptHandler):
             continue
         names = _handler_names(node)
-        if "Exception" in names and _returns_false(node.body):
+        if "Exception" in names and _returns_const(node.body, 0):
             problems.append("weekly deck swallows the shell pin")
         if "ShellPinError" in names:
-            pin_exit = _raises_system_exit(node.body)
-            if _returns_false(node.body):
-                problems.append("weekly deck swallows the shell pin")
-        if "URLError" in names and _returns_false(node.body):
+            pin_fail = _returns_const(node.body, 1)
+            if _returns_const(node.body, 0):
+                problems.append("tampered bytes do not fail the job")
+        if "URLError" not in names:
+            continue
+        reaches_shell = _calls_in(node.body, "inject_shell") or not _returns_const(node.body, 0)
+        if reaches_shell:
+            problems.append("network-error path reaches the shell build")
+        elif not _mentions(node, "NETWORK_WARN"):
+            problems.append("network warning is missing")
+        else:
             network_skip = True
-    if not pin_exit:
-        problems.append("weekly deck swallows the shell pin")
-    if not network_skip:
+        if _returns_const(node.body, 1) or _raises_system_exit(node.body):
+            problems.append("network failure blocks the JSON deck")
+    if not pin_fail:
+        problems.append("tampered bytes do not fail the job")
+    if not network_skip and not any("network-error path" in item for item in problems):
         problems.append("weekly deck treats a network failure as fatal")
     return problems
 
 
 def bento_workflow_problems(text: str) -> list[str]:
-    if BENTO_STEP not in text:
-        return ["weekly deck workflow is missing the shell checksum step"]
-    return []
+    problems: list[str] = []
+    if DECK_STEP not in text:
+        problems.append("weekly deck workflow is missing the JSON deck step")
+    if "scripts/verify_bento_shell.py" in text:
+        problems.append("weekly deck workflow can block the JSON deck on a network error")
+    return problems
 
 
 def float_google_install(text: str) -> str:
@@ -535,35 +587,62 @@ def main() -> int:
         "mismatch is not raised",
     )
     require_bento(
-        "bento swallow",
-        bento_deck_problems(deck.replace("        raise SystemExit(1)\n", "        return False\n", 1)),
-        "swallows the shell pin",
+        "bento tamper",
+        bento_deck_problems(deck.replace(
+            '        print(f"FAIL bento shell: {exc}", file=sys.stderr)\n        return 1\n',
+            '        print(f"FAIL bento shell: {exc}", file=sys.stderr)\n        return 0\n',
+            1,
+        )),
+        "tampered bytes do not fail the job",
     )
     require_bento(
-        "bento step",
-        bento_workflow_problems(
-            weekly.replace(
-                "        run: python3 scripts/verify_bento_shell.py\n",
-                "        run: # python3 scripts/verify_bento_shell.py\n",
-                1,
-            )
-        ),
-        "missing the shell checksum step",
+        "bento offline",
+        bento_deck_problems(deck.replace(
+            f'        print(f"{{NETWORK_WARN}} HTML build skipped: {{exc}}")\n        return 0\n',
+            f'        print(f"{{NETWORK_WARN}} HTML build skipped: {{exc}}")\n        return 1\n',
+            1,
+        )),
+        "network failure blocks the JSON deck",
     )
-    probe = __import__("subprocess").run(
-        [sys.executable, str(ROOT / "scripts" / "verify_bento_shell.py"), "--self-test"],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
+    require_bento(
+        "bento network path",
+        bento_deck_problems(deck.replace(
+            f'        print(f"{{NETWORK_WARN}} HTML build skipped: {{exc}}")\n        return 0\n',
+            f'        print(f"{{NETWORK_WARN}} HTML build skipped: {{exc}}")\n',
+            1,
+        )),
+        "network-error path reaches the shell build",
     )
-    if probe.returncode != 0:
-        fail(probe.stderr.strip() or probe.stdout.strip() or "bento shell self-test failed")
+    require_bento(
+        "bento network gate",
+        bento_workflow_problems(weekly.replace(
+            "      - name: Build weekly deck (JSON + HTML)\n",
+            "      - name: Verify Bento shell checksum\n"
+            "        run: python3 scripts/verify_bento_shell.py\n\n"
+            "      - name: Build weekly deck (JSON + HTML)\n",
+            1,
+        )),
+        "can block the JSON deck",
+    )
+    for script, label in (
+        ("verify_bento_shell.py", "bento shell self-test failed"),
+        ("vf_weekly_deck.py", "weekly deck self-test failed"),
+    ):
+        probe = __import__("subprocess").run(
+            [sys.executable, str(ROOT / "scripts" / script), "--self-test"],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+        )
+        if probe.returncode != 0:
+            fail(probe.stderr.strip() or probe.stdout.strip() or label)
 
     print(
         f"OK {NAME} workflows={len(workflows)} floating=0 allowlist=empty "
         "bare=caught exact=pass mixed=caught npm_float=caught npm_exact=pass "
         "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught "
-        "bento_sha=caught bento_raise=caught bento_swallow=caught bento_step=caught"
+        "bento_sha=caught bento_raise=caught bento_tamper=caught "
+        "bento_offline=caught bento_network_path=caught bento_gate=caught"
     )
     return 0
 
