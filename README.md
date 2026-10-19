@@ -666,6 +666,10 @@ Windows host paths: on `sderot-windows` every agent (ChatGPT, Codex, Grok Bot, C
 
 נתיבי Windows: כל הסוכנים עובדים מ־`D:\Velvet` ולעולם לא משולחן העבודה (Desktop). אם D: לא זמין — עוצרים ומדווחים.
 
+Public path redaction: `scripts/check-public-path-redaction.py` refuses a new private LAN address, a Chris home prefix in any case, and the redacted Desktop Commander id prefix `516b9b39`. An allowlisted file exempts only the sha256 of each sensitive line already in it, so a new line there still fails. The live Windows pin stays unedited.
+
+חיישן הנתיבים הציבוריים מסרב לכתובת LAN פרטית חדשה, לקידומת הבית של Chris בכל רישיות, ולקידומת המזהה `516b9b39`. קובץ ברשימה פוטר רק לפי sha256 של השורות הרגישות שכבר יש בו.
+
 Archived one-shots live in `scripts/archive/` (inert, history only; see its README).
 
 ## Read next · המשך קריאה
