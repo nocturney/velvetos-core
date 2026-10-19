@@ -1212,6 +1212,99 @@ def apt_ffmpeg_problems(text: str, *, path: str) -> list[str]:
     return problems
 
 
+APT_SIDE_TOOLS = {"apt", "apt-get", "aptitude"}
+APT_SIDE_ACTIONS = {"install", "reinstall"}
+APT_SIDE_VALUE_FLAGS = {
+    "-o", "--option", "-c", "--config-file", "-t", "--target-release", "--with-source",
+}
+DPKG_VALUE_FLAGS = {
+    "--admindir", "--root", "--instdir", "--log",
+    "--path-exclude", "--path-include", "--status-fd",
+}
+
+
+def _names_ffmpeg(token: str) -> bool:
+    name = token.replace("\\", "/").rsplit("/", 1)[-1]
+    name = name.split("=", 1)[0].split("/", 1)[0]
+    if name.lower().endswith(".deb"):
+        name = name[:-4]
+    folded = name.lower()
+    return folded == "ffmpeg" or folded.startswith(("ffmpeg_", "ffmpeg-"))
+
+
+def _dpkg_install_action(argv: list[str]) -> bool:
+    """True when dpkg is asked to install, including -iE, --install=, and -R."""
+    rest = argv[1:]
+    index = 0
+    while index < len(rest):
+        token = rest[index]
+        if token == "--":
+            return False
+        if token.startswith("--"):
+            flag = token.split("=", 1)[0]
+            if flag in {"--install", "--recursive"} or token.startswith("--install="):
+                return True
+            if "=" not in token and flag in DPKG_VALUE_FLAGS and index + 1 < len(rest):
+                index += 2
+                continue
+            index += 1
+            continue
+        if token.startswith("-") and token != "-":
+            if "i" in token[1:] or "R" in token[1:]:
+                return True
+            index += 1
+            continue
+        index += 1
+    return False
+
+
+def _apt_installs_ffmpeg(argv: list[str]) -> bool:
+    """True when install/reinstall names ffmpeg, with options in any position."""
+    rest = argv[1:]
+    action = None
+    packages: list[str] = []
+    index = 0
+    while index < len(rest):
+        token = rest[index]
+        if token == "--":
+            packages.extend(rest[index + 1:])
+            break
+        if token.startswith("-"):
+            flag = token.split("=", 1)[0]
+            if "=" not in token and flag in APT_SIDE_VALUE_FLAGS and index + 1 < len(rest):
+                index += 2
+                continue
+            index += 1
+            continue
+        if action is None:
+            action = token.lower()
+            index += 1
+            continue
+        packages.append(token)
+        index += 1
+    return action in APT_SIDE_ACTIONS and any(_names_ffmpeg(token) for token in packages)
+
+
+def ffmpeg_side_install_problems(text: str, *, path: str) -> list[str]:
+    """Refuse dpkg installs and apt/aptitude installs of ffmpeg beside the hashed apt-get line."""
+    problems: list[str] = []
+    blocks = job_blocks(text) or [("workflow", text)]
+    for job, block in blocks:
+        for script in run_scripts(block):
+            for command in script_commands(script):
+                if command in APT_ALLOWED_INSTALLS:
+                    continue
+                argv = prepare_argv(command, InstallRules())
+                if not argv:
+                    continue
+                tool = _base(argv[0])
+                if tool == "dpkg" and _dpkg_install_action(argv):
+                    problems.append(f"{path} job {job} unexpected dpkg install: {command}")
+                if tool in APT_SIDE_TOOLS and _apt_installs_ffmpeg(argv):
+                    problems.append(f"{path} job {job} unexpected apt install: {command}")
+    return problems
+
+
 def float_google_install(text: str) -> str:
     """Mutation: put the pre-pin bare names back on the Google client install."""
     lines = text.splitlines(keepends=True)
@@ -1539,6 +1632,7 @@ def main() -> int:
         if "apt-get install" in text or "apt-get download" in text:
             apt_workflows += 1
         problems.extend(apt)
+        problems.extend(ffmpeg_side_install_problems(text, path=rel))
     req_text = (ROOT / REQ_NAME).read_text(encoding="utf-8")
     lock_text = (ROOT / LOCK_NAME).read_text(encoding="utf-8")
     problems.extend(google_lock_problems(req_text, lock_text))
@@ -1648,6 +1742,48 @@ def main() -> int:
         fail(f"floating apt runner was not caught: {floating_found}")
     if apt_workflows != 2:
         fail(f"expected 2 apt ffmpeg workflows, found {apt_workflows}")
+    if ffmpeg_side_install_problems(check_all, path="check-all.yml"):
+        fail("pinned check-all ffmpeg install has a side path")
+    if ffmpeg_side_install_problems(research, path="velvetos-research.yml"):
+        fail("pinned velvetos-research ffmpeg install has a side path")
+
+    def require_side(label: str, command: str, *, dash: bool = False) -> None:
+        step = (
+            f"      - run: {command}\n"
+            if dash
+            else f"      - name: side\n        run: {command}\n"
+        )
+        sample = (
+            "jobs:\n"
+            "  sample:\n"
+            "    runs-on: ubuntu-24.04\n"
+            "    steps:\n"
+            + step
+        )
+        found = ffmpeg_side_install_problems(sample, path="fixture.yml")
+        if not found:
+            fail(f"{label} was not caught: {found}")
+
+    require_side("apt option before install", "sudo apt -y install ffmpeg")
+    require_side("apt mixed-case package", "sudo apt install -y FFmpeg")
+    require_side("apt reinstall", "sudo apt reinstall ffmpeg")
+    require_side("aptitude install", "sudo aptitude install ffmpeg")
+    require_side("dpkg force before -i", "sudo dpkg --force-all -i ffmpeg.deb")
+    require_side("dpkg recursive install", "sudo dpkg -R -i ./debs")
+    require_side("dpkg bundled short flags", "sudo dpkg -iE ffmpeg.deb")
+    require_side("dpkg glob", "sudo dpkg -i *.deb")
+    require_side("dpkg other variable", 'sudo dpkg -i "$pkg"')
+    require_side("dash run dpkg", "sudo dpkg -i ffmpeg.deb", dash=True)
+    plain_apt = (
+        "jobs:\n"
+        "  sample:\n"
+        "    runs-on: ubuntu-24.04\n"
+        "    steps:\n"
+        "      - name: side\n"
+        "        run: sudo apt -y install ffmpeg\n"
+    )
+    if apt_ffmpeg_problems(plain_apt, path="fixture.yml"):
+        fail("apt -y install was misread as the hashed apt-get step")
 
     print(
         f"OK {NAME} workflows={len(workflows)} floating=0 allowlist=empty "
@@ -1655,7 +1791,10 @@ def main() -> int:
         "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught "
         f"{bypass_evidence} {lock_evidence} "
         f"apt_ffmpeg={apt_workflows} apt_sequence=pinned extra=caught "
-        "comment=caught digest=caught runner=caught pool=caught"
+        "comment=caught digest=caught runner=caught pool=caught "
+        "apt_y=caught apt_case=caught apt_reinstall=caught aptitude=caught "
+        "dpkg_force=caught dpkg_R=caught dpkg_iE=caught dpkg_glob=caught "
+        "dpkg_var=caught dash_run=caught"
     )
     return 0
 
