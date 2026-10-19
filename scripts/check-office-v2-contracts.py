@@ -3437,7 +3437,7 @@ def main() -> int:
         ("test_vf_office_v2_604_cp083_client_socket_negative.py", 10, 45),
         ("test_vf_office_v2_604_cp083_reconcile_negative.py", 5, 15),
         ("test_vf_office_v2_604_cp084_nonroot_sink_recovery.py", 5, 15),
-        ("test_vf_office_v2_604_cp085_public_git_readback.py", 30, 15),
+        ("test_vf_office_v2_604_cp085_public_git_readback.py", 32, 15),
         # #762: offline-only byte-consistency negatives, NOT joined-run QA.
         ("test_vf_office_v2_604_cp083_candidate_evidence_gate.py", 35, 30),
         # ChatGPT-069: GAP_4 and GAP_9 are passing refusals. GAP_6 stays an
