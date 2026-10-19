@@ -3216,7 +3216,7 @@ def check_refusal_gaps() -> None:
         # The version-drift fixture creates a synthetic D: sandbox under its
         # throwaway cwd on POSIX; #842 resolves real filesystem ancestors.
         # Keep the real root predicate while providing its simulated final path.
-        resolved_fixture_root = lambda root: saved_root_check(
+        resolved_fixture_root = lambda root, **_kwargs: saved_root_check(
             root, resolve=lambda target: target
         )
         crew_mod.assert_under_velvet = resolved_fixture_root
