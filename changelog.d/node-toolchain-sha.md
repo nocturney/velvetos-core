@@ -1,0 +1,1 @@
+- 2026-10-19 - **Node toolchain pin:** setup-node stays Node 24.21.0. The check-all policy test stays Node 22.23.3, the ubuntu-24.04 image version from 2026-10-19. Both steps check the actions/node-versions `hashes.sha256` for that build. `check-install-pins.py` refuses a floating `24`, a swapped digest, a commented verifier, and a bare `node` command. No model call.
