@@ -2,7 +2,7 @@
   "schema": "velvetos.cad-engine-stack-host-acceptance.v1",
   "checked_at": "2026-09-27",
   "host": "Chris Windows workstation",
-  "stack_root": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack",
+  "stack_root": "%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\cad-stack",
   "printer_actions_allowed": false,
   "paid_provider_calls_performed": false,
   "engines": {

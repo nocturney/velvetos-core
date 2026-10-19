@@ -12,7 +12,7 @@
     "commit": "fafa7b057d8f2c3347ff422f0515380123a4b1d4",
     "cadgen": "0.7.0"
   },
-  "stageRoot": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad-0.7.0-stage",
+  "stageRoot": "%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad-0.7.0-stage",
   "stageChecks": {
     "vf_cad_doctor": "PASS",
     "fabrication_router_skill_checks": "PASS",
@@ -32,6 +32,6 @@
     "sendcutsend_order_submission": false
   },
   "runtimePromotion": "PASS live v0.7.0/cadgen 0.7.0",
-  "rollback": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad.rollback-v0.6.6-20260927",
+  "rollback": "%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\text-to-cad.rollback-v0.6.6-20260927",
   "status": "PASS"
 }

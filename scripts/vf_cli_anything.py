@@ -10,6 +10,7 @@ import sys
 import tempfile
 from pathlib import Path
 
+import vf_spawn
 from vf_spawn import (
     GIT_TIMEOUT_SECONDS,
     SpawnRefusal,
@@ -41,9 +42,14 @@ def registry() -> dict:
 def run(args: list[str], *, cwd: Path | None = None,
         env: dict[str, str] | None = None, user_args: list[str] | None = None,
         revisions: list[str] | None = None) -> subprocess.CompletedProcess:
-    if args and args[0] == "git":
+    if args and vf_spawn.names_git_tool(args[0]):
         if env is not None:
             raise SystemExit("FAIL git spawn refuses a caller environment")
+        if vf_spawn.executable_is_absolute(args[0]):
+            try:
+                vf_spawn.require_pinned_git(args[0])
+            except SpawnRefusal as exc:
+                raise SystemExit(f"FAIL git spawn: {exc}") from exc
         try:
             return run_git(
                 list(args[1:]),
@@ -250,6 +256,8 @@ def prove_git_hygiene() -> list[str]:
     if other_kwargs.get("stdin") is subprocess.DEVNULL:
         errors.append("non-git stdin was closed")
     errors.extend(windows_pin_case_errors())
+    errors.extend(vf_spawn.prove_git_identity())
+    errors.extend(vf_spawn.prove_git_tool_spelling(lambda args, env=None: run(args, env=env)))
     return errors
 
 
