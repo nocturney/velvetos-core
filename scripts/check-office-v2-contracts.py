@@ -3499,6 +3499,7 @@ def main() -> int:
     for test_file, count, timeout_s in (
         ("test_vf_office_v2_604_identity_subprocess_env.py", 2, 15),
         ("test_vf_office_v2_604_gap6_pin_split.py", 20, 45),
+        ("test_vf_office_v2_604_git_spawn_env_strip.py", 9, 60),
         ("test_vf_office_v2_604_cp083_hardening_candidate.py", 10, 15),
         ("test_vf_office_v2_604_cp083_socket_negative.py", 2, 15),
         ("test_vf_office_v2_604_cp083_client_socket_negative.py", 10, 45),
