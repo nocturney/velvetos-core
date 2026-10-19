@@ -47,7 +47,7 @@ Reel QA: PREFLIGHT -> EDIT-GATE -> visual-standard gate -> reference match -> ex
 Rendering receipt הוא technical evidence בלבד, לא creative PASS ולא publish receipt. ready_for_publish הוא handoff state בלבד.
 
 10. Render host
-Chris = sderot-windows. Repo: D:\Velvet\Repos\velvetos-core. HyperFrames current verified CLI is available from C:\Users\Chris\AppData\Roaming\npm. FFmpeg/ffprobe under D:\Velvet\Tools\Shared\ffmpeg\current\bin. Blender 5.2.2 LTS under C:\Program Files\Blender Foundation\Blender 5.2\blender.exe.
+Chris = sderot-windows. Repo: D:\Velvet\Repos\velvetos-core. HyperFrames current verified CLI is available from %USERPROFILE%\AppData\Roaming\npm. FFmpeg/ffprobe under D:\Velvet\Tools\Shared\ffmpeg\current\bin. Blender 5.2.2 LTS under C:\Program Files\Blender Foundation\Blender 5.2\blender.exe.
 
 הפקודות המדויקות נמצאות ב-REEL-ROUTE.md. CI מבצע lint/schema/sensor tests בלבד ואינו מרנדר production video.
 

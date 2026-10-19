@@ -29,7 +29,7 @@ Context Mode is queued in `memory-context` only for **noncanonical context virtu
 
 ## Machine paths and receipt
 
-Worktrunk Windows executable staged at `D:\Velvet\Tools\OfficeAccelerator\WorktrunkPilot\v0.80.0\runtime\git-wt.exe`; Mac at `/Users/chris/Velvet/Pilots/OfficeAccelerator/WorktrunkPilot/v0.80.0/runtime/worktrunk-aarch64-apple-darwin/wt`. Context Mode Windows staged under `D:\Velvet\Tools\OfficeAccelerator\ContextModePilot\v1.0.169`; Mac under `/Users/chris/Velvet/Pilots/OfficeAccelerator/ContextModePilot/v1.0.169`. Both use separate fixture DB/temporary repo directories with no production writer. No global shell installation or OpenCode plugin enrollment.
+Worktrunk Windows executable staged at `D:\Velvet\Tools\OfficeAccelerator\WorktrunkPilot\v0.80.0\runtime\git-wt.exe`; Mac at `$HOME/Velvet/Pilots/OfficeAccelerator/WorktrunkPilot/v0.80.0/runtime/worktrunk-aarch64-apple-darwin/wt`. Context Mode Windows staged under `D:\Velvet\Tools\OfficeAccelerator\ContextModePilot\v1.0.169`; Mac under `$HOME/Velvet/Pilots/OfficeAccelerator/ContextModePilot/v1.0.169`. Both use separate fixture DB/temporary repo directories with no production writer. No global shell installation or OpenCode plugin enrollment.
 
 Evidence manifest: [p0-ready-made-accelerators-lab-2026-10-08.json](p0-ready-made-accelerators-lab-2026-10-08.json). Exact tests passed but no two-host agent inference coding task, no Context Mode token-saving benchmark and no OpenShell or Octop runtime proof. Do not mark overall P0 green.
 

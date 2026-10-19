@@ -8,7 +8,7 @@ For a trivial, deterministic, repeatedly verified read-only operation with no re
 
 The complete synthetic fixture was **26 bytes**: ASCII `VF604_SYNTHETIC_API_BENCH\n`. Fixture locations were new one-time roots outside the product repository:
 - Chris Windows: `D:\Velvet\Pilots\OfficeAccelerator\AgentEnvelopeLab\p0-604-native-provider-benchmark-win-20261010\fixture.txt`.
-- MacMiniOffice.local: `/Users/chris/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-604-native-provider-benchmark-mac-20261010/fixture.txt`.
+- MacMiniOffice.local: `$HOME/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-604-native-provider-benchmark-mac-20261010/fixture.txt`.
 
 Both hosts independently verified fixture byte length **26** and exact content. Each route was run **30 times** sequentially per host, timed in its native host invocation, with independent byte/encoding comparison on every iteration. This is an exploratory microbenchmark, not a population performance study; OS cache warming, terminal shell overhead, process launch and timing APIs differ. Observed p95 uses sorted index floor(0.95*(n-1)) at n=30; it is not a stable statistical latency bound.
 

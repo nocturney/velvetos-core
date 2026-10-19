@@ -543,11 +543,40 @@ def prove_selftest_timeout() -> list[str]:
     return errors
 
 
+def prove_selftest_child_status() -> list[str]:
+    """A nonzero selftest child exit must fail the no-arg parent."""
+    errors: list[str] = []
+    saved = os.environ.pop(SELFTEST_ENV, None)
+    original = subprocess.run
+
+    def failed(argv, **kwargs):
+        return subprocess.CompletedProcess(argv, 3, stdout="", stderr="child-failed")
+
+    subprocess.run = failed
+    stdout, stderr = io.StringIO(), io.StringIO()
+    old_out, old_err = sys.stdout, sys.stderr
+    sys.stdout, sys.stderr = stdout, stderr
+    code: int | None = None
+    try:
+        code = main([])
+    finally:
+        subprocess.run = original
+        sys.stdout, sys.stderr = old_out, old_err
+        if saved is None:
+            os.environ.pop(SELFTEST_ENV, None)
+        else:
+            os.environ[SELFTEST_ENV] = saved
+    if code != 3 or "CODE_VALID" in stdout.getvalue():
+        errors.append("selftest child failure was swallowed")
+    return errors
+
+
 def run_selftest() -> int:
     errors = prove_repo_git()
     errors.extend(prove_validate_is_pure())
     errors.extend(prove_selftest_sentinel())
     errors.extend(prove_selftest_timeout())
+    errors.extend(prove_selftest_child_status())
     if errors:
         print("FAIL runtime doctor selftest: " + "; ".join(errors), file=sys.stderr)
         return 1

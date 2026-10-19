@@ -1,0 +1,1 @@
+- 2026-10-19 - **Bento payload and openssl:** the shell pin refuses a manifest whose app, version, url, or published checksum does not match the pin. A missing openssl fails the weekly job as its own error, not as a network failure. No model call.

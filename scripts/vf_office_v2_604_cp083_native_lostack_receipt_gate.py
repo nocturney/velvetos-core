@@ -22,7 +22,8 @@ DRIVER = ROOT / "scripts/vf_office_v2_604_cp083_native_lostack_two_receipts.py"
 NATIVE = ROOT / "scripts/vf_office_v2_604_native_git_crash_reconcile_offline.py"
 CANDIDATE = ROOT / "scripts/vf_office_v2_604_cp083_hardened_candidate.py"
 DRIVER_SHA = "0d38f4e45f1d94a64167b72e0f57ca44efa73a758fc72fe368705294de737251"
-NATIVE_SHA = "2bbd81c9c7f59c1b28937286d1c365ca46c0ceb9db96157859f7225e0dd6d632"
+NATIVE_RECEIPT_SHA = "2bbd81c9c7f59c1b28937286d1c365ca46c0ceb9db96157859f7225e0dd6d632"
+NATIVE_LIVE_SHA = "e0bef7806f7de87e1c39a912640a1811a00a8b6d9291cc4d1c1b4549d9ab7163"
 CANDIDATE_PARENT_SHA = "39b0c918f906980f1ba87c49a03cc6cbf10b4d144b157b3221605a14ad3626b6"
 CANDIDATE_LIVE_SHA = "83260c77846b34c4f459eaa812f477e51764fa1eee261af1d542a39dd561cd2c"
 EXPECTED = {
@@ -98,7 +99,7 @@ def validate(evidence, check_local_sources=True):
          "PROVENANCE_SCOPE")
     for name, exact in (
         ("driver_source_sha256", DRIVER_SHA),
-        ("native_implementation_sha256", NATIVE_SHA),
+        ("native_implementation_sha256", NATIVE_RECEIPT_SHA),
         ("hardened_candidate_source_sha256_at_parent", CANDIDATE_PARENT_SHA),
     ):
         need(evidence.get(name) == exact, name + "_DRIFT")
@@ -121,7 +122,8 @@ def validate(evidence, check_local_sources=True):
                      "host_cryptographic_attestation"):
         need(evidence.get(no_claim) is False, "FALSE_CLAIM_" + no_claim)
     if check_local_sources:
-        for p, digest in ((DRIVER, DRIVER_SHA), (NATIVE, NATIVE_SHA),
+        need(NATIVE_LIVE_SHA != NATIVE_RECEIPT_SHA, "NATIVE_PINS_MERGED")
+        for p, digest in ((DRIVER, DRIVER_SHA), (NATIVE, NATIVE_LIVE_SHA),
                           (CANDIDATE, CANDIDATE_LIVE_SHA)):
             need(p.is_file() and sha(p.read_bytes()) == digest,
                  "SOURCE_BYTES_CHANGED:" + p.name)
@@ -161,7 +163,7 @@ def validate(evidence, check_local_sources=True):
              and r.get("os") == "Darwin"
              and r.get("architecture") == "arm64"
              and r.get("driver_source_sha256") == DRIVER_SHA
-             and r.get("native_implementation_sha256") == NATIVE_SHA,
+             and r.get("native_implementation_sha256") == NATIVE_RECEIPT_SHA,
              "RUN_SOURCE_HOST")
         uid = r.get("run_id")
         need(type(uid) is str and bool(re.fullmatch("[0-9a-f]{32}", uid))

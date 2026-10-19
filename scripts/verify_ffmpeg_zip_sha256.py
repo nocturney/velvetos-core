@@ -20,13 +20,15 @@ def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--path", required=True)
     parser.add_argument("--expected", required=True)
+    parser.add_argument("--kind", default="zip")
     args = parser.parse_args(argv)
     got = file_sha256(Path(args.path))
     expected = args.expected.strip().lower()
+    kind = args.kind.strip() or "zip"
     if got != expected:
-        print(f"ffmpeg zip sha256 mismatch: {got}", file=sys.stderr)
+        print(f"ffmpeg {kind} sha256 mismatch: {got}", file=sys.stderr)
         return 1
-    print(f"OK ffmpeg zip sha256 {got}")
+    print(f"OK ffmpeg {kind} sha256 {got}")
     return 0
 
 
