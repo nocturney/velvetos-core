@@ -1598,6 +1598,120 @@ def ffmpeg_side_install_problems(text: str, *, path: str) -> list[str]:
     return problems
 
 
+IMAGE_TOOL_NAMES = (
+    "linux-git",
+    "linux-gh",
+    "linux-curl",
+    "linux-docker-client",
+    "linux-docker-server",
+    "windows-git",
+    "windows-gh",
+    "windows-docker-client",
+    "windows-docker-server",
+)
+LINUX_RUNNER_STEP = """      - name: Record runner image tool versions
+        run: python3 scripts/verify_runner_tools.py --platform linux
+"""
+WINDOWS_RUNNER_STEP = """      - name: Record runner image tool versions
+        shell: pwsh
+        run: python scripts/verify_runner_tools.py --platform windows
+"""
+
+
+def _dict_keys(tree: ast.AST, name: str) -> set[str]:
+    for node in getattr(tree, "body", []):
+        if not isinstance(node, ast.Assign) or len(node.targets) != 1:
+            continue
+        target = node.targets[0]
+        if not isinstance(target, ast.Name) or target.id != name:
+            continue
+        if not isinstance(node.value, ast.Dict):
+            continue
+        keys: set[str] = set()
+        for key in node.value.keys:
+            if isinstance(key, ast.Constant) and isinstance(key.value, str):
+                keys.add(key.value)
+        return keys
+    return set()
+
+
+def _joined_has(node: ast.AST, needle: str) -> bool:
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return needle in node.value
+    if isinstance(node, ast.JoinedStr):
+        return any(_joined_has(part, needle) for part in node.values)
+    if isinstance(node, ast.FormattedValue):
+        return _joined_has(node.value, needle)
+    return False
+
+
+def _warn_is_soft(func: ast.FunctionDef | None) -> bool:
+    if func is None:
+        return False
+    for node in ast.walk(func):
+        if not isinstance(node, ast.Return) or not isinstance(node.value, ast.Tuple):
+            continue
+        elts = node.value.elts
+        if len(elts) != 2 or not _joined_has(elts[0], "WARN runner tool drift"):
+            continue
+        return isinstance(elts[1], ast.Constant) and elts[1].value is False
+    return False
+
+
+def _fails_only_on_problems(func: ast.FunctionDef | None) -> bool:
+    if func is None:
+        return False
+    found: list[ast.AST | None] = []
+
+    def walk(node: ast.AST, test: ast.AST | None) -> None:
+        if isinstance(node, ast.If):
+            for child in node.body:
+                walk(child, node.test)
+            for child in node.orelse:
+                walk(child, test)
+            return
+        if isinstance(node, ast.Return) and isinstance(node.value, ast.Constant) and node.value.value == 1:
+            found.append(test)
+            return
+        for child in ast.iter_child_nodes(node):
+            walk(child, test)
+
+    walk(func, None)
+    return len(found) == 1 and isinstance(found[0], ast.Name) and found[0].id == "problems"
+
+
+def runner_source_problems(text: str) -> list[str]:
+    problems: list[str] = []
+    try:
+        tree = ast.parse(text)
+    except SyntaxError as exc:
+        return [f"runner verifier did not parse: {exc}"]
+    keys = _dict_keys(tree, "RECORDED")
+    for name in IMAGE_TOOL_NAMES:
+        if name not in keys:
+            problems.append(f"runner {name} drift report is missing")
+    if "WARN runner tool drift" not in text:
+        problems.append("runner drift warning is missing")
+    if not _warn_is_soft(_function(tree, "drift_line")):
+        problems.append("drift warning fails the job")
+    if "RECORDED[name]" not in text:
+        problems.append("drift baseline is the observed version")
+    if not _fails_only_on_problems(_function(tree, "finish")):
+        problems.append("drift warning fails the job")
+    return problems
+
+
+def runner_workflow_problems(text: str) -> list[str]:
+    problems: list[str] = []
+    if "runs-on: ubuntu-24.04" not in text.split("check-all-windows:", 1)[0]:
+        problems.append("check-all is not pinned to ubuntu-24.04")
+    if LINUX_RUNNER_STEP not in text:
+        problems.append("linux runner drift step is missing")
+    if WINDOWS_RUNNER_STEP not in text:
+        problems.append("windows runner drift step is missing")
+    return problems
+
+
 def float_google_install(text: str) -> str:
     """Mutation: put the pre-pin bare names back on the Google client install."""
     lines = text.splitlines(keepends=True)
@@ -2131,6 +2245,75 @@ def main() -> int:
     if install_spec_problems(jobs.read_text(encoding="utf-8"), path="jobs-write-through.yml"):
         fail("pinned jobs-write-through install was refused")
 
+    verifier = (ROOT / "scripts" / "verify_runner_tools.py").read_text(encoding="utf-8")
+    workflow = (WORKFLOWS / "check-all.yml").read_text(encoding="utf-8")
+    if runner_source_problems(verifier):
+        fail(f"runner image tools were refused: {runner_source_problems(verifier)}")
+    if runner_workflow_problems(workflow):
+        fail(f"runner image workflow was refused: {runner_workflow_problems(workflow)}")
+
+    def require_runner(label: str, found: list[str], needle: str) -> None:
+        if not any(needle in item for item in found):
+            fail(f"{label} was not caught: {found}")
+
+    require_runner(
+        "runner windows git",
+        runner_source_problems(verifier.replace('    "windows-git": "git version 2.56.0.windows.2",\n', "", 1)),
+        "windows-git drift report is missing",
+    )
+    require_runner(
+        "runner drift hard",
+        runner_source_problems(verifier.replace(
+            'f"WARN runner tool drift name={name} observed={shown!r} recorded={recorded!r}",\n'
+            "        False,",
+            'f"WARN runner tool drift name={name} observed={shown!r} recorded={recorded!r}",\n'
+            "        True,",
+            1,
+        )),
+        "drift warning fails the job",
+    )
+    require_runner(
+        "runner drift exit",
+        runner_source_problems(verifier.replace("    if problems:\n", "    if problems or notes:\n", 1)),
+        "drift warning fails the job",
+    )
+    require_runner(
+        "runner baseline",
+        runner_source_problems(verifier.replace("RECORDED[name]", "observed", 1)),
+        "drift baseline is the observed version",
+    )
+    require_runner(
+        "runner linux step",
+        runner_workflow_problems(workflow.replace(
+            "        run: python3 scripts/verify_runner_tools.py --platform linux\n",
+            "        run: # python3 scripts/verify_runner_tools.py --platform linux\n",
+            1,
+        )),
+        "linux runner drift step is missing",
+    )
+    require_runner(
+        "runner windows step",
+        runner_workflow_problems(workflow.replace(
+            "        run: python scripts/verify_runner_tools.py --platform windows\n",
+            "        run: # python scripts/verify_runner_tools.py --platform windows\n",
+            1,
+        )),
+        "windows runner drift step is missing",
+    )
+    require_runner(
+        "runner image",
+        runner_workflow_problems(workflow.replace("runs-on: ubuntu-24.04", "runs-on: ubuntu-latest", 1)),
+        "not pinned to ubuntu-24.04",
+    )
+    probe = __import__("subprocess").run(
+        [sys.executable, str(ROOT / "scripts" / "verify_runner_tools.py"), "--self-test"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if probe.returncode != 0:
+        fail(probe.stderr.strip() or probe.stdout.strip() or "runner tools self-test failed")
+
     bypass_evidence = prove_bypasses()
     lock_evidence = prove_google_lock(req_text, lock_text)
     check_all = (WORKFLOWS / "check-all.yml").read_text(encoding="utf-8")
@@ -2449,6 +2632,9 @@ def main() -> int:
         f"OK {NAME} workflows={len(workflows)} floating=0 allowlist=empty "
         "bare=caught exact=pass mixed=caught npm_float=caught npm_exact=pass "
         "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught "
+        "runner_drift=caught runner_soft=caught runner_exit=caught "
+        "runner_base=caught runner_linux=caught "
+        "runner_windows=caught runner_image=caught "
         f"{bypass_evidence} {lock_evidence} "
         f"apt_ffmpeg={apt_workflows} apt_sequence=pinned extra=caught "
         "comment=caught digest=caught runner=caught pool=caught "

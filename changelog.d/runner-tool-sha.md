@@ -1,0 +1,1 @@
+- 2026-10-19 - **Runner image tools:** check-all records git, GitHub CLI, curl, and Docker versions that the runner image already installed. A difference from the last recorded version is a warning, not a failure. No model call.
