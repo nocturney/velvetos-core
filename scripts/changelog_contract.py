@@ -167,22 +167,59 @@ def compile_step(paths: list, repo: Path | None = None, base: str | None = None,
     return True
 
 
-def unreleased_lines(changelog: str) -> set[str]:
-    """Whole lines between ``## [Unreleased]`` and the next ``## [`` heading.
+def _line_text(line: str) -> str:
+    return line.strip("\r\n")
 
-    ``splitlines`` drops a trailing CR, so a CRLF changelog still matches an LF bullet.
+
+def _fence_marker(line: str) -> bool:
+    text = _line_text(line).lstrip()
+    return text.startswith("```") or text.startswith("~~~")
+
+
+def _section_heading(line: str) -> bool:
+    """A level-2 heading. ``###`` stays inside the Unreleased section."""
+    text = _line_text(line)
+    return text == "##" or text.startswith("## ") or text.startswith("##\t")
+
+
+def _unreleased_region(lines: list[str]) -> tuple[int, int, set[str]] | None:
+    """Header index, next heading index, and lines that count as folded.
+
+    The section ends at the next ``##`` heading outside a fence. A missing
+    Unreleased heading yields None. Bullets inside a fence are omitted.
     """
-    lines = changelog.splitlines()
+    texts = [_line_text(line) for line in lines]
     try:
-        start = lines.index(UNRELEASED)
+        header = texts.index(UNRELEASED)
     except ValueError:
-        return set()
-    body: list[str] = []
-    for line in lines[start + 1:]:
-        if line.startswith("## ["):
+        return None
+    present: set[str] = set()
+    fenced = False
+    end = len(lines)
+    for index in range(header + 1, len(lines)):
+        if _fence_marker(lines[index]):
+            fenced = not fenced
+            continue
+        if fenced:
+            continue
+        if _section_heading(lines[index]):
+            end = index
             break
-        body.append(line)
-    return set(body)
+        present.add(texts[index])
+    return header, end, present
+
+
+def unreleased_lines(changelog: str) -> set[str]:
+    """Whole lines between ``## [Unreleased]`` and the next ``##`` heading.
+
+    A bullet inside a fenced code block is not folded. ``splitlines`` drops a
+    trailing CR, so a CRLF changelog still matches an LF bullet. No Unreleased
+    heading yields an empty set.
+    """
+    found = _unreleased_region(changelog.splitlines())
+    if found is None:
+        return set()
+    return found[2]
 
 
 def covered(paths: list, repo: Path | None = None, base: str | None = None, head: str | None = None) -> bool:
@@ -318,16 +355,12 @@ def validate_committed(root: Path = ROOT) -> int:
 
 def fold(changelog: str, bullets: list[str]) -> str:
     """Insert missing bullets under Unreleased. Leave every other byte in place."""
-    if UNRELEASED not in changelog.splitlines():
-        raise ValueError("CHANGELOG.md is missing ## [Unreleased]")
     lines = changelog.splitlines(keepends=True)
-    header = next(i for i, line in enumerate(lines) if line.strip("\r\n") == UNRELEASED)
-    nxt = next(
-        (i for i in range(header + 1, len(lines)) if lines[i].startswith("## [")),
-        len(lines),
-    )
+    found = _unreleased_region(lines)
+    if found is None:
+        raise ValueError("CHANGELOG.md is missing ## [Unreleased]")
+    header, nxt, present = found
     section = lines[header + 1:nxt]
-    present = {line.strip("\r\n") for line in section}
     fresh = []
     for bullet in bullets:
         if bullet in present or bullet in fresh:
@@ -787,6 +820,41 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
         (once.count("- 2026-10-18 - **Example:** one line.") == 1, "fold duplicated a bullet"),
         ("- 2026-10-01 - **Kept:** stays." in once, "fold dropped an existing Unreleased bullet"),
     ])
+    notes_log = (
+        "## [Unreleased]\n\n- 2026-10-01 - **Kept:** stays.\n\n"
+        "## Notes\n\n- 2026-10-18 - **Theirs:** stays.\n\n"
+        "## [1.0.0]\n\n- released line must stay byte for byte.\n"
+    )
+    folded_notes = fold(notes_log, ["- 2026-10-18 - **Theirs:** stays."])
+    fenced_log = (
+        "## [Unreleased]\n\n```\n- 2026-10-18 - **Theirs:** stays.\n```\n\n"
+        "## [1.0.0]\n\n- released line must stay byte for byte.\n"
+    )
+    folded_fence = fold(fenced_log, ["- 2026-10-18 - **Theirs:** stays."])
+    probes.extend([
+        (notes_log.split("## Notes\n", 1)[1] == folded_notes.split("## Notes\n", 1)[1], "fold rewrote the section after a plain heading"),
+        ("- 2026-10-18 - **Theirs:** stays." in folded_notes.split("## Notes\n", 1)[0], "fold treated a later heading's bullet as already present"),
+        (fenced_log.split("```\n", 1)[1] == folded_fence.split("```\n", 1)[1], "fold rewrote a fenced bullet"),
+        (folded_fence.split("```\n", 1)[0].count("- 2026-10-18 - **Theirs:** stays.") == 1, "fold treated a fenced bullet as already present"),
+    ])
+    bullet = "- 2026-10-18 - **Theirs:** stays.\n"
+    deleted = ("D", "changelog.d/someone-else.md", bullet)
+    no_heading = [("M", "CHANGELOG.md", "intro\n\n" + bullet), deleted]
+    plain_heading = [("M", "CHANGELOG.md", "## [Unreleased]\n\n- 2026-10-18 - **Other:** stays.\n\n## Notes\n\n" + bullet), deleted]
+    fenced_bullet = [("M", "CHANGELOG.md", "## [Unreleased]\n\n```\n" + bullet + "```\n\n- 2026-10-18 - **Other:** stays.\n"), deleted]
+    after_fence = [
+        ("M", "CHANGELOG.md", "## [Unreleased]\n\n```\n## Notes\n" + bullet + "```\n\n- 2026-10-18 - **Other:** stays.\n"),
+        ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Other:** stays.\n"),
+    ]
+    subsection = [("M", "CHANGELOG.md", "## [Unreleased]\n\n### Notes\n\n" + bullet), deleted]
+    probes.extend([
+        (gate(no_heading) == 1, "a changelog with no Unreleased heading must refuse"),
+        (unreleased_lines("intro\n\n" + bullet) == set(), "missing Unreleased did not yield an empty fold"),
+        (gate(plain_heading) == 1, "a bullet under a later heading is not folded"),
+        (gate(fenced_bullet) == 1, "a bullet inside a code fence is not folded"),
+        (gate(after_fence) == 0, "a heading inside a code fence ended the fold"),
+        (gate(subsection) == 0, "a level-3 heading ended the fold"),
+    ])
     released_only = [
         ("M", "CHANGELOG.md", "## [Unreleased]\n\n- 2026-10-18 - **Other:** stays.\n\n## [1.0.0]\n\n- 2026-10-18 - **Theirs:** stays.\n"),
         ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Theirs:** stays.\n"),
@@ -800,6 +868,58 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
         ))
     finally:
         globals()["unreleased_lines"] = saved_lines
+
+    def _texts(rows: list[str]) -> list[str]:
+        return [line.strip("\r\n") for line in rows]
+
+    def _region_missing_is_whole_file(rows: list[str]) -> tuple[int, int, set[str]] | None:
+        texts = _texts(rows)
+        if UNRELEASED not in texts:
+            return 0, len(rows), set(texts)
+        return saved_region(rows)
+
+    def _region_bracket_only(rows: list[str]) -> tuple[int, int, set[str]] | None:
+        texts = _texts(rows)
+        try:
+            header = texts.index(UNRELEASED)
+        except ValueError:
+            return None
+        present: set[str] = set()
+        end = len(rows)
+        for index in range(header + 1, len(rows)):
+            if texts[index].startswith("## ["):
+                end = index
+                break
+            present.add(texts[index])
+        return header, end, present
+
+    def _region_keep_fences(rows: list[str]) -> tuple[int, int, set[str]] | None:
+        texts = _texts(rows)
+        try:
+            header = texts.index(UNRELEASED)
+        except ValueError:
+            return None
+        present: set[str] = set()
+        end = len(rows)
+        for index in range(header + 1, len(rows)):
+            if texts[index] == "##" or texts[index].startswith("## ") or texts[index].startswith("##\t"):
+                end = index
+                break
+            present.add(texts[index])
+        return header, end, present
+
+    saved_region = _unreleased_region
+    mutants = (
+        (_region_missing_is_whole_file, no_heading, "missing Unreleased still refused the folded bullet"),
+        (_region_bracket_only, plain_heading, "a plain heading still ended the fold"),
+        (_region_keep_fences, fenced_bullet, "a fenced bullet was still ignored"),
+    )
+    for mutant, sample_paths, message in mutants:
+        globals()["_unreleased_region"] = mutant
+        try:
+            probes.append((gate(sample_paths) == 0, message))
+        finally:
+            globals()["_unreleased_region"] = saved_region
     negative_cases = _negative_checks(bad)
     git_errors = git_fixture()
     probes.append((not git_errors, "git fixture"))
