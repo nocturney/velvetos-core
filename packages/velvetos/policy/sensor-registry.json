@@ -2174,7 +2174,7 @@
         "release": "BLOCK_IF_RELEVANT",
         "runtime": "NO_DIRECT_RUNTIME_EFFECT"
       },
-      "fallback_scope": "FULL_SUITE",
+      "fallback_scope": "ALWAYS_ON",
       "mapping_state": "mapped"
     },
     {

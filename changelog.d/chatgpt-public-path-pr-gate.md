@@ -1,0 +1,1 @@
+- 2026-10-19 - **PR-time private host guard:** select the redaction sensor for every PR, recognize all RFC1918 ranges, and scan non-UTF-8 and BOM-marked UTF-16 tracked text; pin known synthetic 10.x training/test fixtures by exact sha256 and test selector/encoding regressions.
