@@ -20,7 +20,7 @@
     ]
   },
   "staging": {
-    "receipt": "C:\\Users\\Chris\\.velvetos\\cognee\\staging\\receipt-1.6.1-20260927T200212Z.json",
+    "receipt": "%USERPROFILE%\\.velvetos\\cognee\\staging\\receipt-1.6.1-20260927T200212Z.json",
     "status": "PASS",
     "python": "3.14",
     "keylessLocalSmoke": "PASS"
@@ -28,7 +28,7 @@
   "costPreflight": "packages/vfharness/cost-preflight/cognee-1.6.1-local.json",
   "authority": "vfmem remains canonical; Cognee derived context only",
   "promotion": "PASS live venv 1.6.1",
-  "rollback": "C:\\Users\\Chris\\.velvetos\\cognee-venv.rollback-20260927T201040Z",
+  "rollback": "%USERPROFILE%\\.velvetos\\cognee-venv.rollback-20260927T201040Z",
   "status": "PASS",
   "verification": {
     "runtimeStatus": "PASS",

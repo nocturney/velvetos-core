@@ -4,7 +4,7 @@
 
 ## What was actually run
 
-An entirely new, isolated **temporary** single-node etcd **v3.6.15** process on existing `MacMiniOffice.local` (Apple ARM64, LAN `192.168.0.217`) exposed the standard etcd v3 JSON gRPC Gateway to the existing **Chris Windows** host for a short synthetic experiment at `192.168.0.217:32379`. Dagu was not restarted; no Fleet Console, Office service, resident scheduler, production writer, original agent worktree/receipt, WSL distro or customer resource was touched.
+An entirely new, isolated **temporary** single-node etcd **v3.6.15** process on existing `MacMiniOffice.local` (Apple ARM64, LAN `192.0.2.10`) exposed the standard etcd v3 JSON gRPC Gateway to the existing **Chris Windows** host for a short synthetic experiment at `192.0.2.10:32379`. Dagu was not restarted; no Fleet Console, Office service, resident scheduler, production writer, original agent worktree/receipt, WSL distro or customer resource was touched.
 
 The official [etcd v3.6.15 release](https://github.com/etcd-io/etcd/releases/tag/v3.6.15) from 2026-09-22 provided `etcd-v3.6.15-darwin-arm64.zip` (**24,037,957 bytes**, archive SHA-256 `c791b3b8e94845e130994f99dc5be7db4f57e6481d15f0a78e9bead7028d1e91`, independently equal to official GitHub asset digest). Extracted binaries were version-readback 3.6.15 with exact local hashes in the JSON receipt. Everything remained inside `p0-etcd604-provider-lab-20261010/runtime`; no global PATH, launchd, Windows startup or persistent service was installed.
 

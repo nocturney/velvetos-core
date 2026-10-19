@@ -13,7 +13,7 @@
   },
   "environment": {
     "coordinator": "MacMiniOffice.local",
-    "coordinator_lan_endpoint": "192.168.0.217:31555",
+    "coordinator_lan_endpoint": "192.0.2.10:31555",
     "web_ui": "127.0.0.1:31808",
     "workers": [
       "chris-windows-headless",

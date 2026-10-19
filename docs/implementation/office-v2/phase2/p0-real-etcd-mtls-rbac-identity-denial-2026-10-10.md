@@ -14,7 +14,7 @@ Mac original source SHA256: b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36
 
 Pin: etcd 3.6.15 darwin/arm64 executable SHA256 dd2596ab902c23252da55e770cb7f7216522ae5599f84d2a20e0e7272d52fe82 and etcdctl SHA256 05f34d3be92b0ba78dfc5aa9fd5d63224d551a7f8c2eadfbaa7dc2f35ae625ad. Both are hashed before launch, not downloaded, replaced or installed. The source verifies the hashes.
 
-Isolated Mac workspace: /Users/chris/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-604-mtls-rbac-identity-isolation-20261010
+Isolated Mac workspace: $HOME/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-604-mtls-rbac-identity-isolation-20261010
 
 Each run creates a distinct private 0700 temporary directory inside that lab, generates an ephemeral CA private key, a server TLS certificate with SAN IP:127.0.0.1, and passwordless CN certificate identities root, vf604-sink and vf604-worker; an outsider certificate signed by the same CA but not enrolled as a user, and a forged sink-CN certificate signed by a different untrusted CA. Private keys have 0600 permissions. No credentials are installed in macOS Keychain, Git or a global trust store. All test keys, certificate serials, users, roles, WAL and server log are confined to the temporary directory and deleted during cleanup.
 

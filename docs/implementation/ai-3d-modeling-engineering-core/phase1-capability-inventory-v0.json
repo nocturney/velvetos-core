@@ -7309,7 +7309,7 @@
                                                                         "status":  "passed",
                                                                         "adapter_version":  "0.2.14",
                                                                         "core_version":  "0.20.41",
-                                                                        "receipt":  "C:\\Users\\Chris\\.dcc-mcp\\receipts\\blender.json",
+                                                                        "receipt":  "%USERPROFILE%\\.dcc-mcp\\receipts\\blender.json",
                                                                         "registry":  "D:\\Velvet\\State\\DCC-MCP\\blender-0.2.14-verify\\registry",
                                                                         "verify_result":  "ok",
                                                                         "directly_usable":  true,

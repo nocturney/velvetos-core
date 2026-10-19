@@ -313,12 +313,12 @@ class ReadbackTests(unittest.TestCase):
             self.assertEqual(printed["remote_github_writes"], 0)
 
     def test_28_group_readable_receipt_directory_denied(self):
-        """0750 and 0740 are group-readable. 0700 stays private and is accepted."""
+        """0750 and 0740 are group-readable. 0710 and 0720 are group-only. 0700 is accepted."""
         self.require_posix_permissions()
         value = r.classify(self.intent, CANDIDATE)
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
-            for mode in (0o750, 0o740):
+            for mode in (0o750, 0o740, 0o710, 0o720):
                 with self.subTest(mode=oct(mode)):
                     directory = self._mode_dir(root, f"group-{mode:o}", mode)
                     self.assertEqual(
@@ -358,7 +358,7 @@ class ReadbackTests(unittest.TestCase):
                 sys.modules.pop(spec.name, None)
                 raise
             try:
-                for mode in (0o750, 0o740):
+                for mode in (0o750, 0o740, 0o710, 0o720):
                     with self.subTest(mode=oct(mode)):
                         opened = self._mode_dir(root, f"weak-{mode:o}", mode)
                         self.assertEqual(
@@ -413,12 +413,12 @@ class ReadbackTests(unittest.TestCase):
 
 
     def test_31_other_readable_receipt_directory_denied(self):
-        """0705, 0704, and 0701 let other users in. A group-only mask must still refuse them."""
+        """0705, 0704, 0701, and 0702 let other users in. A group-only mask must still refuse them."""
         self.require_posix_permissions()
         value = r.classify(self.intent, CANDIDATE)
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
-            for mode in (0o705, 0o704, 0o701):
+            for mode in (0o705, 0o704, 0o701, 0o702):
                 with self.subTest(mode=oct(mode)):
                     directory = self._mode_dir(root, f"other-{mode:o}", mode)
                     self.assertEqual(
@@ -437,7 +437,7 @@ class ReadbackTests(unittest.TestCase):
         self.assertEqual(source.count(gate), 1)
         value = r.classify(self.intent, CANDIDATE)
         cases = (
-            ("mask070", source.replace("st_mode & 0o077", "st_mode & 0o070", 1), (0o705, 0o704, 0o701)),
+            ("mask070", source.replace("st_mode & 0o077", "st_mode & 0o070", 1), (0o705, 0o704, 0o701, 0o702)),
             ("nocheck", source.replace(gate, "", 1), (0o705, 0o750)),
         )
         with tempfile.TemporaryDirectory() as td:

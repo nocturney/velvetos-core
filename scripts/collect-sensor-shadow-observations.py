@@ -14,6 +14,7 @@ import inspect
 import json
 import os
 import re
+import secrets
 import shutil
 import subprocess
 import sys
@@ -895,11 +896,37 @@ def collect(limit: int, classifications_path: Path | None, recoveries_path: Path
     }
 
 
-def _hosted_probe_env(empty: str, *, token: str | None) -> dict[str, str]:
+def _child_hosted_probe(argv: list[str] | None = None) -> bool:
+    """True only when this process was spawned with a one-time probe sentinel.
+
+    The literal ``VF_GH_HOSTED_PROBE=1`` is not that sentinel. An ambient
+    setting of it must not skip the hosted subprocess proof.
+    """
+    argv = sys.argv if argv is None else argv
+    flag = "--hosted-probe-sentinel"
+    if flag not in argv:
+        return False
+    index = argv.index(flag) + 1
+    if index >= len(argv):
+        return False
+    sentinel = argv[index]
+    if len(sentinel) < 32 or sentinel == "1":
+        return False
+    return os.environ.get("VF_GH_HOSTED_PROBE") == sentinel
+
+
+def _refuse_ambient_hosted_probe() -> int | None:
+    if os.environ.get("VF_GH_HOSTED_PROBE") and not _child_hosted_probe():
+        sys.stderr.write("SPLIT_GH_GIT_FAIL ambient VF_GH_HOSTED_PROBE\n")
+        return 1
+    return None
+
+
+def _hosted_probe_env(empty: str, *, token: str | None, sentinel: str) -> dict[str, str]:
     """Child env for a hosted fail-closed proof. The parent os.environ stays put."""
     env = os.environ.copy()
     env["GITHUB_ACTIONS"] = "true"
-    env["VF_GH_HOSTED_PROBE"] = "1"
+    env["VF_GH_HOSTED_PROBE"] = sentinel
     env.pop("GH_TOKEN", None)
     env.pop("GITHUB_TOKEN", None)
     for key in (
@@ -931,17 +958,39 @@ def _require_hosted_fail_closed(proc: subprocess.CompletedProcess, label: str) -
     raise AssertionError(f"{label} did not fail closed rc={proc.returncode} {tail}")
 
 
-def _run_hosted_self_test(env: dict[str, str], script: Path) -> subprocess.CompletedProcess:
+def _run_hosted_self_test(
+    env: dict[str, str],
+    script: Path,
+    sentinel: str | None,
+    timeout: int = 45,
+) -> subprocess.CompletedProcess:
+    command = [sys.executable, str(script), "--self-test"]
+    if sentinel is not None:
+        command.extend(["--hosted-probe-sentinel", sentinel])
+    child_env = dict(env)
+    scripts = str(ROOT / "scripts")
+    prior = child_env.get("PYTHONPATH")
+    child_env["PYTHONPATH"] = scripts if not prior else scripts + os.pathsep + prior
     return subprocess.run(
-        [sys.executable, str(script), "--self-test"],
+        command,
         cwd=ROOT,
-        env=env,
+        env=child_env,
         text=True,
         encoding="utf-8",
         errors="replace",
         capture_output=True,
-        timeout=45,
+        timeout=timeout,
     )
+
+
+def _restore_mutant_location(script: Path) -> tuple[str, Path]:
+    """Directory and path for the restore mutant. Never beside the running script."""
+    mutant_dir = tempfile.mkdtemp(prefix="vf-gh-restore-mutant-")
+    mutant_path = Path(mutant_dir) / "_vf_gh_restore_mutant.py"
+    if mutant_path.resolve().parent == script.resolve().parent:
+        shutil.rmtree(mutant_dir, ignore_errors=True)
+        raise AssertionError("mutant file must not live in scripts/")
+    return mutant_dir, mutant_path
 
 
 def prove_hosted_gh_fail_closed() -> None:
@@ -949,17 +998,33 @@ def prove_hosted_gh_fail_closed() -> None:
 
     A child that only loses ``GITHUB_ACTIONS`` prints ``SKIP_GH_UNAVAILABLE`` and
     exits 0. That is not fail-closed. Dropping ``_restore_scoped_env`` must fail
-    this same check.
+    this same check. Ambient ``VF_GH_HOSTED_PROBE=1`` must not skip it, and the
+    restore mutant is written outside ``scripts/``.
     """
     script = Path(__file__).resolve()
+    sentinel = secrets.token_hex(32)
     empty = tempfile.mkdtemp(prefix="vf-gh-hosted-probe-")
-    mutant_path = script.parent / "_vf_gh_restore_mutant.py"
+    mutant_dir, mutant_path = _restore_mutant_location(script)
     try:
-        no_cred = _run_hosted_self_test(_hosted_probe_env(empty, token=None), script)
+        ambient_env = os.environ.copy()
+        ambient_env["VF_GH_HOSTED_PROBE"] = "1"
+        ambient = _run_hosted_self_test(ambient_env, script, None, timeout=30)
+        ambient_text = f"{ambient.stdout or ''}\n{ambient.stderr or ''}"
+        if ambient.returncode != 1 or "ambient VF_GH_HOSTED_PROBE" not in ambient_text:
+            raise AssertionError(
+                f"ambient VF_GH_HOSTED_PROBE=1 skipped the proof rc={ambient.returncode} "
+                f"{ambient_text[-400:]}"
+            )
+        no_cred = _run_hosted_self_test(
+            _hosted_probe_env(empty, token=None, sentinel=sentinel),
+            script,
+            sentinel,
+        )
         _require_hosted_fail_closed(no_cred, "hosted CI with no credentials")
         bad = _run_hosted_self_test(
-            _hosted_probe_env(empty, token="ghs_invalid_example"),
+            _hosted_probe_env(empty, token="ghs_invalid_example", sentinel=sentinel),
             script,
+            sentinel,
         )
         _require_hosted_fail_closed(bad, "hosted CI with a bad GH_TOKEN")
 
@@ -968,25 +1033,89 @@ def prove_hosted_gh_fail_closed() -> None:
         if source.count(needle) != 1:
             raise AssertionError("scoped env restore call is not unique")
         mutant_path.write_text(source.replace(needle, "        pass\n", 1), encoding="utf-8")
-        mutant = _run_hosted_self_test(_hosted_probe_env(empty, token=None), mutant_path)
+        mutant = _run_hosted_self_test(
+            _hosted_probe_env(empty, token=None, sentinel=sentinel),
+            mutant_path,
+            sentinel,
+        )
         try:
             _require_hosted_fail_closed(mutant, "restore mutant")
         except AssertionError:
-            return
-        raise AssertionError("dropping the scoped env restore still fail-closed")
+            pass
+        else:
+            raise AssertionError("dropping the scoped env restore still fail-closed")
+
+        ambient_needle = (
+            "def _refuse_ambient_hosted_probe() -> int | None:\n"
+            "    if os.environ.get(\"VF_GH_HOSTED_PROBE\") and not _child_hosted_probe():\n"
+            "        sys.stderr.write(\"SPLIT_GH_GIT_FAIL ambient VF_GH_HOSTED_PROBE\\n\")\n"
+            "        return 1\n"
+            "    return None\n"
+        )
+        ambient_skip = (
+            "def _refuse_ambient_hosted_probe() -> int | None:\n"
+            "    if os.environ.get(\"VF_GH_HOSTED_PROBE\") == \"1\":\n"
+            "        return 0\n"
+            "    return None\n"
+        )
+        if source.count(ambient_needle) != 1:
+            raise AssertionError("ambient probe guard is not unique")
+        ambient_mutant_path = Path(mutant_dir) / "_vf_gh_ambient_mutant.py"
+        ambient_mutant_path.write_text(
+            source.replace(ambient_needle, ambient_skip, 1),
+            encoding="utf-8",
+        )
+        skipped = _run_hosted_self_test(ambient_env, ambient_mutant_path, None, timeout=30)
+        if skipped.returncode != 0:
+            raise AssertionError(
+                "ambient skip mutant still failed closed "
+                f"rc={skipped.returncode} {(skipped.stderr or '')[-300:]}"
+            )
+
+        path_needle = "    mutant_path = Path(mutant_dir) / \"_vf_gh_restore_mutant.py\"\n"
+        path_scripts = "    mutant_path = script.parent / \"_vf_gh_restore_mutant.py\"\n"
+        if source.count(path_needle) != 1:
+            raise AssertionError("restore mutant path is not unique")
+        path_mutant_path = Path(mutant_dir) / "_vf_gh_path_mutant.py"
+        path_mutant_path.write_text(source.replace(path_needle, path_scripts, 1), encoding="utf-8")
+        path_mutant = _run_hosted_self_test(
+            os.environ.copy(),
+            path_mutant_path,
+            None,
+            timeout=30,
+        )
+        path_text = f"{path_mutant.stdout or ''}\n{path_mutant.stderr or ''}"
+        if path_mutant.returncode == 0 or "mutant file must not live in scripts/" not in path_text:
+            raise AssertionError(
+                "scripts path mutant was not refused "
+                f"rc={path_mutant.returncode} {path_text[-400:]}"
+            )
+        if (script.parent / "_vf_gh_restore_mutant.py").exists():
+            raise AssertionError("mutant file must not live in scripts/")
     finally:
-        mutant_path.unlink(missing_ok=True)
         shutil.rmtree(empty, ignore_errors=True)
+        shutil.rmtree(mutant_dir, ignore_errors=True)
+        leftover = script.parent / "_vf_gh_restore_mutant.py"
+        if leftover.is_file():
+            leftover.unlink()
 
 
 def _finish_self_test(rc: int) -> int:
-    if rc != 0 or os.environ.get("VF_GH_HOSTED_PROBE") == "1":
+    refused = _refuse_ambient_hosted_probe()
+    if refused is not None:
+        return refused
+    if rc != 0 or _child_hosted_probe():
         return rc
     prove_hosted_gh_fail_closed()
     return 0
 
 
 def self_test() -> int:
+    refused = _refuse_ambient_hosted_probe()
+    if refused is not None:
+        return refused
+    scratch_dir, _scratch = _restore_mutant_location(Path(__file__).resolve())
+    shutil.rmtree(scratch_dir, ignore_errors=True)
     early = {
         "pull_request": 407,
         "run_id": 1001,
@@ -1141,6 +1270,7 @@ def main() -> int:
     ap.add_argument("--recoveries", type=Path, default=DEFAULT_RECOVERIES)
     ap.add_argument("--output", type=Path)
     ap.add_argument("--self-test", action="store_true")
+    ap.add_argument("--hosted-probe-sentinel", default="")
     args = ap.parse_args()
     if args.self_test:
         return self_test()
