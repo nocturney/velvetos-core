@@ -29,8 +29,8 @@ Bento/Slides הוא בדיוק ההפך: קובץ `.bento.html` עצמאי עם 
 
 - **`scripts/vf_weekly_deck.py`** — קורא קבצים אמיתיים מהריפו (`LEARNINGS.md`, `LAST30.md`, `DAILY-RETRO.md`, `WEEKLY-LOAD.md`) ובונה:
   1. JSON בפורמט `bento/slides` → `packages/vfbriefux/hq/weekly-deck.bento-doc.json`.
-  2. דק **HTML מוכן לפתיחה** — מוריד את מעטפת האפליקציה מ-bento.page ומזריק את ה-JSON לתוך בלוק `#bento-doc`, כותב ל-`docs/weekly-deck/<תאריך>.html` וגם ל-`docs/weekly-deck/index.html` (הכי עדכני).
-  3. אם אין רשת / המעטפת השתנתה — כותב אזהרה וממשיך; ה-JSON עדיין נכתב לנתיב הדבקה ידני (ראו למעלה).
+  2. דק **HTML מוכן לפתיחה** — מוריד את מעטפת Bento Slides 1.2.9 מ-bento.page, בודק אותה מול המניפסט החתום, ומזריק את ה-JSON לתוך בלוק `#bento-doc`. נכתב ל-`docs/weekly-deck/<תאריך>.html` וגם ל-`docs/weekly-deck/index.html` (הכי עדכני).
+  3. אם אין רשת — כותב אזהרה וממשיך, וה-JSON עדיין נכתב לנתיב הדבקה ידני. אי-התאמה של החתימה או של ה-sha256 מפילה את העבודה.
 - **`.github/workflows/velvetos-weekly-deck.yml`** — רץ אוטומטית כל יום שישי 09:00 IDT (`cron: '0 6 * * 5'`), מריץ את הסקריפט, ומדביק (`git commit` + `push`) את `docs/weekly-deck/` לענף `main`.
 - **GitHub Pages** — צריך הפעלה חד-פעמית של אדם: Settings → Pages → Source = `main` / `/docs`. אחרי זה הכתובת הקבועה היא `https://nocturney.github.io/velvetos-core/weekly-deck/` ומתעדכנת לבד כל שבוע.
 - **הבריף** (`scripts/vfops_loop.py`) מוסיף אוטומטית שקע **"08 · סופש"** בימי שישי–שבת–ראשון עם הקישור לדק העדכני — אבל **רק** אם `docs/weekly-deck/index.html` כבר קיים (אין קישור מת). ביום חול השקע לא מופיע כלל.

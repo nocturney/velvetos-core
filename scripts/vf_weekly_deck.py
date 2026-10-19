@@ -10,6 +10,7 @@ email pipeline.
 from __future__ import annotations
 
 import json
+import sys
 from datetime import date
 from pathlib import Path
 
@@ -148,22 +149,25 @@ def main() -> None:
         latest_html.write_text(dated_html.read_text(encoding="utf-8"), encoding="utf-8")
         print(f"OK latest pointer written: {latest_html}")
     else:
-        print("WARN HTML build skipped (no network or shell mismatch) — JSON still written for manual paste")
+        print("WARN HTML build skipped (no network) — JSON still written for manual paste")
 
 
 def build_html(doc: dict, out_html: Path) -> bool:
-    """Fetch the Bento Slides app shell and inject our doc into #bento-doc.
+    """Fetch the pinned Bento Slides shell and inject our doc into #bento-doc.
 
-    Returns True on success. Network failure is non-fatal: caller should
-    fall back to shipping the JSON only (see hq/BENTO.md manual path).
+    Network failure returns False so the JSON deck still ships. A checksum
+    or signature mismatch fails the process.
     """
-    import urllib.request
+    import urllib.error
 
-    shell_url = "https://bento.page/releases/slides/Bento_Slides.bento.html"
+    from verify_bento_shell import ShellPinError, load_shell
+
     try:
-        with urllib.request.urlopen(shell_url, timeout=30) as resp:
-            shell = resp.read().decode("utf-8")
-    except Exception as exc:  # noqa: BLE001
+        shell = load_shell().decode("utf-8")
+    except ShellPinError as exc:
+        print(f"FAIL bento shell: {exc}", file=sys.stderr)
+        raise SystemExit(1)
+    except (urllib.error.URLError, TimeoutError, OSError) as exc:
         print(f"WARN could not fetch Bento shell: {exc}")
         return False
 

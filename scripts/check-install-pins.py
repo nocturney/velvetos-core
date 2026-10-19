@@ -9,6 +9,7 @@ committed set fails this sensor. Stdlib only.
 """
 from __future__ import annotations
 
+import ast
 import re
 import shlex
 import sys
@@ -257,6 +258,175 @@ def install_spec_problems(
     return problems
 
 
+BENTO_SHA256 = "c7da70eaa8d3f457b2458f1685769bf2c488724ac075954f216c70c60f310af0"
+BENTO_VERSION = "1.2.9"
+BENTO_SHELL_URL = "https://bento.page/releases/slides/Bento_Slides.bento.html"
+BENTO_MANIFEST_URL = "https://bento.page/releases/slides/manifest.json"
+BENTO_STEP = """      - name: Verify Bento shell checksum
+        run: python3 scripts/verify_bento_shell.py
+
+      - name: Build weekly deck (JSON + HTML)
+        run: python3 scripts/vf_weekly_deck.py
+"""
+
+
+def _module_strings(tree: ast.AST) -> dict[str, str]:
+    found: dict[str, str] = {}
+    for node in getattr(tree, "body", []):
+        if not isinstance(node, ast.Assign) or len(node.targets) != 1:
+            continue
+        target = node.targets[0]
+        if isinstance(target, ast.Name) and isinstance(node.value, ast.Constant):
+            if isinstance(node.value.value, str):
+                found[target.id] = node.value.value
+    return found
+
+
+def _function(tree: ast.AST, name: str) -> ast.FunctionDef | None:
+    for node in getattr(tree, "body", []):
+        if isinstance(node, ast.FunctionDef) and node.name == name:
+            return node
+    return None
+
+
+def _raises_name(func: ast.AST, name: str) -> bool:
+    for node in ast.walk(func):
+        if not isinstance(node, ast.Raise) or not isinstance(node.exc, ast.Call):
+            continue
+        called = node.exc.func
+        if isinstance(called, ast.Name) and called.id == name:
+            return True
+    return False
+
+
+def _noteq_sha(func: ast.AST) -> bool:
+    for node in ast.walk(func):
+        if not isinstance(node, ast.Compare):
+            continue
+        if not any(isinstance(op, ast.NotEq) for op in node.ops):
+            continue
+        names = [node.left, *node.comparators]
+        if any(isinstance(side, ast.Name) and side.id == "SHELL_SHA256" for side in names):
+            return True
+    return False
+
+
+def _calls_openssl(func: ast.AST) -> bool:
+    for node in ast.walk(func):
+        if not isinstance(node, ast.List):
+            continue
+        values = [elt.value for elt in node.elts if isinstance(elt, ast.Constant)]
+        if "openssl" in values:
+            return True
+    return False
+
+
+def _calls_name(func: ast.AST, name: str) -> bool:
+    for node in ast.walk(func):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == name:
+            return True
+    return False
+
+
+def bento_verifier_problems(text: str) -> list[str]:
+    """The shell pin is the signed manifest, and a mismatch is raised."""
+    problems: list[str] = []
+    try:
+        tree = ast.parse(text)
+    except SyntaxError as exc:
+        return [f"bento verifier did not parse: {exc}"]
+    strings = _module_strings(tree)
+    expected = {
+        "SHELL_URL": BENTO_SHELL_URL,
+        "MANIFEST_URL": BENTO_MANIFEST_URL,
+        "SHELL_VERSION": BENTO_VERSION,
+        "SHELL_SHA256": BENTO_SHA256,
+    }
+    for key, value in expected.items():
+        if strings.get(key) != value:
+            problems.append(f"bento {key} is not the pinned value")
+    pin = _function(tree, "pin_problems")
+    load = _function(tree, "load_shell")
+    sign = _function(tree, "signature_ok")
+    if pin is None or not _noteq_sha(pin) or not _calls_name(pin, "signature_ok"):
+        problems.append("bento checksum compare is missing")
+    if load is None or not _raises_name(load, "ShellPinError"):
+        problems.append("bento mismatch is not raised")
+    if sign is None or not _calls_openssl(sign):
+        problems.append("bento signature check is missing openssl")
+    return problems
+
+
+def _handler_names(handler: ast.ExceptHandler) -> list[str]:
+    kind = handler.type
+    if isinstance(kind, ast.Name):
+        return [kind.id]
+    if isinstance(kind, ast.Attribute):
+        return [kind.attr]
+    if isinstance(kind, ast.Tuple):
+        names: list[str] = []
+        for elt in kind.elts:
+            if isinstance(elt, ast.Name):
+                names.append(elt.id)
+            elif isinstance(elt, ast.Attribute):
+                names.append(elt.attr)
+        return names
+    return []
+
+
+def _raises_system_exit(nodes: list[ast.stmt]) -> bool:
+    for node in nodes:
+        if isinstance(node, ast.Raise) and isinstance(node.exc, ast.Call):
+            if isinstance(node.exc.func, ast.Name) and node.exc.func.id == "SystemExit":
+                return True
+    return False
+
+
+def _returns_false(nodes: list[ast.stmt]) -> bool:
+    for node in nodes:
+        if isinstance(node, ast.Return) and isinstance(node.value, ast.Constant):
+            if node.value.value is False:
+                return True
+    return False
+
+
+def bento_deck_problems(text: str) -> list[str]:
+    """A pin failure exits. A network failure still returns False."""
+    problems: list[str] = []
+    try:
+        tree = ast.parse(text)
+    except SyntaxError as exc:
+        return [f"weekly deck did not parse: {exc}"]
+    build = _function(tree, "build_html")
+    if build is None or not _calls_name(build, "load_shell"):
+        return ["weekly deck does not load the pinned shell"]
+    pin_exit = False
+    network_skip = False
+    for node in ast.walk(build):
+        if not isinstance(node, ast.ExceptHandler):
+            continue
+        names = _handler_names(node)
+        if "Exception" in names and _returns_false(node.body):
+            problems.append("weekly deck swallows the shell pin")
+        if "ShellPinError" in names:
+            pin_exit = _raises_system_exit(node.body)
+            if _returns_false(node.body):
+                problems.append("weekly deck swallows the shell pin")
+        if "URLError" in names and _returns_false(node.body):
+            network_skip = True
+    if not pin_exit:
+        problems.append("weekly deck swallows the shell pin")
+    if not network_skip:
+        problems.append("weekly deck treats a network failure as fatal")
+    return problems
+
+
+def bento_workflow_problems(text: str) -> list[str]:
+    if BENTO_STEP not in text:
+        return ["weekly deck workflow is missing the shell checksum step"]
+    return []
+
+
 def float_google_install(text: str) -> str:
     """Mutation: put the pre-pin bare names back on the Google client install."""
     lines = text.splitlines(keepends=True)
@@ -334,10 +504,66 @@ def main() -> int:
     if install_spec_problems(jobs.read_text(encoding="utf-8"), path="jobs-write-through.yml"):
         fail("pinned jobs-write-through install was refused")
 
+    verifier = (ROOT / "scripts" / "verify_bento_shell.py").read_text(encoding="utf-8")
+    deck = (ROOT / "scripts" / "vf_weekly_deck.py").read_text(encoding="utf-8")
+    weekly = (WORKFLOWS / "velvetos-weekly-deck.yml").read_text(encoding="utf-8")
+    if bento_verifier_problems(verifier):
+        fail(f"pinned bento verifier was refused: {bento_verifier_problems(verifier)}")
+    if bento_deck_problems(deck):
+        fail(f"pinned weekly deck was refused: {bento_deck_problems(deck)}")
+    if bento_workflow_problems(weekly):
+        fail(f"pinned weekly workflow was refused: {bento_workflow_problems(weekly)}")
+
+    def require_bento(label: str, found: list[str], needle: str) -> None:
+        if not any(needle in item for item in found):
+            fail(f"{label} was not caught: {found}")
+
+    require_bento(
+        "bento digest",
+        bento_verifier_problems(verifier.replace(BENTO_SHA256, "0" * 64, 1)),
+        "SHELL_SHA256 is not the pinned value",
+    )
+    require_bento(
+        "bento raise",
+        bento_verifier_problems(
+            verifier.replace(
+                '    if problems:\n        raise ShellPinError("; ".join(problems))\n    return shell\n',
+                "    return shell\n",
+                1,
+            )
+        ),
+        "mismatch is not raised",
+    )
+    require_bento(
+        "bento swallow",
+        bento_deck_problems(deck.replace("        raise SystemExit(1)\n", "        return False\n", 1)),
+        "swallows the shell pin",
+    )
+    require_bento(
+        "bento step",
+        bento_workflow_problems(
+            weekly.replace(
+                "        run: python3 scripts/verify_bento_shell.py\n",
+                "        run: # python3 scripts/verify_bento_shell.py\n",
+                1,
+            )
+        ),
+        "missing the shell checksum step",
+    )
+    probe = __import__("subprocess").run(
+        [sys.executable, str(ROOT / "scripts" / "verify_bento_shell.py"), "--self-test"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if probe.returncode != 0:
+        fail(probe.stderr.strip() or probe.stdout.strip() or "bento shell self-test failed")
+
     print(
         f"OK {NAME} workflows={len(workflows)} floating=0 allowlist=empty "
         "bare=caught exact=pass mixed=caught npm_float=caught npm_exact=pass "
-        "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught"
+        "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught "
+        "bento_sha=caught bento_raise=caught bento_swallow=caught bento_step=caught"
     )
     return 0
 
