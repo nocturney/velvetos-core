@@ -231,7 +231,12 @@ class LocalAliasTests(unittest.TestCase):
     def test_invalid_schema_rejected(self):
         with TemporaryDirectory() as folder:
             path = Path(folder) / "a.json"
-            path.write_text(json.dumps({"schema": "old", "entries": []}))
+            path.write_text(json.dumps({"schema": "old", "entries": []}),
+                            encoding="utf-8")
+            # POSIX private-file gate is checked *before* schema validation.
+            # Make this malformed fixture private so the schema path is tested.
+            if os.name == "posix":
+                path.chmod(0o600)
             with self.assertRaisesRegex(aliases.LocalAliasError, "invalid_alias_schema"):
                 aliases.load_aliases(path)
 
