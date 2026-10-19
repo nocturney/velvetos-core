@@ -9,9 +9,10 @@
     "vf_cli_anything.prove_git_hygiene",
     "setup-cli-anything-pilot.prove_git_hygiene",
     "vf_office_v2_p0_worker selftest 16/16",
-    "check-all 126/126 on the working tree"
+    "check-all 126/126 on the working tree",
+    "README contract and changelog fragment contract on 458fc7f0"
   ],
-  "next_step": "Commit, recheck the README and changelog contracts against HEAD, then open a draft PR.",
+  "next_step": "Draft PR. Mark ready and post QA please only after hosted check-all and check-all-windows are green.",
   "artifacts": [
     "scripts/vf_spawn.py",
     "scripts/vf_cli_anything.py",
