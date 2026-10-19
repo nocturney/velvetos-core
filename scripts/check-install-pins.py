@@ -1226,6 +1226,7 @@ DECK_STEP = """      - name: Build weekly deck (JSON + HTML)
         run: python3 scripts/vf_weekly_deck.py
 """
 NETWORK_FAIL = "FAIL BENTO_SHELL_NETWORK"
+OPENSSL_FAIL = "FAIL BENTO_SHELL_OPENSSL"
 
 
 def _module_strings(tree: ast.AST) -> dict[str, str]:
@@ -1253,6 +1254,31 @@ def _raises_name(func: ast.AST, name: str) -> bool:
             continue
         called = node.exc.func
         if isinstance(called, ast.Name) and called.id == name:
+            return True
+    return False
+
+
+def _payload_compare(func: ast.AST, key: str, expected: str, *, const: bool) -> bool:
+    """True when pin_problems compares info.get(key) != the pinned value."""
+    for node in ast.walk(func):
+        if not isinstance(node, ast.Compare) or len(node.ops) != 1 or len(node.comparators) != 1:
+            continue
+        if not isinstance(node.ops[0], ast.NotEq):
+            continue
+        left = node.left
+        if not isinstance(left, ast.Call) or len(left.args) != 1:
+            continue
+        called = left.func
+        if not isinstance(called, ast.Attribute) or called.attr != "get":
+            continue
+        arg = left.args[0]
+        if not isinstance(arg, ast.Constant) or arg.value != key:
+            continue
+        right = node.comparators[0]
+        if const:
+            if isinstance(right, ast.Constant) and right.value == expected:
+                return True
+        elif isinstance(right, ast.Name) and right.id == expected:
             return True
     return False
 
@@ -1312,6 +1338,20 @@ def bento_verifier_problems(text: str) -> list[str]:
         problems.append("bento mismatch is not raised")
     if sign is None or not _calls_openssl(sign):
         problems.append("bento signature check is missing openssl")
+    if sign is None or not _raises_openssl_missing(sign):
+        problems.append("missing openssl is not its own error")
+    payload = (
+        ("app", "bento-slides", True, "bento app check is missing"),
+        ("version", "SHELL_VERSION", False, "bento version check is missing"),
+        ("url", "SHELL_URL", False, "bento url check is missing"),
+        ("sha256", "SHELL_SHA256", False, "bento published checksum check is missing"),
+    )
+    if pin is None:
+        problems.extend(message for _key, _expected, _const, message in payload)
+    else:
+        for key, expected, const, message in payload:
+            if not _payload_compare(pin, key, expected, const=const):
+                problems.append(message)
     return problems
 
 
@@ -1357,6 +1397,24 @@ def _calls_in(nodes: list[ast.stmt], name: str) -> bool:
     return False
 
 
+def _const_contains(node: ast.AST, text: str) -> bool:
+    for child in ast.walk(node):
+        if isinstance(child, ast.Constant) and isinstance(child.value, str) and text in child.value:
+            return True
+    return False
+
+
+def _raises_openssl_missing(func: ast.AST) -> bool:
+    for node in ast.walk(func):
+        if not isinstance(node, ast.ExceptHandler):
+            continue
+        if "FileNotFoundError" not in _handler_names(node):
+            continue
+        if _raises_name(node, "ShellPinError") and _const_contains(node, "openssl missing"):
+            return True
+    return False
+
+
 def _mentions(node: ast.AST, name: str) -> bool:
     for child in ast.walk(node):
         if isinstance(child, ast.Name) and child.id == name:
@@ -1371,8 +1429,11 @@ def bento_deck_problems(text: str) -> list[str]:
         tree = ast.parse(text)
     except SyntaxError as exc:
         return [f"weekly deck did not parse: {exc}"]
-    if _module_strings(tree).get("NETWORK_FAIL") != NETWORK_FAIL:
+    strings = _module_strings(tree)
+    if strings.get("NETWORK_FAIL") != NETWORK_FAIL:
         problems.append("network failure name is missing")
+    if strings.get("OPENSSL_FAIL") != OPENSSL_FAIL:
+        problems.append("openssl failure name is missing")
     build = _function(tree, "build_html")
     entry = _function(tree, "main")
     if (
@@ -1385,6 +1446,7 @@ def bento_deck_problems(text: str) -> list[str]:
         problems.append("tampered bytes do not fail the job")
     pin_fail = False
     network_closed = False
+    openssl_closed = False
     for node in ast.walk(build):
         if not isinstance(node, ast.ExceptHandler):
             continue
@@ -1395,6 +1457,17 @@ def bento_deck_problems(text: str) -> list[str]:
             pin_fail = _returns_const(node.body, 1)
             if _returns_const(node.body, 0):
                 problems.append("tampered bytes do not fail the job")
+        if "FileNotFoundError" in names:
+            if (
+                _returns_const(node.body, 1)
+                and _mentions(node, "OPENSSL_FAIL")
+                and not _returns_const(node.body, 0)
+                and not _mentions(node, "NETWORK_FAIL")
+                and "URLError" not in names
+            ):
+                openssl_closed = True
+            else:
+                problems.append("missing openssl is labeled as a network failure")
         if "URLError" not in names:
             continue
         if _returns_const(node.body, 0):
@@ -1413,6 +1486,8 @@ def bento_deck_problems(text: str) -> list[str]:
         "network failure ships" in item or "network-error path" in item for item in problems
     ):
         problems.append("network failure does not fail the job")
+    if not openssl_closed and not any("missing openssl" in item for item in problems):
+        problems.append("missing openssl is labeled as a network failure")
     return problems
 
 
@@ -2068,6 +2143,37 @@ def main() -> int:
         bento_workflow_problems(weekly.replace(VERIFY_STEP, "", 1)),
         "missing the shell checksum step",
     )
+    for label, old, needle in (
+        ("bento app", '    if info.get("app") != "bento-slides":\n', "bento app check is missing"),
+        ("bento version", '    if info.get("version") != SHELL_VERSION:\n', "bento version check is missing"),
+        ("bento url", '    if info.get("url") != SHELL_URL:\n', "bento url check is missing"),
+        (
+            "bento published checksum",
+            '    if info.get("sha256") != SHELL_SHA256:\n',
+            "bento published checksum check is missing",
+        ),
+    ):
+        require_bento(label, bento_verifier_problems(verifier.replace(old, "    if False:\n", 1)), needle)
+    require_bento(
+        "bento openssl raise",
+        bento_verifier_problems(verifier.replace(
+            '            raise ShellPinError("openssl missing") from exc\n',
+            "            pass\n",
+            1,
+        )),
+        "missing openssl is not its own error",
+    )
+    require_bento(
+        "bento openssl deck",
+        bento_deck_problems(deck.replace(
+            "    except FileNotFoundError as exc:\n"
+            '        print(f"{OPENSSL_FAIL} HTML build skipped: {exc}", file=sys.stderr)\n'
+            "        return 1\n",
+            "",
+            1,
+        )),
+        "missing openssl is labeled as a network failure",
+    )
     for script, label in (
         ("verify_bento_shell.py", "bento shell self-test failed"),
         ("vf_weekly_deck.py", "weekly deck self-test failed"),
@@ -2090,6 +2196,8 @@ def main() -> int:
         "comment=caught digest=caught runner=caught pool=caught "
         "bento_sha=caught bento_raise=caught bento_tamper=caught "
         "bento_offline=caught bento_network_path=caught bento_gate=caught "
+        "bento_app=caught bento_version=caught bento_url=caught bento_published=caught "
+        "bento_openssl=caught "
         "apt_y=caught apt_case=caught apt_reinstall=caught aptitude=caught "
         "dpkg_force=caught dpkg_R=caught dpkg_iE=caught dpkg_glob=caught "
         "dpkg_var=caught dash_run=caught"

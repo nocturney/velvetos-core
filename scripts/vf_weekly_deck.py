@@ -134,6 +134,7 @@ def build() -> dict:
 
 DOCS_DIR = ROOT / "docs" / "weekly-deck"
 NETWORK_FAIL = "FAIL BENTO_SHELL_NETWORK"
+OPENSSL_FAIL = "FAIL BENTO_SHELL_OPENSSL"
 
 
 def main() -> None:
@@ -190,6 +191,9 @@ def build_html(doc: dict, out_html: Path) -> int:
     except ShellPinError as exc:
         print(f"FAIL bento shell: {exc}", file=sys.stderr)
         return 1
+    except FileNotFoundError as exc:
+        print(f"{OPENSSL_FAIL} HTML build skipped: {exc}", file=sys.stderr)
+        return 1
     except (urllib.error.URLError, TimeoutError, OSError) as exc:
         print(f"{NETWORK_FAIL} HTML build skipped: {exc}", file=sys.stderr)
         return 1
@@ -241,6 +245,24 @@ def self_test() -> int:
                 return 1
             if not out_json.is_file():
                 print("FAIL weekly deck: tampered run dropped the JSON deck", file=sys.stderr)
+                return 1
+
+        def missing_openssl() -> bytes:
+            raise FileNotFoundError("openssl")
+
+        shellmod.load_shell = missing_openssl
+        with tempfile.TemporaryDirectory() as tmp:
+            out_json = Path(tmp) / "deck.json"
+            out_html = Path(tmp) / "deck.html"
+            err = io.StringIO()
+            with contextlib.redirect_stderr(err):
+                rc = ship(doc, out_json, out_html)
+            text = err.getvalue()
+            if rc == 0 or out_html.exists():
+                print("FAIL weekly deck: missing openssl did not fail the job", file=sys.stderr)
+                return 1
+            if OPENSSL_FAIL not in text or NETWORK_FAIL in text:
+                print(f"FAIL weekly deck: missing openssl was mislabeled: {text}", file=sys.stderr)
                 return 1
     finally:
         shellmod.load_shell = real

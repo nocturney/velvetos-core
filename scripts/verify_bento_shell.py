@@ -75,20 +75,23 @@ def signature_ok(payload: bytes, signature: bytes) -> bool:
         key.write_text(PUBLIC_KEY_PEM, encoding="utf-8")
         body.write_bytes(payload)
         sig.write_bytes(der)
-        proc = subprocess.run(
-            [
-                "openssl",
-                "dgst",
-                "-sha256",
-                "-verify",
-                str(key),
-                "-signature",
-                str(sig),
-                str(body),
-            ],
-            capture_output=True,
-            text=True,
-        )
+        try:
+            proc = subprocess.run(
+                [
+                    "openssl",
+                    "dgst",
+                    "-sha256",
+                    "-verify",
+                    str(key),
+                    "-signature",
+                    str(sig),
+                    str(body),
+                ],
+                capture_output=True,
+                text=True,
+            )
+        except FileNotFoundError as exc:
+            raise ShellPinError("openssl missing") from exc
     return proc.returncode == 0
 
 
@@ -142,6 +145,26 @@ def self_test() -> int:
     if "manifest signature" not in bad:
         print(f"FAIL bento shell: tampered manifest was not caught: {bad}", file=sys.stderr)
         return 1
+    real_run = subprocess.run
+
+    def missing_openssl(argv, **kwargs):
+        if argv and argv[0] == "openssl":
+            raise FileNotFoundError(2, "No such file or directory", "openssl")
+        return real_run(argv, **kwargs)
+
+    subprocess.run = missing_openssl
+    try:
+        try:
+            signature_ok(b"payload", b"\x00" * 64)
+        except ShellPinError as exc:
+            if str(exc) != "openssl missing":
+                print(f"FAIL bento shell: openssl error was {exc}", file=sys.stderr)
+                return 1
+        else:
+            print("FAIL bento shell: missing openssl was not reported", file=sys.stderr)
+            return 1
+    finally:
+        subprocess.run = real_run
     print("OK bento shell self-test")
     return 0
 
