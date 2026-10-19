@@ -21,7 +21,8 @@ concurrency:
 
 jobs:
   send:
-    runs-on: ubuntu-latest
+    # The pinned actions/python-versions asset is the linux-24.04 build. ubuntu-latest moves to Ubuntu 26.
+    runs-on: ubuntu-24.04
     env:
       REQUEST_PATH: ${{ github.event.inputs.request_path || 'packages/vfops/out/gmail-send-request.json' }}
       VFBRIEF_ALLOWED_RECIPIENT: nocturney@gmail.com
@@ -33,7 +34,10 @@ jobs:
         # actions/setup-python v7.0.0
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
-          python-version: "3.11"
+          python-version: "3.11.17"
+
+      - name: Verify Python toolchain checksum
+        run: python3 scripts/verify_actions_python_sha256.py --version 3.11.17 --filename python-3.11.17-linux-24.04-x64.tar.gz --expected ae713815fe406a06f1691856f697a0b1e58b3e986f44e62f0cd0bca2424f1aac --checksum-url https://github.com/actions/python-versions/releases/download/3.11.17-36876195594/hashes.sha256
 
       - name: Inspect send request
         id: request
