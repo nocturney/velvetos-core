@@ -22,7 +22,7 @@ PR #670 really demonstrated an expired etcd generation-2 owner whose native GitH
 
 Source: scripts/vf_office_v2_604_exclusive_sink_failclosed_offline.py
 
-Mac local isolate: /Users/chris/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-git-sink-failclosed-offline-20261010.
+Mac local isolate: $HOME/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-git-sink-failclosed-offline-20261010.
 
 Source Mac SHA256 before PR upload: 6b3e67c6d226b785474893f5d37ae3edad2fb6904b7fc3f97d910598b84c4ad3. Verify exact canonical blob bytes from independent Windows checkout.
 

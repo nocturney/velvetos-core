@@ -1,0 +1,1 @@
+- 2026-10-18 - **Runtime doctor selftest sentinel:** `check-runtime-doctor.py` no longer treats ambient `VF_RUNTIME_DOCTOR_INSIDE_SELFTEST=1` as a skip. That no-arg run fails closed, and the selftest child receives a fresh per-run token plus a 90s timeout. A `TimeoutExpired` is `SELFTEST_TIMEOUT`. No model call.

@@ -9,7 +9,7 @@ through ci_skip_failure. The fake-ffmpeg capability tests still run. A render
 whose pixels do not match still fails. No network and no send.
 """
 from __future__ import annotations
-import json, os, re, shutil, subprocess, sys
+import contextlib, io, json, os, re, shutil, subprocess, sys, tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -31,6 +31,30 @@ def fail(msg: str) -> None:
     raise SystemExit(1)
 
 
+def same_pinned_directory(actual: str, expected: str, *, realpath=os.path.realpath, fold_case: bool | None = None, separator: str | None = None) -> bool:
+    """True when both strings are one directory and name the same real path.
+
+    A search PATH (more than one entry) is not a pin. Windows compares
+    case-insensitively. realpath expands an 8.3 temp directory to its long name.
+    """
+    if fold_case is None:
+        fold_case = os.name == "nt"
+    if separator is None:
+        separator = os.pathsep
+    if not isinstance(actual, str) or not isinstance(expected, str):
+        return False
+    if not actual or not expected:
+        return False
+    if separator in actual or separator in expected:
+        return False
+    left = realpath(actual)
+    right = realpath(expected)
+    if fold_case:
+        left = os.path.normcase(left).casefold()
+        right = os.path.normcase(right).casefold()
+    return left == right
+
+
 def zoompan_suite_action(gap, blocked: str | None) -> str:
     """Missing zoompan skips the caption suite locally.
 
@@ -44,6 +68,48 @@ def zoompan_suite_action(gap, blocked: str | None) -> str:
     if blocked:
         return "fail"
     return "skip"
+
+
+def bash_syntax_target(
+    platform: str,
+    found: str | None,
+    *,
+    system32: bool,
+    git_bash: str | None,
+) -> tuple[str | None, str | None]:
+    """Return (bash to run, skip line). A skip does not fail the sensor."""
+    bash = found
+    if platform == "win32" and bash and system32:
+        bash = git_bash if git_bash else None
+    if bash:
+        return bash, None
+    if platform == "win32":
+        return None, "SKIP_ENV_MISSING_BASH Mac bootstrap bash -n was not run"
+    return None, None
+
+
+def prove_bash_syntax_target() -> None:
+    path, skip = bash_syntax_target(
+        "win32", r"C:\Windows\System32\bash.exe", system32=True, git_bash=None
+    )
+    if path is not None or skip != "SKIP_ENV_MISSING_BASH Mac bootstrap bash -n was not run":
+        fail("System32 bash without Git Bash must print SKIP_ENV_MISSING_BASH")
+    path, skip = bash_syntax_target(
+        "win32",
+        r"C:\Windows\System32\bash.exe",
+        system32=True,
+        git_bash=r"C:\Program Files\Git\bin\bash.exe",
+    )
+    if path != r"C:\Program Files\Git\bin\bash.exe" or skip is not None:
+        fail("Git Bash must still run bash -n")
+    path, skip = bash_syntax_target("linux", "/bin/bash", system32=False, git_bash=None)
+    if path != "/bin/bash" or skip is not None:
+        fail("Linux bash must still run bash -n")
+    path, skip = bash_syntax_target("linux", None, system32=False, git_bash=None)
+    if path is not None or skip is not None:
+        fail("a missing Linux bash must stay unchanged")
+    if "print(" + "bash_skip)" not in Path(__file__).read_text(encoding="utf-8"):
+        fail("SKIP_ENV_MISSING_BASH must be printed")
 
 
 def prove_zoompan_ci_branches() -> None:
@@ -164,7 +230,98 @@ def check_common_host(host: dict, *, host_id: str, platform: str, recovery_versi
         fail(f"{host_id} missing video-render-host role")
 
 
+def prove_subprocess_hygiene() -> None:
+    """ffprobe is an absolute pinned binary with a timeout and allowlisted env."""
+    if os.environ.get("VF_HYPERFRAMES_PROOF") == "1":
+        return
+    import vf_hyperframes as bridge
+
+    sentinel = "VF_HYPERFRAMES_PROBE_SENTINEL"
+    os.environ[sentinel] = "nope"
+    root = Path(tempfile.mkdtemp(prefix="vf-ffprobe-"))
+    original_run = bridge.subprocess.run
+    original_which = bridge.shutil.which
+    try:
+        ffprobe = root / "ffprobe"
+        ffprobe.write_text("#!/bin/sh\n", encoding="utf-8")
+        calls: list[tuple[list[str], dict]] = []
+
+        def fake_run(argv, **kwargs):
+            calls.append((list(argv), kwargs))
+            stdout = (
+                '{"streams":[{"codec_type":"video","width":9,"height":16,"codec_name":"h264"}],'
+                '"format":{"duration":"1.5"}}'
+            )
+            return subprocess.CompletedProcess(argv, 0, stdout=stdout, stderr="")
+
+        bridge.subprocess.run = fake_run
+        bridge.shutil.which = lambda name: str(ffprobe) if name == "ffprobe" else original_which(name)
+        probe = bridge.probe_output(root / "out.mp4")
+        if (probe.get("streams") or [{}])[0].get("codec_name") != "h264":
+            fail("probe did not return the pinned ffprobe JSON")
+        argv, kwargs = calls[0]
+        if argv[0] != str(ffprobe) or not Path(argv[0]).is_absolute():
+            fail("ffprobe was not pinned to an absolute path")
+        if kwargs.get("timeout") != bridge.PROBE_TIMEOUT_SECONDS:
+            fail("ffprobe timeout missing")
+        env = kwargs.get("env")
+        if not isinstance(env, dict) or sentinel in env:
+            fail("ffprobe environment was not allowlisted: %r" % env)
+        pinned = str(Path(argv[0]).parent)
+        if not same_pinned_directory(env.get("PATH"), pinned):
+            fail("ffprobe environment was not allowlisted: PATH=%r exe_dir=%r" % (env.get("PATH"), pinned))
+        short = "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\vf-ffprobe-abc"
+        long = "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\vf-ffprobe-abc"
+        other = "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\vf-ffprobe-other"
+
+        def expand_short(path: str) -> str:
+            return str(path).replace("/", "\\").replace("RUNNER~1", "runneradmin")
+
+        if not same_pinned_directory(short, long, realpath=expand_short, fold_case=True, separator=";"):
+            fail("8.3 temp path did not match its long directory")
+        if not same_pinned_directory(short, long.upper(), realpath=expand_short, fold_case=True, separator=";"):
+            fail("windows pin comparison stayed case-sensitive")
+        if same_pinned_directory(short, other, realpath=expand_short, fold_case=True, separator=";"):
+            fail("a different directory was accepted as the ffprobe pin")
+        if same_pinned_directory(long + ";" + other, long, realpath=expand_short, fold_case=True, separator=";"):
+            fail("a search PATH was accepted as the ffprobe pin")
+
+        calls.clear()
+        bridge.shutil.which = lambda name: "ffprobe"
+        with contextlib.redirect_stderr(io.StringIO()):
+            try:
+                bridge.probe_output(root / "out.mp4")
+            except SystemExit:
+                refused = True
+            else:
+                refused = False
+        if not refused:
+            fail("relative ffprobe was accepted")
+
+        calls.clear()
+        bridge.subprocess.run = fake_run
+        with contextlib.redirect_stdout(io.StringIO()):
+            bridge.run_command([str(ffprobe), "check"], root)
+        if calls[0][1].get("timeout") != bridge.COMMAND_TIMEOUT_SECONDS:
+            fail("run_command timeout missing")
+        with contextlib.redirect_stderr(io.StringIO()):
+            try:
+                bridge.run_command(["hyperframes", "check"], root)
+            except SystemExit:
+                refused_cmd = True
+            else:
+                refused_cmd = False
+        if not refused_cmd:
+            fail("relative command was accepted")
+    finally:
+        bridge.subprocess.run = original_run
+        bridge.shutil.which = original_which
+        os.environ.pop(sentinel, None)
+        shutil.rmtree(root, ignore_errors=True)
+
+
 def main() -> None:
+    prove_subprocess_hygiene()
     cfg = load(CONFIG)
     exe = cfg.get("execution") or {}
     route = cfg.get("routing") or {}
@@ -355,17 +512,27 @@ def main() -> None:
         fail("RTL must not be set on html root in HyperFrames smoke render")
     if "ngrok" in mac_bootstrap or "--share-desktop" in mac_bootstrap:
         fail("Mac render bootstrap must not create an extra remote route")
-    bash = shutil.which("bash")
-    if sys.platform == "win32" and bash:
-        bash_path = Path(bash).resolve()
+    prove_bash_syntax_target()
+    found = shutil.which("bash")
+    system32 = False
+    git_bash = None
+    if sys.platform == "win32" and found:
+        bash_path = Path(found).resolve()
         # Windows System32\\bash.exe is the WSL launcher, not a POSIX bash that
         # accepts a Windows path argument. Prefer Git Bash when available so
         # this remains a real shell syntax check instead of a false WSL-path failure.
-        if bash_path.name.lower() == "bash.exe" and bash_path.parent.name.lower() == "system32":
+        system32 = bash_path.name.lower() == "bash.exe" and bash_path.parent.name.lower() == "system32"
+        if system32:
             git = shutil.which("git")
-            git_bash = (Path(git).resolve().parents[1] / "bin" / "bash.exe") if git else None
-            bash = str(git_bash) if git_bash and git_bash.is_file() else None
-    if bash:
+            candidate = (Path(git).resolve().parents[1] / "bin" / "bash.exe") if git else None
+            if candidate and candidate.is_file():
+                git_bash = str(candidate)
+    bash, bash_skip = bash_syntax_target(
+        sys.platform, found, system32=system32, git_bash=git_bash
+    )
+    if bash_skip:
+        print(bash_skip)
+    elif bash:
         shell_check = subprocess.run([bash, "-n", str(MAC_BOOTSTRAP)], text=True, capture_output=True)
         if shell_check.returncode != 0:
             fail(f"Mac render host bootstrap shell syntax invalid: {shell_check.stderr.strip()}")

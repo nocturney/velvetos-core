@@ -1,0 +1,25 @@
+{
+  "task_id": "fragment-rename-unreleased-2026-10-18",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfharness",
+  "goal": "Pin the new side of a changelog fragment rename as an add, and match a folded bullet only inside Unreleased.",
+  "completed_steps": [
+    "CLAIM on #612 comment 6256587849"
+  ],
+  "next_step": "Independent QA. security_admission stays RED.",
+  "artifacts": [
+    "scripts/changelog_contract.py",
+    "changelog.d/fragment-rename-unreleased.md",
+    "docs/CHANGELOG-FRAGMENTS.md"
+  ],
+  "unresolved": [
+    "security_admission stays RED"
+  ],
+  "last_updated": "2026-10-18",
+  "execution_state": {
+    "claim": "https://github.com/nocturney/velvetos-core/issues/612#issuecomment-6256587849",
+    "security_admission": "RED"
+  },
+  "latest_observation": "A git rename into changelog.d is status A on the new path. A bullet that exists only under a released heading does not satisfy the compile step. CRLF Unreleased lines still match."
+}

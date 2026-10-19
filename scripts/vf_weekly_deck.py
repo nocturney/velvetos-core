@@ -10,6 +10,7 @@ email pipeline.
 from __future__ import annotations
 
 import json
+import sys
 from datetime import date
 from pathlib import Path
 
@@ -132,47 +133,37 @@ def build() -> dict:
 
 
 DOCS_DIR = ROOT / "docs" / "weekly-deck"
+NETWORK_FAIL = "FAIL BENTO_SHELL_NETWORK"
+OPENSSL_FAIL = "FAIL BENTO_SHELL_OPENSSL"
 
 
 def main() -> None:
     doc = build()
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(doc, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"OK weekly bento deck written: {OUT}")
-
     today = date.today().isoformat()
     dated_html = DOCS_DIR / f"{today}.html"
     latest_html = DOCS_DIR / "index.html"
-    built = build_html(doc, dated_html)
-    if built:
+    rc = ship(doc, OUT, dated_html)
+    if rc:
+        raise SystemExit(rc)
+    if dated_html.is_file():
         latest_html.write_text(dated_html.read_text(encoding="utf-8"), encoding="utf-8")
         print(f"OK latest pointer written: {latest_html}")
-    else:
-        print("WARN HTML build skipped (no network or shell mismatch) — JSON still written for manual paste")
 
 
-def build_html(doc: dict, out_html: Path) -> bool:
-    """Fetch the Bento Slides app shell and inject our doc into #bento-doc.
+def ship(doc: dict, out_json: Path, out_html: Path) -> int:
+    """Write the JSON deck, then try the shell HTML. JSON is already on disk."""
+    out_json.parent.mkdir(parents=True, exist_ok=True)
+    out_json.write_text(json.dumps(doc, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"OK weekly bento deck written: {out_json}")
+    return build_html(doc, out_html)
 
-    Returns True on success. Network failure is non-fatal: caller should
-    fall back to shipping the JSON only (see hq/BENTO.md manual path).
-    """
-    import urllib.request
 
-    shell_url = "https://bento.page/releases/slides/Bento_Slides.bento.html"
-    try:
-        with urllib.request.urlopen(shell_url, timeout=30) as resp:
-            shell = resp.read().decode("utf-8")
-    except Exception as exc:  # noqa: BLE001
-        print(f"WARN could not fetch Bento shell: {exc}")
-        return False
-
-    payload = json.dumps(doc, ensure_ascii=False)
-    # Escape closing script tags so the JSON can't break out of the block.
-    payload_safe = payload.replace("</script", "<\\/script")
-
+def inject_shell(doc: dict, shell: str, out_html: Path) -> int:
+    """Inject the deck into a shell that already passed the pin."""
     import re
 
+    payload = json.dumps(doc, ensure_ascii=False)
+    payload_safe = payload.replace("</script", "<\\/script")
     pattern = re.compile(
         r'(<script type="application/bento\+json" id="bento-doc">)(.*?)(</script>)',
         re.DOTALL,
@@ -182,13 +173,104 @@ def build_html(doc: dict, out_html: Path) -> bool:
     )
     if count != 1:
         print("WARN could not locate #bento-doc block in shell; skipping HTML build")
-        return False
-
+        return 0
     out_html.parent.mkdir(parents=True, exist_ok=True)
     out_html.write_text(new_shell, encoding="utf-8")
     print(f"OK weekly bento HTML written: {out_html}")
-    return True
+    return 0
+
+
+def build_html(doc: dict, out_html: Path) -> int:
+    """Fetch the pinned shell. A network error or a mismatch fails the job."""
+    import urllib.error
+
+    from verify_bento_shell import ShellPinError, load_shell
+
+    try:
+        shell = load_shell().decode("utf-8")
+    except ShellPinError as exc:
+        print(f"FAIL bento shell: {exc}", file=sys.stderr)
+        return 1
+    except FileNotFoundError as exc:
+        print(f"{OPENSSL_FAIL} HTML build skipped: {exc}", file=sys.stderr)
+        return 1
+    except (urllib.error.URLError, TimeoutError, OSError) as exc:
+        print(f"{NETWORK_FAIL} HTML build skipped: {exc}", file=sys.stderr)
+        return 1
+    return inject_shell(doc, shell, out_html)
+
+
+def self_test() -> int:
+    import contextlib
+    import io
+    import tempfile
+    import urllib.error
+
+    import verify_bento_shell as shellmod
+    from verify_bento_shell import FIXTURE, ShellPinError, pin_problems
+
+    doc = {"format": "bento/slides", "version": 1, "title": "self-test", "slides": []}
+    real = shellmod.load_shell
+    try:
+        def offline() -> bytes:
+            raise urllib.error.URLError("offline")
+
+        shellmod.load_shell = offline
+        with tempfile.TemporaryDirectory() as tmp:
+            out_json = Path(tmp) / "deck.json"
+            out_html = Path(tmp) / "deck.html"
+            err = io.StringIO()
+            with contextlib.redirect_stderr(err):
+                rc = ship(doc, out_json, out_html)
+            if rc == 0 or out_html.exists():
+                print("FAIL weekly deck: offline network did not fail the job", file=sys.stderr)
+                return 1
+            if NETWORK_FAIL not in err.getvalue():
+                print("FAIL weekly deck: offline network failure was not named", file=sys.stderr)
+                return 1
+
+        def tampered() -> bytes:
+            problems = pin_problems(FIXTURE.read_bytes(), b"tampered-shell")
+            if problems:
+                raise ShellPinError("; ".join(problems))
+            return b"tampered-shell"
+
+        shellmod.load_shell = tampered
+        with tempfile.TemporaryDirectory() as tmp:
+            out_json = Path(tmp) / "deck.json"
+            out_html = Path(tmp) / "deck.html"
+            rc = ship(doc, out_json, out_html)
+            if rc == 0 or out_html.exists():
+                print("FAIL weekly deck: tampered bytes did not fail the job", file=sys.stderr)
+                return 1
+            if not out_json.is_file():
+                print("FAIL weekly deck: tampered run dropped the JSON deck", file=sys.stderr)
+                return 1
+
+        def missing_openssl() -> bytes:
+            raise FileNotFoundError("openssl")
+
+        shellmod.load_shell = missing_openssl
+        with tempfile.TemporaryDirectory() as tmp:
+            out_json = Path(tmp) / "deck.json"
+            out_html = Path(tmp) / "deck.html"
+            err = io.StringIO()
+            with contextlib.redirect_stderr(err):
+                rc = ship(doc, out_json, out_html)
+            text = err.getvalue()
+            if rc == 0 or out_html.exists():
+                print("FAIL weekly deck: missing openssl did not fail the job", file=sys.stderr)
+                return 1
+            if OPENSSL_FAIL not in text or NETWORK_FAIL in text:
+                print(f"FAIL weekly deck: missing openssl was mislabeled: {text}", file=sys.stderr)
+                return 1
+    finally:
+        shellmod.load_shell = real
+    print("OK weekly deck self-test")
+    return 0
 
 
 if __name__ == "__main__":
+    if sys.argv[1:] == ["--self-test"]:
+        raise SystemExit(self_test())
     main()

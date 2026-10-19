@@ -26,7 +26,7 @@ Chris: Windows / Python 3.11.9 / Git 2.55.0.windows.3.
 
 Both independently ran selftest: PASS_OFFLINE, tests=19, exit 0. Source SHA256 on BOTH hosts: **2bbd81c9c7f59c1b28937286d1c365ca46c0ceb9db96157859f7225e0dd6d632**. Verify mode returns DESIGN_ONLY_NOT_ADMITTED, zero external_git_writes, unknown_auto_retries=0, credential_exclusivity_proven=false, provider_authoritative_journal_proven=false, mid_push_lease_expiry_fenced=false and production_authority=false.
 
-Mac new isolated lab: /Users/chris/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-git604-native-crash-reconcile-offline-20261010
+Mac new isolated lab: $HOME/Velvet/Pilots/OfficeAccelerator/AgentEnvelopeLab/p0-git604-native-crash-reconcile-offline-20261010
 
 Chris Windows new isolated lab: D:\Velvet\Pilots\OfficeAccelerator\AgentEnvelopeLab\p0-git604-native-crash-reconcile-offline-20261010
 

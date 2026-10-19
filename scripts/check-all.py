@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run VelvetOS computational HQ sensors. No network. No send.
+"""Run VelvetOS computational HQ sensors. No send.
 
 Default behavior is the authoritative active regression surface (CORE + DOMAIN).
 Stage 3 uses an exact selector output with --selection for pull requests while
@@ -9,6 +9,8 @@ explicit-only unless the selector directly activates a relevant event sensor.
 from __future__ import annotations
 
 import argparse
+import base64
+import importlib.util
 import json
 import os
 import subprocess
@@ -16,6 +18,8 @@ import sys
 import tempfile
 import time
 from pathlib import Path
+
+import vf_subprocess_hygiene as hygiene
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -28,19 +32,142 @@ SENSOR_REGISTRY = ROOT / "packages" / "velvetos" / "policy" / "sensor-registry.j
 SKIP = {"check-all.py"}
 REGRESSION_LIFECYCLES = {"CORE", "DOMAIN"}
 RETIRED_LIFECYCLE = "RETIRED_RECEIPT"
+# The live gh read is the shadow-observation self-test inside this sensor.
+GH_SENSORS = frozenset({"check-policy-architecture.py"})
+GITHUB_TOKEN_KEYS = ("GH_TOKEN", "GITHUB_TOKEN")
+
+
+def sensor_env_for(path: Path, base: dict[str, str]) -> dict[str, str]:
+    """Forward GH_TOKEN only to the sensor that runs a live gh read."""
+    env = dict(base)
+    if path.name not in GH_SENSORS:
+        for key in GITHUB_TOKEN_KEYS:
+            env.pop(key, None)
+    return env
+
+
+def check_all_sensor_job(workflow: str) -> str:
+    start = workflow.find("\n  check-all:\n")
+    if start < 0:
+        raise ValueError("check-all job missing")
+    rest = workflow[start + 1:]
+    end = rest.find("\n  publish-check-all-status:\n")
+    if end < 0:
+        raise ValueError("publish-check-all-status job missing")
+    return rest[:end]
+
+
+def github_https_basic_header(token: str) -> str:
+    """Base64 of ``x-access-token:<token>`` for GitHub git-over-HTTPS."""
+    return base64.b64encode(f"x-access-token:{token}".encode("ascii")).decode("ascii")
+
+
+def fetch_header_problems(job: str) -> list[str]:
+    """The machine-precheck fetch must send masked basic auth, never bearer."""
+    problems: list[str] = []
+    lowered = job.lower()
+    if "authorization: bearer" in lowered:
+        problems.append("git fetch must not send AUTHORIZATION: bearer")
+    if "authorization: basic" not in lowered:
+        problems.append("git fetch must send AUTHORIZATION: basic")
+    if "x-access-token:" not in job:
+        problems.append("git fetch basic header must encode x-access-token:")
+    if "::add-mask::" not in job:
+        problems.append("git fetch basic header must be masked")
+    if "base64 -w0" not in job:
+        problems.append("git fetch basic header must use base64 -w0")
+    return problems
+
+
+def linux_sensor_job_problems(job: str) -> list[str]:
+    """The suite job is contents: read. statuses: write stays on the publisher."""
+    problems: list[str] = []
+    code = "\n".join(line.split("#", 1)[0] for line in job.splitlines())
+    if "contents: read" not in code:
+        problems.append("check-all job must be contents: read")
+    if "statuses:" in code:
+        problems.append("check-all job must not grant statuses")
+    if "persist-credentials: false" not in job:
+        problems.append("check-all checkout must not persist credentials")
+    if "GH_TOKEN: ${{ github.token }}" not in job:
+        problems.append("check-all job must receive GH_TOKEN so the gh sensor can")
+    return problems
+
+
+def prove_token_scope() -> list[str]:
+    errors: list[str] = []
+    base = {"GH_TOKEN": "job-token", "GITHUB_TOKEN": "also", "PATH": "/usr/bin"}
+    kept = sensor_env_for(Path("scripts/check-policy-architecture.py"), base)
+    other = sensor_env_for(Path("scripts/check-hq-overlay.py"), base)
+    if kept.get("GH_TOKEN") != "job-token" or kept.get("GITHUB_TOKEN") != "also":
+        errors.append("gh sensor lost the job token")
+    if "GH_TOKEN" in other or "GITHUB_TOKEN" in other:
+        errors.append("non-gh sensor received a GitHub token")
+    if other.get("PATH") != "/usr/bin":
+        errors.append("token scope dropped unrelated environment")
+    workflow = (ROOT / ".github" / "workflows" / "check-all.yml").read_text(encoding="utf-8")
+    job = check_all_sensor_job(workflow)
+    errors.extend(linux_sensor_job_problems(job))
+    errors.extend(fetch_header_problems(job))
+    bearer = job.replace("AUTHORIZATION: basic", "AUTHORIZATION: bearer", 1)
+    if bearer == job or not any("bearer" in item for item in fetch_header_problems(bearer)):
+        errors.append("bearer git fetch header was not caught")
+    unmasked = job.replace('echo "::add-mask::$basic"\n', "", 1)
+    if unmasked == job or not any("masked" in item for item in fetch_header_problems(unmasked)):
+        errors.append("unmasked git fetch header was not caught")
+    sample = "ghs_example"
+    expected = github_https_basic_header(sample)
+    decoded = base64.b64decode(expected).decode("ascii")
+    if decoded != f"x-access-token:{sample}":
+        errors.append("basic header did not round-trip x-access-token")
+    if os.name != "nt":
+        proc = subprocess.run(
+            ["bash", "-c", "printf 'x-access-token:%s' \"$1\" | base64 -w0", "bash", sample],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+        if proc.returncode != 0 or proc.stdout.strip() != expected:
+            errors.append("basic header round-trip disagreed with base64(x-access-token:TOKEN)")
+    mutated = job.replace(
+        "    permissions:\n      contents: read\n",
+        "    permissions:\n      contents: read\n      statuses: write\n",
+        1,
+    )
+    if mutated == job or not any("statuses" in item for item in linux_sensor_job_problems(mutated)):
+        errors.append("statuses: write on the sensor job was not caught")
+    errors.extend(prove_policy_forwards_token_only_to_collector())
+    return errors
+
+
+def prove_policy_forwards_token_only_to_collector() -> list[str]:
+    """The policy sensor keeps GH_TOKEN only for the exact collector self-test."""
+    spec = importlib.util.spec_from_file_location(
+        "policy_token_scope",
+        ROOT / "scripts" / "check-policy-architecture.py",
+    )
+    if spec is None or spec.loader is None:
+        return ["policy sensor could not be loaded"]
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    errors: list[str] = []
+    module.prove_github_token_allowlist(errors)
+    return errors
 
 
 def git_dirty_state() -> dict[str, bytes] | None:
     """Return {path: current bytes or b''} for git-visible changes, or None without git."""
     try:
-        proc = subprocess.run(
-            ["git", "status", "--porcelain", "--untracked-files=all"],
+        proc = hygiene.run_pinned(
+            "git",
+            ["status", "--porcelain", "--untracked-files=all"],
             cwd=ROOT,
             text=True,
             capture_output=True,
             timeout=60,
         )
-    except (OSError, subprocess.SubprocessError):
+    except (OSError, subprocess.SubprocessError, hygiene.HygieneError):
         return None
     if proc.returncode != 0:
         return None
@@ -144,9 +271,13 @@ def local_readme_gate(repo: Path = ROOT, base: str = README_BASE, head: str = "H
     """
     if hosted_skip and os.environ.get("GITHUB_ACTIONS") == "true":
         return "SKIP readme-contract (hosted workflow runs the README gate as its own step)", 0
-    probe = subprocess.run(
-        ["git", "rev-parse", "--verify", "-q", f"{base}^{{commit}}"],
-        cwd=repo, text=True, capture_output=True,
+    probe = hygiene.run_pinned(
+        "git",
+        ["rev-parse", "--verify", "-q", f"{base}^{{commit}}"],
+        cwd=repo,
+        text=True,
+        capture_output=True,
+        timeout=30,
     )
     if probe.returncode != 0:
         return f"SKIP readme-contract (no git base {base} in {repo})", 0
@@ -163,7 +294,15 @@ def readme_gate_fixture() -> list[str]:
     errors: list[str] = []
 
     def git(repo: Path, *args: str) -> None:
-        subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True, text=True)
+        hygiene.run_pinned(
+            "git",
+            list(args),
+            cwd=repo,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
 
     with tempfile.TemporaryDirectory() as tmp:
         repo = Path(tmp)
@@ -217,7 +356,34 @@ def readme_gate_fixture() -> list[str]:
     return errors
 
 
+def prove_git_hygiene() -> list[str]:
+    """The live git spawns are absolute, timed, and do not inherit GIT_*."""
+    errors: list[str] = []
+    cases = (
+        ("status", lambda: git_dirty_state(), 60),
+        ("rev-parse", lambda: local_readme_gate(ROOT, hosted_skip=False), 30),
+    )
+    for label, invoke, timeout in cases:
+        try:
+            with hygiene.record_pinned_spawn("git", returncode=1) as (calls, short):
+                invoke()
+            hygiene.expect_pinned(calls, short, timeout=timeout, keep_gh_token=False)
+        except Exception as exc:
+            errors.append(f"git {label} spawn: {exc}")
+    return errors
+
+
 def selftest() -> int:
+    token_errors = prove_token_scope()
+    if token_errors:
+        for error in token_errors:
+            print(f"FAIL check-all token scope: {error}", file=sys.stderr)
+        return 1
+    git_errors = prove_git_hygiene()
+    if git_errors:
+        for error in git_errors:
+            print(f"FAIL check-all git hygiene: {error}", file=sys.stderr)
+        return 1
     fixture_errors = readme_gate_fixture()
     if fixture_errors:
         for error in fixture_errors:
@@ -283,7 +449,7 @@ def selftest() -> int:
     print(
         "OK check-all selftest default=ACTIVE_FULL selected_input=EXACT "
         "always_on=REQUIRED retired=EXPLICIT_ONLY all_lifecycle=AVAILABLE fail_closed=PASS "
-        "readme_gate=LOCAL_PARITY"
+        "readme_gate=LOCAL_PARITY gh_token=SCOPED job_permissions=contents:read fetch_header=BASIC"
     )
     return 0
 
@@ -349,7 +515,7 @@ def main() -> int:
             text=True,
             capture_output=True,
             encoding="utf-8",
-            env=sensor_env,
+            env=sensor_env_for(path, sensor_env),
             creationflags=sensor_creationflags,
         )
         duration = round(time.perf_counter() - started, 3)

@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import inspect
 import json
+import os
+import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -46,6 +50,82 @@ def self_test(path: Path) -> None:
     data = json.loads(p.stdout)
     if data.get("status") != "PASS":
         fail(path.name + " self-test status is not PASS")
+
+
+def prove_windows_facts_hygiene() -> None:
+    """The Windows facts query is fixed, absolute powershell, allowlisted, and timed."""
+    import vf_office_v2_node_manifest as manifest
+
+    if "script" in inspect.signature(manifest.windows_facts).parameters or hasattr(manifest, "win_value"):
+        fail("windows facts still accept a caller script")
+    sentinel = "VF_NODE_MANIFEST_SENTINEL"
+    os.environ[sentinel] = "nope"
+    root = Path(tempfile.mkdtemp(prefix="vf-ps-"))
+    saved_root = os.environ.get("SystemRoot")
+    saved_system = os.environ.get("SYSTEMROOT")
+    try:
+        exe = root / "System32" / "WindowsPowerShell" / "v1.0" / "powershell.exe"
+        exe.parent.mkdir(parents=True)
+        exe.write_text("fake", encoding="utf-8")
+        os.environ["SystemRoot"] = str(root)
+        os.environ.pop("SYSTEMROOT", None)
+        calls: list[tuple[list[str], dict]] = []
+
+        def fake_run(args, **kwargs):
+            calls.append((list(args), kwargs))
+            payload = json.dumps({
+                "caption": "Windows",
+                "version": "10",
+                "build": "1",
+                "cpu": "cpu",
+                "ram_gb": "16",
+                "reboot": "False|False|0",
+            })
+            return subprocess.CompletedProcess(args, 0, stdout=payload, stderr="")
+
+        original = manifest.subprocess.run
+        manifest.subprocess.run = fake_run
+        try:
+            facts = manifest.windows_facts()
+        finally:
+            manifest.subprocess.run = original
+        if facts.get("caption") != "Windows" or facts.get("reboot") != "False|False|0":
+            fail("windows facts did not parse the fixed query: %s" % facts)
+        if len(calls) != 1:
+            fail("windows facts did not run one query")
+        argv, kwargs = calls[0]
+        if argv[0] != str(exe) or not os.path.isabs(argv[0]) or argv[-1] != manifest.WINDOWS_FACTS_QUERY:
+            fail("powershell command was not the absolute fixed query")
+        if kwargs.get("timeout") != manifest.WINDOWS_FACTS_TIMEOUT:
+            fail("powershell timeout missing")
+        env = kwargs.get("env")
+        if not isinstance(env, dict) or sentinel in env or env.get("PATH") != str(root / "System32"):
+            fail("powershell environment was not allowlisted: %s" % env)
+
+        def fake_list(args, **kwargs):
+            return subprocess.CompletedProcess(args, 0, stdout="[]", stderr="")
+
+        manifest.subprocess.run = fake_list
+        try:
+            try:
+                listed = manifest.windows_facts()
+            except Exception as exc:
+                fail("non-object powershell JSON raised %s" % type(exc).__name__)
+        finally:
+            manifest.subprocess.run = original
+        if listed.get("caption") != "UNKNOWN" or listed.get("reboot") != "UNKNOWN":
+            fail("non-object powershell JSON was not UNKNOWN: %s" % listed)
+    finally:
+        os.environ.pop(sentinel, None)
+        if saved_root is None:
+            os.environ.pop("SystemRoot", None)
+        else:
+            os.environ["SystemRoot"] = saved_root
+        if saved_system is None:
+            os.environ.pop("SYSTEMROOT", None)
+        else:
+            os.environ["SYSTEMROOT"] = saved_system
+        shutil.rmtree(root, ignore_errors=True)
 
 
 def main() -> None:
@@ -136,6 +216,8 @@ def main() -> None:
         fail("Phase 1 formal runtime gate is not GREEN")
     if gate.get("phase2_allowed") is not True:
         fail("Phase 2 must be allowed after formal Phase 1 closure")
+
+    prove_windows_facts_hygiene()
 
     for path in (
         ROOT / "scripts" / "vf_office_v2_lab_doctor.py",

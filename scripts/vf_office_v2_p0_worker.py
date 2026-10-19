@@ -22,6 +22,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import vf_office_v2_continuity as continuity
+import vf_spawn
+from vf_spawn import SpawnRefusal, allowlisted_git_errors, run_git
 
 TASK_SCHEMA = "velvetos.office-v2.p0-task-envelope.v0"
 RECEIPT_SCHEMA = "velvetos.office-v2.p0-worker-receipt.v0"
@@ -75,14 +77,21 @@ def save_new(path, value):
         os.fsync(handle.fileno())
 
 
-def git(worktree, *args):
-    result = subprocess.run(
-        ["git", "-C", str(worktree)] + list(args),
-        capture_output=True, text=True, timeout=20,
+def git(worktree, *args, user_args=None):
+    result = run_git(
+        ["-C", str(worktree), *args],
+        user_args=user_args,
+        check=False,
+        timeout=20,
     )
     if result.returncode != 0:
         raise Rejected("GIT_PRECONDITION_FAILED")
+    # Trailing newlines only. A leading porcelain status space is part of the name.
     return result.stdout.rstrip('\n')
+
+
+def git_raw(*args, user_args=None):
+    run_git(list(args), user_args=user_args, check=True, timeout=30)
 
 
 def contained(root, relative):
@@ -147,7 +156,9 @@ def validate(envelope):
     script = contained(worktree, executor.get("script"))
     if not script.is_file() or script.suffix != ".py":
         raise Rejected("PINNED_SCRIPT_MISSING")
-    if git(worktree, "ls-files", "--error-unmatch", executor["script"]) != executor["script"]:
+    # The script path stays after `--`. A leading dash is a path, not an option.
+    listed = git(worktree, "ls-files", "--error-unmatch", user_args=[executor["script"]])
+    if listed != executor["script"]:
         raise Rejected("UNTRACKED_EXECUTOR")
     if not HASH_PATTERN.fullmatch(str(executor.get("sha256", ""))) or file_hash(script) != executor["sha256"]:
         raise Rejected("EXECUTOR_HASH_MISMATCH")
@@ -310,19 +321,104 @@ def run(envelope_path, receipt_path):
             "autonomous_coding_agent_proven": False}
 
 
+def prove_unresolved_git() -> None:
+    """A missing git binary is one FAIL_CLOSED JSON line, not a traceback."""
+    probe = (
+        "import sys\n"
+        "from pathlib import Path\n"
+        "import vf_spawn\n"
+        "import vf_office_v2_p0_worker as worker\n"
+        "vf_spawn.shutil.which = lambda _name: None\n"
+        "def boom():\n"
+        "    worker.git(Path('/tmp/work'), 'status')\n"
+        "worker.demo_selftest = boom\n"
+        "sys.argv = ['worker', 'selftest']\n"
+        "raise SystemExit(worker.main())\n"
+    )
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(Path(__file__).resolve().parent)
+    proc = subprocess.run(
+        [sys.executable, "-c", probe],
+        cwd=str(Path(__file__).resolve().parents[1]),
+        env=env,
+        text=True,
+        capture_output=True,
+        timeout=20,
+    )
+    if "Traceback" in proc.stderr or "Traceback" in proc.stdout:
+        raise Rejected("GIT_UNRESOLVED_TRACEBACK")
+    lines = [line for line in proc.stdout.splitlines() if line.strip()]
+    if proc.returncode != 1 or len(lines) != 1:
+        raise Rejected("GIT_UNRESOLVED_NOT_ONE_LINE")
+    try:
+        payload = json.loads(lines[0])
+    except json.JSONDecodeError as exc:
+        raise Rejected("GIT_UNRESOLVED_NOT_JSON") from exc
+    if payload.get("status") != "FAIL_CLOSED" or payload.get("reason") != "SPAWN_PATH_LOOKUP_REFUSED":
+        raise Rejected("GIT_UNRESOLVED_CODE:" + lines[0])
+
+
+def prove_git_spawn() -> None:
+    """Pinned git, timeout, allowlisted env, and the porcelain leading space."""
+    identity = vf_spawn.prove_git_identity()
+    if identity:
+        raise Rejected("GIT_PIN:" + ";".join(identity))
+    sentinel = "VF_SPAWN_SENTINEL"
+    previous = {
+        sentinel: os.environ.get(sentinel),
+        "GIT_EXEC_PATH": os.environ.get("GIT_EXEC_PATH"),
+    }
+    os.environ[sentinel] = "nope"
+    os.environ["GIT_EXEC_PATH"] = "/evil/git-core"
+    captured = []
+    original = vf_spawn.subprocess.run
+
+    def fake_run(argv, **kwargs):
+        captured.append((list(argv), kwargs))
+        return vf_spawn.subprocess.CompletedProcess(argv, 0, stdout=" M job.py\n", stderr="")
+
+    vf_spawn.subprocess.run = fake_run
+    try:
+        shown = git(Path("/tmp/work"), "status", "--porcelain", "--untracked-files=all")
+        git_raw("init", "-q", "/tmp/work")
+    finally:
+        vf_spawn.subprocess.run = original
+        for key, value in previous.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+    if shown != " M job.py":
+        raise Rejected("PORCELAIN_LEADING_SPACE_STRIPPED")
+    if len(captured) != 2:
+        raise Rejected("GIT_SPAWN_DID_NOT_RUN")
+    errors = allowlisted_git_errors(captured[0][0], captured[0][1], timeout=20)
+    errors.extend(allowlisted_git_errors(captured[1][0], captured[1][1], timeout=30))
+    if errors:
+        raise Rejected("GIT_SPAWN_NOT_ALLOWLISTED:" + ";".join(errors))
+
+
 def demo_selftest():
     tests = []
+    prove_unresolved_git()
+    tests.append("git_unresolved_fail_closed")
+    prove_git_spawn()
+    tests.append("git_spawn_allowlisted")
     with tempfile.TemporaryDirectory(prefix="vf-office-p0-worker-") as tmp:
         base = Path(tmp).resolve()
         worktree = base / "isolated-repo"
         worktree.mkdir()
-        subprocess.run(["git", "init", "-q", str(worktree)], check=True)
-        subprocess.run(["git", "-C", str(worktree), "checkout", "-q", "-b", "test-worker"], check=True)
+        git_raw("init", "-q", str(worktree))
+        git_raw("-C", str(worktree), "checkout", "-q", "-b", "test-worker")
         script = worktree / "job.py"
         script.write_text("from pathlib import Path\nPath('result.txt').write_text('safe output\\n', encoding='utf-8')\n", encoding="utf-8")
-        subprocess.run(["git", "-C", str(worktree), "add", "job.py"], check=True)
-        subprocess.run(["git", "-C", str(worktree), "-c", "user.name=Fixture",
-                        "-c", "user.email=fixture@example.invalid", "commit", "-qm", "fixture"], check=True)
+        dashed = worktree / "--dashed.py"
+        dashed.write_text("print(1)\n", encoding="utf-8")
+        short = worktree / "-x.py"
+        short.write_text("print(1)\n", encoding="utf-8")
+        git_raw("-C", str(worktree), "add", user_args=["job.py", "--dashed.py", "-x.py"])
+        git_raw("-C", str(worktree), "-c", "user.name=Fixture",
+                "-c", "user.email=fixture@example.invalid", "commit", "-qm", "fixture")
         sha = git(worktree, "rev-parse", "HEAD")
         manifest = continuity.self_test_manifest()
         manifest["active_external_effects"] = []
@@ -341,6 +437,48 @@ def demo_selftest():
                          "sha256": file_hash(script), "args": []},
             "allowed_outputs": ["result.txt"], "context_checkpoint": str(checkpoint),
         }
+        short_env = copy.deepcopy(env)
+        short_env["executor"] = {
+            "kind": "PINNED_PYTHON_FIXTURE",
+            "script": "-x.py",
+            "sha256": file_hash(short),
+            "args": [],
+        }
+        import vf_spawn
+        recorded = []
+        original_run = vf_spawn.subprocess.run
+
+        def spy_run(argv, **kwargs):
+            recorded.append(list(argv))
+            return original_run(argv, **kwargs)
+
+        vf_spawn.subprocess.run = spy_run
+        try:
+            validate(short_env)
+        except Rejected as exc:
+            raise Rejected("SHORT_OPTION_EXECUTOR_PATH_REFUSED:" + str(exc))
+        finally:
+            vf_spawn.subprocess.run = original_run
+        listings = [argv for argv in recorded if "ls-files" in argv]
+        if (
+            len(listings) != 1
+            or "--" not in listings[0]
+            or listings[0][listings[0].index("--") + 1:] != ["-x.py"]
+        ):
+            raise Rejected("SHORT_OPTION_LS_FILES_ARGV:" + repr(listings))
+        tests.append("short_option_executor_behind_double_dash")
+        dashed_env = copy.deepcopy(env)
+        dashed_env["executor"] = {
+            "kind": "PINNED_PYTHON_FIXTURE",
+            "script": "--dashed.py",
+            "sha256": file_hash(dashed),
+            "args": [],
+        }
+        try:
+            validate(dashed_env)
+        except Rejected as exc:
+            raise Rejected("DASHED_EXECUTOR_PATH_REFUSED:" + str(exc))
+        tests.append("dashed_executor_behind_double_dash")
         task = base / "envelope.json"
         continuity.write(task, env)
         receipt_path = base / "receipt.json"
@@ -426,7 +564,7 @@ def main():
             result = verify(read_json(args.envelope), read_json(args.receipt))
         print(json.dumps(result, ensure_ascii=False, sort_keys=True))
         return 0 if result.get("status", result.get("state")) in ("PASS", "SUCCEEDED") else 1
-    except (Rejected, OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as exc:
+    except (Rejected, OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError, SpawnRefusal) as exc:
         print(json.dumps({"status": "FAIL_CLOSED", "reason": str(exc)}, sort_keys=True))
         return 1
 

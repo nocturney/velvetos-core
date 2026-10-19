@@ -28,6 +28,60 @@ def fail(message: str) -> None:
     raise SystemExit(1)
 
 
+def format_child_skips(test_file: str, stdout: str, stderr: str) -> list[str]:
+    """Named skip codes for the suite log. The child's pass/fail is unchanged."""
+    text = f"{stdout or ''}\n{stderr or ''}"
+    lines: list[str] = []
+    if "SKIP_NON_POSIX" in text:
+        lines.append(f"SKIP_NON_POSIX {test_file}")
+    if "Windows symlink creation not permitted by OS" in text:
+        lines.append(f"SKIP_WIN_SYMLINK {test_file}")
+    return lines
+
+
+def format_inert_selftest_skip(status: object) -> str | None:
+    if status == "SKIP_NON_POSIX":
+        return "SKIP_NON_POSIX cp083-inert-selftest"
+    return None
+
+
+def prove_windows_skip_codes() -> None:
+    child = format_child_skips(
+        "example.py",
+        "SKIP_NON_POSIX\n",
+        "skipped 'Windows symlink creation not permitted by OS'\n",
+    )
+    if child != [
+        "SKIP_NON_POSIX example.py",
+        "SKIP_WIN_SYMLINK example.py",
+    ]:
+        fail("child skip codes drifted: " + repr(child))
+    if format_child_skips("example.py", "OK\n", "Ran 1 test\n") != []:
+        fail("a passing child must not invent a skip code")
+    inert = format_inert_selftest_skip("SKIP_NON_POSIX")
+    if inert != "SKIP_NON_POSIX cp083-inert-selftest":
+        fail("inert selftest skip code drifted")
+    if format_inert_selftest_skip("OFFLINE_STATIC_ONLY") is not None:
+        fail("POSIX inert selftest must not print a skip")
+    source = Path(__file__).read_text(encoding="utf-8")
+    loop = "for line in format_" + "child_skips("
+    parts = source.split(loop)
+    printed = "print(" + "line)"
+    if len(parts) != 2 or printed not in parts[1][:180]:
+        fail("child skip codes must be printed")
+    if "print(" + "inert_line)" not in source:
+        fail("Windows skip codes must be printed on the suite log")
+    # main() runs to EOF, so stop before the module entrypoint. That entrypoint
+    # also calls the proof, and must not count as the call inside main().
+    main_tail = source.split("def main() -> int:", 1)
+    entry = "\nif __" + "name__"
+    if len(main_tail) != 2 or entry not in main_tail[1]:
+        fail("main must call prove_windows_skip_codes")
+    main_body = main_tail[1].split(entry, 1)[0]
+    if "prove_" + "windows_skip_codes()" not in main_body:
+        fail("main must call prove_windows_skip_codes")
+
+
 def load(path: Path) -> dict:
     if not path.is_file():
         fail(f"missing {path.relative_to(ROOT)}")
@@ -41,6 +95,7 @@ def load(path: Path) -> dict:
 
 
 def main() -> int:
+    prove_windows_skip_codes()
     authority = load(P0 / "authority-map-v0.1.json")
     if authority.get("single_external_effect_authority") is not True:
         fail("Phase 0 must preserve single external-effect authority")
@@ -1074,7 +1129,7 @@ def main() -> int:
             "20cce6a09dec25de74d624361806a8ec2d758856217dd048123cdac8fc7281bd"):
         fail("P0 synthetic signer custody source SHA drift")
     if hashlib.sha256(signer_workflow.read_bytes()).hexdigest() != (
-            "475bcc6114bdcf8d8417cea4a6915c1d5b89f7eabcc1c2c13183d1c6559925fe"):
+            "089ffb2fd25d6eb92e741a90d3faf7f4c5240dbef5dc2bba5b4f9972d4f238d0"):
         fail("P0 synthetic signer custody workflow SHA drift")
     signer_static = subprocess.run([sys.executable, str(signer_lab), "selftest"],
                                   cwd=ROOT, capture_output=True, text=True, timeout=20)
@@ -1104,7 +1159,7 @@ def main() -> int:
             "a4422b0a01ddf480ada0ca857d59c203a4e62f001de5567f1ae36ab524381ceb"):
         fail("P0 hosted Docker isolation source byte pin drift")
     if hashlib.sha256(container_workflow.read_bytes()).hexdigest() != (
-            "a60e3cf6a366681dbae472b590190282894f6b8fa8a93469087a38f89ab6833b"):
+            "65f267523991c3e2db0f77363a2ad00bde83acb2a17a3bc65e6a42cd897338f7"):
         fail("P0 hosted Docker isolation no-credential workflow byte pin drift")
     container_static = subprocess.run(
         [sys.executable, str(container_lab), "selftest"],
@@ -1135,7 +1190,7 @@ def main() -> int:
     new_source_receipt = P2 / "p0-612-new-two-host-local-ollama-text-only-2026-10-11.json"
     for path, expected_sha in (
         (new_source_gate, "7194763e3928cbd0570b18ecceca6b0c5effc6b3a64573884a4a7bfaa2c32db8"),
-        (new_source_workflow, "7afa9bf211dd27a4703bd273a442f22c15937640e8e8bad1b4b1c065b858e2bd"),
+        (new_source_workflow, "631b1f35d756d5d78444324f9022b5fec7a6f468c33cb9f36ee819b51c893b8f"),
         (new_source_receipt, "e86c08f6fb1002528457b16da92ae5e6066225497a94c0126e773645128e9359"),
     ):
         if hashlib.sha256(path.read_bytes()).hexdigest() != expected_sha:
@@ -1186,7 +1241,7 @@ def main() -> int:
             "40cb7557f4f29c789cc7b9135d75ecdad8a1eaa95017dd3b0b3054934b774ace"):
         fail("P0 hosted synthetic QA LAB Python source byte pin changed")
     if hashlib.sha256(hosted_qa_workflow.read_bytes()).hexdigest() != (
-            "f969446df7af39bf71fb00e2ae6e972d8d21b472eeb77a83234855289d12557b"):
+            "89650b88bf7a3206e095fb00e26aa2ce942cbdff89eda2c9240b89f6f3a851c8"):
         fail("P0 hosted synthetic QA LAB no-permission workflow byte pin changed")
     hosted_selftest = subprocess.run([sys.executable, str(hosted_qa), "selftest"],
                                     cwd=ROOT, capture_output=True, text=True, timeout=20)
@@ -2341,9 +2396,13 @@ def main() -> int:
     native_crash_source = (
         ROOT / "scripts" / "vf_office_v2_604_native_git_crash_reconcile_offline.py"
     )
-    if hashlib.sha256(native_crash_source.read_bytes()).hexdigest() != (
+    native_live_sha = (
+        "03c2fd244eac2adf4eb7c288de43f1e28d935e9f2d8f4fe772bfb962390b9a2c"
+    )
+    native_receipt_sha = (
         "2bbd81c9c7f59c1b28937286d1c365ca46c0ceb9db96157859f7225e0dd6d632"
-    ):
+    )
+    if hashlib.sha256(native_crash_source.read_bytes()).hexdigest() != native_live_sha:
         fail("#604 native local Git crash source pinned provenance changed")
     for native_mode in ("selftest", "verify"):
         native = subprocess.run(
@@ -2442,9 +2501,13 @@ def main() -> int:
     tls_rbac_source = (
         ROOT / "scripts" / "vf_office_v2_604_real_etcd_mtls_rbac_identity_lab.py"
     )
-    if hashlib.sha256(tls_rbac_source.read_bytes()).hexdigest() != (
-        "a824e4d38e4ca91d376360f70bb33867a41b23cfb4b7fb0d3d688d038a5aa0e4"
-    ):
+    identity_live_sha = (
+        "7fbd63b9f34ae8a4a465c6f2e78ea7ed89dd105650626712b4a080e58d75c299"
+    )
+    identity_receipt_sha = (
+        "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c"
+    )
+    if hashlib.sha256(tls_rbac_source.read_bytes()).hexdigest() != identity_live_sha:
         fail("#604 ephemeral mTLS/RBAC denial source SHA drift")
     for tls_mode in ("selftest", "verify"):
         tls_receipt = subprocess.run(
@@ -2653,9 +2716,10 @@ def main() -> int:
     same_uid_negative = (
         ROOT / "scripts" / "vf_office_v2_604_sameuid_sink_key_bypass_lab.py"
     )
-    if hashlib.sha256(same_uid_negative.read_bytes()).hexdigest() != (
-        "16e2ca1d702a28a033abd0622815d2ecae98508a179d306820a3381f0a17e465"
-    ):
+    sameuid_live_sha = (
+        "dc7e0f5260a351e25f7b05f7f1197a5f5945f1404d09492eaff5f80eb9a85157"
+    )
+    if hashlib.sha256(same_uid_negative.read_bytes()).hexdigest() != sameuid_live_sha:
         fail("#604 same-UID sink key negative source SHA drift")
     for same_uid_mode in ("selftest", "verify"):
         same_uid_probe = subprocess.run(
@@ -2679,7 +2743,7 @@ def main() -> int:
                 16 if same_uid_mode == "selftest" else 0
             )
             or same_uid_result.get("etcd_original_real_mtls_rbac_source_sha256") != (
-                "a824e4d38e4ca91d376360f70bb33867a41b23cfb4b7fb0d3d688d038a5aa0e4"
+                identity_live_sha
             )
             or same_uid_result.get("required_mac_uid") != (
                 "SAME_UID_IS_NOT_SEPARATE_SECURITY_PRINCIPAL"
@@ -3024,7 +3088,7 @@ def main() -> int:
     ):
         fail("#612 protected-base independent verifier source pin changed")
     if hashlib.sha256(protected_flow.read_bytes()).hexdigest() != (
-        "931c2e208d53a5567c23ab3f0171fe92d88ba0209563a2ccb5b86c7dcb65d4c7"
+        "13c8412135e84a9f2eb6e65058091c238ca741e1b8b9f8582ed594d13f003f5f"
     ):
         fail("#612 protected-default-branch workflow bytes drift across OS")
     attrs = (ROOT / ".gitattributes").read_text(encoding="utf-8")
@@ -3157,8 +3221,9 @@ def main() -> int:
     # CP081 combines real etcd mTLS/RBAC with atomic issuer-only admission
     # in a rootless guest. These historical observations remain LAB/RED only.
     cp081_source = ROOT / "scripts" / "vf_office_v2_604_cp081_mtls_atomic_admission_lab.py"
-    cp081_sha = "eaab28424989b4b3a7a5de58f5571d9938b21c8c17c3dfb4c5d2eaa1d73670e2"
-    if hashlib.sha256(cp081_source.read_bytes()).hexdigest() != cp081_sha:
+    cp081_live_sha = "34289d3ca46c5e0c04b8fd83d4416d6c72aeff5a6bd5837d5b92b63627241811"
+    cp081_receipt_sha = "eaab28424989b4b3a7a5de58f5571d9938b21c8c17c3dfb4c5d2eaa1d73670e2"
+    if hashlib.sha256(cp081_source.read_bytes()).hexdigest() != cp081_live_sha:
         fail("#604 CP081 new provider lab source SHA pin changed")
     cp081 = load(P2 / "p0-604-cp081-mtls-atomic-2026-10-16.json")
     cp081_totals = cp081.get("totals") or {}
@@ -3168,9 +3233,8 @@ def main() -> int:
         cp081.get("schema") != "velvetos.office-v2.604.cp081.live-mtls-atomic-receipts.v1"
         or cp081.get("status") != "PASS_REAL_MTLS_RBAC_ATOMIC_PROVIDER_LAB_ONLY"
         or cp081.get("security_admission") != "RED"
-        or cp081.get("test_script_sha256") != cp081_sha
-        or cp081.get("identity_helper_sha256") !=
-            "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c"
+        or cp081.get("test_script_sha256") != cp081_receipt_sha
+        or cp081.get("identity_helper_sha256") != identity_receipt_sha
         or cp081_totals.get("independent_fresh_provider_runs") != 2
         or cp081_totals.get("passed_bounded_scenarios") != 38
         or cp081_totals.get("real_etcd_atomic_race_rounds") != 8
@@ -3264,11 +3328,9 @@ def main() -> int:
             "PASS_REAL_ETCD_TLS_RBAC_LOCAL_GIT_SQLITE_UNKNOWN_LAB_ONLY"
         or cp082.get("security_admission") != "RED"
         or cp082.get("test_script_sha256") != cp082_sha
-        or cp082_dep.get("cp081_source_sha256") != cp081_sha
-        or cp082_dep.get("tls_rbac_identity_source_sha256") !=
-            "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c"
-        or cp082_dep.get("native_local_git_sqlite_source_sha256") !=
-            "2bbd81c9c7f59c1b28937286d1c365ca46c0ceb9db96157859f7225e0dd6d632"
+        or cp082_dep.get("cp081_source_sha256") != cp081_receipt_sha
+        or cp082_dep.get("tls_rbac_identity_source_sha256") != identity_receipt_sha
+        or cp082_dep.get("native_local_git_sqlite_source_sha256") != native_receipt_sha
         or cp082_totals.get("independent_fresh_provider_runs") != 2
         or cp082_totals.get("real_etcd_mtls_localgit_unknown_assertions_passed") != 52
         or cp082_totals.get("assertions_per_run") != 26
@@ -3413,6 +3475,10 @@ def main() -> int:
                 cp083_result.get("negative_mutations_rejected") != 8)
         ):
             fail("#604 CP083 attempted to promote lab to trusted security admission")
+        if cp083_mode == "--selftest":
+            inert_line = format_inert_selftest_skip(cp083_result.get("inert_selftest"))
+            if inert_line:
+                print(inert_line)
 
     # New CP083 hardening candidate gates: LOCAL-only. Do not change the
     # historical sealed CP083 receipts or imply protected security admission.
@@ -3432,14 +3498,16 @@ def main() -> int:
     skipped_candidate_imports = []
     for test_file, count, timeout_s in (
         ("test_vf_office_v2_604_identity_subprocess_env.py", 2, 15),
+        ("test_vf_office_v2_604_gap6_pin_split.py", 20, 45),
+        ("test_vf_office_v2_604_git_spawn_env_strip.py", 11, 60),
         ("test_vf_office_v2_604_cp083_hardening_candidate.py", 10, 15),
         ("test_vf_office_v2_604_cp083_socket_negative.py", 2, 15),
         ("test_vf_office_v2_604_cp083_client_socket_negative.py", 10, 45),
         ("test_vf_office_v2_604_cp083_reconcile_negative.py", 5, 15),
         ("test_vf_office_v2_604_cp084_nonroot_sink_recovery.py", 5, 15),
-        ("test_vf_office_v2_604_cp085_public_git_readback.py", 29, 15),
+        ("test_vf_office_v2_604_cp085_public_git_readback.py", 32, 15),
         # #762: offline-only byte-consistency negatives, NOT joined-run QA.
-        ("test_vf_office_v2_604_cp083_candidate_evidence_gate.py", 33, 30),
+        ("test_vf_office_v2_604_cp083_candidate_evidence_gate.py", 35, 30),
         # ChatGPT-069: GAP_4 and GAP_9 are passing refusals. GAP_6 stays an
         # expected failure. This file does not import the candidate.
         ("test_vf_office_v2_604_cp083_chatgpt069_negatives.py", 4, 30),
@@ -3478,6 +3546,8 @@ def main() -> int:
             tail = " | ".join(line.strip() for line in captured if line.strip())[-400:]
             extra = (" :: " + tail) if tail else ""
             fail("#604 CP083 candidate negative tests failed: " + test_file + extra)
+        for line in format_child_skips(test_file, test_run.stdout, test_run.stderr):
+            print(line)
     if os.name != "posix":
         if set(skipped_candidate_imports) != candidate_import_skip:
             fail("#604 CP083 candidate-import tests must SKIP_NON_POSIX")
@@ -3524,4 +3594,6 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    # Runs even if the call inside main() is removed, so that mutant still fails.
+    prove_windows_skip_codes()
     raise SystemExit(main())

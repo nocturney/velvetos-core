@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ast
 import hashlib
+import inspect
 import json
 import os
 import shutil
@@ -70,6 +71,8 @@ from office_v2_crewai.sandbox import (  # noqa: E402
     approved_environment,
     assert_cwd,
     assert_no_dotenv,
+    assert_under_velvet,
+    resolve_existing_path,
     assert_no_system_temp_crewai,
     assert_proxy_env,
     assert_sandbox_env,
@@ -93,8 +96,15 @@ from office_v2_crewai.usage_guard import (  # noqa: E402
     DRIFT_FORBIDDEN_MODULES,
     LEFTOVER_RELS,
     WINDOWS_NETSTAT,
+    WINDOWS_SYSTEM_ROOT,
     UsageRefusal,
-    _PS_OBSERVE,
+    _open_trusted_regular,
+    _strip_nt_prefix,
+    _windows_observe,
+    listener_reason,
+    process_tree,
+    windows_tool_env,
+    count_windows_listeners,
     assert_built_crew,
     assert_crew_spec,
     assert_dependency_drift,
@@ -673,6 +683,90 @@ def check_model_redirect(provider: LocalOllamaProvider) -> None:
         provider_mod.open_loopback = original
 
 
+def check_spawn_hygiene() -> None:
+    """Basename python is this interpreter, the child env is allowlisted, and taskkill is absolute."""
+    import subprocess
+
+    import office_v2_crewai.kill_harness as kill_mod
+
+    sentinel = "VF_KILL_HARNESS_SENTINEL"
+    os.environ[sentinel] = "nope"
+    captured: list[tuple[list[str], object]] = []
+
+    class _Proc:
+        pid = 424242
+
+        def poll(self):
+            return 0
+
+        def wait(self, timeout=None):
+            return 0
+
+        def kill(self):
+            return None
+
+    def fake_popen(argv, **kwargs):
+        captured.append((list(argv), kwargs.get("env")))
+        return _Proc()
+
+    original_popen = kill_mod.subprocess.Popen
+    kill_mod.subprocess.Popen = fake_popen
+    try:
+        KillHarness().spawn(["python", "-c", "print(1)"])
+    finally:
+        kill_mod.subprocess.Popen = original_popen
+        os.environ.pop(sentinel, None)
+    if len(captured) != 1:
+        fail("python basename spawn did not run")
+    argv, env = captured[0]
+    if argv[0] != sys.executable or not os.path.isabs(argv[0]) or argv[1] != "-I":
+        fail("python basename was not pinned to this interpreter: %s" % argv)
+    if not isinstance(env, dict) or sentinel in env:
+        fail("spawn inherited the parent environment")
+    if env.get("PATH") != str(Path(sys.executable).resolve().parent):
+        fail("spawn PATH was not limited to the interpreter directory: %s" % env.get("PATH"))
+    try:
+        KillHarness().spawn(["not-a-real-tool", "run"])
+    except KillRefusal as exc:
+        if str(exc) != "SPAWN_PATH_LOOKUP_REFUSED":
+            fail("relative spawn reason %s" % exc)
+    else:
+        fail("relative executable was accepted")
+    kill_argv = kill_mod.taskkill_argv(4242)
+    if kill_argv[0] == "taskkill" or not kill_argv[0].lower().endswith("taskkill.exe"):
+        fail("taskkill is not absolute: %s" % kill_argv)
+    if "system32" not in kill_argv[0].replace("/", "\\").lower():
+        fail("taskkill is not under System32: %s" % kill_argv)
+    for bad_pid in (True, 0, 1, -1, "4242"):
+        try:
+            kill_mod.taskkill_argv(bad_pid)
+        except KillRefusal as exc:
+            if str(exc) != "TASKKILL_PID_REFUSED":
+                fail("taskkill pid %r refused as %s" % (bad_pid, exc))
+        else:
+            fail("taskkill accepted pid %r" % (bad_pid,))
+    killed: list[tuple[list[str], object]] = []
+
+    def fake_run(argv, **kwargs):
+        killed.append((list(argv), kwargs.get("timeout")))
+        return subprocess.CompletedProcess(argv, 0)
+
+    original_run = kill_mod.subprocess.run
+    original_name = kill_mod.os.name
+    kill_mod.os.name = "nt"
+    kill_mod.subprocess.run = fake_run
+    try:
+        harness = KillHarness()
+        harness.owned.add(4242)
+        if harness.signal_pid(4242) != "KILLED":
+            fail("owned windows pid was not killed")
+    finally:
+        kill_mod.os.name = original_name
+        kill_mod.subprocess.run = original_run
+    if not killed or killed[0][0] != kill_argv or killed[0][1] != kill_mod.TASKKILL_TIMEOUT_SECONDS:
+        fail("windows kill did not use absolute taskkill with a timeout: %s" % killed)
+
+
 def check_kill() -> None:
     harness = KillHarness()
     proc = harness.spawn([sys.executable, "-c", "import time; time.sleep(30)"])
@@ -965,12 +1059,234 @@ def check_sandbox_mutations() -> None:
         if kickoff_output_path("D:\\Velvet\\lab\\sandbox") != "D:\\Velvet\\lab\\sandbox\\crewai-output\\kickoff.md":
             fail("kickoff path did not follow the sandbox parameter")
         _expect_storage(lambda: kickoff_output_path("D:\\NotVelvet\\sandbox"), "OUTPUT_NOT_ON_D")
+        _expect_storage(lambda: bind_process_sandbox(root="D:\\Velvet"), "SANDBOX_ROOT_IS_VELVET")
     finally:
         for key, value in snapshot.items():
             if value is None:
                 os.environ.pop(key, None)
             else:
                 os.environ[key] = value
+
+
+def check_sandbox_root() -> None:
+    """D:\\Velvet itself is refused. A link is resolved before that check.
+
+    The cwd cases stay on explicit paths. enter_sandbox(os.getcwd()) from a
+    D: checkout is SANDBOX_CWD_OUTSIDE_ROOT, not SANDBOX_CWD_NOT_ON_D.
+    """
+    _expect_storage(lambda: assert_under_velvet("D:\\Velvet"), "SANDBOX_ROOT_IS_VELVET")
+    _expect_storage(lambda: assert_under_velvet("D:\\Velvet\\"), "SANDBOX_ROOT_IS_VELVET")
+    assert_under_velvet("D:\\Velvet\\Pilots\\crewai-e4\\sandbox-home")
+    _expect_storage(lambda: assert_under_velvet("C:\\Velvet\\pilot"), "SANDBOX_NOT_ON_D:ROOT")
+
+    def resolve(path: str) -> str:
+        table = {
+            "D:\\Velvet": "D:\\Velvet",
+            "D:\\Velvet\\pilot": "D:\\Velvet\\pilot",
+            "D:\\Velvet\\hop": "C:\\Windows",
+            "D:\\Velvet\\loop": "\\\\?\\D:\\Velvet",
+        }
+        if path not in table:
+            fail("resolver was not asked for %s" % path)
+        return table[path]
+
+    assert_under_velvet("D:\\Velvet\\pilot", resolve=resolve)
+    _expect_storage(
+        lambda: assert_under_velvet("D:\\Velvet", resolve=resolve),
+        "SANDBOX_ROOT_IS_VELVET",
+    )
+    _expect_storage(
+        lambda: assert_under_velvet("D:\\Velvet\\hop", resolve=resolve),
+        "SANDBOX_NOT_ON_D:ROOT",
+    )
+    _expect_storage(
+        lambda: assert_under_velvet("D:\\Velvet\\loop", resolve=resolve),
+        "SANDBOX_ROOT_IS_VELVET",
+    )
+
+    present = {
+        "D:\\Velvet",
+        "D:\\Velvet\\hop",
+        "D:\\Velvet\\out",
+        "D:\\Velvet\\alias",
+    }
+    finals = {
+        "D:\\Velvet": "D:\\Velvet",
+        "D:\\Velvet\\hop": "C:\\Windows",
+        "D:\\Velvet\\out": "D:\\Other",
+        "D:\\Velvet\\alias": "D:\\Velvet\\pilot",
+    }
+
+    def exists_ancestor(path: str) -> bool:
+        return path in present
+
+    def final_ancestor(path: str) -> str:
+        if path not in finals:
+            fail("resolver was not asked for %s" % path)
+        return finals[path]
+
+    hop_new = resolve_existing_path(
+        "D:\\Velvet\\hop\\new", exists=exists_ancestor, final_path=final_ancestor,
+    )
+    if hop_new != "C:\\Windows\\new":
+        fail("junction tail was %s" % hop_new)
+    _expect_storage(
+        lambda: assert_under_velvet(
+            "D:\\Velvet\\hop\\new", exists=exists_ancestor, final_path=final_ancestor,
+        ),
+        "SANDBOX_NOT_ON_D:ROOT",
+    )
+    hop_dot = resolve_existing_path(
+        "D:\\Velvet\\hop\\..\\new", exists=exists_ancestor, final_path=final_ancestor,
+    )
+    if hop_dot != "C:\\Windows\\..\\new":
+        fail("junction dotdot tail was %s" % hop_dot)
+    _expect_storage(
+        lambda: assert_under_velvet(
+            "D:\\Velvet\\hop\\..\\new", exists=exists_ancestor, final_path=final_ancestor,
+        ),
+        "SANDBOX_NOT_ON_D:ROOT",
+    )
+    outside_child = resolve_existing_path(
+        "D:\\Velvet\\out\\child", exists=exists_ancestor, final_path=final_ancestor,
+    )
+    if outside_child != "D:\\Other\\child":
+        fail("same-drive link tail was %s" % outside_child)
+    _expect_storage(
+        lambda: assert_under_velvet(
+            "D:\\Velvet\\out\\child", exists=exists_ancestor, final_path=final_ancestor,
+        ),
+        "SANDBOX_OUTSIDE_VELVET",
+    )
+    stayed_child = resolve_existing_path(
+        "D:\\Velvet\\alias\\deeper", exists=exists_ancestor, final_path=final_ancestor,
+    )
+    if stayed_child != "D:\\Velvet\\pilot\\deeper":
+        fail("in-velvet link tail was %s" % stayed_child)
+    assert_under_velvet(
+        "D:\\Velvet\\alias\\deeper", exists=exists_ancestor, final_path=final_ancestor,
+    )
+
+    def never_resolve(path: str) -> str:
+        fail("resolver was asked for a missing tree %s" % path)
+        return path
+
+    lexical = resolve_existing_path(
+        "D:\\Velvet\\missing\\child",
+        exists=lambda path: path in {"D:", "D:\\"},
+        final_path=never_resolve,
+    )
+    if lexical != "D:\\Velvet\\missing\\child":
+        fail("missing tree was rewritten: %s" % lexical)
+    _expect_storage(
+        lambda: resolve_existing_path(
+            "D:\\Velvet\\pilot",
+            exists=lambda path: path == "D:\\Velvet\\pilot",
+            final_path=lambda path: None,
+        ),
+        "SANDBOX_PATH_UNRESOLVED",
+    )
+
+    def raise_os(path: str) -> str:
+        raise OSError("final path failed")
+
+    _expect_storage(
+        lambda: resolve_existing_path(
+            "D:\\Velvet\\pilot",
+            exists=lambda path: path == "D:\\Velvet\\pilot",
+            final_path=raise_os,
+        ),
+        "SANDBOX_PATH_UNRESOLVED",
+    )
+    _expect_storage(
+        lambda: assert_under_velvet("D:\\Velvet\\pilot", resolve=raise_os),
+        "SANDBOX_PATH_UNRESOLVED",
+    )
+    made_early = []
+
+    def mkdir_early(path: str) -> None:
+        made_early.append(path)
+
+    def resolve_before(path: str) -> str:
+        if path == sandbox_temp_dir("D:\\Velvet\\lab\\sandbox"):
+            return "C:\\Windows\\Temp"
+        return path
+
+    _expect_storage(
+        lambda: prepare_sandbox_temp(
+            "D:\\Velvet\\lab\\sandbox",
+            mkdir=mkdir_early,
+            exists=lambda path: True,
+            resolve=resolve_before,
+        ),
+        "SANDBOX_NOT_ON_D:ROOT",
+    )
+    if made_early:
+        fail("mkdir ran through an ancestor that resolves off D:")
+    phase = {"after": False}
+
+    def mkdir_after(path: str) -> None:
+        phase["after"] = True
+
+    def resolve_after(path: str) -> str:
+        if phase["after"] and path == sandbox_temp_dir("D:\\Velvet\\lab\\sandbox"):
+            return "C:\\Windows\\Temp"
+        return path
+
+    _expect_storage(
+        lambda: prepare_sandbox_temp(
+            "D:\\Velvet\\lab\\sandbox",
+            mkdir=mkdir_after,
+            exists=lambda path: True,
+            resolve=resolve_after,
+        ),
+        "SANDBOX_NOT_ON_D:ROOT",
+    )
+    parent = Path(tempfile.mkdtemp(prefix="crewai-velvet-link-"))
+    try:
+        velvet = parent / "Velvet"
+        pilot = velvet / "pilot"
+        outside = parent / "outside"
+        pilot.mkdir(parents=True)
+        outside.mkdir()
+        link = velvet / "hop"
+        try:
+            link.symlink_to(outside, target_is_directory=True)
+        except OSError as exc:
+            if os.name != "posix":
+                link = None
+            else:
+                fail("posix symlink could not be created: %s" % exc)
+        if link is not None:
+            resolved = resolve_existing_path(str(link))
+            outside_real = os.path.realpath(outside)
+            if os.path.normpath(resolved) != outside_real:
+                fail("posix symlink was not resolved: %s" % resolved)
+            if os.path.islink(resolved):
+                fail("resolver returned the symlink itself")
+            velvet_real = os.path.realpath(velvet)
+            if os.path.commonpath([os.path.normpath(resolved), velvet_real]) == velvet_real:
+                fail("resolved symlink stayed inside the velvet stand-in")
+            stayed = resolve_existing_path(str(pilot))
+            if os.path.normpath(stayed) != os.path.realpath(pilot):
+                fail("posix subdirectory was not kept")
+            missing = link / "new-leaf"
+            resolved_missing = resolve_existing_path(str(missing))
+            expect = str(Path(outside_real).joinpath("new-leaf"))
+            if os.path.normpath(resolved_missing) != os.path.normpath(expect):
+                fail("missing leaf under a symlink was %s" % resolved_missing)
+    finally:
+        shutil.rmtree(parent, ignore_errors=True)
+    source = (PACKAGE / "sandbox.py").read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    fn = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "assert_under_velvet")
+    body = ast.get_source_segment(source, fn) or ""
+    resolve_at = body.find("resolve_existing_path")
+    under_at = body.find("under_root")
+    if resolve_at < 0 or under_at < 0 or resolve_at > under_at:
+        fail("velvet check does not resolve the path before the prefix test")
+    if "GetFinalPathNameByHandleW" not in source or "os.path.realpath" not in source:
+        fail("final-path resolution is missing GetFinalPathNameByHandle or realpath")
 
 
 def check_e4_mutations() -> None:
@@ -1458,13 +1774,108 @@ def check_listeners() -> None:
         "PILOT_LISTENER_UNPROVEN",
     )
     _expect_usage(lambda: count_listening_sockets(10, platform="freebsd"), "PILOT_LISTENER_UNPROVEN")
-    if ".ToArray()" not in _PS_OBSERVE:
-        fail("PowerShell listener script does not call ToArray")
-    if WINDOWS_NETSTAT not in _PS_OBSERVE or "& netstat.exe" in _PS_OBSERVE:
-        fail("PowerShell listener script still resolves netstat from PATH")
-    for wrapped in ("@($processes)", "@($tcp)", "@($udp)"):
-        if wrapped in _PS_OBSERVE:
-            fail("PowerShell listener script still wraps %s" % wrapped)
+    header = "Active Connections\n\n  Proto  Local Address  Foreign Address  State  PID\n"
+    asked = {}
+
+    def spawn(netstat):
+        asked["netstat"] = netstat
+        return header, 0, "10 4\n", 0
+
+    observed = _windows_observe(spawn=spawn)
+    if asked.get("netstat") != WINDOWS_NETSTAT:
+        fail("observer did not use the absolute netstat path")
+    if count_windows_listeners(10, observed) != 0:
+        fail("header-only absolute netstat was not a proven zero")
+    listening = header + "  TCP    127.0.0.1:9    0.0.0.0:0    LISTENING    10\n"
+
+    def spawn_listen(netstat):
+        return listening, 0, "10 4\n1 0\n", 0
+
+    if count_windows_listeners(10, _windows_observe(spawn=spawn_listen)) != 1:
+        fail("absolute netstat LISTENING row was not counted")
+    udp = header + "  UDP    0.0.0.0:500    *:*    10\n"
+
+    def spawn_udp(netstat):
+        return udp, 0, "10 1\n", 0
+
+    if count_windows_listeners(10, _windows_observe(spawn=spawn_udp)) != 1:
+        fail("absolute netstat UDP row was not counted")
+
+    def spawn_bad(netstat):
+        return "not a table", 0, "10 4\n", 0
+
+    _expect_usage(lambda: _windows_observe(spawn=spawn_bad), "PILOT_LISTENER_UNPROVEN")
+
+    def spawn_rc(netstat):
+        return header, 1, "10 4\n", 0
+
+    try:
+        _windows_observe(spawn=spawn_rc)
+    except UsageRefusal as exc:
+        if str(exc) != "PILOT_LISTENER_UNPROVEN" or exc.detail != "probe=netstat rc=1 stdout=present":
+            fail("netstat refusal hid its sub-code: %s" % getattr(exc, "detail", None))
+    else:
+        fail("nonzero netstat was accepted")
+    secret = "C:\\Users\\secret SystemRoot=C:\\Windows"
+
+    def spawn_empty(netstat):
+        return secret, 2, "10 4\n", 0
+
+    try:
+        _windows_observe(spawn=spawn_empty)
+    except UsageRefusal as exc:
+        if exc.detail != "probe=netstat rc=2 stdout=present":
+            fail("netstat stdout leaked into the sub-code: %s" % getattr(exc, "detail", None))
+        if "secret" in exc.detail or "SystemRoot" in exc.detail or "\\" in exc.detail:
+            fail("listener sub-code recorded environment or output")
+    else:
+        fail("netstat with a secret stdout was accepted")
+
+    def spawn_blank(netstat):
+        return "   ", 1, "10 4\n", 0
+
+    try:
+        _windows_observe(spawn=spawn_blank)
+    except UsageRefusal as exc:
+        if exc.detail != "probe=netstat rc=1 stdout=empty":
+            fail("empty netstat stdout was not named: %s" % getattr(exc, "detail", None))
+    else:
+        fail("empty netstat stdout was accepted")
+    try:
+        process_tree([{"pid": 1, "ppid": 0}], 99)
+    except UsageRefusal as exc:
+        if exc.detail != "probe=toolhelp pid-absent":
+            fail("missing process-tree pid was not named: %s" % getattr(exc, "detail", None))
+    else:
+        fail("a missing process-tree pid was treated as zero")
+    leaked = listener_reason("netstat", "status", rc=1, stdout=secret)
+    if leaked != "probe=netstat rc=1 stdout=present" or "secret" in leaked:
+        fail("listener_reason copied output: %s" % leaked)
+    source = (PACKAGE / "usage_guard.py").read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    fn = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "_windows_observe")
+    body = ast.get_source_segment(source, fn) or ""
+    if "Get-NetTCPConnection" in body or "Get-NetUDPEndpoint" in body:
+        fail("windows observer still calls Get-Net")
+    if "WINDOWS_NETSTAT" not in body or '"-ano"' not in body:
+        fail("windows observer does not run absolute netstat -ano")
+    if "CreateToolhelp32Snapshot" not in source:
+        fail("windows process tree does not use Toolhelp")
+    if "_windows_processes" not in body:
+        fail("windows observer does not read the Toolhelp process tree")
+    tool_env = windows_tool_env({"SystemRoot": "D:\\Velvet", "PATH": "x"})
+    if tool_env["SystemRoot"] != WINDOWS_SYSTEM_ROOT or tool_env["windir"] != WINDOWS_SYSTEM_ROOT:
+        fail("listener tool env did not pin SystemRoot to C:\\Windows")
+    if tool_env["PATH"] != "x":
+        fail("listener tool env dropped the caller PATH")
+    runner = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "run_trusted_listener")
+    launched = ast.get_source_segment(source, runner) or ""
+    if "windows_tool_env" not in launched:
+        fail("Windows listener child does not pin SystemRoot")
+    opener = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "_open_trusted_regular")
+    opened = ast.get_source_segment(source, opener) or ""
+    if 'os.name != "nt"' not in opened:
+        fail("O_NOFOLLOW is still applied on Windows opens")
     probed = []
 
     def listener_boom():
@@ -1475,6 +1886,104 @@ def check_listeners() -> None:
     _expect_usage(lambda: guard_post_run(loaded, listener_boom), "FORBIDDEN_MODULE_LOADED")
     if probed:
         fail("the module guard ran after the listener check")
+
+
+def check_windows_listener_pins() -> None:
+    """Pins the three Windows checks a source-only scan can leave alive.
+
+    A realpath that leaves the opened file is refused while ``os.name`` is
+    ``nt``. A ``\\\\?\\`` prefix on that same file is still accepted, so
+    stripping the prefix is required. The live observer runs only
+    ``C:\\Windows\\System32\\netstat.exe``.
+    """
+    import office_v2_crewai.usage_guard as usage_mod
+
+    same = "C:\\Windows\\System32\\netstat.exe"
+    if _strip_nt_prefix("\\\\?\\" + same) != same:
+        fail("\\\\?\\ prefix was not stripped")
+    unc = _strip_nt_prefix("\\\\?\\UNC\\server\\share\\netstat.exe")
+    if unc != "\\\\server\\share\\netstat.exe":
+        fail("UNC \\\\?\\ prefix was not stripped: %s" % unc)
+    if _strip_nt_prefix(same) != same:
+        fail("a plain Windows path was rewritten")
+
+    def open_as_windows(realpath):
+        saved_name = os.name
+        saved_realpath = os.path.realpath
+        os.name = "nt"
+        os.path.realpath = realpath
+        try:
+            return _open_trusted_regular(str(binary))
+        finally:
+            os.name = saved_name
+            os.path.realpath = saved_realpath
+
+    parent = Path(tempfile.mkdtemp(prefix="crewai-nt-open-"))
+    binary = parent / "netstat.exe"
+    outside = parent / "outside.exe"
+    binary.write_bytes(b"MZ")
+    outside.write_bytes(b"MZ")
+    try:
+        try:
+            fd = open_as_windows(lambda path: "\\\\?\\" + os.path.abspath(path))
+        except OSError as exc:
+            fail("same-file \\\\?\\ realpath was refused: %s" % exc)
+        else:
+            os.close(fd)
+        try:
+            fd = open_as_windows(lambda path: str(outside))
+        except OSError:
+            fd = None
+        else:
+            os.close(fd)
+            fail("Windows realpath escape was accepted")
+    finally:
+        shutil.rmtree(parent, ignore_errors=True)
+
+    calls = []
+    saved = (
+        usage_mod.trusted_listener_binary,
+        usage_mod.run_trusted_listener,
+        usage_mod._windows_processes,
+    )
+
+    def fake_binary(tool, platform=None):
+        return "C:\\Windows\\System32\\not-netstat.exe"
+
+    class _Proc:
+        stdout = "Active Connections\n"
+        returncode = 0
+
+    def fake_run(binary, args, path_value=None):
+        calls.append(binary)
+        return _Proc()
+
+    usage_mod.trusted_listener_binary = fake_binary
+    usage_mod.run_trusted_listener = fake_run
+    usage_mod._windows_processes = lambda: [{"pid": 10, "ppid": 1}]
+    try:
+        try:
+            _windows_observe()
+        except UsageRefusal as exc:
+            if str(exc) != "PILOT_LISTENER_UNPROVEN":
+                fail("other netstat path refused as %s" % exc)
+        else:
+            fail("a path other than %s was accepted" % WINDOWS_NETSTAT)
+        if calls:
+            fail("non-System32 netstat was executed")
+        calls.clear()
+        usage_mod.trusted_listener_binary = lambda tool, platform=None: WINDOWS_NETSTAT
+        observed = _windows_observe()
+        if calls != [WINDOWS_NETSTAT]:
+            fail("exact netstat.exe was not the binary that ran: %s" % calls)
+        if observed["tcp"] or observed["udp"]:
+            fail("header-only exact netstat was not empty")
+    finally:
+        (
+            usage_mod.trusted_listener_binary,
+            usage_mod.run_trusted_listener,
+            usage_mod._windows_processes,
+        ) = saved
 
 
 def check_run_record() -> None:
@@ -2159,6 +2668,127 @@ def check_review_mutations() -> None:
         shutil.rmtree(parent, ignore_errors=True)
 
 
+WINDOWS_FIXTURE_VARS = (
+    "SystemRoot",
+    "windir",
+    "ComSpec",
+    "SystemDrive",
+    "PATHEXT",
+    "NUMBER_OF_PROCESSORS",
+    "PROCESSOR_ARCHITECTURE",
+    "COMPUTERNAME",
+    "USERDOMAIN",
+    "TEMP",
+    "TMP",
+    "USERPROFILE",
+    "PSModulePath",
+)
+
+
+def _fixture_saved_value(saved: dict, name: str):
+    """Read one saved env value. Windows stores these names in uppercase."""
+    folded = {}
+    for key, value in saved.items():
+        if isinstance(key, str):
+            folded.setdefault(key.casefold(), value)
+    value = folded.get(name.casefold())
+    if isinstance(value, str) and value.strip():
+        return value
+    return None
+
+
+def apply_windows_fixture_env(ready: dict, saved: dict, platform: str | None = None) -> dict:
+    """Copy Windows process plumbing into the cleared kickoff fixture.
+
+    Production listener code does not clear ``os.environ``. This sensor helper
+    does. On win32, ``SystemRoot``, ``windir``, and ``ComSpec`` are copied
+    from the process that started the sensor so a trusted child can start.
+    ``dict(os.environ)`` on Windows has uppercase keys, so the lookup ignores
+    case. Missing or blank values are not invented. ``PATH`` stays the fixture
+    value.
+    """
+    plat = sys.platform if platform is None else platform
+    if plat != "win32" or not isinstance(saved, dict) or not isinstance(ready, dict):
+        return ready
+    for name in WINDOWS_FIXTURE_VARS:
+        value = _fixture_saved_value(saved, name)
+        if value is not None:
+            ready[name] = value
+    return ready
+
+
+def check_windows_fixture_env() -> None:
+    """The completed-kickoff helper keeps SystemRoot, windir, and ComSpec on win32."""
+    saved = {
+        "SystemRoot": "C:\\Windows",
+        "windir": "C:\\Windows",
+        "ComSpec": "C:\\Windows\\System32\\cmd.exe",
+        "PATH": "C:\\Windows\\System32",
+    }
+    ready = {"PATH": "/usr/sbin:/usr/bin:/bin", "OLLAMA_NO_CLOUD": "1"}
+    applied = apply_windows_fixture_env(dict(ready), saved, platform="win32")
+    for name in ("SystemRoot", "windir", "ComSpec"):
+        if applied.get(name) != saved[name]:
+            fail("Windows fixture dropped %s" % name)
+    if applied.get("PATH") != ready["PATH"]:
+        fail("Windows fixture rewrote PATH")
+    upper = apply_windows_fixture_env(
+        dict(ready),
+        {
+            "SYSTEMROOT": "C:\\Windows",
+            "WINDIR": "C:\\Windows",
+            "COMSPEC": "C:\\Windows\\System32\\cmd.exe",
+        },
+        platform="win32",
+    )
+    for name in ("SystemRoot", "windir", "ComSpec"):
+        if upper.get(name) != {
+            "SystemRoot": "C:\\Windows",
+            "windir": "C:\\Windows",
+            "ComSpec": "C:\\Windows\\System32\\cmd.exe",
+        }[name]:
+            fail("uppercase %s was not restored" % name.upper())
+    plumbing = apply_windows_fixture_env(
+        dict(ready),
+        {
+            "PATHEXT": ".COM;.EXE",
+            "TEMP": "C:\\Windows\\Temp",
+            "TMP": "C:\\Windows\\Temp",
+            "USERPROFILE": "C:\\Users\\runner",
+            "PSMODULEPATH": "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules",
+            "PATH": "C:\\should-not-copy",
+        },
+        platform="win32",
+    )
+    for name, value in (
+        ("PATHEXT", ".COM;.EXE"),
+        ("TEMP", "C:\\Windows\\Temp"),
+        ("TMP", "C:\\Windows\\Temp"),
+        ("USERPROFILE", "C:\\Users\\runner"),
+        ("PSModulePath", "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules"),
+    ):
+        if plumbing.get(name) != value:
+            fail("Windows fixture dropped %s" % name)
+    if plumbing.get("PATH") != ready["PATH"]:
+        fail("Windows fixture copied PATH")
+    blank = apply_windows_fixture_env(
+        dict(ready),
+        {"SystemRoot": "  ", "windir": "", "ComSpec": None},
+        platform="win32",
+    )
+    if any(name in blank for name in ("SystemRoot", "windir", "ComSpec")):
+        fail("blank Windows plumbing was invented")
+    posix = apply_windows_fixture_env(dict(ready), saved, platform="linux")
+    if any(name in posix for name in ("SystemRoot", "windir", "ComSpec")):
+        fail("non-Windows fixture copied Windows plumbing")
+    source = inspect.getsource(check_exit_contract)
+    needle = "apply_windows_fixture_env(ready, saved_env)"
+    clear_at = source.find("os.environ.clear()")
+    apply_at = source.find(needle)
+    if clear_at < 0 or apply_at < clear_at:
+        fail("completed-kickoff helper does not keep Windows plumbing after the clear")
+
+
 def check_exit_contract() -> None:
     """Exit 0 only after a post-guarded kickoff that is still unreviewed."""
     cited = (
@@ -2243,6 +2873,7 @@ def check_exit_contract() -> None:
             # Listener proof uses /usr/sbin/lsof, not PATH. The positive fixture
             # still sets a normal PATH for the rest of the process.
             ready["PATH"] = "/usr/sbin:/usr/bin:/bin" if path is None else path
+            apply_windows_fixture_env(ready, saved_env)
             os.environ.update(ready)
             out = parent / "out"
             if force_darwin:
@@ -2280,7 +2911,10 @@ def check_exit_contract() -> None:
 
     code, receipt, postflight = run(cited, True)
     if code != 0 or completed_kickoff_exit(receipt) != 0:
-        fail("completed kickoff returned %s (%s)" % (code, receipt["identity"].get("reason")))
+        fail(
+            "completed kickoff returned %s (%s) detail=%s"
+            % (code, receipt["identity"].get("reason"), receipt.get("teardown", {}).get("listener_detail"))
+        )
     if (
         receipt["identity"]["pilot_status"] != "NOT_VERIFIED"
         or receipt["identity"]["task_status"] != "NOT_VERIFIED"
@@ -2587,13 +3221,16 @@ def main() -> int:
     check_condition_mutations()
     check_e4_mutations()
     check_sandbox_mutations()
+    check_sandbox_root()
     check_endpoint_mutations()
     check_proxy_gate()
     check_manifest_mutation()
     check_provider()
     check_kill()
+    check_spawn_hygiene()
     check_execute()
     check_listeners()
+    check_windows_listener_pins()
     check_trusted_listener_binaries()
     check_run_record()
     check_ast()
@@ -2601,6 +3238,7 @@ def main() -> int:
     check_lab4()
     check_case06_role_mutations()
     check_review_mutations()
+    check_windows_fixture_env()
     check_exit_contract()
     check_evidence_eol()
     check_workflows()

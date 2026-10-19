@@ -9,13 +9,16 @@ on:
 
 jobs:
   research-verification:
-    runs-on: ubuntu-latest
+    # noble ffmpeg=7:6.1.1-3ubuntu5 is not in Ubuntu 26. ubuntu-latest moves there.
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        # actions/checkout v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Set up Python
-        uses: actions/setup-python@v7
+        # actions/setup-python v7.0.0
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: '3.12'
 
@@ -23,7 +26,20 @@ jobs:
         run: |
           python3 -m pip install --disable-pip-version-check --require-hashes -r requirements-sensors.py312.lock
           sudo apt-get update -qq
-          sudo apt-get install -y ffmpeg
+          sudo apt-get install -y -d 'ffmpeg=7:6.1.1-3ubuntu5'
+          shopt -s nullglob
+          matches=(/var/cache/apt/archives/ffmpeg_*6.1.1-3ubuntu5_amd64.deb)
+          if [ "${#matches[@]}" -ne 1 ]; then
+            printf 'FAIL apt ffmpeg deb count=%s\n' "${#matches[@]}" >&2
+            exit 1
+          fi
+          deb="${matches[0]}"
+          if [ "$(basename "$deb")" != 'ffmpeg_7%3a6.1.1-3ubuntu5_amd64.deb' ]; then
+            printf 'FAIL apt ffmpeg cache name=%s\n' "$(basename "$deb")" >&2
+            exit 1
+          fi
+          python3 scripts/verify_ffmpeg_zip_sha256.py --path "$deb" --expected "1a23baace5f2688a47e28119aedae6993cd638e6279a7227dfc52d9a337a1c17" --kind deb
+          sudo apt-get install -y "$deb"
 
       - name: Research routing map
         run: python3 scripts/vfresearch_cadence.py map
@@ -35,7 +51,8 @@ jobs:
         run: python3 scripts/vfresearch_cadence.py build-index
 
       - name: Upload semantic index for consumers
-        uses: actions/upload-artifact@v7
+        # actions/upload-artifact v7.0.2
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: vfmem-semantic-index
           path: packages/vfmem/semantic_index.pkl

@@ -21,12 +21,19 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      # actions/checkout v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Set up Python
-        uses: actions/setup-python@v7
+        # actions/setup-python v7.0.0
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: "3.11"
+
+      # A network error exits 1 here, before the JSON deck is written.
+      # A signature or sha256 mismatch also exits 1. The commit does not run.
+      - name: Verify Bento shell checksum
+        run: python3 scripts/verify_bento_shell.py
 
       - name: Build weekly deck (JSON + HTML)
         run: python3 scripts/vf_weekly_deck.py

@@ -23,7 +23,7 @@ import vf_office_v2_604_real_etcd_mtls_rbac_identity_lab as identity
 SCHEMA = "velvetos.office-v2.604.cp081.real-mtls-atomic-admission.lab.v1"
 ENV = "VF604_CP081_DISPOSABLE_GUEST_ONLY"
 PERMIT = "VF604_CP081_EXPLICIT_NO_GITHUB_TEST"
-PIN_IDENTITY = "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c"
+PIN_IDENTITY = "7fbd63b9f34ae8a4a465c6f2e78ea7ed89dd105650626712b4a080e58d75c299"
 PIN_ETCD = "117cc09981c0f1eb378e7520be6969756c2d6a762f376944e53f7bc9800c0c59"
 PIN_CTL = "de07257495499384f91f028dbc0c8e0394e0bd572b728ac486bbadbfa1cdf275"
 

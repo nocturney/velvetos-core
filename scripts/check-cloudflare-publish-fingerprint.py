@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import importlib.util
 import json
-import subprocess
+import os
 import sys
 from pathlib import Path
+
+from vf_spawn import SpawnRefusal, resolve_executable, run_tool, same_pinned_directory
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKER = ROOT / "packages" / "vfigos" / "cloudflare-publisher"
@@ -27,13 +29,84 @@ def load_python_fingerprint():
     return module.publish_fingerprint
 
 
+NODE_TIMEOUT_SECONDS = 30
+
+
+def prove_node_hygiene() -> None:
+    """node is absolute, timed, and does not inherit NODE_OPTIONS."""
+    import vf_spawn
+
+    sentinel = "VF_SPAWN_SENTINEL"
+    os.environ[sentinel] = "nope"
+    os.environ["NODE_OPTIONS"] = "--experimental-permission"
+    root = Path(os.environ.get("TEMP") or os.environ.get("TMPDIR") or "/tmp")
+    node = root / "node"
+    captured: list[tuple[list[str], dict]] = []
+    original_run = vf_spawn.subprocess.run
+    original_which = vf_spawn.shutil.which
+
+    def fake_run(argv, **kwargs):
+        captured.append((list(argv), kwargs))
+        return vf_spawn.subprocess.CompletedProcess(argv, 0, stdout='{"ok":true}\n', stderr="")
+
+    vf_spawn.subprocess.run = fake_run
+    vf_spawn.shutil.which = lambda name: str(node) if name == "node" else original_which(name)
+    try:
+        run_tool(["node", "test-fingerprint.mjs"], timeout=NODE_TIMEOUT_SECONDS, cwd=ROOT)
+    except SpawnRefusal as exc:
+        fail(f"node spawn refused: {exc}")
+    finally:
+        vf_spawn.subprocess.run = original_run
+        vf_spawn.shutil.which = original_which
+        os.environ.pop(sentinel, None)
+        os.environ.pop("NODE_OPTIONS", None)
+    if len(captured) != 1:
+        fail("node spawn did not run")
+    argv, kwargs = captured[0]
+    if argv[0] != str(Path(node).resolve()) or not os.path.isabs(argv[0]):
+        fail(f"node was not absolute: {argv}")
+    if kwargs.get("timeout") != NODE_TIMEOUT_SECONDS:
+        fail("node timeout missing")
+    env = kwargs.get("env")
+    if not isinstance(env, dict) or sentinel in env or "NODE_OPTIONS" in env:
+        fail(f"node environment was not allowlisted: {env}")
+    if not same_pinned_directory(env.get("PATH", ""), str(Path(argv[0]).resolve().parent)):
+        fail(f"node PATH was not the executable directory: {env.get('PATH')}")
+    short = "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\node-abc"
+    long = "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\node-abc"
+
+    def expand_short(path: str) -> str:
+        return str(path).replace("/", "\\").replace("RUNNER~1", "runneradmin")
+
+    if not same_pinned_directory(short, long, realpath=expand_short, fold_case=True, separator=";"):
+        fail("8.3 node directory did not match its long path")
+    if not same_pinned_directory(short, long.upper(), realpath=expand_short, fold_case=True, separator=";"):
+        fail("node pin comparison stayed case-sensitive")
+    if same_pinned_directory(long + ";" + short, long, realpath=expand_short, fold_case=True, separator=";"):
+        fail("a search PATH was accepted as the node pin")
+    vf_spawn.shutil.which = lambda name: "node" if name == "node" else None
+    try:
+        try:
+            resolve_executable("node")
+        except SpawnRefusal as exc:
+            if str(exc) != "SPAWN_PATH_LOOKUP_REFUSED":
+                fail(f"relative node refused as {exc}")
+        else:
+            fail("relative node was accepted")
+    finally:
+        vf_spawn.shutil.which = original_which
+
+
 def main() -> int:
-    proc = subprocess.run(
-        ["node", str(WORKER / "test-fingerprint.mjs")],
+    prove_node_hygiene()
+    try:
+        node = resolve_executable("node")
+    except SpawnRefusal as exc:
+        fail(str(exc))
+    proc = run_tool(
+        [node, str(WORKER / "test-fingerprint.mjs")],
         cwd=ROOT,
-        text=True,
-        capture_output=True,
-        timeout=30,
+        timeout=NODE_TIMEOUT_SECONDS,
     )
     if proc.returncode != 0:
         fail(proc.stderr or proc.stdout or f"node exit {proc.returncode}")

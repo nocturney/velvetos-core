@@ -16,6 +16,7 @@ from vfmem import (  # noqa: E402
     build_graph,
     cmd_who,
     match_routes,
+    prove_git_changed,
 )
 
 ALLOWED_STATUS = {"embed", "skip", "later"}
@@ -135,6 +136,10 @@ def main() -> None:
     for needle in ("atomic_pickle_dump", "os.replace", "semantic_index.pkl"):
         if needle not in semantic_src:
             fail(f"vf_semantic_search.py must implement atomic index write ({needle})")
+
+    git_errors = prove_git_changed()
+    if git_errors:
+        fail("vfmem git diff: " + "; ".join(git_errors))
 
     print(
         f"OK vfmem embed={embed} packs={len(packs)} "

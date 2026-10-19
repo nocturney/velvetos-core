@@ -5,9 +5,12 @@ from __future__ import annotations
 import argparse
 import fnmatch
 import json
+import os
 import subprocess
 import tempfile
 from pathlib import Path
+
+from vf_spawn import GIT_TIMEOUT_SECONDS, SpawnRefusal, allowlisted_git_errors, revision_form_errors, run_git
 
 ROOT = Path(__file__).resolve().parents[1]
 POLICY_DIR = ROOT / "packages" / "velvetos" / "policy"
@@ -16,18 +19,85 @@ DEFAULT_COVERAGE = "9217e172d4f11a01f5db124d7d811c7dcab6b9c5"
 DEFAULT_REGISTRY = "aaa1ec83cdb62e2b140c54ce00c5a73ccf2faa17"
 
 
-def git(*args: str) -> str:
-    return subprocess.check_output(
-        ["git", *args],
-        cwd=ROOT,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-    ).strip()
+def git(*args: str, revisions: list[str] | None = None) -> str:
+    try:
+        proc = run_git(
+            list(args),
+            cwd=ROOT,
+            check=False,
+            timeout=GIT_TIMEOUT_SECONDS,
+            revisions=revisions,
+        )
+    except SpawnRefusal as exc:
+        raise SystemExit(f"FAIL git spawn: {exc}") from exc
+    if proc.returncode != 0:
+        detail = (proc.stderr or proc.stdout or "").strip()
+        raise SystemExit(f"FAIL git: {detail}")
+    return proc.stdout.strip()
 
 
 def git_show(sha: str, path: str) -> str:
-    return git("show", f"{sha}:{path}")
+    return git("show", revisions=[f"{sha}:{path}"])
+
+
+def prove_git_spawn() -> None:
+    """Report git is absolute, timed, and allowlisted. Revisions stay before ``--``."""
+    import vf_spawn
+
+    previous = {
+        "VF_SPAWN_SENTINEL": os.environ.get("VF_SPAWN_SENTINEL"),
+        "GIT_EXEC_PATH": os.environ.get("GIT_EXEC_PATH"),
+    }
+    os.environ["VF_SPAWN_SENTINEL"] = "nope"
+    os.environ["GIT_EXEC_PATH"] = "/evil/git-core"
+    captured: list[tuple[list[str], dict]] = []
+    original = vf_spawn.subprocess.run
+
+    def fake_run(argv, **kwargs):
+        captured.append((list(argv), kwargs))
+        return vf_spawn.subprocess.CompletedProcess(argv, 0, stdout="blob\n", stderr="")
+
+    vf_spawn.subprocess.run = fake_run
+    try:
+        git("status")
+        try:
+            git("show", revisions=["--output=/tmp/pwn"])
+        except SystemExit as exc:
+            if "GIT_REV_REFUSED" not in str(exc):
+                raise SystemExit(f"FAIL dash revision refused as {exc}") from exc
+        else:
+            raise SystemExit("FAIL dash revision was accepted")
+        git("show", revisions=[f"{DEFAULT_BASELINE}:AGENTS.md"])
+        git("ls-tree", "-r", "-l", revisions=[DEFAULT_BASELINE])
+    finally:
+        vf_spawn.subprocess.run = original
+        for key, value in previous.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+    if len(captured) != 3:
+        raise SystemExit(f"FAIL git spawn count: {captured!r}")
+    errors: list[str] = []
+    for argv, kwargs in captured:
+        errors.extend(allowlisted_git_errors(argv, kwargs, timeout=GIT_TIMEOUT_SECONDS))
+        if kwargs.get("stdin") is not subprocess.DEVNULL:
+            errors.append("git stdin was not closed")
+    if "--" in captured[0][0]:
+        errors.append(f"status inserted --: {captured[0][0]}")
+    errors.extend(revision_form_errors(captured[1][0], [f"{DEFAULT_BASELINE}:AGENTS.md"]))
+    errors.extend(revision_form_errors(captured[2][0], [DEFAULT_BASELINE]))
+    if errors:
+        raise SystemExit("FAIL git spawn: " + "; ".join(errors))
+    spec = f"{DEFAULT_BASELINE}:AGENTS.md"
+    shown = git("show", revisions=[spec])
+    plain = git("show", spec)
+    if shown != plain:
+        raise SystemExit("FAIL git show -- changed object text")
+    listed = git("ls-tree", "-r", "--name-only", revisions=[DEFAULT_BASELINE])
+    plain_list = git("ls-tree", "-r", "--name-only", DEFAULT_BASELINE)
+    if listed != plain_list:
+        raise SystemExit("FAIL git ls-tree -- changed the tree listing")
 
 
 def load_json(path: Path) -> dict:
@@ -152,7 +222,7 @@ def build_reports(baseline_sha: str, coverage_sha: str, registry_sha: str, ci_ba
         ],
     }
 
-    tree = git("ls-tree", "-r", "-l", baseline_sha)
+    tree = git("ls-tree", "-r", "-l", revisions=[baseline_sha])
     tracked: list[dict[str, object]] = []
     for line in tree.splitlines():
         parts = line.split(None, 4)
@@ -185,7 +255,7 @@ def build_reports(baseline_sha: str, coverage_sha: str, registry_sha: str, ci_ba
     }
 
 
-    baseline_tree = git("ls-tree", "-r", "--name-only", baseline_sha).splitlines()
+    baseline_tree = git("ls-tree", "-r", "--name-only", revisions=[baseline_sha]).splitlines()
     baseline_snapshot = {
         "report": "stage0-live-baseline",
         "source_commit_sha": baseline_sha,
@@ -271,7 +341,12 @@ def main() -> int:
     p.add_argument("--registry-sha", default=DEFAULT_REGISTRY)
     p.add_argument("--ci-baseline", default=str(POLICY_DIR / "reports" / "ci-baseline.json"))
     p.add_argument("--check", action="store_true")
+    p.add_argument("--prove", action="store_true")
     args = p.parse_args()
+    if args.prove:
+        prove_git_spawn()
+        print("OK policy report git spawn")
+        return 0
 
     ci_path = Path(args.ci_baseline).resolve()
     ci = load_json(ci_path)

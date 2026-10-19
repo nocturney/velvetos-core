@@ -219,6 +219,16 @@ def artifact_path(base: Path, name: object) -> Path:
     return base.joinpath(*parts)
 
 
+def refuse_symlinked_anchor(base: Path) -> None:
+    """O_NOFOLLOW only sees the final component. An ancestor symlink is still a different tree."""
+    try:
+        real = os.path.realpath(base, strict=True)
+    except OSError as exc:
+        raise Refused("ANCHORED_OPEN_REFUSED") from exc
+    if real != os.path.abspath(base):
+        raise Refused("ANCHORED_OPEN_REFUSED")
+
+
 def read_anchored(base: Path, name: object, limit: int) -> bytes:
     """Open each path component from a held directory fd. O_NOFOLLOW.
 
@@ -234,6 +244,7 @@ def read_anchored(base: Path, name: object, limit: int) -> bytes:
             "/./" not in name and "//" not in name,
             "UNSAFE_ARTIFACT_PATH")
     flags_dir = directory_open_flags()
+    refuse_symlinked_anchor(base)
     flags_file = (os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) |
                   getattr(os, "O_NONBLOCK", 0))
     try:

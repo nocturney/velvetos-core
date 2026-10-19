@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import math
 import os
@@ -165,10 +166,30 @@ def real_smoke() -> tuple[dict, dict]:
         return dfam, dry
 
 
+def prove_setup_git() -> None:
+    path = ROOT / "scripts" / "setup-cli-anything-pilot.py"
+    spec = importlib.util.spec_from_file_location("setup_cli_anything_pilot_hygiene", path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec and spec.loader
+    spec.loader.exec_module(module)
+    errors = module.prove_git_hygiene()
+    errors.extend(module.prove_git_real())
+    errors.extend(module.prove_ensure_clone())
+    errors.extend(module.prove_ensure_clone_rev_parse())
+    if errors:
+        fail("setup git spawn: " + "; ".join(errors))
+    import vf_cli_anything
+    adapter_errors = vf_cli_anything.prove_git_hygiene()
+    adapter_errors.extend(vf_cli_anything.prove_git_real())
+    if adapter_errors:
+        fail("adapter git spawn: " + "; ".join(adapter_errors))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args()
+    prove_setup_git()
     static_checks()
     if args.strict:
         doctor = run([sys.executable, str(ADAPTER), "doctor"], cwd=ROOT)

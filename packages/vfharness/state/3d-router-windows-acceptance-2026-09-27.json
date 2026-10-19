@@ -49,7 +49,7 @@
     "orcaslicer": {
       "status": "PASS",
       "observed_version": "2.4.2",
-      "observed_path": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\OrcaSlicer-2.4.2\\orca-slicer.exe",
+      "observed_path": "%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\OrcaSlicer-2.4.2\\orca-slicer.exe",
       "role": "current installed discovery result, not a runtime pin",
       "selection_policy": "auto_discover_installed"
     },
@@ -101,7 +101,7 @@
       ],
       "vertices": 8,
       "faces": 6,
-      "blend": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\smoke.blend"
+      "blend": "%USERPROFILE%\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\smoke.blend"
     },
     "geometry_gate": {
       "status": "PASS",
@@ -109,12 +109,12 @@
       "failing_checks": 0,
       "scene_sha256": "c2fe42cc7ee9a8b49a7be5ea672ee9b739ed72015be1949e3c82ae6fdd2118e9",
       "spec_sha256": "c573021934865717b8eb49f19ece8bf348378ef6187fd8c5263513fc4a9f7724",
-      "report": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\gate-report.json"
+      "report": "%USERPROFILE%\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\gate-report.json"
     },
     "coverage_audit": {
       "status": "PASS_DECLARED_PART_COVERAGE",
       "manufacture": "BLOCKED",
-      "report": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\coverage-audit.json"
+      "report": "%USERPROFILE%\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\coverage-audit.json"
     },
     "rpc_roundtrip": {
       "status": "PASS",
@@ -131,9 +131,9 @@
       "surface": "llm-guided",
       "transport": "stdio",
       "tool_count": 9,
-      "interpreter": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\blender-ai-mcp\\.venv\\Scripts\\python.exe",
+      "interpreter": "%USERPROFILE%\\Documents\\VelvetPrintLab\\tools\\blender-ai-mcp\\.venv\\Scripts\\python.exe",
       "interpreter_role": "installed component environment, not system-Python pin",
-      "evidence": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\mcp-velvet-adapter-acceptance.json"
+      "evidence": "%USERPROFILE%\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\mcp-velvet-adapter-acceptance.json"
     }
   },
   "targeted_sensors": {
