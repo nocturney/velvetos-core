@@ -257,6 +257,154 @@ def install_spec_problems(
     return problems
 
 
+NODE_PINS = {
+    "24.21.0": (
+        "python3 scripts/verify_actions_node_sha256.py --version 24.21.0 "
+        "--filename node-24.21.0-linux-x64.tar.gz "
+        "--expected ab971d19412a3b70ab4ef310656f5da973df476ccacd5cb4f49d447be2773227 "
+        "--checksum-url https://github.com/actions/node-versions/releases/download/"
+        "24.21.0-34304089047/hashes.sha256"
+    ),
+    "22.23.3": (
+        "python3 scripts/verify_actions_node_sha256.py --version 22.23.3 "
+        "--filename node-22.23.3-linux-x64.tar.gz "
+        "--expected cf9cfe18f485ac615fbc237e269549f4014fd843395568cf81698ce1903e9bcf "
+        "--checksum-url https://github.com/actions/node-versions/releases/download/"
+        "22.23.3-35947643734/hashes.sha256"
+    ),
+}
+NODE_SETUP = "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020"
+EXPECTED_NODE_SETUPS = 2
+
+
+def node_job_blocks(text: str) -> list[tuple[str, str]]:
+    lines = text.splitlines()
+    start = None
+    for index, line in enumerate(lines):
+        if re.match(r"^jobs:\s*$", line):
+            start = index + 1
+            break
+    if start is None:
+        return []
+    blocks: list[tuple[str, str]] = []
+    name: str | None = None
+    body: list[str] = []
+    for line in lines[start:]:
+        if line and not line.startswith(" ") and not line.startswith("#"):
+            break
+        match = re.match(r"^  ([A-Za-z0-9][A-Za-z0-9_-]*):\s*(?:#.*)?$", line)
+        if match:
+            if name is not None:
+                blocks.append((name, "\n".join(body)))
+            name = match.group(1)
+            body = [line]
+            continue
+        if name is not None:
+            body.append(line)
+    if name is not None:
+        blocks.append((name, "\n".join(body)))
+    return blocks
+
+
+def node_steps(job: str) -> list[str]:
+    lines = job.splitlines()
+    start = None
+    indent = 0
+    for index, line in enumerate(lines):
+        match = re.match(r"^(\s*)steps:\s*$", line)
+        if match:
+            indent = len(match.group(1))
+            start = index + 1
+            break
+    if start is None:
+        return []
+    dash = indent + 2
+    steps: list[list[str]] = []
+    for line in lines[start:]:
+        if line.strip() == "":
+            if steps:
+                steps[-1].append(line)
+            continue
+        lead = len(line) - len(line.lstrip(" "))
+        if lead <= indent:
+            break
+        if lead == dash and line.lstrip().startswith("- "):
+            steps.append([line])
+            continue
+        if steps:
+            steps[-1].append(line)
+    return ["\n".join(step) for step in steps]
+
+
+def node_script_commands(script: str) -> list[str]:
+    commands: list[str] = []
+    for line in join_continuations(script).splitlines():
+        command = strip_comment(line)
+        if command:
+            commands.append(command)
+    return commands
+
+
+def step_commands(step: str) -> list[str]:
+    commands: list[str] = []
+    for script in run_scripts(step):
+        commands.extend(node_script_commands(script))
+    return commands
+
+
+def step_node_version(step: str) -> str | None:
+    for line in step.splitlines():
+        match = re.match(r"""^\s*node-version:\s*['"]?([^'"#\s]+)""", line)
+        if match:
+            return match.group(1)
+    return None
+
+
+def is_node_command(command: str) -> bool:
+    try:
+        argv = shlex.split(command, posix=True)
+    except ValueError:
+        return command.startswith("node ")
+    return bool(argv) and argv[0] == "node"
+
+
+def node_toolchain_problems(text: str, *, path: str) -> list[str]:
+    """A node command must follow an exact setup-node step and its checksum command."""
+    problems: list[str] = []
+    blocks = node_job_blocks(text)
+    if not blocks and ("actions/setup-node@" in text or re.search(r"(?m)^\s*node ", text)):
+        problems.append(f"{path} node command is outside a parsed job")
+        return problems
+    for job, block in blocks:
+        steps = node_steps(block)
+        pinned_until = -1
+        for index, step in enumerate(steps):
+            if "actions/setup-node@" not in step:
+                continue
+            if NODE_SETUP not in step:
+                problems.append(f"{path} job {job} setup-node is not the pinned action")
+            version = step_node_version(step)
+            command = NODE_PINS.get(version or "")
+            if command is None:
+                problems.append(
+                    f"{path} job {job} node-version {version!r} is not an exact toolchain pin"
+                )
+                continue
+            if index + 1 >= len(steps) or step_commands(steps[index + 1]) != [command]:
+                problems.append(f"{path} job {job} node toolchain command mismatch")
+                continue
+            pinned_until = index + 1
+        for index, step in enumerate(steps):
+            for command in step_commands(step):
+                if not is_node_command(command):
+                    continue
+                if index <= pinned_until:
+                    problems.append(f"{path} job {job} node command before the toolchain pin")
+                elif pinned_until < 0:
+                    problems.append(f"{path} job {job} node command without a pinned toolchain")
+    return problems
+
+
 def float_google_install(text: str) -> str:
     """Mutation: put the pre-pin bare names back on the Google client install."""
     lines = text.splitlines(keepends=True)
@@ -281,9 +429,13 @@ def main() -> int:
         fail("INSTALL_SPEC_ALLOWLIST must stay empty")
     problems: list[str] = []
     workflows = sorted(WORKFLOWS.glob("*.y*ml"))
+    node_setups = 0
     for path in workflows:
         rel = path.relative_to(ROOT).as_posix()
-        problems.extend(install_spec_problems(path.read_text(encoding="utf-8"), path=rel))
+        text = path.read_text(encoding="utf-8")
+        problems.extend(install_spec_problems(text, path=rel))
+        problems.extend(node_toolchain_problems(text, path=rel))
+        node_setups += text.count("actions/setup-node@")
     if problems:
         for item in problems:
             print(f"FAIL {NAME}: {item}", file=sys.stderr)
@@ -334,10 +486,72 @@ def main() -> int:
     if install_spec_problems(jobs.read_text(encoding="utf-8"), path="jobs-write-through.yml"):
         fail("pinned jobs-write-through install was refused")
 
+    check_all = (WORKFLOWS / "check-all.yml").read_text(encoding="utf-8")
+    observer = (WORKFLOWS / "instagram-read-source-observer.yml").read_text(encoding="utf-8")
+    if node_toolchain_problems(check_all, path="check-all.yml"):
+        fail(f"pinned check-all node was refused: {node_toolchain_problems(check_all, path='check-all.yml')}")
+    if node_toolchain_problems(observer, path="instagram-read-source-observer.yml"):
+        fail("pinned observer node was refused")
+
+    def require_node(label: str, mutated: str, needle: str) -> None:
+        found = node_toolchain_problems(mutated, path="check-all.yml")
+        if not any(needle in item for item in found):
+            fail(f"{label} was not caught: {found}")
+
+    require_node(
+        "floating node 24",
+        observer.replace('node-version: "24.21.0"', 'node-version: "24"', 1),
+        "not an exact toolchain pin",
+    )
+    require_node(
+        "digest swap",
+        check_all.replace(
+            "cf9cfe18f485ac615fbc237e269549f4014fd843395568cf81698ce1903e9bcf",
+            "0" * 64,
+            1,
+        ),
+        "command mismatch",
+    )
+    require_node(
+        "commented verifier",
+        check_all.replace(
+            "run: python3 scripts/verify_actions_node_sha256.py",
+            "run: # python3 scripts/verify_actions_node_sha256.py",
+            1,
+        ),
+        "command mismatch",
+    )
+    bare_node = check_all.replace(
+        """      - name: Set up Node
+        # Image ubuntu-24.04 on 2026-10-19 had Node 22.23.3.
+        # actions/setup-node v4.4.0
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "22.23.3"
+
+      - name: Verify Node toolchain checksum
+        run: python3 scripts/verify_actions_node_sha256.py --version 22.23.3 --filename node-22.23.3-linux-x64.tar.gz --expected cf9cfe18f485ac615fbc237e269549f4014fd843395568cf81698ce1903e9bcf --checksum-url https://github.com/actions/node-versions/releases/download/22.23.3-35947643734/hashes.sha256
+
+""",
+        "",
+        1,
+    )
+    require_node("runner node", bare_node, "without a pinned toolchain")
+    if node_setups != EXPECTED_NODE_SETUPS:
+        fail(f"expected {EXPECTED_NODE_SETUPS} setup-node steps, found {node_setups}")
+    probe = __import__("subprocess").run(
+        [sys.executable, str(ROOT / "scripts" / "verify_actions_node_sha256.py"), "--self-test"],
+        cwd=ROOT, text=True, capture_output=True,
+    )
+    if probe.returncode != 0:
+        fail(probe.stderr.strip() or probe.stdout.strip() or "node toolchain self-test failed")
+
     print(
         f"OK {NAME} workflows={len(workflows)} floating=0 allowlist=empty "
         "bare=caught exact=pass mixed=caught npm_float=caught npm_exact=pass "
-        "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught"
+        "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught "
+        f"node_setups={node_setups} node_float=caught node_sha=caught "
+        "node_comment=caught node_bare=caught"
     )
     return 0
 
