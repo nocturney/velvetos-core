@@ -185,7 +185,7 @@ def _section_heading(line: str) -> bool:
 def _unreleased_region(lines: list[str]) -> tuple[int, int, set[str]] | None:
     """Header index, next heading index, and lines that count as folded.
 
-    The section ends at the next ``##`` heading outside a fence. A missing
+    The section ends at the next ``##`` heading, refusing an open fence at that heading. A missing
     Unreleased heading yields None. Bullets inside a fence are omitted.
     """
     texts = [_line_text(line) for line in lines]
@@ -197,15 +197,19 @@ def _unreleased_region(lines: list[str]) -> tuple[int, int, set[str]] | None:
     fenced = False
     end = len(lines)
     for index in range(header + 1, len(lines)):
+        # A fence cannot hide the boundary with already-released history.
+        if _section_heading(lines[index]):
+            if fenced:
+                return None
+            end = index
+            break
         if _fence_marker(lines[index]):
             fenced = not fenced
             continue
-        if fenced:
-            continue
-        if _section_heading(lines[index]):
-            end = index
-            break
-        present.add(texts[index])
+        if not fenced:
+            present.add(texts[index])
+    if fenced:
+        return None
     return header, end, present
 
 
@@ -872,13 +876,26 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
         ("M", "CHANGELOG.md", "## [Unreleased]\n\n```\n## Notes\n" + bullet + "```\n\n- 2026-10-18 - **Other:** stays.\n"),
         ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Other:** stays.\n"),
     ]
+    fence_marker = chr(96) * 3
+    straddling_release = [
+        ("M", "CHANGELOG.md",
+         "## [Unreleased]\n\n- 2026-10-18 - **Other:** stays.\n\n"
+         + fence_marker + "\n## [1.0.0]\n" + fence_marker + "\n" + bullet),
+        deleted,
+    ]
+    unclosed_fence = [
+        ("M", "CHANGELOG.md", "## [Unreleased]\n\n" + fence_marker + "\n" + bullet),
+        deleted,
+    ]
     subsection = [("M", "CHANGELOG.md", "## [Unreleased]\n\n### Notes\n\n" + bullet), deleted]
     probes.extend([
         (gate(no_heading) == 1, "a changelog with no Unreleased heading must refuse"),
         (unreleased_lines("intro\n\n" + bullet) == set(), "missing Unreleased did not yield an empty fold"),
         (gate(plain_heading) == 1, "a bullet under a later heading is not folded"),
         (gate(fenced_bullet) == 1, "a bullet inside a code fence is not folded"),
-        (gate(after_fence) == 0, "a heading inside a code fence ended the fold"),
+        (gate(after_fence) == 1, "a heading crossed an open fence without refusal"),
+        (gate(straddling_release) == 1, "release heading straddled by a fence was treated as Unreleased"),
+        (gate(unclosed_fence) == 1, "an unclosed fence passed the fold gate"),
         (gate(subsection) == 0, "a level-3 heading ended the fold"),
     ])
     released_only = [
