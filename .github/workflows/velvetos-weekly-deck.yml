@@ -30,6 +30,11 @@ jobs:
         with:
           python-version: "3.11"
 
+      # A network error exits 1 here, before the JSON deck is written.
+      # A signature or sha256 mismatch also exits 1. The commit does not run.
+      - name: Verify Bento shell checksum
+        run: python3 scripts/verify_bento_shell.py
+
       - name: Build weekly deck (JSON + HTML)
         run: python3 scripts/vf_weekly_deck.py
 
