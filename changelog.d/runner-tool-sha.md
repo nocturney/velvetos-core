@@ -1,1 +1,1 @@
-- 2026-10-19 - **Runner tool pin:** check-all keeps git 2.55.0, GitHub CLI 2.102.0, and curl 8.5.0-2ubuntu10.15 on ubuntu-24.04, and git 2.56.0.windows.1 plus GitHub CLI 2.102.0 on Windows. Docker 28.0.4 and 29.7.2 are TOFU pins. No model call.
+- 2026-10-19 - **Runner image tools:** check-all records git, GitHub CLI, curl, and Docker versions that the runner image already installed. A difference from the last recorded version is a warning, not a failure. No model call.

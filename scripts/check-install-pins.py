@@ -1598,85 +1598,86 @@ def ffmpeg_side_install_problems(text: str, *, path: str) -> list[str]:
     return problems
 
 
-RUNNER_PINS = {
-    "LINUX_GIT_VERSION": "git version 2.55.0",
-    "LINUX_GIT_SHA": "457fdb04dc8728e007d4688695e6912e6f680727920f2a40bf11eacc17505357",
-    "LINUX_GIT_SUMS": "https://mirrors.kernel.org/pub/software/scm/git/sha256sums.asc",
-    "LINUX_GH_SHA": "bb766f710eef8ede859c18578c72c327597cd4c8a85b06001b1f3843c6019386",
-    "LINUX_GH_SUMS": "https://github.com/cli/cli/releases/download/v2.102.0/gh_2.102.0_checksums.txt",
-    "LINUX_CURL_VERSION": "8.5.0-2ubuntu10.15",
-    "LINUX_CURL_SHA": "4358c023e3c1a74bb1e77935807ea2088b137a898167fca278a1767c353ac1c5",
-    "LINUX_CURL_SUMS": "https://archive.ubuntu.com/ubuntu/dists/noble-updates/main/binary-amd64/Packages.gz",
-    "LINUX_DOCKER_VERSION": "28.0.4",
-    "LINUX_DOCKER_SHA": "6b130fa5fb13516620d5ece0b63f63a495cede428bb2f9e24449022e9d72e0cb",
-    "LINUX_DOCKER_URL": "https://download.docker.com/linux/static/stable/x86_64/docker-28.0.4.tgz",
-    "LINUX_DOCKER_CHECKSUM": "TOFU",
-    "WINDOWS_GIT_VERSION": "git version 2.56.0.windows.2",
-    "WINDOWS_GIT_SHA": "52188f917b378f00c70ec136bcf090005f30d44fbc4eba0bce759cc6592d60f6",
-    "WINDOWS_GIT_NAME": "Git-2.56.0.2-64-bit.exe",
-    "WINDOWS_GIT_SUMS": "https://api.github.com/repos/git-for-windows/git/releases/tags/v2.56.0.windows.2",
-    "WINDOWS_GIT_URL": "https://github.com/git-for-windows/git/releases/download/v2.56.0.windows.2/Git-2.56.0.2-64-bit.exe",
-    "WINDOWS_GH_SHA": "ae64e556ecc240b200f7eba60d550e4bb60d78e860e69dd88c449405b86067f4",
-    "WINDOWS_DOCKER_VERSION": "29.7.2",
-    "WINDOWS_DOCKER_SHA": "ed9222f478a5d143ac90e8e2fd3209b5076382cdb4b210321f97aa4b68bc6811",
-    "WINDOWS_DOCKER_URL": "https://download.docker.com/win/static/stable/x86_64/docker-29.7.2.zip",
-    "WINDOWS_DOCKER_CHECKSUM": "TOFU",
-}
-LINUX_RUNNER_STEP = """      - name: Verify runner tool checksums
+IMAGE_TOOL_NAMES = (
+    "linux-git",
+    "linux-gh",
+    "linux-curl",
+    "linux-docker-client",
+    "linux-docker-server",
+    "windows-git",
+    "windows-gh",
+    "windows-docker-client",
+    "windows-docker-server",
+)
+LINUX_RUNNER_STEP = """      - name: Record runner image tool versions
         run: python3 scripts/verify_runner_tools.py --platform linux
 """
-WINDOWS_RUNNER_STEP = """      - name: Verify runner tool checksums
+WINDOWS_RUNNER_STEP = """      - name: Record runner image tool versions
         shell: pwsh
         run: python scripts/verify_runner_tools.py --platform windows
 """
 
 
-def _module_strings(tree: ast.AST) -> dict[str, str]:
-    found: dict[str, str] = {}
+def _dict_keys(tree: ast.AST, name: str) -> set[str]:
     for node in getattr(tree, "body", []):
         if not isinstance(node, ast.Assign) or len(node.targets) != 1:
             continue
         target = node.targets[0]
-        if isinstance(target, ast.Name) and isinstance(node.value, ast.Constant):
-            if isinstance(node.value.value, str):
-                found[target.id] = node.value.value
-    return found
-
-
-def _function(tree: ast.AST, name: str) -> ast.FunctionDef | None:
-    for node in getattr(tree, "body", []):
-        if isinstance(node, ast.FunctionDef) and node.name == name:
-            return node
-    return None
-
-
-def _tofu_pin(func: ast.FunctionDef | None, sha_name: str) -> bool:
-    if func is None:
-        return False
-    for node in ast.walk(func):
-        if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Name):
+        if not isinstance(target, ast.Name) or target.id != name:
             continue
-        if node.func.id != "match_pin" or not node.args:
+        if not isinstance(node.value, ast.Dict):
             continue
-        names = [arg.id for arg in node.args if isinstance(arg, ast.Name)]
-        last = node.args[-1]
-        if sha_name in names and isinstance(last, ast.Constant) and last.value is None:
-            return True
+        keys: set[str] = set()
+        for key in node.value.keys:
+            if isinstance(key, ast.Constant) and isinstance(key.value, str):
+                keys.add(key.value)
+        return keys
+    return set()
+
+
+def _joined_has(node: ast.AST, needle: str) -> bool:
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return needle in node.value
+    if isinstance(node, ast.JoinedStr):
+        return any(_joined_has(part, needle) for part in node.values)
+    if isinstance(node, ast.FormattedValue):
+        return _joined_has(node.value, needle)
     return False
 
 
-def _compares_got_sha(func: ast.FunctionDef | None) -> bool:
+def _warn_is_soft(func: ast.FunctionDef | None) -> bool:
     if func is None:
         return False
     for node in ast.walk(func):
-        if not isinstance(node, ast.Compare):
+        if not isinstance(node, ast.Return) or not isinstance(node.value, ast.Tuple):
             continue
-        if not any(isinstance(op, ast.NotEq) for op in node.ops):
+        elts = node.value.elts
+        if len(elts) != 2 or not _joined_has(elts[0], "WARN runner tool drift"):
             continue
-        sides = [node.left, *node.comparators]
-        if any(isinstance(side, ast.Name) and side.id == "got_sha" for side in sides):
-            return True
+        return isinstance(elts[1], ast.Constant) and elts[1].value is False
     return False
+
+
+def _fails_only_on_problems(func: ast.FunctionDef | None) -> bool:
+    if func is None:
+        return False
+    found: list[ast.AST | None] = []
+
+    def walk(node: ast.AST, test: ast.AST | None) -> None:
+        if isinstance(node, ast.If):
+            for child in node.body:
+                walk(child, node.test)
+            for child in node.orelse:
+                walk(child, test)
+            return
+        if isinstance(node, ast.Return) and isinstance(node.value, ast.Constant) and node.value.value == 1:
+            found.append(test)
+            return
+        for child in ast.iter_child_nodes(node):
+            walk(child, test)
+
+    walk(func, None)
+    return len(found) == 1 and isinstance(found[0], ast.Name) and found[0].id == "problems"
 
 
 def runner_source_problems(text: str) -> list[str]:
@@ -1685,16 +1686,18 @@ def runner_source_problems(text: str) -> list[str]:
         tree = ast.parse(text)
     except SyntaxError as exc:
         return [f"runner verifier did not parse: {exc}"]
-    strings = _module_strings(tree)
-    for key, value in RUNNER_PINS.items():
-        if strings.get(key) != value:
-            problems.append(f"runner {key} is not the pinned value")
-    if not _compares_got_sha(_function(tree, "match_pin")):
-        problems.append("runner checksum compare is missing")
-    if not _tofu_pin(_function(tree, "check_linux"), "LINUX_DOCKER_SHA"):
-        problems.append("linux docker TOFU pin is missing")
-    if not _tofu_pin(_function(tree, "check_windows"), "WINDOWS_DOCKER_SHA"):
-        problems.append("windows docker TOFU pin is missing")
+    keys = _dict_keys(tree, "RECORDED")
+    for name in IMAGE_TOOL_NAMES:
+        if name not in keys:
+            problems.append(f"runner {name} drift report is missing")
+    if "WARN runner tool drift" not in text:
+        problems.append("runner drift warning is missing")
+    if not _warn_is_soft(_function(tree, "drift_line")):
+        problems.append("drift warning fails the job")
+    if "RECORDED[name]" not in text:
+        problems.append("drift baseline is the observed version")
+    if not _fails_only_on_problems(_function(tree, "finish")):
+        problems.append("drift warning fails the job")
     return problems
 
 
@@ -1703,9 +1706,9 @@ def runner_workflow_problems(text: str) -> list[str]:
     if "runs-on: ubuntu-24.04" not in text.split("check-all-windows:", 1)[0]:
         problems.append("check-all is not pinned to ubuntu-24.04")
     if LINUX_RUNNER_STEP not in text:
-        problems.append("linux runner checksum step is missing")
+        problems.append("linux runner drift step is missing")
     if WINDOWS_RUNNER_STEP not in text:
-        problems.append("windows runner checksum step is missing")
+        problems.append("windows runner drift step is missing")
     return problems
 
 
@@ -2245,27 +2248,39 @@ def main() -> int:
     verifier = (ROOT / "scripts" / "verify_runner_tools.py").read_text(encoding="utf-8")
     workflow = (WORKFLOWS / "check-all.yml").read_text(encoding="utf-8")
     if runner_source_problems(verifier):
-        fail(f"pinned runner tools were refused: {runner_source_problems(verifier)}")
+        fail(f"runner image tools were refused: {runner_source_problems(verifier)}")
     if runner_workflow_problems(workflow):
-        fail(f"pinned runner workflow was refused: {runner_workflow_problems(workflow)}")
+        fail(f"runner image workflow was refused: {runner_workflow_problems(workflow)}")
 
     def require_runner(label: str, found: list[str], needle: str) -> None:
         if not any(needle in item for item in found):
             fail(f"{label} was not caught: {found}")
 
     require_runner(
-        "runner digest",
-        runner_source_problems(verifier.replace(RUNNER_PINS["LINUX_DOCKER_SHA"], "0" * 64, 1)),
-        "LINUX_DOCKER_SHA is not the pinned value",
+        "runner windows git",
+        runner_source_problems(verifier.replace('    "windows-git": "git version 2.56.0.windows.2",\n', "", 1)),
+        "windows-git drift report is missing",
     )
     require_runner(
-        "runner compare",
+        "runner drift hard",
         runner_source_problems(verifier.replace(
-            "    if got_sha != expected_sha:\n",
-            "    if False:\n",
+            'f"WARN runner tool drift name={name} observed={observed!r} recorded={recorded!r}",\n'
+            "        False,",
+            'f"WARN runner tool drift name={name} observed={observed!r} recorded={recorded!r}",\n'
+            "        True,",
             1,
         )),
-        "checksum compare is missing",
+        "drift warning fails the job",
+    )
+    require_runner(
+        "runner drift exit",
+        runner_source_problems(verifier.replace("    if problems:\n", "    if problems or notes:\n", 1)),
+        "drift warning fails the job",
+    )
+    require_runner(
+        "runner baseline",
+        runner_source_problems(verifier.replace("RECORDED[name]", "observed", 1)),
+        "drift baseline is the observed version",
     )
     require_runner(
         "runner linux step",
@@ -2274,7 +2289,7 @@ def main() -> int:
             "        run: # python3 scripts/verify_runner_tools.py --platform linux\n",
             1,
         )),
-        "linux runner checksum step is missing",
+        "linux runner drift step is missing",
     )
     require_runner(
         "runner windows step",
@@ -2283,7 +2298,7 @@ def main() -> int:
             "        run: # python scripts/verify_runner_tools.py --platform windows\n",
             1,
         )),
-        "windows runner checksum step is missing",
+        "windows runner drift step is missing",
     )
     require_runner(
         "runner image",
@@ -2617,7 +2632,8 @@ def main() -> int:
         f"OK {NAME} workflows={len(workflows)} floating=0 allowlist=empty "
         "bare=caught exact=pass mixed=caught npm_float=caught npm_exact=pass "
         "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught "
-        "runner_sha=caught runner_compare=caught runner_linux=caught "
+        "runner_drift=caught runner_soft=caught runner_exit=caught "
+        "runner_base=caught runner_linux=caught "
         "runner_windows=caught runner_image=caught "
         f"{bypass_evidence} {lock_evidence} "
         f"apt_ffmpeg={apt_workflows} apt_sequence=pinned extra=caught "
