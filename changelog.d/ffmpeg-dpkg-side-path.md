@@ -1,0 +1,1 @@
+- 2026-10-19 - **FFmpeg install side path:** check-install-pins refuses `dpkg -i` and `apt install` of ffmpeg. The only install remains `apt-get install` of the hashed noble deb. No model call.
