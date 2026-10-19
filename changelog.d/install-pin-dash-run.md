@@ -1,0 +1,1 @@
+- 2026-10-19 - **Install pin list steps:** `scripts/check-install-pins.py` scans a workflow step whose first key is `- run:`, including a literal block under that key. The apt ffmpeg pin sequence stays in the same sensor.

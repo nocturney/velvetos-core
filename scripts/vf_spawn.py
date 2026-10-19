@@ -7,11 +7,13 @@ policy-manifest hashes.
 """
 from __future__ import annotations
 
+import atexit
 import os
 import secrets
 import shutil
 import stat
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
@@ -42,6 +44,7 @@ FORCED_ENV_KEYS = (
 _LOCKED_EXTRA_KEYS = {key.upper() for key in FORCED_ENV_KEYS}
 _home_dir: str | None = None
 _temp_dir: str | None = None
+_owned_dirs: list[str] = []
 
 
 class SpawnRefusal(RuntimeError):
@@ -205,7 +208,9 @@ def _private_dir(prefix: str, *, readonly: bool) -> str:
             raise SpawnRefusal("SPAWN_HOME_ROOT_REFUSED")
         if os.name != "nt" and not readonly and mode & 0o077:
             raise SpawnRefusal("SPAWN_HOME_ROOT_REFUSED")
-        return str(path)
+        owned = str(path)
+        _remember_spawn_dir(owned)
+        return owned
     raise SpawnRefusal("SPAWN_HOME_ROOT_REFUSED") from last_error
 
 
@@ -241,6 +246,72 @@ def _temp_is_clean(path: str) -> bool:
     if os.name != "nt" and stat.S_IMODE(info.st_mode) & 0o077:
         return False
     return True
+
+
+def _remember_spawn_dir(path: str) -> None:
+    if path not in _owned_dirs:
+        _owned_dirs.append(path)
+
+
+def _remove_spawn_dir(path: str) -> None:
+    target = Path(path)
+    try:
+        info = target.lstat()
+    except OSError:
+        return
+    if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
+        target.unlink(missing_ok=True)
+        return
+    if os.name != "nt":
+        try:
+            os.chmod(target, 0o700)
+        except OSError:
+            pass
+    shutil.rmtree(target, ignore_errors=True)
+
+
+def release_spawn_dirs() -> None:
+    """Remove every home and temp this process created, then drop the cache."""
+    global _home_dir, _temp_dir
+    for path in list(_owned_dirs):
+        _remove_spawn_dir(path)
+    _owned_dirs.clear()
+    _home_dir = None
+    _temp_dir = None
+
+
+atexit.register(release_spawn_dirs)
+
+
+def sandbox_directories() -> tuple[str, str]:
+    """The controlled home and temp. Ambient HOME and TMPDIR are not used."""
+    return controlled_home(), controlled_temp()
+
+
+def _write_fsmonitor_hook(directory: Path, marker: Path) -> str:
+    """A command that creates marker when this OS runs it."""
+    if os.name == "nt":
+        command = directory / "hook.cmd"
+        command.write_text(
+            '@echo off\r\n> "' + str(marker) + '" echo hooked\r\n',
+            encoding="utf-8",
+        )
+        return str(command)
+    command = directory / "hook.sh"
+    command.write_text(
+        "#!/bin/sh\nprintf hooked > '" + str(marker) + "'\n",
+        encoding="utf-8",
+    )
+    command.chmod(0o755)
+    return str(command)
+
+
+def _execute_hook_command(command: str) -> None:
+    if os.name == "nt":
+        shell = os.environ.get("COMSPEC") or "cmd.exe"
+        subprocess.run([shell, "/d", "/c", command], check=False, timeout=15, capture_output=True)
+        return
+    subprocess.run([command], check=False, timeout=15, capture_output=True)
 
 
 def controlled_home() -> str:
@@ -315,8 +386,7 @@ def allowlisted_env(executable: str, extra: dict[str, str] | None = None) -> dic
             ):
                 raise SpawnRefusal("SPAWN_ENV_REFUSED")
             env[key] = value
-    home = controlled_home()
-    temp = controlled_temp()
+    home, temp = sandbox_directories()
     drive, tail = os.path.splitdrive(home)
     env["HOME"] = home
     env["USERPROFILE"] = home
@@ -590,12 +660,27 @@ def _prove_home_anchor() -> list[str]:
     return errors
 
 
-def prove_controlled_home() -> list[str]:
+def _prove_hook_command() -> list[str]:
+    """The fsmonitor command for this OS creates a marker when it is executed."""
+    errors: list[str] = []
+    with tempfile.TemporaryDirectory(prefix="vf-spawn-hook-") as tmp:
+        root = Path(tmp)
+        marker = root / "hook-ran"
+        command = _write_fsmonitor_hook(root, marker)
+        try:
+            _execute_hook_command(command)
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            return [f"fsmonitor hook command did not run: {exc}"]
+        if not marker.is_file():
+            errors.append("fsmonitor hook command did not create a marker")
+    return errors
+
+
+def _prove_poisoned_child() -> list[str]:
     """A poisoned home, temp, or COMSPEC does not reach the child or git config."""
     import json
-    import sys
 
-    errors: list[str] = _prove_home_anchor()
+    errors: list[str] = []
     keys = (
         "HOME",
         "USERPROFILE",
@@ -618,10 +703,9 @@ def prove_controlled_home() -> list[str]:
         (poison_xdg / "git").mkdir(parents=True)
         poison_tmp.mkdir()
         marker = root / "hook-ran"
-        hook = root / "hook.sh"
-        hook.write_text(f"#!/bin/sh\nprintf hooked > '{marker}'\n", encoding="utf-8")
-        hook.chmod(0o755)
-        config = f"[core]\n\tfsmonitor = {hook}\n"
+        command = _write_fsmonitor_hook(root, marker)
+        hook = Path(command)
+        config = "[core]\n\tfsmonitor = " + command + "\n"
         (poison_home / ".gitconfig").write_text(config, encoding="utf-8")
         (poison_xdg / "git" / "config").write_text(config, encoding="utf-8")
         evil_cmd = root / "evil-cmd"
@@ -695,6 +779,175 @@ def prove_controlled_home() -> list[str]:
             errors.append("poisoned core.fsmonitor ran")
         if status.returncode != 0:
             errors.append(f"git status failed under the sandbox: {status.stderr}")
+    return errors
+
+
+def _private_dir_follows_tmpdir(prefix: str, *, readonly: bool) -> str:
+    """Mutant: create the directory with mkdtemp, which follows ambient TMPDIR."""
+    del readonly
+    return tempfile.mkdtemp(prefix=prefix)
+
+
+def _home_is_clean_keep(path: str) -> bool:
+    """Mutant: reuse a home after a gitconfig was written into it."""
+    del path
+    return True
+
+
+def _write_fsmonitor_hook_noop(directory: Path, marker: Path) -> str:
+    """Mutant: a shell stub that does not create the marker on any OS."""
+    del marker
+    command = directory / "hook.sh"
+    command.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    try:
+        command.chmod(0o755)
+    except OSError:
+        pass
+    return str(command)
+
+
+def sandbox_directories_ambient() -> tuple[str, str]:
+    """Mutant: hand the child the ambient home and temp."""
+    home = os.environ.get("HOME") or os.environ.get("USERPROFILE") or ""
+    temp = os.environ.get("TMPDIR") or os.environ.get("TEMP") or os.environ.get("TMP") or ""
+    return home, temp
+
+
+def _release_spawn_dirs_noop() -> None:
+    """Mutant: leave the controlled directories on disk."""
+    return None
+
+
+def _swap_global(name: str, replacement, probe):
+    original = globals()[name]
+    globals()[name] = replacement
+    try:
+        return probe()
+    finally:
+        globals()[name] = original
+
+
+def _require_caught(found: list[str], token: str, missed: str) -> list[str]:
+    if any(token in item for item in found):
+        return []
+    return [missed]
+
+
+def _prove_note_mutants() -> list[str]:
+    """Each #872 note has a mutant the live proof catches."""
+    errors: list[str] = []
+    found = _swap_global("_private_dir", _private_dir_follows_tmpdir, _prove_home_anchor)
+    errors.extend(_require_caught(found, "followed ambient TMPDIR", "ambient TMPDIR mutant was not caught"))
+    found = _swap_global("_home_is_clean", _home_is_clean_keep, _prove_home_anchor)
+    errors.extend(
+        _require_caught(found, "planted gitconfig was reused", "dirty home mutant was not caught")
+    )
+    found = _swap_global("_write_fsmonitor_hook", _write_fsmonitor_hook_noop, _prove_hook_command)
+    errors.extend(
+        _require_caught(found, "did not create a marker", "fsmonitor hook mutant was not caught")
+    )
+    found = _swap_global("sandbox_directories", sandbox_directories_ambient, _prove_poisoned_child)
+    errors.extend(_require_caught(found, "poisoned home reached the child", "ambient HOME mutant was not caught"))
+    found = _swap_global("release_spawn_dirs", _release_spawn_dirs_noop, _prove_release)
+    errors.extend(_require_caught(found, "spawn home was not removed", "cleanup mutant was not caught"))
+    release_spawn_dirs()
+    return errors
+
+
+def _prove_release() -> list[str]:
+    """release_spawn_dirs removes the home and temp created for this process."""
+    global _home_dir, _temp_dir
+    _home_dir = None
+    _temp_dir = None
+    home = controlled_home()
+    temp = controlled_temp()
+    release_spawn_dirs()
+    errors: list[str] = []
+    if Path(home).exists() or Path(temp).exists():
+        errors.append("spawn home was not removed")
+    return errors
+
+
+def _spawn_child_paths(script_dir: str) -> tuple[int, str, str]:
+    env = {
+        key: os.environ[key]
+        for key in (
+            "PATH",
+            "SYSTEMROOT",
+            "SystemRoot",
+            "WINDIR",
+            "COMSPEC",
+            "PATHEXT",
+            "LANG",
+            "LC_ALL",
+            "LC_CTYPE",
+        )
+        if os.environ.get(key)
+    }
+    env["PYTHONPATH"] = script_dir
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import vf_spawn\n"
+            "home = vf_spawn.controlled_home()\n"
+            "temp = vf_spawn.controlled_temp()\n"
+            "print(home)\n"
+            "print(temp)\n",
+        ],
+        cwd=script_dir,
+        env=env,
+        text=True,
+        capture_output=True,
+        timeout=60,
+    )
+    return proc.returncode, proc.stdout, proc.stderr
+
+
+def _prove_exit_cleanup() -> list[str]:
+    """A child removes its spawn directories at process exit. Skipping registration leaks them."""
+    source_path = Path(__file__).resolve()
+    source = source_path.read_text(encoding="utf-8").replace("\r\n", "\n").replace("\r", "\n")
+    needle = "\natexit.register(release_spawn_dirs)\n"
+    if source.count(needle) != 1:
+        return ["spawn cleanup registration is not unique"]
+    errors: list[str] = []
+    mutant = source.replace(needle, "\natexit.unregister(release_spawn_dirs)\n", 1)
+    for label, text, should_remain in (("live", source, False), ("mutant", mutant, True)):
+        with tempfile.TemporaryDirectory(prefix="vf-spawn-exit-") as tmp:
+            script_dir = Path(tmp)
+            (script_dir / "vf_spawn.py").write_text(text, encoding="utf-8")
+            try:
+                code, stdout, stderr = _spawn_child_paths(str(script_dir))
+            except (OSError, subprocess.TimeoutExpired) as exc:
+                errors.append(f"{label} spawn cleanup child failed: {exc}")
+                continue
+            paths = [line for line in stdout.splitlines() if line.strip()]
+            if code != 0 or len(paths) != 2:
+                errors.append(f"{label} spawn cleanup child failed: exit={code} stderr={stderr!r}")
+                for path in paths:
+                    _remove_spawn_dir(path)
+                continue
+            remaining = [path for path in paths if Path(path).exists()]
+            if should_remain and len(remaining) != 2:
+                errors.append("exit cleanup mutant was not caught")
+            if not should_remain and remaining:
+                errors.append("spawn home leaked after process exit")
+            for path in paths:
+                _remove_spawn_dir(path)
+    return errors
+
+
+def prove_controlled_home() -> list[str]:
+    """QA #872: anchor, private cache, an OS hook command, and cleanup. Each has a mutant."""
+    errors: list[str] = []
+    errors.extend(_prove_hook_command())
+    errors.extend(_prove_home_anchor())
+    errors.extend(_prove_poisoned_child())
+    errors.extend(_prove_note_mutants())
+    errors.extend(_prove_release())
+    errors.extend(_prove_exit_cleanup())
     return errors
 
 

@@ -19,7 +19,7 @@
     },
     "mac": {
       "archive_sha256": "8a2bb053c4bc80dea7d9ce6c221ff038d10a3d2dca2dc8f60d1b1a094fa783a9",
-      "fixture_repo": "/Users/chris/Velvet/Pilots/OfficeAccelerator/WorktrunkPilot/lab-20261008/repo",
+      "fixture_repo": "$HOME/Velvet/Pilots/OfficeAccelerator/WorktrunkPilot/lab-20261008/repo",
       "checks": {
         "create_worktree": true,
         "list_worktrees": true,
