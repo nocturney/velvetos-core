@@ -25,6 +25,9 @@ SCHEMA = "velvetos.office-v2.604.cp083.sealed-osuid-mtls-nativegit.v1"
 RUN_SCHEMA = "velvetos.office-v2.604.cp083.osuid-mtls-localgit-option-a.v1"
 EXPECTED_SOURCE_SHA = "ff7a648d99b2a4bdda057c0758017b90727c7ee637f660351b9bccaf2f42afe6"
 EXPECTED_EVIDENCE_SHA = "cc6a576a57b76c6578c54af36c6d3306976cf92ea5814c3f28de7787285f69b0"
+# Live cp081 bytes moved with PIN_IDENTITY. The receipt field stays historical.
+CP081_LIVE_SHA = "34289d3ca46c5e0c04b8fd83d4416d6c72aeff5a6bd5837d5b92b63627241811"
+CP081_RECEIPT_SHA = "eaab28424989b4b3a7a5de58f5571d9938b21c8c17c3dfb4c5d2eaa1d73670e2"
 REQUIRED = {
     "worker_cannot_read_sink_key_git_or_journal",
     "attacker_cannot_spoof_worker_uid",
@@ -113,9 +116,13 @@ def validate(payload):
             "UNPROVEN_SECURITY_CLAIM_PROMOTED")
     require(payload.get("source_sha256") == EXPECTED_SOURCE_SHA,
             "PUBLISHED_SOURCE_DIGEST_CHANGED")
+    require(CP081_LIVE_SHA != CP081_RECEIPT_SHA, "CP081_PINS_MERGED")
+    require(payload.get("cp081_source_sha256") == CP081_RECEIPT_SHA,
+            "CP081_RECEIPT_PIN_DRIFT")
+    require(sha(P81.read_bytes()) == CP081_LIVE_SHA,
+            "CP081_LIVE_PIN_DRIFT")
     for key, script in (
         ("source_sha256", SOURCE),
-        ("cp081_source_sha256", P81),
         ("cp082_source_sha256", P82),
     ):
         require(hexsha(payload.get(key)) and

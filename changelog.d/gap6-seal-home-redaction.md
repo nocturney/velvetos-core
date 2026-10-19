@@ -1,0 +1,1 @@
+- 2026-10-19 - **GAP_6 seal after public redaction:** the pin-split seal records the `$HOME` bytes now on main for the three historical Mac lab notes. CP083 receipt pins are unchanged. `security_admission` stays RED.

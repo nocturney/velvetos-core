@@ -2396,9 +2396,13 @@ def main() -> int:
     native_crash_source = (
         ROOT / "scripts" / "vf_office_v2_604_native_git_crash_reconcile_offline.py"
     )
-    if hashlib.sha256(native_crash_source.read_bytes()).hexdigest() != (
+    native_live_sha = (
+        "e0bef7806f7de87e1c39a912640a1811a00a8b6d9291cc4d1c1b4549d9ab7163"
+    )
+    native_receipt_sha = (
         "2bbd81c9c7f59c1b28937286d1c365ca46c0ceb9db96157859f7225e0dd6d632"
-    ):
+    )
+    if hashlib.sha256(native_crash_source.read_bytes()).hexdigest() != native_live_sha:
         fail("#604 native local Git crash source pinned provenance changed")
     for native_mode in ("selftest", "verify"):
         native = subprocess.run(
@@ -2497,9 +2501,13 @@ def main() -> int:
     tls_rbac_source = (
         ROOT / "scripts" / "vf_office_v2_604_real_etcd_mtls_rbac_identity_lab.py"
     )
-    if hashlib.sha256(tls_rbac_source.read_bytes()).hexdigest() != (
-        "a824e4d38e4ca91d376360f70bb33867a41b23cfb4b7fb0d3d688d038a5aa0e4"
-    ):
+    identity_live_sha = (
+        "7fbd63b9f34ae8a4a465c6f2e78ea7ed89dd105650626712b4a080e58d75c299"
+    )
+    identity_receipt_sha = (
+        "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c"
+    )
+    if hashlib.sha256(tls_rbac_source.read_bytes()).hexdigest() != identity_live_sha:
         fail("#604 ephemeral mTLS/RBAC denial source SHA drift")
     for tls_mode in ("selftest", "verify"):
         tls_receipt = subprocess.run(
@@ -2708,9 +2716,10 @@ def main() -> int:
     same_uid_negative = (
         ROOT / "scripts" / "vf_office_v2_604_sameuid_sink_key_bypass_lab.py"
     )
-    if hashlib.sha256(same_uid_negative.read_bytes()).hexdigest() != (
-        "16e2ca1d702a28a033abd0622815d2ecae98508a179d306820a3381f0a17e465"
-    ):
+    sameuid_live_sha = (
+        "dc7e0f5260a351e25f7b05f7f1197a5f5945f1404d09492eaff5f80eb9a85157"
+    )
+    if hashlib.sha256(same_uid_negative.read_bytes()).hexdigest() != sameuid_live_sha:
         fail("#604 same-UID sink key negative source SHA drift")
     for same_uid_mode in ("selftest", "verify"):
         same_uid_probe = subprocess.run(
@@ -2734,7 +2743,7 @@ def main() -> int:
                 16 if same_uid_mode == "selftest" else 0
             )
             or same_uid_result.get("etcd_original_real_mtls_rbac_source_sha256") != (
-                "a824e4d38e4ca91d376360f70bb33867a41b23cfb4b7fb0d3d688d038a5aa0e4"
+                identity_live_sha
             )
             or same_uid_result.get("required_mac_uid") != (
                 "SAME_UID_IS_NOT_SEPARATE_SECURITY_PRINCIPAL"
@@ -3212,8 +3221,9 @@ def main() -> int:
     # CP081 combines real etcd mTLS/RBAC with atomic issuer-only admission
     # in a rootless guest. These historical observations remain LAB/RED only.
     cp081_source = ROOT / "scripts" / "vf_office_v2_604_cp081_mtls_atomic_admission_lab.py"
-    cp081_sha = "eaab28424989b4b3a7a5de58f5571d9938b21c8c17c3dfb4c5d2eaa1d73670e2"
-    if hashlib.sha256(cp081_source.read_bytes()).hexdigest() != cp081_sha:
+    cp081_live_sha = "34289d3ca46c5e0c04b8fd83d4416d6c72aeff5a6bd5837d5b92b63627241811"
+    cp081_receipt_sha = "eaab28424989b4b3a7a5de58f5571d9938b21c8c17c3dfb4c5d2eaa1d73670e2"
+    if hashlib.sha256(cp081_source.read_bytes()).hexdigest() != cp081_live_sha:
         fail("#604 CP081 new provider lab source SHA pin changed")
     cp081 = load(P2 / "p0-604-cp081-mtls-atomic-2026-10-16.json")
     cp081_totals = cp081.get("totals") or {}
@@ -3223,9 +3233,8 @@ def main() -> int:
         cp081.get("schema") != "velvetos.office-v2.604.cp081.live-mtls-atomic-receipts.v1"
         or cp081.get("status") != "PASS_REAL_MTLS_RBAC_ATOMIC_PROVIDER_LAB_ONLY"
         or cp081.get("security_admission") != "RED"
-        or cp081.get("test_script_sha256") != cp081_sha
-        or cp081.get("identity_helper_sha256") !=
-            "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c"
+        or cp081.get("test_script_sha256") != cp081_receipt_sha
+        or cp081.get("identity_helper_sha256") != identity_receipt_sha
         or cp081_totals.get("independent_fresh_provider_runs") != 2
         or cp081_totals.get("passed_bounded_scenarios") != 38
         or cp081_totals.get("real_etcd_atomic_race_rounds") != 8
@@ -3319,11 +3328,9 @@ def main() -> int:
             "PASS_REAL_ETCD_TLS_RBAC_LOCAL_GIT_SQLITE_UNKNOWN_LAB_ONLY"
         or cp082.get("security_admission") != "RED"
         or cp082.get("test_script_sha256") != cp082_sha
-        or cp082_dep.get("cp081_source_sha256") != cp081_sha
-        or cp082_dep.get("tls_rbac_identity_source_sha256") !=
-            "b74c4b8a1baee7cc534ee82f7abede8c9b0c154ea9693143bb36d7c09319948c"
-        or cp082_dep.get("native_local_git_sqlite_source_sha256") !=
-            "2bbd81c9c7f59c1b28937286d1c365ca46c0ceb9db96157859f7225e0dd6d632"
+        or cp082_dep.get("cp081_source_sha256") != cp081_receipt_sha
+        or cp082_dep.get("tls_rbac_identity_source_sha256") != identity_receipt_sha
+        or cp082_dep.get("native_local_git_sqlite_source_sha256") != native_receipt_sha
         or cp082_totals.get("independent_fresh_provider_runs") != 2
         or cp082_totals.get("real_etcd_mtls_localgit_unknown_assertions_passed") != 52
         or cp082_totals.get("assertions_per_run") != 26
@@ -3491,6 +3498,7 @@ def main() -> int:
     skipped_candidate_imports = []
     for test_file, count, timeout_s in (
         ("test_vf_office_v2_604_identity_subprocess_env.py", 2, 15),
+        ("test_vf_office_v2_604_gap6_pin_split.py", 20, 45),
         ("test_vf_office_v2_604_cp083_hardening_candidate.py", 10, 15),
         ("test_vf_office_v2_604_cp083_socket_negative.py", 2, 15),
         ("test_vf_office_v2_604_cp083_client_socket_negative.py", 10, 45),
