@@ -1,0 +1,1 @@
+- 2026-10-19 - **Linux ffmpeg deb pin:** `check-all` and `velvetos-research` download noble `ffmpeg=7:6.1.1-3ubuntu5` and check SHA-256 `1a23baace5f2688a47e28119aedae6993cd638e6279a7227dfc52d9a337a1c17` before install. `check-install-pins.py` catches a floating `apt-get install ffmpeg` and a swapped digest. No model call.
