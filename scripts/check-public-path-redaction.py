@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Refuse a new private LAN address or Chris home path in tracked files.
+"""Refuse a new private LAN address, Chris home path, or redacted machine id.
 
 Historical receipts whose bytes are hash-pinned, live host launchers, and the
 Windows path-contract needle stay on the allowlist. A tracked file outside
-that list fails when it contains an RFC1918 address or a Chris home prefix.
+that list fails when it contains an RFC1918 address, a Chris home prefix in
+any letter case, or the redacted Desktop Commander id prefix.
 An allowlist entry that no longer matches fails too, so the list cannot rot.
 Unreadable tracked content fails closed; it is never skipped.
 """
@@ -21,7 +22,18 @@ LAN = re.compile(
     r"|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}"
     r"|192\.168\.\d{1,3}\.\d{1,3})(?!\d)"
 )
-HOME = re.compile(r"(?:[A-Za-z]:[/\\]+Users[/\\]+Chris|/[Uu]sers/[Cc]hris)\b")
+HOME = re.compile(
+    r"(?:[A-Za-z]:[/\\]+Users[/\\]+Chris|/[Uu]sers/[Cc]hris)\b",
+    re.IGNORECASE,
+)
+# Redacted Desktop Commander device id. The public tree keeps only this prefix,
+# replaced with <chris-machine-id>. This is not a general UUID match.
+REDACTED_MACHINE_PREFIXES = ("516b9b39",)
+MACHINE = re.compile(
+    r"\b(?:%s)-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b"
+    % "|".join(REDACTED_MACHINE_PREFIXES),
+    re.IGNORECASE,
+)
 
 # Hash-pinned receipts and lab scripts, live runtime paths, and detectors.
 # Do not add a file here to hide a new occurrence. Remove a row when its
@@ -145,6 +157,8 @@ def kinds(text: str) -> set[str]:
         found.add("lan")
     if HOME.search(text):
         found.add("home")
+    if MACHINE.search(text):
+        found.add("machine")
     return found
 
 
@@ -177,6 +191,7 @@ def sensitive_match_digest(text: str) -> str:
     tokens = sorted(
         ["LAN:" + match.group(0).casefold() for match in LAN.finditer(text)]
         + ["HOME:" + match.group(0).casefold() for match in HOME.finditer(text)]
+        + ["MACHINE:" + match.group(0).casefold() for match in MACHINE.finditer(text)]
     )
     return hashlib.sha256("\x00".join(tokens).encode("utf-8")).hexdigest()
 
@@ -283,6 +298,18 @@ def selftest() -> None:
             fail("selftest missed a home prefix")
     if scan(("%USERPROFILE%\\Desktop $HOME/Velvet").encode("ascii")):
         fail("selftest flagged a placeholder home")
+    lower_win_home = "c:" + "\\users\\" + "chris\\Desktop"
+    upper_posix_home = "/USERS/" + "CHRIS/Velvet"
+    machine_lower = REDACTED_MACHINE_PREFIXES[0] + "-1234-5678-9abc-def012345678"
+    machine_upper = machine_lower.upper()
+    for sample in (lower_win_home, upper_posix_home):
+        if kinds(sample) != {"home"} or scan(sample.encode("ascii")) != home_row:
+            fail("selftest missed a Chris home prefix in a non-canonical letter case")
+    for sample in (machine_lower, machine_upper):
+        if kinds(sample) != {"machine"} or scan(sample.encode("ascii")) != ["docs/sample.md: machine"]:
+            fail("selftest missed the redacted machine id prefix")
+    if kinds("3f2504e0-4f89-11d3-9a0c-0305e82c3301") or kinds("/Users/" + "alice/Projects/velvet"):
+        fail("selftest flagged an unrelated GUID or user path")
 
     clean = b"no private address here"
     private = ("host " + private_lan).encode("ascii")

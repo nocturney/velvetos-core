@@ -1,0 +1,1 @@
+- 2026-10-20 - **Public path guard case and machine id:** the redaction sensor refuses a Chris home prefix in any letter case and the redacted Desktop Commander machine-id prefix, while RFC1918 coverage, fail-closed decoding, the 42 pinned exceptions and the 5 pinned fixtures are unchanged. Negative selftest fixtures fail when either check is removed. No model call.
