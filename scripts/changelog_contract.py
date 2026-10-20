@@ -951,6 +951,49 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
         (gate(unclosed_fence) == 1, "an unclosed fence passed the fold gate"),
         (gate(subsection) == 0, "a level-3 heading ended the fold"),
     ])
+    # Load-bearing regression cases for the Markdown fence and release-boundary fixes.
+    # A deleted fragment cannot be covered by a bullet inside a fenced block or
+    # beneath a released heading, including syntax that resembles a fence closer.
+    four_backticks = fence_marker + "`"
+    bypass_regressions = [
+        ("mixed backtick/tilde fences",
+         "## [Unreleased]\n\n" + fence_marker + "\n~~~\n" + bullet
+         + "~~~\n" + fence_marker + "\n"),
+        ("shorter closing backtick fence",
+         "## [Unreleased]\n\n" + four_backticks + "\n" + fence_marker
+         + "\n" + bullet + fence_marker + "\n" + four_backticks + "\n"),
+        ("fence-like lines with info strings",
+         "## [Unreleased]\n\n" + fence_marker + "\n" + fence_marker
+         + "x\n" + bullet + fence_marker + "y\n" + fence_marker + "\n"),
+        ("one-space-indented released heading",
+         "## [Unreleased]\n\n ## [1.0.0]\n\n" + bullet),
+        ("three-space-indented released heading",
+         "## [Unreleased]\n\n   ## [1.0.0]\n\n" + bullet),
+        ("hyphen setext released heading",
+         "## [Unreleased]\n\nVersion 1.0\n---\n\n" + bullet),
+        ("equals setext released heading",
+         "## [Unreleased]\n\nVersion 1.0\n===\n\n" + bullet),
+    ]
+    for name, changelog in bypass_regressions:
+        probes.append((
+            gate([("M", "CHANGELOG.md", changelog), deleted]) == 1,
+            f"deleted fragment bypassed the changelog gate: {name}",
+        ))
+    # Direct region checks make the fail-closed branches load-bearing even
+    # where another rule would happen to reject the deleted fragment.
+    inline_backticks = "## [Unreleased]\n\n" + fence_marker + "x" + fence_marker + "\n\n" + bullet
+    probes.extend([
+        (gate([("M", "CHANGELOG.md", inline_backticks), deleted]) == 0,
+         "inline backticks with an info string were mistaken for a fence opener"),
+        (_unreleased_region(["## [Unreleased]", "", fence_marker, "still fenced"]) is None,
+         "an unterminated fence did not invalidate the region"),
+        ("Version 1.0" not in unreleased_lines("## [Unreleased]\n\nVersion 1.0\n---\n"),
+         "the setext heading title was counted as an Unreleased line"),
+        (_unreleased_region(["## [Unreleased]", "", "    " + fence_marker, "text", fence_marker]) is None,
+         "a four-space-indented fence opener was accepted"),
+        (_unreleased_region(["## [Unreleased]", "", "    ## [1.0.0]", bullet]) is None,
+         "a four-space-indented level-2 heading was accepted"),
+    ])
     released_only = [
         ("M", "CHANGELOG.md", "## [Unreleased]\n\n- 2026-10-18 - **Other:** stays.\n\n## [1.0.0]\n\n- 2026-10-18 - **Theirs:** stays.\n"),
         ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Theirs:** stays.\n"),
