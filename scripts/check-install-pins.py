@@ -169,14 +169,22 @@ def norm(name: str) -> str:
 
 _WIN_PATH = re.compile(r"[A-Za-z]:\\(?:[^\\\s\"']+\\)*[^\\\s\"']+")
 # Relative `Scripts\pip.exe` or `.\npm`: one unquoted word that starts with a name or `.`.
-# A leading backslash (`\p\i\p`) is left alone so shlex still unescapes it.
+# A leading backslash is not matched here, so `\Scripts\pip.exe` is handled by _WIN_ROOT.
 _WIN_REL = re.compile(r"(?<![^\s;|&(])((?:\.|[\w.-]+)\\(?:[\w.-]+\\)*[\w.-]+)")
+# Rooted `\Scripts\pip.exe` or `\.venv\Scripts\pip.exe`: one unquoted word, leading backslash.
+# `\p\i\p` matches too, and shlex reads it as an escape, so word_lists checks both readings.
+_WIN_ROOT = re.compile(r"(?<![^\s;|&(])\\(?:[\w.-]+\\)*[\w.-]+")
 
 
 def _for_shlex(command: str) -> str:
     """Turn Windows paths into slashes so shlex does not eat the separators."""
     command = _WIN_PATH.sub(lambda match: match.group(0).replace("\\", "/"), command)
     return _WIN_REL.sub(lambda match: match.group(0).replace("\\", "/"), command)
+
+
+def _rooted_path(command: str) -> str:
+    """The same command with each rooted word read as a path, not as shlex escapes."""
+    return _WIN_ROOT.sub(lambda match: match.group(0).replace("\\", "/"), command)
 
 
 def _base(token: str) -> str:
@@ -687,6 +695,12 @@ def word_lists(text: str, seen: set[str] | None = None) -> list[list[str]] | Non
             lists.extend(nested)
     for script in _nested_scripts(words):
         nested = word_lists(script, seen)
+        if nested is None:
+            return None
+        lists.extend(nested)
+    rooted = _rooted_path(cleaned)
+    if rooted != cleaned:
+        nested = word_lists(rooted, seen)
         if nested is None:
             return None
         lists.extend(nested)
@@ -2218,6 +2232,12 @@ def prove_path_forms() -> str:
     require("npm.exe install some-malicious-pkg", "floating npm spec some-malicious-pkg")
     require("\\p\\i\\p install some-malicious-pkg", "floating pip spec some-malicious-pkg")
     require("Scripts\\pip.exe install some-malicious-pkg", "floating pip spec some-malicious-pkg")
+    require("\\Scripts\\pip.exe install some-malicious-pkg", "floating pip spec some-malicious-pkg")
+    require(
+        "\\.venv\\Scripts\\pip.exe install some-malicious-pkg",
+        "floating pip spec some-malicious-pkg",
+    )
+    require("\\pi\\p install some-malicious-pkg", "floating pip spec some-malicious-pkg")
     require(".\\pip.exe install some-malicious-pkg", "floating pip spec some-malicious-pkg")
     require("pip.bat install some-malicious-pkg", "floating pip spec some-malicious-pkg")
     require("Scripts\\pip.bat install some-malicious-pkg", "floating pip spec some-malicious-pkg")
@@ -2239,6 +2259,9 @@ def prove_path_forms() -> str:
         "run: npm.ps1 ci\n",
         "run: Scripts\\pip.exe install google-auth==2.62.0\n",
         "run: .\\pip.bat install google-auth==2.62.0\n",
+        "run: \\Scripts\\pip.exe install google-auth==2.62.0\n",
+        "run: \\.venv\\Scripts\\pip.exe install google-auth==2.62.0\n",
+        "run: \\p\\i\\p install google-auth==2.62.0\n",
         "run: python3 -m pip install --disable-pip-version-check --require-hashes "
         "-r requirements-sensors.py311.lock\n",
     ):
