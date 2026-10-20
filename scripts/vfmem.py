@@ -99,7 +99,7 @@ def _load_json(path: Path) -> Any:
 
 
 def _tokens(text: str) -> set[str]:
-    return {t for t in re.findall(r"[0-9A-Za-z\u0590-\u05FF]+", text.lower()) if len(t) > 1}
+    return {t for t in re.findall(r"[0-9A-Za-z\u0590-\u05FF]+", text.lower().replace("\u05be", " ")) if len(t) > 1}
 
 
 def _nid(label: str, key: str) -> str:

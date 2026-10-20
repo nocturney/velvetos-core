@@ -13,6 +13,22 @@ ROOT = Path(__file__).resolve().parents[4]
 
 
 class CatalogTests(unittest.TestCase):
+    def test_hebrew_maqaf_splits_ui_terms_for_both_routers(self):
+        from vfmem import _tokens as memory_tokens
+        from vf_skill_catalog import _tokens as catalog_tokens
+        ui = "\u05de\u05de\u05e9\u05e7"
+        who = "\u05de\u05e9\u05ea\u05de\u05e9"
+        phrase = ui + "\u05be" + who
+        self.assertIn("ui", catalog_tokens(phrase))
+        self.assertEqual(memory_tokens(phrase), {ui, who})
+        with tempfile.TemporaryDirectory() as scratch:
+            root = Path(scratch)
+            skill = root / ".cursor" / "skills" / "compound" / "SKILL.md"
+            skill.parent.mkdir(parents=True)
+            skill.write_text("---\nname: compound\ndescription: " + phrase +
+                             "\n---\n", encoding="utf-8")
+            self.assertEqual(search(ui, root)[0]["id"], "compound")
+
     def test_crlf_frontmatter_preserves_windows_skill_metadata(self):
         with tempfile.TemporaryDirectory() as scratch:
             root = Path(scratch)

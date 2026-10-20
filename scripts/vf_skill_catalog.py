@@ -31,7 +31,7 @@ HE_TO_EN = {
 
 
 def _tokens(value: str) -> set[str]:
-    base = re.findall(r"[a-z0-9\u0590-\u05ff]+", value.casefold())
+    base = re.findall(r"[a-z0-9\u0590-\u05ff]+", value.casefold().replace("\u05be", " "))
     return {HE_TO_EN.get(x, x) for x in base if len(x) >= 2 and x not in STOPWORDS}
 
 
