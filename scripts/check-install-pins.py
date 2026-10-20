@@ -26,18 +26,18 @@ step is unclassified. A `shlex` failure refuses the step too.
 `requirements-google-clients.txt`, and every lock pin must have a sha256
 hash. INSTALL_SPEC_ALLOWLIST starts empty; a non-empty committed set fails
 this sensor. An apt ffmpeg install must be one exact command sequence on
-ubuntu-24.04. In workflows and composite actions, apt/apt-get/aptitude
-install, reinstall, and satisfy, and dpkg/dpkg-deb install, unpack, and
-extract, are refused unless the simple command is an exact allowlisted
-line. The allowlist is the hashed ffmpeg download and the verified deb
-install. A value-taking option (aptitude `-F`/`--display-format`,
-`-w`/`--width`, `-O`/`--sort`, `-o`, `-c`, `-t`, `--target-release`,
-`--with-source`) consumes its value, so the value is never misread as the
-subcommand. An option that is neither a known no-value flag nor a known
-value-taking flag, seen before the first non-flag word, fails closed as an
-install, and so does install/reinstall/satisfy appearing anywhere after the
-tool, not only in the first subcommand position. A node command must follow
-the pinned setup-node step and its checksum command. Stdlib only.
+ubuntu-24.04. In workflows and composite actions, every apt and aptitude
+command, every apt-get command other than update/remove/purge, and
+dpkg/dpkg-deb install, unpack, and extract, are refused unless the simple
+command is an exact allowlisted line. The allowlist is the hashed ffmpeg
+download and the verified deb install. An apt-get option outside a short
+boolean set (-y, -q, -s, --purge and their long forms) is refused, so
+`-o`/`-c` configuration overrides cannot add a Pre-Invoke hook, and an
+APT_CONFIG assignment is refused too. update takes no operand. A
+remove/purge operand must be a plain lowercase package name without a
+trailing plus, so no install specifier, version, release, arch, glob, or
+pattern passes. A node command must follow the pinned setup-node step and
+its checksum command. Stdlib only.
 """
 from __future__ import annotations
 
@@ -1532,8 +1532,25 @@ APPROVED_PACKAGE_INSTALLS: tuple[tuple[str, str], ...] = (
     ),
 )
 APT_SIDE_TOOLS = {"apt", "apt-get", "aptitude"}
+# Outside the exact allowlist only apt-get update/remove/purge is accepted.
+# apt and aptitude are refused for every action: aptitude reads action
+# suffixes on remove/purge operands (pkg+, pkg+M, pkg&BD, pkg_, pkg=) and
+# several of them install.
+APT_SAFE_TOOL = "apt-get"
 APT_SIDE_ACTIONS = {"install", "reinstall", "satisfy"}
 APT_SAFE_ACTIONS = {"update", "remove", "purge"}
+# The only options a safe apt-get action may carry. Every other option is
+# refused, including -o/--option and -c/--config-file (a Pre-Invoke or
+# Post-Invoke hook runs a shell command, even on update), -t, -f/--fix-broken
+# (can install to fix dependencies) and the --allow-* overrides.
+APT_SAFE_FLAGS = {
+    "-y", "--yes", "--assume-yes", "-q", "--quiet",
+    "-s", "--simulate", "--just-print", "--dry-run", "--no-act", "--purge",
+}
+# A remove/purge operand must be a plain Debian package name. A trailing plus
+# asks apt-get to install, so it is refused even though Debian allows `+` in
+# names. No :arch, =version, /release, glob, regex or ?pattern operand.
+APT_PACKAGE_NAME = re.compile(r"[a-z0-9][a-z0-9.+-]*")
 DPKG_TOOLS = {"dpkg", "dpkg-deb"}
 DPKG_ACTION_LONG = {
     "--install", "--unpack", "--extract", "--recursive",
@@ -1544,25 +1561,6 @@ DPKG_ACTION_SHORT = set("iRxX")
 # Documented dpkg / dpkg-deb short letters. A cluster counts only when every
 # letter is one of these, so a PowerShell -Recurse or -Filter is not a dpkg flag.
 DPKG_SHORT_LETTERS = set("irPAlsLScfxXezZREGBODWbpVa")
-APT_VALUE_FLAGS = {
-    "-o", "--option", "-c", "--config-file", "-t", "--target-release", "--with-source",
-    # aptitude-only value flags. apt-get rejects these combined with install,
-    # but aptitude accepts them, and the value must not be misread as the
-    # action word (that was the aptitude -F/-w/--sort/-O bypass).
-    "-F", "--display-format", "-w", "--width", "-O", "--sort",
-}
-# Known boolean apt/apt-get/aptitude flags that take no separate value. Any
-# other option before the first non-flag word is unknown and fails closed
-# (treated as an install) rather than trusted to not hide the action word.
-APT_NO_VALUE_FLAGS = {
-    "-y", "--yes", "--assume-yes", "--assume-no",
-    "-q", "--quiet", "-s", "--simulate", "--just-print", "--dry-run", "--no-act",
-    "-f", "--fix-broken", "-d", "--download-only", "-u", "--show-upgraded",
-    "-V", "--verbose-versions", "-v", "--verbose", "-h", "--help",
-    "--purge", "--allow-unauthenticated", "--allow-downgrades",
-    "--allow-change-held-packages", "--allow-remove-essential",
-    "--no-install-recommends", "--install-recommends", "--install-suggests",
-}
 DPKG_VALUE_FLAGS = {
     "--admindir", "--root", "--instdir", "--log",
     "--path-exclude", "--path-include", "--status-fd",
@@ -1629,55 +1627,39 @@ def _indirect_command(token: str) -> bool:
     return token.startswith("$") or token.startswith("`") or "$(" in token or "`" in token
 
 
-def _apt_action_installs(argv: list[str]) -> bool:
-    """Fail closed unless an apt action is update, remove, or purge.
+def _apt_command_unsafe(argv: list[str]) -> bool:
+    """Fail closed unless the command is apt-get update, remove, or purge.
 
-    A trailing plus on a remove/purge package operand requests INSTALL in
-    apt/apt-get/aptitude, even though the action itself sounds destructive.
-    Unknown actions (including build-dep, source, upgrades, markauto) and
-    unexpected options are never assumed read-only.
+    apt and aptitude are refused outright. Options must be in APT_SAFE_FLAGS,
+    so no -o/-c configuration override can add a hook. update takes no
+    operand. Every remove/purge operand must be a plain package name without
+    a trailing plus, which apt-get reads as install. Unknown actions
+    (build-dep, source, upgrades, markauto) are never assumed read-only.
     """
-    rest = argv[1:]
-    index = 0
+    if _base(argv[0]) != APT_SAFE_TOOL:
+        return True
     action: str | None = None
-    while index < len(rest):
-        token = rest[index]
-        if token == "--":
-            index += 1
+    options_done = False
+    for token in argv[1:]:
+        if token == "--" and not options_done:
+            options_done = True
             continue
-        if _indirect_command(token):
-            return True
-        if token.startswith("-"):
-            flag, sep, value = token.partition("=")
-            if flag in APT_VALUE_FLAGS:
-                if sep:
-                    if _indirect_command(value):
-                        return True
-                    index += 1
-                    continue
-                if index + 1 >= len(rest) or _indirect_command(rest[index + 1]):
-                    return True
-                index += 2
-                continue
+        if token.startswith("-") and not options_done:
             # Apt -qq is used by an existing update-only workflow.
-            if token in APT_NO_VALUE_FLAGS or (
-                action == "update" and re.fullmatch(r"-q{2,}", token)
-            ):
-                index += 1
+            if token in APT_SAFE_FLAGS or re.fullmatch(r"-q{2,}", token):
                 continue
             return True
         if action is None:
-            action = token.lower()
+            action = token
             if action not in APT_SAFE_ACTIONS:
                 return True
-        else:
-            # A later install/reinstall/satisfy word cannot hide behind a
-            # safe-looking first action or an option-value parsing mistake.
-            if token.lower() in APT_SIDE_ACTIONS:
-                return True
-            if action in {"remove", "purge"} and token.endswith("+"):
-                return True
-        index += 1
+            continue
+        if action == "update":
+            return True
+        if token.lower() in APT_SIDE_ACTIONS:
+            return True
+        if not APT_PACKAGE_NAME.fullmatch(token) or token.endswith("+"):
+            return True
     # No recognised action is not proof of a safe package-manager command.
     return action is None
 
@@ -1714,8 +1696,8 @@ def _direct_tool_problem(chunk: list[str]) -> str | None:
         return None
     shown = " ".join(chunk)
     base = _base(_normalize_token(chunk[0]))
-    if base in APT_SIDE_TOOLS and _apt_action_installs(chunk):
-        return f"unexpected apt install: {shown}"
+    if base in APT_SIDE_TOOLS and _apt_command_unsafe(chunk):
+        return f"unexpected apt command: {shown}"
     if base in DPKG_TOOLS and (
         _dpkg_action(chunk) or any(_indirect_command(token) for token in chunk[1:])
     ):
@@ -1728,6 +1710,9 @@ def _package_word_problems(words: list[str]) -> list[str]:
     peeled = _peel_wrappers(words)
     if peeled and _indirect_command(peeled[0]) and _install_position(peeled[1:]):
         found.append(f"indirect package command: {' '.join(peeled)}")
+    # APT_CONFIG points apt-get at another config file, which can add hooks.
+    if any(_normalize_token(token).startswith("APT_CONFIG=") for token in words):
+        found.append(f"apt config override: {' '.join(words)}")
     for index, token in enumerate(words):
         base = _base(_normalize_token(token))
         if base not in APT_SIDE_TOOLS and base not in DPKG_TOOLS:
@@ -2597,16 +2582,53 @@ def main() -> int:
         ("aptitude safe-upgrade installs", "aptitude safe-upgrade"),
         ("aptitude markauto installs", "aptitude markauto"),
         ("apt fake safe action", "apt-get foo nano"),
+        # aptitude reads action specifiers on remove/purge operands.
+        ("aptitude remove plus-M installs", "aptitude remove ffmpeg+M"),
+        ("aptitude remove build-dep specifier", "aptitude remove 'ffmpeg&BD'"),
+        ("aptitude purge plus installs", "aptitude purge ffmpeg+"),
+        ("aptitude remove plain", "aptitude -y remove nano"),
+        ("aptitude update", "aptitude update"),
+        ("apt remove plain", "apt remove nano"),
+        ("apt update", "sudo apt update"),
+        ("apt-get remove plus-M", "apt-get remove ffmpeg+M"),
+        ("apt-get remove build-dep specifier", "apt-get remove 'ffmpeg&BD'"),
+        ("apt-get remove underscore", "apt-get remove ffmpeg_"),
+        ("apt-get remove version", "apt-get remove ffmpeg=7:6.1.1-3ubuntu5"),
+        ("apt-get remove release", "apt-get remove ffmpeg/noble"),
+        ("apt-get remove arch", "apt-get remove ffmpeg:amd64"),
+        ("apt-get remove glob", "apt-get remove 'ff*'"),
+        ("apt-get remove pattern", "apt-get remove '~nffmpeg'"),
+        ("apt-get remove mixed case", "apt-get remove FFmpeg"),
+        ("apt-get remove variable", 'apt-get remove "$pkg"'),
+        ("apt-get remove then install word", "apt-get remove nano install"),
+        ("apt-get remove dash operand", "apt-get remove -- -nano"),
+        ("apt-get update operand", "apt-get update ffmpeg"),
+        ("apt-get action case", "apt-get Remove nano"),
+        # Configuration overrides can run a hook even on update.
+        ("apt-get -o pre-invoke", "sudo apt-get -o APT::Update::Pre-Invoke::=id update"),
+        ("apt-get -o quoted pre-invoke", "sudo apt-get -o 'APT::Update::Pre-Invoke::=sh -c id' update -qq"),
+        ("apt-get --option= dpkg pre-invoke", "apt-get --option=DPkg::Pre-Invoke::=id remove nano"),
+        ("apt-get -o after action", "apt-get update -o APT::Update::Post-Invoke::=id"),
+        ("apt-get -c config", "apt-get -c /tmp/apt.conf update"),
+        ("apt-get --config-file", "apt-get --config-file=/tmp/apt.conf update"),
+        ("apt-get target release", "apt-get -t noble remove nano"),
+        ("apt-get fix-broken", "apt-get -f remove nano"),
+        ("apt-get long fix-broken", "apt-get --fix-broken purge nano"),
+        ("apt-get allow essential", "apt-get --allow-remove-essential remove nano"),
+        ("APT_CONFIG prefix", "APT_CONFIG=/tmp/apt.conf apt-get update"),
+        ("APT_CONFIG env", "sudo env APT_CONFIG=/tmp/apt.conf apt-get update"),
+        ("APT_CONFIG export", "export APT_CONFIG=/tmp/apt.conf"),
     ):
         require_side(label, command)
     for safe in (
         "apt-get update",
         "sudo apt-get update -qq",
-        "aptitude update",
         "apt-get remove nano",
         "apt-get purge ffmpeg",
-        "aptitude -y remove nano",
+        "apt-get -y remove nano",
         "apt-get remove -- ffmpeg",
+        "sudo apt-get -y -q purge libstdc++6 nano-tiny",
+        "DEBIAN_FRONTEND=noninteractive sudo apt-get -s --purge remove ffmpeg",
     ):
         fixture = (
             "jobs:\n  test:\n    runs-on: ubuntu-24.04\n"
