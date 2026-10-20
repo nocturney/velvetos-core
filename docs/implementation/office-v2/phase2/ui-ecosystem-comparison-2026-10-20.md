@@ -56,6 +56,12 @@ Verified upstream **scope only**, not full third-party asset clearance:
 - SliceBridge `node --test native/tests/source-queue-ui.test.js native/tests/my-printers-ui.test.js native/tests/brand-ui.test.js`: **28/28 PASS**.
 - With `CHROME_BIN` explicitly set to installed Google Chrome, `node native/tests/source-queue-layout-qa.cjs`: **28/28 Chromium-rendered layout fixtures completed (exit 0)**, Hebrew/English, empty/1/2/8/12/15 files, window sizes ranging 720×500 to 1280×900.
 - Representative measured outcomes: 1280×900 / 1 file **0px workspace overflow**; 1100×750 / 2 files **120px workspace scroll**; 900×830 / 2 files **60px workspace scroll**; 720×500 / 2 files **735px workspace scroll**. The Chrome headless inner viewport on macOS is shorter than the requested outer window height (e.g. 1100×750 gives actual 1100×607), so numbers are **not** native Wails client-area metrics.
+**Cross-platform verification on Windows (Chris, isolated Windows TEMP clones, no production mutations):**
+- Same UI catalog PR head `f46a9286c83f8a9ec7d0e5d76997ceddf742e947` at test time: **25/25** catalog tests PASS (Python 3.12); `check-living-studio.py` PASS; `check-vfmem.py` PASS; `check-office-v2-phase2.py` PASS.
+- Same SliceBridge source snapshot `dba4a3b7c786544a6faececb7fdba1d3a3f8f237`: existing **28/28 Node UI checks PASS**, **28/28 Chrome-rendered bilingual layout fixtures exit 0** on Windows.
+- Cross-OS browser viewport evidence: Windows Chrome reserves outer frame width/height differently (1100×750 request measured 1084×599), compared with macOS Chrome (1100×607). Windows 2-file sample at 1100×750 has **128px workspace overflow**; at 900×830 it has **68px**. This reaffirms the *remaining scroll problem* rather than certifying near-zero scroll or native-Wails behavior.
+- Tests were code/Chromium renders, **not** live Wails/WebView2/OS dialog interaction, and not a user-device usability certification.
+
 **XIAS vs SliceBridge — real fixed-source evaluation, pinned upstream `plugin87/ux-ui-agent-skills@55156b40e3a9aafa52448bde76cdcb5147b958db`**:
 
 Ran source-only, in a *separate temporary clone* with `npm install --ignore-scripts --no-audit --no-fund --no-package-lock`, Node 24, installed Chrome and `DS_REQUIRE_BROWSER=1`. No generated UI was committed to SliceBridge, and no provider hooks or model API calls were invoked. The target was the same SliceBridge `native/frontend/dist/index.html`, not a manufactured mock. Each command used `node scripts/<gate>.mjs <target> --widths=720,900,1100`:
