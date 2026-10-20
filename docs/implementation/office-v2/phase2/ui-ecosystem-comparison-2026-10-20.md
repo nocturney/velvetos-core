@@ -67,6 +67,11 @@ Ran source-only, in a *separate temporary clone* with `npm install --ignore-scri
 | `verify_rtl` | **PASS** — 0 px RTL/LTR horizontal overflow | Checks mirroring/overflow, not complete Hebrew copy |
 | `verify_target_size` | **PASS** — 42 targets >=24×24px or documented exceptions | Checks minimum interaction size, not keyboard usability |
 | `measure_render` | **FAIL as implemented** — 8 alleged 4.5:1 text contrast violations | **NOT ACCEPTED AS EIGHT CONFIRMED APP DEFECTS** pending independent source-level adjudication |
+| `axe_audit` | **PASS** — zero axe-core WCAG 2.2 A/AA violations on static DOM | Not native-app UI state and not a substitute for manual review |
+| `verify_keyboard` | **PASS** — 14 controls + 0 composite widgets reachable, Enter/Space and arrows respond | Static fixture; product-specific Wails dialogs not exercised |
+| `verify_reduced_motion` | **PASS** — reduced-motion policy present; transitions stopped, no content lost | Static-file render only |
+
+A total of **7 of 8 executed XIAS gates returned PASS** and **1/8 (contrast) reported the eight findings below**. These are per-gate outcomes, **not** a clean overall application accessibility pass.
 
 **False-positive adjudication of the eight XIAS contrast flags**:
 
@@ -77,7 +82,7 @@ Ran source-only, in a *separate temporary clone* with `npm install --ignore-scri
 - The layout harness's PASS means controls remain reachable and no unexpected horizontal overflow; it **does not prove the user's near-zero-scroll preference has been achieved**. The measurable residual scroll is a candidate for a follow-up layout optimization, not a fictitious full PASS.
 - The first attempt used the test's default Edge path, which was unavailable on this host; an already-installed Chrome binary was selected instead. No browser installation required.
 
-**Not completed in this pilot:** installed native Wails GUI screenshot verification on both operating systems, an Impeccable pinned detector run, UI Skills prompt-agent comparative repair, comprehensive keyboard tests and gradient-aware raster contrast certification, and real 3MF conversion. XIAS five rendered gates *were* executed on the static desktop frontend; that is not the same as a fully verified product. Do not claim those from static or headless tests.
+**Not completed in this pilot:** installed native Wails GUI screenshot verification on both operating systems, an Impeccable pinned detector run, UI Skills prompt-agent comparative repair, comprehensive keyboard tests and gradient-aware raster contrast certification, and real 3MF conversion. XIAS eight rendered gates *were* executed on the static desktop frontend; that is not the same as a fully verified product. Do not claim those from static or headless tests.
 
 ## Selection by task (no universal winner)
 
