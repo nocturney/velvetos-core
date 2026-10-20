@@ -351,6 +351,77 @@ def run_scripts(text: str) -> list[str]:
     return scripts
 
 
+# Alternate YAML runnable forms are unsupported unless the scanner
+# can prove the shell commands it sees are the ones Actions would execute.
+_RUN_KEY = re.compile(r"""^(?:-\s+)?(?:"run"|'run'|run)\s*:""")
+_RUN_FLOW = re.compile(r"""^-\s*[\{\[].*(?:"run"|'run'|run)\s*:""")
+_RUN_QUESTION = re.compile(r"""^(?:-\s+)?\?\s*(?:"run"|'run'|run)\b""")
+_RUN_STRICT = re.compile(r"""^(?:-\s+)?run:\s+(?:[|>][-+]?\s*|[^\s&!*{}\[\],?"'|>#%@\x60].*)$""")
+_RUN_BLOCK = re.compile(r"""^(?:-\s+)?run:\s+[|>][-+]?\s*$""")
+
+
+def run_syntax_problems(text: str, *, path: str) -> list[str]:
+    """Flag YAML run shapes missed by the bounded run_scripts() scanner.
+
+    Literal shell bodies can include JSON with run keys and code that prints
+    YAML. Those lines must not be reclassified as workflow declarations.
+    """
+    problems: list[str] = []
+    lines = text.splitlines()
+    previous = ""
+    literal_indent: int | None = None
+    for number, raw in enumerate(lines, start=1):
+        indent = len(raw) - len(raw.lstrip(" "))
+        if literal_indent is not None:
+            if not raw.strip() or indent > literal_indent:
+                continue
+            literal_indent = None
+        line = strip_comment(raw)
+        if not line:
+            continue
+        in_flow = bool(_RUN_FLOW.search(line))
+        if _RUN_KEY.search(line) or in_flow or _RUN_QUESTION.search(line):
+            flow = in_flow or line[-1:] in {"}", "]", ","} or previous[-1:] in {"{", "[", ","}
+            strict = bool(_RUN_STRICT.fullmatch(line)) and not flow
+            if not strict:
+                problems.append(f"{path}:{number} unsupported YAML run syntax")
+            elif _RUN_BLOCK.fullmatch(line):
+                literal_indent = indent
+            else:
+                after = next((nxt for nxt in lines[number:]
+                              if nxt.strip() and not nxt.strip().startswith("#")), "")
+                if after and len(after) - len(after.lstrip(" ")) > indent:
+                    problems.append(f"{path}:{number} unsupported continued run value")
+        previous = line
+    return problems
+
+
+def prove_yaml_run_syntax() -> None:
+    """Executable negatives for alternate Actions YAML shell syntax."""
+    blocked = (
+        '- name: x\n  "run": pip install floatingpkg\n',
+        "- name: x\n  run: &a |\n    pip install floatingpkg\n",
+        "- { name: x, run: pip install floatingpkg }\n",
+        "- name: x\n  run: !!str |\n    pip install floatingpkg\n",
+        "- name: x\n  run: *shared_script\n",
+        "- name: x\n  run: |2\n    pip install floatingpkg\n",
+        "- name: x\n  run: >2\n    pip install floatingpkg\n",
+    )
+    for index, script in enumerate(blocked):
+        if not any("unsupported YAML run syntax" in line
+                   for line in install_spec_problems(script, path="fixture.yml")):
+            fail(f"alternate YAML run escaped: fixture {index}")
+    accepted = (
+        "- name: code literal\n  run: |\n    echo '{\"run\": \"echo hi\"}'\n",
+        '- name: display\n  run: |\n    echo "run: no install"\n',
+        "- name: approved\n  run: npm ci\n",
+        "- name: pinned\n  run: pip install google-auth==2.62.0\n",
+    )
+    for index, script in enumerate(accepted):
+        if install_spec_problems(script, path="fixture.yml"):
+            fail(f"ordinary YAML run wrongly refused: fixture {index}")
+
+
 def raw_argv(command: str) -> list[str] | None:
     try:
         return shlex.split(_for_shlex(command), posix=True)
@@ -1112,7 +1183,7 @@ def install_spec_problems(
 ) -> list[str]:
     chosen = INSTALL_SPEC_ALLOWLIST if allowlist is None else allowlist
     active = InstallRules() if rules is None else rules
-    problems: list[str] = []
+    problems: list[str] = run_syntax_problems(text, path=path)
     for script in run_scripts(text):
         if active.tokens:
             problems.extend(token_backstop(script, path=path, allowlist=chosen, rules=active))
@@ -2339,8 +2410,8 @@ def prove_bypasses() -> str:
         "bun_add": "run: bun add x\n",
         "if_then": "run: if true; then pip -q install x; fi\n",
         "for_do": "run: for i in 1; do uvx x; done\n",
-        "brace": "run: { pip -q install x; }\n",
-        "bang": "run: ! pip -q install x\n",
+        "brace": "run: |\n  { pip -q install x; }\n",
+        "bang": "run: |\n  ! pip -q install x\n",
         "timeout": "run: timeout 60 pip -q install x\n",
         "nohup": "run: nohup python3 -mpip install x\n",
         "eval": "run: eval pip -q install x\n",
@@ -2401,8 +2472,8 @@ def prove_bypasses() -> str:
         "bun_add": "run: bun add x@1.2.3\n",
         "if_then": "run: if true; then pip -q install x==1.2.3; fi\n",
         "for_do": "run: for i in 1; do uvx x==1.2.3; done\n",
-        "brace": "run: { pip -q install x==1.2.3; }\n",
-        "bang": "run: ! pip -q install x==1.2.3\n",
+        "brace": "run: |\n  { pip -q install x==1.2.3; }\n",
+        "bang": "run: |\n  ! pip -q install x==1.2.3\n",
         "timeout": "run: timeout 60 pip -q install x==1.2.3\n",
         "nohup": "run: nohup python3 -mpip install x==1.2.3\n",
         "eval": "run: eval pip -q install x==1.2.3\n",
@@ -3027,6 +3098,7 @@ def main() -> int:
         fail(probe.stderr.strip() or probe.stdout.strip() or "runner tools self-test failed")
 
     bypass_evidence = prove_bypasses()
+    prove_yaml_run_syntax()
     lock_evidence = prove_google_lock(req_text, lock_text)
     check_all = (WORKFLOWS / "check-all.yml").read_text(encoding="utf-8")
     research = (WORKFLOWS / "velvetos-research.yml").read_text(encoding="utf-8")
@@ -3338,10 +3410,10 @@ def main() -> int:
     # QA 1: a command word or package verb the shell expands is refused, never read.
     for label, step, needle in (
         ("variable command word", "        run: $P install x\n", "expanded command word"),
-        ("quoted variable command word", '        run: "$P" install x\n', "expanded command word"),
-        ("substituted command word", '        run: "$(echo pip)" install x\n', "expanded command word"),
+        ("quoted variable command word", '        run: |\n          "$P" install x\n', "expanded command word"),
+        ("substituted command word", '        run: |\n          "$(echo pip)" install x\n', "expanded command word"),
         ("glued variable command word", "        run: npm$X add x\n", "expanded command word"),
-        ("brace command word", "        run: {pip,install,x}\n", "expanded command word"),
+        ("brace command word", "        run: |\n          {pip,install,x}\n", "expanded command word"),
         ("glob command word", "        run: pi[p] install x\n", "expanded command word"),
         ("default parameter command word", "        run: ${P:-pip} install x\n", "expanded command word"),
         ("after separator", "        run: true; $P install x\n", "expanded command word"),
@@ -3354,7 +3426,7 @@ def main() -> int:
             fail(f"{label} was not caught: {policy_found(step)}")
     for safe in (
         "        run: echo $HOME\n",
-        "        run: '[' -n \"$X\" ']' && echo ok\n",
+        "        run: |\n          '[' -n \"$X\" ']' && echo ok\n",
         "        run: pip install x==1.2.3\n",
         "        run: npm ci --ignore-scripts\n",
     ):
