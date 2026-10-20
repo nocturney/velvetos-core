@@ -224,10 +224,10 @@ def _html_h2(text: str) -> bool:
     """An ``h2`` start or end tag anywhere on a line makes it a level-2 heading.
 
     A block such as ``<div align="center"><h2>1.0.0</h2></div>`` renders a heading after
-    its opening tag, so the tag counts wherever it sits. A literal tag in a code span is not
-    masked here, so a prose mention can end the section early, which fails closed.
+    its opening tag, so the tag counts wherever it sits. Literal HTML h2 inside inline code or backslash-escaped Markdown prose is
+    documentation, not a released-section heading.
     """
-    return HTML_H2_RE.search(text) is not None
+    return HTML_H2_RE.search(_literal_masked(text)) is not None
 
 
 def _literal_masked(text: str) -> str:
@@ -1101,6 +1101,17 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
          "a real HTML comment after a code span on the same line was accepted"),
         (_unreleased_region(["## [Unreleased]", "", "`a <!-- note", bullet, "-->"]) is None,
          "an HTML comment after an unclosed backtick on the same line was accepted"),
+    ])
+    literal_h2_doc = (
+        "## [Unreleased]\n\nUse " + chr(96) + "<h2>1.0.0</h2>" + chr(96)
+        + " as documentation.\n\n" + bullet
+    )
+    escaped_h2_doc = "## [Unreleased]\n\n\\<h2>1.0.0</h2> is escaped.\n\n" + bullet
+    probes.extend([
+        (gate([("M", "CHANGELOG.md", literal_h2_doc), deleted]) == 0,
+         "a literal HTML h2 in inline code wrongly ended Unreleased"),
+        (gate([("M", "CHANGELOG.md", escaped_h2_doc), deleted]) == 0,
+         "a backslash-escaped HTML h2 wrongly ended Unreleased"),
     ])
     # Mutating a new guard must change the gate outcome for its fixture.
     literal_sample = "## [Unreleased]\n\nSee `<!--` syntax.\n\n" + bullet
