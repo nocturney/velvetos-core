@@ -1817,17 +1817,41 @@ def one_hour_forge(idea: str) -> dict:
 
 def skill_list() -> dict:
     # Living Studio's operational registry remains unchanged; discovery is derived.
-    from vf_skill_catalog import catalog
+    from vf_skill_catalog import catalog, ui_resources
     reg = load_json(REGISTRY, {}) or {}
     records = catalog(ROOT)
+    resources = ui_resources(ROOT)
     return {
         "skills": reg.get("skills") or [],
+        "ui_resource_count": len(resources),
+        "ui_resource_command": "python3 scripts/vf_living_studio.py skill resources",
         "livingCapabilities": reg.get("livingCapabilities") or [],
         "count_skills": len(reg.get("skills") or []),
         "count_living": len(reg.get("livingCapabilities") or []),
         "catalog_count": len(records),
         "catalog": [{"id": row["id"], "status": row["status"], "origin": row["origin"]}
                     for row in records],
+    }
+
+
+def skill_ui_resources() -> dict:
+    from vf_skill_catalog import ui_resources
+    resources = ui_resources(ROOT)
+    return {
+        "kind": "SOURCE_ONLY_UI_REFERENCES", "count": len(resources),
+        "items": [{"id": r["id"], "name": r["name"], "category": r["category"],
+                   "rights": r["usage_rights"]["state"], "url": r["url"]}
+                  for r in resources],
+        "executable": False, "runtime": "NOT_INSTALLED_OR_VERIFIED",
+    }
+
+
+def skill_ui_source_search(query: str, stack: str | None = None) -> dict:
+    from vf_skill_catalog import ui_resource_search
+    return {
+        "query": query, "stack": stack,
+        "results": ui_resource_search(query, ROOT, stack=stack),
+        "executable": False, "disposition": "DISCOVERY_ONLY_NO_AUTO_INSTALL",
     }
 
 
@@ -2180,6 +2204,11 @@ def main() -> int:
     p_sk = sub.add_parser("skill")
     sk_sub = p_sk.add_subparsers(dest="skill_cmd", required=True)
     sk_sub.add_parser("list").set_defaults(func=lambda a: print(json.dumps(skill_list(), ensure_ascii=False, indent=2)) or 0)
+    sk_sub.add_parser("resources").set_defaults(func=lambda a: print(json.dumps(skill_ui_resources(), ensure_ascii=False, indent=2)) or 0)
+    p_sources = sk_sub.add_parser("source-search")
+    p_sources.add_argument("query", nargs="+")
+    p_sources.add_argument("--stack", default=None)
+    p_sources.set_defaults(func=lambda a: print(json.dumps(skill_ui_source_search(" ".join(a.query), a.stack), ensure_ascii=False, indent=2)) or 0)
     p_route = sk_sub.add_parser("route")
     p_route.add_argument("name")
     p_route.set_defaults(func=lambda a: print(json.dumps(skill_route(a.name), ensure_ascii=False, indent=2)) or 0)
