@@ -321,6 +321,17 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(audit(ROOT)["ui_resources"], 42)
         self.assertEqual(audit(ROOT)["ui_rights_review_required"], 37)
 
+    def test_living_studio_uses_shared_ui_resource_catalog(self):
+        from vf_living_studio import skill_list, skill_route, skill_ui_resources, skill_ui_source_search
+        listing = skill_list()
+        self.assertEqual(listing["ui_resource_count"], 42)
+        self.assertEqual(skill_ui_resources()["count"], 42)
+        self.assertFalse(skill_ui_resources()["executable"])
+        found = skill_ui_source_search("originui-ng", "Angular")
+        self.assertEqual(found["results"][0]["id"], "originui-ng")
+        self.assertFalse(found["executable"])
+        self.assertEqual(skill_route("ui-skills").get("error"), "unknown_skill")
+
     def test_bad_external_resource_cannot_silently_enter_catalog(self):
         from vf_skill_catalog import UI_SOURCES, ui_resources
         with tempfile.TemporaryDirectory() as tmp:
