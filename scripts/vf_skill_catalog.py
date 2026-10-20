@@ -59,7 +59,18 @@ def _canonical_priority(path: str) -> tuple[int, str]:
     return priority, path
 
 
-def _repo_skill_files(root: Path) -> list[Path]:
+def _contained(path: Path, scope: Path) -> bool:
+    """Fail closed: the fully resolved target (through file or directory symlinks) must stay inside scope.
+    Dangling links and anything that cannot be resolved are treated as outside. Reads no content."""
+    try:
+        return path.resolve(strict=True).is_relative_to(scope)
+    except (OSError, RuntimeError, ValueError):
+        return False
+
+
+def _repo_skill_scan(root: Path) -> tuple[list[Path], list[str]]:
+    """Return (in-root skill sources, repo-relative paths rejected for resolving outside root)."""
+    scope = root.resolve()
     rows: list[Path] = []
     for prefix in SOURCES:
         base = root / prefix
@@ -73,7 +84,13 @@ def _repo_skill_files(root: Path) -> list[Path]:
         else:
             rows += sorted(p for p in base.glob("*/SKILL.md") if p.is_file())
             rows += sorted(p for p in base.glob("*/*/SKILL.md") if p.is_file())
-    return sorted(set(rows), key=lambda p: _canonical_priority(p.relative_to(root).as_posix()))
+    accepted = {p for p in rows if _contained(p, scope)}
+    rejected = sorted(p.relative_to(root).as_posix() for p in set(rows) - accepted)
+    return sorted(accepted, key=lambda p: _canonical_priority(p.relative_to(root).as_posix())), rejected
+
+
+def _repo_skill_files(root: Path) -> list[Path]:
+    return _repo_skill_scan(root)[0]
 
 
 def discover(root: Path = ROOT, *, parsed_cache: dict[str, Any] | None = None) -> list[dict[str, Any]]:
@@ -270,12 +287,18 @@ def host_probe() -> dict[str, Any]:
     home = Path.home()
     found = []
     unreadable = []
+    outside_root = []
     for provider in (".cursor", ".agents", ".grok", ".claude", ".codex"):
         base = home / provider / "skills"
         # Claude synced and Codex .system skills are nested; one-level glob misses them.
         try:
             paths = sorted(base.rglob("SKILL.md")) if base.is_dir() else []
+            scope = base.resolve() if base.is_dir() else None
             for path in paths:
+                # Each adapter's own skills directory is its root; a link escaping it is not inventoried.
+                if scope is None or not _contained(path, scope):
+                    outside_root.append({"adapter": provider, "path": str(path), "reason": "OUTSIDE_SKILL_ROOT"})
+                    continue
                 try:
                     digest = hashlib.sha256(path.read_bytes()).hexdigest()
                 except OSError as exc:
@@ -288,6 +311,7 @@ def host_probe() -> dict[str, Any]:
     return {"hostname": socket.gethostname(), "platform": platform.system(),
             "local_skills": found, "source_present_count": len(found),
             "unreadable": unreadable,
+            "outside_root": outside_root,
             "agent_binary_presence": {"claude": bool(shutil.which("claude")),
                                       "cursor": bool(shutil.which("cursor")),
                                       "codex": bool(shutil.which("codex"))},
@@ -424,7 +448,9 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
     counts = defaultdict(int)
     for item in items:
         counts[item["origin"]] += 1
-    return {"source_files": len(_repo_skill_files(root)), "unique_records": len(items),
+    accepted, rejected = _repo_skill_scan(root)
+    return {"source_files": len(accepted), "unique_records": len(items),
+            "rejected_outside_root": rejected,
             "by_origin": dict(counts), "duplicate_paths": sum(len(x["alternate_paths"]) for x in items),
             "colliding_variants": [x["id"] for x in items if "variant_of" in x],
             "uninstalled_candidates": [x["id"] for x in items if x["origin"] == "EXTERNAL_CANDIDATE"],
