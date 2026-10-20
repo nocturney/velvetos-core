@@ -45,6 +45,7 @@ import ast
 import re
 import shlex
 import sys
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -181,8 +182,20 @@ def norm(name: str) -> str:
     return re.sub(r"[-_.]+", "-", name).lower()
 
 
+_WIN_PATH = re.compile(r"[A-Za-z]:\\(?:[^\\\s\"']+\\)*[^\\\s\"']+")
+
+
+def _for_shlex(command: str) -> str:
+    """Turn a Windows path into slashes so shlex does not eat the separators."""
+    return _WIN_PATH.sub(lambda match: match.group(0).replace("\\", "/"), command)
+
+
 def _base(token: str) -> str:
-    return token.rsplit("/", 1)[-1].lower()
+    name = token.replace("\\", "/").rsplit("/", 1)[-1].lower()
+    for suffix in (".exe", ".cmd"):
+        if name.endswith(suffix) and len(name) > len(suffix):
+            return name[: -len(suffix)]
+    return name
 
 
 def strip_comment(line: str) -> str:
@@ -315,7 +328,7 @@ def run_scripts(text: str) -> list[str]:
 
 def raw_argv(command: str) -> list[str] | None:
     try:
-        return shlex.split(command, posix=True)
+        return shlex.split(_for_shlex(command), posix=True)
     except ValueError:
         return None
 
@@ -692,7 +705,7 @@ def word_lists(text: str, seen: set[str] | None = None) -> list[list[str]] | Non
         return []
     seen.add(cleaned)
     try:
-        words = shlex.split(cleaned, posix=True)
+        words = shlex.split(_for_shlex(cleaned), posix=True)
     except ValueError:
         return None
     lists = [_expand_words(words)]
@@ -2671,6 +2684,107 @@ def node_toolchain_problems(text: str, *, path: str) -> list[str]:
                     problems.append(f"{path} job {job} node command without a pinned toolchain")
     return problems
 
+def action_paths(root: Path) -> list[Path]:
+    base = root / ".github" / "actions"
+    if not base.is_dir():
+        return []
+    return sorted(path for path in base.glob("**/action.y*ml") if path.is_file())
+
+
+def prove_path_forms() -> str:
+    def require(command: str, needle: str) -> None:
+        found = install_spec_problems(f"run: {command}\n", path="fixture.yml")
+        if not any(needle in item for item in found):
+            fail(f"path form was not caught: {found}")
+
+    require("/usr/bin/pip install some-malicious-pkg", "floating pip spec some-malicious-pkg")
+    require("./pip install some-malicious-pkg", "floating pip spec some-malicious-pkg")
+    require("pip.exe install some-malicious-pkg", "floating pip spec some-malicious-pkg")
+    require("PIP.EXE install some-malicious-pkg", "floating pip spec some-malicious-pkg")
+    require("pip3.11 install some-malicious-pkg", "floating pip spec some-malicious-pkg")
+    require(
+        "C:\\Python\\Scripts\\pip.exe install some-malicious-pkg",
+        "floating pip spec some-malicious-pkg",
+    )
+    require("C:\\Tools\\pip.exe install evil-tools-pip", "floating pip spec evil-tools-pip")
+    require("NPM.CMD install evil-npm-cmd", "floating npm spec evil-npm-cmd")
+    require("/usr/bin/npm install some-malicious-pkg", "floating npm spec some-malicious-pkg")
+    require("npm.cmd install some-malicious-pkg", "floating npm spec some-malicious-pkg")
+    require("npm.exe install some-malicious-pkg", "floating npm spec some-malicious-pkg")
+    require("\\p\\i\\p install some-malicious-pkg", "floating pip spec some-malicious-pkg")
+    for sample in (
+        "run: /usr/bin/pip install google-auth==2.62.0\n",
+        "run: /usr/bin/npm ci\n",
+        "run: pip3.12 install google-auth==2.62.0\n",
+        "run: C:\\Tools\\pip.exe install google-auth==2.62.0\n",
+        "run: npm.cmd ci --ignore-scripts\n",
+    ):
+        found = install_spec_problems(sample, path="fixture.yml")
+        if found:
+            fail(f"pinned path form was refused: {found}")
+    jobs = (WORKFLOWS / "jobs-write-through.yml").read_text(encoding="utf-8")
+    injected = jobs + (
+        "\n  path_bypass:\n"
+        "    runs-on: ubuntu-latest\n"
+        "    steps:\n"
+        "      - run: /usr/bin/pip install some-malicious-pkg\n"
+        "      - run: pip.exe install evil-pip-exe\n"
+        "      - run: npm.cmd install evil-npm-cmd\n"
+        "      - run: C:\\Tools\\pip.exe install evil-tools-pip\n"
+    )
+    found = install_spec_problems(injected, path="jobs-write-through.yml")
+    if not any("floating pip spec some-malicious-pkg" in item for item in found):
+        fail(f"jobs-write-through path bypass was not caught: {found}")
+    for needle in (
+        "floating pip spec evil-pip-exe",
+        "floating npm spec evil-npm-cmd",
+        "floating pip spec evil-tools-pip",
+    ):
+        if not any(needle in item for item in found):
+            fail(f"jobs-write-through path form was not caught ({needle}): {found}")
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        sneak = root / ".github" / "actions" / "sneak" / "action.yml"
+        sneak.parent.mkdir(parents=True)
+        sneak.write_text(
+            "runs:\n  using: composite\n  steps:\n"
+            "    - run: /usr/bin/pip install some-malicious-pkg\n"
+            "    - run: pip.exe install evil-pip-exe\n"
+            "    - run: npm.cmd install evil-npm-cmd\n"
+            "    - run: C:\\Tools\\pip.exe install evil-tools-pip\n",
+            encoding="utf-8",
+        )
+        ok = root / ".github" / "actions" / "ok" / "action.yaml"
+        ok.parent.mkdir(parents=True)
+        ok.write_text(
+            "runs:\n  using: composite\n  steps:\n"
+            "    - run: pip3.12 install google-auth==2.62.0\n",
+            encoding="utf-8",
+        )
+        decoy = sneak.parent / "steps.yml"
+        decoy.write_text("run: pip install some-malicious-pkg\n", encoding="utf-8")
+        scanned = action_paths(root)
+        if [path.name for path in scanned] != ["action.yaml", "action.yml"]:
+            fail(f"composite action scan set was wrong: {[path.name for path in scanned]}")
+        action_found: list[str] = []
+        for path in scanned:
+            action_found.extend(
+                install_spec_problems(path.read_text(encoding="utf-8"), path=path.as_posix())
+            )
+        if not any("floating pip spec some-malicious-pkg" in item for item in action_found):
+            fail(f"composite action floating pip was not caught: {action_found}")
+        for needle in (
+            "floating pip spec evil-pip-exe",
+            "floating npm spec evil-npm-cmd",
+            "floating pip spec evil-tools-pip",
+        ):
+            if not any(needle in item for item in action_found):
+                fail(f"composite action path form was not caught ({needle}): {action_found}")
+        if any("google-auth" in item for item in action_found):
+            fail("pinned composite action install was refused")
+    return "path=caught versioned=caught action=caught"
+
+
 def main() -> int:
     if INSTALL_SPEC_ALLOWLIST:
         fail("INSTALL_SPEC_ALLOWLIST must stay empty")
@@ -2695,7 +2809,8 @@ def main() -> int:
         problems.extend(job_policy_problems(text, path=rel))
         problems.extend(node_toolchain_problems(text, path=rel))
         node_setups += text.count("actions/setup-node@")
-    for path in action_files():
+    actions = action_files()
+    for path in actions:
         rel = path.relative_to(ROOT).as_posix()
         composite = path.read_text(encoding="utf-8")
         problems.extend(install_spec_problems(composite, path=rel))
@@ -3380,14 +3495,15 @@ def main() -> int:
         fail(probe.stderr.strip() or probe.stdout.strip() or "node toolchain self-test failed")
 
 
+    path_evidence = prove_path_forms()
     print(
-        f"OK {NAME} workflows={len(workflows)} floating=0 allowlist=empty "
+        f"OK {NAME} workflows={len(workflows)} actions={len(actions)} floating=0 allowlist=empty "
         "bare=caught exact=pass mixed=caught npm_float=caught npm_exact=pass "
         "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught "
         "runner_drift=caught runner_soft=caught runner_exit=caught "
         "runner_base=caught runner_linux=caught "
         "runner_windows=caught runner_image=caught "
-        f"{bypass_evidence} {lock_evidence} "
+        f"{bypass_evidence} {lock_evidence} {path_evidence} "
         f"apt_ffmpeg={apt_workflows} apt_sequence=pinned extra=caught "
         "comment=caught digest=caught runner=caught pool=caught "
         "bento_sha=caught bento_raise=caught bento_tamper=caught "
