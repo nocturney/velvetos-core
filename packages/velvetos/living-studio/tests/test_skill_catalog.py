@@ -153,6 +153,24 @@ class CatalogTests(unittest.TestCase):
         self.assertFalse(row["execution_verified"])
         self.assertEqual(row["execution_readiness"], "NOT_ASSESSED")
 
+    def test_nested_synced_claude_and_codex_host_discovery(self):
+        from unittest.mock import patch
+        from vf_skill_catalog import host_probe
+
+        with tempfile.TemporaryDirectory() as tmp:
+            home = Path(tmp)
+            claude = home / ".claude/skills/synced/workspace/pdf/SKILL.md"
+            codex = home / ".codex/skills/.system/review-agent/SKILL.md"
+            claude.parent.mkdir(parents=True)
+            codex.parent.mkdir(parents=True)
+            claude.write_text("Portable PDF skill")
+            codex.write_text("Portable reviewer skill")
+            with patch("vf_skill_catalog.Path.home", return_value=home):
+                found = host_probe()
+            self.assertEqual(found["source_present_count"], 2)
+            self.assertEqual({x["skill"] for x in found["local_skills"]}, {"pdf", "review-agent"})
+            self.assertFalse(found["execution_verified"])
+
 
 if __name__ == "__main__":
     unittest.main()

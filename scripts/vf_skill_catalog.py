@@ -265,7 +265,8 @@ def host_probe() -> dict[str, Any]:
     found = []
     for provider in (".cursor", ".agents", ".grok", ".claude", ".codex"):
         base = home / provider / "skills"
-        for path in sorted(base.glob("*/SKILL.md")) if base.is_dir() else []:
+        # Claude synced and Codex .system skills are nested; one-level glob misses them.
+        for path in sorted(base.rglob("SKILL.md")) if base.is_dir() else []:
             found.append({"adapter": provider, "skill": path.parent.name,
                           "path": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
     return {"hostname": socket.gethostname(), "platform": platform.system(),
