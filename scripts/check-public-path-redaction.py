@@ -162,22 +162,33 @@ def kinds(text: str) -> set[str]:
     return found
 
 
+UTF32_BOMS = (b"\xff\xfe\x00\x00", b"\x00\x00\xfe\xff")
+BOMLESS_WIDE_CODECS = ("utf-32-le", "utf-32-be", "utf-16-le", "utf-16-be")
+
+
 def decode_tracked_bytes(blob: bytes) -> str:
-    """Scan BOTH raw bytes and decoded text; refuse malformed BOM input."""
+    """Scan BOTH raw bytes and decoded text; refuse malformed BOM input.
+
+    A BOM-less NUL-bearing blob is decoded leniently in every wide codec at
+    every byte offset, so odd length or UTF-32 alignment cannot hide evidence.
+    """
     raw = blob.decode("latin-1")
     decoded = [raw]
-    if blob.startswith((b"\xff\xfe", b"\xfe\xff")):
+    if blob.startswith(UTF32_BOMS):
+        try:
+            decoded.append(blob.decode("utf-32"))
+        except UnicodeDecodeError as exc:
+            raise ValueError("malformed UTF-32 BOM payload") from exc
+    elif blob.startswith((b"\xff\xfe", b"\xfe\xff")):
         try:
             decoded.append(blob.decode("utf-16"))
         except UnicodeDecodeError as exc:
             raise ValueError("malformed UTF-16 BOM payload") from exc
     elif b"\x00" in blob:
-        # Guessing a single BOM-less byte order can miss evidence. Scan both.
-        for codec in ("utf-16-le", "utf-16-be"):
-            try:
-                decoded.append(blob.decode(codec))
-            except UnicodeDecodeError:
-                pass
+        # Guessing one BOM-less byte order can miss evidence. Scan every view.
+        for offset in range(4):
+            for codec in BOMLESS_WIDE_CODECS:
+                decoded.append(blob[offset:].decode(codec, errors="replace"))
     else:
         try:
             decoded.append(blob.decode("utf-8"))
@@ -283,6 +294,34 @@ def selftest() -> None:
         fail("selftest missed a private address in BOM-less UTF-16BE text")
     if scan(b"\xff\xfe" + b"\x31") != unreadable_row:
         fail("selftest skipped a broken UTF-16 BOM payload instead of failing closed")
+    host_text = "host " + private_lan
+    wide_blobs = (
+        host_text.encode("utf-16-le") + b"\x0a",
+        host_text.encode("utf-16-be") + b"\x0a",
+        host_text.encode("utf-32-le"),
+        host_text.encode("utf-32-be"),
+        host_text.encode("utf-32-le") + b"\x0a",
+        host_text.encode("utf-32"),
+        b"\x00\x00\xfe\xff" + host_text.encode("utf-32-be"),
+    )
+    for blob in wide_blobs:
+        if scan(blob) != lan_row:
+            fail("selftest missed a private address in odd-length or UTF-32 text")
+    for blob in (b"\xff\xfe\x00\x00" + b"\x31", b"\x00\x00\xfe\xff" + b"\xff\xff\xff\xff"):
+        if scan(blob) != unreadable_row:
+            fail("selftest skipped a broken UTF-32 BOM payload instead of failing closed")
+    benign_wide = (
+        ("host " + doc_lan).encode("utf-32"),
+        ("docs/readme 8.8.8.8").encode("utf-16-le") + b"\x0a",
+        ("C:" + "\\Users\\alice\\Desktop").encode("utf-32-be"),
+        ("C:" + "\\Users\\alice\\Desktop").encode("utf-16-le") + b"\x0a",
+    )
+    for blob in benign_wide:
+        if scan(blob):
+            fail("selftest flagged benign UTF-16 or UTF-32 text")
+    for blob in (win_home.encode("utf-16-le") + b"\x0a", posix_home.encode("utf-32-be")):
+        if scan(blob) != home_row:
+            fail("selftest missed a home prefix in odd-length or UTF-32 text")
     if not scan(b"\xff\xfe\xfd note " + private_lan.encode("ascii")):
         fail("selftest skipped ASCII private text after a malformed BOM")
     if scan(b"note\x00 private " + private_lan.encode("ascii")) != lan_row:
@@ -338,6 +377,17 @@ def selftest() -> None:
     lf_fixture = b"header\n" + private + b"\n"
     lf_sha = hashlib.sha256(lf_fixture).hexdigest()
     crlf_fixture = lf_fixture.replace(b"\n", b"\r\n")
+    hidden_wide = ("10" + ".9.8.7").encode("utf-32-le")
+    if audit(
+        [("docs/sample.md", lf_fixture + hidden_wide)],
+        allowlist=frozenset(), pins={"docs/sample.md": lf_sha},
+    ) != ["docs/sample.md: pinned synthetic fixture changed"]:
+        fail("selftest let a UTF-32 literal ride on a pinned fixture")
+    if audit(
+        [("docs/sample.md", private + hidden_wide)],
+        allowlist=frozenset({"docs/sample.md"}), pins={}, allowlist_digests=pinned_match,
+    ) != ["docs/sample.md: allowlist sensitive matches changed"]:
+        fail("selftest let a UTF-32 literal ride on a historical exception")
     if audit([("docs/sample.md", crlf_fixture)], allowlist=frozenset(), pins={"docs/sample.md": lf_sha}):
         fail("selftest refused a Windows CRLF checkout of the same pinned fixture")
     if audit(
