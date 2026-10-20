@@ -31,7 +31,9 @@ UNRELEASED_TITLE = "[Unreleased]"
 ATX_H2_RE = re.compile(r"^ *##(?:[ \t]+(.*?))?[ \t]*$")
 SETEXT_RE = re.compile(r"^ *(?:-+|=+)[ \t]*$")
 FENCE_RE = re.compile(r"^ *(`{3,}|~{3,})(.*)$")
-HTML_H2_RE = re.compile(r"^ *</?h2(?=[\s/>]|$)", re.IGNORECASE)
+HTML_H2_RE = re.compile(r"</?h2(?=[\s/>]|$)", re.IGNORECASE)
+ESCAPED_LT_RE = re.compile(r"(?<!\\)((?:\\\\)*)\\<")
+CODE_SPAN_RE = re.compile(r"(?<!`)(`+)(?!`)(.+?)(?<!`)\1(?!`)")
 HTML_COMMENT_OPEN = "<!--"
 HTML_COMMENT_CLOSE = "-->"
 
@@ -219,8 +221,23 @@ def _fence_close(text: str, marker: str, length: int) -> bool:
 
 
 def _html_h2(text: str) -> bool:
-    """An ``h2`` start or end tag opening a line is a level-2 heading, as in CommonMark."""
-    return HTML_H2_RE.match(text) is not None
+    """An ``h2`` start or end tag anywhere on a line makes it a level-2 heading.
+
+    A block such as ``<div align="center"><h2>1.0.0</h2></div>`` renders a heading after
+    its opening tag, so the tag counts wherever it sits. A literal tag in a code span is not
+    masked here, so a prose mention can end the section early, which fails closed.
+    """
+    return HTML_H2_RE.search(text) is not None
+
+
+def _literal_masked(text: str) -> str:
+    """Same-length copy with backslash-escaped ``<`` and code-span text blanked.
+
+    A ``<!--`` in either place is literal Markdown, not an opener. An even run of
+    backslashes escapes nothing, so ``\\\\<`` keeps its ``<``.
+    """
+    masked = ESCAPED_LT_RE.sub(lambda match: match.group(0)[:-2] + "  ", text)
+    return CODE_SPAN_RE.sub(lambda match: " " * len(match.group(0)), masked)
 
 
 def _comment_line(text: str, opened: bool) -> tuple[bool, bool] | None:
@@ -229,12 +246,12 @@ def _comment_line(text: str, opened: bool) -> tuple[bool, bool] | None:
     A comment opens with ``<!--`` at the start of a line. Its text is neither prose nor a
     heading. The closing ``-->`` is searched for on the opening line too, after the ``<!--``
     as CommonMark does. Markup that shares a line with prose, or text after a closing ``-->``,
-    yields None so the caller fails closed.
+    yields None so the caller fails closed. Literal ``<!--`` (code span or escaped) is not an opener.
     """
     if opened:
         search = 0
     else:
-        start = text.find(HTML_COMMENT_OPEN)
+        start = _literal_masked(text).find(HTML_COMMENT_OPEN)
         if start < 0:
             return False, False
         if text[:start].strip():
@@ -1021,6 +1038,8 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
          "## [Unreleased]\n\n<h2>1.0.0</h2>\n\n" + bullet),
         ("uppercase HTML h2 released heading with attributes",
          "## [Unreleased]\n\n  <H2 id=\"v1\">1.0.0</H2>\n\n" + bullet),
+        ("HTML h2 wrapped in a div release block",
+         "## [Unreleased]\n\n<div align=\"center\"><h2>1.0.0</h2></div>\n\n" + bullet),
         ("bullet only inside a multi-line HTML comment",
          "## [Unreleased]\n\n<!--\n" + bullet + "-->\n"),
     ]
@@ -1066,7 +1085,43 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
          "text after an HTML comment close on the same line was accepted"),
         (gate([("M", "CHANGELOG.md", "## [Unreleased]\n\n<!-- one-line -->\n\n" + bullet), deleted]) == 0,
          "a one-line HTML comment hid the Unreleased bullet"),
+        (gate([("M", "CHANGELOG.md", "## [Unreleased]\n\n" + bullet + "<div align=\"center\"><h2>1.0.0</h2></div>\n"), deleted]) == 0,
+         "a bullet above a wrapped HTML h2 release block was not folded"),
+        (gate([("M", "CHANGELOG.md", "# Changelog\n\nUse `<!--` to open a comment.\n\n## [Unreleased]\n\n" + bullet), deleted]) == 0,
+         "a literal <!-- in inline code in the preamble was taken as a comment"),
+        (gate([("M", "CHANGELOG.md", "# Changelog\n\nWrite \\<!-- literally.\n\n## [Unreleased]\n\n" + bullet), deleted]) == 0,
+         "an escaped \\<!-- in the preamble was taken as a comment"),
+        (gate([("M", "CHANGELOG.md", "## [Unreleased]\n\nSee `<!--` syntax.\n\n" + bullet), deleted]) == 0,
+         "a literal <!-- in inline code under Unreleased was taken as a comment"),
+        (gate([("M", "CHANGELOG.md", "## [Unreleased]\n\n\\<!-- literal\n\n" + bullet), deleted]) == 0,
+         "an escaped \\<!-- under Unreleased was taken as a comment"),
+        (_unreleased_region(["## [Unreleased]", "", "\\\\<!-- note", bullet, "-->"]) is None,
+         "an escaped backslash before a real HTML comment was taken as escaping the opener"),
+        (_unreleased_region(["## [Unreleased]", "", "`x` <!-- note", bullet, "-->"]) is None,
+         "a real HTML comment after a code span on the same line was accepted"),
+        (_unreleased_region(["## [Unreleased]", "", "`a <!-- note", bullet, "-->"]) is None,
+         "an HTML comment after an unclosed backtick on the same line was accepted"),
     ])
+    # Mutating a new guard must change the gate outcome for its fixture.
+    literal_sample = "## [Unreleased]\n\nSee `<!--` syntax.\n\n" + bullet
+    escaped_sample = "## [Unreleased]\n\n\\\\<!-- note\n" + bullet + "-->\n"
+    wrapped_sample = "## [Unreleased]\n\n<div align=\"center\"><h2>1.0.0</h2></div>\n\n" + bullet
+    code_span_sample = "## [Unreleased]\n\n`<!--` literal\n\n" + bullet
+    guard_mutants = (
+        ("_literal_masked", lambda text: text, literal_sample, "the literal-opener mask is not load-bearing"),
+        ("ESCAPED_LT_RE", re.compile(r"\\<"), escaped_sample, "the escape parity guard is not load-bearing"),
+        ("CODE_SPAN_RE", re.compile(r"(?!x)x"), code_span_sample, "the code span mask is not load-bearing"),
+        ("HTML_H2_RE", re.compile(r"^ *</?h2(?=[\s/>]|$)", re.IGNORECASE), wrapped_sample, "the wrapped HTML h2 guard is not load-bearing"),
+    )
+    for name, replacement, sample, message in guard_mutants:
+        real_rc = gate([("M", "CHANGELOG.md", sample), deleted])
+        saved_guard = globals()[name]
+        globals()[name] = replacement
+        try:
+            mutant_rc = gate([("M", "CHANGELOG.md", sample), deleted])
+        finally:
+            globals()[name] = saved_guard
+        probes.append((real_rc != mutant_rc, message))
     html_hidden = "## [Unreleased]\n\n<!--\n## Notes\n-->\n\n" + bullet
     probes.append((
         gate([("M", "CHANGELOG.md", html_hidden), deleted]) == 0,
