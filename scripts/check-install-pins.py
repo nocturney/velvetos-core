@@ -20,19 +20,18 @@ first key is `- run:` is the same block. Each word is split again on `;`,
 is scanned even inside double quotes. A word whose basename is pip, pip3*,
 uv, uvx, pipx, npm, npx, pnpm, yarn, or bun, or a `python*` followed by
 `-m pip` / `-mpip`, must belong to a pinned or lock install. Otherwise the
-step is unclassified. The basename is lowercased, a leading directory is
-removed, and one .exe or .cmd suffix is removed. A drive-letter path is
-normalized before shlex. Composite action.yml files under .github/actions
-are scanned the same way. A `shlex` failure refuses the step too.
+step is unclassified. A `shlex` failure refuses the step too.
 
 `requirements-google-clients.py311.lock` must keep the direct pins from
 `requirements-google-clients.txt`, and every lock pin must have a sha256
 hash. INSTALL_SPEC_ALLOWLIST starts empty; a non-empty committed set fails
 this sensor. An apt ffmpeg install must be one exact command sequence on
-ubuntu-24.04. Stdlib only.
+ubuntu-24.04. A node command must follow the pinned setup-node step and its
+checksum command. Stdlib only.
 """
 from __future__ import annotations
 
+import ast
 import re
 import shlex
 import sys
@@ -44,6 +43,12 @@ ROOT = Path(__file__).resolve().parents[1]
 NAME = "install-pins"
 WORKFLOWS = ROOT / ".github" / "workflows"
 INSTALL_SPEC_ALLOWLIST: frozenset[str] = frozenset()
+
+BENTO_SHA256 = "c7da70eaa8d3f457b2458f1685769bf2c488724ac075954f216c70c60f310af0"
+BENTO_VERSION = "1.2.9"
+BENTO_SHELL_URL = "https://bento.page/releases/slides/Bento_Slides.bento.html"
+BENTO_MANIFEST_URL = "https://bento.page/releases/slides/manifest.json"
+
 
 EXACT_PIP = re.compile(
     r"^[A-Za-z0-9][A-Za-z0-9._-]*(?:\[[A-Za-z0-9._,-]+\])?=="
@@ -1228,6 +1233,498 @@ def apt_ffmpeg_problems(text: str, *, path: str) -> list[str]:
     return problems
 
 
+VERIFY_STEP = """      - name: Verify Bento shell checksum
+        run: python3 scripts/verify_bento_shell.py
+"""
+DECK_STEP = """      - name: Build weekly deck (JSON + HTML)
+        run: python3 scripts/vf_weekly_deck.py
+"""
+NETWORK_FAIL = "FAIL BENTO_SHELL_NETWORK"
+OPENSSL_FAIL = "FAIL BENTO_SHELL_OPENSSL"
+
+
+def _module_strings(tree: ast.AST) -> dict[str, str]:
+    found: dict[str, str] = {}
+    for node in getattr(tree, "body", []):
+        if not isinstance(node, ast.Assign) or len(node.targets) != 1:
+            continue
+        target = node.targets[0]
+        if isinstance(target, ast.Name) and isinstance(node.value, ast.Constant):
+            if isinstance(node.value.value, str):
+                found[target.id] = node.value.value
+    return found
+
+
+def _function(tree: ast.AST, name: str) -> ast.FunctionDef | None:
+    for node in getattr(tree, "body", []):
+        if isinstance(node, ast.FunctionDef) and node.name == name:
+            return node
+    return None
+
+
+def _raises_name(func: ast.AST, name: str) -> bool:
+    for node in ast.walk(func):
+        if not isinstance(node, ast.Raise) or not isinstance(node.exc, ast.Call):
+            continue
+        called = node.exc.func
+        if isinstance(called, ast.Name) and called.id == name:
+            return True
+    return False
+
+
+def _payload_compare(func: ast.AST, key: str, expected: str, *, const: bool) -> bool:
+    """True when pin_problems compares info.get(key) != the pinned value."""
+    for node in ast.walk(func):
+        if not isinstance(node, ast.Compare) or len(node.ops) != 1 or len(node.comparators) != 1:
+            continue
+        if not isinstance(node.ops[0], ast.NotEq):
+            continue
+        left = node.left
+        if not isinstance(left, ast.Call) or len(left.args) != 1:
+            continue
+        called = left.func
+        if not isinstance(called, ast.Attribute) or called.attr != "get":
+            continue
+        arg = left.args[0]
+        if not isinstance(arg, ast.Constant) or arg.value != key:
+            continue
+        right = node.comparators[0]
+        if const:
+            if isinstance(right, ast.Constant) and right.value == expected:
+                return True
+        elif isinstance(right, ast.Name) and right.id == expected:
+            return True
+    return False
+
+
+def _noteq_sha(func: ast.AST) -> bool:
+    for node in ast.walk(func):
+        if not isinstance(node, ast.Compare):
+            continue
+        if not any(isinstance(op, ast.NotEq) for op in node.ops):
+            continue
+        names = [node.left, *node.comparators]
+        if any(isinstance(side, ast.Name) and side.id == "SHELL_SHA256" for side in names):
+            return True
+    return False
+
+
+def _calls_openssl(func: ast.AST) -> bool:
+    for node in ast.walk(func):
+        if not isinstance(node, ast.List):
+            continue
+        values = [elt.value for elt in node.elts if isinstance(elt, ast.Constant)]
+        if "openssl" in values:
+            return True
+    return False
+
+
+def _calls_name(func: ast.AST, name: str) -> bool:
+    for node in ast.walk(func):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == name:
+            return True
+    return False
+
+
+def bento_verifier_problems(text: str) -> list[str]:
+    """The shell pin is the signed manifest, and a mismatch is raised."""
+    problems: list[str] = []
+    try:
+        tree = ast.parse(text)
+    except SyntaxError as exc:
+        return [f"bento verifier did not parse: {exc}"]
+    strings = _module_strings(tree)
+    expected = {
+        "SHELL_URL": BENTO_SHELL_URL,
+        "MANIFEST_URL": BENTO_MANIFEST_URL,
+        "SHELL_VERSION": BENTO_VERSION,
+        "SHELL_SHA256": BENTO_SHA256,
+    }
+    for key, value in expected.items():
+        if strings.get(key) != value:
+            problems.append(f"bento {key} is not the pinned value")
+    pin = _function(tree, "pin_problems")
+    load = _function(tree, "load_shell")
+    sign = _function(tree, "signature_ok")
+    if pin is None or not _noteq_sha(pin) or not _calls_name(pin, "signature_ok"):
+        problems.append("bento checksum compare is missing")
+    if load is None or not _raises_name(load, "ShellPinError"):
+        problems.append("bento mismatch is not raised")
+    if sign is None or not _calls_openssl(sign):
+        problems.append("bento signature check is missing openssl")
+    if sign is None or not _raises_openssl_missing(sign):
+        problems.append("missing openssl is not its own error")
+    payload = (
+        ("app", "bento-slides", True, "bento app check is missing"),
+        ("version", "SHELL_VERSION", False, "bento version check is missing"),
+        ("url", "SHELL_URL", False, "bento url check is missing"),
+        ("sha256", "SHELL_SHA256", False, "bento published checksum check is missing"),
+    )
+    if pin is None:
+        problems.extend(message for _key, _expected, _const, message in payload)
+    else:
+        for key, expected, const, message in payload:
+            if not _payload_compare(pin, key, expected, const=const):
+                problems.append(message)
+    return problems
+
+
+def _handler_names(handler: ast.ExceptHandler) -> list[str]:
+    kind = handler.type
+    if isinstance(kind, ast.Name):
+        return [kind.id]
+    if isinstance(kind, ast.Attribute):
+        return [kind.attr]
+    if isinstance(kind, ast.Tuple):
+        names: list[str] = []
+        for elt in kind.elts:
+            if isinstance(elt, ast.Name):
+                names.append(elt.id)
+            elif isinstance(elt, ast.Attribute):
+                names.append(elt.attr)
+        return names
+    return []
+
+
+def _raises_system_exit(nodes: list[ast.stmt]) -> bool:
+    for node in nodes:
+        for child in ast.walk(node):
+            if isinstance(child, ast.Raise) and isinstance(child.exc, ast.Call):
+                func = child.exc.func
+                if isinstance(func, ast.Name) and func.id == "SystemExit":
+                    return True
+    return False
+
+
+def _returns_const(nodes: list[ast.stmt], value: object) -> bool:
+    for node in nodes:
+        if isinstance(node, ast.Return) and isinstance(node.value, ast.Constant):
+            if node.value.value == value:
+                return True
+    return False
+
+
+def _calls_in(nodes: list[ast.stmt], name: str) -> bool:
+    for node in nodes:
+        if _calls_name(node, name):
+            return True
+    return False
+
+
+def _const_contains(node: ast.AST, text: str) -> bool:
+    for child in ast.walk(node):
+        if isinstance(child, ast.Constant) and isinstance(child.value, str) and text in child.value:
+            return True
+    return False
+
+
+def _raises_openssl_missing(func: ast.AST) -> bool:
+    for node in ast.walk(func):
+        if not isinstance(node, ast.ExceptHandler):
+            continue
+        if "FileNotFoundError" not in _handler_names(node):
+            continue
+        if _raises_name(node, "ShellPinError") and _const_contains(node, "openssl missing"):
+            return True
+    return False
+
+
+def _mentions(node: ast.AST, name: str) -> bool:
+    for child in ast.walk(node):
+        if isinstance(child, ast.Name) and child.id == name:
+            return True
+    return False
+
+
+def bento_deck_problems(text: str) -> list[str]:
+    """A network error and a checksum mismatch both fail the job."""
+    problems: list[str] = []
+    try:
+        tree = ast.parse(text)
+    except SyntaxError as exc:
+        return [f"weekly deck did not parse: {exc}"]
+    strings = _module_strings(tree)
+    if strings.get("NETWORK_FAIL") != NETWORK_FAIL:
+        problems.append("network failure name is missing")
+    if strings.get("OPENSSL_FAIL") != OPENSSL_FAIL:
+        problems.append("openssl failure name is missing")
+    build = _function(tree, "build_html")
+    entry = _function(tree, "main")
+    if (
+        build is None
+        or not _calls_name(build, "load_shell")
+        or not _calls_name(build, "inject_shell")
+    ):
+        return problems + ["weekly deck does not load the pinned shell"]
+    if entry is None or not _raises_system_exit(entry.body):
+        problems.append("tampered bytes do not fail the job")
+    pin_fail = False
+    network_closed = False
+    openssl_closed = False
+    for node in ast.walk(build):
+        if not isinstance(node, ast.ExceptHandler):
+            continue
+        names = _handler_names(node)
+        if "Exception" in names and _returns_const(node.body, 0):
+            problems.append("weekly deck swallows the shell pin")
+        if "ShellPinError" in names:
+            pin_fail = _returns_const(node.body, 1)
+            if _returns_const(node.body, 0):
+                problems.append("tampered bytes do not fail the job")
+        if "FileNotFoundError" in names:
+            if (
+                _returns_const(node.body, 1)
+                and _mentions(node, "OPENSSL_FAIL")
+                and not _returns_const(node.body, 0)
+                and not _mentions(node, "NETWORK_FAIL")
+                and "URLError" not in names
+            ):
+                openssl_closed = True
+            else:
+                problems.append("missing openssl is labeled as a network failure")
+        if "URLError" not in names:
+            continue
+        if _returns_const(node.body, 0):
+            problems.append("network failure ships the JSON deck")
+        elif _calls_in(node.body, "inject_shell") or not (
+            _returns_const(node.body, 1) or _raises_system_exit(node.body)
+        ):
+            problems.append("network-error path reaches the shell build")
+        elif not _mentions(node, "NETWORK_FAIL"):
+            problems.append("network failure name is missing")
+        else:
+            network_closed = True
+    if not pin_fail:
+        problems.append("tampered bytes do not fail the job")
+    if not network_closed and not any(
+        "network failure ships" in item or "network-error path" in item for item in problems
+    ):
+        problems.append("network failure does not fail the job")
+    if not openssl_closed and not any("missing openssl" in item for item in problems):
+        problems.append("missing openssl is labeled as a network failure")
+    return problems
+
+
+def bento_workflow_problems(text: str) -> list[str]:
+    problems: list[str] = []
+    if VERIFY_STEP not in text:
+        problems.append("weekly deck workflow is missing the shell checksum step")
+    if DECK_STEP not in text:
+        problems.append("weekly deck workflow is missing the JSON deck step")
+    verify_at = text.find("run: python3 scripts/verify_bento_shell.py")
+    deck_at = text.find("run: python3 scripts/vf_weekly_deck.py")
+    if verify_at < 0 or deck_at < 0 or verify_at > deck_at:
+        problems.append("shell checksum step does not run before the JSON deck")
+    return problems
+
+
+APT_SIDE_TOOLS = {"apt", "apt-get", "aptitude"}
+APT_SIDE_ACTIONS = {"install", "reinstall"}
+APT_SIDE_VALUE_FLAGS = {
+    "-o", "--option", "-c", "--config-file", "-t", "--target-release", "--with-source",
+}
+DPKG_VALUE_FLAGS = {
+    "--admindir", "--root", "--instdir", "--log",
+    "--path-exclude", "--path-include", "--status-fd",
+}
+
+
+def _names_ffmpeg(token: str) -> bool:
+    name = token.replace("\\", "/").rsplit("/", 1)[-1]
+    name = name.split("=", 1)[0].split("/", 1)[0]
+    if name.lower().endswith(".deb"):
+        name = name[:-4]
+    folded = name.lower()
+    return folded == "ffmpeg" or folded.startswith(("ffmpeg_", "ffmpeg-"))
+
+
+def _dpkg_install_action(argv: list[str]) -> bool:
+    """True when dpkg is asked to install, including -iE, --install=, and -R."""
+    rest = argv[1:]
+    index = 0
+    while index < len(rest):
+        token = rest[index]
+        if token == "--":
+            return False
+        if token.startswith("--"):
+            flag = token.split("=", 1)[0]
+            if flag in {"--install", "--recursive"} or token.startswith("--install="):
+                return True
+            if "=" not in token and flag in DPKG_VALUE_FLAGS and index + 1 < len(rest):
+                index += 2
+                continue
+            index += 1
+            continue
+        if token.startswith("-") and token != "-":
+            if "i" in token[1:] or "R" in token[1:]:
+                return True
+            index += 1
+            continue
+        index += 1
+    return False
+
+
+def _apt_installs_ffmpeg(argv: list[str]) -> bool:
+    """True when install/reinstall names ffmpeg, with options in any position."""
+    rest = argv[1:]
+    action = None
+    packages: list[str] = []
+    index = 0
+    while index < len(rest):
+        token = rest[index]
+        if token == "--":
+            packages.extend(rest[index + 1:])
+            break
+        if token.startswith("-"):
+            flag = token.split("=", 1)[0]
+            if "=" not in token and flag in APT_SIDE_VALUE_FLAGS and index + 1 < len(rest):
+                index += 2
+                continue
+            index += 1
+            continue
+        if action is None:
+            action = token.lower()
+            index += 1
+            continue
+        packages.append(token)
+        index += 1
+    return action in APT_SIDE_ACTIONS and any(_names_ffmpeg(token) for token in packages)
+
+
+def ffmpeg_side_install_problems(text: str, *, path: str) -> list[str]:
+    """Refuse dpkg installs and apt/aptitude installs of ffmpeg beside the hashed apt-get line."""
+    problems: list[str] = []
+    blocks = job_blocks(text) or [("workflow", text)]
+    for job, block in blocks:
+        for script in run_scripts(block):
+            for command in script_commands(script):
+                if command in APT_ALLOWED_INSTALLS:
+                    continue
+                argv = prepare_argv(command, InstallRules())
+                if not argv:
+                    continue
+                tool = _base(argv[0])
+                if tool == "dpkg" and _dpkg_install_action(argv):
+                    problems.append(f"{path} job {job} unexpected dpkg install: {command}")
+                if tool in APT_SIDE_TOOLS and _apt_installs_ffmpeg(argv):
+                    problems.append(f"{path} job {job} unexpected apt install: {command}")
+    return problems
+
+
+IMAGE_TOOL_NAMES = (
+    "linux-git",
+    "linux-gh",
+    "linux-curl",
+    "linux-docker-client",
+    "linux-docker-server",
+    "windows-git",
+    "windows-gh",
+    "windows-docker-client",
+    "windows-docker-server",
+)
+LINUX_RUNNER_STEP = """      - name: Record runner image tool versions
+        run: python3 scripts/verify_runner_tools.py --platform linux
+"""
+WINDOWS_RUNNER_STEP = """      - name: Record runner image tool versions
+        shell: pwsh
+        run: python scripts/verify_runner_tools.py --platform windows
+"""
+
+
+def _dict_keys(tree: ast.AST, name: str) -> set[str]:
+    for node in getattr(tree, "body", []):
+        if not isinstance(node, ast.Assign) or len(node.targets) != 1:
+            continue
+        target = node.targets[0]
+        if not isinstance(target, ast.Name) or target.id != name:
+            continue
+        if not isinstance(node.value, ast.Dict):
+            continue
+        keys: set[str] = set()
+        for key in node.value.keys:
+            if isinstance(key, ast.Constant) and isinstance(key.value, str):
+                keys.add(key.value)
+        return keys
+    return set()
+
+
+def _joined_has(node: ast.AST, needle: str) -> bool:
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return needle in node.value
+    if isinstance(node, ast.JoinedStr):
+        return any(_joined_has(part, needle) for part in node.values)
+    if isinstance(node, ast.FormattedValue):
+        return _joined_has(node.value, needle)
+    return False
+
+
+def _warn_is_soft(func: ast.FunctionDef | None) -> bool:
+    if func is None:
+        return False
+    for node in ast.walk(func):
+        if not isinstance(node, ast.Return) or not isinstance(node.value, ast.Tuple):
+            continue
+        elts = node.value.elts
+        if len(elts) != 2 or not _joined_has(elts[0], "WARN runner tool drift"):
+            continue
+        return isinstance(elts[1], ast.Constant) and elts[1].value is False
+    return False
+
+
+def _fails_only_on_problems(func: ast.FunctionDef | None) -> bool:
+    if func is None:
+        return False
+    found: list[ast.AST | None] = []
+
+    def walk(node: ast.AST, test: ast.AST | None) -> None:
+        if isinstance(node, ast.If):
+            for child in node.body:
+                walk(child, node.test)
+            for child in node.orelse:
+                walk(child, test)
+            return
+        if isinstance(node, ast.Return) and isinstance(node.value, ast.Constant) and node.value.value == 1:
+            found.append(test)
+            return
+        for child in ast.iter_child_nodes(node):
+            walk(child, test)
+
+    walk(func, None)
+    return len(found) == 1 and isinstance(found[0], ast.Name) and found[0].id == "problems"
+
+
+def runner_source_problems(text: str) -> list[str]:
+    problems: list[str] = []
+    try:
+        tree = ast.parse(text)
+    except SyntaxError as exc:
+        return [f"runner verifier did not parse: {exc}"]
+    keys = _dict_keys(tree, "RECORDED")
+    for name in IMAGE_TOOL_NAMES:
+        if name not in keys:
+            problems.append(f"runner {name} drift report is missing")
+    if "WARN runner tool drift" not in text:
+        problems.append("runner drift warning is missing")
+    if not _warn_is_soft(_function(tree, "drift_line")):
+        problems.append("drift warning fails the job")
+    if "RECORDED[name]" not in text:
+        problems.append("drift baseline is the observed version")
+    if not _fails_only_on_problems(_function(tree, "finish")):
+        problems.append("drift warning fails the job")
+    return problems
+
+
+def runner_workflow_problems(text: str) -> list[str]:
+    problems: list[str] = []
+    if "runs-on: ubuntu-24.04" not in text.split("check-all-windows:", 1)[0]:
+        problems.append("check-all is not pinned to ubuntu-24.04")
+    if LINUX_RUNNER_STEP not in text:
+        problems.append("linux runner drift step is missing")
+    if WINDOWS_RUNNER_STEP not in text:
+        problems.append("windows runner drift step is missing")
+    return problems
+
+
 def float_google_install(text: str) -> str:
     """Mutation: put the pre-pin bare names back on the Google client install."""
     lines = text.splitlines(keepends=True)
@@ -1541,6 +2038,155 @@ def prove_google_lock(req_text: str, lock_text: str) -> str:
     return "lock=match load_bearing=off_lock_versions=escaped,off_lock_hashes=escaped"
 
 
+NODE_PINS = {
+    "24.21.0": (
+        "python3 scripts/verify_actions_node_sha256.py --version 24.21.0 "
+        "--filename node-24.21.0-linux-x64.tar.gz "
+        "--expected ab971d19412a3b70ab4ef310656f5da973df476ccacd5cb4f49d447be2773227 "
+        "--checksum-url https://github.com/actions/node-versions/releases/download/"
+        "24.21.0-34304089047/hashes.sha256"
+    ),
+    "22.23.3": (
+        "python3 scripts/verify_actions_node_sha256.py --version 22.23.3 "
+        "--filename node-22.23.3-linux-x64.tar.gz "
+        "--expected cf9cfe18f485ac615fbc237e269549f4014fd843395568cf81698ce1903e9bcf "
+        "--checksum-url https://github.com/actions/node-versions/releases/download/"
+        "22.23.3-35947643734/hashes.sha256"
+    ),
+}
+NODE_SETUP = "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020"
+EXPECTED_NODE_SETUPS = 2
+NODE_SHELLS = {"bash", "sh", "dash", "zsh"}
+NODE_SKIP = re.compile(
+    r"""(?m)^[ \t]*(?:-[ \t]*)?(?:"""
+    r"""if:[ \t]*(?:false|['"]false['"]|\$\{\{\s*false\s*\}\})"""
+    r"""|continue-on-error:[ \t]*(?:true|['"]true['"])"""
+    r""")[ \t]*(?:#.*)?$"""
+)
+
+
+def node_steps(job: str) -> list[str]:
+    lines = job.splitlines()
+    start = None
+    indent = 0
+    for index, line in enumerate(lines):
+        match = re.match(r"^(\s*)steps:\s*$", line)
+        if match:
+            indent = len(match.group(1))
+            start = index + 1
+            break
+    if start is None:
+        return []
+    dash = indent + 2
+    steps: list[list[str]] = []
+    for line in lines[start:]:
+        if line.strip() == "":
+            if steps:
+                steps[-1].append(line)
+            continue
+        lead = len(line) - len(line.lstrip(" "))
+        if lead <= indent:
+            break
+        if lead == dash and line.lstrip().startswith("- "):
+            steps.append([line])
+            continue
+        if steps:
+            steps[-1].append(line)
+    return ["\n".join(step) for step in steps]
+
+
+def step_commands(step: str) -> list[str]:
+    """Read run bodies, including a step written as `- run:`."""
+    normalized = "\n".join(
+        re.sub(r"^(\s*)-\s+run:", r"\1run:", line) for line in step.splitlines()
+    )
+    commands: list[str] = []
+    for script in run_scripts(normalized):
+        commands.extend(script_commands(script))
+    return commands
+
+
+def step_node_version(step: str) -> str | None:
+    for line in step.splitlines():
+        match = re.match(r"""^\s*node-version:\s*['"]?([^'"#\s]+)""", line)
+        if match:
+            return match.group(1)
+    return None
+
+
+def node_executable(token: str) -> bool:
+    base = token.replace("\\", "/").rsplit("/", 1)[-1].lower()
+    if base.endswith(".exe"):
+        base = base[:-4]
+    return base == "node"
+
+
+def is_node_command(command: str) -> bool:
+    try:
+        argv = shlex.split(command, posix=True)
+    except ValueError:
+        return False
+    while argv and "=" in argv[0] and not argv[0].startswith("-"):
+        argv = argv[1:]
+    if argv and argv[0] == "sudo":
+        argv = argv[1:]
+    if not argv:
+        return False
+    if argv[0] == "env" or argv[0].endswith("/env"):
+        rest = argv[1:]
+        while rest and (rest[0].startswith("-") or "=" in rest[0]):
+            rest = rest[1:]
+        return bool(rest) and node_executable(rest[0])
+    if node_executable(argv[0]):
+        return True
+    shell = argv[0].replace("\\", "/").rsplit("/", 1)[-1]
+    if shell in NODE_SHELLS and "-c" in argv:
+        idx = argv.index("-c")
+        if idx + 1 < len(argv):
+            return is_node_command(argv[idx + 1])
+    return False
+
+
+def node_toolchain_problems(text: str, *, path: str) -> list[str]:
+    """A node command must follow an exact setup-node step and its checksum command."""
+    problems: list[str] = []
+    blocks = job_blocks(text)
+    if not blocks and ("actions/setup-node@" in text or re.search(r"(?m)^\s*node ", text)):
+        problems.append(f"{path} node command is outside a parsed job")
+        return problems
+    for job, block in blocks:
+        steps = node_steps(block)
+        pinned_until = -1
+        for index, step in enumerate(steps):
+            if "actions/setup-node@" not in step:
+                continue
+            if NODE_SETUP not in step:
+                problems.append(f"{path} job {job} setup-node is not the pinned action")
+            version = step_node_version(step)
+            command = NODE_PINS.get(version or "")
+            if command is None:
+                problems.append(
+                    f"{path} job {job} node-version {version!r} is not an exact toolchain pin"
+                )
+                continue
+            if index + 1 >= len(steps) or step_commands(steps[index + 1]) != [command]:
+                problems.append(f"{path} job {job} node toolchain command mismatch")
+                continue
+            disabled = NODE_SKIP.search(step) or NODE_SKIP.search(steps[index + 1])
+            if disabled:
+                problems.append(f"{path} job {job} node pin step is disabled")
+                continue
+            pinned_until = index + 1
+        for index, step in enumerate(steps):
+            for command in step_commands(step):
+                if not is_node_command(command):
+                    continue
+                if index <= pinned_until:
+                    problems.append(f"{path} job {job} node command before the toolchain pin")
+                elif pinned_until < 0:
+                    problems.append(f"{path} job {job} node command without a pinned toolchain")
+    return problems
+
 def action_paths(root: Path) -> list[Path]:
     base = root / ".github" / "actions"
     if not base.is_dir():
@@ -1624,6 +2270,7 @@ def main() -> int:
     problems: list[str] = []
     workflows = sorted(WORKFLOWS.glob("*.y*ml"))
     apt_workflows = 0
+    node_setups = 0
     for path in workflows:
         rel = path.relative_to(ROOT).as_posix()
         text = path.read_text(encoding="utf-8")
@@ -1632,6 +2279,9 @@ def main() -> int:
         if "apt-get install" in text or "apt-get download" in text:
             apt_workflows += 1
         problems.extend(apt)
+        problems.extend(ffmpeg_side_install_problems(text, path=rel))
+        problems.extend(node_toolchain_problems(text, path=rel))
+        node_setups += text.count("actions/setup-node@")
     actions = action_paths(ROOT)
     for path in actions:
         rel = path.relative_to(ROOT).as_posix()
@@ -1689,6 +2339,75 @@ def main() -> int:
     if install_spec_problems(jobs.read_text(encoding="utf-8"), path="jobs-write-through.yml"):
         fail("pinned jobs-write-through install was refused")
 
+    verifier = (ROOT / "scripts" / "verify_runner_tools.py").read_text(encoding="utf-8")
+    workflow = (WORKFLOWS / "check-all.yml").read_text(encoding="utf-8")
+    if runner_source_problems(verifier):
+        fail(f"runner image tools were refused: {runner_source_problems(verifier)}")
+    if runner_workflow_problems(workflow):
+        fail(f"runner image workflow was refused: {runner_workflow_problems(workflow)}")
+
+    def require_runner(label: str, found: list[str], needle: str) -> None:
+        if not any(needle in item for item in found):
+            fail(f"{label} was not caught: {found}")
+
+    require_runner(
+        "runner windows git",
+        runner_source_problems(verifier.replace('    "windows-git": "git version 2.56.0.windows.2",\n', "", 1)),
+        "windows-git drift report is missing",
+    )
+    require_runner(
+        "runner drift hard",
+        runner_source_problems(verifier.replace(
+            'f"WARN runner tool drift name={name} observed={shown!r} recorded={recorded!r}",\n'
+            "        False,",
+            'f"WARN runner tool drift name={name} observed={shown!r} recorded={recorded!r}",\n'
+            "        True,",
+            1,
+        )),
+        "drift warning fails the job",
+    )
+    require_runner(
+        "runner drift exit",
+        runner_source_problems(verifier.replace("    if problems:\n", "    if problems or notes:\n", 1)),
+        "drift warning fails the job",
+    )
+    require_runner(
+        "runner baseline",
+        runner_source_problems(verifier.replace("RECORDED[name]", "observed", 1)),
+        "drift baseline is the observed version",
+    )
+    require_runner(
+        "runner linux step",
+        runner_workflow_problems(workflow.replace(
+            "        run: python3 scripts/verify_runner_tools.py --platform linux\n",
+            "        run: # python3 scripts/verify_runner_tools.py --platform linux\n",
+            1,
+        )),
+        "linux runner drift step is missing",
+    )
+    require_runner(
+        "runner windows step",
+        runner_workflow_problems(workflow.replace(
+            "        run: python scripts/verify_runner_tools.py --platform windows\n",
+            "        run: # python scripts/verify_runner_tools.py --platform windows\n",
+            1,
+        )),
+        "windows runner drift step is missing",
+    )
+    require_runner(
+        "runner image",
+        runner_workflow_problems(workflow.replace("runs-on: ubuntu-24.04", "runs-on: ubuntu-latest", 1)),
+        "not pinned to ubuntu-24.04",
+    )
+    probe = __import__("subprocess").run(
+        [sys.executable, str(ROOT / "scripts" / "verify_runner_tools.py"), "--self-test"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if probe.returncode != 0:
+        fail(probe.stderr.strip() or probe.stdout.strip() or "runner tools self-test failed")
+
     bypass_evidence = prove_bypasses()
     lock_evidence = prove_google_lock(req_text, lock_text)
     check_all = (WORKFLOWS / "check-all.yml").read_text(encoding="utf-8")
@@ -1745,15 +2464,285 @@ def main() -> int:
         fail(f"floating apt runner was not caught: {floating_found}")
     if apt_workflows != 2:
         fail(f"expected 2 apt ffmpeg workflows, found {apt_workflows}")
+    if ffmpeg_side_install_problems(check_all, path="check-all.yml"):
+        fail("pinned check-all ffmpeg install has a side path")
+    if ffmpeg_side_install_problems(research, path="velvetos-research.yml"):
+        fail("pinned velvetos-research ffmpeg install has a side path")
+
+    def require_side(label: str, command: str, *, dash: bool = False) -> None:
+        step = (
+            f"      - run: {command}\n"
+            if dash
+            else f"      - name: side\n        run: {command}\n"
+        )
+        sample = (
+            "jobs:\n"
+            "  sample:\n"
+            "    runs-on: ubuntu-24.04\n"
+            "    steps:\n"
+            + step
+        )
+        found = ffmpeg_side_install_problems(sample, path="fixture.yml")
+        if not found:
+            fail(f"{label} was not caught: {found}")
+
+    require_side("apt option before install", "sudo apt -y install ffmpeg")
+    require_side("apt mixed-case package", "sudo apt install -y FFmpeg")
+    require_side("apt reinstall", "sudo apt reinstall ffmpeg")
+    require_side("aptitude install", "sudo aptitude install ffmpeg")
+    require_side("dpkg force before -i", "sudo dpkg --force-all -i ffmpeg.deb")
+    require_side("dpkg recursive install", "sudo dpkg -R -i ./debs")
+    require_side("dpkg bundled short flags", "sudo dpkg -iE ffmpeg.deb")
+    require_side("dpkg glob", "sudo dpkg -i *.deb")
+    require_side("dpkg other variable", 'sudo dpkg -i "$pkg"')
+    require_side("dash run dpkg", "sudo dpkg -i ffmpeg.deb", dash=True)
+    plain_apt = (
+        "jobs:\n"
+        "  sample:\n"
+        "    runs-on: ubuntu-24.04\n"
+        "    steps:\n"
+        "      - name: side\n"
+        "        run: sudo apt -y install ffmpeg\n"
+    )
+    if apt_ffmpeg_problems(plain_apt, path="fixture.yml"):
+        fail("apt -y install was misread as the hashed apt-get step")
+
+
+    verifier = (ROOT / "scripts" / "verify_bento_shell.py").read_text(encoding="utf-8")
+    deck = (ROOT / "scripts" / "vf_weekly_deck.py").read_text(encoding="utf-8")
+    weekly = (WORKFLOWS / "velvetos-weekly-deck.yml").read_text(encoding="utf-8")
+    if bento_verifier_problems(verifier):
+        fail(f"pinned bento verifier was refused: {bento_verifier_problems(verifier)}")
+    if bento_deck_problems(deck):
+        fail(f"pinned weekly deck was refused: {bento_deck_problems(deck)}")
+    if bento_workflow_problems(weekly):
+        fail(f"pinned weekly workflow was refused: {bento_workflow_problems(weekly)}")
+
+    def require_bento(label: str, found: list[str], needle: str) -> None:
+        if not any(needle in item for item in found):
+            fail(f"{label} was not caught: {found}")
+
+    require_bento(
+        "bento digest",
+        bento_verifier_problems(verifier.replace(BENTO_SHA256, "0" * 64, 1)),
+        "SHELL_SHA256 is not the pinned value",
+    )
+    require_bento(
+        "bento raise",
+        bento_verifier_problems(
+            verifier.replace(
+                '    if problems:\n        raise ShellPinError("; ".join(problems))\n    return shell\n',
+                "    return shell\n",
+                1,
+            )
+        ),
+        "mismatch is not raised",
+    )
+    require_bento(
+        "bento tamper",
+        bento_deck_problems(deck.replace(
+            '        print(f"FAIL bento shell: {exc}", file=sys.stderr)\n        return 1\n',
+            '        print(f"FAIL bento shell: {exc}", file=sys.stderr)\n        return 0\n',
+            1,
+        )),
+        "tampered bytes do not fail the job",
+    )
+    require_bento(
+        "bento offline",
+        bento_deck_problems(deck.replace(
+            f'        print(f"{{NETWORK_FAIL}} HTML build skipped: {{exc}}", file=sys.stderr)\n'
+            "        return 1\n",
+            f'        print(f"{{NETWORK_FAIL}} HTML build skipped: {{exc}}", file=sys.stderr)\n'
+            "        return 0\n",
+            1,
+        )),
+        "network failure ships the JSON deck",
+    )
+    require_bento(
+        "bento network path",
+        bento_deck_problems(deck.replace(
+            f'        print(f"{{NETWORK_FAIL}} HTML build skipped: {{exc}}", file=sys.stderr)\n'
+            "        return 1\n",
+            f'        print(f"{{NETWORK_FAIL}} HTML build skipped: {{exc}}", file=sys.stderr)\n',
+            1,
+        )),
+        "network-error path reaches the shell build",
+    )
+    require_bento(
+        "bento network gate",
+        bento_workflow_problems(weekly.replace(VERIFY_STEP, "", 1)),
+        "missing the shell checksum step",
+    )
+    for label, old, needle in (
+        ("bento app", '    if info.get("app") != "bento-slides":\n', "bento app check is missing"),
+        ("bento version", '    if info.get("version") != SHELL_VERSION:\n', "bento version check is missing"),
+        ("bento url", '    if info.get("url") != SHELL_URL:\n', "bento url check is missing"),
+        (
+            "bento published checksum",
+            '    if info.get("sha256") != SHELL_SHA256:\n',
+            "bento published checksum check is missing",
+        ),
+    ):
+        require_bento(label, bento_verifier_problems(verifier.replace(old, "    if False:\n", 1)), needle)
+    require_bento(
+        "bento openssl raise",
+        bento_verifier_problems(verifier.replace(
+            '            raise ShellPinError("openssl missing") from exc\n',
+            "            pass\n",
+            1,
+        )),
+        "missing openssl is not its own error",
+    )
+    require_bento(
+        "bento openssl deck",
+        bento_deck_problems(deck.replace(
+            "    except FileNotFoundError as exc:\n"
+            '        print(f"{OPENSSL_FAIL} HTML build skipped: {exc}", file=sys.stderr)\n'
+            "        return 1\n",
+            "",
+            1,
+        )),
+        "missing openssl is labeled as a network failure",
+    )
+    for script, label in (
+        ("verify_bento_shell.py", "bento shell self-test failed"),
+        ("vf_weekly_deck.py", "weekly deck self-test failed"),
+    ):
+        probe = __import__("subprocess").run(
+            [sys.executable, str(ROOT / "scripts" / script), "--self-test"],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+        )
+        if probe.returncode != 0:
+            fail(probe.stderr.strip() or probe.stdout.strip() or label)
+
+    observer = (WORKFLOWS / "instagram-read-source-observer.yml").read_text(encoding="utf-8")
+    if node_toolchain_problems(check_all, path="check-all.yml"):
+        fail(f"pinned check-all node was refused: {node_toolchain_problems(check_all, path='check-all.yml')}")
+    if node_toolchain_problems(observer, path="instagram-read-source-observer.yml"):
+        fail("pinned observer node was refused")
+
+    def require_node(label: str, mutated: str, needle: str) -> None:
+        found = node_toolchain_problems(mutated, path="check-all.yml")
+        if not any(needle in item for item in found):
+            fail(f"{label} was not caught: {found}")
+
+    require_node(
+        "floating node 24",
+        observer.replace('node-version: "24.21.0"', 'node-version: "24"', 1),
+        "not an exact toolchain pin",
+    )
+    require_node(
+        "node digest swap",
+        check_all.replace(
+            "cf9cfe18f485ac615fbc237e269549f4014fd843395568cf81698ce1903e9bcf",
+            "0" * 64,
+            1,
+        ),
+        "command mismatch",
+    )
+    require_node(
+        "commented node verifier",
+        check_all.replace(
+            "run: python3 scripts/verify_actions_node_sha256.py",
+            "run: # python3 scripts/verify_actions_node_sha256.py",
+            1,
+        ),
+        "command mismatch",
+    )
+    bare_node = check_all.replace(
+        """      - name: Set up Node
+        # Image ubuntu-24.04 on 2026-10-19 had Node 22.23.3.
+        # actions/setup-node v4.4.0
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "22.23.3"
+
+      - name: Verify Node toolchain checksum
+        run: python3 scripts/verify_actions_node_sha256.py --version 22.23.3 --filename node-22.23.3-linux-x64.tar.gz --expected cf9cfe18f485ac615fbc237e269549f4014fd843395568cf81698ce1903e9bcf --checksum-url https://github.com/actions/node-versions/releases/download/22.23.3-35947643734/hashes.sha256
+
+""",
+        "",
+        1,
+    )
+    require_node("runner node", bare_node, "without a pinned toolchain")
+
+    def require_unpinned(label: str, command: str) -> None:
+        sample = (
+            "jobs:\n"
+            "  sample:\n"
+            "    runs-on: ubuntu-24.04\n"
+            "    steps:\n"
+            f"      - run: {command}\n"
+        )
+        found = node_toolchain_problems(sample, path="fixture.yml")
+        if not any("without a pinned toolchain" in item for item in found):
+            fail(f"{label} was not caught: {found}")
+
+    require_unpinned("path node", "/usr/bin/node --version")
+    require_unpinned("env node", "env node --version")
+    require_unpinned("bash node", "bash -c 'node --version'")
+    require_unpinned("dash run node", "node --version")
+    require_node(
+        "verify if false",
+        check_all.replace(
+            "      - name: Verify Node toolchain checksum\n        run:",
+            "      - name: Verify Node toolchain checksum\n        if: false\n        run:",
+            1,
+        ),
+        "node pin step is disabled",
+    )
+    require_node(
+        "setup if expression false",
+        check_all.replace(
+            "      - name: Set up Node\n",
+            "      - name: Set up Node\n        if: ${{ false }}\n",
+            1,
+        ),
+        "node pin step is disabled",
+    )
+    require_node(
+        "verify continue-on-error",
+        check_all.replace(
+            "      - name: Verify Node toolchain checksum\n        run:",
+            "      - name: Verify Node toolchain checksum\n"
+            "        continue-on-error: true\n        run:",
+            1,
+        ),
+        "node pin step is disabled",
+    )
+    if node_setups != EXPECTED_NODE_SETUPS:
+        fail(f"expected {EXPECTED_NODE_SETUPS} setup-node steps, found {node_setups}")
+    probe = __import__("subprocess").run(
+        [sys.executable, str(ROOT / "scripts" / "verify_actions_node_sha256.py"), "--self-test"],
+        cwd=ROOT, text=True, capture_output=True,
+    )
+    if probe.returncode != 0:
+        fail(probe.stderr.strip() or probe.stdout.strip() or "node toolchain self-test failed")
+
 
     path_evidence = prove_path_forms()
     print(
         f"OK {NAME} workflows={len(workflows)} actions={len(actions)} floating=0 allowlist=empty "
         "bare=caught exact=pass mixed=caught npm_float=caught npm_exact=pass "
         "npm_ci=pass hashed_lock=pass allow_one=pass mutation=caught "
+        "runner_drift=caught runner_soft=caught runner_exit=caught "
+        "runner_base=caught runner_linux=caught "
+        "runner_windows=caught runner_image=caught "
         f"{bypass_evidence} {lock_evidence} {path_evidence} "
         f"apt_ffmpeg={apt_workflows} apt_sequence=pinned extra=caught "
-        "comment=caught digest=caught runner=caught pool=caught"
+        "comment=caught digest=caught runner=caught pool=caught "
+        "bento_sha=caught bento_raise=caught bento_tamper=caught "
+        "bento_offline=caught bento_network_path=caught bento_gate=caught "
+        "bento_app=caught bento_version=caught bento_url=caught bento_published=caught "
+        "bento_openssl=caught "
+        "apt_y=caught apt_case=caught apt_reinstall=caught aptitude=caught "
+        "dpkg_force=caught dpkg_R=caught dpkg_iE=caught dpkg_glob=caught "
+        "dpkg_var=caught dash_run=caught "
+        f"node_setups={node_setups} node_float=caught node_sha=caught "
+        "node_comment=caught node_bare=caught node_path=caught node_env=caught "
+        "node_bash=caught node_dash=caught node_if=caught node_continue=caught"
     )
     return 0
 

@@ -1,0 +1,1 @@
+- 2026-10-19 - **FFmpeg install tokens:** check-install-pins refuses a dpkg install action (`-i`, `--install`, `-R`, combined short flags) for any filename, and refuses apt, apt-get, or aptitude install/reinstall of ffmpeg in any case and any option order. The hashed apt-get command stays the only install. No model call.

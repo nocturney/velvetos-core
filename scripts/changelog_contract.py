@@ -27,6 +27,10 @@ ROOT = Path(__file__).resolve().parents[1]
 FRAGMENT_RE = re.compile(r"^changelog\.d/([a-z0-9]+(?:-[a-z0-9]+)*)\.md$")
 CAPABILITY_RE = re.compile(r"^(packages/|office/|scripts/|\.github/workflows/|constitution/)")
 UNRELEASED = "## [Unreleased]"
+UNRELEASED_TITLE = "[Unreleased]"
+ATX_H2_RE = re.compile(r"^ *##(?:[ \t]+(.*?))?[ \t]*$")
+SETEXT_RE = re.compile(r"^ *(?:-+|=+)[ \t]*$")
+FENCE_RE = re.compile(r"^ *(`{3,}|~{3,})(.*)$")
 
 
 def fragment_name(path: str) -> bool:
@@ -171,46 +175,99 @@ def _line_text(line: str) -> str:
     return line.strip("\r\n")
 
 
-def _fence_marker(line: str) -> bool:
-    text = _line_text(line).lstrip()
-    return text.startswith("```") or text.startswith("~~~")
+def _indent(text: str) -> int:
+    """Leading spaces of a tab-expanded line."""
+    return len(text) - len(text.lstrip(" "))
 
 
-def _section_heading(line: str) -> bool:
-    """A level-2 heading. ``###`` stays inside the Unreleased section."""
-    text = _line_text(line)
-    return text == "##" or text.startswith("## ") or text.startswith("##\t")
+def _h2_title(text: str) -> str | None:
+    """Title of an ATX level-2 heading at any indent, else None. ``###`` is not level 2."""
+    match = ATX_H2_RE.match(text)
+    if match is None:
+        return None
+    return match.group(1) or ""
+
+
+def _setext_underline(text: str, prose: bool) -> bool:
+    """A ``---`` or ``===`` line directly under text is a setext heading underline."""
+    return prose and SETEXT_RE.match(text) is not None
+
+
+def _fence_open(text: str) -> tuple[str, int] | None:
+    """Marker character and run length of a fence opener, else None.
+
+    A backtick info string may not contain a backtick, so a line like ```x``` is inline code.
+    """
+    match = FENCE_RE.match(text)
+    if match is None:
+        return None
+    run, info = match.group(1), match.group(2)
+    if run[0] == "`" and "`" in info:
+        return None
+    return run[0], len(run)
+
+
+def _fence_close(text: str, marker: str, length: int) -> bool:
+    """Same marker character, at least the opening length, indented three spaces or less, no info."""
+    if _indent(text) > 3:
+        return False
+    body = text.strip(" ")
+    return len(body) >= length and body == marker * len(body)
 
 
 def _unreleased_region(lines: list[str]) -> tuple[int, int, set[str]] | None:
-    """Header index, next heading index, and lines that count as folded.
+    """Header index, next boundary index, and lines that count as folded.
 
-    The section ends at the next ``##`` heading outside a fence. A missing
-    Unreleased heading yields None. Bullets inside a fence are omitted.
+    A boundary is a level-2 heading or a setext underline under text. A fence closes only on
+    its own marker character, at least as long as its opener, so a mixed ``~~~`` inside a
+    backtick fence stays inside. Nothing inside a fence counts. Parsing fails closed: a fence
+    or heading indented four spaces or more, a fence still open at a boundary, a boundary
+    inside an Unreleased fence, or a missing Unreleased heading yields None.
     """
-    texts = [_line_text(line) for line in lines]
-    try:
-        header = texts.index(UNRELEASED)
-    except ValueError:
+    header: int | None = None
+    fence: tuple[str, int] | None = None
+    prose = False
+    counted: list[str] = []
+    for index, line in enumerate(lines):
+        raw = _line_text(line)
+        text = raw.expandtabs(4)
+        if fence is not None:
+            if _fence_close(text, *fence):
+                fence = None
+                prose = False
+            elif header is not None and (_h2_title(text) is not None or _setext_underline(text, prose)):
+                return None
+            else:
+                prose = bool(text.strip())
+            continue
+        opener = _fence_open(text)
+        if opener is not None:
+            if _indent(text) > 3:
+                return None
+            fence = opener
+            prose = False
+            continue
+        if header is None:
+            if _h2_title(text) == UNRELEASED_TITLE and _indent(text) <= 3:
+                header = index
+            continue
+        if _h2_title(text) is not None:
+            if _indent(text) > 3:
+                return None
+            return header, index, set(counted)
+        if _setext_underline(text, prose):
+            # The text line above the underline is the heading title, not a note.
+            counted.pop()
+            return header, index, set(counted)
+        counted.append(raw)
+        prose = bool(text.strip())
+    if header is None or fence is not None:
         return None
-    present: set[str] = set()
-    fenced = False
-    end = len(lines)
-    for index in range(header + 1, len(lines)):
-        if _fence_marker(lines[index]):
-            fenced = not fenced
-            continue
-        if fenced:
-            continue
-        if _section_heading(lines[index]):
-            end = index
-            break
-        present.add(texts[index])
-    return header, end, present
+    return header, len(lines), set(counted)
 
 
 def unreleased_lines(changelog: str) -> set[str]:
-    """Whole lines between ``## [Unreleased]`` and the next ``##`` heading.
+    """Whole lines between ``## [Unreleased]`` and the next level-2 heading or setext underline.
 
     A bullet inside a fenced code block is not folded. ``splitlines`` drops a
     trailing CR, so a CRLF changelog still matches an LF bullet. No Unreleased
@@ -482,16 +539,42 @@ def prove_git_hygiene() -> list[str]:
             ("newline", "rev\nmore"),
             ("nul", "rev\x00more"),
             ("cr", "rev\rmore"),
+            ("leading newline", "\nrev"),
+            ("leading nul", "\x00rev"),
+            ("leading cr", "\rrev"),
+            ("bare newline", "\n"),
+            ("bare cr", "\r"),
+            ("bare nul", "\x00"),
         ):
-            try:
-                changed_files(token, "b", ROOT)
-            except SpawnRefusal as exc:
-                if str(exc) != "GIT_REV_REFUSED":
-                    errors.append(f"{label} revision refused as {exc}")
-            else:
-                errors.append(f"{label} revision was accepted")
+            for slot, caller in (
+                ("base", lambda token=token: changed_files(token, "b", ROOT)),
+                ("head", lambda token=token: changed_files("b", token, ROOT)),
+            ):
+                try:
+                    caller()
+                except SpawnRefusal as exc:
+                    if str(exc) != "GIT_REV_REFUSED":
+                        errors.append(f"{label} {slot} revision refused as {exc}")
+                else:
+                    errors.append(f"{label} {slot} revision was accepted")
         if len(captured) != before:
             errors.append("control-byte revision spawned git")
+        held = len(captured)
+        for label, caller, code in (
+            ("empty argv", lambda: run_git([""]), "GIT_ARGV_REFUSED"),
+            ("non-string argv", lambda: run_git(["status", None]), "GIT_ARGV_REFUSED"),
+            ("empty user arg", lambda: run_git(["status"], user_args=[""]), "GIT_USER_ARG_REFUSED"),
+            ("non-string user arg", lambda: run_git(["status"], user_args=[None]), "GIT_USER_ARG_REFUSED"),
+        ):
+            try:
+                caller()
+            except SpawnRefusal as exc:
+                if str(exc) != code:
+                    errors.append(f"{label} refused as {exc}")
+            else:
+                errors.append(f"{label} was accepted")
+        if len(captured) != held:
+            errors.append("refused git argv spawned git")
     except (SpawnRefusal, SystemExit) as exc:
         errors.append(f"git spawn refused: {exc}")
     finally:
@@ -846,14 +929,70 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
         ("M", "CHANGELOG.md", "## [Unreleased]\n\n```\n## Notes\n" + bullet + "```\n\n- 2026-10-18 - **Other:** stays.\n"),
         ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Other:** stays.\n"),
     ]
+    fence_marker = chr(96) * 3
+    straddling_release = [
+        ("M", "CHANGELOG.md",
+         "## [Unreleased]\n\n- 2026-10-18 - **Other:** stays.\n\n"
+         + fence_marker + "\n## [1.0.0]\n" + fence_marker + "\n" + bullet),
+        deleted,
+    ]
+    unclosed_fence = [
+        ("M", "CHANGELOG.md", "## [Unreleased]\n\n" + fence_marker + "\n" + bullet),
+        deleted,
+    ]
     subsection = [("M", "CHANGELOG.md", "## [Unreleased]\n\n### Notes\n\n" + bullet), deleted]
     probes.extend([
         (gate(no_heading) == 1, "a changelog with no Unreleased heading must refuse"),
         (unreleased_lines("intro\n\n" + bullet) == set(), "missing Unreleased did not yield an empty fold"),
         (gate(plain_heading) == 1, "a bullet under a later heading is not folded"),
         (gate(fenced_bullet) == 1, "a bullet inside a code fence is not folded"),
-        (gate(after_fence) == 0, "a heading inside a code fence ended the fold"),
+        (gate(after_fence) == 1, "a heading crossed an open fence without refusal"),
+        (gate(straddling_release) == 1, "release heading straddled by a fence was treated as Unreleased"),
+        (gate(unclosed_fence) == 1, "an unclosed fence passed the fold gate"),
         (gate(subsection) == 0, "a level-3 heading ended the fold"),
+    ])
+    # Load-bearing regression cases for the Markdown fence and release-boundary fixes.
+    # A deleted fragment cannot be covered by a bullet inside a fenced block or
+    # beneath a released heading, including syntax that resembles a fence closer.
+    four_backticks = fence_marker + "`"
+    bypass_regressions = [
+        ("mixed backtick/tilde fences",
+         "## [Unreleased]\n\n" + fence_marker + "\n~~~\n" + bullet
+         + "~~~\n" + fence_marker + "\n"),
+        ("shorter closing backtick fence",
+         "## [Unreleased]\n\n" + four_backticks + "\n" + fence_marker
+         + "\n" + bullet + fence_marker + "\n" + four_backticks + "\n"),
+        ("fence-like lines with info strings",
+         "## [Unreleased]\n\n" + fence_marker + "\n" + fence_marker
+         + "x\n" + bullet + fence_marker + "y\n" + fence_marker + "\n"),
+        ("one-space-indented released heading",
+         "## [Unreleased]\n\n ## [1.0.0]\n\n" + bullet),
+        ("three-space-indented released heading",
+         "## [Unreleased]\n\n   ## [1.0.0]\n\n" + bullet),
+        ("hyphen setext released heading",
+         "## [Unreleased]\n\nVersion 1.0\n---\n\n" + bullet),
+        ("equals setext released heading",
+         "## [Unreleased]\n\nVersion 1.0\n===\n\n" + bullet),
+    ]
+    for name, changelog in bypass_regressions:
+        probes.append((
+            gate([("M", "CHANGELOG.md", changelog), deleted]) == 1,
+            f"deleted fragment bypassed the changelog gate: {name}",
+        ))
+    # Direct region checks make the fail-closed branches load-bearing even
+    # where another rule would happen to reject the deleted fragment.
+    inline_backticks = "## [Unreleased]\n\n" + fence_marker + "x" + fence_marker + "\n\n" + bullet
+    probes.extend([
+        (gate([("M", "CHANGELOG.md", inline_backticks), deleted]) == 0,
+         "inline backticks with an info string were mistaken for a fence opener"),
+        (_unreleased_region(["## [Unreleased]", "", fence_marker, "still fenced"]) is None,
+         "an unterminated fence did not invalidate the region"),
+        ("Version 1.0" not in unreleased_lines("## [Unreleased]\n\nVersion 1.0\n---\n"),
+         "the setext heading title was counted as an Unreleased line"),
+        (_unreleased_region(["## [Unreleased]", "", "    " + fence_marker, "text", fence_marker]) is None,
+         "a four-space-indented fence opener was accepted"),
+        (_unreleased_region(["## [Unreleased]", "", "    ## [1.0.0]", bullet]) is None,
+         "a four-space-indented level-2 heading was accepted"),
     ])
     released_only = [
         ("M", "CHANGELOG.md", "## [Unreleased]\n\n- 2026-10-18 - **Other:** stays.\n\n## [1.0.0]\n\n- 2026-10-18 - **Theirs:** stays.\n"),

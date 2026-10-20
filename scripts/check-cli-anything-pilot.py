@@ -175,6 +175,7 @@ def prove_setup_git() -> None:
     errors = module.prove_git_hygiene()
     errors.extend(module.prove_git_real())
     errors.extend(module.prove_ensure_clone())
+    errors.extend(module.prove_ensure_clone_rev_parse())
     if errors:
         fail("setup git spawn: " + "; ".join(errors))
     import vf_cli_anything

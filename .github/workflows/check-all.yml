@@ -24,6 +24,7 @@ permissions:
 jobs:
   check-all:
     # noble ffmpeg=7:6.1.1-3ubuntu5 is not in Ubuntu 26. ubuntu-latest moves there.
+    # Recorded image tool versions are from ubuntu24/20261012.334.
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -33,6 +34,9 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Record runner image tool versions
+        run: python3 scripts/verify_runner_tools.py --platform linux
 
       - name: Set up Python
         # actions/setup-python v7.0.0
@@ -83,6 +87,16 @@ jobs:
             --head "$head" \
             --output sensor-selection.json \
             --summary "$GITHUB_STEP_SUMMARY"
+
+      - name: Set up Node
+        # Image ubuntu-24.04 on 2026-10-19 had Node 22.23.3.
+        # actions/setup-node v4.4.0
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "22.23.3"
+
+      - name: Verify Node toolchain checksum
+        run: python3 scripts/verify_actions_node_sha256.py --version 22.23.3 --filename node-22.23.3-linux-x64.tar.gz --expected cf9cfe18f485ac615fbc237e269549f4014fd843395568cf81698ce1903e9bcf --checksum-url https://github.com/actions/node-versions/releases/download/22.23.3-35947643734/hashes.sha256
 
       - name: Instagram publish policy test vectors
         run: node packages/velvetos/policy/test-instagram-publish-policy.mjs
@@ -201,6 +215,10 @@ jobs:
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: "3.11"
+
+      - name: Record runner image tool versions
+        shell: pwsh
+        run: python scripts/verify_runner_tools.py --platform windows
 
       - name: Install hashed sensor lock and pinned ffmpeg
         shell: pwsh
