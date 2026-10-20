@@ -644,6 +644,10 @@ Pinned runtime: the three Cloud Run Dockerfiles (`vfigos/remote`, `vfigos/approv
 
 סביבת ריצה נעולה: שלושת ה־Dockerfiles נעולים ל־digest ולגרסאות מדויקות; ה־Actions ב־workflow נעולים ל־commit SHA עם הערת גרסה, כולל צעד flow. `docker://` בלי digest נדחה.
 
+**PR-time private-host redaction (2026-10-19):** The private-host detector is a fifth CORE/critical ALWAYS_ON check in affected-sensor selection, including doc-only PRs. It scans RFC1918 10/8, 172.16/12 and 192.168/16, Chris home prefixes in any letter case, and the redacted Desktop Commander machine-id prefix; it reads BOM-marked UTF-16 and non-UTF-8 text, fails closed on an unreadable BOM payload or tracked file, and SHA-256 pins pre-existing synthetic examples using canonical LF content across Windows and Unix checkouts. The sensor registry audit is regenerated to record the fifth critical observer. A new private host string in an ordinary tracked text file is a blocking failure.
+
+**סריקת כתובות פרטיות בכל PR (2026-10-19):** גם שינוי תיעוד מפעיל בדיקת כתובות RFC1918, קידודים נוספים ונתיבי בית מקומיים; דוגמאות היסטוריות נעולות בגיבוב.
+
 **CI package installation fail-closed hardening (2026-10-20):** Workflow and composite-action package-manager checks refuse aptitude and apt outright, permit only narrowly scoped apt-get update/remove/purge outside the hashed ffmpeg exception, and reject indirect package commands, apt config hook references, reused deb install lines and suspect shell writes. This is static validation, not a package installation.
 
 **Changelog and GitHub token fence (2026-10-19):** The Unreleased fold refuses a code fence that straddles a level-2 heading or remains unterminated; a bullet in released history never covers a deleted fragment. The GH_TOKEN collector exception now pins the resolved Python interpreter, collector script path and exact self-test flag, with load-bearing negative controls. No existing sealed pins change.
