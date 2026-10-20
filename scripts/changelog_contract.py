@@ -32,8 +32,12 @@ ATX_H2_RE = re.compile(r"^ *##(?:[ \t]+(.*?))?[ \t]*$")
 SETEXT_RE = re.compile(r"^ *(?:-+|=+)[ \t]*$")
 FENCE_RE = re.compile(r"^ *(`{3,}|~{3,})(.*)$")
 HTML_H2_RE = re.compile(r"</?h2(?=[\s/>]|$)", re.IGNORECASE)
-ESCAPED_LT_RE = re.compile(r"(?<!\\)((?:\\\\)*)\\<")
-CODE_SPAN_RE = re.compile(r"(?<!`)(`+)(?!`)(.+?)(?<!`)\1(?!`)")
+# Inline tokens that decide what a backtick or ``<!--`` means: a backslash escape of ASCII
+# punctuation, a raw HTML tag (its quoted attributes may hold backticks), or a backtick run.
+_HTML_ATTR = r"""\s+[A-Za-z_:][A-Za-z0-9_.:-]*(?:\s*=\s*(?:[^\s"'=<>`]+|'[^']*'|"[^"]*"))?"""
+HTML_TAG_PATTERN = r"<(?:[A-Za-z][A-Za-z0-9-]*(?:" + _HTML_ATTR + r")*\s*/?|/[A-Za-z][A-Za-z0-9-]*\s*)>"
+ESCAPE_PATTERN = r"\\[!-/:-@\[-`{-~]"
+INLINE_TOKEN_RE = re.compile(ESCAPE_PATTERN + "|" + HTML_TAG_PATTERN + r"|(`+)")
 HTML_COMMENT_OPEN = "<!--"
 HTML_COMMENT_CLOSE = "-->"
 
@@ -224,29 +228,52 @@ def _html_h2(text: str) -> bool:
     """An ``h2`` start or end tag anywhere on a line makes it a level-2 heading.
 
     A block such as ``<div align="center"><h2>1.0.0</h2></div>`` renders a heading after
-    its opening tag, so the tag counts wherever it sits. Literal HTML h2 inside inline code or backslash-escaped Markdown prose is
-    documentation, not a released-section heading.
+    its opening tag, so the tag counts wherever it sits. Literal HTML h2 inside inline code or
+    backslash-escaped Markdown prose is documentation, not a released-section heading.
     """
     return HTML_H2_RE.search(_literal_masked(text)) is not None
 
 
 def _literal_masked(text: str) -> str:
-    """Same-length copy with backslash-escaped ``<`` and code-span text blanked.
+    """Same-length copy with backslash escapes, code spans and raw HTML tags scanned left to right.
 
-    A ``<!--`` in either place is literal Markdown, not an opener. An even run of
-    backslashes escapes nothing, so ``\\\\<`` keeps its ``<``.
+    An escape blanks the escaped character, so ``\\`` and ``\\<`` open nothing. A raw HTML tag is
+    kept whole, so a backtick inside its attribute opens no code span while an ``h2`` in it stays
+    visible. A backtick run opens a code span only when a run of the same length closes it on the
+    line; otherwise it is literal. A ``<!--`` or ``h2`` in blanked text is literal Markdown.
     """
-    masked = ESCAPED_LT_RE.sub(lambda match: match.group(0)[:-2] + "  ", text)
-    return CODE_SPAN_RE.sub(lambda match: " " * len(match.group(0)), masked)
+    masked: list[str] = []
+    pos = 0
+    match = INLINE_TOKEN_RE.search(text)
+    while match is not None:
+        masked.append(text[pos:match.start()])
+        pos = match.end()
+        token = match.group(0)
+        if match.group(1) is not None:
+            closer = re.compile(r"(?<!`)" + re.escape(token) + r"(?!`)").search(text, pos)
+            if closer is None:
+                masked.append(token)
+            else:
+                masked.append(" " * (closer.end() - match.start()))
+                pos = closer.end()
+        elif token.startswith("\\"):
+            masked.append("  ")
+        else:
+            masked.append(token)
+        match = INLINE_TOKEN_RE.search(text, pos)
+    masked.append(text[pos:])
+    return "".join(masked)
 
 
-def _comment_line(text: str, opened: bool) -> tuple[bool, bool] | None:
+def _comment_line(text: str, opened: bool, prose: bool) -> tuple[bool, bool] | None:
     """(line is inside an HTML comment, comment still open after it), else None.
 
     A comment opens with ``<!--`` at the start of a line. Its text is neither prose nor a
     heading. The closing ``-->`` is searched for on the opening line too, after the ``<!--``
     as CommonMark does. Markup that shares a line with prose, or text after a closing ``-->``,
     yields None so the caller fails closed. Literal ``<!--`` (code span or escaped) is not an opener.
+    An indented ``<!--`` after a blank line is an indented code block, so it opens nothing; directly
+    under prose it may continue the paragraph, so it yields None.
     """
     if opened:
         search = 0
@@ -254,6 +281,8 @@ def _comment_line(text: str, opened: bool) -> tuple[bool, bool] | None:
         start = _literal_masked(text).find(HTML_COMMENT_OPEN)
         if start < 0:
             return False, False
+        if _indent(text) > 3:
+            return None if prose else (False, False)
         if text[:start].strip():
             return None
         search = start + 2
@@ -274,8 +303,8 @@ def _unreleased_region(lines: list[str]) -> tuple[int, int, set[str]] | None:
     counts. An HTML comment, from ``<!--`` to ``-->``, is skipped entirely: its text neither
     folds nor ends the section. Parsing fails closed: a fence or heading indented four spaces
     or more, a fence still open at a boundary, a boundary inside an Unreleased fence, markup
-    sharing a line with prose, a comment never closed, or a missing Unreleased heading yields
-    None.
+    sharing a line with prose, an indented comment opener directly under prose, a comment never
+    closed, or a missing Unreleased heading yields None.
     """
     header: int | None = None
     fence: tuple[str, int] | None = None
@@ -294,7 +323,7 @@ def _unreleased_region(lines: list[str]) -> tuple[int, int, set[str]] | None:
             else:
                 prose = bool(text.strip())
             continue
-        skipped = _comment_line(text, comment)
+        skipped = _comment_line(text, comment, prose)
         if skipped is None:
             return None
         inside, comment = skipped
@@ -1042,6 +1071,12 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
          "## [Unreleased]\n\n<div align=\"center\"><h2>1.0.0</h2></div>\n\n" + bullet),
         ("bullet only inside a multi-line HTML comment",
          "## [Unreleased]\n\n<!--\n" + bullet + "-->\n"),
+        ("four-space-indented comment opener before a released h2",
+         "## [Unreleased]\n\n    <!--\n## [1.0.0]\n\n-->\n\n" + bullet),
+        ("backslash-escaped backtick before a raw released h2",
+         "## [Unreleased]\n\n\\`<h2>1.0.0</h2> `x`\n\n" + bullet),
+        ("backtick in a raw HTML attribute before a released h2",
+         "## [Unreleased]\n\n<div title=\"`\"><h2>1.0.0</h2></div> `x``\n\n" + bullet),
     ]
     for name, changelog in bypass_regressions:
         probes.append((
@@ -1113,15 +1148,34 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
         (gate([("M", "CHANGELOG.md", escaped_h2_doc), deleted]) == 0,
          "a backslash-escaped HTML h2 wrongly ended Unreleased"),
     ])
+    # Positive controls: legitimate inline code and an indented code block still parse as
+    # literal text, so the stricter scanner does not reject ordinary changelog prose.
+    attribute_then_code = "## [Unreleased]\n\n<span title=\"`\"></span> Use `<h2>1.0.0</h2>` here.\n\n" + bullet
+    escaped_backslash_code = "## [Unreleased]\n\nUse \\\\`<h2>1.0.0</h2>` here.\n\n" + bullet
+    indented_code_comment = "## [Unreleased]\n\n    <!-- sample\n\n" + bullet
+    probes.extend([
+        (gate([("M", "CHANGELOG.md", attribute_then_code), deleted]) == 0,
+         "a code span after a raw HTML attribute backtick wrongly ended Unreleased"),
+        (gate([("M", "CHANGELOG.md", escaped_backslash_code), deleted]) == 0,
+         "a code span after an escaped backslash wrongly ended Unreleased"),
+        (gate([("M", "CHANGELOG.md", indented_code_comment), deleted]) == 0,
+         "an indented code-block comment opener hid the Unreleased bullet"),
+        (_unreleased_region(["## [Unreleased]", "", "    <!--", "## [1.0.0]", "-->", bullet.strip()])[1] == 3,
+         "an indented code-block comment opener hid the released h2 boundary"),
+        (_unreleased_region(["## [Unreleased]", "", "text", "    <!--", "-->", bullet.strip()]) is None,
+         "an indented comment opener directly under prose was accepted"),
+    ])
     # Mutating a new guard must change the gate outcome for its fixture.
     literal_sample = "## [Unreleased]\n\nSee `<!--` syntax.\n\n" + bullet
-    escaped_sample = "## [Unreleased]\n\n\\\\<!-- note\n" + bullet + "-->\n"
     wrapped_sample = "## [Unreleased]\n\n<div align=\"center\"><h2>1.0.0</h2></div>\n\n" + bullet
     code_span_sample = "## [Unreleased]\n\n`<!--` literal\n\n" + bullet
+    escaped_backtick_sample = "## [Unreleased]\n\n\\`<h2>1.0.0</h2> `x`\n\n" + bullet
+    attribute_backtick_sample = "## [Unreleased]\n\n<div title=\"`\"><h2>1.0.0</h2></div> `x``\n\n" + bullet
     guard_mutants = (
         ("_literal_masked", lambda text: text, literal_sample, "the literal-opener mask is not load-bearing"),
-        ("ESCAPED_LT_RE", re.compile(r"\\<"), escaped_sample, "the escape parity guard is not load-bearing"),
-        ("CODE_SPAN_RE", re.compile(r"(?!x)x"), code_span_sample, "the code span mask is not load-bearing"),
+        ("INLINE_TOKEN_RE", re.compile(HTML_TAG_PATTERN + r"|(`+)"), escaped_backtick_sample, "the backslash escape guard is not load-bearing"),
+        ("INLINE_TOKEN_RE", re.compile(ESCAPE_PATTERN + r"|(`+)"), attribute_backtick_sample, "the raw HTML tag guard is not load-bearing"),
+        ("INLINE_TOKEN_RE", re.compile(ESCAPE_PATTERN + "|" + HTML_TAG_PATTERN), code_span_sample, "the code span mask is not load-bearing"),
         ("HTML_H2_RE", re.compile(r"^ *</?h2(?=[\s/>]|$)", re.IGNORECASE), wrapped_sample, "the wrapped HTML h2 guard is not load-bearing"),
     )
     for name, replacement, sample, message in guard_mutants:
