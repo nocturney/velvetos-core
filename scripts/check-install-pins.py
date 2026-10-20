@@ -168,16 +168,20 @@ def norm(name: str) -> str:
 
 
 _WIN_PATH = re.compile(r"[A-Za-z]:\\(?:[^\\\s\"']+\\)*[^\\\s\"']+")
+# Relative `Scripts\pip.exe` or `.\npm`: one unquoted word that starts with a name or `.`.
+# A leading backslash (`\p\i\p`) is left alone so shlex still unescapes it.
+_WIN_REL = re.compile(r"(?<![^\s;|&(])((?:\.|[\w.-]+)\\(?:[\w.-]+\\)*[\w.-]+)")
 
 
 def _for_shlex(command: str) -> str:
-    """Turn a Windows path into slashes so shlex does not eat the separators."""
-    return _WIN_PATH.sub(lambda match: match.group(0).replace("\\", "/"), command)
+    """Turn Windows paths into slashes so shlex does not eat the separators."""
+    command = _WIN_PATH.sub(lambda match: match.group(0).replace("\\", "/"), command)
+    return _WIN_REL.sub(lambda match: match.group(0).replace("\\", "/"), command)
 
 
 def _base(token: str) -> str:
     name = token.replace("\\", "/").rsplit("/", 1)[-1].lower()
-    for suffix in (".exe", ".cmd"):
+    for suffix in (".exe", ".cmd", ".bat", ".ps1"):
         if name.endswith(suffix) and len(name) > len(suffix):
             return name[: -len(suffix)]
     return name
@@ -2213,10 +2217,30 @@ def prove_path_forms() -> str:
     require("npm.cmd install some-malicious-pkg", "floating npm spec some-malicious-pkg")
     require("npm.exe install some-malicious-pkg", "floating npm spec some-malicious-pkg")
     require("\\p\\i\\p install some-malicious-pkg", "floating pip spec some-malicious-pkg")
+    require("Scripts\\pip.exe install some-malicious-pkg", "floating pip spec some-malicious-pkg")
+    require(".\\pip.exe install some-malicious-pkg", "floating pip spec some-malicious-pkg")
+    require("pip.bat install some-malicious-pkg", "floating pip spec some-malicious-pkg")
+    require("Scripts\\pip.bat install some-malicious-pkg", "floating pip spec some-malicious-pkg")
+    require(".\\npm install some-malicious-pkg", "floating npm spec some-malicious-pkg")
+    require("npm.ps1 install some-malicious-pkg", "floating npm spec some-malicious-pkg")
+    require("..\\npm.cmd install some-malicious-pkg", "floating npm spec some-malicious-pkg")
+    absolute = install_spec_problems(
+        "run: C:\\Tools\\pip.exe install some-malicious-pkg\n", path="fixture.yml"
+    )
+    if len(absolute) != 2 or not all(
+        "floating pip spec some-malicious-pkg" in item for item in absolute
+    ):
+        fail(f"absolute Windows pip path was not caught twice: {absolute}")
     for sample in (
         "run: /usr/bin/pip install google-auth==2.62.0\n",
         "run: /usr/bin/npm ci\n",
         "run: pip3.12 install google-auth==2.62.0\n",
+        "run: .\\npm ci --ignore-scripts\n",
+        "run: npm.ps1 ci\n",
+        "run: Scripts\\pip.exe install google-auth==2.62.0\n",
+        "run: .\\pip.bat install google-auth==2.62.0\n",
+        "run: python3 -m pip install --disable-pip-version-check --require-hashes "
+        "-r requirements-sensors.py311.lock\n",
     ):
         found = install_spec_problems(sample, path="fixture.yml")
         if found:
