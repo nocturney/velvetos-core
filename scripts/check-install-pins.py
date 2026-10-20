@@ -1765,6 +1765,218 @@ def ffmpeg_side_install_problems(text: str, *, path: str) -> list[str]:
     return problems
 
 
+# Job policy for package installs (workflows and composite actions). These are
+# pattern checks over the shell words, not a shell interpreter, so a shape that
+# cannot be proven safe is refused. Only POSIX steps are scanned: a step whose
+# `shell:` is pwsh, powershell, cmd or python is skipped by these rules.
+#
+# A package job is one whose text mentions a package manager. Its rules:
+#   - refuse `eval`; refuse `sh -c` / `source` / `.` with an expanded script;
+#   - refuse a command word that is an expansion (`$A $B -y ffmpeg`);
+#   - refuse a parameter assignment (`${x:=...}`) and a PM name assigned in
+#     any form (`A=apt-get`, `CMD='apt-get install ...'`).
+# An apt job (apt, apt-get, aptitude, dpkg, dpkg-deb) also refuses every
+# file write that is not a fd dup or /dev/null (tee, cp, mv, install, ln, dd,
+# sed -i, curl/wget output, python/perl/ruby/node/php one-liners, `>`, `>>`).
+# Any job refuses apt configuration text (APT_CONFIG, apt.conf, /etc/apt,
+# Dir::Etc, Pre-Invoke, Post-Invoke). The hashed ffmpeg job must contain its
+# sequence once, each approved install line at most once, and no assignment
+# except its two pinned variables (`matches=`, `deb=`).
+PM_WORD = re.compile(
+    r"(?<![\w/.-])(?:dpkg-deb|apt-get|aptitude|apt|dpkg|pip3|pip|npm|npx|yarn|pnpm"
+    r"|uvx|uv|pipx|bunx|bun|conda)(?![\w/.-])"
+)
+PM_APT_WORD = re.compile(r"(?<![\w/.-])(?:dpkg-deb|apt-get|aptitude|apt|dpkg)(?![\w/.-])")
+APT_CONFIG_TEXT = re.compile(
+    r"APT_CONFIG|apt\.conf|/etc/apt|Dir::Etc|Pre-Invoke|Post-Invoke|apt-config",
+    re.IGNORECASE,
+)
+SHELL_KEYWORDS = {"if", "then", "else", "elif", "do", "while", "until", "time", "!", "{", "}"}
+SEQUENCE_BUILTINS = {
+    "export", "declare", "typeset", "local", "readonly", "read", "mapfile",
+    "readarray", "let", "unset", "getopts", "for", "select",
+}
+SOURCERS = {"source", "."}
+ASSIGNMENT = re.compile(r"[A-Za-z_][A-Za-z0-9_]*=")
+INDIRECT_ASSIGN_VALUE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*=.*[$`]")
+PARAM_ASSIGN = re.compile(r"\$\{[A-Za-z_][A-Za-z0-9_]*:?=")
+ASSIGN_NAMES_ALLOWED = frozenset({APT_FFMPEG_COMMANDS[3], APT_FFMPEG_COMMANDS[8]})
+FILE_WRITERS = {"tee", "cp", "mv", "install", "ln", "dd", "truncate", "rsync"}
+FETCHERS = {"curl", "wget"}
+INLINE_CODE = {
+    "python": {"-c"},
+    "python3": {"-c"},
+    "perl": {"-e", "-E"},
+    "ruby": {"-e"},
+    "node": {"-e", "--eval", "-p"},
+    "php": {"-r"},
+}
+# `>&N` (fd dup) and `>/dev/null` are the only redirections that write nothing.
+REDIRECT = re.compile(r"(?:&>>?|\d*>>?\|?)(&?)\s*([^\s;|&()]*)")
+REDIRECT_TOKEN = re.compile(r"(?:&>>?|\d*>>?\|?|\d*<<?<?)&?\s*[^\s;|&()]+")
+NON_POSIX_SHELL = re.compile(r"(?m)^\s*shell:\s*['\"]?(?:pwsh|powershell|cmd|python)\b")
+STEP_DASH = re.compile(r"^(\s*)-\s")
+
+
+def _posix_scripts(block: str) -> list[str]:
+    """Run scripts of the steps whose shell is POSIX (the default)."""
+    lines = block.splitlines()
+    indents = [len(match.group(1)) for match in map(STEP_DASH.match, lines) if match]
+    if not indents:
+        return [] if NON_POSIX_SHELL.search(block) else run_scripts(block)
+    step = min(indents)
+    chunks: list[str] = []
+    for line in lines:
+        match = STEP_DASH.match(line)
+        if not chunks or (match and len(match.group(1)) == step):
+            chunks.append("")
+        chunks[-1] += line + "\n"
+    scripts: list[str] = []
+    for chunk in chunks:
+        if not NON_POSIX_SHELL.search(chunk):
+            scripts.extend(run_scripts(chunk))
+    return scripts
+
+
+def _unprefixed(command: str) -> str:
+    """Drop leading shell keywords and grouping characters: `then deb=x` -> `deb=x`."""
+    previous = None
+    while previous != command:
+        previous = command
+        command = re.sub(
+            r"^(?:[({!]|(?:if|then|else|elif|do|while|until|time)\b)\s*", "", command, count=1
+        )
+    return command
+
+
+def _script_commands(script: str) -> list[str]:
+    commands: list[str] = []
+    for part in split_commands(join_continuations(script)):
+        for piece in re.split(r"(?<![&>|<])&(?![&>])", part):
+            command = strip_comment(piece)
+            if command:
+                commands.append(command)
+    return commands
+
+
+def _posix_commands(block: str) -> list[tuple[str, bool]]:
+    """(command, in_sequence_step) for every POSIX command in the job block."""
+    found: list[tuple[str, bool]] = []
+    for script in _posix_scripts(block):
+        in_sequence = count_sequence(script_commands(script), APT_FFMPEG_COMMANDS) == 1
+        found.extend((command, in_sequence) for command in _script_commands(script))
+    return found
+
+
+def _writes_file(text: str) -> bool:
+    for match in REDIRECT.finditer(text):
+        if match.group(1) == "&" or match.group(2) == "/dev/null":
+            continue
+        return True
+    return False
+
+
+def _without_redirects(text: str) -> str:
+    """Drop redirections and their targets so a target is never read as a command word."""
+    return REDIRECT_TOKEN.sub(" ", text)
+
+
+def _is_output_flag(token: str) -> bool:
+    return token.startswith("--output") or bool(re.fullmatch(r"-[A-Za-z]*[oO][A-Za-z]*", token))
+
+
+def _is_in_place(token: str) -> bool:
+    return token.startswith("--in-place") or (
+        token.startswith("-") and not token.startswith("--") and "i" in token[1:]
+    )
+
+
+def _command_problems(command: str, *, pm: bool, apt: bool, sequence: bool) -> list[str]:
+    found: list[str] = []
+    text = _unprefixed(command)
+    if apt and _writes_file(text):
+        found.append(f"file write in apt job: {command}")
+    words = raw_argv(_without_redirects(text))
+    if words is None:
+        if pm or PM_WORD.search(text):
+            found.append(f"unparsable package job command: {command}")
+        return found
+    head = [word for word in words if word]
+    while head and (head[0] in SHELL_KEYWORDS or head[0][:1] in {"(", "{", "!"}):
+        head = head[1:]
+    argv = _peel_wrappers(head)
+    if argv:
+        base = _base(_normalize_token(argv[0]))
+        if base == "eval":
+            found.append(f"eval is refused: {command}")
+        if base in SHELLS:
+            for index in range(1, len(argv) - 1):
+                if _shell_c_flag(argv[index]) and _indirect_command(argv[index + 1]):
+                    found.append(f"indirect shell script: {command}")
+        if base in SOURCERS and len(argv) > 1 and _indirect_command(argv[1]):
+            found.append(f"indirect source: {command}")
+        if pm and _indirect_command(argv[0]):
+            found.append(f"indirect package-manager command: {command}")
+        if apt and base in FILE_WRITERS:
+            found.append(f"file write in apt job: {command}")
+        if apt and base == "sed" and any(_is_in_place(token) for token in argv[1:]):
+            found.append(f"in-place edit in apt job: {command}")
+        if apt and base in FETCHERS and any(_is_output_flag(token) for token in argv[1:]):
+            found.append(f"file download in apt job: {command}")
+        if apt and any(token in INLINE_CODE.get(base, set()) for token in argv[1:]):
+            found.append(f"inline interpreter code in apt job: {command}")
+        if sequence and (base in SEQUENCE_BUILTINS or (base == "printf" and "-v" in argv)):
+            found.append(f"variable builtin in apt ffmpeg job: {command}")
+    nested = _nested_scripts(words) + [
+        script for word in words for script in _substitution_scripts(word)
+    ]
+    for script in nested:
+        for piece in _script_commands(script):
+            found.extend(_command_problems(piece, pm=pm, apt=apt, sequence=sequence))
+    return found
+
+
+def job_policy_problems(text: str, *, path: str) -> list[str]:
+    """Refuse eval, indirect package commands, apt config writes, and job-level assignments."""
+    problems: list[str] = []
+    for job, block in job_blocks(text) or [("workflow", text)]:
+        where = f"{path} job {job}"
+        if APT_CONFIG_TEXT.search(block):
+            problems.append(f"{where} apt configuration reference")
+        commands = _posix_commands(block)
+        texts = [command for command, _in_sequence in commands]
+        literal_lines = [line for line in block.splitlines() if not line.lstrip().startswith("#")]
+        # Words as the shell would see them (quotes removed), without redirect targets.
+        shell_words = [
+            " ".join(raw_argv(_without_redirects(_unprefixed(command))) or [])
+            for command in texts
+        ]
+        pm = any(PM_WORD.search(line) for line in literal_lines) or any(
+            PM_WORD.search(words) or INDIRECT_ASSIGN_VALUE.match(_unprefixed(command))
+            for command, words in zip(texts, shell_words)
+        )
+        apt = any(PM_APT_WORD.search(line) for line in literal_lines) or any(
+            PM_APT_WORD.search(words) for words in shell_words
+        )
+        sequence_job = count_sequence(
+            [line for script in _posix_scripts(block) for line in script_commands(script)],
+            APT_FFMPEG_COMMANDS,
+        ) == 1
+        if sequence_job:
+            for line in sorted(APT_ALLOWED_INSTALLS | ASSIGN_NAMES_ALLOWED):
+                if texts.count(line) > 1:
+                    problems.append(f"{where} repeated approved apt line: {line}")
+        for command, in_sequence in commands:
+            text_command = _unprefixed(command)
+            if in_sequence and ASSIGNMENT.match(text_command) and text_command not in ASSIGN_NAMES_ALLOWED:
+                problems.append(f"{where} new variable assignment in apt ffmpeg job: {command}")
+            if pm and PARAM_ASSIGN.search(command):
+                problems.append(f"{where} parameter assignment in package job: {command}")
+            for item in _command_problems(command, pm=pm, apt=apt, sequence=in_sequence):
+                problems.append(f"{where} {item}")
+    return problems
+
+
 IMAGE_TOOL_NAMES = (
     "linux-git",
     "linux-gh",
@@ -2362,13 +2574,14 @@ def main() -> int:
             apt_workflows += 1
         problems.extend(apt)
         problems.extend(ffmpeg_side_install_problems(text, path=rel))
+        problems.extend(job_policy_problems(text, path=rel))
         problems.extend(node_toolchain_problems(text, path=rel))
         node_setups += text.count("actions/setup-node@")
     for path in composite_action_files():
         rel = path.relative_to(ROOT).as_posix()
-        problems.extend(
-            ffmpeg_side_install_problems(path.read_text(encoding="utf-8"), path=rel)
-        )
+        composite = path.read_text(encoding="utf-8")
+        problems.extend(ffmpeg_side_install_problems(composite, path=rel))
+        problems.extend(job_policy_problems(composite, path=rel))
     req_text = (ROOT / REQ_NAME).read_text(encoding="utf-8")
     lock_text = (ROOT / LOCK_NAME).read_text(encoding="utf-8")
     problems.extend(google_lock_problems(req_text, lock_text))
