@@ -31,6 +31,9 @@ UNRELEASED_TITLE = "[Unreleased]"
 ATX_H2_RE = re.compile(r"^ *##(?:[ \t]+(.*?))?[ \t]*$")
 SETEXT_RE = re.compile(r"^ *(?:-+|=+)[ \t]*$")
 FENCE_RE = re.compile(r"^ *(`{3,}|~{3,})(.*)$")
+HTML_H2_RE = re.compile(r"^ *</?h2(?=[\s/>]|$)", re.IGNORECASE)
+HTML_COMMENT_OPEN = "<!--"
+HTML_COMMENT_CLOSE = "-->"
 
 
 def fragment_name(path: str) -> bool:
@@ -215,17 +218,51 @@ def _fence_close(text: str, marker: str, length: int) -> bool:
     return len(body) >= length and body == marker * len(body)
 
 
+def _html_h2(text: str) -> bool:
+    """An ``h2`` start or end tag opening a line is a level-2 heading, as in CommonMark."""
+    return HTML_H2_RE.match(text) is not None
+
+
+def _comment_line(text: str, opened: bool) -> tuple[bool, bool] | None:
+    """(line is inside an HTML comment, comment still open after it), else None.
+
+    A comment opens with ``<!--`` at the start of a line. Its text is neither prose nor a
+    heading. The closing ``-->`` is searched for on the opening line too, after the ``<!--``
+    as CommonMark does. Markup that shares a line with prose, or text after a closing ``-->``,
+    yields None so the caller fails closed.
+    """
+    if opened:
+        search = 0
+    else:
+        start = text.find(HTML_COMMENT_OPEN)
+        if start < 0:
+            return False, False
+        if text[:start].strip():
+            return None
+        search = start + 2
+    end = text.find(HTML_COMMENT_CLOSE, search)
+    if end < 0:
+        return True, True
+    if text[end + len(HTML_COMMENT_CLOSE):].strip():
+        return None
+    return True, False
+
+
 def _unreleased_region(lines: list[str]) -> tuple[int, int, set[str]] | None:
     """Header index, next boundary index, and lines that count as folded.
 
-    A boundary is a level-2 heading or a setext underline under text. A fence closes only on
-    its own marker character, at least as long as its opener, so a mixed ``~~~`` inside a
-    backtick fence stays inside. Nothing inside a fence counts. Parsing fails closed: a fence
-    or heading indented four spaces or more, a fence still open at a boundary, a boundary
-    inside an Unreleased fence, or a missing Unreleased heading yields None.
+    A boundary is a level-2 heading (ATX ``##`` or an HTML ``h2`` tag) or a setext underline
+    under text. A fence closes only on its own marker character, at least as long as its
+    opener, so a mixed ``~~~`` inside a backtick fence stays inside. Nothing inside a fence
+    counts. An HTML comment, from ``<!--`` to ``-->``, is skipped entirely: its text neither
+    folds nor ends the section. Parsing fails closed: a fence or heading indented four spaces
+    or more, a fence still open at a boundary, a boundary inside an Unreleased fence, markup
+    sharing a line with prose, a comment never closed, or a missing Unreleased heading yields
+    None.
     """
     header: int | None = None
     fence: tuple[str, int] | None = None
+    comment = False
     prose = False
     counted: list[str] = []
     for index, line in enumerate(lines):
@@ -235,10 +272,17 @@ def _unreleased_region(lines: list[str]) -> tuple[int, int, set[str]] | None:
             if _fence_close(text, *fence):
                 fence = None
                 prose = False
-            elif header is not None and (_h2_title(text) is not None or _setext_underline(text, prose)):
+            elif header is not None and (_h2_title(text) is not None or _html_h2(text) or _setext_underline(text, prose)):
                 return None
             else:
                 prose = bool(text.strip())
+            continue
+        skipped = _comment_line(text, comment)
+        if skipped is None:
+            return None
+        inside, comment = skipped
+        if inside:
+            prose = False
             continue
         opener = _fence_open(text)
         if opener is not None:
@@ -251,7 +295,7 @@ def _unreleased_region(lines: list[str]) -> tuple[int, int, set[str]] | None:
             if _h2_title(text) == UNRELEASED_TITLE and _indent(text) <= 3:
                 header = index
             continue
-        if _h2_title(text) is not None:
+        if _h2_title(text) is not None or _html_h2(text):
             if _indent(text) > 3:
                 return None
             return header, index, set(counted)
@@ -261,7 +305,7 @@ def _unreleased_region(lines: list[str]) -> tuple[int, int, set[str]] | None:
             return header, index, set(counted)
         counted.append(raw)
         prose = bool(text.strip())
-    if header is None or fence is not None:
+    if header is None or fence is not None or comment:
         return None
     return header, len(lines), set(counted)
 
@@ -973,6 +1017,12 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
          "## [Unreleased]\n\nVersion 1.0\n---\n\n" + bullet),
         ("equals setext released heading",
          "## [Unreleased]\n\nVersion 1.0\n===\n\n" + bullet),
+        ("HTML h2 released heading",
+         "## [Unreleased]\n\n<h2>1.0.0</h2>\n\n" + bullet),
+        ("uppercase HTML h2 released heading with attributes",
+         "## [Unreleased]\n\n  <H2 id=\"v1\">1.0.0</H2>\n\n" + bullet),
+        ("bullet only inside a multi-line HTML comment",
+         "## [Unreleased]\n\n<!--\n" + bullet + "-->\n"),
     ]
     for name, changelog in bypass_regressions:
         probes.append((
@@ -993,7 +1043,35 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
          "a four-space-indented fence opener was accepted"),
         (_unreleased_region(["## [Unreleased]", "", "    ## [1.0.0]", bullet]) is None,
          "a four-space-indented level-2 heading was accepted"),
+        (_unreleased_region(["## [Unreleased]", "", "<h2>1.0.0</h2>", bullet.strip()]) == (0, 2, {""}),
+         "an HTML h2 start tag did not end the Unreleased section"),
+        (_unreleased_region(["## [Unreleased]", "", "</h2>", bullet])[1] == 2,
+         "an HTML h2 end tag did not end the Unreleased section"),
+        (_unreleased_region(["## [Unreleased]", "", "    <h2>1.0.0</h2>", bullet]) is None,
+         "a four-space-indented HTML h2 was accepted"),
+        (_unreleased_region(["## [Unreleased]", "", "<h20>no</h20>", bullet.strip()]) == (0, 4, {"", "<h20>no</h20>", bullet.strip()}),
+         "an h20 tag was mistaken for an h2 heading"),
+        (_unreleased_region(["## [Unreleased]", "", fence_marker, "<h2>x</h2>", fence_marker, bullet]) is None,
+         "an HTML h2 inside an Unreleased fence did not invalidate the region"),
+        (_unreleased_region(["## [Unreleased]", "", "<!--", "## [1.0.0]", "-->", "", bullet.strip()])[1] == 7
+         and bullet.strip() in _unreleased_region(["## [Unreleased]", "", "<!--", "## [1.0.0]", "-->", "", bullet.strip()])[2],
+         "a level-2 heading inside an HTML comment ended the Unreleased section"),
+        (_unreleased_region(["<!-- ## [Unreleased] -->", "## [Unreleased]", "", bullet.strip()]) == (1, 4, {"", bullet.strip()}),
+         "a heading inside an HTML comment was taken as the Unreleased header"),
+        (_unreleased_region(["## [Unreleased]", "", "<!--", bullet]) is None,
+         "an HTML comment that never closes was accepted"),
+        (_unreleased_region(["## [Unreleased]", "", "text <!-- note", bullet, "-->"]) is None,
+         "an HTML comment sharing a line with prose was accepted"),
+        (_unreleased_region(["## [Unreleased]", "", "<!-- note --> " + bullet.strip()]) is None,
+         "text after an HTML comment close on the same line was accepted"),
+        (gate([("M", "CHANGELOG.md", "## [Unreleased]\n\n<!-- one-line -->\n\n" + bullet), deleted]) == 0,
+         "a one-line HTML comment hid the Unreleased bullet"),
     ])
+    html_hidden = "## [Unreleased]\n\n<!--\n## Notes\n-->\n\n" + bullet
+    probes.append((
+        gate([("M", "CHANGELOG.md", html_hidden), deleted]) == 0,
+        "a heading hidden inside an HTML comment ended the Unreleased fold",
+    ))
     released_only = [
         ("M", "CHANGELOG.md", "## [Unreleased]\n\n- 2026-10-18 - **Other:** stays.\n\n## [1.0.0]\n\n- 2026-10-18 - **Theirs:** stays.\n"),
         ("D", "changelog.d/someone-else.md", "- 2026-10-18 - **Theirs:** stays.\n"),
@@ -1048,10 +1126,23 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
         return header, end, present
 
     saved_region = _unreleased_region
+
+    def _region_html_as_prose(rows: list[str]) -> tuple[int, int, set[str]] | None:
+        """Pre-fix behavior: an HTML h2 tag is prose, so it never ends the fold."""
+        return saved_region([row for row in rows if not _html_h2(row.strip("\r\n").expandtabs(4))])
+
+    def _region_comments_as_prose(rows: list[str]) -> tuple[int, int, set[str]] | None:
+        """Pre-fix behavior: comment delimiters vanish, so comment text folds as prose."""
+        return saved_region([row for row in rows if HTML_COMMENT_OPEN not in row and HTML_COMMENT_CLOSE not in row])
+
+    html_release = [("M", "CHANGELOG.md", "## [Unreleased]\n\n<h2>1.0.0</h2>\n\n" + bullet), deleted]
+    comment_only = [("M", "CHANGELOG.md", "## [Unreleased]\n\n<!--\n" + bullet + "-->\n"), deleted]
     mutants = (
         (_region_missing_is_whole_file, no_heading, "missing Unreleased still refused the folded bullet"),
         (_region_bracket_only, plain_heading, "a plain heading still ended the fold"),
         (_region_keep_fences, fenced_bullet, "a fenced bullet was still ignored"),
+        (_region_html_as_prose, html_release, "an HTML h2 release heading still did not end the fold"),
+        (_region_comments_as_prose, comment_only, "an HTML comment bullet was still ignored"),
     )
     for mutant, sample_paths, message in mutants:
         globals()["_unreleased_region"] = mutant
