@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-18T18:47:35+03:00",
+  "updated_at": "2026-10-20T22:53:31+03:00",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 213,
+  "candidate_count": 214,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -10160,6 +10160,87 @@
         "evidence_refs": [
           "https://github.com/yetone/magpie",
           "https://github.com/nocturney/velvetos-core/issues/595"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-vanoperadze-cutroom",
+      "source_item_id": null,
+      "name": "CUTROOM - local-first AI-assisted video editor",
+      "category": "TOOL",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Upstream README, beta limitations, and MIT project license inspected 2026-10-20. Video quality, Hebrew captions, local model performance, API safety and third-party dependencies still require isolated practical verification.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "creative",
+        "video-editing",
+        "short-form-video",
+        "captions",
+        "hebrew-subtitles",
+        "mp4-render",
+        "local-ai-optional",
+        "localhost-api"
+      ],
+      "platform_constraints": [
+        "Upstream 1.2 Beta for Windows/macOS; Linux source development path. First setup requires Python/FFmpeg dependencies, and optional Ollama/transcription models. No deployment, model download or credential grants authorized.",
+        "Review third-party dependency and media asset rights separately; project-level MIT does not license external media or AI model weights."
+      ],
+      "shortlist_lanes": [
+        "creative-video-editing"
+      ],
+      "evidence_refs": [
+        "https://github.com/vanoperadze/cutroom",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "owner-submitted:2026-10-20",
+        "https://github.com/VanoPeradze/cutroom",
+        "https://github.com/VanoPeradze/cutroom/blob/master/README.md",
+        "https://github.com/VanoPeradze/cutroom/blob/master/LICENSE",
+        "https://github.com/VanoPeradze/cutroom/blob/master/docs/BETA_STATUS.md",
+        "https://github.com/VanoPeradze/cutroom/blob/master/docs/AI_CONNECTIONS.md",
+        "https://github.com/VanoPeradze/cutroom/releases/tag/v1.2-beta-20261019-hotfix1",
+        "https://github.com/nocturney/velvetos-core/issues/922"
+      ],
+      "notes": [
+        "Owner requested candidate-for-testing status on 2026-10-20; prior review was read-only, not runtime validation.",
+        "Evaluate complementary/manual editor, standalone bounded replacement, and reusable API/components for the Velvet Factory reels workflow, without displacing P0 priorities.",
+        "No unattended publishing, production access, new recurring cost, new scheduler, external media upload or assumed cloud API access.",
+        "Source-review evidence refers to the upstream public repository; pin and verify exact release hash and any vendored dependencies before isolated execution."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Execute the bounded CUTROOM benchmark in #922 only after ordinary lab admission/isolation: 9:16 product reel, Hebrew captions, optional local first-cut AI and localhost API; compare with the existing media pipeline and capture evidence.",
+        "rationale": "Potential local video-editor workflow and agent-callable rendering component; relevance established from upstream documentation, but usefulness and safety versus the current media workflow are not proven.",
+        "decision_evidence_refs": [
+          "https://github.com/VanoPeradze/cutroom",
+          "https://github.com/VanoPeradze/cutroom/blob/master/README.md",
+          "https://github.com/VanoPeradze/cutroom/blob/master/LICENSE",
+          "https://github.com/VanoPeradze/cutroom/blob/master/docs/BETA_STATUS.md",
+          "https://github.com/VanoPeradze/cutroom/blob/master/docs/AI_CONNECTIONS.md",
+          "https://github.com/VanoPeradze/cutroom/releases/tag/v1.2-beta-20261019-hotfix1",
+          "https://github.com/nocturney/velvetos-core/issues/922"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "creative-video-editing",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/922",
+        "phase": "Office v2 Phase 2 research and isolated media-video benchmark",
+        "status": "WAITING_GATE",
+        "next_gate": "Review pinned release, dependencies and isolation plan; then run the actual short-form product reel, Hebrew captions, optional local AI and localhost API test matrix in issue #922; record evidence and comparison.",
+        "unlock_condition": "Document source pin and bounded LAB/host isolation approval before any installation or execution; preserve existing P0 lane and security admission gates.",
+        "evidence_refs": [
+          "https://github.com/VanoPeradze/cutroom",
+          "https://github.com/nocturney/velvetos-core/issues/922"
         ]
       }
     }
