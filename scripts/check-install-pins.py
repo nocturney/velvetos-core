@@ -165,6 +165,11 @@ APT_ALLOWED_INSTALLS = frozenset({
     APT_FFMPEG_COMMANDS[1],
     APT_FFMPEG_COMMANDS[-1],
 })
+# The only files that may carry the hashed ffmpeg lines (repo-relative paths).
+HASHED_FFMPEG_WORKFLOWS = frozenset({
+    ".github/workflows/check-all.yml",
+    ".github/workflows/velvetos-research.yml",
+})
 
 
 def fail(msg: str) -> None:
@@ -1723,36 +1728,47 @@ def _package_word_problems(words: list[str]) -> list[str]:
     return found
 
 
-def composite_action_files() -> list[Path]:
-    """In-repo composite actions. Workflows are scanned separately."""
+def action_files() -> list[Path]:
+    """Every in-repo action.yml, composite or not. Workflows are scanned separately.
+
+    Scope is by file name, not by a `using: composite` match, so an action
+    cannot leave the scan by spelling its runner differently.
+    """
     found: list[Path] = []
     for path in sorted(ROOT.rglob("action.y*ml")):
-        if ".git" in path.parts:
-            continue
-        try:
-            text = path.read_text(encoding="utf-8")
-        except OSError:
-            continue
-        if re.search(r"(?m)^[ \t]*using:[ \t]*['\"]?composite['\"]?[ \t]*$", text):
+        if ".git" not in path.parts:
             found.append(path)
     return found
 
 
+def _sequence_job(block: str) -> bool:
+    """True when this job carries the hashed ffmpeg sequence exactly once."""
+    lines = [line for script in _posix_scripts(block) for line in script_commands(script)]
+    return count_sequence(lines, APT_FFMPEG_COMMANDS) == 1
+
+
 def ffmpeg_side_install_problems(text: str, *, path: str) -> list[str]:
-    """Allow only the exact hashed ffmpeg commands. Every other install is refused."""
+    """Allow only the exact hashed ffmpeg commands. Every other install is refused.
+
+    The exemption is granted only inside the two verified ffmpeg workflows and
+    only in their sequence job. The same lines in any other file, job or
+    composite action are ordinary installs.
+    """
     problems: list[str] = []
     blocks = job_blocks(text) or [("workflow", text)]
     approved = _approved_commands()
+    hashed = path in HASHED_FFMPEG_WORKFLOWS
     for job, block in blocks:
+        exempt = hashed and _sequence_job(block)
         for script in run_scripts(block):
             for command in split_commands(join_continuations(script)):
                 command = strip_comment(command)
-                if not command or command in approved:
+                if not command or (exempt and command in approved):
                     continue
                 # Exact diagnostics from the hashed-ffmpeg gate use the word
                 # "apt" inside a printf format string. They cannot execute
                 # apt and are independently pinned by apt_ffmpeg_problems.
-                if command in {APT_FFMPEG_COMMANDS[5], APT_FFMPEG_COMMANDS[10]}:
+                if exempt and command in {APT_FFMPEG_COMMANDS[5], APT_FFMPEG_COMMANDS[10]}:
                     continue
                 lists = word_lists(command)
                 if lists is None:
@@ -1814,28 +1830,73 @@ INLINE_CODE = {
 # `>&N` (fd dup) and `>/dev/null` are the only redirections that write nothing.
 REDIRECT = re.compile(r"(?:&>>?|\d*>>?\|?)(&?)\s*([^\s;|&()]*)")
 REDIRECT_TOKEN = re.compile(r"(?:&>>?|\d*>>?\|?|\d*<<?<?)&?\s*[^\s;|&()]+")
-NON_POSIX_SHELL = re.compile(r"(?m)^\s*shell:\s*['\"]?(?:pwsh|powershell|cmd|python)\b")
+# Only these `shell:` values are understood. Each is a bare interpreter name:
+# any argument, wrapper, path or other interpreter is refused as unsupported
+# instead of being matched by a pattern that might miss it.
+POSIX_SHELLS = frozenset({"bash", "sh", "dash"})
+OTHER_SHELLS = frozenset({"pwsh"})
+SHELL_KEY = re.compile(r"(?m)^[ \t]*(?:-[ \t]+)?shell:[ \t]*(.*?)[ \t]*$")
+DEFAULTS_KEY = re.compile(r"(?m)^[ \t]*defaults:[ \t]*$")
+# A word the shell expands (parameter, command substitution, glob, brace, tilde)
+# is not a fixed program or package name. `[` alone is the test builtin.
+EXPANSION_CHARS = re.compile(r"[$`*?\[\]{}~]")
 STEP_DASH = re.compile(r"^(\s*)-\s")
 
 
+def _shell_value(chunk: str) -> str | None:
+    match = SHELL_KEY.search(chunk)
+    if not match:
+        return None
+    value = strip_comment(match.group(1))
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+        value = value[1:-1]
+    return value
+
+
+def _expandable(word: str) -> bool:
+    return word != "[" and EXPANSION_CHARS.search(word) is not None
+
+
 def _posix_scripts(block: str) -> list[str]:
-    """Run scripts of the steps whose shell is POSIX (the default)."""
+    """Run scripts of the steps whose shell is POSIX (the default).
+
+    A step with no `shell:` runs bash here. A step naming any other shell is
+    left to the shell_problems refusal and the install-spec scan.
+    """
     lines = block.splitlines()
     indents = [len(match.group(1)) for match in map(STEP_DASH.match, lines) if match]
     if not indents:
-        return [] if NON_POSIX_SHELL.search(block) else run_scripts(block)
-    step = min(indents)
-    chunks: list[str] = []
-    for line in lines:
-        match = STEP_DASH.match(line)
-        if not chunks or (match and len(match.group(1)) == step):
-            chunks.append("")
-        chunks[-1] += line + "\n"
+        chunks = [block]
+    else:
+        step = min(indents)
+        chunks = []
+        for line in lines:
+            match = STEP_DASH.match(line)
+            if not chunks or (match and len(match.group(1)) == step):
+                chunks.append("")
+            chunks[-1] += line + "\n"
     scripts: list[str] = []
     for chunk in chunks:
-        if not NON_POSIX_SHELL.search(chunk):
+        value = _shell_value(chunk)
+        if value is None or value in POSIX_SHELLS:
             scripts.extend(run_scripts(chunk))
     return scripts
+
+
+def shell_problems(text: str, *, path: str) -> list[str]:
+    """Refuse every shell that is not a bare supported name, and any `defaults:` block.
+
+    A `defaults:` block can set the shell for steps this scan cannot see
+    per step, so it is refused rather than read.
+    """
+    problems: list[str] = []
+    for match in SHELL_KEY.finditer(text):
+        value = _shell_value(match.group(0))
+        if value not in POSIX_SHELLS | OTHER_SHELLS:
+            problems.append(f"{path} unsupported shell interpreter: {match.group(0).strip()}")
+    if DEFAULTS_KEY.search(text):
+        problems.append(f"{path} defaults block can set an unchecked shell")
+    return problems
 
 
 def _unprefixed(command: str) -> str:
@@ -1902,9 +1963,18 @@ def _command_problems(command: str, *, pm: bool, apt: bool, sequence: bool) -> l
             found.append(f"unparsable package job command: {command}")
         return found
     head = [word for word in words if word]
-    while head and (head[0] in SHELL_KEYWORDS or head[0][:1] in {"(", "{", "!"}):
+    while head and (head[0] in SHELL_KEYWORDS or head[0] in {"(", "{", "!"}):
         head = head[1:]
     argv = _peel_wrappers(head)
+    if argv and _expandable(argv[0]) and (len(argv) > 1 or any(c in argv[0] for c in "$`{}")):
+        # An expanded executable with arguments or substitution is nonliteral.
+        # Bare glob-only shell case patterns (e.g. `*)` or `../*`) are not calls.
+        found.append(f"expanded command word: {command}")
+    if argv and (PM_WORD.fullmatch(_base(argv[0])) or is_pip_executable(_base(argv[0]))):
+        # `pip $VERB x` installs whatever the variable names.
+        verb = next((token for token in argv[1:] if not token.startswith("-")), "")
+        if _expandable(verb):
+            found.append(f"expanded package verb: {command}")
     if argv:
         base = _base(_normalize_token(argv[0]))
         if base == "eval":
@@ -1938,7 +2008,7 @@ def _command_problems(command: str, *, pm: bool, apt: bool, sequence: bool) -> l
 
 def job_policy_problems(text: str, *, path: str) -> list[str]:
     """Refuse eval, indirect package commands, apt config writes, and job-level assignments."""
-    problems: list[str] = []
+    problems: list[str] = shell_problems(text, path=path)
     for job, block in job_blocks(text) or [("workflow", text)]:
         where = f"{path} job {job}"
         if APT_CONFIG_TEXT.search(block):
@@ -2577,9 +2647,10 @@ def main() -> int:
         problems.extend(job_policy_problems(text, path=rel))
         problems.extend(node_toolchain_problems(text, path=rel))
         node_setups += text.count("actions/setup-node@")
-    for path in composite_action_files():
+    for path in action_files():
         rel = path.relative_to(ROOT).as_posix()
         composite = path.read_text(encoding="utf-8")
+        problems.extend(install_spec_problems(composite, path=rel))
         problems.extend(ffmpeg_side_install_problems(composite, path=rel))
         problems.extend(job_policy_problems(composite, path=rel))
     req_text = (ROOT / REQ_NAME).read_text(encoding="utf-8")
@@ -2760,9 +2831,9 @@ def main() -> int:
         fail(f"floating apt runner was not caught: {floating_found}")
     if apt_workflows != 2:
         fail(f"expected 2 apt ffmpeg workflows, found {apt_workflows}")
-    if ffmpeg_side_install_problems(check_all, path="check-all.yml"):
+    if ffmpeg_side_install_problems(check_all, path=".github/workflows/check-all.yml"):
         fail("pinned check-all ffmpeg install has a side path")
-    if ffmpeg_side_install_problems(research, path="velvetos-research.yml"):
+    if ffmpeg_side_install_problems(research, path=".github/workflows/velvetos-research.yml"):
         fail("pinned velvetos-research ffmpeg install has a side path")
 
     def require_side(label: str, command: str, *, dash: bool = False) -> None:
@@ -2923,13 +2994,13 @@ def main() -> int:
         path="fixture.yml",
     ):
         fail("apt-get update was refused")
-    if ffmpeg_side_install_problems(
+    if not ffmpeg_side_install_problems(
         "jobs:\n  sample:\n    runs-on: ubuntu-24.04\n    steps:\n"
         f"      - run: {APT_FFMPEG_COMMANDS[1]}\n"
         f"      - run: {APT_FFMPEG_COMMANDS[-1]}\n",
         path="fixture.yml",
     ):
-        fail("hashed ffmpeg lines were refused")
+        fail("hashed ffmpeg lines outside the hashed workflow were accepted")
     plain_apt = (
         "jobs:\n"
         "  sample:\n"
@@ -2940,6 +3011,89 @@ def main() -> int:
     )
     if apt_ffmpeg_problems(plain_apt, path="fixture.yml"):
         fail("apt -y install was misread as the hashed apt-get step")
+
+    def policy_found(step: str, *, path: str = "fixture.yml") -> list[str]:
+        sample = (
+            "jobs:\n  sample:\n    runs-on: ubuntu-latest\n    steps:\n"
+            "      - name: s\n" + step
+        )
+        return job_policy_problems(sample, path=path) + install_spec_problems(sample, path=path)
+
+    # QA 1: a command word or package verb the shell expands is refused, never read.
+    for label, step, needle in (
+        ("variable command word", "        run: $P install x\n", "expanded command word"),
+        ("quoted variable command word", '        run: "$P" install x\n', "expanded command word"),
+        ("substituted command word", '        run: "$(echo pip)" install x\n', "expanded command word"),
+        ("glued variable command word", "        run: npm$X add x\n", "expanded command word"),
+        ("brace command word", "        run: {pip,install,x}\n", "expanded command word"),
+        ("glob command word", "        run: pi[p] install x\n", "expanded command word"),
+        ("default parameter command word", "        run: ${P:-pip} install x\n", "expanded command word"),
+        ("after separator", "        run: true; $P install x\n", "expanded command word"),
+        ("after if", "        run: if true; then $P install x; fi\n", "expanded command word"),
+        ("variable verb", "        run: pip $VERB x\n", "expanded package verb"),
+        ("variable uv verb", "        run: uv $VERB x\n", "expanded package verb"),
+        ("variable npm verb after flag", "        run: npm -q $VERB x\n", "expanded package verb"),
+    ):
+        if not any(needle in item for item in policy_found(step)):
+            fail(f"{label} was not caught: {policy_found(step)}")
+    for safe in (
+        "        run: echo $HOME\n",
+        "        run: '[' -n \"$X\" ']' && echo ok\n",
+        "        run: pip install x==1.2.3\n",
+        "        run: npm ci --ignore-scripts\n",
+    ):
+        if any("expanded" in item for item in policy_found(safe)):
+            fail(f"literal or argument-only command was refused: {safe.strip()}")
+
+    # QA 2: composite actions are scanned like workflows, and the hashed ffmpeg
+    # exemption only holds in the hashed workflow's sequence job.
+    composite_path = ".github/actions/side/action.yml"
+    composite_pip = "runs:\n  using: composite\n  steps:\n    - shell: bash\n      run: pip install x\n"
+    if not any("floating pip spec x" in item for item in install_spec_problems(composite_pip, path=composite_path)):
+        fail("composite action floating pip install was not caught")
+    composite_apt = "".join(
+        f"    - shell: bash\n      run: {line}\n" for line in APT_ALLOWED_INSTALLS
+    )
+    composite_hashed = "runs:\n  using: composite\n  steps:\n" + composite_apt
+    if not ffmpeg_side_install_problems(composite_hashed, path=composite_path):
+        fail("composite action copy of the hashed ffmpeg install was not refused")
+    if not ffmpeg_side_install_problems(
+        "jobs:\n  sample:\n    runs-on: ubuntu-24.04\n    steps:\n"
+        f"      - run: {APT_FFMPEG_COMMANDS[-1]}\n",
+        path=".github/workflows/unrelated.yml",
+    ):
+        fail("hashed ffmpeg install was accepted outside the hashed workflows")
+    if not ffmpeg_side_install_problems(
+        "jobs:\n  sample:\n    runs-on: ubuntu-24.04\n    steps:\n"
+        f"      - run: {APT_FFMPEG_COMMANDS[-1]}\n",
+        path=".github/workflows/check-all.yml",
+    ):
+        fail("hashed ffmpeg install outside the sequence job was accepted")
+
+    # QA 3: only bare supported shell names are read; anything else is refused.
+    for label, step in (
+        ("zsh step", "        shell: zsh\n        run: $P install x\n"),
+        ("python3 step", "        shell: python3 {0}\n        run: import os\n"),
+        ("wrapped shell", "        shell: sh -c 'pip install x' {0}\n        run: echo ok\n"),
+        ("nonstandard path", "        shell: /usr/bin/fish\n        run: echo ok\n"),
+    ):
+        if not any("unsupported shell interpreter" in item for item in policy_found(step)):
+            fail(f"{label} was not refused as unsupported")
+    if not any(
+        "defaults block" in item
+        for item in job_policy_problems(
+            "jobs:\n  sample:\n    runs-on: ubuntu-latest\n    defaults:\n      run:\n"
+            "        shell: zsh\n    steps:\n      - run: echo ok\n",
+            path="fixture.yml",
+        )
+    ):
+        fail("defaults block that sets the shell was not refused")
+    for safe in (
+        "        shell: bash\n        run: echo ok\n",
+        "        shell: pwsh\n        run: echo ok\n",
+    ):
+        if any("unsupported shell" in item for item in policy_found(safe)):
+            fail(f"supported shell refused: {safe.strip()}")
 
 
     verifier = (ROOT / "scripts" / "verify_bento_shell.py").read_text(encoding="utf-8")
