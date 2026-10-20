@@ -86,7 +86,9 @@ class HelperTests(unittest.TestCase):
         self.assertEqual(data["smokes_run_by_helper"], 0)
         self.assertEqual(data["result_provenance"], "AUTHOR_REPORTED_UNVERIFIED")
         self.assertTrue(data["doc_present"])
-        self.assertEqual(data["pins"], list(self.helper.PINS))
+        self.assertEqual(data["reported_versions"], list(self.helper.REPORTED_VERSIONS))
+        self.assertFalse(data["reproducible_lock"])
+        self.assertNotIn("pins", data)
 
     def test_missing_doc_fails_closed(self):
         with mock.patch.object(self.helper, "DOC", ROOT / "does-not-exist.md"):
@@ -175,10 +177,13 @@ class DocTests(unittest.TestCase):
     def test_spare_anchor_exists(self):
         self.assertIn("(#spare-machine-rows-not-run-not-authorized)", self.text)
 
-    def test_pins_appear_in_doc(self):
-        for pin in self.helper.PINS:
-            version = re.split(r"==|@| v", pin)[-1]
-            self.assertIn(version, self.text, pin)
+    def test_reported_versions_appear_in_doc(self):
+        for item in self.helper.REPORTED_VERSIONS:
+            version = re.search(r"\d+(?:\.\d+){1,2}", item)
+            self.assertIsNotNone(version, item)
+            self.assertIn(version.group(), self.text, item)
+        self.assertIn("ifixai 4.2.0 (observed after unpinned install)", self.helper.REPORTED_VERSIONS)
+        self.assertNotIn("ifixai==4.2.0", self.helper.REPORTED_VERSIONS)
 
 
 class FragmentTests(unittest.TestCase):
