@@ -194,40 +194,23 @@ def build_graph(root: Path = ROOT) -> Graph:
             if _nid("Tool", tool) in g.nodes:
                 g.link(_nid("Seat", sid), "USES_TOOL", _nid("Tool", tool))
 
-    skills_dir = root / ".cursor" / "skills"
-    listed_skills = list(desk.get("skills") or [])
-    seen_skills: set[str] = set()
-    for rel in listed_skills:
-        path = root / rel
-        key = Path(rel).parent.name
-        seen_skills.add(key)
-        body = path.read_text(encoding="utf-8") if path.is_file() else ""
+    # Every Skill view shares the same derived canonical metadata. No second map.
+    from vf_skill_catalog import catalog as skill_catalog
+    listed_skills = set(desk.get("skills") or [])
+    for skill in skill_catalog(root):
+        key = skill["id"]
+        rel = skill["canonical_file"]
         g.add(
             Node(
                 id=_nid("Skill", key),
                 label="Skill",
-                name=key,
-                text=f"{key} {body[:800]}",
-                props={"path": rel, "onDesk": True},
+                name=skill["name"],
+                text=f"{key} {skill['description']}",
+                props={"path": rel, "onDesk": bool(rel and rel in listed_skills),
+                       "origin": skill["origin"], "status": skill["status"],
+                       "source_refs": skill["source_refs"]},
             )
         )
-
-    if skills_dir.is_dir():
-        for skill_md in sorted(skills_dir.glob("*/SKILL.md")):
-            key = skill_md.parent.name
-            if key in seen_skills:
-                continue
-            body = skill_md.read_text(encoding="utf-8")
-            rel = str(skill_md.relative_to(root))
-            g.add(
-                Node(
-                    id=_nid("Skill", key),
-                    label="Skill",
-                    name=key,
-                    text=f"{key} {body[:800]}",
-                    props={"path": rel, "onDesk": False},
-                )
-            )
 
     stages = list(desk.get("pipeline") or [])
     for i, stage in enumerate(stages):

@@ -1,0 +1,158 @@
+"""Regression vectors for the single, derived Skill discovery used by vfmem and Living Studio."""
+from __future__ import annotations
+
+import json
+import tempfile
+import unittest
+from pathlib import Path
+
+from vf_skill_catalog import audit, compare, discover, get_skill, route, search
+
+ROOT = Path(__file__).resolve().parents[4]
+
+
+class CatalogTests(unittest.TestCase):
+    def test_real_repo_discovery_and_cross_router_agreement(self):
+        from vf_living_studio import skill_route, skill_list
+        from vfmem import build_graph
+
+        records = discover(ROOT)
+        ids = {x["id"] for x in records}
+        self.assertEqual(len(ids), len(records))
+        self.assertIn("vf-web-ui-quality", ids)
+        self.assertIn("vf-cad-design-craft", ids)
+        self.assertIn("candidate-skill-plugin87-design-screen", ids)
+        self.assertEqual(skill_route("vf-web-ui-quality")["id"], "vf-web-ui-quality")
+        self.assertEqual(get_skill("vf-web-ui-quality", ROOT)["id"], "vf-web-ui-quality")
+        graph = build_graph(ROOT)
+        self.assertIn("Skill:vf-web-ui-quality", graph.nodes)
+        self.assertIn("Skill:candidate-skill-plugin87-design-screen", graph.nodes)
+        self.assertEqual(skill_list()["catalog_count"], len(records))
+
+    def test_external_is_cataloged_not_installed(self):
+        row = get_skill("candidate-skill-plugin87-design-screen", ROOT)
+        self.assertEqual(row["status"], "RESEARCHED")
+        self.assertEqual(row["license"], "MIT")
+        self.assertEqual(row["version"], "2.10.0")
+        self.assertIsNone(row["canonical_file"])
+        self.assertFalse(row["availability"]["source_in_repository"])
+        self.assertEqual(row["availability"]["installed_on_host"], "UNKNOWN")
+        self.assertFalse(row["availability"]["execution_ready"])
+        self.assertFalse(row["availability"]["executed_and_verified"])
+        self.assertTrue(route(row["id"], ROOT)["skills"][0]["requires_admission"])
+
+    def test_no_web_ui_on_instagram_creative(self):
+        ids = {x["id"] for x in route("Instagram product post", ROOT)["skills"]}
+        self.assertNotIn("vf-web-ui-quality", ids)
+        self.assertIn("vf-web-ui-quality", {x["id"] for x in route("web ui dashboard", ROOT)["skills"]})
+
+    def test_non_ui_cad_search(self):
+        ids = {x["id"] for x in search("CAD OpenSCAD 3D", ROOT)}
+        self.assertIn("vf-cad-design-craft", ids)
+        self.assertFalse(any(x.startswith("candidate-skill-plugin87") for x in ids))
+        self.assertTrue(any(not x.startswith("candidate-skill-plugin87") for x in ids))
+
+    def test_ui_design_does_not_select_cad_by_word_overlap(self):
+        ids = {x["id"] for x in search("ui design accessibility", ROOT)}
+        self.assertNotIn("vf-cad-design-craft", ids)
+        self.assertIn("candidate-skill-plugin87-design-review", ids)
+
+    def test_proposed_agents_are_real_registry_entries(self):
+        from vf_skill_catalog import plan
+
+        row = plan("ui design accessibility", ROOT)
+        agency = json.loads((ROOT / ".cursor/agency-agents.json").read_text())
+        valid = {a["slug"] for a in agency["agents"]}
+        self.assertTrue(row["agent_candidates"])
+        self.assertTrue(all(a["slug"] in valid and (ROOT / a["rule_file"]).is_file()
+                            for a in row["agent_candidates"]))
+        self.assertEqual(row["execution"], "NOT_STARTED")
+        self.assertIsNone(row["receipt"])
+
+    def test_hebrew_cross_language_lookup(self):
+        ids = {x["id"] for x in search("עיצוב ממשק נגישות", ROOT)}
+        self.assertTrue(any("ui" in x or "a11y" in x for x in ids))
+
+    def test_comparison_preserves_competitors_without_pretend_scores(self):
+        result = compare("design review accessibility", ROOT)
+        ids = {r["id"] for r in result["candidates"]}
+        self.assertIn("candidate-skill-plugin87-design-review", ids)
+        self.assertGreaterEqual(len(ids), 2)
+        self.assertTrue(all(x["quality"] == "NOT_BENCHMARKED" for x in result["candidates"]))
+
+    def test_alias_dedup_and_distinct_variant(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for name in (".cursor", ".agents", ".grok"):
+                (root / name / "skills" / "demo").mkdir(parents=True)
+            body = "---\nname: demo\ndescription: Make UI components\n---\nBody.\n"
+            a = root / ".cursor/skills/demo/SKILL.md"
+            b = root / ".agents/skills/demo/SKILL.md"
+            c = root / ".grok/skills/demo/SKILL.md"
+            a.write_text(body)
+            b.write_text(body)
+            c.write_text(body.replace("Body.", "A distinct contract."))
+            found = discover(root)
+            self.assertEqual(len(found), 2)
+            self.assertEqual(len([r for r in found if r["alternate_paths"]]), 1)
+            self.assertTrue(all("variant_of" in r for r in found))
+            self.assertEqual(get_skill("demo", root)["error"], "ambiguous_skill")
+            self.assertEqual(len({r["sha256"] for r in found}), 2)
+
+    def test_fixture_negative_trigger_bilingual_and_no_hallucinated_host(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            skill = root / ".cursor/skills/ui-gate/SKILL.md"
+            skill.parent.mkdir(parents=True)
+            skill.write_text("---\nname: ui-gate\ndescription: Design UI and test accessibility\n---\n"
+                             "# Gate\n\n## Hard stops\n- Do not use for Instagram product posts.\n")
+            self.assertEqual(route("Instagram product posts", root)["skills"], [])
+            self.assertEqual(route("בדיקות ממשק", root)["skills"][0]["id"], "ui-gate")
+            x = audit(root)
+            self.assertEqual(x["source_files"], 1)
+            self.assertEqual(x["unique_records"], 1)
+            self.assertIn("UNVERIFIED", x["host_availability"])
+
+
+    def test_incremental_index_and_modified_source(self):
+        from unittest.mock import patch
+        from vf_skill_catalog import catalog, update_index
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            source = root / ".cursor/skills/dummy/SKILL.md"
+            source.parent.mkdir(parents=True)
+            source.write_text("---\nname: dummy\ndescription: Test design\n---\nOne.\n")
+            index = Path(tmp) / "cache.json"
+            initial = update_index(root, index)
+            self.assertTrue(initial["updated"])
+            self.assertEqual(initial["records"], 1)
+            with patch("vf_skill_catalog._index_path", return_value=index):
+                before = catalog(root)
+                self.assertEqual(before[0]["name"], "dummy")
+                self.assertFalse(update_index(root, index)["updated"])
+                source.write_text("---\nname: dummy\ndescription: Test design\n---\nTwo.\n")
+                # Stale derived index is never authoritative on read.
+                altered = catalog(root)
+                self.assertNotEqual(altered[0]["sha256"], before[0]["sha256"])
+                after = update_index(root, index)
+                self.assertTrue(after["updated"])
+                self.assertEqual(after["changed_hashes"], [".cursor/skills/dummy/SKILL.md"])
+                self.assertEqual(catalog(root)[0]["sha256"], altered[0]["sha256"])
+                source.unlink()
+                removed = update_index(root, index)
+                self.assertEqual(removed["removed_sources"], [".cursor/skills/dummy/SKILL.md"])
+                self.assertEqual(catalog(root), [])
+
+    def test_host_probe_does_not_claim_executed(self):
+        from vf_skill_catalog import host_probe
+
+        row = host_probe()
+        self.assertIn("hostname", row)
+        self.assertFalse(row["execution_verified"])
+        self.assertEqual(row["execution_readiness"], "NOT_ASSESSED")
+
+
+if __name__ == "__main__":
+    unittest.main()

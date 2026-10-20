@@ -18,6 +18,10 @@ A full benchmark shortlist remains 2–3 challengers for operational focus. Over
 
 **No authority expansion:** registry/research/queue state does not install software, grant network/credentials, change sources of truth, transfer external-effect authority or waive `NO_NEW_RECURRING_COST`.
 
+## Derived Skill comparison lane (non-P0)
+
+The `skill-capability-comparison` lane is an evidence/Golden Fixture review lane for individually indexed, provider-neutral Skill candidates. It is not a new P0 shortlist, install queue, scheduler, authority, or production deployment. Candidates retain explicit evaluation routes in the canonical Candidate Registry, and advancing any candidate still requires the normal admission/QA gates.
+
 ## CANDIDATE → ADMITTED
 
 Require all of:
