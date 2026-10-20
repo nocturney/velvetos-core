@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sensor: Office 2.0 read-only desk stays offline, fixture-tested, and manual-dispatch only."""
+"""Sensor: Office 2.0 read-only desk stays offline, fixture-tested, and main-push/manual dispatch only."""
 from __future__ import annotations
 
 import importlib.util
@@ -110,6 +110,9 @@ def main() -> int:
     workflow = WORKFLOW.read_text(encoding="utf-8")
     if "  push:\n    branches: [main]\n  workflow_dispatch:" not in workflow:
         fail("board must run on main push and manual dispatch")
+    for disallowed in ("  pull_request:", "  pull_request_target:", "  workflow_run:"):
+        if disallowed in workflow:
+            fail("unexpected Office board event: " + disallowed)
     if re.search(r"(?m)^\s*schedule:\s*$", workflow) or "cron:" in workflow:
         fail("workflow must not schedule; ChatGPT automations own the clock")
     if re.search(r"(?m)^\s*contents:\s*write\s*$", workflow):
