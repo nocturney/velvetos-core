@@ -51,15 +51,33 @@ Verified upstream **scope only**, not full third-party asset clearance:
 6. Exact source SHA, commands, outcomes and independent QA. No score without observed tests.
 
 **Runs on isolated MacMiniOffice2.local clone (no production changes):**
-- `PYTHONPATH=scripts python3.12 packages/velvetos/living-studio/tests/test_skill_catalog.py`: **24/24 PASS**, covering 5 new UI-source/rights/search/cache vectors.
-- `python3.12 scripts/check-living-studio.py`: **PASS**, embedded catalog regressions = 24.
+- `PYTHONPATH=scripts python3.12 packages/velvetos/living-studio/tests/test_skill_catalog.py`: **25/25 PASS**, covering 5 new UI-source/rights/search/cache vectors.
+- `python3.12 scripts/check-living-studio.py`: **PASS**, embedded catalog regressions = 25.
 - SliceBridge `node --test native/tests/source-queue-ui.test.js native/tests/my-printers-ui.test.js native/tests/brand-ui.test.js`: **28/28 PASS**.
 - With `CHROME_BIN` explicitly set to installed Google Chrome, `node native/tests/source-queue-layout-qa.cjs`: **28/28 Chromium-rendered layout fixtures completed (exit 0)**, Hebrew/English, empty/1/2/8/12/15 files, window sizes ranging 720×500 to 1280×900.
 - Representative measured outcomes: 1280×900 / 1 file **0px workspace overflow**; 1100×750 / 2 files **120px workspace scroll**; 900×830 / 2 files **60px workspace scroll**; 720×500 / 2 files **735px workspace scroll**. The Chrome headless inner viewport on macOS is shorter than the requested outer window height (e.g. 1100×750 gives actual 1100×607), so numbers are **not** native Wails client-area metrics.
+**XIAS vs SliceBridge — real fixed-source evaluation, pinned upstream `plugin87/ux-ui-agent-skills@55156b40e3a9aafa52448bde76cdcb5147b958db`**:
+
+Ran source-only, in a *separate temporary clone* with `npm install --ignore-scripts --no-audit --no-fund --no-package-lock`, Node 24, installed Chrome and `DS_REQUIRE_BROWSER=1`. No generated UI was committed to SliceBridge, and no provider hooks or model API calls were invoked. The target was the same SliceBridge `native/frontend/dist/index.html`, not a manufactured mock. Each command used `node scripts/<gate>.mjs <target> --widths=720,900,1100`:
+
+| XIAS gate | Observed result | Assessment |
+|---|---|---|
+| `verify_overflow` | **PASS** — no clipped text/overlap at three widths | Rendered CSS/DOM check; does not assert zero vertical scroll |
+| `verify_responsive` | **PASS** — no horizontal overflow at three widths | Consistent with SliceBridge's independent browser fixture |
+| `verify_rtl` | **PASS** — 0 px RTL/LTR horizontal overflow | Checks mirroring/overflow, not complete Hebrew copy |
+| `verify_target_size` | **PASS** — 42 targets >=24×24px or documented exceptions | Checks minimum interaction size, not keyboard usability |
+| `measure_render` | **FAIL as implemented** — 8 alleged 4.5:1 text contrast violations | **NOT ACCEPTED AS EIGHT CONFIRMED APP DEFECTS** pending independent source-level adjudication |
+
+**False-positive adjudication of the eight XIAS contrast flags**:
+
+- Four `span.target-printer-icon` glyphs `▣` are explicitly `aria-hidden="true"` decorative icons next to printed model-name text. XIAS compares their approximately **3.97:1** contrast to the **4.5:1 text threshold**; decorative glyphs are not required to meet the text criterion. They also exceed the 3:1 non-text criterion if assessed as information-bearing icons.
+- Four child spans of `Add files` and `Convert` buttons are white on a **CSS gradient** (not a flat white background). The XIAS detector reports `1.00:1` because its ancestor `backgroundColor` read ignores `background-image:linear-gradient(110deg,#2F7F73,#193F38)`. Source color math for white on the two endpoint colors yields approximately **4.77:1** and **11.61:1** respectively. These are **likely detector errors**, and native-product raster verification remains appropriate before final accessibility signoff.
+- This is a concrete reason to **compose complementary tools**: the in-repo browser layout harness is strong on scroll/reachability, while XIAS highlights categories such as contrast/targets, but its findings require semantic and gradient-aware review before a fail/pass decision.
+
 - The layout harness's PASS means controls remain reachable and no unexpected horizontal overflow; it **does not prove the user's near-zero-scroll preference has been achieved**. The measurable residual scroll is a candidate for a follow-up layout optimization, not a fictitious full PASS.
 - The first attempt used the test's default Edge path, which was unavailable on this host; an already-installed Chrome binary was selected instead. No browser installation required.
 
-**Not completed in this pilot:** running each XIAS/Impeccable/UI Skills engine against identical Wails screenshots, actual Wails GUI screenshots/interaction on both operating systems, keyboard/WCAG contrast instrumentation, and real 3MF conversion. Do not claim those from static or headless tests.
+**Not completed in this pilot:** installed native Wails GUI screenshot verification on both operating systems, an Impeccable pinned detector run, UI Skills prompt-agent comparative repair, comprehensive keyboard tests and gradient-aware raster contrast certification, and real 3MF conversion. XIAS five rendered gates *were* executed on the static desktop frontend; that is not the same as a fully verified product. Do not claim those from static or headless tests.
 
 ## Selection by task (no universal winner)
 
