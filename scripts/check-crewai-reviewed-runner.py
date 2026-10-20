@@ -96,8 +96,6 @@ from office_v2_crewai.usage_guard import (  # noqa: E402
     DRIFT_FORBIDDEN_MODULES,
     LEFTOVER_RELS,
     WINDOWS_NETSTAT,
-    WINDOWS_NETTCPIP,
-    WINDOWS_POWERSHELL,
     WINDOWS_SYSTEM_ROOT,
     UsageRefusal,
     _open_trusted_regular,
@@ -124,10 +122,8 @@ from office_v2_crewai.usage_guard import (  # noqa: E402
     module_is_forbidden,
     parse_lsof_listen,
     parse_netstat,
-    parse_powershell_listeners,
     seed_trace_consent,
     tcp_listener_binds,
-    windows_listener_argv,
 )
 
 PACKAGE = SCRIPTS / "office_v2_crewai"
@@ -1036,7 +1032,9 @@ def check_sandbox_mutations() -> None:
     _expect_storage(lambda: assert_cwd("/tmp"), "SANDBOX_CWD_NOT_ON_D")
     _expect_storage(lambda: assert_cwd("D:\\Velvet"), "SANDBOX_CWD_OUTSIDE_ROOT")
     _expect_storage(lambda: enter_sandbox(SANDBOX_ROOT + "\\tmp"), "SANDBOX_CWD_OUTSIDE_ROOT")
-    _expect_storage(lambda: enter_sandbox(SANDBOX_ROOT), "SANDBOX_CWD_ABSENT")
+    from unittest.mock import patch
+    with patch.object(Path, "exists", return_value=False), patch.object(Path, "is_dir", return_value=False):
+        _expect_storage(lambda: enter_sandbox(SANDBOX_ROOT), "SANDBOX_CWD_ABSENT")
     # A D:\Velvet checkout is on D: and outside the sandbox root, so the live
     # cwd is not a stable NOT_ON_D case. These paths are.
     _expect_storage(lambda: enter_sandbox("C:\\Users\\Public"), "SANDBOX_CWD_NOT_ON_D")
@@ -1860,16 +1858,20 @@ def check_listeners() -> None:
     tree = ast.parse(source)
     fn = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "_windows_observe")
     body = ast.get_source_segment(source, fn) or ""
-    if "windows_listener_argv" not in body or "parse_powershell_listeners" not in body:
-        fail("windows observer does not try the absolute powershell object query")
     if "parse_netstat" not in body or "WINDOWS_NETSTAT" not in body or '"-ano"' not in body:
-        fail("windows observer does not fall back to absolute netstat -ano")
-    argv_fn = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "windows_listener_argv")
-    argv_body = ast.get_source_segment(source, argv_fn) or ""
-    if "-NoProfile" not in argv_body or "Get-NetTCPConnection" not in argv_body:
-        fail("powershell listener is not Get-NetTCPConnection -NoProfile")
-    if "WINDOWS_NETTCPIP" not in argv_body or "Get-NetUDPEndpoint" not in argv_body:
-        fail("powershell listener does not import NetTCPIP by absolute path")
+        fail("windows observer does not read absolute netstat -ano")
+    # Refuse the Get-Net observer. A locale-independent proof is netstat column shape only.
+    provider_source = (PACKAGE / "provider.py").read_text(encoding="utf-8")
+    for label, text in (("usage_guard.py", source), ("provider.py", provider_source)):
+        for token in ("Get-NetTCPConnection", "Get-NetUDPEndpoint", "NetTCPIP", "WINDOWS_POWERSHELL", "windows_listener_argv", "parse_powershell_listeners"):
+            if token in text:
+                fail("%s reintroduces the Get-Net listener observer: %s" % (label, token))
+    provider_tree = ast.parse(provider_source)
+    netstat_binds = next(node for node in provider_tree.body if isinstance(node, ast.FunctionDef) and node.name == "_netstat_binds")
+    if "powershell" in (ast.get_source_segment(provider_source, netstat_binds) or "").casefold():
+        fail("_netstat_binds calls powershell; the listener proof is netstat -ano only")
+    if "powershell" in body.casefold():
+        fail("_windows_observe calls powershell; the listener proof is netstat -ano only")
     if "shutil.which" in source or "shutil.which" in (PACKAGE / "provider.py").read_text(encoding="utf-8"):
         fail("listener proof searches PATH")
     if "CreateToolhelp32Snapshot" not in source:
@@ -3189,7 +3191,7 @@ def _load_usage_mutant(source: str, old: str, new: str, name: str):
 
 
 def check_locale_listeners() -> None:
-    """English and Hebrew netstat, a garbage row, and a spoofed object query."""
+    """English and Hebrew netstat, garbage and pinned-binary failure modes."""
     import office_v2_crewai.usage_guard as usage_mod
 
     english = (
@@ -3264,21 +3266,7 @@ def check_locale_listeners() -> None:
         lambda: count_listening_sockets(4, platform="win32", observation={"processes": processes, "netstat": garbage}),
         "PILOT_LISTENER_UNPROVEN",
     )
-    object_rows = "127.0.0.1|11434|0.0.0.0|0|4\n127.0.0.1|11434|127.0.0.1|50000|4\nUDP|0.0.0.0|53|9\n"
-    if tcp_listener_binds(parse_powershell_listeners(object_rows), 11434) != [{"address": "127.0.0.1", "port": 11434}]:
-        fail("Get-NetTCPConnection rows were not classified by remote port 0")
-    _expect_usage(lambda: parse_powershell_listeners(object_rows + "NOT-A-ROW\n"), "PILOT_LISTENER_UNPROVEN")
-    argv = windows_listener_argv(WINDOWS_POWERSHELL)
-    if argv[:4] != [WINDOWS_POWERSHELL, "-NoProfile", "-NonInteractive", "-Command"]:
-        fail("powershell argv was %s" % argv[:4])
-    if WINDOWS_NETTCPIP not in argv[-1] or "Get-NetTCPConnection" not in argv[-1]:
-        fail("powershell command did not name the absolute NetTCPIP module")
-    _expect_usage(lambda: windows_listener_argv("powershell"), "PILOT_LISTENER_UNPROVEN")
-    _expect_usage(
-        lambda: windows_listener_argv("C:\\Windows\\System32\\spoof\\powershell.exe"),
-        "PILOT_LISTENER_UNPROVEN",
-    )
-
+    # Exactly one trusted netstat invocation; no PowerShell object probe.
     calls = []
 
     class _Proc:
@@ -3287,21 +3275,15 @@ def check_locale_listeners() -> None:
             self.returncode = returncode
 
     def binary_of(tool, platform=None):
-        if tool == "powershell":
-            return WINDOWS_POWERSHELL
-        if tool == "netstat":
-            return WINDOWS_NETSTAT
-        return None
+        return WINDOWS_NETSTAT if tool == "netstat" else None
 
-    def run_object(binary, args, path_value=None):
-        calls.append(binary)
-        if binary != WINDOWS_POWERSHELL:
-            fail("netstat ran after a classifiable object query")
-        if path_value != str(Path(WINDOWS_POWERSHELL).parent):
-            fail("object query PATH was not the powershell directory")
-        if args[0] != WINDOWS_POWERSHELL or "-NoProfile" not in args or WINDOWS_NETTCPIP not in args[-1]:
-            fail("object query was not the absolute -NoProfile command")
-        return _Proc("127.0.0.1|11434|0.0.0.0|0|4\n", 0)
+    def run_netstat(binary, args, path_value=None):
+        calls.append((binary, args, path_value))
+        if binary != WINDOWS_NETSTAT or args != [WINDOWS_NETSTAT, "-ano"]:
+            fail("Windows listener probe did not use only pinned netstat -ano")
+        if path_value != str(Path(WINDOWS_NETSTAT).parent):
+            fail("netstat PATH was not System32")
+        return _Proc(hebrew, 0)
 
     saved = (
         usage_mod.trusted_listener_binary,
@@ -3309,59 +3291,43 @@ def check_locale_listeners() -> None:
         usage_mod._windows_processes,
     )
     usage_mod.trusted_listener_binary = binary_of
-    usage_mod.run_trusted_listener = run_object
+    usage_mod.run_trusted_listener = run_netstat
     usage_mod._windows_processes = lambda: processes
     try:
         observed = _windows_observe()
-        if calls != [WINDOWS_POWERSHELL]:
-            fail("object query did not use only powershell.exe: %s" % calls)
+        if len(calls) != 1 or calls[0][0] != WINDOWS_NETSTAT:
+            fail("listener probe invoked something other than pinned netstat")
         if count_windows_listeners(4, observed) != 1:
-            fail("object query listener was not counted")
+            fail("Hebrew netstat observation was not counted")
         calls.clear()
-
-        def run_garbage(binary, args, path_value=None):
-            calls.append(binary)
-            if binary == WINDOWS_POWERSHELL:
-                return _Proc("127.0.0.1|11434|0.0.0.0|0|4\nNOT-A-ROW\n", 0)
-            return _Proc(english, 0)
-
-        usage_mod.run_trusted_listener = run_garbage
-        _expect_usage(_windows_observe, "PILOT_LISTENER_UNPROVEN")
-        if calls != [WINDOWS_POWERSHELL]:
-            fail("an unclassifiable object row fell back to netstat: %s" % calls)
-        calls.clear()
-        _expect_provider(lambda: _netstat_binds(11434), "OLLAMA_BIND_UNPROVEN")
-        if calls != [WINDOWS_POWERSHELL]:
-            fail("Ollama binder fell back after an unclassifiable object row: %s" % calls)
-        calls.clear()
-        usage_mod.run_trusted_listener = run_object
         if _netstat_binds(11434) != [{"address": "127.0.0.1", "port": 11434}]:
-            fail("Ollama binder did not accept the object-query loopback row")
-        if calls != [WINDOWS_POWERSHELL]:
-            fail("Ollama binder ran netstat after a classifiable object query: %s" % calls)
-        calls.clear()
+            fail("Ollama binder did not accept Hebrew netstat loopback")
+        if len(calls) != 1 or calls[0][0] != WINDOWS_NETSTAT:
+            fail("Ollama binder called something other than pinned netstat")
 
-        def run_fallback(binary, args, path_value=None):
-            calls.append((binary, path_value))
-            if binary == WINDOWS_POWERSHELL:
-                return _Proc("", 1)
-            if path_value != str(Path(WINDOWS_NETSTAT).parent):
-                fail("netstat fallback PATH was not System32")
-            return _Proc(hebrew, 0)
+        def run_unclassified(binary, args, path_value=None):
+            return _Proc(garbage, 0)
 
-        usage_mod.run_trusted_listener = run_fallback
-        fallback = _windows_observe()
-        if [item[0] for item in calls] != [WINDOWS_POWERSHELL, WINDOWS_NETSTAT]:
-            fail("failed object query did not fall back to netstat: %s" % calls)
-        if count_windows_listeners(4, fallback) != 1:
-            fail("Hebrew netstat fallback was not counted")
+        usage_mod.run_trusted_listener = run_unclassified
+        _expect_usage(_windows_observe, "PILOT_LISTENER_UNPROVEN")
+        _expect_provider(lambda: _netstat_binds(11434), "OLLAMA_BIND_UNPROVEN")
+
+        def run_nonzero(binary, args, path_value=None):
+            return _Proc(hebrew, 1)
+
+        usage_mod.run_trusted_listener = run_nonzero
+        _expect_usage(_windows_observe, "PILOT_LISTENER_UNPROVEN")
+        _expect_provider(lambda: _netstat_binds(11434), "OLLAMA_BIND_UNPROVEN")
+
+        usage_mod.trusted_listener_binary = lambda *args, **kwargs: None
+        _expect_usage(_windows_observe, "PILOT_LISTENER_UNPROVEN")
+        _expect_provider(lambda: _netstat_binds(11434), "OLLAMA_BIND_UNPROVEN")
     finally:
         (
             usage_mod.trusted_listener_binary,
             usage_mod.run_trusted_listener,
             usage_mod._windows_processes,
         ) = saved
-
     source = (PACKAGE / "usage_guard.py").read_text(encoding="utf-8")
     skipped, skipped_dir = _load_usage_mutant(
         source,

@@ -349,38 +349,20 @@ def _lsof_binds(port: int) -> list:
 
 
 def _netstat_binds(port: int) -> list:
-    """Approved-port binds. Object query first, netstat column shape as fallback."""
+    """Approved-port binds from ``netstat -ano`` column shape only."""
     import subprocess
 
     from office_v2_crewai.usage_guard import (
         WINDOWS_NETSTAT,
-        WINDOWS_POWERSHELL,
         UsageRefusal,
         parse_netstat,
-        parse_powershell_listeners,
         run_trusted_listener,
         tcp_listener_binds,
         trusted_listener_binary,
-        windows_listener_argv,
     )
 
     if isinstance(port, bool) or port != APPROVED_PORT:
         raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
-    powershell = trusted_listener_binary("powershell", "win32")
-    if powershell == WINDOWS_POWERSHELL:
-        try:
-            queried = run_trusted_listener(
-                powershell,
-                windows_listener_argv(powershell),
-                path_value=str(Path(powershell).parent),
-            )
-        except (OSError, subprocess.SubprocessError):
-            queried = None
-        if queried is not None and queried.returncode == 0 and (queried.stdout or "").strip():
-            try:
-                return tcp_listener_binds(parse_powershell_listeners(queried.stdout), port)
-            except UsageRefusal as exc:
-                raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
     binary = trusted_listener_binary("netstat", "win32")
     if binary != WINDOWS_NETSTAT:
         raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")

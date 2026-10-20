@@ -43,9 +43,6 @@ _LISTEN_STATES = {"listen", "listening"}
 DARWIN_LSOF = "/usr/sbin/lsof"
 DARWIN_NETSTAT = "/usr/bin/netstat"
 WINDOWS_NETSTAT = "C:\\Windows\\System32\\netstat.exe"
-WINDOWS_POWERSHELL = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
-WINDOWS_NETTCPIP = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\Modules\\NetTCPIP\\NetTCPIP.psd1"
-WINDOWS_LISTENER_PATH = "C:\\Windows\\System32;C:\\Windows\\System32\\WindowsPowerShell\\v1.0"
 WINDOWS_SYSTEM_ROOT = "C:\\Windows"
 # Foreign address of a TCP listener. The state word is not consulted: a Hebrew
 # UI does not print LISTENING. ``state`` is accepted so a regression to the
@@ -706,72 +703,6 @@ def parse_netstat(text: str) -> dict:
     return {"tcp": tcp, "udp": udp}
 
 
-def windows_listener_argv(powershell: str) -> list[str]:
-    """``-NoProfile`` Get-NetTCPConnection via the absolute System32 binaries.
-
-    The module path is the argument, not a PATH lookup. A different powershell
-    path is refused.
-    """
-    if powershell != WINDOWS_POWERSHELL:
-        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
-    command = (
-        "Import-Module -Name '%s'; "
-        "Get-NetTCPConnection | ForEach-Object { "
-        "'{0}|{1}|{2}|{3}|{4}' -f $_.LocalAddress,$_.LocalPort,$_.RemoteAddress,$_.RemotePort,$_.OwningProcess "
-        "}; "
-        "Get-NetUDPEndpoint | ForEach-Object { "
-        "'UDP|{0}|{1}|{2}' -f $_.LocalAddress,$_.LocalPort,$_.OwningProcess "
-        "}"
-    ) % WINDOWS_NETTCPIP
-    return [powershell, "-NoProfile", "-NonInteractive", "-Command", command]
-
-
-def parse_powershell_listeners(text: str) -> dict:
-    """Parse the fixed ``local|port|remote|rport|pid`` rows. A bad row fails all."""
-    if not isinstance(text, str) or not text.strip():
-        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
-    tcp = []
-    udp = []
-    for line in text.splitlines():
-        if not line.strip():
-            continue
-        parts = [part.strip() for part in line.strip().split("|")]
-        if parts and parts[0] == "UDP":
-            row = None
-            if len(parts) == 4 and parts[1] and parts[2].isdigit() and parts[3].isdigit():
-                row = {"pid": int(parts[3])}
-            if row is None:
-                _unclassified_row()
-                continue
-            udp.append(row)
-            continue
-        row = None
-        if (
-            len(parts) == 5
-            and parts[0]
-            and parts[1].isdigit()
-            and parts[2]
-            and parts[3].isdigit()
-            and parts[4].isdigit()
-        ):
-            foreign_host = parts[2].strip("[]").lower()
-            listening = _tcp_listening(foreign_host, parts[3], "")
-            row = {
-                "pid": int(parts[4]),
-                "state": "LISTENING" if listening else "CONNECTED",
-                "host": parts[0].strip("[]"),
-                "port": int(parts[1]),
-                "listening": listening,
-            }
-        if row is None:
-            _unclassified_row()
-            continue
-        tcp.append(row)
-    if not tcp and not udp:
-        raise UsageRefusal("PILOT_LISTENER_UNPROVEN")
-    return {"tcp": tcp, "udp": udp}
-
-
 def tcp_listener_binds(parsed: dict, port: int) -> list:
     """Listening TCP rows for the approved Ollama port only. 11435 is refused."""
     if not isinstance(parsed, dict) or isinstance(port, bool) or not isinstance(port, int):
@@ -901,8 +832,6 @@ def trusted_listener_binary(tool: str, platform: str | None = None) -> str | Non
         candidate = DARWIN_NETSTAT
     elif tool == "netstat" and plat == "win32":
         candidate = WINDOWS_NETSTAT
-    elif tool == "powershell" and plat == "win32":
-        candidate = WINDOWS_POWERSHELL
     else:
         return None
     try:
@@ -1054,63 +983,36 @@ def _windows_processes() -> list:
 
 
 def _windows_observe(spawn=None) -> dict:
-    """Prove listeners without trusting a localized netstat banner.
+    """Prove listeners from ``netstat -ano`` by column shape only.
 
-    The first query is ``powershell.exe -NoProfile`` by full path, importing
-    ``NetTCPIP.psd1`` by full path and reading ``Get-NetTCPConnection``. A
-    missing binary, a nonzero status, an empty stdout, or a timeout falls
-    back to ``C:\\Windows\\System32\\netstat.exe -ano``. A row that cannot be
-    classified fails the whole check and does not fall back. The pilot tree
-    comes from Toolhelp. Empty or unrecognized text stays unproven.
+    The socket rows come from ``C:\\Windows\\System32\\netstat.exe -ano``. No
+    object query runs. A missing binary, a nonzero status, empty
+    stdout, or a row that cannot be classified stays unproven. The pilot tree
+    comes from Toolhelp. Nothing here reads a localized banner or state word.
     """
     import subprocess
 
     if spawn is None:
-        parsed = None
-        powershell = trusted_listener_binary("powershell", "win32")
-        if powershell == WINDOWS_POWERSHELL:
-            try:
-                queried = run_trusted_listener(
-                    powershell,
-                    windows_listener_argv(powershell),
-                    path_value=str(Path(powershell).parent),
-                )
-            except UsageRefusal:
-                raise
-            except (OSError, subprocess.SubprocessError, UnicodeError):
-                queried = None
-            if queried is not None:
-                query_rc = queried.returncode
-                query_out = queried.stdout or ""
-                if (
-                    not isinstance(query_rc, bool)
-                    and isinstance(query_rc, int)
-                    and query_rc == 0
-                    and isinstance(query_out, str)
-                    and query_out.strip()
-                ):
-                    parsed = parse_powershell_listeners(query_out)
-        if parsed is None:
-            netstat = trusted_listener_binary("netstat", "win32")
-            if netstat != WINDOWS_NETSTAT:
-                raise _unproven(listener_reason("netstat", "missing"))
-            try:
-                net = run_trusted_listener(
-                    netstat, [netstat, "-ano"], path_value=str(Path(netstat).parent),
-                )
-            except UsageRefusal:
-                raise
-            except (OSError, subprocess.SubprocessError, UnicodeError) as exc:
-                raise _unproven(listener_reason("netstat", "child", rc=type(exc).__name__)) from exc
-            net_out, net_rc = net.stdout or "", net.returncode
-            if isinstance(net_rc, bool) or not isinstance(net_rc, int) or net_rc != 0:
-                raise _unproven(listener_reason("netstat", "status", rc=net_rc, stdout=net_out))
-            if not isinstance(net_out, str) or not net_out.strip():
-                raise _unproven(listener_reason("netstat", "empty"))
-            try:
-                parsed = parse_netstat(net_out)
-            except UsageRefusal as exc:
-                raise _unproven(listener_reason("netstat", "parse")) from exc
+        netstat = trusted_listener_binary("netstat", "win32")
+        if netstat != WINDOWS_NETSTAT:
+            raise _unproven(listener_reason("netstat", "missing"))
+        try:
+            net = run_trusted_listener(
+                netstat, [netstat, "-ano"], path_value=str(Path(netstat).parent),
+            )
+        except UsageRefusal:
+            raise
+        except (OSError, subprocess.SubprocessError, UnicodeError) as exc:
+            raise _unproven(listener_reason("netstat", "child", rc=type(exc).__name__)) from exc
+        net_out, net_rc = net.stdout or "", net.returncode
+        if isinstance(net_rc, bool) or not isinstance(net_rc, int) or net_rc != 0:
+            raise _unproven(listener_reason("netstat", "status", rc=net_rc, stdout=net_out))
+        if not isinstance(net_out, str) or not net_out.strip():
+            raise _unproven(listener_reason("netstat", "empty"))
+        try:
+            parsed = parse_netstat(net_out)
+        except UsageRefusal as exc:
+            raise _unproven(listener_reason("netstat", "parse")) from exc
         try:
             processes = _windows_processes()
         except UsageRefusal:
