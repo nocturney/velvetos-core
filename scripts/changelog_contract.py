@@ -1106,7 +1106,7 @@ def _selftest(bad: list[str], counted: list[int]) -> int:
         "## [Unreleased]\n\nUse " + chr(96) + "<h2>1.0.0</h2>" + chr(96)
         + " as documentation.\n\n" + bullet
     )
-    escaped_h2_doc = "## [Unreleased]\n\n\\<h2>1.0.0</h2> is escaped.\n\n" + bullet
+    escaped_h2_doc = "## [Unreleased]\n\n\\<h2>1.0.0\\</h2> is escaped.\n\n" + bullet
     probes.extend([
         (gate([("M", "CHANGELOG.md", literal_h2_doc), deleted]) == 0,
          "a literal HTML h2 in inline code wrongly ended Unreleased"),
