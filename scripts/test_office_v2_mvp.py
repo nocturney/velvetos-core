@@ -7,7 +7,10 @@ import json
 import shutil
 import tempfile
 import unittest
-from datetime import datetime, timezone
+import io
+from contextlib import redirect_stdout
+from unittest import mock
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -394,6 +397,178 @@ class OfficeV2MvpFixtureTest(unittest.TestCase):
         blob = "\n".join(path.read_text(encoding="utf-8").lower() for path in locks)
         self.assertNotIn("crewai", blob)
         self.assertNotIn("langgraph", blob)
+
+
+FETCHED = "2026-10-18T11:55:00Z"
+
+
+def fresh_snapshot() -> dict:
+    snapshot = load_fixture()
+    snapshot["fetched_at"] = FETCHED
+    return snapshot
+
+
+def with_run(snapshot: dict, **fields) -> dict:
+    run = dict(snapshot["check_all_runs"][MVP.CHECK_ALL_REPO]["workflow_runs"][0], **fields)
+    snapshot["check_all_runs"][MVP.CHECK_ALL_REPO] = {"workflow_runs": [run]}
+    return snapshot
+
+
+class OfficeV2OverviewTest(unittest.TestCase):
+    def test_overview_keeps_readonly_flags_and_machines_unknown(self) -> None:
+        board = MVP.build_board(fresh_snapshot(), NOW)
+        overview = board["overview"]
+        self.assertTrue(board["read_only"])
+        self.assertFalse(board["writes_to_github"])
+        self.assertFalse(board["llm_calls"])
+        self.assertEqual(overview["machines"]["state"], "UNKNOWN")
+        self.assertEqual(overview["agents"]["state"], "FRESH")
+        self.assertEqual(overview["jobs"]["state"], "PASS")
+        self.assertEqual(overview["jobs"]["freshness"], "FRESH")
+        self.assertEqual(overview["health"]["state"], "FRESH")
+
+    def test_freshness_is_deterministic_for_missing_invalid_naive_and_future(self) -> None:
+        as_of = NOW.isoformat()
+        cases = {
+            "2026-10-18T11:00:00Z": "FRESH",
+            "2026-10-17T12:00:00Z": "FRESH",
+            "2026-10-17T11:59:00Z": "STALE",
+            "2026-10-18T13:00:00Z": "UNKNOWN",
+            "2026-10-18T12:00:00": "UNKNOWN",
+            "not-a-time": "UNKNOWN",
+            "": "UNKNOWN",
+            None: "UNKNOWN",
+            1234: "UNKNOWN",
+        }
+        for stamp, expected in cases.items():
+            with self.subTest(stamp=stamp):
+                self.assertEqual(MVP.freshness(stamp, as_of), expected)
+        self.assertEqual(MVP.freshness("2026-10-18T11:00:00Z", None), "UNKNOWN")
+
+    def test_missing_readback_timestamp_is_unknown_not_healthy(self) -> None:
+        board = MVP.build_board(load_fixture(), NOW)
+        overview = board["overview"]
+        self.assertIsNone(board["fetched_at"])
+        self.assertEqual(overview["agents"]["state"], "UNKNOWN")
+        self.assertEqual(overview["health"]["state"], "UNKNOWN")
+        self.assertIn("UNKNOWN", MVP.render_markdown(board))
+
+    def test_old_readback_marks_agents_jobs_and_health_stale(self) -> None:
+        snapshot = fresh_snapshot()
+        snapshot["fetched_at"] = "2026-10-16T09:00:00Z"
+        overview = MVP.build_board(snapshot, NOW)["overview"]
+        self.assertEqual(overview["agents"]["state"], "STALE")
+        self.assertEqual(overview["jobs"]["freshness"], "STALE")
+        self.assertEqual(overview["health"]["state"], "STALE")
+
+    def test_old_check_all_run_is_stale_not_fresh(self) -> None:
+        overview = MVP.build_board(with_run(fresh_snapshot(), created_at="2026-10-10T08:00:00Z"), NOW)["overview"]
+        self.assertEqual(overview["jobs"]["state"], "PASS")
+        self.assertEqual(overview["jobs"]["freshness"], "STALE")
+        self.assertEqual(overview["health"]["state"], "STALE")
+
+    def test_invalid_run_timestamp_is_unknown_not_healthy(self) -> None:
+        overview = MVP.build_board(with_run(fresh_snapshot(), created_at="yesterday"), NOW)["overview"]
+        self.assertEqual(overview["jobs"]["freshness"], "UNKNOWN")
+        self.assertEqual(overview["health"]["state"], "UNKNOWN")
+
+    def test_missing_check_all_run_is_unknown_not_healthy(self) -> None:
+        snapshot = fresh_snapshot()
+        snapshot["check_all_runs"] = {}
+        board = MVP.build_board(snapshot, NOW)
+        self.assertEqual(board["overview"]["jobs"]["state"], "UNKNOWN")
+        self.assertEqual(board["overview"]["health"]["state"], "UNKNOWN")
+        self.assertEqual(board["overview"]["agents"]["state"], "FRESH")
+        self.assertIn("no check-all run read", MVP.render_markdown(board))
+
+    def test_denied_check_all_run_is_unknown(self) -> None:
+        snapshot = fresh_snapshot()
+        snapshot["check_all_runs"] = {MVP.CHECK_ALL_REPO: {"denied": True, "status": 403}}
+        jobs = MVP.build_board(snapshot, NOW)["overview"]["jobs"]
+        self.assertEqual(jobs["state"], "UNKNOWN")
+        self.assertIn("denied (HTTP 403)", jobs["reason"])
+
+    def test_failed_run_is_fail_and_in_progress_run_is_not_pass(self) -> None:
+        failed = MVP.build_board(with_run(fresh_snapshot(), conclusion="failure"), NOW)
+        self.assertEqual(failed["overview"]["jobs"]["state"], "FAIL")
+        running = MVP.build_board(with_run(fresh_snapshot(), status="in_progress", conclusion=None), NOW)
+        self.assertEqual(running["overview"]["jobs"]["state"], "IN_PROGRESS")
+
+    def test_failed_check_all_does_not_change_agent_counts(self) -> None:
+        passing = MVP.build_board(fresh_snapshot(), NOW)["overview"]["agents"]["counts"]
+        failing = MVP.build_board(with_run(fresh_snapshot(), conclusion="failure"), NOW)
+        self.assertEqual(failing["overview"]["agents"]["counts"], passing)
+
+    def test_public_copy_counts_are_recomputed_after_private_rows_leave(self) -> None:
+        full = MVP.build_board(fresh_snapshot(), NOW)
+        full_gemini = full["overview"]["agents"]["counts"]["gemini"]
+        outside = Path(tempfile.mkdtemp())
+        try:
+            _, json_path = MVP.write_board(full, ROOT, dest=outside, omit_private=True)
+            blob = json_path.read_text(encoding="utf-8")
+            public = json.loads(blob)
+        finally:
+            shutil.rmtree(outside)
+        self.assertFalse(MVP.board_text_leaks_private(blob))
+        public_counts = public["overview"]["agents"]["counts"]
+        self.assertGreater(full_gemini, public_counts["gemini"])
+        recomputed = {agent: 0 for agent in (*MVP.AGENTS, "unassigned")}
+        for name, group in public["sections"].items():
+            if name == "done_today":
+                continue
+            rows = [r for items in group.values() for r in items] if isinstance(group, dict) else group
+            for row in rows:
+                if row["kind"] in {"pull_request", "claim"}:
+                    agent = row["agent"] if row["agent"] in MVP.AGENTS else "unassigned"
+                    recomputed[agent] += 1
+        self.assertEqual(public_counts, recomputed)
+
+    def test_public_copy_overview_matches_a_public_only_snapshot(self) -> None:
+        private = "nocturney/velvetos-velvet-factory"
+        public_snapshot = fresh_snapshot()
+        public_snapshot["pulls"].pop(private)
+        public_snapshot["merged_pulls"].pop(private)
+        public_snapshot["repo_access"].pop(private)
+        expected = MVP.build_board(public_snapshot, NOW)["overview"]["agents"]["counts"]
+        filtered = MVP.omit_private_rows(MVP.build_board(fresh_snapshot(), NOW))
+        self.assertEqual(filtered["overview"]["agents"]["counts"], expected)
+
+    def test_live_readback_clock_is_captured_after_fetch(self) -> None:
+        """Regression: a real GET's fetched_at must not be after board as_of."""
+        class TickingClock(datetime):
+            calls = 0
+
+            @classmethod
+            def now(cls, tz=None):
+                cls.calls += 1
+                return NOW + timedelta(minutes=cls.calls)
+
+        def fake_fetch() -> dict:
+            snap = load_fixture()
+            snap["fetched_at"] = TickingClock.now(timezone.utc).isoformat()
+            return snap
+
+        capture = io.StringIO()
+        with mock.patch.object(MVP, "datetime", TickingClock), mock.patch.object(
+            MVP, "fetch_snapshot", side_effect=fake_fetch
+        ), redirect_stdout(capture):
+            self.assertEqual(MVP.main([]), 0)
+        self.assertEqual(TickingClock.calls, 2)
+        self.assertIn("סוכנים · Agents: FRESH", capture.getvalue())
+        self.assertIn("בריאות · Health: FRESH", capture.getvalue())
+
+    def test_overview_markdown_is_bilingual_and_names_all_four_sources(self) -> None:
+        text = MVP.render_markdown(MVP.build_board(fresh_snapshot(), NOW))
+        for heading in (
+            "סקירה · Overview",
+            "סוכנים · Agents",
+            "עבודות · Jobs",
+            "מכונות · Machines",
+            "בריאות · Health",
+        ):
+            self.assertIn(heading, text)
+        self.assertIn("מכונות · Machines: UNKNOWN", text)
+        self.assertNotIn("velvetos-velvet-factory", text.split("## סקירה")[1].split("## מחכה")[0])
 
 
 if __name__ == "__main__":

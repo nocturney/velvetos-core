@@ -20,7 +20,7 @@ import re
 import subprocess
 import sys
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -41,6 +41,9 @@ QUEUE_REPO = "nocturney/velvetos-core"
 QUEUE_ISSUE = 612
 CHECK_ALL_REPO = "nocturney/velvetos-core"
 SCHEMA = "velvetos.office-v2.board.v0"
+STALE_AFTER = timedelta(hours=24)
+FRESHNESS_RANK = {"FRESH": 0, "STALE": 1, "UNKNOWN": 2}
+PASSING_CONCLUSIONS = {"success", "skipped", "neutral"}
 RESEARCH_COMMENT = (
     "https://github.com/nocturney/velvetos-core/issues/595#issuecomment-6249011608"
 )
@@ -117,7 +120,7 @@ def excerpt(text: str, limit: int = 180) -> str:
 
 
 def parse_time(value: str | None) -> datetime | None:
-    if not value:
+    if not isinstance(value, str) or not value:
         return None
     try:
         return datetime.fromisoformat(value.replace("Z", "+00:00"))
@@ -719,10 +722,12 @@ def build_board(snapshot: dict, now: datetime) -> dict:
 
     generated = now.astimezone(JERUSALEM)
     lostack = cp083_lostack_view()
-    return {
+    board = {
         "schema": SCHEMA,
         "generated_at": generated.isoformat(timespec="minutes"),
         "generated_at_jerusalem": generated.strftime("%Y-%m-%d %H:%M") + " Asia/Jerusalem",
+        "as_of": now.astimezone(timezone.utc).isoformat(timespec="seconds"),
+        "fetched_at": snapshot.get("fetched_at"),
         "timezone": "Asia/Jerusalem",
         "read_only": True,
         "writes_to_github": False,
@@ -744,6 +749,82 @@ def build_board(snapshot: dict, now: datetime) -> dict:
             "research_comment_id": 6249011608,
             "doc": "docs/office-v2/NEXT.md",
         },
+    }
+    board["overview"] = build_overview(board)
+    return board
+
+
+def freshness(stamp: str | None, as_of: str | None) -> str:
+    """FRESH within STALE_AFTER of as_of, STALE when older, UNKNOWN when missing, naive, invalid or in the future."""
+    moment = parse_time(stamp)
+    reference = parse_time(as_of)
+    if moment is None or reference is None or moment.tzinfo is None or reference.tzinfo is None:
+        return "UNKNOWN"
+    age = reference - moment
+    if age < timedelta(0):
+        return "UNKNOWN"
+    return "STALE" if age > STALE_AFTER else "FRESH"
+
+
+def _active_rows(board: dict) -> list[dict]:
+    sections = board.get("sections") or {}
+    rows: list[dict] = []
+    for name, group in sections.items():
+        if name == "done_today":
+            continue
+        if name == "in_progress" and isinstance(group, dict):
+            for items in group.values():
+                rows.extend(items)
+        elif isinstance(group, list):
+            rows.extend(group)
+    return rows
+
+
+def build_overview(board: dict) -> dict:
+    """Summarise only the rows this board holds. Call it after any private-row filter."""
+    as_of = board.get("as_of")
+    fetched = board.get("fetched_at")
+    read_state = freshness(fetched, as_of)
+    access = board.get("repo_access") or {}
+    denied = sum(1 for row in access.values() if isinstance(row, dict) and row.get("ok") is False)
+    counts = {agent: 0 for agent in (*AGENTS, "unassigned")}
+    for row in _active_rows(board):
+        if row.get("kind") not in {"pull_request", "claim"}:
+            continue
+        agent = row.get("agent") if row.get("agent") in AGENTS else "unassigned"
+        counts[agent] += 1
+    if denied:
+        agents = {"state": "UNKNOWN", "reason": f"{denied} repo read(s) denied", "counts": counts}
+    elif read_state == "UNKNOWN":
+        agents = {"state": "UNKNOWN", "reason": "last-verified timestamp missing or invalid", "counts": counts}
+    else:
+        reason = "last GitHub readback older than 24h" if read_state == "STALE" else ""
+        agents = {"state": read_state, "reason": reason, "counts": counts}
+
+    run = board.get("check_all_main") or {}
+    if run.get("denied"):
+        jobs = {"state": "UNKNOWN", "freshness": "UNKNOWN", "reason": f"denied (HTTP {run.get('http_status') or '?'})"}
+    elif not run.get("status"):
+        jobs = {"state": "UNKNOWN", "freshness": "UNKNOWN", "reason": "no check-all run read"}
+    else:
+        if run.get("status") != "completed":
+            state = "IN_PROGRESS"
+        else:
+            state = "PASS" if run.get("conclusion") in PASSING_CONCLUSIONS else "FAIL"
+        run_state = freshness(run.get("created_at"), as_of)
+        jobs_state = max(read_state, run_state, key=FRESHNESS_RANK.get)
+        jobs = {"state": state, "freshness": jobs_state, "reason": ""}
+        if jobs_state == "UNKNOWN":
+            jobs["reason"] = "run or readback timestamp missing or invalid"
+
+    health = max(agents["state"], jobs["freshness"], key=FRESHNESS_RANK.get)
+    return {
+        "as_of": as_of,
+        "last_verified": fetched,
+        "agents": agents,
+        "jobs": jobs,
+        "machines": {"state": "UNKNOWN", "reason": "no verified public machine feed is wired into this board"},
+        "health": {"state": health, "basis": "worst of agents and jobs freshness"},
     }
 
 
@@ -788,6 +869,45 @@ def _fmt_item(row: dict) -> str:
     return line
 
 
+def _overview_lines(board: dict) -> list[str]:
+    overview = board.get("overview") or {}
+    agents = overview.get("agents") or {}
+    jobs = overview.get("jobs") or {}
+    machines = overview.get("machines") or {}
+    health = overview.get("health") or {}
+    verified = jerusalem(overview.get("last_verified")) or "UNKNOWN"
+    counts = " · ".join(f"{agent} {n}" for agent, n in (agents.get("counts") or {}).items() if n)
+    agent_bits = [agents.get("state") or "UNKNOWN"]
+    if agents.get("reason"):
+        agent_bits.append(agents["reason"])
+    if agents.get("state") != "UNKNOWN":
+        agent_bits.append(counts or "0 active")
+    agent_bits.append(f"verified {verified}")
+    job_bits = [jobs.get("state") or "UNKNOWN"]
+    if jobs.get("reason"):
+        job_bits.append(jobs["reason"])
+    run = board.get("check_all_main") or {}
+    if run.get("status") and not run.get("denied"):
+        sha = (run.get("head_sha") or "")[:12]
+        job_bits.append(f"check-all on main {run.get('conclusion') or run.get('status')}")
+        if sha:
+            job_bits.append(f"[{sha}]({run['url']})" if run.get("url") else f"`{sha}`")
+        job_bits.append(f"freshness {jobs.get('freshness') or 'UNKNOWN'}")
+        if run.get("created_at_jerusalem"):
+            job_bits.append(run["created_at_jerusalem"])
+    machine_bits = [machines.get("state") or "UNKNOWN", machines.get("reason") or ""]
+    health_bits = [health.get("state") or "UNKNOWN", health.get("basis") or "", f"verified {verified}"]
+    return [
+        "## סקירה · Overview",
+        "",
+        f"- סוכנים · Agents: {' · '.join(agent_bits)}",
+        f"- עבודות · Jobs: {' · '.join(job_bits)}",
+        f"- מכונות · Machines: {' · '.join(bit for bit in machine_bits if bit)}",
+        f"- בריאות · Health: {' · '.join(bit for bit in health_bits if bit)}",
+        "",
+    ]
+
+
 def render_markdown(board: dict) -> str:
     sections = board["sections"]
     lines = [
@@ -827,6 +947,7 @@ def render_markdown(board: dict) -> str:
         else:
             lines.append(f"- גישה · access {repo}: ok")
     lines.append("")
+    lines.extend(_overview_lines(board))
 
     def block(title: str, rows: list[dict]) -> None:
         lines.append(f"## {title}")
@@ -958,6 +1079,8 @@ def omit_private_rows(board: dict) -> dict:
             del access[repo]
     board["repo_access"] = access
     board["private_rows_omitted"] = True
+    # Counts must come from the filtered rows, never from the pre-filter board.
+    board["overview"] = build_overview(board)
     return board
 
 
@@ -1082,6 +1205,7 @@ def fetch_snapshot() -> dict:
             )
     elif isinstance(runs.get("data"), dict):
         snapshot["check_all_runs"][CHECK_ALL_REPO] = runs["data"]
+    snapshot["fetched_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     return snapshot
 
 
@@ -1112,11 +1236,16 @@ def main(argv: list[str] | None = None) -> int:
             print("FAIL office-v2-mvp: --now is not ISO-8601", file=sys.stderr)
             return 2
     else:
-        now = datetime.now(timezone.utc)
+        now = None
     if args.fixture:
         snapshot = json.loads(args.fixture.read_text(encoding="utf-8"))
     else:
         snapshot = fetch_snapshot()
+    # The live readback records fetched_at at the END of GitHub GETs.
+    # Capture as_of afterward, or every successful read appears to be
+    # in the future and the published Health remains UNKNOWN.
+    if now is None:
+        now = datetime.now(timezone.utc)
     board = build_board(snapshot, now)
     if args.write:
         md_path, json_path = write_board(
