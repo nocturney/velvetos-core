@@ -106,6 +106,26 @@ def _nid(label: str, key: str) -> str:
     return f"{label}:{key}"
 
 
+def _skill_text(root: Path, skill: dict[str, Any]) -> str:
+    """Search text for a Skill row. Body excerpt only for repository rows inside root.
+
+    External candidates have no repository body and stay description-only. A canonical
+    file that resolves outside root (symlink escape) is never read.
+    """
+    base = f"{skill['id']} {skill['description']}"
+    rel = skill.get("canonical_file")
+    if skill.get("origin") != "REPO" or not rel:
+        return base
+    try:
+        resolved = (root / rel).resolve(strict=True)
+    except OSError:
+        return base
+    if not resolved.is_file() or not resolved.is_relative_to(root.resolve()):
+        return base
+    body = resolved.read_text(encoding="utf-8", errors="replace")
+    return f"{base} {body[:800]}"
+
+
 def build_graph(root: Path = ROOT) -> Graph:
     manifest = _load_json(root / "packages" / "manifest.json")
     desk = _load_json(resolve_surface(root, "toolDesk", instance_id="velvet-factory", env={}))
@@ -205,7 +225,7 @@ def build_graph(root: Path = ROOT) -> Graph:
                 id=_nid("Skill", key),
                 label="Skill",
                 name=skill["name"],
-                text=f"{key} {skill['description']}",
+                text=_skill_text(root, skill),
                 props={"path": rel, "onDesk": bool(rel and rel in listed_skills),
                        "origin": skill["origin"], "status": skill["status"],
                        "source_refs": skill["source_refs"]},
