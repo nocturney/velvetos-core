@@ -1906,6 +1906,29 @@ def check_listeners() -> None:
         fail("the module guard ran after the listener check")
 
 
+def check_listener_unicode_refusals() -> None:
+    """A decoding failure in a native listener tool must carry a refusal code."""
+    import office_v2_crewai.usage_guard as guard
+
+    previous_run = guard.run_trusted_listener
+    previous_binary = guard.trusted_listener_binary
+
+    def undecodable(*args, **kwargs):
+        raise UnicodeDecodeError("utf-8", bytes([255]), 0, 1, "invalid native output")
+
+    def pinned_binary(tool, platform):
+        return WINDOWS_NETSTAT if tool == "netstat" else DARWIN_LSOF
+
+    guard.run_trusted_listener = undecodable
+    guard.trusted_listener_binary = pinned_binary
+    try:
+        _expect_provider(lambda: _netstat_binds(APPROVED_PORT), "OLLAMA_BIND_UNPROVEN")
+        _expect_provider(lambda: _lsof_binds(APPROVED_PORT), "OLLAMA_BIND_UNPROVEN")
+    finally:
+        guard.run_trusted_listener = previous_run
+        guard.trusted_listener_binary = previous_binary
+
+
 def check_windows_listener_pins() -> None:
     """Pins the three Windows checks a source-only scan can leave alive.
 
@@ -3710,6 +3733,7 @@ def main() -> int:
     check_spawn_hygiene()
     check_execute()
     check_listeners()
+    check_listener_unicode_refusals()
     check_locale_listeners()
     check_windows_listener_pins()
     check_trusted_listener_binaries()

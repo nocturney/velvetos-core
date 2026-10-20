@@ -339,7 +339,9 @@ def _lsof_binds(port: int) -> list:
             binary,
             [binary, "-nP", "-iTCP:%s" % port, "-sTCP:LISTEN"],
         )
-    except (OSError, subprocess.SubprocessError) as exc:
+    except (OSError, subprocess.SubprocessError, UnicodeError) as exc:
+        # Native listener output may use an unexpected Windows OEM code page.
+        # Text decoding errors are refusals, never unclassified exceptions.
         raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
     if proc.returncode == 1 and not (proc.stdout or "").strip() and not (proc.stderr or "").strip():
         return []
@@ -370,7 +372,9 @@ def _netstat_binds(port: int) -> list:
         proc = run_trusted_listener(
             binary, [binary, "-ano"], path_value=str(Path(binary).parent),
         )
-    except (OSError, subprocess.SubprocessError) as exc:
+    except (OSError, subprocess.SubprocessError, UnicodeError) as exc:
+        # Native listener output may use an unexpected Windows OEM code page.
+        # Text decoding errors are refusals, never unclassified exceptions.
         raise ProviderRefusal("OLLAMA_BIND_UNPROVEN") from exc
     if proc.returncode != 0:
         raise ProviderRefusal("OLLAMA_BIND_UNPROVEN")
