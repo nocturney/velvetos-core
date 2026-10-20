@@ -1,0 +1,1 @@
+- 2026-10-19 - **Spawn-home cleanup:** preserve SIGTERM exit semantics while releasing process-owned sandbox home/temp, and add chmod-before-rmtree and SIGTERM load-bearing mutation tests without overriding existing process signal handlers.
