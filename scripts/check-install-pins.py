@@ -25,9 +25,11 @@ step is unclassified. A `shlex` failure refuses the step too.
 `requirements-google-clients.py311.lock` must keep the direct pins from
 `requirements-google-clients.txt`, and every lock pin must have a sha256
 hash. INSTALL_SPEC_ALLOWLIST starts empty; a non-empty committed set fails
-this sensor. An apt ffmpeg install must be one exact command sequence on
-ubuntu-24.04. In workflows and composite actions, every apt and aptitude
-command, every apt-get command other than update/remove/purge, and
+this sensor. An apt ffmpeg install must be one exact step on ubuntu-24.04: the
+pinned lock install, then the exact command sequence, with only `name` and `run`
+keys. An approved install line may appear once in the job, in that step. In
+workflows and composite actions, every apt and aptitude command, every apt-get
+command other than update/remove/purge, and
 dpkg/dpkg-deb install, unpack, and extract, are refused unless the simple
 command is an exact allowlisted line. The allowlist is the hashed ffmpeg
 download and the verified deb install. An apt-get option outside a short
@@ -166,11 +168,22 @@ APT_ALLOWED_INSTALLS = frozenset({
     APT_FFMPEG_COMMANDS[1],
     APT_FFMPEG_COMMANDS[-1],
 })
-# The only files that may carry the hashed ffmpeg lines (repo-relative paths).
-HASHED_FFMPEG_WORKFLOWS = frozenset({
-    ".github/workflows/check-all.yml",
-    ".github/workflows/velvetos-research.yml",
-})
+# The only files that may carry the hashed ffmpeg lines (repo-relative paths),
+# each with the lock install that must run first in the same step. That step
+# is exactly this prologue, then APT_FFMPEG_COMMANDS, with only `name` and
+# `run` keys. A `set +e`, `cd`, `shell:`, `working-directory:`, or
+# `continue-on-error:` changes how the verifier and install run, so it is refused.
+HASHED_FFMPEG_PROLOGUE = {
+    ".github/workflows/check-all.yml": (
+        "python3 -m pip install --disable-pip-version-check --require-hashes "
+        "-r requirements-sensors.py311.lock",
+    ),
+    ".github/workflows/velvetos-research.yml": (
+        "python3 -m pip install --disable-pip-version-check --require-hashes "
+        "-r requirements-sensors.py312.lock",
+    ),
+}
+HASHED_FFMPEG_WORKFLOWS = frozenset(HASHED_FFMPEG_PROLOGUE)
 
 
 def fail(msg: str) -> None:
@@ -1273,8 +1286,16 @@ def apt_ffmpeg_problems(text: str, *, path: str) -> list[str]:
         runs_on = job_runs_on(block)
         if runs_on != APT_RUNS_ON:
             problems.append(f"{path} job {job} runs-on {runs_on!r} is not {APT_RUNS_ON}")
-        if count_sequence(commands, APT_FFMPEG_COMMANDS) != 1:
+        exact_steps = sum(_sequence_step(chunk, path) for chunk in _step_chunks(block))
+        if exact_steps != 1:
             problems.append(f"{path} job {job} apt ffmpeg command sequence mismatch")
+        # An approved line is allowed once, in the pinned step. A copy in any
+        # other step, or in a pwsh step, is a second install of the same deb.
+        for line in sorted(APT_ALLOWED_INSTALLS):
+            if commands.count(line) != 1:
+                problems.append(
+                    f"{path} job {job} approved apt line count {commands.count(line)}: {line}"
+                )
         for command in commands:
             if apt_re.search(command) and command not in APT_ALLOWED_INSTALLS:
                 problems.append(f"{path} job {job} unexpected apt-get install: {command}")
@@ -1791,43 +1812,54 @@ def action_files() -> list[Path]:
     return found
 
 
-def _sequence_job(block: str) -> bool:
-    """True when this job carries the hashed ffmpeg sequence exactly once."""
-    lines = [line for script in _posix_scripts(block) for line in script_commands(script)]
-    return count_sequence(lines, APT_FFMPEG_COMMANDS) == 1
+def _sequence_step(chunk: str, path: str) -> bool:
+    """True when this step is exactly the pinned prologue, then the hashed ffmpeg sequence.
+
+    The step must be POSIX (no `shell:` or a bare bash/sh), its only keys
+    are `name` and `run`, and its commands equal the prologue plus the
+    sequence line for line. Any other line, shell option, cd, or key fails.
+    """
+    prologue = HASHED_FFMPEG_PROLOGUE.get(path)
+    if prologue is None or not _posix_step(chunk):
+        return False
+    keys = set(re.findall(r"(?m)^\s*(?:-\s+)?([A-Za-z][\w-]*):(?:\s|$)", chunk))
+    if keys != {"name", "run"}:
+        return False
+    lines = [line for script in run_scripts(chunk) for line in script_commands(script)]
+    return lines == [*prologue, *APT_FFMPEG_COMMANDS]
 
 
 def ffmpeg_side_install_problems(text: str, *, path: str) -> list[str]:
     """Allow only the exact hashed ffmpeg commands. Every other install is refused.
 
     The exemption is granted only inside the two verified ffmpeg workflows and
-    only in their sequence job. The same lines in any other file, job or
-    composite action are ordinary installs.
+    only in their one pinned step (see _sequence_step). The same lines in any
+    other file, job, step, shell or composite action are ordinary installs.
     """
     problems: list[str] = []
     blocks = job_blocks(text) or [("workflow", text)]
     approved = _approved_commands()
-    hashed = path in HASHED_FFMPEG_WORKFLOWS
     for job, block in blocks:
-        exempt = hashed and _sequence_job(block)
-        for script in run_scripts(block):
-            for command in split_commands(join_continuations(script)):
-                command = strip_comment(command)
-                if not command or (exempt and command in approved):
-                    continue
-                # Exact diagnostics from the hashed-ffmpeg gate use the word
-                # "apt" inside a printf format string. They cannot execute
-                # apt and are independently pinned by apt_ffmpeg_problems.
-                if exempt and command in {APT_FFMPEG_COMMANDS[5], APT_FFMPEG_COMMANDS[10]}:
-                    continue
-                lists = word_lists(command)
-                if lists is None:
-                    if re.search(r"\b(?:apt-get|aptitude|apt|dpkg-deb|dpkg)\b", command):
-                        problems.append(f"{path} job {job} unparsable package install: {command}")
-                    continue
-                for words in lists:
-                    for found in _package_word_problems(words):
-                        problems.append(f"{path} job {job} {found}")
+        for chunk in _step_chunks(block):
+            exempt = _sequence_step(chunk, path)
+            for script in run_scripts(chunk):
+                for command in split_commands(join_continuations(script)):
+                    command = strip_comment(command)
+                    if not command or (exempt and command in approved):
+                        continue
+                    # Exact diagnostics from the hashed-ffmpeg gate use the word
+                    # "apt" inside a printf format string. They cannot execute
+                    # apt and are independently pinned by apt_ffmpeg_problems.
+                    if exempt and command in {APT_FFMPEG_COMMANDS[5], APT_FFMPEG_COMMANDS[10]}:
+                        continue
+                    lists = word_lists(command)
+                    if lists is None:
+                        if re.search(r"\b(?:apt-get|aptitude|apt|dpkg-deb|dpkg)\b", command):
+                            problems.append(f"{path} job {job} unparsable package install: {command}")
+                        continue
+                    for words in lists:
+                        for found in _package_word_problems(words):
+                            problems.append(f"{path} job {job} {found}")
     return problems
 
 
@@ -1909,28 +1941,37 @@ def _expandable(word: str) -> bool:
     return word != "[" and EXPANSION_CHARS.search(word) is not None
 
 
+def _step_chunks(block: str) -> list[str]:
+    """The text of each step in a job block. A block with no step dashes is one chunk."""
+    lines = block.splitlines()
+    indents = [len(match.group(1)) for match in map(STEP_DASH.match, lines) if match]
+    if not indents:
+        return [block]
+    step = min(indents)
+    chunks: list[str] = []
+    for line in lines:
+        match = STEP_DASH.match(line)
+        if not chunks or (match and len(match.group(1)) == step):
+            chunks.append("")
+        chunks[-1] += line + "\n"
+    return chunks
+
+
+def _posix_step(chunk: str) -> bool:
+    """True when the step runs POSIX shell: no `shell:` key, or a bare POSIX name."""
+    value = _shell_value(chunk)
+    return value is None or value in POSIX_SHELLS
+
+
 def _posix_scripts(block: str) -> list[str]:
     """Run scripts of the steps whose shell is POSIX (the default).
 
     A step with no `shell:` runs bash here. A step naming any other shell is
     left to the shell_problems refusal and the install-spec scan.
     """
-    lines = block.splitlines()
-    indents = [len(match.group(1)) for match in map(STEP_DASH.match, lines) if match]
-    if not indents:
-        chunks = [block]
-    else:
-        step = min(indents)
-        chunks = []
-        for line in lines:
-            match = STEP_DASH.match(line)
-            if not chunks or (match and len(match.group(1)) == step):
-                chunks.append("")
-            chunks[-1] += line + "\n"
     scripts: list[str] = []
-    for chunk in chunks:
-        value = _shell_value(chunk)
-        if value is None or value in POSIX_SHELLS:
+    for chunk in _step_chunks(block):
+        if _posix_step(chunk):
             scripts.extend(run_scripts(chunk))
     return scripts
 
@@ -2989,13 +3030,13 @@ def main() -> int:
     lock_evidence = prove_google_lock(req_text, lock_text)
     check_all = (WORKFLOWS / "check-all.yml").read_text(encoding="utf-8")
     research = (WORKFLOWS / "velvetos-research.yml").read_text(encoding="utf-8")
-    if apt_ffmpeg_problems(check_all, path="check-all.yml"):
-        fail(f"pinned check-all apt step was refused: {apt_ffmpeg_problems(check_all, path='check-all.yml')}")
-    if apt_ffmpeg_problems(research, path="velvetos-research.yml"):
+    if apt_ffmpeg_problems(check_all, path=".github/workflows/check-all.yml"):
+        fail(f"pinned check-all apt step was refused: {apt_ffmpeg_problems(check_all, path='.github/workflows/check-all.yml')}")
+    if apt_ffmpeg_problems(research, path=".github/workflows/velvetos-research.yml"):
         fail("pinned velvetos-research apt step was refused")
 
     def require_apt(label: str, mutated: str, needle: str) -> None:
-        found = apt_ffmpeg_problems(mutated, path="check-all.yml")
+        found = apt_ffmpeg_problems(mutated, path=".github/workflows/check-all.yml")
         if not any(needle in item for item in found):
             fail(f"{label} was not caught: {found}")
 
@@ -3027,6 +3068,71 @@ def main() -> int:
         1,
     )
     require_apt("pool filename", pool, "pool filename")
+
+    # Shell state and cwd changes inside the pinned step, a pwsh copy of the
+    # approved install, and step keys that change failure handling. Each
+    # mutation must be a real edit (mutate() asserts a unique anchor), and each
+    # must produce a finding from the scanner that owns it.
+    apt_anchor = "          sudo apt-get update -qq\n"
+    step_anchor = "      - name: Install sensor runtime dependencies\n        run: |\n"
+    pwsh_block = (
+        "      - name: pwsh side install\n"
+        "        shell: pwsh\n"
+        "        run: |\n"
+        '          sudo apt-get install -y "$deb"\n\n'
+    )
+    pwsh_inline = (
+        "      - name: pwsh inline install\n"
+        "        shell: pwsh\n"
+        '        run: sudo apt-get install -y "$deb"\n\n'
+    )
+
+    def mutate(text: str, old: str, new: str) -> str:
+        if text.count(old) != 1:
+            fail(f"step mutation anchor is not unique: {old!r}")
+        return text.replace(old, new, 1)
+
+    for path, text in (
+        (".github/workflows/check-all.yml", check_all),
+        (".github/workflows/velvetos-research.yml", research),
+    ):
+        for label, mutated in (
+            ("set +e before pinned sequence", mutate(text, apt_anchor, "          set +e\n" + apt_anchor)),
+            ("cd before pinned sequence", mutate(text, apt_anchor, "          cd tools/x\n" + apt_anchor)),
+            (
+                "continue-on-error on pinned step",
+                mutate(text, step_anchor, step_anchor.replace("        run: |\n", "        continue-on-error: true\n        run: |\n")),
+            ),
+        ):
+            found = apt_ffmpeg_problems(mutated, path=path)
+            if not any("command sequence mismatch" in item for item in found):
+                fail(f"{path} {label} was not caught: {found}")
+        for label, mutated in (
+            ("pwsh block copy of approved install", mutate(text, step_anchor, pwsh_block + step_anchor)),
+            ("pwsh inline copy of approved install", mutate(text, step_anchor, pwsh_inline + step_anchor)),
+        ):
+            side = ffmpeg_side_install_problems(mutated, path=path)
+            if not any("unexpected apt command" in item for item in side):
+                fail(f"{path} {label} was not caught by side-install scan: {side}")
+            count = apt_ffmpeg_problems(mutated, path=path)
+            if not any("approved apt line count 2" in item for item in count):
+                fail(f"{path} {label} was not caught by apt sequence scan: {count}")
+        # Legitimate controls: a separate step owns its own shell and cwd, and a
+        # pwsh step with no install is ordinary. Neither may be refused.
+        for label, mutated in (
+            (
+                "separate step with cd and set +e",
+                mutate(text, step_anchor, "      - name: Scratch shell\n        run: |\n          cd tools/x\n          set +e\n          ls\n\n" + step_anchor),
+            ),
+            (
+                "pwsh step without an install",
+                mutate(text, step_anchor, "      - name: pwsh echo\n        shell: pwsh\n        run: Write-Output ok\n\n" + step_anchor),
+            ),
+        ):
+            if apt_ffmpeg_problems(mutated, path=path) or ffmpeg_side_install_problems(mutated, path=path):
+                fail(f"{path} legitimate control was refused: {label}")
+        if apt_ffmpeg_problems(text, path=path) or ffmpeg_side_install_problems(text, path=path):
+            fail(f"{path} unchanged pinned step was refused")
     floating_apt = (
         "jobs:\n"
         "  sample:\n"
@@ -3552,6 +3658,7 @@ def main() -> int:
         "runner_windows=caught runner_image=caught "
         f"{bypass_evidence} {lock_evidence} {path_evidence} "
         f"apt_ffmpeg={apt_workflows} apt_sequence=pinned extra=caught "
+        "step_shell=caught step_cd=caught step_pwsh=caught step_keys=caught step_controls=pass "
         "comment=caught digest=caught runner=caught pool=caught "
         "bento_sha=caught bento_raise=caught bento_tamper=caught "
         "bento_offline=caught bento_network_path=caught bento_gate=caught "
