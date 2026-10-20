@@ -27,17 +27,17 @@ A **yes** row can be smoked on this cloud VM with an isolated venv, `node_module
 
 ## Candidate table
 
-| Candidate | What it is | License | Standalone now | Minimal plan |
+| Candidate | What it is | License | Standalone now | Historical observation or review gate |
 |---|---|---|---|---|
 | CrewAI `crewAIInc/crewAI` | Python multi-agent framework | MIT | Import yes. A completion needs local Ollama | venv, `crewai==1.15.28`, import only here. No `kickoff` under this record. A kickoff goes only through the [gated CrewAI runbook](../office-v2/pilot-runbook-crewai.md) |
 | AutoGen `microsoft/autogen` | Agentic programming framework. README points new work at Microsoft Agent Framework. GitHub `archived` is false | Docs `LICENSE` CC-BY-4.0. Code `LICENSE-CODE` MIT (file re-read) | Import of `autogen-core` yes. Studio is a server | venv, `autogen-core==0.7.5`, print version. Do not start AutoGen Studio |
 | LangGraph `langchain-ai/langgraph` | Graph runtime for agents | MIT | Yes, pure function graph | venv, `langgraph==1.2.16` and `langgraph-checkpoint==4.3.0`, compile a one-node graph |
-| Archon `coleam00/Archon` | AI coding harness with a local server | MIT | Spare. Windows `install.ps1` or a server | Not run. Needs its own reviewed runbook |
+| Archon `coleam00/Archon` | AI coding harness with a local server | MIT | Spare. Windows `install.ps1` or a server | Not run; needs separate reviewed runbook and owner GO |
 | UFO `microsoft/UFO` | Windows computer-use agent | MIT | Spare, and blocked | Chris-Mini-PC stops before install. `security_admission` stays RED. 18 advisories on 2026-10-18 had no patched version |
-| OpenHands `OpenHands/OpenHands` | Software-agent runtime | MIT | Spare. Docker | Mac-Bedroom, one container, loopback, then remove |
-| n8n `n8n-io/n8n` | Workflow automation | Sustainable Use License (`LICENSE.md` re-read). `.ee.` files need an enterprise licence. SPDX `NOASSERTION` | Spare. Docker for current installs | Mac-Bedroom, loopback, then remove |
-| Activepieces `activepieces/activepieces` | Workflow automation | MIT Expat outside `packages/ee/` (`LICENSE` re-read). Enterprise licence inside that tree. SPDX `NOASSERTION` | Spare. Docker Compose, Postgres, Redis | Mac-Bedroom, loopback, then remove |
-| Windmill `windmill-labs/windmill` | Workflow and UI platform | AGPLv3 by default; Apache-2.0 and proprietary enterprise snippets (`LICENSE` re-read). Community Edition images: free use, no sell, resell, managed service, modify, or wrap | Spare. Docker, or an enterprise Windows worker | Mac-Bedroom community image, loopback, then remove |
+| OpenHands `OpenHands/OpenHands` | Software-agent runtime | MIT | Spare. Docker | Not run; needs separate reviewed runbook and owner GO |
+| n8n `n8n-io/n8n` | Workflow automation | Sustainable Use License (`LICENSE.md` re-read). `.ee.` files need an enterprise licence. SPDX `NOASSERTION` | Spare. Docker for current installs | Not run; needs separate reviewed runbook and owner GO |
+| Activepieces `activepieces/activepieces` | Workflow automation | MIT Expat outside `packages/ee/` (`LICENSE` re-read). Enterprise licence inside that tree. SPDX `NOASSERTION` | Spare. Docker Compose, Postgres, Redis | Not run; needs separate reviewed runbook and owner GO |
+| Windmill `windmill-labs/windmill` | Workflow and UI platform | AGPLv3 by default; Apache-2.0 and proprietary enterprise snippets (`LICENSE` re-read). Community Edition images: free use, no sell, resell, managed service, modify, or wrap | Spare. Docker, or an enterprise Windows worker | Not run; needs separate reviewed runbook and owner GO |
 | Temporal `temporalio/temporal` | Durable execution server. CLI is `temporalio/cli` | MIT | CLI version and a netns dev server yes | Binary `temporal` v1.9.1. `start-dev` only inside a network namespace, then kill it |
 | Microsoft Agent Framework `microsoft/agent-framework` | Successor runtime named by the AutoGen README | MIT | Yes, in-process workflow | venv, `agent-framework-core==1.22.0`, two pure executors |
 | Promptfoo `promptfoo/promptfoo` | Prompt and agent eval CLI | MIT | Yes, echo provider, with Node >= 22.22 | `promptfoo@0.124.1`, echo config, run inside a network namespace |
@@ -45,29 +45,29 @@ A **yes** row can be smoked on this cloud VM with an isolated venv, `node_module
 | LiteLLM `BerriAI/litellm` | Multi-provider LLM client | MIT outside `enterprise/` (`LICENSE` re-read). SPDX `NOASSERTION` | Yes, `mock_response` | venv, `litellm==1.88.6`, `LITELLM_LOCAL_MODEL_COST_MAP=True` before import |
 | DBOS `dbos-inc/dbos-transact-py` | Durable Python workflows | MIT | Yes, SQLite system database | venv, `dbos==3.3.0`, one workflow, `DBOS.destroy()` |
 | Spoolman `Donkie/Spoolman` | Filament inventory server | MIT | Frozen. Skip | No install |
-| Hindsight `vectorize-io/hindsight` | Agent memory service | MIT | Spare. Ollama plus its own process | MacMiniOffice2 only if `127.0.0.1:11434` is already up. Stop the process after |
-| Graphiti `getzep/graphiti` | Temporal knowledge graph | Apache-2.0 | Spare. Ollama-compatible clients, usually a graph database | MacMiniOffice2 scratch venv. Stop if it wants Neo4j or a paid key |
-| Mem0 `mem0ai/mem0` | Agent memory library | Apache-2.0 | Spare. Documented Ollama LLM and embedder | MacMiniOffice2. Both models must already be on `127.0.0.1:11434`. Do not pull weights |
-| Supermemory `supermemoryai/supermemory` | Self-hosted memory app | MIT | Spare. Server | Mac-Bedroom loopback, then stop |
-| Letta Code `letta-ai/letta-code` | Coding agent with memory | Apache-2.0 | Spare. Ollama for the LLM path | MacMiniOffice2. Stop if embeddings are not already local |
+| Hindsight `vectorize-io/hindsight` | Agent memory service | MIT | Spare. Ollama plus its own process | Not run; needs separate reviewed runbook and owner GO |
+| Graphiti `getzep/graphiti` | Temporal knowledge graph | Apache-2.0 | Spare. Ollama-compatible clients, usually a graph database | Not run; needs separate reviewed runbook and owner GO |
+| Mem0 `mem0ai/mem0` | Agent memory library | Apache-2.0 | Spare. Documented Ollama LLM and embedder | Not run; needs separate reviewed runbook and owner GO |
+| Supermemory `supermemoryai/supermemory` | Self-hosted memory app | MIT | Spare. Server | Not run; needs separate reviewed runbook and owner GO |
+| Letta Code `letta-ai/letta-code` | Coding agent with memory | Apache-2.0 | Spare. Ollama for the LLM path | Not run; needs separate reviewed runbook and owner GO |
 | Goose `aaif-goose/goose` | Extensible local agent CLI | Apache-2.0 | Version yes. A reply needs Ollama | Linux `--version` here. No `goose run` under this record |
 | OpenCode `anomalyco/opencode` | Coding-agent CLI and desktop app | MIT | Version yes. `run` can open a local server and needs a model | Linux `--version` here. No `opencode run` under this record |
 | iFixAi `ifixai-ai/iFixAi` | Agent assurance CLI | Apache-2.0 | `--version` yes. `ifixai run` asks for a provider | venv, `ifixai==4.2.0` pinned on any rerun, `--version` inside a network namespace |
 | PentAGI `vxcontrol/pentagi` | Autonomous penetration-testing system | MIT, with upstream EULA and service terms called out in the 2026-10-14 intake | No | Do not install. `security_admission` stays RED. No scanner, no Docker socket |
-| Ghidra `NationalSecurityAgency/ghidra` | Reverse-engineering toolkit | Apache-2.0 | Spare. JDK 25. This VM has OpenJDK 21 | MacMiniOffice headless hello-world, then quit |
-| OpenPost `getopenpost/openpost` | Social post scheduler. Provenance row in comment 6250538600 | AGPL-3.0 | Spare | Not smoked. A scratch clone on Mac-Bedroom may read the README. Stop before any account or post |
-| SkillOpt `microsoft/SkillOpt` | Text skill optimizer. Provenance row | MIT | Spare | Not smoked. Scratch venv on MacMiniOffice2. Stop if it calls a paid model |
-| NVIDIA SkillEvaluator `NVIDIA/SkillEvaluator` | Agent-skill evaluator. Provenance row | Apache-2.0 | Spare | Not smoked. Same stop as SkillOpt |
-| OpenDots aliases | Three different repos in the same comment: `CopilotKit/OpenDots` (MIT), `Anil-matcha/open-dots` (SPDX null), `diggerhq/opendots` (MIT) | See cell | Spare | Not smoked. Do not treat the three repos as one product |
-| Laya `NandhaKishorM/laya` | Local decision engine. Provenance row | Apache-2.0 | Spare | Not smoked. Scratch run on MacMiniOffice2 only if the README smoke needs no download and no account |
-| Reef | `mousberg/reef` (SPDX null) and `Coral-Protocol/Reef` (SPDX null, empty description) | Unknown | Spare | Not smoked. Identity is still ambiguous |
+| Ghidra `NationalSecurityAgency/ghidra` | Reverse-engineering toolkit | Apache-2.0 | Spare. JDK 25. This VM has OpenJDK 21 | Not run; needs separate reviewed runbook and owner GO |
+| OpenPost `getopenpost/openpost` | Social post scheduler. Provenance row in comment 6250538600 | AGPL-3.0 | Spare | Not run; needs separate reviewed runbook and owner GO |
+| SkillOpt `microsoft/SkillOpt` | Text skill optimizer. Provenance row | MIT | Spare | Not run; needs separate reviewed runbook and owner GO |
+| NVIDIA SkillEvaluator `NVIDIA/SkillEvaluator` | Agent-skill evaluator. Provenance row | Apache-2.0 | Spare | Not run; needs separate reviewed runbook and owner GO |
+| OpenDots aliases | Three different repos in the same comment: `CopilotKit/OpenDots` (MIT), `Anil-matcha/open-dots` (SPDX null), `diggerhq/opendots` (MIT) | See cell | Spare | Not run; needs separate reviewed runbook and owner GO |
+| Laya `NandhaKishorM/laya` | Local decision engine. Provenance row | Apache-2.0 | Spare | Not run; needs separate reviewed runbook and owner GO |
+| Reef | `mousberg/reef` (SPDX null) and `Coral-Protocol/Reef` (SPDX null, empty description) | Unknown | Spare | Not run; needs separate reviewed runbook and owner GO |
 | Carbon | No source URL in comment 6250538600 | Unknown | No | Do not install |
-| Deja Vu | `vshulcz/deja-vu` (MIT, local Go binary) and `focaxisdev/deja-vu` (MIT, Markdown memory) | MIT | Spare | Not smoked. They are different products. A later scratch `--version` on MacMiniOffice is enough |
-| herdr `herdrdev/herdr` | Agent terminal multiplexer. Provenance row | Apache-2.0 | Spare. Likely a server | Not smoked. Mac-Bedroom, loopback, then stop |
-| useAgent `useagenthq/useagent` | Self-hosted agent control plane. Provenance row | AGPL-3.0 | Spare | Not smoked. Do not point it at a cloud workspace |
-| PI-Desktop `vastsa/PI-Desktop` | Local desktop agent. Provenance row | LGPL-3.0 | Spare. GUI | Not smoked. MacMiniOffice only, scratch profile, then quit |
-| Icepick `hatchet-dev/icepick` | TypeScript durable-agent library. Provenance row | MIT | Spare | Not smoked. Scratch `npm` install on Mac-Bedroom with an exact pin, no Hatchet cloud token |
-| AYON | `ynput/ayon-core` Apache-2.0 and `ynput/ayon-backend` SPDX `NOASSERTION` | Split | Spare | Not smoked. Pipeline server. Do not start it on a DCC machine |
+| Deja Vu | `vshulcz/deja-vu` (MIT, local Go binary) and `focaxisdev/deja-vu` (MIT, Markdown memory) | MIT | Spare | Not run; needs separate reviewed runbook and owner GO |
+| herdr `herdrdev/herdr` | Agent terminal multiplexer. Provenance row | Apache-2.0 | Spare. Likely a server | Not run; needs separate reviewed runbook and owner GO |
+| useAgent `useagenthq/useagent` | Self-hosted agent control plane. Provenance row | AGPL-3.0 | Spare | Not run; needs separate reviewed runbook and owner GO |
+| PI-Desktop `vastsa/PI-Desktop` | Local desktop agent. Provenance row | LGPL-3.0 | Spare. GUI | Not run; needs separate reviewed runbook and owner GO |
+| Icepick `hatchet-dev/icepick` | TypeScript durable-agent library. Provenance row | MIT | Spare | Not run; needs separate reviewed runbook and owner GO |
+| AYON | `ynput/ayon-core` Apache-2.0 and `ynput/ayon-backend` SPDX `NOASSERTION` | Split | Spare | Not run; needs separate reviewed runbook and owner GO |
 
 ## Cloud VM run (author-reported)
 
@@ -88,12 +88,12 @@ Installs used direct version pins with no transitive lock or hash check. The iFi
 | LangGraph | langgraph 1.2.16, langgraph-checkpoint 4.3.0. pip also installed langgraph-sdk 0.4.8 | `pip install --no-cache-dir 'langgraph==1.2.16' 'langgraph-checkpoint==4.3.0'` then a `StateGraph` that adds 1 | **PASS.** `invoke({"n": 41})` returned `42`. Net log empty. The first print used `langgraph.__version__` and raised `AttributeError` after the assert. The rerun read the version from `importlib.metadata` and printed `result 42` |
 | CrewAI | 1.15.28 | `pip install --no-cache-dir 'crewai==1.15.28'` then `import crewai` with telemetry env below | **PASS** for import. Net log empty. `chromadb` was imported. `mcp`, `uvicorn`, and `fastapi` were not. No `kickoff` |
 | AutoGen | autogen-core 0.7.5 | `pip install --no-cache-dir 'autogen-core==0.7.5'` then `import autogen_core` | **PASS.** Net log empty. Studio was not started |
-| DBOS | 3.3.0 | `pip install --no-cache-dir 'dbos==3.3.0'` then a SQLite workflow | **PASS.** Workflow returned `pong`. Log line named `https://console.dbos.dev/self-host?appname=office2-smoke` and opened no socket. `DBOS.destroy()` ran. Net log empty |
+| DBOS | 3.3.0 | `pip install --no-cache-dir 'dbos==3.3.0'` then a SQLite workflow | **PASS.** Workflow returned `pong`. Log line named `https://console.dbos.dev/self-host?appname=office2-smoke` and no TCP connect was logged by the userland guard. `DBOS.destroy()` ran. Net log empty |
 | Pydantic AI | 2.57.0 | `pip install --no-cache-dir 'pydantic-ai==2.57.0'` then `Agent(model=TestModel()).run_sync("ping")` | **PASS.** Output `success (no tool calls)`. A startup banner printed a Logfire URL. Net log empty |
 | LiteLLM | 1.88.6 (PyPI latest at the same time was 1.106.0 and was not installed) | `LITELLM_LOCAL_MODEL_COST_MAP=True` then `completion(..., mock_response="pong")` | **PASS.** Content `pong`. Net log empty |
 | Agent Framework | agent-framework-core 1.22.0 | `pip install --no-cache-dir 'agent-framework-core==1.22.0'` then Upper then Reverse on `"velvet"` | **PASS.** Outputs `['TEVLEV']`. Net log empty |
 | iFixAi | 4.2.0 | `pip install --no-cache-dir ifixai` (unpinned; resolved 4.2.0) then `ifixai --version` inside the netns | **PASS** for version. The install was not pinned, so this row does not reproduce. A rerun uses `ifixai==4.2.0`. `ifixai run` was not used |
-| Promptfoo | 0.124.1 | `npm install --no-fund --no-audit promptfoo@0.124.1` then `promptfoo eval` on the echo config inside the netns | **PASS** on Node v22.23.3: `1 passed (100%)`, 0 failed, 0 errors, duration 0s. **FAIL** on the PATH Node v22.14.0: `promptfoo requires a supported Node.js runtime. Detected: v22.14.0. Required: >=22.22.0`. The passing eval did not leave a listener. `promptfoo view` was not started |
+| Promptfoo | 0.124.1 | `npm install --no-fund --no-audit promptfoo@0.124.1` then `promptfoo eval` on the echo config inside the netns | **PASS** on Node v22.23.3: `1 passed (100%)`, 0 failed, 0 errors, duration 0s. **FAIL** on the PATH Node v22.14.0: `promptfoo requires a supported Node.js runtime. Detected: v22.14.0. Required: >=22.22.0`. The provenance of the Node v22.23.3 binary was not preserved in a receipt. The passing eval did not leave a listener. `promptfoo view` was not started |
 | Goose | 1.55.0 | Release asset `goose-x86_64-unknown-linux-gnu.tar.gz` from tag v1.55.0, then `goose --version` inside the netns with `GOOSE_TELEMETRY_OFF=true` | **PASS.** Printed `1.55.0`. `goose run` was not used |
 | OpenCode | 1.19.3 | Release asset `opencode-linux-x64.tar.gz` from tag v1.19.3, then `opencode --version` inside the netns | **PASS.** Printed `1.19.3`. `opencode run`, `serve`, and `web` were not used |
 | Temporal CLI | CLI 1.9.1, embedded server string `Server 1.32.0, UI 2.54.1` | `temporal_cli_1.9.1_linux_amd64.tar.gz` then `temporal --version` inside the netns | **PASS.** `start-dev` was then run inside a fresh netns whose loopback was brought up with an `ioctl` (`ip` is not installed). It printed `Temporal Server: localhost:7233` and `Temporal UI: http://localhost:8233`. `timeout` killed that namespace (exit 124). Host `netstat` had no 7233, 8233, or 41419, and no `temporal` process remained |
@@ -120,7 +120,7 @@ Eval environment: `CI=1`, `PROMPTFOO_DISABLE_TELEMETRY=1`, `PROMPTFOO_DISABLE_UP
 
 DBOS config: `system_database_url=sqlite:////tmp/office2-smoke/work/dbos.sqlite`, `enable_otlp=False`. No Conductor key.
 
-`scripts/office2/run_standalone_smokes.py` is report only. It prints the pin list, the path of this record, `smokes run by this helper: 0`, and the author-reported status. `--json` prints the same report as JSON. `--execute` is always refused with exit 2. No flag or environment variable makes it install, start, or check anything. `python3 scripts/check-all.py` does not execute it. Offline checks: `python3 scripts/office2/test_run_standalone_smokes.py`.
+`scripts/office2/run_standalone_smokes.py` is report only. It prints the reported version list, the path of this record, `smokes run by this helper: 0`, and the author-reported status. `--json` prints the same report as JSON. `--execute` is always refused with exit 2. No flag or environment variable makes it install, start, or check anything. `python3 scripts/check-all.py` does not execute it. Offline checks: `python3 scripts/office2/test_run_standalone_smokes.py`.
 
 ## Spare-machine rows (not run, not authorized)
 

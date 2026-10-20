@@ -97,7 +97,7 @@ class HelperTests(unittest.TestCase):
         self.assertIn("missing", err)
         self.assertEqual(out, "")
 
-    def test_socket_connect_untouched(self):
+    def test_helper_does_not_patch_socket_connect(self):
         before = socket.socket.connect
         for argv in ([], ["--json"], ["--execute"]):
             run(self.helper, argv, {"OFFICE2_STANDALONE_SMOKE": "1"})
@@ -145,6 +145,28 @@ class DocTests(unittest.TestCase):
         self.assertIn("always refuses `--execute` with exit 2", section)
         self.assertNotIn("egress refused", section)
         self.assertNotIn("exits 2 unless", section)
+
+    def test_spare_rows_require_separate_authorization(self):
+        spare = []
+        for line in self.text.splitlines():
+            if not line.startswith("| ") or line.startswith("|---"):
+                continue
+            cells = line.split("|")
+            if len(cells) > 6 and cells[4].strip().startswith("Spare"):
+                if cells[1].strip().startswith("UFO"):
+                    continue
+                spare.append(cells)
+                self.assertIn("reviewed runbook and owner GO", cells[5], cells[1])
+        self.assertGreaterEqual(len(spare), 18)
+
+    def test_dbos_socket_claim_is_limited_to_guard(self):
+        row = next(line for line in self.text.splitlines() if line.startswith("| DBOS |"))
+        self.assertNotIn("opened no socket", row)
+        self.assertIn("userland guard", row)
+
+    def test_promptfoo_node_binary_provenance_disclaimed(self):
+        row = next(line for line in self.text.splitlines() if line.startswith("| Promptfoo |"))
+        self.assertIn("provenance of the Node v22.23.3 binary was not preserved", row)
 
     def test_guard_claim_is_narrowed(self):
         self.assertIn("does **not** prove egress denial", self.text)
