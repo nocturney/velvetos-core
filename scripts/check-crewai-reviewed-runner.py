@@ -26,6 +26,7 @@ from office_v2_crewai.contract import (  # noqa: E402
     APPROVED_OPENAI_BASE,
     APPROVED_PORT,
     CREWAI_TOOLS_NA,
+    CREWAI_VERSION,
     MCP_NOT_AFFECTED,
     PRIVATE_REPO_NEEDLE,
     PYSEC_CVE_MAP,
@@ -58,6 +59,8 @@ from office_v2_crewai.provider import (  # noqa: E402
     digest_from_tags,
     effective_endpoint,
     open_loopback,
+    validate_config_document,
+    _open_json,
     _lsof_binds,
     _netstat_binds,
 )
@@ -123,6 +126,7 @@ from office_v2_crewai.usage_guard import (  # noqa: E402
     parse_lsof_listen,
     parse_netstat,
     seed_trace_consent,
+    tcp_listener_binds,
 )
 
 PACKAGE = SCRIPTS / "office_v2_crewai"
@@ -1031,7 +1035,9 @@ def check_sandbox_mutations() -> None:
     _expect_storage(lambda: assert_cwd("/tmp"), "SANDBOX_CWD_NOT_ON_D")
     _expect_storage(lambda: assert_cwd("D:\\Velvet"), "SANDBOX_CWD_OUTSIDE_ROOT")
     _expect_storage(lambda: enter_sandbox(SANDBOX_ROOT + "\\tmp"), "SANDBOX_CWD_OUTSIDE_ROOT")
-    _expect_storage(lambda: enter_sandbox(SANDBOX_ROOT), "SANDBOX_CWD_ABSENT")
+    from unittest.mock import patch
+    with patch.object(Path, "exists", return_value=False), patch.object(Path, "is_dir", return_value=False):
+        _expect_storage(lambda: enter_sandbox(SANDBOX_ROOT), "SANDBOX_CWD_ABSENT")
     # A D:\Velvet checkout is on D: and outside the sandbox root, so the live
     # cwd is not a stable NOT_ON_D case. These paths are.
     _expect_storage(lambda: enter_sandbox("C:\\Users\\Public"), "SANDBOX_CWD_NOT_ON_D")
@@ -1855,10 +1861,22 @@ def check_listeners() -> None:
     tree = ast.parse(source)
     fn = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "_windows_observe")
     body = ast.get_source_segment(source, fn) or ""
-    if "Get-NetTCPConnection" in body or "Get-NetUDPEndpoint" in body:
-        fail("windows observer still calls Get-Net")
-    if "WINDOWS_NETSTAT" not in body or '"-ano"' not in body:
-        fail("windows observer does not run absolute netstat -ano")
+    if "parse_netstat" not in body or "WINDOWS_NETSTAT" not in body or '"-ano"' not in body:
+        fail("windows observer does not read absolute netstat -ano")
+    # Refuse the Get-Net observer. A locale-independent proof is netstat column shape only.
+    provider_source = (PACKAGE / "provider.py").read_text(encoding="utf-8")
+    for label, text in (("usage_guard.py", source), ("provider.py", provider_source)):
+        for token in ("Get-NetTCPConnection", "Get-NetUDPEndpoint", "NetTCPIP", "WINDOWS_POWERSHELL", "windows_listener_argv", "parse_powershell_listeners"):
+            if token in text:
+                fail("%s reintroduces the Get-Net listener observer: %s" % (label, token))
+    provider_tree = ast.parse(provider_source)
+    netstat_binds = next(node for node in provider_tree.body if isinstance(node, ast.FunctionDef) and node.name == "_netstat_binds")
+    if "powershell" in (ast.get_source_segment(provider_source, netstat_binds) or "").casefold():
+        fail("_netstat_binds calls powershell; the listener proof is netstat -ano only")
+    if "powershell" in body.casefold():
+        fail("_windows_observe calls powershell; the listener proof is netstat -ano only")
+    if "shutil.which" in source or "shutil.which" in (PACKAGE / "provider.py").read_text(encoding="utf-8"):
+        fail("listener proof searches PATH")
     if "CreateToolhelp32Snapshot" not in source:
         fail("windows process tree does not use Toolhelp")
     if "_windows_processes" not in body:
@@ -1886,6 +1904,29 @@ def check_listeners() -> None:
     _expect_usage(lambda: guard_post_run(loaded, listener_boom), "FORBIDDEN_MODULE_LOADED")
     if probed:
         fail("the module guard ran after the listener check")
+
+
+def check_listener_unicode_refusals() -> None:
+    """A decoding failure in a native listener tool must carry a refusal code."""
+    import office_v2_crewai.usage_guard as guard
+
+    previous_run = guard.run_trusted_listener
+    previous_binary = guard.trusted_listener_binary
+
+    def undecodable(*args, **kwargs):
+        raise UnicodeDecodeError("utf-8", bytes([255]), 0, 1, "invalid native output")
+
+    def pinned_binary(tool, platform):
+        return WINDOWS_NETSTAT if tool == "netstat" else DARWIN_LSOF
+
+    guard.run_trusted_listener = undecodable
+    guard.trusted_listener_binary = pinned_binary
+    try:
+        _expect_provider(lambda: _netstat_binds(APPROVED_PORT), "OLLAMA_BIND_UNPROVEN")
+        _expect_provider(lambda: _lsof_binds(APPROVED_PORT), "OLLAMA_BIND_UNPROVEN")
+    finally:
+        guard.run_trusted_listener = previous_run
+        guard.trusted_listener_binary = previous_binary
 
 
 def check_windows_listener_pins() -> None:
@@ -2995,6 +3036,7 @@ def check_trusted_listener_binaries() -> None:
     directory = Path(tempfile.mkdtemp(prefix="crewai-fake-listener-"))
     lsof_marker = directory / "lsof-ran"
     netstat_marker = directory / "netstat-ran"
+    powershell_marker = directory / "powershell-ran"
     lsof_body = "#!/bin/sh\n: > %s\nexit 1\n" % _sh_quote(lsof_marker)
     netstat_body = (
         "#!/bin/sh\n"
@@ -3007,10 +3049,18 @@ def check_trusted_listener_binaries() -> None:
         "EOF\n"
         "exit 0\n" % _sh_quote(netstat_marker)
     )
+    powershell_body = (
+        "#!/bin/sh\n"
+        ": > %s\n"
+        "printf '127.0.0.1|11434|0.0.0.0|0|1\\n'\n"
+        "exit 0\n" % _sh_quote(powershell_marker)
+    )
     (directory / "lsof").write_text(lsof_body, encoding="ascii", newline="\n")
     (directory / "netstat").write_text(netstat_body, encoding="ascii", newline="\n")
+    (directory / "powershell").write_text(powershell_body, encoding="ascii", newline="\n")
     (directory / "lsof").chmod(0o755)
     (directory / "netstat").chmod(0o755)
+    (directory / "powershell").chmod(0o755)
     (directory / "lsof.cmd").write_text(
         "@echo off\nbreak>\"%s\"\nexit /b 1\n" % lsof_marker,
         encoding="ascii",
@@ -3020,6 +3070,13 @@ def check_trusted_listener_binaries() -> None:
         "@echo off\nbreak>\"%s\"\n" % netstat_marker
         + "echo Active Connections\n"
         + "echo   TCP    127.0.0.1:11434        0.0.0.0:0              LISTENING       1\n"
+        + "exit /b 0\n",
+        encoding="ascii",
+        newline="\n",
+    )
+    (directory / "powershell.cmd").write_text(
+        "@echo off\nbreak>\"%s\"\n" % powershell_marker
+        + "echo 127.0.0.1^|11434^|0.0.0.0^|0^|1\n"
         + "exit /b 0\n",
         encoding="ascii",
         newline="\n",
@@ -3055,8 +3112,18 @@ def check_trusted_listener_binaries() -> None:
             netstat_rows = None
         if netstat_marker.exists():
             fail("fake netstat earlier on PATH was executed")
+        if powershell_marker.exists():
+            fail("fake powershell earlier on PATH was executed")
         if netstat_rows == [{"address": "127.0.0.1", "port": 11434}] and not os.path.isfile(WINDOWS_NETSTAT):
             fail("fake netstat output was trusted as a loopback bind")
+        import shutil as _shutil
+        visible = _shutil.which("powershell")
+        if visible is None:
+            fail("spoofed powershell was not visible on PATH")
+        probed = subprocess.run([visible], check=False, capture_output=True, text=True)
+        if not powershell_marker.exists() or b"11434" not in probed.stdout.encode("ascii"):
+            fail("PATH lookup mutant did not execute the spoofed powershell")
+        powershell_marker.unlink()
         link = directory / "lsof-symlink"
         link.symlink_to(directory / "lsof")
         saved_lsof = usage_mod.DARWIN_LSOF
@@ -3133,6 +3200,441 @@ def check_workflows() -> None:
     for path in folder.glob("*"):
         if path.is_file() and "office_v2_crewai" in path.read_text(encoding="utf-8", errors="replace"):
             fail("workflow mentions the runner: %s" % path.name)
+
+
+def _load_usage_mutant(source: str, old: str, new: str, name: str):
+    import importlib.util
+
+    if source.count(old) != 1:
+        fail("mutation anchor missing for %s" % name)
+    folder = Path(tempfile.mkdtemp(prefix="crewai-locale-mut-"))
+    path = folder / (name + ".py")
+    path.write_text(source.replace(old, new, 1), encoding="ascii", newline="\n")
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module, folder
+
+
+def check_locale_listeners() -> None:
+    """English and Hebrew netstat, garbage and pinned-binary failure modes."""
+    import office_v2_crewai.usage_guard as usage_mod
+
+    english = (
+        "Active Connections\n\n"
+        "  Proto  Local Address          Foreign Address        State           PID\n"
+        "  TCP    127.0.0.1:11434        0.0.0.0:0              LISTENING       4\n"
+        "  TCP    127.0.0.1:11434        127.0.0.1:50000        ESTABLISHED     4\n"
+        "  TCP    [::1]:11434            [::]:0                 LISTENING       4\n"
+    )
+    hebrew = (
+        "\u05d7\u05d9\u05d1\u05d5\u05e8\u05d9\u05dd \u05e4\u05e2\u05d9\u05dc\u05d9\u05dd\n\n"
+        "  \u05e4\u05e8\u05d5\u05d8\u05d5\u05e7\u05d5\u05dc  \u05db\u05ea\u05d5\u05d1\u05ea \u05de\u05e7\u05d5\u05de\u05d9\u05ea"
+        "          \u05db\u05ea\u05d5\u05d1\u05ea \u05d6\u05e8\u05d4        \u05de\u05e6\u05d1           PID\n"
+        "  TCP    127.0.0.1:11434        0.0.0.0:0              \u05de\u05d0\u05d6\u05d9\u05df       4\n"
+        "  TCP    127.0.0.1:11434        127.0.0.1:50000        \u05de\u05d7\u05d5\u05d1\u05e8     4\n"
+    )
+    if "LISTENING" in hebrew or "Active Connections" in hebrew:
+        fail("Hebrew fixture still depends on the English banner or state word")
+    loopback = [
+        {"address": "127.0.0.1", "port": 11434},
+        {"address": "::1", "port": 11434},
+    ]
+    if binds_from_netstat(english, 11434) != loopback:
+        fail("English netstat rows were not classified by foreign-address shape")
+    hebrew_rows = binds_from_netstat(hebrew, 11434)
+    if hebrew_rows != [{"address": "127.0.0.1", "port": 11434}]:
+        fail("Hebrew netstat listener was not counted: %s" % hebrew_rows)
+    assert_ollama_bind(hebrew_rows)
+    processes = [{"pid": 4, "ppid": 1}]
+    if count_listening_sockets(4, platform="win32", observation={"processes": processes, "netstat": hebrew}) != 1:
+        fail("pilot parser dropped the Hebrew listener")
+    if count_listening_sockets(4, platform="win32", observation={"processes": processes, "netstat": english}) != 2:
+        fail("pilot parser dropped an English listener")
+    established = (
+        "\u05d7\u05d9\u05d1\u05d5\u05e8\u05d9\u05dd \u05e4\u05e2\u05d9\u05dc\u05d9\u05dd\n\n"
+        "  PID\n"
+        "  TCP    127.0.0.1:11434        127.0.0.1:50000        \u05de\u05d7\u05d5\u05d1\u05e8     4\n"
+    )
+    if binds_from_netstat(established, 11434) != []:
+        fail("a Hebrew established row was treated as a listener")
+    _expect_provider(lambda: assert_ollama_bind(binds_from_netstat(established, 11434)), "OLLAMA_BIND_UNPROVEN")
+    wildcard = (
+        "Active Connections\n\n"
+        "  Proto  Local Address          Foreign Address        State           PID\n"
+        "  TCP    0.0.0.0:11434          0.0.0.0:0              LISTENING       4\n"
+        "  TCP    *:11434                *:0                    LISTENING       4\n"
+    )
+    _expect_provider(lambda: assert_ollama_bind(binds_from_netstat(wildcard, 11434)), "OLLAMA_BIND_WILDCARD")
+    other_port = (
+        "Active Connections\n\n"
+        "  Proto  Local Address          Foreign Address        State           PID\n"
+        "  TCP    127.0.0.1:11435        0.0.0.0:0              LISTENING       4\n"
+    )
+    if binds_from_netstat(other_port, 11434) != []:
+        fail("port 11435 was returned for the approved port")
+    _expect_provider(lambda: binds_from_netstat(other_port, 11435), "OLLAMA_BIND_UNPROVEN")
+    _expect_provider(
+        lambda: assert_ollama_bind([{"address": "127.0.0.1", "port": 11435}], port=11435),
+        "OLLAMA_BIND_UNPROVEN",
+    )
+    _expect_provider(lambda: collect_ollama_binds(port=11435), "OLLAMA_BIND_UNPROVEN")
+    quiet_hebrew = (
+        "\u05d7\u05d9\u05d1\u05d5\u05e8\u05d9\u05dd \u05e4\u05e2\u05d9\u05dc\u05d9\u05dd\n\n"
+        "  \u05e4\u05e8\u05d5\u05d8\u05d5\u05e7\u05d5\u05dc  \u05db\u05ea\u05d5\u05d1\u05ea \u05de\u05e7\u05d5\u05de\u05d9\u05ea          PID\n"
+    )
+    if parse_netstat(quiet_hebrew) != {"tcp": [], "udp": []}:
+        fail("a Hebrew header with no rows was not a proven empty set")
+    garbage = english + "  TCP    not-an-address    nowhere    ???    zz\n"
+    _expect_usage(lambda: parse_netstat(garbage), "PILOT_LISTENER_UNPROVEN")
+    _expect_provider(lambda: binds_from_netstat(garbage, 11434), "OLLAMA_BIND_UNPROVEN")
+    _expect_usage(
+        lambda: count_listening_sockets(4, platform="win32", observation={"processes": processes, "netstat": garbage}),
+        "PILOT_LISTENER_UNPROVEN",
+    )
+    # Exactly one trusted netstat invocation; no PowerShell object probe.
+    calls = []
+
+    class _Proc:
+        def __init__(self, stdout: str, returncode: int) -> None:
+            self.stdout = stdout
+            self.returncode = returncode
+
+    def binary_of(tool, platform=None):
+        return WINDOWS_NETSTAT if tool == "netstat" else None
+
+    def run_netstat(binary, args, path_value=None):
+        calls.append((binary, args, path_value))
+        if binary != WINDOWS_NETSTAT or args != [WINDOWS_NETSTAT, "-ano"]:
+            fail("Windows listener probe did not use only pinned netstat -ano")
+        if path_value != str(Path(WINDOWS_NETSTAT).parent):
+            fail("netstat PATH was not System32")
+        return _Proc(hebrew, 0)
+
+    saved = (
+        usage_mod.trusted_listener_binary,
+        usage_mod.run_trusted_listener,
+        usage_mod._windows_processes,
+    )
+    usage_mod.trusted_listener_binary = binary_of
+    usage_mod.run_trusted_listener = run_netstat
+    usage_mod._windows_processes = lambda: processes
+    try:
+        observed = _windows_observe()
+        if len(calls) != 1 or calls[0][0] != WINDOWS_NETSTAT:
+            fail("listener probe invoked something other than pinned netstat")
+        if count_windows_listeners(4, observed) != 1:
+            fail("Hebrew netstat observation was not counted")
+        calls.clear()
+        if _netstat_binds(11434) != [{"address": "127.0.0.1", "port": 11434}]:
+            fail("Ollama binder did not accept Hebrew netstat loopback")
+        if len(calls) != 1 or calls[0][0] != WINDOWS_NETSTAT:
+            fail("Ollama binder called something other than pinned netstat")
+
+        def run_unclassified(binary, args, path_value=None):
+            return _Proc(garbage, 0)
+
+        usage_mod.run_trusted_listener = run_unclassified
+        _expect_usage(_windows_observe, "PILOT_LISTENER_UNPROVEN")
+        _expect_provider(lambda: _netstat_binds(11434), "OLLAMA_BIND_UNPROVEN")
+
+        def run_nonzero(binary, args, path_value=None):
+            return _Proc(hebrew, 1)
+
+        usage_mod.run_trusted_listener = run_nonzero
+        _expect_usage(_windows_observe, "PILOT_LISTENER_UNPROVEN")
+        _expect_provider(lambda: _netstat_binds(11434), "OLLAMA_BIND_UNPROVEN")
+
+        usage_mod.trusted_listener_binary = lambda *args, **kwargs: None
+        _expect_usage(_windows_observe, "PILOT_LISTENER_UNPROVEN")
+        _expect_provider(lambda: _netstat_binds(11434), "OLLAMA_BIND_UNPROVEN")
+    finally:
+        (
+            usage_mod.trusted_listener_binary,
+            usage_mod.run_trusted_listener,
+            usage_mod._windows_processes,
+        ) = saved
+    source = (PACKAGE / "usage_guard.py").read_text(encoding="utf-8")
+    skipped, skipped_dir = _load_usage_mutant(
+        source,
+        "def _unclassified_row() -> None:\n"
+        "    \"\"\"One row that is not a banner or a shaped socket row fails the whole check.\"\"\"\n"
+        "    raise UsageRefusal(\"PILOT_LISTENER_UNPROVEN\")\n",
+        "def _unclassified_row() -> None:\n"
+        "    \"\"\"One row that is not a banner or a shaped socket row fails the whole check.\"\"\"\n"
+        "    return\n",
+        "usage_skip_mutant",
+    )
+    try:
+        if skipped.parse_netstat(garbage)["tcp"] == []:
+            fail("skip mutant did not keep the good row")
+        try:
+            skipped.parse_netstat(garbage)
+        except UsageRefusal:
+            fail("skip mutant still failed the whole buffer")
+        if skipped.tcp_listener_binds(skipped.parse_netstat(garbage), 11434) == []:
+            fail("skip mutant dropped the classified listener")
+    finally:
+        shutil.rmtree(skipped_dir, ignore_errors=True)
+    english_word, english_dir = _load_usage_mutant(
+        source,
+        "return (foreign_host, foreign_port) in _LISTENER_FOREIGN\n",
+        "return state.upper() == \"LISTENING\"\n",
+        "usage_english_mutant",
+    )
+    try:
+        if english_word.tcp_listener_binds(english_word.parse_netstat(hebrew), 11434) != []:
+            fail("English-word mutant still counted a Hebrew listener")
+        if english_word.parse_netstat(english)["tcp"][0]["state"] != "LISTENING":
+            fail("English-word mutant did not keep the English fixture, so the mutation is not the contrast")
+    finally:
+        shutil.rmtree(english_dir, ignore_errors=True)
+
+def _approved_model_document() -> dict:
+    return json.loads(MODEL.read_text(encoding="ascii"))
+
+
+def _require_open_json_path_allowlist() -> None:
+    """`_open_json` refuses any path outside `/api/tags` and `/api/chat`.
+
+    A later GET/POST equality check refuses the same stray paths, so calling
+    `/api/pull` does not notice when only the set compare is deleted.
+    """
+    tree = ast.parse((PACKAGE / "provider.py").read_text(encoding="utf-8"))
+    function = next(
+        node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "_open_json"
+    )
+    for node in function.body:
+        test = getattr(node, "test", None)
+        if not isinstance(node, ast.If) or not isinstance(test, ast.Compare):
+            continue
+        if not isinstance(test.left, ast.Name) or test.left.id != "path":
+            continue
+        if len(test.ops) != 1 or not isinstance(test.ops[0], ast.NotIn):
+            continue
+        if len(test.comparators) != 1 or not isinstance(test.comparators[0], ast.Set):
+            continue
+        names = []
+        for elt in test.comparators[0].elts:
+            if not isinstance(elt, ast.Constant) or not isinstance(elt.value, str):
+                fail("Ollama path allowlist is not a string set")
+            names.append(elt.value)
+        if set(names) != {"tags", "chat"} or len(names) != 2:
+            fail("Ollama path allowlist is not exactly tags and chat")
+        if len(node.body) != 1 or not isinstance(node.body[0], ast.Raise):
+            fail("Ollama path allowlist does not raise")
+        exc = node.body[0].exc
+        if (
+            not isinstance(exc, ast.Call)
+            or not isinstance(exc.func, ast.Name)
+            or exc.func.id != "ProviderRefusal"
+            or len(exc.args) != 1
+            or not isinstance(exc.args[0], ast.Constant)
+            or exc.args[0].value != "MODEL_URL_PATH_REFUSED"
+        ):
+            fail("Ollama path allowlist does not raise MODEL_URL_PATH_REFUSED")
+        return
+    fail("Ollama path allowlist compare is missing from _open_json")
+
+
+def check_refusal_gaps() -> None:
+    """Execute the fail-closed branches a source scan can leave uncalled.
+
+    Comment 6255429366. No model call. The crewai object is a stub module.
+    """
+    import types
+
+    import office_v2_crewai.crew_build as crew_mod
+    import office_v2_crewai.sandbox as sandbox_mod
+
+    document = _approved_model_document()
+    _expect_provider(lambda: validate_config_document(["not", "a", "dict"]), "MODEL_CONFIG_NOT_OBJECT")
+    _expect_provider(lambda: validate_config_document(None), "MODEL_CONFIG_NOT_OBJECT")
+    schema = dict(document)
+    schema["schema"] = "not-the-approved-schema"
+    _expect_provider(lambda: validate_config_document(schema), "MODEL_CONFIG_SCHEMA")
+    wrong_provider = dict(document)
+    wrong_provider["provider"] = "openai"
+    _expect_provider(lambda: validate_config_document(wrong_provider), "MODEL_PROVIDER_REFUSED")
+    remote = dict(document)
+    remote["remote_apis_allowed"] = True
+    _expect_provider(lambda: validate_config_document(remote), "REMOTE_API_REFUSED")
+    paid = dict(document)
+    paid["paid_apis_allowed"] = True
+    _expect_provider(lambda: validate_config_document(paid), "PAID_API_REFUSED")
+    keyed = dict(document)
+    keyed["api_key"] = "sk-x"
+    _expect_provider(lambda: validate_config_document(keyed), "API_KEY_REFUSED")
+    thinking = dict(document)
+    thinking["think"] = True
+    _expect_provider(lambda: validate_config_document(thinking), "THINK_NOT_DISABLED")
+    for name in ("openai", "anthropic", "gemini", "openrouter", "azure", "groq"):
+        tainted = dict(document)
+        tainted[name] = {"api_key": "x"}
+        _expect_provider(lambda tainted=tainted: validate_config_document(tainted), "PAID_PROVIDER_FIELD_REFUSED")
+
+    _require_open_json_path_allowlist()
+    called = []
+
+    class _JsonBody:
+        def read(self):
+            return b'{"ok": true}'
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+    def urlopen(request, timeout=30):
+        called.append(getattr(request, "full_url", ""))
+        return _JsonBody()
+
+    for path in ("pull", "delete", "create", "push", "show"):
+        called.clear()
+        target = "http://127.0.0.1:11434/api/" + path
+        _expect_provider(lambda target=target: _open_json(urlopen, target, None, 5), "MODEL_URL_PATH_REFUSED")
+        if called:
+            fail("refused Ollama path reached urlopen: %s" % called)
+    called.clear()
+    _expect_provider(
+        lambda: _open_json(urlopen, "http://127.0.0.1:11434/api/chat", None, 5),
+        "MODEL_URL_PATH_REFUSED",
+    )
+    if called:
+        fail("GET /api/chat reached urlopen")
+    called.clear()
+    _expect_provider(
+        lambda: _open_json(urlopen, "http://127.0.0.1:11434/api/tags", {}, 5),
+        "MODEL_URL_PATH_REFUSED",
+    )
+    if called:
+        fail("POST /api/tags reached urlopen")
+    called.clear()
+    body = _open_json(urlopen, "http://127.0.0.1:11434/api/tags", None, 5)
+    if body != {"ok": True} or called != ["http://127.0.0.1:11434/api/tags"]:
+        fail("GET /api/tags was not the allowed read: %s" % called)
+
+    profile = {key: os.environ.get(key) for key in ("USERPROFILE", "HOME", "TEMP", "TMP")}
+    try:
+        os.environ["USERPROFILE"] = SANDBOX_ROOT
+        _expect_storage(
+            lambda: assert_sandbox_resolution(
+                home="/home/attacker",
+                temp=SANDBOX_ROOT + "\\tmp",
+                platform="linux",
+            ),
+            "SANDBOX_HOME_OUTSIDE_ROOT",
+        )
+        _expect_storage(
+            lambda: assert_sandbox_resolution(
+                home=SANDBOX_ROOT + "\\AppData\\Local",
+                temp=SANDBOX_ROOT + "\\tmp",
+                platform="win32",
+            ),
+            "SANDBOX_HOME_OUTSIDE_ROOT",
+        )
+        _expect_storage(
+            lambda: assert_sandbox_resolution(
+                home=SANDBOX_ROOT,
+                temp="/tmp",
+                platform="win32",
+            ),
+            "SANDBOX_TEMP_OUTSIDE_ROOT",
+        )
+    finally:
+        for key, value in profile.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+
+    provider = LocalOllamaProvider(MODEL)
+    provider.authorize()
+    touched = []
+
+    class _Agent:
+        def __init__(self, *_args, **_kwargs):
+            touched.append("agent")
+
+    early = types.ModuleType("crewai")
+    early.__version__ = CREWAI_VERSION
+    early.Agent = _Agent
+    sys.modules["crewai"] = early
+    try:
+        _expect_provider(lambda: crew_mod.build_crew(provider, {}), "TELEMETRY_FLAGS_NOT_SET_BEFORE_IMPORT")
+        if touched:
+            fail("telemetry refusal still constructed a crewai agent")
+    finally:
+        sys.modules.pop("crewai", None)
+
+    work = Path(tempfile.mkdtemp(prefix="crewai-version-gap-"))
+    cwd = os.getcwd()
+    saved_env = dict(os.environ)
+    saved_home = sandbox_mod.Path.home
+    saved_temp = sandbox_mod.tempfile.gettempdir
+    saved_prepare = crew_mod.prepare_sandbox_temp
+    saved_enter = crew_mod.enter_sandbox
+    saved_seed = crew_mod.seed_trace_consent
+    saved_root_check = crew_mod.assert_under_velvet
+    saved_sandbox_root_check = sandbox_mod.assert_under_velvet
+    try:
+        # The version-drift fixture creates a synthetic D: sandbox under its
+        # throwaway cwd on POSIX; #842 resolves real filesystem ancestors.
+        # Keep the real root predicate while providing its simulated final path.
+        resolved_fixture_root = lambda root, **_kwargs: saved_root_check(
+            root, resolve=lambda target: target
+        )
+        crew_mod.assert_under_velvet = resolved_fixture_root
+        sandbox_mod.assert_under_velvet = resolved_fixture_root
+        sandbox_mod.Path.home = staticmethod(lambda: SANDBOX_ROOT)
+        sandbox_mod.tempfile.gettempdir = lambda: SANDBOX_ROOT + "\\tmp"
+
+        def prepare_without_host_drive(root, mkdir=None, exists=None):
+            # prepare_sandbox_temp refuses to create dirs when os.name != "nt",
+            # and a Windows host here has no D:\\Velvet tree. The stub only
+            # satisfies those directory steps. The version refusal stays real.
+            def mkdir_temp(path):
+                if os.name == "nt":
+                    return None
+                Path(path).mkdir(parents=True, exist_ok=True)
+
+            return saved_prepare(root, mkdir=mkdir_temp, exists=lambda path: True)
+
+        def enter_without_host_drive(cwd_path, root=SANDBOX_ROOT):
+            sandbox_mod.assert_cwd(cwd_path, root)
+            if not sandbox_mod._same(cwd_path, root):
+                raise sandbox_mod.StorageRefusal("SANDBOX_CWD_OUTSIDE_ROOT")
+
+        crew_mod.prepare_sandbox_temp = prepare_without_host_drive
+        if os.name == "nt":
+            crew_mod.enter_sandbox = enter_without_host_drive
+            crew_mod.seed_trace_consent = lambda storage_dir: saved_seed(work / "trace-storage")
+        else:
+            os.chdir(work)
+            Path(SANDBOX_ROOT).mkdir()
+        mismatch = types.ModuleType("crewai")
+        mismatch.__version__ = "0.0.0"
+        sys.modules["crewai"] = mismatch
+        ready = dict(TELEMETRY_FLAGS)
+        ready["OLLAMA_NO_CLOUD"] = "1"
+        _expect_provider(
+            lambda: crew_mod.build_crew(provider, ready),
+            "CREWAI_VERSION_MISMATCH",
+        )
+    finally:
+        os.chdir(cwd)
+        os.environ.clear()
+        os.environ.update(saved_env)
+        sandbox_mod.Path.home = saved_home
+        sandbox_mod.tempfile.gettempdir = saved_temp
+        crew_mod.prepare_sandbox_temp = saved_prepare
+        crew_mod.enter_sandbox = saved_enter
+        crew_mod.seed_trace_consent = saved_seed
+        crew_mod.assert_under_velvet = saved_root_check
+        sandbox_mod.assert_under_velvet = saved_sandbox_root_check
+        sys.modules.pop("crewai", None)
+        shutil.rmtree(work, ignore_errors=True)
 
 
 def _refuse_misplaced_guard(source: str, role: str, sentence: str, label: str) -> None:
@@ -3226,10 +3728,13 @@ def main() -> int:
     check_proxy_gate()
     check_manifest_mutation()
     check_provider()
+    check_refusal_gaps()
     check_kill()
     check_spawn_hygiene()
     check_execute()
     check_listeners()
+    check_listener_unicode_refusals()
+    check_locale_listeners()
     check_windows_listener_pins()
     check_trusted_listener_binaries()
     check_run_record()
