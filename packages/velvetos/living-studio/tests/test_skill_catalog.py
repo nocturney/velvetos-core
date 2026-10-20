@@ -62,7 +62,7 @@ class CatalogTests(unittest.TestCase):
         from vf_skill_catalog import plan
 
         row = plan("ui design accessibility", ROOT)
-        agency = json.loads((ROOT / ".cursor/agency-agents.json").read_text())
+        agency = json.loads((ROOT / ".cursor/agency-agents.json").read_text(encoding="utf-8"))
         valid = {a["slug"] for a in agency["agents"]}
         self.assertTrue(row["agent_candidates"])
         self.assertTrue(all(a["slug"] in valid and (ROOT / a["rule_file"]).is_file()
@@ -193,6 +193,63 @@ class CatalogTests(unittest.TestCase):
                 "docs/implementation/office-v2/phase2/candidate-registry-v0.json"])
             self.assertEqual(item["authority_role"], "NONE")
             self.assertTrue(route("fixture-candidate", root)["skills"][0]["requires_admission"])
+
+    def test_negative_file_symlink_escaping_root_is_rejected_not_indexed(self):
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as outside:
+            root = Path(tmp)
+            canary = Path(outside) / "SKILL.md"
+            canary.write_text("---\nname: outside-leak\ndescription: Synthetic canary outside root\n---\nBody.\n")
+            link = root / ".cursor/skills/outsider/SKILL.md"
+            link.parent.mkdir(parents=True)
+            try:
+                os.symlink(canary, link)
+            except OSError as exc:
+                self.skipTest(f"symlink creation unavailable: {exc}")
+            self.assertEqual(discover(root), [])
+            self.assertEqual(audit(root)["rejected_outside_root"], [".cursor/skills/outsider/SKILL.md"])
+            self.assertEqual(audit(root)["unique_records"], 0)
+
+    def test_negative_nested_directory_symlink_escaping_root_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as outside:
+            root = Path(tmp)
+            inside = root / "packages/vfok/skills/ok/SKILL.md"
+            inside.parent.mkdir(parents=True)
+            # Bytes, not write_text: Windows text mode writes CRLF, which the LF-only frontmatter parser skips.
+            inside.write_bytes(b"---\nname: inrepo-ok\ndescription: In-root control skill\n---\nBody.\n")
+            deep = Path(outside) / "deep"
+            (deep / "vendor").mkdir(parents=True)
+            (deep / "vendor" / "SKILL.md").write_bytes(
+                b"---\nname: outside-leak\ndescription: Synthetic canary\n---\nBody.\n")
+            (root / ".cursor/skills").mkdir(parents=True)
+            try:
+                # packages/** is walked with rglob, which does not descend into symlinked directories.
+                os.symlink(deep, root / "packages/vfok/nested", target_is_directory=True)
+                # .cursor/skills/*/*/SKILL.md does follow a symlinked directory: the nested path must be rejected.
+                os.symlink(deep, root / ".cursor/skills/nested", target_is_directory=True)
+            except OSError as exc:
+                self.skipTest(f"symlink creation unavailable: {exc}")
+            self.assertEqual([r["name"] for r in discover(root)], ["inrepo-ok"])
+            self.assertEqual(audit(root)["rejected_outside_root"], [".cursor/skills/nested/vendor/SKILL.md"])
+
+    def test_negative_host_probe_skill_symlink_leaving_adapter_root_is_rejected(self):
+        from unittest.mock import patch
+        from vf_skill_catalog import host_probe
+
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as outside:
+            home = Path(tmp)
+            canary = Path(outside) / "SKILL.md"
+            canary.write_text("Synthetic canary outside adapter root")
+            link = home / ".cursor/skills/leak/SKILL.md"
+            link.parent.mkdir(parents=True)
+            try:
+                os.symlink(canary, link)
+            except OSError as exc:
+                self.skipTest(f"symlink creation unavailable: {exc}")
+            with patch("vf_skill_catalog.Path.home", return_value=home):
+                found = host_probe()
+            self.assertEqual(found["local_skills"], [])
+            self.assertEqual([x["path"] for x in found["outside_root"]], [str(link)])
+            self.assertEqual(found["outside_root"][0]["reason"], "OUTSIDE_SKILL_ROOT")
 
 
 if __name__ == "__main__":

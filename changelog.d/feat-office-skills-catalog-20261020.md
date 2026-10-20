@@ -1,0 +1,1 @@
+- Skill catalog: `discover`, `host_probe` and `audit` now fail closed on Skill sources whose resolved path (through file or directory symlinks) leaves the repository root or the adapter's skills directory; such paths are not indexed, and `audit` reports them by repo-relative path only.
