@@ -642,6 +642,10 @@ Pinned runtime: the three Cloud Run Dockerfiles (`vfigos/remote`, `vfigos/approv
 
 **CI package installation fail-closed hardening (2026-10-20):** Workflow and composite-action package-manager checks refuse aptitude and apt outright, permit only narrowly scoped apt-get update/remove/purge outside the hashed ffmpeg exception, and reject indirect package commands, apt config hook references, reused deb install lines and suspect shell writes. This is static validation, not a package installation.
 
+**Changelog and GitHub token fence (2026-10-19):** The Unreleased fold refuses a code fence that straddles a level-2 heading or remains unterminated; a bullet in released history never covers a deleted fragment. The GH_TOKEN collector exception now pins the resolved Python interpreter, collector script path and exact self-test flag, with load-bearing negative controls. No existing sealed pins change.
+
+**תיחום CHANGELOG והרשאות GitHub (2026-10-19):** כותרת גרסה שמוסתרת בתוך בלוק קוד לא יכולה לאשר מחיקת מקטע changelog. העברת GH_TOKEN מוגבלת גם למפרש Python המאושר.
+
 **Spawn cleanup on termination (2026-10-19):** Process-owned sandbox home and temp directories are removed on normal Python exit and on ordinary POSIX SIGTERM when no caller-owned handler exists. A pre-existing application signal handler is never replaced. A blocked SIGKILL or os._exit still bypasses normal Python cleanup. Load-bearing probes simulate a chmod-before-rmtree omission and a disabled SIGTERM handler.
 
 **ניקוי סביבת spawn (2026-10-19):** SIGTERM רגיל מנקה את ספריות העבודה בלי להחליף מטפל אותות שהאפליקציה התקינה. בדיקות רגרסיה מזהות דילוג על chmod או על טיפול באות; SIGKILL אינו בר-ניקוי מובטח.
