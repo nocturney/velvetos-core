@@ -13,6 +13,21 @@ ROOT = Path(__file__).resolve().parents[4]
 
 
 class CatalogTests(unittest.TestCase):
+    def test_crlf_frontmatter_preserves_windows_skill_metadata(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            root = Path(scratch)
+            target = root / ".cursor" / "skills" / "example" / "SKILL.md"
+            target.parent.mkdir(parents=True)
+            target.write_bytes(
+                b"---\r\nname: windows-native\r\ndescription: Windows line endings\r\n"
+                b"---\r\nNever use for public launch\r\n"
+            )
+            records = discover(root)
+            self.assertEqual(len(records), 1)
+            self.assertEqual(records[0]["name"], "windows-native")
+            self.assertEqual(records[0]["description"], "Windows line endings")
+            self.assertEqual(records[0]["negative_triggers"], ["Never use for public launch"])
+
     def test_real_repo_discovery_and_cross_router_agreement(self):
         from vf_living_studio import skill_route, skill_list
         from vfmem import build_graph

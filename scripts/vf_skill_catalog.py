@@ -36,6 +36,8 @@ def _tokens(value: str) -> set[str]:
 
 
 def _frontmatter(text: str) -> dict[str, str]:
+    # Decode metadata consistently from LF, CRLF and classic CR Skill files.
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
     if not text.startswith("---\n"):
         return {}
     match = re.match(r"\A---\s*\n(.*?)\n---(?:\s*\n|\Z)", text, re.S)
