@@ -153,7 +153,20 @@ def main() -> None:
     if not result.wasSuccessful():
         fail(f"living-studio tests: {test_out.getvalue()}")
 
-    print("OK living-studio registry+projection+skills+selftest")
+    # Reuse the existing Living Studio sensor for cross-engine Skill regressions.
+    skill_tests = LS / "tests" / "test_skill_catalog.py"
+    skill_spec = importlib.util.spec_from_file_location("skill_catalog_tests", skill_tests)
+    if skill_spec is None or skill_spec.loader is None:
+        fail("could not load skill-catalog regression tests")
+    skill_module = importlib.util.module_from_spec(skill_spec)
+    skill_spec.loader.exec_module(skill_module)
+    skill_suite = unittest.defaultTestLoader.loadTestsFromModule(skill_module)
+    skill_out = io.StringIO()
+    skill_result = unittest.TextTestRunner(stream=skill_out, verbosity=2).run(skill_suite)
+    if not skill_result.wasSuccessful():
+        fail(f"skill catalog regressions: {skill_out.getvalue()}")
+
+    print(f"OK living-studio registry+projection+skills+selftest; skill-catalog regressions={skill_result.testsRun}")
 
 
 # Sensors only read: undo writes made by the office CLIs this sensor smoke-tests

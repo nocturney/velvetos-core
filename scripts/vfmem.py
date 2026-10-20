@@ -99,11 +99,31 @@ def _load_json(path: Path) -> Any:
 
 
 def _tokens(text: str) -> set[str]:
-    return {t for t in re.findall(r"[0-9A-Za-z\u0590-\u05FF]+", text.lower()) if len(t) > 1}
+    return {t for t in re.findall(r"[0-9A-Za-z\u0590-\u05FF]+", text.lower().replace("\u05be", " ")) if len(t) > 1}
 
 
 def _nid(label: str, key: str) -> str:
     return f"{label}:{key}"
+
+
+def _skill_text(root: Path, skill: dict[str, Any]) -> str:
+    """Search text for a Skill row. Body excerpt only for repository rows inside root.
+
+    External candidates have no repository body and stay description-only. A canonical
+    file that resolves outside root (symlink escape) is never read.
+    """
+    base = f"{skill['id']} {skill['description']}"
+    rel = skill.get("canonical_file")
+    if skill.get("origin") != "REPO" or not rel:
+        return base
+    try:
+        resolved = (root / rel).resolve(strict=True)
+    except OSError:
+        return base
+    if not resolved.is_file() or not resolved.is_relative_to(root.resolve()):
+        return base
+    body = resolved.read_text(encoding="utf-8", errors="replace")
+    return f"{base} {body[:800]}"
 
 
 def build_graph(root: Path = ROOT) -> Graph:
@@ -194,40 +214,23 @@ def build_graph(root: Path = ROOT) -> Graph:
             if _nid("Tool", tool) in g.nodes:
                 g.link(_nid("Seat", sid), "USES_TOOL", _nid("Tool", tool))
 
-    skills_dir = root / ".cursor" / "skills"
-    listed_skills = list(desk.get("skills") or [])
-    seen_skills: set[str] = set()
-    for rel in listed_skills:
-        path = root / rel
-        key = Path(rel).parent.name
-        seen_skills.add(key)
-        body = path.read_text(encoding="utf-8") if path.is_file() else ""
+    # Every Skill view shares the same derived canonical metadata. No second map.
+    from vf_skill_catalog import catalog as skill_catalog
+    listed_skills = set(desk.get("skills") or [])
+    for skill in skill_catalog(root):
+        key = skill["id"]
+        rel = skill["canonical_file"]
         g.add(
             Node(
                 id=_nid("Skill", key),
                 label="Skill",
-                name=key,
-                text=f"{key} {body[:800]}",
-                props={"path": rel, "onDesk": True},
+                name=skill["name"],
+                text=_skill_text(root, skill),
+                props={"path": rel, "onDesk": bool(rel and rel in listed_skills),
+                       "origin": skill["origin"], "status": skill["status"],
+                       "source_refs": skill["source_refs"]},
             )
         )
-
-    if skills_dir.is_dir():
-        for skill_md in sorted(skills_dir.glob("*/SKILL.md")):
-            key = skill_md.parent.name
-            if key in seen_skills:
-                continue
-            body = skill_md.read_text(encoding="utf-8")
-            rel = str(skill_md.relative_to(root))
-            g.add(
-                Node(
-                    id=_nid("Skill", key),
-                    label="Skill",
-                    name=key,
-                    text=f"{key} {body[:800]}",
-                    props={"path": rel, "onDesk": False},
-                )
-            )
 
     stages = list(desk.get("pipeline") or [])
     for i, stage in enumerate(stages):
