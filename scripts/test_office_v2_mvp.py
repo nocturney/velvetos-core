@@ -7,7 +7,10 @@ import json
 import shutil
 import tempfile
 import unittest
-from datetime import datetime, timezone
+import io
+from contextlib import redirect_stdout
+from unittest import mock
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -529,6 +532,30 @@ class OfficeV2OverviewTest(unittest.TestCase):
         expected = MVP.build_board(public_snapshot, NOW)["overview"]["agents"]["counts"]
         filtered = MVP.omit_private_rows(MVP.build_board(fresh_snapshot(), NOW))
         self.assertEqual(filtered["overview"]["agents"]["counts"], expected)
+
+    def test_live_readback_clock_is_captured_after_fetch(self) -> None:
+        """Regression: a real GET's fetched_at must not be after board as_of."""
+        class TickingClock(datetime):
+            calls = 0
+
+            @classmethod
+            def now(cls, tz=None):
+                cls.calls += 1
+                return NOW + timedelta(minutes=cls.calls)
+
+        def fake_fetch() -> dict:
+            snap = load_fixture()
+            snap["fetched_at"] = TickingClock.now(timezone.utc).isoformat()
+            return snap
+
+        capture = io.StringIO()
+        with mock.patch.object(MVP, "datetime", TickingClock), mock.patch.object(
+            MVP, "fetch_snapshot", side_effect=fake_fetch
+        ), redirect_stdout(capture):
+            self.assertEqual(MVP.main([]), 0)
+        self.assertEqual(TickingClock.calls, 2)
+        self.assertIn("סוכנים · Agents: FRESH", capture.getvalue())
+        self.assertIn("בריאות · Health: FRESH", capture.getvalue())
 
     def test_overview_markdown_is_bilingual_and_names_all_four_sources(self) -> None:
         text = MVP.render_markdown(MVP.build_board(fresh_snapshot(), NOW))

@@ -1236,11 +1236,16 @@ def main(argv: list[str] | None = None) -> int:
             print("FAIL office-v2-mvp: --now is not ISO-8601", file=sys.stderr)
             return 2
     else:
-        now = datetime.now(timezone.utc)
+        now = None
     if args.fixture:
         snapshot = json.loads(args.fixture.read_text(encoding="utf-8"))
     else:
         snapshot = fetch_snapshot()
+    # The live readback records fetched_at at the END of GitHub GETs.
+    # Capture as_of afterward, or every successful read appears to be
+    # in the future and the published Health remains UNKNOWN.
+    if now is None:
+        now = datetime.now(timezone.utc)
     board = build_board(snapshot, now)
     if args.write:
         md_path, json_path = write_board(
