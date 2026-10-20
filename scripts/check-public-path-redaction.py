@@ -196,7 +196,10 @@ def audit(
     for rel, blob in rows:
         if rel in pins:
             seen_fixtures.add(rel)
-            if hashlib.sha256(blob).hexdigest() != pins[rel]:
+            # Git on Windows may check out tracked text with CRLF when
+            # core.autocrlf=true. Pin the canonical LF content, so these
+            # same historical fixtures verify on macOS, Linux and Windows.
+            if hashlib.sha256(blob.replace(b"\r\n", b"\n")).hexdigest() != pins[rel]:
                 problems.append(f"{rel}: pinned synthetic fixture changed")
         try:
             found = kinds(decode_tracked_bytes(blob))
@@ -305,6 +308,16 @@ def selftest() -> None:
         "docs/sample.md: pinned synthetic fixture changed"
     ]:
         fail("selftest accepted a changed pinned fixture")
+    lf_fixture = b"header\n" + private + b"\n"
+    lf_sha = hashlib.sha256(lf_fixture).hexdigest()
+    crlf_fixture = lf_fixture.replace(b"\n", b"\r\n")
+    if audit([("docs/sample.md", crlf_fixture)], allowlist=frozenset(), pins={"docs/sample.md": lf_sha}):
+        fail("selftest refused a Windows CRLF checkout of the same pinned fixture")
+    if audit(
+        [("docs/sample.md", crlf_fixture + b"extra")],
+        allowlist=frozenset(), pins={"docs/sample.md": lf_sha},
+    ) != ["docs/sample.md: pinned synthetic fixture changed"]:
+        fail("selftest accepted a tampered CRLF fixture")
     if audit([("docs/sample.md", clean)], allowlist=frozenset(), pins={"docs/sample.md": hashlib.sha256(clean).hexdigest()}) != [
         "docs/sample.md: fixture private-range example missing"
     ]:
