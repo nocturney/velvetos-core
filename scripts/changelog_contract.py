@@ -27,6 +27,10 @@ ROOT = Path(__file__).resolve().parents[1]
 FRAGMENT_RE = re.compile(r"^changelog\.d/([a-z0-9]+(?:-[a-z0-9]+)*)\.md$")
 CAPABILITY_RE = re.compile(r"^(packages/|office/|scripts/|\.github/workflows/|constitution/)")
 UNRELEASED = "## [Unreleased]"
+UNRELEASED_TITLE = "[Unreleased]"
+ATX_H2_RE = re.compile(r"^ *##(?:[ \t]+(.*?))?[ \t]*$")
+SETEXT_RE = re.compile(r"^ *(?:-+|=+)[ \t]*$")
+FENCE_RE = re.compile(r"^ *(`{3,}|~{3,})(.*)$")
 
 
 def fragment_name(path: str) -> bool:
@@ -171,50 +175,99 @@ def _line_text(line: str) -> str:
     return line.strip("\r\n")
 
 
-def _fence_marker(line: str) -> bool:
-    text = _line_text(line).lstrip()
-    return text.startswith("```") or text.startswith("~~~")
+def _indent(text: str) -> int:
+    """Leading spaces of a tab-expanded line."""
+    return len(text) - len(text.lstrip(" "))
 
 
-def _section_heading(line: str) -> bool:
-    """A level-2 heading. ``###`` stays inside the Unreleased section."""
-    text = _line_text(line)
-    return text == "##" or text.startswith("## ") or text.startswith("##\t")
+def _h2_title(text: str) -> str | None:
+    """Title of an ATX level-2 heading at any indent, else None. ``###`` is not level 2."""
+    match = ATX_H2_RE.match(text)
+    if match is None:
+        return None
+    return match.group(1) or ""
+
+
+def _setext_underline(text: str, prose: bool) -> bool:
+    """A ``---`` or ``===`` line directly under text is a setext heading underline."""
+    return prose and SETEXT_RE.match(text) is not None
+
+
+def _fence_open(text: str) -> tuple[str, int] | None:
+    """Marker character and run length of a fence opener, else None.
+
+    A backtick info string may not contain a backtick, so a line like ```x``` is inline code.
+    """
+    match = FENCE_RE.match(text)
+    if match is None:
+        return None
+    run, info = match.group(1), match.group(2)
+    if run[0] == "`" and "`" in info:
+        return None
+    return run[0], len(run)
+
+
+def _fence_close(text: str, marker: str, length: int) -> bool:
+    """Same marker character, at least the opening length, indented three spaces or less, no info."""
+    if _indent(text) > 3:
+        return False
+    body = text.strip(" ")
+    return len(body) >= length and body == marker * len(body)
 
 
 def _unreleased_region(lines: list[str]) -> tuple[int, int, set[str]] | None:
-    """Header index, next heading index, and lines that count as folded.
+    """Header index, next boundary index, and lines that count as folded.
 
-    The section ends at the next ``##`` heading, refusing an open fence at that heading. A missing
-    Unreleased heading yields None. Bullets inside a fence are omitted.
+    A boundary is a level-2 heading or a setext underline under text. A fence closes only on
+    its own marker character, at least as long as its opener, so a mixed ``~~~`` inside a
+    backtick fence stays inside. Nothing inside a fence counts. Parsing fails closed: a fence
+    or heading indented four spaces or more, a fence still open at a boundary, a boundary
+    inside an Unreleased fence, or a missing Unreleased heading yields None.
     """
-    texts = [_line_text(line) for line in lines]
-    try:
-        header = texts.index(UNRELEASED)
-    except ValueError:
-        return None
-    present: set[str] = set()
-    fenced = False
-    end = len(lines)
-    for index in range(header + 1, len(lines)):
-        # A fence cannot hide the boundary with already-released history.
-        if _section_heading(lines[index]):
-            if fenced:
+    header: int | None = None
+    fence: tuple[str, int] | None = None
+    prose = False
+    counted: list[str] = []
+    for index, line in enumerate(lines):
+        raw = _line_text(line)
+        text = raw.expandtabs(4)
+        if fence is not None:
+            if _fence_close(text, *fence):
+                fence = None
+                prose = False
+            elif header is not None and (_h2_title(text) is not None or _setext_underline(text, prose)):
                 return None
-            end = index
-            break
-        if _fence_marker(lines[index]):
-            fenced = not fenced
+            else:
+                prose = bool(text.strip())
             continue
-        if not fenced:
-            present.add(texts[index])
-    if fenced:
+        opener = _fence_open(text)
+        if opener is not None:
+            if _indent(text) > 3:
+                return None
+            fence = opener
+            prose = False
+            continue
+        if header is None:
+            if _h2_title(text) == UNRELEASED_TITLE and _indent(text) <= 3:
+                header = index
+            continue
+        if _h2_title(text) is not None:
+            if _indent(text) > 3:
+                return None
+            return header, index, set(counted)
+        if _setext_underline(text, prose):
+            # The text line above the underline is the heading title, not a note.
+            counted.pop()
+            return header, index, set(counted)
+        counted.append(raw)
+        prose = bool(text.strip())
+    if header is None or fence is not None:
         return None
-    return header, end, present
+    return header, len(lines), set(counted)
 
 
 def unreleased_lines(changelog: str) -> set[str]:
-    """Whole lines between ``## [Unreleased]`` and the next ``##`` heading.
+    """Whole lines between ``## [Unreleased]`` and the next level-2 heading or setext underline.
 
     A bullet inside a fenced code block is not folded. ``splitlines`` drops a
     trailing CR, so a CRLF changelog still matches an LF bullet. No Unreleased
