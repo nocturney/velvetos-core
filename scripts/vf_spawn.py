@@ -10,6 +10,8 @@ from __future__ import annotations
 import atexit
 import os
 import secrets
+import signal
+import threading
 import shutil
 import stat
 import subprocess
@@ -298,6 +300,7 @@ def _temp_is_clean(path: str) -> bool:
 def _remember_spawn_dir(path: str) -> None:
     if path not in _owned_dirs:
         _owned_dirs.append(path)
+    _ensure_sigterm_cleanup()
 
 
 def _remove_spawn_dir(path: str) -> None:
@@ -328,6 +331,20 @@ def release_spawn_dirs() -> None:
 
 
 atexit.register(release_spawn_dirs)
+
+
+def _on_spawn_sigterm(signum: int, _frame: object) -> None:
+    # Preserve normal SIGTERM exit semantics after releasing controlled dirs.
+    release_spawn_dirs()
+    signal.signal(signum, signal.SIG_DFL)
+    os.kill(os.getpid(), signum)
+
+
+def _ensure_sigterm_cleanup() -> None:
+    # Never override a caller's own signal handler or touch thread signal state.
+    if os.name != "nt" and threading.current_thread() is threading.main_thread():
+        if signal.getsignal(signal.SIGTERM) is signal.SIG_DFL:
+            signal.signal(signal.SIGTERM, _on_spawn_sigterm)
 
 
 def sandbox_directories() -> tuple[str, str]:
@@ -1153,6 +1170,85 @@ def _prove_exit_cleanup() -> list[str]:
     return errors
 
 
+def _prove_chmod_before_rmtree() -> list[str]:
+    """A dirty non-writable home must be writable before recursive removal."""
+    if os.name == "nt":
+        return []
+    errors: list[str] = []
+    original_chmod, original_rmtree = os.chmod, shutil.rmtree
+
+    def refuse_nonwritable(path, *args, **kwargs):
+        if not (stat.S_IMODE(Path(path).stat().st_mode) & stat.S_IWUSR):
+            return None  # model POSIX refusal, including root CI executors
+        return original_rmtree(path, *args, **kwargs)
+
+    try:
+        shutil.rmtree = refuse_nonwritable
+        for skip_chmod in (False, True):
+            dirty = Path(_private_dir("vf-spawn-chmod-", readonly=False))
+            (dirty / ".gitconfig").write_text("[core]\\nfsmonitor = dirty\\n", encoding="utf-8")
+            original_chmod(dirty, 0o500)
+            if skip_chmod:
+                os.chmod = lambda path, mode: (
+                    None if Path(path) == dirty else original_chmod(path, mode)
+                )
+            try:
+                _remove_spawn_dir(str(dirty))
+            finally:
+                os.chmod = original_chmod
+            if not skip_chmod and dirty.exists():
+                errors.append("spawn chmod cleanup did not remove the dirty home")
+            if skip_chmod and not dirty.exists():
+                errors.append("spawn chmod mutant was not caught")
+            if dirty.exists():
+                original_chmod(dirty, 0o700)
+                original_rmtree(dirty, ignore_errors=True)
+    finally:
+        os.chmod = original_chmod
+        shutil.rmtree = original_rmtree
+    return errors
+
+
+def _prove_sigterm_cleanup() -> list[str]:
+    """SIGTERM runs cleanup, while a disabled handler leaks both child paths."""
+    if os.name == "nt":
+        return []
+    errors: list[str] = []
+    source = Path(__file__).read_text(encoding="utf-8")
+    needle = "signal.signal(" + "signal.SIGTERM, _on_spawn_sigterm)"
+    if source.count(needle) != 1:
+        return ["SIGTERM handler registration is not unique"]
+    mutant = source.replace(needle, "pass  # mutant: SIGTERM ignores cleanup", 1)
+    code = (
+        "import os,signal,vf_spawn\\n"
+        "print(vf_spawn.controlled_home(),flush=True)\\n"
+        "print(vf_spawn.controlled_temp(),flush=True)\\n"
+        "os.kill(os.getpid(),signal.SIGTERM)\\n"
+    ).replace("\\n", "\n")
+    for label, program, should_remain in (
+        ("live", source, False),
+        ("mutant", mutant, True),
+    ):
+        with tempfile.TemporaryDirectory(prefix="vf-spawn-sigterm-") as tmp:
+            (Path(tmp) / "vf_spawn.py").write_text(program, encoding="utf-8")
+            env = dict(os.environ)
+            env["PYTHONPATH"] = tmp
+            proc = subprocess.run(
+                [sys.executable, "-c", code], cwd=tmp, env=env,
+                capture_output=True, text=True, timeout=30,
+            )
+            paths = [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+            if proc.returncode != -signal.SIGTERM or len(paths) != 2:
+                errors.append(
+                    f"SIGTERM {label} child failed exit={proc.returncode} stderr={proc.stderr!r}"
+                )
+            elif sum(Path(path).exists() for path in paths) != (2 if should_remain else 0):
+                errors.append(f"SIGTERM {label} cleanup was not load-bearing")
+            for path in paths:
+                _remove_spawn_dir(path)
+    return errors
+
+
 def prove_controlled_home() -> list[str]:
     """QA #872: anchor, private cache, an OS hook command, and cleanup. Each has a mutant."""
     errors: list[str] = []
@@ -1161,7 +1257,9 @@ def prove_controlled_home() -> list[str]:
     errors.extend(_prove_poisoned_child())
     errors.extend(_prove_note_mutants())
     errors.extend(_prove_release())
+    errors.extend(_prove_chmod_before_rmtree())
     errors.extend(_prove_exit_cleanup())
+    errors.extend(_prove_sigterm_cleanup())
     return errors
 
 
