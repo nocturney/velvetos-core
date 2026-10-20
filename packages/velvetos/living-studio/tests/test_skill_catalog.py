@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -132,7 +133,11 @@ class CatalogTests(unittest.TestCase):
                 before = catalog(root)
                 self.assertEqual(before[0]["name"], "dummy")
                 self.assertFalse(update_index(root, index)["updated"])
+                stat = source.stat()
                 source.write_text("---\nname: dummy\ndescription: Test design\n---\nTwo.\n")
+                # A malicious/restored mtime and identical byte count must not defeat hash validation.
+                os.utime(source, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+                self.assertEqual(source.stat().st_size, stat.st_size)
                 # Stale derived index is never authoritative on read.
                 altered = catalog(root)
                 self.assertNotEqual(altered[0]["sha256"], before[0]["sha256"])
@@ -170,6 +175,24 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(found["source_present_count"], 2)
             self.assertEqual({x["skill"] for x in found["local_skills"]}, {"pdf", "review-agent"})
             self.assertFalse(found["execution_verified"])
+
+
+    def test_empty_candidate_evidence_and_authority_preserved(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            registry = root / "docs/implementation/office-v2/phase2/candidate-registry-v0.json"
+            registry.parent.mkdir(parents=True)
+            registry.write_text(json.dumps({"items": [{
+                "category": "EXTERNAL_SKILL", "name": "upstream:fixture",
+                "candidate_id": "fixture-candidate", "evidence_refs": [],
+                "notes": [], "lifecycle_state": "RESEARCHED",
+                "authority_role": "NONE", "capability_tags": ["web-ui"]
+            }]}))
+            item = get_skill("fixture-candidate", root)
+            self.assertEqual(item["source_refs"], [
+                "docs/implementation/office-v2/phase2/candidate-registry-v0.json"])
+            self.assertEqual(item["authority_role"], "NONE")
+            self.assertTrue(route("fixture-candidate", root)["skills"][0]["requires_admission"])
 
 
 if __name__ == "__main__":

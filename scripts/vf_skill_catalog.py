@@ -85,13 +85,13 @@ def discover(root: Path = ROOT, *, parsed_cache: dict[str, Any] | None = None) -
         st = path.stat()
         signature = {"size": st.st_size, "mtime_ns": st.st_mtime_ns}
         cached = parsed_cache.get(rel) if parsed_cache is not None else None
-        if cached and cached.get("fingerprint") == signature:
-            digest = cached["sha256"]
+        # Hash comparison closes same-size / restored-mtime stale-cache ambiguity.
+        raw = path.read_bytes()
+        digest = hashlib.sha256(raw).hexdigest()
+        if cached and cached.get("fingerprint") == signature and cached.get("sha256") == digest:
             meta = cached["frontmatter"]
             negative = cached["negative_triggers"]
         else:
-            raw = path.read_bytes()
-            digest = hashlib.sha256(raw).hexdigest()
             body = raw.decode("utf-8", errors="replace")
             meta = _frontmatter(body)
             negative = _negative(body)
@@ -112,6 +112,8 @@ def discover(root: Path = ROOT, *, parsed_cache: dict[str, Any] | None = None) -
             "description": desc,
             "use_cases": desc,
             "origin": "REPO",
+            "authority_role": "NONE",
+            "capability_tags": [],
             "canonical_file": rel,
             "alternate_paths": [],
             "source_refs": [rel],
@@ -166,7 +168,10 @@ def discover(root: Path = ROOT, *, parsed_cache: dict[str, Any] | None = None) -
             out.append({
                 "id": entry["candidate_id"], "name": slug, "description": desc, "use_cases": desc,
                 "origin": "EXTERNAL_CANDIDATE", "canonical_file": None, "alternate_paths": [],
-                "source_refs": [ref, CANDIDATES], "upstream": entry.get("evidence_refs", [None])[0],
+                "authority_role": entry.get("authority_role", "NONE"),
+                "capability_tags": entry.get("capability_tags") or [],
+                "source_refs": ([ref] if ref else []) + [CANDIDATES],
+                "upstream": (entry.get("evidence_refs") or [None])[0],
                 "license": next((x.split(": ", 1)[1] for x in entry.get("notes", []) if x.startswith("LICENSE: ")), None),
                 "version": next((x.split(": ", 1)[1] for x in entry.get("notes", []) if x.startswith("VERSION: ")), None),
                 "commit": next((x.split(": ", 1)[1] for x in entry.get("notes", []) if x.startswith("COMMIT: ")), None),
@@ -185,12 +190,13 @@ def discover(root: Path = ROOT, *, parsed_cache: dict[str, Any] | None = None) -
     return sorted(out, key=lambda x: x["id"])
 
 
-def _source_fingerprint(root: Path) -> dict[str, list[int]]:
-    """Stat-only hot-path validation; update_index re-hashes every changed file."""
+def _source_fingerprint(root: Path) -> dict[str, list[Any]]:
+    """Content-verified freshness, including same-size or restored-mtime edits."""
     found = {}
     for path in _repo_skill_files(root):
         st = path.stat()
-        found[path.relative_to(root).as_posix()] = [st.st_size, st.st_mtime_ns]
+        found[path.relative_to(root).as_posix()] = [st.st_size, st.st_mtime_ns,
+                                                   hashlib.sha256(path.read_bytes()).hexdigest()]
     return found
 
 
@@ -263,14 +269,25 @@ def host_probe() -> dict[str, Any]:
     """Read-only local evidence, no inference about other computers or tool authority."""
     home = Path.home()
     found = []
+    unreadable = []
     for provider in (".cursor", ".agents", ".grok", ".claude", ".codex"):
         base = home / provider / "skills"
         # Claude synced and Codex .system skills are nested; one-level glob misses them.
-        for path in sorted(base.rglob("SKILL.md")) if base.is_dir() else []:
-            found.append({"adapter": provider, "skill": path.parent.name,
-                          "path": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
+        try:
+            paths = sorted(base.rglob("SKILL.md")) if base.is_dir() else []
+            for path in paths:
+                try:
+                    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+                except OSError as exc:
+                    unreadable.append({"adapter": provider, "path": str(path), "reason": type(exc).__name__})
+                    continue
+                found.append({"adapter": provider, "skill": path.parent.name,
+                              "path": str(path), "sha256": digest})
+        except OSError as exc:
+            unreadable.append({"adapter": provider, "path": str(base), "reason": type(exc).__name__})
     return {"hostname": socket.gethostname(), "platform": platform.system(),
             "local_skills": found, "source_present_count": len(found),
+            "unreadable": unreadable,
             "agent_binary_presence": {"claude": bool(shutil.which("claude")),
                                       "cursor": bool(shutil.which("cursor")),
                                       "codex": bool(shutil.which("codex"))},
@@ -304,7 +321,7 @@ def _rank(record: dict[str, Any], query: str) -> int:
     if request_ui and not request_cad and candidate_name & {"cad", "openscad", "blender"}:
         return 0
     if request_cad and not request_ui and record["origin"] == "EXTERNAL_CANDIDATE":
-        if record.get("upstream") == "https://github.com/plugin87/ux-ui-agent-skills":
+        if "web-ui" in record.get("capability_tags", []):
             return 0
     for negative in record.get("negative_triggers", []):
         # Explicit exclusions win over incidental matches in negative text.
@@ -350,7 +367,9 @@ def route(query: str, root: Path = ROOT) -> dict[str, Any]:
         "skills": [{"id": x["id"], "score": x["score"], "source": x["canonical_file"],
                     "candidate": x["origin"] == "EXTERNAL_CANDIDATE",
                     "run_ready": x["availability"]["execution_ready"],
-                    "requires_admission": x["origin"] == "EXTERNAL_CANDIDATE"} for x in matches],
+                    "authority_role": x.get("authority_role", "NONE"),
+                    "requires_admission": x["origin"] == "EXTERNAL_CANDIDATE" and
+                    x["status"] not in {"ADMITTED", "ACTIVE", "PRODUCTION"}} for x in matches],
         "execution": "NOT_STARTED",
         "dispatch": "Manual/authorized agent selection only; require host facts and matching permissions",
         "progressive_loading": "Read selected canonical_file when needed, then only its relevant references",
@@ -392,8 +411,8 @@ def plan(query: str, root: Path = ROOT) -> dict[str, Any]:
         "agent_candidates": matched_agents,
         "existing_deterministic_checks": checks,
         "host": {"local": socket.gethostname(),
-                 "skill_source_present": bool(ranked and ranked[0]["canonical_file"]),
-                 "agent_execution": "UNVERIFIED"},
+                 "repo_source_present": bool(ranked and ranked[0]["canonical_file"]),
+                 "machine_specific_access": "UNVERIFIED", "agent_execution": "UNVERIFIED"},
         "composition": "Evaluate complementary/competitive steps; no forced chain or automatic winner",
         "next": "Authorize execution via existing Office task envelope / Core lease; run relevant checks; independent QA on exact head",
         "execution": "NOT_STARTED", "receipt": None,
