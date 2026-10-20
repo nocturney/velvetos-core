@@ -11,6 +11,8 @@ Source: [#595](https://github.com/nocturney/velvetos-core/issues/595) and the to
 
 This pass installs nothing into the Office console or a dashboard, adds no workflow, and edits no candidate registry. `security_admission` stays **RED**.
 
+**Evidence status: AUTHOR_REPORTED_UNVERIFIED.** The cloud-VM results below are what the author reports. No command log, network log, `sitecustomize.py`, or `netstat` capture is committed, and no reviewer has re-run them. Read each **PASS** as "the author reports PASS". This record grants no runtime, install, or admission authority.
+
 License policy is [#632](https://github.com/nocturney/velvetos-core/pull/632) / `packages/vlicense/GATE.md`. These rows are software. A license is recorded and does not block the smoke. The Israeli-creator stop applies to 3D-print models. SPDX values below are `GET /repos/{owner}/{repo}` at 2026-10-19T06:50Z unless a cell says the license file was read.
 
 ## Overlap
@@ -21,16 +23,16 @@ License policy is [#632](https://github.com/nocturney/velvetos-core/pull/632) / 
 
 ## What "standalone now" means
 
-A **yes** row can be smoked on this cloud VM with an isolated venv, `node_modules`, or a downloaded binary: no paid API, no account, no secret, and no listener left on the host. A **spare** row needs a GUI, macOS, Windows, Docker, or an already-running Ollama at `127.0.0.1:11434`. Those steps are written below and were not run. Hosts **Chris** and **Chris-3DPC** are out of every step.
+A **yes** row can be smoked on this cloud VM with an isolated venv, `node_modules`, or a downloaded binary: no paid API, no account, no secret, and no listener left on the host. A **spare** row needs a GUI, macOS, Windows, Docker, or an already-running Ollama at `127.0.0.1:11434`. Spare rows were not run, and this record gives no steps for them. See [Spare-machine rows](#spare-machine-rows-not-run-not-authorized). Hosts **Chris** and **Chris-3DPC** are out of scope for this record.
 
 ## Candidate table
 
 | Candidate | What it is | License | Standalone now | Minimal plan |
 |---|---|---|---|---|
-| CrewAI `crewAIInc/crewAI` | Python multi-agent framework | MIT | Import yes. A completion needs local Ollama | venv, `crewai==1.15.28`, import only here. Completion steps are for MacMiniOffice2 |
+| CrewAI `crewAIInc/crewAI` | Python multi-agent framework | MIT | Import yes. A completion needs local Ollama | venv, `crewai==1.15.28`, import only here. No `kickoff` under this record. A kickoff goes only through the [gated CrewAI runbook](../office-v2/pilot-runbook-crewai.md) |
 | AutoGen `microsoft/autogen` | Agentic programming framework. README points new work at Microsoft Agent Framework. GitHub `archived` is false | Docs `LICENSE` CC-BY-4.0. Code `LICENSE-CODE` MIT (file re-read) | Import of `autogen-core` yes. Studio is a server | venv, `autogen-core==0.7.5`, print version. Do not start AutoGen Studio |
 | LangGraph `langchain-ai/langgraph` | Graph runtime for agents | MIT | Yes, pure function graph | venv, `langgraph==1.2.16` and `langgraph-checkpoint==4.3.0`, compile a one-node graph |
-| Archon `coleam00/Archon` | AI coding harness with a local server | MIT | Spare. Windows `install.ps1` or a server | Chris-Mini-PC. Loopback only, then stop. See spare steps |
+| Archon `coleam00/Archon` | AI coding harness with a local server | MIT | Spare. Windows `install.ps1` or a server | Not run. Needs its own reviewed runbook |
 | UFO `microsoft/UFO` | Windows computer-use agent | MIT | Spare, and blocked | Chris-Mini-PC stops before install. `security_admission` stays RED. 18 advisories on 2026-10-18 had no patched version |
 | OpenHands `OpenHands/OpenHands` | Software-agent runtime | MIT | Spare. Docker | Mac-Bedroom, one container, loopback, then remove |
 | n8n `n8n-io/n8n` | Workflow automation | Sustainable Use License (`LICENSE.md` re-read). `.ee.` files need an enterprise licence. SPDX `NOASSERTION` | Spare. Docker for current installs | Mac-Bedroom, loopback, then remove |
@@ -48,9 +50,9 @@ A **yes** row can be smoked on this cloud VM with an isolated venv, `node_module
 | Mem0 `mem0ai/mem0` | Agent memory library | Apache-2.0 | Spare. Documented Ollama LLM and embedder | MacMiniOffice2. Both models must already be on `127.0.0.1:11434`. Do not pull weights |
 | Supermemory `supermemoryai/supermemory` | Self-hosted memory app | MIT | Spare. Server | Mac-Bedroom loopback, then stop |
 | Letta Code `letta-ai/letta-code` | Coding agent with memory | Apache-2.0 | Spare. Ollama for the LLM path | MacMiniOffice2. Stop if embeddings are not already local |
-| Goose `aaif-goose/goose` | Extensible local agent CLI | Apache-2.0 | Version yes. A reply needs Ollama | Linux `--version` here. `goose run` steps are for MacMiniOffice |
-| OpenCode `anomalyco/opencode` | Coding-agent CLI and desktop app | MIT | Version yes. `run` can open a local server and needs a model | Linux `--version` here. `run` steps are for MacMiniOffice |
-| iFixAi `ifixai-ai/iFixAi` | Agent assurance CLI | Apache-2.0 | `--version` yes. `ifixai run` asks for a provider | venv, `ifixai==4.2.0`, `--version` inside a network namespace |
+| Goose `aaif-goose/goose` | Extensible local agent CLI | Apache-2.0 | Version yes. A reply needs Ollama | Linux `--version` here. No `goose run` under this record |
+| OpenCode `anomalyco/opencode` | Coding-agent CLI and desktop app | MIT | Version yes. `run` can open a local server and needs a model | Linux `--version` here. No `opencode run` under this record |
+| iFixAi `ifixai-ai/iFixAi` | Agent assurance CLI | Apache-2.0 | `--version` yes. `ifixai run` asks for a provider | venv, `ifixai==4.2.0` pinned on any rerun, `--version` inside a network namespace |
 | PentAGI `vxcontrol/pentagi` | Autonomous penetration-testing system | MIT, with upstream EULA and service terms called out in the 2026-10-14 intake | No | Do not install. `security_admission` stays RED. No scanner, no Docker socket |
 | Ghidra `NationalSecurityAgency/ghidra` | Reverse-engineering toolkit | Apache-2.0 | Spare. JDK 25. This VM has OpenJDK 21 | MacMiniOffice headless hello-world, then quit |
 | OpenPost `getopenpost/openpost` | Social post scheduler. Provenance row in comment 6250538600 | AGPL-3.0 | Spare | Not smoked. A scratch clone on Mac-Bedroom may read the README. Stop before any account or post |
@@ -67,11 +69,19 @@ A **yes** row can be smoked on this cloud VM with an isolated venv, `node_module
 | Icepick `hatchet-dev/icepick` | TypeScript durable-agent library. Provenance row | MIT | Spare | Not smoked. Scratch `npm` install on Mac-Bedroom with an exact pin, no Hatchet cloud token |
 | AYON | `ynput/ayon-core` Apache-2.0 and `ynput/ayon-backend` SPDX `NOASSERTION` | Split | Spare | Not smoked. Pipeline server. Do not start it on a DCC machine |
 
-## Cloud VM run
+## Cloud VM run (author-reported)
+
+Everything in this section is author-reported. None of it was re-run for review.
 
 Host: Linux x86_64, Python 3.12.3, `node` on `PATH` at the start was v22.14.0. Docker was absent. Work stayed under `/tmp/office2-smoke`. Venvs and binaries were not copied into the repo. Provider keys were unset in every smoke process. `HOME`, `XDG_*`, and `CREWAI_STORAGE_DIR` pointed at that temp tree.
 
-Python smokes loaded `sitecustomize.py` that logged DNS and `connect`, and raised on any TCP target other than `127.0.0.1`, `::1`, or `localhost`. CLI smokes ran inside `unshare --net --map-root-user`. Host `netstat -lntu` after the run matched the listeners that were already there (ports 50052, 26058, 26500, 2375, 5901, 26054, 26053). No `temporal`, `goose`, `opencode`, `promptfoo`, or `uvicorn` process remained.
+Python smokes loaded a `sitecustomize.py` that replaced `socket.socket.connect` in the Python process. It logged DNS and `connect` calls and raised on a TCP target other than `127.0.0.1`, `::1`, or `localhost`. That file is not committed.
+
+What the guard shows: no Python-level `socket.socket.connect` to a non-loopback address was logged. It does **not** prove egress denial. It is a userland patch in one interpreter. It does not cover `connect_ex`, UDP `sendto`, DNS resolution itself, C extensions or native libraries that open sockets without Python's `socket` module, subprocesses, or code that saved the original `connect` before the patch. It also allows the name `localhost` without checking what that name resolves to. "Net log empty" in the table means only that this log was empty.
+
+CLI smokes ran inside `unshare --net --map-root-user`. A fresh network namespace has no route out, so that is kernel-level isolation for those processes. Python smokes did not run in a namespace. Host `netstat -lntu` after the run matched the listeners that were already there (ports 50052, 26058, 26500, 2375, 5901, 26054, 26053). No `temporal`, `goose`, `opencode`, `promptfoo`, or `uvicorn` process remained.
+
+Installs used direct version pins with no transitive lock or hash check. The iFixAi install was unpinned (see its row). A rerun must pin every direct dependency and is still not a hash-locked install.
 
 | Candidate | Version observed | Command | Result |
 |---|---|---|---|
@@ -82,7 +92,7 @@ Python smokes loaded `sitecustomize.py` that logged DNS and `connect`, and raise
 | Pydantic AI | 2.57.0 | `pip install --no-cache-dir 'pydantic-ai==2.57.0'` then `Agent(model=TestModel()).run_sync("ping")` | **PASS.** Output `success (no tool calls)`. A startup banner printed a Logfire URL. Net log empty |
 | LiteLLM | 1.88.6 (PyPI latest at the same time was 1.106.0 and was not installed) | `LITELLM_LOCAL_MODEL_COST_MAP=True` then `completion(..., mock_response="pong")` | **PASS.** Content `pong`. Net log empty |
 | Agent Framework | agent-framework-core 1.22.0 | `pip install --no-cache-dir 'agent-framework-core==1.22.0'` then Upper then Reverse on `"velvet"` | **PASS.** Outputs `['TEVLEV']`. Net log empty |
-| iFixAi | 4.2.0 | `pip install --no-cache-dir ifixai` (resolved 4.2.0) then `ifixai --version` inside the netns | **PASS** for version. `ifixai run` was not used |
+| iFixAi | 4.2.0 | `pip install --no-cache-dir ifixai` (unpinned; resolved 4.2.0) then `ifixai --version` inside the netns | **PASS** for version. The install was not pinned, so this row does not reproduce. A rerun uses `ifixai==4.2.0`. `ifixai run` was not used |
 | Promptfoo | 0.124.1 | `npm install --no-fund --no-audit promptfoo@0.124.1` then `promptfoo eval` on the echo config inside the netns | **PASS** on Node v22.23.3: `1 passed (100%)`, 0 failed, 0 errors, duration 0s. **FAIL** on the PATH Node v22.14.0: `promptfoo requires a supported Node.js runtime. Detected: v22.14.0. Required: >=22.22.0`. The passing eval did not leave a listener. `promptfoo view` was not started |
 | Goose | 1.55.0 | Release asset `goose-x86_64-unknown-linux-gnu.tar.gz` from tag v1.55.0, then `goose --version` inside the netns with `GOOSE_TELEMETRY_OFF=true` | **PASS.** Printed `1.55.0`. `goose run` was not used |
 | OpenCode | 1.19.3 | Release asset `opencode-linux-x64.tar.gz` from tag v1.19.3, then `opencode --version` inside the netns | **PASS.** Printed `1.19.3`. `opencode run`, `serve`, and `web` were not used |
@@ -110,91 +120,23 @@ Eval environment: `CI=1`, `PROMPTFOO_DISABLE_TELEMETRY=1`, `PROMPTFOO_DISABLE_UP
 
 DBOS config: `system_database_url=sqlite:////tmp/office2-smoke/work/dbos.sqlite`, `enable_otlp=False`. No Conductor key.
 
-`scripts/office2/run_standalone_smokes.py` is the pin list and the connect guard. `python3 scripts/check-all.py` does not execute it. Running it with no flag exits 2 and installs nothing.
+`scripts/office2/run_standalone_smokes.py` is report only. It prints the pin list, the path of this record, `smokes run by this helper: 0`, and the author-reported status. `--json` prints the same report as JSON. `--execute` is always refused with exit 2. No flag or environment variable makes it install, start, or check anything. `python3 scripts/check-all.py` does not execute it. Offline checks: `python3 scripts/office2/test_run_standalone_smokes.py`.
 
-## Spare-machine steps (not run)
+## Spare-machine rows (not run, not authorized)
 
-Do these on one machine at a time. Scratch directory only. Unset `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `GOOGLE_API_KEY`, and `LANGSMITH_API_KEY` before the process starts. After each server test, stop the process and confirm its port is gone. Never use Chris or Chris-3DPC.
+This record has no executable steps for spare machines. Nothing below is a GO. Each row needs its own reviewed runbook, an owner GO, and the admission, security, and cost gates before anything is installed or started.
 
-### MacMiniOffice2 — local Ollama completions
-
-Preflight, every tool in this section:
-
-```bash
-curl -sS --max-time 3 http://127.0.0.1:11434/api/version
-```
-
-Expected: a small JSON version object. Connection refused, a bind on `0.0.0.0`, or port `11435`: **STOP**. Do not start Ollama. Do not pull a model. Do not download weights.
-
-CrewAI, scratch `~/Velvet/candidates/20261019/crewai`:
-
-```bash
-python3 -m venv .venv
-. .venv/bin/activate
-pip install --no-cache-dir 'crewai==1.15.28'
-export CREWAI_DISABLE_TELEMETRY=true OTEL_SDK_DISABLED=true CREWAI_TRACING_ENABLED=false
-export ANONYMIZED_TELEMETRY=False HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
-export CREWAI_STORAGE_DIR="$PWD/storage" HOME="$PWD/home"
-mkdir -p "$CREWAI_STORAGE_DIR" "$HOME"
-python - << 'PY'
-from crewai import Agent, Crew, LLM, Task
-llm = LLM(
-    model="qwen3.5:9b",
-    base_url="http://127.0.0.1:11434/v1",
-    api_key="local",
-    custom_openai=True,
-)
-agent = Agent(role="Triage", goal="Reply with the single word pong", backstory="local", llm=llm, tools=[], memory=False)
-task = Task(description="Reply with the single word pong", expected_output="pong", agent=agent)
-crew = Crew(agents=[agent], tasks=[task], memory=False)
-print(crew.kickoff())
-PY
-```
-
-Expected: the text `pong`, and no TCP connection except `127.0.0.1:11434`. If `qwen3.5:9b` is not already loaded, **STOP**. Do not add `crewai-tools`.
-
-Mem0, Graphiti, Hindsight, and Letta Code use the same preflight and the same scratch parent. One venv each. Point only at `http://127.0.0.1:11434`. If the tool asks for Neo4j, a hosted embedder, or an API key, **STOP** and record `BLOCKED_LOCAL_DEPENDENCY`. Stop any process the tool spawned before leaving the machine.
-
-### MacMiniOffice — Goose, OpenCode, Ghidra
-
-Goose, empty directory `~/Velvet/candidates/20261019/goose`. Same Ollama preflight. Binary from the v1.55.0 Linux or macOS asset that matches the machine, or the copy already used for `--version` if this is a repeat on Linux.
-
-```bash
-export GOOSE_TELEMETRY_OFF=true GOOSE_TELEMETRY_ENABLED=false
-export OLLAMA_HOST=http://127.0.0.1:11434
-goose run --no-session --provider ollama --model qwen3.5:9b -t "Reply with the single word pong"
-```
-
-Expected: `pong` on stdout. Working directory stays the empty scratch dir. Do not pass a recipe from GitHub.
-
-OpenCode, empty directory `~/Velvet/candidates/20261019/opencode`. Same Ollama preflight. v1.19.3 asset for that OS.
-
-```bash
-opencode run --pure --dir "$PWD" -m "ollama/qwen3.5:9b" "Reply with the single word pong"
-```
-
-Expected: `pong`. Do not pass `--auto`, `--mdns`, or a hostname other than `127.0.0.1`. After it exits, confirm nothing is still listening. If `run` opens a local server, stop that process before leaving.
-
-Ghidra: this cloud VM is OpenJDK 21.0.10. The 2026-10-14 intake names Ghidra 12.1.4 and JDK 25. On MacMiniOffice, install a user-local JDK 25, download the official 12.1.4 zip into the scratch dir, compile a local `int main(void){return 0;}` program, and run `support/analyzeHeadless` on that binary only. Quit the GUI if it opens. Expected: a headless log that names the binary and a zero exit. Remove the scratch project after. Do not point it at anyone else's firmware.
-
-### Mac-Bedroom — one Docker stack at a time
-
-No Docker was present on the cloud VM, so these were not started. On Mac-Bedroom, `docker version` must succeed. Publish `127.0.0.1` only. One stack, then `docker compose down` and a port check, before the next.
-
-- n8n current image, port `127.0.0.1:5678`. Expected: local HTTP responds, then the port is gone.
-- Activepieces with its documented Postgres and Redis, loopback ports only. Expected: local HTTP responds, then the ports are gone.
-- Windmill community image, loopback only. Expected: local HTTP responds, then the port is gone.
-- OpenHands with Docker, loopback only. Expected: local HTTP responds, then the container is gone.
-- Supermemory, herdr, and Icepick only if their README smoke is loopback and needs no token. Otherwise **STOP**.
-
-### Chris-Mini-PC — Windows, then stop
-
-Archon: scratch `D:\Velvet\candidates\20261019\Archon`. Follow upstream `install.ps1` only inside that directory. If the server starts, the bind is `127.0.0.1`. Request one local health URL. Stop the process. `netstat` must not show the Archon port. A bind on `0.0.0.0` is a failed test: stop it immediately. CVE-2026-111322 covered 0.2.13–0.11.1; v0.12.1 was outside that range on 2026-10-18. That history is why the bind stays loopback.
-
-UFO: **STOP.** `security_admission` stays RED. The 2026-10-18 advisory read found 18 published advisories and no patched version on any of them. Do not `pip install`, do not start Galaxy, MCP, or a WebSocket server, and do not drive the desktop.
-
-PentAGI: **STOP.** Do not clone it onto a spare machine in this test. A scanner, a host Docker socket, and an exposed callback are outside this smoke.
+- **CrewAI completion (`kickoff`).** The only reviewed path is the gated runbook: [pilot-runbook-crewai.md](../office-v2/pilot-runbook-crewai.md), with the attended checklist [crewai-pilot-attended-run.md](../office-v2/crewai-pilot-attended-run.md) and the [E5 network contract](../office-v2/pilot-e5-network-evidence.md). That path requires every E1-E7 gate to be PASS, a hash-locked offline wheel set, an empty tool list, `memory=False`, and the merged reviewed runner. It is scoped to its named host. Nothing in this record widens that scope to another machine. No ad hoc package install, no inline script, and no placeholder API key.
+- **Mem0, Graphiti, Hindsight, Letta Code.** Not run. They need a local model, and some need a graph database or an embedder. No reviewed runbook.
+- **Goose `run`, OpenCode `run`.** Not run. Only `--version` was smoked. A model call needs a reviewed runbook.
+- **Ghidra.** Not run. Needs JDK 25 and a pinned, checksum-verified download under a reviewed runbook.
+- **n8n, Activepieces, Windmill, OpenHands, Supermemory, herdr, Icepick.** Not run. Docker or a server. A runbook must pin image digests or exact package versions, publish loopback only, and use no account or token.
+- **Archon.** Not run. The upstream `install.ps1` is an unpinned remote installer and is not a reviewed step. CVE-2026-111322 covered 0.2.13–0.11.1; v0.12.1 was outside that range on 2026-10-18.
+- **Provenance-only rows** (OpenPost, SkillOpt, NVIDIA SkillEvaluator, OpenDots, Laya, Reef, Deja Vu, useAgent, PI-Desktop, AYON). Not run. Identity checks stay in the provenance map.
+- **UFO: STOP.** `security_admission` stays RED. The 2026-10-18 advisory read found 18 published advisories and no patched version.
+- **PentAGI: STOP.** `security_admission` stays RED. Do not clone it.
+- **Carbon: STOP.** No source URL.
 
 ## Result line
 
-Cloud smokes that ran: LangGraph, CrewAI import, AutoGen core import, DBOS SQLite, Pydantic AI `TestModel`, LiteLLM mock, Agent Framework workflow, iFixAi version, Promptfoo echo on Node 22.23.3, Goose version, OpenCode version, Temporal version, and Temporal `start-dev` inside a network namespace. Promptfoo on Node v22.14.0 failed its own runtime check. Spoolman was skipped. CortexDesk was left to the parallel ChatGPT pass. UFO and PentAGI stay unrun with `security_admission` RED.
+Status: AUTHOR_REPORTED_UNVERIFIED. Cloud smokes the author reports as run: LangGraph, CrewAI import, AutoGen core import, DBOS SQLite, Pydantic AI `TestModel`, LiteLLM mock, Agent Framework workflow, iFixAi version, Promptfoo echo on Node 22.23.3, Goose version, OpenCode version, Temporal version, and Temporal `start-dev` inside a network namespace. Promptfoo on Node v22.14.0 failed its own runtime check. Spoolman was skipped. CortexDesk was left to the parallel ChatGPT pass. UFO and PentAGI stay unrun with `security_admission` RED. No spare-machine row was run, and none is authorized here. The Python network guard was an in-process log and refusal, not proof of egress denial.

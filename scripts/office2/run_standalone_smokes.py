@@ -1,21 +1,36 @@
 #!/usr/bin/env python3
-"""Reproduce the 2026-10-19 cloud-VM smokes. check-all does not run this file.
+"""Report the 2026-10-19 Office 2.0 standalone smoke record. Report only.
 
-check-all discovers only scripts/check-*.py. This helper stays under
-scripts/office2/ on purpose. It installs nothing. It posts nothing.
-A non-loopback TCP connect is refused. Pass --execute only when the
-venvs from the recorded run already exist and OFFICE2_STANDALONE_SMOKE=1.
+This helper runs no smoke. It installs nothing, starts no process, opens no
+socket and reads no environment secret. It prints the recorded pins and the
+path of the record. The results in that record are author-reported cloud-VM
+output; no log is committed, and this helper does not verify them.
+
+--execute is refused with exit 2 on every input. There is no flag or
+environment variable that makes this helper run a smoke. A future run needs
+its own reviewed runbook.
+
+check-all discovers only scripts/check-*.py, so it does not run this file.
+The offline checks are in scripts/office2/test_run_standalone_smokes.py.
 """
 from __future__ import annotations
 
-import os
-import socket
+import json
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 DOC = ROOT / "docs" / "office2" / "standalone-candidate-tests-2026-10-19.md"
+DOC_REL = "docs/office2/standalone-candidate-tests-2026-10-19.md"
 
+STATUS = "REPORT_ONLY"
+SMOKES_RUN_BY_HELPER = 0
+RESULT_PROVENANCE = "AUTHOR_REPORTED_UNVERIFIED"
+EXECUTE_REFUSAL = "EXECUTE_UNSUPPORTED"
+
+# Versions the author reports for the 2026-10-19 cloud-VM run. Direct pins
+# only: no transitive hash lock exists. iFixAi was installed unpinned and
+# resolved to 4.2.0; the value below is the observed version.
 PINS = (
     "langgraph==1.2.16",
     "langgraph-checkpoint==4.3.0",
@@ -32,33 +47,42 @@ PINS = (
     "opencode v1.19.3",
 )
 
+USAGE = "usage: run_standalone_smokes.py [--json]"
 
-def refuse_non_loopback() -> None:
-    """Install the same connect refusal used during the recorded smokes."""
-    connect = socket.socket.connect
 
-    def guarded(self, address):  # type: ignore[no-untyped-def]
-        if isinstance(address, tuple) and address:
-            host = str(address[0])
-            if host not in {"127.0.0.1", "::1", "localhost"}:
-                raise OSError("refused non-loopback connect to " + repr(address))
-        return connect(self, address)
-
-    socket.socket.connect = guarded  # type: ignore[method-assign]
+def report() -> dict[str, object]:
+    return {
+        "status": STATUS,
+        "doc": DOC_REL,
+        "doc_present": DOC.is_file(),
+        "smokes_run_by_helper": SMOKES_RUN_BY_HELPER,
+        "result_provenance": RESULT_PROVENANCE,
+        "pins": list(PINS),
+    }
 
 
 def main(argv: list[str]) -> int:
-    if os.environ.get("OFFICE2_STANDALONE_SMOKE") != "1" or "--execute" not in argv:
-        print("Office 2.0 standalone smokes are recorded in:")
-        print(DOC)
-        print("Pins:", ", ".join(PINS))
-        print("Refusing to install or run. Set OFFICE2_STANDALONE_SMOKE=1 and pass --execute.")
+    if "--execute" in argv:
+        print(EXECUTE_REFUSAL + ": this helper is report only and runs no smoke.", file=sys.stderr)
+        print("Nothing was installed, started or checked.", file=sys.stderr)
         return 2
-    if not DOC.is_file():
-        print("missing", DOC)
+    unknown = [arg for arg in argv if arg != "--json"]
+    if unknown:
+        print(USAGE, file=sys.stderr)
+        print("unknown argument: " + unknown[0], file=sys.stderr)
+        return 2
+    data = report()
+    if not data["doc_present"]:
+        print("missing " + DOC_REL, file=sys.stderr)
         return 1
-    refuse_non_loopback()
-    print("guard armed; recorded results stay in the doc. This helper does not reinstall packages.")
+    if "--json" in argv:
+        print(json.dumps(data, indent=2, sort_keys=True))
+        return 0
+    print("status: " + STATUS)
+    print("record: " + DOC_REL)
+    print("smokes run by this helper: 0")
+    print("results: author-reported, unverified. No log is committed.")
+    print("pins: " + ", ".join(PINS))
     return 0
 
 
