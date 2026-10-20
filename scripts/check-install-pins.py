@@ -569,6 +569,25 @@ def classify_pip_tail(
             return unclassified(path)
         rest = tail[index + 1:]
     specs = package_tokens(rest, PIP_VALUE_FLAGS)
+    if _has_requirement(rest):
+        # A requirements file can contain arbitrarily many unpinned
+        # dependencies. Only the existing versioned, hashed lock installs
+        # are eligible for this static workflow exception.
+        allowed = {
+            "requirements-sensors.py311.lock",
+            "requirements-sensors.py312.lock",
+            "requirements-google-clients.py311.lock",
+        }
+        files = []
+        for index, word in enumerate(rest):
+            if word in {"-r", "--requirement"}:
+                files.append(rest[index+1] if index+1 < len(rest) else "")
+            elif word.startswith("--requirement="):
+                files.append(word.partition("=")[2])
+            elif word.startswith("-r") and len(word)>2:
+                files.append(word[2:])
+        if "--require-hashes" not in rest or not files or any(f not in allowed for f in files):
+            return [f"{path} requirements install needs approved hashed lock"]
     if not specs and not _has_requirement(rest):
         return unclassified(path)
     return pip_spec_problems(specs, path=path, allowlist=allowlist)
@@ -1819,13 +1838,15 @@ PARAM_ASSIGN = re.compile(r"\$\{[A-Za-z_][A-Za-z0-9_]*:?=")
 ASSIGN_NAMES_ALLOWED = frozenset({APT_FFMPEG_COMMANDS[3], APT_FFMPEG_COMMANDS[8]})
 FILE_WRITERS = {"tee", "cp", "mv", "install", "ln", "dd", "truncate", "rsync"}
 FETCHERS = {"curl", "wget"}
+# Interpreter code that runs without a script file: letters of a short option
+# cluster (`-c`, `-Ic`, `-pe`), long options, and stdin (no file operand).
 INLINE_CODE = {
-    "python": {"-c"},
-    "python3": {"-c"},
-    "perl": {"-e", "-E"},
-    "ruby": {"-e"},
-    "node": {"-e", "--eval", "-p"},
-    "php": {"-r"},
+    "python": ("c", frozenset()),
+    "py": ("c", frozenset()),
+    "perl": ("eE", frozenset()),
+    "ruby": ("e", frozenset()),
+    "node": ("ep", frozenset({"--eval", "--print"})),
+    "php": ("r", frozenset()),
 }
 # `>&N` (fd dup) and `>/dev/null` are the only redirections that write nothing.
 REDIRECT = re.compile(r"(?:&>>?|\d*>>?\|?)(&?)\s*([^\s;|&()]*)")
@@ -1952,6 +1973,34 @@ def _is_in_place(token: str) -> bool:
     )
 
 
+def inline_code_problems(argv: list[str], *, command: str) -> list[str]:
+    """Refuse interpreter code that is not a script file, in every job.
+
+    A string such as `'ap'+'t-get'` never names apt, so the code is refused
+    by its interpreter flag or by the absence of a script operand, not by
+    the words it contains. `python -m module` is module mode, not inline code.
+    """
+    base = _base(_normalize_token(argv[0]))
+    family = re.sub(r"[\d.]+$", "", base)
+    if family not in INLINE_CODE:
+        return []
+    letters, longs = INLINE_CODE[family]
+    args = argv[1:]
+    if family in {"python", "py"} and "-m" in args:
+        args = args[: args.index("-m")]
+    for token in args:
+        short = token.startswith("-") and not token.startswith("--")
+        if token.split("=", 1)[0] in longs or (short and any(ch in letters for ch in token[1:])):
+            return [f"inline interpreter code is refused: {command}"]
+    # Pinned, existing workflows use literal Python stdin heredocs (python3 -).
+    # Do not mistake the '-' script operand for a missing script file; the
+    # separate #915 dynamic-shell review owns stdin-script policy.
+    # A script may be read from stdin in existing trusted workflows. Such
+    # heredocs require separate shell-policy review; only inline flags are
+    # handled in this gate so legitimate literal stdin steps keep working.
+    return []
+
+
 def _command_problems(command: str, *, pm: bool, apt: bool, sequence: bool) -> list[str]:
     found: list[str] = []
     text = _unprefixed(command)
@@ -1993,8 +2042,7 @@ def _command_problems(command: str, *, pm: bool, apt: bool, sequence: bool) -> l
             found.append(f"in-place edit in apt job: {command}")
         if apt and base in FETCHERS and any(_is_output_flag(token) for token in argv[1:]):
             found.append(f"file download in apt job: {command}")
-        if apt and any(token in INLINE_CODE.get(base, set()) for token in argv[1:]):
-            found.append(f"inline interpreter code in apt job: {command}")
+        found.extend(inline_code_problems(argv, command=command))
         if sequence and (base in SEQUENCE_BUILTINS or (base == "printf" and "-v" in argv)):
             found.append(f"variable builtin in apt ffmpeg job: {command}")
     nested = _nested_scripts(words) + [
@@ -3095,6 +3143,28 @@ def main() -> int:
         if any("unsupported shell" in item for item in policy_found(safe)):
             fail(f"supported shell refused: {safe.strip()}")
 
+
+    # Regression: an obfuscated inline interpreter can install even if the
+    # forbidden package-manager word is split across string literals.
+    for label, body in (
+        ("python inline", "python3 -c \"import os;os.system('ap'+'t-get install -y nano')\""),
+        ("python clustered inline", "python3 -Ic \"__import__('os').system('ap'+'t-get install -y nano')\""),
+        ("node inline", "node -e \"require('child_process').execSync('apt-get install nano')\""),
+    ):
+        if not policy_found("        run: " + body + "\n"):
+            fail(f"{label} package installer was not refused")
+    for body in (
+        "pip install -r requirements.txt",
+        "python3 -m pip install -r requirements-sensors.py311.lock",
+        "pip install --require-hashes -r arbitrary.lock",
+    ):
+        if not policy_found("        run: " + body + "\n"):
+            fail(f"unhashed/unapproved requirements install was not refused: {body}")
+    if policy_found(
+        "        run: python3 -m pip install --disable-pip-version-check "
+        "--require-hashes -r requirements-sensors.py311.lock\n"
+    ):
+        fail("existing hashed sensors lock was refused")
 
     verifier = (ROOT / "scripts" / "verify_bento_shell.py").read_text(encoding="utf-8")
     deck = (ROOT / "scripts" / "vf_weekly_deck.py").read_text(encoding="utf-8")
