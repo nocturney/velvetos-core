@@ -26,6 +26,7 @@ from office_v2_crewai.contract import (  # noqa: E402
     APPROVED_OPENAI_BASE,
     APPROVED_PORT,
     CREWAI_TOOLS_NA,
+    CREWAI_VERSION,
     MCP_NOT_AFFECTED,
     PRIVATE_REPO_NEEDLE,
     PYSEC_CVE_MAP,
@@ -58,6 +59,8 @@ from office_v2_crewai.provider import (  # noqa: E402
     digest_from_tags,
     effective_endpoint,
     open_loopback,
+    validate_config_document,
+    _open_json,
     _lsof_binds,
     _netstat_binds,
 )
@@ -3364,6 +3367,252 @@ def check_locale_listeners() -> None:
     finally:
         shutil.rmtree(english_dir, ignore_errors=True)
 
+def _approved_model_document() -> dict:
+    return json.loads(MODEL.read_text(encoding="ascii"))
+
+
+def _require_open_json_path_allowlist() -> None:
+    """`_open_json` refuses any path outside `/api/tags` and `/api/chat`.
+
+    A later GET/POST equality check refuses the same stray paths, so calling
+    `/api/pull` does not notice when only the set compare is deleted.
+    """
+    tree = ast.parse((PACKAGE / "provider.py").read_text(encoding="utf-8"))
+    function = next(
+        node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "_open_json"
+    )
+    for node in function.body:
+        test = getattr(node, "test", None)
+        if not isinstance(node, ast.If) or not isinstance(test, ast.Compare):
+            continue
+        if not isinstance(test.left, ast.Name) or test.left.id != "path":
+            continue
+        if len(test.ops) != 1 or not isinstance(test.ops[0], ast.NotIn):
+            continue
+        if len(test.comparators) != 1 or not isinstance(test.comparators[0], ast.Set):
+            continue
+        names = []
+        for elt in test.comparators[0].elts:
+            if not isinstance(elt, ast.Constant) or not isinstance(elt.value, str):
+                fail("Ollama path allowlist is not a string set")
+            names.append(elt.value)
+        if set(names) != {"tags", "chat"} or len(names) != 2:
+            fail("Ollama path allowlist is not exactly tags and chat")
+        if len(node.body) != 1 or not isinstance(node.body[0], ast.Raise):
+            fail("Ollama path allowlist does not raise")
+        exc = node.body[0].exc
+        if (
+            not isinstance(exc, ast.Call)
+            or not isinstance(exc.func, ast.Name)
+            or exc.func.id != "ProviderRefusal"
+            or len(exc.args) != 1
+            or not isinstance(exc.args[0], ast.Constant)
+            or exc.args[0].value != "MODEL_URL_PATH_REFUSED"
+        ):
+            fail("Ollama path allowlist does not raise MODEL_URL_PATH_REFUSED")
+        return
+    fail("Ollama path allowlist compare is missing from _open_json")
+
+
+def check_refusal_gaps() -> None:
+    """Execute the fail-closed branches a source scan can leave uncalled.
+
+    Comment 6255429366. No model call. The crewai object is a stub module.
+    """
+    import types
+
+    import office_v2_crewai.crew_build as crew_mod
+    import office_v2_crewai.sandbox as sandbox_mod
+
+    document = _approved_model_document()
+    _expect_provider(lambda: validate_config_document(["not", "a", "dict"]), "MODEL_CONFIG_NOT_OBJECT")
+    _expect_provider(lambda: validate_config_document(None), "MODEL_CONFIG_NOT_OBJECT")
+    schema = dict(document)
+    schema["schema"] = "not-the-approved-schema"
+    _expect_provider(lambda: validate_config_document(schema), "MODEL_CONFIG_SCHEMA")
+    wrong_provider = dict(document)
+    wrong_provider["provider"] = "openai"
+    _expect_provider(lambda: validate_config_document(wrong_provider), "MODEL_PROVIDER_REFUSED")
+    remote = dict(document)
+    remote["remote_apis_allowed"] = True
+    _expect_provider(lambda: validate_config_document(remote), "REMOTE_API_REFUSED")
+    paid = dict(document)
+    paid["paid_apis_allowed"] = True
+    _expect_provider(lambda: validate_config_document(paid), "PAID_API_REFUSED")
+    keyed = dict(document)
+    keyed["api_key"] = "sk-x"
+    _expect_provider(lambda: validate_config_document(keyed), "API_KEY_REFUSED")
+    thinking = dict(document)
+    thinking["think"] = True
+    _expect_provider(lambda: validate_config_document(thinking), "THINK_NOT_DISABLED")
+    for name in ("openai", "anthropic", "gemini", "openrouter", "azure", "groq"):
+        tainted = dict(document)
+        tainted[name] = {"api_key": "x"}
+        _expect_provider(lambda tainted=tainted: validate_config_document(tainted), "PAID_PROVIDER_FIELD_REFUSED")
+
+    _require_open_json_path_allowlist()
+    called = []
+
+    class _JsonBody:
+        def read(self):
+            return b'{"ok": true}'
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+    def urlopen(request, timeout=30):
+        called.append(getattr(request, "full_url", ""))
+        return _JsonBody()
+
+    for path in ("pull", "delete", "create", "push", "show"):
+        called.clear()
+        target = "http://127.0.0.1:11434/api/" + path
+        _expect_provider(lambda target=target: _open_json(urlopen, target, None, 5), "MODEL_URL_PATH_REFUSED")
+        if called:
+            fail("refused Ollama path reached urlopen: %s" % called)
+    called.clear()
+    _expect_provider(
+        lambda: _open_json(urlopen, "http://127.0.0.1:11434/api/chat", None, 5),
+        "MODEL_URL_PATH_REFUSED",
+    )
+    if called:
+        fail("GET /api/chat reached urlopen")
+    called.clear()
+    _expect_provider(
+        lambda: _open_json(urlopen, "http://127.0.0.1:11434/api/tags", {}, 5),
+        "MODEL_URL_PATH_REFUSED",
+    )
+    if called:
+        fail("POST /api/tags reached urlopen")
+    called.clear()
+    body = _open_json(urlopen, "http://127.0.0.1:11434/api/tags", None, 5)
+    if body != {"ok": True} or called != ["http://127.0.0.1:11434/api/tags"]:
+        fail("GET /api/tags was not the allowed read: %s" % called)
+
+    profile = {key: os.environ.get(key) for key in ("USERPROFILE", "HOME", "TEMP", "TMP")}
+    try:
+        os.environ["USERPROFILE"] = SANDBOX_ROOT
+        _expect_storage(
+            lambda: assert_sandbox_resolution(
+                home="/home/attacker",
+                temp=SANDBOX_ROOT + "\\tmp",
+                platform="linux",
+            ),
+            "SANDBOX_HOME_OUTSIDE_ROOT",
+        )
+        _expect_storage(
+            lambda: assert_sandbox_resolution(
+                home=SANDBOX_ROOT + "\\AppData\\Local",
+                temp=SANDBOX_ROOT + "\\tmp",
+                platform="win32",
+            ),
+            "SANDBOX_HOME_OUTSIDE_ROOT",
+        )
+        _expect_storage(
+            lambda: assert_sandbox_resolution(
+                home=SANDBOX_ROOT,
+                temp="/tmp",
+                platform="win32",
+            ),
+            "SANDBOX_TEMP_OUTSIDE_ROOT",
+        )
+    finally:
+        for key, value in profile.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+
+    provider = LocalOllamaProvider(MODEL)
+    provider.authorize()
+    touched = []
+
+    class _Agent:
+        def __init__(self, *_args, **_kwargs):
+            touched.append("agent")
+
+    early = types.ModuleType("crewai")
+    early.__version__ = CREWAI_VERSION
+    early.Agent = _Agent
+    sys.modules["crewai"] = early
+    try:
+        _expect_provider(lambda: crew_mod.build_crew(provider, {}), "TELEMETRY_FLAGS_NOT_SET_BEFORE_IMPORT")
+        if touched:
+            fail("telemetry refusal still constructed a crewai agent")
+    finally:
+        sys.modules.pop("crewai", None)
+
+    work = Path(tempfile.mkdtemp(prefix="crewai-version-gap-"))
+    cwd = os.getcwd()
+    saved_env = dict(os.environ)
+    saved_home = sandbox_mod.Path.home
+    saved_temp = sandbox_mod.tempfile.gettempdir
+    saved_prepare = crew_mod.prepare_sandbox_temp
+    saved_enter = crew_mod.enter_sandbox
+    saved_seed = crew_mod.seed_trace_consent
+    saved_root_check = crew_mod.assert_under_velvet
+    saved_sandbox_root_check = sandbox_mod.assert_under_velvet
+    try:
+        # The version-drift fixture creates a synthetic D: sandbox under its
+        # throwaway cwd on POSIX; #842 resolves real filesystem ancestors.
+        # Keep the real root predicate while providing its simulated final path.
+        resolved_fixture_root = lambda root, **_kwargs: saved_root_check(
+            root, resolve=lambda target: target
+        )
+        crew_mod.assert_under_velvet = resolved_fixture_root
+        sandbox_mod.assert_under_velvet = resolved_fixture_root
+        sandbox_mod.Path.home = staticmethod(lambda: SANDBOX_ROOT)
+        sandbox_mod.tempfile.gettempdir = lambda: SANDBOX_ROOT + "\\tmp"
+
+        def prepare_without_host_drive(root, mkdir=None, exists=None):
+            # prepare_sandbox_temp refuses to create dirs when os.name != "nt",
+            # and a Windows host here has no D:\\Velvet tree. The stub only
+            # satisfies those directory steps. The version refusal stays real.
+            def mkdir_temp(path):
+                if os.name == "nt":
+                    return None
+                Path(path).mkdir(parents=True, exist_ok=True)
+
+            return saved_prepare(root, mkdir=mkdir_temp, exists=lambda path: True)
+
+        def enter_without_host_drive(cwd_path, root=SANDBOX_ROOT):
+            sandbox_mod.assert_cwd(cwd_path, root)
+            if not sandbox_mod._same(cwd_path, root):
+                raise sandbox_mod.StorageRefusal("SANDBOX_CWD_OUTSIDE_ROOT")
+
+        crew_mod.prepare_sandbox_temp = prepare_without_host_drive
+        if os.name == "nt":
+            crew_mod.enter_sandbox = enter_without_host_drive
+            crew_mod.seed_trace_consent = lambda storage_dir: saved_seed(work / "trace-storage")
+        else:
+            os.chdir(work)
+            Path(SANDBOX_ROOT).mkdir()
+        mismatch = types.ModuleType("crewai")
+        mismatch.__version__ = "0.0.0"
+        sys.modules["crewai"] = mismatch
+        ready = dict(TELEMETRY_FLAGS)
+        ready["OLLAMA_NO_CLOUD"] = "1"
+        _expect_provider(
+            lambda: crew_mod.build_crew(provider, ready),
+            "CREWAI_VERSION_MISMATCH",
+        )
+    finally:
+        os.chdir(cwd)
+        os.environ.clear()
+        os.environ.update(saved_env)
+        sandbox_mod.Path.home = saved_home
+        sandbox_mod.tempfile.gettempdir = saved_temp
+        crew_mod.prepare_sandbox_temp = saved_prepare
+        crew_mod.enter_sandbox = saved_enter
+        crew_mod.seed_trace_consent = saved_seed
+        crew_mod.assert_under_velvet = saved_root_check
+        sandbox_mod.assert_under_velvet = saved_sandbox_root_check
+        sys.modules.pop("crewai", None)
+        shutil.rmtree(work, ignore_errors=True)
+
 
 def _refuse_misplaced_guard(source: str, role: str, sentence: str, label: str) -> None:
     if sentence not in source:
@@ -3456,6 +3705,7 @@ def main() -> int:
     check_proxy_gate()
     check_manifest_mutation()
     check_provider()
+    check_refusal_gaps()
     check_kill()
     check_spawn_hygiene()
     check_execute()
