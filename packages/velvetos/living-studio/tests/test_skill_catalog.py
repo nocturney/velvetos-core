@@ -282,6 +282,94 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual([x["path"] for x in found["outside_root"]], [str(link)])
             self.assertEqual(found["outside_root"][0]["reason"], "OUTSIDE_SKILL_ROOT")
 
+    def test_ui_source_intake_complete_and_nonexecuting(self):
+        from vf_skill_catalog import ui_resources
+        items = ui_resources(ROOT)
+        self.assertEqual(len(items), 42)
+        self.assertEqual(len({r["id"] for r in items}), 42)
+        self.assertEqual(len({r["url"] for r in items}), 42)
+        groups = {g: len([r for r in items if r["category"] == g])
+                  for g in ("skills", "components", "motion", "inspiration", "design_systems")}
+        self.assertEqual(groups, {"skills": 1, "components": 18, "motion": 8,
+                                  "inspiration": 11, "design_systems": 4})
+        self.assertTrue(all(r["installed"] is False and r["stage"] == "DISCOVERED" for r in items))
+        self.assertTrue(all(r["usage_rights"]["state"] in
+                            {"REVIEW_REQUIRED", "VERIFIED_UPSTREAM_SCOPE_ONLY"} for r in items))
+        self.assertNotIn("ui-skills", {x["id"] for x in discover(ROOT)})
+        self.assertNotIn("ui-skills", {x["id"] for x in route("ui-skills", ROOT)["skills"]})
+
+    def test_resource_search_stack_compatibility(self):
+        from vf_skill_catalog import ui_resource_search
+        angular = ui_resource_search("originui-ng", ROOT, stack="Angular")
+        self.assertEqual(angular[0]["id"], "originui-ng")
+        self.assertEqual(ui_resource_search("originui-ng", ROOT, stack="React"), [])
+        self.assertEqual(ui_resource_search("ui-skills", ROOT)[0]["id"], "ui-skills")
+        self.assertEqual(ui_resource_search("Lucide", ROOT)[0]["id"], "lucide")
+        self.assertTrue(any(r["id"] == "motion" for r in ui_resource_search("motion", ROOT)))
+
+    def test_resource_facets_are_comparable_but_not_preapproved(self):
+        from vf_skill_catalog import ui_resources
+        result = compare("React components", ROOT)
+        self.assertTrue(result["supporting_resources"])
+        self.assertTrue(all(r["execution"] == "NOT_APPLICABLE_SOURCE_ONLY"
+                            for r in result["supporting_resources"]))
+        by_id = {r["id"]: r for r in ui_resources(ROOT)}
+        self.assertEqual(by_id["shadcn-ui"]["usage_rights"]["license"], "MIT")
+        self.assertEqual(by_id["lottiefiles"]["usage_rights"]["state"],
+                         "VERIFIED_UPSTREAM_SCOPE_ONLY")
+        self.assertEqual(by_id["gsap"]["usage_rights"]["state"], "REVIEW_REQUIRED")
+        self.assertEqual(audit(ROOT)["ui_resources"], 42)
+        self.assertEqual(audit(ROOT)["ui_rights_review_required"], 37)
+
+    def test_bad_external_resource_cannot_silently_enter_catalog(self):
+        from vf_skill_catalog import UI_SOURCES, ui_resources
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            src = root / UI_SOURCES
+            src.parent.mkdir(parents=True)
+            row = {"id": "valid", "url": "https://example.org", "installed": False,
+                   "runtime": "NOT_INSTALLED_OR_VERIFIED", "stage": "DISCOVERED",
+                   "usage_rights": {"state": "REVIEW_REQUIRED"}}
+            doc = {"schema": "velvetos.ui-ecosystem-source-intake.v1",
+                   "source_count": 2, "sources": [row, dict(row)]}
+            src.write_text(json.dumps(doc))
+            with self.assertRaisesRegex(ValueError, "duplicate"):
+                ui_resources(root)
+            doc["sources"][1]["id"] = "different"
+            doc["sources"][1]["url"] = "http://example.org"
+            src.write_text(json.dumps(doc))
+            with self.assertRaisesRegex(ValueError, "invalid UI resource URL"):
+                ui_resources(root)
+            doc["sources"][1]["url"] = "https://example.org/second"
+            doc["sources"][1]["stage"] = "PRODUCTION"
+            src.write_text(json.dumps(doc))
+            with self.assertRaisesRegex(ValueError, "status"):
+                ui_resources(root)
+
+    def test_resource_input_changes_invalidate_derived_index(self):
+        from vf_skill_catalog import UI_SOURCES, update_index
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            path = root / UI_SOURCES
+            path.parent.mkdir(parents=True)
+            example = {"id": "demo", "name": "Demo", "url": "https://example.org",
+                       "installed": False, "runtime": "NOT_INSTALLED_OR_VERIFIED",
+                       "stage": "DISCOVERED", "category": "components",
+                       "usage_rights": {"state": "REVIEW_REQUIRED"}}
+            doc = {"schema": "velvetos.ui-ecosystem-source-intake.v1",
+                   "source_count": 1, "sources": [example]}
+            path.write_text(json.dumps(doc))
+            index = Path(tmp) / "index.json"
+            self.assertTrue(update_index(root, index)["ui_resources_changed"])
+            self.assertFalse(update_index(root, index)["updated"])
+            doc["sources"][0]["distinctive"] = "changed source fact"
+            path.write_text(json.dumps(doc))
+            changed = update_index(root, index)
+            self.assertTrue(changed["updated"])
+            self.assertTrue(changed["ui_resources_changed"])
+            self.assertEqual(changed["ui_resource_count"], 1)
+
 
 if __name__ == "__main__":
     unittest.main()
