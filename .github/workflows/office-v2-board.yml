@@ -1,9 +1,15 @@
 name: Office 2.0 board
 
-# Manual dispatch only. Scheduler authority belongs to ChatGPT automations.
-# This job reads GitHub and uploads the board. It does not push or comment.
+# Event-driven on new main commits, with a manual fallback. No cron or extra scheduler.
+# This job reads GitHub and uploads an artifact only. It does not push or comment.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
+
+concurrency:
+  group: office-v2-board-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read

@@ -1,0 +1,1 @@
+- 2026-10-20 - **Office 2.0 board:** Generate a public-safe, read-only board artifact automatically after a main-branch push, while retaining manual dispatch. No cron, repository writes, private factory rows, or production promotion.
