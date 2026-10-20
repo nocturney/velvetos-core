@@ -135,6 +135,15 @@ class DocTests(unittest.TestCase):
         result = self.text.split("## Result line", 1)[1]
         self.assertIn("AUTHOR_REPORTED_UNVERIFIED", result)
 
+    def test_readme_claim_matches_report_only(self):
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertIn("**Office v2 — STANDALONE CANDIDATE SMOKES", readme)
+        section = readme.split("**Office v2 — STANDALONE CANDIDATE SMOKES", 1)[1].split("\n\n", 1)[0]
+        self.assertIn("UNVERIFIED", section)
+        self.assertIn("always refuses `--execute` with exit 2", section)
+        self.assertNotIn("egress refused", section)
+        self.assertNotIn("exits 2 unless", section)
+
     def test_guard_claim_is_narrowed(self):
         self.assertIn("does **not** prove egress denial", self.text)
         self.assertNotRegex(self.text, r"(?i)egress (is )?(denied|blocked)\b")
