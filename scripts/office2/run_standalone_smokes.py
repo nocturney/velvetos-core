@@ -2,7 +2,7 @@
 """Report the 2026-10-19 Office 2.0 standalone smoke record. Report only.
 
 This helper runs no smoke. It installs nothing, starts no process, opens no
-socket and reads no environment secret. It prints the recorded pins and the
+socket and reads no environment secret. It prints the reported versions and the
 path of the record. The results in that record are author-reported cloud-VM
 output; no log is committed, and this helper does not verify them.
 
@@ -28,10 +28,10 @@ SMOKES_RUN_BY_HELPER = 0
 RESULT_PROVENANCE = "AUTHOR_REPORTED_UNVERIFIED"
 EXECUTE_REFUSAL = "EXECUTE_UNSUPPORTED"
 
-# Versions the author reports for the 2026-10-19 cloud-VM run. Direct pins
-# only: no transitive hash lock exists. iFixAi was installed unpinned and
-# resolved to 4.2.0; the value below is the observed version.
-PINS = (
+# Author-reported 2026-10-19 versions, NOT a reproducible pin/lock manifest.
+# Most direct install requests named a version; iFixAi was installed unpinned.
+# No transitive dependency lock, downloadable binary hashes, or run receipt is committed.
+REPORTED_VERSIONS = (
     "langgraph==1.2.16",
     "langgraph-checkpoint==4.3.0",
     "crewai==1.15.28",
@@ -40,7 +40,7 @@ PINS = (
     "pydantic-ai==2.57.0",
     "litellm==1.88.6",
     "agent-framework-core==1.22.0",
-    "ifixai==4.2.0",
+    "ifixai 4.2.0 (observed after unpinned install)",
     "promptfoo@0.124.1",
     "temporal CLI v1.9.1",
     "goose v1.55.0",
@@ -57,7 +57,8 @@ def report() -> dict[str, object]:
         "doc_present": DOC.is_file(),
         "smokes_run_by_helper": SMOKES_RUN_BY_HELPER,
         "result_provenance": RESULT_PROVENANCE,
-        "pins": list(PINS),
+        "reported_versions": list(REPORTED_VERSIONS),
+        "reproducible_lock": False,
     }
 
 
@@ -82,7 +83,7 @@ def main(argv: list[str]) -> int:
     print("record: " + DOC_REL)
     print("smokes run by this helper: 0")
     print("results: author-reported, unverified. No log is committed.")
-    print("pins: " + ", ".join(PINS))
+    print("versions (NOT a reproducible lock): " + ", ".join(REPORTED_VERSIONS))
     return 0
 
 
