@@ -108,7 +108,9 @@
         "candidate-browser-use-bux",
         "candidate-skyvern-ai-skyvern",
         "candidate-ntegrals-openbrowser",
-        "candidate-intake-odysseus-dev-odysseus"
+        "candidate-intake-odysseus-dev-odysseus",
+        "candidate-sapientinc-praxist",
+        "candidate-microsoft-quicksand"
       ],
       "queue_policy": "Competitor-neutral overflow, preserving all credible contenders for contract-matched evaluation. Queue membership grants no runtime or production authority; current 2-3 benchmark shortlist unchanged."
     },
