@@ -223,6 +223,20 @@ Low quality is not a human gate. A failed hook, cover, caption, crop, edit, refe
 
 An instance may opt in once through its profile. Opt-in removes per-asset creative approval for LOW routine content, not constitutional locks. It never authorizes auto-DM, boost, invented ₪/Insights, unsupported claims, customer WhatsApp send, Print from HQ, or publication without rights/tool receipt.
 
+## Future business release acceptance — VF_INSTAGRAM_BUSINESS_E2E
+
+זהו **business release gate** עבור מוכנות המוצר Instagram Autonomy, ולא שער אישור חדש לכל פוסט. Reform v2 נסגרה טכנית בעבר ב־Stage 8D; הסגירה ההיסטורית שלה נשמרת, אבל היא **אינה** הוכחה שחוויית האינסטגרם האוטונומית כבר עובדת למשתמש.
+
+החוזה המכני: `packages/vfom/INSTAGRAM-CONTENT-DECISION.json#businessReleaseAcceptance`, ונבדק סטטית על ידי `scripts/check-instagram-content-decision.py`. כל עוד אין ראיית E2E חיה ומאומתת באופן עצמאי, סטטוס קבלת המוצר הוא `PENDING_LIVE_E2E` ואסור להכריז `instagram_autonomy_business_ready` או `unattended_instagram_autopilot_production_ready`. PASS של CI, סימולציה, smoke של ה־publisher או `CONTENT_READY` לבדם אינם מחליפים את ההוכחה הזו.
+
+**תרחיש הקבלה:** בקשה אמיתית `תכין ותפרסם את התמונות האלה` חייבת לעבור מאותו רצף משתמש דרך קליטת המקור, Product Truth/זכויות, בחירת פורמט, עריכת visual בפועל, ביקורת איכות ותיקון ממוקד, קופי עברי, `CONTENT_READY` קשור ל־hash של הגרסה הסופית, `policy_id: instagram.publish` יחיד עם ALLOW, כלי פרסום מחובר, provider receipt, קריאת Meta חיה חוזרת ו־`published_verified` בקטלוג הקיים. בתרחיש LOW-risk מוכר עם standing authorization: **0 שאלות, 0 אישורים פרטניים**. תקלת כלי עם fallback תקין נפתרת פנימית; חסם אמיתי בלבד עולה לבעלים.
+
+**Intent separation:** `תכין לפרסום` מכין ומאמת אך אינו מפרסם. `תכין ותפרסם` מפעיל את נתיב הפרסום רק לאחר החלטת policy קנונית. Autopilot מפרסם רק מפריטים שהוכנסו במפורש לתור האוטומטי ובהתאם לאותה policy; תמונות שנשלחו להתייעצות אינן הרשאת פרסום.
+
+**הקבלה בעתיד (לא עכשיו):** להריץ replay + shadow + controlled live על תוכן אמיתי מורשה, להוכיח גם negative controls (זכויות/עובדות חסרות, הרשאה, כפילות, timeout אחרי publish, outage), לתעד exact source/final hashes, תוצאת QA/repair, provider/media ID ו־permalink, כמות פניות לבעלים וראיות repeatability. לא יוצרים פוסטים ציבוריים מלאכותיים רק כדי לצבור מבחנים; הכרזת יכולת מותרת רק על פורמטים/מסלולים שהוכחו בפועל. את כלי הבדיקה החיה ו־release receipt יש לממש ולהפעיל בשלב הבדיקה, ולא להמציא להם PASS מראש.
+
+ה־business release gate **אינו** משנה `instagram.publish`, אינו מחייב owner approval פר־asset, אינו חוסם פרסום שגרתי שכבר מורשה, ואינו יוצר scheduler, store או orchestrator נוספים.
+
 ## Done
 
 A content job is done only when one of these is true:
