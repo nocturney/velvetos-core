@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-21T04:10:31.360Z",
+  "updated_at": "2026-10-21T07:03:00+03:00",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 242,
+  "candidate_count": 243,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -12017,6 +12017,87 @@
         "evidence_refs": [
           "https://github.com/deeplethe/solid-glass/tree/6e8903e494a15491ceda38fafea5056c95a74d44",
           "https://github.com/nocturney/velvetos-core/issues/595",
+          "https://github.com/nocturney/velvetos-core/issues/612"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intel-auto-round",
+      "source_item_id": null,
+      "name": "Intel AutoRound — low-bit model quantization and optimization toolkit",
+      "category": "MODEL_QUANTIZATION_TOOL",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner requested evaluation routing for Intel AutoRound. Upstream source/Apache-2.0 license and available low-bit/export schemes reviewed at pinned commit, but not installed or tested on a Velvet host; quality/throughput and exporter/hardware suitability require a same-model controlled comparison against already available quantized serving.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "local-model-inference",
+        "model-quantization",
+        "model-optimization",
+        "weight-only-quantization",
+        "gguf",
+        "gptq",
+        "awq",
+        "nvidia-cuda",
+        "open-weight-llm",
+        "memory-efficiency",
+        "offline-model-preparation"
+      ],
+      "platform_constraints": [
+        "Pin AutoRound source commit, exact compatible model revision and model weights license before any LAB; Apache-2.0 source does not grant rights to every weight, calibration set or dependency.",
+        "Quantization/tuning VRAM/RAM/time can exceed the finished model's footprint; RTX 4080 SUPER 16 GB is a possible conditional Windows host, not a verified capability or available lease.",
+        "Official upstream describes CPU/Intel XPU/Gaudi/NVIDIA CUDA environments and exports including GGUF, AWQ, GPTQ; validate selected backend, scheme, model and loading path rather than assuming compatibility or faster inference.",
+        "AMD/ROCm and native macOS quantization compatibility are not established here. Apple Silicon GGUF/MLX inference may be a separate export/runtime comparison only when verified for the selected artifact.",
+        "No new paid service, Codex CLI agent quota, P0 worker or GPU preemption, model download, systemwide install, public listener, new service or production gateway change follows from research registration."
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "https://github.com/intel/auto-round",
+        "https://github.com/intel/auto-round/tree/c2dbac79c38806859d858aa169f8bad4e74d937b",
+        "https://github.com/intel/auto-round/blob/c2dbac79c38806859d858aa169f8bad4e74d937b/README.md",
+        "https://github.com/intel/auto-round/blob/c2dbac79c38806859d858aa169f8bad4e74d937b/LICENSE",
+        "docs/implementation/office-v2/phase2/owner-local-model-autoround-intake-2026-10-21.md",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "ROLE: Upstream model quantization/preparation, not an inference server, an agent runtime, model routing gateway or source of effect authorization.",
+        "OWNER REQUEST 2026-10-21: Register for later evaluation in Office v2/VelvetOS; use existing local-model-inference lane and Phase 3C provider fixtures without altering LiteLLM/TensorZero or P0 shortlisted contenders.",
+        "FIRST CONTROL: pinned small-model 0.6B smoke, then a feasible 3B–8B open-weight revision; same model/tokenizer, quantization bit budget and inference backend for AutoRound vs prequantized controls, separate from cross-backend benchmarks.",
+        "QUALITY FIXTURES: independent held-out Hebrew and RTL instruction tests, structured JSON/tool schemas without live effects, multi-turn consistency, OpenSCAD/3D code and policy-deny negatives.",
+        "MEASURE: model fidelity to FP16/BF16, memory and latency/tokens-per-second, warm/cold load, quantization wall-time and resource peaks, context budget, disk/cache, exporter interoperability, repeatability, license/security, cleanup and rollback.",
+        "The core issue #595 tracks owner repo-link intake; #612 owns any later local model compute/agent-lab work. No concurrent scheduler, new long-lived worker, or extra active shortlist slot.",
+        "No AutoRound binary installed, model weights downloaded, local experiment run or host resource reserved by this research entry."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "After #612 independently verifies its existing real local model source-to-PR/independent-QA/recovery baseline and Phase 3C provider reference, compare AutoRound against available conventional prequantized GGUF/AWQ/GPTQ models and an uncompressed licensed same-model control using pinned synthetic Hebrew, JSON/tool, and OpenSCAD fixtures. Record quality, wall-clock quantization effort, cold/warm speed, VRAM/RAM/storage, interoperability and rollback; decide whether it creates practical value beyond current models.",
+        "rationale": "AutoRound could improve low-bit quality/resource trade-offs in the existing local-first model pipeline without adding a second inference service or agent orchestrator. Only a controlled equal-model equal-backend benchmark can show whether preparation cost and operational complexity are justified.",
+        "decision_evidence_refs": [
+          "https://github.com/intel/auto-round",
+          "https://github.com/intel/auto-round/blob/c2dbac79c38806859d858aa169f8bad4e74d937b/README.md",
+          "docs/implementation/office-v2/phase2/owner-local-model-autoround-intake-2026-10-21.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "local-model-inference",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Office v2 Phase 2 source review now; Phase 3C downstream same-model quantization comparison after #612 P0 baseline, not provider gateway selection",
+        "status": "WAITING_GATE",
+        "next_gate": "After #612 independently verifies its existing real local model source-to-PR/independent-QA/recovery baseline and Phase 3C provider reference, compare AutoRound against available conventional prequantized GGUF/AWQ/GPTQ models and an uncompressed licensed same-model control using pinned synthetic Hebrew, JSON/tool, and OpenSCAD fixtures. Record quality, wall-clock quantization effort, cold/warm speed, VRAM/RAM/storage, interoperability and rollback; decide whether it creates practical value beyond current models.",
+        "unlock_condition": "No isolated LAB until independently verified #612 model-backed P0 coding reference; a nonconflicting idle CPU/GPU/RAM/disk lease; verified model/weight, calibration-corpus and dependency rights; a reproducible fixed evaluation fixture and isolated rollback. No API spend, systemwide install, download, CUDA/Metal/ROCm claim, P0 resource preemption or production authority.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-local-model-autoround-intake-2026-10-21.md",
+          "https://github.com/intel/auto-round/tree/c2dbac79c38806859d858aa169f8bad4e74d937b",
           "https://github.com/nocturney/velvetos-core/issues/612"
         ]
       }
