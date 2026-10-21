@@ -221,7 +221,16 @@ def verify(envelope, receipt):
         raise Rejected("WORKTREE_BASE_DRIFT")
     expected = set(envelope["allowed_outputs"])
     artifacts = receipt.get("artifacts")
-    if not isinstance(artifacts, list) or {a.get("path") for a in artifacts} != expected:
+    if not isinstance(artifacts, list):
+        raise Rejected("ARTIFACT_SET_MISMATCH")
+    # Rows must be well-formed and unique; a repeated correct row would otherwise
+    # inflate the artifact count while the set comparison still passes.
+    if not all(isinstance(a, dict) and isinstance(a.get("path"), str)
+               and isinstance(a.get("sha256"), str) for a in artifacts):
+        raise Rejected("ARTIFACT_ROW_MALFORMED")
+    if len({a["path"] for a in artifacts}) != len(artifacts):
+        raise Rejected("ARTIFACT_ROW_DUPLICATE")
+    if {a["path"] for a in artifacts} != expected:
         raise Rejected("ARTIFACT_SET_MISMATCH")
     if git_changed(worktree) != expected:
         raise Rejected("UNEXPECTED_WORKTREE_CHANGE")
@@ -502,6 +511,24 @@ def demo_selftest():
         except Rejected as exc:
             assert str(exc) == "ARTIFACT_HASH_MISMATCH"
         tests.append("tampered_artifact_rejected")
+        # Re-sealed receipts with malformed or duplicated artifact rows must fail closed.
+        for name, rows, expected_reason in (
+            ("malformed_artifact_row", ["result.txt"], "ARTIFACT_ROW_MALFORMED"),
+            ("duplicate_artifact_row", None, "ARTIFACT_ROW_DUPLICATE"),
+        ):
+            forged = read_json(receipt_path)
+            forged.pop("receipt_sha256")
+            if rows is None:
+                forged["artifacts"] = forged["artifacts"] * 2
+            else:
+                forged["artifacts"] = rows
+            try:
+                verify(env, seal_receipt(forged))
+                raise AssertionError(name + " accepted")
+            except Rejected as exc:
+                if str(exc) != expected_reason:
+                    raise AssertionError("%s: got %s expected %s" % (name, exc, expected_reason))
+            tests.append(name + "_rejected")
         output.write_text("safe output\\n", encoding="utf-8")
         # Negative controls validate fresh isolated preflight copies, not the now-dirty test repo.
         output.unlink()
