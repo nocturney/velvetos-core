@@ -37,6 +37,12 @@
 | [`scripts/vfmem.py`](../../scripts/vfmem.py) | גרף חי + CLI |
 | [`scripts/check-vfmem.py`](../../scripts/check-vfmem.py) | בדיקת עקביות |
 
+## קטלוג Skills אחוד (נגזר, לא מקור אמת נוסף)
+
+`python3 scripts/vf_skill_catalog.py index` מעדכן cache מקומי ואטומי לפי שינויי קבצים ו־SHA256; כל שאילתה בודקת שה־cache עדיין תואם למקורות. בהיעדר cache פועלים ישירות מהמקורות. `list`, `show <id>`, `search <query>`, `compare <query>`, `route <query>`, `plan <query>`, `audit`, `host` זמינים ללא API חיצוני וללא התקנה. תוצאות זמינות וביצוע הן UNKNOWN/NOT_STARTED ללא ראיות ריצה.
+
+`vfmem` ו־`vf_living_studio.py skill` קוראים את אותה שכבת גילוי. המועמדים החיצוניים נשמרים ב־Office v2 Candidate Registry, לא נטענים כרכיבי runtime. ראו את [פיילוט ההשוואה](../../docs/implementation/office-v2/phase2/skill-comparison-pilot-20261020.md).
+
 ## איך מפעילים
 
 ```

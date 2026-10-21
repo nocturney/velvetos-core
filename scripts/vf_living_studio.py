@@ -1816,12 +1816,18 @@ def one_hour_forge(idea: str) -> dict:
 
 
 def skill_list() -> dict:
+    # Living Studio's operational registry remains unchanged; discovery is derived.
+    from vf_skill_catalog import catalog
     reg = load_json(REGISTRY, {}) or {}
+    records = catalog(ROOT)
     return {
         "skills": reg.get("skills") or [],
         "livingCapabilities": reg.get("livingCapabilities") or [],
         "count_skills": len(reg.get("skills") or []),
         "count_living": len(reg.get("livingCapabilities") or []),
+        "catalog_count": len(records),
+        "catalog": [{"id": row["id"], "status": row["status"], "origin": row["origin"]}
+                    for row in records],
     }
 
 
@@ -1834,6 +1840,10 @@ def skill_route(name: str) -> dict:
     for s in reg.get("livingCapabilities") or []:
         if s["id"] == key or s["title"].lower().replace(" ", "-") == key:
             return s
+    from vf_skill_catalog import get_skill
+    found = get_skill(key, ROOT)
+    if found is not None:
+        return found
     return {"error": "unknown_skill", "name": name, "hint": "python3 scripts/vf_living_studio.py skill list"}
 
 

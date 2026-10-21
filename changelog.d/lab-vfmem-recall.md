@@ -1,0 +1,1 @@
+- **vfmem Skill recall:** repository Skill rows whose canonical file resolves inside the repo root again index a bounded 800-character SKILL.md body, so body-only words are searchable. External source-only candidates stay description-only, and an out-of-root symlink is never read. Regression: `packages/vfmem/tests/test_skill_body_excerpt.py`.

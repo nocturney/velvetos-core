@@ -1,0 +1,1 @@
+- Unify repo Skill discovery across vfmem and Living Studio with a provider-neutral, incrementally indexed CLI; retain plugin87 v2.10.0 skills as non-installed comparison candidates and add cross-router regressions.

@@ -2166,15 +2166,15 @@
       ],
       "depends_on": [],
       "enforces": [],
-      "lifecycle": "DOMAIN",
-      "risk": "high",
+      "lifecycle": "CORE",
+      "risk": "critical",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
         "release": "BLOCK_IF_RELEVANT",
         "runtime": "NO_DIRECT_RUNTIME_EFFECT"
       },
-      "fallback_scope": "FULL_SUITE",
+      "fallback_scope": "ALWAYS_ON",
       "mapping_state": "mapped"
     },
     {
