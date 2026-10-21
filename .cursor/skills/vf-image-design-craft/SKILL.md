@@ -33,3 +33,9 @@ Use the best existing local editor for the artifact while preserving editability
 ## Completion contract
 
 Report `source_preserved`, `edit_structure_checked`, `visual_checked`, `text_checked`, `export_checked`, `rights_known` separately.
+
+## Research adapters — pixel art and local editing
+
+- For explicit pixel art/sprites, use the repo-local `vf-pixel-art` instruction Skill (Claude path `.claude/skills/vf-pixel-art`; Cursor path `.cursor/skills/vf-pixel-art`) to constrain palettes and generate repeatable source plans. Pinned upstream pxl renderer and execution remain **NOT_RUN** until isolated admission.
+- For local generative photo edits, **Kokon** (`candidate-gabrielelozupone-kokon`, AGPL-3.0) is a comparative GPU/MCP candidate only, not an installed editor. Test its mask preservation, product/brand fidelity, metadata and readback versus existing approved raster tools only after compute lease, source/model-rights and isolation gates. Never use generated pixels as photographic evidence for a real unverified product.
+- Source/evaluation record: `docs/implementation/office-v2/phase2/owner-creative-agent-tools-intake-2026-10-21.md`. Source tools and suggestions do **not** override Creative Craft routing or give publication permission.

@@ -45,3 +45,9 @@ Auto-DM, boost, printer jobs from HQ, invented ₪ or Insights, CrewAI/AutoGPT, 
 ## Output
 
 Best artifact + unresolved issues + which sensor/proof ran. Do not hide a red sensor behind fluent Hebrew.
+
+## Research patterns to load conditionally
+
+- If a bounded research task needs parallel experiment scoring and generation-to-generation provenance, read `packages/vfharness/playbooks/research-generation-evidence.md` (Praxist **pattern only**; the runtime remains queued in Office v2).
+- If evaluating sandboxes for untrusted generated code or agent tool calls, read `packages/vfharness/playbooks/agent-sandbox-evaluation.md` (Quicksand **comparison only**; no new VM or execution authority).
+- These two playbooks are specialist QA references, not a separate loop, scheduler, provider entitlement, or permission to consume Codex quota/API credits. Source intake: `docs/implementation/office-v2/phase2/owner-creative-agent-tools-intake-2026-10-21.md`.
