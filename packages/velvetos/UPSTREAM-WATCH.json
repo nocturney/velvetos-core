@@ -1058,6 +1058,47 @@
       "tracking": "default-branch-head-and-release-if-present",
       "updatePolicy": "latest-compatible",
       "autoUpgrade": false
+    },
+    {
+      "repo": "crsolver/claude-pxl",
+      "kind": "skill-pattern",
+      "integration": [
+        ".cursor/skills/vf-pixel-art/SKILL.md",
+        ".claude/skills/vf-pixel-art/SKILL.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "GabrieleLozupone/kokon",
+      "kind": "research-provider-source",
+      "integration": [
+        ".cursor/skills/vf-image-design-craft/SKILL.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "sapientinc/praxist",
+      "kind": "agent-pattern",
+      "integration": [
+        "packages/vfharness/playbooks/research-generation-evidence.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "microsoft/quicksand",
+      "kind": "agent-pattern",
+      "integration": [
+        "packages/vfharness/playbooks/agent-sandbox-evaluation.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
     }
   ],
   "stabilityExceptions": [

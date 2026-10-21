@@ -1,5 +1,5 @@
 ---
-name: vf-pixel-art
+name: vf-pixel-art-claude
 description: Design and QA deterministic pixel art, pixel icons, sprite families, sprite sheets and small pixel animations for Velvet workflows when a user asks for pixel art or sprites. Use the upstream pxl JavaScript DSL only after local pinned runtime admission, otherwise prepare a testable source draft and report rendering as NOT_RUN. Do not invoke this for photography, CAD or ordinary vector/logo tasks.
 ---
 
