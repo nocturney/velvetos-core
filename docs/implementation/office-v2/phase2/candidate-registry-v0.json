@@ -12052,7 +12052,9 @@
         "AMD/ROCm and native macOS quantization compatibility are not established here. Apple Silicon GGUF/MLX inference may be a separate export/runtime comparison only when verified for the selected artifact.",
         "No new paid service, Codex CLI agent quota, P0 worker or GPU preemption, model download, systemwide install, public listener, new service or production gateway change follows from research registration."
       ],
-      "shortlist_lanes": [],
+      "shortlist_lanes": [
+        "local-model-inference"
+      ],
       "evidence_refs": [
         "https://github.com/intel/auto-round",
         "https://github.com/intel/auto-round/tree/c2dbac79c38806859d858aa169f8bad4e74d937b",
@@ -12129,7 +12131,9 @@
         "MIT source code license observed; model weights, bundled binaries, dependencies and distribution/telemetry/update behavior require pinned version review. Upstream safety claims are not independent security audit results.",
         "No install, download, reserved host or GPU lease, network exposure, external paid API, new recurring expense, credential access, agent tool execution or production-route authority. Preserve #612 P0 and #604 fleet worker reservations."
       ],
-      "shortlist_lanes": [],
+      "shortlist_lanes": [
+        "local-model-inference"
+      ],
       "evidence_refs": [
         "https://github.com/Niko1221/Strata",
         "https://github.com/Niko1221/Strata/blob/main/README.md",
