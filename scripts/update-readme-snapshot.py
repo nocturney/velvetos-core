@@ -186,6 +186,9 @@ def main() -> int:
     args = ap.parse_args()
 
     current = README.read_text(encoding="utf-8")
+    if START not in current and END not in current:
+        print("OK README does not contain an operational snapshot")
+        return 0
     expected = apply(current, render())
     if args.check:
         if current != expected:

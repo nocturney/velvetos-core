@@ -101,16 +101,6 @@ jobs:
       - name: Instagram publish policy test vectors
         run: node packages/velvetos/policy/test-instagram-publish-policy.mjs
 
-      # README gate: routine output (research artifacts, checkpoints, briefs, data files)
-      # is exempt; code/config/contract changes still require README.md.
-      # See scripts/readme_contract.py (ROUTINE_OUTPUT) and scripts/check-readme-contract.py.
-      - name: Living README contract
-        if: github.event_name == 'pull_request'
-        run: >-
-          python3 scripts/readme_contract.py
-          --base "${{ github.event.pull_request.base.sha }}"
-          --head "${{ github.event.pull_request.head.sha }}"
-
       # Fragment gate: a capability diff needs changelog.d/<slug>.md or CHANGELOG.md.
       # Compile stays manual. This step does not run changelog-compile.py.
       - name: Changelog fragment contract

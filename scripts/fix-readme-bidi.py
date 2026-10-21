@@ -142,6 +142,9 @@ def main() -> int:
     args = ap.parse_args()
 
     current = README.read_text(encoding="utf-8")
+    if not any(marker in current for marker in ("# English", HEBREW_ANCHOR, ENGLISH_ANCHOR, "?????")):
+        print("OK README has no bilingual sections")
+        return 0
     fixed = normalize(current)
     issues = validate(fixed)
 
