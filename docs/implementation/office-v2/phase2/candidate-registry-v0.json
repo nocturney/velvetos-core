@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-18T18:47:35+03:00",
+  "updated_at": "2026-10-21T04:18:50.521Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 239,
+  "candidate_count": 244,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -11772,6 +11772,410 @@
         "unlock_condition": "Golden Fixture contract, applicable tests, cost and runtime permission review plus independent QA evidence.",
         "evidence_refs": [
           "https://github.com/plugin87/ux-ui-agent-skills/blob/v2.10.0/.claude/skills/ux-writing/SKILL.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-vanoperadze-cutroom",
+      "source_item_id": null,
+      "name": "CUTROOM - local-first AI-assisted video editor",
+      "category": "TOOL",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Upstream README, beta limitations, and MIT project license inspected 2026-10-20. Video quality, Hebrew captions, local model performance, API safety and third-party dependencies still require isolated practical verification.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "creative",
+        "video-editing",
+        "short-form-video",
+        "captions",
+        "hebrew-subtitles",
+        "mp4-render",
+        "local-ai-optional",
+        "localhost-api"
+      ],
+      "platform_constraints": [
+        "Upstream 1.2 Beta for Windows/macOS; Linux source development path. First setup requires Python/FFmpeg dependencies, and optional Ollama/transcription models. No deployment, model download or credential grants authorized.",
+        "Review third-party dependency and media asset rights separately; project-level MIT does not license external media or AI model weights."
+      ],
+      "shortlist_lanes": [
+        "creative-video-editing"
+      ],
+      "evidence_refs": [
+        "https://github.com/vanoperadze/cutroom",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "owner-submitted:2026-10-20",
+        "https://github.com/VanoPeradze/cutroom",
+        "https://github.com/VanoPeradze/cutroom/blob/master/README.md",
+        "https://github.com/VanoPeradze/cutroom/blob/master/LICENSE",
+        "https://github.com/VanoPeradze/cutroom/blob/master/docs/BETA_STATUS.md",
+        "https://github.com/VanoPeradze/cutroom/blob/master/docs/AI_CONNECTIONS.md",
+        "https://github.com/VanoPeradze/cutroom/releases/tag/v1.2-beta-20261019-hotfix1",
+        "https://github.com/nocturney/velvetos-core/issues/922"
+      ],
+      "notes": [
+        "Owner requested candidate-for-testing status on 2026-10-20; prior review was read-only, not runtime validation.",
+        "Evaluate complementary/manual editor, standalone bounded replacement, and reusable API/components for the Velvet Factory reels workflow, without displacing P0 priorities.",
+        "No unattended publishing, production access, new recurring cost, new scheduler, external media upload or assumed cloud API access.",
+        "Source-review evidence refers to the upstream public repository; pin and verify exact release hash and any vendored dependencies before isolated execution."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Execute the bounded CUTROOM benchmark in #922 only after ordinary lab admission/isolation: 9:16 product reel, Hebrew captions, optional local first-cut AI and localhost API; compare with the existing media pipeline and capture evidence.",
+        "rationale": "Potential local video-editor workflow and agent-callable rendering component; relevance established from upstream documentation, but usefulness and safety versus the current media workflow are not proven.",
+        "decision_evidence_refs": [
+          "https://github.com/VanoPeradze/cutroom",
+          "https://github.com/VanoPeradze/cutroom/blob/master/README.md",
+          "https://github.com/VanoPeradze/cutroom/blob/master/LICENSE",
+          "https://github.com/VanoPeradze/cutroom/blob/master/docs/BETA_STATUS.md",
+          "https://github.com/VanoPeradze/cutroom/blob/master/docs/AI_CONNECTIONS.md",
+          "https://github.com/VanoPeradze/cutroom/releases/tag/v1.2-beta-20261019-hotfix1",
+          "https://github.com/nocturney/velvetos-core/issues/922"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "creative-video-editing",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/922",
+        "phase": "Office v2 Phase 2 research and isolated media-video benchmark",
+        "status": "WAITING_GATE",
+        "next_gate": "Review pinned release, dependencies and isolation plan; then run the actual short-form product reel, Hebrew captions, optional local AI and localhost API test matrix in issue #922; record evidence and comparison.",
+        "unlock_condition": "Document source pin and bounded LAB/host isolation approval before any installation or execution; preserve existing P0 lane and security admission gates.",
+        "evidence_refs": [
+          "https://github.com/VanoPeradze/cutroom",
+          "https://github.com/nocturney/velvetos-core/issues/922"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-xerj-org-xerj",
+      "source_item_id": null,
+      "name": "XERJ local-first code search, retrieval and MCP agent memory",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted, source and Apache-2.0 license reviewed at immutable upstream pin; no host install, independent task benchmark or production admissibility evidence. Memory-context overflow and complementary code-search assessment are required.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "local-first-search",
+        "code-search",
+        "reference-coding",
+        "bm25",
+        "hybrid-retrieval",
+        "mcp",
+        "agent-memory",
+        "autoindex",
+        "elasticsearch-api",
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "platform_constraints": [
+        "Upstream advertises Windows, macOS and Linux binaries; host, OS, binary SHA, performance and isolation are NOT_RUN on VelvetOS fleet.",
+        "Authorised isolated LAB only; authenticated scoped API keys and localhost binding, no --insecure on shared hosts or LAN, no inherited credentials or source-data exfiltration.",
+        "Default semantic embedding path is lexical hashing, not neural; neural model download or external reranking is opt-in only after cost, licence, security and privacy gates.",
+        "Preserve canonical vfmem and git/Office source-of-truth verification; derived XERJ memory/search results confer no effect, scheduler or data authority."
+      ],
+      "shortlist_lanes": [
+        "memory-context",
+        "code-retrieval-agent-context"
+      ],
+      "evidence_refs": [
+        "https://github.com/xerj-org/xerj",
+        "https://github.com/xerj-org/xerj/tree/050a12e9ac66f1c3fd279b365d769936e07939da",
+        "https://github.com/xerj-org/xerj/blob/050a12e9ac66f1c3fd279b365d769936e07939da/README.md",
+        "https://github.com/xerj-org/xerj/blob/050a12e9ac66f1c3fd279b365d769936e07939da/LICENSE",
+        "https://github.com/xerj-org/xerj/blob/050a12e9ac66f1c3fd279b365d769936e07939da/docs/SECURITY_MODEL.md",
+        "https://github.com/xerj-org/xerj/blob/050a12e9ac66f1c3fd279b365d769936e07939da/docs/recipes/agentic-memory.md",
+        "https://github.com/xerj-org/xerj/releases/tag/v1.0.0-rc.97",
+        "docs/implementation/office-v2/phase2/owner-xerj-code-retrieval-memory-intake-2026-10-21.md",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "Upstream source HEAD observed 2026-10-21, pin 050a12e9ac66f1c3fd279b365d769936e07939da; release v1.0.0-rc.97 was published 2026-10-19.",
+        "Research-only: compare as a derived search/index layer and memory-context alternative, not as a replacement for canonical project state/effect policy.",
+        "Existing incumbent: vfmem authoritative verifier, Cognee optional local derived semantic index, local TF-IDF/code retrieval baseline.",
+        "Upstream claims of reduced output tokens and Elasticsearch API coverage are not VelvetOS measurements; verify with labelled same-task fixture.",
+        "Primary workstream: #612 code retrieval/reference-coding. P0 memory-context uses queued_challengers (not active shortlist). Source owner #595.",
+        "Admission requires fixed licensed/synthetic corpora, independent QA scorecard, offline/no-cost budget, RBAC and rollback review; do not install or start services."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "After the independently verified #612 source-to-PR/QA/recovery baseline, run source-pinned, same-corpus A/B/C evaluation of incumbent code/vfmem+Cognee retrieval versus XERJ-derived search versus hybrid; record source accuracy, memory freshness/deletion, prompt-injection resistance, BM25/hybrid quality, real tokens, resources, security, rollback and independent QA.",
+        "rationale": "A local index and memory engine may replace some derived retrieval components, improve code reference search or complement vfmem/Cognee. Overlap with an incumbent is not a rejection reason; durable/effect authority is outside its delegated role.",
+        "decision_evidence_refs": [
+          "https://github.com/xerj-org/xerj/blob/050a12e9ac66f1c3fd279b365d769936e07939da/README.md",
+          "https://github.com/xerj-org/xerj/blob/050a12e9ac66f1c3fd279b365d769936e07939da/docs/SECURITY_MODEL.md",
+          "docs/implementation/office-v2/phase2/owner-xerj-code-retrieval-memory-intake-2026-10-21.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "code-retrieval-agent-context",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Office v2 Phase 2 comparative intake / post-#612 independently verified coding-worker baseline and memory-context overflow",
+        "status": "WAITING_GATE",
+        "next_gate": "After the independently verified #612 source-to-PR/QA/recovery baseline, run source-pinned, same-corpus A/B/C evaluation of incumbent code/vfmem+Cognee retrieval versus XERJ-derived search versus hybrid; record source accuracy, memory freshness/deletion, prompt-injection resistance, BM25/hybrid quality, real tokens, resources, security, rollback and independent QA.",
+        "unlock_condition": "Only after #612 independently verified local coding-workflow baseline, #595 source/rights triage, vendor-neutral Golden Fixture and approved isolated free LAB resource/security/rollback plan; no install or benchmark has been admitted.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-xerj-code-retrieval-memory-intake-2026-10-21.md",
+          "https://github.com/xerj-org/xerj/tree/050a12e9ac66f1c3fd279b365d769936e07939da",
+          "https://github.com/nocturney/velvetos-core/issues/595",
+          "https://github.com/nocturney/velvetos-core/issues/612"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-deeplethe-solid-glass",
+      "source_item_id": null,
+      "name": "Solid Glass — React/shadcn design system for AI UIs",
+      "category": "UI_DESIGN_SYSTEM",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted UX/UI candidate; upstream README, registry, source CSS and MIT license reviewed. No VelvetOS runtime integration, fixture result or UX sign-off yet.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "design-system",
+        "agent-ui",
+        "react",
+        "shadcn-ui",
+        "tailwindcss",
+        "css-theme",
+        "ui-components",
+        "agent-workspace"
+      ],
+      "platform_constraints": [
+        "Upstream targets React 19, Tailwind CSS 4 and shadcn/ui with Base UI; do not assume direct compatibility with every VelvetOS frontend.",
+        "Hebrew/RTL coverage is unverified: upstream components.json specifies rtl=false; require full keyboard/focus/reflow and contrast testing.",
+        "CSS uses backdrop-filter/blur on multiple surfaces; benchmark GPU/CPU usage and reduced-transparency behavior.",
+        "SliceBridge currently uses Electron with native HTML/CSS rather than React/shadcn; patterns only, no forced framework migration.",
+        "MIT license is permissive with preservation of copyright and license notices; review bundled notices for copied shadcn components.",
+        "Evaluation only: no installation, credentials, production authority, deployment or interruption of #612 P0 work."
+      ],
+      "shortlist_lanes": [
+        "agent-workbench-ux"
+      ],
+      "evidence_refs": [
+        "https://github.com/deeplethe/solid-glass",
+        "https://github.com/deeplethe/solid-glass/tree/6e8903e494a15491ceda38fafea5056c95a74d44",
+        "https://github.com/deeplethe/solid-glass/blob/6e8903e494a15491ceda38fafea5056c95a74d44/README.md",
+        "https://github.com/deeplethe/solid-glass/blob/6e8903e494a15491ceda38fafea5056c95a74d44/registry.json",
+        "https://github.com/deeplethe/solid-glass/blob/6e8903e494a15491ceda38fafea5056c95a74d44/LICENSE",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "Owner intake 2026-10-21; pinned public main SHA 6e8903e494a15491ceda38fafea5056c95a74d44; source classification: UI design system + agent-oriented components and agent-workspace block, not an autonomous agent engine or portable Skill.",
+        "Fit: VelvetOS/Office 2.0 future Control Center/read-only agent console; benchmark component/theme reuse vs adapting current UI design. Existing comparable records include candidate-kunagent-kun and plugin87 UX/UI skills.",
+        "Evaluate direct React/shadcn component adoption, token/CSS pattern-only adaptation, and keeping incumbent UI. Use same fixture, independent QA and reversible code path.",
+        "No production UI change, local download, installation, cost, benchmark or merge claimed by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "After #612's independently verified P0 worker baseline (or separately proven idle UI capacity), compare one isolated Hebrew RTL high-density agent-workspace fixture with the existing VelvetOS UI and UX skills; record accessibility, scroll, render performance, integration cost and rollback.",
+        "rationale": "Source provides both CSS-theme and Agent UI patterns. Compare against existing VelvetOS component/skill approach; visual appeal alone is insufficient for adoption.",
+        "decision_evidence_refs": [
+          "https://github.com/deeplethe/solid-glass/tree/6e8903e494a15491ceda38fafea5056c95a74d44",
+          "https://github.com/deeplethe/solid-glass/blob/6e8903e494a15491ceda38fafea5056c95a74d44/registry.json",
+          "https://github.com/deeplethe/solid-glass/blob/6e8903e494a15491ceda38fafea5056c95a74d44/LICENSE"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "agent-workbench-ux",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 4 Control Center and agent-workbench UX",
+        "status": "WAITING_GATE",
+        "next_gate": "After #612's independently verified P0 worker baseline (or separately proven idle UI capacity), compare one isolated Hebrew RTL high-density agent-workspace fixture with the existing VelvetOS UI and UX skills; record accessibility, scroll, render performance, integration cost and rollback.",
+        "unlock_condition": "Bounded isolated frontend fixture, verified free host capacity or P0 release, pinned source/dependencies, license/RTL/a11y/performance checks and independent QA.",
+        "evidence_refs": [
+          "https://github.com/deeplethe/solid-glass/tree/6e8903e494a15491ceda38fafea5056c95a74d44",
+          "https://github.com/nocturney/velvetos-core/issues/595",
+          "https://github.com/nocturney/velvetos-core/issues/612"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intel-auto-round",
+      "source_item_id": null,
+      "name": "Intel AutoRound — low-bit model quantization and optimization toolkit",
+      "category": "MODEL_QUANTIZATION_TOOL",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner requested evaluation routing for Intel AutoRound. Upstream source/Apache-2.0 license and available low-bit/export schemes reviewed at pinned commit, but not installed or tested on a Velvet host; quality/throughput and exporter/hardware suitability require a same-model controlled comparison against already available quantized serving.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "local-model-inference",
+        "model-quantization",
+        "model-optimization",
+        "weight-only-quantization",
+        "gguf",
+        "gptq",
+        "awq",
+        "nvidia-cuda",
+        "open-weight-llm",
+        "memory-efficiency",
+        "offline-model-preparation"
+      ],
+      "platform_constraints": [
+        "Pin AutoRound source commit, exact compatible model revision and model weights license before any LAB; Apache-2.0 source does not grant rights to every weight, calibration set or dependency.",
+        "Quantization/tuning VRAM/RAM/time can exceed the finished model's footprint; RTX 4080 SUPER 16 GB is a possible conditional Windows host, not a verified capability or available lease.",
+        "Official upstream describes CPU/Intel XPU/Gaudi/NVIDIA CUDA environments and exports including GGUF, AWQ, GPTQ; validate selected backend, scheme, model and loading path rather than assuming compatibility or faster inference.",
+        "AMD/ROCm and native macOS quantization compatibility are not established here. Apple Silicon GGUF/MLX inference may be a separate export/runtime comparison only when verified for the selected artifact.",
+        "No new paid service, Codex CLI agent quota, P0 worker or GPU preemption, model download, systemwide install, public listener, new service or production gateway change follows from research registration."
+      ],
+      "shortlist_lanes": [
+        "local-model-inference"
+      ],
+      "evidence_refs": [
+        "https://github.com/intel/auto-round",
+        "https://github.com/intel/auto-round/tree/c2dbac79c38806859d858aa169f8bad4e74d937b",
+        "https://github.com/intel/auto-round/blob/c2dbac79c38806859d858aa169f8bad4e74d937b/README.md",
+        "https://github.com/intel/auto-round/blob/c2dbac79c38806859d858aa169f8bad4e74d937b/LICENSE",
+        "docs/implementation/office-v2/phase2/owner-local-model-autoround-intake-2026-10-21.md",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "ROLE: Upstream model quantization/preparation, not an inference server, an agent runtime, model routing gateway or source of effect authorization.",
+        "OWNER REQUEST 2026-10-21: Register for later evaluation in Office v2/VelvetOS; use existing local-model-inference lane and Phase 3C provider fixtures without altering LiteLLM/TensorZero or P0 shortlisted contenders.",
+        "FIRST CONTROL: pinned small-model 0.6B smoke, then a feasible 3B–8B open-weight revision; same model/tokenizer, quantization bit budget and inference backend for AutoRound vs prequantized controls, separate from cross-backend benchmarks.",
+        "QUALITY FIXTURES: independent held-out Hebrew and RTL instruction tests, structured JSON/tool schemas without live effects, multi-turn consistency, OpenSCAD/3D code and policy-deny negatives.",
+        "MEASURE: model fidelity to FP16/BF16, memory and latency/tokens-per-second, warm/cold load, quantization wall-time and resource peaks, context budget, disk/cache, exporter interoperability, repeatability, license/security, cleanup and rollback.",
+        "The core issue #595 tracks owner repo-link intake; #612 owns any later local model compute/agent-lab work. No concurrent scheduler, new long-lived worker, or extra active shortlist slot.",
+        "No AutoRound binary installed, model weights downloaded, local experiment run or host resource reserved by this research entry."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "After #612 independently verifies its existing real local model source-to-PR/independent-QA/recovery baseline and Phase 3C provider reference, compare AutoRound against available conventional prequantized GGUF/AWQ/GPTQ models and an uncompressed licensed same-model control using pinned synthetic Hebrew, JSON/tool, and OpenSCAD fixtures. Record quality, wall-clock quantization effort, cold/warm speed, VRAM/RAM/storage, interoperability and rollback; decide whether it creates practical value beyond current models.",
+        "rationale": "AutoRound could improve low-bit quality/resource trade-offs in the existing local-first model pipeline without adding a second inference service or agent orchestrator. Only a controlled equal-model equal-backend benchmark can show whether preparation cost and operational complexity are justified.",
+        "decision_evidence_refs": [
+          "https://github.com/intel/auto-round",
+          "https://github.com/intel/auto-round/blob/c2dbac79c38806859d858aa169f8bad4e74d937b/README.md",
+          "docs/implementation/office-v2/phase2/owner-local-model-autoround-intake-2026-10-21.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "local-model-inference",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Office v2 Phase 2 source review now; Phase 3C downstream same-model quantization comparison after #612 P0 baseline, not provider gateway selection",
+        "status": "WAITING_GATE",
+        "next_gate": "After #612 independently verifies its existing real local model source-to-PR/independent-QA/recovery baseline and Phase 3C provider reference, compare AutoRound against available conventional prequantized GGUF/AWQ/GPTQ models and an uncompressed licensed same-model control using pinned synthetic Hebrew, JSON/tool, and OpenSCAD fixtures. Record quality, wall-clock quantization effort, cold/warm speed, VRAM/RAM/storage, interoperability and rollback; decide whether it creates practical value beyond current models.",
+        "unlock_condition": "No isolated LAB until independently verified #612 model-backed P0 coding reference; a nonconflicting idle CPU/GPU/RAM/disk lease; verified model/weight, calibration-corpus and dependency rights; a reproducible fixed evaluation fixture and isolated rollback. No API spend, systemwide install, download, CUDA/Metal/ROCm claim, P0 resource preemption or production authority.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-local-model-autoround-intake-2026-10-21.md",
+          "https://github.com/intel/auto-round/tree/c2dbac79c38806859d858aa169f8bad4e74d937b",
+          "https://github.com/nocturney/velvetos-core/issues/612"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-niko1221-strata",
+      "source_item_id": null,
+      "name": "Strata (Niko1221) — local GPU/CPU LLM inference and agent-compatible API runtime",
+      "category": "MODEL_INFERENCE_RUNTIME",
+      "provenance_class": "POST_POLICY_OWNER_SUBMITTED_REPO_REVIEW",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Upstream code/docs reviewed for the user-submitted Strata repo; potential constrained-VRAM on-premises model-serving alternative, but no VelvetOS host, API, quality, resource or security benchmark has run. Preserve for comparative evaluation.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "local-inference",
+        "llm-serving",
+        "cpu-gpu-offload",
+        "openai-compatible-api",
+        "anthropic-compatible-api",
+        "agent-tooling",
+        "constrained-vram",
+        "multimodal-inference"
+      ],
+      "platform_constraints": [
+        "Upstream README v0.2.1 / engine 0.1.46 claims Windows, Linux and Apple Silicon support; hardware/driver/model-specific compatibility has NOT been verified on any VelvetOS host.",
+        "Upstream suggests >=32 GB combined RAM/VRAM and ~80 GB free SSD; verify exact model quantization, peak memory/storage and device drivers before any download.",
+        "MIT source code license observed; model weights, bundled binaries, dependencies and distribution/telemetry/update behavior require pinned version review. Upstream safety claims are not independent security audit results.",
+        "No install, download, reserved host or GPU lease, network exposure, external paid API, new recurring expense, credential access, agent tool execution or production-route authority. Preserve #612 P0 and #604 fleet worker reservations."
+      ],
+      "shortlist_lanes": [
+        "local-model-inference"
+      ],
+      "evidence_refs": [
+        "https://github.com/Niko1221/Strata",
+        "https://github.com/Niko1221/Strata/blob/main/README.md",
+        "https://github.com/Niko1221/Strata/blob/main/LICENSE",
+        "https://github.com/Niko1221/Strata/blob/main/docs/SAFETY.md",
+        "https://github.com/nocturney/velvetos-core/issues/928",
+        "https://github.com/nocturney/velvetos-core/issues/612",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "User-requested evaluation intake on 2026-10-21; not a request to install or activate Strata.",
+        "Research-only source read: upstream README reports Strata v0.2.1 (engine v0.1.46), OpenAI/Anthropic APIs, image support and cross-platform local execution. All operational assertions await repeatable fleet tests.",
+        "Compete with verified Ollama/llama.cpp and existing local-model candidates including llamafile and AirLLM on same allowed synthetic workload; Strata is an inference component, not a VelvetOS orchestrator replacement."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Review release/dependency/model rights and fleet host availability, define matched synthetic code/CAD/Hebrew/tool-call fixtures, then (only after #612 baseline and isolated resource admission) compare Strata with verified local-model incumbents for correct task completions, agent API/tool behavior, throughput, memory, parallel load, privacy and rollback.",
+        "rationale": "Local high-capacity model serving and agent-facing APIs may add value at zero per-token cloud expense, but efficiency, model quality, reliability, capability overlap and host resource contention must be measured against a verified incumbent before admission.",
+        "decision_evidence_refs": [
+          "https://github.com/Niko1221/Strata",
+          "https://github.com/Niko1221/Strata/blob/main/README.md",
+          "https://github.com/Niko1221/Strata/blob/main/docs/SAFETY.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "local-model-inference",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/928",
+        "phase": "Office v2 Phase 2 source/fixture comparison; Phase 3C provider compatibility and isolated LAB only after #612 P0 reference and resource gates",
+        "status": "RESEARCH_ACTIVE",
+        "next_gate": "Review release/dependency/model rights and fleet host availability, define matched synthetic code/CAD/Hebrew/tool-call fixtures, then (only after #612 baseline and isolated resource admission) compare Strata with verified local-model incumbents for correct task completions, agent API/tool behavior, throughput, memory, parallel load, privacy and rollback.",
+        "unlock_condition": "Independently verified #612 local coding-agent baseline, read-only current host inventory, permitted model-weight/license and installer security review, no P0/fleet preemption, approved isolated CPU/GPU/disk lease, loopback-only network and rollback plan.",
+        "evidence_refs": [
+          "https://github.com/nocturney/velvetos-core/issues/928",
+          "https://github.com/Niko1221/Strata",
+          "https://github.com/nocturney/velvetos-core/issues/612"
         ]
       }
     }
