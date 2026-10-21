@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-21T07:03:00+03:00",
+  "updated_at": "2026-10-21T04:18:50.521Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 243,
+  "candidate_count": 244,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -12098,6 +12098,79 @@
         "evidence_refs": [
           "docs/implementation/office-v2/phase2/owner-local-model-autoround-intake-2026-10-21.md",
           "https://github.com/intel/auto-round/tree/c2dbac79c38806859d858aa169f8bad4e74d937b",
+          "https://github.com/nocturney/velvetos-core/issues/612"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-niko1221-strata",
+      "source_item_id": null,
+      "name": "Strata (Niko1221) — local GPU/CPU LLM inference and agent-compatible API runtime",
+      "category": "MODEL_INFERENCE_RUNTIME",
+      "provenance_class": "POST_POLICY_OWNER_SUBMITTED_REPO_REVIEW",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Upstream code/docs reviewed for the user-submitted Strata repo; potential constrained-VRAM on-premises model-serving alternative, but no VelvetOS host, API, quality, resource or security benchmark has run. Preserve for comparative evaluation.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "local-inference",
+        "llm-serving",
+        "cpu-gpu-offload",
+        "openai-compatible-api",
+        "anthropic-compatible-api",
+        "agent-tooling",
+        "constrained-vram",
+        "multimodal-inference"
+      ],
+      "platform_constraints": [
+        "Upstream README v0.2.1 / engine 0.1.46 claims Windows, Linux and Apple Silicon support; hardware/driver/model-specific compatibility has NOT been verified on any VelvetOS host.",
+        "Upstream suggests >=32 GB combined RAM/VRAM and ~80 GB free SSD; verify exact model quantization, peak memory/storage and device drivers before any download.",
+        "MIT source code license observed; model weights, bundled binaries, dependencies and distribution/telemetry/update behavior require pinned version review. Upstream safety claims are not independent security audit results.",
+        "No install, download, reserved host or GPU lease, network exposure, external paid API, new recurring expense, credential access, agent tool execution or production-route authority. Preserve #612 P0 and #604 fleet worker reservations."
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "https://github.com/Niko1221/Strata",
+        "https://github.com/Niko1221/Strata/blob/main/README.md",
+        "https://github.com/Niko1221/Strata/blob/main/LICENSE",
+        "https://github.com/Niko1221/Strata/blob/main/docs/SAFETY.md",
+        "https://github.com/nocturney/velvetos-core/issues/928",
+        "https://github.com/nocturney/velvetos-core/issues/612",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "User-requested evaluation intake on 2026-10-21; not a request to install or activate Strata.",
+        "Research-only source read: upstream README reports Strata v0.2.1 (engine v0.1.46), OpenAI/Anthropic APIs, image support and cross-platform local execution. All operational assertions await repeatable fleet tests.",
+        "Compete with verified Ollama/llama.cpp and existing local-model candidates including llamafile and AirLLM on same allowed synthetic workload; Strata is an inference component, not a VelvetOS orchestrator replacement."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Review release/dependency/model rights and fleet host availability, define matched synthetic code/CAD/Hebrew/tool-call fixtures, then (only after #612 baseline and isolated resource admission) compare Strata with verified local-model incumbents for correct task completions, agent API/tool behavior, throughput, memory, parallel load, privacy and rollback.",
+        "rationale": "Local high-capacity model serving and agent-facing APIs may add value at zero per-token cloud expense, but efficiency, model quality, reliability, capability overlap and host resource contention must be measured against a verified incumbent before admission.",
+        "decision_evidence_refs": [
+          "https://github.com/Niko1221/Strata",
+          "https://github.com/Niko1221/Strata/blob/main/README.md",
+          "https://github.com/Niko1221/Strata/blob/main/docs/SAFETY.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "local-model-inference",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/928",
+        "phase": "Office v2 Phase 2 source/fixture comparison; Phase 3C provider compatibility and isolated LAB only after #612 P0 reference and resource gates",
+        "status": "RESEARCH_ACTIVE",
+        "next_gate": "Review release/dependency/model rights and fleet host availability, define matched synthetic code/CAD/Hebrew/tool-call fixtures, then (only after #612 baseline and isolated resource admission) compare Strata with verified local-model incumbents for correct task completions, agent API/tool behavior, throughput, memory, parallel load, privacy and rollback.",
+        "unlock_condition": "Independently verified #612 local coding-agent baseline, read-only current host inventory, permitted model-weight/license and installer security review, no P0/fleet preemption, approved isolated CPU/GPU/disk lease, loopback-only network and rollback plan.",
+        "evidence_refs": [
+          "https://github.com/nocturney/velvetos-core/issues/928",
+          "https://github.com/Niko1221/Strata",
           "https://github.com/nocturney/velvetos-core/issues/612"
         ]
       }
