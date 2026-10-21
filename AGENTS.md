@@ -48,10 +48,6 @@ Rules:
 - a task crossing multiple routed domains may load one primary local guide per selected domain;
 - keep unrelated domain context unloaded.
 
-## ROOT README
-
-Keep `README.md` a short bilingual entry point: purpose, architecture, getting started and links. Do not append PR/CI diaries, dated lab results, hashes or per-provider status reports. Put details in component docs, `changelog.d/`, issues/PRs and canonical evidence files. For capability changes, update a relevant existing summary or link rather than append a new status paragraph. Preserve the generated `OPERATIONAL-SNAPSHOT` markers; they are committed evidence, not a live dashboard.
-
 ## VERIFICATION
 
 Run the routed sensor set for scoped changes, then `python3 scripts/check-all.py` for repository-wide changes. Do not claim success when a required computational sensor fails.
