@@ -25,15 +25,15 @@ XIAS upstream (plugin87/ux-ui-agent-skills) has 26 source-only candidates alread
 
 ## Resource licensing and rights, scoped accurately
 
-Verified upstream **scope only**, not full third-party asset clearance:
+Verified upstream **scope only**, not full third-party asset clearance. Three entries remain `VERIFIED_UPSTREAM_SCOPE_ONLY`:
 
 - **UI Skills** repository: MIT (https://github.com/ibelick/ui-skills/blob/main/LICENSE); third-party skill documents may differ.
 - **shadcn/ui** upstream: MIT (https://github.com/shadcn-ui/ui/blob/main/LICENSE.md); copied components and transitive dependencies need their own notices.
-- **Motion** library: MIT (https://motion.dev/); premium example access and premium-component terms are separate.
 - **Lucide**: ISC plus Feather-derived MIT notice (https://github.com/lucide-icons/lucide/blob/main/LICENSE); preserve full license notices in redistribution.
-- **LottieFiles** free public animations: Lottie Simple License (https://lottiefiles.com/page/license), asset-specific, no competing bulk aggregation/scraping; premium and creator-specific asset terms can differ.
 
-**Other 37 entries:** `REVIEW_REQUIRED` — no invented license or commercial approval. Differentiate private exploration, internal development, public showcase, marketing usage, redistribution of source/assets, and downloadable community software. Apple-like design references are not licenses to redistribute Apple's logos/assets.
+**Downgraded to `REVIEW_REQUIRED` on 2026-10-21:** **Motion** (prior MIT claim cited the homepage https://motion.dev/, not a license file) and **LottieFiles** (prior Lottie Simple License claim is asset-specific, https://lottiefiles.com/page/license). Neither has a verified exact-package or per-asset license; both records keep their provenance and caveat notes with `license` and `evidence_url` set to null.
+
+**Total 39 entries (including the two downgraded above):** `REVIEW_REQUIRED` — no invented license or commercial approval. Differentiate private exploration, internal development, public showcase, marketing usage, redistribution of source/assets, and downloadable community software. Apple-like design references are not licenses to redistribute Apple's logos/assets.
 
 ## Pilot — one real SliceBridge surface, fixed criteria
 

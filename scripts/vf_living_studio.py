@@ -1835,9 +1835,17 @@ def skill_list() -> dict:
     }
 
 
+def _ui_resources_invalid(exc: Exception) -> dict:
+    # Stable, non-executable error for bad UI intake; UI commands never fall back to partial results.
+    return {"error": "ui_resources_invalid", "detail": f"{type(exc).__name__}: {exc}", "executable": False}
+
+
 def skill_ui_resources() -> dict:
     from vf_skill_catalog import ui_resources
-    resources = ui_resources(ROOT)
+    try:
+        resources = ui_resources(ROOT)
+    except Exception as exc:
+        return _ui_resources_invalid(exc)
     return {
         "kind": "SOURCE_ONLY_UI_REFERENCES", "count": len(resources),
         "items": [{"id": r["id"], "name": r["name"], "category": r["category"],
@@ -1849,11 +1857,20 @@ def skill_ui_resources() -> dict:
 
 def skill_ui_source_search(query: str, stack: str | None = None) -> dict:
     from vf_skill_catalog import ui_resource_search
+    try:
+        results = ui_resource_search(query, ROOT, stack=stack)
+    except Exception as exc:
+        return _ui_resources_invalid(exc)
     return {
         "query": query, "stack": stack,
-        "results": ui_resource_search(query, ROOT, stack=stack),
+        "results": results,
         "executable": False, "disposition": "DISCOVERY_ONLY_NO_AUTO_INSTALL",
     }
+
+
+def _emit_ui_skill(value: dict) -> int:
+    print(json.dumps(value, ensure_ascii=False, indent=2))
+    return 2 if value.get("error") == "ui_resources_invalid" else 0
 
 
 def skill_route(name: str) -> dict:
@@ -2205,11 +2222,11 @@ def main() -> int:
     p_sk = sub.add_parser("skill")
     sk_sub = p_sk.add_subparsers(dest="skill_cmd", required=True)
     sk_sub.add_parser("list").set_defaults(func=lambda a: print(json.dumps(skill_list(), ensure_ascii=False, indent=2)) or 0)
-    sk_sub.add_parser("resources").set_defaults(func=lambda a: print(json.dumps(skill_ui_resources(), ensure_ascii=False, indent=2)) or 0)
+    sk_sub.add_parser("resources").set_defaults(func=lambda a: _emit_ui_skill(skill_ui_resources()))
     p_sources = sk_sub.add_parser("source-search")
     p_sources.add_argument("query", nargs="+")
     p_sources.add_argument("--stack", default=None)
-    p_sources.set_defaults(func=lambda a: print(json.dumps(skill_ui_source_search(" ".join(a.query), a.stack), ensure_ascii=False, indent=2)) or 0)
+    p_sources.set_defaults(func=lambda a: _emit_ui_skill(skill_ui_source_search(" ".join(a.query), a.stack)))
     p_route = sk_sub.add_parser("route")
     p_route.add_argument("name")
     p_route.set_defaults(func=lambda a: print(json.dumps(skill_route(a.name), ensure_ascii=False, indent=2)) or 0)

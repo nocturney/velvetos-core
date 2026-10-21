@@ -908,10 +908,10 @@
         "OFFICE_WEB"
       ],
       "usage_rights": {
-        "state": "VERIFIED_UPSTREAM_SCOPE_ONLY",
-        "license": "MIT",
-        "evidence_url": "https://motion.dev/",
-        "caveat": "Motion+ premium examples and tools can have additional access terms"
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Motion+ premium examples and tools can have additional access terms. Downgraded 2026-10-21 from VERIFIED_UPSTREAM_SCOPE_ONLY: the prior MIT claim cited the homepage https://motion.dev/, which is not a license file and is not verified for the exact package or component; verify the exact license before any use"
       },
       "classification_evidence": "PUBLIC_UPSTREAM_REVIEW_2026-10-20",
       "installed": false,
@@ -1127,10 +1127,10 @@
         "OFFICE_WEB"
       ],
       "usage_rights": {
-        "state": "VERIFIED_UPSTREAM_SCOPE_ONLY",
-        "license": "Lottie Simple License (free assets; asset-specific)",
-        "evidence_url": "https://lottiefiles.com/page/license",
-        "caveat": "Premium uploads and per-asset terms differ; no bulk scraping or reselling standalone assets"
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Premium uploads and per-asset terms differ; no bulk scraping or reselling standalone assets. Downgraded 2026-10-21 from VERIFIED_UPSTREAM_SCOPE_ONLY: the prior Lottie Simple License claim (https://lottiefiles.com/page/license) is asset-specific and not verified for any particular asset; verify each asset's license before any use"
       },
       "classification_evidence": "PUBLIC_UPSTREAM_REVIEW_2026-10-20",
       "installed": false,

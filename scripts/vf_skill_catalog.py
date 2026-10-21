@@ -236,8 +236,13 @@ def ui_resources(root: Path = ROOT) -> list[dict[str, Any]]:
     if not _contained(path, root.resolve()) or not path.is_file():
         raise ValueError("UI source must be a regular file inside the root")
     data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError("UI source must be a JSON object")
     if data.get("schema") != "velvetos.ui-ecosystem-source-intake.v1":
         raise ValueError("unsupported UI source intake schema")
+    # The intake is SOURCE_ONLY as a whole, so no document-level flag may approve source code integration either.
+    if data.get("source_code_integration_approved", False) is not False:
+        raise ValueError("SOURCE_ONLY UI resource cannot approve source code integration")
     rows = data.get("sources")
     if not isinstance(rows, list) or len(rows) != data.get("source_count"):
         raise ValueError("UI resource count mismatch")
@@ -252,19 +257,31 @@ def ui_resources(root: Path = ROOT) -> list[dict[str, Any]]:
             raise ValueError("invalid UI resource URL")
         if identifier in ids or url in urls:
             raise ValueError("duplicate UI resource ID/URL")
+        # Shape checks precede every search/audit use of these fields, so a malformed row cannot KeyError later.
+        for key in ("name", "category", "kind"):
+            if not isinstance(row.get(key), str) or not row[key].strip():
+                raise ValueError(f"invalid UI resource {key}")
+        if not isinstance(row.get("distinctive"), str):
+            raise ValueError("invalid UI resource distinctive")
+        tech = row.get("tech")
+        if not isinstance(tech, list) or not all(isinstance(item, str) for item in tech):
+            raise ValueError("invalid UI resource tech")
         if row.get("runtime") != "NOT_INSTALLED_OR_VERIFIED" or row.get("installed") is not False:
             raise ValueError("resource cannot imply runtime admission or installation")
-        if row.get("stage") not in {"DISCOVERED", "RESEARCHED"}:
+        if not isinstance(row.get("stage"), str) or row["stage"] not in {"DISCOVERED", "RESEARCHED"}:
             raise ValueError("resource status must not imply benchmark or production admission")
         rights = row.get("usage_rights")
-        if not isinstance(rights, dict) or rights.get("state") not in UI_RIGHTS_STATES:
+        if not isinstance(rights, dict) or not isinstance(rights.get("state"), str) \
+                or rights["state"] not in UI_RIGHTS_STATES:
             raise ValueError("missing explicit UI resource rights status")
         if rights["state"] == "VERIFIED_UPSTREAM_SCOPE_ONLY":
             if not isinstance(rights.get("license"), str) or not rights["license"].strip():
                 raise ValueError("verified UI resource rights require a nonempty license")
             if not isinstance(rights.get("evidence_url"), str) or not rights["evidence_url"].startswith("https://"):
                 raise ValueError("verified UI resource rights require an https evidence_url")
-        # Optional per row; the whole intake is SOURCE_ONLY, so no row may approve source code integration.
+        # Optional per row, at top level or nested in slicebridge_fit; no row may approve source code integration.
+        if row.get("source_code_integration_approved", False) is not False:
+            raise ValueError("SOURCE_ONLY UI resource cannot approve source code integration")
         fit = row.get("slicebridge_fit")
         if fit is not None:
             if not isinstance(fit, dict):
@@ -277,10 +294,11 @@ def ui_resources(root: Path = ROOT) -> list[dict[str, Any]]:
 
 
 def ui_resources_status(root: Path = ROOT) -> tuple[list[dict[str, Any]], str | None]:
-    """Non-raising view for mixed Skill commands: an invalid UI source yields no rows plus an explicit error."""
+    """Non-raising view for mixed Skill commands: an invalid UI source yields no rows plus an explicit error.
+    Any malformed shape is reported as text here; it must never escape as a traceback."""
     try:
         return ui_resources(root), None
-    except (OSError, ValueError) as exc:
+    except Exception as exc:
         return [], f"{type(exc).__name__}: {exc}"
 
 
@@ -633,7 +651,7 @@ def main() -> int:
         try:
             value = (ui_resources(root) if args.command == "sources"
                      else ui_resource_search(" ".join(args.query), root, stack=args.stack))
-        except (OSError, ValueError) as exc:
+        except Exception as exc:
             value = {"error": "ui_resources_invalid", "detail": str(exc), "executable": False}
     else:
         query = " ".join(args.query)
