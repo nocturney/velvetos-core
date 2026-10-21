@@ -1,0 +1,1 @@
+- 2026-10-21 - **Office P0 receipt verifier:** reject duplicate artifact paths and malformed rows before comparing the expected output set; add negative regression tests. Offline-only, with no new runtime authority.
