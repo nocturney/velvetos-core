@@ -1,0 +1,1 @@
+- Fixed Office P0 offline worker receipt verification to reject unknown artifact-row fields.
