@@ -224,9 +224,11 @@ def verify(envelope, receipt):
     if not isinstance(artifacts, list):
         raise Rejected("ARTIFACT_SET_MISMATCH")
     # Rows must be well-formed and unique; a repeated correct row would otherwise
-    # inflate the artifact count while the set comparison still passes.
-    if not all(isinstance(a, dict) and isinstance(a.get("path"), str)
-               and isinstance(a.get("sha256"), str) for a in artifacts):
+    # inflate the artifact count while the set comparison still passes. Extra row
+    # fields are closed out too: the seal is recomputable, so unchecked fields would
+    # be ambiguous contract data that verify never validated.
+    if not all(isinstance(a, dict) and set(a) == {"path", "sha256"}
+               and isinstance(a["path"], str) and isinstance(a["sha256"], str) for a in artifacts):
         raise Rejected("ARTIFACT_ROW_MALFORMED")
     if len({a["path"] for a in artifacts}) != len(artifacts):
         raise Rejected("ARTIFACT_ROW_DUPLICATE")
@@ -515,6 +517,7 @@ def demo_selftest():
         for name, rows, expected_reason in (
             ("malformed_artifact_row", ["result.txt"], "ARTIFACT_ROW_MALFORMED"),
             ("duplicate_artifact_row", None, "ARTIFACT_ROW_DUPLICATE"),
+            ("unknown_artifact_row_field", [dict(read_json(receipt_path)["artifacts"][0], unknown="x")], "ARTIFACT_ROW_MALFORMED"),
         ):
             forged = read_json(receipt_path)
             forged.pop("receipt_sha256")
