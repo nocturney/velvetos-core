@@ -26,6 +26,48 @@ def fail(msg: str) -> None:
     raise SystemExit(1)
 
 
+def child_env() -> dict[str, str]:
+    return {
+        **os.environ,
+        "PYTHONPATH": str(ROOT / "packages"),
+        "VELVETOS_INSTANCE_ID": "velvet-factory",
+        # Child streams are UTF-8 on every host (Windows pipes default to the ANSI code page).
+        "PYTHONIOENCODING": "utf-8",
+    }
+
+
+def diag(data: bytes | None) -> str:
+    """Display-only decode for failure messages; never used for pass/fail."""
+    return (data or b"").decode("utf-8", errors="backslashreplace")
+
+
+def parse_child_json(data: bytes | None, label: str) -> dict:
+    """Strict UTF-8 then JSON object. Malformed child output fails closed, nothing is replaced."""
+    try:
+        text = (data or b"").decode("utf-8")
+    except UnicodeDecodeError as exc:
+        fail(f"{label} stdout is not strict UTF-8: {exc}")
+    try:
+        value = json.loads(text)
+    except json.JSONDecodeError as exc:
+        fail(f"{label} stdout is not JSON: {exc}")
+    if not isinstance(value, dict):
+        fail(f"{label} stdout must be a JSON object")
+    return value
+
+
+def snapshot_projection(env: dict[str, str]) -> dict:
+    snap_proc = subprocess.run(
+        [sys.executable, str(CLI), "snapshot"],
+        cwd=ROOT,
+        capture_output=True,
+        env=env,
+    )
+    if snap_proc.returncode != 0:
+        fail(f"snapshot: {diag(snap_proc.stderr or snap_proc.stdout)}")
+    return parse_child_json(snap_proc.stdout, "snapshot")
+
+
 def main() -> None:
     for path in (PKG, CLI, TESTS, DEPLOY, README, CONTRIB, DOCKERFILE):
         if not path.exists():
@@ -79,45 +121,40 @@ def main() -> None:
         if need not in ids:
             fail(f"CONTRIBUTIONS.json missing {need}")
 
-    control_env = {
-        **os.environ,
-        "PYTHONPATH": str(ROOT / "packages"),
-        "VELVETOS_INSTANCE_ID": "velvet-factory",
-    }
+    control_env = child_env()
 
     # CLI selftest
     proc = subprocess.run(
         [sys.executable, str(CLI), "selftest"],
         cwd=ROOT,
-        text=True,
         capture_output=True,
         env=control_env,
     )
     if proc.returncode != 0:
-        fail(f"vf_control_api.py selftest: {proc.stderr or proc.stdout}")
+        fail(f"vf_control_api.py selftest: {diag(proc.stderr or proc.stdout)}")
 
     # Unit + HTTP tests
     tproc = subprocess.run(
         [sys.executable, str(TESTS)],
         cwd=ROOT,
-        text=True,
         capture_output=True,
         env=control_env,
     )
     if tproc.returncode != 0:
-        fail(f"control-api tests:\n{tproc.stderr or tproc.stdout}")
+        fail(f"control-api tests:\n{diag(tproc.stderr or tproc.stdout)}")
 
-    # Snapshot must be authenticable shape
-    snap_proc = subprocess.run(
-        [sys.executable, str(CLI), "snapshot"],
+    # Load-bearing cross-platform regression: Windows ANSI code pages must never decode child JSON.
+    regproc = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "test_check_control_api_encoding.py")],
         cwd=ROOT,
-        text=True,
         capture_output=True,
         env=control_env,
     )
-    if snap_proc.returncode != 0:
-        fail(f"snapshot: {snap_proc.stderr or snap_proc.stdout}")
-    snap = json.loads(snap_proc.stdout)
+    if regproc.returncode != 0:
+        fail(f"control-api UTF-8 regression tests:\n{diag(regproc.stderr or regproc.stdout)}")
+
+    # Snapshot must be authenticable shape
+    snap = snapshot_projection(control_env)
     if snap.get("schema") != "velvetos.control.v1":
         fail("snapshot schema mismatch")
     jobs = (snap.get("collections") or {}).get("jobs") or {}
