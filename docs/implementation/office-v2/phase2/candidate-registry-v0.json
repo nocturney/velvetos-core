@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-18T18:47:35+03:00",
+  "updated_at": "2026-10-21T04:10:31.360Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 239,
+  "candidate_count": 240,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -11772,6 +11772,83 @@
         "unlock_condition": "Golden Fixture contract, applicable tests, cost and runtime permission review plus independent QA evidence.",
         "evidence_refs": [
           "https://github.com/plugin87/ux-ui-agent-skills/blob/v2.10.0/.claude/skills/ux-writing/SKILL.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-deeplethe-solid-glass",
+      "source_item_id": null,
+      "name": "Solid Glass — React/shadcn design system for AI UIs",
+      "category": "UI_DESIGN_SYSTEM",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted UX/UI candidate; upstream README, registry, source CSS and MIT license reviewed. No VelvetOS runtime integration, fixture result or UX sign-off yet.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "design-system",
+        "agent-ui",
+        "react",
+        "shadcn-ui",
+        "tailwindcss",
+        "css-theme",
+        "ui-components",
+        "agent-workspace"
+      ],
+      "platform_constraints": [
+        "Upstream targets React 19, Tailwind CSS 4 and shadcn/ui with Base UI; do not assume direct compatibility with every VelvetOS frontend.",
+        "Hebrew/RTL coverage is unverified: upstream components.json specifies rtl=false; require full keyboard/focus/reflow and contrast testing.",
+        "CSS uses backdrop-filter/blur on multiple surfaces; benchmark GPU/CPU usage and reduced-transparency behavior.",
+        "SliceBridge currently uses Electron with native HTML/CSS rather than React/shadcn; patterns only, no forced framework migration.",
+        "MIT license is permissive with preservation of copyright and license notices; review bundled notices for copied shadcn components.",
+        "Evaluation only: no installation, credentials, production authority, deployment or interruption of #612 P0 work."
+      ],
+      "shortlist_lanes": [
+        "agent-workbench-ux"
+      ],
+      "evidence_refs": [
+        "https://github.com/deeplethe/solid-glass",
+        "https://github.com/deeplethe/solid-glass/tree/6e8903e494a15491ceda38fafea5056c95a74d44",
+        "https://github.com/deeplethe/solid-glass/blob/6e8903e494a15491ceda38fafea5056c95a74d44/README.md",
+        "https://github.com/deeplethe/solid-glass/blob/6e8903e494a15491ceda38fafea5056c95a74d44/registry.json",
+        "https://github.com/deeplethe/solid-glass/blob/6e8903e494a15491ceda38fafea5056c95a74d44/LICENSE",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "Owner intake 2026-10-21; pinned public main SHA 6e8903e494a15491ceda38fafea5056c95a74d44; source classification: UI design system + agent-oriented components and agent-workspace block, not an autonomous agent engine or portable Skill.",
+        "Fit: VelvetOS/Office 2.0 future Control Center/read-only agent console; benchmark component/theme reuse vs adapting current UI design. Existing comparable records include candidate-kunagent-kun and plugin87 UX/UI skills.",
+        "Evaluate direct React/shadcn component adoption, token/CSS pattern-only adaptation, and keeping incumbent UI. Use same fixture, independent QA and reversible code path.",
+        "No production UI change, local download, installation, cost, benchmark or merge claimed by this record."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "After #612's independently verified P0 worker baseline (or separately proven idle UI capacity), compare one isolated Hebrew RTL high-density agent-workspace fixture with the existing VelvetOS UI and UX skills; record accessibility, scroll, render performance, integration cost and rollback.",
+        "rationale": "Source provides both CSS-theme and Agent UI patterns. Compare against existing VelvetOS component/skill approach; visual appeal alone is insufficient for adoption.",
+        "decision_evidence_refs": [
+          "https://github.com/deeplethe/solid-glass/tree/6e8903e494a15491ceda38fafea5056c95a74d44",
+          "https://github.com/deeplethe/solid-glass/blob/6e8903e494a15491ceda38fafea5056c95a74d44/registry.json",
+          "https://github.com/deeplethe/solid-glass/blob/6e8903e494a15491ceda38fafea5056c95a74d44/LICENSE"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "agent-workbench-ux",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 4 Control Center and agent-workbench UX",
+        "status": "WAITING_GATE",
+        "next_gate": "After #612's independently verified P0 worker baseline (or separately proven idle UI capacity), compare one isolated Hebrew RTL high-density agent-workspace fixture with the existing VelvetOS UI and UX skills; record accessibility, scroll, render performance, integration cost and rollback.",
+        "unlock_condition": "Bounded isolated frontend fixture, verified free host capacity or P0 release, pinned source/dependencies, license/RTL/a11y/performance checks and independent QA.",
+        "evidence_refs": [
+          "https://github.com/deeplethe/solid-glass/tree/6e8903e494a15491ceda38fafea5056c95a74d44",
+          "https://github.com/nocturney/velvetos-core/issues/595",
+          "https://github.com/nocturney/velvetos-core/issues/612"
         ]
       }
     }
