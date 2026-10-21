@@ -1,0 +1,1847 @@
+{
+  "schema": "velvetos.ui-ecosystem-source-intake.v1",
+  "intake_date": "2026-10-20",
+  "provenance": {
+    "origin": "Owner-provided Facebook post text",
+    "original_url": "https://www.facebook.com/share/p/1DPNd6X6rC/?mibextid=wwXIfr",
+    "scope": "1 skill directory + 18 component sources + 8 motion sources + 11 inspiration/icon sources + 4 design systems"
+  },
+  "policy": {
+    "source_only": true,
+    "no_execution_authority": true,
+    "no_download_or_install": true,
+    "no_external_credentials": true,
+    "licensing": "UNVERIFIED is a deliberate stop for embedding/redistributing third-party assets. Reference browsing is not an implementation license.",
+    "placement": "Read as a resource facet of scripts/vf_skill_catalog.py; do not create a second Skill registry, Control Plane or runtime.",
+    "comparison": "Keep competitors and complementary choices; benchmark against user tasks instead of selecting a global winner."
+  },
+  "source_count": 42,
+  "sources": [
+    {
+      "id": "ui-skills",
+      "name": "UI Skills",
+      "url": "https://www.ui-skills.com/",
+      "category": "skills",
+      "kind": "skill_directory",
+      "tech": [
+        "Agent CLI",
+        "MCP",
+        "web"
+      ],
+      "tech_confidence": "OFFICIAL_SOURCE_REVIEWED",
+      "distinctive": "Discover and fetch focused UI agent instructions; route only the smallest relevant skill set",
+      "compare_with": [
+        "XIAS",
+        "vf-web-ui-quality"
+      ],
+      "triage": "COMPARE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "VERIFIED_UPSTREAM_SCOPE_ONLY",
+        "license": "MIT",
+        "evidence_url": "https://github.com/ibelick/ui-skills/blob/main/LICENSE",
+        "caveat": "Repository software only; referenced skills may have independent licenses"
+      },
+      "classification_evidence": "PUBLIC_UPSTREAM_REVIEW_2026-10-20",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "RESEARCH_REFERENCE",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Documentation, icons or inspiration are never code dependencies by catalog presence"
+      }
+    },
+    {
+      "id": "spell-ui",
+      "name": "Spell UI",
+      "url": "https://spell.sh/",
+      "category": "components",
+      "kind": "copy_paste_components",
+      "tech": [
+        "React",
+        "Tailwind CSS"
+      ],
+      "tech_confidence": "OFFICIAL_SOURCE_REVIEWED",
+      "distinctive": "Polished high-character components and animated product/landing interactions",
+      "compare_with": [
+        "21st.dev",
+        "Magic UI"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "PUBLIC_UPSTREAM_REVIEW_2026-10-20",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "SOURCE_REFERENCE_NOT_DROP_IN",
+        "source_code_integration_approved": false,
+        "framework_migration_required": true,
+        "reason": "Current SliceBridge Wails frontend is vanilla HTML/CSS/JavaScript, not a React/Angular/Vue app"
+      }
+    },
+    {
+      "id": "21st-dev",
+      "name": "21st.dev",
+      "url": "https://21st.dev/",
+      "category": "components",
+      "kind": "component_registry",
+      "tech": [
+        "React",
+        "Tailwind CSS"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Cross-library component discovery and example sourcing",
+      "compare_with": [
+        "shadcn/ui",
+        "Magic UI",
+        "Aceternity"
+      ],
+      "triage": "COMPARE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "EVALUATE_PER_COMPONENT",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Review exact source component/asset and app integration contract before use"
+      }
+    },
+    {
+      "id": "heroui",
+      "name": "HeroUI",
+      "url": "https://heroui.com/",
+      "category": "components",
+      "kind": "framework_library",
+      "tech": [
+        "React"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Prebuilt accessible-feeling application primitives with an integrated component API",
+      "compare_with": [
+        "Mantine",
+        "Ant Design",
+        "shadcn/ui"
+      ],
+      "triage": "BENCHMARK_LATER",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "SOURCE_REFERENCE_NOT_DROP_IN",
+        "source_code_integration_approved": false,
+        "framework_migration_required": true,
+        "reason": "Current SliceBridge Wails frontend is vanilla HTML/CSS/JavaScript, not a React/Angular/Vue app"
+      }
+    },
+    {
+      "id": "preline",
+      "name": "Preline",
+      "url": "https://preline.co/",
+      "category": "components",
+      "kind": "component_library",
+      "tech": [
+        "Tailwind CSS",
+        "JavaScript"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Tailwind-friendly application patterns and JS components",
+      "compare_with": [
+        "Flowbite",
+        "daisyUI"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "STACK_ADAPTER_REQUIRED",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Tailwind build and CSS-integration require project-specific compatibility review"
+      }
+    },
+    {
+      "id": "mantine",
+      "name": "Mantine",
+      "url": "https://mantine.dev/",
+      "category": "components",
+      "kind": "framework_library",
+      "tech": [
+        "React"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Data-heavy app components, forms and composable hooks",
+      "compare_with": [
+        "HeroUI",
+        "Ant Design"
+      ],
+      "triage": "BENCHMARK_LATER",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "SOURCE_REFERENCE_NOT_DROP_IN",
+        "source_code_integration_approved": false,
+        "framework_migration_required": true,
+        "reason": "Current SliceBridge Wails frontend is vanilla HTML/CSS/JavaScript, not a React/Angular/Vue app"
+      }
+    },
+    {
+      "id": "ant-design",
+      "name": "Ant Design",
+      "url": "https://ant.design/",
+      "category": "components",
+      "kind": "framework_library",
+      "tech": [
+        "React"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Dense enterprise forms, tables and workflows",
+      "compare_with": [
+        "Mantine",
+        "HeroUI"
+      ],
+      "triage": "BENCHMARK_LATER",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "SOURCE_REFERENCE_NOT_DROP_IN",
+        "source_code_integration_approved": false,
+        "framework_migration_required": true,
+        "reason": "Current SliceBridge Wails frontend is vanilla HTML/CSS/JavaScript, not a React/Angular/Vue app"
+      }
+    },
+    {
+      "id": "float-ui",
+      "name": "Float UI",
+      "url": "https://floatui.com/",
+      "category": "components",
+      "kind": "copy_paste_components",
+      "tech": [
+        "Web",
+        "Tailwind CSS"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Ready-made page blocks and layout references",
+      "compare_with": [
+        "Preline",
+        "Flowbite"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "EVALUATE_PER_COMPONENT",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Review exact source component/asset and app integration contract before use"
+      }
+    },
+    {
+      "id": "flowbite",
+      "name": "Flowbite",
+      "url": "https://flowbite.com/",
+      "category": "components",
+      "kind": "component_library",
+      "tech": [
+        "Tailwind CSS",
+        "JavaScript"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Tailwind component examples with multiple integration options",
+      "compare_with": [
+        "Preline",
+        "daisyUI"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "STACK_ADAPTER_REQUIRED",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Tailwind build and CSS-integration require project-specific compatibility review"
+      }
+    },
+    {
+      "id": "shadcn-ui",
+      "name": "shadcn/ui",
+      "url": "https://ui.shadcn.com/",
+      "category": "components",
+      "kind": "source_owned_components",
+      "tech": [
+        "React",
+        "Tailwind CSS"
+      ],
+      "tech_confidence": "OFFICIAL_SOURCE_REVIEWED",
+      "distinctive": "Editable in-project component source; accessible primitives and design ownership",
+      "compare_with": [
+        "HeroUI",
+        "Mantine",
+        "21st.dev"
+      ],
+      "triage": "COMPARE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "VERIFIED_UPSTREAM_SCOPE_ONLY",
+        "license": "MIT",
+        "evidence_url": "https://github.com/shadcn-ui/ui/blob/main/LICENSE.md",
+        "caveat": "Review licenses of copied dependencies and third-party registry items"
+      },
+      "classification_evidence": "PUBLIC_UPSTREAM_REVIEW_2026-10-20",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "SOURCE_REFERENCE_NOT_DROP_IN",
+        "source_code_integration_approved": false,
+        "framework_migration_required": true,
+        "reason": "Current SliceBridge Wails frontend is vanilla HTML/CSS/JavaScript, not a React/Angular/Vue app"
+      }
+    },
+    {
+      "id": "magic-ui",
+      "name": "Magic UI",
+      "url": "https://magicui.design/",
+      "category": "components",
+      "kind": "motion_components",
+      "tech": [
+        "React",
+        "Tailwind CSS"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Expressive animated component patterns",
+      "compare_with": [
+        "Spell UI",
+        "Aceternity",
+        "Motion"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "SOURCE_REFERENCE_NOT_DROP_IN",
+        "source_code_integration_approved": false,
+        "framework_migration_required": true,
+        "reason": "Current SliceBridge Wails frontend is vanilla HTML/CSS/JavaScript, not a React/Angular/Vue app"
+      }
+    },
+    {
+      "id": "headless-ui",
+      "name": "Headless UI",
+      "url": "https://headlessui.com/",
+      "category": "components",
+      "kind": "headless_components",
+      "tech": [
+        "React",
+        "Vue"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Unstyled interaction primitives for custom visuals",
+      "compare_with": [
+        "shadcn/ui",
+        "Radix UI"
+      ],
+      "triage": "BENCHMARK_LATER",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "SOURCE_REFERENCE_NOT_DROP_IN",
+        "source_code_integration_approved": false,
+        "framework_migration_required": true,
+        "reason": "Current SliceBridge Wails frontend is vanilla HTML/CSS/JavaScript, not a React/Angular/Vue app"
+      }
+    },
+    {
+      "id": "tremor",
+      "name": "Tremor",
+      "url": "https://www.tremor.so/",
+      "category": "components",
+      "kind": "data_visualization",
+      "tech": [
+        "React"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Analytic dashboards, KPI visualization and chart patterns",
+      "compare_with": [
+        "Ant Design",
+        "Mantine"
+      ],
+      "triage": "BENCHMARK_LATER",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "SOURCE_REFERENCE_NOT_DROP_IN",
+        "source_code_integration_approved": false,
+        "framework_migration_required": true,
+        "reason": "Current SliceBridge Wails frontend is vanilla HTML/CSS/JavaScript, not a React/Angular/Vue app"
+      }
+    },
+    {
+      "id": "cult-ui",
+      "name": "Cult UI",
+      "url": "https://www.cult-ui.com/",
+      "category": "components",
+      "kind": "copy_paste_components",
+      "tech": [
+        "React",
+        "Tailwind CSS"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Experimental visually distinctive components",
+      "compare_with": [
+        "Magic UI",
+        "Aceternity"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "SOURCE_REFERENCE_NOT_DROP_IN",
+        "source_code_integration_approved": false,
+        "framework_migration_required": true,
+        "reason": "Current SliceBridge Wails frontend is vanilla HTML/CSS/JavaScript, not a React/Angular/Vue app"
+      }
+    },
+    {
+      "id": "aceternity-ui",
+      "name": "Aceternity UI",
+      "url": "https://ui.aceternity.com/",
+      "category": "components",
+      "kind": "motion_components",
+      "tech": [
+        "React",
+        "Tailwind CSS"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Complex visual effects, landing page surfaces and premium interaction examples",
+      "compare_with": [
+        "Magic UI",
+        "Spell UI"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "SOURCE_REFERENCE_NOT_DROP_IN",
+        "source_code_integration_approved": false,
+        "framework_migration_required": true,
+        "reason": "Current SliceBridge Wails frontend is vanilla HTML/CSS/JavaScript, not a React/Angular/Vue app"
+      }
+    },
+    {
+      "id": "eldora-ui",
+      "name": "Eldora UI",
+      "url": "https://www.eldoraui.site/",
+      "category": "components",
+      "kind": "copy_paste_components",
+      "tech": [
+        "Web"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Visual composition and motion-rich component inspiration",
+      "compare_with": [
+        "Magic UI",
+        "Cult UI"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "EVALUATE_PER_COMPONENT",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Review exact source component/asset and app integration contract before use"
+      }
+    },
+    {
+      "id": "daisyui",
+      "name": "daisyUI",
+      "url": "https://daisyui.com/?lang=en",
+      "category": "components",
+      "kind": "tailwind_component_plugin",
+      "tech": [
+        "Tailwind CSS"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Themeable utility-class components for fast UI assembly",
+      "compare_with": [
+        "Preline",
+        "Flowbite"
+      ],
+      "triage": "BENCHMARK_LATER",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "STACK_ADAPTER_REQUIRED",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Tailwind build and CSS-integration require project-specific compatibility review"
+      }
+    },
+    {
+      "id": "vengence-ui",
+      "name": "Vengence UI",
+      "url": "https://www.vengenceui.com/",
+      "category": "components",
+      "kind": "visual_component_reference",
+      "tech": [
+        "UNVERIFIED"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "User-supplied component source; evaluate actual implementation and terms",
+      "compare_with": [
+        "Cult UI",
+        "Magic UI"
+      ],
+      "triage": "RESEARCH_REQUIRED",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "EVALUATE_PER_COMPONENT",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Review exact source component/asset and app integration contract before use"
+      }
+    },
+    {
+      "id": "originui-ng",
+      "name": "Origin UI NG",
+      "url": "https://www.originui-ng.com/",
+      "category": "components",
+      "kind": "angular_components",
+      "tech": [
+        "Angular",
+        "Tailwind CSS"
+      ],
+      "tech_confidence": "OFFICIAL_SOURCE_REVIEWED",
+      "distinctive": "Copy-and-paste Angular zoneless components; not the original React Origin UI",
+      "compare_with": [
+        "shadcn/ui",
+        "21st.dev"
+      ],
+      "triage": "CONDITIONAL_ANGULAR",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "PUBLIC_UPSTREAM_REVIEW_2026-10-20",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "SOURCE_REFERENCE_NOT_DROP_IN",
+        "source_code_integration_approved": false,
+        "framework_migration_required": true,
+        "reason": "Current SliceBridge Wails frontend is vanilla HTML/CSS/JavaScript, not a React/Angular/Vue app"
+      }
+    },
+    {
+      "id": "gsap",
+      "name": "GSAP",
+      "url": "https://gsap.com/",
+      "category": "motion",
+      "kind": "animation_engine",
+      "tech": [
+        "JavaScript"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Precise timeline choreography, scroll-driven effects, advanced composition",
+      "compare_with": [
+        "Motion",
+        "Anime.js"
+      ],
+      "triage": "BENCHMARK_LATER",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "EVALUATE_PER_COMPONENT",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Review exact source component/asset and app integration contract before use"
+      }
+    },
+    {
+      "id": "motion",
+      "name": "Motion",
+      "url": "https://motion.dev/",
+      "category": "motion",
+      "kind": "animation_engine",
+      "tech": [
+        "JavaScript",
+        "React",
+        "Vue"
+      ],
+      "tech_confidence": "OFFICIAL_SOURCE_REVIEWED",
+      "distinctive": "Declarative React/JS motion and interaction gestures",
+      "compare_with": [
+        "GSAP",
+        "Anime.js"
+      ],
+      "triage": "COMPARE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Motion+ premium examples and tools can have additional access terms. Downgraded 2026-10-21 from VERIFIED_UPSTREAM_SCOPE_ONLY: the prior MIT claim cited the homepage https://motion.dev/, which is not a license file and is not verified for the exact package or component; verify the exact license before any use"
+      },
+      "classification_evidence": "PUBLIC_UPSTREAM_REVIEW_2026-10-20",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "EVALUATE_PER_COMPONENT",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Review exact source component/asset and app integration contract before use"
+      }
+    },
+    {
+      "id": "animejs",
+      "name": "Anime.js",
+      "url": "https://animejs.com/",
+      "category": "motion",
+      "kind": "animation_engine",
+      "tech": [
+        "JavaScript"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Small composable timelines and animations for DOM/SVG",
+      "compare_with": [
+        "GSAP",
+        "Motion"
+      ],
+      "triage": "BENCHMARK_LATER",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "EVALUATE_PER_COMPONENT",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Review exact source component/asset and app integration contract before use"
+      }
+    },
+    {
+      "id": "shaders",
+      "name": "Shaders",
+      "url": "https://shaders.com/",
+      "category": "motion",
+      "kind": "shader_reference",
+      "tech": [
+        "WebGL",
+        "GLSL"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Shader visuals and GPU effect ideas; verify embedding path",
+      "compare_with": [
+        "GSAP",
+        "Motion"
+      ],
+      "triage": "RESEARCH_REQUIRED",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "EVALUATE_PER_COMPONENT",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Review exact source component/asset and app integration contract before use"
+      }
+    },
+    {
+      "id": "jitter",
+      "name": "Jitter",
+      "url": "https://jitter.video/",
+      "category": "motion",
+      "kind": "animation_authoring",
+      "tech": [
+        "Video",
+        "Design"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Motion asset authoring and export rather than app runtime",
+      "compare_with": [
+        "LottieFiles",
+        "Swishy"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "EVALUATE_PER_COMPONENT",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Review exact source component/asset and app integration contract before use"
+      }
+    },
+    {
+      "id": "swishy",
+      "name": "Swishy",
+      "url": "https://www.swishy.ai/",
+      "category": "motion",
+      "kind": "animation_authoring",
+      "tech": [
+        "UNVERIFIED"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "AI-assisted animation creation; verify output rights before marketing/redistribution",
+      "compare_with": [
+        "Jitter",
+        "LottieFiles"
+      ],
+      "triage": "RESEARCH_REQUIRED",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "EVALUATE_PER_COMPONENT",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Review exact source component/asset and app integration contract before use"
+      }
+    },
+    {
+      "id": "lottiefiles",
+      "name": "LottieFiles",
+      "url": "https://lottiefiles.com/",
+      "category": "motion",
+      "kind": "animation_asset_platform",
+      "tech": [
+        "Lottie JSON",
+        "Web",
+        "Mobile"
+      ],
+      "tech_confidence": "OFFICIAL_SOURCE_REVIEWED",
+      "distinctive": "Vector animation assets and playback; per-asset license verification",
+      "compare_with": [
+        "Jitter",
+        "Motion"
+      ],
+      "triage": "BENCHMARK_LATER",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Premium uploads and per-asset terms differ; no bulk scraping or reselling standalone assets. Downgraded 2026-10-21 from VERIFIED_UPSTREAM_SCOPE_ONLY: the prior Lottie Simple License claim (https://lottiefiles.com/page/license) is asset-specific and not verified for any particular asset; verify each asset's license before any use"
+      },
+      "classification_evidence": "PUBLIC_UPSTREAM_REVIEW_2026-10-20",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "EVALUATE_PER_COMPONENT",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Review exact source component/asset and app integration contract before use"
+      }
+    },
+    {
+      "id": "animmasterlib",
+      "name": "AnimMasterLib",
+      "url": "https://animmasterlib.dev/",
+      "category": "motion",
+      "kind": "animation_reference",
+      "tech": [
+        "UNVERIFIED"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Animation pattern library; inspect framework and maintainability",
+      "compare_with": [
+        "Motion",
+        "Anime.js"
+      ],
+      "triage": "RESEARCH_REQUIRED",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "EVALUATE_PER_COMPONENT",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Review exact source component/asset and app integration contract before use"
+      }
+    },
+    {
+      "id": "ui-live",
+      "name": "UI.live",
+      "url": "https://ui.live/",
+      "category": "inspiration",
+      "kind": "ui_reference",
+      "tech": [
+        "Web"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Discover UI examples and reusable patterns; do not assume code rights",
+      "compare_with": [
+        "Uiverse",
+        "Recent.design"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "RESEARCH_REFERENCE",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Documentation, icons or inspiration are never code dependencies by catalog presence"
+      }
+    },
+    {
+      "id": "uiverse",
+      "name": "Uiverse",
+      "url": "https://uiverse.io/",
+      "category": "inspiration",
+      "kind": "community_components",
+      "tech": [
+        "HTML",
+        "CSS"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Community-shared micro-UI and CSS examples",
+      "compare_with": [
+        "UI.live",
+        "21st.dev"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "RESEARCH_REFERENCE",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Documentation, icons or inspiration are never code dependencies by catalog presence"
+      }
+    },
+    {
+      "id": "iconsax",
+      "name": "Iconsax",
+      "url": "https://iconsax.io/",
+      "category": "inspiration",
+      "kind": "icon_set",
+      "tech": [
+        "SVG"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Alternative icon shapes and weights",
+      "compare_with": [
+        "Lucide",
+        "Phosphor"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "RESEARCH_REFERENCE",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Documentation, icons or inspiration are never code dependencies by catalog presence"
+      }
+    },
+    {
+      "id": "lucide",
+      "name": "Lucide",
+      "url": "https://lucide.dev/",
+      "category": "inspiration",
+      "kind": "icon_set",
+      "tech": [
+        "SVG",
+        "React",
+        "Vue",
+        "JavaScript"
+      ],
+      "tech_confidence": "OFFICIAL_SOURCE_REVIEWED",
+      "distinctive": "Consistent lightweight icon family across frameworks",
+      "compare_with": [
+        "Phosphor",
+        "Iconsax"
+      ],
+      "triage": "COMPARE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "VERIFIED_UPSTREAM_SCOPE_ONLY",
+        "license": "ISC + MIT (Feather-derived icons)",
+        "evidence_url": "https://github.com/lucide-icons/lucide/blob/main/LICENSE",
+        "caveat": "Retain complete attribution/license notices in redistributed copies"
+      },
+      "classification_evidence": "PUBLIC_UPSTREAM_REVIEW_2026-10-20",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "RESEARCH_REFERENCE",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Documentation, icons or inspiration are never code dependencies by catalog presence"
+      }
+    },
+    {
+      "id": "mobbin",
+      "name": "Mobbin",
+      "url": "https://mobbin.com/",
+      "category": "inspiration",
+      "kind": "product_flow_reference",
+      "tech": [
+        "Web",
+        "Mobile"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Interaction flows and real-product UI reference; not an embeddable library",
+      "compare_with": [
+        "Recent.design",
+        "Landings.dev"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "RESEARCH_REFERENCE",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Documentation, icons or inspiration are never code dependencies by catalog presence"
+      }
+    },
+    {
+      "id": "landings",
+      "name": "Landings.dev",
+      "url": "https://landings.dev/",
+      "category": "inspiration",
+      "kind": "landing_page_reference",
+      "tech": [
+        "Web"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Landing-page composition inspiration",
+      "compare_with": [
+        "Dark.design",
+        "Recent.design"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "RESEARCH_REFERENCE",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Documentation, icons or inspiration are never code dependencies by catalog presence"
+      }
+    },
+    {
+      "id": "recent-design",
+      "name": "Recent.design",
+      "url": "https://recent.design/",
+      "category": "inspiration",
+      "kind": "ui_reference",
+      "tech": [
+        "Web"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Contemporary visual design references",
+      "compare_with": [
+        "Mobbin",
+        "Dark.design"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "RESEARCH_REFERENCE",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Documentation, icons or inspiration are never code dependencies by catalog presence"
+      }
+    },
+    {
+      "id": "dark-design",
+      "name": "Dark.design",
+      "url": "https://www.dark.design/",
+      "category": "inspiration",
+      "kind": "ui_reference",
+      "tech": [
+        "Web"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Dark-themed website and layout inspiration",
+      "compare_with": [
+        "Landings.dev",
+        "Recent.design"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "RESEARCH_REFERENCE",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Documentation, icons or inspiration are never code dependencies by catalog presence"
+      }
+    },
+    {
+      "id": "ripplix",
+      "name": "Ripplix",
+      "url": "https://www.ripplix.com/",
+      "category": "inspiration",
+      "kind": "ui_reference",
+      "tech": [
+        "UNVERIFIED"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "User-supplied UI reference; verify current product scope",
+      "compare_with": [
+        "Design Spells",
+        "Uiverse"
+      ],
+      "triage": "RESEARCH_REQUIRED",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "RESEARCH_REFERENCE",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Documentation, icons or inspiration are never code dependencies by catalog presence"
+      }
+    },
+    {
+      "id": "design-spells",
+      "name": "Design Spells",
+      "url": "https://designspells.com/",
+      "category": "inspiration",
+      "kind": "interaction_reference",
+      "tech": [
+        "Web"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Detailed interaction inspiration and micro-interaction examples",
+      "compare_with": [
+        "Mobbin",
+        "Motion"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "RESEARCH_REFERENCE",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Documentation, icons or inspiration are never code dependencies by catalog presence"
+      }
+    },
+    {
+      "id": "phosphor",
+      "name": "Phosphor Icons",
+      "url": "https://phosphoricons.com/",
+      "category": "inspiration",
+      "kind": "icon_set",
+      "tech": [
+        "SVG",
+        "Web"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Multi-weight icon system with a different visual voice than Lucide",
+      "compare_with": [
+        "Lucide",
+        "Iconsax"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "RESEARCH_REFERENCE",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Documentation, icons or inspiration are never code dependencies by catalog presence"
+      }
+    },
+    {
+      "id": "material3",
+      "name": "Material Design 3",
+      "url": "https://m3.material.io/",
+      "category": "design_systems",
+      "kind": "design_guidelines",
+      "tech": [
+        "Design tokens",
+        "Android",
+        "Web"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Structured accessibility, adaptive and component design guidance",
+      "compare_with": [
+        "XIAS",
+        "Velvet UI System"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "RESEARCH_REFERENCE",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Documentation, icons or inspiration are never code dependencies by catalog presence"
+      }
+    },
+    {
+      "id": "open-ui",
+      "name": "Open UI",
+      "url": "https://open-ui.org/design-systems/",
+      "category": "design_systems",
+      "kind": "standards_research",
+      "tech": [
+        "Web standards"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Cross-design-system research and interaction standards",
+      "compare_with": [
+        "Material 3",
+        "OpenDesign"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "RESEARCH_REFERENCE",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Documentation, icons or inspiration are never code dependencies by catalog presence"
+      }
+    },
+    {
+      "id": "open-design",
+      "name": "OpenDesign",
+      "url": "https://open-design.ai/plugins/systems/",
+      "category": "design_systems",
+      "kind": "design_system_catalog",
+      "tech": [
+        "Design tokens",
+        "Web"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Compare structured design systems, rules and tokens",
+      "compare_with": [
+        "XIAS",
+        "Material 3"
+      ],
+      "triage": "COMPARE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "RESEARCH_REFERENCE",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Documentation, icons or inspiration are never code dependencies by catalog presence"
+      }
+    },
+    {
+      "id": "apple-design-system",
+      "name": "Apple Design System (community)",
+      "url": "https://github.com/mjmirza/apple-design-system",
+      "category": "design_systems",
+      "kind": "community_design_reference",
+      "tech": [
+        "Apple-like UI patterns"
+      ],
+      "tech_confidence": "PROVISIONAL_FROM_POST_OR_DOMAIN",
+      "distinctive": "Reference design patterns; not official Apple brand license",
+      "compare_with": [
+        "Material 3",
+        "OpenDesign"
+      ],
+      "triage": "REFERENCE",
+      "stage": "DISCOVERED",
+      "runtime": "NOT_INSTALLED_OR_VERIFIED",
+      "candidate_fit": [
+        "INTERNAL_UI",
+        "SLICERBRIDGE_DESKTOP_WEBVIEW",
+        "OFFICE_WEB"
+      ],
+      "usage_rights": {
+        "state": "REVIEW_REQUIRED",
+        "license": null,
+        "evidence_url": null,
+        "caveat": "Verify exact component/asset license, commercial rights, marketing use and redistribution before copying"
+      },
+      "classification_evidence": "OWNER_LINK_CATEGORY_ONLY",
+      "installed": false,
+      "benchmark": {
+        "state": "NOT_RUN",
+        "replaces": null,
+        "complements": null
+      },
+      "slicebridge_fit": {
+        "role": "RESEARCH_REFERENCE",
+        "source_code_integration_approved": false,
+        "framework_migration_required": false,
+        "reason": "Documentation, icons or inspiration are never code dependencies by catalog presence"
+      }
+    }
+  ]
+}

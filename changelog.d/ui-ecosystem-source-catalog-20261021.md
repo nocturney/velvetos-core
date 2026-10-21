@@ -1,0 +1,1 @@
+- 2026-10-21 - **UI ecosystem source catalog:** add 42 source-only UI/UX references with rights/provenance labels to the existing shared Skills catalog, including non-executable source search and Living Studio suggestions. This grants no installation or execution authority.

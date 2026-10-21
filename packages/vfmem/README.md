@@ -39,7 +39,10 @@
 
 ## קטלוג Skills אחוד (נגזר, לא מקור אמת נוסף)
 
-`python3 scripts/vf_skill_catalog.py index` מעדכן cache מקומי ואטומי לפי שינויי קבצים ו־SHA256; כל שאילתה בודקת שה־cache עדיין תואם למקורות. בהיעדר cache פועלים ישירות מהמקורות. `list`, `show <id>`, `search <query>`, `compare <query>`, `route <query>`, `plan <query>`, `audit`, `host` זמינים ללא API חיצוני וללא התקנה. תוצאות זמינות וביצוע הן UNKNOWN/NOT_STARTED ללא ראיות ריצה.
+`python3 scripts/vf_skill_catalog.py index` מעדכן cache מקומי ואטומי לפי שינויי קבצים ו־SHA256; כל שאילתה בודקת שה־cache עדיין תואם למקורות. בהיעדר cache פועלים ישירות מהמקורות. `list`, `show <id>`, `search <query>`, `compare <query>`, `route <query>`, `plan <query>`, `audit`, `host` זמינים ללא API חיצוני וללא התקנה.
+
+**מקורות UI/UX שאינם Skills:** `python3 scripts/vf_skill_catalog.py sources` מציג 42 מקורות מהפוסט (ספריות, אנימציה, השראה ומערכות עיצוב), ו־`python3 scripts/vf_skill_catalog.py source-search "Angular" --stack Angular` מחפש בהם. `compare` ו־`plan` מחזירים אותם כ־`supporting_resources` בלבד. Living Studio משתמש באותה שכבה באמצעות `python3 scripts/vf_living_studio.py skill resources` ו־`skill source-search`; שום מקור לא הופך אוטומטית ל־Skill מותקן, לתוסף פעיל או להרשאת ביצוע. מצב הרישוי וההתאמה מפורטים ב־[`ui-ecosystem-sources-2026-10-20.json`](../../docs/implementation/office-v2/phase2/ui-ecosystem-sources-2026-10-20.json) וב־[`ui-ecosystem-comparison-2026-10-20.md`](../../docs/implementation/office-v2/phase2/ui-ecosystem-comparison-2026-10-20.md).
+ תוצאות זמינות וביצוע הן UNKNOWN/NOT_STARTED ללא ראיות ריצה.
 
 `vfmem` ו־`vf_living_studio.py skill` קוראים את אותה שכבת גילוי. המועמדים החיצוניים נשמרים ב־Office v2 Candidate Registry, לא נטענים כרכיבי runtime. ראו את [פיילוט ההשוואה](../../docs/implementation/office-v2/phase2/skill-comparison-pilot-20261020.md).
 
