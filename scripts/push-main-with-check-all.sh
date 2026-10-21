@@ -10,6 +10,101 @@ set -euo pipefail
 #
 # Usage:
 #   GH_TOKEN="${{ github.token }}" scripts/push-main-with-check-all.sh [main]
+#
+# gh api failures are named. GET .../commits/<sha>/status needs statuses: read
+# on the caller. checks: read covers check-runs. The caller must not receive
+# statuses: write; the Core Sensors publisher owns that post.
+
+gh_api() {
+  local label="$1"
+  shift
+  if ! gh api "$@"; then
+    echo "::error::gh api ${label} failed" >&2
+    return 1
+  fi
+}
+
+selftest_gh_api_labels() {
+  local root fake err out rc log
+  root="$(mktemp -d)"
+  fake="$root/bin"
+  mkdir -p "$fake"
+  log="$root/args"
+  cat >"$fake/gh" <<'EOF'
+#!/bin/sh
+printf '%s\n' "$*" >>"${GH_ARGS_LOG:?}"
+case "${GH_FAIL_KIND:-}" in
+  status)
+    case "$*" in
+      *"/status"*)
+        echo "gh: Resource not accessible by integration (HTTP 403)" >&2
+        exit 1
+        ;;
+    esac
+    ;;
+  check-runs)
+    case "$*" in
+      *check-runs*)
+        echo "gh: Resource not accessible by integration (HTTP 403)" >&2
+        exit 1
+        ;;
+    esac
+    ;;
+esac
+printf '1\n'
+EOF
+  chmod +x "$fake/gh"
+
+  expect_named() {
+    local label="$1"
+    local kind="$2"
+    err="$(mktemp)"
+    out="$(mktemp)"
+    rc=0
+    GH_ARGS_LOG="$log" GH_FAIL_KIND="$kind" PATH="$fake:$PATH" \
+      gh_api "$label" "repos/o/r/commits/abc/${kind}" --jq length >"$out" 2>"$err" || rc=$?
+    if [[ "$rc" -eq 0 ]]; then
+      echo "selftest: ${label} was expected to fail" >&2
+      return 1
+    fi
+    if ! grep -Fq "::error::gh api ${label} failed" "$err"; then
+      echo "selftest: ${label} 403 was not named" >&2
+      cat "$err" >&2
+      return 1
+    fi
+    if ! grep -Fq "Resource not accessible by integration (HTTP 403)" "$err"; then
+      echo "selftest: ${label} dropped the gh 403 text" >&2
+      return 1
+    fi
+    rm -f "$err" "$out"
+  }
+
+  expect_named commit-status status
+  expect_named commit-check-runs check-runs
+
+  err="$(mktemp)"
+  out="$(mktemp)"
+  : >"$log"
+  GH_ARGS_LOG="$log" GH_FAIL_KIND="" PATH="$fake:$PATH" \
+    gh_api commit-status "repos/o/r/commits/abc/status" --jq length >"$out" 2>"$err"
+  if [[ "$(cat "$out")" != "1" ]]; then
+    echo "selftest: successful gh api stdout was not passed through" >&2
+    return 1
+  fi
+  if [[ -s "$err" ]]; then
+    echo "selftest: successful gh api printed an error" >&2
+    cat "$err" >&2
+    return 1
+  fi
+  rm -rf "$root"
+  rm -f "$err" "$out"
+  echo "OK gh-api-labels status_403=named checks_403=named success_stdout=1"
+}
+
+if [[ "${1:-}" == "--selftest" ]]; then
+  selftest_gh_api_labels
+  exit 0
+fi
 
 target_branch="${1:-main}"
 workflow_file="${VELVET_CHECK_WORKFLOW:-check-all.yml}"
@@ -122,7 +217,9 @@ PY
   fi
 
   check_count="$(
-    gh api "repos/$repo/commits/$head_sha/check-runs"       --jq '[.check_runs[] | select(.name == "check-all" and .conclusion == "success" and .app.slug == "github-actions")] | length'
+    gh_api commit-check-runs \
+      "repos/$repo/commits/$head_sha/check-runs" \
+      --jq '[.check_runs[] | select(.name == "check-all" and .conclusion == "success" and .app.slug == "github-actions")] | length'
   )"
   if [[ "$check_count" -lt 1 ]]; then
     echo "::error::exact head lacks successful GitHub Actions check-all"
@@ -130,7 +227,8 @@ PY
   fi
 
   status_count="$(
-    gh api "repos/$repo/commits/$head_sha/status" \
+    gh_api commit-status \
+      "repos/$repo/commits/$head_sha/status" \
       --jq '[.statuses[] | select(.context == "check-all" and .state == "success")] | length'
   )"
   if [[ "$status_count" -lt 1 ]]; then

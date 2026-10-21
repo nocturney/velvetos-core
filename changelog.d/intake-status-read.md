@@ -1,0 +1,1 @@
+- 2026-10-19 - **Intake status read:** machine writers that call `push-main-with-check-all.sh` grant `statuses: read` so the precheck can read the `check-all` commit status. A failing `gh api` call is named in the log. The label selftest uses Git Bash on Windows. `statuses: write` stays on the Core Sensors publisher, and `check-all-windows` stays `contents: read`. No model call.
