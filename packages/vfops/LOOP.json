@@ -690,6 +690,13 @@
       "cadence": "on-demand",
       "consume": "python3 scripts/vf_living_studio.py skill list",
       "note": "Cursor skill router for Living Studio"
+    },
+    {
+      "id": "skill-pixel-art",
+      "path": ".cursor/skills/vf-pixel-art/SKILL.md",
+      "cadence": "on-pixel-art",
+      "consume": "packages/vfresearch/LINKS.json",
+      "note": "Conditional creative intent; explicit pixel art only, renderer deferred to Phase 2 benchmark. No launch or publish."
     }
   ]
 }

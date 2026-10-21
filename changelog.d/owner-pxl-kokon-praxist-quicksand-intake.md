@@ -1,0 +1,1 @@
+- Register four owner-submitted creative and agent tools for evidence-based Phase 2 evaluation, stage conditional pixel-art guidance, and add research and sandbox comparison playbooks without production promotion.
