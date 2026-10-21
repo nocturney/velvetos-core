@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-18T18:47:35+03:00",
+  "updated_at": "2026-10-21T04:08:00.049Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 239,
+  "candidate_count": 240,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -11772,6 +11772,94 @@
         "unlock_condition": "Golden Fixture contract, applicable tests, cost and runtime permission review plus independent QA evidence.",
         "evidence_refs": [
           "https://github.com/plugin87/ux-ui-agent-skills/blob/v2.10.0/.claude/skills/ux-writing/SKILL.md"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-xerj-org-xerj",
+      "source_item_id": null,
+      "name": "XERJ local-first code search, retrieval and MCP agent memory",
+      "category": "RESEARCH_CANDIDATE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Owner-submitted, source and Apache-2.0 license reviewed at immutable upstream pin; no host install, independent task benchmark or production admissibility evidence. Memory-context overflow and complementary code-search assessment are required.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "local-first-search",
+        "code-search",
+        "reference-coding",
+        "bm25",
+        "hybrid-retrieval",
+        "mcp",
+        "agent-memory",
+        "autoindex",
+        "elasticsearch-api",
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "platform_constraints": [
+        "Upstream advertises Windows, macOS and Linux binaries; host, OS, binary SHA, performance and isolation are NOT_RUN on VelvetOS fleet.",
+        "Authorised isolated LAB only; authenticated scoped API keys and localhost binding, no --insecure on shared hosts or LAN, no inherited credentials or source-data exfiltration.",
+        "Default semantic embedding path is lexical hashing, not neural; neural model download or external reranking is opt-in only after cost, licence, security and privacy gates.",
+        "Preserve canonical vfmem and git/Office source-of-truth verification; derived XERJ memory/search results confer no effect, scheduler or data authority."
+      ],
+      "shortlist_lanes": [
+        "memory-context",
+        "code-retrieval-agent-context"
+      ],
+      "evidence_refs": [
+        "https://github.com/xerj-org/xerj",
+        "https://github.com/xerj-org/xerj/tree/050a12e9ac66f1c3fd279b365d769936e07939da",
+        "https://github.com/xerj-org/xerj/blob/050a12e9ac66f1c3fd279b365d769936e07939da/README.md",
+        "https://github.com/xerj-org/xerj/blob/050a12e9ac66f1c3fd279b365d769936e07939da/LICENSE",
+        "https://github.com/xerj-org/xerj/blob/050a12e9ac66f1c3fd279b365d769936e07939da/docs/SECURITY_MODEL.md",
+        "https://github.com/xerj-org/xerj/blob/050a12e9ac66f1c3fd279b365d769936e07939da/docs/recipes/agentic-memory.md",
+        "https://github.com/xerj-org/xerj/releases/tag/v1.0.0-rc.97",
+        "docs/implementation/office-v2/phase2/owner-xerj-code-retrieval-memory-intake-2026-10-21.md",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "Upstream source HEAD observed 2026-10-21, pin 050a12e9ac66f1c3fd279b365d769936e07939da; release v1.0.0-rc.97 was published 2026-10-19.",
+        "Research-only: compare as a derived search/index layer and memory-context alternative, not as a replacement for canonical project state/effect policy.",
+        "Existing incumbent: vfmem authoritative verifier, Cognee optional local derived semantic index, local TF-IDF/code retrieval baseline.",
+        "Upstream claims of reduced output tokens and Elasticsearch API coverage are not VelvetOS measurements; verify with labelled same-task fixture.",
+        "Primary workstream: #612 code retrieval/reference-coding. P0 memory-context uses queued_challengers (not active shortlist). Source owner #595.",
+        "Admission requires fixed licensed/synthetic corpora, independent QA scorecard, offline/no-cost budget, RBAC and rollback review; do not install or start services."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "After the independently verified #612 source-to-PR/QA/recovery baseline, run source-pinned, same-corpus A/B/C evaluation of incumbent code/vfmem+Cognee retrieval versus XERJ-derived search versus hybrid; record source accuracy, memory freshness/deletion, prompt-injection resistance, BM25/hybrid quality, real tokens, resources, security, rollback and independent QA.",
+        "rationale": "A local index and memory engine may replace some derived retrieval components, improve code reference search or complement vfmem/Cognee. Overlap with an incumbent is not a rejection reason; durable/effect authority is outside its delegated role.",
+        "decision_evidence_refs": [
+          "https://github.com/xerj-org/xerj/blob/050a12e9ac66f1c3fd279b365d769936e07939da/README.md",
+          "https://github.com/xerj-org/xerj/blob/050a12e9ac66f1c3fd279b365d769936e07939da/docs/SECURITY_MODEL.md",
+          "docs/implementation/office-v2/phase2/owner-xerj-code-retrieval-memory-intake-2026-10-21.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "code-retrieval-agent-context",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Office v2 Phase 2 comparative intake / post-#612 independently verified coding-worker baseline and memory-context overflow",
+        "status": "WAITING_GATE",
+        "next_gate": "After the independently verified #612 source-to-PR/QA/recovery baseline, run source-pinned, same-corpus A/B/C evaluation of incumbent code/vfmem+Cognee retrieval versus XERJ-derived search versus hybrid; record source accuracy, memory freshness/deletion, prompt-injection resistance, BM25/hybrid quality, real tokens, resources, security, rollback and independent QA.",
+        "unlock_condition": "Only after #612 independently verified local coding-workflow baseline, #595 source/rights triage, vendor-neutral Golden Fixture and approved isolated free LAB resource/security/rollback plan; no install or benchmark has been admitted.",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/owner-xerj-code-retrieval-memory-intake-2026-10-21.md",
+          "https://github.com/xerj-org/xerj/tree/050a12e9ac66f1c3fd279b365d769936e07939da",
+          "https://github.com/nocturney/velvetos-core/issues/595",
+          "https://github.com/nocturney/velvetos-core/issues/612"
         ]
       }
     }
