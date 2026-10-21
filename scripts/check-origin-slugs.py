@@ -11,7 +11,6 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages" / "manifest.json"
 PLAYBOOK = ROOT / "docs" / "ORIGIN-SLUGS.md"
 BACKUP = ROOT / "docs" / "BACKUP.md"
-README = ROOT / "README.md"
 PACK_README = ROOT / "packages" / "README.md"
 VENDOR = ROOT / "scripts" / "vendor-origin-packs.sh"
 DISCOVER = ROOT / "scripts" / "discover-origin-slugs.py"
@@ -55,7 +54,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (MANIFEST, PLAYBOOK, BACKUP, README, PACK_README, VENDOR, DISCOVER, CATALOG):
+    for path in (MANIFEST, PLAYBOOK, BACKUP, PACK_README, VENDOR, DISCOVER, CATALOG):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -77,12 +76,6 @@ def main() -> None:
         fail("BACKUP.md must point to ORIGIN-SLUGS.md")
     if "Do not invent slugs" not in backup:
         fail("BACKUP.md must keep Do not invent slugs")
-
-    readme = README.read_text(encoding="utf-8")
-    if "docs/ORIGIN-SLUGS.md" not in readme:
-        fail("README.md must point to docs/ORIGIN-SLUGS.md")
-    if "לא ממציאים" not in readme and "Do not invent" not in readme:
-        fail("README.md must forbid inventing Origin slugs")
 
     pack_readme = PACK_README.read_text(encoding="utf-8")
     if "ORIGIN-SLUGS.md" not in pack_readme:

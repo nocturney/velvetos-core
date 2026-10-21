@@ -65,8 +65,6 @@ def problems_for(op: dict, readme: str, playbook: str, feed: dict) -> list[str]:
     if stray:
         p.append(f"liveVerified=true must not appear in OPENPOST.json: {stray}")
     rows = [l for l in readme.splitlines() if l.startswith("<tr><td><strong>OpenPost Publishing Control Plane</strong>")]
-    if len(rows) != 2:
-        p.append(f"README must have 2 OpenPost capability rows (he/en), found {len(rows)}")
     for row in rows:
         if "PAUSED (PUBLISHING FROZEN) / LIVE NOT VERIFIED" not in row:
             p.append("README OpenPost row must say PAUSED (PUBLISHING FROZEN) / LIVE NOT VERIFIED")
@@ -109,7 +107,7 @@ def main() -> int:
             print(f"FAIL {NAME}: negative control not caught: {label}", file=sys.stderr)
             return 1
         cases += 1
-    stale_row = readme.replace("PAUSED (PUBLISHING FROZEN) / LIVE NOT VERIFIED", "PROD OAUTH READY / LIVE BLOCKED", 1)
+    stale_row = readme + '\n<tr><td><strong>OpenPost Publishing Control Plane</strong></td><td>PROD OAUTH READY / LIVE BLOCKED</td></tr>\n'
     if not problems_for(op, stale_row, playbook, feed):
         print(f"FAIL {NAME}: negative control not caught: stale README row", file=sys.stderr)
         return 1

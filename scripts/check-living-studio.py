@@ -39,9 +39,6 @@ def main() -> None:
     skills = reg.get("skills") or []
     if len(skills) != 23:
         fail(f"REGISTRY skills must be 23, got {len(skills)}")
-    readme = ROOT_README.read_text(encoding="utf-8")
-    if f"with {len(skills)} operational skills." not in readme or f"עם {len(skills)} Skills תפעוליים." not in readme:
-        fail("README Living Studio skill count is stale relative to REGISTRY.json")
     sot_index = SOT_INDEX.read_text(encoding="utf-8")
     if f"| {len(skills)} operational skills ב־README pulse |" not in sot_index:
         fail("SOT-INDEX Living Studio skill count is stale relative to REGISTRY.json")

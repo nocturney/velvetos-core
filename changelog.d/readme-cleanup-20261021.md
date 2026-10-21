@@ -1,0 +1,1 @@
+- Simplified the root README into a short bilingual entry point and decoupled verification sensors from duplicated historical status tables. Canonical component records and the generated operational snapshot remain unchanged.

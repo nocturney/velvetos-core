@@ -35,7 +35,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CALC = ROOT / "packages/vfharness/devtools/pilots/cua/cp057/calc.ps1"
 PIN = ROOT / "packages/vfharness/devtools/pilots/cua/cp057/PIN.json"
-README = ROOT / "README.md"
 CUA_README = ROOT / "packages/vfharness/devtools/pilots/cua/README.md"
 EARLIER = "97e942bcccfb5c5bcbbe13e97badd058e027e1df3e803a4a24d9eaac933cbc6f"
 FIRST_READ = "32824ef410023d84a61c7ecd88edd872ade2e70bdee0ec22b27ae001a3b35f13"
@@ -1346,9 +1345,8 @@ def pin_findings(text: str) -> list[str]:
     problems.extend(recorded_note_sha_mutation_findings(pin))
     if pin.get("line_ending") != "lf":
         problems.append("PIN line_ending must stay lf")
-    root_readme = README.read_text(encoding="utf-8")
     cua_readme = CUA_README.read_text(encoding="utf-8")
-    for path, body in ((README, root_readme), (CUA_README, cua_readme)):
+    for path, body in ((CUA_README, cua_readme),):
         if digest not in body.lower():
             problems.append(f"{path.relative_to(ROOT)} does not record {digest}")
         for token in (
@@ -1371,10 +1369,10 @@ def pin_findings(text: str) -> list[str]:
         ):
             if token not in body:
                 problems.append(f"{path.relative_to(ROOT)} missing {token}")
-    if "PropertyNotFoundException" not in root_readme:
-        problems.append("README must record the strict-mode failure class")
-    if "RuntimeException" not in root_readme or "RuntimeException" not in cua_readme:
-        problems.append("README must record the first-read RuntimeException")
+    if "PropertyNotFoundException" not in cua_readme:
+        problems.append("CUA README must record the strict-mode failure class")
+    if "RuntimeException" not in cua_readme:
+        problems.append("CUA README must record the first-read RuntimeException")
     return problems
 
 
