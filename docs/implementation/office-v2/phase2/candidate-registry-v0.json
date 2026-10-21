@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-21T04:18:50.521Z",
+  "updated_at": "2026-10-21T10:09:08.841Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 244,
+  "candidate_count": 248,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -12175,6 +12175,301 @@
         "evidence_refs": [
           "https://github.com/nocturney/velvetos-core/issues/928",
           "https://github.com/Niko1221/Strata",
+          "https://github.com/nocturney/velvetos-core/issues/612"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-crsolver-claude-pxl",
+      "source_item_id": null,
+      "name": "Claude PXL (pxl) — code-first pixel art and sprite skill",
+      "category": "SKILL_CREATIVE_TOOL",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Upstream includes SKILL.md and pure Node >=22.18 pixel-art DSL with PNG/sprite sheet/GIF exports, suitable as a conditional creative skill after syntax/runtime QA.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "pixel-art",
+        "agent-skill",
+        "deterministic-graphics",
+        "sprite-sheets",
+        "gif",
+        "javascript-dsl",
+        "creative-craft"
+      ],
+      "platform_constraints": [
+        "Requires Node >=22.18 on the selected host; existing CLI presence and safety are NOT_RUN.",
+        "Upstream includes executable JS and an agent-facing SKILL.md; review pinned source and instructions before invoking. No npx remote-install shortcut.",
+        "Pixel art is not a replacement for truthful product photography, editable CAD geometry, 3MF or the four-color dog-portrait manufacturing rule.",
+        "MIT license notice required for any redistributed code or substantial copied instructions."
+      ],
+      "shortlist_lanes": [
+        "skill-capability-comparison"
+      ],
+      "evidence_refs": [
+        "https://github.com/crsolver/claude-pxl",
+        "https://github.com/crsolver/claude-pxl/tree/21fee41f7ecce00bc868d7567f24ffd0f3acc8fa",
+        "https://github.com/crsolver/claude-pxl/blob/21fee41f7ecce00bc868d7567f24ffd0f3acc8fa/README.md",
+        "https://github.com/crsolver/claude-pxl/blob/21fee41f7ecce00bc868d7567f24ffd0f3acc8fa/LICENSE",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "Owner submitted 2026-10-21; pinned https://github.com/crsolver/claude-pxl/tree/21fee41f7ecce00bc868d7567f24ffd0f3acc8fa; license review: MIT.",
+        "Research-only intake. No install, model download, inference, VM launch, test-run, skill deployment or production change is implied.",
+        "The existing VelvetOS control plane and #595 own candidate intake; the existing #612/#604 safety baseline remains higher priority.",
+        "Candidate comparison: On a disposable branch and non-production working directory, compare pinned pxl deterministic 16x16/32x32 icon, color swap, sheet JSON, GIF output and render QA against the existing approved raster/vector workflow; measure exact pixels, variants, reproducibility, visual quality, dependencies and rollback."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "On a disposable branch and non-production working directory, compare pinned pxl deterministic 16x16/32x32 icon, color swap, sheet JSON, GIF output and render QA against the existing approved raster/vector workflow; measure exact pixels, variants, reproducibility, visual quality, dependencies and rollback.",
+        "rationale": "Upstream includes SKILL.md and pure Node >=22.18 pixel-art DSL with PNG/sprite sheet/GIF exports, suitable as a conditional creative skill after syntax/runtime QA.",
+        "decision_evidence_refs": [
+          "https://github.com/crsolver/claude-pxl",
+          "https://github.com/crsolver/claude-pxl/tree/21fee41f7ecce00bc868d7567f24ffd0f3acc8fa",
+          "https://github.com/crsolver/claude-pxl/blob/21fee41f7ecce00bc868d7567f24ffd0f3acc8fa/README.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "skill-capability-comparison",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 research; Creative Craft and Pixel Art skill fixture in isolated CPU LAB",
+        "status": "WAITING_GATE",
+        "next_gate": "On a disposable branch and non-production working directory, compare pinned pxl deterministic 16x16/32x32 icon, color swap, sheet JSON, GIF output and render QA against the existing approved raster/vector workflow; measure exact pixels, variants, reproducibility, visual quality, dependencies and rollback.",
+        "unlock_condition": "Verified source/license and dependency compatibility, preflight approval for a disposable host LAB scope, non-conflicting resource lease, synthetic fixtures and independent QA; no paid APIs or Codex quota.",
+        "evidence_refs": [
+          "https://github.com/crsolver/claude-pxl/tree/21fee41f7ecce00bc868d7567f24ffd0f3acc8fa",
+          "https://github.com/nocturney/velvetos-core/issues/595",
+          "https://github.com/nocturney/velvetos-core/issues/612"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-gabrielelozupone-kokon",
+      "source_item_id": null,
+      "name": "Kokon — local GPU image editing and MCP",
+      "category": "LOCAL_IMAGE_EDITING_TOOL",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Local image editing with built-in MCP may complement current Velvet Factory product-image cleanup and supervised creative asset QA without cloud inference.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "local-image-editing",
+        "inpainting",
+        "image-to-image",
+        "qwen-image",
+        "mcp",
+        "gpu",
+        "creative-craft",
+        "offline"
+      ],
+      "platform_constraints": [
+        "Upstream minimum 12GB VRAM on NVIDIA or AMD/Intel beta; first-run model download approximately 12GB. RTX 4080 SUPER suitability and lease are NOT_RUN.",
+        "macOS Apple Silicon beta recommends 32GB unified memory; never assume a Mac qualifies. Chris-3DPC is not a safe default while hardware stability gate is open.",
+        "AGPL-3.0 for the app; model weight and dependency licenses independently checked, including any redistribution/network-service obligations.",
+        "MCP tools may edit files. Require allowlisted synthetic inputs/outputs, local-only bind, no broad filesystem/credentials, no auto-upload or publish.",
+        "No weight download or GPU job without approved disk and compute lease; no paid API/model hosting."
+      ],
+      "shortlist_lanes": [
+        "creative-image-workflow"
+      ],
+      "evidence_refs": [
+        "https://github.com/GabrieleLozupone/kokon",
+        "https://github.com/GabrieleLozupone/kokon/tree/162f3aed4da0ee2a6808a96ff785a333d42979d3",
+        "https://github.com/GabrieleLozupone/kokon/blob/162f3aed4da0ee2a6808a96ff785a333d42979d3/README.md",
+        "https://github.com/GabrieleLozupone/kokon/blob/162f3aed4da0ee2a6808a96ff785a333d42979d3/LICENSE",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "Owner submitted 2026-10-21; pinned https://github.com/GabrieleLozupone/kokon/tree/162f3aed4da0ee2a6808a96ff785a333d42979d3; license review: AGPL-3.0.",
+        "Research-only intake. No install, model download, inference, VM launch, test-run, skill deployment or production change is implied.",
+        "The existing VelvetOS control plane and #595 own candidate intake; the existing #612/#604 safety baseline remains higher priority.",
+        "Candidate comparison: Pin upstream and model/license versions; on an approved stable host after P0/lease, perform same-source synthetic image local edit, inpaint mask preservation, typography/logo/product identity and color-fidelity fixture against incumbent editor and local models. Measure latency/VRAM/RAM/disk, offline behavior, MCP tool surface, rollback."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Pin upstream and model/license versions; on an approved stable host after P0/lease, perform same-source synthetic image local edit, inpaint mask preservation, typography/logo/product identity and color-fidelity fixture against incumbent editor and local models. Measure latency/VRAM/RAM/disk, offline behavior, MCP tool surface, rollback.",
+        "rationale": "Local image editing with built-in MCP may complement current Velvet Factory product-image cleanup and supervised creative asset QA without cloud inference.",
+        "decision_evidence_refs": [
+          "https://github.com/GabrieleLozupone/kokon",
+          "https://github.com/GabrieleLozupone/kokon/tree/162f3aed4da0ee2a6808a96ff785a333d42979d3",
+          "https://github.com/GabrieleLozupone/kokon/blob/162f3aed4da0ee2a6808a96ff785a333d42979d3/README.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "creative-image-workflow",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 source review; Creative Craft isolated host GPU pilot following spare lease",
+        "status": "WAITING_GATE",
+        "next_gate": "Pin upstream and model/license versions; on an approved stable host after P0/lease, perform same-source synthetic image local edit, inpaint mask preservation, typography/logo/product identity and color-fidelity fixture against incumbent editor and local models. Measure latency/VRAM/RAM/disk, offline behavior, MCP tool surface, rollback.",
+        "unlock_condition": "Verified source/license and dependency compatibility, preflight approval for a disposable host LAB scope, non-conflicting resource lease, synthetic fixtures and independent QA; no paid APIs or Codex quota.",
+        "evidence_refs": [
+          "https://github.com/GabrieleLozupone/kokon/tree/162f3aed4da0ee2a6808a96ff785a333d42979d3",
+          "https://github.com/nocturney/velvetos-core/issues/595",
+          "https://github.com/nocturney/velvetos-core/issues/612"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-sapientinc-praxist",
+      "source_item_id": null,
+      "name": "Praxist — persistent parallel research and evidence workflow",
+      "category": "RESEARCH_ORCHESTRATOR",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Evidence protocol, generations, evaluator contracts and peer ownership may improve existing research loops or challenge the incumbent full/hybrid agent runtime; no automatic pattern-only dismissal.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime",
+        "research-orchestration",
+        "parallel-peers",
+        "experiment-evaluation",
+        "durable-evidence",
+        "research-memory"
+      ],
+      "platform_constraints": [
+        "Praxist license is Fair Source with revenue threshold and output/distribution obligations; review against business use before copying or running.",
+        "Upstream subscription-only path is Codex-native; Codex quota is forbidden as agent engine here. Claude Code operating interface does not prove Claude subscription-only backend compatibility.",
+        "No paid model APIs, cloud inference, new scheduler or unapproved project takeover. Do not run its install wizard on a production host.",
+        "Compare incumbent/complete-alternative/hybrid fairly on identical synthetic work; any rollout needs isolation and an independent rollback plan."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/sapientinc/praxist",
+        "https://github.com/sapientinc/praxist/tree/5b50658b219d292fe471cfae99a9ec0797429ed7",
+        "https://github.com/sapientinc/praxist/blob/5b50658b219d292fe471cfae99a9ec0797429ed7/README.md",
+        "https://github.com/sapientinc/praxist/blob/5b50658b219d292fe471cfae99a9ec0797429ed7/LICENSE.md",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "Owner submitted 2026-10-21; pinned https://github.com/sapientinc/praxist/tree/5b50658b219d292fe471cfae99a9ec0797429ed7; license review: Fair Source License Agreement 1.0 (non-OSI; usage/revenue/output conditions).",
+        "Research-only intake. No install, model download, inference, VM launch, test-run, skill deployment or production change is implied.",
+        "The existing VelvetOS control plane and #595 own candidate intake; the existing #612/#604 safety baseline remains higher priority.",
+        "Candidate comparison: First prove a genuine Claude Code CLI subscription-only supported runtime profile without billing and verify license applicability. If viable, compare equal-budget multi-peer synthetic research tasks, deterministically scored evaluator and evidence retention with current VelvetOS/Challenger Hub. If not, compare patterns only and record evidence-based deferral."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "full_replacement",
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "First prove a genuine Claude Code CLI subscription-only supported runtime profile without billing and verify license applicability. If viable, compare equal-budget multi-peer synthetic research tasks, deterministically scored evaluator and evidence retention with current VelvetOS/Challenger Hub. If not, compare patterns only and record evidence-based deferral.",
+        "rationale": "Evidence protocol, generations, evaluator contracts and peer ownership may improve existing research loops or challenge the incumbent full/hybrid agent runtime; no automatic pattern-only dismissal.",
+        "decision_evidence_refs": [
+          "https://github.com/sapientinc/praxist",
+          "https://github.com/sapientinc/praxist/tree/5b50658b219d292fe471cfae99a9ec0797429ed7",
+          "https://github.com/sapientinc/praxist/blob/5b50658b219d292fe471cfae99a9ec0797429ed7/README.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "agent-runtime",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 overflow queue -> Phase 3D A/B/C research-agent harness benchmark",
+        "status": "WAITING_GATE",
+        "next_gate": "First prove a genuine Claude Code CLI subscription-only supported runtime profile without billing and verify license applicability. If viable, compare equal-budget multi-peer synthetic research tasks, deterministically scored evaluator and evidence retention with current VelvetOS/Challenger Hub. If not, compare patterns only and record evidence-based deferral.",
+        "unlock_condition": "Verified source/license and dependency compatibility, preflight approval for a disposable host LAB scope, non-conflicting resource lease, synthetic fixtures and independent QA; no paid APIs or Codex quota.",
+        "evidence_refs": [
+          "https://github.com/sapientinc/praxist/tree/5b50658b219d292fe471cfae99a9ec0797429ed7",
+          "https://github.com/nocturney/velvetos-core/issues/595",
+          "https://github.com/nocturney/velvetos-core/issues/612"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-microsoft-quicksand",
+      "source_item_id": null,
+      "name": "Microsoft Quicksand — QEMU-based disposable AI-agent sandbox",
+      "category": "AGENT_SANDBOX_RUNTIME",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "QEMU guest isolation with snapshots and constrained execution can improve existing untrusted-code QA and lab segmentation on Windows/macOS/Linux; not a standalone fleet scheduler.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-runtime",
+        "sandboxing",
+        "qemu",
+        "linux-vm",
+        "snapshot",
+        "guest-isolation",
+        "agent-execution-security"
+      ],
+      "platform_constraints": [
+        "Bundled QEMU/VM images require disk, virtualization and host-platform compatibility preflight; no VM launch on an active production host.",
+        "Host-mounted directories, bidirectional forwards and guest-to-host access can defeat expected isolation; test deny-by-default, mount escapes and teardown.",
+        "Do not assume any guarantee of full kernel/host containment from a README. Verify trust boundaries, QEMU updates, version pins and exploit surface.",
+        "No new cloud resources or runtime credentials; no untrusted generated code on an unsandboxed Windows/macOS user context.",
+        "Keep #612/#604 baseline proof and host leases ahead of elective VM trials."
+      ],
+      "shortlist_lanes": [
+        "agent-runtime"
+      ],
+      "evidence_refs": [
+        "https://github.com/microsoft/quicksand",
+        "https://github.com/microsoft/quicksand/tree/5db6adaf04ed61a003d7906a898f448ef89e4f3c",
+        "https://github.com/microsoft/quicksand/blob/5db6adaf04ed61a003d7906a898f448ef89e4f3c/README.md",
+        "https://github.com/microsoft/quicksand/blob/5db6adaf04ed61a003d7906a898f448ef89e4f3c/LICENSE",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "Owner submitted 2026-10-21; pinned https://github.com/microsoft/quicksand/tree/5db6adaf04ed61a003d7906a898f448ef89e4f3c; license review: MIT.",
+        "Research-only intake. No install, model download, inference, VM launch, test-run, skill deployment or production change is implied.",
+        "The existing VelvetOS control plane and #595 own candidate intake; the existing #612/#604 safety baseline remains higher priority.",
+        "Candidate comparison: Compare disposable image startup/snapshot/revert, network-deny, host mount read/write denial, symlinks, file persistence, crash cancellation, resource overhead and rollback versus current protected Windows/Mac isolation practice. Synthetic only and explicit isolated LAB host lease required."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare disposable image startup/snapshot/revert, network-deny, host mount read/write denial, symlinks, file persistence, crash cancellation, resource overhead and rollback versus current protected Windows/Mac isolation practice. Synthetic only and explicit isolated LAB host lease required.",
+        "rationale": "QEMU guest isolation with snapshots and constrained execution can improve existing untrusted-code QA and lab segmentation on Windows/macOS/Linux; not a standalone fleet scheduler.",
+        "decision_evidence_refs": [
+          "https://github.com/microsoft/quicksand",
+          "https://github.com/microsoft/quicksand/tree/5db6adaf04ed61a003d7906a898f448ef89e4f3c",
+          "https://github.com/microsoft/quicksand/blob/5db6adaf04ed61a003d7906a898f448ef89e4f3c/README.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "agent-execution-sandbox",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 sandbox research -> #612/#604 containment and worker assurance fixture",
+        "status": "WAITING_GATE",
+        "next_gate": "Compare disposable image startup/snapshot/revert, network-deny, host mount read/write denial, symlinks, file persistence, crash cancellation, resource overhead and rollback versus current protected Windows/Mac isolation practice. Synthetic only and explicit isolated LAB host lease required.",
+        "unlock_condition": "Verified source/license and dependency compatibility, preflight approval for a disposable host LAB scope, non-conflicting resource lease, synthetic fixtures and independent QA; no paid APIs or Codex quota.",
+        "evidence_refs": [
+          "https://github.com/microsoft/quicksand/tree/5db6adaf04ed61a003d7906a898f448ef89e4f3c",
+          "https://github.com/nocturney/velvetos-core/issues/595",
           "https://github.com/nocturney/velvetos-core/issues/612"
         ]
       }
