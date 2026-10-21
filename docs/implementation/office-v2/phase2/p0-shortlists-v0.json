@@ -60,7 +60,8 @@
         "candidate-deerflow",
         "candidate-context-mode",
         "candidate-letta",
-        "candidate-intake-odysseus-dev-odysseus"
+        "candidate-intake-odysseus-dev-odysseus",
+        "candidate-xerj-org-xerj"
       ],
       "queue_policy": "Competitor-neutral overflow: preserve for fair shortlist triage or lane reopen; queued is neither rejected nor LAB admission."
     },
