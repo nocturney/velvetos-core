@@ -4,15 +4,18 @@
   "trigger": "GitHub Actions workflow 'VF Media Auto Intake' failed on main",
   "action": "Open a fix PR from the failing run log; if the root cause can recur, add or tighten a sensor/contract; triage this candidate (accept/reject/prune) instead of letting it accumulate.",
   "scope": "project",
-  "confidence": 0.3,
+  "confidence": 0.6,
   "status": "accepted",
   "evidence": [
     "gh-run:37155113603:failure:2026-10-03T21:26:32Z:https://github.com/nocturney/velvetos-core/actions/runs/37155113603",
     "office-loop-1830 triage 2026-10-04: New candidate from ingest-ci. Single main failure 37155113603 @ 21:26Z 3.10 schedule — Persist intake state exited 4 because scripts/push-main-with-check-all.sh did not push (annotation: Prechecked main persistence failed; intake state was not pushed; watched check-all reported contract checks failed). Later scheduled main runs succeeded: 37181634079 @ 06:02Z 4.10 and 37202492370 @ 12:33Z 4.10. Accept as a real one-off persist failure; no promote — no durable intake-push fix in this handoff.",
-    "office-loop-1830 triage 2026-10-05: No VF Media Auto Intake failure on main since 4.10; scheduled intake persisted on main today (commits a10c58b, 8aa691f). Keep accepted; no promote."
+    "office-loop-1830 triage 2026-10-05: No VF Media Auto Intake failure on main since 4.10; scheduled intake persisted on main today (commits a10c58b, 8aa691f). Keep accepted; no promote.",
+    "gh-run:39165347739:failure:2026-10-18T20:53:12Z:https://github.com/nocturney/velvetos-core/actions/runs/39165347739",
+    "gh-run:39176164763:failure:2026-10-18T23:21:22Z:https://github.com/nocturney/velvetos-core/actions/runs/39176164763",
+    "gh-run:39201705677:failure:2026-10-19T04:53:06Z:https://github.com/nocturney/velvetos-core/actions/runs/39201705677"
   ],
   "first_seen": "2026-10-03T21:26:32Z",
-  "last_seen": "2026-10-05T18:45:37+03:00",
+  "last_seen": "2026-10-19T04:53:06Z",
   "owner_correction": false,
   "promote_to": null,
   "supersedes": null,

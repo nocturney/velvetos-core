@@ -86,7 +86,7 @@ def pinned_executable(binary, sha):
 
 
 # openssl and etcdctl children. Values are fixed here. The parent environment
-# is not copied. The etcd server Popen and git sites do not use this map.
+# is not copied. The etcd server uses ETCD_SERVER_ENV_REQUIRED, not this map.
 IDENTITY_ENV_REQUIRED = (
     "ETCDCTL_API",
     "GIT_CONFIG_GLOBAL",
@@ -97,6 +97,25 @@ IDENTITY_ENV_REQUIRED = (
     "LC_ALL",
     "PATH",
 )
+# etcd server process only. Separate from openssl/etcdctl. Parent env is not copied.
+ETCD_SERVER_ENV_REQUIRED = (
+    "HOME",
+    "LANG",
+    "LC_ALL",
+    "PATH",
+)
+
+
+def require_closed_env(env, required):
+    if type(env) is not dict:
+        raise RuntimeError("REQUIRED_ENV_MISSING")
+    missing = [
+        key for key in required
+        if type(env.get(key)) is not str or env[key] == ""
+    ]
+    if missing or set(env) != set(required):
+        raise RuntimeError("REQUIRED_ENV_MISSING")
+    return {key: env[key] for key in required}
 
 
 def identity_subprocess_env():
@@ -113,15 +132,16 @@ def identity_subprocess_env():
 
 
 def require_identity_env(env):
-    if type(env) is not dict:
-        raise RuntimeError("REQUIRED_ENV_MISSING")
-    missing = [
-        key for key in IDENTITY_ENV_REQUIRED
-        if type(env.get(key)) is not str or env[key] == ""
-    ]
-    if missing or set(env) != set(IDENTITY_ENV_REQUIRED):
-        raise RuntimeError("REQUIRED_ENV_MISSING")
-    return {key: env[key] for key in IDENTITY_ENV_REQUIRED}
+    return require_closed_env(env, IDENTITY_ENV_REQUIRED)
+
+
+def etcd_server_env():
+    return require_closed_env({
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "HOME": "/nonexistent",
+    }, ETCD_SERVER_ENV_REQUIRED)
 
 
 def subprocess_safe(args, *, cwd=None, timeout=10, data=None):
@@ -267,11 +287,13 @@ class AuthenticatedEtcd:
         return ctx
 
     def start(self):
+        env = require_closed_env(etcd_server_env(), ETCD_SERVER_ENV_REQUIRED)
         self.log = (self.root / "server.stderr").open("ab")
         self.server = subprocess.Popen(self.args, cwd=str(self.root),
                                        stdin=subprocess.DEVNULL,
                                        stdout=subprocess.DEVNULL,
-                                       stderr=self.log)
+                                       stderr=self.log,
+                                       env=env)
         self.health()
 
     def health(self):

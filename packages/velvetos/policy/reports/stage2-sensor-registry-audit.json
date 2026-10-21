@@ -10,8 +10,8 @@
     "mapped": 135
   },
   "fallback_scope_counts": {
-    "ALWAYS_ON": 4,
-    "FULL_SUITE": 131
+    "ALWAYS_ON": 5,
+    "FULL_SUITE": 130
   },
   "dependency_edge_count": 57,
   "sensors_with_dependencies": 33,
@@ -19,7 +19,8 @@
     "check-agent-surface-security",
     "check-critical-syntax",
     "check-machine-writers",
-    "check-policy-architecture"
+    "check-policy-architecture",
+    "check-public-path-redaction"
   ],
   "broad_legacy_sensors": [],
   "nested_sensor_invocations": [

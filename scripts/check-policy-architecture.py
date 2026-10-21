@@ -282,9 +282,13 @@ def command_keeps_github_token(rendered: list[str]) -> bool:
         return False
     try:
         script = Path(rendered[1]).resolve()
+        interpreter = Path(rendered[0]).resolve()
     except OSError:
         return False
-    return script == (ROOT / "scripts" / "collect-sensor-shadow-observations.py").resolve()
+    return (
+        interpreter == Path(sys.executable).resolve()
+        and script == (ROOT / "scripts" / "collect-sensor-shadow-observations.py").resolve()
+    )
 
 
 def prove_github_token_allowlist(problems: list[str]) -> None:
@@ -307,6 +311,9 @@ def prove_github_token_allowlist(problems: list[str]) -> None:
         problems.append("exact collector self-test is not on the GH_TOKEN allowlist")
     if command_keeps_github_token(bait):
         problems.append("a trailing collector path is on the GH_TOKEN allowlist")
+    wrong_interpreter = [str(ROOT / "scripts" / "not-the-interpreter"), collector, "--self-test"]
+    if command_keeps_github_token(wrong_interpreter):
+        problems.append("GH_TOKEN collector argv accepted an untrusted interpreter")
     denied = policy_subprocess_run(bait, env=env, capture_output=True, text=True)
     if denied.returncode != 3:
         problems.append(
@@ -314,16 +321,7 @@ def prove_github_token_allowlist(problems: list[str]) -> None:
         )
     source_path = ROOT / "scripts" / "check-policy-architecture.py"
     source = source_path.read_text(encoding="utf-8")
-    needle = (
-        "    if len(rendered) != 3 or rendered[2] != \"--self-test\":\n"
-        "        return False\n"
-        "    try:\n"
-        "        script = Path(rendered[1]).resolve()\n"
-        "    except OSError:\n"
-        "        return False\n"
-        "    return script == (ROOT / \"scripts\" / "
-        "\"collect-sensor-shadow-observations.py\").resolve()\n"
-    )
+    needle = '    if len(rendered) != 3 or rendered[2] != "--self-test":\n        return False\n    try:\n        script = Path(rendered[1]).resolve()\n        interpreter = Path(rendered[0]).resolve()\n    except OSError:\n        return False\n    return (\n        interpreter == Path(sys.executable).resolve()\n        and script == (ROOT / "scripts" / "collect-sensor-shadow-observations.py").resolve()\n    )\n'
     replacement = (
         "    return any(part.endswith(\"collect-sensor-shadow-observations.py\") "
         "for part in rendered)\n"
@@ -360,6 +358,26 @@ def prove_github_token_allowlist(problems: list[str]) -> None:
             problems.append(
                 f"endswith GH_TOKEN mutant no longer keeps the token, rc={kept.returncode}"
             )
+        interpreter_mutant_source = source.replace(
+            "interpreter == Path(sys.executable).resolve()",
+            "interpreter == interpreter", 1,
+        )
+        if interpreter_mutant_source == source:
+            problems.append("GH_TOKEN interpreter mutant could not be built")
+        else:
+            interp_path = Path(tmp) / "check-policy-interpreter-mutant.py"
+            interp_path.write_text(interpreter_mutant_source, encoding="utf-8")
+            interp_spec = importlib.util.spec_from_file_location(
+                "policy_token_interpreter_mutant", interp_path
+            )
+            if interp_spec is None or interp_spec.loader is None:
+                problems.append("GH_TOKEN interpreter mutant could not be loaded")
+            else:
+                interp_mutant = importlib.util.module_from_spec(interp_spec)
+                interp_spec.loader.exec_module(interp_mutant)
+                interp_mutant.ROOT = ROOT
+                if not interp_mutant.command_keeps_github_token(wrong_interpreter):
+                    problems.append("GH_TOKEN interpreter predicate is not load-bearing")
 
 
 def validate_historical_policy_manifest(problems: list[str]) -> None:
@@ -631,11 +649,14 @@ def validate_registries(historical_replay: bool = False) -> tuple[list[str], set
 
     always_on = [row for row in sensor_rows if isinstance(row, dict) and row.get("fallback_scope") == "ALWAYS_ON"]
     always_on_ids = {row.get("id") for row in always_on}
+    # This is an explicit fifth CORE/critical PR-time guard.
+    # The generated Stage 2A live-registry audit must reflect this set.
     expected_always_on = {
         "check-agent-surface-security",
         "check-critical-syntax",
         "check-machine-writers",
         "check-policy-architecture",
+        "check-public-path-redaction",
     }
     require(always_on_ids == expected_always_on, f"critical ALWAYS_ON set drifted: {sorted(always_on_ids)}", problems)
     require(len(always_on) <= 6, "critical ALWAYS_ON set must remain small", problems)
@@ -671,7 +692,7 @@ def validate_registries(historical_replay: bool = False) -> tuple[list[str], set
             f"EVENT_ACCEPTANCE lifecycle set drifted: {sorted(lifecycle_ids['EVENT_ACCEPTANCE'])}", problems)
     require(lifecycle_ids["RETIRED_RECEIPT"] == expected_retired,
             f"RETIRED_RECEIPT lifecycle set drifted: {sorted(lifecycle_ids['RETIRED_RECEIPT'])}", problems)
-    require(len(lifecycle_ids["DOMAIN"]) == len(sensor_rows) - 12,
+    require(len(lifecycle_ids["DOMAIN"]) == len(sensor_rows) - 13,
             "DOMAIN lifecycle count must cover every non-core/non-event/non-retired sensor", problems)
     critical_ids = {
         row.get("id") for row in sensor_rows

@@ -1,0 +1,1 @@
+- 2026-10-19 - **Fail-closed audit checks:** refuse a changelog Unreleased fence crossing a level-2 heading or left unclosed; GH_TOKEN forwarding now pins the Python interpreter and collector path, with regression and mutation probes.
