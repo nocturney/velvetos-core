@@ -382,5 +382,142 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(changed["ui_resource_count"], 1)
 
 
+    def _ui_doc(self, root, rows):
+        from vf_skill_catalog import UI_SOURCES
+        path = root / UI_SOURCES
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({"schema": "velvetos.ui-ecosystem-source-intake.v1",
+                                    "source_count": len(rows), "sources": rows}))
+        return path
+
+    def test_verified_rights_require_license_and_https_evidence(self):
+        from vf_skill_catalog import ui_resources
+        base = {"id": "verified", "name": "Verified", "url": "https://example.org", "installed": False,
+                "runtime": "NOT_INSTALLED_OR_VERIFIED", "stage": "DISCOVERED", "category": "components",
+                "usage_rights": {"state": "VERIFIED_UPSTREAM_SCOPE_ONLY", "license": "MIT",
+                                 "evidence_url": "https://example.org/LICENSE"}}
+        cases = {
+            "nonempty license": ({"license": ""}, "nonempty license"),
+            "license missing": ({"license": None}, "nonempty license"),
+            "evidence missing": ({"evidence_url": None}, "https evidence_url"),
+            "evidence http": ({"evidence_url": "http://example.org/LICENSE"}, "https evidence_url"),
+            "evidence relative": ({"evidence_url": "LICENSE"}, "https evidence_url"),
+        }
+        for label, (override, message) in cases.items():
+            with self.subTest(label), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                row = json.loads(json.dumps(base))
+                row["usage_rights"].update(override)
+                self._ui_doc(root, [row])
+                with self.assertRaisesRegex(ValueError, message):
+                    ui_resources(root)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._ui_doc(root, [base])
+            self.assertEqual(len(ui_resources(root)), 1)
+
+    def test_source_only_row_cannot_approve_source_code_integration(self):
+        from vf_skill_catalog import ui_resources
+        row = {"id": "fit", "name": "Fit", "url": "https://example.org", "installed": False,
+               "runtime": "NOT_INSTALLED_OR_VERIFIED", "stage": "DISCOVERED", "category": "components",
+               "usage_rights": {"state": "REVIEW_REQUIRED"},
+               "slicebridge_fit": {"role": "SOURCE_REFERENCE_NOT_DROP_IN",
+                                   "source_code_integration_approved": True}}
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._ui_doc(root, [row])
+            with self.assertRaisesRegex(ValueError, "cannot approve source code integration"):
+                ui_resources(root)
+            row["slicebridge_fit"] = "approved"
+            self._ui_doc(root, [row])
+            with self.assertRaisesRegex(ValueError, "invalid UI resource slicebridge_fit"):
+                ui_resources(root)
+            row["slicebridge_fit"] = {"role": "RESEARCH_REFERENCE", "source_code_integration_approved": False}
+            self._ui_doc(root, [row])
+            self.assertEqual(len(ui_resources(root)), 1)
+            # slicebridge_fit is optional: a row without it stays valid.
+            del row["slicebridge_fit"]
+            self._ui_doc(root, [row])
+            self.assertEqual(len(ui_resources(root)), 1)
+
+    def test_hebrew_ui_terms_route_to_direct_resource_search(self):
+        from vf_skill_catalog import _tokens, ui_resource_search
+        self.assertEqual(_tokens("אנימציה"), {"animation"})
+        self.assertEqual(_tokens("אייקונים"), {"icon"})
+        self.assertEqual(_tokens("רכיבים"), {"components"})
+        self.assertEqual(_tokens("ממשקי משתמש"), {"ui", "user"})
+        # Prefixed forms map only through their bare known term; unrelated words keep their spelling.
+        self.assertEqual(_tokens("באנימציה"), {"animation"})
+        self.assertEqual(_tokens("לאייקונים"), {"icon"})
+        self.assertEqual(_tokens("ולרכיבים"), {"components"})
+        self.assertEqual(_tokens("כבדיקות"), {"test"})
+        self.assertEqual({r["id"] for r in ui_resource_search("אנימציה", ROOT)} & {"gsap", "motion", "lottiefiles"},
+                         {"gsap", "motion", "lottiefiles"})
+        icons = [r["id"] for r in ui_resource_search("אייקונים", ROOT, limit=3)]
+        self.assertIn("lucide", icons)
+        self.assertEqual(ui_resource_search("באייקונים", ROOT), ui_resource_search("אייקונים", ROOT))
+        components = {r["id"] for r in ui_resource_search("רכיבים", ROOT, limit=20)}
+        self.assertIn("shadcn-ui", components)
+        self.assertIn("originui-ng", {r["id"] for r in ui_resource_search("ממשקי משתמש", ROOT, limit=20)})
+
+    def test_invalid_ui_source_degrades_mixed_commands_without_approval(self):
+        from vf_skill_catalog import UI_SOURCES, audit, compare, plan, update_index, ui_resource_search, ui_resources
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            skill = root / ".cursor/skills/web-gate/SKILL.md"
+            skill.parent.mkdir(parents=True)
+            skill.write_text("---\nname: web-gate\ndescription: Design UI and test accessibility\n---\nBody.\n")
+            src = root / UI_SOURCES
+            src.parent.mkdir(parents=True)
+            src.write_text("{not json")
+            # UI-specific commands stay fail-closed.
+            with self.assertRaises(ValueError):
+                ui_resources(root)
+            with self.assertRaises(ValueError):
+                ui_resource_search("ui", root)
+            # Unrelated Skill commands still answer, with explicit degradation metadata.
+            self.assertEqual(search("ui accessibility", root)[0]["id"], "web-gate")
+            self.assertEqual(route("web-gate", root)["skills"][0]["id"], "web-gate")
+            found = compare("ui accessibility", root)
+            self.assertEqual(found["supporting_resources"], [])
+            self.assertIsInstance(found["ui_resources_error"], str)
+            planned = plan("ui accessibility", root)
+            self.assertEqual(planned["ui_resource_suggestions"], [])
+            self.assertIsInstance(planned["ui_resources_error"], str)
+            audited = audit(root)
+            self.assertEqual(audited["ui_resources"], 0)
+            self.assertIsInstance(audited["ui_resources_error"], str)
+            self.assertEqual(audited["unique_records"], 1)
+            index = Path(tmp) / "index.json"
+            result = update_index(root, index)
+            self.assertIsInstance(result["ui_resources_error"], str)
+            self.assertEqual(result["ui_resource_count"], 0)
+            self.assertEqual(json.loads(index.read_text())["ui_resources_error"], result["ui_resources_error"])
+
+    def test_negative_ui_source_symlink_outside_root_is_rejected(self):
+        from vf_skill_catalog import UI_SOURCES, audit, ui_resources, update_index
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as outside:
+            root = Path(tmp)
+            outside_doc = Path(outside) / "ui.json"
+            outside_doc.write_text(json.dumps({"schema": "velvetos.ui-ecosystem-source-intake.v1",
+                                               "source_count": 0, "sources": []}))
+            src = root / UI_SOURCES
+            src.parent.mkdir(parents=True)
+            try:
+                os.symlink(outside_doc, src)
+            except OSError as exc:
+                self.skipTest(f"symlink creation unavailable: {exc}")
+            with self.assertRaisesRegex(ValueError, "inside the root"):
+                ui_resources(root)
+            self.assertIn("inside the root", update_index(root, Path(tmp) / "index.json")["ui_resources_error"])
+            self.assertIn("inside the root", audit(root)["ui_resources_error"])
+            self.assertEqual(audit(root)["ui_resources"], 0)
+            src.unlink()
+            # Dangling links fail closed too, never silently reading as an absent source.
+            os.symlink(Path(outside) / "missing.json", src)
+            with self.assertRaises(ValueError):
+                ui_resources(root)
+
+
 if __name__ == "__main__":
     unittest.main()

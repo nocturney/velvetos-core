@@ -29,12 +29,28 @@ HE_TO_EN = {
     "בדיקות": "test", "ביקורת": "review", "תלת": "3d", "ייצור": "production",
     "מדפסת": "printer", "מדפסות": "printer", "גלילה": "scroll", "אינדקס": "index",
     "מחקר": "research", "דשבורד": "dashboard", "צבעים": "color",
+    # UI resource facets; "components" is the catalog's category token for every component source.
+    "ממשקי": "ui", "משתמש": "user", "משתמשים": "user", "אנימציה": "animation", "אנימציות": "animation",
+    "אייקון": "icon", "אייקונים": "icon", "רכיב": "components", "רכיבים": "components",
 }
+# Inseparable one/two-letter Hebrew prefixes: ו and, ב in, ל to, ה the, מ from, ש that, כ as.
+HE_PREFIXES = "ובלהמשכ"
+UI_RIGHTS_STATES = {"REVIEW_REQUIRED", "VERIFIED_UPSTREAM_SCOPE_ONLY"}
+
+
+def _he_term(word: str) -> str:
+    """A prefixed Hebrew form maps only when its bare remainder is a known term; English is untouched."""
+    if word in HE_TO_EN:
+        return HE_TO_EN[word]
+    for size in (1, 2):
+        if len(word) > size + 1 and all(c in HE_PREFIXES for c in word[:size]) and word[size:] in HE_TO_EN:
+            return HE_TO_EN[word[size:]]
+    return word
 
 
 def _tokens(value: str) -> set[str]:
     base = re.findall(r"[a-z0-9\u0590-\u05ff]+", value.casefold().replace("\u05be", " "))
-    return {HE_TO_EN.get(x, x) for x in base if len(x) >= 2 and x not in STOPWORDS}
+    return {_he_term(x) for x in base if len(x) >= 2 and x not in STOPWORDS}
 
 
 def _frontmatter(text: str) -> dict[str, str]:
@@ -212,10 +228,13 @@ def discover(root: Path = ROOT, *, parsed_cache: dict[str, Any] | None = None) -
 
 
 def ui_resources(root: Path = ROOT) -> list[dict[str, Any]]:
-    """Read curated, non-executable UI references through the shared catalog interface."""
+    """Read curated, non-executable UI references through the shared catalog interface.
+    Fail closed: an invalid or out-of-root source raises ValueError; mixed commands use ui_resources_status."""
     path = root / UI_SOURCES
-    if not path.is_file():
+    if not path.exists() and not path.is_symlink():
         return []
+    if not _contained(path, root.resolve()) or not path.is_file():
+        raise ValueError("UI source must be a regular file inside the root")
     data = json.loads(path.read_text(encoding="utf-8"))
     if data.get("schema") != "velvetos.ui-ecosystem-source-intake.v1":
         raise ValueError("unsupported UI source intake schema")
@@ -237,17 +256,35 @@ def ui_resources(root: Path = ROOT) -> list[dict[str, Any]]:
             raise ValueError("resource cannot imply runtime admission or installation")
         if row.get("stage") not in {"DISCOVERED", "RESEARCHED"}:
             raise ValueError("resource status must not imply benchmark or production admission")
-        if row.get("usage_rights", {}).get("state") not in {"REVIEW_REQUIRED", "VERIFIED_UPSTREAM_SCOPE_ONLY"}:
+        rights = row.get("usage_rights")
+        if not isinstance(rights, dict) or rights.get("state") not in UI_RIGHTS_STATES:
             raise ValueError("missing explicit UI resource rights status")
+        if rights["state"] == "VERIFIED_UPSTREAM_SCOPE_ONLY":
+            if not isinstance(rights.get("license"), str) or not rights["license"].strip():
+                raise ValueError("verified UI resource rights require a nonempty license")
+            if not isinstance(rights.get("evidence_url"), str) or not rights["evidence_url"].startswith("https://"):
+                raise ValueError("verified UI resource rights require an https evidence_url")
+        # Optional per row; the whole intake is SOURCE_ONLY, so no row may approve source code integration.
+        fit = row.get("slicebridge_fit")
+        if fit is not None:
+            if not isinstance(fit, dict):
+                raise ValueError("invalid UI resource slicebridge_fit")
+            if fit.get("source_code_integration_approved", False) is not False:
+                raise ValueError("SOURCE_ONLY UI resource cannot approve source code integration")
         ids.add(identifier)
         urls.add(url)
     return rows
 
 
-def ui_resource_search(query: str, root: Path = ROOT, *, limit: int = 12,
-                       stack: str | None = None) -> list[dict[str, Any]]:
-    """Return resource suggestions, not executable Skills or install approvals."""
-    items = ui_resources(root)
+def ui_resources_status(root: Path = ROOT) -> tuple[list[dict[str, Any]], str | None]:
+    """Non-raising view for mixed Skill commands: an invalid UI source yields no rows plus an explicit error."""
+    try:
+        return ui_resources(root), None
+    except (OSError, ValueError) as exc:
+        return [], f"{type(exc).__name__}: {exc}"
+
+
+def _rank_ui(items: list[dict[str, Any]], query: str, *, limit: int, stack: str | None) -> list[dict[str, Any]]:
     q = query.casefold().strip()
     tokens = _tokens(query)
     ranked: list[tuple[int, dict[str, Any]]] = []
@@ -270,9 +307,19 @@ def ui_resource_search(query: str, root: Path = ROOT, *, limit: int = 12,
     return [{"score": score, **item} for score, item in ranked[:limit]]
 
 
+def ui_resource_search(query: str, root: Path = ROOT, *, limit: int = 12,
+                       stack: str | None = None) -> list[dict[str, Any]]:
+    """Return resource suggestions, not executable Skills or install approvals."""
+    return _rank_ui(ui_resources(root), query, limit=limit, stack=stack)
+
+
 def _ui_source_hash(root: Path) -> str | None:
     path = root / UI_SOURCES
-    return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+    if not path.exists() and not path.is_symlink():
+        return None
+    if not _contained(path, root.resolve()) or not path.is_file():
+        return None
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _source_fingerprint(root: Path) -> dict[str, list[Any]]:
@@ -317,10 +364,12 @@ def update_index(root: Path = ROOT, path: Path | None = None) -> dict[str, Any]:
     deleted = sorted(set(previous) - set(fingerprint))
     candidate_sha = _candidate_hash(root)
     ui_source_sha = _ui_source_hash(root)
-    ui_resource_count = len(ui_resources(root))
+    ui_refs, ui_error = ui_resources_status(root)
+    ui_resource_count = len(ui_refs)
     data = {"schema": "velvetos.derived-skill-index.v1", "root": str(root),
             "sources": fingerprint, "candidate_sha256": candidate_sha,
             "ui_source_sha256": ui_source_sha, "ui_resource_count": ui_resource_count,
+            "ui_resources_error": ui_error,
             "parsed_cache": cache, "records": records}
     updated = old.get("sources") != fingerprint or old.get("candidate_sha256") != candidate_sha or old.get("ui_source_sha256") != ui_source_sha or old.get("root") != str(root)
     if updated or not path.is_file():
@@ -341,6 +390,7 @@ def update_index(root: Path = ROOT, path: Path | None = None) -> dict[str, Any]:
             "records": len(records), "updated": updated, "changed_hashes": revised,
             "removed_sources": deleted, "ui_resource_count": ui_resource_count,
             "ui_resources_changed": old.get("ui_source_sha256") != ui_source_sha,
+            "ui_resources_error": ui_error,
             "candidate_registry_changed":
             old.get("candidate_sha256") != candidate_sha}
 
@@ -440,6 +490,7 @@ def search(query: str, root: Path = ROOT, limit: int = 12) -> list[dict[str, Any
 
 def compare(query: str, root: Path = ROOT) -> dict[str, Any]:
     found = search(query, root)
+    ui_refs, ui_error = ui_resources_status(root)
     return {
         "query": query,
         "candidates": [
@@ -454,8 +505,9 @@ def compare(query: str, root: Path = ROOT) -> dict[str, Any]:
             {"id": r["id"], "name": r["name"], "category": r["category"],
              "match_score": r["score"], "rights": r["usage_rights"]["state"],
              "source": r["url"], "execution": "NOT_APPLICABLE_SOURCE_ONLY"}
-            for r in ui_resource_search(query, root, limit=8)
+            for r in _rank_ui(ui_refs, query, limit=8, stack=None)
         ],
+        "ui_resources_error": ui_error,
     }
 
 
@@ -486,6 +538,7 @@ def plan(query: str, root: Path = ROOT) -> dict[str, Any]:
     agency_file = root / ".cursor" / "agency-agents.json"
     agents = json.loads(agency_file.read_text(encoding="utf-8")).get("agents", []) if agency_file.is_file() else []
     tok = _tokens(query)
+    ui_refs, ui_error = ui_resources_status(root)
     specialist_hits: list[tuple[int, dict[str, Any]]] = []
     for agent in agents:
         rule = agent.get("ruleFile")
@@ -516,8 +569,9 @@ def plan(query: str, root: Path = ROOT) -> dict[str, Any]:
         "ui_resource_suggestions": [
             {"id": r["id"], "kind": r["kind"], "rights": r["usage_rights"]["state"],
              "source": r["url"], "installed": False}
-            for r in ui_resource_search(query, root, limit=6)
+            for r in _rank_ui(ui_refs, query, limit=6, stack=None)
         ],
+        "ui_resources_error": ui_error,
         "host": {"local": socket.gethostname(),
                  "repo_source_present": bool(ranked and ranked[0]["canonical_file"]),
                  "machine_specific_access": "UNVERIFIED", "agent_execution": "UNVERIFIED"},
@@ -533,12 +587,13 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
     for item in items:
         counts[item["origin"]] += 1
     accepted, rejected = _repo_skill_scan(root)
-    ui_refs = ui_resources(root)
+    ui_refs, ui_error = ui_resources_status(root)
     ui_counts = defaultdict(int)
     for ref in ui_refs:
         ui_counts[ref["category"]] += 1
     return {"source_files": len(accepted), "unique_records": len(items),
             "ui_resources": len(ui_refs), "ui_resource_categories": dict(ui_counts),
+            "ui_resources_error": ui_error,
             "ui_rights_review_required": sum(r["usage_rights"]["state"] == "REVIEW_REQUIRED" for r in ui_refs),
             "rejected_outside_root": rejected,
             "by_origin": dict(counts), "duplicate_paths": sum(len(x["alternate_paths"]) for x in items),
@@ -573,10 +628,13 @@ def main() -> int:
         value = update_index(root)
     elif args.command == "host":
         value = host_probe()
-    elif args.command == "sources":
-        value = ui_resources(root)
-    elif args.command == "source-search":
-        value = ui_resource_search(" ".join(args.query), root, stack=args.stack)
+    elif args.command in {"sources", "source-search"}:
+        # UI-specific commands stay fail-closed: an invalid or out-of-root source is an error, not empty results.
+        try:
+            value = (ui_resources(root) if args.command == "sources"
+                     else ui_resource_search(" ".join(args.query), root, stack=args.stack))
+        except (OSError, ValueError) as exc:
+            value = {"error": "ui_resources_invalid", "detail": str(exc), "executable": False}
     else:
         query = " ".join(args.query)
         if args.command == "search":

@@ -1817,13 +1817,14 @@ def one_hour_forge(idea: str) -> dict:
 
 def skill_list() -> dict:
     # Living Studio's operational registry remains unchanged; discovery is derived.
-    from vf_skill_catalog import catalog, ui_resources
+    from vf_skill_catalog import catalog, ui_resources_status
     reg = load_json(REGISTRY, {}) or {}
     records = catalog(ROOT)
-    resources = ui_resources(ROOT)
+    resources, ui_error = ui_resources_status(ROOT)
     return {
         "skills": reg.get("skills") or [],
         "ui_resource_count": len(resources),
+        "ui_resources_error": ui_error,
         "ui_resource_command": "python3 scripts/vf_living_studio.py skill resources",
         "livingCapabilities": reg.get("livingCapabilities") or [],
         "count_skills": len(reg.get("skills") or []),
