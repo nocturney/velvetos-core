@@ -51,7 +51,6 @@ def main() -> int:
     assert 'runtimeAuthority=false, activationAllowed=false' in constitution
     assert 'policy_id: instagram.publish' in constitution
     assert 'policy_id: customer.whatsapp.send' in constitution
-    assert 'CAPABILITY_NOT_AUTHORITY_V1' in (ROOT/'README.md').read_text(encoding='utf-8')
     assert p['ufo']['state']=='RESEARCH_PENDING_MATERIAL_CALCULATOR_GAP' and p['ufo']['runtimeAuthority'] is False
     assert p['ufo']['installed'] is False
     assert cua_receipt['promotion']=='BOUNDED_PILOT_VALIDATED_NOT_PRODUCTION_CONTROL'

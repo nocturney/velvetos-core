@@ -3,7 +3,7 @@
 
 Unlike the frozen legacy handoff CLI, this adapter stays RUNNABLE for a
 legitimate manual call. It is dormant because no provider feeds it. Fails if:
-- the adapter loses its DORMANT header, or the docs/README lose the dormant marker,
+- the adapter loses its DORMANT header, or the owning docs lose the dormant marker,
 - anything wires it as an active feed: a workflow, a shell/PowerShell runner, a
   scheduler/routine config, or any Python outside its own test/sensors imports
   or invokes it or consumes DemandSignalPacket,
@@ -80,13 +80,6 @@ def main() -> int:
     head = (ROOT / "packages/vfresearch/DEMAND-SIGNALS.md").read_text(encoding="utf-8")[:900]
     if "No provider feeds" not in head:
         fail("DEMAND-SIGNALS.md banner must say no provider feeds it")
-    readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    rows = [l for l in readme.splitlines() if l.startswith("<tr><td><strong>Structured Demand Signals</strong>")]
-    if len(rows) != 2 or any("DORMANT / NO PROVIDER" not in r for r in rows):
-        fail("README Structured Demand Signals rows (he/en) must say DORMANT / NO PROVIDER")
-    if any("IMPLEMENTED" in r.split("</td>")[1] for r in rows):
-        fail("README must not present the dormant adapter as IMPLEMENTED/active")
-
     offenders = []
     for rel in tracked_files():
         path = ROOT / rel
@@ -115,7 +108,7 @@ def main() -> int:
     if proc.returncode != 0:
         fail(f"dormant adapter must stay runnable (--self-test exit {proc.returncode}): {proc.stderr[-400:]}")
 
-    print(f"OK {NAME} header=DORMANT docs=4 readme=DORMANT wiring=0 runnable=self-test-pass negative_controls={len(probes) + 1}")
+    print(f"OK {NAME} header=DORMANT docs=4 docs=DORMANT wiring=0 runnable=self-test-pass negative_controls={len(probes) + 1}")
     return 0
 
 

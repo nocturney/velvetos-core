@@ -16,3 +16,7 @@ A competing agent runtime, orchestrator, memory layer or complete replacement fo
 
 Verification: `python3 scripts/check-velvetos.py`, `python3 scripts/check-policy-architecture.py`, then `python3 scripts/check-all.py`.
 Policy routing reference: `policy_id: project.request.preflight` is router-only; external effects stay with the registry-mapped effect authority.
+
+## Root README maintenance
+
+Keep the root `README.md` a concise bilingual landing page (purpose, architecture, setup and links). Do not append PR/CI diaries, dated experiments, status reports, hashes or provider claims. Store detail in the owning component documentation, canonical evidence, changelog or PR. Keep the generated `OPERATIONAL-SNAPSHOT` block and its existing update contract.
