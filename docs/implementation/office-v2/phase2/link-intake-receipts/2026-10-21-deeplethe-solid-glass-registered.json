@@ -1,0 +1,16 @@
+{
+  "schema": "velvetos.office-v2.phase2-link-intake-receipt.v0",
+  "received_at": "2026-10-21T04:10:31.360Z",
+  "input_url": "https://github.com/deeplethe/solid-glass",
+  "registry_ref": "docs/implementation/office-v2/phase2/candidate-registry-v0.json",
+  "network_used": true,
+  "authority_granted": false,
+  "normalized_url": "https://github.com/deeplethe/solid-glass",
+  "status": "REGISTERED",
+  "candidate_ids": [
+    "candidate-deeplethe-solid-glass"
+  ],
+  "candidate_count_before": 239,
+  "candidate_count_after": 240,
+  "next_action": "After #612's independently verified P0 worker baseline (or separately proven idle UI capacity), compare one isolated Hebrew RTL high-density agent-workspace fixture with the existing VelvetOS UI and UX skills; record accessibility, scroll, render performance, integration cost and rollback."
+}
