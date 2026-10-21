@@ -311,5 +311,75 @@
       "batchingRule": "Generate many cheap candidates, shortlist before storyboard/render, and do not mass-publish or mass-render.",
       "noPublishAuthority": true
     }
+  },
+  "businessReleaseAcceptance": {
+    "id": "VF_INSTAGRAM_BUSINESS_E2E",
+    "version": 1,
+    "scope": "velvet-factory-instagram-autonomy-product-readiness",
+    "kind": "business_release_acceptance_not_per_content_publish_gate",
+    "historicalReformV2TechnicalClosureUnaffected": true,
+    "statusWithoutVerifiedLiveProof": "PENDING_LIVE_E2E",
+    "releaseClaimsBlockedUntilPass": [
+      "instagram_autonomy_business_ready",
+      "unattended_instagram_autopilot_production_ready"
+    ],
+    "canonicalPublishPolicyId": "instagram.publish",
+    "doNotBlockAlreadyAuthorizedRoutinePublishing": true,
+    "noSecondPublishAuthority": true,
+    "noSecondSchedulerOrStateStore": true,
+    "intentBoundary": {
+      "prepare": "prepare_and_verify_exact_media_and_copy_without_publishing",
+      "publish": "publish_only_for_explicit_publish_intent_with_canonical_policy_ALLOW",
+      "autopilot": "publish_only_from_explicitly_enrolled_autopilot_queue_with_canonical_policy_ALLOW"
+    },
+    "routineHappyPath": {
+      "exampleRequest": "תכין ותפרסם את התמונות האלה",
+      "requiredSteps": [
+        "user_source_asset_ingest_and_identity",
+        "verified_product_truth_and_rights",
+        "editorial_selection_and_actual_visual_edit",
+        "independent_visual_and_copy_qa_with_bounded_targeted_repair",
+        "exact_final_media_caption_and_CONTENT_READY",
+        "one_canonical_instagram_publish_policy_ALLOW",
+        "connected_tool_publish_with_provider_receipt",
+        "independent_live_meta_readback_and_permalink",
+        "existing_media_publication_state_closeout"
+      ],
+      "maxOwnerPromptsForKnownLowRisk": 0,
+      "maxPerAssetOwnerApprovalsWithStandingAuthorization": 0,
+      "noDuplicateOrUnauthorizedPublishes": true,
+      "successfulEndState": "published_verified"
+    },
+    "requiredNegativeControls": [
+      "prepare_intent_never_publishes",
+      "missing_truth_or_unclear_rights_blocks_publish",
+      "unverified_claim_or_price_does_not_silently_pass",
+      "forbidden_dm_boost_and_spend_stay_denied",
+      "ambiguous_provider_write_requires_reconciliation_not_blind_retry",
+      "tool_outage_without_safe_fallback_does_not_claim_success",
+      "duplicate_request_does_not_create_second_live_post",
+      "unknown_or_high_risk_requires_real_owner_decision"
+    ],
+    "releaseEvidenceRequired": [
+      "real_user_initiated_end_to_end_trace",
+      "source_asset_and_exact_final_artifact_hashes",
+      "actual_visual_edit_output_and_qa_repair_receipts",
+      "verified_product_truth_claims_and_rights",
+      "exact_bound_CONTENT_READY",
+      "canonical_instagram_publish_decision_receipt",
+      "provider_media_id_and_publish_receipt",
+      "independent_live_media_readback_with_permalink",
+      "owner_prompt_and_per_asset_approval_counts",
+      "negative_control_and_reconciliation_results",
+      "bounded_repeatability_observation"
+    ],
+    "releaseDecision": {
+      "unverified": "BLOCK_RELEASE_CLAIM",
+      "success": "PASS_ONLY_WITH_INDEPENDENT_LIVE_EVIDENCE",
+      "simulatedOrCiOnlyProofSufficient": false,
+      "capabilityScopedClaimsOnly": true,
+      "doNotManufacturePublicPostsForTestCoverage": true,
+      "noLiveE2ETestIsScheduledByThisContract": true
+    }
   }
 }
