@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-21T10:09:08.841Z",
+  "updated_at": "2026-10-22T13:26:37.155Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 248,
+  "candidate_count": 250,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -12471,6 +12471,166 @@
           "https://github.com/microsoft/quicksand/tree/5db6adaf04ed61a003d7906a898f448ef89e4f3c",
           "https://github.com/nocturney/velvetos-core/issues/595",
           "https://github.com/nocturney/velvetos-core/issues/612"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-google-research-harness2",
+      "source_item_id": null,
+      "name": "Google Research Harness² — recursive agent harness optimization",
+      "category": "AGENT_HARNESS_OPTIMIZATION",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Apache-2.0 research framework optimizes agent prompts, tools, memory, skills, scripts, plugins, guardrails and subagents through contrastive Propose–Probe–Compose and retained lessons. Plausible complement to existing VelvetOS/Claude Code worker QA; not a task scheduler or automatic improvement proof. Upstream supports OpenCode/Codex, not a verified subscription-only Claude Code adapter.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "agent-harness-optimization",
+        "self-improvement",
+        "propose-probe-compose",
+        "eval-loop",
+        "agent-quality",
+        "prompt-tool-skills-memory",
+        "parallel-experiment",
+        "repeatable-qa",
+        "claude-code-adapter-not-verified"
+      ],
+      "platform_constraints": [
+        "Upstream main commit 1cfe254e8d25b15f37048c3730134686abe60335 (2026-10-14), Apache-2.0 core; third-party benchmarks/datasets retain separate licenses. Default documentation targets Linux and Python 3.12; Node 20+, Google Cloud CLI and services may be needed for model-backed runs.",
+        "OpenCode and Codex executors are documented. Claude Code CLI subscription-only execution is NOT documented or verified; no Codex quota as worker engine, metered LLM/Vertex/OpenRouter/API, account keys or extra spend without existing cost approval.",
+        "Upstream model-backed benchmarks incur API spend, executor web access may be unrestricted and Codex sandbox can be disabled; do not execute that configuration on a normal workspace or with credentials.",
+        "Harness edits may touch guardrails/plugins/scripts. Preserve VelvetOS Project Request Gate, effects authority, owner approval, isolated branches/worktrees, human-safe execution and independent QA; no autonomous policy weakening or self-promotion.",
+        "Do not preempt #612 P0 proof, install a second orchestration service or claim quality gains before same-fixture readback and measurable benefit."
+      ],
+      "shortlist_lanes": [
+        "agent-quality-evaluation"
+      ],
+      "evidence_refs": [
+        "https://github.com/google-research/harness2",
+        "https://github.com/google-research/harness2/tree/1cfe254e8d25b15f37048c3730134686abe60335",
+        "https://github.com/google-research/harness2/blob/1cfe254e8d25b15f37048c3730134686abe60335/README.md",
+        "https://github.com/google-research/harness2/blob/1cfe254e8d25b15f37048c3730134686abe60335/pyproject.toml",
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "https://github.com/nocturney/velvetos-core/issues/612"
+      ],
+      "notes": [
+        "Owner supplied source link on 2026-10-22. Source-only GitHub review at immutable main commit 1cfe254e8d25b15f37048c3730134686abe60335; no package execution, model-backed benchmark, adapter implementation or CI claim.",
+        "Composition-first classification: COMPLEMENTARY to existing Claude Code CLI agent workers and VelvetOS independent QA; PARTIAL_OVERLAP with agent-runtime harness logic. Optimize within one canonical task/policy/receipt ownership; no second scheduler.",
+        "Candidate triage: FAST-TRACK RESEARCH because it may improve agent quality across all projects; actual LAB waits for the protected P0 reference task and isolated execution/credential boundary."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "After #612 independently verifies the existing coding-agent baseline, compare fixed VelvetOS/Claude Code CLI task instructions with a minimal isolated Harness² Propose–Probe–Compose adaptation on the SAME real testable coding task; score independent tests/QA, completed work, wall time, operator time, tokens, memory/context, crash recovery, changed policies and reproducibility. Start with the upstream credential-free deterministic demo as a smoke only; do not mistake it for a Claude CLI integration or model-backed benchmark.",
+        "rationale": "Benchmarked harness revision may reduce failed coding iterations and reviewer load without replacing the canonical worker runtime. Separate harness optimization from scheduling, policy authority and model execution.",
+        "decision_evidence_refs": [
+          "https://github.com/google-research/harness2/blob/1cfe254e8d25b15f37048c3730134686abe60335/README.md",
+          "https://github.com/google-research/harness2/blob/1cfe254e8d25b15f37048c3730134686abe60335/pyproject.toml",
+          "https://github.com/nocturney/velvetos-core/issues/612"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "agent-harness-optimization",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/612",
+        "phase": "Office v2 Phase 2 intake -> Phase 3D agent quality/coding worker A/B after #612 reference baseline; issue #595 tracks provenance",
+        "status": "WAITING_GATE",
+        "next_gate": "After #612 independently verifies the existing coding-agent baseline, compare fixed VelvetOS/Claude Code CLI task instructions with a minimal isolated Harness² Propose–Probe–Compose adaptation on the SAME real testable coding task; score independent tests/QA, completed work, wall time, operator time, tokens, memory/context, crash recovery, changed policies and reproducibility. Start with the upstream credential-free deterministic demo as a smoke only; do not mistake it for a Claude CLI integration or model-backed benchmark.",
+        "unlock_condition": "Existing #612 P0 real coding-worker task independently verified, actual spare isolated host/branch lease, safe non-metered Claude Code CLI integration or deterministic smoke only, accepted QA and rollback; no new spend, sandbox disable, or policy edits.",
+        "evidence_refs": [
+          "https://github.com/google-research/harness2/tree/1cfe254e8d25b15f37048c3730134686abe60335",
+          "https://github.com/nocturney/velvetos-core/issues/595",
+          "https://github.com/nocturney/velvetos-core/issues/612"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-codeofaxel-kiln",
+      "source_item_id": null,
+      "name": "Kiln — AI fabrication design validation/recipe/3MF modules (not printer fleet)",
+      "category": "AI3D_FABRICATION_PIPELINE_COMPONENTS",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Kiln's open Python code includes generation providers, printability/mesh analysis, design validation and feedback, parametric recipe/rebuild, preview and multi-colour 3MF tools. These may complement existing VelvetOS Text-to-CAD and SliceBridge. Printer queue/fleet functions largely overlap planned Watchtower and are out of scope.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "ai3d",
+        "text-to-cad",
+        "open-scad",
+        "model-validation",
+        "mesh-repair",
+        "design-feedback-loop",
+        "parametric-rebuild",
+        "design-recipe",
+        "multicolor-3mf",
+        "printability",
+        "visual-qa",
+        "slice-bridge-compatibility"
+      ],
+      "platform_constraints": [
+        "Upstream main commit cc560adba85aca8d51ae50cff7c6fcd35025ded0 (2026-10-22), AGPL-3.0-or-later source declared in Python package; commercial/proprietary redistribution and combined-work implications require review before copying code or bundling.",
+        "Several promoted product/goal/intelligence features use private kiln-pro overlays, hosted sign-in or paid tiers; check exact public paths. Cloud generation backends Gemini, Meshy, Tripo3D and Stability need separate APIs/keys. Do not infer end-to-end text-to-model from OpenSCAD compile-only provider.",
+        "Do not install/enable Kiln printer adapters, upload/start/heat/home/motion, fleet scheduler, queue, remote API or unattended production. Watchtower stays planned local print-floor controller; VelvetOS Fabrication Router and printer_matrix.json remain authorities.",
+        "Run selected public modules only with synthetic/offline files and an isolated source pin, no model-site downloads, credentials, metered APIs, cloud print orders, external egress or paid plan.",
+        "Any derived STL/3MF must pass existing source-master/STEP, exact dimensions, material, nozzle, manifold, colour/material and slicer QA. Do not scale functional fits to fit the bed or label heuristics as structural certification.",
+        "Licenses of dependencies and STL/3MF compatibility across target slicers/printers must be independently checked."
+      ],
+      "shortlist_lanes": [
+        "ai3d-text-to-cad-validation"
+      ],
+      "evidence_refs": [
+        "https://github.com/codeofaxel/Kiln",
+        "https://github.com/codeofaxel/Kiln/tree/cc560adba85aca8d51ae50cff7c6fcd35025ded0",
+        "https://github.com/codeofaxel/Kiln/blob/cc560adba85aca8d51ae50cff7c6fcd35025ded0/kiln/src/kiln/design_validator.py",
+        "https://github.com/codeofaxel/Kiln/blob/cc560adba85aca8d51ae50cff7c6fcd35025ded0/kiln/src/kiln/generation_feedback.py",
+        "https://github.com/codeofaxel/Kiln/blob/cc560adba85aca8d51ae50cff7c6fcd35025ded0/kiln/src/kiln/design_recipe.py",
+        "https://github.com/codeofaxel/Kiln/blob/cc560adba85aca8d51ae50cff7c6fcd35025ded0/kiln/src/kiln/multicolor_3mf.py",
+        "https://github.com/codeofaxel/Kiln/blob/cc560adba85aca8d51ae50cff7c6fcd35025ded0/kiln/src/kiln/generation/openscad.py",
+        "https://github.com/nocturney/velvetos-core/blob/main/packages/vfprod/TEXT-TO-CAD.md",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "Owner submitted source link on 2026-10-22. Read-only file-level review; code was not executed. Source HEAD pinned at cc560adba85aca8d51ae50cff7c6fcd35025ded0.",
+        "Composition-first classification: COMPLEMENTARY at design validation/parametric recipe/3MF interfaces; PARTIAL_OVERLAP with existing DfAM, visualization and SliceBridge. No whole-platform or Watchtower replacement decision.",
+        "Use current VelvetOS Fabrication Router, build123d/cadgen/STEP master, existing fixture and printer matrix. Kiln components are challengers to narrowly defined steps only, not authority for physical output."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "On a free isolated host after P0 capacity clearance, compare existing vf_cad_stack.py/build123d + vf_cad.py DfAM and slicer dry-run against selectively evaluated Kiln printability, design_validator/generation_feedback, design_recipe/rebuild and multicolor_3mf outputs on the SAME dimensioned functional part and four-colour keychain fixtures. Require source STEP parametric fidelity, STL watertight/measurements, original-intent and multicolour 3MF persistence across Bambu/Orca/Prusa where supported, no hidden scaling, negative tests, time/memory/QA receipts. No printer APIs or Watchtower fleet replacement.",
+        "rationale": "Scoped analysis, correction feedback, recipe edit/rebuild and slicer-compatible multicolour export may improve reliable text-to-print throughput while retaining existing CAD masters, SliceBridge, printer profiles and Watchtower floor ownership.",
+        "decision_evidence_refs": [
+          "https://github.com/codeofaxel/Kiln/blob/cc560adba85aca8d51ae50cff7c6fcd35025ded0/kiln/src/kiln/design_validator.py",
+          "https://github.com/codeofaxel/Kiln/blob/cc560adba85aca8d51ae50cff7c6fcd35025ded0/kiln/src/kiln/design_recipe.py",
+          "https://github.com/codeofaxel/Kiln/blob/cc560adba85aca8d51ae50cff7c6fcd35025ded0/kiln/src/kiln/multicolor_3mf.py",
+          "https://github.com/nocturney/velvetos-core/blob/main/packages/vfprod/TEXT-TO-CAD.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "ai3d-text-to-cad-validation",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 candidate review -> P1 fabrication/Text-to-CAD + SliceBridge same-fixture comparison; subordinate to P0 capacity",
+        "status": "WAITING_GATE",
+        "next_gate": "On a free isolated host after P0 capacity clearance, compare existing vf_cad_stack.py/build123d + vf_cad.py DfAM and slicer dry-run against selectively evaluated Kiln printability, design_validator/generation_feedback, design_recipe/rebuild and multicolor_3mf outputs on the SAME dimensioned functional part and four-colour keychain fixtures. Require source STEP parametric fidelity, STL watertight/measurements, original-intent and multicolour 3MF persistence across Bambu/Orca/Prusa where supported, no hidden scaling, negative tests, time/memory/QA receipts. No printer APIs or Watchtower fleet replacement.",
+        "unlock_condition": "Protected isolated source and licensing review, active fixture owner/host resource lease, no Kiln Pro/private package or paid API, no printer-network/motion access, independent geometric and slicer readback; do not preempt P0.",
+        "evidence_refs": [
+          "https://github.com/codeofaxel/Kiln/tree/cc560adba85aca8d51ae50cff7c6fcd35025ded0",
+          "https://github.com/nocturney/velvetos-core/blob/main/packages/vfprod/TEXT-TO-CAD.md",
+          "https://github.com/nocturney/velvetos-core/issues/595"
         ]
       }
     }
