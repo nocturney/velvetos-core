@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-21T10:09:08.841Z",
+  "updated_at": "2026-10-22T13:25:00.000Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 248,
+  "candidate_count": 249,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -12469,6 +12469,90 @@
         "unlock_condition": "Verified source/license and dependency compatibility, preflight approval for a disposable host LAB scope, non-conflicting resource lease, synthetic fixtures and independent QA; no paid APIs or Codex quota.",
         "evidence_refs": [
           "https://github.com/microsoft/quicksand/tree/5db6adaf04ed61a003d7906a898f448ef89e4f3c",
+          "https://github.com/nocturney/velvetos-core/issues/595",
+          "https://github.com/nocturney/velvetos-core/issues/612"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-genspark-ai-genoffice",
+      "source_item_id": null,
+      "name": "GenOffice — local Office artifact creation/editing engine (CLI/MCP)",
+      "category": "DOCUMENT_ARTIFACT_ENGINE",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Local, scriptable native Office editing/generation with deterministic CLI checks could improve current agent-delivered files, but this is an artifact engine/agent tool, not a worker scheduler, source-of-truth store or independent agent orchestration layer.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "documents",
+        "office-artifacts",
+        "docx",
+        "xlsx",
+        "pptx",
+        "pdf",
+        "markdown",
+        "html",
+        "cli",
+        "mcp",
+        "document-roundtrip",
+        "visual-validation",
+        "local-first",
+        "agent-tools"
+      ],
+      "platform_constraints": [
+        "Project declares Apache-2.0 except ee/ under a separate GenOffice Enterprise License; third-party notices and fork branding requirements still apply.",
+        "Packaged official binaries enable anonymous GA4 usage analytics from initial launch before onboarding; source-built binaries reportedly avoid analytics metadata. Verify before handling any company files.",
+        "GUI AI needs Genspark login, BYOK provider credentials or configured local inference. Claude Code subscription should be used as external agent driving the model-free local CLI/MCP; do not silently substitute paid per-call API or Codex quota.",
+        "Untrusted Office/PDF/HTML inputs, Electron IPC and converter dependencies need security/source review and bounded allowed roots before any installation or live document access.",
+        "No background daemon, new scheduler, separate document source of truth, direct edits to authoritative Google Drive documents, or Production write/publish authority implied.",
+        "Keep P0 (#612/#604) and active workers protected; benchmark only on an isolated, unclaimed host and synthetic data."
+      ],
+      "shortlist_lanes": [],
+      "evidence_refs": [
+        "https://github.com/genspark-ai/genoffice",
+        "https://github.com/genspark-ai/genoffice/tree/342abce4280ea92bf7e59580f1ecaf9b562d0f72",
+        "https://github.com/genspark-ai/genoffice/blob/342abce4280ea92bf7e59580f1ecaf9b562d0f72/README.md",
+        "https://github.com/genspark-ai/genoffice/blob/342abce4280ea92bf7e59580f1ecaf9b562d0f72/packages/cli/README.md",
+        "https://github.com/genspark-ai/genoffice/blob/342abce4280ea92bf7e59580f1ecaf9b562d0f72/PRIVACY.md",
+        "https://github.com/genspark-ai/genoffice/blob/342abce4280ea92bf7e59580f1ecaf9b562d0f72/LICENSE",
+        "https://github.com/genspark-ai/genoffice/blob/342abce4280ea92bf7e59580f1ecaf9b562d0f72/ee/LICENSE",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "Owner shared upstream link 2026-10-22; pinned verified upstream main commit 342abce4280ea92bf7e59580f1ecaf9b562d0f72 (2026-10-22 03:55 UTC). Source/README/CLI/privacy/security reviewed remotely only; no local app, CLI, MCP server or model inference run.",
+        "GenOffice CLI describes model-free create/read/apply/convert/audit/render operations. Claude Code can author specs under existing subscription and call local CLI without GenOffice's GUI AI provider; subscription-only compatibility remains to be experimentally verified.",
+        "Composition first: GenOffice is potentially complementary to existing Office/PDF artifact tools and Google Drive connector. It may replace a selected transformation/QA component only after same-file baseline comparison. Paperless-ngx (document capture/management) is adjacent, not functionally equivalent.",
+        "Fixture acceptance: Hebrew RTL DOCX with mixed language, 2 pages, styles, images, tables and tracked edits; XLSX with formulas, number formatting, chart and cross-sheet references; PPTX 8 slides with Hebrew text, images, editable layout and overlap audit; PDF conversion/roundtrip. Compare generated artifacts, byte preservation, platform compatibility, headless behavior, visual QA, resource/cost and crash/error paths.",
+        "No inference, cloud usage, installation, production file modification, auto-merge or shortlist displacement authorized by this research entry."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "On a free isolated host after P0, compare incumbent DOCX/XLSX/PPTX/PDF pipeline versus GenOffice CLI/MCP with identical synthetic Hebrew RTL, formulas/charts, slides and PDF round-trip fixtures. Measure editability, visual overflow, integrity, no-network execution, rollback, memory, timing, outputs and costs; verify actual subscription-only Claude Code path, license exclusions and binary telemetry settings.",
+        "rationale": "Agent-driven Office file creation and local deterministic render/check may close artifact quality and editing gaps without adding a control plane or model API dependency; compare generated deliverables rather than feature claims.",
+        "decision_evidence_refs": [
+          "https://github.com/genspark-ai/genoffice/tree/342abce4280ea92bf7e59580f1ecaf9b562d0f72",
+          "https://github.com/genspark-ai/genoffice/blob/342abce4280ea92bf7e59580f1ecaf9b562d0f72/packages/cli/README.md",
+          "https://github.com/genspark-ai/genoffice/blob/342abce4280ea92bf7e59580f1ecaf9b562d0f72/PRIVACY.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "documents-assets-creative",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phases 5-6 document/artifact consumers, post-P0 candidate intake",
+        "status": "WAITING_GATE",
+        "next_gate": "On a free isolated host after P0, compare incumbent DOCX/XLSX/PPTX/PDF pipeline versus GenOffice CLI/MCP with identical synthetic Hebrew RTL, formulas/charts, slides and PDF round-trip fixtures. Measure editability, visual overflow, integrity, no-network execution, rollback, memory, timing, outputs and costs; verify actual subscription-only Claude Code path, license exclusions and binary telemetry settings.",
+        "unlock_condition": "Verified non-conflicting disposable host lease, existing baseline fixtures/QA, reviewed source/license/privacy, no paid API and independent readback; P0 work must stay unblocked.",
+        "evidence_refs": [
+          "https://github.com/genspark-ai/genoffice/tree/342abce4280ea92bf7e59580f1ecaf9b562d0f72",
           "https://github.com/nocturney/velvetos-core/issues/595",
           "https://github.com/nocturney/velvetos-core/issues/612"
         ]
