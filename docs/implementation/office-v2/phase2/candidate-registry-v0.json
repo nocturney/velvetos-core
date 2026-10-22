@@ -5432,7 +5432,9 @@
         "https://github.com/nocturney/velvetos-core/issues/606",
         "https://github.com/NationalSecurityAgency/ghidra/releases/tag/Ghidra_12.2_build",
         "https://docs.google.com/document/d/175f3SCcXwWiZrBgExYMYy_Z9ztMEIqPWj0DRXeS8AYM/edit",
-        "https://github.com/nocturney/velvetos-core/issues/595"
+        "https://github.com/nocturney/velvetos-core/issues/595",
+        "https://github.com/morluto/rea/blob/main/docs/ghidra-provider.md",
+        "https://github.com/morluto/rea/blob/main/docs/windows-ghidra-p0.md"
       ],
       "notes": [
         "Upstream pinned 918acd744d17e3b95fbde44ec6ab3e59b6dbd45f; license review: Apache-2.0 source; check separate runtime/JDK and bundled dependency licenses.",
@@ -5441,7 +5443,7 @@
         "Admission prerequisite: P1 #606 unparked by a real binary blocker or #612 P0 reference/capacity proven; target file rights, bounded scope, no-P0-contention resource lease, verified release/security and local cost preflight.",
         "No install, local execution, binary modification or permanent service authorized.",
         "2026-10-22 Architecture Evolution section 02 OPEN INTAKE: owner renewed evaluation. Maintain this existing candidate-nsa-ghidra / binary-analysis record; #595 is the active cross-cutting intake coordination lane, while closed #606 remains immutable REA 5.0.0 pilot evidence and its historical phase owner. Do not create a new registry or restart the original REA pilot.",
-        "Immediate read-only research (no host resources): refresh Ghidra 12.2 release/signature/security/JDK prerequisites and review official headless/PyGhidra evidence. Later gated same-artifact comparison: (A) pinned direct Ghidra 12.2 native analysis, (B) existing pinned REA 5.0.0 workflow with available native provider, (C) deterministic baseline. Record decompiler/function evidence, false positives on signed PE, coverage, CPU/RAM, elapsed/operator time, and teardown. No equivalence claim between JavaScript ASAR and native PE.",
+        "2026-10-22 OWNER CORRECTION — COMPOSITION FIRST. Upstream REA documents Ghidra as an analysis provider: REA = agent/MCP investigation, target trace and evidence interface; Ghidra = native decompilation engine. Suggested composed path: authorized copied native PE/ELF -> pinned Ghidra engine -> REA native provider -> agent investigation/evidence -> curated prompt playbook. This is an evaluation design, NOT a deployed or verified integration. Direct Ghidra is only a same-engine reference for REA overhead/fidelity; compare alternative binary engines with Ghidra and alternative AI/agent interfaces with REA only where functions actually overlap. REA Windows 5.0.0 tested a bounded REA Electron fixture, NOT this Ghidra bridge; official REA Windows guide currently documents verified Ghidra 12.1.4/P0, while 12.2 is newly released and unproven with REA.",
         "Optional prompt/community input: https://github.com/JoasASantos/REA-Prompts and https://madewithrea.com/prompts are untrusted research references for evidence-first, narrow feature traces and reproducible prompts. Audit/curate before inclusion in an agent's trusted instructions; do not auto-activate MCP, prompts, privileged scanners or background jobs.",
         "Archived source intake and #606 remain unchanged. New source review is permitted without unpark/installation; running a LAB still requires an authorized owned target, a free independent host/resource lease outside protected #612 work, security + NO_NEW_RECURRING_COST preflight, and the existing admission gates. No Codex CLI worker quota or paid API."
       ],
@@ -5450,23 +5452,25 @@
         "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
         "eligibility": "OPEN_FOR_COMPARISON",
         "variants": [
-          "component_replacement",
-          "hybrid"
+          "hybrid",
+          "component_replacement"
         ],
         "evidence_status": "RESEARCH_ONLY",
-        "next_action": "Architecture Evolution OPEN INTAKE (#595): read-only refresh Ghidra 12.2/JDK25/security advisories and curated REA prompt examples now. Retain #606 as completed REA 5.0.0 pilot evidence; do not redo the pilot. Only with a named authorized native PE/ELF fixture and available P1 capacity, compare direct Ghidra headless/PyGhidra, REA-with-native-provider and deterministic methods on identical evidence/coverage/false-positive/time/RAM/operator-effort criteria. Stay RESEARCHED; no install or service startup.",
-        "rationale": "Potentially deeper native PE/ELF binary inspection than the current JavaScript/Electron-oriented REA pilot; complementary unless reproducible same-artifact evidence proves substitution. 2026-10-22 review explicitly compares complementary/on-demand use and a possible component substitution under the new Core-thin architecture, without choosing an implementation in advance.",
+        "next_action": "COMPOSITION-FIRST under Architecture Evolution OPEN INTAKE (#595): validate from upstream (no install) REA native Ghidra provider for supported host/target/version, including Windows P0 read-only Ghidra 12.1.x; Ghidra 12.2 compatibility is UNKNOWN and needs its own pin/advisory review. With a named authorized native PE/ELF fixture, available P1 lease and admission/cost gates, first assess REA + Ghidra as one composed capability. On the same Ghidra engine/input, run direct headless/PyGhidra only as a reference path to measure REA adapter overhead, provenance, coverage, accuracy, false positives, CPU/RAM, elapsed time and teardown. Compare Ghidra with other engines only for truly overlapping decompilation functions; compare REA with other agent-facing interfaces only for orchestration/trace features. REA-Prompts are evidence-first research patterns to curate separately, not execution providers. #606 retains the 5.0.0 pilot evidence; do not repeat it or auto-install/register MCP. Status unchanged.",
+        "rationale": "DEFAULT COMPOSITION, NOT TOOL-AGAINST-TOOL: Ghidra is a native disassembler/decompiler; REA explicitly implements a Ghidra provider with separate support/version boundaries. Combining REA's MCP investigation interface/evidence layer with Ghidra's native engine is the first architecture hypothesis. Direct Ghidra headless/PyGhidra is a baseline on the same engine, not the preferred competitor; only comparable substitute engines or REA-like interfaces are true replacement candidates. The original 2026-10-14 gate's 'versus' language remains in the immutable historical intake receipt and must be read as route benchmarking, not as a winner-takes-all verdict. No integration or version compatibility with 12.2 has been proved.",
         "decision_evidence_refs": [
           "https://github.com/NationalSecurityAgency/ghidra/releases/tag/Ghidra_12.2_build",
           "https://docs.google.com/document/d/175f3SCcXwWiZrBgExYMYy_Z9ztMEIqPWj0DRXeS8AYM/edit",
           "https://github.com/nocturney/velvetos-core/issues/595",
-          "https://github.com/nocturney/velvetos-core/issues/606"
+          "https://github.com/nocturney/velvetos-core/issues/606",
+          "https://github.com/morluto/rea/blob/main/docs/ghidra-provider.md",
+          "https://github.com/morluto/rea/blob/main/docs/windows-ghidra-p0.md"
         ]
       },
       "evaluation_route": {
         "workstream": "shipped-artifact-analysis",
         "owner_ref": "https://github.com/nocturney/velvetos-core/issues/606",
-        "phase": "P1 parked issue #606; selective Office Phase 4/6 shipped-desktop-app diagnostics and binary analysis",
+        "phase": "Architecture Evolution OPEN INTAKE / P1 gated shipped-artifact analysis; #595 coordinates read-only source triage, historic owner #606 remains completed parked REA evidence; any LAB after #612 P0 capacity gate.",
         "status": "WAITING_GATE",
         "next_gate": "When #606 has a concrete shipped-binary integration blocker, benchmark pinned Ghidra headless/PyGhidra versus the existing REA/read-only deterministic path on the same authorized PE subset: decompilation fidelity, evidence/provenance, false positives, CPU/RAM, time and safe teardown.",
         "unlock_condition": "P1 #606 unparked by a real binary blocker or #612 P0 reference/capacity proven; target file rights, bounded scope, no-P0-contention resource lease, verified release/security and local cost preflight.",
@@ -5475,7 +5479,9 @@
           "https://github.com/NationalSecurityAgency/ghidra/tree/918acd744d17e3b95fbde44ec6ab3e59b6dbd45f",
           "https://github.com/NationalSecurityAgency/ghidra/releases/tag/Ghidra_12.2_build",
           "https://docs.google.com/document/d/175f3SCcXwWiZrBgExYMYy_Z9ztMEIqPWj0DRXeS8AYM/edit",
-          "https://github.com/nocturney/velvetos-core/issues/595"
+          "https://github.com/nocturney/velvetos-core/issues/595",
+          "https://github.com/morluto/rea/blob/main/docs/ghidra-provider.md",
+          "https://github.com/morluto/rea/blob/main/docs/windows-ghidra-p0.md"
         ]
       }
     },
