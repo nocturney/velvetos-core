@@ -34,6 +34,19 @@ Local readback files: `adobe-web-smoke.json` and `adobe-web-browser-smoke.json` 
 - `packages/velvetos/LAYERS.md` already separates Edge, Kernel and Office/HQ. Existing distributed Claude/host execution can remain parallel without copying policy.
 - Therefore **a central-executor bottleneck is not established**. Risks worth measuring are unnecessary always-on context, stale cross-host capability claims, duplicated specialist descriptions, and unnecessary gate traversal for read-only tasks.
 
+### Existing-router bounded discovery checks (synthetic queries)
+
+With the two new registry entries present, `python3.12 scripts/vf_skill_catalog.py route <query>` completed four isolated queries on MacMiniOffice2:
+
+| Query | Measured wall time | Discovery result |
+| --- | ---: | --- |
+| `scan sitemap and enumerate pages of a website` | 525 ms | Adobe Web site-scan candidate selected |
+| `redesign an existing website with stardust` | 534 ms | Adobe Stardust candidate appeared alongside plugin87 redesign challenger |
+| `repair 3MF CAD mesh and supports` | 513 ms | CAD skills surfaced; neither Adobe candidate surfaced |
+| `publish Instagram customer content` | 512 ms | Content skills surfaced; neither Adobe candidate surfaced |
+
+This is **routing/discovery only**, not a model execution or capability quality score. The Adobe entries are correctly marked `candidate: true`, `run_ready: false` and `requires_admission: true` in routed results. Four local samples are not a latency distribution. They show that the existing derived router can discover scoped candidates without automatically activating them and provide **no evidence yet for a centralized execution bottleneck**.
+
 ## Architectural alternatives for the same fixtures
 
 1. **A — current derived router + existing execution:** use existing `vf_skill_catalog`, project authority gates and host-specific tools; keep lab plugins local. Baseline.
