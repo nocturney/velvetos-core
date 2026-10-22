@@ -1,0 +1,19 @@
+{
+  "schema": "velvetos.office-v2.phase2-link-intake-receipt.v0",
+  "received_at": "2026-10-22T13:25:00.000Z",
+  "input_url": "https://github.com/genspark-ai/genoffice?fbclid=IwZnRzaAVG7fxleHRuA2FlbQIxMQBwZG9mBWZkaWQWUQy6pkj5Kr4dTl-76W005hWusj2f-3NydGMGYXBwX2lkCjY2Mjg1NjgzNzkAAR4e62KAw18PCLPGZvfTDTKLuPbe8rpl7ivyljye1j5zmqE3V8uhf_1hVr4VDg_aem__iV3K770Q0sGk-DVnX2vcg",
+  "registry_ref": "docs/implementation/office-v2/phase2/candidate-registry-v0.json",
+  "network_used": true,
+  "authority_granted": false,
+  "normalized_url": "https://github.com/genspark-ai/genoffice",
+  "upstream_pin": "342abce4280ea92bf7e59580f1ecaf9b562d0f72",
+  "status": "REGISTERED",
+  "candidate_ids": [
+    "candidate-genspark-ai-genoffice"
+  ],
+  "candidate_count_before": 248,
+  "candidate_count_after": 249,
+  "triage": "RESEARCHED / BENCHMARK_REQUIRED / NOT_RUN / NONE",
+  "workstream": "documents-assets-creative",
+  "next_action": "After #612/#604 P0 baseline or verified spare host capacity, compare GenOffice CLI output with existing Office/PDF artifact tooling on same synthetic Hebrew RTL DOCX, XLSX formulas/charts, PPTX 8 slides, PDF roundtrip and render/QA fixtures. No install, paid API, Codex, Google Drive source-of-truth change or production authority from this receipt."
+}
