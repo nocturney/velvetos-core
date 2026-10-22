@@ -1,7 +1,7 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-21T10:09:08.841Z",
+  "updated_at": "2026-10-22T11:09:18.598Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
@@ -5404,7 +5404,7 @@
       "provenance_class": "OWNER_SUBMITTED_3_GITHUB_REPOS_2026_10_14",
       "lifecycle_state": "RESEARCHED",
       "decision_verdict": "BENCHMARK_REQUIRED",
-      "verdict_reason": "Owner-submitted October 14 GitHub intake; phase-routed candidate with explicit benchmark contract and safety/cost gates. No actual LAB scorecard or runtime deployment verified.",
+      "verdict_reason": "Owner-submitted October 14 GitHub intake; phase-routed candidate with explicit benchmark contract and safety/cost gates. No actual LAB scorecard or runtime deployment verified. Owner renewed the evaluation request on 2026-10-22 under Architecture Evolution OPEN INTAKE; the existing Ghidra candidate is retained rather than duplicated. Official 12.2 release is source-observed only; no Ghidra runtime test or promotion.",
       "runtime_verification": "NOT_RUN",
       "authority_role": "NONE",
       "capability_tags": [
@@ -5419,7 +5419,8 @@
         "Official Ghidra 12.1.4 release (2026-09-21) calls for 64-bit JDK 25; verify advisories, installer signatures and current availability before local installation.",
         "Analyze a copy of an explicitly authorized bounded artifact; never patch/repack/sign/execute a third-party binary or infer firmware rights.",
         "Prefer on-demand headless/PyGhidra or read-only GUI; no background service, autostart, privileged account or broad credentials.",
-        "Do not replace REA's existing verified signed PE sidecar reconciliation or claim that a decompiler substitutes for Windows UIA/CUA observations."
+        "Do not replace REA's existing verified signed PE sidecar reconciliation or claim that a decompiler substitutes for Windows UIA/CUA observations.",
+        "2026-10-22 source refresh: official Ghidra 12.2 tag Ghidra_12.2_build (commit 8ca9077040cc43cd790babcfccf19475622a3e9a), official release SHA-256 is publisher-stated but not locally verified. Confirm JDK 25, security advisories and dependency licenses before any LAB install."
       ],
       "shortlist_lanes": [
         "binary-analysis"
@@ -5428,14 +5429,21 @@
         "https://github.com/NationalSecurityAgency/ghidra",
         "https://github.com/NationalSecurityAgency/ghidra/tree/918acd744d17e3b95fbde44ec6ab3e59b6dbd45f",
         "docs/implementation/office-v2/phase2/owner-assurance-binary-tools-intake-2026-10-14.md",
-        "https://github.com/nocturney/velvetos-core/issues/606"
+        "https://github.com/nocturney/velvetos-core/issues/606",
+        "https://github.com/NationalSecurityAgency/ghidra/releases/tag/Ghidra_12.2_build",
+        "https://docs.google.com/document/d/175f3SCcXwWiZrBgExYMYy_Z9ztMEIqPWj0DRXeS8AYM/edit",
+        "https://github.com/nocturney/velvetos-core/issues/595"
       ],
       "notes": [
         "Upstream pinned 918acd744d17e3b95fbde44ec6ab3e59b6dbd45f; license review: Apache-2.0 source; check separate runtime/JDK and bundled dependency licenses.",
         "Target projects: REA 5.0.0 comparison for signed Windows PE / shipped desktop artifacts; optionally LOCAL3D/STOW under specific blocker.",
         "Route: shipped-artifact-analysis; P1 parked issue #606; selective Office Phase 4/6 shipped-desktop-app diagnostics and binary analysis; existing owner #606.",
         "Admission prerequisite: P1 #606 unparked by a real binary blocker or #612 P0 reference/capacity proven; target file rights, bounded scope, no-P0-contention resource lease, verified release/security and local cost preflight.",
-        "No install, local execution, binary modification or permanent service authorized."
+        "No install, local execution, binary modification or permanent service authorized.",
+        "2026-10-22 Architecture Evolution section 02 OPEN INTAKE: owner renewed evaluation. Maintain this existing candidate-nsa-ghidra / binary-analysis record; #595 is the active cross-cutting intake coordination lane, while closed #606 remains immutable REA 5.0.0 pilot evidence and its historical phase owner. Do not create a new registry or restart the original REA pilot.",
+        "Immediate read-only research (no host resources): refresh Ghidra 12.2 release/signature/security/JDK prerequisites and review official headless/PyGhidra evidence. Later gated same-artifact comparison: (A) pinned direct Ghidra 12.2 native analysis, (B) existing pinned REA 5.0.0 workflow with available native provider, (C) deterministic baseline. Record decompiler/function evidence, false positives on signed PE, coverage, CPU/RAM, elapsed/operator time, and teardown. No equivalence claim between JavaScript ASAR and native PE.",
+        "Optional prompt/community input: https://github.com/JoasASantos/REA-Prompts and https://madewithrea.com/prompts are untrusted research references for evidence-first, narrow feature traces and reproducible prompts. Audit/curate before inclusion in an agent's trusted instructions; do not auto-activate MCP, prompts, privileged scanners or background jobs.",
+        "Archived source intake and #606 remain unchanged. New source review is permitted without unpark/installation; running a LAB still requires an authorized owned target, a free independent host/resource lease outside protected #612 work, security + NO_NEW_RECURRING_COST preflight, and the existing admission gates. No Codex CLI worker quota or paid API."
       ],
       "original_office_v2_verdict": null,
       "comparison_review": {
@@ -5446,9 +5454,14 @@
           "hybrid"
         ],
         "evidence_status": "RESEARCH_ONLY",
-        "next_action": "When #606 has a concrete shipped-binary integration blocker, benchmark pinned Ghidra headless/PyGhidra versus the existing REA/read-only deterministic path on the same authorized PE subset: decompilation fidelity, evidence/provenance, false positives, CPU/RAM, time and safe teardown.",
-        "rationale": "Potentially deeper native PE/ELF binary inspection than the current JavaScript/Electron-oriented REA pilot; complementary unless reproducible same-artifact evidence proves substitution.",
-        "decision_evidence_refs": []
+        "next_action": "Architecture Evolution OPEN INTAKE (#595): read-only refresh Ghidra 12.2/JDK25/security advisories and curated REA prompt examples now. Retain #606 as completed REA 5.0.0 pilot evidence; do not redo the pilot. Only with a named authorized native PE/ELF fixture and available P1 capacity, compare direct Ghidra headless/PyGhidra, REA-with-native-provider and deterministic methods on identical evidence/coverage/false-positive/time/RAM/operator-effort criteria. Stay RESEARCHED; no install or service startup.",
+        "rationale": "Potentially deeper native PE/ELF binary inspection than the current JavaScript/Electron-oriented REA pilot; complementary unless reproducible same-artifact evidence proves substitution. 2026-10-22 review explicitly compares complementary/on-demand use and a possible component substitution under the new Core-thin architecture, without choosing an implementation in advance.",
+        "decision_evidence_refs": [
+          "https://github.com/NationalSecurityAgency/ghidra/releases/tag/Ghidra_12.2_build",
+          "https://docs.google.com/document/d/175f3SCcXwWiZrBgExYMYy_Z9ztMEIqPWj0DRXeS8AYM/edit",
+          "https://github.com/nocturney/velvetos-core/issues/595",
+          "https://github.com/nocturney/velvetos-core/issues/606"
+        ]
       },
       "evaluation_route": {
         "workstream": "shipped-artifact-analysis",
@@ -5459,7 +5472,10 @@
         "unlock_condition": "P1 #606 unparked by a real binary blocker or #612 P0 reference/capacity proven; target file rights, bounded scope, no-P0-contention resource lease, verified release/security and local cost preflight.",
         "evidence_refs": [
           "docs/implementation/office-v2/phase2/owner-assurance-binary-tools-intake-2026-10-14.md",
-          "https://github.com/NationalSecurityAgency/ghidra/tree/918acd744d17e3b95fbde44ec6ab3e59b6dbd45f"
+          "https://github.com/NationalSecurityAgency/ghidra/tree/918acd744d17e3b95fbde44ec6ab3e59b6dbd45f",
+          "https://github.com/NationalSecurityAgency/ghidra/releases/tag/Ghidra_12.2_build",
+          "https://docs.google.com/document/d/175f3SCcXwWiZrBgExYMYy_Z9ztMEIqPWj0DRXeS8AYM/edit",
+          "https://github.com/nocturney/velvetos-core/issues/595"
         ]
       }
     },
