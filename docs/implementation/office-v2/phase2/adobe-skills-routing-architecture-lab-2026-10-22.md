@@ -69,6 +69,15 @@ For each route capture exact versions/input hashes, selection accuracy, complete
 
 **Decision gate:** Refactor only if a demonstrated gain in completed work/latency/maintainability outweighs regression or governance risk, and the candidate passes existing admission, isolation, independent QA, and rollback/authority gates. No arbitrary improvement threshold or auto-promotion. The immediate useful improvement is **on-demand invocation inside an isolated environment**, not automatically installing all 27 Adobe specialists on every host.
 
+### Branch-local sensor readback
+
+On the branch's changed file contents in the isolated Core checkout:
+
+- `python3.12 scripts/check-office-v2-phase2.py`: **PASS**; registry 250, lifecycle PASS, shortlist and fixture gates PASS.
+- `python3.12 scripts/check-living-studio.py`: **PASS**; registry/projection/skills and 34 catalog regressions.
+- `PYTHONPATH=scripts python3.12 packages/velvetos/living-studio/tests/test_skill_catalog.py`: **PASS, 34/34**.
+- `python3.12 scripts/check-all.py`: **NOT GREEN / stopped after unrelated host-environment failures**. The lab clone was shallow and lacked historic Git objects required by `check-learning-lifecycle.py`; local Python had no `yaml` module for `check-machine-writers.py`; platform-specific FFmpeg capability tests reported missing zoompan/libass prerequisites. This is **not** a claim that the full repository suite passed or that branch CI is clear. Validate full CI on the GitHub PR before merge.
+
 ## Practical use and rollback
 
 - To run the already installed lab, open `~/Velvet/Pilots/AdobeSkillsLab-20261022` on `MacMiniOffice2` and use Claude Code there; `web` and `stardust` plugins are locally enabled.
