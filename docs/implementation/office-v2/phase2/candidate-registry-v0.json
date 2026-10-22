@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-21T10:09:08.841Z",
+  "updated_at": "2026-10-22T11:04:23.507Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 248,
+  "candidate_count": 249,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -12471,6 +12471,93 @@
           "https://github.com/microsoft/quicksand/tree/5db6adaf04ed61a003d7906a898f448ef89e4f3c",
           "https://github.com/nocturney/velvetos-core/issues/595",
           "https://github.com/nocturney/velvetos-core/issues/612"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-intake-yazzang-homelab-blender-agent-sdk",
+      "source_item_id": null,
+      "name": "yazzang-homelab/blender-agent-sdk — persistent Blender SDK/CLI/MCP for AI agents",
+      "category": "BLENDER_AGENT_CONTROL_SDK",
+      "provenance_class": "OWNER_LINK_INTAKE",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Source-reviewed upstream v0.2.0 at immutable commit: Python SDK, optional stdio MCP and persistent CLI session with scene inspection, screenshots, operator control and checkpoints. Plausible replacement/complement for the existing Blender agent controller; no VelvetOS SDK run or same-fixture benchmark yet.",
+      "runtime_verification": "NOT_RUN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "blender",
+        "agent-driven-3d",
+        "python-sdk",
+        "mcp",
+        "cli",
+        "persistent-session",
+        "headless",
+        "gui-optional",
+        "scene-inspection",
+        "visual-feedback",
+        "checkpoint-restore",
+        "claude-code-cli",
+        "mesh-workflow"
+      ],
+      "platform_constraints": [
+        "Python >=3.10 and installed Blender required; upstream CI passes Blender 5.2.2 on Linux x64, Windows x64 and macOS arm64, but GUI tests on Windows/macOS were skipped; other Blender versions untested.",
+        "Read-only host preflight 2026-10-22 saw Blender 5.2.2 LTS and compatible Python on Chris (Windows) and MacMiniOffice (macOS); this does NOT verify the SDK runtime or integration.",
+        "Each BlenderSession launches a child Blender; it does not attach to an already-open Blender window. Separate job roots, process isolation and host leases are required.",
+        "exec_python is disabled by default, but the library is not a filesystem sandbox. Keep allow-exec off, isolate untrusted assets and paths, and never expose the optional gallery HTTP listener on untrusted networks.",
+        "GPL-3.0-or-later: review redistribution and proprietary integration boundaries before packaging. Blender is not bundled.",
+        "Claude Code subscription via stdio MCP/CLI is the intended zero-additional-per-call-cost path; upstream Anthropic/OpenAI API examples are NOT authorized for our pilot.",
+        "The SDK supplies no manufacturing acceptance: current Fabrication Router, Blender Capability Host authority, DfAM/mesh and slicer dry-run gates remain authoritative; no printer network or job controls."
+      ],
+      "shortlist_lanes": [
+        "ai3d-blender-agent-execution"
+      ],
+      "evidence_refs": [
+        "https://github.com/yazzang-homelab/blender-agent-sdk",
+        "https://github.com/yazzang-homelab/blender-agent-sdk/tree/706c86a45706bb6743fc6e63800d9860c359f725",
+        "https://github.com/yazzang-homelab/blender-agent-sdk/blob/706c86a45706bb6743fc6e63800d9860c359f725/README.md",
+        "https://github.com/yazzang-homelab/blender-agent-sdk/blob/706c86a45706bb6743fc6e63800d9860c359f725/pyproject.toml",
+        "https://github.com/yazzang-homelab/blender-agent-sdk/blob/706c86a45706bb6743fc6e63800d9860c359f725/src/blender_agent/mcp_server.py",
+        "https://github.com/yazzang-homelab/blender-agent-sdk/blob/706c86a45706bb6743fc6e63800d9860c359f725/src/blender_agent/bridge.py",
+        "https://github.com/yazzang-homelab/blender-agent-sdk/blob/706c86a45706bb6743fc6e63800d9860c359f725/.github/workflows/ci.yml",
+        "https://github.com/nocturney/velvetos-core/blob/main/packages/vfprod/BLENDER-MCP.md",
+        "https://github.com/nocturney/velvetos-core/issues/595"
+      ],
+      "notes": [
+        "Owner-submitted 2026-10-22; v0.2.0 released 2026-10-18, upstream source HEAD pin 706c86a45706bb6743fc6e63800d9860c359f725; source/CI inspection only. Existing live controller is blender-ai-mcp behind vf_3d.py and existing geometry QA is design-os-3d-blender.",
+        "TRIAGE: COMPARE; research-only intake, not admitted to LAB. No install, MCP registration, API calls, scheduler, fleet rollout, changes to live Blender, production routing or printing were performed.",
+        "Measure visual and semantic agent correction loops independently of geometric acceptance; use synthetic curved-surface inlay / keychain fixture with known dimensions, save/edit/reopen files, quantify non-manifold, error feedback and rollback.",
+        "Compare as an adapter for the existing Fabrication Router rather than creating a second 3D router or authority. If no incremental reliability/quality over current controller, park with measured reason."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare pinned v0.2.0 on a free isolated host with the existing vf_3d.py + blender-ai-mcp controller using the SAME synthetic 3d-asset-dcc-slice-artifact fixture: persistent scene edits, observe/show image-feedback correction, checkpoint/restore and crash recovery, .blend and STL exports, independent manifold/dimension/DfAM gates, time/memory, and no duplicate effects. Record evidence and A/B decision before any adapter or rollout.",
+        "rationale": "Addon-free headless execution and durable CLI/MCP sessions with visual feedback and checkpoints may reduce manual Blender steps or complement existing image and geometry QA; benefits must be measured against vf_3d.py/blender-ai-mcp rather than presumed from README or CI.",
+        "decision_evidence_refs": [
+          "https://github.com/yazzang-homelab/blender-agent-sdk/blob/706c86a45706bb6743fc6e63800d9860c359f725/README.md",
+          "https://github.com/yazzang-homelab/blender-agent-sdk/blob/706c86a45706bb6743fc6e63800d9860c359f725/src/blender_agent/mcp_server.py",
+          "https://github.com/yazzang-homelab/blender-agent-sdk/blob/706c86a45706bb6743fc6e63800d9860c359f725/.github/workflows/ci.yml",
+          "https://github.com/nocturney/velvetos-core/blob/main/packages/vfprod/BLENDER-MCP.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "ai3d-blender-agent-execution",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 Phase 2 candidate triage -> P1 AI3D/Blender same-fixture comparison, subordinate to P0 #612/#604 capacity and existing Fabrication Router",
+        "status": "WAITING_GATE",
+        "next_gate": "Compare pinned v0.2.0 on a free isolated host with the existing vf_3d.py + blender-ai-mcp controller using the SAME synthetic 3d-asset-dcc-slice-artifact fixture: persistent scene edits, observe/show image-feedback correction, checkpoint/restore and crash recovery, .blend and STL exports, independent manifold/dimension/DfAM gates, time/memory, and no duplicate effects. Record evidence and A/B decision before any adapter or rollout.",
+        "unlock_condition": "Confirm no occupied host/process/GUI or P0 resource contention, review source pin, GPL and privilege boundaries, obtain scoped isolated LAB host lease and synthetic fixture; use Claude Code subscription only, no Codex quota or paid API, and preserve geometry authority/rollback.",
+        "evidence_refs": [
+          "https://github.com/yazzang-homelab/blender-agent-sdk/tree/706c86a45706bb6743fc6e63800d9860c359f725",
+          "https://github.com/nocturney/velvetos-core/issues/595",
+          "https://github.com/nocturney/velvetos-core/blob/main/packages/vfprod/BLENDER-MCP.md"
         ]
       }
     }
