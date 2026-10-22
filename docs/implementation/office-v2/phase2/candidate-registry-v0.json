@@ -1,13 +1,13 @@
 {
   "schema": "velvetos.office-v2.phase2-candidate-registry.v0",
   "status": "CLOSED_IMPORT",
-  "updated_at": "2026-10-21T10:09:08.841Z",
+  "updated_at": "2026-10-22T09:58:00Z",
   "source_inventory_ref": "D:/Velvet/State/OfficeV2/ecosystem-inventory.json",
   "source_inventory_schema": "velvetos.office-v2.master-ecosystem-inventory.v0",
   "source_item_count": 68,
   "imported_source_item_count": 68,
   "derived_incumbent_count": 4,
-  "candidate_count": 248,
+  "candidate_count": 250,
   "entry_schema_ref": "docs/implementation/office-v2/phase2/candidate-registry.schema.json",
   "lifecycle_ref": "docs/implementation/office-v2/phase2/candidate-lifecycle-v0.json",
   "rules": [
@@ -18,7 +18,8 @@
     "COMPETITOR_NEUTRAL_ADMISSION_V1: preserve every new credible alternative with comparative evidence and queue when shortlists are full, without shifting the closed 68-source import.",
     "Historical competitor-neutral backfill on 2026-10-08 reopens evidence-free deferrals and preserves established candidate IDs/source_item_id lineage; no LAB or production promotion.",
     "2026-10-10 agent-composition intake: eight namespaced agents researched and queued; Letta historical memory candidate queued; ambiguous OpenDots lineage preserved; no rights or installs.",
-    "2026-10-18 source review upgrades the existing AirLLM and Odysseus auto-placeholders in place. Same candidate ids; research only; no install, deploy, or admission. Odysseus is queued on agent-runtime and memory-context. AirLLM stays off the P0 shortlist and keeps an evaluation_route on the existing local-model-inference lane (folded from local-llm-inference)."
+    "2026-10-18 source review upgrades the existing AirLLM and Odysseus auto-placeholders in place. Same candidate ids; research only; no install, deploy, or admission. Odysseus is queued on agent-runtime and memory-context. AirLLM stays off the P0 shortlist and keeps an evaluation_route on the existing local-model-inference lane (folded from local-llm-inference).",
+    "2026-10-22 Adobe Skills isolated MacMiniOffice2 local-only intake: two routed entrypoints (Web site-scan and Stardust master) are comparison candidates; only synthetic Web smoke verified; no broad activation or governance redesign."
   ],
   "items": [
     {
@@ -12471,6 +12472,147 @@
           "https://github.com/microsoft/quicksand/tree/5db6adaf04ed61a003d7906a898f448ef89e4f3c",
           "https://github.com/nocturney/velvetos-core/issues/595",
           "https://github.com/nocturney/velvetos-core/issues/612"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-adobe-skills-web-site-scan",
+      "source_item_id": null,
+      "name": "adobe/skills:site-scan",
+      "category": "EXTERNAL_SKILL",
+      "provenance_class": "OWNER_LINK_INTAKE_2026_10_22",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Adobe Web 1.0.0 installed with local-only scope on MacMiniOffice2; synthetic sitemap and HTTP scans passed. Integration with VelvetOS routing and real site acceptance not yet benchmarked.",
+      "runtime_verification": "PASS",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "skills",
+        "web",
+        "browser-crawl-extraction",
+        "site-scan",
+        "sitemap",
+        "page-discovery"
+      ],
+      "platform_constraints": [
+        "Node >=22; synthetic local site-scan needs no browser. Other Web skills need playwright-cli and isolated Chrome/Playwright.",
+        "Installed only in MacMiniOffice2 isolated Claude project; other hosts and fleet availability NOT_VERIFIED."
+      ],
+      "shortlist_lanes": [
+        "skill-capability-comparison",
+        "browser-crawl-extraction"
+      ],
+      "evidence_refs": [
+        "https://github.com/adobe/skills",
+        "https://github.com/adobe/skills/blob/main/plugins/web/skills/site-scan/SKILL.md",
+        "docs/implementation/office-v2/phase2/adobe-skills-routing-architecture-lab-2026-10-22.md"
+      ],
+      "notes": [
+        "DESCRIPTION: Enumerate website URLs by sitemap or local HTTP link traversal with language detection, filtered crawl and source errors; useful for public website inventory, content research, migration preflight and controlled test pages.",
+        "LICENSE: Apache-2.0",
+        "VERSION: 1.0.0",
+        "UPSTREAM_HEAD_OBSERVED: a731f0af85460c6d7113fc5ca771e23c91ea4e8c",
+        "LOCAL_EVIDENCE: MacMiniOffice2 AdobeSkillsLab; synthetic sitemaps+http PASS (2/2 URLs per mode, no errors) and rendered page tree PASS with headless Chrome.",
+        "Parent Adobe Web plugin contains 11 skills. This record is for verified site-scan entrypoint only; other skills require separate acceptance.",
+        "No public website mutation, authenticated browser, side-effect authority, third-party service spend or production deployment."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare source-verified Adobe Web site-scan against existing browser-crawl-extraction choices on matching Golden Fixtures with host and cost evidence.",
+        "rationale": "One synthetic skill check demonstrates runtime feasibility, not a comparative win or authorization to bypass the source-routing and browser policy.",
+        "decision_evidence_refs": [
+          "https://github.com/adobe/skills/blob/main/plugins/web/skills/site-scan/SKILL.md",
+          "docs/implementation/office-v2/phase2/adobe-skills-routing-architecture-lab-2026-10-22.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "skill-capability-comparison",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 isolated source and browser scan comparison",
+        "status": "WAITING_GATE",
+        "next_gate": "Same-fixture baseline/adobe head-to-head and negative safety checks",
+        "unlock_condition": "Admission review, comparable Golden Fixture scoring, isolated browser profile, validated cost and rollback",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/adobe-skills-routing-architecture-lab-2026-10-22.md",
+          "https://github.com/adobe/skills"
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate-adobe-skills-stardust",
+      "source_item_id": null,
+      "name": "adobe/skills:stardust",
+      "category": "EXTERNAL_SKILL",
+      "provenance_class": "OWNER_LINK_INTAKE_2026_10_22",
+      "lifecycle_state": "RESEARCHED",
+      "decision_verdict": "BENCHMARK_REQUIRED",
+      "verdict_reason": "Stardust 0.34.1 installed only in MacMiniOffice2 Claude lab with Impeccable 4.7.0 dependency resolved; no full redesign, site content migration, production deployment or competitive benchmark run.",
+      "runtime_verification": "WARN",
+      "authority_role": "NONE",
+      "capability_tags": [
+        "skills",
+        "web-ui",
+        "site-redesign",
+        "accessibility",
+        "stardust",
+        "impeccable",
+        "visual-review"
+      ],
+      "platform_constraints": [
+        "Node >=22, Playwright + Chromium, playwright-cli and Impeccable dependency; installed only within MacMiniOffice2 lab.",
+        "Stardust's AEM deployment branch must not be enabled absent separate provider/authority/cost checks; deploy output not tested.",
+        "Impeccable plugin 4.7.0 in pilot does not replace the Core's existing pinned Impeccable wrapper."
+      ],
+      "shortlist_lanes": [
+        "skill-capability-comparison"
+      ],
+      "evidence_refs": [
+        "https://github.com/adobe/skills",
+        "https://github.com/adobe/skills/blob/main/plugins/stardust/skills/stardust/SKILL.md",
+        "docs/implementation/office-v2/phase2/adobe-skills-routing-architecture-lab-2026-10-22.md"
+      ],
+      "notes": [
+        "DESCRIPTION: Audit or redesign existing websites through extract, design direction, prototype, visual diff and migration outputs, using Impeccable for design-quality iterations. Evaluate against current VelvetOS UI and web tools only on a source-approved task.",
+        "LICENSE: Apache-2.0",
+        "VERSION: 0.34.1",
+        "UPSTREAM_HEAD_OBSERVED: a731f0af85460c6d7113fc5ca771e23c91ea4e8c",
+        "LOCAL_EVIDENCE: MacMiniOffice2; plugin inventory PASS, Impeccable lookup script found required installed skill; no actual Stardust task run.",
+        "Parent Stardust plugin has 16 skills. This record maps to master route, not to full capability validation.",
+        "Requires owner-specified real target or synthetic website and independent browser QA before promotion."
+      ],
+      "original_office_v2_verdict": null,
+      "comparison_review": {
+        "policy": "COMPETITOR_NEUTRAL_ADMISSION_V1",
+        "eligibility": "OPEN_FOR_COMPARISON",
+        "variants": [
+          "component_replacement",
+          "hybrid"
+        ],
+        "evidence_status": "RESEARCH_ONLY",
+        "next_action": "Compare a synthetic website audit/prototype with the existing Impeccable-based VelvetOS design route; measure latency, context and exact screenshot quality.",
+        "rationale": "Plugin installation and dependency resolution alone are not evidence of a redesign advantage or a reason to replace the existing scoped governance.",
+        "decision_evidence_refs": [
+          "https://github.com/adobe/skills/blob/main/plugins/stardust/skills/stardust/SKILL.md",
+          "docs/implementation/office-v2/phase2/adobe-skills-routing-architecture-lab-2026-10-22.md"
+        ]
+      },
+      "evaluation_route": {
+        "workstream": "skill-capability-comparison",
+        "owner_ref": "https://github.com/nocturney/velvetos-core/issues/595",
+        "phase": "Office v2 design skill comparison and isolated Stardust lab",
+        "status": "WAITING_GATE",
+        "next_gate": "Render same site fixture incumbent-only vs Stardust with independent QA",
+        "unlock_condition": "Scoped source/rights acceptance, browser QA, comparable scored outputs, reproducible version pin, rollback",
+        "evidence_refs": [
+          "docs/implementation/office-v2/phase2/adobe-skills-routing-architecture-lab-2026-10-22.md",
+          "https://github.com/adobe/skills"
         ]
       }
     }
