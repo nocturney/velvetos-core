@@ -292,9 +292,11 @@ def parse_git_diff(text):
     """Strictly parse a pure in-place git diff; every line must be accounted for."""
     if not text.strip():
         raise Refused("EMPTY_DIFF")
-    if "\x00" in text or "\r" in text or not text.endswith("\n"):
+    if "\x00" in text or "\r" in text:
         raise Refused("PATCH_ENCODING_OR_TERMINATION_INVALID")
-    lines = text[:-1].split("\n")
+    # The model may omit the terminal transport LF. Hunk counts and git
+    # apply still validate the complete diff, with no source-EOL changes.
+    lines = (text[:-1] if text.endswith("\n") else text).split("\n")
     files, i = [], 0
     while i < len(lines):
         header = DIFF_HEADER.fullmatch(lines[i])
@@ -398,15 +400,18 @@ def stage(task, receipt_path, proposal_sha256, allow_paths):
     patch_bytes = receipt_path.with_suffix(".proposal.txt").read_bytes()
     if hashlib.sha256(patch_bytes).hexdigest() != proposal_sha256:
         raise Refused("PROPOSAL_SHA256_MISMATCH")
+    # Preserve the SHA-bound model bytes; normalize only the bytes submitted
+    # to git apply. The original proposal and receipt are never rewritten.
+    apply_bytes = patch_bytes if patch_bytes.endswith(b"\n") else patch_bytes + b"\n"
     try:
-        files = parse_git_diff(patch_bytes.decode("utf-8"))
+        files = parse_git_diff(apply_bytes.decode("utf-8"))
     except UnicodeDecodeError as exc:
         raise Refused("PROPOSAL_NOT_UTF8") from exc
     if sorted(f["path"] for f in files) != allowed:
         raise Refused("ALLOWLIST_NOT_EXACT_PATCH_SCOPE")
     for item in files:
         item["before_blob"] = tracked_base_blob(repo, item)
-    if not git_apply(repo, patch_bytes, check=True):
+    if not git_apply(repo, apply_bytes, check=True):
         raise Refused("GIT_APPLY_CHECK_FAILED")
     if git(repo, "status", "--porcelain=v1", "--untracked-files=all"):
         raise Refused("WORKTREE_CHANGED")
@@ -415,7 +420,7 @@ def stage(task, receipt_path, proposal_sha256, allow_paths):
         "state": "STAGING_NO_BLIND_RETRY"}))
     # From here the effect outcome may be uncertain: every failure leaves the
     # journal in place and never retries, reverts or commits.
-    if not git_apply(repo, patch_bytes, check=False):
+    if not git_apply(repo, apply_bytes, check=False):
         raise Refused("GIT_APPLY_FAILED_OUTCOME_UNKNOWN_JOURNAL_PRESERVED")
     if (git(repo, "rev-parse", "HEAD") != task["base_sha"] or
             git(repo, "branch", "--show-current") != task["branch"]):
@@ -451,6 +456,9 @@ def stage(task, receipt_path, proposal_sha256, allow_paths):
                                          "after_sha256")} for item in files],
         "bounded_proof": {
             "git_apply_check_passed": True, "status_exactly_allowlist_modified": True,
+            "proposal_bytes_preserved": True,
+            "git_apply_sha256": hashlib.sha256(apply_bytes).hexdigest(),
+            "terminal_lf_added_for_git_apply": apply_bytes != patch_bytes,
             "diff_name_only_equals_allowlist": True, "index_unchanged": True,
             "no_mode_create_delete_rename": True,
             "after_blobs_independently_computed": True,

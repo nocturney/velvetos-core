@@ -192,6 +192,38 @@ class SubscriptionArtifactTests(unittest.TestCase):
         with self.assertRaisesRegex(target.Refused, "WORKTREE_NOT_CLEAN"):
             target.verify(self.task, receipt)
 
+    def test_model_diff_without_terminal_lf_stages_with_original_sha(self):
+        # Role B observed this exact failure mode with a real Claude Code
+        # proposal: a valid, complete unified diff without its final LF.
+        diff = self.real_diff({"beta.txt": b"beta\nstaged\n"})
+        self.assertTrue(diff.endswith("\n"))
+        raw = diff[:-1]
+        receipt, sha = self.draft(raw, "model-no-terminal-lf")
+        original_path = receipt.with_suffix(".proposal.txt")
+        self.assertEqual(original_path.read_bytes(), raw.encode("utf-8"))
+        self.assertEqual(target.file_digest(original_path), sha)
+        self.assertEqual([f["path"] for f in target.parse_git_diff(raw)],
+                         ["beta.txt"])
+        # Missing a complete hunk line or smuggling CRLF still fails closed.
+        with self.assertRaisesRegex(target.Refused, "PATCH_HUNK_TRUNCATED"):
+            target.parse_git_diff(raw.rsplit("\n+", 1)[0])
+        with self.assertRaisesRegex(target.Refused,
+                                    "PATCH_ENCODING_OR_TERMINATION_INVALID"):
+            target.parse_git_diff(raw.replace("\n", "\r\n"))
+        staged = target.stage(self.task, receipt, sha, ["beta.txt"])
+        self.assertEqual(staged["state"], "SOURCE_STAGED_FOR_QA")
+        self.assertEqual((self.repo / "beta.txt").read_bytes(),
+                         b"beta\nstaged\n")
+        self.assertEqual(original_path.read_bytes(), raw.encode("utf-8"))
+        data = json.loads(receipt.with_suffix(".staged.json").read_text(encoding="utf-8"))
+        self.assertEqual(data["proposal_sha256"], sha)
+        self.assertTrue(data["bounded_proof"]["proposal_bytes_preserved"])
+        self.assertTrue(data["bounded_proof"]["terminal_lf_added_for_git_apply"])
+        self.assertEqual(data["bounded_proof"]["git_apply_sha256"],
+                         hashlib.sha256(diff.encode("utf-8")).hexdigest())
+        self.assertFalse(data["generated_code_executed"])
+        self.assertFalse(data["committed"])
+
     def test_api_key_env_never_invokes_model(self):
         with patch.dict(os.environ, {"ANTHROPIC_API_KEY": "present"}):
             with self.assertRaisesRegex(target.Refused, "METERED_API"):
