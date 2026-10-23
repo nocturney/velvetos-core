@@ -4,7 +4,7 @@
   "trigger": "GitHub Actions workflow 'VF Media Auto Intake' failed on main",
   "action": "Open a fix PR from the failing run log; if the root cause can recur, add or tighten a sensor/contract; triage this candidate (accept/reject/prune) instead of letting it accumulate.",
   "scope": "project",
-  "confidence": 0.6,
+  "confidence": 0.7,
   "status": "accepted",
   "evidence": [
     "gh-run:37155113603:failure:2026-10-03T21:26:32Z:https://github.com/nocturney/velvetos-core/actions/runs/37155113603",
@@ -12,10 +12,11 @@
     "office-loop-1830 triage 2026-10-05: No VF Media Auto Intake failure on main since 4.10; scheduled intake persisted on main today (commits a10c58b, 8aa691f). Keep accepted; no promote.",
     "gh-run:39165347739:failure:2026-10-18T20:53:12Z:https://github.com/nocturney/velvetos-core/actions/runs/39165347739",
     "gh-run:39176164763:failure:2026-10-18T23:21:22Z:https://github.com/nocturney/velvetos-core/actions/runs/39176164763",
-    "gh-run:39201705677:failure:2026-10-19T04:53:06Z:https://github.com/nocturney/velvetos-core/actions/runs/39201705677"
+    "gh-run:39201705677:failure:2026-10-19T04:53:06Z:https://github.com/nocturney/velvetos-core/actions/runs/39201705677",
+    "gh-run:39775417190:failure:2026-10-22T12:04:30Z:https://github.com/nocturney/velvetos-core/actions/runs/39775417190"
   ],
   "first_seen": "2026-10-03T21:26:32Z",
-  "last_seen": "2026-10-19T04:53:06Z",
+  "last_seen": "2026-10-22T12:04:30Z",
   "owner_correction": false,
   "promote_to": null,
   "supersedes": null,
