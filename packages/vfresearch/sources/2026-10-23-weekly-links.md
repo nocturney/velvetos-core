@@ -9,7 +9,7 @@ Cached public pages are not guaranteed fresh upstream. Odoo and vBulletin timed 
 live access and were reviewed using the last documented official-source notes ONLY.
 No claims of verified live body for those records. No integration or install authorized.
 
-Key observations: trailhq/Graft URL redirects to trailhq/Trail-Code;
+Key observations: trailhq/Graft URL redirects to trailhq/Trail-Code (observed only, original catalog URL preserved);
 diagram-maker can be reviewed at skills.sh/openclaw/openclaw/diagram-maker.
 
 Coverage: 93 source records; 14 explicitly limited/archive; 60 README excerpts.
