@@ -250,6 +250,95 @@ class SubscriptionArtifactTests(unittest.TestCase):
             target.verify_stage_portable(self.task_path, receipt,
                                          before_copy, foreign)
 
+    def portable_import_fixture(self):
+        """Prepare an already staged source receipt and a fresh topic checkout."""
+        self.task["source_spans"] = [
+            {"path": "beta.txt", "start_line": 1, "end_line": 1},
+        ]
+        self.task["auto_stage_paths"] = ["beta.txt"]
+        self.task_path.write_text(json.dumps(self.task), encoding="utf-8")
+        patch_text = self.real_diff({"beta.txt": b"beta\nportable-import\n"})
+        receipt, proposal_sha = self.draft(patch_text, "portable-import-origin")
+        target.stage(self.task, receipt, proposal_sha, ["beta.txt"])
+        foreign = Path(self.temp.name) / "foreign-topic"
+        subprocess.run(["git", "clone", "-q", "--no-hardlinks", str(self.repo),
+                        str(foreign)], check=True, capture_output=True)
+        subprocess.run(["git", "-C", str(foreign), "checkout", "-q", "-b",
+                        "role-a/foreign-import"], check=True, capture_output=True)
+        evidence_dir = Path(self.temp.name) / "import-evidence"
+        evidence_dir.mkdir()
+        return receipt, foreign, evidence_dir / "import.json"
+
+    def test_portable_import_real_postimages_without_model_or_git_authority(self):
+        receipt, foreign, result_path = self.portable_import_fixture()
+        origin_before = self.repo.joinpath("beta.txt").read_bytes()
+        source_receipt_hash = target.file_digest(receipt)
+        with patch.object(target, "claude_cli",
+                          side_effect=AssertionError("MODEL_MUST_NOT_RUN")):
+            result = target.import_stage_portable(
+                self.task_path, receipt, self.checkpoint, foreign, result_path)
+        self.assertEqual(result["state"], "PORTABLE_SOURCE_STAGED_FOR_QA")
+        self.assertFalse(result["shared_lease_admitted"])
+        self.assertFalse(result["model_reinvoked"])
+        self.assertEqual((foreign / "beta.txt").read_bytes(),
+                         b"beta\nportable-import\n")
+        self.assertEqual((self.repo / "beta.txt").read_bytes(), origin_before)
+        self.assertEqual(source_receipt_hash, target.file_digest(receipt))
+        self.assertEqual(target.git(foreign, "rev-parse", "HEAD"), self.base_sha)
+        self.assertEqual(target.git(foreign, "diff", "--cached", "--name-only"), "")
+        self.assertEqual(target.git(foreign, "diff", "--name-only"), "beta.txt")
+        record = target.read_json(result_path)
+        value = record.pop("import_receipt_sha256")
+        self.assertEqual(value, target.digest(record))
+        self.assertFalse(record["production_admitted"])
+        self.assertFalse(record["distributed_fencing_proven"])
+        self.assertFalse(result_path.with_suffix(".importing").exists())
+        with self.assertRaisesRegex(target.Refused, "EXISTING_RECEIPT_NO_RETRY"):
+            target.import_stage_portable(self.task_path, receipt,
+                                         self.checkpoint, foreign, result_path)
+
+    def test_portable_import_crash_reconciles_without_reapplying(self):
+        receipt, foreign, result_path = self.portable_import_fixture()
+        with patch.object(target, "validate_stage_postconditions",
+                          side_effect=target.Refused("INJECTED_AFTER_APPLY")):
+            with self.assertRaisesRegex(target.Refused, "INJECTED_AFTER_APPLY"):
+                target.import_stage_portable(self.task_path, receipt,
+                                             self.checkpoint, foreign, result_path)
+        self.assertEqual((foreign / "beta.txt").read_bytes(),
+                         b"beta\nportable-import\n")
+        self.assertTrue(result_path.with_suffix(".importing").exists())
+        with patch.object(target, "git_apply",
+                          side_effect=AssertionError("NO_SECOND_APPLY")):
+            result = target.import_stage_portable(
+                self.task_path, receipt, self.checkpoint,
+                foreign, result_path, recover=True)
+        self.assertTrue(result["reconciled_after_crash"])
+        self.assertFalse(result["model_reinvoked"])
+        self.assertFalse(result_path.with_suffix(".importing").exists())
+        self.assertFalse(target.read_json(result_path)["external_effects_authorized"])
+
+    def test_portable_import_resealed_corruption_and_foreign_branch_denied(self):
+        receipt, foreign, result_path = self.portable_import_fixture()
+        stage_path = receipt.with_suffix(".staged.json")
+        original = stage_path.read_bytes()
+        record = target.read_json(stage_path)
+        record["files"][0]["after_sha256"] = "0" * 64
+        record.pop("stage_receipt_sha256")
+        record["stage_receipt_sha256"] = target.digest(record)
+        stage_path.write_text(json.dumps(record), encoding="utf-8")
+        with self.assertRaisesRegex(target.Refused, "PORTABLE_POSTIMAGE_MISMATCH"):
+            target.import_stage_portable(self.task_path, receipt,
+                                         self.checkpoint, foreign, result_path)
+        self.assertEqual(target.git(foreign, "status", "--porcelain=v1"), "")
+        self.assertFalse(result_path.with_suffix(".importing").exists())
+        stage_path.write_bytes(original)
+        subprocess.run(["git", "-C", str(foreign), "checkout", "-q", "--detach"],
+                       check=True, capture_output=True)
+        with self.assertRaisesRegex(target.Refused, "PINNED_TOPIC_HEAD_REQUIRED"):
+            target.import_stage_portable(self.task_path, receipt,
+                                         self.checkpoint, foreign, result_path)
+        self.assertEqual(target.git(foreign, "status", "--porcelain=v1"), "")
+
     def test_model_diff_without_terminal_lf_stages_with_original_sha(self):
         # Role B observed this exact failure mode with a real Claude Code
         # proposal: a valid, complete unified diff without its final LF.

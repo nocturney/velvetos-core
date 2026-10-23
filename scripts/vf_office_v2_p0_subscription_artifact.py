@@ -940,6 +940,137 @@ def verify_stage_portable(task_path, receipt_path, checkpoint_before_path, repo_
     }
 
 
+
+PORTABLE_STAGE_RECEIPT = "velvetos.office-v2.p0-portable-source-import-receipt.v1"
+
+
+def import_stage_portable(task_path, receipt_path, checkpoint_before_path,
+                          repo_path, import_receipt_path, recover=False):
+    """Rehydrate one real, verified Claude source patch in a SECOND clean checkout.
+
+    This does not transfer authority or a lease. The origin receipt is self-
+    hashed evidence, not an identity signature. The only effect is an uncommitted
+    modification of preauthorized tracked text files in an isolated topic branch.
+    A crash leaves an external journal; recovery validates postimages but never
+    applies the patch or invokes Claude again.
+    """
+    task = read_json(task_path)
+    if not isinstance(task.get("repo_path"), str):
+        raise Refused("PORTABLE_IMPORT_TASK_REPO_INVALID")
+    source = Path(receipt_path).resolve()
+    target = Path(repo_path).resolve()
+    raw_destination = Path(import_receipt_path)
+    if raw_destination.is_symlink():
+        raise Refused("PORTABLE_IMPORT_DESTINATION_SYMLINK")
+    dest = raw_destination.resolve()
+    if (not target.is_dir() or not (target / ".git").exists() or
+            Path(repo_path).is_symlink() or target == Path(task["repo_path"]).resolve()):
+        raise Refused("PORTABLE_IMPORT_INDEPENDENT_CHECKOUT_REQUIRED")
+    if (not dest.parent.is_dir() or dest.is_relative_to(target) or
+            dest.parent == source.parent or
+            dest in {Path(task_path).resolve(), source,
+                     Path(checkpoint_before_path).resolve()}):
+        raise Refused("PORTABLE_IMPORT_EXTERNAL_DESTINATION_REQUIRED")
+    if dest.is_symlink():
+        raise Refused("PORTABLE_IMPORT_DESTINATION_SYMLINK")
+    journal = dest.with_suffix(".importing")
+    if dest.exists():
+        raise Refused("PORTABLE_IMPORT_EXISTING_RECEIPT_NO_RETRY")
+    if (git(target, "rev-parse", "HEAD") != task["base_sha"] or
+            git(target, "branch", "--show-current") in ("", "HEAD", "main", "master")):
+        raise Refused("PORTABLE_IMPORT_PINNED_TOPIC_HEAD_REQUIRED")
+    branch = git(target, "branch", "--show-current")
+    # Independently re-execute all source/postimage/continuity checks before
+    # allowing any target mutation; no trust in a re-sealed origin JSON hash.
+    verified = verify_stage_portable(
+        task_path, source, checkpoint_before_path, target)
+    allowed = auto_stage_allowlist(task, required=True)
+    original = read_json(source.with_suffix(".staged.json"))
+    if (original.get("changed_paths") != allowed or
+            original.get("operator_supplied_allowlist") != allowed):
+        raise Refused("PORTABLE_IMPORT_TASK_SCOPE_MISMATCH")
+    original_files = {row["path"]: row for row in original["files"]}
+    patch_bytes = source.with_suffix(".proposal.txt").read_bytes()
+    apply_bytes = patch_bytes if patch_bytes.endswith(b"\n") else patch_bytes + b"\n"
+    try:
+        files = parse_git_diff(apply_bytes.decode("utf-8"))
+    except UnicodeDecodeError as exc:
+        raise Refused("PORTABLE_IMPORT_PATCH_NOT_UTF8") from exc
+    if sorted(row["path"] for row in files) != allowed:
+        raise Refused("PORTABLE_IMPORT_PATCH_SCOPE_MISMATCH")
+    for row in files:
+        row["before_blob"] = tracked_base_blob(target, row)
+    if any(row["before_blob"] != original_files[row["path"]]["before_blob"]
+           for row in files):
+        raise Refused("PORTABLE_IMPORT_BASE_BLOB_MISMATCH")
+    expected = expected_post_blobs(target, apply_bytes, allowed)
+    if any(expected[row["path"]] != original_files[row["path"]]["after_blob"]
+           for row in files):
+        raise Refused("PORTABLE_IMPORT_EXPECTED_POSTIMAGE_MISMATCH")
+    intent = {
+        "task_sha256": digest(task),
+        "origin_stage_receipt_sha256": verified["stage_receipt_sha256"],
+        "origin_draft_sha256": file_digest(source),
+        "proposal_sha256": verified["proposal_sha256"],
+        "base_sha": task["base_sha"], "target_checkout": str(target),
+        "target_branch": branch, "changed_paths": allowed,
+        "state": "PORTABLE_IMPORT_UNKNOWN_NO_REPLAY",
+    }
+    if recover:
+        if (not journal.is_file() or journal.is_symlink() or
+                journal.read_bytes() != canonical(intent)):
+            raise Refused("PORTABLE_IMPORT_RECOVERY_JOURNAL_MISMATCH")
+    else:
+        if journal.exists() or journal.is_symlink():
+            raise Refused("PORTABLE_IMPORT_EXISTING_ATTEMPT_NO_RETRY")
+        if git(target, "status", "--porcelain=v1", "--untracked-files=all"):
+            raise Refused("PORTABLE_IMPORT_DIRTY_CHECKOUT")
+        if not git_apply(target, apply_bytes, check=True):
+            raise Refused("PORTABLE_IMPORT_GIT_APPLY_CHECK_FAILED")
+        exclusive_write(journal, canonical(intent))
+        # No automatic retry or rollback after this point; UNKNOWN is durable.
+        if not git_apply(target, apply_bytes, check=False):
+            raise Refused("PORTABLE_IMPORT_EFFECT_UNKNOWN_JOURNAL_PRESERVED")
+    local = {**task, "repo_path": str(target), "branch": branch}
+    validate_stage_postconditions(local, target, files, allowed, apply_bytes)
+    if any(row["after_blob"] != original_files[row["path"]]["after_blob"] or
+           row["after_sha256"] != original_files[row["path"]]["after_sha256"]
+           for row in files):
+        raise Refused("PORTABLE_IMPORT_POSTIMAGE_DRIFT_JOURNAL_PRESERVED")
+    record = {
+        "schema": PORTABLE_STAGE_RECEIPT, "state": "PORTABLE_SOURCE_STAGED_FOR_QA",
+        "issue_url": ISSUE, "task_id": task["task_id"],
+        "task_sha256": digest(task), "base_sha": task["base_sha"],
+        "original_stage_receipt_sha256": verified["stage_receipt_sha256"],
+        "original_draft_file_sha256": file_digest(source),
+        "proposal_sha256": verified["proposal_sha256"],
+        "origin_worker_host_claim_not_attested": original["worker_host"],
+        "import_host": platform.node(), "target_checkout": str(target),
+        "target_branch": branch, "changed_paths": allowed,
+        "files": [{k: row[k] for k in ("path", "before_blob",
+                                        "after_blob", "after_sha256")}
+                  for row in files],
+        "reconciled_after_crash": recover,
+        "model_reinvoked": False, "source_modified": True,
+        "source_only_uncommitted": True, "generated_code_executed": False,
+        "committed": False, "pushed": False, "merged": False,
+        "external_effects_authorized": False,
+        "shared_lease_admitted": False, "distributed_fencing_proven": False,
+        "production_admitted": False, "independent_quality_approved": False,
+    }
+    exclusive_write(dest, canonical({**record, "import_receipt_sha256": digest(record)}))
+    if journal.is_symlink() or journal.read_bytes() != canonical(intent):
+        raise Refused("PORTABLE_IMPORT_JOURNAL_CHANGED_AFTER_RECEIPT")
+    journal.unlink()
+    return {
+        "state": record["state"], "task_id": task["task_id"],
+        "changed_paths": allowed, "import_receipt": str(dest),
+        "import_receipt_sha256": digest(record),
+        "model_reinvoked": False, "shared_lease_admitted": False,
+        "production_admitted": False, "reconciled_after_crash": recover,
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -962,6 +1093,13 @@ def main():
     q.add_argument("--receipt", required=True)
     q.add_argument("--checkpoint-before", required=True)
     q.add_argument("--repo", required=True)
+    for command in ("import-stage-portable", "recover-import-stage-portable"):
+        q = sub.add_parser(command)
+        q.add_argument("--task", required=True)
+        q.add_argument("--receipt", required=True)
+        q.add_argument("--checkpoint-before", required=True)
+        q.add_argument("--repo", required=True)
+        q.add_argument("--import-receipt", required=True)
     args = parser.parse_args()
     try:
         task = read_json(args.task)
@@ -977,6 +1115,11 @@ def main():
             result = stage(task, args.receipt, args.proposal_sha256, args.allow_path)
         elif args.command == "recover-stage":
             result = recover_stage(task, args.receipt, args.proposal_sha256, args.allow_path)
+        elif args.command in ("import-stage-portable", "recover-import-stage-portable"):
+            result = import_stage_portable(
+                args.task, args.receipt, args.checkpoint_before,
+                args.repo, args.import_receipt,
+                recover=args.command == "recover-import-stage-portable")
         else:
             result = verify_stage_portable(args.task, args.receipt,
                                            args.checkpoint_before, args.repo)
