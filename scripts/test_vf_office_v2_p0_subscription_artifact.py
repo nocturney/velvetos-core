@@ -282,6 +282,90 @@ class SubscriptionArtifactTests(unittest.TestCase):
         self.assertFalse(data["generated_code_executed"])
         self.assertFalse(data["committed"])
 
+    def test_run_stage_real_patch_single_model_call_and_no_external_effect(self):
+        # #612 P0 bridge: a task-owned allowlist drives one model invocation
+        # and one local source-stage attempt, without an operator-side second
+        # command, code execution, commit, push, merge or lease promotion.
+        self.task["source_spans"] = [
+            {"path": "beta.txt", "start_line": 1, "end_line": 1}
+        ]
+        self.task["auto_stage_paths"] = ["beta.txt"]
+        self.task_path.write_text(json.dumps(self.task), encoding="utf-8")
+        self.model_body = self.real_diff({"beta.txt": b"beta\nauto-staged\n"})
+        with patch.object(target, "claude_cli", return_value=("fake-claude", "fake-version")) as auth:
+            with patch.object(target.subprocess, "run", side_effect=self.proxy_subprocess):
+                with patch.object(self, "fake_model", wraps=self.fake_model) as model:
+                    result = target.run_stage(self.task_path, self.receipt)
+        self.assertEqual(auth.call_count, 1)
+        self.assertEqual(model.call_count, 1)
+        self.assertEqual(result["state"], "SOURCE_STAGED_FOR_QA")
+        self.assertTrue(result["model_invoked_in_this_command"])
+        self.assertTrue(result["task_allowlist_bound"])
+        self.assertFalse(result["shared_lease_admitted"])
+        self.assertFalse(result["committed"])
+        self.assertFalse(result["pushed"])
+        self.assertFalse(result["generated_code_executed"])
+        self.assertEqual((self.repo / "beta.txt").read_bytes(), b"beta\nauto-staged\n")
+        self.assertEqual(target.git(self.repo, "rev-parse", "HEAD"), self.base_sha)
+        self.assertEqual(target.git(self.repo, "diff", "--cached", "--name-only"), "")
+        self.assertFalse(self.receipt.with_suffix(".running").exists())
+        self.assertFalse(self.receipt.with_suffix(".staging").exists())
+        staged = target.read_json(self.receipt.with_suffix(".staged.json"))
+        self.assertEqual(staged["task_sha256"], target.digest(self.task))
+        self.assertEqual(staged["operator_supplied_allowlist"], ["beta.txt"])
+        self.assertIs(staged["production"], False)
+
+    def test_run_stage_missing_or_unsafe_scope_refused_before_model(self):
+        base = dict(self.task)
+        source = [{"path": "beta.txt", "start_line": 1, "end_line": 1}]
+        cases = [
+            ({}, "AUTO_STAGE_SCOPE_REQUIRED"),
+            ({"source_spans": source, "auto_stage_paths": []}, "AUTO_STAGE_PATH_COUNT"),
+            ({"source_spans": source, "auto_stage_paths": ["beta.txt", "beta.txt"]},
+             "AUTO_STAGE_PATH_DUPLICATE"),
+            ({"source_spans": source, "auto_stage_paths": ["../beta.txt"]},
+             "ALLOW_PATH_INVALID"),
+            ({"source_spans": source, "auto_stage_paths": ["notes/alpha.txt"]},
+             "AUTO_STAGE_PATH_NOT_CONTEXT_PINNED"),
+            ({"auto_stage_paths": ["beta.txt"]}, "AUTO_STAGE_CONTEXT_INVALID"),
+        ]
+        for n, (extra, reason) in enumerate(cases):
+            with self.subTest(index=n, reason=reason):
+                self.task_path.write_text(json.dumps(dict(base, **extra)), encoding="utf-8")
+                receipt = Path(self.temp.name) / ("blocked-%s.json" % n)
+                with patch.object(target, "claude_cli",
+                                  side_effect=AssertionError("MODEL_MUST_NOT_RUN")):
+                    with self.assertRaisesRegex(target.Refused, reason):
+                        target.run_stage(self.task_path, receipt)
+                self.assertFalse(receipt.exists())
+                self.assertFalse(receipt.with_suffix(".running").exists())
+        self.assertEqual(target.git(self.repo, "status", "--porcelain=v1"), "")
+
+    def test_run_stage_model_patch_outside_allowlist_durable_refusal(self):
+        self.task["source_spans"] = [
+            {"path": "beta.txt", "start_line": 1, "end_line": 1},
+            {"path": "notes/alpha.txt", "start_line": 1, "end_line": 3},
+        ]
+        self.task["auto_stage_paths"] = ["beta.txt"]
+        self.task_path.write_text(json.dumps(self.task), encoding="utf-8")
+        self.model_body = self.real_diff({
+            "notes/alpha.txt": b"alpha one\nalpha changed\nalpha three\n"
+        })
+        with patch.object(target, "claude_cli", return_value=("fake-claude", "fake-version")):
+            with patch.object(target.subprocess, "run", side_effect=self.proxy_subprocess):
+                with self.assertRaisesRegex(target.Refused, "ALLOWLIST_NOT_EXACT_PATCH_SCOPE"):
+                    target.run_stage(self.task_path, self.receipt)
+        self.assertTrue(self.receipt.is_file())  # Model use is not erased.
+        self.assertTrue(self.receipt.with_suffix(".proposal.txt").is_file())
+        self.assertFalse(self.receipt.with_suffix(".staging").exists())
+        self.assertFalse(self.receipt.with_suffix(".staged.json").exists())
+        self.assertEqual(target.verify(self.task, self.receipt)["state"], "MODEL_DRAFT_ONLY")
+        self.assertEqual(target.git(self.repo, "status", "--porcelain=v1"), "")
+        with patch.object(target, "claude_cli",
+                          side_effect=AssertionError("NO_BLIND_MODEL_RETRY")):
+            with self.assertRaisesRegex(target.Refused, "EXISTING_ATTEMPT_NO_RETRY"):
+                target.run_stage(self.task_path, self.receipt)
+
     def test_pinned_source_context_reaches_model_and_is_bound_to_receipt(self):
         self.task["source_spans"] = [
             {"path": "notes/alpha.txt", "start_line": 2, "end_line": 3}

@@ -16,6 +16,11 @@ The separate recover-stage command never replays the model or patch. It
 reconciles an interrupted .staging journal against the exact expected Git
 postimage and writes a stage receipt only for a complete local application;
 missing, partial or ambiguous effects stay fail-closed for operator review.
+
+`run-stage` is a one-shot, source-only bounded integration of `run` and
+`stage` for an explicitly preauthorized file allowlist in the task envelope.
+It never starts a second agent, retries an UNKNOWN outcome, commits, pushes,
+runs model-generated code or confers distributed authority.
 """
 from __future__ import annotations
 
@@ -43,7 +48,7 @@ TASK_FIELDS = frozenset({
     "schema", "issue_url", "task_id", "repo_path", "base_sha", "branch",
     "checkpoint_path", "prompt", "timeout_seconds",
 })
-TASK_OPTIONAL_FIELDS = frozenset({"source_spans"})
+TASK_OPTIONAL_FIELDS = frozenset({"source_spans", "auto_stage_paths"})
 FORBIDDEN_ENV = (
     "ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_BASE_URL",
     "CLAUDE_CODE_USE_BEDROCK", "CLAUDE_CODE_USE_VERTEX",
@@ -172,6 +177,32 @@ def pinned_source_context(task, repo):
     return result
 
 
+def auto_stage_allowlist(task, required=False):
+    """Bind unattended LOCAL staging authority to an explicit task allowlist.
+
+    This is never a shared lease, external effect approval, or PR authority.
+    Each writable file must also be in the pinned model source context.
+    """
+    if "auto_stage_paths" not in task:
+        if required:
+            raise Refused("AUTO_STAGE_SCOPE_REQUIRED")
+        return None
+    paths = task["auto_stage_paths"]
+    if type(paths) is not list or not 1 <= len(paths) <= MAX_SOURCE_SPANS:
+        raise Refused("AUTO_STAGE_PATH_COUNT")
+    allowed = sorted(allow_path(p) for p in paths)
+    if len(set(allowed)) != len(allowed):
+        raise Refused("AUTO_STAGE_PATH_DUPLICATE")
+    spans = task.get("source_spans")
+    if type(spans) is not list or not all(
+            type(s) is dict and isinstance(s.get("path"), str) for s in spans):
+        raise Refused("AUTO_STAGE_CONTEXT_INVALID")
+    pinned_paths = {s["path"] for s in spans}
+    if set(allowed) - pinned_paths:
+        raise Refused("AUTO_STAGE_PATH_NOT_CONTEXT_PINNED")
+    return allowed
+
+
 def validate_task(task, receipt_path, allow_dirty=False):
     if (not TASK_FIELDS.issubset(task) or
             set(task) - TASK_FIELDS - TASK_OPTIONAL_FIELDS or
@@ -227,6 +258,7 @@ def validate_task(task, receipt_path, allow_dirty=False):
             raise Refused("CONTINUITY_BASELINE_MISMATCH_" + field)
     if state.get("active_external_effects"):
         raise Refused("ACTIVE_EXTERNAL_EFFECTS_DENIED")
+    auto_stage_allowlist(task)  # Preauthorize only pinned tracked source paths.
     pinned_source_context(task, repo)  # Fail closed before any model/journal effect.
     return repo, checkpoint, state, out
 
@@ -289,7 +321,10 @@ def verify(task, receipt_path, allow_dirty=False):
 
 
 def run(task_path, receipt_path):
-    task = read_json(task_path)
+    return run_task(read_json(task_path), receipt_path)
+
+
+def run_task(task, receipt_path):
     repo, checkpoint, before, dest = validate_task(task, receipt_path)
     proposal = dest.with_suffix(".proposal.txt")
     after_path = dest.with_suffix(".checkpoint.json")
@@ -356,6 +391,24 @@ def run(task_path, receipt_path):
     result = verify(task, dest)
     journal.unlink()
     return result
+
+
+def run_stage(task_path, receipt_path):
+    """One bounded model call followed by one LOCAL source-only stage attempt.
+
+    Reuses the original sealed model receipt and stage journal. If the model
+    returns prose, an out-of-scope patch, or an uncertain effect, it stops
+    without a retry, source revert, code execution, commit, push or merge.
+    """
+    task = read_json(task_path)
+    allowed = auto_stage_allowlist(task, required=True)
+    validate_task(task, receipt_path)
+    run_task(task, receipt_path)
+    receipt = read_json(receipt_path)
+    result = stage(task, receipt_path, receipt["proposal_sha256"], allowed)
+    return {**result, "model_invoked_in_this_command": True,
+            "task_allowlist_bound": True, "source_only": True,
+            "shared_lease_admitted": False}
 
 
 def recover_run(task, receipt_path):
@@ -890,7 +943,7 @@ def verify_stage_portable(task_path, receipt_path, checkpoint_before_path, repo_
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
-    for command in ("run", "verify", "recover-run"):
+    for command in ("run", "run-stage", "verify", "recover-run"):
         p = sub.add_parser(command)
         p.add_argument("--task", required=True)
         p.add_argument("--receipt", required=True)
@@ -914,6 +967,8 @@ def main():
         task = read_json(args.task)
         if args.command == "run":
             result = run(args.task, args.receipt)
+        elif args.command == "run-stage":
+            result = run_stage(args.task, args.receipt)
         elif args.command == "verify":
             result = verify(task, args.receipt)
         elif args.command == "recover-run":
