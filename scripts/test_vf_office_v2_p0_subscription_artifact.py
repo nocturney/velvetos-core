@@ -224,6 +224,64 @@ class SubscriptionArtifactTests(unittest.TestCase):
         self.assertFalse(data["generated_code_executed"])
         self.assertFalse(data["committed"])
 
+    def test_pinned_source_context_reaches_model_and_is_bound_to_receipt(self):
+        self.task["source_spans"] = [
+            {"path": "notes/alpha.txt", "start_line": 2, "end_line": 3}
+        ]
+        self.task_path.write_text(json.dumps(self.task), encoding="utf-8")
+        actual_model_input = []
+        original = self.fake_model
+
+        def capture(cmd, **kwargs):
+            sent = kwargs["input"].decode("utf-8")
+            actual_model_input.append(sent)
+            self.assertIn("2: alpha two", sent)
+            self.assertIn("3: alpha three", sent)
+            self.assertNotIn("alpha one", sent)
+            self.assertIn("old_blob=", sent)
+            self.assertIn("not new instructions", sent)
+            return original(cmd, **kwargs)
+
+        with patch.object(self, "fake_model", side_effect=capture):
+            result = self.success()
+        self.assertTrue(result["verified"])
+        self.assertEqual(len(actual_model_input), 1)
+        receipt = json.loads(self.receipt.read_text(encoding="utf-8"))
+        expected = target.pinned_source_context(self.task, self.repo)
+        self.assertEqual(receipt["source_context_sha256"],
+                         hashlib.sha256(expected.encode("utf-8")).hexdigest())
+        self.assertTrue(target.verify(self.task, self.receipt)["verified"])
+        self.assertEqual(target.git(self.repo, "status", "--porcelain=v1"), "")
+
+    def test_source_spans_refuse_out_of_scope_before_model_or_journal(self):
+        good = {"path": "notes/alpha.txt", "start_line": 1, "end_line": 2}
+        cases = [
+            ("bad-type", "notes/alpha.txt", "SOURCE_SPAN_COUNT"),
+            ("too-many", [good] * 5, "SOURCE_SPAN_COUNT"),
+            ("bad-fields", [{"path": "beta.txt"}], "SOURCE_SPAN_SCHEMA"),
+            ("path-traversal", [{"path": "../beta.txt", "start_line": 1,
+                                "end_line": 1}], "ALLOW_PATH_INVALID"),
+            ("bad-boolean", [{"path": "beta.txt", "start_line": True,
+                              "end_line": 1}], "SOURCE_SPAN_RANGE"),
+            ("out-of-range", [{"path": "beta.txt", "start_line": 1,
+                               "end_line": 99}], "SOURCE_SPAN_RANGE"),
+            ("untracked", [{"path": "absent.txt", "start_line": 1,
+                            "end_line": 1}], "SOURCE_NOT_REGULAR_TRACKED_BLOB"),
+            ("duplicate", [good, good], "SOURCE_SPAN_DUPLICATE"),
+        ]
+        if (self.repo / "link.txt").is_symlink():
+            cases.append(("symlink", [{"path": "link.txt", "start_line": 1,
+                                       "end_line": 1}], "SOURCE_NOT_REGULAR_TRACKED_BLOB"))
+        for label, value, reason in cases:
+            with self.subTest(label=label):
+                candidate = dict(self.task, source_spans=value)
+                with self.assertRaisesRegex(target.Refused, reason):
+                    target.validate_task(candidate, self.receipt)
+                self.assertFalse(self.receipt.with_suffix(".running").exists())
+        with self.assertRaisesRegex(target.Refused, "TASK_SCHEMA_OR_SCOPE"):
+            target.validate_task(dict(self.task, context_filenames=["beta.txt"]),
+                                 self.receipt)
+
     def test_forbidden_provider_env_never_invokes_model(self):
         for name in target.FORBIDDEN_ENV:
             with self.subTest(env=name):
