@@ -315,6 +315,29 @@ class SubscriptionArtifactTests(unittest.TestCase):
         self.assertEqual(staged["operator_supplied_allowlist"], ["beta.txt"])
         self.assertIs(staged["production"], False)
 
+    def test_run_stage_prose_draft_is_retained(self):
+        self.task["source_spans"] = [
+            {"path": "beta.txt", "start_line": 1, "end_line": 1}
+        ]
+        self.task["auto_stage_paths"] = ["beta.txt"]
+        self.task_path.write_text(json.dumps(self.task), encoding="utf-8")
+        self.model_body = "Here is a prose answer, not a patch.\n"
+        with patch.object(target, "claude_cli", return_value=("fake-claude", "fake-version")):
+            with patch.object(target.subprocess, "run", side_effect=self.proxy_subprocess):
+                with self.assertRaisesRegex(target.Refused, "PATCH_FILE_HEADER_INVALID"):
+                    target.run_stage(self.task_path, self.receipt)
+        self.assertTrue(self.receipt.is_file())
+        self.assertTrue(self.receipt.with_suffix(".proposal.txt").is_file())
+        self.assertEqual(target.verify(self.task, self.receipt)["state"], "MODEL_DRAFT_ONLY")
+        self.assertEqual((self.repo / "beta.txt").read_bytes(), b"beta\n")
+        self.assertEqual(target.git(self.repo, "status", "--porcelain=v1"), "")
+        self.assertFalse(self.receipt.with_suffix(".staging").exists())
+        self.assertFalse(self.receipt.with_suffix(".staged.json").exists())
+        with patch.object(target, "claude_cli",
+                          side_effect=AssertionError("NO_BLIND_MODEL_RETRY")):
+            with self.assertRaisesRegex(target.Refused, "EXISTING_ATTEMPT_NO_RETRY"):
+                target.run_stage(self.task_path, self.receipt)
+
     def test_run_stage_missing_or_unsafe_scope_refused_before_model(self):
         base = dict(self.task)
         source = [{"path": "beta.txt", "start_line": 1, "end_line": 1}]
