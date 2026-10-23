@@ -77,6 +77,8 @@ class SubscriptionArtifactTests(unittest.TestCase):
         self.assertIn("--tools", cmd)
         self.assertEqual(cmd[cmd.index("--tools") + 1], "")
         self.assertIn("--strict-mcp-config", cmd)
+        self.assertIn("--system-prompt", cmd)
+        self.assertIn("Never request tools", cmd[cmd.index("--system-prompt") + 1])
         self.assertNotIn("--dangerously-skip-permissions", cmd)
         self.assertEqual(kwargs.get("cwd"), str(self.repo))
         return subprocess.CompletedProcess(

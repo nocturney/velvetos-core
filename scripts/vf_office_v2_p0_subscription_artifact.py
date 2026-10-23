@@ -62,6 +62,15 @@ SOURCE_SPAN_FIELDS = frozenset({"path", "start_line", "end_line"})
 MAX_SOURCE_SPANS = 4
 MAX_SOURCE_LINES_PER_SPAN = 100
 MAX_SOURCE_CONTEXT_BYTES = 16000
+PATCH_ONLY_SYSTEM_PROMPT = (
+    "You are a deterministic source-patch formatter, not a coding agent with tools. "
+    "You have NO access to Read, Bash, Grep, shell, filesystem, MCP or network. "
+    "Never request tools or emit pseudo tool calls such as <invoke: or tool JSON. "
+    "Use only the supplied pinned source excerpts. For source changes, return "
+    "a plain git unified diff, no Markdown, commentary or explanations. "
+    "If the supplied source is inadequate, output only REFUSED_CONTEXT_INSUFFICIENT. "
+    "Do not fabricate unseen code or claim a file was modified."
+)
 
 
 class Refused(Exception):
@@ -305,7 +314,7 @@ def run(task_path, receipt_path):
     started = time.monotonic()
     result = subprocess.run(
         [binary, "-p", "--tools", "", "--strict-mcp-config", "--max-turns", "1",
-         "--output-format", "json"],
+         "--system-prompt", PATCH_ONLY_SYSTEM_PROMPT, "--output-format", "json"],
         input=prompt.encode("utf-8"), cwd=str(repo), capture_output=True,
         timeout=task["timeout_seconds"])
     if result.returncode or len(result.stdout) > 200000:
