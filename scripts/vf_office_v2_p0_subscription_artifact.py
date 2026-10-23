@@ -29,6 +29,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import time
 
 import vf_office_v2_continuity as continuity
@@ -694,6 +695,198 @@ def stage(task, receipt_path, proposal_sha256, allow_paths):
         patch_bytes, draft_sha, staged, journal)
 
 
+def verify_stage_portable(task_path, receipt_path, checkpoint_before_path, repo_path):
+    """Read-only, cross-checkout replay of a REAL staged proposal.
+
+    A self-hashed receipt is not a signature or proof of who produced it.
+    This independently reconstructs each proposed Git postimage from the
+    pinned base blob in disposable files, without contacting Claude or
+    modifying the verifier's checkout/index/refs. It never authorizes
+    merging, distributed leases, external effects, or production use.
+    """
+    task = read_json(task_path)
+    if (set(task) - TASK_FIELDS - TASK_OPTIONAL_FIELDS or
+            not TASK_FIELDS.issubset(task) or
+            task.get("schema") != SCHEMA or task.get("issue_url") != ISSUE or
+            not isinstance(task.get("task_id"), str) or
+            not TASK_ID.fullmatch(task["task_id"]) or
+            not isinstance(task.get("base_sha"), str) or
+            not SHA.fullmatch(task["base_sha"]) or
+            not isinstance(task.get("repo_path"), str) or
+            not Path(task["repo_path"]).is_absolute() or
+            not isinstance(task.get("branch"), str) or
+            not isinstance(task.get("checkpoint_path"), str) or
+            not isinstance(task.get("prompt"), str) or
+            type(task.get("timeout_seconds")) is not int):
+        raise Refused("PORTABLE_TASK_IDENTITY_INVALID")
+    repo = Path(repo_path).resolve()
+    if not repo.is_dir() or not (repo / ".git").exists():
+        raise Refused("PORTABLE_GIT_CHECKOUT_REQUIRED")
+    if git(repo, "cat-file", "-t", task["base_sha"]) != "commit":
+        raise Refused("PORTABLE_BASE_COMMIT_MISSING")
+    # This is an evidence verifier, so foreign worktree and original branch
+    # paths are not expected to exist on the second physical host.
+    original = Path(receipt_path).resolve()
+    proposed = original.with_suffix(".proposal.txt")
+    checkpoint_after = original.with_suffix(".checkpoint.json")
+    staged_path = original.with_suffix(".staged.json")
+    paths = (Path(task_path), original, proposed, checkpoint_after,
+             staged_path, Path(checkpoint_before_path))
+    if any(not p.is_file() or p.is_symlink() or p.stat().st_size > 262144
+           for p in paths):
+        raise Refused("PORTABLE_EVIDENCE_MISSING_UNSAFE_OR_OVERSIZED")
+    draft = read_json(original)
+    checksum = draft.pop("receipt_sha256", None)
+    if (checksum != digest(draft) or draft.get("schema") != RECEIPT or
+            draft.get("state") != "MODEL_DRAFT_ONLY" or
+            draft.get("task_id") != task["task_id"] or
+            draft.get("task_sha256") != digest(task) or
+            draft.get("base_sha") != task["base_sha"] or
+            draft.get("auth_method") != "claude.ai" or
+            draft.get("model_invoked") is not True or
+            draft.get("num_turns") != 1 or
+            draft.get("tools_enabled") is not False or
+            draft.get("external_effects_authorized") is not False or
+            draft.get("git_writes") != 0 or
+            draft.get("cross_host_lease_admitted") is not False or
+            not isinstance(draft.get("worker_host"), str)):
+        raise Refused("PORTABLE_DRAFT_RECEIPT_INVALID")
+    if (file_digest(proposed) != draft.get("proposal_sha256") or
+            file_digest(checkpoint_before_path) != draft.get("checkpoint_before_sha256") or
+            file_digest(checkpoint_after) != draft.get("checkpoint_after_sha256")):
+        raise Refused("PORTABLE_DRAFT_ARTIFACT_HASH_MISMATCH")
+    before = read_json(checkpoint_before_path)
+    after = read_json(checkpoint_after)
+    baseline = before.get("code_baseline", {})
+    if (continuity.required_shape(before) or
+            any(baseline.get(k) != v for k, v in (
+                ("repo", "nocturney/velvetos-core"),
+                ("base_sha", task["base_sha"]),
+                ("branch", task["branch"]),
+                ("worktree_path", task["repo_path"]))) or
+            before.get("active_external_effects") or
+            continuity.verify(before, after)["status"] != "PASS"):
+        raise Refused("PORTABLE_CONTINUITY_OR_BASELINE_INVALID")
+    source_sha = hashlib.sha256(
+        pinned_source_context(task, repo).encode("utf-8")).hexdigest()
+    if ("source_spans" in task and
+            source_sha != draft.get("source_context_sha256")):
+        raise Refused("PORTABLE_SOURCE_CONTEXT_MISMATCH")
+    if ("source_spans" not in task and
+            draft.get("source_context_sha256") not in (None, source_sha)):
+        raise Refused("PORTABLE_SOURCE_CONTEXT_MISMATCH")
+    staged = read_json(staged_path)
+    stage_sha = staged.pop("stage_receipt_sha256", None)
+    if (stage_sha != digest(staged) or
+            staged.get("schema") != STAGE_RECEIPT or
+            staged.get("state") != "SOURCE_STAGED_FOR_QA" or
+            staged.get("task_id") != task["task_id"] or
+            staged.get("task_sha256") != digest(task) or
+            staged.get("draft_receipt_sha256") != file_digest(original) or
+            staged.get("proposal_sha256") != draft["proposal_sha256"] or
+            staged.get("operator_supplied_proposal_sha256") != draft["proposal_sha256"] or
+            staged.get("base_sha") != task["base_sha"] or
+            staged.get("head_after") != task["base_sha"] or
+            staged.get("branch") != task["branch"] or
+            staged.get("worker_host") != draft["worker_host"] or
+            any(staged.get(k) is not False for k in (
+                "committed", "pushed", "merged", "generated_code_executed",
+                "tools_enabled", "external_effects_authorized",
+                "model_output_is_reviewed_code", "production",
+                "p0_admitted", "two_host_admitted"))):
+        raise Refused("PORTABLE_STAGE_RECEIPT_INVALID")
+    patch = proposed.read_bytes()
+    apply_bytes = patch if patch.endswith(b"\n") else patch + b"\n"
+    try:
+        files = parse_git_diff(apply_bytes.decode("utf-8"))
+    except UnicodeDecodeError as exc:
+        raise Refused("PORTABLE_PATCH_NOT_UTF8") from exc
+    allowed = sorted(f["path"] for f in files)
+    if (not 1 <= len(files) <= MAX_STAGE_FILES or
+            len(set(allowed)) != len(allowed) or
+            staged.get("changed_paths") != allowed or
+            staged.get("operator_supplied_allowlist") != allowed):
+        raise Refused("PORTABLE_PATCH_ALLOWLIST_MISMATCH")
+    proof = staged.get("bounded_proof") or {}
+    if (any(proof.get(k) is not True for k in (
+                "git_apply_check_passed", "status_exactly_allowlist_modified",
+                "proposal_bytes_preserved", "diff_name_only_equals_allowlist",
+                "index_unchanged", "no_mode_create_delete_rename",
+                "after_blobs_independently_computed")) or
+            proof.get("git_apply_sha256") != hashlib.sha256(apply_bytes).hexdigest() or
+            proof.get("terminal_lf_added_for_git_apply") is not
+                (apply_bytes != patch)):
+        raise Refused("PORTABLE_STAGE_PROOF_INVALID")
+    rows = staged.get("files")
+    if (not isinstance(rows, list) or len(rows) != len(files) or
+            any(not isinstance(row, dict) or
+                set(row) != {"path", "mode", "before_blob", "after_blob",
+                             "after_sha256"} or
+                any(not isinstance(row.get(key), str) for key in row) or
+                not PROPOSAL_SHA.fullmatch(row["after_sha256"])
+                for row in rows)):
+        raise Refused("PORTABLE_STAGE_FILE_ROWS_INVALID")
+    by_path = {row["path"]: row for row in rows}
+    if len(by_path) != len(rows) or set(by_path) != set(allowed):
+        raise Refused("PORTABLE_STAGE_FILE_SCOPE_INVALID")
+    # All effects below are confined to a temporary directory. Nothing is
+    # written to the source checkout, its index, refs, or object database.
+    git_env = {k: v for k, v in os.environ.items() if k not in (
+        "GIT_DIR", "GIT_COMMON_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE",
+        "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+        "GIT_CONFIG_COUNT", "GIT_CONFIG_KEY_0", "GIT_CONFIG_VALUE_0")}
+    git_env["GIT_CONFIG_NOSYSTEM"] = "1"
+    git_env["GIT_CONFIG_GLOBAL"] = os.devnull
+    with tempfile.TemporaryDirectory(prefix="office612-portable-") as folder:
+        root = Path(folder)
+        for item in files:
+            rel = item["path"]
+            row = by_path[rel]
+            tree_row = git(repo, "ls-tree", "--full-tree", task["base_sha"], "--", rel)
+            match = re.fullmatch(
+                r"(100644|100755) blob ([0-9a-f]{40,64})\t(.+)", tree_row)
+            if (not match or match.group(3) != rel or
+                    row["mode"] != match.group(1) or
+                    row["before_blob"] != match.group(2) or
+                    not match.group(2).startswith(item["old"])):
+                raise Refused("PORTABLE_BASE_BLOB_MISMATCH")
+            source = git_bytes(repo, "show", f"{task['base_sha']}:{rel}")
+            if b"\x00" in source or len(source) > 1048576:
+                raise Refused("PORTABLE_UNSAFE_SOURCE_BLOB")
+            dest = root / rel
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(source)
+        for args in (("apply", "--check", "-"), ("apply", "-")):
+            command = subprocess.run(
+                ["git", *args], input=apply_bytes, cwd=root,
+                capture_output=True, timeout=20, env=git_env)
+            if command.returncode:
+                raise Refused("PORTABLE_PATCH_REPLAY_FAILED")
+        for item in files:
+            row = by_path[item["path"]]
+            out = (root / item["path"]).read_bytes()
+            result = subprocess.run(["git", "hash-object", "--stdin"],
+                                    input=out, cwd=root, env=git_env,
+                                    capture_output=True, timeout=10)
+            if (result.returncode or
+                    result.stdout.decode("ascii", "replace").strip() != row["after_blob"] or
+                    hashlib.sha256(out).hexdigest() != row["after_sha256"] or
+                    (item["new"] != "0000000" and
+                     not row["after_blob"].startswith(item["new"]))):
+                raise Refused("PORTABLE_POSTIMAGE_MISMATCH")
+    return {
+        "status": "PASS_PORTABLE_REPLAY_REAL_RECEIPT",
+        "task_id": task["task_id"], "files_verified": len(files),
+        "proposal_sha256": draft["proposal_sha256"],
+        "stage_receipt_sha256": stage_sha,
+        "developer_host_claim_not_attested": draft["worker_host"],
+        "verifier_host": platform.node(),
+        "verifier_reran_model": False, "verifier_modified_source": False,
+        "independent_code_quality_approved": False,
+        "cross_host_lease_admitted": False, "production_admitted": False,
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -711,6 +904,11 @@ def main():
     q.add_argument("--receipt", required=True)
     q.add_argument("--proposal-sha256", required=True)
     q.add_argument("--allow-path", action="append", required=True)
+    q = sub.add_parser("verify-stage-portable")
+    q.add_argument("--task", required=True)
+    q.add_argument("--receipt", required=True)
+    q.add_argument("--checkpoint-before", required=True)
+    q.add_argument("--repo", required=True)
     args = parser.parse_args()
     try:
         task = read_json(args.task)
@@ -722,8 +920,11 @@ def main():
             result = recover_run(task, args.receipt)
         elif args.command == "stage":
             result = stage(task, args.receipt, args.proposal_sha256, args.allow_path)
-        else:
+        elif args.command == "recover-stage":
             result = recover_stage(task, args.receipt, args.proposal_sha256, args.allow_path)
+        else:
+            result = verify_stage_portable(args.task, args.receipt,
+                                           args.checkpoint_before, args.repo)
         print(json.dumps(result, ensure_ascii=False, sort_keys=True))
     except (Refused, OSError, ValueError, subprocess.TimeoutExpired) as exc:
         print("REFUSED:" + (str(exc) if isinstance(exc, Refused) else type(exc).__name__),

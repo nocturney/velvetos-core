@@ -194,6 +194,62 @@ class SubscriptionArtifactTests(unittest.TestCase):
         with self.assertRaisesRegex(target.Refused, "WORKTREE_NOT_CLEAN"):
             target.verify(self.task, receipt)
 
+    def test_portable_real_stage_replay_on_foreign_checkout_and_tamper(self):
+        # The producer's worktree is DIRTY after stage. A second checkout
+        # must independently reconstruct the exact Git postimages without
+        # rerunning the model, editing its checkout or trusting SHA claims.
+        self.task["source_spans"] = [
+            {"path": "notes/alpha.txt", "start_line": 1, "end_line": 3}
+        ]
+        self.task_path.write_text(json.dumps(self.task), encoding="utf-8")
+        patch_text = self.real_diff({
+            "notes/alpha.txt": b"alpha one\nalpha 2\nalpha three\n",
+            "beta.txt": b"beta\nstaged\n",
+        })
+        patch_text = "\n".join(
+            line.split("..", 1)[0] + "..0000000 " + line.split(" ")[-1]
+            if line.startswith("index ") else line
+            for line in patch_text.splitlines()
+        ) + "\n"
+        receipt, proposal_sha = self.draft(patch_text, "portable-verified")
+        target.stage(self.task, receipt, proposal_sha,
+                     ["notes/alpha.txt", "beta.txt"])
+        foreign = Path(self.temp.name) / "qa-other-checkout"
+        subprocess.run(["git", "clone", "-q", "--no-hardlinks", str(self.repo),
+                        str(foreign)], check=True, capture_output=True)
+        source_state = target.git(self.repo, "status", "--porcelain=v1")
+        verifier_state = target.git(foreign, "status", "--porcelain=v1")
+        before_copy = Path(self.temp.name) / "checkpoint-copy.json"
+        before_copy.write_bytes(self.checkpoint.read_bytes())
+        with patch.object(target, "claude_cli",
+                          side_effect=AssertionError("NO_MODEL_REINVOCATION")):
+            result = target.verify_stage_portable(
+                self.task_path, receipt, before_copy, foreign)
+        self.assertEqual(result["status"], "PASS_PORTABLE_REPLAY_REAL_RECEIPT")
+        self.assertEqual(result["files_verified"], 2)
+        self.assertFalse(result["verifier_reran_model"])
+        self.assertFalse(result["independent_code_quality_approved"])
+        self.assertFalse(result["cross_host_lease_admitted"])
+        self.assertEqual(target.git(foreign, "status", "--porcelain=v1"),
+                         verifier_state)
+        self.assertEqual(target.git(self.repo, "status", "--porcelain=v1"),
+                         source_state)
+        stage_path = receipt.with_suffix(".staged.json")
+        original = stage_path.read_bytes()
+        data = json.loads(original)
+        data["files"][0]["after_sha256"] = "0" * 64
+        data.pop("stage_receipt_sha256")
+        data["stage_receipt_sha256"] = target.digest(data)
+        stage_path.write_text(json.dumps(data), encoding="utf-8")
+        with self.assertRaisesRegex(target.Refused, "PORTABLE_POSTIMAGE_MISMATCH"):
+            target.verify_stage_portable(self.task_path, receipt,
+                                         before_copy, foreign)
+        stage_path.write_bytes(original)
+        before_copy.write_text("{}", encoding="utf-8")
+        with self.assertRaisesRegex(target.Refused, "ARTIFACT_HASH_MISMATCH"):
+            target.verify_stage_portable(self.task_path, receipt,
+                                         before_copy, foreign)
+
     def test_model_diff_without_terminal_lf_stages_with_original_sha(self):
         # Role B observed this exact failure mode with a real Claude Code
         # proposal: a valid, complete unified diff without its final LF.
