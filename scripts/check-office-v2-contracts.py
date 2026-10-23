@@ -96,6 +96,21 @@ def load(path: Path) -> dict:
 
 def main() -> int:
     prove_windows_skip_codes()
+    # #612: the subscription model adapter is a no-tools, non-authoritative
+    # evidence producer, never a standalone agent/lease/writer admission.
+    subscription_test = ROOT / "scripts" / "test_vf_office_v2_p0_subscription_artifact.py"
+    if not subscription_test.is_file():
+        fail("#612 subscription model evidence adapter tests missing")
+    try:
+        subscription_run = subprocess.run(
+            [sys.executable, "-B", str(subscription_test)],
+            cwd=ROOT, capture_output=True, text=True, timeout=20,
+        )
+    except subprocess.TimeoutExpired:
+        fail("#612 subscription model evidence adapter test timeout")
+    if (subscription_run.returncode != 0 or
+            "Ran 6 tests" not in subscription_run.stderr):
+        fail("#612 subscription model evidence adapter contract failed")
     authority = load(P0 / "authority-map-v0.1.json")
     if authority.get("single_external_effect_authority") is not True:
         fail("Phase 0 must preserve single external-effect authority")
