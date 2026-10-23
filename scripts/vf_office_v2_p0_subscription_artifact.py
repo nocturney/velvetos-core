@@ -5,6 +5,12 @@ This is a producer for the existing Project State / evidence chain, NOT a
 scheduler, autonomous editor, effect authority, PR writer, or OS sandbox.
 Claude runs with ALL built-in tools disabled and no MCP configuration. Generated
 text is untrusted; it must be reviewed and tested independently before use.
+
+`stage` is a separate, explicitly operator-approved step: it applies a verified
+proposal that is exactly a plain unified git diff of existing tracked text files
+to the LOCAL isolated worktree, and writes an external tamper-evident
+`<receipt>.staged.json`. It never commits, pushes, merges, runs generated code
+or grants authority; SOURCE_STAGED_FOR_QA is not P0 or two-host admission.
 """
 from __future__ import annotations
 
@@ -36,6 +42,16 @@ FORBIDDEN_ENV = (
     "CLAUDE_CODE_USE_BEDROCK", "CLAUDE_CODE_USE_VERTEX",
     "CLAUDE_CODE_USE_FOUNDRY",
 )
+STAGE_RECEIPT = "velvetos.office-v2.p0-subscription-source-stage-receipt.v1"
+PROPOSAL_SHA = re.compile(r"[0-9a-f]{64}\Z")
+# Safe subset: no dot-leading components (.git, .., .gitattributes), no
+# whitespace/quoting/pathspec magic, no absolute or empty components.
+SAFE_PATH = re.compile(r"[A-Za-z0-9_][A-Za-z0-9_.+-]*(?:/[A-Za-z0-9_][A-Za-z0-9_.+-]*)*\Z")
+DIFF_HEADER = re.compile(r"diff --git a/(\S+) b/(\S+)\Z")
+INDEX_LINE = re.compile(r"index ([0-9a-f]{7,64})\.\.([0-9a-f]{7,64}) (100644|100755)\Z")
+HUNK = re.compile(r"@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@(?: .*)?\Z")
+NO_EOL = "\\ No newline at end of file"
+MAX_STAGE_FILES = 16
 
 
 class Refused(Exception):
@@ -248,6 +264,212 @@ def run(task_path, receipt_path):
     return result
 
 
+def git_bytes(repo, *argv):
+    p = subprocess.run(["git", "-C", str(repo), *argv],
+                       capture_output=True, timeout=12)
+    if p.returncode:
+        raise Refused("GIT_READBACK_FAILED")
+    return p.stdout
+
+
+def git_apply(repo, patch_bytes, check):
+    """Argv-only `git apply` of the exact verified bytes; never --unsafe-paths."""
+    argv = ["git", "-C", str(repo), "apply", "--whitespace=nowarn", "-p1"]
+    if check:
+        argv.append("--check")
+    p = subprocess.run([*argv, "-"], input=patch_bytes,
+                       capture_output=True, timeout=12)
+    return p.returncode == 0
+
+
+def allow_path(value):
+    if not isinstance(value, str) or len(value) > 200 or not SAFE_PATH.fullmatch(value):
+        raise Refused("ALLOW_PATH_INVALID")
+    return value
+
+
+def parse_git_diff(text):
+    """Strictly parse a pure in-place git diff; every line must be accounted for."""
+    if not text.strip():
+        raise Refused("EMPTY_DIFF")
+    if "\x00" in text or "\r" in text or not text.endswith("\n"):
+        raise Refused("PATCH_ENCODING_OR_TERMINATION_INVALID")
+    lines = text[:-1].split("\n")
+    files, i = [], 0
+    while i < len(lines):
+        header = DIFF_HEADER.fullmatch(lines[i])
+        if not header or header.group(1) != header.group(2):
+            raise Refused("PATCH_FILE_HEADER_INVALID")
+        path = header.group(1)
+        if len(path) > 200 or not SAFE_PATH.fullmatch(path):
+            raise Refused("PATCH_PATH_INVALID")
+        if path in {f["path"] for f in files} or len(files) >= MAX_STAGE_FILES:
+            raise Refused("PATCH_DUPLICATE_OR_TOO_MANY_FILES")
+        # Mode, new/deleted file, rename/copy and similarity headers all fail
+        # here because the line after `diff --git` must be a plain index line.
+        index = INDEX_LINE.fullmatch(lines[i + 1]) if i + 1 < len(lines) else None
+        if not index or index.group(1) == index.group(2):
+            raise Refused("PATCH_INDEX_OR_MODE_HEADER_INVALID")
+        if i + 2 < len(lines) and lines[i + 2].startswith(("GIT binary patch", "Binary files ")):
+            raise Refused("BINARY_PATCH_DENIED")
+        if lines[i + 2:i + 4] != ["--- a/" + path, "+++ b/" + path]:
+            raise Refused("PATCH_FILE_HEADER_INVALID")
+        i += 4
+        hunks = 0
+        while i < len(lines) and lines[i].startswith("@@"):
+            hunk = HUNK.fullmatch(lines[i])
+            if not hunk:
+                raise Refused("PATCH_HUNK_HEADER_INVALID")
+            old_n = 1 if hunk.group(2) is None else int(hunk.group(2))
+            new_n = 1 if hunk.group(4) is None else int(hunk.group(4))
+            i, hunks, changes, prev = i + 1, hunks + 1, 0, ""
+            while old_n or new_n:
+                if i >= len(lines):
+                    raise Refused("PATCH_HUNK_TRUNCATED")
+                line, tag = lines[i], lines[i][:1]
+                if line == NO_EOL and prev in (" ", "-", "+"):
+                    prev, i = "\\", i + 1
+                    continue
+                if tag == " ":
+                    old_n, new_n = old_n - 1, new_n - 1
+                elif tag == "-":
+                    old_n, changes = old_n - 1, changes + 1
+                elif tag == "+":
+                    new_n, changes = new_n - 1, changes + 1
+                else:
+                    raise Refused("PATCH_HUNK_LINE_INVALID")
+                if old_n < 0 or new_n < 0:
+                    raise Refused("PATCH_HUNK_COUNT_MISMATCH")
+                prev, i = tag, i + 1
+            if i < len(lines) and lines[i] == NO_EOL and prev in (" ", "-", "+"):
+                i += 1
+            if not changes:
+                raise Refused("PATCH_FILE_WITHOUT_CHANGES")
+        if not hunks:
+            raise Refused("PATCH_FILE_WITHOUT_CHANGES")
+        files.append({"path": path, "old": index.group(1), "new": index.group(2),
+                      "mode": index.group(3)})
+    return files
+
+
+def regular_text_file(repo, rel):
+    current = repo
+    for part in rel.split("/"):
+        current = current / part
+        if current.is_symlink():
+            raise Refused("SYMLINK_PATH_DENIED")
+    if not current.is_file() or b"\x00" in current.read_bytes():
+        raise Refused("TARGET_NOT_REGULAR_TEXT_FILE")
+    return current
+
+
+def tracked_base_blob(repo, item):
+    listed = re.fullmatch(r"(\d{6}) (\w+) ([0-9a-f]{40,64})\t(.+)",
+                          git(repo, "ls-tree", "--full-tree", "HEAD", "--", item["path"]))
+    if (not listed or listed.group(2) != "blob" or listed.group(4) != item["path"] or
+            listed.group(1) not in ("100644", "100755")):
+        raise Refused("PATH_NOT_TRACKED_REGULAR_FILE")
+    if listed.group(1) != item["mode"]:
+        raise Refused("PATCH_MODE_MISMATCH")
+    if not listed.group(3).startswith(item["old"]):
+        raise Refused("PATCH_INDEX_BASE_MISMATCH")
+    regular_text_file(repo, item["path"])
+    return listed.group(3)
+
+
+def stage(task, receipt_path, proposal_sha256, allow_paths):
+    receipt_path = Path(receipt_path).resolve()
+    if not isinstance(proposal_sha256, str) or not PROPOSAL_SHA.fullmatch(proposal_sha256):
+        raise Refused("PROPOSAL_SHA256_FORMAT")
+    if not isinstance(allow_paths, (list, tuple)) or not 1 <= len(allow_paths) <= MAX_STAGE_FILES:
+        raise Refused("ALLOW_PATH_COUNT")
+    allowed = sorted(allow_path(p) for p in allow_paths)
+    if len(set(allowed)) != len(allowed):
+        raise Refused("ALLOW_PATH_DUPLICATE")
+    staged = receipt_path.with_suffix(".staged.json")
+    journal = receipt_path.with_suffix(".staging")
+    if any(x.exists() or x.is_symlink() for x in (staged, journal)):
+        raise Refused("EXISTING_STAGE_NO_REPLAY")
+    verify(task, receipt_path)
+    repo = Path(task["repo_path"]).resolve()
+    draft_sha = file_digest(receipt_path)
+    if read_json(receipt_path).get("proposal_sha256") != proposal_sha256:
+        raise Refused("PROPOSAL_SHA256_MISMATCH")
+    patch_bytes = receipt_path.with_suffix(".proposal.txt").read_bytes()
+    if hashlib.sha256(patch_bytes).hexdigest() != proposal_sha256:
+        raise Refused("PROPOSAL_SHA256_MISMATCH")
+    try:
+        files = parse_git_diff(patch_bytes.decode("utf-8"))
+    except UnicodeDecodeError as exc:
+        raise Refused("PROPOSAL_NOT_UTF8") from exc
+    if sorted(f["path"] for f in files) != allowed:
+        raise Refused("ALLOWLIST_NOT_EXACT_PATCH_SCOPE")
+    for item in files:
+        item["before_blob"] = tracked_base_blob(repo, item)
+    if not git_apply(repo, patch_bytes, check=True):
+        raise Refused("GIT_APPLY_CHECK_FAILED")
+    if git(repo, "status", "--porcelain=v1", "--untracked-files=all"):
+        raise Refused("WORKTREE_CHANGED")
+    exclusive_write(journal, canonical({
+        "task": digest(task), "proposal_sha256": proposal_sha256, "paths": allowed,
+        "state": "STAGING_NO_BLIND_RETRY"}))
+    # From here the effect outcome may be uncertain: every failure leaves the
+    # journal in place and never retries, reverts or commits.
+    if not git_apply(repo, patch_bytes, check=False):
+        raise Refused("GIT_APPLY_FAILED_OUTCOME_UNKNOWN_JOURNAL_PRESERVED")
+    if (git(repo, "rev-parse", "HEAD") != task["base_sha"] or
+            git(repo, "branch", "--show-current") != task["branch"]):
+        raise Refused("POST_STAGE_HEAD_OR_BRANCH_MOVED_JOURNAL_PRESERVED")
+    expected_status = b"".join(b" M " + p.encode() + b"\x00" for p in allowed)
+    if (git_bytes(repo, "status", "--porcelain=v1", "-z", "--untracked-files=all",
+                  "--no-renames") != expected_status or
+            git(repo, "diff", "--name-only", "--no-renames").split("\n") != allowed or
+            git(repo, "diff", "--cached", "--name-only") or
+            git(repo, "diff", "--summary")):
+        raise Refused("POST_STAGE_SCOPE_MISMATCH_JOURNAL_PRESERVED")
+    for item in files:
+        try:
+            path = regular_text_file(repo, item["path"])
+        except Refused as exc:
+            raise Refused("POST_STAGE_FILE_INVALID_JOURNAL_PRESERVED") from exc
+        item["after_blob"] = git(repo, "hash-object", "--", item["path"])
+        # A no-tools model cannot calculate a Git blob SHA for its proposed
+        # postimage. Allow only the explicit 0000000 placeholder; always
+        # independently compute/store the real postimage blob and SHA-256.
+        if item["new"] != "0000000" and not item["after_blob"].startswith(item["new"]):
+            raise Refused("POST_STAGE_BLOB_MISMATCH_JOURNAL_PRESERVED")
+        item["after_sha256"] = file_digest(path)
+    record = {
+        "schema": STAGE_RECEIPT, "state": "SOURCE_STAGED_FOR_QA",
+        "issue_url": ISSUE, "task_id": task["task_id"], "task_sha256": digest(task),
+        "draft_receipt_sha256": draft_sha, "proposal_sha256": proposal_sha256,
+        "operator_supplied_proposal_sha256": proposal_sha256,
+        "operator_supplied_allowlist": allowed, "changed_paths": allowed,
+        "base_sha": task["base_sha"], "branch": task["branch"],
+        "head_after": task["base_sha"], "worker_host": platform.node(),
+        "files": [{k: item[k] for k in ("path", "mode", "before_blob", "after_blob",
+                                         "after_sha256")} for item in files],
+        "bounded_proof": {
+            "git_apply_check_passed": True, "status_exactly_allowlist_modified": True,
+            "diff_name_only_equals_allowlist": True, "index_unchanged": True,
+            "no_mode_create_delete_rename": True,
+            "after_blobs_independently_computed": True,
+            "new_index_placeholders": sum(f["new"] == "0000000" for f in files),
+        },
+        "committed": False, "pushed": False, "merged": False,
+        "generated_code_executed": False, "tools_enabled": False,
+        "external_effects_authorized": False, "model_output_is_reviewed_code": False,
+        "production": False, "p0_admitted": False, "two_host_admitted": False,
+    }
+    exclusive_write(staged, canonical({**record, "stage_receipt_sha256": digest(record)}))
+    journal.unlink()
+    return {"state": "SOURCE_STAGED_FOR_QA", "staged": True,
+            "task_id": task["task_id"], "changed_paths": allowed,
+            "stage_receipt": str(staged), "stage_receipt_sha256": digest(record),
+            "committed": False, "pushed": False, "generated_code_executed": False,
+            "p0_admitted": False, "two_host_admitted": False}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -255,10 +477,20 @@ def main():
         p = sub.add_parser(command)
         p.add_argument("--task", required=True)
         p.add_argument("--receipt", required=True)
+    p = sub.add_parser("stage")
+    p.add_argument("--task", required=True)
+    p.add_argument("--receipt", required=True)
+    p.add_argument("--proposal-sha256", required=True)
+    p.add_argument("--allow-path", action="append", required=True)
     args = parser.parse_args()
     try:
         task = read_json(args.task)
-        result = run(args.task, args.receipt) if args.command == "run" else verify(task, args.receipt)
+        if args.command == "run":
+            result = run(args.task, args.receipt)
+        elif args.command == "verify":
+            result = verify(task, args.receipt)
+        else:
+            result = stage(task, args.receipt, args.proposal_sha256, args.allow_path)
         print(json.dumps(result, ensure_ascii=False, sort_keys=True))
     except (Refused, OSError, ValueError, subprocess.TimeoutExpired) as exc:
         print("REFUSED:" + (str(exc) if isinstance(exc, Refused) else type(exc).__name__),

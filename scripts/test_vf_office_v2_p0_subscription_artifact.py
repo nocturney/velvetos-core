@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -29,8 +30,18 @@ class SubscriptionArtifactTests(unittest.TestCase):
                            check=True, capture_output=True)
         git("init", "-q")
         git("checkout", "-q", "-b", "role-a/isolated-test")
+        self.git = git
+        self.original_run = subprocess.run
+        self.model_body = "def bounded_add(a, b):\n    return a + b\n"
         (self.repo / "entry.txt").write_text("baseline\n", encoding="utf-8")
-        git("add", "entry.txt")
+        (self.repo / "notes").mkdir()
+        (self.repo / "notes" / "alpha.txt").write_bytes(b"alpha one\nalpha two\nalpha three\n")
+        (self.repo / "beta.txt").write_bytes(b"beta\n")
+        try:
+            os.symlink("beta.txt", self.repo / "link.txt")
+        except (OSError, NotImplementedError):
+            pass
+        git("add", "-A")
         git("-c", "user.name=local-unit", "-c", "user.email=local@example.invalid",
             "commit", "-qm", "baseline")
         self.base_sha = target.git(self.repo, "rev-parse", "HEAD")
@@ -71,7 +82,7 @@ class SubscriptionArtifactTests(unittest.TestCase):
         return subprocess.CompletedProcess(
             cmd, 0,
             stdout=json.dumps({
-                "result": "def bounded_add(a, b):\n    return a + b\n",
+                "result": self.model_body,
                 "subtype": "success", "is_error": False, "num_turns": 1,
             }).encode("utf-8"),
             stderr=b"",
@@ -88,6 +99,32 @@ class SubscriptionArtifactTests(unittest.TestCase):
             return self.fake_model(cmd, **kwargs)
         return self.original_run(cmd, **kwargs)
 
+    def draft(self, body, name):
+        """A verified no-tools draft whose model output is exactly `body`."""
+        self.model_body = body
+        receipt = Path(self.temp.name) / (name + ".json")
+        with patch.object(target, "claude_cli", return_value=("fake-claude", "fake-version")):
+            with patch.object(target.subprocess, "run", side_effect=self.proxy_subprocess):
+                target.run(self.task_path, receipt)
+        return receipt, hashlib.sha256(body.encode("utf-8")).hexdigest()
+
+    def real_diff(self, edits):
+        """Real `git diff` of edits, then restore the clean baseline."""
+        for name, data in edits.items():
+            (self.repo / name).write_bytes(data)
+        diff = subprocess.run(
+            ["git", "-C", str(self.repo), "diff", "--no-color", "--no-ext-diff",
+             "--src-prefix=a/", "--dst-prefix=b/"],
+            check=True, capture_output=True).stdout.decode("utf-8")
+        self.git("checkout", "-q", "--", *edits)
+        return diff
+
+    def assert_not_staged(self, receipt):
+        self.assertEqual(target.git(self.repo, "status", "--porcelain=v1",
+                                    "--untracked-files=all"), "")
+        self.assertFalse(receipt.with_suffix(".staging").exists())
+        self.assertFalse(receipt.with_suffix(".staged.json").exists())
+
     def test_real_artifact_contract_and_integrity(self):
         self.original_run = subprocess.run
         result = self.success()
@@ -99,9 +136,61 @@ class SubscriptionArtifactTests(unittest.TestCase):
         self.assertFalse(target.git(self.repo, "status", "--porcelain=v1"))
         with self.assertRaisesRegex(target.Refused, "EXISTING_ATTEMPT"):
             target.run(self.task_path, self.receipt)
+        # A verified draft that is not a pure git diff is never staged.
+        prose_sha = target.file_digest(self.receipt.with_suffix(".proposal.txt"))
+        with self.assertRaisesRegex(target.Refused, "PATCH_FILE_HEADER_INVALID"):
+            target.stage(self.task, self.receipt, prose_sha, ["entry.txt"])
+        self.assert_not_staged(self.receipt)
         self.receipt.with_suffix(".proposal.txt").write_text("tampered", encoding="utf-8")
         with self.assertRaisesRegex(target.Refused, "ARTIFACT_OR_CONTINUITY_MISMATCH"):
             target.verify(self.task, self.receipt)
+        with self.assertRaisesRegex(target.Refused, "ARTIFACT_OR_CONTINUITY_MISMATCH"):
+            target.stage(self.task, self.receipt, prose_sha, ["entry.txt"])
+
+        # Positive: operator-approved exact SHA + exact allowlist stages locally.
+        diff = self.real_diff({
+            "notes/alpha.txt": b"alpha one\nalpha 2\nalpha three\n",
+            "beta.txt": b"beta\nstaged\n",
+        })
+        # A no-tools Claude proposal cannot know the SHA of its own future
+        # postimage. Exercise the explicit 0000000 index placeholder.
+        diff = "\n".join(
+            line.split("..", 1)[0] + "..0000000 " + line.split(" ")[-1]
+            if line.startswith("index ") else line
+            for line in diff.splitlines()
+        ) + "\n"
+        receipt, sha = self.draft(diff, "stage-ok")
+        staged = target.stage(self.task, receipt, sha, ["notes/alpha.txt", "beta.txt"])
+        self.assertEqual(staged["state"], "SOURCE_STAGED_FOR_QA")
+        self.assertEqual(staged["changed_paths"], ["beta.txt", "notes/alpha.txt"])
+        for flag in ("committed", "pushed", "generated_code_executed",
+                     "p0_admitted", "two_host_admitted"):
+            self.assertIs(staged[flag], False)
+        self.assertEqual(target.git(self.repo, "rev-parse", "HEAD"), self.base_sha)
+        self.assertEqual(target.git(self.repo, "diff", "--name-only"),
+                         "beta.txt\nnotes/alpha.txt")
+        self.assertEqual(target.git(self.repo, "diff", "--cached", "--name-only"), "")
+        self.assertEqual((self.repo / "beta.txt").read_bytes(), b"beta\nstaged\n")
+        self.assertEqual((self.repo / "notes" / "alpha.txt").read_bytes(),
+                         b"alpha one\nalpha 2\nalpha three\n")
+        self.assertFalse(receipt.with_suffix(".staging").exists())
+        record = json.loads(receipt.with_suffix(".staged.json").read_text(encoding="utf-8"))
+        checksum = record.pop("stage_receipt_sha256")
+        self.assertEqual(checksum, target.digest(record))
+        self.assertEqual(checksum, staged["stage_receipt_sha256"])
+        self.assertEqual(record["state"], "SOURCE_STAGED_FOR_QA")
+        self.assertEqual(record["proposal_sha256"], sha)
+        self.assertEqual(record["draft_receipt_sha256"], target.file_digest(receipt))
+        self.assertEqual([f["path"] for f in record["files"]], ["beta.txt", "notes/alpha.txt"])
+        self.assertEqual(record["files"][0]["after_sha256"],
+                         target.file_digest(self.repo / "beta.txt"))
+        self.assertIs(record["external_effects_authorized"], False)
+        self.assertIs(record["committed"], False)
+        with self.assertRaisesRegex(target.Refused, "EXISTING_STAGE_NO_REPLAY"):
+            target.stage(self.task, receipt, sha, ["notes/alpha.txt", "beta.txt"])
+        # The original draft verify contract is unchanged: a staged tree is not a draft.
+        with self.assertRaisesRegex(target.Refused, "WORKTREE_NOT_CLEAN"):
+            target.verify(self.task, receipt)
 
     def test_api_key_env_never_invokes_model(self):
         with patch.dict(os.environ, {"ANTHROPIC_API_KEY": "present"}):
@@ -112,9 +201,36 @@ class SubscriptionArtifactTests(unittest.TestCase):
         wrong = dict(self.task, branch="main")
         with self.assertRaisesRegex(target.Refused, "ISOLATED_TOPIC_BRANCH"):
             target.validate_task(wrong, self.receipt)
+        receipt, sha = self.draft(self.real_diff({"beta.txt": b"beta\nstaged\n"}), "pre")
+        for proposal_sha, allow, reason in (
+            (sha.upper(), ["beta.txt"], "PROPOSAL_SHA256_FORMAT"),
+            (sha[:40], ["beta.txt"], "PROPOSAL_SHA256_FORMAT"),
+            ("0" * 64, ["beta.txt"], "PROPOSAL_SHA256_MISMATCH"),
+            (sha, [], "ALLOW_PATH_COUNT"),
+            (sha, ["beta.txt", "beta.txt"], "ALLOW_PATH_DUPLICATE"),
+            (sha, [str(self.repo / "beta.txt")], "ALLOW_PATH_INVALID"),
+            (sha, ["../beta.txt"], "ALLOW_PATH_INVALID"),
+            (sha, [".git/config"], "ALLOW_PATH_INVALID"),
+            (sha, ["notes//alpha.txt"], "ALLOW_PATH_INVALID"),
+            (sha, ["notes/./alpha.txt"], "ALLOW_PATH_INVALID"),
+            (sha, ["beta.txt\x00"], "ALLOW_PATH_INVALID"),
+            (sha, ["notes/alpha.txt"], "ALLOWLIST_NOT_EXACT_PATCH_SCOPE"),
+            (sha, ["beta.txt", "notes/alpha.txt"], "ALLOWLIST_NOT_EXACT_PATCH_SCOPE"),
+        ):
+            with self.subTest(reason=reason, allow=allow):
+                with self.assertRaisesRegex(target.Refused, reason):
+                    target.stage(self.task, receipt, proposal_sha, allow)
+                self.assert_not_staged(receipt)
+        with self.assertRaisesRegex(target.Refused, "BRANCH_MISMATCH"):
+            target.stage(dict(self.task, branch="role-a/other-branch"), receipt, sha, ["beta.txt"])
+        self.assert_not_staged(receipt)
         (self.repo / "entry.txt").write_text("dirty", encoding="utf-8")
         with self.assertRaisesRegex(target.Refused, "WORKTREE_NOT_CLEAN"):
             target.validate_task(self.task, self.receipt)
+        with self.assertRaisesRegex(target.Refused, "WORKTREE_NOT_CLEAN"):
+            target.stage(self.task, receipt, sha, ["beta.txt"])
+        self.assertFalse(receipt.with_suffix(".staging").exists())
+        self.assertEqual((self.repo / "beta.txt").read_bytes(), b"beta\n")
 
     def test_checkpoint_active_effect_refused(self):
         state = copy.deepcopy(self.state)
@@ -138,6 +254,39 @@ class SubscriptionArtifactTests(unittest.TestCase):
         with self.assertRaisesRegex(target.Refused, "EXISTING_ATTEMPT"):
             target.run(self.task_path, self.receipt)
 
+        # Staging with an uncertain effect outcome keeps its journal, writes no
+        # stage receipt and is never blindly replayed.
+        diff = self.real_diff({"beta.txt": b"beta\nstaged\n"})
+        original_apply = target.git_apply
+        receipt, sha = self.draft(diff, "apply-unknown")
+        with patch.object(target, "git_apply",
+                          side_effect=lambda repo, data, check: check and original_apply(
+                              repo, data, check)):
+            with self.assertRaisesRegex(target.Refused, "OUTCOME_UNKNOWN_JOURNAL_PRESERVED"):
+                target.stage(self.task, receipt, sha, ["beta.txt"])
+        self.assertTrue(receipt.with_suffix(".staging").is_file())
+        self.assertFalse(receipt.with_suffix(".staged.json").exists())
+        with self.assertRaisesRegex(target.Refused, "EXISTING_STAGE_NO_REPLAY"):
+            target.stage(self.task, receipt, sha, ["beta.txt"])
+
+        receipt, sha = self.draft(diff, "overreach")
+        def overreach(repo, data, check):
+            applied = original_apply(repo, data, check)
+            if not check:
+                (self.repo / "entry.txt").write_bytes(b"out of scope\n")
+            return applied
+        with patch.object(target, "git_apply", side_effect=overreach):
+            with self.assertRaisesRegex(target.Refused,
+                                        "POST_STAGE_SCOPE_MISMATCH_JOURNAL_PRESERVED"):
+                target.stage(self.task, receipt, sha, ["beta.txt"])
+        self.assertTrue(receipt.with_suffix(".staging").is_file())
+        self.assertFalse(receipt.with_suffix(".staged.json").exists())
+        self.assertEqual(target.git(self.repo, "rev-parse", "HEAD"), self.base_sha)
+        self.git("checkout", "-q", "--", "entry.txt", "beta.txt")
+        with self.assertRaisesRegex(target.Refused, "EXISTING_STAGE_NO_REPLAY"):
+            target.stage(self.task, receipt, sha, ["beta.txt"])
+        self.assertEqual((self.repo / "beta.txt").read_bytes(), b"beta\n")
+
     def test_bad_model_turn_and_unexpected_code_write_refused(self):
         self.original_run = subprocess.run
         def bad(cmd, **kwargs):
@@ -151,6 +300,62 @@ class SubscriptionArtifactTests(unittest.TestCase):
                     target.run(self.task_path, self.receipt)
         self.assertFalse(self.receipt.exists())
         self.assertTrue(self.receipt.with_suffix(".running").exists())
+        self.git("checkout", "-q", "--", "entry.txt")
+
+        # Verified-but-unsafe model diffs are refused before any worktree write.
+        good = self.real_diff({"beta.txt": b"beta\nstaged\n"})
+        old, new = good.split("\nindex ", 1)[1].split(" ", 1)[0].split("..")
+        two = self.real_diff({"beta.txt": b"beta\nstaged\n",
+                              "notes/alpha.txt": b"alpha one\nalpha 2\nalpha three\n"})
+        hunk = "--- a/beta.txt\n+++ b/beta.txt\n@@ -1 +1,2 @@\n beta\n+staged\n"
+        cases = [
+            ("   \n", ["beta.txt"], "EMPTY_DIFF"),
+            ("Here is the patch:\n" + good, ["beta.txt"], "PATCH_FILE_HEADER_INVALID"),
+            (good + "+smuggled\n", ["beta.txt"], "PATCH_FILE_HEADER_INVALID"),
+            (good.replace(" beta\n+staged\n", " beta\n"), ["beta.txt"],
+             "PATCH_HUNK_TRUNCATED"),
+            (good.replace("@@ -1 +1,2 @@\n beta\n+staged\n", "@@ -1 +1 @@\n beta\n"),
+             ["beta.txt"], "PATCH_FILE_WITHOUT_CHANGES"),
+            (good.replace("@@ -1 +1,2 @@", "@@ -1,0 +1,2 @@"), ["beta.txt"],
+             "PATCH_HUNK_COUNT_MISMATCH"),
+            (two, ["beta.txt"], "ALLOWLIST_NOT_EXACT_PATCH_SCOPE"),
+            (good.replace("index " + old, "index 0000000"), ["beta.txt"],
+             "PATCH_INDEX_BASE_MISMATCH"),
+            (good.replace(" 100644\n", " 100755\n"), ["beta.txt"], "PATCH_MODE_MISMATCH"),
+            (good.replace("\nindex ", "\nold mode 100644\nnew mode 100755\nindex ", 1),
+             ["beta.txt"], "PATCH_INDEX_OR_MODE_HEADER_INVALID"),
+            ("diff --git a/new.txt b/new.txt\nnew file mode 100644\nindex 0000000.." + new +
+             "\n--- /dev/null\n+++ b/new.txt\n@@ -0,0 +1 @@\n+new\n", ["new.txt"],
+             "PATCH_INDEX_OR_MODE_HEADER_INVALID"),
+            ("diff --git a/beta.txt b/beta.txt\ndeleted file mode 100644\nindex " + old +
+             "..0000000\n--- a/beta.txt\n+++ /dev/null\n@@ -1 +0,0 @@\n-beta\n",
+             ["beta.txt"], "PATCH_INDEX_OR_MODE_HEADER_INVALID"),
+            ("diff --git a/beta.txt b/gamma.txt\nsimilarity index 100%\n"
+             "rename from beta.txt\nrename to gamma.txt\n", ["beta.txt"],
+             "PATCH_FILE_HEADER_INVALID"),
+            ("diff --git a/beta.txt b/beta.txt\nindex " + old + "..1234567 100644\n"
+             "GIT binary patch\nliteral 3\nKcmZ?wa{vGU\n\n", ["beta.txt"],
+             "BINARY_PATCH_DENIED"),
+            (good.replace("beta.txt", "../beta.txt"), ["beta.txt"], "PATCH_PATH_INVALID"),
+            (good.replace("beta.txt", ".git/config"), ["beta.txt"], "PATCH_PATH_INVALID"),
+            (good.replace("a/beta.txt", "a//tmp/beta.txt").replace(
+                "b/beta.txt", "b//tmp/beta.txt"), ["beta.txt"], "PATCH_PATH_INVALID"),
+            (good + good, ["beta.txt"], "PATCH_DUPLICATE_OR_TOO_MANY_FILES"),
+            ("diff --git a/beta.txt b/beta.txt\nindex " + old + ".." + new + " 100644\n" +
+             hunk.replace(" beta\n", " BETA\n"), ["beta.txt"], "GIT_APPLY_CHECK_FAILED"),
+        ]
+        if (self.repo / "link.txt").is_symlink():
+            cases.append((
+                "diff --git a/link.txt b/link.txt\nindex 1234567..7654321 100644\n"
+                "--- a/link.txt\n+++ b/link.txt\n@@ -1 +1 @@\n-beta.txt\n+entry.txt\n",
+                ["link.txt"], "PATH_NOT_TRACKED_REGULAR_FILE"))
+        for number, (body, allow, reason) in enumerate(cases):
+            with self.subTest(reason=reason, number=number):
+                receipt, sha = self.draft(body, "unsafe-%02d" % number)
+                with self.assertRaisesRegex(target.Refused, reason):
+                    target.stage(self.task, receipt, sha, allow)
+                self.assert_not_staged(receipt)
+                self.assertEqual((self.repo / "beta.txt").read_bytes(), b"beta\n")
 
 
 if __name__ == "__main__":
