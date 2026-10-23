@@ -361,6 +361,7 @@ class SubscriptionArtifactTests(unittest.TestCase):
             target.recover_stage(self.task, receipt, sha, ["beta.txt"])
         self.assertTrue(journal.exists())
         self.assertFalse(receipt_stage.exists())
+        self.assertEqual(journal.read_bytes(), original_journal)
 
         (self.repo / "beta.txt").write_bytes(b"beta\nstaged\n")
         recovered = target.recover_stage(self.task, receipt, sha, ["beta.txt"])
