@@ -347,6 +347,10 @@ class SubscriptionArtifactTests(unittest.TestCase):
         self.assertFalse(self.receipt.exists())
         with self.assertRaisesRegex(target.Refused, "EXISTING_ATTEMPT"):
             target.run(self.task_path, self.receipt)
+        with self.assertRaisesRegex(target.Refused,
+                                    "RUN_OUTCOME_UNKNOWN_OPERATOR_REVIEW_REQUIRED"):
+            target.recover_run(self.task, self.receipt)
+        self.assertTrue(self.receipt.with_suffix(".running").exists())
 
         # Staging with an uncertain effect outcome keeps its journal, writes no
         # stage receipt and is never blindly replayed.
@@ -451,6 +455,64 @@ class SubscriptionArtifactTests(unittest.TestCase):
         self.assertTrue(no_effect.with_suffix(".staging").exists())
         self.assertFalse(no_effect.with_suffix(".staged.json").exists())
         self.assertEqual((self.repo / "beta.txt").read_bytes(), b"beta\n")
+
+    def test_interrupted_completed_run_recovers_without_model_replay(self):
+        # Crash after the sealed draft and verified checkpoint are on disk,
+        # but before deleting the durable RUNNING journal.
+        journal = self.receipt.resolve().with_suffix(".running")
+        unlink_original = Path.unlink
+
+        def crash_on_run_journal(path, *args, **kwargs):
+            if path == journal:
+                raise OSError("simulated crash at run journal unlink")
+            return unlink_original(path, *args, **kwargs)
+
+        with patch.object(target.Path, "unlink", new=crash_on_run_journal):
+            with self.assertRaisesRegex(OSError, "simulated crash"):
+                self.success()
+        self.assertTrue(journal.is_file())
+        self.assertTrue(self.receipt.is_file())
+        receipt_before = self.receipt.read_bytes()
+        proposal = self.receipt.with_suffix(".proposal.txt")
+        proposal_before = proposal.read_bytes()
+        journal_before = journal.read_bytes()
+        self.assertTrue(target.verify(self.task, self.receipt)["verified"])
+        self.assertEqual(target.git(self.repo, "status", "--porcelain=v1"), "")
+
+        journal.write_bytes(b"forged journal")
+        with self.assertRaisesRegex(target.Refused, "RUN_JOURNAL_MISMATCH"):
+            target.recover_run(self.task, self.receipt)
+        journal.write_bytes(journal_before)
+        with self.assertRaisesRegex(target.Refused, "RUN_JOURNAL_MISMATCH"):
+            target.recover_run(dict(self.task, prompt=self.task["prompt"] + "changed"),
+                               self.receipt)
+        proposal.write_bytes(b"corrupted")
+        with self.assertRaisesRegex(target.Refused, "ARTIFACT_OR_CONTINUITY_MISMATCH"):
+            target.recover_run(self.task, self.receipt)
+        proposal.write_bytes(proposal_before)
+        (self.repo / "entry.txt").write_text("unauthorized", encoding="utf-8")
+        with self.assertRaisesRegex(target.Refused, "WORKTREE_NOT_CLEAN"):
+            target.recover_run(self.task, self.receipt)
+        self.git("checkout", "-q", "--", "entry.txt")
+        self.assertEqual(journal.read_bytes(), journal_before)
+
+        # Reconciliation never re-invokes Claude, rewrites a source file or
+        # replaces the original SHA-bound receipt/proposal.
+        with patch.object(target, "claude_cli",
+                          side_effect=AssertionError("model replay forbidden")):
+            result = target.recover_run(self.task, self.receipt)
+        self.assertTrue(result["verified"])
+        self.assertTrue(result["interrupted_run_reconciled"])
+        self.assertIs(result["model_reinvoked"], False)
+        self.assertIs(result["source_edit"], False)
+        self.assertEqual(self.receipt.read_bytes(), receipt_before)
+        self.assertEqual(proposal.read_bytes(), proposal_before)
+        self.assertEqual(target.git(self.repo, "status", "--porcelain=v1"), "")
+        self.assertFalse(journal.exists())
+        with self.assertRaisesRegex(target.Refused, "NO_INTERRUPTED_RUN_JOURNAL"):
+            target.recover_run(self.task, self.receipt)
+        with self.assertRaisesRegex(target.Refused, "EXISTING_ATTEMPT"):
+            target.run(self.task_path, self.receipt)
 
     def test_bad_model_turn_and_unexpected_code_write_refused(self):
         self.original_run = subprocess.run

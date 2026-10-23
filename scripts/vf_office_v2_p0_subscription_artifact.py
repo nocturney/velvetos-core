@@ -357,6 +357,32 @@ def run(task_path, receipt_path):
     return result
 
 
+def recover_run(task, receipt_path):
+    """Close an interrupted RUN journal only after verifying its complete receipt.
+
+    A missing or incomplete receipt means UNKNOWN: never re-invoke Claude,
+    infer an outcome, generate a replacement receipt or delete the journal.
+    """
+    dest = Path(receipt_path).resolve()
+    journal = dest.with_suffix(".running")
+    if not journal.is_file() or journal.is_symlink():
+        raise Refused("NO_INTERRUPTED_RUN_JOURNAL")
+    expected = canonical({"task": digest(task), "state": "RUNNING_NO_BLIND_RETRY"})
+    if journal.read_bytes() != expected:
+        raise Refused("RUN_JOURNAL_MISMATCH")
+    if (not dest.is_file() or dest.is_symlink() or
+            dest.with_suffix(".staging").exists() or
+            dest.with_suffix(".staged.json").exists()):
+        raise Refused("RUN_OUTCOME_UNKNOWN_OPERATOR_REVIEW_REQUIRED")
+    result = verify(task, dest)
+    # Do not clear a journal replaced during readback.
+    if journal.is_symlink() or journal.read_bytes() != expected:
+        raise Refused("RUN_JOURNAL_CHANGED")
+    journal.unlink()
+    return {**result, "interrupted_run_reconciled": True,
+            "model_reinvoked": False, "source_edit": False}
+
+
 def git_bytes(repo, *argv):
     p = subprocess.run(["git", "-C", str(repo), *argv],
                        capture_output=True, timeout=12)
@@ -671,7 +697,7 @@ def stage(task, receipt_path, proposal_sha256, allow_paths):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
-    for command in ("run", "verify"):
+    for command in ("run", "verify", "recover-run"):
         p = sub.add_parser(command)
         p.add_argument("--task", required=True)
         p.add_argument("--receipt", required=True)
@@ -692,6 +718,8 @@ def main():
             result = run(args.task, args.receipt)
         elif args.command == "verify":
             result = verify(task, args.receipt)
+        elif args.command == "recover-run":
+            result = recover_run(task, args.receipt)
         elif args.command == "stage":
             result = stage(task, args.receipt, args.proposal_sha256, args.allow_path)
         else:
