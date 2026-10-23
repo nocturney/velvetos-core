@@ -224,10 +224,12 @@ class SubscriptionArtifactTests(unittest.TestCase):
         self.assertFalse(data["generated_code_executed"])
         self.assertFalse(data["committed"])
 
-    def test_api_key_env_never_invokes_model(self):
-        with patch.dict(os.environ, {"ANTHROPIC_API_KEY": "present"}):
-            with self.assertRaisesRegex(target.Refused, "METERED_API"):
-                target.validate_task(self.task, self.receipt)
+    def test_forbidden_provider_env_never_invokes_model(self):
+        for name in target.FORBIDDEN_ENV:
+            with self.subTest(env=name):
+                with patch.dict(os.environ, {name: "present"}):
+                    with self.assertRaisesRegex(target.Refused, "METERED_API"):
+                        target.validate_task(self.task, self.receipt)
 
     def test_refuse_cross_host_or_dirty_branch(self):
         wrong = dict(self.task, branch="main")
