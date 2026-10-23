@@ -12,9 +12,9 @@
   },
   "unavailableLabel": "לוח Cloudflare Instagram Publisher לא נקרא הבוקר · ימים ריקים כאן אינם אומרים שאין פרסום.",
   "unavailableVisibleText": "בקרוב בפיד: לוח Cloudflare Instagram Publisher לא נקרא הבוקר",
-  "note": "Cloudflare publisher is current schedule authority. Missing snapshot is unavailable, never an empty schedule. OpenPost is frozen historical evidence only.",
+  "note": "Cloudflare publisher is current schedule authority. Missing snapshot is unavailable, never an empty schedule. OpenPost is retired and has no running service.",
   "openpost": {
-    "state": "paused",
+    "state": "retired",
     "historicalOnly": true,
     "routingAuthority": false
   }

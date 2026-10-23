@@ -401,12 +401,8 @@ if r"C:\Users\Chris" in prompts:
     fail("Grok Cognee prompts still contain Chris-specific absolute paths")
 
 openpost = json.loads(read("packages/vfigos/OPENPOST.json"))
-persistence = (openpost.get("runtime") or {}).get("persistence") or {}
-expected_openpost = str(PureWindowsPath(binding["environment"]["VELVET_ROOT"]) / "Services" / "OpenPost" / "staging" / "start-openpost-staging.ps1")
-if persistence.get("startScript") != expected_openpost:
-    fail("OpenPost staging startScript must match the selected instance Windows service lane")
-if str(persistence.get("startScriptSha256") or "").lower() != "2d5541e4c2b7017c9d34212e78e53c02ee6f144f0e54cf1b1f68defbfed03bd0":
-    fail("OpenPost staging startScript SHA drift")
+if (openpost.get("status") or {}).get("state") != "retired" or "runtime" in openpost:
+    fail("Retired OpenPost must not expose a Windows staging runtime")
 
 fallback = read("packages/vfmcp/WINDOWS-EDGE-FALLBACK.md")
 require(fallback, "WINDOWS-PATH-CONTRACT.md", "Windows fallback playbook")
