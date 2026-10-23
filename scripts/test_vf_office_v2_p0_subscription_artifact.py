@@ -321,6 +321,76 @@ class SubscriptionArtifactTests(unittest.TestCase):
             target.stage(self.task, receipt, sha, ["beta.txt"])
         self.assertEqual((self.repo / "beta.txt").read_bytes(), b"beta\n")
 
+    def test_interrupted_stage_recovery_is_exact_and_never_reapplies(self):
+        # Simulate a process death AFTER git apply but BEFORE the stage receipt.
+        # A placeholder post-SHA must not permit extra in-scope edits.
+        diff = self.real_diff({"beta.txt": b"beta\nstaged\n"})
+        diff = "\n".join(
+            line.split("..", 1)[0] + "..0000000 " + line.split(" ")[-1]
+            if line.startswith("index ") else line
+            for line in diff.splitlines()
+        ) + "\n"
+        receipt, sha = self.draft(diff, "recover-after-apply")
+        receipt_stage = receipt.with_suffix(".staged.json")
+        journal = receipt.with_suffix(".staging")
+        original_write = target.exclusive_write
+
+        def crash_before_receipt(path, value):
+            if Path(path).resolve() == receipt_stage.resolve():
+                raise OSError("simulated process crash after patch apply")
+            return original_write(path, value)
+
+        with patch.object(target, "exclusive_write", side_effect=crash_before_receipt):
+            with self.assertRaisesRegex(OSError, "simulated process crash"):
+                target.stage(self.task, receipt, sha, ["beta.txt"])
+        self.assertTrue(journal.is_file())
+        self.assertFalse(receipt_stage.exists())
+        self.assertEqual((self.repo / "beta.txt").read_bytes(), b"beta\nstaged\n")
+        original_journal = journal.read_bytes()
+        forged = json.loads(original_journal)
+        forged["paths"] = ["entry.txt"]
+        journal.write_text(json.dumps(forged), encoding="utf-8")
+        with self.assertRaisesRegex(target.Refused, "RECOVERY_JOURNAL_MISMATCH"):
+            target.recover_stage(self.task, receipt, sha, ["beta.txt"])
+        journal.write_bytes(original_journal)
+
+        # A malicious/concurrent extra edit inside the SAME allowed file must
+        # NOT be mistaken for successful staging merely by path allowlisting.
+        (self.repo / "beta.txt").write_bytes(b"beta\nstaged\nEXTRA\n")
+        with self.assertRaisesRegex(target.Refused, "POST_STAGE_POSTIMAGE_MISMATCH"):
+            target.recover_stage(self.task, receipt, sha, ["beta.txt"])
+        self.assertTrue(journal.exists())
+        self.assertFalse(receipt_stage.exists())
+
+        (self.repo / "beta.txt").write_bytes(b"beta\nstaged\n")
+        recovered = target.recover_stage(self.task, receipt, sha, ["beta.txt"])
+        self.assertEqual(recovered["state"], "SOURCE_STAGED_FOR_QA")
+        self.assertFalse(recovered["committed"])
+        self.assertFalse(recovered["p0_admitted"])
+        self.assertFalse(journal.exists())
+        stage_receipt = json.loads(receipt_stage.read_text(encoding="utf-8"))
+        checksum = stage_receipt.pop("stage_receipt_sha256")
+        self.assertEqual(checksum, target.digest(stage_receipt))
+        self.assertIs(stage_receipt["bounded_proof"]["recovered_after_interrupted_stage"], True)
+        self.assertEqual(stage_receipt["files"][0]["after_blob"],
+                         target.git(self.repo, "hash-object", "--", "beta.txt"))
+        with self.assertRaisesRegex(target.Refused, "EXISTING_STAGE_NO_REPLAY"):
+            target.recover_stage(self.task, receipt, sha, ["beta.txt"])
+
+        self.git("checkout", "-q", "--", "beta.txt")
+        no_effect, sha2 = self.draft(diff, "recover-before-apply")
+        original_apply = target.git_apply
+        with patch.object(target, "git_apply",
+                          side_effect=lambda repo, data, check: (
+                              original_apply(repo, data, check) if check else False)):
+            with self.assertRaisesRegex(target.Refused, "OUTCOME_UNKNOWN_JOURNAL_PRESERVED"):
+                target.stage(self.task, no_effect, sha2, ["beta.txt"])
+        with self.assertRaisesRegex(target.Refused, "POST_STAGE_SCOPE_MISMATCH"):
+            target.recover_stage(self.task, no_effect, sha2, ["beta.txt"])
+        self.assertTrue(no_effect.with_suffix(".staging").exists())
+        self.assertFalse(no_effect.with_suffix(".staged.json").exists())
+        self.assertEqual((self.repo / "beta.txt").read_bytes(), b"beta\n")
+
     def test_bad_model_turn_and_unexpected_code_write_refused(self):
         self.original_run = subprocess.run
         def bad(cmd, **kwargs):

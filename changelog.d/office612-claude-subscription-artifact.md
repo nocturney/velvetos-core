@@ -1,1 +1,2 @@
 - Add a strictly non-authoritative Claude subscription text-artifact adapter for Office P0: one real one-turn CLI invocation, verified claude.ai login, no tools/MCP, bounded output, hashed Project State continuation, and fail-closed unknown/replay handling. No code execution, PR writer, scheduler, lease or production authority.
+- Reconcile an interrupted source-stage journal without re-running Claude or applying a patch twice; require an exact SHA-256-bound Git postimage, fail closed on in-scope tampering or incomplete apply, and retain non-production/no-merge boundaries.

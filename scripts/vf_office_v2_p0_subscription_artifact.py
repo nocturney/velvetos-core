@@ -11,6 +11,11 @@ proposal that is exactly a plain unified git diff of existing tracked text files
 to the LOCAL isolated worktree, and writes an external tamper-evident
 `<receipt>.staged.json`. It never commits, pushes, merges, runs generated code
 or grants authority; SOURCE_STAGED_FOR_QA is not P0 or two-host admission.
+
+The separate recover-stage command never replays the model or patch. It
+reconciles an interrupted .staging journal against the exact expected Git
+postimage and writes a stage receipt only for a complete local application;
+missing, partial or ambiguous effects stay fail-closed for operator review.
 """
 from __future__ import annotations
 
@@ -98,7 +103,7 @@ def git(repo, *argv):
     return p.stdout.decode("utf-8", "replace").strip()
 
 
-def validate_task(task, receipt_path):
+def validate_task(task, receipt_path, allow_dirty=False):
     if set(task) != TASK_FIELDS or task["schema"] != SCHEMA or task["issue_url"] != ISSUE:
         raise Refused("TASK_SCHEMA_OR_SCOPE")
     if not isinstance(task["task_id"], str) or not TASK_ID.fullmatch(task["task_id"]):
@@ -135,7 +140,7 @@ def validate_task(task, receipt_path):
         raise Refused("STALE_BASE_SHA")
     if git(repo, "branch", "--show-current") != task["branch"]:
         raise Refused("BRANCH_MISMATCH")
-    if git(repo, "status", "--porcelain=v1", "--untracked-files=all"):
+    if not allow_dirty and git(repo, "status", "--porcelain=v1", "--untracked-files=all"):
         raise Refused("WORKTREE_NOT_CLEAN")
     state = read_json(checkpoint)
     if continuity.required_shape(state):
@@ -176,9 +181,9 @@ def claude_cli():
     return binary, version.stdout.decode("utf-8", "replace").strip()[:120]
 
 
-def verify(task, receipt_path):
+def verify(task, receipt_path, allow_dirty=False):
     receipt_path = Path(receipt_path).resolve()
-    repo, checkpoint, before, _ = validate_task(task, receipt_path)
+    repo, checkpoint, before, _ = validate_task(task, receipt_path, allow_dirty=allow_dirty)
     receipt = read_json(receipt_path)
     checksum = receipt.pop("receipt_sha256", None)
     if checksum != digest(receipt):
@@ -200,7 +205,7 @@ def verify(task, receipt_path):
             file_digest(after_path) != receipt["checkpoint_after_sha256"] or
             continuity.verify(before, read_json(after_path))["status"] != "PASS"):
         raise Refused("ARTIFACT_OR_CONTINUITY_MISMATCH")
-    if git(repo, "status", "--porcelain=v1", "--untracked-files=all"):
+    if not allow_dirty and git(repo, "status", "--porcelain=v1", "--untracked-files=all"):
         raise Refused("WORKTREE_CHANGED")
     return {"state": "MODEL_DRAFT_ONLY", "verified": True,
             "task_id": task["task_id"], "real_model_invoked": True,
@@ -379,6 +384,153 @@ def tracked_base_blob(repo, item):
     return listed.group(3)
 
 
+
+def expected_post_blobs(repo, patch_bytes, allowed):
+    """Predict exact postimage Git blobs using a disposable INDEX, not the worktree.
+
+    The index lives outside the repo, never becomes HEAD, and is removed after
+    verification. Git may store unreachable blobs; no effect is committed.
+    """
+    import tempfile
+    with tempfile.TemporaryDirectory(prefix="office612-stage-index-") as folder:
+        env = dict(os.environ, GIT_INDEX_FILE=str(Path(folder) / "index"))
+        def execute(*args, input_bytes=None):
+            result = subprocess.run(
+                ["git", "-C", str(repo), *args], input=input_bytes,
+                capture_output=True, timeout=12, env=env)
+            if result.returncode:
+                raise Refused("STAGE_EXPECTED_POSTIMAGE_UNAVAILABLE")
+            return result.stdout
+        execute("read-tree", "HEAD")
+        execute("apply", "--cached", "--whitespace=nowarn", "-p1", "-", input_bytes=patch_bytes)
+        listing = execute("ls-files", "--stage", "--", *allowed).decode("utf-8")
+    blobs = {}
+    for row in listing.splitlines():
+        matched = re.fullmatch(r"(100644|100755) ([0-9a-f]{40,64}) 0\t(.+)", row)
+        if not matched or matched.group(3) in blobs:
+            raise Refused("STAGE_EXPECTED_INDEX_INVALID")
+        blobs[matched.group(3)] = matched.group(2)
+    if sorted(blobs) != allowed:
+        raise Refused("STAGE_EXPECTED_INDEX_SCOPE_MISMATCH")
+    return blobs
+
+
+def validate_stage_postconditions(task, repo, files, allowed, apply_bytes):
+    if (git(repo, "rev-parse", "HEAD") != task["base_sha"] or
+            git(repo, "branch", "--show-current") != task["branch"]):
+        raise Refused("POST_STAGE_HEAD_OR_BRANCH_MOVED_JOURNAL_PRESERVED")
+    expected_status = b"".join(b" M " + p.encode() + b"\x00" for p in allowed)
+    if (git_bytes(repo, "status", "--porcelain=v1", "-z", "--untracked-files=all",
+                  "--no-renames") != expected_status or
+            git(repo, "diff", "--name-only", "--no-renames").split("\n") != allowed or
+            git(repo, "diff", "--cached", "--name-only") or
+            git(repo, "diff", "--summary")):
+        raise Refused("POST_STAGE_SCOPE_MISMATCH_JOURNAL_PRESERVED")
+    for item in files:
+        try:
+            path = regular_text_file(repo, item["path"])
+        except Refused as exc:
+            raise Refused("POST_STAGE_FILE_INVALID_JOURNAL_PRESERVED") from exc
+        item["after_blob"] = git(repo, "hash-object", "--", item["path"])
+        # A no-tools model cannot calculate a Git blob SHA for its proposed
+        # postimage. Allow only the explicit 0000000 placeholder; always
+        # independently compute/store the real postimage blob and SHA-256.
+        if item["new"] != "0000000" and not item["after_blob"].startswith(item["new"]):
+            raise Refused("POST_STAGE_BLOB_MISMATCH_JOURNAL_PRESERVED")
+        item["after_sha256"] = file_digest(path)
+    expected = expected_post_blobs(repo, apply_bytes, allowed)
+    if any(item["after_blob"] != expected[item["path"]] for item in files):
+        raise Refused("POST_STAGE_POSTIMAGE_MISMATCH_JOURNAL_PRESERVED")
+
+
+def write_stage_receipt(task, receipt_path, proposal_sha256, allowed, files,
+                        apply_bytes, patch_bytes, draft_sha, staged, journal,
+                        recovered=False):
+    record = {
+        "schema": STAGE_RECEIPT, "state": "SOURCE_STAGED_FOR_QA",
+        "issue_url": ISSUE, "task_id": task["task_id"], "task_sha256": digest(task),
+        "draft_receipt_sha256": draft_sha, "proposal_sha256": proposal_sha256,
+        "operator_supplied_proposal_sha256": proposal_sha256,
+        "operator_supplied_allowlist": allowed, "changed_paths": allowed,
+        "base_sha": task["base_sha"], "branch": task["branch"],
+        "head_after": task["base_sha"], "worker_host": platform.node(),
+        "files": [{k: item[k] for k in ("path", "mode", "before_blob", "after_blob",
+                                         "after_sha256")} for item in files],
+        "bounded_proof": {
+            "git_apply_check_passed": True, "status_exactly_allowlist_modified": True,
+            "proposal_bytes_preserved": True,
+            "git_apply_sha256": hashlib.sha256(apply_bytes).hexdigest(),
+            "terminal_lf_added_for_git_apply": apply_bytes != patch_bytes,
+            "diff_name_only_equals_allowlist": True, "index_unchanged": True,
+            "no_mode_create_delete_rename": True,
+            "after_blobs_independently_computed": True,
+            "recovered_after_interrupted_stage": recovered,
+            "new_index_placeholders": sum(f["new"] == "0000000" for f in files),
+        },
+        "committed": False, "pushed": False, "merged": False,
+        "generated_code_executed": False, "tools_enabled": False,
+        "external_effects_authorized": False, "model_output_is_reviewed_code": False,
+        "production": False, "p0_admitted": False, "two_host_admitted": False,
+    }
+    exclusive_write(staged, canonical({**record, "stage_receipt_sha256": digest(record)}))
+    journal.unlink()
+    return {"state": "SOURCE_STAGED_FOR_QA", "staged": True,
+            "task_id": task["task_id"], "changed_paths": allowed,
+            "stage_receipt": str(staged), "stage_receipt_sha256": digest(record),
+            "committed": False, "pushed": False, "generated_code_executed": False,
+            "p0_admitted": False, "two_host_admitted": False}
+
+
+def recover_stage(task, receipt_path, proposal_sha256, allow_paths):
+    """Reconcile an interrupted application WITHOUT re-running model or git apply.
+
+    Only an exact postimage of the original hash-bound patch earns a receipt.
+    Missing effect, partial apply, unrelated writes or ambiguous state keep the
+    journal intact. This is LOCAL source-staging recovery, not distributed lease.
+    """
+    receipt_path = Path(receipt_path).resolve()
+    if not isinstance(proposal_sha256, str) or not PROPOSAL_SHA.fullmatch(proposal_sha256):
+        raise Refused("PROPOSAL_SHA256_FORMAT")
+    if not isinstance(allow_paths, (list, tuple)) or not 1 <= len(allow_paths) <= MAX_STAGE_FILES:
+        raise Refused("ALLOW_PATH_COUNT")
+    allowed = sorted(allow_path(p) for p in allow_paths)
+    if len(set(allowed)) != len(allowed):
+        raise Refused("ALLOW_PATH_DUPLICATE")
+    staged = receipt_path.with_suffix(".staged.json")
+    journal = receipt_path.with_suffix(".staging")
+    if staged.exists() or staged.is_symlink():
+        raise Refused("EXISTING_STAGE_NO_REPLAY")
+    if not journal.is_file() or journal.is_symlink():
+        raise Refused("RECOVERY_JOURNAL_MISSING_OR_INVALID")
+    expected_journal = {
+        "task": digest(task), "proposal_sha256": proposal_sha256,
+        "paths": allowed, "state": "STAGING_NO_BLIND_RETRY",
+    }
+    if read_json(journal) != expected_journal:
+        raise Refused("RECOVERY_JOURNAL_MISMATCH")
+    verify(task, receipt_path, allow_dirty=True)
+    repo = Path(task["repo_path"]).resolve()
+    draft_sha = file_digest(receipt_path)
+    if read_json(receipt_path).get("proposal_sha256") != proposal_sha256:
+        raise Refused("PROPOSAL_SHA256_MISMATCH")
+    patch_bytes = receipt_path.with_suffix(".proposal.txt").read_bytes()
+    if hashlib.sha256(patch_bytes).hexdigest() != proposal_sha256:
+        raise Refused("PROPOSAL_SHA256_MISMATCH")
+    apply_bytes = patch_bytes if patch_bytes.endswith(b"\n") else patch_bytes + b"\n"
+    try:
+        files = parse_git_diff(apply_bytes.decode("utf-8"))
+    except UnicodeDecodeError as exc:
+        raise Refused("PROPOSAL_NOT_UTF8") from exc
+    if sorted(item["path"] for item in files) != allowed:
+        raise Refused("ALLOWLIST_NOT_EXACT_PATCH_SCOPE")
+    for item in files:
+        item["before_blob"] = tracked_base_blob(repo, item)
+    validate_stage_postconditions(task, repo, files, allowed, apply_bytes)
+    return write_stage_receipt(
+        task, receipt_path, proposal_sha256, allowed, files, apply_bytes,
+        patch_bytes, draft_sha, staged, journal, recovered=True)
+
+
 def stage(task, receipt_path, proposal_sha256, allow_paths):
     receipt_path = Path(receipt_path).resolve()
     if not isinstance(proposal_sha256, str) or not PROPOSAL_SHA.fullmatch(proposal_sha256):
@@ -422,60 +574,10 @@ def stage(task, receipt_path, proposal_sha256, allow_paths):
     # journal in place and never retries, reverts or commits.
     if not git_apply(repo, apply_bytes, check=False):
         raise Refused("GIT_APPLY_FAILED_OUTCOME_UNKNOWN_JOURNAL_PRESERVED")
-    if (git(repo, "rev-parse", "HEAD") != task["base_sha"] or
-            git(repo, "branch", "--show-current") != task["branch"]):
-        raise Refused("POST_STAGE_HEAD_OR_BRANCH_MOVED_JOURNAL_PRESERVED")
-    expected_status = b"".join(b" M " + p.encode() + b"\x00" for p in allowed)
-    if (git_bytes(repo, "status", "--porcelain=v1", "-z", "--untracked-files=all",
-                  "--no-renames") != expected_status or
-            git(repo, "diff", "--name-only", "--no-renames").split("\n") != allowed or
-            git(repo, "diff", "--cached", "--name-only") or
-            git(repo, "diff", "--summary")):
-        raise Refused("POST_STAGE_SCOPE_MISMATCH_JOURNAL_PRESERVED")
-    for item in files:
-        try:
-            path = regular_text_file(repo, item["path"])
-        except Refused as exc:
-            raise Refused("POST_STAGE_FILE_INVALID_JOURNAL_PRESERVED") from exc
-        item["after_blob"] = git(repo, "hash-object", "--", item["path"])
-        # A no-tools model cannot calculate a Git blob SHA for its proposed
-        # postimage. Allow only the explicit 0000000 placeholder; always
-        # independently compute/store the real postimage blob and SHA-256.
-        if item["new"] != "0000000" and not item["after_blob"].startswith(item["new"]):
-            raise Refused("POST_STAGE_BLOB_MISMATCH_JOURNAL_PRESERVED")
-        item["after_sha256"] = file_digest(path)
-    record = {
-        "schema": STAGE_RECEIPT, "state": "SOURCE_STAGED_FOR_QA",
-        "issue_url": ISSUE, "task_id": task["task_id"], "task_sha256": digest(task),
-        "draft_receipt_sha256": draft_sha, "proposal_sha256": proposal_sha256,
-        "operator_supplied_proposal_sha256": proposal_sha256,
-        "operator_supplied_allowlist": allowed, "changed_paths": allowed,
-        "base_sha": task["base_sha"], "branch": task["branch"],
-        "head_after": task["base_sha"], "worker_host": platform.node(),
-        "files": [{k: item[k] for k in ("path", "mode", "before_blob", "after_blob",
-                                         "after_sha256")} for item in files],
-        "bounded_proof": {
-            "git_apply_check_passed": True, "status_exactly_allowlist_modified": True,
-            "proposal_bytes_preserved": True,
-            "git_apply_sha256": hashlib.sha256(apply_bytes).hexdigest(),
-            "terminal_lf_added_for_git_apply": apply_bytes != patch_bytes,
-            "diff_name_only_equals_allowlist": True, "index_unchanged": True,
-            "no_mode_create_delete_rename": True,
-            "after_blobs_independently_computed": True,
-            "new_index_placeholders": sum(f["new"] == "0000000" for f in files),
-        },
-        "committed": False, "pushed": False, "merged": False,
-        "generated_code_executed": False, "tools_enabled": False,
-        "external_effects_authorized": False, "model_output_is_reviewed_code": False,
-        "production": False, "p0_admitted": False, "two_host_admitted": False,
-    }
-    exclusive_write(staged, canonical({**record, "stage_receipt_sha256": digest(record)}))
-    journal.unlink()
-    return {"state": "SOURCE_STAGED_FOR_QA", "staged": True,
-            "task_id": task["task_id"], "changed_paths": allowed,
-            "stage_receipt": str(staged), "stage_receipt_sha256": digest(record),
-            "committed": False, "pushed": False, "generated_code_executed": False,
-            "p0_admitted": False, "two_host_admitted": False}
+    validate_stage_postconditions(task, repo, files, allowed, apply_bytes)
+    return write_stage_receipt(
+        task, receipt_path, proposal_sha256, allowed, files, apply_bytes,
+        patch_bytes, draft_sha, staged, journal)
 
 
 def main():
@@ -490,6 +592,11 @@ def main():
     p.add_argument("--receipt", required=True)
     p.add_argument("--proposal-sha256", required=True)
     p.add_argument("--allow-path", action="append", required=True)
+    q = sub.add_parser("recover-stage")
+    q.add_argument("--task", required=True)
+    q.add_argument("--receipt", required=True)
+    q.add_argument("--proposal-sha256", required=True)
+    q.add_argument("--allow-path", action="append", required=True)
     args = parser.parse_args()
     try:
         task = read_json(args.task)
@@ -497,8 +604,10 @@ def main():
             result = run(args.task, args.receipt)
         elif args.command == "verify":
             result = verify(task, args.receipt)
-        else:
+        elif args.command == "stage":
             result = stage(task, args.receipt, args.proposal_sha256, args.allow_path)
+        else:
+            result = recover_stage(task, args.receipt, args.proposal_sha256, args.allow_path)
         print(json.dumps(result, ensure_ascii=False, sort_keys=True))
     except (Refused, OSError, ValueError, subprocess.TimeoutExpired) as exc:
         print("REFUSED:" + (str(exc) if isinstance(exc, Refused) else type(exc).__name__),

@@ -109,7 +109,7 @@ def main() -> int:
     except subprocess.TimeoutExpired:
         fail("#612 subscription model evidence adapter test timeout")
     if (subscription_run.returncode != 0 or
-            "Ran 6 tests" not in subscription_run.stderr):
+            "Ran 8 tests" not in subscription_run.stderr):
         fail("#612 subscription model evidence adapter contract failed")
     authority = load(P0 / "authority-map-v0.1.json")
     if authority.get("single_external_effect_authority") is not True:
