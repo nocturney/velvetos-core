@@ -314,6 +314,12 @@ class SubscriptionArtifactTests(unittest.TestCase):
         self.assertEqual(staged["task_sha256"], target.digest(self.task))
         self.assertEqual(staged["operator_supplied_allowlist"], ["beta.txt"])
         self.assertIs(staged["production"], False)
+        # After staging the checkout is intentionally dirty. The clean-tree
+        # precondition must reject a repeated attempt before calling Claude.
+        with patch.object(target, "claude_cli", side_effect=AssertionError("NO_SECOND_MODEL_CALL")):
+            with self.assertRaisesRegex(target.Refused, "WORKTREE_NOT_CLEAN"):
+                target.run_stage(self.task_path, self.receipt)
+        self.assertEqual((self.repo / "beta.txt").read_bytes(), b"beta\nauto-staged\n")
 
     def test_run_stage_prose_draft_is_retained(self):
         self.task["source_spans"] = [
