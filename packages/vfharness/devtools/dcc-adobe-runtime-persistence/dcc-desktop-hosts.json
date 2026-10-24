@@ -8,39 +8,43 @@
     "stagger_seconds": 25,
     "gui_before_login_supported": false,
     "shortcut_first": true,
-    "note": "DCC gateway and Adobe brokers may run in background. GUI hosts do not launch at logon; agents launch one host on demand in hidden mode via manual scheduled tasks. Normal vendor shortcuts remain unchanged for the user.",
+    "note": "Adobe and Autodesk DCC hosts retired by owner; keep Fusion and Meshmixer. Manual surviving hosts only; no GUI startup at logon.",
     "agent_hidden_launch": true,
     "launch_at_logon": false
   },
   "apps": [
     {
       "id": "substance-painter",
-      "enabled": true,
+      "enabled": false,
       "process": "Adobe Substance 3D Painter",
       "path": "D:\\Velvet\\Runtime\\Autostart\\Adobe Substance 3D Painter - VelvetOS.lnk",
-      "launch_policy": "vram_budget_1536_svt_off"
+      "launch_policy": "vram_budget_1536_svt_off",
+      "reason": "owner_retired_vendor_app_2026-10-24"
     },
     {
       "id": "maya",
-      "enabled": true,
+      "enabled": false,
       "process": "maya",
       "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Autodesk Maya 2027\\Maya 2027.lnk",
       "automation_mode": "headless_mayapy",
       "automation_process": "mayapy",
       "managed_pid_file": "D:\\Velvet\\State\\DCC-MCP\\maya-headless-host.json",
-      "on_demand_launcher": "D:\\Velvet\\Runtime\\Autostart\\Start-VelvetMayaHeadless.ps1"
+      "on_demand_launcher": "D:\\Velvet\\Runtime\\Autostart\\Start-VelvetMayaHeadless.ps1",
+      "reason": "owner_retired_vendor_app_2026-10-24"
     },
     {
       "id": "inventor",
-      "enabled": true,
+      "enabled": false,
       "process": "Inventor",
-      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Autodesk Inventor 2027\\Autodesk Inventor Professional 2027 - English.lnk"
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Autodesk Inventor 2027\\Autodesk Inventor Professional 2027 - English.lnk",
+      "reason": "owner_retired_vendor_app_2026-10-24"
     },
     {
       "id": "autocad",
-      "enabled": true,
+      "enabled": false,
       "process": "acad",
-      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AutoCAD 2027 - English\\AutoCAD 2027 - English.lnk"
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AutoCAD 2027 - English\\AutoCAD 2027 - English.lnk",
+      "reason": "owner_retired_vendor_app_2026-10-24"
     },
     {
       "id": "zbrush",
@@ -72,27 +76,31 @@
     },
     {
       "id": "substance-designer",
-      "enabled": true,
+      "enabled": false,
       "process": "Adobe Substance 3D Designer",
-      "path": "D:\\Velvet\\Runtime\\Autostart\\Adobe Substance 3D Designer - VelvetOS.lnk"
+      "path": "D:\\Velvet\\Runtime\\Autostart\\Adobe Substance 3D Designer - VelvetOS.lnk",
+      "reason": "owner_retired_vendor_app_2026-10-24"
     },
     {
       "id": "substance-sampler",
-      "enabled": true,
+      "enabled": false,
       "process": "Adobe Substance 3D Sampler",
-      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Substance 3D Sampler.lnk"
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Substance 3D Sampler.lnk",
+      "reason": "owner_retired_vendor_app_2026-10-24"
     },
     {
       "id": "substance-modeler",
-      "enabled": true,
+      "enabled": false,
       "process": "Adobe Substance 3D Modeler",
-      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Substance 3D Modeler.lnk"
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Substance 3D Modeler.lnk",
+      "reason": "owner_retired_vendor_app_2026-10-24"
     },
     {
       "id": "substance-stager",
-      "enabled": true,
+      "enabled": false,
       "process": "Adobe Substance 3D Stager",
-      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Substance 3D Stager.lnk"
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Substance 3D Stager.lnk",
+      "reason": "owner_retired_vendor_app_2026-10-24"
     },
     {
       "id": "cinema4d",
@@ -103,33 +111,38 @@
     },
     {
       "id": "3dsmax",
-      "enabled": true,
+      "enabled": false,
       "process": "3dsmax",
-      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Autodesk\\Autodesk 3ds Max 2027\\3ds Max 2027 - English.lnk"
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Autodesk\\Autodesk 3ds Max 2027\\3ds Max 2027 - English.lnk",
+      "reason": "owner_retired_vendor_app_2026-10-24"
     },
     {
       "id": "photoshop",
-      "enabled": true,
+      "enabled": false,
       "process": "Photoshop",
-      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Photoshop 2026.lnk"
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Photoshop 2026.lnk",
+      "reason": "owner_retired_vendor_app_2026-10-24"
     },
     {
       "id": "illustrator",
-      "enabled": true,
+      "enabled": false,
       "process": "Illustrator",
-      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Illustrator 2026.lnk"
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Illustrator 2026.lnk",
+      "reason": "owner_retired_vendor_app_2026-10-24"
     },
     {
       "id": "aftereffects",
-      "enabled": true,
+      "enabled": false,
       "process": "AfterFX",
-      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe After Effects 2026.lnk"
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe After Effects 2026.lnk",
+      "reason": "owner_retired_vendor_app_2026-10-24"
     },
     {
       "id": "premiere",
-      "enabled": true,
+      "enabled": false,
       "process": "Adobe Premiere Pro",
-      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Premiere Pro 2026.lnk"
+      "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Adobe Premiere Pro 2026.lnk",
+      "reason": "owner_retired_vendor_app_2026-10-24"
     },
     {
       "id": "fusion",
