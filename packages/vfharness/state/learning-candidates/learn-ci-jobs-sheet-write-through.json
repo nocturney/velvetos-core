@@ -4,14 +4,17 @@
   "trigger": "GitHub Actions workflow 'Jobs Sheet Write-Through' failed on main",
   "action": "Open a fix PR from the failing run log; if the root cause can recur, add or tighten a sensor/contract; triage this candidate (accept/reject/prune) instead of letting it accumulate.",
   "scope": "project",
-  "confidence": 0.4,
+  "confidence": 0.7,
   "status": "candidate",
   "evidence": [
     "gh-run:39181291475:failure:2026-10-19T00:33:15Z:https://github.com/nocturney/velvetos-core/actions/runs/39181291475",
-    "gh-run:39999399392:failure:2026-10-23T17:57:58Z:https://github.com/nocturney/velvetos-core/actions/runs/39999399392"
+    "gh-run:39999399392:failure:2026-10-23T17:57:58Z:https://github.com/nocturney/velvetos-core/actions/runs/39999399392",
+    "gh-run:40035083789:failure:2026-10-23T22:40:07Z:https://github.com/nocturney/velvetos-core/actions/runs/40035083789",
+    "gh-run:40048666587:failure:2026-10-24T01:11:44Z:https://github.com/nocturney/velvetos-core/actions/runs/40048666587",
+    "gh-run:40070640129:failure:2026-10-24T06:32:57Z:https://github.com/nocturney/velvetos-core/actions/runs/40070640129"
   ],
   "first_seen": "2026-10-19T00:33:15Z",
-  "last_seen": "2026-10-23T17:57:58Z",
+  "last_seen": "2026-10-24T06:32:57Z",
   "owner_correction": false,
   "promote_to": null,
   "supersedes": null,
