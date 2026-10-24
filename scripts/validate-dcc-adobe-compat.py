@@ -325,6 +325,37 @@ def main() -> int:
         if "Register-ScheduledTask -TaskName 'VelvetOS AdobePy Broker Photoshop'" in installer_text:
             errors.append("reboot-persistence-installer: retired Photoshop broker must not be recreated")
 
+    phase2 = DEVTOOLS / "creative-tools" / "missing-integrations-phase2"
+    phase2_installer = phase2 / "Install-Phase2Candidates.ps1"
+    phase2_host = phase2 / "Start-Phase2CandidateHost.ps1"
+    if not phase2_installer.is_file() or not phase2_host.is_file():
+        errors.append("phase2: missing installer or candidate host source")
+    else:
+        phase2_install_text = phase2_installer.read_text(encoding="utf-8-sig")
+        phase2_host_text = phase2_host.read_text(encoding="utf-8-sig")
+        active_ids_line = next(
+            (line for line in phase2_install_text.splitlines() if line.startswith("$ids=@(")), ""
+        )
+        if any(name in active_ids_line for name in ("'indesign'", "'media-encoder'")):
+            errors.append("phase2: retired Adobe applications must not be installed as on-demand hosts")
+        if "Media Encoder Watch Folder missing" in phase2_install_text:
+            errors.append("phase2: removed Adobe Media Encoder must not block Office/Acrobat installation")
+        if not all(
+            marker in phase2_install_text
+            for marker in (
+                "'VelvetOS Phase2 Candidate indesign'",
+                "'VelvetOS Phase2 Candidate media-encoder'",
+                "Acrobat\\Acrobat.exe",
+                "'OfficeWordWorker.ps1'",
+            )
+        ):
+            errors.append("phase2: missing disabled-host cleanup or retained Acrobat/Office contract")
+        if any(
+            marker in phase2_host_text
+            for marker in ("'indesign'", "'media-encoder'", "Adobe Media Encoder.exe", "InDesignSafeAdapter.py")
+        ):
+            errors.append("phase2: retired Adobe launcher branch remains active")
+
     if errors:
         for error in errors:
             print("DCC/ADOBE COMPAT FAIL: " + error, file=sys.stderr)
