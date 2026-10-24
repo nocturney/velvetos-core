@@ -384,8 +384,28 @@ def main() -> None:
         )
         if proc.returncode != 0:
             fail("Stage 6C report regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()))
-        if regenerated6c.read_bytes() != STAGE6C_REPORT.read_bytes():
-            fail("Stage 6C report is not reproducible")
+        generated_bytes = regenerated6c.read_bytes()
+        historical_bytes = STAGE6C_REPORT.read_bytes()
+        if generated_bytes != historical_bytes:
+            # Preserve the captured Stage 6C receipt byte-for-byte. Its validator
+            # counted one now-retired AdobePy deployment template. This is the
+            # only permitted drift in regenerating that historical evidence.
+            before = b"DCC/ADOBE COMPAT PASS overlays=4 records=2 bridges=2 runtime_files=6"
+            after = b"DCC/ADOBE COMPAT PASS overlays=4 records=2 bridges=2 runtime_files=5"
+            active_persistence = json.loads(
+                (ROOT / "packages/vfharness/devtools/dcc-adobe-runtime-persistence.json").read_text(encoding="utf-8")
+            )
+            broker_retired = not any(
+                row.get("id") == "photoshop-broker-wrapper"
+                for row in active_persistence.get("files") or []
+            )
+            if not (
+                broker_retired
+                and historical_bytes.count(before) == 1
+                and generated_bytes.count(after) == 1
+                and generated_bytes.replace(after, before) == historical_bytes
+            ):
+                fail("Stage 6C report is not reproducible")
 
     schema_path = ROOT / "packages/vfharness/templates/checkpoint.schema.json"
     schema = json.loads(schema_path.read_text(encoding="utf-8"))

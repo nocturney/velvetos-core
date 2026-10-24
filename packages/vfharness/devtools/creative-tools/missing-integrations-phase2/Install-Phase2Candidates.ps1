@@ -6,13 +6,17 @@ $state='D:\Velvet\State\MissingIntegrationsPhase2'
 $launcher='D:\Velvet\Runtime\Autostart\Start-Phase2CandidateHost.ps1'
 $template='VelvetOS DCC OnDemand coreldraw'
 $q=[char]34
-$ids=@('indesign','photopaint','fusion','openscad','acrobat','sketchup-capi','media-encoder','xvl-studio-corel','xvl-html5')
+$ids=@('photopaint','fusion','openscad','sketchup-capi','xvl-studio-corel','xvl-html5')
+# Acrobat is retained but its Windows host may be intentionally absent.
+if(Test-Path -LiteralPath 'C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe' -PathType Leaf){$ids+= 'acrobat'}
 $files=@(
- 'InDesignSafeAdapter.py','PhotoPaintSafeAdapter.py','FusionStudioSafeAdapter.py',
+ 'PhotoPaintSafeAdapter.py','FusionStudioSafeAdapter.py',
  'OpenSCADSafeAdapter.py','AcrobatSafeAdapter.py','Invoke-AcrobatInspect.ps1',
- 'SketchUpCapiSafeAdapter.py','MediaEncoderWatchSafeAdapter.py','XVLCorelSafeAdapter.py','XvlHtmlSafeAdapter.py','OfficeSafeAdapter.py','OfficeWordWorker.ps1','OfficeExcelWorker.ps1','OfficePowerPointWorker.ps1'
+ 'SketchUpCapiSafeAdapter.py','XVLCorelSafeAdapter.py','XvlHtmlSafeAdapter.py','OfficeSafeAdapter.py','OfficeWordWorker.ps1','OfficeExcelWorker.ps1','OfficePowerPointWorker.ps1'
 )
 $unsupported=@(
+ 'VelvetOS Phase2 Candidate indesign',
+ 'VelvetOS Phase2 Candidate media-encoder',
  'VelvetOS Phase2 Candidate media-encoder-adapter',
  'VelvetOS Phase2 Candidate sketchup','VelvetOS Phase2 Candidate office-word-worker',
  'VelvetOS Phase2 Candidate fusion-adapter','VelvetOS Phase2 Candidate openscad-adapter',
@@ -22,17 +26,10 @@ foreach($name in $unsupported){
  Stop-ScheduledTask -TaskName $name -ErrorAction SilentlyContinue
  Unregister-ScheduledTask -TaskName $name -Confirm:$false -ErrorAction SilentlyContinue
 }
-$unsupportedRuntime=@('MediaEncoderSafeAdapter.py','MediaEncoderWatchAdapter.py','SketchUpHost.rb','ame_webservice_config.ini','ame_webservice_config.original.ini')
+$unsupportedRuntime=@('InDesignSafeAdapter.py','MediaEncoderWatchSafeAdapter.py','MediaEncoderSafeAdapter.py','MediaEncoderWatchAdapter.py','SketchUpHost.rb','ame_webservice_config.ini','ame_webservice_config.original.ini')
 foreach($file in $unsupportedRuntime){Remove-Item -LiteralPath (Join-Path $runtime $file) -Force -ErrorAction SilentlyContinue}
 Remove-Item -LiteralPath 'D:\Velvet\Runtime\Autostart\Start-MediaEncoderPhase2.ps1','D:\Velvet\Runtime\Autostart\Start-SketchUpPhase2.ps1' -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $runtime,$state | Out-Null
-$ameWatch='D:\Velvet\AME\Watch\h264-high'
-$ameOutput=Join-Path $ameWatch 'Output'
-$amePreset='C:\Program Files\Adobe\Adobe Media Encoder 2026\MediaIO\systempresets\3F3F3F3F_4D6F6F56\H264 Match Source - High bitrate.epr'
-if(-not(Test-Path -LiteralPath $ameWatch -PathType Container)){throw "Media Encoder Watch Folder missing: $ameWatch"}
-if(-not(Test-Path -LiteralPath $ameOutput -PathType Container)){throw "Media Encoder Watch Folder is not initialized by AME: $ameOutput"}
-if(-not(Test-Path -LiteralPath $amePreset -PathType Leaf)){throw "Media Encoder system preset missing: $amePreset"}
-[pscustomobject]@{watch=$ameWatch;output=$ameOutput;preset_id='h264-high';preset_path=$amePreset;preset_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $amePreset).Hash}|ConvertTo-Json|Set-Content -LiteralPath (Join-Path $state 'media-encoder-watch.json') -Encoding UTF8
 $xvlGen='C:\Program Files\Lattice\XVLStudio3DCADCorelEdition27\xvlgenhtm.exe'
 $xvlTemplate='C:\Program Files\Lattice\XVLStudio3DCADCorelEdition27\Etc\HTML5'
 if(-not(Test-Path -LiteralPath $xvlGen -PathType Leaf)){throw "XVL HTML5 generator missing: $xvlGen"}
@@ -106,7 +103,7 @@ foreach($w in $workers){
 [pscustomobject]@{
  status='INSTALLED'
  runtime=$runtime
- accepted=@('indesign','photopaint','fusion-studio','openscad','office','acrobat','sketchup-capi','layout-capi','media-encoder','xvl-studio-corel-gui','xvl-html5')
+ accepted=@('photopaint','fusion-studio','openscad','office','acrobat','sketchup-capi','layout-capi','xvl-studio-corel-gui','xvl-html5')
  blocked=@()
  tasks=@($ids|ForEach-Object{"VelvetOS Phase2 Candidate $_"})+
   @($officeAdapter)+@($workers|ForEach-Object{"VelvetOS Phase2 Candidate office-$($_.id)"})

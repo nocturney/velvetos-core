@@ -22,25 +22,14 @@
       "required_behavior": "Native dcc-mcp-server stderr must not become a terminating PowerShell error while the gateway is running."
     },
     {
-      "id": "photoshop-broker-wrapper",
-      "source": "packages/vfharness/devtools/dcc-adobe-runtime-persistence/Start-AdobePyBroker-Photoshop.ps1",
-      "sha256": "ddbdfd6e331e380f45e5f3ca06c13760ea22d03613ead17df46efbc5faa0f8c5",
-      "runtime_target": "D:\\Velvet\\Runtime\\Autostart\\Start-AdobePyBroker-Photoshop.ps1",
-      "task": "VelvetOS AdobePy Broker Photoshop",
-      "trigger": "interactive_logon",
-      "principal": "CHRIS\\Chris",
-      "broker_port": 47393,
-      "required_behavior": "Loopback broker remains long-lived and retries without a Photoshop watcher or UXP Developer Tool dependency."
-    },
-    {
       "id": "dcc-desktop-host-wrapper",
       "source": "packages/vfharness/devtools/dcc-adobe-runtime-persistence/Start-VelvetDccDesktopHosts.ps1",
-      "sha256": "10d424b9d3709efdf47875fbb68bb16c7232596b638f4f1ff2db4b7fe6f945d6",
+      "sha256": "a31ef93c16c64da1c2bb91ad7252e4735a2a7f06007777f354b45c4b63f17a6b",
       "runtime_target": "D:\\Velvet\\Runtime\\Autostart\\Start-VelvetDccDesktopHosts.ps1",
-      "task": "VelvetOS DCC Desktop Hosts",
       "trigger": "none_manual_only",
       "principal": "CHRIS\\Chris",
-      "required_behavior": "VelvetOS launches DCC GUI hosts only on demand; agent launches use HideAfterLaunch so no host window remains visible or in the taskbar."
+      "required_behavior": "Single-app DCC hosts launch only on demand via the app-specific task; no global Desktop Hosts task and no automatic GUI launch.",
+      "task_family": "VelvetOS DCC OnDemand <app-id>"
     },
     {
       "id": "dcc-host-manager",
@@ -52,15 +41,15 @@
     {
       "id": "dcc-desktop-host-manifest",
       "source": "packages/vfharness/devtools/dcc-adobe-runtime-persistence/dcc-desktop-hosts.json",
-      "sha256": "1f6723656db463ce3a7aa2a923220e4bcaf2ae8dceef1023f2a2f4facee333c6",
+      "sha256": "90a6731e33a0886224b43a3e510d7e0fd57e189061a70766a1570be459fdea39",
       "runtime_target": "D:\\Velvet\\Runtime\\Autostart\\dcc-desktop-hosts.json",
       "required_behavior": "Policy is on_demand_hidden with launch_at_logon=false and agent_hidden_launch=true."
     },
     {
       "id": "reboot-persistence-installer",
       "source": "packages/vfharness/devtools/dcc-adobe-runtime-persistence/Install-DccAdobeRebootPersistence.ps1",
-      "sha256": "057b7e88c42690b73ade88719a2d3afb8a32dc412807a4522f3186fb356fe10d",
-      "required_behavior": "Idempotently deploy background persistence plus manual-only hidden DCC host tasks, remove obsolete acceptance launch tasks, and validate live/source parity without exposing tokens."
+      "sha256": "d0e22997c58a540d60499b1f7a665488397156ca7b6d31cb1c9ef4147ee1aa04",
+      "required_behavior": "Deploy the loopback gateway and enabled app-specific hidden DCC tasks, remove disabled/retired tasks, do not re-create AdobePy brokers or the global DCC launcher, and validate live/source parity."
     }
   ],
   "evidence": "docs/evidence/dcc-adobe-post-reboot-persistence-2026-09-30.json",

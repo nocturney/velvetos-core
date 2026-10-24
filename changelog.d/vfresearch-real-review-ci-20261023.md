@@ -1,0 +1,1 @@
+- 2026-10-23 - **Weekly research evidence:** re-reviewed 93 registered sources with explicit limited/archived evidence, preserving the original research registry format and historical veto-inventory line bindings.
