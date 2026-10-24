@@ -220,11 +220,30 @@ def _item_blob(item: dict[str, Any]) -> str:
     return json.dumps(item, ensure_ascii=False).lower()
 
 
+# Explicit benign words only; an unknown compound such as googleads, adsense,
+# adspend or ads2026 must retain the existing owner-approval/red risk gate.
+_BENIGN_ADS_TOKENS = frozenset({"leads", "uploads", "downloads", "workloads"})
+
+
+def _mentions_keyword(blob: str, keyword: str) -> bool:
+    """Keep paid-ad compounds RED, exempt only verified harmless full words."""
+    lowered = blob.lower()
+    term = keyword.lower()
+    if term != "ads":
+        return term in lowered
+    # Split ASCII English/digit identifiers. Underscores, hyphens, punctuation
+    # and non-English text delimit words, so campaign_ads still signals ads.
+    return any(
+        "ads" in token and token not in _BENIGN_ADS_TOKENS
+        for token in re.findall(r"[a-z0-9]+", lowered)
+    )
+
+
 def _forbidden_publish_signals(blob: str) -> list[str]:
     hits: list[str] = []
     if "₪" in blob or re.search(r"\d[\d.,]*\s*₪", blob):
         hits.append("sale_ils")
-    if any(k in blob for k in ("boost", "ads", "פרסום ממומן")):
+    if any(_mentions_keyword(blob, k) for k in ("boost", "ads", "פרסום ממומן")):
         hits.append("ads")
     if any(k in blob for k in ("whatsapp", "וואטסאפ", "050-2517000", "wa.me")):
         hits.append("whatsapp")
@@ -240,7 +259,7 @@ def _owner_reasons_from_item(item: dict[str, Any], human_required: list[str]) ->
     found: list[str] = []
     for reason in human_required:
         hints = _OWNER_REASON_HINTS.get(reason, (reason,))
-        if any(h.lower() in blob for h in hints):
+        if any(_mentions_keyword(blob, h) for h in hints):
             found.append(reason)
     # explicit flags on the item
     for key in ("ownerSurface", "human_required", "requiresOwner"):
@@ -406,9 +425,9 @@ def resolve_action_risk(action: str, target_id: str | None = None) -> str:
     blob = f"{action or ''} {target_id or ''}".lower()
     policy_text = POLICY.read_text(encoding="utf-8").lower() if POLICY.is_file() else ""
 
-    if any(k.lower() in blob for k in _RED_KEYWORDS):
+    if any(_mentions_keyword(blob, k) for k in _RED_KEYWORDS):
         return "red"
-    if any(k.lower() in policy_text and k.lower() in blob for k in _RED_KEYWORDS):
+    if any(k.lower() in policy_text and _mentions_keyword(blob, k) for k in _RED_KEYWORDS):
         return "red"
     if any(k.lower() in blob for k in _ORANGE_KEYWORDS):
         return "orange"
@@ -1097,6 +1116,42 @@ def selftest() -> tuple[bool, list[str]]:
     if classified.get("disposition") in {"stale_orphan", "human_required"} and classified.get("ownerSurface"):
         if "PREFLIGHT" in (classified.get("missing_gates") or []) and not classified.get("humanRequiredReasons"):
             errors.append("PREFLIGHT-only human_required must have ownerSurface=false")
+
+    # A read-only lead inspection is not paid advertising. Real paid-ad and
+    # unrelated forbidden operations must retain their existing risk gates.
+    risk_cases = (
+        ("review_current_state", "qualified-leads", "green"),
+        ("review_current_state", "monthly_uploads", "green"),
+        ("review_current_state", "weekly_downloads", "green"),
+        ("review_current_state", "worker_workloads", "green"),
+        ("review_current_state", "campaign-ads", "red"),
+        ("review_current_state", "campaign_ads", "red"),
+        ("review_current_state", "googleads", "red"),
+        ("review_current_state", "fbads", "red"),
+        ("review_current_state", "adspend", "red"),
+        ("review_current_state", "adsense", "red"),
+        ("review_current_state", "ads2026", "red"),
+        ("review_current_state", "ads1", "red"),
+        ("review_current_state", "boost campaign", "red"),
+        ("review_current_state", "whatsapp send", "red"),
+        ("purchase", "qualified-leads", "red"),
+        ("unknown-action", "qualified-leads", "orange"),
+    )
+    for action, target, expected_risk in risk_cases:
+        actual_risk = resolve_action_risk(action, target)
+        if actual_risk != expected_risk:
+            errors.append(f"risk mismatch {action}/{target}: {actual_risk} != {expected_risk}")
+    if _forbidden_publish_signals(_item_blob({"id": "qualified_leads"})):
+        errors.append("lead ID falsely identified as forbidden publish signal")
+    if _owner_reasons_from_item({"id": "qualified_leads"}, ["boost-or-ads"]):
+        errors.append("lead ID falsely identified as owner ads reason")
+    # Every real paid-ad compound must remain forbidden and owner-gated in the
+    # same shared matcher, not only in resolve_action_risk.
+    for paid_id in ("campaign_ads", "googleads", "fbads", "adspend", "adsense", "ads2026"):
+        if "ads" not in _forbidden_publish_signals(_item_blob({"id": paid_id})):
+            errors.append(f"paid-ad ID {paid_id!r} must remain forbidden")
+        if _owner_reasons_from_item({"id": paid_id}, ["boost-or-ads"]) != ["boost-or-ads"]:
+            errors.append(f"paid-ad ID {paid_id!r} must retain owner reason")
 
     return not errors, errors
 
