@@ -115,9 +115,52 @@ def exclusive_write(path, value):
         os.fsync(stream.fileno())
 
 
+GIT_ENV_OVERRIDES = frozenset({
+    "GIT_DIR", "GIT_COMMON_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE",
+    "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_NAMESPACE",
+    "GIT_ATTR_SOURCE", "GIT_EXTERNAL_DIFF", "GIT_DIFF_OPTS"})
+# Config that can execute a command during status, diff or hash-object.
+# Attributes alone cannot execute anything; only a config-defined driver can.
+EXECUTABLE_GIT_CONFIG = re.compile(
+    r"filter\.|diff\.external\Z|diff\..+\.(?:textconv|command)\Z|core\.fsmonitor\Z",
+    re.IGNORECASE)
+
+
+def git_env():
+    """Inherited env minus config, index, external-diff and attribute overrides."""
+    env = {k: v for k, v in os.environ.items()
+           if not k.startswith("GIT_CONFIG") and k not in GIT_ENV_OVERRIDES}
+    env.update({"GIT_CONFIG_NOSYSTEM": "1", "GIT_CONFIG_GLOBAL": os.devnull,
+                "GIT_OPTIONAL_LOCKS": "0", "GIT_TERMINAL_PROMPT": "0"})
+    return env
+
+
+def refuse_executable_git_config(repo):
+    """Fail closed before any adapter git call that could run a repo-defined helper.
+
+    Checks the effective local, included and worktree config under the same
+    sanitized environment used for the call; system and global config are off.
+    """
+    listed = subprocess.run(["git", "-C", str(repo), "config", "--null", "--list"],
+                            capture_output=True, timeout=12, env=git_env())
+    if listed.returncode:
+        raise Refused("GIT_CONFIG_UNREADABLE")
+    for entry in listed.stdout.split(b"\0"):
+        if EXECUTABLE_GIT_CONFIG.match(entry.split(b"\n", 1)[0].decode("utf-8", "replace")):
+            raise Refused("EXECUTABLE_GIT_CONFIG_REFUSED")
+
+
+def run_git(repo, argv, input_bytes=None, extra_env=None):
+    """Every adapter git call goes through here: guard first, then sanitized env."""
+    refuse_executable_git_config(repo)
+    env = git_env()
+    env.update(extra_env or {})
+    return subprocess.run(["git", "-C", str(repo), *argv], input=input_bytes,
+                          capture_output=True, timeout=12, env=env)
+
+
 def git(repo, *argv):
-    p = subprocess.run(["git", "-C", str(repo), *argv],
-                       capture_output=True, timeout=12)
+    p = run_git(repo, list(argv))
     if p.returncode:
         raise Refused("GIT_READBACK_FAILED")
     return p.stdout.decode("utf-8", "replace").strip()
@@ -156,8 +199,7 @@ def pinned_source_context(task, repo):
             raise Refused("SOURCE_BLOB_LENGTH_INVALID") from exc
         if length > 131072:
             raise Refused("SOURCE_BLOB_TOO_LARGE")
-        data = subprocess.run(["git", "-C", str(repo), "cat-file", "blob", oid],
-                              capture_output=True, timeout=12)
+        data = run_git(repo, ["cat-file", "blob", oid])
         if data.returncode or len(data.stdout) != length or b"\x00" in data.stdout:
             raise Refused("SOURCE_BLOB_INVALID")
         try:
@@ -438,8 +480,7 @@ def recover_run(task, receipt_path):
 
 
 def git_bytes(repo, *argv):
-    p = subprocess.run(["git", "-C", str(repo), *argv],
-                       capture_output=True, timeout=12)
+    p = run_git(repo, list(argv))
     if p.returncode:
         raise Refused("GIT_READBACK_FAILED")
     return p.stdout
@@ -447,12 +488,10 @@ def git_bytes(repo, *argv):
 
 def git_apply(repo, patch_bytes, check):
     """Argv-only `git apply` of the exact verified bytes; never --unsafe-paths."""
-    argv = ["git", "-C", str(repo), "apply", "--whitespace=nowarn", "-p1"]
+    argv = ["apply", "--whitespace=nowarn", "-p1"]
     if check:
         argv.append("--check")
-    p = subprocess.run([*argv, "-"], input=patch_bytes,
-                       capture_output=True, timeout=12)
-    return p.returncode == 0
+    return run_git(repo, [*argv, "-"], input_bytes=patch_bytes).returncode == 0
 
 
 def allow_path(value):
@@ -559,13 +598,10 @@ def expected_post_blobs(repo, patch_bytes, allowed):
     The index lives outside the repo, never becomes HEAD, and is removed after
     verification. Git may store unreachable blobs; no effect is committed.
     """
-    import tempfile
     with tempfile.TemporaryDirectory(prefix="office612-stage-index-") as folder:
-        env = dict(os.environ, GIT_INDEX_FILE=str(Path(folder) / "index"))
+        index = {"GIT_INDEX_FILE": str(Path(folder) / "index")}
         def execute(*args, input_bytes=None):
-            result = subprocess.run(
-                ["git", "-C", str(repo), *args], input=input_bytes,
-                capture_output=True, timeout=12, env=env)
+            result = run_git(repo, list(args), input_bytes=input_bytes, extra_env=index)
             if result.returncode:
                 raise Refused("STAGE_EXPECTED_POSTIMAGE_UNAVAILABLE")
             return result.stdout
@@ -884,12 +920,6 @@ def verify_stage_portable(task_path, receipt_path, checkpoint_before_path, repo_
         raise Refused("PORTABLE_STAGE_FILE_SCOPE_INVALID")
     # All effects below are confined to a temporary directory. Nothing is
     # written to the source checkout, its index, refs, or object database.
-    git_env = {k: v for k, v in os.environ.items() if k not in (
-        "GIT_DIR", "GIT_COMMON_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE",
-        "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES",
-        "GIT_CONFIG_COUNT", "GIT_CONFIG_KEY_0", "GIT_CONFIG_VALUE_0")}
-    git_env["GIT_CONFIG_NOSYSTEM"] = "1"
-    git_env["GIT_CONFIG_GLOBAL"] = os.devnull
     with tempfile.TemporaryDirectory(prefix="office612-portable-") as folder:
         root = Path(folder)
         for item in files:
@@ -912,14 +942,14 @@ def verify_stage_portable(task_path, receipt_path, checkpoint_before_path, repo_
         for args in (("apply", "--check", "-"), ("apply", "-")):
             command = subprocess.run(
                 ["git", *args], input=apply_bytes, cwd=root,
-                capture_output=True, timeout=20, env=git_env)
+                capture_output=True, timeout=20, env=git_env())
             if command.returncode:
                 raise Refused("PORTABLE_PATCH_REPLAY_FAILED")
         for item in files:
             row = by_path[item["path"]]
             out = (root / item["path"]).read_bytes()
             result = subprocess.run(["git", "hash-object", "--stdin"],
-                                    input=out, cwd=root, env=git_env,
+                                    input=out, cwd=root, env=git_env(),
                                     capture_output=True, timeout=10)
             if (result.returncode or
                     result.stdout.decode("ascii", "replace").strip() != row["after_blob"] or
