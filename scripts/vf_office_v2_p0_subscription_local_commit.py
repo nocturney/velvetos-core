@@ -41,6 +41,7 @@ def git(root, *args, input_bytes=None, raw=False):
     env["GIT_CONFIG_GLOBAL"] = os.devnull
     command = ["git", "-C", str(root), "-c", "core.hooksPath=" + os.devnull,
                "-c", "commit.gpgsign=false", "-c", "core.fsmonitor=false",
+               "-c", "core.autocrlf=false",  # preserve receipt-bound bytes on Windows
                *args]
     try:
         p = subprocess.run(command, input=input_bytes, capture_output=True,

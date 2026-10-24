@@ -2,7 +2,9 @@
 """#612 local source-import -> QA-only Git commit: real Git effects, never model/PR."""
 import copy
 import json
+import os
 from pathlib import Path
+import subprocess
 import unittest
 from unittest.mock import patch
 
@@ -15,13 +17,19 @@ class LocalCommitContractTests(unittest.TestCase):
     def setUp(self):
         self.fixture = existing.SubscriptionArtifactTests(
             methodName="test_portable_import_real_postimages_without_model_or_git_authority")
-        self.fixture.setUp()
-        self.addCleanup(self.fixture.doCleanups)
-        self.origin, self.repo, self.import_receipt = (
-            self.fixture.portable_import_fixture())
-        stage.import_stage_portable(
-            self.fixture.task_path, self.origin, self.fixture.checkpoint,
-            self.repo, self.import_receipt)
+        # A throwaway Git fixture must not inherit the host default EOL policy.
+        # Windows core.autocrlf=true otherwise changes checkout byte postimages
+        # before the source-import contract can be exercised.
+        with patch.dict(os.environ, {
+                "GIT_CONFIG_NOSYSTEM": "1",
+                "GIT_CONFIG_GLOBAL": os.devnull}):
+            self.fixture.setUp()
+            self.addCleanup(self.fixture.doCleanups)
+            self.origin, self.repo, self.import_receipt = (
+                self.fixture.portable_import_fixture())
+            stage.import_stage_portable(
+                self.fixture.task_path, self.origin, self.fixture.checkpoint,
+                self.repo, self.import_receipt)
         commit_dir = Path(self.fixture.temp.name) / "commit-evidence"
         commit_dir.mkdir()
         self.output = commit_dir / "commit.json"
@@ -78,6 +86,18 @@ class LocalCommitContractTests(unittest.TestCase):
             self.run_commit()
         self.assertFalse(self.output.exists())
         self.assertFalse(self.output.with_suffix(".committing").exists())
+
+    def test_index_retains_exact_crlf_bytes_even_with_local_autocrlf_true(self):
+        # The receipt binds raw file bytes, not host-dependent EOL filters.
+        subprocess.run(["git", "-C", str(self.repo), "config", "--local",
+                        "core.autocrlf", "true"], check=True, capture_output=True)
+        raw = bytes.fromhex("66697273740d0a7365636f6e640d0a")
+        target = self.repo / "exact-crlf.txt"
+        target.write_bytes(raw)
+        local.git(self.repo, "add", "--", target.name)
+        self.assertEqual(local.git(self.repo, "show", ":" + target.name,
+                                   raw=True), raw)
+        self.assertEqual(target.read_bytes(), raw)
 
     def test_crash_after_commit_reconciles_without_recommit(self):
         original = local.check_committed
