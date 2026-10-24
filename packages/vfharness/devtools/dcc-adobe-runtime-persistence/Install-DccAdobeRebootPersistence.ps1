@@ -41,7 +41,8 @@ $ObsoleteTasks = @(
     'VelvetOS AdobePy Broker AfterEffects',
     'VelvetOS AfterEffects Readonly Surface',
     'VelvetOS Illustrator Readonly Agent',
-    'VelvetOS DCC Update Sentinel'
+    'VelvetOS DCC Update Sentinel',
+    'VelvetOS DCC Desktop Hosts'
 )
 
 function Get-TaskSummary {
@@ -110,7 +111,6 @@ if ($ValidateOnly) {
     }
     $manifest = Get-Content $ManifestSource -Raw | ConvertFrom-Json
     $enabledApps = @($manifest.apps | Where-Object enabled)
-    $desktop = Get-TaskSummary -Name 'VelvetOS DCC Desktop Hosts'
     $onDemand = foreach ($app in $enabledApps) {
         $summary = Get-TaskSummary -Name (Get-OnDemandTaskName -Id $app.id)
         [pscustomobject]@{
@@ -122,14 +122,14 @@ if ($ValidateOnly) {
         }
     }
 
-    $oldRemaining = @($ObsoleteTasks | Where-Object { Get-ScheduledTask -TaskName $_ -ErrorAction SilentlyContinue })
+    $inactiveTaskNames = @($manifest.apps | Where-Object { -not $_.enabled } | ForEach-Object { Get-OnDemandTaskName -Id $_.id })
+    $oldRemaining = @((@($ObsoleteTasks) + $inactiveTaskNames) | Sort-Object -Unique | Where-Object { Get-ScheduledTask -TaskName $_ -ErrorAction SilentlyContinue })
     $policyOk = ($manifest.policy.launch_mode -eq 'on_demand_hidden' -and
                  $manifest.policy.launch_at_logon -eq $false -and
                  $manifest.policy.agent_hidden_launch -eq $true)
-    $desktopOk = ($desktop.exists -and @($desktop.trigger_types).Count -eq 0 -and $desktop.action.Contains('-HideAfterLaunch'))
     $onDemandOk = (@($onDemand | Where-Object { -not $_.no_triggers -or -not $_.action_contract_ok }).Count -eq 0)
     $filesOk = (@($fileChecks | Where-Object { -not $_.match }).Count -eq 0)
-    $status = if ($filesOk -and $policyOk -and $desktopOk -and $onDemandOk -and $oldRemaining.Count -eq 0) { 'PASS' } else { 'BLOCKED' }
+    $status = if ($filesOk -and $policyOk -and $onDemandOk -and $oldRemaining.Count -eq 0) { 'PASS' } else { 'BLOCKED' }
 
     [pscustomobject]@{
         status=$status
@@ -137,7 +137,6 @@ if ($ValidateOnly) {
         interactive_user=$InteractiveUser
         files=$fileChecks
         policy_ok=$policyOk
-        desktop_hosts=$desktop
         on_demand=$onDemand
         obsolete_tasks_remaining=$oldRemaining
         gateway=(Get-TaskSummary -Name 'VelvetOS DCC Gateway')
@@ -161,10 +160,6 @@ Register-ScheduledTask -TaskName 'VelvetOS DCC Gateway' -Action $gatewayAction -
 
 $desktopPrincipal = New-ScheduledTaskPrincipal -UserId $InteractiveUser -LogonType Interactive -RunLevel Highest
 $desktopSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable -ExecutionTimeLimit ([TimeSpan]::Zero) -MultipleInstances IgnoreNew
-$desktopAction = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument ('-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + $DesktopTarget + '" -HideAfterLaunch')
-$desktopDefinition = New-ScheduledTask -Action $desktopAction -Principal $desktopPrincipal -Settings $desktopSettings -Description 'VelvetOS DCC GUI hosts manual-only hidden launcher. No automatic trigger.'
-Register-ScheduledTask -TaskName 'VelvetOS DCC Desktop Hosts' -InputObject $desktopDefinition -Force | Out-Null
-
 $runtimeManifest = Get-Content $ManifestTarget -Raw | ConvertFrom-Json
 foreach ($app in @($runtimeManifest.apps | Where-Object enabled)) {
     $taskName = Get-OnDemandTaskName -Id $app.id
@@ -184,7 +179,8 @@ foreach ($app in @($runtimeManifest.apps | Where-Object enabled)) {
     Register-ScheduledTask -TaskName $taskName -InputObject $definition -Force | Out-Null
 }
 
-foreach ($name in $ObsoleteTasks) {
+$inactiveTaskNames = @($runtimeManifest.apps | Where-Object { -not $_.enabled } | ForEach-Object { Get-OnDemandTaskName -Id $_.id })
+foreach ($name in (@($ObsoleteTasks) + $inactiveTaskNames | Sort-Object -Unique)) {
     if (Get-ScheduledTask -TaskName $name -ErrorAction SilentlyContinue) {
         Unregister-ScheduledTask -TaskName $name -Confirm:$false
     }
