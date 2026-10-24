@@ -59,37 +59,44 @@
                                                 ]
                              },
                   "meshmixer":  {
-                                    "display_name":  "Autodesk Meshmixer",
-                                    "lifecycle":  "dcc-host",
-                                    "domains":  [
-                                                    "mesh",
-                                                    "3d-print",
-                                                    "inspection"
-                                                ],
-                                    "production_surface":  "official-mm-api-typed",
-                                    "operations":  [
-                                                       "probe",
-                                                       "list",
-                                                       "info",
-                                                       "import",
-                                                       "screenshot"
-                                                   ],
-                                    "blocked":  [
-                                                    "generic-command-stream",
-                                                    "arbitrary-api-execution"
-                                                ],
-                                    "availability":  {
-                                                         "type":  "dcc_routing",
-                                                         "route_key":  "meshmixer"
-                                                     },
-                                    "readiness":  "READY_BOUNDED",
-                                    "skills":  [
-                                                   "vf-dcc-modeling-craft"
-                                               ],
-                                    "typed_gaps":  [
-
-                                                   ]
-                                },
+                    "display_name": "Autodesk Meshmixer",
+                    "lifecycle": "dcc-host",
+                    "domains": [
+                      "mesh",
+                      "3d-print",
+                      "inspection"
+                    ],
+                    "production_surface": "official-mm-api-typed",
+                    "operations": [
+                      "probe",
+                      "list",
+                      "info",
+                      "import",
+                      "screenshot"
+                    ],
+                    "blocked": [
+                      "generic-command-stream",
+                      "arbitrary-api-execution"
+                    ],
+                    "availability": {
+                      "type": "all",
+                      "gates": [
+                        {
+                          "type": "dcc_routing",
+                          "route_key": "meshmixer"
+                        },
+                        {
+                          "type": "file_exists",
+                          "path": "C:\\Program Files\\Autodesk\\Meshmixer\\meshmixer.exe"
+                        }
+                      ]
+                    },
+                    "readiness": "READY_BOUNDED",
+                    "skills": [
+                      "vf-dcc-modeling-craft"
+                    ],
+                    "typed_gaps": []
+                    },
                   "resolve":  {
                                   "display_name":  "DaVinci Resolve Studio",
                                   "lifecycle":  "dcc-host",
@@ -183,9 +190,18 @@
                                                    "canva-ai"
                                                ],
                                    "availability":  {
-                                                        "type":  "dcc_routing",
-                                                        "route_key":  "affinity"
-                                                    },
+  "type": "all",
+  "gates": [
+    {
+      "type": "dcc_routing",
+      "route_key": "affinity"
+    },
+    {
+      "type": "file_exists",
+      "path": "C:\\Program Files\\Affinity\\Affinity\\Affinity.exe"
+    }
+  ]
+},
                                    "readiness":  "READY_BOUNDED",
                                    "skills":  [
                                                   "vf-image-design-craft"
@@ -298,117 +314,103 @@
                                                  ]
                               },
                   "maya":  {
-                               "display_name":  "Autodesk Maya",
-                               "lifecycle":  "dcc-host",
-                               "domains":  [
-                                               "3d",
-                                               "mesh",
-                                               "animation"
-                                           ],
-                               "production_surface":  "accepted-dcc-adapter",
-                               "operations":  [
-                                                  "accepted-dcc-operations"
-                                              ],
-                               "blocked":  [
-                                               "arbitrary-agent-scripting"
-                                           ],
-                               "availability":  {
-                                                    "type":  "dcc_routing",
-                                                    "route_key":  "maya"
-                                                },
-                               "readiness":  "READY_ACCEPTED_SURFACE",
-                               "skills":  [
-                                              "vf-dcc-modeling-craft",
-                                              "vf-material-lookdev"
-                                          ],
-                               "typed_gaps":  [
-
-                                              ]
-                           },
+                    "display_name": "Autodesk Maya",
+                    "lifecycle": "dcc-host",
+                    "domains": [
+                      "3d",
+                      "mesh",
+                      "animation"
+                    ],
+                    "production_surface": "retired",
+                    "operations": [],
+                    "blocked": [
+                      "arbitrary-agent-scripting"
+                    ],
+                    "availability": {
+                      "type": "retired",
+                      "reason": "owner retired Adobe and Autodesk hosts on 2026-10-24; Acrobat, Fusion and Meshmixer excluded"
+                    },
+                    "readiness": "RETIRED_BY_OWNER",
+                    "skills": [
+                      "vf-dcc-modeling-craft",
+                      "vf-material-lookdev"
+                    ],
+                    "typed_gaps": []
+                    },
                   "3dsmax":  {
-                                 "display_name":  "Autodesk 3ds Max",
-                                 "lifecycle":  "dcc-host",
-                                 "domains":  [
-                                                 "3d",
-                                                 "mesh",
-                                                 "render"
-                                             ],
-                                 "production_surface":  "accepted-dcc-adapter",
-                                 "operations":  [
-                                                    "accepted-dcc-operations"
-                                                ],
-                                 "blocked":  [
-                                                 "arbitrary-agent-scripting"
-                                             ],
-                                 "availability":  {
-                                                      "type":  "dcc_routing",
-                                                      "route_key":  "3dsmax"
-                                                  },
-                                 "readiness":  "PARTIAL_TYPED_AUTOMATION",
-                                 "skills":  [
-                                                "vf-dcc-modeling-craft",
-                                                "vf-material-lookdev"
-                                            ],
-                                 "typed_gaps":  [
-                                                    "standardized-job-owned-turntable-operation"
-                                                ]
-                             },
+                    "display_name": "Autodesk 3ds Max",
+                    "lifecycle": "dcc-host",
+                    "domains": [
+                      "3d",
+                      "mesh",
+                      "render"
+                    ],
+                    "production_surface": "retired",
+                    "operations": [],
+                    "blocked": [
+                      "arbitrary-agent-scripting"
+                    ],
+                    "availability": {
+                      "type": "retired",
+                      "reason": "owner retired Adobe and Autodesk hosts on 2026-10-24; Acrobat, Fusion and Meshmixer excluded"
+                    },
+                    "readiness": "RETIRED_BY_OWNER",
+                    "skills": [
+                      "vf-dcc-modeling-craft",
+                      "vf-material-lookdev"
+                    ],
+                    "typed_gaps": [
+                      "standardized-job-owned-turntable-operation"
+                    ]
+                    },
                   "autocad":  {
-                                  "display_name":  "Autodesk AutoCAD",
-                                  "lifecycle":  "dcc-host",
-                                  "domains":  [
-                                                  "cad",
-                                                  "2d-drafting",
-                                                  "dwg",
-                                                  "dxf"
-                                              ],
-                                  "production_surface":  "accepted-dcc-adapter",
-                                  "operations":  [
-                                                     "accepted-dcc-operations"
-                                                 ],
-                                  "blocked":  [
-                                                  "arbitrary-agent-scripting"
-                                              ],
-                                  "availability":  {
-                                                       "type":  "dcc_routing",
-                                                       "route_key":  "autocad"
-                                                   },
-                                  "readiness":  "READY_ACCEPTED_SURFACE",
-                                  "skills":  [
-                                                 "vf-cad-design-craft"
-                                             ],
-                                  "typed_gaps":  [
-
-                                                 ]
-                              },
+                    "display_name": "Autodesk AutoCAD",
+                    "lifecycle": "dcc-host",
+                    "domains": [
+                      "cad",
+                      "2d-drafting",
+                      "dwg",
+                      "dxf"
+                    ],
+                    "production_surface": "retired",
+                    "operations": [],
+                    "blocked": [
+                      "arbitrary-agent-scripting"
+                    ],
+                    "availability": {
+                      "type": "retired",
+                      "reason": "owner retired Adobe and Autodesk hosts on 2026-10-24; Acrobat, Fusion and Meshmixer excluded"
+                    },
+                    "readiness": "RETIRED_BY_OWNER",
+                    "skills": [
+                      "vf-cad-design-craft"
+                    ],
+                    "typed_gaps": []
+                    },
                   "inventor":  {
-                                   "display_name":  "Autodesk Inventor",
-                                   "lifecycle":  "dcc-host",
-                                   "domains":  [
-                                                   "cad",
-                                                   "mechanical",
-                                                   "assembly",
-                                                   "drawing"
-                                               ],
-                                   "production_surface":  "accepted-dcc-adapter",
-                                   "operations":  [
-                                                      "accepted-dcc-operations"
-                                                  ],
-                                   "blocked":  [
-                                                   "arbitrary-agent-scripting"
-                                               ],
-                                   "availability":  {
-                                                        "type":  "dcc_routing",
-                                                        "route_key":  "inventor"
-                                                    },
-                                   "readiness":  "READY_ACCEPTED_SURFACE",
-                                   "skills":  [
-                                                  "vf-cad-design-craft"
-                                              ],
-                                   "typed_gaps":  [
-
-                                                  ]
-                               },
+                    "display_name": "Autodesk Inventor",
+                    "lifecycle": "dcc-host",
+                    "domains": [
+                      "cad",
+                      "mechanical",
+                      "assembly",
+                      "drawing"
+                    ],
+                    "production_surface": "retired",
+                    "operations": [],
+                    "blocked": [
+                      "arbitrary-agent-scripting"
+                    ],
+                    "availability": {
+                      "type": "retired",
+                      "reason": "owner retired Adobe and Autodesk hosts on 2026-10-24; Acrobat, Fusion and Meshmixer excluded"
+                    },
+                    "readiness": "RETIRED_BY_OWNER",
+                    "skills": [
+                      "vf-cad-design-craft"
+                    ],
+                    "typed_gaps": []
+                    },
                   "zbrush":  {
                                  "display_name":  "ZBrush",
                                  "lifecycle":  "dcc-host",
@@ -436,182 +438,157 @@
                                                 ]
                              },
                   "substance-painter":  {
-                                            "display_name":  "Adobe Substance 3D Painter",
-                                            "lifecycle":  "dcc-host",
-                                            "domains":  [
-                                                            "pbr",
-                                                            "materials",
-                                                            "texturing"
-                                                        ],
-                                            "production_surface":  "accepted-dcc-adapter",
-                                            "operations":  [
-                                                               "accepted-dcc-operations"
-                                                           ],
-                                            "blocked":  [
-                                                            "arbitrary-agent-scripting"
-                                                        ],
-                                            "availability":  {
-                                                                 "type":  "dcc_routing",
-                                                                 "route_key":  "substance-painter"
-                                                             },
-                                            "readiness":  "READY_ACCEPTED_SURFACE",
-                                            "skills":  [
-                                                           "vf-material-lookdev"
-                                                       ],
-                                            "typed_gaps":  [
-
-                                                           ]
-                                        },
+                    "display_name": "Adobe Substance 3D Painter",
+                    "lifecycle": "dcc-host",
+                    "domains": [
+                      "pbr",
+                      "materials",
+                      "texturing"
+                    ],
+                    "production_surface": "retired",
+                    "operations": [],
+                    "blocked": [
+                      "arbitrary-agent-scripting"
+                    ],
+                    "availability": {
+                      "type": "retired",
+                      "reason": "owner retired Adobe and Autodesk hosts on 2026-10-24; Acrobat, Fusion and Meshmixer excluded"
+                    },
+                    "readiness": "RETIRED_BY_OWNER",
+                    "skills": [
+                      "vf-material-lookdev"
+                    ],
+                    "typed_gaps": []
+                    },
                   "substance-designer":  {
-                                             "display_name":  "Adobe Substance 3D Designer",
-                                             "lifecycle":  "dcc-host",
-                                             "domains":  [
-                                                             "pbr",
-                                                             "materials",
-                                                             "procedural"
-                                                         ],
-                                             "production_surface":  "accepted-dcc-adapter",
-                                             "operations":  [
-                                                                "accepted-dcc-operations"
-                                                            ],
-                                             "blocked":  [
-                                                             "arbitrary-agent-scripting"
-                                                         ],
-                                             "availability":  {
-                                                                  "type":  "dcc_routing",
-                                                                  "route_key":  "substance-designer"
-                                                              },
-                                             "readiness":  "READY_ACCEPTED_SURFACE",
-                                             "skills":  [
-                                                            "vf-material-lookdev"
-                                                        ],
-                                             "typed_gaps":  [
-
-                                                            ]
-                                         },
+                    "display_name": "Adobe Substance 3D Designer",
+                    "lifecycle": "dcc-host",
+                    "domains": [
+                      "pbr",
+                      "materials",
+                      "procedural"
+                    ],
+                    "production_surface": "retired",
+                    "operations": [],
+                    "blocked": [
+                      "arbitrary-agent-scripting"
+                    ],
+                    "availability": {
+                      "type": "retired",
+                      "reason": "owner retired Adobe and Autodesk hosts on 2026-10-24; Acrobat, Fusion and Meshmixer excluded"
+                    },
+                    "readiness": "RETIRED_BY_OWNER",
+                    "skills": [
+                      "vf-material-lookdev"
+                    ],
+                    "typed_gaps": []
+                    },
                   "photoshop":  {
-                                    "display_name":  "Adobe Photoshop",
-                                    "lifecycle":  "dcc-host",
-                                    "domains":  [
-                                                    "image",
-                                                    "raster",
-                                                    "finishing"
-                                                ],
-                                    "production_surface":  "accepted-readonly-and-temporary-document-surface",
-                                    "operations":  [
-                                                       "getVersion",
-                                                       "getActive",
-                                                       "batchPlayReadOnly",
-                                                       "createTemporary",
-                                                       "closeTemporary"
-                                                   ],
-                                    "blocked":  [
-                                                    "unbounded-authoring"
-                                                ],
-                                    "availability":  {
-                                                         "type":  "dcc_routing",
-                                                         "route_key":  "photoshop"
-                                                     },
-                                    "readiness":  "PARTIAL_TYPED_AUTOMATION",
-                                    "skills":  [
-                                                   "vf-image-design-craft"
-                                               ],
-                                    "typed_gaps":  [
-                                                       "crop-resize",
-                                                       "adjustments-masks",
-                                                       "exact-placement",
-                                                       "editable-save",
-                                                       "png-jpeg-export"
-                                                   ]
-                                },
+                    "display_name": "Adobe Photoshop",
+                    "lifecycle": "dcc-host",
+                    "domains": [
+                      "image",
+                      "raster",
+                      "finishing"
+                    ],
+                    "production_surface": "retired",
+                    "operations": [],
+                    "blocked": [
+                      "unbounded-authoring"
+                    ],
+                    "availability": {
+                      "type": "retired",
+                      "reason": "owner retired Adobe and Autodesk hosts on 2026-10-24; Acrobat, Fusion and Meshmixer excluded"
+                    },
+                    "readiness": "RETIRED_BY_OWNER",
+                    "skills": [
+                      "vf-image-design-craft"
+                    ],
+                    "typed_gaps": [
+                      "crop-resize",
+                      "adjustments-masks",
+                      "exact-placement",
+                      "editable-save",
+                      "png-jpeg-export"
+                    ]
+                    },
                   "illustrator":  {
-                                      "display_name":  "Adobe Illustrator",
-                                      "lifecycle":  "dcc-host",
-                                      "domains":  [
-                                                      "vector",
-                                                      "illustration"
-                                                  ],
-                                      "production_surface":  "accepted-readonly-surface",
-                                      "operations":  [
-                                                         "version",
-                                                         "active-document-read"
-                                                     ],
-                                      "blocked":  [
-                                                      "unbounded-authoring"
-                                                  ],
-                                      "availability":  {
-                                                           "type":  "dcc_routing",
-                                                           "route_key":  "illustrator"
-                                                       },
-                                      "readiness":  "PARTIAL_TYPED_AUTOMATION",
-                                      "skills":  [
-                                                     "vf-image-design-craft"
-                                                 ],
-                                      "typed_gaps":  [
-                                                         "job-owned-vector-authoring-export"
-                                                     ]
-                                  },
+                    "display_name": "Adobe Illustrator",
+                    "lifecycle": "dcc-host",
+                    "domains": [
+                      "vector",
+                      "illustration"
+                    ],
+                    "production_surface": "retired",
+                    "operations": [],
+                    "blocked": [
+                      "unbounded-authoring"
+                    ],
+                    "availability": {
+                      "type": "retired",
+                      "reason": "owner retired Adobe and Autodesk hosts on 2026-10-24; Acrobat, Fusion and Meshmixer excluded"
+                    },
+                    "readiness": "RETIRED_BY_OWNER",
+                    "skills": [
+                      "vf-image-design-craft"
+                    ],
+                    "typed_gaps": [
+                      "job-owned-vector-authoring-export"
+                    ]
+                    },
                   "aftereffects":  {
-                                       "display_name":  "Adobe After Effects",
-                                       "lifecycle":  "dcc-host",
-                                       "domains":  [
-                                                       "motion",
-                                                       "compositing"
-                                                   ],
-                                       "production_surface":  "accepted-read-surface",
-                                       "operations":  [
-                                                          "version",
-                                                          "active-project-read"
-                                                      ],
-                                       "blocked":  [
-                                                       "arbitrary-script-authoring"
-                                                   ],
-                                       "availability":  {
-                                                            "type":  "dcc_routing",
-                                                            "route_key":  "aftereffects"
-                                                        },
-                                       "readiness":  "PARTIAL_TYPED_AUTOMATION",
-                                       "skills":  [
-                                                      "vf-post-production-craft",
-                                                      "vf-vfx-compositing-craft"
-                                                  ],
-                                       "typed_gaps":  [
-                                                          "bounded-comp-layer-authoring",
-                                                          "named-render"
-                                                      ]
-                                   },
+                    "display_name": "Adobe After Effects",
+                    "lifecycle": "dcc-host",
+                    "domains": [
+                      "motion",
+                      "compositing"
+                    ],
+                    "production_surface": "retired",
+                    "operations": [],
+                    "blocked": [
+                      "arbitrary-script-authoring"
+                    ],
+                    "availability": {
+                      "type": "retired",
+                      "reason": "owner retired Adobe and Autodesk hosts on 2026-10-24; Acrobat, Fusion and Meshmixer excluded"
+                    },
+                    "readiness": "RETIRED_BY_OWNER",
+                    "skills": [
+                      "vf-post-production-craft",
+                      "vf-vfx-compositing-craft"
+                    ],
+                    "typed_gaps": [
+                      "bounded-comp-layer-authoring",
+                      "named-render"
+                    ]
+                    },
                   "premiere":  {
-                                   "display_name":  "Adobe Premiere Pro",
-                                   "lifecycle":  "dcc-host",
-                                   "domains":  [
-                                                   "video-edit",
-                                                   "editorial"
-                                               ],
-                                   "production_surface":  "accepted-first-party-limited-surface",
-                                   "operations":  [
-                                                      "getVersion",
-                                                      "getWriteSupport",
-                                                      "getActive",
-                                                      "acceptTemporaryCycle"
-                                                  ],
-                                   "blocked":  [
-                                                   "arbitrary-script-authoring"
-                                               ],
-                                   "availability":  {
-                                                        "type":  "dcc_routing",
-                                                        "route_key":  "premiere"
-                                                    },
-                                   "readiness":  "PARTIAL_TYPED_AUTOMATION",
-                                   "skills":  [
-                                                  "vf-post-production-craft"
-                                              ],
-                                   "typed_gaps":  [
-                                                      "job-project",
-                                                      "timeline-authoring",
-                                                      "captions",
-                                                      "named-export"
-                                                  ]
-                               },
+                    "display_name": "Adobe Premiere Pro",
+                    "lifecycle": "dcc-host",
+                    "domains": [
+                      "video-edit",
+                      "editorial"
+                    ],
+                    "production_surface": "retired",
+                    "operations": [],
+                    "blocked": [
+                      "arbitrary-script-authoring"
+                    ],
+                    "availability": {
+                      "type": "retired",
+                      "reason": "owner retired Adobe and Autodesk hosts on 2026-10-24; Acrobat, Fusion and Meshmixer excluded"
+                    },
+                    "readiness": "RETIRED_BY_OWNER",
+                    "skills": [
+                      "vf-post-production-craft"
+                    ],
+                    "typed_gaps": [
+                      "job-project",
+                      "timeline-authoring",
+                      "captions",
+                      "named-export"
+                    ]
+                    },
                   "fabrication":  {
                                       "display_name":  "VelvetOS Fabrication",
                                       "lifecycle":  "headless-cli",
@@ -660,39 +637,34 @@
                                                      ]
                                   },
                   "indesign":  {
-                                   "display_name":  "Adobe InDesign 2026",
-                                   "lifecycle":  "interactive-token-host",
-                                   "domains":  [
-                                                   "layout",
-                                                   "publication",
-                                                   "technical-publishing"
-                                               ],
-                                   "production_surface":  "accepted-phase2-typed",
-                                   "operations":  [
-                                                      "compose-title-body",
-                                                      "idml-export",
-                                                      "pdf-export"
-                                                  ],
-                                   "blocked":  [
-                                                   "generic-dispatch",
-                                                   "arbitrary-script"
-                                               ],
-                                   "availability":  {
-                                                        "type":  "candidate_matrix",
-                                                        "key":  "indesign",
-                                                        "runtime_file":  "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\InDesignSafeAdapter.py"
-                                                    },
-                                   "readiness":  "PARTIAL_END_TO_END_AUTOMATION",
-                                   "skills":  [
-                                                  "vf-prepress-qa"
-                                              ],
-                                   "typed_gaps":  [
-                                                      "place-link-styles",
-                                                      "preflight",
-                                                      "package",
-                                                      "named-pdf-presets"
-                                                  ]
-                               },
+                    "display_name": "Adobe InDesign 2026",
+                    "lifecycle": "interactive-token-host",
+                    "domains": [
+                      "layout",
+                      "publication",
+                      "technical-publishing"
+                    ],
+                    "production_surface": "retired",
+                    "operations": [],
+                    "blocked": [
+                      "generic-dispatch",
+                      "arbitrary-script"
+                    ],
+                    "availability": {
+                      "type": "retired",
+                      "reason": "owner retired Adobe and Autodesk hosts on 2026-10-24; Acrobat, Fusion and Meshmixer excluded"
+                    },
+                    "readiness": "RETIRED_BY_OWNER",
+                    "skills": [
+                      "vf-prepress-qa"
+                    ],
+                    "typed_gaps": [
+                      "place-link-styles",
+                      "preflight",
+                      "package",
+                      "named-pdf-presets"
+                    ]
+                    },
                   "photopaint":  {
                                      "display_name":  "Corel PHOTO-PAINT 2026",
                                      "lifecycle":  "interactive-token-host",
@@ -790,34 +762,43 @@
                                                 ]
                              },
                   "acrobat":  {
-                                  "display_name":  "Adobe Acrobat",
-                                  "lifecycle":  "interactive-token-host",
-                                  "domains":  [
-                                                  "pdf",
-                                                  "inspection",
-                                                  "prepress"
-                                              ],
-                                  "production_surface":  "accepted-phase2-typed",
-                                  "operations":  [
-                                                     "inspect-pdf"
-                                                 ],
-                                  "blocked":  [
-                                                  "generic-dispatch",
-                                                  "arbitrary-script"
-                                              ],
-                                  "availability":  {
-                                                       "type":  "candidate_matrix",
-                                                       "key":  "acrobat",
-                                                       "runtime_file":  "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\AcrobatSafeAdapter.py"
-                                                   },
-                                  "readiness":  "PARTIAL_TYPED_AUTOMATION",
-                                  "skills":  [
-                                                 "vf-prepress-qa"
-                                             ],
-                                  "typed_gaps":  [
-                                                     "page-box-font-output-intent-separation-inspection"
-                                                 ]
-                              },
+                    "display_name": "Adobe Acrobat",
+                    "lifecycle": "interactive-token-host",
+                    "domains": [
+                      "pdf",
+                      "inspection",
+                      "prepress"
+                    ],
+                    "production_surface": "accepted-phase2-typed",
+                    "operations": [
+                      "inspect-pdf"
+                    ],
+                    "blocked": [
+                      "generic-dispatch",
+                      "arbitrary-script"
+                    ],
+                    "availability": {
+                      "type": "all",
+                      "gates": [
+                        {
+                          "type": "candidate_matrix",
+                          "key": "acrobat",
+                          "runtime_file": "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\AcrobatSafeAdapter.py"
+                        },
+                        {
+                          "type": "file_exists",
+                          "path": "C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe"
+                        }
+                      ]
+                    },
+                    "readiness": "PARTIAL_TYPED_AUTOMATION",
+                    "skills": [
+                      "vf-prepress-qa"
+                    ],
+                    "typed_gaps": [
+                      "page-box-font-output-intent-separation-inspection"
+                    ]
+                    },
                   "sketchup":  {
                                    "display_name":  "SketchUp 2026",
                                    "lifecycle":  "headless-c-api",
@@ -881,35 +862,31 @@
                                                 ]
                              },
                   "media-encoder":  {
-                                        "display_name":  "Adobe Media Encoder 2026",
-                                        "lifecycle":  "interactive-token-host",
-                                        "domains":  [
-                                                        "transcode",
-                                                        "derivative",
-                                                        "delivery"
-                                                    ],
-                                        "production_surface":  "accepted-phase2-typed",
-                                        "operations":  [
-                                                           "h264-high",
-                                                           "job-status"
-                                                       ],
-                                        "blocked":  [
-                                                        "generic-dispatch",
-                                                        "arbitrary-script"
-                                                    ],
-                                        "availability":  {
-                                                             "type":  "candidate_matrix",
-                                                             "key":  "media_encoder",
-                                                             "runtime_file":  "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\MediaEncoderWatchSafeAdapter.py"
-                                                         },
-                                        "readiness":  "READY_BOUNDED_ONE_PRESET",
-                                        "skills":  [
-                                                       "vf-post-production-craft"
-                                                   ],
-                                        "typed_gaps":  [
-                                                           "named-preset-registry-beyond-h264-high"
-                                                       ]
-                                    },
+                    "display_name": "Adobe Media Encoder 2026",
+                    "lifecycle": "interactive-token-host",
+                    "domains": [
+                      "transcode",
+                      "derivative",
+                      "delivery"
+                    ],
+                    "production_surface": "retired",
+                    "operations": [],
+                    "blocked": [
+                      "generic-dispatch",
+                      "arbitrary-script"
+                    ],
+                    "availability": {
+                      "type": "retired",
+                      "reason": "owner retired Adobe and Autodesk hosts on 2026-10-24; Acrobat, Fusion and Meshmixer excluded"
+                    },
+                    "readiness": "RETIRED_BY_OWNER",
+                    "skills": [
+                      "vf-post-production-craft"
+                    ],
+                    "typed_gaps": [
+                      "named-preset-registry-beyond-h264-high"
+                    ]
+                    },
                   "xvl-studio-corel":  {
                                            "display_name":  "XVL Studio Corel Edition -\u003e Corel DESIGNER",
                                            "lifecycle":  "interactive-token-host",

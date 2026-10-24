@@ -124,6 +124,9 @@ def evaluate_availability(gate, reg, route_doc=None):
     gate = gate or {"type": "dcc_routing"}
     kind = gate.get("type")
 
+    if kind == "retired":
+        return {"available": False, "status": "retired", "reason": gate.get("reason", "owner-retired tool"), "gate": kind}
+
     if kind == "all":
         details = [evaluate_availability(item, reg, route_doc) for item in gate.get("gates", [])]
         ok = all(item.get("available") for item in details)
@@ -252,6 +255,8 @@ def availability_check(gate, reg, route_doc):
     if not gate:
         return {"available": False, "status": "missing_gate", "reason": "no availability gate configured"}
     kind = gate.get("type")
+    if kind == "retired":
+        return {"available": False, "status": "retired", "reason": gate.get("reason", "owner-retired tool"), "gate": kind}
     if kind == "dcc_routing":
         key = gate.get("route_key")
         row = route_state(key, route_doc)

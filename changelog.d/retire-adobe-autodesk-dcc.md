@@ -1,0 +1,1 @@
+- 2026-10-24 - **Retire obsolete creative bridges:** stop redeploying AdobePy and removed Adobe/Autodesk DCC hosts, prune obsolete scheduled tasks, and keep Fusion, Blender, ZBrush, Resolve and Corel host routing available while guarding missing applications.
