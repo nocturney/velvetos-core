@@ -16,6 +16,11 @@ import vf_office_v2_continuity as continuity
 import vf_office_v2_p0_subscription_artifact as target
 
 
+def config_path(path):
+    """Quote a path for synthetic Git config; Windows backslashes must be escaped."""
+    return '"' + str(path).replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+
 class SubscriptionArtifactTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -936,8 +941,9 @@ class SubscriptionArtifactTests(unittest.TestCase):
         system = Path(self.temp.name) / "hostile-system-gitconfig"
         # A real change to beta.txt forces the tracked filter=marker to be hashed.
         (self.repo / "beta.txt").write_bytes(b"beta\nchanged\n")
-        hostile = (f"[core]\n\tautocrlf = true\n\tfsmonitor = {script}\n"
-                   f"[filter \"marker\"]\n\tclean = {script}\n\tsmudge = cat\n")
+        quoted = config_path(script)
+        hostile = (f"[core]\n\tautocrlf = true\n\tfsmonitor = {quoted}\n"
+                   f"[filter \"marker\"]\n\tclean = {quoted}\n\tsmudge = cat\n")
         pinned = {"GIT_CONFIG_SYSTEM": str(system), "GIT_CONFIG_NOSYSTEM": "0",
                   "GIT_CONFIG_GLOBAL": os.devnull}
         with patch.dict(os.environ, pinned):
@@ -947,9 +953,9 @@ class SubscriptionArtifactTests(unittest.TestCase):
             self.assertFalse(marker.exists())
 
             # Non-EOL or malformed EOL values refuse before any git status runs.
-            for body in ("[core]\n\tautocrlf = !" + str(script) + "\n",
+            for body in ("[core]\n\tautocrlf = !" + config_path(script) + "\n",
                          "[core]\n\tautocrlf\n",
-                         "[core]\n\teol = !" + str(script) + "\n"):
+                         "[core]\n\teol = !" + config_path(script) + "\n"):
                 with self.subTest(body=body):
                     system.write_text(body, encoding="utf-8")
                     with self.assertRaisesRegex(target.Refused, "EOL_GIT_CONFIG_UNSUPPORTED"):
