@@ -260,12 +260,8 @@ def main() -> int:
         if "--gateway-persist" not in gateway_text or "--port $Port" not in gateway_text:
             errors.append("dcc-gateway-wrapper: canonical gateway launch contract missing")
 
-    photoshop_text = persistence_text.get("photoshop-broker-wrapper", "")
-    if photoshop_text:
-        if "--bind 127.0.0.1:47393" not in photoshop_text:
-            errors.append("photoshop-broker-wrapper: canonical loopback broker binding missing")
-        if "photoshop\\broker.token" not in photoshop_text:
-            errors.append("photoshop-broker-wrapper: runtime token-file reference missing")
+    if "photoshop-broker-wrapper" in persistence_ids:
+        errors.append("photoshop-broker-wrapper: retired AdobePy broker must not be in the active deployment manifest")
 
     desktop_text = persistence_text.get("dcc-desktop-host-wrapper", "")
     if desktop_text:
@@ -293,26 +289,41 @@ def main() -> int:
                 errors.append("dcc-desktop-host-manifest: launch_at_logon must be false")
             if policy.get("agent_hidden_launch") is not True:
                 errors.append("dcc-desktop-host-manifest: agent_hidden_launch must be true")
+            retired_host_ids = {
+                "3dsmax", "autocad", "inventor", "maya", "photoshop",
+                "illustrator", "aftereffects", "premiere",
+                "substance-painter", "substance-designer", "substance-modeler",
+                "substance-sampler", "substance-stager", "affinity", "meshmixer",
+            }
+            for app in host_manifest.get("apps") or []:
+                if app.get("id") in retired_host_ids and app.get("enabled"):
+                    errors.append(f"dcc-desktop-host-manifest: retired host {app['id']} is enabled")
+            for kept in ("blender", "fusion", "zbrush", "resolve", "coreldraw", "corel-designer"):
+                if not any(app.get("id") == kept and app.get("enabled") is True for app in host_manifest.get("apps") or []):
+                    errors.append(f"dcc-desktop-host-manifest: retained host {kept} must remain enabled")
 
     installer_text = persistence_text.get("reboot-persistence-installer", "")
     if installer_text:
         for required in (
             "VelvetOS DCC Gateway",
             "New-ScheduledTaskTrigger -AtStartup",
-            "VelvetOS AdobePy Broker Photoshop",
-            "New-ScheduledTaskTrigger -AtLogOn -User $InteractiveUser",
             "New-ScheduledTaskPrincipal -UserId 'SYSTEM' -LogonType ServiceAccount",
             "New-ScheduledTaskPrincipal -UserId $InteractiveUser -LogonType Interactive",
             "VelvetOS DCC Desktop Hosts",
             "Get-OnDemandTaskName",
             "-HideAfterLaunch",
             "$ObsoleteTasks",
+            "$inactiveTaskNames",
         ):
             if required not in installer_text:
                 errors.append(f"reboot-persistence-installer: missing contract fragment: {required}")
 
-        if installer_text.count("New-ScheduledTaskTrigger -AtLogOn -User $InteractiveUser") != 1:
-            errors.append("reboot-persistence-installer: AtLogOn trigger must be limited to the background Photoshop broker")
+        if "New-ScheduledTaskTrigger -AtLogOn -User $InteractiveUser" in installer_text:
+            errors.append("reboot-persistence-installer: retired AdobePy broker must not be recreated at logon")
+        if "Register-ScheduledTask -TaskName 'VelvetOS DCC Desktop Hosts'" in installer_text:
+            errors.append("reboot-persistence-installer: retired global DCC task must not be recreated")
+        if "Register-ScheduledTask -TaskName 'VelvetOS AdobePy Broker Photoshop'" in installer_text:
+            errors.append("reboot-persistence-installer: retired Photoshop broker must not be recreated")
 
     if errors:
         for error in errors:
