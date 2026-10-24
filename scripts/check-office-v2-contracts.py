@@ -5,11 +5,15 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+SUBSCRIPTION_TEST_MIN_RUN = 19
+SUBSCRIPTION_TEST_TIMEOUT_S = 180
+UNITTEST_SUMMARY_RE = re.compile(r"Ran (\d+) tests? in \d+(?:\.\d+)?s")
 P0 = ROOT / "docs" / "implementation" / "office-v2" / "phase0"
 P1 = ROOT / "docs" / "implementation" / "office-v2" / "phase1"
 P2 = ROOT / "docs" / "implementation" / "office-v2" / "phase2"
@@ -82,6 +86,69 @@ def prove_windows_skip_codes() -> None:
         fail("main must call prove_windows_skip_codes")
 
 
+def subscription_unittest_verdict(returncode: int, stderr: str) -> str | None:
+    """None when the child is a clean unittest run of at least the committed count."""
+    if returncode != 0:
+        return f"child exited {returncode}"
+    lines = [line.strip() for line in (stderr or "").splitlines() if line.strip()]
+    summaries = [i for i, line in enumerate(lines) if UNITTEST_SUMMARY_RE.fullmatch(line)]
+    if len(summaries) != 1:
+        return "expected exactly one unittest summary line"
+    ran = int(UNITTEST_SUMMARY_RE.fullmatch(lines[summaries[0]]).group(1))
+    if ran < SUBSCRIPTION_TEST_MIN_RUN:
+        return f"ran {ran} tests, below the committed {SUBSCRIPTION_TEST_MIN_RUN}"
+    if lines[summaries[0] + 1:] != ["OK"]:
+        return "unittest did not finish with plain OK (failed, errored or skipped)"
+    return None
+
+
+def subscription_unittest_diagnostic(root: Path, stderr: str) -> str:
+    """Bounded, sanitized excerpt: unittest status lines only, no tracebacks or fixture bodies."""
+    kept: list[str] = []
+    for raw in (stderr or "").splitlines():
+        line = raw.strip()
+        if not line.startswith(("FAIL:", "ERROR:", "FAILED", "OK")) and not UNITTEST_SUMMARY_RE.fullmatch(line):
+            continue
+        if re.search(r"token|secret|password|credential|api[_-]?key", line, re.IGNORECASE):
+            line = "<redacted>"
+        line = line.replace(str(root), "<root>").replace(str(Path.home()), "<home>")
+        kept.append(re.sub(r"[^\x20-\x7e]", "?", line)[:120])
+        if len(kept) == 6:
+            break
+    return "; ".join(kept) or "no unittest status lines"
+
+
+def prove_subscription_unittest_verdict() -> None:
+    clean = "....\n----------\nRan 19 tests in 70.2s\n\nOK\n"
+    if subscription_unittest_verdict(0, clean) is not None:
+        fail("a clean 19-test unittest OK run must be accepted")
+    if subscription_unittest_verdict(0, "Ran 20 tests in 1.0s\n\nOK\n") is not None:
+        fail("a larger clean unittest run must be accepted")
+    if subscription_unittest_verdict(0, "Ran 8 tests in 1.0s\n\nOK\n") is None:
+        fail("the stale 8-test count must be rejected")
+    if subscription_unittest_verdict(0, "Ran 0 tests in 0.0s\n\nOK\n") is None:
+        fail("a zero-test run must be rejected")
+    if subscription_unittest_verdict(0, "") is None:
+        fail("a run without a unittest summary must be rejected")
+    if subscription_unittest_verdict(1, clean) is None:
+        fail("a non-zero child exit must be rejected even with OK output")
+    for failing in (
+        "Ran 19 tests in 1.0s\n\nFAILED (failures=1)\n",
+        "Ran 19 tests in 1.0s\n\nFAILED (errors=1)\n",
+        "Ran 19 tests in 1.0s\n\nOK (skipped=1)\n",
+        "Ran 19 tests in 1.0s\n\nOK\nRan 19 tests in 1.0s\n\nOK\n",
+    ):
+        if subscription_unittest_verdict(0, failing) is None:
+            fail("unsafe unittest summary accepted: " + failing.splitlines()[-1])
+    diagnostic = subscription_unittest_diagnostic(
+        ROOT,
+        "FAIL: test_a (x.Y.test_a)\nAPI token=abc123\n"
+        + f"{ROOT}/leak\nRan 19 tests in 1.0s\nFAILED (failures=1)\n",
+    )
+    if "abc123" in diagnostic or str(ROOT) in diagnostic or "FAIL: test_a" not in diagnostic:
+        fail("subscription diagnostic leaked or dropped status lines")
+
+
 def load(path: Path) -> dict:
     if not path.is_file():
         fail(f"missing {path.relative_to(ROOT)}")
@@ -96,6 +163,23 @@ def load(path: Path) -> dict:
 
 def main() -> int:
     prove_windows_skip_codes()
+    prove_subscription_unittest_verdict()
+    # #612: the subscription model adapter is a no-tools, non-authoritative
+    # evidence producer, never a standalone agent/lease/writer admission.
+    subscription_test = ROOT / "scripts" / "test_vf_office_v2_p0_subscription_artifact.py"
+    if not subscription_test.is_file():
+        fail("#612 subscription model evidence adapter tests missing")
+    try:
+        subscription_run = subprocess.run(
+            [sys.executable, "-B", str(subscription_test)],
+            cwd=ROOT, capture_output=True, text=True, timeout=SUBSCRIPTION_TEST_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired:
+        fail("#612 subscription model evidence adapter test timeout")
+    verdict = subscription_unittest_verdict(subscription_run.returncode, subscription_run.stderr)
+    if verdict is not None:
+        fail("#612 subscription model evidence adapter contract failed: " + verdict +
+             " [" + subscription_unittest_diagnostic(ROOT, subscription_run.stderr) + "]")
     authority = load(P0 / "authority-map-v0.1.json")
     if authority.get("single_external_effect_authority") is not True:
         fail("Phase 0 must preserve single external-effect authority")
