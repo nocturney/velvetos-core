@@ -152,9 +152,10 @@
     },
     {
       "id": "meshmixer",
-      "enabled": true,
+      "enabled": false,
       "process": "meshmixer",
-      "path": "D:\\Velvet\\Runtime\\Autostart\\Autodesk Meshmixer - VelvetOS.lnk"
+      "path": "D:\\Velvet\\Runtime\\Autostart\\Autodesk Meshmixer - VelvetOS.lnk",
+      "reason": "missing_executable_as_of_2026-10-24"
     },
     {
       "id": "resolve",
@@ -168,9 +169,10 @@
     },
     {
       "id": "affinity",
-      "enabled": true,
+      "enabled": false,
       "process": "Affinity",
-      "path": "D:\\Velvet\\Runtime\\Autostart\\Affinity - VelvetOS.lnk"
+      "path": "D:\\Velvet\\Runtime\\Autostart\\Affinity - VelvetOS.lnk",
+      "reason": "missing_executable_as_of_2026-10-24"
     },
     {
       "id": "coreldraw",
