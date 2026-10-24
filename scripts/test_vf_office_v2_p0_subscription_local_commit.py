@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """#612 local source-import -> QA-only Git commit: real Git effects, never model/PR."""
 import copy
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -93,12 +94,35 @@ class LocalCommitContractTests(unittest.TestCase):
         subprocess.run(["git", "-C", str(self.repo), "config", "--local",
                         "core.autocrlf", "true"], check=True, capture_output=True)
         raw = bytes.fromhex("66697273740d0a7365636f6e640d0a")
-        target = self.repo / "exact-crlf.txt"
+        # Not *.txt: the fixture's tracked `text eol=lf` rule would normalize it.
+        target = self.repo / "exact-crlf.bin"
         target.write_bytes(raw)
         local.git(self.repo, "add", "--", target.name)
         self.assertEqual(local.git(self.repo, "show", ":" + target.name,
                                    raw=True), raw)
         self.assertEqual(target.read_bytes(), raw)
+
+    def test_attribute_eol_rewrite_refused_before_git_write(self):
+        # Tracked `*.txt text eol=lf` makes `git add` store LF for CRLF bytes; the
+        # receipt binds the raw CRLF postimage, so refuse before any index write.
+        raw = b"beta\r\nportable-import\r\n"
+        self.repo.joinpath("beta.txt").write_bytes(raw)
+        record = stage.read_json(self.import_receipt)
+        row = record["files"][0]
+        row["after_sha256"] = hashlib.sha256(raw).hexdigest()
+        row["after_blob"] = local.git(self.repo, "hash-object", "--stdin",
+                                      input_bytes=raw).decode()
+        record.pop("import_receipt_sha256")
+        record["import_receipt_sha256"] = stage.digest(record)
+        self.import_receipt.write_text(json.dumps(record), encoding="utf-8")
+        with self.assertRaisesRegex(local.Refused,
+                                    "ATTRIBUTE_FILTER_ALTERS_POSTIMAGE"):
+            self.run_commit()
+        self.assertFalse(self.output.exists())
+        self.assertFalse(self.output.with_suffix(".committing").exists())
+        self.assertEqual(local.git(self.repo, "diff", "--cached", "--name-only"), b"")
+        self.assertEqual(local.git(self.repo, "rev-parse", "HEAD").decode(),
+                         self.fixture.base_sha)
 
     def test_crash_after_commit_reconciles_without_recommit(self):
         original = local.check_committed

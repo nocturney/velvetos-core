@@ -130,6 +130,10 @@ def local_checks(task_path, origin_path, checkpoint_path, import_path, root):
         require(hashlib.sha256(payload).hexdigest() == row["after_sha256"] and
                 git(root, "hash-object", "--stdin", input_bytes=payload).decode() ==
                     row["after_blob"], "LOCAL_COMMIT_POSTIMAGE_MISMATCH")
+        # `git add` applies tracked attributes (e.g. text eol=lf) even with autocrlf off.
+        require(git(root, "hash-object", "--path", name, "--stdin",
+                    input_bytes=payload).decode() == row["after_blob"],
+                "LOCAL_COMMIT_ATTRIBUTE_FILTER_ALTERS_POSTIMAGE")
     return task, import_record, received_hash, allowed, branch
 
 
