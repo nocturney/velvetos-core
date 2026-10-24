@@ -37,6 +37,8 @@ class SubscriptionArtifactTests(unittest.TestCase):
         (self.repo / "notes").mkdir()
         (self.repo / "notes" / "alpha.txt").write_bytes(b"alpha one\nalpha two\nalpha three\n")
         (self.repo / "beta.txt").write_bytes(b"beta\n")
+        # Tracked attribute only: it names a filter driver that no config defines.
+        (self.repo / ".gitattributes").write_text("beta.txt filter=marker\n", encoding="utf-8")
         try:
             os.symlink("beta.txt", self.repo / "link.txt")
         except (OSError, NotImplementedError):
@@ -841,6 +843,51 @@ class SubscriptionArtifactTests(unittest.TestCase):
                     target.stage(self.task, receipt, sha, allow)
                 self.assert_not_staged(receipt)
                 self.assertEqual((self.repo / "beta.txt").read_bytes(), b"beta\n")
+
+    def test_repo_filter_config_never_runs_in_preflight_stage_or_recovery(self):
+        # The tracked .gitattributes names filter=marker; only config can define
+        # the driver. A harmless clean filter that appends a marker would have run
+        # during stage postconditions (`git diff`) before the guard existed.
+        diff = self.real_diff({"beta.txt": b"beta\nstaged\n"})
+        receipt, sha = self.draft(diff, "filter-guard")
+        marker = Path(self.temp.name) / "filter-marker.txt"
+        script = Path(self.temp.name) / "marker-filter.sh"
+        script.write_text(f"#!/bin/sh\necho ran >> '{marker}'\ncat\n", encoding="utf-8")
+        script.chmod(0o755)
+        self.git("config", "filter.marker.clean", str(script))
+        refusal = "EXECUTABLE_GIT_CONFIG_REFUSED"
+        journal = receipt.with_suffix(".staging")
+        with self.assertRaisesRegex(target.Refused, refusal):
+            target.validate_task(self.task, receipt)
+        self.assertFalse(marker.exists())
+        with self.assertRaisesRegex(target.Refused, refusal):
+            target.stage(self.task, receipt, sha, ["beta.txt"])
+        self.assertFalse(marker.exists())
+        self.assertFalse(journal.exists())
+        self.assertFalse(receipt.with_suffix(".staged.json").exists())
+        self.assertEqual((self.repo / "beta.txt").read_bytes(), b"beta\n")
+        journal.write_bytes(target.canonical({
+            "task": target.digest(self.task), "proposal_sha256": sha,
+            "paths": ["beta.txt"], "state": "STAGING_NO_BLIND_RETRY"}))
+        journal_before = journal.read_bytes()
+        with self.assertRaisesRegex(target.Refused, refusal):
+            target.recover_stage(self.task, receipt, sha, ["beta.txt"])
+        self.assertFalse(marker.exists())
+        self.assertEqual(journal.read_bytes(), journal_before)
+        self.assertEqual((self.repo / "beta.txt").read_bytes(), b"beta\n")
+
+        # Positive: with repo config removed, an inherited GIT_CONFIG_* driver is
+        # stripped from the environment, so the same stage succeeds without running it.
+        journal.unlink()
+        self.git("config", "--unset", "filter.marker.clean")
+        injected = {"GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "filter.marker.clean",
+                    "GIT_CONFIG_VALUE_0": str(script)}
+        with patch.dict(os.environ, injected):
+            staged = target.stage(self.task, receipt, sha, ["beta.txt"])
+        self.assertEqual(staged["state"], "SOURCE_STAGED_FOR_QA")
+        self.assertEqual(staged["changed_paths"], ["beta.txt"])
+        self.assertFalse(marker.exists())
+        self.assertEqual((self.repo / "beta.txt").read_bytes(), b"beta\nstaged\n")
 
 
 if __name__ == "__main__":
