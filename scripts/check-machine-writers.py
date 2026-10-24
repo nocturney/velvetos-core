@@ -1742,6 +1742,110 @@ def prove_ffmpeg_throw_reachable(job: str) -> str:
     return "throw_hidden=caught"
 
 
+PATH_WRITER_PROBLEM = (
+    "check-all-windows step other than the canonical ffmpeg step writes PATH or GITHUB_PATH"
+)
+_PATH_WRITER_RE = re.compile(
+    r"github_path|github_env|env:\\?path\b|\$\{env:path\}|setenvironmentvariable",
+    re.IGNORECASE,
+)
+
+
+def windows_path_writer_steps(job: str) -> list[str] | None:
+    """Names of non-canonical steps that write PATH, GITHUB_PATH or GITHUB_ENV.
+
+    Only the first step named like the ffmpeg step, and only while its body
+    is canonical, may append to GITHUB_PATH. Any other ``run:`` that names
+    GITHUB_PATH, GITHUB_ENV, ``$env:PATH`` or SetEnvironmentVariable, and any
+    ``env:`` mapping that sets PATH, is a writer. None when YAML will not load.
+    """
+    try:
+        document = load_yaml(job)
+    except UniqueYamlError:
+        return None
+    named = ffmpeg_named_steps(document)
+    exempt = named[0] if named and ffmpeg_body_is_canonical(job) else None
+    writers: list[str] = []
+    for mapping in iter_mappings(document):
+        label = str(mapping.get("name", "<unnamed>"))
+        run = mapping.get("run")
+        if mapping is not exempt and run is not None:
+            if _PATH_WRITER_RE.search(str(run)):
+                writers.append(label)
+                continue
+        env = mapping.get("env")
+        if isinstance(env, dict) and any(str(key).upper() == "PATH" for key in env):
+            writers.append(label)
+    return writers
+
+
+def insert_windows_step(job: str, step_lines: list[str], *, after: bool) -> str:
+    """Insert a step just before or just after the ffmpeg step."""
+    lines = job.split("\n")
+    start, end = ffmpeg_step_span(job)
+    indent = len(lines[start]) - len(lines[start].lstrip(" "))
+    block = [" " * indent + line if line else "" for line in step_lines]
+    at = end if after else start
+    if after:
+        block = [""] + block
+    else:
+        block = block + [""]
+    lines[at:at] = block
+    return "\n".join(lines)
+
+
+def prove_windows_path_writers(windows_job: str) -> str:
+    """An extra step that writes PATH before or after the ffmpeg step fails."""
+    if windows_path_writer_steps(windows_job) != []:
+        fail("canonical check-all-windows job reported a PATH writer")
+    download = [
+        "- name: Extra tool",
+        "  shell: pwsh",
+        "  run: |",
+        '    curl.exe -fsSL -o "$env:RUNNER_TEMP\\x.zip" "https://example.invalid/x.zip"',
+        '    Expand-Archive -Path "$env:RUNNER_TEMP\\x.zip" -DestinationPath "$env:RUNNER_TEMP\\x"',
+    ]
+    writes = {
+        "add_content": '    Add-Content -Path $env:GITHUB_PATH -Value "$env:RUNNER_TEMP\\x"',
+        "lower": '    add-content -path $env:github_path -value "$env:RUNNER_TEMP\\x"',
+        "redirect": '    "$env:RUNNER_TEMP\\x" >> $env:GITHUB_PATH',
+        "out_file": '    Out-File -FilePath $env:GITHUB_PATH -Append -InputObject x',
+        "github_env": '    "PATH=$env:RUNNER_TEMP\\x" >> $env:GITHUB_ENV',
+        "env_path": '    $env:Path = "$env:RUNNER_TEMP\\x;$env:Path"',
+        "set_item": '    Set-Item -Path Env:\\PATH -Value x',
+        "dotnet": "    [Environment]::SetEnvironmentVariable('PATH', 'x', 'User')",
+    }
+    caught = []
+    for where in ("before", "after"):
+        for name, line in writes.items():
+            mutated = insert_windows_step(windows_job, download + [line], after=where == "after")
+            if mutated == windows_job:
+                fail(f"path writer {where}/{name} did not change the windows job")
+            if PATH_WRITER_PROBLEM not in windows_job_problems(mutated):
+                fail(f"path writer {where}/{name} was not caught")
+            caught.append(f"{where}/{name}")
+        step_env = insert_windows_step(
+            windows_job,
+            ["- name: Extra env", "  shell: pwsh", "  env:", "    PATH: C:\\evil", "  run: echo hi"],
+            after=where == "after",
+        )
+        if PATH_WRITER_PROBLEM not in windows_job_problems(step_env):
+            fail(f"step env PATH {where} was not caught")
+        caught.append(f"{where}/step_env")
+        benign = insert_windows_step(windows_job, download, after=where == "after")
+        if PATH_WRITER_PROBLEM in windows_job_problems(benign):
+            fail(f"benign extra step {where} was reported as a PATH writer")
+    decoy = insert_windows_step(
+        windows_job,
+        [f"- name: {FFMPEG_STEP_NAME}", "  shell: pwsh",
+         "  run: Add-Content -Path $env:GITHUB_PATH -Value x"],
+        after=True,
+    )
+    if PATH_WRITER_PROBLEM not in windows_job_problems(decoy):
+        fail("second same-name ffmpeg step writing GITHUB_PATH was not caught")
+    return f"path_writers=caught({len(caught) + 1}) benign=pass"
+
+
 def windows_job_problems(job: str, *, exact_body: bool = True) -> list[str]:
     problems: list[str] = []
     for needle in (
@@ -1789,6 +1893,11 @@ def windows_job_problems(job: str, *, exact_body: bool = True) -> list[str]:
         problems.append(
             "check-all-windows uses an action outside the allowlist: " + ", ".join(extra_actions)
         )
+    path_writers = windows_path_writer_steps(job)
+    if path_writers is None:
+        problems.append("check-all-windows YAML did not load for the PATH writer gate")
+    elif path_writers:
+        problems.append(PATH_WRITER_PROBLEM)
     if "secrets." in job or "upload_gha_artifact" in job or "ACTIONS_RUNTIME_TOKEN" in job:
         problems.append("check-all-windows must not read a secret or call the internal artifact API")
     return problems
@@ -2178,13 +2287,14 @@ def main() -> int:
     ):
         fail("removing the ffmpeg hash-gate parser step was not caught")
     throw_evidence = prove_ffmpeg_throw_reachable(windows_job)
+    path_evidence = prove_windows_path_writers(windows_job)
     gate_evidence = prove_ffmpeg_hash_gate()
     print(
         "OK check-all-windows ffmpeg-sha-enforce "
         "delete=caught operator_flip=caught exit_reset=caught credentials=caught "
         f"continue_on_error=caught variants=quoted,spaced {variant_evidence} "
         f"parser_step=caught label=caught {throw_evidence} "
-        f"{gate_evidence} permissions=contents:read"
+        f"{gate_evidence} {path_evidence} permissions=contents:read"
     )
     pin_evidence = prove_workflow_action_pins(core_workflow)
     for problem in scan_pin_paths(discover_pin_paths(ROOT)):
