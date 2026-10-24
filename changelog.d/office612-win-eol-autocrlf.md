@@ -1,0 +1,1 @@
+- Forward only validated, non-executable `core.autocrlf` and `core.eol` values from ordinary Git config to the Office P0 subscription adapter's Git calls, so committed clean checkouts with system `core.autocrlf=true` (Git for Windows) are not refused as dirty; executable config remains suppressed and malformed EOL values fail closed.

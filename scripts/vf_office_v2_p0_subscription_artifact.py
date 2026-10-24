@@ -135,6 +135,28 @@ def git_env():
     return env
 
 
+# Non-executable EOL settings that ordinary Git applies on Windows (Git for
+# Windows sets core.autocrlf=true system-wide). Only these exact values are
+# forwarded; every other inherited key stays suppressed.
+EOL_GIT_CONFIG = {
+    "core.autocrlf": frozenset({"true", "false", "input"}),
+    "core.eol": frozenset({"lf", "crlf", "native"}),
+}
+
+
+def ordinary_config_env():
+    """Inherited env for read-only EOL discovery, honoring an explicit system switch.
+
+    Keeps only the config-file locations and GIT_CONFIG_NOSYSTEM, so an inherited
+    no-system setting is honored exactly as ordinary Git would. Injected
+    GIT_CONFIG_COUNT/KEY/VALUE/PARAMETERS entries are always stripped.
+    """
+    return {k: v for k, v in os.environ.items()
+            if k not in GIT_ENV_OVERRIDES and
+            (k in ("GIT_CONFIG_SYSTEM", "GIT_CONFIG_GLOBAL", "GIT_CONFIG_NOSYSTEM") or
+             not (k == "GIT_CONFIG" or k.startswith("GIT_CONFIG_")))}
+
+
 def refuse_executable_git_config(repo):
     """Fail closed before any adapter git call that could run a repo-defined helper.
 
@@ -150,13 +172,38 @@ def refuse_executable_git_config(repo):
             raise Refused("EXECUTABLE_GIT_CONFIG_REFUSED")
 
 
+def eol_git_args(repo):
+    """`-c` pairs for the effective EOL keys that ordinary Git would apply here.
+
+    Reads the same effective value Git would use (last occurrence wins), read-only.
+    Malformed or valueless EOL settings refuse instead of falling back silently.
+    """
+    listed = subprocess.run(["git", "-C", str(repo), "config", "--null", "--list"],
+                            capture_output=True, timeout=12, env=ordinary_config_env())
+    if listed.returncode:
+        raise Refused("GIT_CONFIG_UNREADABLE")
+    effective = {}
+    for entry in listed.stdout.split(b"\0"):
+        key, sep, value = entry.partition(b"\n")
+        name = key.decode("utf-8", "replace").lower()
+        if name in EOL_GIT_CONFIG:
+            effective[name] = value.decode("utf-8", "replace").lower() if sep else None
+    args = []
+    for name, allowed in EOL_GIT_CONFIG.items():
+        if name in effective:
+            if effective[name] not in allowed:
+                raise Refused("EOL_GIT_CONFIG_UNSUPPORTED")
+            args += ["-c", f"{name}={effective[name]}"]
+    return args
+
+
 def run_git(repo, argv, input_bytes=None, extra_env=None):
     """Every adapter git call goes through here: guard first, then sanitized env."""
     refuse_executable_git_config(repo)
     env = git_env()
     env.update(extra_env or {})
-    return subprocess.run(["git", "-C", str(repo), *argv], input=input_bytes,
-                          capture_output=True, timeout=12, env=env)
+    return subprocess.run(["git", "-C", str(repo), *eol_git_args(repo), *argv],
+                          input=input_bytes, capture_output=True, timeout=12, env=env)
 
 
 def git(repo, *argv):
