@@ -7,17 +7,13 @@ param(
 $ErrorActionPreference = 'Stop'
 $SourceRoot = $PSScriptRoot
 $GatewaySource = Join-Path $SourceRoot 'Start-VelvetDccGateway.ps1'
-$PhotoshopSource = Join-Path $SourceRoot 'Start-AdobePyBroker-Photoshop.ps1'
 $DesktopSource = Join-Path $SourceRoot 'Start-VelvetDccDesktopHosts.ps1'
 $ManagerSource = Join-Path $SourceRoot 'Invoke-VelvetDccHost.ps1'
 $ManifestSource = Join-Path $SourceRoot 'dcc-desktop-hosts.json'
-$MayaHeadlessSource = Join-Path $SourceRoot 'Start-VelvetMayaHeadless.ps1'
 $GatewayTarget = Join-Path $RuntimeRoot 'Start-VelvetDccGateway.ps1'
-$PhotoshopTarget = Join-Path $RuntimeRoot 'Start-AdobePyBroker-Photoshop.ps1'
 $DesktopTarget = Join-Path $RuntimeRoot 'Start-VelvetDccDesktopHosts.ps1'
 $ManagerTarget = Join-Path $RuntimeRoot 'Invoke-VelvetDccHost.ps1'
 $ManifestTarget = Join-Path $RuntimeRoot 'dcc-desktop-hosts.json'
-$MayaHeadlessTarget = Join-Path $RuntimeRoot 'Start-VelvetMayaHeadless.ps1'
 
 $ObsoleteTasks = @(
     'VelvetOS Acceptance Launch Illustrator',
@@ -26,7 +22,26 @@ $ObsoleteTasks = @(
     'VelvetOS Temp AfterEffects Acceptance Launch',
     'VelvetOS Temp Illustrator Acceptance Launch',
     'VelvetOS Temp Photoshop Reconnect',
-    'VelvetOS Temp ZBrush Reconnect'
+    'VelvetOS Temp ZBrush Reconnect',
+    'VelvetOS DCC OnDemand 3dsmax',
+    'VelvetOS DCC OnDemand autocad',
+    'VelvetOS DCC OnDemand inventor',
+    'VelvetOS DCC OnDemand maya',
+    'VelvetOS DCC OnDemand photoshop',
+    'VelvetOS DCC OnDemand illustrator',
+    'VelvetOS DCC OnDemand aftereffects',
+    'VelvetOS DCC OnDemand premiere',
+    'VelvetOS DCC OnDemand substance-painter',
+    'VelvetOS DCC OnDemand substance-designer',
+    'VelvetOS DCC OnDemand substance-modeler',
+    'VelvetOS DCC OnDemand substance-sampler',
+    'VelvetOS DCC OnDemand substance-stager',
+    'VelvetOS AdobePy Broker Photoshop',
+    'VelvetOS AdobePy Broker Illustrator',
+    'VelvetOS AdobePy Broker AfterEffects',
+    'VelvetOS AfterEffects Readonly Surface',
+    'VelvetOS Illustrator Readonly Agent',
+    'VelvetOS DCC Update Sentinel'
 )
 
 function Get-TaskSummary {
@@ -53,7 +68,6 @@ function Get-OnDemandTaskName {
 }
 
 $ExternalOnDemandContracts = @{
-    'illustrator' = @('Start-VelvetIllustratorReadonlyHost.ps1')
     'fusion' = @('Start-VelvetFusionHost.ps1')
     'meshmixer' = @('Start-VelvetMeshmixerHost.ps1')
     'resolve' = @('Start-VelvetResolveHost.ps1')
@@ -65,8 +79,6 @@ $ExternalOnDemandContracts = @{
 function Test-OnDemandActionContract {
     param($App, $Summary)
     if (-not $Summary.exists) { return $false }
-    $isMayaHeadless = ($App.id -eq 'maya' -and ($App.PSObject.Properties.Name -contains 'automation_mode') -and $App.automation_mode -eq 'headless_mayapy')
-    if ($isMayaHeadless) { return $Summary.action.Contains('Start-VelvetMayaHeadless.ps1') }
     $id = [string]$App.id
     if ($ExternalOnDemandContracts.ContainsKey($id)) {
         foreach ($token in @($ExternalOnDemandContracts[$id])) {
@@ -77,7 +89,7 @@ function Test-OnDemandActionContract {
     return $Summary.action.Contains("-OnlyAppId $id -HideAfterLaunch")
 }
 
-$requiredSources = @($GatewaySource,$PhotoshopSource,$DesktopSource,$ManagerSource,$ManifestSource,$MayaHeadlessSource)
+$requiredSources = @($GatewaySource,$DesktopSource,$ManagerSource,$ManifestSource)
 foreach ($required in $requiredSources) {
     if (-not (Test-Path -LiteralPath $required)) { throw "Missing deployment source: $required" }
 }
@@ -85,11 +97,9 @@ foreach ($required in $requiredSources) {
 if ($ValidateOnly) {
     $pairs = @(
         @($GatewaySource,$GatewayTarget),
-        @($PhotoshopSource,$PhotoshopTarget),
         @($DesktopSource,$DesktopTarget),
         @($ManagerSource,$ManagerTarget),
-        @($ManifestSource,$ManifestTarget),
-        @($MayaHeadlessSource,$MayaHeadlessTarget)
+        @($ManifestSource,$ManifestTarget)
     )
     $fileChecks = foreach ($pair in $pairs) {
         $source = $pair[0]; $target = $pair[1]
@@ -131,7 +141,6 @@ if ($ValidateOnly) {
         on_demand=$onDemand
         obsolete_tasks_remaining=$oldRemaining
         gateway=(Get-TaskSummary -Name 'VelvetOS DCC Gateway')
-        photoshop_broker=(Get-TaskSummary -Name 'VelvetOS AdobePy Broker Photoshop')
     } | ConvertTo-Json -Depth 8
     if ($status -ne 'PASS') { exit 2 }
     exit 0
@@ -140,23 +149,15 @@ if ($ValidateOnly) {
 New-Item -ItemType Directory -Force -Path $RuntimeRoot | Out-Null
 
 Copy-Item -LiteralPath $GatewaySource -Destination $GatewayTarget -Force
-Copy-Item -LiteralPath $PhotoshopSource -Destination $PhotoshopTarget -Force
 Copy-Item -LiteralPath $DesktopSource -Destination $DesktopTarget -Force
 Copy-Item -LiteralPath $ManagerSource -Destination $ManagerTarget -Force
 Copy-Item -LiteralPath $ManifestSource -Destination $ManifestTarget -Force
-Copy-Item -LiteralPath $MayaHeadlessSource -Destination $MayaHeadlessTarget -Force
 
 $gatewayAction = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument ('-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + $GatewayTarget + '"')
 $gatewayTrigger = New-ScheduledTaskTrigger -AtStartup
 $gatewayPrincipal = New-ScheduledTaskPrincipal -UserId 'SYSTEM' -LogonType ServiceAccount -RunLevel Highest
 $gatewaySettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1) -ExecutionTimeLimit ([TimeSpan]::Zero) -MultipleInstances IgnoreNew
 Register-ScheduledTask -TaskName 'VelvetOS DCC Gateway' -Action $gatewayAction -Trigger $gatewayTrigger -Principal $gatewayPrincipal -Settings $gatewaySettings -Description 'Starts the VelvetOS DCC-MCP loopback gateway at Windows boot before user login.' -Force | Out-Null
-
-$photoshopAction = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument ('-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + $PhotoshopTarget + '"')
-$photoshopTrigger = New-ScheduledTaskTrigger -AtLogOn -User $InteractiveUser
-$photoshopPrincipal = New-ScheduledTaskPrincipal -UserId $InteractiveUser -LogonType Interactive -RunLevel Highest
-$photoshopSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable -RestartCount 5 -RestartInterval (New-TimeSpan -Minutes 1) -ExecutionTimeLimit ([TimeSpan]::Zero) -MultipleInstances IgnoreNew
-Register-ScheduledTask -TaskName 'VelvetOS AdobePy Broker Photoshop' -Action $photoshopAction -Trigger $photoshopTrigger -Principal $photoshopPrincipal -Settings $photoshopSettings -Description 'VelvetOS AdobePy 0.6.2 broker for Photoshop first-party UXP bridge, interactive user session, loopback only.' -Force | Out-Null
 
 $desktopPrincipal = New-ScheduledTaskPrincipal -UserId $InteractiveUser -LogonType Interactive -RunLevel Highest
 $desktopSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable -ExecutionTimeLimit ([TimeSpan]::Zero) -MultipleInstances IgnoreNew
@@ -176,14 +177,9 @@ foreach ($app in @($runtimeManifest.apps | Where-Object enabled)) {
         }
         continue
     }
-    $isMayaHeadless = ($app.id -eq 'maya' -and ($app.PSObject.Properties.Name -contains 'automation_mode') -and $app.automation_mode -eq 'headless_mayapy')
-    $args = if ($isMayaHeadless) {
-        '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + $MayaHeadlessTarget + '"'
-    } else {
-        '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + $DesktopTarget + '" -OnlyAppId ' + $app.id + ' -HideAfterLaunch'
-    }
+    $args = '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + $DesktopTarget + '" -OnlyAppId ' + $app.id + ' -HideAfterLaunch'
     $action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument $args
-    $description = if ($isMayaHeadless) { 'VelvetOS hidden on-demand Maya headless MCP host.' } else { "VelvetOS hidden on-demand DCC host: $($app.id)" }
+    $description = "VelvetOS hidden on-demand DCC host: $($app.id)"
     $definition = New-ScheduledTask -Action $action -Principal $desktopPrincipal -Settings $desktopSettings -Description $description
     Register-ScheduledTask -TaskName $taskName -InputObject $definition -Force | Out-Null
 }
