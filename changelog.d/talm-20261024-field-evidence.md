@@ -1,0 +1,1 @@
+- 2026-10-24 - **Creative Craft field evidence:** record owner-confirmed Talm kettlebell print success, local Exact Boolean versus voxel CSG outcome, and scenario-scoped routing guidance under Office v2 evidence; no authority or scoring changes.

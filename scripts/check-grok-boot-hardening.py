@@ -1,50 +1,33 @@
 #!/usr/bin/env python3
-"""Fail closed if legacy OpenPost failover can be re-armed at Windows boot."""
+"""Fail closed if retired OpenPost failover is restored in active source."""
 from __future__ import annotations
 
-import sys
 from pathlib import Path
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-WINDOWS = ROOT / "packages" / "vfigos" / "failover" / "windows"
-SUPERVISOR = WINDOWS / "grok_boot_supervisor.py"
-INSTALLER = WINDOWS / "install_grok_boot.ps1"
-README = ROOT / "packages" / "vfigos" / "failover" / "README.md"
-
-failures: list[str] = []
-
-def require(condition: bool, message: str) -> None:
-    if not condition:
-        failures.append(message)
-
-if not SUPERVISOR.is_file():
-    failures.append("canonical legacy supervisor missing")
+RETIRED = (
+    "packages/vfigos/failover/windows/grok_boot_supervisor.py",
+    "packages/vfigos/failover/failover_watch.py",
+    "packages/vfigos/failover/grok_instagram_failover.py",
+    "packages/vfigos/failover/trusted_dispatch.py",
+    "packages/vfigos/failover/instagram_mcp_remote.py",
+    "packages/vfigos/failover/openpost_failover_state.py",
+)
+errors = [f"retired OpenPost runner reappeared: {rel}" for rel in RETIRED if (ROOT / rel).exists()]
+installer = ROOT / "packages/vfigos/failover/windows/install_grok_boot.ps1"
+if not installer.is_file():
+    errors.append("GrokBot interactive handoff installer missing")
 else:
-    source = SUPERVISOR.read_text(encoding="utf-8")
-    require("no-op after Cloudflare Publisher cutover" in source, "legacy supervisor is not fail-closed")
-    for marker in ("FAILOVER_WATCH", "FAILOVER_DISPATCH", "subprocess.Popen", "trusted-dispatch.py", "failover-watch.py"):
-        require(marker not in source, f"legacy supervisor can still arm failover: {marker}")
-
-if not INSTALLER.is_file():
-    failures.append("canonical Windows installer missing")
-else:
-    install = INSTALLER.read_text(encoding="utf-8")
-    require("Disable-ScheduledTask -TaskName $legacyBoot" in install, "installer does not disable legacy boot task")
-    require("Register-ScheduledTask -TaskName $legacyBoot" not in install, "installer still recreates legacy boot supervisor")
-    require("Start-ScheduledTask -TaskName $legacyBoot" not in install, "installer still starts legacy boot supervisor")
-    require("-LogonType Interactive" in install, "interactive handoff is not explicitly Interactive")
-    require("grok_handoff.py" in install, "installer no longer binds interactive handoff")
-
-if not README.is_file():
-    failures.append("failover README missing")
-else:
-    text = README.read_text(encoding="utf-8")
-    require("Not armed for Cloudflare Publisher jobs" in text, "README does not mark failover as legacy")
-    require("2026-09-24" in text, "README does not record cutover")
-
-if failures:
-    for failure in failures:
-        print(f"FAIL {failure}", file=sys.stderr)
+    source = installer.read_text(encoding="utf-8")
+    for marker in ("grok_handoff.py", "GrokBot Interactive Handoff", "Disable-ScheduledTask -TaskName $legacyBoot"):
+        if marker not in source:
+            errors.append(f"GrokBot fail-closed handoff marker missing: {marker}")
+    for marker in ("Register-ScheduledTask -TaskName $legacyBoot", "Start-ScheduledTask -TaskName $legacyBoot"):
+        if marker in source:
+            errors.append(f"Legacy supervisor re-arm marker: {marker}")
+if errors:
+    for error in errors:
+        print(f"FAIL {error}", file=sys.stderr)
     raise SystemExit(1)
-
-print("PASS legacy OpenPost boot failover is disabled by contract")
+print("PASS retired OpenPost boot and failover runners absent")
