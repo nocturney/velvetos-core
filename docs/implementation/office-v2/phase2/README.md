@@ -73,6 +73,11 @@ The multi-node worker loss/recovery fixture is intentionally deferred until that
 
 The runner never performs an external mutation directly. An effectful benchmark must use a separately admitted provider adapter and return a generic adapter receipt; the runner evaluates that receipt against capability semantics, evidence requirements and resource capture.
 
+## Real-world field outcomes (outside formal scorecards)
+
+[Printed Talm lifestyle kettlebell: smooth SVG flush inlay on protected source mesh, 2026-10-24](field-evidence-2026-10-24-talm-kettlebell-smooth-vector-inlay.md) records an **owner-confirmed successful physical trial** after Blender Exact Boolean + OrcaSlicer dry-run, and a negative result for the previous global voxel CSG approach **for that task**. It is a scoped positive routing precedent for the incumbent Blender/Creative Craft fabrication chain, not a comparative Golden Fixture score, universal tool ranking, new registry, automatic candidate promotion or production permission. Preserve the original 68 registry imports and score only same-fixture comparisons.
+
+
 ## Research freeze / reopen
 
 Research stops when requirements are covered, fixtures ran, security and operations were scored, rollback was tested or explicitly failed, and a verdict was recorded.
