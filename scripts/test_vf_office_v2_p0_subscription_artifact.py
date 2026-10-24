@@ -16,6 +16,11 @@ import vf_office_v2_continuity as continuity
 import vf_office_v2_p0_subscription_artifact as target
 
 
+def config_path(path):
+    """Quote a path for synthetic Git config; Windows backslashes must be escaped."""
+    return '"' + str(path).replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+
 class SubscriptionArtifactTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -37,8 +42,12 @@ class SubscriptionArtifactTests(unittest.TestCase):
         (self.repo / "notes").mkdir()
         (self.repo / "notes" / "alpha.txt").write_bytes(b"alpha one\nalpha two\nalpha three\n")
         (self.repo / "beta.txt").write_bytes(b"beta\n")
-        # Tracked attribute only: it names a filter driver that no config defines.
-        (self.repo / ".gitattributes").write_text("beta.txt filter=marker\n", encoding="utf-8")
+        # Tracked attributes only: pin LF so checkout bytes do not depend on the host's
+        # core.autocrlf, including .gitattributes itself; beta.txt also names a filter
+        # driver that no config defines.
+        (self.repo / ".gitattributes").write_text(
+            ".gitattributes text eol=lf\n*.txt text eol=lf\nbeta.txt filter=marker\n",
+            encoding="utf-8")
         try:
             os.symlink("beta.txt", self.repo / "link.txt")
         except (OSError, NotImplementedError):
@@ -888,6 +897,124 @@ class SubscriptionArtifactTests(unittest.TestCase):
         self.assertEqual(staged["changed_paths"], ["beta.txt"])
         self.assertFalse(marker.exists())
         self.assertEqual((self.repo / "beta.txt").read_bytes(), b"beta\nstaged\n")
+
+    def test_windows_autocrlf_system_config_clean_checkout_matches_git(self):
+        # Git for Windows: system core.autocrlf=true, LF blobs, CRLF worktree and
+        # a tracked .gitattributes. Only a process-local GIT_CONFIG_SYSTEM is used.
+        system = Path(self.temp.name) / "windows-system-gitconfig"
+        system.write_text("[core]\n\tautocrlf = true\n", encoding="utf-8")
+        repo = Path(self.temp.name) / "crlf-repo"
+        repo.mkdir()
+        pinned = {"GIT_CONFIG_SYSTEM": str(system), "GIT_CONFIG_NOSYSTEM": "0",
+                  "GIT_CONFIG_GLOBAL": os.devnull}
+        with patch.dict(os.environ, pinned):
+            def plain(*args):
+                return subprocess.run(["git", "-C", str(repo), *args],
+                                      check=True, capture_output=True).stdout
+            plain("init", "-q")
+            (repo / ".gitattributes").write_bytes(b"beta.txt filter=marker\r\n")
+            (repo / "entry.txt").write_bytes(b"baseline\r\nsecond\r\n")
+            (repo / "beta.txt").write_bytes(b"beta\r\n")
+            plain("add", "-A")
+            plain("-c", "user.name=local-unit", "-c", "user.email=local@example.invalid",
+                  "commit", "-qm", "crlf-baseline")
+            self.assertEqual(plain("show", "HEAD:entry.txt"), b"baseline\nsecond\n")
+            self.assertEqual(plain("status", "--porcelain=v1", "--untracked-files=all"), b"")
+
+            self.assertEqual(target.eol_git_args(repo), ["-c", "core.autocrlf=true"])
+            self.assertEqual(target.git(repo, "status", "--porcelain=v1",
+                                        "--untracked-files=all"), "")
+            base = target.git(repo, "rev-parse", "HEAD")
+            context = target.pinned_source_context(
+                {"base_sha": base, "source_spans": [
+                    {"path": "entry.txt", "start_line": 1, "end_line": 2}]}, repo)
+            self.assertIn("1: baseline", context)
+            self.assertIn("2: second", context)
+
+            # Real edits are still seen: the EOL fix does not weaken dirty detection.
+            # Raw run_git keeps porcelain's leading status-column space (target.git strips).
+            (repo / "entry.txt").write_bytes(b"changed\r\nsecond\r\n")
+            raw = target.run_git(repo, ["status", "--porcelain=v1"]).stdout
+            self.assertIn(b" M entry.txt", raw)
+
+    def test_repo_autocrlf_true_checkout_keeps_pinned_lf_bytes(self):
+        # Disposable repo with explicit core.autocrlf=true: the tracked eol=lf attribute
+        # must keep LF bytes on a real checkout, independent of the host default.
+        repo = Path(self.temp.name) / "explicit-crlf-repo"
+        repo.mkdir()
+        pinned = {"GIT_CONFIG_GLOBAL": os.devnull}
+        with patch.dict(os.environ, pinned):
+            def plain(*args):
+                return subprocess.run(["git", "-C", str(repo), *args],
+                                      check=True, capture_output=True).stdout
+            plain("init", "-q")
+            plain("config", "core.autocrlf", "true")
+            (repo / ".gitattributes").write_bytes(b"*.txt text eol=lf\n")
+            (repo / "entry.txt").write_bytes(b"baseline\n")
+            plain("add", "-A")
+            plain("-c", "user.name=local-unit", "-c", "user.email=local@example.invalid",
+                  "commit", "-qm", "explicit-autocrlf-baseline")
+            (repo / "entry.txt").unlink()
+            plain("checkout", "--", "entry.txt")
+            self.assertEqual((repo / "entry.txt").read_bytes(), b"baseline\n")
+            self.assertEqual(plain("status", "--porcelain=v1", "--untracked-files=all"), b"")
+
+    def test_system_config_executables_never_run_and_eol_values_are_exact(self):
+        marker = Path(self.temp.name) / "system-config-marker.txt"
+        script = Path(self.temp.name) / "system-config-marker.sh"
+        script.write_text(f"#!/bin/sh\necho ran >> '{marker}'\ncat\n", encoding="utf-8")
+        script.chmod(0o755)
+        system = Path(self.temp.name) / "hostile-system-gitconfig"
+        # A real change to beta.txt forces the tracked filter=marker to be hashed.
+        (self.repo / "beta.txt").write_bytes(b"beta\nchanged\n")
+        quoted = config_path(script)
+        hostile = (f"[core]\n\tautocrlf = true\n\tfsmonitor = {quoted}\n"
+                   f"[filter \"marker\"]\n\tclean = {quoted}\n\tsmudge = cat\n")
+        pinned = {"GIT_CONFIG_SYSTEM": str(system), "GIT_CONFIG_NOSYSTEM": "0",
+                  "GIT_CONFIG_GLOBAL": os.devnull}
+        with patch.dict(os.environ, pinned):
+            system.write_text(hostile, encoding="utf-8")
+            status = target.git(self.repo, "status", "--porcelain=v1", "--untracked-files=all")
+            self.assertIn("beta.txt", status)
+            self.assertFalse(marker.exists())
+
+            # Non-EOL or malformed EOL values refuse before any git status runs.
+            for body in ("[core]\n\tautocrlf = !" + config_path(script) + "\n",
+                         "[core]\n\tautocrlf\n",
+                         "[core]\n\teol = !" + config_path(script) + "\n"):
+                with self.subTest(body=body):
+                    system.write_text(body, encoding="utf-8")
+                    with self.assertRaisesRegex(target.Refused, "EOL_GIT_CONFIG_UNSUPPORTED"):
+                        target.git(self.repo, "status", "--porcelain=v1")
+                    self.assertFalse(marker.exists())
+
+            # Inherited GIT_CONFIG_COUNT drivers are stripped, never forwarded.
+            system.write_text("[core]\n\tautocrlf = true\n", encoding="utf-8")
+            injected = {"GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "filter.marker.clean",
+                        "GIT_CONFIG_VALUE_0": str(script)}
+            with patch.dict(os.environ, injected):
+                status = target.git(self.repo, "status", "--porcelain=v1")
+            self.assertIn("beta.txt", status)
+            self.assertFalse(marker.exists())
+
+    def test_eol_discovery_honors_inherited_no_system_switch(self):
+        # Process-local only: a temporary system file says autocrlf=true. An inherited
+        # GIT_CONFIG_NOSYSTEM=1 must suppress it in discovery, as ordinary Git does;
+        # without that switch the same file must be honored.
+        system = Path(self.temp.name) / "eol-system-gitconfig"
+        system.write_text("[core]\n\tautocrlf = true\n", encoding="utf-8")
+        base = {"GIT_CONFIG_SYSTEM": str(system), "GIT_CONFIG_GLOBAL": os.devnull}
+        with patch.dict(os.environ, {**base, "GIT_CONFIG_NOSYSTEM": "1"}):
+            self.assertEqual(target.eol_git_args(self.repo), [])
+            self.assertEqual(target.git(self.repo, "status", "--porcelain=v1"), "")
+        with patch.dict(os.environ, base):
+            os.environ.pop("GIT_CONFIG_NOSYSTEM", None)
+            self.assertEqual(target.eol_git_args(self.repo), ["-c", "core.autocrlf=true"])
+        # Injected command config is still stripped even when NOSYSTEM is inherited.
+        injected = {**base, "GIT_CONFIG_NOSYSTEM": "1", "GIT_CONFIG_COUNT": "1",
+                    "GIT_CONFIG_KEY_0": "core.autocrlf", "GIT_CONFIG_VALUE_0": "input"}
+        with patch.dict(os.environ, injected):
+            self.assertEqual(target.eol_git_args(self.repo), [])
 
 
 if __name__ == "__main__":
