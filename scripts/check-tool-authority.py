@@ -31,15 +31,11 @@ def main() -> int:
 
     op = json.loads(OPENPOST.read_text(encoding="utf-8"))
     op_status = op.get("status")
-    if isinstance(op_status, dict):
-        frozen = op_status.get("state") == "paused" and op_status.get("publishingFrozen") is True
-    else:
-        frozen = str(op_status or "").upper() == "FROZEN"
-    if not frozen:
-        fail("OPENPOST.json must remain paused/frozen")
+    if not isinstance(op_status, dict) or op_status.get("state") != "retired" or op_status.get("runnable") is not False or op_status.get("publishingFrozen") is not True:
+        fail("OPENPOST.json must remain retired, frozen and non-runnable")
     for key in ("newSchedulesAllowed", "queueAuthority", "retryAuthority", "failoverTarget", "releaseWatchEnabled", "healthDependency"):
         if op.get(key) is not False:
-            fail(f"OPENPOST.json {key} must be false while frozen")
+            fail(f"OPENPOST.json {key} must be false when retired")
 
     grok = json.loads(GROK.read_text(encoding="utf-8"))
     scheduler_rows = list(grok.get("routines") or [])

@@ -58,8 +58,6 @@ ALLOWLIST = frozenset({
     "packages/vfharness/devtools/dcc-adobe-runtime-persistence/dcc-desktop-hosts.json",
     "packages/vfharness/devtools/dcc-mcp-illustrator-0.3.1-adobepy-0.9.0-bootstrap.py",
     "packages/vfharness/state/memory-rationalization-phase7-2026-09-27.json",
-    "packages/vfigos/failover/failover_watch.py",
-    "packages/vfigos/failover/grok_instagram_failover.py",
     "scripts/check-crewai-reviewed-runner.py",
     "scripts/check-windows-path-contract.py",
     "scripts/generate-stage8c-windows-host-binding.py",
@@ -105,8 +103,6 @@ ALLOWLIST_MATCH_SHA256 = {
     'packages/vfharness/devtools/dcc-adobe-runtime-persistence/dcc-desktop-hosts.json': 'ed8f5bf930c8f0fd882d01ac7daecbf84158f7f487c803fe0691ec01b9da450b',
     'packages/vfharness/devtools/dcc-mcp-illustrator-0.3.1-adobepy-0.9.0-bootstrap.py': '0e5970555d458c315619af4d29c54c41c0fbbc6bb89ecb570b59bd0689dc6ddf',
     'packages/vfharness/state/memory-rationalization-phase7-2026-09-27.json': 'ed8f5bf930c8f0fd882d01ac7daecbf84158f7f487c803fe0691ec01b9da450b',
-    'packages/vfigos/failover/failover_watch.py': 'c23900b812abd65bb8e12ed325937d6b911561f7814509e8179bfc129d95ae2f',
-    'packages/vfigos/failover/grok_instagram_failover.py': 'e2240790275ad6a94574e6758619032757bcddf058291fd960203ab391bc577b',
     'scripts/check-crewai-reviewed-runner.py': '801b3500f91ca12aa548f0dbf104c9202eff2079eadb1e86b15612b7542b4dd8',
     'scripts/check-windows-path-contract.py': 'b081e8283c55696f9e7b13fc3cecea3135186bde28e275ff6b9e19f66cced18d',
     'scripts/generate-stage8c-windows-host-binding.py': '0e5970555d458c315619af4d29c54c41c0fbbc6bb89ecb570b59bd0689dc6ddf',
@@ -131,7 +127,7 @@ ALLOWLIST_MATCH_SHA256 = {
 }
 
 # Changing the exception or fixture count is a reviewed edit to this sensor.
-EXPECTED_ALLOWLIST_SIZE = 42
+EXPECTED_ALLOWLIST_SIZE = 40
 EXPECTED_FIXTURE_COUNT = 5
 
 

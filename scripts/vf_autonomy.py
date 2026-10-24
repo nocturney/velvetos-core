@@ -220,12 +220,23 @@ def _item_blob(item: dict[str, Any]) -> str:
     return json.dumps(item, ensure_ascii=False).lower()
 
 
+# Explicit benign words only; an unknown compound such as googleads, adsense,
+# adspend or ads2026 must retain the existing owner-approval/red risk gate.
+_BENIGN_ADS_TOKENS = frozenset({"leads", "uploads", "downloads", "workloads"})
+
+
 def _mentions_keyword(blob: str, keyword: str) -> bool:
-    """Do not treat 'ads' inside 'leads'/'uploads' as a paid-ad signal."""
+    """Keep paid-ad compounds RED, exempt only verified harmless full words."""
+    lowered = blob.lower()
     term = keyword.lower()
-    if term == "ads":
-        return re.search(r"(?<![a-z0-9])ads(?![a-z0-9])", blob.lower()) is not None
-    return term in blob.lower()
+    if term != "ads":
+        return term in lowered
+    # Split ASCII English/digit identifiers. Underscores, hyphens, punctuation
+    # and non-English text delimit words, so campaign_ads still signals ads.
+    return any(
+        "ads" in token and token not in _BENIGN_ADS_TOKENS
+        for token in re.findall(r"[a-z0-9]+", lowered)
+    )
 
 
 def _forbidden_publish_signals(blob: str) -> list[str]:
@@ -1111,8 +1122,16 @@ def selftest() -> tuple[bool, list[str]]:
     risk_cases = (
         ("review_current_state", "qualified-leads", "green"),
         ("review_current_state", "monthly_uploads", "green"),
+        ("review_current_state", "weekly_downloads", "green"),
+        ("review_current_state", "worker_workloads", "green"),
         ("review_current_state", "campaign-ads", "red"),
         ("review_current_state", "campaign_ads", "red"),
+        ("review_current_state", "googleads", "red"),
+        ("review_current_state", "fbads", "red"),
+        ("review_current_state", "adspend", "red"),
+        ("review_current_state", "adsense", "red"),
+        ("review_current_state", "ads2026", "red"),
+        ("review_current_state", "ads1", "red"),
         ("review_current_state", "boost campaign", "red"),
         ("review_current_state", "whatsapp send", "red"),
         ("purchase", "qualified-leads", "red"),
@@ -1124,12 +1143,15 @@ def selftest() -> tuple[bool, list[str]]:
             errors.append(f"risk mismatch {action}/{target}: {actual_risk} != {expected_risk}")
     if _forbidden_publish_signals(_item_blob({"id": "qualified_leads"})):
         errors.append("lead ID falsely identified as forbidden publish signal")
-    if "ads" not in _forbidden_publish_signals(_item_blob({"id": "campaign_ads"})):
-        errors.append("real paid-ad ID must remain forbidden")
     if _owner_reasons_from_item({"id": "qualified_leads"}, ["boost-or-ads"]):
         errors.append("lead ID falsely identified as owner ads reason")
-    if _owner_reasons_from_item({"id": "campaign_ads"}, ["boost-or-ads"]) != ["boost-or-ads"]:
-        errors.append("real paid-ad ID must retain owner reason")
+    # Every real paid-ad compound must remain forbidden and owner-gated in the
+    # same shared matcher, not only in resolve_action_risk.
+    for paid_id in ("campaign_ads", "googleads", "fbads", "adspend", "adsense", "ads2026"):
+        if "ads" not in _forbidden_publish_signals(_item_blob({"id": paid_id})):
+            errors.append(f"paid-ad ID {paid_id!r} must remain forbidden")
+        if _owner_reasons_from_item({"id": paid_id}, ["boost-or-ads"]) != ["boost-or-ads"]:
+            errors.append(f"paid-ad ID {paid_id!r} must retain owner reason")
 
     return not errors, errors
 
