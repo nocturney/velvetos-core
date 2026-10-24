@@ -42,8 +42,10 @@ class SubscriptionArtifactTests(unittest.TestCase):
         (self.repo / "notes").mkdir()
         (self.repo / "notes" / "alpha.txt").write_bytes(b"alpha one\nalpha two\nalpha three\n")
         (self.repo / "beta.txt").write_bytes(b"beta\n")
-        # Tracked attribute only: it names a filter driver that no config defines.
-        (self.repo / ".gitattributes").write_text("beta.txt filter=marker\n", encoding="utf-8")
+        # Tracked attributes only: pin LF so checkout bytes do not depend on the host's
+        # core.autocrlf; beta.txt also names a filter driver that no config defines.
+        (self.repo / ".gitattributes").write_text(
+            "*.txt text eol=lf\nbeta.txt filter=marker\n", encoding="utf-8")
         try:
             os.symlink("beta.txt", self.repo / "link.txt")
         except (OSError, NotImplementedError):
@@ -932,6 +934,28 @@ class SubscriptionArtifactTests(unittest.TestCase):
             (repo / "entry.txt").write_bytes(b"changed\r\nsecond\r\n")
             raw = target.run_git(repo, ["status", "--porcelain=v1"]).stdout
             self.assertIn(b" M entry.txt", raw)
+
+    def test_repo_autocrlf_true_checkout_keeps_pinned_lf_bytes(self):
+        # Disposable repo with explicit core.autocrlf=true: the tracked eol=lf attribute
+        # must keep LF bytes on a real checkout, independent of the host default.
+        repo = Path(self.temp.name) / "explicit-crlf-repo"
+        repo.mkdir()
+        pinned = {"GIT_CONFIG_GLOBAL": os.devnull}
+        with patch.dict(os.environ, pinned):
+            def plain(*args):
+                return subprocess.run(["git", "-C", str(repo), *args],
+                                      check=True, capture_output=True).stdout
+            plain("init", "-q")
+            plain("config", "core.autocrlf", "true")
+            (repo / ".gitattributes").write_bytes(b"*.txt text eol=lf\n")
+            (repo / "entry.txt").write_bytes(b"baseline\n")
+            plain("add", "-A")
+            plain("-c", "user.name=local-unit", "-c", "user.email=local@example.invalid",
+                  "commit", "-qm", "explicit-autocrlf-baseline")
+            (repo / "entry.txt").unlink()
+            plain("checkout", "--", "entry.txt")
+            self.assertEqual((repo / "entry.txt").read_bytes(), b"baseline\n")
+            self.assertEqual(plain("status", "--porcelain=v1", "--untracked-files=all"), b"")
 
     def test_system_config_executables_never_run_and_eol_values_are_exact(self):
         marker = Path(self.temp.name) / "system-config-marker.txt"
