@@ -190,9 +190,18 @@
                                                    "canva-ai"
                                                ],
                                    "availability":  {
-                                                        "type":  "dcc_routing",
-                                                        "route_key":  "affinity"
-                                                    },
+  "type": "all",
+  "gates": [
+    {
+      "type": "dcc_routing",
+      "route_key": "affinity"
+    },
+    {
+      "type": "file_exists",
+      "path": "C:\\Program Files\\Affinity\\Affinity\\Affinity.exe"
+    }
+  ]
+},
                                    "readiness":  "READY_BOUNDED",
                                    "skills":  [
                                                   "vf-image-design-craft"
