@@ -43,9 +43,11 @@ class SubscriptionArtifactTests(unittest.TestCase):
         (self.repo / "notes" / "alpha.txt").write_bytes(b"alpha one\nalpha two\nalpha three\n")
         (self.repo / "beta.txt").write_bytes(b"beta\n")
         # Tracked attributes only: pin LF so checkout bytes do not depend on the host's
-        # core.autocrlf; beta.txt also names a filter driver that no config defines.
+        # core.autocrlf, including .gitattributes itself; beta.txt also names a filter
+        # driver that no config defines.
         (self.repo / ".gitattributes").write_text(
-            "*.txt text eol=lf\nbeta.txt filter=marker\n", encoding="utf-8")
+            ".gitattributes text eol=lf\n*.txt text eol=lf\nbeta.txt filter=marker\n",
+            encoding="utf-8")
         try:
             os.symlink("beta.txt", self.repo / "link.txt")
         except (OSError, NotImplementedError):
