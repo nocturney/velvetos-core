@@ -2748,30 +2748,60 @@ def node_executable(token: str) -> bool:
     return base == "node"
 
 
-def is_node_command(command: str) -> bool:
+def _names_node(text: str) -> bool:
+    """Text that cannot be parsed and names node is refused, not passed as an unknown form."""
+    return re.search(r"(?<![\w.-])node(?:\.exe)?(?![\w.-])", text, re.IGNORECASE) is not None
+
+
+def _env_split_string(argv: list[str]) -> bool:
+    """`env -S` re-splits one string into a command, so its words cannot be read one by one."""
+    return any(re.fullmatch(r"-[A-Za-z]*S.*", token) is not None or token.startswith("--split-string")
+               for token in argv)
+
+
+def _shell_c_script(argv: list[str]) -> str | None:
+    """The inline `-c` string of a shell word. None when the shell reads a file or stdin."""
+    index = 1
+    while index < len(argv):
+        token = argv[index]
+        if _shell_c_flag(token):
+            return argv[index + 1] if index + 1 < len(argv) else None
+        if token in {"-o", "+o"}:
+            index += 2
+            continue
+        if not token.startswith(("-", "+")):
+            return None
+        index += 1
+    return None
+
+
+def _is_node_part(part: str) -> bool:
     try:
-        argv = shlex.split(command, posix=True)
+        argv = shlex.split(part, posix=True)
     except ValueError:
-        return False
-    while argv and "=" in argv[0] and not argv[0].startswith("-"):
-        argv = argv[1:]
-    if argv and argv[0] == "sudo":
-        argv = argv[1:]
+        return _names_node(part)
+    argv = [word for word in (_normalize_token(token) for token in argv) if word]
+    if any(_base(token) == "env" for token in argv) and _env_split_string(argv):
+        return _names_node(part)
+    argv = strip_wrappers(argv)
     if not argv:
         return False
-    if argv[0] == "env" or argv[0].endswith("/env"):
-        rest = argv[1:]
-        while rest and (rest[0].startswith("-") or "=" in rest[0]):
-            rest = rest[1:]
-        return bool(rest) and node_executable(rest[0])
     if node_executable(argv[0]):
         return True
-    shell = argv[0].replace("\\", "/").rsplit("/", 1)[-1]
-    if shell in NODE_SHELLS and "-c" in argv:
-        idx = argv.index("-c")
-        if idx + 1 < len(argv):
-            return is_node_command(argv[idx + 1])
+    if _base(argv[0]) in NODE_SHELLS:
+        script = _shell_c_script(argv)
+        return script is not None and is_node_command(script)
     return False
+
+
+def is_node_command(command: str) -> bool:
+    """True when a command runs node behind sudo, env, a subshell, or a nested shell `-c`.
+
+    Each `;`, `&&`, `||`, `|`, and newline part is read on its own, so `echo ok; node`
+    is seen. Wrapper words are stripped by strip_wrappers, which handles sudo value
+    flags and env -u, so `sudo -u runner node` is seen.
+    """
+    return any(_is_node_part(part) for part in split_commands(command))
 
 
 def node_toolchain_problems(text: str, *, path: str) -> list[str]:
@@ -3682,6 +3712,43 @@ def main() -> int:
     require_unpinned("env node", "env node --version")
     require_unpinned("bash node", "bash -c 'node --version'")
     require_unpinned("dash run node", "node --version")
+    require_unpinned("sudo -H node", "sudo -H node --version")
+    require_unpinned("sudo -u node", "sudo -u runner node --version")
+    require_unpinned("path sudo node", "/usr/bin/sudo node --version")
+    require_unpinned("sudo -H bash -c node", "sudo -H bash -c 'node --version'")
+    require_unpinned("env -u node", "env -u FOO node --version")
+    require_unpinned("bash -lc node", "bash -lc 'node --version'")
+    require_unpinned("chained node", "echo ok; node --version")
+    require_unpinned("unparsed node", 'node "--version')
+
+    def require_clean(label: str, text: str) -> None:
+        found = node_toolchain_problems(text, path="fixture.yml")
+        if found:
+            fail(f"{label} was wrongly refused: {found}")
+
+    require_clean(
+        "pinned sudo node",
+        "jobs:\n"
+        "  sample:\n"
+        "    runs-on: ubuntu-24.04\n"
+        "    steps:\n"
+        "      - name: Set up Node\n"
+        f"        uses: {NODE_SETUP}\n"
+        "        with:\n"
+        '          node-version: "22.23.3"\n'
+        "      - name: Verify Node toolchain checksum\n"
+        f"        run: {NODE_PINS['22.23.3']}\n"
+        "      - run: sudo -H node --version\n",
+    )
+    require_clean(
+        "non-node sudo",
+        "jobs:\n"
+        "  sample:\n"
+        "    runs-on: ubuntu-24.04\n"
+        "    steps:\n"
+        "      - run: sudo -u runner echo node\n"
+        "      - run: bash -c 'echo node'\n",
+    )
     require_node(
         "verify if false",
         check_all.replace(
@@ -3745,7 +3812,8 @@ def main() -> int:
         "indirect=caught dashdash=caught " 
         f"node_setups={node_setups} node_float=caught node_sha=caught "
         "node_comment=caught node_bare=caught node_path=caught node_env=caught "
-        "node_bash=caught node_dash=caught node_if=caught node_continue=caught"
+        "node_bash=caught node_dash=caught node_if=caught node_continue=caught "
+        "node_sudo=caught node_env_u=caught node_chain=caught node_unparsed=caught node_safe=pass"
     )
     return 0
 

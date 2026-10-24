@@ -1,0 +1,1 @@
+- **Install pin node wrappers:** check-install-pins reads node behind `sudo -H`, `sudo -u <user>`, `/usr/bin/sudo`, `env -u <name>`, `bash -c` / `sh -c` in any flag cluster, and `;`/`&&`/`||`/`|` chains, and refuses unparseable text that names node. No model call.
