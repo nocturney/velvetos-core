@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import unittest
 from unittest.mock import patch
 
@@ -116,6 +117,43 @@ class LocalCommitContractTests(unittest.TestCase):
         self.assertFalse(any("commit" in call.args[1:] for call in
                              git_monitor.call_args_list))
         self.assertIs(original, local.check_committed)
+
+    def assert_malicious_clean_filter_never_runs(self, configure):
+        commit_dir = self.output.parent
+        marker = commit_dir / "FILTER_RAN"
+        script = commit_dir / "evil_filter.py"
+        script.write_text(
+            "import sys\n"
+            "with open(%r, 'w') as f:\n"
+            "    f.write('ran')\n"
+            "sys.stdout.buffer.write(sys.stdin.buffer.read())\n" % str(marker),
+            encoding="utf-8")
+        configure('"%s" "%s"' % (sys.executable, script))
+        # .git/info/attributes is untracked metadata: without the new guard,
+        # preflight reaches git diff and actually executes this clean filter.
+        info_attrs = self.repo / ".git" / "info" / "attributes"
+        info_attrs.write_text("beta.txt filter=evil\n", encoding="utf-8")
+        with self.assertRaisesRegex(local.Refused, "COMMAND_CONFIG_REFUSED"):
+            self.run_commit()
+        self.assertFalse(marker.exists())
+        self.assertFalse(self.output.exists())
+        self.assertFalse(self.output.with_suffix(".committing").exists())
+        self.assertEqual(local.git(self.repo, "rev-parse", "HEAD").decode(),
+                         self.fixture.base_sha)
+
+    def test_repo_local_malicious_clean_filter_never_runs(self):
+        self.assert_malicious_clean_filter_never_runs(
+            lambda cmd: local.git(self.repo, "config", "--local",
+                                  "filter.evil.clean", cmd))
+
+    def test_included_malicious_clean_filter_never_runs(self):
+        def configure(cmd):
+            included = self.output.parent / "included.cfg"
+            local.git(self.repo, "config", "--file", str(included),
+                      "filter.evil.clean", cmd)
+            local.git(self.repo, "config", "--local", "include.path",
+                      str(included))
+        self.assert_malicious_clean_filter_never_runs(configure)
 
     def test_recovery_before_commit_does_not_blindly_retry(self):
         original_git = local.git

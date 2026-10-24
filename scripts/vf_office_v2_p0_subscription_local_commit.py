@@ -52,6 +52,20 @@ def git(root, *args, input_bytes=None, raw=False):
     return p.stdout if raw else p.stdout.rstrip(b"\n")
 
 
+COMMAND_CONFIG = re.compile(r"filter\..+|diff\..+\.(command|textconv)")
+
+
+def require_no_command_config(root):
+    # Tracked .gitattributes only select a driver by name; Git can execute one only
+    # when config defines it. Refuse any such driver from every config scope
+    # (repo-local, worktree, included, command) before a filter-capable Git call.
+    raw = git(root, "config", "-z", "--list", raw=True)
+    for entry in filter(None, raw.split(b"\0")):
+        key = entry.split(b"\n", 1)[0].decode("utf-8", "replace").lower()
+        require(COMMAND_CONFIG.fullmatch(key) is None,
+                "LOCAL_GIT_COMMAND_CONFIG_REFUSED")
+
+
 def checked_json(path):
     p = Path(path)
     require(p.is_file() and not p.is_symlink() and p.stat().st_size <= MAX_JSON,
@@ -143,6 +157,7 @@ def check_committed(root, base_sha, paths, rows):
 def commit(task_path, origin_path, checkpoint_path, import_path,
            root_path, output_path, recover=False):
     root = Path(root_path).resolve()
+    require_no_command_config(root)
     raw_out = Path(output_path)
     require(not raw_out.is_symlink(), "LOCAL_COMMIT_RECEIPT_SYMLINK")
     output = raw_out.resolve()
